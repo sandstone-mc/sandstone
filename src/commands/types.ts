@@ -11,7 +11,7 @@ import {
   NodeWithRedirect,
 } from '../commandsTree'
 import { json } from '../types'
-import { CompoundTypesMap } from '../commandsTree/compoundTypesMap'
+import { CompoundTypesMap } from '../commandsTree/typesMap'
 
 type SandstoneRedirectNode<rootNode extends RootNode, cmdNode extends CommandNode & NodeWithRedirect> = (
   cmdNode['redirect'][0] extends 'execute' ?
