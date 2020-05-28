@@ -39,7 +39,7 @@ type SandstoneObjectNode<rootNode extends RootNode, cmdNode extends CommandNode>
     ) : (
       cmdNode extends LiteralNode ?
       () => void :
-      string
+      void
     )
   )
 )
