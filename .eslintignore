@@ -1,0 +1,12 @@
+# Ignores all javascript files located at root of folder
+/*.*js
+
+# Don't lint node_modules
+node_modules/*
+
+# Don't lint build output
+build/*
+dist/*
+
+# Don't lint coverage output
+coverage/*
