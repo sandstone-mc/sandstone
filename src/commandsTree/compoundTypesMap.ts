@@ -107,213 +107,215 @@ type CompoundTypesMapObject<typesMap extends {[p: string]: any}, returnType, roo
     ((targets: typesMap['minecraft:entity'], enchantment: typesMap['minecraft:item_enchantment']) => returnType) &
     ((targets: typesMap['minecraft:entity'], enchantment: typesMap['minecraft:item_enchantment'], level: typesMap['brigadier:integer']) => rootNode)
   43:
-    ((targets: typesMap['minecraft:entity'], amount: typesMap['brigadier:integer']) => rootNode)
+    ((axes: typesMap['minecraft:swizzle']) => rootNode)
   44:
-    ((from: typesMap['minecraft:block_pos'], to: typesMap['minecraft:block_pos'], block: typesMap['minecraft:block_state']) => rootNode)
+    ((anchor: typesMap['minecraft:entity_anchor']) => rootNode)
   45:
+    ((targets: typesMap['minecraft:entity'], anchor: typesMap['minecraft:entity_anchor']) => rootNode)
+  46:
+    ((pos: typesMap['minecraft:vec3']) => rootNode)
+  47:
+    ((pos: typesMap['minecraft:block_pos'], block: typesMap['minecraft:block_predicate']) => rootNode)
+  48:
+    ((start: typesMap['minecraft:block_pos'], end: typesMap['minecraft:block_pos'], destination: typesMap['minecraft:block_pos']) => rootNode)
+  49:
+    ((sourcePos: typesMap['minecraft:block_pos'], path: typesMap['minecraft:nbt_path']) => rootNode)
+  50:
+    ((source: typesMap['minecraft:entity'], path: typesMap['minecraft:nbt_path']) => rootNode)
+  51:
+    ((source: typesMap['minecraft:resource_location'], path: typesMap['minecraft:nbt_path']) => rootNode)
+  52:
+    ((entities: typesMap['minecraft:entity']) => rootNode)
+  53:
+    ((predicate: typesMap['minecraft:resource_location']) => rootNode)
+  54:
+    ((target: typesMap['minecraft:score_holder'], targetObjective: typesMap['minecraft:objective']) => rootNode)
+  55:
+    ((source: typesMap['minecraft:score_holder'], sourceObjective: typesMap['minecraft:objective']) => rootNode)
+  56:
+    ((range: typesMap['minecraft:int_range']) => rootNode)
+  57:
+    ((dimension: typesMap['minecraft:dimension']) => rootNode)
+  58:
+    ((rot: typesMap['minecraft:rotation']) => rootNode)
+  59:
+    ((targets: typesMap['minecraft:score_holder'], objective: typesMap['minecraft:objective']) => rootNode)
+  60:
+    ((callback: typesMap['sandstone:callback']) => rootNode)
+  61:
+    ((targets: typesMap['minecraft:entity'], amount: typesMap['brigadier:integer']) => rootNode)
+  62:
+    ((from: typesMap['minecraft:block_pos'], to: typesMap['minecraft:block_pos'], block: typesMap['minecraft:block_state']) => rootNode)
+  63:
     ((from: typesMap['minecraft:column_pos']) => returnType) &
     ((from: typesMap['minecraft:column_pos'], to: typesMap['minecraft:column_pos']) => rootNode)
-  46:
+  64:
     ((pos: typesMap['minecraft:column_pos']) => rootNode)
-  47:
+  65:
     ((from: typesMap['minecraft:column_pos']) => rootNode)
-  48:
+  66:
     ((to: typesMap['minecraft:column_pos']) => rootNode)
-  49:
+  67:
     ((name: typesMap['minecraft:function']) => rootNode)
-  50:
+  68:
     ((target: typesMap['minecraft:entity']) => rootNode)
-  51:
+  69:
     ((value: typesMap['brigadier:bool']) => rootNode)
-  52:
+  70:
     ((targets: typesMap['minecraft:entity'], item: typesMap['minecraft:item_stack']) => returnType) &
     ((targets: typesMap['minecraft:entity'], item: typesMap['minecraft:item_stack'], count: typesMap['brigadier:integer']) => rootNode)
-  53:
+  71:
     ((command: typesMap['brigadier:string']) => rootNode)
-  54:
+  72:
     ((targets: typesMap['minecraft:entity']) => returnType) &
     ((targets: typesMap['minecraft:entity'], reason: typesMap['minecraft:message']) => rootNode)
-  55:
+  73:
     ((biome: typesMap['minecraft:resource_location']) => rootNode)
-  56:
+  74:
     ((players: typesMap['minecraft:entity']) => rootNode)
-  57:
+  75:
     ((loot_table: typesMap['minecraft:resource_location'], pos: typesMap['minecraft:block_pos']) => rootNode)
-  58:
+  76:
     ((tool: typesMap['minecraft:item_stack']) => rootNode)
-  59:
+  77:
     ((loot_table: typesMap['minecraft:resource_location']) => rootNode)
-  60:
+  78:
     ((pos: typesMap['minecraft:block_pos']) => rootNode)
-  61:
+  79:
     ((targetPos: typesMap['minecraft:block_pos']) => rootNode)
-  62:
+  80:
     ((targetPos: typesMap['minecraft:block_pos'], slot: typesMap['minecraft:item_slot']) => rootNode)
-  63:
+  81:
     ((count: typesMap['brigadier:integer']) => rootNode)
-  64:
+  82:
     ((entities: typesMap['minecraft:entity'], slot: typesMap['minecraft:item_slot']) => rootNode)
-  65:
+  83:
     ((targetPos: typesMap['minecraft:vec3']) => rootNode)
-  66:
+  84:
     ((action: typesMap['brigadier:string']) => rootNode)
-  67:
+  85:
     ((targets: typesMap['minecraft:entity'], message: typesMap['minecraft:message']) => rootNode)
-  68:
+  86:
     ((target: typesMap['brigadier:string']) => rootNode)
-  69:
+  87:
     ((name: typesMap['minecraft:particle']) => returnType) &
     ((name: typesMap['minecraft:particle'], pos: typesMap['minecraft:vec3']) => returnType) &
     ((name: typesMap['minecraft:particle'], pos: typesMap['minecraft:vec3'], delta: typesMap['minecraft:vec3'], speed: typesMap['brigadier:float'], count: typesMap['brigadier:integer']) => rootNode)
-  70:
+  88:
     ((viewers: typesMap['minecraft:entity']) => rootNode)
-  71:
+  89:
     ((sound: typesMap['minecraft:resource_location']) => rootNode)
-  72:
+  90:
     ((targets: typesMap['minecraft:entity']) => returnType) &
     ((targets: typesMap['minecraft:entity'], pos: typesMap['minecraft:vec3']) => returnType) &
     ((targets: typesMap['minecraft:entity'], pos: typesMap['minecraft:vec3'], volume: typesMap['brigadier:float']) => returnType) &
     ((targets: typesMap['minecraft:entity'], pos: typesMap['minecraft:vec3'], volume: typesMap['brigadier:float'], pitch: typesMap['brigadier:float']) => returnType) &
     ((targets: typesMap['minecraft:entity'], pos: typesMap['minecraft:vec3'], volume: typesMap['brigadier:float'], pitch: typesMap['brigadier:float'], minVolume: typesMap['brigadier:float']) => rootNode)
-  73:
+  91:
     ((port: typesMap['brigadier:integer']) => rootNode)
-  74:
+  92:
     ((recipe: typesMap['minecraft:resource_location']) => rootNode)
-  75:
+  93:
     ((pos: typesMap['minecraft:block_pos'], slot: typesMap['minecraft:item_slot'], item: typesMap['minecraft:item_stack']) => returnType) &
     ((pos: typesMap['minecraft:block_pos'], slot: typesMap['minecraft:item_slot'], item: typesMap['minecraft:item_stack'], count: typesMap['brigadier:integer']) => rootNode)
-  76:
+  94:
     ((targets: typesMap['minecraft:entity'], slot: typesMap['minecraft:item_slot'], item: typesMap['minecraft:item_stack']) => returnType) &
     ((targets: typesMap['minecraft:entity'], slot: typesMap['minecraft:item_slot'], item: typesMap['minecraft:item_stack'], count: typesMap['brigadier:integer']) => rootNode)
-  77:
+  95:
     ((message: typesMap['minecraft:message']) => rootNode)
-  78:
+  96:
     ((function_: typesMap['brigadier:string']) => rootNode)
-  79:
+  97:
     ((function_: typesMap['minecraft:function'], time: typesMap['minecraft:time']) => rootNode)
-  80:
+  98:
     ((objective: typesMap['brigadier:string'], criteria: typesMap['minecraft:objective_criteria']) => returnType) &
     ((objective: typesMap['brigadier:string'], criteria: typesMap['minecraft:objective_criteria'], displayName: typesMap['minecraft:component']) => rootNode)
-  81:
+  99:
     ((objective: typesMap['minecraft:objective']) => rootNode)
-  82:
+  100:
     ((displayName: typesMap['minecraft:component']) => rootNode)
-  83:
+  101:
     ((slot: typesMap['minecraft:scoreboard_slot']) => returnType) &
     ((slot: typesMap['minecraft:scoreboard_slot'], objective: typesMap['minecraft:objective']) => rootNode)
-  84:
+  102:
     ((targets: typesMap['minecraft:score_holder'], objective: typesMap['minecraft:objective'], score: typesMap['brigadier:integer']) => rootNode)
-  85:
-    ((targets: typesMap['minecraft:score_holder'], objective: typesMap['minecraft:objective']) => rootNode)
-  86:
+  103:
     ((target: typesMap['minecraft:score_holder'], objective: typesMap['minecraft:objective']) => rootNode)
-  87:
+  104:
     ((target: typesMap['minecraft:score_holder']) => rootNode)
-  88:
+  105:
     ((targets: typesMap['minecraft:score_holder'], targetObjective: typesMap['minecraft:objective'], operation: typesMap['minecraft:operation'], source: typesMap['minecraft:score_holder'], sourceObjective: typesMap['minecraft:objective']) => rootNode)
-  89:
+  106:
     ((targets: typesMap['minecraft:score_holder']) => returnType) &
     ((targets: typesMap['minecraft:score_holder'], objective: typesMap['minecraft:objective']) => rootNode)
-  90:
+  107:
     ((pos: typesMap['minecraft:block_pos'], block: typesMap['minecraft:block_state']) => rootNode)
-  91:
+  108:
     ((minutes: typesMap['brigadier:integer']) => rootNode)
-  92:
+  109:
     ((targets: typesMap['minecraft:entity']) => returnType) &
     ((targets: typesMap['minecraft:entity'], pos: typesMap['minecraft:block_pos']) => rootNode)
-  93:
+  110:
     ((target: typesMap['minecraft:entity']) => returnType) &
     ((target: typesMap['minecraft:entity'], player: typesMap['minecraft:entity']) => rootNode)
-  94:
+  111:
     ((center: typesMap['minecraft:vec2'], spreadDistance: typesMap['brigadier:float'], maxRange: typesMap['brigadier:float'], respectTeams: typesMap['brigadier:bool'], targets: typesMap['minecraft:entity']) => rootNode)
-  95:
+  112:
     ((entity: typesMap['minecraft:entity_summon']) => returnType) &
     ((entity: typesMap['minecraft:entity_summon'], pos: typesMap['minecraft:vec3']) => returnType) &
     ((entity: typesMap['minecraft:entity_summon'], pos: typesMap['minecraft:vec3'], nbt: typesMap['minecraft:nbt_compound_tag']) => rootNode)
-  96:
+  113:
     ((team: typesMap['brigadier:string']) => returnType) &
     ((team: typesMap['brigadier:string'], displayName: typesMap['minecraft:component']) => rootNode)
-  97:
+  114:
     ((team: typesMap['minecraft:team']) => rootNode)
-  98:
+  115:
     ((team: typesMap['minecraft:team']) => returnType) &
     ((team: typesMap['minecraft:team'], members: typesMap['minecraft:score_holder']) => rootNode)
-  99:
+  116:
     ((members: typesMap['minecraft:score_holder']) => rootNode)
-  100:
+  117:
     ((value: typesMap['minecraft:color']) => rootNode)
-  101:
+  118:
     ((allowed: typesMap['brigadier:bool']) => rootNode)
-  102:
+  119:
     ((prefix: typesMap['minecraft:component']) => rootNode)
-  103:
+  120:
     ((suffix: typesMap['minecraft:component']) => rootNode)
-  104:
+  121:
     ((destination: typesMap['minecraft:entity']) => rootNode)
-  105:
+  122:
     ((location: typesMap['minecraft:vec3']) => rootNode)
-  106:
+  123:
     ((facingEntity: typesMap['minecraft:entity']) => returnType) &
     ((facingEntity: typesMap['minecraft:entity'], facingAnchor: typesMap['minecraft:entity_anchor']) => rootNode)
-  107:
+  124:
     ((facingLocation: typesMap['minecraft:vec3']) => rootNode)
-  108:
+  125:
     ((rotation: typesMap['minecraft:rotation']) => rootNode)
-  109:
+  126:
     ((targets: typesMap['minecraft:entity'], message: typesMap['minecraft:component']) => rootNode)
-  110:
+  127:
     ((time: typesMap['minecraft:time']) => rootNode)
-  111:
+  128:
     ((title: typesMap['minecraft:component']) => rootNode)
-  112:
+  129:
     ((fadeIn: typesMap['brigadier:integer'], stay: typesMap['brigadier:integer'], fadeOut: typesMap['brigadier:integer']) => rootNode)
-  113:
+  130:
     ((duration: typesMap['brigadier:integer']) => rootNode)
-  114:
+  131:
     ((distance: typesMap['brigadier:float']) => returnType) &
     ((distance: typesMap['brigadier:float'], time: typesMap['brigadier:integer']) => rootNode)
-  115:
-    ((pos: typesMap['minecraft:vec2']) => rootNode)
-  116:
-    ((damagePerBlock: typesMap['brigadier:float']) => rootNode)
-  117:
-    ((distance: typesMap['brigadier:float']) => rootNode)
-  118:
-    ((distance: typesMap['brigadier:integer']) => rootNode)
-  119:
-    ((time: typesMap['brigadier:integer']) => rootNode)
-  120:
-    ((axes: typesMap['minecraft:swizzle']) => rootNode)
-  121:
-    ((anchor: typesMap['minecraft:entity_anchor']) => rootNode)
-  122:
-    ((targets: typesMap['minecraft:entity'], anchor: typesMap['minecraft:entity_anchor']) => rootNode)
-  123:
-    ((pos: typesMap['minecraft:vec3']) => rootNode)
-  124:
-    ((pos: typesMap['minecraft:block_pos'], block: typesMap['minecraft:block_predicate']) => rootNode)
-  125:
-    ((start: typesMap['minecraft:block_pos'], end: typesMap['minecraft:block_pos'], destination: typesMap['minecraft:block_pos']) => rootNode)
-  126:
-    ((sourcePos: typesMap['minecraft:block_pos'], path: typesMap['minecraft:nbt_path']) => rootNode)
-  127:
-    ((source: typesMap['minecraft:entity'], path: typesMap['minecraft:nbt_path']) => rootNode)
-  128:
-    ((source: typesMap['minecraft:resource_location'], path: typesMap['minecraft:nbt_path']) => rootNode)
-  129:
-    ((entities: typesMap['minecraft:entity']) => rootNode)
-  130:
-    ((predicate: typesMap['minecraft:resource_location']) => rootNode)
-  131:
-    ((target: typesMap['minecraft:score_holder'], targetObjective: typesMap['minecraft:objective']) => rootNode)
   132:
-    ((source: typesMap['minecraft:score_holder'], sourceObjective: typesMap['minecraft:objective']) => rootNode)
+    ((pos: typesMap['minecraft:vec2']) => rootNode)
   133:
-    ((range: typesMap['minecraft:int_range']) => rootNode)
+    ((damagePerBlock: typesMap['brigadier:float']) => rootNode)
   134:
-    ((dimension: typesMap['minecraft:dimension']) => rootNode)
+    ((distance: typesMap['brigadier:float']) => rootNode)
   135:
-    ((rot: typesMap['minecraft:rotation']) => rootNode)
+    ((distance: typesMap['brigadier:integer']) => rootNode)
+  136:
+    ((time: typesMap['brigadier:integer']) => rootNode)
 })
 
 export type CompoundTypesMap<typesMap extends {[p: string]: any}, returnType, rootNode, k extends number>  = (

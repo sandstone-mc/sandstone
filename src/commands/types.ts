@@ -8,9 +8,18 @@ import {
   NodeWithChildren,
   RootNode,
   CompoundParserProperties,
+  NodeWithRedirect,
 } from '../commandsTree'
 import { json } from '../types'
 import { CompoundTypesMap } from '../commandsTree/compoundTypesMap'
+
+type SandstoneRedirectNode<rootNode extends RootNode, cmdNode extends CommandNode & NodeWithRedirect> = (
+  cmdNode['redirect'][0] extends 'execute' ?
+    SandstoneNode<rootNode, rootNode['children'][cmdNode['redirect'][0]]> &
+    SandstoneRoot<rootNode>
+    :
+    SandstoneNode<rootNode, rootNode['children'][cmdNode['redirect'][0]]>
+)
 
 // An object node: `weather` in `weather.clear`, `if` in `if.score` or `if.entity`...
 type SandstoneObjectNode<rootNode extends RootNode, cmdNode extends CommandNode> = (
@@ -22,7 +31,16 @@ type SandstoneObjectNode<rootNode extends RootNode, cmdNode extends CommandNode>
     // This doesn't look like a function call, which is bad design.
     // Therefore, we specify it's a function call to have
     // `advancement.grant('@a').everything()` instead.
-    cmdNode extends LiteralNode ? () => void : undefined
+    // However, it could potentially be a redirect: then we need to redirect to the correct object
+    cmdNode extends NodeWithRedirect & CommandNode ? (
+      cmdNode extends LiteralNode ?
+      () => SandstoneRedirectNode<rootNode, cmdNode> :
+      SandstoneRedirectNode<rootNode, cmdNode>
+    ) : (
+      cmdNode extends LiteralNode ?
+      () => void :
+      string
+    )
   )
 )
 
@@ -40,7 +58,8 @@ type SandstoneFunctionNode<
     'minecraft:block': string,
     'minecraft:block_pos': string,
     'minecraft:block_state': string,
-  }, SandstoneObjectNode<rootNode, cmdNode>, void, cmdNode['parsersId']>
+    'sandstone:callback': () => void,
+  }, SandstoneObjectNode<rootNode, cmdNode>, SandstoneObjectNode<rootNode, cmdNode>, cmdNode['parsersId']>
 )
 
 type SandstoneNode_<rootNode extends RootNode, cmdNode extends CommandNode> = {
@@ -56,27 +75,6 @@ type SandstoneNode<
   rootNode, cmdNode
 >[cmdNode['type']]
 
-type SandstoneRoot<rootNode extends RootNode> = {
+export type SandstoneRoot<rootNode extends RootNode> = {
   [key in keyof rootNode['children']]: SandstoneNode<rootNode, rootNode['children'][key]>
-} & {
-  run: (callback: () => void) => SandstoneRoot<rootNode>
 }
-
-type CommandsTreeType = typeof COMMANDS_TREE
-
-type TypedSandstoneRoot = SandstoneRoot<CommandsTreeType>
-
-const sand: TypedSandstoneRoot = {} as unknown as any
-
-const {
-  advancement, experience, teleport, xp, align, anchored, as, at, attribute, ban, banlist, bossbar, clear, data, datapack, clone, debug, defaultgamemode, deop, difficulty, gamemode, gamerule, effect, enchant, facing, forceload, fill, function: sandFunction, give, help, if: sandIf, in: sandIn, kick, kill, locate, locatebiome, loot, setblock,
-} = sand
-
-sandIn('minecraft:the_nether').say("I'm in the nether!")
-
-as('@a').at('@s').in('minecraft:the_nether').run(() => {
-  // Create a platform of dirt with air around the player, in the nether
-  setblock('~ ~1 ~', 'minecraft:air')
-  setblock('~ ~ ~', 'minecraft:air')
-  setblock('~ ~-1 ~', 'minecraft:dirt')
-})

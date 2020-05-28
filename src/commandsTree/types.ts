@@ -45,7 +45,12 @@ export type CommandParser = |
   'brigadier:integer' |
   'brigadier:string' |
   'minecraft:entity' |
-  'minecraft:score_holder'
+  'minecraft:score_holder' |
+  'sandstone:callback'
+
+export type NodeWithRedirect = {
+  redirect: readonly [string]
+}
 
 export type NodeWithChildren = {
   children: {
@@ -64,11 +69,12 @@ export type RootNode = {
   type: 'root'
 } & NodeWithChildren
 
+type AnyNode = (NodeMaybeWithChildren | NodeWithRedirect)
 
 // Represents a literal node, which requires to type the argument's name.
 export type LiteralNode = {
   type: 'literal'
-} & NodeMaybeWithChildren
+} & AnyNode
 
 type ParserProperties = {
   parser: CommandParser
@@ -85,12 +91,12 @@ export type CompoundParserProperties = {
 // Represents an argument node, which requires to type the argument's value.
 export type ArgumentNode = {
   type: 'argument'
-} & ParserProperties & NodeMaybeWithChildren
+} & ParserProperties & AnyNode
 
 // Represents a literal node, which requires to type the argument's value.
 export type LiteralArgumentNode = {
   type: 'literalArgument'
-} & NodeMaybeWithChildren & (
+} & AnyNode & (
   ParserProperties | CompoundParserProperties
 )
 

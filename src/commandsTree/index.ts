@@ -1,6 +1,81 @@
+/** TODO: autogenerate that whole file */
 import COMMANDS_TREE from './commands'
+import type { SandstoneRoot } from '../commands/types'
 
-export type commandsTreeType = typeof COMMANDS_TREE
-export { COMMANDS_TREE }
+type TypedSandstoneRoot = SandstoneRoot<typeof COMMANDS_TREE>
+
+const sandstone: TypedSandstoneRoot = {} as unknown as any
+
+export default sandstone
+
+export const {
+  advancement,
+  execute,
+  experience,
+  teleport,
+  xp,
+  attribute,
+  ban,
+  banlist,
+  bossbar,
+  clear,
+  data,
+  datapack,
+  clone,
+  debug,
+  defaultgamemode,
+  deop,
+  difficulty,
+  gamemode,
+  gamerule,
+  effect,
+  enchant,
+  forceload,
+  fill,
+  give,
+  help,
+  kick,
+  kill,
+  locate,
+  locatebiome,
+  loot,
+  setblock,
+  me,
+  msg,
+  op,
+  pardon,
+  particle,
+  playsound,
+  recipe,
+  reload,
+  scoreboard,
+  say,
+  schedule,
+  publish,
+  replaceitem,
+  seed,
+  setidletimeout,
+  setworldspawn,
+  spawnpoint,
+  spectate,
+  stop,
+  stopsound,
+  spreadplayers,
+  summon,
+  tell,
+  tellraw,
+  title,
+  tag,
+  team,
+  teammsg,
+  time,
+  tm,
+  tp,
+  trigger,
+  w,
+  weather,
+  whitelist,
+  worldborder,
+} = sandstone
 
 export * from './types'

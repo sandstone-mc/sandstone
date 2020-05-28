@@ -26,17 +26,6 @@ function executeOnChildren(commandNode: any, callback: (commandNode: any, ...arg
   }
 }
 
-// Redirect every node going to "execute" to root
-function redirectFromExecuteToRoot(commandNode: any): void {
-  // Replace "execute" by "root" in redirects
-  if (Object.prototype.hasOwnProperty.call(commandNode, 'redirect')) {
-    commandNode.redirect = commandNode.redirect.map((to: string) => (to === 'execute' ? 'root' : to))
-  }
-
-  // Call the same method on all children
-  executeOnChildren(commandNode, redirectFromExecuteToRoot)
-}
-
 type ParserInfo = {
   parsers: string[][], arguments: string[]
 }
@@ -175,18 +164,21 @@ export function commandsJsonToJS(filePath: string) {
 
     const commandsTree: any = JSON.parse(data.toString('utf-8'))
 
-    // Set the execute arguments at the root of the object, to be able to directly call sand.as().at()
-    Object.assign(commandsTree.children, commandsTree.children.execute.children)
-    delete commandsTree.children.execute
-
-    // Delete the 'run' sub-command, to be able to directly call sand.as().at().say('Hello!')
-    delete commandsTree.children.run
+    // Delete the 'run' sub-command, to be able to directly call execute.as().at().say('Hello!')
+    delete commandsTree.children.execute.children.run
+    commandsTree.children.execute.children.run = {
+      type: 'literal',
+      children: {
+        callback: {
+          type: 'argument',
+          executable: true,
+          parser: 'sandstone:callback',
+        },
+      },
+    }
 
     delete commandsTree.children.list
     delete commandsTree.children['save-all']
-
-    // Redirect every node going to "execute" to root
-    redirectFromExecuteToRoot(commandsTree)
 
     // Now, literals with only 1 possibility (like "as", it only has the "targets" child) should be collapsed
     // to 1 node with the "literalArgument" type.
