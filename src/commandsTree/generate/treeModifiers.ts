@@ -35,7 +35,7 @@ type CompoundTypesMap = Map<number, ParserInfo>
  *
  * Warning: this directly modifies the given object.
  */
-export function setExecutableLiterals(commandNode: any) {
+export function setLiteralArguments(commandNode: any) {
   let childrenNames = Object.keys(commandNode.children ?? {})
 
   // While the node is a literal/literalArgument with only 1 children
@@ -91,7 +91,23 @@ export function setExecutableLiterals(commandNode: any) {
   }
 
   // Call the same method on all children
-  executeOnChildren(commandNode, setExecutableLiterals)
+  executeOnChildren(commandNode, setLiteralArguments)
+}
+
+/**
+ * Add a 'root' redirect in all execute nodes.
+ */
+export function redirectExecutesToRoot(commandNode: any): void {
+  if (commandNode.type === 'root') {
+    redirectExecutesToRoot(commandNode.children.execute)
+    return
+  }
+
+  if (commandNode.redirect && commandNode.redirect[0] === 'execute') {
+    commandNode.redirect.push('root')
+  }
+
+  executeOnChildren(commandNode, redirectExecutesToRoot)
 }
 
 /**
@@ -164,4 +180,28 @@ export function setCompoundParser(
   executeOnChildren(commandNode, setCompoundParser, compoundTypesMap, existingTypes)
 
   return compoundTypesMap
+}
+
+export function changeBiomeSoundParser(commandNode: any) {
+  const newParsers = new Map([
+    ['biome', 'sandstone:biome'],
+    ['sound', 'sandstone:sound'],
+  ])
+
+  const newParser = newParsers.get(commandNode.arguments)
+
+  if (newParser) {
+    commandNode.parser = newParser
+  } else if (Array.isArray(commandNode.parser)) {
+    // If we have an array of parsers & arguments, get where arguments are biome/sound, and replace corresponding parser
+    commandNode.arguments.forEach((arg: string, i: number) => {
+      const parser = newParsers.get(arg)
+
+      if (parser) {
+        commandNode.parsers[i] = parser
+      }
+    })
+  }
+
+  executeOnChildren(commandNode, changeBiomeSoundParser)
 }

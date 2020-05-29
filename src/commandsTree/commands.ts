@@ -2449,7 +2449,8 @@ export default ({
           type: 'literalArgument',
           parser: 'minecraft:swizzle',
           redirect: [
-            'execute'
+            'execute',
+            'root'
           ],
           executable: false,
           properties: undefined,
@@ -2460,7 +2461,8 @@ export default ({
           type: 'literalArgument',
           parser: 'minecraft:entity_anchor',
           redirect: [
-            'execute'
+            'execute',
+            'root'
           ],
           executable: false,
           properties: undefined,
@@ -2475,7 +2477,8 @@ export default ({
             type: 'entities'
           },
           redirect: [
-            'execute'
+            'execute',
+            'root'
           ],
           executable: false,
           arguments: 'targets',
@@ -2489,7 +2492,8 @@ export default ({
             type: 'entities'
           },
           redirect: [
-            'execute'
+            'execute',
+            'root'
           ],
           executable: false,
           arguments: 'targets',
@@ -2517,7 +2521,8 @@ export default ({
                 'anchor'
               ],
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               parsers: [
                 'minecraft:entity',
@@ -2529,7 +2534,8 @@ export default ({
               type: 'argument',
               parser: 'minecraft:vec3',
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               parsersId: 46
             }
@@ -2554,7 +2560,8 @@ export default ({
                 'block'
               ],
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               parsers: [
                 'minecraft:block_pos',
@@ -2585,14 +2592,16 @@ export default ({
                   type: 'literal',
                   executable: true,
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ]
                 },
                 masked: {
                   type: 'literal',
                   executable: true,
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ]
                 }
               },
@@ -2622,7 +2631,8 @@ export default ({
                     'path'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:block_pos',
@@ -2649,7 +2659,8 @@ export default ({
                     'path'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:entity',
@@ -2673,7 +2684,8 @@ export default ({
                     'path'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:resource_location',
@@ -2692,7 +2704,8 @@ export default ({
               },
               executable: true,
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               arguments: 'entities',
               parsersId: 52
@@ -2702,7 +2715,8 @@ export default ({
               parser: 'minecraft:resource_location',
               executable: true,
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               properties: undefined,
               arguments: 'predicate',
@@ -2744,7 +2758,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -2770,7 +2785,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -2796,7 +2812,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -2822,7 +2839,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -2848,7 +2866,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -2861,7 +2880,8 @@ export default ({
                   parser: 'minecraft:int_range',
                   executable: true,
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   properties: undefined,
                   arguments: 'range',
@@ -2880,7 +2900,8 @@ export default ({
           type: 'literalArgument',
           parser: 'minecraft:dimension',
           redirect: [
-            'execute'
+            'execute',
+            'root'
           ],
           executable: false,
           properties: undefined,
@@ -2898,7 +2919,8 @@ export default ({
                 type: 'entities'
               },
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               executable: false,
               arguments: 'targets',
@@ -2908,7 +2930,8 @@ export default ({
               type: 'argument',
               parser: 'minecraft:vec3',
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               parsersId: 46
             }
@@ -2925,7 +2948,8 @@ export default ({
                 type: 'entities'
               },
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               executable: false,
               arguments: 'targets',
@@ -2935,7 +2959,8 @@ export default ({
               type: 'argument',
               parser: 'minecraft:rotation',
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               parsersId: 58
             }
@@ -2967,7 +2992,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -2978,7 +3004,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -2989,7 +3016,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3000,7 +3028,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3011,7 +3040,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3022,7 +3052,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3043,13 +3074,15 @@ export default ({
                     max: {
                       type: 'literal',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ]
                     },
                     value: {
                       type: 'literal',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ]
                     }
                   },
@@ -3081,7 +3114,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3092,7 +3126,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3103,7 +3138,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3114,7 +3150,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3125,7 +3162,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3136,7 +3174,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3168,7 +3207,8 @@ export default ({
                     'objective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -3196,7 +3236,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3207,7 +3248,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3218,7 +3260,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3229,7 +3272,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3240,7 +3284,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3251,7 +3296,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3290,7 +3336,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3301,7 +3348,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3312,7 +3360,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3323,7 +3372,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3334,7 +3384,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3345,7 +3396,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3366,13 +3418,15 @@ export default ({
                     max: {
                       type: 'literal',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ]
                     },
                     value: {
                       type: 'literal',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ]
                     }
                   },
@@ -3404,7 +3458,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3415,7 +3470,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3426,7 +3482,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3437,7 +3494,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3448,7 +3506,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3459,7 +3518,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3491,7 +3551,8 @@ export default ({
                     'objective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -3519,7 +3580,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3530,7 +3592,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3541,7 +3604,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3552,7 +3616,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3563,7 +3628,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3574,7 +3640,8 @@ export default ({
                       type: 'literalArgument',
                       parser: 'brigadier:double',
                       redirect: [
-                        'execute'
+                        'execute',
+                        'root'
                       ],
                       executable: false,
                       properties: undefined,
@@ -3611,7 +3678,8 @@ export default ({
                 'block'
               ],
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               parsers: [
                 'minecraft:block_pos',
@@ -3642,14 +3710,16 @@ export default ({
                   type: 'literal',
                   executable: true,
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ]
                 },
                 masked: {
                   type: 'literal',
                   executable: true,
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ]
                 }
               },
@@ -3679,7 +3749,8 @@ export default ({
                     'path'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:block_pos',
@@ -3706,7 +3777,8 @@ export default ({
                     'path'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:entity',
@@ -3730,7 +3802,8 @@ export default ({
                     'path'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:resource_location',
@@ -3749,7 +3822,8 @@ export default ({
               },
               executable: true,
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               arguments: 'entities',
               parsersId: 52
@@ -3759,7 +3833,8 @@ export default ({
               parser: 'minecraft:resource_location',
               executable: true,
               redirect: [
-                'execute'
+                'execute',
+                'root'
               ],
               properties: undefined,
               arguments: 'predicate',
@@ -3801,7 +3876,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -3827,7 +3903,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -3853,7 +3930,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -3879,7 +3957,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -3905,7 +3984,8 @@ export default ({
                     'sourceObjective'
                   ],
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   parsers: [
                     'minecraft:score_holder',
@@ -3918,7 +3998,8 @@ export default ({
                   parser: 'minecraft:int_range',
                   executable: true,
                   redirect: [
-                    'execute'
+                    'execute',
+                    'root'
                   ],
                   properties: undefined,
                   arguments: 'range',
@@ -4611,7 +4692,7 @@ export default ({
     },
     locatebiome: {
       type: 'literalArgument',
-      parser: 'minecraft:resource_location',
+      parser: 'sandstone:biome',
       executable: true,
       properties: undefined,
       arguments: 'biome',
@@ -5412,7 +5493,7 @@ export default ({
     },
     playsound: {
       type: 'literalArgument',
-      parser: 'minecraft:resource_location',
+      parser: 'sandstone:sound',
       children: {
         ambient: {
           type: 'literalArgument',
@@ -6529,7 +6610,7 @@ export default ({
       children: {
         '*': {
           type: 'literalArgument',
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           executable: true,
           properties: undefined,
           arguments: 'sound',
@@ -6538,7 +6619,7 @@ export default ({
         ambient: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6546,7 +6627,7 @@ export default ({
         block: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6554,7 +6635,7 @@ export default ({
         hostile: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6562,7 +6643,7 @@ export default ({
         master: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6570,7 +6651,7 @@ export default ({
         music: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6578,7 +6659,7 @@ export default ({
         neutral: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6586,7 +6667,7 @@ export default ({
         player: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6594,7 +6675,7 @@ export default ({
         record: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6602,7 +6683,7 @@ export default ({
         voice: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89
@@ -6610,7 +6691,7 @@ export default ({
         weather: {
           type: 'literalArgument',
           executable: true,
-          parser: 'minecraft:resource_location',
+          parser: 'sandstone:sound',
           properties: undefined,
           arguments: 'sound',
           parsersId: 89

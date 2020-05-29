@@ -8,6 +8,8 @@ const sandstone: TypedSandstoneRoot = {} as unknown as any
 
 export default sandstone
 
+export { COMMANDS_TREE }
+
 export const {
   advancement,
   execute,
@@ -77,5 +79,3 @@ export const {
   whitelist,
   worldborder,
 } = sandstone
-
-export * from './types'
