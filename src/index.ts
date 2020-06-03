@@ -1,26 +1,27 @@
 // Everything you are going to see is auto generated. Nothing hardcoded there.
 
 import {
-  effect, setblock, enchant, execute, particle, locatebiome, playsound,
+  effect, reload, execute, advancement, setblock, fill, mcfunction, saveDatapack,
 } from './commandsTree'
 
-// 1. Give everyone haste 2
-effect.give('@a', 'minecraft:haste', 30, 2)
+mcfunction('main', () => {
+  const giveEffect = effect.give.call(null, '@a', 'minecraft:absorption', 30, 2, true)
 
-// 2. Set obsidian at 0 0 0
-setblock('~ ~ ~', 'minecraft:obsidian')
+  effect.give('@a', 'minecraft:absorption', 30, 2)
+  effect.clear('@a', 'minecraft:absorption')
+  reload()
 
-// 3. Enchant all players current object with sharpness 2
-enchant('@a', 'minecraft:sharpness')
+  advancement.grant('@a').everything()
 
-// 4. Summon a skeleton at every player
-execute.as('@a').at('@s').summon('minecraft:skeleton')
+  setblock('0 0 0', 'minecraft:acacia_button', 'destroy')
 
-// 5. Put a bunch of soul fire flame particles
-particle('minecraft:soul_fire_flame')
+  execute.as('@a').run(() => {
+    fill('0 0 0', '1 1 1', 'minecraft:acacia_button')
+    fill('0 0 0', '1 1 1', 'minecraft:acacia_button').keep()
+    fill('0 0 0', '1 1 1', 'minecraft:acacia_button').replace('minecraft:air')
+  })
 
-// 6. Locate the closest bamboo jungle hills
-locatebiome('minecraft:bamboo_jungle_hills')
+  execute.as('@s').say('Hello')
+})
 
-// 7. Make a creepy cave sound
-playsound('minecraft:ambient.cave')
+saveDatapack()

@@ -39,3 +39,10 @@ export function safeName(name: string): string {
   }
   return name
 }
+
+/**
+ * Transforms a dash-cased string into a camelCase one.
+ */
+export function toCamelCase(input: string): string {
+  return input.toLowerCase().replace(/-(.)/g, (match, group1) => group1.toUpperCase())
+}

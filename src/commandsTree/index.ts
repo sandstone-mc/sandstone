@@ -1,14 +1,20 @@
 /** TODO: autogenerate that whole file */
 import COMMANDS_TREE from './commands'
+
 import type { SandstoneRoot } from '../commands/types'
+import { createCommandsResolver } from '../commands/resolver'
+import Datapack from '../commands/Datapack'
 
 type TypedSandstoneRoot = SandstoneRoot<typeof COMMANDS_TREE>
 
-const sandstone: TypedSandstoneRoot = {} as unknown as any
+const dp = new Datapack('default')
 
-export default sandstone
+const sandstone: TypedSandstoneRoot = createCommandsResolver(dp, COMMANDS_TREE) as any
 
 export { COMMANDS_TREE }
+
+
+export const { mcfunction, save: saveDatapack } = dp
 
 export const {
   advancement,
@@ -17,16 +23,12 @@ export const {
   teleport,
   xp,
   attribute,
-  ban,
-  banlist,
   bossbar,
   clear,
   data,
   datapack,
   clone,
-  debug,
   defaultgamemode,
-  deop,
   difficulty,
   gamemode,
   gamerule,
@@ -36,7 +38,6 @@ export const {
   fill,
   give,
   help,
-  kick,
   kill,
   locate,
   locatebiome,
@@ -44,8 +45,6 @@ export const {
   setblock,
   me,
   msg,
-  op,
-  pardon,
   particle,
   playsound,
   recipe,
@@ -53,14 +52,11 @@ export const {
   scoreboard,
   say,
   schedule,
-  publish,
   replaceitem,
   seed,
-  setidletimeout,
   setworldspawn,
   spawnpoint,
   spectate,
-  stop,
   stopsound,
   spreadplayers,
   summon,
@@ -76,6 +72,5 @@ export const {
   trigger,
   w,
   weather,
-  whitelist,
   worldborder,
 } = sandstone

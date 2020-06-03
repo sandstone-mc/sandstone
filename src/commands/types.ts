@@ -50,7 +50,6 @@ type SandstoneFunctionNode<
 > = (
   ParsersIdMap<
     SandstoneObjectNode<rootNode, cmdNode>,
-    SandstoneObjectNode<rootNode, cmdNode>,
     cmdNode['parsersId']
   >
 )
@@ -71,24 +70,3 @@ type SandstoneNode<
 export type SandstoneRoot<rootNode extends RootNode> = {
   [key in keyof rootNode['children']]: SandstoneNode<rootNode, rootNode['children'][key]>
 }
-
-
-type Test<arg extends NodeWithRedirect & CommandNode> = {}
-
-const x: Test<{
-  type: 'literalArgument',
-  parser: 'minecraft:entity',
-  properties: {
-    amount: 'multiple',
-    type: 'entities'
-  },
-  redirect: [
-    'execute',
-    'root'
-  ],
-  executable: false,
-  arguments: 'targets',
-  parsersId: 0
-}> = 0 as unknown as any
-
-console.log(x)

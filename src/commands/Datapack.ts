@@ -5,6 +5,8 @@
  */
 type McFunctionName = [string, string, ...string[]]
 
+type CommandArgs = readonly [any, ...any[]]
+
 function minecraftFunctionName(functionName: McFunctionName | string[]): string {
   const [namespace, ...folders] = functionName
   return `${namespace}:${folders.join('/')}`
@@ -17,12 +19,12 @@ export default class Datapack {
 
   /** Here, we use a "string" for the name because JS doesn't support objects as indexes.
    * We'll use the JSON representation. */
-  functions: { [functionName: string]: string[] }
+  functions: Map<string, CommandArgs[]>
 
   constructor(namespace: string) {
     this.namespace = namespace
     this.currentFunction = null
-    this.functions = {}
+    this.functions = new Map()
   }
 
   getCurrentFunctionMcName(): string {
@@ -33,9 +35,19 @@ export default class Datapack {
     return minecraftFunctionName(this.currentFunction)
   }
 
+  getCurrentFunction(): CommandArgs[] {
+    const commandsIds = this.functions.get(this.getCurrentFunctionMcName())
+
+    if (!commandsIds) {
+      throw new Error('Current function is undefined')
+    }
+
+    return commandsIds
+  }
+
   enterRootFunction(functionName: string): void {
     this.currentFunction = [this.namespace, functionName]
-    this.functions[this.getCurrentFunctionMcName()] = []
+    this.functions.set(this.getCurrentFunctionMcName(), [])
   }
 
   hasChildFunction(childName: string): boolean {
@@ -65,7 +77,7 @@ export default class Datapack {
     this.currentFunction.push(newName)
 
     const fullName = this.getCurrentFunctionMcName()
-    this.functions[fullName] = []
+    this.functions.set(fullName, [])
 
     return fullName
   }
@@ -86,22 +98,33 @@ export default class Datapack {
     this.currentFunction.pop()
   }
 
-  addCommand(args: any[]): void {
+  registerNewCommand = (commandArgs: CommandArgs): void => {
     if (!this.currentFunction) {
-      throw Error('Creating COMMANDS_TREE outside registered function')
+      throw Error('Adding a command outside of a registered function')
     }
 
-    const command = args.map((arg) => {
-      if (typeof arg === 'object') {
-        return JSON.stringify(arg)
-      }
-      return arg.toString()
-    }).join(' ')
-
-    this.functions[this.getCurrentFunctionMcName()].push(command)
+    this.getCurrentFunction().push(commandArgs)
   }
 
-  save(): void {
-    console.log(this.functions)
+  unregisterLastCommand = (): void => {
+    this.getCurrentFunction().pop()
+  }
+
+  mcfunction = (name: string, callback: () => void) => {
+    this.enterRootFunction(name)
+    callback()
+    this.exitRootFunction()
+  }
+
+  save = (): void => {
+    for (const [functionName, commandsArgs] of this.functions) {
+      console.log('====', functionName, '====\n')
+
+      console.log(
+        commandsArgs.map((commandArgs) => commandArgs?.join(' ')).join('\n'),
+      )
+
+      console.log('\n================\n')
+    }
   }
 }

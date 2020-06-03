@@ -21,7 +21,10 @@ export type NodeMaybeWithChildren = {
 // Represents the root node
 export type RootNode = {
   type: 'root'
-} & NodeWithChildren
+  children: {
+    [key: string]: LiteralArgumentNode | LiteralNode
+  }
+}
 
 type AnyNode = (NodeMaybeWithChildren | NodeWithRedirect)
 
@@ -30,16 +33,13 @@ export type LiteralNode = {
   type: 'literal'
 } & AnyNode
 
-type ParserProperties = {
-  parser: string
-  parsersId: number
-  properties?: {[key: string]: any}
-}
+type _Properties = {[key: string]: any} | undefined
 
-export type CompoundParserProperties = {
-  parser: 'compound'
+type ParserProperties = {
+  parsers: readonly string[]
+  executables?: readonly boolean[]
   parsersId: number
-  properties?: readonly ({[key: string]: any} | undefined)[]
+  properties?: readonly _Properties[]
 }
 
 // Represents an argument node, which requires to type the argument's value.
@@ -50,9 +50,7 @@ export type ArgumentNode = {
 // Represents a literal node, which requires to type the argument's value.
 export type LiteralArgumentNode = {
   type: 'literalArgument'
-} & AnyNode & (
-  ParserProperties | CompoundParserProperties
-)
+} & ParserProperties & AnyNode
 
 
 // Represents a command or sub-command node, which can be either a literal or an argument node.

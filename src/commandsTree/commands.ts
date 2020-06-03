@@ -8,28 +8,46 @@ export default ({
       children: {
         grant: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
           children: {
             everything: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             from: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'advancement',
-              parsersId: 1
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'advancement'
+              ],
+              parsersId: 2
             },
             only: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:resource_location',
+                'brigadier:string'
+              ],
+              executables: [
                 true,
                 true
               ],
@@ -43,57 +61,82 @@ export default ({
                 'advancement',
                 'criterion'
               ],
-              parsers: [
-                'minecraft:resource_location',
-                'brigadier:string'
-              ],
-              parsersId: 2
+              parsersId: 3
             },
             through: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'advancement',
-              parsersId: 1
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'advancement'
+              ],
+              parsersId: 2
             },
             until: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'advancement',
-              parsersId: 1
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'advancement'
+              ],
+              parsersId: 2
             }
           },
-          executable: false,
-          arguments: 'targets',
+          arguments: [
+            'targets'
+          ],
           parsersId: 0
         },
         revoke: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
           children: {
             everything: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             from: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'advancement',
-              parsersId: 1
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'advancement'
+              ],
+              parsersId: 2
             },
             only: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:resource_location',
+                'brigadier:string'
+              ],
+              executables: [
                 true,
                 true
               ],
@@ -107,48 +150,58 @@ export default ({
                 'advancement',
                 'criterion'
               ],
-              parsers: [
-                'minecraft:resource_location',
-                'brigadier:string'
-              ],
-              parsersId: 2
+              parsersId: 3
             },
             through: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'advancement',
-              parsersId: 1
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'advancement'
+              ],
+              parsersId: 2
             },
             until: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'advancement',
-              parsersId: 1
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'advancement'
+              ],
+              parsersId: 2
             }
           },
-          executable: false,
-          arguments: 'targets',
+          arguments: [
+            'targets'
+          ],
           parsersId: 0
         }
       }
     },
     attribute: {
       type: 'literalArgument',
-      parser: 'compound',
+      parsers: [
+        'minecraft:entity',
+        'minecraft:resource_location'
+      ],
+      executables: [
+        false,
+        false
+      ],
       properties: [
         {
           amount: 'single',
           type: 'entities'
         },
         undefined
-      ],
-      executable: [
-        false,
-        false
       ],
       arguments: [
         'target',
@@ -160,40 +213,63 @@ export default ({
           children: {
             get: {
               type: 'literalArgument',
-              executable: true,
-              parser: 'brigadier:double',
-              properties: undefined,
-              arguments: 'scale',
-              parsersId: 4
+              parsers: [
+                'brigadier:double'
+              ],
+              executables: [
+                true,
+                true
+              ],
+              arguments: [
+                'scale'
+              ],
+              parsersId: 5
             },
             set: {
               type: 'literalArgument',
-              parser: 'brigadier:double',
-              executable: true,
-              properties: undefined,
-              arguments: 'value',
-              parsersId: 5
+              parsers: [
+                'brigadier:double'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'value'
+              ],
+              parsersId: 6
             }
           }
         },
         get: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:double',
-          properties: undefined,
-          arguments: 'scale',
-          parsersId: 4
+          parsers: [
+            'brigadier:double'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'scale'
+          ],
+          parsersId: 5
         },
         modifier: {
           type: 'literal',
           children: {
             add: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:uuid',
+                'brigadier:string',
+                'brigadier:double',
+                'sandstone:literals'
+              ],
+              executables: [
                 false,
                 false,
-                false
+                false,
+                true
               ],
               properties: [
                 undefined,
@@ -205,316 +281,259 @@ export default ({
               arguments: [
                 'uuid',
                 'name',
-                'value'
+                'value',
+                'option'
               ],
-              children: {
-                add: {
-                  type: 'literal',
-                  executable: true
-                },
-                multiply: {
-                  type: 'literal',
-                  executable: true
-                },
-                multiply_base: {
-                  type: 'literal',
-                  executable: true
-                }
-              },
-              parsers: [
-                'minecraft:uuid',
-                'brigadier:string',
-                'brigadier:double'
-              ],
-              parsersId: 6
+              parsersId: 7
             },
             remove: {
               type: 'literalArgument',
-              parser: 'minecraft:uuid',
-              executable: true,
-              properties: undefined,
-              arguments: 'uuid',
-              parsersId: 7
+              parsers: [
+                'minecraft:uuid'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'uuid'
+              ],
+              parsersId: 8
             },
             value: {
               type: 'literalArgument',
-              executable: [
-                false,
+              parsers: [
+                'minecraft:uuid',
+                'brigadier:double'
+              ],
+              executables: [
                 true,
                 true
               ],
-              properties: [
-                undefined,
-                undefined,
-                undefined
-              ],
-              parser: 'compound',
               arguments: [
                 'get',
                 'uuid',
                 'scale'
               ],
-              parsers: [
-                undefined,
-                'minecraft:uuid',
-                'brigadier:double'
-              ],
-              parsersId: 8
+              parsersId: 9
             }
           }
         }
       },
-      parsers: [
-        'minecraft:entity',
-        'minecraft:resource_location'
-      ],
-      parsersId: 3
-    },
-    ban: {
-      type: 'literalArgument',
-      parser: 'compound',
-      executable: [
-        true,
-        true
-      ],
-      properties: [
-        undefined,
-        undefined
-      ],
-      arguments: [
-        'targets',
-        'reason'
-      ],
-      parsers: [
-        'minecraft:game_profile',
-        'minecraft:message'
-      ],
-      parsersId: 9
-    },
-    'ban-ip': {
-      type: 'literalArgument',
-      parser: 'compound',
-      properties: [
-        {
-          type: 'word'
-        },
-        undefined
-      ],
-      executable: [
-        true,
-        true
-      ],
-      arguments: [
-        'target',
-        'reason'
-      ],
-      parsers: [
-        'brigadier:string',
-        'minecraft:message'
-      ],
-      parsersId: 10
-    },
-    banlist: {
-      type: 'literal',
-      children: {
-        ips: {
-          type: 'literal',
-          executable: true
-        },
-        players: {
-          type: 'literal',
-          executable: true
-        }
-      },
-      executable: true
+      parsersId: 4
     },
     bossbar: {
       type: 'literal',
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'compound',
-          executable: [
+          parsers: [
+            'minecraft:resource_location',
+            'minecraft:component'
+          ],
+          executables: [
             false,
             true
-          ],
-          properties: [
-            undefined,
-            undefined
           ],
           arguments: [
             'id',
             'name'
           ],
-          parsers: [
-            'minecraft:resource_location',
-            'minecraft:component'
-          ],
-          parsersId: 11
+          parsersId: 10
         },
         get: {
           type: 'literalArgument',
-          parser: 'minecraft:resource_location',
-          children: {
-            max: {
-              type: 'literal',
-              executable: true
-            },
-            players: {
-              type: 'literal',
-              executable: true
-            },
-            value: {
-              type: 'literal',
-              executable: true
-            },
-            visible: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          executable: false,
-          properties: undefined,
-          arguments: 'id',
-          parsersId: 12
+          parsers: [
+            'minecraft:resource_location',
+            'sandstone:literals'
+          ],
+          executables: [
+            false,
+            true
+          ],
+          arguments: [
+            'id',
+            'option'
+          ],
+          parsersId: 11
         },
         list: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         remove: {
           type: 'literalArgument',
-          parser: 'minecraft:resource_location',
-          executable: true,
-          properties: undefined,
-          arguments: 'id',
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'id'
+          ],
           parsersId: 12
         },
         set: {
           type: 'literalArgument',
-          parser: 'minecraft:resource_location',
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            false
+          ],
           children: {
             color: {
-              type: 'literal',
-              children: {
-                blue: {
-                  type: 'literal',
-                  executable: true
-                },
-                green: {
-                  type: 'literal',
-                  executable: true
-                },
-                pink: {
-                  type: 'literal',
-                  executable: true
-                },
-                purple: {
-                  type: 'literal',
-                  executable: true
-                },
-                red: {
-                  type: 'literal',
-                  executable: true
-                },
-                white: {
-                  type: 'literal',
-                  executable: true
-                },
-                yellow: {
-                  type: 'literal',
-                  executable: true
-                }
-              }
+              type: 'literalArgument',
+              parsers: [
+                'sandstone:literals'
+              ],
+              executables: [
+                true
+              ],
+              literalValues: [
+                [
+                  'blue',
+                  'green',
+                  'pink',
+                  'purple',
+                  'red',
+                  'white',
+                  'yellow'
+                ]
+              ],
+              arguments: [
+                'option'
+              ],
+              parsersId: 13
             },
             max: {
               type: 'literalArgument',
-              parser: 'brigadier:integer',
-              properties: {
-                min: 1
-              },
-              executable: true,
-              arguments: 'max',
-              parsersId: 13
+              parsers: [
+                'brigadier:integer'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  min: 1
+                }
+              ],
+              arguments: [
+                'max'
+              ],
+              parsersId: 14
             },
             name: {
               type: 'literalArgument',
-              parser: 'minecraft:component',
-              executable: true,
-              properties: undefined,
-              arguments: 'name',
-              parsersId: 14
+              parsers: [
+                'minecraft:component'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'name'
+              ],
+              parsersId: 15
             },
             players: {
               type: 'literalArgument',
-              executable: true,
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'multiple',
-                type: 'players'
-              },
-              arguments: 'targets',
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                true,
+                true
+              ],
+              properties: [
+                {
+                  amount: 'multiple',
+                  type: 'players'
+                }
+              ],
+              arguments: [
+                'targets'
+              ],
               parsersId: 0
             },
             style: {
-              type: 'literal',
-              children: {
-                notched_10: {
-                  type: 'literal',
-                  executable: true
-                },
-                notched_12: {
-                  type: 'literal',
-                  executable: true
-                },
-                notched_20: {
-                  type: 'literal',
-                  executable: true
-                },
-                notched_6: {
-                  type: 'literal',
-                  executable: true
-                },
-                progress: {
-                  type: 'literal',
-                  executable: true
-                }
-              }
+              type: 'literalArgument',
+              parsers: [
+                'sandstone:literals'
+              ],
+              executables: [
+                true
+              ],
+              literalValues: [
+                [
+                  'notched_10',
+                  'notched_12',
+                  'notched_20',
+                  'notched_6',
+                  'progress'
+                ]
+              ],
+              arguments: [
+                'option'
+              ],
+              parsersId: 16
             },
             value: {
               type: 'literalArgument',
-              parser: 'brigadier:integer',
-              properties: {
-                min: 0
-              },
-              executable: true,
-              arguments: 'value',
-              parsersId: 15
+              parsers: [
+                'brigadier:integer'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  min: 0
+                }
+              ],
+              arguments: [
+                'value'
+              ],
+              parsersId: 17
             },
             visible: {
               type: 'literalArgument',
-              parser: 'brigadier:bool',
-              executable: true,
-              properties: undefined,
-              arguments: 'visible',
-              parsersId: 16
+              parsers: [
+                'brigadier:bool'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'visible'
+              ],
+              parsersId: 18
             }
           },
-          executable: false,
-          properties: undefined,
-          arguments: 'id',
+          arguments: [
+            'id'
+          ],
           parsersId: 12
         }
       }
     },
     clear: {
       type: 'literalArgument',
-      executable: [
+      parsers: [
+        'minecraft:entity',
+        'minecraft:item_predicate',
+        'brigadier:integer'
+      ],
+      executables: [
+        true,
         true,
         true,
         true
       ],
-      parser: 'compound',
       properties: [
         {
           amount: 'multiple',
@@ -530,25 +549,19 @@ export default ({
         'item',
         'maxCount'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:item_predicate',
-        'brigadier:integer'
-      ],
-      parsersId: 17
+      parsersId: 19
     },
     clone: {
       type: 'literalArgument',
-      parser: 'compound',
-      executable: [
+      parsers: [
+        'minecraft:block_pos',
+        'minecraft:block_pos',
+        'minecraft:block_pos'
+      ],
+      executables: [
         false,
         false,
         true
-      ],
-      properties: [
-        undefined,
-        undefined,
-        undefined
       ],
       arguments: [
         'begin',
@@ -558,69 +571,64 @@ export default ({
       children: {
         filtered: {
           type: 'literalArgument',
-          parser: 'minecraft:block_predicate',
-          children: {
-            force: {
-              type: 'literal',
-              executable: true
-            },
-            move: {
-              type: 'literal',
-              executable: true
-            },
-            normal: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          executable: true,
-          properties: undefined,
-          arguments: 'filter',
-          parsersId: 19
+          parsers: [
+            'minecraft:block_predicate',
+            'sandstone:literals'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'filter',
+            'option'
+          ],
+          parsersId: 21
         },
         masked: {
-          type: 'literal',
-          children: {
-            force: {
-              type: 'literal',
-              executable: true
-            },
-            move: {
-              type: 'literal',
-              executable: true
-            },
-            normal: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          executable: true
+          type: 'literalArgument',
+          parsers: [
+            'sandstone:literals'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          literalValues: [
+            [
+              'force',
+              'move',
+              'normal'
+            ]
+          ],
+          arguments: [
+            'option'
+          ],
+          parsersId: 22
         },
         replace: {
-          type: 'literal',
-          children: {
-            force: {
-              type: 'literal',
-              executable: true
-            },
-            move: {
-              type: 'literal',
-              executable: true
-            },
-            normal: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          executable: true
+          type: 'literalArgument',
+          parsers: [
+            'sandstone:literals'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          literalValues: [
+            [
+              'force',
+              'move',
+              'normal'
+            ]
+          ],
+          arguments: [
+            'option'
+          ],
+          parsersId: 22
         }
       },
-      parsers: [
-        'minecraft:block_pos',
-        'minecraft:block_pos',
-        'minecraft:block_pos'
-      ],
-      parsersId: 18
+      parsersId: 20
     },
     data: {
       type: 'literal',
@@ -630,32 +638,35 @@ export default ({
           children: {
             block: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:nbt_path',
+                'brigadier:double'
+              ],
+              executables: [
                 true,
                 true,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined,
-                undefined
               ],
               arguments: [
                 'targetPos',
                 'path',
                 'scale'
               ],
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:nbt_path',
-                'brigadier:double'
-              ],
-              parsersId: 20
+              parsersId: 23
             },
             entity: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:entity',
+                'minecraft:nbt_path',
+                'brigadier:double'
+              ],
+              executables: [
+                true,
+                true,
+                true
+              ],
               properties: [
                 {
                   amount: 'single',
@@ -664,47 +675,31 @@ export default ({
                 undefined,
                 undefined
               ],
-              executable: [
-                true,
-                true,
-                true
-              ],
               arguments: [
                 'target',
                 'path',
                 'scale'
               ],
-              parsers: [
-                'minecraft:entity',
-                'minecraft:nbt_path',
-                'brigadier:double'
-              ],
-              parsersId: 21
+              parsersId: 24
             },
             storage: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
-                true,
-                true,
-                true
-              ],
-              properties: [
-                undefined,
-                undefined,
-                undefined
-              ],
-              arguments: [
-                'target',
-                'path',
-                'scale'
-              ],
               parsers: [
                 'minecraft:resource_location',
                 'minecraft:nbt_path',
                 'brigadier:double'
               ],
-              parsersId: 22
+              executables: [
+                true,
+                true,
+                true
+              ],
+              arguments: [
+                'target',
+                'path',
+                'scale'
+              ],
+              parsersId: 25
             }
           }
         },
@@ -713,28 +708,30 @@ export default ({
           children: {
             block: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:nbt_compound_tag'
+              ],
+              executables: [
                 false,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'targetPos',
                 'nbt'
               ],
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:nbt_compound_tag'
-              ],
-              parsersId: 23
+              parsersId: 26
             },
             entity: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:entity',
+                'minecraft:nbt_compound_tag'
+              ],
+              executables: [
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'single',
@@ -742,40 +739,27 @@ export default ({
                 },
                 undefined
               ],
-              executable: [
-                false,
-                true
-              ],
               arguments: [
                 'target',
                 'nbt'
               ],
-              parsers: [
-                'minecraft:entity',
-                'minecraft:nbt_compound_tag'
-              ],
-              parsersId: 24
+              parsersId: 27
             },
             storage: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
-                false,
-                true
-              ],
-              properties: [
-                undefined,
-                undefined
-              ],
-              arguments: [
-                'target',
-                'nbt'
-              ],
               parsers: [
                 'minecraft:resource_location',
                 'minecraft:nbt_compound_tag'
               ],
-              parsersId: 25
+              executables: [
+                false,
+                true
+              ],
+              arguments: [
+                'target',
+                'nbt'
+              ],
+              parsersId: 28
             }
           }
         },
@@ -784,14 +768,13 @@ export default ({
           children: {
             block: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:nbt_path'
+              ],
+              executables: [
                 false,
                 false
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'targetPos',
@@ -806,28 +789,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -835,84 +820,83 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 },
                 insert: {
                   type: 'literalArgument',
-                  parser: 'brigadier:integer',
+                  parsers: [
+                    'brigadier:integer'
+                  ],
+                  executables: [
+                    false
+                  ],
                   children: {
                     from: {
                       type: 'literal',
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -920,56 +904,48 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   },
-                  executable: false,
-                  properties: undefined,
-                  arguments: 'index',
-                  parsersId: 31
+                  arguments: [
+                    'index'
+                  ],
+                  parsersId: 34
                 },
                 merge: {
                   type: 'literal',
@@ -979,28 +955,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1008,50 +986,42 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 },
@@ -1063,28 +1033,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1092,50 +1064,42 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 },
@@ -1147,28 +1111,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1176,63 +1142,58 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 }
               },
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:nbt_path'
-              ],
-              parsersId: 26
+              parsersId: 29
             },
             entity: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:entity',
+                'minecraft:nbt_path'
+              ],
+              executables: [
+                false,
+                false
+              ],
               properties: [
                 {
                   amount: 'single',
@@ -1240,10 +1201,6 @@ export default ({
                 },
                 undefined
               ],
-              executable: [
-                false,
-                false
-              ],
               arguments: [
                 'target',
                 'targetPath'
@@ -1257,28 +1214,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1286,84 +1245,83 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 },
                 insert: {
                   type: 'literalArgument',
-                  parser: 'brigadier:integer',
+                  parsers: [
+                    'brigadier:integer'
+                  ],
+                  executables: [
+                    false
+                  ],
                   children: {
                     from: {
                       type: 'literal',
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1371,56 +1329,48 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   },
-                  executable: false,
-                  properties: undefined,
-                  arguments: 'index',
-                  parsersId: 31
+                  arguments: [
+                    'index'
+                  ],
+                  parsersId: 34
                 },
                 merge: {
                   type: 'literal',
@@ -1430,28 +1380,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1459,50 +1411,42 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 },
@@ -1514,28 +1458,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1543,50 +1489,42 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 },
@@ -1598,28 +1536,30 @@ export default ({
                       children: {
                         block: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
                             true,
                             true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
                           ],
                           arguments: [
                             'sourcePos',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
+                          parsersId: 30
                         },
                         entity: {
                           type: 'literalArgument',
-                          parser: 'compound',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
                           properties: [
                             {
                               amount: 'single',
@@ -1627,507 +1567,465 @@ export default ({
                             },
                             undefined
                           ],
-                          executable: [
-                            true,
-                            true
-                          ],
                           arguments: [
                             'source',
                             'sourcePath'
                           ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
+                          parsersId: 31
                         },
                         storage: {
                           type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
                           parsers: [
                             'minecraft:resource_location',
                             'minecraft:nbt_path'
                           ],
-                          parsersId: 29
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
                         }
                       }
                     },
                     value: {
                       type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
                     }
                   }
                 }
               },
-              parsers: [
-                'minecraft:entity',
-                'minecraft:nbt_path'
-              ],
-              parsersId: 32
+              parsersId: 35
             },
             storage: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
-                false,
-                false
-              ],
-              properties: [
-                undefined,
-                undefined
-              ],
-              arguments: [
-                'target',
-                'targetPath'
-              ],
-              children: {
-                append: {
-                  type: 'literal',
-                  children: {
-                    from: {
-                      type: 'literal',
-                      children: {
-                        block: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'sourcePos',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
-                        },
-                        entity: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          properties: [
-                            {
-                              amount: 'single',
-                              type: 'entities'
-                            },
-                            undefined
-                          ],
-                          executable: [
-                            true,
-                            true
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
-                        },
-                        storage: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:resource_location',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 29
-                        }
-                      }
-                    },
-                    value: {
-                      type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
-                    }
-                  }
-                },
-                insert: {
-                  type: 'literalArgument',
-                  parser: 'brigadier:integer',
-                  children: {
-                    from: {
-                      type: 'literal',
-                      children: {
-                        block: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'sourcePos',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
-                        },
-                        entity: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          properties: [
-                            {
-                              amount: 'single',
-                              type: 'entities'
-                            },
-                            undefined
-                          ],
-                          executable: [
-                            true,
-                            true
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
-                        },
-                        storage: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:resource_location',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 29
-                        }
-                      }
-                    },
-                    value: {
-                      type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
-                    }
-                  },
-                  executable: false,
-                  properties: undefined,
-                  arguments: 'index',
-                  parsersId: 31
-                },
-                merge: {
-                  type: 'literal',
-                  children: {
-                    from: {
-                      type: 'literal',
-                      children: {
-                        block: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'sourcePos',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
-                        },
-                        entity: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          properties: [
-                            {
-                              amount: 'single',
-                              type: 'entities'
-                            },
-                            undefined
-                          ],
-                          executable: [
-                            true,
-                            true
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
-                        },
-                        storage: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:resource_location',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 29
-                        }
-                      }
-                    },
-                    value: {
-                      type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
-                    }
-                  }
-                },
-                prepend: {
-                  type: 'literal',
-                  children: {
-                    from: {
-                      type: 'literal',
-                      children: {
-                        block: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'sourcePos',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
-                        },
-                        entity: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          properties: [
-                            {
-                              amount: 'single',
-                              type: 'entities'
-                            },
-                            undefined
-                          ],
-                          executable: [
-                            true,
-                            true
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
-                        },
-                        storage: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:resource_location',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 29
-                        }
-                      }
-                    },
-                    value: {
-                      type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
-                    }
-                  }
-                },
-                set: {
-                  type: 'literal',
-                  children: {
-                    from: {
-                      type: 'literal',
-                      children: {
-                        block: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'sourcePos',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:block_pos',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 27
-                        },
-                        entity: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          properties: [
-                            {
-                              amount: 'single',
-                              type: 'entities'
-                            },
-                            undefined
-                          ],
-                          executable: [
-                            true,
-                            true
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:entity',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 28
-                        },
-                        storage: {
-                          type: 'literalArgument',
-                          parser: 'compound',
-                          executable: [
-                            true,
-                            true
-                          ],
-                          properties: [
-                            undefined,
-                            undefined
-                          ],
-                          arguments: [
-                            'source',
-                            'sourcePath'
-                          ],
-                          parsers: [
-                            'minecraft:resource_location',
-                            'minecraft:nbt_path'
-                          ],
-                          parsersId: 29
-                        }
-                      }
-                    },
-                    value: {
-                      type: 'literalArgument',
-                      parser: 'minecraft:nbt_tag',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'value',
-                      parsersId: 30
-                    }
-                  }
-                }
-              },
               parsers: [
                 'minecraft:resource_location',
                 'minecraft:nbt_path'
               ],
-              parsersId: 33
+              executables: [
+                false,
+                false
+              ],
+              arguments: [
+                'target',
+                'targetPath'
+              ],
+              children: {
+                append: {
+                  type: 'literal',
+                  children: {
+                    from: {
+                      type: 'literal',
+                      children: {
+                        block: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'sourcePos',
+                            'sourcePath'
+                          ],
+                          parsersId: 30
+                        },
+                        entity: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          properties: [
+                            {
+                              amount: 'single',
+                              type: 'entities'
+                            },
+                            undefined
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 31
+                        },
+                        storage: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:resource_location',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
+                        }
+                      }
+                    },
+                    value: {
+                      type: 'literalArgument',
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
+                    }
+                  }
+                },
+                insert: {
+                  type: 'literalArgument',
+                  parsers: [
+                    'brigadier:integer'
+                  ],
+                  executables: [
+                    false
+                  ],
+                  children: {
+                    from: {
+                      type: 'literal',
+                      children: {
+                        block: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'sourcePos',
+                            'sourcePath'
+                          ],
+                          parsersId: 30
+                        },
+                        entity: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          properties: [
+                            {
+                              amount: 'single',
+                              type: 'entities'
+                            },
+                            undefined
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 31
+                        },
+                        storage: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:resource_location',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
+                        }
+                      }
+                    },
+                    value: {
+                      type: 'literalArgument',
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
+                    }
+                  },
+                  arguments: [
+                    'index'
+                  ],
+                  parsersId: 34
+                },
+                merge: {
+                  type: 'literal',
+                  children: {
+                    from: {
+                      type: 'literal',
+                      children: {
+                        block: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'sourcePos',
+                            'sourcePath'
+                          ],
+                          parsersId: 30
+                        },
+                        entity: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          properties: [
+                            {
+                              amount: 'single',
+                              type: 'entities'
+                            },
+                            undefined
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 31
+                        },
+                        storage: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:resource_location',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
+                        }
+                      }
+                    },
+                    value: {
+                      type: 'literalArgument',
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
+                    }
+                  }
+                },
+                prepend: {
+                  type: 'literal',
+                  children: {
+                    from: {
+                      type: 'literal',
+                      children: {
+                        block: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'sourcePos',
+                            'sourcePath'
+                          ],
+                          parsersId: 30
+                        },
+                        entity: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          properties: [
+                            {
+                              amount: 'single',
+                              type: 'entities'
+                            },
+                            undefined
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 31
+                        },
+                        storage: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:resource_location',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
+                        }
+                      }
+                    },
+                    value: {
+                      type: 'literalArgument',
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
+                    }
+                  }
+                },
+                set: {
+                  type: 'literal',
+                  children: {
+                    from: {
+                      type: 'literal',
+                      children: {
+                        block: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:block_pos',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'sourcePos',
+                            'sourcePath'
+                          ],
+                          parsersId: 30
+                        },
+                        entity: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:entity',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          properties: [
+                            {
+                              amount: 'single',
+                              type: 'entities'
+                            },
+                            undefined
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 31
+                        },
+                        storage: {
+                          type: 'literalArgument',
+                          parsers: [
+                            'minecraft:resource_location',
+                            'minecraft:nbt_path'
+                          ],
+                          executables: [
+                            true,
+                            true
+                          ],
+                          arguments: [
+                            'source',
+                            'sourcePath'
+                          ],
+                          parsersId: 32
+                        }
+                      }
+                    },
+                    value: {
+                      type: 'literalArgument',
+                      parsers: [
+                        'minecraft:nbt_tag'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'value'
+                      ],
+                      parsersId: 33
+                    }
+                  }
+                }
+              },
+              parsersId: 36
             }
           }
         },
@@ -2136,28 +2034,30 @@ export default ({
           children: {
             block: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:nbt_path'
+              ],
+              executables: [
                 false,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'targetPos',
                 'path'
               ],
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:nbt_path'
-              ],
-              parsersId: 34
+              parsersId: 37
             },
             entity: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:entity',
+                'minecraft:nbt_path'
+              ],
+              executables: [
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'single',
@@ -2165,40 +2065,27 @@ export default ({
                 },
                 undefined
               ],
-              executable: [
-                false,
-                true
-              ],
               arguments: [
                 'target',
                 'path'
               ],
-              parsers: [
-                'minecraft:entity',
-                'minecraft:nbt_path'
-              ],
-              parsersId: 35
+              parsersId: 38
             },
             storage: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
-                false,
-                true
-              ],
-              properties: [
-                undefined,
-                undefined
-              ],
-              arguments: [
-                'target',
-                'path'
-              ],
               parsers: [
                 'minecraft:resource_location',
                 'minecraft:nbt_path'
               ],
-              parsersId: 36
+              executables: [
+                false,
+                true
+              ],
+              arguments: [
+                'target',
+                'path'
+              ],
+              parsersId: 39
             }
           }
         }
@@ -2209,148 +2096,171 @@ export default ({
       children: {
         disable: {
           type: 'literalArgument',
-          parser: 'brigadier:string',
-          properties: {
-            type: 'phrase'
-          },
-          executable: true,
-          arguments: 'name',
-          parsersId: 37
+          parsers: [
+            'brigadier:string'
+          ],
+          executables: [
+            true
+          ],
+          properties: [
+            {
+              type: 'phrase'
+            }
+          ],
+          arguments: [
+            'name'
+          ],
+          parsersId: 40
         },
         enable: {
           type: 'literalArgument',
-          parser: 'brigadier:string',
-          properties: {
-            type: 'phrase'
-          },
+          parsers: [
+            'brigadier:string'
+          ],
+          executables: [
+            true
+          ],
+          properties: [
+            {
+              type: 'phrase'
+            }
+          ],
           children: {
             after: {
               type: 'literalArgument',
-              parser: 'brigadier:string',
-              properties: {
-                type: 'phrase'
-              },
-              executable: true,
-              arguments: 'existing',
-              parsersId: 38
+              parsers: [
+                'brigadier:string'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  type: 'phrase'
+                }
+              ],
+              arguments: [
+                'existing'
+              ],
+              parsersId: 41
             },
             before: {
               type: 'literalArgument',
-              parser: 'brigadier:string',
-              properties: {
-                type: 'phrase'
-              },
-              executable: true,
-              arguments: 'existing',
-              parsersId: 38
+              parsers: [
+                'brigadier:string'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  type: 'phrase'
+                }
+              ],
+              arguments: [
+                'existing'
+              ],
+              parsersId: 41
             },
             first: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             last: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             }
           },
-          executable: true,
-          arguments: 'name',
-          parsersId: 37
+          arguments: [
+            'name'
+          ],
+          parsersId: 40
         },
         list: {
-          type: 'literal',
-          children: {
-            available: {
-              type: 'literal',
-              executable: true
-            },
-            enabled: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          executable: true
-        }
-      }
-    },
-    debug: {
-      type: 'literal',
-      children: {
-        report: {
-          type: 'literal',
-          executable: true
-        },
-        start: {
-          type: 'literal',
-          executable: true
-        },
-        stop: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [
+            'sandstone:literals'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          literalValues: [
+            [
+              'available',
+              'enabled'
+            ]
+          ],
+          arguments: [
+            'option'
+          ],
+          parsersId: 42
         }
       }
     },
     defaultgamemode: {
-      type: 'literal',
-      children: {
-        adventure: {
-          type: 'literal',
-          executable: true
-        },
-        creative: {
-          type: 'literal',
-          executable: true
-        },
-        spectator: {
-          type: 'literal',
-          executable: true
-        },
-        survival: {
-          type: 'literal',
-          executable: true
-        }
-      }
-    },
-    deop: {
       type: 'literalArgument',
-      parser: 'minecraft:game_profile',
-      executable: true,
-      properties: undefined,
-      arguments: 'targets',
-      parsersId: 39
+      parsers: [
+        'sandstone:literals'
+      ],
+      executables: [
+        true
+      ],
+      literalValues: [
+        [
+          'adventure',
+          'creative',
+          'spectator',
+          'survival'
+        ]
+      ],
+      arguments: [
+        'option'
+      ],
+      parsersId: 43
     },
     difficulty: {
-      type: 'literal',
-      children: {
-        easy: {
-          type: 'literal',
-          executable: true
-        },
-        hard: {
-          type: 'literal',
-          executable: true
-        },
-        normal: {
-          type: 'literal',
-          executable: true
-        },
-        peaceful: {
-          type: 'literal',
-          executable: true
-        }
-      },
-      executable: true
+      type: 'literalArgument',
+      parsers: [
+        'sandstone:literals'
+      ],
+      executables: [
+        true,
+        true
+      ],
+      literalValues: [
+        [
+          'easy',
+          'hard',
+          'normal',
+          'peaceful'
+        ]
+      ],
+      arguments: [
+        'option'
+      ],
+      parsersId: 44
     },
     effect: {
       type: 'literal',
       children: {
         clear: {
           type: 'literalArgument',
-          executable: [
+          parsers: [
+            'minecraft:entity',
+            'minecraft:mob_effect'
+          ],
+          executables: [
+            true,
             true,
             true
           ],
-          parser: 'compound',
           properties: [
             {
               amount: 'multiple',
@@ -2362,15 +2272,24 @@ export default ({
             'targets',
             'effect'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:mob_effect'
-          ],
-          parsersId: 40
+          parsersId: 45
         },
         give: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:mob_effect',
+            'brigadier:integer',
+            'brigadier:integer',
+            'brigadier:bool'
+          ],
+          executables: [
+            false,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -2387,13 +2306,6 @@ export default ({
             },
             undefined
           ],
-          executable: [
-            false,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'effect',
@@ -2401,20 +2313,22 @@ export default ({
             'amplifier',
             'hideParticles'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:mob_effect',
-            'brigadier:integer',
-            'brigadier:integer',
-            'brigadier:bool'
-          ],
-          parsersId: 41
+          parsersId: 46
         }
       }
     },
     enchant: {
       type: 'literalArgument',
-      parser: 'compound',
+      parsers: [
+        'minecraft:entity',
+        'minecraft:item_enchantment',
+        'brigadier:integer'
+      ],
+      executables: [
+        false,
+        true,
+        true
+      ],
       properties: [
         {
           amount: 'multiple',
@@ -2425,78 +2339,94 @@ export default ({
           min: 0
         }
       ],
-      executable: [
-        false,
-        true,
-        true
-      ],
       arguments: [
         'targets',
         'enchantment',
         'level'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:item_enchantment',
-        'brigadier:integer'
-      ],
-      parsersId: 42
+      parsersId: 47
     },
     execute: {
       type: 'literal',
       children: {
         align: {
           type: 'literalArgument',
-          parser: 'minecraft:swizzle',
+          parsers: [
+            'minecraft:swizzle'
+          ],
+          executables: [
+            false
+          ],
           redirect: [
             'execute',
             'root'
           ],
-          executable: false,
-          properties: undefined,
-          arguments: 'axes',
-          parsersId: 43
+          arguments: [
+            'axes'
+          ],
+          parsersId: 48
         },
         anchored: {
           type: 'literalArgument',
-          parser: 'minecraft:entity_anchor',
+          parsers: [
+            'minecraft:entity_anchor'
+          ],
+          executables: [
+            false
+          ],
           redirect: [
             'execute',
             'root'
           ],
-          executable: false,
-          properties: undefined,
-          arguments: 'anchor',
-          parsersId: 44
+          arguments: [
+            'anchor'
+          ],
+          parsersId: 49
         },
         as: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'entities'
-          },
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'entities'
+            }
+          ],
           redirect: [
             'execute',
             'root'
           ],
-          executable: false,
-          arguments: 'targets',
+          arguments: [
+            'targets'
+          ],
           parsersId: 0
         },
         at: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'entities'
-          },
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'entities'
+            }
+          ],
           redirect: [
             'execute',
             'root'
           ],
-          executable: false,
-          arguments: 'targets',
+          arguments: [
+            'targets'
+          ],
           parsersId: 0
         },
         facing: {
@@ -2504,17 +2434,20 @@ export default ({
           children: {
             entity: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:entity',
+                'minecraft:entity_anchor'
+              ],
+              executables: [
+                false,
+                false
+              ],
               properties: [
                 {
                   amount: 'multiple',
                   type: 'entities'
                 },
                 undefined
-              ],
-              executable: [
-                false,
-                false
               ],
               arguments: [
                 'targets',
@@ -2524,20 +2457,21 @@ export default ({
                 'execute',
                 'root'
               ],
-              parsers: [
-                'minecraft:entity',
-                'minecraft:entity_anchor'
-              ],
-              parsersId: 45
+              parsersId: 50
             },
             pos: {
               type: 'argument',
-              parser: 'minecraft:vec3',
               redirect: [
                 'execute',
                 'root'
               ],
-              parsersId: 46
+              parsers: [
+                'minecraft:vec3'
+              ],
+              executables: [
+                false
+              ],
+              parsersId: 51
             }
           }
         },
@@ -2546,14 +2480,13 @@ export default ({
           children: {
             block: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:block_predicate'
+              ],
+              executables: [
                 false,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'pos',
@@ -2563,68 +2496,46 @@ export default ({
                 'execute',
                 'root'
               ],
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:block_predicate'
-              ],
-              parsersId: 47
+              parsersId: 52
             },
             blocks: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
-                false,
-                false,
-                false
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:block_pos',
+                'minecraft:block_pos',
+                'sandstone:literals'
               ],
-              properties: [
-                undefined,
-                undefined,
-                undefined
+              executables: [
+                false,
+                false,
+                false,
+                true
               ],
               arguments: [
                 'start',
                 'end',
-                'destination'
+                'destination',
+                'option'
               ],
-              children: {
-                all: {
-                  type: 'literal',
-                  executable: true,
-                  redirect: [
-                    'execute',
-                    'root'
-                  ]
-                },
-                masked: {
-                  type: 'literal',
-                  executable: true,
-                  redirect: [
-                    'execute',
-                    'root'
-                  ]
-                }
-              },
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:block_pos',
-                'minecraft:block_pos'
+              redirect: [
+                'execute',
+                'root'
               ],
-              parsersId: 48
+              parsersId: 53
             },
             data: {
               type: 'literal',
               children: {
                 block: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:block_pos',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
                     false,
                     true
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'sourcePos',
@@ -2634,15 +2545,18 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:block_pos',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 49
+                  parsersId: 54
                 },
                 entity: {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:entity',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single',
@@ -2650,10 +2564,6 @@ export default ({
                     },
                     undefined
                   ],
-                  executable: [
-                    false,
-                    true
-                  ],
                   arguments: [
                     'source',
                     'path'
@@ -2662,78 +2572,85 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:entity',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 50
+                  parsersId: 55
                 },
                 storage: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
-                    false,
-                    true
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
-                  ],
-                  arguments: [
-                    'source',
-                    'path'
-                  ],
-                  redirect: [
-                    'execute',
-                    'root'
-                  ],
                   parsers: [
                     'minecraft:resource_location',
                     'minecraft:nbt_path'
                   ],
-                  parsersId: 51
+                  executables: [
+                    false,
+                    true
+                  ],
+                  arguments: [
+                    'source',
+                    'path'
+                  ],
+                  redirect: [
+                    'execute',
+                    'root'
+                  ],
+                  parsersId: 56
                 }
               }
             },
             entity: {
               type: 'literalArgument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'multiple',
-                type: 'entities'
-              },
-              executable: true,
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  amount: 'multiple',
+                  type: 'entities'
+                }
+              ],
               redirect: [
                 'execute',
                 'root'
               ],
-              arguments: 'entities',
-              parsersId: 52
+              arguments: [
+                'entities'
+              ],
+              parsersId: 57
             },
             predicate: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
               redirect: [
                 'execute',
                 'root'
               ],
-              properties: undefined,
-              arguments: 'predicate',
-              parsersId: 53
+              arguments: [
+                'predicate'
+              ],
+              parsersId: 58
             },
             score: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective'
+              ],
+              executables: [
+                false,
+                false
+              ],
               properties: [
                 {
                   amount: 'single'
                 },
                 undefined
-              ],
-              executable: [
-                false,
-                false
               ],
               arguments: [
                 'target',
@@ -2742,16 +2659,19 @@ export default ({
               children: {
                 '<': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -2761,24 +2681,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '<=': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -2788,24 +2707,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '=': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -2815,24 +2733,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '>': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -2842,24 +2759,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '>=': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -2869,71 +2785,86 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 matches: {
                   type: 'literalArgument',
-                  parser: 'minecraft:int_range',
-                  executable: true,
+                  parsers: [
+                    'minecraft:int_range'
+                  ],
+                  executables: [
+                    true
+                  ],
                   redirect: [
                     'execute',
                     'root'
                   ],
-                  properties: undefined,
-                  arguments: 'range',
-                  parsersId: 56
+                  arguments: [
+                    'range'
+                  ],
+                  parsersId: 61
                 }
               },
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective'
-              ],
-              parsersId: 54
+              parsersId: 59
             }
           }
         },
         in: {
           type: 'literalArgument',
-          parser: 'minecraft:dimension',
+          parsers: [
+            'minecraft:dimension'
+          ],
+          executables: [
+            false
+          ],
           redirect: [
             'execute',
             'root'
           ],
-          executable: false,
-          properties: undefined,
-          arguments: 'dimension',
-          parsersId: 57
+          arguments: [
+            'dimension'
+          ],
+          parsersId: 62
         },
         positioned: {
           type: 'literal',
           children: {
             as: {
               type: 'literalArgument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'multiple',
-                type: 'entities'
-              },
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                false
+              ],
+              properties: [
+                {
+                  amount: 'multiple',
+                  type: 'entities'
+                }
+              ],
               redirect: [
                 'execute',
                 'root'
               ],
-              executable: false,
-              arguments: 'targets',
+              arguments: [
+                'targets'
+              ],
               parsersId: 0
             },
             pos: {
               type: 'argument',
-              parser: 'minecraft:vec3',
               redirect: [
                 'execute',
                 'root'
               ],
-              parsersId: 46
+              parsers: [
+                'minecraft:vec3'
+              ],
+              executables: [
+                false
+              ],
+              parsersId: 51
             }
           }
         },
@@ -2942,27 +2873,40 @@ export default ({
           children: {
             as: {
               type: 'literalArgument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'multiple',
-                type: 'entities'
-              },
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                false
+              ],
+              properties: [
+                {
+                  amount: 'multiple',
+                  type: 'entities'
+                }
+              ],
               redirect: [
                 'execute',
                 'root'
               ],
-              executable: false,
-              arguments: 'targets',
+              arguments: [
+                'targets'
+              ],
               parsersId: 0
             },
             rot: {
               type: 'argument',
-              parser: 'minecraft:rotation',
               redirect: [
                 'execute',
                 'root'
               ],
-              parsersId: 58
+              parsers: [
+                'minecraft:rotation'
+              ],
+              executables: [
+                false
+              ],
+              parsersId: 63
             }
           }
         },
@@ -2974,14 +2918,13 @@ export default ({
               children: {
                 block: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:block_pos',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
                     false,
                     false
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'targetPos',
@@ -2990,120 +2933,145 @@ export default ({
                   children: {
                     byte: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     double: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     float: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     int: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     long: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     short: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     }
                   },
-                  parsers: [
-                    'minecraft:block_pos',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 34
+                  parsersId: 37
                 },
                 bossbar: {
                   type: 'literalArgument',
-                  parser: 'minecraft:resource_location',
-                  children: {
-                    max: {
-                      type: 'literal',
-                      redirect: [
-                        'execute',
-                        'root'
-                      ]
-                    },
-                    value: {
-                      type: 'literal',
-                      redirect: [
-                        'execute',
-                        'root'
-                      ]
-                    }
-                  },
-                  executable: false,
-                  properties: undefined,
-                  arguments: 'id',
-                  parsersId: 12
+                  parsers: [
+                    'minecraft:resource_location',
+                    'sandstone:literals'
+                  ],
+                  executables: [
+                    false,
+                    false
+                  ],
+                  arguments: [
+                    'id',
+                    'option'
+                  ],
+                  redirect: [
+                    'execute',
+                    'root'
+                  ],
+                  parsersId: 64
                 },
                 entity: {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:entity',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
+                    false,
+                    false
+                  ],
                   properties: [
                     {
                       amount: 'single',
                       type: 'entities'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    false
                   ],
                   arguments: [
                     'target',
@@ -3112,95 +3080,124 @@ export default ({
                   children: {
                     byte: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     double: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     float: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     int: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     long: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     short: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     }
                   },
-                  parsers: [
-                    'minecraft:entity',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 35
+                  parsersId: 38
                 },
                 score: {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    false
+                  ],
                   properties: [
                     {
                       amount: 'multiple'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    false
                   ],
                   arguments: [
                     'targets',
@@ -3210,22 +3207,17 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 59
+                  parsersId: 65
                 },
                 storage: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:resource_location',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
                     false,
                     false
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'target',
@@ -3234,82 +3226,108 @@ export default ({
                   children: {
                     byte: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     double: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     float: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     int: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     long: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     short: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     }
                   },
-                  parsers: [
-                    'minecraft:resource_location',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 36
+                  parsersId: 39
                 }
               }
             },
@@ -3318,14 +3336,13 @@ export default ({
               children: {
                 block: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:block_pos',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
                     false,
                     false
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'targetPos',
@@ -3334,120 +3351,145 @@ export default ({
                   children: {
                     byte: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     double: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     float: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     int: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     long: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     short: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     }
                   },
-                  parsers: [
-                    'minecraft:block_pos',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 34
+                  parsersId: 37
                 },
                 bossbar: {
                   type: 'literalArgument',
-                  parser: 'minecraft:resource_location',
-                  children: {
-                    max: {
-                      type: 'literal',
-                      redirect: [
-                        'execute',
-                        'root'
-                      ]
-                    },
-                    value: {
-                      type: 'literal',
-                      redirect: [
-                        'execute',
-                        'root'
-                      ]
-                    }
-                  },
-                  executable: false,
-                  properties: undefined,
-                  arguments: 'id',
-                  parsersId: 12
+                  parsers: [
+                    'minecraft:resource_location',
+                    'sandstone:literals'
+                  ],
+                  executables: [
+                    false,
+                    false
+                  ],
+                  arguments: [
+                    'id',
+                    'option'
+                  ],
+                  redirect: [
+                    'execute',
+                    'root'
+                  ],
+                  parsersId: 64
                 },
                 entity: {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:entity',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
+                    false,
+                    false
+                  ],
                   properties: [
                     {
                       amount: 'single',
                       type: 'entities'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    false
                   ],
                   arguments: [
                     'target',
@@ -3456,95 +3498,124 @@ export default ({
                   children: {
                     byte: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     double: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     float: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     int: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     long: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     short: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     }
                   },
-                  parsers: [
-                    'minecraft:entity',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 35
+                  parsersId: 38
                 },
                 score: {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    false
+                  ],
                   properties: [
                     {
                       amount: 'multiple'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    false
                   ],
                   arguments: [
                     'targets',
@@ -3554,22 +3625,17 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 59
+                  parsersId: 65
                 },
                 storage: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:resource_location',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
                     false,
                     false
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'target',
@@ -3578,82 +3644,108 @@ export default ({
                   children: {
                     byte: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     double: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     float: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     int: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     long: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     },
                     short: {
                       type: 'literalArgument',
-                      parser: 'brigadier:double',
+                      parsers: [
+                        'brigadier:double'
+                      ],
+                      executables: [
+                        false
+                      ],
                       redirect: [
                         'execute',
                         'root'
                       ],
-                      executable: false,
-                      properties: undefined,
-                      arguments: 'scale',
-                      parsersId: 4
+                      arguments: [
+                        'scale'
+                      ],
+                      parsersId: 5
                     }
                   },
-                  parsers: [
-                    'minecraft:resource_location',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 36
+                  parsersId: 39
                 }
               }
             }
@@ -3664,14 +3756,13 @@ export default ({
           children: {
             block: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:block_predicate'
+              ],
+              executables: [
                 false,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'pos',
@@ -3681,68 +3772,46 @@ export default ({
                 'execute',
                 'root'
               ],
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:block_predicate'
-              ],
-              parsersId: 47
+              parsersId: 52
             },
             blocks: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
-                false,
-                false,
-                false
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:block_pos',
+                'minecraft:block_pos',
+                'sandstone:literals'
               ],
-              properties: [
-                undefined,
-                undefined,
-                undefined
+              executables: [
+                false,
+                false,
+                false,
+                true
               ],
               arguments: [
                 'start',
                 'end',
-                'destination'
+                'destination',
+                'option'
               ],
-              children: {
-                all: {
-                  type: 'literal',
-                  executable: true,
-                  redirect: [
-                    'execute',
-                    'root'
-                  ]
-                },
-                masked: {
-                  type: 'literal',
-                  executable: true,
-                  redirect: [
-                    'execute',
-                    'root'
-                  ]
-                }
-              },
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:block_pos',
-                'minecraft:block_pos'
+              redirect: [
+                'execute',
+                'root'
               ],
-              parsersId: 48
+              parsersId: 53
             },
             data: {
               type: 'literal',
               children: {
                 block: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:block_pos',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
                     false,
                     true
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'sourcePos',
@@ -3752,15 +3821,18 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:block_pos',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 49
+                  parsersId: 54
                 },
                 entity: {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:entity',
+                    'minecraft:nbt_path'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single',
@@ -3768,10 +3840,6 @@ export default ({
                     },
                     undefined
                   ],
-                  executable: [
-                    false,
-                    true
-                  ],
                   arguments: [
                     'source',
                     'path'
@@ -3780,78 +3848,85 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:entity',
-                    'minecraft:nbt_path'
-                  ],
-                  parsersId: 50
+                  parsersId: 55
                 },
                 storage: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
-                    false,
-                    true
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
-                  ],
-                  arguments: [
-                    'source',
-                    'path'
-                  ],
-                  redirect: [
-                    'execute',
-                    'root'
-                  ],
                   parsers: [
                     'minecraft:resource_location',
                     'minecraft:nbt_path'
                   ],
-                  parsersId: 51
+                  executables: [
+                    false,
+                    true
+                  ],
+                  arguments: [
+                    'source',
+                    'path'
+                  ],
+                  redirect: [
+                    'execute',
+                    'root'
+                  ],
+                  parsersId: 56
                 }
               }
             },
             entity: {
               type: 'literalArgument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'multiple',
-                type: 'entities'
-              },
-              executable: true,
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  amount: 'multiple',
+                  type: 'entities'
+                }
+              ],
               redirect: [
                 'execute',
                 'root'
               ],
-              arguments: 'entities',
-              parsersId: 52
+              arguments: [
+                'entities'
+              ],
+              parsersId: 57
             },
             predicate: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
               redirect: [
                 'execute',
                 'root'
               ],
-              properties: undefined,
-              arguments: 'predicate',
-              parsersId: 53
+              arguments: [
+                'predicate'
+              ],
+              parsersId: 58
             },
             score: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective'
+              ],
+              executables: [
+                false,
+                false
+              ],
               properties: [
                 {
                   amount: 'single'
                 },
                 undefined
-              ],
-              executable: [
-                false,
-                false
               ],
               arguments: [
                 'target',
@@ -3860,16 +3935,19 @@ export default ({
               children: {
                 '<': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -3879,24 +3957,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '<=': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -3906,24 +3983,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '=': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -3933,24 +4009,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '>': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -3960,24 +4035,23 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 '>=': {
                   type: 'literalArgument',
-                  parser: 'compound',
+                  parsers: [
+                    'minecraft:score_holder',
+                    'minecraft:objective'
+                  ],
+                  executables: [
+                    false,
+                    true
+                  ],
                   properties: [
                     {
                       amount: 'single'
                     },
                     undefined
-                  ],
-                  executable: [
-                    false,
-                    true
                   ],
                   arguments: [
                     'source',
@@ -3987,40 +4061,42 @@ export default ({
                     'execute',
                     'root'
                   ],
-                  parsers: [
-                    'minecraft:score_holder',
-                    'minecraft:objective'
-                  ],
-                  parsersId: 55
+                  parsersId: 60
                 },
                 matches: {
                   type: 'literalArgument',
-                  parser: 'minecraft:int_range',
-                  executable: true,
+                  parsers: [
+                    'minecraft:int_range'
+                  ],
+                  executables: [
+                    true
+                  ],
                   redirect: [
                     'execute',
                     'root'
                   ],
-                  properties: undefined,
-                  arguments: 'range',
-                  parsersId: 56
+                  arguments: [
+                    'range'
+                  ],
+                  parsersId: 61
                 }
               },
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective'
-              ],
-              parsersId: 54
+              parsersId: 59
             }
           }
         },
         run: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:callback',
-          properties: undefined,
-          arguments: 'callback',
-          parsersId: 60
+          parsers: [
+            'sandstone:callback'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'callback'
+          ],
+          parsersId: 66
         }
       }
     },
@@ -4029,7 +4105,16 @@ export default ({
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'brigadier:integer',
+            'sandstone:literals'
+          ],
+          executables: [
+            false,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -4037,54 +4122,47 @@ export default ({
             },
             undefined
           ],
-          executable: [
-            false,
-            true
-          ],
           arguments: [
             'targets',
-            'amount'
+            'amount',
+            'option'
           ],
-          children: {
-            levels: {
-              type: 'literal',
-              executable: true
-            },
-            points: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          parsers: [
-            'minecraft:entity',
-            'brigadier:integer'
-          ],
-          parsersId: 61
+          parsersId: 67
         },
         query: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'single',
-            type: 'players'
-          },
-          children: {
-            levels: {
-              type: 'literal',
-              executable: true
-            },
-            points: {
-              type: 'literal',
-              executable: true
+          parsers: [
+            'minecraft:entity',
+            'sandstone:literals'
+          ],
+          executables: [
+            false,
+            true
+          ],
+          properties: [
+            {
+              amount: 'single',
+              type: 'players'
             }
-          },
-          executable: false,
-          arguments: 'targets',
-          parsersId: 0
+          ],
+          arguments: [
+            'targets',
+            'option'
+          ],
+          parsersId: 68
         },
         set: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'brigadier:integer',
+            'sandstone:literals'
+          ],
+          executables: [
+            false,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -4094,44 +4172,26 @@ export default ({
               min: 0
             }
           ],
-          executable: [
-            false,
-            true
-          ],
           arguments: [
             'targets',
-            'amount'
+            'amount',
+            'option'
           ],
-          children: {
-            levels: {
-              type: 'literal',
-              executable: true
-            },
-            points: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          parsers: [
-            'minecraft:entity',
-            'brigadier:integer'
-          ],
-          parsersId: 61
+          parsersId: 67
         }
       }
     },
     fill: {
       type: 'literalArgument',
-      parser: 'compound',
-      executable: [
+      parsers: [
+        'minecraft:block_pos',
+        'minecraft:block_pos',
+        'minecraft:block_state'
+      ],
+      executables: [
         false,
         false,
         true
-      ],
-      properties: [
-        undefined,
-        undefined,
-        undefined
       ],
       arguments: [
         'from',
@@ -4140,89 +4200,114 @@ export default ({
       ],
       children: {
         destroy: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         hollow: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         keep: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         outline: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         replace: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:block_predicate',
-          properties: undefined,
-          arguments: 'filter',
-          parsersId: 19
+          parsers: [
+            'minecraft:block_predicate'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'filter'
+          ],
+          parsersId: 70
         }
       },
-      parsers: [
-        'minecraft:block_pos',
-        'minecraft:block_pos',
-        'minecraft:block_state'
-      ],
-      parsersId: 62
+      parsersId: 69
     },
     forceload: {
       type: 'literal',
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'compound',
-          executable: [
+          parsers: [
+            'minecraft:column_pos',
+            'minecraft:column_pos'
+          ],
+          executables: [
             true,
             true
-          ],
-          properties: [
-            undefined,
-            undefined
           ],
           arguments: [
             'from',
             'to'
           ],
-          parsers: [
-            'minecraft:column_pos',
-            'minecraft:column_pos'
-          ],
-          parsersId: 63
+          parsersId: 71
         },
         query: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:column_pos',
-          properties: undefined,
-          arguments: 'pos',
-          parsersId: 64
+          parsers: [
+            'minecraft:column_pos'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'pos'
+          ],
+          parsersId: 72
         },
         remove: {
           type: 'literal',
           children: {
             all: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             from: {
               type: 'argument',
-              parser: 'minecraft:column_pos',
               children: {
                 to: {
                   type: 'argument',
-                  parser: 'minecraft:column_pos',
-                  executable: true,
-                  parsersId: 66
+                  parsers: [
+                    'minecraft:column_pos'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 74
                 }
               },
-              executable: true,
-              parsersId: 65
+              parsers: [
+                'minecraft:column_pos'
+              ],
+              executables: [
+                true
+              ],
+              parsersId: 73
             }
           }
         }
@@ -4230,58 +4315,99 @@ export default ({
     },
     function: {
       type: 'literalArgument',
-      parser: 'minecraft:function',
-      executable: true,
-      properties: undefined,
-      arguments: 'name',
-      parsersId: 67
+      parsers: [
+        'minecraft:function'
+      ],
+      executables: [
+        true
+      ],
+      arguments: [
+        'name'
+      ],
+      parsersId: 75
     },
     gamemode: {
       type: 'literal',
       children: {
         adventure: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
-          arguments: 'target',
-          parsersId: 68
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
+          arguments: [
+            'target'
+          ],
+          parsersId: 76
         },
         creative: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
-          arguments: 'target',
-          parsersId: 68
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
+          arguments: [
+            'target'
+          ],
+          parsersId: 76
         },
         spectator: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
-          arguments: 'target',
-          parsersId: 68
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
+          arguments: [
+            'target'
+          ],
+          parsersId: 76
         },
         survival: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
-          arguments: 'target',
-          parsersId: 68
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
+          arguments: [
+            'target'
+          ],
+          parsersId: 76
         }
       }
     },
@@ -4290,257 +4416,452 @@ export default ({
       children: {
         announceAdvancements: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         commandBlockOutput: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         disableElytraMovementCheck: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         disableRaids: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doDaylightCycle: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doEntityDrops: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doFireTick: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doImmediateRespawn: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doInsomnia: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doLimitedCrafting: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doMobLoot: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doMobSpawning: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doPatrolSpawning: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doTileDrops: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doTraderSpawning: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         doWeatherCycle: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         drowningDamage: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         fallDamage: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         fireDamage: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         keepInventory: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         logAdminCommands: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         maxCommandChainLength: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:integer',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 15
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 17
         },
         maxEntityCramming: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:integer',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 15
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 17
         },
         mobGriefing: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         naturalRegeneration: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         randomTickSpeed: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:integer',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 15
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 17
         },
         reducedDebugInfo: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         sendCommandFeedback: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         showDeathMessages: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         },
         spawnRadius: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:integer',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 15
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 17
         },
         spectatorsGenerateChunks: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:bool',
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 69
+          parsers: [
+            'brigadier:bool'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 77
         }
       }
     },
     give: {
       type: 'literalArgument',
-      parser: 'compound',
+      parsers: [
+        'minecraft:entity',
+        'minecraft:item_stack',
+        'brigadier:integer'
+      ],
+      executables: [
+        false,
+        true,
+        true
+      ],
       properties: [
         {
           amount: 'multiple',
@@ -4551,174 +4872,127 @@ export default ({
           min: 1
         }
       ],
-      executable: [
-        false,
-        true,
-        true
-      ],
       arguments: [
         'targets',
         'item',
         'count'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:item_stack',
-        'brigadier:integer'
-      ],
-      parsersId: 70
+      parsersId: 78
     },
     help: {
       type: 'literalArgument',
-      executable: true,
-      parser: 'brigadier:string',
-      properties: {
-        type: 'greedy'
-      },
-      arguments: 'command',
-      parsersId: 71
-    },
-    kick: {
-      type: 'literalArgument',
-      parser: 'compound',
-      properties: [
-        {
-          amount: 'multiple',
-          type: 'players'
-        },
-        undefined
+      parsers: [
+        'brigadier:string'
       ],
-      executable: [
+      executables: [
         true,
         true
       ],
+      properties: [
+        {
+          type: 'greedy'
+        }
+      ],
       arguments: [
-        'targets',
-        'reason'
+        'command'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:message'
-      ],
-      parsersId: 72
+      parsersId: 79
     },
     kill: {
       type: 'literalArgument',
-      executable: true,
-      parser: 'minecraft:entity',
-      properties: {
-        amount: 'multiple',
-        type: 'entities'
-      },
-      arguments: 'targets',
+      parsers: [
+        'minecraft:entity'
+      ],
+      executables: [
+        true,
+        true
+      ],
+      properties: [
+        {
+          amount: 'multiple',
+          type: 'entities'
+        }
+      ],
+      arguments: [
+        'targets'
+      ],
       parsersId: 0
     },
     locate: {
-      type: 'literal',
-      children: {
-        Bastion_Remnant: {
-          type: 'literal',
-          executable: true
-        },
-        Buried_Treasure: {
-          type: 'literal',
-          executable: true
-        },
-        Desert_Pyramid: {
-          type: 'literal',
-          executable: true
-        },
-        EndCity: {
-          type: 'literal',
-          executable: true
-        },
-        Fortress: {
-          type: 'literal',
-          executable: true
-        },
-        Igloo: {
-          type: 'literal',
-          executable: true
-        },
-        Jungle_Pyramid: {
-          type: 'literal',
-          executable: true
-        },
-        Mansion: {
-          type: 'literal',
-          executable: true
-        },
-        Mineshaft: {
-          type: 'literal',
-          executable: true
-        },
-        Monument: {
-          type: 'literal',
-          executable: true
-        },
-        Nether_Fossil: {
-          type: 'literal',
-          executable: true
-        },
-        Ocean_Ruin: {
-          type: 'literal',
-          executable: true
-        },
-        Pillager_Outpost: {
-          type: 'literal',
-          executable: true
-        },
-        Ruined_Portal: {
-          type: 'literal',
-          executable: true
-        },
-        Shipwreck: {
-          type: 'literal',
-          executable: true
-        },
-        Stronghold: {
-          type: 'literal',
-          executable: true
-        },
-        Swamp_Hut: {
-          type: 'literal',
-          executable: true
-        },
-        Village: {
-          type: 'literal',
-          executable: true
-        }
-      }
+      type: 'literalArgument',
+      parsers: [
+        'sandstone:literals'
+      ],
+      executables: [
+        true
+      ],
+      literalValues: [
+        [
+          'Bastion_Remnant',
+          'Buried_Treasure',
+          'Desert_Pyramid',
+          'EndCity',
+          'Fortress',
+          'Igloo',
+          'Jungle_Pyramid',
+          'Mansion',
+          'Mineshaft',
+          'Monument',
+          'Nether_Fossil',
+          'Ocean_Ruin',
+          'Pillager_Outpost',
+          'Ruined_Portal',
+          'Shipwreck',
+          'Stronghold',
+          'Swamp_Hut',
+          'Village'
+        ]
+      ],
+      arguments: [
+        'option'
+      ],
+      parsersId: 80
     },
     locatebiome: {
       type: 'literalArgument',
-      parser: 'sandstone:biome',
-      executable: true,
-      properties: undefined,
-      arguments: 'biome',
-      parsersId: 73
+      parsers: [
+        'minecraft:resource_location'
+      ],
+      executables: [
+        true
+      ],
+      arguments: [
+        'biome'
+      ],
+      parsersId: 81
     },
     loot: {
       type: 'literal',
       children: {
         give: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
           children: {
             fish: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:resource_location',
+                'minecraft:block_pos'
+              ],
+              executables: [
                 false,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'loot_table',
@@ -4726,88 +5000,127 @@ export default ({
               ],
               children: {
                 mainhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 offhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 tool: {
                   type: 'argument',
-                  parser: 'minecraft:item_stack',
-                  executable: true,
-                  parsersId: 76
+                  parsers: [
+                    'minecraft:item_stack'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 84
                 }
               },
-              parsers: [
-                'minecraft:resource_location',
-                'minecraft:block_pos'
-              ],
-              parsersId: 75
+              parsersId: 83
             },
             kill: {
               type: 'literalArgument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'single',
-                type: 'entities'
-              },
-              executable: true,
-              arguments: 'target',
-              parsersId: 68
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  amount: 'single',
+                  type: 'entities'
+                }
+              ],
+              arguments: [
+                'target'
+              ],
+              parsersId: 76
             },
             loot: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'loot_table',
-              parsersId: 77
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'loot_table'
+              ],
+              parsersId: 85
             },
             mine: {
               type: 'literalArgument',
-              parser: 'minecraft:block_pos',
+              parsers: [
+                'minecraft:block_pos'
+              ],
+              executables: [
+                true
+              ],
               children: {
                 mainhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 offhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 tool: {
                   type: 'argument',
-                  parser: 'minecraft:item_stack',
-                  executable: true,
-                  parsersId: 76
+                  parsers: [
+                    'minecraft:item_stack'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 84
                 }
               },
-              executable: true,
-              properties: undefined,
-              arguments: 'pos',
-              parsersId: 78
+              arguments: [
+                'pos'
+              ],
+              parsersId: 86
             }
           },
-          executable: false,
-          arguments: 'players',
-          parsersId: 74
+          arguments: [
+            'players'
+          ],
+          parsersId: 82
         },
         insert: {
           type: 'literalArgument',
-          parser: 'minecraft:block_pos',
+          parsers: [
+            'minecraft:block_pos'
+          ],
+          executables: [
+            false
+          ],
           children: {
             fish: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:resource_location',
+                'minecraft:block_pos'
+              ],
+              executables: [
                 false,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'loot_table',
@@ -4815,88 +5128,121 @@ export default ({
               ],
               children: {
                 mainhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 offhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 tool: {
                   type: 'argument',
-                  parser: 'minecraft:item_stack',
-                  executable: true,
-                  parsersId: 76
+                  parsers: [
+                    'minecraft:item_stack'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 84
                 }
               },
-              parsers: [
-                'minecraft:resource_location',
-                'minecraft:block_pos'
-              ],
-              parsersId: 75
+              parsersId: 83
             },
             kill: {
               type: 'literalArgument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'single',
-                type: 'entities'
-              },
-              executable: true,
-              arguments: 'target',
-              parsersId: 68
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  amount: 'single',
+                  type: 'entities'
+                }
+              ],
+              arguments: [
+                'target'
+              ],
+              parsersId: 76
             },
             loot: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'loot_table',
-              parsersId: 77
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'loot_table'
+              ],
+              parsersId: 85
             },
             mine: {
               type: 'literalArgument',
-              parser: 'minecraft:block_pos',
+              parsers: [
+                'minecraft:block_pos'
+              ],
+              executables: [
+                true
+              ],
               children: {
                 mainhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 offhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 tool: {
                   type: 'argument',
-                  parser: 'minecraft:item_stack',
-                  executable: true,
-                  parsersId: 76
+                  parsers: [
+                    'minecraft:item_stack'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 84
                 }
               },
-              executable: true,
-              properties: undefined,
-              arguments: 'pos',
-              parsersId: 78
+              arguments: [
+                'pos'
+              ],
+              parsersId: 86
             }
           },
-          executable: false,
-          properties: undefined,
-          arguments: 'targetPos',
-          parsersId: 79
+          arguments: [
+            'targetPos'
+          ],
+          parsersId: 87
         },
         replace: {
           type: 'literal',
           children: {
             block: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:block_pos',
+                'minecraft:item_slot'
+              ],
+              executables: [
                 false,
                 false
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'targetPos',
@@ -4905,14 +5251,13 @@ export default ({
               children: {
                 fish: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:resource_location',
+                    'minecraft:block_pos'
+                  ],
+                  executables: [
                     false,
                     true
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'loot_table',
@@ -4920,86 +5265,120 @@ export default ({
                   ],
                   children: {
                     mainhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     offhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     tool: {
                       type: 'argument',
-                      parser: 'minecraft:item_stack',
-                      executable: true,
-                      parsersId: 76
+                      parsers: [
+                        'minecraft:item_stack'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      parsersId: 84
                     }
                   },
-                  parsers: [
-                    'minecraft:resource_location',
-                    'minecraft:block_pos'
-                  ],
-                  parsersId: 75
+                  parsersId: 83
                 },
                 kill: {
                   type: 'literalArgument',
-                  parser: 'minecraft:entity',
-                  properties: {
-                    amount: 'single',
-                    type: 'entities'
-                  },
-                  executable: true,
-                  arguments: 'target',
-                  parsersId: 68
+                  parsers: [
+                    'minecraft:entity'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  properties: [
+                    {
+                      amount: 'single',
+                      type: 'entities'
+                    }
+                  ],
+                  arguments: [
+                    'target'
+                  ],
+                  parsersId: 76
                 },
                 loot: {
                   type: 'literalArgument',
-                  parser: 'minecraft:resource_location',
-                  executable: true,
-                  properties: undefined,
-                  arguments: 'loot_table',
-                  parsersId: 77
+                  parsers: [
+                    'minecraft:resource_location'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  arguments: [
+                    'loot_table'
+                  ],
+                  parsersId: 85
                 },
                 mine: {
                   type: 'literalArgument',
-                  parser: 'minecraft:block_pos',
+                  parsers: [
+                    'minecraft:block_pos'
+                  ],
+                  executables: [
+                    true
+                  ],
                   children: {
                     mainhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     offhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     tool: {
                       type: 'argument',
-                      parser: 'minecraft:item_stack',
-                      executable: true,
-                      parsersId: 76
+                      parsers: [
+                        'minecraft:item_stack'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      parsersId: 84
                     }
                   },
-                  executable: true,
-                  properties: undefined,
-                  arguments: 'pos',
-                  parsersId: 78
+                  arguments: [
+                    'pos'
+                  ],
+                  parsersId: 86
                 },
                 count: {
                   type: 'argument',
-                  parser: 'brigadier:integer',
-                  properties: {
-                    min: 0
-                  },
+                  properties: [
+                    {
+                      min: 0
+                    }
+                  ],
                   children: {
                     fish: {
                       type: 'literalArgument',
-                      parser: 'compound',
-                      executable: [
+                      parsers: [
+                        'minecraft:resource_location',
+                        'minecraft:block_pos'
+                      ],
+                      executables: [
                         false,
                         true
-                      ],
-                      properties: [
-                        undefined,
-                        undefined
                       ],
                       arguments: [
                         'loot_table',
@@ -5007,92 +5386,131 @@ export default ({
                       ],
                       children: {
                         mainhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         offhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         tool: {
                           type: 'argument',
-                          parser: 'minecraft:item_stack',
-                          executable: true,
-                          parsersId: 76
+                          parsers: [
+                            'minecraft:item_stack'
+                          ],
+                          executables: [
+                            true
+                          ],
+                          parsersId: 84
                         }
                       },
-                      parsers: [
-                        'minecraft:resource_location',
-                        'minecraft:block_pos'
-                      ],
-                      parsersId: 75
+                      parsersId: 83
                     },
                     kill: {
                       type: 'literalArgument',
-                      parser: 'minecraft:entity',
-                      properties: {
-                        amount: 'single',
-                        type: 'entities'
-                      },
-                      executable: true,
-                      arguments: 'target',
-                      parsersId: 68
+                      parsers: [
+                        'minecraft:entity'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      properties: [
+                        {
+                          amount: 'single',
+                          type: 'entities'
+                        }
+                      ],
+                      arguments: [
+                        'target'
+                      ],
+                      parsersId: 76
                     },
                     loot: {
                       type: 'literalArgument',
-                      parser: 'minecraft:resource_location',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'loot_table',
-                      parsersId: 77
+                      parsers: [
+                        'minecraft:resource_location'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'loot_table'
+                      ],
+                      parsersId: 85
                     },
                     mine: {
                       type: 'literalArgument',
-                      parser: 'minecraft:block_pos',
+                      parsers: [
+                        'minecraft:block_pos'
+                      ],
+                      executables: [
+                        true
+                      ],
                       children: {
                         mainhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         offhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         tool: {
                           type: 'argument',
-                          parser: 'minecraft:item_stack',
-                          executable: true,
-                          parsersId: 76
+                          parsers: [
+                            'minecraft:item_stack'
+                          ],
+                          executables: [
+                            true
+                          ],
+                          parsersId: 84
                         }
                       },
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'pos',
-                      parsersId: 78
+                      arguments: [
+                        'pos'
+                      ],
+                      parsersId: 86
                     }
                   },
-                  parsersId: 81
+                  parsers: [
+                    'brigadier:integer'
+                  ],
+                  executables: [
+                    false
+                  ],
+                  parsersId: 89
                 }
               },
-              parsers: [
-                'minecraft:block_pos',
-                'minecraft:item_slot'
-              ],
-              parsersId: 80
+              parsersId: 88
             },
             entity: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:entity',
+                'minecraft:item_slot'
+              ],
+              executables: [
+                false,
+                false
+              ],
               properties: [
                 {
                   amount: 'multiple',
                   type: 'entities'
                 },
                 undefined
-              ],
-              executable: [
-                false,
-                false
               ],
               arguments: [
                 'entities',
@@ -5101,14 +5519,13 @@ export default ({
               children: {
                 fish: {
                   type: 'literalArgument',
-                  parser: 'compound',
-                  executable: [
+                  parsers: [
+                    'minecraft:resource_location',
+                    'minecraft:block_pos'
+                  ],
+                  executables: [
                     false,
                     true
-                  ],
-                  properties: [
-                    undefined,
-                    undefined
                   ],
                   arguments: [
                     'loot_table',
@@ -5116,86 +5533,120 @@ export default ({
                   ],
                   children: {
                     mainhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     offhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     tool: {
                       type: 'argument',
-                      parser: 'minecraft:item_stack',
-                      executable: true,
-                      parsersId: 76
+                      parsers: [
+                        'minecraft:item_stack'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      parsersId: 84
                     }
                   },
-                  parsers: [
-                    'minecraft:resource_location',
-                    'minecraft:block_pos'
-                  ],
-                  parsersId: 75
+                  parsersId: 83
                 },
                 kill: {
                   type: 'literalArgument',
-                  parser: 'minecraft:entity',
-                  properties: {
-                    amount: 'single',
-                    type: 'entities'
-                  },
-                  executable: true,
-                  arguments: 'target',
-                  parsersId: 68
+                  parsers: [
+                    'minecraft:entity'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  properties: [
+                    {
+                      amount: 'single',
+                      type: 'entities'
+                    }
+                  ],
+                  arguments: [
+                    'target'
+                  ],
+                  parsersId: 76
                 },
                 loot: {
                   type: 'literalArgument',
-                  parser: 'minecraft:resource_location',
-                  executable: true,
-                  properties: undefined,
-                  arguments: 'loot_table',
-                  parsersId: 77
+                  parsers: [
+                    'minecraft:resource_location'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  arguments: [
+                    'loot_table'
+                  ],
+                  parsersId: 85
                 },
                 mine: {
                   type: 'literalArgument',
-                  parser: 'minecraft:block_pos',
+                  parsers: [
+                    'minecraft:block_pos'
+                  ],
+                  executables: [
+                    true
+                  ],
                   children: {
                     mainhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     offhand: {
-                      type: 'literal',
-                      executable: true
+                      type: 'literalArgument',
+                      parsers: [],
+                      executables: [],
+                      arguments: [],
+                      parsersId: 1
                     },
                     tool: {
                       type: 'argument',
-                      parser: 'minecraft:item_stack',
-                      executable: true,
-                      parsersId: 76
+                      parsers: [
+                        'minecraft:item_stack'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      parsersId: 84
                     }
                   },
-                  executable: true,
-                  properties: undefined,
-                  arguments: 'pos',
-                  parsersId: 78
+                  arguments: [
+                    'pos'
+                  ],
+                  parsersId: 86
                 },
                 count: {
                   type: 'argument',
-                  parser: 'brigadier:integer',
-                  properties: {
-                    min: 0
-                  },
+                  properties: [
+                    {
+                      min: 0
+                    }
+                  ],
                   children: {
                     fish: {
                       type: 'literalArgument',
-                      parser: 'compound',
-                      executable: [
+                      parsers: [
+                        'minecraft:resource_location',
+                        'minecraft:block_pos'
+                      ],
+                      executables: [
                         false,
                         true
-                      ],
-                      properties: [
-                        undefined,
-                        undefined
                       ],
                       arguments: [
                         'loot_table',
@@ -5203,95 +5654,135 @@ export default ({
                       ],
                       children: {
                         mainhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         offhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         tool: {
                           type: 'argument',
-                          parser: 'minecraft:item_stack',
-                          executable: true,
-                          parsersId: 76
+                          parsers: [
+                            'minecraft:item_stack'
+                          ],
+                          executables: [
+                            true
+                          ],
+                          parsersId: 84
                         }
                       },
-                      parsers: [
-                        'minecraft:resource_location',
-                        'minecraft:block_pos'
-                      ],
-                      parsersId: 75
+                      parsersId: 83
                     },
                     kill: {
                       type: 'literalArgument',
-                      parser: 'minecraft:entity',
-                      properties: {
-                        amount: 'single',
-                        type: 'entities'
-                      },
-                      executable: true,
-                      arguments: 'target',
-                      parsersId: 68
+                      parsers: [
+                        'minecraft:entity'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      properties: [
+                        {
+                          amount: 'single',
+                          type: 'entities'
+                        }
+                      ],
+                      arguments: [
+                        'target'
+                      ],
+                      parsersId: 76
                     },
                     loot: {
                       type: 'literalArgument',
-                      parser: 'minecraft:resource_location',
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'loot_table',
-                      parsersId: 77
+                      parsers: [
+                        'minecraft:resource_location'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      arguments: [
+                        'loot_table'
+                      ],
+                      parsersId: 85
                     },
                     mine: {
                       type: 'literalArgument',
-                      parser: 'minecraft:block_pos',
+                      parsers: [
+                        'minecraft:block_pos'
+                      ],
+                      executables: [
+                        true
+                      ],
                       children: {
                         mainhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         offhand: {
-                          type: 'literal',
-                          executable: true
+                          type: 'literalArgument',
+                          parsers: [],
+                          executables: [],
+                          arguments: [],
+                          parsersId: 1
                         },
                         tool: {
                           type: 'argument',
-                          parser: 'minecraft:item_stack',
-                          executable: true,
-                          parsersId: 76
+                          parsers: [
+                            'minecraft:item_stack'
+                          ],
+                          executables: [
+                            true
+                          ],
+                          parsersId: 84
                         }
                       },
-                      executable: true,
-                      properties: undefined,
-                      arguments: 'pos',
-                      parsersId: 78
+                      arguments: [
+                        'pos'
+                      ],
+                      parsersId: 86
                     }
                   },
-                  parsersId: 81
+                  parsers: [
+                    'brigadier:integer'
+                  ],
+                  executables: [
+                    false
+                  ],
+                  parsersId: 89
                 }
               },
-              parsers: [
-                'minecraft:entity',
-                'minecraft:item_slot'
-              ],
-              parsersId: 82
+              parsersId: 90
             }
           }
         },
         spawn: {
           type: 'literalArgument',
-          parser: 'minecraft:vec3',
+          parsers: [
+            'minecraft:vec3'
+          ],
+          executables: [
+            false
+          ],
           children: {
             fish: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:resource_location',
+                'minecraft:block_pos'
+              ],
+              executables: [
                 false,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'loot_table',
@@ -5299,90 +5790,139 @@ export default ({
               ],
               children: {
                 mainhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 offhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 tool: {
                   type: 'argument',
-                  parser: 'minecraft:item_stack',
-                  executable: true,
-                  parsersId: 76
+                  parsers: [
+                    'minecraft:item_stack'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 84
                 }
               },
-              parsers: [
-                'minecraft:resource_location',
-                'minecraft:block_pos'
-              ],
-              parsersId: 75
+              parsersId: 83
             },
             kill: {
               type: 'literalArgument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'single',
-                type: 'entities'
-              },
-              executable: true,
-              arguments: 'target',
-              parsersId: 68
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  amount: 'single',
+                  type: 'entities'
+                }
+              ],
+              arguments: [
+                'target'
+              ],
+              parsersId: 76
             },
             loot: {
               type: 'literalArgument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              properties: undefined,
-              arguments: 'loot_table',
-              parsersId: 77
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'loot_table'
+              ],
+              parsersId: 85
             },
             mine: {
               type: 'literalArgument',
-              parser: 'minecraft:block_pos',
+              parsers: [
+                'minecraft:block_pos'
+              ],
+              executables: [
+                true
+              ],
               children: {
                 mainhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 offhand: {
-                  type: 'literal',
-                  executable: true
+                  type: 'literalArgument',
+                  parsers: [],
+                  executables: [],
+                  arguments: [],
+                  parsersId: 1
                 },
                 tool: {
                   type: 'argument',
-                  parser: 'minecraft:item_stack',
-                  executable: true,
-                  parsersId: 76
+                  parsers: [
+                    'minecraft:item_stack'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 84
                 }
               },
-              executable: true,
-              properties: undefined,
-              arguments: 'pos',
-              parsersId: 78
+              arguments: [
+                'pos'
+              ],
+              parsersId: 86
             }
           },
-          executable: false,
-          properties: undefined,
-          arguments: 'targetPos',
-          parsersId: 83
+          arguments: [
+            'targetPos'
+          ],
+          parsersId: 91
         }
       }
     },
     me: {
       type: 'literalArgument',
-      parser: 'brigadier:string',
-      properties: {
-        type: 'greedy'
-      },
-      executable: true,
-      arguments: 'action',
-      parsersId: 84
+      parsers: [
+        'brigadier:string'
+      ],
+      executables: [
+        true
+      ],
+      properties: [
+        {
+          type: 'greedy'
+        }
+      ],
+      arguments: [
+        'action'
+      ],
+      parsersId: 92
     },
     msg: {
       type: 'literalArgument',
-      parser: 'compound',
+      parsers: [
+        'minecraft:entity',
+        'minecraft:message'
+      ],
+      executables: [
+        false,
+        true
+      ],
       properties: [
         {
           amount: 'multiple',
@@ -5390,50 +5930,22 @@ export default ({
         },
         undefined
       ],
-      executable: [
-        false,
-        true
-      ],
       arguments: [
         'targets',
         'message'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:message'
-      ],
-      parsersId: 85
-    },
-    op: {
-      type: 'literalArgument',
-      parser: 'minecraft:game_profile',
-      executable: true,
-      properties: undefined,
-      arguments: 'targets',
-      parsersId: 39
-    },
-    pardon: {
-      type: 'literalArgument',
-      parser: 'minecraft:game_profile',
-      executable: true,
-      properties: undefined,
-      arguments: 'targets',
-      parsersId: 39
-    },
-    'pardon-ip': {
-      type: 'literalArgument',
-      parser: 'brigadier:string',
-      properties: {
-        type: 'word'
-      },
-      executable: true,
-      arguments: 'target',
-      parsersId: 86
+      parsersId: 93
     },
     particle: {
       type: 'literalArgument',
-      parser: 'compound',
-      executable: [
+      parsers: [
+        'minecraft:particle',
+        'minecraft:vec3',
+        'minecraft:vec3',
+        'brigadier:float',
+        'brigadier:integer'
+      ],
+      executables: [
         true,
         true,
         false,
@@ -5461,43 +5973,72 @@ export default ({
       children: {
         force: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
-          arguments: 'viewers',
-          parsersId: 88
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
+          arguments: [
+            'viewers'
+          ],
+          parsersId: 95
         },
         normal: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
-          arguments: 'viewers',
-          parsersId: 88
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
+          arguments: [
+            'viewers'
+          ],
+          parsersId: 95
         }
       },
-      parsers: [
-        'minecraft:particle',
-        'minecraft:vec3',
-        'minecraft:vec3',
-        'brigadier:float',
-        'brigadier:integer'
-      ],
-      parsersId: 87
+      parsersId: 94
     },
     playsound: {
       type: 'literalArgument',
-      parser: 'sandstone:sound',
+      parsers: [
+        'minecraft:resource_location'
+      ],
+      executables: [
+        false
+      ],
       children: {
         ambient: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5516,13 +6057,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5530,18 +6064,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         block: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5560,13 +6100,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5574,18 +6107,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         hostile: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5604,13 +6143,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5618,18 +6150,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         master: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5648,13 +6186,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5662,18 +6193,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         music: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5692,13 +6229,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5706,18 +6236,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         neutral: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5736,13 +6272,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5750,18 +6279,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         player: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5780,13 +6315,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5794,18 +6322,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         record: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5824,13 +6358,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5838,18 +6365,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         voice: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5868,13 +6401,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5882,18 +6408,24 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         },
         weather: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'minecraft:entity',
+            'minecraft:vec3',
+            'brigadier:float',
+            'brigadier:float',
+            'brigadier:float'
+          ],
+          executables: [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -5912,13 +6444,6 @@ export default ({
               max: 1
             }
           ],
-          executable: [
-            true,
-            true,
-            true,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'pos',
@@ -5926,94 +6451,114 @@ export default ({
             'pitch',
             'minVolume'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:vec3',
-            'brigadier:float',
-            'brigadier:float',
-            'brigadier:float'
-          ],
-          parsersId: 90
+          parsersId: 97
         }
       },
-      executable: false,
-      properties: undefined,
-      arguments: 'sound',
-      parsersId: 89
-    },
-    publish: {
-      type: 'literalArgument',
-      executable: true,
-      parser: 'brigadier:integer',
-      properties: {
-        min: 0,
-        max: 65535
-      },
-      arguments: 'port',
-      parsersId: 91
+      arguments: [
+        'sound'
+      ],
+      parsersId: 96
     },
     recipe: {
       type: 'literal',
       children: {
         give: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
           children: {
             '*': {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             recipe: {
               type: 'argument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              parsersId: 92
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              parsersId: 98
             }
           },
-          executable: false,
-          arguments: 'targets',
+          arguments: [
+            'targets'
+          ],
           parsersId: 0
         },
         take: {
           type: 'literalArgument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'players'
-          },
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'players'
+            }
+          ],
           children: {
             '*': {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             recipe: {
               type: 'argument',
-              parser: 'minecraft:resource_location',
-              executable: true,
-              parsersId: 92
+              parsers: [
+                'minecraft:resource_location'
+              ],
+              executables: [
+                true
+              ],
+              parsersId: 98
             }
           },
-          executable: false,
-          arguments: 'targets',
+          arguments: [
+            'targets'
+          ],
           parsersId: 0
         }
       }
     },
     reload: {
-      type: 'literal',
-      executable: true
+      type: 'literalArgument',
+      parsers: [],
+      executables: [],
+      arguments: [],
+      parsersId: 1
     },
     replaceitem: {
       type: 'literal',
       children: {
         block: {
           type: 'literalArgument',
-          parser: 'compound',
-          executable: [
+          parsers: [
+            'minecraft:block_pos',
+            'minecraft:item_slot',
+            'minecraft:item_stack',
+            'brigadier:integer'
+          ],
+          executables: [
             false,
             false,
             true,
@@ -6034,17 +6579,22 @@ export default ({
             'item',
             'count'
           ],
+          parsersId: 99
+        },
+        entity: {
+          type: 'literalArgument',
           parsers: [
-            'minecraft:block_pos',
+            'minecraft:entity',
             'minecraft:item_slot',
             'minecraft:item_stack',
             'brigadier:integer'
           ],
-          parsersId: 93
-        },
-        entity: {
-          type: 'literalArgument',
-          parser: 'compound',
+          executables: [
+            false,
+            false,
+            true,
+            true
+          ],
           properties: [
             {
               amount: 'multiple',
@@ -6057,87 +6607,68 @@ export default ({
               max: 64
             }
           ],
-          executable: [
-            false,
-            false,
-            true,
-            true
-          ],
           arguments: [
             'targets',
             'slot',
             'item',
             'count'
           ],
-          parsers: [
-            'minecraft:entity',
-            'minecraft:item_slot',
-            'minecraft:item_stack',
-            'brigadier:integer'
-          ],
-          parsersId: 94
+          parsersId: 100
         }
       }
     },
-    'save-off': {
-      type: 'literal',
-      executable: true
-    },
-    'save-on': {
-      type: 'literal',
-      executable: true
-    },
     say: {
       type: 'literalArgument',
-      parser: 'minecraft:message',
-      executable: true,
-      properties: undefined,
-      arguments: 'message',
-      parsersId: 95
+      parsers: [
+        'minecraft:message'
+      ],
+      executables: [
+        true
+      ],
+      arguments: [
+        'message'
+      ],
+      parsersId: 101
     },
     schedule: {
       type: 'literal',
       children: {
         clear: {
           type: 'literalArgument',
-          parser: 'brigadier:string',
-          properties: {
-            type: 'greedy'
-          },
-          executable: true,
-          arguments: 'function',
-          parsersId: 96
-        },
-        function: {
-          type: 'literalArgument',
-          parser: 'compound',
-          executable: [
-            false,
+          parsers: [
+            'brigadier:string'
+          ],
+          executables: [
             true
           ],
           properties: [
-            undefined,
-            undefined
+            {
+              type: 'greedy'
+            }
+          ],
+          arguments: [
+            'function'
+          ],
+          parsersId: 102
+        },
+        function: {
+          type: 'literalArgument',
+          parsers: [
+            'minecraft:function',
+            'minecraft:time',
+            'sandstone:literals'
+          ],
+          executables: [
+            false,
+            true,
+            true
           ],
           arguments: [
             'function',
-            'time'
+            'time',
+            'option'
           ],
-          children: {
-            append: {
-              type: 'literal',
-              executable: true
-            },
-            replace: {
-              type: 'literal',
-              executable: true
-            }
-          },
-          parsers: [
-            'minecraft:function',
-            'minecraft:time'
-          ],
-          parsersId: 97
+          parsersId: 103
         }
       }
     },
@@ -6149,7 +6680,16 @@ export default ({
           children: {
             add: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'brigadier:string',
+                'minecraft:objective_criteria',
+                'minecraft:component'
+              ],
+              executables: [
+                false,
+                true,
+                true
+              ],
               properties: [
                 {
                   type: 'word'
@@ -6157,86 +6697,95 @@ export default ({
                 undefined,
                 undefined
               ],
-              executable: [
-                false,
-                true,
-                true
-              ],
               arguments: [
                 'objective',
                 'criteria',
                 'displayName'
               ],
-              parsers: [
-                'brigadier:string',
-                'minecraft:objective_criteria',
-                'minecraft:component'
-              ],
-              parsersId: 98
+              parsersId: 104
             },
             list: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             modify: {
               type: 'literalArgument',
-              parser: 'minecraft:objective',
+              parsers: [
+                'minecraft:objective'
+              ],
+              executables: [
+                false
+              ],
               children: {
                 displayname: {
                   type: 'literalArgument',
-                  parser: 'minecraft:component',
-                  executable: true,
-                  properties: undefined,
-                  arguments: 'displayName',
-                  parsersId: 100
+                  parsers: [
+                    'minecraft:component'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  arguments: [
+                    'displayName'
+                  ],
+                  parsersId: 106
                 },
                 rendertype: {
-                  type: 'literal',
-                  children: {
-                    hearts: {
-                      type: 'literal',
-                      executable: true
-                    },
-                    integer: {
-                      type: 'literal',
-                      executable: true
-                    }
-                  }
+                  type: 'literalArgument',
+                  parsers: [
+                    'sandstone:literals'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  literalValues: [
+                    [
+                      'hearts',
+                      'integer'
+                    ]
+                  ],
+                  arguments: [
+                    'option'
+                  ],
+                  parsersId: 107
                 }
               },
-              executable: false,
-              properties: undefined,
-              arguments: 'objective',
-              parsersId: 99
+              arguments: [
+                'objective'
+              ],
+              parsersId: 105
             },
             remove: {
               type: 'literalArgument',
-              parser: 'minecraft:objective',
-              executable: true,
-              properties: undefined,
-              arguments: 'objective',
-              parsersId: 99
+              parsers: [
+                'minecraft:objective'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'objective'
+              ],
+              parsersId: 105
             },
             setdisplay: {
               type: 'literalArgument',
-              parser: 'compound',
-              executable: [
+              parsers: [
+                'minecraft:scoreboard_slot',
+                'minecraft:objective'
+              ],
+              executables: [
                 true,
                 true
-              ],
-              properties: [
-                undefined,
-                undefined
               ],
               arguments: [
                 'slot',
                 'objective'
               ],
-              parsers: [
-                'minecraft:scoreboard_slot',
-                'minecraft:objective'
-              ],
-              parsersId: 101
+              parsersId: 108
             }
           }
         },
@@ -6245,7 +6794,16 @@ export default ({
           children: {
             add: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective',
+                'brigadier:integer'
+              ],
+              executables: [
+                false,
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'multiple'
@@ -6255,82 +6813,92 @@ export default ({
                   min: 0
                 }
               ],
-              executable: [
-                false,
-                false,
-                true
-              ],
               arguments: [
                 'targets',
                 'objective',
                 'score'
               ],
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective',
-                'brigadier:integer'
-              ],
-              parsersId: 102
+              parsersId: 109
             },
             enable: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective'
+              ],
+              executables: [
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'multiple'
                 },
                 undefined
               ],
-              executable: [
-                false,
-                true
-              ],
               arguments: [
                 'targets',
                 'objective'
               ],
+              parsersId: 65
+            },
+            get: {
+              type: 'literalArgument',
               parsers: [
                 'minecraft:score_holder',
                 'minecraft:objective'
               ],
-              parsersId: 59
-            },
-            get: {
-              type: 'literalArgument',
-              parser: 'compound',
+              executables: [
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'single'
                 },
                 undefined
               ],
-              executable: [
-                false,
-                true
-              ],
               arguments: [
                 'target',
                 'objective'
               ],
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective'
-              ],
-              parsersId: 103
+              parsersId: 110
             },
             list: {
               type: 'literalArgument',
-              executable: true,
-              parser: 'minecraft:score_holder',
-              properties: {
-                amount: 'single'
-              },
-              arguments: 'target',
-              parsersId: 104
+              parsers: [
+                'minecraft:score_holder'
+              ],
+              executables: [
+                true,
+                true
+              ],
+              properties: [
+                {
+                  amount: 'single'
+                }
+              ],
+              arguments: [
+                'target'
+              ],
+              parsersId: 111
             },
             operation: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective',
+                'minecraft:operation',
+                'minecraft:score_holder',
+                'minecraft:objective'
+              ],
+              executables: [
+                false,
+                false,
+                false,
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'multiple'
@@ -6341,13 +6909,6 @@ export default ({
                   amount: 'multiple'
                 },
                 undefined
-              ],
-              executable: [
-                false,
-                false,
-                false,
-                false,
-                true
               ],
               arguments: [
                 'targets',
@@ -6356,18 +6917,20 @@ export default ({
                 'source',
                 'sourceObjective'
               ],
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective',
-                'minecraft:operation',
-                'minecraft:score_holder',
-                'minecraft:objective'
-              ],
-              parsersId: 105
+              parsersId: 112
             },
             remove: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective',
+                'brigadier:integer'
+              ],
+              executables: [
+                false,
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'multiple'
@@ -6377,49 +6940,47 @@ export default ({
                   min: 0
                 }
               ],
-              executable: [
-                false,
-                false,
-                true
-              ],
               arguments: [
                 'targets',
                 'objective',
                 'score'
               ],
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective',
-                'brigadier:integer'
-              ],
-              parsersId: 102
+              parsersId: 109
             },
             reset: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective'
+              ],
+              executables: [
+                true,
+                true
+              ],
               properties: [
                 {
                   amount: 'multiple'
                 },
                 undefined
               ],
-              executable: [
-                true,
-                true
-              ],
               arguments: [
                 'targets',
                 'objective'
               ],
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective'
-              ],
-              parsersId: 106
+              parsersId: 113
             },
             set: {
               type: 'literalArgument',
-              parser: 'compound',
+              parsers: [
+                'minecraft:score_holder',
+                'minecraft:objective',
+                'brigadier:integer'
+              ],
+              executables: [
+                false,
+                false,
+                true
+              ],
               properties: [
                 {
                   amount: 'multiple'
@@ -6427,91 +6988,68 @@ export default ({
                 undefined,
                 undefined
               ],
-              executable: [
-                false,
-                false,
-                true
-              ],
               arguments: [
                 'targets',
                 'objective',
                 'score'
               ],
-              parsers: [
-                'minecraft:score_holder',
-                'minecraft:objective',
-                'brigadier:integer'
-              ],
-              parsersId: 102
+              parsersId: 109
             }
           }
         }
       }
     },
     seed: {
-      type: 'literal',
-      executable: true
+      type: 'literalArgument',
+      parsers: [],
+      executables: [],
+      arguments: [],
+      parsersId: 1
     },
     setblock: {
       type: 'literalArgument',
-      parser: 'compound',
-      executable: [
-        false,
-        true
-      ],
-      properties: [
-        undefined,
-        undefined
-      ],
-      arguments: [
-        'pos',
-        'block'
-      ],
-      children: {
-        destroy: {
-          type: 'literal',
-          executable: true
-        },
-        keep: {
-          type: 'literal',
-          executable: true
-        },
-        replace: {
-          type: 'literal',
-          executable: true
-        }
-      },
       parsers: [
         'minecraft:block_pos',
-        'minecraft:block_state'
+        'minecraft:block_state',
+        'sandstone:literals'
       ],
-      parsersId: 107
-    },
-    setidletimeout: {
-      type: 'literalArgument',
-      parser: 'brigadier:integer',
-      properties: {
-        min: 0
-      },
-      executable: true,
-      arguments: 'minutes',
-      parsersId: 108
-    },
-    setworldspawn: {
-      type: 'literalArgument',
-      executable: true,
-      parser: 'minecraft:block_pos',
-      properties: undefined,
-      arguments: 'pos',
-      parsersId: 78
-    },
-    spawnpoint: {
-      type: 'literalArgument',
-      executable: [
+      executables: [
+        false,
         true,
         true
       ],
-      parser: 'compound',
+      arguments: [
+        'pos',
+        'block',
+        'option'
+      ],
+      parsersId: 114
+    },
+    setworldspawn: {
+      type: 'literalArgument',
+      parsers: [
+        'minecraft:block_pos'
+      ],
+      executables: [
+        true,
+        true
+      ],
+      arguments: [
+        'pos'
+      ],
+      parsersId: 86
+    },
+    spawnpoint: {
+      type: 'literalArgument',
+      parsers: [
+        'minecraft:entity',
+        'minecraft:block_pos'
+      ],
+      executables: [
+        true,
+        true,
+        true
+      ],
       properties: [
         {
           amount: 'multiple',
@@ -6523,19 +7061,19 @@ export default ({
         'targets',
         'pos'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:block_pos'
-      ],
-      parsersId: 109
+      parsersId: 115
     },
     spectate: {
       type: 'literalArgument',
-      executable: [
+      parsers: [
+        'minecraft:entity',
+        'minecraft:entity'
+      ],
+      executables: [
+        true,
         true,
         true
       ],
-      parser: 'compound',
       properties: [
         {
           amount: 'single',
@@ -6550,16 +7088,18 @@ export default ({
         'target',
         'player'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:entity'
-      ],
-      parsersId: 110
+      parsersId: 116
     },
     spreadplayers: {
       type: 'literalArgument',
-      parser: 'compound',
-      executable: [
+      parsers: [
+        'minecraft:vec2',
+        'brigadier:float',
+        'brigadier:float',
+        'brigadier:bool',
+        'minecraft:entity'
+      ],
+      executables: [
         false,
         false,
         false,
@@ -6587,180 +7127,263 @@ export default ({
         'respectTeams',
         'targets'
       ],
-      parsers: [
-        'minecraft:vec2',
-        'brigadier:float',
-        'brigadier:float',
-        'brigadier:bool',
-        'minecraft:entity'
-      ],
-      parsersId: 111
-    },
-    stop: {
-      type: 'literal',
-      executable: true
+      parsersId: 117
     },
     stopsound: {
       type: 'literalArgument',
-      parser: 'minecraft:entity',
-      properties: {
-        amount: 'multiple',
-        type: 'players'
-      },
+      parsers: [
+        'minecraft:entity'
+      ],
+      executables: [
+        true
+      ],
+      properties: [
+        {
+          amount: 'multiple',
+          type: 'players'
+        }
+      ],
       children: {
         '*': {
           type: 'literalArgument',
-          parser: 'sandstone:sound',
-          executable: true,
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         ambient: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         block: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         hostile: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         master: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         music: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         neutral: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         player: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         record: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         voice: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         },
         weather: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'sandstone:sound',
-          properties: undefined,
-          arguments: 'sound',
-          parsersId: 89
+          parsers: [
+            'minecraft:resource_location'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'sound'
+          ],
+          parsersId: 96
         }
       },
-      executable: true,
-      arguments: 'targets',
+      arguments: [
+        'targets'
+      ],
       parsersId: 0
     },
     summon: {
       type: 'literalArgument',
-      parser: 'compound',
-      executable: [
+      parsers: [
+        'minecraft:entity_summon',
+        'minecraft:vec3',
+        'minecraft:nbt_compound_tag'
+      ],
+      executables: [
         true,
         true,
         true
-      ],
-      properties: [
-        undefined,
-        undefined,
-        undefined
       ],
       arguments: [
         'entity',
         'pos',
         'nbt'
       ],
-      parsers: [
-        'minecraft:entity_summon',
-        'minecraft:vec3',
-        'minecraft:nbt_compound_tag'
-      ],
-      parsersId: 112
+      parsersId: 118
     },
     tag: {
       type: 'literalArgument',
-      parser: 'minecraft:entity',
-      properties: {
-        amount: 'multiple',
-        type: 'entities'
-      },
+      parsers: [
+        'minecraft:entity'
+      ],
+      executables: [
+        false
+      ],
+      properties: [
+        {
+          amount: 'multiple',
+          type: 'entities'
+        }
+      ],
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'brigadier:string',
-          properties: {
-            type: 'word'
-          },
-          executable: true,
-          arguments: 'name',
-          parsersId: 37
+          parsers: [
+            'brigadier:string'
+          ],
+          executables: [
+            true
+          ],
+          properties: [
+            {
+              type: 'word'
+            }
+          ],
+          arguments: [
+            'name'
+          ],
+          parsersId: 40
         },
         list: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         remove: {
           type: 'literalArgument',
-          parser: 'brigadier:string',
-          properties: {
-            type: 'word'
-          },
-          executable: true,
-          arguments: 'name',
-          parsersId: 37
+          parsers: [
+            'brigadier:string'
+          ],
+          executables: [
+            true
+          ],
+          properties: [
+            {
+              type: 'word'
+            }
+          ],
+          arguments: [
+            'name'
+          ],
+          parsersId: 40
         }
       },
-      executable: false,
-      arguments: 'targets',
+      arguments: [
+        'targets'
+      ],
       parsersId: 0
     },
     team: {
@@ -6768,39 +7391,46 @@ export default ({
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'brigadier:string',
+            'minecraft:component'
+          ],
+          executables: [
+            true,
+            true
+          ],
           properties: [
             {
               type: 'word'
             },
             undefined
           ],
-          executable: [
-            true,
-            true
-          ],
           arguments: [
             'team',
             'displayName'
           ],
-          parsers: [
-            'brigadier:string',
-            'minecraft:component'
-          ],
-          parsersId: 113
+          parsersId: 119
         },
         empty: {
           type: 'literalArgument',
-          parser: 'minecraft:team',
-          executable: true,
-          properties: undefined,
-          arguments: 'team',
-          parsersId: 114
+          parsers: [
+            'minecraft:team'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'team'
+          ],
+          parsersId: 120
         },
         join: {
           type: 'literalArgument',
-          parser: 'compound',
-          executable: [
+          parsers: [
+            'minecraft:team',
+            'minecraft:score_holder'
+          ],
+          executables: [
             true,
             true
           ],
@@ -6814,216 +7444,294 @@ export default ({
             'team',
             'members'
           ],
-          parsers: [
-            'minecraft:team',
-            'minecraft:score_holder'
-          ],
-          parsersId: 115
+          parsersId: 121
         },
         leave: {
           type: 'literalArgument',
-          parser: 'minecraft:score_holder',
-          properties: {
-            amount: 'multiple'
-          },
-          executable: true,
-          arguments: 'members',
-          parsersId: 116
+          parsers: [
+            'minecraft:score_holder'
+          ],
+          executables: [
+            true
+          ],
+          properties: [
+            {
+              amount: 'multiple'
+            }
+          ],
+          arguments: [
+            'members'
+          ],
+          parsersId: 122
         },
         list: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'minecraft:team',
-          properties: undefined,
-          arguments: 'team',
-          parsersId: 114
+          parsers: [
+            'minecraft:team'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          arguments: [
+            'team'
+          ],
+          parsersId: 120
         },
         modify: {
           type: 'literalArgument',
-          parser: 'minecraft:team',
+          parsers: [
+            'minecraft:team'
+          ],
+          executables: [
+            false
+          ],
           children: {
             collisionRule: {
-              type: 'literal',
-              children: {
-                always: {
-                  type: 'literal',
-                  executable: true
-                },
-                never: {
-                  type: 'literal',
-                  executable: true
-                },
-                pushOtherTeams: {
-                  type: 'literal',
-                  executable: true
-                },
-                pushOwnTeam: {
-                  type: 'literal',
-                  executable: true
-                }
-              }
+              type: 'literalArgument',
+              parsers: [
+                'sandstone:literals'
+              ],
+              executables: [
+                true
+              ],
+              literalValues: [
+                [
+                  'always',
+                  'never',
+                  'pushOtherTeams',
+                  'pushOwnTeam'
+                ]
+              ],
+              arguments: [
+                'option'
+              ],
+              parsersId: 123
             },
             color: {
               type: 'literalArgument',
-              parser: 'minecraft:color',
-              executable: true,
-              properties: undefined,
-              arguments: 'value',
-              parsersId: 117
+              parsers: [
+                'minecraft:color'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'value'
+              ],
+              parsersId: 124
             },
             deathMessageVisibility: {
-              type: 'literal',
-              children: {
-                always: {
-                  type: 'literal',
-                  executable: true
-                },
-                hideForOtherTeams: {
-                  type: 'literal',
-                  executable: true
-                },
-                hideForOwnTeam: {
-                  type: 'literal',
-                  executable: true
-                },
-                never: {
-                  type: 'literal',
-                  executable: true
-                }
-              }
+              type: 'literalArgument',
+              parsers: [
+                'sandstone:literals'
+              ],
+              executables: [
+                true
+              ],
+              literalValues: [
+                [
+                  'always',
+                  'hideForOtherTeams',
+                  'hideForOwnTeam',
+                  'never'
+                ]
+              ],
+              arguments: [
+                'option'
+              ],
+              parsersId: 125
             },
             displayName: {
               type: 'literalArgument',
-              parser: 'minecraft:component',
-              executable: true,
-              properties: undefined,
-              arguments: 'displayName',
-              parsersId: 100
+              parsers: [
+                'minecraft:component'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'displayName'
+              ],
+              parsersId: 106
             },
             friendlyFire: {
               type: 'literalArgument',
-              parser: 'brigadier:bool',
-              executable: true,
-              properties: undefined,
-              arguments: 'allowed',
-              parsersId: 118
+              parsers: [
+                'brigadier:bool'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'allowed'
+              ],
+              parsersId: 126
             },
             nametagVisibility: {
-              type: 'literal',
-              children: {
-                always: {
-                  type: 'literal',
-                  executable: true
-                },
-                hideForOtherTeams: {
-                  type: 'literal',
-                  executable: true
-                },
-                hideForOwnTeam: {
-                  type: 'literal',
-                  executable: true
-                },
-                never: {
-                  type: 'literal',
-                  executable: true
-                }
-              }
+              type: 'literalArgument',
+              parsers: [
+                'sandstone:literals'
+              ],
+              executables: [
+                true
+              ],
+              literalValues: [
+                [
+                  'always',
+                  'hideForOtherTeams',
+                  'hideForOwnTeam',
+                  'never'
+                ]
+              ],
+              arguments: [
+                'option'
+              ],
+              parsersId: 125
             },
             prefix: {
               type: 'literalArgument',
-              parser: 'minecraft:component',
-              executable: true,
-              properties: undefined,
-              arguments: 'prefix',
-              parsersId: 119
+              parsers: [
+                'minecraft:component'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'prefix'
+              ],
+              parsersId: 127
             },
             seeFriendlyInvisibles: {
               type: 'literalArgument',
-              parser: 'brigadier:bool',
-              executable: true,
-              properties: undefined,
-              arguments: 'allowed',
-              parsersId: 118
+              parsers: [
+                'brigadier:bool'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'allowed'
+              ],
+              parsersId: 126
             },
             suffix: {
               type: 'literalArgument',
-              parser: 'minecraft:component',
-              executable: true,
-              properties: undefined,
-              arguments: 'suffix',
-              parsersId: 120
+              parsers: [
+                'minecraft:component'
+              ],
+              executables: [
+                true
+              ],
+              arguments: [
+                'suffix'
+              ],
+              parsersId: 128
             }
           },
-          executable: false,
-          properties: undefined,
-          arguments: 'team',
-          parsersId: 114
+          arguments: [
+            'team'
+          ],
+          parsersId: 120
         },
         remove: {
           type: 'literalArgument',
-          parser: 'minecraft:team',
-          executable: true,
-          properties: undefined,
-          arguments: 'team',
-          parsersId: 114
+          parsers: [
+            'minecraft:team'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'team'
+          ],
+          parsersId: 120
         }
       }
     },
     teammsg: {
       type: 'literalArgument',
-      parser: 'minecraft:message',
-      executable: true,
-      properties: undefined,
-      arguments: 'message',
-      parsersId: 95
+      parsers: [
+        'minecraft:message'
+      ],
+      executables: [
+        true
+      ],
+      arguments: [
+        'message'
+      ],
+      parsersId: 101
     },
     teleport: {
       type: 'literal',
       children: {
         destination: {
           type: 'argument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'single',
-            type: 'entities'
-          },
-          executable: true,
-          parsersId: 121
+          properties: [
+            {
+              amount: 'single',
+              type: 'entities'
+            }
+          ],
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            true
+          ],
+          parsersId: 129
         },
         location: {
           type: 'argument',
-          parser: 'minecraft:vec3',
-          executable: true,
-          parsersId: 122
+          parsers: [
+            'minecraft:vec3'
+          ],
+          executables: [
+            true
+          ],
+          parsersId: 130
         },
         targets: {
           type: 'argument',
-          parser: 'minecraft:entity',
-          properties: {
-            amount: 'multiple',
-            type: 'entities'
-          },
+          properties: [
+            {
+              amount: 'multiple',
+              type: 'entities'
+            }
+          ],
           children: {
             destination: {
               type: 'argument',
-              parser: 'minecraft:entity',
-              properties: {
-                amount: 'single',
-                type: 'entities'
-              },
-              executable: true,
-              parsersId: 121
+              properties: [
+                {
+                  amount: 'single',
+                  type: 'entities'
+                }
+              ],
+              parsers: [
+                'minecraft:entity'
+              ],
+              executables: [
+                true
+              ],
+              parsersId: 129
             },
             location: {
               type: 'argument',
-              parser: 'minecraft:vec3',
               children: {
                 facing: {
                   type: 'literal',
                   children: {
                     entity: {
                       type: 'literalArgument',
-                      parser: 'compound',
+                      parsers: [
+                        'minecraft:entity',
+                        'minecraft:entity_anchor'
+                      ],
+                      executables: [
+                        true,
+                        true
+                      ],
                       properties: [
                         {
                           amount: 'single',
@@ -7031,52 +7739,74 @@ export default ({
                         },
                         undefined
                       ],
-                      executable: [
-                        true,
-                        true
-                      ],
                       arguments: [
                         'facingEntity',
                         'facingAnchor'
                       ],
-                      parsers: [
-                        'minecraft:entity',
-                        'minecraft:entity_anchor'
-                      ],
-                      parsersId: 123
+                      parsersId: 132
                     },
                     facingLocation: {
                       type: 'argument',
-                      parser: 'minecraft:vec3',
-                      executable: true,
-                      parsersId: 124
+                      parsers: [
+                        'minecraft:vec3'
+                      ],
+                      executables: [
+                        true
+                      ],
+                      parsersId: 133
                     }
                   }
                 },
                 rotation: {
                   type: 'argument',
-                  parser: 'minecraft:rotation',
-                  executable: true,
-                  parsersId: 125
+                  parsers: [
+                    'minecraft:rotation'
+                  ],
+                  executables: [
+                    true
+                  ],
+                  parsersId: 134
                 }
               },
-              executable: true,
-              parsersId: 122
+              parsers: [
+                'minecraft:vec3'
+              ],
+              executables: [
+                true
+              ],
+              parsersId: 130
             }
           },
-          parsersId: 0
+          parsers: [
+            'minecraft:entity'
+          ],
+          executables: [
+            false
+          ],
+          parsersId: 131
         }
       }
     },
     tell: {
-      type: 'literal',
+      type: 'literalArgument',
       redirect: [
         'msg'
-      ]
+      ],
+      parsers: [],
+      executables: [],
+      arguments: [],
+      parsersId: 1
     },
     tellraw: {
       type: 'literalArgument',
-      parser: 'compound',
+      parsers: [
+        'minecraft:entity',
+        'minecraft:component'
+      ],
+      executables: [
+        false,
+        true
+      ],
       properties: [
         {
           amount: 'multiple',
@@ -7084,72 +7814,88 @@ export default ({
         },
         undefined
       ],
-      executable: [
-        false,
-        true
-      ],
       arguments: [
         'targets',
         'message'
       ],
-      parsers: [
-        'minecraft:entity',
-        'minecraft:component'
-      ],
-      parsersId: 126
+      parsersId: 135
     },
     time: {
       type: 'literal',
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'minecraft:time',
-          executable: true,
-          properties: undefined,
-          arguments: 'time',
-          parsersId: 127
+          parsers: [
+            'minecraft:time'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'time'
+          ],
+          parsersId: 136
         },
         query: {
-          type: 'literal',
-          children: {
-            day: {
-              type: 'literal',
-              executable: true
-            },
-            daytime: {
-              type: 'literal',
-              executable: true
-            },
-            gametime: {
-              type: 'literal',
-              executable: true
-            }
-          }
+          type: 'literalArgument',
+          parsers: [
+            'sandstone:literals'
+          ],
+          executables: [
+            true
+          ],
+          literalValues: [
+            [
+              'day',
+              'daytime',
+              'gametime'
+            ]
+          ],
+          arguments: [
+            'option'
+          ],
+          parsersId: 137
         },
         set: {
           type: 'literal',
           children: {
             day: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             midnight: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             night: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             noon: {
-              type: 'literal',
-              executable: true
+              type: 'literalArgument',
+              parsers: [],
+              executables: [],
+              arguments: [],
+              parsersId: 1
             },
             time: {
               type: 'argument',
-              parser: 'minecraft:time',
-              executable: true,
-              parsersId: 127
+              parsers: [
+                'minecraft:time'
+              ],
+              executables: [
+                true
+              ],
+              parsersId: 138
             }
           }
         }
@@ -7157,39 +7903,71 @@ export default ({
     },
     title: {
       type: 'literalArgument',
-      parser: 'minecraft:entity',
-      properties: {
-        amount: 'multiple',
-        type: 'players'
-      },
+      parsers: [
+        'minecraft:entity'
+      ],
+      executables: [
+        false
+      ],
+      properties: [
+        {
+          amount: 'multiple',
+          type: 'players'
+        }
+      ],
       children: {
         actionbar: {
           type: 'literalArgument',
-          parser: 'minecraft:component',
-          executable: true,
-          properties: undefined,
-          arguments: 'title',
-          parsersId: 128
+          parsers: [
+            'minecraft:component'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'title'
+          ],
+          parsersId: 139
         },
         clear: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         reset: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         subtitle: {
           type: 'literalArgument',
-          parser: 'minecraft:component',
-          executable: true,
-          properties: undefined,
-          arguments: 'title',
-          parsersId: 128
+          parsers: [
+            'minecraft:component'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'title'
+          ],
+          parsersId: 139
         },
         times: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'brigadier:integer',
+            'brigadier:integer',
+            'brigadier:integer'
+          ],
+          executables: [
+            false,
+            false,
+            true
+          ],
           properties: [
             {
               min: 0
@@ -7201,152 +7979,165 @@ export default ({
               min: 0
             }
           ],
-          executable: [
-            false,
-            false,
-            true
-          ],
           arguments: [
             'fadeIn',
             'stay',
             'fadeOut'
           ],
-          parsers: [
-            'brigadier:integer',
-            'brigadier:integer',
-            'brigadier:integer'
-          ],
-          parsersId: 129
+          parsersId: 140
         },
         title: {
           type: 'literalArgument',
-          parser: 'minecraft:component',
-          executable: true,
-          properties: undefined,
-          arguments: 'title',
-          parsersId: 128
+          parsers: [
+            'minecraft:component'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'title'
+          ],
+          parsersId: 139
         }
       },
-      executable: false,
-      arguments: 'targets',
+      arguments: [
+        'targets'
+      ],
       parsersId: 0
     },
     tm: {
-      type: 'literal',
+      type: 'literalArgument',
       redirect: [
         'teammsg'
-      ]
+      ],
+      parsers: [],
+      executables: [],
+      arguments: [],
+      parsersId: 1
     },
     tp: {
-      type: 'literal',
+      type: 'literalArgument',
       redirect: [
         'teleport'
-      ]
+      ],
+      parsers: [],
+      executables: [],
+      arguments: [],
+      parsersId: 1
     },
     trigger: {
       type: 'literalArgument',
-      parser: 'minecraft:objective',
+      parsers: [
+        'minecraft:objective'
+      ],
+      executables: [
+        true
+      ],
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'brigadier:integer',
-          executable: true,
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 15
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 17
         },
         set: {
           type: 'literalArgument',
-          parser: 'brigadier:integer',
-          executable: true,
-          properties: undefined,
-          arguments: 'value',
-          parsersId: 15
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'value'
+          ],
+          parsersId: 17
         }
       },
-      executable: true,
-      properties: undefined,
-      arguments: 'objective',
-      parsersId: 99
+      arguments: [
+        'objective'
+      ],
+      parsersId: 105
     },
     w: {
-      type: 'literal',
+      type: 'literalArgument',
       redirect: [
         'msg'
-      ]
+      ],
+      parsers: [],
+      executables: [],
+      arguments: [],
+      parsersId: 1
     },
     weather: {
       type: 'literal',
       children: {
         clear: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:integer',
-          properties: {
-            min: 0,
-            max: 1000000
-          },
-          arguments: 'duration',
-          parsersId: 130
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              min: 0,
+              max: 1000000
+            }
+          ],
+          arguments: [
+            'duration'
+          ],
+          parsersId: 141
         },
         rain: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:integer',
-          properties: {
-            min: 0,
-            max: 1000000
-          },
-          arguments: 'duration',
-          parsersId: 130
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              min: 0,
+              max: 1000000
+            }
+          ],
+          arguments: [
+            'duration'
+          ],
+          parsersId: 141
         },
         thunder: {
           type: 'literalArgument',
-          executable: true,
-          parser: 'brigadier:integer',
-          properties: {
-            min: 0,
-            max: 1000000
-          },
-          arguments: 'duration',
-          parsersId: 130
-        }
-      }
-    },
-    whitelist: {
-      type: 'literal',
-      children: {
-        add: {
-          type: 'literalArgument',
-          parser: 'minecraft:game_profile',
-          executable: true,
-          properties: undefined,
-          arguments: 'targets',
-          parsersId: 39
-        },
-        list: {
-          type: 'literal',
-          executable: true
-        },
-        off: {
-          type: 'literal',
-          executable: true
-        },
-        on: {
-          type: 'literal',
-          executable: true
-        },
-        reload: {
-          type: 'literal',
-          executable: true
-        },
-        remove: {
-          type: 'literalArgument',
-          parser: 'minecraft:game_profile',
-          executable: true,
-          properties: undefined,
-          arguments: 'targets',
-          parsersId: 39
+          parsers: [
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
+          properties: [
+            {
+              min: 0,
+              max: 1000000
+            }
+          ],
+          arguments: [
+            'duration'
+          ],
+          parsersId: 141
         }
       }
     },
@@ -7355,7 +8146,14 @@ export default ({
       children: {
         add: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'brigadier:float',
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
           properties: [
             {
               min: -60000000,
@@ -7365,60 +8163,83 @@ export default ({
               min: 0
             }
           ],
-          executable: [
-            true,
-            true
-          ],
           arguments: [
             'distance',
             'time'
           ],
-          parsers: [
-            'brigadier:float',
-            'brigadier:integer'
-          ],
-          parsersId: 131
+          parsersId: 142
         },
         center: {
           type: 'literalArgument',
-          parser: 'minecraft:vec2',
-          executable: true,
-          properties: undefined,
-          arguments: 'pos',
-          parsersId: 132
+          parsers: [
+            'minecraft:vec2'
+          ],
+          executables: [
+            true
+          ],
+          arguments: [
+            'pos'
+          ],
+          parsersId: 143
         },
         damage: {
           type: 'literal',
           children: {
             amount: {
               type: 'literalArgument',
-              parser: 'brigadier:float',
-              properties: {
-                min: 0
-              },
-              executable: true,
-              arguments: 'damagePerBlock',
-              parsersId: 133
+              parsers: [
+                'brigadier:float'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  min: 0
+                }
+              ],
+              arguments: [
+                'damagePerBlock'
+              ],
+              parsersId: 144
             },
             buffer: {
               type: 'literalArgument',
-              parser: 'brigadier:float',
-              properties: {
-                min: 0
-              },
-              executable: true,
-              arguments: 'distance',
-              parsersId: 134
+              parsers: [
+                'brigadier:float'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  min: 0
+                }
+              ],
+              arguments: [
+                'distance'
+              ],
+              parsersId: 145
             }
           }
         },
         get: {
-          type: 'literal',
-          executable: true
+          type: 'literalArgument',
+          parsers: [],
+          executables: [],
+          arguments: [],
+          parsersId: 1
         },
         set: {
           type: 'literalArgument',
-          parser: 'compound',
+          parsers: [
+            'brigadier:float',
+            'brigadier:integer'
+          ],
+          executables: [
+            true,
+            true
+          ],
           properties: [
             {
               min: -60000000,
@@ -7428,52 +8249,66 @@ export default ({
               min: 0
             }
           ],
-          executable: [
-            true,
-            true
-          ],
           arguments: [
             'distance',
             'time'
           ],
-          parsers: [
-            'brigadier:float',
-            'brigadier:integer'
-          ],
-          parsersId: 131
+          parsersId: 142
         },
         warning: {
           type: 'literal',
           children: {
             distance: {
               type: 'literalArgument',
-              parser: 'brigadier:integer',
-              properties: {
-                min: 0
-              },
-              executable: true,
-              arguments: 'distance',
-              parsersId: 135
+              parsers: [
+                'brigadier:integer'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  min: 0
+                }
+              ],
+              arguments: [
+                'distance'
+              ],
+              parsersId: 146
             },
             time: {
               type: 'literalArgument',
-              parser: 'brigadier:integer',
-              properties: {
-                min: 0
-              },
-              executable: true,
-              arguments: 'time',
-              parsersId: 136
+              parsers: [
+                'brigadier:integer'
+              ],
+              executables: [
+                true
+              ],
+              properties: [
+                {
+                  min: 0
+                }
+              ],
+              arguments: [
+                'time'
+              ],
+              parsersId: 147
             }
           }
         }
       }
     },
     xp: {
-      type: 'literal',
+      type: 'literalArgument',
       redirect: [
         'experience'
-      ]
+      ],
+      parsers: [],
+      executables: [],
+      arguments: [],
+      parsersId: 1
     }
-  }
+  },
+  parsers: [],
+  executables: []
 }) as const

@@ -3,12 +3,12 @@
 
 import { ParsersMap } from './parsersMap'
 
-type ParsersIdMapObject<returnType, rootNode> = ({
+type ParsersIdMapObject<returnType> = ({
   $1
 })
 
-export type ParsersIdMap<returnType, rootNode, k extends number>  = (
-  k extends keyof ParsersIdMapObject<returnType, rootNode> ?
-    ParsersIdMapObject<returnType, rootNode>[k] :
+export type ParsersIdMap<returnType, k extends number>  = (
+  k extends keyof ParsersIdMapObject<returnType> ?
+    ParsersIdMapObject<returnType>[k] :
     never
 )

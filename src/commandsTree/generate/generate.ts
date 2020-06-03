@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 
 import {
-  setLiteralArguments, setCompoundParser, redirectExecutesToRoot, changeBiomeSoundParser,
+  setLiteralArguments, setParserIds, redirectExecutesToRoot, changeBiomeSoundParser, commandsToCamelCase, removeOpCommands, normalizeNodes, mergeLiteralSiblings, cleanUselessProperties, setLeafLiteralsToArguments,
 } from './treeModifiers'
 import { toJS, getBasePath, safeName } from './utils'
 
@@ -28,11 +28,25 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
   }
 
   delete commandsTree.children.list
-  delete commandsTree.children['save-all']
+
+  // Remove commands that are not usable by datapacks.
+  removeOpCommands(commandsTree)
+
+  // Change all commands to camel case
+  commandsToCamelCase(commandsTree)
+
+  // Normalize all nodes
+  normalizeNodes(commandsTree)
+
+  // Merge literal siblings
+  mergeLiteralSiblings(commandsTree)
 
   // Now, literals with only 1 possibility (like "as", it only has the "targets" child) should be collapsed
   // to 1 node with the "literalArgument" type.
   setLiteralArguments(commandsTree)
+
+  // Literal leafs should be literalArguments too
+  setLeafLiteralsToArguments(commandsTree)
 
   // Change argument types of "biome" and "sound" to a custom type
   // (instead of the generic "resource_location" which can be used for nbts, functions, etc...),
@@ -40,11 +54,13 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
   changeBiomeSoundParser(commandsTree)
 
   // Map parsers to IDs. We're going to transform each parser into a TypeScript type later.
-  const compoundTypesMap = setCompoundParser(commandsTree)
+  const compoundTypesMap = setParserIds(commandsTree)
 
   // Make all execute subcommands both redirect to execute & root
   redirectExecutesToRoot(commandsTree)
 
+  // Remove all useless properties
+  cleanUselessProperties(commandsTree)
 
   /** Output dir for our commands tree */
   const parentDir = path.join(__dirname, '..')
@@ -65,17 +81,29 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
    */
   const typesMapResult = [...compoundTypesMap.entries()].map(
     ([id, parserInfo]) => {
-      const { arguments: names, parsers } = parserInfo
+      const { arguments: names, parsers, literalValues } = parserInfo
 
-      return `${id}:\n    ${parsers.map((types, parserIndex) => {
-        const funcArgs: string = types.map((_, i) => `${safeName(names[i])}: ParsersMap['${types[i]}']`).join(', ')
+      if (parsers.length) {
+        return `${id}:\n    ${parsers.map((types, parserIndex) => {
+          function getResultingType(i: number) {
+            if (types[i] === 'sandstone:literals') {
+              return literalValues[i].map((v) => `'${v}'`).join(' | ')
+            }
+            return `ParsersMap['${types[i]}']`
+          }
 
-        if (parserIndex + 1 === parsers.length) {
-          return `((${funcArgs}) => rootNode)`
-        }
+          const funcArgs: string = types.map((_, i) => `${safeName(names[i])}: ${getResultingType(i)}`).join(', ')
 
-        return `((${funcArgs}) => returnType)`
-      }).join(' &\n    ')}`
+          if (parserIndex + 1 === parsers.length) {
+            return `((${funcArgs}) => returnType)`
+          }
+
+          return `((${funcArgs}) => returnType)`
+        }).join(' &\n    ')}`
+      }
+
+      // Node with no arguments
+      return `${id}:\n    () => returnType`
     },
   ).join('\n  ')
 
