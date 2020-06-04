@@ -61,7 +61,7 @@ mcfunction('hello', () => {
   say('Hello world!')
 })
 
-saveDatapack()
+saveDatapack('My datapack')
 ```
 To run this file, type the following command in your terminal:
 
@@ -72,18 +72,7 @@ To run this file, type the following command in your terminal:
 npx ts-node helloworld.ts
 ```
 
-You should see the following output:
-```
-==== default:hello ====
-
-say Hello world!
-
-================
-```
-
-If you do, congratulations! You just wrote your first Minecraft function using Sandstone.
-
-*For the moment, no datapack is created. Sandstone is in early stage, and the automatic creation of datapacks will be added later.*
+You should see a new folder in your current working directory, named `My datapack`. If you do, congratulations! You just wrote your first Minecraft function using Sandstone.
 
 ### Explanation
 Let's do a line-by-line explanation.
@@ -108,13 +97,11 @@ Inside the curly brackets `{...}`, we will specify the commands we want to write
 This line tells Sandstone that we want to write the `/say` command in the current mcfunction, with the `Hello world!` argument. It will result in the command `say Hello world!`.
 
 ```js
-saveDatapack()
+saveDatapack('My datapack')
 ```
-This line tells Sandstone to save the all mcfunctions to the actual file system.
+This line tells Sandstone to save the all mcfunctions to the actual file system. Here, you only specified the datapack's name: it will therefore be saved to your current directory. As a 2nd argument, you can specify a world's name, and it will add the datapack directly to your world.
 
 *Note 1: one day, Sandstone will have its own CLI, and manual saving won't be required anymore.*
-
-*Note 2: for the moment, Sandstone does not save anything to the file system. It only prints the result to the console.*
 
 ## How to write a command
 
@@ -136,7 +123,7 @@ A command can have multiple subcommands, which all have arguments: `effect.give(
 
 **Important**: A command is only written to the datapack if it has been called. For example, some commands do not have any arguments, like `/reload`. In Sandstone, you'd have to type `reload()`. Only typing `reload` will **not** call the command, and nothing will appear in your datapacK.
 
-## Optional arguments
+### Optional arguments
 
 In Minecraft, some commands have optional arguments. Let's stay with the `/effect give` command. According to the [Wiki](https://minecraft.gamepedia.com/Commands/effect#Syntax), It has 2 to 5 arguments:
 
@@ -200,6 +187,28 @@ setblock ~ ~1 ~ minecraft:air
 ```
 
 As you can see, Sandstone automatically created a new mcfunction for you. It contains all your nested commands (all the setblocks), and is called by the `execute` command. Therefore, you achieve the desired effect **without managing several files youself**.
+
+## Saving the datapack
+
+Using sandstone, you can choose to either save the datapack to the current directory, or to save it directly in one of your Minecraft world. The first argument to the `saveDatapack` method is the name of the datapack. If you only provide this argument, the datapack will be saved to your current directory.
+
+```js
+// Save the datapack to the current directory
+saveDatapack('My datapack')
+```
+
+If you specify the name of one of your Minecraft worlds as second argument, Sandstone will save the datapack in the specified world.
+
+```js
+// Save the datapack in "An awesome world"
+saveDatapack('My datapack', 'An awesome world')
+```
+
+To achieve this, Sandstone automatically detects where your `.minecraft` folder is located. In that case, Sandstone will give you a clear error message. You will then have to manually specify your `.minecraft` location:
+```js
+// Save the datapack in "An awesome world", in a custom .minecraft folder
+saveDatapack('My datapack', 'An awesome world', 'C:/Program Files/.minecraft')
+```
 
 # Contributing
 
