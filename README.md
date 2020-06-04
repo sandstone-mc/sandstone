@@ -186,11 +186,11 @@ If you try running such commands, under a mcfunction named "main", you'll have t
 ```
 ==== default:main ====
 
-execute as @a at @s run function default:main/callback_0
+execute as @a at @s run function default:main/execute_as
 
 ================
 
-==== default:main/callback_0 ====
+==== default:main/execute_as ====
 
 setblock ~ ~-1 ~ minecraft:dirt
 setblock ~ ~ ~ minecraft:air

@@ -11,13 +11,12 @@ import { Wizard } from './classes/wizard'
 const classes = [new Knight(), new Wizard()]
 
 mcfunction('main', () => {
-  // Execute as players who used a skill
-  execute.as('@a[scores={useSkill=0..}]').run(() => {
-    // For each class
-    for (const class_ of classes) {
-      // The player is a of the current class
-      execute.as(`@s[scores={class=${class_.class}}]`).run(class_.skill)
-    }
+  execute.as('@a').at('@s').run(() => {
+    // All this commands are executed "as @a at @s".
+    // Sets a block of dirt under all players, and air on their body & head.
+    setblock('~ ~-1 ~', 'minecraft:dirt')
+    setblock('~ ~ ~', 'minecraft:air')
+    setblock('~ ~1 ~', 'minecraft:air')
   })
 })
 
