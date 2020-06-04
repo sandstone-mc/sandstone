@@ -4,7 +4,7 @@
 
 ![GitHub](https://img.shields.io/github/license/TheMrZZ/sandstone) ![GitHub last commit](https://img.shields.io/github/last-commit/TheMrZZ/sandstone?color=blue) ![Version](https://img.shields.io/badge/version-alpha-success)
 
-Sandstone is a Typescript library for Minecraft Datapacks. It allows to easily create, debug and share Minecraft functions, loot tables, predicates etc...
+Sandstone is a Typescript library for Minecraft Datapacks. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
 
 ## Features
 
@@ -13,6 +13,7 @@ Sandstone is a Typescript library for Minecraft Datapacks. It allows to easily c
 Sandstone tells you what a command expects, and autocomplete complicated arguments for you.
 
 You don't need to remember commands syntax anymore.
+
 ![autocomplete](./docs/readme/autocomplete.gif)
 
 This autocompletion works for commands, predicates, loot tables, advancements...
@@ -82,7 +83,7 @@ say Hello world!
 
 If you do, congratulations! You just wrote your first Minecraft function using Sandstone.
 
-*For the moment, no datapack is created. Sandstone is at its earliest stage, and the automatic creation of datapacks will be added later.*
+*For the moment, no datapack is created. Sandstone is in early stage, and the automatic creation of datapacks will be added later.*
 
 ### Explanation
 Let's do a line-by-line explanation.
@@ -133,7 +134,7 @@ When typing a command or a subcommand, there are two possibilities:
 
 A command can have multiple subcommands, which all have arguments: `effect.give('@a', 'minecraft:speed', 30, 2)` or `effect.clear('@a', 'minecraft:night_vision')`.
 
-**Important**: A command is only wrote to the datapack if it has been called. For example, some commands do not have any arguments, like `/reload`. In Sandstone, you'd have to type `reload()`. Only typing `reload` will **not** call the command, and nothing will appear in your datapacK.
+**Important**: A command is only written to the datapack if it has been called. For example, some commands do not have any arguments, like `/reload`. In Sandstone, you'd have to type `reload()`. Only typing `reload` will **not** call the command, and nothing will appear in your datapacK.
 
 ## Optional arguments
 
@@ -143,11 +144,13 @@ In Minecraft, some commands have optional arguments. Let's stay with the `/effec
 
 As you can see, the `targets` and the `effect` arguments are **mandatory**. Minecraft doesn't know what to do if you do not provide them. However, the `seconds`, `amplifier` and `hideParticles` arguments are all optionals. If you do not specify them, Minecraft uses default values.
 
-In this aspect, Sandstone is identical to Minecraft. When typing `effect.give()`, your IDE will show you the possible arguments: ![argumentshint1](docs/readme/argumentshint1.png)
+In this aspect, Sandstone is identical to Minecraft. When typing `effect.give()`, your IDE will show you the possible arguments:
+![argumentshint1](docs/readme/argumentshint1.png)
 
-On the left, you can see there is 4 different ways to call `effect.give`. The first one is shown here: you can just give a target and an effect, and Minecraft will be happy. If you type them and try to enter a **third** argument, your IDE will automatically show the next possible argument: ![argumentshint2](docs/readme/argumentshint2.png).
+On the left, you can see there are 4 different ways to call `effect.give`. The first one is shown here: you can just give a target and an effect, and Minecraft will be happy. If you type them and try to enter a **third** argument, your IDE will automatically show the next possible argument:
+![argumentshint2](docs/readme/argumentshint2.png).
 
-It tell you that the third argument is the number of seconds. If you keep going (or type the Down arrow to display all possibilities), you will see that Sandstone allows what Minecraft allows. It's very useful: **you don't have to remember the syntax of all commands**, Sandstone does that for you.
+It's telling you the third argument is the number of seconds. If you keep going (or type the Down arrow to display all possibilities), you will see that Sandstone allows what Minecraft allows. It's very useful: **you don't have to remember the syntax of all commands**, Sandstone does that for you.
 
 ### Execute
 
@@ -200,4 +203,4 @@ As you can see, Sandstone automatically created a new mcfunction for you. It con
 
 # Contributing
 
-For the moment, Sandstone is not opened to external contributions *(honestly, I don't know how to do that)*. However, feel free to open Issues, or to contact me on the [Minecraft Commands Discord](https://discord.gg/9wNcfsH) for discussing this project!
+For the moment, Sandstone is not opened to external contributions *(honestly, I don't know how to do that)*. However, feel free to open Issues, or to contact @TheMrZZ#9307 on the [Minecraft Commands Discord](https://discord.gg/9wNcfsH) for discussing this project!
