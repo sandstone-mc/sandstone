@@ -10,7 +10,7 @@ import { Wizard } from './classes/wizard'
 
 const classes = [new Knight(), new Wizard()]
 
-mcfunction('main', () => {
+const main = mcfunction(() => {
   execute.as('@a').at('@s').run(() => {
     // All this commands are executed "as @a at @s".
     // Sets a block of dirt under all players, and air on their body & head.
@@ -20,5 +20,9 @@ mcfunction('main', () => {
   })
 })
 
+mcfunction(() => {
+  main()
+})
 
-saveDatapack()
+
+saveDatapack('My Datapack', 'Test')

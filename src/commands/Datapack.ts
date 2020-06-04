@@ -1,15 +1,24 @@
-// OLD STUFF
+import path from 'path'
+import fs from 'fs'
+import os from 'os'
+
+import { getWorldPath } from './utils'
 
 /**
  * A McFunction's name has at least 2 components: a namespace, then the different folders up to the function itself.
  */
-type McFunctionName = [string, string, ...string[]]
+type McFunctionName = string[]
 
 type CommandArgs = readonly [any, ...any[]]
 
 function minecraftFunctionName(functionName: McFunctionName | string[]): string {
   const [namespace, ...folders] = functionName
   return `${namespace}:${folders.join('/')}`
+}
+
+type McFunctionMethod = {
+  (name: string, callback: () => void): () => void
+  (callback: () => void): () => void
 }
 
 export default class Datapack {
@@ -19,7 +28,7 @@ export default class Datapack {
 
   /** Here, we use a "string" for the name because JS doesn't support objects as indexes.
    * We'll use the JSON representation. */
-  functions: Map<string, CommandArgs[]>
+  functions: Map<McFunctionName, CommandArgs[]>
 
   constructor(namespace: string) {
     this.namespace = namespace
@@ -36,18 +45,28 @@ export default class Datapack {
   }
 
   getCurrentFunction(): CommandArgs[] {
-    const commandsIds = this.functions.get(this.getCurrentFunctionMcName())
+    if (!this.currentFunction) {
+      throw new Error('Current function is undefined')
+    }
+
+
+    const commandsIds = this.functions.get(this.currentFunction)
 
     if (!commandsIds) {
-      throw new Error('Current function is undefined')
+      throw new Error('Current function does not exist in the commands map - this is an internal error.')
     }
 
     return commandsIds
   }
 
-  enterRootFunction(functionName: string): void {
+  enterRootFunction(functionName: string): McFunctionName {
     this.currentFunction = [this.namespace, functionName]
-    this.functions.set(this.getCurrentFunctionMcName(), [])
+    this.functions.set(this.currentFunction, [])
+    return this.currentFunction
+  }
+
+  hasFunction(functionName: McFunctionName): boolean {
+    return this.functions.has(functionName)
   }
 
   hasChildFunction(childName: string): boolean {
@@ -55,10 +74,9 @@ export default class Datapack {
       return false
     }
 
-    const possibleChildFullName = this.currentFunction.concat([childName])
-    const mcName = minecraftFunctionName(possibleChildFullName)
+    const childFullName = this.currentFunction.concat([childName])
 
-    return this.functions.has(mcName)
+    return this.hasFunction(childFullName)
   }
 
   enterChildFunction(functionName: string): string {
@@ -76,12 +94,14 @@ export default class Datapack {
       i += 1
     }
 
+    // Update the current function - it now is the child function.
     this.currentFunction.push(newName)
 
-    const fullName = this.getCurrentFunctionMcName()
-    this.functions.set(fullName, [])
+    // Set its commands as empty
+    this.functions.set(this.currentFunction, [])
 
-    return fullName
+    // Return its full minecraft name
+    return this.getCurrentFunctionMcName()
   }
 
   exitRootFunction(): void {
@@ -112,21 +132,86 @@ export default class Datapack {
     this.getCurrentFunction().pop()
   }
 
-  mcfunction = (name: string, callback: () => void) => {
-    this.enterRootFunction(name)
+  mcfunction: McFunctionMethod = (nameOrCallback: string | (() => void), callbackOrUndefined: undefined | (() => void) = undefined) => {
+    let name: string
+    let callback: () => void
+
+    if (callbackOrUndefined === undefined) {
+      callback = nameOrCallback as () => void
+      name = callback.name || '__anonymous__'
+    } else {
+      callback = callbackOrUndefined
+      name = nameOrCallback as string
+    }
+
+    const functionName = minecraftFunctionName(this.enterRootFunction(name))
     callback()
     this.exitRootFunction()
+
+    return () => {
+      this.registerNewCommand(['function', functionName])
+    }
   }
 
-  save = (): void => {
-    for (const [functionName, commandsArgs] of this.functions) {
-      console.log('====', functionName, '====\n')
+  /**
+   * Saves the datapack to the file system.
+   *
+   * @param name The name of the Datapack
+   * @param worldName The name of the world to save the datapack in. If unspecified, the datapack will be saved in the current folder.
+   * @param minecraftPath The path of the .minecraft folder. If unspecified, it is automatically discovered.
+   */
+  save = (name: string, worldName: string | undefined = undefined, minecraftPath: string | undefined = undefined): void => {
+    let savePath
 
-      console.log(
-        commandsArgs.map((commandArgs) => commandArgs?.join(' ')).join('\n'),
-      )
-
-      console.log('\n================\n')
+    if (worldName) {
+      savePath = path.join(getWorldPath(worldName, minecraftPath), 'datapacks')
+    } else {
+      savePath = process.cwd()
     }
+
+    savePath = path.join(savePath, name)
+
+    try {
+    // Make the directory
+      fs.mkdirSync(savePath)
+    } catch (e) {
+      // The folder already exists - don't do anything
+    }
+
+    const dataPath = path.join(savePath, 'data')
+
+    for (const [[namespace, ...foldersAndFile], commandsArgs] of this.functions) {
+      const functionsPath = path.join(dataPath, namespace, 'functions')
+      const fileName = foldersAndFile.pop()
+      const folders = foldersAndFile
+
+      const mcFunctionFolder = path.join(functionsPath, ...folders)
+
+      // Create the path
+      try {
+        fs.mkdirSync(mcFunctionFolder, { recursive: true })
+      } catch (e) {
+        // Folder already exists
+      }
+
+      // Write the commands
+      const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
+
+      // Join the arguments of all commands to write them
+      const commands = commandsArgs.map((arg) => arg?.join(' '))
+
+      fs.writeFileSync(mcFunctionPath, commands.join('\n'))
+    }
+
+    // Write pack.mcmeta
+    fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify({
+      pack: {
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        pack_format: 5,
+        description: 'Generated using Sandstone',
+      },
+    }))
+
+    console.log('Successfully wrote commands to', savePath)
   }
 }
