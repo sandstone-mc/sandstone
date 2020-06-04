@@ -18,7 +18,7 @@ export function getMinecraftPath(): string {
   const mcPath = getMCPath()
 
   if (!fs.existsSync(mcPath)) {
-    throw new Error('Unable to locate the .minecraft folder.')
+    throw new Error('Unable to locate the .minecraft folder. Please specify it manually.')
   }
 
   return mcPath
@@ -36,8 +36,8 @@ export function getWorldPath(worldName: string, minecraftPath: string | undefine
 
   const worldPath = path.join(mcPath, 'saves', worldName)
 
-  if (!fs.existsSync(mcPath)) {
-    throw new Error(`Unable to locate the "${worldPath}" folder in ${path.join(mcPath, 'saves')}.`)
+  if (!fs.existsSync(worldPath)) {
+    throw new Error(`Unable to locate the "${worldPath}" folder. Word ${worldName} does not exists.`)
   }
 
   return worldPath

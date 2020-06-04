@@ -25,4 +25,4 @@ mcfunction(() => {
 })
 
 
-saveDatapack('My Datapack', 'Test')
+saveDatapack('My Datapack', 'Test2')
