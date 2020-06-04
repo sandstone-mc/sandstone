@@ -23,7 +23,7 @@ This autocompletion works for commands, predicates, loot tables, advancements...
 ## Always up-to-date
 
 Sandstone is divided in two parts. The core part is version-agnostic, and the commands part is *automatically generated* for each version of the game.
-10 minutes after a new snapshot is released, Sandstone is already updated. You will always have access to **the latest commands**.
+10 minutes after a new snapshot is released, Sandstone is already updated. You will always have access to **the latest commands**. Minecraft gets new blocks, enchantments, items, mobs? Sandstone knows it, and will autocomplete them for you.
 
 *For the moment, Sandstone has not yet been splitted in two.*
 
