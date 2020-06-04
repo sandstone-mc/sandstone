@@ -3,7 +3,7 @@
 
 import { ParsersMap } from './parsersMap'
 
-type ParsersIdMapObject<returnType> = ({
+interface ParsersIdMapObject<returnType> {
   0:
     ((targets: ParsersMap['minecraft:entity']) => returnType)
   1:
@@ -343,7 +343,7 @@ type ParsersIdMapObject<returnType> = ({
     ((distance: ParsersMap['brigadier:integer']) => returnType)
   147:
     ((time: ParsersMap['brigadier:integer']) => returnType)
-})
+}
 
 export type ParsersIdMap<returnType, k extends number>  = (
   k extends keyof ParsersIdMapObject<returnType> ?

@@ -1,0 +1,148 @@
+<div align="center"><img src=https://vignette.wikia.nocookie.net/minecraft/images/d/d6/Sandstone.png/></div>
+
+# Sandstone
+
+![GitHub](https://img.shields.io/github/license/TheMrZZ/sandstone) ![GitHub last commit](https://img.shields.io/github/last-commit/TheMrZZ/sandstone?color=blue) ![Version](https://img.shields.io/badge/version-alpha-success)
+
+Sandstone is a Typescript library for Minecraft Datapacks. It allows to easily create, debug and share Minecraft functions, loot tables, predicates etc...
+
+## Features
+
+### Perfect autocompletion
+
+Sandstone tells you what a command expects, and autocomplete complicated arguments for you.
+
+You don't need to remember commands syntax anymore.
+![autocomplete](./docs/readme/autocomplete.gif)
+
+This autocompletion works for commands, predicates, loot tables, advancements...
+
+*For the moment, autocompletion only works for commands*
+
+## Always up-to-date
+
+Sandstone is divided in two parts. The core part is version-agnostic, and the commands part is *automatically generated* for each version of the game.
+10 minutes after a new snapshot is released, Sandstone is already updated. You will always have access to **the latest commands**.
+
+*For the moment, Sandstone has not yet been splitted in two. It will be in the future*
+
+## Easy to share
+Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own datapacks.
+
+# Getting started
+
+## Installation
+
+The first step is to install [Node.JS](https://nodejs.org/en/). You will then need a code editor: I personnaly recommend [Visual Studio Code](https://code.visualstudio.com/Download).
+
+Create an empty folder named "My Datapack", and run the following commands in order:
+
+```bash
+npm init
+```
+
+Answer the different questions (nothing of importance here). Then add the needed packages:
+
+```bash
+npm add typescript ts-node git+https://git@github.com/TheMrZZ/sandstone.git
+npx tsc --init
+```
+
+You've now installed Sandstone, congratulations!
+
+## Your first function
+
+Let's write your first Minecraft function. In the directory, create a new file named `helloworld.ts`. In it, write the following:
+```js
+import { say, mcfunction, saveDatapack } from 'sandstone'
+
+mcfunction('hello', () => {
+  say('Hello world!')
+})
+
+saveDatapack()
+```
+To run this file, type the following command in your terminal:
+
+```bash
+npx ts-node helloworld.ts
+```
+
+You should see the following output:
+```
+==== default:hello ====
+
+say Hello world!
+
+================
+```
+
+If you do, congratulations! You just wrote your first Minecraft function using Sandstone.
+
+*For the moment, no datapack is created. Sandstone is at its earliest stage, and the automatic creation of datapacks will be added later.*
+
+### Explanation
+Let's do a line-by-line explanation.
+
+```js
+import { say, mcfunction, saveDatapack } from 'sandstone'
+```
+This line tells Sandstone what we need to use. Here, we need one command, `say`, and two Sandstone functions, `mcfunction` and `saveDatapack`.
+
+
+```js
+mcfunction('hello', () => {...})
+```
+This line tells Sandstone we want to create a new mcfunction, called `hello`. We do not have to specify the namespace: here, the default namespace will be used. If you want, you can specify the namespace yourself.
+
+*For the moment, you cannot change the default namespace.*
+
+Inside the curly brackets `{...}`, we will specify the commands we want to write inside this mcfunction.
+
+```js
+  say('Hello world!')
+```
+This line tells Sandstone that we want to write the `/say` command in the current mcfunction, with the `Hello world!` argument. It will result in the command `say Hello world!`.
+
+```js
+saveDatapack()
+```
+This line tells Sandstone to save the all mcfunctions to the actual file system.
+
+*Note 1: one day, Sandstone will have its own CLI, and this won't be required anymore.*
+
+*Note 2: for the moment, Sandstone does not save anything to the file system. It only prints the result to the console.*
+
+## How to write a command
+
+### The basics
+
+In Sandstone, all commands can directly be imported from `sandstone`:
+
+```ts
+import { advancement, execute, kill, say, scoreboard } from 'sandstone'
+```
+
+When typing a command or a subcommand, there are two possibilities:
+
+* The command/subcommand has several subcommands, like `effect give|clear`. To access a subcommand, access it as a property: `effect.give` or `effect.clear`
+
+* The command/subcommand has no subcommands. It directly has argument, like `enchant`. To specify the arguments, call it as a normal function: `enchant("@a", "minecraft:sharpness")`
+
+A command can have multiple subcommands, which all have arguments: `effect.give('@a', 'minecraft:speed', 30, 2)` or `effect.clear('@a', 'minecraft:night_vision')`.
+
+**Important**: A command is only wrote to the datapack if it has been called. For example, some commands do not have any arguments, like `/reload`. In Sandstone, you'd have to type `reload()`. Only typing `reload` will **not** call the command, and nothing will appear in your datapacK.
+
+## Optional arguments
+
+In Minecraft, somme commands have optional arguments. Let's stay with the `/effect give` command. According to the [Wiki](https://minecraft.gamepedia.com/Commands/effect#Syntax), It has 2 to 5 arguments:
+
+```/effect give <targets> <effect> [<seconds>] [<amplifier>] [<hideParticles>]```
+
+As you can see, the `targets` and the `effect` arguments are e **mandatory**. Minecraft doesn't know what to do if you do not provide them. However, the `seconds`, `amplifier` and `hideParticles` arguments are all optionals. If you do not specify them, Minecraft uses default values.
+
+In this aspect, Sandstone is identical to Minecraft. When typing `effect.give(`, your IDE will show you the possible arguments: ![argumentshint1](docs/readme/argumentshint1.png)
+
+On the right, you can see there is 4 different ways to call `effect.give`. The first one is shown here: you can just give a target and an effect, and Minecraft will be happy. If you type them and try to enter a **third** argument, your IDE will automatically show the next possible argument: ![argumentshint2](docs/readme/argumentshint2.png).
+
+It tell you that the third argument is the number of seconds. If you keep going (or type the Down arrow to display all possibilities), you will see that Sandstone allows what Minecraft allows. It's very useful: **you don't have to remember the syntax of all commands**, Sandstone does that for you.

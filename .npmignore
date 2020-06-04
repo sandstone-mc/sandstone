@@ -1,0 +1,7 @@
+src
+tests
+tsconfig.json
+*.js.map
+.eslint*
+.editorconfig
+.prettier*

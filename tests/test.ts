@@ -1,13 +1,14 @@
-import sand from '../src'
+import {
+  say, mcfunction, enchant, saveDatapack, effect,
+} from '../src'
 
-sand.mcfunction('coucou', () => {
-  sand.say('hi')
-  sand.execute.as('@a').at('@s').say('hey')
+mcfunction('hello', () => {
+  // @ts-ignore
 
-  sand.execute.as('@a').run(() => {
-    sand.say('child function')
-    sand.say('This is too bad')
-  })
+
+
+
+  effect.give('@a', 'minecraft:absorption', )
 })
 
-sand.save()
+saveDatapack()

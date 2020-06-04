@@ -10,17 +10,17 @@ import { SOUND_EVENTS } from './sound_event'
 
 type LiteralUnion<T extends U, U = string> = T | (U & {});
 
-type JsonChatComponent = JsonChatComponent[] | {
+export type JsonChatComponent = JsonChatComponent[] | {
   [key: string]: JsonChatComponent | string | number
 }
 
-type SingleNBTValue = number | string | NBT | SingleNBTValue[]
-
-type NBT = {
+export type NBT = {
   [name: string]: SingleNBTValue
 }
 
-export type ParsersMap = {
+export type SingleNBTValue = number | string | NBT | SingleNBTValue[]
+
+export interface ParsersMap {
   // Brigadier types //
   'brigadier:integer': number,
   'brigadier:float': number,

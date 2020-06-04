@@ -10,13 +10,13 @@ import {
 import { ParsersIdMap } from '../commandsTree/types'
 
 
-type _SandstoneRedirectNode<rootNode extends RootNode, redirect extends string> = (
+export type _SandstoneRedirectNode<rootNode extends RootNode, redirect extends string> = (
   redirect extends 'root' ?
-    SandstoneRoot<rootNode> :
+    SandstoneRootNoExecute<rootNode> :
     SandstoneNode<rootNode, rootNode['children'][redirect]>
 )
 
-type SandstoneRedirectNode<
+export type SandstoneRedirectNode<
   rootNode extends RootNode,
   cmdNode extends CommandNode & NodeWithRedirect
 > = _SandstoneRedirectNode<rootNode, cmdNode['redirect'][0]> & (
@@ -24,7 +24,7 @@ type SandstoneRedirectNode<
 )
 
 // An object node: `weather` in `weather.clear`, `if` in `if.score` or `if.entity`...
-type SandstoneObjectNode<rootNode extends RootNode, cmdNode extends CommandNode> = (
+export type SandstoneObjectNode<rootNode extends RootNode, cmdNode extends CommandNode> = (
   cmdNode extends NodeWithChildren ?
     // A literal node with children
     { [key in keyof cmdNode['children']]: SandstoneNode<rootNode, cmdNode['children'][key]> }
@@ -44,7 +44,7 @@ type SandstoneObjectNode<rootNode extends RootNode, cmdNode extends CommandNode>
   )
 )
 
-type SandstoneFunctionNode<
+export type SandstoneFunctionNode<
   rootNode extends RootNode,
   cmdNode extends LiteralArgumentNode | ArgumentNode
 > = (
@@ -54,18 +54,28 @@ type SandstoneFunctionNode<
   >
 )
 
-type SandstoneNode_<rootNode extends RootNode, cmdNode extends CommandNode> = {
-  'root': SandstoneRoot<rootNode>,
+
+// eslint-disable-next-line @typescript-eslint/class-name-casing
+export interface SandstoneNode_<rootNode extends RootNode, cmdNode extends CommandNode> {
+  'root': SandstoneRootNoExecute<rootNode>,
   'argument': (cmdNode extends ArgumentNode ? SandstoneFunctionNode<rootNode, cmdNode> : never)
   'literal': (cmdNode extends LiteralNode ? SandstoneObjectNode<rootNode, cmdNode> : never)
   'literalArgument': (cmdNode extends LiteralArgumentNode ? SandstoneFunctionNode<rootNode, cmdNode> : never)
 }
 
-type SandstoneNode<
+export type SandstoneNode<
   rootNode extends RootNode, cmdNode extends CommandNode
 > = SandstoneNode_<
   rootNode, cmdNode
 >[cmdNode['type']]
+
+type RootNodeWithoutExecute<rootNode extends RootNode> = {
+  [key in Exclude<keyof rootNode['children'], 'execute'>]: rootNode['children'][key]
+}
+
+export type SandstoneRootNoExecute<rootNode extends RootNode> = {
+  [key in (Exclude<keyof rootNode['children'], 'execute'>)]: SandstoneNode<rootNode, rootNode['children'][key]>
+}
 
 export type SandstoneRoot<rootNode extends RootNode> = {
   [key in keyof rootNode['children']]: SandstoneNode<rootNode, rootNode['children'][key]>

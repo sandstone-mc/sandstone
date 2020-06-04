@@ -1,27 +1,75 @@
-// Everything you are going to see is auto generated. Nothing hardcoded there.
+/** TODO: autogenerate that whole file */
+import { COMMANDS_TREE, COMMANDS_TREE_TYPE } from './commandsTree/commands'
 
-import {
-  effect, reload, execute, advancement, setblock, fill, mcfunction, saveDatapack,
-} from './commandsTree'
+import type { SandstoneRoot } from './commands/types'
+import { createCommandsResolver } from './commands/resolver'
+import Datapack from './commands/Datapack'
 
-mcfunction('main', () => {
-  const giveEffect = effect.give.call(null, '@a', 'minecraft:absorption', 30, 2, true)
+type TypedSandstoneRoot = SandstoneRoot<COMMANDS_TREE_TYPE>
 
-  effect.give('@a', 'minecraft:absorption', 30, 2)
-  effect.clear('@a', 'minecraft:absorption')
-  reload()
+const dp = new Datapack('default')
 
-  advancement.grant('@a').everything()
+const sandstone: TypedSandstoneRoot = createCommandsResolver(dp, COMMANDS_TREE) as any
 
-  setblock('0 0 0', 'minecraft:acacia_button', 'destroy')
+export { COMMANDS_TREE }
 
-  execute.as('@a').run(() => {
-    fill('0 0 0', '1 1 1', 'minecraft:acacia_button')
-    fill('0 0 0', '1 1 1', 'minecraft:acacia_button').keep()
-    fill('0 0 0', '1 1 1', 'minecraft:acacia_button').replace('minecraft:air')
-  })
+export const { mcfunction, save: saveDatapack } = dp
 
-  execute.as('@s').say('Hello')
-})
-
-saveDatapack()
+export const {
+  advancement,
+  clone,
+  execute,
+  experience,
+  teleport,
+  xp,
+  attribute,
+  bossbar,
+  clear,
+  data,
+  datapack,
+  defaultgamemode,
+  difficulty,
+  gamemode,
+  gamerule,
+  effect,
+  enchant,
+  forceload,
+  fill,
+  give,
+  help,
+  kill,
+  locate,
+  locatebiome,
+  loot,
+  setblock,
+  me,
+  msg,
+  particle,
+  playsound,
+  recipe,
+  reload,
+  scoreboard,
+  say,
+  schedule,
+  replaceitem,
+  seed,
+  setworldspawn,
+  spawnpoint,
+  spectate,
+  stopsound,
+  spreadplayers,
+  summon,
+  tell,
+  tellraw,
+  title,
+  tag,
+  team,
+  teammsg,
+  time,
+  tm,
+  tp,
+  trigger,
+  w,
+  weather,
+  worldborder,
+} = sandstone

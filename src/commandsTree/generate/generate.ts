@@ -94,10 +94,6 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
 
           const funcArgs: string = types.map((_, i) => `${safeName(names[i])}: ${getResultingType(i)}`).join(', ')
 
-          if (parserIndex + 1 === parsers.length) {
-            return `((${funcArgs}) => returnType)`
-          }
-
           return `((${funcArgs}) => returnType)`
         }).join(' &\n    ')}`
       }

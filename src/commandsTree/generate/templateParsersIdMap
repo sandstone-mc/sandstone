@@ -3,9 +3,9 @@
 
 import { ParsersMap } from './parsersMap'
 
-type ParsersIdMapObject<returnType> = ({
+interface ParsersIdMapObject<returnType> {
   $1
-})
+}
 
 export type ParsersIdMap<returnType, k extends number>  = (
   k extends keyof ParsersIdMapObject<returnType> ?
