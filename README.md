@@ -17,14 +17,14 @@ You don't need to remember commands syntax anymore.
 
 This autocompletion works for commands, predicates, loot tables, advancements...
 
-*For the moment, autocompletion only works for commands*
+*For the moment, autocompletion only works for commands.*
 
 ## Always up-to-date
 
 Sandstone is divided in two parts. The core part is version-agnostic, and the commands part is *automatically generated* for each version of the game.
 10 minutes after a new snapshot is released, Sandstone is already updated. You will always have access to **the latest commands**.
 
-*For the moment, Sandstone has not yet been splitted in two. It will be in the future*
+*For the moment, Sandstone has not yet been splitted in two.*
 
 ## Easy to share
 Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own datapacks.
@@ -52,7 +52,7 @@ You've now installed Sandstone, congratulations!
 
 ## Your first function
 
-Let's write your first Minecraft function. In the directory, create a new file named `helloworld.ts`. In it, write the following:
+Let's write your first Minecraft function. Start VSCode, and open the folder you created. In the directory, create a new file named `helloworld.ts`, with the following content:
 ```js
 import { say, mcfunction, saveDatapack } from 'sandstone'
 
@@ -63,6 +63,9 @@ mcfunction('hello', () => {
 saveDatapack()
 ```
 To run this file, type the following command in your terminal:
+
+*Hint: to start a Terminal in VSCode, look at the top bar, click on Terminal > New Terminal.*
+
 
 ```bash
 npx ts-node helloworld.ts
@@ -93,11 +96,10 @@ This line tells Sandstone what we need to use. Here, we need one command, `say`,
 ```js
 mcfunction('hello', () => {...})
 ```
-This line tells Sandstone we want to create a new mcfunction, called `hello`. We do not have to specify the namespace: here, the default namespace will be used. If you want, you can specify the namespace yourself.
+This line tells Sandstone we want to create a new mcfunction, called `hello`. We do not have to specify the namespace: here, the default namespace will be used. If you want, you can specify the namespace yourself, like you would in Minecraft: `mynamespace:hello`.
+Inside the curly brackets `{...}`, we will specify the commands we want to write inside this mcfunction.
 
 *For the moment, you cannot change the default namespace.*
-
-Inside the curly brackets `{...}`, we will specify the commands we want to write inside this mcfunction.
 
 ```js
   say('Hello world!')
@@ -109,7 +111,7 @@ saveDatapack()
 ```
 This line tells Sandstone to save the all mcfunctions to the actual file system.
 
-*Note 1: one day, Sandstone will have its own CLI, and this won't be required anymore.*
+*Note 1: one day, Sandstone will have its own CLI, and manual saving won't be required anymore.*
 
 *Note 2: for the moment, Sandstone does not save anything to the file system. It only prints the result to the console.*
 
@@ -135,14 +137,67 @@ A command can have multiple subcommands, which all have arguments: `effect.give(
 
 ## Optional arguments
 
-In Minecraft, somme commands have optional arguments. Let's stay with the `/effect give` command. According to the [Wiki](https://minecraft.gamepedia.com/Commands/effect#Syntax), It has 2 to 5 arguments:
+In Minecraft, some commands have optional arguments. Let's stay with the `/effect give` command. According to the [Wiki](https://minecraft.gamepedia.com/Commands/effect#Syntax), It has 2 to 5 arguments:
 
 ```/effect give <targets> <effect> [<seconds>] [<amplifier>] [<hideParticles>]```
 
-As you can see, the `targets` and the `effect` arguments are e **mandatory**. Minecraft doesn't know what to do if you do not provide them. However, the `seconds`, `amplifier` and `hideParticles` arguments are all optionals. If you do not specify them, Minecraft uses default values.
+As you can see, the `targets` and the `effect` arguments are **mandatory**. Minecraft doesn't know what to do if you do not provide them. However, the `seconds`, `amplifier` and `hideParticles` arguments are all optionals. If you do not specify them, Minecraft uses default values.
 
-In this aspect, Sandstone is identical to Minecraft. When typing `effect.give(`, your IDE will show you the possible arguments: ![argumentshint1](docs/readme/argumentshint1.png)
+In this aspect, Sandstone is identical to Minecraft. When typing `effect.give()`, your IDE will show you the possible arguments: ![argumentshint1](docs/readme/argumentshint1.png)
 
-On the right, you can see there is 4 different ways to call `effect.give`. The first one is shown here: you can just give a target and an effect, and Minecraft will be happy. If you type them and try to enter a **third** argument, your IDE will automatically show the next possible argument: ![argumentshint2](docs/readme/argumentshint2.png).
+On the left, you can see there is 4 different ways to call `effect.give`. The first one is shown here: you can just give a target and an effect, and Minecraft will be happy. If you type them and try to enter a **third** argument, your IDE will automatically show the next possible argument: ![argumentshint2](docs/readme/argumentshint2.png).
 
 It tell you that the third argument is the number of seconds. If you keep going (or type the Down arrow to display all possibilities), you will see that Sandstone allows what Minecraft allows. It's very useful: **you don't have to remember the syntax of all commands**, Sandstone does that for you.
+
+### Execute
+
+Sandstone has a special syntax for the `/execute` command. At its core, it looks just like Minecraft:
+
+```js
+execute.as("@a").at("@s")
+```
+
+The divergent part is the command call:
+
+```js
+// Sets a block of dirt under all players
+execute.as("@a").at("@s").setblock('~ ~-1 ~', 'minecraft:dirt')
+```
+
+This will result in `execute as @a at @s run setblock ~ ~-1 ~ minecraft:dirt`. As you can see, you **don't specify the run subcommand**. It is automatically infered.
+
+However, the `run` subcommand still exists, but it is used to execute *several commands*:
+
+```js
+execute.as("@a").at("@s").run(() => {
+  // All this commands are executed "as @a at @s".
+  // Sets a block of dirt under all players, and air on their body & head.
+  setblock('~ ~-1 ~', 'minecraft:dirt')
+  setblock('~ ~ ~', 'minecraft:air')
+  setblock('~ ~1 ~', 'minecraft:air')
+})
+```
+
+If you try running such commands, under a mcfunction named "main", you'll have the following results:
+
+```
+==== default:main ====
+
+execute as @a at @s run function default:main/callback_0
+
+================
+
+==== default:main/callback_0 ====
+
+setblock ~ ~-1 ~ minecraft:dirt
+setblock ~ ~ ~ minecraft:air
+setblock ~ ~1 ~ minecraft:air
+
+================
+```
+
+As you can see, Sandstone automatically created a new mcfunction for you. It contains all your nested commands (all the setblocks), and is called by the `execute` command. Therefore, you achieve the desired effect **without managing several files youself**.
+
+# Contributing
+
+For the moment, Sandstone is not opened to external contributions *(honestly, I don't know how to do that)*. However, feel free to open Issues, or to contact me on the [Minecraft Commands Discord](https://discord.gg/9wNcfsH) for discussing this project!
