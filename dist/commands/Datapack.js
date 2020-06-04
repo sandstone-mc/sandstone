@@ -55,19 +55,19 @@ class Datapack {
         }
         const possibleChildFullName = this.currentFunction.concat([childName]);
         const mcName = minecraftFunctionName(possibleChildFullName);
-        return mcName in this.functions;
+        return this.functions.has(mcName);
     }
     enterChildFunction(functionName) {
         if (!this.currentFunction) {
             throw Error('Entering child function without registering a root function');
         }
-        let i = 0;
-        let newName;
+        let newName = functionName;
         const newNameTemplate = `${functionName}_{}`;
-        do {
+        let i = 2;
+        while (this.hasChildFunction(newName)) {
             newName = newNameTemplate.replace('{}', i.toString());
             i += 1;
-        } while (this.hasChildFunction(newName));
+        }
         this.currentFunction.push(newName);
         const fullName = this.getCurrentFunctionMcName();
         this.functions.set(fullName, []);

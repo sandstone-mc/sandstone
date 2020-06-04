@@ -144,9 +144,14 @@ export class CommandsResolver {
   getArgumentsResolver(...args: any[]): CommandsResolver {
     if (args.length === 1 && isNodeWithArguments(this.currentNode) && this.currentNode.parsers[0] === 'sandstone:callback') {
       // We're entering a callback
+      if (typeof args[0] !== 'function') {
+        throw new Error(`The \`run\` subcommand expects a function as only argument, got: ${args[0]}`)
+      }
 
       // First, we enter a child function, in which the callback will be executed. We keep the name of the newly created function.
-      const functionName = this.datapack.enterChildFunction('callback')
+      const name = args[0]?.name || `${this.args[0]}_${this.args?.[1] || ''}`
+
+      const functionName = this.datapack.enterChildFunction(name)
 
       // Call the callback
       args[0]()

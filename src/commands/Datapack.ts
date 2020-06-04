@@ -57,7 +57,8 @@ export default class Datapack {
 
     const possibleChildFullName = this.currentFunction.concat([childName])
     const mcName = minecraftFunctionName(possibleChildFullName)
-    return mcName in this.functions
+
+    return this.functions.has(mcName)
   }
 
   enterChildFunction(functionName: string): string {
@@ -65,14 +66,15 @@ export default class Datapack {
       throw Error('Entering child function without registering a root function')
     }
 
-    let i = 0
-    let newName: string
-    const newNameTemplate = `${functionName}_{}`
+    let newName = functionName
 
-    do {
+    const newNameTemplate = `${functionName}_{}`
+    let i = 2
+
+    while (this.hasChildFunction(newName)) {
       newName = newNameTemplate.replace('{}', i.toString())
       i += 1
-    } while (this.hasChildFunction(newName))
+    }
 
     this.currentFunction.push(newName)
 
