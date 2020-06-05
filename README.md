@@ -354,11 +354,68 @@ say This function is not used anywhere
 ===========================
 ```
 
-As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions.
+As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions, and for parametrized functions.
 
 ### Parametrized Minecraft functions
 
-Parametrized Minecraft functions allows you to create Minecraft functions expeting arguments. Under the hood, several Minecraft functions will be created: one for each possible
+Parametrized Minecraft functions allows you to create Minecraft functions expecting arguments. Under the hood, several Minecraft functions will be created: one for each different calls you do.
+
+Let's take the following example:
+```js
+// Give diamonds to everyone!
+const giveDiamonds = mcfunction('giveDiamonds', () => {
+  give('@a', 'minecraft:diamond', 64)
+})
+
+mcfunction('main', () => {
+  say('Giving diamonds to everyone!')
+  giveDiamonds()
+})
+```
+
+As you can see, the `main` function will call the `giveDiamonds` function, which gives 64 diamonds to everyone. But what if, in another function, you wanted to give 32 diamonds to everyone? And somewhere else, 16? How can you avoid writing 3 nearly identicals functions? That's where parametrized functions are used. A parametrized function expects some parameters:
+
+```js
+const giveDiamonds = mcfunction('giveDiamonds', (count: number) => {
+  give('@a', 'minecraft:diamond', count)
+}, { lazy: true })
+
+mcfunction('main', () => {
+  say('Giving diamonds to everyone!')
+  giveDiamonds(64)
+  giveDiamonds(32)
+})
+```
+
+As you can see, our `giveDiamonds` Minecraft function now takes an argument: `count`, of type `number`, is the amount of diamonds you want to give. Under the hood, Sandstone created three functions: one for `main`, one for `giveDiamonds(64)`, one for `giveDiamonds(32)`.
+
+```
+===== default:main =====
+say Giving diamonds to everyone!
+function default:giveDiamonds/call
+function default:giveDiamonds/call_2
+========================
+
+===== default:giveDiamonds/call =====
+give @a minecraft:diamond 64
+=====================================
+
+===== default:giveDiamonds/call_2 =====
+give @a minecraft:diamond 32
+=======================================
+```
+
+If you look closely at the previous example, you'll notice that `giveDiamonds` is both a parametrized and a lazy function. In fact, this example **does not work** if `giveDiamonds` is not lazy. Indeed, declaring a non-lazy `mcfunction` will add it to your datapack, so you can call it from Minecraft. However, when Sandstone encounters `giveDiamonds`, it notices that the `count` parameter is required. Sandstone doesn't know what value `count` should have by default: therefore, it cannot create the function. In that case, you will get a very explicit error message.
+
+To prevent this from happening, you should either declare the function as lazy (you won't be able to call it from Minecraft anymore), or you should give all your parameters **default values**:
+
+```js
+const giveDiamonds = mcfunction('giveDiamonds', (count = 1) => {
+  give('@a', 'minecraft:diamond', count)
+})
+```
+
+Here, `count` has a default value of 1. You will be able to call `/function default:giveDiamonds` from Minecraft, and it will give everyone 1 diamond. Used together, **lazy and parametrized functions are very powerful**.
 
 # Contributing
 
