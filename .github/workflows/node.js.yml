@@ -32,6 +32,7 @@ jobs:
 
     - name: Commit dist folder
       run: |
+        git pull
         git config --global user.name 'Automatic CI'
         git config --global user.email 'ci@themrzz.com'
         git add -f dist
