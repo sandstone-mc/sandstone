@@ -35,7 +35,7 @@ function register(optionsOrCommandArg1, ...commandArgs) {
             ...propertyDescriptor,
             value(...args) {
                 let sandObj = this;
-                if (options?.thisField) {
+                if (options === null || options === void 0 ? void 0 : options.thisField) {
                     sandObj = sandObj[options.thisField];
                 }
                 if (!('register' in sandObj)) {
@@ -43,7 +43,7 @@ function register(optionsOrCommandArg1, ...commandArgs) {
                         + ' of your class, you can use the { thisField: "" } option.');
                 }
                 // If we're register an execute subcommand, set inExecute to true
-                if (options?.execute) {
+                if (options === null || options === void 0 ? void 0 : options.execute) {
                     // If we're not already in an execute, prepend "execute"
                     if (!sandObj.inExecute) {
                         sandObj.arguments.push('execute');
@@ -51,20 +51,20 @@ function register(optionsOrCommandArg1, ...commandArgs) {
                     sandObj.inExecute = true;
                 }
                 // If we're not registering an execute subcommand, and we were in an execute before, add the `run` argument
-                if (!options?.execute && sandObj.inExecute) {
+                if (!(options === null || options === void 0 ? void 0 : options.execute) && sandObj.inExecute) {
                     sandObj.arguments.push('run');
                 }
                 // Add the command arguments
                 sandObj.arguments.push(...commandArgs);
                 // Add all arguments to the object
-                if (!options?.dontRegisterArguments) {
+                if (!(options === null || options === void 0 ? void 0 : options.dontRegisterArguments)) {
                     sandObj.arguments.push(...args);
                 }
                 /*
                  * Here, we MUST use 'this' because the method is owned by the decorated class - not by Sandstone !!
                  */
                 const result = method.apply(this, args);
-                if (!options?.subcommand) {
+                if (!(options === null || options === void 0 ? void 0 : options.subcommand)) {
                     sandObj.register();
                 }
                 return result;
@@ -87,14 +87,14 @@ function nested(...commandArguments) {
         if (typeof getter !== 'function' && typeof method !== 'function') {
             throw new SyntaxError(`@nested can only be used on functions or getters, not: ${getter} / ${method}`);
         }
-        const value = getter ?? method;
+        const value = getter !== null && getter !== void 0 ? getter : method;
         function decorated(func, ...args) {
             const self = this;
             if (!('arguments' in self)) {
                 throw Error('This decorator can only be used on subclasses of Sandstone');
             }
             // If currently in execute, leave the execute
-            if (self?.inExecute) {
+            if (self === null || self === void 0 ? void 0 : self.inExecute) {
                 self.arguments.push('run');
                 self.inExecute = false;
             }

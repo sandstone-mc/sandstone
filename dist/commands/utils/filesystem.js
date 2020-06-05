@@ -59,10 +59,11 @@ exports.getWorldPath = getWorldPath;
  * @param options The save options.
  */
 function saveDatapack(functions, name, options) {
-    const verbose = options?.verbose ?? false;
+    var _a;
+    const verbose = (_a = options === null || options === void 0 ? void 0 : options.verbose) !== null && _a !== void 0 ? _a : false;
     let savePath;
-    if (options?.world !== undefined) {
-        savePath = path_1.default.join(getWorldPath(options?.world, options?.minecraftPath), 'datapacks');
+    if ((options === null || options === void 0 ? void 0 : options.world) !== undefined) {
+        savePath = path_1.default.join(getWorldPath(options === null || options === void 0 ? void 0 : options.world, options === null || options === void 0 ? void 0 : options.minecraftPath), 'datapacks');
     }
     else {
         savePath = process.cwd();

@@ -49,9 +49,10 @@ exports.removeOpCommands = removeOpCommands;
  * For argument nodes, it will default their `executable` to false, and their properties to `undefined`
  */
 function normalizeNodes(commandNode, name = 'root') {
+    var _a;
     commandNode.parsers = commandNode.parser ? [commandNode.parser] : [];
     if (commandNode.type === 'argument') {
-        commandNode.executables = [commandNode.executable ?? false];
+        commandNode.executables = [(_a = commandNode.executable) !== null && _a !== void 0 ? _a : false];
         commandNode.properties = [commandNode.properties];
     }
     else {
@@ -67,7 +68,8 @@ exports.normalizeNodes = normalizeNodes;
  * Transform sibling nodes which all are literals, and have the same children themselves, into a single node.
  */
 function mergeLiteralSiblings(commandNode) {
-    const childrenNames = Object.keys(commandNode.children ?? {});
+    var _a;
+    const childrenNames = Object.keys((_a = commandNode.children) !== null && _a !== void 0 ? _a : {});
     if (!childrenNames.length) {
         return;
     }
@@ -108,7 +110,8 @@ exports.mergeLiteralSiblings = mergeLiteralSiblings;
  * Warning: this directly modifies the given object.
  */
 function setLiteralArguments(commandNode) {
-    let childrenNames = Object.keys(commandNode.children ?? {});
+    var _a, _b, _c, _d, _e, _f;
+    let childrenNames = Object.keys((_a = commandNode.children) !== null && _a !== void 0 ? _a : {});
     if (commandNode.type === 'literal') {
     }
     // While the node is a literal/literalArgument with only 1 children
@@ -119,8 +122,8 @@ function setLiteralArguments(commandNode) {
             parsers: [...commandNode.parsers, ...child.parsers],
             executables: [...commandNode.executables, ...child.executables],
             properties: [...commandNode.properties, ...child.properties],
-            arguments: [...(commandNode.arguments ?? []), ...(child.arguments ?? [childName])],
-            literalValues: [...(commandNode.literalValues ?? []), ...(child.literalValues ?? [undefined])],
+            arguments: [...((_b = commandNode.arguments) !== null && _b !== void 0 ? _b : []), ...((_c = child.arguments) !== null && _c !== void 0 ? _c : [childName])],
+            literalValues: [...((_d = commandNode.literalValues) !== null && _d !== void 0 ? _d : []), ...((_e = child.literalValues) !== null && _e !== void 0 ? _e : [undefined])],
         };
         // Remove all children
         delete commandNode.children;
@@ -128,7 +131,7 @@ function setLiteralArguments(commandNode) {
         Object.assign(commandNode, child, newProperties);
         // Set the new type
         commandNode.type = 'literalArgument';
-        childrenNames = Object.keys(commandNode.children ?? {});
+        childrenNames = Object.keys((_f = commandNode.children) !== null && _f !== void 0 ? _f : {});
     }
     // Call the same method on all children
     executeOnChildren(commandNode, setLiteralArguments);
@@ -173,6 +176,7 @@ exports.setLeafLiteralsToArguments = setLeafLiteralsToArguments;
  * @returns the mapping from IDs to parsers.
  */
 function setParserIds(commandNode, compoundTypesMap = new Map(), existingTypes = new Map(), name = 'root') {
+    var _a;
     let parserInfo = null;
     let id = Math.max(-1, ...compoundTypesMap.keys()) + 1;
     if (commandNode.type === 'literalArgument') {
@@ -195,7 +199,7 @@ function setParserIds(commandNode, compoundTypesMap = new Map(), existingTypes =
     else if (commandNode.parsers.length) {
         parserInfo = {
             parsers: [commandNode.parsers],
-            arguments: commandNode.arguments ?? [name],
+            arguments: (_a = commandNode.arguments) !== null && _a !== void 0 ? _a : [name],
             literalValues: commandNode.literalValues,
         };
     }

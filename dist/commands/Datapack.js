@@ -28,14 +28,14 @@ class Datapack {
                 callback = args[0];
                 name = callback.name || '__anonymous__';
                 // Apply the user-defined options to the default ones
-                Object.assign(options, args?.[1]);
+                Object.assign(options, args === null || args === void 0 ? void 0 : args[1]);
             }
             else if (args.length >= 2 && typeof args[0] === 'string') {
                 // The user specified an named function
                 name = args[0];
                 callback = args[1];
                 // Apply the user-defined options to the default ones
-                Object.assign(options, args?.[2]);
+                Object.assign(options, args === null || args === void 0 ? void 0 : args[2]);
             }
             else {
                 throw new Error(`Got invalid arguments for mcfunction method: ${args}`);
