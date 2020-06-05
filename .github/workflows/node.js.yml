@@ -40,4 +40,4 @@ jobs:
         git config --global user.email 'ci@themrzz.com'
         git add -f dist
         git commit -am "Build library"
-        git push origin develop:master
+        git push -f origin develop:master
