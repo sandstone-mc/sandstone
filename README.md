@@ -49,6 +49,8 @@ npm add typescript ts-node git+https://git@github.com/TheMrZZ/sandstone.git
 npx tsc --init
 ```
 
+Open the newly created `tsconfig.json` file, and change `"target": "es5"` to `"target": "es2019"`.
+
 You've now installed Sandstone, congratulations!
 
 ## Your first function
