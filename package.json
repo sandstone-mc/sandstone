@@ -5,6 +5,11 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "author": "TheMrZZ - Florian ERNST",
+  "description": "Sandstone, a Javascript library for Minecraft datapacks.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheMrZZ/sandstone"
+  },
   "scripts": {
     "watch:errors": "tsc --watch --noEmit --incremental false",
     "watch": "tsc --watch",
