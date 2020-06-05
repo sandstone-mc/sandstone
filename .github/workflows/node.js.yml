@@ -39,5 +39,5 @@ jobs:
         git config --global user.name 'Automatic CI'
         git config --global user.email 'ci@themrzz.com'
         git add -f dist
-        git commit -am "Build library"
+        git commit -am "Build latest version of library"
         git push -f origin develop:master
