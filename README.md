@@ -244,7 +244,7 @@ saveDatapack('My datapack', {
  */
 ```
 
-## Calling Functions
+## Minecraft Functions
 
 ### Create a Minecraft function
 
@@ -263,11 +263,10 @@ mcfunction('mydatapack:main', () => {...})
 
 Here, your function will be created inside the `mydatapack` namespace.
 
-### Calling another function
+### Calling a Minecraft function
 
 One of the goal of Sandstone is to promote reusable block of commands. To make this possible, you have the ability to call other functions.
 
-#### Calling a Minecraft function
 Your first possibility is to call another Minecraft function, just like you would in a normal Minecraft Datapack. To achieve this, you need to assign your mcfunction to a variable:
 
 ```js
@@ -313,7 +312,7 @@ However, it has three drawbacks:
 
 The first drawback can be solved using **lazy functions**, and the second one using **parametrized functions**.
 
-#### Lazy Minecraft Functions
+### Lazy Minecraft Functions
 
 To prevent Sandstone creating functions when not mandatory, you can use lazy functions. A lazy function will be created **only if another function calls it**. A lazy function that isn't called won't even be present in the datapack:
 ```js
@@ -357,11 +356,11 @@ say This function is not used anywhere
 
 As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions to people.
 
-#### Parametrized Minecraft functions
+### Parametrized Minecraft functions
 
 *Parametrized functions are not implemented yet. This is coming soon!*
 
-#### Anonymous Minecraft functions
+### Anonymous Minecraft functions
 
 
 # Contributing
