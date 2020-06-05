@@ -1,1 +1,0 @@
-function default:__anonymous__

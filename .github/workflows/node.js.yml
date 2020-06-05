@@ -25,13 +25,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Add Yarn
+      run: npm add yarn
+
     - name: Build dist folder
       run: |
-        npm i
-        npm run build --if-present
+        yarn install
+        yarn run build
 
     - name: Commit dist folder
       run: |
+        git pull
         git config --global user.name 'Automatic CI'
         git config --global user.email 'ci@themrzz.com'
         git add -f dist
