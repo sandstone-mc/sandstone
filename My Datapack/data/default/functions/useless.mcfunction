@@ -1,1 +1,0 @@
-say This function is not used anywhere

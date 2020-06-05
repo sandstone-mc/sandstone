@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "TheMrZZ - Florian ERNST",
   "scripts": {
+    "watch:errors": "tsc --watch --noEmit --incremental false",
     "watch": "tsc --watch",
     "build": "tsc",
     "test": "ts-node-dev ./tests/test.ts",
