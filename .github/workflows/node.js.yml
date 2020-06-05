@@ -20,17 +20,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build dist folder
+    - name: Use Node version ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: |
+
+    - name: Build dist folder
+      run: |
         npm i
         npm run build --if-present
+
     - name: Commit dist folder
       run: |
         git config --global user.name 'Automatic CI'
         git config --global user.email 'ci@themrzz.com'
+        git add dist/**/*
         git add dist
         git commit -am "Build library"
         git push
