@@ -284,7 +284,7 @@ mcfunction('callMainThreeTimes', () => {
 ```
 
 This will result in the following functions:
-```mcfunction
+```
 ===== default:main =====
 say This is the main function
 give @a minecraft:diamond
