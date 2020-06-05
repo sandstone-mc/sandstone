@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "TheMrZZ - Florian ERNST",
   "scripts": {
+    "watch": "tsc --watch",
     "build": "tsc",
     "test": "ts-node-dev --transpile-only ./tests/test.ts",
     "test:watch": "ts-node-dev --respawn --transpile-only --clear ./tests/test.ts",

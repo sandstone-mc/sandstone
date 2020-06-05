@@ -109,7 +109,7 @@ function saveDatapack(functions, name, options) {
             description: 'Generated using Sandstone',
         },
     }));
-    console.log('Successfully wrote commands to', savePath);
+    console.log(`Successfully wrote commands to "${savePath}"`);
 }
 exports.saveDatapack = saveDatapack;
 //# sourceMappingURL=filesystem.js.map

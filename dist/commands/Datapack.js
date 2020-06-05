@@ -19,26 +19,61 @@ class Datapack {
         this.unregisterLastCommand = () => {
             this.getCurrentFunctionCommands().pop();
         };
-        this.mcfunction = ((nameOrCallback, callbackOrUndefined, options) => {
+        this.mcfunction = (...args) => {
             let name;
             let callback;
-            // Get the name and the callback
-            if (callbackOrUndefined === undefined) {
-                callback = nameOrCallback;
+            let options = { lazy: false };
+            if (args.length >= 1 && typeof args[0] === 'function') {
+                // The user specified an anonymous function
+                callback = args[0];
                 name = callback.name || '__anonymous__';
+                // Apply the user-defined options to the default ones
+                Object.assign(options, args?.[1]);
+            }
+            else if (args.length >= 2 && typeof args[0] === 'string') {
+                // The user specified an named function
+                name = args[0];
+                callback = args[1];
+                // Apply the user-defined options to the default ones
+                Object.assign(options, args?.[2]);
             }
             else {
-                callback = callbackOrUndefined;
-                name = nameOrCallback;
+                throw new Error(`Got invalid arguments for mcfunction method: ${args}`);
             }
-            const functionName = utils_1.toMcFunctionName(this.enterRootFunction(name));
-            callback();
-            this.exitRootFunction();
+            const callCallback = (...args) => {
+                // Keep the previous function
+                const previousFunction = this.currentFunction;
+                // Create a new root function
+                const currentName = this.enterRootFunction(name);
+                const functionName = utils_1.toMcFunctionName(currentName);
+                // Add the commands
+                callback(...args);
+                // Go back to the previous function
+                this.currentFunction = previousFunction;
+                return functionName;
+            };
+            let functionName;
+            let initialized = false;
+            if (!options.lazy) {
+                // If the mcfunction is not lazy, then we directly create it
+                functionName = callCallback();
+                initialized = true;
+            }
+            else if (callback.length > 0) {
+                // If the callback requires arguments, but the function is not lazy, we can't create the function
+                throw new Error(`Got a parametrized function "${name}" expecting at least ${callback.length} arguments, without being is not lazy.\n`
+                    + `This is not possible. Consider putting default values to the parameters, or setting the function as lazy.`);
+            }
             // When calling the result of mcfunction, it will be considered as the command /function functionName!
-            return () => {
+            return (...args) => {
+                if (!initialized) {
+                    // If the mcfunction is lazy, we wait until it's actually called to initialize it
+                    functionName = callCallback();
+                    initialized = true;
+                }
                 this.registerNewCommand(['function', functionName]);
             };
-        });
+        };
         /**
          * Saves the datapack to the file system.
          *

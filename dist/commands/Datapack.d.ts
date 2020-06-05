@@ -5,22 +5,22 @@ declare type McFunctionOptions = {
      */
     lazy?: boolean;
 };
-declare type McFunctionMethod = {
+export interface McFunctionMethod {
     /**
      * Creates a Minecraft Function.
      *
      * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
      * @param callback A callback containing the commands you want in the Minecraft Function.
      */
-    (name: string, callback: () => void, options?: McFunctionOptions): () => void;
+    (name: string, callback: (...args: any[]) => void, options?: McFunctionOptions): () => void;
     /**
      * Creates a Minecraft Function.
      *
      * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
      * @param callback A callback containing the commands you want in the Minecraft Function.
      */
-    (callback: () => void, options?: McFunctionOptions): () => void;
-};
+    (callback: (...args: any[]) => void, options?: McFunctionOptions): () => void;
+}
 export default class Datapack {
     defaultNamespace: string;
     currentFunction: McFunctionName | null;
