@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     /* Basic Options */
+    "types": [
+      "node"
+    ],
     "incremental": true, /* Enable incremental compilation */
     "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
     // We target a minimum Node version of 12: https://stackoverflow.com/a/59787575
