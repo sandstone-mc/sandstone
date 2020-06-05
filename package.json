@@ -1,6 +1,6 @@
 {
   "name": "sandstone",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -26,5 +26,8 @@
   },
   "dependencies": {
     "ts-node-dev": "^1.0.0-pre.44"
+  },
+  "engines": {
+    "node": ">=12.9.0"
   }
 }

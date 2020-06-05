@@ -83,14 +83,16 @@ async function commandsJsonToJS(commandsJsonPath, registriesJsonPath) {
     // These possibilities are not restrictive, they are only here for autocomplete.
     const toGenerate = new Set(['block', 'sound_event', 'mob_effect', 'enchantment', 'entity_type', 'item', 'biome', 'particle_type', 'dimension_type', 'attributes']);
     const registries = JSON.parse((await promises_1.default.readFile(registriesJsonPath)).toString());
+    const promises = [];
     for (const type of toGenerate) {
         const { entries } = registries[`minecraft:${type}`];
         const values = Object.keys(entries);
         // The name of the type will be uppercase, and pluzalized if not already
         const typeName = type.toUpperCase() + (type.endsWith('s') ? '' : 'S');
         const result = `/* eslint-disable */\n/* Auto-generated */\nexport type ${typeName} = ${values.map((v) => `'${v}'`).join(' | ')}`;
-        await promises_1.default.writeFile(path_1.default.join(typesDir, `${type}.ts`), result);
+        promises.push(promises_1.default.writeFile(path_1.default.join(typesDir, `${type}.ts`), result));
     }
+    await Promise.allSettled(promises);
     console.log('All types successfully generated:', ...toGenerate);
     console.log('Auto-generation suceeded.');
 }

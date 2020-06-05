@@ -119,6 +119,7 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
 
   const registries: any = JSON.parse((await fs.readFile(registriesJsonPath)).toString())
 
+  const promises: Promise<void>[] = []
   for (const type of toGenerate) {
     const { entries } = registries[`minecraft:${type}`]
     const values: string[] = Object.keys(entries)
@@ -128,8 +129,12 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
 
     const result = `/* eslint-disable */\n/* Auto-generated */\nexport type ${typeName} = ${values.map((v) => `'${v}'`).join(' | ')}`
 
-    await fs.writeFile(path.join(typesDir, `${type}.ts`), result)
+    promises.push(
+      fs.writeFile(path.join(typesDir, `${type}.ts`), result)
+    )
   }
+
+  await Promise.allSettled(promises)
 
   console.log('All types successfully generated:', ...toGenerate)
 
