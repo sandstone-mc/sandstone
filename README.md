@@ -358,7 +358,7 @@ As you can see, the `useless` function has been created, because it is called fr
 
 ### Parametrized Minecraft functions
 
-
+Parametrized Minecraft functions allows you to create Minecraft functions expeting arguments. Under the hood, several Minecraft functions will be created: one for each possible
 
 # Contributing
 

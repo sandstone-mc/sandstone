@@ -81,7 +81,7 @@ export type SaveOptions = {
  * @param name The name of the Datapack
  * @param options The save options.
  */
-export function saveDatapack(functions: Map<McFunctionName, CommandArgs[]>, name: string, options: SaveOptions): void {
+export function saveDatapack(functions: Map<McFunctionName, CommandArgs[] | null>, name: string, options: SaveOptions): void {
   const verbose = options?.verbose ?? false
 
   let savePath
@@ -104,6 +104,10 @@ export function saveDatapack(functions: Map<McFunctionName, CommandArgs[]>, name
   const dataPath = path.join(savePath, 'data')
 
   for (const [fullFunctionName, commandsArgs] of functions) {
+    if (!commandsArgs) {
+      continue
+    }
+
     const [namespace, ...foldersAndFile] = fullFunctionName
     const functionsPath = path.join(dataPath, namespace, 'functions')
     const fileName = foldersAndFile.pop()
@@ -137,7 +141,6 @@ export function saveDatapack(functions: Map<McFunctionName, CommandArgs[]>, name
   // Write pack.mcmeta
   fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify({
     pack: {
-      // eslint-disable-next-line @typescript-eslint/camelcase
       pack_format: 5,
       description: 'Generated using Sandstone',
     },

@@ -54,6 +54,8 @@ module.exports = {
     // Allow having only 1 export
     'import/prefer-default-export': 'off',
 
+    'no-continue': 'off',
+
     // Don't use array destructuring for assignement expressions
     "prefer-destructuring": [
       "error",

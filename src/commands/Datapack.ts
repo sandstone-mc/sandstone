@@ -21,7 +21,7 @@ export default class Datapack {
 
   /** Here, we use a "string" for the name because JS doesn't support objects as indexes.
    * We'll use the JSON representation. */
-  functions: Map<McFunctionName, CommandArgs[]>
+  functions: Map<McFunctionName, CommandArgs[] | null>
 
   constructor(namespace: string) {
     this.defaultNamespace = namespace
@@ -47,12 +47,7 @@ export default class Datapack {
     return commandsIds
   }
 
-  /**
-   * Enters a root Minecraft function.
-   *
-   * @param functionName The name of the function to enter
-   */
-  enterRootFunction(functionName: string): McFunctionName {
+  private getFunctionAndNamespace(functionName: string): McFunctionName {
     let namespace = this.defaultNamespace
     let name = functionName
 
@@ -60,9 +55,18 @@ export default class Datapack {
       ([namespace, name] = functionName.split(':'))
     }
 
-    [namespace, name] = this.getUniqueName([namespace, name])
+    return [namespace, name]
+  }
 
-    this.currentFunction = [namespace, name]
+  /**
+   * Creates and enters a new root Minecraft function.
+   *
+   * @param functionName The name of the function to create
+   */
+  createEnterRootFunction(functionName: string): McFunctionName {
+    const functionFullName = this.getFunctionAndNamespace(functionName)
+    this.currentFunction = this.getUniqueName(functionFullName)
+
     this.functions.set(this.currentFunction, [])
     return this.currentFunction
   }
@@ -127,10 +131,10 @@ export default class Datapack {
   }
 
   /**
-   * Enter a child function of the current function.
+   * Creates and enters a new child function of the current function.
    * @param functionName The name of the child function.
    */
-  enterChildFunction(functionName: string): string {
+  createEnterChildFunction(functionName: string): string {
     if (!this.currentFunction) {
       throw Error('Entering child function without registering a root function')
     }
@@ -138,7 +142,7 @@ export default class Datapack {
     const newName = this.getUniqueChildName(functionName)
 
     // Update the current function - it now is the child function.
-    this.currentFunction.push(newName)
+    this.currentFunction = [...this.currentFunction, newName]
 
     // Set its commands as empty
     this.functions.set(this.currentFunction, [])
@@ -202,24 +206,45 @@ export default class Datapack {
     const defaultOptions: McFunctionOptions = { lazy: false }
     const realOptions: McFunctionOptions = { ...defaultOptions, ...options }
 
+    const alreadyInitializedParameters = new Set<string>()
+
+    // We "reserve" the folder by creating an empty function there
+    const functionFolder = this.createEnterRootFunction(name)
+    this.functions.set(functionFolder, null)
+    this.exitRootFunction()
+
+    /**
+     * This function is used to call the callback.
+     */
     const callCallback = (...callbackArgs: Parameters<T>) => {
       // Keep the previous function
       const previousFunction = this.currentFunction
 
-      // Create a new root function
-      const currentName = this.enterRootFunction(name)
-      const functionName = toMcFunctionName(currentName)
+      /* We have 2 possibilities.
+       * 1. For a no-parameter function, we can directly write in the root function.
+       * 2. For a function with parameters, we get a child
+       */
+      this.currentFunction = functionFolder
+
+      if (callbackArgs.length === 0) {
+        // We initialized with "null", now we set to empty commands
+        this.functions.set(functionFolder, [])
+      } else {
+        // Parametrized function
+        this.createEnterChildFunction('call')
+      }
+
+      const currentName = this.currentFunction as McFunctionName
 
       // Add the commands
       callback(...callbackArgs)
 
       // Go back to the previous function
       this.currentFunction = previousFunction
-      return functionName
+      return toMcFunctionName(currentName)
     }
 
     let functionName: string
-    let initialized = false
 
     if (!realOptions.lazy) {
       // If the mcfunction is not lazy, then we directly create it
@@ -236,15 +261,19 @@ export default class Datapack {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       functionName = callCallback()
-      initialized = true
+
+      alreadyInitializedParameters.add('[]')
     }
 
     // When calling the result of mcfunction, it will be considered as the command /function functionName!
     return (...callbackArgs) => {
-      if (!initialized) {
-        // If the mcfunction is lazy, we wait until it's actually called to initialize it
+      const jsonRepresentation = JSON.stringify(callbackArgs)
+
+      if (!alreadyInitializedParameters.has(jsonRepresentation)) {
+        // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
         functionName = callCallback(...callbackArgs)
-        initialized = true
+
+        alreadyInitializedParameters.add(jsonRepresentation)
       }
 
       this.registerNewCommand(['function', functionName])

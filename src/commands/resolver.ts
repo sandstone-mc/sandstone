@@ -151,7 +151,7 @@ export class CommandsResolver {
       // First, we enter a child function, in which the callback will be executed. We keep the name of the newly created function.
       const name = args[0]?.name || `${this.args[0]}_${this.args?.[1] || ''}`
 
-      const functionName = this.datapack.enterChildFunction(name)
+      const functionName = this.datapack.createEnterChildFunction(name)
 
       // Call the callback
       args[0]()
