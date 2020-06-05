@@ -61,7 +61,7 @@ mcfunction('hello', () => {
   say('Hello world!')
 })
 
-saveDatapack('My datapack')
+saveDatapack('My datapack', { verbose: true })
 ```
 To run this file, type the following command in your terminal:
 
@@ -72,7 +72,14 @@ To run this file, type the following command in your terminal:
 npx ts-node helloworld.ts
 ```
 
-You should see a new folder in your current working directory, named `My datapack`. If you do, congratulations! You just wrote your first Minecraft function using Sandstone.
+First, you should see the following output in your console:
+```
+===== default:hello =====
+say Hello world!
+=========================
+```
+
+Also, you should see a new folder in your current working directory, named `My datapack`. If you do, congratulations! You just wrote your first Minecraft function using Sandstone. You can explore your `My datapack` folder: you'll see it is a valid datapack, with your custom function in it!
 
 ### Explanation
 Let's do a line-by-line explanation.
@@ -97,9 +104,11 @@ Inside the curly brackets `{...}`, we will specify the commands we want to write
 This line tells Sandstone that we want to write the `/say` command in the current mcfunction, with the `Hello world!` argument. It will result in the command `say Hello world!`.
 
 ```js
-saveDatapack('My datapack')
+saveDatapack('My datapack', {
+  verbose: true
+})
 ```
-This line tells Sandstone to save the all mcfunctions to the actual file system. Here, you only specified the datapack's name: it will therefore be saved to your current directory. As a 2nd argument, you can specify a world's name, and it will add the datapack directly to your world.
+This line tells Sandstone to save the all mcfunctions to the actual file system. Here, the first argument specifies the datapack's name. The second argument is the options. The `verbose` option allows you to display the resulting commands directly in your console, to ensure the result is correct. You'll learn how to save your datapack directly in Minecraft below.
 
 *Note 1: one day, Sandstone will have its own CLI, and manual saving won't be required anymore.*
 
@@ -168,21 +177,17 @@ execute.as("@a").at("@s").run(() => {
 })
 ```
 
-If you try running such commands, under a mcfunction named "main", you'll have the following results:
+If you try running such commands, under a mcfunction named "main" with verbose saving, you'll have the following results:
 
 ```
 ==== default:main ====
-
 execute as @a at @s run function default:main/execute_as
-
 ================
 
 ==== default:main/execute_as ====
-
 setblock ~ ~-1 ~ minecraft:dirt
 setblock ~ ~ ~ minecraft:air
 setblock ~ ~1 ~ minecraft:air
-
 ================
 ```
 
@@ -197,17 +202,46 @@ Using sandstone, you can choose to either save the datapack to the current direc
 saveDatapack('My datapack')
 ```
 
-If you specify the name of one of your Minecraft worlds as second argument, Sandstone will save the datapack in the specified world.
+As a second argument, `saveDatapack` accepts options. They are listed below.
+|               | |
+|---------------|-|
+| verbose       | If true, the resulting commands will be displayed in the console. |
+| world         | The name of the world to save your datapack into. If left unspecified, the datapack will be saved in the current directory. |
+| minecraftPath | The location of the .minecraft folder. If left unspecified, it will be automatically discovered. |
 
+As you can see, Sandstone can save your datapack directly in one of your world:
 ```js
 // Save the datapack in "An awesome world"
-saveDatapack('My datapack', 'An awesome world')
+saveDatapack('My datapack', {
+  world: 'An awesome world'
+})
 ```
 
-To achieve this, Sandstone automatically detects where your `.minecraft` folder is located. In that case, Sandstone will give you a clear error message. You will then have to manually specify your `.minecraft` location:
+To achieve this, Sandstone automatically detects where your `.minecraft` folder is located. If you modified your `.minecraft` location, Sandstone could fail to find it. In that case, Sandstone will give you a clear error message. You will then have to manually specify your `.minecraft` location:
 ```js
 // Save the datapack in "An awesome world", in a custom .minecraft folder
-saveDatapack('My datapack', 'An awesome world', 'C:/Program Files/.minecraft')
+saveDatapack('My datapack', {
+  world : 'An awesome world',
+  minecraftPath: 'C:/Program Files/.minecraft'
+})
+```
+
+Sometimes, you might want direct feedback on the functions you're writing. The `verbose` option will display all functions & commands in your console.
+```js
+mcfunction('hello', () => {
+  say('Hello world!')
+})
+
+saveDatapack('My datapack', {
+  verbose: true
+})
+
+/** Console output:
+ *
+ * ===== default:hello =====
+ * say Hello world!
+ * =========================
+ */
 ```
 
 # Contributing
