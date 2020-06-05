@@ -11,11 +11,11 @@
     "url": "https://github.com/TheMrZZ/sandstone"
   },
   "scripts": {
-    "watch:errors": "tsc --watch --noEmit --incremental false",
-    "watch": "tsc --watch",
+    "watch:errors": "tsc --watch --noEmit --incremental false --allowSyntheticDefaultImports --downlevelIteration --pretty tests/test.ts",
+    "watch": "tsc --watch --pretty",
     "build": "tsc",
     "test": "ts-node-dev ./tests/test.ts",
-    "test:watch": "ts-node-dev --respawn --clear ./tests/test.ts",
+    "test:watch": "ts-node-dev --pretty --respawn --clear ./tests/test.ts",
     "generateCommands": "cd src/commandsTree && ts-node generate/index.ts _commands.json"
   },
   "devDependencies": {

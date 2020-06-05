@@ -354,13 +354,10 @@ say This function is not used anywhere
 ===========================
 ```
 
-As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions to people.
+As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions.
 
 ### Parametrized Minecraft functions
 
-*Parametrized functions are not implemented yet. This is coming soon!*
-
-### Anonymous Minecraft functions
 
 
 # Contributing

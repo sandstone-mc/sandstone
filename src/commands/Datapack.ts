@@ -14,24 +14,6 @@ type McFunctionOptions = {
   lazy?: boolean
 }
 
-export interface McFunctionMethod {
-  /**
-   * Creates a Minecraft Function.
-   *
-   * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
-   * @param callback A callback containing the commands you want in the Minecraft Function.
-   */
-  (name: string, callback: (...args: any[]) => void, options?: McFunctionOptions): () => void
-
-  /**
-   * Creates a Minecraft Function.
-   *
-   * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
-   * @param callback A callback containing the commands you want in the Minecraft Function.
-   */
-  (callback: (...args: any[]) => void, options?: McFunctionOptions): () => void
-}
-
 export default class Datapack {
   defaultNamespace: string
 
@@ -208,32 +190,19 @@ export default class Datapack {
     this.getCurrentFunctionCommands().pop()
   }
 
-  mcfunction: McFunctionMethod = (...args: any[]) => {
-    let name: string
-    let callback: (...args: any[]) => void
-    let options: McFunctionOptions = { lazy: false }
+  /**
+   * Creates a Minecraft Function.
+   *
+   * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
+   * @param callback A callback containing the commands you want in the Minecraft Function.
+   */
+  mcfunction = <T extends (...args: any[]) => void>(
+    name: string, callback: T, options?: McFunctionOptions,
+  ): ((...args: Parameters<T>) => void) => {
+    const defaultOptions: McFunctionOptions = { lazy: false }
+    const realOptions: McFunctionOptions = { ...defaultOptions, ...options }
 
-    if (args.length >= 1 && typeof args[0] === 'function') {
-      // The user specified an anonymous function
-      callback = args[0]
-      name = callback.name || '__anonymous__'
-
-      // Apply the user-defined options to the default ones
-      Object.assign(options, args?.[1])
-    }
-    else if (args.length >= 2 && typeof args[0] === 'string') {
-      // The user specified an named function
-      name = args[0]
-      callback = args[1]
-
-      // Apply the user-defined options to the default ones
-      Object.assign(options, args?.[2])
-    }
-    else {
-      throw new Error(`Got invalid arguments for mcfunction method: ${args}`)
-    }
-
-    const callCallback = (...args: any[]) => {
+    const callCallback = (...callbackArgs: Parameters<T>) => {
       // Keep the previous function
       const previousFunction = this.currentFunction
 
@@ -242,7 +211,7 @@ export default class Datapack {
       const functionName = toMcFunctionName(currentName)
 
       // Add the commands
-      callback(...args)
+      callback(...callbackArgs)
 
       // Go back to the previous function
       this.currentFunction = previousFunction
@@ -252,22 +221,29 @@ export default class Datapack {
     let functionName: string
     let initialized = false
 
-    if (!options.lazy) {
+    if (!realOptions.lazy) {
       // If the mcfunction is not lazy, then we directly create it
+
+      if (callback.length >= 1) {
+        // However, if the callback requires arguments, but the function is not lazy, we can't create the function
+        throw new Error(`Got a parametrized function "${name}" expecting at least ${callback.length} arguments, without being lazy.\n`
+        + 'Since it is not lazy, Sandstone tried to create it without passing any arguments.\n'
+        + 'This is not possible. Consider putting default values to the parameters, or setting the function as lazy.')
+      }
+
+      // We know our callback has NO arguments. It's fine TypeScript, it really is!
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       functionName = callCallback()
       initialized = true
     }
-    else if (callback.length > 0) {
-      // If the callback requires arguments, but the function is not lazy, we can't create the function
-      throw new Error(`Got a parametrized function "${name}" expecting at least ${callback.length} arguments, without being is not lazy.\n`
-      + `This is not possible. Consider putting default values to the parameters, or setting the function as lazy.`)
-    }
 
     // When calling the result of mcfunction, it will be considered as the command /function functionName!
-    return (...args: any[]) => {
+    return (...callbackArgs) => {
       if (!initialized) {
         // If the mcfunction is lazy, we wait until it's actually called to initialize it
-        functionName = callCallback()
+        functionName = callCallback(...callbackArgs)
         initialized = true
       }
 

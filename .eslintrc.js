@@ -55,13 +55,19 @@ module.exports = {
     'import/prefer-default-export': 'off',
 
     // Don't use array destructuring for assignement expressions
-    "prefer-destructuring": ["error", {
-      "VariableDeclarator": {
-        "array": false,
-        "object": true
-      },
-      "AssignmentExpression": false
-    }]
+    "prefer-destructuring": [
+      "error",
+      {
+        "VariableDeclarator": {
+          "array": true,
+          "object": true
+        },
+        "AssignmentExpression": {
+          "array": false,
+          "object": false
+        }
+      }
+    ],
 
     // Tweaking @typescript-eslint
     '@typescript-eslint/member-delimiter-style': 'off', // No semi-colons in types
