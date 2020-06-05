@@ -2,27 +2,32 @@ import path from 'path'
 import fs from 'fs'
 import os from 'os'
 
-import { getWorldPath } from './utils'
+import {
+  getWorldPath, saveDatapack, toMcFunctionName,
+  McFunctionName, CommandArgs, SaveOptions,
+} from './utils'
 
-/**
- * A McFunction's name has at least 2 components: a namespace, then the different folders up to the function itself.
- */
-type McFunctionName = string[]
-
-type CommandArgs = readonly [any, ...any[]]
-
-function minecraftFunctionName(functionName: McFunctionName | string[]): string {
-  const [namespace, ...folders] = functionName
-  return `${namespace}:${folders.join('/')}`
-}
 
 type McFunctionMethod = {
+  /**
+   * Creates a Minecraft Function.
+   *
+   * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
+   * @param callback A callback containing the commands you want in the Minecraft Function.
+   */
   (name: string, callback: () => void): () => void
+
+  /**
+   * Creates a Minecraft Function.
+   *
+   * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
+   * @param callback A callback containing the commands you want in the Minecraft Function.
+   */
   (callback: () => void): () => void
 }
 
 export default class Datapack {
-  namespace: string
+  defaultNamespace: string
 
   currentFunction: McFunctionName | null
 
@@ -31,24 +36,19 @@ export default class Datapack {
   functions: Map<McFunctionName, CommandArgs[]>
 
   constructor(namespace: string) {
-    this.namespace = namespace
+    this.defaultNamespace = namespace
     this.currentFunction = null
     this.functions = new Map()
   }
 
-  getCurrentFunctionMcName(): string {
-    if (!this.currentFunction) {
-      throw Error('Trying to get the name of a function without registering a root function')
-    }
 
-    return minecraftFunctionName(this.currentFunction)
-  }
-
-  getCurrentFunction(): CommandArgs[] {
+  /**
+   * Get the commands of the current function.
+   */
+  getCurrentFunctionCommands(): CommandArgs[] {
     if (!this.currentFunction) {
       throw new Error('Current function is undefined')
     }
-
 
     const commandsIds = this.functions.get(this.currentFunction)
 
@@ -59,40 +59,95 @@ export default class Datapack {
     return commandsIds
   }
 
+  /**
+   * Enters a root Minecraft function.
+   *
+   * @param functionName The name of the function to enter
+   */
   enterRootFunction(functionName: string): McFunctionName {
-    this.currentFunction = [this.namespace, functionName]
+    let namespace = this.defaultNamespace
+    let name = functionName
+
+    if (functionName.includes(':')) {
+      ([namespace, name] = functionName.split(':'))
+    }
+
+    [namespace, name] = this.getUniqueName([namespace, name])
+
+    this.currentFunction = [namespace, name]
     this.functions.set(this.currentFunction, [])
     return this.currentFunction
   }
 
+  /**
+   * Check if the datapack contains a function with the given nam
+   * @param functionName The name of the function
+   */
   hasFunction(functionName: McFunctionName): boolean {
-    return this.functions.has(functionName)
+    /* Sadly, we can't directly check if an array is present as a key in the map
+     * (because JS checks references, not if arrays have same elements)
+     * Therefore, we compare the JSON representation */
+    const jsonFunctionName = JSON.stringify(functionName)
+    const jsonFunctions = Array.from(this.functions.keys()).map((key) => JSON.stringify(key))
+
+    return jsonFunctions.includes(jsonFunctionName)
   }
 
-  hasChildFunction(childName: string): boolean {
-    if (!this.currentFunction) {
-      return false
+  /**
+   * Returns a unique name for a function, from an original name.
+   *
+   * @example
+   * // If there is no default:main function
+   * getUniqueName(["default", "main"]) --> ["default", "main"]
+   *
+   * @example
+   * // If there is already a default:main function
+   * getUniqueName(["default", "main"]) --> ["default", "main_2"]
+   *
+   * @param functionName The original name for the function
+   */
+  getUniqueName(functionName: McFunctionName): McFunctionName {
+    // Get the namespace and the folders of the function
+    const namespaceFolders = functionName.slice(0, -1)
+
+    // By default, the "new name" is the original name.
+    let newName = functionName[functionName.length - 1]
+
+    const newNameTemplate = `${newName}_{}`
+    let i = 2
+
+    // If the current "new name" already exists in the Datapack, increment `i` and apply the template
+    while (this.hasFunction([...namespaceFolders, newName])) {
+      newName = newNameTemplate.replace('{}', i.toString())
+      i += 1
     }
 
-    const childFullName = this.currentFunction.concat([childName])
-
-    return this.hasFunction(childFullName)
+    return [...namespaceFolders, newName]
   }
 
+  /**
+   * Get a unique name for a child function of the current function, from an original name.
+   * @param childName The original name for the child function.
+   */
+  getUniqueChildName(childName: string): string {
+    if (!this.currentFunction) {
+      throw new Error('Trying to get a unique child name outside a root function.')
+    }
+
+    const result = this.getUniqueName(this.currentFunction.concat([childName]))
+    return result[result.length - 1]
+  }
+
+  /**
+   * Enter a child function of the current function.
+   * @param functionName The name of the child function.
+   */
   enterChildFunction(functionName: string): string {
     if (!this.currentFunction) {
       throw Error('Entering child function without registering a root function')
     }
 
-    let newName = functionName
-
-    const newNameTemplate = `${functionName}_{}`
-    let i = 2
-
-    while (this.hasChildFunction(newName)) {
-      newName = newNameTemplate.replace('{}', i.toString())
-      i += 1
-    }
+    const newName = this.getUniqueChildName(functionName)
 
     // Update the current function - it now is the child function.
     this.currentFunction.push(newName)
@@ -101,9 +156,14 @@ export default class Datapack {
     this.functions.set(this.currentFunction, [])
 
     // Return its full minecraft name
-    return this.getCurrentFunctionMcName()
+    return toMcFunctionName(this.currentFunction)
   }
 
+  /**
+   * Recursively exit the current function of the datapack.
+   *
+   * If we're in a child function of a root function (or a n-th child), it will exit them too.
+   */
   exitRootFunction(): void {
     if (!this.currentFunction) {
       throw Error('Exiting a not-existing function')
@@ -112,6 +172,9 @@ export default class Datapack {
     this.currentFunction = null
   }
 
+  /**
+   * Exit the current child function, and enter the parent function.
+   */
   exitChildFunction(): void {
     if (!this.currentFunction) {
       throw Error('Exiting a not-existing function')
@@ -120,22 +183,30 @@ export default class Datapack {
     this.currentFunction.pop()
   }
 
+  /**
+   * Register a new command in the current function.
+   * @param commandArgs The arguments of the command to add.
+   */
   registerNewCommand = (commandArgs: CommandArgs): void => {
     if (!this.currentFunction) {
       throw Error('Adding a command outside of a registered function')
     }
 
-    this.getCurrentFunction().push(commandArgs)
+    this.getCurrentFunctionCommands().push(commandArgs)
   }
 
+  /**
+   * Remove the last command added to the current function.
+   */
   unregisterLastCommand = (): void => {
-    this.getCurrentFunction().pop()
+    this.getCurrentFunctionCommands().pop()
   }
 
   mcfunction: McFunctionMethod = (nameOrCallback: string | (() => void), callbackOrUndefined: undefined | (() => void) = undefined) => {
     let name: string
     let callback: () => void
 
+    // Get the name and the callback
     if (callbackOrUndefined === undefined) {
       callback = nameOrCallback as () => void
       name = callback.name || '__anonymous__'
@@ -144,10 +215,11 @@ export default class Datapack {
       name = nameOrCallback as string
     }
 
-    const functionName = minecraftFunctionName(this.enterRootFunction(name))
+    const functionName = toMcFunctionName(this.enterRootFunction(name))
     callback()
     this.exitRootFunction()
 
+    // When calling the result of mcfunction, it will be considered as the command /function functionName!
     return () => {
       this.registerNewCommand(['function', functionName])
     }
@@ -157,61 +229,11 @@ export default class Datapack {
    * Saves the datapack to the file system.
    *
    * @param name The name of the Datapack
-   * @param worldName The name of the world to save the datapack in. If unspecified, the datapack will be saved in the current folder.
-   * @param minecraftPath The path of the .minecraft folder. If unspecified, it is automatically discovered.
+   * @param options The save options
    */
-  save = (name: string, worldName: string | undefined = undefined, minecraftPath: string | undefined = undefined): void => {
-    let savePath
-
-    if (worldName) {
-      savePath = path.join(getWorldPath(worldName, minecraftPath), 'datapacks')
-    } else {
-      savePath = process.cwd()
-    }
-
-    savePath = path.join(savePath, name)
-
-    try {
-    // Make the directory
-      fs.mkdirSync(savePath)
-    } catch (e) {
-      // The folder already exists - don't do anything
-    }
-
-    const dataPath = path.join(savePath, 'data')
-
-    for (const [[namespace, ...foldersAndFile], commandsArgs] of this.functions) {
-      const functionsPath = path.join(dataPath, namespace, 'functions')
-      const fileName = foldersAndFile.pop()
-      const folders = foldersAndFile
-
-      const mcFunctionFolder = path.join(functionsPath, ...folders)
-
-      // Create the path
-      try {
-        fs.mkdirSync(mcFunctionFolder, { recursive: true })
-      } catch (e) {
-        // Folder already exists
-      }
-
-      // Write the commands
-      const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
-
-      // Join the arguments of all commands to write them
-      const commands = commandsArgs.map((arg) => arg?.join(' '))
-
-      fs.writeFileSync(mcFunctionPath, commands.join('\n'))
-    }
-
-    // Write pack.mcmeta
-    fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify({
-      pack: {
-        // eslint-disable-next-line @typescript-eslint/camelcase
-        pack_format: 5,
-        description: 'Generated using Sandstone',
-      },
-    }))
-
-    console.log('Successfully wrote commands to', savePath)
-  }
+  save = (name: string, options: SaveOptions = {}): void => saveDatapack(
+    this.functions,
+    name,
+    options,
+  )
 }
