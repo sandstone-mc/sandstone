@@ -1,14 +1,14 @@
 <div align="center"><img src=https://vignette.wikia.nocookie.net/minecraft/images/d/d6/Sandstone.png/></div>
 
-# Sandstone
+# Sandstone <!-- omit in toc -->
 
 ![GitHub](https://img.shields.io/github/license/TheMrZZ/sandstone) ![GitHub last commit](https://img.shields.io/github/last-commit/TheMrZZ/sandstone?color=blue) ![Version](https://img.shields.io/badge/version-alpha-success)
 
 Sandstone is a Typescript library for Minecraft Datapacks. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
 
-## Features
+## Features <!-- omit in toc -->
 
-### Perfect autocompletion
+## Perfect autocompletion <!-- omit in toc -->
 
 Sandstone tells you what a command expects, and autocomplete complicated arguments for you.
 
@@ -20,17 +20,33 @@ This autocompletion works for commands, predicates, loot tables, advancements...
 
 *For the moment, autocompletion only works for commands.*
 
-## Always up-to-date
+## Always up-to-date <!-- omit in toc -->
 
 Sandstone is divided in two parts. The core part is version-agnostic, and the commands part is *automatically generated* for each version of the game.
 10 minutes after a new snapshot is released, Sandstone is already updated. You will always have access to **the latest commands**. Minecraft gets new blocks, enchantments, items, mobs? Sandstone knows it, and will autocomplete them for you.
 
 *For the moment, Sandstone has not yet been splitted in two.*
 
-## Easy to share
+## Easy to share <!-- omit in toc -->
 Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own datapacks.
 
 # Getting started
+
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+  - [Your first function](#your-first-function)
+    - [Explanation](#explanation)
+  - [How to write a command](#how-to-write-a-command)
+    - [The basics](#the-basics)
+    - [Optional arguments](#optional-arguments)
+    - [Execute](#execute)
+  - [Saving the datapack](#saving-the-datapack)
+  - [Minecraft Functions](#minecraft-functions)
+    - [Create a Minecraft function](#create-a-minecraft-function)
+    - [Calling a Minecraft function](#calling-a-minecraft-function)
+    - [Lazy Minecraft Functions](#lazy-minecraft-functions)
+    - [Parametrized Minecraft functions](#parametrized-minecraft-functions)
+- [Contributing](#contributing)
 
 ## Installation
 
@@ -205,11 +221,11 @@ saveDatapack('My datapack')
 ```
 
 As a second argument, `saveDatapack` accepts options. They are listed below.
-|               | |
-|---------------|-|
-| verbose       | If true, the resulting commands will be displayed in the console. |
+|               |                                                                                                                             |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| verbose       | If true, the resulting commands will be displayed in the console.                                                           |
 | world         | The name of the world to save your datapack into. If left unspecified, the datapack will be saved in the current directory. |
-| minecraftPath | The location of the .minecraft folder. If left unspecified, it will be automatically discovered. |
+| minecraftPath | The location of the .minecraft folder. If left unspecified, it will be automatically discovered.                            |
 
 As you can see, Sandstone can save your datapack directly in one of your world:
 ```js
