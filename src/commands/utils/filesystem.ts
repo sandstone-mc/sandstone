@@ -143,5 +143,5 @@ export function saveDatapack(functions: Map<McFunctionName, CommandArgs[]>, name
     },
   }))
 
-  console.log('Successfully wrote commands to', savePath)
+  console.log(`Successfully wrote commands to "${savePath}"`)
 }

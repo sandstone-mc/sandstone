@@ -244,6 +244,126 @@ saveDatapack('My datapack', {
  */
 ```
 
+## Calling Functions
+
+### Create a Minecraft function
+
+As you saw earlier, you can create a Minecraft function using `mcfunction`:
+
+```js
+// Create a Minecraft function inside the default namespace, named "main.mcfunction"
+mcfunction('main', () => {...})
+```
+
+By specifying only the function's name, it will be created inside the default namespace. However, you can specify it yourself:
+```js
+// Create a Minecraft function inside the `mydatapack` namespace, named "main.mcfunction"
+mcfunction('mydatapack:main', () => {...})
+```
+
+Here, your function will be created inside the `mydatapack` namespace.
+
+### Calling another function
+
+One of the goal of Sandstone is to promote reusable block of commands. To make this possible, you have the ability to call other functions.
+
+#### Calling a Minecraft function
+Your first possibility is to call another Minecraft function, just like you would in a normal Minecraft Datapack. To achieve this, you need to assign your mcfunction to a variable:
+
+```js
+const main = mcfunction('main', () => {
+  say("This is the main function.")
+  give('@a', 'minecraft:diamond')
+})
+
+mcfunction('callMainThreeTimes', () => {
+  main()
+  main()
+  main()
+})
+```
+
+This will result in the following functions:
+```mcfunction
+===== default:main =====
+say This is the main function
+give @a minecraft:diamond
+========================
+
+===== default:callMainThreeTimes =====
+function default:main
+function default:main
+function default:main
+======================================
+```
+
+This approach has several advantages:
+
+* Commands are not duplicated. This results in a lighter datapack.
+
+* The function can be recursive.
+
+* It has a meaningful name in Minecraft (here, default:main).
+
+However, it has three drawbacks:
+
+1. It will create a `.mcfunction` file, even if it's never called. Therefore, it makes it hard to share your functions with other peoples: if your library contains 100 helper functions, all datapacks using your library will include those 100 functions - even if they only use one.
+
+2. It cannot take parameters. If you want to have a generic function, this is not possible.
+
+The first drawback can be solved using **lazy functions**, and the second one using **parametrized functions**.
+
+#### Lazy Minecraft Functions
+
+To prevent Sandstone creating functions when not mandatory, you can use lazy functions. A lazy function will be created **only if another function calls it**. A lazy function that isn't called won't even be present in the datapack:
+```js
+const useless = mcfunction('useless', () => {
+  say('This function is not used anywhere')
+}, { lazy: true })
+
+mcfunction('main', () => {
+  say('Main function')
+})
+```
+Results in:
+```
+===== default:main =====
+say Main function
+========================
+```
+
+As you can see, the `useless` function has not been created. Let's call it from the `main function`:
+```js
+const useless = mcfunction('useless', () => {
+  say('This function is not used anywhere')
+}, { lazy: true })
+
+mcfunction('main', () => {
+  say('Calling "useless"...')
+  useless()
+})
+```
+Results in:
+```
+===== default:main =====
+say Calling "useless"...
+function default:useless
+========================
+
+===== default:useless =====
+say This function is not used anywhere
+===========================
+```
+
+As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions to people.
+
+#### Parametrized Minecraft functions
+
+*Parametrized functions are not implemented yet. This is coming soon!*
+
+#### Anonymous Minecraft functions
+
+
 # Contributing
 
 For the moment, Sandstone is not opened to external contributions *(honestly, I don't know how to do that)*. However, feel free to open Issues, or to contact @TheMrZZ#9307 on the [Minecraft Commands Discord](https://discord.gg/9wNcfsH) for discussing this project!

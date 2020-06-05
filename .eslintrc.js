@@ -7,16 +7,6 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
 
-  /*
-  "overrides": [
-    {
-      "files": ["./tests/!**!/!*"],
-      "rules": {
-        "prettier/prettier": "off"
-      }
-    }
-  ],*/
-
   extends: [
     'airbnb-base',
     'plugin:import/errors',
@@ -63,6 +53,15 @@ module.exports = {
 
     // Allow having only 1 export
     'import/prefer-default-export': 'off',
+
+    // Don't use array destructuring for assignement expressions
+    "prefer-destructuring": ["error", {
+      "VariableDeclarator": {
+        "array": false,
+        "object": true
+      },
+      "AssignmentExpression": false
+    }]
 
     // Tweaking @typescript-eslint
     '@typescript-eslint/member-delimiter-style': 'off', // No semi-colons in types

@@ -7,15 +7,21 @@ import {
   McFunctionName, CommandArgs, SaveOptions,
 } from './utils'
 
+type McFunctionOptions = {
+  /**
+   * If true, then the function will only be created if it
+   */
+  lazy?: boolean
+}
 
-type McFunctionMethod = {
+interface McFunctionMethod {
   /**
    * Creates a Minecraft Function.
    *
    * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
    * @param callback A callback containing the commands you want in the Minecraft Function.
    */
-  (name: string, callback: () => void): () => void
+  (name: string, callback: () => void, options?: McFunctionOptions): () => void
 
   /**
    * Creates a Minecraft Function.
@@ -23,7 +29,7 @@ type McFunctionMethod = {
    * @param name The name of the function. If left unspecified, creates an anonymous Minecraft Function.
    * @param callback A callback containing the commands you want in the Minecraft Function.
    */
-  (callback: () => void): () => void
+  (callback: () => void, options?: McFunctionOptions): () => void
 }
 
 export default class Datapack {
@@ -202,25 +208,64 @@ export default class Datapack {
     this.getCurrentFunctionCommands().pop()
   }
 
-  mcfunction: McFunctionMethod = (nameOrCallback: string | (() => void), callbackOrUndefined: undefined | (() => void) = undefined) => {
+  mcfunction: McFunctionMethod = (...args: any[]) => {
     let name: string
     let callback: () => void
+    let options: McFunctionOptions = { lazy: false }
 
-    // Get the name and the callback
-    if (callbackOrUndefined === undefined) {
-      callback = nameOrCallback as () => void
+    if (args.length >= 1 && typeof args[0] === 'function') {
+      // The user specified an anonymous function
+      callback = args[0]
       name = callback.name || '__anonymous__'
-    } else {
-      callback = callbackOrUndefined
-      name = nameOrCallback as string
+
+      // Apply the user-defined options to the default ones
+      Object.assign(options, args?.[1])
+    }
+    else if (args.length >= 2 && typeof args[0] === 'string') {
+      // The user specified an named function
+      name = args[0]
+      callback = args[1]
+
+      // Apply the user-defined options to the default ones
+      Object.assign(options, args?.[2])
+    }
+    else {
+      throw new Error(`Got invalid arguments for mcfunction method: ${args}`)
     }
 
-    const functionName = toMcFunctionName(this.enterRootFunction(name))
-    callback()
-    this.exitRootFunction()
+    const callCallback = () => {
+      // Keep the previous function
+      const previousFunction = this.currentFunction
+
+      // Create a new root function
+      const currentName = this.enterRootFunction(name)
+      const functionName = toMcFunctionName(currentName)
+
+      // Add the commands
+      callback()
+
+      // Go back to the previous function
+      this.currentFunction = previousFunction
+      return functionName
+    }
+
+    let functionName: string
+    let initialized = false
+
+    if (!options.lazy) {
+      // If the mcfunction is not lazy, then we directly create it
+      functionName = callCallback()
+      initialized = true
+    }
 
     // When calling the result of mcfunction, it will be considered as the command /function functionName!
     return () => {
+      if (!initialized) {
+        // If the mcfunction is lazy, we wait until it's actually called to initialize it
+        functionName = callCallback()
+        initialized = true
+      }
+
       this.registerNewCommand(['function', functionName])
     }
   }

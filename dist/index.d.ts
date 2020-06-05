@@ -1,7 +1,14 @@
 /** TODO: autogenerate that whole file */
 import { COMMANDS_TREE, COMMANDS_TREE_TYPE } from './commandsTree/commands';
 export { COMMANDS_TREE };
-export declare const mcfunction: (name: string, callback: () => void) => void, saveDatapack: () => void;
+export declare const mcfunction: {
+    (name: string, callback: () => void, options?: {
+        lazy?: boolean | undefined;
+    } | undefined): () => void;
+    (callback: () => void, options?: {
+        lazy?: boolean | undefined;
+    } | undefined): () => void;
+}, saveDatapack: (name: string, options?: import("./commands/utils").SaveOptions) => void;
 export declare const advancement: {
     grant: (targets: string) => {
         everything: () => void;
@@ -257,7 +264,7 @@ export declare const advancement: {
                     parsersId: 48;
                 }>;
             };
-            bossbar: (id: string, option: "value" | "max") => import("./commands/types").SandstoneRedirectNode<COMMANDS_TREE_TYPE, {
+            bossbar: (id: string, option: "max" | "value") => import("./commands/types").SandstoneRedirectNode<COMMANDS_TREE_TYPE, {
                 type: "literalArgument";
                 parsers: ["minecraft:swizzle"];
                 executables: [false];
@@ -425,7 +432,7 @@ export declare const advancement: {
                     parsersId: 48;
                 }>;
             };
-            bossbar: (id: string, option: "value" | "max") => import("./commands/types").SandstoneRedirectNode<COMMANDS_TREE_TYPE, {
+            bossbar: (id: string, option: "max" | "value") => import("./commands/types").SandstoneRedirectNode<COMMANDS_TREE_TYPE, {
                 type: "literalArgument";
                 parsers: ["minecraft:swizzle"];
                 executables: [false];
@@ -684,7 +691,7 @@ export declare const advancement: {
     };
 }, bossbar: {
     add: (id: string, name: import("./commandsTree/types/parsersMap").JsonChatComponent) => void;
-    get: (id: string, option: "players" | "value" | "max" | "visible") => void;
+    get: (id: string, option: "max" | "value" | "players" | "visible") => void;
     list: () => void;
     remove: (id: string) => void;
     set: (id: string) => {
@@ -1092,7 +1099,7 @@ export declare const advancement: {
     list: (team: string) => void;
     modify: (team: string) => {
         collisionRule: (option: "always" | "never" | "pushOtherTeams" | "pushOwnTeam") => void;
-        color: (value: "blue" | "green" | "red" | "white" | "yellow" | (string & {}) | "reset" | "black" | "dark_blue" | "dark_green" | "dark_aqua" | "dark_red" | "dark_purple" | "gold" | "gray" | "dark_gray" | "aqua" | "light_purple") => void;
+        color: (value: (string & {}) | "blue" | "green" | "red" | "white" | "yellow" | "reset" | "black" | "dark_blue" | "dark_green" | "dark_aqua" | "dark_red" | "dark_purple" | "gold" | "gray" | "dark_gray" | "aqua" | "light_purple") => void;
         deathMessageVisibility: (option: "always" | "never" | "hideForOtherTeams" | "hideForOwnTeam") => void;
         displayName: (displayName: import("./commandsTree/types/parsersMap").JsonChatComponent) => void;
         friendlyFire: (allowed: boolean) => void;
