@@ -34,7 +34,6 @@ jobs:
       run: |
         git config --global user.name 'Automatic CI'
         git config --global user.email 'ci@themrzz.com'
-        git add dist/**/*
-        git add dist
+        git add -f dist
         git commit -am "Build library"
         git push
