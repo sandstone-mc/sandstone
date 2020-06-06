@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 ![sandstone](readme/sandstone.png){: style="margin: 0 auto; display: block;"}
 
 # Sandstone <!-- omit in toc -->
