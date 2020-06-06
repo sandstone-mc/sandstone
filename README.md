@@ -30,14 +30,13 @@ Sandstone is divided in two parts. The core part is version-agnostic, and the co
 ## Easy to share <!-- omit in toc -->
 Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own datapacks.
 
-# Supporting Sandston
+# Supporting Sandstone <!-- omit in toc -->
 
 If you want to support Sandstone, the simplest way is to star the repository! It's actually very encouraging.
 ![stars](docs/readme/star.png)
 
 # Getting started
 
-- [Supporting Sandston](#supporting-sandston)
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Your first function](#your-first-function)
