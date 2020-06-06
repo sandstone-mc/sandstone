@@ -91,10 +91,9 @@ npx ts-node helloworld.ts
 ```
 
 First, you should see the following output in your console:
-```
-===== default:hello =====
+```mcfunction
+# default:hello
 say Hello world!
-=========================
 ```
 
 Also, you should see a new folder in your current working directory, named `My datapack`. If you do, congratulations! You just wrote your first Minecraft function using Sandstone. You can explore your `My datapack` folder: you'll see it is a valid datapack, with your custom function in it!
@@ -186,7 +185,7 @@ This will result in `execute as @a at @s run setblock ~ ~-1 ~ minecraft:dirt`. A
 However, the `run` subcommand still exists, but it is used to execute *several commands*:
 
 ```js
-execute.as("@a").at("@s").run(() => {
+execute.as('@a').at('@s').run(() => {
   // All this commands are executed "as @a at @s".
   // Sets a block of dirt under all players, and air on their body & head.
   setblock('~ ~-1 ~', 'minecraft:dirt')
@@ -197,16 +196,14 @@ execute.as("@a").at("@s").run(() => {
 
 If you try running such commands, under a mcfunction named "main" with verbose saving, you'll have the following results:
 
-```
-==== default:main ====
+```mcfunction
+# default:main
 execute as @a at @s run function default:main/execute_as
-================
 
-==== default:main/execute_as ====
+# default:main/execute_as
 setblock ~ ~-1 ~ minecraft:dirt
 setblock ~ ~ ~ minecraft:air
 setblock ~ ~1 ~ minecraft:air
-================
 ```
 
 As you can see, Sandstone automatically created a new mcfunction for you. It contains all your nested commands (all the setblocks), and is called by the `execute` command. Therefore, you achieve the desired effect **without managing several files youself**.
@@ -253,13 +250,12 @@ mcfunction('hello', () => {
 saveDatapack('My datapack', {
   verbose: true
 })
+```
 
-/** Console output:
- *
- * ===== default:hello =====
- * say Hello world!
- * =========================
- */
+Will output:
+```mcfunction
+# default:hello
+say Hello world!
 ```
 
 ## Minecraft Functions
@@ -301,17 +297,15 @@ mcfunction('callMainThreeTimes', () => {
 ```
 
 This will result in the following functions:
-```
-===== default:main =====
+```mcfunction
+# default:main
 say This is the main function
 give @a minecraft:diamond
-========================
 
-===== default:callMainThreeTimes =====
+# default:callMainThreeTimes
 function default:main
 function default:main
 function default:main
-======================================
 ```
 
 This approach has several advantages:
@@ -344,9 +338,8 @@ mcfunction('main', () => {
 ```
 Results in:
 ```
-===== default:main =====
+# default:main
 say Main function
-========================
 ```
 
 As you can see, the `useless` function has not been created. Let's call it from the `main function`:
@@ -362,14 +355,12 @@ mcfunction('main', () => {
 ```
 Results in:
 ```
-===== default:main =====
+# default:main
 say Calling "useless"...
 function default:useless
-========================
 
-===== default:useless =====
+# default:useless
 say This function is not used anywhere
-===========================
 ```
 
 As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions, and for parametrized functions.
@@ -407,20 +398,17 @@ mcfunction('main', () => {
 
 As you can see, our `giveDiamonds` Minecraft function now takes an argument: `count`, of type `number`, is the amount of diamonds you want to give. Under the hood, Sandstone created three functions: one for `main`, one for `giveDiamonds(64)`, one for `giveDiamonds(32)`.
 
-```
-===== default:main =====
+```mcfunction
+# default:main
 say Giving diamonds to everyone!
 function default:giveDiamonds/call
 function default:giveDiamonds/call_2
-========================
 
-===== default:giveDiamonds/call =====
+# default:giveDiamonds/call
 give @a minecraft:diamond 64
-=====================================
 
-===== default:giveDiamonds/call_2 =====
+# default:giveDiamonds/call_2
 give @a minecraft:diamond 32
-=======================================
 ```
 
 If you look closely at the previous example, you'll notice that `giveDiamonds` is both a parametrized and a lazy function. In fact, this example **does not work** if `giveDiamonds` is not lazy. Indeed, declaring a non-lazy `mcfunction` will add it to your datapack, so you can call it from Minecraft. However, when Sandstone encounters `giveDiamonds`, it notices that the `count` parameter is required. Sandstone doesn't know what value `count` should have by default: therefore, it cannot create the function. In that case, you will get a very explicit error message.

@@ -2,7 +2,8 @@ import os from 'os'
 import path from 'path'
 import fs from 'fs'
 
-import { toMcFunctionName, McFunctionName, CommandArgs } from './minecraft'
+import { toMcFunctionName, CommandArgs } from './minecraft'
+import { ResourcesTree, FunctionResource } from './resourcesTree'
 
 /**
  * Get the .minecraft path
@@ -54,6 +55,18 @@ export function getWorldPath(worldName: string, minecraftPath: string | undefine
   return worldPath
 }
 
+/**
+ * Create a directory.
+ */
+function createDirectory(directory: string): void {
+  // Create the path
+  try {
+    fs.mkdirSync(directory, { recursive: true })
+  } catch (e) {
+    // Folder already exists
+  }
+}
+
 export type SaveOptions = {
   /**
    * The name of the world to save the datapack in.
@@ -81,7 +94,7 @@ export type SaveOptions = {
  * @param name The name of the Datapack
  * @param options The save options.
  */
-export function saveDatapack(functions: Map<McFunctionName, CommandArgs[] | null>, name: string, options: SaveOptions): void {
+export function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): void {
   const verbose = options?.verbose ?? false
 
   let savePath
@@ -94,57 +107,43 @@ export function saveDatapack(functions: Map<McFunctionName, CommandArgs[] | null
 
   savePath = path.join(savePath, name)
 
-  try {
-    // Make the directory
-    fs.mkdirSync(savePath)
-  } catch (e) {
-    // The folder already exists - don't do anything
-  }
+  createDirectory(savePath)
 
   const dataPath = path.join(savePath, 'data')
 
-  for (const [fullFunctionName, commandsArgs] of functions) {
-    if (!commandsArgs) {
-      continue
+  function logFunction(resource: FunctionResource) {
+    if (resource.isResource) {
+      const [namespace, ...folders] = resource.path
+      const commands = resource.commands.map((args) => args.join(' '))
+
+      const functionsPath = path.join(dataPath, namespace, 'functions')
+      const fileName = folders.pop()
+
+      const mcFunctionFolder = path.join(functionsPath, ...folders)
+
+      createDirectory(mcFunctionFolder)
+
+
+      // Write the commands to the file system
+      const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
+
+      fs.writeFileSync(mcFunctionPath, commands.join('\n'))
+
+      if (options.verbose) {
+        console.log('#', `${namespace}:${[...folders, fileName].join('/')}`)
+        console.log(commands.join('\n'))
+        console.log()
+      }
     }
 
-    const [namespace, ...foldersAndFile] = fullFunctionName
-    const functionsPath = path.join(dataPath, namespace, 'functions')
-    const fileName = foldersAndFile.pop()
-    const folders = foldersAndFile
-
-    const mcFunctionFolder = path.join(functionsPath, ...folders)
-
-    // Create the path
-    try {
-      fs.mkdirSync(mcFunctionFolder, { recursive: true })
-    } catch (e) {
-      // Folder already exists
-    }
-
-    // Write the commands to the file system
-    const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
-
-    // Join the arguments of all commands with spaces
-    const commands = commandsArgs.map((commandArgs) => commandArgs.join(' '))
-
-    fs.writeFileSync(mcFunctionPath, commands.join('\n'))
-
-    if (verbose) {
-      const niceName = toMcFunctionName(fullFunctionName)
-      console.log('=====', niceName, '=====')
-      console.log(commands.join('\n'))
-      console.log(`======${niceName.replace(/./g, '=')}======\n`)
-    }
+    Array.from(resource.children.values()).forEach(logFunction)
   }
 
-  // Write pack.mcmeta
-  fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify({
-    pack: {
-      pack_format: 5,
-      description: 'Generated using Sandstone',
-    },
-  }))
+  for (const n of resources.namespaces.values()) {
+    for (const f of n.functions.values()) {
+      logFunction(f)
+    }
+  }
 
   console.log(`Successfully wrote commands to "${savePath}"`)
 }

@@ -1,1 +1,0 @@
-give @a minecraft:diamond 64

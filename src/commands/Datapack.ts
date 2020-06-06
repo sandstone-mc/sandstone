@@ -4,8 +4,9 @@ import os from 'os'
 
 import {
   getWorldPath, saveDatapack, toMcFunctionName,
-  McFunctionName, CommandArgs, SaveOptions,
+  CommandArgs, SaveOptions,
 } from './utils'
+import { FunctionResource, ResourcesTree, ResourcePath } from './utils/resourcesTree'
 
 type McFunctionOptions = {
   /**
@@ -17,37 +18,19 @@ type McFunctionOptions = {
 export default class Datapack {
   defaultNamespace: string
 
-  currentFunction: McFunctionName | null
+  currentFunction: FunctionResource | null
 
-  /** Here, we use a "string" for the name because JS doesn't support objects as indexes.
-   * We'll use the JSON representation. */
-  functions: Map<McFunctionName, CommandArgs[] | null>
+  resources: ResourcesTree
 
   constructor(namespace: string) {
     this.defaultNamespace = namespace
     this.currentFunction = null
-    this.functions = new Map()
+
+    this.resources = new ResourcesTree()
   }
 
 
-  /**
-   * Get the commands of the current function.
-   */
-  getCurrentFunctionCommands(): CommandArgs[] {
-    if (!this.currentFunction) {
-      throw new Error('Current function is undefined')
-    }
-
-    const commandsIds = this.functions.get(this.currentFunction)
-
-    if (!commandsIds) {
-      throw new Error('Current function does not exist in the commands map - this is an internal error.')
-    }
-
-    return commandsIds
-  }
-
-  private getFunctionAndNamespace(functionName: string): McFunctionName {
+  private getFunctionAndNamespace(functionName: string): ResourcePath {
     let namespace = this.defaultNamespace
     let name = functionName
 
@@ -58,31 +41,56 @@ export default class Datapack {
     return [namespace, name]
   }
 
+
   /**
    * Creates and enters a new root Minecraft function.
    *
    * @param functionName The name of the function to create
    */
-  createEnterRootFunction(functionName: string): McFunctionName {
-    const functionFullName = this.getFunctionAndNamespace(functionName)
-    this.currentFunction = this.getUniqueName(functionFullName)
+  createEnterRootFunction(functionName: string): ResourcePath {
+    const functionFullPath = this.getFunctionAndNamespace(functionName)
+    const rootFunctionPath = this.getUniqueName(functionFullPath)
 
-    this.functions.set(this.currentFunction, [])
-    return this.currentFunction
+    const emptyFunction = {
+      children: new Map(), commands: [], isResource: true, path: rootFunctionPath,
+    }
+
+    this.resources.addResource(rootFunctionPath, 'functions', emptyFunction)
+
+    return emptyFunction.path
   }
 
   /**
    * Check if the datapack contains a function with the given nam
-   * @param functionName The name of the function
+   * @param functionPath The name of the function
    */
-  hasFunction(functionName: McFunctionName): boolean {
-    /* Sadly, we can't directly check if an array is present as a key in the map
-     * (because JS checks references, not if arrays have same elements)
-     * Therefore, we compare the JSON representation */
-    const jsonFunctionName = JSON.stringify(functionName)
-    const jsonFunctions = Array.from(this.functions.keys()).map((key) => JSON.stringify(key))
+  hasFunction(functionPath: ResourcePath): boolean {
+    try {
+      this.resources.getResource(functionPath, 'functions')
+      return true
+    } catch (e) {
+      return false
+    }
+  }
 
-    return jsonFunctions.includes(jsonFunctionName)
+  /**
+   * Returns a unique name for a function, from an original name, by checking if it already exists in the given folder.
+   * @param functionName the original name for the function.
+   * @param folder the folder to check into.
+   */
+  getUniqueNameFromFolder(functionName: string, folder: FunctionResource): string {
+    let newName = functionName
+
+    const newNameTemplate = `${newName}_{}`
+    let i = 2
+
+    // If the current "new name" already exists in the Datapack, increment `i` and apply the template
+    while (folder.children.has(newName)) {
+      newName = newNameTemplate.replace('{}', i.toString())
+      i += 1
+    }
+
+    return newName
   }
 
   /**
@@ -96,23 +104,18 @@ export default class Datapack {
    * // If there is already a default:main function
    * getUniqueName(["default", "main"]) --> ["default", "main_2"]
    *
-   * @param functionName The original name for the function
+   * @param functionPath The original path for the function
    */
-  getUniqueName(functionName: McFunctionName): McFunctionName {
+  getUniqueName(functionPath: ResourcePath): ResourcePath {
     // Get the namespace and the folders of the function
-    const namespaceFolders = functionName.slice(0, -1)
+    const namespaceFolders = functionPath.slice(0, -1)
+
+    const parentFolder = this.resources.getFolder(namespaceFolders, 'functions')
 
     // By default, the "new name" is the original name.
-    let newName = functionName[functionName.length - 1]
+    const originalName = functionPath[functionPath.length - 1]
 
-    const newNameTemplate = `${newName}_{}`
-    let i = 2
-
-    // If the current "new name" already exists in the Datapack, increment `i` and apply the template
-    while (this.hasFunction([...namespaceFolders, newName])) {
-      newName = newNameTemplate.replace('{}', i.toString())
-      i += 1
-    }
+    const newName = this.getUniqueNameFromFolder(originalName, parentFolder)
 
     return [...namespaceFolders, newName]
   }
@@ -126,8 +129,8 @@ export default class Datapack {
       throw new Error('Trying to get a unique child name outside a root function.')
     }
 
-    const result = this.getUniqueName(this.currentFunction.concat([childName]))
-    return result[result.length - 1]
+    const result = this.getUniqueNameFromFolder(childName, this.currentFunction)
+    return result
   }
 
   /**
@@ -139,16 +142,19 @@ export default class Datapack {
       throw Error('Entering child function without registering a root function')
     }
 
-    const newName = this.getUniqueChildName(functionName)
+    const childName = this.getUniqueChildName(functionName)
 
     // Update the current function - it now is the child function.
-    this.currentFunction = [...this.currentFunction, newName]
+    const emptyFunction = {
+      children: new Map(), isResource: true as const, commands: [], path: [...this.currentFunction.path, childName],
+    }
 
-    // Set its commands as empty
-    this.functions.set(this.currentFunction, [])
+    this.currentFunction.children.set(childName, emptyFunction)
+
+    this.currentFunction = emptyFunction
 
     // Return its full minecraft name
-    return toMcFunctionName(this.currentFunction)
+    return toMcFunctionName(emptyFunction.path)
   }
 
   /**
@@ -172,7 +178,13 @@ export default class Datapack {
       throw Error('Exiting a not-existing function')
     }
 
-    this.currentFunction.pop()
+    const parentPath = this.currentFunction.path.slice(0, -1)
+
+    try {
+      this.currentFunction = this.resources.getResource(parentPath, 'functions')
+    } catch (e) {
+      this.currentFunction = null
+    }
   }
 
   /**
@@ -180,18 +192,22 @@ export default class Datapack {
    * @param commandArgs The arguments of the command to add.
    */
   registerNewCommand = (commandArgs: CommandArgs): void => {
-    if (!this.currentFunction) {
+    if (!this.currentFunction || !this.currentFunction.isResource) {
       throw Error('Adding a command outside of a registered function')
     }
 
-    this.getCurrentFunctionCommands().push(commandArgs)
+    this.currentFunction.commands.push(commandArgs)
   }
 
   /**
    * Remove the last command added to the current function.
    */
   unregisterLastCommand = (): void => {
-    this.getCurrentFunctionCommands().pop()
+    if (!this.currentFunction || !this.currentFunction.isResource) {
+      throw Error('Removing a command outside of a registered function')
+    }
+
+    this.currentFunction.commands.pop()
   }
 
   /**
@@ -208,10 +224,11 @@ export default class Datapack {
 
     const alreadyInitializedParameters = new Set<string>()
 
-    // We "reserve" the folder by creating an empty function there
-    const functionFolder = this.createEnterRootFunction(name)
-    this.functions.set(functionFolder, null)
-    this.exitRootFunction()
+    // We "reserve" the folder by creating an empty folder there
+    const functionsFolder = this.getFunctionAndNamespace(name)
+    const functionsFolderResource = this.resources.addResource(functionsFolder, 'functions', {
+      children: new Map(), isResource: false as const, path: functionsFolder,
+    })
 
     /**
      * This function is used to call the callback.
@@ -221,27 +238,27 @@ export default class Datapack {
       const previousFunction = this.currentFunction
 
       /* We have 2 possibilities.
-       * 1. For a no-parameter function, we can directly write in the root function.
+       * 1. For a no-parameter function, we directly write in the root function.
        * 2. For a function with parameters, we get a child
        */
-      this.currentFunction = functionFolder
+      this.currentFunction = functionsFolderResource
 
       if (callbackArgs.length === 0) {
         // We initialized with "null", now we set to empty commands
-        this.functions.set(functionFolder, [])
+        this.currentFunction = Object.assign(functionsFolderResource, { isResource: true as const, commands: [] })
       } else {
         // Parametrized function
         this.createEnterChildFunction('call')
       }
 
-      const currentName = this.currentFunction as McFunctionName
+      const currentPath = this.currentFunction?.path as ResourcePath
 
       // Add the commands
       callback(...callbackArgs)
 
       // Go back to the previous function
       this.currentFunction = previousFunction
-      return toMcFunctionName(currentName)
+      return toMcFunctionName(currentPath)
     }
 
     let functionName: string
@@ -287,7 +304,7 @@ export default class Datapack {
    * @param options The save options
    */
   save = (name: string, options: SaveOptions = {}): void => saveDatapack(
-    this.functions,
+    this.resources,
     name,
     options,
   )
