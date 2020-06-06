@@ -1,4 +1,4 @@
-![sandstone](readme/sandstone.png){: .center-image}
+![sandstone](readme/sandstone.png){: style="margin: 0 auto; display: block;"}
 
 # Sandstone <!-- omit in toc -->
 
