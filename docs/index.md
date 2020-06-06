@@ -1,12 +1,6 @@
----
-layout: default
----
-
-![sandstone](readme/sandstone.png){: style="margin: 0 auto; display: block;"}
-
-# Sandstone <!-- omit in toc -->
-
 ![GitHub](https://img.shields.io/github/license/TheMrZZ/sandstone) ![GitHub last commit](https://img.shields.io/github/last-commit/TheMrZZ/sandstone?color=blue) ![Version](https://img.shields.io/badge/version-alpha-success)
+
+![sandstone](readme/sandstone.png){: .center-image .sandstone-image}
 
 Sandstone is a Typescript library for Minecraft Datapacks. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
 

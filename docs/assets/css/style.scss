@@ -1,0 +1,14 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.center-image {
+  display: block;
+  margin: 0 auto;
+}
+
+sandstone-image {
+  width: 150px;
+  height: 150px;
+}
