@@ -1,5 +1,7 @@
 src
 tests
+docs
+README.md
 tsconfig.json
 *.js.map
 .eslint*
