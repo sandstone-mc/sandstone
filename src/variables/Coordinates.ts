@@ -1,31 +1,13 @@
-type Rotation = {
-  value: number,
-  type: 'absolute' | 'relative' | 'local'
-}
-
-type Coordinate = {
-  value: number
-  type: 'absolute' | 'relative' | 'local'
-}
-
 /** A root class that can be used to defined a N-dimeension vector */
 class VectorClass {
-  protected values: Coordinate[]
+  protected values: string[]
 
-  constructor(values: (Coordinate | number)[]) {
-    this.values = values.map((value) => (typeof value === 'number' ? { value, type: 'relative' } : value))
+  constructor(values: string[]) {
+    this.values = values
   }
 
   toString() {
-    const signs = {
-      absolute: '',
-      relative: '~',
-      local: '^',
-    }
-
-    const results = this.values.map(({ value, type }) => signs[type] + value)
-
-    return results.join(' ')
+    return this.values.join(' ')
   }
 
   toJSON() {
@@ -37,7 +19,7 @@ class VectorClass {
  * A class containing 3 coordinates, that can be absolute, relative or local.
  */
 export class CoordinatesClass extends VectorClass {
-  constructor(x: Coordinate | number, y: Coordinate | number, z: Coordinate | number) {
+  constructor(x: string, y: string, z: string) {
     super([x, y, z])
   }
 
@@ -45,7 +27,7 @@ export class CoordinatesClass extends VectorClass {
     return this.values[0]
   }
 
-  set x(newValue: Coordinate) {
+  set x(newValue: string) {
     this.values[0] = newValue
   }
 
@@ -53,7 +35,7 @@ export class CoordinatesClass extends VectorClass {
     return this.values[1]
   }
 
-  set y(newValue: Coordinate) {
+  set y(newValue: string) {
     this.values[1] = newValue
   }
 
@@ -61,13 +43,13 @@ export class CoordinatesClass extends VectorClass {
     return this.values[2]
   }
 
-  set z(newValue: Coordinate) {
+  set z(newValue: string) {
     this.values[2] = newValue
   }
 }
 
 export class RotationClass extends VectorClass {
-  constructor(horizontal: Rotation | number, vertical: Rotation | number) {
+  constructor(horizontal: string, vertical: string) {
     super([horizontal, vertical])
   }
 
@@ -75,7 +57,7 @@ export class RotationClass extends VectorClass {
     return this.values[0]
   }
 
-  set horizontal(value: Rotation) {
+  set horizontal(value: string) {
     this.values[0] = value
   }
 
@@ -83,176 +65,128 @@ export class RotationClass extends VectorClass {
     return this.values[1]
   }
 
-  set vertical(value: Rotation) {
+  set vertical(value: string) {
     this.values[1] = value
   }
 }
 
+type Tuple<T> = readonly [T, ...T[]]
+type MappedArray<T, U> = { [key in keyof T]: U }
+
 /**
- * Creates a coordinates vector.
- *
- * For each coordinate, you can give either a number or an object.
- * If a number is given, it defaults to relative coordinates.
- * If an object is given, you can specify the type of coordinates.
+ * Transforms a number into an absolute coordinate.
  *
  * @example
  *
- * Vector`0 0 0` => '0 0 0'
- * Vector(0, { value: 128, type: 'absolute' }, 0) => '~0 128 ~0'
- * Vector({ value: 10, type: 'local' }, 0, { value: 128, type: 'absolute' }) => '^10 ~0 128'
+ * absolute(0) => '0'
  *
- * @see
+ * absolute(5.5) => '5.5'
  *
- * `Absolute` to create absolute-only coordinates
- *
- * `Relative` to create relative-only coordinates
- *
- * `Local` to create local-only coordinates
+ * @see `relative` for relative coordinates (e.g. ~10)
+ * @see `local` for local coordinates (e.g. ^10)
  */
-export function Vector(template: TemplateStringsArray, ...values: unknown[]): CoordinatesClass & RotationClass
-
+export function absolute(coordinate: number): string
 
 /**
- * Creates a coordinates vector.
- *
- * For each coordinate, you can give either a number or an object.
- * If a number is given, it defaults to relative coordinates.
- * If an object is given, you can specify the type of coordinates.
+ * Transforms numbers into absolute coordinates.
  *
  * @example
  *
- * Vector(0, 0, 0) => '~0 ~0 ~0'
- * Vector(0, { value: 128, type: 'absolute' }, 0) => '~0 128 ~0'
- * Vector({ value: 10, type: 'local' }, 0, { value: 128, type: 'absolute' }) => '^10 ~0 128'
+ * relative(0, 0, 0) => ['0', '0', '0']
  *
- * @see
+ * relative(0, 180) => ['0', '180']
  *
- * `Absolute` to create absolute-only coordinates
+ * relative(-1, 10, 5) => ['-1', '10', '5']
  *
- * `Relative` to create relative-only coordinates
- *
- * `Local` to create local-only coordinates
+ * @see `relative` for relative coordinates (e.g. ~10)
+ * @see `local` for local coordinates (e.g. ^10)
  */
-export function Vector(x: Coordinate | number, y: Coordinate | number, z: Coordinate | number): CoordinatesClass
+export function absolute<T extends Tuple<number>>(...coordinates: T): MappedArray<T, string>
 
-/**
- * Creates a rotation vector.
- *
- * For both horizontal & vertical rotation, you can give either a number or an object.
- * If a number is given, it defaults to relative rotation.
- * If an object is given, you can specify the type of rotation.
- *
- * @example
- *
- * Vector(0, 0) => '~0 ~0'
- * Vector(0, { value: 180, type: 'absolute' }) => '~0 128'
- * Vector({ value: 0, type: 'absolute' }, { value: 90, type: 'absolute' }) => '0 90'
- *
- * @see
- *
- * `Absolute` to create absolute-only rotation
- *
- * `Relative` to create relative-only rotation
- */
-export function Vector(horizontal: Rotation | number, vertical: Rotation | number): RotationClass
-export function Vector(...args: [(Coordinate | Rotation | number), (Coordinate | Rotation | number), (Coordinate | number)?] | [TemplateStringsArray, ...unknown[]]) {
-  if (!Array.isArray(args[0])) {
-    const [first, second, third] = args as [(Coordinate | Rotation | number), (Coordinate | Rotation | number), (Coordinate | number)?]
-
-    if (third !== undefined) {
-      return new CoordinatesClass(first, second, third)
-    }
-    return new RotationClass(first, second)
+export function absolute<T extends Tuple<number>>(...coordinates: T): string | MappedArray<T, string> {
+  if (coordinates.length === 1) {
+    return coordinates[0].toString()
   }
 
-  const [strings, ...values] = args as [TemplateStringsArray, ...unknown[]]
-
-  let result = ''
-  strings.forEach((string, i) => {
-      if(values[i]) {
-        result += string + values[i]
-      }
-  })
-
-  result.trim().split(/ +/).map((valueAsString) => {
-    let type = 'absolute'
-    let value: number
-
-    if (valueAsString.match(/\~\d*/)) {
-      type = 'relative'
-      value = parseInt(valueAsString.substr(1), 10)
-    }
-    else if (valueAsString.match(/\^\d*/)) {
-      type = 'local'
-      value = parseInt(valueAsString.substr(1), 10)
-    }
-
-  })
+  return coordinates.map(coord => coord.toString()) as unknown as MappedArray<T, string>
 }
 
-type TwoOrThreeTuple<T> = [T, T] | [T, T, T]
+/**
+ * Transforms a number into a relative coordinate, using the tilde notation `~`.
+ *
+ * @example
+ *
+ * relative(0) => '~'
+ *
+ * relative(5.5) => '~5.5'
+ *
+ * relative(-1) => '~-1'
+ *
+ * @see `absolute` for absolute coordinates (e.g. 10)
+ * @see `local` for local coordinates (e.g. ^10)
+ */
+export function relative(coordinate: number): string
 
-function createSingleTypeVector(type: string, args: TwoOrThreeTuple<number>) {
-  const parsedValues = args.map(value => ({type, value}))
+/**
+ * Transforms numbers into relative coordinates, using the tilde notation `~`.
+ *
+ * @example
+ *
+ * relative(0, 0, 0) => ['~', '~', '~']
+ *
+ * relative(0, 180) => ['~', '~180']
+ *
+ * relative(-1, 10, 5) => ['~-1', '~10', '~5']
+ *
+ * @see `absolute` for absolute coordinates (e.g. 10)
+ * @see `local` for local coordinates (e.g. ^10)
+ */
+export function relative<T extends Tuple<number>>(...coordinates: T): MappedArray<T, string>
 
-  const [first, second, third] = args
-  if (third !== undefined) {
-    return Vector(first, second, third)
+export function relative<T extends Tuple<number>>(...coordinates: T): string | MappedArray<T, string> {
+  if (coordinates.length === 1) {
+    return `~${coordinates[0] || ''}`
   }
 
-  return Vector(first, second)
+  return coordinates.map((coord) => `~${coord || ''}`) as unknown as MappedArray<T, string>
 }
 
 /**
- * Creates absolute coordinates.
+ * Transforms a number into a local coordinate, using the caret notation `^`.
  *
  * @example
  *
- * Absolute(0, 128, 0) => '0 128 0'
- */
-export function Absolute(x: number, y: number, z: number): CoordinatesClass
-/**
- * Creates absolute rotation.
+ * local(0) => '~'
  *
- * @example
+ * local(5.5) => '^5.5'
  *
- * Absolute(90, -180) => '90 -180'
+ * local(-1) => '^-1'
+ *
+ * @see `absolute` for absolute coordinates (e.g. 10)
+ * @see `relative` for relative coordinates (e.g. ~10)
  */
-export function Absolute(horizontal: number, vertical: number): RotationClass
-export function Absolute(...args: TwoOrThreeTuple<number>) {
-  return createSingleTypeVector('absolute', args)
-}
+export function local(coordinate: number): string
 
 /**
- * Creates relative coordinates, using the tilde notation.
+ * Transforms numbers into local coordinates, using the tilde notation `^`.
  *
  * @example
  *
- * Relative(0, 10, 0) => '~0 ~10 ~0'
+ * relative(0, 0, 0) => ['^', '^', '^']
+ *
+ * relative(0, 180, 0) => ['^', '^180', '^']
+ *
+ * relative(-1, 10, 5) => ['^-1', '^10', '^5']
+ *
+ * @see `absolute` for absolute coordinates (e.g. 10)
+ * @see `relative` for relative coordinates (e.g. ~10)
  */
-export function Relative(x: number, y: number, z: number): CoordinatesClass
+export function local<T extends Tuple<number>>(...coordinates: T): MappedArray<T, string>
 
-/**
- * Creates relative rotation, using the tilde notation.
- *
- * @example
- *
- * Relative(-90, 180) => '~-90 ~180'
- */
-export function Relative(horizontal: number, y: number): RotationClass
+export function local<T extends Tuple<number>>(...coordinates: T): string | MappedArray<T, string> {
+  if (coordinates.length === 1) {
+    return `^${coordinates[0] || ''}`
+  }
 
-export function Relative(...args: TwoOrThreeTuple<number>) {
-  return createSingleTypeVector('relative', args)
-}
-
-
-/**
- * Creates local coordinates, using the caret notation.
- *
- * @example
- *
- * Local(0, 10, 0) => '^0 ^10 ^0'
- */
-export function Local(leftward: number, upward: number, frontward: number) {
-  return createSingleTypeVector('local', [leftward, upward, frontward])
+  return coordinates.map((coord) => `^${coord || ''}`) as unknown as MappedArray<T, string>
 }
