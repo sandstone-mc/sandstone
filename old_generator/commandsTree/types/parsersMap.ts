@@ -105,7 +105,7 @@ export interface ParsersMap {
   'minecraft:vec3': string,
 
   // A collection of up to 3 axes.
-  'minecraft:swizzle': LiteralUnion<'x' | 'xy' | 'yz' | 'xyz'>
+  'minecraft:swizzle': LiteralUnion<'x' | 'xy' | 'yz' | 'xz' | 'xyz'>
 
   // The entity anchor related to the facing argument in the teleport command. Is "feet" or "eyes".
   'minecraft:entity_anchor': LiteralUnion<'feet' | 'eyes'>

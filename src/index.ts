@@ -1,75 +1,9 @@
-/** TODO: autogenerate that whole file */
-import { COMMANDS_TREE, COMMANDS_TREE_TYPE } from './commandsTree/commands'
+import { CommandsRoot } from './commands'
+import { Datapack } from './datapack'
 
-import type { SandstoneRoot } from './commands/types'
-import { createCommandsResolver } from './commands/resolver'
-import Datapack from './commands/Datapack'
+export * from './variables'
 
-type TypedSandstoneRoot = SandstoneRoot<COMMANDS_TREE_TYPE>
+export const datapack = new Datapack('default')
+const commandsRoot = new CommandsRoot(datapack)
 
-const dp = new Datapack('default')
-
-const sandstone: TypedSandstoneRoot = createCommandsResolver(dp, COMMANDS_TREE) as any
-
-export { COMMANDS_TREE }
-
-export const { mcfunction, save: saveDatapack } = dp
-
-export const {
-  advancement,
-  clone,
-  execute,
-  experience,
-  teleport,
-  xp,
-  attribute,
-  bossbar,
-  clear,
-  data,
-  datapack,
-  defaultgamemode,
-  difficulty,
-  gamemode,
-  gamerule,
-  effect,
-  enchant,
-  forceload,
-  fill,
-  give,
-  help,
-  kill,
-  locate,
-  locatebiome,
-  loot,
-  setblock,
-  me,
-  msg,
-  particle,
-  playsound,
-  recipe,
-  reload,
-  scoreboard,
-  say,
-  schedule,
-  replaceitem,
-  seed,
-  setworldspawn,
-  spawnpoint,
-  spectate,
-  stopsound,
-  spreadplayers,
-  summon,
-  tell,
-  tellraw,
-  title,
-  tag,
-  team,
-  teammsg,
-  time,
-  tm,
-  tp,
-  trigger,
-  w,
-  weather,
-  worldborder,
-} = sandstone
+export const { say, teleport, tellraw } = commandsRoot

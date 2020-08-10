@@ -7788,14 +7788,10 @@ export interface COMMANDS_TREE_TYPE {
       }
     },
     tell: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'msg'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     tellraw: {
       type: 'literalArgument',
@@ -8006,24 +8002,16 @@ export interface COMMANDS_TREE_TYPE {
       parsersId: 0
     },
     tm: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'teammsg'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     tp: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'teleport'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     trigger: {
       type: 'literalArgument',
@@ -8067,14 +8055,10 @@ export interface COMMANDS_TREE_TYPE {
       parsersId: 105
     },
     w: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'msg'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     weather: {
       type: 'literal',
@@ -8299,14 +8283,10 @@ export interface COMMANDS_TREE_TYPE {
       }
     },
     xp: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'experience'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     }
   },
   parsers: [],
@@ -16101,14 +16081,10 @@ export const COMMANDS_TREE: COMMANDS_TREE_TYPE = {
       }
     },
     tell: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'msg'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     tellraw: {
       type: 'literalArgument',
@@ -16319,24 +16295,16 @@ export const COMMANDS_TREE: COMMANDS_TREE_TYPE = {
       parsersId: 0
     },
     tm: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'teammsg'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     tp: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'teleport'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     trigger: {
       type: 'literalArgument',
@@ -16380,14 +16348,10 @@ export const COMMANDS_TREE: COMMANDS_TREE_TYPE = {
       parsersId: 105
     },
     w: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'msg'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     },
     weather: {
       type: 'literal',
@@ -16612,14 +16576,10 @@ export const COMMANDS_TREE: COMMANDS_TREE_TYPE = {
       }
     },
     xp: {
-      type: 'literalArgument',
+      type: 'literal',
       redirect: [
         'experience'
-      ],
-      parsers: [],
-      executables: [],
-      arguments: [],
-      parsersId: 1
+      ]
     }
   },
   parsers: [],

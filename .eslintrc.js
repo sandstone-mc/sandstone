@@ -61,7 +61,7 @@ module.exports = {
       "error",
       {
         "VariableDeclarator": {
-          "array": true,
+          "array": false,
           "object": true
         },
         "AssignmentExpression": {
@@ -74,5 +74,9 @@ module.exports = {
     // Tweaking @typescript-eslint
     '@typescript-eslint/member-delimiter-style': 'off', // No semi-colons in types
     '@typescript-eslint/explicit-function-return-type': 'off', // Don't force every function to have a return type
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+
+    // Allow as many classes per file as necessary
+    'max-classes-per-file': 'off'
   },
 }

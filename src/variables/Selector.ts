@@ -1,3 +1,5 @@
+import type { TextComponentObject } from '../arguments'
+
 type ScoreArgument = {
   [objective: string]: number | [null, number] | [number, null] | [number, number]
 }
@@ -8,12 +10,12 @@ type SelectorArguments = {
   name?: string
 }
 
-export class Selector {
+export class SelectorClass {
   target: string
 
   arguments: SelectorArguments
 
-  constructor(target: string, selectorArguments?: SelectorArguments) {
+  constructor(target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorArguments) {
     this.target = target
     this.arguments = selectorArguments ?? {}
   }
@@ -33,6 +35,10 @@ export class Selector {
       }).join(', ')
     }
 
+    if (!Object.keys(this.arguments).length) {
+      return this.target
+    }
+
     const result: string[][] = []
 
     if (this.arguments) {
@@ -49,5 +55,21 @@ export class Selector {
         delete args.tag
       }
     }
+
+    return ``
   }
+
+  toChatComponent() : TextComponentObject {
+    return {
+      selector: this.toString()
+    }
+  }
+
+  toJSON() {
+    return this.toString()
+  }
+}
+
+export function Selector(target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorArguments): SelectorClass {
+  return new SelectorClass(target, selectorArguments)
 }

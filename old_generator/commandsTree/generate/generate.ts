@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 
 import {
-  setLiteralArguments, setParserIds, redirectExecutesToRoot, changeBiomeSoundParser, commandsToCamelCase, removeOpCommands, normalizeNodes, mergeLiteralSiblings, cleanUselessProperties, setLeafLiteralsToArguments,
+  setLiteralArguments, setParserIds, redirectExecutesToRoot, changeBiomeSoundParser, commandsToCamelCase, removeOpCommands, normalizeNodes, mergeLiteralSiblings, cleanUselessProperties, setLeafLiteralsToArguments, test,
 } from './treeModifiers'
 import { toJS, getBasePath, safeName } from './utils'
 
@@ -28,6 +28,8 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
   }
 
   delete commandsTree.children.list
+
+  test(commandsTree)
 
   // Remove commands that are not usable by datapacks.
   removeOpCommands(commandsTree)
@@ -130,7 +132,7 @@ export async function commandsJsonToJS(commandsJsonPath: string, registriesJsonP
     const result = `/* eslint-disable */\n/* Auto-generated */\nexport type ${typeName} = ${values.map((v) => `'${v}'`).join(' | ')}`
 
     promises.push(
-      fs.writeFile(path.join(typesDir, `${type}.ts`), result)
+      fs.writeFile(path.join(typesDir, `${type}.ts`), result),
     )
   }
 

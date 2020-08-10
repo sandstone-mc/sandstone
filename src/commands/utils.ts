@@ -2,22 +2,27 @@
 type RegisterOptions = {
   /**
    * Whether the subcommand is an execute subcommand. If true, implies `subcommand` to be true.
+   * @default false
    */
   execute?: boolean
 
   /**
    * Whether the given function is a subcommand. In root case, will not register the function.
+   * @default false
    */
   subcommand?: boolean
 
   /**
    * Prevent the decorator to automatically register the method's arguments. You'll have to do it manually.
+   * @default false
    */
   dontRegisterArguments?: boolean
 
   /**
    * The object field corresponding to the Sandstone object, containing the arguments.
    * If not set, the object using the decorator will be the one used.
+   *
+   * @default undefined
    */
   thisField?: string
 }
@@ -25,7 +30,6 @@ type RegisterOptions = {
 // Overload 1
 export function register(options: RegisterOptions, ...commandArgs: string[]): MethodDecorator;
 // Overload 2 (no options)
-export function register(...commandArgs: string[]): MethodDecorator;
 
 /**
  * A decorator used to register COMMANDS_TREE.
@@ -36,18 +40,26 @@ export function register(...commandArgs: string[]): MethodDecorator;
  *
  * After the function was called, if it is not a subcommand, it adds it to the datapack by calling the .register method.
  */
+export function register(...commandArgs: string[]): MethodDecorator;
+
 export function register(optionsOrCommandArg1: RegisterOptions | string, ...commandArgs: string[]): MethodDecorator {
-  let options: RegisterOptions | null = null
+  let options: RegisterOptions = {
+    dontRegisterArguments: false,
+    execute: false,
+    subcommand: false,
+    thisField: undefined,
+  }
+
   if (typeof optionsOrCommandArg1 === 'object') {
     // User gave an options object
-    options = optionsOrCommandArg1
-
-    if (options.execute) {
-      options.subcommand = true
-    }
+    options = { ...options, ...optionsOrCommandArg1 }
   } else {
     // User didn't give any options, just arguments
-    commandArgs.push(optionsOrCommandArg1)
+    commandArgs = [optionsOrCommandArg1, ...commandArgs]
+  }
+
+  if (options.execute) {
+    options.subcommand = true
   }
 
   return (target, propertyName, propertyDescriptor) => {
@@ -133,7 +145,7 @@ export function nested(...commandArguments: string[]): MethodDecorator {
 
     const value = getter ?? method
 
-    function decorated(this: any, func: Function, ...args: any[]) {
+    function decorated(this: any, func: (..._: any[]) => any, ...args: any[]) {
       const self = (this as unknown) as any
 
       if (!('arguments' in self)) {
@@ -163,7 +175,7 @@ export function nested(...commandArguments: string[]): MethodDecorator {
     } else if (method) {
       object = {
         value(...args: any[]) {
-          return decorated.apply(this, [method as unknown as Function, ...args])
+          return decorated.apply(this, [method as unknown as (() => any), ...args])
         },
       }
     } else {

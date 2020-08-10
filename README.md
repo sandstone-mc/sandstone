@@ -223,6 +223,7 @@ saveDatapack('My datapack')
 ```
 
 As a second argument, `saveDatapack` accepts options. They are listed below.
+
 |               |                                                                                                                             |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | verbose       | If true, the resulting commands will be displayed in the console.                                                           |

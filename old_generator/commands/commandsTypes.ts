@@ -2,10 +2,8 @@
  * Provides types matching closely the nodes of the commands tree
  */
 
-type REDIRECTS = 'execute' | 'root'
-
 export type NodeWithRedirect = {
-  redirect: readonly [REDIRECTS] | readonly [REDIRECTS, REDIRECTS]
+  redirect: readonly [string] | readonly [string, string]
 }
 
 export type NodeWithChildren = {

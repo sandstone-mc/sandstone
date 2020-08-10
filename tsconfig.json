@@ -68,6 +68,6 @@
   ],
   "exclude": [
     "node_modules",
-    "src/commandsTree/**/*.json"
+    "src/old_generator/commandsTree/**/*.json"
   ]
 }

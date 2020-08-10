@@ -1,7 +1,5 @@
 ![GitHub](https://img.shields.io/github/license/TheMrZZ/sandstone) ![GitHub last commit](https://img.shields.io/github/last-commit/TheMrZZ/sandstone?color=blue) ![Version](https://img.shields.io/badge/version-alpha-success)
 
-![sandstone](readme/sandstone.png){: .center-image .sandstone-image}
-
 Sandstone is a Typescript library for Minecraft Datapacks. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
 
 ## Features <!-- omit in toc -->
@@ -222,6 +220,7 @@ saveDatapack('My datapack')
 ```
 
 As a second argument, `saveDatapack` accepts options. They are listed below.
+
 |               |                                                                                                                             |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | verbose       | If true, the resulting commands will be displayed in the console.                                                           |

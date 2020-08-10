@@ -24,7 +24,7 @@ function executeOnChildren(commandNode: any, callback: (commandNode: any, ...arg
   }
 }
 
-export function removeOpCommands(commandRoot: any) {
+export function removeOpCommands(commandRoot: any): void {
   // Remove commands that are not usable by datapacks.
   // Taken from: https://minecraft.gamepedia.com/Commands#List_and_summary_of_commands
   delete commandRoot.children.publish
@@ -50,7 +50,7 @@ export function removeOpCommands(commandRoot: any) {
  * It means `executable` becomes `executables`, and `parser` becomes `parsers`.
  * For argument nodes, it will default their `executable` to false, and their properties to `undefined`
  */
-export function normalizeNodes(commandNode: any, name = 'root') {
+export function normalizeNodes(commandNode: any, name = 'root'): void {
   commandNode.parsers = commandNode.parser ? [commandNode.parser] : []
 
   if (commandNode.type === 'argument') {
@@ -70,7 +70,7 @@ export function normalizeNodes(commandNode: any, name = 'root') {
 /**
  * Transform sibling nodes which all are literals, and have the same children themselves, into a single node.
  */
-export function mergeLiteralSiblings(commandNode: any) {
+export function mergeLiteralSiblings(commandNode: any): void {
   const childrenNames = Object.keys(commandNode.children ?? {})
 
   if (!childrenNames.length) {
@@ -118,12 +118,8 @@ export function mergeLiteralSiblings(commandNode: any) {
  *
  * Warning: this directly modifies the given object.
  */
-export function setLiteralArguments(commandNode: any) {
+export function setLiteralArguments(commandNode: any, name = 'root'): void {
   let childrenNames = Object.keys(commandNode.children ?? {})
-
-  if (commandNode.type === 'literal') {
-
-  }
 
   // While the node is a literal/literalArgument with only 1 children
   while (['literal', 'literalArgument'].includes(commandNode.type) && childrenNames.length === 1) {
@@ -175,7 +171,7 @@ export function redirectExecutesToRoot(commandNode: any): void {
  * Therefore, they should become literalArguments, with an empty arguments list.
  */
 export function setLeafLiteralsToArguments(commandNode: any, name = 'root') {
-  if (commandNode.type === 'literal' && !commandNode.children) {
+  if (commandNode.type === 'literal' && !commandNode.children && !commandNode.redirect) {
     // The node is a literal with no children, therefore a leaf literal node.
     Object.assign(commandNode, {
       type: 'literalArgument',
