@@ -1,6 +1,4 @@
-export {
-  Absolute, Vector, Local, Relative,
-} from './Coordinates'
-export { Objective } from './Objective'
-export { Selector } from './Selector'
+export * from './Coordinates'
+export * from './Objective'
+export * from './Selector'
 export * from './JsonTextComponentClass'

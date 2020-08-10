@@ -1,5 +1,7 @@
-import type { SelectorClass } from '../variables/Selector'
-import type { CoordinatesClass } from '../variables/Coordinates'
+import type { VectorClass } from '../variables/Coordinates'
+import { SelectorArgument } from './selector'
+import { BASIC_COLORS } from './colors'
+import { LiteralUnion } from '../generalTypes'
 
 interface ComponentClass {
   toChatComponent(): JsonTextComponent
@@ -25,7 +27,7 @@ type ContentTag = {
   score: {
     /** The name of the score holder whose score should be displayed.
      * This can be a selector like @p or an explicit name. */
-    name: string | SelectorClass
+    name: SelectorArgument<false>
 
     /** The internal name of the objective to display the player's score in. */
     objective: string
@@ -33,7 +35,7 @@ type ContentTag = {
     /** Optional. If present, this value is used regardless of what the score would have been. */
     value?: number
   }
- } | {
+} | {
   /**
    * An entity selector. Displayed as the name of the player or entity found by the selector.
    *
@@ -47,39 +49,39 @@ type ContentTag = {
   keybind: string
 } | (
     {
-    /**
-     * The NBT path used for looking up NBT values from an entity, a block entity or an NBT storage.
-     *
-     * NBT strings display their contents.
-     * Other NBT values are displayed as SNBT with no spacing or linebreaks.
-     *
-     * How values are displayed depends on the value of `interpret`.
-     */
-    nbt: string
+      /**
+       * The NBT path used for looking up NBT values from an entity, a block entity or an NBT storage.
+       *
+       * NBT strings display their contents.
+       * Other NBT values are displayed as SNBT with no spacing or linebreaks.
+       *
+       * How values are displayed depends on the value of `interpret`.
+       */
+      nbt: string
 
-    /**
-     * Optional.
-     * If true, the game will try to parse the text of each NBT value as a raw JSON text component.
-     *
-     * This usually only works if the value is an NBT string containing JSON, since JSON and SNBT are not compatible.
-     *
-     * If parsing fails, displays nothing.
-     *
-     * @default false
-     */
-    interpret?: boolean
-  } & ({
-    /** The coordinates of the block entity from which the NBT value is obtained.
-     * The coordinates can be absolute or relative. */
-    block: string | CoordinatesClass
-  } | {
-    /** The target selector for the entity or entities from which the NBT value is obtained. */
-    entity: string
-  } | {
-    /** The namespaced ID of the command storage from which the NBT value is obtained */
-    storage: string
-  })
-)
+      /**
+       * Optional.
+       * If true, the game will try to parse the text of each NBT value as a raw JSON text component.
+       *
+       * This usually only works if the value is an NBT string containing JSON, since JSON and SNBT are not compatible.
+       *
+       * If parsing fails, displays nothing.
+       *
+       * @default false
+       */
+      interpret?: boolean
+    } & ({
+      /** The coordinates of the block entity from which the NBT value is obtained.
+       * The coordinates can be absolute or relative. */
+      block: string | VectorClass<[string, string, string]>
+    } | {
+      /** The target selector for the entity or entities from which the NBT value is obtained. */
+      entity: string
+    } | {
+      /** The namespaced ID of the command storage from which the NBT value is obtained */
+      storage: string
+    })
+  )
 
 type ChildrenTags = {
   /**
@@ -93,7 +95,7 @@ type ChildrenTags = {
 
 type FormattingTags = {
   /** Optional. The color to render the content in. */
-  color?: string
+  color?: LiteralUnion<BASIC_COLORS>
 
   /**
    * Optional.
@@ -234,6 +236,6 @@ type PossibleComponents = (
  * A Json text component, that can be displayed in several locations: in-game chat, books, signs, titles...
  */
 export type JsonTextComponent = (
-  PossibleComponents[] |
+  readonly PossibleComponents[] |
   PossibleComponents
 )

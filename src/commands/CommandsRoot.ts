@@ -3,12 +3,15 @@
 import Datapack from '../datapack/Datapack'
 import { CommandArgs } from '../datapack/minecraft'
 import {
-  Absolute, JsonTextComponentClass, Relative, Selector,
+  JsonTextComponentClass, Selector,
 } from '../variables'
-import { JsonTextComponent } from '../arguments'
-
+import { ITEMS, JsonTextComponent, SelectorArgument } from '../arguments'
+import { LiteralUnion } from '../generalTypes'
 import { command } from './decorators'
-import { Teleport } from './teleport'
+import { Teleport } from './Teleport'
+import { Attribute } from './Attribute'
+import { Bossbar } from './Bossbar'
+import { Clone } from './Clone'
 
 export class CommandsRoot {
   protected datapack: Datapack
@@ -19,11 +22,16 @@ export class CommandsRoot {
 
   arguments: CommandArgs
 
+  // This might seem weird, but we need this object to reference itself. Thanks to that, CommandsRoot implements the Command interface,
+  // and we can directly create commands here.
+  commandsRoot: CommandsRoot
+
   constructor(datapack: Datapack) {
     this.arguments = []
     this.inExecute = false
     this.executable = false
     this.datapack = datapack
+    this.commandsRoot = this
   }
 
   register = () => {
@@ -38,18 +46,31 @@ export class CommandsRoot {
   protected reset() {
     this.arguments = []
     this.inExecute = false
+    this.executable = false
   }
 
+  // attribute command //
+  attribute = (new Attribute(this)).attribute
+
+  // bossabar command //
+  bossbar = (new Bossbar(this))
+
+  // clear command //
+  @command('clear', { isRoot: true })
+  clear = (targets?: SelectorArgument<false>, item?: LiteralUnion<ITEMS>, maxCount?: number) => { }
+
+  clone = (new Clone(this)).clone
+
   // say command //
-  @command('say')
-  say = (...messages: string[]) => {}
+  @command('say', { isRoot: true })
+  say = (...messages: string[]) => { }
 
   // teleport command //
-  teleport: Teleport['teleport'] = (new Teleport(this)).teleport
+  teleport = (new Teleport(this)).teleport
 
   // tellraw command //
-  @command('tellraw', { parsers: { '1': JsonTextComponentClass } })
-  tellraw = (targets: string, message: JsonTextComponent) => {}
+  @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JsonTextComponentClass(msg) } })
+  tellraw = (targets: SelectorArgument<false>, message: JsonTextComponent) => { }
 }
 
 export default CommandsRoot

@@ -129,8 +129,10 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
       fs.writeFileSync(mcFunctionPath, commands.join('\n'))
 
+      const GREEN = '\x1b[32m'
+      const RESET = '\x1b[0m'
       if (options.verbose) {
-        console.log('#', `${namespace}:${[...folders, fileName].join('/')}`)
+        console.log(GREEN + '#', `${namespace}:${[...folders, fileName].join('/')}` + RESET)
         console.log(commands.join('\n'))
         console.log()
       }

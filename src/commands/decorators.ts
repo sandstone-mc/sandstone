@@ -97,7 +97,14 @@ type RegisterConfig = {
    *
    * => The `textComponent` argument will be casted to a JsonTextComponentClass when registered.
    */
-  parsers?: Record<number | string, new (arg: any) => unknown>
+  parsers?: Record<number | string, (arg: any, innerArgs: unknown[]) => unknown>
+
+  /**
+   * Whether the command is a root one (/say, /tellraw) or a subcommand.
+   * 
+   * @default false
+   */
+  isRoot?: boolean
 }
 
 type RootObjectWithCommand = {
@@ -120,6 +127,8 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
     registerArguments: true,
     hasSubcommands: false,
     executable: true,
+    thisField: 'commandsRoot',
+    isRoot: false,
     ...config,
   }
 
@@ -128,14 +137,30 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
   const names = Array.isArray(name) ? name : [name]
 
   return createPropertyDecorator<RootObjectWithCommand>(config.thisField ?? null, (commandsRoot, innerFunction, ...innerArgs) => {
+    // If the previous command was executable, register it. 
+    // It means it wasn't registered because it could have been extended with other arguments.
+    if (config.isRoot && commandsRoot.executable) {
+      commandsRoot.register()
+    }
+    if (config.isRoot && commandsRoot.arguments.length > 0) {
+      throw new Error(`Error: the previous command ${commandsRoot.arguments} was not finished.`)
+    }
+
+    if (!config.isRoot && commandsRoot.arguments.length === 0) {
+      throw new Error(
+        `Trying to call some command arguments with no registered root. Did you forgot {hasSubcommands:true}?` +
+        `Args are: ${innerArgs}, function is ${innerFunction}`
+      )
+    }
+
     if (config.registerArguments) {
       // Merge the default arguments with the given innerArgs
       const defaultArgs = getDefaultArguments(innerFunction)
       const finalRawArgs = mergeArrays(innerArgs, defaultArgs)
 
       const parsedArgs = finalRawArgs.map((arg, index) => {
-        if (Object.prototype.hasOwnProperty.call(parsers, index)) {
-          return new parsers[index](arg)
+        if (arg !== undefined && Object.prototype.hasOwnProperty.call(parsers, index)) {
+          return parsers[index](arg, finalRawArgs)
         }
         return arg
       })

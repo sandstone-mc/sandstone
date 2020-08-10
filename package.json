@@ -12,11 +12,10 @@
     "url": "https://github.com/TheMrZZ/sandstone"
   },
   "scripts": {
-    "watch:errors": "tsc --watch --noEmit --incremental --allowSyntheticDefaultImports --downlevelIteration --pretty tests/test.ts",
     "watch": "tsc --watch --pretty",
     "build": "tsc",
     "test": "ts-node-dev ./tests/test.ts",
-    "test:watch": "ts-node-dev --pretty --respawn --clear ./tests/test.ts"
+    "test:watch": "ts-node-dev --pretty --respawn --clear --poll ./tests/test.ts"
   },
   "devDependencies": {
     "@types/node": "^14.0.11",

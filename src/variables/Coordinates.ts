@@ -1,8 +1,14 @@
-/** A root class that can be used to defined a N-dimeension vector */
-class VectorClass {
-  protected values: string[]
+import { inspect } from 'util'
 
-  constructor(values: string[]) {
+/** A root class that can be used to defined a N-dimeension vector */
+export class VectorClass<T extends readonly unknown[]> {
+  protected values: T
+
+  constructor(values: T) {
+    if (!Array.isArray(values) || !values.every(i => typeof i === 'string')) {
+      throw new Error(`Expected array of string for Vector values, got ${inspect(values)}`)
+    }
+
     this.values = values
   }
 
@@ -13,60 +19,9 @@ class VectorClass {
   toJSON() {
     return this.toString()
   }
-}
 
-/**
- * A class containing 3 coordinates, that can be absolute, relative or local.
- */
-export class CoordinatesClass extends VectorClass {
-  constructor(x: string, y: string, z: string) {
-    super([x, y, z])
-  }
-
-  get x() {
-    return this.values[0]
-  }
-
-  set x(newValue: string) {
-    this.values[0] = newValue
-  }
-
-  get y() {
-    return this.values[1]
-  }
-
-  set y(newValue: string) {
-    this.values[1] = newValue
-  }
-
-  get z() {
-    return this.values[2]
-  }
-
-  set z(newValue: string) {
-    this.values[2] = newValue
-  }
-}
-
-export class RotationClass extends VectorClass {
-  constructor(horizontal: string, vertical: string) {
-    super([horizontal, vertical])
-  }
-
-  get horizontal() {
-    return this.values[0]
-  }
-
-  set horizontal(value: string) {
-    this.values[0] = value
-  }
-
-  get vertical() {
-    return this.values[1]
-  }
-
-  set vertical(value: string) {
-    this.values[1] = value
+  [Symbol.iterator]() {
+    return this.values[Symbol.iterator]
   }
 }
 
@@ -101,14 +56,14 @@ export function absolute(coordinate: number): string
  * @see `relative` for relative coordinates (e.g. ~10)
  * @see `local` for local coordinates (e.g. ^10)
  */
-export function absolute<T extends Tuple<number>>(...coordinates: T): MappedArray<T, string>
+export function absolute<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, string>>
 
-export function absolute<T extends Tuple<number>>(...coordinates: T): string | MappedArray<T, string> {
+export function absolute<T extends Tuple<number>>(...coordinates: T): string | VectorClass<MappedArray<T, string>> {
   if (coordinates.length === 1) {
     return coordinates[0].toString()
   }
 
-  return coordinates.map(coord => coord.toString()) as unknown as MappedArray<T, string>
+  return new VectorClass(coordinates.map(coord => coord.toString()) as unknown as MappedArray<T, string>)
 }
 
 /**
@@ -141,14 +96,14 @@ export function relative(coordinate: number): string
  * @see `absolute` for absolute coordinates (e.g. 10)
  * @see `local` for local coordinates (e.g. ^10)
  */
-export function relative<T extends Tuple<number>>(...coordinates: T): MappedArray<T, string>
+export function relative<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, string>>
 
-export function relative<T extends Tuple<number>>(...coordinates: T): string | MappedArray<T, string> {
+export function relative<T extends Tuple<number>>(...coordinates: T): string | VectorClass<MappedArray<T, string>> {
   if (coordinates.length === 1) {
     return `~${coordinates[0] || ''}`
   }
 
-  return coordinates.map((coord) => `~${coord || ''}`) as unknown as MappedArray<T, string>
+  return new VectorClass(coordinates.map((coord) => `~${coord || ''}`) as unknown as MappedArray<T, string>)
 }
 
 /**
@@ -181,12 +136,16 @@ export function local(coordinate: number): string
  * @see `absolute` for absolute coordinates (e.g. 10)
  * @see `relative` for relative coordinates (e.g. ~10)
  */
-export function local<T extends Tuple<number>>(...coordinates: T): MappedArray<T, string>
+export function local<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, string>>
 
-export function local<T extends Tuple<number>>(...coordinates: T): string | MappedArray<T, string> {
+export function local<T extends Tuple<number>>(...coordinates: T): string | VectorClass<MappedArray<T, string>> {
   if (coordinates.length === 1) {
     return `^${coordinates[0] || ''}`
   }
 
-  return coordinates.map((coord) => `^${coord || ''}`) as unknown as MappedArray<T, string>
+  return new VectorClass(coordinates.map((coord) => `^${coord || ''}`) as unknown as MappedArray<T, string>)
 }
+
+export const abs = absolute
+export const rel = relative
+export const loc = local
