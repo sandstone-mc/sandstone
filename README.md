@@ -20,13 +20,6 @@ This autocompletion works for commands, predicates, loot tables, advancements...
 
 *For the moment, autocompletion only works for commands.*
 
-## Always up-to-date <!-- omit in toc -->
-
-Sandstone is divided in two parts. The core part is version-agnostic, and the commands part is *automatically generated* for each version of the game.
-10 minutes after a new snapshot is released, Sandstone is already updated. You will always have access to **the latest commands**. Minecraft gets new blocks, enchantments, items, mobs? Sandstone knows it, and will autocomplete them for you.
-
-*For the moment, Sandstone has not yet been splitted in two.*
-
 ## Easy to share <!-- omit in toc -->
 Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own datapacks.
 
@@ -78,7 +71,8 @@ You've now installed Sandstone, congratulations!
 
 Let's write your first Minecraft function. Start VSCode, and open the folder you created. In the directory, create a new file named `helloworld.ts`, with the following content:
 ```js
-import { say, mcfunction, saveDatapack } from 'sandstone'
+import { say } from 'sandstone/commands'
+import { mcfunction, saveDatapack } from 'sandstone/core'
 
 mcfunction('hello', () => {
   say('Hello world!')
@@ -107,9 +101,10 @@ Also, you should see a new folder in your current working directory, named `My d
 Let's do a line-by-line explanation.
 
 ```js
-import { say, mcfunction, saveDatapack } from 'sandstone'
+import { say } from 'sandstone/commands'
+import { mcfunction, saveDatapack } from 'sandstone/core'
 ```
-This line tells Sandstone what we need to use. Here, we need one command, `say`, and two Sandstone functions, `mcfunction` and `saveDatapack`.
+This line tells Sandstone what we need to use. Here, we need one command, `say`, and two Sandstone functions, `mcfunction` and `saveDatapack`. The commands are located in `sandstone/commands`, the Sandstone functions are located in `sandstone/core`.
 
 
 ```js
@@ -141,7 +136,7 @@ This line tells Sandstone to save the all mcfunctions to the actual file system.
 In Sandstone, all commands can directly be imported from `sandstone`:
 
 ```ts
-import { advancement, execute, kill, say, scoreboard } from 'sandstone'
+import { advancement, execute, kill, say, scoreboard } from 'sandstone/commands'
 ```
 
 When typing a command or a subcommand, there are two possibilities:
@@ -212,6 +207,8 @@ setblock ~ ~1 ~ minecraft:air
 ```
 
 As you can see, Sandstone automatically created a new mcfunction for you. It contains all your nested commands (all the setblocks), and is called by the `execute` command. Therefore, you achieve the desired effect **without managing several files youself**.
+
+PS: If you need to run only one command, you can use `runOne` instead of `run`.
 
 ## Saving the datapack
 
