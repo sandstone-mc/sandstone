@@ -1,0 +1,25 @@
+import { commandsRoot } from './_internals'
+
+export const {
+  advancement,
+  attribute,
+  bossbar,
+  clear,
+  clone,
+  data,
+  datapack,
+  debug,
+  defaultgamemode,
+  difficulty,
+  effect,
+  enchant,
+  execute,
+  experience,
+  fill,
+  forceload,
+  gamemode,
+  say,
+  scoreboard,
+  teleport,
+  tellraw,
+} = commandsRoot

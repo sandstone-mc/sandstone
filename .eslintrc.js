@@ -5,7 +5,11 @@ module.exports = {
     node: true,
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: '.'
+  },
+  plugins: ['@typescript-eslint', 'import'],
 
   extends: [
     'airbnb-base',
@@ -15,6 +19,12 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
   ],
+
+  settings: {
+    'import/resolver': {
+      typescript: {}
+    }
+  },
 
   rules: {
     'semi': ['error', 'never'],
@@ -77,6 +87,12 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
 
     // Allow as many classes per file as necessary
-    'max-classes-per-file': 'off'
+    'max-classes-per-file': 'off',
+
+    // Allow empty arrow functions
+    '@typescript-eslint/no-empty-function': 'off',
+
+    // Allow unused arguments
+    '@typescript-eslint/no-unused-vars': 'off',
   },
 }

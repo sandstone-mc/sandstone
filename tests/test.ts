@@ -1,31 +1,24 @@
+import { mcfunction, saveDatapack } from '../src/core'
+
 import {
-  abs, rel, loc, Selector,
-  datapack, say, teleport, tellraw, attribute, bossbar, clear, clone
-} from '../src'
+  advancement,
+  attribute, bossbar, clear, clone, data, datapack, enchant, execute, fill, say, scoreboard,
+  teleport, tellraw,
+} from '../src/commands'
 
-datapack.mcfunction('test', () => {
-  say('Hello')
-  teleport(Selector('@a'), abs(0, 0, 0))
-  teleport(Selector('@a'), abs(0, 0, 0)).facingEntity(Selector('@s'))
+import {
+  abs,
+  createObjective, Selector, self,
+} from '../src/variables'
 
-  teleport(Selector('@s', {
-    advancements: {
-      'story/form_obsidian': true,
-      'story/obtain_armor': {
-        iron_helmet: true,
-      }
-    }
-  }))
+const kills = createObjective('kills', 'playerKills')
+const myKills = kills.ScoreHolder('@s')
 
-  tellraw(Selector('@a'), { text: 'cc' })
+mcfunction('multiply_kills', () => {
+  execute.if(myKills.greaterThan('@r', 'kills')).runOne.say('Hello')
+  execute.if(myKills.equalTo('@r', 'kills')).runOne.say('Hello')
 
-  attribute(Selector('@s'), 'BaseModifier').get()
-
-  bossbar.add('minecraft:test', { text: 'cc' })
-
-  clone(['0', '0', '0'], ['1', '1', '1'], ['2', '2', '2']).filtered('minecraft:acacia_button', 'force')
-
-  clear(Selector('@a'), 'minecraft:acacia_boat[test=cc]')
+  fill(abs(0, 0, 0), abs(10, 10, 10), 'minecraft:acacia_button')
 })
 
-datapack.save('My Awesome Datapack', { verbose: true })
+saveDatapack('My Awesome Datapack', { verbose: true })

@@ -6,9 +6,9 @@ import {
   NodeWithChildren,
   RootNode,
   NodeWithRedirect,
-} from '../../commands/commandsTypes'
-import { ParsersIdMap } from '../commandsTree/types'
-import { COMMANDS_TREE_TYPE } from '../commandsTree/commands'
+} from '@commands/commandsTypes'
+import { ParsersIdMap } from '@commandsTree/types'
+import { COMMANDS_TREE_TYPE } from '@commandsTree/commands'
 
 
 export type _SandstoneRedirectNode<rootNode extends RootNode, redirect extends string> = (
