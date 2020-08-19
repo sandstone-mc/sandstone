@@ -1,15 +1,15 @@
 {
   "name": "sandstone",
-  "version": "0.1.3",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "private": false,
   "author": "TheMrZZ - Florian ERNST",
-  "description": "Sandstone, a Javascript library for Minecraft datapacks.",
+  "description": "Sandstone, a Typescript library for Minecraft datapacks.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheMrZZ/sandstone"
+    "url": "git+https://github.com/TheMrZZ/sandstone.git"
   },
   "scripts": {
     "build:watch": "tsc --watch --incremental --pretty",
@@ -44,5 +44,13 @@
     "@datapack": "dist/src/_internals/datapack",
     "@variables": "dist/src/_internals/variables",
     "@": "dist/src/_internals"
+  },
+  "bugs": {
+    "url": "https://github.com/TheMrZZ/sandstone/issues"
+  },
+  "homepage": "https://github.com/TheMrZZ/sandstone#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
   }
 }

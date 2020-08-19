@@ -1,6 +1,7 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type {
-  GAMEMODES, ITEMS, JsonTextComponent, SelectorArgument,
+  BIOMES,
+  GAMEMODES, GAMERULES, ITEMS, JsonTextComponent, SelectorArgument, STRUCTURES,
 } from '@arguments'
 import Datapack from '@datapack/Datapack'
 import type { SaveOptions } from '@datapack/filesystem'
@@ -14,8 +15,10 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, Scoreboard, Teleport,
+  FunctionCommand, Loot, Scoreboard, Teleport,
 } from './implementations'
+
+import type * as commands from '../../commands'
 
 export class CommandsRoot {
   Datapack: Datapack
@@ -145,6 +148,50 @@ export class CommandsRoot {
   // gamemode command //
   @command('gamemode', { isRoot: true })
   gamemode = (gamemode: GAMEMODES, target: SelectorArgument<false>) => {}
+
+  // gamerule command //
+  @command('gamerule', { isRoot: true })
+  gamerule = (gamerule: LiteralUnion<GAMERULES>, value: boolean | number) => {}
+
+  // give command //
+  @command('give', { isRoot: true })
+  give = (target: SelectorArgument<false>, item: LiteralUnion<ITEMS>, count?: number) => {}
+
+  // help command //
+  @command('help', { isRoot: true })
+  help = (command_?: keyof typeof commands) => {}
+
+  // kill command //
+  @command('kill', { isRoot: true })
+  kill = (targets: SelectorArgument<false>) => {}
+
+  // list command //
+  @command('list', {
+    isRoot: true,
+    parsers: {
+      '0': (uuids) => (uuids ? 'uuids' : undefined),
+    },
+  })
+  list = (uuids?: boolean) => {}
+
+  // locate command //
+  @command('locate', { isRoot: true })
+  locate = (structure: LiteralUnion<STRUCTURES>) => {}
+
+  // locatebiome command //
+  @command('locatebiome', { isRoot: true })
+  locatebiome = (biome: LiteralUnion<BIOMES>) => {}
+
+  // loot command //
+  loot = new Loot(this)
+
+  // me command //
+  @command('me', { isRoot: true })
+  me = (action: string) => {}
+
+  // me command //
+  @command('msg', { isRoot: true })
+  msg = (action: string) => {}
 
   // say command //
   @command('say', { isRoot: true })
