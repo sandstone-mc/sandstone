@@ -1,7 +1,7 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BIOMES,
-  GAMEMODES, GAMERULES, ITEMS, JsonTextComponent, SelectorArgument, STRUCTURES,
+  GAMEMODES, GAMERULES, ITEMS, JsonTextComponent, SelectorArgument, STRUCTURES, SOUND_EVENTS, SOUND_SOURCES, Coordinates,
 } from '@arguments'
 import Datapack from '@datapack/Datapack'
 import type { SaveOptions } from '@datapack/filesystem'
@@ -15,7 +15,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, Loot, Particle, Scoreboard, Teleport,
+  FunctionCommand, Loot, Particle, Scoreboard, Teleport, Recipe,
 } from './implementations'
 
 import type * as commands from '../../commands'
@@ -197,7 +197,17 @@ export class CommandsRoot {
   particle = (new Particle(this)).particle
 
   // playsound command //
+  @command('playsound', { isRoot: true })
+  playsound = (sound: LiteralUnion<SOUND_EVENTS>, source: SOUND_SOURCES, targets: SelectorArgument<false>, sourcePosition?: Coordinates, volume?: number, pitch?: number, minVolume?: number) => { }
 
+  // recipe command //
+  recipe = new Recipe(this)
+
+  // reload command //
+  @command('reload', { isRoot: true })
+  reload = () => { }
+
+  // replaceitem command //
 
   // say command //
   @command('say', { isRoot: true })

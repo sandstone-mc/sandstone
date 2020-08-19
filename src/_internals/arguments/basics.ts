@@ -14,3 +14,5 @@ export type DIFFICULTIES = 'easy' | 'normal' | 'hard' | 'peaceful'
 export type OPERATORS = '=' | '+=' | '-=' | '/=' | '*=' | '%=' | '<=' | '>=' | '<>'
 
 export type COMPARISON_OPERATORS = '<' | '<=' | '=' | '>=' | '>'
+
+export type SOUND_SOURCES = 'master' | 'music' | 'record' | 'weather' | 'block' | 'hostile' | 'neutral' | 'player' | 'ambient' | 'voice'

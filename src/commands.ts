@@ -29,6 +29,8 @@ export const {
   me,
   msg,
   particle,
+  playsound,
+  recipe,
   say,
   scoreboard,
   teleport,
