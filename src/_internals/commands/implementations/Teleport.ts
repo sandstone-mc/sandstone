@@ -1,4 +1,4 @@
-import type { Coordinates, Rotation, SelectorArgument } from '@arguments'
+import { Coordinates, coordinatesParser, Rotation, rotationParser, SelectorArgument } from '@arguments'
 import { VectorClass } from '@variables/Coordinates'
 import { Command } from '../Command'
 import { command } from '../decorators'
@@ -8,11 +8,7 @@ export class TeleportFacing extends Command {
    * Specifies the coordinates to make the target(s) facing to.
    * May use tilde and caret notation to specify a position relative to the position where the command is executed.
    */
-  @command('facing', {
-    parsers: {
-      '0': (arg) => (Array.isArray(arg) ? new VectorClass(arg) : arg),
-    },
-  })
+  @command('facing', { parsers: { '0': coordinatesParser } })
   facing = (location: Coordinates) => { }
 
   /**
@@ -33,9 +29,9 @@ export class Teleport extends Command {
     hasSubcommands: true,
     isRoot: true,
     parsers: {
-      '0': (arg) => (Array.isArray(arg) ? new VectorClass(arg) : arg),
-      '1': (arg) => (Array.isArray(arg) ? new VectorClass(arg) : arg),
-      '2': (arg) => (Array.isArray(arg) ? new VectorClass(arg) : arg),
+      '0': coordinatesParser,
+      '1': coordinatesParser,
+      '2': rotationParser,
     },
   })
   teleport: (

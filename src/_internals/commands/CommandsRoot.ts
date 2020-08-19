@@ -15,7 +15,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, Loot, Scoreboard, Teleport,
+  FunctionCommand, Loot, Particle, Scoreboard, Teleport,
 } from './implementations'
 
 import type * as commands from '../../commands'
@@ -147,23 +147,23 @@ export class CommandsRoot {
 
   // gamemode command //
   @command('gamemode', { isRoot: true })
-  gamemode = (gamemode: GAMEMODES, target: SelectorArgument<false>) => {}
+  gamemode = (gamemode: GAMEMODES, target: SelectorArgument<false>) => { }
 
   // gamerule command //
   @command('gamerule', { isRoot: true })
-  gamerule = (gamerule: LiteralUnion<GAMERULES>, value: boolean | number) => {}
+  gamerule = (gamerule: LiteralUnion<GAMERULES>, value: boolean | number) => { }
 
   // give command //
   @command('give', { isRoot: true })
-  give = (target: SelectorArgument<false>, item: LiteralUnion<ITEMS>, count?: number) => {}
+  give = (target: SelectorArgument<false>, item: LiteralUnion<ITEMS>, count?: number) => { }
 
   // help command //
   @command('help', { isRoot: true })
-  help = (command_?: keyof typeof commands) => {}
+  help = (command_?: keyof typeof commands) => { }
 
   // kill command //
   @command('kill', { isRoot: true })
-  kill = (targets: SelectorArgument<false>) => {}
+  kill = (targets: SelectorArgument<false>) => { }
 
   // list command //
   @command('list', {
@@ -172,26 +172,32 @@ export class CommandsRoot {
       '0': (uuids) => (uuids ? 'uuids' : undefined),
     },
   })
-  list = (uuids?: boolean) => {}
+  list = (uuids?: boolean) => { }
 
   // locate command //
   @command('locate', { isRoot: true })
-  locate = (structure: LiteralUnion<STRUCTURES>) => {}
+  locate = (structure: LiteralUnion<STRUCTURES>) => { }
 
   // locatebiome command //
   @command('locatebiome', { isRoot: true })
-  locatebiome = (biome: LiteralUnion<BIOMES>) => {}
+  locatebiome = (biome: LiteralUnion<BIOMES>) => { }
 
   // loot command //
   loot = new Loot(this)
 
   // me command //
   @command('me', { isRoot: true })
-  me = (action: string) => {}
+  me = (action: string) => { }
 
   // me command //
   @command('msg', { isRoot: true })
-  msg = (action: string) => {}
+  msg = (action: string) => { }
+
+  // particle command //
+  particle = (new Particle(this)).particle
+
+  // playsound command //
+
 
   // say command //
   @command('say', { isRoot: true })

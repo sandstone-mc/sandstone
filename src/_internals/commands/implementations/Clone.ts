@@ -1,5 +1,5 @@
 import { VectorClass } from '@variables'
-import { BLOCKS, Coordinates } from '@arguments'
+import { BLOCKS, Coordinates, coordinatesParser } from '@arguments'
 import { LiteralUnion } from '@/generalTypes'
 import { Command } from '../Command'
 import { command } from '../decorators'
@@ -20,9 +20,9 @@ export class Clone extends Command {
     isRoot: true,
     hasSubcommands: true,
     parsers: {
-      '0': (arg) => (Array.isArray(arg) ? new VectorClass(arg) : arg),
-      '1': (arg) => (Array.isArray(arg) ? new VectorClass(arg) : arg),
-      '2': (arg) => (Array.isArray(arg) ? new VectorClass(arg) : arg),
+      '0': coordinatesParser,
+      '1': coordinatesParser,
+      '2': coordinatesParser,
     },
   })
   clone = (begin: Coordinates, end: Coordinates, destination: Coordinates) => new CloneOptions(this.commandsRoot)

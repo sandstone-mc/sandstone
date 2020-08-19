@@ -177,12 +177,12 @@ The divergent part is the command call:
 
 ```js
 // Sets a block of dirt under all players
-execute.as("@a").at("@s").setblock('~ ~-1 ~', 'minecraft:dirt')
+execute.as("@a").at("@s").runOne.setblock('~ ~-1 ~', 'minecraft:dirt')
 ```
 
-This will result in `execute as @a at @s run setblock ~ ~-1 ~ minecraft:dirt`. As you can see, you **don't specify the run subcommand**. It is automatically infered.
+This will result in `execute as @a at @s run setblock ~ ~-1 ~ minecraft:dirt`. As you can see, you **use runOne instead of run**. In Sandstone, `run` is used to execute *multiple commands*, and `runOne` to execute *only one* command.
 
-However, the `run` subcommand still exists, but it is used to execute *several commands*:
+For example, here is how you could execute multiple commands with `run`:
 
 ```js
 execute.as('@a').at('@s').run(() => {
@@ -208,8 +208,6 @@ setblock ~ ~1 ~ minecraft:air
 
 As you can see, Sandstone automatically created a new mcfunction for you. It contains all your nested commands (all the setblocks), and is called by the `execute` command. Therefore, you achieve the desired effect **without managing several files youself**.
 
-PS: If you need to run only one command, you can use `runOne` instead of `run`.
-
 ## Saving the datapack
 
 Using sandstone, you can choose to either save the datapack to the current directory, or to save it directly in one of your Minecraft world. The first argument to the `saveDatapack` method is the name of the datapack. If you only provide this argument, the datapack will be saved to your current directory.
@@ -229,7 +227,9 @@ As a second argument, `saveDatapack` accepts options. They are listed below.
 
 As you can see, Sandstone can save your datapack directly in one of your world:
 ```js
-// Save the datapack in "An awesome world"
+import { saveDatapack } from 'sandstone/core'
+
+// Save the datapack in "An awesome world", with the "My datapack" name.
 saveDatapack('My datapack', {
   world: 'An awesome world'
 })
@@ -340,7 +340,7 @@ mcfunction('main', () => {
 })
 ```
 Results in:
-```
+```mcfunction
 # default:main
 say Main function
 ```
@@ -357,7 +357,7 @@ mcfunction('main', () => {
 })
 ```
 Results in:
-```
+```mcfunction
 # default:main
 say Calling "useless"...
 function default:useless

@@ -1,7 +1,7 @@
 import { LiteralUnion } from '@/generalTypes'
 /* eslint-disable no-use-before-define */
 import {
-  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, ObjectiveArgument, Rotation, SelectorArgument,
+  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, coordinatesParser, DIMENSION_TYPES, ObjectiveArgument, Rotation, SelectorArgument,
 } from '@arguments'
 import { MinecraftCondition } from '@arguments/condition'
 import { Range } from '@variables'
@@ -21,13 +21,11 @@ const executeConfig = {
 type StoreType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double'
 
 export class ExecuteStoreArgs extends Command {
-  @command('block', executeConfig)
-  block = (
-    targetPos: Coordinates, path: string, type: StoreType, scale: number,
-  ) => new Execute(this.commandsRoot)
+  @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
+  block = (targetPos: Coordinates, path: string, type: StoreType, scale: number) => new Execute(this.commandsRoot)
 
   @command('bossbar', executeConfig)
-  bossbar = (id: string, type: 'max'|'value') => new Execute(this.commandsRoot)
+  bossbar = (id: string, type: 'max' | 'value') => new Execute(this.commandsRoot)
 
   @command('entity', executeConfig)
   entity = (
@@ -69,7 +67,7 @@ export class ExecuteStore extends Command {
 }
 
 export class ExecuteIfData extends Command {
-  @command('block', executeConfig)
+  @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
   block = (pos: Coordinates, path: string) => new Execute(this.commandsRoot)
 
   @command('entity', executeConfig)
@@ -92,7 +90,7 @@ export class Execute extends Command {
   @command('at', executeConfig)
   at = (targets: SelectorArgument<false>) => this
 
-  @command('facing', executeConfig)
+  @command('facing', { ...executeConfig, parsers: { '0': coordinatesParser } })
   facing = (pos: Coordinates) => this
 
   @command(['facing', 'entity'], executeConfig)
@@ -101,7 +99,7 @@ export class Execute extends Command {
   @command('in', executeConfig)
   in = (dimension: DIMENSION_TYPES) => this
 
-  @command('positioned', executeConfig)
+  @command('positioned', { ...executeConfig, parsers: { '0': coordinatesParser } })
   positioned = (pos: Coordinates) => this
 
   @command(['positioned', 'as'], executeConfig)
@@ -113,13 +111,13 @@ export class Execute extends Command {
   @command(['rotated', 'as'], executeConfig)
   rotatedAs = (targets: SelectorArgument<false>) => this
 
-  @command(['if', 'block'], executeConfig)
+  @command(['if', 'block'], { ...executeConfig, parsers: { '0': coordinatesParser } })
   ifBlock = (pos: Coordinates, block: LiteralUnion<BLOCKS>) => this
 
   @command(['unless', 'block'], executeConfig)
   unlessBlock: this['ifBlock'] = (...args: unknown[]) => this
 
-  @command(['if', 'blocks'], executeConfig)
+  @command(['if', 'blocks'], { ...executeConfig, parsers: { '0': coordinatesParser, '1': coordinatesParser, '2': coordinatesParser } })
   ifBlocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked') => this
 
   @command(['unless', 'blocks'], executeConfig)
@@ -161,7 +159,7 @@ export class Execute extends Command {
       operator: COMPARISON_OPERATORS,
       source: SelectorArgument<true>,
       sourceObjective:
-      ObjectiveArgument
+        ObjectiveArgument
     ) => Execute) &
     ((
       target: SelectorArgument<true>,
@@ -199,7 +197,7 @@ export class Execute extends Command {
 
   run = (callback: () => void) => {
     const name = this.commandsRoot.arguments[1]
-    const currentFunctionName = this.commandsRoot.Datapack.createEnterChildFunction(`run_${name}`)
+    const currentFunctionName = this.commandsRoot.Datapack.createEnterChildFunction(`execute_${name}`)
 
     const currentArgs = this.commandsRoot.arguments
     currentArgs.push('run', 'function', currentFunctionName)

@@ -1,26 +1,26 @@
 import { LiteralUnion } from '@/generalTypes'
-import { BLOCKS, Coordinates } from '@arguments'
+import { BLOCKS, Coordinates, coordinatesParser } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
 export class FillArguments extends Command {
   @command('destroy')
-  destroy = () => {}
+  destroy = () => { }
 
   @command('hollow')
-  hollow = () => {}
+  hollow = () => { }
 
   @command('keep')
-  keep = () => {}
+  keep = () => { }
 
   @command('outline')
-  outline = () => {}
+  outline = () => { }
 
   @command('replace')
-  replace = (filter?: LiteralUnion<BLOCKS>) => {}
+  replace = (filter?: LiteralUnion<BLOCKS>) => { }
 }
 
 export class Fill extends Command {
-  @command('fill', { isRoot: true, executable: true, hasSubcommands: true })
+  @command('fill', { isRoot: true, executable: true, hasSubcommands: true, parsers: { '0': coordinatesParser, '1': coordinatesParser } })
   fill = (from: Coordinates, to: Coordinates, block: LiteralUnion<BLOCKS>) => FillArguments
 }
