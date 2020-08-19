@@ -1,4 +1,6 @@
-import { Coordinates, coordinatesParser, Rotation, rotationParser, SelectorArgument } from '@arguments'
+import {
+  Coordinates, coordinatesParser, Rotation, rotationParser, SelectorArgument,
+} from '@arguments'
 import { VectorClass } from '@variables/Coordinates'
 import { Command } from '../Command'
 import { command } from '../decorators'

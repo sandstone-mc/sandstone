@@ -1,7 +1,7 @@
-import { Command } from "@commands/Command";
-import { command } from "@commands/decorators";
-import { SelectorArgument, ITEMS } from "@arguments";
-import { LiteralUnion } from "@/generalTypes";
+import { Command } from '@commands/Command'
+import { command } from '@commands/decorators'
+import { SelectorArgument, ITEMS } from '@arguments'
+import { LiteralUnion } from '@/generalTypes'
 
 export class Recipe extends Command {
     @command(['recipe', 'give'], { isRoot: true })

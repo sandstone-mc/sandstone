@@ -28,7 +28,7 @@ module.exports = {
 
   rules: {
     'semi': ['error', 'never'],
-    'max-len': ['warn', 120],
+    'max-len': ['warn', 200],
     'quote-props': ['error', 'as-needed', { numbers: true }],
 
     'import/extensions': [

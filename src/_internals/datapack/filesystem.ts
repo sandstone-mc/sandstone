@@ -30,7 +30,6 @@ export function getMinecraftPath(): string {
   return mcPath
 }
 
-
 /**
  *
  * @param worldName The name of the world
@@ -123,7 +122,6 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
       createDirectory(mcFunctionFolder)
 
-
       // Write the commands to the file system
       const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
 
@@ -132,7 +130,7 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
       const GREEN = '\x1b[32m'
       const RESET = '\x1b[0m'
       if (options.verbose) {
-        console.log(GREEN + '#', `${namespace}:${[...folders, fileName].join('/')}` + RESET)
+        console.log(`${GREEN}#`, `${namespace}:${[...folders, fileName].join('/')}${RESET}`)
         console.log(commands.join('\n'))
         console.log()
       }

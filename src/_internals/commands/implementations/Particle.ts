@@ -56,11 +56,12 @@ type ParticleCommand = (
 
 export class Particle extends Command {
   @command('particle', {
-    isRoot: true, parsers: {
+    isRoot: true,
+    parsers: {
       '1': arrayToArgsParser,
       '2': arrayToArgsParser,
       '3': arrayToArgsParser,
-    }
+    },
   })
   particle: ParticleCommand = (...args: unknown[]) => { }
 }

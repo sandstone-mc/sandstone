@@ -76,7 +76,9 @@ class DataModifyType extends Command {
 }
 
 class DataModify extends Command {
-  @command(modifyCmd('block'), { isRoot: true, executable: false, hasSubcommands: true, parsers: { '0': coordinatesParser } })
+  @command(modifyCmd('block'), {
+    isRoot: true, executable: false, hasSubcommands: true, parsers: { '0': coordinatesParser },
+  })
   block = (targetPos: Coordinates, targetPath: string) => new DataModifyType(this.commandsRoot)
 
   @command(modifyCmd('entity'), { isRoot: true, executable: false, hasSubcommands: true })
@@ -87,7 +89,9 @@ class DataModify extends Command {
 }
 
 class DataRemove extends Command {
-  @command(removeCmd('block'), { isRoot: true, executable: false, hasSubcommands: true, parsers: { '0': coordinatesParser } })
+  @command(removeCmd('block'), {
+    isRoot: true, executable: false, hasSubcommands: true, parsers: { '0': coordinatesParser },
+  })
   block = (targetPos: Coordinates, targetPath: string) => { }
 
   @command(removeCmd('entity'), { isRoot: true, executable: false, hasSubcommands: true })
