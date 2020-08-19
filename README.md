@@ -59,7 +59,7 @@ npm init
 Answer the different questions (nothing of importance here). Then add the needed packages:
 
 ```bash
-npm add typescript ts-node git+https://git@github.com/TheMrZZ/sandstone.git
+npm install typescript ts-node sandstone
 npx tsc --init
 ```
 

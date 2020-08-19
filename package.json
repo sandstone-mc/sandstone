@@ -12,10 +12,8 @@
     "url": "git+https://github.com/TheMrZZ/sandstone.git"
   },
   "scripts": {
-    "build:watch": "tsc --watch --incremental --pretty",
-    "build": "tsc",
-    "test": "node ./dist/tests/test.js",
-    "test:watch": "nodemon -q ./dist/tests/test.js"
+    "watch": "tsc --watch --incremental --pretty",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node": "^14.0.11",
@@ -27,13 +25,11 @@
     "eslint-import-resolver-typescript": "^2.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "typescript": "^4.0.1-rc"
   },
   "dependencies": {
-    "module-alias": "^2.2.2",
-    "ts-node-dev": "^1.0.0-pre.56"
+    "module-alias": "^2.2.2"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -51,6 +47,11 @@
   "homepage": "https://github.com/TheMrZZ/sandstone#readme",
   "directories": {
     "doc": "docs",
-    "test": "tests"
+    "test": "tests",
+    "lib": "dist"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./": "./dist/"
   }
 }
