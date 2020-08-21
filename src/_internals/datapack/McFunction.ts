@@ -25,7 +25,10 @@ export class McFunction<T extends any[]> {
 
   options: McFunctionOptions
 
-  alreadyInitializedParameters: Set<string>
+  alreadyInitializedParameters: Map<string, {
+    mcFunction: FunctionResource,
+    name: string,
+  }>
 
   functionsFolderResource: FunctionResource
 
@@ -37,7 +40,7 @@ export class McFunction<T extends any[]> {
     this.name = name
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
-    this.alreadyInitializedParameters = new Set()
+    this.alreadyInitializedParameters = new Map()
     this.callback = callback
     this.datapack = datapack
 
@@ -92,23 +95,38 @@ export class McFunction<T extends any[]> {
     const commandsRoot = this.datapack.commandsRoot
     const jsonRepresentation = JSON.stringify(args)
 
-    if (!this.alreadyInitializedParameters.has(jsonRepresentation)) {
+    const isNewOverload = !this.alreadyInitializedParameters.has(jsonRepresentation)
+
+    let name: string
+    let mcFunction: FunctionResource
+
+    if (isNewOverload) {
       // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
-      this.alreadyInitializedParameters.add(jsonRepresentation)
+      const result = this.createFunctionOverload(args)
 
-      const { newFunction, functionName } = this.createFunctionOverload(args)
+      mcFunction = result.newFunction
+      name = result.functionName
 
-      if (addArgumentsCallback) {
-        addArgumentsCallback(functionName)
+      this.alreadyInitializedParameters.set(jsonRepresentation, { mcFunction, name })
+    }
+    else {
+      const result = this.alreadyInitializedParameters.get(jsonRepresentation)
+      mcFunction = result?.mcFunction as FunctionResource
+      name = result?.name as string
+    }
 
-        commandsRoot.executable = true
-        commandsRoot.register()
-      }
+    if (addArgumentsCallback) {
+      addArgumentsCallback(name)
 
-      // Finally call the function
+      commandsRoot.executable = true
+      commandsRoot.register()
+    }
+
+    // Finally, if it was a new overload, we need to run the actual function
+    if (isNewOverload) {
       const previousFunction = this.datapack.currentFunction
 
-      this.datapack.currentFunction = newFunction
+      this.datapack.currentFunction = mcFunction
 
       // Add some comments specifying the overload, and the options
       if (this.options.debug) {

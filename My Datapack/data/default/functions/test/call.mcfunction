@@ -1,1 +1,0 @@
-replaceitem entity @s armor.chest minecraft:acacia_button 1

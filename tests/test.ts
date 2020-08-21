@@ -1,15 +1,13 @@
-import { advancement, replaceitem } from '../src/commands'
+import { createObjective, Selector } from '../src/variables'
+import { advancement, execute, replaceitem, say } from '../src/commands'
 import { saveDatapack, mcfunction } from '../src/core'
 
-const test = mcfunction('test', (arg: number | undefined = undefined) => {
-  replaceitem.entity('@s', 'armor.chest', 'minecraft:acacia_button', arg)
-  test(1)
+const recursion = mcfunction('recursion', () => {
+  recursion()
 }, { lazy: true })
 
-mcfunction('cc', () => {
-  test.schedule(0, 'append')
-  test()
-  test(2)
+mcfunction('main', () => {
+  recursion()
 })
 
 saveDatapack('My Datapack', {

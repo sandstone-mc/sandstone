@@ -228,7 +228,7 @@ export default class Datapack {
     }
 
     if (this.currentFunction?.isResource && this.currentFunction.commands.length === 0) {
-      console.log(this.resources.deleteResource([this.defaultNamespace, '__init__'], 'functions'))
+      this.resources.deleteResource([this.defaultNamespace, '__init__'], 'functions')
     }
 
     this.exitRootFunction()
