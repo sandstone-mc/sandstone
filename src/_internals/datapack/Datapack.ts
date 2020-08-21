@@ -1,18 +1,14 @@
+import { LiteralUnion } from '@/generalTypes'
 import { CommandsRoot } from '@commands'
 import type { ObjectiveClass } from '@variables'
 import { saveDatapack, SaveOptions } from './filesystem'
 import { CommandArgs, toMcFunctionName } from './minecraft'
 import { FunctionResource, ResourcePath, ResourcesTree } from './resourcesTree'
 
-type McFunctionOptions = {
-  /**
-   * If true, then the function will only be created if it ??
-   */
-  lazy?: boolean
-}
-
-export interface McFunction<T extends unknown[]> {
+export interface McFunctionReturn<T extends unknown[]> {
   (...args: T): void
+
+  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type: 'append' | 'replace', ...callbackArgs: T) => void
 }
 
 export default class Datapack {
@@ -38,7 +34,7 @@ export default class Datapack {
     this.commandsRoot = new CommandsRoot(this)
   }
 
-  private getFunctionAndNamespace(functionName: string): ResourcePath {
+  getFunctionAndNamespace(functionName: string): ResourcePath {
     let namespace = this.defaultNamespace
     let name = functionName
 
@@ -97,10 +93,10 @@ export default class Datapack {
   }
 
   /**
-   * Creates and enters a new child function of the current function.
+   * Creates a new child function of the current function.
    * @param functionName The name of the child function.
    */
-  createEnterChildFunction(functionName: string): string {
+  createChildFunction(functionName: string): { childFunction: FunctionResource, functionName: string } {
     if (!this.currentFunction) {
       throw Error('Entering child function without registering a root function')
     }
@@ -114,10 +110,24 @@ export default class Datapack {
 
     this.currentFunction.children.set(childName, emptyFunction)
 
-    this.currentFunction = emptyFunction
+    // Return its full minecraft name
+    return {
+      functionName: toMcFunctionName(emptyFunction.path),
+      childFunction: emptyFunction,
+    }
+  }
+
+  /**
+   * Creates and enters a new child function of the current function.
+   * @param functionName The name of the child function.
+   */
+  createEnterChildFunction(functionName: string): string {
+    const { childFunction, functionName: realFunctionName } = this.createChildFunction(functionName)
+
+    this.currentFunction = childFunction
 
     // Return its full minecraft name
-    return toMcFunctionName(emptyFunction.path)
+    return realFunctionName
   }
 
   /**
@@ -184,9 +194,8 @@ export default class Datapack {
    */
   mcfunction = <T extends (...args: any[]) => void>(
     name: string, callback: T, options?: McFunctionOptions,
-  ): McFunction<Parameters<T>> => {
-    const defaultOptions: McFunctionOptions = { lazy: false }
-    const realOptions: McFunctionOptions = { ...defaultOptions, ...options }
+  ): McFunctionReturn<Parameters<T>> => {
+    const realOptions: McFunctionOptions = { lazy: false, ...options }
 
     const alreadyInitializedParameters = new Set<string>()
 
@@ -199,7 +208,7 @@ export default class Datapack {
     /**
      * This function is used to call the callback.
      */
-    const callCallback = (...callbackArgs: Parameters<T>) => {
+    const callCallback = (callbackArgs: Parameters<T>, registerFunctionCall?: (functionName: string) => void) => {
       // Keep the previous function
       const previousFunction = this.currentFunction
 
@@ -207,17 +216,26 @@ export default class Datapack {
        * 1. For a no-parameter function, we directly write in the root function.
        * 2. For a function with parameters, we get a child
        */
-      this.currentFunction = functionsFolderResource
+      if (!this.currentFunction) {
+        this.currentFunction = functionsFolderResource
+      }
+
+      let newFunction: FunctionResource
 
       if (callbackArgs.length === 0) {
         // We initialized with "null", now we set to empty commands
-        this.currentFunction = Object.assign(functionsFolderResource, { isResource: true as const, commands: [] })
+        newFunction = Object.assign(functionsFolderResource, { isResource: true as const, commands: [] })
       } else {
         // Parametrized function
-        this.createEnterChildFunction('call')
+        const result = this.createChildFunction('call')
+        newFunction = result.childFunction
       }
 
-      const currentPath = this.currentFunction?.path as ResourcePath
+      const newPath = newFunction?.path as ResourcePath
+      console.log('Registering inside', toMcFunctionName(this.currentFunction.path))
+      registerFunctionCall?.(toMcFunctionName(newPath))
+
+      this.currentFunction = newFunction
 
       // Add the commands by calling the function
       callback(...callbackArgs)
@@ -227,10 +245,7 @@ export default class Datapack {
 
       // Go back to the previous function
       this.currentFunction = previousFunction
-      return toMcFunctionName(currentPath)
     }
-
-    let functionName: string
 
     if (!realOptions.lazy) {
       // If the mcfunction is not lazy, then we directly create it
@@ -246,28 +261,42 @@ export default class Datapack {
 
       // We know our callback has NO arguments. It's fine TypeScript, it really is!
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      functionName = callCallback()
+      callCallback([] as unknown as Parameters<T>)
 
       alreadyInitializedParameters.add('[]')
     }
 
-    // When calling the result of mcfunction, it will be considered as the command /function functionName!
-    return (...callbackArgs) => {
+    const callMcFunction = (callbackArgs: Parameters<T>, schedule?: {delay: number | string, type: 'append' | 'replace'}) => {
       const jsonRepresentation = JSON.stringify(callbackArgs)
 
       if (!alreadyInitializedParameters.has(jsonRepresentation)) {
         // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
-        functionName = callCallback(...callbackArgs)
-
         alreadyInitializedParameters.add(jsonRepresentation)
-      }
 
-      this.commandsRoot.arguments.push('function', functionName)
-      this.commandsRoot.executable = true
-      this.commandsRoot.register()
+        callCallback(callbackArgs, (functionName) => {
+          console.log('hh')
+          if (schedule) {
+            this.commandsRoot.arguments.push('schedule', 'function', functionName, schedule.delay, schedule.type)
+          } else {
+            this.commandsRoot.arguments.push('function', functionName)
+          }
+
+          this.commandsRoot.executable = true
+          this.commandsRoot.register()
+        })
+      }
     }
+
+    // When calling the result of mcfunction, it will be considered as the command /function functionName!
+    const returnFunction = (...callbackArgs: Parameters<T>) => {
+      callMcFunction(callbackArgs)
+    }
+
+    returnFunction.schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type: 'append' | 'replace', ...callbackArgs: Parameters<T>) => {
+      callMcFunction(callbackArgs, { delay, type })
+    }
+
+    return returnFunction
   }
 
   /**

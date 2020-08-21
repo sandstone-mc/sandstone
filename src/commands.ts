@@ -31,6 +31,8 @@ export const {
   particle,
   playsound,
   recipe,
+  reload,
+  replaceitem,
   say,
   scoreboard,
   teleport,

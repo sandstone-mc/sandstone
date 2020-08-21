@@ -1,9 +1,9 @@
+import fs from 'fs'
 import os from 'os'
 import path from 'path'
-import fs from 'fs'
 
-import { toMcFunctionName, CommandArgs } from './minecraft'
-import { ResourcesTree, FunctionResource } from './resourcesTree'
+import packMcMeta from './packMcMeta.json'
+import { FunctionResource, ResourcesTree } from './resourcesTree'
 
 /**
  * Get the .minecraft path
@@ -68,12 +68,6 @@ function createDirectory(directory: string): void {
 
 export type SaveOptions = {
   /**
-   * The name of the world to save the datapack in.
-   * If unspecified, the datapack will be saved to the current folder.
-   */
-  world?: string
-
-  /**
    * The location of the `.minecraft` folder.
    * If unspecified, the location of the `.minecraft` folder will be automatically discovered.
    */
@@ -84,7 +78,29 @@ export type SaveOptions = {
    * Defaults to false.
    */
   verbose?: boolean
-}
+
+  /**
+   * Pack description.
+   */
+  description?: string
+} & (
+  {
+    /**
+     * Whether to put the datapack in the .minecraft/datapacks folder, or not.
+     *
+     * Incompatible with the `world` parameter.
+     */
+    rootDatapacks?: boolean
+  } | {
+    /**
+     * The name of the world to save the datapack in.
+     * If unspecified, the datapack will be saved to the current folder.
+     *
+     * Incompatible with the `rootDatapacks` folder.
+     */
+    world?: string
+  }
+)
 
 /**
  * Saves the datapack to the file system.
@@ -98,8 +114,18 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
   let savePath
 
-  if (options?.world !== undefined) {
+  function hasWorld(arg: SaveOptions): arg is { world: string } & SaveOptions {
+    return Object.prototype.hasOwnProperty.call(arg, 'world')
+  }
+
+  function hasRoot(arg: SaveOptions): arg is { rootDatapacks: string } & SaveOptions {
+    return Object.prototype.hasOwnProperty.call(arg, 'rootDatapacks')
+  }
+
+  if (hasWorld(options)) {
     savePath = path.join(getWorldPath(options?.world, options?.minecraftPath), 'datapacks')
+  } else if (hasRoot(options)) {
+    savePath = path.join(getMinecraftPath(), 'datapacks/')
   } else {
     savePath = process.cwd()
   }
@@ -110,7 +136,13 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
   const dataPath = path.join(savePath, 'data')
 
-  function logFunction(resource: FunctionResource) {
+  if (options.description !== undefined) {
+    packMcMeta.pack.description = options.description
+  }
+
+  fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify(packMcMeta))
+
+  function saveFunction(resource: FunctionResource) {
     if (resource.isResource) {
       const [namespace, ...folders] = resource.path
       const commands = resource.commands.map((args) => args.join(' '))
@@ -136,12 +168,12 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
       }
     }
 
-    Array.from(resource.children.values()).forEach(logFunction)
+    Array.from(resource.children.values()).forEach(saveFunction)
   }
 
   for (const n of resources.namespaces.values()) {
     for (const f of n.functions.values()) {
-      logFunction(f)
+      saveFunction(f)
     }
   }
 

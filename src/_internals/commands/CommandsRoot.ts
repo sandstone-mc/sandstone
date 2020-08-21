@@ -15,7 +15,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, Loot, Particle, Scoreboard, Teleport, Recipe,
+  FunctionCommand, Loot, Particle, Scoreboard, Teleport, Recipe, ReplaceItem,
 } from './implementations'
 
 import type * as commands from '../../commands'
@@ -208,6 +208,7 @@ export class CommandsRoot {
   reload = () => { }
 
   // replaceitem command //
+  replaceitem = new ReplaceItem(this)
 
   // say command //
   @command('say', { isRoot: true })

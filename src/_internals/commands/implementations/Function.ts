@@ -1,4 +1,4 @@
-import type { McFunction } from '@datapack/Datapack'
+import type { McFunctionReturn } from '@datapack/Datapack'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
@@ -8,8 +8,8 @@ export class FunctionCommand extends Command {
   })
   function: (
     ((functionName: string) => void) &
-    ((mcFunction: McFunction<[]>) => void)
-  ) = (func: string | McFunction<[]>) => {
+    ((mcFunction: McFunctionReturn<[]>) => void)
+  ) = (func: string | McFunctionReturn<[]>) => {
     if (typeof func === 'string') {
       this.commandsRoot.arguments.push(func)
       this.commandsRoot.register()
