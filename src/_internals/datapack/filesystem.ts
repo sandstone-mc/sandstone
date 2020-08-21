@@ -84,23 +84,23 @@ export type SaveOptions = {
    */
   description?: string
 } & (
-  {
-    /**
-     * Whether to put the datapack in the .minecraft/datapacks folder, or not.
-     *
-     * Incompatible with the `world` parameter.
-     */
-    rootDatapacks?: boolean
-  } | {
-    /**
-     * The name of the world to save the datapack in.
-     * If unspecified, the datapack will be saved to the current folder.
-     *
-     * Incompatible with the `rootDatapacks` folder.
-     */
-    world?: string
-  }
-)
+    {
+      /**
+       * Whether to put the datapack in the .minecraft/datapacks folder, or not.
+       *
+       * Incompatible with the `world` parameter.
+       */
+      rootDatapacks?: boolean
+    } | {
+      /**
+       * The name of the world to save the datapack in.
+       * If unspecified, the datapack will be saved to the current folder.
+       *
+       * Incompatible with the `rootDatapacks` folder.
+       */
+      world?: string
+    }
+  )
 
 /**
  * Saves the datapack to the file system.
@@ -159,11 +159,21 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
       fs.writeFileSync(mcFunctionPath, commands.join('\n'))
 
+
+      const GRAY = '\x1b[90m'
       const GREEN = '\x1b[32m'
       const RESET = '\x1b[0m'
+
+      const commandsRepresentation = commands.map(command => {
+        if (command.startsWith('#')) {
+          return GRAY + command + RESET
+        }
+        return command
+      }).join('\n')
+
       if (options.verbose) {
-        console.log(`${GREEN}#`, `${namespace}:${[...folders, fileName].join('/')}${RESET}`)
-        console.log(commands.join('\n'))
+        console.log(`${GREEN}## Function`, `${namespace}:${[...folders, fileName].join('/')}${RESET}`)
+        console.log(commandsRepresentation)
         console.log()
       }
     }

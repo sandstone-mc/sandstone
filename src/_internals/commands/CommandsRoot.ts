@@ -109,6 +109,10 @@ export class CommandsRoot {
   // clone command //
   clone = (new Clone(this)).clone
 
+  // Add a comment //
+  @command('#', { isRoot: true })
+  comment = (...comments: string[]) => { }
+
   // data command //
   data = new Data(this)
 

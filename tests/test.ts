@@ -1,21 +1,17 @@
 import { advancement, replaceitem } from '../src/commands'
 import { saveDatapack, mcfunction } from '../src/core'
 
-console.log('before')
-const test = mcfunction('test', (arg = 0) => {
-  replaceitem.entity('@s', 'armor.chest', 'minecraft:acacia_button')
+const test = mcfunction('test', (arg: number | undefined = undefined) => {
+  replaceitem.entity('@s', 'armor.chest', 'minecraft:acacia_button', arg)
   test(1)
 }, { lazy: true })
-console.log('after')
 
 mcfunction('cc', () => {
-  console.log('INSIDE CC')
   test.schedule(0, 'append')
   test()
   test(2)
 })
 
-saveDatapack('test', {
-  world: 'Crea1_15',
+saveDatapack('My Datapack', {
   verbose: true,
 })

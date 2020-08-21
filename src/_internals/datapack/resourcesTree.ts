@@ -11,11 +11,11 @@ export type FolderOrFile<T extends Record<string, unknown>> = {
   path: ResourcePath
   children: Map<string, FolderOrFile<T>>
 } & (
-  // Either it is a resource, and has the resource properties, or it's a folder.
-  ({ isResource: true} & T) | { isResource: false }
-)
+    // Either it is a resource, and has the resource properties, or it's a folder.
+    ({ isResource: true } & T) | { isResource: false }
+  )
 
-export type FunctionResource = FolderOrFile<{commands: CommandArgs[]}>
+export type FunctionResource = FolderOrFile<{ commands: CommandArgs[] }>
 
 /**
  * All the resources associated with a namespace.
@@ -74,7 +74,7 @@ export class ResourcesTree {
     resourcePath: ResourcePath,
     resourceType: keyof NamespaceResources,
   ): ResourceType<typeof resourceType> | undefined {
-    if (resourcePath.length < 1) {
+    if (resourcePath.length < 2) {
       throw new Error(
         `Cannot access resource path with less than 1 arguments, namely "${resourcePath}". This is an internal error.`,
       )
@@ -119,6 +119,25 @@ export class ResourcesTree {
     }
 
     return resource
+  }
+
+  /**
+   * Deletes a given resource.
+   * 
+   * @returns Whether the resource existed and was deleted.
+   */
+  deleteResource(
+    resourcePath: ResourcePath,
+    resourceType: keyof NamespaceResources,
+  ): boolean {
+
+    if (resourcePath.length > 2) {
+      const parentResource = this.getResourceOrFolder(resourcePath.slice(0, -1), resourceType)
+      return parentResource?.children.delete(resourcePath[resourcePath.length - 1]) ?? false
+    }
+
+    const namespace = this.namespaces.get(resourcePath[0])?.[resourceType]
+    return namespace?.delete(resourcePath[1]) ?? false
   }
 
   /**
