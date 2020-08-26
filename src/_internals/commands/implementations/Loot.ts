@@ -1,6 +1,6 @@
 import { LiteralUnion } from '@/generalTypes'
 import {
-  Coordinates, coordinatesParser, MultipleEntitiesArgument, SingleEntityArgument,
+  Coordinates, coordinatesParser, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
@@ -34,7 +34,7 @@ export class Loot extends Command {
   replaceBlock = (targetPos: Coordinates, slot: string, count?: number) => new LootSource(this.commandsRoot)
 
   @command(['loot', 'give'], { isRoot: true, hasSubcommands: true, executable: false })
-  give = (players: MultipleEntitiesArgument) => new LootSource(this.commandsRoot)
+  give = (players: MultiplePlayersArgument) => new LootSource(this.commandsRoot)
 
   @command(['loot', 'insert'], {
     isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser },
