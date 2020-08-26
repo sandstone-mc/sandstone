@@ -2,7 +2,7 @@
 import { LiteralUnion } from '@/generalTypes'
 import {
   arrayToArgsParser,
-  BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, MultiplePlayersArgument, PARTICLE_TYPES,
+  BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'

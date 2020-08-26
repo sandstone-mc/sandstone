@@ -12,7 +12,7 @@ export class AttributeOperation extends Command {
   baseGet = (scale?: number) => { }
 
   /** Overwrites the base value of the specified attribute with the given value. */
-  @command(['base', 'get'])
+  @command(['base', 'set'])
   baseSet = (value: number) => { }
 
   /** Adds an attribute modifier with the specified properties if no modifier with the same UUID already existed. */

@@ -1,9 +1,26 @@
-import type { LiteralUnion } from '@/generalTypes'
+import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
 import {
   BIOMES,
   BLOCKS,
-  Coordinates, coordinatesParser, ENTITY_TYPES, GAMEMODES, GAMERULES, ITEMS, JsonTextComponent, MultipleEntitiesArgument, MultiplePlayersArgument, NBT, Rotation, rotationParser, SingleEntityArgument, SinglePlayerArgument, SOUND_EVENTS, SOUND_SOURCES, STRUCTURES,
+  Coordinates,
+  coordinatesParser,
+  ENTITY_TYPES,
+  GAMEMODES,
+  GAMERULES,
+  ITEMS,
+  JsonTextComponent,
+  MessageOrSelector,
+  MultipleEntitiesArgument,
+  MultiplePlayersArgument,
+  NBT, Rotation,
+  rotationParser,
+  SingleEntityArgument,
+  SinglePlayerArgument,
+  SOUND_EVENTS,
+  SOUND_SOURCES,
+  STRUCTURES,
 } from '@arguments'
+
 import Datapack from '@datapack/Datapack'
 import type { SaveOptions } from '@datapack/filesystem'
 import type { CommandArgs } from '@datapack/minecraft'
@@ -17,7 +34,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, Loot, Particle, Recipe, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title,
+  FunctionCommand, Loot, Particle, Recipe, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
 } from './implementations'
 
 export class CommandsRoot {
@@ -193,10 +210,6 @@ export class CommandsRoot {
   @command('me', { isRoot: true })
   me = (action: string) => { }
 
-  // msg command //
-  @command('msg', { isRoot: true })
-  msg = (targets: MultiplePlayersArgument, ...messages: (string | MultipleEntitiesArgument)[]) => { }
-
   // particle command //
   particle = (new Particle(this)).particle
 
@@ -300,10 +313,22 @@ export class CommandsRoot {
    * At least one message is necesarry.
    */
   @command('teammessage', { isRoot: true })
-  teammessage = (...messages: [(string | MultipleEntitiesArgument), ...(string | MultipleEntitiesArgument)[]]) => { }
+  teammessage = (...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // teleport command //
   teleport = (new Teleport(this)).teleport
+
+  // tell command //
+  /**
+   * Sends a private message to one or more players.
+   * @param targets Specifies the player(s) to send the message to.
+   * @param messages Specified the message to tell. They will be joined with whitespaces.
+   * Can include target selectors.
+   * The game replaces entity selectors in the message with the list of selected entities' names,
+   * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
+   */
+  @command('tell', { isRoot: true })
+  tell = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // tellraw command //
   @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JsonTextComponentClass(msg) } })
@@ -314,6 +339,24 @@ export class CommandsRoot {
 
   // title command //
   title = (new Title(this)).title
+
+  // trigger command //
+  trigger = (new Trigger(this)).trigger
+
+  weather = new Weather(this)
+
+  worldborder = new WorldBorder(this)
+
+  /// ALIAS COMMANDS ///
+
+  // msg command //
+  msg: CommandsRoot['tell'] = (...args) => this.tell(...args)
+
+  // w command //
+  w: CommandsRoot['tell'] = (...args) => this.tell(...args)
+
+  // xp command //
+  xp: CommandsRoot['experience'] = this.experience
 }
 
 export default CommandsRoot

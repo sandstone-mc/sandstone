@@ -3,11 +3,11 @@ import { command } from '@commands/decorators'
 
 export class Debug extends Command {
   @command(['debug', 'start'], { isRoot: true })
-  start= () => {}
+  start = () => {}
 
   @command(['debug', 'stop'], { isRoot: true })
-  stop= () => {}
+  stop = () => {}
 
   @command(['debug', 'report'], { isRoot: true })
-  report= () => {}
+  report = () => {}
 }

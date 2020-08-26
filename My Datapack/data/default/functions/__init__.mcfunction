@@ -1,1 +1,1 @@
-scoreboard objectives add recursions dummy 
+scoreboard objectives add kills playerKillCount 

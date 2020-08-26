@@ -1,3 +1,5 @@
+import type { MultipleEntitiesArgument } from '@arguments'
+
 export type AXES = 'x' | 'xy' | 'yz' | 'xz' | 'xyz'
 export type ANCHORS = 'eyes' | 'feet'
 
@@ -16,3 +18,10 @@ export type OPERATORS = '=' | '+=' | '-=' | '/=' | '*=' | '%=' | '<=' | '>=' | '
 export type COMPARISON_OPERATORS = '<' | '<=' | '=' | '>=' | '>'
 
 export type SOUND_SOURCES = 'master' | 'music' | 'record' | 'weather' | 'block' | 'hostile' | 'neutral' | 'player' | 'ambient' | 'voice'
+
+// When used as `type XX = YY | _ShowAlias`, forces Typescript to show the alias type (XX) and not the real one (YY).
+export class _ShowAlias {
+  private readonly xxx?: never
+}
+
+export type MessageOrSelector = (string | MultipleEntitiesArgument) | _ShowAlias

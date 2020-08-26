@@ -178,6 +178,8 @@ export class Execute extends Command {
   @command(['unless', 'predicate'], executeConfig)
   unlessPredicate: this['ifPredicate'] = (...args: unknown[]) => this
 
+  // For if & unless, we're using an intermediate command because the "real" arguments are in the `.value` property of the condition
+
   @command('if', executeConfig)
   private if_ = (...args: string[]) => this
 

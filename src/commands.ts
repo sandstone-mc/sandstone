@@ -52,4 +52,8 @@ export const {
   teleport,
   tellraw,
   title,
+  trigger,
+  w,
+  weather,
+  worldborder,
 } = commandsRoot

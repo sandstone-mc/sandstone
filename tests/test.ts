@@ -1,8 +1,12 @@
-import { Selector } from '../src/variables'
+import { createObjective, Selector } from '../src/variables'
 import {
-  say, team, teammessage, title,
+  execute,
+  msg,
+  say, team, teammessage, title, w, weather,
 } from '../src/commands'
 import { mcfunction, saveDatapack } from '../src/core'
+
+const kills = createObjective('kills', 'playerKillCount')
 
 const recursion = mcfunction('recursion', () => {
   recursion()
@@ -17,11 +21,7 @@ const pong = mcfunction('pong', () => {
   say('pong')
   ping()
 
-  team.add('cc', {})
-
-  teammessage('cc')
-
-  title(Selector('@a', { x_rotation: 0, score: { test: [0, 1] } })).actionbar({})
+  execute.if(kills.ScoreHolder('@s').greaterThan(0)).runOne.worldborder.setWarningDistance(5)
 })
 
 saveDatapack('My Datapack', {
