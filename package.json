@@ -16,7 +16,7 @@
     "build": "node scripts/clean.js && tsc && node scripts/setupPackage.js",
     "test": "node dist/tests/test.js",
     "test:watch": "nodemon -q dist/tests/test.js",
-    "prepublishOnly": "yarn build"
+    "publishToNpm": "npm run build && npm publish dist/src"
   },
   "devDependencies": {
     "@types/node": "^14.0.11",
