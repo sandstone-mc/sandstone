@@ -26,6 +26,7 @@ Sharing commands has **never been easier**. Just publish your functions on NPM, 
 # Supporting Sandstone <!-- omit in toc -->
 
 If you want to support Sandstone, the simplest way is to star the repository! It's actually very encouraging.
+
 ![stars](docs/readme/star.png)
 
 # Getting started
