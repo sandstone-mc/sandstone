@@ -1,5 +1,5 @@
 import {
-  Coordinates, coordinatesParser, Rotation, rotationParser, SelectorArgument,
+  Coordinates, coordinatesParser, MultipleEntitiesArgument, Rotation, rotationParser, SingleEntityArgument,
 } from '@arguments'
 import { VectorClass } from '@variables/Coordinates'
 import { Command } from '../Command'
@@ -23,7 +23,7 @@ export class TeleportFacing extends Command {
    *             Must be one of eyes and feet. If not specified, defaults to eyes.
    */
   @command(['facing', 'entity'])
-  facingEntity = (entity: SelectorArgument<true>, anchor?: 'eyes' | 'feet') => { }
+  facingEntity = (entity: SingleEntityArgument, anchor?: 'eyes' | 'feet') => { }
 }
 
 export class Teleport extends Command {
@@ -45,7 +45,7 @@ export class Teleport extends Command {
        *  Specifies the entity to teleport the executer to. Must be a player name, a target selector, or a UUID‌.
        *  Permits entity other than players.
        */
-      (destinationEntity: SelectorArgument<true>) => void
+      (destinationEntity: SingleEntityArgument) => void
     ) & (
       /**
        * Teleports the executer to a given location.
@@ -67,7 +67,7 @@ export class Teleport extends Command {
        *  Specifies the entity to teleport the executer to. Must be a player name, a target selector, or a UUID‌.
        *  Permits entity other than players.
        */
-      (targets: SelectorArgument<false>, destinationEntity: string) => void
+      (targets: MultipleEntitiesArgument, destinationEntity: string) => void
     ) & (
       /**
        * Teleports entities (players, mobs, etc.) to the given location.
@@ -84,7 +84,7 @@ export class Teleport extends Command {
        *  An object with two optional possibilities: `facing` or `facingEntity`,
        *  to change the direction the player is facing.
        */
-      (targets: SelectorArgument<false>, location: Coordinates) => TeleportFacing
+      (targets: MultipleEntitiesArgument, location: Coordinates) => TeleportFacing
     ) & (
       /**
        * Teleports entities (players, mobs, etc.) to the given location, with the given rotation.
@@ -101,7 +101,7 @@ export class Teleport extends Command {
        *  Specifies the rotation.
        *  Tilde notation can be used to specify a rotation relative to the target's previous rotation.
        */
-      (targets: SelectorArgument<false>, location: Coordinates, rotation: Rotation) => void)
+      (targets: MultipleEntitiesArgument, location: Coordinates, rotation: Rotation) => void)
   ) = (...args: unknown[]): any => {
     if (args.length === 2 && (args[1] instanceof VectorClass || typeof args[1] === 'string')) {
       return new TeleportFacing(this.commandsRoot)

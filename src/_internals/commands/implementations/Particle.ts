@@ -2,7 +2,7 @@
 import { LiteralUnion } from '@/generalTypes'
 import {
   arrayToArgsParser,
-  BLOCKS, Coordinates, ITEMS, PARTICLE_TYPES, SelectorArgument,
+  BLOCKS, Coordinates, ITEMS, MultipleEntitiesArgument, PARTICLE_TYPES,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
@@ -17,7 +17,7 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultipleEntitiesArgument
     ) => void) & (
     /** Dust parameters */
     (
@@ -28,7 +28,7 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultipleEntitiesArgument
     ) => void) & (
     /** Block / falling dust parameters */
     (
@@ -39,7 +39,7 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultipleEntitiesArgument
     ) => void) & (
     /** Item parameters */
     (
@@ -50,7 +50,7 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultipleEntitiesArgument
     ) => void)
 )
 

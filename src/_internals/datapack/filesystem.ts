@@ -1,7 +1,6 @@
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
-
 import packMcMeta from './packMcMeta.json'
 import { FunctionResource, ResourcesTree } from './resourcesTree'
 
@@ -159,12 +158,11 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
       fs.writeFileSync(mcFunctionPath, commands.join('\n'))
 
-
       const GRAY = '\x1b[90m'
       const GREEN = '\x1b[32m'
       const RESET = '\x1b[0m'
 
-      const commandsRepresentation = commands.map(command => {
+      const commandsRepresentation = commands.map((command) => {
         if (command.startsWith('#')) {
           return GRAY + command + RESET
         }

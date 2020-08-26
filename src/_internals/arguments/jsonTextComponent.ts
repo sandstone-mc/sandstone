@@ -1,10 +1,12 @@
 import type { VectorClass } from '@variables/Coordinates'
-import { SelectorArgument } from './selector'
+import { MultipleEntitiesArgument, SelectorArgument } from './selector'
 import { BASIC_COLORS } from './basics'
 import { LiteralUnion } from '../generalTypes'
 
-export interface ComponentClass {
-  _toChatComponent(): JsonTextComponent
+export class ComponentClass {
+  protected toChatComponent(): JsonTextComponent {
+    throw new Error('Not implemented')
+  }
 }
 
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
@@ -27,7 +29,7 @@ type ContentTag = {
   score: {
     /** The name of the score holder whose score should be displayed.
      * This can be a selector like @p or an explicit name. */
-    name: SelectorArgument<false>
+    name: MultipleEntitiesArgument
 
     /** The internal name of the objective to display the player's score in. */
     objective: string
@@ -218,7 +220,7 @@ type InteractivityTags = {
  * A JSON text component object.
  */
 export type TextComponentObject = (
-  ContentTag & ChildrenTags & FormattingTags & InteractivityTags
+  (ContentTag | {}) & ChildrenTags & FormattingTags & InteractivityTags
 )
 
 /**

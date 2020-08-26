@@ -1,6 +1,8 @@
-import { BASIC_COLORS, JsonTextComponent, SelectorArgument } from '@arguments'
-import { JsonTextComponentClass } from '@variables'
 import { LiteralUnion } from '@/generalTypes'
+import {
+  BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument,
+} from '@arguments'
+import { JsonTextComponentClass } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
@@ -78,7 +80,7 @@ export class Bossbar extends Command {
      * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
      */
     @command(['bossbar', 'set', 'players'], { isRoot: true })
-    setPlayers = (id: string, players?: SelectorArgument<false>) => { }
+    setPlayers = (id: string, players?: MultipleEntitiesArgument) => { }
 
     /**
      * Set the boss bar's visual amount of segments: continuous, 6 segments, 10 segments, 12 segments, or 20 segments.

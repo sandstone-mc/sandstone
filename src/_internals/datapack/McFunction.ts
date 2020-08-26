@@ -1,7 +1,7 @@
 import { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import { toMcFunctionName } from './minecraft'
-import { FolderOrFile, FunctionResource } from './resourcesTree'
+import { FunctionResource } from './resourcesTree'
 
 export type McFunctionOptions = {
   /**
@@ -9,12 +9,11 @@ export type McFunctionOptions = {
    */
   lazy?: boolean
 
-
   /**
    * Whether to activate debugging features for the function.
-   * 
+   *
    * For the moment, it only adds some comments detailling what each function options & arguments are.
-   * 
+   *
    * It defaults to `true` if the environment variable NODE_ENV is set to `development`, else it defaults to `false`
    */
   debug?: boolean
@@ -50,17 +49,12 @@ export class McFunction<T extends any[]> {
       children: new Map(), isResource: false as const, path: functionsFolder,
     })
 
-    if (!options.lazy) {
-      if (callback.length === 0) {
-        this.callAndRegister([] as unknown as T)
-      }
-      else {
-        throw new Error(
-          `Got a parametrized function "${name}" expecting at least ${callback.length} arguments, without being lazy.\n`
-          + 'Since it is not lazy, Sandstone tried to create it without passing any arguments.\n'
-          + 'This is not possible. Consider putting default values to the parameters, or setting the function as lazy.',
-        )
-      }
+    if (!options.lazy && callback.length !== 0) {
+      throw new Error(
+        `Got a parametrized function "${name}" expecting at least ${callback.length} arguments, without being lazy.\n`
+        + 'Since it is not lazy, Sandstone tried to create it without passing any arguments.\n'
+        + 'This is not possible. Consider putting default values to the parameters, or setting the function as lazy.',
+      )
     }
   }
 
@@ -72,8 +66,7 @@ export class McFunction<T extends any[]> {
     if (args.length === 0) {
       // Change the "folder" to specify it is a resource too.
       newFunction = Object.assign(this.functionsFolderResource, { isResource: true, commands: [] })
-    }
-    else {
+    } else {
       // Set the "folder" as the current function, and create a child of it
       this.datapack.currentFunction = this.functionsFolderResource
       newFunction = this.datapack.createChildFunction('call').childFunction
@@ -88,11 +81,11 @@ export class McFunction<T extends any[]> {
 
   /**
    * Call the actual function, and triggers the given callback to add the arguments to the command.
-   * 
+   *
    * If addArgumentsCallback is not set, then no function call will be registered.
    */
   private callAndRegister = (args: T, addArgumentsCallback?: (functionName: string) => void) => {
-    const commandsRoot = this.datapack.commandsRoot
+    const { commandsRoot } = this.datapack
     const jsonRepresentation = JSON.stringify(args)
 
     const isNewOverload = !this.alreadyInitializedParameters.has(jsonRepresentation)
@@ -108,8 +101,7 @@ export class McFunction<T extends any[]> {
       name = result.functionName
 
       this.alreadyInitializedParameters.set(jsonRepresentation, { mcFunction, name })
-    }
-    else {
+    } else {
       const result = this.alreadyInitializedParameters.get(jsonRepresentation)
       mcFunction = result?.mcFunction as FunctionResource
       name = result?.name as string
@@ -147,9 +139,35 @@ export class McFunction<T extends any[]> {
     })
   }
 
-  schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type: 'replace' | 'append', ...args: T) => {
+  schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'replace' | 'append', ...args: T) => {
     this.callAndRegister(args, (functionName) => {
       this.datapack.commandsRoot.arguments.push('schedule', 'function', functionName, delay, type)
     })
+  }
+
+  clearSchedule = (...args: T) => {
+    const name = this.getNameFromArgs(...args)
+
+    this.datapack.commandsRoot.arguments.push('clear', name)
+    this.datapack.commandsRoot.executable = true
+    this.datapack.commandsRoot.register()
+  }
+
+  getNameFromArgs = (...args: T): string => {
+    const jsonRepresentation = JSON.stringify(args)
+    const mcfunction = this.alreadyInitializedParameters.get(jsonRepresentation)
+
+    if (mcfunction) {
+      return mcfunction.name
+    }
+
+    this.callAndRegister(args)
+    return this.alreadyInitializedParameters.get(jsonRepresentation)?.name as string
+  }
+
+  generateInitialFunction = () => {
+    if (!this.options.lazy && !this.alreadyInitializedParameters.has('[]')) {
+      this.callAndRegister([] as any)
+    }
   }
 }

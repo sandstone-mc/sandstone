@@ -9,7 +9,11 @@ import { FunctionResource, ResourcePath, ResourcesTree } from './resourcesTree'
 export interface McFunctionReturn<T extends unknown[]> {
   (...args: T): void
 
-  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type: 'append' | 'replace', ...callbackArgs: T) => void
+  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: T) => void
+
+  getNameFromArgs: (...args: T) => string
+
+  clearSchedule: (...args: T) => void
 }
 
 export default class Datapack {
@@ -25,12 +29,15 @@ export default class Datapack {
 
   constants: Set<number>
 
+  rootFunctions: Set<McFunction<any[]>>
+
   constructor(namespace: string) {
     this.defaultNamespace = namespace
     this.currentFunction = null
     this.resources = new ResourcesTree()
     this.objectives = new Map()
     this.constants = new Set()
+    this.rootFunctions = new Set()
 
     this.commandsRoot = new CommandsRoot(this)
   }
@@ -198,8 +205,12 @@ export default class Datapack {
   ): McFunctionReturn<T> => {
     const mcfunction = new McFunction(this, name, callback, options ?? {})
 
+    this.rootFunctions.add(mcfunction as McFunction<any[]>)
+
     const returnFunction: any = mcfunction.call
     returnFunction.schedule = mcfunction.schedule
+    returnFunction.getNameFromArgs = mcfunction.getNameFromArgs
+    returnFunction.clearSchedule = mcfunction.clearSchedule
 
     return returnFunction
   }
@@ -211,6 +222,10 @@ export default class Datapack {
    * @param options The save options
    */
   save = (name: string, options: SaveOptions = {}): void => {
+    for (const mcfunction of this.rootFunctions) {
+      mcfunction.generateInitialFunction()
+    }
+
     this.createEnterRootFunction('__init__')
 
     if (this.constants.size > 0) {

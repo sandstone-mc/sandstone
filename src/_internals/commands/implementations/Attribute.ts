@@ -1,4 +1,4 @@
-import type { SelectorArgument } from '@arguments'
+import type { SelectorArgument, SingleEntityArgument } from '@arguments'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
@@ -30,5 +30,5 @@ export class AttributeOperation extends Command {
 
 export class Attribute extends Command {
   @command('attribute', { isRoot: true, hasSubcommands: true, executable: false })
-  attribute = (target: SelectorArgument<true>, attribute: string) => new AttributeOperation(this.commandsRoot)
+  attribute = (target: SingleEntityArgument, attribute: string) => new AttributeOperation(this.commandsRoot)
 }

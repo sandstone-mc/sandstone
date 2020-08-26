@@ -1,4 +1,4 @@
-import { Coordinates, coordinatesParser, SelectorArgument } from '@arguments'
+import { Coordinates, coordinatesParser, SingleEntityArgument } from '@arguments'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
@@ -15,7 +15,7 @@ class DataGet extends Command {
   block = (targetPos: Coordinates, path?: string, scale?: number) => { }
 
   @command(getCmd('entity'), { isRoot: true })
-  entity = (target: SelectorArgument<true>, path?: string, scale?: number) => { }
+  entity = (target: SingleEntityArgument, path?: string, scale?: number) => { }
 
   @command(getCmd('storage'), { isRoot: true })
   storage = (target: string, path?: string, scale?: number) => { }
@@ -26,7 +26,7 @@ class DataMerge extends Command {
   block = (targetPos: Coordinates, nbt: string) => { }
 
   @command(mergeCmd('entity'), { isRoot: true })
-  entity = (target: SelectorArgument<true>, nbt: string) => { }
+  entity = (target: SingleEntityArgument, nbt: string) => { }
 
   @command(mergeCmd('storage'), { isRoot: true })
   storage = (target: string, nbt: string) => { }
@@ -37,7 +37,7 @@ class DataModifyValues extends Command {
   fromBlock = (sourcePosition: Coordinates, sourcePath: string) => { }
 
   @command(['from', 'entity'])
-  fromEntity = (source: SelectorArgument<true>, sourcePath: string) => { }
+  fromEntity = (source: SingleEntityArgument, sourcePath: string) => { }
 
   @command(['from', 'storage'])
   fromStorage = (source: string, sourcePath: string) => { }
@@ -82,7 +82,7 @@ class DataModify extends Command {
   block = (targetPos: Coordinates, targetPath: string) => new DataModifyType(this.commandsRoot)
 
   @command(modifyCmd('entity'), { isRoot: true, executable: false, hasSubcommands: true })
-  entity = (target: SelectorArgument<true>, targetPath: string) => new DataModifyType(this.commandsRoot)
+  entity = (target: SingleEntityArgument, targetPath: string) => new DataModifyType(this.commandsRoot)
 
   @command(modifyCmd('storage'), { isRoot: true, executable: false, hasSubcommands: true })
   storage = (target: string, targetPath: string) => new DataModifyType(this.commandsRoot)
@@ -95,7 +95,7 @@ class DataRemove extends Command {
   block = (targetPos: Coordinates, targetPath: string) => { }
 
   @command(removeCmd('entity'), { isRoot: true, executable: false, hasSubcommands: true })
-  entity = (target: SelectorArgument<true>, targetPath: string) => { }
+  entity = (target: SingleEntityArgument, targetPath: string) => { }
 
   @command(removeCmd('storage'), { isRoot: true, executable: false, hasSubcommands: true })
   storage = (target: string, targetPath: string) => { }

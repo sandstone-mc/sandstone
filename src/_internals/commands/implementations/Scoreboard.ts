@@ -1,5 +1,5 @@
 import type {
-  JsonTextComponent, ObjectiveArgument, OPERATORS, SelectorArgument,
+  JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
 } from '@arguments'
 import { DISPLAY_SLOTS } from '@arguments/displaySlots'
 import { JsonTextComponentClass } from '@variables'
@@ -142,7 +142,7 @@ class ScoreboardPlayers extends Command {
      *
      * @param target The entity to list the scores from.
      */
-    ((target: SelectorArgument<false> | number) => void)
+    ((target: MultipleEntitiesArgument | number) => void)
   ) = (target?: unknown) => {}
 
   /**
@@ -162,29 +162,29 @@ class ScoreboardPlayers extends Command {
    * @param objective The objective to get the score from.
    */
   @command(playersCmd('get'), { isRoot: true })
-  get = (target: SelectorArgument<false> | number, objective: ObjectiveArgument) => {}
+  get = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
 
   @command(playersCmd('set'), { isRoot: true })
-  set = (target: SelectorArgument<false> | number, objective: ObjectiveArgument, score: number) => {}
+  set = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
 
   @command(playersCmd('add'), { isRoot: true })
-  add = (target: SelectorArgument<false> | number, objective: ObjectiveArgument, score: number) => {}
+  add = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
 
   @command(playersCmd('remove'), { isRoot: true })
-  remove = (target: SelectorArgument<false> | number, objective: ObjectiveArgument, score: number) => {}
+  remove = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
 
   @command(playersCmd('reset'), { isRoot: true })
-  reset = (target: SelectorArgument<false> | number, objective: ObjectiveArgument) => {}
+  reset = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
 
   @command(playersCmd('enable'), { isRoot: true })
-  enable = (target: SelectorArgument<false> | number, objective: ObjectiveArgument) => {}
+  enable = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
 
   @command(playersCmd('operation'), { isRoot: true })
   operation = (
-    targets: SelectorArgument<false> | number,
+    targets: MultipleEntitiesArgument | number,
     targetObjective: ObjectiveArgument,
     operation: OPERATORS,
-    source: SelectorArgument<false> | number,
+    source: MultipleEntitiesArgument | number,
     sourceObjective: ObjectiveArgument,
   ) => {}
 }

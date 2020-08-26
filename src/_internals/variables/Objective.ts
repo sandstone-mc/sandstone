@@ -1,8 +1,7 @@
-import type { JsonTextComponent, SelectorArgument } from '@arguments'
+import type { JsonTextComponent, MultipleEntitiesArgument } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import { JsonTextComponentClass } from './JsonTextComponentClass'
 import { PlayerScore } from './PlayerScore'
-import { SelectorClass } from './Selector'
 
 export class ObjectiveClass {
   private commandsRoot: CommandsRoot
@@ -27,7 +26,7 @@ export class ObjectiveClass {
     return this.name
   }
 
-  ScoreHolder(scoreHolder: SelectorArgument<false>) {
+  ScoreHolder(scoreHolder: MultipleEntitiesArgument) {
     return new PlayerScore(this.commandsRoot, scoreHolder.toString(), this)
   }
 }

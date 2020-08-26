@@ -1,4 +1,4 @@
-import { SelectorArgument } from '@arguments'
+import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
@@ -21,8 +21,8 @@ class AdvancementArguments extends Command {
 
 export class Advancement extends Command {
   @command(['avancement', 'grant'], { isRoot: true, hasSubcommands: true, executable: false })
-  grant = (targets: SelectorArgument<false>) => new AdvancementArguments(this.commandsRoot)
+  grant = (targets: MultipleEntitiesArgument) => new AdvancementArguments(this.commandsRoot)
 
   @command(['avancement', 'revoke'], { isRoot: true, hasSubcommands: true, executable: false })
-  revoke = (targets: SelectorArgument<false>) => new AdvancementArguments(this.commandsRoot)
+  revoke = (targets: MultipleEntitiesArgument) => new AdvancementArguments(this.commandsRoot)
 }
