@@ -1,10 +1,10 @@
-import { createObjective, Selector } from '../src/variables'
 import {
   execute,
   msg,
   say, team, teammessage, title, w, weather,
-} from '../src/commands'
-import { mcfunction, saveDatapack } from '../src/core'
+} from 'sandstone/commands'
+import { createObjective, Selector } from 'sandstone/variables'
+import { mcfunction, saveDatapack } from 'sandstone/core'
 
 const kills = createObjective('kills', 'playerKillCount')
 
@@ -21,9 +21,9 @@ const pong = mcfunction('pong', () => {
   say('pong')
   ping()
 
-  execute.if(kills.ScoreHolder('@s').greaterThan(0)).runOne.worldborder.setWarningDistance(5)
+  execute.if(kills.ScoreHolder('@s').greaterThan(0)).runOne.worldborder.setWarningDistance(1)
 })
 
-saveDatapack('My Datapack', {
+saveDatapack('My datapack', {
   verbose: true,
 })
