@@ -1,4 +1,3 @@
-
 type RegisterOptions = {
   /**
    * Whether the subcommand is an execute subcommand. If true, implies `subcommand` to be true.
@@ -151,7 +150,6 @@ export function nested(...commandArguments: string[]): MethodDecorator {
       if (!('arguments' in self)) {
         throw Error('This decorator can only be used on subclasses of Sandstone')
       }
-
 
       // If currently in execute, leave the execute
       if (self?.inExecute) {

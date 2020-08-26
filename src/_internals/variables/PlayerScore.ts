@@ -1,11 +1,11 @@
 import type {
-  COMPARISON_OPERATORS, ObjectiveArgument, OPERATORS, SelectorArgument,
+  COMPARISON_OPERATORS, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
 } from '@arguments'
 import { MinecraftCondition } from '@arguments/condition'
 import type { CommandsRoot } from '@commands'
 import type { ObjectiveClass } from './Objective'
 
-type PlayersTarget = number | SelectorArgument<false>
+type PlayersTarget = number | MultipleEntitiesArgument
 
 type OperationArguments = (
   [amount: number] |
@@ -18,11 +18,11 @@ export class PlayerScore {
 
   commandsRoot: CommandsRoot
 
-  target: SelectorArgument<false>
+  target: MultipleEntitiesArgument
 
   objective: ObjectiveClass
 
-  constructor(commandsRoot: CommandsRoot, target: SelectorArgument<false>, objective: ObjectiveClass) {
+  constructor(commandsRoot: CommandsRoot, target: MultipleEntitiesArgument, objective: ObjectiveClass) {
     this.commandsRoot = commandsRoot
     this.target = target
     this.objective = objective
@@ -109,7 +109,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  add(targets: SelectorArgument<false>, objective?: ObjectiveArgument): void
+  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
 
   /**
    * Adds other target's scores to the current entity's score.
@@ -136,7 +136,7 @@ export class PlayerScore {
   *
   * @param objective The related objective. If not specified, default to the same objective as the current target.
   */
-  remove(targets: SelectorArgument<false>, objective?: ObjectiveArgument): void
+  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
 
   /**
   * Substract other entities's scores from the current entity's score.
@@ -163,7 +163,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multiply(targets: SelectorArgument<false>, objective?: ObjectiveArgument): void
+  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
 
   /**
    * Multiply the current entity's score by other target's scores.
@@ -192,7 +192,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  divide(targets: SelectorArgument<false>, objective?: ObjectiveArgument): void
+  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
 
   /**
    * Divide the current entity's score by other target's scores.
@@ -219,7 +219,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  modulo(targets: SelectorArgument<false>, objective?: ObjectiveArgument): void
+  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
 
   /**
    * Divide the current entity's score by other target's scores.
@@ -239,7 +239,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  swap(targets: SelectorArgument<false>, objective?: ObjectiveArgument): void
+  swap(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
 
   /**
    * Swap the current entity's score with the other target's scores.
@@ -255,7 +255,7 @@ export class PlayerScore {
   /** EFFECT-FREE OPERATORS */
   protected createAnonymousScore(amount: number): PlayerScore
 
-  protected createAnonymousScore(targets: SelectorArgument<false>, objective?: ObjectiveArgument): PlayerScore
+  protected createAnonymousScore(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
 
   protected createAnonymousScore(amountOrTargets: PlayersTarget, objective: ObjectiveArgument = this.objective): PlayerScore {
     const anonymousScore = new PlayerScore(
@@ -288,7 +288,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  plus(targets: SelectorArgument<false>, objective?: ObjectiveArgument): PlayerScore
+  plus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
 
   /**
    * Returns a new anonymous score, equal to the sum of the current score and the given targets' score.
@@ -317,7 +317,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  minus(targets: SelectorArgument<false>, objective?: ObjectiveArgument): PlayerScore
+  minus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
 
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given targets' score.
@@ -346,7 +346,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multipliedBy(targets: SelectorArgument<false>, objective?: ObjectiveArgument): PlayerScore
+  multipliedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
 
   /**
    * Returns a new anonymous score, equal to the product of the current score and the given targets' score.
@@ -375,7 +375,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  dividedBy(targets: SelectorArgument<false>, objective?: ObjectiveArgument): PlayerScore
+  dividedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
 
   /**
    * Returns a new anonymous score, equal to the division of the current score and the given targets' score.
@@ -404,7 +404,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  moduloBy(targets: SelectorArgument<false>, objective?: ObjectiveArgument): PlayerScore
+  moduloBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
 
   /**
    * Returns a new anonymous score, equal to the modulo of the current score and the given targets' score.
@@ -451,7 +451,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterThan (targets: SelectorArgument<false>, objective?: ObjectiveArgument): MinecraftCondition
+  greaterThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
 
   /**
    * Check if the current score is strictly greater than the given score.
@@ -478,7 +478,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterOrEqualThan (targets: SelectorArgument<false>, objective?: ObjectiveArgument): MinecraftCondition
+  greaterOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
 
   /**
    * Check if the current score is greater or equal than the given score.
@@ -505,7 +505,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerThan (targets: SelectorArgument<false>, objective?: ObjectiveArgument): MinecraftCondition
+  lowerThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
 
   /**
    * Check if the current score is strictly lower than the given score.
@@ -532,7 +532,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerOrEqualThan (targets: SelectorArgument<false>, objective?: ObjectiveArgument): MinecraftCondition
+  lowerOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
 
   /**
    * Check if the current score is lower or equal than the given score.
@@ -559,7 +559,7 @@ export class PlayerScore {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  equalTo (targets: SelectorArgument<false>, objective?: ObjectiveArgument): MinecraftCondition
+  equalTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
 
   /**
    * Check if the current score is equal to the given score.

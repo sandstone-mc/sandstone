@@ -1,28 +1,28 @@
-import { SelectorArgument } from '@arguments'
+import { MultipleEntitiesArgument, MultiplePlayersArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
 class AdvancementArguments extends Command {
   @command('everything', { isRoot: false, executable: true })
-  everything = () => {}
+  everything = () => { }
 
   @command('only', { isRoot: false, executable: true })
-  only = (advancement: string, criterion: string) => {}
+  only = (advancement: string, criterion: string) => { }
 
   @command('from', { isRoot: false, executable: true })
-  from = (advancement: string) => {}
+  from = (advancement: string) => { }
 
   @command('through', { isRoot: false, executable: true })
-  through = (advancement: string) => {}
+  through = (advancement: string) => { }
 
   @command('until', { isRoot: false, executable: true })
-  until = (advancement: string) => {}
+  until = (advancement: string) => { }
 }
 
 export class Advancement extends Command {
   @command(['avancement', 'grant'], { isRoot: true, hasSubcommands: true, executable: false })
-  grant = (targets: SelectorArgument<false>) => new AdvancementArguments(this.commandsRoot)
+  grant = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
 
   @command(['avancement', 'revoke'], { isRoot: true, hasSubcommands: true, executable: false })
-  revoke = (targets: SelectorArgument<false>) => new AdvancementArguments(this.commandsRoot)
+  revoke = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
 }

@@ -1,13 +1,32 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type {
+import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
+import {
   BIOMES,
-  GAMEMODES, GAMERULES, ITEMS, JsonTextComponent, SelectorArgument, STRUCTURES,
+  BLOCKS,
+  Coordinates,
+  coordinatesParser,
+  ENTITY_TYPES,
+  GAMEMODES,
+  GAMERULES,
+  ITEMS,
+  JsonTextComponent,
+  MessageOrSelector,
+  MultipleEntitiesArgument,
+  MultiplePlayersArgument,
+  NBT, Rotation,
+  rotationParser,
+  SingleEntityArgument,
+  SinglePlayerArgument,
+  SOUND_EVENTS,
+  SOUND_SOURCES,
+  STRUCTURES,
 } from '@arguments'
+
 import Datapack from '@datapack/Datapack'
 import type { SaveOptions } from '@datapack/filesystem'
 import type { CommandArgs } from '@datapack/minecraft'
 import { Objective, Selector } from '@variables'
 import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
+import type * as commands from '../../commands'
 import { command } from './decorators'
 import {
   Advancement, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
@@ -15,10 +34,8 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, Loot, Particle, Scoreboard, Teleport,
+  FunctionCommand, Loot, Particle, Recipe, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
 } from './implementations'
-
-import type * as commands from '../../commands'
 
 export class CommandsRoot {
   Datapack: Datapack
@@ -104,10 +121,14 @@ export class CommandsRoot {
 
   // clear command //
   @command('clear', { isRoot: true })
-  clear = (targets?: SelectorArgument<false>, item?: LiteralUnion<ITEMS>, maxCount?: number) => { }
+  clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS>, maxCount?: number) => { }
 
   // clone command //
   clone = (new Clone(this)).clone
+
+  // Add a comment //
+  @command('#', { isRoot: true })
+  comment = (...comments: string[]) => { }
 
   // data command //
   data = new Data(this)
@@ -147,7 +168,7 @@ export class CommandsRoot {
 
   // gamemode command //
   @command('gamemode', { isRoot: true })
-  gamemode = (gamemode: GAMEMODES, target: SelectorArgument<false>) => { }
+  gamemode = (gamemode: GAMEMODES, target: MultiplePlayersArgument) => { }
 
   // gamerule command //
   @command('gamerule', { isRoot: true })
@@ -155,7 +176,7 @@ export class CommandsRoot {
 
   // give command //
   @command('give', { isRoot: true })
-  give = (target: SelectorArgument<false>, item: LiteralUnion<ITEMS>, count?: number) => { }
+  give = (target: MultiplePlayersArgument, item: LiteralUnion<ITEMS>, count?: number) => { }
 
   // help command //
   @command('help', { isRoot: true })
@@ -163,7 +184,7 @@ export class CommandsRoot {
 
   // kill command //
   @command('kill', { isRoot: true })
-  kill = (targets: SelectorArgument<false>) => { }
+  kill = (targets: MultipleEntitiesArgument) => { }
 
   // list command //
   @command('list', {
@@ -189,29 +210,153 @@ export class CommandsRoot {
   @command('me', { isRoot: true })
   me = (action: string) => { }
 
-  // me command //
-  @command('msg', { isRoot: true })
-  msg = (action: string) => { }
-
   // particle command //
   particle = (new Particle(this)).particle
 
   // playsound command //
+  @command('playsound', { isRoot: true })
+  playsound = (sound: LiteralUnion<SOUND_EVENTS>, source: SOUND_SOURCES, targets: MultiplePlayersArgument, sourcePosition?: Coordinates, volume?: number, pitch?: number, minVolume?: number) => { }
 
+  // recipe command //
+  recipe = new Recipe(this)
+
+  // reload command //
+  @command('reload', { isRoot: true })
+  reload = () => { }
+
+  // replaceitem command //
+  replaceitem = new ReplaceItem(this)
 
   // say command //
   @command('say', { isRoot: true })
   say = (...messages: string[]) => { }
 
+  // schedule command //
+  schedule = new Schedule(this)
+
   // scoreboard command //
   scoreboard = new Scoreboard(this)
+
+  // seed command //
+  @command('seed', { isRoot: true })
+  seed = () => { }
+
+  // setblock command //
+  @command('setblock', { isRoot: true, parsers: { '0': coordinatesParser } })
+  setblock = (pos: Coordinates, block: LiteralUnion<BLOCKS>, type?: 'destroy' | 'keep' | 'replace') => { }
+
+  // setidletimeout command //
+  @command('setidletimeout', { isRoot: true })
+  setidletimeout = (minutes: number) => { }
+
+  // setworldspawn command //
+  @command('setworldspawn', { isRoot: true, parsers: { '0': coordinatesParser, '1': rotationParser } })
+  setworldspawn = (pos?: Coordinates, angle?: Rotation) => { }
+
+  // spawnpoint command //
+  @command('spawnpoint', { isRoot: true, parsers: { '1': coordinatesParser, '2': rotationParser } })
+  spawnpoint = (targets?: MultiplePlayersArgument, pos?: Coordinates, angle?: Rotation) => { }
+
+  // spectate command //
+  /**
+   * Causes a player in Spectator mode to spectate another entity.
+   *
+   * @param targets Specifies the target to be spectated.
+   *
+   * @param player Specifies the spectating player. If unspecified, defaults to the executor.
+   */
+  @command('spectate', { isRoot: true })
+  spectate = (target: SinglePlayerArgument, player?: SingleEntityArgument) => { }
+
+  // spreadplayers command //
+  spreadplayers = (new SpreadPlayers(this)).spreadplayers
+
+  /**
+   * Stops a given sound.
+   *
+   * @param targets Specifies the command's target.
+   *
+   * @param source Specifies which category in the Music & Sound options the sound falls under. If it is *, stop sound of all category.
+   *
+   * @param sound Specifies the sound to stop.
+   */
+  @command('stopsound', { isRoot: true })
+  stopsound = (targets: MultiplePlayersArgument, source?: SOUND_SOURCES | '*', sound?: LiteralUnion<SOUND_EVENTS>) => { }
+
+  /**
+   * Summons an entity.
+   *
+   * @param entity Specifies the entity to be summoned.
+   *
+   * @param pos Specifies the position to summon the entity. If not specified, defaults to the position of the command's execution.
+   *
+   * @param nbt Specifies the data tag for the entity.
+   */
+  @command('summon', { isRoot: true })
+  summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: NBT) => { }
+
+  // tag command //
+  tag = (new TagCommand(this)).tag
+
+  // team command //
+  team = new Team(this)
+
+  // teammessage command //
+  /**
+   * Specifies a message to send to team.
+   *
+   * @param messages Must be plain text messages.
+   * Can include spaces as well as target selectors.
+   * The game replaces entity selectors in the message with the list of selected entities' names,
+   * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
+   *
+   * At least one message is necesarry.
+   */
+  @command('teammessage', { isRoot: true })
+  teammessage = (...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // teleport command //
   teleport = (new Teleport(this)).teleport
 
+  // tell command //
+  /**
+   * Sends a private message to one or more players.
+   * @param targets Specifies the player(s) to send the message to.
+   * @param messages Specified the message to tell. They will be joined with whitespaces.
+   * Can include target selectors.
+   * The game replaces entity selectors in the message with the list of selected entities' names,
+   * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
+   */
+  @command('tell', { isRoot: true })
+  tell = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
+
   // tellraw command //
   @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JsonTextComponentClass(msg) } })
-  tellraw = (targets: SelectorArgument<false>, message: JsonTextComponent) => { }
+  tellraw = (targets: MultiplePlayersArgument, message: JsonTextComponent) => { }
+
+  // time command //
+  time = new Time(this)
+
+  // title command //
+  title = (new Title(this)).title
+
+  // trigger command //
+  trigger = (new Trigger(this)).trigger
+
+  weather = new Weather(this)
+
+  worldborder = new WorldBorder(this)
+
+  /// ALIAS COMMANDS ///
+
+  // msg command //
+  msg: CommandsRoot['tell'] = (...args) => this.tell(...args)
+
+  // w command //
+  w: CommandsRoot['tell'] = (...args) => this.tell(...args)
+
+  // xp command //
+  xp: CommandsRoot['experience'] = this.experience
 }
 
 export default CommandsRoot

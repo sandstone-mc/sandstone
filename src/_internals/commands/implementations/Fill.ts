@@ -21,6 +21,8 @@ export class FillArguments extends Command {
 }
 
 export class Fill extends Command {
-  @command('fill', { isRoot: true, executable: true, hasSubcommands: true, parsers: { '0': coordinatesParser, '1': coordinatesParser } })
+  @command('fill', {
+    isRoot: true, executable: true, hasSubcommands: true, parsers: { '0': coordinatesParser, '1': coordinatesParser },
+  })
   fill = (from: Coordinates, to: Coordinates, block: LiteralUnion<BLOCKS>) => FillArguments
 }

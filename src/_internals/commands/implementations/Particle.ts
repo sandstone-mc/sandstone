@@ -2,7 +2,7 @@
 import { LiteralUnion } from '@/generalTypes'
 import {
   arrayToArgsParser,
-  BLOCKS, Coordinates, ITEMS, PARTICLE_TYPES, SelectorArgument,
+  BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
@@ -17,7 +17,7 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultiplePlayersArgument
     ) => void) & (
     /** Dust parameters */
     (
@@ -28,7 +28,7 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultiplePlayersArgument
     ) => void) & (
     /** Block / falling dust parameters */
     (
@@ -39,7 +39,7 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultiplePlayersArgument
     ) => void) & (
     /** Item parameters */
     (
@@ -50,17 +50,18 @@ type ParticleCommand = (
       speed?: number,
       count?: number,
       mode?: 'force' | 'normal',
-      viewers?: SelectorArgument<false>
+      viewers?: MultiplePlayersArgument
     ) => void)
 )
 
 export class Particle extends Command {
   @command('particle', {
-    isRoot: true, parsers: {
+    isRoot: true,
+    parsers: {
       '1': arrayToArgsParser,
       '2': arrayToArgsParser,
       '3': arrayToArgsParser,
-    }
+    },
   })
   particle: ParticleCommand = (...args: unknown[]) => { }
 }

@@ -1,18 +1,19 @@
+import { LiteralUnion } from '@/generalTypes'
 import { CommandsRoot } from '@commands'
 import type { ObjectiveClass } from '@variables'
 import { saveDatapack, SaveOptions } from './filesystem'
+import { McFunction, McFunctionOptions } from './McFunction'
 import { CommandArgs, toMcFunctionName } from './minecraft'
 import { FunctionResource, ResourcePath, ResourcesTree } from './resourcesTree'
 
-type McFunctionOptions = {
-  /**
-   * If true, then the function will only be created if it ??
-   */
-  lazy?: boolean
-}
-
-export interface McFunction<T extends unknown[]> {
+export interface McFunctionReturn<T extends unknown[]> {
   (...args: T): void
+
+  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: T) => void
+
+  getNameFromArgs: (...args: T) => string
+
+  clearSchedule: (...args: T) => void
 }
 
 export default class Datapack {
@@ -28,17 +29,20 @@ export default class Datapack {
 
   constants: Set<number>
 
+  rootFunctions: Set<McFunction<any[]>>
+
   constructor(namespace: string) {
     this.defaultNamespace = namespace
     this.currentFunction = null
     this.resources = new ResourcesTree()
     this.objectives = new Map()
     this.constants = new Set()
+    this.rootFunctions = new Set()
 
     this.commandsRoot = new CommandsRoot(this)
   }
 
-  private getFunctionAndNamespace(functionName: string): ResourcePath {
+  getFunctionAndNamespace(functionName: string): ResourcePath {
     let namespace = this.defaultNamespace
     let name = functionName
 
@@ -97,10 +101,10 @@ export default class Datapack {
   }
 
   /**
-   * Creates and enters a new child function of the current function.
+   * Creates a new child function of the current function.
    * @param functionName The name of the child function.
    */
-  createEnterChildFunction(functionName: string): string {
+  createChildFunction(functionName: string): { childFunction: FunctionResource, functionName: string } {
     if (!this.currentFunction) {
       throw Error('Entering child function without registering a root function')
     }
@@ -114,10 +118,24 @@ export default class Datapack {
 
     this.currentFunction.children.set(childName, emptyFunction)
 
-    this.currentFunction = emptyFunction
+    // Return its full minecraft name
+    return {
+      functionName: toMcFunctionName(emptyFunction.path),
+      childFunction: emptyFunction,
+    }
+  }
+
+  /**
+   * Creates and enters a new child function of the current function.
+   * @param functionName The name of the child function.
+   */
+  createEnterChildFunction(functionName: string): string {
+    const { childFunction, functionName: realFunctionName } = this.createChildFunction(functionName)
+
+    this.currentFunction = childFunction
 
     // Return its full minecraft name
-    return toMcFunctionName(emptyFunction.path)
+    return realFunctionName
   }
 
   /**
@@ -177,97 +195,24 @@ export default class Datapack {
   }
 
   /**
-   * Creates a Minecraft Function.
-   *
-   * @param name The name of the function.
-   * @param callback A callback containing the commands you want in the Minecraft Function.
-   */
-  mcfunction = <T extends (...args: any[]) => void>(
-    name: string, callback: T, options?: McFunctionOptions,
-  ): McFunction<Parameters<T>> => {
-    const defaultOptions: McFunctionOptions = { lazy: false }
-    const realOptions: McFunctionOptions = { ...defaultOptions, ...options }
+ * Creates a Minecraft Function.
+ *
+ * @param name The name of the function.
+ * @param callback A callback containing the commands you want in the Minecraft Function.
+ */
+  mcfunction = <T extends any[]>(
+    name: string, callback: (...args: T) => void, options?: McFunctionOptions,
+  ): McFunctionReturn<T> => {
+    const mcfunction = new McFunction(this, name, callback, options ?? {})
 
-    const alreadyInitializedParameters = new Set<string>()
+    this.rootFunctions.add(mcfunction as McFunction<any[]>)
 
-    // We "reserve" the folder by creating an empty folder there
-    const functionsFolder = this.getFunctionAndNamespace(name)
-    const functionsFolderResource = this.resources.addResource('functions', {
-      children: new Map(), isResource: false as const, path: functionsFolder,
-    })
+    const returnFunction: any = mcfunction.call
+    returnFunction.schedule = mcfunction.schedule
+    returnFunction.getNameFromArgs = mcfunction.getNameFromArgs
+    returnFunction.clearSchedule = mcfunction.clearSchedule
 
-    /**
-     * This function is used to call the callback.
-     */
-    const callCallback = (...callbackArgs: Parameters<T>) => {
-      // Keep the previous function
-      const previousFunction = this.currentFunction
-
-      /* We have 2 possibilities.
-       * 1. For a no-parameter function, we directly write in the root function.
-       * 2. For a function with parameters, we get a child
-       */
-      this.currentFunction = functionsFolderResource
-
-      if (callbackArgs.length === 0) {
-        // We initialized with "null", now we set to empty commands
-        this.currentFunction = Object.assign(functionsFolderResource, { isResource: true as const, commands: [] })
-      } else {
-        // Parametrized function
-        this.createEnterChildFunction('call')
-      }
-
-      const currentPath = this.currentFunction?.path as ResourcePath
-
-      // Add the commands by calling the function
-      callback(...callbackArgs)
-
-      // Register the last command if needed
-      this.commandsRoot.register(true)
-
-      // Go back to the previous function
-      this.currentFunction = previousFunction
-      return toMcFunctionName(currentPath)
-    }
-
-    let functionName: string
-
-    if (!realOptions.lazy) {
-      // If the mcfunction is not lazy, then we directly create it
-
-      if (callback.length >= 1) {
-        // However, if the callback requires arguments, but the function is not lazy, we can't create the function
-        throw new Error(
-          `Got a parametrized function "${name}" expecting at least ${callback.length} arguments, without being lazy.\n`
-        + 'Since it is not lazy, Sandstone tried to create it without passing any arguments.\n'
-        + 'This is not possible. Consider putting default values to the parameters, or setting the function as lazy.',
-        )
-      }
-
-      // We know our callback has NO arguments. It's fine TypeScript, it really is!
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      functionName = callCallback()
-
-      alreadyInitializedParameters.add('[]')
-    }
-
-    // When calling the result of mcfunction, it will be considered as the command /function functionName!
-    return (...callbackArgs) => {
-      const jsonRepresentation = JSON.stringify(callbackArgs)
-
-      if (!alreadyInitializedParameters.has(jsonRepresentation)) {
-        // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
-        functionName = callCallback(...callbackArgs)
-
-        alreadyInitializedParameters.add(jsonRepresentation)
-      }
-
-      this.commandsRoot.arguments.push('function', functionName)
-      this.commandsRoot.executable = true
-      this.commandsRoot.register()
-    }
+    return returnFunction
   }
 
   /**
@@ -277,6 +222,10 @@ export default class Datapack {
    * @param options The save options
    */
   save = (name: string, options: SaveOptions = {}): void => {
+    for (const mcfunction of this.rootFunctions) {
+      mcfunction.generateInitialFunction()
+    }
+
     this.createEnterRootFunction('__init__')
 
     if (this.constants.size > 0) {
@@ -291,6 +240,10 @@ export default class Datapack {
       this.objectives.forEach((objective) => {
         this.commandsRoot.scoreboard.objectives.add(objective.name, objective.criterion, objective._displayRaw)
       })
+    }
+
+    if (this.currentFunction?.isResource && this.currentFunction.commands.length === 0) {
+      this.resources.deleteResource([this.defaultNamespace, '__init__'], 'functions')
     }
 
     this.exitRootFunction()

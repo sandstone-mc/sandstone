@@ -28,7 +28,7 @@ module.exports = {
 
   rules: {
     'semi': ['error', 'never'],
-    'max-len': ['warn', 120],
+    'max-len': ['warn', 200],
     'quote-props': ['error', 'as-needed', { numbers: true }],
 
     'import/extensions': [
@@ -94,5 +94,7 @@ module.exports = {
 
     // Allow unused arguments
     '@typescript-eslint/no-unused-vars': 'off',
+
+    'no-use-before-define': 'off',
   },
 }

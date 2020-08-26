@@ -12,7 +12,7 @@ type AdvancementsArgument = Record<string, boolean | Record<string, boolean>>
  * If MustBeSingle is false, then anything is allowed.
  * If it is true, then you must provide limit=1 or limit=0.
  */
-export type SelectorProperties<MustBeSingle extends boolean> = {
+export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extends boolean> = {
   /**
    * Filter target selection based on their Euclidean distances from some point,
    * searching for the target's feet (a point at the bottom of the center of their hitbox).
@@ -104,7 +104,7 @@ export type SelectorProperties<MustBeSingle extends boolean> = {
    *
    * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
    */
-  type?: LiteralUnion<ENTITY_TYPES> | LiteralUnion<ENTITY_TYPES>[]
+  type?: MustBePlayer extends true ? 'minecraft:player' | 'minecraft:player'[] : (LiteralUnion<ENTITY_TYPES> | LiteralUnion<ENTITY_TYPES>[])
 
   /** Select all targets that match the specified advancement and value. */
   advancements?: AdvancementsArgument
@@ -141,7 +141,7 @@ export type SelectorProperties<MustBeSingle extends boolean> = {
 
 function isSingleSelector(
   target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>,
-  selectorProperties: SelectorProperties<true> | SelectorProperties<false>,
+  selectorProperties: SelectorProperties<true, false> | SelectorProperties<false, false>,
 ): boolean {
   if (['@s', '@p', '@r'].includes(target)) {
     return true
@@ -175,21 +175,21 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
   }).join(', ')}}`
 }
 
-export class SelectorClass<IsSingle extends boolean> {
+export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
   commandsRoot: CommandsRoot
 
   target: string
 
-  arguments: SelectorProperties<IsSingle>
+  arguments: SelectorProperties<IsSingle, IsPlayer>
 
   constructor(
     commandsRoot: CommandsRoot,
     target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>,
-    selectorArguments?: SelectorProperties<IsSingle>,
+    selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
     this.commandsRoot = commandsRoot
     this.target = target
-    this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle>
+    this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
   }
 
   listScores = () => {
@@ -220,7 +220,7 @@ export class SelectorClass<IsSingle extends boolean> {
         // Parse potentially multiple tags
         tag: (tag: string | string[]) => {
           const tags = Array.isArray(tag) ? tag : [tag]
-          result.push(...tags.map((tag) => ['tag', tag] as const))
+          result.push(...tags.map((tag_) => ['tag', tag_] as const))
         },
 
         // Parse potentially multiple predicates
@@ -253,9 +253,15 @@ export class SelectorClass<IsSingle extends boolean> {
           delete args[name]
         }
       }
+
+      Object.entries(args).forEach(([key, value]) => {
+        if (value !== undefined) {
+          result.push([key, value.toString()])
+        }
+      })
     }
 
-    return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(',')}]`
+    return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }
 
   _toChatComponent(): TextComponentObject {
@@ -269,14 +275,17 @@ export class SelectorClass<IsSingle extends boolean> {
   }
 }
 
-export type AnySelectorProperties = SelectorProperties<false>
-export type SingleSelectorProperties = SelectorProperties<true>
-export type NoLimitSelectorProperties = Omit<SelectorProperties<false>, 'limit'>
+// Possible selector properties
+export type AnySelectorProperties = SelectorProperties<false, false>
+export type SingleSelectorProperties = SelectorProperties<true, false>
+export type SinglePlayerSelectorProperties = SelectorProperties<true, true>
 
-export function Selector(target: '@s' | '@p' | '@r', selectorArguments?: NoLimitSelectorProperties): SelectorClass<true>
-export function Selector(target: '@a' | '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true>
-export function Selector(target: '@a' | '@e', selectorArguments?: AnySelectorProperties): SelectorClass<false>
-export function Selector(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false>
-export function Selector<T extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T>): SelectorClass<T> {
+export function Selector(target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>): SelectorClass<true, true>
+export function Selector(target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>): SelectorClass<true, true>
+export function Selector(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
+export function Selector(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
+export function Selector(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
+export function Selector(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
+export function Selector<T extends boolean, U extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
 }

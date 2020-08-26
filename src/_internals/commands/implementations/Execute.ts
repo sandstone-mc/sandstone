@@ -1,7 +1,7 @@
 import { LiteralUnion } from '@/generalTypes'
 /* eslint-disable no-use-before-define */
 import {
-  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, coordinatesParser, DIMENSION_TYPES, ObjectiveArgument, Rotation, SelectorArgument,
+  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, coordinatesParser, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SelectorArgument, SingleEntityArgument,
 } from '@arguments'
 import { MinecraftCondition } from '@arguments/condition'
 import { Range } from '@variables'
@@ -29,12 +29,12 @@ export class ExecuteStoreArgs extends Command {
 
   @command('entity', executeConfig)
   entity = (
-    target: SelectorArgument<true>, path: string, type: StoreType, scale: number,
+    target: SingleEntityArgument, path: string, type: StoreType, scale: number,
   ) => new Execute(this.commandsRoot)
 
   @command('score', executeConfig)
   score: (
-    ((targets: SelectorArgument<false>, objective: ObjectiveArgument) => Execute) &
+    ((targets: MultipleEntitiesArgument, objective: ObjectiveArgument) => Execute) &
     ((playerScore: PlayerScore) => Execute)
   ) = (...args: unknown[]) => new Execute(this.commandsRoot)
 
@@ -71,7 +71,7 @@ export class ExecuteIfData extends Command {
   block = (pos: Coordinates, path: string) => new Execute(this.commandsRoot)
 
   @command('entity', executeConfig)
-  entity = (target: SelectorArgument<true>, path: string) => new Execute(this.commandsRoot)
+  entity = (target: SingleEntityArgument, path: string) => new Execute(this.commandsRoot)
 
   @command('storage', executeConfig)
   storage = (source: string, path: string) => new Execute(this.commandsRoot)
@@ -85,16 +85,16 @@ export class Execute extends Command {
   anchored = (anchor: ANCHORS) => this
 
   @command('as', executeConfig)
-  as = (targets: SelectorArgument<false>) => this
+  as = (targets: MultipleEntitiesArgument) => this
 
   @command('at', executeConfig)
-  at = (targets: SelectorArgument<false>) => this
+  at = (targets: MultipleEntitiesArgument) => this
 
   @command('facing', { ...executeConfig, parsers: { '0': coordinatesParser } })
   facing = (pos: Coordinates) => this
 
   @command(['facing', 'entity'], executeConfig)
-  facingEntity = (targets: SelectorArgument<false>, anchor: ANCHORS) => this
+  facingEntity = (targets: MultipleEntitiesArgument, anchor: ANCHORS) => this
 
   @command('in', executeConfig)
   in = (dimension: DIMENSION_TYPES) => this
@@ -103,13 +103,13 @@ export class Execute extends Command {
   positioned = (pos: Coordinates) => this
 
   @command(['positioned', 'as'], executeConfig)
-  positionedAs = (targets: SelectorArgument<false>) => this
+  positionedAs = (targets: MultipleEntitiesArgument) => this
 
   @command('rotated', executeConfig)
   rotated = (rotation: Rotation) => this
 
   @command(['rotated', 'as'], executeConfig)
-  rotatedAs = (targets: SelectorArgument<false>) => this
+  rotatedAs = (targets: MultipleEntitiesArgument) => this
 
   @command(['if', 'block'], { ...executeConfig, parsers: { '0': coordinatesParser } })
   ifBlock = (pos: Coordinates, block: LiteralUnion<BLOCKS>) => this
@@ -146,7 +146,7 @@ export class Execute extends Command {
   }
 
   @command(['if', 'entity'], executeConfig)
-  ifEntity = (targets: SelectorArgument<false>) => this
+  ifEntity = (targets: MultipleEntitiesArgument) => this
 
   @command(['unless', 'entity'], executeConfig)
   unlessEntity: this['ifEntity'] = (...args: unknown[]) => this
@@ -154,15 +154,15 @@ export class Execute extends Command {
   @command(['if', 'score'], executeConfig)
   ifScore: (
     ((
-      target: SelectorArgument<true>,
+      target: SingleEntityArgument,
       targetObjective: ObjectiveArgument,
       operator: COMPARISON_OPERATORS,
-      source: SelectorArgument<true>,
+      source: SingleEntityArgument,
       sourceObjective:
         ObjectiveArgument
     ) => Execute) &
     ((
-      target: SelectorArgument<true>,
+      target: SingleEntityArgument,
       targetObjective: ObjectiveArgument,
       operator: 'matches',
       range: Range,
@@ -177,6 +177,8 @@ export class Execute extends Command {
 
   @command(['unless', 'predicate'], executeConfig)
   unlessPredicate: this['ifPredicate'] = (...args: unknown[]) => this
+
+  // For if & unless, we're using an intermediate command because the "real" arguments are in the `.value` property of the condition
 
   @command('if', executeConfig)
   private if_ = (...args: string[]) => this
