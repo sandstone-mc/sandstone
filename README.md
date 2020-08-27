@@ -372,7 +372,7 @@ As you can see, the `useless` function has been created, because it is called fr
 
 ### Inline functions
 
-Inline functions are normal, Javascript functions. **Inline functions do not create additional mcfunctions**. They are inlined when they are called.
+Inline functions are normal, Javascript functions. They group up related commands in a reusable, readable piece of code. **Inline functions do not create additional mcfunctions**. They are inlined when they are called.
 
 Let's take a simple example using inline functions:
 ```js
