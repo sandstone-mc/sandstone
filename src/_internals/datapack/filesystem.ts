@@ -97,13 +97,13 @@ export type SaveOptions = {
        *
        * Incompatible with the `world` parameter.
        */
-      rootDatapacks?: boolean
+      asRootDatapack?: boolean
     } | {
       /**
        * The name of the world to save the datapack in.
        * If unspecified, the datapack will be saved to the current folder.
        *
-       * Incompatible with the `rootDatapacks` folder.
+       * Incompatible with the `asRootDatapack` folder.
        */
       world?: string
     }
@@ -123,8 +123,8 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
     return Object.prototype.hasOwnProperty.call(arg, 'world')
   }
 
-  function hasRoot(arg: SaveOptions): arg is { rootDatapacks: string } & SaveOptions {
-    return Object.prototype.hasOwnProperty.call(arg, 'rootDatapacks')
+  function hasRoot(arg: SaveOptions): arg is { asRootDatapack: string } & SaveOptions {
+    return Object.prototype.hasOwnProperty.call(arg, 'asRootDatapack')
   }
 
   if (hasWorld(options)) {

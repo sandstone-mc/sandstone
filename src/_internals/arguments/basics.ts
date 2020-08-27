@@ -24,4 +24,4 @@ export class _ShowAlias {
   private readonly xxx?: never
 }
 
-export type MessageOrSelector = (string | MultipleEntitiesArgument) | _ShowAlias
+export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias

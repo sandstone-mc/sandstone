@@ -18,7 +18,7 @@ You don't need to remember commands syntax anymore.
 
 This autocompletion works for commands, predicates, loot tables, advancements...
 
-*For the moment, autocompletion only works for commands.*
+*Custom loot tables, predicates and advancements are not yet implemented.*
 
 ## Easy to share <!-- omit in toc -->
 Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own datapacks.
@@ -26,7 +26,6 @@ Sharing commands has **never been easier**. Just publish your functions on NPM, 
 # Supporting Sandstone <!-- omit in toc -->
 
 If you want to support Sandstone, the simplest way is to star the repository! It's actually very encouraging.
-
 ![stars](docs/readme/star.png)
 
 # Getting started
@@ -44,7 +43,7 @@ If you want to support Sandstone, the simplest way is to star the repository! It
     - [Create a Minecraft function](#create-a-minecraft-function)
     - [Calling a Minecraft function](#calling-a-minecraft-function)
     - [Lazy Minecraft Functions](#lazy-minecraft-functions)
-    - [Parametrized Minecraft functions](#parametrized-minecraft-functions)
+    - [Inline functions](#inline-functions)
 - [Contributing](#contributing)
 
 ## Installation
@@ -220,11 +219,13 @@ saveDatapack('My datapack')
 
 As a second argument, `saveDatapack` accepts options. They are listed below.
 
-|               |                                                                                                                             |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| verbose       | If true, the resulting commands will be displayed in the console.                                                           |
-| world         | The name of the world to save your datapack into. If left unspecified, the datapack will be saved in the current directory. |
-| minecraftPath | The location of the .minecraft folder. If left unspecified, it will be automatically discovered.                            |
+|                |                                                                                                                                              |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| verbose        | If true, the resulting commands will be displayed in the console.                                                                            |
+| world          | The name of the world to save your datapack into. If left unspecified, the datapack will be saved in the current directory.                  |
+| asRootDatapack | If `true`, then the resulting datapack will be saved to the `.minecraft/datapacks` folder.                                                   |
+| minecraftPath  | The location of the .minecraft folder. If left unspecified, it will be automatically discovered.                                             |
+| dryRun         | If true, then the datapack will not be saved to the file system. Combined with `verbose`, it allows to only show the results in the console. |
 
 As you can see, Sandstone can save your datapack directly in one of your world:
 ```js
@@ -326,7 +327,7 @@ However, it has three drawbacks:
 
 2. It cannot take parameters. If you want to have a generic function, this is not possible.
 
-The first drawback can be solved using **lazy functions**, and the second one using **parametrized functions**.
+The first drawback can be solved using **lazy functions**, and the second one using **parametrized functions** or **inline functions**.
 
 ### Lazy Minecraft Functions
 
@@ -367,65 +368,37 @@ function default:useless
 say This function is not used anywhere
 ```
 
-As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions, and for parametrized functions.
+As you can see, the `useless` function has been created, because it is called from `main`. This feature is very useful to distribute lot of functions, in a library for example.
 
-### Parametrized Minecraft functions
+### Inline functions
 
-Parametrized Minecraft functions allows you to create Minecraft functions expecting arguments. Under the hood, several Minecraft functions will be created: one for each different calls you do.
+Inline functions are normal, Javascript functions. **Inline functions do not create additional mcfunctions**. They are inlined when they are called.
 
-Let's take the following example:
+Let's take a simple example using inline functions:
 ```js
-// Give diamonds to everyone!
-const giveDiamonds = mcfunction('giveDiamonds', () => {
-  give('@a', 'minecraft:diamond', 64)
-})
-
-mcfunction('main', () => {
-  say('Giving diamonds to everyone!')
-  giveDiamonds()
-})
-```
-
-As you can see, the `main` function will call the `giveDiamonds` function, which gives 64 diamonds to everyone. But what if, in another function, you wanted to give 32 diamonds to everyone? And somewhere else, 16? How can you avoid writing 3 nearly identicals functions? That's where parametrized functions are used. A parametrized function expects some parameters:
-
-```js
-const giveDiamonds = mcfunction('giveDiamonds', (count: number) => {
+function giveDiamonds(count: number) {
   give('@a', 'minecraft:diamond', count)
-}, { lazy: true })
+  say('I gave', count, 'diamonds to everyone!')
+}
 
 mcfunction('main', () => {
-  say('Giving diamonds to everyone!')
   giveDiamonds(64)
   giveDiamonds(32)
 })
 ```
 
-As you can see, our `giveDiamonds` Minecraft function now takes an argument: `count`, of type `number`, is the amount of diamonds you want to give. Under the hood, Sandstone created three functions: one for `main`, one for `giveDiamonds(64)`, one for `giveDiamonds(32)`.
-
+This results in:
 ```mcfunction
-# default:main
-say Giving diamonds to everyone!
-function default:giveDiamonds/call
-function default:giveDiamonds/call_2
-
-# default:giveDiamonds/call
+## Function default:main
 give @a minecraft:diamond 64
-
-# default:giveDiamonds/call_2
+say I gave 64 diamonds to everyone!
 give @a minecraft:diamond 32
+say I gave 32 diamonds to everyone!
 ```
 
-If you look closely at the previous example, you'll notice that `giveDiamonds` is both a parametrized and a lazy function. In fact, this example **does not work** if `giveDiamonds` is not lazy. Indeed, declaring a non-lazy `mcfunction` will add it to your datapack, so you can call it from Minecraft. However, when Sandstone encounters `giveDiamonds`, it notices that the `count` parameter is required. Sandstone doesn't know what value `count` should have by default: therefore, it cannot create the function. In that case, you will get a very explicit error message.
+As you can see, the commands from the `giveDiamonds` function are directly written inside `main`. Inline functions are a very efficient way to group up related commands, which helps writing a **clean** and **logical** datapack.
 
-To prevent this from happening, you should either declare the function as lazy (you won't be able to call it from Minecraft anymore), or you should give all your parameters **default values**:
-
-```js
-const giveDiamonds = mcfunction('giveDiamonds', (count = 1) => {
-  give('@a', 'minecraft:diamond', count)
-})
-```
-
-Here, `count` has a default value of 1. You will be able to call `/function default:giveDiamonds` from Minecraft, and it will give everyone 1 diamond. Used together, **lazy and parametrized functions are very powerful**.
+Inline functions can do everything a normal function does: using commands, calling mcfunctions, calling other lazy functions...
 
 # Contributing
 

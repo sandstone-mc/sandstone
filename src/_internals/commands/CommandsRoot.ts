@@ -230,7 +230,7 @@ export class CommandsRoot {
 
   // say command //
   @command('say', { isRoot: true })
-  say = (...messages: string[]) => { }
+  say = (...messages: MessageOrSelector[]) => { }
 
   // schedule command //
   schedule = new Schedule(this)

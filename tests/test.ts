@@ -1,25 +1,16 @@
 import {
-  execute,
-  msg,
-  say, team, teammessage, title, w, weather,
+  give,
+  say,
 } from '../src/commands'
-import { createObjective, Selector } from '../src/variables'
 import { mcfunction, saveDatapack } from '../src/core'
 
-const kills = createObjective('kills', 'playerKillCount')
+function giveDiamonds(count: number) {
+  give('@a', 'minecraft:diamond', count)
+}
 
-const recursion = mcfunction('recursion', () => {
-  recursion()
-})
-
-const ping = mcfunction('ping', () => {
-  say('ping')
-  pong()
-})
-
-const pong = mcfunction('pong', () => {
-  say('pong')
-  ping()
+mcfunction('main', () => {
+  giveDiamonds(64)
+  giveDiamonds(32)
 })
 
 saveDatapack('My datapack', {
