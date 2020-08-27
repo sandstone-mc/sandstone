@@ -21,9 +21,10 @@ const pong = mcfunction('pong', () => {
   say('pong')
   ping()
 
-  execute.if(kills.ScoreHolder('@s').greaterThan(0)).runOne.worldborder.setWarningDistance(1)
+  execute.if(kills.ScoreHolder('@s').greaterThan(0)).runOne.worldborder.setWarningDistance(10)
 })
 
 saveDatapack('My datapack', {
   verbose: true,
+  dryRun: true,
 })

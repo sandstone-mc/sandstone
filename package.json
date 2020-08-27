@@ -1,6 +1,6 @@
 {
   "name": "sandstone",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "license": "MIT",
@@ -33,7 +33,8 @@
     "typescript": "^4.0.1-rc"
   },
   "dependencies": {
-    "module-alias": "^2.2.2"
+    "module-alias": "^2.2.2",
+    "sandstone": "^0.2.2"
   },
   "engines": {
     "node": ">=14.0.0"
