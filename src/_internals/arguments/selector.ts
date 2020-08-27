@@ -18,7 +18,7 @@ export type SelectorArgument<MustBeSingle extends boolean, MustBePlayer extends 
 
 // The `| _ShowAlias` is to prevent Typescript from showing the ugly "SelectorClass<??, ??>",
 // and to instead show the given name (e.g. SinglePlayerArgument).
-export type MultipleEntitiesArgument = SelectorArgument<false, false> | _ShowAlias
-export type SingleEntityArgument = SelectorArgument<true, false> | _ShowAlias
-export type MultiplePlayersArgument = SelectorArgument<false, true> | _ShowAlias
 export type SinglePlayerArgument = SelectorArgument<true, true> | _ShowAlias
+export type MultiplePlayersArgument = SelectorArgument<false, true> | SinglePlayerArgument | _ShowAlias
+export type SingleEntityArgument = SelectorArgument<true, false> | SinglePlayerArgument | _ShowAlias
+export type MultipleEntitiesArgument = SelectorArgument<false, false> | SingleEntityArgument | MultiplePlayersArgument | _ShowAlias

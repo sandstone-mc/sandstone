@@ -74,9 +74,17 @@ export type SaveOptions = {
 
   /**
    * If true, will display the resulting commands in the console.
-   * Defaults to false.
+   *
+   * @default false
    */
   verbose?: boolean
+
+  /**
+   * If true, then nothing will actually be saved to the file system.
+   *
+   * Used with `verbose`, you can use this option to only print the results of your functions, without saving anything.
+   */
+  dryRun?: boolean
 
   /**
    * Pack description.
@@ -89,13 +97,13 @@ export type SaveOptions = {
        *
        * Incompatible with the `world` parameter.
        */
-      rootDatapacks?: boolean
+      asRootDatapack?: boolean
     } | {
       /**
        * The name of the world to save the datapack in.
        * If unspecified, the datapack will be saved to the current folder.
        *
-       * Incompatible with the `rootDatapacks` folder.
+       * Incompatible with the `asRootDatapack` folder.
        */
       world?: string
     }
@@ -109,16 +117,14 @@ export type SaveOptions = {
  * @param options The save options.
  */
 export function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): void {
-  const verbose = options?.verbose ?? false
-
   let savePath
 
   function hasWorld(arg: SaveOptions): arg is { world: string } & SaveOptions {
     return Object.prototype.hasOwnProperty.call(arg, 'world')
   }
 
-  function hasRoot(arg: SaveOptions): arg is { rootDatapacks: string } & SaveOptions {
-    return Object.prototype.hasOwnProperty.call(arg, 'rootDatapacks')
+  function hasRoot(arg: SaveOptions): arg is { asRootDatapack: string } & SaveOptions {
+    return Object.prototype.hasOwnProperty.call(arg, 'asRootDatapack')
   }
 
   if (hasWorld(options)) {
@@ -130,16 +136,17 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
   }
 
   savePath = path.join(savePath, name)
-
-  createDirectory(savePath)
-
   const dataPath = path.join(savePath, 'data')
 
   if (options.description !== undefined) {
     packMcMeta.pack.description = options.description
   }
 
-  fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify(packMcMeta))
+  if (!options.dryRun) {
+    createDirectory(savePath)
+
+    fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify(packMcMeta))
+  }
 
   function saveFunction(resource: FunctionResource) {
     if (resource.isResource) {
@@ -151,12 +158,14 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
       const mcFunctionFolder = path.join(functionsPath, ...folders)
 
-      createDirectory(mcFunctionFolder)
+      if (!options.dryRun) {
+        createDirectory(mcFunctionFolder)
 
-      // Write the commands to the file system
-      const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
+        // Write the commands to the file system
+        const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
 
-      fs.writeFileSync(mcFunctionPath, commands.join('\n'))
+        fs.writeFileSync(mcFunctionPath, commands.join('\n'))
+      }
 
       const GRAY = '\x1b[90m'
       const GREEN = '\x1b[32m'
@@ -185,5 +194,7 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
     }
   }
 
-  console.log(`Successfully wrote commands to "${savePath}"`)
+  if (!options.dryRun) {
+    console.log(`Successfully wrote commands to "${savePath}"`)
+  }
 }

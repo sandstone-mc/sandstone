@@ -1,4 +1,4 @@
-import type { ENTITY_TYPES, TextComponentObject } from '@arguments'
+import type { ENTITY_TYPES, MinecraftCondition, TextComponentObject } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { LiteralUnion } from '../generalTypes'
 
@@ -139,23 +139,6 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
     MustBeSingle extends true ? { limit: 0 | 1 } : { limit?: number }
   )
 
-function isSingleSelector(
-  target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>,
-  selectorProperties: SelectorProperties<true, false> | SelectorProperties<false, false>,
-): boolean {
-  if (['@s', '@p', '@r'].includes(target)) {
-    return true
-  }
-
-  const { limit } = selectorProperties
-
-  if (limit === 0 || limit === 1) {
-    return true
-  }
-
-  return false
-}
-
 function parseScore(scores: ScoreArgument): string {
   return `{${Object.entries(scores).map(([scoreName, value]) => {
     if (Array.isArray(value)) {
@@ -176,11 +159,11 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
 }
 
 export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
-  commandsRoot: CommandsRoot
+  protected commandsRoot: CommandsRoot
 
-  target: string
+  protected target: string
 
-  arguments: SelectorProperties<IsSingle, IsPlayer>
+  protected arguments: SelectorProperties<IsSingle, IsPlayer>
 
   constructor(
     commandsRoot: CommandsRoot,
@@ -192,11 +175,21 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
   }
 
+  // Custom actions //
+
+  /**
+   * List all scores of this entity.
+   */
   listScores = () => {
     this.commandsRoot.scoreboard.players.list(this.toString())
   }
 
-  isSingle = (): IsSingle => isSingleSelector(this.target, this.arguments) as IsSingle
+  /**
+   * Returns a condition, that Minecraft will evaluate to `true` if this selector finds at least one entity.
+   */
+  exists = (): MinecraftCondition => ({
+    value: ['entity', this],
+  })
 
   toString() {
     if (!Object.keys(this.arguments).length) {
@@ -264,13 +257,13 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
     return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }
 
-  _toChatComponent(): TextComponentObject {
+  protected _toChatComponent(): TextComponentObject {
     return {
       selector: this.toString(),
     }
   }
 
-  toJSON() {
+  protected toJSON() {
     return this.toString()
   }
 }
@@ -286,6 +279,7 @@ export function Selector(target: '@a', selectorArguments?: Omit<AnySelectorPrope
 export function Selector(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
 export function Selector(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
 export function Selector(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
+
 export function Selector<T extends boolean, U extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
 }
