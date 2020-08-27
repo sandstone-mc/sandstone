@@ -14,6 +14,7 @@ import {
   MultiplePlayersArgument,
   NBT, Rotation,
   rotationParser,
+  SelectorArgument,
   SingleEntityArgument,
   SinglePlayerArgument,
   SOUND_EVENTS,
@@ -96,7 +97,7 @@ export class CommandsRoot {
     return objective
   }
 
-  Selector = Selector
+  Selector = Selector.bind(this)
 
   /**
    * Saves the datapack to the file system.
