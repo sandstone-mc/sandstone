@@ -74,13 +74,23 @@ export class CommandsRoot {
     }
 
     if (!soft) {
-      throw new Error(`Registering a command that is not executable: ${JSON.stringify(this.arguments)}`)
+      throw new Error(`Registering a command that is not executable: ${this.arguments.join(' ')}`)
     }
 
     // Soft registering. If the last command had arguments but was not executable, it's an error.
     if (this.arguments.length > 0) {
       throw new Error(`Error: the previous command ${this.arguments} was not finished.`)
     }
+  }
+
+  /**
+   * Add some arguments to the current ones, then registers them.
+   * It will explicitely set the resulting command as executable.
+   */
+  addAndRegister = (...args: CommandArgs) => {
+    this.arguments.push(...args)
+    this.executable = true
+    this.register()
   }
 
   reset() {
@@ -92,6 +102,10 @@ export class CommandsRoot {
   /** UTILS */
   // Create a new objective
   createObjective = (name: string, criterion: string, display?: JsonTextComponent) => {
+    if (name.length > 16) {
+      throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
+    }
+
     const objective = Objective(this, name, criterion, display)
     this.Datapack.registerNewObjective(objective)
     return objective

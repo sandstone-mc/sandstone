@@ -1,4 +1,7 @@
-import type { ENTITY_TYPES, MinecraftCondition, TextComponentObject } from '@arguments'
+import type {
+  ENTITY_TYPES, MinecraftCondition, TextComponentObject,
+} from '@arguments'
+import { ComponentClass } from '@arguments/jsonTextComponent'
 import type { CommandsRoot } from '@commands'
 import type { LiteralUnion } from '../generalTypes'
 
@@ -158,7 +161,7 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
   }).join(', ')}}`
 }
 
-export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
+export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> extends ComponentClass {
   protected commandsRoot: CommandsRoot
 
   protected target: string
@@ -170,6 +173,8 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
     target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>,
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
+    super()
+
     this.commandsRoot = commandsRoot
     this.target = target
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>

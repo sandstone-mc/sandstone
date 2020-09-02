@@ -1,10 +1,10 @@
 import type { VectorClass } from '@variables/Coordinates'
-import { MultipleEntitiesArgument, SelectorArgument } from './selector'
-import { BASIC_COLORS } from './basics'
-import { LiteralUnion } from '../generalTypes'
+import type { MultipleEntitiesArgument, SelectorArgument } from './selector'
+import type { BASIC_COLORS } from './basics'
+import type { LiteralUnion } from '../generalTypes'
 
 export class ComponentClass {
-  protected toChatComponent(): JsonTextComponent {
+  protected _toChatComponent(): JsonTextComponent {
     throw new Error('Not implemented')
   }
 }
@@ -226,7 +226,7 @@ export type TextComponentObject = (
 /**
  * All possible chat components
  */
-type PossibleComponents = (
+type PossibleComponent = (
   string |
   boolean |
   number |
@@ -238,6 +238,6 @@ type PossibleComponents = (
  * A Json text component, that can be displayed in several locations: in-game chat, books, signs, titles...
  */
 export type JsonTextComponent = (
-  readonly PossibleComponents[] |
-  PossibleComponents
+  readonly PossibleComponent[] |
+  PossibleComponent
 )

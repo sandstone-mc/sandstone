@@ -42,7 +42,11 @@ class ScoreboardObjectives extends Command {
       '2': (displayName) => (displayName ? new JsonTextComponentClass(displayName) : displayName),
     },
   })
-  add = (objective: ObjectiveArgument, criteria: string, displayName?: JsonTextComponent) => {}
+  add = (objective: string, criteria: string, displayName?: JsonTextComponent) => {
+    if (objective.length > 16) {
+      throw new Error(`Objectives cannot have names with more than 16 characters. Got ${objective.length} with objective "${objective}".`)
+    }
+  }
 
   /**
    * Delete all references to the named objective in the scoreboard system.

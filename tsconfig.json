@@ -27,6 +27,12 @@
       "@variables/*": [
         "./src/_internals/variables/*"
       ],
+      "@flow": [
+        "./src/_internals/flow"
+      ],
+      "@flow/*": [
+        "./src/_internals/flow/*"
+      ],
       "@/*": [
         "./src/_internals/*"
       ]

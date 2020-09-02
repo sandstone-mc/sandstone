@@ -11,8 +11,7 @@ export class FunctionCommand extends Command {
     ((mcFunction: McFunctionReturn<[]>) => void)
   ) = (func: string | McFunctionReturn<[]>) => {
     if (typeof func === 'string') {
-      this.commandsRoot.arguments.push(func)
-      this.commandsRoot.register()
+      this.commandsRoot.addAndRegister(func)
     } else {
       func()
     }

@@ -1,7 +1,10 @@
 import type {
-  COMPARISON_OPERATORS, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
+  COMPARISON_OPERATORS, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, JsonTextComponent,
 } from '@arguments'
-import { MinecraftCondition } from '@arguments/condition'
+import type { MinecraftCondition } from '@arguments/condition'
+import {
+  ComponentClass,
+} from '@arguments/jsonTextComponent'
 import type { CommandsRoot } from '@commands'
 import type { ObjectiveClass } from './Objective'
 
@@ -13,7 +16,7 @@ type OperationArguments = (
   [targetScore: PlayerScore]
 )
 
-export class PlayerScore {
+export class PlayerScore extends ComponentClass {
   static anonymousScoreId = 0
 
   commandsRoot: CommandsRoot
@@ -23,6 +26,8 @@ export class PlayerScore {
   objective: ObjectiveClass
 
   constructor(commandsRoot: CommandsRoot, target: MultipleEntitiesArgument, objective: ObjectiveClass) {
+    super()
+
     this.commandsRoot = commandsRoot
     this.target = target
     this.objective = objective
@@ -30,6 +35,12 @@ export class PlayerScore {
 
   toString() {
     return `${this.target} ${this.objective}`
+  }
+
+  protected _toChatComponent(): JsonTextComponent {
+    return {
+      score: { name: this.target, objective: this.objective.name },
+    }
   }
 
   private unaryOperation(

@@ -44,6 +44,7 @@
     "@commands": "dist/src/_internals/commands",
     "@datapack": "dist/src/_internals/datapack",
     "@variables": "dist/src/_internals/variables",
+    "@flow": "dist/src/_internals/flow",
     "@": "dist/src/_internals"
   },
   "bugs": {
