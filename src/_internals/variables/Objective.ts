@@ -1,4 +1,5 @@
-import type { JsonTextComponent, MultipleEntitiesArgument } from '@arguments'
+import { LiteralUnion } from '@/generalTypes'
+import type { JsonTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import { JsonTextComponentClass } from './JsonTextComponentClass'
 import { PlayerScore } from './PlayerScore'
@@ -14,7 +15,7 @@ export class ObjectiveClass {
 
   _displayRaw: JsonTextComponent | undefined
 
-  constructor(commandsRoot: CommandsRoot, name: string, criterion: string, display?: JsonTextComponent) {
+  constructor(commandsRoot: CommandsRoot, name: string, criterion: LiteralUnion<OBJECTIVE_CRITERION>, display?: JsonTextComponent) {
     this.commandsRoot = commandsRoot
     this.name = name
     this.criterion = criterion

@@ -1,6 +1,7 @@
 export * from './attributes'
 export * from './biome'
 export * from './block'
+export * from './criterion'
 export * from './dimension_type'
 export * from './enchantment'
 export * from './entity_type'

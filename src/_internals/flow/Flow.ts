@@ -1,164 +1,42 @@
 import type { LiteralUnion } from '@/generalTypes'
 import {
-  BLOCKS, Coordinates, coordinatesParser, MinecraftCondition,
+  BLOCKS, Coordinates, coordinatesParser,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import { ObjectiveClass } from '@variables'
+import { Execute } from '@commands/implementations/Execute'
+import type { CommandArgs } from '@datapack/minecraft'
+import { ConditionClass } from '@variables'
+import { PlayerScore } from '@variables/PlayerScore'
+import { CombinedConditions, ConditionType } from './conditions'
 
-function conditionToString(condition: ConditionType): string {
-  if (condition instanceof CombinedConditions) {
-    return condition.toString()
+type FlowStatementConfig = {
+  callbackName: string
+} & (
+  {
+    initialCondition: false,
+    loopCondition: false,
+    condition?: undefined
+  } | {
+    initialCondition: boolean,
+    loopCondition: boolean,
+    condition: ConditionType
   }
-
-  return condition.value.join(' ')
-}
-
-export class CombinedConditions {
-  private values
-
-  private operator
-
-  private commandsRoot
-
-  private static id = 0
-
-  constructor(
-    commandsRoot: CommandsRoot,
-    values: (ConditionType)[],
-    operator: 'not' | 'and' | 'or',
-  ) {
-    this.values = values
-    this.operator = operator
-    this.commandsRoot = commandsRoot
-  }
-
-  removeOr = (): CombinedConditions => {
-    const valuesWithoutOr = this.values.map((v) => (v instanceof CombinedConditions ? v.removeOr() : v))
-
-    if (this.operator !== 'or') {
-      return new CombinedConditions(this.commandsRoot, valuesWithoutOr, this.operator)
-    }
-
-    // We have an OR operator. We need to transform it into an AND, using De Morgan's law:
-    // (A or B) = not (not A and not B)
-
-    // This corresponds to (not A, not B, not C)
-    const newValues = valuesWithoutOr.map((value) => new CombinedConditions(this.commandsRoot, [value], 'not'))
-
-    // This corresponds to (not A and not B)
-    const andCondition = new CombinedConditions(this.commandsRoot, newValues, 'and')
-
-    // This is the final expression, not (not A and not B)
-    const finalCondition = new CombinedConditions(this.commandsRoot, [andCondition], 'not')
-
-    return finalCondition
-  }
-
-  simplify = (): ConditionType => {
-    const simplifiedValues = this.values.map((value) => (value instanceof CombinedConditions ? value.simplify() : value))
-
-    // Simplify NOT NOT A to A
-    if (this.operator === 'not') {
-      const condition = simplifiedValues[0]
-      if (condition instanceof CombinedConditions && condition.operator === 'not') {
-        const realCondition = condition.values[0]
-        return realCondition
-      }
-    }
-
-    const flattenedValues = simplifiedValues.flatMap((value) => {
-      if (value instanceof CombinedConditions && value.operator === this.operator) {
-        return value.values
-      }
-      return value
-    })
-
-    return new CombinedConditions(this.commandsRoot, flattenedValues, this.operator)
-  }
-
-  toExecutes = (inverted = false): {
-    requiredExpressions: string[][]
-    callableExpression: string[]
-   } => {
-    if (this.operator === 'or') {
-      throw new Error('You must call removeOrs before.')
-    }
-
-    const requiredExpressions: string[][] = []
-
-    const callableExpression: string[] = ['execute']
-
-    this.values.forEach((value) => {
-      if (value instanceof CombinedConditions) {
-        if (value.operator === 'not' && !(value.values[0] instanceof CombinedConditions)) {
-          callableExpression.push('unless', ...value.values[0].value)
-          return
-        }
-
-        const executes = value.toExecutes()
-
-        if (value.operator === 'not') {
-          requiredExpressions.push(...executes.requiredExpressions)
-          callableExpression.push(...executes.callableExpression)
-          return
-        }
-
-        const { id } = CombinedConditions
-        CombinedConditions.id += 1
-
-        const sandstoneConditionsName = 'sandstone_cond'
-        let sandstoneConditions: ObjectiveClass
-        try {
-          sandstoneConditions = this.commandsRoot.createObjective(sandstoneConditionsName, 'dummy', 'Sandstone Conditions')
-        } catch (e) {
-          sandstoneConditions = this.commandsRoot.Datapack.objectives.get(sandstoneConditionsName) as ObjectiveClass
-        }
-
-        // An intermediate condition
-        const condition = sandstoneConditions.ScoreHolder('scoreHolder')
-
-        requiredExpressions.push(...executes.requiredExpressions)
-        requiredExpressions.push(['scoreboard', 'players', 'set', condition.toString(), '0'])
-        requiredExpressions.push([...executes.callableExpression, 'run', 'scoreboard', 'players', 'set', condition.toString(), '1'])
-        callableExpression.push(this.operator === 'not' ? 'unless' : 'if', 'score', condition.toString(), 'matches', '1')
-        return
-      }
-      callableExpression.push('if', ...value.value)
-    })
-
-    return { requiredExpressions, callableExpression }
-  }
-
-  toString() {
-    if (this.operator === 'not') {
-      return `NOT ${conditionToString(this.values[0])}`
-    }
-
-    const keyword = this.operator.toUpperCase()
-
-    let result = '('
-
-    result += this.values.map(conditionToString).join(` ${keyword} `)
-
-    result += ')'
-
-    return result
-  }
-}
-
-type ConditionType = CombinedConditions | MinecraftCondition
+)
 
 export class Flow {
   private commandsRoot
 
+  arguments: CommandArgs
+
   constructor(
     commandsRoot: CommandsRoot,
   ) {
     this.commandsRoot = commandsRoot
+    this.arguments = []
   }
 
-  block = (coords: Coordinates, block: LiteralUnion<BLOCKS>): MinecraftCondition => ({
-    value: ['block', coordinatesParser(coords), block],
+  block = (coords: Coordinates, block: LiteralUnion<BLOCKS>): ConditionClass => ({
+    _toMinecraftCondition: () => ({ value: ['block', coordinatesParser(coords), block] }),
   })
 
   /** Logical operators */
@@ -170,38 +48,165 @@ export class Flow {
   not = (...conditions: (ConditionType)[]) => new CombinedConditions(this.commandsRoot, conditions, 'not')
 
   /** Flow statements */
+  flowStatement = (callback: () => void, config: FlowStatementConfig) => {
+    const args = this.arguments.slice(1)
 
-  while = (condition: MinecraftCondition | CombinedConditions, callback: () => void) => {
     // First, enter the callback
-    const callbackFunctionName = this.commandsRoot.Datapack.createEnterChildFunction('while')
+    const callbackFunctionName = this.commandsRoot.Datapack.createEnterChildFunction(config.callbackName)
+    const callbackMcFunction = this.commandsRoot.Datapack.currentFunction
 
     // Add its commands
     callback()
+    this.commandsRoot.register(true)
 
     // At the end of the callback, add the given conditions to call it again
-    registerCondition(this.commandsRoot, condition)
-    this.commandsRoot.addAndRegister('function', callbackFunctionName)
+    if (config.loopCondition) {
+      registerCondition(this.commandsRoot, config.condition, args)
+      this.commandsRoot.addAndRegister('function', callbackFunctionName)
+    }
 
+    // Exit the callback
     this.commandsRoot.Datapack.exitChildFunction()
 
-    registerCondition(this.commandsRoot, condition)
-    this.commandsRoot.addAndRegister('function', callbackFunctionName)
+    // Register the initial condition (in the root function) to enter the callback
+    if (config.initialCondition) {
+      registerCondition(this.commandsRoot, config.condition, args)
+      this.commandsRoot.inExecute = true
+    }
+
+    if (
+      callbackMcFunction?.isResource
+      && callbackMcFunction.commands.length === 1
+      && callbackMcFunction.commands[0][0] !== 'execute'
+    ) {
+      // If our callback only has 1 command, inline this command. We CANNOT inline executes, for complicated reasons.
+      // If you want to understand the reasons, see @vdvman1#9510 explanation =>
+      // https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
+      this.commandsRoot.Datapack.resources.deleteResource(callbackMcFunction.path, 'functions')
+
+      if (this.commandsRoot.arguments.length > 0) {
+        this.commandsRoot.arguments.push('run')
+      }
+
+      this.commandsRoot.addAndRegister(...callbackMcFunction.commands[0])
+    } else {
+      // Else, register the function call
+      this.commandsRoot.function(callbackFunctionName)
+    }
+
+    this.arguments = []
   }
 
-  doWhile = (condition: MinecraftCondition | CombinedConditions, callback: () => void) => {
-    const callbackFunctionName = this.commandsRoot.Datapack.createEnterChildFunction('while')
+  if = (condition: ConditionType, callback: () => void) => {
+    this.flowStatement(callback, {
+      callbackName: 'if',
+      initialCondition: true,
+      loopCondition: false,
+      condition,
+    })
+  }
 
-    callback()
-    registerCondition(this.commandsRoot, condition)
-    this.commandsRoot.addAndRegister('function', callbackFunctionName)
+  while = (condition: ConditionClass | CombinedConditions, callback: () => void) => {
+    this.flowStatement(callback, {
+      callbackName: 'while',
+      initialCondition: true,
+      loopCondition: true,
+      condition,
+    })
+  }
 
-    this.commandsRoot.Datapack.exitChildFunction()
+  doWhile = (condition: ConditionClass | CombinedConditions, callback: () => void) => {
+    this.flowStatement(callback, {
+      callbackName: 'doWhile',
+      initialCondition: false,
+      loopCondition: true,
+      condition,
+    })
+  }
 
-    this.commandsRoot.addAndRegister('function', callbackFunctionName)
+  binaryFor = (from: PlayerScore | number, to: PlayerScore |number, callback: (amount: number) => void, maximum = 128) => {
+    if (typeof from === 'number' && typeof to === 'number') {
+      callback(to - from)
+    }
+
+    const realStart = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.createAnonymousScore().set(from)
+    const realEnd = to instanceof PlayerScore ? to : this.commandsRoot.Datapack.createAnonymousScore().set(to)
+
+    const iterations = realEnd.minus(realStart)
+
+    const _ = this
+
+    // For all iterations above the maximum,
+    // just do a while loop that calls `maximum` times the callback,
+    // until there is less than `maximum` iterations
+    _.while(iterations.lowerThan(maximum), () => {
+      callback(maximum)
+      iterations.remove(maximum)
+    })
+
+    // There is now less iterations than the allowed MAXIMUM
+    // Start the binary part
+    for (let i = 1; i < maximum; i *= 2) {
+      _.if(iterations.moduloBy(2).equalTo(1), () => {
+        callback(i)
+      })
+
+      iterations.dividedBy(2)
+    }
+  }
+
+  forRange = (from: PlayerScore | number, to: PlayerScore | number, callback: (score: PlayerScore) => void, maximum = 16) => {
+    function callCallbackNTimes(n: number) {
+      for (let i = 0; i < n; i += 1) {
+        if (callback.length > 0) {
+          callback(scoreTracker)
+          scoreTracker.add(1)
+        } else {
+          // We know the callback takes no arguments - it's OK to avoid it
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          callback()
+        }
+      }
+    }
+
+    const scoreTracker = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.createAnonymousScore().set(from)
+
+    // If the callback does not use the "score" argument, we can directly set the real score
+    // `scoreTracker` to the end (instead of spamming `scoreboard players add anonymous sand_ano 1`).
+    if (callback.length === 0) {
+      // Typescript has a bug, and will not recognize `scoreTracker.set(to)` as a valid expression. So I have to use this condition.
+      if (typeof to === 'number') {
+        scoreTracker.set(to)
+      } else {
+        scoreTracker.set(to)
+      }
+    }
+
+    this.binaryFor(scoreTracker, to, callCallbackNTimes, maximum)
+  }
+
+  forScore = (
+    score: PlayerScore | number,
+    condition: ((score: PlayerScore) => ConditionType) | ConditionType,
+    modifier: (score: PlayerScore) => void,
+    callback: (score: PlayerScore) => void,
+  ) => {
+    const realScore = score instanceof PlayerScore ? score : this.commandsRoot.Datapack.createAnonymousScore().set(score)
+    const realCondition = typeof condition === 'function' ? condition(realScore) : condition
+
+    this.while(realCondition, () => {
+      callback(realScore)
+      modifier(realScore)
+    })
+  }
+
+  get execute(): Omit<Execute<Flow>, 'run' | 'runOne'> {
+    return new Execute(this)
   }
 }
 
-export function registerCondition(commandsRoot: CommandsRoot, condition: MinecraftCondition | CombinedConditions) {
+function registerCondition(commandsRoot: CommandsRoot, condition: ConditionType, args: unknown[] = []) {
   let commands: string[][]
 
   if (condition instanceof CombinedConditions) {
@@ -211,10 +216,10 @@ export function registerCondition(commandsRoot: CommandsRoot, condition: Minecra
       const { callableExpression, requiredExpressions } = realCondition.toExecutes()
       commands = [...requiredExpressions, [...callableExpression, 'run']]
     } else {
-      commands = [['execute', 'if', ...realCondition.value]]
+      commands = [['execute', ...args, 'if', ...realCondition._toMinecraftCondition().value]]
     }
   } else {
-    commands = [['execute', 'if', ...condition.value]]
+    commands = [['execute', ...args, 'if', ...condition._toMinecraftCondition().value]]
   }
 
   // Add & register all required commands
@@ -226,3 +231,5 @@ export function registerCondition(commandsRoot: CommandsRoot, condition: Minecra
   const callableCommand = commands[commands.length - 1]
   commandsRoot.arguments.push(...callableCommand)
 }
+
+export type PublicFlow = Omit<Flow, 'arguments' | 'flowStatement'>

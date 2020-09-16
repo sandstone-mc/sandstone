@@ -30,6 +30,7 @@ export class Teleport extends Command {
   @command('teleport', {
     hasSubcommands: true,
     isRoot: true,
+    executable: true,
     parsers: {
       '0': coordinatesParser,
       '1': coordinatesParser,

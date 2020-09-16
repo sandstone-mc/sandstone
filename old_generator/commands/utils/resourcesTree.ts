@@ -133,7 +133,7 @@ export class ResourcesTree {
       throw new Error(errorMessage)
     }
 
-    return resource
+    return resource as any
   }
 
   /**
@@ -156,6 +156,7 @@ export class ResourcesTree {
 
       parent.children.set(resourcePath[resourcePath.length - 1], resource)
     } else {
+      console.log("Adding", parentPath[0])
       const namespace = this.getSetNamespaces(parentPath[0])
       namespace[resourceType].set(resourcePath[1], resource)
     }

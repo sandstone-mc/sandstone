@@ -1,5 +1,6 @@
+import { LiteralUnion } from '@/generalTypes'
 import type {
-  JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
+  JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, OBJECTIVE_CRITERION,
 } from '@arguments'
 import { DISPLAY_SLOTS } from '@arguments/displaySlots'
 import { JsonTextComponentClass } from '@variables'
@@ -42,7 +43,7 @@ class ScoreboardObjectives extends Command {
       '2': (displayName) => (displayName ? new JsonTextComponentClass(displayName) : displayName),
     },
   })
-  add = (objective: string, criteria: string, displayName?: JsonTextComponent) => {
+  add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JsonTextComponent) => {
     if (objective.length > 16) {
       throw new Error(`Objectives cannot have names with more than 16 characters. Got ${objective.length} with objective "${objective}".`)
     }

@@ -17,6 +17,16 @@ export type McFunctionOptions = {
    * It defaults to `true` if the environment variable NODE_ENV is set to `development`, else it defaults to `false`
    */
   debug?: boolean
+
+  /**
+   * Whether the function should run each tick.
+   */
+  runEachTick?: boolean
+
+  /**
+   * Whether the function should run when the datapack loads.
+   */
+  runOnLoad?: boolean
 }
 
 export class McFunction<T extends any[]> {
@@ -100,6 +110,15 @@ export class McFunction<T extends any[]> {
       mcFunction = result.newFunction
       name = result.functionName
 
+      // If it should run each tick, add it to the tick.json function
+      if (this.options.runEachTick) {
+        this.datapack.addTickFunction(name)
+      }
+      // Idem for load
+      if (this.options.runOnLoad) {
+        this.datapack.addLoadFunction(name)
+      }
+
       this.alreadyInitializedParameters.set(jsonRepresentation, { mcFunction, name })
     } else {
       const result = this.alreadyInitializedParameters.get(jsonRepresentation)
@@ -127,6 +146,9 @@ export class McFunction<T extends any[]> {
       }
 
       this.callback(...args)
+
+      // If there is an unfinished command, register it
+      this.datapack.commandsRoot.register(true)
 
       // Then back to the previous one
       this.datapack.currentFunction = previousFunction

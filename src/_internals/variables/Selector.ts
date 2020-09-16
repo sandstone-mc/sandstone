@@ -1,9 +1,9 @@
 import type {
-  ENTITY_TYPES, MinecraftCondition, TextComponentObject,
+  ENTITY_TYPES, TextComponentObject,
 } from '@arguments'
-import { ComponentClass } from '@arguments/jsonTextComponent'
 import type { CommandsRoot } from '@commands'
 import type { LiteralUnion } from '../generalTypes'
+import { ComponentClass, ConditionClass } from './abstractClasses'
 
 export type Range = number | [min: number, max: number] | [min: number, max: null] | [min: null, max: number]
 
@@ -143,6 +143,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   )
 
 function parseScore(scores: ScoreArgument): string {
+  console.log('>>>>>>>> PARSE SCOOORE <<<<<<<<<<<')
   return `{${Object.entries(scores).map(([scoreName, value]) => {
     if (Array.isArray(value)) {
       return [scoreName, `${value[0] ?? ''}..${value[1] ?? ''}`].join('=')
@@ -161,7 +162,7 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
   }).join(', ')}}`
 }
 
-export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> extends ComponentClass {
+export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> extends ComponentClass implements ConditionClass {
   protected commandsRoot: CommandsRoot
 
   protected target: string
@@ -189,12 +190,9 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> e
     this.commandsRoot.scoreboard.players.list(this.toString())
   }
 
-  /**
-   * Returns a condition, that Minecraft will evaluate to `true` if this selector finds at least one entity.
-   */
-  exists = (): MinecraftCondition => ({
-    value: ['entity', this],
-  })
+  _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {
+    return { value: ['entity', this] }
+  }
 
   toString() {
     if (!Object.keys(this.arguments).length) {

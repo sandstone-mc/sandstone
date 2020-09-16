@@ -1,4 +1,4 @@
-import { commandsRoot } from './_internals'
+import { datapack } from './_internals'
 
 export {
   absolute, relative, local,
@@ -8,6 +8,6 @@ export {
 export const {
   createObjective,
   Selector,
-} = commandsRoot
+} = datapack
 
 export const self = Selector('@s')

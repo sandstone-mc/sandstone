@@ -12,26 +12,27 @@ import {
   MessageOrSelector,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
-  NBT, Rotation,
+  NBT,
+  nbtParser,
+  Rotation,
   rotationParser,
-  SelectorArgument,
+
   SingleEntityArgument,
   SinglePlayerArgument,
   SOUND_EVENTS,
   SOUND_SOURCES,
   STRUCTURES,
 } from '@arguments'
-
 import Datapack from '@datapack/Datapack'
-import type { SaveOptions } from '@datapack/filesystem'
 import type { CommandArgs } from '@datapack/minecraft'
-import { Objective, Selector } from '@variables'
 import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
+import util from 'util'
 import type * as commands from '../../commands'
 import { command } from './decorators'
 import {
   Advancement, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
-  DefaultGamemode, Difficulty, Effect, Enchant, Execute,
+  DefaultGamemode, Difficulty, Effect, Enchant,
+  ExecuteWithRun,
   Experience,
   Fill,
   Forceload,
@@ -99,31 +100,6 @@ export class CommandsRoot {
     this.executable = false
   }
 
-  /** UTILS */
-  // Create a new objective
-  createObjective = (name: string, criterion: string, display?: JsonTextComponent) => {
-    if (name.length > 16) {
-      throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
-    }
-
-    const objective = Objective(this, name, criterion, display)
-    this.Datapack.registerNewObjective(objective)
-    return objective
-  }
-
-  Selector = Selector.bind(this)
-
-  /**
-   * Saves the datapack to the file system.
-   *
-   * @param name The name of the Datapack
-   *
-   * @param options The save options
-   */
-  save = (name: string, options?: SaveOptions) => {
-    this.Datapack.save(name, options)
-  }
-
   /** COMMANDS */
   // advancement command //
   advancement = new Advancement(this)
@@ -167,7 +143,7 @@ export class CommandsRoot {
   enchant = (new Enchant(this)).enchant
 
   // execute command //
-  execute: Omit<Execute, 'run' | 'runOne'> = (new Execute(this))
+  execute: Omit<ExecuteWithRun<CommandsRoot>, 'run' | 'runOne'> = (new ExecuteWithRun(this))
 
   // experience command //
   experience = new Experience(this)
@@ -307,7 +283,7 @@ export class CommandsRoot {
    *
    * @param nbt Specifies the data tag for the entity.
    */
-  @command('summon', { isRoot: true })
+  @command('summon', { isRoot: true, parsers: { '2': nbtParser } })
   summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: NBT) => { }
 
   // tag command //

@@ -1,13 +1,12 @@
 import { LiteralUnion } from '@/generalTypes'
 /* eslint-disable no-use-before-define */
 import {
-  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, coordinatesParser, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SelectorArgument, SingleEntityArgument,
+  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, coordinatesParser, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
 } from '@arguments'
-import { MinecraftCondition } from '@arguments/condition'
-import { Range } from '@variables'
+import type { Flow } from '@flow'
+import { ConditionClass, Range } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
 import type * as commands from '../../../commands'
-import { Command } from '../Command'
 import type { CommandsRoot } from '../CommandsRoot'
 import { command } from '../decorators'
 
@@ -20,38 +19,67 @@ const executeConfig = {
 
 type StoreType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double'
 
-export class ExecuteStoreArgs extends Command {
+type CommandsRootLike = CommandsRoot | Flow
+
+class CommandLike<T extends CommandsRootLike> {
+  protected commandsRoot: T
+
+  constructor(commandsRootLike: T) {
+    this.commandsRoot = commandsRootLike
+  }
+}
+
+class ExecuteSubcommand<T extends CommandsRootLike> extends CommandLike<T> {
+  protected execute: InferExecute<T>
+
+  constructor(execute: InferExecute<T>) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    super(execute.commandsRoot)
+
+    this.execute = execute
+  }
+}
+
+function isRealCommandsRoot(commandsRootLike: CommandsRootLike): commandsRootLike is CommandsRoot {
+  return Object.prototype.hasOwnProperty.call(commandsRootLike, 'register')
+}
+
+export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
   @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
-  block = (targetPos: Coordinates, path: string, type: StoreType, scale: number) => new Execute(this.commandsRoot)
+  block = (targetPos: Coordinates, path: string, type: StoreType, scale: number) => this.execute
 
   @command('bossbar', executeConfig)
-  bossbar = (id: string, type: 'max' | 'value') => new Execute(this.commandsRoot)
+  bossbar = (id: string, type: 'max' | 'value') => this.execute
 
   @command('entity', executeConfig)
   entity = (
     target: SingleEntityArgument, path: string, type: StoreType, scale: number,
-  ) => new Execute(this.commandsRoot)
+  ) => this.execute
 
   @command('score', executeConfig)
   score: (
-    ((targets: MultipleEntitiesArgument, objective: ObjectiveArgument) => Execute) &
-    ((playerScore: PlayerScore) => Execute)
-  ) = (...args: unknown[]) => new Execute(this.commandsRoot)
+    ((targets: MultipleEntitiesArgument, objective: ObjectiveArgument) => InferExecute<T>) &
+    ((playerScore: PlayerScore) => InferExecute<T>)
+  ) = (...args: unknown[]) => this.execute
 
   @command('storage', executeConfig)
-  storage = (target: string, path: string, type: StoreType, scale: number) => new Execute(this.commandsRoot)
+  storage = (target: string, path: string, type: StoreType, scale: number) => this.execute
 }
 
-export class ExecuteStore extends Command {
-  get result() {
+export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
+  get result(): ExecuteStoreArgs<T> {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
     this.commandsRoot.arguments.push('store', 'result')
-    this.commandsRoot.executable = true
-    this.commandsRoot.inExecute = true
 
-    return new ExecuteStoreArgs(this.commandsRoot)
+    if (isRealCommandsRoot(this.commandsRoot)) {
+      this.commandsRoot.executable = true
+      this.commandsRoot.inExecute = true
+    }
+
+    return new ExecuteStoreArgs(this.execute)
   }
 
   get success() {
@@ -59,25 +87,28 @@ export class ExecuteStore extends Command {
       this.commandsRoot.arguments.push('execute')
     }
     this.commandsRoot.arguments.push('store', 'success')
-    this.commandsRoot.executable = true
-    this.commandsRoot.inExecute = true
 
-    return new ExecuteStoreArgs(this.commandsRoot)
+    if (isRealCommandsRoot(this.commandsRoot)) {
+      this.commandsRoot.executable = true
+      this.commandsRoot.inExecute = true
+    }
+
+    return new ExecuteStoreArgs(this.execute)
   }
 }
 
-export class ExecuteIfData extends Command {
+export class ExecuteIfData<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
   @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
-  block = (pos: Coordinates, path: string) => new Execute(this.commandsRoot)
+  block = (pos: Coordinates, path: string) => this.execute
 
   @command('entity', executeConfig)
-  entity = (target: SingleEntityArgument, path: string) => new Execute(this.commandsRoot)
+  entity = (target: SingleEntityArgument, path: string) => this.execute
 
   @command('storage', executeConfig)
-  storage = (source: string, path: string) => new Execute(this.commandsRoot)
+  storage = (source: string, path: string) => this.execute
 }
 
-export class Execute extends Command {
+export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   @command('align', executeConfig)
   align = (axes: AXES) => this
 
@@ -123,26 +154,32 @@ export class Execute extends Command {
   @command(['unless', 'blocks'], executeConfig)
   unlessBlocks: this['ifBlocks'] = (...args: unknown[]) => this
 
-  get ifData() {
+  get ifData(): ExecuteIfData<T> {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
     this.commandsRoot.arguments.push('if', 'data')
-    this.commandsRoot.executable = true
-    this.commandsRoot.inExecute = true
 
-    return new ExecuteIfData(this.commandsRoot)
+    if (isRealCommandsRoot(this.commandsRoot)) {
+      this.commandsRoot.executable = true
+      this.commandsRoot.inExecute = true
+    }
+
+    return new ExecuteIfData(this as unknown as InferExecute<T>)
   }
 
-  get unlessData() {
+  get unlessData(): ExecuteIfData<T> {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
     this.commandsRoot.arguments.push('unless', 'data')
-    this.commandsRoot.executable = true
-    this.commandsRoot.inExecute = true
 
-    return new ExecuteIfData(this.commandsRoot)
+    if (isRealCommandsRoot(this.commandsRoot)) {
+      this.commandsRoot.executable = true
+      this.commandsRoot.inExecute = true
+    }
+
+    return new ExecuteIfData(this as unknown as InferExecute<T>)
   }
 
   @command(['if', 'entity'], executeConfig)
@@ -160,13 +197,13 @@ export class Execute extends Command {
       source: SingleEntityArgument,
       sourceObjective:
         ObjectiveArgument
-    ) => Execute) &
+    ) => this) &
     ((
       target: SingleEntityArgument,
       targetObjective: ObjectiveArgument,
       operator: 'matches',
       range: Range,
-    ) => Execute)
+    ) => this)
   ) = (...args: unknown[]) => this
 
   @command(['unless', 'score'], executeConfig)
@@ -186,31 +223,30 @@ export class Execute extends Command {
   @command('unless', executeConfig)
   private unless_ = (...args: string[]) => this
 
-  if = (condition: MinecraftCondition) => this.if_(...condition.value)
+  if = (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value)
 
-  unless = (condition: MinecraftCondition) => this.unless_(...condition.value)
+  unless = (condition: ConditionClass) => this.unless_(...condition._toMinecraftCondition().value)
 
-  store = new ExecuteStore(this.commandsRoot)
+  store: ExecuteStore<T> = new ExecuteStore(this as unknown as InferExecute<T>)
 
-  // The Pick<> ensures only commands are returned from CommandsRoot
-  get runOne(): Pick<CommandsRoot, ((keyof typeof commands) | 'function')> {
-    return this.commandsRoot
-  }
-
-  run = (callback: () => void) => {
-    const name = this.commandsRoot.arguments[1]
-    const currentFunctionName = this.commandsRoot.Datapack.createEnterChildFunction(`execute_${name}`)
-
-    const currentArgs = this.commandsRoot.arguments
-    currentArgs.push('run', 'function', currentFunctionName)
-    this.commandsRoot.reset()
-
-    callback()
-
-    this.commandsRoot.Datapack.exitChildFunction()
-
-    this.commandsRoot.arguments = currentArgs
-    this.commandsRoot.executable = true
-    this.commandsRoot.register()
+  get runOne(): (
+    T extends CommandsRoot ?
+      // The Pick<> ensures only commands are returned from CommandsRoot
+      Pick<T, ((keyof typeof commands) | 'function')> :
+      T
+  ) {
+    return this.commandsRoot as any
   }
 }
+
+export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
+  run = (callback: () => void) => {
+    this.commandsRoot.Datapack.flow.flowStatement(callback, {
+      callbackName: `execute_${this.commandsRoot.arguments[1]}`,
+      initialCondition: false,
+      loopCondition: false,
+    })
+  }
+}
+
+type InferExecute<T extends CommandsRootLike> = T extends CommandsRoot ? ExecuteWithRun<T> : Execute<T>

@@ -1,5 +1,4 @@
 export * from './basics'
-export * from './condition'
 export * from './coords'
 export * from './generated'
 export * from './displaySlots'

@@ -1,14 +1,8 @@
 import type { VectorClass } from '@variables/Coordinates'
+import type { ComponentClass } from '@variables/abstractClasses'
 import type { MultipleEntitiesArgument, SelectorArgument } from './selector'
 import type { BASIC_COLORS } from './basics'
 import type { LiteralUnion } from '../generalTypes'
-
-export class ComponentClass {
-  protected _toChatComponent(): JsonTextComponent {
-    throw new Error('Not implemented')
-  }
-}
-
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
 type ContentTag = {
   /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */

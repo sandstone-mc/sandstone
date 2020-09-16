@@ -2,7 +2,8 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import packMcMeta from './packMcMeta.json'
-import { FunctionResource, ResourcesTree } from './resourcesTree'
+
+import { FunctionResource, ResourcesTree, TagsResource } from './resourcesTree'
 
 /**
  * Get the .minecraft path
@@ -65,6 +66,18 @@ function createDirectory(directory: string): void {
   }
 }
 
+/**
+ * Delete a directory.
+ */
+function deleteDirectory(directory: string): void {
+  // Delete the path
+  try {
+    fs.rmdirSync(directory, { recursive: true })
+  } catch (e) {
+    // Folder already deleted
+  }
+}
+
 export type SaveOptions = {
   /**
    * The location of the `.minecraft` folder.
@@ -109,6 +122,10 @@ export type SaveOptions = {
     }
   )
 
+const GRAY = '\x1b[90m'
+const GREEN = '\x1b[32m'
+const RESET = '\x1b[0m'
+
 /**
  * Saves the datapack to the file system.
  *
@@ -143,6 +160,7 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
   }
 
   if (!options.dryRun) {
+    deleteDirectory(savePath)
     createDirectory(savePath)
 
     fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify(packMcMeta))
@@ -167,10 +185,6 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
         fs.writeFileSync(mcFunctionPath, commands.join('\n'))
       }
 
-      const GRAY = '\x1b[90m'
-      const GREEN = '\x1b[32m'
-      const RESET = '\x1b[0m'
-
       const commandsRepresentation = commands.map((command) => {
         if (command.startsWith('#')) {
           return GRAY + command + RESET
@@ -188,9 +202,47 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
     Array.from(resource.children.values()).forEach(saveFunction)
   }
 
+  function saveTag(resource: TagsResource) {
+    if (resource.isResource) {
+      const [namespace, ...folders] = resource.path
+
+      const basePath = path.join(dataPath, namespace, 'tags')
+      const fileName = folders.pop()
+      const resourceFolder = path.join(basePath, ...folders)
+
+      const representation = JSON.stringify({
+        replace: resource.replace ?? false,
+        values: resource.values,
+      }, null, 2)
+
+      if (!options.dryRun) {
+        createDirectory(resourceFolder)
+
+        // Write the commands to the file system
+        const resourcePath = path.join(resourceFolder, `${fileName}.json`)
+
+        fs.writeFileSync(resourcePath, representation)
+      }
+
+      if (options.verbose) {
+        console.log(`${GREEN}##`, `Tag[${folders[0]}] ${namespace}:${[...folders.slice(1), fileName].join('/')}`, RESET)
+        console.log(representation)
+        console.log()
+      }
+    }
+
+    Array.from(resource.children.values()).forEach((r) => saveTag(r as TagsResource))
+  }
+
   for (const n of resources.namespaces.values()) {
+    // Save functions
     for (const f of n.functions.values()) {
       saveFunction(f)
+    }
+
+    // Save tags
+    for (const t of n.tags.values()) {
+      saveTag(t)
     }
   }
 

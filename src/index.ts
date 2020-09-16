@@ -1,5 +1,5 @@
-export * as commands from './commands'
+import * as commands from './commands'
 
 export * as variables from './variables'
 
-export * from './core'
+export * as core from './core'

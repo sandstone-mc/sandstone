@@ -1,10 +1,14 @@
 import { LiteralUnion } from '@/generalTypes'
+import type { OBJECTIVE_CRITERION, JsonTextComponent } from '@arguments'
 import { CommandsRoot } from '@commands'
-import type { ObjectiveClass } from '@variables'
+import { Flow } from '@flow'
+import { Objective, ObjectiveClass, Selector } from '@variables'
 import { saveDatapack, SaveOptions } from './filesystem'
 import { McFunction, McFunctionOptions } from './McFunction'
 import { CommandArgs, toMcFunctionName } from './minecraft'
-import { FunctionResource, ResourcePath, ResourcesTree } from './resourcesTree'
+import {
+  FunctionResource, ResourcePath, ResourcesTree,
+} from './resourcesTree'
 
 export interface McFunctionReturn<T extends unknown[]> {
   (...args: T): void
@@ -31,6 +35,10 @@ export default class Datapack {
 
   rootFunctions: Set<McFunction<any[]>>
 
+  static anonymousScoreId = 0
+
+  flow: Flow
+
   constructor(namespace: string) {
     this.defaultNamespace = namespace
     this.currentFunction = null
@@ -40,6 +48,7 @@ export default class Datapack {
     this.rootFunctions = new Set()
 
     this.commandsRoot = new CommandsRoot(this)
+    this.flow = new Flow(this.commandsRoot)
   }
 
   getFunctionAndNamespace(functionName: string): ResourcePath {
@@ -116,12 +125,12 @@ export default class Datapack {
       children: new Map(), isResource: true as const, commands: [], path: [...this.currentFunction.path, childName],
     }
 
-    this.currentFunction.children.set(childName, emptyFunction)
+    this.currentFunction.children.set(childName, emptyFunction as any)
 
     // Return its full minecraft name
     return {
       functionName: toMcFunctionName(emptyFunction.path),
-      childFunction: emptyFunction,
+      childFunction: emptyFunction as any,
     }
   }
 
@@ -162,7 +171,7 @@ export default class Datapack {
     const parentPath = this.currentFunction.path.slice(0, -1)
 
     try {
-      this.currentFunction = this.resources.getResource(parentPath, 'functions')
+      this.currentFunction = this.resources.getResource(parentPath as unknown as ResourcePath, 'functions')
     } catch (e) {
       this.currentFunction = null
     }
@@ -195,11 +204,77 @@ export default class Datapack {
   }
 
   /**
- * Creates a Minecraft Function.
- *
- * @param name The name of the function.
- * @param callback A callback containing the commands you want in the Minecraft Function.
- */
+   * Add a function that must be run each tick
+   */
+  addTickFunction(mcfunction: string) {
+    const tickResource = this.resources.getOrAddResource('tags', {
+      children: new Map(),
+      isResource: true,
+      path: ['minecraft', 'functions', 'tick'],
+      values: [],
+      replace: false,
+    })
+
+    tickResource.values.push(mcfunction)
+  }
+
+  /**
+   * Add a function that must be run on each datapack load
+   */
+  addLoadFunction(mcfunction: string) {
+    const tickResource = this.resources.getOrAddResource('tags', {
+      children: new Map(),
+      isResource: true,
+      path: ['minecraft', 'functions', 'load'],
+      values: [],
+      replace: false,
+    })
+
+    tickResource.values.push(mcfunction)
+  }
+
+  /** UTILS */
+  /** Create a new objective */
+  createObjective = (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, display?: JsonTextComponent) => {
+    if (name.length > 16) {
+      throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
+    }
+
+    const objective = Objective(this.commandsRoot, name, criteria, display)
+    this.registerNewObjective(objective)
+    return objective
+  }
+
+  /** Get an objective, and create it if it does not exists. */
+  getCreateObjective(name: string, criteria: string, display?: JsonTextComponent) {
+    try {
+      return this.createObjective(name, criteria, display)
+    } catch (e) {
+      return this.objectives.get(name) as ObjectiveClass
+    }
+  }
+
+  /**
+   * Creates an anonymous, unique score
+   */
+  createAnonymousScore() {
+    const sandstoneAnonymousName = 'sand_anonymous'
+    const score = this.getCreateObjective(sandstoneAnonymousName, 'dummy', 'Sandstone Anonymous Scores')
+
+    const id = Datapack.anonymousScoreId
+    Datapack.anonymousScoreId += 1
+
+    return score.ScoreHolder(`anonymous_${id}`)
+  }
+
+  Selector = Selector.bind(this)
+
+  /**
+   * Creates a Minecraft Function.
+   *
+   * @param name The name of the function.
+   * @param callback A callback containing the commands you want in the Minecraft Function.
+   */
   mcfunction = <T extends any[]>(
     name: string, callback: (...args: T) => void, options?: McFunctionOptions,
   ): McFunctionReturn<T> => {
@@ -222,12 +297,15 @@ export default class Datapack {
    * @param options The save options
    */
   save = (name: string, options: SaveOptions = {}): void => {
+    // First, generate all functions
     for (const mcfunction of this.rootFunctions) {
       mcfunction.generateInitialFunction()
     }
 
+    // Then, generate the init function.
     this.createEnterRootFunction('__init__')
 
+    // Start by generating constants
     if (this.constants.size > 0) {
       this.commandsRoot.scoreboard.objectives.add('sandstone_const', 'dummy', [{ text: 'Sandstone Constants' }])
 
@@ -236,14 +314,19 @@ export default class Datapack {
       })
     }
 
+    // Then, generate objectives
     if (this.objectives.size > 0) {
       this.objectives.forEach((objective) => {
         this.commandsRoot.scoreboard.objectives.add(objective.name, objective.criterion, objective._displayRaw)
       })
     }
 
+    // Delete __init__ function if it's empty
     if (this.currentFunction?.isResource && this.currentFunction.commands.length === 0) {
-      this.resources.deleteResource([this.defaultNamespace, '__init__'], 'functions')
+      this.resources.deleteResource(this.currentFunction.path, 'functions')
+    } else {
+      // Else, put the __init__ function in the minecraft:load tag
+      this.addLoadFunction(toMcFunctionName(this.currentFunction!.path))
     }
 
     this.exitRootFunction()

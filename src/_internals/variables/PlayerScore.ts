@@ -1,11 +1,9 @@
 import type {
-  COMPARISON_OPERATORS, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, JsonTextComponent,
+  COMPARISON_OPERATORS, JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
 } from '@arguments'
-import type { MinecraftCondition } from '@arguments/condition'
-import {
-  ComponentClass,
-} from '@arguments/jsonTextComponent'
 import type { CommandsRoot } from '@commands'
+import { Datapack } from '@datapack'
+import { ComponentClass, ConditionClass } from '@variables/abstractClasses'
 import type { ObjectiveClass } from './Objective'
 
 type PlayersTarget = number | MultipleEntitiesArgument
@@ -16,9 +14,23 @@ type OperationArguments = (
   [targetScore: PlayerScore]
 )
 
-export class PlayerScore extends ComponentClass {
-  static anonymousScoreId = 0
+function createAnonymousScore(datapack: Datapack, amount: number): PlayerScore
 
+function createAnonymousScore(datapack: Datapack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): PlayerScore
+
+function createAnonymousScore(datapack: Datapack, amountOrTargets: PlayersTarget, objective?: ObjectiveArgument): PlayerScore {
+  const anonymousScore = datapack.createAnonymousScore()
+
+  if (typeof amountOrTargets === 'number') {
+    anonymousScore.set(amountOrTargets)
+  } else {
+    anonymousScore.set(amountOrTargets, objective)
+  }
+
+  return anonymousScore
+}
+
+export class PlayerScore extends ComponentClass {
   commandsRoot: CommandsRoot
 
   target: MultipleEntitiesArgument
@@ -47,7 +59,7 @@ export class PlayerScore extends ComponentClass {
     operation: 'add' | 'remove' | 'set',
     operator: OPERATORS,
     ...args: OperationArguments
-  ) {
+  ): this {
     if (typeof args[0] === 'number') {
       this.commandsRoot.scoreboard.players[operation](this.target, this.objective, args[0])
     } else if (args[0] instanceof PlayerScore) {
@@ -59,14 +71,16 @@ export class PlayerScore extends ComponentClass {
         this.target, this.objective, operator, args[0], args[1] ?? this.objective,
       )
     }
+
+    return this
   }
 
-  private binaryOperation(operator: OPERATORS, ...args: OperationArguments) {
+  private binaryOperation(operator: OPERATORS, ...args: OperationArguments): this {
     if (args[0] instanceof PlayerScore) {
       this.commandsRoot.scoreboard.players.operation(
         this.target, this.objective, operator, args[0].target, args[0].objective,
       )
-      return
+      return this
     }
 
     if (typeof args[0] === 'number') {
@@ -76,6 +90,8 @@ export class PlayerScore extends ComponentClass {
     this.commandsRoot.scoreboard.players.operation(
       this.target, this.objective, operator, args[0], args[1] ?? this.objective,
     )
+
+    return this
   }
 
   /** INLINE OPERATORS */
@@ -84,7 +100,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The amount to set the entity's score to.
    */
-  set(amount: number): void
+  set(amount: number): this
 
   /**
    * Set the current entity's score to other entities's scores.
@@ -93,17 +109,17 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  set(targets: PlayersTarget, objective?: ObjectiveArgument): void
+  set(targets: PlayersTarget, objective?: ObjectiveArgument): this
 
   /**
    * Set the current entity's score to other entities's scores.
    *
    * @param targetScore The target to get the scores from
    */
-  set(targetScore: PlayerScore): void
+  set(targetScore: PlayerScore): this
 
   set(...args: OperationArguments) {
-    this.unaryOperation('set', '=', ...args)
+    return this.unaryOperation('set', '=', ...args)
   }
 
   /**
@@ -111,7 +127,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The amount to add to the entity's score.
   */
-  add(amount: number): void
+  add(amount: number): this
 
   /**
    * Adds other entities's scores to the current entity's score.
@@ -120,17 +136,17 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
+  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
 
   /**
    * Adds other target's scores to the current entity's score.
    *
    * @param targetScore The target to add the scores from
    */
-  add(targetScore: PlayerScore): void
+  add(targetScore: PlayerScore): this
 
   add(...args: OperationArguments) {
-    this.unaryOperation('add', '+=', ...args)
+    return this.unaryOperation('add', '+=', ...args)
   }
 
   /**
@@ -138,7 +154,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The amount to substract to the entity's score.
   */
-  remove(amount: number): void
+  remove(amount: number): this
 
   /**
   * Substract other target's scores from the current entity's score.
@@ -147,17 +163,17 @@ export class PlayerScore extends ComponentClass {
   *
   * @param objective The related objective. If not specified, default to the same objective as the current target.
   */
-  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
+  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
 
   /**
   * Substract other entities's scores from the current entity's score.
   *
   * @param targetScore The target to get the scores from
   */
-  remove(targetScore: PlayerScore): void
+  remove(targetScore: PlayerScore): this
 
   remove(...args: OperationArguments) {
-    this.unaryOperation('remove', '-=', ...args)
+    return this.unaryOperation('remove', '-=', ...args)
   }
 
   /**
@@ -165,7 +181,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The amount to multiply the entity's score by.
    */
-  multiply(amount: number): void
+  multiply(amount: number): this
 
   /**
    * Multiply the current entity's score by other entities's scores.
@@ -174,7 +190,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
+  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
 
   /**
    * Multiply the current entity's score by other target's scores.
@@ -183,10 +199,10 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multiply(targetScore: PlayerScore): void
+  multiply(targetScore: PlayerScore): this
 
   multiply(...args: OperationArguments) {
-    this.binaryOperation('*=', ...args)
+    return this.binaryOperation('*=', ...args)
   }
 
   /**
@@ -194,7 +210,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The amount to divide the entity's score by.
    */
-  divide(amount: number): void
+  divide(amount: number): this
 
   /**
    * Divide the current entity's score by other entities's scores.
@@ -203,17 +219,17 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
+  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
 
   /**
    * Divide the current entity's score by other target's scores.
    *
    * @param targetScore The target to get the scores from
    */
-  divide(targetScore: PlayerScore): void
+  divide(targetScore: PlayerScore): this
 
   divide(...args: OperationArguments) {
-    this.binaryOperation('/=', ...args)
+    return this.binaryOperation('/=', ...args)
   }
 
   /**
@@ -221,7 +237,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The amount to divide the entity's score by.
    */
-  modulo(amount: number): void
+  modulo(amount: number): this
 
   /**
    * Get the remainder of the division of the current entity's score by other entities's scores.
@@ -230,17 +246,17 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
+  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
 
   /**
    * Divide the current entity's score by other target's scores.
    *
    * @param targetScore The target to modulo the scores with
    */
-  modulo(targetScore: PlayerScore): void
+  modulo(targetScore: PlayerScore): this
 
   modulo(...args: OperationArguments) {
-    this.binaryOperation('%=', ...args)
+    return this.binaryOperation('%=', ...args)
   }
 
   /**
@@ -264,26 +280,6 @@ export class PlayerScore extends ComponentClass {
   }
 
   /** EFFECT-FREE OPERATORS */
-  protected createAnonymousScore(amount: number): PlayerScore
-
-  protected createAnonymousScore(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
-
-  protected createAnonymousScore(amountOrTargets: PlayersTarget, objective: ObjectiveArgument = this.objective): PlayerScore {
-    const anonymousScore = new PlayerScore(
-      this.commandsRoot,
-      `#__anonymous_${PlayerScore.anonymousScoreId}__`,
-      this.objective,
-    )
-    if (typeof amountOrTargets === 'number') {
-      anonymousScore.set(amountOrTargets)
-    } else {
-      anonymousScore.set(amountOrTargets, objective)
-    }
-
-    PlayerScore.anonymousScoreId += 1
-
-    return anonymousScore
-  }
 
   /**
    * Returns a new anonymous score, equal to the current score plus the given amount.
@@ -306,10 +302,10 @@ export class PlayerScore extends ComponentClass {
    *
    * @param targetScore The target to add the scores from
    */
-  plus(targetScore: PlayerScore): void
+  plus(targetScore: PlayerScore): PlayerScore
 
   plus(...args: OperationArguments): PlayerScore {
-    const anonymousScore = this.createAnonymousScore(this.target, this.objective)
+    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.unaryOperation('add', '+=', ...args)
     return anonymousScore
   }
@@ -335,10 +331,10 @@ export class PlayerScore extends ComponentClass {
    *
    * @param targetScore The target to substract the scores from
    */
-  minus(targetScore: PlayerScore): void
+  minus(targetScore: PlayerScore): PlayerScore
 
   minus(...args: OperationArguments): PlayerScore {
-    const anonymousScore = this.createAnonymousScore(this.target, this.objective)
+    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.unaryOperation('remove', '-=', ...args)
     return anonymousScore
   }
@@ -364,10 +360,10 @@ export class PlayerScore extends ComponentClass {
    *
    * @param targetScore The target to multiply the scores from
    */
-  multipliedBy(targetScore: PlayerScore): void
+  multipliedBy(targetScore: PlayerScore): PlayerScore
 
   multipliedBy(...args: OperationArguments): PlayerScore {
-    const anonymousScore = this.createAnonymousScore(this.target, this.objective)
+    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('*=', ...args)
     return anonymousScore
   }
@@ -393,10 +389,10 @@ export class PlayerScore extends ComponentClass {
    *
    * @param targetScore The target to divide the scores by
    */
-  dividedBy(targetScore: PlayerScore): void
+  dividedBy(targetScore: PlayerScore): PlayerScore
 
   dividedBy(...args: OperationArguments): PlayerScore {
-    const anonymousScore = this.createAnonymousScore(this.target, this.objective)
+    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('*=', ...args)
     return anonymousScore
   }
@@ -422,10 +418,10 @@ export class PlayerScore extends ComponentClass {
    *
    * @param targetScore The target to divide the scores by
    */
-  moduloBy(targetScore: PlayerScore): void
+  moduloBy(targetScore: PlayerScore): PlayerScore
 
   moduloBy(...args: OperationArguments): PlayerScore {
-    const anonymousScore = this.createAnonymousScore(this.target, this.objective)
+    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('%=', ...args)
     return anonymousScore
   }
@@ -435,16 +431,18 @@ export class PlayerScore extends ComponentClass {
     operator: COMPARISON_OPERATORS,
     matchesRange: string,
     args: OperationArguments,
-  ): MinecraftCondition {
+  ): ConditionClass {
+    const playerScore = this
+
     if (typeof args[0] === 'number') {
       return {
-        value: ['score', this.target, this.objective, 'matches', matchesRange],
+        _toMinecraftCondition: () => ({ value: ['score', playerScore.target, playerScore.objective, 'matches', matchesRange] }),
       }
     }
 
     const endArgs = args[1] ? args : [args[0]]
     return {
-      value: ['score', this.target, this.objective, operator, ...endArgs],
+      _toMinecraftCondition: () => ({ value: ['score', playerScore.target, playerScore.objective, operator, ...endArgs] }),
     }
   }
 
@@ -453,7 +451,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The number to compare the current score against.
    */
-  greaterThan (amount: number) : MinecraftCondition
+  greaterThan (amount: number) : ConditionClass
 
   /**
    * Check if the current score is strictly greater than the given score.
@@ -462,14 +460,14 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
+  greaterThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly greater than the given score.
    *
    * @param targets The target to compare the current score against.
    */
-  greaterThan (targetScore: PlayerScore) : MinecraftCondition
+  greaterThan (targetScore: PlayerScore) : ConditionClass
 
   greaterThan(...args: OperationArguments) {
     return this.comparison('>', `${typeof args[0] === 'number' ? args[0] + 1 : null}..`, args)
@@ -480,7 +478,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The number to compare the current score against.
    */
-  greaterOrEqualThan (amount: number) : MinecraftCondition
+  greaterOrEqualThan (amount: number) : ConditionClass
 
   /**
    * Check if the current score is greater or equal than the given score.
@@ -489,14 +487,14 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
+  greaterOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is greater or equal than the given score.
    *
    * @param targets The target to compare the current score against.
    */
-  greaterOrEqualThan (targetScore: PlayerScore) : MinecraftCondition
+  greaterOrEqualThan (targetScore: PlayerScore) : ConditionClass
 
   greaterOrEqualThan(...args: OperationArguments) {
     return this.comparison('>=', `${args[0]}..`, args)
@@ -507,7 +505,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The number to compare the current score against.
    */
-  lowerThan (amount: number) : MinecraftCondition
+  lowerThan (amount: number) : ConditionClass
 
   /**
    * Check if the current score is strictly lower than the given score.
@@ -516,14 +514,14 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
+  lowerThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly lower than the given score.
    *
    * @param targets The target to compare the current score against.
    */
-  lowerThan (targetScore: PlayerScore) : MinecraftCondition
+  lowerThan (targetScore: PlayerScore) : ConditionClass
 
   lowerThan(...args: OperationArguments) {
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
@@ -534,7 +532,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The number to compare the current score against.
    */
-  lowerOrEqualThan (amount: number) : MinecraftCondition
+  lowerOrEqualThan (amount: number) : ConditionClass
 
   /**
    * Check if the current score is lower or equal than the given score.
@@ -543,14 +541,14 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
+  lowerOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is lower or equal than the given score.
    *
    * @param targets The target to compare the current score against.
    */
-  lowerOrEqualThan (targetScore: PlayerScore) : MinecraftCondition
+  lowerOrEqualThan (targetScore: PlayerScore) : ConditionClass
 
   lowerOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
@@ -561,7 +559,7 @@ export class PlayerScore extends ComponentClass {
    *
    * @param amount The number to compare the current score against.
    */
-  equalTo (amount: number) : MinecraftCondition
+  equalTo (amount: number) : ConditionClass
 
   /**
    * Check if the current score is equal to than the given score.
@@ -570,14 +568,14 @@ export class PlayerScore extends ComponentClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  equalTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): MinecraftCondition
+  equalTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is equal to the given score.
    *
    * @param targets The target to compare the current score against.
    */
-  equalTo (targetScore: PlayerScore) : MinecraftCondition
+  equalTo (targetScore: PlayerScore) : ConditionClass
 
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)
