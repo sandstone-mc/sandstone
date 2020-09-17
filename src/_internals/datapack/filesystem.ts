@@ -140,8 +140,6 @@ const RESET = '\x1b[0m'
  */
 export function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): void {
   // Start by clearing the console
-  console.clear()
-
   let savePath
 
   function hasWorld(arg: SaveOptions): arg is { world: string } & SaveOptions {
@@ -186,6 +184,7 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
 
       if (!options.dryRun) {
         createDirectory(mcFunctionFolder)
+        console.log('FOLDER', mcFunctionFolder)
 
         // Write the commands to the file system
         const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)

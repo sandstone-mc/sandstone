@@ -143,7 +143,6 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   )
 
 function parseScore(scores: ScoreArgument): string {
-  console.log('>>>>>>>> PARSE SCOOORE <<<<<<<<<<<')
   return `{${Object.entries(scores).map(([scoreName, value]) => {
     if (Array.isArray(value)) {
       return [scoreName, `${value[0] ?? ''}..${value[1] ?? ''}`].join('=')

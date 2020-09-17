@@ -46,6 +46,10 @@ export class McFunction<T extends any[]> {
   callback: (...args: T) => void
 
   constructor(datapack: Datapack, name: string, callback: (...args: T) => void, options: McFunctionOptions) {
+    const fullPath = name.split('/')
+    const realName = fullPath[fullPath.length - 1]
+    const path = fullPath.slice(-1)
+
     this.name = name
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
@@ -54,9 +58,10 @@ export class McFunction<T extends any[]> {
     this.datapack = datapack
 
     // We "reserve" the folder by creating an empty folder there. It can be later changed to be a resource.
-    const functionsFolder = datapack.getFunctionAndNamespace(name)
+    const functionsPaths = datapack.getFunctionAndNamespace(name)
+
     this.functionsFolderResource = datapack.resources.addResource('functions', {
-      children: new Map(), isResource: false as const, path: functionsFolder,
+      children: new Map(), isResource: false as const, path: functionsPaths.fullPathWithNamespace,
     })
 
     if (!options.lazy && callback.length !== 0) {

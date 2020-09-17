@@ -49,10 +49,18 @@ export class Flow {
 
   /** Flow statements */
   flowStatement = (callback: () => void, config: FlowStatementConfig) => {
+    // Sometimes, there are a few arguments left inside the commandsRoot (for execute.run mostly).
+    // Keep them aside, & register them after.
+    const previousArguments = this.commandsRoot.arguments
+    const previousInExecute = this.commandsRoot.inExecute
+    this.commandsRoot.reset()
+
     const args = this.arguments.slice(1)
 
     // First, enter the callback
+    console.log('>>>>> Entering child function. Parent is', this.commandsRoot.Datapack.currentFunction)
     const callbackFunctionName = this.commandsRoot.Datapack.createEnterChildFunction(config.callbackName)
+    console.log('      Children is', this.commandsRoot.Datapack.currentFunction)
     const callbackMcFunction = this.commandsRoot.Datapack.currentFunction
 
     // Add its commands
@@ -67,6 +75,12 @@ export class Flow {
 
     // Exit the callback
     this.commandsRoot.Datapack.exitChildFunction()
+
+    console.log('<<<<< Back to parent', this.commandsRoot.Datapack.currentFunction)
+
+    // Put back the old arguments
+    this.commandsRoot.arguments = previousArguments
+    this.commandsRoot.inExecute = previousInExecute
 
     // Register the initial condition (in the root function) to enter the callback
     if (config.initialCondition) {

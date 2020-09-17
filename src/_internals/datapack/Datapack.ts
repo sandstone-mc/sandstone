@@ -51,15 +51,28 @@ export default class Datapack {
     this.flow = new Flow(this.commandsRoot)
   }
 
-  getFunctionAndNamespace(functionName: string): ResourcePath {
+  getFunctionAndNamespace(functionName: string): {
+    namespace: string
+    path: string[]
+    name: string
+    fullPath: string[]
+    fullPathWithNamespace: ResourcePath
+  } {
     let namespace = this.defaultNamespace
-    let name = functionName
+    let fullName = functionName
 
     if (functionName.includes(':')) {
-      ([namespace, name] = functionName.split(':'))
+      ([namespace, fullName] = functionName.split(':'))
     }
 
-    return [namespace, name]
+    const fullPath = fullName.split('/')
+
+    const name = fullPath[fullPath.length - 1]
+    const path = fullPath.slice(0, -1)
+
+    return {
+      namespace, path, fullPath, name, fullPathWithNamespace: [namespace, ...fullPath],
+    }
   }
 
   /**
@@ -68,13 +81,13 @@ export default class Datapack {
    * @param functionName The name of the function to create
    */
   private createEnterRootFunction(functionName: string): ResourcePath {
-    const functionFullPath = this.getFunctionAndNamespace(functionName)
+    const functionPath = this.getFunctionAndNamespace(functionName).fullPathWithNamespace
 
     this.currentFunction = this.resources.addResource('functions', {
-      children: new Map(), commands: [], isResource: true, path: functionFullPath,
+      children: new Map(), commands: [], isResource: true, path: functionPath,
     })
 
-    return functionFullPath
+    return functionPath
   }
 
   /**
@@ -170,11 +183,7 @@ export default class Datapack {
 
     const parentPath = this.currentFunction.path.slice(0, -1)
 
-    try {
-      this.currentFunction = this.resources.getResource(parentPath as unknown as ResourcePath, 'functions')
-    } catch (e) {
-      this.currentFunction = null
-    }
+    this.currentFunction = this.resources.getResource(parentPath as unknown as ResourcePath, 'functions')
   }
 
   registerNewObjective = (objective: ObjectiveClass) => {
