@@ -1,5 +1,7 @@
 import type { LiteralUnion } from '@/generalTypes'
-import type { BLOCKS, DIMENSION_TYPES, MOB_EFFECTS } from '@arguments'
+import type {
+  BLOCKS, DIMENSION_TYPES, ENCHANTMENTS, MOB_EFFECTS,
+} from '@arguments'
 import type { NumberOrMinMax } from './utils'
 
 // All the possible criteria
@@ -16,13 +18,29 @@ export type SlotCriterion = Partial<{
   occupied: NumberOrMinMax
 }>
 
+export type PositionCriterion = Partial<{
+  /** The X-axis position. */
+  x: NumberOrMinMax
+
+  /** The Y-axis position. */
+  y: NumberOrMinMax
+
+  /** The Z-axis position. */
+  z: NumberOrMinMax
+}>
+
 export type DistanceCriterion = Partial<{
   absolute: NumberOrMinMax
   horizontal: NumberOrMinMax
-  x: NumberOrMinMax
-  y: NumberOrMinMax
-  z: NumberOrMinMax
-}>
+}> & PositionCriterion
+
+export type EnchantmentCriterion = {
+  /** An enchantment ID. */
+  enchantment: LiteralUnion<ENCHANTMENTS>
+
+  /** The level of the enchantment. */
+  levels: NumberOrMinMax
+}
 
 export type PotionIdCriterion = string
 

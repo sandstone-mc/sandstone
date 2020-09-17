@@ -2,16 +2,15 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS } from '@arguments'
 import type {
-  BlockIdCriterion, PotionIdCriterion, DimensionCriterion, EffectCriterion, SlotCriterion, DistanceCriterion,
-} from './basic_criteria'
-import type { DamageCriterion } from './DamageCriterion'
-import type { EntityCriterion } from './EntityCriterion'
-import type { ItemCriterion } from './ItemCriterion'
-import type { LocationCriterion } from './LocationCriterion'
-import type { PlayerCriterion } from './PlayerCriterion'
-import type { NumberOrMinMax } from './utils'
+  PlayerCriterion, BlockIdCriterion,
+  EntityCriterion, PotionIdCriterion,
+  DimensionCriterion, EffectCriterion,
+  NumberOrMinMax, DamageCriterion,
+  LocationCriterion, SlotCriterion,
+  DistanceCriterion, ItemCriterion,
+} from './criteria'
 
-// The advancement criteria
+// The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = {
   trigger: NAME
 
@@ -23,7 +22,7 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = 
   }
 }
 
-export type AdvancementCriteria = (
+export type AdvancementTriggers = (
   Trigger<'minecraft:bee_nest_destroyed', {
     /** The block that was destroyed. Accepts block IDs. */
     block: BlockIdCriterion

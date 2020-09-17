@@ -45,10 +45,13 @@ export function getWorldPath(worldName: string, minecraftPath: string | undefine
     mcPath = getMinecraftPath()
   }
 
-  const worldPath = path.join(mcPath, 'saves', worldName)
+  const savesPath = path.join(mcPath, 'saves')
+  const worldPath = path.join(savesPath, worldName)
 
   if (!fs.existsSync(worldPath)) {
-    throw new Error(`Unable to locate the "${worldPath}" folder. Word ${worldName} does not exists.`)
+    const existingWorlds = fs.readdirSync(savesPath, { withFileTypes: true }).filter((f) => f.isDirectory).map((f) => f.name)
+
+    throw new Error(`Unable to locate the "${worldPath}" folder. Word ${worldName} does not exists. List of existing worlds: ${JSON.stringify(existingWorlds, null, 2)}`)
   }
 
   return worldPath
@@ -123,7 +126,9 @@ export type SaveOptions = {
   )
 
 const GRAY = '\x1b[90m'
+const CYAN = '\x1b[36m'
 const GREEN = '\x1b[32m'
+const LIGHT_GREEN = '\x1b[92m'
 const RESET = '\x1b[0m'
 
 /**
@@ -134,6 +139,9 @@ const RESET = '\x1b[0m'
  * @param options The save options.
  */
 export function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): void {
+  // Start by clearing the console
+  console.clear()
+
   let savePath
 
   function hasWorld(arg: SaveOptions): arg is { world: string } & SaveOptions {
@@ -193,7 +201,7 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
       }).join('\n')
 
       if (options.verbose) {
-        console.log(`${GREEN}## Function`, `${namespace}:${[...folders, fileName].join('/')}${RESET}`)
+        console.log(`${CYAN}## Function`, `${namespace}:${[...folders, fileName].join('/')}${RESET}`)
         console.log(commandsRepresentation)
         console.log()
       }
@@ -247,6 +255,6 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
   }
 
   if (!options.dryRun) {
-    console.log(`Successfully wrote commands to "${savePath}"`)
+    console.log(`${LIGHT_GREEN}✓ Successfully wrote commands to "${savePath}"${RESET}`)
   }
 }

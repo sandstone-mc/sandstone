@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS, JsonTextComponent, NBT } from '@arguments'
-import type { AdvancementCriteria } from './AdvancementCriteria'
+import type { AdvancementTriggers } from './AdvancementTriggers'
 
-type AdvancementType<CRITERIA_NAMES extends string> = {
+export type AdvancementType<CRITERIA_NAMES extends string> = {
   /** The optional display data. */
   display?: {
     /** The data for the icon. */
@@ -41,7 +41,7 @@ type AdvancementType<CRITERIA_NAMES extends string> = {
   }
 
   /** The required criteria that have to be met. */
-  criteria: Record<CRITERIA_NAMES, AdvancementCriteria>
+  criteria: Record<CRITERIA_NAMES, AdvancementTriggers>
 
   /** An optional list of requirements (all the <criteriaNames>).
    * If all criteria are required, this may be omitted.
@@ -83,7 +83,3 @@ type AdvancementType<CRITERIA_NAMES extends string> = {
     parent: string
   }
 )
-
-export function Advancement<T extends string>(advancement: AdvancementType<T>) {
-  return advancement
-}
