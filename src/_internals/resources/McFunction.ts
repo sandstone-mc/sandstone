@@ -1,7 +1,9 @@
 import { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
-import { toMcFunctionName } from './minecraft'
-import { FunctionResource } from './resourcesTree'
+import { exec } from 'child_process'
+import hash from 'object-hash'
+import { toMcFunctionName } from '../datapack/minecraft'
+import { FunctionResource } from '../datapack/resourcesTree'
 
 export type McFunctionOptions = {
   /**
@@ -58,7 +60,7 @@ export class McFunction<T extends any[]> {
     this.datapack = datapack
 
     // We "reserve" the folder by creating an empty folder there. It can be later changed to be a resource.
-    const functionsPaths = datapack.getFunctionAndNamespace(name)
+    const functionsPaths = datapack.getResourcePath(name)
 
     this.functionsFolderResource = datapack.resources.addResource('functions', {
       children: new Map(), isResource: false as const, path: functionsPaths.fullPathWithNamespace,
@@ -101,9 +103,9 @@ export class McFunction<T extends any[]> {
    */
   private callAndRegister = (args: T, addArgumentsCallback?: (functionName: string) => void) => {
     const { commandsRoot } = this.datapack
-    const jsonRepresentation = JSON.stringify(args)
+    const hashed = hash(args)
 
-    const isNewOverload = !this.alreadyInitializedParameters.has(jsonRepresentation)
+    const isNewOverload = !this.alreadyInitializedParameters.has(hashed)
 
     let name: string
     let mcFunction: FunctionResource
@@ -124,9 +126,9 @@ export class McFunction<T extends any[]> {
         this.datapack.addLoadFunction(name)
       }
 
-      this.alreadyInitializedParameters.set(jsonRepresentation, { mcFunction, name })
+      this.alreadyInitializedParameters.set(hashed, { mcFunction, name })
     } else {
-      const result = this.alreadyInitializedParameters.get(jsonRepresentation)
+      const result = this.alreadyInitializedParameters.get(hashed)
       mcFunction = result?.mcFunction as FunctionResource
       name = result?.name as string
     }
@@ -147,7 +149,12 @@ export class McFunction<T extends any[]> {
       // Add some comments specifying the overload, and the options
       if (this.options.debug) {
         this.datapack.commandsRoot.comment('Options:', JSON.stringify(this.options))
-        this.datapack.commandsRoot.comment('Arguments:', jsonRepresentation)
+
+        try {
+          this.datapack.commandsRoot.comment('Arguments:', JSON.stringify(args))
+        } catch (e) {
+          // JSON.stringify fails on recursive objects.
+        }
       }
 
       this.callback(...args)

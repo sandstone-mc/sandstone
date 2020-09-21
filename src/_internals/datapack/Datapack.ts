@@ -1,13 +1,19 @@
 import { LiteralUnion } from '@/generalTypes'
-import type { OBJECTIVE_CRITERION, JsonTextComponent } from '@arguments'
+import type {
+  AdvancementType, JsonTextComponent, OBJECTIVE_CRITERION, PredicateType,
+} from '@arguments'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import { Objective, ObjectiveClass, Selector } from '@variables'
-import { saveDatapack, SaveOptions } from './filesystem'
-import { McFunction, McFunctionOptions } from './McFunction'
+import { McFunction, McFunctionOptions } from '@resources/McFunction'
+import { Objective, ObjectiveClass, SelectorCreator } from '@variables'
+import { AdvancementCommand } from '@commands/implementations'
+import { Advancement } from '@resources'
+import { Predicate } from '@resources/Predicate'
+import { saveDatapack, SaveOptions } from './saveDatapack'
 import { CommandArgs, toMcFunctionName } from './minecraft'
 import {
-  FunctionResource, ResourcePath, ResourcesTree,
+  FolderOrFile,
+  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourcesTree, ResourceTypeMap, ResourceTypes,
 } from './resourcesTree'
 
 export interface McFunctionReturn<T extends unknown[]> {
@@ -51,7 +57,7 @@ export default class Datapack {
     this.flow = new Flow(this.commandsRoot)
   }
 
-  getFunctionAndNamespace(functionName: string): {
+  getResourcePath(functionName: string): {
     namespace: string
     path: string[]
     name: string
@@ -81,7 +87,7 @@ export default class Datapack {
    * @param functionName The name of the function to create
    */
   private createEnterRootFunction(functionName: string): ResourcePath {
-    const functionPath = this.getFunctionAndNamespace(functionName).fullPathWithNamespace
+    const functionPath = this.getResourcePath(functionName).fullPathWithNamespace
 
     this.currentFunction = this.resources.addResource('functions', {
       children: new Map(), commands: [], isResource: true, path: functionPath,
@@ -276,7 +282,16 @@ export default class Datapack {
     return score.ScoreHolder(`anonymous_${id}`)
   }
 
-  Selector = Selector.bind(this)
+  Selector = SelectorCreator.bind(this)
+
+  addResource = <T extends ResourceTypes>(name: string, type: T, resource: ResourceOnlyTypeMap[T]) => {
+    this.resources.addResource(type, {
+      ...resource,
+      children: new Map(),
+      isResource: true,
+      path: this.getResourcePath(name).fullPathWithNamespace,
+    })
+  }
 
   /**
    * Creates a Minecraft Function.
@@ -298,6 +313,10 @@ export default class Datapack {
 
     return returnFunction
   }
+
+  Advancement = <T extends string>(name: string, advancement: AdvancementType<T>) => new Advancement(this.commandsRoot, name, advancement)
+
+  Predicate = (name: string, predicate: PredicateType) => new Predicate(this.commandsRoot, name, predicate)
 
   /**
    * Saves the datapack to the file system.

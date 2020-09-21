@@ -8,9 +8,9 @@ export class Effect extends Command {
   give = (
     targets: MultipleEntitiesArgument,
     effect: LiteralUnion<MOB_EFFECTS>,
-    seconds: number,
-    amplifier: number,
-    hideParticles: boolean,
+    seconds?: number,
+    amplifier?: number,
+    hideParticles?: boolean,
   ) => {}
 
   @command(['effect', 'clear'], { isRoot: true })

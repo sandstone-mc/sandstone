@@ -1,7 +1,7 @@
 import {
-  Coordinates, coordinatesParser, MultipleEntitiesArgument, Rotation, rotationParser, SingleEntityArgument,
+  Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument,
 } from '@arguments'
-import { VectorClass } from '@variables/Coordinates'
+import { coordinatesParser, rotationParser, VectorClass } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
@@ -108,6 +108,6 @@ export class Teleport extends Command {
       return new TeleportFacing(this.commandsRoot)
     }
 
-    this.commandsRoot.register()
+    return this.commandsRoot.register()
   }
 }

@@ -25,6 +25,8 @@ export class VectorClass<T extends readonly unknown[]> {
   }
 }
 
+// SHORTCUTS
+
 type Tuple<T> = readonly [T, ...T[]]
 type MappedArray<T, U> = { [key in keyof T]: U }
 

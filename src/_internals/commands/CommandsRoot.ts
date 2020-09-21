@@ -1,9 +1,8 @@
 import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
-import {
+import type {
   BIOMES,
   BLOCKS,
   Coordinates,
-  coordinatesParser,
   ENTITY_TYPES,
   GAMEMODES,
   GAMERULES,
@@ -13,24 +12,23 @@ import {
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
   NBT,
-  nbtParser,
   Rotation,
-  rotationParser,
-
   SingleEntityArgument,
   SinglePlayerArgument,
   SOUND_EVENTS,
   SOUND_SOURCES,
   STRUCTURES,
 } from '@arguments'
+import { nbtParser } from '@variables'
 import Datapack from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
 import util from 'util'
+import { coordinatesParser, rotationParser } from '..'
 import type * as commands from '../../commands'
 import { command } from './decorators'
 import {
-  Advancement, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
+  AdvancementCommand, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
   DefaultGamemode, Difficulty, Effect, Enchant,
   ExecuteWithRun,
   Experience,
@@ -102,7 +100,7 @@ export class CommandsRoot {
 
   /** COMMANDS */
   // advancement command //
-  advancement = new Advancement(this)
+  advancement = new AdvancementCommand(this)
 
   // attribute command //
   attribute = (new Attribute(this)).attribute

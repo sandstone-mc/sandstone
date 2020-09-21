@@ -1,6 +1,7 @@
-import { Coordinates, coordinatesParser } from '@arguments'
+import type { Coordinates } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+import { coordinatesParser } from '@variables'
 
 export class Forceload extends Command {
   @command(['forceload', 'add'], { isRoot: true, parsers: { '0': coordinatesParser, '1': coordinatesParser } })

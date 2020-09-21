@@ -1,5 +1,5 @@
-import { VectorClass } from '@variables'
-import { BLOCKS, Coordinates, coordinatesParser } from '@arguments'
+import { coordinatesParser, VectorClass } from '@variables'
+import type { BLOCKS, Coordinates } from '@arguments'
 import { LiteralUnion } from '@/generalTypes'
 import { Command } from '../Command'
 import { command } from '../decorators'

@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/ban-types */
 import type {
   ENTITY_TYPES, TextComponentObject,
 } from '@arguments'
@@ -28,7 +30,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   distance?: Range,
 
   /** Filter target selection based on their scores in the specified objectives. */
-  score?: ScoreArgument
+  scores?: ScoreArgument
 
   /**
    * Filter target selection to those who are on a given team.
@@ -205,7 +207,7 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> e
 
       const modifiers = {
         // Parse scores
-        score: (score: ScoreArgument) => result.push(['score', parseScore(score)]),
+        scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
 
         // Parse advancements
         advancements: (advancements: AdvancementsArgument) => result.push(
@@ -275,13 +277,13 @@ export type AnySelectorProperties = SelectorProperties<false, false>
 export type SingleSelectorProperties = SelectorProperties<true, false>
 export type SinglePlayerSelectorProperties = SelectorProperties<true, true>
 
-export function Selector(target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>): SelectorClass<true, true>
-export function Selector(target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>): SelectorClass<true, true>
-export function Selector(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
-export function Selector(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
-export function Selector(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
-export function Selector(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
+export function SelectorCreator(target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>): SelectorClass<true, true>
+export function SelectorCreator(target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>): SelectorClass<true, true>
+export function SelectorCreator(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
+export function SelectorCreator(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
+export function SelectorCreator(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
+export function SelectorCreator(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
 
-export function Selector<T extends boolean, U extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
+export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
 }

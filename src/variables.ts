@@ -1,13 +1,19 @@
 import { datapack } from './_internals'
 
 export {
-  absolute, relative, local,
   absolute as abs, relative as rel, local as loc,
 } from './_internals'
 
+export * from './_internals/variables/Coordinates'
+export * from './_internals/variables/parsers'
+export * from './_internals/variables/PlayerScore'
+export { SelectorClass } from './_internals/variables/Selector'
+export * from './_internals/variables/Objective'
+export * from './_internals/variables/JsonTextComponentClass'
+
 export const {
   createObjective,
-  Selector,
+  Selector: SelectorCreator,
 } = datapack
 
-export const self = Selector('@s')
+export const self = SelectorCreator('@s')

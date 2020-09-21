@@ -9,6 +9,10 @@ export function conditionToString(condition: ConditionType): string {
   return condition._toMinecraftCondition().value.join(' ')
 }
 
+export function getConditionsObjective(commandsRoot: CommandsRoot) {
+  return commandsRoot.Datapack.getCreateObjective('sandstoneCond', 'dummy', 'Sandstone Conditions')
+}
+
 export class CombinedConditions {
   private values
 
@@ -102,7 +106,7 @@ export class CombinedConditions {
         const { id } = CombinedConditions
         CombinedConditions.id += 1
 
-        const sandstoneConditions = this.commandsRoot.Datapack.getCreateObjective('sandstone_cond', 'dummy', 'Sandstone Conditions')
+        const sandstoneConditions = getConditionsObjective(this.commandsRoot)
 
         // An intermediate condition
         const condition = sandstoneConditions.ScoreHolder(`cond_${id}`)
@@ -113,7 +117,7 @@ export class CombinedConditions {
         callableExpression.push(this.operator === 'not' ? 'unless' : 'if', 'score', condition.toString(), 'matches', '1')
         return
       }
-      callableExpression.push('if', ...value._toMinecraftCondition().value)
+      callableExpression.push(this.operator === 'not' ? 'unless' : 'if', ...value._toMinecraftCondition().value)
     })
 
     return { requiredExpressions, callableExpression }

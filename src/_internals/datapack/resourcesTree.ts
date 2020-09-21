@@ -1,37 +1,68 @@
+import type { AdvancementType, PredicateType } from '@arguments'
 import type { CommandArgs } from './minecraft'
 
 export type ResourcePath = readonly [namespace: string, ...path: string[]]
+
+type FolderOrFileProperties<T extends Record<string, unknown>, P extends ResourcePath> = {
+  path: P
+  children: Map<string, FolderOrFile<T>>
+}
 
 /**
  * Represents either a folder or a resource file.
  *
  * A resource file can have children too.
  */
-export type FolderOrFile<T extends Record<string, unknown>, P extends ResourcePath = ResourcePath> = {
-  path: P
-  children: Map<string, FolderOrFile<T>>
-} & (
-    // Either it is a resource, and has the resource properties, or it's a folder.
-    ({ isResource: true } & T) | { isResource: false }
-  )
+export type FolderOrFile<T extends Record<string, unknown>, P extends ResourcePath = ResourcePath> = FolderOrFileProperties<T, P> & (
+  // Either it is a resource, and has the resource properties, or it's a folder.
+  ({ isResource: true } & T) | { isResource: false }
+)
 
-export type FunctionResource = FolderOrFile<{ commands: CommandArgs[] }>
+export type File<T extends Record<string, unknown>, P extends ResourcePath = ResourcePath> = FolderOrFileProperties<T, P> & (
+  // We know it's a resource
+  { isResource: true } & T
+)
 
-export type TagsResource = FolderOrFile<
-  { values: (string | { id: string, required: boolean })[], replace?: boolean },
-  readonly [
-    namespace: string,
-    type: 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items',
-    ...path: string[]
-  ]
->
+type FunctionProperties = { commands: CommandArgs[] }
+export type FunctionResource = FolderOrFile<FunctionProperties>
+
+type TagProperties = { values: (string | { id: string, required: boolean })[], replace?: boolean }
+type TagPath = readonly [
+  namespace: string,
+  type: 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items',
+  ...path: string[]
+]
+export type TagsResource = FolderOrFile<TagProperties, TagPath>
+
+// Here, the criteria names doesn't matter, so we put string
+type AdvancementProperties = { advancement: AdvancementType<string> }
+export type AdvancementResource = FolderOrFile<AdvancementProperties>
+
+type PredicateProperties = { predicate: PredicateType }
+export type PredicateResource = FolderOrFile<PredicateProperties>
+
+/**
+ * Given a resource names, returns the type of resource
+ */
+export type ResourceTypeMap = {
+  functions: FunctionResource
+  tags: TagsResource
+  advancements: AdvancementResource
+  predicates: PredicateResource
+}
+
+export type ResourceOnlyTypeMap = {
+  functions: File<FunctionProperties>
+  tags: File<TagProperties, TagPath>
+  advancements: File<AdvancementProperties>
+  predicates: File<PredicateProperties>
+}
 
 /**
  * All the resources associated with a namespace.
  */
 export type NamespaceResources = {
-  functions: Map<string, FunctionResource>
-  tags: Map<string, TagsResource>
+  [key in keyof ResourceTypeMap]: Map<string, ResourceTypeMap[key]>
 }
 
 /**
@@ -39,13 +70,7 @@ export type NamespaceResources = {
  */
 export type Namespaces = Map<string, NamespaceResources>
 
-/**
- * Given a resource names, returns the type of resource
- */
-interface ResourceType {
-  functions: FunctionResource
-  tags: TagsResource
-}
+export type ResourceTypes = keyof NamespaceResources
 
 export class ResourcesTree {
   namespaces: Namespaces
@@ -61,6 +86,8 @@ export class ResourcesTree {
     const namespaceResource = {
       functions: new Map(),
       tags: new Map(),
+      advancements: new Map(),
+      predicates: new Map(),
     }
 
     this.namespaces.set(name, namespaceResource)
@@ -72,10 +99,10 @@ export class ResourcesTree {
    * @param resourcePath the path of the resource/folder, in the format [namespace, folder, folder, resource]
    * @param resourceType the type of the resource/folder
    */
-  getResourceOrFolder<T extends keyof NamespaceResources>(
-    resourcePath: ResourceType[T]['path'],
+  getResourceOrFolder<T extends ResourceTypes>(
+    resourcePath: ResourceTypeMap[T]['path'],
     resourceType: T,
-  ): ResourceType[T] | undefined {
+  ): ResourceTypeMap[T] | undefined {
     if (resourcePath.length < 2) {
       throw new Error(
         `Cannot access resource path with less than 1 arguments, namely "${resourcePath}". This is an internal error.`,
@@ -92,14 +119,12 @@ export class ResourcesTree {
     }
 
     // Find the resource
-    const reversePath = path.reverse()
-
-    const result = reversePath.reduce(
+    const result = path.reduce(
       (resource, folder) => (resource ? resource.children.get(folder) as typeof resource : undefined),
       namespace[resourceType].get(firstFolder),
     )
 
-    return result as ResourceType[T]
+    return result as ResourceTypeMap[T]
   }
 
   /**
@@ -109,11 +134,11 @@ export class ResourcesTree {
    * @param resourceType the type of the resource
    * @throws An error if the resource is not found, or if it is a folder and not a resource.
    */
-  getResource<T extends keyof NamespaceResources>(
-    resourcePath: ResourceType[T]['path'],
+  getResource<T extends ResourceTypes>(
+    resourcePath: ResourceTypeMap[T]['path'],
     resourceType: T,
     errorMessage = `Impossible to find resource ${resourcePath}. This is an internal error.`,
-  ): Exclude<ResourceType[T], { isResource: false }> {
+  ): Exclude<ResourceTypeMap[T], { isResource: false }> {
     const resource = this.getResourceOrFolder(resourcePath, resourceType)
 
     if (!resource || !resource.isResource) {
@@ -130,7 +155,7 @@ export class ResourcesTree {
    */
   deleteResource(
     resourcePath: ResourcePath,
-    resourceType: keyof NamespaceResources,
+    resourceType: ResourceTypes,
   ): boolean {
     if (resourcePath.length > 2) {
       const parentResource = this.getResourceOrFolder(resourcePath.slice(0, -1) as unknown as ResourcePath, resourceType)
@@ -150,9 +175,9 @@ export class ResourcesTree {
    */
   getFolder(
     folderPath: ResourcePath,
-    folderType: keyof NamespaceResources,
+    folderType: ResourceTypes,
     errorMessage = `Impossible to find folder ${folderPath}. This is an internal error.`,
-  ): Exclude<ResourceType[typeof folderType], { isResource: true }> {
+  ): Exclude<ResourceTypeMap[typeof folderType], { isResource: true }> {
     const resource = this.getResourceOrFolder(folderPath, folderType)
 
     if (!resource || resource.isResource) {
@@ -168,10 +193,10 @@ export class ResourcesTree {
    * @param resourceType the type of the resource
    * @param resource The resource to add.
    */
-  addResource<T extends keyof NamespaceResources, U extends ResourceType[T]>(
+  addResource<T extends ResourceTypes, U extends ResourceTypeMap[T]>(
     resourceType: T,
     resource: U,
-  ): U & ResourceType[T] {
+  ): U & ResourceTypeMap[T] {
     const parentPath = resource.path.slice(0, -1)
     const namespace = parentPath[0]
 
@@ -208,10 +233,10 @@ export class ResourcesTree {
    * @param resourceType the type of the resource
    * @param resource The resource to add, if it doesn't already exists.
    */
-  getOrAddResource<T extends keyof NamespaceResources, U extends ResourceType[T]>(
+  getOrAddResource<T extends ResourceTypes, U extends ResourceTypeMap[T]>(
     resourceType: T,
     resource: U,
-  ): U & ResourceType[T] {
+  ): U & ResourceTypeMap[T] {
     try {
       return this.getResource(resource.path, resourceType) as unknown as U
     } catch (e) {

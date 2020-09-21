@@ -7,7 +7,7 @@ class AdvancementArguments extends Command {
   everything = () => { }
 
   @command('only', { isRoot: false, executable: true })
-  only = (advancement: string, criterion: string) => { }
+  only = (advancement: string, criterion?: string) => { }
 
   @command('from', { isRoot: false, executable: true })
   from = (advancement: string) => { }
@@ -19,7 +19,7 @@ class AdvancementArguments extends Command {
   until = (advancement: string) => { }
 }
 
-export class Advancement extends Command {
+export class AdvancementCommand extends Command {
   @command(['avancement', 'grant'], { isRoot: true, hasSubcommands: true, executable: false })
   grant = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
 

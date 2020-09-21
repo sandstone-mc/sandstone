@@ -1,13 +1,13 @@
 import type { LiteralUnion } from '@/generalTypes'
-import {
-  BLOCKS, Coordinates, coordinatesParser,
+import type {
+  BLOCKS, Coordinates,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import { Execute } from '@commands/implementations/Execute'
 import type { CommandArgs } from '@datapack/minecraft'
-import { ConditionClass } from '@variables'
+import { ConditionClass, coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
-import { CombinedConditions, ConditionType } from './conditions'
+import { CombinedConditions, ConditionType, getConditionsObjective } from './conditions'
 
 type FlowStatementConfig = {
   callbackName: string
@@ -58,9 +58,7 @@ export class Flow {
     const args = this.arguments.slice(1)
 
     // First, enter the callback
-    console.log('>>>>> Entering child function. Parent is', this.commandsRoot.Datapack.currentFunction)
     const callbackFunctionName = this.commandsRoot.Datapack.createEnterChildFunction(config.callbackName)
-    console.log('      Children is', this.commandsRoot.Datapack.currentFunction)
     const callbackMcFunction = this.commandsRoot.Datapack.currentFunction
 
     // Add its commands
@@ -76,8 +74,6 @@ export class Flow {
     // Exit the callback
     this.commandsRoot.Datapack.exitChildFunction()
 
-    console.log('<<<<< Back to parent', this.commandsRoot.Datapack.currentFunction)
-
     // Put back the old arguments
     this.commandsRoot.arguments = previousArguments
     this.commandsRoot.inExecute = previousInExecute
@@ -90,19 +86,23 @@ export class Flow {
 
     if (
       callbackMcFunction?.isResource
-      && callbackMcFunction.commands.length === 1
-      && callbackMcFunction.commands[0][0] !== 'execute'
+      && callbackMcFunction.commands.length <= 1
+      && callbackMcFunction.commands?.[0]?.[0] !== 'execute'
     ) {
       // If our callback only has 1 command, inline this command. We CANNOT inline executes, for complicated reasons.
       // If you want to understand the reasons, see @vdvman1#9510 explanation =>
       // https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
       this.commandsRoot.Datapack.resources.deleteResource(callbackMcFunction.path, 'functions')
 
-      if (this.commandsRoot.arguments.length > 0) {
-        this.commandsRoot.arguments.push('run')
-      }
+      if (callbackMcFunction.commands.length) {
+        if (this.commandsRoot.arguments.length > 0) {
+          this.commandsRoot.arguments.push('run')
+        }
 
-      this.commandsRoot.addAndRegister(...callbackMcFunction.commands[0])
+        this.commandsRoot.addAndRegister(...callbackMcFunction.commands[0])
+      } else {
+        this.commandsRoot.arguments = []
+      }
     } else {
       // Else, register the function call
       this.commandsRoot.function(callbackFunctionName)
@@ -111,13 +111,99 @@ export class Flow {
     this.arguments = []
   }
 
-  if = (condition: ConditionType, callback: () => void) => {
-    this.flowStatement(callback, {
+  if = (condition: ConditionType, callback: () => void): ElifElseFlow => {
+    const conditionsObjective = getConditionsObjective(this.commandsRoot)
+
+    // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
+    const ifScore = conditionsObjective.ScoreHolder('ifResult')
+    ifScore.set(0)
+
+    this.flowStatement(() => {
+      callback()
+      ifScore.set(1)
+    }, {
       callbackName: 'if',
       initialCondition: true,
       loopCondition: false,
       condition,
     })
+
+    return this
+  }
+
+  elseIf = (condition: ConditionType, callback: () => void): ElifElseFlow => {
+    const conditionsObjective = getConditionsObjective(this.commandsRoot)
+    const ifScore = conditionsObjective.ScoreHolder('ifResult')
+
+    this.flowStatement(() => {
+      callback()
+      ifScore.set(1)
+    }, {
+      callbackName: 'else_if',
+      initialCondition: true,
+      loopCondition: false,
+      condition: this.and(ifScore.equalTo(0), condition),
+    })
+
+    return this
+  }
+
+  else = (callback: () => void) => {
+    const conditionsObjective = getConditionsObjective(this.commandsRoot)
+    const ifScore = conditionsObjective.ScoreHolder('ifResult')
+
+    this.flowStatement(callback, {
+      callbackName: 'else',
+      initialCondition: true,
+      loopCondition: false,
+      condition: ifScore.equalTo(0),
+    })
+  }
+
+  binaryMatch = (score: PlayerScore, minimum: number, maximum: number, callback: (num: number) => void) => {
+    // First, specify we didn't find a match yet
+    const foundMatch = this.commandsRoot.Datapack.createAnonymousScore()
+    foundMatch.set(0)
+
+    const callCallback = (num: number) => {
+      this.if(this.and(score.equalTo(num), foundMatch.equalTo(0)), () => {
+        // If we found the correct score, call the callback & specify we found a match
+        callback(num)
+        foundMatch.set(1)
+      })
+    }
+
+    // Recursively match the score
+    const recursiveMatch = (min: number, max: number) => {
+      const diff = max - min
+
+      if (diff < 0) {
+        return
+      }
+
+      if (diff === 3) {
+        callCallback(min)
+        callCallback(min + 1)
+        callCallback(min + 2)
+        return
+      }
+      if (diff === 2) {
+        callCallback(min)
+        callCallback(min + 1)
+        return
+      }
+      if (diff === 1) {
+        callCallback(min)
+        return
+      }
+
+      const mean = Math.floor((min + max) / 2)
+
+      this.if(score.lowerThan(mean), () => recursiveMatch(min, mean))
+      this.if(score.greaterOrEqualThan(mean), () => recursiveMatch(mean, max))
+    }
+
+    recursiveMatch(minimum, maximum)
   }
 
   while = (condition: ConditionClass | CombinedConditions, callback: () => void) => {
@@ -228,7 +314,7 @@ function registerCondition(commandsRoot: CommandsRoot, condition: ConditionType,
 
     if (realCondition instanceof CombinedConditions) {
       const { callableExpression, requiredExpressions } = realCondition.toExecutes()
-      commands = [...requiredExpressions, [...callableExpression, 'run']]
+      commands = [...requiredExpressions, callableExpression]
     } else {
       commands = [['execute', ...args, 'if', ...realCondition._toMinecraftCondition().value]]
     }
@@ -246,4 +332,5 @@ function registerCondition(commandsRoot: CommandsRoot, condition: ConditionType,
   commandsRoot.arguments.push(...callableCommand)
 }
 
-export type PublicFlow = Omit<Flow, 'arguments' | 'flowStatement'>
+export type PublicFlow = Omit<Flow, 'arguments' | 'flowStatement' | 'elseIf' | 'else'>
+type ElifElseFlow = Pick<Flow, 'elseIf' | 'else'>

@@ -1,10 +1,9 @@
 import { LiteralUnion } from '@/generalTypes'
-/* eslint-disable no-use-before-define */
-import {
-  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, coordinatesParser, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
+import type {
+  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
 } from '@arguments'
 import type { Flow } from '@flow'
-import { ConditionClass, Range } from '@variables'
+import { ConditionClass, coordinatesParser, Range } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
 import type * as commands from '../../../commands'
 import type { CommandsRoot } from '../CommandsRoot'
