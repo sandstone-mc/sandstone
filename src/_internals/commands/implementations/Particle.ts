@@ -1,11 +1,11 @@
 /* eslint-disable no-restricted-globals */
 import { LiteralUnion } from '@/generalTypes'
-import {
-  arrayToArgsParser,
+import type {
   BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+import { arrayToArgsParser } from '@variables'
 
 type ParticleCommand = (
   (

@@ -1,6 +1,11 @@
-import type { ENTITY_TYPES, MinecraftCondition, TextComponentObject } from '@arguments'
+/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/ban-types */
+import type {
+  ENTITY_TYPES, TextComponentObject,
+} from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { LiteralUnion } from '../generalTypes'
+import { ComponentClass, ConditionClass } from './abstractClasses'
 
 export type Range = number | [min: number, max: number] | [min: number, max: null] | [min: null, max: number]
 
@@ -25,7 +30,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   distance?: Range,
 
   /** Filter target selection based on their scores in the specified objectives. */
-  score?: ScoreArgument
+  scores?: ScoreArgument
 
   /**
    * Filter target selection to those who are on a given team.
@@ -158,7 +163,7 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
   }).join(', ')}}`
 }
 
-export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
+export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> extends ComponentClass implements ConditionClass {
   protected commandsRoot: CommandsRoot
 
   protected target: string
@@ -170,6 +175,8 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
     target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>,
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
+    super()
+
     this.commandsRoot = commandsRoot
     this.target = target
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
@@ -184,12 +191,9 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
     this.commandsRoot.scoreboard.players.list(this.toString())
   }
 
-  /**
-   * Returns a condition, that Minecraft will evaluate to `true` if this selector finds at least one entity.
-   */
-  exists = (): MinecraftCondition => ({
-    value: ['entity', this],
-  })
+  _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {
+    return { value: ['entity', this] }
+  }
 
   toString() {
     if (!Object.keys(this.arguments).length) {
@@ -203,7 +207,7 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> {
 
       const modifiers = {
         // Parse scores
-        score: (score: ScoreArgument) => result.push(['score', parseScore(score)]),
+        scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
 
         // Parse advancements
         advancements: (advancements: AdvancementsArgument) => result.push(
@@ -273,13 +277,13 @@ export type AnySelectorProperties = SelectorProperties<false, false>
 export type SingleSelectorProperties = SelectorProperties<true, false>
 export type SinglePlayerSelectorProperties = SelectorProperties<true, true>
 
-export function Selector(target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>): SelectorClass<true, true>
-export function Selector(target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>): SelectorClass<true, true>
-export function Selector(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
-export function Selector(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
-export function Selector(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
-export function Selector(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
+export function SelectorCreator(target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>): SelectorClass<true, true>
+export function SelectorCreator(target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>): SelectorClass<true, true>
+export function SelectorCreator(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
+export function SelectorCreator(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
+export function SelectorCreator(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
+export function SelectorCreator(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
 
-export function Selector<T extends boolean, U extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
+export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
 }

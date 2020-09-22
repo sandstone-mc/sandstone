@@ -1,9 +1,10 @@
-import { LiteralUnion } from '@/generalTypes'
-import {
-  CONTAINER_SLOTS, Coordinates, coordinatesParser, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument,
+import type { LiteralUnion } from '@/generalTypes'
+import type {
+  CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+import { coordinatesParser } from '@variables'
 
 export class ReplaceItem extends Command {
     @command(['replaceitem', 'block'], { isRoot: true, parsers: { '0': coordinatesParser } })

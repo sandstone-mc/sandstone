@@ -1,27 +1,68 @@
-import { CommandArgs } from './minecraft'
+import type { AdvancementType, PredicateType } from '@arguments'
+import type { CommandArgs } from './minecraft'
 
-export type ResourcePath = readonly string[]
+export type ResourcePath = readonly [namespace: string, ...path: string[]]
+
+type FolderOrFileProperties<T extends Record<string, unknown>, P extends ResourcePath> = {
+  path: P
+  children: Map<string, FolderOrFile<T>>
+}
 
 /**
  * Represents either a folder or a resource file.
  *
  * A resource file can have children too.
  */
-export type FolderOrFile<T extends Record<string, unknown>> = {
-  path: ResourcePath
-  children: Map<string, FolderOrFile<T>>
-} & (
-    // Either it is a resource, and has the resource properties, or it's a folder.
-    ({ isResource: true } & T) | { isResource: false }
-  )
+export type FolderOrFile<T extends Record<string, unknown>, P extends ResourcePath = ResourcePath> = FolderOrFileProperties<T, P> & (
+  // Either it is a resource, and has the resource properties, or it's a folder.
+  ({ isResource: true } & T) | { isResource: false }
+)
 
-export type FunctionResource = FolderOrFile<{ commands: CommandArgs[] }>
+export type File<T extends Record<string, unknown>, P extends ResourcePath = ResourcePath> = FolderOrFileProperties<T, P> & (
+  // We know it's a resource
+  { isResource: true } & T
+)
+
+type FunctionProperties = { commands: CommandArgs[] }
+export type FunctionResource = FolderOrFile<FunctionProperties>
+
+type TagProperties = { values: (string | { id: string, required: boolean })[], replace?: boolean }
+type TagPath = readonly [
+  namespace: string,
+  type: 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items',
+  ...path: string[]
+]
+export type TagsResource = FolderOrFile<TagProperties, TagPath>
+
+// Here, the criteria names doesn't matter, so we put string
+type AdvancementProperties = { advancement: AdvancementType<string> }
+export type AdvancementResource = FolderOrFile<AdvancementProperties>
+
+type PredicateProperties = { predicate: PredicateType }
+export type PredicateResource = FolderOrFile<PredicateProperties>
+
+/**
+ * Given a resource names, returns the type of resource
+ */
+export type ResourceTypeMap = {
+  functions: FunctionResource
+  tags: TagsResource
+  advancements: AdvancementResource
+  predicates: PredicateResource
+}
+
+export type ResourceOnlyTypeMap = {
+  functions: File<FunctionProperties>
+  tags: File<TagProperties, TagPath>
+  advancements: File<AdvancementProperties>
+  predicates: File<PredicateProperties>
+}
 
 /**
  * All the resources associated with a namespace.
  */
 export type NamespaceResources = {
-  functions: Map<string, FunctionResource>
+  [key in keyof ResourceTypeMap]: Map<string, ResourceTypeMap[key]>
 }
 
 /**
@@ -29,14 +70,7 @@ export type NamespaceResources = {
  */
 export type Namespaces = Map<string, NamespaceResources>
 
-/**
- * Given a resource names, returns the type of resource
- */
-type ResourceType<resourceName extends keyof NamespaceResources> = Exclude<
-  ReturnType<NamespaceResources[resourceName]['get']>, undefined
->
-
-type ExtendedPick<T, K extends keyof T> = T extends any ? Pick<T, K> : never
+export type ResourceTypes = keyof NamespaceResources
 
 export class ResourcesTree {
   namespaces: Namespaces
@@ -46,23 +80,18 @@ export class ResourcesTree {
   }
 
   /**
-   * Get the resources of a namespace. Initialize the namespace if required.
+   * Initialize a new namespace.
    */
-  protected getSetNamespaces(namespace: string): NamespaceResources {
-    let resources = this.namespaces.get(namespace)
-
-    // If the namespace if already there, return it
-    if (resources !== undefined) {
-      return resources
-    }
-
-    // Else, create a new resource and set it
-    resources = {
+  protected createNamespace(name: string): NamespaceResources {
+    const namespaceResource = {
       functions: new Map(),
+      tags: new Map(),
+      advancements: new Map(),
+      predicates: new Map(),
     }
 
-    this.namespaces.set(namespace, resources)
-    return resources
+    this.namespaces.set(name, namespaceResource)
+    return namespaceResource
   }
 
   /**
@@ -70,10 +99,10 @@ export class ResourcesTree {
    * @param resourcePath the path of the resource/folder, in the format [namespace, folder, folder, resource]
    * @param resourceType the type of the resource/folder
    */
-  getResourceOrFolder(
-    resourcePath: ResourcePath,
-    resourceType: keyof NamespaceResources,
-  ): ResourceType<typeof resourceType> | undefined {
+  getResourceOrFolder<T extends ResourceTypes>(
+    resourcePath: ResourceTypeMap[T]['path'],
+    resourceType: T,
+  ): ResourceTypeMap[T] | undefined {
     if (resourcePath.length < 2) {
       throw new Error(
         `Cannot access resource path with less than 1 arguments, namely "${resourcePath}". This is an internal error.`,
@@ -90,14 +119,12 @@ export class ResourcesTree {
     }
 
     // Find the resource
-    const reversePath = path.reverse()
-
-    const result = reversePath.reduce(
-      (resource, folder) => (resource ? resource.children.get(folder) : undefined),
+    const result = path.reduce(
+      (resource, folder) => (resource ? resource.children.get(folder) as typeof resource : undefined),
       namespace[resourceType].get(firstFolder),
     )
 
-    return result
+    return result as ResourceTypeMap[T]
   }
 
   /**
@@ -107,32 +134,31 @@ export class ResourcesTree {
    * @param resourceType the type of the resource
    * @throws An error if the resource is not found, or if it is a folder and not a resource.
    */
-  getResource(
-    resourcePath: ResourcePath,
-    resourceType: keyof NamespaceResources,
+  getResource<T extends ResourceTypes>(
+    resourcePath: ResourceTypeMap[T]['path'],
+    resourceType: T,
     errorMessage = `Impossible to find resource ${resourcePath}. This is an internal error.`,
-  ): Exclude<ResourceType<typeof resourceType>, undefined | { isResource: false }> {
+  ): Exclude<ResourceTypeMap[T], { isResource: false }> {
     const resource = this.getResourceOrFolder(resourcePath, resourceType)
 
     if (!resource || !resource.isResource) {
       throw new Error(errorMessage)
     }
 
-    return resource
+    return resource as any
   }
 
   /**
    * Deletes a given resource.
-   * 
+   *
    * @returns Whether the resource existed and was deleted.
    */
   deleteResource(
     resourcePath: ResourcePath,
-    resourceType: keyof NamespaceResources,
+    resourceType: ResourceTypes,
   ): boolean {
-
     if (resourcePath.length > 2) {
-      const parentResource = this.getResourceOrFolder(resourcePath.slice(0, -1), resourceType)
+      const parentResource = this.getResourceOrFolder(resourcePath.slice(0, -1) as unknown as ResourcePath, resourceType)
       return parentResource?.children.delete(resourcePath[resourcePath.length - 1]) ?? false
     }
 
@@ -149,9 +175,9 @@ export class ResourcesTree {
    */
   getFolder(
     folderPath: ResourcePath,
-    folderType: keyof NamespaceResources,
+    folderType: ResourceTypes,
     errorMessage = `Impossible to find folder ${folderPath}. This is an internal error.`,
-  ): Exclude<ResourceType<typeof folderType>, undefined | { isResource: true }> {
+  ): Exclude<ResourceTypeMap[typeof folderType], { isResource: true }> {
     const resource = this.getResourceOrFolder(folderPath, folderType)
 
     if (!resource || resource.isResource) {
@@ -162,32 +188,59 @@ export class ResourcesTree {
   }
 
   /**
-   * Adds a new resource. Throws an error if parent folder/resource does not exist.
+   * Adds a new resource. Creates the namespace of the resource if it doesn't exists yet.
    *
-   * @param resourcePath the path of the resource, in the format [namespace, folder, subfolder, resource name]
    * @param resourceType the type of the resource
    * @param resource The resource to add.
-   * @throws An error if parent folder/resource does not exist.
    */
-  addResource<T extends keyof NamespaceResources>(
+  addResource<T extends ResourceTypes, U extends ResourceTypeMap[T]>(
     resourceType: T,
-    resource: ResourceType<T>,
-  ): ResourceType<T> {
+    resource: U,
+  ): U & ResourceTypeMap[T] {
     const parentPath = resource.path.slice(0, -1)
+    const namespace = parentPath[0]
+
+    if (!this.namespaces.has(namespace)) {
+      this.createNamespace(namespace)
+    }
 
     if (parentPath.length >= 2) {
-      const parent = this.getResourceOrFolder(parentPath, resourceType)
+      let parent = this.getResourceOrFolder(parentPath as unknown as ResourcePath, resourceType)
 
       if (!parent) {
-        throw new Error(`Cannot add resource of type "${resourceType}" to non-existent parent resource ${parentPath}.`)
+        this.addResource(resourceType, {
+          children: new Map(),
+          isResource: false,
+          path: parentPath as any,
+        })
+
+        parent = this.getResourceOrFolder(parentPath as unknown as ResourcePath, resourceType)
       }
 
-      parent.children.set(resource.path[resource.path.length - 1], resource)
+      parent!.children.set(resource.path[resource.path.length - 1], resource as any)
     } else {
-      const namespace = this.getSetNamespaces(parentPath[0])
-      namespace[resourceType].set(resource.path[1], resource)
+      // Our parent path only has one component, the namespace. We need to add the resource like this.
+      const namespaceResource = this.namespaces.get(namespace) as NamespaceResources
+      namespaceResource[resourceType].set(resource.path[1], resource as any)
     }
 
     return resource
+  }
+
+  /**
+   * Get a given resource, or add it if it already exists.
+   *
+   * @param resourceType the type of the resource
+   * @param resource The resource to add, if it doesn't already exists.
+   */
+  getOrAddResource<T extends ResourceTypes, U extends ResourceTypeMap[T]>(
+    resourceType: T,
+    resource: U,
+  ): U & ResourceTypeMap[T] {
+    try {
+      return this.getResource(resource.path, resourceType) as unknown as U
+    } catch (e) {
+      return this.addResource(resourceType, resource)
+    }
   }
 }

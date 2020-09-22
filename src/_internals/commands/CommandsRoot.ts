@@ -1,9 +1,8 @@
 import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
-import {
+import type {
   BIOMES,
   BLOCKS,
   Coordinates,
-  coordinatesParser,
   ENTITY_TYPES,
   GAMEMODES,
   GAMERULES,
@@ -12,26 +11,26 @@ import {
   MessageOrSelector,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
-  NBT, Rotation,
-  rotationParser,
-  SelectorArgument,
+  NBT,
+  Rotation,
   SingleEntityArgument,
   SinglePlayerArgument,
   SOUND_EVENTS,
   SOUND_SOURCES,
   STRUCTURES,
 } from '@arguments'
-
+import { nbtParser } from '@variables'
 import Datapack from '@datapack/Datapack'
-import type { SaveOptions } from '@datapack/filesystem'
 import type { CommandArgs } from '@datapack/minecraft'
-import { Objective, Selector } from '@variables'
 import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
+import util from 'util'
+import { coordinatesParser, rotationParser } from '..'
 import type * as commands from '../../commands'
 import { command } from './decorators'
 import {
-  Advancement, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
-  DefaultGamemode, Difficulty, Effect, Enchant, Execute,
+  AdvancementCommand, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
+  DefaultGamemode, Difficulty, Effect, Enchant,
+  ExecuteWithRun,
   Experience,
   Fill,
   Forceload,
@@ -74,7 +73,7 @@ export class CommandsRoot {
     }
 
     if (!soft) {
-      throw new Error(`Registering a command that is not executable: ${JSON.stringify(this.arguments)}`)
+      throw new Error(`Registering a command that is not executable: ${this.arguments.join(' ')}`)
     }
 
     // Soft registering. If the last command had arguments but was not executable, it's an error.
@@ -83,36 +82,25 @@ export class CommandsRoot {
     }
   }
 
+  /**
+   * Add some arguments to the current ones, then registers them.
+   * It will explicitely set the resulting command as executable.
+   */
+  addAndRegister = (...args: CommandArgs) => {
+    this.arguments.push(...args)
+    this.executable = true
+    this.register()
+  }
+
   reset() {
     this.arguments = []
     this.inExecute = false
     this.executable = false
   }
 
-  /** UTILS */
-  // Create a new objective
-  createObjective = (name: string, criterion: string, display?: JsonTextComponent) => {
-    const objective = Objective(this, name, criterion, display)
-    this.Datapack.registerNewObjective(objective)
-    return objective
-  }
-
-  Selector = Selector.bind(this)
-
-  /**
-   * Saves the datapack to the file system.
-   *
-   * @param name The name of the Datapack
-   *
-   * @param options The save options
-   */
-  save = (name: string, options?: SaveOptions) => {
-    this.Datapack.save(name, options)
-  }
-
   /** COMMANDS */
   // advancement command //
-  advancement = new Advancement(this)
+  advancement = new AdvancementCommand(this)
 
   // attribute command //
   attribute = (new Attribute(this)).attribute
@@ -153,7 +141,7 @@ export class CommandsRoot {
   enchant = (new Enchant(this)).enchant
 
   // execute command //
-  execute: Omit<Execute, 'run' | 'runOne'> = (new Execute(this))
+  execute: Omit<ExecuteWithRun<CommandsRoot>, 'run' | 'runOne'> = (new ExecuteWithRun(this))
 
   // experience command //
   experience = new Experience(this)
@@ -293,7 +281,7 @@ export class CommandsRoot {
    *
    * @param nbt Specifies the data tag for the entity.
    */
-  @command('summon', { isRoot: true })
+  @command('summon', { isRoot: true, parsers: { '2': nbtParser } })
   summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: NBT) => { }
 
   // tag command //

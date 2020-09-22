@@ -13,8 +13,7 @@ export class Schedule extends Command {
     ((functionName: string) => void)
   ) = (func: McFunctionReturn<any> | string, ...args: any[]) => {
     if (typeof func === 'string') {
-      this.commandsRoot.arguments.push('schedule', 'clear', func)
-      this.commandsRoot.register()
+      this.commandsRoot.addAndRegister('schedule', 'clear', func)
     } else {
       func.clearSchedule(...args)
     }

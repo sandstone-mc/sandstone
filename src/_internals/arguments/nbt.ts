@@ -1,3 +1,5 @@
+import util from 'util'
+
 export type NBTObject = (
     string |
     number |

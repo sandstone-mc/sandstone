@@ -1,9 +1,10 @@
 import { LiteralUnion } from '@/generalTypes'
-import {
-  Coordinates, coordinatesParser, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
+import type {
+  Coordinates, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+import { coordinatesParser } from '@variables'
 
 class LootSource extends Command {
   @command('fish', { parsers: { '0': coordinatesParser } })

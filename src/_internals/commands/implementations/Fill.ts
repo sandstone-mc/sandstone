@@ -1,7 +1,8 @@
-import { LiteralUnion } from '@/generalTypes'
-import { BLOCKS, Coordinates, coordinatesParser } from '@arguments'
+import type { LiteralUnion } from '@/generalTypes'
+import type { BLOCKS, Coordinates } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+import { coordinatesParser } from '@variables'
 
 export class FillArguments extends Command {
   @command('destroy')

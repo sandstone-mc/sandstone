@@ -1,7 +1,9 @@
 import { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
-import { toMcFunctionName } from './minecraft'
-import { FunctionResource } from './resourcesTree'
+import { exec } from 'child_process'
+import hash from 'object-hash'
+import { toMcFunctionName } from '../datapack/minecraft'
+import { FunctionResource } from '../datapack/resourcesTree'
 
 export type McFunctionOptions = {
   /**
@@ -17,6 +19,16 @@ export type McFunctionOptions = {
    * It defaults to `true` if the environment variable NODE_ENV is set to `development`, else it defaults to `false`
    */
   debug?: boolean
+
+  /**
+   * Whether the function should run each tick.
+   */
+  runEachTick?: boolean
+
+  /**
+   * Whether the function should run when the datapack loads.
+   */
+  runOnLoad?: boolean
 }
 
 export class McFunction<T extends any[]> {
@@ -36,6 +48,10 @@ export class McFunction<T extends any[]> {
   callback: (...args: T) => void
 
   constructor(datapack: Datapack, name: string, callback: (...args: T) => void, options: McFunctionOptions) {
+    const fullPath = name.split('/')
+    const realName = fullPath[fullPath.length - 1]
+    const path = fullPath.slice(-1)
+
     this.name = name
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
@@ -44,9 +60,10 @@ export class McFunction<T extends any[]> {
     this.datapack = datapack
 
     // We "reserve" the folder by creating an empty folder there. It can be later changed to be a resource.
-    const functionsFolder = datapack.getFunctionAndNamespace(name)
+    const functionsPaths = datapack.getResourcePath(name)
+
     this.functionsFolderResource = datapack.resources.addResource('functions', {
-      children: new Map(), isResource: false as const, path: functionsFolder,
+      children: new Map(), isResource: false as const, path: functionsPaths.fullPathWithNamespace,
     })
 
     if (!options.lazy && callback.length !== 0) {
@@ -86,9 +103,9 @@ export class McFunction<T extends any[]> {
    */
   private callAndRegister = (args: T, addArgumentsCallback?: (functionName: string) => void) => {
     const { commandsRoot } = this.datapack
-    const jsonRepresentation = JSON.stringify(args)
+    const hashed = hash(args)
 
-    const isNewOverload = !this.alreadyInitializedParameters.has(jsonRepresentation)
+    const isNewOverload = !this.alreadyInitializedParameters.has(hashed)
 
     let name: string
     let mcFunction: FunctionResource
@@ -100,9 +117,18 @@ export class McFunction<T extends any[]> {
       mcFunction = result.newFunction
       name = result.functionName
 
-      this.alreadyInitializedParameters.set(jsonRepresentation, { mcFunction, name })
+      // If it should run each tick, add it to the tick.json function
+      if (this.options.runEachTick) {
+        this.datapack.addTickFunction(name)
+      }
+      // Idem for load
+      if (this.options.runOnLoad) {
+        this.datapack.addLoadFunction(name)
+      }
+
+      this.alreadyInitializedParameters.set(hashed, { mcFunction, name })
     } else {
-      const result = this.alreadyInitializedParameters.get(jsonRepresentation)
+      const result = this.alreadyInitializedParameters.get(hashed)
       mcFunction = result?.mcFunction as FunctionResource
       name = result?.name as string
     }
@@ -123,10 +149,18 @@ export class McFunction<T extends any[]> {
       // Add some comments specifying the overload, and the options
       if (this.options.debug) {
         this.datapack.commandsRoot.comment('Options:', JSON.stringify(this.options))
-        this.datapack.commandsRoot.comment('Arguments:', jsonRepresentation)
+
+        try {
+          this.datapack.commandsRoot.comment('Arguments:', JSON.stringify(args))
+        } catch (e) {
+          // JSON.stringify fails on recursive objects.
+        }
       }
 
       this.callback(...args)
+
+      // If there is an unfinished command, register it
+      this.datapack.commandsRoot.register(true)
 
       // Then back to the previous one
       this.datapack.currentFunction = previousFunction

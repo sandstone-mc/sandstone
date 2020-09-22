@@ -1,6 +1,6 @@
 {
   "name": "sandstone",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "license": "MIT",
@@ -19,7 +19,9 @@
     "publishToNpm": "npm run build && npm publish dist/src"
   },
   "devDependencies": {
+    "@types/module-alias": "^2.0.0",
     "@types/node": "^14.0.11",
+    "@types/object-hash": "^1.3.3",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "eslint": "^7.6.0",
@@ -30,11 +32,11 @@
     "eslint-plugin-prettier": "^3.1.4",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
-    "typescript": "^4.0.1-rc"
+    "typescript": "^4.0.2"
   },
   "dependencies": {
     "module-alias": "^2.2.2",
-    "sandstone": "^0.2.2"
+    "object-hash": "^2.0.3"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -43,13 +45,15 @@
     "@arguments": "dist/src/_internals/arguments",
     "@commands": "dist/src/_internals/commands",
     "@datapack": "dist/src/_internals/datapack",
+    "@resources": "dist/src/_internals/resources",
     "@variables": "dist/src/_internals/variables",
+    "@flow": "dist/src/_internals/flow",
     "@": "dist/src/_internals"
   },
   "bugs": {
     "url": "https://github.com/TheMrZZ/sandstone/issues"
   },
-  "homepage": "https://github.com/TheMrZZ/sandstone#readme",
+  "homepage": "https://sandstone.dev",
   "directories": {
     "doc": "docs",
     "test": "tests",

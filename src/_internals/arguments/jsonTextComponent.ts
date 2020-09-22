@@ -1,14 +1,8 @@
 import type { VectorClass } from '@variables/Coordinates'
-import { MultipleEntitiesArgument, SelectorArgument } from './selector'
-import { BASIC_COLORS } from './basics'
-import { LiteralUnion } from '../generalTypes'
-
-export class ComponentClass {
-  protected toChatComponent(): JsonTextComponent {
-    throw new Error('Not implemented')
-  }
-}
-
+import type { ComponentClass } from '@variables/abstractClasses'
+import type { MultipleEntitiesArgument, SelectorArgument } from './selector'
+import type { BASIC_COLORS } from './basics'
+import type { LiteralUnion } from '../generalTypes'
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
 type ContentTag = {
   /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
@@ -226,7 +220,7 @@ export type TextComponentObject = (
 /**
  * All possible chat components
  */
-type PossibleComponents = (
+type PossibleComponent = (
   string |
   boolean |
   number |
@@ -238,6 +232,6 @@ type PossibleComponents = (
  * A Json text component, that can be displayed in several locations: in-game chat, books, signs, titles...
  */
 export type JsonTextComponent = (
-  readonly PossibleComponents[] |
-  PossibleComponents
+  readonly PossibleComponent[] |
+  PossibleComponent
 )

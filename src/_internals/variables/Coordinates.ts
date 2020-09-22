@@ -25,6 +25,8 @@ export class VectorClass<T extends readonly unknown[]> {
   }
 }
 
+// SHORTCUTS
+
 type Tuple<T> = readonly [T, ...T[]]
 type MappedArray<T, U> = { [key in keyof T]: U }
 
@@ -109,13 +111,15 @@ export function local(coordinate: number): string
 /**
  * Transforms numbers into local coordinates, using the tilde notation `^`.
  *
+ * First coordinate is leftward, second is upward, third is frontward.
+ *
  * @example
  *
- * relative(0, 0, 0) => ['^', '^', '^']
+ * local(0, 0, 0) => ['^', '^', '^']
  *
- * relative(0, 180, 0) => ['^', '^180', '^']
+ * local(0, 180, 0) => ['^', '^180', '^']
  *
- * relative(-1, 10, 5) => ['^-1', '^10', '^5']
+ * local(-1, 10, 5) => ['^-1', '^10', '^5']
  *
  * @see `absolute` for absolute coordinates (e.g. 10)
  * @see `relative` for relative coordinates (e.g. ~10)

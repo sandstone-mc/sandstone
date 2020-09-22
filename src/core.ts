@@ -1,5 +1,10 @@
-import { commandsRoot, datapack } from './_internals'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('module-alias')(__dirname)
+// eslint-disable-next-line import/first
+import { datapack } from './_internals'
 
-export const { save: saveDatapack } = commandsRoot
+export const {
+  mcfunction, save: saveDatapack, Advancement, Predicate,
+} = datapack
 
-export const { mcfunction } = datapack
+export { _ } from './_internals'

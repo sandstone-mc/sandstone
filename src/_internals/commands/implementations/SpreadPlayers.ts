@@ -1,4 +1,5 @@
-import { Coordinates, coordinatesParser, MultipleEntitiesArgument } from '@arguments'
+import type { Coordinates, MultipleEntitiesArgument } from '@arguments'
+import { coordinatesParser } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
