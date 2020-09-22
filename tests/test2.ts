@@ -3,6 +3,7 @@ import { effect, execute, say } from '../src/commands'
 import {
   Advancement, mcfunction, saveDatapack, Predicate, _,
 } from '../src/core'
+import { Menu } from './menu'
 
 const test = Advancement('coucou:test', {
   criteria: {
