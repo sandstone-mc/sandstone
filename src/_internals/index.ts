@@ -1,4 +1,3 @@
-import 'module-alias/register'
 import { Datapack } from './datapack'
 import { Flow } from './flow'
 

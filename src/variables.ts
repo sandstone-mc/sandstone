@@ -16,7 +16,5 @@ export * from './_internals/variables/JsonTextComponentClass'
 
 export const {
   createObjective,
-  Selector: SelectorCreator,
+  Selector,
 } = datapack
-
-export const self = SelectorCreator('@s')
