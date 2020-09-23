@@ -5,7 +5,7 @@ import {
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
 import type {
-  AdvancementResource, FunctionResource, ResourcesTree, TagsResource,
+  AdvancementResource, FunctionResource, PredicateResource, ResourcesTree, TagsResource,
 } from './resourcesTree'
 
 const GRAY = '\x1b[90m'
@@ -161,7 +161,36 @@ function saveAdvancement(dataPath: string, resource: AdvancementResource, option
     }
   }
 
-  Array.from(resource.children.values()).forEach((r) => saveTag(dataPath, r as TagsResource, options))
+  Array.from(resource.children.values()).forEach((r) => saveAdvancement(dataPath, r as AdvancementResource, options))
+}
+
+function savePredicate(dataPath: string, resource: PredicateResource, options: SaveOptions) {
+  if (resource.isResource) {
+    const [namespace, ...folders] = resource.path
+
+    const basePath = path.join(dataPath, namespace, 'predicates')
+    const fileName = folders.pop()
+    const resourceFolder = path.join(basePath, ...folders)
+
+    const representation = JSON.stringify(resource.predicate, null, 2)
+
+    if (!options.dryRun) {
+      createDirectory(resourceFolder)
+
+      // Write the commands to the file system
+      const resourcePath = path.join(resourceFolder, `${fileName}.json`)
+
+      fs.writeFileSync(resourcePath, representation)
+    }
+
+    if (options.verbose) {
+      console.log(`${CYAN}##`, `Predicate ${namespace}:${[...folders, fileName].join('/')}`, RESET)
+      console.log(representation)
+      console.log()
+    }
+  }
+
+  Array.from(resource.children.values()).forEach((r) => savePredicate(dataPath, r as PredicateResource, options))
 }
 
 /**
@@ -209,8 +238,14 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
         saveTag(dataPath, t, options)
       }
 
+      // Save advancements
       for (const a of n.advancements.values()) {
         saveAdvancement(dataPath, a, options)
+      }
+
+      // Save predicates
+      for (const p of n.predicates.values()) {
+        savePredicate(dataPath, p, options)
       }
     }
 
