@@ -4,17 +4,15 @@ import type {
 } from '@arguments'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import { McFunction, McFunctionOptions } from '@resources/McFunction'
-import { Objective, ObjectiveClass, SelectorCreator } from '@variables'
-import { AdvancementCommand } from '@commands/implementations'
 import { Advancement } from '@resources'
+import { McFunction, McFunctionOptions } from '@resources/McFunction'
 import { Predicate } from '@resources/Predicate'
-import { saveDatapack, SaveOptions } from './saveDatapack'
+import { Objective, ObjectiveClass, SelectorCreator } from '@variables'
 import { CommandArgs, toMcFunctionName } from './minecraft'
 import {
-  FolderOrFile,
-  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourcesTree, ResourceTypeMap, ResourceTypes,
+  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourcesTree, ResourceTypes,
 } from './resourcesTree'
+import { saveDatapack, SaveOptions } from './saveDatapack'
 
 export interface McFunctionReturn<T extends unknown[]> {
   (...args: T): void
@@ -55,15 +53,6 @@ export default class Datapack {
 
     this.commandsRoot = new CommandsRoot(this)
     this.flow = new Flow(this.commandsRoot)
-  }
-
-  /**
-   * Change the default namespace of the datapack.
-   *
-   * ⚠️ You must do this **before** creating any resource (functions, advancements, predicates...
-   */
-  setDefaultNamespace(namespace: string) {
-    this.defaultNamespace = namespace
   }
 
   getResourcePath(functionName: string): {
