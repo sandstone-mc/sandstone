@@ -2,9 +2,6 @@ import type { SelectorArgument, SingleEntityArgument } from '@arguments'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-/**
- * @category attribute
- */
 export class AttributeOperation extends Command {
   /** Returns the total value of the specified attribute.
    * @category attribute
@@ -40,7 +37,7 @@ export class AttributeOperation extends Command {
 }
 
 /**
- * @category attribute
+ * Used to change or read attributes.
  */
 export class Attribute extends Command {
   @command('attribute', { isRoot: true, hasSubcommands: true, executable: false })

@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require('module-alias')(__dirname)
+require('module-alias/register')(__dirname)
+
 // eslint-disable-next-line import/first
 import { datapack } from './_internals'
 
