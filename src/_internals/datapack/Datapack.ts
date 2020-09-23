@@ -57,6 +57,15 @@ export default class Datapack {
     this.flow = new Flow(this.commandsRoot)
   }
 
+  /**
+   * Change the default namespace of the datapack.
+   *
+   * ⚠️ You must do this **before** creating any resource (functions, advancements, predicates...
+   */
+  setDefaultNamespace(namespace: string) {
+    this.defaultNamespace = namespace
+  }
+
   getResourcePath(functionName: string): {
     namespace: string
     path: string[]
