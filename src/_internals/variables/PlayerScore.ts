@@ -14,12 +14,12 @@ type OperationArguments = (
   [targetScore: PlayerScore]
 )
 
-function createAnonymousScore(datapack: Datapack, amount: number): PlayerScore
+function createVariable(datapack: Datapack, amount: number): PlayerScore
 
-function createAnonymousScore(datapack: Datapack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): PlayerScore
+function createVariable(datapack: Datapack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): PlayerScore
 
-function createAnonymousScore(datapack: Datapack, amountOrTargets: PlayersTarget, objective?: ObjectiveArgument): PlayerScore {
-  const anonymousScore = datapack.createAnonymousScore()
+function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, objective?: ObjectiveArgument): PlayerScore {
+  const anonymousScore = datapack.Variable()
 
   if (typeof amountOrTargets === 'number') {
     anonymousScore.set(amountOrTargets)
@@ -305,7 +305,7 @@ export class PlayerScore extends ComponentClass {
   plus(targetScore: PlayerScore): PlayerScore
 
   plus(...args: OperationArguments): PlayerScore {
-    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
+    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.unaryOperation('add', '+=', ...args)
     return anonymousScore
   }
@@ -334,7 +334,7 @@ export class PlayerScore extends ComponentClass {
   minus(targetScore: PlayerScore): PlayerScore
 
   minus(...args: OperationArguments): PlayerScore {
-    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
+    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.unaryOperation('remove', '-=', ...args)
     return anonymousScore
   }
@@ -363,7 +363,7 @@ export class PlayerScore extends ComponentClass {
   multipliedBy(targetScore: PlayerScore): PlayerScore
 
   multipliedBy(...args: OperationArguments): PlayerScore {
-    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
+    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('*=', ...args)
     return anonymousScore
   }
@@ -392,7 +392,7 @@ export class PlayerScore extends ComponentClass {
   dividedBy(targetScore: PlayerScore): PlayerScore
 
   dividedBy(...args: OperationArguments): PlayerScore {
-    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
+    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('*=', ...args)
     return anonymousScore
   }
@@ -421,7 +421,7 @@ export class PlayerScore extends ComponentClass {
   moduloBy(targetScore: PlayerScore): PlayerScore
 
   moduloBy(...args: OperationArguments): PlayerScore {
-    const anonymousScore = createAnonymousScore(this.commandsRoot.Datapack, this.target, this.objective)
+    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('%=', ...args)
     return anonymousScore
   }

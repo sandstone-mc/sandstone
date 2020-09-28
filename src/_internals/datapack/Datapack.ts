@@ -8,6 +8,8 @@ import { Advancement } from '@resources'
 import { McFunction, McFunctionOptions } from '@resources/McFunction'
 import { Predicate } from '@resources/Predicate'
 import { Objective, ObjectiveClass, SelectorCreator } from '@variables'
+import { toNamespacedPath } from 'path'
+import { getMinecraftPath } from './filesystem'
 import { CommandArgs, toMcFunctionName } from './minecraft'
 import {
   FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourcesTree, ResourceTypes,
@@ -55,12 +57,50 @@ export default class Datapack {
     this.flow = new Flow(this.commandsRoot)
   }
 
+  /** Get information like the path, namespace etc... from a resource name */
   getResourcePath(functionName: string): {
+    /** The namespace of the resource */
     namespace: string
+
+    /**
+     * The path of the resource, EXCLUDING the resource name and the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').path === ['test']
+     */
     path: string[]
-    name: string
+
+    /**
+     * The path of the resource, EXCLUDING the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').fullPath === ['test', 'myfunction']
+     */
     fullPath: string[]
+
+    /**
+     * The path of the resource, INCLUDING the resource name and the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').fullPathWithNamespace === ['minecraft', 'test', 'myfunction']
+     */
     fullPathWithNamespace: ResourcePath
+
+    /**
+     * The name of the resource itself. Does not include the path nor the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').name === 'myfunction'
+     */
+    name: string
+
+    /**
+     * The full name of the resource itself, as it should be refered in the datapack.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').name === 'minecraft:test/myfunction'
+     */
+    fullName: string
   } {
     let namespace = this.defaultNamespace
     let fullName = functionName
@@ -75,7 +115,7 @@ export default class Datapack {
     const path = fullPath.slice(0, -1)
 
     return {
-      namespace, path, fullPath, name, fullPathWithNamespace: [namespace, ...fullPath],
+      namespace, path, fullPath, name, fullPathWithNamespace: [namespace, ...fullPath], fullName: `${namespace}:${fullName}`,
     }
   }
 
@@ -217,33 +257,20 @@ export default class Datapack {
   }
 
   /**
-   * Add a function that must be run each tick
+   * Add a function to a given function tag
    */
-  addTickFunction(mcfunction: string) {
+  addFunctionToTag(mcfunction: string, tag: string) {
+    const { namespace, fullPath, name } = this.getResourcePath(tag)
+
     const tickResource = this.resources.getOrAddResource('tags', {
       children: new Map(),
       isResource: true,
-      path: ['minecraft', 'functions', 'tick'],
+      path: [namespace, 'functions', ...fullPath],
       values: [],
       replace: false,
     })
 
-    tickResource.values.push(mcfunction)
-  }
-
-  /**
-   * Add a function that must be run on each datapack load
-   */
-  addLoadFunction(mcfunction: string) {
-    const tickResource = this.resources.getOrAddResource('tags', {
-      children: new Map(),
-      isResource: true,
-      path: ['minecraft', 'functions', 'load'],
-      values: [],
-      replace: false,
-    })
-
-    tickResource.values.push(mcfunction)
+    tickResource.values.push(this.getResourcePath(mcfunction).fullName)
   }
 
   /** UTILS */
@@ -268,16 +295,28 @@ export default class Datapack {
   }
 
   /**
-   * Creates an anonymous, unique score
+   * Creates a dynamic numeric variable, represented by an anonymous & unique score.
+   *
+   * @param initialValue The initial value of the variable. If left unspecified,
+   * or if `undefined`, then the score will not be initialized.
+   *
+   * @param name A name that can be useful for debugging.
    */
-  createAnonymousScore() {
-    const sandstoneAnonymousName = 'sand_anonymous'
+  Variable = (initialValue?: number | undefined, name?: string) => {
+    // Get the objective
+    const sandstoneAnonymousName = 'sand_variables'
     const score = this.getCreateObjective(sandstoneAnonymousName, 'dummy', 'Sandstone Anonymous Scores')
 
+    // Get the specific anonymous score
     const id = Datapack.anonymousScoreId
     Datapack.anonymousScoreId += 1
+    const anonymousScore = score.ScoreHolder(`${name ?? 'anonymous'}_${id}`)
 
-    return score.ScoreHolder(`anonymous_${id}`)
+    if (initialValue !== undefined) {
+      anonymousScore.set(initialValue)
+    }
+
+    return anonymousScore
   }
 
   Selector = SelectorCreator.bind(this)
@@ -306,7 +345,7 @@ export default class Datapack {
 
     const returnFunction: any = mcfunction.call
     returnFunction.schedule = mcfunction.schedule
-    returnFunction.getNameFromArgs = mcfunction.getNameFromArgs
+    returnFunction.getName = mcfunction.getNameFromArgs
     returnFunction.clearSchedule = mcfunction.clearSchedule
 
     return returnFunction
@@ -352,7 +391,7 @@ export default class Datapack {
       this.resources.deleteResource(this.currentFunction.path, 'functions')
     } else {
       // Else, put the __init__ function in the minecraft:load tag
-      this.addLoadFunction(toMcFunctionName(this.currentFunction!.path))
+      this.addFunctionToTag(toMcFunctionName(this.currentFunction!.path), 'minecraft:tick')
     }
 
     this.exitRootFunction()

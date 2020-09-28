@@ -10,7 +10,9 @@ type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> 
     condition: NAME
 } & VALUES
 
-export type PredicateType = (
+export type ObjectOrArray<T> = T | T[]
+
+export type PredicateType = ObjectOrArray<(
     PredicateKind<'minecraft:alternative', {
         /** A list of conditions to join using `or`. */
         terms: PredicateType[]
@@ -95,4 +97,4 @@ export type PredicateType = (
         /** If true, the condition evaluates to true only if it's thundering. */
         thundering?: boolean
     }>
-)
+)>

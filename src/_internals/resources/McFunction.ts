@@ -1,6 +1,5 @@
 import { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
-import { exec } from 'child_process'
 import hash from 'object-hash'
 import { toMcFunctionName } from '../datapack/minecraft'
 import { FunctionResource } from '../datapack/resourcesTree'
@@ -29,6 +28,11 @@ export type McFunctionOptions = {
    * Whether the function should run when the datapack loads.
    */
   runOnLoad?: boolean
+
+  /**
+   * The function tags to put this function in.
+   */
+  tags?: readonly string[]
 }
 
 export class McFunction<T extends any[]> {
@@ -99,7 +103,7 @@ export class McFunction<T extends any[]> {
   /**
    * Call the actual function, and triggers the given callback to add the arguments to the command.
    *
-   * If addArgumentsCallback is not set, then no function call will be registered.
+   * If `addArgumentsCallback` is not set, then no function call will be registered.
    */
   private callAndRegister = (args: T, addArgumentsCallback?: (functionName: string) => void) => {
     const { commandsRoot } = this.datapack
@@ -117,13 +121,21 @@ export class McFunction<T extends any[]> {
       mcFunction = result.newFunction
       name = result.functionName
 
+      // Get the given tags
+      let tags = this.options.tags ?? []
+
       // If it should run each tick, add it to the tick.json function
       if (this.options.runEachTick) {
-        this.datapack.addTickFunction(name)
+        tags = [...tags, 'minecraft:tick']
       }
+
       // Idem for load
       if (this.options.runOnLoad) {
-        this.datapack.addLoadFunction(name)
+        tags = [...tags, 'minecraft:load']
+      }
+
+      for (const tag of tags) {
+        this.datapack.addFunctionToTag(name, tag)
       }
 
       this.alreadyInitializedParameters.set(hashed, { mcFunction, name })
