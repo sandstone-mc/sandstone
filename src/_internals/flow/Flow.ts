@@ -5,9 +5,11 @@ import type {
 import type { CommandsRoot } from '@commands'
 import { Execute } from '@commands/implementations/Execute'
 import type { CommandArgs } from '@datapack/minecraft'
-import { ConditionClass, coordinatesParser } from '@variables'
+import type { ConditionClass } from '@variables'
+import { coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
-import { CombinedConditions, ConditionType, getConditionsObjective } from './conditions'
+import type { ConditionType } from './conditions'
+import { CombinedConditions, getConditionsObjective } from './conditions'
 
 type FlowStatementConfig = {
   callbackName: string
@@ -287,8 +289,11 @@ export class Flow {
 
   forScore = (
     score: PlayerScore | number,
+    // eslint-disable-next-line no-shadow
     condition: ((score: PlayerScore) => ConditionType) | ConditionType,
+    // eslint-disable-next-line no-shadow
     modifier: (score: PlayerScore) => void,
+    // eslint-disable-next-line no-shadow
     callback: (score: PlayerScore) => void,
   ) => {
     const realScore = score instanceof PlayerScore ? score : this.commandsRoot.Datapack.Variable(score)

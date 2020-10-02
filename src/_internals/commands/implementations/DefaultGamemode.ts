@@ -1,4 +1,4 @@
-import { GAMEMODES } from '@arguments'
+import type { GAMEMODES } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

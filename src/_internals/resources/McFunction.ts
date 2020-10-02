@@ -1,8 +1,8 @@
-import { LiteralUnion } from '@/generalTypes'
+import type { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import hash from 'object-hash'
 import { toMcFunctionName } from '../datapack/minecraft'
-import { FunctionResource } from '../datapack/resourcesTree'
+import type { FunctionResource } from '../datapack/resourcesTree'
 
 export type McFunctionOptions = {
   /**

@@ -1,5 +1,5 @@
 import { Datapack } from './datapack'
-import { Flow } from './flow'
+import type { Flow } from './flow'
 
 import { getConfigFile } from './config'
 

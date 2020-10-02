@@ -1,5 +1,5 @@
 import type { CommandsRoot } from '@commands'
-import { ConditionClass } from '@variables'
+import type { ConditionClass } from '@variables'
 
 export function conditionToString(condition: ConditionType): string {
   if (condition instanceof CombinedConditions) {

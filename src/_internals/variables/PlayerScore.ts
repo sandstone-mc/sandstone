@@ -2,8 +2,9 @@ import type {
   COMPARISON_OPERATORS, JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import { Datapack } from '@datapack'
-import { ComponentClass, ConditionClass } from '@variables/abstractClasses'
+import type { Datapack } from '@datapack'
+import type { ConditionClass } from '@variables/abstractClasses'
+import { ComponentClass } from '@variables/abstractClasses'
 import type { ObjectiveClass } from './Objective'
 
 type PlayersTarget = number | MultipleEntitiesArgument

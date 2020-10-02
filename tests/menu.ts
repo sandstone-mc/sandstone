@@ -75,11 +75,11 @@ function getIdSubmenuMap(menu: SubMenu<PossibleSlots>, id = 0): {
 }
 
 function menuItemToObject(menuItem: MenuItem<AllSlots>): {item: string, nbt?: NBT, callback?: () => void, subMenu?: SubMenu<AllSlots>} {
-  if (typeof menuItem === 'string') {
-    return { item: menuItem }
+  if (!Array.isArray(menuItem)) {
+    return { item: menuItem as string }
   }
 
-  const item = menuItem[0]
+  const item = menuItem[0] as string
   let nbt: NBT | undefined
   let action: MenuAction<AllSlots>
 

@@ -1,4 +1,4 @@
-import { LiteralUnion } from '@/generalTypes'
+import type { LiteralUnion } from '@/generalTypes'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

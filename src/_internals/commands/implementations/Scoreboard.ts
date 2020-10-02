@@ -1,8 +1,8 @@
-import { LiteralUnion } from '@/generalTypes'
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, OBJECTIVE_CRITERION,
 } from '@arguments'
-import { DISPLAY_SLOTS } from '@arguments/displaySlots'
+import type { DISPLAY_SLOTS } from '@arguments/displaySlots'
 import { JsonTextComponentClass } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'

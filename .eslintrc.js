@@ -39,6 +39,8 @@ module.exports = {
         js: 'never',
       },
     ],
+    // Forces `import type` when possible
+    "@typescript-eslint/consistent-type-imports": ['error', { prefer: 'type-imports' }],
 
     // Allow custom method chaining
     'newline-per-chained-call': 'off',
@@ -95,6 +97,7 @@ module.exports = {
     // Allow unused arguments
     '@typescript-eslint/no-unused-vars': 'off',
 
+    // Allow use after define
     'no-use-before-define': 'off',
   },
 }

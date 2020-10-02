@@ -1,5 +1,5 @@
-import { LiteralUnion } from '@/generalTypes'
-import { MOB_EFFECTS, MultipleEntitiesArgument } from '@arguments'
+import type { LiteralUnion } from '@/generalTypes'
+import type { MOB_EFFECTS, MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

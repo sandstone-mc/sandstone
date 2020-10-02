@@ -1,20 +1,26 @@
-import { LiteralUnion } from '@/generalTypes'
+import type { LiteralUnion } from '@/generalTypes'
 import type {
-  AdvancementType, JsonTextComponent, OBJECTIVE_CRITERION, PredicateType,
+  AdvancementType, JsonTextComponent, LootTableType, OBJECTIVE_CRITERION, PredicateType, RecipeType, TAG_TYPES,
 } from '@arguments'
 import { CommandsRoot } from '@commands'
+import { RecipeCommand } from '@commands/implementations'
 import { Flow } from '@flow'
-import { Advancement } from '@resources'
-import { McFunction, McFunctionOptions } from '@resources/McFunction'
-import { Predicate } from '@resources/Predicate'
-import { Objective, ObjectiveClass, SelectorCreator } from '@variables'
-import { toNamespacedPath } from 'path'
-import { getMinecraftPath } from './filesystem'
-import { CommandArgs, toMcFunctionName } from './minecraft'
+import type { HintedTagValues, McFunctionOptions } from '@resources'
 import {
-  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourcesTree, ResourceTypes,
+  Recipe,
+  Advancement, LootTable, McFunction, Predicate, Tag,
+} from '@resources'
+
+import type { ObjectiveClass } from '@variables'
+import { Objective, SelectorCreator } from '@variables'
+import type { CommandArgs } from './minecraft'
+import { toMcFunctionName } from './minecraft'
+import type {
+  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes, TagObjectValue,
 } from './resourcesTree'
-import { saveDatapack, SaveOptions } from './saveDatapack'
+import { ResourcesTree } from './resourcesTree'
+import type { SaveOptions } from './saveDatapack'
+import { saveDatapack } from './saveDatapack'
 
 export interface McFunctionReturn<T extends unknown[]> {
   (...args: T): void
@@ -58,7 +64,7 @@ export default class Datapack {
   }
 
   /** Get information like the path, namespace etc... from a resource name */
-  getResourcePath(functionName: string): {
+  getResourcePath(resourceName: string): {
     /** The namespace of the resource */
     namespace: string
 
@@ -103,10 +109,10 @@ export default class Datapack {
     fullName: string
   } {
     let namespace = this.defaultNamespace
-    let fullName = functionName
+    let fullName = resourceName
 
-    if (functionName.includes(':')) {
-      ([namespace, fullName] = functionName.split(':'))
+    if (resourceName.includes(':')) {
+      ([namespace, fullName] = resourceName.split(':'))
     }
 
     const fullPath = fullName.split('/')
@@ -280,7 +286,7 @@ export default class Datapack {
       throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
     }
 
-    const objective = Objective(this.commandsRoot, name, criteria, display)
+    const objective = Objective(this.commandsRoot, name, criteria as string, display)
     this.registerNewObjective(objective)
     return objective
   }
@@ -321,13 +327,13 @@ export default class Datapack {
 
   Selector = SelectorCreator.bind(this)
 
-  addResource = <T extends ResourceTypes>(name: string, type: T, resource: ResourceOnlyTypeMap[T]) => {
+  addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
     this.resources.addResource(type, {
       ...resource,
       children: new Map(),
       isResource: true,
       path: this.getResourcePath(name).fullPathWithNamespace,
-    })
+    } as ResourceOnlyTypeMap[T])
   }
 
   /**
@@ -354,6 +360,12 @@ export default class Datapack {
   Advancement = <T extends string>(name: string, advancement: AdvancementType<T>) => new Advancement(this.commandsRoot, name, advancement)
 
   Predicate = (name: string, predicate: PredicateType) => new Predicate(this.commandsRoot, name, predicate)
+
+  Tag = <T extends TAG_TYPES>(type: T, name: string, values: HintedTagValues<T>, replace?: boolean) => new Tag(this, type, name, values as TagObjectValue<string>[], replace)
+
+  LootTable = (name: string, lootTable: LootTableType) => new LootTable(this, name, lootTable)
+
+  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeType<P1, P2, P3>) => new Recipe(this, name, recipe)
 
   /**
    * Saves the datapack to the file system.

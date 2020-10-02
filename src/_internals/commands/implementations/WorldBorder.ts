@@ -1,4 +1,4 @@
-import { Coordinates } from '@arguments'
+import type { Coordinates } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

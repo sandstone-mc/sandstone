@@ -1,4 +1,4 @@
-import { ObjectiveArgument } from '@arguments'
+import type { ObjectiveArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

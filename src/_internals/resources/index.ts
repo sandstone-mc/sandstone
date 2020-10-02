@@ -1,3 +1,6 @@
 export * from './Advancement'
 export * from './McFunction'
 export * from './Predicate'
+export * from './LootTable'
+export * from './Tag'
+export * from './Recipe'

@@ -1,6 +1,7 @@
-import { LiteralUnion } from '@/generalTypes'
+import type { LiteralUnion } from '@/generalTypes'
 import type {
-  Coordinates, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
+  CONTAINER_SLOTS,
+  Coordinates, ENTITY_SLOTS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
 } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
@@ -27,12 +28,12 @@ export class Loot extends Command {
   spawn = (targetPos: Coordinates) => new LootSource(this.commandsRoot)
 
   @command(['loot', 'replace', 'entity'], { isRoot: true, hasSubcommands: true, executable: false })
-  replaceEntity = (entities: MultipleEntitiesArgument, slot: string, count?: number) => new LootSource(this.commandsRoot)
+  replaceEntity = (entities: MultipleEntitiesArgument, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => new LootSource(this.commandsRoot)
 
   @command(['loot', 'replace', 'block'], {
     isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser },
   })
-  replaceBlock = (targetPos: Coordinates, slot: string, count?: number) => new LootSource(this.commandsRoot)
+  replaceBlock = (targetPos: Coordinates, slot: LiteralUnion<CONTAINER_SLOTS>, count?: number) => new LootSource(this.commandsRoot)
 
   @command(['loot', 'give'], { isRoot: true, hasSubcommands: true, executable: false })
   give = (players: MultiplePlayersArgument) => new LootSource(this.commandsRoot)

@@ -1,4 +1,5 @@
-import { MultipleEntitiesArgument, MultiplePlayersArgument } from '@arguments'
+import type { MultiplePlayersArgument } from '@arguments'
+import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

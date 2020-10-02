@@ -1,11 +1,11 @@
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
 import {
   createDirectory, deleteDirectory, getMinecraftPath, getWorldPath,
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
 import type {
-  AdvancementResource, FunctionResource, PredicateResource, ResourcesTree, TagsResource,
+  FunctionResource, ResourceOnlyTypeMap, ResourcesTree, ResourceTypeMap, ResourceTypes,
 } from './resourcesTree'
 
 const GRAY = '\x1b[90m'
@@ -94,7 +94,7 @@ function saveFunction(dataPath: string, resource: FunctionResource, options: Sav
     }).join('\n')
 
     if (options.verbose) {
-      console.log(`${CYAN}## Function`, `${namespace}:${[...folders, fileName].join('/')}${RESET}`)
+      console.log(`${CYAN}## Function ${namespace}:${[...folders, fileName].join('/')}${RESET}`)
       console.log(commandsRepresentation)
       console.log()
     }
@@ -103,94 +103,40 @@ function saveFunction(dataPath: string, resource: FunctionResource, options: Sav
   Array.from(resource.children.values()).forEach((v) => saveFunction(dataPath, v, options))
 }
 
-function saveTag(dataPath: string, resource: TagsResource, options: SaveOptions) {
+function saveResource<T extends ResourceTypes>(
+  dataPath: string,
+  type: T,
+  resource: ResourceTypeMap[T],
+  options: SaveOptions,
+  getRepresentation: (resource: ResourceOnlyTypeMap[T], consoleDisplay: boolean) => string,
+  getDisplayTitle: (namespace: string, folders: string[], fileName: string) => string,
+) {
   if (resource.isResource) {
     const [namespace, ...folders] = resource.path
 
-    const basePath = path.join(dataPath, namespace, 'tags')
-    const fileName = folders.pop()
+    const basePath = path.join(dataPath, namespace, type)
+    const fileName = folders.pop() as string
     const resourceFolder = path.join(basePath, ...folders)
-
-    const representation = JSON.stringify({
-      replace: resource.replace ?? false,
-      values: resource.values,
-    }, null, 2)
 
     if (!options.dryRun) {
       createDirectory(resourceFolder)
 
       // Write the commands to the file system
-      const resourcePath = path.join(resourceFolder, `${fileName}.json`)
+      const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
 
-      fs.writeFileSync(resourcePath, representation)
+      fs.writeFileSync(resourcePath, getRepresentation(resource as ResourceOnlyTypeMap[T], false))
     }
 
     if (options.verbose) {
-      console.log(`${CYAN}##`, `Tag[${folders[0]}] ${namespace}:${[...folders.slice(1), fileName].join('/')}`, RESET)
-      console.log(representation)
+      console.log(`${CYAN}## ${getDisplayTitle(namespace, folders, fileName)} ${RESET}`)
+      console.log(getRepresentation(resource as ResourceOnlyTypeMap[T], true))
       console.log()
     }
   }
 
-  Array.from(resource.children.values()).forEach((r) => saveTag(dataPath, r as TagsResource, options))
-}
-
-function saveAdvancement(dataPath: string, resource: AdvancementResource, options: SaveOptions) {
-  if (resource.isResource) {
-    const [namespace, ...folders] = resource.path
-
-    const basePath = path.join(dataPath, namespace, 'advancements')
-    const fileName = folders.pop()
-    const resourceFolder = path.join(basePath, ...folders)
-
-    const representation = JSON.stringify(resource.advancement, null, 2)
-
-    if (!options.dryRun) {
-      createDirectory(resourceFolder)
-
-      // Write the commands to the file system
-      const resourcePath = path.join(resourceFolder, `${fileName}.json`)
-
-      fs.writeFileSync(resourcePath, representation)
-    }
-
-    if (options.verbose) {
-      console.log(`${CYAN}##`, `Avancement ${namespace}:${[...folders, fileName].join('/')}`, RESET)
-      console.log(representation)
-      console.log()
-    }
+  for (const r of resource.children.values()) {
+    saveResource(dataPath, type, r as ResourceTypeMap[T], options, getRepresentation, getDisplayTitle)
   }
-
-  Array.from(resource.children.values()).forEach((r) => saveAdvancement(dataPath, r as AdvancementResource, options))
-}
-
-function savePredicate(dataPath: string, resource: PredicateResource, options: SaveOptions) {
-  if (resource.isResource) {
-    const [namespace, ...folders] = resource.path
-
-    const basePath = path.join(dataPath, namespace, 'predicates')
-    const fileName = folders.pop()
-    const resourceFolder = path.join(basePath, ...folders)
-
-    const representation = JSON.stringify(resource.predicate, null, 2)
-
-    if (!options.dryRun) {
-      createDirectory(resourceFolder)
-
-      // Write the commands to the file system
-      const resourcePath = path.join(resourceFolder, `${fileName}.json`)
-
-      fs.writeFileSync(resourcePath, representation)
-    }
-
-    if (options.verbose) {
-      console.log(`${CYAN}##`, `Predicate ${namespace}:${[...folders, fileName].join('/')}`, RESET)
-      console.log(representation)
-      console.log()
-    }
-  }
-
-  Array.from(resource.children.values()).forEach((r) => savePredicate(dataPath, r as PredicateResource, options))
 }
 
 /**
@@ -230,22 +176,63 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
     for (const n of resources.namespaces.values()) {
     // Save functions
       for (const f of n.functions.values()) {
-        saveFunction(dataPath, f, options)
+        saveResource(
+          dataPath, 'functions', f, options,
+
+          // To display a function, we join their arguments. If we're in a console display, we put comments in gray.
+          (func, consoleDisplay) => {
+            const repr = func.commands.map((command) => command.join(' ')).join('\n')
+            if (consoleDisplay) {
+              return repr.replace(/^#(.+)/gm, `${GRAY}#$1${RESET}`)
+            }
+
+            return repr
+          },
+          (namespace, folders, fileName) => `Function ${namespace}:${[...folders, fileName].join('/')}`,
+        )
       }
 
       // Save tags
       for (const t of n.tags.values()) {
-        saveTag(dataPath, t, options)
+        saveResource(
+          dataPath, 'tags', t, options,
+          (r) => JSON.stringify({ replace: r.replace ?? false, values: r.values }, null, 2),
+          (namespace, folders, fileName) => `Tag[${folders[0]}] ${namespace}:${[...folders.slice(1), fileName].join('/')}`,
+        )
       }
 
       // Save advancements
       for (const a of n.advancements.values()) {
-        saveAdvancement(dataPath, a, options)
+        saveResource(dataPath, 'advancements', a, options,
+          (r) => JSON.stringify(r.advancement, null, 2),
+          (namespace, folders, fileName) => `Avancement ${namespace}:${[...folders, fileName].join('/')}`)
       }
 
       // Save predicates
       for (const p of n.predicates.values()) {
-        savePredicate(dataPath, p, options)
+        saveResource(
+          dataPath, 'predicates', p, options,
+          (r) => JSON.stringify(r.predicate, null, 2),
+          (namespace, folders, fileName) => `Predicate ${namespace}:${[...folders, fileName].join('/')}`,
+        )
+      }
+
+      // Save loot tables
+      for (const l of n.loot_tables.values()) {
+        saveResource(
+          dataPath, 'loot_tables', l, options,
+          (r) => JSON.stringify(r.lootTable, null, 2),
+          (namespace, folders, fileName) => `Loot table ${namespace}:${[...folders, fileName].join('/')}`,
+        )
+      }
+
+      // Save recipe
+      for (const r of n.recipe.values()) {
+        saveResource(
+          dataPath, 'recipe', r, options,
+          (resource) => JSON.stringify(resource.recipe, null, 2),
+          (namespace, folders, fileName) => `Recipe ${namespace}:${[...folders, fileName].join('/')}`,
+        )
       }
     }
 
