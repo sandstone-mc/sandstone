@@ -14,7 +14,7 @@ Sandstone tells you what a command expects, and autocomplete complicated argumen
 
 You don't need to remember commands syntax anymore.
 
-![autocomplete](./docs/readme/autocomplete.gif)
+![autocomplete](https://raw.githubusercontent.com/TheMrZZ/sandstone/4d3d74210b74ccf0bb807b90c35c1920ce1aa44a/docs/readme/autocomplete.gif)
 
 This autocompletion works for commands, predicates, loot tables, advancements...
 
@@ -26,7 +26,7 @@ Sharing commands has **never been easier**. Just publish your functions on NPM, 
 # Supporting Sandstone <!-- omit in toc -->
 
 If you want to support Sandstone, the simplest way is to star the repository! It's actually very encouraging.
-![stars](docs/readme/star.png)
+![stars](https://raw.githubusercontent.com/TheMrZZ/sandstone/4d3d74210b74ccf0bb807b90c35c1920ce1aa44a/docs/readme/star.png)
 
 # Getting started
 
@@ -158,10 +158,10 @@ In Minecraft, some commands have optional arguments. Let's stay with the `/effec
 As you can see, the `targets` and the `effect` arguments are **mandatory**. Minecraft doesn't know what to do if you do not provide them. However, the `seconds`, `amplifier` and `hideParticles` arguments are all optionals. If you do not specify them, Minecraft uses default values.
 
 In this aspect, Sandstone is identical to Minecraft. When typing `effect.give()`, your IDE will show you the possible arguments:
-![argumentshint1](docs/readme/argumentshint1.png)
+![argumentshint1](https://raw.githubusercontent.com/TheMrZZ/sandstone/4d3d74210b74ccf0bb807b90c35c1920ce1aa44a/docs/readme/argumentshint1.png)
 
 On the left, you can see there are 4 different ways to call `effect.give`. The first one is shown here: you can just give a target and an effect, and Minecraft will be happy. If you type them and try to enter a **third** argument, your IDE will automatically show the next possible argument:
-![argumentshint2](docs/readme/argumentshint2.png).
+![argumentshint2](https://raw.githubusercontent.com/TheMrZZ/sandstone/4d3d74210b74ccf0bb807b90c35c1920ce1aa44a/docs/readme/argumentshint2.png).
 
 It's telling you the third argument is the number of seconds. If you keep going (or type the Down arrow to display all possibilities), you will see that Sandstone allows what Minecraft allows. It's very useful: **you don't have to remember the syntax of all commands**, Sandstone does that for you.
 
