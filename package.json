@@ -1,12 +1,23 @@
 {
   "name": "sandstone",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "license": "MIT",
   "private": false,
   "author": "TheMrZZ - Florian ERNST",
   "description": "Sandstone, a Typescript library for Minecraft datapacks.",
+  "keywords": [
+    "minecraft",
+    "datapack",
+    "preprocessor",
+    "generator",
+    "library",
+    "creator",
+    "language",
+    "typescript",
+    "autocompletion"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TheMrZZ/sandstone.git"
