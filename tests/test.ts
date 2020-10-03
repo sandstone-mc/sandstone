@@ -1,5 +1,5 @@
 import {
-  execute, gamerule, say, tellraw,
+  execute, gamerule, raw, say, tellraw,
 } from '../src/commands'
 import {
   mcfunction, Recipe, saveDatapack, _,
@@ -11,6 +11,10 @@ Recipe('test', {
   ingredient: { item: 'minecraft:acacia_boat' },
   result: 'minecraft:coal',
   experience: 0,
+})
+
+mcfunction('cc', () => {
+  raw('mount', 'cc')
 })
 
 saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })
