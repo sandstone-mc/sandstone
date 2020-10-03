@@ -10,7 +10,7 @@ Sandstone is a Typescript library for Minecraft Datapacks. It allows easy creati
 
 ## Perfect autocompletion <!-- omit in toc -->
 
-Sandstone tells you what a command expects, and autocomplete complicated arguments for you.
+Sandstone tells you what a command expects, and autocompletes complicated arguments for you.
 
 You don't need to remember commands syntax anymore.
 
