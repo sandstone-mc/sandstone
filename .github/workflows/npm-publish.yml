@@ -22,11 +22,11 @@ jobs:
           path: node_modules
           # An explicit key for restoring and saving the cache
           key: ${{ runner.os }}-npm-modules
-      - name: Install npm modules
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install # will run `yarn install` command      - run: npm test
-
+      - name: Install dependencies
+        run: yarn
+      - name: Build release
+        run: yarn build
+    
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
+      - run: yarn build
       - run: npm run publishToNpm
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
