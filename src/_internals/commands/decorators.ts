@@ -7,7 +7,8 @@ function getDefaultArguments(func: (...args: unknown[]) => unknown): unknown[] {
   const args = func.toString().replace(/[^(]*\(([^)]*)\).*/, '$1')
   const argsArray = args.split(',').map((str) => str.trim().split('='))
 
-  const parsedArgsArray = argsArray.map(([_, defaultVal]) => (defaultVal === undefined ? null : eval(defaultVal)))
+  // eslint-disable-next-line no-eval
+  const parsedArgsArray = argsArray.map(([_, defaultVal]) => (defaultVal === undefined ? undefined : eval(defaultVal)))
 
   return parsedArgsArray
 }

@@ -1,4 +1,4 @@
-import { DIFFICULTIES } from '@arguments'
+import type { DIFFICULTIES } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

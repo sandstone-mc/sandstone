@@ -25,3 +25,20 @@ export class _ShowAlias {
 }
 
 export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
+
+export type TAG_TYPES = 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items'
+
+export type MAP_ICONS = (
+  'player' | 'frame' | 'red_marker' |
+  'blue_marker' | 'target_x' | 'target_point' |
+  'player_off_map' | 'player_off_limits' | 'mansion' |
+  'monument' | 'banner_white' | 'minecraft:orange' |
+  'minecraft:magenta' | 'minecraft:light_blue' |
+  'minecraft:yellow' | 'minecraft:lime' |
+  'minecraft:pink' | 'minecraft:gray' |
+  'minecraft:light_gray' | 'minecraft:cyan' |
+  'minecraft:purple' | 'minecraft:blue' |
+  'minecraft:brown' | 'minecraft:green' |
+  'minecraft:red' | 'minecraft:black' |
+  'red_x'
+)

@@ -13,16 +13,9 @@ export class Advancement<CriteriaNames extends string> {
     this.commandsRoot = commandsRoot
     this.advancementJson = advancement
 
-    const path = this.commandsRoot.Datapack.getResourcePath(name)
+    this.path = this.commandsRoot.Datapack.getResourcePath(name)
 
-    this.path = path
-
-    this.commandsRoot.Datapack.addResource(name, 'advancements', {
-      advancement,
-      children: new Map(),
-      isResource: true,
-      path: path.fullPathWithNamespace,
-    })
+    this.commandsRoot.Datapack.addResource(name, 'advancements', { advancement })
   }
 
   get name(): string {

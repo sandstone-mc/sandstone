@@ -1,5 +1,5 @@
-import { LiteralUnion } from '@/generalTypes'
-import { ENCHANTMENTS, MultipleEntitiesArgument } from '@arguments'
+import type { LiteralUnion } from '@/generalTypes'
+import type { ENCHANTMENTS, MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

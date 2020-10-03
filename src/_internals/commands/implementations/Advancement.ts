@@ -1,4 +1,5 @@
-import { MultipleEntitiesArgument, MultiplePlayersArgument } from '@arguments'
+import type { MultiplePlayersArgument } from '@arguments'
+import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
@@ -68,7 +69,7 @@ export class AdvancementCommand extends Command {
    *
    * @param targets Specifies one player or more.
    */
-  @command(['avancement', 'grant'], { isRoot: true, hasSubcommands: true, executable: false })
+  @command(['advancement', 'grant'], { isRoot: true, hasSubcommands: true, executable: false })
   grant = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
 
   /**
@@ -76,6 +77,6 @@ export class AdvancementCommand extends Command {
    *
    * @param targets Specifies one player or more.
    */
-  @command(['avancement', 'revoke'], { isRoot: true, hasSubcommands: true, executable: false })
+  @command(['advancement', 'revoke'], { isRoot: true, hasSubcommands: true, executable: false })
   revoke = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
 }

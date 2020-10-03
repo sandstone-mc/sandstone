@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import { LiteralUnion } from '@/generalTypes'
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
 } from '@arguments'

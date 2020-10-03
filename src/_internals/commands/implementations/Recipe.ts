@@ -1,9 +1,10 @@
-import { LiteralUnion } from '@/generalTypes'
-import { ITEMS, MultipleEntitiesArgument, MultiplePlayersArgument } from '@arguments'
+import type { LiteralUnion } from '@/generalTypes'
+import type { ITEMS, MultiplePlayersArgument } from '@arguments'
+import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
-export class Recipe extends Command {
+export class RecipeCommand extends Command {
     @command(['recipe', 'give'], { isRoot: true })
     give = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS>) => { }
 

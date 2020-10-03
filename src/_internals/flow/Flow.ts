@@ -5,9 +5,11 @@ import type {
 import type { CommandsRoot } from '@commands'
 import { Execute } from '@commands/implementations/Execute'
 import type { CommandArgs } from '@datapack/minecraft'
-import { ConditionClass, coordinatesParser } from '@variables'
+import type { ConditionClass } from '@variables'
+import { coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
-import { CombinedConditions, ConditionType, getConditionsObjective } from './conditions'
+import type { ConditionType } from './conditions'
+import { CombinedConditions, getConditionsObjective } from './conditions'
 
 type FlowStatementConfig = {
   callbackName: string
@@ -162,8 +164,7 @@ export class Flow {
 
   binaryMatch = (score: PlayerScore, minimum: number, maximum: number, callback: (num: number) => void) => {
     // First, specify we didn't find a match yet
-    const foundMatch = this.commandsRoot.Datapack.createAnonymousScore()
-    foundMatch.set(0)
+    const foundMatch = this.commandsRoot.Datapack.Variable(0)
 
     const callCallback = (num: number) => {
       this.if(this.and(score.equalTo(num), foundMatch.equalTo(0)), () => {
@@ -229,8 +230,8 @@ export class Flow {
       callback(to - from)
     }
 
-    const realStart = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.createAnonymousScore().set(from)
-    const realEnd = to instanceof PlayerScore ? to : this.commandsRoot.Datapack.createAnonymousScore().set(to)
+    const realStart = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.Variable(from)
+    const realEnd = to instanceof PlayerScore ? to : this.commandsRoot.Datapack.Variable(to)
 
     const iterations = realEnd.minus(realStart)
 
@@ -270,7 +271,7 @@ export class Flow {
       }
     }
 
-    const scoreTracker = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.createAnonymousScore().set(from)
+    const scoreTracker = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.Variable(from)
 
     // If the callback does not use the "score" argument, we can directly set the real score
     // `scoreTracker` to the end (instead of spamming `scoreboard players add anonymous sand_ano 1`).
@@ -288,11 +289,14 @@ export class Flow {
 
   forScore = (
     score: PlayerScore | number,
+    // eslint-disable-next-line no-shadow
     condition: ((score: PlayerScore) => ConditionType) | ConditionType,
+    // eslint-disable-next-line no-shadow
     modifier: (score: PlayerScore) => void,
+    // eslint-disable-next-line no-shadow
     callback: (score: PlayerScore) => void,
   ) => {
-    const realScore = score instanceof PlayerScore ? score : this.commandsRoot.Datapack.createAnonymousScore().set(score)
+    const realScore = score instanceof PlayerScore ? score : this.commandsRoot.Datapack.Variable(score)
     const realCondition = typeof condition === 'function' ? condition(realScore) : condition
 
     this.while(realCondition, () => {

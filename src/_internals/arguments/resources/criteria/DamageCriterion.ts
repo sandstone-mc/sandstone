@@ -1,5 +1,5 @@
-import { EntityCriterion } from './EntityCriterion'
-import { NumberOrMinMax } from './utils'
+import type { EntityCriterion } from './EntityCriterion'
+import type { NumberOrMinMax } from './utils'
 
 /* eslint-disable camelcase */
 export type DamageTypeCriterion = Partial<{

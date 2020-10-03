@@ -1,4 +1,5 @@
-import { MultipleEntitiesArgument, SelectorArgument } from '@arguments'
+import type { MultipleEntitiesArgument } from '@arguments'
+import { SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 

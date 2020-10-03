@@ -5,7 +5,7 @@ import {
   clear, execute, replaceitem,
 } from '../src/commands'
 import { mcfunction } from '../src/core'
-import { createObjective, PlayerScore } from '../src/variables'
+import { createObjective, PlayerScore, Variable } from '../src/variables'
 import { nbtParser, SelectorCreator, _ } from '../src/_internals'
 
 /** A menu action can either be: a new menu bar to open, or a callback. */
@@ -75,11 +75,11 @@ function getIdSubmenuMap(menu: SubMenu<PossibleSlots>, id = 0): {
 }
 
 function menuItemToObject(menuItem: MenuItem<AllSlots>): {item: string, nbt?: NBT, callback?: () => void, subMenu?: SubMenu<AllSlots>} {
-  if (typeof menuItem === 'string') {
-    return { item: menuItem }
+  if (!Array.isArray(menuItem)) {
+    return { item: menuItem as string }
   }
 
-  const item = menuItem[0]
+  const item = menuItem[0] as string
   let nbt: NBT | undefined
   let action: MenuAction<AllSlots>
 
@@ -102,7 +102,6 @@ function menuItemToObject(menuItem: MenuItem<AllSlots>): {item: string, nbt?: NB
 const currentMenuObjective = createObjective('currentMenu', 'dummy')
 const currentSubMenuObjective = createObjective('currentSubMenu', 'dummy')
 const rightClick = createObjective('rightclick', 'minecraft.used:minecraft.carrot_on_a_stick')
-const selectedSlot = createObjective('selectedSlot', 'dummy')
 
 export class Menu {
   static previousMenuId = 0
@@ -124,11 +123,13 @@ export class Menu {
         // Reset clicks to 0
         rightClick.ScoreHolder('@s').set(0)
 
+        const selectedSlot = Variable(undefined, 'selected_slot')
+
         // On right click, store the current selected item slot
-        execute.store.result.score('@s', selectedSlot).runOne.data.get.entity('@s', 'SelectedItemSlot')
+        execute.store.result.score(selectedSlot).runOne.data.get.entity('@s', 'SelectedItemSlot')
 
         // Call the callback
-        this.executeCallback(selectedSlot.ScoreHolder('@s'))
+        this.executeCallback(selectedSlot)
       })
     }, {
       runEachTick: true,

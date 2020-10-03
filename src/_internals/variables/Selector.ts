@@ -5,7 +5,8 @@ import type {
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { LiteralUnion } from '../generalTypes'
-import { ComponentClass, ConditionClass } from './abstractClasses'
+import type { ConditionClass } from './abstractClasses'
+import { ComponentClass } from './abstractClasses'
 
 export type Range = number | [min: number, max: number] | [min: number, max: null] | [min: null, max: number]
 
@@ -178,7 +179,7 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> e
     super()
 
     this.commandsRoot = commandsRoot
-    this.target = target
+    this.target = target as string
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
   }
 

@@ -15,17 +15,9 @@ export class Predicate extends ConditionClass {
 
     this.commandsRoot = commandsRoot
     this.predicateJson = predicate
+    this.path = this.commandsRoot.Datapack.getResourcePath(name)
 
-    const path = this.commandsRoot.Datapack.getResourcePath(name)
-
-    this.path = path
-
-    this.commandsRoot.Datapack.addResource(name, 'predicates', {
-      predicate,
-      children: new Map(),
-      isResource: true,
-      path: path.fullPathWithNamespace,
-    })
+    this.commandsRoot.Datapack.addResource(name, 'predicates', { predicate })
   }
 
   get name(): string {

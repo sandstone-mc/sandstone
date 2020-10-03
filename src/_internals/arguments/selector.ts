@@ -1,5 +1,5 @@
-import { SelectorClass } from '@variables'
-import { _ShowAlias } from './basics'
+import type { SelectorClass } from '@variables'
+import type { _ShowAlias } from './basics'
 
 // Possible selectors.
 type MultipleEntitiesSelector = SelectorClass<false, false>

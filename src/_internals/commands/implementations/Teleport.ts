@@ -1,4 +1,4 @@
-import {
+import type {
   Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument,
 } from '@arguments'
 import { coordinatesParser, rotationParser, VectorClass } from '@variables'

@@ -1,10 +1,11 @@
-import { LiteralUnion } from '@/generalTypes'
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
 } from '@arguments'
 import type { Flow } from '@flow'
-import { ConditionClass, coordinatesParser, Range } from '@variables'
-import { PlayerScore } from '@variables/PlayerScore'
+import type { ConditionClass, Range } from '@variables'
+import { coordinatesParser } from '@variables'
+import type { PlayerScore } from '@variables/PlayerScore'
 import type * as commands from '../../../commands'
 import type { CommandsRoot } from '../CommandsRoot'
 import { command } from '../decorators'

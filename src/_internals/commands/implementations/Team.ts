@@ -1,6 +1,5 @@
-import {
-  BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument, SelectorArgument,
-} from '@arguments'
+import type { BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument } from '@arguments'
+import { SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { JsonTextComponentClass } from '@variables'

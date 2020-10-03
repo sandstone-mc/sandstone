@@ -20,7 +20,7 @@ import type {
   STRUCTURES,
 } from '@arguments'
 import { nbtParser } from '@variables'
-import Datapack from '@datapack/Datapack'
+import type Datapack from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
 import util from 'util'
@@ -34,7 +34,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, Loot, Particle, Recipe, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
+  FunctionCommand, Loot, Particle, RecipeCommand, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
 } from './implementations'
 
 export class CommandsRoot {
@@ -67,7 +67,8 @@ export class CommandsRoot {
    */
   register = (soft = false) => {
     if (this.executable) {
-      this.Datapack.registerNewCommand(this.arguments as CommandArgs)
+      // We remove undefined arguments!
+      this.Datapack.registerNewCommand(this.arguments.filter((arg) => arg !== undefined) as CommandArgs)
       this.reset()
       return
     }
@@ -207,11 +208,24 @@ export class CommandsRoot {
   playsound = (sound: LiteralUnion<SOUND_EVENTS>, source: SOUND_SOURCES, targets: MultiplePlayersArgument, sourcePosition?: Coordinates, volume?: number, pitch?: number, minVolume?: number) => { }
 
   // recipe command //
-  recipe = new Recipe(this)
+  recipe = new RecipeCommand(this)
 
   // reload command //
   @command('reload', { isRoot: true })
   reload = () => { }
+
+  /**
+   * A raw command. Can be used to create custom commands, for mods or plugins for example.
+   *
+   * @example
+   * // A custom `mount` command, that takes a player and an entity as argument
+   * const self = Selector(`@s`)
+   * const nearestSkeleton = Selector(`@e`, { limit: 1, sort: 'nearest' })
+   *
+   * raw('mount', self, nearestSkeleton)
+   */
+  @command([], { isRoot: true })
+  raw = (...args: unknown[]) => {}
 
   // replaceitem command //
   replaceitem = new ReplaceItem(this)
