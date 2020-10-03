@@ -22,8 +22,10 @@ jobs:
           path: node_modules
           # An explicit key for restoring and saving the cache
           key: ${{ runner.os }}-npm-modules
-      - run: npm ci
-      - run: npm test
+      - name: Install npm modules
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install # will run `yarn install` command      - run: npm test
 
   publish-npm:
     needs: build
