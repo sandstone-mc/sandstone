@@ -39,4 +39,4 @@ jobs:
       - run: yarn
       - run: npm run publishToNpm
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NPM_TOKEN: ${{secrets.npm_token}}
