@@ -14,7 +14,7 @@ export class Recipe<P1 extends string, P2 extends string, P3 extends string> {
 
     this.path = datapack.getResourcePath(name)
 
-    this.datapack.addResource(name, 'recipe', { recipe })
+    this.datapack.addResource(name, 'recipes', { recipe })
   }
 
   get name() {

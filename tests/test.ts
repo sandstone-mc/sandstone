@@ -1,5 +1,5 @@
 import {
-  execute, gamerule, raw, say, tellraw,
+  execute, gamerule, give, raw, say, tellraw,
 } from '../src/commands'
 import {
   mcfunction, Recipe, saveDatapack, _,
@@ -14,18 +14,7 @@ Recipe('test', {
 })
 
 mcfunction('cc', () => {
-  raw('mount', 'cc')
+  give(Selector('@s', { scores: { xx: [0, 1] } }), 'minecraft:blue_ice')
 })
 
 saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })
-
-/*
-
-Added Recipe, raw command, and updated README
-
-@TheMrZZ TheMrZZ released this now
-
-Added Recipe, a raw command that can be used to create custom commands, and updated README.
-Github Releases will now automatically be published to NPM.
-
-*/

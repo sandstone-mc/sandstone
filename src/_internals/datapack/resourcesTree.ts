@@ -60,7 +60,7 @@ export type ResourceTypeMap = {
   advancements: AdvancementResource
   predicates: PredicateResource
   loot_tables: LootTableResource
-  recipe: RecipeResource
+  recipes: RecipeResource
 }
 
 export type ResourceOnlyTypeMap = {
@@ -69,7 +69,7 @@ export type ResourceOnlyTypeMap = {
   advancements: File<AdvancementProperties>
   predicates: File<PredicateProperties>
   loot_tables: File<LootTableProperties>
-  recipe: File<RecipeProperties>
+  recipes: File<RecipeProperties>
 }
 
 /**
@@ -103,7 +103,7 @@ export class ResourcesTree {
       advancements: new Map(),
       predicates: new Map(),
       loot_tables: new Map(),
-      recipe: new Map(),
+      recipes: new Map(),
     }
 
     this.namespaces.set(name, namespaceResource)

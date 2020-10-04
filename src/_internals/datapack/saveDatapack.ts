@@ -227,9 +227,9 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
       }
 
       // Save recipe
-      for (const r of n.recipe.values()) {
+      for (const r of n.recipes.values()) {
         saveResource(
-          dataPath, 'recipe', r, options,
+          dataPath, 'recipes', r, options,
           (resource) => JSON.stringify(resource.recipe, null, 2),
           (namespace, folders, fileName) => `Recipe ${namespace}:${[...folders, fileName].join('/')}`,
         )
