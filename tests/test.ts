@@ -17,8 +17,13 @@ const myPredicate = Predicate('mypred', {
   },
 })
 
+const myScore = createObjective('aa', 'dummy')
+
 const me = Selector('@s', {
   predicate: myPredicate,
+  scores: {
+    [myScore.name]: [0, Infinity],
+  },
 })
 
 mcfunction('cc', () => {
