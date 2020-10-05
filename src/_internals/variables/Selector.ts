@@ -4,6 +4,7 @@ import type {
   ENTITY_TYPES, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
+import type { Predicate } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
 import { ComponentClass } from './abstractClasses'
@@ -116,7 +117,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   advancements?: AdvancementsArgument
 
   /** Select all targets that match the specified predicate. */
-  predicate?: string | string[]
+  predicate?: string | string[] | Predicate | Predicate[]
 } & ({} | {
   /** Define a position on the X-axis in the world the selector starts at,
    * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */

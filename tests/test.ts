@@ -2,19 +2,27 @@ import {
   execute, gamerule, give, raw, say, tellraw,
 } from '../src/commands'
 import {
-  mcfunction, Recipe, saveDatapack, _,
+  mcfunction, Predicate, Recipe, saveDatapack, _,
 } from '../src/core'
 import { createObjective, Selector } from '../src/variables'
 
-Recipe('test', {
-  type: 'blasting',
-  ingredient: { item: 'minecraft:acacia_boat' },
-  result: 'minecraft:coal',
-  experience: 0,
+const myPredicate = Predicate('mypred', {
+  condition: 'minecraft:entity_scores',
+  entity: 'killer',
+  scores: {
+    cc: {
+      max: 0,
+      min: 2,
+    },
+  },
+})
+
+const me = Selector('@s', {
+  predicate: myPredicate,
 })
 
 mcfunction('cc', () => {
-  give(Selector('@s', { scores: { xx: [0, 1] } }), 'minecraft:blue_ice')
+  give(me, 'minecraft:blue_ice')
 })
 
 saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })

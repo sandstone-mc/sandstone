@@ -29,4 +29,8 @@ export class Predicate extends ConditionClass {
       value: ['predicate', this.name],
     }
   }
+
+  toString() {
+    return this.name
+  }
 }
