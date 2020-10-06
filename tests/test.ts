@@ -1,8 +1,9 @@
+import type { LiteralUnion } from '../src/arguments'
 import {
   execute, gamerule, give, raw, say, tellraw,
 } from '../src/commands'
 import {
-  mcfunction, Predicate, Recipe, saveDatapack, _,
+  mcfunction, Predicate, Recipe, saveDatapack, Tag, _,
 } from '../src/core'
 import { createObjective, Selector } from '../src/variables'
 
@@ -19,15 +20,12 @@ const myPredicate = Predicate('mypred', {
 
 const myScore = createObjective('aa', 'dummy')
 
-const me = Selector('@s', {
-  predicate: myPredicate,
-  scores: {
-    [myScore.name]: [0, Infinity],
-  },
-})
+const cc = mcfunction('cc', () => {})
 
-mcfunction('cc', () => {
-  give(me, 'minecraft:blue_ice')
-})
+Tag('functions', 'hi2', [
+  'test:mc',
+  'minecraft:acacia_button',
+  cc,
+])
 
 saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })

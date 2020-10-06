@@ -3,20 +3,18 @@ import type {
   AdvancementType, JsonTextComponent, LootTableType, OBJECTIVE_CRITERION, PredicateType, RecipeType, TAG_TYPES,
 } from '@arguments'
 import { CommandsRoot } from '@commands'
-import { RecipeCommand } from '@commands/implementations'
 import { Flow } from '@flow'
-import type { HintedTagValues, McFunctionOptions } from '@resources'
+import type { HintedTagStringType, McFunctionOptions } from '@resources'
 import {
-  Recipe,
-  Advancement, LootTable, McFunction, Predicate, Tag,
+  Advancement, LootTable, McFunction, Predicate, Recipe,
+  Tag,
 } from '@resources'
-
 import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
 import type { CommandArgs } from './minecraft'
 import { toMcFunctionName } from './minecraft'
 import type {
-  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes, TagObjectValue,
+  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes, TagSingleValue,
 } from './resourcesTree'
 import { ResourcesTree } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
@@ -27,7 +25,7 @@ export interface McFunctionReturn<T extends unknown[]> {
 
   schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: T) => void
 
-  getNameFromArgs: (...args: T) => string
+  getName: (...args: T) => string
 
   clearSchedule: (...args: T) => void
 }
@@ -361,7 +359,7 @@ export default class Datapack {
 
   Predicate = (name: string, predicate: PredicateType) => new Predicate(this.commandsRoot, name, predicate)
 
-  Tag = <T extends TAG_TYPES>(type: T, name: string, values: HintedTagValues<T>, replace?: boolean) => new Tag(this, type, name, values as TagObjectValue<string>[], replace)
+  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[], replace?: boolean) => new Tag(this, type, name, values, replace)
 
   LootTable = (name: string, lootTable: LootTableType) => new LootTable(this, name, lootTable)
 
