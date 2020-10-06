@@ -97,6 +97,6 @@ export type PredicateCondition = (
       /** If true, the condition evaluates to true only if it's thundering. */
       thundering?: boolean
   }>
-)
+) |never
 
 export type PredicateType = ObjectOrArray<PredicateCondition>

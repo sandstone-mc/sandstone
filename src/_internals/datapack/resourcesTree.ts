@@ -29,8 +29,8 @@ export type File<T extends Record<string, unknown>, P extends ResourcePath = Res
 type FunctionProperties = { commands: CommandArgs[] }
 export type FunctionResource = FolderOrFile<FunctionProperties>
 
-export type TagObjectValue<T extends unknown = string> = { id: T, required: boolean }
-type TagProperties = { values: (TagObjectValue | string)[], replace?: boolean }
+export type TagSingleValue<T> = T | { id: T, required: boolean }
+type TagProperties = { values: TagSingleValue<string>[], replace?: boolean }
 type TagPath = readonly [
   namespace: string,
   type: TAG_TYPES,

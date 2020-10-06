@@ -1,20 +1,31 @@
+import type { LiteralUnion } from '../src/arguments'
 import {
   execute, gamerule, give, raw, say, tellraw,
 } from '../src/commands'
 import {
-  mcfunction, Recipe, saveDatapack, _,
+  mcfunction, Predicate, Recipe, saveDatapack, Tag, _,
 } from '../src/core'
 import { createObjective, Selector } from '../src/variables'
 
-Recipe('test', {
-  type: 'blasting',
-  ingredient: { item: 'minecraft:acacia_boat' },
-  result: 'minecraft:coal',
-  experience: 0,
+const myPredicate = Predicate('mypred', {
+  condition: 'minecraft:entity_scores',
+  entity: 'killer',
+  scores: {
+    cc: {
+      max: 0,
+      min: 2,
+    },
+  },
 })
 
-mcfunction('cc', () => {
-  give(Selector('@s', { scores: { xx: [0, 1] } }), 'minecraft:blue_ice')
-})
+const myScore = createObjective('aa', 'dummy')
+
+const cc = mcfunction('cc', () => {})
+
+Tag('functions', 'hi2', [
+  'test:mc',
+  'minecraft:acacia_button',
+  cc,
+])
 
 saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })

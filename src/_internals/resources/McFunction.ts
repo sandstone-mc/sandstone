@@ -200,15 +200,15 @@ export class McFunction<T extends any[]> {
   }
 
   getNameFromArgs = (...args: T): string => {
-    const jsonRepresentation = JSON.stringify(args)
-    const mcfunction = this.alreadyInitializedParameters.get(jsonRepresentation)
+    const repr = hash(args)
+    const mcfunction = this.alreadyInitializedParameters.get(repr)
 
     if (mcfunction) {
       return mcfunction.name
     }
 
     this.callAndRegister(args)
-    return this.alreadyInitializedParameters.get(jsonRepresentation)?.name as string
+    return this.alreadyInitializedParameters.get(repr)?.name as string
   }
 
   generateInitialFunction = () => {

@@ -3,36 +3,51 @@ import type {
   BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS, TAG_TYPES,
 } from '@arguments'
 import type { Datapack } from '@datapack'
-import type { TagObjectValue } from '@datapack/resourcesTree'
+import type { McFunctionReturn } from '@datapack/Datapack'
+import type { TagSingleValue } from '@datapack/resourcesTree'
 
-type HintedTagStringType<T extends TAG_TYPES> = (
-  T extends 'blocks' ? BLOCKS :
-  T extends 'fluids' ? FLUIDS :
-  T extends 'entity_types' ? ENTITY_TYPES :
-  T extends 'functions' ? string :
-  T extends 'items' ? ITEMS :
+export type HintedTagStringType<T extends TAG_TYPES> = (
+  T extends 'blocks' ? LiteralUnion<BLOCKS> :
+  T extends 'fluids' ? LiteralUnion<FLUIDS> :
+  T extends 'entity_types' ? LiteralUnion<ENTITY_TYPES> :
+  T extends 'functions' ? (LiteralUnion<string> | McFunctionReturn<[]>) :
+  T extends 'items' ? LiteralUnion<ITEMS> :
   string
 )
 
-export type HintedTagValues<T extends TAG_TYPES> = (
-  LiteralUnion<HintedTagStringType<T>> |
-  TagObjectValue<
-    LiteralUnion<HintedTagStringType<T>>
-  >
-)[]
+function isMcFunctionReturn(v: unknown): v is McFunctionReturn<[]> {
+  return typeof v === 'function'
+}
 
-export class Tag {
+function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T> {
+  return typeof v === 'object'
+}
+
+export class Tag<TYPE extends TAG_TYPES> {
   readonly type
 
-  readonly values
+  readonly values: TagSingleValue<string>[]
 
   readonly name
 
   readonly datapack
 
-  constructor(datapack: Datapack, type: TAG_TYPES, name: string, values: TagObjectValue[], replace?: boolean) {
+  constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[], replace?: boolean) {
     this.type = type
-    this.values = values
+
+    this.values = values.map((v) => {
+      if (isMcFunctionReturn(v)) {
+        return v.getName()
+      }
+      if (isTagObject(v) && isMcFunctionReturn(v.id)) {
+        return {
+          id: v.id.getName(),
+          required: v.required,
+        }
+      }
+      return v as string | TagSingleValue<string>
+    })
+
     this.name = name
     this.datapack = datapack
 
@@ -42,7 +57,7 @@ export class Tag {
       children: new Map(),
       isResource: true,
       path: [namespace, type, ...fullPath],
-      values,
+      values: this.values,
       replace,
     })
   }

@@ -4,6 +4,7 @@ import type {
   ENTITY_TYPES, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
+import type { Predicate } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
 import { ComponentClass } from './abstractClasses'
@@ -116,7 +117,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   advancements?: AdvancementsArgument
 
   /** Select all targets that match the specified predicate. */
-  predicate?: string | string[]
+  predicate?: string | string[] | Predicate | Predicate[]
 } & ({} | {
   /** Define a position on the X-axis in the world the selector starts at,
    * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
@@ -145,15 +146,31 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
     MustBeSingle extends true ? { limit: 0 | 1 } : { limit?: number }
   )
 
+// Sanitize score values. null => '', Infinity => '', any number => itself
+function sanitizeValue(value: number | null): string {
+  if (value === undefined || value === null) {
+    return ''
+  }
+
+  if (Number.isFinite(value)) {
+    return value.toString()
+  }
+
+  // Value is Infinity or -Infinity
+  return ''
+}
+
+// Returns the string representation of a score range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
 function parseScore(scores: ScoreArgument): string {
   return `{${Object.entries(scores).map(([scoreName, value]) => {
     if (Array.isArray(value)) {
-      return [scoreName, `${value[0] ?? ''}..${value[1] ?? ''}`].join('=')
+      return [scoreName, `${sanitizeValue(value[0])}..${sanitizeValue(value[1])}`].join('=')
     }
     return [scoreName, value].join('=')
   }).join(', ')}}`
 }
 
+// Returns the string representation of advancements
 function parseAdvancements(advancements: AdvancementsArgument): string {
   return `{${Object.entries(advancements).map(([advancementName, value]) => {
     if (typeof value === 'boolean') {
