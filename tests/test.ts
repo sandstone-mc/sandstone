@@ -5,27 +5,18 @@ import {
 import {
   mcfunction, Predicate, Recipe, saveDatapack, Tag, _,
 } from '../src/core'
-import { createObjective, Selector } from '../src/variables'
+import {
+  createObjective, rel, Selector, Variable,
+} from '../src/variables'
+import { Menu } from './menu'
 
-const myPredicate = Predicate('mypred', {
-  condition: 'minecraft:entity_scores',
-  entity: 'killer',
-  scores: {
-    cc: {
-      max: 0,
-      min: 2,
-    },
-  },
+mcfunction('test', () => {
+  const counter = Variable(0)
+
+  _.while(_.block(rel(0, 0, 0), 'minecraft:acacia_button'), () => {
+    say('hi')
+    say('ho')
+  })
 })
-
-const myScore = createObjective('aa', 'dummy')
-
-const cc = mcfunction('cc', () => {})
-
-Tag('functions', 'hi2', [
-  'test:mc',
-  'minecraft:acacia_button',
-  cc,
-])
 
 saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })

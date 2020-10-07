@@ -5,7 +5,8 @@ import {
   clear, execute, replaceitem,
 } from '../src/commands'
 import { mcfunction } from '../src/core'
-import { createObjective, PlayerScore, Variable } from '../src/variables'
+import type { PlayerScore } from '../src/variables'
+import { createObjective, Variable } from '../src/variables'
 import { nbtParser, SelectorCreator, _ } from '../src/_internals'
 
 /** A menu action can either be: a new menu bar to open, or a callback. */
