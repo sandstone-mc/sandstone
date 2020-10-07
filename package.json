@@ -1,6 +1,6 @@
 {
   "name": "sandstone",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "license": "MIT",
@@ -23,8 +23,8 @@
     "url": "git+https://github.com/TheMrZZ/sandstone.git"
   },
   "scripts": {
-    "build:watch": "tsc --watch --incremental --pretty",
-    "build": "node scripts/clean.js && tsc && node scripts/setupPackage.js",
+    "build:watch": "ttsc --watch --incremental --pretty",
+    "build": "node scripts/clean.js && ttsc && node scripts/setupPackage.js",
     "test": "node dist/tests/test.js",
     "test:watch": "nodemon -q dist/tests/test.js",
     "publishToNpm": "npm run build && npm publish dist/src"
@@ -43,23 +43,15 @@
     "eslint-plugin-prettier": "^3.1.4",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
-    "typescript": "^4.1.0-dev.20200930"
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.1.0-dev.20200930",
+    "typescript-transform-paths": "^2.0.1"
   },
   "dependencies": {
-    "module-alias": "^2.2.2",
     "object-hash": "^2.0.3"
   },
   "engines": {
     "node": ">=14.0.0"
-  },
-  "_moduleAliases": {
-    "@arguments": "dist/src/_internals/arguments",
-    "@commands": "dist/src/_internals/commands",
-    "@datapack": "dist/src/_internals/datapack",
-    "@resources": "dist/src/_internals/resources",
-    "@variables": "dist/src/_internals/variables",
-    "@flow": "dist/src/_internals/flow",
-    "@": "dist/src/_internals"
   },
   "bugs": {
     "url": "https://github.com/TheMrZZ/sandstone/issues"

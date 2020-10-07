@@ -7,7 +7,7 @@ rootDir = __dirname + '/..'
 distDir = rootDir + '/dist/src'
 
 /*
-Copies the root package.json but removes the scripts and dev dependencies which are not needed in the package. 
+Copies the root package.json but removes the scripts and dev dependencies which are not needed in the package.
 It also fixes the main entry point to the package.
 */
 const source = fs.readFileSync(__dirname + "/../package.json").toString('utf-8');
@@ -21,15 +21,6 @@ if (sourceObj.types.startsWith("dist/src/")) {
     sourceObj.types = sourceObj.types.slice(9);
 }
 
-sourceObj._moduleAliases = Object.fromEntries(
-    Object.entries(sourceObj._moduleAliases).map(([key, value]) => {
-        if (value.startsWith('dist/src/')) {
-            value = value.slice(9)
-        }
-        return [key, value]
-    })
-)
-
 // Remove sandstone from dependencies
 delete sourceObj.dependencies.sandstone
 
@@ -37,3 +28,4 @@ fs.writeFileSync(distDir + "/package.json", Buffer.from(JSON.stringify(sourceObj
 fs.writeFileSync(distDir + "/version.txt", Buffer.from(sourceObj.version, "utf-8"));
 fs.copyFileSync(rootDir + '/README.md', distDir + '/README.md')
 fs.copyFileSync(rootDir + '/LICENSE', distDir + '/LICENSE')
+fs.copyFileSync(rootDir + '/tsconfig.json', distDir + '/.tsconfig.json')

@@ -70,7 +70,8 @@ export class Flow {
     // At the end of the callback, add the given conditions to call it again
     if (config.loopCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
-      this.commandsRoot.addAndRegister('function', callbackFunctionName)
+      this.commandsRoot.inExecute = true
+      this.commandsRoot.function(callbackFunctionName)
     }
 
     // Exit the callback

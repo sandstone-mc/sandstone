@@ -1,7 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('module-alias')(__dirname)
-
-// eslint-disable-next-line import/first
 import { commandsRoot } from './_internals'
 
 export const {
