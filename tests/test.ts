@@ -13,9 +13,10 @@ import { Menu } from './menu'
 mcfunction('test', () => {
   const counter = Variable(0)
 
-  _.while(_.block(rel(0, 0, 0), 'minecraft:acacia_button'), () => {
+  _.while(counter.lowerOrEqualThan(10), () => {
     say('hi')
     say('ho')
+    counter.add(1)
   })
 })
 
