@@ -1,8 +1,8 @@
 import {
-  data, execute, experience, gamerule, weather,
+  data, execute,
 } from '../src/commands'
-import { mcfunction, saveDatapack, _ } from '../src/core'
-import { createObjective, rel, Selector } from '../src/variables'
+import { mcfunction, saveDatapack } from '../src/core'
+import { createObjective, Selector } from '../src/variables'
 
 const jinxCooldown = createObjective('jinxCooldown', 'dummy')
 const myCooldown = jinxCooldown.ScoreHolder('@s')
