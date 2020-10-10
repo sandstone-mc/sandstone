@@ -186,17 +186,15 @@ export class McFunction<T extends any[]> {
   }
 
   schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'replace' | 'append', ...args: T) => {
-    this.callAndRegister(args, (functionName) => {
-      this.datapack.commandsRoot.arguments.push('schedule', 'function', functionName, delay, type)
-    })
+    const name = this.getNameFromArgs(...args)
+
+    this.datapack.commandsRoot.schedule.function(name, delay, type)
   }
 
   clearSchedule = (...args: T) => {
     const name = this.getNameFromArgs(...args)
 
-    this.datapack.commandsRoot.arguments.push('clear', name)
-    this.datapack.commandsRoot.executable = true
-    this.datapack.commandsRoot.register()
+    this.datapack.commandsRoot.schedule.clear(name)
   }
 
   getNameFromArgs = (...args: T): string => {

@@ -1,23 +1,22 @@
-import type { LiteralUnion } from '../src/arguments'
 import {
-  execute, gamerule, give, raw, say, tellraw,
+  data, execute, experience, gamerule, weather,
 } from '../src/commands'
-import {
-  mcfunction, Predicate, Recipe, saveDatapack, Tag, _,
-} from '../src/core'
-import {
-  createObjective, rel, Selector, Variable,
-} from '../src/variables'
-import { Menu } from './menu'
+import { mcfunction, saveDatapack, _ } from '../src/core'
+import { createObjective, rel, Selector } from '../src/variables'
+
+const jinxCooldown = createObjective('jinxCooldown', 'dummy')
+const myCooldown = jinxCooldown.ScoreHolder('@s')
+
+const rng = createObjective('rng', 'dummy')
+const myRng = rng.ScoreHolder('@s')
+
+function getRotation() { return Math.random() * 360 }
+
+const buffActiveFunc = mcfunction('buffactive', () => {})
 
 mcfunction('test', () => {
-  const counter = Variable(0)
-
-  _.while(counter.lowerOrEqualThan(10), () => {
-    say('hi')
-    say('ho')
-    counter.add(1)
-  })
+  const closestCow = Selector('@e', { type: 'minecraft:cow', limit: 1 })
+  data.modify.entity(closestCow, 'Health').set.value(0)
 })
 
-saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })
+saveDatapack('myDatapack', { verbose: true, world: 'Crea1_15' })

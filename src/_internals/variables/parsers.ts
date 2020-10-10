@@ -7,8 +7,8 @@ import { VectorClass } from './Coordinates'
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<typeof args> : typeof args
 ) {
-  if (Array.isArray(args) && args.length === 3 && args.every((a) => typeof a === 'string')) {
-    return new VectorClass(args)
+  if (Array.isArray(args) && args.length === 3) {
+    return new VectorClass(args.map((arg) => arg.toString()))
   }
 
   return args
