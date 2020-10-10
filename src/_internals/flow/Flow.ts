@@ -118,7 +118,7 @@ export class Flow {
     const conditionsObjective = getConditionsObjective(this.commandsRoot)
 
     // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
-    const ifScore = conditionsObjective.ScoreHolder('ifResult')
+    const ifScore = conditionsObjective.ScoreHolder('if_result')
     ifScore.set(0)
 
     this.flowStatement(() => {
@@ -136,7 +136,7 @@ export class Flow {
 
   elseIf = (condition: ConditionType, callback: () => void): ElifElseFlow => {
     const conditionsObjective = getConditionsObjective(this.commandsRoot)
-    const ifScore = conditionsObjective.ScoreHolder('ifResult')
+    const ifScore = conditionsObjective.ScoreHolder('if_result')
 
     this.flowStatement(() => {
       callback()
@@ -153,7 +153,7 @@ export class Flow {
 
   else = (callback: () => void) => {
     const conditionsObjective = getConditionsObjective(this.commandsRoot)
-    const ifScore = conditionsObjective.ScoreHolder('ifResult')
+    const ifScore = conditionsObjective.ScoreHolder('if_result')
 
     this.flowStatement(callback, {
       callbackName: 'else',

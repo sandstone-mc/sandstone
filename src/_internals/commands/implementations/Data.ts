@@ -1,4 +1,4 @@
-import type { Coordinates, SingleEntityArgument } from '@arguments'
+import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
 import { coordinatesParser } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
@@ -101,10 +101,10 @@ class DataModifyValues extends Command {
   fromStorage = (source: string, sourcePath: string) => { }
 
   /**
-   * Modify the NBT witht the given value.
+   * Modify the NBT with the given value.
    */
   @command('value')
-  value = (value: string) => { }
+  value = (value: NBTObject) => { }
 }
 
 class DataModifyType extends Command {

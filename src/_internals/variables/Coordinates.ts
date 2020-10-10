@@ -2,7 +2,7 @@ import { inspect } from 'util'
 
 /** A root class that can be used to defined a N-dimeension vector */
 export class VectorClass<T extends readonly unknown[]> {
-  protected values: T
+  values: T
 
   constructor(values: T) {
     if (!Array.isArray(values) || !values.every((i) => typeof i === 'string')) {
@@ -20,8 +20,8 @@ export class VectorClass<T extends readonly unknown[]> {
     return this.toString()
   }
 
-  [Symbol.iterator]() {
-    return this.values[Symbol.iterator]
+  [Symbol.iterator](): Iterator<T[0]> {
+    return this.values[Symbol.iterator]()
   }
 }
 

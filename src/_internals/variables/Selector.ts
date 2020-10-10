@@ -100,19 +100,6 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
    */
   y_rotation?: Range
 
-  /**
-   * Filter target selection to those of a specific entity type.
-   *
-   * Multiple values are allowed, when passed as an array.
-   *
-   * @example
-   *
-   * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
-   *
-   * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
-   */
-  type?: MustBePlayer extends true ? 'minecraft:player' | 'minecraft:player'[] : (LiteralUnion<ENTITY_TYPES> | LiteralUnion<ENTITY_TYPES>[])
-
   /** Select all targets that match the specified advancement and value. */
   advancements?: AdvancementsArgument
 
@@ -143,8 +130,36 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
    * as measured from the closest corner of the entities' hitboxes */
   dz: number
 }) & (
-    MustBeSingle extends true ? { limit: 0 | 1 } : { limit?: number }
-  )
+  MustBeSingle extends true ? { limit: 0 | 1 } : { limit?: number }
+) & (
+  MustBePlayer extends true ? {
+    /**
+     * Filter target selection to those of a specific entity type.
+     *
+     * Multiple values are allowed, when passed as an array.
+     *
+     * @example
+     *
+     * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
+     *
+     * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
+     */
+    type: 'minecraft:player' | 'minecraft:player'[]
+  } : {
+    /**
+     * Filter target selection to those of a specific entity type.
+     *
+     * Multiple values are allowed, when passed as an array.
+     *
+     * @example
+     *
+     * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
+     *
+     * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
+     */
+    type?: LiteralUnion<ENTITY_TYPES> | LiteralUnion<ENTITY_TYPES>[]
+  }
+)
 
 // Sanitize score values. null => '', Infinity => '', any number => itself
 function sanitizeValue(value: number | null): string {
@@ -300,8 +315,8 @@ export function SelectorCreator(target: '@a', selectorArguments: Omit<SingleSele
 export function SelectorCreator(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
 export function SelectorCreator(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
 export function SelectorCreator(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
-export function SelectorCreator(target: string, selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
+export function SelectorCreator(target: '@e', selectorArguments: AnySelectorProperties): SelectorClass<false, false>
 
-export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
+export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: string, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
 }

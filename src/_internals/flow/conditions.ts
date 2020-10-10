@@ -10,7 +10,7 @@ export function conditionToString(condition: ConditionType): string {
 }
 
 export function getConditionsObjective(commandsRoot: CommandsRoot) {
-  return commandsRoot.Datapack.getCreateObjective('sandstoneCond', 'dummy', 'Sandstone Conditions')
+  return commandsRoot.Datapack.getCreateObjective('sandstone_cond', 'dummy', 'Sandstone Conditions')
 }
 
 export class CombinedConditions {
