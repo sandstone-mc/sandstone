@@ -46,12 +46,47 @@ function isRealCommandsRoot(commandsRootLike: CommandsRootLike): commandsRootLik
 }
 
 export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
+  /**
+   * Saves the final command's return value as tag data within a block entity.
+   *
+   * Store as a byte, short, int, long, float, or double. If the return value is a decimal, it is rounded first and then multiplied by `scale`.
+   *
+   * @param targetPos Position of target block
+   *
+   * @param path Location of the desired tag to hold the value in.
+   *
+   * @param type Desired data size/type.
+   *
+   * @param scale Multiplier to apply before storing value.
+   */
   @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
   block = (targetPos: Coordinates, path: string, type: StoreType, scale: number) => this.execute
 
+  /**
+   * Saves the final command's return value in either a bossbar's current value or its maximum value.
+   *
+   * @param id ID of the bossbar to target for saving.
+   *
+   * @param type Whether to overwrite the bossbar's current value or its max value.
+   */
   @command('bossbar', executeConfig)
   bossbar = (id: string, type: 'max' | 'value') => this.execute
 
+  /**
+   * Save the final command's return value in one of an entity's data tags.
+   *
+   * Store as a byte, short, int, long, float, or double. If the return value is a decimal, it is rounded first and then multiplied by `scale`.
+   *
+   * Like the `/data` command, `/execute store <arguments>` cannot modify player NBT.
+   *
+   * @param target A single entity to store under.
+   *
+   * @param path Location of the desired tag to hold the value in.
+   *
+   * @param type Desired data size/type.
+   *
+   * @param scale Multiplier to apply before storing value.
+   */
   @command('entity', executeConfig)
   entity = (
     target: SingleEntityArgument, path: string, type: StoreType, scale: number,
@@ -59,15 +94,45 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
 
   @command('score', executeConfig)
   score: (
-    ((targets: MultipleEntitiesArgument, objective: ObjectiveArgument) => InferExecute<T>) &
-    ((playerScore: PlayerScore) => InferExecute<T>)
+  (
+    /**
+     * Overrides `targets`' score on the given `objective` with the final command's return value.
+     *
+     * @param targets Specifies score holder(s) whose score is to be overridden.
+     *
+     * @param objective A scoreboard objective.
+     */
+    (targets: MultipleEntitiesArgument, objective: ObjectiveArgument) => InferExecute<T>
+  ) & (
+    /**
+     * Overrides the given player's score with the final command's return value.
+     *
+     * @param playerScore The player's score to override.
+     */
+    (playerScore: PlayerScore) => InferExecute<T>)
   ) = (...args: unknown[]) => this.execute
 
+  /**
+   * Uses the `path` within storage `target` to store the return value in.
+   *
+   * Store as a byte, short, int, long, float, or double. If the return value is a decimal, it is rounded first and then multiplied by `scale`.
+   *
+   * If the storage does not yet exist, it gets created.
+   *
+   * @param target Target storage container, as a namespaced ID.
+   *
+   * @param path Location of the desired tag to hold the value in.
+   *
+   * @param type Desired data size/type.
+   *
+   * @param scale Multiplier to apply before storing value.
+   */
   @command('storage', executeConfig)
   storage = (target: string, path: string, type: StoreType, scale: number) => this.execute
 }
 
 export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
+  /** Store the final command's result value. */
   get result(): ExecuteStoreArgs<T> {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
@@ -82,6 +147,7 @@ export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<
     return new ExecuteStoreArgs(this.execute)
   }
 
+  /** Store the final command's success value. */
   get success() {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
@@ -98,62 +164,181 @@ export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<
 }
 
 export class ExecuteIfData<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
+  /**
+   * Checks whether the targeted block has any data for a given tag
+   * @param pos Position of the block to be tested.
+   * @param path Data tag to check for.
+   */
   @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
   block = (pos: Coordinates, path: string) => this.execute
 
+  /**
+   * Checks whether the targeted entity has any data for a given tag
+   * @param target One single entity to be tested.
+   * @param path Data tag to check for.
+   */
   @command('entity', executeConfig)
   entity = (target: SingleEntityArgument, path: string) => this.execute
 
+  /**
+   * Checks whether the targeted storage has any data for a given tag
+   * @param source The storage to check in.
+   * @param path Data tag to check for.
+   */
   @command('storage', executeConfig)
   storage = (source: string, path: string) => this.execute
 }
 
 export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
+  /**
+   * Updates the command's position, aligning to its current block position (an integer). Only applies along specified axes.
+   * This is akin to flooring the coordinates – i.e. rounding them downwards. It updates the meaning of `~ ~ ~` and `^ ^ ^`.
+   *
+   * @param axes Any non-repeating combination of the characters 'x', 'y', and 'z'.
+   */
   @command('align', executeConfig)
   align = (axes: AXES) => this
 
+  /**
+   * Stores the distance from the feet to the eyes of the entity that is executing the command in the anchor, which is part of the command context.
+   * Effectively recentres `^ ^ ^` on either the eyes or feet, also changing the angle the `facing` sub-command works off of.
+   *
+   * @param anchor Whether to anchor the executed command to eye level or feet level
+   */
   @command('anchored', executeConfig)
   anchored = (anchor: ANCHORS) => this
 
+  /**
+   * Sets the command sender to target entity, without changing position, rotation, dimension, or anchor
+   *
+   * @param targets Target entity/entities to become the new sender.
+   */
   @command('as', executeConfig)
   as = (targets: MultipleEntitiesArgument) => this
 
+  /**
+   * Sets the command position, rotation, and dimension to match those of an entity/entities; does not change sender
+   * @param targets Target entity/entities to match position, rotation, and dimension with
+   */
   @command('at', executeConfig)
   at = (targets: MultipleEntitiesArgument) => this
 
+  /**
+   * Sets the command rotation to face a given point, as viewed from its anchor (either the eyes or the feet).
+   *
+   * @param pos Coordinate to rotate towards.
+   */
   @command('facing', { ...executeConfig, parsers: { '0': coordinatesParser } })
   facing = (pos: Coordinates) => this
 
+  /**
+   * Sets the command rotation to face a given point, as viewed from its anchor (either the eyes or the feet).
+   *
+   * @param targets The target(s) to rotate towards.
+   *
+   * @param anchor Whether to point at the target's eyes or feet.
+   */
   @command(['facing', 'entity'], executeConfig)
   facingEntity = (targets: MultipleEntitiesArgument, anchor: ANCHORS) => this
 
+  /**
+   * Sets the command dimension.
+   *
+   * @param dimension Name of the new execution dimension.
+   */
   @command('in', executeConfig)
-  in = (dimension: DIMENSION_TYPES) => this
+  in = (dimension: LiteralUnion<DIMENSION_TYPES>) => this
 
+  /**
+   * Sets the command position, without changing rotation or dimension.
+   *
+   * @param pos The new position.
+   */
   @command('positioned', { ...executeConfig, parsers: { '0': coordinatesParser } })
   positioned = (pos: Coordinates) => this
 
+  /**
+   * Sets the command position, without changing rotation or dimension, by matching an entity's position.
+   *
+   * @param targets Target entity/entities to match position with.
+   */
   @command(['positioned', 'as'], executeConfig)
   positionedAs = (targets: MultipleEntitiesArgument) => this
 
+  /**
+   * Sets the command rotation.
+   *
+   * @param rotation The desired rotation.
+   *
+   * First value is measured clockwise in degrees from due south (the +Z Axis), ranging [–180 to +180)
+   * Second value is measured as declination from the horizon in degrees, ranging [–90 to +90] (straight up to straight down)
+   *
+   * Relative values can be used to specify a rotation relative to the current execution rotation.
+   */
   @command('rotated', executeConfig)
   rotated = (rotation: Rotation) => this
 
+  /**
+   * Sets the command rotation, by matching an entity's rotation.
+   *
+   * @param targets Target entity/entities to match rotation with.
+   */
   @command(['rotated', 'as'], executeConfig)
   rotatedAs = (targets: MultipleEntitiesArgument) => this
 
+  /**
+   * Compares the block at a given position to a given block. Suceeds if both are identical.
+   *
+   * @param pos Position of a target block to test.
+   *
+   * @param block A block to test against.
+   */
   @command(['if', 'block'], { ...executeConfig, parsers: { '0': coordinatesParser } })
   ifBlock = (pos: Coordinates, block: LiteralUnion<BLOCKS>) => this
 
+  /**
+   * Compares the block at a given position to a given block. Succeeds if both are different.
+   *
+   * @param pos Position of a target block to test.
+   *
+   * @param block A block to test against.
+   */
   @command(['unless', 'block'], executeConfig)
   unlessBlock: this['ifBlock'] = (...args: unknown[]) => this
 
+  /**
+   * Compares the blocks in two equally sized volumes. Suceeds if both are identical.
+   *
+   * @param start Positions of the first diagonal corner of the source volume (the comparand; the volume to compare).
+   *
+   * @param end Positions of the second diagonal corner of the source volume (the comparand; the volume to compare)
+   *
+   * @param destination
+   * Position of the lower northwest (the smallest X, Y and Z value) corner of the destination volume
+   * (the comparator; the volume to compare to). Assumed to be of the same size as the source volume.
+   *
+   * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
+   */
   @command(['if', 'blocks'], { ...executeConfig, parsers: { '0': coordinatesParser, '1': coordinatesParser, '2': coordinatesParser } })
   ifBlocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked') => this
 
+  /**
+   * Compares the blocks in two equally sized volumes. Suceeds if both are different.
+   *
+   * @param start Positions of the first diagonal corner of the source volume (the comparand; the volume to compare).
+   *
+   * @param end Positions of the second diagonal corner of the source volume (the comparand; the volume to compare)
+   *
+   * @param destination
+   * Position of the lower northwest (the smallest X, Y and Z value) corner of the destination volume
+   * (the comparator; the volume to compare to). Assumed to be of the same size as the source volume.
+   *
+   * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
+   */
   @command(['unless', 'blocks'], executeConfig)
   unlessBlocks: this['ifBlocks'] = (...args: unknown[]) => this
 
+  /** Checks whether the targeted block, entity or storage has any data for a given tag. Suceeds if the data is found. */
   get ifData(): ExecuteIfData<T> {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
@@ -168,6 +353,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     return new ExecuteIfData(this as unknown as InferExecute<T>)
   }
 
+  /** Checks whether the targeted block, entity or storage has any data for a given tag. Suceeds if no data is found. */
   get unlessData(): ExecuteIfData<T> {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
@@ -182,38 +368,86 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     return new ExecuteIfData(this as unknown as InferExecute<T>)
   }
 
+  /**
+   * Checks whether one or more entities exist. Suceeds if they do.
+   *
+   * @param targets The target entities to check.
+   */
   @command(['if', 'entity'], executeConfig)
   ifEntity = (targets: MultipleEntitiesArgument) => this
 
+  /**
+   * Checks whether one or more entities exist. Suceeds if they don't.
+   *
+   * @param targets The target entities to check.
+   */
   @command(['unless', 'entity'], executeConfig)
   unlessEntity: this['ifEntity'] = (...args: unknown[]) => this
 
+  /**
+   * Checks whether the `predicate` evaluates to a positive result. Suceeds if it does.
+   *
+   * @param predicate The predicate to test.
+   */
+  @command(['if', 'predicate'], executeConfig)
+  ifPredicate = (predicate: string) => this
+
+  /**
+   * Checks whether the `predicate` evaluates to a positive result. Suceeds if it doesn't.
+   *
+   * @param predicate The predicate to test.
+   */
+  @command(['unless', 'predicate'], executeConfig)
+  unlessPredicate: this['ifPredicate'] = (...args: unknown[]) => this
+
+  /**
+   * Check a score against either another score or a given range.
+   * @param args
+   */
   @command(['if', 'score'], executeConfig)
   ifScore: (
-    ((
+    /**
+     * Check a score against either another score or a given range.
+     *
+     * @param target A single score holder.
+     *
+     * @param objective The scoreboard objective to check under.
+     *
+     * @param operator The comparison operator to use.
+     *
+     * @param source A second score holder to compare against.
+     *
+     * @param sourceObjective  A scoreboard objective to compare against.
+     */
+    (
       target: SingleEntityArgument,
       targetObjective: ObjectiveArgument,
       operator: COMPARISON_OPERATORS,
       source: SingleEntityArgument,
-      sourceObjective:
-        ObjectiveArgument
-    ) => this) &
-    ((
+      sourceObjective: ObjectiveArgument
+    ) => this
+ ) & (
+    /**
+     * Check a score against either another score or a given range.
+     *
+     * @param target A single score holder.
+     *
+     * @param objective The scoreboard objective to check under.
+     *
+     * @param operator The comparison operator to use.
+     *
+     * @param range Range to compare score against.
+     */
+    (
       target: SingleEntityArgument,
       targetObjective: ObjectiveArgument,
       operator: 'matches',
-      range: Range,
-    ) => this)
+      range: Range
+   ) => this
   ) = (...args: unknown[]) => this
 
   @command(['unless', 'score'], executeConfig)
   unlessScore: this['ifScore'] = (...args: unknown[]) => this
-
-  @command(['if', 'predicate'], executeConfig)
-  ifPredicate = (predicate: string) => this
-
-  @command(['unless', 'predicate'], executeConfig)
-  unlessPredicate: this['ifPredicate'] = (...args: unknown[]) => this
 
   // For if & unless, we're using an intermediate command because the "real" arguments are in the `.value` property of the condition
 
@@ -223,23 +457,37 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   @command('unless', executeConfig)
   private unless_ = (...args: string[]) => this
 
+  /** Checks if the given condition is met. */
   if = (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value)
 
+  /** Checks if the given conditions is not met. */
   unless = (condition: ConditionClass) => this.unless_(...condition._toMinecraftCondition().value)
 
+  /**
+   * Store the final command's result or success value somewhere.
+   * It first records the location to store in, and then stores in the location after all the commands are executed.
+   *
+   * Note that the return values of commands must be an integer. If a decimal, it is rounded down.
+   */
   store: ExecuteStore<T> = new ExecuteStore(this as unknown as InferExecute<T>)
 
+  /** Runs a single command. */
   get runOne(): (
-    T extends CommandsRoot ?
-      // The Pick<> ensures only commands are returned from CommandsRoot
-      Pick<T, ((keyof typeof commands) | 'function')> :
-      T
+ T extends CommandsRoot ?
+  // The Pick<> ensures only commands are returned from CommandsRoot
+  Pick<T, ((keyof typeof commands) | 'function')> :
+  T
   ) {
     return this.commandsRoot as any
   }
 }
 
 export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
+  /**
+   * Runs a callback inside a new function.
+   *
+   * If the callback only creates one command, and this command is safe to be inlined, it will be inlined to avoid a useless function call.
+   */
   run = (callback: () => void) => {
     this.commandsRoot.Datapack.flow.flowStatement(callback, {
       callbackName: `execute_${this.commandsRoot.arguments[1]}`,
