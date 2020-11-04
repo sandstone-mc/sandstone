@@ -11,6 +11,7 @@ import {
 } from '@resources'
 import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
+import chalk from 'chalk'
 import type { CommandArgs } from './minecraft'
 import { toMcFunctionName } from './minecraft'
 import type {
@@ -49,6 +50,8 @@ export default class Datapack {
 
   flow: Flow
 
+  initCommands: CommandArgs[]
+
   constructor(namespace: string) {
     this.defaultNamespace = namespace
     this.currentFunction = null
@@ -59,6 +62,8 @@ export default class Datapack {
 
     this.commandsRoot = new CommandsRoot(this)
     this.flow = new Flow(this.commandsRoot)
+
+    this.initCommands = []
   }
 
   /** Get information like the path, namespace etc... from a resource name */
@@ -317,7 +322,11 @@ export default class Datapack {
     const anonymousScore = score.ScoreHolder(`${name ?? 'anonymous'}_${id}`)
 
     if (initialValue !== undefined) {
-      anonymousScore.set(initialValue)
+      if (this.currentFunction !== null) {
+        anonymousScore.set(initialValue)
+      } else {
+        this.initCommands.push(['scoreboard', 'players', 'set', anonymousScore.target, anonymousScore.objective, initialValue])
+      }
     }
 
     return anonymousScore
@@ -371,7 +380,11 @@ export default class Datapack {
    * @param name The name of the Datapack
    * @param options The save options
    */
-  save = (name: string, options: SaveOptions = {}): void => {
+  save = (name: string, options: SaveOptions = {}): Promise<void> => {
+    if (!options.dryRun) {
+      console.log(chalk`⌛ {gray Starting compilation...}`)
+    }
+
     // First, generate all functions
     for (const mcfunction of this.rootFunctions) {
       mcfunction.generateInitialFunction()
@@ -396,17 +409,22 @@ export default class Datapack {
       })
     }
 
+    // Then, add init commands
+    for (const commandArgs of this.initCommands) {
+      this.registerNewCommand(commandArgs)
+    }
+
     // Delete __init__ function if it's empty
     if (this.currentFunction?.isResource && this.currentFunction.commands.length === 0) {
       this.resources.deleteResource(this.currentFunction.path, 'functions')
     } else {
       // Else, put the __init__ function in the minecraft:load tag
-      this.addFunctionToTag(toMcFunctionName(this.currentFunction!.path), 'minecraft:tick')
+      this.addFunctionToTag(toMcFunctionName(this.currentFunction!.path), 'minecraft:load')
     }
 
     this.exitRootFunction()
 
-    saveDatapack(
+    return saveDatapack(
       this.resources,
       name,
       options,

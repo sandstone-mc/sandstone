@@ -9,6 +9,7 @@ import type {
   LocationCriterion, SlotCriterion,
   DistanceCriterion, ItemCriterion,
 } from './criteria'
+import type { ObjectOrArray } from './predicate'
 
 // The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = {

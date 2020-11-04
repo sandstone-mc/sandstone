@@ -17,6 +17,7 @@ export const {
   execute,
   experience,
   fill,
+  functionCmd,
   forceload,
   gamemode,
   gamerule,

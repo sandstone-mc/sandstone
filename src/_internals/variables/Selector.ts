@@ -104,7 +104,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   advancements?: AdvancementsArgument
 
   /** Select all targets that match the specified predicate. */
-  predicate?: string | string[] | Predicate | Predicate[]
+  predicate?: string | Predicate | (Predicate | string)[]
 } & ({} | {
   /** Define a position on the X-axis in the world the selector starts at,
    * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
@@ -175,14 +175,17 @@ function sanitizeValue(value: number | null): string {
   return ''
 }
 
-// Returns the string representation of a score range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
+// Returns the string representation of a range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
+function parseRange(range: Range): string {
+  if (Array.isArray(range)) {
+    return `${sanitizeValue(range[0])}..${sanitizeValue(range[1])}`
+  }
+  return range.toString()
+}
+
+// Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'
 function parseScore(scores: ScoreArgument): string {
-  return `{${Object.entries(scores).map(([scoreName, value]) => {
-    if (Array.isArray(value)) {
-      return [scoreName, `${sanitizeValue(value[0])}..${sanitizeValue(value[1])}`].join('=')
-    }
-    return [scoreName, value].join('=')
-  }).join(', ')}}`
+  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, parseRange(value)].join('=')).join(', ')}}`
 }
 
 // Returns the string representation of advancements
@@ -196,7 +199,7 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
   }).join(', ')}}`
 }
 
-export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> extends ComponentClass implements ConditionClass {
+export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> extends ComponentClass implements ConditionClass {
   protected commandsRoot: CommandsRoot
 
   protected target: string
@@ -272,6 +275,8 @@ export class SelectorClass<IsSingle extends boolean, IsPlayer extends boolean> e
           }
           result.push(['team', teamRepr])
         },
+
+        distance: parseRange,
       } as const
 
       for (const [baseName, modifier] of Object.entries(modifiers)) {
