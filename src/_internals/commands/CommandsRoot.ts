@@ -170,7 +170,7 @@ export class CommandsRoot {
   forceload = new Forceload(this)
 
   // function command //
-  function = (new FunctionCommand(this).function)
+  functionCmd = (new FunctionCommand(this).function)
 
   /**
    * Sets a player's game mode.

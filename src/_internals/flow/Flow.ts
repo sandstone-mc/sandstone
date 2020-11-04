@@ -1,6 +1,6 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type {
-  BLOCKS, Coordinates,
+  BLOCKS, Coordinates, SingleEntityArgument,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import { Execute } from '@commands/implementations/Execute'
@@ -37,17 +37,97 @@ export class Flow {
     this.arguments = []
   }
 
+  /** CONDITIONS */
+
+  /**
+   * Compares the block at a given position to a given block. Suceeds if both are identical.
+   *
+   * @param pos Position of a target block to test.
+   *
+   * @param block A block to test against.
+   */
   block = (coords: Coordinates, block: LiteralUnion<BLOCKS>): ConditionClass => ({
     _toMinecraftCondition: () => ({ value: ['block', coordinatesParser(coords), block] }),
   })
 
+  /**
+   * Compares the blocks in two equally sized volumes. Suceeds if both are identical.
+   *
+   * @param start Positions of the first diagonal corner of the source volume (the comparand; the volume to compare).
+   *
+   * @param end Positions of the second diagonal corner of the source volume (the comparand; the volume to compare)
+   *
+   * @param destination
+   * Position of the lower northwest (the smallest X, Y and Z value) corner of the destination volume
+   * (the comparator; the volume to compare to). Assumed to be of the same size as the source volume.
+   *
+   * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
+   */
+  blocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked'): ConditionClass => ({
+    _toMinecraftCondition: () => ({ value: ['blocks', coordinatesParser(start), coordinatesParser(end), coordinatesParser(destination), scanMode] }),
+  })
+
+  /**
+   * Checks if the given target has any data for a given tag.
+   *
+   * @example
+   * // Check whether the current block has an Inventory
+   * _.if(_.data.block(rel(0, 0, 0), 'Inventory'), () => {
+   *   say('The current block has data in its Inventory tag.')
+   * })
+   *
+   * // Check whether the player has at least one slot with dirt
+   * _.if(_.data.entity(`@r`, 'Inventory[{id: "minecraft:dirt"}]'), () => {
+   *   say('The random player has dirt.')
+   * })
+   *
+   * // Check whether there is data in the "Test" tag of the storage
+   * _.if(_.data.storage('namespace:mystorage', 'Test'), () => {
+   *   say('There is data in the "Test" tag of mystorage.')
+   * })
+   */
+  data = {
+    /**
+     * Checks whether the targeted block has any data for a given tag.
+     * @param pos Position of the block to be tested.
+     * @param path Data tag to check for.
+     */
+    block: (pos: Coordinates, path: string) => ({ value: ['data', 'block', coordinatesParser(pos), path] }),
+
+    /**
+     * Checks whether the targeted entity has any data for a given tag
+     * @param target One single entity to be tested.
+     * @param path Data tag to check for.
+     */
+    entity: (target: SingleEntityArgument, path: string) => ({ value: ['data', 'entity', target, path] }),
+
+    /**
+     * Checks whether the targeted storage has any data for a given tag
+     * @param source The storage to check in.
+     * @param path Data tag to check for.
+     */
+    storage: (source: string, path: string) => ({ value: ['data', 'storage', source, path] }),
+  }
+
   /** Logical operators */
 
+  /**
+   * Check if multiple conditions are true at the same time.
+   * @param conditions The conditions to check.
+   */
   and = (...conditions: (ConditionType)[]) => new CombinedConditions(this.commandsRoot, conditions, 'and')
 
+  /**
+   * Check if at least one of the given conditions is true.
+   * @param conditions The conditions to check.
+   */
   or = (...conditions: (ConditionType)[]) => new CombinedConditions(this.commandsRoot, conditions, 'or')
 
-  not = (...conditions: (ConditionType)[]) => new CombinedConditions(this.commandsRoot, conditions, 'not')
+  /**
+   * Check if the given condition is not true.
+   * @param condition The condition to check.
+   */
+  not = (condition: ConditionType) => new CombinedConditions(this.commandsRoot, [condition], 'not')
 
   /** Flow statements */
   flowStatement = (callback: () => void, config: FlowStatementConfig) => {
@@ -71,7 +151,7 @@ export class Flow {
     if (config.loopCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.inExecute = true
-      this.commandsRoot.function(callbackFunctionName)
+      this.commandsRoot.functionCmd(callbackFunctionName)
     }
 
     // Exit the callback
@@ -108,7 +188,7 @@ export class Flow {
       }
     } else {
       // Else, register the function call
-      this.commandsRoot.function(callbackFunctionName)
+      this.commandsRoot.functionCmd(callbackFunctionName)
     }
 
     this.arguments = []

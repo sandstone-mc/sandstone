@@ -1,6 +1,5 @@
-import util from 'util'
-
 import type { Coordinates, NBT, Rotation } from '@arguments'
+import util from 'util'
 import { VectorClass } from './Coordinates'
 
 // PARSERS
@@ -14,24 +13,24 @@ export function arrayToArgsParser(args: unknown): (
   return args
 }
 
-export function coordinatesParser(coordinates: unknown): (
-  typeof coordinates extends Coordinates ? VectorClass<[string, string, string]> : typeof coordinates
-) {
-  if (Array.isArray(coordinates) && coordinates.length === 3 && coordinates.every((c) => typeof c === 'string')) {
-    return new VectorClass(coordinates)
-  }
-
-  return coordinates
+function isRawCoordinates(arg: unknown): arg is [string, string, string] {
+  return Array.isArray(arg) && arg.length === 3 && arg.every((c) => typeof c === 'string')
 }
 
-export function rotationParser(rotation: unknown): (
-  typeof rotation extends Rotation ? VectorClass<[string, string]> : typeof rotation
-) {
-  if (Array.isArray(rotation) && rotation.length === 2 && rotation.every((r) => typeof r === 'string')) {
-    return new VectorClass(rotation)
-  }
+function isRawRotation(arg: unknown): arg is [string, string] {
+  return Array.isArray(arg) && arg.length === 2 && arg.every((c) => typeof c === 'string')
+}
 
-  return rotation
+export function coordinatesParser<T extends unknown>(coordinates: T): (
+  T extends Coordinates ? VectorClass<[string, string, string]> : T
+) {
+  return isRawCoordinates(coordinates) ? new VectorClass(coordinates) : coordinates as any
+}
+
+export function rotationParser<T extends unknown>(rotation: T): (
+  T extends Rotation ? VectorClass<[string, string]> : T
+) {
+  return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
 }
 
 export const nbtParser = (nbt: NBT) => util.inspect(nbt, {

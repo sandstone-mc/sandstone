@@ -4,7 +4,7 @@ import type {
 } from '@arguments'
 import type { Flow } from '@flow'
 import type { ConditionClass, Range } from '@variables'
-import { coordinatesParser } from '@variables'
+import { coordinatesParser, rotationParser } from '@variables'
 import type { PlayerScore } from '@variables/PlayerScore'
 import type * as commands from '../../../commands'
 import type { CommandsRoot } from '../CommandsRoot'
@@ -275,7 +275,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    *
    * Relative values can be used to specify a rotation relative to the current execution rotation.
    */
-  @command('rotated', executeConfig)
+  @command('rotated', { ...executeConfig, parsers: { '0': rotationParser } })
   rotated = (rotation: Rotation) => this
 
   /**
@@ -475,7 +475,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   get runOne(): (
  T extends CommandsRoot ?
   // The Pick<> ensures only commands are returned from CommandsRoot
-  Pick<T, ((keyof typeof commands) | 'function')> :
+  Pick<T, keyof typeof commands> :
   T
   ) {
     return this.commandsRoot as any

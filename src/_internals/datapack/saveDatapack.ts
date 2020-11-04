@@ -1,5 +1,7 @@
-import fs from 'fs'
+import chalk from 'chalk'
+import fs from 'graceful-fs'
 import path from 'path'
+import { promisify } from 'util'
 import {
   createDirectory, deleteDirectory, getMinecraftPath, getWorldPath,
 } from './filesystem'
@@ -8,12 +10,7 @@ import type {
   FunctionResource, ResourceOnlyTypeMap, ResourcesTree, ResourceTypeMap, ResourceTypes,
 } from './resourcesTree'
 
-const GRAY = '\x1b[90m'
-const CYAN = '\x1b[36m'
-const LIGHT_RED = '\x1b[91m'
-const GREEN = '\x1b[32m'
-const LIGHT_GREEN = '\x1b[92m'
-const RESET = '\x1b[0m'
+const writeFile = promisify(fs.writeFile)
 
 export type SaveOptions = {
   /**
@@ -67,7 +64,9 @@ function hasRoot(arg: SaveOptions): arg is { asRootDatapack: string } & SaveOpti
   return Object.prototype.hasOwnProperty.call(arg, 'asRootDatapack')
 }
 
-function saveFunction(dataPath: string, resource: FunctionResource, options: SaveOptions) {
+function saveFunction(dataPath: string, resource: FunctionResource, options: SaveOptions): Promise<void>[] {
+  const promises: Promise<void>[] = []
+
   if (resource.isResource) {
     const [namespace, ...folders] = resource.path
     const commands = resource.commands.map((args) => args.join(' '))
@@ -83,24 +82,26 @@ function saveFunction(dataPath: string, resource: FunctionResource, options: Sav
       // Write the commands to the file system
       const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
 
-      fs.writeFileSync(mcFunctionPath, commands.join('\n'))
+      promises.push(writeFile(mcFunctionPath, commands.join('\n')))
     }
 
     const commandsRepresentation = commands.map((command) => {
       if (command.startsWith('#')) {
-        return GRAY + command + RESET
+        return chalk.gray(command)
       }
       return command
     }).join('\n')
 
     if (options.verbose) {
-      console.log(`${CYAN}## Function ${namespace}:${[...folders, fileName].join('/')}${RESET}`)
+      console.log(chalk`{cyan ## Function ${namespace}:${[...folders, fileName].join('/')}}`)
       console.log(commandsRepresentation)
       console.log()
     }
   }
 
-  Array.from(resource.children.values()).forEach((v) => saveFunction(dataPath, v, options))
+  Array.from(resource.children.values()).forEach((v) => promises.push(...saveFunction(dataPath, v, options)))
+
+  return promises
 }
 
 function saveResource<T extends ResourceTypes>(
@@ -108,9 +109,11 @@ function saveResource<T extends ResourceTypes>(
   type: T,
   resource: ResourceTypeMap[T],
   options: SaveOptions,
-  getRepresentation: (resource: ResourceOnlyTypeMap[T], consoleDisplay: boolean) => string,
+  getRepresentation: (resource_: ResourceOnlyTypeMap[T], consoleDisplay: boolean) => string,
   getDisplayTitle: (namespace: string, folders: string[], fileName: string) => string,
-) {
+): Promise<void>[] {
+  const promises: Promise<void>[] = []
+
   if (resource.isResource) {
     const [namespace, ...folders] = resource.path
 
@@ -124,19 +127,25 @@ function saveResource<T extends ResourceTypes>(
       // Write the commands to the file system
       const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
 
-      fs.writeFileSync(resourcePath, getRepresentation(resource as ResourceOnlyTypeMap[T], false))
+      promises.push(
+        writeFile(resourcePath, getRepresentation(resource as ResourceOnlyTypeMap[T], false)),
+      )
     }
 
     if (options.verbose) {
-      console.log(`${CYAN}## ${getDisplayTitle(namespace, folders, fileName)} ${RESET}`)
+      console.log(chalk`{cyan ## ${getDisplayTitle(namespace, folders, fileName)}}`)
       console.log(getRepresentation(resource as ResourceOnlyTypeMap[T], true))
       console.log()
     }
   }
 
   for (const r of resource.children.values()) {
-    saveResource(dataPath, type, r as ResourceTypeMap[T], options, getRepresentation, getDisplayTitle)
+    promises.push(
+      ...saveResource(dataPath, type, r as ResourceTypeMap[T], options, getRepresentation, getDisplayTitle),
+    )
   }
+
+  return promises
 }
 
 /**
@@ -146,8 +155,13 @@ function saveResource<T extends ResourceTypes>(
  * @param name The name of the Datapack
  * @param options The save options.
  */
-export function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): void {
+export async function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): Promise<void> {
   try {
+    const start = Date.now()
+
+    // Files saving promises
+    const promises: Promise<void>[] = []
+
     // Start by clearing the console
     let savePath
 
@@ -170,76 +184,82 @@ export function saveDatapack(resources: ResourcesTree, name: string, options: Sa
       deleteDirectory(savePath)
       createDirectory(savePath)
 
-      fs.writeFileSync(path.join(savePath, 'pack.mcmeta'), JSON.stringify(packMcMeta))
+      promises.push(writeFile(path.join(savePath, 'pack.mcmeta'), JSON.stringify(packMcMeta)))
     }
 
     for (const n of resources.namespaces.values()) {
     // Save functions
       for (const f of n.functions.values()) {
-        saveResource(
+        promises.push(...saveResource(
           dataPath, 'functions', f, options,
 
           // To display a function, we join their arguments. If we're in a console display, we put comments in gray.
           (func, consoleDisplay) => {
             const repr = func.commands.map((command) => command.join(' ')).join('\n')
             if (consoleDisplay) {
-              return repr.replace(/^#(.+)/gm, `${GRAY}#$1${RESET}`)
+              return repr.replace(/^#(.+)/gm, chalk.gray('#$1'))
             }
 
             return repr
           },
           (namespace, folders, fileName) => `Function ${namespace}:${[...folders, fileName].join('/')}`,
-        )
+        ))
       }
 
       // Save tags
       for (const t of n.tags.values()) {
-        saveResource(
+        promises.push(...saveResource(
           dataPath, 'tags', t, options,
           (r) => JSON.stringify({ replace: r.replace ?? false, values: r.values }, null, 2),
           (namespace, folders, fileName) => `Tag[${folders[0]}] ${namespace}:${[...folders.slice(1), fileName].join('/')}`,
-        )
+        ))
       }
 
       // Save advancements
       for (const a of n.advancements.values()) {
-        saveResource(dataPath, 'advancements', a, options,
+        promises.push(...saveResource(
+          dataPath, 'advancements', a, options,
           (r) => JSON.stringify(r.advancement, null, 2),
-          (namespace, folders, fileName) => `Avancement ${namespace}:${[...folders, fileName].join('/')}`)
+          (namespace, folders, fileName) => `Avancement ${namespace}:${[...folders, fileName].join('/')}`,
+        ))
       }
 
       // Save predicates
       for (const p of n.predicates.values()) {
-        saveResource(
+        promises.push(...saveResource(
           dataPath, 'predicates', p, options,
           (r) => JSON.stringify(r.predicate, null, 2),
           (namespace, folders, fileName) => `Predicate ${namespace}:${[...folders, fileName].join('/')}`,
-        )
+        ))
       }
 
       // Save loot tables
       for (const l of n.loot_tables.values()) {
-        saveResource(
+        promises.push(...saveResource(
           dataPath, 'loot_tables', l, options,
           (r) => JSON.stringify(r.lootTable, null, 2),
           (namespace, folders, fileName) => `Loot table ${namespace}:${[...folders, fileName].join('/')}`,
-        )
+        ))
       }
 
       // Save recipe
       for (const r of n.recipes.values()) {
-        saveResource(
+        promises.push(...saveResource(
           dataPath, 'recipes', r, options,
           (resource) => JSON.stringify(resource.recipe, null, 2),
           (namespace, folders, fileName) => `Recipe ${namespace}:${[...folders, fileName].join('/')}`,
-        )
+        ))
       }
     }
 
+    // Wait until all files are written
+    await Promise.all(promises)
+
     if (!options.dryRun) {
-      console.log(`${LIGHT_GREEN}✓ Successfully wrote datapack to "${savePath}"${RESET}`)
+      console.log(chalk`{greenBright ✓ Successfully wrote datapack to "${savePath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
     }
   } catch (e) {
-    console.log(`${LIGHT_RED}✗ Failed to write datapack. See above for additional information.${RESET}`)
+    console.error(e)
+    console.log(chalk`{redBright ✗ Failed to write datapack. See above for additional information.}`)
   }
 }

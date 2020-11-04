@@ -4,6 +4,7 @@ import type {
 } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { McFunctionReturn } from '@datapack/Datapack'
+import { toMcFunctionName } from '@datapack/minecraft'
 import type { TagSingleValue } from '@datapack/resourcesTree'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (
@@ -32,6 +33,8 @@ export class Tag<TYPE extends TAG_TYPES> {
 
   readonly datapack
 
+  private readonly paths
+
   constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[], replace?: boolean) {
     this.type = type
 
@@ -51,14 +54,18 @@ export class Tag<TYPE extends TAG_TYPES> {
     this.name = name
     this.datapack = datapack
 
-    const { namespace, fullPath } = datapack.getResourcePath(name)
+    this.paths = datapack.getResourcePath(name)
 
     datapack.resources.addResource('tags', {
       children: new Map(),
       isResource: true,
-      path: [namespace, type, ...fullPath],
+      path: [this.paths.namespace, type, ...this.paths.fullPath],
       values: this.values,
       replace,
     })
+  }
+
+  toString() {
+    return `#${toMcFunctionName(this.paths.fullPathWithNamespace)}`
   }
 }

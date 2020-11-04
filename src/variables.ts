@@ -10,6 +10,7 @@ export * from './_internals/variables/PlayerScore'
 export { SelectorClass } from './_internals/variables/Selector'
 export * from './_internals/variables/Objective'
 export * from './_internals/variables/JsonTextComponentClass'
+export * from './_internals/variables/NBTs'
 
 export const {
   createObjective,
