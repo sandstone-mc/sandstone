@@ -2,6 +2,7 @@ import type { LiteralUnion } from '@/generalTypes'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import type { McFunctionReturn } from '@datapack/Datapack'
+import { Tag } from '@resources'
 import { FunctionCommand } from './Function'
 
 export class Schedule extends Command {
@@ -23,7 +24,7 @@ export class Schedule extends Command {
        * @param functionName Specify the scheduled function to be cleared.
        *
        */
-      (functionName: string) => void
+      (functionName: string | Tag<'functions'>) => void
     ) & (
       /**
        * Removes a scheduled function.
@@ -41,8 +42,8 @@ export class Schedule extends Command {
        */
       <T extends any[]>(mcFunction: McFunctionReturn<T>, ...args: T) => void
     )
-  ) = (func: McFunctionReturn<any> | string, ...args: any[]) => {
-    if (typeof func === 'string') {
+  ) = (func: McFunctionReturn<any> | string | Tag<'functions'>, ...args: any[]) => {
+    if (typeof func === 'string' || func instanceof Tag) {
       this.commandsRoot.addAndRegister('schedule', 'clear', func)
     } else {
       func.clearSchedule(...args)
@@ -79,7 +80,7 @@ export class Schedule extends Command {
        * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
        * If unspecified, defaults to `replace`.
        */
-      (functionName: string, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
+      (functionName: string | Tag<'functions'>, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
     ) & (
       /**
        * Delays the execution of a function. Executes the function after specified amount of time passes.
@@ -110,8 +111,8 @@ export class Schedule extends Command {
        */
       <T extends unknown[]>(mcFunction: McFunctionReturn<T>, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...args: T) => void
     )
-  ) = (func: string | McFunctionReturn<any>, delay: unknown, type?: 'append' | 'replace', ...args: unknown[]) => {
-    if (typeof func === 'string') {
+  ) = (func: string | McFunctionReturn<any> | Tag<'functions'>, delay: unknown, type?: 'append' | 'replace', ...args: unknown[]) => {
+    if (typeof func === 'string' || func instanceof Tag) {
       this.commandsRoot.arguments.push('schedule', 'function', func, delay, type, ...args)
       this.commandsRoot.register()
     } else {
