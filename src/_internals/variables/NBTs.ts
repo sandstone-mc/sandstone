@@ -4,13 +4,20 @@ export abstract class NBTCustomObject {
   abstract [util.inspect.custom]: () => string;
 }
 
-function customUnit(num: number, unit: string) {
+function customUnit(num: number, unit: string): NBTCustomObject {
   return new class {
     [util.inspect.custom] = () => `${num}${unit}`
   }()
 }
 
 export class NBT {
+  private static customNumber(num: number | number[], unit: string): NBTCustomObject | NBTCustomObject[] {
+    if (Array.isArray(num)) {
+      return num.map((n) => customUnit(n, unit))
+    }
+    return customUnit(num, unit)
+  }
+
   /**
    * Transform a number into a Minecraft NBT float number.
    *
@@ -21,7 +28,7 @@ export class NBT {
    *
    * summon(..., { Health: NBT.float(20) }) // => { Health: 20f }
    */
-  static float = (floatNumber: number) => customUnit(floatNumber, 'f')
+  static float (floatNumber: number): NBTCustomObject
 
   /**
    * Transform several numbers into a an array of Minecraft NBT float numbers.
@@ -31,9 +38,13 @@ export class NBT {
    * @example
    * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
    *
-   * summon(..., { Test: NBT.floats(0, 1, 2) }) // => { Test: [0f, 1f, 2f] }
+   * summon(..., { Test: NBT.float([0, 1, 2]) }) // => { Test: [0f, 1f, 2f] }
    */
-  static floats = (...floatNumbers: number[]) => floatNumbers.map(NBT.float)
+  static float (...floatNumbers: number[]): NBTCustomObject[]
+
+  static float(num: number | number[]): NBTCustomObject | NBTCustomObject[] {
+    return NBT.customNumber(num, 'f')
+  }
 
   /**
    * Transform a number into a Minecraft NBT double number.
@@ -45,7 +56,7 @@ export class NBT {
    *
    * summon(..., { Health: NBT.double(20) }) // => { Health: 20d }
    */
-  static double = (doubleNumber: number) => customUnit(doubleNumber, 'd')
+  static double(doubleNumber: number): NBTCustomObject
 
   /**
    * Transform several numbers into a an array of Minecraft NBT double numbers.
@@ -55,9 +66,13 @@ export class NBT {
    * @example
    * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
    *
-   * summon(..., { Test: NBT.doubles(0, 1, 2) }) // => { Test: [0d, 1d, 2d] }
+   * summon(..., { Test: NBT.double([0, 1, 2]) }) // => { Test: [0d, 1d, 2d] }
    */
-  static doubles = (...doubleNumbers: number[]) => doubleNumbers.map(NBT.double)
+  static double(...doubleNumbers: number[]): NBTCustomObject[]
+
+  static double(num: number | number[]): NBTCustomObject | NBTCustomObject[] {
+    return this.customNumber(num, 'd')
+  }
 
   /**
    * Transform a number into a Minecraft NBT byte number.
@@ -69,7 +84,7 @@ export class NBT {
    *
    * summon(..., { Health: NBT.byte(20) }) // => { Health: 20b }
    */
-  static byte = (byteNumber: number) => customUnit(byteNumber, 'b')
+  static byte(byteNumber: number): NBTCustomObject
 
   /**
    * Transform several numbers into a an array of Minecraft NBT byte numbers.
@@ -79,9 +94,13 @@ export class NBT {
    * @example
    * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
    *
-   * summon(..., { Test: NBT.bytes(0, 1, 2) }) // => { Test: [0b, 1b, 2b] }
+   * summon(..., { Test: NBT.byte([0, 1, 2]) }) // => { Test: [0b, 1b, 2b] }
    */
-  static bytes = (...byteNumbers: number[]) => byteNumbers.map(NBT.byte)
+  static byte(...byteNumbers: number[]): NBTCustomObject[]
+
+  static byte(num: number | number[]): NBTCustomObject | NBTCustomObject[] {
+    return this.customNumber(num, 'b')
+  }
 
   /**
    * Transform a number into a Minecraft NBT short number.
@@ -93,7 +112,7 @@ export class NBT {
    *
    * summon(..., { Health: NBT.short(20) }) // => { Health: 20b }
    */
-  static short = (shortNumber: number) => customUnit(shortNumber, 's')
+  static short(shortNumber: number): NBTCustomObject
 
   /**
    * Transform several numbers into a an array of Minecraft NBT short numbers.
@@ -103,9 +122,13 @@ export class NBT {
    * @example
    * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
    *
-   * summon(..., { Test: NBT.shorts(0, 1, 2) }) // => { Test: [0b, 1b, 2b] }
+   * summon(..., { Test: NBT.short([0, 1, 2]) }) // => { Test: [0s, 1s, 2s] }
    */
-  static shorts = (...shortNumbers: number[]) => shortNumbers.map(NBT.short)
+  static short(...shortNumbers: number[]): NBTCustomObject[]
+
+  static short(num: number | number[]): NBTCustomObject | NBTCustomObject[] {
+    return this.customNumber(num, 's')
+  }
 
   /**
    * Transform a number into a Minecraft NBT long number.
@@ -117,7 +140,7 @@ export class NBT {
    *
    * summon(..., { Health: NBT.long(20) }) // => { Health: 20l }
    */
-  static long = (longNumber: number) => customUnit(longNumber, 'l')
+  static long(longNumber: number): NBTCustomObject
 
   /**
    * Transform several numbers into a an array of Minecraft NBT long numbers.
@@ -127,7 +150,11 @@ export class NBT {
    * @example
    * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
    *
-   * summon(..., { Test: NBT.longs(0, 1, 2) }) // => { Test: [0l, 1l, 2l] }
+   * summon(..., { Test: NBT.long([0, 1, 2]) }) // => { Test: [0l, 1l, 2l] }
    */
-  static longs = (...longNumbers: number[]) => longNumbers.map(NBT.long)
+  static long(...longNumbers: number[]): NBTCustomObject[]
+
+  static long(num: number | number[]): NBTCustomObject | NBTCustomObject[] {
+    return this.customNumber(num, 'l')
+  }
 }
