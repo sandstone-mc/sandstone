@@ -1,4 +1,5 @@
-import chalk from 'chalk'
+import chalk, { Options } from 'chalk'
+import type { PathLike } from 'graceful-fs'
 import fs, { write } from 'graceful-fs'
 import path from 'path'
 import { promisify } from 'util'
@@ -7,11 +8,19 @@ import {
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
 import type {
-  FunctionResource, ResourceOnlyTypeMap, ResourcesTree, ResourceTypeMap, ResourceTypes,
+  AdvancementResource,
+  FunctionResource, LootTableResource, RecipeResource, ResourceOnlyTypeMap, ResourcesTree, ResourceTypeMap, ResourceTypes, TagsResource,
 } from './resourcesTree'
 
-const writeFile = promisify(fs.writeFile)
-
+const writeFileAsync = promisify(fs.writeFile)
+type FileMeta = {
+  file:{
+    path:string,
+    content:string,
+  }
+  options:SaveOptions
+}
+const writeFile = (filePath:string, type:unknown, resource:unknown, meta:FileMeta) => writeFileAsync(filePath, meta.file.content)
 export type SaveOptions = {
   /**
    * The location of the `.minecraft` folder.
@@ -39,9 +48,14 @@ export type SaveOptions = {
   description?: string
 
   /**
-   * Output json list of files instead of writing files to disk.
+   * custom fileIO handler.
    */
-  customFileHandler?: (path:string,content:any) => Promise<any>
+  customFileHandler: ((filePath: string, type: string & 'functions', resource: FunctionResource, options: FileMeta)=>Promise<void>)|
+  ((filePath: string, type: string & 'recipes', resource: RecipeResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: string & 'loot_tables', resource: LootTableResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: string & 'tags', resource: TagsResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: string & 'advancements', resource: AdvancementResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: string & 'raw', resource: string, options: FileMeta) => Promise<void>)
 } & (
     {
       /**
@@ -69,46 +83,6 @@ function hasRoot(arg: SaveOptions): arg is { asRootDatapack: string } & SaveOpti
   return Object.prototype.hasOwnProperty.call(arg, 'asRootDatapack')
 }
 
-function saveFunction(dataPath: string, resource: FunctionResource, options: SaveOptions): Promise<void>[] {
-  const promises: Promise<void>[] = []
-  const WriteFileToDisk = Reflect.has(options,'customFileHandler') && options.customFileHandler instanceof Function?options.customFileHandler:writeFile;
-  if (resource.isResource) {
-    const [namespace, ...folders] = resource.path
-    const commands = resource.commands.map((args) => args.join(' '))
-
-    const functionsPath = path.join(dataPath, namespace, 'functions')
-    const fileName = folders.pop()
-
-    const mcFunctionFolder = path.join(functionsPath, ...folders)
-
-    if (!options.dryRun) {
-      createDirectory(mcFunctionFolder)
-
-      // Write the commands to the file system
-      const mcFunctionPath = path.join(mcFunctionFolder, `${fileName}.mcfunction`)
-
-      promises.push(WriteFileToDisk(mcFunctionPath, commands.join('\n')))
-    }
-
-    const commandsRepresentation = commands.map((command) => {
-      if (command.startsWith('#')) {
-        return chalk.gray(command)
-      }
-      return command
-    }).join('\n')
-
-    if (options.verbose) {
-      console.log(chalk`{cyan ## Function ${namespace}:${[...folders, fileName].join('/')}}`)
-      console.log(commandsRepresentation)
-      console.log()
-    }
-  }
-
-  Array.from(resource.children.values()).forEach((v) => promises.push(...saveFunction(dataPath, v, options)))
-
-  return promises
-}
-
 function saveResource<T extends ResourceTypes>(
   dataPath: string,
   type: T,
@@ -117,7 +91,7 @@ function saveResource<T extends ResourceTypes>(
   getRepresentation: (resource_: ResourceOnlyTypeMap[T], consoleDisplay: boolean) => string,
   getDisplayTitle: (namespace: string, folders: string[], fileName: string) => string,
 ): Promise<void>[] {
-  const WriteFileToDisk = Reflect.has(options,'customFileHandler') && options.customFileHandler instanceof Function?options.customFileHandler:writeFile;
+  const writeFileToDisk = options?.customFileHandler
   const promises: Promise<void>[] = []
 
   if (resource.isResource) {
@@ -134,7 +108,13 @@ function saveResource<T extends ResourceTypes>(
       const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
 
       promises.push(
-        WriteFileToDisk(resourcePath, getRepresentation(resource as ResourceOnlyTypeMap[T], false)),
+        writeFileToDisk(resourcePath, type, resource as ResourceOnlyTypeMap[T], {
+          file: {
+            path: resourcePath,
+            content: getRepresentation(resource as ResourceOnlyTypeMap[T], false),
+          },
+          options,
+        }),
       )
     }
 
@@ -162,7 +142,7 @@ function saveResource<T extends ResourceTypes>(
  * @param options The save options.
  */
 export async function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): Promise<void> {
-  const WriteFileToDisk = Reflect.has(options,'customFileHandler') && options.customFileHandler instanceof Function?options.customFileHandler:writeFile;
+  const writeFileToDisk = options?.customFileHandler
   try {
     const start = Date.now()
 
@@ -191,7 +171,13 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       deleteDirectory(savePath)
       createDirectory(savePath)
 
-      promises.push(WriteFileToDisk(path.join(savePath, 'pack.mcmeta'), JSON.stringify(packMcMeta)))
+      promises.push(writeFileToDisk(path.join(savePath, 'pack.mcmeta'), '', null, {
+        file: {
+          path: savePath,
+          content: JSON.stringify(packMcMeta),
+        },
+        options,
+      }))
     }
 
     for (const n of resources.namespaces.values()) {
