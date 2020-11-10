@@ -50,12 +50,12 @@ export type SaveOptions = {
   /**
    * custom fileIO handler.
    */
-  customFileHandler: ((filePath: string, type: string & 'functions', resource: FunctionResource, options: FileMeta)=>Promise<void>)|
-  ((filePath: string, type: string & 'recipes', resource: RecipeResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: string & 'loot_tables', resource: LootTableResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: string & 'tags', resource: TagsResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: string & 'advancements', resource: AdvancementResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: string & 'raw', resource: string, options: FileMeta) => Promise<void>)
+  customFileHandler: ((filePath: string, type: 'functions', resource: FunctionResource, options: FileMeta)=>Promise<void>)|
+  ((filePath: string, type: 'recipes', resource: RecipeResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: 'loot_tables', resource: LootTableResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: 'tags', resource: TagsResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: 'advancements', resource: AdvancementResource, options: FileMeta) => Promise<void>)|
+  ((filePath: string, type: 'raw', resource: string, options: FileMeta) => Promise<void>)
 } & (
     {
       /**
@@ -91,7 +91,7 @@ function saveResource<T extends ResourceTypes>(
   getRepresentation: (resource_: ResourceOnlyTypeMap[T], consoleDisplay: boolean) => string,
   getDisplayTitle: (namespace: string, folders: string[], fileName: string) => string,
 ): Promise<void>[] {
-  const writeFileToDisk = options?.customFileHandler
+  const writeFileToDisk = options?.customFileHandler ?? writeFile
   const promises: Promise<void>[] = []
 
   if (resource.isResource) {
@@ -142,7 +142,7 @@ function saveResource<T extends ResourceTypes>(
  * @param options The save options.
  */
 export async function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): Promise<void> {
-  const writeFileToDisk = options?.customFileHandler
+  const writeFileToDisk = options?.customFileHandler ?? writeFile
   try {
     const start = Date.now()
 
@@ -171,7 +171,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       deleteDirectory(savePath)
       createDirectory(savePath)
 
-      promises.push(writeFileToDisk(path.join(savePath, 'pack.mcmeta'), '', null, {
+      promises.push(writeFileToDisk(path.join(savePath, 'pack.mcmeta'), 'raw', null, {
         file: {
           path: savePath,
           content: JSON.stringify(packMcMeta),
