@@ -60,7 +60,7 @@ export type SaveOptions = {
   /**
    * custom fileIO handler.
    */
-  customFileHandler: CustomWriteFunctionSig
+  customFileHandler?: CustomWriteFunctionSig
 } & (
     {
       /**
