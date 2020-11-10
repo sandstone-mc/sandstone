@@ -9,7 +9,7 @@ import {
 import packMcMeta from './packMcMeta.json'
 import type {
   AdvancementResource,
-  FunctionResource, LootTableResource, RecipeResource, ResourceOnlyTypeMap, ResourcesTree, ResourceTypeMap, ResourceTypes, TagsResource,
+  FunctionResource, LootTableResource, PredicateResource, RecipeResource, ResourceOnlyTypeMap, ResourcesTree, ResourceTypeMap, ResourceTypes, TagsResource,
 } from './resourcesTree'
 
 const writeFileAsync = promisify(fs.writeFile)
@@ -21,6 +21,16 @@ type FileMeta = {
   options:SaveOptions
 }
 const writeFile = (filePath:string, type:unknown, resource:unknown, meta:FileMeta) => writeFileAsync(filePath, meta.file.content)
+
+type WriteFunctions = ((filePath: string, type: 'functions', resource: FunctionResource, options: FileMeta)=>Promise<void>)
+type WriteRecipes = ((filePath: string, type: 'recipes', resource: RecipeResource, options: FileMeta) => Promise<void>)
+type WritePredicates = ((filePath: string, type: 'predicates', resource: PredicateResource, options: FileMeta) => Promise<void>)
+type WriteLootTables = ((filePath: string, type: 'loot_tables', resource: LootTableResource, options: FileMeta) => Promise<void>)
+type WriteTags = ((filePath: string, type: 'tags', resource: TagsResource, options: FileMeta) => Promise<void>)
+type WriteAdvancements = ((filePath: string, type: 'advancements', resource: AdvancementResource, options: FileMeta) => Promise<void>)
+type WriteRaw = ((filePath: string, type: 'raw', resource: null, options: FileMeta) => Promise<void>)
+type CustomWriteFunctionSig = WriteFunctions | WriteRecipes | WriteLootTables | WriteTags | WriteAdvancements | WritePredicates | WriteRaw
+
 export type SaveOptions = {
   /**
    * The location of the `.minecraft` folder.
@@ -50,12 +60,7 @@ export type SaveOptions = {
   /**
    * custom fileIO handler.
    */
-  customFileHandler: ((filePath: string, type: 'functions', resource: FunctionResource, options: FileMeta)=>Promise<void>)|
-  ((filePath: string, type: 'recipes', resource: RecipeResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: 'loot_tables', resource: LootTableResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: 'tags', resource: TagsResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: 'advancements', resource: AdvancementResource, options: FileMeta) => Promise<void>)|
-  ((filePath: string, type: 'raw', resource: string, options: FileMeta) => Promise<void>)
+  customFileHandler: CustomWriteFunctionSig
 } & (
     {
       /**
@@ -107,15 +112,76 @@ function saveResource<T extends ResourceTypes>(
       // Write the commands to the file system
       const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
 
-      promises.push(
-        writeFileToDisk(resourcePath, type, resource as ResourceOnlyTypeMap[T], {
-          file: {
-            path: resourcePath,
-            content: getRepresentation(resource as ResourceOnlyTypeMap[T], false),
-          },
-          options,
-        }),
-      )
+      switch (type) {
+        case 'advancements':
+          promises.push(
+            (writeFileToDisk as WriteAdvancements)(resourcePath, 'advancements', resource as AdvancementResource, {
+              file: {
+                path: resourcePath,
+                content: getRepresentation(resource as any, false),
+              },
+              options,
+            }),
+          )
+          break
+        case 'functions':
+          promises.push(
+            (writeFileToDisk as WriteFunctions)(resourcePath, 'functions', resource as FunctionResource, {
+              file: {
+                path: resourcePath,
+                content: getRepresentation(resource as any, false),
+              },
+              options,
+            }),
+          )
+          break
+        case 'loot_tables':
+          promises.push(
+            (writeFileToDisk as WriteLootTables)(resourcePath, 'loot_tables', resource as LootTableResource, {
+              file: {
+                path: resourcePath,
+                content: getRepresentation(resource as any, false),
+              },
+              options,
+            }),
+          )
+          break
+        case 'predicates':
+          promises.push(
+            (writeFileToDisk as WritePredicates)(resourcePath, 'predicates', resource as PredicateResource, {
+              file: {
+                path: resourcePath,
+                content: getRepresentation(resource as any, false),
+              },
+              options,
+            }),
+          )
+          break
+        case 'recipes':
+          promises.push(
+            (writeFileToDisk as WriteRecipes)(resourcePath, 'recipes', resource as RecipeResource, {
+              file: {
+                path: resourcePath,
+                content: getRepresentation(resource as any, false),
+              },
+              options,
+            }),
+          )
+          break
+        case 'tags':
+          promises.push(
+            (writeFileToDisk as WriteTags)(resourcePath, 'tags', resource as TagsResource, {
+              file: {
+                path: resourcePath,
+                content: getRepresentation(resource as any, false),
+              },
+              options,
+            }),
+          )
+          break
+        default:
+          console.log('this code should not be accessible')
+      }
     }
 
     if (options.verbose) {
@@ -171,7 +237,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       deleteDirectory(savePath)
       createDirectory(savePath)
 
-      promises.push(writeFileToDisk(path.join(savePath, 'pack.mcmeta'), 'raw', null, {
+      promises.push((writeFileToDisk as WriteRaw)(path.join(savePath, 'pack.mcmeta'), 'raw', null, {
         file: {
           path: savePath,
           content: JSON.stringify(packMcMeta),
