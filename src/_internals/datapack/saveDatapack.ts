@@ -1,6 +1,5 @@
-import chalk, { Options } from 'chalk'
-import type { PathLike } from 'graceful-fs'
-import fs, { write } from 'graceful-fs'
+import chalk from 'chalk'
+import fs from 'graceful-fs'
 import path from 'path'
 import { promisify } from 'util'
 import {
@@ -8,28 +7,27 @@ import {
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
 import type {
-  AdvancementResource,
-  FunctionResource, LootTableResource, PredicateResource, RecipeResource, ResourceOnlyTypeMap, ResourcesTree, ResourceTypeMap, ResourceTypes, TagsResource,
+  ResourceOnlyTypeMap,
+  ResourcesTree,
+  ResourceTypeMap,
+  ResourceTypes,
 } from './resourcesTree'
 
-const writeFileAsync = promisify(fs.writeFile)
-type FileMeta = {
-  file:{
-    path:string,
-    content:string,
-  }
-  options:SaveOptions
-}
-const writeFile = (filePath:string, type:unknown, resource:unknown, meta:FileMeta) => writeFileAsync(filePath, meta.file.content)
+type ExtendedResourceTypes = ResourceTypes
 
-type WriteFunctions = ((filePath: string, type: 'functions', resource: FunctionResource, options: FileMeta)=>Promise<void>)
-type WriteRecipes = ((filePath: string, type: 'recipes', resource: RecipeResource, options: FileMeta) => Promise<void>)
-type WritePredicates = ((filePath: string, type: 'predicates', resource: PredicateResource, options: FileMeta) => Promise<void>)
-type WriteLootTables = ((filePath: string, type: 'loot_tables', resource: LootTableResource, options: FileMeta) => Promise<void>)
-type WriteTags = ((filePath: string, type: 'tags', resource: TagsResource, options: FileMeta) => Promise<void>)
-type WriteAdvancements = ((filePath: string, type: 'advancements', resource: AdvancementResource, options: FileMeta) => Promise<void>)
-type WriteRaw = ((filePath: string, type: 'raw', resource: null, options: FileMeta) => Promise<void>)
-type CustomWriteFunctionSig = WriteFunctions | WriteRecipes | WriteLootTables | WriteTags | WriteAdvancements | WritePredicates | WriteRaw
+type SaveFileObject = {
+  packType: 'datapack'
+  type: ResourceTypes | 'raw'
+  rootPath: string
+  relativePath: string
+  content: string
+  saveOptions: SaveOptions
+  resource: any
+}
+const writeFileAsync = promisify(fs.writeFile)
+const writeFile = (saveObject: SaveFileObject) => {
+  writeFileAsync(path.join(saveObject.rootPath, saveObject.relativePath), saveObject.content)
+}
 
 export type SaveOptions = {
   /**
@@ -58,9 +56,9 @@ export type SaveOptions = {
   description?: string
 
   /**
-   * custom fileIO handler.
+   * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
    */
-  customFileHandler?: CustomWriteFunctionSig
+  customFileHandler?: (fileInfo: SaveFileObject) => Promise<void> | void
 } & (
     {
       /**
@@ -89,20 +87,25 @@ function hasRoot(arg: SaveOptions): arg is { asRootDatapack: string } & SaveOpti
 }
 
 function saveResource<T extends ResourceTypes>(
-  dataPath: string,
+  rootPath: string,
   type: T,
   resource: ResourceTypeMap[T],
   options: SaveOptions,
   getRepresentation: (resource_: ResourceOnlyTypeMap[T], consoleDisplay: boolean) => string,
   getDisplayTitle: (namespace: string, folders: string[], fileName: string) => string,
 ): Promise<void>[] {
-  const writeFileToDisk = options?.customFileHandler ?? writeFile
+  // This ensure the function is async, and can be await
+  const writeFileToDisk = async (info: SaveFileObject) => {
+    const func = options?.customFileHandler ?? writeFile
+    return func(info)
+  }
+
   const promises: Promise<void>[] = []
 
   if (resource.isResource) {
     const [namespace, ...folders] = resource.path
 
-    const basePath = path.join(dataPath, namespace, type)
+    const basePath = path.join('data', namespace, type)
     const fileName = folders.pop() as string
     const resourceFolder = path.join(basePath, ...folders)
 
@@ -112,76 +115,17 @@ function saveResource<T extends ResourceTypes>(
       // Write the commands to the file system
       const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
 
-      switch (type) {
-        case 'advancements':
-          promises.push(
-            (writeFileToDisk as WriteAdvancements)(resourcePath, 'advancements', resource as AdvancementResource, {
-              file: {
-                path: resourcePath,
-                content: getRepresentation(resource as any, false),
-              },
-              options,
-            }),
-          )
-          break
-        case 'functions':
-          promises.push(
-            (writeFileToDisk as WriteFunctions)(resourcePath, 'functions', resource as FunctionResource, {
-              file: {
-                path: resourcePath,
-                content: getRepresentation(resource as any, false),
-              },
-              options,
-            }),
-          )
-          break
-        case 'loot_tables':
-          promises.push(
-            (writeFileToDisk as WriteLootTables)(resourcePath, 'loot_tables', resource as LootTableResource, {
-              file: {
-                path: resourcePath,
-                content: getRepresentation(resource as any, false),
-              },
-              options,
-            }),
-          )
-          break
-        case 'predicates':
-          promises.push(
-            (writeFileToDisk as WritePredicates)(resourcePath, 'predicates', resource as PredicateResource, {
-              file: {
-                path: resourcePath,
-                content: getRepresentation(resource as any, false),
-              },
-              options,
-            }),
-          )
-          break
-        case 'recipes':
-          promises.push(
-            (writeFileToDisk as WriteRecipes)(resourcePath, 'recipes', resource as RecipeResource, {
-              file: {
-                path: resourcePath,
-                content: getRepresentation(resource as any, false),
-              },
-              options,
-            }),
-          )
-          break
-        case 'tags':
-          promises.push(
-            (writeFileToDisk as WriteTags)(resourcePath, 'tags', resource as TagsResource, {
-              file: {
-                path: resourcePath,
-                content: getRepresentation(resource as any, false),
-              },
-              options,
-            }),
-          )
-          break
-        default:
-          console.log('this code should not be accessible')
-      }
+      promises.push(
+        writeFileToDisk({
+          packType: 'datapack',
+          type,
+          content: getRepresentation(resource as ResourceOnlyTypeMap[T], false),
+          rootPath,
+          relativePath: resourcePath,
+          resource,
+          saveOptions: options,
+        }),
+      )
     }
 
     if (options.verbose) {
@@ -193,7 +137,7 @@ function saveResource<T extends ResourceTypes>(
 
   for (const r of resource.children.values()) {
     promises.push(
-      ...saveResource(dataPath, type, r as ResourceTypeMap[T], options, getRepresentation, getDisplayTitle),
+      ...saveResource(rootPath, type, r as ResourceTypeMap[T], options, getRepresentation, getDisplayTitle),
     )
   }
 
@@ -208,41 +152,51 @@ function saveResource<T extends ResourceTypes>(
  * @param options The save options.
  */
 export async function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): Promise<void> {
-  const writeFileToDisk = options?.customFileHandler ?? writeFile
+  // This ensure the function is async, and can be await
+  const writeFileToDisk = async <U extends ExtendedResourceTypes>(info: SaveFileObject) => {
+    const func = options?.customFileHandler ?? writeFile
+    return func(info)
+  }
+
   try {
     const start = Date.now()
 
     // Files saving promises
     const promises: Promise<void>[] = []
 
-    // Start by clearing the console
-    let savePath
+    // Find the save path
+    let rootPath
 
     if (hasWorld(options)) {
-      savePath = path.join(getWorldPath(options?.world, options?.minecraftPath), 'datapacks')
+      rootPath = path.join(getWorldPath(options?.world, options?.minecraftPath), 'datapacks')
     } else if (hasRoot(options)) {
-      savePath = path.join(getMinecraftPath(), 'datapacks/')
+      rootPath = path.join(getMinecraftPath(), 'datapacks/')
     } else {
-      savePath = process.cwd()
+      rootPath = process.cwd()
     }
 
-    savePath = path.join(savePath, name)
-    const dataPath = path.join(savePath, 'data')
+    rootPath = path.join(rootPath, name)
 
     if (options.description !== undefined) {
       packMcMeta.pack.description = options.description
     }
 
     if (!options.dryRun) {
-      deleteDirectory(savePath)
-      createDirectory(savePath)
+      // Clean the old working directory
+      if (!options.customFileHandler) {
+        deleteDirectory(rootPath)
+        createDirectory(rootPath)
+      }
 
-      promises.push((writeFileToDisk as WriteRaw)(path.join(savePath, 'pack.mcmeta'), 'raw', null, {
-        file: {
-          path: savePath,
-          content: JSON.stringify(packMcMeta),
-        },
-        options,
+      // Overwrite it
+      promises.push(writeFileToDisk({
+        packType: 'datapack',
+        type: 'raw',
+        resource: packMcMeta,
+        content: JSON.stringify(packMcMeta),
+        rootPath,
+        relativePath: 'pack.mcmeta',
+        saveOptions: options,
       }))
     }
 
@@ -250,7 +204,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     // Save functions
       for (const f of n.functions.values()) {
         promises.push(...saveResource(
-          dataPath, 'functions', f, options,
+          rootPath, 'functions', f, options,
 
           // To display a function, we join their arguments. If we're in a console display, we put comments in gray.
           (func, consoleDisplay) => {
@@ -268,7 +222,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       // Save tags
       for (const t of n.tags.values()) {
         promises.push(...saveResource(
-          dataPath, 'tags', t, options,
+          rootPath, 'tags', t, options,
           (r) => JSON.stringify({ replace: r.replace ?? false, values: r.values }, null, 2),
           (namespace, folders, fileName) => `Tag[${folders[0]}] ${namespace}:${[...folders.slice(1), fileName].join('/')}`,
         ))
@@ -277,7 +231,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       // Save advancements
       for (const a of n.advancements.values()) {
         promises.push(...saveResource(
-          dataPath, 'advancements', a, options,
+          rootPath, 'advancements', a, options,
           (r) => JSON.stringify(r.advancement, null, 2),
           (namespace, folders, fileName) => `Avancement ${namespace}:${[...folders, fileName].join('/')}`,
         ))
@@ -286,7 +240,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       // Save predicates
       for (const p of n.predicates.values()) {
         promises.push(...saveResource(
-          dataPath, 'predicates', p, options,
+          rootPath, 'predicates', p, options,
           (r) => JSON.stringify(r.predicate, null, 2),
           (namespace, folders, fileName) => `Predicate ${namespace}:${[...folders, fileName].join('/')}`,
         ))
@@ -295,7 +249,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       // Save loot tables
       for (const l of n.loot_tables.values()) {
         promises.push(...saveResource(
-          dataPath, 'loot_tables', l, options,
+          rootPath, 'loot_tables', l, options,
           (r) => JSON.stringify(r.lootTable, null, 2),
           (namespace, folders, fileName) => `Loot table ${namespace}:${[...folders, fileName].join('/')}`,
         ))
@@ -304,7 +258,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       // Save recipe
       for (const r of n.recipes.values()) {
         promises.push(...saveResource(
-          dataPath, 'recipes', r, options,
+          rootPath, 'recipes', r, options,
           (resource) => JSON.stringify(resource.recipe, null, 2),
           (namespace, folders, fileName) => `Recipe ${namespace}:${[...folders, fileName].join('/')}`,
         ))
@@ -314,8 +268,8 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     // Wait until all files are written
     await Promise.all(promises)
 
-    if (!options.dryRun) {
-      console.log(chalk`{greenBright ✓ Successfully wrote datapack to "${savePath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
+    if (!options.dryRun && !options.customFileHandler) {
+      console.log(chalk`{greenBright ✓ Successfully wrote datapack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
     }
   } catch (e) {
     console.error(e)
