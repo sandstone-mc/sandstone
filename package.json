@@ -26,7 +26,7 @@
     "build:watch": "ttsc --watch --incremental --pretty",
     "build": "node scripts/clean.js && ttsc && node scripts/setupPackage.js",
     "test": "node dist/tests/test.js",
-    "test:watch": "nodemon -q dist/tests/test.js",
+    "test:watch": "nodemon -q --unhandled-rejections=strict --trace-warnings dist/tests/test.js",
     "publishToNpm": "npm run build && npm publish dist/src"
   },
   "devDependencies": {

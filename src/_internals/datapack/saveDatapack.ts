@@ -25,9 +25,7 @@ type SaveFileObject = {
   resource: any
 }
 const writeFileAsync = promisify(fs.writeFile)
-const writeFile = (saveObject: SaveFileObject) => {
-  writeFileAsync(path.join(saveObject.rootPath, saveObject.relativePath), saveObject.content)
-}
+const writeFile = (saveObject: SaveFileObject) => writeFileAsync(path.join(saveObject.rootPath, saveObject.relativePath), saveObject.content)
 
 export type SaveOptions = {
   /**
@@ -110,7 +108,7 @@ function saveResource<T extends ResourceTypes>(
     const resourceFolder = path.join(basePath, ...folders)
 
     if (!options.dryRun) {
-      createDirectory(resourceFolder)
+      createDirectory(path.join(rootPath, resourceFolder))
 
       // Write the commands to the file system
       const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
