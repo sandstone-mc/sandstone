@@ -1,7 +1,7 @@
 import type { JsonTextComponent } from '../src/arguments'
 import { effect, execute, say } from '../src/commands'
 import {
-  Advancement, mcfunction, saveDatapack, Predicate, _,
+  Advancement, mcfunction, savePack, Predicate, _,
 } from '../src/core'
 import { Menu } from './menu'
 
@@ -31,4 +31,4 @@ mcfunction('myfunc', () => {
     })
 })
 
-saveDatapack('My datapack', { verbose: true, world: 'Crea1_15' })
+savePack('My datapack', { verbose: true, world: 'Crea1_15' })
