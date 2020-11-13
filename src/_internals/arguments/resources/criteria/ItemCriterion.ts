@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS } from '@arguments'
+import type { Tag } from '@resources'
 import type { NumberOrMinMax, EnchantmentCriterion } from '.'
 
 export type ItemCriterion = Partial<{
@@ -26,5 +27,5 @@ export type ItemCriterion = Partial<{
   potion: string
 
   /** An item data pack tag. */
-  tag: string
+  tag: string | Tag<'items'>
 }>

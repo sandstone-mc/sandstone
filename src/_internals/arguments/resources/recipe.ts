@@ -1,5 +1,6 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS } from '@arguments/generated'
+import type { Tag } from '@resources'
 
 /**
  * Ensures that the given string has 3 characters or less - else, evaluates as `never`
@@ -44,7 +45,7 @@ type ItemOrTag = {
   item: LiteralUnion<ITEMS>,
 } | {
   /** An item tag. */
-  tag: string
+  tag: string | Tag<'items'>
 }
 
 type CookingRecipe = {
