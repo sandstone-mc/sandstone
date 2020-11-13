@@ -2,6 +2,7 @@ import type { LiteralUnion } from '@/generalTypes'
 import type {
   BIOMES, BLOCKS, DIMENSION_TYPES, STRUCTURES, FLUIDS,
 } from '@arguments'
+import type { Tag } from '@resources'
 import type { NumberOrMinMax, PositionCriterion } from '.'
 
 export type LocationCriterion = Partial<{
@@ -14,7 +15,7 @@ export type LocationCriterion = Partial<{
         block: LiteralUnion<BLOCKS>
 
         /** The block Tag. */
-        tag: string
+        tag: string | Tag<'blocks'>
 
         /** The block NBT. */
         nbt: string
@@ -35,7 +36,7 @@ export type LocationCriterion = Partial<{
         fluid: LiteralUnion<FLUIDS>
 
         /** The fluid Tag. */
-        tag: string
+        tag: string | Tag<'fluids'>
 
         /** A map of fluid property names to values. Test will fail if the fluid doesn't match. */
         state: Record<string, string | Omit<NumberOrMinMax, number>>

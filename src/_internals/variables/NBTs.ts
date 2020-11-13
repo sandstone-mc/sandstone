@@ -1,3 +1,5 @@
+import type { NBT as NBTObj } from '@arguments'
+import { nbtParser } from '@variables'
 import util from 'util'
 
 export abstract class NBTCustomObject {
@@ -17,6 +19,9 @@ export class NBT {
     }
     return customUnit(num, unit)
   }
+
+  /** Transforms a NBT object to a string. */
+  toString = (nbt: NBTObj) => nbtParser(nbt)
 
   /**
    * Transform a number into a Minecraft NBT float number.

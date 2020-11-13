@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS, JsonTextComponent, NBT } from '@arguments'
+import type { McFunctionReturn } from '@datapack/Datapack'
 import type { AdvancementTriggers } from './AdvancementTriggers'
 
 export type AdvancementType<CRITERIA_NAMES extends string> = {
@@ -62,7 +63,7 @@ export type AdvancementType<CRITERIA_NAMES extends string> = {
     experience?: number
 
     /** A function to run. Function tags are not allowed. */
-    function?: string
+    function?: string | McFunctionReturn<[]>
   }
 } & (
   // Root advancement can specify a background - non-root can't.
