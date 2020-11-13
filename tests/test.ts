@@ -3,6 +3,10 @@ import {
   BasePath, savePack,
 } from '../src/core'
 import { Selector } from '../src/variables'
+import { datapack } from '../src/_internals'
+import { ResourcesTree } from '../src/_internals/datapack/resourcesTree'
+
+datapack.resources = new ResourcesTree()
 
 const myBasePath = BasePath({
   namespace: 'mydatapack',

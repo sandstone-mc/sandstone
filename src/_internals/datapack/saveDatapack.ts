@@ -108,7 +108,9 @@ function saveResource<T extends ResourceTypes>(
     const resourceFolder = path.join(basePath, ...folders)
 
     if (!options.dryRun) {
-      createDirectory(path.join(rootPath, resourceFolder))
+      if (!options.customFileHandler) {
+        createDirectory(path.join(rootPath, resourceFolder))
+      }
 
       // Write the commands to the file system
       const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
