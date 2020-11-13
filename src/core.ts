@@ -1,7 +1,11 @@
 import { datapack } from './_internals'
 
 export const {
-  mcfunction, save: savePack, Advancement, Predicate, Tag, LootTable, Recipe,
+  save: savePack, BasePath,
 } = datapack
+
+export const {
+  mcfunction, Advancement, Predicate, Tag, LootTable, Recipe,
+} = datapack.basePath
 
 export { _ } from './_internals'

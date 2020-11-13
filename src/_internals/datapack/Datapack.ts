@@ -1,21 +1,17 @@
 import type { LiteralUnion } from '@/generalTypes'
-import type {
-  AdvancementType, JsonTextComponent, LootTableType, OBJECTIVE_CRITERION, PredicateType, RecipeType, TAG_TYPES,
-} from '@arguments'
+import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import type { HintedTagStringType, McFunctionOptions } from '@resources'
-import {
-  Advancement, LootTable, McFunction, Predicate, Recipe,
-  Tag,
-} from '@resources'
+import type { McFunction } from '@resources'
 import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
 import chalk from 'chalk'
+import type { BasePathOptions } from './BasePath'
+import { BasePath } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import { toMcFunctionName } from './minecraft'
 import type {
-  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes, TagSingleValue,
+  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
 import { ResourcesTree } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
@@ -32,6 +28,8 @@ export interface McFunctionReturn<T extends unknown[]> {
 }
 
 export default class Datapack {
+  basePath: BasePath
+
   defaultNamespace: string
 
   currentFunction: FunctionResource | null
@@ -53,6 +51,7 @@ export default class Datapack {
   initCommands: CommandArgs[]
 
   constructor(namespace: string) {
+    this.basePath = new BasePath(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
     this.resources = new ResourcesTree()
@@ -334,6 +333,9 @@ export default class Datapack {
 
   Selector = SelectorCreator.bind(this)
 
+  /** A BasePath changes the base namespace & directory of nested resources. */
+  BasePath = (basePath: BasePathOptions) => new BasePath(this, basePath)
+
   addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
     this.resources.addResource(type, {
       ...resource,
@@ -342,37 +344,6 @@ export default class Datapack {
       path: this.getResourcePath(name).fullPathWithNamespace,
     } as ResourceOnlyTypeMap[T])
   }
-
-  /**
-   * Creates a Minecraft Function.
-   *
-   * @param name The name of the function.
-   * @param callback A callback containing the commands you want in the Minecraft Function.
-   */
-  mcfunction = <T extends any[]>(
-    name: string, callback: (...args: T) => void, options?: McFunctionOptions,
-  ): McFunctionReturn<T> => {
-    const mcfunction = new McFunction(this, name, callback, options ?? {})
-
-    this.rootFunctions.add(mcfunction as McFunction<any[]>)
-
-    const returnFunction: any = mcfunction.call
-    returnFunction.schedule = mcfunction.schedule
-    returnFunction.getName = mcfunction.getNameFromArgs
-    returnFunction.clearSchedule = mcfunction.clearSchedule
-
-    return returnFunction
-  }
-
-  Advancement = <T extends string>(name: string, advancement: AdvancementType<T>) => new Advancement(this.commandsRoot, name, advancement)
-
-  Predicate = (name: string, predicate: PredicateType) => new Predicate(this.commandsRoot, name, predicate)
-
-  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[], replace?: boolean) => new Tag(this, type, name, values, replace)
-
-  LootTable = (name: string, lootTable: LootTableType) => new LootTable(this, name, lootTable)
-
-  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeType<P1, P2, P3>) => new Recipe(this, name, recipe)
 
   /**
    * Saves the datapack to the file system.
