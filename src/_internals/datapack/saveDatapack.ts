@@ -49,9 +49,18 @@ export type SaveOptions = {
   dryRun?: boolean
 
   /**
-   * Pack description.
+   * The description of the datapack.
+   * Corresponds to the `pack.description` property of the `pack.mcmeta` file.
    */
   description?: string
+
+  /**
+   * The format version of the datapack.
+   * Corresponds to the `pack.pack_format` property of the `pack.mcmeta` file.
+   *
+   * @default 6
+   */
+  formatVersion?: number
 
   /**
    * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
@@ -181,6 +190,10 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       packMcMeta.pack.description = options.description
     }
 
+    if (options.formatVersion !== undefined) {
+      packMcMeta.pack.pack_format = options.formatVersion
+    }
+
     if (!options.dryRun) {
       // Clean the old working directory
       if (!options.customFileHandler) {
@@ -193,7 +206,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
         packType: 'datapack',
         type: 'raw',
         resource: packMcMeta,
-        content: JSON.stringify(packMcMeta),
+        content: JSON.stringify(packMcMeta, null, 2),
         rootPath,
         relativePath: 'pack.mcmeta',
         saveOptions: options,
