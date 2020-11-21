@@ -39,9 +39,27 @@ export type AdvancementType<CRITERIA_NAMES extends string> = {
      * Has no effect on root advancements themselves, but still affects all their children.
      * Defaults to `false`. */
     hidden?: boolean
+
+    /** The optional directory for the background to use in this advancement tab (used only for the root advancement). */
+    background?: string
   }
 
-  /** The required criteria that have to be met. */
+  /**
+   * The required criteria that have to be met.
+   *
+   * Must be an object: the keys are the criteria names, the values are objects with a `trigger` and `conditions`.
+   *
+   * @example
+   *
+   * {
+   *   criteria: {
+   *     bred_two_cows: {
+   *       trigger: 'minecraft:bred_animals',
+   *       conditions: { ... },
+   *     }
+   *   }
+   * }
+   */
   criteria: Record<CRITERIA_NAMES, AdvancementTriggers>
 
   /** An optional list of requirements (all the <criteriaNames>).
@@ -65,22 +83,9 @@ export type AdvancementType<CRITERIA_NAMES extends string> = {
     /** A function to run. Function tags are not allowed. */
     function?: string | McFunctionReturn<[]>
   }
-} & (
-  // Root advancement can specify a background - non-root can't.
-  {
-    display?: {
-      /** The optional directory for the background to use in this advancement tab (used only for the root advancement). */
-      background?: string
-    }
 
-    /** The optional parent advancement directory of this advancement.
-     * If this field is absent, this advancement is a root advancement.
-     * Circular references cause a loading failure. */
-    parent?: undefined
-  } | {
-    /** The optional parent advancement directory of this advancement.
-     * If this field is absent, this advancement is a root advancement.
-     * Circular references cause a loading failure. */
-    parent: string
-  }
-)
+  /** The optional parent advancement directory of this advancement.
+   * If this field is absent, this advancement is a root advancement.
+   * Circular references cause a loading failure. */
+  parent?: string
+}

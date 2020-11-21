@@ -1,3 +1,4 @@
+import type { JsonTextComponent } from '@arguments'
 import chalk from 'chalk'
 import fs from 'graceful-fs'
 import path from 'path'
@@ -51,8 +52,10 @@ export type SaveOptions = {
   /**
    * The description of the datapack.
    * Corresponds to the `pack.description` property of the `pack.mcmeta` file.
+   *
+   * Can be a string or a JSON Text Component.
    */
-  description?: string
+  description?: JsonTextComponent
 
   /**
    * The format version of the datapack.
@@ -160,7 +163,7 @@ function saveResource<T extends ResourceTypes>(
  * @param name The name of the Datapack
  * @param options The save options.
  */
-export async function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions): Promise<void> {
+export async function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions) {
   // This ensure the function is async, and can be await
   const writeFileToDisk = async <U extends ExtendedResourceTypes>(info: SaveFileObject) => {
     const func = options?.customFileHandler ?? writeFile
@@ -187,7 +190,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     rootPath = path.join(rootPath, name)
 
     if (options.description !== undefined) {
-      packMcMeta.pack.description = options.description
+      packMcMeta.pack.description = options.description as string
     }
 
     if (options.formatVersion !== undefined) {
@@ -284,8 +287,13 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     if (!options.dryRun && !options.customFileHandler) {
       console.log(chalk`{greenBright ✓ Successfully wrote datapack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
     }
+
+    return {
+      destination: rootPath,
+    }
   } catch (e) {
     console.error(e)
     console.log(chalk`{redBright ✗ Failed to write datapack. See above for additional information.}`)
+    throw e
   }
 }
