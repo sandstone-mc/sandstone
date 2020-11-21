@@ -13,6 +13,7 @@ import type { ObjectOrArray } from './predicate'
 
 // The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = {
+  /** The trigger for this advancement; specifies what the game should check for the advancement. */
   trigger: NAME
 
   /** All the conditions that need to be met when the trigger gets activated. */

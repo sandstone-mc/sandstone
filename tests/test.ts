@@ -1,3 +1,4 @@
+/** eslint-disable */
 import {
   effect, give, summon, tellraw,
 } from '../src/commands'
@@ -12,16 +13,14 @@ import { Menu } from './menu'
 
 datapack.resources = new ResourcesTree()
 
-/** An advancement granted to a survival player who bred 2 cows. */
+// Advancement granted to survival players breeding 2 cows
 Advancement('bred_cows', {
   criteria: {
-    player_bred_cows: {
+    bred_two_cows: {
       trigger: 'minecraft:bred_animals',
       conditions: {
         child: { type: 'minecraft:cow' },
-        player: {
-          gamemode: 'survival',
-        },
+        player: { gamemode: 'survival' },
       },
     },
   },

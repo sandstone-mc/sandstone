@@ -351,7 +351,7 @@ export default class Datapack {
    * @param name The name of the Datapack
    * @param options The save options
    */
-  save = (name: string, options: SaveOptions = {}): Promise<void> => {
+  save = (name: string, options: SaveOptions = {}) => {
     if (!options.dryRun) {
       console.log(chalk`⌛ {gray Starting compilation...}`)
     }
