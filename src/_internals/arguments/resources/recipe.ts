@@ -79,8 +79,10 @@ type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | un
   type: NAME
 } & VALUES & (
     HAS_GROUP extends true ? {
-    /** Used to group multiple recipes together in the recipe book.
-     * Example: group all boats recipes. */
+    /**
+     * Used to group multiple recipes together in the recipe book.
+     * Example: group all boats recipes.
+     */
     group: string
     } : unknown
 )
@@ -118,26 +120,29 @@ export type RecipeType<P1 extends string, P2 extends string, P3 extends string> 
      *   key: {C: {item: 'minecraft:cobblestone'}, R: {item: 'minecraft:redstone'}},
      *   result: {item: 'minecraft:dropper'}
      * }
-    */
+     */
     pattern: [
       StringSmallerThan4<P1>,
       StringSmallerThan4<P2>?,
       StringSmallerThan4<P3>?,
     ]
   } & ({
-    // Note: you might notice a little trick here.
-    // As you can see, the object here is:
-    // { pattern: [] } & ({recipe: foo<P1, P2, P3>, result: bar} | never )
-    //
-    // This (theoretically) should resolve to { pattern: [], recipe: foo<P1, P2, P3>, result: bar }.
-    // So why not use the latter, both more simple & more obvious?
-    // Because of a small bug in VSCode, who doesn't autocomplete generics-derived types until
-    // all properties of the object has been defined. Here, you won't get this keys autocompletion,
-    // until you define the `result` property.
-    //
-    // This little trick forces VSCode to autocomplete properly the keys.
+    /*
+     * Note: you might notice a little trick here.
+     * As you can see, the object here is:
+     * { pattern: [] } & ({recipe: foo<P1, P2, P3>, result: bar} | never )
+     *
+     * This (theoretically) should resolve to { pattern: [], recipe: foo<P1, P2, P3>, result: bar }.
+     * So why not use the latter, both more simple & more obvious?
+     * Because of a small bug in VSCode, who doesn't autocomplete generics-derived types until
+     * all properties of the object has been defined. Here, you won't get this keys autocompletion,
+     * until you define the `result` property.
+     *
+     * This little trick forces VSCode to autocomplete properly the keys.
+     */
 
-    /** All keys used for this shaped crafting recipe.
+    /**
+     * All keys used for this shaped crafting recipe.
      *
      * Each key corresponds to a character present in `pattern`.
      * Their values are either an ingredient, or a list of possible ingredients.
@@ -154,13 +159,15 @@ export type RecipeType<P1 extends string, P2 extends string, P3 extends string> 
      */
     key: KeysIngredients<[P1, P2, P3]>
 
-    /** The output item of the recipe. Not optional. */
+    /** The output item of the recipe. */
     result: {
       /** The resulting item. */
       item: LiteralUnion<ITEMS>
 
-      /** Optional. The amount of the item.
-       * @default 1 */
+      /**
+       * Optional. The amount of the item.
+       * @default 1
+       */
       count?: number
     }
    } | never)

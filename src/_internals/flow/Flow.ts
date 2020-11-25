@@ -131,8 +131,10 @@ export class Flow {
 
   /** Flow statements */
   flowStatement = (callback: () => void, config: FlowStatementConfig) => {
-    // Sometimes, there are a few arguments left inside the commandsRoot (for execute.run mostly).
-    // Keep them aside, & register them after.
+    /*
+     * Sometimes, there are a few arguments left inside the commandsRoot (for execute.run mostly).
+     * Keep them aside, & register them after.
+     */
     const previousArguments = this.commandsRoot.arguments
     const previousInExecute = this.commandsRoot.inExecute
     this.commandsRoot.reset()
@@ -172,9 +174,11 @@ export class Flow {
       && callbackMcFunction.commands.length <= 1
       && callbackMcFunction.commands?.[0]?.[0] !== 'execute'
     ) {
-      // If our callback only has 1 command, inline this command. We CANNOT inline executes, for complicated reasons.
-      // If you want to understand the reasons, see @vdvman1#9510 explanation =>
-      // https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
+      /*
+       * If our callback only has 1 command, inline this command. We CANNOT inline executes, for complicated reasons.
+       * If you want to understand the reasons, see @vdvman1#9510 explanation =>
+       * https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
+       */
       this.commandsRoot.Datapack.resources.deleteResource(callbackMcFunction.path, 'functions')
 
       if (callbackMcFunction.commands.length) {
@@ -318,16 +322,20 @@ export class Flow {
 
     const _ = this
 
-    // For all iterations above the maximum,
-    // just do a while loop that calls `maximum` times the callback,
-    // until there is less than `maximum` iterations
+    /*
+     * For all iterations above the maximum,
+     * just do a while loop that calls `maximum` times the callback,
+     * until there is less than `maximum` iterations
+     */
     _.while(iterations.lowerThan(maximum), () => {
       callback(maximum)
       iterations.remove(maximum)
     })
 
-    // There is now less iterations than the allowed MAXIMUM
-    // Start the binary part
+    /*
+     * There is now less iterations than the allowed MAXIMUM
+     * Start the binary part
+     */
     for (let i = 1; i < maximum; i *= 2) {
       _.if(iterations.moduloBy(2).equalTo(1), () => {
         callback(i)
@@ -354,8 +362,10 @@ export class Flow {
 
     const scoreTracker = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.Variable(from)
 
-    // If the callback does not use the "score" argument, we can directly set the real score
-    // `scoreTracker` to the end (instead of spamming `scoreboard players add anonymous sand_ano 1`).
+    /*
+     * If the callback does not use the "score" argument, we can directly set the real score
+     * `scoreTracker` to the end (instead of spamming `scoreboard players add anonymous sand_ano 1`).
+     */
     if (callback.length === 0) {
       // Typescript has a bug, and will not recognize `scoreTracker.set(to)` as a valid expression. So I have to use this condition.
       if (typeof to === 'number') {

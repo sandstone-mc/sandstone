@@ -265,11 +265,31 @@ type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
 } & VALUES
 
 type LootTableEntry = {
-  /** Determines conditions for this entry to be used. If multiple conditions are specified, all must pass. */
+  /**
+   * Determines conditions for this entry to be used. If multiple conditions are specified, all must pass.
+   *
+   * @example
+   * conditions: [
+   *   {
+   *     condition: '<condition>',
+   *     ...
+   *   }
+   * ]
+   */
   conditions?: PredicateCondition[]
 
-  /** Applies functions to the item stack or item stacks being produced.
-   * Functions are applied in order, so for example looting_enchant must be after set_count to work correctly. */
+  /**
+   * Applies functions to the item stack or item stacks being produced.
+   * Functions are applied in order, so for example looting_enchant must be after set_count to work correctly.
+   *
+   * @example
+   * functions: [
+   *   {
+   *     type: '<type>',
+   *     ...,
+   *   }
+   * ]
+   */
   functions?: LootTableFunction[]
 
   /** Determines how often this entry is chosen out of all the entries in the pool.
@@ -316,15 +336,35 @@ type LootTableEntry = {
 )
 
 type LootTablePoll = {
-  /** Determines conditions for this pool to be used. If multiple conditions are specified, all must pass. */
+  /**
+   * Determines conditions for this pool to be used. If multiple conditions are specified, all must pass.
+   *
+   * @example
+   * conditions: [
+   *   {
+   *     condition: '<condition>',
+   *     ...
+   *   }
+   * ]
+   */
   conditions?: PredicateCondition[]
 
-  /** Applies functions to all item stacks produced by this pool.
-   * Functions are applied in order, so for example looting_enchant must be after set_count to work correctly. */
+  /**
+   * Applies functions to all item stacks produced by this pool.
+   * Functions are applied in order, so for example `looting_enchant` must be after `set_count` to work correctly.
+   *
+   * @example
+   * functions: [
+   *   {
+   *     type: '<type>',
+   *     ...,
+   *   }
+   * ]
+   */
   functions?: LootTableFunction[]
 
   /** Specifies the number of rolls on the pool. Can be either an exact number, a uniform range, or a binomial distribution. */
-  rolls?: number | {
+  rolls: number | {
     /**
      * Type of the distribution. Must be one of:
      * - "uniform" (default), for a uniform probability between a min and a max
@@ -347,8 +387,24 @@ type LootTablePoll = {
     max: number
   }
 
-  /** A list of all things that can be produced by this pool.
-   * One entry is chosen per roll as a weighted random selection from all entries without failing conditions. */
+  /**
+   * A list of all things that can be produced by this pool.
+   * One entry is chosen per roll as a weighted random selection from all entries without failing conditions.
+   *
+   * @example
+   * entries: [
+   *   // First entry
+   *   {
+   *     type: '<type1>',
+   *     ...
+   *   },
+   *   // Second entry
+   *   {
+   *     type: '<type2>',
+   *     ...
+   *   },
+   * ]
+   */
   entries: LootTableEntry[]
 }
 
@@ -378,11 +434,41 @@ export type LootTableType = {
     'advancement_entity' | 'generic'
   ),
 
-  /** Applies functions to all item stacks produced by this table.
-   * Functions are applied in order, so for example looting_enchant must be after set_count to work correctly.  */
+  /**
+   * Applies functions to all item stacks produced by this table.
+   * Functions are applied in order, so for example looting_enchant must be after set_count to work correctly.
+   *
+   * @example
+   * functions: [
+   *   {
+   *     type: '<type>',
+   *     ...,
+   *   }
+   * ]
+   */
   functions?: LootTableFunction[]
 
-  /** A list of all pools for this loot table.
-   * Each pool used generates items from its list of items based on the number of rolls. Pools are applied in order.  */
+  /**
+   * A list of all pools for this loot table.
+   * Each pool used generates items from its list of items based on the number of rolls.
+   *
+   * Pools are applied in order.
+   *
+   * @example
+   * pools: [
+   *   // First pool
+   *   {
+   *     entries: [{...}],
+   *     conditions: [{...}],
+   *     ...
+   *   },
+   *   // Second pool
+   *   {
+   *     entries: [{...}],
+   *     conditions: [{...}],
+   *     ...
+   *   },
+   * ]
+   */
   pools?: LootTablePoll[]
 }

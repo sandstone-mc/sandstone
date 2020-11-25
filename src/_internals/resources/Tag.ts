@@ -6,6 +6,7 @@ import type { Datapack } from '@datapack'
 import type { McFunctionReturn } from '@datapack/Datapack'
 import { toMcFunctionName } from '@datapack/minecraft'
 import type { TagSingleValue } from '@datapack/resourcesTree'
+import { Resource } from './Resource'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
@@ -24,18 +25,14 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
   return typeof v === 'object'
 }
 
-export class Tag<TYPE extends TAG_TYPES> {
+export class Tag<TYPE extends TAG_TYPES> extends Resource {
   readonly type
 
   readonly values: TagSingleValue<string>[]
 
-  readonly name
-
-  readonly datapack
-
-  private readonly paths
-
   constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[], replace?: boolean) {
+    super(datapack, name)
+
     this.type = type
 
     this.values = values.map((v) => {
@@ -51,21 +48,22 @@ export class Tag<TYPE extends TAG_TYPES> {
       return v as string | TagSingleValue<string>
     })
 
-    this.name = name
     this.datapack = datapack
-
-    this.paths = datapack.getResourcePath(name)
 
     datapack.resources.addResource('tags', {
       children: new Map(),
       isResource: true,
-      path: [this.paths.namespace, type, ...this.paths.fullPath],
+      path: [this.path.namespace, type, ...this.path.fullPath],
       values: this.values,
       replace,
     })
   }
 
+  get name() {
+    return `#${toMcFunctionName(this.path.fullPathWithNamespace)}`
+  }
+
   toString() {
-    return `#${toMcFunctionName(this.paths.fullPathWithNamespace)}`
+    return this.name
   }
 }

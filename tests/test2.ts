@@ -2,7 +2,7 @@ import {
   effect, give, say, tellraw,
 } from '../src/commands'
 import {
-  Advancement, mcfunction, Predicate, savePack, _,
+  Advancement, MCFunction, Predicate, savePack, _,
 } from '../src/core'
 import { Menu } from './menu'
 
@@ -19,7 +19,7 @@ const pred = Predicate('mypredicate', {
   chance: 0.8,
 })
 
-mcfunction('myfunc', () => {
+MCFunction('myfunc', () => {
   _
     .if(pred, () => {
       test.grant('@s')
@@ -32,7 +32,7 @@ mcfunction('myfunc', () => {
     })
 })
 
-mcfunction('test', () => {
+MCFunction('test', () => {
   const menu = new Menu({
     // A menu giving the strength effect
     '0': ['minecraft:golden_sword', {

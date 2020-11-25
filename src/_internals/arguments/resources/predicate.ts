@@ -6,7 +6,44 @@ import type {
 } from './criteria'
 
 type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> = {
-    /** The condition's ID. */
+    /**
+     * The condition's ID.
+     *
+     * One of:
+     * - `alternative`: Joins conditions from parameter terms with "or".
+     *
+     * - `block_state_property`: Check properties of a block state.
+     *
+     * - `damage_source_properties`: Check properties of damage source.
+     *
+     * - `entity_properties`: Test properties of an entity.
+     *
+     * - `entity_scores`: Test the scoreboard scores of an entity.
+     *
+     * - `inverted`: Inverts condition from parameter term.
+     *
+     * - `killed_by_player`: Test if a `killer_player` entity is available.
+     *
+     * - `location_check`:  Checks if the current location matches.
+     *
+     * - `match_tool`: Checks tool.
+     *
+     * - `random_chance`: Test if a random number 0.0–1.0 is less than a specified value.
+     *
+     * - `random_chance_with_looting`: Test if a random number 0.0–1.0 is less than a specified value, affected by the level of Looting on the `killer` entity.
+     *
+     * - `reference`: Test if another referred condition (predicate) passes.
+     *
+     * - `survives_explosion`: Returns true with 1/explosion radius probability.
+     *
+     * - `table_bonus`: Passes with probability picked from table, indexed by enchantment level.
+     *
+     * - `time_check`: Checks the current time
+     *
+     * - `weather_check `: Checks for a current weather state
+     *
+     * - `value_check`: Checks for range of value
+     */
     condition: NAME
 } & VALUES
 
@@ -14,8 +51,12 @@ export type ObjectOrArray<T> = T | T[]
 
 export type PredicateCondition = (
   PredicateKind<'minecraft:alternative', {
-      /** A list of conditions to join using `or`. */
-      terms: PredicateType[]
+      /**
+       * A list of conditions to join using `or`.
+       * @example
+       * terms: [{  }]
+       */
+      terms: PredicateCondition[]
   }> | PredicateKind<'minecraft:block_state_property', {
       /** A block ID. The test fails if the block doesn't match. */
       block: LiteralUnion<BLOCKS>
@@ -25,23 +66,38 @@ export type PredicateCondition = (
       /** Predicate applied to the damage source. */
       predicate: DamageCriterion
   }> | PredicateKind<'minecraft:entity_properties', {
-      /** Specifies the entity to check for the condition.
+      /**
+       * Specifies the entity to check for the condition.
        * Set to `this` to use the entity that died or the player that gained the advancement, opened the container or broke the block.
        * `killer` for the killer.
-       * `killer_player` for a killer that is a player. */
+       * `killer_player` for a killer that is a player.
+       */
       entity: 'this' | 'killer' | 'killer_player'
 
       /** Predicate applied to entity. */
       predicate: EntityCriterion
   }> | PredicateKind<'minecraft:entity_scores', {
-      /** Specifies the entity to check for the condition.
+      /**
+       * Specifies the entity to check for the condition.
        * Set to `this` to use the entity that died or the player that gained the advancement, opened the container or broke the block.
        * `killer` for the killer.
-       * `killer_player` for a killer that is a player. */
+       * `killer_player` for a killer that is a player.
+       */
       entity: 'this' | 'killer' | 'killer_player'
 
-      /** Scores to check. All specified scores must pass for the condition to pass.
-       * Key name are the objectives, while the value are the required score. */
+      /**
+       * Scores to check. All specified scores must pass for the condition to pass.
+       * Key name are the objectives, while the value are the required score.
+       *
+       * @example
+       * scores: {
+       *   'myscore': 0,
+       *   'myscore2': {
+       *     min: 5,
+       *     max: 20,
+       *   }
+       * }
+       */
       scores: Record<string, NumberOrMinMax>
   }> | PredicateKind<'minecraft:inverted', {
       /** The condition to be negated. */
@@ -86,9 +142,11 @@ export type PredicateCondition = (
       /** The time value in ticks. */
       value: NumberOrMinMax
 
-      /** If present, time gets modulo-divided by this value.
+      /**
+       * If present, time gets modulo-divided by this value.
        *
-       * For example, if set to 24000, value operates on a time period of days. */
+       * For example, if set to 24000, value operates on a time period of days.
+       */
       period?: number
   }> | PredicateKind<'minecraft:weather_check', {
       /**  If true, the condition evaluates to true only if it's raining. */

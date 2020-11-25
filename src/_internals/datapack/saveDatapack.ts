@@ -165,7 +165,7 @@ function saveResource<T extends ResourceTypes>(
  */
 export async function saveDatapack(resources: ResourcesTree, name: string, options: SaveOptions) {
   // This ensure the function is async, and can be await
-  const writeFileToDisk = async <U extends ExtendedResourceTypes>(info: SaveFileObject) => {
+  const writeFileToDisk = async (info: SaveFileObject) => {
     const func = options?.customFileHandler ?? writeFile
     return func(info)
   }

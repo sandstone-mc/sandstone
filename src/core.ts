@@ -5,7 +5,7 @@ export const {
 } = datapack
 
 export const {
-  mcfunction, Advancement, Predicate, Tag, LootTable, Recipe,
+  MCFunction, Advancement, Predicate, Tag, LootTable, Recipe,
 } = datapack.basePath
 
 export { _ } from './_internals'

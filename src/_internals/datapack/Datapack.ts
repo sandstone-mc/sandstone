@@ -2,12 +2,12 @@ import type { LiteralUnion } from '@/generalTypes'
 import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import type { McFunction } from '@resources'
+import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
 import chalk from 'chalk'
 import type { BasePathOptions } from './BasePath'
-import { BasePath } from './BasePath'
+import { BasePathClass } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import { toMcFunctionName } from './minecraft'
 import type {
@@ -28,7 +28,7 @@ export interface McFunctionReturn<T extends unknown[]> {
 }
 
 export default class Datapack {
-  basePath: BasePath
+  basePath: BasePathClass
 
   defaultNamespace: string
 
@@ -42,7 +42,7 @@ export default class Datapack {
 
   constants: Set<number>
 
-  rootFunctions: Set<McFunction<any[]>>
+  rootFunctions: Set<MCFunctionClass<any[]>>
 
   static anonymousScoreId = 0
 
@@ -51,7 +51,7 @@ export default class Datapack {
   initCommands: CommandArgs[]
 
   constructor(namespace: string) {
-    this.basePath = new BasePath(this, {})
+    this.basePath = new BasePathClass(this, { namespace })
     this.defaultNamespace = namespace
     this.currentFunction = null
     this.resources = new ResourcesTree()
@@ -334,7 +334,7 @@ export default class Datapack {
   Selector = SelectorCreator.bind(this)
 
   /** A BasePath changes the base namespace & directory of nested resources. */
-  BasePath = (basePath: BasePathOptions) => new BasePath(this, basePath)
+  BasePath = (basePath: BasePathOptions) => new BasePathClass(this, basePath)
 
   addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
     this.resources.addResource(type, {
