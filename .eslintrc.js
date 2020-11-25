@@ -99,5 +99,9 @@ module.exports = {
 
     // Allow use after define
     'no-use-before-define': 'off',
+
+    'multiline-comment-style': ['error', 'starred-block'],
+
+    'spaced-comment': ['error', 'always'],
   },
 }

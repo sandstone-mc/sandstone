@@ -1,8 +1,8 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import hash from 'object-hash'
-import { toMcFunctionName } from '../datapack/minecraft'
-import type { FunctionResource } from '../datapack/resourcesTree'
+import { toMcFunctionName } from '@datapack/minecraft'
+import type { FunctionResource } from '@datapack/resourcesTree'
 
 export type McFunctionOptions = {
   /**
@@ -35,7 +35,7 @@ export type McFunctionOptions = {
   tags?: readonly string[]
 }
 
-export class McFunction<T extends any[]> {
+export class MCFunctionClass<T extends any[]> {
   name: string
 
   options: McFunctionOptions

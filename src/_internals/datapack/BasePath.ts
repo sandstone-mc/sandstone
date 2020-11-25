@@ -4,7 +4,7 @@ import type {
 import type { Datapack } from '@datapack'
 import type { HintedTagStringType, McFunctionOptions } from '@resources'
 import {
-  Advancement, LootTable, McFunction, Predicate, Recipe, Tag,
+  AdvancementClass, LootTable, MCFunctionClass, Predicate, Recipe, Tag,
 } from '@resources'
 import type { McFunctionReturn } from './Datapack'
 import type { TagSingleValue } from './resourcesTree'
@@ -28,7 +28,7 @@ function pathToArray(path?: string): string[] {
 }
 
 /** Changes the base namespace & directory of nested resources. */
-export class BasePath {
+export class BasePathClass {
   protected datapack: Datapack
 
   namespace?: string
@@ -83,6 +83,12 @@ export class BasePath {
      * . (Period)
      * - (Hyphen/minus)
      */
+    if (!path.length) {
+      throw new Error(
+        'Empty name is not allowed.',
+      )
+    }
+
     if (!path.match(/^[0-9a-z_\-/.]+$/)) {
       throw new Error(
         `Resources names can only contain numbers, lowercase letters, underscores, forward slash, period, and hyphens: got "${path}"`,
@@ -113,7 +119,7 @@ export class BasePath {
     const newDirectory = pathToArray(trimSlashes(childPath.directory))
     const oldDirectory = pathToArray(this.directory)
 
-    return new BasePath(this.datapack, {
+    return new BasePathClass(this.datapack, {
       namespace: this.namespace,
       directory: [...oldDirectory, ...newDirectory].join('/'),
     })
@@ -125,12 +131,12 @@ export class BasePath {
    * @param name The name of the function.
    * @param callback A callback containing the commands you want in the Minecraft Function.
    */
-  mcfunction = <T extends any[]>(
+  MCFunction = <T extends any[]>(
     name: string, callback: (...args: T) => void, options?: McFunctionOptions,
   ): McFunctionReturn<T> => {
-    const mcfunction = new McFunction(this.datapack, this.getName(name), callback, options ?? {})
+    const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, options ?? {})
 
-    this.datapack.rootFunctions.add(mcfunction as McFunction<any[]>)
+    this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any[]>)
 
     const returnFunction: any = mcfunction.call
     returnFunction.schedule = mcfunction.schedule
@@ -146,18 +152,63 @@ export class BasePath {
    * @param name The name of the function.
    * @param callback A callback containing the commands you want in the Minecraft Function.
    */
-  Function = this.mcfunction
+  Function = this.MCFunction
 
-  /** Create an advancement. */
-  Advancement = <T extends string>(name: string, advancement: AdvancementType<T>) => new Advancement(this.datapack.commandsRoot, this.getName(name), advancement)
+  /**
+   * Create an advancement.
+   *
+   * @param advancement The actual advancement. You must provide at least a `criteria` for it to be valid.
+   *
+   * @example
+   *
+   * Advancement('bred_two_cows', {
+   *   criteria: {
+   *     'bred_cows': {
+   *       trigger: 'minecraft:bred_animals',
+   *       conditions: {
+   *         child: { type: 'minecraft:cow' }
+   *       }
+   *     }
+   *   }
+   * })
+   */
+  Advancement = <T extends string>(name: string, advancement: AdvancementType<T>) => new AdvancementClass(this.datapack, this.getName(name), advancement)
 
-  /** Create a predicate. */
-  Predicate = (name: string, predicate: PredicateType) => new Predicate(this.datapack.commandsRoot, this.getName(name), predicate)
+  /**
+   * Create a predicate.
+   *
+   * @param predicate The actual predicate. You must provide at least a `condition` for it to be valid.
+   *
+   * @example
+   *
+   * Predicate('is_raining', {
+   *   condition: 'minecraft:weather_check',
+   *   raining: true,
+   * })
+   */
+  Predicate = (name: string, predicate: PredicateType) => new Predicate(this.datapack, this.getName(name), predicate)
 
   /** Create a tag. */
   Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[], replace?: boolean) => new Tag(this.datapack, type, this.getName(name), values, replace)
 
-  /** Create a loot table. */
+  /**
+   * Create a loot table.
+   *
+   * @param lootTable The actual loot table. Each pool must provide a number of `rolls` and a list of `entries` to be valid.
+   * Each entry must at least provide its `type` and the type-dependant required properties.
+   *
+   * @example
+   *
+   * LootTable('give_diamond', {
+   *   pools: [{
+   *     rolls: 1,
+   *     entries: [{
+   *       type: 'item',
+   *       name: 'minecraft:diamond',
+   *     }],
+   *   }],
+   * })
+   */
   LootTable = (name: string, lootTable: LootTableType) => new LootTable(this.datapack, this.getName(name), lootTable)
 
   /** Create a recipe. */

@@ -4,7 +4,7 @@ import type {
 import {
   clear, execute, replaceitem,
 } from '../src/commands'
-import { mcfunction } from '../src/core'
+import { MCFunction } from '../src/core'
 import type { PlayerScore } from '../src/variables'
 import { createObjective, Variable } from '../src/variables'
 import { nbtParser, SelectorCreator, _ } from '../src/_internals'
@@ -164,7 +164,7 @@ export class Menu {
     }
   }
 
-  mcfunction: typeof mcfunction = (name, callback, options?) => mcfunction(`__inventory__/${this.menuId}/${name}`, callback, options)
+  mcfunction: typeof MCFunction = (name, callback, options?) => MCFunction(`__inventory__/${this.menuId}/${name}`, callback, options)
 
   executeCallback = this.mcfunction('callback', (playerSelectedSlot: PlayerScore) => {
     const playerSubMenu = currentSubMenuObjective.ScoreHolder('@s')

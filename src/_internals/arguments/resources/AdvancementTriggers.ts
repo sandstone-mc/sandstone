@@ -13,13 +13,109 @@ import type { ObjectOrArray } from './predicate'
 
 // The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = {
-  /** The trigger for this advancement; specifies what the game should check for the advancement. */
+  /**
+   * The trigger for this advancement; specifies what the game should check for the advancement.
+   *
+   * One of:
+   * - `minecraft:bee_nest_destroyed`: Triggers when the player breaks a bee nest or beehive.
+   *
+   * - `minecraft:bred_animals`: Triggers after the player breeds 2 animals.
+   *
+   * - `minecraft:brewed_potion`: Triggers after the player takes any item out of a brewing stand.
+   *
+   * - `minecraft:changed_dimension`: Triggers after the player travels between two dimensions.
+   *
+   * - `minecraft:channeled_lightning`: Triggers after the player successfully uses the Channeling enchantment on an entity.
+   *
+   * - `minecraft:construct_beacon`: Triggers after the player changes the structure of a beacon. (When the beacon updates itself).
+   *
+   * - `minecraft:consume_item`: Triggers when the player consumes an item.
+   *
+   * - `minecraft:cured_zombie_villager`: Triggers when the player cures a zombie villager.
+   *
+   * - `minecraft:effects_changed`: Triggers after the player gets a status effect applied or taken from them.
+   *
+   * - `minecraft:enchanted_item`: Triggers after the player enchants an item through an enchanting table (does not get triggered through an anvil, or through commands).
+   *
+   * - `minecraft:enter_block`: Triggers when the player stands in a block.
+   *    Checks every tick and will try to trigger for each successful match (up to 8 times, the maximum amount of blocks a player can stand in),
+   *    which only works if the advancement is revoked from within the advancement using a function reward.
+   *
+   * - `minecraft:entity_hurt_player`: Triggers after a player gets hurt.
+   *
+   * - `minecraft:entity_killed_player`: Triggers after an entity kills a player.
+   *
+   * - `minecraft:filled_bucket`: Triggers after the player fills a bucket.
+   *
+   * - `minecraft:fishing_rod_hooked`: Triggers after the player successfully catches an item with a fishing rod or pulls an entity with a fishing rod.
+   *
+   * - `minecraft:hero_of_the_village`: Triggers when the player defeats a raid and checks where the player is.
+   *
+   * - `minecraft:impossible`: Triggers only using commands.
+   *
+   * - `minecraft:inventory_changed`: Triggers after any changes happen to the player's inventory.
+   *
+   * - `minecraft:item_durability_changed`: Triggers after any item in the inventory has been damaged in any form.
+   *
+   * - `minecraft:item_used_on_block`: Triggers when the player uses their hand or an item on a block.
+   *
+   * - `minecraft:killed_by_crossbow`: Triggers after the player kills a mob or player using a crossbow in ranged combat.
+   *
+   * - `minecraft:levitation`: Triggers when the player has the levitation status effect.
+   *
+   * - `minecraft:location`: Triggers every 20 ticks (1 second) and checks where the player is.
+   *
+   * - `minecraft:nether_travel`: Triggers when the player travels to the Nether and then returns to the Overworld.
+   *
+   * - `minecraft:placed_block`: Triggers when the player places a block.
+   *
+   * - `minecraft:player_generates_container_loot`: Triggers when the player generates the contents of a container with a loot table set.
+   *
+   * - `minecraft:player_hurt_entity`: Triggers after the player hurts a mob or player.
+   *
+   * - `minecraft:player_interacted_with_entity`: Triggers when the player interacts with an entity.
+   *
+   * - `minecraft:player_killed_entity`: Triggers after a player is the source of a mob or player being killed.
+   *
+   * - `minecraft:recipe_unlocked`: Triggers after the player unlocks a recipe (using a knowledge book for example).
+   *
+   * - `minecraft:shot_crossbow`: Triggers when the player shoots a crossbow.
+   *
+   * - `minecraft:slept_in_bed`: Triggers when the player enters a bed.
+   *
+   * - `minecraft:slide_down_block`: Triggers when the player slides down a block.
+   *
+   * - `minecraft:summoned_entity`: Triggers after an entity has been summoned.
+   *    Works with iron golems (pumpkin and iron blocks), snow golems (pumpkin and snow blocks), the ender dragon (end crystals)
+   *    and the wither (wither skulls and soul sand/soul soil).
+   *    Using dispensers to place the wither skulls or pumpkins will still activate this trigger.
+   *    Spawn eggs, commands and mob spawners will not work however.
+   *
+   * - `minecraft:tame_animal`: Triggers after the player tames an animal.
+   *
+   * - `minecraft:target_hit`: Triggers when the player shoots a target block.
+   *
+   * - `minecraft:thrown_item_picked_up_by_entity`: Triggers after the player throws an item and another entity picks it up.
+   *
+   * - `minecraft:tick`: Triggers every tick (20 times a second).
+   *
+   * - `minecraft:used_ender_eye`: Triggers when the player uses an eye of ender (in a world where strongholds generate).
+   *
+   * - `minecraft:used_totem`: Triggers when the player uses a totem.
+   *
+   * - `minecraft:villager_trade`: Triggers after the player trades with a villager or a wandering trader.
+   *
+   * - `minecraft:voluntary_exile`: Triggers when the player causes a raid and checks where the player is.
+   *
+   */
   trigger: NAME
 
   /** All the conditions that need to be met when the trigger gets activated. */
   conditions: Partial<CONDITIONS> & {
-    /** A list of loot table conditions that must pass in order for the trigger to activate.
-     * The checks are applied to the player that would get the advancement. */
+    /**
+     * A list of loot table conditions that must pass in order for the trigger to activate.
+     * The checks are applied to the player that would get the advancement.
+     */
     player?: PlayerCriterion
   }
 }
@@ -50,10 +146,12 @@ export type AdvancementTriggers = (
     to: DimensionCriterion
 
   }> | Trigger<'minecraft:channeled_lightning', {
-    /** The victims hit by the lightning summoned by the Channeling enchantment.
+    /**
+     * The victims hit by the lightning summoned by the Channeling enchantment.
      * All entities in this list must be hit.
      * Each entry may also be a list of loot table conditions that must pass in order for the trigger to activate.
-     * The checks are applied to the victim hit by the enchanted trident. */
+     * The checks are applied to the victim hit by the enchanted trident.
+     */
     victims: EntityCriterion[]
 
   }> | Trigger<'minecraft:construct_beacon', {
@@ -67,13 +165,17 @@ export type AdvancementTriggers = (
     /** The item that was consumed. */
     item: ItemCriterion
   }> | Trigger<'minecraft:cured_zombie_villager', {
-    /** The villager that is the result of the conversion.
+    /**
+     * The villager that is the result of the conversion.
      * The 'type' tag is redundant since it will always be "villager".
-     * May also be a list of loot table conditions that must pass in order for the trigger to activate. */
+     * May also be a list of loot table conditions that must pass in order for the trigger to activate.
+     */
     villager: EntityCriterion
-    /** The zombie villager right before the conversion is complete (not when it is initiated).
+    /**
+     * The zombie villager right before the conversion is complete (not when it is initiated).
      * The `type` tag is redundant since it will always be `zombie_villager`.
-     * May also be a list of loot table conditions that must pass in order for the trigger to activate. */
+     * May also be a list of loot table conditions that must pass in order for the trigger to activate.
+     */
     zombie: EntityCriterion
 
   }> | Trigger<'minecraft:effects_changed', {
@@ -90,8 +192,10 @@ export type AdvancementTriggers = (
     /** Checks the damage done to the player. */
     damage: DamageCriterion
   }> | Trigger<'minecraft:entity_killed_player', {
-    /** Checks the entity that was the source of the damage that killed the player (for example: The skeleton that shot the arrow).
-     * May also be a list of loot table conditions that must pass in order for the trigger to activate.  */
+    /**
+     * Checks the entity that was the source of the damage that killed the player (for example: The skeleton that shot the arrow).
+     * May also be a list of loot table conditions that must pass in order for the trigger to activate.
+     */
     entity: EntityCriterion
     /** Checks the type of damage that killed the player. Missing corresponding list of loot table conditions for the direct entity. */
     killing_blow: DamageCriterion

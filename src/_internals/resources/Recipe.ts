@@ -1,24 +1,16 @@
 import type { MultiplePlayersArgument, RecipeType } from '@arguments'
 import type { Datapack } from '@datapack'
+import { Resource } from './Resource'
 
-export class Recipe<P1 extends string, P2 extends string, P3 extends string> {
-  private datapack
-
-  private path
-
-  recipe
+export class Recipe<P1 extends string, P2 extends string, P3 extends string> extends Resource {
+  recipeJson
 
   constructor(datapack: Datapack, name: string, recipe: RecipeType<P1, P2, P3>) {
-    this.datapack = datapack
-    this.recipe = recipe
+    super(datapack, name)
 
-    this.path = datapack.getResourcePath(name)
+    this.recipeJson = recipe
 
     this.datapack.addResource(name, 'recipes', { recipe })
-  }
-
-  get name() {
-    return this.path.name
   }
 
   /** Give this recipe to the given players. */

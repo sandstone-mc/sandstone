@@ -94,7 +94,7 @@ export class Loot extends Command {
   }
 
   /**
-   * Distributes items to blocks.
+   * Replace an entity slot with the items.
    *
    * @param targetPos Specifies the position of a block.
    *
