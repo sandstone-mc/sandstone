@@ -17,6 +17,69 @@ import { ResourcesTree } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 import { saveDatapack } from './saveDatapack'
 
+export interface SandstoneConfig {
+  /**
+   * The default namespace for the data pack.
+   * It can be changed for each resources, individually or using Base Paths.
+   */
+  namespace: string
+
+  /**
+   * The name of the datapack.
+   */
+  name: string
+
+  /**
+   * The description of the datapack.
+   * Can be a single string or a JSON Text Component
+   * (like in /tellraw or /title).
+   */
+  description: JsonTextComponent
+
+  /**
+   * The format version of the data pack.
+   * Can change depending on the versions of Minecraft.
+   *
+   * @see [https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta](https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta)
+   */
+  formatVersion: number
+
+  /**
+   * A custom path to your .minecraft folder,
+   * in case you changed the default and Sandstone fails to find it.
+   */
+  minecraftPath?: string
+
+  /** All the options to save the data pack. */
+  saveOptions: ({
+    /**
+     * The world to save the data pack in.
+     *
+     * Incompatible with `root` and `path`.
+     */
+    world: string
+  } | {
+    /**
+     * Whether to save the data pack in the `.minecraft/datapacks` folder.
+     *
+     * Incompatible with `world` and `path`.
+     */
+    root: true
+  } | {
+    /**
+     * A custom path to save the data pack at.
+     *
+     * Incompatible with `root` and `world`.
+     */
+    path: string
+  }) & {
+    /**
+     * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
+     */
+    customFileHandler?: SaveOptions['customFileHandler']
+  }
+}
+
 export interface McFunctionReturn<T extends unknown[]> {
   (...args: T): void
 
@@ -51,7 +114,7 @@ export default class Datapack {
   initCommands: CommandArgs[]
 
   constructor(namespace: string) {
-    this.basePath = new BasePathClass(this, { namespace })
+    this.basePath = new BasePathClass(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
     this.resources = new ResourcesTree()
@@ -351,7 +414,7 @@ export default class Datapack {
    * @param name The name of the Datapack
    * @param options The save options
    */
-  save = (name: string, options: SaveOptions = {}) => {
+  save = (name: string, options: SaveOptions) => {
     if (!options.dryRun) {
       console.log(chalk`⌛ {gray Starting compilation...}`)
     }

@@ -74,17 +74,23 @@ export type SaveOptions = {
       /**
        * Whether to put the datapack in the .minecraft/datapacks folder, or not.
        *
-       * Incompatible with the `world` parameter.
+       * Incompatible with the `world` and the `customPath` parameters.
        */
-      asRootDatapack?: boolean
+      asRootDatapack: boolean
     } | {
       /**
        * The name of the world to save the datapack in.
-       * If unspecified, the datapack will be saved to the current folder.
        *
-       * Incompatible with the `asRootDatapack` folder.
+       * Incompatible with the `asRootDatapack` and the `customPath` parameters.
        */
-      world?: string
+      world: string
+    } | {
+      /**
+       * A custom path to save the data pack at.
+       *
+       * Incompatible with the `asRootDatapack` and the `world` parameters.
+       */
+      customPath: string
     }
   )
 
@@ -94,6 +100,10 @@ function hasWorld(arg: SaveOptions): arg is { world: string } & SaveOptions {
 
 function hasRoot(arg: SaveOptions): arg is { asRootDatapack: string } & SaveOptions {
   return Object.prototype.hasOwnProperty.call(arg, 'asRootDatapack')
+}
+
+function hasCustomPath(arg: SaveOptions): arg is { customPath: string } & SaveOptions {
+  return Object.prototype.hasOwnProperty.call(arg, 'customPath')
 }
 
 function saveResource<T extends ResourceTypes>(
@@ -179,12 +189,17 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     // Find the save path
     let rootPath
 
-    if (hasWorld(options)) {
+    if (hasWorld(options) && options.world !== undefined) {
       rootPath = path.join(getWorldPath(options?.world, options?.minecraftPath), 'datapacks')
-    } else if (hasRoot(options)) {
+    } else if (hasRoot(options) && options.asRootDatapack !== undefined) {
       rootPath = path.join(getMinecraftPath(), 'datapacks/')
+    } else if (hasCustomPath(options) && options.customPath !== undefined) {
+      rootPath = options.customPath
     } else {
-      rootPath = process.cwd()
+      throw new Error(
+        'Expected either the `world`, the `root` or the `path` save options to be defined. Got none of them.'
+      + 'If you are manually saving the pack, expected `world`, `asRootDatapack` or `customPath` to be set.',
+      )
     }
 
     rootPath = path.join(rootPath, name)
@@ -284,7 +299,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     // Wait until all files are written
     await Promise.all(promises)
 
-    if (!options.dryRun && !options.customFileHandler) {
+    if (!options.dryRun) {
       console.log(chalk`{greenBright ✓ Successfully wrote datapack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
     }
 

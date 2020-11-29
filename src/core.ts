@@ -1,5 +1,7 @@
 import { datapack } from './_internals'
 
+export { SandstoneConfig } from './_internals/datapack/Datapack'
+
 export const {
   save: savePack, BasePath,
 } = datapack
