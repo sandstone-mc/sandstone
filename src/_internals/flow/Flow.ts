@@ -4,6 +4,7 @@ import type {
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import { Execute } from '@commands/implementations/Execute'
+import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import type { ConditionClass } from '@variables'
 import { coordinatesParser } from '@variables'
@@ -28,12 +29,15 @@ type FlowStatementConfig = {
 export class Flow {
   private commandsRoot
 
+  private datapack
+
   arguments: CommandArgs
 
   constructor(
-    commandsRoot: CommandsRoot,
+    datapack: Datapack,
   ) {
-    this.commandsRoot = commandsRoot
+    this.datapack = datapack
+    this.commandsRoot = datapack.commandsRoot
     this.arguments = []
   }
 
@@ -142,8 +146,8 @@ export class Flow {
     const args = this.arguments.slice(1)
 
     // First, enter the callback
-    const callbackFunctionName = this.commandsRoot.Datapack.createEnterChildFunction(config.callbackName)
-    const callbackMcFunction = this.commandsRoot.Datapack.currentFunction
+    const callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
+    const callbackMcFunction = this.datapack.currentFunction
 
     // Add its commands
     callback()
@@ -157,7 +161,7 @@ export class Flow {
     }
 
     // Exit the callback
-    this.commandsRoot.Datapack.exitChildFunction()
+    this.datapack.exitChildFunction()
 
     // Put back the old arguments
     this.commandsRoot.arguments = previousArguments
@@ -179,7 +183,7 @@ export class Flow {
        * If you want to understand the reasons, see @vdvman1#9510 explanation =>
        * https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
        */
-      this.commandsRoot.Datapack.resources.deleteResource(callbackMcFunction.path, 'functions')
+      this.datapack.resources.deleteResource(callbackMcFunction.path, 'functions')
 
       if (callbackMcFunction.commands.length) {
         if (this.commandsRoot.arguments.length > 0) {
@@ -249,7 +253,7 @@ export class Flow {
 
   binaryMatch = (score: PlayerScore, minimum: number, maximum: number, callback: (num: number) => void) => {
     // First, specify we didn't find a match yet
-    const foundMatch = this.commandsRoot.Datapack.Variable(0)
+    const foundMatch = this.datapack.Variable(0)
 
     const callCallback = (num: number) => {
       this.if(this.and(score.equalTo(num), foundMatch.equalTo(0)), () => {
@@ -315,8 +319,8 @@ export class Flow {
       callback(to - from)
     }
 
-    const realStart = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.Variable(from)
-    const realEnd = to instanceof PlayerScore ? to : this.commandsRoot.Datapack.Variable(to)
+    const realStart = from instanceof PlayerScore ? from : this.datapack.Variable(from)
+    const realEnd = to instanceof PlayerScore ? to : this.datapack.Variable(to)
 
     const iterations = realEnd.minus(realStart)
 
@@ -360,7 +364,7 @@ export class Flow {
       }
     }
 
-    const scoreTracker = from instanceof PlayerScore ? from : this.commandsRoot.Datapack.Variable(from)
+    const scoreTracker = from instanceof PlayerScore ? from : this.datapack.Variable(from)
 
     /*
      * If the callback does not use the "score" argument, we can directly set the real score
@@ -387,7 +391,7 @@ export class Flow {
     // eslint-disable-next-line no-shadow
     callback: (score: PlayerScore) => void,
   ) => {
-    const realScore = score instanceof PlayerScore ? score : this.commandsRoot.Datapack.Variable(score)
+    const realScore = score instanceof PlayerScore ? score : this.datapack.Variable(score)
     const realCondition = typeof condition === 'function' ? condition(realScore) : condition
 
     this.while(realCondition, () => {

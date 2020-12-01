@@ -35,7 +35,7 @@ export type McFunctionOptions = {
   tags?: readonly string[]
 }
 
-export class MCFunctionClass<T extends any[]> {
+export class MCFunctionClass<T extends any[], R extends void | Promise<void> = void | Promise<void>> {
   name: string
 
   options: McFunctionOptions
@@ -43,15 +43,16 @@ export class MCFunctionClass<T extends any[]> {
   alreadyInitializedParameters: Map<string, {
     mcFunction: FunctionResource,
     name: string,
+    result: R,
   }>
 
   functionsFolderResource: FunctionResource
 
   datapack: Datapack
 
-  callback: (...args: T) => void
+  callback: (...args: T) => R
 
-  constructor(datapack: Datapack, name: string, callback: (...args: T) => void, options: McFunctionOptions) {
+  constructor(datapack: Datapack, name: string, callback: (...args: T) => R, options: McFunctionOptions) {
     const fullPath = name.split('/')
     const realName = fullPath[fullPath.length - 1]
     const path = fullPath.slice(-1)
@@ -101,25 +102,21 @@ export class MCFunctionClass<T extends any[]> {
   }
 
   /**
-   * Call the actual function, and triggers the given callback to add the arguments to the command.
-   *
-   * If `addArgumentsCallback` is not set, then no function call will be registered.
+   * Call the actual function overload. Returns different informations about it.
    */
-  private callAndRegister = (args: T, addArgumentsCallback?: (functionName: string) => void) => {
+  private callOverload = (args: T): {
+    mcFunction: FunctionResource,
+    name: string,
+    result: R,
+  } => {
     const { commandsRoot } = this.datapack
     const hashed = hash(args)
 
     const isNewOverload = !this.alreadyInitializedParameters.has(hashed)
 
-    let name: string
-    let mcFunction: FunctionResource
-
     if (isNewOverload) {
       // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
-      const result = this.createFunctionOverload(args)
-
-      mcFunction = result.newFunction
-      name = result.functionName
+      const { functionName, newFunction } = this.createFunctionOverload(args)
 
       // Get the given tags
       let tags = this.options.tags ?? []
@@ -135,28 +132,12 @@ export class MCFunctionClass<T extends any[]> {
       }
 
       for (const tag of tags) {
-        this.datapack.addFunctionToTag(name, tag)
+        this.datapack.addFunctionToTag(functionName, tag)
       }
 
-      this.alreadyInitializedParameters.set(hashed, { mcFunction, name })
-    } else {
-      const result = this.alreadyInitializedParameters.get(hashed)
-      mcFunction = result?.mcFunction as FunctionResource
-      name = result?.name as string
-    }
-
-    if (addArgumentsCallback) {
-      addArgumentsCallback(name)
-
-      commandsRoot.executable = true
-      commandsRoot.register()
-    }
-
-    // Finally, if it was a new overload, we need to run the actual function
-    if (isNewOverload) {
       const previousFunction = this.datapack.currentFunction
 
-      this.datapack.currentFunction = mcFunction
+      this.datapack.currentFunction = newFunction
 
       // Add some comments specifying the overload, and the options
       if (this.options.debug) {
@@ -169,20 +150,54 @@ export class MCFunctionClass<T extends any[]> {
         }
       }
 
-      this.callback(...args)
+      const result = this.callback(...args)
 
       // If there is an unfinished command, register it
       this.datapack.commandsRoot.register(true)
 
       // Then back to the previous one
       this.datapack.currentFunction = previousFunction
+
+      // Register this set of arguments as already initialized
+      const returnValue = { mcFunction: newFunction, name: functionName, result }
+      this.alreadyInitializedParameters.set(hashed, returnValue)
+
+      return returnValue
     }
+
+    // Else, we need to return the previous result
+    return this.alreadyInitializedParameters.get(hashed)!
   }
 
-  call = (...args: T) => {
-    this.callAndRegister(args, (functionName) => {
-      this.datapack.commandsRoot.arguments.push('function', functionName)
-    })
+  call = (...args: T): R => {
+    const { commandsRoot } = this.datapack
+
+    // Call without registering
+    this.callOverload(args)
+
+    const repr = hash(args)
+    const { mcFunction, name, result } = this.alreadyInitializedParameters.get(repr)!
+
+    // If the function didn't return anything, it was synchronous, so we register the /function call & stop there
+    if (!result) {
+      commandsRoot.functionCmd(name)
+      return result
+    }
+
+    // Else, it was asynchronous. Awaiting this function should therefore add a callback.
+    const childFunc = this.datapack.createChildFunction('await')
+    commandsRoot.functionCmd(childFunc.functionName)
+
+    return {
+      then: async (onfulfilled) => {
+        // This callback will be entered when the function is awaited: `await myAsyncFunc()`.
+        this.datapack.currentFunction = childFunc.childFunction
+
+        // Await the result. At the end,
+        await result
+        onfulfilled?.()
+      },
+    } as R
   }
 
   schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'replace' | 'append', ...args: T) => {
@@ -205,13 +220,13 @@ export class MCFunctionClass<T extends any[]> {
       return mcfunction.name
     }
 
-    this.callAndRegister(args)
-    return this.alreadyInitializedParameters.get(repr)?.name as string
+    throw new Error('Function has never been generated before!')
   }
 
-  generateInitialFunction = () => {
+  // eslint-disable-next-line consistent-return
+  generateInitialFunction = (): void | Promise<void> => {
     if (!this.options.lazy && !this.alreadyInitializedParameters.has('[]')) {
-      this.callAndRegister([] as any)
+      return this.callOverload([] as any).result
     }
   }
 }

@@ -80,14 +80,14 @@ export interface SandstoneConfig {
   }
 }
 
-export interface McFunctionReturn<T extends unknown[]> {
-  (...args: T): void
+export interface McFunctionReturn<ARGS extends unknown[], RETURN extends void | Promise<void> = void | Promise<void>> {
+  (...args: ARGS): RETURN
 
-  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: T) => void
+  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: ARGS) => void
 
-  getName: (...args: T) => string
+  getName: (...args: ARGS) => string
 
-  clearSchedule: (...args: T) => void
+  clearSchedule: (...args: ARGS) => void
 }
 
 export default class Datapack {
@@ -123,7 +123,7 @@ export default class Datapack {
     this.rootFunctions = new Set()
 
     this.commandsRoot = new CommandsRoot(this)
-    this.flow = new Flow(this.commandsRoot)
+    this.flow = new Flow(this)
 
     this.initCommands = []
   }
@@ -408,20 +408,32 @@ export default class Datapack {
     } as ResourceOnlyTypeMap[T])
   }
 
+  sleep = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>): PromiseLike<void> => {
+    const newFunction = this.createChildFunction('sleep')
+    this.commandsRoot.schedule.function(newFunction.functionName, delay, 'replace')
+
+    return ({
+      then: ((onfullfilled?: () => void) => {
+        this.currentFunction = newFunction.childFunction
+
+        onfullfilled?.()
+      }) as any,
+    })
+  }
+
   /**
    * Saves the datapack to the file system.
    *
    * @param name The name of the Datapack
    * @param options The save options
    */
-  save = (name: string, options: SaveOptions) => {
-    if (!options.dryRun) {
-      console.log(chalk`⌛ {gray Starting compilation...}`)
-    }
+  save = async (name: string, options: SaveOptions) => {
+    console.log(chalk`⌛ {gray Starting compilation...}`)
 
     // First, generate all functions
     for (const mcfunction of this.rootFunctions) {
-      mcfunction.generateInitialFunction()
+      // eslint-disable-next-line no-await-in-loop
+      await mcfunction.generateInitialFunction()
     }
 
     // Then, generate the init function.

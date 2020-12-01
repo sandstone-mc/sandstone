@@ -300,7 +300,9 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     await Promise.all(promises)
 
     if (!options.dryRun) {
-      console.log(chalk`{greenBright ✓ Successfully wrote datapack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
+      console.log(chalk`{greenBright ✓ Successfully wrote data pack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
+    } else {
+      console.log(chalk`{greenBright ✓ Successfully compiled data pack.} {gray (${(Date.now() - start).toLocaleString()}ms)}`)
     }
 
     return {
