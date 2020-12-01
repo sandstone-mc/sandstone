@@ -1,8 +1,8 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
-import hash from 'object-hash'
 import { toMcFunctionName } from '@datapack/minecraft'
 import type { FunctionResource } from '@datapack/resourcesTree'
+import hash from 'object-hash'
 
 export type McFunctionOptions = {
   /**
@@ -53,10 +53,6 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
   callback: (...args: T) => R
 
   constructor(datapack: Datapack, name: string, callback: (...args: T) => R, options: McFunctionOptions) {
-    const fullPath = name.split('/')
-    const realName = fullPath[fullPath.length - 1]
-    const path = fullPath.slice(-1)
-
     this.name = name
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
@@ -112,9 +108,9 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
     const { commandsRoot } = this.datapack
     const hashed = hash(args)
 
-    const isNewOverload = !this.alreadyInitializedParameters.has(hashed)
+    const existing = this.alreadyInitializedParameters.get(hashed)
 
-    if (isNewOverload) {
+    if (!existing) {
       // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
       const { functionName, newFunction } = this.createFunctionOverload(args)
 
@@ -141,10 +137,10 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
 
       // Add some comments specifying the overload, and the options
       if (this.options.debug) {
-        this.datapack.commandsRoot.comment('Options:', JSON.stringify(this.options))
+        commandsRoot.comment('Options:', JSON.stringify(this.options))
 
         try {
-          this.datapack.commandsRoot.comment('Arguments:', JSON.stringify(args))
+          commandsRoot.comment('Arguments:', JSON.stringify(args))
         } catch (e) {
           // JSON.stringify fails on recursive objects.
         }
@@ -153,7 +149,7 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
       const result = this.callback(...args)
 
       // If there is an unfinished command, register it
-      this.datapack.commandsRoot.register(true)
+      commandsRoot.register(true)
 
       // Then back to the previous one
       this.datapack.currentFunction = previousFunction
@@ -166,38 +162,17 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
     }
 
     // Else, we need to return the previous result
-    return this.alreadyInitializedParameters.get(hashed)!
+    return existing
   }
 
   call = (...args: T): R => {
     const { commandsRoot } = this.datapack
 
     // Call without registering
-    this.callOverload(args)
+    const { name, result } = this.callOverload(args)
 
-    const repr = hash(args)
-    const { mcFunction, name, result } = this.alreadyInitializedParameters.get(repr)!
-
-    // If the function didn't return anything, it was synchronous, so we register the /function call & stop there
-    if (!result) {
-      commandsRoot.functionCmd(name)
-      return result
-    }
-
-    // Else, it was asynchronous. Awaiting this function should therefore add a callback.
-    const childFunc = this.datapack.createChildFunction('await')
-    commandsRoot.functionCmd(childFunc.functionName)
-
-    return {
-      then: async (onfulfilled) => {
-        // This callback will be entered when the function is awaited: `await myAsyncFunc()`.
-        this.datapack.currentFunction = childFunc.childFunction
-
-        // Await the result. At the end,
-        await result
-        onfulfilled?.()
-      },
-    } as R
+    commandsRoot.functionCmd(name)
+    return result
   }
 
   schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'replace' | 'append', ...args: T) => {
