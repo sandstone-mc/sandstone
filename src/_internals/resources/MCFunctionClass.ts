@@ -6,7 +6,7 @@ import hash from 'object-hash'
 
 export type McFunctionOptions = {
   /**
-   * If true, then the function will only be created if it ??
+   * If true, then the function will only be created if it is called from another function.
    */
   lazy?: boolean
 

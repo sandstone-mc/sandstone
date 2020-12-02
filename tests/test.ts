@@ -1,14 +1,14 @@
 import { say, tellraw } from 'src/commands'
 import { MCFunction, sleep, savePack } from 'src/core'
 
-MCFunction('display_message', async () => {
-  say('ho')
-  await sleep(10)
+MCFunction('council', async () => {
+  tellraw('@a', '[Aragorn] - You have my sword.')
+  await sleep(10) // sleep 10 ticks, half a second.
 
-  say('oops I slept too much')
-  await sleep(12)
+  tellraw('@a', '[Legolas] - And my bow.')
+  await sleep('1s') // sleep 1 second
 
-  say('once again')
+  tellraw('@a', '[Gimly] - AND MY AXE!')
 })
 
 savePack('My Datapack', {
