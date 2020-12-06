@@ -446,11 +446,11 @@ export class Flow {
     recursiveMatch(minimum, maximum)
   }
 
-  while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => {
+  private _while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R, type: 'while' | 'doWhile'): R => {
     if (!isAsyncFunction(callback)) {
       this.flowStatement(callback, {
-        callbackName: 'while',
-        initialCondition: true,
+        callbackName: type,
+        initialCondition: type === 'while',
         loopCondition: true,
         condition,
       })
@@ -459,8 +459,8 @@ export class Flow {
     }
 
     const promise = this.flowStatementAsync(callback, {
-      callbackName: 'while',
-      initialCondition: true,
+      callbackName: type,
+      initialCondition: type === 'while',
       loopCondition: true,
       condition,
     })
@@ -475,14 +475,9 @@ export class Flow {
     } as any
   }
 
-  doWhile = (condition: ConditionClass | CombinedConditions, callback: () => void) => {
-    this.flowStatement(callback, {
-      callbackName: 'doWhile',
-      initialCondition: false,
-      loopCondition: true,
-      condition,
-    })
-  }
+  while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'while')
+
+  doWhile = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'doWhile')
 
   binaryFor = (from: PlayerScore | number, to: PlayerScore |number, callback: (amount: number) => void, maximum = 128) => {
     if (typeof from === 'number' && typeof to === 'number') {
