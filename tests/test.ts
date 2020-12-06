@@ -1,17 +1,12 @@
-import { tellraw } from 'src/commands'
-import { MCFunction, Predicate, savePack } from 'src/core'
+import { comment, say } from 'src/commands'
+import {
+  MCFunction, savePack, _,
+} from 'src/core'
+import { Variable } from 'src/variables'
 
-MCFunction('display_message', () => {
-  tellraw('@a', [
-    ['hi'],
-    '\n========= Congratulations! =========\n\n',
-    { text: ' Sandstone', color: 'gold', bold: true }, ' is ', { text: 'successfully installed.\n\n', color: 'green' },
-    ' Add files to the ', { text: 'src', underlined: true }, ' folder\n',
-    ' and start creating your data pack!\n',
-    '==============', { text: '🏹', color: '#D2691E' }, { text: '⚔', color: '#45ACA5' }, { text: '⛏', color: '#FFD700' }, '==============',
-  ])
-}, {
-  runOnLoad: true,
+const myFunc = MCFunction('recursive', () => {
+  comment('Hey!')
+  myFunc()
 })
 
 savePack('My Datapack', {

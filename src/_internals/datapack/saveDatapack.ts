@@ -239,7 +239,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
 
           // To display a function, we join their arguments. If we're in a console display, we put comments in gray.
           (func, consoleDisplay) => {
-            const repr = func.commands.map((command) => command.join(' ')).join('\n')
+            const repr = [...func.commands].map((command) => command.join(' ')).join('\n')
             if (consoleDisplay) {
               return repr.replace(/^#(.+)/gm, chalk.gray('#$1'))
             }
@@ -300,7 +300,9 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     await Promise.all(promises)
 
     if (!options.dryRun) {
-      console.log(chalk`{greenBright ✓ Successfully wrote datapack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
+      console.log(chalk`{greenBright ✓ Successfully wrote data pack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
+    } else {
+      console.log(chalk`{greenBright ✓ Successfully compiled data pack.} {gray (${(Date.now() - start).toLocaleString()}ms)}`)
     }
 
     return {

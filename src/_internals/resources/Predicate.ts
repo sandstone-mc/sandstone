@@ -19,7 +19,7 @@ export class Predicate extends Resource implements ConditionClass {
    */
   _toMinecraftCondition(): {value: any[]} {
     return {
-      value: ['predicate', this.name],
+      value: ['if', 'predicate', this.name],
     }
   }
 }
