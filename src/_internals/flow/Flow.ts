@@ -6,11 +6,51 @@ import type { CommandsRoot } from '@commands'
 import { Execute } from '@commands/implementations/Execute'
 import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
+import { toMcFunctionName } from '@datapack/minecraft'
+import type { FunctionResource } from '@datapack/resourcesTree'
 import type { ConditionClass } from '@variables'
 import { coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
+import util from 'util'
 import type { ConditionType } from './conditions'
 import { CombinedConditions, getConditionsObjective } from './conditions'
+
+const ASYNC_CALLBACK_NAME = '__await_flow'
+
+function isAsyncFunction(func: (() => void) | (() => Promise<void>)): func is () => Promise<void> {
+  return util.types.isAsyncFunction(func)
+}
+
+/** Call a given callback function, and inline it if possible */
+function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionResource) {
+  const { commandsRoot } = datapack
+
+  if (
+    callbackFunction?.isResource
+        && callbackFunction.commands.length <= 1
+        && callbackFunction.commands?.[0]?.[0] !== 'execute'
+  ) {
+    /*
+     * If our callback only has 1 command, inline this command. We CANNOT inline executes, for complicated reasons.
+     * If you want to understand the reasons, see @vdvman1#9510 explanation =>
+     * https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
+     */
+    datapack.resources.deleteResource(callbackFunction.path, 'functions')
+
+    if (callbackFunction.commands.length) {
+      if (commandsRoot.arguments.length > 0) {
+        commandsRoot.arguments.push('run')
+      }
+
+      commandsRoot.addAndRegister(...callbackFunction.commands[0])
+    } else {
+      commandsRoot.arguments = []
+    }
+  } else {
+    // Else, register the function call
+    commandsRoot.functionCmd(toMcFunctionName(callbackFunction.path))
+  }
+}
 
 type FlowStatementConfig = {
   callbackName: string
@@ -51,7 +91,7 @@ export class Flow {
    * @param block A block to test against.
    */
   block = (coords: Coordinates, block: LiteralUnion<BLOCKS>): ConditionClass => ({
-    _toMinecraftCondition: () => ({ value: ['block', coordinatesParser(coords), block] }),
+    _toMinecraftCondition: () => ({ value: ['if', 'block', coordinatesParser(coords), block] }),
   })
 
   /**
@@ -68,7 +108,7 @@ export class Flow {
    * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
    */
   blocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked'): ConditionClass => ({
-    _toMinecraftCondition: () => ({ value: ['blocks', coordinatesParser(start), coordinatesParser(end), coordinatesParser(destination), scanMode] }),
+    _toMinecraftCondition: () => ({ value: ['if', 'blocks', coordinatesParser(start), coordinatesParser(end), coordinatesParser(destination), scanMode] }),
   })
 
   /**
@@ -96,21 +136,21 @@ export class Flow {
      * @param pos Position of the block to be tested.
      * @param path Data tag to check for.
      */
-    block: (pos: Coordinates, path: string) => ({ value: ['data', 'block', coordinatesParser(pos), path] }),
+    block: (pos: Coordinates, path: string) => ({ value: ['if', 'data', 'block', coordinatesParser(pos), path] }),
 
     /**
      * Checks whether the targeted entity has any data for a given tag
      * @param target One single entity to be tested.
      * @param path Data tag to check for.
      */
-    entity: (target: SingleEntityArgument, path: string) => ({ value: ['data', 'entity', target, path] }),
+    entity: (target: SingleEntityArgument, path: string) => ({ value: ['if', 'data', 'entity', target, path] }),
 
     /**
      * Checks whether the targeted storage has any data for a given tag
      * @param source The storage to check in.
      * @param path Data tag to check for.
      */
-    storage: (source: string, path: string) => ({ value: ['data', 'storage', source, path] }),
+    storage: (source: string, path: string) => ({ value: ['if', 'data', 'storage', source, path] }),
   }
 
   /** Logical operators */
@@ -134,6 +174,85 @@ export class Flow {
   not = (condition: ConditionType) => new CombinedConditions(this.commandsRoot, [condition], 'not')
 
   /** Flow statements */
+  flowStatementAsync = async (callback: () => Promise<void>, config: FlowStatementConfig) => {
+    /*
+     * Sometimes, there are a few arguments left inside the commandsRoot (for execute.run mostly).
+     * Keep them aside, & register them after.
+     */
+    const previousArguments = this.commandsRoot.arguments
+    const previousInExecute = this.commandsRoot.inExecute
+    this.commandsRoot.reset()
+
+    const args = this.arguments.slice(1)
+
+    const { currentFunction } = this.datapack
+
+    const { fullName: asyncCallbackName } = this.datapack.getUniqueChildName(ASYNC_CALLBACK_NAME)
+
+    // First, enter the callback
+    const callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
+    const callbackMcFunction = this.datapack.currentFunction!
+
+    await callback()
+
+    this.commandsRoot.register(true)
+
+    // Add its commands
+    if (config.initialCondition && !config.loopCondition) {
+      // If we're in a if/else if/else, call the next lines at the end of each branch
+      this.commandsRoot.functionCmd(asyncCallbackName)
+    }
+
+    // At the end of the callback, add the given conditions to call it again
+    if (config.loopCondition) {
+      /*
+       * In an asynchronous flow statement, we need to recursively call the function if the condition is met, else we need to enter a new child function.
+       * We create a new Flow object to prevent interfering with the current flow object, which might cause problems.
+       */
+      const flow = new Flow(this.datapack)
+      flow.arguments = this.arguments
+      flow
+        .if(config.condition, () => {
+          this.commandsRoot.functionCmd(callbackFunctionName)
+        })
+        .else(() => {
+          this.commandsRoot.functionCmd(asyncCallbackName)
+        })
+    }
+
+    // Exit the callback
+    this.datapack.currentFunction = currentFunction
+
+    // Put back the old arguments
+    this.commandsRoot.arguments = previousArguments
+    this.commandsRoot.inExecute = previousInExecute
+
+    // Register the initial condition (in the root function) to enter the callback.
+    if (config.initialCondition) {
+      // In while statements, if the condition isn't met the 1st time, directly call the next lines of code
+      if (config.loopCondition) {
+        const flow = new Flow(this.datapack)
+        flow.arguments = this.arguments
+        flow
+          .if(config.condition, () => { callOrInlineFunction(this.datapack, callbackMcFunction) })
+          .else(() => { this.commandsRoot.functionCmd(asyncCallbackName) })
+      } else {
+        /*
+         * In if/else/else if, the respective functions have to ensure the next lines of code will be called no matter what.
+         * Therefore, this function just has to register the initial condition.
+         */
+        registerCondition(this.commandsRoot, config.condition, args)
+        this.commandsRoot.inExecute = true
+        callOrInlineFunction(this.datapack, callbackMcFunction)
+      }
+    } else {
+      callOrInlineFunction(this.datapack, callbackMcFunction)
+    }
+
+    // Reset the _.execute.as().at()... arguments.
+    this.arguments = []
+  }
+
   flowStatement = (callback: () => void, config: FlowStatementConfig) => {
     /*
      * Sometimes, there are a few arguments left inside the commandsRoot (for execute.run mostly).
@@ -145,23 +264,27 @@ export class Flow {
 
     const args = this.arguments.slice(1)
 
+    const { currentFunction } = this.datapack
+
     // First, enter the callback
     const callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
-    const callbackMcFunction = this.datapack.currentFunction
+    const callbackMcFunction = this.datapack.currentFunction!
 
     // Add its commands
     callback()
+
     this.commandsRoot.register(true)
 
     // At the end of the callback, add the given conditions to call it again
     if (config.loopCondition) {
+      // In a synchronous flow statement, we just have to recursively call the function
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.inExecute = true
       this.commandsRoot.functionCmd(callbackFunctionName)
     }
 
     // Exit the callback
-    this.datapack.exitChildFunction()
+    this.datapack.currentFunction = currentFunction
 
     // Put back the old arguments
     this.commandsRoot.arguments = previousArguments
@@ -171,84 +294,111 @@ export class Flow {
     if (config.initialCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.inExecute = true
-    }
-
-    if (
-      callbackMcFunction?.isResource
-      && callbackMcFunction.commands.length <= 1
-      && callbackMcFunction.commands?.[0]?.[0] !== 'execute'
-    ) {
-      /*
-       * If our callback only has 1 command, inline this command. We CANNOT inline executes, for complicated reasons.
-       * If you want to understand the reasons, see @vdvman1#9510 explanation =>
-       * https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
-       */
-      this.datapack.resources.deleteResource(callbackMcFunction.path, 'functions')
-
-      if (callbackMcFunction.commands.length) {
-        if (this.commandsRoot.arguments.length > 0) {
-          this.commandsRoot.arguments.push('run')
-        }
-
-        this.commandsRoot.addAndRegister(...callbackMcFunction.commands[0])
-      } else {
-        this.commandsRoot.arguments = []
-      }
+      callOrInlineFunction(this.datapack, callbackMcFunction)
     } else {
-      // Else, register the function call
       this.commandsRoot.functionCmd(callbackFunctionName)
     }
 
     this.arguments = []
   }
 
-  if = (condition: ConditionType, callback: () => void): ElifElseFlow => {
-    const conditionsObjective = getConditionsObjective(this.commandsRoot)
+  private if_ = <R extends void | Promise<void>>(condition: ConditionType, callback: () => R, callbackName: string, ifScore: PlayerScore): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
+    if (!isAsyncFunction(callback)) {
+      this.flowStatement(callback, {
+        callbackName,
+        initialCondition: true,
+        loopCondition: false,
+        condition,
+      })
 
-    // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
-    const ifScore = conditionsObjective.ScoreHolder('if_result')
-    ifScore.set(0)
+      return {
+        elseIf: (condition_: ConditionType, callback_: () => void) => this.if_(this.and(ifScore.equalTo(0), condition_), () => {
+          callback_()
+          ifScore.set(1)
+        }, 'else_if', ifScore),
+        else: (callback_: () => void) => this.if_(ifScore.equalTo(0), callback_, 'else', ifScore),
+      } as any
+    }
 
-    this.flowStatement(() => {
-      callback()
-      ifScore.set(1)
-    }, {
-      callbackName: 'if',
+    const { currentFunction: initialFunction } = this.datapack
+
+    const promise = this.flowStatementAsync(callback, {
+      callbackName,
       initialCondition: true,
       loopCondition: false,
       condition,
     })
 
-    return this
+    const { currentFunction: callbackFunction } = this.datapack
+
+    this.datapack.currentFunction = initialFunction
+    return {
+      elseIf: (condition_: ConditionType, callback_: () => Promise<void>) => this.if_(this.and(condition_, ifScore.equalTo(0)), async () => {
+        // We keep the function where the "else if" is running
+        const { currentFunction: newCallback } = this.datapack
+
+        // Go back in the previous "if"/"else if"
+        this.datapack.currentFunction = callbackFunction
+        // Run its code
+        await promise
+
+        // Now, we're going back in the current "else if"
+        this.datapack.currentFunction = newCallback
+
+        // First, we run all synchronous code (that will end up in the .mcfunction instantly called by the "else if")
+        const returnedPromise = callback_()
+
+        // We notice Sandstone that the condition has successfully passed
+        ifScore.set(1)
+
+        // Then we run the asynchronous code, that will create other .mcfunction called with /schedule.
+        await returnedPromise
+      }, 'else_if', ifScore),
+      else: (callback_: () => Promise<void>) => this.if_(ifScore.equalTo(0), async () => {
+        // We keep the function where the "else" is running
+        const { currentFunction: newCallback } = this.datapack
+
+        // Go back in the previous "if"/"else if"
+        this.datapack.currentFunction = callbackFunction
+        // Run its code
+        await promise
+
+        // Now, we're going back in the current "else"
+        this.datapack.currentFunction = newCallback
+
+        // And we run the "else" code.
+        await callback_()
+      }, 'else', ifScore),
+      then: async (onfulfilled: () => void) => {
+        // Go back in the previous "if"/"else if"/"else"
+        this.datapack.currentFunction = callbackFunction
+
+        await promise
+        this.datapack.createEnterChildFunction(ASYNC_CALLBACK_NAME)
+        onfulfilled?.()
+      },
+    } as any
   }
 
-  elseIf = (condition: ConditionType, callback: () => void): ElifElseFlow => {
+  if = <R extends void | Promise<void>>(condition: ConditionType, callback: () => R): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
     const conditionsObjective = getConditionsObjective(this.commandsRoot)
-    const ifScore = conditionsObjective.ScoreHolder('if_result')
 
-    this.flowStatement(() => {
-      callback()
+    // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
+    const ifScore = conditionsObjective.ScoreHolder(`if_result_${Math.floor(Math.random() * 10_000)}`)
+    ifScore.set(0)
+
+    if (!isAsyncFunction(callback)) {
+      return this.if_(condition, () => {
+        callback()
+        ifScore.set(1)
+      }, 'if', ifScore) as any
+    }
+    // Async function
+    return this.if_(condition, async () => {
+      const returnedPromise = callback()
       ifScore.set(1)
-    }, {
-      callbackName: 'else_if',
-      initialCondition: true,
-      loopCondition: false,
-      condition: this.and(ifScore.equalTo(0), condition),
-    })
-
-    return this
-  }
-
-  else = (callback: () => void) => {
-    const conditionsObjective = getConditionsObjective(this.commandsRoot)
-    const ifScore = conditionsObjective.ScoreHolder('if_result')
-
-    this.flowStatement(callback, {
-      callbackName: 'else',
-      initialCondition: true,
-      loopCondition: false,
-      condition: ifScore.equalTo(0),
-    })
+      await returnedPromise
+    }, 'if', ifScore) as any
   }
 
   binaryMatch = (score: PlayerScore, minimum: number, maximum: number, callback: (num: number) => void) => {
@@ -296,13 +446,33 @@ export class Flow {
     recursiveMatch(minimum, maximum)
   }
 
-  while = (condition: ConditionClass | CombinedConditions, callback: () => void) => {
-    this.flowStatement(callback, {
+  while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => {
+    if (!isAsyncFunction(callback)) {
+      this.flowStatement(callback, {
+        callbackName: 'while',
+        initialCondition: true,
+        loopCondition: true,
+        condition,
+      })
+
+      return undefined as any
+    }
+
+    const promise = this.flowStatementAsync(callback, {
       callbackName: 'while',
       initialCondition: true,
       loopCondition: true,
       condition,
     })
+
+    return {
+      then: (onfulfilled: () => void) => {
+        promise.then(() => {
+          this.datapack.createEnterChildFunction(ASYNC_CALLBACK_NAME)
+          onfulfilled?.()
+        })
+      },
+    } as any
   }
 
   doWhile = (condition: ConditionClass | CombinedConditions, callback: () => void) => {
@@ -400,6 +570,10 @@ export class Flow {
     })
   }
 
+  private register = (soft?: boolean) => {
+    this.commandsRoot.register(soft)
+  }
+
   get execute(): Omit<Execute<Flow>, 'run' | 'runOne'> {
     return new Execute(this)
   }
@@ -415,10 +589,10 @@ function registerCondition(commandsRoot: CommandsRoot, condition: ConditionType,
       const { callableExpression, requiredExpressions } = realCondition.toExecutes()
       commands = [...requiredExpressions, callableExpression]
     } else {
-      commands = [['execute', ...args, 'if', ...realCondition._toMinecraftCondition().value]]
+      commands = [['execute', ...args, ...realCondition._toMinecraftCondition().value]]
     }
   } else {
-    commands = [['execute', ...args, 'if', ...condition._toMinecraftCondition().value]]
+    commands = [['execute', ...args, ...condition._toMinecraftCondition().value]]
   }
 
   // Add & register all required commands
@@ -432,4 +606,8 @@ function registerCondition(commandsRoot: CommandsRoot, condition: ConditionType,
 }
 
 export type PublicFlow = Omit<Flow, 'arguments' | 'flowStatement' | 'elseIf' | 'else'>
-type ElifElseFlow = Pick<Flow, 'elseIf' | 'else'>
+
+type ElifElseFlow<R extends void | Promise<void>> = {
+  elseIf: (condition: ConditionType, callback: () => R) => (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>)
+  else: (callback: () => R) => void
+}

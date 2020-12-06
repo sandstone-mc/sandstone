@@ -141,8 +141,10 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
   const names = Array.isArray(name) ? name : [name]
 
   return createPropertyDecorator<CommandsRoot>(config.thisField ?? null, (commandsRoot, innerFunction, ...innerArgs) => {
-    // If the previous command was executable, register it.
-    // It means it wasn't registered because it could have been extended with other arguments.
+    /*
+     * If the previous command was executable, register it.
+     * It means it wasn't registered because it could have been extended with other arguments.
+     */
     if (config.isExecuteSubcommand && !commandsRoot.inExecute) {
       commandsRoot.register(true)
     }

@@ -239,7 +239,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
 
           // To display a function, we join their arguments. If we're in a console display, we put comments in gray.
           (func, consoleDisplay) => {
-            const repr = func.commands.map((command) => command.join(' ')).join('\n')
+            const repr = [...func.commands].map((command) => command.join(' ')).join('\n')
             if (consoleDisplay) {
               return repr.replace(/^#(.+)/gm, chalk.gray('#$1'))
             }

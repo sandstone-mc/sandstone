@@ -39,8 +39,10 @@ export class CombinedConditions {
       return new CombinedConditions(this.commandsRoot, valuesWithoutOr, this.operator)
     }
 
-    // We have an OR operator. We need to transform it into an AND, using De Morgan's law:
-    // (A or B) = not (not A and not B)
+    /*
+     * We have an OR operator. We need to transform it into an AND, using De Morgan's law:
+     * (A or B) = not (not A and not B)
+     */
 
     // This corresponds to (not A, not B, not C)
     const newValues = valuesWithoutOr.map((value) => new CombinedConditions(this.commandsRoot, [value], 'not'))
@@ -117,7 +119,14 @@ export class CombinedConditions {
         callableExpression.push(this.operator === 'not' ? 'unless' : 'if', 'score', condition.toString(), 'matches', '1')
         return
       }
-      callableExpression.push(this.operator === 'not' ? 'unless' : 'if', ...value._toMinecraftCondition().value)
+
+      let conditionArgs = value._toMinecraftCondition().value
+      if (this.operator === 'not') {
+        // Invert the 1st argument, which is "if" or "unless"
+        const invertedOperator = conditionArgs[0] === 'if' ? 'unless' : 'if'
+        conditionArgs = [invertedOperator, ...value._toMinecraftCondition().value.slice(1)]
+      }
+      callableExpression.push(...conditionArgs)
     })
 
     return { requiredExpressions, callableExpression }

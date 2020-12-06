@@ -6,6 +6,7 @@ import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
 import chalk from 'chalk'
+import util from 'util'
 import type { BasePathOptions } from './BasePath'
 import { BasePathClass } from './BasePath'
 import type { CommandArgs } from './minecraft'
@@ -230,12 +231,14 @@ export default class Datapack {
    * @param childName The original name for the child function.
    * @param parentFunction The parent function to find a child's name for. Defaults to current function.
    */
-  private getUniqueChildName(childName: string, parentFunction = this.currentFunction): string {
+  getUniqueChildName(childName: string, parentFunction = this.currentFunction) {
     if (!parentFunction) {
       throw new Error('Trying to get a unique child name outside a root function.')
     }
 
-    return this.getUniqueNameFromFolder(childName, parentFunction)
+    const newName = this.getUniqueNameFromFolder(childName, parentFunction)
+    const fullName = toMcFunctionName([...parentFunction.path, newName])
+    return this.getResourcePath(fullName)
   }
 
   /**
@@ -248,19 +251,19 @@ export default class Datapack {
       throw Error('Entering child function without registering a root function')
     }
 
-    const childName = this.getUniqueChildName(functionName, parentFunction)
+    const { name: childName, fullName, fullPathWithNamespace } = this.getUniqueChildName(functionName, parentFunction)
 
     // Update the current function - it now is the child function.
     const emptyFunction = {
-      children: new Map(), isResource: true as const, commands: [], path: [...parentFunction.path, childName],
+      children: new Map(), isResource: true as const, commands: [], path: fullPathWithNamespace,
     }
 
     parentFunction.children.set(childName, emptyFunction as any)
 
     // Return its full minecraft name
     return {
-      functionName: toMcFunctionName(emptyFunction.path),
-      childFunction: emptyFunction as any,
+      functionName: fullName,
+      childFunction: emptyFunction,
     }
   }
 
@@ -323,7 +326,7 @@ export default class Datapack {
    */
   registerNewCommand = (commandArgs: CommandArgs): void => {
     if (!this.currentFunction || !this.currentFunction.isResource) {
-      throw Error('Adding a command outside of a registered function')
+      throw Error(`Adding a command outside of a registered function: /${commandArgs.join(' ')}`)
     }
 
     this.currentFunction.commands.push(commandArgs)
@@ -438,7 +441,7 @@ export default class Datapack {
     }
 
     const newFunction = this.createChildFunction(SLEEP_CHILD_NAME, parentFunction)
-    this.commandsRoot.schedule.function(newFunction.functionName, delay, 'replace')
+    this.commandsRoot.schedule.function(newFunction.functionName, delay, 'append')
 
     return ({
       then: (async (onfullfilled?: () => (void | Promise<void>)) => {

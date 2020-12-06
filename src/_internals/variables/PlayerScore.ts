@@ -31,7 +31,7 @@ function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, obje
   return anonymousScore
 }
 
-export class PlayerScore extends ComponentClass {
+export class PlayerScore extends ComponentClass implements ConditionClass {
   commandsRoot: CommandsRoot
 
   target: MultipleEntitiesArgument
@@ -55,6 +55,10 @@ export class PlayerScore extends ComponentClass {
       score: { name: this.target, objective: this.objective.name },
     }
   }
+
+  _toMinecraftCondition = () => ({
+    value: ['unless', 'score', this.target, this.objective.name, 'matches', 0],
+  })
 
   private unaryOperation(
     operation: 'add' | 'remove' | 'set',
@@ -127,7 +131,7 @@ export class PlayerScore extends ComponentClass {
    * Adds a constant amount to the entity's score.
    *
    * @param amount The amount to add to the entity's score.
-  */
+   */
   add(amount: number): this
 
   /**
@@ -154,23 +158,23 @@ export class PlayerScore extends ComponentClass {
    * Substract a constant amount from the entity's score.
    *
    * @param amount The amount to substract to the entity's score.
-  */
+   */
   remove(amount: number): this
 
   /**
-  * Substract other target's scores from the current entity's score.
-  *
-  * @param targets The targets to get the scores from
-  *
-  * @param objective The related objective. If not specified, default to the same objective as the current target.
-  */
+   * Substract other target's scores from the current entity's score.
+   *
+   * @param targets The targets to get the scores from
+   *
+   * @param objective The related objective. If not specified, default to the same objective as the current target.
+   */
   remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
 
   /**
-  * Substract other entities's scores from the current entity's score.
-  *
-  * @param targetScore The target to get the scores from
-  */
+   * Substract other entities's scores from the current entity's score.
+   *
+   * @param targetScore The target to get the scores from
+   */
   remove(targetScore: PlayerScore): this
 
   remove(...args: OperationArguments) {
@@ -437,13 +441,13 @@ export class PlayerScore extends ComponentClass {
 
     if (typeof args[0] === 'number') {
       return {
-        _toMinecraftCondition: () => ({ value: ['score', playerScore.target, playerScore.objective, 'matches', matchesRange] }),
+        _toMinecraftCondition: () => ({ value: ['if', 'score', playerScore.target, playerScore.objective, 'matches', matchesRange] }),
       }
     }
 
     const endArgs = args[1] ? args : [args[0]]
     return {
-      _toMinecraftCondition: () => ({ value: ['score', playerScore.target, playerScore.objective, operator, ...endArgs] }),
+      _toMinecraftCondition: () => ({ value: ['if', 'score', playerScore.target, playerScore.objective, operator, ...endArgs] }),
     }
   }
 

@@ -1,18 +1,15 @@
-import { say, tellraw } from 'src/commands'
-import { MCFunction, sleep, savePack } from 'src/core'
+import { comment, say } from 'src/commands'
+import {
+  MCFunction, savePack, _,
+} from 'src/core'
+import { Variable } from 'src/variables'
 
-MCFunction('council', async () => {
-  tellraw('@a', '[Aragorn] - You have my sword.')
-  await sleep(10) // sleep 10 ticks, half a second.
-
-  tellraw('@a', '[Legolas] - And my bow.')
-  await sleep('1s') // sleep 1 second
-
-  tellraw('@a', '[Gimly] - AND MY AXE!')
+const myFunc = MCFunction('recursive', () => {
+  comment('Hey!')
+  myFunc()
 })
 
 savePack('My Datapack', {
   verbose: true,
   world: 'Crea1_15',
-  dryRun: true,
 })

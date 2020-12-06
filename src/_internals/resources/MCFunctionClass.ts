@@ -43,7 +43,7 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
   alreadyInitializedParameters: Map<string, {
     mcFunction: FunctionResource,
     name: string,
-    result: R,
+    result: R | null, // Null mean the value isn't currently defined
   }>
 
   functionsFolderResource: FunctionResource
@@ -113,6 +113,9 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
     if (!existing) {
       // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
       const { functionName, newFunction } = this.createFunctionOverload(args)
+
+      // We also set it as currently in initialization.
+      this.alreadyInitializedParameters.set(hashed, { name: functionName, mcFunction: newFunction, result: null })
 
       // Get the given tags
       let tags = this.options.tags ?? []
