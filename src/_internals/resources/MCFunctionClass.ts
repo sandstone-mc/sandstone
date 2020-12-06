@@ -103,7 +103,7 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
   private callOverload = (args: T): {
     mcFunction: FunctionResource,
     name: string,
-    result: R,
+    result: R | null,
   } => {
     const { commandsRoot } = this.datapack
     const hashed = hash(args)
@@ -168,7 +168,7 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
     return existing
   }
 
-  call = (...args: T): R => {
+  call = (...args: T): R | null => {
     const { commandsRoot } = this.datapack
 
     // Call without registering
@@ -202,7 +202,7 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
   }
 
   // eslint-disable-next-line consistent-return
-  generateInitialFunction = (): void | Promise<void> => {
+  generateInitialFunction = (): void | Promise<void> | null => {
     if (!this.options.lazy && !this.alreadyInitializedParameters.has('[]')) {
       return this.callOverload([] as any).result
     }
