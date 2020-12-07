@@ -46,9 +46,11 @@ export class CommandsRoot {
 
   arguments: CommandArgs
 
-  // This might seem weird, but we need this object to reference itself.
-  // Thanks to that, CommandsRoot implements the Command interface,
-  // and we can directly create commands here.
+  /*
+   * This might seem weird, but we need this object to reference itself.
+   * Thanks to that, CommandsRoot implements the Command interface,
+   * and we can directly create commands here.
+   */
   commandsRoot: CommandsRoot
 
   constructor(datapack: Datapack) {
@@ -495,7 +497,7 @@ export class CommandsRoot {
 
   worldborder = new WorldBorder(this)
 
-  /// ALIAS COMMANDS ///
+  // / ALIAS COMMANDS ///
 
   // msg command //
   msg: CommandsRoot['tell'] = (...args) => this.tell(...args)

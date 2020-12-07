@@ -53,6 +53,7 @@ export const {
   teammessage,
   teleport,
   tellraw,
+  time,
   title,
   trigger,
   w,
