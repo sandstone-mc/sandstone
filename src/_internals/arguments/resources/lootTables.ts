@@ -70,12 +70,14 @@ type LootTableFunction = {
     source: 'block_entity'
   }>
   | FunctionType<'copy_nbt', {
-    /** Specifies the source. Must be one of:
+    /**
+     * Specifies the source. Must be one of:
      * - `block_entity` for the block entity of the destroyed block
      * - `this` to use the entity that died or the player that gained the loot table
      * - `opened` the container or broke the block,
      * - `killer` for the killer,
-     * - `killer_player` for a killer that is a player. */
+     * - `killer_player` for a killer that is a player.
+     */
     source: 'block_entity' | 'this' | 'killer' | 'killer_player'
 
     /** An operation. */
@@ -107,16 +109,20 @@ type LootTableFunction = {
   | FunctionType<'exploration_map', {
     /** The type of generated structure to locate. Accepts any of the StructureTypes used by the `/locate` command (case insensitive). */
     destination: LiteralUnion<STRUCTURES>
-    /** The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
-     * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map. */
+    /**
+     * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
+     * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
+     */
     decoration?: LiteralUnion<MAP_ICONS>
     /** The zoom level of the resulting map. Defaults to 2. */
     zoom?: number
-    /** The size, in chunks, of the area to search for structures.
+    /**
+     * The size, in chunks, of the area to search for structures.
      * The area checked is square, not circular.
      * Radius `0` causes only the current chunk to be searched,
      * radius `1` causes the current chunk and eight adjacent chunks to be searched, and so on.
-     * Defaults to `50`. */
+     * Defaults to `50`.
+     */
     search_radius?: number
     /** Don't search in chunks that have already been generated. Defaults to `true`. */
     skip_existing_chunks?: boolean
@@ -133,7 +139,8 @@ type LootTableFunction = {
      * - `this` to use the entity that died or the player that gained the advancement,
      *   opened the container or broke the block
      * - `killer` for the killer
-     * - `killer_player` for a killer that is a player. */
+     * - `killer_player` for a killer that is a player.
+     */
     entity: 'this' | 'killer' | 'killer_player'
   }>
   | FunctionType<'limit_count', {
@@ -141,16 +148,20 @@ type LootTableFunction = {
     limit: NumberOrMinMax
   }>
   | FunctionType<'looting_enchant', {
-    /** If a number is given, it specifies an exact number
+    /**
+     * If a number is given, it specifies an exact number
      * of additional items per level of looting.
      *
      * If a range is given, it specifies a random number
      * (within a range) of additional items per level of looting.
      * Note the random number generated may be fractional, rounded after multiplying by the looting level.
-     * */
+     *
+     */
     count?: NumberOrMinMax
-    /** Specifies the maximum amount of items in the stack after the looting calculation.
-     * If the value is `0`, no limit is applied. */
+    /**
+     * Specifies the maximum amount of items in the stack after the looting calculation.
+     * If the value is `0`, no limit is applied.
+     */
     limit?: number
   }>
   | FunctionType<'set_attributes', {
@@ -162,11 +173,13 @@ type LootTableFunction = {
       amount: NumberOrMinMax
       id?: string
 
-      /** Slots the item must be in for the modifier to take effect.
+      /**
+       * Slots the item must be in for the modifier to take effect.
        * This value can be one of the following : `mainhand`, `offhand`, `feet`, `legs`, `chest`, or `head`.
        *
        * If a list is given, one of the listed slots will be chosen randomly.
-       * */
+       *
+       */
       slot?: ATTRIBUTE_SLOTS | ATTRIBUTE_SLOTS[]
     }[]
   }>
@@ -177,7 +190,8 @@ type LootTableFunction = {
   | FunctionType<'set_count', {
     /** Specifies the exact stack size to set, or a random stack size within a range. */
     count: number | {
-      /** The distribution type. Must be:
+      /**
+       * The distribution type. Must be:
        * - `uniform`: Uniform distribution. A random integer is chosen with probability of each number being equal.
        * - `binomial`: Binomial distribution. Roll a number of times, each having a chance of adding 1 to the stack size.
        */
@@ -187,7 +201,8 @@ type LootTableFunction = {
       /** Maximum stack size. */
       max: number
     } | {
-      /** The distribution type. Must be:
+      /**
+       * The distribution type. Must be:
        * - `uniform`: Uniform distribution. A random integer is chosen with probability of each number being equal.
        * - `binomial`: Binomial distribution. Roll a number of times, each having a chance of adding 1 to the stack size.
        */
@@ -199,7 +214,8 @@ type LootTableFunction = {
     }
   }>
   | FunctionType<'set_damage', {
-    /** If a number is given, it specifies the damage fraction to set
+    /**
+     * If a number is given, it specifies the damage fraction to set
      * (1.0 is undamaged, 0.0 is zero durability left).
      *
      * If a range is give, it specifies a random damage fraction within the given range.
@@ -215,10 +231,12 @@ type LootTableFunction = {
   | FunctionType<'set_lore', {
     /** List of JSON text components. Each list entry represents one line of the lore. */
     lore: JsonTextComponent[]
-    /** Specifies the entity to act as the source @s in the JSON text component. Set to:
+    /**
+     * Specifies the entity to act as the source @s in the JSON text component. Set to:
      * - `this` to use the entity that died or the player that gained the advancement, opened the container or broke the block
      * - `killer` for the killer
-     * - `killer_player` for a killer that is a player. */
+     * - `killer_player` for a killer that is a player.
+     */
     entity: 'this' | 'killer' | 'killer_player'
     /** If true, replaces all existing lines of lore, if false appends the list. */
     replace?: boolean
@@ -226,16 +244,20 @@ type LootTableFunction = {
   | FunctionType<'set_name', {
     /** A JSON text component name, allowing color, translations, etc. */
     name: JsonTextComponent
-    /** Specifies the entity to act as the source @s in the JSON text component. Set to:
+    /**
+     * Specifies the entity to act as the source @s in the JSON text component. Set to:
      * - `this` to use the entity that died or the player that gained the advancement, opened the container or broke the block
      * - `killer` for the killer
-     * - `killer_player` for a killer that is a player. */
+     * - `killer_player` for a killer that is a player.
+     */
     entity: 'this' | 'killer' | 'killer_player'
   }>
   | FunctionType<'set_nbt', {
-    /** Tag string to add, similar to those used by commands.
+    /**
+     * Tag string to add, similar to those used by commands.
      * Note that the first bracket is required,
-     * and quotation marks need to be escaped using a backslash. */
+     * and quotation marks need to be escaped using a backslash.
+     */
     tag: string
   }>
   | FunctionType<'set_stew_effect', {
@@ -251,7 +273,8 @@ type LootTableFunction = {
 )
 
 type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
-  /** Type of entry.
+  /**
+   * Type of entry.
    * Can be:
    * - `item` for item entries,
    * - `tag` for item tags,
@@ -260,7 +283,8 @@ type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
    * - `alternatives` to select one sub-entry from a list,
    * - `sequence` to select sub-entries until one entry cannot be granted,
    * - `dynamic` to generate block specific drops,
-   * - `empty` for an entry that generates nothing. */
+   * - `empty` for an entry that generates nothing.
+   */
   type: TYPE
 } & VALUES
 
@@ -292,25 +316,33 @@ type LootTableEntry = {
    */
   functions?: LootTableFunction[]
 
-  /** Determines how often this entry is chosen out of all the entries in the pool.
-   * Entries with higher weights are used more often (chance is `this entry's weight / total of all considered entries' weights`). */
+  /**
+   * Determines how often this entry is chosen out of all the entries in the pool.
+   * Entries with higher weights are used more often (chance is `this entry's weight / total of all considered entries' weights`).
+   */
    weight?: number
 
-   /** Modifies the entry's weight based on the killing/opening/fishing player's luck attribute.
-    * Formula is `floor( weight + (quality * generic.luck))`. */
+   /**
+    * Modifies the entry's weight based on the killing/opening/fishing player's luck attribute.
+    * Formula is `floor( weight + (quality * generic.luck))`.
+    */
    quality?: number
 } & (
   EntryType<'item', {
-    /** ID name of the item to be produced, e.g. `diamond`.
-     * The default, if not changed by functions, is a stack of 1 of the default instance of the item. */
+    /**
+     * ID name of the item to be produced, e.g. `diamond`.
+     * The default, if not changed by functions, is a stack of 1 of the default instance of the item.
+     */
     name: LiteralUnion<ITEMS>
   }>
   | EntryType<'tag', {
     /** Tag to be used, e.g. `arrows`. */
     name: string
 
-    /** If set to `true`, it chooses one item of the tag, each with the same weight and quality.
-     * If `false`, it generates one of each of the items in the tag. */
+    /**
+     * If set to `true`, it chooses one item of the tag, each with the same weight and quality.
+     * If `false`, it generates one of each of the items in the tag.
+     */
     expand: boolean
   }>
   | EntryType<'loot_table', {
@@ -369,17 +401,20 @@ type LootTablePoll = {
      * Type of the distribution. Must be one of:
      * - "uniform" (default), for a uniform probability between a min and a max
      * - "binomial", for a binomial distribution
-     * @default "uniform" */
+     * @default "uniform"
+     */
     type: 'binomial'
     /** The number of tries. The number of successful tries will be the number of rolls. */
     n: number,
     /** The probability for one try to succeed. */
     p: number
   } | {
-    /** Type of the distribution. Must be one of:
+    /**
+     * Type of the distribution. Must be one of:
      * - "uniform" (default), for a uniform probability between a min and a max
      * - "binomial", for a binomial distribution
-     * @default "uniform" */
+     * @default "uniform"
+     */
     type?: 'uniform'
     /** The minimum value. */
     min: number

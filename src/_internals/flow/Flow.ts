@@ -13,11 +13,11 @@ import { coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
 import util from 'util'
 import type { ConditionType } from './conditions'
-import { CombinedConditions, getConditionsObjective } from './conditions'
+import { getConditionScore, CombinedConditions } from './conditions'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
 
-function isAsyncFunction(func: (() => void) | (() => Promise<void>)): func is () => Promise<void> {
+function isAsyncFunction(func: ((...args: any[]) => void) | ((...args: any[]) => Promise<void>)): func is (...args: any[]) => Promise<void> {
   return util.types.isAsyncFunction(func)
 }
 
@@ -294,15 +294,18 @@ export class Flow {
     if (config.initialCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.inExecute = true
-      callOrInlineFunction(this.datapack, callbackMcFunction)
-    } else {
-      this.commandsRoot.functionCmd(callbackFunctionName)
     }
+    callOrInlineFunction(this.datapack, callbackMcFunction)
 
     this.arguments = []
   }
 
-  private if_ = <R extends void | Promise<void>>(condition: ConditionType, callback: () => R, callbackName: string, ifScore: PlayerScore): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
+  private if_ = <R extends void | Promise<void>>(
+    condition: ConditionType,
+    callback: () => R,
+    callbackName: string,
+    ifScore: PlayerScore,
+  ): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
     if (!isAsyncFunction(callback)) {
       this.flowStatement(callback, {
         callbackName,
@@ -381,10 +384,9 @@ export class Flow {
   }
 
   if = <R extends void | Promise<void>>(condition: ConditionType, callback: () => R): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
-    const conditionsObjective = getConditionsObjective(this.commandsRoot)
+    const ifScore = getConditionScore(this.commandsRoot.Datapack)
 
     // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
-    const ifScore = conditionsObjective.ScoreHolder(`if_result_${Math.floor(Math.random() * 10_000)}`)
     ifScore.set(0)
 
     if (!isAsyncFunction(callback)) {
@@ -446,7 +448,7 @@ export class Flow {
     recursiveMatch(minimum, maximum)
   }
 
-  private _while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R, type: 'while' | 'doWhile'): R => {
+  private _while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R, type: 'while' | 'do_while'): R => {
     if (!isAsyncFunction(callback)) {
       this.flowStatement(callback, {
         callbackName: type,
@@ -477,7 +479,7 @@ export class Flow {
 
   while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'while')
 
-  doWhile = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'doWhile')
+  doWhile = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'do_while')
 
   binaryFor = (from: PlayerScore | number, to: PlayerScore |number, callback: (amount: number) => void, maximum = 128) => {
     if (typeof from === 'number' && typeof to === 'number') {
@@ -514,55 +516,51 @@ export class Flow {
     }
   }
 
-  forRange = (from: PlayerScore | number, to: PlayerScore | number, callback: (score: PlayerScore) => void, maximum = 16) => {
-    function callCallbackNTimes(n: number) {
-      for (let i = 0; i < n; i += 1) {
-        if (callback.length > 0) {
-          callback(scoreTracker)
-          scoreTracker.add(1)
-        } else {
-          // We know the callback takes no arguments - it's OK to avoid it
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          callback()
-        }
-      }
-    }
-
+  forRange = <R extends void | Promise<void>>(from: PlayerScore | number, to: PlayerScore | number, callback: (score: PlayerScore) => R) => {
     const scoreTracker = from instanceof PlayerScore ? from : this.datapack.Variable(from)
 
-    /*
-     * If the callback does not use the "score" argument, we can directly set the real score
-     * `scoreTracker` to the end (instead of spamming `scoreboard players add anonymous sand_ano 1`).
-     */
-    if (callback.length === 0) {
-      // Typescript has a bug, and will not recognize `scoreTracker.set(to)` as a valid expression. So I have to use this condition.
-      if (typeof to === 'number') {
-        scoreTracker.set(to)
-      } else {
-        scoreTracker.set(to)
-      }
+    // Small optimization: if we know the loop will run at least once, use a do while
+    let loop = this.while
+    if (typeof from === 'number' && typeof to === 'number' && to > from) {
+      loop = this.doWhile
     }
 
-    this.binaryFor(scoreTracker, to, callCallbackNTimes, maximum)
+    if (!isAsyncFunction(callback)) {
+      return loop(scoreTracker.lowerThan(to as any), () => {
+        callback(scoreTracker)
+        scoreTracker.add(1)
+      })
+    }
+
+    return loop(scoreTracker.lowerThan(to as any), async () => {
+      await callback(scoreTracker)
+      scoreTracker.add(1)
+    })
   }
 
-  forScore = (
+  forScore = <R extends void | Promise<void>>(
     score: PlayerScore | number,
     // eslint-disable-next-line no-shadow
     condition: ((score: PlayerScore) => ConditionType) | ConditionType,
     // eslint-disable-next-line no-shadow
     modifier: (score: PlayerScore) => void,
     // eslint-disable-next-line no-shadow
-    callback: (score: PlayerScore) => void,
-  ) => {
+    callback: (score: PlayerScore) => R,
+  ): R => {
     const realScore = score instanceof PlayerScore ? score : this.datapack.Variable(score)
     const realCondition = typeof condition === 'function' ? condition(realScore) : condition
 
-    this.while(realCondition, () => {
-      callback(realScore)
+    if (!isAsyncFunction(callback)) {
+      return this.while(realCondition, () => {
+        callback(realScore)
+        modifier(realScore)
+      }) as any
+    }
+
+    return this.while(realCondition, async () => {
+      await callback(realScore)
       modifier(realScore)
-    })
+    }) as any
   }
 
   private register = (soft?: boolean) => {

@@ -38,8 +38,10 @@ export class Forceload extends Command {
       || [...from, ...to].every((c) => c[0] === '^') // or local
       || [...from, ...to].every((c) => c[0].match(/0-9/)) // or absolute
     ) {
-      // Then we can calculate before-hand the number of affected chunks, and throw an error
-      // if it's greater than 256
+      /*
+       * Then we can calculate before-hand the number of affected chunks, and throw an error
+       * if it's greater than 256
+       */
 
       const [fromX, fromZ] = coordinatesToNumbers(from)
       const [toX, toZ] = coordinatesToNumbers(to)

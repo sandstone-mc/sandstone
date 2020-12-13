@@ -1,5 +1,5 @@
 import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
-import { coordinatesParser } from '@variables'
+import { coordinatesParser, nbtParser } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
@@ -103,7 +103,7 @@ class DataModifyValues extends Command {
   /**
    * Modify the NBT with the given value.
    */
-  @command('value')
+  @command('value', { parsers: { '0': nbtParser } })
   value = (value: NBTObject) => { }
 }
 

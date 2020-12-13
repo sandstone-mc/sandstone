@@ -477,35 +477,44 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @deprecated Use `run.<command>` instead.
    */
   get runOne(): (
- T extends CommandsRoot ?
-  // The Pick<> ensures only commands are returned from CommandsRoot
-  Pick<T, keyof typeof commands> :
-  T
+    T extends CommandsRoot ?
+      // The Pick<> ensures only commands are returned from CommandsRoot
+      Pick<T, keyof typeof commands> :
+      T
   ) {
-    console.warn(chalk`{orange "runOne" is deprecated. Please use "run" instead: "execute...run.give('@a', ...)"}`)
+    console.warn(chalk.hex('#ff6700')('`runOne` is deprecated. Please use `run` instead: `execute.as("@a").run.give("@s", "minecraft:diamond", 1)`'))
     return this.commandsRoot as any
   }
 
   /**
    * Runs a single command.
-   * @deprecated Use `run.<command>` instead.
    */
   get run(): (
     T extends CommandsRoot ?
-   // The Pick<> ensures only commands are returned from CommandsRoot
-   Pick<T, keyof typeof commands> :
-   T
+      // The Pick<> ensures only commands are returned from CommandsRoot
+      Pick<T, keyof typeof commands> :
+      T
   ) {
-    console.warn(chalk`{orange "runOne" is deprecated. Please use "run" instead: "execute...run.give('@a', ...)"}`)
     return this.commandsRoot as any
   }
 }
 
 export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
   /**
-   * Runs a callback inside a new function.
+   * Runs one or multiple commands.
    *
-   * If the callback only creates one command, and this command is safe to be inlined, it will be inlined to avoid a useless function call.
+   * When giving a callback, if it only creates one command, and this command is safe to be inlined,
+   * it will be inlined to avoid a useless function call.
+   *
+   * @example
+   * // Run multiple commands
+   * execute.as(`@a`).run(() => {
+   *    give(`@s`, 'minecraft:diamond', 1)
+   *    kill(`@s`)
+   * })
+   *
+   * // Run a single command
+   * execute.as(`@s`).run.give(`@s`, 'minecraft:diamond', 1)
    */
   get run(): (
     T extends CommandsRoot ?
@@ -513,18 +522,35 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
    Pick<T, keyof typeof commands> & ((callback: () => void) => void) :
    T & ((callback: () => void) => void)
   ) {
-    type Result = (CommandsRoot & ((callback: () => void)))
+    type Callback = ((callback: () => void) => void)
+    type Result = (Record<string, unknown> & Callback)
 
-    const runMultiple:  = (callback: () => void) => {
+    const runMultiple: Result = ((callback: () => void) => {
       this.commandsRoot.Datapack.flow.flowStatement(callback, {
         callbackName: `execute_${this.commandsRoot.arguments[1]}`,
         initialCondition: false,
         loopCondition: false,
       })
-    }
-    // For some reason, Object.assign(runMultiple, this.commandsRoot) throws a weird error, so we go manually
-    for (const [command, value] of Object.entries(this.commandsRoot)) {
-      runMultiple[command] = value
+    }) as any
+
+    // We need to add all CommandsRoot keys to this function.
+    const keys = [
+      ...Object.getOwnPropertyNames(this.commandsRoot),
+      ...Object.getOwnPropertyNames(Object.getPrototypeOf(this.commandsRoot)),
+    ] as (keyof CommandsRoot)[]
+
+    for (const key of keys) {
+      /*
+       * Filter away keys that are not commands. While that's not mandatory since TypeScript will not propose them with autocompletion,
+       * it prevents overriding properties by mistake.
+       *
+       * However, it is MANDATORY to exclude "arguments" and "constructor", since those two properties exists on functions, and will cause a problem if kept.
+       */
+      if (['register', 'addAndRegister', 'arguments', 'inExecute', 'executable', 'Datapack', 'commandsRoot', 'constructor', 'reset'].includes(key)) {
+        continue
+      }
+
+      runMultiple[key] = (this.commandsRoot)[key]
     }
     return runMultiple as any
   }

@@ -15,12 +15,14 @@ export class FillArguments extends Command {
   @command('destroy')
   destroy = () => { }
 
-  /** Replaces only the blocks on the outer edge of the fill region with the specified block.
+  /**
+   * Replaces only the blocks on the outer edge of the fill region with the specified block.
    *
    * Inner blocks are changed to air, dropping their contents as entities but not themselves.
    *
    * If the fill region has no inner blocks (because it is smaller than three blocks in at least one dimension),
-   * acts like `replace`. */
+   * acts like `replace`.
+   */
   @command('hollow')
   hollow = () => { }
 
@@ -41,7 +43,8 @@ export class FillArguments extends Command {
   @command('outline')
   outline = () => { }
 
-  /** Replaces all blocks (including air) in the fill region with the specified block,
+  /**
+   * Replaces all blocks (including air) in the fill region with the specified block,
    * without dropping blocks or block contents as entities.
    *
    * Optionally, instead of specifying a data tag for the replacing block,

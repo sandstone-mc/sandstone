@@ -6,7 +6,6 @@ import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
 import chalk from 'chalk'
-import util from 'util'
 import type { BasePathOptions } from './BasePath'
 import { BasePathClass } from './BasePath'
 import type { CommandArgs } from './minecraft'
@@ -51,6 +50,13 @@ export interface SandstoneConfig {
    */
   minecraftPath?: string
 
+  /**
+   * A random code that is used to distinguish your variables from other Sandstone data pack variables.
+   *
+   * It must be a random string of valid scoreboard characters.
+   */
+  randomCode: string
+
   /** All the options to save the data pack. */
   saveOptions: ({
     /**
@@ -81,7 +87,7 @@ export interface SandstoneConfig {
   }
 }
 
-export interface McFunctionReturn<ARGS extends unknown[], RETURN extends void | Promise<void> = void | Promise<void>> {
+export interface McFunctionReturn<ARGS extends unknown[], RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
   (...args: ARGS): RETURN
 
   schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: ARGS) => void
@@ -89,10 +95,12 @@ export interface McFunctionReturn<ARGS extends unknown[], RETURN extends void | 
   getName: (...args: ARGS) => string
 
   clearSchedule: (...args: ARGS) => void
+
+  generate: (...args: ARGS) => void
 }
 
 export default class Datapack {
-  basePath: BasePathClass
+  basePath: BasePathClass<undefined, undefined>
 
   defaultNamespace: string
 
@@ -114,7 +122,10 @@ export default class Datapack {
 
   initCommands: CommandArgs[]
 
-  constructor(namespace: string) {
+  uniqueCode: string
+
+  constructor(uniqueCode: string, namespace: string) {
+    this.uniqueCode = uniqueCode
     this.basePath = new BasePathClass(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
@@ -377,6 +388,10 @@ export default class Datapack {
     }
   }
 
+  get rootObjective() {
+    return this.getCreateObjective('sandstone', 'dummy', [{ text: 'Sandstone', color: 'gold' }, ' internals'])
+  }
+
   /**
    * Creates a dynamic numeric variable, represented by an anonymous & unique score.
    *
@@ -387,13 +402,13 @@ export default class Datapack {
    */
   Variable = (initialValue?: number | undefined, name?: string) => {
     // Get the objective
-    const sandstoneAnonymousName = 'sand_variables'
-    const score = this.getCreateObjective(sandstoneAnonymousName, 'dummy', 'Sandstone Anonymous Scores')
+    const datapack = this.commandsRoot.Datapack
+    const score = datapack.rootObjective
 
     // Get the specific anonymous score
     const id = Datapack.anonymousScoreId
     Datapack.anonymousScoreId += 1
-    const anonymousScore = score.ScoreHolder(`${name ?? 'anonymous'}_${id}`)
+    const anonymousScore = score.ScoreHolder(`${name ?? 'anon'}_${datapack.uniqueCode}_${id}`)
 
     if (initialValue !== undefined) {
       if (this.currentFunction !== null) {
@@ -409,7 +424,7 @@ export default class Datapack {
   Selector = SelectorCreator.bind(this)
 
   /** A BasePath changes the base namespace & directory of nested resources. */
-  BasePath = (basePath: BasePathOptions) => new BasePathClass(this, basePath)
+  BasePath = <N extends string | undefined, D extends string | undefined>(basePath: BasePathOptions<N, D>) => new BasePathClass(this, basePath)
 
   addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
     this.resources.addResource(type, {

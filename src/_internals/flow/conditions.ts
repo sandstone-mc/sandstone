@@ -1,4 +1,5 @@
 import type { CommandsRoot } from '@commands'
+import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables'
 
 export function conditionToString(condition: ConditionType): string {
@@ -9,8 +10,11 @@ export function conditionToString(condition: ConditionType): string {
   return condition._toMinecraftCondition().value.join(' ')
 }
 
-export function getConditionsObjective(commandsRoot: CommandsRoot) {
-  return commandsRoot.Datapack.getCreateObjective('sandstone_cond', 'dummy', 'Sandstone Conditions')
+let conditionID = 0
+export function getConditionScore(datapack: Datapack) {
+  const score = datapack.rootObjective.ScoreHolder(`cond_${conditionID}`)
+  conditionID += 1
+  return score
 }
 
 export class CombinedConditions {
@@ -78,7 +82,7 @@ export class CombinedConditions {
     return new CombinedConditions(this.commandsRoot, flattenedValues, this.operator)
   }
 
-  toExecutes = (inverted = false): {
+  toExecutes = (): {
     requiredExpressions: string[][]
     callableExpression: string[]
    } => {
@@ -108,10 +112,8 @@ export class CombinedConditions {
         const { id } = CombinedConditions
         CombinedConditions.id += 1
 
-        const sandstoneConditions = getConditionsObjective(this.commandsRoot)
-
         // An intermediate condition
-        const condition = sandstoneConditions.ScoreHolder(`cond_${id}`)
+        const condition = getConditionScore(this.commandsRoot.Datapack)
 
         requiredExpressions.push(...executes.requiredExpressions)
         requiredExpressions.push(['scoreboard', 'players', 'set', condition.toString(), '0'])

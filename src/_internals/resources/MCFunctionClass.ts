@@ -201,6 +201,10 @@ export class MCFunctionClass<T extends any[], R extends void | Promise<void> = v
     throw new Error('Function has never been generated before!')
   }
 
+  generate = (...args: T) => {
+    this.callOverload(args)
+  }
+
   // eslint-disable-next-line consistent-return
   generateInitialFunction = (): void | Promise<void> | null => {
     if (!this.options.lazy && !this.alreadyInitializedParameters.has('[]')) {

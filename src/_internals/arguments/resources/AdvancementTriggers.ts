@@ -2,17 +2,22 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS } from '@arguments'
 import type {
-  PlayerCriterion, BlockIdCriterion,
-  EntityCriterion, PotionIdCriterion,
-  DimensionCriterion, EffectCriterion,
-  NumberOrMinMax, DamageCriterion,
-  LocationCriterion, SlotCriterion,
-  DistanceCriterion, ItemCriterion,
+  BlockIdCriterion,
+  DamageCriterion,
+  DimensionCriterion,
+  DistanceCriterion,
+  EffectCriterion,
+  EntityCriterion,
+  ItemCriterion,
+  LocationCriterion,
+  NumberOrMinMax,
+  PlayerCriterion,
+  PotionIdCriterion,
+  SlotCriterion,
 } from './criteria'
-import type { ObjectOrArray } from './predicate'
 
 // The advancement triggers
-type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = {
+type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | undefined> = {
   /**
    * The trigger for this advancement; specifies what the game should check for the advancement.
    *
@@ -110,6 +115,11 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = 
    */
   trigger: NAME
 
+  /*
+   * The "& unknown" is like "x1" or "+0", it doesn't change the initial type.
+   * So it basically means "don't add anything to this object if CONDITIONS is undefined"
+   */
+} & (CONDITIONS extends undefined ? unknown : ({
   /** All the conditions that need to be met when the trigger gets activated. */
   conditions: Partial<CONDITIONS> & {
     /**
@@ -118,7 +128,7 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown>> = 
      */
     player?: PlayerCriterion
   }
-}
+}))
 
 export type AdvancementTriggers = (
   Trigger<'minecraft:bee_nest_destroyed', {
@@ -310,7 +320,7 @@ export type AdvancementTriggers = (
     /** The entity which picked up the item. May be a list of loot table conditions that must pass in order for the trigger to activate. */
     entity: EntityCriterion
   // eslint-disable-next-line @typescript-eslint/ban-types
-  }> | Trigger<'minecraft:tick', {}> | Trigger<'minecraft:used_ender_eye', {
+  }> | Trigger<'minecraft:tick', undefined> | Trigger<'minecraft:used_ender_eye', {
     /** The horizontal distance between the player and the stronghold. */
     distance: NumberOrMinMax
   }> | Trigger<'minecraft:used_totem', {

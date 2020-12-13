@@ -9,17 +9,17 @@ import {
 import type { McFunctionReturn } from './Datapack'
 import type { TagSingleValue } from './resourcesTree'
 
-export type BasePathOptions = {
-  /** The namespace all nested resources will be located in. */
-  namespace?: string
+/** The namespace all nested resources will be located in. */
+export type BasePathOptions<N extends (undefined | string), D extends (undefined | string)> = {
+  namespace?: N
 
   /** The directory all nested resources will be located in. */
-  directory?: string
+  directory?: D
 }
 
 /** Remove forward & trailing slashes */
-function trimSlashes(str?: string): string | undefined {
-  return str?.replace(/^\/+/, '')?.replace(/\/+$/, '')
+function trimSlashes(str: string): string {
+  return str.replace(/^\/+/, '')?.replace(/\/+$/, '')
 }
 
 /** Tranforms a path to an array of folders. */
@@ -28,19 +28,19 @@ function pathToArray(path?: string): string[] {
 }
 
 /** Changes the base namespace & directory of nested resources. */
-export class BasePathClass {
+export class BasePathClass<N extends (undefined | string), D extends (undefined | string)> {
   protected datapack: Datapack
 
-  namespace?: string
+  namespace: N
 
-  directory?: string
+  directory: D
 
-  constructor(datapack: Datapack, basePath: BasePathOptions) {
+  constructor(datapack: Datapack, basePath: BasePathOptions<N, D>) {
     this.datapack = datapack
-    this.namespace = basePath.namespace
+    this.namespace = basePath.namespace as N
 
     // Remove forward & trailing slashes
-    this.directory = trimSlashes(basePath.directory)
+    this.directory = (typeof basePath.directory === 'string' ? trimSlashes(basePath.directory) : undefined) as D
   }
 
   /** Validates & crafts the name of a resource. */
@@ -115,8 +115,8 @@ export class BasePathClass {
    *
    * The namespace cannot be provided in a child path.
    */
-  child = (childPath: Omit<BasePathOptions, 'namespace'>) => {
-    const newDirectory = pathToArray(trimSlashes(childPath.directory))
+  child = <DIR extends string | undefined>(childPath: Omit<BasePathOptions<undefined, DIR>, 'namespace'>) => {
+    const newDirectory = pathToArray(typeof childPath.directory === 'string' ? trimSlashes(childPath.directory) : undefined)
     const oldDirectory = pathToArray(this.directory)
 
     return new BasePathClass(this.datapack, {
@@ -133,7 +133,7 @@ export class BasePathClass {
    */
   MCFunction = <ARGS extends any[], RETURN extends void | Promise<void>>(
     name: string, callback: (...args: ARGS) => RETURN, options?: McFunctionOptions,
-  ): McFunctionReturn<ARGS> => {
+  ): McFunctionReturn<ARGS, RETURN> => {
     const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, options ?? {})
 
     this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)
@@ -142,17 +142,10 @@ export class BasePathClass {
     returnFunction.schedule = mcfunction.schedule
     returnFunction.getName = mcfunction.getNameFromArgs
     returnFunction.clearSchedule = mcfunction.clearSchedule
+    returnFunction.generate = mcfunction.generate
 
     return returnFunction
   }
-
-  /**
-   * Creates a Minecraft Function.
-   *
-   * @param name The name of the function.
-   * @param callback A callback containing the commands you want in the Minecraft Function.
-   */
-  Function = this.MCFunction
 
   /**
    * Create an advancement.
