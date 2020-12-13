@@ -6,6 +6,7 @@ import type { Flow } from '@flow'
 import type { ConditionClass, Range } from '@variables'
 import { coordinatesParser, rotationParser } from '@variables'
 import type { PlayerScore } from '@variables/PlayerScore'
+import chalk from 'chalk'
 import type * as commands from '../../../commands'
 import type { CommandsRoot } from '../CommandsRoot'
 import { command } from '../decorators'
@@ -471,13 +472,31 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    */
   store: ExecuteStore<T> = new ExecuteStore(this as unknown as InferExecute<T>)
 
-  /** Runs a single command. */
+  /**
+   * Runs a single command.
+   * @deprecated Use `run.<command>` instead.
+   */
   get runOne(): (
  T extends CommandsRoot ?
   // The Pick<> ensures only commands are returned from CommandsRoot
   Pick<T, keyof typeof commands> :
   T
   ) {
+    console.warn(chalk`{orange "runOne" is deprecated. Please use "run" instead: "execute...run.give('@a', ...)"}`)
+    return this.commandsRoot as any
+  }
+
+  /**
+   * Runs a single command.
+   * @deprecated Use `run.<command>` instead.
+   */
+  get run(): (
+    T extends CommandsRoot ?
+   // The Pick<> ensures only commands are returned from CommandsRoot
+   Pick<T, keyof typeof commands> :
+   T
+  ) {
+    console.warn(chalk`{orange "runOne" is deprecated. Please use "run" instead: "execute...run.give('@a', ...)"}`)
     return this.commandsRoot as any
   }
 }
@@ -488,12 +507,26 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
    *
    * If the callback only creates one command, and this command is safe to be inlined, it will be inlined to avoid a useless function call.
    */
-  run = (callback: () => void) => {
-    this.commandsRoot.Datapack.flow.flowStatement(callback, {
-      callbackName: `execute_${this.commandsRoot.arguments[1]}`,
-      initialCondition: false,
-      loopCondition: false,
-    })
+  get run(): (
+    T extends CommandsRoot ?
+   // The Pick<> ensures only commands are returned from CommandsRoot
+   Pick<T, keyof typeof commands> & ((callback: () => void) => void) :
+   T & ((callback: () => void) => void)
+  ) {
+    type Result = (CommandsRoot & ((callback: () => void)))
+
+    const runMultiple:  = (callback: () => void) => {
+      this.commandsRoot.Datapack.flow.flowStatement(callback, {
+        callbackName: `execute_${this.commandsRoot.arguments[1]}`,
+        initialCondition: false,
+        loopCondition: false,
+      })
+    }
+    // For some reason, Object.assign(runMultiple, this.commandsRoot) throws a weird error, so we go manually
+    for (const [command, value] of Object.entries(this.commandsRoot)) {
+      runMultiple[command] = value
+    }
+    return runMultiple as any
   }
 }
 
