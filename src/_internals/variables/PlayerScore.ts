@@ -84,12 +84,14 @@ export class PlayerScore extends ComponentClass {
       return this
     }
 
+    let objective = args[1] ?? this.objective
     if (typeof args[0] === 'number') {
       this.commandsRoot.Datapack.registerNewConstant(args[0])
+      objective = 'sandstone_const'
     }
 
     this.commandsRoot.scoreboard.players.operation(
-      this.target, this.objective, operator, args[0], args[1] ?? this.objective,
+      this.target, this.objective, operator, args[0], objective,
     )
 
     return this
