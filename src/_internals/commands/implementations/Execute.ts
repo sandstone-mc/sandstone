@@ -4,7 +4,8 @@ import type {
 } from '@arguments'
 import type { Flow } from '@flow'
 import type { ConditionClass, Range } from '@variables'
-import { coordinatesParser, rotationParser } from '@variables'
+import { rangeParser, coordinatesParser, rotationParser } from '@variables'
+
 import type { PlayerScore } from '@variables/PlayerScore'
 import chalk from 'chalk'
 import type * as commands from '../../../commands'
@@ -405,7 +406,17 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * Check a score against either another score or a given range.
    * @param args
    */
-  @command(['if', 'score'], executeConfig)
+  @command(['if', 'score'], {
+    ...executeConfig,
+    parsers: {
+      '3': (arg, innerArgs) => {
+        if (innerArgs[2] === 'matches') {
+          return rangeParser(arg)
+        }
+        return arg
+      },
+    },
+  })
   ifScore: (
     /**
      * Check a score against either another score or a given range.
