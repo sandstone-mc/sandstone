@@ -2,12 +2,13 @@ import type { LiteralUnion } from '@/generalTypes'
 import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import type { McFunction } from '@resources'
+import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
 import chalk from 'chalk'
+import util from 'util'
 import type { BasePathOptions } from './BasePath'
-import { BasePath } from './BasePath'
+import { BasePathClass } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import { toMcFunctionName } from './minecraft'
 import type {
@@ -17,18 +18,81 @@ import { ResourcesTree } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 import { saveDatapack } from './saveDatapack'
 
-export interface McFunctionReturn<T extends unknown[]> {
-  (...args: T): void
+export interface SandstoneConfig {
+  /**
+   * The default namespace for the data pack.
+   * It can be changed for each resources, individually or using Base Paths.
+   */
+  namespace: string
 
-  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: T) => void
+  /**
+   * The name of the datapack.
+   */
+  name: string
 
-  getName: (...args: T) => string
+  /**
+   * The description of the datapack.
+   * Can be a single string or a JSON Text Component
+   * (like in /tellraw or /title).
+   */
+  description: JsonTextComponent
 
-  clearSchedule: (...args: T) => void
+  /**
+   * The format version of the data pack.
+   * Can change depending on the versions of Minecraft.
+   *
+   * @see [https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta](https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta)
+   */
+  formatVersion: number
+
+  /**
+   * A custom path to your .minecraft folder,
+   * in case you changed the default and Sandstone fails to find it.
+   */
+  minecraftPath?: string
+
+  /** All the options to save the data pack. */
+  saveOptions: ({
+    /**
+     * The world to save the data pack in.
+     *
+     * Incompatible with `root` and `path`.
+     */
+    world: string
+  } | {
+    /**
+     * Whether to save the data pack in the `.minecraft/datapacks` folder.
+     *
+     * Incompatible with `world` and `path`.
+     */
+    root: true
+  } | {
+    /**
+     * A custom path to save the data pack at.
+     *
+     * Incompatible with `root` and `world`.
+     */
+    path: string
+  }) & {
+    /**
+     * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
+     */
+    customFileHandler?: SaveOptions['customFileHandler']
+  }
+}
+
+export interface McFunctionReturn<ARGS extends unknown[], RETURN extends void | Promise<void> = void | Promise<void>> {
+  (...args: ARGS): RETURN
+
+  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: ARGS) => void
+
+  getName: (...args: ARGS) => string
+
+  clearSchedule: (...args: ARGS) => void
 }
 
 export default class Datapack {
-  basePath: BasePath
+  basePath: BasePathClass
 
   defaultNamespace: string
 
@@ -42,7 +106,7 @@ export default class Datapack {
 
   constants: Set<number>
 
-  rootFunctions: Set<McFunction<any[]>>
+  rootFunctions: Set<MCFunctionClass<any[]>>
 
   static anonymousScoreId = 0
 
@@ -51,7 +115,7 @@ export default class Datapack {
   initCommands: CommandArgs[]
 
   constructor(namespace: string) {
-    this.basePath = new BasePath(this, {})
+    this.basePath = new BasePathClass(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
     this.resources = new ResourcesTree()
@@ -60,7 +124,7 @@ export default class Datapack {
     this.rootFunctions = new Set()
 
     this.commandsRoot = new CommandsRoot(this)
-    this.flow = new Flow(this.commandsRoot)
+    this.flow = new Flow(this)
 
     this.initCommands = []
   }
@@ -163,39 +227,43 @@ export default class Datapack {
   }
 
   /**
-   * Get a unique name for a child function of the current function, from an original name.
+   * Get a unique name for a child function of a parent function, from an original name.
    * @param childName The original name for the child function.
+   * @param parentFunction The parent function to find a child's name for. Defaults to current function.
    */
-  private getUniqueChildName(childName: string): string {
-    if (!this.currentFunction) {
+  getUniqueChildName(childName: string, parentFunction = this.currentFunction) {
+    if (!parentFunction) {
       throw new Error('Trying to get a unique child name outside a root function.')
     }
 
-    return this.getUniqueNameFromFolder(childName, this.currentFunction)
+    const newName = this.getUniqueNameFromFolder(childName, parentFunction)
+    const fullName = toMcFunctionName([...parentFunction.path, newName])
+    return this.getResourcePath(fullName)
   }
 
   /**
    * Creates a new child function of the current function.
    * @param functionName The name of the child function.
+   * @param parentFunction The function for which a child must be created. Defaults to the current function.
    */
-  createChildFunction(functionName: string): { childFunction: FunctionResource, functionName: string } {
-    if (!this.currentFunction) {
+  createChildFunction(functionName: string, parentFunction = this.currentFunction): { childFunction: FunctionResource, functionName: string } {
+    if (!parentFunction) {
       throw Error('Entering child function without registering a root function')
     }
 
-    const childName = this.getUniqueChildName(functionName)
+    const { name: childName, fullName, fullPathWithNamespace } = this.getUniqueChildName(functionName, parentFunction)
 
     // Update the current function - it now is the child function.
     const emptyFunction = {
-      children: new Map(), isResource: true as const, commands: [], path: [...this.currentFunction.path, childName],
+      children: new Map(), isResource: true as const, commands: [], path: fullPathWithNamespace,
     }
 
-    this.currentFunction.children.set(childName, emptyFunction as any)
+    parentFunction.children.set(childName, emptyFunction as any)
 
     // Return its full minecraft name
     return {
-      functionName: toMcFunctionName(emptyFunction.path),
-      childFunction: emptyFunction as any,
+      functionName: fullName,
+      childFunction: emptyFunction,
     }
   }
 
@@ -226,16 +294,23 @@ export default class Datapack {
   }
 
   /**
-   * Exit the current child function, and enter the parent function.
+   * Get the parent function of the current function.
    */
-  exitChildFunction(): void {
+  getParentFunction() {
     if (!this.currentFunction) {
       throw Error('Exiting a not-existing function')
     }
 
     const parentPath = this.currentFunction.path.slice(0, -1)
 
-    this.currentFunction = this.resources.getResource(parentPath as unknown as ResourcePath, 'functions')
+    return this.resources.getResource(parentPath as unknown as ResourcePath, 'functions')
+  }
+
+  /**
+   * Exit the current child function, and enter the parent function.
+   */
+  exitChildFunction(): void {
+    this.currentFunction = this.getParentFunction()
   }
 
   registerNewObjective = (objective: ObjectiveClass) => {
@@ -251,7 +326,7 @@ export default class Datapack {
    */
   registerNewCommand = (commandArgs: CommandArgs): void => {
     if (!this.currentFunction || !this.currentFunction.isResource) {
-      throw Error('Adding a command outside of a registered function')
+      throw Error(`Adding a command outside of a registered function: /${commandArgs.join(' ')}`)
     }
 
     this.currentFunction.commands.push(commandArgs)
@@ -334,7 +409,7 @@ export default class Datapack {
   Selector = SelectorCreator.bind(this)
 
   /** A BasePath changes the base namespace & directory of nested resources. */
-  BasePath = (basePath: BasePathOptions) => new BasePath(this, basePath)
+  BasePath = (basePath: BasePathOptions) => new BasePathClass(this, basePath)
 
   addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
     this.resources.addResource(type, {
@@ -345,20 +420,52 @@ export default class Datapack {
     } as ResourceOnlyTypeMap[T])
   }
 
+  sleep = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>): PromiseLike<void> => {
+    const SLEEP_CHILD_NAME = '__sleep'
+
+    if (!this.currentFunction) {
+      throw new Error('Cannot call `sleep` outside of a MCFunction.')
+    }
+
+    // If we're already in a "sleep" child, go to the parent function. It avoids childs' names becoming namespace:function/__sleep/__sleep/__sleep etc...
+    const { fullPath } = this.getResourcePath(toMcFunctionName(this.currentFunction.path))
+    const inSleepFunction = fullPath[fullPath.length - 1] === SLEEP_CHILD_NAME
+
+    let parentFunction: FunctionResource
+
+    // If we're in a sleep function, the parent function of the new child is the current function's parent. Else, the parent is the current function.
+    if (inSleepFunction) {
+      parentFunction = this.getParentFunction()
+    } else {
+      parentFunction = this.currentFunction
+    }
+
+    const newFunction = this.createChildFunction(SLEEP_CHILD_NAME, parentFunction)
+    this.commandsRoot.schedule.function(newFunction.functionName, delay, 'append')
+
+    return ({
+      then: (async (onfullfilled?: () => (void | Promise<void>)) => {
+        // Enter child "sleep"
+        this.currentFunction = newFunction.childFunction
+
+        return onfullfilled?.()
+      }) as any,
+    })
+  }
+
   /**
    * Saves the datapack to the file system.
    *
    * @param name The name of the Datapack
    * @param options The save options
    */
-  save = (name: string, options: SaveOptions = {}): Promise<void> => {
-    if (!options.dryRun) {
-      console.log(chalk`⌛ {gray Starting compilation...}`)
-    }
+  save = async (name: string, options: SaveOptions) => {
+    console.log(chalk`⌛ {gray Starting compilation...}`)
 
     // First, generate all functions
     for (const mcfunction of this.rootFunctions) {
-      mcfunction.generateInitialFunction()
+      // eslint-disable-next-line no-await-in-loop
+      await mcfunction.generateInitialFunction()
     }
 
     // Then, generate the init function.

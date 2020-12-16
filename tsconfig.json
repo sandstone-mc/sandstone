@@ -58,11 +58,8 @@
     ],
     "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
     "moduleResolution": "node",
-    // We target a minimum Node version of 12: https://stackoverflow.com/a/59787575
-    "target": "es2019", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-    "lib": [
-      "ES2020" /* Specify library files to be included in the compilation. */
-    ],
+    // We target a minimum Node version of 14
+    "target": "es2020", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
     "incremental": true, /* Enable incremental compilation */
     "resolveJsonModule": true,
     // "allowJs": true,                       /* Allow javascript files to be compiled. */

@@ -30,7 +30,25 @@ export type LocationCriterion = Partial<{
     /** Name of a structure. */
     feature: LiteralUnion<STRUCTURES>
 
-    /** The fluid at the location. */
+    /**
+     * The fluid at the location.
+     *
+     * Must be an object defining the fluid.
+     *
+     * @example
+     * {
+     *   fluid: {
+     *     fluid: 'minecraft:lava'
+     *   }
+     * }
+     *
+     * {
+     *   fluid: {
+     *     tag: '#custom:fluids'
+     *   }
+     * }
+     *
+     */
     fluid: Partial<{
         /** The fluid ID. */
         fluid: LiteralUnion<FLUIDS>

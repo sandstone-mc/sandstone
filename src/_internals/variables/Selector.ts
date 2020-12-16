@@ -106,28 +106,40 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   /** Select all targets that match the specified predicate. */
   predicate?: string | Predicate | (Predicate | string)[]
 } & ({} | {
-  /** Define a position on the X-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
+  /**
+   * Define a position on the X-axis in the world the selector starts at,
+   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+   */
   x: number
 
-  /** Define a position on the Y-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
+  /**
+   * Define a position on the Y-axis in the world the selector starts at,
+   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+   */
   y: number
 
-  /** Define a position on the Z-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
+  /**
+   * Define a position on the Z-axis in the world the selector starts at,
+   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+   */
   z: number
 }) & ({} | {
-  /** Filter target selection based on their x-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes */
+  /**
+   * Filter target selection based on their x-difference, from some point,
+   * as measured from the closest corner of the entities' hitboxes
+   */
   dx: number
 
-  /** Filter target selection based on their y-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes */
+  /**
+   * Filter target selection based on their y-difference, from some point,
+   * as measured from the closest corner of the entities' hitboxes
+   */
   dy: number
 
-  /** Filter target selection based on their z-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes */
+  /**
+   * Filter target selection based on their z-difference, from some point,
+   * as measured from the closest corner of the entities' hitboxes
+   */
   dz: number
 }) & (
   MustBeSingle extends true ? { limit: 0 | 1 } : { limit?: number }
@@ -228,7 +240,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
   }
 
   _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {
-    return { value: ['entity', this] }
+    return { value: ['if', 'entity', this] }
   }
 
   toString() {
