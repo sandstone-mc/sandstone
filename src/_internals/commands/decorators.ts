@@ -157,15 +157,13 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
         commandsRoot.register(true)
       }
     } else if (commandsRoot.arguments.length === 0) {
-      if (config.isExecuteSubcommand) {
-        commandsRoot.arguments.push('execute')
-      } else {
       // Function is not root but has no previous command
-        throw new Error(
-          'Trying to call some command arguments with no registered root. Did you forgot {hasSubcommands:true}?'
-        + `Args are: ${innerArgs}, function is ${innerFunction}`,
-        )
-      }
+      throw new Error(
+        'Trying to call some command arguments with no registered root. Did you forgot {hasSubcommands:true}?'
+      + `Args are: ${innerArgs}, function is ${innerFunction}`,
+      )
+    } else if (!commandsRoot.inExecute && config.isExecuteSubcommand) {
+      commandsRoot.arguments.push('execute')
     }
 
     if (config.registerArguments) {

@@ -6,7 +6,7 @@ import type {
 } from '@arguments/generated'
 import type { JsonTextComponent } from '@arguments/jsonTextComponent'
 import type { NumberOrMinMax } from './criteria'
-import type { PredicateCondition } from './predicate'
+import type { ObjectOrArray, PredicateCondition } from './predicate'
 
 type FunctionType<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**
@@ -80,15 +80,15 @@ type LootTableFunction = {
      */
     source: 'block_entity' | 'this' | 'killer' | 'killer_player'
 
-    /** An operation. */
-    ops: {
+    /** An operation, or a list of operations. */
+    ops: ObjectOrArray<{
       /** The nbt path to copy from. */
       source: string
       /** The nbt path to copy to, starting from the item's tag tag. */
      target: string
      /** Can be `replace` to replace any existing contents of the target, `append` to append to a list, or `merge` to merge into a compound tag. */
      op: 'replace' | 'append' | 'merge'
-    }
+    }>
   }>
   | FunctionType<'copy_state', {
     /** A block ID. Function fails if the block doesn't match. */
@@ -285,7 +285,7 @@ type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
    * - `dynamic` to generate block specific drops,
    * - `empty` for an entry that generates nothing.
    */
-  type: TYPE
+  type: `${'minecraft:' | ''}${TYPE}`
 } & VALUES
 
 type LootTableEntry = {
@@ -357,7 +357,7 @@ type LootTableEntry = {
     /** A list of entries that are used to generate loot. Can be used for convenience, e.g. if one condition applies for multiple entries. */
     children: LootTableEntry[]
   }>
-  | EntryType<'alternative', {
+  | EntryType<'alternatives', {
     /** A list of entries of which the first, and only the first, successful entry gets generated. */
     children: LootTableEntry[]
   }>

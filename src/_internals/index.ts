@@ -2,16 +2,18 @@ import { nanoid } from 'nanoid'
 import { Datapack } from './datapack'
 import type { Flow } from './flow'
 
-import { getConfigFile } from './config'
+let packUid = process.env.PACK_UID
 
-const configFile = getConfigFile()
+if (!packUid) {
+  packUid = nanoid(8)
+  console.error(`\`packUid\` property missing from \`sandstone.config.ts\`. A new one will be generated at each build, which is **not** recommended. Please add the following line:
 
-let dataPackCode: string = configFile?.randomCode ?? process.env.RANDOM_CODE
-if (!dataPackCode) {
-  dataPackCode = nanoid(8)
-  console.error(`\`randomCode\` property missing from \`sandstone.config.ts\`. A new one will be generated at each build, which is **not** recommended. Please add the following line:\n\n  randomCode: '${dataPackCode}',\n\nto \`sandstone.config.ts\`.`)
+  packUid: '${packUid}',
+
+to \`sandstone.config.ts\`, or set the PACK_UID environment variable.`)
 }
-export const dataPack = new Datapack(dataPackCode, configFile?.namespace ?? process.env.NAMESPACE ?? 'default')
+
+export const dataPack = new Datapack(packUid, process.env.NAMESPACE ?? 'default')
 export const { commandsRoot } = dataPack
 export const _: Omit<Flow, 'arguments'> = dataPack.flow
 

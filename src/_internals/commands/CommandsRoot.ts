@@ -42,6 +42,9 @@ export class CommandsRoot {
 
   inExecute: boolean
 
+  // Whether current command was an execute ending with `run`
+  afterExecute: boolean
+
   executable: boolean
 
   arguments: CommandArgs
@@ -56,6 +59,7 @@ export class CommandsRoot {
   constructor(datapack: Datapack) {
     this.arguments = []
     this.inExecute = false
+    this.afterExecute = false
     this.executable = false
     this.Datapack = datapack
     this.commandsRoot = this
@@ -98,6 +102,7 @@ export class CommandsRoot {
   reset() {
     this.arguments = []
     this.inExecute = false
+    this.afterExecute = false
     this.executable = false
   }
 
@@ -108,7 +113,7 @@ export class CommandsRoot {
   // attribute command //
   attribute = (new Attribute(this)).attribute
 
-  // bossabar command //
+  // bossbar command //
   bossbar = new Bossbar(this)
 
   /**
@@ -133,10 +138,13 @@ export class CommandsRoot {
 
   // Add a comment //
   /**
-   * Adds a comment, starting with a `#`, to the function.
+   * Adds a comment, starting with a `# `, to the function.
    */
-  @command('#', { isRoot: true })
-  comment = (...comments: string[]) => { }
+  @command([], { isRoot: true, registerArguments: false })
+  comment = (...comments: unknown[]) => {
+    const fullComment = comments.join(' ').split('\n').map((line) => `# ${line}`).join('\n')
+    this.commandsRoot.arguments.push(fullComment)
+  }
 
   // data command //
   data = new Data(this)

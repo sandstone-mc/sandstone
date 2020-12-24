@@ -51,11 +51,11 @@ export interface SandstoneConfig {
   minecraftPath?: string
 
   /**
-   * A random code that is used to distinguish your variables from other Sandstone data pack variables.
+   * A unique identifier that is used to distinguish your variables from other Sandstone data pack variables.
    *
-   * It must be a random string of valid scoreboard characters.
+   * It must be a string of valid scoreboard characters.
    */
-  randomCode: string
+  packUid: string
 
   /** All the options to save the data pack. */
   saveOptions: ({
@@ -122,10 +122,10 @@ export default class Datapack {
 
   initCommands: CommandArgs[]
 
-  uniqueCode: string
+  packUid: string
 
-  constructor(uniqueCode: string, namespace: string) {
-    this.uniqueCode = uniqueCode
+  constructor(packUid: string, namespace: string) {
+    this.packUid = packUid
     this.basePath = new BasePathClass(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
@@ -408,7 +408,7 @@ export default class Datapack {
     // Get the specific anonymous score
     const id = Datapack.anonymousScoreId
     Datapack.anonymousScoreId += 1
-    const anonymousScore = score.ScoreHolder(`${name ?? 'anon'}_${datapack.uniqueCode}_${id}`)
+    const anonymousScore = score.ScoreHolder(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
 
     if (initialValue !== undefined) {
       if (this.currentFunction !== null) {

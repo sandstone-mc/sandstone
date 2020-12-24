@@ -463,17 +463,28 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
   // For if & unless, we're using an intermediate command because the "real" arguments are in the `.value` property of the condition
 
-  @command('if', executeConfig)
+  @command([], executeConfig)
   private if_ = (...args: string[]) => this
-
-  @command('unless', executeConfig)
-  private unless_ = (...args: string[]) => this
 
   /** Checks if the given condition is met. */
   if = (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value)
 
   /** Checks if the given conditions is not met. */
-  unless = (condition: ConditionClass) => this.unless_(...condition._toMinecraftCondition().value)
+  unless = (condition: ConditionClass) => {
+    const args = condition._toMinecraftCondition().value
+    if (args[0] === 'if') {
+      args[0] = 'unless'
+    } else {
+      args[0] = 'if'
+    }
+
+    return this.if_(...args)
+  }
+
+  @command([], {
+    isRoot: false, executable: true, hasSubcommands: false,
+  })
+  register = () => {}
 
   /**
    * Store the final command's result or success value somewhere.
@@ -494,7 +505,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       T
   ) {
     console.warn(chalk.hex('#ff6700')('`runOne` is deprecated. Please use `run` instead: `execute.as("@a").run.give("@s", "minecraft:diamond", 1)`'))
-    return this.commandsRoot as any
+    return this.run
   }
 
   /**
@@ -506,6 +517,9 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       Pick<T, keyof typeof commands> :
       T
   ) {
+    this.commandsRoot.afterExecute = true
+    this.commandsRoot.arguments.push('run')
+
     return this.commandsRoot as any
   }
 }
@@ -563,6 +577,9 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
 
       runMultiple[key] = (this.commandsRoot)[key]
     }
+
+    this.commandsRoot.afterExecute = true
+    this.commandsRoot.arguments.push('run')
     return runMultiple as any
   }
 }

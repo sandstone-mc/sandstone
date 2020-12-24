@@ -73,12 +73,15 @@ export class Flow {
 
   arguments: CommandArgs
 
+  afterExecute: boolean
+
   constructor(
     datapack: Datapack,
   ) {
     this.datapack = datapack
     this.commandsRoot = datapack.commandsRoot
     this.arguments = []
+    this.afterExecute = false
   }
 
   /** CONDITIONS */
@@ -306,6 +309,15 @@ export class Flow {
     callbackName: string,
     ifScore: PlayerScore,
   ): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
+    function ensureConsistency(nextCallback: () => void) {
+      if (!isAsyncFunction(callback) && isAsyncFunction(nextCallback)) {
+        throw new Error('Passed an asynchronous callback in a synchronous if/else if/else. If/else if/else must be all synchronous, or all asynchronous.')
+      }
+      if (isAsyncFunction(callback) && !isAsyncFunction(nextCallback)) {
+        throw new Error('Passed a synchronous callback in an asynchronous if/else if/else. If/else if/else must be all synchronous, or all asynchronous.')
+      }
+    }
+
     if (!isAsyncFunction(callback)) {
       this.flowStatement(callback, {
         callbackName,
@@ -314,12 +326,23 @@ export class Flow {
         condition,
       })
 
+      // We know the callback is synchronous. We must prevent the user to pass an asynchronous callback in else/else if.
       return {
-        elseIf: (condition_: ConditionType, callback_: () => void) => this.if_(this.and(ifScore.equalTo(0), condition_), () => {
-          callback_()
-          ifScore.set(1)
-        }, 'else_if', ifScore),
-        else: (callback_: () => void) => this.if_(ifScore.equalTo(0), callback_, 'else', ifScore),
+        elseIf: (nextCondition: ConditionType, nextCallback: () => void) => {
+          // Ensure the callback is synchronous.
+          ensureConsistency(nextCallback)
+
+          return this.if_(this.and(ifScore.equalTo(0), nextCondition), () => {
+            nextCallback()
+            ifScore.set(1)
+          }, 'else_if', ifScore)
+        },
+        else: (nextCallback: () => void) => {
+          // Ensure the callback is synchronous.
+          ensureConsistency(nextCallback)
+
+          this.if_(ifScore.equalTo(0), nextCallback, 'else', ifScore)
+        },
       } as any
     }
 
@@ -336,42 +359,52 @@ export class Flow {
 
     this.datapack.currentFunction = initialFunction
     return {
-      elseIf: (condition_: ConditionType, callback_: () => Promise<void>) => this.if_(this.and(condition_, ifScore.equalTo(0)), async () => {
-        // We keep the function where the "else if" is running
-        const { currentFunction: newCallback } = this.datapack
+      elseIf: (nextCondition: ConditionType, nextCallback: () => Promise<void>) => {
+        // Ensure the callback is asynchronous.
+        ensureConsistency(nextCallback)
 
-        // Go back in the previous "if"/"else if"
-        this.datapack.currentFunction = callbackFunction
-        // Run its code
-        await promise
+        return this.if_(this.and(nextCondition, ifScore.equalTo(0)), async () => {
+          // We keep the function where the "else if" is running
+          const { currentFunction: newCallback } = this.datapack
 
-        // Now, we're going back in the current "else if"
-        this.datapack.currentFunction = newCallback
+          // Go back in the previous "if"/"else if"
+          this.datapack.currentFunction = callbackFunction
+          // Run its code
+          await promise
 
-        // First, we run all synchronous code (that will end up in the .mcfunction instantly called by the "else if")
-        const returnedPromise = callback_()
+          // Now, we're going back in the current "else if"
+          this.datapack.currentFunction = newCallback
 
-        // We notice Sandstone that the condition has successfully passed
-        ifScore.set(1)
+          // First, we run all synchronous code (that will end up in the .mcfunction instantly called by the "else if")
+          const returnedPromise = nextCallback()
 
-        // Then we run the asynchronous code, that will create other .mcfunction called with /schedule.
-        await returnedPromise
-      }, 'else_if', ifScore),
-      else: (callback_: () => Promise<void>) => this.if_(ifScore.equalTo(0), async () => {
-        // We keep the function where the "else" is running
-        const { currentFunction: newCallback } = this.datapack
+          // We notice Sandstone that the condition has successfully passed
+          ifScore.set(1)
 
-        // Go back in the previous "if"/"else if"
-        this.datapack.currentFunction = callbackFunction
-        // Run its code
-        await promise
+          // Then we run the asynchronous code, that will create other .mcfunction called with /schedule.
+          await returnedPromise
+        }, 'else_if', ifScore)
+      },
+      else: (nextCallback: () => Promise<void>) => {
+        // Ensure the callback is asynchronous.
+        ensureConsistency(nextCallback)
 
-        // Now, we're going back in the current "else"
-        this.datapack.currentFunction = newCallback
+        this.if_(ifScore.equalTo(0), async () => {
+          // We keep the function where the "else" is running
+          const { currentFunction: newCallback } = this.datapack
 
-        // And we run the "else" code.
-        await callback_()
-      }, 'else', ifScore),
+          // Go back in the previous "if"/"else if"
+          this.datapack.currentFunction = callbackFunction
+          // Run its code
+          await promise
+
+          // Now, we're going back in the current "else"
+          this.datapack.currentFunction = newCallback
+
+          // And we run the "else" code.
+          await nextCallback()
+        }, 'else', ifScore)
+      },
       then: async (onfulfilled: () => void) => {
         // Go back in the previous "if"/"else if"/"else"
         this.datapack.currentFunction = callbackFunction
