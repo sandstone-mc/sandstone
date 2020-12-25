@@ -40,10 +40,13 @@ import {
 export class CommandsRoot {
   Datapack: Datapack
 
-  inExecute: boolean
-
-  // Whether current command was an execute ending with `run`
-  afterExecute: boolean
+  /**
+   * The state of the current execute command.
+   * outside: we aren't in an execute command
+   * inside : we are in an execute subcommand
+   * after  : we are after the `run` part of an execute command
+   */
+  executeState: 'outside' | 'inside' | 'after'
 
   executable: boolean
 
@@ -58,8 +61,7 @@ export class CommandsRoot {
 
   constructor(datapack: Datapack) {
     this.arguments = []
-    this.inExecute = false
-    this.afterExecute = false
+    this.executeState = 'outside'
     this.executable = false
     this.Datapack = datapack
     this.commandsRoot = this
@@ -101,8 +103,7 @@ export class CommandsRoot {
 
   reset() {
     this.arguments = []
-    this.inExecute = false
-    this.afterExecute = false
+    this.executeState = 'outside'
     this.executable = false
   }
 
@@ -168,7 +169,19 @@ export class CommandsRoot {
   enchant = (new Enchant(this)).enchant
 
   // execute command //
-  execute: Omit<ExecuteWithRun<CommandsRoot>, 'run' | 'runOne'> = (new ExecuteWithRun(this))
+  get execute(): Omit<ExecuteWithRun<CommandsRoot>, 'run' | 'runOne'> {
+    const realExecute = new ExecuteWithRun(this)
+
+    return new Proxy(realExecute, {
+      get: (_, p: keyof ExecuteWithRun<any>) => {
+        if (this.arguments.length > 0) {
+          this.register()
+        }
+
+        return realExecute[p]
+      },
+    })
+  }
 
   // experience command //
   experience = new Experience(this)

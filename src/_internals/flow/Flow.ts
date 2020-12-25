@@ -73,7 +73,7 @@ export class Flow {
 
   arguments: CommandArgs
 
-  afterExecute: boolean
+  executeState: CommandsRoot['executeState']
 
   constructor(
     datapack: Datapack,
@@ -81,7 +81,7 @@ export class Flow {
     this.datapack = datapack
     this.commandsRoot = datapack.commandsRoot
     this.arguments = []
-    this.afterExecute = false
+    this.executeState = 'outside'
   }
 
   /** CONDITIONS */
@@ -183,7 +183,7 @@ export class Flow {
      * Keep them aside, & register them after.
      */
     const previousArguments = this.commandsRoot.arguments
-    const previousInExecute = this.commandsRoot.inExecute
+    const previousExecuteState = this.commandsRoot.executeState
     this.commandsRoot.reset()
 
     const args = this.arguments.slice(1)
@@ -228,7 +228,7 @@ export class Flow {
 
     // Put back the old arguments
     this.commandsRoot.arguments = previousArguments
-    this.commandsRoot.inExecute = previousInExecute
+    this.commandsRoot.executeState = previousExecuteState
 
     // Register the initial condition (in the root function) to enter the callback.
     if (config.initialCondition) {
@@ -245,7 +245,7 @@ export class Flow {
          * Therefore, this function just has to register the initial condition.
          */
         registerCondition(this.commandsRoot, config.condition, args)
-        this.commandsRoot.inExecute = true
+        this.commandsRoot.executeState = 'after'
         callOrInlineFunction(this.datapack, callbackMcFunction)
       }
     } else {
@@ -262,7 +262,7 @@ export class Flow {
      * Keep them aside, & register them after.
      */
     const previousArguments = this.commandsRoot.arguments
-    const previousInExecute = this.commandsRoot.inExecute
+    const previousExecuteState = this.commandsRoot.executeState
     this.commandsRoot.reset()
 
     const args = this.arguments.slice(1)
@@ -282,7 +282,7 @@ export class Flow {
     if (config.loopCondition) {
       // In a synchronous flow statement, we just have to recursively call the function
       registerCondition(this.commandsRoot, config.condition, args)
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'after'
       this.commandsRoot.functionCmd(callbackFunctionName)
     }
 
@@ -291,12 +291,12 @@ export class Flow {
 
     // Put back the old arguments
     this.commandsRoot.arguments = previousArguments
-    this.commandsRoot.inExecute = previousInExecute
+    this.commandsRoot.executeState = previousExecuteState
 
     // Register the initial condition (in the root function) to enter the callback
     if (config.initialCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'after'
     }
     callOrInlineFunction(this.datapack, callbackMcFunction)
 

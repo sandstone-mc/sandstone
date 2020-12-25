@@ -143,7 +143,7 @@ export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteStoreArgs(this.execute)
@@ -158,7 +158,7 @@ export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteStoreArgs(this.execute)
@@ -349,7 +349,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteIfData(this as unknown as InferExecute<T>)
@@ -364,7 +364,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteIfData(this as unknown as InferExecute<T>)
@@ -517,8 +517,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       Pick<T, keyof typeof commands> :
       T
   ) {
-    this.commandsRoot.afterExecute = true
-    this.commandsRoot.arguments.push('run')
+    this.commandsRoot.executeState = 'after'
 
     return this.commandsRoot as any
   }
@@ -578,8 +577,7 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
       runMultiple[key] = (this.commandsRoot)[key]
     }
 
-    this.commandsRoot.afterExecute = true
-    this.commandsRoot.arguments.push('run')
+    this.commandsRoot.executeState = 'after'
     return runMultiple as any
   }
 }
