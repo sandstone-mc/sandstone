@@ -156,14 +156,14 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
       } else {
         commandsRoot.register(true)
       }
+    } else if (commandsRoot.executeState === 'outside' && config.isExecuteSubcommand) {
+      commandsRoot.arguments.push('execute')
     } else if (commandsRoot.arguments.length === 0) {
       // Function is not root but has no previous command
       throw new Error(
         'Trying to call some command arguments with no registered root. Did you forgot {hasSubcommands:true}?'
       + `Args are: ${innerArgs}, function is ${innerFunction}`,
       )
-    } else if (commandsRoot.executeState === 'outside' && config.isExecuteSubcommand) {
-      commandsRoot.arguments.push('execute')
     }
 
     if (config.registerArguments) {
