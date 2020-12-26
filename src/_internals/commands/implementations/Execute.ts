@@ -4,8 +4,10 @@ import type {
 } from '@arguments'
 import type { Flow } from '@flow'
 import type { ConditionClass, Range } from '@variables'
-import { coordinatesParser, rotationParser } from '@variables'
+import { rangeParser, coordinatesParser, rotationParser } from '@variables'
+
 import type { PlayerScore } from '@variables/PlayerScore'
+import chalk from 'chalk'
 import type * as commands from '../../../commands'
 import type { CommandsRoot } from '../CommandsRoot'
 import { command } from '../decorators'
@@ -141,7 +143,7 @@ export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteStoreArgs(this.execute)
@@ -156,7 +158,7 @@ export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteStoreArgs(this.execute)
@@ -347,7 +349,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteIfData(this as unknown as InferExecute<T>)
@@ -362,7 +364,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'inside'
     }
 
     return new ExecuteIfData(this as unknown as InferExecute<T>)
@@ -404,7 +406,17 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * Check a score against either another score or a given range.
    * @param args
    */
-  @command(['if', 'score'], executeConfig)
+  @command(['if', 'score'], {
+    ...executeConfig,
+    parsers: {
+      '3': (arg, innerArgs) => {
+        if (innerArgs[2] === 'matches') {
+          return rangeParser(arg)
+        }
+        return arg
+      },
+    },
+  })
   ifScore: (
     /**
      * Check a score against either another score or a given range.
@@ -451,17 +463,28 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
   // For if & unless, we're using an intermediate command because the "real" arguments are in the `.value` property of the condition
 
-  @command('if', executeConfig)
+  @command([], executeConfig)
   private if_ = (...args: string[]) => this
-
-  @command('unless', executeConfig)
-  private unless_ = (...args: string[]) => this
 
   /** Checks if the given condition is met. */
   if = (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value)
 
   /** Checks if the given conditions is not met. */
-  unless = (condition: ConditionClass) => this.unless_(...condition._toMinecraftCondition().value)
+  unless = (condition: ConditionClass) => {
+    const args = condition._toMinecraftCondition().value
+    if (args[0] === 'if') {
+      args[0] = 'unless'
+    } else {
+      args[0] = 'if'
+    }
+
+    return this.if_(...args)
+  }
+
+  @command([], {
+    isRoot: false, executable: true, hasSubcommands: false,
+  })
+  register = () => {}
 
   /**
    * Store the final command's result or success value somewhere.
@@ -471,29 +494,91 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    */
   store: ExecuteStore<T> = new ExecuteStore(this as unknown as InferExecute<T>)
 
-  /** Runs a single command. */
+  /**
+   * Runs a single command.
+   * @deprecated Use `run.<command>` instead.
+   */
   get runOne(): (
- T extends CommandsRoot ?
-  // The Pick<> ensures only commands are returned from CommandsRoot
-  Pick<T, keyof typeof commands> :
-  T
+    T extends CommandsRoot ?
+      // The Pick<> ensures only commands are returned from CommandsRoot
+      Pick<T, keyof typeof commands> :
+      T
   ) {
+    console.warn(chalk.hex('#ff6700')('`runOne` is deprecated. Please use `run` instead: `execute.as("@a").run.give("@s", "minecraft:diamond", 1)`'))
+    return this.run
+  }
+
+  /**
+   * Runs a single command.
+   */
+  get run(): (
+    T extends CommandsRoot ?
+      // The Pick<> ensures only commands are returned from CommandsRoot
+      Pick<T, keyof typeof commands> :
+      T
+  ) {
+    this.commandsRoot.executeState = 'after'
+
     return this.commandsRoot as any
   }
 }
 
 export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
   /**
-   * Runs a callback inside a new function.
+   * Runs one or multiple commands.
    *
-   * If the callback only creates one command, and this command is safe to be inlined, it will be inlined to avoid a useless function call.
+   * When giving a callback, if it only creates one command, and this command is safe to be inlined,
+   * it will be inlined to avoid a useless function call.
+   *
+   * @example
+   * // Run multiple commands
+   * execute.as(`@a`).run(() => {
+   *    give(`@s`, 'minecraft:diamond', 1)
+   *    kill(`@s`)
+   * })
+   *
+   * // Run a single command
+   * execute.as(`@s`).run.give(`@s`, 'minecraft:diamond', 1)
    */
-  run = (callback: () => void) => {
-    this.commandsRoot.Datapack.flow.flowStatement(callback, {
-      callbackName: `execute_${this.commandsRoot.arguments[1]}`,
-      initialCondition: false,
-      loopCondition: false,
-    })
+  get run(): (
+    T extends CommandsRoot ?
+   // The Pick<> ensures only commands are returned from CommandsRoot
+   Pick<T, keyof typeof commands> & ((callback: () => void) => void) :
+   T & ((callback: () => void) => void)
+  ) {
+    type Callback = ((callback: () => void) => void)
+    type Result = (Record<string, unknown> & Callback)
+
+    const runMultiple: Result = ((callback: () => void) => {
+      this.commandsRoot.Datapack.flow.flowStatement(callback, {
+        callbackName: `execute_${this.commandsRoot.arguments[1]}`,
+        initialCondition: false,
+        loopCondition: false,
+      })
+    }) as any
+
+    // We need to add all CommandsRoot keys to this function.
+    const keys = [
+      ...Object.getOwnPropertyNames(this.commandsRoot),
+      ...Object.getOwnPropertyNames(Object.getPrototypeOf(this.commandsRoot)),
+    ] as (keyof CommandsRoot)[]
+
+    for (const key of keys) {
+      /*
+       * Filter away keys that are not commands. While that's not mandatory since TypeScript will not propose them with autocompletion,
+       * it prevents overriding properties by mistake.
+       *
+       * However, it is MANDATORY to exclude "arguments" and "constructor", since those two properties exists on functions, and will cause a problem if kept.
+       */
+      if (['register', 'addAndRegister', 'arguments', 'inExecute', 'executable', 'Datapack', 'commandsRoot', 'constructor', 'reset'].includes(key)) {
+        continue
+      }
+
+      runMultiple[key] = (this.commandsRoot)[key]
+    }
+
+    this.commandsRoot.executeState = 'after'
+    return runMultiple as any
   }
 }
 

@@ -5,6 +5,7 @@ import type {
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { Predicate } from '@resources'
+import { rangeParser } from '@variables/parsers'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
 import { ComponentClass } from './abstractClasses'
@@ -173,31 +174,9 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   }
 )
 
-// Sanitize score values. null => '', Infinity => '', any number => itself
-function sanitizeValue(value: number | null): string {
-  if (value === undefined || value === null) {
-    return ''
-  }
-
-  if (Number.isFinite(value)) {
-    return value.toString()
-  }
-
-  // Value is Infinity or -Infinity
-  return ''
-}
-
-// Returns the string representation of a range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
-function parseRange(range: Range): string {
-  if (Array.isArray(range)) {
-    return `${sanitizeValue(range[0])}..${sanitizeValue(range[1])}`
-  }
-  return range.toString()
-}
-
 // Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'
 function parseScore(scores: ScoreArgument): string {
-  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, parseRange(value)].join('=')).join(', ')}}`
+  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, rangeParser(value)].join('=')).join(', ')}}`
 }
 
 // Returns the string representation of advancements
@@ -214,19 +193,19 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
 export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> extends ComponentClass implements ConditionClass {
   protected commandsRoot: CommandsRoot
 
-  protected target: string
+  target
 
-  protected arguments: SelectorProperties<IsSingle, IsPlayer>
+  arguments: SelectorProperties<IsSingle, IsPlayer>
 
   constructor(
     commandsRoot: CommandsRoot,
-    target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>,
+    target: '@s' | '@p' | '@a' | '@e' | '@r',
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
     super()
 
     this.commandsRoot = commandsRoot
-    this.target = target as string
+    this.target = target
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
   }
 
@@ -288,7 +267,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
           result.push(['team', teamRepr])
         },
 
-        distance: parseRange,
+        distance: rangeParser,
       } as const
 
       for (const [baseName, modifier] of Object.entries(modifiers)) {
@@ -334,6 +313,6 @@ export function SelectorCreator(target: '@e', selectorArguments: SinglePlayerSel
 export function SelectorCreator(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
 export function SelectorCreator(target: '@e', selectorArguments: AnySelectorProperties): SelectorClass<false, false>
 
-export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: string, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
+export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: '@s' | '@p' | '@r' | '@a' | '@e', selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
 }

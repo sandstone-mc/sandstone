@@ -11,7 +11,7 @@ export class RecipeCommand extends Command {
      *
      * @param targets Specifies the player(s) to give the recipe to.
      * @param recipe Specifies a recipe to give. If `*` is specified, then all recipes will be given.
-    */
+     */
     @command(['recipe', 'give'], { isRoot: true })
     give = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS>) => { }
 
@@ -20,7 +20,7 @@ export class RecipeCommand extends Command {
      *
      * @param targets Specifies the player(s) to take the recipe from.
      * @param recipe Specifies a recipe to take. If `*` is specified, then all recipes will be taken.
-    */
+     */
    @command(['recipe', 'take'], { isRoot: true })
     take = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS>) => { }
 }

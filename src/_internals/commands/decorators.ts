@@ -145,27 +145,25 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
      * If the previous command was executable, register it.
      * It means it wasn't registered because it could have been extended with other arguments.
      */
-    if (config.isExecuteSubcommand && !commandsRoot.inExecute) {
+    if (config.isExecuteSubcommand && commandsRoot.executeState === 'outside') {
       commandsRoot.register(true)
     }
 
     if (config.isRoot) {
-      if (commandsRoot.inExecute) {
+      if (commandsRoot.executeState === 'after') {
         commandsRoot.arguments.push('run')
-        commandsRoot.inExecute = false
+        commandsRoot.executeState = 'outside'
       } else {
         commandsRoot.register(true)
       }
+    } else if (commandsRoot.executeState === 'outside' && config.isExecuteSubcommand) {
+      commandsRoot.arguments.push('execute')
     } else if (commandsRoot.arguments.length === 0) {
-      if (config.isExecuteSubcommand) {
-        commandsRoot.arguments.push('execute')
-      } else {
       // Function is not root but has no previous command
-        throw new Error(
-          'Trying to call some command arguments with no registered root. Did you forgot {hasSubcommands:true}?'
-        + `Args are: ${innerArgs}, function is ${innerFunction}`,
-        )
-      }
+      throw new Error(
+        'Trying to call some command arguments with no registered root. Did you forgot {hasSubcommands:true}?'
+      + `Args are: ${innerArgs}, function is ${innerFunction}`,
+      )
     }
 
     if (config.registerArguments) {
@@ -192,7 +190,7 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
     }
 
     if (config.isExecuteSubcommand) {
-      commandsRoot.inExecute = true
+      commandsRoot.executeState = 'inside'
     }
 
     return result

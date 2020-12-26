@@ -13,11 +13,11 @@ import { coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
 import util from 'util'
 import type { ConditionType } from './conditions'
-import { CombinedConditions, getConditionsObjective } from './conditions'
+import { getConditionScore, CombinedConditions } from './conditions'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
 
-function isAsyncFunction(func: (() => void) | (() => Promise<void>)): func is () => Promise<void> {
+function isAsyncFunction(func: ((...args: any[]) => void) | ((...args: any[]) => Promise<void>)): func is (...args: any[]) => Promise<void> {
   return util.types.isAsyncFunction(func)
 }
 
@@ -73,12 +73,15 @@ export class Flow {
 
   arguments: CommandArgs
 
+  executeState: CommandsRoot['executeState']
+
   constructor(
     datapack: Datapack,
   ) {
     this.datapack = datapack
     this.commandsRoot = datapack.commandsRoot
     this.arguments = []
+    this.executeState = 'outside'
   }
 
   /** CONDITIONS */
@@ -180,7 +183,7 @@ export class Flow {
      * Keep them aside, & register them after.
      */
     const previousArguments = this.commandsRoot.arguments
-    const previousInExecute = this.commandsRoot.inExecute
+    const previousExecuteState = this.commandsRoot.executeState
     this.commandsRoot.reset()
 
     const args = this.arguments.slice(1)
@@ -225,7 +228,7 @@ export class Flow {
 
     // Put back the old arguments
     this.commandsRoot.arguments = previousArguments
-    this.commandsRoot.inExecute = previousInExecute
+    this.commandsRoot.executeState = previousExecuteState
 
     // Register the initial condition (in the root function) to enter the callback.
     if (config.initialCondition) {
@@ -242,7 +245,7 @@ export class Flow {
          * Therefore, this function just has to register the initial condition.
          */
         registerCondition(this.commandsRoot, config.condition, args)
-        this.commandsRoot.inExecute = true
+        this.commandsRoot.executeState = 'after'
         callOrInlineFunction(this.datapack, callbackMcFunction)
       }
     } else {
@@ -259,7 +262,7 @@ export class Flow {
      * Keep them aside, & register them after.
      */
     const previousArguments = this.commandsRoot.arguments
-    const previousInExecute = this.commandsRoot.inExecute
+    const previousExecuteState = this.commandsRoot.executeState
     this.commandsRoot.reset()
 
     const args = this.arguments.slice(1)
@@ -279,7 +282,7 @@ export class Flow {
     if (config.loopCondition) {
       // In a synchronous flow statement, we just have to recursively call the function
       registerCondition(this.commandsRoot, config.condition, args)
-      this.commandsRoot.inExecute = true
+      this.commandsRoot.executeState = 'after'
       this.commandsRoot.functionCmd(callbackFunctionName)
     }
 
@@ -288,21 +291,33 @@ export class Flow {
 
     // Put back the old arguments
     this.commandsRoot.arguments = previousArguments
-    this.commandsRoot.inExecute = previousInExecute
+    this.commandsRoot.executeState = previousExecuteState
 
     // Register the initial condition (in the root function) to enter the callback
     if (config.initialCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
-      this.commandsRoot.inExecute = true
-      callOrInlineFunction(this.datapack, callbackMcFunction)
-    } else {
-      this.commandsRoot.functionCmd(callbackFunctionName)
+      this.commandsRoot.executeState = 'after'
     }
+    callOrInlineFunction(this.datapack, callbackMcFunction)
 
     this.arguments = []
   }
 
-  private if_ = <R extends void | Promise<void>>(condition: ConditionType, callback: () => R, callbackName: string, ifScore: PlayerScore): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
+  private if_ = <R extends void | Promise<void>>(
+    condition: ConditionType,
+    callback: () => R,
+    callbackName: string,
+    ifScore: PlayerScore,
+  ): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
+    function ensureConsistency(nextCallback: () => void) {
+      if (!isAsyncFunction(callback) && isAsyncFunction(nextCallback)) {
+        throw new Error('Passed an asynchronous callback in a synchronous if/else if/else. If/else if/else must be all synchronous, or all asynchronous.')
+      }
+      if (isAsyncFunction(callback) && !isAsyncFunction(nextCallback)) {
+        throw new Error('Passed a synchronous callback in an asynchronous if/else if/else. If/else if/else must be all synchronous, or all asynchronous.')
+      }
+    }
+
     if (!isAsyncFunction(callback)) {
       this.flowStatement(callback, {
         callbackName,
@@ -311,12 +326,23 @@ export class Flow {
         condition,
       })
 
+      // We know the callback is synchronous. We must prevent the user to pass an asynchronous callback in else/else if.
       return {
-        elseIf: (condition_: ConditionType, callback_: () => void) => this.if_(this.and(ifScore.equalTo(0), condition_), () => {
-          callback_()
-          ifScore.set(1)
-        }, 'else_if', ifScore),
-        else: (callback_: () => void) => this.if_(ifScore.equalTo(0), callback_, 'else', ifScore),
+        elseIf: (nextCondition: ConditionType, nextCallback: () => void) => {
+          // Ensure the callback is synchronous.
+          ensureConsistency(nextCallback)
+
+          return this.if_(this.and(ifScore.equalTo(0), nextCondition), () => {
+            nextCallback()
+            ifScore.set(1)
+          }, 'else_if', ifScore)
+        },
+        else: (nextCallback: () => void) => {
+          // Ensure the callback is synchronous.
+          ensureConsistency(nextCallback)
+
+          this.if_(ifScore.equalTo(0), nextCallback, 'else', ifScore)
+        },
       } as any
     }
 
@@ -333,42 +359,52 @@ export class Flow {
 
     this.datapack.currentFunction = initialFunction
     return {
-      elseIf: (condition_: ConditionType, callback_: () => Promise<void>) => this.if_(this.and(condition_, ifScore.equalTo(0)), async () => {
-        // We keep the function where the "else if" is running
-        const { currentFunction: newCallback } = this.datapack
+      elseIf: (nextCondition: ConditionType, nextCallback: () => Promise<void>) => {
+        // Ensure the callback is asynchronous.
+        ensureConsistency(nextCallback)
 
-        // Go back in the previous "if"/"else if"
-        this.datapack.currentFunction = callbackFunction
-        // Run its code
-        await promise
+        return this.if_(this.and(nextCondition, ifScore.equalTo(0)), async () => {
+          // We keep the function where the "else if" is running
+          const { currentFunction: newCallback } = this.datapack
 
-        // Now, we're going back in the current "else if"
-        this.datapack.currentFunction = newCallback
+          // Go back in the previous "if"/"else if"
+          this.datapack.currentFunction = callbackFunction
+          // Run its code
+          await promise
 
-        // First, we run all synchronous code (that will end up in the .mcfunction instantly called by the "else if")
-        const returnedPromise = callback_()
+          // Now, we're going back in the current "else if"
+          this.datapack.currentFunction = newCallback
 
-        // We notice Sandstone that the condition has successfully passed
-        ifScore.set(1)
+          // First, we run all synchronous code (that will end up in the .mcfunction instantly called by the "else if")
+          const returnedPromise = nextCallback()
 
-        // Then we run the asynchronous code, that will create other .mcfunction called with /schedule.
-        await returnedPromise
-      }, 'else_if', ifScore),
-      else: (callback_: () => Promise<void>) => this.if_(ifScore.equalTo(0), async () => {
-        // We keep the function where the "else" is running
-        const { currentFunction: newCallback } = this.datapack
+          // We notice Sandstone that the condition has successfully passed
+          ifScore.set(1)
 
-        // Go back in the previous "if"/"else if"
-        this.datapack.currentFunction = callbackFunction
-        // Run its code
-        await promise
+          // Then we run the asynchronous code, that will create other .mcfunction called with /schedule.
+          await returnedPromise
+        }, 'else_if', ifScore)
+      },
+      else: (nextCallback: () => Promise<void>) => {
+        // Ensure the callback is asynchronous.
+        ensureConsistency(nextCallback)
 
-        // Now, we're going back in the current "else"
-        this.datapack.currentFunction = newCallback
+        this.if_(ifScore.equalTo(0), async () => {
+          // We keep the function where the "else" is running
+          const { currentFunction: newCallback } = this.datapack
 
-        // And we run the "else" code.
-        await callback_()
-      }, 'else', ifScore),
+          // Go back in the previous "if"/"else if"
+          this.datapack.currentFunction = callbackFunction
+          // Run its code
+          await promise
+
+          // Now, we're going back in the current "else"
+          this.datapack.currentFunction = newCallback
+
+          // And we run the "else" code.
+          await nextCallback()
+        }, 'else', ifScore)
+      },
       then: async (onfulfilled: () => void) => {
         // Go back in the previous "if"/"else if"/"else"
         this.datapack.currentFunction = callbackFunction
@@ -381,10 +417,9 @@ export class Flow {
   }
 
   if = <R extends void | Promise<void>>(condition: ConditionType, callback: () => R): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
-    const conditionsObjective = getConditionsObjective(this.commandsRoot)
+    const ifScore = getConditionScore(this.commandsRoot.Datapack)
 
     // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
-    const ifScore = conditionsObjective.ScoreHolder(`if_result_${Math.floor(Math.random() * 10_000)}`)
     ifScore.set(0)
 
     if (!isAsyncFunction(callback)) {
@@ -446,7 +481,7 @@ export class Flow {
     recursiveMatch(minimum, maximum)
   }
 
-  private _while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R, type: 'while' | 'doWhile'): R => {
+  private _while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R, type: 'while' | 'do_while'): R => {
     if (!isAsyncFunction(callback)) {
       this.flowStatement(callback, {
         callbackName: type,
@@ -477,7 +512,7 @@ export class Flow {
 
   while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'while')
 
-  doWhile = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'doWhile')
+  doWhile = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'do_while')
 
   binaryFor = (from: PlayerScore | number, to: PlayerScore |number, callback: (amount: number) => void, maximum = 128) => {
     if (typeof from === 'number' && typeof to === 'number') {
@@ -514,55 +549,51 @@ export class Flow {
     }
   }
 
-  forRange = (from: PlayerScore | number, to: PlayerScore | number, callback: (score: PlayerScore) => void, maximum = 16) => {
-    function callCallbackNTimes(n: number) {
-      for (let i = 0; i < n; i += 1) {
-        if (callback.length > 0) {
-          callback(scoreTracker)
-          scoreTracker.add(1)
-        } else {
-          // We know the callback takes no arguments - it's OK to avoid it
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          callback()
-        }
-      }
-    }
-
+  forRange = <R extends void | Promise<void>>(from: PlayerScore | number, to: PlayerScore | number, callback: (score: PlayerScore) => R) => {
     const scoreTracker = from instanceof PlayerScore ? from : this.datapack.Variable(from)
 
-    /*
-     * If the callback does not use the "score" argument, we can directly set the real score
-     * `scoreTracker` to the end (instead of spamming `scoreboard players add anonymous sand_ano 1`).
-     */
-    if (callback.length === 0) {
-      // Typescript has a bug, and will not recognize `scoreTracker.set(to)` as a valid expression. So I have to use this condition.
-      if (typeof to === 'number') {
-        scoreTracker.set(to)
-      } else {
-        scoreTracker.set(to)
-      }
+    // Small optimization: if we know the loop will run at least once, use a do while
+    let loop = this.while
+    if (typeof from === 'number' && typeof to === 'number' && to > from) {
+      loop = this.doWhile
     }
 
-    this.binaryFor(scoreTracker, to, callCallbackNTimes, maximum)
+    if (!isAsyncFunction(callback)) {
+      return loop(scoreTracker.lowerThan(to as any), () => {
+        callback(scoreTracker)
+        scoreTracker.add(1)
+      })
+    }
+
+    return loop(scoreTracker.lowerThan(to as any), async () => {
+      await callback(scoreTracker)
+      scoreTracker.add(1)
+    })
   }
 
-  forScore = (
+  forScore = <R extends void | Promise<void>>(
     score: PlayerScore | number,
     // eslint-disable-next-line no-shadow
     condition: ((score: PlayerScore) => ConditionType) | ConditionType,
     // eslint-disable-next-line no-shadow
     modifier: (score: PlayerScore) => void,
     // eslint-disable-next-line no-shadow
-    callback: (score: PlayerScore) => void,
-  ) => {
+    callback: (score: PlayerScore) => R,
+  ): R => {
     const realScore = score instanceof PlayerScore ? score : this.datapack.Variable(score)
     const realCondition = typeof condition === 'function' ? condition(realScore) : condition
 
-    this.while(realCondition, () => {
-      callback(realScore)
+    if (!isAsyncFunction(callback)) {
+      return this.while(realCondition, () => {
+        callback(realScore)
+        modifier(realScore)
+      }) as any
+    }
+
+    return this.while(realCondition, async () => {
+      await callback(realScore)
       modifier(realScore)
-    })
+    }) as any
   }
 
   private register = (soft?: boolean) => {

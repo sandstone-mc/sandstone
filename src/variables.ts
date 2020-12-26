@@ -1,4 +1,4 @@
-import { datapack } from './_internals'
+import { dataPack } from './_internals'
 
 export {
   absolute as abs, relative as rel, local as loc,
@@ -16,4 +16,4 @@ export const {
   createObjective,
   Selector,
   Variable,
-} = datapack
+} = dataPack

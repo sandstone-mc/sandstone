@@ -40,20 +40,28 @@ import {
 export class CommandsRoot {
   Datapack: Datapack
 
-  inExecute: boolean
+  /**
+   * The state of the current execute command.
+   * outside: we aren't in an execute command
+   * inside : we are in an execute subcommand
+   * after  : we are after the `run` part of an execute command
+   */
+  executeState: 'outside' | 'inside' | 'after'
 
   executable: boolean
 
   arguments: CommandArgs
 
-  // This might seem weird, but we need this object to reference itself.
-  // Thanks to that, CommandsRoot implements the Command interface,
-  // and we can directly create commands here.
+  /*
+   * This might seem weird, but we need this object to reference itself.
+   * Thanks to that, CommandsRoot implements the Command interface,
+   * and we can directly create commands here.
+   */
   commandsRoot: CommandsRoot
 
   constructor(datapack: Datapack) {
     this.arguments = []
-    this.inExecute = false
+    this.executeState = 'outside'
     this.executable = false
     this.Datapack = datapack
     this.commandsRoot = this
@@ -95,7 +103,7 @@ export class CommandsRoot {
 
   reset() {
     this.arguments = []
-    this.inExecute = false
+    this.executeState = 'outside'
     this.executable = false
   }
 
@@ -106,7 +114,7 @@ export class CommandsRoot {
   // attribute command //
   attribute = (new Attribute(this)).attribute
 
-  // bossabar command //
+  // bossbar command //
   bossbar = new Bossbar(this)
 
   /**
@@ -131,10 +139,13 @@ export class CommandsRoot {
 
   // Add a comment //
   /**
-   * Adds a comment, starting with a `#`, to the function.
+   * Adds a comment, starting with a `# `, to the function.
    */
-  @command('#', { isRoot: true })
-  comment = (...comments: string[]) => { }
+  @command([], { isRoot: true, registerArguments: false })
+  comment = (...comments: unknown[]) => {
+    const fullComment = comments.join(' ').split('\n').map((line) => `# ${line}`).join('\n')
+    this.commandsRoot.arguments.push(fullComment)
+  }
 
   // data command //
   data = new Data(this)
@@ -158,7 +169,19 @@ export class CommandsRoot {
   enchant = (new Enchant(this)).enchant
 
   // execute command //
-  execute: Omit<ExecuteWithRun<CommandsRoot>, 'run' | 'runOne'> = (new ExecuteWithRun(this))
+  get execute(): Omit<ExecuteWithRun<CommandsRoot>, 'run' | 'runOne'> {
+    const realExecute = new ExecuteWithRun(this)
+
+    return new Proxy(realExecute, {
+      get: (_, p: keyof ExecuteWithRun<any>) => {
+        if (this.arguments.length > 0) {
+          this.register()
+        }
+
+        return realExecute[p]
+      },
+    })
+  }
 
   // experience command //
   experience = new Experience(this)
@@ -495,7 +518,7 @@ export class CommandsRoot {
 
   worldborder = new WorldBorder(this)
 
-  /// ALIAS COMMANDS ///
+  // / ALIAS COMMANDS ///
 
   // msg command //
   msg: CommandsRoot['tell'] = (...args) => this.tell(...args)

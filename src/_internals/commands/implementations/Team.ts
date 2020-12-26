@@ -100,9 +100,11 @@ export class Team extends Command {
      */
     (<T extends keyof TeamOptions>(option: T, value: TeamOptions[T]) => void) &
 
-    // Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
-    // We need T to capture the exact value of the string (like "foo"),
-    // and the type of the parameter becomes Exclude<"foo", keyof TeamOptions> which works.
+    /*
+     * Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
+     * We need T to capture the exact value of the string (like "foo"),
+     * and the type of the parameter becomes Exclude<"foo", keyof TeamOptions> which works.
+     */
 
     /**
      * Modifies the option of the team.

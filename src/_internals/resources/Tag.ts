@@ -25,6 +25,19 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
   return typeof v === 'object'
 }
 
+function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagStringType<TYPE>>): TagSingleValue<string> {
+  if (isMcFunctionReturn(value)) {
+    return value.getName()
+  }
+  if (isTagObject(value) && isMcFunctionReturn(value.id)) {
+    return {
+      id: value.id.getName(),
+      required: value.required,
+    }
+  }
+  return value as string | TagSingleValue<string>
+}
+
 export class Tag<TYPE extends TAG_TYPES> extends Resource {
   readonly type
 
@@ -35,18 +48,7 @@ export class Tag<TYPE extends TAG_TYPES> extends Resource {
 
     this.type = type
 
-    this.values = values.map((v) => {
-      if (isMcFunctionReturn(v)) {
-        return v.getName()
-      }
-      if (isTagObject(v) && isMcFunctionReturn(v.id)) {
-        return {
-          id: v.id.getName(),
-          required: v.required,
-        }
-      }
-      return v as string | TagSingleValue<string>
-    })
+    this.values = values.map(objectToString)
 
     this.datapack = datapack
 
@@ -61,6 +63,11 @@ export class Tag<TYPE extends TAG_TYPES> extends Resource {
 
   get name() {
     return `#${toMcFunctionName(this.path.fullPathWithNamespace)}`
+  }
+
+  /** Adds a new value to this tag. */
+  add(value: TagSingleValue<HintedTagStringType<TYPE>>) {
+    this.values.push(objectToString(value))
   }
 
   toString() {

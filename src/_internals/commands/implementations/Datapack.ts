@@ -60,7 +60,8 @@ export class DatapackCommand extends Command {
   @command(['datapack', 'enable'], { isRoot: true, hasSubcommands: true })
   enable = (name: string) => new DatapackEnable(this.commandsRoot)
 
-  /** List all data packs, or list only the available/enabled ones.
+  /**
+   * List all data packs, or list only the available/enabled ones.
    *
    * Hovering over the data packs in the chat output shows their description defined in their pack.mcmeta.
    *
