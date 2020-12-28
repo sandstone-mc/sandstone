@@ -85,6 +85,18 @@ export interface SandstoneConfig {
      */
     customFileHandler?: SaveOptions['customFileHandler']
   }
+
+  /** Some scripts that can run at defined moments. */
+  scripts?: {
+    /** A script running before Sandstone starts importing source files. */
+    beforeAll?: () => (void | Promise<void>)
+
+    /** A script running before Sandstone starts saving the files. */
+    beforeSave?: () => (void | Promise<void>)
+
+    /** A script running after Sandstone saved all files. */
+    afterAll?: () => (void | Promise<void>)
+  }
 }
 
 export interface McFunctionReturn<ARGS extends unknown[], RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
