@@ -346,8 +346,6 @@ export class Flow {
       } as any
     }
 
-    const { currentFunction: initialFunction } = this.datapack
-
     const promise = this.flowStatementAsync(callback, {
       callbackName,
       initialCondition: true,
@@ -355,9 +353,8 @@ export class Flow {
       condition,
     })
 
-    const { currentFunction: callbackFunction } = this.datapack
+    const { currentFunction: previousFunction } = this.datapack
 
-    this.datapack.currentFunction = initialFunction
     return {
       elseIf: (nextCondition: ConditionType, nextCallback: () => Promise<void>) => {
         // Ensure the callback is asynchronous.
@@ -368,7 +365,7 @@ export class Flow {
           const { currentFunction: newCallback } = this.datapack
 
           // Go back in the previous "if"/"else if"
-          this.datapack.currentFunction = callbackFunction
+          this.datapack.currentFunction = previousFunction
           // Run its code
           await promise
 
@@ -394,7 +391,7 @@ export class Flow {
           const { currentFunction: newCallback } = this.datapack
 
           // Go back in the previous "if"/"else if"
-          this.datapack.currentFunction = callbackFunction
+          this.datapack.currentFunction = previousFunction
           // Run its code
           await promise
 
@@ -406,12 +403,12 @@ export class Flow {
         }, 'else', ifScore)
       },
       then: async (onfulfilled: () => void) => {
-        // Go back in the previous "if"/"else if"/"else"
-        this.datapack.currentFunction = callbackFunction
-
+        // Run the code
         await promise
+
+        // Finally enter the callback function
         this.datapack.createEnterChildFunction(ASYNC_CALLBACK_NAME)
-        onfulfilled?.()
+        return onfulfilled?.()
       },
     } as any
   }

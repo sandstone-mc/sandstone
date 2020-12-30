@@ -99,16 +99,14 @@ export interface SandstoneConfig {
   }
 }
 
-export interface McFunctionReturn<ARGS extends unknown[], RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
-  (...args: ARGS): RETURN
+export interface McFunctionReturn<RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
+  (): RETURN
 
-  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: ARGS) => void
+  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
 
-  getName: (...args: ARGS) => string
+  clearSchedule: () => void
 
-  clearSchedule: (...args: ARGS) => void
-
-  generate: (...args: ARGS) => void
+  generate: () => void
 }
 
 export default class Datapack {
@@ -126,7 +124,7 @@ export default class Datapack {
 
   constants: Set<number>
 
-  rootFunctions: Set<MCFunctionClass<any[]>>
+  rootFunctions: Set<MCFunctionClass>
 
   static anonymousScoreId = 0
 
@@ -470,12 +468,17 @@ export default class Datapack {
     const newFunction = this.createChildFunction(SLEEP_CHILD_NAME, parentFunction)
     this.commandsRoot.schedule.function(newFunction.functionName, delay, 'append')
 
+    console.log('sleep called', this.currentFunction.path)
     return ({
       then: (async (onfullfilled?: () => (void | Promise<void>)) => {
         // Enter child "sleep"
+        console.log('sleep awaited', this.currentFunction?.path)
         this.currentFunction = newFunction.childFunction
-
-        return onfullfilled?.()
+        console.log('             ', this.currentFunction?.path)
+        
+        const result = await onfullfilled?.()
+        console.log('             ', result, this.currentFunction?.path)
+        return result
       }) as any,
     })
   }
@@ -492,7 +495,7 @@ export default class Datapack {
     // First, generate all functions
     for (const mcfunction of this.rootFunctions) {
       // eslint-disable-next-line no-await-in-loop
-      await mcfunction.generateInitialFunction()
+      await mcfunction.generate()
     }
 
     // Then, generate the init function.

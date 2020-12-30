@@ -89,7 +89,7 @@ export interface AdvancementType<CRITERIA_NAMES extends string> {
     experience?: number
 
     /** A function to run. Function tags are not allowed. */
-    function?: string | McFunctionReturn<[]>
+    function?: string | McFunctionReturn
   }
 
   /**

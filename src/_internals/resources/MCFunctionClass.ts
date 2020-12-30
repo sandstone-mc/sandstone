@@ -1,8 +1,7 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
-import { toMcFunctionName } from '@datapack/minecraft'
 import type { FunctionResource } from '@datapack/resourcesTree'
-import hash from 'object-hash'
+import util from 'util'
 
 export type McFunctionOptions = {
   /**
@@ -35,180 +34,98 @@ export type McFunctionOptions = {
   tags?: readonly string[]
 }
 
-export class MCFunctionClass<T extends any[], R extends void | Promise<void> = void | Promise<void>> {
+export class MCFunctionClass<R extends void | Promise<void> = void | Promise<void>> {
   name: string
 
   options: McFunctionOptions
 
-  alreadyInitializedParameters: Map<string, {
-    mcFunction: FunctionResource,
-    name: string,
-    result: R | null, // Null mean the value isn't currently defined
-  }>
+  alreadyInitialized: boolean
 
-  functionsFolderResource: FunctionResource
+  resource: FunctionResource
 
   datapack: Datapack
 
-  callback: (...args: T) => R
+  callback: () => R
 
-  constructor(datapack: Datapack, name: string, callback: (...args: T) => R, options: McFunctionOptions) {
-    this.name = name
+  constructor(datapack: Datapack, name: string, callback: () => R, options: McFunctionOptions) {
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
-    this.alreadyInitializedParameters = new Map()
+    this.alreadyInitialized = false
     this.callback = callback
     this.datapack = datapack
 
     // We "reserve" the folder by creating an empty folder there. It can be later changed to be a resource.
     const functionsPaths = datapack.getResourcePath(name)
 
-    this.functionsFolderResource = datapack.resources.addResource('functions', {
-      children: new Map(), isResource: false as const, path: functionsPaths.fullPathWithNamespace,
+    this.resource = datapack.resources.addResource('functions', {
+      children: new Map(), isResource: true, path: functionsPaths.fullPathWithNamespace, commands: [],
     })
 
-    if (!options.lazy && callback.length !== 0) {
-      throw new Error(
-        `Got a parametrized function "${name}" expecting at least ${callback.length} arguments, without being lazy.\n`
-        + 'Since it is not lazy, Sandstone tried to create it without passing any arguments.\n'
-        + 'This is not possible. Consider putting default values to the parameters, or setting the function as lazy.',
-      )
-    }
-  }
-
-  // Create an empty function, with the correct name given the overload
-  private createFunctionOverload = (args: T) => {
-    const previousFunction = this.datapack.currentFunction
-
-    let newFunction: FunctionResource
-    if (args.length === 0) {
-      // Change the "folder" to specify it is a resource too.
-      newFunction = Object.assign(this.functionsFolderResource, { isResource: true, commands: [] })
-    } else {
-      // Set the "folder" as the current function, and create a child of it
-      this.datapack.currentFunction = this.functionsFolderResource
-      newFunction = this.datapack.createChildFunction('call').childFunction
-    }
-
-    // Go back to the previous function
-    this.datapack.currentFunction = previousFunction
-
-    // Return the new function
-    return { newFunction, functionName: toMcFunctionName(newFunction.path) }
+    this.name = functionsPaths.fullName
   }
 
   /**
    * Call the actual function overload. Returns different informations about it.
    */
-  private callOverload = (args: T): {
-    mcFunction: FunctionResource,
-    name: string,
-    result: R | null,
-  } => {
+  generate = (): R => {
     const { commandsRoot } = this.datapack
-    const hashed = hash(args)
 
-    const existing = this.alreadyInitializedParameters.get(hashed)
+    if (this.alreadyInitialized) {
+      return undefined as any
+    }
 
-    if (!existing) {
-      // If it's the 1st time this mcfunction is called with these arguments, we create a new overload
-      const { functionName, newFunction } = this.createFunctionOverload(args)
+    // Get the given tags
+    let tags = this.options.tags ?? []
 
-      // We also set it as currently in initialization.
-      this.alreadyInitializedParameters.set(hashed, { name: functionName, mcFunction: newFunction, result: null })
+    // If it should run each tick, add it to the tick.json function
+    if (this.options.runEachTick) {
+      tags = [...tags, 'minecraft:tick']
+    }
 
-      // Get the given tags
-      let tags = this.options.tags ?? []
+    // Idem for load
+    if (this.options.runOnLoad) {
+      tags = [...tags, 'minecraft:load']
+    }
 
-      // If it should run each tick, add it to the tick.json function
-      if (this.options.runEachTick) {
-        tags = [...tags, 'minecraft:tick']
-      }
+    for (const tag of tags) {
+      this.datapack.addFunctionToTag(this.name, tag)
+    }
 
-      // Idem for load
-      if (this.options.runOnLoad) {
-        tags = [...tags, 'minecraft:load']
-      }
+    const previousFunction = this.datapack.currentFunction
 
-      for (const tag of tags) {
-        this.datapack.addFunctionToTag(functionName, tag)
-      }
+    this.datapack.currentFunction = this.resource
 
-      const previousFunction = this.datapack.currentFunction
+    // Add some comments specifying the overload, and the options
+    if (this.options.debug) {
+      commandsRoot.comment('Options:', JSON.stringify(this.options))
+    }
 
-      this.datapack.currentFunction = newFunction
+    const result = this.callback()
 
-      // Add some comments specifying the overload, and the options
-      if (this.options.debug) {
-        commandsRoot.comment('Options:', JSON.stringify(this.options))
-
-        try {
-          commandsRoot.comment('Arguments:', JSON.stringify(args))
-        } catch (e) {
-          // JSON.stringify fails on recursive objects.
-        }
-      }
-
-      const result = this.callback(...args)
-
+    const afterCall = () => {
       // If there is an unfinished command, register it
       commandsRoot.register(true)
 
       // Then back to the previous one
       this.datapack.currentFunction = previousFunction
-
-      // Register this set of arguments as already initialized
-      const returnValue = { mcFunction: newFunction, name: functionName, result }
-      this.alreadyInitializedParameters.set(hashed, returnValue)
-
-      return returnValue
     }
 
-    // Else, we need to return the previous result
-    return existing
-  }
-
-  call = (...args: T): R | null => {
-    const { commandsRoot } = this.datapack
-
-    // Call without registering
-    const { name, result } = this.callOverload(args)
-
-    commandsRoot.functionCmd(name)
-    return result
-  }
-
-  schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'replace' | 'append', ...args: T) => {
-    const name = this.getNameFromArgs(...args)
-
-    this.datapack.commandsRoot.schedule.function(name, delay, type)
-  }
-
-  clearSchedule = (...args: T) => {
-    const name = this.getNameFromArgs(...args)
-
-    this.datapack.commandsRoot.schedule.clear(name)
-  }
-
-  getNameFromArgs = (...args: T): string => {
-    const repr = hash(args)
-    const mcfunction = this.alreadyInitializedParameters.get(repr)
-
-    if (mcfunction) {
-      return mcfunction.name
+    if (util.types.isAsyncFunction(this.callback)) {
+      return (result as Promise<void>).then(afterCall) as any
     }
 
-    throw new Error('Function has never been generated before!')
+    return afterCall() as any
   }
 
-  generate = (...args: T) => {
-    this.callOverload(args)
+  call = () => {
+    this.datapack.commandsRoot.functionCmd(this.name)
   }
 
-  // eslint-disable-next-line consistent-return
-  generateInitialFunction = (): void | Promise<void> | null => {
-    if (!this.options.lazy && !this.alreadyInitializedParameters.has('[]')) {
-      return this.callOverload([] as any).result
-    }
+  schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'replace' | 'append') => {
+    this.datapack.commandsRoot.schedule.function(this.name, delay, type)
+  }
+
+  clearSchedule = () => {
+    this.datapack.commandsRoot.schedule.clear(this.name)
   }
 }

@@ -131,16 +131,21 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    * @param name The name of the function.
    * @param callback A callback containing the commands you want in the Minecraft Function.
    */
-  MCFunction = <ARGS extends any[], RETURN extends void | Promise<void>>(
-    name: string, callback: (...args: ARGS) => RETURN, options?: McFunctionOptions,
-  ): McFunctionReturn<ARGS, RETURN> => {
+  MCFunction = <RETURN extends void | Promise<void>>(
+    name: string, callback: () => RETURN, options?: McFunctionOptions,
+  ): McFunctionReturn<RETURN> => {
     const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, options ?? {})
 
     this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)
 
     const returnFunction: any = mcfunction.call
     returnFunction.schedule = mcfunction.schedule
-    returnFunction.getName = mcfunction.getNameFromArgs
+
+    // Set the function's nam
+    const descriptor = Object.getOwnPropertyDescriptor(returnFunction, 'name')!
+    descriptor.value = mcfunction.name
+    Object.defineProperty(returnFunction, 'name', descriptor)
+
     returnFunction.clearSchedule = mcfunction.clearSchedule
     returnFunction.generate = mcfunction.generate
 
