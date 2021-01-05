@@ -7,7 +7,7 @@ import type {
 } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { HintedTagStringType, McFunctionOptions } from '@resources'
-import type { McFunctionReturn } from './Datapack'
+import type { McFunctionReturn as McFunctionInstance } from './Datapack'
 import type { TagSingleValue } from './resourcesTree'
 
 /** The namespace all nested resources will be located in. */
@@ -134,7 +134,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    */
   MCFunction = <RETURN extends void | Promise<void>>(
     name: string, callback: () => RETURN, options?: McFunctionOptions,
-  ): McFunctionReturn<RETURN> => {
+  ): McFunctionInstance<RETURN> => {
     const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, options ?? {})
 
     this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)
@@ -149,6 +149,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
 
     returnFunction.clearSchedule = mcfunction.clearSchedule
     returnFunction.generate = mcfunction.generate
+    returnFunction.toString = mcfunction.toString
 
     return returnFunction
   }

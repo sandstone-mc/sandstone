@@ -129,4 +129,6 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
   clearSchedule = () => {
     this.datapack.commandsRoot.schedule.clear(this.name)
   }
+
+  toString = () => this.name
 }
