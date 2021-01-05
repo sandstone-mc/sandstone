@@ -142,7 +142,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
     const returnFunction: any = mcfunction.call
     returnFunction.schedule = mcfunction.schedule
 
-    // Set the function's nam
+    // Set the function's name
     const descriptor = Object.getOwnPropertyDescriptor(returnFunction, 'name')!
     descriptor.value = mcfunction.name
     Object.defineProperty(returnFunction, 'name', descriptor)
@@ -150,6 +150,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
     returnFunction.clearSchedule = mcfunction.clearSchedule
     returnFunction.generate = mcfunction.generate
     returnFunction.toString = mcfunction.toString
+    returnFunction.toJSON = mcfunction.toJSON
 
     return returnFunction
   }
