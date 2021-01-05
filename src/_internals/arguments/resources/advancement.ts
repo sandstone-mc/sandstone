@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS, JsonTextComponent, NBT } from '@arguments'
-import type { McFunctionReturn } from '@datapack/Datapack'
+import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { AdvancementClass } from '@resources'
 import type { AdvancementTriggers } from './AdvancementTriggers'
 
@@ -89,7 +89,7 @@ export interface AdvancementType<CRITERIA_NAMES extends string> {
     experience?: number
 
     /** A function to run. Function tags are not allowed. */
-    function?: string | McFunctionReturn
+    function?: string | MCFunctionInstance
   }
 
   /**

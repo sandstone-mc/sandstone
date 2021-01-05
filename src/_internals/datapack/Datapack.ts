@@ -4,7 +4,7 @@ import { Flow } from '@flow'
 import { Objective, SelectorCreator } from '@variables'
 
 import { BasePathClass } from './BasePath'
-import { toMcFunctionName } from './minecraft'
+import { toMCFunctionName } from './minecraft'
 import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
@@ -101,7 +101,7 @@ export interface SandstoneConfig {
   }
 }
 
-export interface McFunctionReturn<RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
+export interface MCFunctionInstance<RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
   (): RETURN
 
   schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
@@ -260,7 +260,7 @@ export default class Datapack {
     }
 
     const newName = this.getUniqueNameFromFolder(childName, parentFunction)
-    const fullName = toMcFunctionName([...parentFunction.path, newName])
+    const fullName = toMCFunctionName([...parentFunction.path, newName])
     return this.getResourcePath(fullName)
   }
 
@@ -455,7 +455,7 @@ export default class Datapack {
     }
 
     // If we're already in a "sleep" child, go to the parent function. It avoids childs' names becoming namespace:function/__sleep/__sleep/__sleep etc...
-    const { fullPath } = this.getResourcePath(toMcFunctionName(this.currentFunction.path))
+    const { fullPath } = this.getResourcePath(toMCFunctionName(this.currentFunction.path))
     const inSleepFunction = fullPath[fullPath.length - 1] === SLEEP_CHILD_NAME
 
     let parentFunction: FunctionResource
@@ -524,7 +524,7 @@ export default class Datapack {
       this.resources.deleteResource(this.currentFunction.path, 'functions')
     } else {
       // Else, put the __init__ function in the minecraft:load tag
-      this.addFunctionToTag(toMcFunctionName(this.currentFunction!.path), 'minecraft:load')
+      this.addFunctionToTag(toMCFunctionName(this.currentFunction!.path), 'minecraft:load')
     }
 
     this.exitRootFunction()

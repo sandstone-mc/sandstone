@@ -4,7 +4,7 @@ import type { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type { FunctionResource } from '@datapack/resourcesTree'
 
-export type McFunctionOptions = {
+export type MCFunctionOptions = {
   /**
    * If true, then the function will only be created if it is called from another function.
    */
@@ -38,7 +38,7 @@ export type McFunctionOptions = {
 export class MCFunctionClass<R extends void | Promise<void> = void | Promise<void>> {
   name: string
 
-  options: McFunctionOptions
+  options: MCFunctionOptions
 
   alreadyInitialized: boolean
 
@@ -48,7 +48,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
   callback: () => R
 
-  constructor(datapack: Datapack, name: string, callback: () => R, options: McFunctionOptions) {
+  constructor(datapack: Datapack, name: string, callback: () => R, options: MCFunctionOptions) {
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
     this.alreadyInitialized = false

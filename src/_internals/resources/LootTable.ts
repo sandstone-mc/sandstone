@@ -1,4 +1,4 @@
-import { toMcFunctionName } from '@datapack/minecraft'
+import { toMCFunctionName } from '@datapack/minecraft'
 
 import { Resource } from './Resource'
 
