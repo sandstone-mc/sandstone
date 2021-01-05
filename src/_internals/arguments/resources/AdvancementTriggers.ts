@@ -15,6 +15,7 @@ import type {
   PotionIdCriterion,
   SlotCriterion,
 } from './criteria'
+import type { PredicateType } from './predicate'
 
 // The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | undefined> = {
@@ -123,10 +124,10 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | u
   /** All the conditions that need to be met when the trigger gets activated. */
   conditions: Partial<CONDITIONS> & {
     /**
-     * A list of loot table conditions that must pass in order for the trigger to activate.
+     * A list of predicates that must pass in order for the trigger to activate.
      * The checks are applied to the player that would get the advancement.
      */
-    player?: PlayerCriterion
+    player?: PredicateType[]
   }
 }))
 
@@ -279,7 +280,7 @@ export type AdvancementTriggers = (
     damage: DamageCriterion
     /** The entity that was damaged. May be a list of loot table conditions that must pass in order for the trigger to activate. */
     entity: EntityCriterion
-  }> | Trigger<'minecraft:player_hurt_entity', {
+  }> | Trigger<'minecraft:player_interacted_with_entity', {
     /** The damage that was dealt. Missing corresponding list of loot table conditions for the direct entity. */
     damage: DamageCriterion
     /** The entity that was damaged. May be a list of loot table conditions that must pass in order for the trigger to activate. */
