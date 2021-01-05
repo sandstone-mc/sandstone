@@ -1,6 +1,6 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { Tag } from '@resources'
+import { TagClass } from '@resources'
 
 import { FunctionCommand } from './Function'
 
@@ -26,7 +26,7 @@ export class Schedule extends Command {
        * @param functionName Specify the scheduled function to be cleared.
        *
        */
-      (functionName: string | Tag<'functions'>) => void
+      (functionName: string | TagClass<'functions'>) => void
     ) & (
       /**
        * Removes a scheduled function.
@@ -42,8 +42,8 @@ export class Schedule extends Command {
        */
       (mcFunction: MCFunctionInstance) => void
     )
-  ) = (func: MCFunctionInstance<any> | string | Tag<'functions'>) => {
-    if (typeof func === 'string' || func instanceof Tag) {
+  ) = (func: MCFunctionInstance<any> | string | TagClass<'functions'>) => {
+    if (typeof func === 'string' || func instanceof TagClass) {
       this.commandsRoot.addAndRegister('schedule', 'clear', func)
     } else {
       func.clearSchedule()
@@ -80,7 +80,7 @@ export class Schedule extends Command {
        * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
        * If unspecified, defaults to `replace`.
        */
-      (functionName: string | Tag<'functions'>, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
+      (functionName: string | TagClass<'functions'>, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
     ) & (
       /**
        * Delays the execution of a function. Executes the function after specified amount of time passes.
@@ -109,8 +109,8 @@ export class Schedule extends Command {
        */
       (mcFunction: MCFunctionInstance, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
     )
-  ) = (func: string | MCFunctionInstance | Tag<'functions'>, delay: unknown, type?: 'append' | 'replace') => {
-    if (typeof func === 'string' || func instanceof Tag) {
+  ) = (func: string | MCFunctionInstance | TagClass<'functions'>, delay: unknown, type?: 'append' | 'replace') => {
+    if (typeof func === 'string' || func instanceof TagClass) {
       this.commandsRoot.arguments.push('schedule', 'function', func, delay, type)
       this.commandsRoot.register()
     } else {

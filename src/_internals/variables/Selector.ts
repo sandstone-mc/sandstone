@@ -8,7 +8,7 @@ import type {
   ENTITY_TYPES, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import type { Predicate } from '@resources'
+import type { PredicateClass } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
 
@@ -107,7 +107,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   advancements?: AdvancementsArgument
 
   /** Select all targets that match the specified predicate. */
-  predicate?: string | Predicate | (Predicate | string)[]
+  predicate?: string | PredicateClass | (PredicateClass | string)[]
 } & ({} | {
   /**
    * Define a position on the X-axis in the world the selector starts at,

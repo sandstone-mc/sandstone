@@ -1,6 +1,4 @@
-import { toMCFunctionName } from '@datapack/minecraft'
-
-import { Resource } from './Resource'
+import { ResourceClass } from './Resource'
 
 import type { LiteralUnion } from '@/generalTypes'
 import type {
@@ -8,7 +6,7 @@ import type {
 } from '@arguments'
 import type { Datapack } from '@datapack'
 
-export class LootTable extends Resource {
+export class LootTableClass extends ResourceClass {
   lootTableJson
 
   constructor(datapack: Datapack, name: string, lootTable: LootTableType) {
