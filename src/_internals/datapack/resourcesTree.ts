@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import type {
-  AdvancementType, PredicateType, TAG_TYPES, LootTableType, RecipeType,
+  AdvancementType, LootTableType, PredicateType, RecipeType,
+  TAG_TYPES,
 } from '@arguments'
 import type { CommandArgs } from './minecraft'
 

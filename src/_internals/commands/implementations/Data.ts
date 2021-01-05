@@ -1,7 +1,9 @@
-import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
 import { coordinatesParser, nbtParser } from '@variables'
+
 import { Command } from '../Command'
 import { command } from '../decorators'
+
+import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
 
 const getCmd = (name: string) => ['data', 'get', name]
 

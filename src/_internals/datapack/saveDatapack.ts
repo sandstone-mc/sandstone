@@ -1,12 +1,14 @@
-import type { JsonTextComponent } from '@arguments'
 import chalk from 'chalk'
 import fs from 'graceful-fs'
 import path from 'path'
 import { promisify } from 'util'
+
 import {
   createDirectory, deleteDirectory, getMinecraftPath, getWorldPath,
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
+
+import type { JsonTextComponent } from '@arguments'
 import type {
   ResourceOnlyTypeMap,
   ResourcesTree,

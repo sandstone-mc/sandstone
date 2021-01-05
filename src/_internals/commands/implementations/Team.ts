@@ -1,8 +1,9 @@
-import type { BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument } from '@arguments'
 import { SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { JsonTextComponentClass } from '@variables'
+
+import type { BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument } from '@arguments'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'

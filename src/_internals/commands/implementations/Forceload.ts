@@ -1,8 +1,9 @@
-import type { ColumnCoordinates } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import type { VectorClass } from '@variables'
 import { coordinatesParser } from '@variables'
+
+import type { ColumnCoordinates } from '@arguments'
+import type { VectorClass } from '@variables'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]>): number[] {

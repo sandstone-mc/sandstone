@@ -1,19 +1,21 @@
+import util from 'util'
+import { Execute } from '@commands/implementations/Execute'
+import { toMcFunctionName } from '@datapack/minecraft'
+import { coordinatesParser } from '@variables'
+import { PlayerScore } from '@variables/PlayerScore'
+
+import { CombinedConditions, getConditionScore } from './conditions'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, Coordinates, SingleEntityArgument,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import { Execute } from '@commands/implementations/Execute'
 import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
-import { toMcFunctionName } from '@datapack/minecraft'
 import type { FunctionResource } from '@datapack/resourcesTree'
 import type { ConditionClass } from '@variables'
-import { coordinatesParser } from '@variables'
-import { PlayerScore } from '@variables/PlayerScore'
-import util from 'util'
 import type { ConditionType } from './conditions'
-import { getConditionScore, CombinedConditions } from './conditions'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
 

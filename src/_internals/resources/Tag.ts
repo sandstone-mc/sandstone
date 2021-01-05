@@ -1,12 +1,14 @@
+import { toMcFunctionName } from '@datapack/minecraft'
+
+import { Resource } from './Resource'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS, TAG_TYPES,
 } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { McFunctionReturn } from '@datapack/Datapack'
-import { toMcFunctionName } from '@datapack/minecraft'
 import type { TagSingleValue } from '@datapack/resourcesTree'
-import { Resource } from './Resource'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :

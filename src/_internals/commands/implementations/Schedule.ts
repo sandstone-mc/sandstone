@@ -1,9 +1,11 @@
-import type { LiteralUnion } from '@/generalTypes'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import type { McFunctionReturn } from '@datapack/Datapack'
 import { Tag } from '@resources'
+
 import { FunctionCommand } from './Function'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { McFunctionReturn } from '@datapack/Datapack'
 
 export class Schedule extends Command {
   @command(['schedule', 'clear'], {

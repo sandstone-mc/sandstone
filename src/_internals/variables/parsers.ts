@@ -1,9 +1,11 @@
-import type {
-  Coordinates, NBT, Rotation, Range,
-} from '@arguments'
 import util from 'util'
 
 import { VectorClass } from './Coordinates'
+
+import type {
+  Coordinates, NBT, Range,
+  Rotation,
+} from '@arguments'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<typeof args> : typeof args

@@ -1,8 +1,9 @@
-import type { MultiplePlayersArgument, SinglePlayerArgument } from '@arguments'
 import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { validateIntegerRange } from '@commands/validators'
+
+import type { MultiplePlayersArgument, SinglePlayerArgument } from '@arguments'
 
 /** Adds, sets or removes player experience.  */
 export class Experience extends Command {

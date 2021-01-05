@@ -1,8 +1,9 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { ITEMS, MultiplePlayersArgument } from '@arguments'
 import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { ITEMS, MultiplePlayersArgument } from '@arguments'
 
 /** Gives or takes (unlocks or locks) recipes for players. */
 export class RecipeCommand extends Command {

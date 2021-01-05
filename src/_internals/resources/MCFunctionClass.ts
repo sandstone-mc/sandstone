@@ -1,7 +1,8 @@
+import util from 'util'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type { FunctionResource } from '@datapack/resourcesTree'
-import util from 'util'
 
 export type McFunctionOptions = {
   /**

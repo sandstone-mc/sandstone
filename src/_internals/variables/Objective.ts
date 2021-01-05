@@ -1,8 +1,9 @@
+import { JsonTextComponentClass } from './JsonTextComponentClass'
+import { PlayerScore } from './PlayerScore'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type { JsonTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import { JsonTextComponentClass } from './JsonTextComponentClass'
-import { PlayerScore } from './PlayerScore'
 
 export class ObjectiveClass {
   private commandsRoot: CommandsRoot

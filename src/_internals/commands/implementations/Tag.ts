@@ -1,7 +1,8 @@
-import type { MultipleEntitiesArgument } from '@arguments'
 import { SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+
+import type { MultipleEntitiesArgument } from '@arguments'
 
 function checkTagName(tag: string) {
   if (!tag.match(/[A-Za-z0-9\-_+.]/g)) {

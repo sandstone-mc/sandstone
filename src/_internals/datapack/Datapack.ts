@@ -1,21 +1,23 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
+import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
+import { Objective, SelectorCreator } from '@variables'
+
+import { BasePathClass } from './BasePath'
+import { toMcFunctionName } from './minecraft'
+import { ResourcesTree } from './resourcesTree'
+import { saveDatapack } from './saveDatapack'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
 import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
-import { Objective, SelectorCreator } from '@variables'
-import chalk from 'chalk'
 import type { BasePathOptions } from './BasePath'
-import { BasePathClass } from './BasePath'
 import type { CommandArgs } from './minecraft'
-import { toMcFunctionName } from './minecraft'
 import type {
   FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
-import { ResourcesTree } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
-import { saveDatapack } from './saveDatapack'
 
 export interface SandstoneConfig {
   /**
@@ -475,7 +477,7 @@ export default class Datapack {
         console.log('sleep awaited', this.currentFunction?.path)
         this.currentFunction = newFunction.childFunction
         console.log('             ', this.currentFunction?.path)
-        
+
         const result = await onfullfilled?.()
         console.log('             ', result, this.currentFunction?.path)
         return result

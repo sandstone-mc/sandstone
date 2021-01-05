@@ -1,11 +1,12 @@
+import {
+  AdvancementClass, LootTable, MCFunctionClass, Predicate, Recipe, Tag,
+} from '@resources'
+
 import type {
   AdvancementType, LootTableType, PredicateType, RecipeType, TAG_TYPES,
 } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { HintedTagStringType, McFunctionOptions } from '@resources'
-import {
-  AdvancementClass, LootTable, MCFunctionClass, Predicate, Recipe, Tag,
-} from '@resources'
 import type { McFunctionReturn } from './Datapack'
 import type { TagSingleValue } from './resourcesTree'
 

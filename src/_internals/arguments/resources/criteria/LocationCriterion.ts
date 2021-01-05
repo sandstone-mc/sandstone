@@ -1,6 +1,7 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type {
-  BIOMES, BLOCKS, DIMENSION_TYPES, STRUCTURES, FLUIDS,
+  BIOMES, BLOCKS, DIMENSION_TYPES, FLUIDS,
+  STRUCTURES,
 } from '@arguments'
 import type { Tag } from '@resources'
 import type { NumberOrMinMax, PositionCriterion } from '.'

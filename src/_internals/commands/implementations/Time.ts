@@ -1,6 +1,7 @@
-import type { LiteralUnion } from '@/generalTypes'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+
+import type { LiteralUnion } from '@/generalTypes'
 
 /**
  * Changes or queries the world's game time.

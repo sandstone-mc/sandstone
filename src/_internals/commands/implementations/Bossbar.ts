@@ -1,9 +1,11 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { BASIC_COLORS, JsonTextComponent, MultiplePlayersArgument } from '@arguments'
 import { MultipleEntitiesArgument } from '@arguments'
 import { JsonTextComponentClass } from '@variables'
+
 import { Command } from '../Command'
 import { command } from '../decorators'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { BASIC_COLORS, JsonTextComponent, MultiplePlayersArgument } from '@arguments'
 
 export class Bossbar extends Command {
   /**
