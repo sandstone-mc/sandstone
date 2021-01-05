@@ -62,7 +62,7 @@ export type PredicateCondition = (
       /** A block ID. The test fails if the block doesn't match. */
       block: LiteralUnion<BLOCKS>
       /** A map of block property names to values. All values are strings. The test fails if the block doesn't match. */
-      properties?: Map<string, string>
+      properties?: Record<string, string>
   }> | PredicateKind<'minecraft:damage_source_properties', {
       /** Predicate applied to the damage source. */
       predicate: DamageCriterion
