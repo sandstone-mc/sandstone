@@ -39,6 +39,10 @@ module.exports = {
         js: 'never',
       },
     ],
+
+    // Force LF newlines
+    'linebreak-style': ['error', 'unix'],
+
     // Forces `import type` when possible
     '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
 

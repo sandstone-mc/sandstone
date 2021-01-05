@@ -224,6 +224,7 @@ type InteractivityTags = {
  * A JSON text component object.
  */
 export type TextComponentObject = (
+  // eslint-disable-next-line @typescript-eslint/ban-types
   (ContentTag | {}) & ChildrenTags & FormattingTags & InteractivityTags
 )
 

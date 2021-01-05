@@ -64,7 +64,7 @@
     "build": "node scripts/clean.js && ttsc && node scripts/setupPackage.js",
     "watch": "nodemon --watch src --watch tests -e js,ts --exec ttsc --pretty",
     "publishToNpm": "npm run build && npm publish dist",
-    "format": "eslint ./src/**/* --fix"
+    "format": "eslint src --fix --quiet"
   },
   "types": "dist/src/index.d.ts"
 }

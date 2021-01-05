@@ -470,16 +470,11 @@ export default class Datapack {
     const newFunction = this.createChildFunction(SLEEP_CHILD_NAME, parentFunction)
     this.commandsRoot.schedule.function(newFunction.functionName, delay, 'append')
 
-    console.log('sleep called', this.currentFunction.path)
     return ({
       then: (async (onfullfilled?: () => (void | Promise<void>)) => {
         // Enter child "sleep"
-        console.log('sleep awaited', this.currentFunction?.path)
         this.currentFunction = newFunction.childFunction
-        console.log('             ', this.currentFunction?.path)
-
         const result = await onfullfilled?.()
-        console.log('             ', result, this.currentFunction?.path)
         return result
       }) as any,
     })
