@@ -1,9 +1,9 @@
-import { Resource } from './Resource'
+import { ResourceClass } from './Resource'
 
 import type { AdvancementType, MultiplePlayersArgument } from '@arguments'
 import type { Datapack } from '@datapack'
 
-export class AdvancementClass<CriteriaNames extends string> extends Resource {
+export class AdvancementClass<CriteriaNames extends string = string> extends ResourceClass {
   advancementJson
 
   constructor(datapack: Datapack, name: string, advancement: AdvancementType<CriteriaNames>) {

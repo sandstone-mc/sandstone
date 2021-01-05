@@ -1,9 +1,9 @@
-import { Resource } from './Resource'
+import { ResourceClass } from './Resource'
 
 import type { MultiplePlayersArgument, RecipeType } from '@arguments'
 import type { Datapack } from '@datapack'
 
-export class Recipe<P1 extends string, P2 extends string, P3 extends string> extends Resource {
+export class RecipeClass<P1 extends string = string, P2 extends string = string, P3 extends string = string> extends ResourceClass {
   recipeJson
 
   constructor(datapack: Datapack, name: string, recipe: RecipeType<P1, P2, P3>) {

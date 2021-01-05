@@ -126,8 +126,16 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | u
     /**
      * A list of predicates that must pass in order for the trigger to activate.
      * The checks are applied to the player that would get the advancement.
+     *
+     * @example
+     * player: [
+     *    {
+     *      condition: '<any condition>',
+     *      // ...
+     *    }
+     *  ]
      */
-    player?: PredicateType[]
+    player?: PredicateType
   }
 }))
 

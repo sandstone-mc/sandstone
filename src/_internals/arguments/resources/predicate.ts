@@ -158,4 +158,28 @@ export type PredicateCondition = (
   }>
 ) |never
 
+/**
+ * A predicate, or a list of predicates.
+ * You must specify a `condition` before anything else.
+ *
+ * @example
+ *
+ * {
+ *   condition: '<any condition>',
+ *   // ...
+ * }
+ *
+ * [
+ *   {
+ *     condition: 'minecraft:match_tool',
+ *     predicate: {
+ *       item: 'minecraft:diamond_pickaxe',
+ *     }
+ *   },
+ *   {
+ *     condition: 'minecraft:random_chance',
+ *     chance: 0.5,
+ *   }
+ * ]
+ */
 export type PredicateType = ObjectOrArray<PredicateCondition>

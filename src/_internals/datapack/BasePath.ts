@@ -1,5 +1,5 @@
 import {
-  AdvancementClass, LootTable, MCFunctionClass, Predicate, Recipe, Tag,
+  AdvancementClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, TagClass,
 } from '@resources'
 
 import type {
@@ -187,10 +187,10 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    *   raining: true,
    * })
    */
-  Predicate = (name: string, predicate: PredicateType) => new Predicate(this.datapack, this.getName(name), predicate)
+  Predicate = (name: string, predicate: PredicateType) => new PredicateClass(this.datapack, this.getName(name), predicate)
 
   /** Create a tag. */
-  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[], replace?: boolean) => new Tag(this.datapack, type, this.getName(name), values, replace)
+  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[], replace?: boolean) => new TagClass(this.datapack, type, this.getName(name), values, replace)
 
   /**
    * Create a loot table.
@@ -210,8 +210,8 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    *   }],
    * })
    */
-  LootTable = (name: string, lootTable: LootTableType) => new LootTable(this.datapack, this.getName(name), lootTable)
+  LootTable = (name: string, lootTable: LootTableType) => new LootTableClass(this.datapack, this.getName(name), lootTable)
 
   /** Create a recipe. */
-  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeType<P1, P2, P3>) => new Recipe(this.datapack, this.getName(name), recipe)
+  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeType<P1, P2, P3>) => new RecipeClass(this.datapack, this.getName(name), recipe)
 }

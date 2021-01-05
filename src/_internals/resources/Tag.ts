@@ -1,6 +1,6 @@
 import { toMCFunctionName } from '@datapack/minecraft'
 
-import { Resource } from './Resource'
+import { ResourceClass } from './Resource'
 
 import type { LiteralUnion } from '@/generalTypes'
 import type {
@@ -40,7 +40,7 @@ function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagS
   return value as string | TagSingleValue<string>
 }
 
-export class Tag<TYPE extends TAG_TYPES> extends Resource {
+export class TagClass<TYPE extends TAG_TYPES> extends ResourceClass {
   readonly type
 
   readonly values: TagSingleValue<string>[]

@@ -1,10 +1,10 @@
-import { Resource } from './Resource'
+import { ResourceClass } from './Resource'
 
 import type { PredicateType } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables'
 
-export class Predicate extends Resource implements ConditionClass {
+export class PredicateClass extends ResourceClass implements ConditionClass {
   predicateJson
 
   constructor(datapack: Datapack, name: string, predicate: PredicateType) {
