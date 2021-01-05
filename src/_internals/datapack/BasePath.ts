@@ -6,8 +6,8 @@ import type {
   AdvancementType, LootTableType, PredicateType, RecipeType, TAG_TYPES,
 } from '@arguments'
 import type { Datapack } from '@datapack'
-import type { HintedTagStringType, McFunctionOptions } from '@resources'
-import type { McFunctionReturn as McFunctionInstance } from './Datapack'
+import type { HintedTagStringType, MCFunctionOptions } from '@resources'
+import type { MCFunctionInstance } from './Datapack'
 import type { TagSingleValue } from './resourcesTree'
 
 /** The namespace all nested resources will be located in. */
@@ -133,8 +133,8 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    * @param callback A callback containing the commands you want in the Minecraft Function.
    */
   MCFunction = <RETURN extends void | Promise<void>>(
-    name: string, callback: () => RETURN, options?: McFunctionOptions,
-  ): McFunctionInstance<RETURN> => {
+    name: string, callback: () => RETURN, options?: MCFunctionOptions,
+  ): MCFunctionInstance<RETURN> => {
     const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, options ?? {})
 
     this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)

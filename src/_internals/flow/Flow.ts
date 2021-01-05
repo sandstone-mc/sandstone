@@ -1,6 +1,6 @@
 import util from 'util'
 import { Execute } from '@commands/implementations/Execute'
-import { toMcFunctionName } from '@datapack/minecraft'
+import { toMCFunctionName } from '@datapack/minecraft'
 import { coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
 
@@ -50,7 +50,7 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
     }
   } else {
     // Else, register the function call
-    commandsRoot.functionCmd(toMcFunctionName(callbackFunction.path))
+    commandsRoot.functionCmd(toMCFunctionName(callbackFunction.path))
   }
 }
 
@@ -196,7 +196,7 @@ export class Flow {
 
     // First, enter the callback
     const callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
-    const callbackMcFunction = this.datapack.currentFunction!
+    const callbackMCFunction = this.datapack.currentFunction!
 
     await callback()
 
@@ -239,7 +239,7 @@ export class Flow {
         const flow = new Flow(this.datapack)
         flow.arguments = this.arguments
         flow
-          .if(config.condition, () => { callOrInlineFunction(this.datapack, callbackMcFunction) })
+          .if(config.condition, () => { callOrInlineFunction(this.datapack, callbackMCFunction) })
           .else(() => { this.commandsRoot.functionCmd(asyncCallbackName) })
       } else {
         /*
@@ -248,10 +248,10 @@ export class Flow {
          */
         registerCondition(this.commandsRoot, config.condition, args)
         this.commandsRoot.executeState = 'after'
-        callOrInlineFunction(this.datapack, callbackMcFunction)
+        callOrInlineFunction(this.datapack, callbackMCFunction)
       }
     } else {
-      callOrInlineFunction(this.datapack, callbackMcFunction)
+      callOrInlineFunction(this.datapack, callbackMCFunction)
     }
 
     // Reset the _.execute.as().at()... arguments.
@@ -273,7 +273,7 @@ export class Flow {
 
     // First, enter the callback
     const callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
-    const callbackMcFunction = this.datapack.currentFunction!
+    const callbackMCFunction = this.datapack.currentFunction!
 
     // Add its commands
     callback()
@@ -300,7 +300,7 @@ export class Flow {
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.executeState = 'after'
     }
-    callOrInlineFunction(this.datapack, callbackMcFunction)
+    callOrInlineFunction(this.datapack, callbackMCFunction)
 
     this.arguments = []
   }

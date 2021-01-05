@@ -1,4 +1,4 @@
-import { toMcFunctionName } from '@datapack/minecraft'
+import { toMCFunctionName } from '@datapack/minecraft'
 
 import type { Datapack } from '@datapack'
 
@@ -18,7 +18,7 @@ export class Resource {
     }
 
     get name(): string {
-      return toMcFunctionName(this.path.fullPathWithNamespace)
+      return toMCFunctionName(this.path.fullPathWithNamespace)
     }
 
     toString() {

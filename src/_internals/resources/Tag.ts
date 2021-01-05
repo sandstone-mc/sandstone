@@ -1,4 +1,4 @@
-import { toMcFunctionName } from '@datapack/minecraft'
+import { toMCFunctionName } from '@datapack/minecraft'
 
 import { Resource } from './Resource'
 
@@ -7,19 +7,19 @@ import type {
   BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS, TAG_TYPES,
 } from '@arguments'
 import type { Datapack } from '@datapack'
-import type { McFunctionReturn } from '@datapack/Datapack'
+import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { TagSingleValue } from '@datapack/resourcesTree'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
   T extends 'fluids' ? LiteralUnion<FLUIDS> :
   T extends 'entity_types' ? LiteralUnion<ENTITY_TYPES> :
-  T extends 'functions' ? (LiteralUnion<string> | McFunctionReturn) :
+  T extends 'functions' ? (LiteralUnion<string> | MCFunctionInstance) :
   T extends 'items' ? LiteralUnion<ITEMS> :
   string
 )
 
-function isMcFunctionReturn(v: unknown): v is McFunctionReturn {
+function isMCFunctionInstance(v: unknown): v is MCFunctionInstance {
   return typeof v === 'function'
 }
 
@@ -28,10 +28,10 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
 }
 
 function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagStringType<TYPE>>): TagSingleValue<string> {
-  if (isMcFunctionReturn(value)) {
+  if (isMCFunctionInstance(value)) {
     return value.name
   }
-  if (isTagObject(value) && isMcFunctionReturn(value.id)) {
+  if (isTagObject(value) && isMCFunctionInstance(value.id)) {
     return {
       id: value.id.name,
       required: value.required,
@@ -64,7 +64,7 @@ export class Tag<TYPE extends TAG_TYPES> extends Resource {
   }
 
   get name() {
-    return `#${toMcFunctionName(this.path.fullPathWithNamespace)}`
+    return `#${toMCFunctionName(this.path.fullPathWithNamespace)}`
   }
 
   /** Adds a new value to this tag. */
