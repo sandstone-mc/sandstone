@@ -1,5 +1,6 @@
-import type { Datapack } from '@datapack'
 import { toMcFunctionName } from '@datapack/minecraft'
+
+import type { Datapack } from '@datapack'
 
 export class Resource {
     protected datapack

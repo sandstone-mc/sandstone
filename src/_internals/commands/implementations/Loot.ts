@@ -1,12 +1,13 @@
+import { Command } from '@commands/Command'
+import { command } from '@commands/decorators'
+import { validateIntegerRange } from '@commands/validators'
+import { coordinatesParser } from '@variables'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
 } from '@arguments'
-import { Command } from '@commands/Command'
-import { command } from '@commands/decorators'
-import { validateIntegerRange } from '@commands/validators'
-import { coordinatesParser } from '@variables'
 
 class LootSource extends Command {
   /**

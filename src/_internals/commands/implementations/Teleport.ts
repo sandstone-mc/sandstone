@@ -1,9 +1,11 @@
+import { coordinatesParser, rotationParser, VectorClass } from '@variables'
+
+import { Command } from '../Command'
+import { command } from '../decorators'
+
 import type {
   Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument,
 } from '@arguments'
-import { coordinatesParser, rotationParser, VectorClass } from '@variables'
-import { Command } from '../Command'
-import { command } from '../decorators'
 
 export class TeleportFacing extends Command {
   /**

@@ -1,23 +1,25 @@
+import { toMcFunctionName } from '@datapack/minecraft'
+
+import { Resource } from './Resource'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS, TAG_TYPES,
 } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { McFunctionReturn } from '@datapack/Datapack'
-import { toMcFunctionName } from '@datapack/minecraft'
 import type { TagSingleValue } from '@datapack/resourcesTree'
-import { Resource } from './Resource'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
   T extends 'fluids' ? LiteralUnion<FLUIDS> :
   T extends 'entity_types' ? LiteralUnion<ENTITY_TYPES> :
-  T extends 'functions' ? (LiteralUnion<string> | McFunctionReturn<[]>) :
+  T extends 'functions' ? (LiteralUnion<string> | McFunctionReturn) :
   T extends 'items' ? LiteralUnion<ITEMS> :
   string
 )
 
-function isMcFunctionReturn(v: unknown): v is McFunctionReturn<[]> {
+function isMcFunctionReturn(v: unknown): v is McFunctionReturn {
   return typeof v === 'function'
 }
 
@@ -27,11 +29,11 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
 
 function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagStringType<TYPE>>): TagSingleValue<string> {
   if (isMcFunctionReturn(value)) {
-    return value.getName()
+    return value.name
   }
   if (isTagObject(value) && isMcFunctionReturn(value.id)) {
     return {
-      id: value.id.getName(),
+      id: value.id.name,
       required: value.required,
     }
   }

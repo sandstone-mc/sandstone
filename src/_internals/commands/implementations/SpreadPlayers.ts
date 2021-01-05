@@ -1,7 +1,9 @@
-import type { Coordinates, MultipleEntitiesArgument } from '@arguments'
 import { coordinatesParser } from '@variables'
+
 import { Command } from '../Command'
 import { command } from '../decorators'
+
+import type { Coordinates, MultipleEntitiesArgument } from '@arguments'
 
 export class SpreadPlayers extends Command {
   @command('spreadplayers', {

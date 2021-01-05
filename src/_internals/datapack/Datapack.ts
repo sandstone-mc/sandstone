@@ -1,21 +1,23 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
+import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
+import { Objective, SelectorCreator } from '@variables'
+
+import { BasePathClass } from './BasePath'
+import { toMcFunctionName } from './minecraft'
+import { ResourcesTree } from './resourcesTree'
+import { saveDatapack } from './saveDatapack'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
 import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
-import { Objective, SelectorCreator } from '@variables'
-import chalk from 'chalk'
 import type { BasePathOptions } from './BasePath'
-import { BasePathClass } from './BasePath'
 import type { CommandArgs } from './minecraft'
-import { toMcFunctionName } from './minecraft'
 import type {
   FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
-import { ResourcesTree } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
-import { saveDatapack } from './saveDatapack'
 
 export interface SandstoneConfig {
   /**
@@ -99,16 +101,14 @@ export interface SandstoneConfig {
   }
 }
 
-export interface McFunctionReturn<ARGS extends unknown[], RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
-  (...args: ARGS): RETURN
+export interface McFunctionReturn<RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
+  (): RETURN
 
-  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: ARGS) => void
+  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
 
-  getName: (...args: ARGS) => string
+  clearSchedule: () => void
 
-  clearSchedule: (...args: ARGS) => void
-
-  generate: (...args: ARGS) => void
+  generate: () => void
 }
 
 export default class Datapack {
@@ -126,7 +126,7 @@ export default class Datapack {
 
   constants: Set<number>
 
-  rootFunctions: Set<MCFunctionClass<any[]>>
+  rootFunctions: Set<MCFunctionClass>
 
   static anonymousScoreId = 0
 
@@ -474,8 +474,8 @@ export default class Datapack {
       then: (async (onfullfilled?: () => (void | Promise<void>)) => {
         // Enter child "sleep"
         this.currentFunction = newFunction.childFunction
-
-        return onfullfilled?.()
+        const result = await onfullfilled?.()
+        return result
       }) as any,
     })
   }
@@ -492,7 +492,7 @@ export default class Datapack {
     // First, generate all functions
     for (const mcfunction of this.rootFunctions) {
       // eslint-disable-next-line no-await-in-loop
-      await mcfunction.generateInitialFunction()
+      await mcfunction.generate()
     }
 
     // Then, generate the init function.

@@ -1,11 +1,12 @@
 /* eslint-disable no-restricted-globals */
+import { Command } from '@commands/Command'
+import { command } from '@commands/decorators'
+import { arrayToArgsParser } from '@variables'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
 } from '@arguments'
-import { Command } from '@commands/Command'
-import { command } from '@commands/decorators'
-import { arrayToArgsParser } from '@variables'
 
 // This command is fucking hell
 

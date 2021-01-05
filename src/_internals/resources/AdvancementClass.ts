@@ -1,6 +1,7 @@
+import { Resource } from './Resource'
+
 import type { AdvancementType, MultiplePlayersArgument } from '@arguments'
 import type { Datapack } from '@datapack'
-import { Resource } from './Resource'
 
 export class AdvancementClass<CriteriaNames extends string> extends Resource {
   advancementJson

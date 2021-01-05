@@ -1,10 +1,12 @@
+import { toMcFunctionName } from '@datapack/minecraft'
+
+import { Resource } from './Resource'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   Coordinates, ENTITY_SLOTS, LootTableType, MultipleEntitiesArgument, MultiplePlayersArgument,
 } from '@arguments'
 import type { Datapack } from '@datapack'
-import { toMcFunctionName } from '@datapack/minecraft'
-import { Resource } from './Resource'
 
 export class LootTable extends Resource {
   lootTableJson

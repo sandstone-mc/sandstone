@@ -1,16 +1,17 @@
+import chalk from 'chalk'
+import { coordinatesParser, rangeParser, rotationParser } from '@variables'
+
+import { command } from '../decorators'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
 } from '@arguments'
 import type { Flow } from '@flow'
 import type { ConditionClass, Range } from '@variables'
-import { rangeParser, coordinatesParser, rotationParser } from '@variables'
-
 import type { PlayerScore } from '@variables/PlayerScore'
-import chalk from 'chalk'
 import type * as commands from '../../../commands'
 import type { CommandsRoot } from '../CommandsRoot'
-import { command } from '../decorators'
 
 const executeConfig = {
   isRoot: false,

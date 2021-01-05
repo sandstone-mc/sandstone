@@ -2,7 +2,8 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { BLOCKS, ENCHANTMENTS } from '@arguments'
 import type {
-  NumberOrMinMax, DamageCriterion, EntityCriterion, ItemCriterion, LocationCriterion,
+  DamageCriterion, EntityCriterion, ItemCriterion, LocationCriterion,
+  NumberOrMinMax,
 } from './criteria'
 
 type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> = {

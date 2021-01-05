@@ -1,8 +1,9 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { MOB_EFFECTS, MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { validateIntegerRange } from '@commands/validators'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { MOB_EFFECTS, MultipleEntitiesArgument } from '@arguments'
 
 /** Add or remove status effects on players and other entities. */
 export class Effect extends Command {

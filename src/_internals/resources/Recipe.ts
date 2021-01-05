@@ -1,6 +1,7 @@
+import { Resource } from './Resource'
+
 import type { MultiplePlayersArgument, RecipeType } from '@arguments'
 import type { Datapack } from '@datapack'
-import { Resource } from './Resource'
 
 export class Recipe<P1 extends string, P2 extends string, P3 extends string> extends Resource {
   recipeJson

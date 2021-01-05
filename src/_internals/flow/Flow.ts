@@ -1,19 +1,21 @@
+import util from 'util'
+import { Execute } from '@commands/implementations/Execute'
+import { toMcFunctionName } from '@datapack/minecraft'
+import { coordinatesParser } from '@variables'
+import { PlayerScore } from '@variables/PlayerScore'
+
+import { CombinedConditions, getConditionScore } from './conditions'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, Coordinates, SingleEntityArgument,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import { Execute } from '@commands/implementations/Execute'
 import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
-import { toMcFunctionName } from '@datapack/minecraft'
 import type { FunctionResource } from '@datapack/resourcesTree'
 import type { ConditionClass } from '@variables'
-import { coordinatesParser } from '@variables'
-import { PlayerScore } from '@variables/PlayerScore'
-import util from 'util'
 import type { ConditionType } from './conditions'
-import { getConditionScore, CombinedConditions } from './conditions'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
 
@@ -346,18 +348,15 @@ export class Flow {
       } as any
     }
 
-    const { currentFunction: initialFunction } = this.datapack
-
-    const promise = this.flowStatementAsync(callback, {
+    const getPreviousPromise = () => this.flowStatementAsync(callback, {
       callbackName,
       initialCondition: true,
       loopCondition: false,
       condition,
     })
 
-    const { currentFunction: callbackFunction } = this.datapack
+    const { currentFunction: parentFunction } = this.datapack
 
-    this.datapack.currentFunction = initialFunction
     return {
       elseIf: (nextCondition: ConditionType, nextCallback: () => Promise<void>) => {
         // Ensure the callback is asynchronous.
@@ -367,10 +366,10 @@ export class Flow {
           // We keep the function where the "else if" is running
           const { currentFunction: newCallback } = this.datapack
 
-          // Go back in the previous "if"/"else if"
-          this.datapack.currentFunction = callbackFunction
-          // Run its code
-          await promise
+          // Go back in the parent function
+          this.datapack.currentFunction = parentFunction
+          // Run the previous "if/else if" code
+          await getPreviousPromise()
 
           // Now, we're going back in the current "else if"
           this.datapack.currentFunction = newCallback
@@ -389,14 +388,19 @@ export class Flow {
         // Ensure the callback is asynchronous.
         ensureConsistency(nextCallback)
 
-        this.if_(ifScore.equalTo(0), async () => {
+        /*
+         * We return the "if" result, which theoritically could allow our users to
+         * write `.if().else().if()`, however this is forbidden thanks to our TypeScript types.
+         * We have to return the result for the `then` part.
+         */
+        return this.if_(ifScore.equalTo(0), async () => {
           // We keep the function where the "else" is running
           const { currentFunction: newCallback } = this.datapack
 
-          // Go back in the previous "if"/"else if"
-          this.datapack.currentFunction = callbackFunction
-          // Run its code
-          await promise
+          // Go back in the parent function
+          this.datapack.currentFunction = parentFunction
+          // Run the previous "if"/"else if" code
+          await getPreviousPromise()
 
           // Now, we're going back in the current "else"
           this.datapack.currentFunction = newCallback
@@ -406,12 +410,17 @@ export class Flow {
         }, 'else', ifScore)
       },
       then: async (onfulfilled: () => void) => {
-        // Go back in the previous "if"/"else if"/"else"
-        this.datapack.currentFunction = callbackFunction
+        // In theory, we are already in the parent function so we shouldn't need to go back in it.
 
-        await promise
+        // Run the previous "if/else if/else" code
+        await getPreviousPromise()
+
+        // Go back in the parent function, because we don't know where the last "if/else if/else" code ended up.
+        this.datapack.currentFunction = parentFunction
+
+        // Finally enter the callback function
         this.datapack.createEnterChildFunction(ASYNC_CALLBACK_NAME)
-        onfulfilled?.()
+        return onfulfilled?.()
       },
     } as any
   }

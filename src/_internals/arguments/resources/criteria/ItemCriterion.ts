@@ -2,7 +2,7 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS } from '@arguments'
 import type { Tag } from '@resources'
-import type { NumberOrMinMax, EnchantmentCriterion } from '.'
+import type { EnchantmentCriterion, NumberOrMinMax } from '.'
 
 export type ItemCriterion = Partial<{
   /** Amount of the item. */

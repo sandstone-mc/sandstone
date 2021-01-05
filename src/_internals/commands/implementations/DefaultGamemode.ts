@@ -1,6 +1,7 @@
-import type { GAMEMODES } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+
+import type { GAMEMODES } from '@arguments'
 
 export class DefaultGamemode extends Command {
   /**

@@ -1,14 +1,16 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
+import { rangeParser } from '@variables/parsers'
+
+import { ComponentClass } from './abstractClasses'
+
 import type {
   ENTITY_TYPES, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { Predicate } from '@resources'
-import { rangeParser } from '@variables/parsers'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
-import { ComponentClass } from './abstractClasses'
 
 export type Range = number | [min: number, max: number] | [min: number, max: null] | [min: null, max: number]
 

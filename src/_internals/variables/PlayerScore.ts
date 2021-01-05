@@ -1,10 +1,11 @@
+import { ComponentClass } from '@variables/abstractClasses'
+
 import type {
   COMPARISON_OPERATORS, JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables/abstractClasses'
-import { ComponentClass } from '@variables/abstractClasses'
 import type { ObjectiveClass } from './Objective'
 
 type PlayersTarget = number | MultipleEntitiesArgument

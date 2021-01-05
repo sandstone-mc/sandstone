@@ -1,3 +1,18 @@
+import { nbtParser } from '@variables'
+import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
+
+import { coordinatesParser, rotationParser } from '..'
+import { command } from './decorators'
+import {
+  AdvancementCommand, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
+  DefaultGamemode, Difficulty, Effect, Enchant,
+  ExecuteWithRun,
+  Experience,
+  Fill,
+  Forceload,
+  FunctionCommand, GameruleCommand, Loot, Particle, RecipeCommand, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
+} from './implementations'
+
 import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
 import type {
   BIOMES,
@@ -19,23 +34,9 @@ import type {
   SOUND_SOURCES,
   STRUCTURES,
 } from '@arguments'
-import { nbtParser } from '@variables'
 import type Datapack from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
-import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
-import util from 'util'
-import { coordinatesParser, rotationParser } from '..'
 import type * as commands from '../../commands'
-import { command } from './decorators'
-import {
-  AdvancementCommand, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
-  DefaultGamemode, Difficulty, Effect, Enchant,
-  ExecuteWithRun,
-  Experience,
-  Fill,
-  Forceload,
-  FunctionCommand, GameruleCommand, Loot, Particle, RecipeCommand, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
-} from './implementations'
 
 export class CommandsRoot {
   Datapack: Datapack
