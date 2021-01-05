@@ -109,6 +109,10 @@ export interface MCFunctionInstance<RETURN extends (void | Promise<void>) = (voi
   clearSchedule: () => void
 
   generate: () => void
+
+  toString: () => string
+
+  toJSON: () => string
 }
 
 export default class Datapack {

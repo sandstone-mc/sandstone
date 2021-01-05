@@ -131,4 +131,6 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
   }
 
   toString = () => this.name
+
+  toJSON = this.toString
 }
