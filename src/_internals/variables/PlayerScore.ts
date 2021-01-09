@@ -1,4 +1,5 @@
 import { ComponentClass } from '@variables/abstractClasses'
+import { rangeParser } from '@variables/parsers'
 
 import type {
   COMPARISON_OPERATORS, JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
@@ -6,6 +7,7 @@ import type {
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables/abstractClasses'
+import type { Range } from '..'
 import type { ObjectiveClass } from './Objective'
 
 type PlayersTarget = number | MultipleEntitiesArgument
@@ -103,6 +105,13 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   }
 
   /** INLINE OPERATORS */
+  /**
+   * Reset the entity's score.
+   */
+  reset = () => {
+    this.commandsRoot.scoreboard.players.reset(this.target, this.objective)
+  }
+
   /**
    * Set the entity's score to a given amount.
    *
@@ -588,4 +597,13 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)
   }
+
+  /**
+   * Check if the current score matches a certain range.
+   *
+   * @param range The range to compare the current score against.
+   */
+  matches = (range: Range) => ({
+    _toMinecraftCondition: () => ({ value: ['if', 'score', this.target, this.objective, 'matches', rangeParser(range)] }),
+  })
 }
