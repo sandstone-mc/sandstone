@@ -1,3 +1,4 @@
+import type { LiteralUnion } from '@/generalTypes'
 import type { MultipleEntitiesArgument } from '@arguments'
 
 export type AXES = 'x' | 'xy' | 'yz' | 'xz' | 'xyz'
@@ -25,6 +26,8 @@ export class _ShowAlias {
 }
 
 export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
+
+export type TimeArgument = number | LiteralUnion<'1t' | '1s' | '1d'>
 
 export type TAG_TYPES = 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items'
 

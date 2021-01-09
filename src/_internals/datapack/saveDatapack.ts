@@ -16,8 +16,6 @@ import type {
   ResourceTypes,
 } from './resourcesTree'
 
-type ExtendedResourceTypes = ResourceTypes
-
 type SaveFileObject = {
   packType: 'datapack'
   type: ResourceTypes | 'raw'
@@ -71,6 +69,9 @@ export type SaveOptions = {
    * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
    */
   customFileHandler?: (fileInfo: SaveFileObject) => Promise<void> | void
+
+  /** The indentation to use for all JSON & MCMeta files. This argument is the same than `JSON.stringify` 3d argument. */
+  indentation?: string | number
 } & (
     {
       /**
@@ -182,6 +183,8 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     return func(info)
   }
 
+  const indentation = options.indentation ?? 2
+
   try {
     const start = Date.now()
 
@@ -226,7 +229,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
         packType: 'datapack',
         type: 'raw',
         resource: packMcMeta,
-        content: JSON.stringify(packMcMeta, null, 2),
+        content: JSON.stringify(packMcMeta, null, indentation),
         rootPath,
         relativePath: 'pack.mcmeta',
         saveOptions: options,
@@ -256,7 +259,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       for (const t of n.tags.values()) {
         promises.push(...saveResource(
           rootPath, 'tags', t, options,
-          (r) => JSON.stringify({ replace: r.replace ?? false, values: r.values }, null, 2),
+          (r) => JSON.stringify({ replace: r.replace ?? false, values: r.values }, null, indentation),
           (namespace, folders, fileName) => `Tag[${folders[0]}] ${namespace}:${[...folders.slice(1), fileName].join('/')}`,
         ))
       }
@@ -265,7 +268,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       for (const a of n.advancements.values()) {
         promises.push(...saveResource(
           rootPath, 'advancements', a, options,
-          (r) => JSON.stringify(r.advancement, null, 2),
+          (r) => JSON.stringify(r.advancement, null, indentation),
           (namespace, folders, fileName) => `Avancement ${namespace}:${[...folders, fileName].join('/')}`,
         ))
       }
@@ -274,7 +277,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       for (const p of n.predicates.values()) {
         promises.push(...saveResource(
           rootPath, 'predicates', p, options,
-          (r) => JSON.stringify(r.predicate, null, 2),
+          (r) => JSON.stringify(r.predicate, null, indentation),
           (namespace, folders, fileName) => `Predicate ${namespace}:${[...folders, fileName].join('/')}`,
         ))
       }
@@ -283,7 +286,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       for (const l of n.loot_tables.values()) {
         promises.push(...saveResource(
           rootPath, 'loot_tables', l, options,
-          (r) => JSON.stringify(r.lootTable, null, 2),
+          (r) => JSON.stringify(r.lootTable, null, indentation),
           (namespace, folders, fileName) => `Loot table ${namespace}:${[...folders, fileName].join('/')}`,
         ))
       }
@@ -292,7 +295,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       for (const r of n.recipes.values()) {
         promises.push(...saveResource(
           rootPath, 'recipes', r, options,
-          (resource) => JSON.stringify(resource.recipe, null, 2),
+          (resource) => JSON.stringify(resource.recipe, null, indentation),
           (namespace, folders, fileName) => `Recipe ${namespace}:${[...folders, fileName].join('/')}`,
         ))
       }

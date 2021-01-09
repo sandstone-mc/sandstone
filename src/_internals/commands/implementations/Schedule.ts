@@ -5,6 +5,7 @@ import { TagClass } from '@resources'
 import { FunctionCommand } from './Function'
 
 import type { LiteralUnion } from '@/generalTypes'
+import type { TimeArgument } from '@arguments'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 
 export class Schedule extends Command {
@@ -80,7 +81,7 @@ export class Schedule extends Command {
        * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
        * If unspecified, defaults to `replace`.
        */
-      (functionName: string | TagClass<'functions'>, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
+      (functionName: string | TagClass<'functions'>, delay: TimeArgument, type?: 'append' | 'replace') => void
     ) & (
       /**
        * Delays the execution of a function. Executes the function after specified amount of time passes.
@@ -107,7 +108,7 @@ export class Schedule extends Command {
        * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
        * If unspecified, defaults to `replace`.
        */
-      (mcFunction: MCFunctionInstance, delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
+      (mcFunction: MCFunctionInstance, delay: TimeArgument, type?: 'append' | 'replace') => void
     )
   ) = (func: string | MCFunctionInstance | TagClass<'functions'>, delay: unknown, type?: 'append' | 'replace') => {
     if (typeof func === 'string' || func instanceof TagClass) {

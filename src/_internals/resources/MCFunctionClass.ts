@@ -1,6 +1,7 @@
 import util from 'util'
 
 import type { LiteralUnion } from '@/generalTypes'
+import type { TimeArgument } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { FunctionResource } from '@datapack/resourcesTree'
 
@@ -20,12 +21,9 @@ export type MCFunctionOptions = {
   debug?: boolean
 
   /**
-   * Whether the function should run each tick.
-   */
-  runEachTick?: boolean
-
-  /**
    * Whether the function should run when the datapack loads.
+   *
+   * Defaults to `true` if `runEach` is specified, else `false`.
    */
   runOnLoad?: boolean
 
@@ -33,7 +31,41 @@ export type MCFunctionOptions = {
    * The function tags to put this function in.
    */
   tags?: readonly string[]
-}
+} & (
+  {
+    /**
+     * Whether the function should run each tick.
+     */
+    runEachTick?: boolean
+  } | {
+    /**
+     * If specified, the function will run every given time.
+     *
+     * If `runOnLoad` is unspecified or `true`, then it will run on load too.
+     *
+     * If `runOnLoad` is `false`, when the data pack loads, it will wait the given time until the first execution.
+     *
+     * @example
+     *
+     * // Run each 5 ticks, including on data pack load.
+     * {
+     *   runEach: 5,
+     * }
+     *
+     * // Run each 5 ticks, but wait 5 ticks before data pack loads for 1st execution.
+     * {
+     *   runEach: 5,
+     *   runOnLoad: false,
+     * }
+     *
+     * // Run each 8 seconds
+     * {
+     *   runEach: '8s'
+     * }
+     */
+    runEach?: TimeArgument
+  }
+)
 
 export class MCFunctionClass<R extends void | Promise<void> = void | Promise<void>> {
   name: string
@@ -79,13 +111,27 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     let tags = this.options.tags ?? []
 
     // If it should run each tick, add it to the tick.json function
-    if (this.options.runEachTick) {
-      tags = [...tags, 'minecraft:tick']
-    }
+    const { runEach: runEachDelay } = this.options as any
+    if (runEachDelay !== undefined) {
+      if (typeof runEachDelay && runEachDelay < 0) { throw new Error(`\`runEach\` argument must be greater than 0, got ${runEachDelay}`) }
 
-    // Idem for load
-    if (this.options.runOnLoad) {
-      tags = [...tags, 'minecraft:load']
+      if (this.options.runOnLoad !== false) {
+        // If run on load, call it directly
+        this.datapack.initCommands.push(['function', this.name])
+      } else {
+        // If not, schedule it
+        this.datapack.initCommands.push(['schedule', 'function', this.name, runEachDelay, 'append'])
+      }
+    } else {
+      // If runEachTick is specified, add to minecraft:tick
+      if ((this.options as any).runEachTick) {
+        tags = [...tags, 'minecraft:tick']
+      }
+
+      // Idem for load
+      if (this.options.runOnLoad) {
+        tags = [...tags, 'minecraft:load']
+      }
     }
 
     for (const tag of tags) {
@@ -102,6 +148,11 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     }
 
     const result = this.callback()
+
+    // If the command was scheduled to run each n ticks, add the /schedule command
+    if (runEachDelay) {
+      this.datapack.commandsRoot.schedule.function(this.name, runEachDelay, 'append')
+    }
 
     const afterCall = () => {
       // If there is an unfinished command, register it
@@ -122,7 +173,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     this.datapack.commandsRoot.functionCmd(this.name)
   }
 
-  schedule = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'replace' | 'append') => {
+  schedule = (delay: TimeArgument, type?: 'replace' | 'append') => {
     this.datapack.commandsRoot.schedule.function(this.name, delay, type)
   }
 

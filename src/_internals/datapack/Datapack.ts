@@ -9,7 +9,7 @@ import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
 import type { LiteralUnion } from '@/generalTypes'
-import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
+import type { JsonTextComponent, OBJECTIVE_CRITERION, TimeArgument } from '@arguments'
 import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
 import type { BasePathOptions } from './BasePath'
@@ -60,7 +60,15 @@ export interface SandstoneConfig {
   packUid: string
 
   /** All the options to save the data pack. */
-  saveOptions: ({
+  saveOptions: {
+    /**
+     * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
+     */
+    customFileHandler?: SaveOptions['customFileHandler']
+
+    /** The indentation to use for all JSON & MCMeta files. This argument is the same than `JSON.stringify` 3d argument. */
+    indentation?: string | number
+  } & ({
     /**
      * The world to save the data pack in.
      *
@@ -81,12 +89,7 @@ export interface SandstoneConfig {
      * Incompatible with `root` and `world`.
      */
     path: string
-  }) & {
-    /**
-     * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
-     */
-    customFileHandler?: SaveOptions['customFileHandler']
-  }
+  })
 
   /** Some scripts that can run at defined moments. */
   scripts?: {
@@ -104,7 +107,7 @@ export interface SandstoneConfig {
 export interface MCFunctionInstance<RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
   (): RETURN
 
-  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace') => void
+  schedule: (delay: TimeArgument, type?: 'append' | 'replace') => void
 
   clearSchedule: () => void
 
@@ -451,7 +454,7 @@ export default class Datapack {
     } as ResourceOnlyTypeMap[T])
   }
 
-  sleep = (delay: number | LiteralUnion<'1t' | '1s' | '1d'>): PromiseLike<void> => {
+  sleep = (delay: TimeArgument): PromiseLike<void> => {
     const SLEEP_CHILD_NAME = '__sleep'
 
     if (!this.currentFunction) {
