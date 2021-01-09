@@ -24,13 +24,24 @@ function isAsyncFunction(func: ((...args: any[]) => void) | ((...args: any[]) =>
 }
 
 /** Call a given callback function, and inline it if possible */
-function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionResource) {
+function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionResource, forceInlineScore?: PlayerScore) {
   const { commandsRoot } = datapack
 
   if (
-    callbackFunction?.isResource
-        && callbackFunction.commands.length <= 1
+    callbackFunction?.isResource && (
+      (
+        // Either our command is 1-line-long, then it can be inlined (if it's not an execute!)
+        callbackFunction.commands.length <= 1
         && callbackFunction.commands?.[0]?.[0] !== 'execute'
+      ) || (
+        /*
+         * Either it has 2 commands, but the 2nde one is used in an if/else context,
+         * and can be dropped in favor of an `execute store`
+         */
+        callbackFunction.commands.length === 2
+        && forceInlineScore
+      )
+    )
   ) {
     /*
      * If our callback only has 1 command, inline this command. We CANNOT inline executes, for complicated reasons.
@@ -40,6 +51,15 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
     datapack.resources.deleteResource(callbackFunction.path, 'functions')
 
     if (callbackFunction.commands.length) {
+      if (callbackFunction.commands.length === 2 && forceInlineScore) {
+        // If we have 2 commands, add the execute store
+        if (commandsRoot.arguments.length === 0) {
+          commandsRoot.arguments.push('execute')
+        }
+
+        commandsRoot.arguments.push('store', 'success', 'score', forceInlineScore)
+      }
+
       if (commandsRoot.arguments.length > 0) {
         commandsRoot.arguments.push('run')
       }
@@ -56,6 +76,7 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
 
 type FlowStatementConfig = {
   callbackName: string
+  forceInlineScore?: PlayerScore
 } & (
   {
     initialCondition: false,
@@ -300,7 +321,7 @@ export class Flow {
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.executeState = 'after'
     }
-    callOrInlineFunction(this.datapack, callbackMCFunction)
+    callOrInlineFunction(this.datapack, callbackMCFunction, config.forceInlineScore)
 
     this.arguments = []
   }
@@ -310,6 +331,7 @@ export class Flow {
     callback: () => R,
     callbackName: string,
     ifScore: PlayerScore,
+    forceInlineScore = false,
   ): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
     function ensureConsistency(nextCallback: () => void) {
       if (!isAsyncFunction(callback) && isAsyncFunction(nextCallback)) {
@@ -321,11 +343,13 @@ export class Flow {
     }
 
     if (!isAsyncFunction(callback)) {
+      // Register the current if
       this.flowStatement(callback, {
         callbackName,
         initialCondition: true,
         loopCondition: false,
         condition,
+        forceInlineScore: forceInlineScore ? ifScore : undefined,
       })
 
       // We know the callback is synchronous. We must prevent the user to pass an asynchronous callback in else/else if.
@@ -334,16 +358,16 @@ export class Flow {
           // Ensure the callback is synchronous.
           ensureConsistency(nextCallback)
 
-          return this.if_(this.and(ifScore.equalTo(0), nextCondition), () => {
+          return this.if_(this.and(ifScore.matches([0, null]), nextCondition), () => {
             nextCallback()
             ifScore.set(1)
-          }, 'else_if', ifScore)
+          }, 'else_if', ifScore, true)
         },
         else: (nextCallback: () => void) => {
           // Ensure the callback is synchronous.
           ensureConsistency(nextCallback)
 
-          this.if_(ifScore.equalTo(0), nextCallback, 'else', ifScore)
+          this.if_(ifScore.matches([0, null]), nextCallback, 'else', ifScore, false)
         },
       } as any
     }
@@ -362,7 +386,7 @@ export class Flow {
         // Ensure the callback is asynchronous.
         ensureConsistency(nextCallback)
 
-        return this.if_(this.and(nextCondition, ifScore.equalTo(0)), async () => {
+        return this.if_(this.and(nextCondition, ifScore.matches([0, null])), async () => {
           // We keep the function where the "else if" is running
           const { currentFunction: newCallback } = this.datapack
 
@@ -393,7 +417,7 @@ export class Flow {
          * write `.if().else().if()`, however this is forbidden thanks to our TypeScript types.
          * We have to return the result for the `then` part.
          */
-        return this.if_(ifScore.equalTo(0), async () => {
+        return this.if_(ifScore.matches([0, null]), async () => {
           // We keep the function where the "else" is running
           const { currentFunction: newCallback } = this.datapack
 
@@ -428,15 +452,59 @@ export class Flow {
   if = <R extends void | Promise<void>>(condition: ConditionType, callback: () => R): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
     const ifScore = getConditionScore(this.commandsRoot.Datapack)
 
-    // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
-    ifScore.set(0)
-
     if (!isAsyncFunction(callback)) {
+      // /!\ Complicated stuff happening here.
+      let callbackFunction: FunctionResource
+      const { elseIf: realElseIf, else: realElse } = this.if_(condition, () => { callbackFunction = this.datapack.currentFunction!; callback() }, 'if', ifScore, false)
+      const { currentFunction } = this.datapack
+
+      // for Typescript
+      if (!currentFunction?.isResource) { throw new Error('Impossible') }
+
+      const ifCommandIndex = currentFunction.commands.length - 1
+
+      const switchToComplicatedIf = () => {
+        const command = currentFunction.commands[ifCommandIndex]
+
+        try {
+          // If this doesn't raise an error, it means the function didn't get inlined
+          this.datapack.resources.getResource(callbackFunction.path, 'functions')
+
+          // The function wasn't inlined - add the '/scoreboard players set' at the end of the function
+          if (!callbackFunction?.isResource) { throw new Error('Impossible') }
+          callbackFunction.commands.push(['scoreboard', 'players', 'set', ifScore, 1])
+        } catch (e) {
+          // The f0unction was inlined - add the 'store success' part to the execute
+          currentFunction.commands[ifCommandIndex] = ['execute', 'store', 'success', 'score', ifScore, ...command.slice(1)]
+        }
+
+        // Add the reset
+        currentFunction.commands = [
+          ...currentFunction.commands.slice(0, ifCommandIndex),
+          ['scoreboard', 'players', 'reset', ifScore],
+          ...currentFunction.commands.slice(ifCommandIndex),
+        ]
+      }
+
+      return {
+        elseIf: (cond: any, cb: any) => {
+          switchToComplicatedIf()
+          realElseIf(cond, cb)
+        },
+        else: (cb: any) => {
+          switchToComplicatedIf()
+          realElse(cb)
+        },
+      } as any
       return this.if_(condition, () => {
         callback()
         ifScore.set(1)
       }, 'if', ifScore) as any
     }
+
+    // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
+    ifScore.reset()
+
     // Async function
     return this.if_(condition, async () => {
       const returnedPromise = callback()
