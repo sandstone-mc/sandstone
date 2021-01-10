@@ -358,7 +358,7 @@ export class Flow {
           // Ensure the callback is synchronous.
           ensureConsistency(nextCallback)
 
-          return this.if_(this.and(ifScore.matches([0, null]), nextCondition), () => {
+          return this.if_(this.and(ifScore.equalTo(0), nextCondition), () => {
             nextCallback()
             ifScore.set(1)
           }, 'else_if', ifScore, true)
@@ -367,7 +367,7 @@ export class Flow {
           // Ensure the callback is synchronous.
           ensureConsistency(nextCallback)
 
-          this.if_(ifScore.matches([0, null]), nextCallback, 'else', ifScore, false)
+          this.if_(ifScore.equalTo(0), nextCallback, 'else', ifScore, false)
         },
       } as any
     }
@@ -386,7 +386,7 @@ export class Flow {
         // Ensure the callback is asynchronous.
         ensureConsistency(nextCallback)
 
-        return this.if_(this.and(nextCondition, ifScore.matches([0, null])), async () => {
+        return this.if_(this.and(nextCondition, ifScore.equalTo(0)), async () => {
           // We keep the function where the "else if" is running
           const { currentFunction: newCallback } = this.datapack
 
@@ -417,7 +417,7 @@ export class Flow {
          * write `.if().else().if()`, however this is forbidden thanks to our TypeScript types.
          * We have to return the result for the `then` part.
          */
-        return this.if_(ifScore.matches([0, null]), async () => {
+        return this.if_(ifScore.equalTo(0), async () => {
           // We keep the function where the "else" is running
           const { currentFunction: newCallback } = this.datapack
 
