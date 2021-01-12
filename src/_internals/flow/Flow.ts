@@ -474,7 +474,7 @@ export class Flow {
           if (!callbackFunction?.isResource) { throw new Error('Impossible') }
           callbackFunction.commands.push(['scoreboard', 'players', 'set', ifScore, 1])
         } catch (e) {
-          // The f0unction was inlined - add the 'store success' part to the execute
+          // The function was inlined - add the 'store success' part to the execute
           currentFunction.commands[ifCommandIndex] = ['execute', 'store', 'success', 'score', ifScore, ...command.slice(1)]
         }
 

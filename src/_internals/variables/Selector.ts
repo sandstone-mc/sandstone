@@ -269,7 +269,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
           result.push(['team', teamRepr])
         },
 
-        distance: rangeParser,
+        distance: (range_: Range) => result.push(['distance', rangeParser(range_)]),
       } as const
 
       for (const [baseName, modifier] of Object.entries(modifiers)) {
