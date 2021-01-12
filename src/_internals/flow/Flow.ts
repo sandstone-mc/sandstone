@@ -489,11 +489,11 @@ export class Flow {
       return {
         elseIf: (cond: any, cb: any) => {
           switchToComplicatedIf()
-          realElseIf(cond, cb)
+          return realElseIf(cond, cb)
         },
         else: (cb: any) => {
           switchToComplicatedIf()
-          realElse(cb)
+          return realElse(cb)
         },
       } as any
       return this.if_(condition, () => {
