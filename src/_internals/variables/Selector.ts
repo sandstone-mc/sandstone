@@ -313,7 +313,7 @@ export function SelectorCreator(target: '@a', selectorArguments: Omit<SingleSele
 export function SelectorCreator(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
 export function SelectorCreator(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
 export function SelectorCreator(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
-export function SelectorCreator(target: '@e', selectorArguments: AnySelectorProperties): SelectorClass<false, false>
+export function SelectorCreator(target: '@e', selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
 
 export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: '@s' | '@p' | '@r' | '@a' | '@e', selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
