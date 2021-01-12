@@ -14,7 +14,7 @@ export type GAMEMODES = 'survival' | 'creative' | 'adventure' | 'spectator'
 
 export type DIFFICULTIES = 'easy' | 'normal' | 'hard' | 'peaceful'
 
-export type OPERATORS = '=' | '+=' | '-=' | '/=' | '*=' | '%=' | '<=' | '>=' | '<>'
+export type OPERATORS = '=' | '+=' | '-=' | '/=' | '*=' | '%=' | '<' | '>' | '<>'
 
 export type COMPARISON_OPERATORS = '<' | '<=' | '=' | '>=' | '>'
 
