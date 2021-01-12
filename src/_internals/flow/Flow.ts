@@ -358,7 +358,7 @@ export class Flow {
           // Ensure the callback is synchronous.
           ensureConsistency(nextCallback)
 
-          return this.if_(this.and(ifScore.matches([0, null]), nextCondition), () => {
+          return this.if_(this.and(this.not(ifScore.matches([0, null])), nextCondition), () => {
             nextCallback()
             ifScore.set(1)
           }, 'else_if', ifScore, true)
@@ -367,7 +367,7 @@ export class Flow {
           // Ensure the callback is synchronous.
           ensureConsistency(nextCallback)
 
-          this.if_(ifScore.matches([0, null]), nextCallback, 'else', ifScore, false)
+          this.if_(this.not(ifScore.matches([0, null])), nextCallback, 'else', ifScore, false)
         },
       } as any
     }
@@ -386,7 +386,7 @@ export class Flow {
         // Ensure the callback is asynchronous.
         ensureConsistency(nextCallback)
 
-        return this.if_(this.and(nextCondition, ifScore.matches([0, null])), async () => {
+        return this.if_(this.and(nextCondition, this.not(ifScore.matches([0, null]))), async () => {
           // We keep the function where the "else if" is running
           const { currentFunction: newCallback } = this.datapack
 
@@ -417,7 +417,7 @@ export class Flow {
          * write `.if().else().if()`, however this is forbidden thanks to our TypeScript types.
          * We have to return the result for the `then` part.
          */
-        return this.if_(ifScore.matches([0, null]), async () => {
+        return this.if_(this.not(ifScore.matches([0, null])), async () => {
           // We keep the function where the "else" is running
           const { currentFunction: newCallback } = this.datapack
 
@@ -474,7 +474,7 @@ export class Flow {
           if (!callbackFunction?.isResource) { throw new Error('Impossible') }
           callbackFunction.commands.push(['scoreboard', 'players', 'set', ifScore, 1])
         } catch (e) {
-          // The f0unction was inlined - add the 'store success' part to the execute
+          // The function was inlined - add the 'store success' part to the execute
           currentFunction.commands[ifCommandIndex] = ['execute', 'store', 'success', 'score', ifScore, ...command.slice(1)]
         }
 

@@ -87,5 +87,5 @@ export class Fill extends Command {
   @command('fill', {
     isRoot: true, executable: true, hasSubcommands: true, parsers: { '0': coordinatesParser, '1': coordinatesParser },
   })
-  fill = (from: Coordinates, to: Coordinates, block: LiteralUnion<BLOCKS>) => FillArguments
+  fill = (from: Coordinates, to: Coordinates, block: LiteralUnion<BLOCKS>) => new FillArguments(this.commandsRoot)
 }
