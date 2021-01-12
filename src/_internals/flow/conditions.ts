@@ -97,7 +97,8 @@ export class CombinedConditions {
     this.values.forEach((value) => {
       if (value instanceof CombinedConditions) {
         if (value.operator === 'not' && !(value.values[0] instanceof CombinedConditions)) {
-          callableExpression.push('unless', ...value.values[0]._toMinecraftCondition().value)
+          const cond = value.values[0]._toMinecraftCondition().value
+          callableExpression.push(cond[0] === 'if' ? 'unless' : 'if', ...cond.slice(1))
           return
         }
 
