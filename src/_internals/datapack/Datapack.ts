@@ -387,7 +387,7 @@ export default class Datapack {
   }
 
   /** UTILS */
-  /** Create a new objective */
+  /** Create a new objective. Defaults to `dummy` if unspecified. */
   createObjective = (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JsonTextComponent) => {
     if (name.length > 16) {
       throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
