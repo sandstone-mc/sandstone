@@ -45,7 +45,7 @@ export class TagClass<TYPE extends TAG_TYPES> extends ResourceClass {
 
   readonly values: TagSingleValue<string>[]
 
-  constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[], replace?: boolean) {
+  constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[] = [], replace?: boolean) {
     super(datapack, name)
 
     this.type = type

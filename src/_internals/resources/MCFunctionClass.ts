@@ -4,6 +4,7 @@ import type { LiteralUnion } from '@/generalTypes'
 import type { TimeArgument } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { FunctionResource } from '@datapack/resourcesTree'
+import type { TagClass } from './Tag'
 
 export type MCFunctionOptions = {
   /**
@@ -30,7 +31,7 @@ export type MCFunctionOptions = {
   /**
    * The function tags to put this function in.
    */
-  tags?: readonly string[]
+  tags?: readonly (string | TagClass<'functions'>)[]
 } & (
   {
     /**
@@ -43,7 +44,9 @@ export type MCFunctionOptions = {
      *
      * If `runOnLoad` is unspecified or `true`, then it will run on load too.
      *
-     * If `runOnLoad` is `false`, when the data pack loads, it will wait the given time until the first execution.
+     * If `runOnLoad` is `false`, you will have to manually start it.
+     *
+     * You can stop the automatic scheduling by running `theFunction.clearSchedule()`.
      *
      * @example
      *
@@ -118,9 +121,6 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       if (this.options.runOnLoad !== false) {
         // If run on load, call it directly
         this.datapack.initCommands.push(['function', this.name])
-      } else {
-        // If not, schedule it
-        this.datapack.initCommands.push(['schedule', 'function', this.name, runEachDelay, 'append'])
       }
     } else {
       // If runEachTick is specified, add to minecraft:tick
@@ -135,7 +135,11 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     }
 
     for (const tag of tags) {
-      this.datapack.addFunctionToTag(this.name, tag)
+      if (typeof tag === 'string') {
+        this.datapack.addFunctionToTag(this.name, tag)
+      } else {
+        tag.values.push(this.name)
+      }
     }
 
     const previousFunction = this.datapack.currentFunction
