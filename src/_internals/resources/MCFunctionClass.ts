@@ -44,7 +44,9 @@ export type MCFunctionOptions = {
      *
      * If `runOnLoad` is unspecified or `true`, then it will run on load too.
      *
-     * If `runOnLoad` is `false`, when the data pack loads, it will wait the given time until the first execution.
+     * If `runOnLoad` is `false`, you will have to manually start it.
+     *
+     * You can stop the automatic scheduling by running `theFunction.clearSchedule()`.
      *
      * @example
      *
@@ -119,9 +121,6 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       if (this.options.runOnLoad !== false) {
         // If run on load, call it directly
         this.datapack.initCommands.push(['function', this.name])
-      } else {
-        // If not, schedule it
-        this.datapack.initCommands.push(['schedule', 'function', this.name, runEachDelay, 'append'])
       }
     } else {
       // If runEachTick is specified, add to minecraft:tick
