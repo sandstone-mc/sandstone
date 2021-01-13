@@ -4,6 +4,7 @@ import type { LiteralUnion } from '@/generalTypes'
 import type { TimeArgument } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { FunctionResource } from '@datapack/resourcesTree'
+import type { TagClass } from './Tag'
 
 export type MCFunctionOptions = {
   /**
@@ -30,7 +31,7 @@ export type MCFunctionOptions = {
   /**
    * The function tags to put this function in.
    */
-  tags?: readonly string[]
+  tags?: readonly (string | TagClass<'functions'>)[]
 } & (
   {
     /**
@@ -135,7 +136,11 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     }
 
     for (const tag of tags) {
-      this.datapack.addFunctionToTag(this.name, tag)
+      if (typeof tag === 'string') {
+        this.datapack.addFunctionToTag(this.name, tag)
+      } else {
+        tag.values.push(this.name)
+      }
     }
 
     const previousFunction = this.datapack.currentFunction
