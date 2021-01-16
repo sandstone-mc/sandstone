@@ -190,7 +190,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
   Predicate = (name: string, predicate: PredicateType) => new PredicateClass(this.datapack, this.getName(name), predicate)
 
   /** Create a tag. */
-  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[], replace?: boolean) => new TagClass(this.datapack, type, this.getName(name), values, replace)
+  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[] = [], replace?: boolean) => new TagClass(this.datapack, type, this.getName(name), values, replace)
 
   /**
    * Create a loot table.
