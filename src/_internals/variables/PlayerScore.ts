@@ -410,7 +410,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
 
   dividedBy(...args: OperationArguments): PlayerScore {
     const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
-    anonymousScore.binaryOperation('*=', ...args)
+    anonymousScore.binaryOperation('/=', ...args)
     return anonymousScore
   }
 

@@ -6,7 +6,7 @@ import type { AdvancementClass } from '@resources'
 import type { AdvancementTriggers } from './AdvancementTriggers'
 
 /** A representation of a Minecraft advancement. */
-export interface AdvancementType<CRITERIA_NAMES extends string> {
+export interface AdvancementType<CRITERIA_NAMES extends string = string> {
   /** The optional display data. */
   display?: {
     /** The data for the icon. */

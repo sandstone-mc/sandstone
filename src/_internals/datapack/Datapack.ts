@@ -19,6 +19,13 @@ import type {
 } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 
+type ScriptArguments = {
+  /** The name of the data pack. */
+  dataPackName: string,
+  /** The destination folder of the data pack. */
+  destination: string,
+}
+
 export interface SandstoneConfig {
   /**
    * The default namespace for the data pack.
@@ -94,13 +101,13 @@ export interface SandstoneConfig {
   /** Some scripts that can run at defined moments. */
   scripts?: {
     /** A script running before Sandstone starts importing source files. */
-    beforeAll?: () => (void | Promise<void>)
+    beforeAll?: (options: ScriptArguments) => (void | Promise<void>)
 
     /** A script running before Sandstone starts saving the files. */
-    beforeSave?: () => (void | Promise<void>)
+    beforeSave?: (options: ScriptArguments) => (void | Promise<void>)
 
     /** A script running after Sandstone saved all files. */
-    afterAll?: () => (void | Promise<void>)
+    afterAll?: (options: ScriptArguments) => (void | Promise<void>)
   }
 }
 
