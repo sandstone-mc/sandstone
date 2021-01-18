@@ -379,7 +379,7 @@ export default class Datapack {
   /**
    * Add a function to a given function tag
    */
-  addFunctionToTag(mcfunction: string, tag: string) {
+  addFunctionToTag(mcfunction: string, tag: string, index?: number | undefined) {
     const { namespace, fullPath, name } = this.getResourcePath(tag)
 
     const tickResource = this.resources.getOrAddResource('tags', {
@@ -390,7 +390,13 @@ export default class Datapack {
       replace: false,
     })
 
-    tickResource.values.push(this.getResourcePath(mcfunction).fullName)
+    const { fullName } = this.getResourcePath(mcfunction)
+    if (index === undefined) {
+      tickResource.values.push(fullName)
+    } else {
+      // Insert at given index
+      tickResource.values.splice(index, 0, fullName)
+    }
   }
 
   /** UTILS */
@@ -538,7 +544,7 @@ export default class Datapack {
       this.resources.deleteResource(this.currentFunction.path, 'functions')
     } else {
       // Else, put the __init__ function in the minecraft:load tag
-      this.addFunctionToTag(toMCFunctionName(this.currentFunction!.path), 'minecraft:load')
+      this.addFunctionToTag(toMCFunctionName(this.currentFunction!.path), 'minecraft:load', 0)
     }
 
     this.exitRootFunction()
