@@ -6,6 +6,8 @@
 
 Sandstone is a Typescript library for Minecraft Datapacks. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
 
+Interested? Join our Discord: [discord.gg/4tzM5aXDRe](https://discord.gg/4tzM5aXDRe)
+
 ## Features
 
 ## 💻 Perfect autocompletion & IDE support
