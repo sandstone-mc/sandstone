@@ -1,7 +1,7 @@
 import { nbtParser } from '@variables'
 import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
 
-import { coordinatesParser, rotationParser } from '..'
+import { coordinatesParser, rotationParser } from '../variables/parsers'
 import { command } from './decorators'
 import {
   AdvancementCommand, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
