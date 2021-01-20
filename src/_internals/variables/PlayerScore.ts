@@ -293,7 +293,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   swap(targetScore: PlayerScore): void
 
   swap(...args: OperationArguments) {
-    this.binaryOperation('<>', ...args)
+    this.binaryOperation('><', ...args)
   }
 
   /** EFFECT-FREE OPERATORS */
