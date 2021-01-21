@@ -5,7 +5,7 @@ import { rangeParser } from '@variables/parsers'
 import { ComponentClass } from './abstractClasses'
 
 import type {
-  ENTITY_TYPES, TextComponentObject,
+  ENTITY_TYPES, NBT, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { PredicateClass } from '@resources'
@@ -108,6 +108,9 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
 
   /** Select all targets that match the specified predicate. */
   predicate?: string | PredicateClass | (PredicateClass | string)[]
+
+  /** Select all targets that have the specified NBT. */
+  nbt?: NBT
 } & ({} | {
   /**
    * Define a position on the X-axis in the world the selector starts at,
