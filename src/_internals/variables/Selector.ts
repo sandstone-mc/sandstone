@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { rangeParser } from '@variables/parsers'
+import { nbtParser, rangeParser } from '@variables/parsers'
 
 import { ComponentClass } from './abstractClasses'
 
@@ -240,6 +240,8 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
       const modifiers = {
         // Parse scores
         scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
+
+        nbt: (nbt: NBT) => result.push(['nbt', nbtParser(nbt)]),
 
         // Parse advancements
         advancements: (advancements: AdvancementsArgument) => result.push(
