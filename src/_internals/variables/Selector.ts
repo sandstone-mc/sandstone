@@ -111,43 +111,43 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
 
   /** Select all targets that have the specified NBT. */
   nbt?: NBT
-} & ({} | {
+
   /**
    * Define a position on the X-axis in the world the selector starts at,
    * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
    */
-  x: number
+  x?: number
 
   /**
    * Define a position on the Y-axis in the world the selector starts at,
    * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
    */
-  y: number
+  y?: number
 
   /**
    * Define a position on the Z-axis in the world the selector starts at,
    * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
    */
-  z: number
-}) & ({} | {
+  z?: number
+
   /**
    * Filter target selection based on their x-difference, from some point,
    * as measured from the closest corner of the entities' hitboxes
    */
-  dx: number
+  dx?: number
 
   /**
    * Filter target selection based on their y-difference, from some point,
    * as measured from the closest corner of the entities' hitboxes
    */
-  dy: number
+  dy?: number
 
   /**
    * Filter target selection based on their z-difference, from some point,
    * as measured from the closest corner of the entities' hitboxes
    */
-  dz: number
-}) & (
+  dz?: number
+} & (
   MustBeSingle extends true ? { limit: 0 | 1 } : { limit?: number }
 ) & (
   MustBePlayer extends true ? {
