@@ -369,7 +369,7 @@ export class Flow {
 
           this.if_(this.not(ifScore.matches([0, null])), nextCallback, 'else', ifScore, false)
         },
-      } as any
+      } as ElifElseFlow<void> as any
     }
 
     const getPreviousPromise = () => this.flowStatementAsync(callback, {
@@ -487,19 +487,15 @@ export class Flow {
       }
 
       return {
-        elseIf: (cond: any, cb: any) => {
+        elseIf: (...args: Parameters<typeof realElseIf>) => {
           switchToComplicatedIf()
-          return realElseIf(cond, cb)
+          return realElseIf(...args)
         },
-        else: (cb: any) => {
+        else: (cb: Parameters<typeof realElse>['0']) => {
           switchToComplicatedIf()
           return realElse(cb)
         },
-      } as any
-      return this.if_(condition, () => {
-        callback()
-        ifScore.set(1)
-      }, 'if', ifScore) as any
+      } as ElifElseFlow<void> as any
     }
 
     // First, specify the `if` didn't pass yet (it's in order to chain elif/else)
@@ -584,7 +580,7 @@ export class Flow {
           onfulfilled?.()
         })
       },
-    } as any
+    } as PromiseLike<void> as any
   }
 
   while = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'while')
@@ -636,13 +632,13 @@ export class Flow {
     }
 
     if (!isAsyncFunction(callback)) {
-      return loop(scoreTracker.lowerThan(to as any), () => {
+      return loop(scoreTracker.lowerThan(to), () => {
         callback(scoreTracker)
         scoreTracker.add(1)
       })
     }
 
-    return loop(scoreTracker.lowerThan(to as any), async () => {
+    return loop(scoreTracker.lowerThan(to), async () => {
       await callback(scoreTracker)
       scoreTracker.add(1)
     })
@@ -674,7 +670,7 @@ export class Flow {
   }
 
   private register = (soft?: boolean) => {
-    this.commandsRoot.register(soft)
+    throw new Error('Not supposed to happen!')
   }
 
   get execute(): Omit<Execute<Flow>, 'run' | 'runOne'> {
