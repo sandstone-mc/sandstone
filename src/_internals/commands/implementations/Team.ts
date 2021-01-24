@@ -99,7 +99,7 @@ export class Team extends Command {
      *
      * - `suffix`: Modifies the suffix that appears after players' names in chat.
      */
-    (<T extends keyof TeamOptions>(option: T, value: TeamOptions[T]) => void) &
+    (<T extends keyof TeamOptions>(team: string, option: T, value: TeamOptions[T]) => void) &
 
     /*
      * Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
@@ -132,7 +132,7 @@ export class Team extends Command {
      *
      * - `suffix`: Modifies the suffix that appears after players' names in chat.
      */
-    (<T extends string>(option: Exclude<T, keyof TeamOptions>, value: string) => void)
+    (<T extends string>(team: string, option: Exclude<T, keyof TeamOptions>, value: string) => void)
   ) = (...args: unknown[]) => {}
 
   /**

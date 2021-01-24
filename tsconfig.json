@@ -58,8 +58,11 @@
     ],
     "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
     "moduleResolution": "node",
-    // We target a minimum Node version of 14
-    "target": "es2020", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+    // We target a minimum Node version of 12.9.0: https://stackoverflow.com/questions/59787574/typescript-tsconfig-settings-for-node-js-12
+    "target": "es2019", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+    "lib": [
+      "es2020",
+    ],
     "incremental": true, /* Enable incremental compilation */
     "resolveJsonModule": true,
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
