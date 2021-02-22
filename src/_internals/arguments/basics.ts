@@ -1,7 +1,17 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { MultipleEntitiesArgument } from '@arguments'
 
-export type AXES = 'x' | 'xy' | 'yz' | 'xz' | 'xyz'
+type SINGLE_AXES = 'x' | 'y' | 'z'
+type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
+type TRIPLE_AXES = `${DOUBLE_AXES}${SINGLE_AXES}`
+
+type DEDUP<A extends string> = (
+  A extends `${infer I}${infer J}${infer K}` ? `${I}${Exclude<J, I>}${Exclude<K, I | J>}` :
+  A extends `${infer I}${infer J}` ? `${I}${Exclude<J, I>}` : A
+)
+
+export type AXES = SINGLE_AXES | DEDUP<DOUBLE_AXES> | DEDUP<TRIPLE_AXES>
+
 export type ANCHORS = 'eyes' | 'feet'
 
 export type BASIC_COLORS = (
