@@ -1,8 +1,8 @@
-import type { VectorClass } from '@variables/Coordinates'
 import type { ComponentClass } from '@variables/abstractClasses'
-import type { MultipleEntitiesArgument, SelectorArgument } from './selector'
-import type { BASIC_COLORS } from './basics'
+import type { VectorClass } from '@variables/Coordinates'
 import type { LiteralUnion } from '../generalTypes'
+import type { BASIC_COLORS } from './basics'
+import type { MultipleEntitiesArgument, SelectorArgument } from './selector'
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
 type ContentTag = {
   /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
@@ -21,8 +21,10 @@ type ContentTag = {
    * or if the score holder is not tracked in the objective.
    */
   score: {
-    /** The name of the score holder whose score should be displayed.
-     * This can be a selector like @p or an explicit name. */
+    /**
+     * The name of the score holder whose score should be displayed.
+     * This can be a selector like @p or an explicit name.
+     */
     name: MultipleEntitiesArgument
 
     /** The internal name of the objective to display the player's score in. */
@@ -40,8 +42,10 @@ type ContentTag = {
    */
   selector: string
 } | {
-  /** A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
-   * For example, {"keybind": "key.inventory"} will display "e" if the player is using the default control scheme. */
+  /**
+   * A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
+   * For example, {"keybind": "key.inventory"} will display "e" if the player is using the default control scheme.
+   */
   keybind: string
 } | (
     {
@@ -67,8 +71,10 @@ type ContentTag = {
        */
       interpret?: boolean
     } & ({
-      /** The coordinates of the block entity from which the NBT value is obtained.
-       * The coordinates can be absolute or relative. */
+      /**
+       * The coordinates of the block entity from which the NBT value is obtained.
+       * The coordinates can be absolute or relative.
+       */
       block: string | VectorClass<[string, string, string]>
     } | {
       /** The target selector for the entity or entities from which the NBT value is obtained. */
@@ -123,12 +129,16 @@ type FormattingTags = {
 }
 
 type InteractivityTags = {
-  /** Optional. When the text is shift-clicked by a player, this string is inserted in their chat input.
-   * It does not overwrite any existing text the player was writing. This only works in chat messages. */
+  /**
+   * Optional. When the text is shift-clicked by a player, this string is inserted in their chat input.
+   * It does not overwrite any existing text the player was writing. This only works in chat messages.
+   */
   insertion?: string
 
-  /** Optional. Allows for events to occur when the player clicks on text.
-   * Only work in chat messages and written books, unless specified otherwise. */
+  /**
+   * Optional. Allows for events to occur when the player clicks on text.
+   * Only work in chat messages and written books, unless specified otherwise.
+   */
   clickEvent?: {
     /**
      * The action to perform when clicked.
@@ -214,6 +224,7 @@ type InteractivityTags = {
  * A JSON text component object.
  */
 export type TextComponentObject = (
+  // eslint-disable-next-line @typescript-eslint/ban-types
   (ContentTag | {}) & ChildrenTags & FormattingTags & InteractivityTags
 )
 
@@ -225,7 +236,8 @@ type PossibleComponent = (
   boolean |
   number |
   TextComponentObject |
-  ComponentClass
+  ComponentClass |
+  PossibleComponent[]
 )
 
 /*

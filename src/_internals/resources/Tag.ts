@@ -1,22 +1,25 @@
+import { toMCFunctionName } from '@datapack/minecraft'
+
+import { ResourceClass } from './Resource'
+
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS, TAG_TYPES,
 } from '@arguments'
 import type { Datapack } from '@datapack'
-import type { McFunctionReturn } from '@datapack/Datapack'
-import { toMcFunctionName } from '@datapack/minecraft'
+import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { TagSingleValue } from '@datapack/resourcesTree'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
   T extends 'fluids' ? LiteralUnion<FLUIDS> :
   T extends 'entity_types' ? LiteralUnion<ENTITY_TYPES> :
-  T extends 'functions' ? (LiteralUnion<string> | McFunctionReturn<[]>) :
+  T extends 'functions' ? (LiteralUnion<string> | MCFunctionInstance) :
   T extends 'items' ? LiteralUnion<ITEMS> :
   string
 )
 
-function isMcFunctionReturn(v: unknown): v is McFunctionReturn<[]> {
+function isMCFunctionInstance(v: unknown): v is MCFunctionInstance {
   return typeof v === 'function'
 }
 
@@ -24,48 +27,52 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
   return typeof v === 'object'
 }
 
-export class Tag<TYPE extends TAG_TYPES> {
+function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagStringType<TYPE>>): TagSingleValue<string> {
+  if (isMCFunctionInstance(value)) {
+    return value.name
+  }
+  if (isTagObject(value) && isMCFunctionInstance(value.id)) {
+    return {
+      id: value.id.name,
+      required: value.required,
+    }
+  }
+  return value as string | TagSingleValue<string>
+}
+
+export class TagClass<TYPE extends TAG_TYPES> extends ResourceClass {
   readonly type
 
   readonly values: TagSingleValue<string>[]
 
-  readonly name
+  constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[] = [], replace?: boolean) {
+    super(datapack, name)
 
-  readonly datapack
-
-  private readonly paths
-
-  constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[], replace?: boolean) {
     this.type = type
 
-    this.values = values.map((v) => {
-      if (isMcFunctionReturn(v)) {
-        return v.getName()
-      }
-      if (isTagObject(v) && isMcFunctionReturn(v.id)) {
-        return {
-          id: v.id.getName(),
-          required: v.required,
-        }
-      }
-      return v as string | TagSingleValue<string>
-    })
+    this.values = values.map(objectToString)
 
-    this.name = name
     this.datapack = datapack
-
-    this.paths = datapack.getResourcePath(name)
 
     datapack.resources.addResource('tags', {
       children: new Map(),
       isResource: true,
-      path: [this.paths.namespace, type, ...this.paths.fullPath],
+      path: [this.path.namespace, type, ...this.path.fullPath],
       values: this.values,
       replace,
     })
   }
 
+  get name() {
+    return `#${toMCFunctionName(this.path.fullPathWithNamespace)}`
+  }
+
+  /** Adds a new value to this tag. */
+  add(value: TagSingleValue<HintedTagStringType<TYPE>>) {
+    this.values.push(objectToString(value))
+  }
+
   toString() {
-    return `#${toMcFunctionName(this.paths.fullPathWithNamespace)}`
+    return this.name
   }
 }

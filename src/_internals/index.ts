@@ -1,12 +1,25 @@
+import chalk from 'chalk'
+import { nanoid } from 'nanoid'
+
 import { Datapack } from './datapack'
+
 import type { Flow } from './flow'
 
-import { getConfigFile } from './config'
+let packUid: string
 
-const configFile = getConfigFile()
+if (!process.env.PACK_UID) {
+  packUid = nanoid(8)
+  console.error(chalk.red(`\`packUid\` property missing from \`sandstone.config.ts\`. A new one will be generated at each build, which is **not** recommended. Please add the following line:
 
-export const datapack = new Datapack(configFile?.namespace ?? 'default')
-export const { commandsRoot } = datapack
-export const _: Omit<Flow, 'arguments'> = datapack.flow
+  packUid: '${packUid}',
+
+to \`sandstone.config.ts\`, or set the PACK_UID environment variable.`))
+} else {
+  packUid = process.env.PACK_UID
+}
+
+export const dataPack = new Datapack(packUid, process.env.NAMESPACE ?? 'default')
+export const { commandsRoot } = dataPack
+export const _: Omit<Flow, 'arguments'> = dataPack.flow
 
 export * from './variables'

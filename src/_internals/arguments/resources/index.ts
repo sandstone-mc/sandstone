@@ -1,4 +1,4 @@
 export * from './advancement'
-export * from './predicate'
 export * from './lootTables'
+export * from './predicate'
 export * from './recipe'

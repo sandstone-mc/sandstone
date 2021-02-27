@@ -1,11 +1,14 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type {
-  JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, OBJECTIVE_CRITERION,
-} from '@arguments'
-import type { DISPLAY_SLOTS } from '@arguments/displaySlots'
 import { JsonTextComponentClass } from '@variables'
+
 import { Command } from '../Command'
 import { command } from '../decorators'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type {
+  JsonTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
+  ObjectiveArgument, OPERATORS,
+} from '@arguments'
+import type { DISPLAY_SLOTS } from '@arguments/displaySlots'
 
 function objectiveCmd(subcommand: string) {
   return ['scoreboard', 'objectives', subcommand]

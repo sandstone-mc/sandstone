@@ -1,6 +1,8 @@
-import type { LiteralUnion } from '@/generalTypes'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { TimeArgument } from '@arguments'
 
 /**
  * Changes or queries the world's game time.
@@ -15,7 +17,7 @@ export class Time extends Command {
    * - `t` (default and omitable): a single gametick; the default unit.
    */
   @command(['time', 'add'], { isRoot: true })
-  add = (time: number | LiteralUnion<'1t' | '1s' | '1d'>) => {}
+  add = (time: TimeArgument) => {}
 
   /**
    * Queries current time.
@@ -37,5 +39,5 @@ export class Time extends Command {
    * - `t` (default and omitable): a single gametick; the default unit.
    */
   @command(['time', 'set'], { isRoot: true })
-  set = (time: number | LiteralUnion<'1t' | '1s' | '1d'> | LiteralUnion<'day' | 'night' | 'noon' | 'midnight'>) => {}
+  set = (time: TimeArgument | LiteralUnion<'day' | 'night' | 'noon' | 'midnight'>) => {}
 }

@@ -1,8 +1,9 @@
-import type { ColumnCoordinates } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import type { VectorClass } from '@variables'
 import { coordinatesParser } from '@variables'
+
+import type { ColumnCoordinates } from '@arguments'
+import type { VectorClass } from '@variables'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]>): number[] {
@@ -38,8 +39,10 @@ export class Forceload extends Command {
       || [...from, ...to].every((c) => c[0] === '^') // or local
       || [...from, ...to].every((c) => c[0].match(/0-9/)) // or absolute
     ) {
-      // Then we can calculate before-hand the number of affected chunks, and throw an error
-      // if it's greater than 256
+      /*
+       * Then we can calculate before-hand the number of affected chunks, and throw an error
+       * if it's greater than 256
+       */
 
       const [fromX, fromZ] = coordinatesToNumbers(from)
       const [toX, toZ] = coordinatesToNumbers(to)

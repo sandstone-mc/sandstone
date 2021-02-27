@@ -1,11 +1,13 @@
-import { datapack } from './_internals'
+import { dataPack } from './_internals'
+
+export { SandstoneConfig } from './_internals/datapack/Datapack'
 
 export const {
-  save: savePack, BasePath,
-} = datapack
+  save: savePack, BasePath, sleep,
+} = dataPack
 
 export const {
-  mcfunction, Advancement, Predicate, Tag, LootTable, Recipe,
-} = datapack.basePath
+  MCFunction, Advancement, Predicate, Tag, LootTable, Recipe,
+} = dataPack.basePath
 
 export { _ } from './_internals'

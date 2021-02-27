@@ -1,13 +1,16 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
+import { nbtParser, rangeParser } from '@variables/parsers'
+
+import { ComponentClass } from './abstractClasses'
+
 import type {
-  ENTITY_TYPES, TextComponentObject,
+  ENTITY_TYPES, NBT, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import type { Predicate } from '@resources'
+import type { PredicateClass } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
-import { ComponentClass } from './abstractClasses'
 
 export type Range = number | [min: number, max: number] | [min: number, max: null] | [min: null, max: number]
 
@@ -104,32 +107,47 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   advancements?: AdvancementsArgument
 
   /** Select all targets that match the specified predicate. */
-  predicate?: string | Predicate | (Predicate | string)[]
-} & ({} | {
-  /** Define a position on the X-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
-  x: number
+  predicate?: string | PredicateClass | (PredicateClass | string)[]
 
-  /** Define a position on the Y-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
-  y: number
+  /** Select all targets that have the specified NBT. */
+  nbt?: NBT
 
-  /** Define a position on the Z-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`. */
-  z: number
-}) & ({} | {
-  /** Filter target selection based on their x-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes */
-  dx: number
+  /**
+   * Define a position on the X-axis in the world the selector starts at,
+   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+   */
+  x?: number
 
-  /** Filter target selection based on their y-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes */
-  dy: number
+  /**
+   * Define a position on the Y-axis in the world the selector starts at,
+   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+   */
+  y?: number
 
-  /** Filter target selection based on their z-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes */
-  dz: number
-}) & (
+  /**
+   * Define a position on the Z-axis in the world the selector starts at,
+   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+   */
+  z?: number
+
+  /**
+   * Filter target selection based on their x-difference, from some point,
+   * as measured from the closest corner of the entities' hitboxes
+   */
+  dx?: number
+
+  /**
+   * Filter target selection based on their y-difference, from some point,
+   * as measured from the closest corner of the entities' hitboxes
+   */
+  dy?: number
+
+  /**
+   * Filter target selection based on their z-difference, from some point,
+   * as measured from the closest corner of the entities' hitboxes
+   */
+  dz?: number
+} & (
   MustBeSingle extends true ? { limit: 0 | 1 } : { limit?: number }
 ) & (
   MustBePlayer extends true ? {
@@ -161,31 +179,9 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   }
 )
 
-// Sanitize score values. null => '', Infinity => '', any number => itself
-function sanitizeValue(value: number | null): string {
-  if (value === undefined || value === null) {
-    return ''
-  }
-
-  if (Number.isFinite(value)) {
-    return value.toString()
-  }
-
-  // Value is Infinity or -Infinity
-  return ''
-}
-
-// Returns the string representation of a range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
-function parseRange(range: Range): string {
-  if (Array.isArray(range)) {
-    return `${sanitizeValue(range[0])}..${sanitizeValue(range[1])}`
-  }
-  return range.toString()
-}
-
 // Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'
 function parseScore(scores: ScoreArgument): string {
-  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, parseRange(value)].join('=')).join(', ')}}`
+  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, rangeParser(value)].join('=')).join(', ')}}`
 }
 
 // Returns the string representation of advancements
@@ -202,19 +198,19 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
 export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> extends ComponentClass implements ConditionClass {
   protected commandsRoot: CommandsRoot
 
-  protected target: string
+  target
 
-  protected arguments: SelectorProperties<IsSingle, IsPlayer>
+  arguments: SelectorProperties<IsSingle, IsPlayer>
 
   constructor(
     commandsRoot: CommandsRoot,
-    target: LiteralUnion<'@s' | '@p' | '@a' | '@e' | '@r'>,
+    target: '@s' | '@p' | '@a' | '@e' | '@r',
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
     super()
 
     this.commandsRoot = commandsRoot
-    this.target = target as string
+    this.target = target
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
   }
 
@@ -228,7 +224,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
   }
 
   _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {
-    return { value: ['entity', this] }
+    return { value: ['if', 'entity', this] }
   }
 
   toString() {
@@ -244,6 +240,8 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
       const modifiers = {
         // Parse scores
         scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
+
+        nbt: (nbt: NBT) => result.push(['nbt', nbtParser(nbt)]),
 
         // Parse advancements
         advancements: (advancements: AdvancementsArgument) => result.push(
@@ -276,7 +274,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
           result.push(['team', teamRepr])
         },
 
-        distance: parseRange,
+        distance: (range_: Range) => result.push(['distance', rangeParser(range_)]),
       } as const
 
       for (const [baseName, modifier] of Object.entries(modifiers)) {
@@ -320,8 +318,8 @@ export function SelectorCreator(target: '@a', selectorArguments: Omit<SingleSele
 export function SelectorCreator(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
 export function SelectorCreator(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
 export function SelectorCreator(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
-export function SelectorCreator(target: '@e', selectorArguments: AnySelectorProperties): SelectorClass<false, false>
+export function SelectorCreator(target: '@e', selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
 
-export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: string, selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
+export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: '@s' | '@p' | '@r' | '@a' | '@e', selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
   return new SelectorClass(this, target, selectorArguments)
 }

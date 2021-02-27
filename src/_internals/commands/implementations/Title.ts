@@ -1,8 +1,9 @@
-import type { JsonTextComponent, MultiplePlayersArgument } from '@arguments'
 import { MultipleEntitiesArgument, SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { JsonTextComponentClass, SelectorClass } from '@variables'
+
+import type { JsonTextComponent, MultiplePlayersArgument } from '@arguments'
 
 export class TitleArguments extends Command {
   @command('clear')

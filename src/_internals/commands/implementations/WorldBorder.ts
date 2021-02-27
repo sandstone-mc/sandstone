@@ -1,6 +1,7 @@
-import type { Coordinates } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+
+import type { Coordinates } from '@arguments'
 
 /** These commands control the world border. */
 export class WorldBorder extends Command {

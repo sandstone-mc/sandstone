@@ -1,8 +1,10 @@
 import { coordinatesParser, VectorClass } from '@variables'
-import type { BLOCKS, Coordinates } from '@arguments'
-import type { LiteralUnion } from '@/generalTypes'
+
 import { Command } from '../Command'
 import { command } from '../decorators'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { BLOCKS, Coordinates } from '@arguments'
 
 export class CloneOptions extends Command {
   /**

@@ -1,6 +1,17 @@
+import type { LiteralUnion } from '@/generalTypes'
 import type { MultipleEntitiesArgument } from '@arguments'
 
-export type AXES = 'x' | 'xy' | 'yz' | 'xz' | 'xyz'
+type SINGLE_AXES = 'x' | 'y' | 'z'
+type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
+type TRIPLE_AXES = `${DOUBLE_AXES}${SINGLE_AXES}`
+
+type DEDUP<A extends string> = (
+  A extends `${infer I}${infer J}${infer K}` ? `${I}${Exclude<J, I>}${Exclude<K, I | J>}` :
+  A extends `${infer I}${infer J}` ? `${I}${Exclude<J, I>}` : A
+)
+
+export type AXES = SINGLE_AXES | DEDUP<DOUBLE_AXES> | DEDUP<TRIPLE_AXES>
+
 export type ANCHORS = 'eyes' | 'feet'
 
 export type BASIC_COLORS = (
@@ -13,7 +24,7 @@ export type GAMEMODES = 'survival' | 'creative' | 'adventure' | 'spectator'
 
 export type DIFFICULTIES = 'easy' | 'normal' | 'hard' | 'peaceful'
 
-export type OPERATORS = '=' | '+=' | '-=' | '/=' | '*=' | '%=' | '<=' | '>=' | '<>'
+export type OPERATORS = '=' | '+=' | '-=' | '/=' | '*=' | '%=' | '<' | '>' | '><'
 
 export type COMPARISON_OPERATORS = '<' | '<=' | '=' | '>=' | '>'
 
@@ -25,6 +36,8 @@ export class _ShowAlias {
 }
 
 export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
+
+export type TimeArgument = number | LiteralUnion<'1t' | '1s' | '1d'>
 
 export type TAG_TYPES = 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items'
 

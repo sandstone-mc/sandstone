@@ -1,34 +1,132 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { JsonTextComponent, OBJECTIVE_CRITERION } from '@arguments'
+import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import type { McFunction } from '@resources'
-import type { ObjectiveClass } from '@variables'
 import { Objective, SelectorCreator } from '@variables'
-import chalk from 'chalk'
+
+import { BasePathClass } from './BasePath'
+import { toMCFunctionName } from './minecraft'
+import { ResourcesTree } from './resourcesTree'
+import { saveDatapack } from './saveDatapack'
+
+import type { LiteralUnion } from '@/generalTypes'
+import type { JsonTextComponent, OBJECTIVE_CRITERION, TimeArgument } from '@arguments'
+import type { MCFunctionClass } from '@resources'
+import type { ObjectiveClass } from '@variables'
 import type { BasePathOptions } from './BasePath'
-import { BasePath } from './BasePath'
 import type { CommandArgs } from './minecraft'
-import { toMcFunctionName } from './minecraft'
 import type {
   FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
-import { ResourcesTree } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
-import { saveDatapack } from './saveDatapack'
 
-export interface McFunctionReturn<T extends unknown[]> {
-  (...args: T): void
+type ScriptArguments = {
+  /** The name of the data pack. */
+  dataPackName: string,
+  /** The destination folder of the data pack. */
+  destination: string,
+}
 
-  schedule: (delay: number | LiteralUnion<'1t' | '1s' | '1d'>, type?: 'append' | 'replace', ...callbackArgs: T) => void
+export interface SandstoneConfig {
+  /**
+   * The default namespace for the data pack.
+   * It can be changed for each resources, individually or using Base Paths.
+   */
+  namespace: string
 
-  getName: (...args: T) => string
+  /**
+   * The name of the datapack.
+   */
+  name: string
 
-  clearSchedule: (...args: T) => void
+  /**
+   * The description of the datapack.
+   * Can be a single string or a JSON Text Component
+   * (like in /tellraw or /title).
+   */
+  description: JsonTextComponent
+
+  /**
+   * The format version of the data pack.
+   * Can change depending on the versions of Minecraft.
+   *
+   * @see [https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta](https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta)
+   */
+  formatVersion: number
+
+  /**
+   * A custom path to your .minecraft folder,
+   * in case you changed the default and Sandstone fails to find it.
+   */
+  minecraftPath?: string
+
+  /**
+   * A unique identifier that is used to distinguish your variables from other Sandstone data pack variables.
+   *
+   * It must be a string of valid scoreboard characters.
+   */
+  packUid: string
+
+  /** All the options to save the data pack. */
+  saveOptions: {
+    /**
+     * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
+     */
+    customFileHandler?: SaveOptions['customFileHandler']
+
+    /** The indentation to use for all JSON & MCMeta files. This argument is the same than `JSON.stringify` 3d argument. */
+    indentation?: string | number
+  } & ({
+    /**
+     * The world to save the data pack in.
+     *
+     * Incompatible with `root` and `path`.
+     */
+    world: string
+  } | {
+    /**
+     * Whether to save the data pack in the `.minecraft/datapacks` folder.
+     *
+     * Incompatible with `world` and `path`.
+     */
+    root: true
+  } | {
+    /**
+     * A custom path to save the data pack at.
+     *
+     * Incompatible with `root` and `world`.
+     */
+    path: string
+  })
+
+  /** Some scripts that can run at defined moments. */
+  scripts?: {
+    /** A script running before Sandstone starts importing source files. */
+    beforeAll?: (options: ScriptArguments) => (void | Promise<void>)
+
+    /** A script running before Sandstone starts saving the files. */
+    beforeSave?: (options: ScriptArguments) => (void | Promise<void>)
+
+    /** A script running after Sandstone saved all files. */
+    afterAll?: (options: ScriptArguments) => (void | Promise<void>)
+  }
+}
+
+export interface MCFunctionInstance<RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
+  (): RETURN
+
+  schedule: (delay: TimeArgument, type?: 'append' | 'replace') => void
+
+  clearSchedule: () => void
+
+  generate: () => void
+
+  toString: () => string
+
+  toJSON: () => string
 }
 
 export default class Datapack {
-  basePath: BasePath
+  basePath: BasePathClass<undefined, undefined>
 
   defaultNamespace: string
 
@@ -42,7 +140,7 @@ export default class Datapack {
 
   constants: Set<number>
 
-  rootFunctions: Set<McFunction<any[]>>
+  rootFunctions: Set<MCFunctionClass>
 
   static anonymousScoreId = 0
 
@@ -50,8 +148,11 @@ export default class Datapack {
 
   initCommands: CommandArgs[]
 
-  constructor(namespace: string) {
-    this.basePath = new BasePath(this, {})
+  packUid: string
+
+  constructor(packUid: string, namespace: string) {
+    this.packUid = packUid
+    this.basePath = new BasePathClass(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
     this.resources = new ResourcesTree()
@@ -60,7 +161,7 @@ export default class Datapack {
     this.rootFunctions = new Set()
 
     this.commandsRoot = new CommandsRoot(this)
-    this.flow = new Flow(this.commandsRoot)
+    this.flow = new Flow(this)
 
     this.initCommands = []
   }
@@ -163,39 +264,43 @@ export default class Datapack {
   }
 
   /**
-   * Get a unique name for a child function of the current function, from an original name.
+   * Get a unique name for a child function of a parent function, from an original name.
    * @param childName The original name for the child function.
+   * @param parentFunction The parent function to find a child's name for. Defaults to current function.
    */
-  private getUniqueChildName(childName: string): string {
-    if (!this.currentFunction) {
+  getUniqueChildName(childName: string, parentFunction = this.currentFunction) {
+    if (!parentFunction) {
       throw new Error('Trying to get a unique child name outside a root function.')
     }
 
-    return this.getUniqueNameFromFolder(childName, this.currentFunction)
+    const newName = this.getUniqueNameFromFolder(childName, parentFunction)
+    const fullName = toMCFunctionName([...parentFunction.path, newName])
+    return this.getResourcePath(fullName)
   }
 
   /**
    * Creates a new child function of the current function.
    * @param functionName The name of the child function.
+   * @param parentFunction The function for which a child must be created. Defaults to the current function.
    */
-  createChildFunction(functionName: string): { childFunction: FunctionResource, functionName: string } {
-    if (!this.currentFunction) {
+  createChildFunction(functionName: string, parentFunction = this.currentFunction): { childFunction: FunctionResource, functionName: string } {
+    if (!parentFunction) {
       throw Error('Entering child function without registering a root function')
     }
 
-    const childName = this.getUniqueChildName(functionName)
+    const { name: childName, fullName, fullPathWithNamespace } = this.getUniqueChildName(functionName, parentFunction)
 
     // Update the current function - it now is the child function.
     const emptyFunction = {
-      children: new Map(), isResource: true as const, commands: [], path: [...this.currentFunction.path, childName],
+      children: new Map(), isResource: true as const, commands: [], path: fullPathWithNamespace,
     }
 
-    this.currentFunction.children.set(childName, emptyFunction as any)
+    parentFunction.children.set(childName, emptyFunction as any)
 
     // Return its full minecraft name
     return {
-      functionName: toMcFunctionName(emptyFunction.path),
-      childFunction: emptyFunction as any,
+      functionName: fullName,
+      childFunction: emptyFunction,
     }
   }
 
@@ -226,16 +331,23 @@ export default class Datapack {
   }
 
   /**
-   * Exit the current child function, and enter the parent function.
+   * Get the parent function of the current function.
    */
-  exitChildFunction(): void {
+  getParentFunction() {
     if (!this.currentFunction) {
       throw Error('Exiting a not-existing function')
     }
 
     const parentPath = this.currentFunction.path.slice(0, -1)
 
-    this.currentFunction = this.resources.getResource(parentPath as unknown as ResourcePath, 'functions')
+    return this.resources.getResource(parentPath as unknown as ResourcePath, 'functions')
+  }
+
+  /**
+   * Exit the current child function, and enter the parent function.
+   */
+  exitChildFunction(): void {
+    this.currentFunction = this.getParentFunction()
   }
 
   registerNewObjective = (objective: ObjectiveClass) => {
@@ -251,7 +363,7 @@ export default class Datapack {
    */
   registerNewCommand = (commandArgs: CommandArgs): void => {
     if (!this.currentFunction || !this.currentFunction.isResource) {
-      throw Error('Adding a command outside of a registered function')
+      throw Error(`Adding a command outside of a registered function: /${commandArgs.join(' ')}`)
     }
 
     this.currentFunction.commands.push(commandArgs)
@@ -267,7 +379,7 @@ export default class Datapack {
   /**
    * Add a function to a given function tag
    */
-  addFunctionToTag(mcfunction: string, tag: string) {
+  addFunctionToTag(mcfunction: string, tag: string, index?: number | undefined) {
     const { namespace, fullPath, name } = this.getResourcePath(tag)
 
     const tickResource = this.resources.getOrAddResource('tags', {
@@ -278,12 +390,18 @@ export default class Datapack {
       replace: false,
     })
 
-    tickResource.values.push(this.getResourcePath(mcfunction).fullName)
+    const { fullName } = this.getResourcePath(mcfunction)
+    if (index === undefined) {
+      tickResource.values.push(fullName)
+    } else {
+      // Insert at given index
+      tickResource.values.splice(index, 0, fullName)
+    }
   }
 
   /** UTILS */
-  /** Create a new objective */
-  createObjective = (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, display?: JsonTextComponent) => {
+  /** Create a new objective. Defaults to `dummy` if unspecified. */
+  createObjective = (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JsonTextComponent) => {
     if (name.length > 16) {
       throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
     }
@@ -302,6 +420,10 @@ export default class Datapack {
     }
   }
 
+  get rootObjective() {
+    return this.getCreateObjective('sandstone', 'dummy', [{ text: 'Sandstone', color: 'gold' }, ' internals'])
+  }
+
   /**
    * Creates a dynamic numeric variable, represented by an anonymous & unique score.
    *
@@ -312,13 +434,13 @@ export default class Datapack {
    */
   Variable = (initialValue?: number | undefined, name?: string) => {
     // Get the objective
-    const sandstoneAnonymousName = 'sand_variables'
-    const score = this.getCreateObjective(sandstoneAnonymousName, 'dummy', 'Sandstone Anonymous Scores')
+    const datapack = this.commandsRoot.Datapack
+    const score = datapack.rootObjective
 
     // Get the specific anonymous score
     const id = Datapack.anonymousScoreId
     Datapack.anonymousScoreId += 1
-    const anonymousScore = score.ScoreHolder(`${name ?? 'anonymous'}_${id}`)
+    const anonymousScore = score.ScoreHolder(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
 
     if (initialValue !== undefined) {
       if (this.currentFunction !== null) {
@@ -334,7 +456,7 @@ export default class Datapack {
   Selector = SelectorCreator.bind(this)
 
   /** A BasePath changes the base namespace & directory of nested resources. */
-  BasePath = (basePath: BasePathOptions) => new BasePath(this, basePath)
+  BasePath = <N extends string | undefined, D extends string | undefined>(basePath: BasePathOptions<N, D>) => new BasePathClass(this, basePath)
 
   addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
     this.resources.addResource(type, {
@@ -345,20 +467,52 @@ export default class Datapack {
     } as ResourceOnlyTypeMap[T])
   }
 
+  sleep = (delay: TimeArgument): PromiseLike<void> => {
+    const SLEEP_CHILD_NAME = '__sleep'
+
+    if (!this.currentFunction) {
+      throw new Error('Cannot call `sleep` outside of a MCFunction.')
+    }
+
+    // If we're already in a "sleep" child, go to the parent function. It avoids childs' names becoming namespace:function/__sleep/__sleep/__sleep etc...
+    const { fullPath } = this.getResourcePath(toMCFunctionName(this.currentFunction.path))
+    const inSleepFunction = fullPath[fullPath.length - 1] === SLEEP_CHILD_NAME
+
+    let parentFunction: FunctionResource
+
+    // If we're in a sleep function, the parent function of the new child is the current function's parent. Else, the parent is the current function.
+    if (inSleepFunction) {
+      parentFunction = this.getParentFunction()
+    } else {
+      parentFunction = this.currentFunction
+    }
+
+    const newFunction = this.createChildFunction(SLEEP_CHILD_NAME, parentFunction)
+    this.commandsRoot.schedule.function(newFunction.functionName, delay, 'append')
+
+    return ({
+      then: (async (onfullfilled?: () => (void | Promise<void>)) => {
+        // Enter child "sleep"
+        this.currentFunction = newFunction.childFunction
+        const result = await onfullfilled?.()
+        return result
+      }) as any,
+    })
+  }
+
   /**
    * Saves the datapack to the file system.
    *
    * @param name The name of the Datapack
    * @param options The save options
    */
-  save = (name: string, options: SaveOptions = {}): Promise<void> => {
-    if (!options.dryRun) {
-      console.log(chalk`⌛ {gray Starting compilation...}`)
-    }
+  save = async (name: string, options: SaveOptions) => {
+    console.log(chalk`⌛ {gray Starting compilation...}`)
 
     // First, generate all functions
     for (const mcfunction of this.rootFunctions) {
-      mcfunction.generateInitialFunction()
+      // eslint-disable-next-line no-await-in-loop
+      await mcfunction.generate()
     }
 
     // Then, generate the init function.
@@ -390,7 +544,7 @@ export default class Datapack {
       this.resources.deleteResource(this.currentFunction.path, 'functions')
     } else {
       // Else, put the __init__ function in the minecraft:load tag
-      this.addFunctionToTag(toMcFunctionName(this.currentFunction!.path), 'minecraft:load')
+      this.addFunctionToTag(toMCFunctionName(this.currentFunction!.path), 'minecraft:load', 0)
     }
 
     this.exitRootFunction()

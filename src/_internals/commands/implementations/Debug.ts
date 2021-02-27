@@ -15,8 +15,10 @@ export class Debug extends Command {
   @command(['debug', 'stop'], { isRoot: true })
   stop = () => {}
 
-  /** Used to get more detailed information while debugging performance.
-   * Saves information in the `.minecraft\debug` folder in the form of a zip file. */
+  /**
+   * Used to get more detailed information while debugging performance.
+   * Saves information in the `.minecraft\debug` folder in the form of a zip file.
+   */
   @command(['debug', 'report'], { isRoot: true })
   report = () => {}
 }

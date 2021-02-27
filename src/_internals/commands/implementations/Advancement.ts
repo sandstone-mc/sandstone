@@ -1,7 +1,9 @@
-import type { MultiplePlayersArgument } from '@arguments'
 import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+
+import type { MultiplePlayersArgument } from '@arguments'
+import type { AdvancementClass } from '@resources'
 
 class AdvancementArguments extends Command {
   /** Adds or removes all loaded advancements. */
@@ -18,7 +20,7 @@ class AdvancementArguments extends Command {
    * If specified, the command refers to merely the criterion and not the entire advancement.
    */
   @command('only', { isRoot: false, executable: true })
-  only = (advancement: string, criterion?: string) => { }
+  only = (advancement: string | AdvancementClass, criterion?: string) => { }
 
   /**
    * Adds or removes an advancement and all its children advancements.
@@ -33,7 +35,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('from', { isRoot: false, executable: true })
-  from = (advancement: string) => { }
+  from = (advancement: string | AdvancementClass) => { }
 
   /**
    * Specifies an advancement, and adds or removes all its parent advancements, and all its children advancements.
@@ -46,7 +48,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('through', { isRoot: false, executable: true })
-  through = (advancement: string) => { }
+  through = (advancement: string | AdvancementClass) => { }
 
   /**
    * Adds or removes an advancement and all its parent advancements until the root for addition/removal.
@@ -59,7 +61,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('until', { isRoot: false, executable: true })
-  until = (advancement: string) => { }
+  until = (advancement: string | AdvancementClass) => { }
 }
 
 /** Gives or takes an advancement from one or more players. */

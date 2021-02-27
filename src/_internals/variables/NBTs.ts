@@ -1,6 +1,7 @@
-import type { NBT as NBTObj } from '@arguments'
-import { nbtParser } from '@variables'
 import util from 'util'
+import { nbtParser } from '@variables'
+
+import type { NBT as NBTObj } from '@arguments'
 
 export abstract class NBTCustomObject {
   abstract [util.inspect.custom]: () => string;
@@ -9,6 +10,12 @@ export abstract class NBTCustomObject {
 function customUnit(num: number, unit: string): NBTCustomObject {
   return new class {
     [util.inspect.custom] = () => `${num}${unit}`
+  }()
+}
+
+function customUnitArray(numbers: number[], unit: string): NBTCustomObject {
+  return new class {
+    [util.inspect.custom] = () => `[I; ${numbers.join(', ')}]`
   }()
 }
 
@@ -24,7 +31,7 @@ interface NBTInterface {
   toString: (nbt: NBTObj) => string
 
   /**
-  * Transform a number into a Minecraft NBT float number.
+   * Transform a number into a Minecraft NBT float number.
    *
    * @param floatNumber The number to transform.
    *
@@ -142,6 +149,31 @@ interface NBTInterface {
    * summon(..., { Test: NBT.long([0, 1, 2]) }) // => { Test: [0l, 1l, 2l] }
    */
   long(longNumbers: number[]): NBTCustomObject[]
+
+  /**
+   * Transforms an array into an Integer array.
+   *
+   * @param intNumbers The numbers to transform.
+   *
+   * @example
+   * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
+   *
+   * summon(..., { Test: NBT.integerArray([0, 1, 2]) }) // => { Test: [I; 0, 1, 2] }
+   */
+  integerArray(intNumbers: number[]): NBTCustomObject,
+
+  /**
+   * Transforms an array into a Long array.
+   *
+   * @param longNumbers The numbers to transform.
+   *
+   * @example
+   * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
+   *
+   * summon(..., { Test: NBT.longArray([0, 1, 2]) }) // => { Test: [L; 0, 1, 2] }
+   */
+  longArray(longNumbers: number[]): NBTCustomObject,
+
 }
 
 export const NBT: NBTInterface = {
@@ -157,4 +189,8 @@ export const NBT: NBTInterface = {
   short: (num: number | number[]): any => customNumber(num, 's'),
 
   long: (num: number | number[]): any => customNumber(num, 'l'),
+
+  integerArray: (numbers: number[]): any => customUnitArray(numbers, 'I'),
+
+  longArray: (numbers: number[]): any => customUnitArray(numbers, 'L'),
 }

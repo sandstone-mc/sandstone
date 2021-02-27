@@ -1,8 +1,9 @@
-import type { BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument } from '@arguments'
 import { SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { JsonTextComponentClass } from '@variables'
+
+import type { BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument } from '@arguments'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'
@@ -98,11 +99,13 @@ export class Team extends Command {
      *
      * - `suffix`: Modifies the suffix that appears after players' names in chat.
      */
-    (<T extends keyof TeamOptions>(option: T, value: TeamOptions[T]) => void) &
+    (<T extends keyof TeamOptions>(team: string, option: T, value: TeamOptions[T]) => void) &
 
-    // Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
-    // We need T to capture the exact value of the string (like "foo"),
-    // and the type of the parameter becomes Exclude<"foo", keyof TeamOptions> which works.
+    /*
+     * Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
+     * We need T to capture the exact value of the string (like "foo"),
+     * and the type of the parameter becomes Exclude<"foo", keyof TeamOptions> which works.
+     */
 
     /**
      * Modifies the option of the team.
@@ -129,7 +132,7 @@ export class Team extends Command {
      *
      * - `suffix`: Modifies the suffix that appears after players' names in chat.
      */
-    (<T extends string>(option: Exclude<T, keyof TeamOptions>, value: string) => void)
+    (<T extends string>(team: string, option: Exclude<T, keyof TeamOptions>, value: string) => void)
   ) = (...args: unknown[]) => {}
 
   /**

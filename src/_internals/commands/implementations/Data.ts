@@ -1,7 +1,9 @@
-import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
-import { coordinatesParser } from '@variables'
+import { coordinatesParser, nbtParser } from '@variables'
+
 import { Command } from '../Command'
 import { command } from '../decorators'
+
+import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
 
 const getCmd = (name: string) => ['data', 'get', name]
 
@@ -103,7 +105,7 @@ class DataModifyValues extends Command {
   /**
    * Modify the NBT with the given value.
    */
-  @command('value')
+  @command('value', { parsers: { '0': nbtParser } })
   value = (value: NBTObject) => { }
 }
 
@@ -184,7 +186,7 @@ class DataRemove extends Command {
    * @param path The path of the NBT to remove.
    */
   @command(removeCmd('block'), {
-    isRoot: true, executable: false, hasSubcommands: true, parsers: { '0': coordinatesParser },
+    isRoot: true, executable: true, parsers: { '0': coordinatesParser },
   })
   block = (targetPos: Coordinates, targetPath: string) => { }
 
@@ -194,7 +196,7 @@ class DataRemove extends Command {
    * @param target The entity to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  @command(removeCmd('entity'), { isRoot: true, executable: false, hasSubcommands: true })
+  @command(removeCmd('entity'), { isRoot: true, executable: true })
   entity = (target: SingleEntityArgument, targetPath: string) => { }
 
   /**
@@ -203,7 +205,7 @@ class DataRemove extends Command {
    * @param target The storage to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  @command(removeCmd('storage'), { isRoot: true, executable: false, hasSubcommands: true })
+  @command(removeCmd('storage'), { isRoot: true, executable: true })
   storage = (target: string, targetPath: string) => { }
 }
 
