@@ -20,7 +20,7 @@ export class Schedule extends Command {
        * --------------------------------------------------
        * ⚠️ The prefered way is using:
        * ```
-       * const myFunction = mcfunction(...)
+       * const myFunction = MCFunction(...)
        * myFunction.clearSchedule()
        * ```
        *
@@ -35,11 +35,11 @@ export class Schedule extends Command {
        * --------------------------------------------------
        * ⚠️ The prefered way is using:
        * ```
-       * const myFunction = mcfunction(...)
+       * const myFunction = MCFunction(...)
        * myFunction.clearSchedule()
        * ```
        *
-       * @param mcFunction Specify the scheduled `mcfunction` to be cleared.
+       * @param mcFunction Specify the scheduled `MCFunction` to be cleared.
        */
       (mcFunction: MCFunctionInstance) => void
     )
@@ -62,7 +62,7 @@ export class Schedule extends Command {
        * --------------------------------------------------
        * ⚠️ The prefered way is using:
        * ```
-       * const myFunction = mcfunction(...)
+       * const myFunction = MCFunction(...)
        * myFunction.schedule('2s', 'append')
        * ```
        *
@@ -89,11 +89,11 @@ export class Schedule extends Command {
        * --------------------------------------------------
        * ⚠️ The prefered way is using:
        * ```
-       * const myFunction = mcfunction(...)
+       * const myFunction = MCFunction(...)
        * myFunction.schedule('2s', 'append')
        * ```
        *
-       * @param mcFunction Specify the `mcfunction` to be scheduled.
+       * @param mcFunction Specify the `MCFunction` to be scheduled.
        *
        * @param delay Specify the delay time.
        *
