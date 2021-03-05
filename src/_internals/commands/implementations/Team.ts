@@ -61,7 +61,7 @@ export class Team extends Command {
    * @param members Specifies the entities to leave the team.
    * `'*'` may be used to represent all entities tracked by the scoreboard
    */
-  @command(['team', 'join'], { isRoot: true })
+  @command(['team', 'leave'], { isRoot: true })
   leave = (members: MultipleEntitiesArgument | '*') => {}
 
   /**
