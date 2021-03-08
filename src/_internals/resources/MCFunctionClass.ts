@@ -120,7 +120,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
       if (this.options.runOnLoad !== false) {
         // If run on load, call it directly
-        this.datapack.initCommands.push(['function', this.name])
+        tags = [...tags, 'minecraft:tick']
       }
     } else {
       // If runEachTick is specified, add to minecraft:tick
