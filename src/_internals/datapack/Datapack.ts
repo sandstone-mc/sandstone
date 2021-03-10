@@ -22,8 +22,8 @@ import type { SaveOptions } from './saveDatapack'
 type ScriptArguments = {
   /** The name of the data pack. */
   dataPackName: string,
-  /** The destination folder of the data pack. */
-  destination: string,
+  /** The destination folder of the data pack. `null` if there is only a custom file handler, or nothing at all. */
+  destination: string | null,
 }
 
 export interface SandstoneConfig {
@@ -73,30 +73,32 @@ export interface SandstoneConfig {
      */
     customFileHandler?: SaveOptions['customFileHandler']
 
-    /** The indentation to use for all JSON & MCMeta files. This argument is the same than `JSON.stringify` 3d argument. */
+    /**
+     * The indentation to use for all JSON & MCMeta files. This argument is the same than `JSON.stringify` 3d argument.
+     */
     indentation?: string | number
-  } & ({
+
     /**
      * The world to save the data pack in.
      *
      * Incompatible with `root` and `path`.
      */
-    world: string
-  } | {
+    world?: string
+
     /**
      * Whether to save the data pack in the `.minecraft/datapacks` folder.
      *
      * Incompatible with `world` and `path`.
      */
-    root: true
-  } | {
+    root?: true
+
     /**
      * A custom path to save the data pack at.
      *
      * Incompatible with `root` and `world`.
      */
-    path: string
-  })
+    path?: string
+  }
 
   /** Some scripts that can run at defined moments. */
   scripts?: {

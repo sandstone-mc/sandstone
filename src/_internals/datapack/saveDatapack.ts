@@ -25,6 +25,9 @@ type SaveFileObject = {
   saveOptions: SaveOptions
   resource: any
 }
+
+type CustomHandlerFileObject = Omit<SaveFileObject, 'rootPath'> & { rootPath: string | null }
+
 const writeFileAsync = promisify(fs.writeFile)
 const writeFile = (saveObject: SaveFileObject) => writeFileAsync(path.join(saveObject.rootPath, saveObject.relativePath), saveObject.content)
 
@@ -68,34 +71,32 @@ export type SaveOptions = {
   /**
    * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
    */
-  customFileHandler?: (fileInfo: SaveFileObject) => Promise<void> | void
+  customFileHandler?: (fileInfo: CustomHandlerFileObject) => Promise<void> | void
 
   /** The indentation to use for all JSON & MCMeta files. This argument is the same than `JSON.stringify` 3d argument. */
   indentation?: string | number
-} & (
-  {
-    /**
-     * Whether to put the datapack in the .minecraft/datapacks folder, or not.
-     *
-     * Incompatible with the `world` and the `customPath` parameters.
-     */
-    asRootDatapack: boolean
-  } | {
-    /**
-     * The name of the world to save the datapack in.
-     *
-     * Incompatible with the `asRootDatapack` and the `customPath` parameters.
-     */
-    world: string
-  } | {
-    /**
-     * A custom path to save the data pack at.
-     *
-     * Incompatible with the `asRootDatapack` and the `world` parameters.
-     */
-    customPath: string
-  }
-)
+
+  /**
+   * Whether to put the datapack in the .minecraft/datapacks folder, or not.
+   *
+   * Incompatible with the `world` and the `customPath` parameters.
+   */
+  asRootDatapack?: boolean
+
+  /**
+   * The name of the world to save the datapack in.
+   *
+   * Incompatible with the `asRootDatapack` and the `customPath` parameters.
+   */
+
+  world?: string
+  /**
+   * A custom path to save the data pack at.
+   *
+   * Incompatible with the `asRootDatapack` and the `world` parameters.
+   */
+  customPath?: string
+}
 
 type RestrictedSaveOptions = { world?: string, asRootDatapack?: boolean, customPath?: string, minecraftPath?: string }
 
@@ -112,7 +113,7 @@ function hasCustomPath(arg: RestrictedSaveOptions): arg is { customPath: string 
 }
 
 function saveResource<T extends ResourceTypes>(
-  rootPath: string,
+  rootPath: string | null,
   type: T,
   resource: ResourceTypeMap[T],
   options: SaveOptions,
@@ -120,9 +121,16 @@ function saveResource<T extends ResourceTypes>(
   getDisplayTitle: (namespace: string, folders: string[], fileName: string) => string,
 ): Promise<void>[] {
   // This ensure the function is async, and can be await
-  const writeFileToDisk = async (info: SaveFileObject) => {
-    const func = options?.customFileHandler ?? writeFile
-    return func(info)
+  const writeFileToDisk = async (info: CustomHandlerFileObject) => {
+    const customFileHandler = options?.customFileHandler
+    if (!customFileHandler && info.rootPath) {
+      // If we don't have a custom file handler, info.rootPath is necessarily not null
+      return writeFile(info as SaveFileObject)
+    }
+    if (customFileHandler) {
+      return customFileHandler(info)
+    }
+    return undefined
   }
 
   const promises: Promise<void>[] = []
@@ -135,7 +143,7 @@ function saveResource<T extends ResourceTypes>(
     const resourceFolder = path.join(basePath, ...folders)
 
     if (!options.dryRun) {
-      if (!options.customFileHandler) {
+      if (!options.customFileHandler && rootPath) {
         createDirectory(path.join(rootPath, resourceFolder))
       }
 
@@ -179,10 +187,7 @@ export function getDestinationPath(name: string, options: RestrictedSaveOptions)
   } if (hasCustomPath(options) && options.customPath !== undefined) {
     return path.join(options.customPath, name)
   }
-  throw new Error(
-    'Expected either the `world`, the `root` or the `path` save options to be defined. Got none of them.'
-    + 'If you are manually saving the pack, expected `world`, `asRootDatapack` or `customPath` to be set.',
-  )
+  return null
 }
 
 /**
@@ -208,7 +213,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     const promises: Promise<void>[] = []
 
     // Find the save path
-    const rootPath = getDestinationPath(name, options)
+    const rootPath: string | null = getDestinationPath(name, options)
 
     if (options.description !== undefined) {
       packMcMeta.pack.description = options.description as string
@@ -220,21 +225,21 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
 
     if (!options.dryRun) {
       // Clean the old working directory
-      if (!options.customFileHandler) {
+      if (rootPath !== null) {
         deleteDirectory(rootPath)
         createDirectory(rootPath)
-      }
 
-      // Overwrite it
-      promises.push(writeFileToDisk({
-        packType: 'datapack',
-        type: 'raw',
-        resource: packMcMeta,
-        content: JSON.stringify(packMcMeta, null, indentation),
-        rootPath,
-        relativePath: 'pack.mcmeta',
-        saveOptions: options,
-      }))
+        // Overwrite it
+        promises.push(writeFileToDisk({
+          packType: 'datapack',
+          type: 'raw',
+          resource: packMcMeta,
+          content: JSON.stringify(packMcMeta, null, indentation),
+          rootPath,
+          relativePath: 'pack.mcmeta',
+          saveOptions: options,
+        }))
+      }
     }
 
     for (const n of resources.namespaces.values()) {
@@ -305,7 +310,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     // Wait until all files are written
     await Promise.all(promises)
 
-    if (!options.dryRun) {
+    if (!options.dryRun && rootPath !== null) {
       console.log(chalk`{greenBright ✓ Successfully wrote data pack to "${rootPath}".} {gray (${promises.length.toLocaleString()} files - ${(Date.now() - start).toLocaleString()}ms)}`)
     } else {
       console.log(chalk`{greenBright ✓ Successfully compiled data pack.} {gray (${(Date.now() - start).toLocaleString()}ms)}`)
