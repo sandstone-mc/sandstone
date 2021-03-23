@@ -8,7 +8,7 @@ import type {
   ENTITY_TYPES, NBT, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
-import type { PredicateClass } from '@resources'
+import type { PredicateInstance } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
 
@@ -107,7 +107,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   advancements?: AdvancementsArgument
 
   /** Select all targets that match the specified predicate. */
-  predicate?: string | PredicateClass | (PredicateClass | string)[]
+  predicate?: string | PredicateInstance | (PredicateInstance | string)[]
 
   /** Select all targets that have the specified NBT. */
   nbt?: NBT

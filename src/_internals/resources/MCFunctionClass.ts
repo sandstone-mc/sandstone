@@ -4,7 +4,7 @@ import type { LiteralUnion } from '@/generalTypes'
 import type { TimeArgument } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { FunctionResource } from '@datapack/resourcesTree'
-import type { TagClass } from './Tag'
+import type { TagInstance } from './Tag'
 
 export type MCFunctionOptions = {
   /**
@@ -31,7 +31,7 @@ export type MCFunctionOptions = {
   /**
    * The function tags to put this function in.
    */
-  tags?: readonly (string | TagClass<'functions'>)[]
+  tags?: readonly (string | TagInstance<'functions'>)[]
 } & (
   {
     /**

@@ -1,4 +1,4 @@
-export * from './AdvancementClass'
+export * from './Advancement'
 export * from './LootTable'
 export * from './MCFunctionClass'
 export * from './Predicate'

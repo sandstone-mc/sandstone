@@ -3,7 +3,7 @@ import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
 import { Objective, SelectorCreator } from '@variables'
 
-import { BasePathClass, BasePathInstance } from './BasePath'
+import { BasePathClass } from './BasePath'
 import { toMCFunctionName } from './minecraft'
 import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
@@ -12,7 +12,7 @@ import type { LiteralUnion } from '@/generalTypes'
 import type { JsonTextComponent, OBJECTIVE_CRITERION, TimeArgument } from '@arguments'
 import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
-import type { BasePathOptions } from './BasePath'
+import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
   FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,

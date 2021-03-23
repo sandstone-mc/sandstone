@@ -1,23 +1,13 @@
 import { toMCFunctionName } from '@datapack/minecraft'
 
-import { ResourceClass } from './Resource'
+import { ResourceInstance } from './Resource'
 
-import type { LiteralUnion } from '@/generalTypes'
 import type {
-  BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS, TAG_TYPES,
+  HintedTagStringType, TAG_TYPES,
+  TagJSON, TagSingleValue,
 } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { MCFunctionInstance } from '@datapack/Datapack'
-import type { TagSingleValue } from '@datapack/resourcesTree'
-
-export type HintedTagStringType<T extends TAG_TYPES> = (
-  T extends 'blocks' ? LiteralUnion<BLOCKS> :
-  T extends 'fluids' ? LiteralUnion<FLUIDS> :
-  T extends 'entity_types' ? LiteralUnion<ENTITY_TYPES> :
-  T extends 'functions' ? (LiteralUnion<string> | MCFunctionInstance) :
-  T extends 'items' ? LiteralUnion<ITEMS> :
-  string
-)
 
 function isMCFunctionInstance(v: unknown): v is MCFunctionInstance {
   return typeof v === 'function'
@@ -40,12 +30,12 @@ function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagS
   return value as string | TagSingleValue<string>
 }
 
-export class TagClass<TYPE extends TAG_TYPES> extends ResourceClass {
+export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
   readonly type
 
   readonly values: TagSingleValue<string>[]
 
-  constructor(datapack: Datapack, type: TYPE, name: string, values: readonly TagSingleValue<HintedTagStringType<TYPE>>[] = [], replace?: boolean) {
+  constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], replace?: boolean) {
     super(datapack, name)
 
     this.type = type

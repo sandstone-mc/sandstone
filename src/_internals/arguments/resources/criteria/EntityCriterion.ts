@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import type { LiteralUnion } from '@/generalTypes'
 import type { ENTITY_TYPES, MOB_EFFECTS } from '@arguments/generated'
-import type { TagClass } from '@resources'
+import type { TagInstance } from '@resources'
 import type { DistanceCriterion, EffectCriterion } from './basic_criteria'
 import type { ItemCriterion } from './ItemCriterion'
 import type { LocationCriterion } from './LocationCriterion'
@@ -48,7 +48,7 @@ export type EntityCriterion = Partial<{
   team: string
 
   /** An entity ID. */
-  type: LiteralUnion<ENTITY_TYPES> | TagClass<'entity_types'>
+  type: LiteralUnion<ENTITY_TYPES> | TagInstance<'entity_types'>
 
   /** The entity which this entity is targeting for attacks. */
   targeted_entity: EntityCriterion

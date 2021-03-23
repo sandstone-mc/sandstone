@@ -1,6 +1,6 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS } from '@arguments/generated'
-import type { TagClass } from '@resources'
+import type { TagInstance } from '@resources'
 
 /**
  * Ensures that the given string has 3 characters or less - else, evaluates as `never`
@@ -45,7 +45,7 @@ type ItemOrTag = {
   item: LiteralUnion<ITEMS>,
 } | {
   /** An item tag. */
-  tag: string | TagClass<'items'>
+  tag: string | TagInstance<'items'>
 }
 
 type CookingRecipe = {
@@ -89,7 +89,7 @@ type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | un
 
 type KeysIngredients<T extends [string, string, string]> = Record<Exclude<CharacterOfStringsArray<T>, ' '>, ItemOrTag | ItemOrTag[]>
 
-export type RecipeType<P1 extends string = string, P2 extends string = string, P3 extends string = string> = (
+export type RecipeJSON<P1 extends string = string, P2 extends string = string, P3 extends string = string> = (
   RecipeKind<'blasting', CookingRecipe>
   | RecipeKind<'campfire_cooking', CookingRecipe>
   | RecipeKind<'crafting_shaped', {

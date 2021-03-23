@@ -15,7 +15,7 @@ import type {
   PotionIdCriterion,
   SlotCriterion,
 } from './criteria'
-import type { PredicateType } from './predicate'
+import type { PredicateJSON } from './predicate'
 
 // The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | undefined> = {
@@ -135,7 +135,7 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | u
      *    }
      *  ]
      */
-    player?: PredicateType
+    player?: PredicateJSON
   }
 }))
 

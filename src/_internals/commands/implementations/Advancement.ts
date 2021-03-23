@@ -3,7 +3,7 @@ import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
 import type { MultiplePlayersArgument } from '@arguments'
-import type { AdvancementClass } from '@resources'
+import type { AdvancementInstance } from '@resources'
 
 class AdvancementArguments extends Command {
   /** Adds or removes all loaded advancements. */
@@ -20,7 +20,7 @@ class AdvancementArguments extends Command {
    * If specified, the command refers to merely the criterion and not the entire advancement.
    */
   @command('only', { isRoot: false, executable: true })
-  only = (advancement: string | AdvancementClass, criterion?: string) => { }
+  only = (advancement: string | AdvancementInstance, criterion?: string) => { }
 
   /**
    * Adds or removes an advancement and all its children advancements.
@@ -35,7 +35,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('from', { isRoot: false, executable: true })
-  from = (advancement: string | AdvancementClass) => { }
+  from = (advancement: string | AdvancementInstance) => { }
 
   /**
    * Specifies an advancement, and adds or removes all its parent advancements, and all its children advancements.
@@ -48,7 +48,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('through', { isRoot: false, executable: true })
-  through = (advancement: string | AdvancementClass) => { }
+  through = (advancement: string | AdvancementInstance) => { }
 
   /**
    * Adds or removes an advancement and all its parent advancements until the root for addition/removal.
@@ -61,7 +61,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('until', { isRoot: false, executable: true })
-  until = (advancement: string | AdvancementClass) => { }
+  until = (advancement: string | AdvancementInstance) => { }
 }
 
 /** Gives or takes an advancement from one or more players. */

@@ -102,7 +102,7 @@ export type PredicateCondition = (
       scores: Record<string, NumberOrMinMax>
   }> | PredicateKind<'minecraft:inverted', {
       /** The condition to be negated. */
-      term: PredicateType
+      term: PredicateJSON
   }> | PredicateKind<'minecraft:killed_by_player', {
       /** If true, the condition passes if killer_player is not available. */
       inverse: boolean
@@ -182,4 +182,4 @@ export type PredicateCondition = (
  *   }
  * ]
  */
-export type PredicateType = ObjectOrArray<PredicateCondition>
+export type PredicateJSON = ObjectOrArray<PredicateCondition>

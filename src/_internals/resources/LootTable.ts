@@ -1,15 +1,15 @@
-import { ResourceClass } from './Resource'
+import { ResourceInstance } from './Resource'
 
 import type { LiteralUnion } from '@/generalTypes'
 import type {
-  Coordinates, ENTITY_SLOTS, LootTableType, MultipleEntitiesArgument, MultiplePlayersArgument,
+  Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
 } from '@arguments'
 import type { Datapack } from '@datapack'
 
-export class LootTableClass extends ResourceClass {
+export class LootTableInstance extends ResourceInstance {
   lootTableJson
 
-  constructor(datapack: Datapack, name: string, lootTable: LootTableType) {
+  constructor(datapack: Datapack, name: string, lootTable: LootTableJSON) {
     super(datapack, name)
 
     this.lootTableJson = lootTable

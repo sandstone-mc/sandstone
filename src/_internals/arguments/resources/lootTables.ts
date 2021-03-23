@@ -443,7 +443,7 @@ type LootTablePoll = {
   entries: LootTableEntry[]
 }
 
-export type LootTableType = {
+export type LootTableJSON = {
   /**
    * Optional type of the loot table.
    * Must be one of:

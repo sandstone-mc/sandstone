@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import type {
-  AdvancementType, LootTableType, PredicateType, RecipeType,
-  TAG_TYPES,
+  AdvancementJSON, LootTableJSON, PredicateJSON, RecipeJSON,
+  TAG_TYPES, TagSingleValue,
 } from '@arguments'
 import type { CommandArgs } from './minecraft'
 
@@ -30,7 +30,6 @@ export type File<T extends Record<string, unknown>, P extends ResourcePath = Res
 type FunctionProperties = { commands: CommandArgs[] }
 export type FunctionResource = FolderOrFile<FunctionProperties>
 
-export type TagSingleValue<T> = T | { id: T, required: boolean }
 type TagProperties = { values: TagSingleValue<string>[], replace?: boolean }
 type TagPath = readonly [
   namespace: string,
@@ -40,16 +39,16 @@ type TagPath = readonly [
 export type TagsResource = FolderOrFile<TagProperties, TagPath>
 
 // Here, the criteria names doesn't matter, so we put string
-type AdvancementProperties = { advancement: AdvancementType<string> }
+type AdvancementProperties = { advancement: AdvancementJSON<string> }
 export type AdvancementResource = FolderOrFile<AdvancementProperties>
 
-type PredicateProperties = { predicate: PredicateType }
+type PredicateProperties = { predicate: PredicateJSON }
 export type PredicateResource = FolderOrFile<PredicateProperties>
 
-type LootTableProperties = { lootTable: LootTableType }
+type LootTableProperties = { lootTable: LootTableJSON }
 export type LootTableResource = FolderOrFile<LootTableProperties>
 
-type RecipeProperties = { recipe: RecipeType<string, string, string> }
+type RecipeProperties = { recipe: RecipeJSON<string, string, string> }
 export type RecipeResource = FolderOrFile<RecipeProperties>
 
 /**

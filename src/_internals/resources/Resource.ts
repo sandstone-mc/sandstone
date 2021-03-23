@@ -2,7 +2,7 @@ import { toMCFunctionName } from '@datapack/minecraft'
 
 import type { Datapack } from '@datapack'
 
-export class ResourceClass {
+export class ResourceInstance {
     protected datapack
 
     protected commandsRoot

@@ -2,11 +2,11 @@
 import type { LiteralUnion } from '@/generalTypes'
 import type { ITEMS, JsonTextComponent, NBT } from '@arguments'
 import type { MCFunctionInstance } from '@datapack/Datapack'
-import type { AdvancementClass } from '@resources'
+import type { AdvancementInstance } from '@resources'
 import type { AdvancementTriggers } from './AdvancementTriggers'
 
 /** A representation of a Minecraft advancement. */
-export interface AdvancementType<CRITERIA_NAMES extends string = string> {
+export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
   /** The optional display data. */
   display?: {
     /** The data for the icon. */
@@ -97,5 +97,5 @@ export interface AdvancementType<CRITERIA_NAMES extends string = string> {
    * If this field is absent, this advancement is a root advancement.
    * Circular references cause a loading failure.
    */
-  parent?: string | AdvancementClass<string>
+  parent?: string | AdvancementInstance<string>
 }

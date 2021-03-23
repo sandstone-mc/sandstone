@@ -1,13 +1,13 @@
-import { ResourceClass } from './Resource'
+import { ResourceInstance } from './Resource'
 
-import type { PredicateType } from '@arguments'
+import type { PredicateJSON } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables'
 
-export class PredicateClass extends ResourceClass implements ConditionClass {
+export class PredicateInstance extends ResourceInstance implements ConditionClass {
   predicateJson
 
-  constructor(datapack: Datapack, name: string, predicate: PredicateType) {
+  constructor(datapack: Datapack, name: string, predicate: PredicateJSON) {
     super(datapack, name)
 
     this.predicateJson = predicate

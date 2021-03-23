@@ -1,15 +1,15 @@
 import {
-  AdvancementClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, TagClass,
+  AdvancementInstance, LootTableInstance, MCFunctionClass, PredicateInstance, RecipeInstance, TagInstance,
 } from '@resources'
 
 import type { HideFunctionProperties } from '@/generalTypes'
 import type {
-  AdvancementType, LootTableType, PredicateType, RecipeType, TAG_TYPES,
+  AdvancementJSON, HintedTagStringType, LootTableJSON, PredicateJSON, RecipeJSON, TAG_TYPES,
+  TagSingleValue,
 } from '@arguments'
 import type { Datapack } from '@datapack'
-import type { HintedTagStringType, MCFunctionOptions } from '@resources'
+import type { MCFunctionOptions } from '@resources'
 import type { MCFunctionInstance } from './Datapack'
-import type { TagSingleValue } from './resourcesTree'
 
 /** The namespace all nested resources will be located in. */
 export type BasePathOptions<N extends (undefined | string), D extends (undefined | string)> = {
@@ -188,7 +188,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    *   }
    * })
    */
-  Advancement = <T extends string>(name: string, advancement: AdvancementType<T>) => new AdvancementClass(this.datapack, this.getName(name), advancement)
+  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>) => new AdvancementInstance(this.datapack, this.getName(name), advancement)
 
   /**
    * Create a predicate.
@@ -202,10 +202,10 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    *   raining: true,
    * })
    */
-  Predicate = (name: string, predicate: PredicateType) => new PredicateClass(this.datapack, this.getName(name), predicate)
+  Predicate = (name: string, predicate: PredicateJSON) => new PredicateInstance(this.datapack, this.getName(name), predicate)
 
   /** Create a tag. */
-  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[] = [], replace?: boolean) => new TagClass(this.datapack, type, this.getName(name), values, replace)
+  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[] = [], replace?: boolean) => new TagInstance(this.datapack, type, this.getName(name), values, replace)
 
   /**
    * Create a loot table.
@@ -225,8 +225,8 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    *   }],
    * })
    */
-  LootTable = (name: string, lootTable: LootTableType) => new LootTableClass(this.datapack, this.getName(name), lootTable)
+  LootTable = (name: string, lootTable: LootTableJSON) => new LootTableInstance(this.datapack, this.getName(name), lootTable)
 
   /** Create a recipe. */
-  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeType<P1, P2, P3>) => new RecipeClass(this.datapack, this.getName(name), recipe)
+  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeJSON<P1, P2, P3>) => new RecipeInstance(this.datapack, this.getName(name), recipe)
 }
