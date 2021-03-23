@@ -3,7 +3,7 @@ import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
 import { Objective, SelectorCreator } from '@variables'
 
-import { BasePathClass } from './BasePath'
+import { BasePathClass, BasePathInstance } from './BasePath'
 import { toMCFunctionName } from './minecraft'
 import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
@@ -458,7 +458,14 @@ export default class Datapack {
   Selector = SelectorCreator.bind(this)
 
   /** A BasePath changes the base namespace & directory of nested resources. */
-  BasePath = <N extends string | undefined, D extends string | undefined>(basePath: BasePathOptions<N, D>) => new BasePathClass(this, basePath)
+  BasePath = <N extends string | undefined, D extends string | undefined>(basePath: BasePathOptions<N, D>): BasePathInstance<N, D> => {
+    const basePathInstance = new BasePathClass(this, basePath)
+
+    const returnFunction: any = basePathInstance.getResourceName
+    Object.assign(returnFunction, basePathInstance)
+
+    return returnFunction
+  }
 
   addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
     this.resources.addResource(type, {

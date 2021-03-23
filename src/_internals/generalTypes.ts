@@ -14,3 +14,25 @@ export type LiteralUnion<T extends string> = T | (Omit<string, keyof string> & {
 });
 
 export type AtLeastOne<T> = [T, ...T[]]
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type HideFunctionProperties<T extends Function> = {
+    /** @deprecated */
+  call: T['call']
+  /** @deprecated */
+  apply: T['apply']
+  /** @deprecated */
+  bind: T['bind']
+  /** @deprecated */
+  prototype: T['prototype']
+  /** @deprecated */
+  length: T['length']
+  /** @deprecated */
+  arguments: T['arguments']
+  /** @deprecated */
+  caller: T['caller']
+  /** @deprecated */
+  name: T['name']
+  /** @deprecated */
+  [Symbol.hasInstance]: (value: unknown) => boolean
+} & T

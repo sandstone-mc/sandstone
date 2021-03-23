@@ -2,6 +2,7 @@ import {
   AdvancementClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, TagClass,
 } from '@resources'
 
+import type { HideFunctionProperties } from '@/generalTypes'
 import type {
   AdvancementType, LootTableType, PredicateType, RecipeType, TAG_TYPES,
 } from '@arguments'
@@ -17,6 +18,10 @@ export type BasePathOptions<N extends (undefined | string), D extends (undefined
   /** The directory all nested resources will be located in. */
   directory?: D
 }
+
+export type BasePathInstance<N extends (undefined | string), D extends (undefined | string)> = (
+  HideFunctionProperties<BasePathClass<N, D>['getResourceName'] & BasePathClass<N, D>>
+)
 
 /** Remove forward & trailing slashes */
 function trimSlashes(str: string): string {
@@ -116,15 +121,27 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    *
    * The namespace cannot be provided in a child path.
    */
-  child = <DIR extends string | undefined>(childPath: Omit<BasePathOptions<undefined, DIR>, 'namespace'>) => {
+  child = <DIR extends string | undefined>(childPath: Omit<BasePathOptions<undefined, DIR>, 'namespace'>): BasePathInstance<N, string> => {
     const newDirectory = pathToArray(typeof childPath.directory === 'string' ? trimSlashes(childPath.directory) : undefined)
     const oldDirectory = pathToArray(this.directory)
 
-    return new BasePathClass(this.datapack, {
+    return this.datapack.BasePath({
       namespace: this.namespace,
       directory: [...oldDirectory, ...newDirectory].join('/'),
     })
   }
+
+  /**
+   * Get the name of a resource under this base path.
+   * @param name The basic name of the resource.
+   * @returns The name of the resource under this base path.
+   *
+   * @example
+   * >>> const basePath = BasePath({ directory: 'sub/folder', namespace: 'mynamespace' })
+   * >>> basePath.getResourceName('my_resource')
+   * "mynamespace:sub/folder/my_resource"
+   */
+  getResourceName = (name: string) => this.getName(name)
 
   /**
    * Creates a Minecraft Function.
@@ -140,17 +157,15 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
     this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)
 
     const returnFunction: any = mcfunction.call
-    returnFunction.schedule = mcfunction.schedule
 
     // Set the function's name
     const descriptor = Object.getOwnPropertyDescriptor(returnFunction, 'name')!
     descriptor.value = mcfunction.name
     Object.defineProperty(returnFunction, 'name', descriptor)
 
-    returnFunction.clearSchedule = mcfunction.clearSchedule
-    returnFunction.generate = mcfunction.generate
-    returnFunction.toString = mcfunction.toString
-    returnFunction.toJSON = mcfunction.toJSON
+    // Set all properties, except for "name"
+    const { name: _, ...mcfunctionClone } = mcfunction
+    Object.assign(returnFunction, mcfunctionClone)
 
     return returnFunction
   }
