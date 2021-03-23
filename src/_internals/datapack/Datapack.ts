@@ -478,7 +478,7 @@ export default class Datapack {
 
     // If we're already in a "sleep" child, go to the parent function. It avoids childs' names becoming namespace:function/__sleep/__sleep/__sleep etc...
     const { fullPath } = this.getResourcePath(toMCFunctionName(this.currentFunction.path))
-    const inSleepFunction = fullPath[fullPath.length - 1] === SLEEP_CHILD_NAME
+    const inSleepFunction = fullPath[fullPath.length - 1].startsWith(SLEEP_CHILD_NAME)
 
     let parentFunction: FunctionResource
 
