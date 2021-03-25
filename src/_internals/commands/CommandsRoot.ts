@@ -464,7 +464,7 @@ export class CommandsRoot {
    *
    * @param nbt Specifies the data tag for the entity.
    */
-  @command('summon', { isRoot: true, parsers: { '2': nbtParser } })
+  @command('summon', { isRoot: true, parsers: { '1': coordinatesParser, '2': nbtParser } })
   summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: NBT) => { }
 
   // tag command //
