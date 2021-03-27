@@ -1,12 +1,16 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { TagInstance } from '@resources'
+import { toMCFunctionName } from '@datapack/minecraft'
+import { TagInstance } from '@resources/Tag'
 
-import { FunctionCommand } from './Function'
-
-import type { LiteralUnion } from '@/generalTypes'
 import type { TimeArgument } from '@arguments'
 import type { MCFunctionInstance } from '@datapack/Datapack'
+
+function isMCFunctionInstance(callback: () => (void | Promise<void>)): callback is MCFunctionInstance {
+  return Object.prototype.hasOwnProperty.call(callback, 'datapack')
+}
+
+type ScheduledFunction = string | TagInstance<'functions'> | MCFunctionInstance | (() => (void | Promise<void>))
 
 export class Schedule extends Command {
   @command(['schedule', 'clear'], {
@@ -66,7 +70,7 @@ export class Schedule extends Command {
        * myFunction.schedule('2s', 'append')
        * ```
        *
-       * @param functionName Specify the function to be scheduled.
+       * @param functionName Specify the function, the `MCFunction` or the callback to be scheduled.
        *
        * @param delay Specify the delay time.
        *
@@ -81,10 +85,10 @@ export class Schedule extends Command {
        * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
        * If unspecified, defaults to `replace`.
        */
-      (functionName: string | TagInstance<'functions'>, delay: TimeArgument, type?: 'append' | 'replace') => void
+      (functionName: ScheduledFunction, delay: TimeArgument, type?: 'append' | 'replace') => void
     ) & (
       /**
-       * Delays the execution of a function. Executes the function after specified amount of time passes.
+       * Delays the execution of a named callback. Executes the function after specified amount of time passes.
        *
        * --------------------------------------------------
        * ⚠️ The prefered way is using:
@@ -108,14 +112,34 @@ export class Schedule extends Command {
        * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
        * If unspecified, defaults to `replace`.
        */
-      (mcFunction: MCFunctionInstance, delay: TimeArgument, type?: 'append' | 'replace') => void
+      (callbackName: string, callback: (() => (void | Promise<void>)), delay: TimeArgument, type?: 'append' | 'replace') => void
     )
-  ) = (func: string | MCFunctionInstance | TagInstance<'functions'>, delay: unknown, type?: 'append' | 'replace') => {
+  ) = (...args: unknown[]) => {
+    const datapack = this.commandsRoot.Datapack
+
+    const scheduleCallback = (name: string, callback: () => (void | Promise<void>), delay: TimeArgument, type: 'append' | 'replace', asChild: boolean) => {
+      datapack.createCallbackMCFunction(name, callback, asChild).schedule(delay, type)
+    }
+
+    // If a callback with a name has been given, create a root function & schedule it
+    if (typeof args[0] === 'string' && typeof args[1] === 'function') {
+      const [callbackName, callback, delay, type] = args
+      scheduleCallback(callbackName, callback as () => (void | Promise<void>), delay as TimeArgument, type as 'append' | 'replace', false)
+      return
+    }
+
+    const [func, delay, type] = args as [ScheduledFunction, TimeArgument, 'append' | 'replace']
+
     if (typeof func === 'string' || func instanceof TagInstance) {
+      // If a string/tag has been given simply schedule it
       this.commandsRoot.arguments.push('schedule', 'function', func, delay, type)
       this.commandsRoot.register()
+    } else if (isMCFunctionInstance(func)) {
+      // If a MCFunction has been given, use the builtin schedule
+      func.schedule(delay as string, type as any)
     } else {
-      func.schedule(delay as string, type)
+      // If a nameless callback has been given, create a child function & schedule it
+      scheduleCallback('_schedule', func as () => (void | Promise<void>), delay, type, true)
     }
   }
 }

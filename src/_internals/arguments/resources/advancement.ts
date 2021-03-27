@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import type { LiteralUnion } from '@/generalTypes'
-import type { ITEMS, JsonTextComponent, NBT } from '@arguments'
+import type { ITEMS, JsonTextComponent, RootNBT } from '@arguments'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { AdvancementInstance } from '@resources'
 import type { AdvancementTriggers } from './AdvancementTriggers'

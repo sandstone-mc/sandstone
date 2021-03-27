@@ -3,8 +3,8 @@ import util from 'util'
 import { VectorClass } from './Coordinates'
 
 import type {
-  Coordinates, NBT, Range,
-  Rotation,
+  Coordinates, Range,
+  RootNBT, Rotation,
 } from '@arguments'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
@@ -37,7 +37,7 @@ export function rotationParser<T extends unknown>(rotation: T): (
   return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
 }
 
-export const nbtParser = (nbt: NBT) => util.inspect(nbt, {
+export const nbtParser = (nbt: RootNBT) => util.inspect(nbt, {
   depth: null,
   showHidden: false,
   compact: true,

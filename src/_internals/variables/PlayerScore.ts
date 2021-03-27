@@ -131,6 +131,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return this.unaryOperation('set', '=', ...args)
   }
 
+  '=' = this.set
+
   /**
    * Adds other entities's scores to the current entity's score.
    *
@@ -150,6 +152,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   add(...args: OperationArguments) {
     return this.unaryOperation('add', '+=', ...args)
   }
+
+  '+=' = this.add
 
   /**
    * Substract other target's scores from the current entity's score.
@@ -171,6 +175,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return this.unaryOperation('remove', '-=', ...args)
   }
 
+  '-=' = this.remove
+
   /**
    * Multiply the current entity's score by other entities's scores.
    *
@@ -190,6 +196,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   multiply(...args: OperationArguments) {
     return this.binaryOperation('*=', ...args)
   }
+
+  '*=' = this.multiply
 
   /**
    * Divide the current entity's score by other entities's scores.
@@ -211,6 +219,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return this.binaryOperation('/=', ...args)
   }
 
+  '/=' = this.divide
+
   /**
    * Get the remainder of the division of the current entity's score by other entities's scores.
    *
@@ -231,6 +241,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return this.binaryOperation('%=', ...args)
   }
 
+  '%=' = this.modulo
+
   /**
    * Swap the current score with the other targets' scores.
    *
@@ -250,6 +262,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   swap(...args: OperationArguments) {
     this.binaryOperation('><', ...args)
   }
+
+  '><' = this.swap
 
   /** EFFECT-FREE OPERATORS */
 
@@ -275,6 +289,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return anonymousScore
   }
 
+  '+' = this.plus
+
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given targets' score.
    *
@@ -296,6 +312,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     anonymousScore.unaryOperation('remove', '-=', ...args)
     return anonymousScore
   }
+
+  '-' = this.plus
 
   /**
    * Returns a new anonymous score, equal to the product of the current score and the given targets' score.
@@ -319,6 +337,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return anonymousScore
   }
 
+  '*' = this.multipliedBy
+
   /**
    * Returns a new anonymous score, equal to the division of the current score and the given targets' score.
    *
@@ -341,6 +361,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return anonymousScore
   }
 
+  '/' = this.dividedBy
+
   /**
    * Returns a new anonymous score, equal to the modulo of the current score and the given targets' score.
    *
@@ -362,6 +384,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     anonymousScore.binaryOperation('%=', ...args)
     return anonymousScore
   }
+
+  '%' = this.dividedBy
 
   /** COMPARISONS OPERATORS */
   private comparison(
@@ -403,6 +427,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return this.comparison('>', `${typeof args[0] === 'number' ? args[0] + 1 : null}..`, args)
   }
 
+  '>' = this.greaterThan
+
   /**
    * Check if the current score is greater or equal than the given score.
    *
@@ -423,6 +449,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return this.comparison('>=', `${args[0]}..`, args)
   }
 
+  '>=' = this.greaterThan
+
   /**
    * Check if the current score is strictly lower than the given score.
    *
@@ -430,18 +458,20 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  lessThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly lower than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  lowerThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
+  lessThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
 
-  lowerThan(...args: OperationArguments) {
+  lessThan(...args: OperationArguments) {
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
   }
+
+  '<' = this.lessThan
 
   /**
    * Check if the current score is lower or equal than the given score.
@@ -450,18 +480,20 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  lessOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is lower or equal than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score target to compare the current score against.
    */
-  lowerOrEqualThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
+  lessOrEqualThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
 
-  lowerOrEqualThan(...args: OperationArguments) {
+  lessOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
   }
+
+  '<=' = this.lessOrEqualThan
 
   /**
    * Check if the current score is equal to than the given score.
@@ -482,6 +514,8 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)
   }
+
+  '==' = this.equalTo
 
   /**
    * Check if the current score matches a certain range.

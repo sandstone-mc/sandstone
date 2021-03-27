@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import { isAsyncFunction } from '@/utils'
 import { coordinatesParser, rangeParser, rotationParser } from '@variables'
 
 import { command } from '../decorators'
@@ -47,6 +47,8 @@ class ExecuteSubcommand<T extends CommandsRootLike> extends CommandLike<T> {
 function isRealCommandsRoot(commandsRootLike: CommandsRootLike): commandsRootLike is CommandsRoot {
   return Object.prototype.hasOwnProperty.call(commandsRootLike, 'register')
 }
+
+type TEST<T> = 0
 
 export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
   /**
@@ -497,20 +499,6 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
   /**
    * Runs a single command.
-   * @deprecated Use `run.<command>` instead.
-   */
-  get runOne(): (
-    T extends CommandsRoot ?
-      // The Pick<> ensures only commands are returned from CommandsRoot
-      Pick<T, keyof typeof commands> :
-      T
-  ) {
-    console.warn(chalk.hex('#ff6700')('`runOne` is deprecated. Please use `run` instead: `execute.as("@a").run.give("@s", "minecraft:diamond", 1)`'))
-    return this.run
-  }
-
-  /**
-   * Runs a single command.
    */
   get run(): (
     T extends CommandsRoot ?
@@ -523,6 +511,11 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     return this.commandsRoot as any
   }
 }
+
+type RunCallback = (
+  (<R extends Promise<void> | void>(callback: () => R) => R) &
+  (<R extends Promise<void> | void>(name: string, callback: () => R) => R)
+)
 
 export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
   /**
@@ -541,21 +534,29 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
    * // Run a single command
    * execute.as(`@s`).run.give(`@s`, 'minecraft:diamond', 1)
    */
-  get run(): (
-    T extends CommandsRoot ?
-   // The Pick<> ensures only commands are returned from CommandsRoot
-   Pick<T, keyof typeof commands> & ((callback: () => void) => void) :
-   T & ((callback: () => void) => void)
-  ) {
+  get run() {
     type Callback = ((callback: () => void) => void)
     type Result = (Record<string, unknown> & Callback)
 
-    const runMultiple: Result = ((callback: () => void) => {
-      this.commandsRoot.Datapack.flow.flowStatement(callback, {
-        callbackName: `execute_${this.commandsRoot.arguments[1]}`,
-        initialCondition: false,
-        loopCondition: false,
-      })
+    const runMultiple: Result = ((nameOrCb: string | Callback, callbackOrUndefined?: Callback) => {
+      const datapack = this.commandsRoot.Datapack
+
+      const callback = (callbackOrUndefined ?? nameOrCb) as Callback
+      const name = typeof nameOrCb === 'string' ? nameOrCb : undefined
+
+      const fallbackName = `execute_${this.commandsRoot.arguments[1]}`
+      if (isAsyncFunction(callback)) {
+        const realName = name ?? fallbackName
+        const mcFunction = datapack.createCallbackMCFunction(realName, callback, typeof name === 'undefined')
+        mcFunction()
+      } else {
+        datapack.flow.flowStatement(callback as any, {
+          absoluteName: name,
+          callbackName: fallbackName,
+          initialCondition: false,
+          loopCondition: false,
+        })
+      }
     }) as any
 
     // We need to add all CommandsRoot keys to this function.
@@ -579,7 +580,7 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
     }
 
     this.commandsRoot.executeState = 'after'
-    return runMultiple as any
+    return runMultiple as RunCallback & (T extends CommandsRoot ? Pick<T, keyof typeof commands> : T)
   }
 }
 

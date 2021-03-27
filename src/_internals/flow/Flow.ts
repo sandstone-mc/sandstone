@@ -1,4 +1,4 @@
-import util from 'util'
+import { isAsyncFunction } from '@/utils'
 import { Execute } from '@commands/implementations/Execute'
 import { toMCFunctionName } from '@datapack/minecraft'
 import { coordinatesParser } from '@variables'
@@ -18,10 +18,6 @@ import type { ConditionClass } from '@variables'
 import type { ConditionType } from './conditions'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
-
-function isAsyncFunction(func: ((...args: any[]) => void) | ((...args: any[]) => Promise<void>)): func is (...args: any[]) => Promise<void> {
-  return util.types.isAsyncFunction(func)
-}
 
 /** Call a given callback function, and inline it if possible */
 function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionResource, forceInlineScore?: PlayerScore) {
@@ -76,6 +72,7 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
 
 type FlowStatementConfig = {
   callbackName: string
+  absoluteName?: string
   forceInlineScore?: PlayerScore
 } & (
   {
@@ -216,7 +213,14 @@ export class Flow {
     const { fullName: asyncCallbackName } = this.datapack.getUniqueChildName(ASYNC_CALLBACK_NAME)
 
     // First, enter the callback
-    const callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
+    let callbackFunctionName: string
+
+    if (config.absoluteName) {
+      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName)
+    } else {
+      callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
+    }
+
     const callbackMCFunction = this.datapack.currentFunction!
 
     await callback()
@@ -293,7 +297,14 @@ export class Flow {
     const { currentFunction } = this.datapack
 
     // First, enter the callback
-    const callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
+    let callbackFunctionName: string
+
+    if (config.absoluteName) {
+      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName)
+    } else {
+      callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
+    }
+
     const callbackMCFunction = this.datapack.currentFunction!
 
     // Add its commands
@@ -547,7 +558,7 @@ export class Flow {
 
       const mean = Math.floor((min + max) / 2)
 
-      this.if(score.lowerThan(mean), () => recursiveMatch(min, mean))
+      this.if(score.lessThan(mean), () => recursiveMatch(min, mean))
       this.if(score.greaterOrEqualThan(mean), () => recursiveMatch(mean, max))
     }
 
@@ -604,7 +615,7 @@ export class Flow {
      * just do a while loop that calls `maximum` times the callback,
      * until there is less than `maximum` iterations
      */
-    _.while(iterations.lowerThan(maximum), () => {
+    _.while(iterations.lessThan(maximum), () => {
       callback(maximum)
       iterations.remove(maximum)
     })
@@ -632,13 +643,13 @@ export class Flow {
     }
 
     if (!isAsyncFunction(callback)) {
-      return loop(scoreTracker.lowerThan(to), () => {
+      return loop(scoreTracker.lessThan(to), () => {
         callback(scoreTracker)
         scoreTracker.add(1)
       })
     }
 
-    return loop(scoreTracker.lowerThan(to), async () => {
+    return loop(scoreTracker.lessThan(to), async () => {
       await callback(scoreTracker)
       scoreTracker.add(1)
     })

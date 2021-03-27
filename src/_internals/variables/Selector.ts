@@ -5,7 +5,7 @@ import { nbtParser, rangeParser } from '@variables/parsers'
 import { ComponentClass } from './abstractClasses'
 
 import type {
-  ENTITY_TYPES, NBT, TextComponentObject,
+  ENTITY_TYPES, RootNBT, TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { PredicateInstance } from '@resources'
@@ -110,7 +110,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   predicate?: string | PredicateInstance | (PredicateInstance | string)[]
 
   /** Select all targets that have the specified NBT. */
-  nbt?: NBT
+  nbt?: RootNBT
 
   /**
    * Define a position on the X-axis in the world the selector starts at,
@@ -241,7 +241,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
         // Parse scores
         scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
 
-        nbt: (nbt: NBT) => result.push(['nbt', nbtParser(nbt)]),
+        nbt: (nbt: RootNBT) => result.push(['nbt', nbtParser(nbt)]),
 
         // Parse advancements
         advancements: (advancements: AdvancementsArgument) => result.push(

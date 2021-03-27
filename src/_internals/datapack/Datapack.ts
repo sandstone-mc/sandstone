@@ -8,7 +8,7 @@ import { toMCFunctionName } from './minecraft'
 import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
-import type { LiteralUnion } from '@/generalTypes'
+import type { HideFunctionProperties, LiteralUnion } from '@/generalTypes'
 import type { JsonTextComponent, OBJECTIVE_CRITERION, TimeArgument } from '@arguments'
 import type { MCFunctionClass } from '@resources'
 import type { ObjectiveClass } from '@variables'
@@ -113,7 +113,7 @@ export interface SandstoneConfig {
   }
 }
 
-export interface MCFunctionInstance<RETURN extends (void | Promise<void>) = (void | Promise<void>)> {
+export type MCFunctionInstance<RETURN extends (void | Promise<void>) = (void | Promise<void>)> = HideFunctionProperties<{
   (): RETURN
 
   schedule: (delay: TimeArgument, type?: 'append' | 'replace') => void
@@ -125,7 +125,7 @@ export interface MCFunctionInstance<RETURN extends (void | Promise<void>) = (voi
   toString: () => string
 
   toJSON: () => string
-}
+}>
 
 export default class Datapack {
   basePath: BasePathClass<undefined, undefined>
@@ -235,14 +235,14 @@ export default class Datapack {
    *
    * @param functionName The name of the function to create
    */
-  private createEnterRootFunction(functionName: string): ResourcePath {
+  createEnterRootFunction(functionName: string): string {
     const functionPath = this.getResourcePath(functionName).fullPathWithNamespace
 
     this.currentFunction = this.resources.addResource('functions', {
       children: new Map(), commands: [], isResource: true, path: functionPath,
     })
 
-    return functionPath
+    return toMCFunctionName(functionPath)
   }
 
   /**
@@ -317,6 +317,16 @@ export default class Datapack {
 
     // Return its full minecraft name
     return realFunctionName
+  }
+
+  createCallbackMCFunction(name: string, callback: () => (void | Promise<void>), asChild: boolean): MCFunctionInstance {
+    let fullName: string
+    if (asChild) {
+      fullName = toMCFunctionName(this.getUniqueChildName(name).fullPathWithNamespace)
+    } else {
+      fullName = name
+    }
+    return this.basePath.MCFunction(fullName, callback)
   }
 
   /**

@@ -1,7 +1,7 @@
 import util from 'util'
 import { nbtParser } from '@variables'
 
-import type { NBT as NBTObj } from '@arguments'
+import type { RootNBT as NBTObj } from '@arguments'
 
 export abstract class NBTCustomObject {
   abstract [util.inspect.custom]: () => string;

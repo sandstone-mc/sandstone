@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.
  * @see https://github.com/microsoft/TypeScript/issues/29729#issuecomment-700527227
@@ -15,9 +16,8 @@ export type LiteralUnion<T extends string> = T | (Omit<string, keyof string> & {
 
 export type AtLeastOne<T> = [T, ...T[]]
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type HideFunctionProperties<T extends Function> = {
-    /** @deprecated */
+export type HideFunctionProperties<T extends Function> = T & {
+  /** @deprecated */
   call: T['call']
   /** @deprecated */
   apply: T['apply']
@@ -32,7 +32,7 @@ export type HideFunctionProperties<T extends Function> = {
   /** @deprecated */
   caller: T['caller']
   /** @deprecated */
-  name: T['name']
+  readonly name: T['name']
   /** @deprecated */
   [Symbol.hasInstance]: (value: unknown) => boolean
-} & T
+}

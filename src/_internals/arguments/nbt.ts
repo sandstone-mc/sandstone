@@ -8,4 +8,4 @@ export type NBTObject = (
     NBTCustomObject
 )
 
-export type NBT = Record<string, NBTObject>
+export type RootNBT = Record<string, NBTObject>

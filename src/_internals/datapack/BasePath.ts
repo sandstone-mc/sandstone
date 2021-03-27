@@ -132,7 +132,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
   }
 
   /**
-   * Get the name of a resource under this base path.
+   * Get the name of a resource under this base path. Can also be used with template strings.
    * @param name The basic name of the resource.
    * @returns The name of the resource under this base path.
    *
@@ -141,7 +141,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
    * >>> basePath.getResourceName('my_resource')
    * "mynamespace:sub/folder/my_resource"
    */
-  getResourceName = (name: string) => this.getName(name)
+  getResourceName = (name: string | TemplateStringsArray) => this.getName(typeof name === 'string' ? name : name.join())
 
   /**
    * Creates a Minecraft Function.
