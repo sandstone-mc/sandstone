@@ -115,17 +115,7 @@ export interface SandstoneConfig {
 
 export type MCFunctionInstance<RETURN extends (void | Promise<void>) = (void | Promise<void>)> = HideFunctionProperties<{
   (): RETURN
-
-  schedule: (delay: TimeArgument, type?: 'append' | 'replace') => void
-
-  clearSchedule: () => void
-
-  generate: () => void
-
-  toString: () => string
-
-  toJSON: () => string
-}>
+} & Pick<MCFunctionClass, 'schedule' | 'generate' | 'toString' | 'toJSON'>>
 
 export default class Datapack {
   basePath: BasePathClass<undefined, undefined>

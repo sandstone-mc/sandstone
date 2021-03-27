@@ -1,6 +1,5 @@
 import util from 'util'
 
-import type { LiteralUnion } from '@/generalTypes'
 import type { TimeArgument } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { FunctionResource } from '@datapack/resourcesTree'
@@ -177,12 +176,23 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     this.datapack.commandsRoot.functionCmd(this.name)
   }
 
-  schedule = (delay: TimeArgument, type?: 'replace' | 'append') => {
+  private scheduleFunction = (delay: TimeArgument, type?: 'replace' | 'append') => {
     this.datapack.commandsRoot.schedule.function(this.name, delay, type)
   }
 
-  clearSchedule = () => {
+  private clearSchedule = () => {
     this.datapack.commandsRoot.schedule.clear(this.name)
+  }
+
+  schedule = (() => {
+    const scheduleFunction = this.scheduleFunction as ((delay: TimeArgument, type?: 'replace' | 'append') => void) & { clear: () => void }
+
+    scheduleFunction.clear = this.clearSchedule
+    return scheduleFunction
+  })()
+
+  get x() {
+    return 0
   }
 
   toString = () => this.name

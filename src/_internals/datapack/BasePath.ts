@@ -154,6 +154,7 @@ export class BasePathClass<N extends (undefined | string), D extends (undefined 
   ): MCFunctionInstance<RETURN> => {
     const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, options ?? {})
 
+    console.log(mcfunction)
     this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)
 
     const returnFunction: any = mcfunction.call

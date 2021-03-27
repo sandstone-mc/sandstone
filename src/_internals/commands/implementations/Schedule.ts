@@ -12,109 +12,78 @@ function isMCFunctionInstance(callback: () => (void | Promise<void>)): callback 
 
 type ScheduledFunction = string | TagInstance<'functions'> | MCFunctionInstance | (() => (void | Promise<void>))
 
+export type ScheduleFunction = (
+  (
+    /**
+     * Delays the execution of a function. Executes the function after specified amount of time passes.
+     *
+     * @param functionName Specify the function, the `MCFunction` or the callback to be scheduled.
+     *
+     * @param delay Specify the delay time.
+     *
+     * Must be a time in Minecraft. It must be a single-precision floating point number suffixed with a unit. Units include:
+     * - d: an in-game day, 24000 gameticks;
+     * - s: a second, 20 gameticks;
+     * - t (default and omitable): a single gametick; the default unit.
+     *
+     * The time is set to the closest integer tick after unit conversion. For example. .5d is same as 12000 ticks.
+     *
+     * @param type
+     * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
+     * If unspecified, defaults to `replace`.
+     */
+    (functionName: ScheduledFunction, delay: TimeArgument, type?: 'append' | 'replace') => void
+  ) & (
+    /**
+     * Delays the execution of a named callback. Executes the function after specified amount of time passes.
+     *
+     * @param mcFunction Specify the `MCFunction` to be scheduled.
+     *
+     * @param delay Specify the delay time.
+     *
+     * Must be a time in Minecraft. It must be a single-precision floating point number suffixed with a unit. Units include:
+     * - d: an in-game day, 24000 gameticks;
+     * - s: a second, 20 gameticks;
+     * - t (default and omitable): a single gametick; the default unit.
+     *
+     * The time is set to the closest integer tick after unit conversion. For example. .5d is same as 12000 ticks.
+     *
+     * @param type
+     * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
+     * If unspecified, defaults to `replace`.
+     */
+    (callbackName: string, callback: (() => (void | Promise<void>)), delay: TimeArgument, type?: 'append' | 'replace') => void
+  )
+)
+
+export type ClearScheduleFunction = (
+  (
+    /**
+     * Removes a scheduled function.
+     *
+     * @param functionName Specify the scheduled function or `MCFunction` to be cleared.
+     *
+     */
+    (functionName: string | TagInstance<'functions'> | MCFunctionInstance) => void
+  )
+)
+
 export class Schedule extends Command {
   @command(['schedule', 'clear'], {
     isRoot: true, executable: true, registerArguments: false, hasSubcommands: true,
   })
-  clear: (
-    (
-      /**
-       * Removes a scheduled function.
-       *
-       * --------------------------------------------------
-       * ⚠️ The prefered way is using:
-       * ```
-       * const myFunction = MCFunction(...)
-       * myFunction.clearSchedule()
-       * ```
-       *
-       * @param functionName Specify the scheduled function to be cleared.
-       *
-       */
-      (functionName: string | TagInstance<'functions'>) => void
-    ) & (
-      /**
-       * Removes a scheduled function.
-       *
-       * --------------------------------------------------
-       * ⚠️ The prefered way is using:
-       * ```
-       * const myFunction = MCFunction(...)
-       * myFunction.clearSchedule()
-       * ```
-       *
-       * @param mcFunction Specify the scheduled `MCFunction` to be cleared.
-       */
-      (mcFunction: MCFunctionInstance) => void
-    )
-  ) = (func: MCFunctionInstance<any> | string | TagInstance<'functions'>) => {
+  clear: ClearScheduleFunction = (func: MCFunctionInstance<any> | string | TagInstance<'functions'>) => {
     if (typeof func === 'string' || func instanceof TagInstance) {
       this.commandsRoot.addAndRegister('schedule', 'clear', func)
     } else {
-      func.clearSchedule()
+      func.schedule.clear()
     }
   }
 
   @command(['schedule', 'function'], {
     isRoot: true, executable: true, registerArguments: false, hasSubcommands: true,
   })
-  function: (
-    (
-      /**
-       * Delays the execution of a function. Executes the function after specified amount of time passes.
-       *
-       * --------------------------------------------------
-       * ⚠️ The prefered way is using:
-       * ```
-       * const myFunction = MCFunction(...)
-       * myFunction.schedule('2s', 'append')
-       * ```
-       *
-       * @param functionName Specify the function, the `MCFunction` or the callback to be scheduled.
-       *
-       * @param delay Specify the delay time.
-       *
-       * Must be a time in Minecraft. It must be a single-precision floating point number suffixed with a unit. Units include:
-       * - d: an in-game day, 24000 gameticks;
-       * - s: a second, 20 gameticks;
-       * - t (default and omitable): a single gametick; the default unit.
-       *
-       * The time is set to the closest integer tick after unit conversion. For example. .5d is same as 12000 ticks.
-       *
-       * @param type
-       * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
-       * If unspecified, defaults to `replace`.
-       */
-      (functionName: ScheduledFunction, delay: TimeArgument, type?: 'append' | 'replace') => void
-    ) & (
-      /**
-       * Delays the execution of a named callback. Executes the function after specified amount of time passes.
-       *
-       * --------------------------------------------------
-       * ⚠️ The prefered way is using:
-       * ```
-       * const myFunction = MCFunction(...)
-       * myFunction.schedule('2s', 'append')
-       * ```
-       *
-       * @param mcFunction Specify the `MCFunction` to be scheduled.
-       *
-       * @param delay Specify the delay time.
-       *
-       * Must be a time in Minecraft. It must be a single-precision floating point number suffixed with a unit. Units include:
-       * - d: an in-game day, 24000 gameticks;
-       * - s: a second, 20 gameticks;
-       * - t (default and omitable): a single gametick; the default unit.
-       *
-       * The time is set to the closest integer tick after unit conversion. For example. .5d is same as 12000 ticks.
-       *
-       * @param type
-       * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
-       * If unspecified, defaults to `replace`.
-       */
-      (callbackName: string, callback: (() => (void | Promise<void>)), delay: TimeArgument, type?: 'append' | 'replace') => void
-    )
-  ) = (...args: unknown[]) => {
+  function: ScheduleFunction = (...args: unknown[]) => {
     const datapack = this.commandsRoot.Datapack
 
     const scheduleCallback = (name: string, callback: () => (void | Promise<void>), delay: TimeArgument, type: 'append' | 'replace', asChild: boolean) => {
