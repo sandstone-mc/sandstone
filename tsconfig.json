@@ -13,43 +13,43 @@
     "baseUrl": ".",
     "paths": {
       "@arguments": [
-        "./src/_internals/arguments"
+        "./src/arguments"
       ],
       "@arguments/*": [
-        "./src/_internals/arguments/*"
+        "./src/arguments/*"
       ],
       "@commands": [
-        "./src/_internals/commands"
+        "./src/commands"
       ],
       "@commands/*": [
-        "./src/_internals/commands/*"
+        "./src/commands/*"
       ],
       "@datapack": [
-        "./src/_internals/datapack"
+        "./src/datapack"
       ],
       "@datapack/*": [
-        "./src/_internals/datapack/*"
+        "./src/datapack/*"
       ],
       "@resources": [
-        "./src/_internals/resources"
+        "./src/resources"
       ],
       "@resources/*": [
-        "./src/_internals/resources/*"
+        "./src/resources/*"
       ],
       "@variables": [
-        "./src/_internals/variables"
+        "./src/variables"
       ],
       "@variables/*": [
-        "./src/_internals/variables/*"
+        "./src/variables/*"
       ],
       "@flow": [
-        "./src/_internals/flow"
+        "./src/flow"
       ],
       "@flow/*": [
-        "./src/_internals/flow/*"
+        "./src/flow/*"
       ],
       "@/*": [
-        "./src/_internals/*"
+        "./src/*"
       ]
     },
     /* Basic Options */
