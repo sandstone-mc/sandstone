@@ -216,7 +216,7 @@ export class Flow {
     let callbackFunctionName: string
 
     if (config.absoluteName) {
-      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName)
+      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName, 'throw')
     } else {
       callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
     }
@@ -300,7 +300,7 @@ export class Flow {
     let callbackFunctionName: string
 
     if (config.absoluteName) {
-      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName)
+      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName, 'throw')
     } else {
       callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
     }

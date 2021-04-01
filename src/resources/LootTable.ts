@@ -6,15 +6,26 @@ import type {
 import type { LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 
+export type LootTableOptions = {
+  /**
+   * What to do if another LootTable has the same name.
+   *
+   * - `throw`: Throw an error.
+   * - `replace`: Replace silently the old LootTable with the new one.
+   * - `ignore`: Keep silently the old LootTable, discarding the new one.
+   */
+  onConflict?: 'throw' | 'replace' | 'ignore'
+}
+
 export class LootTableInstance extends ResourceInstance {
   lootTableJson
 
-  constructor(datapack: Datapack, name: string, lootTable: LootTableJSON) {
+  constructor(datapack: Datapack, name: string, lootTable: LootTableJSON, options?: LootTableOptions) {
     super(datapack, name)
 
     this.lootTableJson = lootTable
 
-    datapack.addResource(name, 'loot_tables', { lootTable })
+    datapack.addResource(name, 'loot_tables', { lootTable }, options?.onConflict ?? 'warn')
   }
 
   /** Gives items to players, ignoring empty item stacks. */

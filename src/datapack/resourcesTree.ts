@@ -1,4 +1,8 @@
 /* eslint-disable camelcase */
+import chalk from 'chalk'
+
+import { toMCFunctionName } from './minecraft'
+
 import type {
   AdvancementJSON, LootTableJSON, PredicateJSON, RecipeJSON,
   TAG_TYPES, TagSingleValue,
@@ -85,6 +89,10 @@ export type NamespaceResources = {
 export type Namespaces = Map<string, NamespaceResources>
 
 export type ResourceTypes = keyof NamespaceResources
+
+export type ResourceConflictStrategy<T extends ResourceTypes, U extends ResourceOnlyTypeMap[T] = ResourceOnlyTypeMap[T]> = (
+  'throw' | 'replace' | 'ignore' | 'warn' | ((oldResource: U, newResource: U) => U)
+)
 
 export class ResourcesTree {
   namespaces: Namespaces
@@ -209,11 +217,45 @@ export class ResourcesTree {
    * @param resourceType the type of the resource
    * @param resource The resource to add.
    */
-  addResource<T extends ResourceTypes, U extends ResourceTypeMap[T]>(
+  addResource<T extends ResourceTypes, U extends ResourceTypeMap[T] = ResourceTypeMap[T]>(
     resourceType: T,
     resource: U,
+    conflictStrategy: ResourceConflictStrategy<T>,
   ): U & ResourceTypeMap[T] {
     const parentPath = resource.path.slice(0, -1)
+
+    const handleConflict = (): U => {
+      const previousResource = this.getResourceOrFolder(resource.path, resourceType) as U
+
+      if (!previousResource || conflictStrategy === 'replace' || !previousResource.isResource || !resource.isResource) {
+        return resource
+      }
+
+      if (conflictStrategy === 'ignore') {
+        return previousResource
+      }
+
+      const toTitleCase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+      const niceResourceType = toTitleCase(resourceType.slice(0, -1))
+
+      if (conflictStrategy === 'throw') {
+        throw new Error(`Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`)
+      }
+
+      if (conflictStrategy === 'warn') {
+        console.warn(
+          chalk.keyword('orange')(
+            'Warning:',
+            `Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`,
+            "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
+          ),
+        )
+        return resource
+      }
+
+      return conflictStrategy(previousResource as ResourceOnlyTypeMap[T], resource as ResourceOnlyTypeMap[T]) as U
+    }
+
     const namespace = parentPath[0]
 
     if (!this.namespaces.has(namespace)) {
@@ -221,23 +263,26 @@ export class ResourcesTree {
     }
 
     if (parentPath.length >= 2) {
+      // Our parent is a namespace + a folder
       let parent = this.getResourceOrFolder(parentPath as unknown as ResourcePath, resourceType)
 
       if (!parent) {
-        this.addResource(resourceType, {
+        // If our resource has no parents, create  aparent folder first
+        parent = this.addResource(resourceType, {
           children: new Map(),
           isResource: false,
           path: parentPath as any,
-        })
-
-        parent = this.getResourceOrFolder(parentPath as unknown as ResourcePath, resourceType)
+        } as U, conflictStrategy)
       }
 
-      parent!.children.set(resource.path[resource.path.length - 1], resource as any)
+      // Create the resource on the parent
+      const newResource = handleConflict()
+      parent.children.set(newResource.path[resource.path.length - 1], newResource as any)
     } else {
       // Our parent path only has one component, the namespace. We need to add the resource like this.
+      const newResource = handleConflict()
       const namespaceResource = this.namespaces.get(namespace) as NamespaceResources
-      namespaceResource[resourceType].set(resource.path[1], resource as any)
+      namespaceResource[resourceType].set(newResource.path[1], newResource as any)
     }
 
     return resource
@@ -256,7 +301,7 @@ export class ResourcesTree {
     try {
       return this.getResource(resource.path, resourceType) as unknown as U
     } catch (e) {
-      return this.addResource(resourceType, resource)
+      return this.addResource(resourceType, resource, 'throw')
     }
   }
 }

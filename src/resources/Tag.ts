@@ -30,12 +30,23 @@ function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagS
   return value as string | TagSingleValue<string>
 }
 
+export type TagOptions = {
+  /**
+   * What to do if another Tag has the same name.
+   *
+   * - `throw`: Throw an error.
+   * - `replace`: Replace silently the old Tag with the new one.
+   * - `ignore`: Keep silently the old Tag, discarding the new one.
+   */
+  onConflict?: 'throw' | 'replace' | 'ignore'
+}
+
 export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
   readonly type
 
   readonly values: TagSingleValue<string>[]
 
-  constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], replace?: boolean) {
+  constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], replace?: boolean, options?: TagOptions) {
     super(datapack, name)
 
     this.type = type
@@ -50,7 +61,7 @@ export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
       path: [this.path.namespace, type, ...this.path.fullPath],
       values: this.values,
       replace,
-    })
+    }, options?.onConflict ?? 'warn')
   }
 
   get name() {

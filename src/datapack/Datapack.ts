@@ -15,7 +15,7 @@ import type { ObjectiveClass } from '@variables'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
-  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
+  FunctionResource, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 
@@ -225,12 +225,12 @@ export default class Datapack {
    *
    * @param functionName The name of the function to create
    */
-  createEnterRootFunction(functionName: string): string {
+  createEnterRootFunction(functionName: string, conflictStrategy: ResourceConflictStrategy<'functions'>): string {
     const functionPath = this.getResourcePath(functionName).fullPathWithNamespace
 
     this.currentFunction = this.resources.addResource('functions', {
       children: new Map(), commands: [], isResource: true, path: functionPath,
-    })
+    }, conflictStrategy)
 
     return toMCFunctionName(functionPath)
   }
@@ -467,13 +467,18 @@ export default class Datapack {
     return returnFunction
   }
 
-  addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
+  addResource = <T extends ResourceTypes, U extends ResourceOnlyTypeMap[T] = ResourceOnlyTypeMap[T]>(
+    name: string,
+    type: T,
+    resource: Omit<U, 'children' | 'isResource' | 'path'>,
+    conflictStrategy: ResourceConflictStrategy<T>,
+  ) => {
     this.resources.addResource(type, {
       ...resource,
       children: new Map(),
       isResource: true,
       path: this.getResourcePath(name).fullPathWithNamespace,
-    } as ResourceOnlyTypeMap[T])
+    } as U, conflictStrategy)
   }
 
   sleep = (delay: TimeArgument): PromiseLike<void> => {
@@ -525,7 +530,7 @@ export default class Datapack {
     }
 
     // Then, generate the init function.
-    this.createEnterRootFunction('__init__')
+    this.createEnterRootFunction('__init__', 'ignore')
 
     // Start by generating constants
     if (this.constants.size > 0) {

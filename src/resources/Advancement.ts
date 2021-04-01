@@ -3,15 +3,26 @@ import { ResourceInstance } from './Resource'
 import type { AdvancementJSON, MultiplePlayersArgument } from 'src/arguments'
 import type { Datapack } from '@datapack'
 
+export type AdvancementOptions = {
+  /**
+   * What to do if an Advancement has the same name.
+   *
+   * - `throw`: Throw an error.
+   * - `replace`: Replace silently the old Advancement with the new one.
+   * - `ignore`: Keep silently the old Advancement, discarding the new one.
+   */
+  onConflict?: 'throw' | 'replace' | 'ignore'
+}
+
 export class AdvancementInstance<CriteriaNames extends string = string> extends ResourceInstance {
   advancementJson
 
-  constructor(datapack: Datapack, name: string, advancement: AdvancementJSON<CriteriaNames>) {
+  constructor(datapack: Datapack, name: string, advancement: AdvancementJSON<CriteriaNames>, options?: AdvancementOptions) {
     super(datapack, name)
 
     this.advancementJson = advancement
 
-    this.datapack.addResource(name, 'advancements', { advancement })
+    this.datapack.addResource(name, 'advancements', { advancement }, options?.onConflict ?? 'warn')
   }
 
   /**
