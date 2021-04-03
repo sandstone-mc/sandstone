@@ -1,6 +1,9 @@
+import { CONFLICT_STRATEGIES } from '@/env'
+
 import { ResourceInstance } from './Resource'
 
 import type { AdvancementJSON, MultiplePlayersArgument } from 'src/arguments'
+import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 
 export type AdvancementOptions = {
@@ -11,7 +14,7 @@ export type AdvancementOptions = {
    * - `replace`: Replace silently the old Advancement with the new one.
    * - `ignore`: Keep silently the old Advancement, discarding the new one.
    */
-  onConflict?: 'throw' | 'replace' | 'ignore'
+  onConflict?: BASIC_CONFLICT_STRATEGIES
 }
 
 export class AdvancementInstance<CriteriaNames extends string = string> extends ResourceInstance {
@@ -22,7 +25,7 @@ export class AdvancementInstance<CriteriaNames extends string = string> extends 
 
     this.advancementJson = advancement
 
-    this.datapack.addResource(name, 'advancements', { advancement }, options?.onConflict ?? 'warn')
+    this.datapack.addResource(name, 'advancements', { advancement }, options?.onConflict ?? CONFLICT_STRATEGIES.ADVANCEMENT)
   }
 
   /**

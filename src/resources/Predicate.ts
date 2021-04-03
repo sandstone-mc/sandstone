@@ -1,6 +1,9 @@
+import { CONFLICT_STRATEGIES } from '@/env'
+
 import { ResourceInstance } from './Resource'
 
 import type { PredicateJSON } from 'src/arguments'
+import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables'
 
@@ -12,7 +15,7 @@ export type PredicateOptions = {
    * - `replace`: Replace silently the old Predicate with the new one.
    * - `ignore`: Keep silently the old Predicate, discarding the new one.
    */
-  onConflict?: 'throw' | 'replace' | 'ignore'
+  onConflict?: BASIC_CONFLICT_STRATEGIES
 }
 
 export class PredicateInstance extends ResourceInstance implements ConditionClass {
@@ -23,7 +26,7 @@ export class PredicateInstance extends ResourceInstance implements ConditionClas
 
     this.predicateJson = predicate
 
-    this.commandsRoot.Datapack.addResource(name, 'predicates', { predicate }, options?.onConflict ?? 'warn')
+    this.commandsRoot.Datapack.addResource(name, 'predicates', { predicate }, options?.onConflict ?? CONFLICT_STRATEGIES.PREDICATE)
   }
 
   /**

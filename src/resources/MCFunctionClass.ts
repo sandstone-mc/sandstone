@@ -1,6 +1,8 @@
 import util from 'util'
+import { CONFLICT_STRATEGIES } from '@/env'
 
 import type { TimeArgument } from 'src/arguments'
+import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import type { FunctionResource, ResourceConflictStrategy, ResourcePath } from '@datapack/resourcesTree'
@@ -38,7 +40,7 @@ export type MCFunctionOptions = {
    * - `append`: Append the commands of the new MCFunction on the bottom of the new one.
    * - `prepend`: Prepend the commands of the new MCFunction on the top of the new one.
    */
-  onConflict?: 'throw' | 'replace' | 'ignore' | 'warn' | 'append' | 'prepend'
+  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
 
   /**
    * The function tags to put this function in.
@@ -105,7 +107,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     this.callback = callback
     this.datapack = datapack
 
-    this.onConflict = options.onConflict ?? 'warn'
+    this.onConflict = options.onConflict ?? CONFLICT_STRATEGIES.MCFUNCTION
 
     // We "reserve" the folder by creating an empty folder there. It can be later changed to be a resource.
     const functionsPaths = datapack.getResourcePath(name)

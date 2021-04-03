@@ -1,3 +1,4 @@
+import { CONFLICT_STRATEGIES } from '@/env'
 import { toMCFunctionName } from '@datapack/minecraft'
 
 import { ResourceInstance } from './Resource'
@@ -6,6 +7,7 @@ import type {
   HintedTagStringType, TAG_TYPES,
   TagJSON, TagSingleValue,
 } from 'src/arguments'
+import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 
@@ -38,7 +40,7 @@ export type TagOptions = {
    * - `replace`: Replace silently the old Tag with the new one.
    * - `ignore`: Keep silently the old Tag, discarding the new one.
    */
-  onConflict?: 'throw' | 'replace' | 'ignore'
+  onConflict?: BASIC_CONFLICT_STRATEGIES
 }
 
 export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
@@ -61,7 +63,7 @@ export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
       path: [this.path.namespace, type, ...this.path.fullPath],
       values: this.values,
       replace,
-    }, options?.onConflict ?? 'warn')
+    }, options?.onConflict ?? CONFLICT_STRATEGIES.TAG)
   }
 
   get name() {

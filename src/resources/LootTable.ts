@@ -1,9 +1,11 @@
+import { CONFLICT_STRATEGIES } from '@/env'
+
 import { ResourceInstance } from './Resource'
 
 import type {
   Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
 } from 'src/arguments'
-import type { LiteralUnion } from '@/generalTypes'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 
 export type LootTableOptions = {
@@ -14,7 +16,7 @@ export type LootTableOptions = {
    * - `replace`: Replace silently the old LootTable with the new one.
    * - `ignore`: Keep silently the old LootTable, discarding the new one.
    */
-  onConflict?: 'throw' | 'replace' | 'ignore'
+  onConflict?: BASIC_CONFLICT_STRATEGIES
 }
 
 export class LootTableInstance extends ResourceInstance {
@@ -25,7 +27,7 @@ export class LootTableInstance extends ResourceInstance {
 
     this.lootTableJson = lootTable
 
-    datapack.addResource(name, 'loot_tables', { lootTable }, options?.onConflict ?? 'warn')
+    datapack.addResource(name, 'loot_tables', { lootTable }, options?.onConflict ?? CONFLICT_STRATEGIES.LOOT_TABLE)
   }
 
   /** Gives items to players, ignoring empty item stacks. */

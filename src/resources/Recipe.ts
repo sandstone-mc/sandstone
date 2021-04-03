@@ -1,6 +1,9 @@
+import { CONFLICT_STRATEGIES } from '@/env'
+
 import { ResourceInstance } from './Resource'
 
 import type { MultiplePlayersArgument, RecipeJSON } from 'src/arguments'
+import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 
 export type RecipeOptions = {
@@ -11,7 +14,7 @@ export type RecipeOptions = {
    * - `replace`: Replace silently the old Recipe with the new one.
    * - `ignore`: Keep silently the old Recipe, discarding the new one.
    */
-  onConflict?: 'throw' | 'replace' | 'ignore'
+  onConflict?: BASIC_CONFLICT_STRATEGIES
 }
 
 export class RecipeInstance<P1 extends string = string, P2 extends string = string, P3 extends string = string> extends ResourceInstance {
@@ -22,7 +25,7 @@ export class RecipeInstance<P1 extends string = string, P2 extends string = stri
 
     this.recipeJson = recipe
 
-    this.datapack.addResource(name, 'recipes', { recipe }, options?.onConflict ?? 'warn')
+    this.datapack.addResource(name, 'recipes', { recipe }, options?.onConflict ?? CONFLICT_STRATEGIES.RECIPE)
   }
 
   /** Give this recipe to the given players. */

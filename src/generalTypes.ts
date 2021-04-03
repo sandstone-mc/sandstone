@@ -36,3 +36,5 @@ export type HideFunctionProperties<T extends Function> = T & {
   /** @deprecated */
   [Symbol.hasInstance]: (value: unknown) => boolean
 }
+
+export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'ignore' | 'warn'
