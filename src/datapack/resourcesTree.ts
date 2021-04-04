@@ -227,30 +227,44 @@ export class ResourcesTree {
     const handleConflict = (): U => {
       const previousResource = this.getResourceOrFolder(resource.path, resourceType) as U
 
-      if (!previousResource || conflictStrategy === 'replace' || !previousResource.isResource || !resource.isResource) {
-        return resource
-      }
-
-      if (conflictStrategy === 'ignore') {
-        return previousResource
-      }
-
       const toTitleCase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
       const niceResourceType = toTitleCase(resourceType.slice(0, -1))
 
-      if (conflictStrategy === 'throw') {
-        throw new Error(`Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`)
+      const niceName = toMCFunctionName(resource.path)
+
+      if (!previousResource || conflictStrategy === 'replace' || conflictStrategy === 'warn' || !previousResource.isResource) {
+        if (conflictStrategy === 'warn') {
+          console.warn(
+            chalk.keyword('orange')(
+              'Warning:',
+              `Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`,
+              "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
+            ),
+          )
+        }
+
+        // Merge children if strategy isn't "replace" or "warn"
+        if (previousResource && conflictStrategy !== 'replace' && conflictStrategy !== 'warn') {
+          [...previousResource.children].forEach(([key, child]) => {
+            resource.children.set(key, child as any)
+          })
+        }
+        return resource
       }
 
-      if (conflictStrategy === 'warn') {
-        console.warn(
-          chalk.keyword('orange')(
-            'Warning:',
-            `Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`,
-            "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
-          ),
-        )
-        return resource
+      if (conflictStrategy === 'ignore' || !resource.isResource) {
+        // Merge children if strategy isn't "ignore"
+        if (conflictStrategy !== 'ignore') {
+          [...resource.children].forEach(([key, child]) => {
+            previousResource.children.set(key, child as any)
+          })
+        }
+
+        return previousResource
+      }
+
+      if (conflictStrategy === 'throw') {
+        throw new Error(`Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`)
       }
 
       return conflictStrategy(previousResource as ResourceOnlyTypeMap[T], resource as ResourceOnlyTypeMap[T]) as U

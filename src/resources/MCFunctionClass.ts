@@ -4,6 +4,7 @@ import { CONFLICT_STRATEGIES } from '@/env'
 import type { TimeArgument } from 'src/arguments'
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
+import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import type { FunctionResource, ResourceConflictStrategy, ResourcePath } from '@datapack/resourcesTree'
 import type { TagInstance } from './Tag'
@@ -99,7 +100,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
   callback: () => R
 
-  constructor(datapack: Datapack, name: string, callback: () => R, options?: MCFunctionOptions) {
+  constructor(datapack: Datapack, name: string, callback: (this: MCFunctionInstance) => R, options?: MCFunctionOptions) {
     options = options ?? {}
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
@@ -170,14 +171,16 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
     // Choose the conflict strategy
     let onConflict: ResourceConflictStrategy<'functions'>
-    const previousResourceCommands: CommandArgs = []
+    let previousResource: FunctionResource & { isResource: true }
 
     if (this.onConflict === 'append' || this.onConflict === 'prepend') {
       onConflict = (oldFunc, newFunc) => {
-        previousResourceCommands.push(...oldFunc.commands)
+        previousResource = oldFunc
         return newFunc
       }
-    } else onConflict = this.onConflict
+    } else {
+      onConflict = this.onConflict
+    }
 
     const resource = this.generateResource(onConflict)
     this.datapack.currentFunction = resource
@@ -198,11 +201,27 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       // If there is an unfinished command, register it
       commandsRoot.register(true)
 
-      if (this.onConflict === 'append') {
-        resource.commands = [...previousResourceCommands, ...resource.commands]
+      const mergeChildren = () => {
+        if (!previousResource) {
+          return
+        }
+
+        [...previousResource.children].forEach(([key, child]) => {
+          if (resource.children.has(key)) {
+            throw new Error(`Tried to merge "${this.name}" MCFunctions using the "${this.onConflict}" strategy, but failed due to identically named children: "${key}".`)
+          }
+
+          resource.children.set(key, child)
+        })
       }
-      if (this.onConflict === 'prepend') {
-        resource.commands = [...resource.commands, ...previousResourceCommands]
+
+      if (this.onConflict === 'append') {
+        mergeChildren()
+        resource.commands = [...(previousResource?.commands ?? []), ...resource.commands]
+      }
+      if (this.onConflict === 'prepend' && previousResource) {
+        mergeChildren()
+        resource.commands = [...resource.commands, ...(previousResource?.commands ?? [])]
       }
 
       // Then back to the previous one
