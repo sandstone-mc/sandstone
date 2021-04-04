@@ -1,8 +1,12 @@
 import util from 'util'
+import { CONFLICT_STRATEGIES } from '@/env'
 
 import type { TimeArgument } from 'src/arguments'
+import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
-import type { FunctionResource } from '@datapack/resourcesTree'
+import type { MCFunctionInstance } from '@datapack/Datapack'
+import type { CommandArgs } from '@datapack/minecraft'
+import type { FunctionResource, ResourceConflictStrategy, ResourcePath } from '@datapack/resourcesTree'
 import type { TagInstance } from './Tag'
 
 export type MCFunctionOptions = {
@@ -26,6 +30,18 @@ export type MCFunctionOptions = {
    * Defaults to `true` if `runEach` is specified, else `false`.
    */
   runOnLoad?: boolean
+
+  /**
+   * What to do if another MCFunction has the same name.
+   *
+   * - `throw`: Throw an error.
+   * - `replace`: Replace silently the old MCFunction with the new one.
+   * - `ignore`: Keep silently the old MCFunction, discarding the new one.
+   * - `warn`: Logs a warning to the console.
+   * - `append`: Append the commands of the new MCFunction on the bottom of the new one.
+   * - `prepend`: Prepend the commands of the new MCFunction on the top of the new one.
+   */
+  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
 
   /**
    * The function tags to put this function in.
@@ -72,31 +88,41 @@ export type MCFunctionOptions = {
 export class MCFunctionClass<R extends void | Promise<void> = void | Promise<void>> {
   name: string
 
+  path: ResourcePath
+
   options: MCFunctionOptions
 
   alreadyInitialized: boolean
 
-  resource: FunctionResource
-
   datapack: Datapack
+
+  onConflict: NonNullable<MCFunctionOptions['onConflict']>
 
   callback: () => R
 
-  constructor(datapack: Datapack, name: string, callback: () => R, options: MCFunctionOptions) {
+  constructor(datapack: Datapack, name: string, callback: (this: MCFunctionInstance) => R, options?: MCFunctionOptions) {
+    options = options ?? {}
     this.options = { lazy: false, debug: process.env.NODE_ENV === 'development', ...options }
 
     this.alreadyInitialized = false
     this.callback = callback
     this.datapack = datapack
 
+    this.onConflict = options.onConflict ?? CONFLICT_STRATEGIES.MCFUNCTION
+
     // We "reserve" the folder by creating an empty folder there. It can be later changed to be a resource.
     const functionsPaths = datapack.getResourcePath(name)
 
-    this.resource = datapack.resources.addResource('functions', {
-      children: new Map(), isResource: true, path: functionsPaths.fullPathWithNamespace, commands: [],
-    })
-
     this.name = functionsPaths.fullName
+    this.path = functionsPaths.fullPathWithNamespace
+  }
+
+  private generateResource(strategy: ResourceConflictStrategy<'functions'>): FunctionResource & { isResource: true } {
+    const resource = this.datapack.resources.addResource('functions', {
+      children: new Map(), isResource: true, path: this.path, commands: [],
+    }, strategy)
+
+    return resource
   }
 
   /**
@@ -143,7 +169,21 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
     const previousFunction = this.datapack.currentFunction
 
-    this.datapack.currentFunction = this.resource
+    // Choose the conflict strategy
+    let onConflict: ResourceConflictStrategy<'functions'>
+    let previousResource: FunctionResource & { isResource: true }
+
+    if (this.onConflict === 'append' || this.onConflict === 'prepend') {
+      onConflict = (oldFunc, newFunc) => {
+        previousResource = oldFunc
+        return newFunc
+      }
+    } else {
+      onConflict = this.onConflict
+    }
+
+    const resource = this.generateResource(onConflict)
+    this.datapack.currentFunction = resource
 
     // Add some comments specifying the overload, and the options
     if (this.options.debug) {
@@ -160,6 +200,29 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     const afterCall = () => {
       // If there is an unfinished command, register it
       commandsRoot.register(true)
+
+      const mergeChildren = () => {
+        if (!previousResource) {
+          return
+        }
+
+        [...previousResource.children].forEach(([key, child]) => {
+          if (resource.children.has(key)) {
+            throw new Error(`Tried to merge "${this.name}" MCFunctions using the "${this.onConflict}" strategy, but failed due to identically named children: "${key}".`)
+          }
+
+          resource.children.set(key, child)
+        })
+      }
+
+      if (this.onConflict === 'append') {
+        mergeChildren()
+        resource.commands = [...(previousResource?.commands ?? []), ...resource.commands]
+      }
+      if (this.onConflict === 'prepend' && previousResource) {
+        mergeChildren()
+        resource.commands = [...resource.commands, ...(previousResource?.commands ?? [])]
+      }
 
       // Then back to the previous one
       this.datapack.currentFunction = previousFunction
@@ -190,10 +253,6 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     scheduleFunction.clear = this.clearSchedule
     return scheduleFunction
   })()
-
-  get x() {
-    return 0
-  }
 
   toString = () => this.name
 

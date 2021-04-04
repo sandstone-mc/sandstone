@@ -1,20 +1,33 @@
+import { CONFLICT_STRATEGIES } from '@/env'
+
 import { ResourceInstance } from './Resource'
 
 import type {
   Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
 } from 'src/arguments'
-import type { LiteralUnion } from '@/generalTypes'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
+
+export type LootTableOptions = {
+  /**
+   * What to do if another LootTable has the same name.
+   *
+   * - `throw`: Throw an error.
+   * - `replace`: Replace silently the old LootTable with the new one.
+   * - `ignore`: Keep silently the old LootTable, discarding the new one.
+   */
+  onConflict?: BASIC_CONFLICT_STRATEGIES
+}
 
 export class LootTableInstance extends ResourceInstance {
   lootTableJson
 
-  constructor(datapack: Datapack, name: string, lootTable: LootTableJSON) {
+  constructor(datapack: Datapack, name: string, lootTable: LootTableJSON, options?: LootTableOptions) {
     super(datapack, name)
 
     this.lootTableJson = lootTable
 
-    datapack.addResource(name, 'loot_tables', { lootTable })
+    datapack.addResource(name, 'loot_tables', { lootTable }, options?.onConflict ?? CONFLICT_STRATEGIES.LOOT_TABLE)
   }
 
   /** Gives items to players, ignoring empty item stacks. */

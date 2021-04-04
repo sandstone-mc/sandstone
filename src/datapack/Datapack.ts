@@ -9,13 +9,15 @@ import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
 import type { JsonTextComponent, OBJECTIVE_CRITERION, TimeArgument } from 'src/arguments'
-import type { HideFunctionProperties, LiteralUnion } from '@/generalTypes'
-import type { MCFunctionClass } from '@resources'
+import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion } from '@/generalTypes'
+import type {
+  AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
+} from '@resources'
 import type { ObjectiveClass } from '@variables'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
-  FunctionResource, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
+  FunctionResource, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 
@@ -110,6 +112,51 @@ export interface SandstoneConfig {
 
     /** A script running after Sandstone saved all files. */
     afterAll?: (options: ScriptArguments) => (void | Promise<void>)
+  }
+
+  /**
+   * The strategy to use when 2 resources of the same type (Advancement, MCFunctions...) have the same name.
+   */
+  onConflict?: {
+    /**
+     * The default conflict strategy to use for all resources.
+     *
+     * @default
+     * 'warn'
+     */
+    default?: BASIC_CONFLICT_STRATEGIES,
+
+    /**
+     * The conflict strategy to use for Advancements.
+     * Will override the defined `default` strategy.
+     */
+    advancement?: AdvancementOptions['onConflict']
+
+    /**
+     * The conflict strategy to use for Loot Tables.
+     * Will override the defined `default` strategy.
+     */
+    lootTable?: LootTableOptions['onConflict']
+    /**
+     * The conflict strategy to use for MCFunctions.
+     * Will override the defined `default` strategy.
+     */
+    mcFunction?: MCFunctionOptions['onConflict']
+    /**
+     * The conflict strategy to use for Predicates.
+     * Will override the defined `default` strategy.
+     */
+    predicate?: PredicateOptions['onConflict']
+    /**
+     * The conflict strategy to use for RecipeOptions.
+     * Will override the defined `default` strategy.
+     */
+    recipe?: RecipeOptions['onConflict']
+    /**
+     * The conflict strategy to use for Tags.
+     * Will override the defined `default` strategy.
+     */
+    tag?: TagOptions['onConflict']
   }
 }
 
@@ -225,12 +272,12 @@ export default class Datapack {
    *
    * @param functionName The name of the function to create
    */
-  createEnterRootFunction(functionName: string): string {
+  createEnterRootFunction(functionName: string, conflictStrategy: ResourceConflictStrategy<'functions'>): string {
     const functionPath = this.getResourcePath(functionName).fullPathWithNamespace
 
     this.currentFunction = this.resources.addResource('functions', {
       children: new Map(), commands: [], isResource: true, path: functionPath,
-    })
+    }, conflictStrategy)
 
     return toMCFunctionName(functionPath)
   }
@@ -467,13 +514,18 @@ export default class Datapack {
     return returnFunction
   }
 
-  addResource = <T extends ResourceTypes>(name: string, type: T, resource: Omit<ResourceOnlyTypeMap[T], 'children' | 'isResource' | 'path'>) => {
+  addResource = <T extends ResourceTypes, U extends ResourceOnlyTypeMap[T] = ResourceOnlyTypeMap[T]>(
+    name: string,
+    type: T,
+    resource: Omit<U, 'children' | 'isResource' | 'path'>,
+    conflictStrategy: ResourceConflictStrategy<T>,
+  ) => {
     this.resources.addResource(type, {
       ...resource,
       children: new Map(),
       isResource: true,
       path: this.getResourcePath(name).fullPathWithNamespace,
-    } as ResourceOnlyTypeMap[T])
+    } as U, conflictStrategy)
   }
 
   sleep = (delay: TimeArgument): PromiseLike<void> => {
@@ -525,7 +577,7 @@ export default class Datapack {
     }
 
     // Then, generate the init function.
-    this.createEnterRootFunction('__init__')
+    this.createEnterRootFunction('__init__', 'ignore')
 
     // Start by generating constants
     if (this.constants.size > 0) {
