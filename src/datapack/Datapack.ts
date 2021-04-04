@@ -9,8 +9,10 @@ import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
 import type { JsonTextComponent, OBJECTIVE_CRITERION, TimeArgument } from 'src/arguments'
-import type { HideFunctionProperties, LiteralUnion } from '@/generalTypes'
-import type { MCFunctionClass } from '@resources'
+import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion } from '@/generalTypes'
+import type {
+  AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
+} from '@resources'
 import type { ObjectiveClass } from '@variables'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
@@ -110,6 +112,51 @@ export interface SandstoneConfig {
 
     /** A script running after Sandstone saved all files. */
     afterAll?: (options: ScriptArguments) => (void | Promise<void>)
+  }
+
+  /**
+   * The strategy to use when 2 resources of the same type (Advancement, MCFunctions...) have the same name.
+   */
+  onConflict?: {
+    /**
+     * The default conflict strategy to use for all resources.
+     *
+     * @default
+     * 'warn'
+     */
+    default?: BASIC_CONFLICT_STRATEGIES,
+
+    /**
+     * The conflict strategy to use for Advancements.
+     * Will override the defined `default` strategy.
+     */
+    advancement?: AdvancementOptions['onConflict']
+
+    /**
+     * The conflict strategy to use for Loot Tables.
+     * Will override the defined `default` strategy.
+     */
+    lootTable?: LootTableOptions['onConflict']
+    /**
+     * The conflict strategy to use for MCFunctions.
+     * Will override the defined `default` strategy.
+     */
+    mcFunction?: MCFunctionOptions['onConflict']
+    /**
+     * The conflict strategy to use for Predicates.
+     * Will override the defined `default` strategy.
+     */
+    predicate?: PredicateOptions['onConflict']
+    /**
+     * The conflict strategy to use for RecipeOptions.
+     * Will override the defined `default` strategy.
+     */
+    recipe?: RecipeOptions['onConflict']
+    /**
+     * The conflict strategy to use for Tags.
+     * Will override the defined `default` strategy.
+     */
+    tag?: TagOptions['onConflict']
   }
 }
 
