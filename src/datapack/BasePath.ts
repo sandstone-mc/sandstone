@@ -21,7 +21,7 @@ export type BasePathOptions<N extends (undefined | string), D extends (undefined
   directory?: D
 }
 
-export type BasePathInstance<N extends (undefined | string), D extends (undefined | string)> = (
+export type BasePathInstance<N extends (undefined | string) = (undefined | string), D extends (undefined | string) = (undefined | string)> = (
   HideFunctionProperties<BasePathClass<N, D>['getResourceName'] & BasePathClass<N, D>>
 )
 
@@ -36,7 +36,7 @@ function pathToArray(path?: string): string[] {
 }
 
 /** Changes the base namespace & directory of nested resources. */
-export class BasePathClass<N extends (undefined | string), D extends (undefined | string)> {
+export class BasePathClass<N extends (undefined | string) = (undefined | string), D extends (undefined | string) = (undefined | string)> {
   protected datapack: Datapack
 
   namespace: N
