@@ -75,32 +75,44 @@ class DataMerge extends Command {
 }
 
 class DataModifyValues extends Command {
-  /**
-   * Modify with the NBT of a block at the given position.
-   *
-   * @param sourcePosition The coordinates of the block to modify the NBT with.
-   * @param sourcePath The path of the NBT to modify with.
-   */
   @command(['from', 'block'], { parsers: { '0': coordinatesParser } })
-  fromBlock = (sourcePosition: Coordinates, sourcePath: string) => { }
+  private fromBlock = (...args: unknown[]) => { }
 
-  /**
-   * Modify with the NBT of a given entity.
-   *
-   * @param source The entity to modify the NBT with.
-   * @param sourcePath The path of the NBT to modify with.
-   */
   @command(['from', 'entity'])
-  fromEntity = (source: SingleEntityArgument, sourcePath: string) => { }
+  private fromEntity = (...args: unknown[]) => { }
 
-  /**
-   * Modify with the NBT of a given storage path.
-   *
-   * @param source The storage path to modify the NBT with.
-   * @param sourcePath The path of the NBT to modify with.
-   */
   @command(['from', 'storage'])
-  fromStorage = (source: string, sourcePath: string) => { }
+  private fromStorage = (...args: unknown[]) => { }
+
+  from: {
+    /**
+     * Modify with the NBT of a block at the given position.
+     *
+     * @param sourcePosition The coordinates of the block to modify the NBT with.
+     * @param sourcePath The path of the NBT to modify with.
+     */
+    block: (sourcePosition: Coordinates, sourcePath: string) => void
+
+    /**
+     * Modify with the NBT of a given entity.
+     *
+     * @param source The entity to modify the NBT with.
+     * @param sourcePath The path of the NBT to modify with.
+     */
+    entity: (source: SingleEntityArgument, sourcePath: string) => void
+
+    /**
+     * Modify with the NBT of a given storage path.
+     *
+     * @param source The storage path to modify the NBT with.
+     * @param sourcePath The path of the NBT to modify with.
+     */
+    storage: (source: string, sourcePath: string) => void
+  } = {
+    block: this.fromBlock,
+    entity: this.fromEntity,
+    storage: this.fromStorage,
+  }
 
   /**
    * Modify the NBT with the given value.
