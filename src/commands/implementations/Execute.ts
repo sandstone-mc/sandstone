@@ -48,8 +48,6 @@ function isRealCommandsRoot(commandsRootLike: CommandsRootLike): commandsRootLik
   return Object.prototype.hasOwnProperty.call(commandsRootLike, 'register')
 }
 
-type TEST<T> = 0
-
 export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
   /**
    * Saves the final command's return value as tag data within a block entity.
@@ -62,10 +60,10 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    *
    * @param type Desired data size/type.
    *
-   * @param scale Multiplier to apply before storing value.
+   * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
   @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
-  block = (targetPos: Coordinates, path: string, type: StoreType, scale: number) => this.execute
+  block = (targetPos: Coordinates, path: string, type: StoreType, scale = 1) => this.execute
 
   /**
    * Saves the final command's return value in either a bossbar's current value or its maximum value.
@@ -90,11 +88,11 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    *
    * @param type Desired data size/type.
    *
-   * @param scale Multiplier to apply before storing value.
+   * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
   @command('entity', executeConfig)
   entity = (
-    target: SingleEntityArgument, path: string, type: StoreType, scale: number,
+    target: SingleEntityArgument, path: string, type: StoreType, scale = 1,
   ) => this.execute
 
   @command('score', executeConfig)
@@ -130,10 +128,10 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    *
    * @param type Desired data size/type.
    *
-   * @param scale Multiplier to apply before storing value.
+   * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
   @command('storage', executeConfig)
-  storage = (target: string, path: string, type: StoreType, scale: number) => this.execute
+  storage = (target: string, path: string, type: StoreType, scale = 1) => this.execute
 }
 
 export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
