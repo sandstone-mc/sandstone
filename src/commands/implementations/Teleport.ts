@@ -29,7 +29,7 @@ export class TeleportFacing extends Command {
 }
 
 export class Teleport extends Command {
-  @command('teleport', {
+  @command('tp', {
     hasSubcommands: true,
     isRoot: true,
     executable: true,
@@ -39,7 +39,7 @@ export class Teleport extends Command {
       '2': rotationParser,
     },
   })
-  teleport: (
+  tp: (
     (
       /**
        * Teleports the executer to a given entity.

@@ -1,7 +1,7 @@
 import { isAsyncFunction } from '@/utils'
 import { Execute } from '@commands/implementations/Execute'
 import { toMCFunctionName } from '@datapack/minecraft'
-import { coordinatesParser } from '@variables'
+import { ConditionClass, coordinatesParser } from '@variables'
 import { PlayerScore } from '@variables/PlayerScore'
 
 import { CombinedConditions, getConditionScore } from './conditions'
@@ -14,10 +14,15 @@ import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import type { FunctionResource } from '@datapack/resourcesTree'
-import type { ConditionClass } from '@variables'
 import type { ConditionType } from './conditions'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
+
+function valueToCondition(value: unknown[]): ConditionClass {
+  const condition = new ConditionClass()
+  condition._toMinecraftCondition = () => ({ value })
+  return condition
+}
 
 /** Call a given callback function, and inline it if possible */
 function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionResource, forceInlineScore?: PlayerScore) {
@@ -113,9 +118,9 @@ export class Flow {
    *
    * @param block A block to test against.
    */
-  block = (coords: Coordinates, block: LiteralUnion<BLOCKS>): ConditionClass => ({
-    _toMinecraftCondition: () => ({ value: ['if', 'block', coordinatesParser(coords), block] }),
-  })
+  block = (coords: Coordinates, block: LiteralUnion<BLOCKS>): ConditionClass => (
+    valueToCondition(['if', 'block', coordinatesParser(coords), block])
+  )
 
   /**
    * Compares the blocks in two equally sized volumes. Suceeds if both are identical.
@@ -130,9 +135,9 @@ export class Flow {
    *
    * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
    */
-  blocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked'): ConditionClass => ({
-    _toMinecraftCondition: () => ({ value: ['if', 'blocks', coordinatesParser(start), coordinatesParser(end), coordinatesParser(destination), scanMode] }),
-  })
+  blocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked'): ConditionClass => (
+    valueToCondition(['if', 'blocks', coordinatesParser(start), coordinatesParser(end), coordinatesParser(destination), scanMode])
+  )
 
   /**
    * Checks if the given target has any data for a given tag.
@@ -159,21 +164,21 @@ export class Flow {
      * @param pos Position of the block to be tested.
      * @param path Data tag to check for.
      */
-    block: (pos: Coordinates, path: string) => ({ value: ['if', 'data', 'block', coordinatesParser(pos), path] }),
+    block: (pos: Coordinates, path: string) => valueToCondition(['if', 'data', 'block', coordinatesParser(pos), path]),
 
     /**
      * Checks whether the targeted entity has any data for a given tag
      * @param target One single entity to be tested.
      * @param path Data tag to check for.
      */
-    entity: (target: SingleEntityArgument, path: string) => ({ value: ['if', 'data', 'entity', target, path] }),
+    entity: (target: SingleEntityArgument, path: string) => valueToCondition(['if', 'data', 'entity', target, path]),
 
     /**
      * Checks whether the targeted storage has any data for a given tag
      * @param source The storage to check in.
      * @param path Data tag to check for.
      */
-    storage: (source: string, path: string) => ({ value: ['if', 'data', 'storage', source, path] }),
+    storage: (source: string, path: string) => valueToCondition(['if', 'data', 'storage', source, path]),
   }
 
   /** Logical operators */

@@ -51,7 +51,7 @@ export const {
   summon,
   tag,
   team,
-  teammessage,
+  teammsg,
   teleport,
   tellraw,
   time,
@@ -60,4 +60,8 @@ export const {
   w,
   weather,
   worldborder,
+  tm,
+  tp,
+  xp,
+  tell,
 } = commandsRoot

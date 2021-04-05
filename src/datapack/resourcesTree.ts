@@ -233,7 +233,7 @@ export class ResourcesTree {
       const niceName = toMCFunctionName(resource.path)
 
       if (!previousResource || conflictStrategy === 'replace' || conflictStrategy === 'warn' || !previousResource.isResource) {
-        if (conflictStrategy === 'warn') {
+        if (conflictStrategy === 'warn' && previousResource && previousResource.isResource) {
           console.warn(
             chalk.keyword('orange')(
               'Warning:',

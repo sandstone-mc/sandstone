@@ -1,7 +1,6 @@
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables'
-import type { PlayerScore } from '@variables/PlayerScore'
 
 export function conditionToString(condition: ConditionType): string {
   if (condition instanceof CombinedConditions) {

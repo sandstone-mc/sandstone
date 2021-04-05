@@ -24,7 +24,7 @@ export class Experience extends Command {
    *
    * If unspecified, defaults to `points`.
    */
-  @command(['experience', 'add'], { isRoot: true })
+  @command(['xp', 'add'], { isRoot: true })
   add = (targets: MultiplePlayersArgument, amount: number, type?: 'level' | 'points') => {
     validateIntegerRange(amount, 'amount', -2147483648, 2147483647)
   }
@@ -45,7 +45,7 @@ export class Experience extends Command {
    *
    * If unspecified, defaults to `points`.
    */
-  @command(['experience', 'set'], { isRoot: true })
+  @command(['xp', 'set'], { isRoot: true })
   set = (targets: MultiplePlayersArgument, amount: number, type?: 'level' | 'points') => {
     validateIntegerRange(amount, 'amount', 0, 2147483647)
   }
@@ -61,6 +61,6 @@ export class Experience extends Command {
    *
    * If unspecified, defaults to `points`.
    */
-  @command(['experience', 'query'], { isRoot: true })
+  @command(['xp', 'query'], { isRoot: true })
   query = (target: SinglePlayerArgument, type?: 'level' | 'points') => { }
 }

@@ -184,8 +184,8 @@ export class CommandsRoot {
     })
   }
 
-  // experience command //
-  experience = new Experience(this)
+  // experience command (aliased as xp) //
+  xp = new Experience(this)
 
   // fill command //
   fill = (new Fill(this)).fill
@@ -473,7 +473,7 @@ export class CommandsRoot {
   // team command //
   team = new Team(this)
 
-  // teammessage command //
+  // teammsg command (aliased to tm) //
   /**
    * Specifies a message to send to team.
    *
@@ -484,13 +484,13 @@ export class CommandsRoot {
    *
    * At least one message is necesarry.
    */
-  @command('teammessage', { isRoot: true })
-  teammessage = (...messages: AtLeastOne<MessageOrSelector>) => { }
+  @command('tm', { isRoot: true })
+  tm = (...messages: AtLeastOne<MessageOrSelector>) => { }
 
-  // teleport command //
-  teleport = (new Teleport(this)).teleport
+  // teleport command (aliased to tp) //
+  tp = (new Teleport(this)).tp
 
-  // tell command //
+  // msg command (aliased to w) //
   /**
    * Sends a private message to one or more players.
    * @param targets Specifies the player(s) to send the message to.
@@ -499,8 +499,8 @@ export class CommandsRoot {
    * The game replaces entity selectors in the message with the list of selected entities' names,
    * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
    */
-  @command('tell', { isRoot: true })
-  tell = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
+  @command('w', { isRoot: true })
+  w = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // tellraw command //
   @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JsonTextComponentClass(msg) } })
@@ -519,16 +519,27 @@ export class CommandsRoot {
 
   worldborder = new WorldBorder(this)
 
-  // / ALIAS COMMANDS ///
+  // / ALIAS COMMANDS. ///
+
+  /*
+   * In Sandstone, data pack is considered a byproduct of the compilation,
+   * so the shorter aliases will always be the compiled result.
+   */
+
+  // tell command //
+  tell = this.w
+
+  // teammsg command //
+  teammsg = this.tm
+
+  // teleport command //
+  teleport = this.tp
 
   // msg command //
-  msg: CommandsRoot['tell'] = (...args) => this.tell(...args)
+  msg = this.w
 
-  // w command //
-  w: CommandsRoot['tell'] = (...args) => this.tell(...args)
-
-  // xp command //
-  xp: CommandsRoot['experience'] = this.experience
+  // experience command //
+  experience = this.xp
 }
 
 export default CommandsRoot
