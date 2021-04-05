@@ -577,19 +577,26 @@ export class Flow {
       return undefined as any
     }
 
-    const promise = this.flowStatementAsync(callback, {
-      callbackName: type,
-      initialCondition: type === 'while',
-      loopCondition: true,
-      condition,
-    })
+    const { currentFunction: parentFunction } = this.datapack
 
     return {
-      then: (onfulfilled: () => void) => {
-        promise.then(() => {
-          this.datapack.createEnterChildFunction(ASYNC_CALLBACK_NAME)
-          onfulfilled?.()
+      then: async (onfulfilled: () => void) => {
+        // In theory, we are already in the parent function so we shouldn't need to go back in it.
+
+        // Run the previous code
+        await this.flowStatementAsync(callback, {
+          callbackName: type,
+          initialCondition: type === 'while',
+          loopCondition: true,
+          condition,
         })
+
+        // Go back in the parent function, because we don't know where the last code ended up.
+        this.datapack.currentFunction = parentFunction
+
+        // Finally enter the callback function
+        this.datapack.createEnterChildFunction(ASYNC_CALLBACK_NAME)
+        return onfulfilled?.()
       },
     } as PromiseLike<void> as any
   }
