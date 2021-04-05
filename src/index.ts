@@ -1,8 +1,6 @@
 import { dataPack } from './init'
 
 // CORE
-export { SandstoneConfig } from './datapack/Datapack'
-
 export const {
   save: savePack, BasePath, sleep,
 } = dataPack
@@ -37,8 +35,8 @@ export const {
 
 // TYPES
 export * from './arguments'
-export type { BasePathClass, BasePathOptions } from './datapack/BasePath'
-export type { MCFunctionInstance } from './datapack/Datapack'
+export * from './datapack/BasePath'
+export * from './datapack/Datapack'
 export type { LiteralUnion } from './generalTypes'
 export type {
   AdvancementInstance, LootTableInstance, MCFunctionOptions, PredicateInstance, RecipeInstance, ResourceInstance, TagInstance,

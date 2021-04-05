@@ -3,8 +3,9 @@ import type { VectorClass } from '@variables/Coordinates'
 import type { LiteralUnion } from '../generalTypes'
 import type { BASIC_COLORS } from './basics'
 import type { MultipleEntitiesArgument, SelectorArgument } from './selector'
+
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
-type ContentTag = {
+type ContentTag = ({
   /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
   text: string | number | boolean
 } | {
@@ -78,12 +79,13 @@ type ContentTag = {
       block: string | VectorClass<[string, string, string]>
     } | {
       /** The target selector for the entity or entities from which the NBT value is obtained. */
-      entity: string
+      entity: MultipleEntitiesArgument
     } | {
       /** The namespaced ID of the command storage from which the NBT value is obtained */
       storage: string
     })
   )
+)
 
 type ChildrenTags = {
   /**
@@ -92,7 +94,7 @@ type ChildrenTags = {
    * Child text components inherit all formatting and interactivity from the parent component,
    * unless they explicitly override them.
    */
-  with?: TextComponentObject[]
+  extra?: TextComponentObject[]
 }
 
 type FormattingTags = {
@@ -224,8 +226,7 @@ type InteractivityTags = {
  * A JSON text component object.
  */
 export type TextComponentObject = (
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  (ContentTag | {}) & ChildrenTags & FormattingTags & InteractivityTags
+  ContentTag & ChildrenTags & FormattingTags & InteractivityTags
 )
 
 /**
