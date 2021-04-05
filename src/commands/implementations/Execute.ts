@@ -192,6 +192,107 @@ export class ExecuteIfData<T extends CommandsRootLike> extends ExecuteSubcommand
   storage = (source: string, path: string) => this.execute
 }
 
+type IfsAndUnlesses<T extends CommandsRootLike, E extends Execute<T>> = {
+  ifBlock: (pos: Coordinates, block: LiteralUnion<BLOCKS>) => E
+
+  ifBlocks: (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked') => E
+
+  ifData: ExecuteIfData<T>
+
+  ifEntity: (targets: MultipleEntitiesArgument) => E
+
+  ifPredicate: (predicate: string) => E
+
+  ifScore: (
+    /**
+     * Check a score against either another score or a given range.
+     *
+     * @param target A single score holder.
+     *
+     * @param objective The scoreboard objective to check under.
+     *
+     * @param operator The comparison operator to use.
+     *
+     * @param source A second score holder to compare against.
+     *
+     * @param sourceObjective  A scoreboard objective to compare against.
+     */
+    (
+      target: SingleEntityArgument,
+      targetObjective: ObjectiveArgument,
+      operator: COMPARISON_OPERATORS,
+      source: SingleEntityArgument,
+      sourceObjective: ObjectiveArgument
+    ) => Execute<T>
+ ) & (
+    /**
+     * Check a score against either another score or a given range.
+     *
+     * @param target A single score holder.
+     *
+     * @param objective The scoreboard objective to check under.
+     *
+     * @param operator The comparison operator to use.
+     *
+     * @param range Range to compare score against.
+     */
+    (
+      target: SingleEntityArgument,
+      targetObjective: ObjectiveArgument,
+      operator: 'matches',
+      range: Range
+   ) => E
+  )
+}
+
+type IfType<T extends CommandsRootLike, E extends Execute<T>> = {
+  /**
+   * Compares the block at a given position to a given block.
+   *
+   * @param pos Position of a target block to test.
+   *
+   * @param block A block to test against.
+   */
+  block: IfsAndUnlesses<T, E>['ifBlock']
+
+  /**
+   * Compares the blocks in two equally sized volumes. Suceeds if both are identical.
+   *
+   * @param start Positions of the first diagonal corner of the source volume (the comparand; the volume to compare).
+   *
+   * @param end Positions of the second diagonal corner of the source volume (the comparand; the volume to compare)
+   *
+   * @param destination
+   * Position of the lower northwest (the smallest X, Y and Z value) corner of the destination volume
+   * (the comparator; the volume to compare to). Assumed to be of the same size as the source volume.
+   *
+   * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
+   */
+  blocks: IfsAndUnlesses<T, E>['ifBlocks']
+
+  /** Checks whether the targeted block, entity or storage has any data for a given tag. */
+  data: IfsAndUnlesses<T, E>['ifData']
+
+  /**
+   * Checks whether one or more entities exist.
+   *
+   * @param targets The target entities to check.
+   */
+  entity: IfsAndUnlesses<T, E>['ifEntity']
+
+  /**
+   * Checks whether the `predicate` evaluates to a positive result.
+   *
+   * @param predicate The predicate to test.
+   */
+  predicate: IfsAndUnlesses<T, E>['ifPredicate']
+
+  /**
+   * Check a score against either another score or a given range.
+   */
+  score: IfsAndUnlesses<T, E>['ifScore']
+}
+
 export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   /**
    * Updates the command's position, aligning to its current block position (an integer). Only applies along specified axes.
@@ -289,60 +390,19 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   @command(['rotated', 'as'], executeConfig)
   rotatedAs = (targets: MultipleEntitiesArgument) => this
 
-  /**
-   * Compares the block at a given position to a given block. Suceeds if both are identical.
-   *
-   * @param pos Position of a target block to test.
-   *
-   * @param block A block to test against.
-   */
   @command(['if', 'block'], { ...executeConfig, parsers: { '0': coordinatesParser } })
-  ifBlock = (pos: Coordinates, block: LiteralUnion<BLOCKS>) => this
+  private ifBlock: IfsAndUnlesses<T, this>['ifBlock'] = (...args: unknown[]) => this
 
-  /**
-   * Compares the block at a given position to a given block. Succeeds if both are different.
-   *
-   * @param pos Position of a target block to test.
-   *
-   * @param block A block to test against.
-   */
   @command(['unless', 'block'], executeConfig)
-  unlessBlock: this['ifBlock'] = (...args: unknown[]) => this
+  private unlessBlock: IfsAndUnlesses<T, this>['ifBlock'] = (...args: unknown[]) => this
 
-  /**
-   * Compares the blocks in two equally sized volumes. Suceeds if both are identical.
-   *
-   * @param start Positions of the first diagonal corner of the source volume (the comparand; the volume to compare).
-   *
-   * @param end Positions of the second diagonal corner of the source volume (the comparand; the volume to compare)
-   *
-   * @param destination
-   * Position of the lower northwest (the smallest X, Y and Z value) corner of the destination volume
-   * (the comparator; the volume to compare to). Assumed to be of the same size as the source volume.
-   *
-   * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
-   */
   @command(['if', 'blocks'], { ...executeConfig, parsers: { '0': coordinatesParser, '1': coordinatesParser, '2': coordinatesParser } })
-  ifBlocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked') => this
+  private ifBlocks: IfsAndUnlesses<T, this>['ifBlocks'] = (...args: unknown[]) => this
 
-  /**
-   * Compares the blocks in two equally sized volumes. Suceeds if both are different.
-   *
-   * @param start Positions of the first diagonal corner of the source volume (the comparand; the volume to compare).
-   *
-   * @param end Positions of the second diagonal corner of the source volume (the comparand; the volume to compare)
-   *
-   * @param destination
-   * Position of the lower northwest (the smallest X, Y and Z value) corner of the destination volume
-   * (the comparator; the volume to compare to). Assumed to be of the same size as the source volume.
-   *
-   * @param scanMode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored.
-   */
   @command(['unless', 'blocks'], executeConfig)
-  unlessBlocks: this['ifBlocks'] = (...args: unknown[]) => this
+  private unlessBlocks: IfsAndUnlesses<T, this>['ifBlocks'] = (...args: unknown[]) => this
 
-  /** Checks whether the targeted block, entity or storage has any data for a given tag. Suceeds if the data is found. */
-  get ifData(): ExecuteIfData<T> {
+  private get ifData(): IfsAndUnlesses<T, this>['ifData'] {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
@@ -356,8 +416,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     return new ExecuteIfData(this as unknown as InferExecute<T>)
   }
 
-  /** Checks whether the targeted block, entity or storage has any data for a given tag. Suceeds if no data is found. */
-  get unlessData(): ExecuteIfData<T> {
+  private get unlessData(): IfsAndUnlesses<T, this>['ifData'] {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
@@ -371,42 +430,18 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     return new ExecuteIfData(this as unknown as InferExecute<T>)
   }
 
-  /**
-   * Checks whether one or more entities exist. Suceeds if they do.
-   *
-   * @param targets The target entities to check.
-   */
   @command(['if', 'entity'], executeConfig)
-  ifEntity = (targets: MultipleEntitiesArgument) => this
+  private ifEntity: IfsAndUnlesses<T, this>['ifEntity'] = (...args: unknown[]) => this
 
-  /**
-   * Checks whether one or more entities exist. Suceeds if they don't.
-   *
-   * @param targets The target entities to check.
-   */
   @command(['unless', 'entity'], executeConfig)
-  unlessEntity: this['ifEntity'] = (...args: unknown[]) => this
+  private unlessEntity: IfsAndUnlesses<T, this>['ifEntity'] = (...args: unknown[]) => this
 
-  /**
-   * Checks whether the `predicate` evaluates to a positive result. Suceeds if it does.
-   *
-   * @param predicate The predicate to test.
-   */
   @command(['if', 'predicate'], executeConfig)
-  ifPredicate = (predicate: string) => this
+  private ifPredicate: IfsAndUnlesses<T, this>['ifPredicate'] = (...args: unknown[]) => this
 
-  /**
-   * Checks whether the `predicate` evaluates to a positive result. Suceeds if it doesn't.
-   *
-   * @param predicate The predicate to test.
-   */
   @command(['unless', 'predicate'], executeConfig)
-  unlessPredicate: this['ifPredicate'] = (...args: unknown[]) => this
+  private unlessPredicate: IfsAndUnlesses<T, this>['ifPredicate'] = (...args: unknown[]) => this
 
-  /**
-   * Check a score against either another score or a given range.
-   * @param args
-   */
   @command(['if', 'score'], {
     ...executeConfig,
     parsers: {
@@ -418,49 +453,20 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       },
     },
   })
-  ifScore: (
-    /**
-     * Check a score against either another score or a given range.
-     *
-     * @param target A single score holder.
-     *
-     * @param objective The scoreboard objective to check under.
-     *
-     * @param operator The comparison operator to use.
-     *
-     * @param source A second score holder to compare against.
-     *
-     * @param sourceObjective  A scoreboard objective to compare against.
-     */
-    (
-      target: SingleEntityArgument,
-      targetObjective: ObjectiveArgument,
-      operator: COMPARISON_OPERATORS,
-      source: SingleEntityArgument,
-      sourceObjective: ObjectiveArgument
-    ) => this
- ) & (
-    /**
-     * Check a score against either another score or a given range.
-     *
-     * @param target A single score holder.
-     *
-     * @param objective The scoreboard objective to check under.
-     *
-     * @param operator The comparison operator to use.
-     *
-     * @param range Range to compare score against.
-     */
-    (
-      target: SingleEntityArgument,
-      targetObjective: ObjectiveArgument,
-      operator: 'matches',
-      range: Range
-   ) => this
-  ) = (...args: unknown[]) => this
+  private ifScore: IfsAndUnlesses<T, this>['ifScore'] = (...args: unknown[]) => this
 
-  @command(['unless', 'score'], executeConfig)
-  unlessScore: this['ifScore'] = (...args: unknown[]) => this
+  @command(['unless', 'score'], {
+    ...executeConfig,
+    parsers: {
+      '3': (arg, innerArgs) => {
+        if (innerArgs[2] === 'matches') {
+          return rangeParser(arg)
+        }
+        return arg
+      },
+    },
+  })
+  private unlessScore: IfsAndUnlesses<T, this>['ifScore'] = (...args: unknown[]) => this
 
   // For if & unless, we're using an intermediate command because the "real" arguments are in the `.value` property of the condition
 
@@ -468,24 +474,46 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   private if_ = (...args: string[]) => this
 
   /** Checks if the given condition is met. */
-  if = (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value)
+  get if(): ((condition: ConditionClass) => this) & IfType<T, this> {
+    return Object.assign(
+      (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value), {
+        block: this.ifBlock,
+        blocks: this.ifBlocks,
+        data: this.ifData,
+        entity: this.ifEntity,
+        predicate: this.ifPredicate,
+        score: this.ifScore,
+      },
+    )
+  }
 
   /** Checks if the given conditions is not met. */
-  unless = (condition: ConditionClass) => {
-    const args = condition._toMinecraftCondition().value
-    if (args[0] === 'if') {
-      args[0] = 'unless'
-    } else {
-      args[0] = 'if'
+  get unless(): Execute<T>['if'] {
+    const func = (condition: ConditionClass) => {
+      const args = condition._toMinecraftCondition().value
+      if (args[0] === 'if') {
+        args[0] = 'unless'
+      } else {
+        args[0] = 'if'
+      }
+
+      return this.if_(...args)
     }
 
-    return this.if_(...args)
+    return Object.assign(func, {
+      block: this.unlessBlock,
+      blocks: this.unlessBlocks,
+      data: this.unlessData,
+      entity: this.unlessEntity,
+      predicate: this.unlessPredicate,
+      score: this.unlessScore,
+    })
   }
 
   @command([], {
     isRoot: false, executable: true, hasSubcommands: false,
   })
-  register = () => {}
+  protected register = () => {}
 
   /**
    * Store the final command's result or success value somewhere.
