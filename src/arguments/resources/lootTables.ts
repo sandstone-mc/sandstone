@@ -3,7 +3,7 @@ import type { MAP_ICONS } from 'src/arguments/basics'
 import type {
   BLOCKS, ENCHANTMENTS, ITEMS, STRUCTURES,
 } from 'src/arguments/generated'
-import type { JsonTextComponent } from 'src/arguments/jsonTextComponent'
+import type { JSONTextComponent } from 'src/arguments/jsonTextComponent'
 import type { LiteralUnion } from '@/generalTypes'
 import type { NumberOrMinMax } from './criteria'
 import type { ObjectOrArray, PredicateCondition } from './predicate'
@@ -230,7 +230,7 @@ type LootTableFunction = {
   }>
   | FunctionType<'set_lore', {
     /** List of JSON text components. Each list entry represents one line of the lore. */
-    lore: JsonTextComponent[]
+    lore: JSONTextComponent[]
     /**
      * Specifies the entity to act as the source @s in the JSON text component. Set to:
      * - `this` to use the entity that died or the player that gained the advancement, opened the container or broke the block
@@ -243,7 +243,7 @@ type LootTableFunction = {
   }>
   | FunctionType<'set_name', {
     /** A JSON text component name, allowing color, translations, etc. */
-    name: JsonTextComponent
+    name: JSONTextComponent
     /**
      * Specifies the entity to act as the source @s in the JSON text component. Set to:
      * - `this` to use the entity that died or the player that gained the advancement, opened the container or broke the block

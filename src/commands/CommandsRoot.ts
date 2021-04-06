@@ -1,5 +1,5 @@
 import { nbtParser } from '@variables'
-import { JsonTextComponentClass } from '@variables/JsonTextComponentClass'
+import { JSONTextComponentClass } from '@variables/JSONTextComponentClass'
 
 import { coordinatesParser, rotationParser } from '../variables/parsers'
 import { command } from './decorators'
@@ -21,7 +21,7 @@ import type {
   GAMEMODES,
   GAMERULES,
   ITEMS,
-  JsonTextComponent,
+  JSONTextComponent,
   MessageOrSelector,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
@@ -503,8 +503,8 @@ export class CommandsRoot {
   w = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // tellraw command //
-  @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JsonTextComponentClass(msg) } })
-  tellraw = (targets: MultiplePlayersArgument, message: JsonTextComponent) => { }
+  @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JSONTextComponentClass(msg) } })
+  tellraw = (targets: MultiplePlayersArgument, message: JSONTextComponent) => { }
 
   // time command //
   time = new Time(this)

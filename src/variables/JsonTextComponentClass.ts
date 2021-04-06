@@ -1,9 +1,9 @@
-import type { JsonTextComponent } from 'src/arguments'
+import type { JSONTextComponent } from 'src/arguments'
 
-export class JsonTextComponentClass {
-  jsonTextComponent: JsonTextComponent
+export class JSONTextComponentClass {
+  jsonTextComponent: JSONTextComponent
 
-  constructor(jsonTextComponent: JsonTextComponent) {
+  constructor(jsonTextComponent: JSONTextComponent) {
     this.jsonTextComponent = jsonTextComponent
   }
 

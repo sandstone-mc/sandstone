@@ -1,7 +1,7 @@
-import { JsonTextComponentClass } from './JsonTextComponentClass'
+import { JSONTextComponentClass } from './JSONTextComponentClass'
 import { PlayerScore } from './PlayerScore'
 
-import type { JsonTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from 'src/arguments'
+import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { CommandsRoot } from '@commands'
 
@@ -12,15 +12,15 @@ export class ObjectiveClass {
 
   criterion: string
 
-  display: JsonTextComponentClass | undefined
+  display: JSONTextComponentClass | undefined
 
-  _displayRaw: JsonTextComponent | undefined
+  _displayRaw: JSONTextComponent | undefined
 
-  constructor(commandsRoot: CommandsRoot, name: string, criterion: LiteralUnion<OBJECTIVE_CRITERION>, display?: JsonTextComponent) {
+  constructor(commandsRoot: CommandsRoot, name: string, criterion: LiteralUnion<OBJECTIVE_CRITERION>, display?: JSONTextComponent) {
     this.commandsRoot = commandsRoot
     this.name = name
     this.criterion = criterion as string
-    this.display = display === undefined ? undefined : new JsonTextComponentClass(display)
+    this.display = display === undefined ? undefined : new JSONTextComponentClass(display)
     this._displayRaw = display
   }
 
@@ -37,7 +37,7 @@ export function Objective(
   commandsRoot: CommandsRoot,
   name: string,
   criterion: string,
-  display?: JsonTextComponent,
+  display?: JSONTextComponent,
 ): ObjectiveClass {
   return new ObjectiveClass(
     commandsRoot,

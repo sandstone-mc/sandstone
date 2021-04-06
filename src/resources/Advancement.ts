@@ -18,12 +18,12 @@ export type AdvancementOptions = {
 }
 
 export class AdvancementInstance<CriteriaNames extends string = string> extends ResourceInstance {
-  advancementJson
+  advancementJSON
 
   constructor(datapack: Datapack, name: string, advancement: AdvancementJSON<CriteriaNames>, options?: AdvancementOptions) {
     super(datapack, name)
 
-    this.advancementJson = advancement
+    this.advancementJSON = advancement
 
     this.datapack.addResource(name, 'advancements', { advancement }, options?.onConflict ?? CONFLICT_STRATEGIES.ADVANCEMENT)
   }

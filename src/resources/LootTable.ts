@@ -20,12 +20,12 @@ export type LootTableOptions = {
 }
 
 export class LootTableInstance extends ResourceInstance {
-  lootTableJson
+  lootTableJSON
 
   constructor(datapack: Datapack, name: string, lootTable: LootTableJSON, options?: LootTableOptions) {
     super(datapack, name)
 
-    this.lootTableJson = lootTable
+    this.lootTableJSON = lootTable
 
     datapack.addResource(name, 'loot_tables', { lootTable }, options?.onConflict ?? CONFLICT_STRATEGIES.LOOT_TABLE)
   }

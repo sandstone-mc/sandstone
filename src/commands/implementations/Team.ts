@@ -1,22 +1,22 @@
 import { SelectorArgument } from 'src/arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { JsonTextComponentClass } from '@variables'
+import { JSONTextComponentClass } from '@variables'
 
-import type { BASIC_COLORS, JsonTextComponent, MultipleEntitiesArgument } from 'src/arguments'
+import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from 'src/arguments'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'
   color: BASIC_COLORS
   deathMessageVisibility: 'never' | 'hideForOtherTeams' | 'hideForOwnTeam' | 'always'
-  displayName: JsonTextComponent
+  displayName: JSONTextComponent
   friendlyFire: boolean
   nametagVisibility: 'never' | 'hideForOtherTeams' | 'hideForOwnTeam' | 'always'
-  prefix: JsonTextComponent
+  prefix: JSONTextComponent
   seeFriendlyInvisibles: boolean
 
   /** Hey */
-  suffix: JsonTextComponent
+  suffix: JSONTextComponent
 }
 
 export class Team extends Command {
@@ -30,10 +30,10 @@ export class Team extends Command {
   @command(['team', 'add'], {
     isRoot: true,
     parsers: {
-      '1': (displayName) => new JsonTextComponentClass(displayName),
+      '1': (displayName) => new JSONTextComponentClass(displayName),
     },
   })
-  add = (team: string, displayName?: JsonTextComponent) => {}
+  add = (team: string, displayName?: JSONTextComponent) => {}
 
   /**
    * Removes all members from a team.

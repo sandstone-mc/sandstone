@@ -19,12 +19,12 @@ export type PredicateOptions = {
 }
 
 export class PredicateInstance extends ResourceInstance implements ConditionClass {
-  predicateJson
+  predicateJSON
 
   constructor(datapack: Datapack, name: string, predicate: PredicateJSON, options?: PredicateOptions) {
     super(datapack, name)
 
-    this.predicateJson = predicate
+    this.predicateJSON = predicate
 
     this.commandsRoot.Datapack.addResource(name, 'predicates', { predicate }, options?.onConflict ?? CONFLICT_STRATEGIES.PREDICATE)
   }
