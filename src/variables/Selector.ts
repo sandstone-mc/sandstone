@@ -5,7 +5,7 @@ import { nbtParser, rangeParser } from '@variables/parsers'
 import { ComponentClass } from './abstractClasses'
 
 import type {
-  ENTITY_TYPES, RootNBT, TextComponentObject,
+  ENTITY_TYPES, GAMEMODES, RootNBT, TextComponentObject,
 } from 'src/arguments'
 import type { CommandsRoot } from '@commands'
 import type { PredicateInstance } from '@resources'
@@ -79,7 +79,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   level?: Range
 
   /** Filter target selection to those who are in the specified game mode. */
-  gamemode?: LiteralUnion<'adventure' | 'creative' | 'spectator' | 'survival' | '!adventure' | '!creative' | '!spectator' | '!survival'>
+  gamemode?: LiteralUnion<GAMEMODES | `!${GAMEMODES}`> | `!${GAMEMODES}`[]
 
   // Selecting targets by vertical rotation
 
@@ -252,6 +252,12 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
         tag: (tag: string | string[]) => {
           const tags = Array.isArray(tag) ? tag : [tag]
           result.push(...tags.map((tag_) => ['tag', tag_] as const))
+        },
+
+        // Parse potentially multiple gamemodes
+        gamemode: (gamemode: string | string[]) => {
+          const gamemodes = Array.isArray(gamemode) ? gamemode : [gamemode]
+          result.push(...gamemodes.map((gamemode_) => ['gamemode', gamemode_] as const))
         },
 
         // Parse potentially multiple predicates
