@@ -94,7 +94,7 @@ type ChildrenTags = {
    * Child text components inherit all formatting and interactivity from the parent component,
    * unless they explicitly override them.
    */
-  extra?: TextComponentObject[]
+  extra?: JSONTextComponent[]
 }
 
 type FormattingTags = {
@@ -190,7 +190,7 @@ type InteractivityTags = {
      * `show_item`: The item that should be displayed.
      * `show_entity`: The entity that should be displayed.
      */
-    contents: JsonTextComponent
+    contents: JSONTextComponent
   } | {
     action: 'show_item'
 
@@ -229,22 +229,14 @@ export type TextComponentObject = (
   ContentTag & ChildrenTags & FormattingTags & InteractivityTags
 )
 
-/**
- * All possible chat components
+/*
+ * A JSON text component, that can be displayed in several locations: in-game chat, books, signs, titles...
  */
-type PossibleComponent = (
+export type JSONTextComponent = (
   string |
   boolean |
   number |
   TextComponentObject |
   ComponentClass |
-  PossibleComponent[]
-)
-
-/*
- * A Json text component, that can be displayed in several locations: in-game chat, books, signs, titles...
- */
-export type JsonTextComponent = (
-  readonly PossibleComponent[] |
-  PossibleComponent
+  JSONTextComponent[]
 )

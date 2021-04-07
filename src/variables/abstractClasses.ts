@@ -1,7 +1,7 @@
-import type { JsonTextComponent } from 'src/arguments/jsonTextComponent'
+import type { JSONTextComponent } from 'src/arguments/jsonTextComponent'
 
 export class ComponentClass {
-  protected _toChatComponent(): JsonTextComponent {
+  protected _toChatComponent(): JSONTextComponent {
     throw new Error('Not implemented')
   }
 }
@@ -16,7 +16,7 @@ export class ConditionClass {
 }
 
 export class ConditionTextComponentClass {
-  protected _toChatComponent(): JsonTextComponent {
+  protected _toChatComponent(): JSONTextComponent {
     throw new Error('Not implemented')
   }
 

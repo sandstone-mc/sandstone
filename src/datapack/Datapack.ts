@@ -8,7 +8,7 @@ import { toMCFunctionName } from './minecraft'
 import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
-import type { JsonTextComponent, OBJECTIVE_CRITERION, TimeArgument } from 'src/arguments'
+import type { JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument } from 'src/arguments'
 import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion } from '@/generalTypes'
 import type {
   AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
@@ -45,7 +45,7 @@ export interface SandstoneConfig {
    * Can be a single string or a JSON Text Component
    * (like in /tellraw or /title).
    */
-  description: JsonTextComponent
+  description: JSONTextComponent
 
   /**
    * The format version of the data pack.
@@ -450,7 +450,7 @@ export default class Datapack {
 
   /** UTILS */
   /** Create a new objective. Defaults to `dummy` if unspecified. */
-  createObjective = (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JsonTextComponent) => {
+  createObjective = (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent) => {
     if (name.length > 16) {
       throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
     }
@@ -461,7 +461,7 @@ export default class Datapack {
   }
 
   /** Get an objective, and create it if it does not exists. */
-  getCreateObjective(name: string, criteria: string, display?: JsonTextComponent) {
+  getCreateObjective(name: string, criteria: string, display?: JSONTextComponent) {
     try {
       return this.createObjective(name, criteria, display)
     } catch (e) {

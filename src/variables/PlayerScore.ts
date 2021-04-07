@@ -2,7 +2,7 @@ import { ComponentClass } from '@variables/abstractClasses'
 import { rangeParser } from '@variables/parsers'
 
 import type {
-  COMPARISON_OPERATORS, JsonTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
+  COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
 } from 'src/arguments'
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
@@ -52,7 +52,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
     return `${this.target} ${this.objective}`
   }
 
-  protected _toChatComponent(): JsonTextComponent {
+  protected _toChatComponent(): JSONTextComponent {
     return {
       score: { name: this.target, objective: this.objective.name },
     }

@@ -1,10 +1,10 @@
-import { JsonTextComponentClass } from '@variables'
+import { JSONTextComponentClass } from '@variables'
 
 import { Command } from '../Command'
 import { command } from '../decorators'
 
 import type {
-  JsonTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
+  JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
   ObjectiveArgument, OPERATORS,
 } from 'src/arguments'
 import type { DISPLAY_SLOTS } from 'src/arguments/displaySlots'
@@ -43,10 +43,10 @@ class ScoreboardObjectives extends Command {
   @command(objectiveCmd('add'), {
     isRoot: true,
     parsers: {
-      '2': (displayName) => (displayName ? new JsonTextComponentClass(displayName) : displayName),
+      '2': (displayName) => (displayName ? new JSONTextComponentClass(displayName) : displayName),
     },
   })
-  add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JsonTextComponent) => {
+  add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => {
     if (objective.length > 16) {
       throw new Error(`Objectives cannot have names with more than 16 characters. Got ${objective.length} with objective "${objective}".`)
     }
@@ -89,7 +89,7 @@ class ScoreboardObjectives extends Command {
   @command(objectiveCmd('modify'), {
     isRoot: true,
     parsers: {
-      '2': (displayName, [_, type]) => (type === 'displayname' ? new JsonTextComponentClass(displayName) : displayName),
+      '2': (displayName, [_, type]) => (type === 'displayname' ? new JSONTextComponentClass(displayName) : displayName),
     },
   })
   modify: (
@@ -108,7 +108,7 @@ class ScoreboardObjectives extends Command {
    *
    * @param displayName The new display name. Must be a JSON text component.
    */
-  ((objective: ObjectiveArgument, type: 'displayname', displayName?: JsonTextComponent) => void) &
+  ((objective: ObjectiveArgument, type: 'displayname', displayName?: JSONTextComponent) => void) &
 
   /**
    * Change the display format of health bars.

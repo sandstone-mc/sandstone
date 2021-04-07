@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import type { ITEMS, JsonTextComponent, RootNBT } from 'src/arguments'
+import type { ITEMS, JSONTextComponent, RootNBT } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { AdvancementInstance } from '@resources'
@@ -19,7 +19,7 @@ export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
     }
 
     /** The title for this advancement. */
-    title: JsonTextComponent
+    title: JSONTextComponent
 
     /**
      * The optional type of frame for the icon.
@@ -30,7 +30,7 @@ export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
     frame?: 'challenge' | 'goal' | 'task'
 
     /** The description of the advancement. */
-    description: JsonTextComponent
+    description: JSONTextComponent
 
     /** Whether or not to show the toast pop up after completing this advancement. Defaults to `true`. */
     show_toast?: boolean

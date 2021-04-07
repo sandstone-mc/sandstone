@@ -1,10 +1,10 @@
 import { MultipleEntitiesArgument } from 'src/arguments'
-import { JsonTextComponentClass } from '@variables'
+import { JSONTextComponentClass } from '@variables'
 
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { BASIC_COLORS, JsonTextComponent, MultiplePlayersArgument } from 'src/arguments'
+import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
 
 export class Bossbar extends Command {
@@ -15,8 +15,8 @@ export class Bossbar extends Command {
    *
    * @param name The display name of the boss bar.
    */
-  @command(['bossbar', 'add'], { isRoot: true, parsers: { '1': (arg) => new JsonTextComponentClass(arg) } })
-  add = (id: string, name: JsonTextComponent) => { }
+  @command(['bossbar', 'add'], { isRoot: true, parsers: { '1': (arg) => new JSONTextComponentClass(arg) } })
+  add = (id: string, name: JSONTextComponent) => { }
 
   /**
    * Return the requested setting as a result of the command.

@@ -18,12 +18,12 @@ export type RecipeOptions = {
 }
 
 export class RecipeInstance<P1 extends string = string, P2 extends string = string, P3 extends string = string> extends ResourceInstance {
-  recipeJson
+  recipeJSON
 
   constructor(datapack: Datapack, name: string, recipe: RecipeJSON<P1, P2, P3>, options?: RecipeOptions) {
     super(datapack, name)
 
-    this.recipeJson = recipe
+    this.recipeJSON = recipe
 
     this.datapack.addResource(name, 'recipes', { recipe }, options?.onConflict ?? CONFLICT_STRATEGIES.RECIPE)
   }

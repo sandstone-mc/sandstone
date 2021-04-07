@@ -8,7 +8,7 @@ import {
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
 
-import type { JsonTextComponent } from 'src/arguments'
+import type { JSONTextComponent } from 'src/arguments'
 import type {
   ResourceOnlyTypeMap,
   ResourcesTree,
@@ -58,7 +58,7 @@ export type SaveOptions = {
    *
    * Can be a string or a JSON Text Component.
    */
-  description?: JsonTextComponent
+  description?: JSONTextComponent
 
   /**
    * The format version of the datapack.
