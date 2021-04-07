@@ -176,6 +176,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     if (this.onConflict === 'append' || this.onConflict === 'prepend') {
       onConflict = (oldFunc, newFunc) => {
         previousResource = oldFunc
+        newFunc.children = oldFunc.children
         return newFunc
       }
     } else {
@@ -201,26 +202,10 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       // If there is an unfinished command, register it
       commandsRoot.register(true)
 
-      const mergeChildren = () => {
-        if (!previousResource) {
-          return
-        }
-
-        [...previousResource.children].forEach(([key, child]) => {
-          if (resource.children.has(key)) {
-            throw new Error(`Tried to merge "${this.name}" MCFunctions using the "${this.onConflict}" strategy, but failed due to identically named children: "${key}".`)
-          }
-
-          resource.children.set(key, child)
-        })
-      }
-
       if (this.onConflict === 'append') {
-        mergeChildren()
         resource.commands = [...(previousResource?.commands ?? []), ...resource.commands]
       }
       if (this.onConflict === 'prepend' && previousResource) {
-        mergeChildren()
         resource.commands = [...resource.commands, ...(previousResource?.commands ?? [])]
       }
 
