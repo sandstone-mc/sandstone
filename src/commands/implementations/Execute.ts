@@ -402,7 +402,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   @command(['unless', 'blocks'], executeConfig)
   private unlessBlocks: IfsAndUnlesses<T, this>['ifBlocks'] = (...args: unknown[]) => this
 
-  private get ifData(): IfsAndUnlesses<T, this>['ifData'] {
+  private ifData = (): IfsAndUnlesses<T, this>['ifData'] => {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
@@ -416,7 +416,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     return new ExecuteIfData(this as unknown as InferExecute<T>)
   }
 
-  private get unlessData(): IfsAndUnlesses<T, this>['ifData'] {
+  private unlessData = (): IfsAndUnlesses<T, this>['ifData'] => {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
@@ -475,16 +475,21 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
   /** Checks if the given condition is met. */
   get if(): ((condition: ConditionClass) => this) & IfType<T, this> {
-    return Object.assign(
+    const result = Object.assign(
       (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value), {
         block: this.ifBlock,
         blocks: this.ifBlocks,
-        data: this.ifData,
+        data: 0 as any, // We are going to override it just below
         entity: this.ifEntity,
         predicate: this.ifPredicate,
         score: this.ifScore,
       },
     )
+
+    Object.defineProperty(result, 'data', {
+      get: this.ifData,
+    })
+    return result
   }
 
   /** Checks if the given conditions is not met. */
@@ -500,14 +505,20 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       return this.if_(...args)
     }
 
-    return Object.assign(func, {
+    const result = Object.assign(func, {
       block: this.unlessBlock,
       blocks: this.unlessBlocks,
-      data: this.unlessData,
+      data: 0 as any, // We are going to override it just below
       entity: this.unlessEntity,
       predicate: this.unlessPredicate,
       score: this.unlessScore,
     })
+
+    Object.defineProperty(result, 'data', {
+      get: this.unlessData,
+    })
+
+    return result
   }
 
   @command([], {
