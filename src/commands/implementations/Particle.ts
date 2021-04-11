@@ -93,6 +93,7 @@ type ParticleCommand = (
     (
       name: 'minecraft:dust',
       colors: [red: number, green: number, blue: number, size: number],
+      size: number,
       pos?: Coordinates,
       delta?: [deltaX: number, deltaY: number, deltaZ: number],
       speed?: number,
@@ -198,6 +199,7 @@ export class Particle extends Command {
       '1': arrayToArgsParser,
       '2': arrayToArgsParser,
       '3': arrayToArgsParser,
+      '4': arrayToArgsParser,
     },
   })
   particle: ParticleCommand = (...args: unknown[]) => { }
