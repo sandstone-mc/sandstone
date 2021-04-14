@@ -200,20 +200,20 @@ interface NBTInterface {
   /**
    * Return a stringified version of a NBT.
    *
-   * @param nbt The NBT to parse.
+   * @param nbt The NBT to stringify.
    *
    * @example
    *
-   * >>> NBT.parse({ Invisible: NBT.byte(1) })
+   * >>> NBT.stringify({ Invisible: NBT.byte(1) })
    * '{ Invisible: 1b }'
    *
-   * >>> NBT.parse({ Rotation: NBT.float([ 90, 0 ]) })
+   * >>> NBT.stringify({ Rotation: NBT.float([ 90, 0 ]) })
    * '{ Rotation: [90f, 0f] }'
    *
-   * >>> NBT.parse({ Test: NBT.longArray([0, 1, 2]) })
+   * >>> NBT.stringify({ Test: NBT.longArray([0, 1, 2]) })
    * '{ Test: [L; 0, 1, 2] }'
    */
-  parse: (nbt: RootNBT) => string
+  stringify: (nbt: RootNBT) => string
 }
 
 export const NBT: NBTInterface = {
@@ -236,5 +236,5 @@ export const NBT: NBTInterface = {
 
   not: (nbt: RootNBT) => new NotNBT(nbt),
 
-  parse: (nbt: RootNBT) => nbtParser(nbt),
+  stringify: (nbt: RootNBT) => nbtParser(nbt),
 }
