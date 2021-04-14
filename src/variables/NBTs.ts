@@ -217,9 +217,6 @@ interface NBTInterface {
 }
 
 export const NBT: NBTInterface = {
-  /** Transforms a NBT object to a string. */
-  toString: nbtParser,
-
   float: (num: number | number[]): any => customNumber(num, 'f'),
 
   double: (num: number | number[]): any => customNumber(num, 'd'),
