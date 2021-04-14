@@ -1,7 +1,7 @@
 import util from 'util'
 import { nbtParser } from '@variables'
 
-import type { RootNBT as NBTObj } from 'src/arguments'
+import type { NBTObject, RootNBT as NBTObj, RootNBT } from '@arguments'
 
 export abstract class NBTCustomObject {
   abstract [util.inspect.custom]: () => string;
@@ -24,6 +24,16 @@ function customNumber(num: number | number[], unit: string): NBTCustomObject | N
     return num.map((n) => customUnit(n, unit))
   }
   return customUnit(num, unit)
+}
+
+export class NotNBT {
+  nbt
+
+  constructor(nbt: RootNBT) {
+    this.nbt = nbt
+  }
+
+  [util.inspect.custom] = () => `!${nbtParser(this.nbt)}`
 }
 
 interface NBTInterface {
@@ -174,6 +184,36 @@ interface NBTInterface {
    */
   longArray(longNumbers: number[]): NBTCustomObject,
 
+  /**
+   * Used to check for the absence of a NBT in a selector.
+   *
+   * @param nbt The NBT to check the absence of.
+   *
+   * @example
+   *
+   * // Check for entities that are NOT new babies.
+   * >>> Selector('@e', { nbt: NBT.not({ Age: -32768 }) }).toString()
+   * @e[nbt=!{ Age: -32768 }]
+   */
+  not: (nbt: RootNBT) => NotNBT
+
+  /**
+   * Return a stringified version of a NBT.
+   *
+   * @param nbt The NBT to parse.
+   *
+   * @example
+   *
+   * >>> NBT.parse({ Invisible: NBT.byte(1) })
+   * '{ Invisible: 1b }'
+   *
+   * >>> NBT.parse({ Rotation: NBT.float([ 90, 0 ]) })
+   * '{ Rotation: [90f, 0f] }'
+   *
+   * >>> NBT.parse({ Test: NBT.longArray([0, 1, 2]) })
+   * '{ Test: [L; 0, 1, 2] }'
+   */
+  parse: (nbt: RootNBT) => string
 }
 
 export const NBT: NBTInterface = {
@@ -193,4 +233,8 @@ export const NBT: NBTInterface = {
   integerArray: (numbers: number[]): any => customUnitArray(numbers, 'I'),
 
   longArray: (numbers: number[]): any => customUnitArray(numbers, 'L'),
+
+  not: (nbt: RootNBT) => new NotNBT(nbt),
+
+  parse: (nbt: RootNBT) => nbtParser(nbt),
 }

@@ -11,6 +11,7 @@ import type { CommandsRoot } from '@commands'
 import type { PredicateInstance } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
+import type { NotNBT } from './NBTs'
 
 export type Range = number | [min: number, max: number] | [min: number, max: null] | [min: null, max: number]
 
@@ -110,7 +111,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   predicate?: string | PredicateInstance | (PredicateInstance | string)[]
 
   /** Select all targets that have the specified NBT. */
-  nbt?: RootNBT
+  nbt?: RootNBT | NotNBT
 
   /**
    * Define a position on the X-axis in the world the selector starts at,
