@@ -14,7 +14,7 @@ function customUnit(num: number, unit: string): NBTCustomObject {
 }
 
 function customUnitArray(numbers: number[], unit: string): NBTCustomObject {
-  return new class {
+  return new class extends NBTCustomObject {
     [util.inspect.custom] = () => `[I; ${numbers.join(', ')}]`
   }()
 }
@@ -34,6 +34,14 @@ export class NotNBT {
   }
 
   [util.inspect.custom] = () => `!${nbtParser(this.nbt)}`
+}
+
+function dynamicNBT(template: TemplateStringsArray): NBTCustomObject {
+  const result = template.map((element: any) => (element instanceof NBTCustomObject ? nbtParser(element) : element.toString()))
+
+  return new class implements NBTCustomObject {
+      [util.inspect.custom] = () => result.join('')
+  }()
 }
 
 interface NBTInterface {
@@ -214,9 +222,14 @@ interface NBTInterface {
    * '{ Test: [L; 0, 1, 2] }'
    */
   stringify: (nbt: RootNBT) => string
+
+  /**
+   * Evaluate the given NBT.
+   */
+  (nbts: TemplateStringsArray): NBTCustomObject
 }
 
-export const NBT: NBTInterface = {
+export const NBT: NBTInterface = Object.assign(dynamicNBT, {
   float: (num: number | number[]): any => customNumber(num, 'f'),
 
   double: (num: number | number[]): any => customNumber(num, 'd'),
@@ -234,4 +247,4 @@ export const NBT: NBTInterface = {
   not: (nbt: RootNBT) => new NotNBT(nbt),
 
   stringify: (nbt: RootNBT) => nbtParser(nbt),
-}
+})

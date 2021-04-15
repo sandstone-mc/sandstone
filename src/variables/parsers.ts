@@ -6,6 +6,7 @@ import type {
   Coordinates, Range,
   RootNBT, Rotation,
 } from 'src/arguments'
+import type { NBTCustomObject } from './NBTs'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<typeof args> : typeof args
@@ -37,7 +38,7 @@ export function rotationParser<T extends unknown>(rotation: T): (
   return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
 }
 
-export const nbtParser = (nbt: RootNBT) => util.inspect(nbt, {
+export const nbtParser = (nbt: NBTCustomObject | RootNBT) => util.inspect(nbt, {
   depth: null,
   showHidden: false,
   compact: true,
