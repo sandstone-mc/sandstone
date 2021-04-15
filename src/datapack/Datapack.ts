@@ -14,6 +14,7 @@ import type {
   AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
 import type { ObjectiveInstance } from '@variables'
+import type { Score } from '@variables/Score'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
@@ -504,7 +505,7 @@ export default class Datapack {
    *
    * @param name A name that can be useful for debugging.
    */
-  Variable = (initialValue?: number | undefined, name?: string) => {
+  Variable = (initialValue?: number | Score | undefined, name?: string) => {
     // Get the objective
     const datapack = this.commandsRoot.Datapack
     const score = datapack.rootObjective
