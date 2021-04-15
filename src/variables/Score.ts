@@ -131,8 +131,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return this.unaryOperation('set', '=', ...args)
   }
 
-  '=' = this.set
-
   /**
    * Adds other entities's scores to the current entity's score.
    *
@@ -152,8 +150,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   add(...args: OperationArguments) {
     return this.unaryOperation('add', '+=', ...args)
   }
-
-  '+=' = this.add
 
   /**
    * Substract other target's scores from the current entity's score.
@@ -175,8 +171,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return this.unaryOperation('remove', '-=', ...args)
   }
 
-  '-=' = this.remove
-
   /**
    * Multiply the current entity's score by other entities's scores.
    *
@@ -196,8 +190,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   multiply(...args: OperationArguments) {
     return this.binaryOperation('*=', ...args)
   }
-
-  '*=' = this.multiply
 
   /**
    * Divide the current entity's score by other entities's scores.
@@ -219,8 +211,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return this.binaryOperation('/=', ...args)
   }
 
-  '/=' = this.divide
-
   /**
    * Get the remainder of the division of the current entity's score by other entities's scores.
    *
@@ -241,8 +231,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return this.binaryOperation('%=', ...args)
   }
 
-  '%=' = this.modulo
-
   /**
    * Swap the current score with the other targets' scores.
    *
@@ -262,8 +250,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   swap(...args: OperationArguments) {
     this.binaryOperation('><', ...args)
   }
-
-  '><' = this.swap
 
   /** EFFECT-FREE OPERATORS */
 
@@ -289,8 +275,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return anonymousScore
   }
 
-  '+' = this.plus
-
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given targets' score.
    *
@@ -312,8 +296,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.unaryOperation('remove', '-=', ...args)
     return anonymousScore
   }
-
-  '-' = this.plus
 
   /**
    * Returns a new anonymous score, equal to the product of the current score and the given targets' score.
@@ -337,8 +319,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return anonymousScore
   }
 
-  '*' = this.multipliedBy
-
   /**
    * Returns a new anonymous score, equal to the division of the current score and the given targets' score.
    *
@@ -360,8 +340,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.binaryOperation('/=', ...args)
     return anonymousScore
   }
-
-  '/' = this.dividedBy
 
   /**
    * Returns a new anonymous score, equal to the modulo of the current score and the given targets' score.
@@ -385,25 +363,26 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return anonymousScore
   }
 
-  '%' = this.dividedBy
-
   /** COMPARISONS OPERATORS */
   private comparison(
     operator: COMPARISON_OPERATORS,
     matchesRange: string,
     args: OperationArguments,
+    invert = false,
   ): ConditionClass {
     const playerScore = this
 
+    const ifOrUnless = invert ? 'unless' : 'if'
+
     if (typeof args[0] === 'number') {
       return {
-        _toMinecraftCondition: () => ({ value: ['if', 'score', playerScore.target, playerScore.objective, 'matches', matchesRange] }),
+        _toMinecraftCondition: () => ({ value: [ifOrUnless, 'score', playerScore.target, playerScore.objective, 'matches', matchesRange] }),
       }
     }
 
     const endArgs = args[1] ? args : [args[0]]
     return {
-      _toMinecraftCondition: () => ({ value: ['if', 'score', playerScore.target, playerScore.objective, operator, ...endArgs] }),
+      _toMinecraftCondition: () => ({ value: [ifOrUnless, 'score', playerScore.target, playerScore.objective, operator, ...endArgs] }),
     }
   }
 
@@ -427,8 +406,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return this.comparison('>', `${typeof args[0] === 'number' ? args[0] + 1 : null}..`, args)
   }
 
-  '>' = this.greaterThan
-
   /**
    * Check if the current score is greater or equal than the given score.
    *
@@ -448,8 +425,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   greaterOrEqualThan(...args: OperationArguments) {
     return this.comparison('>=', `${args[0]}..`, args)
   }
-
-  '>=' = this.greaterThan
 
   /**
    * Check if the current score is strictly lower than the given score.
@@ -471,8 +446,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
   }
 
-  '<' = this.lessThan
-
   /**
    * Check if the current score is lower or equal than the given score.
    *
@@ -492,8 +465,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   lessOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
   }
-
-  '<=' = this.lessOrEqualThan
 
   /**
    * Check if the current score is equal to than the given score.
@@ -515,7 +486,25 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return this.comparison('=', args[0].toString(), args)
   }
 
-  '==' = this.equalTo
+  /**
+   * Check if the current score is not equal to than the given score.
+   *
+   * @param targets The target to compare the current score against.
+   *
+   * @param objective The related objective. If not specified, default to the same objective as the current target.
+   */
+  notEqualTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+
+  /**
+   * Check if the current score is not equal to the given amount or score.
+   *
+   * @param amountOrTargetScore The amount or score to compare the current score against.
+   */
+  notEqualTo (amountOrTargetScore: number | Score) : ConditionClass
+
+  notEqualTo(...args: OperationArguments) {
+    return this.comparison('=', args[0].toString(), args, true)
+  }
 
   /**
    * Check if the current score matches a certain range.
