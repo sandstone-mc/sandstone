@@ -222,7 +222,7 @@ class DataRemove extends Command {
 }
 
 /** Allows to get, merge, modify, and remove NBT data of a block entity, entity, or Command NBT storage. */
-export class Data extends Command {
+export class DataCommand extends Command {
   /** Read off the entire NBT data or the subsection of the NBT data from the targeted block position or entity, scaled by `scale` if specified. */
   get = new DataGet(this.commandsRoot)
 

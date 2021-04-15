@@ -4,7 +4,7 @@ import { JSONTextComponentClass } from '@variables/JSONTextComponentClass'
 import { coordinatesParser, rotationParser } from '../variables/parsers'
 import { command } from './decorators'
 import {
-  AdvancementCommand, Attribute, Bossbar, Clone, Data, DatapackCommand, Debug,
+  AdvancementCommand, Attribute, Bossbar, Clone, DataCommand, DatapackCommand, Debug,
   DefaultGamemode, Difficulty, Effect, Enchant,
   ExecuteWithRun,
   Experience,
@@ -149,7 +149,7 @@ export class CommandsRoot {
   }
 
   // data command //
-  data = new Data(this)
+  data = new DataCommand(this)
 
   // datapack command //
   datapack = new DatapackCommand(this)

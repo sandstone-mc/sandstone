@@ -8,7 +8,7 @@ import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables/abstractClasses'
 import type { Range } from '..'
-import type { ObjectiveClass } from './Objective'
+import type { ObjectiveInstance } from './Objective'
 
 type PlayersTarget = number | MultipleEntitiesArgument
 
@@ -38,9 +38,9 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
 
   target: MultipleEntitiesArgument
 
-  objective: ObjectiveClass
+  objective: ObjectiveInstance
 
-  constructor(commandsRoot: CommandsRoot, target: MultipleEntitiesArgument, objective: ObjectiveClass) {
+  constructor(commandsRoot: CommandsRoot, target: MultipleEntitiesArgument, objective: ObjectiveInstance) {
     super()
 
     this.commandsRoot = commandsRoot

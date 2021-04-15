@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import { ObjectiveClass, SelectorCreator } from '@variables'
+import { ObjectiveInstance, SelectorCreator } from '@variables'
 
 import { BasePathClass } from './BasePath'
 import { toMCFunctionName } from './minecraft'
@@ -172,7 +172,7 @@ export default class Datapack {
 
   resources: ResourcesTree
 
-  objectives: Map<string, ObjectiveClass<string>>
+  objectives: Map<string, ObjectiveInstance<string>>
 
   commandsRoot: CommandsRoot
 
@@ -398,7 +398,7 @@ export default class Datapack {
     this.currentFunction = this.getParentFunction()
   }
 
-  registerNewObjective = (objective: ObjectiveClass<string>) => {
+  registerNewObjective = (objective: ObjectiveInstance<string>) => {
     if (this.objectives.has(objective.name)) {
       throw new Error(`An objective named "${objective.name}" already exists.`)
     }
@@ -458,7 +458,7 @@ export default class Datapack {
         throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
       }
 
-      const objective = new ObjectiveClass(this.commandsRoot, name, criteria as string, display)
+      const objective = new ObjectiveInstance(this.commandsRoot, name, criteria as string, display)
       this.registerNewObjective(objective)
       return objective
     },
@@ -469,7 +469,7 @@ export default class Datapack {
         throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
       }
 
-      return new ObjectiveClass(this.commandsRoot, name)
+      return new ObjectiveInstance(this.commandsRoot, name)
     },
   }
 
@@ -478,7 +478,7 @@ export default class Datapack {
     try {
       return this.Objective.create(name, criteria, display)
     } catch (e) {
-      return this.objectives.get(name) as ObjectiveClass
+      return this.objectives.get(name) as ObjectiveInstance
     }
   }
 
