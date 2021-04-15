@@ -2,24 +2,23 @@ import { JSONTextComponentClass } from './JSONTextComponentClass'
 import { PlayerScore } from './PlayerScore'
 
 import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from 'src/arguments'
-import type { LiteralUnion } from '@/generalTypes'
 import type { CommandsRoot } from '@commands'
 
-export class ObjectiveClass {
+export class ObjectiveClass<CRITERION extends string | undefined = string | undefined> {
   private commandsRoot: CommandsRoot
 
   name: string
 
-  criterion: string
+  criterion: CRITERION
 
   display: JSONTextComponentClass | undefined
 
   _displayRaw: JSONTextComponent | undefined
 
-  constructor(commandsRoot: CommandsRoot, name: string, criterion: LiteralUnion<OBJECTIVE_CRITERION>, display?: JSONTextComponent) {
+  constructor(commandsRoot: CommandsRoot, name: string, criterion?: CRITERION, display?: JSONTextComponent) {
     this.commandsRoot = commandsRoot
     this.name = name
-    this.criterion = criterion as string
+    this.criterion = criterion as CRITERION
     this.display = display === undefined ? undefined : new JSONTextComponentClass(display)
     this._displayRaw = display
   }
@@ -28,21 +27,7 @@ export class ObjectiveClass {
     return this.name
   }
 
-  ScoreHolder(scoreHolder: MultipleEntitiesArgument) {
+  ScoreHolder(scoreHolder: MultipleEntitiesArgument): PlayerScore {
     return new PlayerScore(this.commandsRoot, scoreHolder.toString(), this)
   }
-}
-
-export function Objective(
-  commandsRoot: CommandsRoot,
-  name: string,
-  criterion: string,
-  display?: JSONTextComponent,
-): ObjectiveClass {
-  return new ObjectiveClass(
-    commandsRoot,
-    name,
-    criterion,
-    display,
-  )
 }

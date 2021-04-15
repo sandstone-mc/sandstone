@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import { Objective, SelectorCreator } from '@variables'
+import { ObjectiveClass, SelectorCreator } from '@variables'
 
 import { BasePathClass } from './BasePath'
 import { toMCFunctionName } from './minecraft'
@@ -13,7 +13,6 @@ import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion } 
 import type {
   AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
-import type { ObjectiveClass } from '@variables'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
@@ -173,7 +172,7 @@ export default class Datapack {
 
   resources: ResourcesTree
 
-  objectives: Map<string, ObjectiveClass>
+  objectives: Map<string, ObjectiveClass<string>>
 
   commandsRoot: CommandsRoot
 
@@ -399,7 +398,7 @@ export default class Datapack {
     this.currentFunction = this.getParentFunction()
   }
 
-  registerNewObjective = (objective: ObjectiveClass) => {
+  registerNewObjective = (objective: ObjectiveClass<string>) => {
     if (this.objectives.has(objective.name)) {
       throw new Error(`An objective named "${objective.name}" already exists.`)
     }
@@ -449,21 +448,32 @@ export default class Datapack {
   }
 
   /** UTILS */
-  /** Create a new objective. Defaults to `dummy` if unspecified. */
-  createObjective = (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent) => {
-    if (name.length > 16) {
-      throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
-    }
+  Objective = {
+    /** Create a new objective. Defaults to `dummy` if unspecified. */
+    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent) => {
+      if (name.length > 16) {
+        throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
+      }
 
-    const objective = Objective(this.commandsRoot, name, criteria as string, display)
-    this.registerNewObjective(objective)
-    return objective
+      const objective = new ObjectiveClass(this.commandsRoot, name, criteria as string, display)
+      this.registerNewObjective(objective)
+      return objective
+    },
+
+    /** Get an existing objective. */
+    get: (name: string) => {
+      if (name.length > 16) {
+        throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
+      }
+
+      return new ObjectiveClass(this.commandsRoot, name)
+    },
   }
 
   /** Get an objective, and create it if it does not exists. */
   getCreateObjective(name: string, criteria: string, display?: JSONTextComponent) {
     try {
-      return this.createObjective(name, criteria, display)
+      return this.Objective.create(name, criteria, display)
     } catch (e) {
       return this.objectives.get(name) as ObjectiveClass
     }

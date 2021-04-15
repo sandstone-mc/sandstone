@@ -28,7 +28,7 @@ export * from './variables/PlayerScore'
 export { SelectorClass } from './variables/Selector'
 
 export const {
-  createObjective,
+  Objective,
   Selector,
   Variable,
 } = dataPack
