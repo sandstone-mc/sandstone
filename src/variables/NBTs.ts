@@ -176,9 +176,9 @@ interface NBTInterface {
    * @example
    * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
    *
-   * summon(..., { Test: NBT.integerArray([0, 1, 2]) }) // => { Test: [I; 0, 1, 2] }
+   * summon(..., { Test: NBT.intArray([0, 1, 2]) }) // => { Test: [I; 0, 1, 2] }
    */
-  integerArray(intNumbers: number[]): NBTCustomObject,
+  intArray(intNumbers: number[]): NBTCustomObject,
 
   /**
    * Transforms an array into a Long array.
@@ -240,7 +240,7 @@ export const NBT: NBTInterface = Object.assign(dynamicNBT, {
 
   long: (num: number | number[]): any => customNumber(num, 'l'),
 
-  integerArray: (numbers: number[]): any => customUnitArray(numbers, 'I'),
+  intArray: (numbers: number[]): any => customUnitArray(numbers, 'I'),
 
   longArray: (numbers: number[]): any => customUnitArray(numbers, 'L'),
 
