@@ -27,7 +27,7 @@ export class ObjectiveInstance<CRITERION extends string | undefined = string | u
     return this.name
   }
 
-  ScoreHolder(scoreHolder: MultipleEntitiesArgument): Score {
-    return new Score(this.commandsRoot, scoreHolder.toString(), this)
+  ScoreHolder(scoreHolder: MultipleEntitiesArgument): Score<CRITERION> {
+    return new Score<CRITERION>(this.commandsRoot, scoreHolder.toString(), this)
   }
 }

@@ -33,14 +33,14 @@ function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, obje
   return anonymousScore
 }
 
-export class Score extends ComponentClass implements ConditionClass {
+export class Score<OBJ_CRITERION extends string | undefined = string | undefined> extends ComponentClass implements ConditionClass {
   commandsRoot: CommandsRoot
 
   target: MultipleEntitiesArgument
 
-  objective: ObjectiveInstance
+  objective: ObjectiveInstance<OBJ_CRITERION>
 
-  constructor(commandsRoot: CommandsRoot, target: MultipleEntitiesArgument, objective: ObjectiveInstance) {
+  constructor(commandsRoot: CommandsRoot, target: MultipleEntitiesArgument, objective: ObjectiveInstance<OBJ_CRITERION>) {
     super()
 
     this.commandsRoot = commandsRoot
