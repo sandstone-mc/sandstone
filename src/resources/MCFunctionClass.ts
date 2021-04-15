@@ -141,11 +141,11 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     // If it should run each tick, add it to the tick.json function
     const { runEach: runEachDelay } = this.options as any
     if (runEachDelay !== undefined) {
-      if (typeof runEachDelay && runEachDelay < 0) { throw new Error(`\`runEach\` argument must be greater than 0, got ${runEachDelay}`) }
+      if (typeof runEachDelay === 'number' && runEachDelay < 0) { throw new Error(`\`runEach\` argument must be greater than 0, got ${runEachDelay}`) }
 
       if (this.options.runOnLoad !== false) {
         // If run on load, call it directly
-        tags = [...tags, 'minecraft:tick']
+        tags = [...tags, 'minecraft:load']
       }
     } else {
       // If runEachTick is specified, add to minecraft:tick
