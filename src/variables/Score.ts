@@ -13,15 +13,15 @@ import type { ObjectiveInstance } from './Objective'
 type PlayersTarget = number | MultipleEntitiesArgument
 
 type OperationArguments = (
-  [amountOrTargetScore: number | PlayerScore] |
+  [amountOrTargetScore: number | Score] |
   [targets: PlayersTarget, objective?: ObjectiveArgument]
 )
 
-function createVariable(datapack: Datapack, amount: number): PlayerScore
+function createVariable(datapack: Datapack, amount: number): Score
 
-function createVariable(datapack: Datapack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): PlayerScore
+function createVariable(datapack: Datapack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): Score
 
-function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, objective?: ObjectiveArgument): PlayerScore {
+function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, objective?: ObjectiveArgument): Score {
   const anonymousScore = datapack.Variable()
 
   if (typeof amountOrTargets === 'number') {
@@ -33,7 +33,7 @@ function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, obje
   return anonymousScore
 }
 
-export class PlayerScore extends ComponentClass implements ConditionClass {
+export class Score extends ComponentClass implements ConditionClass {
   commandsRoot: CommandsRoot
 
   target: MultipleEntitiesArgument
@@ -69,7 +69,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   ): this {
     if (typeof args[0] === 'number') {
       this.commandsRoot.scoreboard.players[operation](this.target, this.objective, args[0])
-    } else if (args[0] instanceof PlayerScore) {
+    } else if (args[0] instanceof Score) {
       this.commandsRoot.scoreboard.players.operation(
         this.target, this.objective, operator, args[0].target, args[0].objective,
       )
@@ -83,7 +83,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
   }
 
   private binaryOperation(operator: OPERATORS, ...args: OperationArguments): this {
-    if (args[0] instanceof PlayerScore) {
+    if (args[0] instanceof Score) {
       this.commandsRoot.scoreboard.players.operation(
         this.target, this.objective, operator, args[0].target, args[0].objective,
       )
@@ -125,7 +125,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore A value, or the target's score.
    */
-  set(amountOrTargetScore: number | PlayerScore): this
+  set(amountOrTargetScore: number | Score): this
 
   set(...args: OperationArguments) {
     return this.unaryOperation('set', '=', ...args)
@@ -147,7 +147,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The amount to add, or the target to add the scores from.
    */
-  add(amountOrTargetScore: number | PlayerScore): this
+  add(amountOrTargetScore: number | Score): this
 
   add(...args: OperationArguments) {
     return this.unaryOperation('add', '+=', ...args)
@@ -169,7 +169,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param targetScore The amount to substract, or the target to get the score from.
    */
-  remove(amountOrTargetScore: number | PlayerScore): this
+  remove(amountOrTargetScore: number | Score): this
 
   remove(...args: OperationArguments) {
     return this.unaryOperation('remove', '-=', ...args)
@@ -191,7 +191,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The value, or the target to get the scores from.
    */
-  multiply(amountOrTargetScore: number | PlayerScore): this
+  multiply(amountOrTargetScore: number | Score): this
 
   multiply(...args: OperationArguments) {
     return this.binaryOperation('*=', ...args)
@@ -213,7 +213,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The value, or the target to get the scores from
    */
-  divide(amountOrTargetScore: number | PlayerScore): this
+  divide(amountOrTargetScore: number | Score): this
 
   divide(...args: OperationArguments) {
     return this.binaryOperation('/=', ...args)
@@ -235,7 +235,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The value, or target's score to modulo the current score with.
    */
-  modulo(amountOrTargetScore: number | PlayerScore): this
+  modulo(amountOrTargetScore: number | Score): this
 
   modulo(...args: OperationArguments) {
     return this.binaryOperation('%=', ...args)
@@ -257,7 +257,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param targetScore The target to swap the scores with
    */
-  swap(targetScore: PlayerScore): void
+  swap(targetScore: Score): void
 
   swap(...args: OperationArguments) {
     this.binaryOperation('><', ...args)
@@ -274,16 +274,16 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  plus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
+  plus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the sum of the current score and the given amount or target' score.
    *
    * @param amountOrTargetScore The value, or the target to add the score from.
    */
-  plus(amountOrTargetScore: number | PlayerScore): PlayerScore
+  plus(amountOrTargetScore: number | Score): Score
 
-  plus(...args: OperationArguments): PlayerScore {
+  plus(...args: OperationArguments): Score {
     const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.unaryOperation('add', '+=', ...args)
     return anonymousScore
@@ -298,16 +298,16 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  minus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
+  minus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given amount or target' score.
    *
    * @param amountOrTargetScore The amount to substract, or the target to substract the score from.
    */
-  minus(amountOrTargetScore: number | PlayerScore): PlayerScore
+  minus(amountOrTargetScore: number | Score): Score
 
-  minus(...args: OperationArguments): PlayerScore {
+  minus(...args: OperationArguments): Score {
     const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.unaryOperation('remove', '-=', ...args)
     return anonymousScore
@@ -322,16 +322,16 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multipliedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
+  multipliedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the product of the current score and the given amount or target's score.
    *
    * @param amountOrTargetScore The amount, or the target to multiply the scores from
    */
-  multipliedBy(amountOrTargetScore: number | PlayerScore): PlayerScore
+  multipliedBy(amountOrTargetScore: number | Score): Score
 
-  multipliedBy(...args: OperationArguments): PlayerScore {
+  multipliedBy(...args: OperationArguments): Score {
     const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('*=', ...args)
     return anonymousScore
@@ -346,16 +346,16 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  dividedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
+  dividedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the division of the current score and the given amount or target's score.
    *
    * @param amountOrTargetScore The amount, or target's score to divide the current score by.
    */
-  dividedBy(amountOrTargetScore: number | PlayerScore): PlayerScore
+  dividedBy(amountOrTargetScore: number | Score): Score
 
-  dividedBy(...args: OperationArguments): PlayerScore {
+  dividedBy(...args: OperationArguments): Score {
     const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('/=', ...args)
     return anonymousScore
@@ -370,16 +370,16 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  moduloBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): PlayerScore
+  moduloBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the modulo of the current score and the given value, or target's score.
    *
    * @param amountOrTargetScore The amount, or target's score to modulo the current score by.
    */
-  moduloBy(amountOrTargetScore: number | PlayerScore): PlayerScore
+  moduloBy(amountOrTargetScore: number | Score): Score
 
-  moduloBy(...args: OperationArguments): PlayerScore {
+  moduloBy(...args: OperationArguments): Score {
     const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
     anonymousScore.binaryOperation('%=', ...args)
     return anonymousScore
@@ -421,7 +421,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  greaterThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
+  greaterThan (amountOrTargetScore: number | Score) : ConditionClass
 
   greaterThan(...args: OperationArguments) {
     return this.comparison('>', `${typeof args[0] === 'number' ? args[0] + 1 : null}..`, args)
@@ -443,7 +443,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The amount or score compare the current score against.
    */
-  greaterOrEqualThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
+  greaterOrEqualThan (amountOrTargetScore: number | Score) : ConditionClass
 
   greaterOrEqualThan(...args: OperationArguments) {
     return this.comparison('>=', `${args[0]}..`, args)
@@ -465,7 +465,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  lessThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
+  lessThan (amountOrTargetScore: number | Score) : ConditionClass
 
   lessThan(...args: OperationArguments) {
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
@@ -487,7 +487,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The amount or score target to compare the current score against.
    */
-  lessOrEqualThan (amountOrTargetScore: number | PlayerScore) : ConditionClass
+  lessOrEqualThan (amountOrTargetScore: number | Score) : ConditionClass
 
   lessOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
@@ -509,7 +509,7 @@ export class PlayerScore extends ComponentClass implements ConditionClass {
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  equalTo (amountOrTargetScore: number | PlayerScore) : ConditionClass
+  equalTo (amountOrTargetScore: number | Score) : ConditionClass
 
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)

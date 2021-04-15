@@ -1,5 +1,5 @@
 import { JSONTextComponentClass } from './JSONTextComponentClass'
-import { PlayerScore } from './PlayerScore'
+import { Score } from './Score'
 
 import type { JSONTextComponent, MultipleEntitiesArgument } from 'src/arguments'
 import type { CommandsRoot } from '@commands'
@@ -27,7 +27,7 @@ export class ObjectiveInstance<CRITERION extends string | undefined = string | u
     return this.name
   }
 
-  ScoreHolder(scoreHolder: MultipleEntitiesArgument): PlayerScore {
-    return new PlayerScore(this.commandsRoot, scoreHolder.toString(), this)
+  ScoreHolder(scoreHolder: MultipleEntitiesArgument): Score {
+    return new Score(this.commandsRoot, scoreHolder.toString(), this)
   }
 }

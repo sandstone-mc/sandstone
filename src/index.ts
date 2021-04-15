@@ -24,7 +24,7 @@ export * from './variables/JSONTextComponentClass'
 export * from './variables/NBTs'
 export * from './variables/Objective'
 export * from './variables/parsers'
-export * from './variables/PlayerScore'
+export * from './variables/Score'
 export { SelectorClass } from './variables/Selector'
 
 export const {

@@ -10,7 +10,7 @@ import type * as commands from '@/commandsOnly'
 import type { LiteralUnion } from '@/generalTypes'
 import type { Flow } from '@flow'
 import type { ConditionClass, Range } from '@variables'
-import type { PlayerScore } from '@variables/PlayerScore'
+import type { Score } from '@variables/Score'
 import type { CommandsRoot } from '../CommandsRoot'
 
 const executeConfig = {
@@ -112,7 +112,7 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
      *
      * @param playerScore The player's score to override.
      */
-    (playerScore: PlayerScore) => InferExecute<T>)
+    (playerScore: Score) => InferExecute<T>)
   ) = (...args: unknown[]) => this.execute
 
   /**

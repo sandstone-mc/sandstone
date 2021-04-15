@@ -2,7 +2,7 @@ import { isAsyncFunction } from '@/utils'
 import { Execute } from '@commands/implementations/Execute'
 import { toMCFunctionName } from '@datapack/minecraft'
 import { ConditionClass, coordinatesParser } from '@variables'
-import { PlayerScore } from '@variables/PlayerScore'
+import { Score } from '@variables/Score'
 
 import { CombinedConditions, getConditionScore } from './conditions'
 
@@ -25,7 +25,7 @@ function valueToCondition(value: unknown[]): ConditionClass {
 }
 
 /** Call a given callback function, and inline it if possible */
-function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionResource, forceInlineScore?: PlayerScore) {
+function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionResource, forceInlineScore?: Score) {
   const { commandsRoot } = datapack
 
   if (
@@ -78,7 +78,7 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
 type FlowStatementConfig = {
   callbackName: string
   absoluteName?: string
-  forceInlineScore?: PlayerScore
+  forceInlineScore?: Score
 } & (
   {
     initialCondition: false,
@@ -346,7 +346,7 @@ export class Flow {
     condition: ConditionType,
     callback: () => R,
     callbackName: string,
-    ifScore: PlayerScore,
+    ifScore: Score,
     forceInlineScore = false,
   ): (R extends void ? ElifElseFlow<R> : ElifElseFlow<R> & PromiseLike<void>) => {
     function ensureConsistency(nextCallback: () => void) {
@@ -525,7 +525,7 @@ export class Flow {
     }, 'if', ifScore) as any
   }
 
-  binaryMatch = (score: PlayerScore, minimum: number, maximum: number, callback: (num: number) => void) => {
+  binaryMatch = (score: Score, minimum: number, maximum: number, callback: (num: number) => void) => {
     // First, specify we didn't find a match yet
     const foundMatch = this.datapack.Variable(0)
 
@@ -610,13 +610,13 @@ export class Flow {
 
   doWhile = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'do_while')
 
-  binaryFor = (from: PlayerScore | number, to: PlayerScore |number, callback: (amount: number) => void, maximum = 128) => {
+  binaryFor = (from: Score | number, to: Score |number, callback: (amount: number) => void, maximum = 128) => {
     if (typeof from === 'number' && typeof to === 'number') {
       callback(to - from)
     }
 
-    const realStart = from instanceof PlayerScore ? from : this.datapack.Variable(from)
-    const realEnd = to instanceof PlayerScore ? to : this.datapack.Variable(to)
+    const realStart = from instanceof Score ? from : this.datapack.Variable(from)
+    const realEnd = to instanceof Score ? to : this.datapack.Variable(to)
 
     const iterations = realEnd.minus(realStart)
 
@@ -645,8 +645,8 @@ export class Flow {
     }
   }
 
-  forRange = <R extends void | Promise<void>>(from: PlayerScore | number, to: PlayerScore | number, callback: (score: PlayerScore) => R) => {
-    const scoreTracker = from instanceof PlayerScore ? from : this.datapack.Variable(from)
+  forRange = <R extends void | Promise<void>>(from: Score | number, to: Score | number, callback: (score: Score) => R) => {
+    const scoreTracker = from instanceof Score ? from : this.datapack.Variable(from)
 
     // Small optimization: if we know the loop will run at least once, use a do while
     let loop = this.while
@@ -668,15 +668,15 @@ export class Flow {
   }
 
   forScore = <R extends void | Promise<void>>(
-    score: PlayerScore | number,
+    score: Score | number,
     // eslint-disable-next-line no-shadow
-    condition: ((score: PlayerScore) => ConditionType) | ConditionType,
+    condition: ((score: Score) => ConditionType) | ConditionType,
     // eslint-disable-next-line no-shadow
-    modifier: (score: PlayerScore) => void,
+    modifier: (score: Score) => void,
     // eslint-disable-next-line no-shadow
-    callback: (score: PlayerScore) => R,
+    callback: (score: Score) => R,
   ): R => {
-    const realScore = score instanceof PlayerScore ? score : this.datapack.Variable(score)
+    const realScore = score instanceof Score ? score : this.datapack.Variable(score)
     const realCondition = typeof condition === 'function' ? condition(realScore) : condition
 
     if (!isAsyncFunction(callback)) {
