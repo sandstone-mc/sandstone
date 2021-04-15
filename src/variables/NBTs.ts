@@ -240,7 +240,7 @@ export const NBT: NBTInterface = Object.assign(dynamicNBT, {
 
   long: (num: number | number[]): any => customNumber(num, 'l'),
 
-  integerArray: (numbers: number[]): any => customUnitArray(numbers, 'I'),
+  intArray: (numbers: number[]): any => customUnitArray(numbers, 'I'),
 
   longArray: (numbers: number[]): any => customUnitArray(numbers, 'L'),
 
