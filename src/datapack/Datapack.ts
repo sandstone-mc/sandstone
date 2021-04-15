@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
-import { ObjectiveInstance, SelectorCreator } from '@variables'
+import { ObjectiveClass, SelectorCreator } from '@variables'
 
 import { BasePathClass } from './BasePath'
 import { toMCFunctionName } from './minecraft'
@@ -13,6 +13,7 @@ import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion } 
 import type {
   AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
+import type { ObjectiveInstance } from '@variables'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
@@ -453,23 +454,32 @@ export default class Datapack {
      * Create a new objective. Defaults to `dummy` if unspecified.
      * @param name The name of the objective
      */
-    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent) => {
+    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent): ObjectiveInstance => {
       if (name.length > 16) {
         throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
       }
 
-      const objective = new ObjectiveInstance(this.commandsRoot, name, criteria as string, display)
-      this.registerNewObjective(objective)
-      return objective
+      const objective = new ObjectiveClass(this.commandsRoot, name, criteria as string, display)
+      const objectiveInstance = Object.assign(
+        objective.ScoreHolder,
+        objective,
+      )
+
+      this.registerNewObjective(objectiveInstance)
+      return objectiveInstance
     },
 
     /** Get an existing objective. */
-    get: (name: string) => {
+    get: (name: string): ObjectiveInstance => {
       if (name.length > 16) {
         throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
       }
 
-      return new ObjectiveInstance(this.commandsRoot, name)
+      const objective = new ObjectiveClass(this.commandsRoot, name)
+      return Object.assign(
+        objective.ScoreHolder,
+        objective,
+      )
     },
   }
 
@@ -478,7 +488,7 @@ export default class Datapack {
     try {
       return this.Objective.create(name, criteria, display)
     } catch (e) {
-      return this.objectives.get(name) as ObjectiveInstance
+      return this.objectives.get(name)!
     }
   }
 
@@ -502,7 +512,7 @@ export default class Datapack {
     // Get the specific anonymous score
     const id = Datapack.anonymousScoreId
     Datapack.anonymousScoreId += 1
-    const anonymousScore = score.ScoreHolder(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
+    const anonymousScore = score(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
 
     if (initialValue !== undefined) {
       if (this.currentFunction !== null) {

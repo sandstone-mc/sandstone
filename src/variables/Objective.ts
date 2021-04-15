@@ -4,7 +4,7 @@ import { Score } from './Score'
 import type { JSONTextComponent, MultipleEntitiesArgument } from 'src/arguments'
 import type { CommandsRoot } from '@commands'
 
-export class ObjectiveInstance<CRITERION extends string | undefined = string | undefined> {
+export class ObjectiveClass<CRITERION extends string | undefined = string | undefined> {
   private commandsRoot: CommandsRoot
 
   name: string
@@ -31,3 +31,7 @@ export class ObjectiveInstance<CRITERION extends string | undefined = string | u
     return new Score<CRITERION>(this.commandsRoot, scoreHolder.toString(), this)
   }
 }
+
+export type ObjectiveInstance<CRITERION extends string | undefined = string | undefined> = (
+  Omit<ObjectiveClass<CRITERION>, 'ScoreHolder'> & ObjectiveClass<CRITERION>['ScoreHolder']
+)
