@@ -11,14 +11,18 @@ import type { Datapack } from '@datapack'
 import type {
   AdvancementOptions, LootTableOptions, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
+import type { SandstoneConfig } from '..'
 import type { MCFunctionInstance } from './Datapack'
 
-/** The namespace all nested resources will be located in. */
 export type BasePathOptions<N extends (undefined | string), D extends (undefined | string)> = {
+  /** The namespace all nested resources will be located in. */
   namespace?: N
 
   /** The directory all nested resources will be located in. */
   directory?: D
+
+  /** The default conflict strategies for all nested resources. */
+  onConflict?: SandstoneConfig['onConflict']
 }
 
 export type BasePathInstance<N extends (undefined | string) = (undefined | string), D extends (undefined | string) = (undefined | string)> = (
@@ -43,9 +47,26 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
 
   directory: D
 
+  onConflict
+
   constructor(datapack: Datapack, basePath: BasePathOptions<N, D>) {
     this.datapack = datapack
     this.namespace = basePath.namespace as N
+
+    // Copy onConflict into an object
+    const onConflict = basePath.onConflict ? { ...basePath.onConflict } : undefined
+
+    // Apply default
+    if (onConflict?.default) {
+      onConflict.advancement ??= onConflict.default
+      onConflict.lootTable ??= onConflict.default
+      onConflict.mcFunction ??= onConflict.default
+      onConflict.predicate ??= onConflict.default
+      onConflict.recipe ??= onConflict.default
+      onConflict.tag ??= onConflict.default
+    }
+
+    this.onConflict = onConflict
 
     // Remove forward & trailing slashes
     this.directory = (typeof basePath.directory === 'string' ? trimSlashes(basePath.directory) : undefined) as D
@@ -130,6 +151,7 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
     return this.datapack.BasePath({
       namespace: this.namespace,
       directory: [...oldDirectory, ...newDirectory].join('/'),
+      onConflict: this.onConflict,
     })
   }
 
@@ -144,33 +166,6 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
    * "mynamespace:sub/folder/my_resource"
    */
   getResourceName = (name: string | TemplateStringsArray) => this.getName(typeof name === 'string' ? name : name.join())
-
-  /**
-   * Creates a Minecraft Function.
-   *
-   * @param name The name of the function.
-   * @param callback A callback containing the commands you want in the Minecraft Function.
-   */
-  MCFunction = <RETURN extends void | Promise<void>>(
-    name: string, callback: () => RETURN, options?: MCFunctionOptions,
-  ): MCFunctionInstance<RETURN> => {
-    const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, options)
-
-    this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)
-
-    const returnFunction: any = mcfunction.call
-
-    // Set the function's name
-    const descriptor = Object.getOwnPropertyDescriptor(returnFunction, 'name')!
-    descriptor.value = mcfunction.name
-    Object.defineProperty(returnFunction, 'name', descriptor)
-
-    // Set all properties, except for "name"
-    const { name: _, ...mcfunctionClone } = mcfunction
-    Object.assign(returnFunction, mcfunctionClone)
-
-    return returnFunction
-  }
 
   /**
    * Create an advancement.
@@ -190,24 +185,9 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
    *   }
    * })
    */
-  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: AdvancementOptions) => new AdvancementInstance(this.datapack, this.getName(name), advancement, options)
-
-  /**
-   * Create a predicate.
-   *
-   * @param predicate The actual predicate. You must provide at least a `condition` for it to be valid.
-   *
-   * @example
-   *
-   * Predicate('is_raining', {
-   *   condition: 'minecraft:weather_check',
-   *   raining: true,
-   * })
-   */
-  Predicate = (name: string, predicate: PredicateJSON, options?: PredicateOptions) => new PredicateInstance(this.datapack, this.getName(name), predicate)
-
-  /** Create a tag. */
-  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[] = [], replace?: boolean, options?: TagOptions) => new TagInstance(this.datapack, type, this.getName(name), values, replace, options)
+  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: AdvancementOptions) => (
+    new AdvancementInstance(this.datapack, this.getName(name), advancement, { onConflict: this.onConflict?.advancement, ...options })
+  )
 
   /**
    * Create a loot table.
@@ -227,8 +207,62 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
    *   }],
    * })
    */
-  LootTable = (name: string, lootTable: LootTableJSON, options?: LootTableOptions) => new LootTableInstance(this.datapack, this.getName(name), lootTable, options)
+  LootTable = (name: string, lootTable: LootTableJSON, options?: LootTableOptions) => (
+    new LootTableInstance(this.datapack, this.getName(name), lootTable, { onConflict: this.onConflict?.lootTable, ...options })
+  )
+
+  /**
+   * Creates a Minecraft Function.
+   *
+   * @param name The name of the function.
+   * @param callback A callback containing the commands you want in the Minecraft Function.
+   */
+  MCFunction = <RETURN extends void | Promise<void>>(
+    name: string, callback: () => RETURN, options?: MCFunctionOptions,
+  ): MCFunctionInstance<RETURN> => {
+    const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, {
+      onConflict: this.onConflict?.mcFunction, ...options,
+    })
+
+    this.datapack.rootFunctions.add(mcfunction as MCFunctionClass<any>)
+
+    const returnFunction: any = mcfunction.call
+
+    // Set the function's name
+    const descriptor = Object.getOwnPropertyDescriptor(returnFunction, 'name')!
+    descriptor.value = mcfunction.name
+    Object.defineProperty(returnFunction, 'name', descriptor)
+
+    // Set all properties, except for "name"
+    const { name: _, ...mcfunctionClone } = mcfunction
+    Object.assign(returnFunction, mcfunctionClone)
+
+    return returnFunction
+  }
+
+  /**
+   * Create a predicate.
+   *
+   * @param predicate The actual predicate. You must provide at least a `condition` for it to be valid.
+   *
+   * @example
+   *
+   * Predicate('is_raining', {
+   *   condition: 'minecraft:weather_check',
+   *   raining: true,
+   * })
+   */
+  Predicate = (name: string, predicate: PredicateJSON, options?: PredicateOptions) => (
+    new PredicateInstance(this.datapack, this.getName(name), predicate, { onConflict: this.onConflict?.predicate, ...options })
+  )
 
   /** Create a recipe. */
-  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeJSON<P1, P2, P3>, options?: RecipeOptions) => new RecipeInstance(this.datapack, this.getName(name), recipe, options)
+  Recipe = <P1 extends string, P2 extends string, P3 extends string>(name: string, recipe: RecipeJSON<P1, P2, P3>, options?: RecipeOptions) => (
+    new RecipeInstance(this.datapack, this.getName(name), recipe, { onConflict: this.onConflict?.recipe, ...options })
+  )
+
+  /** Create a tag. */
+  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[] = [], replace?: boolean, options?: TagOptions) => (
+    new TagInstance(this.datapack, type, this.getName(name), values, replace, { onConflict: this.onConflict?.tag, ...options })
+  )
 }
