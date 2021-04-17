@@ -3,7 +3,7 @@ import util from 'util'
 import { VectorClass } from './Coordinates'
 
 import type {
-  Coordinates, Range,
+  Coordinates, NBTObject, Range,
   RootNBT, Rotation,
 } from 'src/arguments'
 import type { NBTCustomObject } from './NBTs'
@@ -38,7 +38,7 @@ export function rotationParser<T extends unknown>(rotation: T): (
   return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
 }
 
-export const nbtParser = (nbt: NBTCustomObject | RootNBT) => util.inspect(nbt, {
+export const nbtParser = (nbt: NBTObject) => util.inspect(nbt, {
   depth: null,
   showHidden: false,
   compact: true,

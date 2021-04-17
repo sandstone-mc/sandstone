@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
 import { ObjectiveClass, SelectorCreator } from '@variables'
+import { DataInstance, TargetlessDataInstance } from '@variables/Data'
 
 import { BasePathClass } from './BasePath'
 import { toMCFunctionName } from './minecraft'
@@ -14,6 +15,7 @@ import type {
   AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
 import type { ObjectiveInstance } from '@variables'
+import type { DATA_TARGET, DATA_TYPES } from '@variables/Data'
 import type { Score } from '@variables/Score'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
@@ -461,10 +463,17 @@ export default class Datapack {
       }
 
       const objective = new ObjectiveClass(this.commandsRoot, name, criteria as string, display)
+      const value = objective.ScoreHolder
+
+      const { name: _, ...objectiveExceptName } = objective
       const objectiveInstance = Object.assign(
         objective.ScoreHolder,
-        objective,
+        objectiveExceptName,
       )
+
+      const descriptor = Object.getOwnPropertyDescriptor(value, 'name')!
+      descriptor.value = objective.name
+      Object.defineProperty(value, 'name', descriptor)
 
       this.registerNewObjective(objectiveInstance)
       return objectiveInstance
@@ -527,6 +536,13 @@ export default class Datapack {
   }
 
   Selector = SelectorCreator.bind(this)
+
+  Data = <TYPE extends DATA_TYPES>(type: TYPE, target?: DATA_TARGET[TYPE]): typeof target extends undefined ? TargetlessDataInstance : DataInstance => {
+    if (target) {
+      return new DataInstance(this, type, target) as any
+    }
+    return new TargetlessDataInstance(this, type) as any
+  }
 
   /** A BasePath changes the base namespace & directory of nested resources. */
   BasePath = <N extends string | undefined, D extends string | undefined>(basePath: BasePathOptions<N, D>): BasePathInstance<N, D> => {

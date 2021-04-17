@@ -13,7 +13,7 @@ const modifyCmd = (name: string) => ['data', 'modify', name]
 
 const removeCmd = (name: string) => ['data', 'remove', name]
 
-class DataGet extends Command {
+export class DataGet extends Command {
   /**
    * Get the NBT of a block at the given position.
    *
@@ -45,7 +45,7 @@ class DataGet extends Command {
   storage = (target: string, path?: string, scale?: number) => { }
 }
 
-class DataMerge extends Command {
+export class DataMerge extends Command {
   /**
    * Merge the NBT of a block at the given position, with the given NBT.
    *
@@ -53,7 +53,7 @@ class DataMerge extends Command {
    * @param nbt The NBT to merge with.
    */
   @command(mergeCmd('block'), { isRoot: true, parsers: { '0': coordinatesParser } })
-  block = (targetPos: Coordinates, nbt: string) => { }
+  block = (targetPos: Coordinates, nbt: NBTObject) => { }
 
   /**
    * Merge the NBT of the given entity, with the given NBT.
@@ -62,7 +62,7 @@ class DataMerge extends Command {
    * @param nbt The NBT to merge with.
    */
   @command(mergeCmd('entity'), { isRoot: true })
-  entity = (target: SingleEntityArgument, nbt: string) => { }
+  entity = (target: SingleEntityArgument, nbt: NBTObject) => { }
 
   /**
    * Merge the NBT of the given storage path, with the given NBT.
@@ -71,10 +71,10 @@ class DataMerge extends Command {
    * @param nbt The NBT to merge with.
    */
   @command(mergeCmd('storage'), { isRoot: true })
-  storage = (target: string, nbt: string) => { }
+  storage = (target: string, nbt: NBTObject) => { }
 }
 
-class DataModifyValues extends Command {
+export class DataModifyValues extends Command {
   @command(['from', 'block'], { parsers: { '0': coordinatesParser } })
   private fromBlock = (...args: unknown[]) => { }
 
@@ -121,7 +121,7 @@ class DataModifyValues extends Command {
   value = (value: NBTObject) => { }
 }
 
-class DataModifyType extends Command {
+export class DataModifyType extends Command {
   /** Append the source data onto the end of the pointed-to list. */
   get append() {
     this.commandsRoot.arguments.push('append')
@@ -159,7 +159,7 @@ class DataModifyType extends Command {
   }
 }
 
-class DataModify extends Command {
+export class DataModify extends Command {
   /**
    * Modify the NBT of a block at the given position.
    *
@@ -190,7 +190,7 @@ class DataModify extends Command {
   storage = (target: string, targetPath: string) => new DataModifyType(this.commandsRoot)
 }
 
-class DataRemove extends Command {
+export class DataRemove extends Command {
   /**
    * Remove the NBT of a block at the given position.
    *

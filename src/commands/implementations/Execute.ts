@@ -10,6 +10,7 @@ import type * as commands from '@/commandsOnly'
 import type { LiteralUnion } from '@/generalTypes'
 import type { Flow } from '@flow'
 import type { ConditionClass, Range } from '@variables'
+import type { DataPointInstance } from '@variables/Data'
 import type { Score } from '@variables/Score'
 import type { CommandsRoot } from '../CommandsRoot'
 
@@ -20,7 +21,7 @@ const executeConfig = {
   isExecuteSubcommand: true,
 }
 
-type StoreType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double'
+export type StoreType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double'
 
 type CommandsRootLike = CommandsRoot | Flow
 
@@ -197,7 +198,7 @@ type IfsAndUnlesses<T extends CommandsRootLike, E extends Execute<T>> = {
 
   ifBlocks: (start: Coordinates, end: Coordinates, destination: Coordinates, scanMode: 'all' | 'masked') => E
 
-  ifData: ExecuteIfData<T>
+  ifData: ((data: DataPointInstance) => E) & ExecuteIfData<T>
 
   ifEntity: (targets: MultipleEntitiesArgument) => E
 
@@ -413,7 +414,12 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       this.commandsRoot.executeState = 'inside'
     }
 
-    return new ExecuteIfData(this as unknown as InferExecute<T>)
+    const result = (data: DataPointInstance) => {
+      this.commandsRoot.arguments.push(data.type, data.currentTarget, data.path)
+      return this
+    }
+
+    return Object.assign(result, new ExecuteIfData(this as unknown as InferExecute<T>))
   }
 
   private unlessData = (): IfsAndUnlesses<T, this>['ifData'] => {
@@ -427,7 +433,12 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       this.commandsRoot.executeState = 'inside'
     }
 
-    return new ExecuteIfData(this as unknown as InferExecute<T>)
+    const result = (data: DataPointInstance) => {
+      this.commandsRoot.arguments.push(data.type, data.currentTarget, data.path)
+      return this
+    }
+
+    return Object.assign(result, new ExecuteIfData(this as unknown as InferExecute<T>))
   }
 
   @command(['if', 'entity'], executeConfig)

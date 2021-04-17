@@ -30,6 +30,7 @@ export { SelectorClass } from './variables/Selector'
 export const {
   Objective,
   Selector,
+  Data,
   Variable,
 } = dataPack
 
