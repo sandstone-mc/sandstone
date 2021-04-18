@@ -6,8 +6,8 @@ import type {
 } from 'src/arguments'
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
-import type { ConditionClass } from '@variables/abstractClasses'
-import type { Range } from '..'
+import type { ConditionClass, Range } from '@variables'
+import type { DataPointInstance } from './Data'
 import type { ObjectiveClass } from './Objective'
 
 type PlayersTarget = number | MultipleEntitiesArgument
@@ -127,8 +127,29 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    */
   set(amountOrTargetScore: number | Score): this
 
-  set(...args: OperationArguments) {
-    return this.unaryOperation('set', '=', ...args)
+  /**
+   * Set the current entity's score to the given NBT value, with the given scale.
+   *
+   * @param nbt The Data Point to set the score to.
+   *
+   * @param scale The scale factor. Defaults to 1.
+   */
+  set(nbt: DataPointInstance, scale?: number): this
+
+  set(...args: OperationArguments | [DataPointInstance, number?]) {
+    if (args.length === 2) {
+      // eslint-disable-next-line prefer-const
+      let [data, scale] = args as [DataPointInstance, number?]
+
+      if (typeof scale === 'number') {
+        scale = scale ?? 1
+        this.commandsRoot.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale)
+
+        return this
+      }
+    }
+
+    return this.unaryOperation('set', '=', ...args as OperationArguments)
   }
 
   /**

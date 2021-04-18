@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
 import { ObjectiveClass, SelectorCreator } from '@variables'
-import { DataInstance, TargetlessDataInstance } from '@variables/Data'
+import { DataInstance, DataPointInstance, TargetlessDataInstance } from '@variables/Data'
 
 import { BasePathClass } from './BasePath'
 import { toMCFunctionName } from './minecraft'
@@ -506,34 +506,56 @@ export default class Datapack {
     return this.getCreateObjective('sandstone', 'dummy', [{ text: 'Sandstone', color: 'gold' }, ' internals'])
   }
 
-  /**
-   * Creates a dynamic numeric variable, represented by an anonymous & unique score.
-   *
-   * @param initialValue The initial value of the variable. If left unspecified,
-   * or if `undefined`, then the score will not be initialized.
-   *
-   * @param name A name that can be useful for debugging.
-   */
-  Variable = (initialValue?: number | Score | undefined, name?: string) => {
-    // Get the objective
-    const datapack = this.commandsRoot.Datapack
-    const score = datapack.rootObjective
+  Variable: (
+    (
+      /**
+       * Creates a dynamic numeric variable, represented by an anonymous & unique score.
+       *
+       * @param initialValue The initial value of the variable. If left unspecified,
+       * or if `undefined`, then the score will not be initialized.
+       *
+       * @param name A name that can be useful for debugging.
+       */
+      (initialValue?: number | Score | undefined, name?: string) => Score
+    ) & (
+      /**
+       * Creates a dynamic numeric variable, represented by an anonymous & unique score.
+       *
+       * @param nbt The NBT value to set the Variable to.
+       *
+       * @param scale The scale to multiply the value by. Defaults to 1.
+       *
+       * @param name A name that can be useful for debugging.
+       */
+      (nbt: DataPointInstance, scale?: number, name?: string) => Score
+      )
+   ) = (initialValue?: number | Score | undefined | DataPointInstance, nameOrScale?: string | number, maybeName?: string) => {
+     // Get the objective
+     const datapack = this.commandsRoot.Datapack
+     const score = datapack.rootObjective
 
-    // Get the specific anonymous score
-    const id = Datapack.anonymousScoreId
-    Datapack.anonymousScoreId += 1
-    const anonymousScore = score(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
+     if (initialValue instanceof DataPointInstance) {
+       // If the value is a data point, leverage the .set method
+       return this.Variable(undefined, maybeName).set(initialValue, nameOrScale as number)
+     }
 
-    if (initialValue !== undefined) {
-      if (this.currentFunction !== null) {
-        anonymousScore.set(initialValue)
-      } else {
-        this.initCommands.push(['scoreboard', 'players', 'set', anonymousScore.target, anonymousScore.objective, initialValue])
-      }
-    }
+     const name = nameOrScale as string | undefined
 
-    return anonymousScore
-  }
+     // Get the specific anonymous score
+     const id = Datapack.anonymousScoreId
+     Datapack.anonymousScoreId += 1
+     const anonymousScore = score(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
+
+     if (initialValue !== undefined) {
+       if (this.currentFunction !== null) {
+         anonymousScore.set(initialValue)
+       } else {
+         this.initCommands.push(['scoreboard', 'players', 'set', anonymousScore.target, anonymousScore.objective, initialValue])
+       }
+     }
+
+     return anonymousScore
+   }
 
   Selector = SelectorCreator.bind(this)
 
