@@ -1,13 +1,15 @@
 import { Score } from '@variables/Score'
 
-import { nbtParser } from './parsers'
+import { ConditionTextComponentClass } from './abstractClasses'
+import { nbtParser } from './NBTs'
 
-import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
+import type {
+  Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument,
+} from '@arguments'
 import type {
   DataModify, DataModifyType, DataModifyValues, StoreType,
 } from '@commands/implementations'
 import type { Datapack } from '@datapack'
-import type { ConditionClass } from './abstractClasses'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 
@@ -50,12 +52,16 @@ export class TargetlessDataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   select = (...path: DATA_PATH[]) => new TargetlessDataPointInstance(this.datapack, this.type, path)
 }
 
-export class TargetlessDataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends TargetlessDataInstance<TYPE> {
+export class TargetlessDataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
+  protected datapack
+
+  type
+
   path
 
   constructor(datapack: Datapack, type: TYPE, path: DATA_PATH[]) {
-    super(datapack, type)
-
+    this.datapack = datapack
+    this.type = type
     this.path = pathToString(path)
   }
 
@@ -64,12 +70,16 @@ export class TargetlessDataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> e
   select = (...path: DATA_PATH[]) => new TargetlessDataPointInstance(this.datapack, this.type, [this.path, ...path])
 }
 
-export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends TargetlessDataInstance<TYPE> {
+export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
+  datapack
+
+  type
+
   currentTarget
 
   constructor(datapack: Datapack, type: TYPE, target: DATA_TARGET[TYPE]) {
-    super(datapack, type)
-
+    this.datapack = datapack
+    this.type = type
     this.currentTarget = target
   }
 
@@ -80,14 +90,25 @@ export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Targetle
     this.datapack.commandsRoot.data.merge[this.type](this.currentTarget as any, value)
   }
 
+  target = (target: DATA_TARGET[TYPE]) => new DataInstance(this.datapack, this.type, target)
+
   select = (...path: DATA_PATH[]) => new DataPointInstance(this.datapack, this.type, this.currentTarget, path)
 }
 
-export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends TargetlessDataPointInstance<TYPE> implements ConditionClass {
+export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends ConditionTextComponentClass {
+  datapack
+
+  type
+
+  path
+
   currentTarget
 
   constructor(datapack: Datapack, type: TYPE, target: DATA_TARGET[TYPE], path: DATA_PATH[]) {
-    super(datapack, type, path)
+    super()
+    this.datapack = datapack
+    this.type = type
+    this.path = pathToString(path)
 
     this.currentTarget = target
   }
@@ -133,24 +154,29 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Tar
   /**
    * Set the data point to the given NBT.
    */
- merge = (value: NBTObject | DataPointInstance) => this.modify((data) => data.merge, value)
+  merge = (value: NBTObject | DataPointInstance) => this.modify((data) => data.merge, value)
 
- /**
-  * Append the given NBT to the current data point.
-  */
- append = (value: NBTObject | DataPointInstance) => this.modify((data) => data.append, value)
+  /**
+   * Append the given NBT to the current data point.
+   */
+  append = (value: NBTObject | DataPointInstance) => this.modify((data) => data.append, value)
 
- /**
-  * Prepend the given NBT to the current data point.
-  */
- prepend = (value: NBTObject | DataPointInstance) => this.modify((data) => data.prepend, value)
+  /**
+   * Prepend the given NBT to the current data point.
+   */
+  prepend = (value: NBTObject | DataPointInstance) => this.modify((data) => data.prepend, value)
 
- /**
-  * Insert the given NBT to the given index of the current data point.
-  */
- insert = (value: NBTObject | DataPointInstance, index: number) => this.modify((data) => data.insert(index), value)
+  /**
+   * Insert the given NBT to the given index of the current data point.
+   */
+  insert = (value: NBTObject | DataPointInstance, index: number) => this.modify((data) => data.insert(index), value)
 
- _toMinecraftCondition = () => ({
-   value: ['if', 'data', this.type, this.currentTarget, this.path],
- })
+  _toMinecraftCondition = () => ({
+    value: ['if', 'data', this.type, this.currentTarget, this.path],
+  })
+
+  protected _toChatComponent =() => ({
+    nbt: this.path,
+    [this.type]: this.currentTarget,
+  }) as unknown as JSONTextComponent
 }

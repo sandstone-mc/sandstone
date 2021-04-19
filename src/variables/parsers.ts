@@ -5,8 +5,7 @@ import { VectorClass } from './Coordinates'
 import type {
   Coordinates, NBTObject, Range,
   RootNBT, Rotation,
-} from 'src/arguments'
-import type { NBTCustomObject } from './NBTs'
+} from '@arguments'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<typeof args> : typeof args
@@ -37,21 +36,6 @@ export function rotationParser<T extends unknown>(rotation: T): (
 ) {
   return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
 }
-
-function removeSpaces(s: string) {
-  let inside = 0
-  // eslint-disable-next-line
-  return s.replace(/ +|['"]/g, (m) => (m === '"\'' ? (inside ^= 1, '"\'') : inside ? m : ''))
-}
-export const nbtParser = (nbt: NBTObject) => removeSpaces(util.inspect(nbt, {
-  depth: null,
-  showHidden: false,
-  compact: true,
-  maxArrayLength: null,
-  maxStringLength: null,
-  breakLength: Infinity,
-  colors: false,
-}))
 
 // Sanitize score values. null => '', Infinity => '', any number => itself
 export const sanitizeValue = (value: number | null): string => {

@@ -2,7 +2,7 @@ import type { ComponentClass } from '@variables/abstractClasses'
 import type { VectorClass } from '@variables/Coordinates'
 import type { LiteralUnion } from '../generalTypes'
 import type { BASIC_COLORS } from './basics'
-import type { MultipleEntitiesArgument, SelectorArgument } from './selector'
+import type { MultipleEntitiesArgument } from './selector'
 
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
 type ContentTag = ({

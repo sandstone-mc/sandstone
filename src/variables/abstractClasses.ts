@@ -15,11 +15,7 @@ export class ConditionClass {
   }
 }
 
-export class ConditionTextComponentClass {
-  protected _toChatComponent(): JSONTextComponent {
-    throw new Error('Not implemented')
-  }
-
+export class ConditionTextComponentClass extends ComponentClass implements ConditionClass {
   _toMinecraftCondition(): {value: any[]} {
     throw new Error('Not implemented')
   }

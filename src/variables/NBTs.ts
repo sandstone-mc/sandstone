@@ -1,5 +1,4 @@
 import util from 'util'
-import { nbtParser } from '@variables'
 
 import type { NBTObject, RootNBT as NBTObj, RootNBT } from '@arguments'
 
@@ -39,7 +38,7 @@ export class NotNBT {
 function dynamicNBT(template: TemplateStringsArray): NBTCustomObject {
   const result = template.map((element: any) => (element instanceof NBTCustomObject ? nbtParser(element) : element.toString()))
 
-  return new class implements NBTCustomObject {
+  return new class extends NBTCustomObject {
       [util.inspect.custom] = () => result.join('')
   }()
 }
@@ -248,3 +247,47 @@ export const NBT: NBTInterface = Object.assign(dynamicNBT, {
 
   stringify: (nbt: RootNBT) => nbtParser(nbt),
 })
+
+export const nbtParser = (nbt: NBTObject): string => {
+  if (typeof nbt === 'number') {
+    // We have a number
+    return nbt.toString()
+  }
+
+  if (typeof nbt === 'string') {
+    // We have a string
+
+    /*
+     * Sometimes, when we have both a " and a ' in a string,
+     * util.inspect will end up creating a template string, invalid for Minecraft.
+     */
+    const inspectedStr = util.inspect(nbt, {
+      breakLength: +Infinity,
+      compact: true,
+      maxStringLength: +Infinity,
+      depth: +Infinity,
+    })
+
+    if (inspectedStr[0] === '`') {
+      return JSON.stringify(nbt)
+    }
+
+    return inspectedStr
+  }
+
+  if (Array.isArray(nbt)) {
+    // We have an array
+    const itemsStr = nbt.map(nbtParser).join(',')
+    return `[${itemsStr}]`
+  }
+
+  // We have an object
+  if (nbt instanceof NBTCustomObject) {
+    // It's actually a "Minecraft Primitive", like 1b, and not an object
+    return nbt[util.inspect.custom]()
+  }
+
+  // It's a real object.
+  const objectStr = Object.entries(nbt).map(([key, value]) => `${key}:${nbtParser(value)}`).join(',')
+  return `{${objectStr}}`
+}

@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { nbtParser, rangeParser } from '@variables/parsers'
+import { nbtParser } from '@variables/NBTs'
+import { rangeParser } from '@variables/parsers'
 
 import { ComponentClass } from './abstractClasses'
 
