@@ -559,9 +559,9 @@ export default class Datapack {
 
   Selector = SelectorCreator.bind(this)
 
-  Data = <TYPE extends DATA_TYPES>(type: TYPE, target?: DATA_TARGET[TYPE]): typeof target extends undefined ? TargetlessDataInstance : DataInstance => {
+  Data = <TYPE extends DATA_TYPES, TARGET extends DATA_TARGET[TYPE] | undefined = undefined>(type: TYPE, target?: TARGET): TARGET extends undefined ? TargetlessDataInstance : DataInstance => {
     if (target) {
-      return new DataInstance(this, type, target) as any
+      return new DataInstance(this, type, target!) as any
     }
     return new TargetlessDataInstance(this, type) as any
   }

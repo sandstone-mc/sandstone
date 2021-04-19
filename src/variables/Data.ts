@@ -180,7 +180,7 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
     value: ['if', 'data', this.type, this.currentTarget, this.path],
   })
 
-  protected _toChatComponent =() => ({
+  protected _toChatComponent = () => ({
     nbt: this.path,
     [this.type]: this.currentTarget,
   }) as unknown as JSONTextComponent
