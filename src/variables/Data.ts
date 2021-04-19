@@ -171,6 +171,11 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
    */
   insert = (value: NBTObject | DataPointInstance, index: number) => this.modify((data) => data.insert(index), value)
 
+  /**
+   * Remove the current NBT value.
+   */
+  remove = () => this.datapack.commandsRoot.data.remove[this.type](this.currentTarget as any, this.path)
+
   _toMinecraftCondition = () => ({
     value: ['if', 'data', this.type, this.currentTarget, this.path],
   })
