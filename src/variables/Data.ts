@@ -1,7 +1,6 @@
-import { Score } from '@variables/Score'
-
 import { ConditionTextComponentClass } from './abstractClasses'
 import { nbtParser } from './NBTs'
+import { Score } from './Score'
 
 import type {
   Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument,

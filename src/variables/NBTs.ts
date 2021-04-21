@@ -7,7 +7,7 @@ export abstract class NBTCustomObject {
 }
 
 function customUnit(num: number, unit: string): NBTCustomObject {
-  return new class {
+  return new class extends NBTCustomObject {
     [util.inspect.custom] = () => `${num}${unit}`
   }()
 }

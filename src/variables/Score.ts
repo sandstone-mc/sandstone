@@ -1,6 +1,8 @@
 import { ComponentClass } from '@variables/abstractClasses'
 import { rangeParser } from '@variables/parsers'
 
+import { SelectorClass } from './Selector'
+
 import type {
   COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
 } from 'src/arguments'
@@ -137,16 +139,12 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   set(nbt: DataPointInstance, scale?: number): this
 
   set(...args: OperationArguments | [DataPointInstance, number?]) {
-    if (args.length === 2) {
-      // eslint-disable-next-line prefer-const
-      let [data, scale] = args as [DataPointInstance, number?]
+    if (typeof args[0] === 'object' && !(args[0] instanceof SelectorClass) && !(args[0] instanceof Score)) {
+      const [data, scale] = args as [DataPointInstance, number?]
 
-      if (typeof scale === 'number') {
-        scale = scale ?? 1
-        this.commandsRoot.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale)
+      this.commandsRoot.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale ?? 1)
 
-        return this
-      }
+      return this
     }
 
     return this.unaryOperation('set', '=', ...args as OperationArguments)
