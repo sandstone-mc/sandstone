@@ -1,13 +1,13 @@
-import fs from 'fs'
 import os from 'os'
 import path from 'path'
-
-import { FunctionResource, ResourcesTree, TagsResource } from './resourcesTree'
 
 /**
  * Get the .minecraft path
  */
 export function getMinecraftPath(): string {
+  // eslint-disable-next-line
+  const fs = require('fs')
+
   function getMCPath(): string {
     switch (os.platform()) {
       case 'win32':
@@ -38,6 +38,9 @@ export function getMinecraftPath(): string {
 export function getWorldPath(worldName: string, minecraftPath: string | undefined = undefined): string {
   let mcPath: string
 
+  // eslint-disable-next-line
+  const fs = require('fs')
+
   if (minecraftPath) {
     mcPath = minecraftPath
   } else {
@@ -48,7 +51,7 @@ export function getWorldPath(worldName: string, minecraftPath: string | undefine
   const worldPath = path.join(savesPath, worldName)
 
   if (!fs.existsSync(worldPath)) {
-    const existingWorlds = fs.readdirSync(savesPath, { withFileTypes: true }).filter((f) => f.isDirectory).map((f) => f.name)
+    const existingWorlds = fs.readdirSync(savesPath, { withFileTypes: true }).filter((f: any) => f.isDirectory).map((f: {name: string}) => f.name) as string[]
 
     throw new Error(`Unable to locate the "${worldPath}" folder. Word ${worldName} does not exists. List of existing worlds: ${JSON.stringify(existingWorlds, null, 2)}`)
   }
@@ -59,10 +62,11 @@ export function getWorldPath(worldName: string, minecraftPath: string | undefine
 /**
  * Create a directory.
  */
-export function createDirectory(directory: string): void {
+export async function createDirectory(directory: string) {
+  const fs = await import('fs/promises')
   // Create the path
   try {
-    fs.mkdirSync(directory, { recursive: true })
+    await fs.mkdir(directory, { recursive: true })
   } catch (e) {
     // Folder already exists
   }
@@ -71,10 +75,11 @@ export function createDirectory(directory: string): void {
 /**
  * Delete a directory.
  */
-export function deleteDirectory(directory: string): void {
+export async function deleteDirectory(directory: string) {
+  const fs = await import('fs/promises')
   // Delete the path
   try {
-    fs.rmdirSync(directory, { recursive: true })
+    await fs.rmdir(directory, { recursive: true })
   } catch (e) {
     // Folder already deleted
   }

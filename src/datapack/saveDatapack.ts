@@ -1,7 +1,5 @@
 import chalk from 'chalk'
-import fs from 'graceful-fs'
 import path from 'path'
-import { promisify } from 'util'
 
 import {
   createDirectory, deleteDirectory, getMinecraftPath, getWorldPath,
@@ -28,7 +26,12 @@ type SaveFileObject = {
 
 type CustomHandlerFileObject = Omit<SaveFileObject, 'rootPath'> & { rootPath: string | null }
 
-const writeFileAsync = promisify(fs.writeFile)
+const writeFileAsync = async (path_: string, content: string) => {
+  const fs = await import('graceful-fs')
+  const { promisify } = await import('util')
+  const writeFile = promisify(fs.writeFile)
+  return writeFile(path_, content)
+}
 const writeFile = (saveObject: SaveFileObject) => writeFileAsync(path.join(saveObject.rootPath, saveObject.relativePath), saveObject.content)
 
 export type SaveOptions = {
@@ -226,8 +229,8 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     if (!options.dryRun) {
       // Clean the old working directory
       if (rootPath !== null) {
-        deleteDirectory(rootPath)
-        createDirectory(rootPath)
+        await deleteDirectory(rootPath)
+        await createDirectory(rootPath)
 
         // Overwrite it
         promises.push(writeFileToDisk({
