@@ -49,10 +49,21 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
      * If you want to understand the reasons, see @vdvman1#9510 explanation =>
      * https://discordapp.com/channels/154777837382008833/154777837382008833/754985742706409492
      */
-    datapack.resources.deleteResource(callbackFunction.path, 'functions')
 
-    if (callbackFunction.commands.length) {
-      if (callbackFunction.commands.length === 2 && forceInlineScore) {
+    const { commands } = callbackFunction
+
+    // If our resource has children, just set it as a folder. Else, entirely, destroy it.
+    if (callbackFunction.children.size > 0) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      callbackFunction.isResource = false
+      callbackFunction.commands = []
+    } else {
+      datapack.resources.deleteResource(callbackFunction.path, 'functions')
+    }
+
+    if (commands.length) {
+      if (commands.length === 2 && forceInlineScore) {
         // If we have 2 commands, add the execute store
         if (commandsRoot.arguments.length === 0) {
           commandsRoot.arguments.push('execute')
@@ -65,7 +76,7 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
         commandsRoot.arguments.push('run')
       }
 
-      commandsRoot.addAndRegister(...callbackFunction.commands[0])
+      commandsRoot.addAndRegister(...commands[0])
     } else {
       commandsRoot.arguments = []
     }
