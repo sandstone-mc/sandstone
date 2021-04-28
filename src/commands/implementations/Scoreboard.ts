@@ -30,7 +30,7 @@ class ScoreboardObjectives extends Command {
    * --------------------------------------------------
    * ⚠️ The prefered way is using:
    * ```
-   * const objective = createObjective(...)
+   * const objective = Objective.create(...)
    * ```
    * --------------------------------------------------
    *
@@ -60,7 +60,7 @@ class ScoreboardObjectives extends Command {
    * --------------------------------------------------
    * ⚠️ The prefered way is using:
    * ```
-   * const objective = createObjective(...)
+   * const objective = Objective.create(...)
    * objective.remove()
    * ```
    * --------------------------------------------------
@@ -74,7 +74,7 @@ class ScoreboardObjectives extends Command {
    * --------------------------------------------------
    * ⚠️ The prefered way is using:
    * ```
-   * const objective = createObjective(...)
+   * const objective = Objective.create(...)
    * objective.setDisplay(...)
    * ```
    * --------------------------------------------------
@@ -99,7 +99,7 @@ class ScoreboardObjectives extends Command {
    * --------------------------------------------------
    * ⚠️ The prefered way is using:
    * ```
-   * const objective = createObjective(...)
+   * const objective = Objective.create(...)
    * objective.modify(...)
    * ```
    * --------------------------------------------------
@@ -116,7 +116,7 @@ class ScoreboardObjectives extends Command {
    * --------------------------------------------------
    * ⚠️ The prefered way is using:
    * ```
-   * const objective = createObjective(...)
+   * const objective = Objective.create(...)
    * objective.modify(...)
    * ```
    * --------------------------------------------------
@@ -159,7 +159,7 @@ class ScoreboardPlayers extends Command {
    * --------------------------------------------------
    * ⚠️ The prefered way is using:
    * ```
-   * const objective = createObjective(...)
+   * const objective = Objective.create(...)
    * const player = objective.ScoreHolder(...)
    * player.get()
    * ```
