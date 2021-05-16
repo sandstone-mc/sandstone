@@ -62,11 +62,13 @@ export function getWorldPath(worldName: string, minecraftPath: string | undefine
 /**
  * Create a directory.
  */
-export async function createDirectory(directory: string) {
-  const fs = await import('fs/promises')
+export function createDirectory(directory: string) {
+  // eslint-disable-next-line
+  const fs = require('fs')
+
   // Create the path
   try {
-    await fs.mkdir(directory, { recursive: true })
+    fs.mkdirSync(directory, { recursive: true })
   } catch (e) {
     // Folder already exists
   }
@@ -75,11 +77,13 @@ export async function createDirectory(directory: string) {
 /**
  * Delete a directory.
  */
-export async function deleteDirectory(directory: string) {
-  const fs = await import('fs/promises')
+export function deleteDirectory(directory: string) {
+  // eslint-disable-next-line
+  const fs = require('fs')
+
   // Delete the path
   try {
-    await fs.rmdir(directory, { recursive: true })
+    fs.rmdirSync(directory, { recursive: true })
   } catch (e) {
     // Folder already deleted
   }

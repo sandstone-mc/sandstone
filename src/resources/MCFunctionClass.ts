@@ -1,5 +1,6 @@
 import util from 'util'
 import { CONFLICT_STRATEGIES } from '@/env'
+import { isPromise } from '@/utils'
 
 import type { TimeArgument } from 'src/arguments'
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
@@ -115,6 +116,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
     this.name = functionsPaths.fullName
     this.path = functionsPaths.fullPathWithNamespace
+    console.log('Callback is', callback.toString())
   }
 
   private generateResource(strategy: ResourceConflictStrategy<'functions'>): FunctionResource & { isResource: true } {
@@ -186,11 +188,6 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     const resource = this.generateResource(onConflict)
     this.datapack.currentFunction = resource
 
-    // Add some comments specifying the overload, and the options
-    if (this.options.debug) {
-      commandsRoot.comment('Options:', JSON.stringify(this.options))
-    }
-
     const result = this.callback()
 
     // If the command was scheduled to run each n ticks, add the /schedule command
@@ -213,8 +210,8 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       this.datapack.currentFunction = previousFunction
     }
 
-    if (util.types.isAsyncFunction(this.callback)) {
-      return (result as Promise<void>).then(afterCall) as any
+    if (isPromise(result)) {
+      return result.then(afterCall) as any
     }
 
     return afterCall() as any

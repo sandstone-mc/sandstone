@@ -208,6 +208,20 @@ export default class Datapack {
     this.initCommands = []
   }
 
+  reset = () => {
+    this.basePath = new BasePathClass(this, {})
+    this.currentFunction = null
+    this.resources = new ResourcesTree()
+    this.objectives = new Map()
+    this.constants = new Set()
+    this.rootFunctions = new Set()
+
+    this.commandsRoot = new CommandsRoot(this)
+    this.flow = new Flow(this)
+
+    this.initCommands = []
+  }
+
   /** Get information like the path, namespace etc... from a resource name */
   getResourcePath(resourceName: string): {
     /** The namespace of the resource */

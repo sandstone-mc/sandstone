@@ -229,8 +229,8 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     if (!options.dryRun) {
       // Clean the old working directory
       if (rootPath !== null) {
-        await deleteDirectory(rootPath)
-        await createDirectory(rootPath)
+        deleteDirectory(rootPath)
+        createDirectory(rootPath)
 
         // Overwrite it
         promises.push(writeFileToDisk({

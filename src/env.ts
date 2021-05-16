@@ -3,7 +3,13 @@ import type {
 } from '@resources'
 import type { BASIC_CONFLICT_STRATEGIES } from './generalTypes'
 
-export const { NAMESPACE, PACK_UID } = process.env
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+export const NAMESPACE: string = typeof window === 'undefined' ? process.env.NAMESPACE : window.NAMESPACE
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+export const PACK_UID: string = typeof window === 'undefined' ? process.env.PACK_UID : window.PACK_UID
 
 const {
   GENERAL_CONFLICT_STRATEGY,
