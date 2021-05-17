@@ -17,8 +17,8 @@ export function arrayToArgsParser(args: unknown): (
   return args
 }
 
-function isRawCoordinates(arg: unknown): arg is [string, string, string] {
-  return Array.isArray(arg) && arg.length === 3 && arg.every((c) => typeof c === 'string')
+function isRawCoordinates(arg: unknown): arg is [string, string, string] | [string, string] {
+  return Array.isArray(arg) && (arg.length === 3 || arg.length === 2) && arg.every((c) => typeof c === 'string')
 }
 
 function isRawRotation(arg: unknown): arg is [string, string] {
