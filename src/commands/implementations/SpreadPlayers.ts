@@ -3,7 +3,7 @@ import { coordinatesParser } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { Coordinates, MultipleEntitiesArgument } from 'src/arguments'
+import type { ColumnCoordinates, Coordinates, MultipleEntitiesArgument } from 'src/arguments'
 
 export class SpreadPlayers extends Command {
   @command('spreadplayers', {
@@ -23,7 +23,7 @@ export class SpreadPlayers extends Command {
     /**
      * Teleports entities to random surface locations within an area.
      *
-     * @param center Specifies the center of the region to spread targets to.
+     * @param center Specifies the center of the region to spread targets to. You must only specify the `x` and the `z` coordinates.
      *
      * @param spreadDistance Specifies the minimum distance between targets.
      *
@@ -35,7 +35,7 @@ export class SpreadPlayers extends Command {
      *
      * @param targets Specifies the targets to spread.
      */
-    (center: Coordinates, spreadDistance: number, maxRange: number, respectTeams: boolean, targets:MultipleEntitiesArgument) => void) & (
+    (center: ColumnCoordinates, spreadDistance: number, maxRange: number, respectTeams: boolean, targets:MultipleEntitiesArgument) => void) & (
     /**
      * Teleports entities to random surface locations within an area.
      *
