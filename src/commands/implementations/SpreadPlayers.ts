@@ -3,7 +3,7 @@ import { coordinatesParser } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { ColumnCoordinates, Coordinates, MultipleEntitiesArgument } from 'src/arguments'
+import type { ColumnCoordinates, MultipleEntitiesArgument } from 'src/arguments'
 
 export class SpreadPlayers extends Command {
   @command('spreadplayers', {
@@ -53,6 +53,6 @@ export class SpreadPlayers extends Command {
      *
      * @param targets Specifies the targets to spread.
      */
-    (center: Coordinates, spreadDistance: number, maxRange: number, underHeight: number, respectTeams: boolean, targets: MultipleEntitiesArgument) => void)
+    (center: ColumnCoordinates, spreadDistance: number, maxRange: number, underHeight: number, respectTeams: boolean, targets: MultipleEntitiesArgument) => void)
   ) = (...args: unknown[]) => {}
 }
