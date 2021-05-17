@@ -140,6 +140,6 @@ export class Team extends Command {
    *
    * @param team Specifies the name of the team.
    */
-  @command(['team', 'remove'])
+  @command(['team', 'remove'], { isRoot: true })
   remove = (team: string) => {}
 }
