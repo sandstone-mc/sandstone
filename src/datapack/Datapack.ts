@@ -220,6 +220,7 @@ export default class Datapack {
     this.flow = new Flow(this)
 
     this.initCommands = []
+    Datapack.anonymousScoreId = 0
   }
 
   /** Get information like the path, namespace etc... from a resource name */
