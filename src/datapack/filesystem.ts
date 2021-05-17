@@ -83,7 +83,7 @@ export function deleteDirectory(directory: string) {
 
   // Delete the path
   try {
-    fs.rmdirSync(directory, { recursive: true })
+    fs.rmSync(directory, { recursive: true })
   } catch (e) {
     // Folder already deleted
   }

@@ -116,7 +116,6 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
     this.name = functionsPaths.fullName
     this.path = functionsPaths.fullPathWithNamespace
-    console.log('Callback is', callback.toString())
   }
 
   private generateResource(strategy: ResourceConflictStrategy<'functions'>): FunctionResource & { isResource: true } {

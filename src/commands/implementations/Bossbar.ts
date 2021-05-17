@@ -59,7 +59,7 @@ class BossbarSet extends Command {
    *
    * @param color The new color.
    */
-  @command('color', { isRoot: true })
+  @command('color', { isRoot: false })
   color = (color: LiteralUnion<BASIC_COLORS>) => { }
 
   /**
@@ -68,7 +68,7 @@ class BossbarSet extends Command {
    *
    * @param max The new maximum value.
    */
-  @command('max', { isRoot: true })
+  @command('max', { isRoot: false })
   max = (max: number) => { }
 
   /**
@@ -76,7 +76,7 @@ class BossbarSet extends Command {
    *
    * @param name The new name.
    */
-  @command('name', { isRoot: true })
+  @command('name', { isRoot: false })
   name = (name: string) => { }
 
   /**
@@ -85,7 +85,7 @@ class BossbarSet extends Command {
    *
    * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
    */
-  @command('players', { isRoot: true })
+  @command('players', { isRoot: false })
   players = (players?: MultiplePlayersArgument) => { }
 
   /**
@@ -94,7 +94,7 @@ class BossbarSet extends Command {
    *
    * @param style The new style.
    */
-  @command('style', { isRoot: true })
+  @command('style', { isRoot: false })
   style = (style: 'progress' | 'notched_6' | 'notched_10' | 'notched_12' | 'notched_20') => { }
 
   /**
@@ -103,7 +103,7 @@ class BossbarSet extends Command {
    *
    * @param value The new value.
    */
-  @command('value', { isRoot: true })
+  @command('value', { isRoot: false })
   value = (value: number) => { }
 
   /**
@@ -112,6 +112,6 @@ class BossbarSet extends Command {
    *
    * @param visible Whether the bossbar is visible or not.
    */
-  @command('visible', { isRoot: true })
+  @command('visible', { isRoot: false })
   visible = (visible: number) => { }
 }
