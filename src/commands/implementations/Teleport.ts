@@ -70,7 +70,7 @@ export class Teleport extends Command {
        *  Specifies the entity to teleport the executer to. Must be a player name, a target selector, or a UUID‌.
        *  Permits entity other than players.
        */
-      (targets: MultipleEntitiesArgument, destinationEntity: string) => void
+      (targets: MultipleEntitiesArgument, destinationEntity: SingleEntityArgument) => void
     ) & (
       /**
        * Teleports entities (players, mobs, etc.) to the given location.
