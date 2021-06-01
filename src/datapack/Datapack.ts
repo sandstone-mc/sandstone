@@ -501,10 +501,19 @@ export default class Datapack {
       }
 
       const objective = new ObjectiveClass(this.commandsRoot, name)
-      return Object.assign(
+      const value = objective.ScoreHolder
+
+      const { name: _, ...objectiveExceptName } = objective
+      const objectiveInstance = Object.assign(
         objective.ScoreHolder,
-        objective,
+        objectiveExceptName,
       )
+
+      const descriptor = Object.getOwnPropertyDescriptor(value, 'name')!
+      descriptor.value = objective.name
+      Object.defineProperty(value, 'name', descriptor)
+
+      return objectiveInstance
     },
   }
 

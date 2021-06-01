@@ -24,7 +24,7 @@ type SaveFileObject = {
   resource: any
 }
 
-type CustomHandlerFileObject = Omit<SaveFileObject, 'rootPath'> & { rootPath: string | null }
+export type CustomHandlerFileObject = Omit<SaveFileObject, 'rootPath'> & { rootPath: string | null }
 
 const writeFileAsync = async (path_: string, content: string) => {
   const fs = await import('graceful-fs')
