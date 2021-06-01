@@ -216,7 +216,7 @@ export default class Datapack {
     this.constants = new Set()
     this.rootFunctions = new Set()
 
-    this.commandsRoot = new CommandsRoot(this)
+    this.commandsRoot.reset()
     this.flow = new Flow(this)
 
     this.initCommands = []

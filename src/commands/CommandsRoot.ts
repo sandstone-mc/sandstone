@@ -68,6 +68,12 @@ export class CommandsRoot {
     this.commandsRoot = this
   }
 
+  reset() {
+    this.arguments = []
+    this.executeState = 'outside'
+    this.executable = false
+  }
+
   /**
    * Registers the current command.
    *
@@ -100,12 +106,6 @@ export class CommandsRoot {
     this.arguments.push(...args)
     this.executable = true
     this.register()
-  }
-
-  reset() {
-    this.arguments = []
-    this.executeState = 'outside'
-    this.executable = false
   }
 
   /** COMMANDS */
