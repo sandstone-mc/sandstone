@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
+import { resetConditionScore } from '@flow/conditions'
 import { ObjectiveClass, SelectorCreator } from '@variables'
 import { DataInstance, DataPointInstance, TargetlessDataInstance } from '@variables/Data'
 
@@ -221,6 +222,8 @@ export default class Datapack {
 
     this.initCommands = []
     Datapack.anonymousScoreId = 0
+
+    resetConditionScore(this)
   }
 
   /** Get information like the path, namespace etc... from a resource name */

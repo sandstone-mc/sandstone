@@ -11,6 +11,10 @@ export function conditionToString(condition: ConditionType): string {
 }
 
 let conditionID = 0
+export function resetConditionScore(datapack: Datapack) {
+  conditionID = 0
+}
+
 export function getConditionScore(datapack: Datapack) {
   const score = datapack.rootObjective(`cond_${conditionID}`)
   conditionID += 1
