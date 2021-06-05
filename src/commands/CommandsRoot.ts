@@ -362,7 +362,7 @@ export class CommandsRoot {
    * The game replaces entity selectors in the message with the list of selected entities' names, which is formatted as "name1 and name2" for two entities,
    * or "name1, name2, ... and namen" for n entities.
    */
-  @command('say', { isRoot: true })
+  @command('say', { isRoot: true, parsers: (args) => [JSON.stringify(args.join(' '))] })
   say = (...messages: MessageOrSelector[]) => { }
 
   // schedule command //

@@ -99,7 +99,7 @@ type RegisterConfig = {
    *
    * => The `textComponent` argument will be casted to a JSONTextComponentClass when registered.
    */
-  parsers?: Record<number | string, (arg: any, innerArgs: unknown[]) => unknown>
+  parsers?: Record<number | string, (arg: any, innerArgs: unknown[]) => unknown> | ((args: unknown[]) => unknown[])
 
   /**
    * Whether the command is a root one (/say, /tellraw) or a subcommand.
@@ -171,7 +171,7 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
       const defaultArgs = getDefaultArguments(innerFunction)
       const finalRawArgs = mergeArrays(innerArgs, defaultArgs)
 
-      const parsedArgs = finalRawArgs.map((arg, index) => {
+      const parsedArgs = typeof parsers === 'function' ? parsers(finalRawArgs) : finalRawArgs.map((arg, index) => {
         if (arg !== undefined && Object.prototype.hasOwnProperty.call(parsers, index)) {
           return parsers[index](arg, finalRawArgs)
         }
