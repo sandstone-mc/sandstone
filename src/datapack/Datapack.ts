@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
+import { resetConditionScore } from '@flow/conditions'
 import { ObjectiveClass, SelectorCreator } from '@variables'
 import { DataInstance, DataPointInstance, TargetlessDataInstance } from '@variables/Data'
 
@@ -216,11 +217,13 @@ export default class Datapack {
     this.constants = new Set()
     this.rootFunctions = new Set()
 
-    this.commandsRoot = new CommandsRoot(this)
+    this.commandsRoot.reset()
     this.flow = new Flow(this)
 
     this.initCommands = []
     Datapack.anonymousScoreId = 0
+
+    resetConditionScore(this)
   }
 
   /** Get information like the path, namespace etc... from a resource name */
@@ -501,10 +504,19 @@ export default class Datapack {
       }
 
       const objective = new ObjectiveClass(this.commandsRoot, name)
-      return Object.assign(
+      const value = objective.ScoreHolder
+
+      const { name: _, ...objectiveExceptName } = objective
+      const objectiveInstance = Object.assign(
         objective.ScoreHolder,
-        objective,
+        objectiveExceptName,
       )
+
+      const descriptor = Object.getOwnPropertyDescriptor(value, 'name')!
+      descriptor.value = objective.name
+      Object.defineProperty(value, 'name', descriptor)
+
+      return objectiveInstance
     },
   }
 
