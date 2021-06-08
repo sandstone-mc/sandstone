@@ -19,12 +19,14 @@ export type GAMERULES = (
   'fallDamage' |
   'fireDamage' |
   'forgiveDeadPlayers' |
+  'freezeDamage' |
   'keepInventory' |
   'logAdminCommands' |
   'maxCommandChainLength' |
   'maxEntityCramming' |
   'mobGriefing' |
   'naturalRegeneration' |
+  'playersSleepingPercentage' |
   'randomTickSpeed' |
   'reducedDebugInfo' |
   'sendCommandFeedback' |

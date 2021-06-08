@@ -31,6 +31,7 @@ export class GameruleCommand extends Command {
    * - `fallDamage `: Whether the player should take fall damage
    * - `fireDamage `: Whether the player should take fire damage
    * - `forgiveDeadPlayers `: Makes angered neutral mobs stop being angry when the targeted player dies nearby
+   * - `freezeDamage `: Whether entities take damage from freezing inside of powder snow.
    * - `keepInventory `: Whether the player should keep items and experience in their inventory after death
    * - `logAdminCommands `: Whether to log admin commands to server log
    * - `maxCommandChainLength `: Determines the number at which the chain command block acts as a "chain".
@@ -41,6 +42,7 @@ export class GameruleCommand extends Command {
    *    should be able to change blocks and whether mobs can pick up items, which also disables bartering.
    *    This also affects the capability of zombie-like creatures like zombie pigmen and drowned to pathfind to turtle eggs.
    * - `naturalRegeneration `: Whether the player can regenerate health naturally if their hunger is full enough (doesn't affect external healing, such as golden apples, the Regeneration effect, etc.)
+   * - `playersSleepingPercentage `: Controls what percentage of players must sleep to skip the night. When set to 0 or a negative value, a single player is sufficient to skip the night. The sleeping animation occurs as normal. When set over 100, the night cannot be skipped.
    * - `randomTickSpeed `: How often a random block tick occurs (such as plant growth, leaf decay, etc.) per chunk section per game tick.
    *    0 disables random ticks, higher numbers increase random ticks. Setting to a high integer results in high speeds of decay and growth
    * - `reducedDebugInfo `: Whether the debug screen shows all or reduced information; and whether the effects of F3+B (entity hitboxes) and F3+G (chunk boundaries) are shown.
