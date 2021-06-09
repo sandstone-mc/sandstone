@@ -48,21 +48,35 @@ type LootTableFunction = {
     enchantment: LiteralUnion<ENCHANTMENTS>
   } & ({
     /**
+     * A special function used for ore drops in the vanilla game (`Count * (max(0; random(0..Level + 2) - 1)+1)`)
+     */
+    formula: 'ore_drops'
+  } | {
+    /**
+     * A binomial distribution (with `n=level + extra`, `p=probability`),
+     * - `uniform_bonus_count` for uniform distribution (from `0` to `level * bonusMultiplier`)
+     */
+    formula: 'binomial_with_bonus_count'
+
+    /** Values required for the formula (except ore_drops). */
+    parameters: {
+      /** For formula `binomial_with_bonus_count`, the extra value. */
+      extra: number
+      /** For formula `binomial_with_bonus_count`, the probability. */
+      probability: number
+    }
+  } | {
+    /**
      * Can be:
      * - `binomial_with_bonus_count` for a binomial distribution (with `n=level + extra`, `p=probability`),
      * - `uniform_bonus_count` for uniform distribution (from `0` to `level * bonusMultiplier`)
-     * - `ore_drops` for a special function used for ore drops in the vanilla game (`Count * (max(0; random(0..Level + 2) - 1)+1)`)
      */
-    formula: 'binomial_with_bonus_count' | 'uniform_bonus_count' | 'ore_rops'
+    formula: 'uniform_bonus_count'
 
-    /** Values required for the formula. */
+    /** Values required for the formula (except ore_drops). */
     parameters: {
-      /** For formula `binomial_with_bonus_count`, the extra value. */
-      extra?: number
-      /** For formula `binomial_with_bonus_count`, the probability. */
-      probability?: number
       /** For formula `uniform_bonus_count`, the bonus multiplier. */
-      bonusMultiplier?: number
+      bonusMultiplier: number
     }
   })>
   | FunctionType<'copy_name', {
