@@ -15,24 +15,32 @@ export class ItemSource extends Command {
    */
   @command('with')
   with = (item: ITEMS, count: number) => { }
-
+  
+  /**
+   * Replace the slot with a specific item.
+   * @param item The item to replace the slot with.
+   * @param count The amount of items.
+   */
   @command(['from', 'block'])
   private fromBlock = (...args: unknown[]) => { }
 
   @command(['from', 'entity'])
   private fromEntity = (...args: unknown[]) => { }
 
+  /**
+   * Replace the slot with a block or an entity's item
+   */
   from: {
     /**
-     * @param pos The coordinates of the container containing the item to replace with.
-     * @param slot The slot inside the container to replace with.
+     * @param pos The coordinates of the container to copy items from.
+     * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply. 
      */
     block: (pos: Coordinates, slot: CONTAINER_SLOTS, modifier?: string) => void
 
     /**
-     * @param targets The entity/entities containing the item to replace with.
-     * @param slot The slot of the entity to replace with.
+     * @param targets The entity to copy items from.
+     * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
     entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string) => void
@@ -70,7 +78,8 @@ export class ReplaceItem extends Command {
   block = (pos: Coordinates, slot: CONTAINER_SLOTS) => new ItemSource(this.commandsRoot)
 
   /**
-   * @param targets The entity/entities containing the slot to be replaced.
+   * @param targets one or more entities to modify.
+.
    * @param slot The slot to be replaced.
    */
   @command(['item', 'replace', 'entity'], { isRoot: true, hasSubcommands: true, executable: false })
