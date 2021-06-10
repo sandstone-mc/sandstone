@@ -38,3 +38,7 @@ export type HideFunctionProperties<T extends Function> = T & {
 }
 
 export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'ignore' | 'warn'
+
+export type OmitFirst<T extends unknown[]> = (
+  T extends [infer A, ...infer B] ? B : []
+)

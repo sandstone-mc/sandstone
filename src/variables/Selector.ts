@@ -321,13 +321,11 @@ export type AnySelectorProperties = SelectorProperties<false, false>
 export type SingleSelectorProperties = SelectorProperties<true, false>
 export type SinglePlayerSelectorProperties = SelectorProperties<true, true>
 
-export function SelectorCreator(target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>): SelectorClass<true, true>
-export function SelectorCreator(target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>): SelectorClass<true, true>
-export function SelectorCreator(target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>): SelectorClass<false, true>
-export function SelectorCreator(target: '@e', selectorArguments: SinglePlayerSelectorProperties): SelectorClass<true, true>
-export function SelectorCreator(target: '@e', selectorArguments: SingleSelectorProperties): SelectorClass<true, false>
-export function SelectorCreator(target: '@e', selectorArguments?: AnySelectorProperties): SelectorClass<false, false>
-
-export function SelectorCreator<T extends boolean, U extends boolean>(this: CommandsRoot, target: '@s' | '@p' | '@r' | '@a' | '@e', selectorArguments?: SelectorProperties<T, U>): SelectorClass<T, U> {
-  return new SelectorClass(this, target, selectorArguments)
-}
+export type SelectorCreator = (
+  & ((target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>) => SelectorClass<true, true>)
+  & ((target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>) => SelectorClass<true, true>)
+  & ((target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>) => SelectorClass<false, true>)
+  & ((target: '@e', selectorArguments: SinglePlayerSelectorProperties) => SelectorClass<true, true>)
+  & ((target: '@e', selectorArguments: SingleSelectorProperties) => SelectorClass<true, false>)
+  & ((target: '@e', selectorArguments?: AnySelectorProperties) => SelectorClass<false, false>)
+)
