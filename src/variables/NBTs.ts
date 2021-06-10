@@ -4,6 +4,8 @@ import type { NBTObject, RootNBT as NBTObj, RootNBT } from '@arguments'
 
 export abstract class NBTCustomObject {
   abstract [util.inspect.custom]: () => string;
+
+  toString = this[util.inspect.custom]
 }
 
 function customUnit(num: number, unit: string): NBTCustomObject {
@@ -25,10 +27,11 @@ function customNumber(num: number | number[], unit: string): NBTCustomObject | N
   return customUnit(num, unit)
 }
 
-export class NotNBT {
+export class NotNBT extends NBTCustomObject {
   nbt
 
   constructor(nbt: RootNBT) {
+    super()
     this.nbt = nbt
   }
 

@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
 import { resetConditionScore } from '@flow/conditions'
-import { ObjectiveClass, SelectorCreator } from '@variables'
+import { ObjectiveClass, SelectorClass } from '@variables'
 import { DataInstance, DataPointInstance, TargetlessDataInstance } from '@variables/Data'
 
 import { BasePathClass } from './BasePath'
@@ -15,7 +15,7 @@ import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion } 
 import type {
   AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
-import type { ObjectiveInstance } from '@variables'
+import type { ObjectiveInstance, SelectorCreator, SelectorProperties } from '@variables'
 import type { DATA_TARGET, DATA_TYPES } from '@variables/Data'
 import type { Score } from '@variables/Score'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
@@ -584,7 +584,7 @@ export default class Datapack {
      return anonymousScore
    }
 
-  Selector = SelectorCreator.bind(this)
+  Selector: SelectorCreator = (target: '@s' | '@p' | '@r' | '@a' | '@e', selectorArguments?: SelectorProperties<false, false>) => new SelectorClass(this.commandsRoot, target, selectorArguments) as any
 
   Data = <TYPE extends DATA_TYPES, TARGET extends DATA_TARGET[TYPE] | undefined = undefined>(type: TYPE, target?: TARGET): TARGET extends undefined ? TargetlessDataInstance : DataInstance => {
     if (target) {
