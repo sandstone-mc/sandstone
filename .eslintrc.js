@@ -46,6 +46,9 @@ module.exports = {
     // Forces `import type` when possible
     '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
 
+    // Allow `any`
+    '@typescript-eslint/no-explicit-any': 'off',
+
     // Import sorting
     'simple-import-sort/imports': ['error', {
       groups: [
