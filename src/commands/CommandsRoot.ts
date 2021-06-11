@@ -10,7 +10,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, GameruleCommand, Loot, Particle, RecipeCommand, ReplaceItem, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
+  FunctionCommand, GameruleCommand, Loot, Particle, RecipeCommand, Item, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
 } from './implementations'
 
 import type {
@@ -346,10 +346,10 @@ export class CommandsRoot {
    * raw('mount', self, nearestSkeleton)
    */
   @command([], { isRoot: true })
-  raw = (...args: unknown[]) => {}
+  raw = (...args: unknown[]) => { }
 
-  // replaceitem command //
-  replaceitem = new ReplaceItem(this)
+  // item command //
+  item = new Item(this)
 
   // say command //
   /**
