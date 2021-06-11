@@ -38,7 +38,7 @@ export function rotationParser<T extends unknown>(rotation: T): (
 }
 
 // Sanitize score values. null => '', Infinity => '', any number => itself
-export const sanitizeValue = (value: number | null): string => {
+export const sanitizeValue = (value: number | null | undefined): string => {
   if (value === undefined || value === null) {
     return ''
   }

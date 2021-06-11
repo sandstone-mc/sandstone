@@ -4,11 +4,11 @@ import { rangeParser } from '@variables/parsers'
 import { SelectorClass } from './Selector'
 
 import type {
-  COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS,
-} from 'src/arguments'
+  COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
+} from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
-import type { ConditionClass, Range } from '@variables'
+import type { ConditionClass } from '@variables'
 import type { DataPointInstance } from './Data'
 import type { ObjectiveClass } from './Objective'
 

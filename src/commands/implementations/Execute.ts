@@ -4,12 +4,13 @@ import { coordinatesParser, rangeParser, rotationParser } from '@variables'
 import { command } from '../decorators'
 
 import type {
-  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
-} from 'src/arguments'
+  ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Range,
+  Rotation, SingleEntityArgument,
+} from '@/arguments'
 import type * as commands from '@/commandsOnly'
 import type { LiteralUnion } from '@/generalTypes'
 import type { Flow } from '@flow'
-import type { ConditionClass, Range } from '@variables'
+import type { ConditionClass } from '@variables'
 import type { DataPointInstance } from '@variables/Data'
 import type { Score } from '@variables/Score'
 import type { CommandsRoot } from '../CommandsRoot'

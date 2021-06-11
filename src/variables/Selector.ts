@@ -6,15 +6,13 @@ import { rangeParser } from '@variables/parsers'
 import { ComponentClass } from './abstractClasses'
 
 import type {
-  ENTITY_TYPES, GAMEMODES, RootNBT, TextComponentObject,
+  ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
 } from 'src/arguments'
 import type { CommandsRoot } from '@commands'
 import type { PredicateInstance } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
 import type { NotNBT } from './NBTs'
-
-export type Range = number | [min: number, max: number] | [min: number, max: null] | [min: null, max: number]
 
 type ScoreArgument = Record<string, Range>
 
