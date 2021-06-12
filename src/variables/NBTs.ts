@@ -38,8 +38,9 @@ export class NotNBT extends NBTCustomObject {
   [util.inspect.custom] = () => `!${nbtParser(this.nbt)}`
 }
 
-function dynamicNBT(template: TemplateStringsArray): NBTCustomObject {
-  const result = template.map((element: any) => (element instanceof NBTCustomObject ? nbtParser(element) : element.toString()))
+function dynamicNBT(template: TemplateStringsArray, ...args: unknown[]): NBTCustomObject {
+  const mixedArgs = template.flatMap((s, i) => [s, args[i]]).slice(0, -1) // Remove the last argument, which will always be undefined
+  const result = mixedArgs.map((element: any) => (element instanceof NBTCustomObject ? nbtParser(element) : element.toString()))
 
   return new class extends NBTCustomObject {
       [util.inspect.custom] = () => result.join('')
@@ -228,7 +229,7 @@ interface NBTInterface {
   /**
    * Evaluate the given NBT.
    */
-  (nbts: TemplateStringsArray): NBTCustomObject
+  (nbts: TemplateStringsArray, ...args: unknown[]): NBTCustomObject
 }
 
 export const NBT: NBTInterface = Object.assign(dynamicNBT, {

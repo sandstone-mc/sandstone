@@ -434,12 +434,15 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
       this.commandsRoot.executeState = 'inside'
     }
 
-    const result = (data: DataPointInstance) => {
+    const callableFunction = (data: DataPointInstance) => {
       this.commandsRoot.arguments.push(data.type, data.currentTarget, data.path)
       return this
     }
 
-    return Object.assign(result, new ExecuteIfData(this as unknown as InferExecute<T>))
+    const data = new ExecuteIfData(this as unknown as InferExecute<T>)
+    const subData: Omit<ExecuteIfData<T>, 'execute' | 'commandsRoot'> = { entity: data.entity, storage: data.storage, block: data.block }
+
+    return Object.assign(callableFunction, data, subData)
   }
 
   @command(['if', 'entity'], executeConfig)
