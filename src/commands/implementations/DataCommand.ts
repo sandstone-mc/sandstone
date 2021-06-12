@@ -52,7 +52,7 @@ export class DataMerge extends Command {
    * @param targetPos The coordinates of the block to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  @command(mergeCmd('block'), { isRoot: true, parsers: { '0': coordinatesParser } })
+  @command(mergeCmd('block'), { isRoot: true, parsers: { '0': coordinatesParser, '1': nbtParser } })
   block = (targetPos: Coordinates, nbt: NBTObject) => { }
 
   /**
@@ -61,7 +61,7 @@ export class DataMerge extends Command {
    * @param target The entity to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  @command(mergeCmd('entity'), { isRoot: true })
+  @command(mergeCmd('entity'), { isRoot: true, parsers: { '1': nbtParser } })
   entity = (target: SingleEntityArgument, nbt: NBTObject) => { }
 
   /**
@@ -70,7 +70,7 @@ export class DataMerge extends Command {
    * @param target The storage to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  @command(mergeCmd('storage'), { isRoot: true })
+  @command(mergeCmd('storage'), { isRoot: true, parsers: { '1': nbtParser } })
   storage = (target: string, nbt: NBTObject) => { }
 }
 

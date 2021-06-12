@@ -1,11 +1,10 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { coordinatesParser, } from '@variables'
+import { coordinatesParser } from '@variables'
 
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument,
 } from 'src/arguments'
-
 
 export class ItemSource extends Command {
   /**
@@ -15,7 +14,7 @@ export class ItemSource extends Command {
    */
   @command('with')
   with = (item: ITEMS, count: number) => { }
-  
+
   /**
    * Replace the slot with a specific item.
    * @param item The item to replace the slot with.
@@ -34,7 +33,7 @@ export class ItemSource extends Command {
     /**
      * @param pos The coordinates of the container to copy items from.
      * @param slot The slot to copy the items from.
-     * @param [modifier] An optional modifier to apply. 
+     * @param [modifier] An optional modifier to apply.
      */
     block: (pos: Coordinates, slot: CONTAINER_SLOTS, modifier?: string) => void
 
@@ -45,13 +44,12 @@ export class ItemSource extends Command {
      */
     entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string) => void
   } = {
-      block: this.fromBlock,
-      entity: this.fromEntity
-    }
+    block: this.fromBlock,
+    entity: this.fromEntity,
+  }
 }
 
 export class ModifyItem extends Command {
-
   /**
    * @param pos The position of the container containing the slot to apply the modifier to.
    * @param slot The slot to apply the modifier to.
@@ -74,12 +72,14 @@ export class ReplaceItem extends Command {
    * @param pos The position of the container containing the slot to be replaced.
    * @param slot The slot to be replaced.
    */
-  @command(['item', 'replace', 'block'], { isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser } })
+  @command(['item', 'replace', 'block'], {
+    isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser },
+  })
   block = (pos: Coordinates, slot: CONTAINER_SLOTS) => new ItemSource(this.commandsRoot)
 
   /**
    * @param targets one or more entities to modify.
-.
+   *.
    * @param slot The slot to be replaced.
    */
   @command(['item', 'replace', 'entity'], { isRoot: true, hasSubcommands: true, executable: false })

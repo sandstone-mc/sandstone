@@ -10,7 +10,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, GameruleCommand, Loot, Particle, RecipeCommand, Item, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
+  FunctionCommand, GameruleCommand, Item, Loot, Particle, RecipeCommand, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
 } from './implementations'
 
 import type {
