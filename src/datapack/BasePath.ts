@@ -95,9 +95,9 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
      * _ (Underscore)
      * - (Hyphen/minus)
      */
-    if (!namespace.match(/^[0-9a-z_-]+$/)) {
+    if (!namespace.match(/^[0-9a-z_\-.]+$/)) {
       throw new Error(
-        `A namespace should only contain numbers, lowercase letters, underscores and hyphen/minus, and be at least 1 caracter long: got "${namespace}"`,
+        `A namespace should only contain numbers, lowercase letters, underscores, hyphen/minus and dot/period, and be at least 1 caracter long: got "${namespace}"`,
       )
     }
 
