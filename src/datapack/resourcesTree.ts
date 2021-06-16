@@ -291,7 +291,7 @@ export class ResourcesTree {
 
       // Create the resource on the parent
       const newResource = handleConflict()
-      parent.children.set(newResource.path[resource.path.length - 1], newResource as any)
+      parent!.children.set(newResource.path[resource.path.length - 1], newResource as any)
     } else {
       // Our parent path only has one component, the namespace. We need to add the resource like this.
       const newResource = handleConflict()
