@@ -44,7 +44,7 @@ export type TagOptions = {
 }
 
 export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
-  readonly type
+  readonly type: TYPE
 
   readonly values: TagSingleValue<string>[]
 
