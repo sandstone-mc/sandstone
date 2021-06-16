@@ -51,7 +51,7 @@ You can finally stop reinventing the wheel.
 
 If you want to support Sandstone, the simplest way is to star the repository! It's actually very encouraging.
 
-![GitHub Repo stars](https://img.shields.io/github/stars/TheMrZZ/sandstone?style=social)
+[![GitHub Repo stars](https://img.shields.io/github/stars/TheMrZZ/sandstone?style=social)](https://github.com/TheMrZZ/sandstone/blob/master/README.md)
 
 # Getting started
 
