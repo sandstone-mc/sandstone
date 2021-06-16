@@ -17,7 +17,7 @@ export type ItemCriterion = Partial<{
   /** List of stored enchantments.  */
   stored_enchantments: EnchantmentCriterion[]
 
-  /** An item ID. */
+  /** An array of item IDs. */
   items: LiteralUnion<ITEMS>[]
 
   /** An NBT string. */
