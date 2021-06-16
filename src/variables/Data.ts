@@ -39,7 +39,7 @@ function pathToString(path: DATA_PATH[]) {
 export class TargetlessDataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   protected datapack
 
-  type
+  type: TYPE
 
   constructor(datapack: Datapack, type: TYPE) {
     this.datapack = datapack
@@ -54,7 +54,7 @@ export class TargetlessDataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
 export class TargetlessDataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   protected datapack
 
-  type
+  type: TYPE
 
   path
 
@@ -72,9 +72,9 @@ export class TargetlessDataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
 export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   datapack
 
-  type
+  type: TYPE
 
-  currentTarget
+  currentTarget: DATA_TARGET[TYPE]
 
   constructor(datapack: Datapack, type: TYPE, target: DATA_TARGET[TYPE]) {
     this.datapack = datapack
@@ -97,11 +97,11 @@ export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
 export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends ConditionTextComponentClass {
   datapack
 
-  type
+  type: TYPE
 
   path
 
-  currentTarget
+  currentTarget: DATA_TARGET[TYPE]
 
   constructor(datapack: Datapack, type: TYPE, target: DATA_TARGET[TYPE], path: DATA_PATH[]) {
     super()
@@ -141,7 +141,7 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
      * Set the data point to the given score, with a given type and a scale.
      */
     ((value: Score, storeType: StoreType, scale?: number) => void)
-  ) = (value: NBTObject | DataPointInstance | Score, storeType?: StoreType, scale = 1) => {
+  ) = (value: NBTObject | DataPointInstance | Score, storeType?: StoreType, scale: number = 1) => {
     if (value instanceof Score) {
       this.executeStore(storeType as StoreType, scale).run.scoreboard.players.get(value.target, value.objective)
       return
