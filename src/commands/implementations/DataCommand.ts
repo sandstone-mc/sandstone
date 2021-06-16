@@ -4,8 +4,6 @@ import { Command } from '../Command'
 import { command } from '../decorators'
 
 import type { Coordinates, NBTObject, SingleEntityArgument } from 'src/arguments'
-import { functionify } from '@commands/functionify'
-import { DataInstance, DataPointInstance, DATA_TYPES } from '@variables/Data'
 
 const getCmd = (name: string) => ['data', 'get', name]
 
@@ -110,13 +108,11 @@ export class DataModifyValues extends Command {
      * @param sourcePath The path of the NBT to modify with.
      */
     storage: (source: string, sourcePath: string) => void
-  } & ((source: DataPointInstance) => void) = functionify({
+  } = {
     block: this.fromBlock,
     entity: this.fromEntity,
     storage: this.fromStorage,
-  }, (source: DataPointInstance) => {
-    this.from[source.type](source.currentTarget as any, source.path)
-  })
+  }
 
   /**
    * Modify the NBT with the given value.
@@ -228,34 +224,14 @@ export class DataRemove extends Command {
 /** Allows to get, merge, modify, and remove NBT data of a block entity, entity, or Command NBT storage. */
 export class DataCommand extends Command {
   /** Read off the entire NBT data or the subsection of the NBT data from the targeted block position or entity, scaled by `scale` if specified. */
-  get get() {
-    const dataCommand = new DataGet(this.commandsRoot)
-    return functionify(dataCommand, (source: DataPointInstance, scale?: number) => {
-      return dataCommand[source.type](source.currentTarget as any, source.path, scale)
-    })
-  }
+  get = new DataGet(this.commandsRoot)
 
   /** Merge the NBT data from the sourced block position or entity with the specified `nbt` data. */
-  get merge() {
-    const dataCommand = new DataMerge(this.commandsRoot)
-    return functionify(dataCommand, (source: DataInstance, nbt: NBTObject) => {
-      return dataCommand[source.type](source.currentTarget as any, nbt)
-    })
-  }
+  merge = new DataMerge(this.commandsRoot)
 
   /** Modify the NBT data from the sourced block position or entity, with the specified operation and the given NBT. */
-  get modify() {
-    const dataCommand = new DataModify(this.commandsRoot)
-    return functionify(dataCommand, (source: DataPointInstance) => {
-      return dataCommand[source.type](source.currentTarget as any, source.path)
-    })
-  }
+  modify = new DataModify(this.commandsRoot)
 
   /** Removes NBT data at `path` from the targeted block position or entity. Player NBT data cannot be removed. */
-  get remove() {
-    const dataCommand = new DataRemove(this.commandsRoot)
-    return functionify(dataCommand, (source: DataPointInstance) => {
-      return dataCommand[source.type](source.currentTarget as any, source.path)
-    })
-  }
+  remove = new DataRemove(this.commandsRoot)
 }

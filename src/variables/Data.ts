@@ -131,13 +131,6 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
 
   protected executeStore = (storeType: StoreType, scale: number) => this.datapack.commandsRoot.execute.store.result[this.type](this.currentTarget as any, this.path, storeType as StoreType, scale)
 
-  /**
-   * Get the value of the current data point
-   */
-  get = (scale?: number) => {
-    this.datapack.commandsRoot.data.get[this.type](this.currentTarget as any, this.path, scale)
-  }
-
   set: (
     /**
      * Set the data point to the given NBT.
@@ -147,10 +140,15 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
     /**
      * Set the data point to the given score, with a given type and a scale.
      */
-    ((value: Score, storeType: StoreType, scale?: number) => void)
+    ((value: Score | DataPointInstance, storeType: StoreType, scale?: number) => void)
   ) = (value: NBTObject | DataPointInstance | Score, storeType?: StoreType, scale: number = 1) => {
     if (value instanceof Score) {
       this.executeStore(storeType as StoreType, scale).run.scoreboard.players.get(value.target, value.objective)
+      return
+    }
+
+    if (value instanceof DataPointInstance && storeType !== undefined) {
+      this.executeStore(storeType as StoreType, scale).run.data.get.storage(value.currentTarget as any, value.path, scale)
       return
     }
 
