@@ -13,7 +13,7 @@ export type LocationCriterion = Partial<{
     /* The block at the location. */
     block: Partial<{
         /** The block ID. */
-        block: LiteralUnion<BLOCKS>
+        blocks: LiteralUnion<BLOCKS>[]
 
         /** The block Tag. */
         tag: string | TagInstance<'blocks'>
