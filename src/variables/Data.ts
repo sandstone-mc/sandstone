@@ -131,6 +131,13 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
 
   protected executeStore = (storeType: StoreType, scale: number) => this.datapack.commandsRoot.execute.store.result[this.type](this.currentTarget as any, this.path, storeType as StoreType, scale)
 
+  /**
+   * Get the value of the current data point
+   */
+  get = (scale?: number) => {
+    this.datapack.commandsRoot.data.get[this.type](this.currentTarget as any, this.path, scale)
+  }
+
   set: (
     /**
      * Set the data point to the given NBT.
