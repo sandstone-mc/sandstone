@@ -79,7 +79,7 @@ export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   constructor(datapack: Datapack, type: TYPE, target: DATA_TARGET[TYPE]) {
     this.datapack = datapack
     this.type = type
-    this.currentTarget = target
+    this.currentTarget = type === 'storage' ? datapack.getResourcePath(target as string).fullName as any : target
   }
 
   /**
@@ -109,7 +109,7 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
     this.type = type
     this.path = pathToString(path)
 
-    this.currentTarget = target
+    this.currentTarget = type === 'storage' ? datapack.getResourcePath(target as string).fullName as any : target
   }
 
   target = (target: DATA_TARGET[TYPE]) => new DataPointInstance(this.datapack, this.type, target, [this.path])
