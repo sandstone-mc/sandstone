@@ -149,6 +149,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
 
     return this.unaryOperation('set', '=', ...args as OperationArguments)
   }
+  '=' = this.set
 
   /**
    * Adds other entities's scores to the current entity's score.
@@ -169,6 +170,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   add(...args: OperationArguments) {
     return this.unaryOperation('add', '+=', ...args)
   }
+  '+=' = this.add
 
   /**
    * Substract other target's scores from the current entity's score.
@@ -189,6 +191,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   remove(...args: OperationArguments) {
     return this.unaryOperation('remove', '-=', ...args)
   }
+  '-=' = this.remove
 
   /**
    * Multiply the current entity's score by other entities's scores.
@@ -209,6 +212,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   multiply(...args: OperationArguments) {
     return this.binaryOperation('*=', ...args)
   }
+  '*=' = this.multiply
 
   /**
    * Divide the current entity's score by other entities's scores.
@@ -229,6 +233,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   divide(...args: OperationArguments) {
     return this.binaryOperation('/=', ...args)
   }
+  '/=' = this.divide
 
   /**
    * Get the remainder of the division of the current entity's score by other entities's scores.
@@ -249,6 +254,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   modulo(...args: OperationArguments) {
     return this.binaryOperation('%=', ...args)
   }
+  '%=' = this.modulo
 
   /**
    * Swap the current score with the other targets' scores.
@@ -269,6 +275,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   swap(...args: OperationArguments) {
     this.binaryOperation('><', ...args)
   }
+  '><' = this.swap
 
   /** EFFECT-FREE OPERATORS */
 
@@ -293,6 +300,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.unaryOperation('add', '+=', ...args)
     return anonymousScore
   }
+  '+' = this.plus
 
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given targets' score.
@@ -315,6 +323,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.unaryOperation('remove', '-=', ...args)
     return anonymousScore
   }
+  '-' = this.minus
 
   /**
    * Returns a new anonymous score, equal to the product of the current score and the given targets' score.
@@ -337,6 +346,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.binaryOperation('*=', ...args)
     return anonymousScore
   }
+  '*' = this.multipliedBy
 
   /**
    * Returns a new anonymous score, equal to the division of the current score and the given targets' score.
@@ -359,6 +369,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.binaryOperation('/=', ...args)
     return anonymousScore
   }
+  '/' = this.divide
 
   /**
    * Returns a new anonymous score, equal to the modulo of the current score and the given targets' score.
@@ -381,6 +392,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.binaryOperation('%=', ...args)
     return anonymousScore
   }
+  '%' = this.modulo
 
   /** COMPARISONS OPERATORS */
   private comparison(
@@ -424,6 +436,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   greaterThan(...args: OperationArguments) {
     return this.comparison('>', `${typeof args[0] === 'number' ? args[0] + 1 : null}..`, args)
   }
+  '>' = this.greaterThan
 
   /**
    * Check if the current score is greater or equal than the given score.
@@ -444,6 +457,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   greaterOrEqualThan(...args: OperationArguments) {
     return this.comparison('>=', `${args[0]}..`, args)
   }
+  '>=' = this.greaterOrEqualThan
 
   /**
    * Check if the current score is strictly lower than the given score.
@@ -464,6 +478,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   lessThan(...args: OperationArguments) {
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
   }
+  '<' = this.lessThan
 
   /**
    * Check if the current score is lower or equal than the given score.
@@ -484,6 +499,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   lessOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
   }
+  '<=' = this.lessOrEqualThan
 
   /**
    * Check if the current score is equal to than the given score.
@@ -504,6 +520,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)
   }
+  '==' = this.equalTo
 
   /**
    * Check if the current score is not equal to than the given score.
@@ -524,6 +541,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   notEqualTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args, true)
   }
+  '!=' = this.notEqualTo
 
   /**
    * Check if the current score matches a certain range.
