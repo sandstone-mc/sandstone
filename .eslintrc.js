@@ -49,6 +49,9 @@ module.exports = {
     // Allow `any`
     '@typescript-eslint/no-explicit-any': 'off',
 
+    // Allow (x: number = 1) => {...}
+    '@typescript-eslint/no-inferrable-types': 'off',
+
     // Import sorting
     'simple-import-sort/imports': ['error', {
       groups: [

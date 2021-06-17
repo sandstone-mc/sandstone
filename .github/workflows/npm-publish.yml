@@ -23,9 +23,9 @@ jobs:
           # An explicit key for restoring and saving the cache
           key: ${{ runner.os }}-npm-modules
       - name: Install dependencies
-        run: yarn
+        run: npm i
       - name: Build release
-        run: yarn build
+        run: npm run build
     
   publish-npm:
     needs: build
@@ -43,7 +43,7 @@ jobs:
           path: node_modules
           # An explicit key for restoring and saving the cache
           key: ${{ runner.os }}-npm-modules
-      - run: yarn
+      - run: npm i
       - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
         env:
           NPM_TOKEN: ${{secrets.npm_token}}
