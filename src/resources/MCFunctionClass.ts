@@ -1,4 +1,4 @@
-import util from 'util'
+import * as util from 'util'
 import { CONFLICT_STRATEGIES } from '@/env'
 import { isPromise } from '@/utils'
 

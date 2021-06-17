@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import path from 'path'
+import * as path from 'path'
 
 import {
   createDirectory, deleteDirectory, getMinecraftPath, getWorldPath,
