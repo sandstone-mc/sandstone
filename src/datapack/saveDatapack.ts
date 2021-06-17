@@ -308,6 +308,15 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
           (namespace, folders, fileName) => `Recipe ${namespace}:${[...folders, fileName].join('/')}`,
         ))
       }
+
+      // Save item modifier
+      for (const r of n.item_modifiers.values()) {
+        promises.push(...saveResource(
+          rootPath, 'item_modifiers', r, options,
+          (resource) => JSON.stringify(resource.modifier, null, indentation),
+          (namespace, folders, fileName) => `Item modifier ${namespace}:${[...folders, fileName].join('/')}`,
+        ))
+      }
     }
 
     // Wait until all files are written

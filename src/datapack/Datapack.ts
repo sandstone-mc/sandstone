@@ -15,7 +15,7 @@ import type {
   BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion, OmitFirst,
 } from '@/generalTypes'
 import type {
-  AdvancementOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
+  AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
 import type { ObjectiveInstance, SelectorCreator, SelectorProperties } from '@variables'
 import type { DATA_TARGET, DATA_TYPES } from '@variables/Data'
@@ -163,6 +163,11 @@ export interface SandstoneConfig {
      * Will override the defined `default` strategy.
      */
     tag?: TagOptions['onConflict']
+    /**
+     * The conflict strategy to use for Item modifiers.
+     * Will override the defined `default` strategy.
+     */
+    itemModifier?: ItemModifierOptions['onConflict']
   }
 }
 
