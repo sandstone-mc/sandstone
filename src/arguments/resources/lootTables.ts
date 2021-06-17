@@ -10,7 +10,7 @@ import type { NumberProvider } from './criteria'
 import type { ObjectOrArray, PredicateCondition } from './predicate'
 import { DataInstance } from '@variables/Data'
 import { BASIC_COLORS } from '@arguments'
-import { LootTableInstance } from '@resources'
+import { LootTableInstance, TagInstance } from '@resources'
 
 type FunctionType<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**
@@ -29,9 +29,11 @@ type FunctionType<TYPE extends string, VALUES extends Record<string, unknown>> =
    * - `limit_count`: Limits the count of every item stack.
    * - `looting_enchant`: Adjusts the stack size based on the level of the `Looting` enchantment on the `killer` entity.
    * - `set_attributes`: Add `attribute` modifiers to the item.
+   * - `set_banner_patterns`: Set the banners' patterns.
    * - `set_contents`: For loot tables of type 'block', sets the contents of a container block item to a list of entries.
    * - `set_count`: Sets the stack size.
    * - `set_damage`: Sets the item's damage value (durability) for tools.
+   * - `set_enchantments`: Add `enchantments` to the item.
    * - `set_loot_table`: Sets the loot table for a container (chest etc.).
    * - `set_lore`: Adds lore to the item
    * - `set_name`: Adds display name of the item.
@@ -385,17 +387,17 @@ type LootTableEntry = {
   }>
   | EntryType<'tag', {
     /** Tag to be used, e.g. `arrows`. */
-    name: string
+    name: string | TagInstance<'items'>
 
     /**
      * If set to `true`, it chooses one item of the tag, each with the same weight and quality.
      * If `false`, it generates one of each of the items in the tag.
      */
-    expand: boolean
+    expand?: boolean
   }>
   | EntryType<'loot_table', {
     /** Loot table to be used, e.g. `gameplay/fishing/junk` */
-    name: string
+    name: string | LootTableInstance
   }>
   | EntryType<'dynamic', {
     /** Can be contents for block entity contents or self for banners and player skulls. */
@@ -443,32 +445,10 @@ type LootTablePoll = {
    */
   functions?: LootTableFunction[]
 
-  /** Specifies the number of rolls on the pool. Can be either an exact number, a uniform range, or a binomial distribution. */
-  rolls: number | {
-    /**
-     * Type of the distribution. Must be one of:
-     * - "uniform" (default), for a uniform probability between a min and a max
-     * - "binomial", for a binomial distribution
-     * @default "uniform"
-     */
-    type: 'binomial'
-    /** The number of tries. The number of successful tries will be the number of rolls. */
-    n: number,
-    /** The probability for one try to succeed. */
-    p: number
-  } | {
-    /**
-     * Type of the distribution. Must be one of:
-     * - "uniform" (default), for a uniform probability between a min and a max
-     * - "binomial", for a binomial distribution
-     * @default "uniform"
-     */
-    type?: 'uniform'
-    /** The minimum value. */
-    min: number
-    /** The maximum value. */
-    max: number
-  }
+  /** Specifies the number of rolls on the pool. */
+  rolls: NumberProvider
+  /** Specifies the number of rolls on the pool. */
+  bonus_rolls: NumberProvider
 
   /**
    * A list of all things that can be produced by this pool.

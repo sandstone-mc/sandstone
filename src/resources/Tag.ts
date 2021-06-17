@@ -78,4 +78,6 @@ export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
   toString() {
     return this.name
   }
+
+  toJSON = this.toString
 }
