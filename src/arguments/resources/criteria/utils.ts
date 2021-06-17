@@ -58,4 +58,4 @@ export type NumberProvider = number | {
   }
   score: string | ObjectiveClass
   scale: number
-} | Score
+}
