@@ -92,6 +92,9 @@ export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   target = (target: DATA_TARGET[TYPE]) => new DataInstance(this.datapack, this.type, target)
 
   select = (...path: DATA_PATH[]) => new DataPointInstance(this.datapack, this.type, this.currentTarget, path)
+
+  toString = () => this.currentTarget
+  toJSON = this.toString
 }
 
 export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends ConditionTextComponentClass {

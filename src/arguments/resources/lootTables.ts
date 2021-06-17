@@ -1,12 +1,16 @@
 /* eslint-disable camelcase */
 import type { MAP_ICONS } from 'src/arguments/basics'
 import type {
+  ATTRIBUTES,
   BLOCKS, ENCHANTMENTS, ITEMS, STRUCTURES,
 } from 'src/arguments/generated'
 import type { JSONTextComponent } from 'src/arguments/jsonTextComponent'
 import type { LiteralUnion } from '@/generalTypes'
-import type { NumberOrMinMax } from './criteria'
+import type { NumberProvider } from './criteria'
 import type { ObjectOrArray, PredicateCondition } from './predicate'
+import { DataInstance } from '@variables/Data'
+import { BASIC_COLORS } from '@arguments'
+import { LootTableInstance } from '@resources'
 
 type FunctionType<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**
@@ -80,10 +84,6 @@ type LootTableFunction = {
     }
   })>
   | FunctionType<'copy_name', {
-    /** Needs to be set to `block_entity`. */
-    source: 'block_entity'
-  }>
-  | FunctionType<'copy_nbt', {
     /**
      * Specifies the source. Must be one of:
      * - `block_entity` for the block entity of the destroyed block
@@ -93,16 +93,34 @@ type LootTableFunction = {
      * - `killer_player` for a killer that is a player.
      */
     source: 'block_entity' | 'this' | 'killer' | 'killer_player'
+  }>
+  | FunctionType<'copy_nbt', {
+    // TODO: update docs
+    /**
+     * Specifies the source. Must be one of:
+     * - `block_entity` for the block entity of the destroyed block
+     * - `this` to use the entity that died or the player that gained the loot table
+     * - `opened` the container or broke the block,
+     * - `killer` for the killer,
+     * - `killer_player` for a killer that is a player.
+     */
+    source: 'block_entity' | 'this' | 'killer' | 'killer_player' | {
+      type: 'minecraft:context'
+      target: 'block_entity' | 'this' | 'killer' | 'killer_player'
+    } | {
+      type: 'minecraft:storage'
+      source: string | DataInstance<'storage'>
+    }
 
-    /** An operation, or a list of operations. */
-    ops: ObjectOrArray<{
+    /** A list of operations. */
+    ops: {
       /** The nbt path to copy from. */
       source: string
       /** The nbt path to copy to, starting from the item's tag tag. */
-     target: string
-     /** Can be `replace` to replace any existing contents of the target, `append` to append to a list, or `merge` to merge into a compound tag. */
-     op: 'replace' | 'append' | 'merge'
-    }>
+      target: string
+      /** Can be `replace` to replace any existing contents of the target, `append` to append to a list, or `merge` to merge into a compound  tag. */
+      op: 'replace' | 'append' | 'merge'
+    }[]
   }>
   | FunctionType<'copy_state', {
     /** A block ID. Function fails if the block doesn't match. */
@@ -118,7 +136,7 @@ type LootTableFunction = {
     /** Determines whether treasure enchantments are allowed on this item. */
     treasure?: boolean
     /** Specifies a random enchantment level, as an exact number or a range. */
-    levels: NumberOrMinMax
+    levels: NumberProvider
   }>
   | FunctionType<'exploration_map', {
     /** The type of generated structure to locate. Accepts any of the StructureTypes used by the `/locate` command (case insensitive). */
@@ -159,7 +177,10 @@ type LootTableFunction = {
   }>
   | FunctionType<'limit_count', {
     /** Specify the count limit of every item stack. */
-    limit: NumberOrMinMax
+    limit: number | {
+      min?: NumberProvider
+      max?: NumberProvider
+    }
   }>
   | FunctionType<'looting_enchant', {
     /**
@@ -171,7 +192,7 @@ type LootTableFunction = {
      * Note the random number generated may be fractional, rounded after multiplying by the looting level.
      *
      */
-    count?: NumberOrMinMax
+    count?: NumberProvider
     /**
      * Specifies the maximum amount of items in the stack after the looting calculation.
      * If the value is `0`, no limit is applied.
@@ -182,9 +203,9 @@ type LootTableFunction = {
     /** The modifiers to apply to the item. */
     modifiers: {
       name: string
-      attribute: string
+      attribute: LiteralUnion<ATTRIBUTES>
       operation: 'addition' | 'multiply_base' | 'multiply_total'
-      amount: NumberOrMinMax
+      amount: NumberProvider
       id?: string
 
       /**
@@ -196,6 +217,13 @@ type LootTableFunction = {
        */
       slot?: ATTRIBUTE_SLOTS | ATTRIBUTE_SLOTS[]
     }[]
+  }>
+  | FunctionType<'set_banner_pattern', {
+    patterns: {
+      pattern: string // TODO: add patterns type
+      color: BASIC_COLORS
+    }[]
+    append?: boolean
   }>
   | FunctionType<'set_contents', {
     /** For loot tables of type 'block', sets the contents of a container block item to a list of entries. */
@@ -234,11 +262,17 @@ type LootTableFunction = {
      *
      * If a range is give, it specifies a random damage fraction within the given range.
      */
-    damage: NumberOrMinMax
+    damage: NumberProvider
+    add?: boolean
+  }>
+  | FunctionType<'set_enchantments', {
+    // TODO: add docs
+    enchantments: { [K in ENCHANTMENTS]?: NumberProvider }
+    add?: boolean
   }>
   | FunctionType<'set_loot_table', {
     /** Specifies the resource location of the loot table to be used. */
-    name: string
+    name: string | LootTableInstance
     /** Optional. Specifies the loot table seed. If absent or set to 0, a random seed will be used. */
     seed?: number
   }>
@@ -251,7 +285,7 @@ type LootTableFunction = {
      * - `killer` for the killer
      * - `killer_player` for a killer that is a player.
      */
-    entity: 'this' | 'killer' | 'killer_player'
+    entity?: 'this' | 'killer' | 'killer_player' | 'direct_killer'
     /** If true, replaces all existing lines of lore, if false appends the list. */
     replace?: boolean
   }>
@@ -264,7 +298,7 @@ type LootTableFunction = {
      * - `killer` for the killer
      * - `killer_player` for a killer that is a player.
      */
-    entity: 'this' | 'killer' | 'killer_player'
+    entity?: 'this' | 'killer' | 'killer_player' | 'direct_killer'
   }>
   | FunctionType<'set_nbt', {
     /**
@@ -280,7 +314,7 @@ type LootTableFunction = {
       /** The effect ID. */
       type: LiteralUnion<ENCHANTMENTS>
       /** The duration of the effect. */
-      duration: number
+      duration: NumberProvider
     }[]
   }>
 
