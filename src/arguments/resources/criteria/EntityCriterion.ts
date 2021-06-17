@@ -15,7 +15,7 @@ export type EntityCriterion = Partial<{
   effects: Record<MOB_EFFECTS, EffectCriterion>
 
   /** A list of equipment the entity must match. */
-  equipment: Record<'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet', ItemCriterion>
+  equipment: Partial<Record<'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet', ItemCriterion>>
 
   /** Predicate Flags to be checked. */
   flags: Partial<{
