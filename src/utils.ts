@@ -1,4 +1,4 @@
-import util from 'util'
+import * as util from 'util'
 
 export function isAsyncFunction(func: ((...args: any[]) => void) | ((...args: any[]) => Promise<void>)): func is (...args: any[]) => Promise<void> {
   if (util.types) {
