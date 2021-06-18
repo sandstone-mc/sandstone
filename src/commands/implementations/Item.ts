@@ -1,5 +1,6 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
+import { ItemModifierInstance } from '@resources'
 import { coordinatesParser } from '@variables'
 
 import type {
@@ -35,14 +36,14 @@ export class ItemSource extends Command {
      * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
-    block: (pos: Coordinates, slot: CONTAINER_SLOTS, modifier?: string) => void
+    block: (pos: Coordinates, slot: CONTAINER_SLOTS, modifier?: string | ItemModifierInstance) => void
 
     /**
      * @param targets The entity to copy items from.
      * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
-    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string) => void
+    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string | ItemModifierInstance) => void
   } = {
     block: this.fromBlock,
     entity: this.fromEntity,

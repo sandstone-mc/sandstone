@@ -269,7 +269,7 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
   )
 
   /** Create an item modifier */
-  ItemModifier = (name: string, modifier: ItemModifierJSON, options?: ItemModifierOptions) => {
+  ItemModifier = (name: string, modifier: ItemModifierJSON, options?: ItemModifierOptions) => (
     new ItemModifierInstance(this.datapack, this.getName(name), modifier, { onConflict: this.onConflict?.predicate, ...options })
-  }
+  )
 }
