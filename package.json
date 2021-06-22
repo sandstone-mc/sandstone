@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
   "description": "Sandstone, a Typescript library for Minecraft datapacks.",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "author": "TheMrZZ - Florian ERNST",
   "bugs": {
     "url": "https://github.com/TheMrZZ/sandstone/issues"
