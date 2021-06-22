@@ -37,6 +37,7 @@ import type * as commands from '@/commandsOnly'
 import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
 import type Datapack from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
+import { TagInstance } from '@resources'
 
 export class CommandsRoot {
   Datapack: Datapack
@@ -133,7 +134,7 @@ export class CommandsRoot {
    * If `0`, instead of clearing of items, detectes and queries the amount of specified items.
    */
   @command('clear', { isRoot: true })
-  clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS>, maxCount?: number) => { }
+  clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS> | TagInstance<'items'>, maxCount?: number) => { }
 
   // clone command //
   clone = (new Clone(this)).clone
