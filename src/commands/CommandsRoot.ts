@@ -37,7 +37,7 @@ import type * as commands from '@/commandsOnly'
 import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
 import type Datapack from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
-import { TagInstance } from '@resources'
+import type { TagInstance } from '@resources'
 
 export class CommandsRoot {
   Datapack: Datapack

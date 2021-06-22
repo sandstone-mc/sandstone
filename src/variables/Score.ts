@@ -149,6 +149,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
 
     return this.unaryOperation('set', '=', ...args as OperationArguments)
   }
+
   '=' = this.set
 
   /**
@@ -170,6 +171,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   add(...args: OperationArguments) {
     return this.unaryOperation('add', '+=', ...args)
   }
+
   '+=' = this.add
 
   /**
@@ -191,6 +193,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   remove(...args: OperationArguments) {
     return this.unaryOperation('remove', '-=', ...args)
   }
+
   '-=' = this.remove
 
   /**
@@ -212,6 +215,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   multiply(...args: OperationArguments) {
     return this.binaryOperation('*=', ...args)
   }
+
   '*=' = this.multiply
 
   /**
@@ -233,6 +237,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   divide(...args: OperationArguments) {
     return this.binaryOperation('/=', ...args)
   }
+
   '/=' = this.divide
 
   /**
@@ -254,6 +259,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   modulo(...args: OperationArguments) {
     return this.binaryOperation('%=', ...args)
   }
+
   '%=' = this.modulo
 
   /**
@@ -275,6 +281,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   swap(...args: OperationArguments) {
     this.binaryOperation('><', ...args)
   }
+
   '><' = this.swap
 
   /** EFFECT-FREE OPERATORS */
@@ -300,6 +307,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.unaryOperation('add', '+=', ...args)
     return anonymousScore
   }
+
   '+' = this.plus
 
   /**
@@ -323,6 +331,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.unaryOperation('remove', '-=', ...args)
     return anonymousScore
   }
+
   '-' = this.minus
 
   /**
@@ -346,6 +355,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.binaryOperation('*=', ...args)
     return anonymousScore
   }
+
   '*' = this.multipliedBy
 
   /**
@@ -369,6 +379,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.binaryOperation('/=', ...args)
     return anonymousScore
   }
+
   '/' = this.divide
 
   /**
@@ -392,6 +403,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     anonymousScore.binaryOperation('%=', ...args)
     return anonymousScore
   }
+
   '%' = this.modulo
 
   /** COMPARISONS OPERATORS */
@@ -436,6 +448,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   greaterThan(...args: OperationArguments) {
     return this.comparison('>', `${typeof args[0] === 'number' ? args[0] + 1 : null}..`, args)
   }
+
   '>' = this.greaterThan
 
   /**
@@ -457,6 +470,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   greaterOrEqualThan(...args: OperationArguments) {
     return this.comparison('>=', `${args[0]}..`, args)
   }
+
   '>=' = this.greaterOrEqualThan
 
   /**
@@ -478,6 +492,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   lessThan(...args: OperationArguments) {
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
   }
+
   '<' = this.lessThan
 
   /**
@@ -499,6 +514,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   lessOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
   }
+
   '<=' = this.lessOrEqualThan
 
   /**
@@ -520,6 +536,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)
   }
+
   '==' = this.equalTo
 
   /**
@@ -541,6 +558,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   notEqualTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args, true)
   }
+
   '!=' = this.notEqualTo
 
   /**
