@@ -16,9 +16,10 @@ export * from './commandsOnly'
 
 // VARIABLES
 export {
-  absolute as abs, local as loc,
+  absolute as abs,
+  local as loc,
   relative as rel,
-} from '.'
+} from './variables'
 export * from './variables/Coordinates'
 export * from './variables/JSONTextComponentClass'
 export * from './variables/NBTs'
