@@ -57,7 +57,7 @@ export class ModifyItem extends Command {
    * @param modifier The name of the modifier.
    */
   @command(['item', 'modify', 'block'], { isRoot: true, parsers: { '0': coordinatesParser } })
-  block = (pos: Coordinates, slot: CONTAINER_SLOTS, modifier: string) => { }
+  block = (pos: Coordinates, slot: CONTAINER_SLOTS, modifier: string | ItemModifierInstance) => { }
 
   /**
    * @param targets The entity/entities containing the slot to apply the modifier to.
@@ -65,7 +65,7 @@ export class ModifyItem extends Command {
    * @param modifier The name of the modifier.
    */
   @command(['item', 'modify', 'entity'], { isRoot: true })
-  entity = (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier: string) => { }
+  entity = (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier: string | ItemModifierInstance) => { }
 }
 
 export class ReplaceItem extends Command {
