@@ -62,6 +62,7 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
       datapack.resources.deleteResource(callbackFunction.path, 'functions')
     }
 
+    console.log('Commands length:', commands.length)
     if (commands.length) {
       if (commands.length === 2 && forceInlineScore) {
         // If we have 2 commands, add the execute store
@@ -328,8 +329,10 @@ export class Flow {
 
     this.commandsRoot.register(true)
 
+    const isEmpty = callbackMCFunction.isResource && callbackMCFunction.commands.length === 0
+
     // At the end of the callback, add the given conditions to call it again
-    if (config.loopCondition) {
+    if (!isEmpty && config.loopCondition) {
       // In a synchronous flow statement, we just have to recursively call the function
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.executeState = 'after'
@@ -344,11 +347,16 @@ export class Flow {
     this.commandsRoot.executeState = previousExecuteState
 
     // Register the initial condition (in the root function) to enter the callback
-    if (config.initialCondition) {
+    if (!isEmpty && config.initialCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
       this.commandsRoot.executeState = 'after'
     }
-    callOrInlineFunction(this.datapack, callbackMCFunction, config.forceInlineScore)
+
+    if (!isEmpty) {
+      callOrInlineFunction(this.datapack, callbackMCFunction, config.forceInlineScore)
+    } else {
+      this.datapack.resources.deleteResource(callbackMCFunction.path, 'functions')
+    }
 
     this.arguments = []
   }
