@@ -35,28 +35,30 @@ type MappedArray<T, U> = { [key in keyof T]: U }
  *
  * @example
  *
- * absolute(0) => '0'
+ * abs(0) => '0'
  *
- * absolute(5.5) => '5.5'
+ * abs(5.5) => '5.5'
  *
- * @see `relative` for relative coordinates (e.g. ~10)
- * @see `local` for local coordinates (e.g. ^10)
+ * @alias {@link absolute}
+ * @see {@link relative} for relative coordinates (e.g. `~10`)
+ * @see {@link local} for local coordinates (e.g. `^10`)
  */
-export function absolute(coordinate: number): string
+export function absolute(coordinate?: number): string
 
 /**
  * Transforms numbers into absolute coordinates.
  *
  * @example
  *
- * relative(0, 0, 0) => ['0', '0', '0']
+ * abs(0, 0, 0) => ['0', '0', '0']
  *
- * relative(0, 180) => ['0', '180']
+ * abs(0, 180) => ['0', '180']
  *
- * relative(-1, 10, 5) => ['-1', '10', '5']
+ * abs(-1, 10, 5) => ['-1', '10', '5']
  *
- * @see `relative` for relative coordinates (e.g. ~10)
- * @see `local` for local coordinates (e.g. ^10)
+ * @alias {@link absolute}
+ * @see {@link relative} for relative coordinates (e.g. `~10`)
+ * @see {@link local} for local coordinates (e.g. `^10`)
  */
 export function absolute<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, string>>
 
@@ -69,20 +71,38 @@ export function absolute<T extends Tuple<number>>(...coordinates: T): string | V
 }
 
 /**
+ * Transforms a number into a relative coordinate, using the tilde notation `~`.
+ *
+ * @example
+ *
+ * rel(0) => '~'
+ *
+ * rel(5.5) => '~5.5'
+ *
+ * rel(-1) => '~-1'
+ *
+ * @alias {@link relative}
+ * @see {@link absolute} for absolute coordinates (e.g. `10`)
+ * @see {@link local} for local coordinates (e.g. `^10`)
+ */
+export function relative(coordinate: number): `~${string}`
+
+/**
  * Transforms numbers into relative coordinates, using the tilde notation `~`.
  *
  * @example
  *
- * relative(0, 0, 0) => ['~', '~', '~']
+ * rel(0, 0, 0) => ['~', '~', '~']
  *
- * relative(0, 180) => ['~', '~180']
+ * rel(0, 180) => ['~', '~180']
  *
- * relative(-1, 10, 5) => ['~-1', '~10', '~5']
+ * rel(-1, 10, 5) => ['~-1', '~10', '~5']
  *
- * @see `absolute` for absolute coordinates (e.g. 10)
- * @see `local` for local coordinates (e.g. ^10)
+ * @alias {@link relative}
+ * @see {@link absolute} for absolute coordinates (e.g. `10`)
+ * @see {@link local} for local coordinates (e.g. `^10`)
  */
-export function relative<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, string>>
+export function relative<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `~${string}`>>
 
 export function relative<T extends Tuple<number>>(...coordinates: T): string | VectorClass<MappedArray<T, string>> {
   if (coordinates.length === 1) {
@@ -97,16 +117,17 @@ export function relative<T extends Tuple<number>>(...coordinates: T): string | V
  *
  * @example
  *
- * local(0) => '~'
+ * loc(0) => '^'
  *
- * local(5.5) => '^5.5'
+ * loc(5.5) => '^5.5'
  *
- * local(-1) => '^-1'
+ * loc(-1) => '^-1'
  *
- * @see `absolute` for absolute coordinates (e.g. 10)
- * @see `relative` for relative coordinates (e.g. ~10)
+ * @alias {@link local}
+ * @see {@link absolute} for absolute coordinates (e.g. `10`)
+ * @see {@link relative} for relative coordinates (e.g. `~10`)
  */
-export function local(coordinate: number): string
+export function local(coordinate: number): `^${string}`
 
 /**
  * Transforms numbers into local coordinates, using the tilde notation `^`.
@@ -115,16 +136,17 @@ export function local(coordinate: number): string
  *
  * @example
  *
- * local(0, 0, 0) => ['^', '^', '^']
+ * loc(0, 0, 0) => ['^', '^', '^']
  *
- * local(0, 180, 0) => ['^', '^180', '^']
+ * loc(0, 180, 0) => ['^', '^180', '^']
  *
- * local(-1, 10, 5) => ['^-1', '^10', '^5']
+ * loc(-1, 10, 5) => ['^-1', '^10', '^5']
  *
- * @see `absolute` for absolute coordinates (e.g. 10)
- * @see `relative` for relative coordinates (e.g. ~10)
+ * @alias {@link local}
+ * @see {@link absolute} for absolute coordinates (e.g. `10`)
+ * @see {@link relative} for relative coordinates (e.g. `~10`)
  */
-export function local<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, string>>
+export function local<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `^${string}`>>
 
 export function local<T extends Tuple<number>>(...coordinates: T): string | VectorClass<MappedArray<T, string>> {
   if (coordinates.length === 1) {
