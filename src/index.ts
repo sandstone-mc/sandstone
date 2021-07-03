@@ -6,7 +6,7 @@ export const {
 } = dataPack
 
 export const {
-  MCFunction, Advancement, Predicate, Tag, LootTable, Recipe, ItemModifier
+  MCFunction, Advancement, Predicate, Tag, LootTable, Recipe, ItemModifier,
 } = dataPack.basePath
 
 export { _ } from './init'
@@ -41,5 +41,6 @@ export * from './datapack/BasePath'
 export * from './datapack/Datapack'
 export type { LiteralUnion } from './generalTypes'
 export type {
-  AdvancementInstance, LootTableInstance, MCFunctionOptions, PredicateInstance, RecipeInstance, ResourceInstance, TagInstance, ItemModifierInstance
+  AdvancementInstance, ItemModifierInstance,
+  LootTableInstance, MCFunctionOptions, PredicateInstance, RecipeInstance, ResourceInstance, TagInstance,
 } from './resources'

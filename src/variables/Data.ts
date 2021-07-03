@@ -94,6 +94,7 @@ export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   select = (...path: DATA_PATH[]) => new DataPointInstance(this.datapack, this.type, this.currentTarget, path)
 
   toString = () => this.currentTarget
+
   toJSON = this.toString
 }
 

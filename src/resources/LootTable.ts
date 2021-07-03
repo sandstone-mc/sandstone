@@ -75,5 +75,6 @@ export class LootTableInstance extends ResourceInstance {
   replaceEntity = (entities: MultipleEntitiesArgument, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => this.datapack.commandsRoot.loot.replaceEntity(entities, slot, count).loot(this.name)
 
   toString = () => this.name
+
   toJSON = this.toString
 }

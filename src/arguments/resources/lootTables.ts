@@ -4,10 +4,10 @@ import type {
   ITEMS,
 } from 'src/arguments/generated'
 import type { LiteralUnion } from '@/generalTypes'
+import type { LootTableInstance, TagInstance } from '@resources'
 import type { NumberProvider } from './criteria'
+import type { ItemModifierFunction } from './itemModifier'
 import type { PredicateCondition } from './predicate'
-import { LootTableInstance, TagInstance } from '@resources'
-import { ItemModifierFunction } from './itemModifier'
 
 type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**

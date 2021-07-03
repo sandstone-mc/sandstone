@@ -3,9 +3,9 @@ import { CONFLICT_STRATEGIES } from '@/env'
 import { ResourceInstance } from './Resource'
 
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
+import type { CONTAINER_SLOTS, Coordinates, ItemModifierJSON } from '@arguments'
 import type { Datapack } from '@datapack'
-import { CONTAINER_SLOTS, Coordinates, ItemModifierJSON } from '@arguments'
-import { ENTITY_SLOTS, item, MultipleEntitiesArgument } from '..'
+import type { ENTITY_SLOTS, MultipleEntitiesArgument } from '..'
 
 export type ItemModifierOptions = {
   /**
@@ -36,7 +36,7 @@ export class ItemModifierInstance extends ResourceInstance {
        * @param slot The slot to apply the modifier to.
        */
       block: (pos: Coordinates, slot: CONTAINER_SLOTS) => {
-        item.modify.block(pos, slot, this)
+        this.commandsRoot.item.modify.block(pos, slot, this)
       },
       /**
        * @param targets The entity/entities containing the slot to apply the modifier to.
@@ -44,8 +44,8 @@ export class ItemModifierInstance extends ResourceInstance {
        * @param modifier The name of the modifier.
        */
       entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => {
-        item.modify.entity(targets, slot, this)
-      }
+        this.commandsRoot.item.modify.entity(targets, slot, this)
+      },
     }
   }
 }

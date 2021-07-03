@@ -4,8 +4,9 @@ import chalk from 'chalk'
 import { toMCFunctionName } from './minecraft'
 
 import type {
-  AdvancementJSON, LootTableJSON, PredicateJSON, RecipeJSON,
-  TAG_TYPES, TagSingleValue, ItemModifierJSON,
+  AdvancementJSON, ItemModifierJSON,
+  LootTableJSON, PredicateJSON, RecipeJSON,
+  TAG_TYPES, TagSingleValue,
 } from 'src/arguments'
 import type { CommandArgs } from './minecraft'
 

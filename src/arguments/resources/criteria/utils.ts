@@ -1,8 +1,11 @@
-import { ObjectiveClass } from "@variables";
-import { Score } from "@variables/Score";
+import { Score } from '@variables/Score'
 
-// Utility types
-// TODO: add docs
+import type { ObjectiveClass } from '@variables'
+
+/*
+ * Utility types
+ * TODO: add docs
+ */
 export type NumberProvider = number | {
   /** The maximum value. */
   max?: NumberProvider

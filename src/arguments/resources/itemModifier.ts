@@ -1,11 +1,14 @@
-import { LiteralUnion } from "@/generalTypes"
-import { JSONTextComponent, LootTableEntry } from "@arguments"
-import { BASIC_COLORS, MAP_ICONS } from "@arguments/basics"
-import { ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES } from "@arguments/generated"
-import { LootTableInstance } from "@resources"
-import { DataInstance } from "@variables/Data"
-import { NumberProvider } from "./criteria/utils"
-import { ObjectOrArray, PredicateCondition } from "./predicate"
+/* eslint-disable camelcase */
+import type { LiteralUnion } from '@/generalTypes'
+import type { JSONTextComponent, LootTableEntry } from '@arguments'
+import type { BASIC_COLORS, MAP_ICONS } from '@arguments/basics'
+import type {
+  ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES,
+} from '@arguments/generated'
+import type { LootTableInstance } from '@resources'
+import type { DataInstance } from '@variables/Data'
+import type { NumberProvider } from './criteria/utils'
+import type { ObjectOrArray, PredicateCondition } from './predicate'
 
 type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**

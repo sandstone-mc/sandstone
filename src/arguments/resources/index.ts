@@ -1,6 +1,6 @@
 export * from './advancement'
+export * from './itemModifier'
 export * from './lootTables'
 export * from './predicate'
 export * from './recipe'
 export * from './tag'
-export * from './itemModifier'

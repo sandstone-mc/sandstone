@@ -1,11 +1,11 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { ItemModifierInstance } from '@resources'
 import { coordinatesParser } from '@variables'
 
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument,
 } from 'src/arguments'
+import type { ItemModifierInstance } from '@resources'
 
 export class ItemSource extends Command {
   /**
