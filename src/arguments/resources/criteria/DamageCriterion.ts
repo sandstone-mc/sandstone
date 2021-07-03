@@ -1,5 +1,5 @@
 import type { EntityCriterion } from './EntityCriterion'
-import type { NumberOrMinMax } from './utils'
+import type { NumberProvider } from './utils'
 
 /* eslint-disable camelcase */
 export type DamageTypeCriterion = Partial<{
@@ -30,10 +30,10 @@ export type DamageCriterion = Partial<{
   blocked: boolean
 
   /** Checks the amount of incoming damage before damage reduction. */
-  dealt: NumberOrMinMax
+  dealt: NumberProvider
 
   /** Checks the amount of incoming damage after damage reduction. */
-  taken: NumberOrMinMax
+  taken: NumberProvider
 
   /** Checks the entity that was the source of the damage (for example: The skeleton that shot the arrow). */
   source_entity: EntityCriterion

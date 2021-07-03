@@ -1,5 +1,5 @@
 import type { GAMEMODES } from 'src/arguments/basics'
-import type { NumberOrMinMax } from './utils'
+import type { NumberProvider } from './utils'
 
 export type PlayerCriterion = Partial<{
   /** A map of advancements to check. */
@@ -9,7 +9,7 @@ export type PlayerCriterion = Partial<{
   gamemode: GAMEMODES
 
   /** The experience level of the player. */
-  level: NumberOrMinMax
+  level: NumberProvider
 
   /** Map of recipes to check. */
   recipes: Record<string, boolean>
@@ -44,6 +44,6 @@ export type PlayerCriterion = Partial<{
     stat: string
 
     /** The value of the statistic. */
-    value: NumberOrMinMax
+    value: NumberProvider
   }
 }>

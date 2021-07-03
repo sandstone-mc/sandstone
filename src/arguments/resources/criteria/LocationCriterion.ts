@@ -4,7 +4,7 @@ import type {
 } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { TagInstance } from '@resources'
-import type { NumberOrMinMax, PositionCriterion } from '.'
+import type { NumberProvider, PositionCriterion } from '.'
 
 export type LocationCriterion = Partial<{
     /** The biome the entity is currently in. */
@@ -22,7 +22,7 @@ export type LocationCriterion = Partial<{
         nbt: string
 
         /**  A map of block property names to values. Test will fail if the block doesn't match. */
-        state: Record<string, string | Omit<NumberOrMinMax, number>>
+        state: Record<string, string | Omit<NumberProvider, number>>
     }>
 
     /** The dimension the entity is currently in. */
@@ -58,11 +58,11 @@ export type LocationCriterion = Partial<{
         tag: string | TagInstance<'fluids'>
 
         /** A map of fluid property names to values. Test will fail if the fluid doesn't match. */
-        state: Record<string, string | Omit<NumberOrMinMax, number>>
+        state: Record<string, string | Omit<NumberProvider, number>>
     }>
 
     /** The light at the location. : The light level of visible light is calculated using: `max(sky-darkening, block)`. */
-    light: NumberOrMinMax
+    light: NumberProvider
 
     /** The position of the location. */
     position: PositionCriterion

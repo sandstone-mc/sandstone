@@ -1,4 +1,5 @@
 export * from './Advancement'
+export * from './ItemModifier'
 export * from './LootTable'
 export * from './MCFunctionClass'
 export * from './Predicate'

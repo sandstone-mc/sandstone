@@ -1,15 +1,16 @@
 import {
-  AdvancementInstance, LootTableInstance, MCFunctionClass, PredicateInstance, RecipeInstance, TagInstance,
+  AdvancementInstance, ItemModifierInstance, LootTableInstance, MCFunctionClass, PredicateInstance, RecipeInstance, TagInstance,
 } from '@resources'
 
 import type {
-  AdvancementJSON, HintedTagStringType, LootTableJSON, PredicateJSON, RecipeJSON, TAG_TYPES,
+  AdvancementJSON, HintedTagStringType, ItemModifierJSON,
+  LootTableJSON, PredicateJSON, RecipeJSON, TAG_TYPES,
   TagSingleValue,
 } from 'src/arguments'
 import type { HideFunctionProperties } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type {
-  AdvancementOptions, LootTableOptions, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
+  AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
 import type { SandstoneConfig } from '..'
 import type { MCFunctionInstance } from './Datapack'
@@ -64,6 +65,7 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
       onConflict.predicate ??= onConflict.default
       onConflict.recipe ??= onConflict.default
       onConflict.tag ??= onConflict.default
+      onConflict.itemModifier ??= onConflict.default
     }
 
     this.onConflict = onConflict
@@ -264,5 +266,10 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
   /** Create a tag. */
   Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T>>[] = [], replace?: boolean, options?: TagOptions) => (
     new TagInstance(this.datapack, type, this.getName(name), values, replace, { onConflict: this.onConflict?.tag, ...options })
+  )
+
+  /** Create an item modifier */
+  ItemModifier = (name: string, modifier: ItemModifierJSON, options?: ItemModifierOptions) => (
+    new ItemModifierInstance(this.datapack, this.getName(name), modifier, { onConflict: this.onConflict?.predicate, ...options })
   )
 }

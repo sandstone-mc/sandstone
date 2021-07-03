@@ -1,6 +1,5 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { toMCFunctionName } from '@datapack/minecraft'
 import { TagInstance } from '@resources/Tag'
 
 import type { TimeArgument } from 'src/arguments'

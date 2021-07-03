@@ -54,6 +54,18 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     return `${this.target} ${this.objective}`
   }
 
+  toJSON() {
+    return {
+      type: 'minecraft:score',
+      target: {
+        type: 'minecraft:fixed',
+        name: this.target.toString(),
+      },
+      score: this.objective.toString(),
+      scale: 1,
+    } as const
+  }
+
   protected _toChatComponent(): JSONTextComponent {
     return {
       score: { name: this.target, objective: this.objective.name },

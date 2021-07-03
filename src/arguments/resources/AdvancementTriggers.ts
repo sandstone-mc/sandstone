@@ -10,7 +10,7 @@ import type {
   EntityCriterion,
   ItemCriterion,
   LocationCriterion,
-  NumberOrMinMax,
+  NumberProvider,
   PlayerCriterion,
   PotionIdCriterion,
   SlotCriterion,
@@ -206,7 +206,7 @@ export type AdvancementTriggers = (
     item: ItemCriterion
 
     /** The levels spent by the player on the enchantment. */
-    levels: NumberOrMinMax
+    levels: NumberProvider
   }> | Trigger<'minecraft:entity_hurt_player', {
     /** Checks the damage done to the player. */
     damage: DamageCriterion
@@ -238,9 +238,9 @@ export type AdvancementTriggers = (
     slots: SlotCriterion
   }> | Trigger<'minecraft:item_durability_changed', {
     /** The change in durability (negative numbers are used to indicate a decrease in durability). */
-    delta: NumberOrMinMax
+    delta: NumberProvider
     /** The remaining durability of the item. */
-    durability: NumberOrMinMax
+    durability: NumberProvider
     /** The item before it was damaged, allows you to check the durability before the item was damaged. */
     item: ItemCriterion
   }> | Trigger<'minecraft:item_used_on_block', {
@@ -250,14 +250,14 @@ export type AdvancementTriggers = (
     item: ItemCriterion
   }> | Trigger<'minecraft:killed_by_crossbow', {
     /** The count of types of entities killed. */
-    unique_entity_types: NumberOrMinMax
+    unique_entity_types: NumberProvider
     /** A predicate for any of the killed entities. */
     victims: EntityCriterion
   }> | Trigger<'minecraft:levitation', {
     /** The distance of levitation. */
     distance: DistanceCriterion
     /** The duration of the levitation in ticks. */
-    duration: NumberOrMinMax
+    duration: NumberProvider
   }> | Trigger<'minecraft:location', {
     /** The location of the player. */
     location: LocationCriterion
@@ -331,7 +331,7 @@ export type AdvancementTriggers = (
   // eslint-disable-next-line @typescript-eslint/ban-types
   }> | Trigger<'minecraft:tick', undefined> | Trigger<'minecraft:used_ender_eye', {
     /** The horizontal distance between the player and the stronghold. */
-    distance: NumberOrMinMax
+    distance: NumberProvider
   }> | Trigger<'minecraft:used_totem', {
     /** The item, only works with totem items. */
     item: ItemCriterion
