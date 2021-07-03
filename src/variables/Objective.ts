@@ -26,6 +26,7 @@ export class ObjectiveClass<CRITERION extends string | undefined = string | unde
   toString() {
     return this.name
   }
+  toJSON = this.toString
 
   ScoreHolder = (scoreHolder: MultipleEntitiesArgument): Score<CRITERION> => new Score<CRITERION>(this.commandsRoot, scoreHolder.toString(), this)
 }

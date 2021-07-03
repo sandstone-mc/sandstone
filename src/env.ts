@@ -1,5 +1,5 @@
 import type {
-  AdvancementOptions, LootTableOptions, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
+  AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
 import type { BASIC_CONFLICT_STRATEGIES } from './generalTypes'
 
@@ -37,6 +37,7 @@ export const CONFLICT_STRATEGIES: {
   PREDICATE: NonNullable<PredicateOptions['onConflict']>,
   RECIPE: NonNullable<RecipeOptions['onConflict']>,
   TAG: NonNullable<TagOptions['onConflict']>,
+  ITEM_MODIFIER: NonNullable<ItemModifierOptions['onConflict']>,
 } = {
   DEFAULT: DEFAULT_STRATEGY,
   GENERAL: GENERAL_STRATEGY,
@@ -46,6 +47,7 @@ export const CONFLICT_STRATEGIES: {
   PREDICATE: GENERAL_STRATEGY,
   RECIPE: GENERAL_STRATEGY,
   TAG: GENERAL_STRATEGY,
+  ITEM_MODIFIER: GENERAL_STRATEGY,
 }
 
 function isBasic(strategy?: string): strategy is BASIC_CONFLICT_STRATEGIES {

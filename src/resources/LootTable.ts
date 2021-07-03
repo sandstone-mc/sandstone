@@ -73,4 +73,7 @@ export class LootTableInstance extends ResourceInstance {
    * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
    */
   replaceEntity = (entities: MultipleEntitiesArgument, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => this.datapack.commandsRoot.loot.replaceEntity(entities, slot, count).loot(this.name)
+
+  toString = () => this.name
+  toJSON = this.toString
 }

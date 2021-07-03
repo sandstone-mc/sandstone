@@ -2,14 +2,14 @@
 import type { ITEMS } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { TagInstance } from '@resources'
-import type { EnchantmentCriterion, NumberOrMinMax } from '.'
+import type { EnchantmentCriterion, NumberProvider } from '.'
 
 export type ItemCriterion = Partial<{
   /** Amount of the item. */
-  count: NumberOrMinMax
+  count: NumberProvider
 
   /** The durability of the item. */
-  durability: NumberOrMinMax
+  durability: NumberProvider
 
   /** List of enchantments.  */
   enchantments: EnchantmentCriterion[]

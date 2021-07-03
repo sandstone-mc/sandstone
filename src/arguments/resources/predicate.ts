@@ -3,7 +3,7 @@ import type { BLOCKS, ENCHANTMENTS } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   DamageCriterion, EntityCriterion, ItemCriterion, LocationCriterion,
-  NumberOrMinMax,
+  NumberProvider,
 } from './criteria'
 
 type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> = {
@@ -99,7 +99,7 @@ export type PredicateCondition = (
        *   }
        * }
        */
-      scores: Record<string, NumberOrMinMax>
+      scores: Record<string, NumberProvider>
   }> | PredicateKind<'minecraft:inverted', {
       /** The condition to be negated. */
       term: PredicateJSON
@@ -141,7 +141,7 @@ export type PredicateCondition = (
       chances: number[]
   }> | PredicateKind<'minecraft:time_check', {
       /** The time value in ticks. */
-      value: NumberOrMinMax
+      value: NumberProvider
 
       /**
        * If present, time gets modulo-divided by this value.

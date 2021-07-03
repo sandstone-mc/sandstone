@@ -5,7 +5,7 @@ import { toMCFunctionName } from './minecraft'
 
 import type {
   AdvancementJSON, LootTableJSON, PredicateJSON, RecipeJSON,
-  TAG_TYPES, TagSingleValue,
+  TAG_TYPES, TagSingleValue, ItemModifierJSON,
 } from 'src/arguments'
 import type { CommandArgs } from './minecraft'
 
@@ -55,6 +55,9 @@ export type LootTableResource = FolderOrFile<LootTableProperties>
 type RecipeProperties = { recipe: RecipeJSON<string, string, string> }
 export type RecipeResource = FolderOrFile<RecipeProperties>
 
+type ItemModifierProperties = { modifier: ItemModifierJSON }
+export type ItemModifierResource = FolderOrFile<ItemModifierProperties>
+
 /**
  * Given a resource names, returns the type of resource
  */
@@ -65,6 +68,7 @@ export type ResourceTypeMap = {
   predicates: PredicateResource
   loot_tables: LootTableResource
   recipes: RecipeResource
+  item_modifiers: ItemModifierResource
 }
 
 export type ResourceOnlyTypeMap = {
@@ -74,6 +78,7 @@ export type ResourceOnlyTypeMap = {
   predicates: File<PredicateProperties>
   loot_tables: File<LootTableProperties>
   recipes: File<RecipeProperties>
+  item_modifiers: File<ItemModifierProperties>
 }
 
 /**
@@ -112,6 +117,7 @@ export class ResourcesTree {
       predicates: new Map(),
       loot_tables: new Map(),
       recipes: new Map(),
+      item_modifiers: new Map(),
     }
 
     this.namespaces.set(name, namespaceResource)

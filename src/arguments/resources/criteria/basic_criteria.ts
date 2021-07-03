@@ -2,36 +2,36 @@ import type {
   BLOCKS, DIMENSION_TYPES, ENCHANTMENTS, MOB_EFFECTS,
 } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
-import type { NumberOrMinMax } from './utils'
+import type { NumberProvider } from './utils'
 
 // All the possible criteria
 export type BlockIdCriterion = LiteralUnion<BLOCKS>
 
 export type SlotCriterion = Partial<{
   /** The amount of slots empty in the inventory. */
-  empty: NumberOrMinMax
+  empty: NumberProvider
 
   /** The amount of slots completely filled (stacksize) in the inventory. */
-  full: NumberOrMinMax
+  full: NumberProvider
 
   /** The amount of slots occupied in the inventory. */
-  occupied: NumberOrMinMax
+  occupied: NumberProvider
 }>
 
 export type PositionCriterion = Partial<{
   /** The X-axis position. */
-  x: NumberOrMinMax
+  x: NumberProvider
 
   /** The Y-axis position. */
-  y: NumberOrMinMax
+  y: NumberProvider
 
   /** The Z-axis position. */
-  z: NumberOrMinMax
+  z: NumberProvider
 }>
 
 export type DistanceCriterion = Partial<{
-  absolute: NumberOrMinMax
-  horizontal: NumberOrMinMax
+  absolute: NumberProvider
+  horizontal: NumberProvider
 }> & PositionCriterion
 
 export type EnchantmentCriterion = {
@@ -39,7 +39,7 @@ export type EnchantmentCriterion = {
   enchantment: LiteralUnion<ENCHANTMENTS>
 
   /** The level of the enchantment. */
-  levels: NumberOrMinMax
+  levels: NumberProvider
 }
 
 export type PotionIdCriterion = string
@@ -50,7 +50,7 @@ export type DimensionCriterion = LiteralUnion<DIMENSION_TYPES>
 // @ts-expect-error
 export type EffectCriterion = Partial<Record<LiteralUnion<MOB_EFFECTS>, {
   /** The effect amplifier. */
-  amplifier?: NumberOrMinMax
+  amplifier?: NumberProvider
   /** The effect duration in ticks. */
-  duration?: NumberOrMinMax
+  duration?: NumberProvider
 }>>
