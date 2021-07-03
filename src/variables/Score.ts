@@ -59,11 +59,11 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
       type: 'minecraft:score',
       target: {
         type: 'minecraft:fixed',
-        name: this.target.toString()
+        name: this.target.toString(),
       },
       score: this.objective.toString(),
-      scale: 1
-    }
+      scale: 1,
+    } as const
   }
 
   protected _toChatComponent(): JSONTextComponent {
