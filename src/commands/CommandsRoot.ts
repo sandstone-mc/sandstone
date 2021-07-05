@@ -32,7 +32,7 @@ import type {
   SOUND_EVENTS,
   SOUND_SOURCES,
   STRUCTURES,
-} from 'src/arguments'
+} from '@arguments'
 import type * as commands from '@/commandsOnly'
 import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
 import type Datapack from '@datapack/Datapack'

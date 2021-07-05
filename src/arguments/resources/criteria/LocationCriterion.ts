@@ -1,7 +1,7 @@
 import type {
   BIOMES, BLOCKS, DIMENSION_TYPES, FLUIDS,
   STRUCTURES,
-} from 'src/arguments'
+} from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { TagInstance } from '@resources'
 import type { NumberProvider, PositionCriterion } from '.'

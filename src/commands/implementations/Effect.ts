@@ -2,7 +2,7 @@ import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { validateIntegerRange } from '@commands/validators'
 
-import type { MOB_EFFECTS, MultipleEntitiesArgument } from 'src/arguments'
+import type { MOB_EFFECTS, MultipleEntitiesArgument } from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 
 /** Add or remove status effects on players and other entities. */

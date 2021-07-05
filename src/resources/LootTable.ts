@@ -4,7 +4,7 @@ import { ResourceInstance } from './Resource'
 
 import type {
   Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
-} from 'src/arguments'
+} from '@arguments'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 

@@ -6,7 +6,7 @@ import type {
   AdvancementJSON, HintedTagStringType, ItemModifierJSON,
   LootTableJSON, PredicateJSON, RecipeJSON, TAG_TYPES,
   TagSingleValue,
-} from 'src/arguments'
+} from '@arguments'
 import type { HideFunctionProperties } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type {

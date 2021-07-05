@@ -7,7 +7,7 @@ import type {
   AdvancementJSON, ItemModifierJSON,
   LootTableJSON, PredicateJSON, RecipeJSON,
   TAG_TYPES, TagSingleValue,
-} from 'src/arguments'
+} from '@arguments'
 import type { CommandArgs } from './minecraft'
 
 export type ResourcePath = readonly [namespace: string, ...path: string[]]

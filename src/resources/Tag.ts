@@ -6,7 +6,7 @@ import { ResourceInstance } from './Resource'
 import type {
   HintedTagStringType, TAG_TYPES,
   TagJSON, TagSingleValue,
-} from 'src/arguments'
+} from '@arguments'
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type { MCFunctionInstance } from '@datapack/Datapack'

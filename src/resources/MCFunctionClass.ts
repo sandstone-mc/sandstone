@@ -2,7 +2,7 @@ import * as util from 'util'
 import { CONFLICT_STRATEGIES } from '@/env'
 import { isPromise } from '@/utils'
 
-import type { TimeArgument } from 'src/arguments'
+import type { TimeArgument } from '@arguments'
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
 import type { Datapack } from '@datapack'
 import type { MCFunctionInstance } from '@datapack/Datapack'

@@ -8,7 +8,7 @@ import { CombinedConditions, getConditionScore } from './conditions'
 
 import type {
   BLOCKS, Coordinates, SingleEntityArgument,
-} from 'src/arguments'
+} from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'

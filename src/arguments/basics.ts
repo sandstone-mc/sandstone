@@ -1,4 +1,4 @@
-import type { MultipleEntitiesArgument } from 'src/arguments'
+import type { MultipleEntitiesArgument } from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'

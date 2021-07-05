@@ -6,8 +6,8 @@ import { command } from '../decorators'
 import type {
   JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
   ObjectiveArgument, OPERATORS,
-} from 'src/arguments'
-import type { DISPLAY_SLOTS } from 'src/arguments/displaySlots'
+} from '@arguments'
+import type { DISPLAY_SLOTS } from '@arguments/displaySlots'
 import type { LiteralUnion } from '@/generalTypes'
 
 function objectiveCmd(subcommand: string) {

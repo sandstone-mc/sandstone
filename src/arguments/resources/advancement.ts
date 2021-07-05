@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import type { ITEMS, JSONTextComponent, RootNBT } from 'src/arguments'
+import type { ITEMS, JSONTextComponent, RootNBT } from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { AdvancementInstance } from '@resources'

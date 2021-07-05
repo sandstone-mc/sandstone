@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import type { BLOCKS, ENCHANTMENTS } from 'src/arguments'
+import type { BLOCKS, ENCHANTMENTS } from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   DamageCriterion, EntityCriterion, ItemCriterion, LocationCriterion,

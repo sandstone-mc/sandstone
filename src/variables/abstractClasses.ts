@@ -1,4 +1,4 @@
-import type { JSONTextComponent } from 'src/arguments/jsonTextComponent'
+import type { JSONTextComponent } from '@arguments/jsonTextComponent'
 
 export class ComponentClass {
   protected _toChatComponent(): JSONTextComponent {

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import type { ITEMS } from 'src/arguments'
+import type { ITEMS } from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type {
   BlockIdCriterion,

@@ -61,7 +61,7 @@
     "url": "git+https://github.com/TheMrZZ/sandstone.git"
   },
   "scripts": {
-    "build": "node scripts/clean.js && npm run fast-build",
+    "build": "tsc --noEmit && node scripts/clean.js && npm run fast-build",
     "fast-build": "ttsc && node scripts/setupPackage.js",
     "build-pack": "npm run fast-build && cd dist && npm pack",
     "watch": "nodemon --watch src --watch tests -e js,ts --exec \"npm run fast-build\" --pretty",

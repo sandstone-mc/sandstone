@@ -10,7 +10,7 @@ import { toMCFunctionName } from './minecraft'
 import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
-import type { JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument } from 'src/arguments'
+import type { JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument } from '@arguments'
 import type {
   BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion, OmitFirst,
 } from '@/generalTypes'

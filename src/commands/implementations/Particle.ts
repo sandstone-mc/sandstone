@@ -3,10 +3,10 @@ import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { arrayToArgsParser } from '@variables'
 
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
-} from 'src/arguments'
-import type { LiteralUnion } from '@/generalTypes'
+} from '@arguments'
 
 // This command is fucking hell
 

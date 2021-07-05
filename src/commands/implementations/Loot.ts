@@ -6,7 +6,7 @@ import { coordinatesParser } from '@variables'
 import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
-} from 'src/arguments'
+} from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 
 class LootSource extends Command {

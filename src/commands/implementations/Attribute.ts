@@ -1,7 +1,7 @@
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { SelectorArgument, SingleEntityArgument } from 'src/arguments'
+import type { SelectorArgument, SingleEntityArgument } from '@arguments'
 
 export class AttributeOperation extends Command {
   /**

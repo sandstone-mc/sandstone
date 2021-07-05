@@ -7,7 +7,7 @@ import { ComponentClass } from './abstractClasses'
 
 import type {
   ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
-} from 'src/arguments'
+} from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { PredicateInstance } from '@resources'
 import type { LiteralUnion } from '../generalTypes'

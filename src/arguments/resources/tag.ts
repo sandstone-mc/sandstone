@@ -1,7 +1,7 @@
 import type {
   BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS,
-} from 'src/arguments'
-import type { TAG_TYPES } from 'src/arguments/basics'
+} from '@arguments'
+import type { TAG_TYPES } from '@arguments/basics'
 import type { LiteralUnion } from '@/generalTypes'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 

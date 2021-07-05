@@ -1,6 +1,6 @@
 import type {
   BLOCKS, DIMENSION_TYPES, ENCHANTMENTS, MOB_EFFECTS,
-} from 'src/arguments'
+} from '@arguments'
 import type { LiteralUnion } from '@/generalTypes'
 import type { NumberProvider } from './utils'
 

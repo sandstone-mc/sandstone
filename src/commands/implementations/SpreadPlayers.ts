@@ -3,7 +3,7 @@ import { coordinatesParser } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { ColumnCoordinates, MultipleEntitiesArgument } from 'src/arguments'
+import type { ColumnCoordinates, MultipleEntitiesArgument } from '@arguments'
 
 export class SpreadPlayers extends Command {
   @command('spreadplayers', {
