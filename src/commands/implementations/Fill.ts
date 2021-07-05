@@ -2,8 +2,8 @@ import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { coordinatesParser } from '@variables'
 
-import type { BLOCKS, Coordinates } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
+import type { BLOCKS, Coordinates } from '@arguments'
 
 export class FillArguments extends Command {
   /**

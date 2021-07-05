@@ -2,8 +2,8 @@ import { CONFLICT_STRATEGIES } from '@/env'
 
 import { ResourceInstance } from './Resource'
 
-import type { PredicateJSON } from 'src/arguments'
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
+import type { PredicateJSON } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables'
 

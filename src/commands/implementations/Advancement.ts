@@ -1,8 +1,8 @@
-import { MultipleEntitiesArgument } from 'src/arguments'
+import { MultipleEntitiesArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
-import type { MultiplePlayersArgument } from 'src/arguments'
+import type { MultiplePlayersArgument } from '@arguments'
 import type { AdvancementInstance } from '@resources'
 
 class AdvancementArguments extends Command {

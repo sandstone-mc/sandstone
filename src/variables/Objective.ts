@@ -1,7 +1,7 @@
 import { JSONTextComponentClass } from './JSONTextComponentClass'
 import { Score } from './Score'
 
-import type { JSONTextComponent, MultipleEntitiesArgument } from 'src/arguments'
+import type { JSONTextComponent, MultipleEntitiesArgument } from '@arguments'
 import type { CommandsRoot } from '@commands'
 
 export class ObjectiveClass<CRITERION extends string | undefined = string | undefined> {

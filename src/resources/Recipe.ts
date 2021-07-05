@@ -2,8 +2,8 @@ import { CONFLICT_STRATEGIES } from '@/env'
 
 import { ResourceInstance } from './Resource'
 
-import type { MultiplePlayersArgument, RecipeJSON } from 'src/arguments'
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
+import type { MultiplePlayersArgument, RecipeJSON } from '@arguments'
 import type { Datapack } from '@datapack'
 
 export type RecipeOptions = {

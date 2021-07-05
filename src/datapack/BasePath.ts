@@ -2,12 +2,12 @@ import {
   AdvancementInstance, ItemModifierInstance, LootTableInstance, MCFunctionClass, PredicateInstance, RecipeInstance, TagInstance,
 } from '@resources'
 
+import type { HideFunctionProperties } from '@/generalTypes'
 import type {
   AdvancementJSON, HintedTagStringType, ItemModifierJSON,
   LootTableJSON, PredicateJSON, RecipeJSON, TAG_TYPES,
   TagSingleValue,
-} from 'src/arguments'
-import type { HideFunctionProperties } from '@/generalTypes'
+} from '@arguments'
 import type { Datapack } from '@datapack'
 import type {
   AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,

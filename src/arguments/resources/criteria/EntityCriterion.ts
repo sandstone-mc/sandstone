@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import type { ENTITY_TYPES, MOB_EFFECTS } from 'src/arguments/generated'
 import type { LiteralUnion } from '@/generalTypes'
+import type { ENTITY_TYPES, MOB_EFFECTS } from '@arguments/generated'
 import type { TagInstance } from '@resources'
 import type { DistanceCriterion, EffectCriterion } from './basic_criteria'
 import type { ItemCriterion } from './ItemCriterion'

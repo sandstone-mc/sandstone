@@ -2,7 +2,7 @@ import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { TagInstance } from '@resources/Tag'
 
-import type { TimeArgument } from 'src/arguments'
+import type { TimeArgument } from '@arguments'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 
 function isMCFunctionInstance(callback: () => (void | Promise<void>)): callback is MCFunctionInstance {

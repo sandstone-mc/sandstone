@@ -1,8 +1,8 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
-import type { TimeArgument } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
+import type { TimeArgument } from '@arguments'
 
 /**
  * Changes or queries the world's game time.

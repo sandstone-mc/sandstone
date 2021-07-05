@@ -3,8 +3,8 @@ import { coordinatesParser, VectorClass } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { BLOCKS, Coordinates } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
+import type { BLOCKS, Coordinates } from '@arguments'
 
 export class CloneOptions extends Command {
   /**

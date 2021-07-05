@@ -6,7 +6,7 @@ import {
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
 
-import type { JSONTextComponent } from 'src/arguments'
+import type { JSONTextComponent } from '@arguments'
 import type {
   ResourceOnlyTypeMap,
   ResourcesTree,

@@ -3,12 +3,12 @@ import { JSONTextComponentClass } from '@variables'
 import { Command } from '../Command'
 import { command } from '../decorators'
 
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
   ObjectiveArgument, OPERATORS,
-} from 'src/arguments'
-import type { DISPLAY_SLOTS } from 'src/arguments/displaySlots'
-import type { LiteralUnion } from '@/generalTypes'
+} from '@arguments'
+import type { DISPLAY_SLOTS } from '@arguments/displaySlots'
 
 function objectiveCmd(subcommand: string) {
   return ['scoreboard', 'objectives', subcommand]

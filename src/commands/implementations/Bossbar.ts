@@ -1,11 +1,11 @@
-import { MultipleEntitiesArgument } from 'src/arguments'
+import { MultipleEntitiesArgument } from '@arguments'
 import { JSONTextComponentClass } from '@variables'
 
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
+import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from '@arguments'
 
 export class Bossbar extends Command {
   /**

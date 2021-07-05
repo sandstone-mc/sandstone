@@ -1,4 +1,4 @@
-import type { GAMEMODES } from 'src/arguments/basics'
+import type { GAMEMODES } from '@arguments/basics'
 import type { NumberProvider } from './utils'
 
 export type PlayerCriterion = Partial<{

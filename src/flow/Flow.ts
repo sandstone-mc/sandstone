@@ -6,10 +6,10 @@ import { Score } from '@variables/Score'
 
 import { CombinedConditions, getConditionScore } from './conditions'
 
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, Coordinates, SingleEntityArgument,
-} from 'src/arguments'
-import type { LiteralUnion } from '@/generalTypes'
+} from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'

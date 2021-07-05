@@ -1,7 +1,7 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
-import type { ObjectiveArgument } from 'src/arguments'
+import type { ObjectiveArgument } from '@arguments'
 
 export class TriggerArguments extends Command {
     /**

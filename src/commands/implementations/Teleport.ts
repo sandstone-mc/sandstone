@@ -5,7 +5,7 @@ import { command } from '../decorators'
 
 import type {
   Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument,
-} from 'src/arguments'
+} from '@arguments'
 
 export class TeleportFacing extends Command {
   /**

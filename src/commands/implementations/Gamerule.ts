@@ -1,8 +1,8 @@
 import { Command } from '../Command'
 import { command } from '../decorators'
 
-import type { GAMERULES } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
+import type { GAMERULES } from '@arguments'
 
 export class GameruleCommand extends Command {
   /**

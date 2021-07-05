@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
-import type { MAP_ICONS } from 'src/arguments/basics'
+import type { LiteralUnion } from '@/generalTypes'
+import type { MAP_ICONS } from '@arguments/basics'
 import type {
   ITEMS,
-} from 'src/arguments/generated'
-import type { LiteralUnion } from '@/generalTypes'
+} from '@arguments/generated'
 import type { LootTableInstance, TagInstance } from '@resources'
 import type { NumberProvider } from './criteria'
 import type { ItemModifierFunction } from './itemModifier'

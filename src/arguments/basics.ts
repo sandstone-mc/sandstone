@@ -1,5 +1,5 @@
-import type { MultipleEntitiesArgument } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
+import type { MultipleEntitiesArgument } from '@arguments'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`

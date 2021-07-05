@@ -1,8 +1,8 @@
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   BLOCKS, ENTITY_TYPES, FLUIDS, ITEMS,
-} from 'src/arguments'
-import type { TAG_TYPES } from 'src/arguments/basics'
-import type { LiteralUnion } from '@/generalTypes'
+} from '@arguments'
+import type { TAG_TYPES } from '@arguments/basics'
 import type { MCFunctionInstance } from '@datapack/Datapack'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (

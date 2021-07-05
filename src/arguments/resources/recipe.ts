@@ -1,5 +1,5 @@
-import type { ITEMS } from 'src/arguments/generated'
 import type { LiteralUnion } from '@/generalTypes'
+import type { ITEMS } from '@arguments/generated'
 import type { TagInstance } from '@resources'
 
 /**

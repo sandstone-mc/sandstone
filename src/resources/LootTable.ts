@@ -2,10 +2,10 @@ import { CONFLICT_STRATEGIES } from '@/env'
 
 import { ResourceInstance } from './Resource'
 
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from '@/generalTypes'
 import type {
   Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
-} from 'src/arguments'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from '@/generalTypes'
+} from '@arguments'
 import type { Datapack } from '@datapack'
 
 export type LootTableOptions = {

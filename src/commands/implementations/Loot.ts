@@ -3,11 +3,11 @@ import { command } from '@commands/decorators'
 import { validateIntegerRange } from '@commands/validators'
 import { coordinatesParser } from '@variables'
 
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
-} from 'src/arguments'
-import type { LiteralUnion } from '@/generalTypes'
+} from '@arguments'
 
 class LootSource extends Command {
   /**

@@ -2,8 +2,8 @@ import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { validateIntegerRange } from '@commands/validators'
 
-import type { ENCHANTMENTS, MultipleEntitiesArgument } from 'src/arguments'
 import type { LiteralUnion } from '@/generalTypes'
+import type { ENCHANTMENTS, MultipleEntitiesArgument } from '@arguments'
 
 export class Enchant extends Command {
   /**

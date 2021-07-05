@@ -1,4 +1,4 @@
-import type { JSONTextComponent } from 'src/arguments'
+import type { JSONTextComponent } from '@arguments'
 
 export class JSONTextComponentClass {
   jsonTextComponent: JSONTextComponent

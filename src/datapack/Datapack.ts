@@ -10,10 +10,10 @@ import { toMCFunctionName } from './minecraft'
 import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
-import type { JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument } from 'src/arguments'
 import type {
   BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion, OmitFirst,
 } from '@/generalTypes'
+import type { JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument } from '@arguments'
 import type {
   AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'

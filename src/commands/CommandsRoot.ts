@@ -13,6 +13,8 @@ import {
   FunctionCommand, GameruleCommand, Item, Loot, Particle, RecipeCommand, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
 } from './implementations'
 
+import type * as commands from '@/commandsOnly'
+import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
 import type {
   BIOMES,
   BLOCKS,
@@ -32,9 +34,7 @@ import type {
   SOUND_EVENTS,
   SOUND_SOURCES,
   STRUCTURES,
-} from 'src/arguments'
-import type * as commands from '@/commandsOnly'
-import type { AtLeastOne, LiteralUnion } from '@/generalTypes'
+} from '@arguments'
 import type Datapack from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import type { TagInstance } from '@resources'

@@ -4,7 +4,7 @@ import { coordinatesParser } from '@variables'
 
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument,
-} from 'src/arguments'
+} from '@arguments'
 import type { ItemModifierInstance } from '@resources'
 
 export class ItemSource extends Command {
