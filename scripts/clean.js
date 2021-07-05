@@ -5,4 +5,4 @@ const fs = require('fs');
 
 distDir = __dirname + '/../dist'
 
-fs.rmdirSync(distDir, { recursive: true })
+fs.rmSync(distDir, { recursive: true })
