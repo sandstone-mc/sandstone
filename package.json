@@ -39,7 +39,7 @@
     "lib": "src"
   },
   "engines": {
-    "node": ">=12.9.0"
+    "node": ">=12.22.3"
   },
   "homepage": "https://sandstone.dev",
   "keywords": [
