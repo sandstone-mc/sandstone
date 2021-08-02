@@ -62,7 +62,6 @@ function callOrInlineFunction(datapack: Datapack, callbackFunction: FunctionReso
       datapack.resources.deleteResource(callbackFunction.path, 'functions')
     }
 
-    console.log('Commands length:', commands.length)
     if (commands.length) {
       if (commands.length === 2 && forceInlineScore) {
         // If we have 2 commands, add the execute store
