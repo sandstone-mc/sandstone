@@ -404,30 +404,11 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   @command(['unless', 'blocks'], executeConfig)
   private unlessBlocks: IfsAndUnlesses<T, this>['ifBlocks'] = (...args: unknown[]) => this
 
-  private ifData = (): IfsAndUnlesses<T, this>['ifData'] => {
+  private ifUnlessData = (ifUnless: 'if' | 'unless'): IfsAndUnlesses<T, this>['ifData'] => {
     if (!this.commandsRoot.arguments.length) {
       this.commandsRoot.arguments.push('execute')
     }
-    this.commandsRoot.arguments.push('if', 'data')
-
-    if (isRealCommandsRoot(this.commandsRoot)) {
-      this.commandsRoot.executable = true
-      this.commandsRoot.executeState = 'inside'
-    }
-
-    const result = (data: DataPointInstance) => {
-      this.commandsRoot.arguments.push(data.type, data.currentTarget, data.path)
-      return this
-    }
-
-    return Object.assign(result, new ExecuteIfData(this as unknown as InferExecute<T>))
-  }
-
-  private unlessData = (): IfsAndUnlesses<T, this>['ifData'] => {
-    if (!this.commandsRoot.arguments.length) {
-      this.commandsRoot.arguments.push('execute')
-    }
-    this.commandsRoot.arguments.push('unless', 'data')
+    this.commandsRoot.arguments.push(ifUnless, 'data')
 
     if (isRealCommandsRoot(this.commandsRoot)) {
       this.commandsRoot.executable = true
@@ -502,7 +483,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     )
 
     Object.defineProperty(result, 'data', {
-      get: this.ifData,
+      get: () => this.ifUnlessData('if'),
     })
     return result
   }
@@ -530,7 +511,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
     })
 
     Object.defineProperty(result, 'data', {
-      get: this.unlessData,
+      get: () => this.ifUnlessData('unless'),
     })
 
     return result
