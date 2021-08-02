@@ -98,13 +98,10 @@ export class Schedule extends Command {
 
     const [func, delay, type] = args as [ScheduledFunction, TimeArgument, 'append' | 'replace']
 
-    if (typeof func === 'string' || func instanceof TagInstance) {
+    if (typeof func === 'string' || func instanceof TagInstance || isMCFunctionInstance(func)) {
       // If a string/tag has been given simply schedule it
       this.commandsRoot.arguments.push('schedule', 'function', func, delay, type)
       this.commandsRoot.register()
-    } else if (isMCFunctionInstance(func)) {
-      // If a MCFunction has been given, use the builtin schedule
-      func.schedule(delay as string, type as any)
     } else {
       // If a nameless callback has been given, create a child function & schedule it
       scheduleCallback('_schedule', func as () => (void | Promise<void>), delay, type, true)
