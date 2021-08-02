@@ -489,7 +489,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   }
 
   /** Checks if the given conditions is not met. */
-  get unless(): Execute<T>['if'] {
+  get unless(): ((condition: ConditionClass) => this) & IfType<T, this> {
     const func = (condition: ConditionClass) => {
       const args = condition._toMinecraftCondition().value
       if (args[0] === 'if') {
