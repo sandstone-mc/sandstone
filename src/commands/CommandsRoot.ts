@@ -143,11 +143,14 @@ export class CommandsRoot {
   /**
    * Adds a comment, starting with a `# `, to the function.
    */
-  @command([], { isRoot: true, registerArguments: false })
-  comment = (...comments: unknown[]) => {
-    const fullComment = comments.join(' ').split('\n').map((line) => `# ${line}`).join('\n')
-    this.commandsRoot.arguments.push(fullComment)
-  }
+  @command([], {
+    isRoot: true,
+    registerArguments: false,
+    parsers: (comments) => [
+      comments.join(' ').split('\n').map((line) => `# ${line}`).join('\n'),
+    ],
+  })
+  comment = (...comments: unknown[]) => {}
 
   // data command //
   data = new DataCommand(this)
@@ -363,8 +366,15 @@ export class CommandsRoot {
    * The game replaces entity selectors in the message with the list of selected entities' names, which is formatted as "name1 and name2" for two entities,
    * or "name1, name2, ... and namen" for n entities.
    */
-  @command('say', { isRoot: true, parsers: (args) => [JSON.stringify(args.join(' '))] })
-  say = (...messages: MessageOrSelector[]) => { }
+  @command('say', { isRoot: true, parsers: (args) => [args.join(' ')] })
+  say = (...messages: MessageOrSelector[]) => {
+    // If any message contains a newline, throw an error
+    for (const message of messages) {
+      if (message.toString().includes('\n')) {
+        throw new Error('The message cannot contain newlines.')
+      }
+    }
+  }
 
   // schedule command //
   schedule = new Schedule(this)
