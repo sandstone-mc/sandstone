@@ -588,6 +588,7 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
           callbackName: fallbackName,
           initialCondition: false,
           loopCondition: false,
+          mightHaveRemainingArguments: true,
         })
       }
     }) as any

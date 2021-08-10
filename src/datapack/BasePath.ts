@@ -219,10 +219,10 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
    * @param name The name of the function.
    * @param callback A callback containing the commands you want in the Minecraft Function.
    */
-  MCFunction = <RETURN extends void | Promise<void>>(
-    name: string, callback: () => RETURN, options?: MCFunctionOptions,
+  MCFunction = <RETURN extends void | Promise<void>, _ extends RETURN = RETURN>(
+    name: string, callback: (this: MCFunctionInstance<_>) => RETURN, options?: MCFunctionOptions,
   ): MCFunctionInstance<RETURN> => {
-    const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback, {
+    const mcfunction = new MCFunctionClass(this.datapack, this.getName(name), callback as any, {
       onConflict: this.onConflict?.mcFunction, ...options,
     })
 
@@ -238,6 +238,7 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
     // Set all properties, except for "name"
     const { name: _, ...mcfunctionClone } = mcfunction
     Object.assign(returnFunction, mcfunctionClone)
+    mcfunction.callback = callback.bind(returnFunction)
 
     return returnFunction
   }

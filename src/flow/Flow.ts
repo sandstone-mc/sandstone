@@ -90,6 +90,7 @@ type FlowStatementConfig = {
   callbackName: string
   absoluteName?: string
   forceInlineScore?: Score
+  mightHaveRemainingArguments?: boolean
 } & (
   {
     initialCondition: false,
@@ -218,11 +219,17 @@ export class Flow {
      * Sometimes, there are a few arguments left inside the commandsRoot (for execute.run mostly).
      * Keep them aside, & register them after.
      */
-    const previousArguments = this.commandsRoot.arguments
-    const previousExecuteState = this.commandsRoot.executeState
-    this.commandsRoot.reset()
+    const previousArguments = config.mightHaveRemainingArguments ? this.commandsRoot.arguments : undefined
+    const previousExecuteState = config.mightHaveRemainingArguments ? this.commandsRoot.executeState : undefined
+
+    if (config.mightHaveRemainingArguments) {
+      this.commandsRoot.reset()
+    } else {
+      this.commandsRoot.register(true)
+    }
 
     const args = this.arguments.slice(1)
+    this.arguments = []
 
     const { currentFunction } = this.datapack
 
@@ -270,8 +277,12 @@ export class Flow {
     this.datapack.currentFunction = currentFunction
 
     // Put back the old arguments
-    this.commandsRoot.arguments = previousArguments
-    this.commandsRoot.executeState = previousExecuteState
+    if (previousArguments) {
+      this.commandsRoot.arguments = previousArguments
+    }
+    if (previousExecuteState) {
+      this.commandsRoot.executeState = previousExecuteState
+    }
 
     // Register the initial condition (in the root function) to enter the callback.
     if (config.initialCondition) {
@@ -304,11 +315,17 @@ export class Flow {
      * Sometimes, there are a few arguments left inside the commandsRoot (for execute.run mostly).
      * Keep them aside, & register them after.
      */
-    const previousArguments = this.commandsRoot.arguments
-    const previousExecuteState = this.commandsRoot.executeState
-    this.commandsRoot.reset()
+    const previousArguments = config.mightHaveRemainingArguments ? this.commandsRoot.arguments : undefined
+    const previousExecuteState = config.mightHaveRemainingArguments ? this.commandsRoot.executeState : undefined
+
+    if (config.mightHaveRemainingArguments) {
+      this.commandsRoot.reset()
+    } else {
+      this.commandsRoot.register(true)
+    }
 
     const args = this.arguments.slice(1)
+    this.arguments = []
 
     const { currentFunction } = this.datapack
 
@@ -342,9 +359,12 @@ export class Flow {
     this.datapack.currentFunction = currentFunction
 
     // Put back the old arguments
-    this.commandsRoot.arguments = previousArguments
-    this.commandsRoot.executeState = previousExecuteState
-
+    if (previousArguments) {
+      this.commandsRoot.arguments = previousArguments
+    }
+    if (previousExecuteState) {
+      this.commandsRoot.executeState = previousExecuteState
+    }
     // Register the initial condition (in the root function) to enter the callback
     if (!isEmpty && config.initialCondition) {
       registerCondition(this.commandsRoot, config.condition, args)
@@ -710,9 +730,7 @@ export class Flow {
     }) as any
   }
 
-  private register = (soft?: boolean) => {
-    throw new Error('Not supposed to happen!')
-  }
+  private register = (soft?: boolean) => { }
 
   get execute(): Omit<Execute<Flow>, 'run' | 'runOne'> {
     return new Execute(this)
@@ -720,19 +738,19 @@ export class Flow {
 }
 
 function registerCondition(commandsRoot: CommandsRoot, condition: ConditionType, args: unknown[] = []) {
-  let commands: string[][]
+  let commands: CommandArgs[]
 
   if (condition instanceof CombinedConditions) {
     const realCondition = condition.removeOr().simplify()
 
     if (realCondition instanceof CombinedConditions) {
       const { callableExpression, requiredExpressions } = realCondition.toExecutes()
-      commands = [...requiredExpressions, callableExpression]
+      commands = [...requiredExpressions, ['execute', ...callableExpression.slice(1), ...args]]
     } else {
-      commands = [['execute', ...args, ...realCondition._toMinecraftCondition().value]]
+      commands = [['execute', ...realCondition._toMinecraftCondition().value, ...args]]
     }
   } else {
-    commands = [['execute', ...args, ...condition._toMinecraftCondition().value]]
+    commands = [['execute', ...condition._toMinecraftCondition().value, ...args]]
   }
 
   // Add & register all required commands
