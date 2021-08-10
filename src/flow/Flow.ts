@@ -263,7 +263,7 @@ export class Flow {
        * We create a new Flow object to prevent interfering with the current flow object, which might cause problems.
        */
       const flow = new Flow(this.datapack)
-      flow.arguments = this.arguments
+      flow.arguments = ['execute', ...args]
       flow
         .if(config.condition, () => {
           this.commandsRoot.functionCmd(callbackFunctionName)
@@ -289,7 +289,7 @@ export class Flow {
       // In while statements, if the condition isn't met the 1st time, directly call the next lines of code
       if (config.loopCondition) {
         const flow = new Flow(this.datapack)
-        flow.arguments = this.arguments
+        flow.arguments = ['execute', ...args]
         flow
           .if(config.condition, () => { callOrInlineFunction(this.datapack, callbackMCFunction) })
           .else(() => { this.commandsRoot.functionCmd(asyncCallbackName) })
@@ -326,6 +326,8 @@ export class Flow {
 
     const args = this.arguments.slice(1)
     this.arguments = []
+
+    console.log('Inside sync:', args, config.callbackName)
 
     const { currentFunction } = this.datapack
 
