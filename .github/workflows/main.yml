@@ -17,7 +17,7 @@ jobs:
       - run: npm install -f --production
       - run: npm install @types/node
       - run: npm run build
-      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
+      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./dist/.npmrc
         env:
           NPM_TOKEN: ${{secrets.npm_token}}
       - run: cd dist && npm publish
