@@ -329,7 +329,7 @@ export type AdvancementTriggers = (
     /** The entity which picked up the item. May be a list of loot table conditions that must pass in order for the trigger to activate. */
     entity: EntityCriterion
   // eslint-disable-next-line @typescript-eslint/ban-types
-  }> | Trigger<'minecraft:tick', undefined> | Trigger<'minecraft:used_ender_eye', {
+  }> | Trigger<'minecraft:tick', {}> | Trigger<'minecraft:used_ender_eye', {
     /** The horizontal distance between the player and the stronghold. */
     distance: NumberProvider
   }> | Trigger<'minecraft:used_totem', {
