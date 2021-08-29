@@ -1,4 +1,4 @@
-import { coordinatesParser, nbtParser } from '@variables'
+import { coordinatesParser, nbtStringifier } from '@variables'
 
 import { Command } from '../Command'
 import { command } from '../decorators'
@@ -52,7 +52,7 @@ export class DataMerge extends Command {
    * @param targetPos The coordinates of the block to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  @command(mergeCmd('block'), { isRoot: true, parsers: { '0': coordinatesParser, '1': nbtParser } })
+  @command(mergeCmd('block'), { isRoot: true, parsers: { '0': coordinatesParser, '1': nbtStringifier } })
   block = (targetPos: Coordinates, nbt: NBTObject) => { }
 
   /**
@@ -61,7 +61,7 @@ export class DataMerge extends Command {
    * @param target The entity to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  @command(mergeCmd('entity'), { isRoot: true, parsers: { '1': nbtParser } })
+  @command(mergeCmd('entity'), { isRoot: true, parsers: { '1': nbtStringifier } })
   entity = (target: SingleEntityArgument, nbt: NBTObject) => { }
 
   /**
@@ -70,7 +70,7 @@ export class DataMerge extends Command {
    * @param target The storage to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  @command(mergeCmd('storage'), { isRoot: true, parsers: { '1': nbtParser } })
+  @command(mergeCmd('storage'), { isRoot: true, parsers: { '1': nbtStringifier } })
   storage = (target: string, nbt: NBTObject) => { }
 }
 
@@ -117,7 +117,7 @@ export class DataModifyValues extends Command {
   /**
    * Modify the NBT with the given value.
    */
-  @command('value', { parsers: { '0': nbtParser } })
+  @command('value', { parsers: { '0': nbtStringifier } })
   value = (value: NBTObject) => { }
 }
 

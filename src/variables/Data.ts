@@ -1,5 +1,5 @@
 import { ConditionTextComponentClass } from './abstractClasses'
-import { nbtParser } from './NBTs'
+import { nbtStringifier } from './nbt/NBTs'
 import { Score } from './Score'
 
 import type {
@@ -29,7 +29,7 @@ function pathToString(path: DATA_PATH[]) {
       }
       result += p
     } else {
-      result += nbtParser(p)
+      result += nbtStringifier(p)
     }
   }
 
@@ -98,7 +98,7 @@ export class DataInstance<TYPE extends DATA_TYPES = DATA_TYPES> {
   toJSON = this.toString
 }
 
-export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends ConditionTextComponentClass {
+export class DataPointInstance<TYPE extends DATA_TYPES = any> extends ConditionTextComponentClass {
   datapack
 
   type: TYPE
@@ -125,7 +125,7 @@ export class DataPointInstance<TYPE extends DATA_TYPES = DATA_TYPES> extends Con
 
     // The value is another Data Point
     if (value instanceof DataPointInstance) {
-      data.from[value.type](value.currentTarget as any, value.path)
+      data.from[value.type as DATA_TYPES](value.currentTarget as any, value.path)
       return
     }
 

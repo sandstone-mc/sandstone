@@ -9,7 +9,7 @@ import type {
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { ConditionClass } from '@variables'
-import type { DataPointInstance } from './Data'
+import type { DATA_TYPES, DataPointInstance } from './Data'
 import type { ObjectiveClass } from './Objective'
 
 type PlayersTarget = number | MultipleEntitiesArgument
@@ -146,15 +146,15 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param nbt The Data Point to set the score to.
    *
-   * @param scale The scale factor. Defaults to 1.
+   * @param scale The scale factor.
    */
   set(nbt: DataPointInstance, scale?: number): this
 
   set(...args: OperationArguments | [DataPointInstance, number?]) {
     if (typeof args[0] === 'object' && !(args[0] instanceof SelectorClass) && !(args[0] instanceof Score)) {
-      const [data, scale] = args as [DataPointInstance, number?]
+      const [data, scale] = args as [DataPointInstance<DATA_TYPES>, number?]
 
-      this.commandsRoot.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale ?? 1)
+      this.commandsRoot.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale)
 
       return this
     }

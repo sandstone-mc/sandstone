@@ -327,8 +327,6 @@ export class Flow {
     const args = this.arguments.slice(1)
     this.arguments = []
 
-    console.log('Inside sync:', args, config.callbackName)
-
     const { currentFunction } = this.datapack
 
     // First, enter the callback

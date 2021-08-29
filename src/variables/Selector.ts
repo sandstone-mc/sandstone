@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { nbtParser } from '@variables/NBTs'
+import { nbtStringifier } from '@variables/nbt/NBTs'
 import { rangeParser } from '@variables/parsers'
 
 import { ComponentClass } from './abstractClasses'
@@ -12,7 +12,7 @@ import type { CommandsRoot } from '@commands'
 import type { PredicateInstance } from '@resources'
 import type { LiteralUnion } from '../generalTypes'
 import type { ConditionClass } from './abstractClasses'
-import type { NotNBT } from './NBTs'
+import type { NotNBT } from './nbt/NBTs'
 
 type ScoreArgument = Record<string, Range>
 
@@ -241,7 +241,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
         // Parse scores
         scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
 
-        nbt: (nbt: RootNBT) => result.push(['nbt', nbtParser(nbt)]),
+        nbt: (nbt: RootNBT) => result.push(['nbt', nbtStringifier(nbt)]),
 
         // Parse advancements
         advancements: (advancements: AdvancementsArgument) => result.push(

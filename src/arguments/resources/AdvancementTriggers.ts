@@ -18,7 +18,7 @@ import type {
 import type { PredicateJSON } from './predicate'
 
 // The advancement triggers
-type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | undefined> = {
+type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | never | null> = {
   /**
    * The trigger for this advancement; specifies what the game should check for the advancement.
    *
@@ -120,9 +120,9 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | u
    * The "& unknown" is like "x1" or "+0", it doesn't change the initial type.
    * So it basically means "don't add anything to this object if CONDITIONS is undefined"
    */
-} & (CONDITIONS extends undefined ? unknown : ({
+} & (CONDITIONS extends never ? unknown : ({
   /** All the conditions that need to be met when the trigger gets activated. */
-  conditions: Partial<CONDITIONS> & {
+  conditions?: (CONDITIONS extends null ? unknown : Partial<CONDITIONS>) & {
     /**
      * A list of predicates that must pass in order for the trigger to activate.
      * The checks are applied to the player that would get the advancement.
@@ -231,9 +231,9 @@ export type AdvancementTriggers = (
   }> | Trigger<'minecraft:hero_of_the_village', {
     /** The location of the player. */
     location: LocationCriterion
-  }> | {
-    trigger: 'minecraft:impossible'
-  } | Trigger<'minecraft:inventory_changed', {
+  }>
+  | Trigger<'minecraft:impossible', never>
+  | Trigger<'minecraft:inventory_changed', {
     items: ItemCriterion[]
     slots: SlotCriterion
   }> | Trigger<'minecraft:item_durability_changed', {
@@ -328,8 +328,7 @@ export type AdvancementTriggers = (
     item: ItemCriterion
     /** The entity which picked up the item. May be a list of loot table conditions that must pass in order for the trigger to activate. */
     entity: EntityCriterion
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  }> | Trigger<'minecraft:tick', {}> | Trigger<'minecraft:used_ender_eye', {
+  }> | Trigger<'minecraft:tick', null> | Trigger<'minecraft:used_ender_eye', {
     /** The horizontal distance between the player and the stronghold. */
     distance: NumberProvider
   }> | Trigger<'minecraft:used_totem', {

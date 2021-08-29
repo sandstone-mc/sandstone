@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import { log } from 'console'
 import * as path from 'path'
 
 import {
@@ -6,8 +7,9 @@ import {
 } from './filesystem'
 import packMcMeta from './packMcMeta.json'
 
-import type { JSONTextComponent } from '@arguments'
+import type { CustomResourceProperties, JSONTextComponent } from '@arguments'
 import type {
+  CustomResource,
   ResourceOnlyTypeMap,
   ResourcesTree,
   ResourceTypeMap,
@@ -119,7 +121,7 @@ function saveResource<T extends ResourceTypes>(
   rootPath: string | null,
   type: T,
   resource: ResourceTypeMap[T],
-  options: SaveOptions,
+  options: SaveOptions & { relativePath?: string },
   getRepresentation: (resource_: ResourceOnlyTypeMap[T], consoleDisplay: boolean) => string,
   getDisplayTitle: (namespace: string, folders: string[], fileName: string) => string,
 ): Promise<void>[] {
@@ -151,7 +153,9 @@ function saveResource<T extends ResourceTypes>(
       }
 
       // Write the commands to the file system
-      const resourcePath = path.join(resourceFolder, `${fileName}.${type === 'functions' ? 'mcfunction' : 'json'}`)
+      // eslint-disable-next-line no-nested-ternary
+      const extension = type === 'customs' ? (resource as any).extension : type === 'functions' ? 'mcfunction' : 'json'
+      const resourcePath = path.join(options.relativePath ?? resourceFolder, `${fileName}.${extension}`)
 
       promises.push(
         writeFileToDisk({
@@ -316,6 +320,28 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
           (resource) => JSON.stringify(resource.modifier, null, indentation),
           (namespace, folders, fileName) => `Item modifier ${namespace}:${[...folders, fileName].join('/')}`,
         ))
+      }
+
+      // Save item modifier
+      const saveType = (
+        // eslint-disable-next-line no-nested-ternary
+        options.world ? 'world'
+          : options.asRootDatapack ? 'root'
+            : 'custom-path'
+      )
+
+      for (const r of n.customs.values()) {
+        if (r.isResource) {
+          // eslint-disable-next-line no-await-in-loop
+          const savePath = await r.save({ saveType, packName: name, saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any })
+          const relativeSavePath = rootPath ? path.relative(rootPath, savePath) : savePath
+
+          promises.push(...saveResource(
+            savePath, 'customs', r, { ...options, relativePath: relativeSavePath },
+            (resource) => resource.data,
+            (_, folders, fileName) => `Custom ${r.type} "${[...folders, fileName].join('/')}.${r.extension}"`,
+          ))
+        }
       }
     }
 

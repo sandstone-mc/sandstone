@@ -22,7 +22,7 @@ export {
 } from './variables'
 export * from './variables/Coordinates'
 export * from './variables/JSONTextComponentClass'
-export * from './variables/NBTs'
+export * from './variables/nbt/NBTs'
 export * from './variables/Objective'
 export * from './variables/parsers'
 export * from './variables/Score'
@@ -33,6 +33,7 @@ export const {
   Selector,
   Data,
   Variable,
+  CustomResource,
 } = dataPack
 
 // TYPES

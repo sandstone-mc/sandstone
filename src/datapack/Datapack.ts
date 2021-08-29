@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
 import { resetConditionScore } from '@flow/conditions'
+import { CustomResourceFactory } from '@resources/Custom'
 import { ObjectiveClass, SelectorClass } from '@variables'
 import { DataInstance, DataPointInstance, TargetlessDataInstance } from '@variables/Data'
 
@@ -13,17 +14,21 @@ import { saveDatapack } from './saveDatapack'
 import type {
   BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion, OmitFirst,
 } from '@/generalTypes'
-import type { JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument } from '@arguments'
+import type {
+  CustomResourceDataTypes,
+  CustomResourceProperties, JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument,
+} from '@arguments'
 import type {
   AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
+import type { CustomResourceInstance } from '@resources/Custom'
 import type { ObjectiveInstance, SelectorCreator, SelectorProperties } from '@variables'
 import type { DATA_TARGET, DATA_TYPES } from '@variables/Data'
 import type { Score } from '@variables/Score'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
-  FunctionResource, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
+  CustomResource, FunctionResource, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 
@@ -192,6 +197,8 @@ export default class Datapack {
 
   rootFunctions: Set<MCFunctionClass>
 
+  customResources: Set<CustomResourceInstance<any, any>>
+
   static anonymousScoreId = 0
 
   flow: Flow
@@ -209,6 +216,7 @@ export default class Datapack {
     this.objectives = new Map()
     this.constants = new Set()
     this.rootFunctions = new Set()
+    this.customResources = new Set()
 
     this.commandsRoot = new CommandsRoot(this)
     this.flow = new Flow(this)
@@ -593,7 +601,7 @@ export default class Datapack {
 
   Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this.commandsRoot, target, properties)) as any
 
-  Data = <TYPE extends DATA_TYPES, TARGET extends DATA_TARGET[TYPE] | undefined = undefined>(type: TYPE, target?: TARGET): TARGET extends undefined ? TargetlessDataInstance : DataInstance => {
+  Data = <TYPE extends DATA_TYPES, TARGET extends DATA_TARGET[TYPE] | undefined = undefined>(type: TYPE, target?: TARGET): TARGET extends undefined ? TargetlessDataInstance<TYPE> : DataInstance<TYPE> => {
     if (target) {
       return new DataInstance(this, type, target!) as any
     }
@@ -609,6 +617,8 @@ export default class Datapack {
 
     return returnFunction
   }
+
+  CustomResource = <TYPE extends string, DATA_TYPE extends CustomResourceDataTypes>(type: TYPE, properties: CustomResourceProperties<DATA_TYPE>) => new CustomResourceFactory(this, type, properties)
 
   addResource = <T extends ResourceTypes, U extends ResourceOnlyTypeMap[T] = ResourceOnlyTypeMap[T]>(
     name: string,
@@ -666,10 +676,15 @@ export default class Datapack {
   save = async (name: string, options: SaveOptions) => {
     console.log(chalk`⌛ {gray Starting compilation...}`)
 
-    // First, generate all functions
+    // First, generate all functions & all custom resources
     for (const mcfunction of this.rootFunctions) {
       // eslint-disable-next-line no-await-in-loop
       await mcfunction.generate()
+    }
+
+    for (const resource of this.customResources) {
+      // eslint-disable-next-line no-await-in-loop
+      await resource.generate()
     }
 
     // Then, generate the init function.

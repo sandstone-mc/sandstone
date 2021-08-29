@@ -1,4 +1,4 @@
-import { nbtParser } from '@variables'
+import { nbtStringifier } from '@variables'
 import { JSONTextComponentClass } from '@variables/JSONTextComponentClass'
 
 import { coordinatesParser, rotationParser } from '../variables/parsers'
@@ -475,7 +475,7 @@ export class CommandsRoot {
    *
    * @param nbt Specifies the data tag for the entity.
    */
-  @command('summon', { isRoot: true, parsers: { '1': coordinatesParser, '2': nbtParser } })
+  @command('summon', { isRoot: true, parsers: { '1': coordinatesParser, '2': nbtStringifier } })
   summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: RootNBT) => { }
 
   // tag command //

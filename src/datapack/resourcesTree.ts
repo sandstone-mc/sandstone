@@ -4,7 +4,10 @@ import chalk from 'chalk'
 import { toMCFunctionName } from './minecraft'
 
 import type {
-  AdvancementJSON, ItemModifierJSON,
+  AdvancementJSON, CustomResourceData,
+  CustomResourceProperties,
+  CustomResourceSave,
+  ItemModifierJSON,
   LootTableJSON, PredicateJSON, RecipeJSON,
   TAG_TYPES, TagSingleValue,
 } from '@arguments'
@@ -59,6 +62,9 @@ export type RecipeResource = FolderOrFile<RecipeProperties>
 type ItemModifierProperties = { modifier: ItemModifierJSON }
 export type ItemModifierResource = FolderOrFile<ItemModifierProperties>
 
+type CustomProperties = { dataType: string, data: string, save: CustomResourceSave, extension: string, type: string }
+export type CustomResource = FolderOrFile<CustomProperties>
+
 /**
  * Given a resource names, returns the type of resource
  */
@@ -70,6 +76,7 @@ export type ResourceTypeMap = {
   loot_tables: LootTableResource
   recipes: RecipeResource
   item_modifiers: ItemModifierResource
+  customs: CustomResource
 }
 
 export type ResourceOnlyTypeMap = {
@@ -80,6 +87,7 @@ export type ResourceOnlyTypeMap = {
   loot_tables: File<LootTableProperties>
   recipes: File<RecipeProperties>
   item_modifiers: File<ItemModifierProperties>
+  customs: File<CustomResource>
 }
 
 /**
@@ -119,6 +127,7 @@ export class ResourcesTree {
       loot_tables: new Map(),
       recipes: new Map(),
       item_modifiers: new Map(),
+      customs: new Map(),
     }
 
     this.namespaces.set(name, namespaceResource)
@@ -140,7 +149,7 @@ export class ResourcesTree {
       )
     }
     // Get the namespace name, first folder and path
-    const [namespaceName, firstFolder, ...path] = resourcePath
+    const [namespaceName, firstFolder, ...path] = resourceType === 'customs' ? ['(custom)', ...resourcePath] : resourcePath
 
     // Get the namespace resource
     const namespace = this.namespaces.get(namespaceName)
@@ -193,7 +202,7 @@ export class ResourcesTree {
       return parentResource?.children.delete(resourcePath[resourcePath.length - 1]) ?? false
     }
 
-    const namespace = this.namespaces.get(resourcePath[0])?.[resourceType]
+    const namespace = this.namespaces.get(resourceType === 'customs' ? '(custom)' : resourcePath[0])?.[resourceType]
     return namespace?.delete(resourcePath[1]) ?? false
   }
 
@@ -244,7 +253,7 @@ export class ResourcesTree {
           console.warn(
             chalk.keyword('orange')(
               'Warning:',
-              `Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`,
+              `Tried to create a ${niceResourceType} named "${niceName}", but found an already existing one.`,
               "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
             ),
           )
@@ -271,13 +280,13 @@ export class ResourcesTree {
       }
 
       if (conflictStrategy === 'throw') {
-        throw new Error(`Tried to create a ${niceResourceType} named "${toMCFunctionName(resource.path)}", but found an already existing one.`)
+        throw new Error(`Tried to create a ${niceResourceType} named "${niceName}", but found an already existing one.`)
       }
 
       return conflictStrategy(previousResource as ResourceOnlyTypeMap[T], resource as ResourceOnlyTypeMap[T]) as U
     }
 
-    const namespace = parentPath[0]
+    const namespace = resourceType === 'customs' ? '(custom)' : parentPath[0]
 
     if (!this.namespaces.has(namespace)) {
       this.createNamespace(namespace)
