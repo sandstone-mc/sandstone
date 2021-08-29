@@ -492,20 +492,20 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lessThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  lowerThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly lower than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  lessThan (amountOrTargetScore: number | Score) : ConditionClass
+  lowerThan (amountOrTargetScore: number | Score) : ConditionClass
 
-  lessThan(...args: OperationArguments) {
+  lowerThan(...args: OperationArguments) {
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
   }
 
-  '<' = this.lessThan
+  '<' = this.lowerThan
 
   /**
    * Check if the current score is lower or equal than the given score.
@@ -514,20 +514,20 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lessOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  lowerOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is lower or equal than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score target to compare the current score against.
    */
-  lessOrEqualThan (amountOrTargetScore: number | Score) : ConditionClass
+  lowerOrEqualThan (amountOrTargetScore: number | Score) : ConditionClass
 
-  lessOrEqualThan(...args: OperationArguments) {
+  lowerOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
   }
 
-  '<=' = this.lessOrEqualThan
+  '<=' = this.lowerOrEqualThan
 
   /**
    * Check if the current score is equal to than the given score.

@@ -601,7 +601,7 @@ export class Flow {
 
       const mean = Math.floor((min + max) / 2)
 
-      this.if(score.lessThan(mean), () => recursiveMatch(min, mean))
+      this.if(score.lowerThan(mean), () => recursiveMatch(min, mean))
       this.if(score.greaterOrEqualThan(mean), () => recursiveMatch(mean, max))
     }
 
@@ -665,7 +665,7 @@ export class Flow {
      * just do a while loop that calls `maximum` times the callback,
      * until there is less than `maximum` iterations
      */
-    _.while(iterations.lessThan(maximum), () => {
+    _.while(iterations.lowerThan(maximum), () => {
       callback(maximum)
       iterations.remove(maximum)
     })
@@ -693,13 +693,13 @@ export class Flow {
     }
 
     if (!isAsyncFunction(callback)) {
-      return loop(scoreTracker.lessThan(to), () => {
+      return loop(scoreTracker.lowerThan(to), () => {
         callback(scoreTracker)
         scoreTracker.add(1)
       })
     }
 
-    return loop(scoreTracker.lessThan(to), async () => {
+    return loop(scoreTracker.lowerThan(to), async () => {
       await callback(scoreTracker)
       scoreTracker.add(1)
     })
