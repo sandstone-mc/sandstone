@@ -46,8 +46,6 @@ export type PotionIdCriterion = string
 
 export type DimensionCriterion = LiteralUnion<DIMENSION_TYPES>
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 export type EffectCriterion = Partial<Record<LiteralUnion<MOB_EFFECTS>, {
   /** The effect amplifier. */
   amplifier?: NumberProvider
