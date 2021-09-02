@@ -171,12 +171,15 @@ export function command(name: string | string[], config: RegisterConfig = {}): R
       const defaultArgs = getDefaultArguments(innerFunction)
       const finalRawArgs = mergeArrays(innerArgs, defaultArgs)
 
+      console.log('Is function?', parsers, typeof parsers === 'function')
       const parsedArgs = typeof parsers === 'function' ? parsers(finalRawArgs) : finalRawArgs.map((arg, index) => {
         if (arg !== undefined && Object.prototype.hasOwnProperty.call(parsers, index)) {
           return parsers[index](arg, finalRawArgs)
         }
         return arg
       })
+
+      console.log({ parsedArgs })
 
       commandsRoot.arguments.push(...names, ...parsedArgs)
     }

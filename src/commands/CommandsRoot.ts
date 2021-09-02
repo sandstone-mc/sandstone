@@ -145,7 +145,7 @@ export class CommandsRoot {
    */
   @command([], {
     isRoot: true,
-    registerArguments: false,
+    registerArguments: true,
     parsers: (comments) => [
       comments.join(' ').split('\n').map((line) => `# ${line}`).join('\n'),
     ],

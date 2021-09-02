@@ -3,12 +3,12 @@ import { coordinatesParser, rangeParser, rotationParser } from '@variables'
 
 import { command } from '../decorators'
 
+import type * as commands from '@/commandsOnly'
+import type { LiteralUnion } from '@/generalTypes'
 import type {
   ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Range,
   Rotation, SingleEntityArgument,
 } from '@arguments'
-import type * as commands from '@/commandsOnly'
-import type { LiteralUnion } from '@/generalTypes'
 import type { Flow } from '@flow'
 import type { ConditionClass } from '@variables'
 import type { DataPointInstance } from '@variables/Data'
