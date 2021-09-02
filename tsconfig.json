@@ -50,7 +50,7 @@
       ],
       "@/*": [
         "./src/*"
-      ]
+      ],
     },
     /* Basic Options */
     "types": [

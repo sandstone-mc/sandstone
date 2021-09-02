@@ -6,7 +6,7 @@ import { command } from '../decorators'
 import type {
   ANCHORS, AXES, BLOCKS, COMPARISON_OPERATORS, Coordinates, DIMENSION_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Range,
   Rotation, SingleEntityArgument,
-} from '@/arguments'
+} from '@arguments'
 import type * as commands from '@/commandsOnly'
 import type { LiteralUnion } from '@/generalTypes'
 import type { Flow } from '@flow'
