@@ -108,11 +108,26 @@ export type ResourceConflictStrategy<T extends ResourceTypes, U extends Resource
   'throw' | 'replace' | 'ignore' | 'warn' | ((oldResource: U, newResource: U) => U)
 )
 
+export type OnResourceCallback<T extends ResourceTypes = ResourceTypes> = (props: {
+  type: T,
+  event: 'add' | 'remove',
+  resource: ResourceTypeMap[T],
+}) => void
+
+export type OnResourceCallbacks = OnResourceCallback[]
+
 export class ResourcesTree {
   namespaces: Namespaces
 
-  constructor() {
+  onResource: OnResourceCallbacks
+
+  constructor(onResource: OnResourceCallbacks) {
     this.namespaces = new Map()
+    this.onResource = onResource
+  }
+
+  callResourceCallbacks = (props: Parameters<OnResourceCallback>[0]) => {
+    this.onResource.forEach((cb) => cb(props))
   }
 
   /**
@@ -203,7 +218,17 @@ export class ResourcesTree {
     }
 
     const namespace = this.namespaces.get(resourceType === 'customs' ? '(custom)' : resourcePath[0])?.[resourceType]
-    return namespace?.delete(resourcePath[1]) ?? false
+
+    if (namespace) {
+      const name = resourcePath[1]
+      if (namespace.has(name)) {
+        this.callResourceCallbacks({ type: resourceType, event: 'remove', resource: namespace.get(name) as any })
+        namespace.delete(name)
+        return true
+      }
+    }
+
+    return false
   }
 
   /**
@@ -265,6 +290,12 @@ export class ResourcesTree {
             resource.children.set(key, child as any)
           })
         }
+
+        this.callResourceCallbacks({
+          event: 'add',
+          resource,
+          type: resourceType,
+        })
         return resource
       }
 
