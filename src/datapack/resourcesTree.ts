@@ -76,6 +76,7 @@ export type ResourceTypeMap = {
   loot_tables: LootTableResource
   recipes: RecipeResource
   item_modifiers: ItemModifierResource
+  custom_namespaced: CustomResource
   customs: CustomResource
 }
 
@@ -87,6 +88,7 @@ export type ResourceOnlyTypeMap = {
   loot_tables: File<LootTableProperties>
   recipes: File<RecipeProperties>
   item_modifiers: File<ItemModifierProperties>
+  custom_namespaced: File<CustomResource>
   customs: File<CustomResource>
 }
 
@@ -142,6 +144,7 @@ export class ResourcesTree {
       loot_tables: new Map(),
       recipes: new Map(),
       item_modifiers: new Map(),
+      custom_namespaced: new Map(),
       customs: new Map(),
     }
 

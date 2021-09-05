@@ -330,10 +330,36 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
             : 'custom-path'
       )
 
+      for (const r of n.custom_namespaced.values()) {
+        if (r.isResource) {
+          const namespace: string = r.path[0]
+
+          // eslint-disable-next-line no-await-in-loop
+          const savePath = await r.save({
+            saveType,
+            packName: name,
+            namespace,
+            saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any,
+          })
+          const relativeSavePath = rootPath ? path.relative(rootPath, savePath) : savePath
+
+          promises.push(...saveResource(
+            savePath, 'custom_namespaced', r, { ...options, relativePath: relativeSavePath },
+            (resource) => resource.data,
+            (_, folders, fileName) => `Custom namespaced ${r.type} "${[...folders, fileName].join('/')}.${r.extension}"`,
+          ))
+        }
+      }
+
       for (const r of n.customs.values()) {
         if (r.isResource) {
           // eslint-disable-next-line no-await-in-loop
-          const savePath = await r.save({ saveType, packName: name, saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any })
+          const savePath = await r.save({
+            saveType,
+            packName: name,
+            namespace: null,
+            saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any,
+          })
           const relativeSavePath = rootPath ? path.relative(rootPath, savePath) : savePath
 
           promises.push(...saveResource(

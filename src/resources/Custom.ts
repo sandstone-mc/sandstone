@@ -14,11 +14,13 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
 
   properties: CustomResourceProperties<DATA_TYPE>
 
-  constructor(datapack: Datapack, type: TYPE, properties: CustomResourceProperties<DATA_TYPE>, name: string, data: Promise<CustomResourceData[DATA_TYPE]>) {
+  constructor(datapack: Datapack, type: TYPE, properties: CustomResourceProperties<DATA_TYPE>, name: string, namespaced: boolean, data: Promise<CustomResourceData[DATA_TYPE]>) {
     super(datapack, name)
     this.type = type
     this.data = data
     this.properties = properties
+
+    if (namespaced) this.path = datapack.getResourcePath(name)
 
     datapack.customResources.add(this)
   }
@@ -27,7 +29,11 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
     const data = await this.data
     const stringifiedData = (this.properties.dataType === 'json' ? JSON.stringify(data) : data) as string
 
-    this.datapack.addResource(this.name, 'customs', {
+    let type: 'customs' | 'custom_namespaced' = 'customs'
+
+    if (this.path) type = 'custom_namespaced'
+
+    this.datapack.addResource(this.name, type, {
       data: stringifiedData,
       dataType: this.properties.dataType,
       save: this.properties.save,
@@ -37,24 +43,28 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
   }
 }
 
-export class CustomResourceFactory<TYPE extends string, DATA_TYPE extends CustomResourceDataTypes> {
+export class CustomResourceFactory<TYPE extends string, NAMESPACED extends boolean, DATA_TYPE extends CustomResourceDataTypes> {
   datapack: Datapack
 
   type: TYPE
 
   properties: CustomResourceProperties<DATA_TYPE>
 
-  constructor(datapack: Datapack, resourceType: TYPE, properties: CustomResourceProperties<DATA_TYPE>) {
+  namespaced: NAMESPACED
+
+  constructor(datapack: Datapack, resourceType: TYPE, namespaced: NAMESPACED, properties: CustomResourceProperties<DATA_TYPE>) {
     this.type = resourceType
     this.datapack = datapack
     this.properties = properties
+
+    this.namespaced = namespaced
   }
 
   private createResource(name: string, data: Promise<CustomResourceData[DATA_TYPE]>): CustomResourceInstance<TYPE, DATA_TYPE> {
     const { datapack } = this
 
     return new CustomResourceInstance(
-      this.datapack, this.type, this.properties, name, data,
+      this.datapack, this.type, this.properties, name, this.namespaced, data,
     )
   }
 

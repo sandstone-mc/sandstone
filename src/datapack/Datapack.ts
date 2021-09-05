@@ -631,7 +631,7 @@ export default class Datapack {
     return returnFunction
   }
 
-  CustomResource = <TYPE extends string, DATA_TYPE extends CustomResourceDataTypes>(type: TYPE, properties: CustomResourceProperties<DATA_TYPE>) => new CustomResourceFactory(this, type, properties)
+  CustomResource = <TYPE extends string, DATA_TYPE extends CustomResourceDataTypes>(type: TYPE, namespaced: boolean, properties: CustomResourceProperties<DATA_TYPE>) => new CustomResourceFactory(this, type, namespaced, properties)
 
   addResource = <T extends ResourceTypes, U extends ResourceOnlyTypeMap[T] = ResourceOnlyTypeMap[T]>(
     name: string,

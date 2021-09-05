@@ -7,12 +7,15 @@ export type CustomResourceDataTypes = keyof CustomResourceData
 
 export type CustomResourceSave = (properties: {
   packName: string,
+  namespace: string | null,
 } & ({
   saveType: 'root' | 'world',
-  saveLocation: string
+  saveLocation: string,
+  namespace: string | null,
 } | {
-  saveType: 'custom-path'
-  saveLocation: null
+  saveType: 'custom-path',
+  saveLocation: null,
+  namespace: string | null,
 })) => string | Promise<string>
 
 export type CustomResourceProperties<DATA_TYPE extends CustomResourceDataTypes> = {
