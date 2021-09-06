@@ -77,7 +77,6 @@ export type ResourceTypeMap = {
   recipes: RecipeResource
   item_modifiers: ItemModifierResource
   [key: `custom-${string}`]: CustomResource
-  customs: CustomResource
 }
 
 export type ResourceOnlyTypeMap = {
@@ -89,7 +88,6 @@ export type ResourceOnlyTypeMap = {
   recipes: File<RecipeProperties>
   item_modifiers: File<ItemModifierProperties>
   [key: `custom-${string}`]: File<CustomResource>
-  customs: File<CustomResource>
 }
 
 /**
@@ -144,7 +142,6 @@ export class ResourcesTree {
       loot_tables: new Map(),
       recipes: new Map(),
       item_modifiers: new Map(),
-      customs: new Map(),
     }
 
     this.namespaces.set(name, namespaceResource)
@@ -166,7 +163,7 @@ export class ResourcesTree {
       )
     }
     // Get the namespace name, first folder and path
-    const [namespaceName, firstFolder, ...path] = resourceType === 'customs' ? ['(custom)', ...resourcePath] : resourcePath
+    const [namespaceName, firstFolder, ...path] = resourcePath
 
     // Get the namespace resource
     const namespace = this.namespaces.get(namespaceName)
@@ -219,7 +216,7 @@ export class ResourcesTree {
       return parentResource?.children.delete(resourcePath[resourcePath.length - 1]) ?? false
     }
 
-    const namespace = this.namespaces.get(resourceType === 'customs' ? '(custom)' : resourcePath[0])?.[resourceType]
+    const namespace = this.namespaces.get(resourcePath[0])?.[resourceType]
 
     if (namespace) {
       const name = resourcePath[1]

@@ -154,7 +154,7 @@ function saveResource<T extends ResourceTypes>(
 
       // Write the commands to the file system
       // eslint-disable-next-line no-nested-ternary
-      const extension = type === 'customs' ? (resource as any).extension : type === 'functions' ? 'mcfunction' : 'json'
+      const extension = (resource as any).extension || type === 'functions' ? 'mcfunction' : 'json'
       const resourcePath = path.join(options.relativePath ?? resourceFolder, `${fileName}.${extension}`)
 
       promises.push(
@@ -349,29 +349,10 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
               promises.push(...saveResource(
                 savePath, `custom-${r.type}`, r, { ...options, relativePath: relativeSavePath },
                 (resource) => resource.data,
-                (_, folders, fileName) => `Custom namespaced ${r.type} "${[...folders, fileName].join('/')}.${r.extension}"`,
+                (_, folders, fileName) => `Custom ${r.type} "${[...folders, fileName].join('/')}.${r.extension}"`,
               ))
             }
           }
-        }
-      }
-
-      for (const r of n.customs.values()) {
-        if (r.isResource) {
-          // eslint-disable-next-line no-await-in-loop
-          const savePath = await r.save({
-            saveType,
-            packName: name,
-            namespace: null,
-            saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any,
-          })
-          const relativeSavePath = rootPath ? path.relative(rootPath, savePath) : savePath
-
-          promises.push(...saveResource(
-            savePath, 'customs', r, { ...options, relativePath: relativeSavePath },
-            (resource) => resource.data,
-            (_, folders, fileName) => `Custom ${r.type} "${[...folders, fileName].join('/')}.${r.extension}"`,
-          ))
         }
       }
     }
