@@ -316,7 +316,7 @@ export class ResourcesTree {
       return conflictStrategy(previousResource as ResourceOnlyTypeMap[T], resource as ResourceOnlyTypeMap[T]) as U
     }
 
-    const namespace = resourceType === 'customs' ? '(custom)' : parentPath[0]
+    const namespace = parentPath[0]
 
     if (!this.namespaces.has(namespace)) {
       this.createNamespace(namespace)
