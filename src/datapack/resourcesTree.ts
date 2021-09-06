@@ -76,6 +76,7 @@ export type ResourceTypeMap = {
   loot_tables: LootTableResource
   recipes: RecipeResource
   item_modifiers: ItemModifierResource
+  [key: `custom-${string}`]: CustomResource
   customs: CustomResource
 }
 
@@ -87,6 +88,7 @@ export type ResourceOnlyTypeMap = {
   loot_tables: File<LootTableProperties>
   recipes: File<RecipeProperties>
   item_modifiers: File<ItemModifierProperties>
+  [key: `custom-${string}`]: File<CustomResource>
   customs: File<CustomResource>
 }
 

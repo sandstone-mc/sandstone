@@ -330,10 +330,41 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
             : 'custom-path'
       )
 
+      for (const t of Object.entries(n)) {
+        if (t[0].indexOf('custom-', 0) !== -1) {
+          for (const _r of t[1].values()) {
+            const r = _r as CustomResource
+            if (r.isResource) {
+              const namespace: string = r.path[0]
+
+              // eslint-disable-next-line no-await-in-loop
+              const savePath = await r.save({
+                saveType,
+                packName: name,
+                namespace,
+                saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any,
+              })
+              const relativeSavePath = rootPath ? path.relative(rootPath, savePath) : savePath
+
+              promises.push(...saveResource(
+                savePath, `custom-${r.type}`, r, { ...options, relativePath: relativeSavePath },
+                (resource) => resource.data,
+                (_, folders, fileName) => `Custom namespaced ${r.type} "${[...folders, fileName].join('/')}.${r.extension}"`,
+              ))
+            }
+          }
+        }
+      }
+
       for (const r of n.customs.values()) {
         if (r.isResource) {
           // eslint-disable-next-line no-await-in-loop
-          const savePath = await r.save({ saveType, packName: name, saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any })
+          const savePath = await r.save({
+            saveType,
+            packName: name,
+            namespace: null,
+            saveLocation: (rootPath ? path.join(rootPath, '../') : null) as any,
+          })
           const relativeSavePath = rootPath ? path.relative(rootPath, savePath) : savePath
 
           promises.push(...saveResource(
