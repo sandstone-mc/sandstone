@@ -121,7 +121,7 @@ export class ResourcesTree {
 
   onResource: OnResourceCallbacks
 
-  constructor() {
+  constructor(onResource: OnResourceCallbacks) {
     this.namespaces = new Map()
     this.onResource = onResource
   }
