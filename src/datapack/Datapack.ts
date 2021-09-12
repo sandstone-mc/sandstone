@@ -12,12 +12,13 @@ import { ResourcesTree } from './resourcesTree'
 import { saveDatapack } from './saveDatapack'
 
 import type {
-  BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion, OmitFirst,
+  BASIC_CONFLICT_STRATEGIES, HideFunctionProperties, LiteralUnion,
 } from '@/generalTypes'
 import type {
   CustomResourceDataTypes,
   CustomResourceProperties, JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument,
 } from '@arguments'
+import type { ExecuteWithRun } from '@commands/implementations'
 import type {
   AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
@@ -28,7 +29,7 @@ import type { Score } from '@variables/Score'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
-  CustomResource, FunctionResource, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
+  FunctionResource, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 
@@ -37,6 +38,19 @@ type ScriptArguments = {
   dataPackName: string,
   /** The destination folder of the data pack. `null` if there is only a custom file handler, or nothing at all. */
   destination: string | null,
+}
+
+/**
+ * Defaults to no context; just running schedule, adding to the context will allow runs of the function that maintain context. single/1/true being one run supported at once per entity per sleep
+ */
+type sleepContext = 'default' | 'single' | 0 | 1 | boolean;
+
+type sleepOptions = {
+  /** Default: off, includes `at('@s')` in run */
+  includeAt: boolean
+} | {
+  /** Allows you to craft custom run arguments, can either use execute instance with included `as` selector or add the tag to yours */
+  customRunArgs: (execute: () => ExecuteWithRun<CommandsRoot>, tag: string) => ExecuteWithRun<CommandsRoot>
 }
 
 export interface SandstoneConfig {
@@ -601,6 +615,7 @@ export default class Datapack {
 
   Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this.commandsRoot, target, properties)) as any
 
+  // eslint-disable-next-line max-len
   Data = <TYPE extends DATA_TYPES, TARGET extends DATA_TARGET[TYPE] | undefined = undefined>(type: TYPE, target?: TARGET): TARGET extends undefined ? TargetlessDataInstance<TYPE> : DataInstance<TYPE> => {
     if (target) {
       return new DataInstance(this, type, target!) as any
@@ -634,8 +649,11 @@ export default class Datapack {
     } as U, conflictStrategy)
   }
 
-  sleep = (delay: TimeArgument): PromiseLike<void> => {
+  sleep = (delay: TimeArgument, _context: sleepContext, options: sleepOptions | false = false): PromiseLike<void> => {
+    // eslint-disable-next-line no-nested-ternary
+    const context: boolean = typeof _context === 'string' ? _context === 'single' : typeof _context === 'number' ? _context === 1 : _context
     const SLEEP_CHILD_NAME = '__sleep'
+    const SLEEP_CONTEXT_CHILD_NAME = '__sleepContext'
 
     if (!this.currentFunction) {
       throw new Error('Cannot call `sleep` outside of a MCFunction.')
@@ -655,12 +673,39 @@ export default class Datapack {
     }
 
     const newFunction = this.createChildFunction(SLEEP_CHILD_NAME, parentFunction)
+
     this.commandsRoot.schedule.function(newFunction.functionName, delay, 'append')
+
+    const childName = newFunction.childFunction.path[newFunction.childFunction.path.length - 1]
+    // eslint-disable-next-line radix
+    const contextTag = `__sleep.${parentFunction.path[parentFunction.path.length - 1]}.${childName.slice(-2) === '_' ? parseInt(childName.slice(-1)) - 1 : '0'}`
+
+    if (context) this.commandsRoot.tag('@s').add(contextTag)
 
     return ({
       then: (async (onfullfilled?: () => (void | Promise<void>)) => {
         // Enter child "sleep"
         this.currentFunction = newFunction.childFunction
+
+        if (context) {
+          const actualFunction = this.createChildFunction(SLEEP_CONTEXT_CHILD_NAME, newFunction.childFunction)
+          const actualFunctionName = actualFunction.childFunction.path[actualFunction.childFunction.path.length - 1]
+          const selector = this.Selector('@s', { tag: contextTag })
+
+          // LOL
+          if (options) {
+            // eslint-disable-next-line max-len
+            if ((options as any).customRunArgs) {
+              (this.commandsRoot.execute as ExecuteWithRun<CommandsRoot>).run(
+                () => ((options as any).customRunArgs(() => this.commandsRoot.execute.as(selector), contextTag) as ExecuteWithRun<CommandsRoot>).run.functionCmd(actualFunctionName),
+              )
+            } else if ((options as any).includeAt === false) this.commandsRoot.execute.as(selector).run.functionCmd(actualFunctionName)
+            else this.commandsRoot.execute.as(selector).at('@s').run.functionCmd(actualFunctionName)
+          } else this.commandsRoot.execute.as(selector).at('@s').run.functionCmd(actualFunctionName)
+
+          this.currentFunction = actualFunction.childFunction
+        }
+
         const result = await onfullfilled?.()
         return result
       }) as any,

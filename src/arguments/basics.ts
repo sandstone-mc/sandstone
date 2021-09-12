@@ -37,7 +37,10 @@ export class _ShowAlias {
 
 export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
 
-export type TimeArgument = number | LiteralUnion<'1t' | '1s' | '1d'>
+/**
+ * A number in ticks or _ number in '_' (tick implicit), '_t' (tick explicit), '_s' (second), '_d' (day)
+ */
+export type TimeArgument = number | `${number}` | `${number}t` | `${number}s` | `${number}d`
 
 export type TAG_TYPES = 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items'
 
