@@ -705,13 +705,9 @@ export default class Datapack {
           const actualFunctionName = actualFunction.childFunction.path[actualFunction.childFunction.path.length - 1]
           const selector = this.Selector('@s', { tag: contextTag })
 
-          // LOL
           if (options) {
-            // eslint-disable-next-line max-len
             if ((options as any).customRunArgs) {
-              (this.commandsRoot.execute as ExecuteWithRun<CommandsRoot>).run(
-                () => ((options as any).customRunArgs(() => this.commandsRoot.execute.as(selector), contextTag) as ExecuteWithRun<CommandsRoot>).run.functionCmd(actualFunctionName),
-              )
+              ((options as any).customRunArgs(() => this.commandsRoot.execute.as(selector), contextTag) as ExecuteWithRun<CommandsRoot>).run.functionCmd(actualFunctionName)
             } else if ((options as any).includeAt === false) this.commandsRoot.execute.as(selector).run.functionCmd(actualFunctionName)
             else this.commandsRoot.execute.as(selector).at('@s').run.functionCmd(actualFunctionName)
           } else this.commandsRoot.execute.as(selector).at('@s').run.functionCmd(actualFunctionName)
