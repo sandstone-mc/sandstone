@@ -19,7 +19,7 @@ import type {
   CustomResourceProperties, JSONTextComponent, OBJECTIVE_CRITERION, TimeArgument,
 } from '@arguments'
 import type {
-  AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, ResourceInstance, TagOptions,
+  AdvancementOptions, ItemModifierOptions, LootTableOptions, MCFunctionClass, MCFunctionOptions, PredicateOptions, RecipeOptions, TagOptions,
 } from '@resources'
 import type { CustomResourceInstance } from '@resources/Custom'
 import type { ObjectiveInstance, SelectorCreator, SelectorProperties } from '@variables'
@@ -28,7 +28,7 @@ import type { Score } from '@variables/Score'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
 import type {
-  CustomResource, FunctionResource, OnResourceCallback, OnResourceCallbacks, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypeMap, ResourceTypes,
+  CustomResource, FunctionResource, ResourceConflictStrategy, ResourceOnlyTypeMap, ResourcePath, ResourceTypes,
 } from './resourcesTree'
 import type { SaveOptions } from './saveDatapack'
 
@@ -207,15 +207,12 @@ export default class Datapack {
 
   packUid: string
 
-  onResourceCallbacks: OnResourceCallbacks
-
   constructor(packUid: string, namespace: string) {
     this.packUid = packUid
     this.basePath = new BasePathClass(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
-    this.onResourceCallbacks = []
-    this.resources = new ResourcesTree(this.onResourceCallbacks)
+    this.resources = new ResourcesTree()
     this.objectives = new Map()
     this.constants = new Set()
     this.rootFunctions = new Set()
@@ -230,8 +227,7 @@ export default class Datapack {
   reset = () => {
     this.basePath = new BasePathClass(this, {})
     this.currentFunction = null
-    this.onResourceCallbacks = []
-    this.resources = new ResourcesTree(this.onResourceCallbacks)
+    this.resources = new ResourcesTree()
     this.objectives = new Map()
     this.constants = new Set()
     this.rootFunctions = new Set()
@@ -243,15 +239,6 @@ export default class Datapack {
     Datapack.anonymousScoreId = 0
 
     resetConditionScore(this)
-  }
-
-  addResourceCallback = (cb: OnResourceCallback) => {
-    this.onResourceCallbacks.push(cb)
-  }
-
-  clearResourceCallbacks = () => {
-    // It's an inplace way of clearing the array
-    this.onResourceCallbacks.length = 0
   }
 
   /** Get information like the path, namespace etc... from a resource name */

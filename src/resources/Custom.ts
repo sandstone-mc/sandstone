@@ -20,8 +20,6 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
     this.data = data
     this.properties = properties
 
-    this.path = datapack.getResourcePath(name)
-
     datapack.customResources.add(this)
   }
 
@@ -29,9 +27,7 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
     const data = await this.data
     const stringifiedData = (this.properties.dataType === 'json' ? JSON.stringify(data) : data) as string
 
-    const resourceType: `custom-${string}` = `custom-${this.type}`
-
-    this.datapack.addResource(this.name, resourceType, {
+    this.datapack.addResource(this.name, 'customs', {
       data: stringifiedData,
       dataType: this.properties.dataType,
       save: this.properties.save,
