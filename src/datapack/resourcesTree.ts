@@ -76,7 +76,7 @@ export type ResourceTypeMap = {
   loot_tables: LootTableResource
   recipes: RecipeResource
   item_modifiers: ItemModifierResource
-  customs: CustomResource
+  [key: `custom-${string}`]: CustomResource
 }
 
 export type ResourceOnlyTypeMap = {
@@ -87,7 +87,7 @@ export type ResourceOnlyTypeMap = {
   loot_tables: File<LootTableProperties>
   recipes: File<RecipeProperties>
   item_modifiers: File<ItemModifierProperties>
-  customs: File<CustomResource>
+  [key: `custom-${string}`]: File<CustomResource>
 }
 
 /**
@@ -142,7 +142,6 @@ export class ResourcesTree {
       loot_tables: new Map(),
       recipes: new Map(),
       item_modifiers: new Map(),
-      customs: new Map(),
     }
 
     this.namespaces.set(name, namespaceResource)
@@ -164,7 +163,7 @@ export class ResourcesTree {
       )
     }
     // Get the namespace name, first folder and path
-    const [namespaceName, firstFolder, ...path] = resourceType === 'customs' ? ['(custom)', ...resourcePath] : resourcePath
+    const [namespaceName, firstFolder, ...path] = resourcePath
 
     // Get the namespace resource
     const namespace = this.namespaces.get(namespaceName)
@@ -217,7 +216,7 @@ export class ResourcesTree {
       return parentResource?.children.delete(resourcePath[resourcePath.length - 1]) ?? false
     }
 
-    const namespace = this.namespaces.get(resourceType === 'customs' ? '(custom)' : resourcePath[0])?.[resourceType]
+    const namespace = this.namespaces.get(resourcePath[0])?.[resourceType]
 
     if (namespace) {
       const name = resourcePath[1]
@@ -317,7 +316,7 @@ export class ResourcesTree {
       return conflictStrategy(previousResource as ResourceOnlyTypeMap[T], resource as ResourceOnlyTypeMap[T]) as U
     }
 
-    const namespace = resourceType === 'customs' ? '(custom)' : parentPath[0]
+    const namespace = parentPath[0]
 
     if (!this.namespaces.has(namespace)) {
       this.createNamespace(namespace)

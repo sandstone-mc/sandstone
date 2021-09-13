@@ -132,14 +132,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  set(targets: PlayersTarget, objective?: ObjectiveArgument): this
+  set(targets: PlayersTarget, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
 
   /**
    * Set the current entity's score to the given value, or to the other target's score.
    *
    * @param amountOrTargetScore A value, or the target's score.
    */
-  set(amountOrTargetScore: number | Score): this
+  set(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
 
   /**
    * Set the current entity's score to the given NBT value, with the given scale.
@@ -148,7 +148,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param scale The scale factor.
    */
-  set(nbt: DataPointInstance, scale?: number): this
+  set(nbt: DataPointInstance, scale?: number): Score<OBJ_CRITERION>
 
   set(...args: OperationArguments | [DataPointInstance, number?]) {
     if (typeof args[0] === 'object' && !(args[0] instanceof SelectorClass) && !(args[0] instanceof Score)) {
@@ -171,14 +171,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
+  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
 
   /**
    * Adds the given amount, or the other target's score, to the current entity's score.
    *
    * @param amountOrTargetScore The amount to add, or the target to add the scores from.
    */
-  add(amountOrTargetScore: number | Score): this
+  add(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
 
   add(...args: OperationArguments) {
     return this.unaryOperation('add', '+=', ...args)
@@ -193,14 +193,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
+  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
 
   /**
    * Substract the given amount, or the other target's score, from the current entity's score.
    *
    * @param targetScore The amount to substract, or the target to get the score from.
    */
-  remove(amountOrTargetScore: number | Score): this
+  remove(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
 
   remove(...args: OperationArguments) {
     return this.unaryOperation('remove', '-=', ...args)
@@ -215,14 +215,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
+  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
 
   /**
    * Multiply the current entity's score by the given value, or other target's scores.
    *
    * @param amountOrTargetScore The value, or the target to get the scores from.
    */
-  multiply(amountOrTargetScore: number | Score): this
+  multiply(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
 
   multiply(...args: OperationArguments) {
     return this.binaryOperation('*=', ...args)
@@ -237,14 +237,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
+  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
 
   /**
    * Divide the current entity's score by the given value, or the other target's scores.
    *
    * @param amountOrTargetScore The value, or the target to get the scores from
    */
-  divide(amountOrTargetScore: number | Score): this
+  divide(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
 
   divide(...args: OperationArguments) {
     return this.binaryOperation('/=', ...args)
@@ -259,14 +259,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): this
+  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
 
   /**
    * Divide the current entity's score by other target's scores.
    *
    * @param amountOrTargetScore The value, or target's score to modulo the current score with.
    */
-  modulo(amountOrTargetScore: number | Score): this
+  modulo(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
 
   modulo(...args: OperationArguments) {
     return this.binaryOperation('%=', ...args)
