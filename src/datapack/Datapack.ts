@@ -713,6 +713,8 @@ export default class Datapack {
           } else this.commandsRoot.execute.as(selector).at('@s').run.functionCmd(actualFunctionName)
 
           this.currentFunction = actualFunction.childFunction
+
+          this.commandsRoot.tag('@s').remove(contextTag)
         }
 
         const result = await onfullfilled?.()
