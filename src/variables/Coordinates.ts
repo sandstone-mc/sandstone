@@ -138,7 +138,7 @@ export function relative<T extends Tuple<number>>(...coordinates: T): string | V
 }
 
 /**
- * Transforms numbers into local coordinates, using the tilde notation `^`.
+ * Transforms numbers into local coordinates, using the caret notation `^`.
  *
  * First coordinate is leftward, second is upward, third is frontward.
  *
