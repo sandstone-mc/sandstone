@@ -119,15 +119,8 @@ export type OnResourceCallbacks = OnResourceCallback[]
 export class ResourcesTree {
   namespaces: Namespaces
 
-  onResource: OnResourceCallbacks
-
-  constructor(onResource: OnResourceCallbacks) {
+  constructor() {
     this.namespaces = new Map()
-    this.onResource = onResource
-  }
-
-  callResourceCallbacks = (props: Parameters<OnResourceCallback>[0]) => {
-    this.onResource.forEach((cb) => cb(props))
   }
 
   /**
@@ -221,7 +214,6 @@ export class ResourcesTree {
     if (namespace) {
       const name = resourcePath[1]
       if (namespace.has(name)) {
-        this.callResourceCallbacks({ type: resourceType, event: 'remove', resource: namespace.get(name) as any })
         namespace.delete(name)
         return true
       }
@@ -263,6 +255,7 @@ export class ResourcesTree {
     conflictStrategy: ResourceConflictStrategy<T>,
   ): U & ResourceTypeMap[T] {
     const parentPath = resource.path.slice(0, -1)
+    const namespaceName = parentPath[0]
 
     const handleConflict = (): U => {
       const previousResource = this.getResourceOrFolder(resource.path, resourceType) as U
@@ -290,11 +283,6 @@ export class ResourcesTree {
           })
         }
 
-        this.callResourceCallbacks({
-          event: 'add',
-          resource,
-          type: resourceType,
-        })
         return resource
       }
 
@@ -316,10 +304,14 @@ export class ResourcesTree {
       return conflictStrategy(previousResource as ResourceOnlyTypeMap[T], resource as ResourceOnlyTypeMap[T]) as U
     }
 
-    const namespace = parentPath[0]
+    if (!this.namespaces.has(namespaceName)) {
+      this.createNamespace(namespaceName)
+    }
 
-    if (!this.namespaces.has(namespace)) {
-      this.createNamespace(namespace)
+    const namespace = this.namespaces.get(namespaceName)!
+
+    if (!Object.keys(namespace).includes(resourceType)) {
+      namespace[resourceType] = new Map()
     }
 
     if (parentPath.length >= 2) {
@@ -341,7 +333,7 @@ export class ResourcesTree {
     } else {
       // Our parent path only has one component, the namespace. We need to add the resource like this.
       const newResource = handleConflict()
-      const namespaceResource = this.namespaces.get(namespace) as NamespaceResources
+      const namespaceResource = this.namespaces.get(namespaceName) as NamespaceResources
       namespaceResource[resourceType].set(newResource.path[1], newResource as any)
     }
 
@@ -363,5 +355,63 @@ export class ResourcesTree {
     } catch (e) {
       return this.addResource(resourceType, resource, 'throw')
     }
+  }
+
+  * list() {
+    type FileResource = File<Record<never, never>>
+
+    function* yieldResources(rootResource: FolderOrFile<Record<never, never>>, resourceType: string): Generator<FileResource & { resourceType: string }> {
+      if (rootResource.isResource) {
+        yield { ...rootResource, resourceType }
+      }
+
+      for (const resource of rootResource.children.values()) {
+        yield* yieldResources(resource, resourceType)
+      }
+    }
+
+    for (const namespace of this.namespaces.values()) {
+      for (const [resourceType, resources] of Object.entries(namespace)) {
+        for (const resource of resources.values()) {
+          yield* yieldResources(resource, resourceType)
+        }
+      }
+    }
+  }
+
+  diff(other: ResourcesTree): Set<File<Record<never, never>> & { resourceType: string }> {
+    const resources1 = new Set(this.list())
+    const resources2 = [...other.list()]
+
+    for (const resource of resources1) {
+      const name = toMCFunctionName(resource.path)
+      if (resources2.find((r) => toMCFunctionName(r.path) === name && r.resourceType === resource.resourceType)) {
+        resources1.delete(resource)
+      }
+    }
+
+    return resources1
+  }
+
+  clone(): ResourcesTree {
+    const clone = new ResourcesTree()
+
+    const cloneResource = (resource: FolderOrFile<Record<never, never>>): typeof resource => ({
+      ...resource,
+      children: new Map(
+        [...resource.children.entries()].map(([key, child]) => [key, cloneResource(child)]),
+      ),
+    })
+
+    for (const namespace of this.namespaces.values()) {
+      for (const [resourceType, resources] of Object.entries(namespace)) {
+        for (const resource of resources.values()) {
+          const clonedResource = cloneResource(resource)
+          clone.addResource(resourceType as any, clonedResource as any, 'replace')
+        }
+      }
+    }
+
+    return clone
   }
 }

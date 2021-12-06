@@ -14,11 +14,14 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
 
   properties: CustomResourceProperties<DATA_TYPE>
 
+  generated: boolean
+
   constructor(datapack: Datapack, type: TYPE, properties: CustomResourceProperties<DATA_TYPE>, name: string, data: Promise<CustomResourceData[DATA_TYPE]>) {
     super(datapack, name)
     this.type = type
     this.data = data
     this.properties = properties
+    this.generated = false
 
     this.path = datapack.getResourcePath(name)
 
@@ -26,6 +29,8 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
   }
 
   generate = async () => {
+    if (this.generated) return
+
     const data = await this.data
     const stringifiedData = (this.properties.dataType === 'json' ? JSON.stringify(data) : data) as string
 
@@ -38,6 +43,8 @@ export class CustomResourceInstance<TYPE extends string, DATA_TYPE extends Custo
       extension: this.properties.extension,
       type: this.type,
     }, 'throw')
+
+    this.generated = true
   }
 }
 
@@ -55,8 +62,6 @@ export class CustomResourceFactory<TYPE extends string, DATA_TYPE extends Custom
   }
 
   private createResource(name: string, data: Promise<CustomResourceData[DATA_TYPE]>): CustomResourceInstance<TYPE, DATA_TYPE> {
-    const { datapack } = this
-
     return new CustomResourceInstance(
       this.datapack, this.type, this.properties, name, data,
     )

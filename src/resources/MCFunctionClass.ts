@@ -49,42 +49,42 @@ export type MCFunctionOptions = {
    */
   tags?: readonly (string | TagInstance<'functions'>)[]
 } & (
-  {
-    /**
-     * Whether the function should run each tick.
-     */
-    runEachTick?: boolean
-  } | {
-    /**
-     * If specified, the function will run every given time.
-     *
-     * If `runOnLoad` is unspecified or `true`, then it will run on load too.
-     *
-     * If `runOnLoad` is `false`, you will have to manually start it.
-     *
-     * You can stop the automatic scheduling by running `theFunction.clearSchedule()`.
-     *
-     * @example
-     *
-     * // Run each 5 ticks, including on data pack load.
-     * {
-     *   runEach: 5,
-     * }
-     *
-     * // Run each 5 ticks, but wait 5 ticks before data pack loads for 1st execution.
-     * {
-     *   runEach: 5,
-     *   runOnLoad: false,
-     * }
-     *
-     * // Run each 8 seconds
-     * {
-     *   runEach: '8s'
-     * }
-     */
-    runEach?: TimeArgument
-  }
-)
+    {
+      /**
+       * Whether the function should run each tick.
+       */
+      runEachTick?: boolean
+    } | {
+      /**
+       * If specified, the function will run every given time.
+       *
+       * If `runOnLoad` is unspecified or `true`, then it will run on load too.
+       *
+       * If `runOnLoad` is `false`, you will have to manually start it.
+       *
+       * You can stop the automatic scheduling by running `theFunction.clearSchedule()`.
+       *
+       * @example
+       *
+       * // Run each 5 ticks, including on data pack load.
+       * {
+       *   runEach: 5,
+       * }
+       *
+       * // Run each 5 ticks, but wait 5 ticks before data pack loads for 1st execution.
+       * {
+       *   runEach: 5,
+       *   runOnLoad: false,
+       * }
+       *
+       * // Run each 8 seconds
+       * {
+       *   runEach: '8s'
+       * }
+       */
+      runEach?: TimeArgument
+    }
+  )
 
 export class MCFunctionClass<R extends void | Promise<void> = void | Promise<void>> {
   name: string
@@ -208,6 +208,8 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       // Then back to the previous one
       this.datapack.currentFunction = previousFunction
     }
+
+    this.alreadyInitialized = true
 
     if (isPromise(result)) {
       return result.then(afterCall) as any

@@ -207,15 +207,12 @@ export default class Datapack {
 
   packUid: string
 
-  onResourceCallbacks: OnResourceCallbacks
-
   constructor(packUid: string, namespace: string) {
     this.packUid = packUid
     this.basePath = new BasePathClass(this, {})
     this.defaultNamespace = namespace
     this.currentFunction = null
-    this.onResourceCallbacks = []
-    this.resources = new ResourcesTree(this.onResourceCallbacks)
+    this.resources = new ResourcesTree()
     this.objectives = new Map()
     this.constants = new Set()
     this.rootFunctions = new Set()
@@ -230,8 +227,7 @@ export default class Datapack {
   reset = () => {
     this.basePath = new BasePathClass(this, {})
     this.currentFunction = null
-    this.onResourceCallbacks = []
-    this.resources = new ResourcesTree(this.onResourceCallbacks)
+    this.resources = new ResourcesTree()
     this.objectives = new Map()
     this.constants = new Set()
     this.rootFunctions = new Set()
@@ -243,15 +239,6 @@ export default class Datapack {
     Datapack.anonymousScoreId = 0
 
     resetConditionScore(this)
-  }
-
-  addResourceCallback = (cb: OnResourceCallback) => {
-    this.onResourceCallbacks.push(cb)
-  }
-
-  clearResourceCallbacks = () => {
-    // It's an inplace way of clearing the array
-    this.onResourceCallbacks.length = 0
   }
 
   /** Get information like the path, namespace etc... from a resource name */
@@ -583,34 +570,34 @@ export default class Datapack {
        * @param name A name that can be useful for debugging.
        */
       (nbt: DataPointInstance, scale?: number, name?: string) => Score
-      )
-   ) = (initialValue?: number | Score | undefined | DataPointInstance, nameOrScale?: string | number, maybeName?: string) => {
-     // Get the objective
-     const datapack = this.commandsRoot.Datapack
-     const score = datapack.rootObjective
+    )
+  ) = (initialValue?: number | Score | undefined | DataPointInstance, nameOrScale?: string | number, maybeName?: string) => {
+    // Get the objective
+    const datapack = this.commandsRoot.Datapack
+    const score = datapack.rootObjective
 
-     if (initialValue instanceof DataPointInstance) {
-       // If the value is a data point, leverage the .set method
-       return this.Variable(undefined, maybeName).set(initialValue, nameOrScale as number)
-     }
+    if (initialValue instanceof DataPointInstance) {
+      // If the value is a data point, leverage the .set method
+      return this.Variable(undefined, maybeName).set(initialValue, nameOrScale as number)
+    }
 
-     const name = nameOrScale as string | undefined
+    const name = nameOrScale as string | undefined
 
-     // Get the specific anonymous score
-     const id = Datapack.anonymousScoreId
-     Datapack.anonymousScoreId += 1
-     const anonymousScore = score(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
+    // Get the specific anonymous score
+    const id = Datapack.anonymousScoreId
+    Datapack.anonymousScoreId += 1
+    const anonymousScore = score(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
 
-     if (initialValue !== undefined) {
-       if (this.currentFunction !== null) {
-         anonymousScore.set(initialValue)
-       } else {
-         this.initCommands.push(['scoreboard', 'players', 'set', anonymousScore.target, anonymousScore.objective, initialValue])
-       }
-     }
+    if (initialValue !== undefined) {
+      if (this.currentFunction !== null) {
+        anonymousScore.set(initialValue)
+      } else {
+        this.initCommands.push(['scoreboard', 'players', 'set', anonymousScore.target, anonymousScore.objective, initialValue])
+      }
+    }
 
-     return anonymousScore
-   }
+    return anonymousScore
+  }
 
   Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this.commandsRoot, target, properties)) as any
 
