@@ -50,12 +50,12 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
 
   onConflict
 
-  constructor(datapack: Datapack, basePath: BasePathOptions<N, D>) {
+  constructor(datapack: Datapack, options: BasePathOptions<N, D>) {
     this.datapack = datapack
-    this.namespace = basePath.namespace as N
+    this.namespace = options.namespace as N
 
     // Copy onConflict into an object
-    const onConflict = basePath.onConflict ? { ...basePath.onConflict } : undefined
+    const onConflict = options.onConflict ? { ...options.onConflict } : undefined
 
     // Apply default
     if (onConflict?.default) {
@@ -71,7 +71,7 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
     this.onConflict = onConflict
 
     // Remove forward & trailing slashes
-    this.directory = (typeof basePath.directory === 'string' ? trimSlashes(basePath.directory) : undefined) as D
+    this.directory = (typeof options.directory === 'string' ? trimSlashes(options.directory) : undefined) as D
   }
 
   /** Validates & crafts the name of a resource. */
