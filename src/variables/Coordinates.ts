@@ -71,6 +71,25 @@ export function absolute<T extends Tuple<number>>(...coordinates: T): string | V
 }
 
 /**
+ * Transforms numbers into relative coordinates, using the tilde notation `~`.
+ *
+ * @example
+ *
+ * rel() => ['~', '~', '~']
+ *
+ * rel(0, 0, 0) => ['~', '~', '~']
+ *
+ * rel(0, 180) => ['~', '~180']
+ *
+ * rel(-1, 10, 5) => ['~-1', '~10', '~5']
+ *
+ * @alias {@link relative}
+ * @see {@link absolute} for absolute coordinates (e.g. `10`)
+ * @see {@link local} for local coordinates (e.g. `^10`)
+ */
+export function relative<T extends [0, 0, 0]>(): VectorClass<MappedArray<T, '~'>>
+
+/**
  * Transforms a number into a relative coordinate, using the tilde notation `~`.
  *
  * @example
@@ -92,6 +111,8 @@ export function relative(coordinate: number): `~${string}`
  *
  * @example
  *
+ * rel() => ['~', '~', '~']
+ *
  * rel(0, 0, 0) => ['~', '~', '~']
  *
  * rel(0, 180) => ['~', '~180']
@@ -105,12 +126,37 @@ export function relative(coordinate: number): `~${string}`
 export function relative<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `~${string}`>>
 
 export function relative<T extends Tuple<number>>(...coordinates: T): string | VectorClass<MappedArray<T, string>> {
+  if (coordinates.length === 0) {
+    return new VectorClass(['~', '~', '~'] as unknown as MappedArray<T, string>)
+  }
+
   if (coordinates.length === 1) {
     return `~${coordinates[0] || ''}`
   }
 
   return new VectorClass(coordinates.map((coord) => `~${coord || ''}`) as unknown as MappedArray<T, string>)
 }
+
+/**
+ * Transforms numbers into local coordinates, using the caret notation `^`.
+ *
+ * First coordinate is leftward, second is upward, third is frontward.
+ *
+ * @example
+ *
+ * loc() => ['^', '^', '^']
+ *
+ * loc(0, 0, 0) => ['^', '^', '^']
+ *
+ * loc(0, 180, 0) => ['^', '^180', '^']
+ *
+ * loc(-1, 10, 5) => ['^-1', '^10', '^5']
+ *
+ * @alias {@link local}
+ * @see {@link absolute} for absolute coordinates (e.g. `10`)
+ * @see {@link relative} for relative coordinates (e.g. `~10`)
+ */
+export function local<T extends [0, 0, 0]>(): VectorClass<MappedArray<T, '^'>>
 
 /**
  * Transforms a number into a local coordinate, using the caret notation `^`.
@@ -136,6 +182,8 @@ export function local(coordinate: number): `^${string}`
  *
  * @example
  *
+ * loc() => ['^', '^', '^']
+ *
  * loc(0, 0, 0) => ['^', '^', '^']
  *
  * loc(0, 180, 0) => ['^', '^180', '^']
@@ -149,6 +197,10 @@ export function local(coordinate: number): `^${string}`
 export function local<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `^${string}`>>
 
 export function local<T extends Tuple<number>>(...coordinates: T): string | VectorClass<MappedArray<T, string>> {
+  if (coordinates.length === 0) {
+    return new VectorClass(['^', '^', '^'] as unknown as MappedArray<T, string>)
+  }
+
   if (coordinates.length === 1) {
     return `^${coordinates[0] || ''}`
   }
