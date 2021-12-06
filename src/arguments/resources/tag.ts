@@ -4,6 +4,7 @@ import type {
 } from '@arguments'
 import type { TAG_TYPES } from '@arguments/basics'
 import type { MCFunctionInstance } from '@datapack/Datapack'
+import type { TagInstance } from '@resources'
 
 export type HintedTagStringType<T extends TAG_TYPES> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
@@ -16,4 +17,4 @@ export type HintedTagStringType<T extends TAG_TYPES> = (
 
 export type TagSingleValue<T> = T | { id: T, required: boolean }
 
-export type TagJSON<TAG_TYPE extends TAG_TYPES> = readonly TagSingleValue<HintedTagStringType<TAG_TYPE>>[]
+export type TagJSON<TAG_TYPE extends TAG_TYPES> = readonly TagSingleValue<HintedTagStringType<TAG_TYPE> | TagInstance<TAG_TYPE>>[]

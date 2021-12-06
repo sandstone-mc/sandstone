@@ -15,15 +15,22 @@ function isMCFunctionInstance(v: unknown): v is MCFunctionInstance {
   return typeof v === 'function'
 }
 
+function isTagInstance(v: unknown): v is TagInstance<any> {
+  return v instanceof TagInstance
+}
+
 function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T> {
   return typeof v === 'object'
 }
 
-function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagStringType<TYPE>>): TagSingleValue<string> {
-  if (isMCFunctionInstance(value)) {
+function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagStringType<TYPE> | TagInstance<TYPE>>): TagSingleValue<string> {
+  if (isMCFunctionInstance(value) || isTagInstance(value)) {
     return value.name
   }
-  if (isTagObject(value) && isMCFunctionInstance(value.id)) {
+
+  if (isTagObject(value) && (
+    isMCFunctionInstance(value.id) || isTagInstance(value.id)
+  )) {
     return {
       id: value.id.name,
       required: value.required,
@@ -46,7 +53,7 @@ export type TagOptions = {
 export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
   readonly type: TYPE
 
-  readonly values: TagSingleValue<string>[]
+  readonly values: TagSingleValue<string | TagInstance<TYPE>>[]
 
   constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], replace?: boolean, options?: TagOptions) {
     super(datapack, name)

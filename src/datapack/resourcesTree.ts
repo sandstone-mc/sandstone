@@ -4,13 +4,13 @@ import chalk from 'chalk'
 import { toMCFunctionName } from './minecraft'
 
 import type {
-  AdvancementJSON, CustomResourceData,
-  CustomResourceProperties,
+  AdvancementJSON,
   CustomResourceSave,
   ItemModifierJSON,
   LootTableJSON, PredicateJSON, RecipeJSON,
   TAG_TYPES, TagSingleValue,
 } from '@arguments'
+import type { TagInstance } from '@resources'
 import type { CommandArgs } from './minecraft'
 
 export type ResourcePath = readonly [namespace: string, ...path: string[]]
@@ -38,7 +38,7 @@ export type File<T extends Record<string, unknown>, P extends ResourcePath = Res
 type FunctionProperties = { commands: CommandArgs[] }
 export type FunctionResource = FolderOrFile<FunctionProperties>
 
-type TagProperties = { values: TagSingleValue<string>[], replace?: boolean }
+type TagProperties = { values: TagSingleValue<string | TagInstance<any>>[], replace?: boolean }
 type TagPath = readonly [
   namespace: string,
   type: TAG_TYPES,
