@@ -265,8 +265,8 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
   )
 
   /** Create a tag. */
-  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T> | TagInstance<T>>[] = [], replace?: boolean, options?: TagOptions) => (
-    new TagInstance(this.datapack, type, this.getName(name), values, replace, { onConflict: this.onConflict?.tag, ...options })
+  Tag = <T extends TAG_TYPES>(type: T, name: string, values: TagSingleValue<HintedTagStringType<T> | TagInstance<T>>[] = [], options?: TagOptions) => (
+    new TagInstance(this.datapack, type, this.getName(name), values, { onConflict: this.onConflict?.tag, ...options })
   )
 
   /** Create an item modifier */

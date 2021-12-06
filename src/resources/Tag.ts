@@ -48,6 +48,11 @@ export type TagOptions = {
    * - `ignore`: Keep silently the old Tag, discarding the new one.
    */
   onConflict?: BASIC_CONFLICT_STRATEGIES
+
+  /**
+   * Whether to replace previous Tags with the same name.
+   */
+  replace?: boolean
 }
 
 export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
@@ -55,7 +60,7 @@ export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
 
   readonly values: TagSingleValue<string | TagInstance<TYPE>>[]
 
-  constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], replace?: boolean, options?: TagOptions) {
+  constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], options?: TagOptions) {
     super(datapack, name)
 
     this.type = type
@@ -69,7 +74,7 @@ export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
       isResource: true,
       path: [this.path.namespace, type, ...this.path.fullPath],
       values: this.values,
-      replace,
+      replace: options?.replace,
     }, options?.onConflict ?? CONFLICT_STRATEGIES.TAG)
   }
 

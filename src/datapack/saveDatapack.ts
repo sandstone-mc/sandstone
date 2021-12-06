@@ -258,7 +258,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
     }
 
     for (const n of resources.namespaces.values()) {
-    // Save functions
+      // Save functions
       for (const f of n.functions.values()) {
         promises.push(...saveResource(
           rootPath, 'functions', f, options,
@@ -280,7 +280,7 @@ export async function saveDatapack(resources: ResourcesTree, name: string, optio
       for (const t of n.tags.values()) {
         promises.push(...saveResource(
           rootPath, 'tags', t, options,
-          (r) => JSON.stringify({ replace: r.replace ?? false, values: r.values }, null, indentation),
+          (r) => JSON.stringify({ replace: r.replace, values: r.values }, null, indentation),
           (namespace, folders, fileName) => `Tag[${folders[0]}] ${namespace}:${[...folders.slice(1), fileName].join('/')}`,
         ))
       }
