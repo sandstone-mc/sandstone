@@ -9,6 +9,7 @@ import type { MCFunctionInstance } from '@datapack/Datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import type { FunctionResource, ResourceConflictStrategy, ResourcePath } from '@datapack/resourcesTree'
 import type { TagInstance } from './Tag'
+import chalk from 'chalk'
 
 export type MCFunctionOptions = {
   /**
@@ -51,10 +52,19 @@ export type MCFunctionOptions = {
 } & (
     {
       /**
-       * Whether the function should run each tick.
+       * @deprecated Use runEveryTick instead.
        */
       runEachTick?: boolean
+      /**
+       * Whether the function should run each tick.
+       */
+      runEveryTick?: boolean
     } | {
+      /**
+       * @deprecated Use runEvery instead.
+       */
+      runEach?: TimeArgument
+
       /**
        * If specified, the function will run every given time.
        *
@@ -82,7 +92,7 @@ export type MCFunctionOptions = {
        *   runEach: '8s'
        * }
        */
-      runEach?: TimeArgument
+      runEvery?: TimeArgument
     }
   )
 
@@ -140,7 +150,9 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
     let tags = this.options.tags ?? []
 
     // If it should run each tick, add it to the tick.json function
-    const { runEach: runEachDelay } = this.options as any
+    const opts = this.options as any
+    const runEachDelay = opts.runEvery ?? opts.runEach
+
     if (runEachDelay !== undefined) {
       if (typeof runEachDelay === 'number' && runEachDelay < 0) { throw new Error(`\`runEach\` argument must be greater than 0, got ${runEachDelay}`) }
 
@@ -150,7 +162,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       }
     } else {
       // If runEachTick is specified, add to minecraft:tick
-      if ((this.options as any).runEachTick) {
+      if (opts.runEveryTick ?? opts.runEachTick) {
         tags = [...tags, 'minecraft:tick']
       }
 
@@ -158,6 +170,15 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
       if (this.options.runOnLoad) {
         tags = [...tags, 'minecraft:load']
       }
+    }
+
+    const warning = chalk.hex('#FFA500')
+    if (opts.runEachTick !== undefined) {
+      console.warn(warning('The `runEachTick` MCFunction option is deprecated, use `runEveryTick` instead.'))
+    }
+
+    if (opts.runEach !== undefined) {
+      console.warn(warning('The `runEach` MCFunction option is deprecated, use `runEvery` instead.'))
     }
 
     for (const tag of tags) {

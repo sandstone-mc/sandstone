@@ -56,6 +56,11 @@ export type TagOptions = {
    * Whether to replace previous Tags with the same name.
    */
   replace?: boolean
+
+  /**
+   * Whether the tag should run on load
+   */
+  runOnLoad?: boolean
 }
 
 export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
