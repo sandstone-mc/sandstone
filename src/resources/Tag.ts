@@ -4,6 +4,7 @@ import { toMCFunctionName } from '@datapack/minecraft'
 import { ResourceInstance } from './Resource'
 
 import type { BASIC_CONFLICT_STRATEGIES } from '@/generalTypes'
+import type { Either } from '@/utils'
 import type {
   HintedTagStringType, TAG_TYPES,
   TagJSON, TagSingleValue,
@@ -40,7 +41,7 @@ function objectToString<TYPE extends TAG_TYPES>(value: TagSingleValue<HintedTagS
   return value as string | TagSingleValue<string>
 }
 
-export type TagOptions = {
+export type TagOptions<T extends TAG_TYPES = TAG_TYPES> = {
   /**
    * What to do if another Tag has the same name.
    *
@@ -56,19 +57,24 @@ export type TagOptions = {
    * Whether to replace previous Tags with the same name.
    */
   replace?: boolean
-
+} & (T extends 'functions' ? {
   /**
    * Whether the tag should run on load
    */
   runOnLoad?: boolean
-}
+
+  /**
+   * Whether the function should run each tick.
+   */
+  runEveryTick?: boolean
+} : unknown)
 
 export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
   readonly type: TYPE
 
   readonly values: TagSingleValue<string | TagInstance<TYPE>>[]
 
-  constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], options?: TagOptions) {
+  constructor(datapack: Datapack, type: TYPE, name: string, values: TagJSON<TYPE> = [], options?: TagOptions<TYPE>) {
     super(datapack, name)
 
     this.type = type
@@ -101,6 +107,26 @@ export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
       values: this.values,
       replace: options?.replace,
     }, conflictStrategy)
+
+    // Handle tags
+    const tags = []
+
+    // If runEachTick is specified, add to minecraft:tick
+    const opts = options as any
+    if (type === 'functions') {
+      if (opts?.runEveryTick) {
+        tags.push('minecraft:tick')
+      }
+
+      // Idem for load
+      if (opts?.runOnLoad) {
+        tags.push('minecraft:load')
+      }
+    }
+
+    for (const tag of tags) {
+      this.datapack.addFunctionToTag(this.name, tag)
+    }
   }
 
   get name() {
