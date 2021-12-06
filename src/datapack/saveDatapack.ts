@@ -159,7 +159,7 @@ function saveResource<T extends ResourceTypes>(
       if (isCustomResource(resource)) {
         extension = resource.extension
       }
-      if (type === 'mcfunction') {
+      if (type === 'functions') {
         extension = 'mcfunction'
       }
 

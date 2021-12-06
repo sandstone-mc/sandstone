@@ -10,6 +10,7 @@ import type {
 } from '@arguments'
 import type { Datapack } from '@datapack'
 import type { MCFunctionInstance } from '@datapack/Datapack'
+import type { ResourceConflictStrategy } from '@datapack/resourcesTree'
 
 function isMCFunctionInstance(v: unknown): v is MCFunctionInstance {
   return typeof v === 'function'
@@ -46,8 +47,10 @@ export type TagOptions = {
    * - `throw`: Throw an error.
    * - `replace`: Replace silently the old Tag with the new one.
    * - `ignore`: Keep silently the old Tag, discarding the new one.
+   * - `append`: Append the new Tag values to the old one.
+   * - `prepend`: Prepend the new Tag values to the old one.
    */
-  onConflict?: BASIC_CONFLICT_STRATEGIES
+  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
 
   /**
    * Whether to replace previous Tags with the same name.
@@ -69,13 +72,30 @@ export class TagInstance<TYPE extends TAG_TYPES> extends ResourceInstance {
 
     this.datapack = datapack
 
+    const conflictStrategyName = options?.onConflict ?? CONFLICT_STRATEGIES.TAG
+    let conflictStrategy: ResourceConflictStrategy<'tags'>
+
+    if (conflictStrategyName === 'append') {
+      conflictStrategy = (old, new_) => {
+        old.values = [...old.values, ...new_.values]
+        return old
+      }
+    } else if (conflictStrategyName === 'prepend') {
+      conflictStrategy = (old, new_) => {
+        old.values = [...new_.values, ...old.values]
+        return old
+      }
+    } else {
+      conflictStrategy = conflictStrategyName
+    }
+
     datapack.resources.addResource('tags', {
       children: new Map(),
       isResource: true,
       path: [this.path.namespace, type, ...this.path.fullPath],
       values: this.values,
       replace: options?.replace,
-    }, options?.onConflict ?? CONFLICT_STRATEGIES.TAG)
+    }, conflictStrategy)
   }
 
   get name() {
