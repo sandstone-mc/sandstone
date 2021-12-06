@@ -15,7 +15,7 @@ import type {
 import type { SandstoneConfig } from '..'
 import type { MCFunctionInstance } from './Datapack'
 
-export type BasePathOptions<N extends (undefined | string), D extends (undefined | string)> = {
+export type BasePathOptions<N extends (undefined | string) = (undefined | string), D extends (undefined | string) = (undefined | string)> = {
   /** The namespace all nested resources will be located in. */
   namespace?: N
 
