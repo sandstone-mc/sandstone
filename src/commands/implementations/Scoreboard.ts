@@ -34,7 +34,7 @@ class ScoreboardObjectives extends Command {
    * ```
    * --------------------------------------------------
    *
-   * @param objective must be a plain text at most 16 characters.
+   * @param objective must be a plain text.
    *
    * @param criterion must be a valid criterion type.
    *
@@ -46,11 +46,7 @@ class ScoreboardObjectives extends Command {
       '2': (displayName) => (displayName ? new JSONTextComponentClass(displayName) : displayName),
     },
   })
-  add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => {
-    if (objective.length > 16) {
-      throw new Error(`Objectives cannot have names with more than 16 characters. Got ${objective.length} with objective "${objective}".`)
-    }
-  }
+  add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => {}
 
   /**
    * Delete all references to the named objective in the scoreboard system.

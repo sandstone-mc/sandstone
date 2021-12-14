@@ -491,10 +491,6 @@ export default class Datapack {
      * @param name The name of the objective
      */
     create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent): ObjectiveInstance => {
-      if (name.length > 16) {
-        throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
-      }
-
       const objective = new ObjectiveClass(this.commandsRoot, name, criteria as string, display)
       const value = objective.ScoreHolder
 
@@ -514,10 +510,6 @@ export default class Datapack {
 
     /** Get an existing objective. */
     get: (name: string): ObjectiveInstance => {
-      if (name.length > 16) {
-        throw new Error(`Objectives cannot have names with more than 16 characters. Got ${name.length} with objective "${name}".`)
-      }
-
       const objective = new ObjectiveClass(this.commandsRoot, name)
       const value = objective.ScoreHolder
 
