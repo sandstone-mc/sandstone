@@ -8,6 +8,9 @@ import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
 } from '@arguments'
+import type { LootTableInstance } from '@resources'
+
+type LootTableArgument = LootTableInstance | string
 
 class LootSource extends Command {
   /**
@@ -20,7 +23,7 @@ class LootSource extends Command {
    * @param tool Specifies an tool to fish.
    */
   @command('fish', { parsers: { '0': coordinatesParser } })
-  fish = (lootTable: string, pos: Coordinates, tool: LiteralUnion<'mainhand' | 'offhand'>) => { }
+  fish = (lootTable: LootTableArgument, pos: Coordinates, tool: LiteralUnion<'mainhand' | 'offhand'>) => { }
 
   /**
    * Drops items that would be dropped by the given loot table.
@@ -29,7 +32,7 @@ class LootSource extends Command {
    */
 
   @command('loot')
-  loot = (lootTable: string) => { }
+  loot = (lootTable: LootTableArgument) => { }
 
   /**
    * Drops items that would be dropped by killing the given entity.
