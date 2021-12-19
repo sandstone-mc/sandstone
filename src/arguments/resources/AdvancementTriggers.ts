@@ -18,7 +18,7 @@ import type {
 import type { PredicateJSON } from './predicate'
 
 // The advancement triggers
-type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | never | null> = {
+type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | unknown | null> = {
   /**
    * The trigger for this advancement; specifies what the game should check for the advancement.
    *
@@ -120,7 +120,7 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | n
    * The "& unknown" is like "x1" or "+0", it doesn't change the initial type.
    * So it basically means "don't add anything to this object if CONDITIONS is undefined"
    */
-} & (CONDITIONS extends never ? unknown : ({
+} & (CONDITIONS extends (Record<string, unknown> | null) ? ({
   /** All the conditions that need to be met when the trigger gets activated. */
   conditions?: (CONDITIONS extends null ? unknown : Partial<CONDITIONS>) & {
     /**
@@ -137,7 +137,7 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | n
      */
     player?: PredicateJSON
   }
-}))
+}) : unknown)
 
 export type AdvancementTriggers = (
   Trigger<'minecraft:bee_nest_destroyed', {
@@ -232,7 +232,7 @@ export type AdvancementTriggers = (
     /** The location of the player. */
     location: LocationCriterion
   }>
-  | Trigger<'minecraft:impossible', never>
+  | Trigger<'minecraft:impossible', unknown>
   | Trigger<'minecraft:inventory_changed', {
     items: ItemCriterion[]
     slots: SlotCriterion
