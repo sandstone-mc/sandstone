@@ -99,22 +99,22 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
 
   @command('score', executeConfig)
   score: (
-  (
-    /**
-     * Overrides `targets`' score on the given `objective` with the final command's return value.
-     *
-     * @param targets Specifies score holder(s) whose score is to be overridden.
-     *
-     * @param objective A scoreboard objective.
-     */
-    (targets: MultipleEntitiesArgument, objective: ObjectiveArgument) => InferExecute<T>
-  ) & (
-    /**
-     * Overrides the given player's score with the final command's return value.
-     *
-     * @param playerScore The player's score to override.
-     */
-    (playerScore: Score) => InferExecute<T>)
+    (
+      /**
+       * Overrides `targets`' score on the given `objective` with the final command's return value.
+       *
+       * @param targets Specifies score holder(s) whose score is to be overridden.
+       *
+       * @param objective A scoreboard objective.
+       */
+      (targets: MultipleEntitiesArgument, objective: ObjectiveArgument) => InferExecute<T>
+    ) & (
+      /**
+       * Overrides the given player's score with the final command's return value.
+       *
+       * @param playerScore The player's score to override.
+       */
+      (playerScore: Score) => InferExecute<T>)
   ) = (...args: unknown[]) => this.execute
 
   /**
@@ -226,7 +226,7 @@ type IfsAndUnlesses<T extends CommandsRootLike, E extends Execute<T>> = {
       source: SingleEntityArgument,
       sourceObjective: ObjectiveArgument
     ) => Execute<T>
- ) & (
+  ) & (
     /**
      * Check a score against either another score or a given range.
      *
@@ -243,7 +243,7 @@ type IfsAndUnlesses<T extends CommandsRootLike, E extends Execute<T>> = {
       targetObjective: ObjectiveArgument,
       operator: 'matches',
       range: Range
-   ) => E
+    ) => E
   )
 }
 
@@ -473,13 +473,13 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   get if(): ((condition: ConditionClass) => this) & IfType<T, this> {
     const result = Object.assign(
       (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value), {
-        block: this.ifBlock,
-        blocks: this.ifBlocks,
-        data: 0 as any, // We are going to override it just below
-        entity: this.ifEntity,
-        predicate: this.ifPredicate,
-        score: this.ifScore,
-      },
+      block: this.ifBlock,
+      blocks: this.ifBlocks,
+      data: 0 as any, // We are going to override it just below
+      entity: this.ifEntity,
+      predicate: this.ifPredicate,
+      score: this.ifScore,
+    },
     )
 
     Object.defineProperty(result, 'data', {
@@ -520,7 +520,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   @command([], {
     isRoot: false, executable: true, hasSubcommands: false,
   })
-  protected register = () => {}
+  protected register = () => { }
 
   /**
    * Store the final command's result or success value somewhere.
@@ -535,9 +535,9 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    */
   get run(): (
     T extends CommandsRoot ?
-      // The Pick<> ensures only commands are returned from CommandsRoot
-      Pick<T, keyof typeof commands> :
-      T
+    // The Pick<> ensures only commands are returned from CommandsRoot
+    Pick<T, keyof typeof commands> :
+    T
   ) {
     this.commandsRoot.executeState = 'after'
 
@@ -578,6 +578,7 @@ export class ExecuteWithRun<T extends CommandsRoot> extends Execute<T> {
       const name = typeof nameOrCb === 'string' ? nameOrCb : undefined
 
       const fallbackName = `execute_${this.commandsRoot.arguments[1]}`
+
       if (isAsyncFunction(callback)) {
         const realName = name ?? fallbackName
         const mcFunction = datapack.createCallbackMCFunction(realName, callback, typeof name === 'undefined')

@@ -13,8 +13,9 @@ import type {
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
-import type { FunctionResource } from '@datapack/resourcesTree'
+import type { FunctionResource, ResourceConflictStrategy } from '@datapack/resourcesTree'
 import type { ConditionType } from './conditions'
+import { CONFLICT_STRATEGIES } from '@/env'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
 
@@ -92,16 +93,16 @@ type FlowStatementConfig = {
   forceInlineScore?: Score
   mightHaveRemainingArguments?: boolean
 } & (
-  {
-    initialCondition: false,
-    loopCondition: false,
-    condition?: undefined
-  } | {
-    initialCondition: boolean,
-    loopCondition: boolean,
-    condition: ConditionType
-  }
-)
+    {
+      initialCondition: false,
+      loopCondition: false,
+      condition?: undefined
+    } | {
+      initialCondition: boolean,
+      loopCondition: boolean,
+      condition: ConditionType
+    }
+  )
 
 export class Flow {
   private commandsRoot
@@ -333,7 +334,14 @@ export class Flow {
     let callbackFunctionName: string
 
     if (config.absoluteName) {
-      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName, 'throw')
+      let conflictStrat: Exclude<ResourceConflictStrategy<'functions'>, 'append' | 'prepend'>
+      if (CONFLICT_STRATEGIES.MCFUNCTION === 'append' || CONFLICT_STRATEGIES.MCFUNCTION === 'prepend') {
+        conflictStrat = 'throw'
+      } else {
+        conflictStrat = CONFLICT_STRATEGIES.MCFUNCTION
+      }
+
+      callbackFunctionName = this.datapack.createEnterRootFunction(config.absoluteName, conflictStrat)
     } else {
       callbackFunctionName = this.datapack.createEnterChildFunction(config.callbackName)
     }
@@ -648,7 +656,7 @@ export class Flow {
 
   doWhile = <R extends void | Promise<void>>(condition: ConditionClass | CombinedConditions, callback: () => R): R => this._while(condition, callback, 'do_while')
 
-  binaryFor = (from: Score | number, to: Score |number, callback: (amount: number) => void, maximum = 128) => {
+  binaryFor = (from: Score | number, to: Score | number, callback: (amount: number) => void, maximum = 128) => {
     if (typeof from === 'number' && typeof to === 'number') {
       callback(to - from)
     }

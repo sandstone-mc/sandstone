@@ -10,7 +10,7 @@ import type {
   LootTableJSON, PredicateJSON, RecipeJSON,
   TAG_TYPES, TagSingleValue,
 } from '@arguments'
-import type { TagInstance } from '@resources'
+import type { MCFunctionOptions, TagInstance } from '@resources'
 import type { CommandArgs } from './minecraft'
 
 export type ResourcePath = readonly [namespace: string, ...path: string[]]

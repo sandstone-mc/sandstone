@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import { CONFLICT_STRATEGIES } from '@/env'
 import { CommandsRoot } from '@commands'
 import { Flow } from '@flow'
 import { resetConditionScore } from '@flow/conditions'
@@ -399,7 +400,10 @@ export default class Datapack {
     } else {
       fullName = name
     }
-    return this.basePath.MCFunction(fullName, callback)
+
+    return this.basePath.MCFunction(fullName, callback, {
+      onConflict: CONFLICT_STRATEGIES.MCFUNCTION,
+    })
   }
 
   /**
