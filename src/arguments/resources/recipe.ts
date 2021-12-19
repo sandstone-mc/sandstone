@@ -26,9 +26,9 @@ type CharacterOfStringsArray<ARRAY extends string[]> = (
   ARRAY extends [infer A, ...infer B] ? (
     A extends string ?
     B extends string[] ?
-      (CharacterOfString<A> | CharacterOfStringsArray<B>)
-      : never
-      : never
+    (CharacterOfString<A> | CharacterOfStringsArray<B>)
+    : never
+    : never
   ) : never
 )
 
@@ -79,13 +79,13 @@ type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | un
   type: NAME
 } & VALUES & (
     HAS_GROUP extends true ? {
-    /**
-     * Used to group multiple recipes together in the recipe book.
-     * Example: group all boats recipes.
-     */
-    group: string
+      /**
+       * Used to group multiple recipes together in the recipe book.
+       * Example: group all boats recipes.
+       */
+      group: string
     } : unknown
-)
+  )
 
 type KeysIngredients<T extends [string, string, string]> = Record<Exclude<CharacterOfStringsArray<T>, ' '>, ItemOrTag | ItemOrTag[]>
 
@@ -170,17 +170,24 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
        */
       count?: number
     }
-   } | never)
+  } | never)
   >
+  | RecipeKind<'crafting_shapeless', {
+    ingredients: ItemOrTag[],
+    result: {
+      item: LiteralUnion<ITEMS>,
+      count?: number
+    }
+  }>
   | RecipeKind<`crafting_special_${SPECIAL_CRAFTING_RECIPES}`, unknown, false>
   | RecipeKind<'smelting', CookingRecipe>
   | RecipeKind<'smithing', {
-      /** Ingredient specifying an item to be upgraded. */
-      base: ItemOrTag
-      /** Item that will be used for upgrading. */
-      addition: ItemOrTag
-      /** Item specifying the resulting type of the upgraded item. */
-      result: LiteralUnion<ITEMS>
+    /** Ingredient specifying an item to be upgraded. */
+    base: ItemOrTag
+    /** Item that will be used for upgrading. */
+    addition: ItemOrTag
+    /** Item specifying the resulting type of the upgraded item. */
+    result: LiteralUnion<ITEMS>
   }>
   | RecipeKind<'smoking', CookingRecipe>
   | RecipeKind<'stonecutting', {
