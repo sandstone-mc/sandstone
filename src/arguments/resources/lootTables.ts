@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import type { LiteralUnion } from '@/generalTypes'
-import type { MAP_ICONS } from '@arguments/basics'
+import type { WithMCNamespace } from '@/utils'
 import type {
   ITEMS,
 } from '@arguments/generated'
@@ -22,7 +22,7 @@ type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
    * - `dynamic` to generate block specific drops,
    * - `empty` for an entry that generates nothing.
    */
-  type: `${'minecraft:' | ''}${TYPE}`
+  type: WithMCNamespace<TYPE>
 } & VALUES
 
 export type LootTableEntry = {
@@ -175,14 +175,14 @@ export type LootTableJSON = {
    * - `advancement_entity`
    * - `generic` if none of the above apply.
    */
-  type?: (
+  type?: WithMCNamespace<
     'empty' | 'entity' |
     'block' | 'chest' |
     'fishing' | 'gift' |
     'advancement_reward' | 'barter' |
     'command' | 'selector' |
     'advancement_entity' | 'generic'
-  ),
+  >,
 
   /**
    * Applies functions to all item stacks produced by this table.

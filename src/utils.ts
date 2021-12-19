@@ -34,3 +34,5 @@ export type Either<A extends Record<string, any>, B extends Record<string, any>>
 } | {
     [K in (keyof A | keyof B)]?: K extends keyof B ? B[K] : never
   }
+
+export type WithMCNamespace<T extends string> = `minecraft:${T}` | T
