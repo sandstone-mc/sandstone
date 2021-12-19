@@ -57,52 +57,52 @@ export type LootTableEntry = {
    * Determines how often this entry is chosen out of all the entries in the pool.
    * Entries with higher weights are used more often (chance is `this entry's weight / total of all considered entries' weights`).
    */
-   weight?: number
+  weight?: number
 
-   /**
-    * Modifies the entry's weight based on the killing/opening/fishing player's luck attribute.
-    * Formula is `floor( weight + (quality * generic.luck))`.
-    */
-   quality?: number
+  /**
+   * Modifies the entry's weight based on the killing/opening/fishing player's luck attribute.
+   * Formula is `floor( weight + (quality * generic.luck))`.
+   */
+  quality?: number
 } & (
-  EntryType<'item', {
-    /**
-     * ID name of the item to be produced, e.g. `diamond`.
-     * The default, if not changed by functions, is a stack of 1 of the default instance of the item.
-     */
-    name: LiteralUnion<ITEMS>
-  }>
-  | EntryType<'tag', {
-    /** Tag to be used, e.g. `arrows`. */
-    name: string | TagInstance<'items'>
+    EntryType<'item', {
+      /**
+       * ID name of the item to be produced, e.g. `diamond`.
+       * The default, if not changed by functions, is a stack of 1 of the default instance of the item.
+       */
+      name: LiteralUnion<ITEMS>
+    }>
+    | EntryType<'tag', {
+      /** Tag to be used, e.g. `arrows`. */
+      name: string | TagInstance<'items'>
 
-    /**
-     * If set to `true`, it chooses one item of the tag, each with the same weight and quality.
-     * If `false`, it generates one of each of the items in the tag.
-     */
-    expand?: boolean
-  }>
-  | EntryType<'loot_table', {
-    /** Loot table to be used, e.g. `gameplay/fishing/junk` */
-    name: string | LootTableInstance
-  }>
-  | EntryType<'dynamic', {
-    /** Can be contents for block entity contents or self for banners and player skulls. */
-    name: 'contents' | 'self'
-  }>
-  | EntryType<'group', {
-    /** A list of entries that are used to generate loot. Can be used for convenience, e.g. if one condition applies for multiple entries. */
-    children: LootTableEntry[]
-  }>
-  | EntryType<'alternatives', {
-    /** A list of entries of which the first, and only the first, successful entry gets generated. */
-    children: LootTableEntry[]
-  }>
-  | EntryType<'sequence', {
-    /** A list of entries that are used until the first entry fails. After an entry fails, no more entries of this list are generated */
-    children: LootTableEntry[]
-  }>
-)
+      /**
+       * If set to `true`, it chooses one item of the tag, each with the same weight and quality.
+       * If `false`, it generates one of each of the items in the tag.
+       */
+      expand?: boolean
+    }>
+    | EntryType<'loot_table', {
+      /** Loot table to be used, e.g. `gameplay/fishing/junk` */
+      name: string | LootTableInstance
+    }>
+    | EntryType<'dynamic', {
+      /** Can be contents for block entity contents or self for banners and player skulls. */
+      name: 'contents' | 'self'
+    }>
+    | EntryType<'group', {
+      /** A list of entries that are used to generate loot. Can be used for convenience, e.g. if one condition applies for multiple entries. */
+      children: LootTableEntry[]
+    }>
+    | EntryType<'alternatives', {
+      /** A list of entries of which the first, and only the first, successful entry gets generated. */
+      children: LootTableEntry[]
+    }>
+    | EntryType<'sequence', {
+      /** A list of entries that are used until the first entry fails. After an entry fails, no more entries of this list are generated */
+      children: LootTableEntry[]
+    }>
+  )
 
 type LootTablePoll = {
   /**
@@ -135,7 +135,7 @@ type LootTablePoll = {
   /** Specifies the number of rolls on the pool. */
   rolls: NumberProvider
   /** Specifies the number of rolls on the pool. */
-  bonus_rolls: NumberProvider
+  bonus_rolls?: NumberProvider
 
   /**
    * A list of all things that can be produced by this pool.
