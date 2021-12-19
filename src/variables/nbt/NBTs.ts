@@ -2,7 +2,7 @@ import * as util from 'util'
 
 import { parseNBT } from './parser'
 
-import type { NBTObject, RootNBT as NBTObj, RootNBT } from '@arguments'
+import type { NBTObject, RootNBT } from '@arguments'
 
 export abstract class NBTInstance {
   abstract [util.inspect.custom]: () => string;
@@ -98,9 +98,6 @@ function dynamicNBT(template: TemplateStringsArray, ...args: unknown[]): NBTObje
 }
 
 interface NBTInterface {
-  /** Transforms a NBT object to a string. */
-  toString: (nbt: NBTObj) => string
-
   /**
    * Transform a number into a Minecraft NBT float number.
    *
@@ -286,7 +283,7 @@ interface NBTInterface {
    * >>> NBT.stringify({ Test: NBT.longArray([0, 1, 2]) })
    * '{ Test: [L; 0, 1, 2] }'
    */
-  stringify: (nbt: RootNBT) => string
+  stringify: (nbt: NBTObject) => string
 
   /**
    * Parses the given NBT.
@@ -346,7 +343,7 @@ export const NBT: NBTInterface = Object.assign(dynamicNBT, {
 
   not: (nbt: RootNBT) => new NotNBT(nbt),
 
-  stringify: (nbt: RootNBT) => nbtStringifier(nbt),
+  stringify: (nbt: NBTObject) => nbtStringifier(nbt),
 
   parse: (nbt: string) => parseNBT(NBT, nbt),
 })
@@ -359,23 +356,7 @@ export const nbtStringifier = (nbt: NBTObject): string => {
 
   if (typeof nbt === 'string') {
     // We have a string
-
-    /*
-     * Sometimes, when we have both a " and a ' in a string,
-     * util.inspect will end up creating a template string, invalid for Minecraft.
-     */
-    const inspectedStr = util.inspect(nbt, {
-      breakLength: +Infinity,
-      compact: true,
-      maxStringLength: +Infinity,
-      depth: +Infinity,
-    })
-
-    if (inspectedStr[0] === '`') {
-      return JSON.stringify(nbt)
-    }
-
-    return inspectedStr
+    return JSON.stringify(nbt)
   }
 
   if (Array.isArray(nbt)) {
@@ -391,6 +372,6 @@ export const nbtStringifier = (nbt: NBTObject): string => {
   }
 
   // It's a real object.
-  const objectStr = Object.entries(nbt).map(([key, value]) => `${key}:${nbtStringifier(value)}`).join(',')
+  const objectStr = Object.entries(nbt).map(([key, value]) => `"${key}":${nbtStringifier(value)}`).join(',')
   return `{${objectStr}}`
 }
