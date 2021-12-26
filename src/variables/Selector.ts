@@ -3,7 +3,7 @@
 import { nbtStringifier } from '@variables/nbt/NBTs'
 import { rangeParser } from '@variables/parsers'
 
-import { ComponentClass } from './abstractClasses'
+import { TextComponentClass } from './abstractClasses'
 
 import type {
   ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
@@ -195,7 +195,7 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
   }).join(', ')}}`
 }
 
-export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> extends ComponentClass implements ConditionClass {
+export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> extends TextComponentClass implements ConditionClass {
   protected commandsRoot: CommandsRoot
 
   target
@@ -303,7 +303,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
     return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }
 
-  protected _toChatComponent(): TextComponentObject {
+  toJSONTextComponent(): TextComponentObject {
     return {
       selector: this.toString(),
     }

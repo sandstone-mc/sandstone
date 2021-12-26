@@ -21,7 +21,7 @@ export {
   relative as rel,
 } from './variables'
 export * from './variables/Coordinates'
-export * from './variables/JSONTextComponentClass'
+export * from './variables/JSONTextComponentParser'
 export * from './variables/nbt/NBTs'
 export * from './variables/Objective'
 export * from './variables/parsers'

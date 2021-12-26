@@ -1,6 +1,6 @@
 export * from './abstractClasses'
 export * from './Coordinates'
-export * from './JSONTextComponentClass'
+export * from './JSONTextComponentParser'
 export * from './nbt'
 export * from './Objective'
 export * from './parsers'

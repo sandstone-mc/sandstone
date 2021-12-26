@@ -1,4 +1,4 @@
-import { JSONTextComponentClass } from './JSONTextComponentClass'
+import { JSONTextComponentParser } from './JSONTextComponentParser'
 import { Score } from './Score'
 
 import type { JSONTextComponent, MultipleEntitiesArgument } from '@arguments'
@@ -11,7 +11,7 @@ export class ObjectiveClass<CRITERION extends string | undefined = string | unde
 
   criterion: CRITERION
 
-  display: JSONTextComponentClass | undefined
+  display: JSONTextComponentParser | undefined
 
   _displayRaw: JSONTextComponent | undefined
 
@@ -19,7 +19,7 @@ export class ObjectiveClass<CRITERION extends string | undefined = string | unde
     this.commandsRoot = commandsRoot
     this.name = name
     this.criterion = criterion as CRITERION
-    this.display = display === undefined ? undefined : new JSONTextComponentClass(display)
+    this.display = display === undefined ? undefined : new JSONTextComponentParser(display)
     this._displayRaw = display
   }
 

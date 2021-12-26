@@ -3,7 +3,8 @@ import { nbtStringifier } from './nbt/NBTs'
 import { Score } from './Score'
 
 import type {
-  Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument,
+  Coordinates, NBTObject, SingleEntityArgument,
+  TextComponentObject,
 } from '@arguments'
 import type {
   DataModify, DataModifyType, DataModifyValues, StoreType,
@@ -183,8 +184,8 @@ export class DataPointInstance<TYPE extends DATA_TYPES = any> extends ConditionT
     value: ['if', 'data', this.type, this.currentTarget, this.path],
   })
 
-  protected _toChatComponent = () => ({
+  toJSONTextComponent = () => ({
     nbt: this.path,
     [this.type]: this.currentTarget,
-  }) as unknown as JSONTextComponent
+  }) as unknown as TextComponentObject
 }

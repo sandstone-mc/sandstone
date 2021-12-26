@@ -1,7 +1,7 @@
 import { SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { JSONTextComponentClass } from '@variables'
+import { JSONTextComponentParser } from '@variables'
 
 import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from '@arguments'
 
@@ -30,7 +30,7 @@ export class Team extends Command {
   @command(['team', 'add'], {
     isRoot: true,
     parsers: {
-      '1': (displayName) => new JSONTextComponentClass(displayName),
+      '1': (displayName) => new JSONTextComponentParser(displayName),
     },
   })
   add = (team: string, displayName?: JSONTextComponent) => {}

@@ -1,10 +1,11 @@
-import { ComponentClass } from '@variables/abstractClasses'
+import { TextComponentClass } from '@variables/abstractClasses'
 import { rangeParser } from '@variables/parsers'
 
 import { SelectorClass } from './Selector'
 
 import type {
-  COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
+  COMPARISON_OPERATORS, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
+  TextComponentObject,
 } from '@arguments'
 import type { CommandsRoot } from '@commands'
 import type { Datapack } from '@datapack'
@@ -35,7 +36,7 @@ function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, obje
   return anonymousScore
 }
 
-export class Score<OBJ_CRITERION extends string | undefined = string | undefined> extends ComponentClass implements ConditionClass {
+export class Score<OBJ_CRITERION extends string | undefined = string | undefined> extends TextComponentClass implements ConditionClass {
   commandsRoot: CommandsRoot
 
   target: MultipleEntitiesArgument
@@ -66,7 +67,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     } as const
   }
 
-  protected _toChatComponent(): JSONTextComponent {
+  toJSONTextComponent(): TextComponentObject {
     return {
       score: { name: this.target, objective: this.objective.name },
     }

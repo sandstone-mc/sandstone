@@ -1,5 +1,5 @@
 import { MultipleEntitiesArgument } from '@arguments'
-import { JSONTextComponentClass } from '@variables'
+import { JSONTextComponentParser } from '@variables'
 
 import { Command } from '../Command'
 import { command } from '../decorators'
@@ -15,7 +15,7 @@ export class Bossbar extends Command {
    *
    * @param name The display name of the boss bar.
    */
-  @command(['bossbar', 'add'], { isRoot: true, parsers: { '1': (arg) => new JSONTextComponentClass(arg) } })
+  @command(['bossbar', 'add'], { isRoot: true, parsers: { '1': (arg) => new JSONTextComponentParser(arg) } })
   add = (id: string, name: JSONTextComponent) => { }
 
   /**

@@ -1,10 +1,10 @@
-import type { JSONTextComponent } from '@arguments'
+import type { JSONTextComponent, RawJSONTextComponent } from '@arguments'
 
-function toComponent(c: any): JSONTextComponent {
-  return c._toChatComponent?.() ?? c.toJSON?.() ?? c
+function toComponent(c: any): RawJSONTextComponent {
+  return c.toJSONTextComponent?.() ?? c.toJSON?.() ?? c
 }
 
-export class JSONTextComponentClass {
+export class JSONTextComponentParser {
   jsonTextComponent: JSONTextComponent
 
   constructor(jsonTextComponent: JSONTextComponent) {

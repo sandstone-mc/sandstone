@@ -1,5 +1,5 @@
 import { nbtStringifier } from '@variables'
-import { JSONTextComponentClass } from '@variables/JSONTextComponentClass'
+import { JSONTextComponentParser } from '@variables/JSONTextComponentParser'
 
 import { coordinatesParser, rotationParser } from '../variables/parsers'
 import { command } from './decorators'
@@ -514,7 +514,7 @@ export class CommandsRoot {
   w = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // tellraw command //
-  @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JSONTextComponentClass(msg) } })
+  @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JSONTextComponentParser(msg) } })
   tellraw = (targets: MultiplePlayersArgument, message: JSONTextComponent) => { }
 
   // time command //

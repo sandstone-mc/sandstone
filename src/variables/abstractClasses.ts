@@ -1,7 +1,7 @@
-import type { JSONTextComponent } from '@arguments/jsonTextComponent'
+import type { RawJSONTextComponent } from '@arguments/jsonTextComponent'
 
-export class ComponentClass {
-  protected _toChatComponent(): JSONTextComponent {
+export class TextComponentClass {
+  toJSONTextComponent(): RawJSONTextComponent {
     throw new Error('Not implemented')
   }
 }
@@ -15,7 +15,7 @@ export class ConditionClass {
   }
 }
 
-export class ConditionTextComponentClass extends ComponentClass implements ConditionClass {
+export class ConditionTextComponentClass extends TextComponentClass implements ConditionClass {
   _toMinecraftCondition(): {value: any[]} {
     throw new Error('Not implemented')
   }

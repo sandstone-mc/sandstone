@@ -1,7 +1,7 @@
 import { MultipleEntitiesArgument, SelectorArgument } from '@arguments'
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
-import { JSONTextComponentClass, SelectorClass } from '@variables'
+import { JSONTextComponentParser, SelectorClass } from '@variables'
 
 import type { JSONTextComponent, MultiplePlayersArgument } from '@arguments'
 
@@ -14,21 +14,21 @@ export class TitleArguments extends Command {
 
   @command('title', {
     parsers: {
-      '0': (title) => new JSONTextComponentClass(title),
+      '0': (title) => new JSONTextComponentParser(title),
     },
   })
   title = (title: JSONTextComponent) => {}
 
   @command('subtitle', {
     parsers: {
-      '0': (subtitle) => new JSONTextComponentClass(subtitle),
+      '0': (subtitle) => new JSONTextComponentParser(subtitle),
     },
   })
   subtitle = (subtitle: JSONTextComponent) => {}
 
   @command('actionbar', {
     parsers: {
-      '0': (actionbar) => new JSONTextComponentClass(actionbar),
+      '0': (actionbar) => new JSONTextComponentParser(actionbar),
     },
   })
   actionbar = (actionbarText: JSONTextComponent) => {}

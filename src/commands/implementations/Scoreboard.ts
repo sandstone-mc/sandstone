@@ -1,4 +1,4 @@
-import { JSONTextComponentClass } from '@variables'
+import { JSONTextComponentParser } from '@variables'
 
 import { Command } from '../Command'
 import { command } from '../decorators'
@@ -43,7 +43,7 @@ class ScoreboardObjectives extends Command {
   @command(objectiveCmd('add'), {
     isRoot: true,
     parsers: {
-      '2': (displayName) => (displayName ? new JSONTextComponentClass(displayName) : displayName),
+      '2': (displayName) => (displayName ? new JSONTextComponentParser(displayName) : displayName),
     },
   })
   add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => {}
@@ -85,7 +85,7 @@ class ScoreboardObjectives extends Command {
   @command(objectiveCmd('modify'), {
     isRoot: true,
     parsers: {
-      '2': (displayName, [_, type]) => (type === 'displayname' ? new JSONTextComponentClass(displayName) : displayName),
+      '2': (displayName, [_, type]) => (type === 'displayname' ? new JSONTextComponentParser(displayName) : displayName),
     },
   })
   modify: (

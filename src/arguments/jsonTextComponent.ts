@@ -1,4 +1,4 @@
-import type { ComponentClass } from '@variables/abstractClasses'
+import type { TextComponentClass } from '@variables/abstractClasses'
 import type { VectorClass } from '@variables/Coordinates'
 import type { LiteralUnion } from '../generalTypes'
 import type { BASIC_COLORS } from './basics'
@@ -229,6 +229,17 @@ export type TextComponentObject = (
   ContentTag & ChildrenTags & FormattingTags & InteractivityTags
 )
 
+/**
+ * A JSON text component, excluding TextComponentClass instances.
+ */
+export type RawJSONTextComponent = (
+  string |
+  boolean |
+  number |
+  TextComponentObject |
+  RawJSONTextComponent[]
+)
+
 /*
  * A JSON text component, that can be displayed in several locations: in-game chat, books, signs, titles...
  */
@@ -237,6 +248,6 @@ export type JSONTextComponent = (
   boolean |
   number |
   TextComponentObject |
-  ComponentClass |
+  TextComponentClass |
   JSONTextComponent[]
 )

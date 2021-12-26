@@ -94,10 +94,10 @@ type RegisterConfig = {
    * Please note that the unparsed argument will be given to the function itself, to avoid types problems.
    *
    * @example
-   * `@command`('tellraw', { parsers: { 1: JSONTextComponentClass } })
+   * `@command`('tellraw', { parsers: { 1: JSONTextComponentParser } })
    * tellraw = (targets: string, textComponent: JSONTextComponent) => {}
    *
-   * => The `textComponent` argument will be casted to a JSONTextComponentClass when registered.
+   * => The `textComponent` argument will be casted to a JSONTextComponentParser when registered.
    */
   parsers?: Record<number | string, (arg: any, innerArgs: unknown[]) => unknown> | ((args: unknown[]) => unknown[])
 
