@@ -1,3 +1,4 @@
+import { CONFLICT_STRATEGIES } from '@/env'
 import { isAsyncFunction } from '@/utils'
 import { Execute } from '@commands/implementations/Execute'
 import { toMCFunctionName } from '@datapack/minecraft'
@@ -15,7 +16,6 @@ import type { Datapack } from '@datapack'
 import type { CommandArgs } from '@datapack/minecraft'
 import type { FunctionResource, ResourceConflictStrategy } from '@datapack/resourcesTree'
 import type { ConditionType } from './conditions'
-import { CONFLICT_STRATEGIES } from '@/env'
 
 const ASYNC_CALLBACK_NAME = '__await_flow'
 
