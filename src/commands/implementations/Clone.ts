@@ -16,7 +16,7 @@ export class CloneOptions extends Command {
    * - `normal`: Don't move or force.
    */
   @command('replace')
-  replace = (mode?: 'force' | 'move' | 'normal') => { }
+    replace = (mode?: 'force' | 'move' | 'normal') => { }
 
   /**
    * Copy only non-air blocks. Blocks in the destination region that would otherwise be overwritten by air are left unmodified.
@@ -27,7 +27,7 @@ export class CloneOptions extends Command {
    * - `normal`: Don't move or force.
    */
   @command('masked')
-  masked = (mode?: 'force' | 'move' | 'normal') => { }
+    masked = (mode?: 'force' | 'move' | 'normal') => { }
 
   /**
    * Clones only blocks with the block id specified by `filter`.
@@ -40,7 +40,7 @@ export class CloneOptions extends Command {
    * - `normal`: Don't move or force.
    */
   @command('filtered')
-  filtered = (filter: LiteralUnion<BLOCKS>, mode?: 'force' | 'move' | 'normal') => { }
+    filtered = (filter: LiteralUnion<BLOCKS>, mode?: 'force' | 'move' | 'normal') => { }
 }
 
 export class Clone extends Command {
@@ -74,5 +74,5 @@ export class Clone extends Command {
       '2': coordinatesParser,
     },
   })
-  clone = (begin: Coordinates, end: Coordinates, destination: Coordinates) => new CloneOptions(this.commandsRoot)
+    clone = (begin: Coordinates, end: Coordinates, destination: Coordinates) => new CloneOptions(this.commandsRoot)
 }

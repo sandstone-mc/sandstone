@@ -20,7 +20,7 @@ export class Enchant extends Command {
    * It must be between 0 and 2_147_483_647 (inclusive).
    */
   @command('enchant', { isRoot: true })
-  enchant = (targets: MultipleEntitiesArgument, enchantment: LiteralUnion<ENCHANTMENTS>, level?: number) => {
-    if (level) validateIntegerRange(level, 'level', 0, 2_147_483_647)
-  }
+    enchant = (targets: MultipleEntitiesArgument, enchantment: LiteralUnion<ENCHANTMENTS>, level?: number) => {
+      if (level) validateIntegerRange(level, 'level', 0, 2_147_483_647)
+    }
 }

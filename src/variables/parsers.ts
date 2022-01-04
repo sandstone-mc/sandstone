@@ -25,13 +25,13 @@ function isRawRotation(arg: unknown): arg is [string, string] {
   return Array.isArray(arg) && arg.length === 2 && arg.every((c) => typeof c === 'string')
 }
 
-export function coordinatesParser<T extends unknown>(coordinates: T): (
+export function coordinatesParser<T>(coordinates: T): (
   T extends Coordinates ? VectorClass<[string, string, string]> : T
 ) {
   return isRawCoordinates(coordinates) ? new VectorClass(coordinates) : coordinates as any
 }
 
-export function rotationParser<T extends unknown>(rotation: T): (
+export function rotationParser<T>(rotation: T): (
   T extends Rotation ? VectorClass<[string, string]> : T
 ) {
   return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any

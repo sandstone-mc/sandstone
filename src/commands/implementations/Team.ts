@@ -33,7 +33,7 @@ export class Team extends Command {
       '1': (displayName) => new JSONTextComponentClass(displayName),
     },
   })
-  add = (team: string, displayName?: JSONTextComponent) => {}
+    add = (team: string, displayName?: JSONTextComponent) => {}
 
   /**
    * Removes all members from a team.
@@ -41,7 +41,7 @@ export class Team extends Command {
    * @param team Specifies the name of the team.
    */
   @command(['team', 'empty'], { isRoot: true })
-  empty = (team: string) => {}
+    empty = (team: string) => {}
 
   /**
    * Makes specified entities join a team.
@@ -53,7 +53,7 @@ export class Team extends Command {
    * If unspecified, defaults to the executor.
    */
   @command(['team', 'join'], { isRoot: true })
-  join = (team: string, members?: MultipleEntitiesArgument | '*') => {}
+    join = (team: string, members?: MultipleEntitiesArgument | '*') => {}
 
   /**
    * Makes specified entities leave a team.
@@ -62,7 +62,7 @@ export class Team extends Command {
    * `'*'` may be used to represent all entities tracked by the scoreboard
    */
   @command(['team', 'leave'], { isRoot: true })
-  leave = (members: MultipleEntitiesArgument | '*') => {}
+    leave = (members: MultipleEntitiesArgument | '*') => {}
 
   /**
    * Lists all teams, or lists all members of a team if `team` is set.
@@ -70,10 +70,10 @@ export class Team extends Command {
    * @param team Specifies the name of the team.
    */
   @command(['team', 'list'], { isRoot: true })
-  list = (team?: string) => {}
+    list = (team?: string) => {}
 
   @command(['team', 'modify'], { isRoot: true })
-  modify: (
+    modify: (
     /**
      * Modifies the option of the team.
      *
@@ -141,5 +141,5 @@ export class Team extends Command {
    * @param team Specifies the name of the team.
    */
   @command(['team', 'remove'], { isRoot: true })
-  remove = (team: string) => {}
+    remove = (team: string) => {}
 }

@@ -146,13 +146,13 @@ export class DataPointInstance<TYPE extends DATA_TYPES = any> extends ConditionT
      */
     ((value: Score, storeType: StoreType, scale?: number) => void)
   ) = (value: NBTObject | DataPointInstance | Score, storeType?: StoreType, scale: number = 1) => {
-    if (value instanceof Score) {
-      this.executeStore(storeType as StoreType, scale).run.scoreboard.players.get(value.target, value.objective)
-      return
-    }
+      if (value instanceof Score) {
+        this.executeStore(storeType as StoreType, scale).run.scoreboard.players.get(value.target, value.objective)
+        return
+      }
 
-    this.modify((data) => data.set, value)
-  }
+      this.modify((data) => data.set, value)
+    }
 
   /**
    * Set the data point to the given NBT.

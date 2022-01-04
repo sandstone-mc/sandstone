@@ -14,5 +14,5 @@ export class DefaultGamemode extends Command {
    * - `spectator` for spectator mode
    */
   @command('defaultgamemode', { isRoot: true })
-  defaultgamemode = (mode: GAMEMODES) => {}
+    defaultgamemode = (mode: GAMEMODES) => {}
 }

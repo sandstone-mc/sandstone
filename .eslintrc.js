@@ -122,6 +122,8 @@ module.exports = {
 
     'no-useless-constructor': 'off',
 
+    'default-param-last': 'off',
+
     // Don't use array destructuring for assignement expressions
     'prefer-destructuring': [
       'error',

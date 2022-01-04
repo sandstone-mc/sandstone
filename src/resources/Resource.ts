@@ -3,27 +3,27 @@ import { toMCFunctionName } from '@datapack/minecraft'
 import type { Datapack } from '@datapack'
 
 export class ResourceInstance {
-    protected datapack
+  protected datapack
 
-    protected commandsRoot
+  protected commandsRoot
 
-    protected path
+  protected path
 
-    constructor(datapack: Datapack, name: string) {
-      this.datapack = datapack
+  constructor(datapack: Datapack, name: string) {
+    this.datapack = datapack
 
-      this.commandsRoot = datapack.commandsRoot
+    this.commandsRoot = datapack.commandsRoot
 
-      this.path = datapack.getResourcePath(name)
-    }
+    this.path = datapack.getResourcePath(name)
+  }
 
-    get name(): string {
-      return toMCFunctionName(this.path.fullPathWithNamespace)
-    }
+  get name(): string {
+    return toMCFunctionName(this.path.fullPathWithNamespace)
+  }
 
-    toString() {
-      return this.name
-    }
+  toString() {
+    return this.name
+  }
 
-    toJSON() { return this.toString() }
+  toJSON() { return this.toString() }
 }

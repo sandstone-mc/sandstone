@@ -21,7 +21,7 @@ function playersCmd(...subcommands: string[]) {
 class ScoreboardObjectives extends Command {
   /** List all existing objectives with their display names and criteria. */
   @command(objectiveCmd('list'), { isRoot: true })
-  list = () => {}
+    list = () => {}
 
   /**
    * Create a new objective with the given internal objective name, specified criterion, and the optional display name.
@@ -46,7 +46,7 @@ class ScoreboardObjectives extends Command {
       '2': (displayName) => (displayName ? new JSONTextComponentClass(displayName) : displayName),
     },
   })
-  add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => {}
+    add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => {}
 
   /**
    * Delete all references to the named objective in the scoreboard system.
@@ -62,7 +62,7 @@ class ScoreboardObjectives extends Command {
    * --------------------------------------------------
    */
   @command(objectiveCmd('remove'), { isRoot: true })
-  remove = (objective: ObjectiveArgument) => {}
+    remove = (objective: ObjectiveArgument) => {}
 
   /**
    * Display score info for the objective in the given slot.
@@ -80,7 +80,7 @@ class ScoreboardObjectives extends Command {
    * @param objective The objective to display. If not provided, this display slot is cleared.
    */
   @command(objectiveCmd('setdisplay'), { isRoot: true })
-  setDisplay = (slot: DISPLAY_SLOTS, objective?: ObjectiveArgument) => {}
+    setDisplay = (slot: DISPLAY_SLOTS, objective?: ObjectiveArgument) => {}
 
   @command(objectiveCmd('modify'), {
     isRoot: true,
@@ -88,7 +88,7 @@ class ScoreboardObjectives extends Command {
       '2': (displayName, [_, type]) => (type === 'displayname' ? new JSONTextComponentClass(displayName) : displayName),
     },
   })
-  modify: (
+    modify: (
   /**
    * Change the display name of the scoreboard in display slots.
    *
@@ -127,7 +127,7 @@ class ScoreboardObjectives extends Command {
 
 class ScoreboardPlayers extends Command {
   @command(playersCmd('list'), { isRoot: true })
-  list: (
+    list: (
     /**
      * Lists all entities which are tracked in some way by the scoreboard system.
      */
@@ -166,31 +166,31 @@ class ScoreboardPlayers extends Command {
    * @param objective The objective to get the score from.
    */
   @command(playersCmd('get'), { isRoot: true })
-  get = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
+    get = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
 
   @command(playersCmd('set'), { isRoot: true })
-  set = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
+    set = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
 
   @command(playersCmd('add'), { isRoot: true })
-  add = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
+    add = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
 
   @command(playersCmd('remove'), { isRoot: true })
-  remove = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
+    remove = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
 
   @command(playersCmd('reset'), { isRoot: true })
-  reset = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
+    reset = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
 
   @command(playersCmd('enable'), { isRoot: true })
-  enable = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
+    enable = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
 
   @command(playersCmd('operation'), { isRoot: true })
-  operation = (
-    targets: MultipleEntitiesArgument | number,
-    targetObjective: ObjectiveArgument,
-    operation: OPERATORS,
-    source: MultipleEntitiesArgument | number,
-    sourceObjective: ObjectiveArgument,
-  ) => {}
+    operation = (
+      targets: MultipleEntitiesArgument | number,
+      targetObjective: ObjectiveArgument,
+      operation: OPERATORS,
+      source: MultipleEntitiesArgument | number,
+      sourceObjective: ObjectiveArgument,
+    ) => {}
 }
 
 export class Scoreboard extends Command {

@@ -10,7 +10,7 @@ export class TriggerArguments extends Command {
      * @param value the value to add.
      */
     @command('add')
-    add = (value: number) => {}
+      add = (value: number) => {}
 
     /**
      * Sets the value of `objective` to `value`.
@@ -18,7 +18,7 @@ export class TriggerArguments extends Command {
      * @param value the new value.
      */
     @command('add')
-    set = (value: number) => {}
+      set = (value: number) => {}
 }
 
 export class Trigger extends Command {
@@ -44,5 +44,5 @@ export class Trigger extends Command {
      * trigger(myObjective).add(2)
      */
     @command('trigger', { isRoot: true, hasSubcommands: true })
-    trigger = (objective: ObjectiveArgument) => new TriggerArguments(this.commandsRoot)
+      trigger = (objective: ObjectiveArgument) => new TriggerArguments(this.commandsRoot)
 }

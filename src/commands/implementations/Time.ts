@@ -17,7 +17,7 @@ export class Time extends Command {
    * - `t` (default and omitable): a single gametick; the default unit.
    */
   @command(['time', 'add'], { isRoot: true })
-  add = (time: TimeArgument) => {}
+    add = (time: TimeArgument) => {}
 
   /**
    * Queries current time.
@@ -28,7 +28,7 @@ export class Time extends Command {
    * - `day`: the number of in-game days passed. (the in-game daytime divided by 24000, then modulo 2147483647)
    */
   @command(['time', 'query'], { isRoot: true })
-  query = (type: 'daytime' | 'gametime' | 'day') => {}
+    query = (type: 'daytime' | 'gametime' | 'day') => {}
 
   /**
    * Sets the in-game daytime.
@@ -39,5 +39,5 @@ export class Time extends Command {
    * - `t` (default and omitable): a single gametick; the default unit.
    */
   @command(['time', 'set'], { isRoot: true })
-  set = (time: TimeArgument | LiteralUnion<'day' | 'night' | 'noon' | 'midnight'>) => {}
+    set = (time: TimeArgument | LiteralUnion<'day' | 'night' | 'noon' | 'midnight'>) => {}
 }

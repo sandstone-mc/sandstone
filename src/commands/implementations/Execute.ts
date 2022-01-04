@@ -65,7 +65,7 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
   @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
-  block = (targetPos: Coordinates, path: string, type: StoreType, scale = 1) => this.execute
+    block = (targetPos: Coordinates, path: string, type: StoreType, scale = 1) => this.execute
 
   /**
    * Saves the final command's return value in either a bossbar's current value or its maximum value.
@@ -75,7 +75,7 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    * @param type Whether to overwrite the bossbar's current value or its max value.
    */
   @command('bossbar', executeConfig)
-  bossbar = (id: string, type: 'max' | 'value') => this.execute
+    bossbar = (id: string, type: 'max' | 'value') => this.execute
 
   /**
    * Save the final command's return value in one of an entity's data tags.
@@ -93,12 +93,10 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
   @command('entity', executeConfig)
-  entity = (
-    target: SingleEntityArgument, path: string, type: StoreType, scale = 1,
-  ) => this.execute
+    entity = (target: SingleEntityArgument, path: string, type: StoreType, scale = 1) => this.execute
 
   @command('score', executeConfig)
-  score: (
+    score: (
     (
       /**
        * Overrides `targets`' score on the given `objective` with the final command's return value.
@@ -133,7 +131,7 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
   @command('storage', executeConfig)
-  storage = (target: string, path: string, type: StoreType, scale = 1) => this.execute
+    storage = (target: string, path: string, type: StoreType, scale = 1) => this.execute
 }
 
 export class ExecuteStore<T extends CommandsRootLike> extends ExecuteSubcommand<T> {
@@ -175,7 +173,7 @@ export class ExecuteIfData<T extends CommandsRootLike> extends ExecuteSubcommand
    * @param path Data tag to check for.
    */
   @command('block', { ...executeConfig, parsers: { '0': coordinatesParser } })
-  block = (pos: Coordinates, path: string) => this.execute
+    block = (pos: Coordinates, path: string) => this.execute
 
   /**
    * Checks whether the targeted entity has any data for a given tag
@@ -183,7 +181,7 @@ export class ExecuteIfData<T extends CommandsRootLike> extends ExecuteSubcommand
    * @param path Data tag to check for.
    */
   @command('entity', executeConfig)
-  entity = (target: SingleEntityArgument, path: string) => this.execute
+    entity = (target: SingleEntityArgument, path: string) => this.execute
 
   /**
    * Checks whether the targeted storage has any data for a given tag
@@ -191,7 +189,7 @@ export class ExecuteIfData<T extends CommandsRootLike> extends ExecuteSubcommand
    * @param path Data tag to check for.
    */
   @command('storage', executeConfig)
-  storage = (source: string, path: string) => this.execute
+    storage = (source: string, path: string) => this.execute
 }
 
 type IfsAndUnlesses<T extends CommandsRootLike, E extends Execute<T>> = {
@@ -303,7 +301,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param axes Any non-repeating combination of the characters 'x', 'y', and 'z'.
    */
   @command('align', executeConfig)
-  align = (axes: AXES) => this
+    align = (axes: AXES) => this
 
   /**
    * Stores the distance from the feet to the eyes of the entity that is executing the command in the anchor, which is part of the command context.
@@ -312,7 +310,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param anchor Whether to anchor the executed command to eye level or feet level
    */
   @command('anchored', executeConfig)
-  anchored = (anchor: ANCHORS) => this
+    anchored = (anchor: ANCHORS) => this
 
   /**
    * Sets the command sender to target entity, without changing position, rotation, dimension, or anchor
@@ -320,14 +318,14 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param targets Target entity/entities to become the new sender.
    */
   @command('as', executeConfig)
-  as = (targets: MultipleEntitiesArgument) => this
+    as = (targets: MultipleEntitiesArgument) => this
 
   /**
    * Sets the command position, rotation, and dimension to match those of an entity/entities; does not change sender
    * @param targets Target entity/entities to match position, rotation, and dimension with
    */
   @command('at', executeConfig)
-  at = (targets: MultipleEntitiesArgument) => this
+    at = (targets: MultipleEntitiesArgument) => this
 
   /**
    * Sets the command rotation to face a given point, as viewed from its anchor (either the eyes or the feet).
@@ -335,7 +333,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param pos Coordinate to rotate towards.
    */
   @command('facing', { ...executeConfig, parsers: { '0': coordinatesParser } })
-  facing = (pos: Coordinates) => this
+    facing = (pos: Coordinates) => this
 
   /**
    * Sets the command rotation to face a given point, as viewed from its anchor (either the eyes or the feet).
@@ -345,7 +343,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param anchor Whether to point at the target's eyes or feet.
    */
   @command(['facing', 'entity'], executeConfig)
-  facingEntity = (targets: MultipleEntitiesArgument, anchor: ANCHORS) => this
+    facingEntity = (targets: MultipleEntitiesArgument, anchor: ANCHORS) => this
 
   /**
    * Sets the command dimension.
@@ -353,7 +351,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param dimension Name of the new execution dimension.
    */
   @command('in', executeConfig)
-  in = (dimension: LiteralUnion<DIMENSION_TYPES>) => this
+    in = (dimension: LiteralUnion<DIMENSION_TYPES>) => this
 
   /**
    * Sets the command position, without changing rotation or dimension.
@@ -361,7 +359,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param pos The new position.
    */
   @command('positioned', { ...executeConfig, parsers: { '0': coordinatesParser } })
-  positioned = (pos: Coordinates) => this
+    positioned = (pos: Coordinates) => this
 
   /**
    * Sets the command position, without changing rotation or dimension, by matching an entity's position.
@@ -369,7 +367,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param targets Target entity/entities to match position with.
    */
   @command(['positioned', 'as'], executeConfig)
-  positionedAs = (targets: MultipleEntitiesArgument) => this
+    positionedAs = (targets: MultipleEntitiesArgument) => this
 
   /**
    * Sets the command rotation.
@@ -382,7 +380,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * Relative values can be used to specify a rotation relative to the current execution rotation.
    */
   @command('rotated', { ...executeConfig, parsers: { '0': rotationParser } })
-  rotated = (rotation: Rotation) => this
+    rotated = (rotation: Rotation) => this
 
   /**
    * Sets the command rotation, by matching an entity's rotation.
@@ -390,7 +388,7 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
    * @param targets Target entity/entities to match rotation with.
    */
   @command(['rotated', 'as'], executeConfig)
-  rotatedAs = (targets: MultipleEntitiesArgument) => this
+    rotatedAs = (targets: MultipleEntitiesArgument) => this
 
   @command(['if', 'block'], { ...executeConfig, parsers: { '0': coordinatesParser } })
   private ifBlock: IfsAndUnlesses<T, this>['ifBlock'] = (...args: unknown[]) => this
@@ -471,16 +469,14 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
 
   /** Checks if the given condition is met. */
   get if(): ((condition: ConditionClass) => this) & IfType<T, this> {
-    const result = Object.assign(
-      (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value), {
-        block: this.ifBlock,
-        blocks: this.ifBlocks,
-        data: 0 as any, // We are going to override it just below
-        entity: this.ifEntity,
-        predicate: this.ifPredicate,
-        score: this.ifScore,
-      },
-    )
+    const result = Object.assign((condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value), {
+      block: this.ifBlock,
+      blocks: this.ifBlocks,
+      data: 0 as any, // We are going to override it just below
+      entity: this.ifEntity,
+      predicate: this.ifPredicate,
+      score: this.ifScore,
+    })
 
     Object.defineProperty(result, 'data', {
       get: () => this.ifUnlessData('if'),

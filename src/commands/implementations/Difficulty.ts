@@ -14,5 +14,5 @@ export class Difficulty extends Command {
    * If unspecified, querys current difficulty rather than changes it.‌
    */
   @command('difficulty', { isRoot: true })
-  difficulty = (difficulty?: DIFFICULTIES) => {}
+    difficulty = (difficulty?: DIFFICULTIES) => {}
 }

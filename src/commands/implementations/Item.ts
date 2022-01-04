@@ -14,7 +14,7 @@ export class ItemSource extends Command {
    * @param count The amount of items.
    */
   @command('with')
-  with = (item: ITEMS, count: number) => { }
+    with = (item: ITEMS, count: number) => { }
 
   /**
    * Replace the slot with a specific item.
@@ -45,9 +45,9 @@ export class ItemSource extends Command {
      */
     entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string | ItemModifierInstance) => void
   } = {
-    block: this.fromBlock,
-    entity: this.fromEntity,
-  }
+      block: this.fromBlock,
+      entity: this.fromEntity,
+    }
 }
 
 export class ModifyItem extends Command {
@@ -57,7 +57,7 @@ export class ModifyItem extends Command {
    * @param modifier The name of the modifier.
    */
   @command(['item', 'modify', 'block'], { isRoot: true, parsers: { '0': coordinatesParser } })
-  block = (pos: Coordinates, slot: CONTAINER_SLOTS, modifier: string | ItemModifierInstance) => { }
+    block = (pos: Coordinates, slot: CONTAINER_SLOTS, modifier: string | ItemModifierInstance) => { }
 
   /**
    * @param targets The entity/entities containing the slot to apply the modifier to.
@@ -65,7 +65,7 @@ export class ModifyItem extends Command {
    * @param modifier The name of the modifier.
    */
   @command(['item', 'modify', 'entity'], { isRoot: true })
-  entity = (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier: string | ItemModifierInstance) => { }
+    entity = (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier: string | ItemModifierInstance) => { }
 }
 
 export class ReplaceItem extends Command {
@@ -76,7 +76,7 @@ export class ReplaceItem extends Command {
   @command(['item', 'replace', 'block'], {
     isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser },
   })
-  block = (pos: Coordinates, slot: CONTAINER_SLOTS) => new ItemSource(this.commandsRoot)
+    block = (pos: Coordinates, slot: CONTAINER_SLOTS) => new ItemSource(this.commandsRoot)
 
   /**
    * @param targets one or more entities to modify.
@@ -84,7 +84,7 @@ export class ReplaceItem extends Command {
    * @param slot The slot to be replaced.
    */
   @command(['item', 'replace', 'entity'], { isRoot: true, hasSubcommands: true, executable: false })
-  entity = (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => new ItemSource(this.commandsRoot)
+    entity = (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => new ItemSource(this.commandsRoot)
 }
 
 /** Replaces or modifies items in inventories */

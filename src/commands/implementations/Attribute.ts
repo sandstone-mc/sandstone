@@ -9,36 +9,36 @@ export class AttributeOperation extends Command {
    * @category attribute
    */
   @command('get')
-  get = (scale?: number) => { }
+    get = (scale?: number) => { }
 
   /**
    * Returns the base value of the specified attribute.
    * @category attribute
    */
   @command(['base', 'get'])
-  baseGet = (scale?: number) => { }
+    baseGet = (scale?: number) => { }
 
   /**
    * Overwrites the base value of the specified attribute with the given value.
    * @category attribute
    */
   @command(['base', 'set'])
-  baseSet = (value: number) => { }
+    baseSet = (value: number) => { }
 
   /**
    * Adds an attribute modifier with the specified properties if no modifier with the same UUID already existed.
    * @category attribute
    */
   @command(['modifier', 'add'])
-  add = (uuid: string, name: string, value: number, modifier: 'add' | 'multiply' | 'multiply_base') => { }
+    add = (uuid: string, name: string, value: number, modifier: 'add' | 'multiply' | 'multiply_base') => { }
 
   /** Removes the attribute modifier with the specified UUID. */
   @command(['modifier', 'remove'])
-  remove = (uuid: string) => { }
+    remove = (uuid: string) => { }
 
   /** Returns the value of the modifier with the specified UUID. */
   @command(['modifier', 'value', 'get'])
-  getModifierValue = (uuid: string, scale?: number) => { }
+    getModifierValue = (uuid: string, scale?: number) => { }
 }
 
 /**
@@ -46,5 +46,5 @@ export class AttributeOperation extends Command {
  */
 export class Attribute extends Command {
   @command('attribute', { isRoot: true, hasSubcommands: true, executable: false })
-  attribute = (target: SingleEntityArgument, attribute: string) => new AttributeOperation(this.commandsRoot)
+    attribute = (target: SingleEntityArgument, attribute: string) => new AttributeOperation(this.commandsRoot)
 }

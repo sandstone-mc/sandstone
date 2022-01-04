@@ -10,7 +10,7 @@ export class Weather extends Command {
      * If 0, resets to random weather duration.
      */
     @command(['weather', 'clear'], { isRoot: true })
-    clear = (duration: number) => {}
+      clear = (duration: number) => {}
 
     /**
      * Set the weather to rain (or snow in cold biomes).
@@ -20,7 +20,7 @@ export class Weather extends Command {
      * If 0, resets to random weather duration.
      */
     @command(['weather', 'rain'], { isRoot: true })
-    rain = (duration: number) => {}
+      rain = (duration: number) => {}
 
     /**
      * Set the weather to a thunderstorm (or blizzard cold biomes).
@@ -30,5 +30,5 @@ export class Weather extends Command {
      * If 0, resets to random weather duration.
      */
     @command(['weather', 'thunder'], { isRoot: true })
-    thunder = (duration: number) => {}
+      thunder = (duration: number) => {}
 }

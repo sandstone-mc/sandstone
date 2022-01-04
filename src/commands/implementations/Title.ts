@@ -7,34 +7,34 @@ import type { JSONTextComponent, MultiplePlayersArgument } from '@arguments'
 
 export class TitleArguments extends Command {
   @command('clear')
-  clear = () => {}
+    clear = () => {}
 
   @command('reset')
-  reset = () => {}
+    reset = () => {}
 
   @command('title', {
     parsers: {
       '0': (title) => new JSONTextComponentClass(title),
     },
   })
-  title = (title: JSONTextComponent) => {}
+    title = (title: JSONTextComponent) => {}
 
   @command('subtitle', {
     parsers: {
       '0': (subtitle) => new JSONTextComponentClass(subtitle),
     },
   })
-  subtitle = (subtitle: JSONTextComponent) => {}
+    subtitle = (subtitle: JSONTextComponent) => {}
 
   @command('actionbar', {
     parsers: {
       '0': (actionbar) => new JSONTextComponentClass(actionbar),
     },
   })
-  actionbar = (actionbarText: JSONTextComponent) => {}
+    actionbar = (actionbarText: JSONTextComponent) => {}
 
   @command('times')
-  times = (fadeIn: number, stay: number, fadeOut: number) => {}
+    times = (fadeIn: number, stay: number, fadeOut: number) => {}
 }
 
 export class Title extends Command {
@@ -52,5 +52,5 @@ export class Title extends Command {
    * title('@a').actionbar(['You target is: ', target])
    */
   @command('title', { isRoot: true, hasSubcommands: true })
-  title = (targets: MultiplePlayersArgument) => new TitleArguments(this.commandsRoot)
+    title = (targets: MultiplePlayersArgument) => new TitleArguments(this.commandsRoot)
 }
