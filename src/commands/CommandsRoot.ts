@@ -150,7 +150,7 @@ export class CommandsRoot {
       comments.join(' ').split('\n').map((line) => `# ${line}`).join('\n'),
     ],
   })
-  comment = (...comments: unknown[]) => {}
+  comment = (...comments: unknown[]) => { }
 
   // data command //
   data = new DataCommand(this)

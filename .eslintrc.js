@@ -120,6 +120,8 @@ module.exports = {
 
     'no-continue': 'off',
 
+    'no-useless-constructor': 'off',
+
     // Don't use array destructuring for assignement expressions
     'prefer-destructuring': [
       'error',
