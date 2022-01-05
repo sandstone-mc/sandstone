@@ -2,6 +2,7 @@ import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
 import type { AdvancementJSON } from '@arguments'
+import type { ResourcePath } from '@datapack/resourcesTree'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 
@@ -21,13 +22,13 @@ export type AdvancementClassArguments<CriteriaNames extends string = string> = {
    * The advancement's JSON.
    */
   advancement: AdvancementJSON<CriteriaNames>
-} & ResourceClassArguments
+} & ResourceClassArguments<AdvancementClass>
 
 export class AdvancementClass<CriteriaNames extends string = string> extends ResourceClass<AdvancementNode> {
   public advancementJSON: NonNullable<AdvancementClassArguments['advancement']>
 
-  constructor(sandstoneCore: SandstoneCore, public name: string, args: AdvancementClassArguments<CriteriaNames>) {
-    super(sandstoneCore, AdvancementNode, name, args)
+  constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: AdvancementClassArguments<CriteriaNames>) {
+    super(sandstoneCore, AdvancementNode, path, args)
 
     this.advancementJSON = args.advancement
   }

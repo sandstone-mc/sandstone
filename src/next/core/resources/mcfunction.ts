@@ -1,6 +1,7 @@
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
+import type { ResourcePath } from '@datapack/resourcesTree'
 import type { ContainerCommandNode, Node } from '../nodes'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
@@ -76,13 +77,13 @@ export type MCFunctionClassArguments = {
    * @default () => {}
    */
   callback?: () => void
-} & ResourceClassArguments
+} & ResourceClassArguments<MCFunctionClass>
 
 export class MCFunctionClass extends ResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
-  constructor(sandstoneCore: SandstoneCore, public name: string, args: MCFunctionClassArguments = {}) {
-    super(sandstoneCore, MCFunctionNode, name, args)
+  constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: MCFunctionClassArguments = {}) {
+    super(sandstoneCore, MCFunctionNode, path, args)
 
     this.callback = args.callback ?? (() => { })
 

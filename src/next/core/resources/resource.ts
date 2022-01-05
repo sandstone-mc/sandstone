@@ -1,6 +1,7 @@
+import type { ResourcePath } from '@datapack/resourcesTree'
 import type { Node, SandstoneCore } from '..'
 
-export type ResourceClassArguments = {
+export type ResourceClassArguments<THIS = ResourceClass> = {
   /**
    * Whether the associated Node should be added to Sandstone Core.
    *
@@ -14,6 +15,11 @@ export type ResourceClassArguments = {
    * @default 'sandstone'
    */
   creator?: 'user' | 'sandstone'
+
+  /**
+   * The optional parent of this resource.
+   */
+  parent?: THIS
 }
 
 export type ResourceNode<T = ResourceClass<any>> = Node & {
@@ -29,7 +35,11 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   protected creator: NonNullable<ResourceClassArguments['creator']>
 
-  constructor(sandstoneCore: SandstoneCore, NodeType: ResourceNodeConstructor<N>, public name: string, args: ResourceClassArguments = {}) {
+  protected parentResource: this | undefined
+
+  protected childResources: Set<this> = new Set()
+
+  constructor(sandstoneCore: SandstoneCore, NodeType: ResourceNodeConstructor<N>, protected path: ResourcePath, args: ResourceClassArguments = {}) {
     this.node = new NodeType(sandstoneCore, this)
 
     if (args.addToSandstoneCore) {
@@ -38,6 +48,11 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.generated = false
     this.creator = args.creator ?? 'sandstone'
+    this.parentResource = args.parent as this | undefined
+  }
+
+  get name(): string {
+    return `${this.path[0]}:${this.path.slice(1).join('/')}`
   }
 
   generate = () => {

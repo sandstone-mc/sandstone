@@ -6,7 +6,7 @@ import type { CommandNode, Node } from '@/next/core/nodes'
 import type { SandstoneCore } from '@/next/core/sandstoneCore'
 import type { SandstoneCommands } from '../commands'
 
-export class ExecuteNode extends ContainerCommandNode {
+export class ExecuteNode extends ContainerCommandNode<[[subcommand: string, ...args: unknown[]]]> {
   command = 'execute' as const
 
   /**

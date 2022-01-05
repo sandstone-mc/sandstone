@@ -8,7 +8,7 @@ export class SandstoneCore {
 
   mcfunctionStack: MCFunctionNode[]
 
-  constructor(public namespace: string, public packUid: string) {
+  constructor() {
     this.resourceNodes = new Set()
     this.mcfunctionStack = []
   }
@@ -16,7 +16,7 @@ export class SandstoneCore {
   /**
    * The current MCFunction.
    */
-  get currentMCFunction(): MCFunctionNode {
+  get currentMCFunction(): MCFunctionNode | undefined {
     return this.mcfunctionStack[this.mcfunctionStack.length - 1]
   }
 
