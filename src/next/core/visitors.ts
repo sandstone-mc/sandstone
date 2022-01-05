@@ -55,6 +55,8 @@ export class GenericVisitor {
   // Resources
   visitMCFunctionNode = this.genericResourceNodeVisitor<MCFunctionNode>()
 
+  visitAdvancementNode = this.genericResourceNodeVisitor<AdvancementNode>()
+
   // Commands
   visitAdvancedCommandNode = this.genericNodeVisitor<AdvancementNode>()
 

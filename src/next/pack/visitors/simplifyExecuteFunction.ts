@@ -48,7 +48,7 @@ export class SimplifyExecuteFunctionVisitor extends GenericVisitor {
     node.body = [command]
 
     if (!mcFunction.isUserCreated) {
-      this.sandstoneCore.mcfunctions.delete(mcFunctionNode)
+      this.sandstoneCore.resourceNodes.delete(mcFunctionNode)
     }
 
     return this.genericVisit(node)

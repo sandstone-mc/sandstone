@@ -26,7 +26,7 @@ export class ExecuteWithNodesToMCFunctionVisitor extends GenericVisitor {
 
     // Visit the new MCFunctionNode. Also add it to the sandstoneCore MCFunctions.
     const visitedMCFunction = this.visitMCFunctionNode(mcFunctionNode)
-    this.sandstoneCore.mcfunctions.add(visitedMCFunction)
+    this.sandstoneCore.resourceNodes.add(visitedMCFunction)
 
     // Create a node calling this MCFunction.
     const mcFunctionCall = new FunctionNode(this.sandstoneCore, mcFunction)

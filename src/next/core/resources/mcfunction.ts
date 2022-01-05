@@ -1,15 +1,17 @@
 import { ContainerNode } from '../nodes'
+import { ResourceClass } from './resource'
 
 import type { ContainerCommandNode, Node } from '../nodes'
 import type { SandstoneCore } from '../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from './resource'
 
 /**
  * A node representing a Minecraft function.
  */
-export class MCFunctionNode extends ContainerNode {
+export class MCFunctionNode extends ContainerNode implements ResourceNode {
   contextStack: (ContainerNode | ContainerCommandNode)[]
 
-  constructor(sandstoneCore: SandstoneCore, public mcFunction: MCFunctionClass) {
+  constructor(sandstoneCore: SandstoneCore, public resource: MCFunctionClass) {
     super(sandstoneCore)
     this.contextStack = [this]
   }
@@ -74,39 +76,19 @@ export type MCFunctionClassArguments = {
    * @default () => {}
    */
   callback?: () => void
+} & ResourceClassArguments
 
-  /**
-   * Whether the MCFunction has been created explicitely by a user.
-   *
-   * @default false
-   */
-  isUserCreated?: boolean
-
-  /**
-   * Whether the associated Node should be added to Sandstone Core.
-   *
-   * @default true
-   */
-  addToSandstoneCore?: boolean
-}
-
-export class MCFunctionClass {
-  protected generated: boolean = false
-
-  protected node: MCFunctionNode
-
+export class MCFunctionClass extends ResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
-  public isUserCreated: NonNullable<MCFunctionClassArguments['isUserCreated']>
-
   constructor(sandstoneCore: SandstoneCore, public name: string, args: MCFunctionClassArguments = {}) {
-    this.node = new MCFunctionNode(sandstoneCore, this)
+    super(sandstoneCore, MCFunctionNode, name, args)
 
     this.callback = args.callback ?? (() => { })
-    this.isUserCreated = args.isUserCreated ?? false
 
-    if (args.addToSandstoneCore) {
-      sandstoneCore.mcfunctions.add(this.node)
+    // If there is no given callback, the MCFunction can be considered as generated.
+    if (!args.callback) {
+      this.generated = true
     }
   }
 
@@ -120,9 +102,5 @@ export class MCFunctionClass {
     this.callback()
     this.generated = true
     sandstoneCore.exitMCFunction()
-  }
-
-  toString(): string {
-    return this.name
   }
 }

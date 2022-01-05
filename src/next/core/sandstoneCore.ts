@@ -1,14 +1,15 @@
 import type { MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
+import type { ResourceNode } from './resources/resource'
 import type { GenericVisitor } from './visitors'
 
 export class SandstoneCore {
-  /** All MCFunctions */
-  mcfunctions: Set<MCFunctionNode>
+  /** All Resources */
+  resourceNodes: Set<ResourceNode>
 
   mcfunctionStack: MCFunctionNode[]
 
   constructor(public namespace: string, public packUid: string) {
-    this.mcfunctions = new Set()
+    this.resourceNodes = new Set()
     this.mcfunctionStack = []
   }
 
@@ -43,23 +44,23 @@ export class SandstoneCore {
 
   save = (opts: { visitors: GenericVisitor[] }) => {
     // First, generate all the MCFunctions.
-    for (const mcfunctionNode of this.mcfunctions) {
-      mcfunctionNode.mcFunction.generate()
+    for (const { resource } of this.resourceNodes) {
+      resource.generate()
     }
 
     // Then, transform all the nodes with the given visitors.
     for (const visitor of opts.visitors) {
-      for (const mcfunctionNode of this.mcfunctions) {
-        visitor.visit(mcfunctionNode)
+      for (const node of this.resourceNodes) {
+        visitor.visit(node)
       }
     }
 
     // Finally, display the generated code.
-    for (const mcfunctionNode of this.mcfunctions) {
+    for (const node of this.resourceNodes) {
       console.log('='.repeat(80))
-      console.log(mcfunctionNode.mcFunction.name)
+      console.log(node.resource.name)
       console.log('='.repeat(80))
-      console.log(mcfunctionNode.toString(), '\n')
+      console.log(node.toString(), '\n')
     }
   }
 }
