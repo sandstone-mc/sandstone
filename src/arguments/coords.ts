@@ -1,8 +1,8 @@
 import type { VectorClass } from '@variables'
 
 type AbsoluteFloat = number | `${number}`;
-type RelativeFloat = `~${number}`;
-type LocalFloat = `^${number}`;
+type RelativeFloat = `~${number | ''}`;
+type LocalFloat = `^${number | ''}`;
 type AbsoluteOrRelativeFloat = AbsoluteFloat | RelativeFloat;
 
 type AbsoluteOrRelativeVec3 = `${AbsoluteOrRelativeFloat} ${AbsoluteOrRelativeFloat} ${AbsoluteOrRelativeFloat}`;
