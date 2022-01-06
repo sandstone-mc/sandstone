@@ -34,33 +34,33 @@ export class Forceload extends Command {
    * forceload.add(rel(0, 0)
    */
   @command(['forceload', 'add'], { isRoot: true, parsers: { '0': coordinatesParser, '1': coordinatesParser } })
-  add = (from: ColumnCoordinates, to?: ColumnCoordinates) => {
-    if (!to) return
+    add = (from: ColumnCoordinates, to?: ColumnCoordinates) => {
+      if (!to) return
 
-    if (
+      if (
       // If all coordinates are:
-      [...from, ...to].every((c) => c[0] === '~') // Relative
+        [...from, ...to].every((c) => c[0] === '~') // Relative
       || [...from, ...to].every((c) => c[0] === '^') // or local
       || [...from, ...to].every((c) => c[0].match(/0-9/)) // or absolute
-    ) {
+      ) {
       /*
        * Then we can calculate before-hand the number of affected chunks, and throw an error
        * if it's greater than 256
        */
 
-      const [fromX, fromZ] = coordinatesToNumbers(from)
-      const [toX, toZ] = coordinatesToNumbers(to)
+        const [fromX, fromZ] = coordinatesToNumbers(from)
+        const [toX, toZ] = coordinatesToNumbers(to)
 
-      const chunksX = Math.ceil((Math.abs(fromX - toX) + 1) / 16)
-      const chunksZ = Math.ceil((Math.abs(fromZ - toZ) + 1) / 16)
+        const chunksX = Math.ceil((Math.abs(fromX - toX) + 1) / 16)
+        const chunksZ = Math.ceil((Math.abs(fromZ - toZ) + 1) / 16)
 
-      const affectedChunks = chunksX * chunksZ
+        const affectedChunks = chunksX * chunksZ
 
-      if (affectedChunks > 256) {
-        throw new Error(`Impossible to forceload more than 256 chunks. From "${from}" to "${to}", at least ${affectedChunks} would be forceloaded.`)
+        if (affectedChunks > 256) {
+          throw new Error(`Impossible to forceload more than 256 chunks. From "${from}" to "${to}", at least ${affectedChunks} would be forceloaded.`)
+        }
       }
     }
-  }
 
   /**
    * Unforces the chunk at the `from` position (through to `to` if set) in the dimension of the command's execution to be loaded constantly.
@@ -70,11 +70,11 @@ export class Forceload extends Command {
    * If unspecified, only targets the chunk specified by `from`.
    */
   @command(['forceload', 'remove'], { isRoot: true, parsers: { '0': coordinatesParser, '1': coordinatesParser } })
-  remove = (from: ColumnCoordinates) => { }
+    remove = (from: ColumnCoordinates) => { }
 
   /** Unforces all chunks in the dimension of the command's execution to be loaded constantly. */
   @command(['forceload', 'remove', 'all'], { isRoot: true })
-  removeAll = () => { }
+    removeAll = () => { }
 
   /**
    * If chunk coordinates are given, displays whether the specified chunk in the dimension of the command's execution is force loaded.
@@ -86,5 +86,5 @@ export class Forceload extends Command {
    * @example
    */
   @command(['forceload', 'query'], { isRoot: true, parsers: { '0': coordinatesParser } })
-  query = (pos?: ColumnCoordinates) => { }
+    query = (pos?: ColumnCoordinates) => { }
 }

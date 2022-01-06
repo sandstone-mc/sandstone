@@ -18,15 +18,15 @@ export class TagArguments extends Command {
    * Valid characters are uppercase and lowercase letters, numbers, hyphen, underscore, plus sign and period.
    */
   @command('add')
-  add = (name: string) => {
-    checkTagName(name)
-  }
+    add = (name: string) => {
+      checkTagName(name)
+    }
 
   /**
    * Lists all tags on the targets.
    */
   @command('list')
-  list = () => {}
+    list = () => {}
 
   /**
    * Removes a tag from the targets.
@@ -35,9 +35,9 @@ export class TagArguments extends Command {
    * Valid characters are uppercase and lowercase letters, numbers, hyphen, underscore, plus sign and period.
    */
   @command('remove')
-  remove = (name: string) => {
-    checkTagName(name)
-  }
+    remove = (name: string) => {
+      checkTagName(name)
+    }
 }
 
 export class TagCommand extends Command {
@@ -49,5 +49,5 @@ export class TagCommand extends Command {
    * @param targets Specifies the command's target.
    */
   @command('tag', { isRoot: true, executable: false, hasSubcommands: true })
-  tag = (targets: MultipleEntitiesArgument) => new TagArguments(this.commandsRoot)
+    tag = (targets: MultipleEntitiesArgument) => new TagArguments(this.commandsRoot)
 }

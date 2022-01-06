@@ -22,7 +22,7 @@ export class DataGet extends Command {
    * @param scale The scale to multiply the NBT value by.
    */
   @command(getCmd('block'), { isRoot: true, parsers: { '0': coordinatesParser } })
-  block = (targetPos: Coordinates, path?: string, scale?: number) => { }
+    block = (targetPos: Coordinates, path?: string, scale?: number) => { }
 
   /**
    * Get the NBT of a given entity.
@@ -32,7 +32,7 @@ export class DataGet extends Command {
    * @param scale The scale to multiply the NBT value by.
    */
   @command(getCmd('entity'), { isRoot: true })
-  entity = (target: SingleEntityArgument, path?: string, scale?: number) => { }
+    entity = (target: SingleEntityArgument, path?: string, scale?: number) => { }
 
   /**
    * Get the NBT from a given storage path.
@@ -42,7 +42,7 @@ export class DataGet extends Command {
    * @param scale The scale to multiply the NBT value by.
    */
   @command(getCmd('storage'), { isRoot: true })
-  storage = (target: string, path?: string, scale?: number) => { }
+    storage = (target: string, path?: string, scale?: number) => { }
 }
 
 export class DataMerge extends Command {
@@ -53,7 +53,7 @@ export class DataMerge extends Command {
    * @param nbt The NBT to merge with.
    */
   @command(mergeCmd('block'), { isRoot: true, parsers: { '0': coordinatesParser, '1': nbtStringifier } })
-  block = (targetPos: Coordinates, nbt: NBTObject) => { }
+    block = (targetPos: Coordinates, nbt: NBTObject) => { }
 
   /**
    * Merge the NBT of the given entity, with the given NBT.
@@ -62,7 +62,7 @@ export class DataMerge extends Command {
    * @param nbt The NBT to merge with.
    */
   @command(mergeCmd('entity'), { isRoot: true, parsers: { '1': nbtStringifier } })
-  entity = (target: SingleEntityArgument, nbt: NBTObject) => { }
+    entity = (target: SingleEntityArgument, nbt: NBTObject) => { }
 
   /**
    * Merge the NBT of the given storage path, with the given NBT.
@@ -71,7 +71,7 @@ export class DataMerge extends Command {
    * @param nbt The NBT to merge with.
    */
   @command(mergeCmd('storage'), { isRoot: true, parsers: { '1': nbtStringifier } })
-  storage = (target: string, nbt: NBTObject) => { }
+    storage = (target: string, nbt: NBTObject) => { }
 }
 
 export class DataModifyValues extends Command {
@@ -118,7 +118,7 @@ export class DataModifyValues extends Command {
    * Modify the NBT with the given value.
    */
   @command('value', { parsers: { '0': nbtStringifier } })
-  value = (value: NBTObject) => { }
+    value = (value: NBTObject) => { }
 }
 
 export class DataModifyType extends Command {
@@ -135,7 +135,7 @@ export class DataModifyType extends Command {
    * @param index The index to insert the NBT to.
    */
   @command('insert', { isRoot: false, hasSubcommands: true, executable: false })
-  insert = (index: number) => new DataModifyValues(this.commandsRoot)
+    insert = (index: number) => new DataModifyValues(this.commandsRoot)
 
   /** Merge the source data into the pointed-to object. */
   get merge() {
@@ -169,7 +169,7 @@ export class DataModify extends Command {
   @command(modifyCmd('block'), {
     isRoot: true, executable: false, hasSubcommands: true, parsers: { '0': coordinatesParser },
   })
-  block = (targetPos: Coordinates, targetPath: string) => new DataModifyType(this.commandsRoot)
+    block = (targetPos: Coordinates, targetPath: string) => new DataModifyType(this.commandsRoot)
 
   /**
    * Modify the NBT of a given entity.
@@ -178,7 +178,7 @@ export class DataModify extends Command {
    * @param path The path of the NBT to modify.
    */
   @command(modifyCmd('entity'), { isRoot: true, executable: false, hasSubcommands: true })
-  entity = (target: SingleEntityArgument, targetPath: string) => new DataModifyType(this.commandsRoot)
+    entity = (target: SingleEntityArgument, targetPath: string) => new DataModifyType(this.commandsRoot)
 
   /**
    * Modify the NBT from a given storage path.
@@ -187,7 +187,7 @@ export class DataModify extends Command {
    * @param path The path of the NBT to modify.
    */
   @command(modifyCmd('storage'), { isRoot: true, executable: false, hasSubcommands: true })
-  storage = (target: string, targetPath: string) => new DataModifyType(this.commandsRoot)
+    storage = (target: string, targetPath: string) => new DataModifyType(this.commandsRoot)
 }
 
 export class DataRemove extends Command {
@@ -200,7 +200,7 @@ export class DataRemove extends Command {
   @command(removeCmd('block'), {
     isRoot: true, executable: true, parsers: { '0': coordinatesParser },
   })
-  block = (targetPos: Coordinates, targetPath: string) => { }
+    block = (targetPos: Coordinates, targetPath: string) => { }
 
   /**
    * Remove the NBT of a given entity.
@@ -209,7 +209,7 @@ export class DataRemove extends Command {
    * @param path The path of the NBT to remove.
    */
   @command(removeCmd('entity'), { isRoot: true, executable: true })
-  entity = (target: SingleEntityArgument, targetPath: string) => { }
+    entity = (target: SingleEntityArgument, targetPath: string) => { }
 
   /**
    * Remove the NBT from a given storage path.
@@ -218,7 +218,7 @@ export class DataRemove extends Command {
    * @param path The path of the NBT to remove.
    */
   @command(removeCmd('storage'), { isRoot: true, executable: true })
-  storage = (target: string, targetPath: string) => { }
+    storage = (target: string, targetPath: string) => { }
 }
 
 /** Allows to get, merge, modify, and remove NBT data of a block entity, entity, or Command NBT storage. */

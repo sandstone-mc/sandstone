@@ -14,7 +14,7 @@ export class WorldBorder extends Command {
      * If not specified, defaults to 0.
      */
     @command(['worldborder', 'add'], { isRoot: true })
-    add = (distance: number, time?: number) => {}
+      add = (distance: number, time?: number) => {}
 
     /**
      * Recenters the world boundary.
@@ -22,7 +22,7 @@ export class WorldBorder extends Command {
      * @param pos Specifies the horizontal coordinates of the world border's center.
      */
     @command(['worldborder', 'center'], { isRoot: true })
-    center = (pos: Coordinates) => {}
+      center = (pos: Coordinates) => {}
 
     /**
      * Sets the world border damage amount to the specified value.
@@ -33,7 +33,7 @@ export class WorldBorder extends Command {
      * (damage less than half a heart might not change the visual health display, but still accumulates). Initially set to 0.2.
      */
     @command(['worldborder', 'damage', 'amount'], { isRoot: true })
-    damageAmount = (damagePerBlock: number) => {}
+      damageAmount = (damagePerBlock: number) => {}
 
     /**
      * Sets the world border buffer distance to the specified value.
@@ -43,13 +43,13 @@ export class WorldBorder extends Command {
      * Initially set to 5.0.
      */
     @command(['worldborder', 'damage', 'buffer'], { isRoot: true })
-    damageBuffer = (distance: number) => {}
+      damageBuffer = (distance: number) => {}
 
     /**
      * Returns the current world border diameter.
      */
     @command(['worldborder', 'get'], { isRoot: true })
-    get = () => {}
+      get = () => {}
 
     /**
      * Sets the world border diameter.
@@ -60,7 +60,7 @@ export class WorldBorder extends Command {
      * If not specified, defaults to 0.
      */
     @command(['worldborder', 'set'], { isRoot: true })
-    set = (distance: number, time?: number) => {}
+      set = (distance: number, time?: number) => {}
 
     /**
      * Sets the world border warning distance to the specified value.
@@ -69,7 +69,7 @@ export class WorldBorder extends Command {
      * Initially set to 5.
      */
     @command(['worldborder', 'warning', 'distance'], { isRoot: true })
-    setWarningDistance = (distance: number) => {}
+      setWarningDistance = (distance: number) => {}
 
     /**
      * Sets the world border warning time to the specified value.
@@ -78,5 +78,5 @@ export class WorldBorder extends Command {
      * Initially set to 15.
      */
     @command(['worldborder', 'warning', 'time'], { isRoot: true })
-    setWarningTime = (time: number) => {}
+      setWarningTime = (time: number) => {}
 }

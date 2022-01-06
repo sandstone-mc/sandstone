@@ -134,7 +134,7 @@ export class CommandsRoot {
    * If `0`, instead of clearing of items, detectes and queries the amount of specified items.
    */
   @command('clear', { isRoot: true })
-  clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS> | TagInstance<'items'>, maxCount?: number) => { }
+    clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS> | TagInstance<'items'>, maxCount?: number) => { }
 
   // clone command //
   clone = (new Clone(this)).clone
@@ -150,7 +150,7 @@ export class CommandsRoot {
       comments.join(' ').split('\n').map((line) => `# ${line}`).join('\n'),
     ],
   })
-  comment = (...comments: unknown[]) => {}
+    comment = (...comments: unknown[]) => { }
 
   // data command //
   data = new DataCommand(this)
@@ -212,7 +212,7 @@ export class CommandsRoot {
    * @param targets Specifies the target(s). If not specified, defaults to the player who executes the command.
    */
   @command('gamemode', { isRoot: true })
-  gamemode = (gamemode: GAMEMODES, targets?: MultiplePlayersArgument) => { }
+    gamemode = (gamemode: GAMEMODES, targets?: MultiplePlayersArgument) => { }
 
   // gamerule command //
   gamerule = (new GameruleCommand(this)).gamerule
@@ -227,7 +227,7 @@ export class CommandsRoot {
    * @param count Specifies the number of items to give. If not specified, defaults to `1`.
    */
   @command('give', { isRoot: true })
-  give = (targets: MultiplePlayersArgument, item: LiteralUnion<ITEMS>, count?: number) => { }
+    give = (targets: MultiplePlayersArgument, item: LiteralUnion<ITEMS>, count?: number) => { }
 
   /**
    * Shows usages for one command, or lists of commands.
@@ -240,7 +240,7 @@ export class CommandsRoot {
    * @param parameters More specific parameters of the command.
    */
   @command('help', { isRoot: true })
-  help = (command_?: LiteralUnion<keyof typeof commands>, ...parameters: string[]) => { }
+    help = (command_?: LiteralUnion<keyof typeof commands>, ...parameters: string[]) => { }
 
   // kill command //
   /**
@@ -249,7 +249,7 @@ export class CommandsRoot {
    * @param targets Specifies the target(s) to kill. If not specified, defaults to the executor who executed the command.
    */
   @command('kill', { isRoot: true })
-  kill = (targets?: MultipleEntitiesArgument) => { }
+    kill = (targets?: MultipleEntitiesArgument) => { }
 
   // list command //
   /**
@@ -263,7 +263,7 @@ export class CommandsRoot {
       '0': (uuids) => (uuids ? 'uuids' : undefined),
     },
   })
-  list = (uuids?: boolean) => { }
+    list = (uuids?: boolean) => { }
 
   // locate command //
   /**
@@ -272,7 +272,7 @@ export class CommandsRoot {
    * @param structure Specifies the structure to locate.
    */
   @command('locate', { isRoot: true })
-  locate = (structure: LiteralUnion<STRUCTURES>) => { }
+    locate = (structure: LiteralUnion<STRUCTURES>) => { }
 
   // locatebiome command //
   /**
@@ -281,7 +281,7 @@ export class CommandsRoot {
    * @param biome Specifies the biome to be located.
    */
   @command('locatebiome', { isRoot: true })
-  locatebiome = (biome: LiteralUnion<BIOMES>) => { }
+    locatebiome = (biome: LiteralUnion<BIOMES>) => { }
 
   // loot command //
   loot = new Loot(this)
@@ -297,7 +297,7 @@ export class CommandsRoot {
    * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
    */
   @command('me', { isRoot: true })
-  me = (...actions: string[]) => { }
+    me = (...actions: string[]) => { }
 
   // particle command //
   particle = (new Particle(this)).particle
@@ -324,7 +324,7 @@ export class CommandsRoot {
    * @param targets Specifies the sound's target.
    */
   @command('playsound', { isRoot: true })
-  playsound = (sound: LiteralUnion<SOUND_EVENTS>, source: SOUND_SOURCES, targets: MultiplePlayersArgument, sourcePosition?: Coordinates, volume?: number, pitch?: number, minVolume?: number) => { }
+    playsound = (sound: LiteralUnion<SOUND_EVENTS>, source: SOUND_SOURCES, targets: MultiplePlayersArgument, sourcePosition?: Coordinates, volume?: number, pitch?: number, minVolume?: number) => { }
 
   // recipe command //
   recipe = new RecipeCommand(this)
@@ -337,7 +337,7 @@ export class CommandsRoot {
    * changes are not applied and the game continues using the previous data.[
    */
   @command('reload', { isRoot: true })
-  reload = () => { }
+    reload = () => { }
 
   /**
    * A raw command. Can be used to create custom commands, for mods or plugins for example.
@@ -350,7 +350,7 @@ export class CommandsRoot {
    * raw('mount', self, nearestSkeleton)
    */
   @command([], { isRoot: true })
-  raw = (...args: unknown[]) => { }
+    raw = (...args: unknown[]) => { }
 
   // item command //
   item = new Item(this)
@@ -367,14 +367,14 @@ export class CommandsRoot {
    * or "name1, name2, ... and namen" for n entities.
    */
   @command('say', { isRoot: true, parsers: (args) => [args.join(' ')] })
-  say = (...messages: MessageOrSelector[]) => {
+    say = (...messages: MessageOrSelector[]) => {
     // If any message contains a newline, throw an error
-    for (const message of messages) {
-      if (message.toString().includes('\n')) {
-        throw new Error('The message cannot contain newlines.')
+      for (const message of messages) {
+        if (message.toString().includes('\n')) {
+          throw new Error('The message cannot contain newlines.')
+        }
       }
     }
-  }
 
   // schedule command //
   schedule = new Schedule(this)
@@ -385,7 +385,7 @@ export class CommandsRoot {
   // seed command //
   /** Displays the world seed. */
   @command('seed', { isRoot: true })
-  seed = () => { }
+    seed = () => { }
 
   // setblock command //
   /**
@@ -403,7 +403,7 @@ export class CommandsRoot {
    * If not specified, defaults to `replace`.
    */
   @command('setblock', { isRoot: true, parsers: { '0': coordinatesParser } })
-  setblock = (pos: Coordinates, block: LiteralUnion<BLOCKS>, type?: 'destroy' | 'keep' | 'replace') => { }
+    setblock = (pos: Coordinates, block: LiteralUnion<BLOCKS>, type?: 'destroy' | 'keep' | 'replace') => { }
 
   // setidletimeout command //
   /**
@@ -412,7 +412,7 @@ export class CommandsRoot {
    * @param minutes Specifies the idle kick timer.
    */
   @command('setidletimeout', { isRoot: true })
-  setidletimeout = (minutes: number) => { }
+    setidletimeout = (minutes: number) => { }
 
   // setworldspawn command //
   /**
@@ -423,7 +423,7 @@ export class CommandsRoot {
    * @param angle Specified the yaw angle to spawn with. Defaults to the direction the executor is facing.
    */
   @command('setworldspawn', { isRoot: true, parsers: { '0': coordinatesParser, '1': rotationParser } })
-  setworldspawn = (pos?: Coordinates, angle?: Rotation) => { }
+    setworldspawn = (pos?: Coordinates, angle?: Rotation) => { }
 
   // spawnpoint command //
   /**
@@ -438,7 +438,7 @@ export class CommandsRoot {
    * @param angle Specifies the yaw angle to spawn with. Defaults to the direction the executor is facing.
    */
   @command('spawnpoint', { isRoot: true, parsers: { '1': coordinatesParser, '2': rotationParser } })
-  spawnpoint = (targets?: MultiplePlayersArgument, pos?: Coordinates, angle?: Rotation) => { }
+    spawnpoint = (targets?: MultiplePlayersArgument, pos?: Coordinates, angle?: Rotation) => { }
 
   // spectate command //
   /**
@@ -449,7 +449,7 @@ export class CommandsRoot {
    * @param player Specifies the spectating player. If unspecified, defaults to the executor.
    */
   @command('spectate', { isRoot: true })
-  spectate = (target: SinglePlayerArgument, player?: SingleEntityArgument) => { }
+    spectate = (target: SinglePlayerArgument, player?: SingleEntityArgument) => { }
 
   // spreadplayers command //
   spreadplayers = (new SpreadPlayers(this)).spreadplayers
@@ -464,7 +464,7 @@ export class CommandsRoot {
    * @param sound Specifies the sound to stop.
    */
   @command('stopsound', { isRoot: true })
-  stopsound = (targets: MultiplePlayersArgument, source?: SOUND_SOURCES | '*', sound?: LiteralUnion<SOUND_EVENTS>) => { }
+    stopsound = (targets: MultiplePlayersArgument, source?: SOUND_SOURCES | '*', sound?: LiteralUnion<SOUND_EVENTS>) => { }
 
   /**
    * Summons an entity.
@@ -476,7 +476,7 @@ export class CommandsRoot {
    * @param nbt Specifies the data tag for the entity.
    */
   @command('summon', { isRoot: true, parsers: { '1': coordinatesParser, '2': nbtStringifier } })
-  summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: RootNBT) => { }
+    summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: RootNBT) => { }
 
   // tag command //
   tag = (new TagCommand(this)).tag
@@ -496,7 +496,7 @@ export class CommandsRoot {
    * At least one message is necesarry.
    */
   @command('tm', { isRoot: true })
-  tm = (...messages: AtLeastOne<MessageOrSelector>) => { }
+    tm = (...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // teleport command (aliased to tp) //
   tp = (new Teleport(this)).tp
@@ -511,11 +511,11 @@ export class CommandsRoot {
    * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
    */
   @command('w', { isRoot: true })
-  w = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
+    w = (targets: MultiplePlayersArgument, ...messages: AtLeastOne<MessageOrSelector>) => { }
 
   // tellraw command //
   @command('tellraw', { isRoot: true, parsers: { '1': (msg) => new JSONTextComponentClass(msg) } })
-  tellraw = (targets: MultiplePlayersArgument, message: JSONTextComponent) => { }
+    tellraw = (targets: MultiplePlayersArgument, message: JSONTextComponent) => { }
 
   // time command //
   time = new Time(this)

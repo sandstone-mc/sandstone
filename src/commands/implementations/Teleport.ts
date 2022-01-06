@@ -13,7 +13,7 @@ export class TeleportFacing extends Command {
    * May use tilde and caret notation to specify a position relative to the position where the command is executed.
    */
   @command('facing', { parsers: { '0': coordinatesParser } })
-  facing = (location: Coordinates) => { }
+    facing = (location: Coordinates) => { }
 
   /**
    * Specifies the entity to make the target(s) facing to.
@@ -25,7 +25,7 @@ export class TeleportFacing extends Command {
    *             Must be one of eyes and feet. If not specified, defaults to eyes.
    */
   @command(['facing', 'entity'])
-  facingEntity = (entity: SingleEntityArgument, anchor?: 'eyes' | 'feet') => { }
+    facingEntity = (entity: SingleEntityArgument, anchor?: 'eyes' | 'feet') => { }
 }
 
 export class Teleport extends Command {
@@ -39,7 +39,7 @@ export class Teleport extends Command {
       '2': rotationParser,
     },
   })
-  tp: (
+    tp: (
     (
       /**
        * Teleports the executer to a given entity.

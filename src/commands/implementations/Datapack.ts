@@ -6,13 +6,13 @@ class DatapackEnable extends Command {
    * Load this pack before all others. It will have the lowest priority.
    */
   @command('first')
-  first = () => {}
+    first = () => {}
 
   /**
    * Load this pack after all others. It will have the highest priority.
    */
   @command('last')
-  last = () => {}
+    last = () => {}
 
   /**
    * Load this pack just before an existing pack.
@@ -21,7 +21,7 @@ class DatapackEnable extends Command {
    * @param name The name of the existing datapack.
    */
   @command('before')
-  before = (name: string) => {}
+    before = (name: string) => {}
 
   /**
    * Load this pack just after an existing pack.
@@ -30,7 +30,7 @@ class DatapackEnable extends Command {
    * @param name The name of the existing datapack.
    */
   @command('after')
-  after = (name: string) => {}
+    after = (name: string) => {}
 }
 
 /** Controls the loading/unloading of data packs. */
@@ -41,7 +41,7 @@ export class DatapackCommand extends Command {
    * @param name Specifies the name of the data pack.
    */
   @command(['datapack', 'disable'], { isRoot: true })
-  disable = (name: string) => {}
+    disable = (name: string) => {}
 
   /**
    * Enable the specified pack.
@@ -58,7 +58,7 @@ export class DatapackCommand extends Command {
    * datapack.enable('myDatapack').before('importantDatapack')
    */
   @command(['datapack', 'enable'], { isRoot: true, hasSubcommands: true })
-  enable = (name: string) => new DatapackEnable(this.commandsRoot)
+    enable = (name: string) => new DatapackEnable(this.commandsRoot)
 
   /**
    * List all data packs, or list only the available/enabled ones.
@@ -68,5 +68,5 @@ export class DatapackCommand extends Command {
    * @param typ `"available"` to only show available datapacks, `"enabled"` to only show enabled ones.
    */
   @command(['datapack', 'list'], { isRoot: true })
-  list = (type: 'available' | 'enabled') => {}
+    list = (type: 'available' | 'enabled') => {}
 }

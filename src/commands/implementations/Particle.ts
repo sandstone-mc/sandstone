@@ -202,5 +202,5 @@ export class Particle extends Command {
       '4': arrayToArgsParser,
     },
   })
-  particle: ParticleCommand = (...args: unknown[]) => { }
+    particle: ParticleCommand = (...args: unknown[]) => { }
 }

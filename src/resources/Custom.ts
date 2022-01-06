@@ -62,13 +62,11 @@ export class CustomResourceFactory<TYPE extends string, DATA_TYPE extends Custom
   }
 
   private createResource(name: string, data: Promise<CustomResourceData[DATA_TYPE]>): CustomResourceInstance<TYPE, DATA_TYPE> {
-    return new CustomResourceInstance(
-      this.datapack, this.type, this.properties, name, data,
-    )
+    return new CustomResourceInstance(this.datapack, this.type, this.properties, name, data)
   }
 
   create = (name: string, data: CustomResourceData[DATA_TYPE]): CustomResourceInstance<TYPE, DATA_TYPE> => {
-    const dataPromise = new Promise<typeof data>((resolve) => resolve(data))
+    const dataPromise = new Promise<typeof data>((resolve) => { resolve(data) })
     return this.createResource(name, dataPromise)
   }
 

@@ -23,7 +23,7 @@ class LootSource extends Command {
    * @param tool Specifies an tool to fish.
    */
   @command('fish', { parsers: { '0': coordinatesParser } })
-  fish = (lootTable: LootTableArgument, pos: Coordinates, tool: LiteralUnion<'mainhand' | 'offhand'>) => { }
+    fish = (lootTable: LootTableArgument, pos: Coordinates, tool: LiteralUnion<'mainhand' | 'offhand'>) => { }
 
   /**
    * Drops items that would be dropped by the given loot table.
@@ -32,7 +32,7 @@ class LootSource extends Command {
    */
 
   @command('loot')
-  loot = (lootTable: LootTableArgument) => { }
+    loot = (lootTable: LootTableArgument) => { }
 
   /**
    * Drops items that would be dropped by killing the given entity.
@@ -40,7 +40,7 @@ class LootSource extends Command {
    * @param target Specifies one entity to kill simulatively.
    */
   @command('kill')
-  kill = (target: SingleEntityArgument) => { }
+    kill = (target: SingleEntityArgument) => { }
 
   /**
    * Drops items that would be dropped by mining the given block, with the given tool.
@@ -50,7 +50,7 @@ class LootSource extends Command {
    * @param tool Specifies an tool to mine.
    */
   @command('mine', { parsers: { '0': coordinatesParser } })
-  mine = (pos: Coordinates, tool: LiteralUnion<'mainhand' | 'offhand'>) => { }
+    mine = (pos: Coordinates, tool: LiteralUnion<'mainhand' | 'offhand'>) => { }
 }
 
 /** Drops the given loot table into the specified inventory or into the world. */
@@ -62,7 +62,7 @@ export class Loot extends Command {
   @command(['loot', 'spawn'], {
     isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser },
   })
-  spawn = (targetPos: Coordinates) => new LootSource(this.commandsRoot)
+    spawn = (targetPos: Coordinates) => new LootSource(this.commandsRoot)
 
   /**
    * Distributes items to entities.
@@ -91,11 +91,11 @@ export class Loot extends Command {
    * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
    */
   @command(['loot', 'replace', 'entity'], { isRoot: true, hasSubcommands: true, executable: false })
-  replaceEntity = (entities: MultipleEntitiesArgument, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => {
-    if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
+    replaceEntity = (entities: MultipleEntitiesArgument, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => {
+      if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
-    return new LootSource(this.commandsRoot)
-  }
+      return new LootSource(this.commandsRoot)
+    }
 
   /**
    * Replace an entity slot with the items.
@@ -116,11 +116,11 @@ export class Loot extends Command {
   @command(['loot', 'replace', 'block'], {
     isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser },
   })
-  replaceBlock = (targetPos: Coordinates, slot: LiteralUnion<CONTAINER_SLOTS>, count?: number) => {
-    if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
+    replaceBlock = (targetPos: Coordinates, slot: LiteralUnion<CONTAINER_SLOTS>, count?: number) => {
+      if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
-    return new LootSource(this.commandsRoot)
-  }
+      return new LootSource(this.commandsRoot)
+    }
 
   /**
    * Gives items to players, ignoring empty item stacks.
@@ -128,7 +128,7 @@ export class Loot extends Command {
    * @param players Specifies one or more players to give.
    */
   @command(['loot', 'give'], { isRoot: true, hasSubcommands: true, executable: false })
-  give = (players: MultiplePlayersArgument) => new LootSource(this.commandsRoot)
+    give = (players: MultiplePlayersArgument) => new LootSource(this.commandsRoot)
 
   /**
    * Distributes items to a container block.
@@ -138,5 +138,5 @@ export class Loot extends Command {
   @command(['loot', 'insert'], {
     isRoot: true, hasSubcommands: true, executable: false, parsers: { '0': coordinatesParser },
   })
-  insert = (targetPos: Coordinates) => new LootSource(this.commandsRoot)
+    insert = (targetPos: Coordinates) => new LootSource(this.commandsRoot)
 }

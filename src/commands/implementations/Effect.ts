@@ -33,15 +33,15 @@ export class Effect extends Command {
    * If not specified, defaults to `false`.
    */
   @command(['effect', 'give'], { isRoot: true })
-  give = (
-    targets: MultipleEntitiesArgument,
-    effect: LiteralUnion<MOB_EFFECTS>,
-    seconds?: number,
-    amplifier?: number,
-    hideParticles?: boolean,
-  ) => {
-    if (seconds) validateIntegerRange(seconds, 'seconds', 0, 1_000_000)
-  }
+    give = (
+      targets: MultipleEntitiesArgument,
+      effect: LiteralUnion<MOB_EFFECTS>,
+      seconds?: number,
+      amplifier?: number,
+      hideParticles?: boolean,
+    ) => {
+      if (seconds) validateIntegerRange(seconds, 'seconds', 0, 1_000_000)
+    }
 
   /**
    * Removes an effect.
@@ -51,5 +51,5 @@ export class Effect extends Command {
    * @param effect Specifies the effect to be removed. If unspecified, clears all effects.
    */
   @command(['effect', 'clear'], { isRoot: true })
-  clear = (targets?: MultipleEntitiesArgument, effect?: LiteralUnion<MOB_EFFECTS>) => {}
+    clear = (targets?: MultipleEntitiesArgument, effect?: LiteralUnion<MOB_EFFECTS>) => {}
 }

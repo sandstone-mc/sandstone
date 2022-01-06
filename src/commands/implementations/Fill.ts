@@ -14,7 +14,7 @@ export class FillArguments extends Command {
    * (Blocks that can be mined only with shears, such as vines, do not drop; neither do liquids.)
    */
   @command('destroy')
-  destroy = () => { }
+    destroy = () => { }
 
   /**
    * Replaces only the blocks on the outer edge of the fill region with the specified block.
@@ -25,13 +25,13 @@ export class FillArguments extends Command {
    * acts like `replace`.
    */
   @command('hollow')
-  hollow = () => { }
+    hollow = () => { }
 
   /**
    * Replaces only the air blocks in the fill region with the specified block.
    */
   @command('keep')
-  keep = () => { }
+    keep = () => { }
 
   /**
    * Replaces only the blocks on the outer edge of the fill region with the specified block.
@@ -42,7 +42,7 @@ export class FillArguments extends Command {
    * acts like `replace`.
    */
   @command('outline')
-  outline = () => { }
+    outline = () => { }
 
   /**
    * Replaces all blocks (including air) in the fill region with the specified block,
@@ -56,7 +56,7 @@ export class FillArguments extends Command {
    * fill(...).replace('minecraft:furnace[facing=north]{BurnTime:200}')
    */
   @command('replace')
-  replace = (filter?: LiteralUnion<BLOCKS>) => { }
+    replace = (filter?: LiteralUnion<BLOCKS>) => { }
 }
 
 export class Fill extends Command {
@@ -87,5 +87,5 @@ export class Fill extends Command {
   @command('fill', {
     isRoot: true, executable: true, hasSubcommands: true, parsers: { '0': coordinatesParser, '1': coordinatesParser },
   })
-  fill = (from: Coordinates, to: Coordinates, block: LiteralUnion<BLOCKS>) => new FillArguments(this.commandsRoot)
+    fill = (from: Coordinates, to: Coordinates, block: LiteralUnion<BLOCKS>) => new FillArguments(this.commandsRoot)
 }

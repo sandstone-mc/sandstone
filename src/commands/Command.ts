@@ -1,12 +1,12 @@
 import type { CommandsRoot } from './CommandsRoot'
 
 export abstract class Command {
-    protected commandsRoot: CommandsRoot
+  protected commandsRoot: CommandsRoot
 
-    /**
-     * @hidden
-     */
-    constructor(commandsRoot: CommandsRoot) {
-      this.commandsRoot = commandsRoot
-    }
+  /**
+   * @hidden
+   */
+  constructor(commandsRoot: CommandsRoot) {
+    this.commandsRoot = commandsRoot
+  }
 }

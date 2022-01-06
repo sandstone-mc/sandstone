@@ -8,7 +8,7 @@ import type { AdvancementInstance } from '@resources'
 class AdvancementArguments extends Command {
   /** Adds or removes all loaded advancements. */
   @command('everything', { isRoot: false, executable: true })
-  everything = () => { }
+    everything = () => { }
 
   /**
    * Adds or removes a single advancement or criterion.
@@ -20,7 +20,7 @@ class AdvancementArguments extends Command {
    * If specified, the command refers to merely the criterion and not the entire advancement.
    */
   @command('only', { isRoot: false, executable: true })
-  only = (advancement: string | AdvancementInstance, criterion?: string) => { }
+    only = (advancement: string | AdvancementInstance, criterion?: string) => { }
 
   /**
    * Adds or removes an advancement and all its children advancements.
@@ -35,7 +35,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('from', { isRoot: false, executable: true })
-  from = (advancement: string | AdvancementInstance) => { }
+    from = (advancement: string | AdvancementInstance) => { }
 
   /**
    * Specifies an advancement, and adds or removes all its parent advancements, and all its children advancements.
@@ -48,7 +48,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('through', { isRoot: false, executable: true })
-  through = (advancement: string | AdvancementInstance) => { }
+    through = (advancement: string | AdvancementInstance) => { }
 
   /**
    * Adds or removes an advancement and all its parent advancements until the root for addition/removal.
@@ -61,7 +61,7 @@ class AdvancementArguments extends Command {
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
   @command('until', { isRoot: false, executable: true })
-  until = (advancement: string | AdvancementInstance) => { }
+    until = (advancement: string | AdvancementInstance) => { }
 }
 
 /** Gives or takes an advancement from one or more players. */
@@ -72,7 +72,7 @@ export class AdvancementCommand extends Command {
    * @param targets Specifies one player or more.
    */
   @command(['advancement', 'grant'], { isRoot: true, hasSubcommands: true, executable: false })
-  grant = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
+    grant = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
 
   /**
    * Removes specified advancements.
@@ -80,5 +80,5 @@ export class AdvancementCommand extends Command {
    * @param targets Specifies one player or more.
    */
   @command(['advancement', 'revoke'], { isRoot: true, hasSubcommands: true, executable: false })
-  revoke = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
+    revoke = (targets: MultiplePlayersArgument) => new AdvancementArguments(this.commandsRoot)
 }

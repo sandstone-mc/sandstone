@@ -16,7 +16,7 @@ export class Bossbar extends Command {
    * @param name The display name of the boss bar.
    */
   @command(['bossbar', 'add'], { isRoot: true, parsers: { '1': (arg) => new JSONTextComponentClass(arg) } })
-  add = (id: string, name: JSONTextComponent) => { }
+    add = (id: string, name: JSONTextComponent) => { }
 
   /**
    * Return the requested setting as a result of the command.
@@ -24,13 +24,13 @@ export class Bossbar extends Command {
    * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
    */
   @command(['bossbar', 'get'], { isRoot: true })
-  get = (id: string, setting: 'max' | 'players' | 'value' | 'visible') => { }
+    get = (id: string, setting: 'max' | 'players' | 'value' | 'visible') => { }
 
   /**
    * Display a list of existing boss bars.
    */
   @command(['bossbar', 'list'], { isRoot: true })
-  list = () => { }
+    list = () => { }
 
   /**
    * Remove an existing bossbar.
@@ -38,7 +38,7 @@ export class Bossbar extends Command {
    * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
    */
   @command(['bossbar', 'remove'], { isRoot: true })
-  remove = (id: string) => { }
+    remove = (id: string) => { }
 
   /**
    * Set some bossbar options.
@@ -49,7 +49,7 @@ export class Bossbar extends Command {
    * bossbar.set('custom:mybossbar').color('red')
    */
   @command(['bossbar', 'set'], { isRoot: true, executable: false, hasSubcommands: true })
-  set = (id: string) => new BossbarSet(this.commandsRoot)
+    set = (id: string) => new BossbarSet(this.commandsRoot)
 }
 
 class BossbarSet extends Command {
@@ -60,7 +60,7 @@ class BossbarSet extends Command {
    * @param color The new color.
    */
   @command('color', { isRoot: false })
-  color = (color: LiteralUnion<BASIC_COLORS>) => { }
+    color = (color: LiteralUnion<BASIC_COLORS>) => { }
 
   /**
    * Set the boss bar's maximum value.
@@ -69,7 +69,7 @@ class BossbarSet extends Command {
    * @param max The new maximum value.
    */
   @command('max', { isRoot: false })
-  max = (max: number) => { }
+    max = (max: number) => { }
 
   /**
    * Set the boss bar's name.
@@ -77,7 +77,7 @@ class BossbarSet extends Command {
    * @param name The new name.
    */
   @command('name', { isRoot: false })
-  name = (name: string) => { }
+    name = (name: string) => { }
 
   /**
    * Change the set of players to whom the bar is visible.
@@ -86,7 +86,7 @@ class BossbarSet extends Command {
    * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
    */
   @command('players', { isRoot: false })
-  players = (players?: MultiplePlayersArgument) => { }
+    players = (players?: MultiplePlayersArgument) => { }
 
   /**
    * Set the boss bar's visual amount of segments: continuous, 6 segments, 10 segments, 12 segments, or 20 segments.
@@ -95,7 +95,7 @@ class BossbarSet extends Command {
    * @param style The new style.
    */
   @command('style', { isRoot: false })
-  style = (style: 'progress' | 'notched_6' | 'notched_10' | 'notched_12' | 'notched_20') => { }
+    style = (style: 'progress' | 'notched_6' | 'notched_10' | 'notched_12' | 'notched_20') => { }
 
   /**
    * Set the boss bar's current value.
@@ -104,7 +104,7 @@ class BossbarSet extends Command {
    * @param value The new value.
    */
   @command('value', { isRoot: false })
-  value = (value: number) => { }
+    value = (value: number) => { }
 
   /**
    * Set the boss bar's visibility.
@@ -113,5 +113,5 @@ class BossbarSet extends Command {
    * @param visible Whether the bossbar is visible or not.
    */
   @command('visible', { isRoot: false })
-  visible = (visible: number) => { }
+    visible = (visible: number) => { }
 }

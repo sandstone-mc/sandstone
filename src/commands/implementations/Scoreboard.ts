@@ -73,6 +73,7 @@ class ScoreboardObjectives extends Command {
   @command(objectiveCmd('remove'), { isRoot: true })
   remove = (objective: ObjectiveArgument) => { }
 
+
   /**
    * Display score info for the objective in the given slot.
    *
@@ -136,7 +137,7 @@ class ScoreboardObjectives extends Command {
 
 class ScoreboardPlayers extends Command {
   @command(playersCmd('list'), { isRoot: true })
-  list: (
+    list: (
     /**
      * Lists all entities which are tracked in some way by the scoreboard system.
      */

@@ -84,13 +84,9 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     if (typeof args[0] === 'number') {
       this.commandsRoot.scoreboard.players[operation](this.target, this.objective, args[0])
     } else if (args[0] instanceof Score) {
-      this.commandsRoot.scoreboard.players.operation(
-        this.target, this.objective, operator, args[0].target, args[0].objective,
-      )
+      this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0].target, args[0].objective)
     } else {
-      this.commandsRoot.scoreboard.players.operation(
-        this.target, this.objective, operator, args[0], args[1] ?? this.objective,
-      )
+      this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0], args[1] ?? this.objective)
     }
 
     return this
@@ -98,9 +94,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
 
   private binaryOperation(operator: OPERATORS, ...args: OperationArguments): this {
     if (args[0] instanceof Score) {
-      this.commandsRoot.scoreboard.players.operation(
-        this.target, this.objective, operator, args[0].target, args[0].objective,
-      )
+      this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0].target, args[0].objective)
       return this
     }
 
@@ -110,9 +104,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
       objective = 'sandstone_const'
     }
 
-    this.commandsRoot.scoreboard.players.operation(
-      this.target, this.objective, operator, args[0], objective,
-    )
+    this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0], objective)
 
     return this
   }

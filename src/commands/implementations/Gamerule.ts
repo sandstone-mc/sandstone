@@ -59,5 +59,5 @@ export class GameruleCommand extends Command {
    * where any integer 0 or greater affects gameplay.
    */
   @command('gamerule', { isRoot: true })
-  gamerule = (gamerule: LiteralUnion<GAMERULES>, value?: boolean | number) => { }
+    gamerule = (gamerule: LiteralUnion<GAMERULES>, value?: boolean | number) => { }
 }

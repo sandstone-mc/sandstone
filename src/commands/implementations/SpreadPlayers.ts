@@ -18,7 +18,7 @@ export class SpreadPlayers extends Command {
       },
     },
   })
-  spreadplayers: (
+    spreadplayers: (
     (
     /**
      * Teleports entities to random surface locations within an area.
