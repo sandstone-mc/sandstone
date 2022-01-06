@@ -356,7 +356,23 @@ export const nbtStringifier = (nbt: NBTObject): string => {
 
   if (typeof nbt === 'string') {
     // We have a string
-    return JSON.stringify(nbt)
+
+    /*
+     * Sometimes, when we have both a " and a ' in a string,
+     * util.inspect will end up creating a template string, invalid for Minecraft.
+     */
+    const inspectedStr = util.inspect(nbt, {
+      breakLength: +Infinity,
+      compact: true,
+      maxStringLength: +Infinity,
+      depth: +Infinity,
+    })
+
+    if (inspectedStr[0] === '`') {
+      return JSON.stringify(nbt)
+    }
+
+    return inspectedStr
   }
 
   if (Array.isArray(nbt)) {
@@ -372,6 +388,6 @@ export const nbtStringifier = (nbt: NBTObject): string => {
   }
 
   // It's a real object.
-  const objectStr = Object.entries(nbt).map(([key, value]) => `"${key}":${nbtStringifier(value)}`).join(',')
+  const objectStr = Object.entries(nbt).map(([key, value]) => `${key}:${nbtStringifier(value)}`).join(',')
   return `{${objectStr}}`
 }

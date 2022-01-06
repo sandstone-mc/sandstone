@@ -6,7 +6,11 @@ import type { ColumnCoordinates } from '@arguments'
 import type { VectorClass } from '@variables'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
-function coordinatesToNumbers(coords: string[] | VectorClass<string[]>): number[] {
+function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string): number[] {
+  if (typeof coords === 'string') {
+    return coords.replace(/[~^]/, '').split(' ').map((i) => Number(i))
+  }
+
   const realCoords = Array.isArray(coords) ? coords : coords.values
 
   return realCoords.map((coord) => parseInt(coord.replace(/[\^~]/, '') || '0', 10))
