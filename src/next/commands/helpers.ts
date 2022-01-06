@@ -43,31 +43,31 @@ export abstract class CommandArguments<NODE extends (new (...args: any) => Comma
     // Command with possible followups
     (<NEXT_ARGUMENT extends (new (...args: any) => CommandArguments) >(nextArgumentType: NEXT_ARGUMENT, executable: boolean, args: unknown[], additionalNextArgs?: unknown[]) => InstanceType<NEXT_ARGUMENT>)
   ) = (...args: any[]) => {
-      const node = this.getNode()
+    const node = this.getNode()
 
-      if (args.length === 0) {
+    if (args.length === 0) {
       // No arguments, so we can commit the command.
-        node.commit()
-        return new FinalCommandOutput(node)
-      }
-      if (args.length === 1) {
-      // One argument, which means the command is executable and has no followup. We can add arguments & commit.
-        node.args.push(...args[0])
-        node.commit()
-        return new FinalCommandOutput(node)
-      }
-
-      /*
-       * The command has followup arguments. We need to append the arguments to the node, and return a new instance of the followup command.
-       * If the command is executable at this point, we can commit it.
-       */
-      const [NextArgumentType, executable, nextArguments, additionalNextArgs = []] = args
-      node.args.push(...nextArguments)
-
-      if (executable) {
-        node.commit()
-      }
-
-      return new NextArgumentType(this.sandstoneCore, node, ...additionalNextArgs)
+      node.commit()
+      return new FinalCommandOutput(node)
     }
+    if (args.length === 1) {
+      // One argument, which means the command is executable and has no followup. We can add arguments & commit.
+      node.args.push(...args[0])
+      node.commit()
+      return new FinalCommandOutput(node)
+    }
+
+    /*
+     * The command has followup arguments. We need to append the arguments to the node, and return a new instance of the followup command.
+     * If the command is executable at this point, we can commit it.
+     */
+    const [NextArgumentType, executable, nextArguments, additionalNextArgs = []] = args
+    node.args.push(...nextArguments)
+
+    if (executable) {
+      node.commit()
+    }
+
+    return new NextArgumentType(this.sandstoneCore, node, ...additionalNextArgs)
+  }
 }

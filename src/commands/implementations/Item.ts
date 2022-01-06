@@ -45,9 +45,9 @@ export class ItemSource extends Command {
      */
     entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string | ItemModifierInstance) => void
   } = {
-      block: this.fromBlock,
-      entity: this.fromEntity,
-    }
+    block: this.fromBlock,
+    entity: this.fromEntity,
+  }
 }
 
 export class ModifyItem extends Command {
