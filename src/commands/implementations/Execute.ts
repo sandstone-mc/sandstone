@@ -473,13 +473,13 @@ export class Execute<T extends CommandsRootLike> extends CommandLike<T> {
   get if(): ((condition: ConditionClass) => this) & IfType<T, this> {
     const result = Object.assign(
       (condition: ConditionClass) => this.if_(...condition._toMinecraftCondition().value), {
-      block: this.ifBlock,
-      blocks: this.ifBlocks,
-      data: 0 as any, // We are going to override it just below
-      entity: this.ifEntity,
-      predicate: this.ifPredicate,
-      score: this.ifScore,
-    },
+        block: this.ifBlock,
+        blocks: this.ifBlocks,
+        data: 0 as any, // We are going to override it just below
+        entity: this.ifEntity,
+        predicate: this.ifPredicate,
+        score: this.ifScore,
+      },
     )
 
     Object.defineProperty(result, 'data', {

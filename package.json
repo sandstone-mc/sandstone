@@ -68,7 +68,7 @@
     "build-pack": "npm run fast-build && cd dist && npm pack",
     "watch": "nodemon --watch src --watch tests -e js,ts --exec \"npm run fast-build\" --pretty",
     "publishToNpm": "npm run build && npm publish dist",
-    "format": "eslint src --fix --quiet"
+    "format": "eslint src --fix --quiet --cache"
   },
   "types": "dist/src/index.d.ts"
 }

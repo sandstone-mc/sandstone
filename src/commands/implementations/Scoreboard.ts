@@ -1,12 +1,12 @@
 import { JSONTextComponentClass } from '@variables'
+import { Score } from '@variables/Score'
 
 import { Command } from '../Command'
 import { command } from '../decorators'
 
 import type { LiteralUnion } from '@/generalTypes'
 import type {
-  JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
-  ObjectiveArgument, OPERATORS,
+  JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION, ObjectiveArgument, OPERATORS,
 } from '@arguments'
 import type { DISPLAY_SLOTS } from '@arguments/displaySlots'
 
@@ -18,10 +18,19 @@ function playersCmd(...subcommands: string[]) {
   return ['scoreboard', 'players', ...subcommands]
 }
 
+function scoresParser(...args: unknown[]) {
+  return args.flatMap((arg, i) => {
+    if (arg instanceof Score) {
+      return [arg.target, arg.objective]
+    }
+    return [arg]
+  })
+}
+
 class ScoreboardObjectives extends Command {
   /** List all existing objectives with their display names and criteria. */
   @command(objectiveCmd('list'), { isRoot: true })
-  list = () => {}
+  list = () => { }
 
   /**
    * Create a new objective with the given internal objective name, specified criterion, and the optional display name.
@@ -46,7 +55,7 @@ class ScoreboardObjectives extends Command {
       '2': (displayName) => (displayName ? new JSONTextComponentClass(displayName) : displayName),
     },
   })
-  add = (objective: string, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => {}
+  add = (objective: ObjectiveArgument, criteria: LiteralUnion<OBJECTIVE_CRITERION>, displayName?: JSONTextComponent) => { }
 
   /**
    * Delete all references to the named objective in the scoreboard system.
@@ -62,7 +71,7 @@ class ScoreboardObjectives extends Command {
    * --------------------------------------------------
    */
   @command(objectiveCmd('remove'), { isRoot: true })
-  remove = (objective: ObjectiveArgument) => {}
+  remove = (objective: ObjectiveArgument) => { }
 
   /**
    * Display score info for the objective in the given slot.
@@ -80,7 +89,7 @@ class ScoreboardObjectives extends Command {
    * @param objective The objective to display. If not provided, this display slot is cleared.
    */
   @command(objectiveCmd('setdisplay'), { isRoot: true })
-  setDisplay = (slot: DISPLAY_SLOTS, objective?: ObjectiveArgument) => {}
+  setDisplay = (slot: DISPLAY_SLOTS, objective?: ObjectiveArgument) => { }
 
   @command(objectiveCmd('modify'), {
     isRoot: true,
@@ -89,40 +98,40 @@ class ScoreboardObjectives extends Command {
     },
   })
   modify: (
-  /**
-   * Change the display name of the scoreboard in display slots.
-   *
-   * --------------------------------------------------
-   * ⚠️ The prefered way is using:
-   * ```
-   * const objective = Objective.create(...)
-   * objective.modify(...)
-   * ```
-   * --------------------------------------------------
-   *
-   * @param objective The objective to change.
-   *
-   * @param displayName The new display name. Must be a JSON text component.
-   */
-  ((objective: ObjectiveArgument, type: 'displayname', displayName?: JSONTextComponent) => void) &
+    /**
+     * Change the display name of the scoreboard in display slots.
+     *
+     * --------------------------------------------------
+     * ⚠️ The prefered way is using:
+     * ```
+     * const objective = Objective.create(...)
+     * objective.modify(...)
+     * ```
+     * --------------------------------------------------
+     *
+     * @param objective The objective to change.
+     *
+     * @param displayName The new display name. Must be a JSON text component.
+     */
+    ((objective: ObjectiveArgument, type: 'displayname', displayName?: JSONTextComponent) => void) &
 
-  /**
-   * Change the display format of health bars.
-   *
-   * --------------------------------------------------
-   * ⚠️ The prefered way is using:
-   * ```
-   * const objective = Objective.create(...)
-   * objective.modify(...)
-   * ```
-   * --------------------------------------------------
-   *
-   * @param objective The objective to change.
-   *
-   * @param display Whether to display the health bars as hearts or integers.
-   */
-  ((objective: ObjectiveArgument, type: 'rendertype', display: 'hearts' | 'integer') => void)
-  ) = (...args: unknown[]) => {}
+    /**
+     * Change the display format of health bars.
+     *
+     * --------------------------------------------------
+     * ⚠️ The prefered way is using:
+     * ```
+     * const objective = Objective.create(...)
+     * objective.modify(...)
+     * ```
+     * --------------------------------------------------
+     *
+     * @param objective The objective to change.
+     *
+     * @param display Whether to display the health bars as hearts or integers.
+     */
+    ((objective: ObjectiveArgument, type: 'rendertype', display: 'hearts' | 'integer') => void)
+  ) = (...args: unknown[]) => { }
 }
 
 class ScoreboardPlayers extends Command {
@@ -147,7 +156,7 @@ class ScoreboardPlayers extends Command {
      * @param target The entity to list the scores from.
      */
     ((target: MultipleEntitiesArgument | number) => void)
-  ) = (target?: unknown) => {}
+  ) = (target?: unknown) => { }
 
   /**
    * Return the scoreboard value of a given objective for a given target.
@@ -166,31 +175,43 @@ class ScoreboardPlayers extends Command {
    * @param objective The objective to get the score from.
    */
   @command(playersCmd('get'), { isRoot: true })
-  get = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
+  get: (
+    (...args: [target: MultipleEntitiesArgument | number, objective: ObjectiveArgument] | [target: Score]) => void
+  ) = (...args) => { }
 
-  @command(playersCmd('set'), { isRoot: true })
-  set = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
+  @command(playersCmd('set'), { parsers: scoresParser, isRoot: true })
+  set: (
+    (...a: [...a: ([target: MultipleEntitiesArgument | number, objective: ObjectiveArgument] | [target: Score]), score: number]) => void
+  ) = (...args: unknown[]) => { }
 
-  @command(playersCmd('add'), { isRoot: true })
-  add = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
+  @command(playersCmd('add'), { parsers: scoresParser, isRoot: true })
+  add: (
+    (...a: [...a: ([target: MultipleEntitiesArgument | number, objective: ObjectiveArgument] | [target: Score]), score: number]) => void
+  ) = (...args) => { }
 
-  @command(playersCmd('remove'), { isRoot: true })
-  remove = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument, score: number) => {}
+  @command(playersCmd('remove'), { parsers: scoresParser, isRoot: true })
+  remove: (
+    (...a: [...a: ([target: MultipleEntitiesArgument | number, objective: ObjectiveArgument] | [target: Score]), score: number]) => void
+  ) = (...args) => { }
 
-  @command(playersCmd('reset'), { isRoot: true })
-  reset = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
+  @command(playersCmd('reset'), { parsers: scoresParser, isRoot: true })
+  reset: (
+    (...target: [target: MultipleEntitiesArgument | number, objective: ObjectiveArgument] | [target: Score]) => void
+  ) = (...args) => { }
 
-  @command(playersCmd('enable'), { isRoot: true })
-  enable = (target: MultipleEntitiesArgument | number, objective: ObjectiveArgument) => {}
+  @command(playersCmd('enable'), { parsers: scoresParser, isRoot: true })
+  enable: (
+    (...target: [target: MultipleEntitiesArgument | number, objective: ObjectiveArgument] | [target: Score]) => void
+  ) = (...args) => { }
 
-  @command(playersCmd('operation'), { isRoot: true })
-  operation = (
-    targets: MultipleEntitiesArgument | number,
-    targetObjective: ObjectiveArgument,
-    operation: OPERATORS,
-    source: MultipleEntitiesArgument | number,
-    sourceObjective: ObjectiveArgument,
-  ) => {}
+  @command(playersCmd('operation'), { parsers: scoresParser, isRoot: true })
+  operation: (
+    (...args: [
+      ...target: [target: MultipleEntitiesArgument | number, targetObjective: ObjectiveArgument] | [targetScore: Score],
+      operation: OPERATORS,
+      ...source: [source: MultipleEntitiesArgument | number, sourceObjective: ObjectiveArgument] | [sourceScore: Score],
+    ]) => void
+  ) = (...args) => { }
 }
 
 export class Scoreboard extends Command {
