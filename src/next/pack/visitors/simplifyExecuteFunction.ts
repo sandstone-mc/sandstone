@@ -1,6 +1,5 @@
 /* eslint-disable dot-notation */
-import { ExecuteNode } from '@/next/commands'
-import { FunctionNode } from '@/next/commands'
+import { ExecuteNode, FunctionNode } from '@/next/commands'
 import { CommandNode } from '@/next/core'
 import { GenericVisitor } from '@/next/core/visitors'
 
@@ -47,7 +46,7 @@ export class SimplifyExecuteFunctionVisitor extends GenericVisitor {
     // We can safely simplify the execute. If the called command is not a user-created MCFunction, we can safely delete it.
     node.body = [command]
 
-    if (!mcFunction.isUserCreated) {
+    if (mcFunction['creator'] === 'sandstone') {
       this.sandstoneCore.resourceNodes.delete(mcFunctionNode)
     }
 

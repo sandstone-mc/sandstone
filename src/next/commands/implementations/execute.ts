@@ -19,7 +19,7 @@ export class ExecuteNode extends ContainerCommandNode<[[subcommand: string, ...a
     this.body.push(node)
 
     if (this.isSingleExecute) {
-      this.sandstoneCore.currentMCFunction.exitContext()
+      this.sandstoneCore.getCurrentMCFunctionOrThrow().exitContext()
     }
 
     return node
@@ -57,12 +57,13 @@ export class ExecuteCommand extends CommandArguments<typeof ExecuteNode> {
 
   get run() {
     const node = this.getNode()
-    this.sandstoneCore.currentMCFunction.enterContext(node, false)
+
+    this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(node, false)
 
     return Object.assign((callback: () => void) => {
       node.isSingleExecute = false
       callback()
-      this.sandstoneCore.currentMCFunction.exitContext()
+      this.sandstoneCore.getCurrentMCFunctionOrThrow().exitContext()
       return new FinalCommandOutput(node)
     }, this.sandstoneCommands)
   }

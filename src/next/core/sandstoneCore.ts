@@ -20,6 +20,16 @@ export class SandstoneCore {
     return this.mcfunctionStack[this.mcfunctionStack.length - 1]
   }
 
+  getCurrentMCFunctionOrThrow = () => {
+    const { currentMCFunction } = this
+
+    if (!currentMCFunction) {
+      throw new Error('This operation is invalid when outside a MCFunction.')
+    }
+
+    return currentMCFunction
+  }
+
   /**
    * Create a new MCFunction with the given name, and switch the currently active MCFunction to it.
    * @param mcfunction The MCFunction to switch to.

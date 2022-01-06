@@ -61,7 +61,8 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
       return this
     }
     this.commited = true
-    return this.sandstoneCore.currentMCFunction.addNode(this)
+
+    return this.sandstoneCore.getCurrentMCFunctionOrThrow().addNode(this)
   }
 }
 

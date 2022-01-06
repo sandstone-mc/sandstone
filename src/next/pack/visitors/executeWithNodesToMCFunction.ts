@@ -18,7 +18,7 @@ export class ExecuteWithNodesToMCFunctionVisitor extends GenericVisitor {
     }
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${this.currentMCFunction.mcFunction.name}/execute`, {
+    const mcFunction = new MCFunctionClass(this.sandstoneCore, [...this.currentMCFunction.resource['path'], 'execute'], {
       addToSandstoneCore: false,
     })
     const mcFunctionNode = mcFunction['node']

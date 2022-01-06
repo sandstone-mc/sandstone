@@ -569,31 +569,31 @@ export default class Datapack {
     )
   ) = (initialValue?: number | Score | undefined | DataPointInstance, nameOrScale?: string | number, maybeName?: string) => {
     // Get the objective
-      const datapack = this.commandsRoot.Datapack
-      const score = datapack.rootObjective
+    const datapack = this.commandsRoot.Datapack
+    const score = datapack.rootObjective
 
-      if (initialValue instanceof DataPointInstance) {
+    if (initialValue instanceof DataPointInstance) {
       // If the value is a data point, leverage the .set method
-        return this.Variable(undefined, maybeName).set(initialValue, nameOrScale as number)
-      }
-
-      const name = nameOrScale as string | undefined
-
-      // Get the specific anonymous score
-      const id = Datapack.anonymousScoreId
-      Datapack.anonymousScoreId += 1
-      const anonymousScore = score(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
-
-      if (initialValue !== undefined) {
-        if (this.currentFunction !== null) {
-          anonymousScore.set(initialValue)
-        } else {
-          this.initCommands.push(['scoreboard', 'players', 'set', anonymousScore.target, anonymousScore.objective, initialValue])
-        }
-      }
-
-      return anonymousScore
+      return this.Variable(undefined, maybeName).set(initialValue, nameOrScale as number)
     }
+
+    const name = nameOrScale as string | undefined
+
+    // Get the specific anonymous score
+    const id = Datapack.anonymousScoreId
+    Datapack.anonymousScoreId += 1
+    const anonymousScore = score(`${name ?? 'anon'}_${datapack.packUid}_${id}`)
+
+    if (initialValue !== undefined) {
+      if (this.currentFunction !== null) {
+        anonymousScore.set(initialValue)
+      } else {
+        this.initCommands.push(['scoreboard', 'players', 'set', anonymousScore.target, anonymousScore.objective, initialValue])
+      }
+    }
+
+    return anonymousScore
+  }
 
   Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this.commandsRoot, target, properties)) as any
 
