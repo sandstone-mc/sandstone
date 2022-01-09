@@ -368,8 +368,11 @@ export const nbtStringifier = (nbt: NBTObject): string => {
       depth: +Infinity,
     })
 
-    if (inspectedStr[0] === '`') {
-      return JSON.stringify(nbt)
+    const stringifiedStr = JSON.stringify(nbt)
+
+    // Always use the standard stringification if it's shorter or equal to the inspected string, or if the inspected string doesn't start with " or '
+    if (stringifiedStr.length <= inspectedStr.length || inspectedStr[0] === '`') {
+      return stringifiedStr
     }
 
     return inspectedStr
