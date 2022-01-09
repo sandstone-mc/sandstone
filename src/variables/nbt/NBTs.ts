@@ -388,6 +388,9 @@ export const nbtStringifier = (nbt: NBTObject): string => {
   }
 
   // It's a real object.
-  const objectStr = Object.entries(nbt).map(([key, value]) => `${key}:${nbtStringifier(value)}`).join(',')
+  const objectStr = Object.entries(nbt)
+    .filter((entry): entry is [string, NBTObject] => entry[1] !== undefined)
+    .map(([key, value]) => `${key}:${nbtStringifier(value)}`)
+    .join(',')
   return `{${objectStr}}`
 }

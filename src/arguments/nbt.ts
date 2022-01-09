@@ -3,9 +3,9 @@ import type { NBTInstance } from '@variables/nbt/NBTs'
 export type NBTObject = (
     string |
     number |
-    { [NBTTAg: string]: NBTObject } |
+    { [Key: string]: NBTObject | undefined } |
     NBTObject[] |
     NBTInstance
 )
 
-export type RootNBT = Record<string, NBTObject>
+export type RootNBT = Record<string, NBTObject | undefined>
