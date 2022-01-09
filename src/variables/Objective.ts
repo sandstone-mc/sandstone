@@ -23,9 +23,7 @@ export class ObjectiveClass<CRITERION extends string | undefined = string | unde
     this._displayRaw = display
   }
 
-  toString() {
-    return this.name
-  }
+  toString = () => this.name
 
   toJSON = this.toString
 

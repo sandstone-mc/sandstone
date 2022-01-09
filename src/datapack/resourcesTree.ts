@@ -268,7 +268,7 @@ export class ResourcesTree {
       if (!previousResource || conflictStrategy === 'replace' || conflictStrategy === 'warn' || !previousResource.isResource) {
         if (conflictStrategy === 'warn' && previousResource && previousResource.isResource) {
           console.warn(
-            chalk.keyword('orange')(
+            chalk.hex('#FFA500')(
               'Warning:',
               `Tried to create a ${niceResourceType} named "${niceName}", but found an already existing one.`,
               "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",

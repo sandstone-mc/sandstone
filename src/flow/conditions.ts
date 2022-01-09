@@ -133,9 +133,9 @@ export class CombinedConditions {
         requiredExpressions.push(...executes.requiredExpressions)
 
         const conditionScore = getConditionScore(this.commandsRoot.Datapack)
-        requiredExpressions.push(['scoreboard', 'players', 'set', conditionScore.toCommand(), '0'])
-        requiredExpressions.push(['execute', ...executes.callableExpression, 'run', 'scoreboard', 'players', 'set', conditionScore.toCommand(), '1'])
-        callableExpression.push(this.operator === 'not' ? 'unless' : 'if', 'score', conditionScore.toCommand(), 'matches', '1')
+        requiredExpressions.push(['scoreboard', 'players', 'set', conditionScore.toString(), '0'])
+        requiredExpressions.push(['execute', ...executes.callableExpression, 'run', 'scoreboard', 'players', 'set', conditionScore.toString(), '1'])
+        callableExpression.push(this.operator === 'not' ? 'unless' : 'if', 'score', conditionScore.toString(), 'matches', '1')
         return
       }
 

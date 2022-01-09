@@ -106,10 +106,10 @@ export class Teleport extends Command {
        */
       (targets: MultipleEntitiesArgument, location: Coordinates, rotation: Rotation) => void)
   ) = (...args: unknown[]): any => {
-    if (args.length === 2 && (args[1] instanceof VectorClass || typeof args[1] === 'string')) {
-      return new TeleportFacing(this.commandsRoot)
-    }
+        if (args.length === 2 && (args[1] instanceof VectorClass || typeof args[1] === 'string')) {
+          return new TeleportFacing(this.commandsRoot)
+        }
 
-    return this.commandsRoot.register()
-  }
+        return this.commandsRoot.register()
+      }
 }

@@ -7,7 +7,7 @@
     "url": "https://github.com/TheMrZZ/sandstone/issues"
   },
   "dependencies": {
-    "chalk": "^5.0.0",
+    "chalk": "^4.1.1",
     "graceful-fs": "^4.2.8",
     "nanoid": "^3.1.30",
     "nearley": "^2.20.1",

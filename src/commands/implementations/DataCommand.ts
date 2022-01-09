@@ -109,10 +109,10 @@ export class DataModifyValues extends Command {
      */
     storage: (source: string, sourcePath: string) => void
   } = {
-    block: this.fromBlock,
-    entity: this.fromEntity,
-    storage: this.fromStorage,
-  }
+      block: this.fromBlock,
+      entity: this.fromEntity,
+      storage: this.fromStorage,
+    }
 
   /**
    * Modify the NBT with the given value.
