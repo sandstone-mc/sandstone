@@ -113,5 +113,5 @@ class BossbarSet extends Command {
    * @param visible Whether the bossbar is visible or not.
    */
   @command('visible', { isRoot: false })
-    visible = (visible: number) => { }
+    visible = (visible: boolean) => { }
 }
