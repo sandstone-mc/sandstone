@@ -14,6 +14,9 @@ type ContentTag = ({
 
   /** Optional. A list of raw JSON text component arguments to be inserted into slots in the translation text.  */
   with?: TextComponentObject[]
+
+  /** Optional. A raw JSON text component that will be used in place of a translation if it is missing */
+  fallback?: TextComponentObject
 } | {
   /**
    * Displays a score holder's current score in an objective.

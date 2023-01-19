@@ -1,6 +1,8 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
+import type { TimeArgument } from '@arguments'
+
 export class Weather extends Command {
     /**
      * Set the weather to clear.
@@ -10,7 +12,7 @@ export class Weather extends Command {
      * If 0, resets to random weather duration.
      */
     @command(['weather', 'clear'], { isRoot: true })
-      clear = (duration: number) => {}
+      clear = (duration: TimeArgument) => {}
 
     /**
      * Set the weather to rain (or snow in cold biomes).
@@ -20,7 +22,7 @@ export class Weather extends Command {
      * If 0, resets to random weather duration.
      */
     @command(['weather', 'rain'], { isRoot: true })
-      rain = (duration: number) => {}
+      rain = (duration: TimeArgument) => {}
 
     /**
      * Set the weather to a thunderstorm (or blizzard cold biomes).
@@ -30,5 +32,5 @@ export class Weather extends Command {
      * If 0, resets to random weather duration.
      */
     @command(['weather', 'thunder'], { isRoot: true })
-      thunder = (duration: number) => {}
+      thunder = (duration: TimeArgument) => {}
 }

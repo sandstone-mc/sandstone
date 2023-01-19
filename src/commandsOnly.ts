@@ -36,6 +36,7 @@ export const {
   raw,
   recipe,
   reload,
+  ride,
   item,
   say,
   schedule,

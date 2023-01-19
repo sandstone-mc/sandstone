@@ -3,7 +3,7 @@ import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 import { JSONTextComponentClass, SelectorClass } from '@variables'
 
-import type { JSONTextComponent, MultiplePlayersArgument } from '@arguments'
+import type { JSONTextComponent, MultiplePlayersArgument, TimeArgument } from '@arguments'
 
 export class TitleArguments extends Command {
   @command('clear')
@@ -34,7 +34,7 @@ export class TitleArguments extends Command {
     actionbar = (actionbarText: JSONTextComponent) => {}
 
   @command('times')
-    times = (fadeIn: number, stay: number, fadeOut: number) => {}
+    times = (fadeIn: TimeArgument, stay: TimeArgument, fadeOut: TimeArgument) => {}
 }
 
 export class Title extends Command {

@@ -23,6 +23,7 @@ const executeConfig = {
 }
 
 export type StoreType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double'
+export type RelationType = 'attacker' | 'controller' | 'leasher' | 'owner' | 'passengers' | 'target' | 'vehicle'
 
 type CommandsRootLike = CommandsRoot | Flow
 
@@ -94,6 +95,9 @@ export class ExecuteStoreArgs<T extends CommandsRootLike> extends ExecuteSubcomm
    */
   @command('entity', executeConfig)
     entity = (target: SingleEntityArgument, path: string, type: StoreType, scale = 1) => this.execute
+
+  @command('on', executeConfig)
+    on = (relation: RelationType) => this.execute
 
   @command('score', executeConfig)
     score: (

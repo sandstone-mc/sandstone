@@ -10,7 +10,7 @@ import {
   Experience,
   Fill,
   Forceload,
-  FunctionCommand, GameruleCommand, Item, Loot, Particle, RecipeCommand, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
+  FunctionCommand, GameruleCommand, Item, Loot, Particle, RecipeCommand, Ride, Schedule, Scoreboard, SpreadPlayers, TagCommand, Team, Teleport, Time, Title, Trigger, Weather, WorldBorder,
 } from './implementations'
 
 import type * as commands from '@/commandsOnly'
@@ -343,14 +343,17 @@ export class CommandsRoot {
    * A raw command. Can be used to create custom commands, for mods or plugins for example.
    *
    * @example
-   * // A custom `mount` command, that takes a player and an entity as argument
+   * // A custom `open` command, that takes a player and a position as argument
    * const self = Selector(`@s`)
-   * const nearestSkeleton = Selector(`@e`, { limit: 1, sort: 'nearest' })
+   * const chest = pos(1,5,24)
    *
-   * raw('mount', self, nearestSkeleton)
+   * raw('open', self, chest)
    */
   @command([], { isRoot: true })
     raw = (...args: unknown[]) => { }
+
+  // ride command //
+  ride = (new Ride(this)).ride
 
   // item command //
   item = new Item(this)
