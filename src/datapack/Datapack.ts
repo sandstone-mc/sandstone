@@ -24,7 +24,7 @@ import type {
 } from '@resources'
 import type { CustomResourceInstance } from '@resources/Custom'
 import type { ObjectiveInstance, SelectorCreator, SelectorProperties } from '@variables'
-import type { DATA_TARGET, DATA_TYPES } from '@variables/Data'
+import type { DATA_SOURCES, DATA_TARGET, DATA_TYPES } from '@variables/Data'
 import type { Score } from '@variables/Score'
 import type { BasePathInstance, BasePathOptions } from './BasePath'
 import type { CommandArgs } from './minecraft'
@@ -597,11 +597,16 @@ export default class Datapack {
 
   Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this.commandsRoot, target, properties)) as any
 
-  Data = <TYPE extends DATA_TYPES, TARGET extends DATA_TARGET[TYPE] | undefined = undefined>(type: TYPE, target?: TARGET): TARGET extends undefined ? TargetlessDataInstance<TYPE> : DataInstance<TYPE> => {
+  Data = <
+    TYPE extends DATA_TYPES, SOURCE extends DATA_SOURCES,
+    TARGET extends DATA_TARGET[TYPE] | undefined = undefined
+  >(type: TYPE, source?: SOURCE, target?: TARGET): TARGET extends undefined ? TargetlessDataInstance<TYPE, SOURCE> : DataInstance<TYPE, SOURCE> => {
     if (target) {
-      return new DataInstance(this, type, target!) as any
+      // eslint-disable-next-line no-unneeded-ternary, @typescript-eslint/no-non-null-assertion
+      return new DataInstance(this, type, source ? source : 'default', target!) as any
     }
-    return new TargetlessDataInstance(this, type) as any
+    // eslint-disable-next-line no-unneeded-ternary
+    return new TargetlessDataInstance(this, type, source ? source : 'default') as any
   }
 
   /** A BasePath changes the base namespace & directory of nested resources. */

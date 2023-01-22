@@ -84,6 +84,15 @@ export class DataModifyValues extends Command {
   @command(['from', 'storage'])
   private fromStorage = (...args: unknown[]) => { }
 
+  @command(['from', 'string', 'block'], { parsers: { '0': coordinatesParser } })
+  private fromStringBlock = (...args: unknown[]) => { }
+
+  @command(['from', 'string', 'entity'])
+  private fromStringEntity = (...args: unknown[]) => { }
+
+  @command(['from', 'string', 'storage'])
+  private fromStringStorage = (...args: unknown[]) => { }
+
   from: {
     /**
      * Modify with the NBT of a block at the given position.
@@ -112,6 +121,42 @@ export class DataModifyValues extends Command {
       block: this.fromBlock,
       entity: this.fromEntity,
       storage: this.fromStorage,
+    }
+
+  fromString: {
+    /**
+     * Modify with the NBT String of a block at the given position.
+     *
+     * @param sourcePosition The coordinates of the block to modify the NBT with.
+     * @param sourcePath The path of the NBT to modify with.
+     * @param start Optional. Index of first character to include at the start of the string.
+     * @param end Optional. Index of the first character to exclude at the end of the string
+     */
+    block: (sourcePosition: Coordinates, sourcePath: string, start?: number, end?: number) => void
+
+    /**
+     * Modify with the NBT String of a given entity.
+     *
+     * @param source The entity to modify the NBT with.
+     * @param sourcePath The path of the NBT to modify with.
+     * @param start Optional. Index of first character to include at the start of the string.
+     * @param end Optional. Index of the first character to exclude at the end of the string
+     */
+    entity: (source: SingleEntityArgument, sourcePath: string, start?: number, end?: number) => void
+
+    /**
+     * Modify with the NBT String of a given storage path.
+     *
+     * @param source The storage path to modify the NBT with.
+     * @param sourcePath The path of the NBT to modify with.
+     * @param start Optional. Index of first character to include at the start of the string.
+     * @param end Optional. Index of the first character to exclude at the end of the string
+     */
+    storage: (source: string, sourcePath: string, start?: number, end?: number) => void
+  } = {
+      block: this.fromStringBlock,
+      entity: this.fromStringEntity,
+      storage: this.fromStringStorage,
     }
 
   /**
