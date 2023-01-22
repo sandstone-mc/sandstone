@@ -2,8 +2,8 @@
 
 # Sandstone
 
-![GitHub](https://img.shields.io/github/license/TheMrZZ/sandstone)
-![GitHub last commit](https://img.shields.io/github/last-commit/TheMrZZ/sandstone?color=blue)
+![GitHub](https://img.shields.io/github/license/sandstone-mc/sandstone)
+![GitHub last commit](https://img.shields.io/github/last-commit/sandstone-mc/sandstone?color=blue)
 ![Version](https://img.shields.io/badge/version-alpha-success)
 ![Discord](https://img.shields.io/discord/800035701243772969?color=%237289DA&label=discord)
 
@@ -21,7 +21,7 @@ Sandstone tells you what a command expects, and autocompletes complicated argume
 
 You don't need to remember commands syntax anymore.
 
-![autocomplete](https://raw.githubusercontent.com/TheMrZZ/sandstone/4d3d74210b74ccf0bb807b90c35c1920ce1aa44a/docs/readme/autocomplete.gif)
+![autocomplete](https://raw.githubusercontent.com/sandstone-mc/sandstone/4d3d74210b74ccf0bb807b90c35c1920ce1aa44a/docs/readme/autocomplete.gif)
 
 This autocompletion works for all resources: commands, predicates, loot tables, advancements...
 
@@ -51,8 +51,8 @@ You can finally stop reinventing the wheel.
 
 If you want to support Sandstone, the simplest way is to star the repository! It's actually very encouraging.
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/TheMrZZ/sandstone?style=social)](https://github.com/TheMrZZ/sandstone/blob/master/README.md)
+[![GitHub Repo stars](https://img.shields.io/github/stars/sandstone-mc/sandstone?style=social)](https://github.com/sandstone-mc/sandstone/blob/master/README.md)
 
 # Getting started
 
-See the [Getting Started](https://www.sandstone.dev/docs/) section on [sandstone.dev](https://www.sandstone.dev/) to start using Sandstone!
+See the [Getting Started](https://sandstone-documentation.vercel.app/docs) section on [sandstone-documentation.vercel.app](https://sandstone-documentation.vercel.app/) to start using Sandstone!
