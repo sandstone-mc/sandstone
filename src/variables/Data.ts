@@ -165,11 +165,11 @@ export class DataPointInstance<TYPE extends DATA_TYPES = any, SOURCE extends DAT
       // The value is another Data Point
       if (value instanceof DataPointInstance) {
         if (sliceString) {
-          data.fromString[value.type as DATA_TYPES](value.currentTarget as any, value.path, ...sliceString)
+          data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, ...sliceString)
           return
         }
 
-        data.fromString[value.type as DATA_TYPES](value.currentTarget as any, value.path)
+        data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path)
         return
       }
 

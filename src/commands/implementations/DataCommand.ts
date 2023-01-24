@@ -84,14 +84,14 @@ export class DataModifyValues extends Command {
   @command(['from', 'storage'])
   private fromStorage = (...args: unknown[]) => { }
 
-  @command(['from', 'string', 'block'], { parsers: { '0': coordinatesParser } })
-  private fromStringBlock = (...args: unknown[]) => { }
+  @command(['string', 'block'], { parsers: { '0': coordinatesParser } })
+  private stringBlock = (...args: unknown[]) => { }
 
-  @command(['from', 'string', 'entity'])
-  private fromStringEntity = (...args: unknown[]) => { }
+  @command(['string', 'entity'])
+  private stringEntity = (...args: unknown[]) => { }
 
-  @command(['from', 'string', 'storage'])
-  private fromStringStorage = (...args: unknown[]) => { }
+  @command(['string', 'storage'])
+  private stringStorage = (...args: unknown[]) => { }
 
   from: {
     /**
@@ -123,7 +123,7 @@ export class DataModifyValues extends Command {
       storage: this.fromStorage,
     }
 
-  fromString: {
+  string: {
     /**
      * Modify with the NBT String of a block at the given position.
      *
@@ -154,9 +154,9 @@ export class DataModifyValues extends Command {
      */
     storage: (source: string, sourcePath: string, start?: number, end?: number) => void
   } = {
-      block: this.fromStringBlock,
-      entity: this.fromStringEntity,
-      storage: this.fromStringStorage,
+      block: this.stringBlock,
+      entity: this.stringEntity,
+      storage: this.stringStorage,
     }
 
   /**
