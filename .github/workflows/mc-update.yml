@@ -16,7 +16,7 @@ jobs:
       - run: npm install
       - run: npm install @types/node
       - run: node scripts/generateLists.mjs
-      - run: git config --global user.name "MC Update"
-      - run: git add --all
-      - run: git commit -am "Updated generated files for new mc release"
-      - run: git push origin HEAD:master
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: mc-update
+          message: "Update generated files for latest minecraft release"
