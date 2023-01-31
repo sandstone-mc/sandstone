@@ -1,16 +1,17 @@
 import * as util from 'util'
+import { makeCallable } from '#utils'
 
 import { parseNBT } from './parser'
 
-import type { NBTObject, RootNBT } from '@arguments'
+import type { NBTObject, RootNBT } from '#arguments'
 
-export abstract class NBTInstance {
+export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string;
 
   toString = this[util.inspect.custom]
 }
 
-export class NBTPrimitive extends NBTInstance {
+export class NBTPrimitive extends NBTClass {
   value: number
 
   unit: string
@@ -44,7 +45,7 @@ export class NBTDouble extends NBTPrimitive {
   constructor(value: number) { super(value, 'd') }
 }
 
-export class NBTTypedArray extends NBTInstance {
+export class NBTTypedArray extends NBTClass {
   values: number[]
 
   unit: string
@@ -70,7 +71,7 @@ export class NBTIntArray extends NBTTypedArray {
   constructor(values: number[]) { super(values, 'I') }
 }
 
-export class NotNBT extends NBTInstance {
+export class NotNBT extends NBTClass {
   nbt
 
   constructor(nbt: RootNBT) {
@@ -92,7 +93,7 @@ function customNumber<T extends number | number[], C extends NBTSimpleClasses>(n
 
 function dynamicNBT(template: TemplateStringsArray, ...args: unknown[]): NBTObject {
   const mixedArgs = template.flatMap((s, i) => [s, args[i]]).slice(0, -1) // Remove the last argument, which will always be undefined
-  const result = mixedArgs.map((element: any) => (element instanceof NBTInstance ? nbtStringifier(element) : element.toString())).join('')
+  const result = mixedArgs.map((element: any) => (element instanceof NBTClass ? nbtStringifier(element) : element.toString())).join('')
 
   return parseNBT(NBT, result)
 }
@@ -324,7 +325,7 @@ interface NBTInterface {
   (nbts: TemplateStringsArray, ...args: unknown[]): NBTObject
 }
 
-export const NBT: NBTInterface = Object.assign(dynamicNBT, {
+export const NBT: NBTInterface = makeCallable({
   float: (num: number | number[]): any => customNumber(num, NBTFloat),
 
   double: (num: number | number[]): any => customNumber(num, NBTDouble),
@@ -346,7 +347,7 @@ export const NBT: NBTInterface = Object.assign(dynamicNBT, {
   stringify: (nbt: NBTObject) => nbtStringifier(nbt),
 
   parse: (nbt: string) => parseNBT(NBT, nbt),
-})
+}, dynamicNBT)
 
 export const nbtStringifier = (nbt: NBTObject): string => {
   if (typeof nbt === 'number') {
@@ -368,11 +369,8 @@ export const nbtStringifier = (nbt: NBTObject): string => {
       depth: +Infinity,
     })
 
-    const stringifiedStr = JSON.stringify(nbt)
-
-    // Always use the standard stringification if it's shorter or equal to the inspected string, or if the inspected string doesn't start with " or '
-    if (stringifiedStr.length <= inspectedStr.length || inspectedStr[0] === '`') {
-      return stringifiedStr
+    if (inspectedStr[0] === '`') {
+      return JSON.stringify(nbt)
     }
 
     return inspectedStr
@@ -385,15 +383,12 @@ export const nbtStringifier = (nbt: NBTObject): string => {
   }
 
   // We have an object
-  if (nbt instanceof NBTInstance) {
+  if (nbt instanceof NBTClass) {
     // It's actually a "Minecraft Primitive", like 1b, and not an object
     return nbt[util.inspect.custom]()
   }
 
   // It's a real object.
-  const objectStr = Object.entries(nbt)
-    .filter((entry): entry is [string, NBTObject] => entry[1] !== undefined)
-    .map(([key, value]) => `${key}:${nbtStringifier(value)}`)
-    .join(',')
+  const objectStr = Object.entries(nbt).map(([key, value]) => `${key}:${nbtStringifier(value)}`).join(',')
   return `{${objectStr}}`
 }

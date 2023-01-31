@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
-import type { LiteralUnion } from '@/generalTypes'
-import type { ITEMS } from '@arguments'
-import type { TagInstance } from '@resources'
 import type { EnchantmentCriterion, NumberProvider } from '.'
+import type { ITEMS } from '#arguments'
+import type { TagClass } from '#core'
+import type { LiteralUnion } from '#utils'
 
 export type ItemCriterion = Partial<{
   /** Amount of the item. */
@@ -27,5 +27,5 @@ export type ItemCriterion = Partial<{
   potion: string
 
   /** An item data pack tag. */
-  tag: string | TagInstance<'items'>
+  tag: string | TagClass<'items'>
 }>

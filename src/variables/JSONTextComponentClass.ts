@@ -1,4 +1,4 @@
-import type { JSONTextComponent } from '@arguments'
+import type { JSONTextComponent } from '#arguments'
 
 function toComponent(c: any): JSONTextComponent {
   return c._toChatComponent?.() ?? c.toJSON?.() ?? c
@@ -13,7 +13,7 @@ export class JSONTextComponentClass {
 
   toString() {
     // We want a compact output
-    return JSON.stringify(toComponent(this.jsonTextComponent), function (key: string, value: any) {
+    return JSON.stringify(toComponent(this.jsonTextComponent), (key: string, value: any) => {
       /*
        * If we are in an array, our component could be a custom object (like a Selector) that is directly used as a chat component.
        * Therefore, we must try to transform it into a chat component, or a json object.
@@ -24,7 +24,7 @@ export class JSONTextComponentClass {
          * The value given is not the real original value, but sometimes it is the stringified value.
          * Therefore, we must get back the real one.
          */
-        const realValue = this[parseInt(key, 10)]
+        const realValue = this[parseInt(key, 10)] as any
         return toComponent(realValue)
       }
 

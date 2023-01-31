@@ -1,6 +1,6 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { ITEMS } from '@arguments/generated'
-import type { TagInstance } from '@resources'
+import type { ITEMS } from '#arguments/generated'
+import type { TagClass } from '#core'
+import type { LiteralUnion } from '#utils'
 
 /**
  * Ensures that the given string has 3 characters or less - else, evaluates as `never`
@@ -45,7 +45,7 @@ type ItemOrTag = {
   item: LiteralUnion<ITEMS>,
 } | {
   /** An item tag. */
-  tag: string | TagInstance<'items'>
+  tag: string | TagClass<'items'>
 }
 
 type CookingRecipe = {
@@ -197,5 +197,13 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
     result: LiteralUnion<ITEMS>
     /** The amount of the output item. */
     count: number
+  }>
+  | RecipeKind<'smithing_trim', {
+    /** Ingredient specifying an item to be trimmed. (eg. { tag: 'minecraft:trimmable_armor' }) */
+    base: ItemOrTag
+    /** Trim material that will be used for trimming. (eg. { tag: 'minecraft:trim_materials' })*/
+    addition: ItemOrTag
+    /** Trim template item that will be used for the trim pattern. */
+    template: LiteralUnion<ITEMS>
   }>
 )

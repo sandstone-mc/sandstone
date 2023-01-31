@@ -1,5 +1,45 @@
 import * as util from 'util'
 
+/**
+ * Allows to get autocompletion on string unions, while still allowing generic strings.
+ * @see https://github.com/microsoft/TypeScript/issues/29729#issuecomment-700527227
+ */
+export type LiteralUnion<T extends string> = T | string & Record<never, never>
+
+export type AtLeastOne<T> = [T, ...T[]]
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type HideFunctionProperties<T extends Function> = T & {
+    /** @deprecated */
+    call: T['call']
+    /** @deprecated */
+    apply: T['apply']
+    /** @deprecated */
+    bind: T['bind']
+    /** @deprecated */
+    prototype: T['prototype']
+    /** @deprecated */
+    length: T['length']
+    /** @deprecated */
+    arguments: T['arguments']
+    /** @deprecated */
+    caller: T['caller']
+    /** @deprecated */
+    readonly name: T['name']
+    /** @deprecated */
+    [Symbol.hasInstance]: (value: unknown) => boolean
+  }
+
+export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'ignore' | 'warn'
+
+export type OmitFirst<T extends unknown[]> = (
+    T extends [infer A, ...infer B] ? B : []
+  )
+
+export type InstanceOfClass<X extends (abstract new (...args: any[]) => any)> = (
+    (new (..._args: [...one: ConstructorParameters<X>, ...two: any[]]) => InstanceType<X>)
+  )
+
 export function isAsyncFunction(func: ((...args: any[]) => void) | ((...args: any[]) => Promise<void>)): func is (...args: any[]) => Promise<void> {
   if (util.types) {
     // We are in NodeJS, so we can use the builtin check
@@ -36,3 +76,84 @@ export type Either<A extends Record<string, any>, B extends Record<string, any>>
   }
 
 export type WithMCNamespace<T extends string> = `minecraft:${T}` | T
+
+function makeCallableProxy(func: any, object: any) {
+  return new Proxy(func, {
+    get: (target, p, receiver) => object[p],
+    set: (target, p, value, receiver) => {
+      object[p] = value
+      return value
+    },
+    getPrototypeOf: (target) => Object.getPrototypeOf(object),
+  }) as any
+}
+
+export interface CallableInstance {
+  __call__: (...args: any[]) => any
+}
+type CallableClass = new(...args: any[]) => CallableInstance
+
+export function makeClassCallable<C extends CallableClass>(Class_: C): MakeClassCallable<C> {
+  return new Proxy(Class_, {
+    construct: (target, argArray, newTarget) => {
+      const obj = new Class_(...argArray)
+      const result = makeCallableProxy(obj.__call__, obj)
+      result.makeCallable(result)
+      return result
+    },
+  }) as any
+}
+
+export type MakeInstanceCallable<T extends CallableInstance> = T & T['__call__']
+export type MakeClassCallable<T extends CallableClass> = new (...args: ConstructorParameters<T>) => MakeInstanceCallable<InstanceType<T>>
+
+export function makeCallable<T, F extends((...args: any[]) => any)>(object: T, func: F, useProxy = false): T & F {
+  if (useProxy) {
+    return makeCallableProxy(func, object)
+  }
+
+  const { name, ...objectExceptName } = object as T & { name?: unknown }
+
+  // Everything can be assigned except the name
+  const result = Object.assign(func, objectExceptName as unknown as T)
+
+  if (name !== undefined) {
+    const descriptor = Object.getOwnPropertyDescriptor(func, 'name')!
+    descriptor.value = name
+    Object.defineProperty(func, 'name', descriptor)
+  }
+
+  return result
+}
+
+type TupleSplit<T, N extends number, O extends readonly any[] = readonly []> =
+    O['length'] extends N ? [O, T] : T extends readonly [infer F, ...infer R] ?
+    TupleSplit<readonly [...R], N, readonly [...O, F]> : [O, T]
+
+type TakeFirst<T extends readonly any[], N extends number> =
+    TupleSplit<T, N>[0];
+
+type SkipFirst<T extends readonly any[], N extends number> =
+    TupleSplit<T, N>[1];
+
+type TupleSlice<T extends readonly any[], S extends number, E extends number> =
+  SkipFirst<TakeFirst<T, E>, S>
+
+export type SlicedArguments<
+  T extends (...args: any[]) => any,
+  FROM extends number | undefined = undefined,
+  TO extends number | undefined = undefined,
+> = (
+  TupleSlice<Parameters<T>, FROM extends undefined ? 0 : FROM, TO extends undefined ? Parameters<T>['length'] : TO>
+)
+
+export type PartialFunction<
+  T extends (...args: any[]) => any,
+  FROM extends number | undefined = undefined,
+  TO extends number | undefined = undefined,
+> = (...args: SlicedArguments<T, FROM, TO>) => ReturnType<T>
+
+export function toMinecraftResourceName(path: readonly string[]): string {
+  const [namespace, ...folders] = path
+  return `${namespace}:${folders.join('/')}`
+}

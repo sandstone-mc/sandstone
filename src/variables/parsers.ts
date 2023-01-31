@@ -1,14 +1,11 @@
-import * as util from 'util'
-
 import { VectorClass } from './Coordinates'
 
 import type {
-  Coordinates, NBTObject, Range,
-  RootNBT, Rotation,
-} from '@arguments'
+  Coordinates, Range, Rotation,
+} from '#arguments'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
-  typeof args extends string[] ? VectorClass<typeof args> : typeof args
+  typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args
 ) {
   if (Array.isArray(args) && args.length === 3) {
     return new VectorClass(args.map((arg) => arg.toString()))

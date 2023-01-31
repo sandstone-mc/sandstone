@@ -1,86 +1,79 @@
 {
   "compilerOptions": {
-    /* Custom paths */
-    "plugins": [
-      {
-        "transform": "typescript-transform-paths"
-      },
-      {
-        "transform": "typescript-transform-paths",
-        "afterDeclarations": true
-      }
-    ],
     "baseUrl": ".",
     "paths": {
-      "@arguments": [
-        "./src/arguments"
+      "sandstone": [
+        "./src/index.ts"
       ],
-      "@arguments/*": [
-        "./src/arguments/*"
-      ],
-      "@commands": [
-        "./src/commands"
-      ],
-      "@commands/*": [
-        "./src/commands/*"
-      ],
-      "@datapack": [
-        "./src/datapack"
-      ],
-      "@datapack/*": [
-        "./src/datapack/*"
-      ],
-      "@resources": [
-        "./src/resources"
-      ],
-      "@resources/*": [
-        "./src/resources/*"
-      ],
-      "@variables": [
-        "./src/variables"
-      ],
-      "@variables/*": [
-        "./src/variables/*"
-      ],
-      "@flow": [
-        "./src/flow"
-      ],
-      "@flow/*": [
-        "./src/flow/*"
-      ],
-      "@/*": [
+      "sandstone/*": [
         "./src/*"
       ],
+      "#arguments": [
+        "src/arguments"
+      ],
+      "#arguments/*": [
+        "src/arguments/*"
+      ],
+      "#commands": [
+        "src/commands"
+      ],
+      "#commands/*": [
+        "src/commands/*"
+      ],
+      "#core": [
+        "src/core"
+      ],
+      "#core/*": [
+        "src/core/*"
+      ],
+      "#flow": [
+        "src/flow"
+      ],
+      "#flow/*": [
+        "src/flow/*"
+      ],
+      "#pack": [
+        "src/pack"
+      ],
+      "#pack/*": [
+        "src/pack/*"
+      ],
+      "#variables": [
+        "src/variables"
+      ],
+      "#variables/*": [
+        "src/variables/*"
+      ],
+      "#utils": [
+        "src/utils"
+      ]
     },
     /* Basic Options */
     "types": [
       "node"
     ],
-    "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
-    "moduleResolution": "node",
+    "module": "NodeNext", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
+    // "moduleResolution": "nodenext",
     // We target a minimum Node version of 12.9.0: https://stackoverflow.com/questions/59787574/typescript-tsconfig-settings-for-node-js-12
-    "target": "es2019", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-    "lib": [
-      "es2020",
-    ],
+    "target": "ESNEXT", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
     "incremental": true, /* Enable incremental compilation */
     "resolveJsonModule": true,
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     "declaration": true, /* Generates corresponding '.d.ts' file. */
-    // "declarationMap": true, /* Generates a sourcemap for each corresponding '.d.ts' file. */
+    "declarationMap": true, /* Generates a sourcemap for each corresponding '.d.ts' file. */
     // "sourceMap": true, /* Generates corresponding '.map' file. */
     // "outFile": "./",                       /* Concatenate and emit output to single file. */
     "outDir": "./dist", /* Redirect output structure to the directory. */
-    // "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-    // "composite": true,                     /* Enable project compilation */
-    // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
+    // "rootDir": ".", /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+    // "composite": true, /* Enable project compilation */
+    "tsBuildInfoFile": ".tsbuildinfo", /* Specify file to store incremental compilation information */
     // "removeComments": true,                /* Do not emit comments to output. */
     // "noEmit": true,                        /* Do not emit outputs. */
     // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
     // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
-    // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+    "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
     /* Strict Type-Checking Options */
     "strict": true, /* Enable all strict type-checking options. */
     // "noImplicitAny": true,                 /* Raise error on expressions and declarations with an implied 'any' type. */
@@ -112,15 +105,17 @@
     // "inlineSourceMap": true,               /* Emit a single file with source maps instead of having a separate file. */
     // "inlineSources": true,                 /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
     /* Experimental Options */
-    "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
-    "emitDecoratorMetadata": true, /* Enables experimental support for emitting type metadata for decorators. */
+    // "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
+    // "emitDecoratorMetadata": true, /* Enables experimental support for emitting type metadata for decorators. */
     /* Advanced Options */
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "src",
+    "src"
   ],
   "exclude": [
-    "node_modules",
+    "**/node_modules",
+    "**/.*/"
   ],
 }

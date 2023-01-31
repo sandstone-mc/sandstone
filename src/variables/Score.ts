@@ -1,16 +1,16 @@
-import { ComponentClass } from '@variables/abstractClasses'
-import { rangeParser } from '@variables/parsers'
+import { SelectorClass } from '#variables/Selector'
 
-import { SelectorClass } from './Selector'
+import { ComponentClass } from './abstractClasses'
+import { rangeParser } from './parsers'
 
+import type { SandstoneCommands } from '../commands'
+import type { SandstonePack } from '../pack'
+import type { DATA_TYPES, DataPointClass } from './Data'
+import type { ObjectiveClass } from './Objective'
 import type {
   COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
-} from '@arguments'
-import type { CommandsRoot } from '@commands'
-import type { Datapack } from '@datapack'
-import type { ConditionClass } from '@variables'
-import type { DATA_TYPES, DataPointInstance } from './Data'
-import type { ObjectiveClass } from './Objective'
+} from '#arguments'
+import type { ConditionClass } from '#variables'
 
 type PlayersTarget = number | MultipleEntitiesArgument
 
@@ -19,35 +19,28 @@ type OperationArguments = (
   [targets: PlayersTarget, objective?: ObjectiveArgument]
 )
 
-function createVariable(datapack: Datapack, amount: number): Score
+function createVariable(pack: SandstonePack, amount: number): Score
 
-function createVariable(datapack: Datapack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): Score
+function createVariable(pack: SandstonePack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): Score
 
-function createVariable(datapack: Datapack, amountOrTargets: PlayersTarget, objective?: ObjectiveArgument): Score {
-  const anonymousScore = datapack.Variable()
+function createVariable(pack: SandstonePack, score: Score): Score
 
-  if (typeof amountOrTargets === 'number') {
-    anonymousScore.set(amountOrTargets)
-  } else {
-    anonymousScore.set(amountOrTargets, objective)
+function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [MultipleEntitiesArgument, ObjectiveArgument]): Score {
+  const anonymousScore = pack.Variable()
+
+  if (typeof args[0] === 'number' || args[0] instanceof Score) {
+    return anonymousScore.set(args[0])
   }
 
-  return anonymousScore
+  return anonymousScore.set(args[0], args[1])
 }
 
-export class Score<OBJ_CRITERION extends string | undefined = string | undefined> extends ComponentClass implements ConditionClass {
-  commandsRoot: CommandsRoot
+export class Score extends ComponentClass implements ConditionClass {
+  commands: SandstoneCommands
 
-  target: MultipleEntitiesArgument
-
-  objective: ObjectiveClass<OBJ_CRITERION>
-
-  constructor(commandsRoot: CommandsRoot, target: MultipleEntitiesArgument, objective: ObjectiveClass<OBJ_CRITERION>) {
+  constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument, public objective: ObjectiveClass) {
     super()
-
-    this.commandsRoot = commandsRoot
-    this.target = target
-    this.objective = objective
+    this.commands = sandstonePack.commands
   }
 
   toString() {
@@ -73,7 +66,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   }
 
   _toMinecraftCondition = () => ({
-    value: ['unless', 'score', this.target, this.objective.name, 'matches', 0],
+    value: ['unless', 'score', this, 'matches', 0] as unknown[],
   })
 
   private unaryOperation(
@@ -82,11 +75,11 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
     ...args: OperationArguments
   ): this {
     if (typeof args[0] === 'number') {
-      this.commandsRoot.scoreboard.players[operation](this.target, this.objective, args[0])
+      this.commands.scoreboard.players[operation](this, args[0])
     } else if (args[0] instanceof Score) {
-      this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0].target, args[0].objective)
+      this.commands.scoreboard.players.operation(this, operator, args[0].target, args[0].objective)
     } else {
-      this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0], args[1] ?? this.objective)
+      this.commands.scoreboard.players.operation(this, operator, args[0], args[1] ?? this.objective)
     }
 
     return this
@@ -94,17 +87,18 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
 
   private binaryOperation(operator: OPERATORS, ...args: OperationArguments): this {
     if (args[0] instanceof Score) {
-      this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0].target, args[0].objective)
+      this.commands.scoreboard.players.operation(this, operator, args[0].target, args[0].objective)
       return this
     }
 
     let objective = args[1] ?? this.objective
     if (typeof args[0] === 'number') {
-      this.commandsRoot.Datapack.registerNewConstant(args[0])
+      // @ts-expect-error
+      this.sandstonePack.registerNewConstant(args[0])
       objective = 'sandstone_const'
     }
 
-    this.commandsRoot.scoreboard.players.operation(this.target, this.objective, operator, args[0], objective)
+    this.commands.scoreboard.players.operation(this, operator, args[0], objective)
 
     return this
   }
@@ -114,7 +108,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    * Reset the entity's score.
    */
   reset = () => {
-    this.commandsRoot.scoreboard.players.reset(this.target, this.objective)
+    this.commands.scoreboard.players.reset(this)
   }
 
   /**
@@ -124,14 +118,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  set(targets: PlayersTarget, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
+  set(targets: PlayersTarget, objective?: ObjectiveArgument): Score
 
   /**
    * Set the current entity's score to the given value, or to the other target's score.
    *
    * @param amountOrTargetScore A value, or the target's score.
    */
-  set(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
+  set(amountOrTargetScore: number | Score): Score
 
   /**
    * Set the current entity's score to the given NBT value, with the given scale.
@@ -140,13 +134,13 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param scale The scale factor.
    */
-  set(nbt: DataPointInstance, scale?: number): Score<OBJ_CRITERION>
+  set(nbt: DataPointClass, scale?: number): Score
 
-  set(...args: OperationArguments | [DataPointInstance, number?]) {
+  set(...args: OperationArguments | [DataPointClass, number?]) {
     if (typeof args[0] === 'object' && !(args[0] instanceof SelectorClass) && !(args[0] instanceof Score)) {
-      const [data, scale] = args as [DataPointInstance<DATA_TYPES>, number?]
+      const [data, scale] = args as [DataPointClass<DATA_TYPES>, number?]
 
-      this.commandsRoot.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale)
+      this.commands.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale)
 
       return this
     }
@@ -163,14 +157,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
+  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Adds the given amount, or the other target's score, to the current entity's score.
    *
    * @param amountOrTargetScore The amount to add, or the target to add the scores from.
    */
-  add(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
+  add(amountOrTargetScore: number | Score): Score
 
   add(...args: OperationArguments) {
     return this.unaryOperation('add', '+=', ...args)
@@ -185,14 +179,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
+  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Substract the given amount, or the other target's score, from the current entity's score.
    *
    * @param targetScore The amount to substract, or the target to get the score from.
    */
-  remove(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
+  remove(amountOrTargetScore: number | Score): Score
 
   remove(...args: OperationArguments) {
     return this.unaryOperation('remove', '-=', ...args)
@@ -207,14 +201,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
+  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Multiply the current entity's score by the given value, or other target's scores.
    *
    * @param amountOrTargetScore The value, or the target to get the scores from.
    */
-  multiply(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
+  multiply(amountOrTargetScore: number | Score): Score
 
   multiply(...args: OperationArguments) {
     return this.binaryOperation('*=', ...args)
@@ -229,14 +223,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
+  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Divide the current entity's score by the given value, or the other target's scores.
    *
    * @param amountOrTargetScore The value, or the target to get the scores from
    */
-  divide(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
+  divide(amountOrTargetScore: number | Score): Score
 
   divide(...args: OperationArguments) {
     return this.binaryOperation('/=', ...args)
@@ -251,14 +245,14 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score<OBJ_CRITERION>
+  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
 
   /**
    * Divide the current entity's score by other target's scores.
    *
    * @param amountOrTargetScore The value, or target's score to modulo the current score with.
    */
-  modulo(amountOrTargetScore: number | Score): Score<OBJ_CRITERION>
+  modulo(amountOrTargetScore: number | Score): Score
 
   modulo(...args: OperationArguments) {
     return this.binaryOperation('%=', ...args)
@@ -307,9 +301,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   plus(amountOrTargetScore: number | Score): Score
 
   plus(...args: OperationArguments): Score {
-    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
-    anonymousScore.unaryOperation('add', '+=', ...args)
-    return anonymousScore
+    return createVariable(this.sandstonePack, this).unaryOperation('add', '+=', ...args)
   }
 
   '+' = this.plus
@@ -331,9 +323,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   minus(amountOrTargetScore: number | Score): Score
 
   minus(...args: OperationArguments): Score {
-    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
-    anonymousScore.unaryOperation('remove', '-=', ...args)
-    return anonymousScore
+    return createVariable(this.sandstonePack, this).unaryOperation('remove', '-=', ...args)
   }
 
   '-' = this.minus
@@ -355,9 +345,7 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   multipliedBy(amountOrTargetScore: number | Score): Score
 
   multipliedBy(...args: OperationArguments): Score {
-    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
-    anonymousScore.binaryOperation('*=', ...args)
-    return anonymousScore
+    return createVariable(this.sandstonePack, this).binaryOperation('*=', ...args)
   }
 
   '*' = this.multipliedBy
@@ -379,12 +367,10 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   dividedBy(amountOrTargetScore: number | Score): Score
 
   dividedBy(...args: OperationArguments): Score {
-    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
-    anonymousScore.binaryOperation('/=', ...args)
-    return anonymousScore
+    return createVariable(this.sandstonePack, this).binaryOperation('/=', ...args)
   }
 
-  '/' = this.divide
+  '/' = this.dividedBy
 
   /**
    * Returns a new anonymous score, equal to the modulo of the current score and the given targets' score.
@@ -403,12 +389,10 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
   moduloBy(amountOrTargetScore: number | Score): Score
 
   moduloBy(...args: OperationArguments): Score {
-    const anonymousScore = createVariable(this.commandsRoot.Datapack, this.target, this.objective)
-    anonymousScore.binaryOperation('%=', ...args)
-    return anonymousScore
+    return createVariable(this.sandstonePack, this).binaryOperation('%=', ...args)
   }
 
-  '%' = this.modulo
+  '%' = this.moduloBy
 
   /** COMPARISONS OPERATORS */
   private comparison(
@@ -571,6 +555,6 @@ export class Score<OBJ_CRITERION extends string | undefined = string | undefined
    * @param range The range to compare the current score against.
    */
   matches = (range: Range) => ({
-    _toMinecraftCondition: () => ({ value: ['if', 'score', this.target, this.objective, 'matches', rangeParser(range)] }),
+    _toMinecraftCondition: () => ({ value: ['if', 'score', this as unknown, 'matches', rangeParser(range)] }),
   })
 }

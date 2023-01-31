@@ -1,5 +1,3 @@
-import type { VectorClass } from '@variables'
-
 /** Ensure that a number is inside a given range. */
 export function validateIntegerRange(integer: number, name: string, minimum: number, maximum: number) {
   if (integer && integer < 0) {

@@ -1,7 +1,6 @@
 export type GAMERULES = (
   'announceAdvancements' |
   'commandBlockOutput' |
-  'commandModificationBlockLimit' |
   'disableElytraMovementCheck' |
   'disableRaids' |
   'doDaylightCycle' |

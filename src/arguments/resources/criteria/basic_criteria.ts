@@ -1,8 +1,8 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type {
-  BLOCKS, DIMENSION_TYPES, ENCHANTMENTS, MOB_EFFECTS,
-} from '@arguments'
 import type { NumberProvider } from './utils'
+import type {
+  BLOCKS, DIMENSIONS, ENCHANTMENTS, MOB_EFFECTS,
+} from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 // All the possible criteria
 export type BlockIdCriterion = LiteralUnion<BLOCKS>
@@ -44,7 +44,7 @@ export type EnchantmentCriterion = {
 
 export type PotionIdCriterion = string
 
-export type DimensionCriterion = LiteralUnion<DIMENSION_TYPES>
+export type DimensionCriterion = LiteralUnion<DIMENSIONS>
 
 export type EffectCriterion = Partial<Record<LiteralUnion<MOB_EFFECTS>, {
   /** The effect amplifier. */

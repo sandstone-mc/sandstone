@@ -1,8 +1,8 @@
-import type { ComponentClass } from '@variables/abstractClasses'
-import type { VectorClass } from '@variables/Coordinates'
-import type { LiteralUnion } from '../generalTypes'
 import type { BASIC_COLORS } from './basics'
 import type { MultipleEntitiesArgument } from './selector'
+import type { LiteralUnion } from '#utils'
+import type { ComponentClass } from '#variables/abstractClasses'
+import type { VectorClass } from '#variables/Coordinates'
 
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
 type ContentTag = ({
@@ -12,7 +12,7 @@ type ContentTag = ({
   /** A translation identifier, to be displayed as the corresponding text in the player's selected language. */
   translate: string
 
-  /** Optional. A list of raw JSON text component arguments to be inserted into slots in the translation text.  */
+  /** Optional. Depreciated. A list of raw JSON text component arguments to be inserted into slots in the translation text.  */
   with?: TextComponentObject[]
 
   /** Optional. A raw JSON text component that will be used in place of a translation if it is missing */
@@ -167,7 +167,7 @@ type InteractivityTags = {
      *
      * - `copy_to_clipboard`: Copies `value` to the clipboard.
      */
-    action: LiteralUnion<'open_url' | 'open_file' | 'run_command' | 'suggest_command' | 'change_page' | 'copy_to_clipboard'>
+    action: 'open_url' | 'open_file' | 'run_command' | 'suggest_command' | 'change_page' | 'copy_to_clipboard'
 
     /** The URL, file path, chat, command or book page used by the specified action. */
     value: string

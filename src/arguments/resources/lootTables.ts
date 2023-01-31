@@ -1,14 +1,14 @@
 /* eslint-disable camelcase */
-import type { LiteralUnion } from '@/generalTypes'
-import type { WithMCNamespace } from '@/utils'
-import type {
-  ITEMS,
-} from '@arguments/generated'
-import type { LootTableInstance, TagInstance } from '@resources'
 import type { NumberProvider } from './criteria'
 import type { ItemModifierFunction } from './itemModifier'
 import type { PredicateCondition } from './predicate'
+import type {
+  ITEMS,
+} from '#arguments/generated'
+import type { LootTableClass, TagClass } from '#core'
+import type { LiteralUnion, WithMCNamespace } from '#utils'
 
+export class XXXXAIJIA {}
 type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**
    * Type of entry.
@@ -74,7 +74,7 @@ export type LootTableEntry = {
     }>
     | EntryType<'tag', {
       /** Tag to be used, e.g. `arrows`. */
-      name: string | TagInstance<'items'>
+      name: string | TagClass<'items'>
 
       /**
        * If set to `true`, it chooses one item of the tag, each with the same weight and quality.
@@ -84,7 +84,7 @@ export type LootTableEntry = {
     }>
     | EntryType<'loot_table', {
       /** Loot table to be used, e.g. `gameplay/fishing/junk` */
-      name: string | LootTableInstance
+      name: string | LootTableClass
     }>
     | EntryType<'dynamic', {
       /** Can be contents for block entity contents or self for banners and player skulls. */

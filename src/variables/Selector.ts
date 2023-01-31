@@ -1,18 +1,18 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { nbtStringifier } from '@variables/nbt/NBTs'
-import { rangeParser } from '@variables/parsers'
+import { nbtStringifier } from '#variables/nbt/NBTs'
+import { rangeParser } from '#variables/parsers'
 
 import { ComponentClass } from './abstractClasses'
 
-import type {
-  ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
-} from '@arguments'
-import type { CommandsRoot } from '@commands'
-import type { PredicateInstance } from '@resources'
-import type { LiteralUnion } from '../generalTypes'
+import type { LiteralUnion } from '../utils'
 import type { ConditionClass } from './abstractClasses'
 import type { NotNBT } from './nbt/NBTs'
+import type {
+  ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
+} from '#arguments'
+import type { PredicateClass } from '#core'
+import type { SandstonePack } from '#pack'
 
 type ScoreArgument = Record<string, Range>
 
@@ -73,7 +73,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
    * - `random`: Sort randomly. (Default for `@r`)
    * - `arbitrary`: Do not sort. (Default for `@e`, `@a`)
    */
-  sort?: LiteralUnion<'nearest' | 'furthest' | 'random' | 'abitrary'>
+  sort?: 'nearest' | 'furthest' | 'random' | 'abitrary'
 
   /** Filter target selection based on their experience levels. This naturally filters out all non-player targets. */
   level?: Range
@@ -107,7 +107,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   advancements?: AdvancementsArgument
 
   /** Select all targets that match the specified predicate. */
-  predicate?: string | PredicateInstance | (PredicateInstance | string)[]
+  predicate?: string | PredicateClass | (PredicateClass | string)[]
 
   /** Select all targets that have the specified NBT. */
   nbt?: RootNBT | NotNBT
@@ -196,21 +196,14 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
 }
 
 export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> extends ComponentClass implements ConditionClass {
-  protected commandsRoot: CommandsRoot
-
-  target
-
   arguments: SelectorProperties<IsSingle, IsPlayer>
 
   constructor(
-    commandsRoot: CommandsRoot,
-    target: '@s' | '@p' | '@a' | '@e' | '@r',
+    protected sandstonePack: SandstonePack,
+    public target: '@s' | '@p' | '@a' | '@e' | '@r',
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
     super()
-
-    this.commandsRoot = commandsRoot
-    this.target = target
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
   }
 
@@ -220,7 +213,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
    * List all scores of this entity.
    */
   listScores = () => {
-    this.commandsRoot.scoreboard.players.list(this.toString())
+    this.sandstonePack.commands.scoreboard.players.list(this.toString())
   }
 
   _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {

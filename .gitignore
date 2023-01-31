@@ -1,6 +1,8 @@
 ### Dist folder ###
 dist
 
+.tsbuildinfo
+
 # Datapack folder
 My datapack
 

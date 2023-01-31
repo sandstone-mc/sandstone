@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
-import type { LiteralUnion } from '@/generalTypes'
-import type { BLOCKS, ENCHANTMENTS } from '@arguments'
 import type {
   DamageCriterion, EntityCriterion, ItemCriterion, LocationCriterion,
   NumberProvider,
 } from './criteria'
+import type { BLOCKS, ENCHANTMENTS } from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> = {
     /**

@@ -1,47 +1,89 @@
-import { dataPack } from './init'
+import { SandstonePack } from '#pack'
 
-// CORE
+export const sandstonePack = new SandstonePack('default', '0')
+export { SandstonePack }
+
+// Commands
 export const {
-  save: savePack, BasePath, sleep,
-} = dataPack
+  advancement,
+  attribute,
+  bossbar,
+  clear,
+  clone,
+  comment,
+  data,
+  datapack,
+  debug,
+  defaultgamemode,
+  difficulty,
+  effect,
+  enchant,
+  execute,
+  experience,
+  fill,
+  functionCmd,
+  forceload,
+  gamemode,
+  gamerule,
+  give,
+  help,
+  kill,
+  list,
+  locate,
+  locatebiome,
+  loot,
+  me,
+  msg,
+  particle,
+  playsound,
+  raw,
+  recipe,
+  reload,
+  item,
+  say,
+  schedule,
+  scoreboard,
+  seed,
+  setblock,
+  setidletimeout,
+  setworldspawn,
+  spawnpoint,
+  spectate,
+  spreadplayers,
+  stopsound,
+  summon,
+  tag,
+  team,
+  teammsg,
+  teleport,
+  tellraw,
+  time,
+  title,
+  trigger,
+  w,
+  weather,
+  worldborder,
+  tm,
+  tp,
+  xp,
+  tell,
+} = sandstonePack.commands
 
+// Resources
 export const {
-  MCFunction, Advancement, Predicate, Tag, LootTable, Recipe, ItemModifier,
-} = dataPack.basePath
+  MCFunction,
+  Advancement,
+  ItemModifier,
+  LootTable,
+  Predicate,
+  Recipe,
+  Tag,
+  TrimMaterial,
+  TrimPattern,
+} = sandstonePack
 
-export { _ } from './init'
-
-// COMMANDS
-export * from './commandsOnly'
-
-// VARIABLES
-export {
-  absolute as abs,
-  local as loc,
-  relative as rel,
-} from './variables'
-export * from './variables/Coordinates'
-export * from './variables/JSONTextComponentClass'
-export * from './variables/nbt/NBTs'
-export * from './variables/Objective'
-export * from './variables/parsers'
-export * from './variables/Score'
-export { SelectorClass } from './variables/Selector'
-
+// Misc
 export const {
   Objective,
-  Selector,
-  Data,
-  Variable,
-  CustomResource,
-} = dataPack
-
-// TYPES
-export * from './arguments'
-export * from './datapack/BasePath'
-export * from './datapack/Datapack'
-export type { LiteralUnion } from './generalTypes'
-export type {
-  AdvancementInstance, ItemModifierInstance,
-  LootTableInstance, MCFunctionOptions, PredicateInstance, RecipeInstance, ResourceInstance, TagInstance,
-} from './resources'
+  _,
+} = sandstonePack

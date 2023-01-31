@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
-import type { LiteralUnion } from '@/generalTypes'
-import type { ENTITY_TYPES, MOB_EFFECTS } from '@arguments/generated'
-import type { TagInstance } from '@resources'
 import type { DistanceCriterion, EffectCriterion } from './basic_criteria'
 import type { ItemCriterion } from './ItemCriterion'
 import type { LocationCriterion } from './LocationCriterion'
 import type { PlayerCriterion } from './PlayerCriterion'
+import type { ENTITY_TYPES, MOB_EFFECTS } from '#arguments/generated'
+import type { TagClass } from '#core'
+import type { LiteralUnion } from '#utils'
 
 export type EntityCriterion = Partial<{
   /** The distance of the entity */
@@ -48,7 +48,7 @@ export type EntityCriterion = Partial<{
   team: string
 
   /** An entity ID. */
-  type: LiteralUnion<ENTITY_TYPES> | TagInstance<'entity_types'>
+  type: LiteralUnion<ENTITY_TYPES> | TagClass<'entity_types'>
 
   /** The entity which this entity is targeting for attacks. */
   targeted_entity: EntityCriterion

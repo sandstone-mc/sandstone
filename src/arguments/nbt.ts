@@ -1,11 +1,11 @@
-import type { NBTInstance } from '@variables/nbt/NBTs'
+import type { NBTClass } from '#variables/nbt/NBTs'
 
 export type NBTObject = (
     string |
     number |
-    { [Key: string]: NBTObject | undefined } |
+    { [NBTTAg: string]: NBTObject } |
     NBTObject[] |
-    NBTInstance
+    NBTClass
 )
 
-export type RootNBT = Record<string, NBTObject | undefined>
+export type RootNBT = Record<string, NBTObject>

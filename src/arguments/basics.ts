@@ -1,5 +1,5 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type { MultipleEntitiesArgument } from '@arguments'
+import type { MultipleEntitiesArgument } from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
@@ -38,8 +38,6 @@ export class _ShowAlias {
 export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
 
 export type TimeArgument = number | LiteralUnion<'1t' | '1s' | '1d'>
-
-export type TAG_TYPES = 'blocks' | 'entity_types' | 'fluids' | 'functions' | 'items'
 
 export type MAP_ICONS = (
   'player' | 'frame' | 'red_marker' |

@@ -1,3 +1,3 @@
-import type { ObjectiveClass, ObjectiveInstance } from '@variables'
+import type { ObjectiveClass } from '#variables'
 
-export type ObjectiveArgument = string | ObjectiveClass | ObjectiveInstance
+export type ObjectiveArgument = string | ObjectiveClass

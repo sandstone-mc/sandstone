@@ -1,6 +1,4 @@
 /* eslint-disable camelcase */
-import type { LiteralUnion } from '@/generalTypes'
-import type { ITEMS } from '@arguments'
 import type {
   BlockIdCriterion,
   DamageCriterion,
@@ -11,11 +9,12 @@ import type {
   ItemCriterion,
   LocationCriterion,
   NumberProvider,
-  PlayerCriterion,
   PotionIdCriterion,
   SlotCriterion,
 } from './criteria'
 import type { PredicateJSON } from './predicate'
+import type { ITEMS } from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 // The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | unknown | null> = {

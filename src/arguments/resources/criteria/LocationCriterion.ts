@@ -1,10 +1,10 @@
-import type { LiteralUnion } from '@/generalTypes'
-import type {
-  BIOMES, BLOCKS, DIMENSION_TYPES, FLUIDS,
-  STRUCTURES,
-} from '@arguments'
-import type { TagInstance } from '@resources'
 import type { NumberProvider, PositionCriterion } from '.'
+import type {
+  BIOMES, BLOCKS, DIMENSIONS, FLUIDS,
+  STRUCTURES,
+} from '#arguments'
+import type { TagClass } from '#core'
+import type { LiteralUnion } from '#utils'
 
 export type LocationCriterion = Partial<{
     /** The biome the entity is currently in. */
@@ -16,7 +16,7 @@ export type LocationCriterion = Partial<{
         blocks: LiteralUnion<BLOCKS>[]
 
         /** The block Tag. */
-        tag: string | TagInstance<'blocks'>
+        tag: string | TagClass<'blocks'>
 
         /** The block NBT. */
         nbt: string
@@ -26,7 +26,7 @@ export type LocationCriterion = Partial<{
     }>
 
     /** The dimension the entity is currently in. */
-    dimension: LiteralUnion<DIMENSION_TYPES>
+    dimension: LiteralUnion<DIMENSIONS>
 
     /** Name of a structure. */
     feature: LiteralUnion<STRUCTURES>
@@ -55,7 +55,7 @@ export type LocationCriterion = Partial<{
         fluid: LiteralUnion<FLUIDS>
 
         /** The fluid Tag. */
-        tag: string | TagInstance<'fluids'>
+        tag: string | TagClass<'fluids'>
 
         /** A map of fluid property names to values. Test will fail if the fluid doesn't match. */
         state: Record<string, string | Omit<NumberProvider, number>>

@@ -1,14 +1,16 @@
+// @ts-nocheck
+
 /* eslint-disable camelcase */
-import type { LiteralUnion } from '@/generalTypes'
-import type { JSONTextComponent, LootTableEntry } from '@arguments'
-import type { BASIC_COLORS, MAP_ICONS } from '@arguments/basics'
-import type {
-  ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES,
-} from '@arguments/generated'
-import type { LootTableInstance } from '@resources'
-import type { DataInstance } from '@variables/Data'
 import type { NumberProvider } from './criteria/utils'
 import type { ObjectOrArray, PredicateCondition } from './predicate'
+import type { JSONTextComponent, LootTableEntry } from '#arguments'
+import type { BASIC_COLORS, MAP_ICONS } from '#arguments/basics'
+import type {
+  ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES,
+} from '#arguments/generated'
+import type { LootTableClass } from '#core'
+import type { LiteralUnion } from '#utils'
+import type { DataInstance } from '#variables/Data'
 
 type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**
@@ -272,7 +274,7 @@ export type ItemModifierFunction = {
     }>
     | ItemModifierKind<'set_loot_table', {
       /** Specifies the resource location of the loot table to be used. */
-      name: string | LootTableInstance
+      name: string | LootTableClass
       /** Optional. Specifies the loot table seed. If absent or set to 0, a random seed will be used. */
       seed?: number
     }>

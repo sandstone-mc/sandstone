@@ -1,9 +1,8 @@
 /* eslint-disable camelcase */
-import type { LiteralUnion } from '@/generalTypes'
-import type { ITEMS, JSONTextComponent, RootNBT } from '@arguments'
-import type { MCFunctionInstance } from '@datapack/Datapack'
-import type { AdvancementInstance } from '@resources'
 import type { AdvancementTriggers } from './AdvancementTriggers'
+import type { ITEMS, JSONTextComponent } from '#arguments'
+import type { AdvancementClass, MCFunctionClass } from '#core'
+import type { LiteralUnion } from '#utils'
 
 /** A representation of a Minecraft advancement. */
 export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
@@ -89,7 +88,7 @@ export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
     experience?: number
 
     /** A function to run. Function tags are not allowed. */
-    function?: string | MCFunctionInstance
+    function?: string | MCFunctionClass
   }
 
   /**
@@ -97,5 +96,5 @@ export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
    * If this field is absent, this advancement is a root advancement.
    * Circular references cause a loading failure.
    */
-  parent?: string | AdvancementInstance<string>
+  parent?: string | AdvancementClass<string>
 }

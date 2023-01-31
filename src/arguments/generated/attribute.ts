@@ -1,17 +1,17 @@
 /* eslint-disable */
 /* Auto-generated */
 export type ATTRIBUTES = (
-  'minecraft:generic.max_health' |
-  'minecraft:generic.follow_range' |
-  'minecraft:generic.knockback_resistance' |
-  'minecraft:generic.movement_speed' |
-  'minecraft:generic.flying_speed' |
-  'minecraft:generic.attack_damage' |
-  'minecraft:generic.attack_knockback' |
-  'minecraft:generic.attack_speed' |
-  'minecraft:generic.armor' |
-  'minecraft:generic.armor_toughness' |
-  'minecraft:generic.luck' |
-  'minecraft:zombie.spawn_reinforcements' |
-  'minecraft:horse.jump_strength'
+  'generic.armor' |
+  'generic.armor_toughness' |
+  'generic.attack_damage' |
+  'generic.attack_knockback' |
+  'generic.attack_speed' |
+  'generic.flying_speed' |
+  'generic.follow_range' |
+  'generic.knockback_resistance' |
+  'generic.luck' |
+  'generic.max_health' |
+  'generic.movement_speed' |
+  'horse.jump_strength' |
+  'zombie.spawn_reinforcements'
 )

@@ -8,5 +8,7 @@ node_modules/*
 build/*
 dist/*
 
+scripts/*
+
 # Don't lint coverage output
 coverage/*
