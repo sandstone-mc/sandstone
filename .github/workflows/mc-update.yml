@@ -1,4 +1,4 @@
-name: Sandstone MC Update File Generation
+name: MC Update File Generation
 
 on:
   repository_dispatch:
@@ -16,3 +16,7 @@ jobs:
       - run: npm install
       - run: npm install @types/node
       - run: node scripts/generateLists.mjs
+      - run: git config --global user.name "MC Update"
+      - run: git add --all
+      - run: git commit "Updated generated files for new mc release"
+      - run: git push
