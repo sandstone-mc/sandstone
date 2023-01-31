@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16
+      - run: git checkout master
       - run: npm install
       - run: npm install @types/node
       - run: node scripts/generateLists.mjs
