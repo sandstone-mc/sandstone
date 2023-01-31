@@ -7,6 +7,7 @@ export type OBJECTIVE_CRITERION = (
   'dummy' |
   'food' |
   'health' |
+  'level' |
   'killedByTeam.aqua' |
   'killedByTeam.black' |
   'killedByTeam.blue' |
@@ -23,7 +24,6 @@ export type OBJECTIVE_CRITERION = (
   'killedByTeam.red' |
   'killedByTeam.white' |
   'killedByTeam.yellow' |
-  'level' |
   'minecraft.broken:minecraft.acacia_button' |
   'minecraft.mined:minecraft.acacia_button' |
   'minecraft.broken:minecraft.acacia_door' |
