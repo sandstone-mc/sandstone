@@ -18,5 +18,4 @@ jobs:
       - run: node scripts/generateLists.mjs
       - uses: EndBug/add-and-commit@v9
         with:
-          default_author: mc-update
           message: "Update generated files for latest minecraft release"
