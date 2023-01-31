@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -19,4 +19,4 @@ jobs:
       - run: git config --global user.name "MC Update"
       - run: git add --all
       - run: git commit -am "Updated generated files for new mc release"
-      - run: git push
+      - run: git push origin HEAD:master
