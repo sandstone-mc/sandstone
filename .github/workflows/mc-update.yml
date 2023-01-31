@@ -18,5 +18,5 @@ jobs:
       - run: node scripts/generateLists.mjs
       - run: git config --global user.name "MC Update"
       - run: git add --all
-      - run: git commit "Updated generated files for new mc release"
+      - run: git commit -am "Updated generated files for new mc release"
       - run: git push
