@@ -3,7 +3,7 @@ import { resolve, join, relative, parse } from 'path/posix'
 import fs from 'fs/promises'
 
 /**
- * @param {string} pathNoLib 
+ * @param {string} pathNoLib
  */
 function getExportsObject(pathNoLib) {
     const realPath = './' + join('dist', pathNoLib)
@@ -62,4 +62,20 @@ for await (const _ of getFiles('src')) {}
 const packageJson = JSON.parse((await fs.readFile('package.json')).toString('utf-8'))
 delete packageJson.exports
 packageJson.exports = exports
-await fs.writeFile('package.json', JSON.stringify(packageJson, null, 2))
+packageJson.scripts = {};
+packageJson.devDependencies = {};
+if (packageJson.main.startsWith("dist/")) {
+  packageJson.main = packageJson.main.slice(9);
+}
+if (packageJson.types.startsWith("dist/")) {
+  packageJson.types = packageJson.types.slice(9);
+}
+
+// Remove sandstone from dependencies
+delete packageJson.dependencies.sandstone
+
+await fs.writeFile('dist/package.json', JSON.stringify(packageJson, null, 2))
+await fs.writeFile('dist/version.txt', Buffer.from(packageJson.version, "utf-8"))
+await fs.copyFile('README.md', 'dist/README.md')
+await fs.copyFile('LICENSE', 'dist/LICENSE')
+await fs.copyFile('tsconfig.json', 'dist/tsconfig.json')

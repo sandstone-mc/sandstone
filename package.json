@@ -76,8 +76,8 @@
     "build": "tsup --onSuccess \"npm run setup\"",
     "watch": "npm run build -- --watch",
     "build-types": "tsc --emitDeclarationOnly",
-    "setup-exports": "node ./scripts/setupExports.mjs",
-    "setup": "npm run build-types && npm run setup-exports && echo ✔️  Successfully built Sandstone.",
+    "setup-package": "node ./scripts/setupPackage.mjs",
+    "setup": "npm run build-types && npm run setup-package && echo ✔️  Successfully built Sandstone.",
     "build-pack": "npm run build && cd dist && npm pack",
     "publishToNpm": "npm run build && npm publish",
     "format": "eslint src --cache --fix --quiet"
