@@ -1,9 +1,7 @@
 import type { SandstoneCommands } from 'sandstone/commands/commands'
 import type { Node, SandstoneCore } from '#core'
 import type { ResourcePath, SandstonePack } from '#pack'
-import type { MakeInstanceCallable } from '#utils'
-
-type CONFLICT_STRATEGIES = 'replace' | 'ignore' | 'throw' | 'append' | 'prepend' | 'rename'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from '#utils'
 
 export type ResourceClassArguments = {
   /**
@@ -17,7 +15,7 @@ export type ResourceClassArguments = {
   creator: 'user' | 'sandstone'
 
   // TODO: Remove the optional part!
-  onConflict?: CONFLICT_STRATEGIES
+  onConflict?: LiteralUnion<BASIC_CONFLICT_STRATEGIES>
 }
 
 export type ResourceNode<T = ResourceClass<any>> = Node & {
@@ -37,7 +35,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   path
 
-  onConflict: CONFLICT_STRATEGIES
+  onConflict: LiteralUnion<BASIC_CONFLICT_STRATEGIES>
 
   constructor(protected core: SandstoneCore, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments) {
     this.node = new NodeType(core, this)

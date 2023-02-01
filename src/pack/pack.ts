@@ -60,6 +60,68 @@ export class SandstonePack {
     return [namespace, ...fullPath]
   }
 
+  /** Get information like the path, namespace etc... from a resource name */
+  getResourcePath(resourceName: string): {
+    /** The namespace of the resource */
+    namespace: string
+
+    /**
+     * The path of the resource, EXCLUDING the resource name and the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').path === ['test']
+     */
+    path: string[]
+
+    /**
+     * The path of the resource, EXCLUDING the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').fullPath === ['test', 'myfunction']
+     */
+    fullPath: string[]
+
+    /**
+     * The path of the resource, INCLUDING the resource name and the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').fullPathWithNamespace === ['minecraft', 'test', 'myfunction']
+     */
+    fullPathWithNamespace: ResourcePath
+
+    /**
+     * The name of the resource itself. Does not include the path nor the namespace.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').name === 'myfunction'
+     */
+    name: string
+
+    /**
+     * The full name of the resource itself, as it should be refered in the datapack.
+     *
+     * @example
+     * getResourcePath('minecraft:test/myfunction').name === 'minecraft:test/myfunction'
+     */
+    fullName: string
+  } {
+    let namespace = this.defaultNamespace
+    let fullName = resourceName
+
+    if (resourceName.includes(':')) {
+      ([namespace, fullName] = resourceName.split(':'))
+    }
+
+    const fullPath = fullName.split('/')
+
+    const name = fullPath[fullPath.length - 1]
+    const path = fullPath.slice(0, -1)
+
+    return {
+      namespace, path, fullPath, name, fullPathWithNamespace: [namespace, ...fullPath], fullName: `${namespace}:${fullName}`,
+    }
+  }
+
   /** UTILS */
   get _() {
     return new Flow(this.core)

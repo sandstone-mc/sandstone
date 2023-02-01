@@ -10,7 +10,7 @@ import type {
   ContainerCommandNode, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
 } from '#core'
 import type { ResourcePath } from '#pack'
-import type { MakeInstanceCallable } from '#utils'
+import type { BASIC_CONFLICT_STRATEGIES, MakeInstanceCallable } from '#utils'
 
 /**
  * A node representing a Minecraft function.
@@ -118,6 +118,17 @@ export type MCFunctionClassArguments = {
    */
   tags?: readonly (string /* | TagInstance<'functions'>*/)[]
 } & ResourceClassArguments & ({
+  /**
+   * What to do if another mcfunction has the same name.
+   *
+   * - `throw`: Throw an error.
+   * - `replace`: Replace silently the old mcfunction with the new one.
+   * - `ignore`: Keep silently the old mcfunction, discarding the new one.
+   * - `append`: Append the new mcfunction commands to the old one.
+   * - `prepend`: Prepend the new mcfunction commands to the old one.
+   */
+  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
+}) & ({
   /**
    * If specified, the function will run every given time.
    *
