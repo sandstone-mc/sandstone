@@ -1,6 +1,7 @@
 export * from './containerCommandsToMCFunction'
 export * from './generateLazyMCFunctions'
 export * from './ifElseTransformationVisitor'
+export * from './initConstantsVisitor'
 export * from './initObjectivesVisitor'
 export * from './inlineFunctionCallVisitor'
 export * from './logVisitor'

@@ -93,7 +93,6 @@ export class Score extends ComponentClass implements ConditionClass {
 
     let objective = args[1] ?? this.objective
     if (typeof args[0] === 'number') {
-      // @ts-expect-error
       this.sandstonePack.registerNewConstant(args[0])
       objective = 'sandstone_const'
     }

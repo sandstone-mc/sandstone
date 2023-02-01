@@ -7,7 +7,7 @@ import { ObjectiveClass } from '#variables'
 import { DataPointClass } from '#variables/Data'
 
 import {
-  ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitObjectivesVisitor,
+  ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LogVisitor,
   MergeSimilarResourcesVisitor, MinifySandstoneResourcesNamesVisitor, SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
@@ -36,12 +36,15 @@ export class SandstonePack {
 
   anonymousScoreId = 0
 
-  constructor(public defaultNamespace: string, public uid: string) {
+  constants: Set<number>
+
+  constructor(public defaultNamespace: string, public packUid: string) {
     this.core = new SandstoneCore(this)
     this.commands = new SandstoneCommands(this)
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
+    this.constants = new Set()
   }
 
   resourceNameToPath = (resourceName: string): ResourcePath => {
@@ -70,6 +73,13 @@ export class SandstonePack {
 
   registerNewObjective = (objective: ObjectiveClass) => {
     this.objectives.add(objective)
+  }
+
+  /**
+   * Register a new numeric constant.
+   */
+  registerNewConstant(amount: number) {
+    this.constants.add(amount)
   }
 
   Objective = {
@@ -195,7 +205,7 @@ export class SandstonePack {
       const [initialValue, name] = args
 
       // Get the specific anonymous score
-      const anonymousScore = score(`${name ?? 'anon'}_${this.uid}_${this.anonymousScoreId}`)
+      const anonymousScore = score(`${name ?? 'anon'}_${this.packUid}_${this.anonymousScoreId}`)
       this.anonymousScoreId += 1
 
       // No initial value => we can directly return the score
@@ -221,6 +231,7 @@ export class SandstonePack {
       // Initialization visitors
       new LogVisitor(this),
       new InitObjectivesVisitor(this),
+      new InitConstantsVisitor(this),
       new GenerateLazyMCFunction(this),
 
       // Transformation visitors
