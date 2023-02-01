@@ -1,7 +1,7 @@
 import { Command } from '@commands/Command'
 import { command } from '@commands/decorators'
 
-import type { Coordinates } from '@arguments'
+import type { ColumnCoordinates, Coordinates } from '@arguments'
 
 /** These commands control the world border. */
 export class WorldBorder extends Command {
@@ -22,7 +22,7 @@ export class WorldBorder extends Command {
      * @param pos Specifies the horizontal coordinates of the world border's center.
      */
     @command(['worldborder', 'center'], { isRoot: true })
-      center = (pos: Coordinates) => {}
+      center = (pos: ColumnCoordinates) => {}
 
     /**
      * Sets the world border damage amount to the specified value.
