@@ -42,6 +42,7 @@ export abstract class CommandArguments<NODE extends CommandNodeConstructor | und
     // Automatically create the node for root-level commands.
     if (this.NodeType) {
       /* Typescript does not manage to remove undefined for some reasons */
+      /* @ts-ignore */
       return new this.NodeType(this.sandstonePack) as any
     }
 

@@ -127,7 +127,7 @@ export type MCFunctionClassArguments = {
    * - `append`: Append the new mcfunction commands to the old one.
    * - `prepend`: Prepend the new mcfunction commands to the old one.
    */
-  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
+  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend' | 'rename'
 }) & ({
   /**
    * If specified, the function will run every given time.
