@@ -3,7 +3,7 @@ import { coordinatesParser } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { Coordinates } from '#arguments'
+import type { ColumnCoordinates } from '#arguments'
 
 export class WorldBorderNode extends CommandNode {
   command = 'worldborder' as const
@@ -28,7 +28,7 @@ export class WorldBorderCommand extends CommandArguments {
    *
    * @param pos Specifies the horizontal coordinates of the world border's center.
    */
-  center = (pos: Coordinates) => this.finalCommand(['center', coordinatesParser(pos)])
+  center = (pos: ColumnCoordinates) => this.finalCommand(['center', coordinatesParser(pos)])
 
   damage = {
     /**
