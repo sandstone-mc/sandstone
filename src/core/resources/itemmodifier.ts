@@ -30,7 +30,7 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> {
   public itemModifierJSON: NonNullable<ItemModifierClassArguments['itemModifier']>
 
   constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: ItemModifierClassArguments) {
-    super(sandstoneCore, ItemModifierNode, path, args)
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', ItemModifierNode, path, args)
 
     this.itemModifierJSON = args.itemModifier
   }

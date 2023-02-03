@@ -3,8 +3,9 @@ import {
 } from '#core'
 
 import type {
-  AdvancementNode, CommandNode, MCFunctionNode,
-  Node, SandstoneCore,
+  AdvancementNode, CommandNode, ItemModifierNode, LootTableNode, MCFunctionNode,
+  Node, PredicateNode, RecipeNode, SandstoneCore,
+  TagNode, TrimMaterialNode, TrimPatternNode,
 } from '#core'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -91,4 +92,18 @@ export class GenericCoreVisitor {
   visitMCFunctionNode?: GenericResourceNodeVisitor<MCFunctionNode>
 
   visitAdvancementNode?: GenericResourceNodeVisitor<AdvancementNode>
+
+  visitItemModifierNode?: GenericResourceNodeVisitor<ItemModifierNode>
+
+  visitLootTableNode?: GenericResourceNodeVisitor<LootTableNode>
+
+  visitPredicateNode?: GenericResourceNodeVisitor<PredicateNode>
+
+  visitRecipeNode?: GenericResourceNodeVisitor<RecipeNode>
+
+  visitTagNode?: GenericResourceNodeVisitor<TagNode>
+
+  visitTrimMaterialNode?: GenericResourceNodeVisitor<TrimMaterialNode>
+
+  visitTrimPatternNode?: GenericResourceNodeVisitor<TrimPatternNode>
 }

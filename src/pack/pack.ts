@@ -25,12 +25,91 @@ import type { Score } from '#variables/Score'
 
 export type ResourcePath = string[]
 
+const conflictDefaults = (resourceType: string) => (process.env.GENERAL_CONFLICT_STRATEGY ?? process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`]) as string
+
+/** relativePath can have variables $worldName$ & $packName$ */
+export type handlerReadFile = (relativePath: string) => Promise<void>
+
+/** relativePath & contents can have variables $worldName$ & $packName$ */
+export type handlerWriteFile = (relativePath: string, contents: string) => Promise<void>
+export abstract class PackType {
+  readonly type: string
+
+  readonly clientPath: string
+
+  readonly serverPath: string
+
+  readonly networkSides: 'client' | 'server' | 'both'
+
+  readonly resourceSubFolder: undefined | string
+
+  readonly namespaced: boolean
+
+  readonly archiveOutput: boolean
+
+  /** `output` executes from `<workspace>/.sandstone/output/$packName$_<type>`*/
+  readonly handleOutput: undefined | ((type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => Promise<void>)
+
+  /**
+   * @param type eg. datapack or resource_pack
+   * @param clientPath from active client directory (eg. .minecraft), can use variables $worldName$ & $packName$; eg. 'saves/$worldName$/datapacks/$packName$' or 'saves/$worldName$/resources'
+   * @param serverPath from active server directory, can use variable $packName$; eg. 'world/datapacks/$packName$'
+   * @param networkSides which sides of the network the pack needs to be exported to; if both the client & server are defined which side this pack needs to be exported to
+   * @param archiveOutput whether to archive the directory on output
+   * @param resourceSubFolder Optional. Defines sub folder for resources to go; eg. data or assets (use handleOutput if you want to bypass this)
+   */
+  // eslint-disable-next-line max-len
+  constructor(type: string, clientPath: string, serverPath: string, networkSides: 'client' | 'server' | 'both', archiveOutput: boolean = false, resourceSubFolder?: string, namespaced: boolean = false) {
+    this.type = type
+    this.clientPath = clientPath
+    this.serverPath = serverPath
+    this.networkSides = networkSides
+    this.archiveOutput = archiveOutput
+    if (resourceSubFolder) {
+      this.resourceSubFolder = resourceSubFolder
+    }
+    this.namespaced = namespaced
+  }
+}
+
+class DataPack extends PackType {
+  resourceSubFolder = 'data'
+
+  // TODO: typing. low priority
+  readonly packMcmeta: any
+
+  constructor(archiveOutput: boolean, packFormat: number, packDescription: JSONTextComponent, features?: string[]) {
+    super('datapack', 'saves/$worldName$/datapacks/$packName$', 'world/datapacks/$packName$', 'server', archiveOutput, 'data', true)
+
+    this.packMcmeta = {
+      pack: {
+        pack_format: packFormat,
+        description: packDescription,
+      },
+    }
+
+    if (features) {
+      this.packMcmeta.features = { enabled: features }
+    }
+  }
+
+  handleOutput = async (type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => {
+    if (type === 'output') {
+      await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta))
+    }
+  }
+}
+
 export class SandstonePack {
   readonly core: SandstoneCore
 
   readonly flow: Flow
 
   readonly commands: SandstoneCommands
+
+  packTypes: Map<string, PackType>
+
+  dataPack = () => this.packTypes.get('datapack') as DataPack
 
   objectives: Set<ObjectiveClass>
 
@@ -41,6 +120,8 @@ export class SandstonePack {
   constructor(public defaultNamespace: string, public packUid: string) {
     this.core = new SandstoneCore(this)
     this.commands = new SandstoneCommands(this)
+
+    this.packTypes = new Map()
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
@@ -168,16 +249,17 @@ export class SandstonePack {
     callback,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
     ...options,
   })
 
   addNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().addNode(node)
 
-  // TODO: Add options
   Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: AdvancementClassArguments) => new AdvancementClass(this.core, this.resourceNameToPath(name), {
     advancement,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('advancement') as AdvancementClassArguments['onConflict'],
     ...options,
   })
 
@@ -185,6 +267,7 @@ export class SandstonePack {
     itemModifier,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('item_modifier') as ItemModifierClassArguments['onConflict'],
     ...options,
   })
 
@@ -192,6 +275,7 @@ export class SandstonePack {
     lootTable,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('loot_table') as LootTableClassArguments['onConflict'],
     ...options,
   })
 
@@ -199,6 +283,7 @@ export class SandstonePack {
     predicate,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('predicate') as PredicateClassArguments['onConflict'],
     ...options,
   })
 
@@ -206,6 +291,7 @@ export class SandstonePack {
     recipe,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],
     ...options,
   })
 
@@ -214,6 +300,7 @@ export class SandstonePack {
     values,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('tag') as TagClassArguments<T>['onConflict'],
     ...options,
   })
 
@@ -221,6 +308,7 @@ export class SandstonePack {
     trimMaterial,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('trim_material') as TrimMaterialClassArguments['onConflict'],
     ...options,
   })
 
@@ -228,6 +316,7 @@ export class SandstonePack {
     trimPattern,
     creator: 'user',
     addToSandstoneCore: true,
+    onConflict: conflictDefaults('trim_pattern') as TrimPatternClassArguments['onConflict'],
     ...options,
   })
 
@@ -288,24 +377,31 @@ export class SandstonePack {
       return anonymousScore
     }
 
-  save = () => this.core.save({
-    visitors: [
-      // Initialization visitors
-      new LogVisitor(this),
-      new InitObjectivesVisitor(this),
-      new InitConstantsVisitor(this),
-      new GenerateLazyMCFunction(this),
+  save = async () => {
+    // TODO: Add options
+    this.packTypes.set('datapack', new DataPack(false, 11, 'Default Pack', undefined))
 
-      // Transformation visitors
-      new IfElseTransformationVisitor(this),
-      new ContainerCommandsToMCFunctionVisitor(this),
-      new MergeSimilarResourcesVisitor(this),
+    await this.core.save({
+      visitors: [
+        // Initialization visitors
+        new LogVisitor(this),
+        new InitObjectivesVisitor(this),
+        new InitConstantsVisitor(this),
+        new GenerateLazyMCFunction(this),
 
-      // Optimization
-      new InlineFunctionCallVisitor(this),
-      new UnifyChainedExecutesVisitor(this),
-      new SimplifyExecuteFunctionVisitor(this),
-      new MinifySandstoneResourcesNamesVisitor(this),
-    ],
-  })
+        // Transformation visitors
+        new IfElseTransformationVisitor(this),
+        new ContainerCommandsToMCFunctionVisitor(this),
+        new MergeSimilarResourcesVisitor(this),
+
+        // Optimization
+        new InlineFunctionCallVisitor(this),
+        new UnifyChainedExecutesVisitor(this),
+        new SimplifyExecuteFunctionVisitor(this),
+        new MinifySandstoneResourcesNamesVisitor(this),
+      ],
+    })
+
+    return this.packTypes
+  }
 }

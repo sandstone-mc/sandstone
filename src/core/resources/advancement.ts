@@ -28,7 +28,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
   public advancementJSON: NonNullable<AdvancementClassArguments['advancement']>
 
   constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: AdvancementClassArguments<CriteriaNames>) {
-    super(sandstoneCore, AdvancementNode, path, args)
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', AdvancementNode, path, args)
 
     this.advancementJSON = args.advancement
   }

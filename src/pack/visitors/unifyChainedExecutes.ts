@@ -6,7 +6,7 @@ import { GenericSandstoneVisitor } from './visitor'
  * Transforms several chained execute.run.execute.run... into a single execute
  */
 export class UnifyChainedExecutesVisitor extends GenericSandstoneVisitor {
-  visitExecuteNode = (node: ExecuteCommandNode) => {
+  visitExecuteCommandNode = (node: ExecuteCommandNode) => {
     if (node.body.length === 0) {
       return this.genericVisit(node)
     }

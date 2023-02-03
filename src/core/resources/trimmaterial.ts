@@ -46,7 +46,7 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
   protected equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: TrimMaterialClassArguments) {
-    super(sandstoneCore, TrimMaterialNode, path, args)
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', TrimMaterialNode, path, args)
 
     this.trimMaterialJSON = args.trimMaterial
 

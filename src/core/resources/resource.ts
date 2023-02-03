@@ -1,6 +1,6 @@
 import type { SandstoneCommands } from 'sandstone/commands/commands'
 import type { Node, SandstoneCore } from '#core'
-import type { ResourcePath, SandstonePack } from '#pack'
+import type { PackType, ResourcePath, SandstonePack } from '#pack'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from '#utils'
 
 export type ResourceClassArguments = {
@@ -27,6 +27,12 @@ export type ResourceNodeConstructor<N extends Node> = new (sandstoneCore: Sandst
 export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> {
   protected node: N
 
+  packType
+
+  fileExtension
+
+  fileEncoding
+
   protected creator: NonNullable<ResourceClassArguments['creator']>
 
   protected commands: SandstoneCommands
@@ -37,8 +43,13 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   onConflict: LiteralUnion<BASIC_CONFLICT_STRATEGIES>
 
-  constructor(protected core: SandstoneCore, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments) {
+  constructor(protected core: SandstoneCore, packType: PackType, fileExtension: string, fileEncoding: string, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments) {
     this.node = new NodeType(core, this)
+
+    this.packType = packType
+
+    this.fileExtension = fileExtension
+    this.fileEncoding = fileEncoding
 
     this.pack = core.pack
     this.commands = core.pack.commands

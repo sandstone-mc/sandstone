@@ -98,7 +98,7 @@ export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass {
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
 
   constructor(sandstoneCore: SandstoneCore, type: REGISTRY, path: ResourcePath, args: TagClassArguments<REGISTRY>) {
-    super(sandstoneCore, TagNode, path, args)
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', TagNode, path, args)
 
     this.type = type
 

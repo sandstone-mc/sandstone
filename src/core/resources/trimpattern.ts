@@ -43,7 +43,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
   protected equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: TrimPatternClassArguments) {
-    super(sandstoneCore, TrimPatternNode, path, args)
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', TrimPatternNode, path, args)
 
     this.trimPatternJSON = args.trimPattern
 
@@ -54,7 +54,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
         type: 'smithing_trim',
         base: { tag: 'minecraft:trimmable_armor' },
         addition: { tag: 'minecraft:trim_materials' },
-        template: args.trimPattern.template_item,
+        template: { item: args.trimPattern.template_item },
       })
     }
   }

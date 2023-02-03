@@ -1,3 +1,6 @@
+import fs from 'fs-extra'
+import path from 'path'
+
 import type { SandstonePack } from 'sandstone'
 import type { MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
 import type { ResourceNode } from './resources/resource'
@@ -92,17 +95,24 @@ export class SandstoneCore {
     return finalResources
   }
 
-  save = (opts: { visitors: GenericCoreVisitor[] }) => {
+  save = async (opts: { visitors: GenericCoreVisitor[] }) => {
     const resources = this.generateResources(opts)
 
-    // Finally, display the generated code.
-    for (const node of resources) {
-      console.log('='.repeat(80))
-      console.log(node.resource.name)
-      console.log('='.repeat(80))
-      console.log(node.getValue(), '\n')
-    }
+    for await (const node of resources) {
+      const resourcePath = ['.sandstone', 'output', node.resource.packType.type, `${node.resource.path}.${node.resource.fileExtension}`]
+      // eslint-disable-next-line no-nested-ternary
+      const namespace = node.resource.packType.namespaced ? node.resource.name.includes(':') ? node.resource.name.split(':')[0] : this.pack.defaultNamespace : false
+      const subFolder = node.resource.packType.resourceSubFolder
 
-    return resources
+      if (namespace) {
+        resourcePath.splice(2, 0, namespace)
+      }
+
+      if (subFolder) {
+        resourcePath.splice(2, 0, subFolder)
+      }
+
+      await fs.writeFile(path.join(...resourcePath), node.getValue())
+    }
   }
 }

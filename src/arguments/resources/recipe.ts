@@ -199,11 +199,21 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
     count: number
   }>
   | RecipeKind<'smithing_trim', {
-    /** Ingredient specifying an item to be trimmed. (eg. { tag: 'minecraft:trimmable_armor' }) */
+    /** Ingredient specifying an item to be trimmed. (eg. `{ tag: 'minecraft:trimmable_armor' }`) */
     base: ItemOrTag
-    /** Trim material that will be used for trimming. (eg. { tag: 'minecraft:trim_materials' })*/
+    /** Trim material that will be used for trimming. (eg. `{ tag: 'minecraft:trim_materials' }`)*/
     addition: ItemOrTag
     /** Trim template item that will be used for the trim pattern. */
-    template: LiteralUnion<ITEMS>
+    template: ItemOrTag
+  }>
+  | RecipeKind<'smithing_transform', {
+    /** Ingredient specifying an item to be transformed. (eg. `{ "tag": "minecraft:diamond_helmet" }`) */
+    base: ItemOrTag
+    /** Material that will be used for transforming. (eg. `{ "tag": "minecraft:netherite_ingot" }`) */
+    addition: ItemOrTag
+    /** Template item that will be used for the item transformation. */
+    template: ItemOrTag
+    /** Resulting transformed item */
+    result: { item: LiteralUnion<ITEMS> } // Fun
   }>
 )

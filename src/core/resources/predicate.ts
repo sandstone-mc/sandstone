@@ -28,7 +28,7 @@ export class PredicateClass extends ResourceClass<PredicateNode> {
   public predicateJSON: NonNullable<PredicateClassArguments['predicate']>
 
   constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: PredicateClassArguments) {
-    super(sandstoneCore, PredicateNode, path, args)
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', PredicateNode, path, args)
 
     this.predicateJSON = args.predicate
   }
