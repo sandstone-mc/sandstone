@@ -5,7 +5,7 @@ import type { SandstonePack } from '#pack'
 export abstract class Node {
   constructor(public sandstoneCore: SandstoneCore) { }
 
-  abstract getValue(): string
+  abstract getValue(): any
 }
 
 /**

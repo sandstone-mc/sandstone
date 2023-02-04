@@ -1,4 +1,3 @@
-import fs from 'fs-extra'
 import path from 'path'
 
 import type { SandstonePack } from 'sandstone'
@@ -95,7 +94,8 @@ export class SandstoneCore {
     return finalResources
   }
 
-  save = async (opts: { visitors: GenericCoreVisitor[] }) => {
+  // TODO: Support dry & verbose runs
+  save = async (cliOptions: { fileHandler: (relativePath: string, content: any, contentSummary: string) => Promise<void> }, opts: { visitors: GenericCoreVisitor[] }) => {
     const resources = this.generateResources(opts)
 
     for await (const node of resources) {
@@ -112,7 +112,10 @@ export class SandstoneCore {
         resourcePath.splice(2, 0, subFolder)
       }
 
-      await fs.writeFile(path.join(...resourcePath), node.getValue())
+      const value = node.getValue()
+
+      /* @ts-ignore */
+      await cliOptions.fileHandler(path.join(...resourcePath), value, node.resource.fileEncoding === 'utf8' ? value : node.getSummary())
     }
   }
 }

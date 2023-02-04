@@ -39,6 +39,8 @@ export abstract class PackType {
 
   readonly serverPath: string
 
+  readonly rootPath: string
+
   readonly networkSides: 'client' | 'server' | 'both'
 
   readonly resourceSubFolder: undefined | string
@@ -54,17 +56,22 @@ export abstract class PackType {
    * @param type eg. datapack or resource_pack
    * @param clientPath from active client directory (eg. .minecraft), can use variables $worldName$ & $packName$; eg. 'saves/$worldName$/datapacks/$packName$' or 'saves/$worldName$/resources'
    * @param serverPath from active server directory, can use variable $packName$; eg. 'world/datapacks/$packName$'
+   * @param rootPath from active client directory (eg. .minecraft), can use variable $packName$; eg. 'datapacks/$packName$' or 'resource_packs/$packName$'
    * @param networkSides which sides of the network the pack needs to be exported to; if both the client & server are defined which side this pack needs to be exported to
    * @param archiveOutput whether to archive the directory on output
    * @param resourceSubFolder Optional. Defines sub folder for resources to go; eg. data or assets (use handleOutput if you want to bypass this)
    */
   // eslint-disable-next-line max-len
-  constructor(type: string, clientPath: string, serverPath: string, networkSides: 'client' | 'server' | 'both', archiveOutput: boolean = false, resourceSubFolder?: string, namespaced: boolean = false) {
+  constructor(type: string, clientPath: string, serverPath: string, rootPath: string, networkSides: 'client' | 'server' | 'both', archiveOutput: boolean = false, resourceSubFolder?: string, namespaced: boolean = false) {
     this.type = type
+
     this.clientPath = clientPath
     this.serverPath = serverPath
+    this.rootPath = rootPath
+
     this.networkSides = networkSides
     this.archiveOutput = archiveOutput
+
     if (resourceSubFolder) {
       this.resourceSubFolder = resourceSubFolder
     }
@@ -78,18 +85,18 @@ class DataPack extends PackType {
   // TODO: typing. low priority
   readonly packMcmeta: any
 
-  constructor(archiveOutput: boolean, packFormat: number, packDescription: JSONTextComponent, features?: string[]) {
-    super('datapack', 'saves/$worldName$/datapacks/$packName$', 'world/datapacks/$packName$', 'server', archiveOutput, 'data', true)
+  constructor(archiveOutput: boolean, options: { packFormat: number, packDescription: JSONTextComponent, features?: string[] }) {
+    super('datapack', 'saves/$worldName$/datapacks/$packName$', 'world/datapacks/$packName$', 'datapacks/$packName$', 'server', archiveOutput, 'data', true)
 
     this.packMcmeta = {
       pack: {
-        pack_format: packFormat,
-        description: packDescription,
+        pack_format: options.packFormat,
+        description: options.packDescription,
       },
     }
 
-    if (features) {
-      this.packMcmeta.features = { enabled: features }
+    if (options.features) {
+      this.packMcmeta.features = { enabled: options.features }
     }
   }
 
@@ -122,6 +129,8 @@ export class SandstonePack {
     this.commands = new SandstoneCommands(this)
 
     this.packTypes = new Map()
+    // TODO: Add options
+    this.packTypes.set('datapack', new DataPack(false, JSON.parse(process.env.PACK_OPTIONS as string)))
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
@@ -139,68 +148,6 @@ export class SandstonePack {
     const fullPath = fullName.split('/')
 
     return [namespace, ...fullPath]
-  }
-
-  /** Get information like the path, namespace etc... from a resource name */
-  getResourcePath(resourceName: string): {
-    /** The namespace of the resource */
-    namespace: string
-
-    /**
-     * The path of the resource, EXCLUDING the resource name and the namespace.
-     *
-     * @example
-     * getResourcePath('minecraft:test/myfunction').path === ['test']
-     */
-    path: string[]
-
-    /**
-     * The path of the resource, EXCLUDING the namespace.
-     *
-     * @example
-     * getResourcePath('minecraft:test/myfunction').fullPath === ['test', 'myfunction']
-     */
-    fullPath: string[]
-
-    /**
-     * The path of the resource, INCLUDING the resource name and the namespace.
-     *
-     * @example
-     * getResourcePath('minecraft:test/myfunction').fullPathWithNamespace === ['minecraft', 'test', 'myfunction']
-     */
-    fullPathWithNamespace: ResourcePath
-
-    /**
-     * The name of the resource itself. Does not include the path nor the namespace.
-     *
-     * @example
-     * getResourcePath('minecraft:test/myfunction').name === 'myfunction'
-     */
-    name: string
-
-    /**
-     * The full name of the resource itself, as it should be refered in the datapack.
-     *
-     * @example
-     * getResourcePath('minecraft:test/myfunction').name === 'minecraft:test/myfunction'
-     */
-    fullName: string
-  } {
-    let namespace = this.defaultNamespace
-    let fullName = resourceName
-
-    if (resourceName.includes(':')) {
-      ([namespace, fullName] = resourceName.split(':'))
-    }
-
-    const fullPath = fullName.split('/')
-
-    const name = fullPath[fullPath.length - 1]
-    const path = fullPath.slice(0, -1)
-
-    return {
-      namespace, path, fullPath, name, fullPathWithNamespace: [namespace, ...fullPath], fullName: `${namespace}:${fullName}`,
-    }
   }
 
   /** UTILS */
@@ -377,11 +324,8 @@ export class SandstonePack {
       return anonymousScore
     }
 
-  save = async () => {
-    // TODO: Add options
-    this.packTypes.set('datapack', new DataPack(false, 11, 'Default Pack', undefined))
-
-    await this.core.save({
+  save = async (cliOptions: { fileHandler: (relativePath: string, content: any, contentSummary: string) => Promise<void> }) => {
+    await this.core.save(cliOptions, {
       visitors: [
         // Initialization visitors
         new LogVisitor(this),

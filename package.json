@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
   "description": "Sandstone, a Typescript library for Minecraft datapacks.",
-  "version": "0.14.0-alpha.14",
+  "version": "0.14.0-alpha.15",
   "contributors": [
     {
       "name": "TheMrZZ - Florian ERNST",
@@ -17,10 +17,8 @@
     "url": "https://github.com/sandstone-mc/sandstone/issues"
   },
   "dependencies": {
-    "@types/fs-extra": "^11.0.1",
     "@typescript/analyze-trace": "^0.4.0",
     "chalk": "^4",
-    "fs-extra": "^11.1.0",
     "nanoid": "^3.1.30",
     "nearley": "^2.20.1",
     "node-fetch": "^3.3.0",
