@@ -1,8 +1,8 @@
-import { CommandNode } from '#core'
+import { CommandNode } from '@core'
 
 import { CommandArguments } from '../helpers'
 
-import type { MCFunctionClass } from '#core'
+import type { MCFunctionClass } from '@core'
 
 // Function command
 
@@ -11,7 +11,7 @@ export class FunctionCommandNode extends CommandNode<[string | MCFunctionClass]>
 }
 
 export class FunctionCommand extends CommandArguments {
-  protected NodeType = FunctionCommandNode
+  public NodeType = FunctionCommandNode
 
   function = (mcFunction: string | MCFunctionClass) => this.finalCommand([mcFunction])
 }

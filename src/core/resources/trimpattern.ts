@@ -1,12 +1,12 @@
-import { toMinecraftResourceName } from 'sandstone/utils'
+import { toMinecraftResourceName } from '@utils'
 
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
-import type { PredicateJSON, TrimPatternJSON } from '#arguments'
-import type { ResourcePath } from '#pack'
+import type { PredicateJSON, TrimPatternJSON } from '@arguments'
+import type { ResourcePath } from '@pack'
 
 type equipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
 
@@ -40,7 +40,7 @@ export type TrimPatternClassArguments = {
 export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
   public trimPatternJSON: NonNullable<TrimPatternClassArguments['trimPattern']>
 
-  protected equipmentCheck
+  public equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: TrimPatternClassArguments) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', TrimPatternNode, path, args)

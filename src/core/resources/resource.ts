@@ -1,7 +1,7 @@
-import type { SandstoneCommands } from 'sandstone/commands/commands'
-import type { Node, SandstoneCore } from '#core'
-import type { PackType, ResourcePath, SandstonePack } from '#pack'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from '#utils'
+import type { SandstoneCommands } from '@commands/commands'
+import type { Node, SandstoneCore } from '@core'
+import type { PackType, ResourcePath, SandstonePack } from '@pack'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from '@utils'
 
 export type ResourceClassArguments = {
   /**
@@ -25,7 +25,7 @@ export type ResourceNode<T = ResourceClass<any>> = Node & {
 export type ResourceNodeConstructor<N extends Node> = new (sandstoneCore: SandstoneCore, resource: any) => N
 
 export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> {
-  protected node: N
+  node: N
 
   packType
 
@@ -33,17 +33,17 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   fileEncoding
 
-  protected creator: NonNullable<ResourceClassArguments['creator']>
+  creator: NonNullable<ResourceClassArguments['creator']>
 
-  protected commands: SandstoneCommands
+  commands: SandstoneCommands
 
-  protected pack: SandstonePack
+  pack: SandstonePack
 
   path
 
   onConflict: LiteralUnion<BASIC_CONFLICT_STRATEGIES>
 
-  constructor(protected core: SandstoneCore, packType: PackType, fileExtension: string, fileEncoding: string, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments) {
+  constructor(public core: SandstoneCore, packType: PackType, fileExtension: string, fileEncoding: string, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments) {
     this.node = new NodeType(core, this)
 
     this.packType = packType
@@ -64,13 +64,13 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
     this.onConflict = args.onConflict ?? 'throw'
   }
 
-  protected getNode = () => this.node
+  public getNode = () => this.node
 
   get name(): string {
     return `${this.path[0]}:${this.path.slice(1).join('/')}`
   }
 
-  protected generate = () => {}
+  public generate = () => {}
 
   toString(): string {
     return this.name
@@ -81,7 +81,7 @@ export abstract class CallableResourceClass<N extends ResourceNode = ResourceNod
   // This is the resource, but as a callable
   private _that: MakeInstanceCallable<this> | undefined
 
-  protected get asCallable() {
+  public get asCallable() {
     if (!this._that) {
       throw new Error('Class has not been made callable.')
     }

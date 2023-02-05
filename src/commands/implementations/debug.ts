@@ -1,4 +1,4 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -12,7 +12,7 @@ export class DebugCommandNode extends CommandNode {
  * When stopped, creates a profiler results file in the folder `debug`.
  */
 export class DebugCommand extends CommandArguments {
-  protected NodeType = DebugCommandNode
+  public NodeType = DebugCommandNode
 
   /** Starts a new debug profiling session. */
   start = () => this.finalCommand(['start'])

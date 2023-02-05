@@ -1,10 +1,10 @@
-import { CommandNode } from '#core/nodes'
-import { coordinatesParser } from '#variables'
+import { CommandNode } from '@core/nodes'
+import { coordinatesParser } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { BLOCKS, Coordinates } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { BLOCKS, Coordinates } from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 export class FillCommandNode extends CommandNode {
   command = 'fill' as const
@@ -61,7 +61,7 @@ export class FillArgumentsCommand extends CommandArguments {
 
 /** Adds, sets or removes player experience.  */
 export class FillCommand extends CommandArguments {
-  protected NodeType = FillCommandNode
+  public NodeType = FillCommandNode
 
   /**
    * Fills all or parts of a region with a specific block.

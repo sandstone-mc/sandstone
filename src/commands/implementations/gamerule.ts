@@ -1,9 +1,9 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { GAMERULES } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { GAMERULES } from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 // Gamerule command
 
@@ -12,7 +12,7 @@ export class GameRuleCommandNode extends CommandNode {
 }
 
 export class GameRuleCommand extends CommandArguments {
-  protected NodeType = GameRuleCommandNode
+  public NodeType = GameRuleCommandNode
 
   /**
    * Sets or queries a game rule value.

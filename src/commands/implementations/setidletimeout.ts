@@ -1,4 +1,4 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -7,7 +7,7 @@ export class SetIdleTimeoutCommandNode extends CommandNode {
 }
 
 export class SetIdleTimeoutCommand extends CommandArguments {
-  protected NodeType = SetIdleTimeoutCommandNode
+  public NodeType = SetIdleTimeoutCommandNode
 
   setidletimeout = (minutes: number) => this.finalCommand([minutes])
 }

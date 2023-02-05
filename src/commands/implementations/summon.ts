@@ -1,17 +1,17 @@
-import { CommandNode } from '#core/nodes'
-import { coordinatesParser, nbtStringifier } from '#variables'
+import { CommandNode } from '@core/nodes'
+import { coordinatesParser, nbtStringifier } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { Coordinates, ENTITY_TYPES, RootNBT } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { Coordinates, ENTITY_TYPES, RootNBT } from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 export class SummonCommandNode extends CommandNode {
   command = 'summon' as const
 }
 
 export class SummonCommand extends CommandArguments {
-  protected NodeType = SummonCommandNode
+  public NodeType = SummonCommandNode
 
   /**
    * Summons an entity.

@@ -1,10 +1,10 @@
 /* eslint-disable dot-notation */
 
-import { MCFunctionClass } from '#core'
+import { MCFunctionClass } from '@core'
 
 import { GenericSandstoneVisitor } from './visitor'
 
-import type { FunctionCommandNode, ScheduleCommandNode } from '#commands'
+import type { FunctionCommandNode, ScheduleCommandNode } from '@commands'
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.

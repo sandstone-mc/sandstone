@@ -1,6 +1,6 @@
-import type { ITEMS } from '#arguments/generated'
-import type { TagClass } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS } from '@arguments/generated'
+import type { TagClass } from '@core'
+import type { LiteralUnion } from '@utils'
 
 /**
  * Ensures that the given string has 3 characters or less - else, evaluates as `never`

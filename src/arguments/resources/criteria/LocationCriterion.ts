@@ -2,9 +2,9 @@ import type { NumberProvider, PositionCriterion } from '.'
 import type {
   BIOMES, BLOCKS, DIMENSIONS, FLUIDS,
   STRUCTURES,
-} from '#arguments'
-import type { TagClass } from '#core'
-import type { LiteralUnion } from '#utils'
+} from '@arguments'
+import type { TagClass } from '@core'
+import type { LiteralUnion } from '@utils'
 
 export type LocationCriterion = Partial<{
     /** The biome the entity is currently in. */

@@ -1,4 +1,4 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -7,7 +7,7 @@ export class SeedCommandNode extends CommandNode {
 }
 
 export class SeedCommand extends CommandArguments {
-  protected NodeType = SeedCommandNode
+  public NodeType = SeedCommandNode
 
   /** Displays the world seed. */
   seed = () => this.finalCommand([])

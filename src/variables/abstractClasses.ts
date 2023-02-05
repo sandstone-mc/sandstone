@@ -1,7 +1,7 @@
-import type { JSONTextComponent } from '#arguments/jsonTextComponent'
+import type { JSONTextComponent } from '@arguments/jsonTextComponent'
 
 export class ComponentClass {
-  protected _toChatComponent(): JSONTextComponent {
+  public _toChatComponent(): JSONTextComponent {
     throw new Error('Not implemented')
   }
 }

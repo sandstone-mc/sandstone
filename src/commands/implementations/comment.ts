@@ -1,4 +1,4 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -11,7 +11,7 @@ export class CommentCommandNode extends CommandNode<[unknown[]]> {
 }
 
 export class CommentCommand extends CommandArguments<typeof CommentCommandNode> {
-  protected NodeType = CommentCommandNode
+  public NodeType = CommentCommandNode
 
   /**
    * Adds a comment, starting with a `# `, to the function.

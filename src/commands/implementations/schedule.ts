@@ -1,11 +1,11 @@
-import { ContainerCommandNode } from '#core'
-import { MCFunctionClass, TagClass } from '#core/resources'
+import { ContainerCommandNode } from '@core'
+import { MCFunctionClass, TagClass } from '@core/resources'
 
 import { CommandArguments } from '../helpers'
 
-import type { TimeArgument } from '#arguments'
-import type { Node } from '#core'
-import type { MCFunctionNode } from '#core/resources'
+import type { TimeArgument } from '@arguments'
+import type { Node } from '@core'
+import type { MCFunctionNode } from '@core/resources'
 
 function isMCFunctionInstance(callback: any): callback is MCFunctionClass {
   return Object.prototype.hasOwnProperty.call(callback, 'datapack')
@@ -48,7 +48,7 @@ export class ScheduleCommandNode extends ContainerCommandNode<
 export type ScheduleType = 'append' | 'replace'
 
 export class ScheduleCommand extends CommandArguments<typeof ScheduleCommandNode> {
-  protected NodeType = ScheduleCommandNode
+  public NodeType = ScheduleCommandNode
 
   /**
    * Removes a scheduled function.

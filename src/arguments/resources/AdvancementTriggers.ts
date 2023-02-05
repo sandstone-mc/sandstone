@@ -13,8 +13,8 @@ import type {
   SlotCriterion,
 } from './criteria'
 import type { PredicateJSON } from './predicate'
-import type { ITEMS } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS } from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 // The advancement triggers
 type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | unknown | null> = {

@@ -4,7 +4,7 @@ import grammar, { isCompoundSymbol } from './grammar'
 
 import type { NBTCompound, NBTExpression } from './grammar'
 import type { NBT as NBTMethods } from './NBTs'
-import type { NBTObject } from '#arguments'
+import type { NBTObject } from '@arguments'
 
 function isCompoundNbt(nbt: any): nbt is NBTCompound {
   return !!nbt[isCompoundSymbol]

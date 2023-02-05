@@ -2,7 +2,7 @@ import { VectorClass } from './Coordinates'
 
 import type {
   Coordinates, Range, Rotation,
-} from '#arguments'
+} from '@arguments'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args

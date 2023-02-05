@@ -1,9 +1,9 @@
-import { CommandNode } from '#core'
+import { CommandNode } from '@core'
 
 import { CommandArguments } from '../helpers'
 
-import type { TimeArgument } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { TimeArgument } from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 export class TimeCommandNode extends CommandNode {
   command = 'time' as const
@@ -13,7 +13,7 @@ export class TimeCommandNode extends CommandNode {
  * Changes or queries the world's game time.
  */
 export class TimeCommand extends CommandArguments {
-  protected NodeType = TimeCommandNode
+  public NodeType = TimeCommandNode
 
   /**
    * Adds `time` to the in-game daytime.

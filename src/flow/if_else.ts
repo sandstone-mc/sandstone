@@ -21,9 +21,9 @@ export class IfNode extends ContainerNode {
 }
 
 export class IfStatement {
-  protected node: IfNode
+  public node: IfNode
 
-  constructor(protected sandstoneCore: SandstoneCore, protected condition: ConditionNode, protected callback: () => void) {
+  constructor(public sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback: () => void) {
     // Generate the body of the If node.
     this.node = new IfNode(sandstoneCore, condition, callback)
   }
@@ -40,7 +40,7 @@ export class IfStatement {
     return statement
   }
 
-  protected getNode = () => this.node
+  public getNode = () => this.node
 }
 
 export class ElseNode extends ContainerNode {
@@ -59,12 +59,12 @@ export class ElseNode extends ContainerNode {
 }
 
 export class ElseStatement {
-  protected node: ElseNode
+  public node: ElseNode
 
-  constructor(protected sandstoneCore: SandstoneCore, protected callback: () => void) {
+  constructor(public sandstoneCore: SandstoneCore, public callback: () => void) {
     // Generate the body of the If node.
     this.node = new ElseNode(sandstoneCore, callback)
   }
 
-  protected getNode = () => this.node
+  public getNode = () => this.node
 }

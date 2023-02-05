@@ -1,16 +1,16 @@
-import { CommandNode } from '#core/nodes'
-import { coordinatesParser } from '#variables'
+import { CommandNode } from '@core/nodes'
+import { coordinatesParser } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { Coordinates, MultiplePlayersArgument, Rotation } from '#arguments'
+import type { Coordinates, MultiplePlayersArgument, Rotation } from '@arguments'
 
 export class SpawnPointCommandNode extends CommandNode {
   command = 'spawnpoint' as const
 }
 
 export class SpawnPointCommand extends CommandArguments {
-  protected NodeType = SpawnPointCommandNode
+  public NodeType = SpawnPointCommandNode
 
   /**
    * Sets the spawn point for a player. You can now set your spawnpoint in the Nether and End.

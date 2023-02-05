@@ -1,15 +1,15 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { TimeArgument } from '#arguments'
+import type { TimeArgument } from '@arguments'
 
 export class WeatherCommandNode extends CommandNode {
   command = 'weather' as const
 }
 
 export class WeatherCommand extends CommandArguments {
-  protected NodeType = WeatherCommandNode
+  public NodeType = WeatherCommandNode
 
   /**
    * Set the weather to clear.

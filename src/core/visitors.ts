@@ -1,12 +1,12 @@
 import {
   ContainerCommandNode, ContainerNode,
-} from '#core'
+} from '@core'
 
 import type {
   AdvancementNode, CommandNode, ItemModifierNode, LootTableNode, MCFunctionNode,
   Node, PredicateNode, RecipeNode, SandstoneCore,
   TagNode, TrimMaterialNode, TrimPatternNode,
-} from '#core'
+} from '@core'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function ancestors(prototype: Function): string[] {
@@ -75,7 +75,7 @@ export class GenericCoreVisitor {
 
   onEnd = (): void => {}
 
-  protected genericNodeVisitor: <N extends Node>() => GenericNodeVisitor<N> = () => (node) => this.genericVisit(node)
+  public genericNodeVisitor: <N extends Node>() => GenericNodeVisitor<N> = () => (node) => this.genericVisit(node)
 
   // Container nodes
   visitCommandNode = this.genericNodeVisitor<CommandNode>()

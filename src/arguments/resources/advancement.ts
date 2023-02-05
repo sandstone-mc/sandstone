@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import type { AdvancementTriggers } from './AdvancementTriggers'
-import type { ITEMS, JSONTextComponent } from '#arguments'
-import type { AdvancementClass, MCFunctionClass } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS, JSONTextComponent } from '@arguments'
+import type { AdvancementClass, MCFunctionClass } from '@core'
+import type { LiteralUnion } from '@utils'
 
 /** A representation of a Minecraft advancement. */
 export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {

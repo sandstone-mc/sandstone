@@ -1,15 +1,15 @@
-import { validateIntegerRange } from '#commands/validators'
-import { CommandNode } from '#core'
-import { coordinatesParser } from '#variables'
+import { validateIntegerRange } from '@commands/validators'
+import { CommandNode } from '@core'
+import { coordinatesParser } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
 import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
-} from '#arguments'
-import type { LootTableClass } from '#core'
-import type { LiteralUnion } from '#utils'
+} from '@arguments'
+import type { LootTableClass } from '@core'
+import type { LiteralUnion } from '@utils'
 
 type LootTableArgument = LootTableClass | string
 
@@ -55,7 +55,7 @@ class LootSourceCommand extends CommandArguments {
 
 /** Drops the given loot table into the specified inventory or into the world. */
 export class LootCommand extends CommandArguments {
-  protected NodeType = LootCommandNode
+  public NodeType = LootCommandNode
 
   /**
    * Spawns item entities.

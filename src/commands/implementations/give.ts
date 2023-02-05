@@ -1,9 +1,9 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { ITEMS, MultiplePlayersArgument } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS, MultiplePlayersArgument } from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 // Give command
 
@@ -12,7 +12,7 @@ export class GiveCommandNode extends CommandNode {
 }
 
 export class GiveCommand extends CommandArguments {
-  protected NodeType = GiveCommandNode
+  public NodeType = GiveCommandNode
 
   /**
    * Gives an item to one or more players.

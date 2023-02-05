@@ -1,4 +1,4 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -7,7 +7,7 @@ export class ListCommandNode extends CommandNode {
 }
 
 export class ListCommand extends CommandArguments {
-  protected NodeType = ListCommandNode
+  public NodeType = ListCommandNode
 
   /**
    * Shows the names of all currently-connected players.

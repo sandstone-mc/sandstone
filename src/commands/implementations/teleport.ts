@@ -1,11 +1,11 @@
-import { CommandNode } from '#core'
-import { coordinatesParser, VectorClass } from '#variables'
+import { CommandNode } from '@core'
+import { coordinatesParser, VectorClass } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
 import type {
   Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument,
-} from '#arguments'
+} from '@arguments'
 
 export class TeleportCommandNode extends CommandNode {
   command = 'tp' as const
@@ -31,7 +31,7 @@ export class TeleportFacingCommand extends CommandArguments {
 }
 
 export class TeleportCommand extends CommandArguments {
-  protected NodeType = TeleportCommandNode
+  public NodeType = TeleportCommandNode
 
   tp: (
     (

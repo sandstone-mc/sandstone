@@ -58,7 +58,7 @@ import {
   WorldBorderCommand,
 } from './implementations'
 
-import type { SandstonePack } from '#pack'
+import type { SandstonePack } from '@pack'
 
 export class SandstoneCommands {
   constructor(public sandstonePack: SandstonePack) {}

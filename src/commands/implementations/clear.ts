@@ -1,17 +1,17 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers.js'
 
-import type { ITEMS, MultiplePlayersArgument } from '#arguments'
-import type { TagClass } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS, MultiplePlayersArgument } from '@arguments'
+import type { TagClass } from '@core'
+import type { LiteralUnion } from '@utils'
 
 export class ClearCommandNode extends CommandNode {
   command = 'clear' as const
 }
 
 export class ClearCommand extends CommandArguments {
-  protected NodeType = ClearCommandNode
+  NodeType = ClearCommandNode
 
   /**
    * Clears items from player inventory, including items being dragged by the player.

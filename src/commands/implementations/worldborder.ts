@@ -1,9 +1,9 @@
-import { CommandNode } from '#core'
-import { coordinatesParser } from '#variables'
+import { CommandNode } from '@core'
+import { coordinatesParser } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { ColumnCoordinates } from '#arguments'
+import type { ColumnCoordinates } from '@arguments'
 
 export class WorldBorderNode extends CommandNode {
   command = 'worldborder' as const
@@ -11,7 +11,7 @@ export class WorldBorderNode extends CommandNode {
 
 /** These commands control the world border. */
 export class WorldBorderCommand extends CommandArguments {
-  protected NodeType = WorldBorderNode
+  public NodeType = WorldBorderNode
 
   /**
    * Increases or decreases the world border diameter.

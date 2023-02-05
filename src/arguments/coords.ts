@@ -1,4 +1,4 @@
-import type { VectorClass } from '#variables'
+import type { VectorClass } from '@variables'
 
 type AbsoluteFloat = number | `${number}`;
 type RelativeFloat = `~${number | ''}`;

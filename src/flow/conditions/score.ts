@@ -1,9 +1,9 @@
-import { Score } from '#variables'
+import { Score } from '@variables'
 
 import { SingleConditionNode } from './condition'
 
-import type { Range } from '#arguments/range'
-import type { SandstoneCore } from '#core'
+import type { Range } from '@arguments/range'
+import type { SandstoneCore } from '@core'
 
 export class ScoreConditionNode extends SingleConditionNode {
   constructor(sandstoneCore: SandstoneCore, public op1: Score, public operator: string, public op2: Score | number | Range) {

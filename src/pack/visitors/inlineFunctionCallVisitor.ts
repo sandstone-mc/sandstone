@@ -1,15 +1,15 @@
-import { FunctionCommandNode } from '#commands'
-import { MCFunctionClass } from '#core'
+import { FunctionCommandNode } from '@commands'
+import { MCFunctionClass } from '@core'
 
 import { GenericSandstoneVisitor } from './visitor'
 
-import type { MCFunctionNode } from '#core'
+import type { MCFunctionNode } from '@core'
 
 /**
  * Initialize the objectives of the pack.
  */
 export class InlineFunctionCallVisitor extends GenericSandstoneVisitor {
-  deletedMCFunction: [deleted: MCFunctionClass, new: MCFunctionClass] | null = null
+  deletedMCFunction: {deleted: MCFunctionClass, newOne: MCFunctionClass} | null = null
 
   visitFunctionCommandNode = (node: FunctionCommandNode) => {
     const mcFunction = node.args[0]
@@ -17,7 +17,7 @@ export class InlineFunctionCallVisitor extends GenericSandstoneVisitor {
       return node
     }
 
-    const [deleted, newOne] = this.deletedMCFunction
+    const { deleted, newOne } = this.deletedMCFunction
     if (node.args[0] instanceof MCFunctionClass && node.args[0] === deleted) {
       node.args[0] = newOne
     }
@@ -35,7 +35,7 @@ export class InlineFunctionCallVisitor extends GenericSandstoneVisitor {
     if (
       node instanceof FunctionCommandNode
       && node.args[0] instanceof MCFunctionClass
-      && node.args[0]['creator'] === 'sandstone'
+      && node.args[0].creator === 'sandstone'
     ) {
       /*
        * The current function has the following body:
@@ -45,12 +45,12 @@ export class InlineFunctionCallVisitor extends GenericSandstoneVisitor {
        * Now, we can delete the Sandstone-created function
        */
       const sandstoneCreatedFunction = node.args[0]
-      this.core.resourceNodes.delete(sandstoneCreatedFunction['node'])
+      this.core.resourceNodes.delete(sandstoneCreatedFunction.node)
 
-      this.deletedMCFunction = [sandstoneCreatedFunction, functionNode.resource]
+      this.deletedMCFunction = { newOne: sandstoneCreatedFunction, deleted: functionNode.resource }
 
       // Copy the body of the Sandstone function to the current one
-      functionNode.body = sandstoneCreatedFunction['node'].body
+      functionNode.body = sandstoneCreatedFunction.node.body
     }
 
     this.genericVisit(functionNode)

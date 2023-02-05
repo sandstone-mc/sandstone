@@ -1,4 +1,4 @@
-import { Node } from '#core'
+import { Node } from '@core'
 
 export type GenericConditionType = {
   /**

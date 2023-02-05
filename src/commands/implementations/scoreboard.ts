@@ -1,5 +1,5 @@
-import { CommandNode } from '#core'
-import { JSONTextComponentClass, Score } from '#variables'
+import { CommandNode } from '@core'
+import { JSONTextComponentClass, Score } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
@@ -7,8 +7,8 @@ import type {
   DISPLAY_SLOTS, JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
   ObjectiveArgument,
   OPERATORS,
-} from '#arguments'
-import type { LiteralUnion } from '#utils'
+} from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 function scoresParser(...args: unknown[]) {
   return args.map((arg, i) => {
@@ -41,7 +41,7 @@ export class ScoreboardObjectivesModifyCommand extends CommandArguments {
 }
 
 export class ScoreboardCommand extends CommandArguments {
-  protected NodeType = ScoreboardCommandNode
+  public NodeType = ScoreboardCommandNode
 
   /** All commands related to scoreboard objectives. */
   objectives = {

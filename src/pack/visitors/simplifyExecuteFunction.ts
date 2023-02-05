@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
-import { ExecuteCommandNode, FunctionCommandNode } from '#commands'
-import { CommandNode } from '#core'
+import { ExecuteCommandNode, FunctionCommandNode } from '@commands'
+import { CommandNode } from '@core'
 
 import { GenericSandstoneVisitor } from './visitor'
 

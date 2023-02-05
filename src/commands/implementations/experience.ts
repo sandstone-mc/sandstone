@@ -1,9 +1,9 @@
-import { validateIntegerRange } from '#commands/validators'
-import { CommandNode } from '#core/nodes'
+import { validateIntegerRange } from '@commands/validators'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MultiplePlayersArgument, SinglePlayerArgument } from '#arguments'
+import type { MultiplePlayersArgument, SinglePlayerArgument } from '@arguments'
 
 export class ExperienceCommandNode extends CommandNode {
   // We always use the shorthand version for compactness purposes
@@ -12,7 +12,7 @@ export class ExperienceCommandNode extends CommandNode {
 
 /** Adds, sets or removes player experience.  */
 export class ExperienceCommand extends CommandArguments {
-  protected NodeType = ExperienceCommandNode
+  public NodeType = ExperienceCommandNode
 
   /**
    * Adds experience to the player(s).

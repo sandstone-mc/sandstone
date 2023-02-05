@@ -1,10 +1,10 @@
-import { CommandNode } from '#core'
-import { coordinatesParser, nbtStringifier } from '#variables'
+import { CommandNode } from '@core'
+import { coordinatesParser, nbtStringifier } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { Coordinates, NBTObject, SingleEntityArgument } from '#arguments'
-import type { VectorClass } from '#variables'
+import type { Coordinates, NBTObject, SingleEntityArgument } from '@arguments'
+import type { VectorClass } from '@variables'
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const
@@ -12,7 +12,7 @@ export class DataCommandNode extends CommandNode {
 
 /** Allows to get, merge, modify, and remove NBT data of a block entity, entity, or Command NBT storage. */
 export class DataCommand extends CommandArguments {
-  protected NodeType = DataCommandNode
+  public NodeType = DataCommandNode
 
   /** Read off the entire NBT data or the subsection of the NBT data from the targeted block position or entity, scaled by `scale` if specified. */
   get get() { return this.subCommand(['get'], DataGetCommand, false) }

@@ -1,7 +1,7 @@
+import type { SandstoneCore } from '@core'
+import type { CommandNode } from '@core/nodes'
+import type { SandstonePack } from '@pack'
 import type { SandstoneCommands } from './commands'
-import type { SandstoneCore } from '#core'
-import type { CommandNode } from '#core/nodes'
-import type { SandstonePack } from '#pack'
 
 type InstanceTypeOr<NODE extends (new (...args: any) => CommandNode) | undefined, X> = (
   NODE extends undefined ? X : NODE extends new (...args: any) => infer R ? R : never
@@ -15,25 +15,25 @@ type InstanceTypeOr<NODE extends (new (...args: any) => CommandNode) | undefined
  */
 
 export class FinalCommandOutput {
-  constructor(protected node: CommandNode<unknown[]>) { }
+  constructor(public node: CommandNode<unknown[]>) { }
 }
 
 export type CommandNodeConstructor = (new (...args: any) => CommandNode)
 export type CommandArgumentsConstructor = (new (...args: any) => any)
 
 export abstract class CommandArguments<NODE extends CommandNodeConstructor | undefined = CommandNodeConstructor | undefined> {
-  protected NodeType?: NODE
+  public NodeType?: NODE
 
-  protected sandstoneCore: SandstoneCore
+  public sandstoneCore: SandstoneCore
 
-  protected sandstoneCommands: SandstoneCommands
+  public sandstoneCommands: SandstoneCommands
 
-  constructor(protected sandstonePack: SandstonePack, protected previousNode?: CommandNode, protected autoCommit = true) {
+  constructor(public sandstonePack: SandstonePack, public previousNode?: CommandNode, public autoCommit = true) {
     this.sandstoneCore = sandstonePack.core
     this.sandstoneCommands = sandstonePack.commands
   }
 
-  protected getNode: (() => InstanceTypeOr<NODE, CommandNode>) = () => {
+  public getNode: (() => InstanceTypeOr<NODE, CommandNode>) = () => {
     if (this.previousNode) {
       // This is not a root-level command, so we can use the previous node.
       return this.previousNode
@@ -49,7 +49,7 @@ export abstract class CommandArguments<NODE extends CommandNodeConstructor | und
     throw new Error('No node type specified & no previous node for a non-root-level command')
   }
 
-  protected finalCommand = (
+  public finalCommand = (
     args?: NODE extends CommandNodeConstructor ? InstanceType<NODE>['args'] : any[],
     currentNode?: InstanceTypeOr<NODE, CommandNode> | undefined,
   ): FinalCommandOutput => {
@@ -68,7 +68,7 @@ export abstract class CommandArguments<NODE extends CommandNodeConstructor | und
     return new FinalCommandOutput(node)
   }
 
-  protected subCommand = <NEXT_ARGUMENT extends CommandArgumentsConstructor>(
+  public subCommand = <NEXT_ARGUMENT extends CommandArgumentsConstructor>(
     args: NODE extends CommandNodeConstructor ? InstanceType<NODE>['args'] : any[],
     NextArgumentType: NEXT_ARGUMENT,
     executable = false,

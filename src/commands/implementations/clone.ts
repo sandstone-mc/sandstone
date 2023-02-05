@@ -1,17 +1,17 @@
-import { CommandNode } from '#core/nodes'
-import { coordinatesParser } from '#variables'
+import { CommandNode } from '@core/nodes'
+import { coordinatesParser } from '@variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { BLOCKS, Coordinates } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { BLOCKS, Coordinates } from '@arguments'
+import type { LiteralUnion } from '@utils'
 
 export class CloneCommandNode extends CommandNode {
   command = 'clone' as const
 }
 
 export class CloneCommand extends CommandArguments {
-  protected NodeType = CloneCommandNode
+  NodeType = CloneCommandNode
 
   /**
    * Clones blocks from one region to another.

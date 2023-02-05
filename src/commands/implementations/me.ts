@@ -1,8 +1,8 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MultipleEntitiesArgument } from '#arguments'
+import type { MultipleEntitiesArgument } from '@arguments'
 
 export class MeCommandNode extends CommandNode<[string[]]> {
   command = 'me' as const
@@ -13,7 +13,7 @@ export class MeCommandNode extends CommandNode<[string[]]> {
 }
 
 export class MeCommand extends CommandArguments {
-  protected NodeType = MeCommandNode
+  public NodeType = MeCommandNode
 
   /**
    * Displays a message about yourself.

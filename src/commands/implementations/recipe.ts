@@ -1,10 +1,10 @@
-import { CommandNode } from '#core'
+import { CommandNode } from '@core'
 
 import { CommandArguments } from '../helpers'
 
-import type { ITEMS, MultiplePlayersArgument } from '#arguments'
-import type { RecipeClass } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS, MultiplePlayersArgument } from '@arguments'
+import type { RecipeClass } from '@core'
+import type { LiteralUnion } from '@utils'
 
 export class RecipeCommandNode extends CommandNode {
   command = 'recipe' as const
@@ -12,7 +12,7 @@ export class RecipeCommandNode extends CommandNode {
 
 /** Gives or takes (unlocks or locks) recipes for players. */
 export class RecipeCommand extends CommandArguments {
-  protected NodeType = RecipeCommandNode
+  public NodeType = RecipeCommandNode
 
   /**
    * Gives recipes to the player.

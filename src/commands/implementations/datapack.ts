@@ -1,4 +1,4 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -35,7 +35,7 @@ export class DataPackEnableCommand extends CommandArguments {
 }
 
 export class DataPackCommand extends CommandArguments {
-  protected NodeType = DataPackCommandNode
+  public NodeType = DataPackCommandNode
 
   /**
    * Disable the specified pack.

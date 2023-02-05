@@ -1,5 +1,5 @@
 import type { NumberProvider } from './utils'
-import type { GAMEMODES } from '#arguments/basics'
+import type { GAMEMODES } from '@arguments/basics'
 
 export type PlayerCriterion = Partial<{
   /** A map of advancements to check. */

@@ -3,14 +3,14 @@
 /* eslint-disable camelcase */
 import type { NumberProvider } from './criteria/utils'
 import type { ObjectOrArray, PredicateCondition } from './predicate'
-import type { JSONTextComponent, LootTableEntry } from '#arguments'
-import type { BASIC_COLORS, MAP_ICONS } from '#arguments/basics'
+import type { JSONTextComponent, LootTableEntry } from '@arguments'
+import type { BASIC_COLORS, MAP_ICONS } from '@arguments/basics'
 import type {
   ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES,
-} from '#arguments/generated'
-import type { LootTableClass } from '#core'
-import type { LiteralUnion } from '#utils'
-import type { DataInstance } from '#variables/Data'
+} from '@arguments/generated'
+import type { LootTableClass } from '@core'
+import type { LiteralUnion } from '@utils'
+import type { DataInstance } from '@variables/Data'
 
 type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**

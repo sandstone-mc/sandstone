@@ -1,4 +1,4 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from '@core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -7,7 +7,7 @@ export class RawCommandNode extends CommandNode {
 }
 
 export class RawCommand extends CommandArguments<typeof RawCommandNode> {
-  protected NodeType = RawCommandNode
+  public NodeType = RawCommandNode
 
   /**
    * Creates an arbitrary command, separating arguments with spaces.
