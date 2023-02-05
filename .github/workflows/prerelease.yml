@@ -20,6 +20,6 @@ jobs:
       - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./dist/.npmrc
         env:
           NPM_TOKEN: ${{secrets.npm_token}}
-      - run: cd dist && npm publish dist --tag next
+      - run: cd dist && npm publish --tag next
         env:
           NPM_TOKEN: ${{secrets.npm_token}}
