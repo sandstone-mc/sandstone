@@ -1,8 +1,8 @@
-import { CommandNode } from '@core'
+import { CommandNode } from '#core'
 
 import { CommandArguments } from '../helpers'
 
-import type { MultipleEntitiesArgument } from '@arguments'
+import type { MultipleEntitiesArgument } from '#arguments'
 
 function checkTagName(tag: string) {
   if (!tag.match(/[A-Za-z0-9\-_+.]/g)) {
@@ -40,7 +40,7 @@ export class TagArgumentsCommand extends CommandArguments {
 }
 
 export class TagCommand extends CommandArguments {
-  public NodeType = TagCommandNode
+  protected NodeType = TagCommandNode
 
   /**
    * Controls scoreboard tags on individual entities.

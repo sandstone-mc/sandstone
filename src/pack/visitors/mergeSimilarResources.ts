@@ -1,10 +1,10 @@
 /* eslint-disable dot-notation */
 
-import { AdvancementClass, MCFunctionClass, ResourceNode, TagClass, TagNode } from '@core'
+import { AdvancementClass, MCFunctionClass, ResourceNode, TagClass, TagNode } from '#core'
 
 import { GenericSandstoneVisitor } from './visitor'
 
-import type { ResourceClass } from '@core'
+import type { ResourceClass } from '#core'
 
 export type RootMap = {
   function: NestedMap

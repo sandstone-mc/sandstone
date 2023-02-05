@@ -2,7 +2,7 @@
 
 import { GenericSandstoneVisitor } from './visitor'
 
-import type { GiveCommandNode } from '@commands'
+import type { GiveCommandNode } from '#commands'
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.

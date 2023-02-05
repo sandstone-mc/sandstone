@@ -6,7 +6,7 @@ import type {
 import type {
   AdvancementClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, PredicateClassArguments, RecipeClassArguments, TagClassArguments,
 } from 'sandstone/core/index'
-import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties } from '@utils'
+import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties } from 'sandstone/utils'
 import type { SandstonePack } from './pack'
 
 type Conflicts = {
@@ -88,7 +88,7 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
 
   onConflict
 
-  constructor(public pack: SandstonePack, options: BasePathOptions<N, D>) {
+  constructor(protected pack: SandstonePack, options: BasePathOptions<N, D>) {
     this.namespace = options.namespace as N
 
     // Copy onConflict into an object
@@ -112,7 +112,7 @@ export class BasePathClass<N extends (undefined | string) = (undefined | string)
   }
 
   /** Validates & crafts the name of a resource. */
-  public getName(name: string): string {
+  protected getName(name: string): string {
     if (this.namespace !== undefined && name.includes(':')) {
       throw new Error('Cannot define namespace under a base path.')
     }

@@ -1,8 +1,8 @@
 import type {
   BANNER_PATTERNS, BIOMES, BLOCKS, CAT_VARIANTS, DIMENSIONS, ENTITY_TYPES, FLUIDS, GAME_EVENTS, ITEMS, PAINTING_VARIANTS, POINT_OF_INTEREST_TYPES, REGISTRIES,
-} from '@arguments'
-import type { MCFunctionClass, TagClass } from '@core'
-import type { LiteralUnion } from '@utils'
+} from '#arguments'
+import type { MCFunctionClass, TagClass } from '#core'
+import type { LiteralUnion } from '#utils'
 
 export type HintedTagStringType<T extends REGISTRIES> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :

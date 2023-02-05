@@ -1,8 +1,8 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { GAMEMODES, MultiplePlayersArgument } from '@arguments'
+import type { GAMEMODES, MultiplePlayersArgument } from '#arguments'
 
 // Gamemode command
 
@@ -11,7 +11,7 @@ export class GameModeCommandNode extends CommandNode {
 }
 
 export class GameModeCommand extends CommandArguments {
-  public NodeType = GameModeCommandNode
+  protected NodeType = GameModeCommandNode
 
   /**
    * Sets a player's game mode.

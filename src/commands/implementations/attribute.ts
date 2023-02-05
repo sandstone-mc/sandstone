@@ -1,8 +1,8 @@
-import { CommandNode } from '@core'
+import { CommandNode } from '#core'
 
 import { CommandArguments } from '../helpers'
 
-import type { SingleEntityArgument } from '@arguments'
+import type { SingleEntityArgument } from '#arguments'
 
 // Attribute command
 
@@ -46,7 +46,7 @@ export class AttributeOperationCommand extends CommandArguments {
  * Used to change or read attributes.
  */
 export class AttributeCommand extends CommandArguments {
-  NodeType = AttributeCommandNode
+  protected NodeType = AttributeCommandNode
 
   attribute = (target: SingleEntityArgument, attribute: string) => this.finalCommand([target, attribute])
 }

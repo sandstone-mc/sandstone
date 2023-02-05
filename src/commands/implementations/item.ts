@@ -1,13 +1,13 @@
-import { CommandNode } from '@core/nodes'
-import { coordinatesParser } from '@variables'
+import { CommandNode } from '#core/nodes'
+import { coordinatesParser } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS,
   ITEMS, MultipleEntitiesArgument,
-} from '@arguments'
-import type { ItemModifierClass } from '@core'
+} from '#arguments'
+import type { ItemModifierClass } from '#core'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
@@ -40,7 +40,7 @@ export class ItemSourceCommand extends CommandArguments {
 
 /** Replaces or modifies items in inventories */
 export class ItemCommand extends CommandArguments {
-  public NodeType = ItemCommandNode
+  protected NodeType = ItemCommandNode
 
   /** Applies a modifier to a slot in an inventory. */
   modify = {

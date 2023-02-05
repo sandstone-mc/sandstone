@@ -1,19 +1,19 @@
-import { CommandNode } from '@core/nodes'
-import { coordinatesParser } from '@variables/parsers'
+import { CommandNode } from '#core/nodes'
+import { coordinatesParser } from '#variables/parsers'
 
 import { CommandArguments } from '../helpers'
 
 import type {
   Coordinates, MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES,
-} from '@arguments'
-import type { LiteralUnion } from '@utils'
+} from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 export class PlaySoundCommandNode extends CommandNode {
   command = 'playsound' as const
 }
 
 export class PlaySoundCommand extends CommandArguments {
-  public NodeType = PlaySoundCommandNode
+  protected NodeType = PlaySoundCommandNode
 
   /**
    * Plays a specified sound at a player, in a location, and in a specific volume and pitch.

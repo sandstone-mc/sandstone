@@ -1,32 +1,32 @@
-import { MCFunctionClass } from '@core/index'
-import { ContainerCommandNode } from '@core/nodes'
-import { makeCallable, toMinecraftResourceName } from '@utils'
+import { MCFunctionClass } from '#core/index'
+import { ContainerCommandNode } from '#core/nodes'
+import { makeCallable, toMinecraftResourceName } from '#utils'
 import {
   coordinatesParser, ObjectiveClass, rangeParser, rotationParser,
   Score,
-} from '@variables'
+} from '#variables'
 
 import { CommandArguments, FinalCommandOutput } from '../helpers'
 import { FunctionCommandNode } from './function'
 
-import type { DataPointClass } from '@variables/Data'
+import type { DataPointClass } from 'sandstone/variables/Data'
 import type {
   ANCHORS,
   AXES,
   BLOCKS,
   COMPARISON_OPERATORS,
   Coordinates, DIMENSIONS, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
-} from '@arguments'
-import type { MCFunctionNode, PredicateClass } from '@core/index'
-import type { Node } from '@core/nodes'
-import type { SandstonePack } from '@pack'
-import type { LiteralUnion } from '@utils'
+} from '#arguments'
+import type { MCFunctionNode, PredicateClass } from '#core/index'
+import type { Node } from '#core/nodes'
+import type { SandstonePack } from '#pack'
+import type { LiteralUnion } from '#utils'
 
 // Execute command
 type SubCommand = [subcommand: string, ...args: unknown[]]
 
 class ExecuteCommandPart extends CommandArguments<typeof ExecuteCommandNode> {
-  public nestedExecute = (args: SubCommand, executable = true) => this.subCommand([args], ExecuteCommand, executable)
+  protected nestedExecute = (args: SubCommand, executable = true) => this.subCommand([args], ExecuteCommand, executable)
 }
 
 export type StoreType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double'
@@ -329,7 +329,7 @@ export class ExecuteRotatedAsCommand extends ExecuteCommandPart {
 }
 
 export class ExecuteCommand extends ExecuteCommandPart {
-  public NodeType = ExecuteCommandNode
+  protected NodeType = ExecuteCommandNode
 
   /**
    * Updates the command's position, aligning to its current block position (an integer). Only applies along specified axes.

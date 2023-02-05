@@ -1,16 +1,16 @@
-import { makeClassCallable } from '@utils'
+import { makeClassCallable } from '#utils'
 
 import { ContainerNode } from '../nodes'
 import { CallableResourceClass } from './resource'
 
-import type { TimeArgument } from '@arguments/basics'
-import type { ScheduleType } from '@commands'
-import type { FinalCommandOutput } from '@commands/helpers'
+import type { TimeArgument } from '#arguments/basics'
+import type { ScheduleType } from '#commands'
+import type { FinalCommandOutput } from '#commands/helpers'
 import type {
   ContainerCommandNode, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
-} from '@core'
-import type { ResourcePath } from '@pack'
-import type { BASIC_CONFLICT_STRATEGIES, MakeInstanceCallable } from '@utils'
+} from '#core'
+import type { ResourcePath } from '#pack'
+import type { BASIC_CONFLICT_STRATEGIES, MakeInstanceCallable } from '#utils'
 
 /**
  * A node representing a Minecraft function.
@@ -167,11 +167,11 @@ export type MCFunctionClassArguments = {
 export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
-  public tags: MCFunctionClassArguments['tags']
+  protected tags: MCFunctionClassArguments['tags']
 
-  public lazy: boolean
+  protected lazy: boolean
 
-  public addToSandstoneCore: boolean
+  protected addToSandstoneCore: boolean
 
   constructor(core: SandstoneCore, path: ResourcePath, args: MCFunctionClassArguments) {
     super(core, core.pack.dataPack(), 'mcfunction', 'utf8', MCFunctionNode, path, {
@@ -186,7 +186,7 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     this.tags = args.tags
   }
 
-  public generate = () => {
+  protected generate = () => {
     if (this.addToSandstoneCore && this.lazy) {
       this.core.resourceNodes.add(this.node)
     }

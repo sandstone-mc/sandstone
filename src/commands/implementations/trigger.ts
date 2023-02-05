@@ -1,8 +1,8 @@
-import { CommandNode } from '@core'
+import { CommandNode } from '#core'
 
 import { CommandArguments } from '../helpers'
 
-import type { ObjectiveArgument } from '@arguments'
+import type { ObjectiveArgument } from '#arguments'
 
 export class TriggerCommandNode extends CommandNode {
   command = 'trigger' as const
@@ -25,7 +25,7 @@ export class TriggerArgumentsCommand extends CommandArguments {
 }
 
 export class TriggerCommand extends CommandArguments {
-  public NodeType = TriggerCommandNode
+  protected NodeType = TriggerCommandNode
 
   /**
    * Modifies a scoreboard objective with a "trigger" criterion.

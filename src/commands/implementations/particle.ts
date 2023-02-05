@@ -1,13 +1,13 @@
-import { CommandNode } from '@core/nodes'
-import { arrayToArgsParser } from '@variables'
+import { CommandNode } from '#core/nodes'
+import { arrayToArgsParser } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
 import type {
   BLOCKS, Coordinates,
   ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
-} from '@arguments'
-import type { LiteralUnion } from '@utils'
+} from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 // Particle command
 
@@ -200,7 +200,7 @@ type ParticleCommandType = (
 )
 
 export class ParticleCommand extends CommandArguments {
-  public NodeType = ParticleCommandNode
+  protected NodeType = ParticleCommandNode
 
   particle: ParticleCommandType = (...args: unknown[]) => this.finalCommand([
     args[0],

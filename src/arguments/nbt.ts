@@ -1,4 +1,4 @@
-import type { NBTClass } from '@variables/nbt/NBTs'
+import type { NBTClass } from '#variables/nbt/NBTs'
 
 export type NBTObject = (
     string |

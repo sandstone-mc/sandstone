@@ -1,9 +1,9 @@
-import { CommandNode } from '@core'
-import { JSONTextComponentClass } from '@variables'
+import { CommandNode } from '#core'
+import { JSONTextComponentClass } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { JSONTextComponent, MultiplePlayersArgument, TimeArgument } from '@arguments'
+import type { JSONTextComponent, MultiplePlayersArgument, TimeArgument } from '#arguments'
 
 export class TitleCommandNode extends CommandNode {
   command = 'title' as const
@@ -24,7 +24,7 @@ export class TitleArgumentsCommand extends CommandArguments {
 }
 
 export class TitleCommand extends CommandArguments {
-  public NodeType = TitleCommandNode
+  protected NodeType = TitleCommandNode
 
   /**
    * Controls text displayed on the screen.

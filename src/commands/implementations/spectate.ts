@@ -1,15 +1,15 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { SingleEntityArgument, SinglePlayerArgument } from '@arguments'
+import type { SingleEntityArgument, SinglePlayerArgument } from '#arguments'
 
 export class SpectateCommandNode extends CommandNode {
   command = 'spectate' as const
 }
 
 export class SpectateCommand extends CommandArguments {
-  public NodeType = SpectateCommandNode
+  protected NodeType = SpectateCommandNode
 
   /**
    * Causes a player in Spectator mode to spectate another entity.

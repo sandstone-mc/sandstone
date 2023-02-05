@@ -1,16 +1,16 @@
-import { CommandNode } from '@core/nodes'
-import { coordinatesParser } from '@variables'
+import { CommandNode } from '#core/nodes'
+import { coordinatesParser } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { Coordinates, Rotation } from '@arguments'
+import type { Coordinates, Rotation } from '#arguments'
 
 export class SetWorldSpawnCommandNode extends CommandNode {
   command = 'setworldspawn' as const
 }
 
 export class SetWorldSpawnCommand extends CommandArguments {
-  public NodeType = SetWorldSpawnCommandNode
+  protected NodeType = SetWorldSpawnCommandNode
 
   /**
    * Sets the world spawn.

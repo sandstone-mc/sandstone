@@ -1,17 +1,17 @@
-import { validateIntegerRange } from '@commands/validators'
-import { CommandNode } from '@core/nodes'
+import { validateIntegerRange } from '#commands/validators'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MOB_EFFECTS, MultipleEntitiesArgument } from '@arguments'
-import type { LiteralUnion } from '@utils'
+import type { MOB_EFFECTS, MultipleEntitiesArgument } from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 export class EffectCommandNode extends CommandNode {
   command = 'effect' as const
 }
 
 export class EffectCommand extends CommandArguments {
-  public NodeType = EffectCommandNode
+  protected NodeType = EffectCommandNode
 
   /**
    * Gives an effect.

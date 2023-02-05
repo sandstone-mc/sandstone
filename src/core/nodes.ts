@@ -1,6 +1,6 @@
-import type { SandstonePack } from '@pack'
 import type { MCFunctionNode } from './resources'
 import type { SandstoneCore } from './sandstoneCore'
+import type { SandstonePack } from '#pack'
 
 export abstract class Node {
   constructor(public sandstoneCore: SandstoneCore) { }

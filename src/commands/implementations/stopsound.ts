@@ -1,16 +1,16 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES } from '@arguments'
-import type { LiteralUnion } from '@utils'
+import type { MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES } from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 export class StopSoundCommandNode extends CommandNode {
   command = 'stopsound' as const
 }
 
 export class StopSoundCommand extends CommandArguments {
-  public NodeType = StopSoundCommandNode
+  protected NodeType = StopSoundCommandNode
 
   /**
    * Stops a given sound.

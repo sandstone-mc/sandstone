@@ -4,9 +4,9 @@ import type { ItemModifierFunction } from './itemModifier'
 import type { PredicateCondition } from './predicate'
 import type {
   ITEMS,
-} from '@arguments/generated'
-import type { LootTableClass, TagClass } from '@core'
-import type { LiteralUnion, WithMCNamespace } from '@utils'
+} from '#arguments/generated'
+import type { LootTableClass, TagClass } from '#core'
+import type { LiteralUnion, WithMCNamespace } from '#utils'
 
 export class XXXXAIJIA {}
 type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {

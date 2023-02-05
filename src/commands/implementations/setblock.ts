@@ -1,17 +1,17 @@
-import { CommandNode } from '@core/nodes'
-import { coordinatesParser } from '@variables'
+import { CommandNode } from '#core/nodes'
+import { coordinatesParser } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { BLOCKS, Coordinates } from '@arguments'
-import type { LiteralUnion } from '@utils'
+import type { BLOCKS, Coordinates } from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 export class SetBlockCommandNode extends CommandNode {
   command = 'setblock' as const
 }
 
 export class SetBlockCommand extends CommandArguments {
-  public NodeType = SetBlockCommandNode
+  protected NodeType = SetBlockCommandNode
 
   /**
    * Changes a block to another block.

@@ -1,4 +1,4 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -7,7 +7,7 @@ export class ReloadCommandNode extends CommandNode {
 }
 
 export class ReloadCommand extends CommandArguments {
-  public NodeType = ReloadCommandNode
+  protected NodeType = ReloadCommandNode
 
   /**
    * Reloads the current data packs.

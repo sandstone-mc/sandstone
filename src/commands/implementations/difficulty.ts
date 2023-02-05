@@ -1,15 +1,15 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { DIFFICULTIES } from '@arguments'
+import type { DIFFICULTIES } from '#arguments'
 
 export class DifficultyCommandNode extends CommandNode {
   command = 'difficulty' as const
 }
 
 export class DifficultyCommand extends CommandArguments {
-  public NodeType = DifficultyCommandNode
+  protected NodeType = DifficultyCommandNode
 
   /**
    * Sets the new difficulty level. Must be one of the following:

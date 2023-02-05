@@ -1,21 +1,21 @@
-import { makeClassCallable } from '@utils'
+import { makeClassCallable } from 'sandstone/utils'
 
 import { JSONTextComponentClass } from './JSONTextComponentClass'
 import { Score } from './Score'
 
-import type { LiteralUnion, MakeInstanceCallable } from '@utils'
+import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type { SandstonePack } from '../pack'
-import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from '@arguments'
+import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from '#arguments'
 
 export class _RawObjectiveClass {
   display: JSONTextComponentClass | undefined
 
   _displayRaw: JSONTextComponent | undefined
 
-  public creator: 'user' | 'sandstone'
+  protected creator: 'user' | 'sandstone'
 
   constructor(
-    public sandstonePack: SandstonePack,
+    protected sandstonePack: SandstonePack,
     public name: string,
     public criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy',
     display: JSONTextComponent | undefined,

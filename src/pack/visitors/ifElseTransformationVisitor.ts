@@ -1,10 +1,10 @@
-import { ExecuteCommandNode } from '@commands'
-import { IfNode, NotNode, ScoreConditionNode } from '@flow'
-import { ObjectiveClass } from '@variables'
+import { ExecuteCommandNode } from '#commands'
+import { IfNode, NotNode, ScoreConditionNode } from '#flow'
+import { ObjectiveClass } from '#variables'
 
 import { GenericSandstoneVisitor } from './visitor'
 
-import type { ConditionNode, ElseNode } from '@flow'
+import type { ConditionNode, ElseNode } from '#flow'
 
 function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   yield node

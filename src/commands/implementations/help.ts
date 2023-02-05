@@ -1,4 +1,4 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -7,7 +7,7 @@ export class HelpCommandNode extends CommandNode {
 }
 
 export class HelpCommand extends CommandArguments {
-  public NodeType = HelpCommandNode
+  protected NodeType = HelpCommandNode
 
   /**
    * Shows usages for one command, or lists of commands.

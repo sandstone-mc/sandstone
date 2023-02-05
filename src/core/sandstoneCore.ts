@@ -1,6 +1,6 @@
 import path from 'path'
 
-import type { SandstonePack } from '@pack'
+import type { SandstonePack } from 'sandstone'
 import type { MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
 import type { ResourceNode } from './resources/resource'
 import type { GenericCoreVisitor } from './visitors'
@@ -53,11 +53,11 @@ export class SandstoneCore {
    */
   enterMCFunction = (mcfunction: MCFunctionClass): MCFunctionNode => {
     /*
-     * We cannot simply call mcfunction.node, because .node is public to avoid polluting the autocompleted API.
+     * We cannot simply call mcfunction.node, because .node is protected to avoid polluting the autocompleted API.
      * However, TypeScript gives us a backdoor using this dynamic call, in a fully type-safe way.
      */
     // eslint-disable-next-line prefer-destructuring, dot-notation
-    const node = mcfunction.node
+    const node = mcfunction['node']
     this.mcfunctionStack.push(node)
     return node
   }
@@ -73,7 +73,7 @@ export class SandstoneCore {
 
     // First, generate all the MCFunctions.
     for (const { resource } of this.resourceNodes) {
-      resource.generate()
+      resource['generate']()
     }
 
     // Then, transform all the nodes with the given visitors.

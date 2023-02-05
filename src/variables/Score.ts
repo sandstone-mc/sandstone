@@ -1,4 +1,4 @@
-import { SelectorClass } from '@variables/Selector'
+import { SelectorClass } from '#variables/Selector'
 
 import { ComponentClass } from './abstractClasses'
 import { rangeParser } from './parsers'
@@ -9,8 +9,8 @@ import type { DATA_TYPES, DataPointClass } from './Data'
 import type { ObjectiveClass } from './Objective'
 import type {
   COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
-} from '@arguments'
-import type { ConditionClass } from '@variables'
+} from '#arguments'
+import type { ConditionClass } from '#variables'
 
 type PlayersTarget = number | MultipleEntitiesArgument
 
@@ -59,7 +59,7 @@ export class Score extends ComponentClass implements ConditionClass {
     } as const
   }
 
-  public _toChatComponent(): JSONTextComponent {
+  protected _toChatComponent(): JSONTextComponent {
     return {
       score: { name: this.target, objective: this.objective.name },
     }

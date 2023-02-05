@@ -1,16 +1,16 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MessageOrSelector } from '@arguments'
-import type { AtLeastOne } from '@utils'
+import type { MessageOrSelector } from '#arguments'
+import type { AtLeastOne } from '#utils'
 
 export class TeamMessageCommandNode extends CommandNode {
   command = 'tm' as const
 }
 
 export class TeamMessageCommand extends CommandArguments {
-  public NodeType = TeamMessageCommandNode
+  protected NodeType = TeamMessageCommandNode
 
   /**
    * Specifies a message to send to team.

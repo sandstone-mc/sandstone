@@ -1,16 +1,16 @@
-import { toMinecraftResourceName } from '@utils'
+import { toMinecraftResourceName } from 'sandstone/utils'
 
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
 import type {
   HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON,
-} from '@arguments/index'
-import type { BASIC_CONFLICT_STRATEGIES } from '@utils'
+} from 'sandstone/arguments/index'
+import type { BASIC_CONFLICT_STRATEGIES } from 'sandstone/utils'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { MCFunctionClass } from './mcfunction'
 import type { ResourceClassArguments, ResourceNode } from './resource'
-import type { ResourcePath } from '@pack'
+import type { ResourcePath } from '#pack'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass {
   return typeof v === 'function'

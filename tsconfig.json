@@ -2,54 +2,51 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@arguments": [
-        "./src/arguments"
+      "sandstone": [
+        "./src/index.ts"
       ],
-      "@arguments/*": [
-        "./src/arguments/*"
-      ],
-      "@commands": [
-        "./src/commands"
-      ],
-      "@commands/*": [
-        "./src/commands/*"
-      ],
-      "@core": [
-        "./src/core"
-      ],
-      "@core/*": [
-        "./src/core/*"
-      ],
-      "@pack": [
-        "./src/pack"
-      ],
-      "@pack/*": [
-        "./src/pack/*"
-      ],
-      "@resources": [
-        "./src/resources"
-      ],
-      "@resources/*": [
-        "./src/resources/*"
-      ],
-      "@variables": [
-        "./src/variables"
-      ],
-      "@variables/*": [
-        "./src/variables/*"
-      ],
-      "@flow": [
-        "./src/flow"
-      ],
-      "@flow/*": [
-        "./src/flow/*"
-      ],
-      "@utils": [
-        "./src/utils"
-      ],
-      "@/*": [
+      "sandstone/*": [
         "./src/*"
       ],
+      "#arguments": [
+        "src/arguments"
+      ],
+      "#arguments/*": [
+        "src/arguments/*"
+      ],
+      "#commands": [
+        "src/commands"
+      ],
+      "#commands/*": [
+        "src/commands/*"
+      ],
+      "#core": [
+        "src/core"
+      ],
+      "#core/*": [
+        "src/core/*"
+      ],
+      "#flow": [
+        "src/flow"
+      ],
+      "#flow/*": [
+        "src/flow/*"
+      ],
+      "#pack": [
+        "src/pack"
+      ],
+      "#pack/*": [
+        "src/pack/*"
+      ],
+      "#variables": [
+        "src/variables"
+      ],
+      "#variables/*": [
+        "src/variables/*"
+      ],
+      "#utils": [
+        "src/utils"
+      ]
     },
     /* Basic Options */
     "types": [

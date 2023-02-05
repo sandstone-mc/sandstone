@@ -1,16 +1,16 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MessageOrSelector, MultiplePlayersArgument } from '@arguments'
-import type { AtLeastOne } from '@utils'
+import type { MessageOrSelector, MultiplePlayersArgument } from '#arguments'
+import type { AtLeastOne } from '#utils'
 
 export class TellCommandNode extends CommandNode<[MultiplePlayersArgument, AtLeastOne<MessageOrSelector>]> {
   command = 'w' as const
 }
 
 export class TellCommand extends CommandArguments {
-  public NodeType = TellCommandNode
+  protected NodeType = TellCommandNode
 
   /**
    * Sends a private message to one or more players.

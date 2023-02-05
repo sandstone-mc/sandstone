@@ -1,8 +1,8 @@
-import { CommandNode } from '@core'
+import { CommandNode } from '#core'
 
 import { CommandArguments } from '../helpers'
 
-import type { SingleEntityArgument } from '@arguments'
+import type { SingleEntityArgument } from '#arguments'
 
 export class RideCommandNode extends CommandNode {
   command = 'ride' as const
@@ -23,7 +23,7 @@ export class RideArgumentsCommand extends CommandArguments {
 }
 
 export class RideCommand extends CommandArguments {
-  public NodeType = RideCommandNode
+  protected NodeType = RideCommandNode
 
   /**
    * Mounts or dismounts an individual entity

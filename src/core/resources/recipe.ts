@@ -3,8 +3,8 @@ import { ResourceClass } from './resource'
 
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
-import type { MultiplePlayersArgument, RecipeJSON } from '@arguments'
-import type { ResourcePath } from '@pack'
+import type { MultiplePlayersArgument, RecipeJSON } from '#arguments'
+import type { ResourcePath } from '#pack'
 
 /**
  * A node representing a Minecraft recipe.

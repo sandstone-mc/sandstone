@@ -1,9 +1,9 @@
 import * as util from 'util'
-import { makeCallable } from '@utils'
+import { makeCallable } from '#utils'
 
 import { parseNBT } from './parser'
 
-import type { NBTObject, RootNBT } from '@arguments'
+import type { NBTObject, RootNBT } from '#arguments'
 
 export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string;

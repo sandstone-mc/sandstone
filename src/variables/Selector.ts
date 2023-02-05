@@ -1,18 +1,18 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { nbtStringifier } from '@variables/nbt/NBTs'
-import { rangeParser } from '@variables/parsers'
+import { nbtStringifier } from '#variables/nbt/NBTs'
+import { rangeParser } from '#variables/parsers'
 
 import { ComponentClass } from './abstractClasses'
 
-import type {
-  ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
-} from '@arguments'
-import type { PredicateClass } from '@core'
-import type { SandstonePack } from '@pack'
 import type { LiteralUnion } from '../utils'
 import type { ConditionClass } from './abstractClasses'
 import type { NotNBT } from './nbt/NBTs'
+import type {
+  ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
+} from '#arguments'
+import type { PredicateClass } from '#core'
+import type { SandstonePack } from '#pack'
 
 type ScoreArgument = Record<string, Range>
 
@@ -199,7 +199,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
   arguments: SelectorProperties<IsSingle, IsPlayer>
 
   constructor(
-    public sandstonePack: SandstonePack,
+    protected sandstonePack: SandstonePack,
     public target: '@s' | '@p' | '@a' | '@e' | '@r',
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
@@ -296,13 +296,13 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
     return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }
 
-  public _toChatComponent(): TextComponentObject {
+  protected _toChatComponent(): TextComponentObject {
     return {
       selector: this.toString(),
     }
   }
 
-  public toJSON() {
+  protected toJSON() {
     return this.toString()
   }
 }

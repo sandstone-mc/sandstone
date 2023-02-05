@@ -1,4 +1,4 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
@@ -9,7 +9,7 @@ export class SayCommandNode extends CommandNode<['string']> {
 }
 
 export class SayCommand extends CommandArguments {
-  public NodeType = SayCommandNode
+  protected NodeType = SayCommandNode
 
   /**
    * /say a message.

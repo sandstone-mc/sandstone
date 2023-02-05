@@ -1,9 +1,9 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MultiplePlayersArgument } from '@arguments'
-import type { AdvancementClass } from '@core'
+import type { MultiplePlayersArgument } from '#arguments'
+import type { AdvancementClass } from '#core'
 
 // Advancement command
 
@@ -69,7 +69,7 @@ export class AdvancementArgumentsCommand extends CommandArguments {
 
 /** Gives or takes an advancement from one or more players. */
 export class AdvancementCommand extends CommandArguments {
-  NodeType = AdvancementCommandNode
+  protected NodeType = AdvancementCommandNode
 
   /**
    * Adds specified advancements.

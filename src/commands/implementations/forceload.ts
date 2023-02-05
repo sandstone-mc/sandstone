@@ -1,10 +1,10 @@
-import { CommandNode } from '@core/nodes'
-import { coordinatesParser } from '@variables'
+import { CommandNode } from '#core/nodes'
+import { coordinatesParser } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { ColumnCoordinates } from '@arguments'
-import type { VectorClass } from '@variables'
+import type { ColumnCoordinates } from '#arguments'
+import type { VectorClass } from '#variables'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string): number[] {
@@ -57,7 +57,7 @@ export class ForceLoadCommandNode extends CommandNode {
  * Force chunks to load constantly or not.
  */
 export class ForceLoadCommand extends CommandArguments {
-  public NodeType = ForceLoadCommandNode
+  protected NodeType = ForceLoadCommandNode
 
   /**
    * Forces the chunk at the `from` position (through to `to` if set) in the dimension of the command's execution to be loaded constantly.

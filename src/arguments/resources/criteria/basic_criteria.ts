@@ -1,8 +1,8 @@
 import type { NumberProvider } from './utils'
 import type {
   BLOCKS, DIMENSIONS, ENCHANTMENTS, MOB_EFFECTS,
-} from '@arguments'
-import type { LiteralUnion } from '@utils'
+} from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 // All the possible criteria
 export type BlockIdCriterion = LiteralUnion<BLOCKS>

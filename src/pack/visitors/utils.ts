@@ -1,6 +1,6 @@
-import { AdvancementClass, MCFunctionClass } from '@core'
+import { AdvancementClass, MCFunctionClass } from '#core'
 
-import type { ResourceClass } from '@core'
+import type { ResourceClass } from '#core'
 
 export function getResourceType(resource: ResourceClass) {
   if (resource instanceof MCFunctionClass) {

@@ -1,10 +1,10 @@
-import { CommandNode } from '@core/nodes'
-import { JSONTextComponentClass } from '@variables'
+import { CommandNode } from '#core/nodes'
+import { JSONTextComponentClass } from '#variables'
 
 import { CommandArguments } from '../helpers.js'
 
-import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from '@arguments'
-import type { LiteralUnion } from '@utils'
+import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from '#arguments'
+import type { LiteralUnion } from '#utils'
 
 // Bossbar command
 export class BossBarCommandNode extends CommandNode {
@@ -12,7 +12,7 @@ export class BossBarCommandNode extends CommandNode {
 }
 
 export class BossBarCommand extends CommandArguments {
-  NodeType = BossBarCommandNode
+  protected NodeType = BossBarCommandNode
 
   /**
    * Create a new boss bar.

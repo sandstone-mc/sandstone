@@ -1,11 +1,11 @@
-import { GenericCoreVisitor } from '@core/visitors'
+import { GenericCoreVisitor } from '#core/visitors'
 
 import type {
   AdvancementCommandNode, AttributeCommandNode, CloneCommandNode, DataCommandNode, ExecuteCommandNode, FunctionCommandNode, GameRuleCommandNode, SayCommandNode,
-} from '@commands'
-import type { GenericNodeVisitor } from '@core/visitors'
-import type { ElseNode, IfNode } from '@flow'
-import type { SandstonePack } from '@pack'
+} from '#commands'
+import type { GenericNodeVisitor } from '#core/visitors'
+import type { ElseNode, IfNode } from '#flow'
+import type { SandstonePack } from '#pack'
 
 export class GenericSandstoneVisitor extends GenericCoreVisitor {
   constructor(public readonly pack: SandstonePack) {

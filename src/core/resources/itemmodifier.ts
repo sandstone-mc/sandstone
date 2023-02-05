@@ -5,8 +5,8 @@ import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ItemModifierJSON, MultipleEntitiesArgument,
-} from '@arguments'
-import type { ResourcePath } from '@pack'
+} from '#arguments'
+import type { ResourcePath } from '#pack'
 
 /**
  * A node representing a Minecraft item modifier.

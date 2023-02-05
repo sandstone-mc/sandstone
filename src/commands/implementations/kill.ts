@@ -1,15 +1,15 @@
-import { CommandNode } from '@core/nodes'
+import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../helpers'
 
-import type { MultipleEntitiesArgument } from '@arguments'
+import type { MultipleEntitiesArgument } from '#arguments'
 
 export class KillCommandNode extends CommandNode {
   command = 'kill' as const
 }
 
 export class KillCommand extends CommandArguments {
-  public NodeType = KillCommandNode
+  protected NodeType = KillCommandNode
 
   /**
    * Kills entities (players, mobs, items, etc.).

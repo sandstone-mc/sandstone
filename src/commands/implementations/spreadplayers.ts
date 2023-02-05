@@ -1,17 +1,17 @@
-import { CommandNode } from '@core'
-import { coordinatesParser } from '@variables'
+import { CommandNode } from '#core'
+import { coordinatesParser } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
 import type { FinalCommandOutput } from '../helpers'
-import type { ColumnCoordinates, MultipleEntitiesArgument } from '@arguments'
+import type { ColumnCoordinates, MultipleEntitiesArgument } from '#arguments'
 
 export class SpreadPlayersNode extends CommandNode {
   command = 'spreadplayers' as const
 }
 
 export class SpreadPlayersCommand extends CommandArguments<typeof SpreadPlayersNode> {
-  public NodeType = SpreadPlayersNode
+  protected NodeType = SpreadPlayersNode
 
   spreadplayers: (
     (

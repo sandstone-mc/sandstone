@@ -4,9 +4,9 @@ import { Score } from './Score'
 
 import type {
   Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument,
-} from '@arguments'
-import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from '@commands/implementations'
-import type { SandstonePack } from '@pack'
+} from '#arguments'
+import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from '#commands/implementations'
+import type { SandstonePack } from '#pack'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 
@@ -35,7 +35,7 @@ function pathToString(path: DATA_PATH[]) {
 }
 
 export class TargetlessDataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
-  constructor(public sandstonePack: SandstonePack, public type: TYPE) {}
+  constructor(protected sandstonePack: SandstonePack, public type: TYPE) {}
 
   target = (target: DATA_TARGET[TYPE]) => new DataClass(this.sandstonePack, this.type, target)
 
@@ -45,7 +45,7 @@ export class TargetlessDataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
 export class TargetlessDataPointClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   path
 
-  constructor(public sandstonePack: SandstonePack, public type: TYPE, path: DATA_PATH[]) {
+  constructor(protected sandstonePack: SandstonePack, public type: TYPE, path: DATA_PATH[]) {
     this.path = pathToString(path)
   }
 
@@ -57,7 +57,7 @@ export class TargetlessDataPointClass<TYPE extends DATA_TYPES = DATA_TYPES> {
 export class DataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   currentTarget
 
-  constructor(public sandstonePack: SandstonePack, public type: TYPE, target: DATA_TARGET[TYPE]) {
+  constructor(protected sandstonePack: SandstonePack, public type: TYPE, target: DATA_TARGET[TYPE]) {
     this.currentTarget = target
   }
 
@@ -92,7 +92,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionText
 
   select = (...path: DATA_PATH[]) => new DataPointClass(this.sandstonePack, this.type, this.currentTarget, [this.path, ...path])
 
-  public modify = (cb: (data: DataModifyTypeCommand) => DataModifyValuesCommand, value: NBTObject | DataPointClass) => {
+  protected modify = (cb: (data: DataModifyTypeCommand) => DataModifyValuesCommand, value: NBTObject | DataPointClass) => {
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     // The value is another Data Point
@@ -105,14 +105,14 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionText
     data.value(value)
   }
 
-  public string = (cb: (data: DataModifyTypeCommand) => DataModifyValuesCommand, value: DataPointClass, start: number, end?: number) => {
+  protected string = (cb: (data: DataModifyTypeCommand) => DataModifyValuesCommand, value: DataPointClass, start: number, end?: number) => {
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     if (!end) data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start)
     else data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start, end)
   }
 
-  public executeStore = (storeType: StoreType, scale: number) => this.sandstonePack.commands.execute.store.result[this.type](this.currentTarget as any, this.path, storeType as StoreType, scale)
+  protected executeStore = (storeType: StoreType, scale: number) => this.sandstonePack.commands.execute.store.result[this.type](this.currentTarget as any, this.path, storeType as StoreType, scale)
 
   set: (
     /**
@@ -178,7 +178,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionText
     value: ['if', 'data', this.type, this.currentTarget, this.path],
   })
 
-  public _toChatComponent = () => ({
+  protected _toChatComponent = () => ({
     nbt: this.path,
     [this.type]: this.currentTarget,
   }) as unknown as JSONTextComponent

@@ -1,4 +1,4 @@
-import type { JSONTextComponent } from '@arguments'
+import type { JSONTextComponent } from '#arguments'
 
 function toComponent(c: any): JSONTextComponent {
   return c._toChatComponent?.() ?? c.toJSON?.() ?? c

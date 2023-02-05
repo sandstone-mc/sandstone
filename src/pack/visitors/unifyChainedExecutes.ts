@@ -1,4 +1,4 @@
-import { ExecuteCommandNode } from '@commands'
+import { ExecuteCommandNode } from '#commands'
 
 import { GenericSandstoneVisitor } from './visitor'
 

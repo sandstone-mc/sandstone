@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
   "description": "Sandstone, a Typescript library for Minecraft datapacks.",
-  "version": "0.14.0-alpha.18",
+  "version": "0.14.0-alpha.15",
   "contributors": [
     {
       "name": "TheMrZZ - Florian ERNST",
@@ -22,8 +22,7 @@
     "nanoid": "^3.1.30",
     "nearley": "^2.20.1",
     "node-fetch": "^3.3.0",
-    "object-hash": "^2.2.0",
-    "ttypescript": "^1.5.15"
+    "object-hash": "^2.2.0"
   },
   "devDependencies": {
     "@types/module-alias": "^2.0.1",
@@ -44,6 +43,7 @@
     "husky": "^7.0.4",
     "prettier": "^2.5.1",
     "ts-node": "^10.7.0",
+    "tsup": "^5.12.4",
     "typescript": "^4.7.0-dev.20220424"
   },
   "directories": {
@@ -73,15 +73,113 @@
     "url": "git+https://github.com/sandstone-mc/sandstone.git"
   },
   "scripts": {
-    "build": "tsc --noEmit && npm run fast-build",
-    "fast-build": "ttsc && node scripts/setupPackage.js",
+    "build": "tsup --onSuccess \"npm run setup\"",
     "watch": "npm run build -- --watch",
+    "build-types": "tsc --emitDeclarationOnly",
     "setup-package": "node ./scripts/setupPackage.mjs",
-    "setup": "npm run setup-package && echo ✔️  Successfully built Sandstone.",
+    "setup": "npm run build-types && npm run setup-package && echo ✔️  Successfully built Sandstone.",
     "build-pack": "npm run build && cd dist && npm pack",
     "publishToNpm": "npm run build && npm publish",
     "format": "eslint src --cache --fix --quiet"
   },
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts"
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "imports": {
+    "#arguments": "sandstone/arguments",
+    "#arguments/*": "sandstone/arguments/*",
+    "#commands": "sandstone/commands",
+    "#commands/*": "sandstone/commands/*",
+    "#core": "sandstone/core",
+    "#core/*": "sandstone/core/*",
+    "#flow": "sandstone/flow",
+    "#flow/*": "sandstone/flow/*",
+    "#pack": "sandstone/pack",
+    "#pack/*": "sandstone/pack/*",
+    "#variables": "sandstone/variables",
+    "#variables/*": "sandstone/variables/*",
+    "#utils": "sandstone/utils"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.mjs",
+      "default": "./dist/*.js"
+    },
+    "./arguments": {
+      "types": "./dist/arguments/index.d.ts",
+      "import": "./dist/arguments/index.mjs",
+      "default": "./dist/arguments/index.js"
+    },
+    "./arguments/generated": {
+      "types": "./dist/arguments/generated/index.d.ts",
+      "import": "./dist/arguments/generated/index.mjs",
+      "default": "./dist/arguments/generated/index.js"
+    },
+    "./arguments/resources": {
+      "types": "./dist/arguments/resources/index.d.ts",
+      "import": "./dist/arguments/resources/index.mjs",
+      "default": "./dist/arguments/resources/index.js"
+    },
+    "./arguments/resources/criteria": {
+      "types": "./dist/arguments/resources/criteria/index.d.ts",
+      "import": "./dist/arguments/resources/criteria/index.mjs",
+      "default": "./dist/arguments/resources/criteria/index.js"
+    },
+    "./commands": {
+      "types": "./dist/commands/index.d.ts",
+      "import": "./dist/commands/index.mjs",
+      "default": "./dist/commands/index.js"
+    },
+    "./commands/implementations": {
+      "types": "./dist/commands/implementations/index.d.ts",
+      "import": "./dist/commands/implementations/index.mjs",
+      "default": "./dist/commands/implementations/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.mjs",
+      "default": "./dist/core/index.js"
+    },
+    "./core/resources": {
+      "types": "./dist/core/resources/index.d.ts",
+      "import": "./dist/core/resources/index.mjs",
+      "default": "./dist/core/resources/index.js"
+    },
+    "./flow": {
+      "types": "./dist/flow/index.d.ts",
+      "import": "./dist/flow/index.mjs",
+      "default": "./dist/flow/index.js"
+    },
+    "./flow/conditions": {
+      "types": "./dist/flow/conditions/index.d.ts",
+      "import": "./dist/flow/conditions/index.mjs",
+      "default": "./dist/flow/conditions/index.js"
+    },
+    "./pack": {
+      "types": "./dist/pack/index.d.ts",
+      "import": "./dist/pack/index.mjs",
+      "default": "./dist/pack/index.js"
+    },
+    "./pack/visitors": {
+      "types": "./dist/pack/visitors/index.d.ts",
+      "import": "./dist/pack/visitors/index.mjs",
+      "default": "./dist/pack/visitors/index.js"
+    },
+    "./variables": {
+      "types": "./dist/variables/index.d.ts",
+      "import": "./dist/variables/index.mjs",
+      "default": "./dist/variables/index.js"
+    },
+    "./variables/nbt": {
+      "types": "./dist/variables/nbt/index.d.ts",
+      "import": "./dist/variables/nbt/index.mjs",
+      "default": "./dist/variables/nbt/index.js"
+    }
+  }
 }

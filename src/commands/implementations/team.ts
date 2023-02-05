@@ -1,9 +1,9 @@
-import { CommandNode } from '@core'
-import { JSONTextComponentClass } from '@variables'
+import { CommandNode } from '#core'
+import { JSONTextComponentClass } from '#variables'
 
 import { CommandArguments } from '../helpers'
 
-import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from '@arguments'
+import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from '#arguments'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'
@@ -24,7 +24,7 @@ export class TeamCommandNode extends CommandNode {
 }
 
 export class TeamCommand extends CommandArguments {
-  public NodeType = TeamCommandNode
+  protected NodeType = TeamCommandNode
 
   /**
    * Creates a new team.

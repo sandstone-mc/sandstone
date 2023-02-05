@@ -1,10 +1,10 @@
-import { SandstoneCommands } from '@commands'
+import { SandstoneCommands } from '#commands'
 import {
   AdvancementClass, ItemModifierClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, SandstoneCore, TagClass, TrimMaterialClass, TrimPatternClass,
-} from '@core'
-import { Flow } from '@flow'
-import { ObjectiveClass } from '@variables'
-import { DataPointClass } from '@variables/Data'
+} from '#core'
+import { Flow } from '#flow'
+import { ObjectiveClass } from '#variables'
+import { DataPointClass } from '#variables/Data'
 
 import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
@@ -15,13 +15,13 @@ import {
 
 import type {
   AdvancementJSON, ItemModifierJSON, JSONTextComponent, LootTableJSON, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, TagValuesJSON, TrimMaterialJSON, TrimPatternJSON,
-} from '@arguments'
+} from '#arguments'
 import type {
   // eslint-disable-next-line max-len
   AdvancementClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, Node, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
-} from '@core'
-import type { LiteralUnion } from '@utils'
-import type { Score } from '@variables/Score'
+} from '#core'
+import type { LiteralUnion } from '#utils'
+import type { Score } from '#variables/Score'
 
 export type ResourcePath = string[]
 

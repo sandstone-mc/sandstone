@@ -1,4 +1,4 @@
-import type { ObjectiveClass } from '@variables'
+import type { ObjectiveClass } from '#variables'
 
 /*
  * Utility types
