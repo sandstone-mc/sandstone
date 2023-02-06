@@ -12,10 +12,12 @@ export class InitConstantsVisitor extends GenericSandstoneVisitor {
     let constants = [...pack.constants.values()]
     constants = constants.filter((item: number, index) => constants.indexOf(item) === index)
 
-    core.insideMCFunction(pack.getInitMCFunction(), () => {
-      for (const constant of constants) {
-        commands.scoreboard.players.set(constant, pack.rootObjective, constant)
-      }
-    })
+    if (constants.length !== 0) {
+      core.insideMCFunction(pack.getInitMCFunction(), () => {
+        for (const constant of constants) {
+          commands.scoreboard.players.set(constant, pack.rootObjective, constant)
+        }
+      })
+    }
   }
 }

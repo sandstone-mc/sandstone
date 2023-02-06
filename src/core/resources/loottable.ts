@@ -7,7 +7,6 @@ import type { ResourceClassArguments, ResourceNode } from './resource'
 import type {
   Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
 } from '#arguments'
-import type { ResourcePath } from '#pack'
 
 /**
  * A node representing a Minecraft loot table.
@@ -25,13 +24,13 @@ export type LootTableClassArguments = {
    * The loot table's JSON.
    */
   lootTable: LootTableJSON
-} & ResourceClassArguments
+} & ResourceClassArguments<'default'>
 
 export class LootTableClass extends ResourceClass<LootTableNode> {
   public lootTableJSON: NonNullable<LootTableClassArguments['lootTable']>
 
-  constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: LootTableClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', LootTableNode, path, args)
+  constructor(sandstoneCore: SandstoneCore, name: string, args: LootTableClassArguments) {
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', LootTableNode, sandstoneCore.pack.resourceToPath(name, ['loot_tables']), args)
 
     this.lootTableJSON = args.lootTable
   }

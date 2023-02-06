@@ -4,7 +4,6 @@ import { ResourceClass } from './resource'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 import type { PredicateJSON } from '#arguments'
-import type { ResourcePath } from '#pack'
 
 /**
  * A node representing a Minecraft predicate.
@@ -22,16 +21,18 @@ export type PredicateClassArguments = {
    * The predicate's JSON.
    */
   predicate: PredicateJSON
-} & ResourceClassArguments
+} & ResourceClassArguments<'list'>
 
 export class PredicateClass extends ResourceClass<PredicateNode> {
   public predicateJSON: NonNullable<PredicateClassArguments['predicate']>
 
-  constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: PredicateClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', PredicateNode, path, args)
+  constructor(sandstoneCore: SandstoneCore, name: string, args: PredicateClassArguments) {
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', PredicateNode, sandstoneCore.pack.resourceToPath(name, ['predicates']), args)
 
     this.predicateJSON = args.predicate
   }
+
+  // TODO: Add list methods
 
   /**
    * @internal

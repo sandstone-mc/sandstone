@@ -10,22 +10,25 @@ import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LogVisitor,
-  MergeSimilarResourcesVisitor, MinifySandstoneResourcesNamesVisitor, SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
+  MergeSimilarResourcesVisitor, SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
 } from './visitors'
 
 import type {
-  AdvancementJSON, ItemModifierJSON, JSONTextComponent, LootTableJSON, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, TagValuesJSON, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON, ItemModifierJSON, JSONTextComponent, LootTableJSON, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from '#arguments'
 import type {
+  _RawMCFunctionClass,
   // eslint-disable-next-line max-len
   AdvancementClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, Node, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
 } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { LiteralUnion, MakeInstanceCallable } from '#utils'
 import type { Score } from '#variables/Score'
 
 export type ResourcePath = string[]
 
 const conflictDefaults = (resourceType: string) => (process.env.GENERAL_CONFLICT_STRATEGY ?? process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`]) as string
+
+let startTickedLoops: MCFunctionClass
 
 /** relativePath can have variables $worldName$ & $packName$ */
 export type handlerReadFile = (relativePath: string) => Promise<void>
@@ -124,6 +127,8 @@ export class SandstonePack {
 
   constants: Set<number>
 
+  tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass>>
+
   constructor(public defaultNamespace: string, public packUid: string) {
     this.core = new SandstoneCore(this)
     this.commands = new SandstoneCommands(this)
@@ -135,19 +140,20 @@ export class SandstonePack {
     this.flow = new Flow(this.core)
     this.objectives = new Set()
     this.constants = new Set()
+    this.tickedLoops = {}
   }
 
-  resourceNameToPath = (resourceName: string): ResourcePath => {
+  resourceToPath = (name: string, resourceFolders: string[]): ResourcePath => {
     let namespace = this.defaultNamespace
-    let fullName = resourceName
+    let fullName = name
 
-    if (resourceName.includes(':')) {
-      ([namespace, fullName] = resourceName.split(':'))
+    if (name.includes(':')) {
+      ([namespace, fullName] = name.split(':'))
     }
 
     const fullPath = fullName.split('/')
 
-    return [namespace, ...fullPath]
+    return [namespace, ...resourceFolders, ...fullPath]
   }
 
   /** UTILS */
@@ -155,7 +161,7 @@ export class SandstonePack {
     return new Flow(this.core)
   }
 
-  getInitMCFunction = () => new MCFunctionClass(this.core, [this.defaultNamespace, '__init__'], {
+  getInitMCFunction = () => new MCFunctionClass(this.core, `${this.defaultNamespace}:__init__`, {
     addToSandstoneCore: true,
     creator: 'sandstone',
     onConflict: 'append',
@@ -170,6 +176,28 @@ export class SandstonePack {
    */
   registerNewConstant(amount: number) {
     this.constants.add(amount)
+  }
+
+  /**
+   * Register commands that will be ticked at the rate you specify
+   */
+  registerTickedCommands(runEvery: TimeArgument, callback: () => void) {
+    if (this.tickedLoops[runEvery]) {
+      this.core.insideMCFunction(this.tickedLoops[runEvery], callback)
+    } else {
+      this.tickedLoops[runEvery] = this.MCFunction(`__sandstone:ticked/times/${runEvery}`, () => {
+        this.tickedLoops[runEvery].schedule.function(runEvery, 'replace')
+        callback()
+      })
+      if (!startTickedLoops) {
+        startTickedLoops = this.MCFunction('__sandstone:ticked/start', () => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
+        const load = new TagClass(this.core, 'functions', 'minecraft:load', {
+          values: [startTickedLoops], addToSandstoneCore: true, creator: 'sandstone', onConflict: 'append',
+        })
+      } else {
+        this.core.insideMCFunction(startTickedLoops, () => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
+      }
+    }
   }
 
   Objective = {
@@ -192,7 +220,7 @@ export class SandstonePack {
     return this.Objective.create('sandstone', 'dummy', [{ text: 'Sandstone', color: 'gold' }, ' internals'])
   }
 
-  MCFunction = (name: string, callback: (this: MCFunctionClass) => void, options?: MCFunctionClassArguments) => new MCFunctionClass(this.core, this.resourceNameToPath(name), {
+  MCFunction = (name: string, callback: (this: MCFunctionClass) => void, options?: MCFunctionClassArguments) => new MCFunctionClass(this.core, name, {
     callback,
     creator: 'user',
     addToSandstoneCore: true,
@@ -200,9 +228,9 @@ export class SandstonePack {
     ...options,
   })
 
-  addNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().addNode(node)
+  appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
 
-  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: AdvancementClassArguments) => new AdvancementClass(this.core, this.resourceNameToPath(name), {
+  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: AdvancementClassArguments) => new AdvancementClass(this.core, name, {
     advancement,
     creator: 'user',
     addToSandstoneCore: true,
@@ -210,7 +238,7 @@ export class SandstonePack {
     ...options,
   })
 
-  ItemModifier = (name: string, itemModifier: ItemModifierJSON, options?: ItemModifierClassArguments) => new ItemModifierClass(this.core, this.resourceNameToPath(name), {
+  ItemModifier = (name: string, itemModifier: ItemModifierJSON, options?: ItemModifierClassArguments) => new ItemModifierClass(this.core, name, {
     itemModifier,
     creator: 'user',
     addToSandstoneCore: true,
@@ -218,7 +246,7 @@ export class SandstonePack {
     ...options,
   })
 
-  LootTable = (name: string, lootTable: LootTableJSON, options?: LootTableClassArguments) => new LootTableClass(this.core, this.resourceNameToPath(name), {
+  LootTable = (name: string, lootTable: LootTableJSON, options?: LootTableClassArguments) => new LootTableClass(this.core, name, {
     lootTable,
     creator: 'user',
     addToSandstoneCore: true,
@@ -226,7 +254,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Predicate = (name: string, predicate: PredicateJSON, options?: PredicateClassArguments) => new PredicateClass(this.core, this.resourceNameToPath(name), {
+  Predicate = (name: string, predicate: PredicateJSON, options?: PredicateClassArguments) => new PredicateClass(this.core, name, {
     predicate,
     creator: 'user',
     addToSandstoneCore: true,
@@ -234,7 +262,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Recipe = (name: string, recipe: RecipeJSON, options?: RecipeClassArguments) => new RecipeClass(this.core, this.resourceNameToPath(name), {
+  Recipe = (name: string, recipe: RecipeJSON, options?: RecipeClassArguments) => new RecipeClass(this.core, name, {
     recipe,
     creator: 'user',
     addToSandstoneCore: true,
@@ -243,7 +271,7 @@ export class SandstonePack {
   })
 
   /** @ts-ignore */
-  Tag = <T extends REGISTRIES>(type: T, name: string, values: TagValuesJSON<T>, options?: TagClassArguments) => new TagClass<T>(this.core, type, this.resourceNameToPath(name), {
+  Tag = <T extends REGISTRIES>(type: T, name: string, values: TagValuesJSON<T>, options?: TagClassArguments) => new TagClass<T>(this.core, type, name, {
     values,
     creator: 'user',
     addToSandstoneCore: true,
@@ -251,7 +279,7 @@ export class SandstonePack {
     ...options,
   })
 
-  TrimMaterial = (name: string, trimMaterial: TrimMaterialJSON, options?: TrimMaterialClassArguments) => new TrimMaterialClass(this.core, this.resourceNameToPath(name), {
+  TrimMaterial = (name: string, trimMaterial: TrimMaterialJSON, options?: TrimMaterialClassArguments) => new TrimMaterialClass(this.core, name, {
     trimMaterial,
     creator: 'user',
     addToSandstoneCore: true,
@@ -259,7 +287,7 @@ export class SandstonePack {
     ...options,
   })
 
-  TrimPattern = (name: string, trimPattern: TrimPatternJSON, options?: TrimPatternClassArguments) => new TrimPatternClass(this.core, this.resourceNameToPath(name), {
+  TrimPattern = (name: string, trimPattern: TrimPatternJSON, options?: TrimPatternClassArguments) => new TrimPatternClass(this.core, name, {
     trimPattern,
     creator: 'user',
     addToSandstoneCore: true,
@@ -324,7 +352,7 @@ export class SandstonePack {
       return anonymousScore
     }
 
-  save = async (cliOptions: { fileHandler: (relativePath: string, content: any, contentSummary: string) => Promise<void> }) => {
+  save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void> }) => {
     await this.core.save(cliOptions, {
       visitors: [
         // Initialization visitors
@@ -342,7 +370,6 @@ export class SandstonePack {
         new InlineFunctionCallVisitor(this),
         new UnifyChainedExecutesVisitor(this),
         new SimplifyExecuteFunctionVisitor(this),
-        new MinifySandstoneResourcesNamesVisitor(this),
       ],
     })
 

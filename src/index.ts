@@ -5,7 +5,7 @@ import type {
   // eslint-disable-next-line max-len
   AdvancementClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
 } from './core/index'
-import type { BASIC_CONFLICT_STRATEGIES } from './utils'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils'
 
 export const sandstonePack = new SandstonePack('default', '0')
 export { SandstonePack }
@@ -95,18 +95,9 @@ export const {
   _,
 } = sandstonePack
 
-export interface SandstoneConfig {
-  /**
-   * The default namespace for the data pack.
-   * It can be changed for each resources, individually or using Base Paths.
-   */
-  namespace: string
+type PackTypes = LiteralUnion<'datapack'>
 
-  /**
-   * The name of the datapack.
-   */
-  name: string
-
+export type DatapackConfig = {
   /**
    * The description of the datapack.
    * Can be a single string or a JSON Text Component
@@ -123,19 +114,43 @@ export interface SandstoneConfig {
   formatVersion: number
 
   /**
-   * A custom path to your .minecraft folder,
-   * in case you changed the default and Sandstone fails to find it.
+   * Section for filtering out files from data packs applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
    */
-  minecraftPath?: string
+  filter: {
+    /** List of patterns */
+    block: {
+      /** A regular expression for the namespace of files to be filtered out. If unspecified, it applies to every namespace. */
+      namespace?: string
+      /** A regular expression for the paths of files to be filtered out. If unspecified, it applies to every file. */
+      path?: string
+    }[]
+  }
+}
+
+type PackConfigs<PackType extends PackTypes> = Record<PackType, PackType extends 'datapack' ? DatapackConfig : unknown>
+
+export interface SandstoneConfig {
+  /**
+   * The default namespace for the packs.
+   * It can be changed for each resources, individually or using Base Paths.
+   */
+  namespace: string
 
   /**
-   * A unique identifier that is used to distinguish your variables from other Sandstone data pack variables.
+   * The name of the pack.
+   */
+  name: string
+
+  packs: PackConfigs<PackTypes>
+
+  /**
+   * A unique identifier that is used to distinguish your variables from other Sandstone pack variables.
    *
    * It must be a string of valid scoreboard characters.
    */
   packUid: string
 
-  /** All the options to save the data pack. */
+  /** All the options to save the pack. */
   saveOptions: {
     /**
      * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
@@ -148,25 +163,29 @@ export interface SandstoneConfig {
     indentation?: string | number
 
     /**
-     * The world to save the data pack in.
+     * The world to save the packs in.
      *
      * Incompatible with `root` and `path`.
      */
     world?: string
 
     /**
-     * Whether to save the data pack in the `.minecraft/datapacks` folder.
+     * Whether to save the resource pack & datapack in the `.minecraft/datapacks` & `.minecraft/resource_pack` folders.
      *
      * Incompatible with `world` and `path`.
      */
     root?: true
 
     /**
-     * A custom path to save the data pack at.
-     *
-     * Incompatible with `root` and `world`.
+     * A custom path to your .minecraft folder,
+     * in case you changed the default and Sandstone fails to find it.
      */
-    path?: string
+    clientPath?: string
+
+    /**
+     * A server path to save the server-side packs at.
+     */
+    serverPath?: string
   }
 
   /** Some scripts that can run at defined moments. */

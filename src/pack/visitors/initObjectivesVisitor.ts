@@ -12,21 +12,24 @@ export class InitObjectivesVisitor extends GenericSandstoneVisitor {
     const sandstoneRegisteredObjectives = new Set<string>()
     const userRegisteredObjectives = new Set<string>()
 
-    core.insideMCFunction(pack.getInitMCFunction(), () => {
-      for (const obj of pack.objectives.values()) {
-        if (userRegisteredObjectives.has(obj.name)) {
-          throw new Error(`An objective named "${obj.name}" has been created twice.`)
-        }
+    const objectives = [...pack.objectives.values()]
+    if (objectives.length !== 0) {
+      core.insideMCFunction(pack.getInitMCFunction(), () => {
+        for (const obj of objectives) {
+          if (userRegisteredObjectives.has(obj.name)) {
+            throw new Error(`An objective named "${obj.name}" has been created twice.`)
+          }
 
-        if (obj['creator'] === 'user') {
-          userRegisteredObjectives.add(obj.name)
-        } else {
-          // Sandstone can create several objectives with identical names, it's okay.
-          sandstoneRegisteredObjectives.add(obj.name)
-        }
+          if (obj['creator'] === 'user') {
+            userRegisteredObjectives.add(obj.name)
+          } else {
+            // Sandstone can create several objectives with identical names, it's okay.
+            sandstoneRegisteredObjectives.add(obj.name)
+          }
 
-        commands.scoreboard.objectives.add(obj.name, obj.criteria, obj.display?.jsonTextComponent)
-      }
-    })
+          commands.scoreboard.objectives.add(obj.name, obj.criteria, obj.display?.jsonTextComponent)
+        }
+      })
+    }
   }
 }

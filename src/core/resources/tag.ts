@@ -6,11 +6,9 @@ import { ResourceClass } from './resource'
 import type {
   HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON,
 } from 'sandstone/arguments/index'
-import type { BASIC_CONFLICT_STRATEGIES } from 'sandstone/utils'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { MCFunctionClass } from './mcfunction'
 import type { ResourceClassArguments, ResourceNode } from './resource'
-import type { ResourcePath } from '#pack'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass {
   return typeof v === 'function'
@@ -64,23 +62,12 @@ export type TagClassArguments<REGISTRY extends REGISTRIES> = {
    */
   values: TagValuesJSON<REGISTRY>
 
-} & ResourceClassArguments & ({
   /**
-   * What to do if another Tag has the same name.
-   *
-   * - `throw`: Throw an error.
-   * - `replace`: Replace silently the old Tag with the new one.
-   * - `ignore`: Keep silently the old Tag, discarding the new one.
-   * - `append`: Append the new Tag values to the old one.
-   * - `prepend`: Prepend the new Tag values to the old one.
-   */
-  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
-
-  /**
-   * Whether to replace previous Tags with the same name.
+   * Whether to replace existing Tags with the same name.
    */
   replace?: boolean
-} & REGISTRY extends 'functions' ? ({
+
+} & ResourceClassArguments<'list'> & (REGISTRY extends 'functions' ? ({
   /**
    * Whether the tag should run on load
    */
@@ -97,13 +84,13 @@ export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass {
 
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
 
-  constructor(sandstoneCore: SandstoneCore, type: REGISTRY, path: ResourcePath, args: TagClassArguments<REGISTRY>) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', TagNode, path, args)
+  constructor(sandstoneCore: SandstoneCore, type: REGISTRY, name: string, args: TagClassArguments<REGISTRY>) {
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TagNode, sandstoneCore.pack.resourceToPath(name, ['tags', type]), args)
 
     this.type = type
 
     this.tagJSON = {
-      replace: false,
+      replace: args.replace || false,
       values: [],
     }
 
@@ -111,7 +98,7 @@ export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass {
   }
 
   get name(): `#${string}` {
-    return `#${toMinecraftResourceName(this.path)}`
+    return `#${toMinecraftResourceName(this.path, 2)}`
   }
 
   /** Adds a new resource to the end of this tag. */

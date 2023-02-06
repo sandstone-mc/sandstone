@@ -7,7 +7,6 @@ import type { TagClass } from '../index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 import type { PredicateJSON, TrimMaterialJSON } from '#arguments'
-import type { ResourcePath } from '#pack'
 
 let trimMaterials: undefined | TagClass<'items'>
 
@@ -29,7 +28,7 @@ export type TrimMaterialClassArguments = {
    * The trim material's JSON.
    */
   trimMaterial: TrimMaterialJSON
-} & ResourceClassArguments & {
+} & ResourceClassArguments<'default'> & {
   /**
    * Optional. Defaults to true. Automatically adds trim material to #minecraft:trim_materials.
    */
@@ -45,8 +44,8 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
 
   protected equipmentCheck
 
-  constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: TrimMaterialClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', TrimMaterialNode, path, args)
+  constructor(sandstoneCore: SandstoneCore, name: string, args: TrimMaterialClassArguments) {
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimMaterialNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
 
     this.trimMaterialJSON = args.trimMaterial
 

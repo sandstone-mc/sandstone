@@ -6,7 +6,7 @@ import fs from 'fs/promises'
  * @param {string} pathNoLib
  */
 function getExportsObject(pathNoLib) {
-    const realPath = './' + join('dist', pathNoLib)
+    const realPath = './' + pathNoLib
 
     const types = realPath + '.d.ts'
 

@@ -30,9 +30,22 @@ export abstract class ContainerNode extends Node {
   append<NODES extends Node[]>(...nodes: NODES): NODES
 
   append(...nodes: Node[]) {
-    for (const node of nodes) {
-      this.body.push(node)
-    }
+    this.body.push(...nodes)
+    return nodes.length === 1 ? nodes[0] : nodes
+  }
+
+  /**
+   * Prepends a node to the beginning of this node's body.
+   */
+  prepend<NODE extends Node>(node: NODE): NODE
+
+  /**
+   * Prepends several nodes to the beginning of this node's body.
+   */
+  prepend<NODES extends Node[]>(...nodes: NODES): NODES
+
+  prepend(...nodes: Node[]) {
+    this.body.unshift(...nodes)
     return nodes.length === 1 ? nodes[0] : nodes
   }
 }
@@ -66,7 +79,7 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
     }
     this.commited = true
 
-    return this.sandstonePack.addNode(this)
+    return this.sandstonePack.appendNode(this)
   }
 }
 
@@ -88,6 +101,14 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> e
    */
   append(node: Node) {
     this.body.push(node)
+    return node
+  }
+
+  /**
+   * Appends a node at the end of this node's body.
+   */
+  prepend(node: Node) {
+    this.body.unshift(node)
     return node
   }
 

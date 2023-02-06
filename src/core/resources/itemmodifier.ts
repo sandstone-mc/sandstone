@@ -6,7 +6,6 @@ import type { ResourceClassArguments, ResourceNode } from './resource'
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ItemModifierJSON, MultipleEntitiesArgument,
 } from '#arguments'
-import type { ResourcePath } from '#pack'
 
 /**
  * A node representing a Minecraft item modifier.
@@ -24,16 +23,18 @@ export type ItemModifierClassArguments = {
    * The item modifier's JSON.
    */
   itemModifier: ItemModifierJSON
-} & ResourceClassArguments
+} & ResourceClassArguments<'list'>
 
 export class ItemModifierClass extends ResourceClass<ItemModifierNode> {
   public itemModifierJSON: NonNullable<ItemModifierClassArguments['itemModifier']>
 
-  constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: ItemModifierClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', ItemModifierNode, path, args)
+  constructor(sandstoneCore: SandstoneCore, name: string, args: ItemModifierClassArguments) {
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', ItemModifierNode, sandstoneCore.pack.resourceToPath(name, ['item_modifiers']), args)
 
     this.itemModifierJSON = args.itemModifier
   }
+
+  // TODO: Add list methods
 
   get modify() {
     return {

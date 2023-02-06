@@ -6,7 +6,6 @@ import { ResourceClass } from './resource'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 import type { PredicateJSON, TrimPatternJSON } from '#arguments'
-import type { ResourcePath } from '#pack'
 
 type equipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
 
@@ -26,7 +25,7 @@ export type TrimPatternClassArguments = {
    * The trim pattern's JSON.
    */
   trimPattern: TrimPatternJSON
-} & ResourceClassArguments & {
+} & ResourceClassArguments<'default'> & {
   /**
    * Optional. Defaults to true. Automatically adds armor trim pattern recipe.
    */
@@ -42,15 +41,25 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
 
   protected equipmentCheck
 
-  constructor(sandstoneCore: SandstoneCore, path: ResourcePath, args: TrimPatternClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', 'utf8', TrimPatternNode, path, args)
+  constructor(sandstoneCore: SandstoneCore, name: string, args: TrimPatternClassArguments) {
+    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimPatternNode, sandstoneCore.pack.resourceToPath(name, ['trim_patterns']), args)
 
     this.trimPatternJSON = args.trimPattern
 
     this.equipmentCheck = args.equipmentCheck
 
     if (args.registerPatternRecipe !== false) {
-      sandstoneCore.pack.Recipe(sandstoneCore.pack.resourceNameToPath(args.trimPattern.asset_id).slice(1).join('_'), {
+      let assetID = args.trimPattern.asset_id
+
+      if (assetID.includes(':')) {
+        assetID = assetID.split(':')[1]
+      }
+
+      if (assetID.includes('/')) {
+        assetID = assetID.split('/').join('/')
+      }
+
+      sandstoneCore.pack.Recipe(assetID, {
         type: 'smithing_trim',
         base: { tag: 'minecraft:trimmable_armor' },
         addition: { tag: 'minecraft:trim_materials' },

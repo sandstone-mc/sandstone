@@ -2,6 +2,7 @@ import { makeClassCallable } from '#utils'
 
 import { ContainerNode } from '../nodes'
 import { CallableResourceClass } from './resource'
+import { TagClass } from './tag'
 
 import type { TimeArgument } from '#arguments/basics'
 import type { ScheduleType } from '#commands'
@@ -9,8 +10,9 @@ import type { FinalCommandOutput } from '#commands/helpers'
 import type {
   ContainerCommandNode, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
 } from '#core'
-import type { ResourcePath } from '#pack'
-import type { BASIC_CONFLICT_STRATEGIES, MakeInstanceCallable } from '#utils'
+import type { MakeInstanceCallable } from '#utils'
+
+const tags: Record<string, TagClass<'functions'>> = {}
 
 /**
  * A node representing a Minecraft function.
@@ -34,11 +36,34 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
   }
 
   /**
-   * Sequentially add a node to the body of the function.
+   * Sequentially add node(s) to the end of the body of the function.
    *
-   * @param node The node to add.
+   * @param node The node(s) to add.
    */
-  addNode = (node: Node) => this.currentContext.append(node)
+  appendNode = (node: Node | Node[]) => {
+    if (Array.isArray(node)) {
+      for (const _node of node) {
+        this.currentContext.append(_node)
+      }
+    } else {
+      this.currentContext.append(node)
+    }
+  }
+
+  /**
+   * Sequentially add node(s) to the beginning of the body of the function.
+   *
+   * @param node The node(s) to add.
+   */
+  prependNode = (node: Node | Node[]) => {
+    if (Array.isArray(node)) {
+      for (const _node of node) {
+        this.currentContext.prepend(_node)
+      }
+    } else {
+      this.currentContext.prepend(node)
+    }
+  }
 
   /**
    * Switch the current context to the given node.
@@ -93,7 +118,7 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
   getValue = () => this.body.map((node) => node.getValue()).join('\n')
 }
 
-export type MCFunctionClassArguments = {
+export type MCFunctionClassArguments = ({
   /**
    * The callback to run when the MCFunction is generated.
    *
@@ -102,7 +127,7 @@ export type MCFunctionClassArguments = {
   callback?: () => void
 
   /**
-   * If true, then the function will only be created if it is called from another function.
+   * If true, then the function will only be created if it is called from another function. TODO: implement this
    */
   lazy?: boolean
 
@@ -116,19 +141,8 @@ export type MCFunctionClassArguments = {
   /**
    * The function tags to put this function in.
    */
-  tags?: readonly (string /* | TagInstance<'functions'>*/)[]
-} & ResourceClassArguments & ({
-  /**
-   * What to do if another mcfunction has the same name.
-   *
-   * - `throw`: Throw an error.
-   * - `replace`: Replace silently the old mcfunction with the new one.
-   * - `ignore`: Keep silently the old mcfunction, discarding the new one.
-   * - `append`: Append the new mcfunction commands to the old one.
-   * - `prepend`: Prepend the new mcfunction commands to the old one.
-   */
-  onConflict?: BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend' | 'rename'
-}) & ({
+  tags?: readonly (string | TagClass<'functions'>)[]
+
   /**
    * If specified, the function will run every given time.
    *
@@ -157,12 +171,12 @@ export type MCFunctionClassArguments = {
    * }
    */
   runEvery?: TimeArgument
-} | {
+
   /**
    * Whether the function should run each tick.
    */
   runEveryTick?: boolean
-})
+}) & ResourceClassArguments<'function'>
 
 export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
@@ -173,8 +187,8 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
 
   protected addToSandstoneCore: boolean
 
-  constructor(core: SandstoneCore, path: ResourcePath, args: MCFunctionClassArguments) {
-    super(core, core.pack.dataPack(), 'mcfunction', 'utf8', MCFunctionNode, path, {
+  constructor(core: SandstoneCore, name: string | string[], args: MCFunctionClassArguments) {
+    super(core, core.pack.dataPack(), 'mcfunction', MCFunctionNode, Array.isArray(name) ? name : core.pack.resourceToPath(name, ['functions']), {
       ...args,
       addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,
     })
@@ -184,13 +198,25 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     this.lazy = !!args.lazy
     this.addToSandstoneCore = !!args.addToSandstoneCore
     this.tags = args.tags
+
+    if (args.runOnLoad) {
+      this.addToTag('minecraft:load')
+    } else if (args.runEveryTick) {
+      this.addToTag('minecraft:tick')
+    }
+
+    if (args.tags) {
+      for (const tag of args.tags) {
+        this.addToTag(`${tag}`)
+      }
+    }
+
+    if (!args.runEveryTick && args.runEvery) {
+      core.pack.registerTickedCommands(args.runEvery, () => this.__call__())
+    }
   }
 
   protected generate = () => {
-    if (this.addToSandstoneCore && this.lazy) {
-      this.core.resourceNodes.add(this.node)
-    }
-
     if (this.node.body.length > 0) {
       /*
        * Don't generate resource if the node already has commands.
@@ -202,9 +228,19 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     const { sandstoneCore } = this.node
 
     sandstoneCore.insideMCFunction(this.asCallable, () => {
-      // Doing .apply allows users to use `this()` inside the callbak to call the MCFunction!
+      // Doing .apply allows users to use `this()` inside the callback to call the MCFunction!
       this.callback.apply(this.asCallable)
     })
+  }
+
+  protected addToTag = (tag: string) => {
+    if (tags[tag]) {
+      tags[tag].push(this.name)
+    } else {
+      tags[tag] = new TagClass(this.core, 'functions', tag, {
+        values: [this.name], addToSandstoneCore: true, creator: 'sandstone', onConflict: 'append',
+      })
+    }
   }
 
   __call__ = (): FinalCommandOutput => this.commands.functionCmd(this.asCallable)

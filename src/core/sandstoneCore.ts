@@ -71,7 +71,7 @@ export class SandstoneCore {
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
     const originalResources = new Set(this.resourceNodes)
 
-    // First, generate all the MCFunctions.
+    // First, generate all the resources.
     for (const { resource } of this.resourceNodes) {
       resource['generate']()
     }
@@ -95,27 +95,16 @@ export class SandstoneCore {
   }
 
   // TODO: Support dry & verbose runs
-  save = async (cliOptions: { fileHandler: (relativePath: string, content: any, contentSummary: string) => Promise<void> }, opts: { visitors: GenericCoreVisitor[] }) => {
+  save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void> }, opts: { visitors: GenericCoreVisitor[] }) => {
     const resources = this.generateResources(opts)
 
     for await (const node of resources) {
-      const resourcePath = ['.sandstone', 'output', node.resource.packType.type, `${node.resource.path}.${node.resource.fileExtension}`]
-      // eslint-disable-next-line no-nested-ternary
-      const namespace = node.resource.packType.namespaced ? node.resource.name.includes(':') ? node.resource.name.split(':')[0] : this.pack.defaultNamespace : false
-      const subFolder = node.resource.packType.resourceSubFolder
-
-      if (namespace) {
-        resourcePath.splice(2, 0, namespace)
-      }
-
-      if (subFolder) {
-        resourcePath.splice(2, 0, subFolder)
-      }
+      const resourcePath = path.join(node.resource.packType.type, ...node.resource.path)
 
       const value = node.getValue()
 
       /* @ts-ignore */
-      await cliOptions.fileHandler(path.join(...resourcePath), value, node.resource.fileEncoding === 'utf8' ? value : node.getSummary())
+      await cliOptions.fileHandler(`${resourcePath}.${node.resource.fileExtension}`, value)
     }
   }
 }
