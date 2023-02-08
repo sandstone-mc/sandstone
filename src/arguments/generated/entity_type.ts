@@ -9,6 +9,7 @@ export type ENTITY_TYPES = (
   'bat' |
   'bee' |
   'blaze' |
+  'block_display' |
   'boat' |
   'camel' |
   'cat' |
@@ -56,6 +57,7 @@ export type ENTITY_TYPES = (
   'illusioner' |
   'iron_golem' |
   'item' |
+  'item_display' |
   'item_frame' |
   'leash_knot' |
   'lightning_bolt' |
@@ -99,6 +101,7 @@ export type ENTITY_TYPES = (
   'stray' |
   'strider' |
   'tadpole' |
+  'text_display' |
   'tnt' |
   'tnt_minecart' |
   'trader_llama' |

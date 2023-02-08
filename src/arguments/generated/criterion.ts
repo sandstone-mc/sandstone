@@ -1984,6 +1984,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.bee' |
   'minecraft.killed:minecraft.blaze' |
   'minecraft.killed_by:minecraft.blaze' |
+  'minecraft.killed:minecraft.block_display' |
+  'minecraft.killed_by:minecraft.block_display' |
   'minecraft.killed:minecraft.boat' |
   'minecraft.killed_by:minecraft.boat' |
   'minecraft.killed:minecraft.camel' |
@@ -2078,6 +2080,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.iron_golem' |
   'minecraft.killed:minecraft.item' |
   'minecraft.killed_by:minecraft.item' |
+  'minecraft.killed:minecraft.item_display' |
+  'minecraft.killed_by:minecraft.item_display' |
   'minecraft.killed:minecraft.item_frame' |
   'minecraft.killed_by:minecraft.item_frame' |
   'minecraft.killed:minecraft.leash_knot' |
@@ -2164,6 +2168,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.strider' |
   'minecraft.killed:minecraft.tadpole' |
   'minecraft.killed_by:minecraft.tadpole' |
+  'minecraft.killed:minecraft.text_display' |
+  'minecraft.killed_by:minecraft.text_display' |
   'minecraft.killed:minecraft.tnt' |
   'minecraft.killed_by:minecraft.tnt' |
   'minecraft.killed:minecraft.tnt_minecart' |

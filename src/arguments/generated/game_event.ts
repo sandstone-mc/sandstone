@@ -18,7 +18,9 @@ export type GAME_EVENTS = (
   'elytra_glide' |
   'entity_damage' |
   'entity_die' |
+  'entity_dismount' |
   'entity_interact' |
+  'entity_mount' |
   'entity_place' |
   'entity_roar' |
   'entity_shake' |
