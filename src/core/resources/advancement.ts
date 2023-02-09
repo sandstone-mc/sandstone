@@ -20,7 +20,7 @@ export type AdvancementClassArguments<CriteriaNames extends string = string> = {
   /**
    * The advancement's JSON.
    */
-  advancement: AdvancementJSON<CriteriaNames>
+  advancement?: AdvancementJSON<CriteriaNames>
 } & ResourceClassArguments<'default'>
 
 export class AdvancementClass<CriteriaNames extends string = string> extends ResourceClass<AdvancementNode> {
@@ -29,7 +29,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
   constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<CriteriaNames>) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', AdvancementNode, sandstoneCore.pack.resourceToPath(name, ['advancements']), args)
 
-    this.advancementJSON = args.advancement
+    this.advancementJSON = args.advancement as AdvancementJSON
   }
 
   /**

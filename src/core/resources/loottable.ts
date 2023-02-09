@@ -23,7 +23,7 @@ export type LootTableClassArguments = {
   /**
    * The loot table's JSON.
    */
-  lootTable: LootTableJSON
+  lootTable?: LootTableJSON
 } & ResourceClassArguments<'default'>
 
 export class LootTableClass extends ResourceClass<LootTableNode> {
@@ -32,7 +32,7 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
   constructor(sandstoneCore: SandstoneCore, name: string, args: LootTableClassArguments) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', LootTableNode, sandstoneCore.pack.resourceToPath(name, ['loot_tables']), args)
 
-    this.lootTableJSON = args.lootTable
+    this.lootTableJSON = args.lootTable as LootTableJSON
   }
 
   /**

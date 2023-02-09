@@ -3,6 +3,7 @@ import { toMinecraftResourceName } from 'sandstone/utils'
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
+import type { ConditionClass } from 'sandstone/variables/index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 import type { PredicateJSON, TrimPatternJSON } from '#arguments'
@@ -24,7 +25,7 @@ export type TrimPatternClassArguments = {
   /**
    * The trim pattern's JSON.
    */
-  trimPattern: TrimPatternJSON
+  trimPattern?: TrimPatternJSON
 } & ResourceClassArguments<'default'> & {
   /**
    * Optional. Defaults to true. Automatically adds armor trim pattern recipe.
@@ -36,7 +37,7 @@ export type TrimPatternClassArguments = {
   equipmentCheck?: 'whole_inventory' | equipmentSlots | equipmentSlots[]
 }
 
-export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
+export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements ConditionClass {
   public trimPatternJSON: NonNullable<TrimPatternClassArguments['trimPattern']>
 
   protected equipmentCheck
@@ -44,12 +45,12 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimPatternClassArguments) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimPatternNode, sandstoneCore.pack.resourceToPath(name, ['trim_patterns']), args)
 
-    this.trimPatternJSON = args.trimPattern
+    this.trimPatternJSON = args.trimPattern as TrimPatternJSON
 
     this.equipmentCheck = args.equipmentCheck
 
     if (args.registerPatternRecipe !== false) {
-      let assetID = args.trimPattern.asset_id
+      let assetID = this.trimPatternJSON.asset_id
 
       if (assetID.includes(':')) {
         assetID = assetID.split(':')[1]
@@ -63,7 +64,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
         type: 'smithing_trim',
         base: { tag: 'minecraft:trimmable_armor' },
         addition: { tag: 'minecraft:trim_materials' },
-        template: { item: args.trimPattern.template_item },
+        template: { item: this.trimPatternJSON.template_item },
       })
     }
   }

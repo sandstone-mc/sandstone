@@ -10,7 +10,7 @@ import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LogVisitor,
-  MergeSimilarResourcesVisitor, SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
+  SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
 } from './visitors'
 
 import type {
@@ -141,6 +141,10 @@ export class SandstonePack {
     this.objectives = new Set()
     this.constants = new Set()
     this.tickedLoops = {}
+
+    if (process.env.NAMESPACE) {
+      this.defaultNamespace = process.env.NAMESPACE
+    }
   }
 
   resourceToPath = (name: string, resourceFolders: string[]): ResourcePath => {
@@ -364,7 +368,6 @@ export class SandstonePack {
         // Transformation visitors
         new IfElseTransformationVisitor(this),
         new ContainerCommandsToMCFunctionVisitor(this),
-        new MergeSimilarResourcesVisitor(this),
 
         // Optimization
         new InlineFunctionCallVisitor(this),

@@ -1,5 +1,7 @@
 import * as util from 'util'
 
+import type { UUIDinNumber } from './variables/UUID'
+
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.
  * @see https://github.com/microsoft/TypeScript/issues/29729#issuecomment-700527227
@@ -30,7 +32,7 @@ export type HideFunctionProperties<T extends Function> = T & {
     [Symbol.hasInstance]: (value: unknown) => boolean
   }
 
-export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'ignore' | 'warn'
+export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'warn' | 'rename'
 
 export type OmitFirst<T extends unknown[]> = (
     T extends [infer A, ...infer B] ? B : []
@@ -159,4 +161,27 @@ export function toMinecraftResourceName(path: readonly string[], typeNested: num
   folders.splice(1, typeNested)
 
   return `${namespace}:${folders.join('/')}`
+}
+
+/* Ported from https://github.com/AjaxGb/mc-uuid-converter/blob/master/convert.js */
+const uuidBytes = new Uint8Array(16)
+const uuid = new DataView(uuidBytes.buffer)
+
+export function randomUUID() {
+  crypto.getRandomValues(uuidBytes)
+
+  // Set version to 4 (random)
+  // eslint-disable-next-line no-bitwise
+  uuidBytes[6] = (uuidBytes[6] & 0x0f) | (4 << 4)
+  // Set variant to 1 (Leach–Salz)
+  // eslint-disable-next-line no-bitwise
+  uuidBytes[8] = (uuidBytes[8] & 0x3f) | 0x80
+
+  const array: number[] = []
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < 4; i++) {
+    array.push(uuid.getInt32(i * 4, false))
+  }
+
+  return array as UUIDinNumber
 }

@@ -8,7 +8,7 @@ import type {
 } from 'sandstone/arguments/index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { MCFunctionClass } from './mcfunction'
-import type { ResourceClassArguments, ResourceNode } from './resource'
+import type { ListResource, ResourceClassArguments, ResourceNode } from './resource'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass {
   return typeof v === 'function'
@@ -60,7 +60,7 @@ export type TagClassArguments<REGISTRY extends REGISTRIES> = {
   /**
    * The tag's entry list.
    */
-  values: TagValuesJSON<REGISTRY>
+  values?: TagValuesJSON<REGISTRY>
 
   /**
    * Whether to replace existing Tags with the same name.
@@ -79,7 +79,9 @@ export type TagClassArguments<REGISTRY extends REGISTRIES> = {
   runEveryTick?: boolean
 }) : unknown)
 
-export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass {
+type Resource<T extends REGISTRIES> = TagSingleValue<HintedTagStringType<T>> | TagClass<T>
+
+export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass implements ListResource {
   readonly type: REGISTRY
 
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
@@ -94,21 +96,26 @@ export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass {
       values: [],
     }
 
-    this.tagJSON.values = Array.from(args.values, objectToString) as unknown as TagValuesJSON<REGISTRY>
+    this.tagJSON.values = Array.from(args.values as TagValuesJSON<REGISTRY>, objectToString) as unknown as TagValuesJSON<REGISTRY>
   }
 
   get name(): `#${string}` {
     return `#${toMinecraftResourceName(this.path, 2)}`
   }
 
-  /** Adds a new resource to the end of this tag. */
-  push(resource: TagSingleValue<HintedTagStringType<REGISTRY>>) {
-    this.tagJSON.values.push(objectToString(resource) as HintedTagStringType<REGISTRY>)
+  public push(...resources: Resource<REGISTRY>[]) {
+    for (const resource of resources) {
+      this.tagJSON.values.push(objectToString(resource) as HintedTagStringType<REGISTRY>)
+    }
   }
 
-  /** Adds a new resource to the start of this tag. */
-  unshift(resource: TagSingleValue<HintedTagStringType<REGISTRY>>) {
-    this.tagJSON.values.push(objectToString(resource) as HintedTagStringType<REGISTRY>)
+  public unshift(..._resources: Resource<REGISTRY>[]) {
+    // Done this way so the resources you're adding to the beginning of the tag stay in order.
+    const resources: (string | TagSingleValue<string>)[] = []
+    for (const resource of _resources) {
+      resources.push(objectToString(resource))
+    }
+    this.tagJSON.values.push(...resources as HintedTagStringType<REGISTRY>[])
   }
 
   /** Checks whether a given resource is in this tag. */

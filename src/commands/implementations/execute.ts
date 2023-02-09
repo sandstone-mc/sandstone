@@ -15,7 +15,7 @@ import type {
   AXES,
   BLOCKS,
   COMPARISON_OPERATORS,
-  Coordinates, DIMENSIONS, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
+  Coordinates, DIMENSIONS, ENTITY_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
 } from '#arguments'
 import type { MCFunctionNode, PredicateClass } from '#core/index'
 import type { Node } from '#core/nodes'
@@ -381,6 +381,10 @@ export class ExecuteCommand extends ExecuteCommandPart {
    */
   in = (dimension: LiteralUnion<DIMENSIONS>) => this.nestedExecute(['in', dimension])
 
+  /**
+   * Sets the command executor to a related entity.
+   * @param relation Relation with the current executor.
+   */
   on = (relation: RelationType) => this.nestedExecute(['on', relation])
 
   /**
@@ -414,6 +418,14 @@ export class ExecuteCommand extends ExecuteCommandPart {
       return this.nestedExecute(['as', rotationParser(rotation)])
     }
     return this.subCommand([['as']], ExecuteRotatedAsCommand, false)
+  }
+
+  /**
+   * Summons an entity at the command position and sets the command executor to said newly summoned entity.
+   * @param entityType Entity to summon.
+   */
+  summon(entityType: LiteralUnion<ENTITY_TYPES>) {
+    return this.nestedExecute(['summon', entityType])
   }
 
   get if() {

@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable multiline-comment-style */
 import type { SandstoneCommands } from 'sandstone/commands/commands'
 import type { Node, SandstoneCore } from '#core'
@@ -26,7 +27,7 @@ export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'fu
    * - `rename`: Rename the new file to an iterating number (ie. func1, func2, func3)
    */
   // eslint-disable-next-line max-len
-  onConflict?: ConflictType extends 'default' ? BASIC_CONFLICT_STRATEGIES : ConflictType extends 'list' ? BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend' : BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend' | 'rename'
+  onConflict?: ConflictType extends 'default' ? BASIC_CONFLICT_STRATEGIES : BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
 }
 
 export type ResourceNode<T = ResourceClass<any>> = Node & {
@@ -50,7 +51,9 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   path
 
-  onConflict: LiteralUnion<BASIC_CONFLICT_STRATEGIES> | ((oldResource: ResourceNode, newResource: ResourceNode) => void)
+  onConflict: LiteralUnion<BASIC_CONFLICT_STRATEGIES>
+
+  renameIndex = 2
 
   // eslint-disable-next-line max-len
   constructor(protected core: SandstoneCore, packType: PackType, fileExtension: string, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments<any>) {
@@ -65,30 +68,63 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.path = path
 
-    this.onConflict = args.onConflict ?? 'throw'
+    const resourceType = this.node.resource.path[1]
+
+    this.onConflict = args.onConflict || process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`] || process.env.GENERAL_CONFLICT_STRATEGY || 'throw'
+
+    console.log(resourceType, this.onConflict)
 
     if (args.addToSandstoneCore) {
       // TODO: Add conflict handling
+      const conflict = [...core.resourceNodes].find((node) => node.resource.path.join('') === this.node.resource.path.join(''))
 
-      // if (this instanceof MCFunctionClass) {
-      //   if (this.onConflict === 'prepend') {
-      //     this.onConflict = (_oldFunc, _newFunc) => {
-      //       const oldFunc = _oldFunc as MCFunctionNode
-      //       const newFunc = _newFunc as MCFunctionNode
+      if (conflict) {
+        const oldResource = conflict.resource
+        const newResource = this.node.resource
 
-      //       oldFunc.prependNode(newFunc.body)
-      //     }
-      //   }
-      //   if (this.onConflict === 'append') {
-      //     this.onConflict = (_oldFunc, _newFunc) => {
-      //       const oldFunc = _oldFunc as MCFunctionNode
-      //       const newFunc = _newFunc as MCFunctionNode
+        switch (this.onConflict) {
+          case 'throw': {
+            // eslint-disable-next-line max-len
+            throw new Error(`Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`)
+          }
+          case 'replace': {
+            core.resourceNodes.forEach((node) => {
+              if (node.resource.path.join('') === oldResource.path.join('')) {
+                core.resourceNodes.delete(node)
+              }
+            })
+            core.resourceNodes.add(this.node)
+          } break
+          case 'warn': {
+            console.warn([
+              'Warning:',
+              `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
+              "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
+            ].join('\n'))
+            core.resourceNodes.forEach((node) => {
+              if (node.resource.path.join('') === oldResource.path.join('')) {
+                core.resourceNodes.delete(node)
+              }
+            })
+            core.resourceNodes.add(this.node)
+          } break
+          case 'rename': {
+            // eslint-disable-next-line no-plusplus
+            this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
 
-      //       oldFunc.appendNode(newFunc.body)
-      //     }
-      //   }
-      // }
-      core.resourceNodes.add(this.node)
+            core.resourceNodes.add(this.node)
+          } break
+          case 'prepend': {
+            (oldResource as unknown as ListResource).unshift(newResource)
+          } break
+          case 'append': {
+            (oldResource as unknown as ListResource).push(newResource)
+          } break
+          default: break
+        }
+      } else {
+        core.resourceNodes.add(this.node)
+      }
     }
 
     this.creator = args.creator ?? 'sandstone'
@@ -97,7 +133,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   protected getNode = () => this.node
 
   get name(): string {
-    return `${this.path[0]}:${this.path.slice(1).join('/')}`
+    return `${this.path[0]}:${this.path.slice(2).join('/')}`
   }
 
   protected generate = () => {}
@@ -124,4 +160,10 @@ export abstract class CallableResourceClass<N extends ResourceNode = ResourceNod
   }
 
   abstract __call__: (...args: any) => any
+}
+
+export abstract class ListResource {
+  public push(...args: any[]) {}
+
+  public unshift(...args: any[]) {}
 }

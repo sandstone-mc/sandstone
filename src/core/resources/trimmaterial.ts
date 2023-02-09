@@ -3,6 +3,7 @@ import { toMinecraftResourceName } from 'sandstone/utils'
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
+import type { ConditionClass } from 'sandstone/variables/index'
 import type { TagClass } from '../index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
@@ -27,7 +28,7 @@ export type TrimMaterialClassArguments = {
   /**
    * The trim material's JSON.
    */
-  trimMaterial: TrimMaterialJSON
+  trimMaterial?: TrimMaterialJSON
 } & ResourceClassArguments<'default'> & {
   /**
    * Optional. Defaults to true. Automatically adds trim material to #minecraft:trim_materials.
@@ -39,7 +40,7 @@ export type TrimMaterialClassArguments = {
   equipmentCheck?: 'whole_inventory' | equipmentSlots | equipmentSlots[]
 }
 
-export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
+export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implements ConditionClass {
   public trimMaterialJSON: NonNullable<TrimMaterialClassArguments['trimMaterial']>
 
   protected equipmentCheck
@@ -47,7 +48,7 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimMaterialClassArguments) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimMaterialNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
 
-    this.trimMaterialJSON = args.trimMaterial
+    this.trimMaterialJSON = args.trimMaterial as TrimMaterialJSON
 
     this.equipmentCheck = args.equipmentCheck
 

@@ -2,7 +2,7 @@ import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
 import type { SandstoneCore } from '../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from './resource'
+import type { ListResource, ResourceClassArguments, ResourceNode } from './resource'
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ItemModifierJSON, MultipleEntitiesArgument,
 } from '#arguments'
@@ -22,19 +22,59 @@ export type ItemModifierClassArguments = {
   /**
    * The item modifier's JSON.
    */
-  itemModifier: ItemModifierJSON
+  itemModifier?: ItemModifierJSON
 } & ResourceClassArguments<'list'>
 
-export class ItemModifierClass extends ResourceClass<ItemModifierNode> {
+type Modifier = ItemModifierJSON | ItemModifierClass
+
+export class ItemModifierClass extends ResourceClass<ItemModifierNode> implements ListResource {
   public itemModifierJSON: NonNullable<ItemModifierClassArguments['itemModifier']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ItemModifierClassArguments) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', ItemModifierNode, sandstoneCore.pack.resourceToPath(name, ['item_modifiers']), args)
 
-    this.itemModifierJSON = args.itemModifier
+    this.itemModifierJSON = args.itemModifier as ItemModifierJSON
   }
 
-  // TODO: Add list methods
+  public push(...modifiers: Modifier[]) {
+    if (!Array.isArray(this.itemModifierJSON)) {
+      this.itemModifierJSON = [this.itemModifierJSON]
+    }
+
+    for (const modifier of modifiers) {
+      let modifierJSON: ItemModifierJSON
+      if (modifier instanceof ItemModifierClass) {
+        modifierJSON = modifier.itemModifierJSON
+      } else {
+        modifierJSON = modifier
+      }
+      if (Array.isArray(modifierJSON)) {
+        this.itemModifierJSON.push(...modifierJSON)
+      } else {
+        this.itemModifierJSON.push(modifierJSON)
+      }
+    }
+  }
+
+  public unshift(...modifiers: Modifier[]) {
+    if (!Array.isArray(this.itemModifierJSON)) {
+      this.itemModifierJSON = [this.itemModifierJSON]
+    }
+
+    for (const modifier of modifiers) {
+      let modifierJSON: ItemModifierJSON
+      if (modifier instanceof ItemModifierClass) {
+        modifierJSON = modifier.itemModifierJSON
+      } else {
+        modifierJSON = modifier
+      }
+      if (Array.isArray(modifierJSON)) {
+        this.itemModifierJSON.unshift(...modifierJSON)
+      } else {
+        this.itemModifierJSON.unshift(modifierJSON)
+      }
+    }
+  }
 
   get modify() {
     return {
