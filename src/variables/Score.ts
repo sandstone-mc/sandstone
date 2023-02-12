@@ -1,6 +1,4 @@
-import { SelectorClass } from '#variables/Selector'
-
-import { ComponentClass } from './abstractClasses'
+import { ComponentClass, SelectorPickClass } from './abstractClasses'
 import { rangeParser } from './parsers'
 
 import type { SandstoneCommands } from '../commands'
@@ -59,12 +57,18 @@ export class Score extends ComponentClass implements ConditionClass {
     } as const
   }
 
-  protected _toChatComponent(): JSONTextComponent {
+  /**
+   * @internal
+   */
+  _toChatComponent(): JSONTextComponent {
     return {
       score: { name: this.target, objective: this.objective.name },
     }
   }
 
+  /**
+   * @internal
+   */
   _toMinecraftCondition = () => ({
     value: ['unless', 'score', this, 'matches', 0] as unknown[],
   })
@@ -136,7 +140,7 @@ export class Score extends ComponentClass implements ConditionClass {
   set(nbt: DataPointClass, scale?: number): Score
 
   set(...args: OperationArguments | [DataPointClass, number?]) {
-    if (typeof args[0] === 'object' && !(args[0] instanceof SelectorClass) && !(args[0] instanceof Score)) {
+    if (typeof args[0] === 'object' && !(args[0] instanceof SelectorPickClass) && !(args[0] instanceof Score)) {
       const [data, scale] = args as [DataPointClass<DATA_TYPES>, number?]
 
       this.commands.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale)

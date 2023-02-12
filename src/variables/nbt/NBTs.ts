@@ -56,7 +56,7 @@ export class NBTTypedArray extends NBTClass {
     this.unit = unit
   }
 
-  [util.inspect.custom] = () => `[${this.unit};${this.values.join(',')}]`
+  [util.inspect.custom] = () => `[${this.unit};${this.values.length === 0 ? '' : this.values.join(',')}]`
 }
 
 export class NBTLongArray extends NBTTypedArray {
@@ -82,7 +82,22 @@ export class NotNBT extends NBTClass {
   [util.inspect.custom] = () => `!${nbtStringifier(this.nbt)}`
 }
 
-type NBTSimpleClasses = typeof NBTLong | typeof NBTShort | typeof NBTByte | typeof NBTFloat | typeof NBTDouble
+export type NBTSimpleClasses = typeof NBTLong | typeof NBTShort | typeof NBTByte | typeof NBTFloat | typeof NBTDouble
+
+export class NBTInt extends NBTPrimitive {}
+
+export type NBTAllNumbers = typeof NBTInt | NBTSimpleClasses
+
+export type NBTAllArrays = typeof NBTTypedArray | typeof NBTLongArray | typeof NBTByteArray | typeof NBTIntArray
+
+export class NBTString extends NBTPrimitive {}
+
+export type NBTAllPrimitives = NBTAllNumbers | NBTAllArrays | typeof NBTString
+
+// Type Hack, not actually a primitive
+export class NBTAnyValue extends NBTPrimitive {}
+
+export type NBTAllValues = NBTAllPrimitives | NBTAnyValue
 
 function customNumber<T extends number | number[], C extends NBTSimpleClasses>(num: T, _class: C): T extends number ? C : C[] {
   if (Array.isArray(num)) {
@@ -325,6 +340,7 @@ interface NBTInterface {
   (nbts: TemplateStringsArray, ...args: unknown[]): NBTObject
 }
 
+// TODO: Look into the weird typing on this
 export const NBT: NBTInterface = makeCallable({
   float: (num: number | number[]): any => customNumber(num, NBTFloat),
 

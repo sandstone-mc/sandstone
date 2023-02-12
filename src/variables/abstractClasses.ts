@@ -1,3 +1,5 @@
+import type { DataPointClass } from './index'
+import type { SelectorClass } from './Selector'
 import type { JSONTextComponent } from '#arguments/jsonTextComponent'
 
 export class ComponentClass {
@@ -6,6 +8,7 @@ export class ComponentClass {
   }
 }
 
+// TODO: Update all of these to return a ConditionNode instead
 export class ConditionClass {
   /**
    * @internal
@@ -15,8 +18,29 @@ export class ConditionClass {
   }
 }
 
+export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> {
+  /**
+   * @internal
+   */
+  _toSelector(): SelectorClass<IsSingle, IsPlayer> {
+    throw new Error('Not implemented')
+  }
+}
+
 export class ConditionTextComponentClass extends ComponentClass implements ConditionClass {
+  /**
+   * @internal
+   */
   _toMinecraftCondition(): {value: any[]} {
+    throw new Error('Not implemented')
+  }
+}
+
+export class DataPointPickClass {
+  /**
+   * @internal
+   */
+  _toDataPoint(): DataPointClass<'storage'> {
     throw new Error('Not implemented')
   }
 }

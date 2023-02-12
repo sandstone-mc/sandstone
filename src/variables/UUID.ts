@@ -2,12 +2,17 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 import { DataPointClass } from './Data'
-import { NBT, NBTIntArray, NBTShort } from './index'
+import {
+  NBT, NBTIntArray, NBTShort, SelectorPickClass,
+} from './index'
+import { parseNBT } from './nbt/parser'
+import { ResolveNBTPart } from './ResolveNBT'
 import { Score } from './Score'
 import { SelectorClass } from './Selector'
 
-import type { JSONTextComponent } from 'sandstone/arguments/index'
-import type { SandstoneCore } from 'sandstone/core/index'
+import type { ENTITY_TYPES, JSONTextComponent, NBTObject } from 'sandstone/arguments/index'
+import type { MCFunctionClass, SandstoneCore } from 'sandstone/core/index'
+import type { LiteralUnion } from 'sandstone/utils'
 import type { ConditionTextComponentClass } from './index'
 
 export type UUIDinNumber = [number, number, number, number]
@@ -21,7 +26,7 @@ export type UUIDOptions = {
   /** Used for `on relation origin` links. Usually an Area Effect Cloud, must be a projectile. Will be automatically generated if needed. */
   holder?: SelectorClass<true, boolean> | UUIDClass
 
-  stack?: UUIDStackClass
+  stack?: UUIDStack
 
   /** Can set source types for the UUID that you did not set in `source`. */
   sources?: {
@@ -50,7 +55,9 @@ export type UUIDOptions = {
   }
 }
 
-export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> implements ConditionTextComponentClass {
+export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> implements ConditionTextComponentClass, SelectorPickClass<true, false> {
+  private core
+
   relationLasts: RelationLasts
 
   readonly primarySource: 'known' | 'scores' | 'selector' | 'data'
@@ -75,7 +82,9 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @param _source A primary source for the UUID. Either a UUID string, a UUID integer array, 4 scores set to the UUID, a selector, or a Data Point set to the UUID.
    * @param holderState Whether a holder for the origin relation will be permanent or last a certain amount of ticks.
    */
-  constructor(private core: SandstoneCore, _source: string | UUIDinNumber | UUIDinScore | SelectorClass<true, boolean> | DataPointClass, holderState: number | Score | 'permanent', options?: UUIDOptions) {
+  constructor(core: SandstoneCore, _source: string | UUIDinNumber | UUIDinScore | SelectorPickClass<true, boolean> | DataPointClass, holderState: number | Score | 'permanent', options?: UUIDOptions) {
+    this.core = core
+
     let source = _source
 
     if (typeof holderState === 'number') {
@@ -103,9 +112,9 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
         this.primarySource = 'scores'
         this.scores = source as UUIDinScore
       }
-    } else if (source instanceof SelectorClass) {
+    } else if (source instanceof SelectorPickClass) {
       this.primarySource = 'selector'
-      this.selector = source
+      this.selector = source._toSelector()
     } else {
       this.primarySource = 'data'
       this.data = source
@@ -121,6 +130,10 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
           throw new Error('Attempted to set UUID source of the same type as the primary source in options!')
         }
 
+        const {
+          Data, DataVariable, getTempStorage, getInitMCFunction, Variable, ResolveNBT,
+        } = core.pack
+
         if (options.sources.scores) {
           const handleConversions = (scores: UUIDinScore) => {
             switch (this.primarySource) {
@@ -130,23 +143,21 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
                 }
               } break
               case 'data': {
-                let storagePoint = this.data as DataPointClass<'storage'>
+                const storagePoint = this.data as DataPointClass<'storage'>
 
                 if (storagePoint.type !== 'storage') {
-                  const dataPoint = new DataPointClass(core.pack, 'storage', '__sandstone:temp', ['UUID'])
+                  const dataPoint = getTempStorage('UUID')
 
                   dataPoint.set(storagePoint)
-
-                  storagePoint = dataPoint
                 }
                 for (let i = 0; i < 4; i++) {
                   scores[i].set(storagePoint.select([i]))
                 }
               } break
               case 'selector': {
-                const storagePoint = new DataPointClass(core.pack, 'storage', '__sandstone:temp', ['UUID'])
+                const storagePoint = getTempStorage('UUID')
 
-                storagePoint.set(new DataPointClass(core.pack, 'entity', this.selector as SelectorClass<true, any>, ['UUID']))
+                storagePoint.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
 
                 for (let i = 0; i < 4; i++) {
                   scores[i].set(storagePoint.select([i]))
@@ -158,7 +169,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
 
           // Generating & setting scores
           if (options.sources.scores === true) {
-            handleConversions([core.pack.Variable(), core.pack.Variable(), core.pack.Variable(), core.pack.Variable()])
+            handleConversions([Variable(), Variable(), Variable(), Variable()])
             // Setting existing scores
           } else if (Array.isArray(options.sources.scores[0])) {
             // UUIDClass is being constructed in an MCFunction
@@ -169,7 +180,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
               })
             // UUIDClass is being constructed outside of a MCFunction
             } else {
-              core.insideMCFunction(core.pack.getInitMCFunction(), () => {
+              core.insideMCFunction(getInitMCFunction(), () => {
                 /* @ts-ignore */
                 handleConversions(options.sources.scores[0])
               })
@@ -183,25 +194,21 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
           if (Array.isArray(options.sources.data) || options.sources.data === true) {
             // User doesn't want to set up a storage location
             if (options.sources.data === true) {
-              this.data = new DataPointClass(core.pack, 'storage', '__sandstone:variables', ['UUID', `${this.known?.[0] || Math.floor(Math.random() * 10000)}`])
+              this.data = DataVariable(undefined, '__sandstone')
             // User has set a storage location
             } else {
               this.data = options.sources.data[0]
             }
 
-            // TODO: Add __init__
             switch (this.primarySource) {
               case 'known': {
                 this.data.set(this.known as UUIDinNumber)
               } break
               case 'scores': {
-                this.data.set([0])
-                for (let i = 0; i < 4; i++) {
-                  this.data.select([i]).set((this.scores as UUIDinScore)[i], 'int')
-                }
+                ResolveNBT((this.scores as UUIDinScore).map((score) => ResolveNBTPart(score)), this.data)
               } break
               case 'selector': {
-                this.data.set(new DataPointClass(core.pack, 'entity', this.selector as SelectorClass<true, any>, ['UUID']))
+                this.data.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
               } break
               default: break
             }
@@ -247,21 +254,24 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @param array Optional. An integer array. Defaults to contained UUID (known; this does not work at pack runtime)
    */
   arrayToString(array?: UUIDinNumber) {
-    if (!array) {
-      array = this.known as UUIDinNumber
-    }
-    for (let i = 0; i < 4; i++) {
-      UUIDData.setInt32(i * 4, array[i], false)
-    }
+    if (this.known) {
+      if (!array) {
+        array = this.known as UUIDinNumber
+      }
+      for (let i = 0; i < 4; i++) {
+        UUIDData.setInt32(i * 4, array[i], false)
+      }
 
-    const hex = UUIDData.getBigUint64(0, false).toString(16).padStart(16, '0') + UUIDData.getBigUint64(8, false).toString(16).padStart(16, '0')
-    const groups = []
-    let groupStart = 0
-    for (const groupSize of UUID_GROUP_SIZES) {
-      groups.push(hex.substring(groupStart, groupStart + groupSize))
-      groupStart += groupSize
+      const hex = UUIDData.getBigUint64(0, false).toString(16).padStart(16, '0') + UUIDData.getBigUint64(8, false).toString(16).padStart(16, '0')
+      const groups = []
+      let groupStart = 0
+      for (const groupSize of UUID_GROUP_SIZES) {
+        groups.push(hex.substring(groupStart, groupStart + groupSize))
+        groupStart += groupSize
+      }
+      return groups.join('-')
     }
-    return groups.join('-')
+    return undefined
   }
 
   setKnown(uuid: UUIDinNumber) {
@@ -269,15 +279,16 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
   }
 
   setScores(scores?: UUIDinScore, alreadySet = false) {
-
+    // TODO: Implement
   }
 
   setData(data?: DataPointClass<'storage'>, alreadySet = false) {
 
   }
 
+  /** Selector for the entity with the UUID. If `known` is set this will go unused. */
   setSelector(selector: SelectorClass<true, any>) {
-
+    this.selector = selector
   }
 
   /**
@@ -286,49 +297,74 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @param timerSet Optional. Whether the AEC's Duration has been set. (Unless you're using a Score this should've been done in the summon command)
    * @param ownerSet Optional. Whether the AEC's Owner has been set. If false it will be set.
    */
-  setHolder(holder?: string | UUIDinNumber | UUIDinScore | UUIDClass | SelectorClass<true, any>, timerSet = true, ownerSet = false) {
-    if (!holder) {
-      let nbt: any = {}
+  setHolder(holder?: string | UUIDClass | SelectorClass<true, any>, timerSet = true, ownerSet = false): UUIDClass<any> | SelectorClass<true, any> | [SelectorClass<true, any>, MCFunctionClass] {
+    const { pack } = this.core
 
+    let nbt: NBTObject = {}
+
+    if (!timerSet) {
       if (this.relationLasts === 'singleTick') {
         nbt = { Duration: new NBTShort(1) }
       } else if (this.relationLasts === 'permanent') {
-        nbt = NBT`{Age:-2147483648,Duration:-1s,WaitTime:-2147483648}`
+        nbt = parseNBT(NBT, '{Age:-2147483648,Duration:-1s,WaitTime:-2147483648}') as Omit<NBTObject, string>
       } else {
-        nbt = { Duration: new ResolveNBTPart(this.timer, NBTShort) }
+        nbt = { Duration: typeof this.timer === 'number' ? new NBTShort(this.timer) : ResolveNBTPart(this.timer as Score, 1, NBTShort) }
       }
+    }
+
+    const { Data, Selector, ResolveNBT } = pack
+
+    if (!ownerSet) {
+      switch (this.primarySource) {
+        case 'known': nbt.Owner = new NBTIntArray(this.known as UUIDinNumber)
+          break
+        case 'data': nbt.Owner = ResolveNBTPart(this.data as DataPointClass, NBTIntArray)
+          break
+        case 'scores': nbt.Owner = ResolveNBTPart(this.scores as Score[], 1)
+          break
+        case 'selector': nbt.Owner = ResolveNBTPart(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'), NBTIntArray)
+          break
+        default: break
+      }
+    }
+
+    const relationAEC = pack.Label('__sandstone.relation_aec')
+
+    nbt.Tags = [`${relationAEC}`]
+
+    const resolvedNBT = () => ResolveNBT(nbt)
+
+    const { execute } = pack.commands
+
+    if (!holder) {
       if (this.stack) {
-        switch (this.primarySource) {
-          case 'known': nbt.Owner = new NBTIntArray(this.known as UUIDinNumber)
-            break
-          case 'data': nbt.Owner = new ResolveNBTPart(this.data)
-            break
-          case 'scores': nbt.Owner = new ResolveNBTPart(this.scores, NBTIntArray)
-            break
-          case 'selector': nbt.Owner = new ResolveNBTPart(new DataPointClass(this.core.pack, 'entity', this.selector as SelectorClass<true, any>, ['UUID']))
-            break
-          default: break
-        }
-        this.holder = this.stack.addMember('minecraft:area_effect_cloud', nbt, this.timer instanceof Score || this.primarySource !== 'known')
+        this.stack.createMember('minecraft:area_effect_cloud', nbt, this.timer instanceof Score || this.primarySource !== 'known')
+
+        this.holder = relationAEC(Selector('@e', { limit: 1 })).selector
         return this.holder as SelectorClass<true, any>
       }
 
-      nbt.Tags = ['__sandstone.relation_aec']
+      const mcfunction = pack.MCFunction(`__sandstone:uuid/relation${Math.floor(Math.random() * 10000)}}`, () => Data('entity', '@s', ['{}']).set(resolvedNBT()))
 
-      const resolvedNBT = new ResolveNBT(this.core, nbt)
+      execute.summon('area_effect_cloud').run.functionCmd(mcfunction)
 
-      const mcfunction = this.core.pack.MCFunction(`__sandstone:uuid/relation${Math.floor(Math.random() * 10000)}}`, () => this.core.pack.commands.data.modify.entity('@s', '.').set.from.storage(resolvedNBT.target, resolvedNBT.path))
+      this.holder = relationAEC(Selector('@e', { limit: 1 })).selector
 
-      this.core.pack.commands.execute.summon('area_effect_cloud').run.functionCmd(mcfunction)
-
-      this.holder = this.core.pack.Label('__sandstone.relation_aec')(new SelectorClass(this.core.pack, '@e', { tag: '__sandstone.relation_aec', limit: 1 }))
-      return [this.holder, mcfunction]
+      return [this.holder as SelectorClass<true, any>, mcfunction]
     }
     if (holder instanceof UUIDClass) {
       this.holder = holder
+      if (Object.keys(nbt).length !== 0) {
+        Data('entity', this.holder.arrayToString() || this.holder.selector as SelectorClass<true, any>, ['{}']).set(resolvedNBT())
+      }
       return this.holder
     }
-    this.holder = new UUIDClass(this.core, holder, this.relationLasts === 'permanent' ? 'permanent' : (this.timer as number | Score))
+
+    this.holder = holder as SelectorClass<true, any>
+
+    if (Object.keys(nbt).length !== 0) {
+      Data('entity', this.holder as SelectorClass<true, any>, ['{}']).set(resolvedNBT())
+    }
     return this.holder
   }
 
@@ -344,12 +380,15 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    */
   _toChatComponent(): JSONTextComponent {
     if (this.known) {
-      return { selector: this.arrayToString() }
+      return { selector: this.arrayToString() as string }
     }
     if (this.selector) {
       return { selector: this.selector.toString() }
     }
-    return 'Stored in scores or data storage'
+    if (this.scores) {
+      return [...this.scores]
+    }
+    return this.data as DataPointClass
   }
 
   /**
@@ -360,5 +399,35 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
       return { value: ['if', 'entity', this.arrayToString()] }
     }
     return { value: ['as', this.setHolder(), 'on', 'passengers', 'if', 'entity', '@s'] }
+  }
+
+  /**
+   * @internal
+   */
+  public _toSelector() {
+    return this.selector || new SelectorClass(this.core.pack, this.known)
+  }
+}
+
+class UUIDStack {
+  base
+
+  constructor(private core: SandstoneCore, base: UUIDClass | UtilityChunkMember) {
+    this.base = base
+  }
+
+  createMember(entityType: LiteralUnion<ENTITY_TYPES>, nbt: any, resolveNBT = false) {
+    const { execute, data, ride } = this.core.pack.commands
+
+    execute.as(this.base).at('@s').summon(entityType).run(() => {
+      if (nbt) {
+        if (resolveNBT) {
+          new DataPointClass(this.core.pack, 'entity', '@s', ['{}']).set(this.core.pack.ResolveNBT(nbt))
+        } else {
+          data.merge.entity('@s', nbt)
+        }
+      }
+      ride('@s').mount(this.base)
+    })
   }
 }

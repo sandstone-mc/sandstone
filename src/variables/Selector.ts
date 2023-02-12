@@ -3,10 +3,8 @@
 import { nbtStringifier } from '#variables/nbt/NBTs'
 import { rangeParser } from '#variables/parsers'
 
-import { ComponentClass } from './abstractClasses'
-
 import type { LiteralUnion } from '../utils'
-import type { ConditionClass } from './abstractClasses'
+import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses'
 import type { NotNBT } from './nbt/NBTs'
 import type {
   ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
@@ -195,7 +193,7 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
   }).join(', ')}}`
 }
 
-export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> extends ComponentClass implements ConditionClass {
+export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends boolean = false> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer> {
   arguments: SelectorProperties<IsSingle, IsPlayer>
 
   constructor(
@@ -203,7 +201,6 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
     public target: '@s' | '@p' | '@a' | '@e' | '@r',
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
-    super()
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
   }
 
@@ -214,10 +211,6 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
    */
   listScores = () => {
     this.sandstonePack.commands.scoreboard.players.list(this.toString())
-  }
-
-  _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {
-    return { value: ['if', 'entity', this] }
   }
 
   toString() {
@@ -296,10 +289,27 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
     return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }
 
-  protected _toChatComponent(): TextComponentObject {
+  /**
+   * @internal
+   */
+  _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {
+    return { value: ['if', 'entity', this] }
+  }
+
+  /**
+   * @internal
+   */
+  _toChatComponent(): TextComponentObject {
     return {
       selector: this.toString(),
     }
+  }
+
+  /**
+   * @internal
+   */
+  _toSelector(): SelectorClass<IsSingle, IsPlayer> {
+    return this
   }
 
   protected toJSON() {

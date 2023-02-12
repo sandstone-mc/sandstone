@@ -1,5 +1,4 @@
-import { Score } from '#variables'
-
+import { Score } from '../../variables/Score'
 import { SingleConditionNode } from './condition'
 
 import type { Range } from '#arguments/range'
