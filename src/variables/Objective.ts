@@ -26,13 +26,16 @@ export class _RawObjectiveClass {
     this.creator = opts.creator
   }
 
+  /** Resets all scores on the objective */
+  reset = () => this.sandstonePack.commands.scoreboard.players.reset('*', this.name)
+
+  ScoreHolder = (scoreHolder: MultipleEntitiesArgument): Score => new Score(this.sandstonePack, scoreHolder.toString(), this as any)
+
   toString() {
     return this.name
   }
 
   toJSON = this.toString
-
-  ScoreHolder = (scoreHolder: MultipleEntitiesArgument): Score => new Score(this.sandstonePack, scoreHolder.toString(), this as any)
 
   __call__ = this.ScoreHolder
 }

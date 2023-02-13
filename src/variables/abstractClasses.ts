@@ -22,7 +22,7 @@ export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolea
   /**
    * @internal
    */
-  _toSelector(): SelectorClass<IsSingle, IsPlayer> {
+  _toSelector(): SelectorClass<IsSingle, IsPlayer> | string {
     throw new Error('Not implemented')
   }
 }

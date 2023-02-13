@@ -124,13 +124,16 @@ class DataPack extends PackType {
 export class SandstonePack {
   readonly core: SandstoneCore
 
-  readonly flow: Flow
-
-  readonly commands: SandstoneCommands
-
   packTypes: Map<string, PackType>
 
   dataPack = () => this.packTypes.get('datapack') as DataPack
+
+  // Smithed Pack IDs
+  dependencies: Map<string, boolean>
+
+  readonly flow: Flow
+
+  readonly commands: SandstoneCommands
 
   objectives: Set<ObjectiveClass>
 
@@ -142,13 +145,23 @@ export class SandstonePack {
 
   tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass>>
 
+  loadTags: { preLoad: TagClass<'functions'>, load: TagClass<'functions'>, postLoad: TagClass<'functions'> }
+
   constructor(public defaultNamespace: string, public packUid: string) {
     this.core = new SandstoneCore(this)
-    this.commands = new SandstoneCommands(this)
 
     this.packTypes = new Map()
-    // TODO: Add options
     this.packTypes.set('datapack', new DataPack(false, JSON.parse(process.env.PACK_OPTIONS as string)))
+
+    this.loadTags = {
+      preLoad: this.Tag('functions', 'load:pre_load', []),
+      load: this.Tag('functions', 'load:load', []),
+      postLoad: this.Tag('functions', 'load:post_load', []),
+    }
+    this.setupLantern()
+    this.dependencies = new Map()
+
+    this.commands = new SandstoneCommands(this)
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
@@ -158,6 +171,29 @@ export class SandstonePack {
     if (process.env.NAMESPACE) {
       this.defaultNamespace = process.env.NAMESPACE
     }
+  }
+
+  protected setupLantern = () => {
+    const loadStatus = this.Objective.create('load.status')
+
+    const privateInit = this.Tag('functions', 'load:_private/init', [this.MCFunction('load:_private/init', () => {
+      this.commands.comment('Reset scoreboards so packs can set values accurate for current load.')
+      loadStatus.reset()
+    })])
+
+    const privateLoad = this.Tag('functions', 'load:_private/load', [
+      privateInit,
+      { id: this.loadTags.preLoad, required: false },
+      { id: this.loadTags.load, required: false },
+      { id: this.loadTags.postLoad, required: false },
+    ])
+
+    this.Tag('functions', 'minecraft:load', [privateLoad])
+
+    this.core.insideMCFunction(this.getInitMCFunction(), () => {
+      // TODO: Add this to CLI
+      loadStatus(this.defaultNamespace).set(process.env.LOAD_VERSION || 1)
+    })
   }
 
   resourceToPath = (name: string, resourceFolders: string[]): ResourcePath => {
@@ -195,7 +231,13 @@ export class SandstonePack {
      * @param name The name of the objective
      */
     create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent): ObjectiveClass => {
-      const objective = new ObjectiveClass(this, name, criteria as string, display, { creator: 'user' })
+      let namespace: boolean = false
+
+      if (name.includes('.')) {
+        namespace = true
+      }
+
+      const objective = new ObjectiveClass(this, namespace ? name : `${this.defaultNamespace}.${name}`, criteria as string, display, { creator: 'user' })
 
       this.registerNewObjective(objective)
       return objective
@@ -379,7 +421,7 @@ export class SandstonePack {
    * @param nbt NBT with Data Points & Scores initialized with ResolveNBTPart.
    * @param dataPoint Optional. Data Point to resolve to.
    */
-  ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass) => new ResolveNBTClass(this, nbt, dataPoint)
+  ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) => new ResolveNBTClass(this, nbt, dataPoint)
 
   Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this, target, properties)) as any
 
@@ -412,9 +454,7 @@ export class SandstonePack {
       })
       if (!startTickedLoops) {
         startTickedLoops = this.MCFunction('__sandstone:ticked/start', () => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
-        const load = new TagClass(this.core, 'functions', 'minecraft:load', {
-          values: [startTickedLoops], addToSandstoneCore: true, creator: 'sandstone', onConflict: 'append',
-        })
+        this.loadTags.load.push(startTickedLoops)
       } else {
         this.core.insideMCFunction(startTickedLoops, () => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
       }

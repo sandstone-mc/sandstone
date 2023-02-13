@@ -8,12 +8,12 @@ import {
 import { parseNBT } from './nbt/parser'
 import { ResolveNBTPart } from './ResolveNBT'
 import { Score } from './Score'
-import { SelectorClass } from './Selector'
 
 import type { ENTITY_TYPES, JSONTextComponent, NBTObject } from 'sandstone/arguments/index'
 import type { MCFunctionClass, SandstoneCore } from 'sandstone/core/index'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { ConditionTextComponentClass } from './index'
+import type { SelectorClass } from './Selector'
 
 export type UUIDinNumber = [number, number, number, number]
 export type UUIDinScore = [Score, Score, Score, Score]
@@ -114,7 +114,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
       }
     } else if (source instanceof SelectorPickClass) {
       this.primarySource = 'selector'
-      this.selector = source._toSelector()
+      this.selector = source._toSelector() as SelectorClass<true, boolean>
     } else {
       this.primarySource = 'data'
       this.data = source
@@ -129,92 +129,11 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
         if (this.primarySource !== 'known' && options.sources[this.primarySource]) {
           throw new Error('Attempted to set UUID source of the same type as the primary source in options!')
         }
-
-        const {
-          Data, DataVariable, getTempStorage, getInitMCFunction, Variable, ResolveNBT,
-        } = core.pack
-
         if (options.sources.scores) {
-          const handleConversions = (scores: UUIDinScore) => {
-            switch (this.primarySource) {
-              case 'known': {
-                for (let i = 0; i < 4; i++) {
-                  scores[i].set((this.known as UUIDinNumber)[i])
-                }
-              } break
-              case 'data': {
-                const storagePoint = this.data as DataPointClass<'storage'>
-
-                if (storagePoint.type !== 'storage') {
-                  const dataPoint = getTempStorage('UUID')
-
-                  dataPoint.set(storagePoint)
-                }
-                for (let i = 0; i < 4; i++) {
-                  scores[i].set(storagePoint.select([i]))
-                }
-              } break
-              case 'selector': {
-                const storagePoint = getTempStorage('UUID')
-
-                storagePoint.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
-
-                for (let i = 0; i < 4; i++) {
-                  scores[i].set(storagePoint.select([i]))
-                }
-              } break
-              default: break
-            }
-          }
-
-          // Generating & setting scores
-          if (options.sources.scores === true) {
-            handleConversions([Variable(), Variable(), Variable(), Variable()])
-            // Setting existing scores
-          } else if (Array.isArray(options.sources.scores[0])) {
-            // UUIDClass is being constructed in an MCFunction
-            if (core.mcfunctionStack.length !== 0) {
-              core.insideMCFunction(core.mcfunctionStack[core.mcfunctionStack.length - 1].resource, () => {
-                /* @ts-ignore */
-                handleConversions(options.sources.scores[0])
-              })
-            // UUIDClass is being constructed outside of a MCFunction
-            } else {
-              core.insideMCFunction(getInitMCFunction(), () => {
-                /* @ts-ignore */
-                handleConversions(options.sources.scores[0])
-              })
-            }
-          } else {
-            this.scores = options.sources.scores as UUIDinScore
-          }
+          this.setScores(options.sources.scores === true ? undefined : options.sources.scores)
         }
         if (options.sources.data) {
-          // Storage needs to be set
-          if (Array.isArray(options.sources.data) || options.sources.data === true) {
-            // User doesn't want to set up a storage location
-            if (options.sources.data === true) {
-              this.data = DataVariable(undefined, '__sandstone')
-            // User has set a storage location
-            } else {
-              this.data = options.sources.data[0]
-            }
-
-            switch (this.primarySource) {
-              case 'known': {
-                this.data.set(this.known as UUIDinNumber)
-              } break
-              case 'scores': {
-                ResolveNBT((this.scores as UUIDinScore).map((score) => ResolveNBTPart(score)), this.data)
-              } break
-              case 'selector': {
-                this.data.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
-              } break
-              default: break
-            }
-          } else {
-            this.data = options.sources.data
-          }
+          this.setData(options.sources.data === true ? undefined : options.sources.data)
         }
         if (options.sources.selector) {
           this.selector = options.sources.selector
@@ -254,7 +173,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @param array Optional. An integer array. Defaults to contained UUID (known; this does not work at pack runtime)
    */
   arrayToString(array?: UUIDinNumber) {
-    if (this.known) {
+    if (this.known || array) {
       if (!array) {
         array = this.known as UUIDinNumber
       }
@@ -271,24 +190,114 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
       }
       return groups.join('-')
     }
-    return undefined
+    throw new Error('Cannot convert a non-existent UUID array to a string!')
   }
 
   setKnown(uuid: UUIDinNumber) {
     this.known = uuid
+
+    return this
   }
 
-  setScores(scores?: UUIDinScore, alreadySet = false) {
-    // TODO: Implement
+  setScores(scores?: UUIDinScore | [UUIDinScore]) {
+    const { core } = this
+    const {
+      Data, getTempStorage, getInitMCFunction, Variable,
+    } = core.pack
+
+    const handleConversions = (_scores: UUIDinScore) => {
+      switch (this.primarySource) {
+        case 'known': {
+          for (let i = 0; i < 4; i++) {
+            _scores[i].set((this.known as UUIDinNumber)[i])
+          }
+        } break
+        case 'data': {
+          const storagePoint = this.data as DataPointClass<'storage'>
+
+          if (storagePoint.type !== 'storage') {
+            const dataPoint = getTempStorage('UUID')
+
+            dataPoint.set(storagePoint)
+          }
+          for (let i = 0; i < 4; i++) {
+            _scores[i].set(storagePoint.select([i]))
+          }
+        } break
+        case 'selector': {
+          const storagePoint = getTempStorage('UUID')
+
+          storagePoint.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
+
+          for (let i = 0; i < 4; i++) {
+            _scores[i].set(storagePoint.select([i]))
+          }
+        } break
+        default: break
+      }
+    }
+
+    // Generating & setting scores
+    if (scores === undefined) {
+      handleConversions([Variable(), Variable(), Variable(), Variable()])
+      // Setting existing scores
+    } else if (Array.isArray(scores[0])) {
+      // UUIDClass is being constructed in an MCFunction
+      if (core.mcfunctionStack.length !== 0) {
+        core.insideMCFunction(core.mcfunctionStack[core.mcfunctionStack.length - 1].resource, () => {
+          /* @ts-ignore */
+          handleConversions(scores[0])
+        })
+      // UUIDClass is being constructed outside of a MCFunction
+      } else {
+        core.insideMCFunction(getInitMCFunction(), () => {
+          /* @ts-ignore */
+          handleConversions(scores[0])
+        })
+      }
+    } else {
+      this.scores = scores as UUIDinScore
+    }
+
+    return this
   }
 
-  setData(data?: DataPointClass<'storage'>, alreadySet = false) {
+  setData(data?: DataPointClass | DataPointClass[]) {
+    if (Array.isArray(data) || data === undefined) {
+      const {
+        Data, DataVariable, ResolveNBT,
+      } = this.core.pack
 
+      // User doesn't want to set up a storage location
+      if (data === undefined) {
+        this.data = DataVariable(undefined, '__sandstone')
+      // User has set a storage location
+      } else {
+        this.data = data[0]
+      }
+
+      switch (this.primarySource) {
+        case 'known': {
+          this.data.set(new NBTIntArray(this.known as UUIDinNumber))
+        } break
+        case 'scores': {
+          ResolveNBT((this.scores as UUIDinScore).map((score) => ResolveNBTPart(score)), this.data)
+        } break
+        case 'selector': {
+          this.data.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
+        } break
+        default: break
+      }
+    } else {
+      this.data = data
+    }
+    return this
   }
 
   /** Selector for the entity with the UUID. If `known` is set this will go unused. */
   setSelector(selector: SelectorClass<true, any>) {
     this.selector = selector
+    return this
   }
 
   /**
@@ -320,7 +329,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
           break
         case 'data': nbt.Owner = ResolveNBTPart(this.data as DataPointClass, NBTIntArray)
           break
-        case 'scores': nbt.Owner = ResolveNBTPart(this.scores as Score[], 1)
+        case 'scores': nbt.Owner = ResolveNBTPart(this.scores as Score[])
           break
         case 'selector': nbt.Owner = ResolveNBTPart(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'), NBTIntArray)
           break
@@ -405,7 +414,11 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @internal
    */
   public _toSelector() {
-    return this.selector || new SelectorClass(this.core.pack, this.known)
+    const selector = this.known ? this.arrayToString() : this.selector
+    if (!selector) {
+      throw new Error('Cannot create a selector without a UUID or existing selector')
+    }
+    return selector
   }
 }
 

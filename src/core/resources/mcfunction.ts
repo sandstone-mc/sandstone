@@ -187,8 +187,8 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
 
   protected addToSandstoneCore: boolean
 
-  constructor(core: SandstoneCore, name: string | string[], args: MCFunctionClassArguments) {
-    super(core, core.pack.dataPack(), 'mcfunction', MCFunctionNode, Array.isArray(name) ? name : core.pack.resourceToPath(name, ['functions']), {
+  constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments) {
+    super(core, core.pack.dataPack(), 'mcfunction', MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
       ...args,
       addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,
     })
@@ -200,9 +200,9 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     this.tags = args.tags
 
     if (args.runOnLoad) {
-      this.addToTag('minecraft:load')
+      core.pack.loadTags.load.push(this.name)
     } else if (args.runEveryTick) {
-      this.addToTag('minecraft:tick')
+      core.pack.registerTickedCommands('1t', () => this.__call__())
     }
 
     if (args.tags) {
