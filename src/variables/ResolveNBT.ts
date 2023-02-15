@@ -42,11 +42,13 @@ export class ResolveNBTClass implements DataPointPickClass {
     if (Array.isArray(nbt)) {
       resolvedNBT = []
 
-      for (const [i, value] of nbt.entries()) {
-        const resolved = this._resolveNBT(value, `${path === undefined ? '' : path}`, i)
+      if (resolvedNBT.length !== 0) {
+        for (const [i, value] of nbt.entries()) {
+          const resolved = this._resolveNBT(value, `${path === undefined ? '' : path}`, i)
 
-        if (resolved !== undefined) {
-          resolvedNBT.push(resolved)
+          if (resolved !== undefined) {
+            resolvedNBT.push(resolved)
+          }
         }
       }
 
@@ -171,13 +173,13 @@ export class ResolveNBTPartClass<ValueType extends 'data' | 'score' | 'scores', 
 
 export function ResolveNBTPart(data: StringDataPointClass): ResolveNBTPartClass<'data', typeof NBTString>
 
-export function ResolveNBTPart(data: DataPointClass, type: NBTAllValues): ResolveNBTPartClass<'data', NBTAllValues>
+export function ResolveNBTPart(data: DataPointClass<any>, type: NBTAllValues): ResolveNBTPartClass<'data', NBTAllValues>
 
 export function ResolveNBTPart(score: Score, scale?: number, type?: NBTAllNumbers): ResolveNBTPartClass<'score', typeof NBTInt | NBTAllNumbers>
 
 export function ResolveNBTPart(scores: Score[], scale?: number, type?: NBTAllArrays): ResolveNBTPartClass<'scores', typeof NBTIntArray | NBTAllArrays>
 
-export function ResolveNBTPart<ValueType extends 'data' | 'score' | 'scores', Primitive extends NBTAllValues>(value: StringDataPointClass | DataPointClass | Score | Score[], option1?: number | Primitive, option2?: Primitive) {
+export function ResolveNBTPart<ValueType extends 'data' | 'score' | 'scores', Primitive extends NBTAllValues>(value: StringDataPointClass | DataPointClass<any> | Score | Score[], option1?: number | Primitive, option2?: Primitive) {
   if (Array.isArray(value)) {
     return new ResolveNBTPartClass<ValueType, Primitive>(value, 'scores' as ValueType, (option2 || NBTIntArray) as Primitive, (option1 || 1) as number)
   }

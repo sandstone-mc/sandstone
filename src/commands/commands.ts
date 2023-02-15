@@ -23,7 +23,6 @@ import {
   ItemCommand,
   KillCommand,
   ListCommand,
-  LocateBiomeCommand,
   LocateCommand,
   LootCommand,
   MeCommand,
@@ -57,6 +56,7 @@ import {
   WeatherCommand,
   WorldBorderCommand,
 } from './implementations'
+import { PlaceCommand } from './implementations/block/place'
 
 import type { SandstonePack } from '#pack'
 
@@ -113,15 +113,15 @@ export class SandstoneCommands {
 
   get list() { return new ListCommand(this.sandstonePack).list }
 
-  get locate() { return new LocateCommand(this.sandstonePack).locate }
-
-  get locatebiome() { return new LocateBiomeCommand(this.sandstonePack).locatebiome }
+  get locate() { return new LocateCommand(this.sandstonePack) }
 
   get loot() { return new LootCommand(this.sandstonePack) }
 
   get me() { return new MeCommand(this.sandstonePack).me }
 
   get particle() { return new ParticleCommand(this.sandstonePack).particle }
+
+  get place() { return new PlaceCommand(this.sandstonePack) }
 
   get playsound() { return new PlaySoundCommand(this.sandstonePack).playsound }
 

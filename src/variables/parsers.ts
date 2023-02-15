@@ -1,7 +1,7 @@
 import { VectorClass } from './Coordinates'
 
 import type {
-  Coordinates, Range, Rotation,
+  Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION,
 } from '#arguments'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
@@ -54,4 +54,67 @@ export const rangeParser = (range: Range): string => {
     return `${sanitizeValue(range[0])}..${sanitizeValue(range[1])}`
   }
   return range.toString()
+}
+
+export type StructureRotation = STRUCTURE_ROTATION | number | `${90 | 180 | 270}` | `-${90 | 180 | 270}`
+
+export const structureRotationParser = (rotation?: StructureRotation) => {
+  if (!rotation) {
+    return 'none'
+  }
+  const numToLiteral = (angle: number): STRUCTURE_ROTATION => {
+    switch (angle) {
+      case 0: return 'none'
+      case 90: return 'clockwise_90'
+      case 180: return '180'
+      case 270: return 'counterclockwise_90'
+      case -90: return 'counterclockwise_90'
+      case -180: return '180'
+      case -270: return 'clockwise_90'
+      default: {
+        if (!Number.isInteger(angle / 90)) {
+          throw new Error('Structure rotation must be in increments of 90!')
+        }
+
+        // reduce the angle
+        angle %= 360
+
+        // force it to be the positive remainder, so that 0 <= angle < 360
+        angle = (angle + 360) % 360
+
+        // force into the minimum absolute value residue class, so that -180 < angle <= 180
+        if (angle > 180) angle -= 360
+
+        return numToLiteral(angle)
+      }
+    }
+  }
+  if (typeof rotation === 'number') {
+    return numToLiteral(rotation)
+  }
+
+  if (rotation === 'clockwise_90' || rotation === 'counterclockwise_90') {
+    return rotation
+  }
+
+  return numToLiteral(Number(rotation))
+}
+
+export type StructureMirror = STRUCTURE_MIRROR | '^x' | '^z' | 'x' | 'z' | boolean
+
+export const structureMirrorParser = (mirror?: StructureMirror): STRUCTURE_MIRROR => {
+  if (typeof mirror === 'string') {
+    const lastCharacter = mirror.slice(0, -1)
+    if (lastCharacter === 'x') {
+      return 'left_right'
+    }
+    if (lastCharacter === 'z') {
+      return 'front_back'
+    }
+    return mirror as STRUCTURE_MIRROR
+  }
+  if (mirror) {
+    return 'left_right'
+  }
+  return 'none'
 }

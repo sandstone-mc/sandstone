@@ -1,3 +1,4 @@
+import type { UUIDClass } from 'sandstone/variables/UUID'
 import type { _ShowAlias } from './basics'
 import type { SelectorClass } from '#variables'
 
@@ -22,5 +23,5 @@ export type SelectorArgument<MustBeSingle extends boolean, MustBePlayer extends 
  */
 export type SinglePlayerArgument = SelectorArgument<true, true> | _ShowAlias
 export type MultiplePlayersArgument = SelectorArgument<false, true> | SinglePlayerArgument | _ShowAlias
-export type SingleEntityArgument = SelectorArgument<true, false> | SinglePlayerArgument | _ShowAlias
+export type SingleEntityArgument = SelectorArgument<true, false> | SinglePlayerArgument | UUIDClass<any> | _ShowAlias
 export type MultipleEntitiesArgument = SelectorArgument<false, false> | SingleEntityArgument | MultiplePlayersArgument | _ShowAlias

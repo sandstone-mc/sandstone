@@ -35,6 +35,10 @@ export class _ShowAlias {
   private readonly xxx?: never
 }
 
+export type STRUCTURE_ROTATION = 'none' | 'clockwise_90' | 'counterclockwise_90' | '180'
+
+export type STRUCTURE_MIRROR = 'none' | 'front_back' | 'left_right'
+
 export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
 
 export type TimeArgument = number | LiteralUnion<'1t' | '1s' | '1d'>

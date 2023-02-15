@@ -20,7 +20,7 @@ import {
 
 import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON, Coordinates, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from '#arguments'
 import type { StoreType } from '#commands'
 import type {
@@ -230,7 +230,7 @@ export class SandstonePack {
      * Create a new objective. Defaults to `dummy` if unspecified.
      * @param name The name of the objective
      */
-    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent): ObjectiveClass => {
+    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent, alreadyExists?: true): ObjectiveClass => {
       let namespace: boolean = false
 
       if (name.includes('.')) {
@@ -239,7 +239,9 @@ export class SandstonePack {
 
       const objective = new ObjectiveClass(this, namespace ? name : `${this.defaultNamespace}.${name}`, criteria as string, display, { creator: 'user' })
 
-      this.registerNewObjective(objective)
+      if (!alreadyExists) {
+        this.registerNewObjective(objective)
+      }
       return objective
     },
 
@@ -322,13 +324,21 @@ export class SandstonePack {
    */
   Data<T extends DATA_TYPES>(type: T): TargetlessDataClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target: SelectorClass<true, boolean> | string | VectorClass<any>): DataClass<T>
+  Data<T extends 'entity'>(type: T, target: SingleEntityArgument): DataClass<T>
+
+  Data<T extends 'storage'>(type: T, target: string): DataClass<T>
+
+  Data<T extends 'block'>(type: T, target: Coordinates): DataClass<T>
 
   Data<T extends DATA_TYPES>(type: T, target: undefined, path: DATA_PATH | DATA_PATH[]): TargetlessDataPointClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target: SelectorClass<true, boolean> | string | VectorClass<any>, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'entity'>(type: T, target: SingleEntityArgument, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target?: SelectorClass<true, boolean> | string | VectorClass<any>, path?: DATA_PATH | DATA_PATH[]) {
+  Data<T extends 'storage'>(type: T, target: string, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+
+  Data<T extends 'block'>(type: T, target: Coordinates, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+
+  Data<T extends DATA_TYPES>(type: T, target?: SingleEntityArgument | string | Coordinates, path?: DATA_PATH | DATA_PATH[]) {
     const dataPath = path ?? typeof path === 'string' ? [path] : path
     if (!path && !target) {
       return new TargetlessDataClass(this, type)
@@ -337,7 +347,7 @@ export class SandstonePack {
       return new TargetlessDataPointClass(this, type, dataPath as DATA_PATH[])
     }
     if (!path) {
-      return new DataClass(this, type, (target instanceof VectorClass ? coordinatesParser(target) : target) as DATA_TARGET[T])
+      return new DataClass(this, type, (type === 'block' ? coordinatesParser(target) : target) as DATA_TARGET[T])
     }
 
     return new DataPointClass(this, type, (target instanceof VectorClass ? coordinatesParser(target) : target) as DATA_TARGET[T], dataPath as DATA_PATH[])
@@ -359,7 +369,7 @@ export class SandstonePack {
        *
        * @param name Optional. A name that can be useful for debugging.
        */
-      (initialValue?: NBTObject | DataPointClass<DATA_TYPES> | undefined, name?: string) => DataPointClass<'storage'>
+      (initialValue?: NBTObject | DataPointClass<any>, name?: string) => DataPointClass<'storage'>
     ) & (
       /**
        * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
@@ -374,7 +384,7 @@ export class SandstonePack {
        */
       (score: Score, storeType?: StoreType, scale?: number, name?: string) => DataPointClass<'storage'>
     )
-  ) = (...args: [initialValue?: NBTObject | DataPointClass | undefined, name?: string] | [score: Score, storeType?: StoreType, scale?: number, name?: string]) => {
+  ) = (...args: [initialValue?: NBTObject | DataPointClass<any>, name?: string] | [score: Score, storeType?: StoreType, scale?: number, name?: string]) => {
     // Get the objective
       const data = this.rootStorage
 

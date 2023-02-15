@@ -9,11 +9,15 @@ import { parseNBT } from './nbt/parser'
 import { ResolveNBTPart } from './ResolveNBT'
 import { Score } from './Score'
 
-import type { ENTITY_TYPES, JSONTextComponent, NBTObject } from 'sandstone/arguments/index'
-import type { MCFunctionClass, SandstoneCore } from 'sandstone/core/index'
-import type { LiteralUnion } from 'sandstone/utils'
+import type {
+  ENTITY_TYPES, JSONTextComponent, NBTObject, SingleEntityArgument,
+} from '../arguments/index'
+import type { ExecuteCommand } from '../commands/index'
+import type { MCFunctionClass, SandstoneCore } from '../core/index'
+import type { LiteralUnion } from '../utils'
 import type { ConditionTextComponentClass } from './index'
 import type { SelectorClass } from './Selector'
+import type { UtilityChunkMember } from './UtilityChunk'
 
 export type UUIDinNumber = [number, number, number, number]
 export type UUIDinScore = [Score, Score, Score, Score]
@@ -26,7 +30,8 @@ export type UUIDOptions = {
   /** Used for `on relation origin` links. Usually an Area Effect Cloud, must be a projectile. Will be automatically generated if needed. */
   holder?: SelectorClass<true, boolean> | UUIDClass
 
-  stack?: UUIDStack
+  /** Used for holder's that are on a stack */
+  stack?: UUIDStackClass<boolean>
 
   /** Can set source types for the UUID that you did not set in `source`. */
   sources?: {
@@ -56,8 +61,6 @@ export type UUIDOptions = {
 }
 
 export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> implements ConditionTextComponentClass, SelectorPickClass<true, false> {
-  private core
-
   relationLasts: RelationLasts
 
   readonly primarySource: 'known' | 'scores' | 'selector' | 'data'
@@ -72,19 +75,17 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
 
   timer?: number | Score
 
-  stack?: UUIDStack
+  stack?: UUIDStackClass<boolean>
 
   /** Used for `on relation origin` links. Usually an Area Effect Cloud, always a projectile. Will be automatically generated if needed. */
-  holder?: SelectorClass<true, boolean> | UUIDClass
+  holder?: SingleEntityArgument
 
   /**
    *
    * @param _source A primary source for the UUID. Either a UUID string, a UUID integer array, 4 scores set to the UUID, a selector, or a Data Point set to the UUID.
    * @param holderState Whether a holder for the origin relation will be permanent or last a certain amount of ticks.
    */
-  constructor(core: SandstoneCore, _source: string | UUIDinNumber | UUIDinScore | SelectorPickClass<true, boolean> | DataPointClass, holderState: number | Score | 'permanent', options?: UUIDOptions) {
-    this.core = core
-
+  constructor(protected core: SandstoneCore, _source: string | UUIDinNumber | UUIDinScore | SelectorPickClass<true, boolean> | DataPointClass, holderState: number | Score | 'permanent', options?: UUIDOptions) {
     let source = _source
 
     if (typeof holderState === 'number') {
@@ -306,7 +307,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @param timerSet Optional. Whether the AEC's Duration has been set. (Unless you're using a Score this should've been done in the summon command)
    * @param ownerSet Optional. Whether the AEC's Owner has been set. If false it will be set.
    */
-  setHolder(holder?: string | UUIDClass | SelectorClass<true, any>, timerSet = true, ownerSet = false): UUIDClass<any> | SelectorClass<true, any> | [SelectorClass<true, any>, MCFunctionClass] {
+  setHolder(holder?: string | UUIDClass | SelectorClass<true, any>, timerSet = true, ownerSet = false): UUIDClass<any> | SingleEntityArgument | [SingleEntityArgument, MCFunctionClass] {
     const { pack } = this.core
 
     let nbt: NBTObject = {}
@@ -350,7 +351,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
         this.stack.createMember('minecraft:area_effect_cloud', nbt, this.timer instanceof Score || this.primarySource !== 'known')
 
         this.holder = relationAEC(Selector('@e', { limit: 1 })).selector
-        return this.holder as SelectorClass<true, any>
+        return this.holder
       }
 
       const mcfunction = pack.MCFunction(`__sandstone:uuid/relation${Math.floor(Math.random() * 10000)}}`, () => Data('entity', '@s', ['{}']).set(resolvedNBT()))
@@ -359,22 +360,47 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
 
       this.holder = relationAEC(Selector('@e', { limit: 1 })).selector
 
-      return [this.holder as SelectorClass<true, any>, mcfunction]
+      return [this.holder, mcfunction]
     }
+
     if (holder instanceof UUIDClass) {
       this.holder = holder
       if (Object.keys(nbt).length !== 0) {
-        Data('entity', this.holder.arrayToString() || this.holder.selector as SelectorClass<true, any>, ['{}']).set(resolvedNBT())
+        Data('entity', this.holder, ['{}']).set(resolvedNBT())
       }
       return this.holder
     }
 
-    this.holder = holder as SelectorClass<true, any>
+    this.holder = holder
 
     if (Object.keys(nbt).length !== 0) {
-      Data('entity', this.holder as SelectorClass<true, any>, ['{}']).set(resolvedNBT())
+      Data('entity', this.holder, ['{}']).set(resolvedNBT())
     }
+
     return this.holder
+  }
+
+  /** Partial execute command executing as (not at) the entity */
+  get execute(): ExecuteCommand {
+    const { execute } = this.core.pack.commands
+    if (this.known) {
+      return execute.as(this.arrayToString())
+    }
+    if (this.stack) {
+      // TODO: Add member test that isn't a selector, requires `_.if` getting `.run` so I can make it a Condition
+      this.stack.execute.if.entity(this._toSelector()).on('origin')
+    }
+    if (this.holder) {
+      if (this.holder instanceof UUIDClass) {
+        return this.holder.execute.on('origin')
+      }
+      return execute.as(this.holder).on('origin')
+    }
+    if (this.selector) {
+      return execute.as(this.selector)
+    }
+    // TODO: Add overloads to setHolder so I don't have to do this.
+    return execute.as(this.setHolder() as SingleEntityArgument).on('origin')
   }
 
   toString() {
@@ -422,17 +448,21 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
   }
 }
 
-class UUIDStack {
-  base
+class UUIDStackClass<InUtilityChunk extends boolean> {
+  constructor(private core: SandstoneCore, public base: UUIDClass | UtilityChunkMember) {
+  }
 
-  constructor(private core: SandstoneCore, base: UUIDClass | UtilityChunkMember) {
-    this.base = base
+  /** Partial execute command executing as all of the members of the stack */
+  get execute() {
+    return this.core.pack.commands.execute.as(this.base).on('passengers')
   }
 
   createMember(entityType: LiteralUnion<ENTITY_TYPES>, nbt: any, resolveNBT = false) {
     const { execute, data, ride } = this.core.pack.commands
 
-    execute.as(this.base).at('@s').summon(entityType).run(() => {
+    const selector = (this.base.known ? this.base.arrayToString() : this.base.selector) as SingleEntityArgument
+
+    execute.as(selector).at('@s').summon(entityType).run(() => {
       if (nbt) {
         if (resolveNBT) {
           new DataPointClass(this.core.pack, 'entity', '@s', ['{}']).set(this.core.pack.ResolveNBT(nbt))
@@ -440,7 +470,7 @@ class UUIDStack {
           data.merge.entity('@s', nbt)
         }
       }
-      ride('@s').mount(this.base)
+      ride('@s').mount(selector)
     })
   }
 }

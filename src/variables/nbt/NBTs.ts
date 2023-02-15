@@ -371,6 +371,11 @@ export const nbtStringifier = (nbt: NBTObject): string => {
     return nbt.toString()
   }
 
+  if (typeof nbt === 'boolean') {
+    // We have a boolean
+    return nbt.toString()
+  }
+
   if (typeof nbt === 'string') {
     // We have a string
 
