@@ -20,8 +20,8 @@ const registries = [
   'sound_event',
   'structure',
   ['worldgen/biome'],
-  ['worldgen/configured_feature']
-  ['worldgen/template_pool']
+  ['worldgen/configured_feature'],
+  ['worldgen/template_pool'],
   ['worldgen/structure']
 ]
 const last = list => list[list.length - 1]
