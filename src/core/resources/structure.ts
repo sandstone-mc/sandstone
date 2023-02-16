@@ -162,20 +162,17 @@ export class StructureClass extends ResourceClass<StructureNode> {
     }
 
     // Ima have an aneurism. Codecs are fun. This is definitely worth it. Definitely.
+    nbt.size[0] = array.length
     for (const layer of array.entries()) {
+      if (layer.length > nbt.size[1]) {
+        nbt.size[1] = layer.length
+      }
       for (const row of layer[1].entries()) {
+        if (row.length > nbt.size[2]) {
+          nbt.size[2] = row.length
+        }
         for (const entry of row[1].entries()) {
           if (entry[1].block) {
-            if (entry[0] > nbt.size[2]) {
-              nbt.size[2] = entry[0]
-            }
-            if (row[0] > nbt.size[1]) {
-              nbt.size[1] = row[0]
-            }
-            if (layer[0] > nbt.size[0]) {
-              nbt.size[0] = entry[0]
-            }
-
             if (Array.isArray(entry[1].block)) {
               let paletteIndex = -1
 
