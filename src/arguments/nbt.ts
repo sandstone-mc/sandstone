@@ -4,9 +4,9 @@ export type NBTObject = (
   string |
   number |
   boolean |
-  { [key: string]: NBTObject } |
+  { [key: string]: NBTObject | undefined } |
   NBTObject[] |
   NBTClass
 )
 
-export type RootNBT = Record<string, NBTObject>
+export type RootNBT = Record<string, NBTObject | undefined>

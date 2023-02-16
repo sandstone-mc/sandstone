@@ -7,13 +7,13 @@ import { ResolveNBTPart } from './ResolveNBT'
 import { UUIDClass } from './UUID'
 
 import type { LootTableClass } from 'sandstone/core/index'
+import type { StructureClass } from 'sandstone/core/resources/structure'
 import type {
-  DIMENSIONS, ENTITY_TYPES, JSONTextComponent, NBTObject,
+  DIMENSIONS, ENTITY_TYPES, JSONTextComponent, NBTObject, RootNBT,
 } from '../arguments/index'
 import type { SandstonePack } from '../pack/pack'
 import type { LiteralUnion } from '../utils'
 import type { DataClass, NBTInt } from './index'
-import { StructureClass } from 'sandstone/core/resources/structure'
 
 export class UtilityChunkClass {
   readonly chunk
@@ -29,7 +29,7 @@ export class UtilityChunkClass {
     return this.pack.commands.execute.in(this.dimension)
   }
 
-  createMember(entityType: LiteralUnion<ENTITY_TYPES>, nbt: { [key: string]: NBTObject } = {}, resolveNBT = false) {
+  createMember(entityType: LiteralUnion<ENTITY_TYPES>, nbt: RootNBT = {}, resolveNBT = false) {
     const { execute, data } = this.pack.commands
 
     const selector = this.marker

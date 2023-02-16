@@ -68,6 +68,8 @@ export class SandstoneCore {
    */
   exitMCFunction = () => this.mcfunctionStack.pop()
 
+  // TODO: getExistingResource, make sure to have logic for `minecraft` files.
+
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
     const originalResources = new Set(this.resourceNodes)
 

@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* Auto-generated */
-export type STRUCTURES = (
+export type STRUCTURE = (
   'ancient_city' |
   'bastion_remnant' |
   'buried_treasure' |

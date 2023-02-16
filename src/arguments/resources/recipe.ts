@@ -170,6 +170,8 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
        */
       count?: number
     }
+    /** Accepts a boolean which determines if a notification is shown when unlocking this recipe. Defaults to true. */
+    show_notification?: boolean
   } | never)
   >
   | RecipeKind<'crafting_shapeless', {

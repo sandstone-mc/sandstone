@@ -21,8 +21,8 @@ const registries = [
   'structure',
   ['worldgen/biome'],
   ['worldgen/configured_feature'],
-  ['worldgen/template_pool'],
-  ['worldgen/structure']
+  ['worldgen/structure'], // TODO: Fix this
+  ['worldgen/template_pool']
 ]
 const last = list => list[list.length - 1]
 
