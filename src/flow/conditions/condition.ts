@@ -22,7 +22,6 @@ export abstract class ConditionNode extends Node {
 export abstract class SingleConditionNode extends ConditionNode {
   abstract getCondition(): unknown[]
 
-  // TODO: Implement support for store
   getValue = (negated = false) => {
     const keyword = negated ? 'unless' : 'if'
 

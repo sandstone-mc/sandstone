@@ -62,7 +62,8 @@ type CookingRecipe = {
   cookingtime?: number
 }
 
-type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | unknown, HAS_GROUP extends boolean = false> = {
+// TODO: set HAS_GROUP to false for recipes that do not have group
+type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | unknown, HAS_GROUP extends boolean = true> = {
   /**
    * A namespaced ID indicating the type of serializer of the recipe. Must be one of:
    * - `blasting`: Represents a recipe in a blast furnace
@@ -76,7 +77,7 @@ type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | un
    * - `smoking`: Represents a recipe in a smoker.
    * - `stonecutting`: Represents a recipe in a stonecutter.
    */
-  type: NAME
+  type: LiteralUnion<NAME>
 } & VALUES & (
     HAS_GROUP extends true ? {
       /**
@@ -189,7 +190,7 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
     /** Item that will be used for upgrading. */
     addition: ItemOrTag
     /** Item specifying the resulting type of the upgraded item. */
-    result: LiteralUnion<ITEMS>
+    result: ItemOrTag
   }>
   | RecipeKind<'smoking', CookingRecipe>
   | RecipeKind<'stonecutting', {

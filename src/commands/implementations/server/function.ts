@@ -1,4 +1,4 @@
-import { CommandNode } from '#core'
+import { CommandNode, TagClass } from '#core'
 
 import { CommandArguments } from '../../helpers'
 
@@ -13,5 +13,5 @@ export class FunctionCommandNode extends CommandNode<[string | MCFunctionClass]>
 export class FunctionCommand extends CommandArguments {
   protected NodeType = FunctionCommandNode
 
-  function = (mcFunction: string | MCFunctionClass) => this.finalCommand([mcFunction])
+  function = (mcFunction: string | MCFunctionClass | TagClass<'functions'>) => this.finalCommand([mcFunction instanceof TagClass ? `#${mcFunction}` : mcFunction])
 }

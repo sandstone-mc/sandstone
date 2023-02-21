@@ -58,5 +58,5 @@ export type NumberProvider = number | {
     name: string
   }
   score: string | ObjectiveClass
-  scale: number
+  scale?: number
 }

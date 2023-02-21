@@ -277,13 +277,6 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
       setblock('1 0 3', 'redstone_block')
     })
   }
-
-  /*
-   * TODO
-   * get commandBlockTick() {
-   *   return TagClass
-   * }
-   */
 }
 
 export class UtilityChunkMember extends UUIDClass<any, any> {

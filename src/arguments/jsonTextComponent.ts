@@ -45,6 +45,9 @@ type ContentTag = ({
    * their names are displayed in either the form "Name1 and Name2" or the form "Name1, Name2, Name3, and Name4".
    */
   selector: string
+
+  /** Optional, defaults to {"color": "gray", "text": ", "}. Used as the separator between different names, if the component selects multiple entities. */
+  separator?: JSONTextComponent
 } | {
   /**
    * A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
@@ -138,7 +141,7 @@ type InteractivityTags = {
    * Optional. When the text is shift-clicked by a player, this string is inserted in their chat input.
    * It does not overwrite any existing text the player was writing. This only works in chat messages.
    */
-  insertion?: string
+  insertion?: string | number | boolean
 
   /**
    * Optional. Allows for events to occur when the player clicks on text.

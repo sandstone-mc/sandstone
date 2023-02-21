@@ -1,5 +1,4 @@
 import type { MultipleEntitiesArgument } from '#arguments'
-import type { LiteralUnion } from '#utils'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
@@ -41,7 +40,7 @@ export type STRUCTURE_MIRROR = 'none' | 'front_back' | 'left_right'
 
 export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
 
-export type TimeArgument = number | LiteralUnion<'1t' | '1s' | '1d'>
+export type TimeArgument = number | `${number}` | `${number}${'t' | 's' | 'd'}`
 
 export type MAP_ICONS = (
   'player' | 'frame' | 'red_marker' |

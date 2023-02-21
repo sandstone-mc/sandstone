@@ -40,7 +40,7 @@ type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown
    * - `set_nbt`: Adds NBT data to the item.
    * - `set_stew_effect`: Sets the status effects for `suspicious stew`.
    */
-  function: TYPE
+  function: LiteralUnion<TYPE>
 } & VALUES
 
 type ATTRIBUTE_SLOTS = 'mainhand' | 'offhand' | 'feet' | 'legs' | 'chest' | 'head'

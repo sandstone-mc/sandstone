@@ -119,8 +119,6 @@ export const structureMirrorParser = (mirror?: StructureMirror): STRUCTURE_MIRRO
   return 'none'
 }
 
-// TODO: finish implementing this
-
 export function targetParser(target: any): string {
   if (typeof target === 'string') {
     return target

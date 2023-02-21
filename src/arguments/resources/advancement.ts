@@ -384,9 +384,9 @@ export type AdvancementTriggers = (
     /** The entity that was damaged. May be a list of loot table conditions that must pass in order for the trigger to activate. */
     entity: EntityCriterion
   }> | Trigger<'minecraft:player_interacted_with_entity', {
-    /** The damage that was dealt. Missing corresponding list of loot table conditions for the direct entity. */
-    damage: DamageCriterion
-    /** The entity that was damaged. May be a list of loot table conditions that must pass in order for the trigger to activate. */
+    /** The item that was in the player's hand when interacting. */
+    item: ItemCriterion
+    /** The entity that was interacted with. May be a list of loot table conditions that must pass in order for the trigger to activate. */
     entity: EntityCriterion
   }> | Trigger<'minecraft:player_killed_entity', {
     /** The entity that was killed. May be a list of loot table conditions that must pass in order for the trigger to activate. */
