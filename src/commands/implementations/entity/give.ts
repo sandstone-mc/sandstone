@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers'
@@ -23,5 +24,5 @@ export class GiveCommand extends CommandArguments {
    *
    * @param count Specifies the number of items to give. If not specified, defaults to `1`.
    */
-  give = (targets: MultiplePlayersArgument, item: LiteralUnion<ITEMS>, count?: number) => this.finalCommand([targets, item, count])
+  give = (targets: MultiplePlayersArgument, item: LiteralUnion<ITEMS>, count?: number) => this.finalCommand([targetParser(targets), item, count])
 }

@@ -1,5 +1,3 @@
-import { toMinecraftResourceName } from 'sandstone/utils'
-
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
@@ -7,7 +5,7 @@ import type { ConditionClass } from 'sandstone/variables/index'
 import type { TagClass } from '../index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
-import type { PredicateJSON, TrimMaterialJSON } from '#arguments'
+import type { TrimMaterialJSON } from '#arguments'
 
 let trimMaterials: undefined | TagClass<'items'>
 
@@ -43,7 +41,7 @@ export type TrimMaterialClassArguments = {
 export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implements ConditionClass {
   public trimMaterialJSON: NonNullable<TrimMaterialClassArguments['trimMaterial']>
 
-  protected equipmentCheck
+  readonly equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimMaterialClassArguments) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimMaterialNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
@@ -76,32 +74,5 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
   /**
    * @internal
    */
-  _toMinecraftCondition(): {value: any[]} {
-    if (this.equipmentCheck === 'whole_inventory') {
-      return {
-        value: ['if', 'data', 'entity', '@s', `Inventory[{tag:{Trim:{material:"${toMinecraftResourceName(this.path)}"}}}]`],
-      }
-    }
-
-    // look, this is an incomplete predicate okay, what do you want from me
-    const slotCheck: any = {
-      condition: 'entity_properties',
-      entity: 'this',
-      predicate: {
-        equipment: {},
-      },
-    }
-
-    for (const slot of this.equipmentCheck ? [...this.equipmentCheck] : ['mainhand', 'offhand', 'head', 'chest', 'legs', 'feet']) {
-      slotCheck[slot] = {
-        nbt: `{Trim:{material:"${toMinecraftResourceName(this.path)}"}}`,
-      }
-    }
-
-    const predicate = this.pack.Predicate(`trim_material/${this.name}`, slotCheck as PredicateJSON)
-
-    return {
-      value: ['if', 'predicate', toMinecraftResourceName(predicate.path)],
-    }
-  }
+  _toMinecraftCondition = () => new this.pack.conditions.TrimMaterial(this.core, this)
 }

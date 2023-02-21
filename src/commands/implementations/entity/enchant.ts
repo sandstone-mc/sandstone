@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { validateIntegerRange } from '#commands/validators'
 import { CommandNode } from '#core/nodes'
 
@@ -28,6 +29,6 @@ export class EnchantCommand extends CommandArguments {
    */
   enchant = (targets: MultipleEntitiesArgument, enchantment: LiteralUnion<ENCHANTMENTS>, level?: number) => {
     if (level) validateIntegerRange(level, 'level', 0, 2_147_483_647)
-    return this.finalCommand([targets, enchantment, level])
+    return this.finalCommand([targetParser(targets), enchantment, level])
   }
 }

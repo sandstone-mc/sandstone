@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core'
 
 import { CommandArguments } from '../../helpers'
@@ -20,7 +21,7 @@ export class RecipeCommand extends CommandArguments {
    * @param targets Specifies the player(s) to give the recipe to.
    * @param recipe Specifies a recipe to give. If `*` is specified, then all recipes will be given.
    */
-  give = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS> | RecipeClass) => this.finalCommand(['give', targets, recipe])
+  give = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS> | RecipeClass) => this.finalCommand(['give', targetParser(targets), recipe])
 
   /**
    * Takes recipes to the player.
@@ -28,5 +29,5 @@ export class RecipeCommand extends CommandArguments {
    * @param targets Specifies the player(s) to take the recipe from.
    * @param recipe Specifies a recipe to take. If `*` is specified, then all recipes will be taken.
    */
-  take = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS> | RecipeClass) => this.finalCommand(['take', targets, recipe])
+  take = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS> | RecipeClass) => this.finalCommand(['take', targetParser(targets), recipe])
 }

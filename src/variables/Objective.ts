@@ -1,6 +1,7 @@
 import { makeClassCallable } from 'sandstone/utils'
 
 import { JSONTextComponentClass } from './JSONTextComponentClass'
+import { targetParser } from './parsers'
 import { Score } from './Score'
 
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
@@ -29,7 +30,7 @@ export class _RawObjectiveClass {
   /** Resets all scores on the objective */
   reset = () => this.sandstonePack.commands.scoreboard.players.reset('*', this.name)
 
-  ScoreHolder = (scoreHolder: MultipleEntitiesArgument): Score => new Score(this.sandstonePack, scoreHolder.toString(), this as any)
+  ScoreHolder = (scoreHolder: MultipleEntitiesArgument): Score => new Score(this.sandstonePack, targetParser(scoreHolder), this as any)
 
   toString() {
     return this.name

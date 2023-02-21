@@ -1,5 +1,5 @@
 import { CommandNode } from '#core'
-import { coordinatesParser, VectorClass } from '#variables'
+import { coordinatesParser, targetParser, VectorClass } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -27,7 +27,7 @@ export class TeleportFacingCommand extends CommandArguments {
    * @param anchor Specifies whether the entity'eyes or feet to make the target(s) facing to.
    *             Must be one of eyes and feet. If not specified, defaults to eyes.
    */
-  facingEntity = (entity: SingleEntityArgument, anchor?: 'eyes' | 'feet') => this.finalCommand(['facing', entity, anchor])
+  facingEntity = (entity: SingleEntityArgument, anchor?: 'eyes' | 'feet') => this.finalCommand(['facing', targetParser(entity), anchor])
 }
 
 export class TeleportCommand extends CommandArguments {
@@ -100,7 +100,7 @@ export class TeleportCommand extends CommandArguments {
        */
       (targets: MultipleEntitiesArgument, location: Coordinates, rotation: Rotation) => void)
   ) = (...args: unknown[]): any => {
-      const parsedArgs = [...args.slice(0, 3).map(coordinatesParser), ...args.slice(3)]
+      const parsedArgs = [...args.slice(0, 3).map(coordinatesParser), ...args.slice(3).map(targetParser)]
 
       if (parsedArgs.length === 2 && (parsedArgs[1] instanceof VectorClass || typeof parsedArgs[1] === 'string')) {
         return this.subCommand(parsedArgs, TeleportFacingCommand, true)

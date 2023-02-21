@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers'
@@ -18,5 +19,5 @@ export class SpectateCommand extends CommandArguments {
    *
    * @param player Specifies the spectating player. If unspecified, defaults to the executor.
    */
-  spectate = (target: SinglePlayerArgument, player?: SingleEntityArgument) => this.finalCommand([target, player])
+  spectate = (target: SinglePlayerArgument, player?: SingleEntityArgument) => this.finalCommand([targetParser(target), player])
 }

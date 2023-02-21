@@ -33,17 +33,6 @@ export class SandstoneCore {
     return currentMCFunction
   }
 
-  /**
-   * Enter a MCFunction, run the given callback, and then exit the MCFunction.
-   * @param mcFunction The MCFunction to go in.
-   * @param callback The callback to run.
-   */
-  insideMCFunction = (mcFunction: MCFunctionClass, callback: () => void) => {
-    this.enterMCFunction(mcFunction)
-    callback()
-    this.exitMCFunction()
-  }
-
   insideContext: MCFunctionNode['insideContext'] = (...args) => this.getCurrentMCFunctionOrThrow().insideContext(...args)
 
   /**

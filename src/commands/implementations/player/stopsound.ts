@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers'
@@ -21,5 +22,5 @@ export class StopSoundCommand extends CommandArguments {
    *
    * @param sound Specifies the sound to stop.
    */
-  stopsound = (targets: MultiplePlayersArgument, source?: SOUND_SOURCES | '*', sound?: LiteralUnion<SOUND_EVENTS>) => this.finalCommand([targets, source, sound])
+  stopsound = (targets: MultiplePlayersArgument, source?: SOUND_SOURCES | '*', sound?: LiteralUnion<SOUND_EVENTS>) => this.finalCommand([targetParser(targets), source, sound])
 }

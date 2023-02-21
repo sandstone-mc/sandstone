@@ -9,7 +9,7 @@ import type { PredicateJSON } from '#arguments'
 /**
  * A node representing a Minecraft predicate.
  */
-export class PredicateNode extends ContainerNode implements ResourceNode<PredicateClass>, ConditionClass {
+export class PredicateNode extends ContainerNode implements ResourceNode<PredicateClass> {
   constructor(sandstoneCore: SandstoneCore, public resource: PredicateClass) {
     super(sandstoneCore)
   }
@@ -26,7 +26,7 @@ export type PredicateClassArguments = {
 
 type Predicate = PredicateJSON | PredicateClass
 
-export class PredicateClass extends ResourceClass<PredicateNode> implements ListResource {
+export class PredicateClass extends ResourceClass<PredicateNode> implements ListResource, ConditionClass {
   public predicateJSON: NonNullable<PredicateClassArguments['predicate']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: PredicateClassArguments) {
@@ -78,9 +78,5 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
   /**
    * @internal
    */
-  _toMinecraftCondition(): { value: any[] } {
-    return {
-      value: ['if', 'predicate', this.name],
-    }
-  }
+  _toMinecraftCondition = () => new this.pack.conditions.Predicate(this.core, this.name)
 }

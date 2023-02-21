@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers'
@@ -24,5 +25,5 @@ export class GameModeCommand extends CommandArguments {
    *
    * @param targets Specifies the target(s). If not specified, defaults to the player who executes the command.
    */
-  gamemode = (gamemode: GAMEMODES, targets?: MultiplePlayersArgument) => this.finalCommand([gamemode, targets])
+  gamemode = (gamemode: GAMEMODES, targets?: MultiplePlayersArgument) => this.finalCommand([targetParser(gamemode), targets])
 }

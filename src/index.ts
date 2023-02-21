@@ -37,7 +37,6 @@ export const {
   kill,
   list,
   locate,
-  locatebiome,
   loot,
   me,
   msg,

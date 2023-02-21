@@ -1,7 +1,7 @@
 import type { JSONTextComponent } from '#arguments'
 
 function toComponent(c: any): JSONTextComponent {
-  return c._toChatComponent?.() ?? c.toJSON?.() ?? c
+  return c._toSelector?.() ?? c._toChatComponent?.() ?? c.toJSON?.() ?? c
 }
 
 export class JSONTextComponentClass {

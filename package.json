@@ -17,12 +17,15 @@
     "url": "https://github.com/sandstone-mc/sandstone/issues"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.191",
     "@typescript/analyze-trace": "^0.4.0",
     "chalk": "^4",
+    "lodash": "^4.17.21",
     "nanoid": "^3.1.30",
     "nearley": "^2.20.1",
     "node-fetch": "^3.3.0",
-    "object-hash": "^2.2.0"
+    "object-hash": "^2.2.0",
+    "prismarine-nbt": "^2.2.1"
   },
   "devDependencies": {
     "@types/module-alias": "^2.0.1",

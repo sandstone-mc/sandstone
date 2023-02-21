@@ -1,6 +1,6 @@
+/* eslint-disable max-len */
 import { makeClassCallable } from 'sandstone/utils'
 
-import { Flow } from '../flow/Flow'
 import { SelectorClass } from './Selector'
 
 import type { MakeInstanceCallable } from 'sandstone/utils'
@@ -49,7 +49,7 @@ export class _RawLabelClass {
   /**
    * Contains the name and description of the Label (eg. 'wasd:is_walking; Whether the player is not mounted')
    */
-  public toString = () => `${this.name}${this.description ? `; ${this.description}` : ''}`
+  public toString = () => `${this.fullName}${this.description ? `; ${this.description}` : ''}`
 
   /**
    * @internal
@@ -72,7 +72,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
   /**
    * Selects entity
    */
-  public originalSelector: SelectorClass<true, false>
+  public originalSelector: string | SelectorClass<true, false>
 
   /** Test for label on entity */
   public test = this as ConditionClass
@@ -82,13 +82,17 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
     this.label = label
 
     // Haha brrrrrrr
-    const selector = new SelectorClass(this.pack, entity._toSelector().target, { ...entity._toSelector().arguments }) as SelectorClass<true, false>
+    const selector = (typeof this.originalSelector === 'string' ? new SelectorClass(this.pack, '@s') : new SelectorClass(this.pack, this.originalSelector.target, { ...this.originalSelector.arguments })) as SelectorClass<true, false>
 
     if (selector.arguments) {
       if (selector.arguments.tag) {
-        if (typeof selector.arguments.tag === 'string') { selector.arguments.tag = [selector.arguments.tag, label.name] } else { selector.arguments.tag = [...selector.arguments.tag, label.name] }
-      } else selector.arguments.tag = label.name
-    } else selector.arguments = { tag: label.name } as SelectorProperties<true, false>
+        if (typeof selector.arguments.tag === 'string') {
+          selector.arguments.tag = [selector.arguments.tag, label.fullName]
+        } else {
+          selector.arguments.tag = [...selector.arguments.tag, label.fullName]
+        }
+      } else selector.arguments.tag = [label.fullName]
+    } else selector.arguments = { tag: [label.fullName] } as SelectorProperties<true, false>
 
     this.selector = selector
   }
@@ -96,12 +100,12 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
   /**
    * Add label to entity
    */
-  public add = () => this.pack.commands.tag(this.originalSelector).add(this.label.name)
+  public add = () => this.pack.commands.tag(this.originalSelector).add(this.label.fullName)
 
   /**
    * Remove label from entity
    */
-  public remove = () => this.pack.commands.tag(this.originalSelector).remove(this.label.name)
+  public remove = () => this.pack.commands.tag(this.originalSelector).remove(this.label.fullName)
 
   /**
    * Set label on/off for entity
@@ -111,7 +115,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
       if (set) this.add()
       else this.remove()
     } else {
-      (new Flow(this.pack.core)).if(set, () => this.add())
+      this.pack._.if(set, () => this.add())
         .else(() => this.remove())
     }
   }
@@ -120,7 +124,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
    * Toggle label on/off for entity
    */
   public toggle() {
-    (new Flow(this.pack.core)).if(this.test, () => this.remove())
+    this.pack._.if(this.test, () => this.remove())
       .else(() => this.add())
   }
 
@@ -132,14 +136,10 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
   /**
    * @internal
    */
-  public _toMinecraftCondition() {
-    return { value: ['if', 'entity', this.selector.toString()] as any[] }
-  }
+  _toMinecraftCondition = () => new this.pack.conditions.Label(this.pack.core, this)
 
   /**
    * @internal
    */
-  public _toSelector() {
-    return this.selector._toSelector()
-  }
+  _toSelector = () => this.selector._toSelector()
 }

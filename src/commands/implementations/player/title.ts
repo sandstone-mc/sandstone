@@ -1,5 +1,5 @@
 import { CommandNode } from '#core'
-import { JSONTextComponentClass } from '#variables'
+import { JSONTextComponentClass, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -39,5 +39,5 @@ export class TitleCommand extends CommandArguments {
    * const target = Selector('@r')
    * title('@a').actionbar(['You target is: ', target])
    */
-  title = (targets: MultiplePlayersArgument) => this.subCommand([targets], TitleArgumentsCommand, false)
+  title = (targets: MultiplePlayersArgument) => this.subCommand([targetParser(targets)], TitleArgumentsCommand, false)
 }

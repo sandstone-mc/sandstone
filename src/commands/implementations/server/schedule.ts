@@ -1,3 +1,4 @@
+import { toMinecraftResourceName } from 'sandstone/utils'
 import { ContainerCommandNode } from '#core'
 import { MCFunctionClass, TagClass } from '#core/resources'
 
@@ -30,7 +31,7 @@ export class ScheduleCommandNode extends ContainerCommandNode<
     }
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, [...currentMCFunction.resource['path'], func ?? 'schedule'], {
+    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${toMinecraftResourceName(currentMCFunction.resource.path)}/${func ?? 'schedule'}`, {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',

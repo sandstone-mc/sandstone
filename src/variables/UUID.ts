@@ -22,13 +22,15 @@ import type { UtilityChunkMember } from './UtilityChunk'
 export type UUIDinNumber = [number, number, number, number]
 export type UUIDinScore = [Score, Score, Score, Score]
 
+export type UUIDSource = string | UUIDinNumber | UUIDinScore | SelectorPickClass<true, boolean> | DataPointClass
+
 // Conversion methods ported from https://github.com/AjaxGb/mc-uuid-converter/blob/master/convert.js
 const UUIDData = new DataView((new Uint8Array(16)).buffer)
 const UUID_GROUP_SIZES = [8, 4, 4, 4, 12]
 
 export type UUIDOptions = {
   /** Used for `on relation origin` links. Usually an Area Effect Cloud, must be a projectile. Will be automatically generated if needed. */
-  holder?: SelectorClass<true, boolean> | UUIDClass
+  holder?: SelectorClass<true, boolean> | UUIDClass<any, any>
 
   /** Used for holder's that are on a stack */
   stack?: UUIDStackClass<boolean>
@@ -60,20 +62,20 @@ export type UUIDOptions = {
   }
 }
 
-export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> implements ConditionTextComponentClass, SelectorPickClass<true, false> {
+export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data', RelationLasts extends 'singleTick' | 'timed' | 'permanent'> implements ConditionTextComponentClass, SelectorPickClass<true, false> {
   relationLasts: RelationLasts
 
-  readonly primarySource: 'known' | 'scores' | 'selector' | 'data'
+  readonly primarySource: PrimarySource
 
-  known?: UUIDinNumber
+  known!: PrimarySource extends 'known' ? UUIDinNumber : (UUIDinNumber | undefined)
 
-  scores?: UUIDinScore
+  scores!: PrimarySource extends 'scores' ? UUIDinScore : (UUIDinScore | undefined)
 
-  data?: DataPointClass
+  data!: PrimarySource extends 'data' ? DataPointClass : (DataPointClass | undefined)
 
-  selector?: SelectorClass<true, boolean>
+  selector!: PrimarySource extends 'selector' ? SelectorClass<true, boolean> : (SelectorClass<true, boolean> | undefined)
 
-  timer?: number | Score
+  timer!: RelationLasts extends 'timed' ? (number | Score) : RelationLasts extends 'singleTick' ? 1 : undefined
 
   stack?: UUIDStackClass<boolean>
 
@@ -85,7 +87,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @param _source A primary source for the UUID. Either a UUID string, a UUID integer array, 4 scores set to the UUID, a selector, or a Data Point set to the UUID.
    * @param holderState Whether a holder for the origin relation will be permanent or last a certain amount of ticks.
    */
-  constructor(protected core: SandstoneCore, _source: string | UUIDinNumber | UUIDinScore | SelectorPickClass<true, boolean> | DataPointClass, holderState: number | Score | 'permanent', options?: UUIDOptions) {
+  constructor(protected core: SandstoneCore, _source: UUIDSource, holderState: number | Score | 'permanent', options?: UUIDOptions) {
     let source = _source
 
     if (typeof holderState === 'number') {
@@ -107,17 +109,17 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
     if (Array.isArray(source)) {
       // Thanks Typescript
       if (typeof source[0] === 'number') {
-        this.primarySource = 'known'
+        this.primarySource = 'known' as PrimarySource
         this.known = source as UUIDinNumber
       } else {
-        this.primarySource = 'scores'
+        this.primarySource = 'scores' as PrimarySource
         this.scores = source as UUIDinScore
       }
     } else if (source instanceof SelectorPickClass) {
-      this.primarySource = 'selector'
+      this.primarySource = 'selector' as PrimarySource
       this.selector = source._toSelector() as SelectorClass<true, boolean>
     } else {
-      this.primarySource = 'data'
+      this.primarySource = 'data' as PrimarySource
       this.data = source
     }
 
@@ -127,7 +129,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
       }
 
       if (options.sources) {
-        if (this.primarySource !== 'known' && options.sources[this.primarySource]) {
+        if (this.primarySource !== 'known' && options.sources[this.primarySource as 'scores' | 'data' | 'selector']) {
           throw new Error('Attempted to set UUID source of the same type as the primary source in options!')
         }
         if (options.sources.scores) {
@@ -203,7 +205,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
   setScores(scores?: UUIDinScore | [UUIDinScore]) {
     const { core } = this
     const {
-      Data, getTempStorage, getInitMCFunction, Variable,
+      Data, getTempStorage, initMCFunction, Variable,
     } = core.pack
 
     const handleConversions = (_scores: UUIDinScore) => {
@@ -245,16 +247,12 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
     } else if (Array.isArray(scores[0])) {
       // UUIDClass is being constructed in an MCFunction
       if (core.mcfunctionStack.length !== 0) {
-        core.insideMCFunction(core.mcfunctionStack[core.mcfunctionStack.length - 1].resource, () => {
-          /* @ts-ignore */
-          handleConversions(scores[0])
-        })
+        /* @ts-ignore */
+        core.getCurrentMCFunctionOrThrow().resource.push(() => handleConversions(scores[0]))
       // UUIDClass is being constructed outside of a MCFunction
       } else {
-        core.insideMCFunction(getInitMCFunction(), () => {
-          /* @ts-ignore */
-          handleConversions(scores[0])
-        })
+        /* @ts-ignore */
+        initMCFunction.push(() => handleConversions(scores[0]))
       }
     } else {
       this.scores = scores as UUIDinScore
@@ -307,7 +305,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
    * @param timerSet Optional. Whether the AEC's Duration has been set. (Unless you're using a Score this should've been done in the summon command)
    * @param ownerSet Optional. Whether the AEC's Owner has been set. If false it will be set.
    */
-  setHolder(holder?: string | UUIDClass | SelectorClass<true, any>, timerSet = true, ownerSet = false): UUIDClass<any> | SingleEntityArgument | [SingleEntityArgument, MCFunctionClass] {
+  setHolder(holder?: string | UUIDClass<any, any> | SelectorClass<true, any>, timerSet = true, ownerSet = false): UUIDClass<any, any> | SingleEntityArgument | [SingleEntityArgument, MCFunctionClass] {
     const { pack } = this.core
 
     let nbt: NBTObject = {}
@@ -315,7 +313,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
     if (!timerSet) {
       if (this.relationLasts === 'singleTick') {
         nbt = { Duration: new NBTShort(1) }
-      } else if (this.relationLasts === 'permanent') {
+      } else if (this.relationLasts === 'permanent' as RelationLasts) {
         nbt = parseNBT(NBT, '{Age:-2147483648,Duration:-1s,WaitTime:-2147483648}') as Omit<NBTObject, string>
       } else {
         nbt = { Duration: typeof this.timer === 'number' ? new NBTShort(this.timer) : ResolveNBTPart(this.timer as Score, 1, NBTShort) }
@@ -399,7 +397,6 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
     if (this.selector) {
       return execute.as(this.selector)
     }
-    // TODO: Add overloads to setHolder so I don't have to do this.
     return execute.as(this.setHolder() as SingleEntityArgument).on('origin')
   }
 
@@ -429,12 +426,8 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
   /**
    * @internal
    */
-  _toMinecraftCondition() {
-    if (this.known) {
-      return { value: ['if', 'entity', this.arrayToString()] }
-    }
-    return { value: ['as', this.setHolder(), 'on', 'passengers', 'if', 'entity', '@s'] }
-  }
+  /* @ts-ignore */
+  _toMinecraftCondition = () => (new this.core.pack.conditions.UUID(this.core, this)) as ConditionClass
 
   /**
    * @internal
@@ -449,7 +442,7 @@ export class UUIDClass<RelationLasts = 'singleTick' | 'timed' | 'permament'> imp
 }
 
 class UUIDStackClass<InUtilityChunk extends boolean> {
-  constructor(private core: SandstoneCore, public base: UUIDClass | UtilityChunkMember) {
+  constructor(private core: SandstoneCore, public base: UUIDClass<any, any> | UtilityChunkMember) {
   }
 
   /** Partial execute command executing as all of the members of the stack */

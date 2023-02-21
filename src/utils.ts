@@ -32,7 +32,7 @@ export type HideFunctionProperties<T extends Function> = T & {
     [Symbol.hasInstance]: (value: unknown) => boolean
   }
 
-export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'warn' | 'rename'
+export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'warn' | 'rename' | 'ignore'
 
 export type OmitFirst<T extends unknown[]> = (
     T extends [infer A, ...infer B] ? B : []
@@ -187,3 +187,20 @@ export function randomUUID() {
 }
 
 export const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
+type InputObject<ValueType extends any | NonNullable<any>, Input extends Record<string, ValueType>> = Input
+
+/** Returns a modified object with only entries that are not undefined. If the input is undefined, {} is returned instead. */
+export function add<Value extends any | NonNullable<any>, Input extends InputObject<Value, Record<string, Value>>>(object: Input | undefined): InputObject<NonNullable<any>, Input> {
+  if (object === undefined) {
+    return {} as InputObject<NonNullable<any>, Input>
+  }
+  const output: any = {}
+  for (const [key, value] of (object as {[key: string]: any}).entries()) {
+    if (value !== undefined) {
+      output[key] = value
+    }
+  }
+
+  return output
+}

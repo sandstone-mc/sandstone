@@ -4,6 +4,7 @@ import { makeCallable, toMinecraftResourceName } from '#utils'
 import {
   coordinatesParser, ObjectiveClass, rangeParser, rotationParser,
   Score,
+  targetParser,
 } from '#variables'
 
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
@@ -96,7 +97,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     }
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, [...currentMCFunction.resource.path, this.callbackName], {
+    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${currentMCFunction.resource.path.slice(1).join('/')}/${this.callbackName}`, {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',
@@ -152,7 +153,7 @@ export class ExecuteStoreArgsCommand extends ExecuteCommandPart {
    *
    * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
-  entity = (target: SingleEntityArgument, path: string, type: StoreType, scale?: number) => this.nestedExecute(['entity', target, path, type, scale])
+  entity = (target: SingleEntityArgument, path: string, type: StoreType, scale?: number) => this.nestedExecute(['entity', targetParser(target), path, type, scale])
 
   /**
    * Overrides the given score with the final command's return value.
@@ -163,7 +164,12 @@ export class ExecuteStoreArgsCommand extends ExecuteCommandPart {
    *
    * @param playerScore The player's score to override.
    */
-  score = (...args: [targets: MultipleEntitiesArgument, objective: ObjectiveArgument] | [playerScore: Score]) => this.nestedExecute(['score', ...args])
+  score(...args: [targets: MultipleEntitiesArgument, objective: ObjectiveArgument] | [playerScore: Score]) {
+    if (args[0] instanceof Score) {
+      return this.nestedExecute(['score', args[0]])
+    }
+    return this.nestedExecute(['score', targetParser(args[0]), args[1]])
+  }
 
   /**
    * Uses the `path` within storage `target` to store the return value in.
@@ -208,7 +214,7 @@ export class ExecuteDataArgsCommand extends ExecuteCommandPart {
    * @param target One single entity to be tested.
    * @param path Data tag to check for.
    */
-  entity = (target: SingleEntityArgument, path: string) => this.nestedExecute(['entity', target, path], true)
+  entity = (target: SingleEntityArgument, path: string) => this.nestedExecute(['entity', targetParser(target), path], true)
 
   /**
    * Checks whether the targeted storage has any data for a given tag
@@ -233,7 +239,7 @@ export class ExecuteIfUnlessCommand extends ExecuteCommandPart {
    *
    * @param targets The target entities to check.
    */
-  entity = (targets: MultipleEntitiesArgument) => this.nestedExecute(['entity', targets], true)
+  entity = (targets: MultipleEntitiesArgument) => this.nestedExecute(['entity', targetParser(targets)], true)
 
   /**
    * Checks whether the `predicate` evaluates to a positive result.
@@ -248,11 +254,11 @@ export class ExecuteIfUnlessCommand extends ExecuteCommandPart {
   score(firstTarget: SingleEntityArgument, firstObjective: string | ObjectiveClass, comparison: 'matches', value: Range): ExecuteCommand
 
   // eslint-disable-next-line max-len
-  score(firstTarget: SingleEntityArgument, firstObjective: string | ObjectiveClass, comparison: 'matches' | COMPARISON_OPERATORS, otherTarget: SingleEntityArgument, otherObjective: string | ObjectiveClass): ExecuteCommand
+  score(firstTarget: SingleEntityArgument, firstObjective: string | ObjectiveClass, comparison: COMPARISON_OPERATORS, otherTarget: SingleEntityArgument, otherObjective: string | ObjectiveClass): ExecuteCommand
 
   score(firstScore: Score, comparison: 'matches', value: Range): ExecuteCommand
 
-  score(firstScore: Score, comparison: 'matches' | COMPARISON_OPERATORS, otherScore: Score): ExecuteCommand
+  score(firstScore: Score, comparison: COMPARISON_OPERATORS, otherScore: Score): ExecuteCommand
 
   score(...args: any[]) {
     const finalArgs: string[] = []
@@ -265,9 +271,9 @@ export class ExecuteIfUnlessCommand extends ExecuteCommandPart {
         finalArgs.push(rangeParser(args[2]))
       }
     } else {
-      finalArgs.push(args[0].toString(), args[1] instanceof ObjectiveClass ? args[1].name : args[1], args[2])
+      finalArgs.push(targetParser(args[0]), args[1] instanceof ObjectiveClass ? args[1].name : args[1], args[2])
       if (args[4]) {
-        finalArgs.push(args[3].toString(), args[4] instanceof ObjectiveClass ? args[4].name : args[4])
+        finalArgs.push(targetParser(args[3]), args[4] instanceof ObjectiveClass ? args[4].name : args[4])
       } else {
         finalArgs.push(rangeParser(args[3]))
       }
@@ -292,8 +298,7 @@ export class ExecuteIfUnlessCommand extends ExecuteCommandPart {
 
   data(dataPoint?: DataPointClass) {
     if (dataPoint) {
-      // lol
-      return this.nestedExecute(Array.from(dataPoint._toMinecraftCondition().value.slice(1), (item) => `${item}`) as [''])
+      return this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as [''])
     }
     return this.subCommand([['data']], ExecuteDataArgsCommand, false)
   }
@@ -307,7 +312,7 @@ export class ExecuteFacingEntityCommand extends ExecuteCommandPart {
    *
    * @param anchor Whether to point at the target's eyes or feet.
    */
-  entity = (targets: MultipleEntitiesArgument, anchor: ANCHORS = 'feet') => this.nestedExecute(['entity', targets, anchor])
+  entity = (targets: MultipleEntitiesArgument, anchor: ANCHORS = 'feet') => this.nestedExecute(['entity', targetParser(targets), anchor])
 }
 
 export class ExecutePositionedAsCommand extends ExecuteCommandPart {
@@ -316,7 +321,7 @@ export class ExecutePositionedAsCommand extends ExecuteCommandPart {
    *
    * @param targets Target entity/entities to match position with.
    */
-  as = (targets: MultipleEntitiesArgument) => this.nestedExecute(['as', targets])
+  as = (targets: MultipleEntitiesArgument) => this.nestedExecute(['as', targetParser(targets)])
 }
 
 export class ExecuteRotatedAsCommand extends ExecuteCommandPart {
@@ -325,7 +330,7 @@ export class ExecuteRotatedAsCommand extends ExecuteCommandPart {
    *
    * @param targets Target entity/entities to match rotation with.
    */
-  as = (targets: MultipleEntitiesArgument) => this.nestedExecute(['as', targets])
+  as = (targets: MultipleEntitiesArgument) => this.nestedExecute(['as', targetParser(targets)])
 }
 
 export class ExecuteCommand extends ExecuteCommandPart {
@@ -352,13 +357,13 @@ export class ExecuteCommand extends ExecuteCommandPart {
    *
    * @param targets Target entity/entities to become the new sender.
    */
-  as = (targets: MultipleEntitiesArgument) => this.nestedExecute(['as', targets])
+  as = (targets: MultipleEntitiesArgument) => this.nestedExecute(['as', targetParser(targets)])
 
   /**
    * Sets the command position, rotation, and dimension to match those of an entity/entities; does not change sender
    * @param targets Target entity/entities to match position, rotation, and dimension with
    */
-  at = (targets: MultipleEntitiesArgument) => this.nestedExecute(['at', targets])
+  at = (targets: MultipleEntitiesArgument) => this.nestedExecute(['at', targetParser(targets)])
 
   /**
    * Sets the command rotation to face a given point, as viewed from its anchor (either the eyes or the feet).

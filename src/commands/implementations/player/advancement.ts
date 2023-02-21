@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers'
@@ -76,12 +77,12 @@ export class AdvancementCommand extends CommandArguments {
    *
    * @param targets Specifies one player or more.
    */
-  grant = (targets: MultiplePlayersArgument) => this.subCommand(['grant', targets], AdvancementArgumentsCommand, false)
+  grant = (targets: MultiplePlayersArgument) => this.subCommand(['grant', targetParser(targets)], AdvancementArgumentsCommand, false)
 
   /**
    * Removes specified advancements.
    *
    * @param targets Specifies one player or more.
    */
-  revoke = (targets: MultiplePlayersArgument) => this.subCommand(['revoke', targets], AdvancementArgumentsCommand, false)
+  revoke = (targets: MultiplePlayersArgument) => this.subCommand(['revoke', targetParser(targets)], AdvancementArgumentsCommand, false)
 }

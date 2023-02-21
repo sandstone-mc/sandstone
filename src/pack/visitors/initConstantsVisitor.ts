@@ -13,7 +13,7 @@ export class InitConstantsVisitor extends GenericSandstoneVisitor {
     constants = constants.filter((item: number, index) => constants.indexOf(item) === index)
 
     if (constants.length !== 0) {
-      core.insideMCFunction(pack.getInitMCFunction(), () => {
+      pack.initMCFunction.push(() => {
         for (const constant of constants) {
           commands.scoreboard.players.set(constant, pack.rootObjective, constant)
         }

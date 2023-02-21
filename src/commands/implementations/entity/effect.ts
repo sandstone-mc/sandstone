@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { validateIntegerRange } from '#commands/validators'
 import { CommandNode } from '#core/nodes'
 
@@ -46,7 +47,7 @@ export class EffectCommand extends CommandArguments {
     hideParticles?: boolean,
   ) => {
     if (seconds) validateIntegerRange(seconds, 'seconds', 0, 1_000_000)
-    return this.finalCommand(['give', targets, effect, seconds, amplifier, hideParticles])
+    return this.finalCommand(['give', targetParser(targets), effect, seconds, amplifier, hideParticles])
   }
 
   /**
@@ -56,5 +57,5 @@ export class EffectCommand extends CommandArguments {
    *
    * @param effect Specifies the effect to be removed. If unspecified, clears all effects.
    */
-  clear = (targets?: MultipleEntitiesArgument, effect?: LiteralUnion<MOB_EFFECTS>) => this.finalCommand(['clear', targets, effect])
+  clear = (targets?: MultipleEntitiesArgument, effect?: LiteralUnion<MOB_EFFECTS>) => this.finalCommand(['clear', targetParser(targets), effect])
 }

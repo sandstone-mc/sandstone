@@ -1,5 +1,5 @@
 import { CommandNode } from '#core'
-import { coordinatesParser } from '#variables'
+import { coordinatesParser, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -50,6 +50,6 @@ export class SpreadPlayersCommand extends CommandArguments<typeof SpreadPlayersN
      */
     (center: ColumnCoordinates, spreadDistance: number, maxRange: number, under: 'under', height: number, respectTeams: boolean, targets: MultipleEntitiesArgument) => FinalCommandOutput)
   ) = (...args: unknown[]) => this.finalCommand(
-      [coordinatesParser(args[0]), ...args.slice(1)],
+      [coordinatesParser(args[0]), ...args.slice(1, -1), targetParser(args.slice(-1))],
     )
 }

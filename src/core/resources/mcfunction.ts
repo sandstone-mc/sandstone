@@ -1,4 +1,4 @@
-import { makeClassCallable } from '#utils'
+import { makeCallable, makeClassCallable } from '#utils'
 
 import { ContainerNode } from '../nodes'
 import { CallableResourceClass } from './resource'
@@ -225,12 +225,8 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
       return
     }
 
-    const { sandstoneCore } = this.node
-
-    sandstoneCore.insideMCFunction(this.asCallable, () => {
-      // Doing .apply allows users to use `this()` inside the callback to call the MCFunction!
-      this.callback.apply(this.asCallable)
-    })
+    // Doing .apply allows users to use `this()` inside the callback to call the MCFunction!
+    this.asCallable.push(() => this.callback.apply(this.asCallable))
   }
 
   protected addToTag = (tag: string) => {
@@ -249,6 +245,50 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     clear: (): FinalCommandOutput => this.commands.schedule.clear(this.asCallable),
 
     function: (delay: TimeArgument, type: ScheduleType): FinalCommandOutput => this.commands.schedule.function(this.asCallable, delay, type),
+  }
+
+  get push() {
+    const commands = new Proxy(this.pack.commands, {
+      get: (target, p, receiver) => {
+        this.core.insideContext(this.node, () => (this.pack.commands as any)[p], false)
+      },
+    })
+
+    return makeCallable(commands, (...contents: _RawMCFunctionClass[] | [() => void]) => {
+      if (contents[0] instanceof _RawMCFunctionClass) {
+        for (const mcfunction of contents as _RawMCFunctionClass[]) {
+          this.node.body.push(...mcfunction.node.body)
+        }
+      } else {
+        this.core.insideContext(this.node, contents[0], false)
+      }
+    }, true)
+  }
+
+  get unshift() {
+    const fake = new MCFunctionClass(this.core, 'fake', {
+      addToSandstoneCore: false,
+      creator: 'sandstone',
+      onConflict: 'ignore',
+    })
+
+    const commands = new Proxy(this.pack.commands, {
+      get: (target, p, receiver) => {
+        this.core.insideContext(fake.node, () => (this.pack.commands as any)[p], false)
+        this.node.body.unshift(...fake.node.body)
+      },
+    })
+
+    return makeCallable(commands, (...contents: _RawMCFunctionClass[] | [() => void]) => {
+      if (contents[0] instanceof _RawMCFunctionClass) {
+        for (const mcfunction of contents as _RawMCFunctionClass[]) {
+          this.node.body.unshift(...mcfunction.node.body)
+        }
+      } else {
+        this.core.insideContext(fake.node, contents[0], false)
+        this.node.body.unshift(...fake.node.body)
+      }
+    }, true)
   }
 }
 

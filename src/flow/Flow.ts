@@ -1,17 +1,26 @@
+import { ConditionClass } from '../variables/index'
 import { AndNode, NotNode, OrNode } from './conditions'
 import { IfStatement } from './if_else'
 
 import type { SandstoneCore } from '../core'
 import type { ConditionNode } from './conditions'
 
+type Condition = ConditionNode | ConditionClass
 export class Flow {
   constructor(public sandstoneCore: SandstoneCore) { }
 
-  if = (condition: ConditionNode, callback: () => void) => new IfStatement(this.sandstoneCore, condition, callback)
+  conditionToNode(condition: Condition) {
+    if (condition instanceof ConditionClass) {
+      return condition._toMinecraftCondition()
+    }
+    return condition
+  }
 
-  and = (...conditions: ConditionNode[]) => new AndNode(this.sandstoneCore, conditions)
+  if = (condition: Condition, callback: () => void) => new IfStatement(this.sandstoneCore, this.conditionToNode(condition), callback)
 
-  or = (...conditions: ConditionNode[]) => new OrNode(this.sandstoneCore, conditions)
+  and = (...conditions: Condition[]) => new AndNode(this.sandstoneCore, conditions.map((condition) => this.conditionToNode(condition)))
 
-  not = (condition: ConditionNode) => new NotNode(this.sandstoneCore, condition)
+  or = (...conditions: Condition[]) => new OrNode(this.sandstoneCore, conditions.map((condition) => this.conditionToNode(condition)))
+
+  not = (condition: Condition) => new NotNode(this.sandstoneCore, this.conditionToNode(condition))
 }

@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core'
 
 import { CommandArguments } from '../../helpers'
@@ -48,5 +49,5 @@ export class AttributeOperationCommand extends CommandArguments {
 export class AttributeCommand extends CommandArguments {
   protected NodeType = AttributeCommandNode
 
-  attribute = (target: SingleEntityArgument, attribute: string) => this.finalCommand([target, attribute])
+  attribute = (target: SingleEntityArgument, attribute: string) => this.finalCommand([targetParser(target), attribute])
 }

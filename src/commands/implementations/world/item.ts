@@ -1,5 +1,5 @@
 import { CommandNode } from '#core/nodes'
-import { coordinatesParser } from '#variables'
+import { coordinatesParser, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -34,7 +34,7 @@ export class ItemSourceCommand extends CommandArguments {
      * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
-    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string | ItemModifierClass) => this.finalCommand(['from', 'entity', targets, slot, modifier]),
+    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string | ItemModifierClass) => this.finalCommand(['from', 'entity', targetParser(targets), slot, modifier]),
   }
 }
 
@@ -56,7 +56,7 @@ export class ItemCommand extends CommandArguments {
      * @param slot The slot to apply the modifier to.
      * @param modifier The name of the modifier.
      */
-    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier: string | ItemModifierClass) => this.finalCommand(['modify', 'entity', targets, slot, modifier]),
+    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier: string | ItemModifierClass) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
   }
 
   /** Replaces the content of a specific slot of an inventory with another. */
@@ -72,6 +72,6 @@ export class ItemCommand extends CommandArguments {
      *.
      * @param slot The slot to be replaced.
      */
-    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => this.subCommand(['entity', targets, slot], ItemSourceCommand, false),
+    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => this.subCommand(['entity', targetParser(targets), slot], ItemSourceCommand, false),
   }
 }

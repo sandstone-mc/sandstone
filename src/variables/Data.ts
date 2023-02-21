@@ -98,16 +98,17 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionText
     // The value is another Data Point
     if (value instanceof DataPointClass) {
       data.from[value.type as DATA_TYPES](value.currentTarget as any, value.path)
-      return
+      return this
     }
 
     if (value instanceof DataPointPickClass) {
       this.set(value._toDataPoint())
-      return
+      return this
     }
 
     // The value is a NBT
     data.value(value)
+    return this
   }
 
   protected string = (cb: (data: DataModifyTypeCommand) => DataModifyValuesCommand, value: DataPointClass, start: number, end?: number) => {
@@ -185,9 +186,9 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionText
    */
   slice = (start: number, end?: number) => new StringDataPointClass(this.sandstonePack, this.type, this.currentTarget, this.path, start, end)
 
-  _toMinecraftCondition = () => ({
-    value: ['if', 'data', this.type, this.currentTarget, this.path],
-  })
+  _toMinecraftCondition = () => new this.sandstonePack.conditions.DataPoint(this.sandstonePack.core, this)
+
+  equals = (value: NBTObject | Score | DataPointClass) => new this.sandstonePack.conditions.DataPointEquals(this.sandstonePack.core, this, value)
 
   /**
    * @internal

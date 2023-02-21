@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { validateIntegerRange } from '#commands/validators'
 import { CommandNode } from '#core/nodes'
 
@@ -33,7 +34,7 @@ export class ExperienceCommand extends CommandArguments {
    */
   add = (targets: MultiplePlayersArgument, amount: number, type?: 'level' | 'points') => {
     validateIntegerRange(amount, 'amount', -2147483648, 2147483647)
-    return this.finalCommand([targets, amount, type])
+    return this.finalCommand([targetParser(targets), amount, type])
   }
 
   /**

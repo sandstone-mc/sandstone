@@ -1,19 +1,21 @@
+import type { ConditionNode } from '../flow/index'
 import type { DataPointClass } from './index'
 import type { SelectorClass } from './Selector'
 import type { JSONTextComponent } from '#arguments/jsonTextComponent'
 
 export class ComponentClass {
+  /**
+   * @internal
+   */
   _toChatComponent(): JSONTextComponent {
     throw new Error('Not implemented')
   }
 }
-
-// TODO: Update all of these to return a ConditionNode instead
 export class ConditionClass {
   /**
    * @internal
    */
-  _toMinecraftCondition(): {value: any[]} {
+  _toMinecraftCondition(): ConditionNode {
     throw new Error('Not implemented')
   }
 }
@@ -31,7 +33,14 @@ export class ConditionTextComponentClass extends ComponentClass implements Condi
   /**
    * @internal
    */
-  _toMinecraftCondition(): {value: any[]} {
+  _toChatComponent(): JSONTextComponent {
+    throw new Error('Not implemented')
+  }
+
+  /**
+   * @internal
+   */
+  _toMinecraftCondition(): ConditionNode {
     throw new Error('Not implemented')
   }
 }

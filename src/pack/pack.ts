@@ -1,13 +1,18 @@
+/* eslint-disable max-len */
 /* eslint-disable no-plusplus */
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
+import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk'
+import { UUIDClass } from 'sandstone/variables/UUID'
 import { SandstoneCommands } from '#commands'
 import {
   AdvancementClass, ItemModifierClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, SandstoneCore, TagClass, TrimMaterialClass, TrimPatternClass,
 } from '#core'
-import { Flow } from '#flow'
+import { Flow, SandstoneConditions } from '#flow'
+import { randomUUID } from '#utils'
 import {
+  absolute,
   coordinatesParser,
-  DataClass, DataPointClass, LabelClass, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
+  DataClass, DataPointClass, LabelClass, NBTIntArray, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
 } from '#variables'
 import { Score } from '#variables/Score'
 
@@ -19,8 +24,11 @@ import {
 } from './visitors'
 
 import type {
+  UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
+} from 'sandstone/variables/UUID'
+import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON, Coordinates, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON, Coordinates, DIMENSIONS, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from '#arguments'
 import type { StoreType } from '#commands'
 import type {
@@ -121,6 +129,14 @@ class DataPack extends PackType {
   }
 }
 
+export type DimensionID = ['minecraft', DIMENSIONS] | [string, string]
+
+export type ChunkTuple = [number, number]
+
+export type UtilityChunksIndex<Chunk extends ChunkTuple, ID extends DimensionID> = `${Chunk[0]},${Chunk[1]};${ID[0]}:${ID[1]}`
+
+type ChunkMap<C extends ChunkTuple, ID extends DimensionID> = Map<UtilityChunksIndex<C, ID>, UtilityChunkClass<C, ID>>
+
 export class SandstonePack {
   readonly core: SandstoneCore
 
@@ -135,6 +151,8 @@ export class SandstonePack {
 
   readonly commands: SandstoneCommands
 
+  readonly conditions = SandstoneConditions
+
   objectives: Set<ObjectiveClass>
 
   anonymousScoreId = 0
@@ -146,6 +164,8 @@ export class SandstonePack {
   tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass>>
 
   loadTags: { preLoad: TagClass<'functions'>, load: TagClass<'functions'>, postLoad: TagClass<'functions'> }
+
+  utilityChunks: ChunkMap<ChunkTuple, DimensionID>
 
   constructor(public defaultNamespace: string, public packUid: string) {
     this.core = new SandstoneCore(this)
@@ -167,6 +187,7 @@ export class SandstonePack {
     this.objectives = new Set()
     this.constants = new Set()
     this.tickedLoops = {}
+    this.utilityChunks = new Map()
 
     if (process.env.NAMESPACE) {
       this.defaultNamespace = process.env.NAMESPACE
@@ -190,10 +211,7 @@ export class SandstonePack {
 
     this.Tag('functions', 'minecraft:load', [privateLoad])
 
-    this.core.insideMCFunction(this.getInitMCFunction(), () => {
-      // TODO: Add this to CLI
-      loadStatus(this.defaultNamespace).set(process.env.LOAD_VERSION || 1)
-    })
+    this.initMCFunction.push(() => loadStatus(this.defaultNamespace).set(process.env.LOAD_VERSION || 1))
   }
 
   resourceToPath = (name: string, resourceFolders: string[]): ResourcePath => {
@@ -302,9 +320,7 @@ export class SandstonePack {
       }
 
       // Else, we should run it in the init MCFunction
-      this.core.insideMCFunction(this.getInitMCFunction(), () => {
-        anonymousScore.set(initialValue)
-      })
+      this.initMCFunction.push(() => anonymousScore.set(initialValue))
 
       return anonymousScore
     }
@@ -410,9 +426,7 @@ export class SandstonePack {
       }
 
       // Else, we should run it in the init MCFunction
-      this.core.insideMCFunction(this.getInitMCFunction(), () => {
-        anonymousData.set(initialValue)
-      })
+      this.initMCFunction.push(() => anonymousData.set(initialValue))
 
       return anonymousData
     }
@@ -435,6 +449,139 @@ export class SandstonePack {
 
   Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this, target, properties)) as any
 
+  /** Creates a randomly generated static UUID. (changes on pack compile, should only use this if it is killed) */
+  UUID(): UUIDClass<'known', 'permanent'>
+
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  UUID(source: string | UUIDinNumber): UUIDClass<'known', 'permanent'>
+
+  /** Initializes with `Score`'s. */
+  UUID(source: UUIDinScore): UUIDClass<'scores', 'permanent'>
+
+  /** Initializes with a Data Point (to a UUID int array). */
+  UUID(source: DataPointClass): UUIDClass<'data', 'permanent'>
+
+  /** Initializes with a Selector. */
+  UUID(source: SelectorClass<true, boolean>): UUIDClass<'selector', 'permanent'>
+
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  UUID(source: string | UUIDinNumber, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'known', 'permanent'>
+
+  /** Initializes with `Score`'s. */
+  UUID(source: UUIDinScore, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'scores', 'permanent'>
+
+  /** Initializes with a Data Point (to a UUID int array). */
+  UUID(source: DataPointClass, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'data', 'permanent'>
+
+  /** Initializes with a Selector. */
+  UUID(source: SelectorClass<true, boolean>, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'selector', 'permanent'>
+
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  UUID(source: string | UUIDinNumber, holderState: 1, options?: UUIDOptions): UUIDClass<'known', 'singleTick'>
+
+  /** Initializes with 4 `Score`'s. */
+  UUID(source: UUIDinScore, holderState: 1, options?: UUIDOptions): UUIDClass<'scores', 'singleTick'>
+
+  /** Initializes with a Data Point (to a UUID int array). */
+  UUID(source: DataPointClass, holderState: 1, options?: UUIDOptions): UUIDClass<'data', 'singleTick'>
+
+  /** Initializes with a Selector. */
+  UUID(source: SelectorClass<true, boolean>, holderState: 1, options?: UUIDOptions): UUIDClass<'selector', 'singleTick'>
+
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  UUID(source: string | UUIDinNumber, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'known', 'timed'>
+
+  /** Initializes with 4 `Score`'s. */
+  UUID(source: UUIDinScore, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'scores', 'timed'>
+
+  /** Initializes with a Data Point (to a UUID int array). */
+  UUID(source: DataPointClass, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'data', 'timed'>
+
+  /** Initializes with a Selector. */
+  UUID(source: SelectorClass<true, boolean>, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'selector', 'timed'>
+
+  UUID(source: UUIDSource = randomUUID(), holderState: 1 | Omit<number, 1> | Score | 'permanent' = 'permanent', options?: UUIDOptions) { return new UUIDClass(this.core, source, holderState as number, options) }
+
+  get rootChunk() {
+    if (this.utilityChunks.get('0,0;smithed:void')) {
+      return this.utilityChunks.get('0,0;smithed:void') as RootChunkClass
+    }
+    this.utilityChunks.set('0,0;smithed:void', new RootChunkClass(this))
+
+    return this.utilityChunks.get('0,0;smithed:void') as RootChunkClass
+  }
+
+  __dimensionEntryPoints: {
+    markerMissing?: TagClass<'functions'>
+    commandBlock?: TagClass<'functions'>
+    setup?: TagClass<'functions'>
+    init?: TagClass<'functions'>
+    ready?: TagClass<'functions'>
+  } = {}
+
+  dimensionChunk<ID extends DimensionID, IDString extends `${ID[0]}:${ID[1]}` | ID[1], Chunk extends UtilityChunkClass<[-1875000, 200], ID>>(id: IDString, create: false | { name?: JSONTextComponent, uuid: string | UUIDinNumber }) {
+    const _id = id.includes(':') ? id.split(':') as ID : [this.defaultNamespace, id] as [string, ID[1]]
+    const index: UtilityChunksIndex<[-1875000, 200], ID> = `-1875000,200;${_id[0]}:${_id[1]}`
+    if (this.utilityChunks.get(index)) {
+      return this.utilityChunks.get(index) as Chunk
+    }
+    this.utilityChunks.set(index, new DimensionChunkClass(this, _id, create))
+    return this.utilityChunks.get(index) as Chunk
+  }
+
+  get dimensionID() {
+    return this.Objective.create('smithed.dimensions.id', 'dummy', undefined, true)
+  }
+
+  get dimensionTarget() {
+    return this.dimensionID('#target')
+  }
+
+  get dimensionMarker() {
+    // TODO: Set dimension target to current dimension some how
+
+    return this.rootChunk.armorStand.execute.on('passengers').if.score(this.dimensionID('@s'), '=', this.dimensionTarget).on('origin')
+  }
+
+  UtilityChunk<ID extends DimensionID, IDString extends `${ID[0]}:${ID[1]}`, ChunkLoc extends ChunkTuple, Chunk extends UtilityChunkClass<ChunkLoc, ID>>(id: IDString, chunk: ChunkLoc, marker?: UUIDClass<'known', 'permanent'>) {
+    const _id = id.split(':') as ID
+    const index: UtilityChunksIndex<ChunkLoc, ID> = `${chunk[0]},${chunk[1]};${_id[0]}:${_id[1]}`
+
+    if (this.utilityChunks.get(index)) {
+      return this.utilityChunks.get(index) as Chunk
+    }
+    let _marker = marker
+    if (!marker) {
+      const UUID = this.UUID()
+      const summon = () => this.commands.summon('marker', absolute(chunk[0] * 16, 0, chunk[1] * 16), { UUID: new NBTIntArray(UUID.known), Tags: [`sandstone.uc.${chunk.join('.')}.${_id.join('.')}`] })
+
+      // We currently are in a MCFunction => that's where the initialization should take place
+      if (this.core.currentMCFunction) {
+        summon()
+        // Else, we should run it in the init MCFunction
+      } else {
+        this.initMCFunction.push(() => summon())
+      }
+      _marker = UUID
+    }
+    this.utilityChunks.set(index, new UtilityChunkClass(this, _id, chunk, _marker as UUIDClass<'known', 'permanent'>))
+
+    const forceload = () => {
+      this.commands.forceload.remove(absolute(chunk[0], chunk[1]))
+      this.commands.forceload.add(absolute(chunk[0], chunk[1]))
+    }
+
+    // We currently are in a MCFunction => that's where the initialization should take place
+    if (this.core.currentMCFunction) {
+      forceload()
+      // Else, we should run it in the init MCFunction
+    } else {
+      this.initMCFunction.push(() => forceload())
+    }
+
+    return this.utilityChunks.get(index) as Chunk
+  }
+
   MCFunction = (name: string, callback: (this: MCFunctionClass) => void, options?: MCFunctionClassArguments) => new MCFunctionClass(this.core, name, {
     callback,
     creator: 'user',
@@ -445,18 +592,27 @@ export class SandstonePack {
 
   appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
 
-  getInitMCFunction = () => new MCFunctionClass(this.core, `${this.defaultNamespace}:__init__`, {
-    addToSandstoneCore: true,
-    creator: 'sandstone',
-    onConflict: 'append',
-  })
+  __initMCFunction?: MCFunctionClass
+
+  get initMCFunction() {
+    if (!this.__initMCFunction) {
+      this.__initMCFunction = new MCFunctionClass(this.core, `${this.defaultNamespace}:__init__`, {
+        addToSandstoneCore: true,
+        creator: 'sandstone',
+      })
+      this.loadTags.load.push(this.__initMCFunction)
+
+      return this.__initMCFunction
+    }
+    return this.__initMCFunction
+  }
 
   /**
    * Register commands that will be ticked at the rate you specify
    */
   registerTickedCommands(runEvery: TimeArgument, callback: () => void) {
     if (this.tickedLoops[runEvery]) {
-      this.core.insideMCFunction(this.tickedLoops[runEvery], callback)
+      this.tickedLoops[runEvery].push(callback)
     } else {
       this.tickedLoops[runEvery] = this.MCFunction(`__sandstone:ticked/times/${runEvery}`, () => {
         this.tickedLoops[runEvery].schedule.function(runEvery, 'replace')
@@ -466,7 +622,7 @@ export class SandstonePack {
         startTickedLoops = this.MCFunction('__sandstone:ticked/start', () => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
         this.loadTags.load.push(startTickedLoops)
       } else {
-        this.core.insideMCFunction(startTickedLoops, () => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
+        startTickedLoops.push(() => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
       }
     }
   }
@@ -512,7 +668,7 @@ export class SandstonePack {
   })
 
   /** @ts-ignore */
-  Tag = <T extends REGISTRIES>(type: T, name: string, values: TagValuesJSON<T>, options?: TagClassArguments) => new TagClass<T>(this.core, type, name, {
+  Tag = <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: TagClassArguments) => new TagClass<T>(this.core, type, name, {
     values,
     creator: 'user',
     addToSandstoneCore: true,

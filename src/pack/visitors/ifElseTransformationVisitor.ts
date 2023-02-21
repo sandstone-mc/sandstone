@@ -45,7 +45,7 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
       const conditions: ConditionNode[] = []
 
       if (i > 0) {
-        conditions.push(new NotNode(this.core, new ScoreConditionNode(this.core, ifScore, 'matches', '0..')))
+        conditions.push(new NotNode(this.core, new ScoreConditionNode(this.core, [ifScore.target.toString(), ifScore.objective.name, 'matches', '0..'])))
         /*
          * TODO: replace with a real, existing objective
          * conditions.push(flow.not(createCondition(['unless', 'score', IF_OBJECTIVE.name, IF_OBJECTIVE.objective, 'matches', '0..'])))

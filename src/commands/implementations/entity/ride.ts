@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core'
 
 import { CommandArguments } from '../../helpers'
@@ -12,9 +13,9 @@ export class RideArgumentsCommand extends CommandArguments {
   /**
    * Adds the target as a passenger of the mount.
    *
-   * @param mount Specifies the mount.
+   * @param target Specifies the mount.
    */
-  mount = (name: SingleEntityArgument) => this.finalCommand(['mount', name])
+  mount = (target: SingleEntityArgument) => this.finalCommand(['mount', targetParser(target)])
 
   /**
    * Dismounts the target if it is mounted.
@@ -30,5 +31,5 @@ export class RideCommand extends CommandArguments {
    *
    * @param target Specifies the command's target.
    */
-  ride = (target: SingleEntityArgument) => this.subCommand([target], RideArgumentsCommand, false)
+  ride = (target: SingleEntityArgument) => this.subCommand([targetParser(target)], RideArgumentsCommand, false)
 }

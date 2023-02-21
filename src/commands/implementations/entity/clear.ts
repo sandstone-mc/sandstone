@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers.js'
 import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
@@ -27,5 +28,5 @@ export class ClearCommand extends CommandArguments {
    *
    * If `0`, instead of clearing of items, detectes and queries the amount of specified items.
    */
-  clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS> | TagClass<'items'>, maxCount?: number) => this.finalCommand([targets, item, maxCount])
+  clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS> | TagClass<'items'>, maxCount?: number) => this.finalCommand([targetParser(targets), item, maxCount])
 }

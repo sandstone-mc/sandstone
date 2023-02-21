@@ -1,13 +1,13 @@
 import type { UUIDClass } from 'sandstone/variables/UUID'
 import type { _ShowAlias } from './basics'
-import type { SelectorClass } from '#variables'
+import type { SelectorClass, SelectorPickClass } from '#variables'
 
 // Possible selectors.
-type MultipleEntitiesSelector = SelectorClass<false, false>
-type SingleEntitySelector = SelectorClass<true, false>
+type MultipleEntitiesSelector = SelectorClass<false, false> | SelectorPickClass<false, false>
+type SingleEntitySelector = SelectorClass<true, false> | SelectorPickClass<true, false>
 
-type MultiplePlayersSelector = SelectorClass<false, true>
-type SinglePlayerSelector = SelectorClass<true, true>
+type MultiplePlayersSelector = SelectorClass<false, true> | SelectorPickClass<false, true>
+type SinglePlayerSelector = SelectorClass<true, true> | SelectorPickClass<true, true>
 
 export type SelectorArgument<MustBeSingle extends boolean, MustBePlayer extends boolean = false> = string | (
     MustBePlayer extends true ? (
@@ -23,5 +23,5 @@ export type SelectorArgument<MustBeSingle extends boolean, MustBePlayer extends 
  */
 export type SinglePlayerArgument = SelectorArgument<true, true> | _ShowAlias
 export type MultiplePlayersArgument = SelectorArgument<false, true> | SinglePlayerArgument | _ShowAlias
-export type SingleEntityArgument = SelectorArgument<true, false> | SinglePlayerArgument | UUIDClass<any> | _ShowAlias
+export type SingleEntityArgument = SelectorArgument<true, false> | SinglePlayerArgument | UUIDClass<any, any> | _ShowAlias
 export type MultipleEntitiesArgument = SelectorArgument<false, false> | SingleEntityArgument | MultiplePlayersArgument | _ShowAlias

@@ -1,6 +1,7 @@
 import { ComponentClass, SelectorPickClass } from './abstractClasses'
 import { rangeParser } from './parsers'
 
+import type { NotNode } from 'sandstone/flow/index'
 import type { SandstoneCommands } from '../commands'
 import type { SandstonePack } from '../pack'
 import type { DATA_TYPES, DataPointClass } from './Data'
@@ -69,9 +70,7 @@ export class Score extends ComponentClass implements ConditionClass {
   /**
    * @internal
    */
-  _toMinecraftCondition = () => ({
-    value: ['unless', 'score', this, 'matches', 0] as unknown[],
-  })
+  _toMinecraftCondition = () => this.sandstonePack._.not(new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', '0']))
 
   private unaryOperation(
     operation: 'add' | 'remove' | 'set',
@@ -402,21 +401,19 @@ export class Score extends ComponentClass implements ConditionClass {
     operator: COMPARISON_OPERATORS,
     matchesRange: string,
     args: OperationArguments,
-    invert = false,
   ): ConditionClass {
     const playerScore = this
 
-    const ifOrUnless = invert ? 'unless' : 'if'
-
     if (typeof args[0] === 'number') {
       return {
-        _toMinecraftCondition: () => ({ value: [ifOrUnless, 'score', playerScore.target, playerScore.objective, 'matches', matchesRange] }),
+        _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${playerScore.target}`, `${playerScore.objective}`, 'matches', matchesRange]),
       }
     }
 
     const endArgs = args[1] ? args : [args[0]]
     return {
-      _toMinecraftCondition: () => ({ value: [ifOrUnless, 'score', playerScore.target, playerScore.objective, operator, ...endArgs] }),
+      // eslint-disable-next-line max-len
+      _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${playerScore.target}`, `${playerScore.objective}`, operator, ...(endArgs.map((arg) => (arg as any).toString()))]),
     }
   }
 
@@ -537,17 +534,17 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  notEqualTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  notEqualTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): NotNode
 
   /**
    * Check if the current score is not equal to the given amount or score.
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  notEqualTo (amountOrTargetScore: number | Score) : ConditionClass
+  notEqualTo (amountOrTargetScore: number | Score) : NotNode
 
   notEqualTo(...args: OperationArguments) {
-    return this.comparison('=', args[0].toString(), args, true)
+    return this.sandstonePack._.not(this.comparison('=', args[0].toString(), args))
   }
 
   '!=' = this.notEqualTo
@@ -558,6 +555,6 @@ export class Score extends ComponentClass implements ConditionClass {
    * @param range The range to compare the current score against.
    */
   matches = (range: Range) => ({
-    _toMinecraftCondition: () => ({ value: ['if', 'score', this as unknown, 'matches', rangeParser(range)] }),
+    _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, ['if', 'score', `${this.target}`, `${this.objective}`, 'matches', rangeParser(range)]),
   })
 }

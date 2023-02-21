@@ -14,7 +14,9 @@ import type { SandstonePack } from '#pack'
 
 type ScoreArgument = Record<string, Range>
 
-type AdvancementsArgument = Record<string, boolean | Record<string, boolean>>
+type AdvancementsArgumentValue = boolean | [string, boolean] | [string, boolean][]
+
+type AdvancementsArgument = Record<string, AdvancementsArgumentValue | Record<string, AdvancementsArgumentValue>>
 
 /**
  * If MustBeSingle is false, then anything is allowed.
@@ -188,6 +190,12 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
     if (typeof value === 'boolean') {
       return [advancementName, value].join('=')
     }
+    if (Array.isArray(value)) {
+      if (Array.isArray(value[0])) {
+        return [advancementName, `{${value.map((_value) => (_value as [string, boolean]).join('=')).join(',')}}`].join('=')
+      }
+      return [advancementName, `{${value.join('=')}}`].join('=')
+    }
 
     return [advancementName, parseAdvancements(value)].join('=')
   }).join(', ')}}`
@@ -292,9 +300,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
   /**
    * @internal
    */
-  _toMinecraftCondition(this: SelectorClass<IsSingle, IsPlayer>) {
-    return { value: ['if', 'entity', this] }
-  }
+  _toMinecraftCondition = () => new this.sandstonePack.conditions.Selector(this.sandstonePack.core, this.toString())
 
   /**
    * @internal
@@ -323,7 +329,8 @@ export type SingleSelectorProperties = SelectorProperties<true, false>
 export type SinglePlayerSelectorProperties = SelectorProperties<true, true>
 
 export type SelectorCreator = (
-  & ((target: '@s' | '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>) => SelectorClass<true, true>)
+  & ((target: '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties, 'limit' | 'type'>) => SelectorClass<true, true>)
+  & ((target: '@s', selectorArguments?: Omit<AnySelectorProperties, 'limit'>) => SelectorClass<true, true>)
   & ((target: '@a', selectorArguments: Omit<SingleSelectorProperties, 'type'>) => SelectorClass<true, true>)
   & ((target: '@a', selectorArguments?: Omit<AnySelectorProperties, 'type'>) => SelectorClass<false, true>)
   & ((target: '@e', selectorArguments: SinglePlayerSelectorProperties) => SelectorClass<true, true>)

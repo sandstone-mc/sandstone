@@ -1,5 +1,5 @@
 import { CommandNode } from '#core'
-import { coordinatesParser, nbtStringifier } from '#variables'
+import { coordinatesParser, nbtStringifier, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -44,7 +44,7 @@ export class DataGetCommand extends CommandArguments {
    * @param path The path of the NBT to get.
    * @param scale The scale to multiply the NBT value by.
    */
-  entity = (target: SingleEntityArgument, path?: string, scale?: number) => this.finalCommand(['entity', target, path, scale])
+  entity = (target: SingleEntityArgument, path?: string, scale?: number) => this.finalCommand(['entity', targetParser(target), path, scale])
 
   /**
    * Get the NBT from a given storage path.
@@ -71,7 +71,7 @@ export class DataMergeCommand extends CommandArguments {
    * @param target The entity to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  entity = (target: SingleEntityArgument, nbt: NBTObject) => this.finalCommand(['entity', target, nbtStringifier(nbt)])
+  entity = (target: SingleEntityArgument, nbt: NBTObject) => this.finalCommand(['entity', targetParser(target), nbtStringifier(nbt)])
 
   /**
    * Merge the NBT of the given storage path, with the given NBT.
@@ -98,7 +98,7 @@ export class DataModifyValuesCommand extends CommandArguments {
      * @param source The entity to modify the NBT with.
      * @param sourcePath The path of the NBT to modify with.
      */
-    entity: (source: SingleEntityArgument, sourcePath: string) => this.finalCommand(['from', 'entity', source, sourcePath]),
+    entity: (source: SingleEntityArgument, sourcePath: string) => this.finalCommand(['from', 'entity', targetParser(source), sourcePath]),
 
     /**
      * Modify with the NBT of a given storage path.
@@ -136,7 +136,7 @@ export class DataModifyValuesCommand extends CommandArguments {
      * @param end Optional. Index of the first character to exclude at the end of the string
      */
     entity: (source: SingleEntityArgument, sourcePath: string, start?: number, end?: number) => {
-      const command: (string | SingleEntityArgument | number)[] = ['from', 'entity', source, sourcePath]
+      const command: (string | SingleEntityArgument | number)[] = ['from', 'entity', targetParser(source), sourcePath]
       if (start) {
         command.push(start)
         if (end) command.push(end)
@@ -212,7 +212,7 @@ export class DataModifyCommand extends CommandArguments {
    * @param target The entity to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  entity = (target: SingleEntityArgument, targetPath: string) => this.subCommand(['entity', target, targetPath], DataModifyTypeCommand, false)
+  entity = (target: SingleEntityArgument, targetPath: string) => this.subCommand(['entity', targetParser(target), targetPath], DataModifyTypeCommand, false)
 
   /**
    * Modify the NBT from a given storage path.
@@ -238,7 +238,7 @@ export class DataRemoveCommand extends CommandArguments {
    * @param target The entity to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  entity = (target: SingleEntityArgument, targetPath: string) => this.finalCommand(['entity', target, targetPath])
+  entity = (target: SingleEntityArgument, targetPath: string) => this.finalCommand(['entity', targetParser(target), targetPath])
 
   /**
    * Remove the NBT from a given storage path.

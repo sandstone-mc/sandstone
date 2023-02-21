@@ -1,5 +1,5 @@
 import { CommandNode } from '#core'
-import { JSONTextComponentClass } from '#variables'
+import { JSONTextComponentClass, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -51,7 +51,7 @@ export class TeamCommand extends CommandArguments {
    * `'*'` may be used to represent all entities tracked by the scoreboard
    * If unspecified, defaults to the executor.
    */
-  join = (team: string, members?: MultipleEntitiesArgument | '*') => this.finalCommand(['join', team, members])
+  join = (team: string, members?: MultipleEntitiesArgument | '*') => this.finalCommand(['join', team, targetParser(members)])
 
   /**
    * Makes specified entities leave a team.
@@ -59,14 +59,14 @@ export class TeamCommand extends CommandArguments {
    * @param members Specifies the entities to leave the team.
    * `'*'` may be used to represent all entities tracked by the scoreboard
    */
-  leave = (members: MultipleEntitiesArgument | '*') => this.finalCommand(['leave', members])
+  leave = (members: MultipleEntitiesArgument | '*') => this.finalCommand(['leave', targetParser(members)])
 
   /**
    * Lists all teams, or lists all members of a team if `team` is set.
    *
    * @param team Specifies the name of the team.
    */
-  list = (team?: string) => this.finalCommand(['list', team])
+  list = (team?: string) => this.finalCommand(['list', targetParser(team)])
 
   modify: (
     /**

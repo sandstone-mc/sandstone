@@ -1,12 +1,10 @@
-import { toMinecraftResourceName } from 'sandstone/utils'
-
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
 import type { ConditionClass } from 'sandstone/variables/index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
-import type { PredicateJSON, TrimPatternJSON } from '#arguments'
+import type { TrimPatternJSON } from '#arguments'
 
 type equipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
 
@@ -40,7 +38,7 @@ export type TrimPatternClassArguments = {
 export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements ConditionClass {
   public trimPatternJSON: NonNullable<TrimPatternClassArguments['trimPattern']>
 
-  protected equipmentCheck
+  readonly equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimPatternClassArguments) {
     super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimPatternNode, sandstoneCore.pack.resourceToPath(name, ['trim_patterns']), args)
@@ -77,32 +75,5 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
   /**
    * @internal
    */
-  _toMinecraftCondition(): {value: any[]} {
-    if (this.equipmentCheck === 'whole_inventory') {
-      return {
-        value: ['if', 'data', 'entity', '@s', `Inventory[{tag:{Trim:{pattern:"${toMinecraftResourceName(this.path)}"}}}]`],
-      }
-    }
-
-    // look, this is an incomplete predicate okay, what do you want from me
-    const slotCheck: any = {
-      condition: 'entity_properties',
-      entity: 'this',
-      predicate: {
-        equipment: {},
-      },
-    }
-
-    for (const slot of this.equipmentCheck ? [...this.equipmentCheck] : ['mainhand', 'offhand', 'head', 'chest', 'legs', 'feet']) {
-      slotCheck[slot] = {
-        nbt: `{Trim:{pattern:"${toMinecraftResourceName(this.path)}"}}`,
-      }
-    }
-
-    const predicate = this.pack.Predicate(`trim_pattern/${this.name}`, slotCheck as PredicateJSON)
-
-    return {
-      value: ['if', 'predicate', toMinecraftResourceName(predicate.path)],
-    }
-  }
+  _toMinecraftCondition = () => new this.pack.conditions.TrimPattern(this.core, this)
 }

@@ -14,7 +14,7 @@ export class InitObjectivesVisitor extends GenericSandstoneVisitor {
 
     const objectives = [...pack.objectives.values()]
     if (objectives.length !== 0) {
-      core.insideMCFunction(pack.getInitMCFunction(), () => {
+      pack.initMCFunction.push(() => {
         for (const obj of objectives) {
           if (userRegisteredObjectives.has(obj.name)) {
             throw new Error(`An objective named "${obj.name}" has been created twice.`)

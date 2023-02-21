@@ -1,5 +1,5 @@
 import { CommandNode } from '#core'
-import { JSONTextComponentClass, Score } from '#variables'
+import { JSONTextComponentClass, Score, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -11,9 +11,13 @@ import type {
 import type { LiteralUnion } from '#utils'
 
 function scoresParser(...args: unknown[]) {
-  return args.map((arg, i) => {
+  return args.map((_arg, i) => {
+    const arg = _arg as any
     if (arg instanceof Score) {
       return [arg.target, arg.objective]
+    }
+    if (arg?._toSelector) {
+      return [arg._toSelector()]
     }
     return [arg]
   }).flat(+Infinity)
@@ -95,7 +99,7 @@ export class ScoreboardCommand extends CommandArguments {
      *
      * @param target The entity to list the scores from.
      */
-    list: (target?: unknown) => this.finalCommand(['players', 'list', target]),
+    list: (target?: MultipleEntitiesArgument) => this.finalCommand(['players', 'list', targetParser(target)]),
 
     /**
      * Return the scoreboard value of a given objective for a given target.

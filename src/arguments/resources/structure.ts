@@ -15,7 +15,7 @@ export type StructureNBT = {
     state: number
     /** Position. A list of positive integers. */
     pos: Vec3
-    /** BlockEntity nbt. */
+    /** BlockEntity nbt. Must use NBT Primitives! */
     nbt?: RootNBT
   }[]
 
@@ -24,16 +24,16 @@ export type StructureNBT = {
     pos: Vec3
     /** Block position */
     blockPos: Vec3
-    /** Entity NBT. */
+    /** Entity NBT. Must use NBT Primitives! */
     nbt: RootNBT
   }[]
 
-} & ({
-  palette: BlockState[]
-} | {
-  /** Sets of different block states used in the structure, a random palette gets selected based on coordinates. */
-  palettes: BlockState[][]
-})
+  /** Exclusive of palettes. */
+  palette?: BlockState[]
+
+  /** Exclusive of palette. Sets of different block states used in the structure, a random palette gets selected based on coordinates. */
+  palettes?: BlockState[][]
+}
 
 export type BlockState = {
   Name: LiteralUnion<BLOCKS>

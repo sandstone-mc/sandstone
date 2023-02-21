@@ -6,6 +6,8 @@ import { ResourceClass } from './resource'
 import type {
   HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON,
 } from 'sandstone/arguments/index'
+import type { LiteralUnion } from 'sandstone/utils'
+import type { ConditionClass } from 'sandstone/variables/index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { MCFunctionClass } from './mcfunction'
 import type { ListResource, ResourceClassArguments, ResourceNode } from './resource'
@@ -22,7 +24,7 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
   return typeof v === 'object'
 }
 
-function objectToString<REGISTRY extends REGISTRIES>(value: TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<REGISTRY>>): TagSingleValue<string> {
+function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(value: TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<REGISTRY>>): TagSingleValue<string> {
   if (isMCFunctionClass(value) || isTagClass(value)) {
     /** @ts-ignore */
     return value.name
@@ -40,7 +42,7 @@ function objectToString<REGISTRY extends REGISTRIES>(value: TagSingleValue<Hinte
   return value as string | TagSingleValue<string>
 }
 
-type TagJSON<REGISTRY extends REGISTRIES> = {
+type TagJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = {
   replace: boolean
   values: TagValuesJSON<REGISTRY>
 }
@@ -48,15 +50,15 @@ type TagJSON<REGISTRY extends REGISTRIES> = {
 /**
  * A node representing a Minecraft tag.
  */
-export class TagNode extends ContainerNode implements ResourceNode<TagClass<REGISTRIES>> {
-  constructor(sandstoneCore: SandstoneCore, public resource: TagClass<REGISTRIES>) {
+export class TagNode extends ContainerNode implements ResourceNode<TagClass<LiteralUnion<REGISTRIES>>> {
+  constructor(sandstoneCore: SandstoneCore, public resource: TagClass<LiteralUnion<REGISTRIES>>) {
     super(sandstoneCore)
   }
 
   getValue = () => JSON.stringify(this.resource.tagJSON)
 }
 
-export type TagClassArguments<REGISTRY extends REGISTRIES> = {
+export type TagClassArguments<REGISTRY extends LiteralUnion<REGISTRIES>> = {
   /**
    * The tag's entry list.
    */
@@ -79,9 +81,9 @@ export type TagClassArguments<REGISTRY extends REGISTRIES> = {
   runEveryTick?: boolean
 }) : unknown)
 
-type Resource<T extends REGISTRIES> = TagSingleValue<HintedTagStringType<T>> | TagClass<T>
+type Resource<T extends LiteralUnion<REGISTRIES>> = TagSingleValue<HintedTagStringType<T>> | TagClass<T>
 
-export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass implements ListResource {
+export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>> extends ResourceClass implements ListResource, ConditionClass {
   readonly type: REGISTRY
 
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
@@ -129,5 +131,15 @@ export class TagClass<REGISTRY extends REGISTRIES> extends ResourceClass impleme
 
   toJSON() {
     return toMinecraftResourceName(this.path)
+  }
+
+  /**
+   * @internal
+   */
+  _toMinecraftCondition = () => {
+    if (this.type === 'blocks' || this.type === 'entity_types') {
+      return new this.pack.conditions.Tag(this.core, this.type as 'blocks' | 'entity_types', this.name)
+    }
+    throw new Error(`Cannot use a ${this.type} group tag as a condition. Only supports 'blocks' or 'entity_types'.`)
   }
 }

@@ -1,6 +1,6 @@
 import { validateIntegerRange } from '#commands/validators'
 import { CommandNode } from '#core'
-import { coordinatesParser } from '#variables'
+import { coordinatesParser, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -41,7 +41,7 @@ class LootSourceCommand extends CommandArguments {
    *
    * @param target Specifies one entity to kill simulatively.
    */
-  kill = (target: SingleEntityArgument) => this.finalCommand(['kill', target])
+  kill = (target: SingleEntityArgument) => this.finalCommand(['kill', targetParser(target)])
 
   /**
    * Drops items that would be dropped by mining the given block, with the given tool.
@@ -94,7 +94,7 @@ export class LootCommand extends CommandArguments {
     entity: (entities: MultipleEntitiesArgument, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => {
       if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
-      return this.subCommand(['replace', 'entity', entities, slot, count], LootSourceCommand, false)
+      return this.subCommand(['replace', 'entity', targetParser(entities), slot, count], LootSourceCommand, false)
     },
 
     /**
@@ -125,7 +125,7 @@ export class LootCommand extends CommandArguments {
    *
    * @param players Specifies one or more players to give.
    */
-  give = (players: MultiplePlayersArgument) => this.subCommand(['give', players], LootSourceCommand, false)
+  give = (players: MultiplePlayersArgument) => this.subCommand(['give', targetParser(players)], LootSourceCommand, false)
 
   /**
    * Distributes items to a container block.

@@ -1,5 +1,5 @@
 import { CommandNode } from '#core/nodes'
-import { coordinatesParser } from '#variables'
+import { coordinatesParser, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers'
 
@@ -23,5 +23,5 @@ export class SpawnPointCommand extends CommandArguments {
    *
    * @param angle Specifies the yaw angle to spawn with. Defaults to the direction the executor is facing.
    */
-  spawnpoint = (targets?: MultiplePlayersArgument, pos?: Coordinates, angle?: Rotation) => this.finalCommand([targets, coordinatesParser(pos), coordinatesParser(angle)])
+  spawnpoint = (targets?: MultiplePlayersArgument, pos?: Coordinates, angle?: Rotation) => this.finalCommand([targetParser(targets), coordinatesParser(pos), coordinatesParser(angle)])
 }

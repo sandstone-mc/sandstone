@@ -4,7 +4,7 @@ import type {
 import type { MCFunctionClass, TagClass } from '#core'
 import type { LiteralUnion } from '#utils'
 
-export type HintedTagStringType<T extends REGISTRIES> = (
+export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
   T extends 'fluids' ? LiteralUnion<FLUIDS> :
   T extends 'entity_types' ? LiteralUnion<ENTITY_TYPES> :
@@ -22,4 +22,4 @@ export type HintedTagStringType<T extends REGISTRIES> = (
 
 export type TagSingleValue<T> = T | { id: T, required: boolean }
 
-export type TagValuesJSON<REGISTRY extends REGISTRIES> = TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<REGISTRY> >[]
+export type TagValuesJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<LiteralUnion<REGISTRIES>> >[]

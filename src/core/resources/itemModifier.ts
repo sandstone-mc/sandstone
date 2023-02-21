@@ -1,3 +1,5 @@
+import { targetParser } from 'sandstone/variables/parsers'
+
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
@@ -91,7 +93,7 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
        * @param modifier The name of the modifier.
        */
       entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => {
-        this.pack.commands.item.modify.entity(targets, slot, this)
+        this.pack.commands.item.modify.entity(targetParser(targets), slot, this)
       },
     }
   }

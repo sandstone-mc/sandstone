@@ -1,6 +1,7 @@
 import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
+import type { ConditionClass } from 'sandstone/variables/index'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 import type { AdvancementJSON, MultiplePlayersArgument } from '#arguments'
@@ -23,7 +24,7 @@ export type AdvancementClassArguments<CriteriaNames extends string = string> = {
   advancement?: AdvancementJSON<CriteriaNames>
 } & ResourceClassArguments<'default'>
 
-export class AdvancementClass<CriteriaNames extends string = string> extends ResourceClass<AdvancementNode> {
+export class AdvancementClass<CriteriaNames extends string = string> extends ResourceClass<AdvancementNode> implements ConditionClass {
   public advancementJSON: NonNullable<AdvancementClassArguments['advancement']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<CriteriaNames>) {
@@ -122,5 +123,17 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    */
   revokeThroughThis(players: MultiplePlayersArgument = '@s') {
     this.pack.commands.advancement.revoke(players).through(this.name)
+  }
+
+  /**
+   * @internal
+   */
+  _toMinecraftCondition = () => new this.pack.conditions.Advancement(this.core, this.name)
+
+  /**
+   * Test if the currently executing player has a specific advancement criterion.
+   */
+  criterion(criterion: string) {
+    return new this.pack.conditions.Advancement(this.core, this.name, criterion)
   }
 }

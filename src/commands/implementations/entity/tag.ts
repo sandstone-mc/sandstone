@@ -1,3 +1,4 @@
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core'
 
 import { CommandArguments } from '../../helpers'
@@ -49,5 +50,5 @@ export class TagCommand extends CommandArguments {
    *
    * @param targets Specifies the command's target.
    */
-  tag = (targets: MultipleEntitiesArgument) => this.subCommand([targets], TagArgumentsCommand, false)
+  tag = (targets: MultipleEntitiesArgument) => this.subCommand([targetParser(targets)], TagArgumentsCommand, false)
 }

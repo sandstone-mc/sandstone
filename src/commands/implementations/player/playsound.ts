@@ -1,5 +1,5 @@
 import { CommandNode } from '#core/nodes'
-import { coordinatesParser } from '#variables/parsers'
+import { coordinatesParser, targetParser } from '#variables/parsers'
 
 import { CommandArguments } from '../../helpers'
 
@@ -43,5 +43,5 @@ export class PlaySoundCommand extends CommandArguments {
     volume?: number,
     pitch?: number,
     minVolume?: number,
-  ) => this.finalCommand([sound, source, targets, coordinatesParser(sourcePosition), volume, pitch, minVolume])
+  ) => this.finalCommand([sound, source, targetParser(targets), coordinatesParser(sourcePosition), volume, pitch, minVolume])
 }

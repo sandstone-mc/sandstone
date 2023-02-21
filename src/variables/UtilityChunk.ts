@@ -1,32 +1,36 @@
 /* eslint-disable max-len */
+
 import { randomUUID } from '../utils'
 import {
-  absolute, coordinatesParser, DataPointClass, NBTIntArray, NBTLong, NBTString, nbtStringifier, Score,
+  absolute, coordinatesParser, DataPointClass, JSONTextComponentClass, NBTIntArray, NBTLong, NBTString, nbtStringifier, Score,
 } from './index'
 import { ResolveNBTPart } from './ResolveNBT'
 import { UUIDClass } from './UUID'
 
-import type { LootTableClass } from 'sandstone/core/index'
+import type {
+  _RawMCFunctionClass, LootTableClass, PredicateClass, ResourceClassArguments,
+} from 'sandstone/core/index'
 import type { StructureClass } from 'sandstone/core/resources/structure'
 import type {
-  DIMENSIONS, ENTITY_TYPES, JSONTextComponent, NBTObject, RootNBT,
+  ENTITY_TYPES, JSONTextComponent, NBTObject, RootNBT,
 } from '../arguments/index'
-import type { SandstonePack } from '../pack/pack'
+import type { ChunkTuple, DimensionID, SandstonePack } from '../pack/pack'
 import type { LiteralUnion } from '../utils'
 import type { DataClass, NBTInt } from './index'
+import type { UUIDinNumber } from './UUID'
 
-export class UtilityChunkClass {
+export class UtilityChunkClass<Chunk extends ChunkTuple, ID extends DimensionID> {
   readonly chunk
 
   readonly coordinates
 
-  constructor(protected pack: SandstonePack, public dimension: LiteralUnion<DIMENSIONS>, chunk: [number, number], public marker: UUIDClass<'permanent'>) {
+  constructor(protected pack: SandstonePack, public dimension: ID, chunk: Chunk, public marker: UUIDClass<'known' | 'selector', 'permanent'>) {
     this.chunk = coordinatesParser(absolute(...chunk))
     this.coordinates = coordinatesParser(absolute(chunk[0] * 16, chunk[1] * 16))
   }
 
   get inDimension() {
-    return this.pack.commands.execute.in(this.dimension)
+    return this.pack.commands.execute.in(this.dimension.join(':'))
   }
 
   createMember(entityType: LiteralUnion<ENTITY_TYPES>, nbt: RootNBT = {}, resolveNBT = false) {
@@ -46,36 +50,95 @@ export class UtilityChunkClass {
   }
 }
 
-export class DimensionChunkClass extends UtilityChunkClass {
-  constructor(pack: SandstonePack, id: string, name?: JSONTextComponent) {
-    super(pack, id, [-1875000, 200], pack.UUID(pack.Selector('@e', {
-      type: 'marker', tag: 'smithed.dimensions.marker', x: 30000000, z: 3200, limit: 1,
-    })))
+const resourceOpts: ResourceClassArguments<'function'> = { addToSandstoneCore: true, creator: 'sandstone', onConflict: 'append' }
+
+export class DimensionChunkClass<ID extends DimensionID> extends UtilityChunkClass<[-1875000, 200], ID> {
+  constructor(pack: SandstonePack, id: ID, create: false | { name?: JSONTextComponent, uuid: string | UUIDinNumber }) {
+    super(pack, id, [-1875000, 200], create ? pack.UUID(create.uuid) : pack.UUID(
+      pack.Selector('@e', {
+        type: 'marker', tag: 'smithed.dimensions.marker', x: 30000000, z: 3200, limit: 1,
+      }),
+      'permanent',
+    ))
+
+    if (create) {
+      pack.initMCFunction.push(() => {
+        pack.Data('storage', 'smithed.dimensions:temp', '{}').merge({
+          DimensionID: id,
+          ...(create.name ? { PrettyName: `${new JSONTextComponentClass(create.name)}` } : {}),
+        })
+      })
+      if (!pack.__dimensionEntryPoints.markerMissing) {
+        pack.__dimensionEntryPoints.markerMissing = pack.Tag('functions', 'smithed.dimensions:marker_missing', [pack.MCFunction('__sandstone:dimension/marker_missing', () => {}, resourceOpts)])
+      }
+
+      (pack.__dimensionEntryPoints.markerMissing.tagJSON.values[0] as _RawMCFunctionClass).push.execute.if.predicate(this.predicate).run.summon('marker', '~ ~ ~', {
+        Tags: ['smithed.dimensions.marker', 'smithed.entity', 'smithed.strict'],
+        UUID: create.uuid,
+      })
+    }
   }
 
   /** Partial execute command executing as (not at) the per-dimension marker */
   get execute() {
-    return this.pack.commands.execute.as(this.pack.rootChunk.marker).on('passengers').if.score('@s', 'smithed.dimensions.id', '=', '#target', 'smithed.dimensions.id')
+    // TODO: Switch this to `Thrower` based relation linkage due to MC-260322. Figure out how to set #target.
+    return this.pack.commands.execute.as(this.pack.rootChunk.armorStand).on('passengers').if.score(this.pack.dimensionID('@s'), '=', this.pack.dimensionTarget)
   }
 
-  get dimensionID() {
+  __predicate?: PredicateClass
+
+  get predicate() {
+    if (!this.__predicate) {
+      this.__predicate = this.pack.Predicate(`__internal/dimension_check/${this.dimension.join('.')}`, {
+        condition: 'minecraft:location_check',
+        predicate: {
+          dimension: this.dimension.join(':'),
+        },
+      })
+    }
+    return this.__predicate
+  }
+
+  // TODO
+  get dimensionNumber() {
     return Score
   }
 
+  /** Not yet implemented by Smithed Core */
   get commandBlockTick() {
-    return TagClass
+    if (!this.pack.__dimensionEntryPoints.commandBlock) {
+      this.pack.__dimensionEntryPoints.commandBlock = this.pack.Tag('functions', 'smithed.todo:dimension_command_block_tick', [
+        this.pack.MCFunction('__sandstone:dimension/command_block_tick', () => {}, resourceOpts),
+      ], resourceOpts)
+    }
+    return (this.pack.__dimensionEntryPoints.commandBlock.tagJSON.values[0] as _RawMCFunctionClass).push.execute.if.predicate(this.predicate)
   }
 
-  get dimensionSetup() {
-    return TagClass
+  get setup() {
+    if (!this.pack.__dimensionEntryPoints.setup) {
+      this.pack.__dimensionEntryPoints.setup = this.pack.Tag('functions', 'smithed.dimensions:setup_dimension', [
+        this.pack.MCFunction('__sandstone:dimension/setup_dimension', () => {}, resourceOpts),
+      ], resourceOpts)
+    }
+    return (this.pack.__dimensionEntryPoints.setup.tagJSON.values[0] as _RawMCFunctionClass).push.execute.if.predicate(this.predicate)
   }
 
-  get dimensionInit() {
-    return TagClass
+  get init() {
+    if (!this.pack.__dimensionEntryPoints.init) {
+      this.pack.__dimensionEntryPoints.init = this.pack.Tag('functions', 'smithed.dimensions:dimension_initialized', [
+        this.pack.MCFunction('__sandstone:dimension/dimension_initialized', () => {}, resourceOpts),
+      ], resourceOpts)
+    }
+    return (this.pack.__dimensionEntryPoints.init.tagJSON.values[0] as _RawMCFunctionClass).push.execute.if.predicate(this.predicate)
   }
 
   get dimensionReady() {
-    return TagClass
+    if (!this.pack.__dimensionEntryPoints.ready) {
+      this.pack.__dimensionEntryPoints.ready = this.pack.Tag('functions', 'smithed.dimensions:dimension_ready', [
+        this.pack.MCFunction('__sandstone:dimension/dimension_ready', () => {}, resourceOpts),
+      ], resourceOpts)
+    }
+    return (this.pack.__dimensionEntryPoints.ready.tagJSON.values[0] as _RawMCFunctionClass).push.execute.if.predicate(this.predicate)
   }
 
   /**
@@ -88,7 +151,9 @@ export class DimensionChunkClass extends UtilityChunkClass {
   }
 }
 
-export class RootChunkClass extends UtilityChunkClass {
+export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void']> {
+  declare marker: UUIDClass<'known', 'permanent'>
+
   /** Partial execute command executing as (not at) the root marker */
   readonly execute = this.pack.commands.execute.as(this.marker)
 
@@ -103,7 +168,7 @@ export class RootChunkClass extends UtilityChunkClass {
   readonly userspace = '-16 0 0'
 
   constructor(pack: SandstonePack) {
-    super(pack, 'smithed:void', [0, 0], pack.UUID('000000fe-0000-0000-0000-000000000000'))
+    super(pack, ['smithed', 'void'], [0, 0], pack.UUID('000000fe-0000-0000-0000-000000000000'))
   }
 
   /**
@@ -122,18 +187,18 @@ export class RootChunkClass extends UtilityChunkClass {
     const blockData = this.pack.Data('block', '0 0 0', 'Text1')
     const output = this.pack.DataVariable(undefined, 'textOutput')
 
-    this.inDimension.run(() => blockData.set(text instanceof DataPointClass ? text : `${text}`))
+    this.inDimension.run(() => blockData.set(text instanceof DataPointClass ? text : `${new JSONTextComponentClass(text)}`))
     this.inDimension.run(() => output.set(blockData))
 
     return output
   }
 
+  __variable = this.pack.DataVariable('shulkerBox')
+
   /**
    * A shulker box, for using loot insert into containers using dynamic items, detecting the stack limit of items without hardcoding, or running loot tables with a seed.
    */
   shulkerBox = {
-    __variable: this.pack.DataVariable('shulkerBox'),
-
     /**
      * @param executingAt Callback that is executed in the dimension at the shulker box.
      */
@@ -145,7 +210,7 @@ export class RootChunkClass extends UtilityChunkClass {
      * @param scale Optional. Set the scale for the seed if using a score.
      * @returns List of all items that resulted from running the loot table.
      */
-    loot: (lootTable: LootTableClass | DataPointClass, output: DataPointClass<'storage'> = this.shulkerBox.__variable, seed?: Score | DataPointClass, scale?: number): DataPointClass<'storage'> => {
+    loot: (lootTable: LootTableClass | DataPointClass, output: DataPointClass<'storage'> = this.__variable, seed?: Score | DataPointClass, scale?: number): DataPointClass<'storage'> => {
       const data = this.pack.Data('block', '0 0 1')
 
       if (!(lootTable instanceof DataPointClass) && !seed) {
@@ -221,6 +286,6 @@ export class RootChunkClass extends UtilityChunkClass {
    */
 }
 
-export class UtilityChunkMember extends UUIDClass {
+export class UtilityChunkMember extends UUIDClass<any, any> {
 
 }

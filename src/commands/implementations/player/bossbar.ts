@@ -1,5 +1,5 @@
 import { CommandNode } from '#core/nodes'
-import { JSONTextComponentClass } from '#variables'
+import { JSONTextComponentClass, targetParser } from '#variables'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -83,7 +83,7 @@ export class BossBarSetCommand extends CommandArguments {
    *
    * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
    */
-  players = (players?: MultiplePlayersArgument) => this.finalCommand(['players', players])
+  players = (players?: MultiplePlayersArgument) => this.finalCommand(['players', targetParser(players)])
 
   /**
    * Set the boss bar's visual amount of segments: continuous, 6 segments, 10 segments, 12 segments, or 20 segments.
