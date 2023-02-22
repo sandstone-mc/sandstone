@@ -7,7 +7,7 @@
 ![Version](https://img.shields.io/badge/version-alpha-success)
 ![Discord](https://img.shields.io/discord/800035701243772969?color=%237289DA&label=discord)
 
-Sandstone is a Typescript library for Minecraft Datapacks. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
+Sandstone is a Typescript library for Minecraft Datapacks, Resource Packs, etc. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
 
 Interested? Join our Discord:
 
@@ -43,7 +43,7 @@ These statements are most of the time more optimized than hand-written code, sin
 However, you stay free: you can keep using only vanilla commands, if you prefer - Sandstone does not get in your way.
 
 ## 👐 Easy to share
-Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own datapacks. Whether it's some common code like raycasting, or some new abstractions like better `/tellraw`, the Sandstone ecosystem grows by the day.
+Sharing commands has **never been easier**. Just publish your functions on NPM, and everyone can use them to improve their own packs. Whether it's some common code like raycasting, or some new abstractions like better `/tellraw`, the Sandstone ecosystem grows by the day.
 
 You can finally stop reinventing the wheel.
 

@@ -43,7 +43,7 @@ import type {
 
 export type ResourcePath = string[]
 
-const conflictDefaults = (resourceType: string) => (process.env.GENERAL_CONFLICT_STRATEGY ?? process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`]) as string
+const conflictDefaults = (resourceType: string) => (process.env.DEFAULT_CONFLICT_STRATEGY ?? process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`]) as string
 
 let tempStorage: DataClass<'storage'>
 

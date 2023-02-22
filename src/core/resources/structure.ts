@@ -1,7 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 import lodash from 'lodash'
-import path from 'path'
 import prismarine, { NBT } from 'prismarine-nbt'
 import { add } from 'sandstone/utils'
 import { ConditionClass, relative } from 'sandstone/variables/index'

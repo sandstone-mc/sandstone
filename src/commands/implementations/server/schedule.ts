@@ -8,10 +8,6 @@ import type { TimeArgument } from '#arguments'
 import type { Node } from '#core'
 import type { MCFunctionNode } from '#core/resources'
 
-function isMCFunctionInstance(callback: any): callback is MCFunctionClass {
-  return Object.prototype.hasOwnProperty.call(callback, 'datapack')
-}
-
 type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass | MCFunctionClass | (() => (void | Promise<void>))
 
 export class ScheduleCommandNode extends ContainerCommandNode<

@@ -74,7 +74,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     const resourceType = this.node.resource.path[1]
 
-    this.onConflict = args.onConflict || process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`] || process.env.GENERAL_CONFLICT_STRATEGY || 'throw'
+    this.onConflict = args.onConflict || process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY || 'throw'
 
     console.log(resourceType, this.onConflict)
 
