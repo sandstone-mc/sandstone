@@ -1,9 +1,13 @@
+import fs from 'fs-extra'
 import path from 'path'
 
 import type { SandstonePack } from 'sandstone'
 import type { MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
-import type { ResourceNode } from './resources/resource'
+import type { ResourceClass, ResourceNode } from './resources/resource'
 import type { GenericCoreVisitor } from './visitors'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fetch = require('node-fetch').default
 
 export class SandstoneCore {
   /** All Resources */
@@ -57,7 +61,40 @@ export class SandstoneCore {
    */
   exitMCFunction = () => this.mcfunctionStack.pop()
 
-  // TODO: getExistingResource, make sure to have logic for `minecraft` files.
+  async getExistingResource(relativePath: string): Promise<string>
+
+  async getExistingResource(relativePath: string, encoding: false): Promise<Buffer>
+
+  async getExistingResource(relativePath: string, encoding: fs.EncodingOption): Promise<Buffer | string>
+
+  async getExistingResource(resource: ResourceClass): Promise<Buffer | string>
+
+  async getExistingResource(pathOrResource: string | ResourceClass, encoding: false | fs.EncodingOption = 'utf8'): Promise<Buffer | string> {
+    if (typeof pathOrResource === 'string') {
+      if (encoding === false) {
+        return fs.readFile(pathOrResource)
+      }
+      return fs.readFile(pathOrResource, encoding)
+    }
+    const _path = pathOrResource.path
+    if (_path[0] === 'minecraft') {
+      const type = pathOrResource.packType.resourceSubFolder as string
+      // TODO: Add cache to CLI
+      const resource = (await fetch(`https://raw.githubusercontent.com/misode/mcmeta/${type}/${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`))
+
+      if (encoding === 'utf8') {
+        return resource.text()
+      }
+      return resource.buffer()
+    }
+    // eslint-disable-next-line max-len
+    const fullPath = path.join(process.env.WORKING_DIR as string, `resources/${path.join(pathOrResource.packType.type, ..._path)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`)
+
+    if (pathOrResource.fileEncoding === false) {
+      return fs.readFile(fullPath)
+    }
+    return fs.readFile(fullPath, pathOrResource.fileEncoding)
+  }
 
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
     const originalResources = new Set(this.resourceNodes)

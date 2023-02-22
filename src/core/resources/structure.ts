@@ -1,6 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 import lodash from 'lodash'
+import path from 'path'
 import prismarine, { NBT } from 'prismarine-nbt'
 import { add } from 'sandstone/utils'
 import { ConditionClass, relative } from 'sandstone/variables/index'
@@ -69,12 +70,12 @@ export class StructureClass extends ResourceClass<StructureNode> {
   structureNBT?: StructureNBT
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: StructureClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'nbt', StructureNode, sandstoneCore.pack.resourceToPath(name, ['structures']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'nbt', encoding: false }, StructureNode, sandstoneCore.pack.resourceToPath(name, ['structures']), args)
 
     if (args.structure === undefined) {
-      // this.structureBuffer = sandstoneCore.getExistingResource(true, this.path)
+      this.structureBuffer = sandstoneCore.getExistingResource(this) as Promise<Buffer>
     } else if (typeof args.structure === 'string') {
-      // this.structureBuffer = sandstoneCore.getExistingResource(true, args.structure)
+      this.structureBuffer = sandstoneCore.getExistingResource(args.structure, false)
     } else if (args.structure instanceof StructureClass) {
       if (args.structure.structureNBT) {
         this.structureNBT = args.structure.structureNBT
@@ -98,10 +99,8 @@ export class StructureClass extends ResourceClass<StructureNode> {
       return this.structureBuffer
     }
 
-    // TODO: remove this comment and as unknown
-
-    // this.structureBuffer = this.node.sandstoneCore.getExistingResource(true, this.name)
-    return this.structureBuffer as unknown as Promise<Buffer>
+    this.structureBuffer = this.node.sandstoneCore.getExistingResource(this.name, false)
+    return this.structureBuffer
   }
 
   async readBuffer() {

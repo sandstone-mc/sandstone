@@ -188,7 +188,7 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
   protected addToSandstoneCore: boolean
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments) {
-    super(core, core.pack.dataPack(), 'mcfunction', MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
+    super(core, { packType: core.pack.dataPack(), extension: 'mcfunction' }, MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
       ...args,
       addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,
     })

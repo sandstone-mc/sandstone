@@ -65,7 +65,7 @@ export abstract class PackType {
 
   readonly networkSides: 'client' | 'server' | 'both'
 
-  readonly resourceSubFolder: undefined | string
+  readonly resourceSubFolder?: string
 
   readonly namespaced: boolean
 
@@ -94,9 +94,7 @@ export abstract class PackType {
     this.networkSides = networkSides
     this.archiveOutput = archiveOutput
 
-    if (resourceSubFolder) {
-      this.resourceSubFolder = resourceSubFolder
-    }
+    this.resourceSubFolder = resourceSubFolder
     this.namespaced = namespaced
   }
 }

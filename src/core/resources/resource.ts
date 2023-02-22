@@ -1,5 +1,6 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable multiline-comment-style */
+import type fs from 'fs-extra'
 import type { SandstoneCommands } from 'sandstone/commands/commands'
 import type { Node, SandstoneCore } from '#core'
 import type { PackType, ResourcePath, SandstonePack } from '#pack'
@@ -43,6 +44,8 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   fileExtension
 
+  fileEncoding
+
   protected creator: NonNullable<ResourceClassArguments<any>['creator']>
 
   protected commands: SandstoneCommands
@@ -56,12 +59,13 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   renameIndex = 2
 
   // eslint-disable-next-line max-len
-  constructor(protected core: SandstoneCore, packType: PackType, fileExtension: string, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments<any>) {
+  constructor(protected core: SandstoneCore, file: { packType: PackType, extension?: string, encoding?: fs.EncodingOption | false }, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments<any>) {
     this.node = new NodeType(core, this)
 
-    this.packType = packType
+    this.packType = file.packType
 
-    this.fileExtension = fileExtension
+    this.fileExtension = file.extension
+    this.fileEncoding = file.encoding === undefined ? 'utf8' : file.encoding
 
     this.pack = core.pack
     this.commands = core.pack.commands
