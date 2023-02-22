@@ -31,6 +31,8 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
     super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, AdvancementNode, sandstoneCore.pack.resourceToPath(name, ['advancements']), args)
 
     this.advancementJSON = args.advancement as AdvancementJSON
+
+    this.handleConflicts()
   }
 
   /**

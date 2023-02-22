@@ -33,6 +33,8 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
     super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, PredicateNode, sandstoneCore.pack.resourceToPath(name, ['predicates']), args)
 
     this.predicateJSON = args.predicate as PredicateJSON
+
+    this.handleConflicts()
   }
 
   public push(...predicates: Predicate[]) {
@@ -47,6 +49,7 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
       } else {
         predicateJSON = predicate
       }
+      console.log(predicateJSON)
       if (Array.isArray(predicateJSON)) {
         this.predicateJSON.push(...predicateJSON)
       } else {

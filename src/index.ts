@@ -112,6 +112,9 @@ export type DatapackConfig = {
    */
   formatVersion: number
 
+  /** List of experimental game features to enable. */
+  features: string[],
+
   /**
    * Section for filtering out files from data packs applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
    */

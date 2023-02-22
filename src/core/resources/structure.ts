@@ -88,6 +88,8 @@ export class StructureClass extends ResourceClass<StructureNode> {
     } else {
       this.structureNBT = args.structure
     }
+
+    this.handleConflicts()
   }
 
   get structure(): StructureNBT | Promise<Buffer> {

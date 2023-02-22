@@ -36,6 +36,8 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
     super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, ItemModifierNode, sandstoneCore.pack.resourceToPath(name, ['item_modifiers']), args)
 
     this.itemModifierJSON = args.itemModifier as ItemModifierJSON
+
+    this.handleConflicts()
   }
 
   public push(...modifiers: Modifier[]) {

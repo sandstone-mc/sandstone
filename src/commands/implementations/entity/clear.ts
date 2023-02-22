@@ -1,4 +1,4 @@
-import { targetParser } from 'sandstone/variables/parsers.js'
+import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers.js'

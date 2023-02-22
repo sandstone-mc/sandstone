@@ -214,6 +214,8 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     if (!args.runEveryTick && args.runEvery) {
       core.pack.registerTickedCommands(args.runEvery, () => this.__call__())
     }
+
+    this.handleConflicts()
   }
 
   protected generate = () => {
@@ -222,11 +224,16 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
        * Don't generate resource if the node already has commands.
        * Else, this might generate the nodes twice with fast refresh
        */
-      return
+      // return
     }
 
+    // TODO: Fix this
+
     // Doing .apply allows users to use `this()` inside the callback to call the MCFunction!
-    this.asCallable.push(() => this.callback.apply(this.asCallable))
+
+    // this.asCallable.push(() => this.callback.apply(this.asCallable))
+
+    this.push(this.callback)
   }
 
   protected addToTag = (tag: string) => {
@@ -239,18 +246,20 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     }
   }
 
-  __call__ = (): FinalCommandOutput => this.commands.functionCmd(this.asCallable)
+  __call__ = (): FinalCommandOutput => this.commands.functionCmd(this.name)
 
   schedule = {
-    clear: (): FinalCommandOutput => this.commands.schedule.clear(this.asCallable),
+    clear: (): FinalCommandOutput => this.commands.schedule.clear(this.name),
 
-    function: (delay: TimeArgument, type: ScheduleType): FinalCommandOutput => this.commands.schedule.function(this.asCallable, delay, type),
+    function: (delay: TimeArgument, type: ScheduleType): FinalCommandOutput => this.commands.schedule.function(this.name, delay, type),
   }
 
   get push() {
     const commands = new Proxy(this.pack.commands, {
       get: (target, p, receiver) => {
+        this.core.enterMCFunction(this)
         this.core.insideContext(this.node, () => (this.pack.commands as any)[p], false)
+        this.core.exitMCFunction()
       },
     })
 
@@ -260,7 +269,9 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
           this.node.body.push(...mcfunction.node.body)
         }
       } else {
+        this.core.enterMCFunction(this)
         this.core.insideContext(this.node, contents[0], false)
+        this.core.exitMCFunction()
       }
     }, true)
   }
@@ -274,7 +285,9 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
 
     const commands = new Proxy(this.pack.commands, {
       get: (target, p, receiver) => {
+        this.core.enterMCFunction(fake)
         this.core.insideContext(fake.node, () => (this.pack.commands as any)[p], false)
+        this.core.exitMCFunction()
         this.node.body.unshift(...fake.node.body)
       },
     })
@@ -285,7 +298,9 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
           this.node.body.unshift(...mcfunction.node.body)
         }
       } else {
+        this.core.enterMCFunction(fake)
         this.core.insideContext(fake.node, contents[0], false)
+        this.core.exitMCFunction()
         this.node.body.unshift(...fake.node.body)
       }
     }, true)

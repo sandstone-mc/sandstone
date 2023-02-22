@@ -43,7 +43,7 @@ import type {
 
 export type ResourcePath = string[]
 
-const conflictDefaults = (resourceType: string) => (process.env.DEFAULT_CONFLICT_STRATEGY ?? process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`]) as string
+const conflictDefaults = (resourceType: string) => (process.env[`${resourceType.toUpperCase()}S_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY) as string
 
 let tempStorage: DataClass<'storage'>
 
@@ -105,7 +105,7 @@ class DataPack extends PackType {
   // TODO: typing. low priority
   readonly packMcmeta: any
 
-  constructor(archiveOutput: boolean, options: { packFormat: number, packDescription: JSONTextComponent, features?: string[] }) {
+  constructor(archiveOutput: boolean, options: { packFormat: number, packDescription: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
     super('datapack', 'saves/$worldName$/datapacks/$packName$', 'world/datapacks/$packName$', 'datapacks/$packName$', 'server', archiveOutput, 'data', true)
 
     this.packMcmeta = {
@@ -117,6 +117,9 @@ class DataPack extends PackType {
 
     if (options.features) {
       this.packMcmeta.features = { enabled: options.features }
+    }
+    if (options.filter) {
+      this.packMcmeta.filter = { block: options.filter }
     }
   }
 
@@ -171,18 +174,11 @@ export class SandstonePack {
     this.packTypes = new Map()
     this.packTypes.set('datapack', new DataPack(false, JSON.parse(process.env.PACK_OPTIONS as string)))
 
-    this.loadTags = {
-      preLoad: this.Tag('functions', 'load:pre_load', []),
-      load: this.Tag('functions', 'load:load', []),
-      postLoad: this.Tag('functions', 'load:post_load', []),
-    }
-    this.setupLantern()
-    this.dependencies = new Map()
-
     this.commands = new SandstoneCommands(this)
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
+
     this.constants = new Set()
     this.tickedLoops = {}
     this.utilityChunks = new Map()
@@ -190,6 +186,14 @@ export class SandstonePack {
     if (process.env.NAMESPACE) {
       this.defaultNamespace = process.env.NAMESPACE
     }
+
+    this.loadTags = {
+      preLoad: this.Tag('functions', 'load:pre_load', []),
+      load: this.Tag('functions', 'load:load', []),
+      postLoad: this.Tag('functions', 'load:post_load', []),
+    }
+    this.setupLantern()
+    this.dependencies = new Map()
   }
 
   protected setupLantern = () => {

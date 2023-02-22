@@ -100,7 +100,9 @@ export function makeClassCallable<C extends CallableClass>(Class_: C): MakeClass
     construct: (target, argArray, newTarget) => {
       const obj = new Class_(...argArray)
       const result = makeCallableProxy(obj.__call__, obj)
-      result.makeCallable(result)
+      // TODO: Figure this out
+
+      // result.makeCallable(result)
       return result
     },
   }) as any

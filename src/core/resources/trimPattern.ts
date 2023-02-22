@@ -41,7 +41,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
   readonly equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimPatternClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimPatternNode, sandstoneCore.pack.resourceToPath(name, ['trim_patterns']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, TrimPatternNode, sandstoneCore.pack.resourceToPath(name, ['trim_patterns']), args)
 
     this.trimPatternJSON = args.trimPattern as TrimPatternJSON
 
@@ -65,6 +65,8 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
         template: { item: this.trimPatternJSON.template_item },
       })
     }
+
+    this.handleConflicts()
   }
 
   /** The item used in the smithing table for this pattern. */

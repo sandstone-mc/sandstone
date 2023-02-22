@@ -72,66 +72,63 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.path = path
 
+    this.creator = args.creator ?? 'sandstone'
+
+    this.onConflict = args.onConflict || process.env[`${this.node.resource.path[1].toUpperCase()}_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY || 'throw'
+  }
+
+  protected handleConflicts() {
     const resourceType = this.node.resource.path[1]
 
-    this.onConflict = args.onConflict || process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY || 'throw'
+    const conflict = [...this.core.resourceNodes].find((node) => node.resource.path.join('') === this.node.resource.path.join(''))
 
-    console.log(resourceType, this.onConflict)
+    if (conflict) {
+      const oldResource = conflict.resource
+      const newResource = this.node.resource
 
-    if (args.addToSandstoneCore) {
-      // TODO: Add conflict handling
-      const conflict = [...core.resourceNodes].find((node) => node.resource.path.join('') === this.node.resource.path.join(''))
-
-      if (conflict) {
-        const oldResource = conflict.resource
-        const newResource = this.node.resource
-
-        switch (this.onConflict) {
-          case 'throw': {
-            // eslint-disable-next-line max-len
-            throw new Error(`Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`)
-          }
-          case 'replace': {
-            core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                core.resourceNodes.delete(node)
-              }
-            })
-            core.resourceNodes.add(this.node)
-          } break
-          case 'warn': {
-            console.warn([
-              'Warning:',
-              `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
-              "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
-            ].join('\n'))
-            core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                core.resourceNodes.delete(node)
-              }
-            })
-            core.resourceNodes.add(this.node)
-          } break
-          case 'rename': {
-            // eslint-disable-next-line no-plusplus
-            this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
-
-            core.resourceNodes.add(this.node)
-          } break
-          case 'prepend': {
-            (oldResource as unknown as ListResource).unshift(newResource)
-          } break
-          case 'append': {
-            (oldResource as unknown as ListResource).push(newResource)
-          } break
-          default: break
+      switch (this.onConflict) {
+        case 'throw': {
+          // eslint-disable-next-line max-len
+          throw new Error(`Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`)
         }
-      } else {
-        core.resourceNodes.add(this.node)
-      }
-    }
+        case 'replace': {
+          this.core.resourceNodes.forEach((node) => {
+            if (node.resource.path.join('') === oldResource.path.join('')) {
+              this.core.resourceNodes.delete(node)
+            }
+          })
+          this.core.resourceNodes.add(this.node)
+        } break
+        case 'warn': {
+          console.warn([
+            'Warning:',
+            `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
+            "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
+          ].join('\n'))
+          this.core.resourceNodes.forEach((node) => {
+            if (node.resource.path.join('') === oldResource.path.join('')) {
+              this.core.resourceNodes.delete(node)
+            }
+          })
+          this.core.resourceNodes.add(this.node)
+        } break
+        case 'rename': {
+          // eslint-disable-next-line no-plusplus
+          this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
 
-    this.creator = args.creator ?? 'sandstone'
+          this.core.resourceNodes.add(this.node)
+        } break
+        case 'prepend': {
+          (oldResource as unknown as ListResource).unshift(newResource)
+        } break
+        case 'append': {
+          (oldResource as unknown as ListResource).push(newResource)
+        } break
+        default: break
+      }
+    } else {
+      this.core.resourceNodes.add(this.node)
+    }
   }
 
   protected getNode = () => this.node

@@ -89,7 +89,7 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>> extends Resourc
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
 
   constructor(sandstoneCore: SandstoneCore, type: REGISTRY, name: string, args: TagClassArguments<REGISTRY>) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TagNode, sandstoneCore.pack.resourceToPath(name, ['tags', type]), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, TagNode, sandstoneCore.pack.resourceToPath(name, ['tags', type]), args)
 
     this.type = type
 
@@ -99,6 +99,8 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>> extends Resourc
     }
 
     this.tagJSON.values = Array.from(args.values as TagValuesJSON<REGISTRY>, objectToString) as unknown as TagValuesJSON<REGISTRY>
+
+    this.handleConflicts()
   }
 
   get name(): `#${string}` {

@@ -44,7 +44,7 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
   readonly equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimMaterialClassArguments) {
-    super(sandstoneCore, sandstoneCore.pack.dataPack(), 'json', TrimMaterialNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, TrimMaterialNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
 
     this.trimMaterialJSON = args.trimMaterial as TrimMaterialJSON
 
@@ -54,6 +54,8 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
       if (!trimMaterials) trimMaterials = sandstoneCore.pack.Tag('items', 'minecraft:trim_materials', [this.material])
       else trimMaterials.push(this.material)
     }
+
+    this.handleConflicts()
   }
 
   /** String which will be used in the resource pack. */

@@ -2,12 +2,12 @@ import fs from 'fs-extra'
 import path from 'path'
 
 import type { SandstonePack } from 'sandstone'
-import type { MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
+import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
 import type { ResourceClass, ResourceNode } from './resources/resource'
 import type { GenericCoreVisitor } from './visitors'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const fetch = require('node-fetch').default
+const fetch = import('node-fetch')
 
 export class SandstoneCore {
   /** All Resources */
@@ -44,7 +44,7 @@ export class SandstoneCore {
    * @param mcfunction The MCFunction to switch to.
    * @return The newly created and active MCFunction.
    */
-  enterMCFunction = (mcfunction: MCFunctionClass): MCFunctionNode => {
+  enterMCFunction = (mcfunction: _RawMCFunctionClass | MCFunctionClass): MCFunctionNode => {
     /*
      * We cannot simply call mcfunction.node, because .node is protected to avoid polluting the autocompleted API.
      * However, TypeScript gives us a backdoor using this dynamic call, in a fully type-safe way.
@@ -80,7 +80,8 @@ export class SandstoneCore {
     if (_path[0] === 'minecraft') {
       const type = pathOrResource.packType.resourceSubFolder as string
       // TODO: Add cache to CLI
-      const resource = (await fetch(`https://raw.githubusercontent.com/misode/mcmeta/${type}/${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`))
+      // eslint-disable-next-line max-len
+      const resource = (await (await fetch).default(`https://raw.githubusercontent.com/misode/mcmeta/${type}/${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`))
 
       if (encoding === 'utf8') {
         return resource.text()
