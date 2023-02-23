@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* Auto-generated */
-export type STRUCTURE = (
+export type WORLDGEN_STRUCTURES = (
   'ancient_city' |
   'bastion_remnant' |
   'buried_treasure' |

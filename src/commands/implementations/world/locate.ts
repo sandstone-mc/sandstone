@@ -2,7 +2,7 @@ import { CommandNode } from '#core/nodes'
 
 import { CommandArguments } from '../../helpers'
 
-import type { BIOMES, POINT_OF_INTEREST_TYPES, STRUCTURE } from '#arguments'
+import type { POINT_OF_INTEREST_TYPES, WORLDGEN_BIOMES, WORLDGEN_STRUCTURES } from '#arguments'
 import type { LiteralUnion } from '#utils'
 
 export class LocateCommandNode extends CommandNode {
@@ -17,14 +17,14 @@ export class LocateCommand extends CommandArguments {
    *
    * @param structure Specifies the structure to locate.
    */
-  structure = (structure: LiteralUnion<STRUCTURE>) => this.finalCommand(['structure', structure])
+  structure = (structure: LiteralUnion<WORLDGEN_STRUCTURES>) => this.finalCommand(['structure', structure])
 
   /**
    * Displays the coordinates for the closest generated biome of a given type.
    *
    * @param biome Specifies the biome to locate.
    */
-  biome = (biome: LiteralUnion<BIOMES>) => this.finalCommand(['biome', biome])
+  biome = (biome: LiteralUnion<WORLDGEN_BIOMES>) => this.finalCommand(['biome', biome])
 
   /**
    * Displays the coordinates for the closest generated point of interest of a given type.

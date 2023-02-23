@@ -8,7 +8,7 @@ import { CommandArguments } from '../../helpers'
 import type { StructureMirror, StructureRotation } from 'sandstone/variables/parsers'
 import type { StructureClass } from '../../../core/resources/structure'
 import type {
-  CONFIGURED_FEATURES, Coordinates, STRUCTURE, STRUCTURES, TEMPLATE_POOLS,
+  Coordinates, STRUCTURES, WORLDGEN_CONFIGURED_FEATURES, WORLDGEN_STRUCTURES, WORLDGEN_TEMPLATE_POOLS,
 } from '#arguments'
 import type { LiteralUnion } from '#utils'
 
@@ -26,7 +26,7 @@ export class PlaceCommand extends CommandArguments {
    * @param feature Specifies the configured feature to place.
    * @param pos Optional. Where the placement should be tried.
    */
-  feature = (feature: LiteralUnion<CONFIGURED_FEATURES>, pos: Coordinates = '~ ~ ~') => this.finalCommand(['feature', feature, coordinatesParser(pos)])
+  feature = (feature: LiteralUnion<WORLDGEN_CONFIGURED_FEATURES>, pos: Coordinates = '~ ~ ~') => this.finalCommand(['feature', feature, coordinatesParser(pos)])
 
   /**
    * Places from a pool with a jigsaw.
@@ -36,7 +36,7 @@ export class PlaceCommand extends CommandArguments {
    * @param maxDepth Max depth of the jigsaw. Must be an integer between 1 & 7 (inclusive).
    * @param pos Optional. Where to place.
    */
-  jigsaw = (pool: LiteralUnion<TEMPLATE_POOLS>, target: string, maxDepth: number, pos: Coordinates = '~ ~ ~') => this.finalCommand(['jigsaw', pool, target, `${validateIntegerRange(maxDepth, 'Jigsaw max depth', 0, 7)}`, coordinatesParser(pos)])
+  jigsaw = (pool: LiteralUnion<WORLDGEN_TEMPLATE_POOLS>, target: string, maxDepth: number, pos: Coordinates = '~ ~ ~') => this.finalCommand(['jigsaw', pool, target, `${validateIntegerRange(maxDepth, 'Jigsaw max depth', 0, 7)}`, coordinatesParser(pos)])
 
   /**
    * Places a configured structure feature. (not from `data/<namespace>/structures`, see [the wiki](https://minecraft.fandom.com/wiki/Custom_structure#Configured_Structure_Feature))
@@ -44,7 +44,7 @@ export class PlaceCommand extends CommandArguments {
    * @param configuredStructure The configured structure feature to place.
    * @param pos Optional. Where to place.
    */
-  structure = (configuredStructure: LiteralUnion<STRUCTURE>, pos: Coordinates = '~ ~ ~') => this.finalCommand(['structure', configuredStructure, coordinatesParser(pos)])
+  structure = (configuredStructure: LiteralUnion<WORLDGEN_STRUCTURES>, pos: Coordinates = '~ ~ ~') => this.finalCommand(['structure', configuredStructure, coordinatesParser(pos)])
 
   /**
    * Places a structure (from `data/<namespace>/structures`, just like a LOAD structure block).

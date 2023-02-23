@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* Auto-generated */
-export type BIOMES = (
+export type WORLDGEN_BIOMES = (
   'badlands' |
   'bamboo_jungle' |
   'basalt_deltas' |

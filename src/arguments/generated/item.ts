@@ -158,6 +158,7 @@ export type ITEMS = (
   'brown_stained_glass_pane' |
   'brown_terracotta' |
   'brown_wool' |
+  'brush' |
   'bubble_coral' |
   'bubble_coral_block' |
   'bubble_coral_fan' |
@@ -184,6 +185,23 @@ export type ITEMS = (
   'chainmail_helmet' |
   'chainmail_leggings' |
   'charcoal' |
+  'cherry_boat' |
+  'cherry_button' |
+  'cherry_chest_boat' |
+  'cherry_door' |
+  'cherry_fence' |
+  'cherry_fence_gate' |
+  'cherry_hanging_sign' |
+  'cherry_leaves' |
+  'cherry_log' |
+  'cherry_planks' |
+  'cherry_pressure_plate' |
+  'cherry_sapling' |
+  'cherry_sign' |
+  'cherry_slab' |
+  'cherry_stairs' |
+  'cherry_trapdoor' |
+  'cherry_wood' |
   'chest' |
   'chest_minecart' |
   'chicken' |
@@ -327,6 +345,7 @@ export type ITEMS = (
   'dead_tube_coral_block' |
   'dead_tube_coral_fan' |
   'debug_stick' |
+  'decorated_pot' |
   'deepslate' |
   'deepslate_brick_slab' |
   'deepslate_brick_stairs' |
@@ -806,6 +825,7 @@ export type ITEMS = (
   'pink_concrete_powder' |
   'pink_dye' |
   'pink_glazed_terracotta' |
+  'pink_petals' |
   'pink_shulker_box' |
   'pink_stained_glass' |
   'pink_stained_glass_pane' |
@@ -847,6 +867,10 @@ export type ITEMS = (
   'porkchop' |
   'potato' |
   'potion' |
+  'pottery_shard_archer' |
+  'pottery_shard_arms_up' |
+  'pottery_shard_prize' |
+  'pottery_shard_skull' |
   'powder_snow_bucket' |
   'powered_rail' |
   'prismarine' |
@@ -990,6 +1014,7 @@ export type ITEMS = (
   'smooth_sandstone_stairs' |
   'smooth_stone' |
   'smooth_stone_slab' |
+  'sniffer_spawn_egg' |
   'snout_armor_trim_smithing_template' |
   'snow' |
   'snow_block' |
@@ -1052,6 +1077,8 @@ export type ITEMS = (
   'stripped_bamboo_block' |
   'stripped_birch_log' |
   'stripped_birch_wood' |
+  'stripped_cherry_log' |
+  'stripped_cherry_wood' |
   'stripped_crimson_hyphae' |
   'stripped_crimson_stem' |
   'stripped_dark_oak_log' |
@@ -1071,6 +1098,7 @@ export type ITEMS = (
   'sugar' |
   'sugar_cane' |
   'sunflower' |
+  'suspicious_sand' |
   'suspicious_stew' |
   'sweet_berries' |
   'tadpole_bucket' |
@@ -1084,6 +1112,8 @@ export type ITEMS = (
   'tnt' |
   'tnt_minecart' |
   'torch' |
+  'torchflower' |
+  'torchflower_seeds' |
   'totem_of_undying' |
   'trader_llama_spawn_egg' |
   'trapped_chest' |

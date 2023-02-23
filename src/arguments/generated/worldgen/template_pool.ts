@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* Auto-generated */
-export type TEMPLATE_POOLS = (
+export type WORLDGEN_TEMPLATE_POOLS = (
   'ancient_city/city/entrance' |
   'ancient_city/city_center' |
   'ancient_city/city_center/walls' |

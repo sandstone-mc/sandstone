@@ -7,6 +7,7 @@ const registries = [
   'banner_pattern',
   'block',
   'cat_variant',
+  'damage_type',
   'dimension',
   'enchantment',
   'entity_type',
@@ -21,11 +22,9 @@ const registries = [
   'structure',
   ['worldgen/biome'],
   ['worldgen/configured_feature'],
-  ['worldgen/structure'], // TODO: Fix this
+  ['worldgen/structure'],
   ['worldgen/template_pool']
 ]
-const last = list => list[list.length - 1]
-
 async function generate() {
   // need to fix fetch somehow
   const allRegistries = await (await fetch('https://raw.githubusercontent.com/misode/mcmeta/summary/registries/data.min.json')).json()
@@ -36,7 +35,7 @@ async function generate() {
 
       `/* eslint-disable */\n` +
       `/* Auto-generated */\n` +
-      `export type ${`${Array.isArray(registry) ? last(registry[0].split('/')) : registry}`.toUpperCase()}S = (\n` +
+      `export type ${`${Array.isArray(registry) ? registry[0].split('/').join('_') : registry}`.toUpperCase()}S = (\n` +
       `  '${allRegistries[`${registry}`].join('\' |\n  \'')}'\n` +
       `)`,
       () => {}

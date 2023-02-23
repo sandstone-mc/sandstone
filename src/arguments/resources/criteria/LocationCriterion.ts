@@ -1,14 +1,15 @@
 import type { NumberProvider, PositionCriterion } from '.'
 import type {
-  BIOMES, BLOCKS, DIMENSIONS, FLUIDS,
+  BLOCKS, DIMENSIONS, FLUIDS,
   STRUCTURES,
+  WORLDGEN_BIOMES,
 } from '#arguments'
 import type { TagClass } from '#core'
 import type { LiteralUnion } from '#utils'
 
 export type LocationCriterion = Partial<{
     /** The biome the entity is currently in. */
-    biome: LiteralUnion<BIOMES>
+    biome: LiteralUnion<WORLDGEN_BIOMES>
 
     /* The block at the location. */
     block: Partial<{
@@ -29,7 +30,7 @@ export type LocationCriterion = Partial<{
     dimension: LiteralUnion<DIMENSIONS>
 
     /** Name of a structure. */
-    feature: LiteralUnion<STRUCTURES>
+    structure: LiteralUnion<STRUCTURES>
 
     /**
      * The fluid at the location.

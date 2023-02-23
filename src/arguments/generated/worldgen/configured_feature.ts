@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* Auto-generated */
-export type CONFIGURED_FEATURES = (
+export type WORLDGEN_CONFIGURED_FEATURES = (
   'acacia' |
   'amethyst_geode' |
   'azalea_tree' |
@@ -19,6 +19,8 @@ export type CONFIGURED_FEATURES = (
   'bonus_chest' |
   'cave_vine' |
   'cave_vine_in_moss' |
+  'cherry' |
+  'cherry_bees_005' |
   'chorus_plant' |
   'clay_pool_with_dripleaves' |
   'clay_with_dripleaves' |
@@ -45,6 +47,7 @@ export type CONFIGURED_FEATURES = (
   'fancy_oak_bees_0002' |
   'fancy_oak_bees_002' |
   'fancy_oak_bees_005' |
+  'flower_cherry' |
   'flower_default' |
   'flower_flower_forest' |
   'flower_meadow' |

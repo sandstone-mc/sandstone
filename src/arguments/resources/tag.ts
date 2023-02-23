@@ -1,5 +1,6 @@
 import type {
-  BANNER_PATTERNS, BIOMES, BLOCKS, CAT_VARIANTS, DIMENSIONS, ENTITY_TYPES, FLUIDS, GAME_EVENTS, ITEMS, PAINTING_VARIANTS, POINT_OF_INTEREST_TYPES, REGISTRIES,
+  BANNER_PATTERNS, BLOCKS, CAT_VARIANTS, DIMENSIONS, ENTITY_TYPES, FLUIDS, GAME_EVENTS, ITEMS, PAINTING_VARIANTS, POINT_OF_INTEREST_TYPES, REGISTRIES,
+  WORLDGEN_BIOMES,
 } from '#arguments'
 import type { MCFunctionClass, TagClass } from '#core'
 import type { LiteralUnion } from '#utils'
@@ -16,7 +17,7 @@ export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
   T extends 'painting_variant' ? LiteralUnion<PAINTING_VARIANTS> :
   T extends 'point_of_interest_type' ? LiteralUnion<POINT_OF_INTEREST_TYPES> :
   T extends 'banner_pattern' ? LiteralUnion<BANNER_PATTERNS> :
-  T extends 'worldgen/biome' ? LiteralUnion<BIOMES> :
+  T extends 'worldgen/biome' ? LiteralUnion<WORLDGEN_BIOMES> :
   string
 )
 

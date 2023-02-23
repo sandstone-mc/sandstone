@@ -55,6 +55,7 @@ export type ENTITY_TYPES = (
   'horse' |
   'husk' |
   'illusioner' |
+  'interaction' |
   'iron_golem' |
   'item' |
   'item_display' |
@@ -92,6 +93,7 @@ export type ENTITY_TYPES = (
   'skeleton_horse' |
   'slime' |
   'small_fireball' |
+  'sniffer' |
   'snow_golem' |
   'snowball' |
   'spawner_minecart' |

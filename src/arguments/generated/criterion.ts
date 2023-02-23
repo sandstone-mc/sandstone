@@ -350,6 +350,40 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.chain' |
   'minecraft.broken:minecraft.chain_command_block' |
   'minecraft.mined:minecraft.chain_command_block' |
+  'minecraft.broken:minecraft.cherry_button' |
+  'minecraft.mined:minecraft.cherry_button' |
+  'minecraft.broken:minecraft.cherry_door' |
+  'minecraft.mined:minecraft.cherry_door' |
+  'minecraft.broken:minecraft.cherry_fence' |
+  'minecraft.mined:minecraft.cherry_fence' |
+  'minecraft.broken:minecraft.cherry_fence_gate' |
+  'minecraft.mined:minecraft.cherry_fence_gate' |
+  'minecraft.broken:minecraft.cherry_hanging_sign' |
+  'minecraft.mined:minecraft.cherry_hanging_sign' |
+  'minecraft.broken:minecraft.cherry_leaves' |
+  'minecraft.mined:minecraft.cherry_leaves' |
+  'minecraft.broken:minecraft.cherry_log' |
+  'minecraft.mined:minecraft.cherry_log' |
+  'minecraft.broken:minecraft.cherry_planks' |
+  'minecraft.mined:minecraft.cherry_planks' |
+  'minecraft.broken:minecraft.cherry_pressure_plate' |
+  'minecraft.mined:minecraft.cherry_pressure_plate' |
+  'minecraft.broken:minecraft.cherry_sapling' |
+  'minecraft.mined:minecraft.cherry_sapling' |
+  'minecraft.broken:minecraft.cherry_sign' |
+  'minecraft.mined:minecraft.cherry_sign' |
+  'minecraft.broken:minecraft.cherry_slab' |
+  'minecraft.mined:minecraft.cherry_slab' |
+  'minecraft.broken:minecraft.cherry_stairs' |
+  'minecraft.mined:minecraft.cherry_stairs' |
+  'minecraft.broken:minecraft.cherry_trapdoor' |
+  'minecraft.mined:minecraft.cherry_trapdoor' |
+  'minecraft.broken:minecraft.cherry_wall_hanging_sign' |
+  'minecraft.mined:minecraft.cherry_wall_hanging_sign' |
+  'minecraft.broken:minecraft.cherry_wall_sign' |
+  'minecraft.mined:minecraft.cherry_wall_sign' |
+  'minecraft.broken:minecraft.cherry_wood' |
+  'minecraft.mined:minecraft.cherry_wood' |
   'minecraft.broken:minecraft.chest' |
   'minecraft.mined:minecraft.chest' |
   'minecraft.broken:minecraft.chipped_anvil' |
@@ -600,6 +634,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.dead_tube_coral_fan' |
   'minecraft.broken:minecraft.dead_tube_coral_wall_fan' |
   'minecraft.mined:minecraft.dead_tube_coral_wall_fan' |
+  'minecraft.broken:minecraft.decorated_pot' |
+  'minecraft.mined:minecraft.decorated_pot' |
   'minecraft.broken:minecraft.deepslate' |
   'minecraft.mined:minecraft.deepslate' |
   'minecraft.broken:minecraft.deepslate_brick_slab' |
@@ -1272,6 +1308,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.pink_concrete_powder' |
   'minecraft.broken:minecraft.pink_glazed_terracotta' |
   'minecraft.mined:minecraft.pink_glazed_terracotta' |
+  'minecraft.broken:minecraft.pink_petals' |
+  'minecraft.mined:minecraft.pink_petals' |
   'minecraft.broken:minecraft.pink_shulker_box' |
   'minecraft.mined:minecraft.pink_shulker_box' |
   'minecraft.broken:minecraft.pink_stained_glass' |
@@ -1368,6 +1406,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.potted_brown_mushroom' |
   'minecraft.broken:minecraft.potted_cactus' |
   'minecraft.mined:minecraft.potted_cactus' |
+  'minecraft.broken:minecraft.potted_cherry_sapling' |
+  'minecraft.mined:minecraft.potted_cherry_sapling' |
   'minecraft.broken:minecraft.potted_cornflower' |
   'minecraft.mined:minecraft.potted_cornflower' |
   'minecraft.broken:minecraft.potted_crimson_fungus' |
@@ -1406,6 +1446,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.potted_red_tulip' |
   'minecraft.broken:minecraft.potted_spruce_sapling' |
   'minecraft.mined:minecraft.potted_spruce_sapling' |
+  'minecraft.broken:minecraft.potted_torchflower' |
+  'minecraft.mined:minecraft.potted_torchflower' |
   'minecraft.broken:minecraft.potted_warped_fungus' |
   'minecraft.mined:minecraft.potted_warped_fungus' |
   'minecraft.broken:minecraft.potted_warped_roots' |
@@ -1728,6 +1770,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.stripped_birch_log' |
   'minecraft.broken:minecraft.stripped_birch_wood' |
   'minecraft.mined:minecraft.stripped_birch_wood' |
+  'minecraft.broken:minecraft.stripped_cherry_log' |
+  'minecraft.mined:minecraft.stripped_cherry_log' |
+  'minecraft.broken:minecraft.stripped_cherry_wood' |
+  'minecraft.mined:minecraft.stripped_cherry_wood' |
   'minecraft.broken:minecraft.stripped_crimson_hyphae' |
   'minecraft.mined:minecraft.stripped_crimson_hyphae' |
   'minecraft.broken:minecraft.stripped_crimson_stem' |
@@ -1764,6 +1810,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.sugar_cane' |
   'minecraft.broken:minecraft.sunflower' |
   'minecraft.mined:minecraft.sunflower' |
+  'minecraft.broken:minecraft.suspicious_sand' |
+  'minecraft.mined:minecraft.suspicious_sand' |
   'minecraft.broken:minecraft.sweet_berry_bush' |
   'minecraft.mined:minecraft.sweet_berry_bush' |
   'minecraft.broken:minecraft.tall_grass' |
@@ -1780,6 +1828,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.tnt' |
   'minecraft.broken:minecraft.torch' |
   'minecraft.mined:minecraft.torch' |
+  'minecraft.broken:minecraft.torchflower' |
+  'minecraft.mined:minecraft.torchflower' |
+  'minecraft.broken:minecraft.torchflower_crop' |
+  'minecraft.mined:minecraft.torchflower_crop' |
   'minecraft.broken:minecraft.trapped_chest' |
   'minecraft.mined:minecraft.trapped_chest' |
   'minecraft.broken:minecraft.tripwire' |
@@ -2076,6 +2128,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.husk' |
   'minecraft.killed:minecraft.illusioner' |
   'minecraft.killed_by:minecraft.illusioner' |
+  'minecraft.killed:minecraft.interaction' |
+  'minecraft.killed_by:minecraft.interaction' |
   'minecraft.killed:minecraft.iron_golem' |
   'minecraft.killed_by:minecraft.iron_golem' |
   'minecraft.killed:minecraft.item' |
@@ -2150,6 +2204,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.slime' |
   'minecraft.killed:minecraft.small_fireball' |
   'minecraft.killed_by:minecraft.small_fireball' |
+  'minecraft.killed:minecraft.sniffer' |
+  'minecraft.killed_by:minecraft.sniffer' |
   'minecraft.killed:minecraft.snow_golem' |
   'minecraft.killed_by:minecraft.snow_golem' |
   'minecraft.killed:minecraft.snowball' |
@@ -2915,6 +2971,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.brown_wool' |
   'minecraft.picked_up:minecraft.brown_wool' |
   'minecraft.used:minecraft.brown_wool' |
+  'minecraft.crafted:minecraft.brush' |
+  'minecraft.dropped:minecraft.brush' |
+  'minecraft.picked_up:minecraft.brush' |
+  'minecraft.used:minecraft.brush' |
   'minecraft.crafted:minecraft.bubble_coral' |
   'minecraft.dropped:minecraft.bubble_coral' |
   'minecraft.picked_up:minecraft.bubble_coral' |
@@ -3019,6 +3079,74 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.charcoal' |
   'minecraft.picked_up:minecraft.charcoal' |
   'minecraft.used:minecraft.charcoal' |
+  'minecraft.crafted:minecraft.cherry_boat' |
+  'minecraft.dropped:minecraft.cherry_boat' |
+  'minecraft.picked_up:minecraft.cherry_boat' |
+  'minecraft.used:minecraft.cherry_boat' |
+  'minecraft.crafted:minecraft.cherry_button' |
+  'minecraft.dropped:minecraft.cherry_button' |
+  'minecraft.picked_up:minecraft.cherry_button' |
+  'minecraft.used:minecraft.cherry_button' |
+  'minecraft.crafted:minecraft.cherry_chest_boat' |
+  'minecraft.dropped:minecraft.cherry_chest_boat' |
+  'minecraft.picked_up:minecraft.cherry_chest_boat' |
+  'minecraft.used:minecraft.cherry_chest_boat' |
+  'minecraft.crafted:minecraft.cherry_door' |
+  'minecraft.dropped:minecraft.cherry_door' |
+  'minecraft.picked_up:minecraft.cherry_door' |
+  'minecraft.used:minecraft.cherry_door' |
+  'minecraft.crafted:minecraft.cherry_fence' |
+  'minecraft.dropped:minecraft.cherry_fence' |
+  'minecraft.picked_up:minecraft.cherry_fence' |
+  'minecraft.used:minecraft.cherry_fence' |
+  'minecraft.crafted:minecraft.cherry_fence_gate' |
+  'minecraft.dropped:minecraft.cherry_fence_gate' |
+  'minecraft.picked_up:minecraft.cherry_fence_gate' |
+  'minecraft.used:minecraft.cherry_fence_gate' |
+  'minecraft.crafted:minecraft.cherry_hanging_sign' |
+  'minecraft.dropped:minecraft.cherry_hanging_sign' |
+  'minecraft.picked_up:minecraft.cherry_hanging_sign' |
+  'minecraft.used:minecraft.cherry_hanging_sign' |
+  'minecraft.crafted:minecraft.cherry_leaves' |
+  'minecraft.dropped:minecraft.cherry_leaves' |
+  'minecraft.picked_up:minecraft.cherry_leaves' |
+  'minecraft.used:minecraft.cherry_leaves' |
+  'minecraft.crafted:minecraft.cherry_log' |
+  'minecraft.dropped:minecraft.cherry_log' |
+  'minecraft.picked_up:minecraft.cherry_log' |
+  'minecraft.used:minecraft.cherry_log' |
+  'minecraft.crafted:minecraft.cherry_planks' |
+  'minecraft.dropped:minecraft.cherry_planks' |
+  'minecraft.picked_up:minecraft.cherry_planks' |
+  'minecraft.used:minecraft.cherry_planks' |
+  'minecraft.crafted:minecraft.cherry_pressure_plate' |
+  'minecraft.dropped:minecraft.cherry_pressure_plate' |
+  'minecraft.picked_up:minecraft.cherry_pressure_plate' |
+  'minecraft.used:minecraft.cherry_pressure_plate' |
+  'minecraft.crafted:minecraft.cherry_sapling' |
+  'minecraft.dropped:minecraft.cherry_sapling' |
+  'minecraft.picked_up:minecraft.cherry_sapling' |
+  'minecraft.used:minecraft.cherry_sapling' |
+  'minecraft.crafted:minecraft.cherry_sign' |
+  'minecraft.dropped:minecraft.cherry_sign' |
+  'minecraft.picked_up:minecraft.cherry_sign' |
+  'minecraft.used:minecraft.cherry_sign' |
+  'minecraft.crafted:minecraft.cherry_slab' |
+  'minecraft.dropped:minecraft.cherry_slab' |
+  'minecraft.picked_up:minecraft.cherry_slab' |
+  'minecraft.used:minecraft.cherry_slab' |
+  'minecraft.crafted:minecraft.cherry_stairs' |
+  'minecraft.dropped:minecraft.cherry_stairs' |
+  'minecraft.picked_up:minecraft.cherry_stairs' |
+  'minecraft.used:minecraft.cherry_stairs' |
+  'minecraft.crafted:minecraft.cherry_trapdoor' |
+  'minecraft.dropped:minecraft.cherry_trapdoor' |
+  'minecraft.picked_up:minecraft.cherry_trapdoor' |
+  'minecraft.used:minecraft.cherry_trapdoor' |
+  'minecraft.crafted:minecraft.cherry_wood' |
+  'minecraft.dropped:minecraft.cherry_wood' |
+  'minecraft.picked_up:minecraft.cherry_wood' |
+  'minecraft.used:minecraft.cherry_wood' |
   'minecraft.crafted:minecraft.chest' |
   'minecraft.dropped:minecraft.chest' |
   'minecraft.picked_up:minecraft.chest' |
@@ -3591,6 +3719,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.debug_stick' |
   'minecraft.picked_up:minecraft.debug_stick' |
   'minecraft.used:minecraft.debug_stick' |
+  'minecraft.crafted:minecraft.decorated_pot' |
+  'minecraft.dropped:minecraft.decorated_pot' |
+  'minecraft.picked_up:minecraft.decorated_pot' |
+  'minecraft.used:minecraft.decorated_pot' |
   'minecraft.crafted:minecraft.deepslate' |
   'minecraft.dropped:minecraft.deepslate' |
   'minecraft.picked_up:minecraft.deepslate' |
@@ -5507,6 +5639,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.pink_glazed_terracotta' |
   'minecraft.picked_up:minecraft.pink_glazed_terracotta' |
   'minecraft.used:minecraft.pink_glazed_terracotta' |
+  'minecraft.crafted:minecraft.pink_petals' |
+  'minecraft.dropped:minecraft.pink_petals' |
+  'minecraft.picked_up:minecraft.pink_petals' |
+  'minecraft.used:minecraft.pink_petals' |
   'minecraft.crafted:minecraft.pink_shulker_box' |
   'minecraft.dropped:minecraft.pink_shulker_box' |
   'minecraft.picked_up:minecraft.pink_shulker_box' |
@@ -5671,6 +5807,22 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.potion' |
   'minecraft.picked_up:minecraft.potion' |
   'minecraft.used:minecraft.potion' |
+  'minecraft.crafted:minecraft.pottery_shard_archer' |
+  'minecraft.dropped:minecraft.pottery_shard_archer' |
+  'minecraft.picked_up:minecraft.pottery_shard_archer' |
+  'minecraft.used:minecraft.pottery_shard_archer' |
+  'minecraft.crafted:minecraft.pottery_shard_arms_up' |
+  'minecraft.dropped:minecraft.pottery_shard_arms_up' |
+  'minecraft.picked_up:minecraft.pottery_shard_arms_up' |
+  'minecraft.used:minecraft.pottery_shard_arms_up' |
+  'minecraft.crafted:minecraft.pottery_shard_prize' |
+  'minecraft.dropped:minecraft.pottery_shard_prize' |
+  'minecraft.picked_up:minecraft.pottery_shard_prize' |
+  'minecraft.used:minecraft.pottery_shard_prize' |
+  'minecraft.crafted:minecraft.pottery_shard_skull' |
+  'minecraft.dropped:minecraft.pottery_shard_skull' |
+  'minecraft.picked_up:minecraft.pottery_shard_skull' |
+  'minecraft.used:minecraft.pottery_shard_skull' |
   'minecraft.crafted:minecraft.powder_snow_bucket' |
   'minecraft.dropped:minecraft.powder_snow_bucket' |
   'minecraft.picked_up:minecraft.powder_snow_bucket' |
@@ -6243,6 +6395,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.smooth_stone_slab' |
   'minecraft.picked_up:minecraft.smooth_stone_slab' |
   'minecraft.used:minecraft.smooth_stone_slab' |
+  'minecraft.crafted:minecraft.sniffer_spawn_egg' |
+  'minecraft.dropped:minecraft.sniffer_spawn_egg' |
+  'minecraft.picked_up:minecraft.sniffer_spawn_egg' |
+  'minecraft.used:minecraft.sniffer_spawn_egg' |
   'minecraft.crafted:minecraft.snout_armor_trim_smithing_template' |
   'minecraft.dropped:minecraft.snout_armor_trim_smithing_template' |
   'minecraft.picked_up:minecraft.snout_armor_trim_smithing_template' |
@@ -6491,6 +6647,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.stripped_birch_wood' |
   'minecraft.picked_up:minecraft.stripped_birch_wood' |
   'minecraft.used:minecraft.stripped_birch_wood' |
+  'minecraft.crafted:minecraft.stripped_cherry_log' |
+  'minecraft.dropped:minecraft.stripped_cherry_log' |
+  'minecraft.picked_up:minecraft.stripped_cherry_log' |
+  'minecraft.used:minecraft.stripped_cherry_log' |
+  'minecraft.crafted:minecraft.stripped_cherry_wood' |
+  'minecraft.dropped:minecraft.stripped_cherry_wood' |
+  'minecraft.picked_up:minecraft.stripped_cherry_wood' |
+  'minecraft.used:minecraft.stripped_cherry_wood' |
   'minecraft.crafted:minecraft.stripped_crimson_hyphae' |
   'minecraft.dropped:minecraft.stripped_crimson_hyphae' |
   'minecraft.picked_up:minecraft.stripped_crimson_hyphae' |
@@ -6567,6 +6731,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.sunflower' |
   'minecraft.picked_up:minecraft.sunflower' |
   'minecraft.used:minecraft.sunflower' |
+  'minecraft.crafted:minecraft.suspicious_sand' |
+  'minecraft.dropped:minecraft.suspicious_sand' |
+  'minecraft.picked_up:minecraft.suspicious_sand' |
+  'minecraft.used:minecraft.suspicious_sand' |
   'minecraft.crafted:minecraft.suspicious_stew' |
   'minecraft.dropped:minecraft.suspicious_stew' |
   'minecraft.picked_up:minecraft.suspicious_stew' |
@@ -6619,6 +6787,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.torch' |
   'minecraft.picked_up:minecraft.torch' |
   'minecraft.used:minecraft.torch' |
+  'minecraft.crafted:minecraft.torchflower' |
+  'minecraft.dropped:minecraft.torchflower' |
+  'minecraft.picked_up:minecraft.torchflower' |
+  'minecraft.used:minecraft.torchflower' |
+  'minecraft.crafted:minecraft.torchflower_seeds' |
+  'minecraft.dropped:minecraft.torchflower_seeds' |
+  'minecraft.picked_up:minecraft.torchflower_seeds' |
+  'minecraft.used:minecraft.torchflower_seeds' |
   'minecraft.crafted:minecraft.totem_of_undying' |
   'minecraft.dropped:minecraft.totem_of_undying' |
   'minecraft.picked_up:minecraft.totem_of_undying' |
