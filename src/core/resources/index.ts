@@ -1,4 +1,5 @@
 export * from './advancement'
+export * from './damageType'
 export * from './itemModifier'
 export * from './lootTable'
 export * from './mcfunction'

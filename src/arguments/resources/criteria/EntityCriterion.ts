@@ -3,7 +3,7 @@ import type { DistanceCriterion, EffectCriterion } from './basic_criteria'
 import type { ItemCriterion } from './ItemCriterion'
 import type { LocationCriterion } from './LocationCriterion'
 import type { PlayerCriterion } from './PlayerCriterion'
-import type { ENTITY_TYPES, MOB_EFFECTS } from '#arguments/generated'
+import type { CAT_VARIANTS, ENTITY_TYPES, MOB_EFFECTS } from '#arguments/generated'
 import type { TagClass } from '#core'
 import type { LiteralUnion } from '#utils'
 
@@ -55,4 +55,40 @@ export type EntityCriterion = Partial<{
 
   /** The vehicle that the entity is riding on. */
   vehicle: EntityCriterion
+
+  type_specific: TypeSpecific
 }>
+
+type TypeSpecificKind<TYPE extends string, VALUES extends Record<string, unknown>> = {
+  condition: LiteralUnion<TYPE>
+} & VALUES
+
+type TypeSpecific = (
+  TypeSpecificKind<'player', PlayerCriterion> |
+  TypeSpecificKind<'fishing_hook', {
+    in_open_water?: boolean
+  }> |
+  TypeSpecificKind<'lightning', {
+    blocks_set_on_fire: number | {
+      /** The maximum value. */
+      max?: number
+      /** The minimum value. */
+      min?: number
+    },
+    entity_struck: EntityCriterion
+  }> |
+  TypeSpecificKind<'cat', {
+    variant: LiteralUnion<CAT_VARIANTS>
+  }> |
+  TypeSpecificKind<'slime', {
+    size: number | {
+      /** The maximum value. */
+      max?: number
+      /** The minimum value. */
+      min?: number
+    },
+  }> |
+  TypeSpecificKind<'frog', {
+    variant: LiteralUnion<'cold' | 'temperate' | 'warm'>
+  }>
+)

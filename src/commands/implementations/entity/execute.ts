@@ -315,13 +315,23 @@ export class ExecuteFacingEntityCommand extends ExecuteCommandPart {
   entity = (targets: MultipleEntitiesArgument, anchor: ANCHORS = 'feet') => this.nestedExecute(['entity', targetParser(targets), anchor])
 }
 
-export class ExecutePositionedAsCommand extends ExecuteCommandPart {
+export class ExecutePositionedCommand extends ExecuteCommandPart {
   /**
    * Sets the command position, without changing rotation or dimension, by matching an entity's position.
    *
    * @param targets Target entity/entities to match position with.
    */
   as = (targets: MultipleEntitiesArgument) => this.nestedExecute(['as', targetParser(targets)])
+
+  /**
+   * Sets the command position matching the height map (highest position in a column of blocks according to criteria) for the current position.
+   *
+   * - `world_surface` Any non-air block.
+   * - `motion_blocking` Any motion blocking material (eg. ignores flowers and grass).
+   * - `motion_blocking_no_leaves` Any non-leaf motion blocking material.
+   * - `ocean_floor` Any non-fluid motion blocking material.
+   */
+  over = (heightMap: 'world_surface' | 'motion_blocking' | 'motion_blocking_no_leaves' | 'ocean_floor') => this.nestedExecute(['over', heightMap])
 }
 
 export class ExecuteRotatedAsCommand extends ExecuteCommandPart {
@@ -403,7 +413,7 @@ export class ExecuteCommand extends ExecuteCommandPart {
     if (pos) {
       return this.nestedExecute(['positioned', coordinatesParser(pos)])
     }
-    return this.subCommand([['as']], ExecutePositionedAsCommand, false)
+    return this.subCommand([['positioned']], ExecutePositionedCommand, false)
   }
 
   /**
@@ -422,7 +432,7 @@ export class ExecuteCommand extends ExecuteCommandPart {
     if (rotation) {
       return this.nestedExecute(['rotated', rotationParser(rotation)])
     }
-    return this.subCommand([['as']], ExecuteRotatedAsCommand, false)
+    return this.subCommand([['rotated']], ExecuteRotatedAsCommand, false)
   }
 
   /**

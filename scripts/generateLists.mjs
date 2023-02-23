@@ -20,6 +20,7 @@ const registries = [
   'point_of_interest_type',
   'sound_event',
   'structure',
+  ['tag/damage_type'],
   ['worldgen/biome'],
   ['worldgen/configured_feature'],
   ['worldgen/structure'],

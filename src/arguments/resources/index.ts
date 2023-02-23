@@ -1,5 +1,6 @@
 export * from './advancement'
 export * from './custom'
+export * from './damageType'
 export * from './itemModifier'
 export * from './lootTables'
 export * from './predicate'

@@ -57,6 +57,7 @@ import {
   WorldBorderCommand,
 } from './implementations'
 import { PlaceCommand } from './implementations/block/place'
+import { DamageCommand } from './implementations/entity/damage'
 
 import type { SandstonePack } from '#pack'
 
@@ -74,6 +75,8 @@ export class SandstoneCommands {
   get clone() { return new CloneCommand(this.sandstonePack).clone }
 
   get comment() { return new CommentCommand(this.sandstonePack).comment }
+
+  get damage() { return new DamageCommand(this.sandstonePack).damage }
 
   get data() { return new DataCommand(this.sandstonePack) }
 

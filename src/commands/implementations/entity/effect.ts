@@ -42,11 +42,11 @@ export class EffectCommand extends CommandArguments {
   give = (
     targets: MultipleEntitiesArgument,
     effect: LiteralUnion<MOB_EFFECTS>,
-    seconds?: number,
+    seconds?: number | 'infinite',
     amplifier?: number,
     hideParticles?: boolean,
   ) => {
-    if (seconds) validateIntegerRange(seconds, 'seconds', 0, 1_000_000)
+    if (seconds && seconds !== 'infinite') validateIntegerRange(seconds, 'seconds', 0, 1_000_000)
     return this.finalCommand(['give', targetParser(targets), effect, seconds, amplifier, hideParticles])
   }
 

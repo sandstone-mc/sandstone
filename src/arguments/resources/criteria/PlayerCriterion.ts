@@ -1,3 +1,4 @@
+import type { EntityCriterion } from './EntityCriterion'
 import type { NumberProvider } from './utils'
 import type { GAMEMODES } from '#arguments/basics'
 
@@ -46,4 +47,6 @@ export type PlayerCriterion = Partial<{
     /** The value of the statistic. */
     value: NumberProvider
   }
+
+  looking_at: EntityCriterion
 }>

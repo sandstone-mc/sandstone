@@ -5,7 +5,7 @@ import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandston
 import { UUIDClass } from 'sandstone/variables/UUID'
 import { SandstoneCommands } from '#commands'
 import {
-  AdvancementClass, ItemModifierClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, SandstoneCore, TagClass, TrimMaterialClass, TrimPatternClass,
+  AdvancementClass, DamageTypeClass, ItemModifierClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, SandstoneCore, TagClass, TrimMaterialClass, TrimPatternClass,
 } from '#core'
 import { Flow, SandstoneConditions } from '#flow'
 import { randomUUID } from '#utils'
@@ -28,13 +28,13 @@ import type {
 } from 'sandstone/variables/UUID'
 import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON, Coordinates, DIMENSIONS, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON, Coordinates, DamageTypeJSON, DIMENSIONS, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from '#arguments'
 import type { StoreType } from '#commands'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
-  AdvancementClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, Node, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
+  AdvancementClassArguments, DamageTypeClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, Node, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
 } from '#core'
 import type { LiteralUnion, MakeInstanceCallable } from '#utils'
 import type {
@@ -646,6 +646,14 @@ export class SandstonePack {
     creator: 'user',
     addToSandstoneCore: true,
     onConflict: conflictDefaults('advancement') as AdvancementClassArguments['onConflict'],
+    ...options,
+  })
+
+  DamageType = (name: string, damageType: DamageTypeJSON, options?: DamageTypeClassArguments) => new DamageTypeClass(this.core, name, {
+    damageType,
+    creator: 'user',
+    addToSandstoneCore: true,
+    onConflict: conflictDefaults('damage_type') as DamageTypeClassArguments['onConflict'],
     ...options,
   })
 

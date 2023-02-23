@@ -155,6 +155,9 @@ export type PredicateCondition = (
 
       /** If true, the condition evaluates to true only if it's thundering. */
       thundering?: boolean
+  }> | PredicateKind<'minecraft:value_check', {
+    value: NumberProvider,
+    range: NumberProvider
   }>
 ) |never
 
