@@ -110,15 +110,15 @@ export type DatapackConfig = {
    *
    * @see [https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta](https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta)
    */
-  formatVersion: number
+  packFormat: number
 
   /** List of experimental game features to enable. */
-  features: string[],
+  features?: string[],
 
   /**
    * Section for filtering out files from data packs applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
    */
-  filter: {
+  filter?: {
     /** List of patterns */
     block: {
       /** A regular expression for the namespace of files to be filtered out. If unspecified, it applies to every namespace. */
@@ -200,6 +200,24 @@ export interface SandstoneConfig {
 
     /** A script running after Sandstone saved all files. */
     afterAll?: () => (void | Promise<void>)
+  }
+
+  resources?: {
+    /** Path regex of files to exclude from the output. */
+    exclude?: {
+      /** From `SandstonePack` (your code in `./src`). */
+      generated?: RegExp[]
+
+      /** From `./resources`. */
+      existing?: RegExp[]
+    } | RegExp[]
+
+    /** Handle files before they are written to the output. */
+    handle?: {
+      path: RegExp
+
+      callback: (contents: string | Buffer | Promise<Buffer>) => Promise<Buffer>
+    }[]
   }
 
   /**

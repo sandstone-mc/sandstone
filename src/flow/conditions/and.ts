@@ -7,5 +7,5 @@ export class AndNode extends ConditionNode {
     super(sandstoneCore)
   }
 
-  getValue = (negated = false) => this.conditions.join(' ')
+  getValue = (negated = false) => this.conditions.map((condition) => condition.getValue(negated)).join(' ')
 }

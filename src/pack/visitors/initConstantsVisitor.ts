@@ -6,7 +6,7 @@ import { GenericSandstoneVisitor } from './visitor'
 export class InitConstantsVisitor extends GenericSandstoneVisitor {
   onStart = () => {
     const { pack } = this
-    const { commands, core } = pack
+    const { scoreboard } = pack.commands
 
     // Remove duplicates
     let constants = [...pack.constants.values()]
@@ -15,7 +15,7 @@ export class InitConstantsVisitor extends GenericSandstoneVisitor {
     if (constants.length !== 0) {
       pack.initMCFunction.unshift(() => {
         for (const constant of constants) {
-          commands.scoreboard.players.set(constant, pack.rootObjective, constant)
+          scoreboard.players.set(constant, pack.rootObjective, constant)
         }
       })
     }

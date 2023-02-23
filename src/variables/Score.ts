@@ -555,6 +555,6 @@ export class Score extends ComponentClass implements ConditionClass {
    * @param range The range to compare the current score against.
    */
   matches = (range: Range) => ({
-    _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, ['if', 'score', `${this.target}`, `${this.objective}`, 'matches', rangeParser(range)]),
+    _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(range)]),
   })
 }

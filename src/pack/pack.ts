@@ -105,13 +105,13 @@ class DataPack extends PackType {
   // TODO: typing. low priority
   readonly packMcmeta: any
 
-  constructor(archiveOutput: boolean, options: { packFormat: number, packDescription: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
+  constructor(archiveOutput: boolean, options: { packFormat: number, description: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
     super('datapack', 'saves/$worldName$/datapacks/$packName$', 'world/datapacks/$packName$', 'datapacks/$packName$', 'server', archiveOutput, 'data', true)
 
     this.packMcmeta = {
       pack: {
         pack_format: options.packFormat,
-        description: options.packDescription,
+        description: options.description,
       },
     }
 
@@ -143,6 +143,8 @@ export class SandstonePack {
 
   packTypes: Map<string, PackType>
 
+  packOptions = JSON.parse(process.env.PACK_OPTIONS as string)
+
   dataPack = () => this.packTypes.get('datapack') as DataPack
 
   // Smithed Pack IDs
@@ -172,7 +174,7 @@ export class SandstonePack {
     this.core = new SandstoneCore(this)
 
     this.packTypes = new Map()
-    this.packTypes.set('datapack', new DataPack(false, JSON.parse(process.env.PACK_OPTIONS as string)))
+    this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack))
 
     this.commands = new SandstoneCommands(this)
 
@@ -253,7 +255,7 @@ export class SandstonePack {
     create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent, alreadyExists?: true): ObjectiveClass => {
       let namespace: boolean = false
 
-      if (name.includes('.')) {
+      if (name.includes('.') || name.includes('__')) {
         namespace = true
       }
 
@@ -269,8 +271,14 @@ export class SandstonePack {
     get: (name: string): ObjectiveClass => new ObjectiveClass(this, name, undefined, undefined, { creator: 'user' }),
   }
 
+  __rootObjective?: ObjectiveClass
+
   get rootObjective() {
-    return this.Objective.create('sandstone', 'dummy', [{ text: 'Sandstone', color: 'gold' }, ' internals'])
+    if (this.__rootObjective) {
+      return this.__rootObjective
+    }
+    this.__rootObjective = this.Objective.create('__sandstone', 'dummy', [{ text: 'Sandstone', color: 'gold' }, ' internals'])
+    return this.__rootObjective
   }
 
   Variable: (
@@ -326,6 +334,10 @@ export class SandstonePack {
 
       return anonymousScore
     }
+
+  get flowVariable() {
+    return this.rootObjective('if_result')
+  }
 
   /**
    * Creates a new label
@@ -694,7 +706,7 @@ export class SandstonePack {
     ...options,
   })
 
-  save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void> }) => {
+  save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>, dry: boolean, verbose: boolean }) => {
     await this.core.save(cliOptions, {
       visitors: [
         // Initialization visitors

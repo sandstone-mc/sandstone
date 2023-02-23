@@ -6,13 +6,21 @@ import type { ConditionNode } from './conditions'
 export class IfNode extends ContainerNode {
   nextFlowNode?: IfNode | ElseNode
 
-  constructor(sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback: () => void) {
+  constructor(sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback: () => void, reset = true) {
     super(sandstoneCore)
 
-    // Generate the body of the If node.
-    this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(this)
-    this.callback()
-    this.sandstoneCore.currentMCFunction?.exitContext()
+    const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
+
+    if (reset) {
+      currentNode.resource.push(() => sandstoneCore.pack.flowVariable.reset())
+    }
+
+    if (callback.toString() !== '() => {}') {
+      // Generate the body of the If node.
+      currentNode.enterContext(this)
+      this.callback()
+      currentNode.exitContext()
+    }
   }
 
   getValue = () => {
@@ -53,9 +61,7 @@ export class ElseNode extends ContainerNode {
     this.sandstoneCore.currentMCFunction?.exitContext()
   }
 
-  getValue = () => {
-    throw new Error('Minecraft does not support else statements. This must be postprocessed.')
-  }
+  getValue = () => null
 }
 
 export class ElseStatement {

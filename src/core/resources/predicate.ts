@@ -49,7 +49,6 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
       } else {
         predicateJSON = predicate
       }
-      console.log(predicateJSON)
       if (Array.isArray(predicateJSON)) {
         this.predicateJSON.push(...predicateJSON)
       } else {

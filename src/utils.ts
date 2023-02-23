@@ -160,7 +160,7 @@ export type PartialFunction<
 export function toMinecraftResourceName(path: readonly string[], typeNested: number = 1): string {
   const [namespace, ...folders] = path
 
-  folders.splice(1, typeNested)
+  folders.splice(0, typeNested)
 
   return `${namespace}:${folders.join('/')}`
 }

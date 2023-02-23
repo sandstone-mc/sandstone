@@ -1,6 +1,8 @@
+/* eslint-disable no-spaced-func */
+/* eslint-disable func-call-spacing */
+import { SuccessConditionNode } from 'sandstone/flow/conditions/success'
 import { ExecuteCommandNode } from '#commands'
 import { IfNode, NotNode, ScoreConditionNode } from '#flow'
-import { ObjectiveClass } from '#variables'
 
 import { GenericSandstoneVisitor } from './visitor'
 
@@ -18,17 +20,12 @@ function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   }
 }
 
-const IF_OBJECTIVE = {
-  objective: 'sandstone',
-  name: 'if_result',
-}
-
 export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
   visitIfNode = (node_: IfNode) => {
     // Start by flattening all nodes
     const nodes = Array.from(flattenIfNode(node_))
 
-    const ifScore = new ObjectiveClass(this.pack, IF_OBJECTIVE.objective, undefined, undefined, { creator: 'sandstone' }).ScoreHolder(IF_OBJECTIVE.name)
+    const ifScore = this.core.pack.flowVariable
 
     // 1. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {
@@ -45,11 +42,7 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
       const conditions: ConditionNode[] = []
 
       if (i > 0) {
-        conditions.push(new NotNode(this.core, new ScoreConditionNode(this.core, [ifScore.target.toString(), ifScore.objective.name, 'matches', '0..'])))
-        /*
-         * TODO: replace with a real, existing objective
-         * conditions.push(flow.not(createCondition(['unless', 'score', IF_OBJECTIVE.name, IF_OBJECTIVE.objective, 'matches', '0..'])))
-         */
+        conditions.push(new NotNode(this.core, new ScoreConditionNode(this.core, [`${ifScore}`, 'matches', '0..'])))
       }
 
       let callbackName: string
@@ -58,17 +51,18 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
       // If we have a "If" node, add the condition
       if (node instanceof IfNode) {
         conditions.push(node.condition)
+        conditions.push(new SuccessConditionNode(this.core, ifScore))
         callbackName = i === 0 ? 'if' : 'elseif'
       } else {
         callbackName = 'else'
       }
 
-      return new ExecuteCommandNode(this.pack, [], {
+      return new ExecuteCommandNode(this.pack, [[flow.and(...conditions).getValue()]], {
         isSingleExecute: false,
         givenCallbackName: callbackName,
         body,
       })
     })
-    return node_
+    return transformedNodes
   }
 }

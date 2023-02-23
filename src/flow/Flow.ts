@@ -1,16 +1,17 @@
-import { ConditionClass } from '../variables/index'
-import { AndNode, NotNode, OrNode } from './conditions'
+import {
+  AndNode, ConditionNode, NotNode, OrNode,
+} from './conditions'
 import { IfStatement } from './if_else'
 
 import type { SandstoneCore } from '../core'
-import type { ConditionNode } from './conditions'
+import type { ConditionClass } from '../variables/index'
 
 type Condition = ConditionNode | ConditionClass
 export class Flow {
   constructor(public sandstoneCore: SandstoneCore) { }
 
   conditionToNode(condition: Condition) {
-    if (condition instanceof ConditionClass) {
+    if (!(condition instanceof ConditionNode)) {
       return condition._toMinecraftCondition()
     }
     return condition

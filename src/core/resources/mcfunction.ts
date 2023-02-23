@@ -115,7 +115,7 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
     return this.contextStack.pop()
   }
 
-  getValue = () => this.body.map((node) => node.getValue()).join('\n')
+  getValue = () => this.body.filter((node) => node.getValue() !== null).map((node) => node.getValue()).join('\n')
 }
 
 export type MCFunctionClassArguments = ({
@@ -184,8 +184,6 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
   protected tags: MCFunctionClassArguments['tags']
 
   protected lazy: boolean
-
-  protected addToSandstoneCore: boolean
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments) {
     super(core, { packType: core.pack.dataPack(), extension: 'mcfunction' }, MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
@@ -304,6 +302,29 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
         this.node.body.unshift(...fake.node.body)
       }
     }, true)
+  }
+
+  splice(start: number, removeItems: number | 'auto', ...contents: _RawMCFunctionClass[] | [() => void]) {
+    const fake = new MCFunctionClass(this.core, 'fake', {
+      addToSandstoneCore: false,
+      creator: 'sandstone',
+      onConflict: 'ignore',
+    })
+
+    const fullBody: Node[] = []
+
+    if (contents[0] instanceof _RawMCFunctionClass) {
+      for (const mcfunction of contents as _RawMCFunctionClass[]) {
+        fullBody.push(...mcfunction.node.body)
+      }
+    } else {
+      this.core.enterMCFunction(fake)
+      this.core.insideContext(fake.node, contents[0], false)
+      this.core.exitMCFunction()
+      fullBody.push(...fake.node.body)
+    }
+
+    this.node.body.splice(start, removeItems === 'auto' ? fullBody.length : removeItems, ...fullBody)
   }
 }
 

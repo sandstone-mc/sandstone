@@ -97,7 +97,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     }
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${currentMCFunction.resource.path.slice(1).join('/')}/${this.callbackName}`, {
+    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${currentMCFunction.resource.path.slice(2).join('/')}/${this.callbackName}`, {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',
@@ -401,7 +401,7 @@ export class ExecuteCommand extends ExecuteCommandPart {
 
   positioned(pos?: Coordinates) {
     if (pos) {
-      return this.nestedExecute(['as', coordinatesParser(pos)])
+      return this.nestedExecute(['positioned', coordinatesParser(pos)])
     }
     return this.subCommand([['as']], ExecutePositionedAsCommand, false)
   }
@@ -420,7 +420,7 @@ export class ExecuteCommand extends ExecuteCommandPart {
 
   rotated(rotation?: Rotation) {
     if (rotation) {
-      return this.nestedExecute(['as', rotationParser(rotation)])
+      return this.nestedExecute(['rotated', rotationParser(rotation)])
     }
     return this.subCommand([['as']], ExecuteRotatedAsCommand, false)
   }

@@ -28,3 +28,9 @@ export abstract class SingleConditionNode extends ConditionNode {
     return [keyword, ...this.getCondition()].join(' ')
   }
 }
+
+export abstract class SingleExecuteNode extends ConditionNode {
+  abstract getCondition(): unknown[]
+
+  getValue = (negated = false) => this.getCondition().join(' ')
+}
