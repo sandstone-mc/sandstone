@@ -5,6 +5,7 @@ export type REGISTRIES = (
   'fluids' |
   'functions' |
   'items' |
+  'damage_types' |
   'dimensions' |
   'game_events' |
   'cat_variant' |

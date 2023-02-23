@@ -18,6 +18,7 @@ export const {
   clear,
   clone,
   comment,
+  damage,
   data,
   datapack,
   debug,
@@ -75,10 +76,11 @@ export const {
   tell,
 } = sandstonePack.commands
 
-// Resources
 export const {
+  // Resources
   MCFunction,
   Advancement,
+  DamageType,
   ItemModifier,
   LootTable,
   Predicate,
@@ -86,12 +88,25 @@ export const {
   Tag,
   TrimMaterial,
   TrimPattern,
-} = sandstonePack
+  RawResource,
 
-// Misc
-export const {
+  // Variables
   Objective,
   _,
+  Variable,
+  flowVariable,
+  Label,
+  Data,
+  DataVariable,
+  getTempStorage,
+  ResolveNBT,
+  Selector,
+  UUID,
+  rootChunk,
+  dimensionChunk,
+  dimensionMarker,
+  UtilityChunk,
+  makeCustomResource,
 } = sandstonePack
 
 type PackTypes = LiteralUnion<'datapack'>

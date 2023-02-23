@@ -30,7 +30,7 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
   public predicateJSON: NonNullable<PredicateClassArguments['predicate']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: PredicateClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, PredicateNode, sandstoneCore.pack.resourceToPath(name, ['predicates']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack, extension: 'json' }, PredicateNode, sandstoneCore.pack.resourceToPath(name, ['predicates']), args)
 
     this.predicateJSON = args.predicate as PredicateJSON
 

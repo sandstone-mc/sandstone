@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-plusplus */
+import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
 import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk'
 import { UUIDClass } from 'sandstone/variables/UUID'
@@ -145,7 +146,9 @@ export class SandstonePack {
 
   packOptions = JSON.parse(process.env.PACK_OPTIONS as string)
 
-  dataPack = () => this.packTypes.get('datapack') as DataPack
+  get dataPack() {
+    return this.packTypes.get('datapack') as DataPack
+  }
 
   // Smithed Pack IDs
   dependencies: Map<string, boolean>
@@ -218,7 +221,7 @@ export class SandstonePack {
     this.initMCFunction.push(() => loadStatus(this.defaultNamespace).set(process.env.LOAD_VERSION || 1))
   }
 
-  resourceToPath = (name: string, resourceFolders: string[]): ResourcePath => {
+  resourceToPath = (name: string, resourceFolders?: string[]): ResourcePath => {
     let namespace = this.defaultNamespace
     let fullName = name
 
@@ -227,6 +230,10 @@ export class SandstonePack {
     }
 
     const fullPath = fullName.split('/')
+
+    if (!resourceFolders) {
+      return fullPath
+    }
 
     return [namespace, ...resourceFolders, ...fullPath]
   }
@@ -639,6 +646,68 @@ export class SandstonePack {
         startTickedLoops.push(() => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
       }
     }
+  }
+
+  __customResourceTypes: string[] = []
+
+  registerCustomResource(type: string) {
+    if (this.__customResourceTypes.includes(type)) {
+      throw new Error(`A custom resource of the type '${type}' has already been created!`)
+    }
+    this.__customResourceTypes.push(type)
+  }
+
+  get makeCustomResource(): [SandstoneCore, typeof CustomResourceClass] {
+    return [this.core, CustomResourceClass]
+  }
+
+  /** Creates a resource in the datapack, path must include file extension. */
+  RawResource(path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
+
+  /** Creates a resource in the given pack, path must include file extension. */
+  RawResource(pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
+
+  RawResource(...args: [path: string, contents: string | Buffer | Promise<Buffer>] | [pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>]) {
+    if (args[0] instanceof PackType) {
+      const _path = args[1] as string
+      const path = _path.includes('/') ? _path.split('/') : [_path]
+      const extension = path[path.length - 1].split('.')[1]
+
+      path[path.length - 1] = path[path.length - 1].replace(`.${extension}`, '')
+
+      const { core } = this
+
+      class RawResource extends this.makeCustomResource[1] {
+        constructor() {
+          super(core, path.join('/'), {
+            type: `${Math.random()}`, packType: args[0] as PackType, extension, addToSandstoneCore: true, creator: 'user',
+          })
+        }
+
+        getValue = () => args[2] as string | Buffer | Promise<Buffer>
+      }
+
+      return new RawResource()
+    }
+    const _path = args[0] as string
+    const path = _path.includes('/') ? _path.split('/') : [_path]
+    const extension = path[path.length - 1].split('.')[1]
+
+    path[path.length - 1] = path[path.length - 1].replace(`.${extension}`, '')
+
+    const { core, dataPack } = this
+
+    class RawResource extends this.makeCustomResource[1] {
+      constructor() {
+        super(core, path.join('/'), {
+          type: `${Math.random()}`, packType: dataPack, extension, addToSandstoneCore: true, creator: 'user',
+        })
+      }
+
+      getValue = () => args[1]
+    }
+
+    return new RawResource()
   }
 
   Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: AdvancementClassArguments) => new AdvancementClass(this.core, name, {

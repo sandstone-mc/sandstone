@@ -30,7 +30,7 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
   public lootTableJSON: NonNullable<LootTableClassArguments['lootTable']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: LootTableClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, LootTableNode, sandstoneCore.pack.resourceToPath(name, ['loot_tables']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack, extension: 'json' }, LootTableNode, sandstoneCore.pack.resourceToPath(name, ['loot_tables']), args)
 
     this.lootTableJSON = args.lootTable as LootTableJSON
 

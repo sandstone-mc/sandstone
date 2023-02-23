@@ -27,7 +27,7 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
   public recipeJSON: NonNullable<RecipeClassArguments['recipe']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: RecipeClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, RecipeNode, sandstoneCore.pack.resourceToPath(name, ['recipes']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack, extension: 'json' }, RecipeNode, sandstoneCore.pack.resourceToPath(name, ['recipes']), args)
 
     this.recipeJSON = args.recipe
 
