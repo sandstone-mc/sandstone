@@ -2,8 +2,9 @@
 /* eslint-disable multiline-comment-style */
 import type fs from 'fs-extra'
 import type { SandstoneCommands } from 'sandstone/commands/commands'
+import type { PackType } from 'sandstone/pack/packType'
 import type { Node, SandstoneCore } from '#core'
-import type { PackType, ResourcePath, SandstonePack } from '#pack'
+import type { ResourcePath, SandstonePack } from '#pack'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from '#utils'
 
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {

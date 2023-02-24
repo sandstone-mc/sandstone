@@ -30,7 +30,7 @@ export class StructureNode extends ContainerNode implements ResourceNode<Structu
     super(sandstoneCore)
   }
 
-  getValue = () => (this.resource.structureNBT ? encodeStructure(this.resource.structure as StructureNBT) : this.resource.structureBuffer)
+  getValue = () => (this.resource.structureNBT ? encodeStructure(this.resource.structure() as StructureNBT) : this.resource.structureBuffer)
 }
 
 type Block = {
@@ -81,7 +81,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       } else if (args.structure.structureBuffer) {
         this.structureBuffer = args.structure.structureBuffer
       } else {
-        this.structureBuffer = args.structure.structure as Promise<Buffer>
+        this.structureBuffer = args.structure.structure() as Promise<Buffer>
       }
     } else if (Array.isArray(args.structure)) {
       this.structureNBT = this.arrayToNBT(args.structure)
@@ -92,7 +92,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
     this.handleConflicts()
   }
 
-  get structure(): StructureNBT | Promise<Buffer> {
+  structure(): StructureNBT | Promise<Buffer> {
     if (this.structureNBT) {
       return this.structureNBT
     }
@@ -287,7 +287,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       const bottomCoordinate = Variable()
 
       currentLevel.set(Data('entity', '@s', 'Position[1]'))
-      dimensionMarker.run(() => bottomCoordinate.set(Data('entity', '@s', 'Position[1]')))
+      dimensionMarker().run(() => bottomCoordinate.set(Data('entity', '@s', 'Position[1]')))
 
       execute.summon('marker').run(() => {
         Data('entity', '@s', 'Position[1]').set(bottomCoordinate, 'double')

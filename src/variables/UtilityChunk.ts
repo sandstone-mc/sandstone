@@ -29,7 +29,7 @@ export class UtilityChunkClass<Chunk extends ChunkTuple, ID extends DimensionID>
     this.coordinates = coordinatesParser(absolute(chunk[0] * 16, chunk[1] * 16))
   }
 
-  get inDimension() {
+  inDimension() {
     return this.pack.commands.execute.in(this.dimension.join(':'))
   }
 
@@ -80,10 +80,7 @@ export class DimensionChunkClass<ID extends DimensionID> extends UtilityChunkCla
   }
 
   /** Partial execute command executing as (not at) the per-dimension marker */
-  get execute() {
-    // TODO: Switch this to `Thrower` based relation linkage due to MC-260322. Figure out how to set #target.
-    return this.pack.commands.execute.as(this.pack.rootChunk.armorStand).on('passengers').if.score(this.pack.dimensionID('@s'), '=', this.pack.dimensionTarget)
-  }
+  execute = () => this.pack.commands.execute.as(this.pack.rootChunk.armorStand).on('passengers').if.score(this.pack.dimensionID('@s'), '=', this.pack.dimensionTarget)
 
   __predicate?: PredicateClass
 
@@ -147,7 +144,7 @@ export class DimensionChunkClass<ID extends DimensionID> extends UtilityChunkCla
    * @param executingAt Callback that is executed as the per-dimension marker, at the jukebox
    */
   jukebox(executingAt: (data: DataClass<'block'>) => void) {
-    this.execute.at('@s').positioned('~ ~ ~1').run(() => executingAt(this.pack.Data('block', '~ ~ ~')))
+    this.execute().at('@s').positioned('~ ~ ~1').run(() => executingAt(this.pack.Data('block', '~ ~ ~')))
   }
 }
 
@@ -155,7 +152,7 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
   declare marker: UUIDClass<'known', 'permanent'>
 
   /** Partial execute command executing as (not at) the root marker */
-  readonly execute = this.pack.commands.execute.as(this.marker)
+  readonly execute = () => this.pack.commands.execute.as(this.marker)
 
   /**
    * For checking arbitrary items that cannot be directly targeted against a predicate & getting the low 32 bits of a long by copying the long using data modify to DisabledSlots
@@ -169,6 +166,9 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
 
   constructor(pack: SandstonePack) {
     super(pack, ['smithed', 'void'], [0, 0], pack.UUID('000000fe-0000-0000-0000-000000000000'))
+
+    // TODO
+    pack.dependencies.set('smithed.forceload', true)
   }
 
   /**
@@ -177,7 +177,7 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
    * @param executingAt Callback that is executed in the dimension at the sign.
    */
   sign(executingAt: (data: DataClass<'block'>) => void) {
-    this.inDimension.positioned('0 0 0').run(() => executingAt(this.pack.Data('block', '~ ~ ~')))
+    this.inDimension().positioned('0 0 0').run(() => executingAt(this.pack.Data('block', '~ ~ ~')))
   }
 
   /**
@@ -187,13 +187,13 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
     const blockData = this.pack.Data('block', '0 0 0', 'Text1')
     const output = this.pack.DataVariable(undefined, 'textOutput')
 
-    this.inDimension.run(() => blockData.set(text instanceof DataPointClass ? text : `${new JSONTextComponentClass(text)}`))
-    this.inDimension.run(() => output.set(blockData))
+    this.inDimension().run(() => blockData.set(text instanceof DataPointClass ? text : `${new JSONTextComponentClass(text)}`))
+    this.inDimension().run(() => output.set(blockData))
 
     return output
   }
 
-  __variable = this.pack.DataVariable('shulkerBox')
+  __variable = () => this.pack.DataVariable('shulkerBox')
 
   /**
    * A shulker box, for using loot insert into containers using dynamic items, detecting the stack limit of items without hardcoding, or running loot tables with a seed.
@@ -202,7 +202,7 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
     /**
      * @param executingAt Callback that is executed in the dimension at the shulker box.
      */
-    execute: this.inDimension.positioned('0 0 1'),
+    execute: () => this.inDimension().positioned('0 0 1'),
 
     /**
      * @param output Optional. Set where the result of the loot table is stored in data storage.
@@ -210,12 +210,12 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
      * @param scale Optional. Set the scale for the seed if using a score.
      * @returns List of all items that resulted from running the loot table.
      */
-    loot: (lootTable: LootTableClass | DataPointClass, output: DataPointClass<'storage'> = this.__variable, seed?: Score | DataPointClass, scale?: number): DataPointClass<'storage'> => {
+    loot: (lootTable: LootTableClass | DataPointClass, output: DataPointClass<'storage'> = this.__variable(), seed?: Score | DataPointClass, scale?: number): DataPointClass<'storage'> => {
       const data = this.pack.Data('block', '0 0 1')
 
       if (!(lootTable instanceof DataPointClass) && !seed) {
-        this.inDimension.run(() => data.merge('{Items:[]}'))
-        this.inDimension.run.loot.insert('0 0 1').loot(lootTable)
+        this.inDimension().run(() => data.merge('{Items:[]}'))
+        this.inDimension().run.loot.insert('0 0 1').loot(lootTable)
         return output.set(data.select('Items'))
       }
       const nbt = this.pack.ResolveNBT({
@@ -226,9 +226,9 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
         } : {}),
       }, output)
 
-      this.inDimension.run(() => data.select('{}').set(nbt))
+      this.inDimension().run(() => data.select('{}').set(nbt))
 
-      this.inDimension.run.loot.insert('0 0 1').mine('0 0 1', 'air{drop_contents:1b}')
+      this.inDimension().run.loot.insert('0 0 1').mine('0 0 1', 'air{drop_contents:1b}')
 
       return output.set(data.select('Items'))
     },
@@ -242,7 +242,7 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
    * @param executingAt Callback that is executed in the dimension at the structure block.
    */
   structureBlock(executingAt: (data: DataClass<'block'>) => void) {
-    this.inDimension.positioned('0 0 3').run(() => executingAt(this.pack.Data('block', '~ ~ ~')))
+    this.inDimension().positioned('0 0 3').run(() => executingAt(this.pack.Data('block', '~ ~ ~')))
   }
 
   /**
@@ -252,7 +252,7 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
    * @param size Optional. Size of the structure in x, y, z. Defaults to 1 block.
    */
   saveStructure(structure: StructureClass, offset?: [NBTInt, NBTInt, NBTInt], size?: [NBTInt, NBTInt, NBTInt]) {
-    this.inDimension.positioned(this.userspace).run(() => {
+    this.inDimension().positioned(this.userspace).run(() => {
       const nbt: NBTObject = {
         mode: 'SAVE',
         showboundingbox: false,

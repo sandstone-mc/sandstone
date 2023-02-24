@@ -2,7 +2,10 @@
 import fs from 'fs-extra'
 import path from 'path'
 
+import { handleDependencies } from '../pack/dependencies'
+
 import type { SandstonePack } from 'sandstone'
+import type { AwaitNode } from './nodes'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
 import type { ResourceClass, ResourceNode } from './resources/resource'
 import type { GenericCoreVisitor } from './visitors'
@@ -16,9 +19,12 @@ export class SandstoneCore {
 
   mcfunctionStack: MCFunctionNode[]
 
+  awaitNodes: Set<AwaitNode>
+
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new Set()
     this.mcfunctionStack = []
+    this.awaitNodes = new Set()
   }
 
   /**
@@ -150,5 +156,7 @@ export class SandstoneCore {
         await cliOptions.fileHandler(`${resourcePath}.${fileExtension}`, value)
       }
     }
+
+    handleDependencies(this.pack.dependencies)
   }
 }

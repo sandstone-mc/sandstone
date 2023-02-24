@@ -2,6 +2,7 @@
 /* eslint-disable no-plusplus */
 import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
+import { SleepClass } from 'sandstone/variables/Sleep'
 import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk'
 import { UUIDClass } from 'sandstone/variables/UUID'
 import { SandstoneCommands } from '#commands'
@@ -17,16 +18,19 @@ import {
 } from '#variables'
 import { Score } from '#variables/Score'
 
+import { PackType } from './packType'
 import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LogVisitor,
   SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
 } from './visitors'
+import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions'
 
 import type {
   UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
 } from 'sandstone/variables/UUID'
+import type { handlerReadFile, handlerWriteFile } from './packType'
 import type {
   // eslint-disable-next-line max-len
   AdvancementJSON, Coordinates, DamageTypeJSON, DIMENSIONS, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
@@ -50,57 +54,7 @@ let tempStorage: DataClass<'storage'>
 
 let startTickedLoops: MCFunctionClass
 
-/** relativePath can have variables $worldName$ & $packName$ */
-export type handlerReadFile = (relativePath: string) => Promise<void>
-
-/** relativePath & contents can have variables $worldName$ & $packName$ */
-export type handlerWriteFile = (relativePath: string, contents: string) => Promise<void>
-export abstract class PackType {
-  readonly type: string
-
-  readonly clientPath: string
-
-  readonly serverPath: string
-
-  readonly rootPath: string
-
-  readonly networkSides: 'client' | 'server' | 'both'
-
-  readonly resourceSubFolder?: string
-
-  readonly namespaced: boolean
-
-  readonly archiveOutput: boolean
-
-  /** `output` executes from `<workspace>/.sandstone/output/$packName$_<type>`*/
-  readonly handleOutput: undefined | ((type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => Promise<void>)
-
-  /**
-   * @param type eg. datapack or resource_pack
-   * @param clientPath from active client directory (eg. .minecraft), can use variables $worldName$ & $packName$; eg. 'saves/$worldName$/datapacks/$packName$' or 'saves/$worldName$/resources'
-   * @param serverPath from active server directory, can use variable $packName$; eg. 'world/datapacks/$packName$'
-   * @param rootPath from active client directory (eg. .minecraft), can use variable $packName$; eg. 'datapacks/$packName$' or 'resource_packs/$packName$'
-   * @param networkSides which sides of the network the pack needs to be exported to; if both the client & server are defined which side this pack needs to be exported to
-   * @param archiveOutput whether to archive the directory on output
-   * @param resourceSubFolder Optional. Defines sub folder for resources to go; eg. data or assets (use handleOutput if you want to bypass this)
-   */
-  // eslint-disable-next-line max-len
-  constructor(type: string, clientPath: string, serverPath: string, rootPath: string, networkSides: 'client' | 'server' | 'both', archiveOutput: boolean = false, resourceSubFolder?: string, namespaced: boolean = false) {
-    this.type = type
-
-    this.clientPath = clientPath
-    this.serverPath = serverPath
-    this.rootPath = rootPath
-
-    this.networkSides = networkSides
-    this.archiveOutput = archiveOutput
-
-    this.resourceSubFolder = resourceSubFolder
-    this.namespaced = namespaced
-  }
-}
-
-class DataPack extends PackType {
+export class DataPack extends PackType {
   resourceSubFolder = 'data'
 
   // TODO: typing. low priority
@@ -390,10 +344,18 @@ export class SandstonePack {
     return new DataPointClass(this, type, (target instanceof VectorClass ? coordinatesParser(target) : target) as DATA_TARGET[T], dataPath as DATA_PATH[])
   }
 
-  get rootStorage() {
-    const variableStorage = new DataPointClass(this, 'storage', '__sandstone:variable', [])
-    this.commands.data.merge.storage('__sandstone:variable', {})
-    return variableStorage
+  __rootStorage?: DataPointClass
+
+  rootStorage() {
+    if (!this.__rootStorage) {
+      this.__rootStorage = new DataPointClass(this, 'storage', '__sandstone:variable', [])
+
+      this.initMCFunction.push.data.merge.storage('__sandstone:variable', {})
+
+      return this.__rootStorage
+    }
+
+    return this.__rootStorage
   }
 
   DataVariable: (
@@ -423,7 +385,7 @@ export class SandstonePack {
     )
   ) = (...args: [initialValue?: NBTObject | DataPointClass<any>, name?: string] | [score: Score, storeType?: StoreType, scale?: number, name?: string]) => {
     // Get the objective
-      const data = this.rootStorage
+      const data = this.rootStorage()
 
       if (args[0] instanceof Score) {
         const [score, storeType, scale, name] = args
@@ -558,7 +520,7 @@ export class SandstonePack {
     return this.dimensionID('#target')
   }
 
-  get dimensionMarker() {
+  dimensionMarker() {
     // TODO: Set dimension target to current dimension some how
 
     return this.rootChunk.armorStand.execute.on('passengers').if.score(this.dimensionID('@s'), '=', this.dimensionTarget).on('origin')
@@ -647,6 +609,8 @@ export class SandstonePack {
       }
     }
   }
+
+  sleep = (delay: TimeArgument): PromiseLike<SleepClass> => (new SleepClass(this.core, delay)).getValue()
 
   __customResourceTypes: string[] = []
 
@@ -800,6 +764,9 @@ export class SandstonePack {
         new InlineFunctionCallVisitor(this),
         new UnifyChainedExecutesVisitor(this),
         new SimplifyExecuteFunctionVisitor(this),
+
+        // Special visitors
+        new AwaitBodyVisitor(this),
       ],
     })
 

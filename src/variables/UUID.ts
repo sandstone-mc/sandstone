@@ -443,7 +443,7 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
 
 // TODO: Add proper indexing utilities
 
-class UUIDStackClass<InUtilityChunk extends boolean> {
+export class UUIDStackClass<InUtilityChunk extends boolean> {
   constructor(private core: SandstoneCore, public base: UUIDClass<any, any> | UtilityChunkMember) {
   }
 

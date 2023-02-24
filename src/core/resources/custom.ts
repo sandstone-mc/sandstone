@@ -5,7 +5,7 @@ import { ContainerNode } from '../nodes'
 import { ResourceClass } from './resource'
 
 import type fs from 'fs-extra'
-import type { PackType } from 'sandstone/pack/pack'
+import type { PackType } from 'sandstone/pack/packType'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 
@@ -24,8 +24,8 @@ export type CustomResourceClassArguments = {
   /** The custom resource type. */
   type: string,
 
-  /** The Pack this resource is exported into. */
-  packType: PackType,
+  /** Optional. The Pack this resource is exported into. Defaults to the datapack. */
+  packType?: PackType,
 
   /** Optional. The folder in the pack where the resource gets stored. Defaults to the root of the pack without a namespace. */
   folder?: string[]
@@ -47,7 +47,7 @@ export abstract class CustomResourceClass extends ResourceClass<CustomResourceNo
 
     super(
       sandstoneCore,
-      { packType: args.packType, extension: args.extension || 'json', encoding: args.encoding },
+      { packType: args.packType || sandstoneCore.pack.dataPack, extension: args.extension || 'json', encoding: args.encoding },
       CustomResourceNode,
       // eslint-disable-next-line no-nested-ternary
       args.folder ? name.includes('/') ? name.split('/') : [name] : sandstoneCore.pack.resourceToPath(name, args.folder),

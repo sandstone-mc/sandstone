@@ -1,13 +1,14 @@
 /* eslint-disable camelcase */
+import type { PredicateJSON } from '../predicate'
 import type { DistanceCriterion, EffectCriterion } from './basic_criteria'
 import type { ItemCriterion } from './ItemCriterion'
 import type { LocationCriterion } from './LocationCriterion'
 import type { PlayerCriterion } from './PlayerCriterion'
 import type { CAT_VARIANTS, ENTITY_TYPES, MOB_EFFECTS } from '#arguments/generated'
-import type { TagClass } from '#core'
+import type { PredicateClass, TagClass } from '#core'
 import type { LiteralUnion } from '#utils'
 
-export type EntityCriterion = Partial<{
+export type EntityCriterion = (PredicateClass | PredicateJSON)[] | Partial<{
   /** The distance of the entity */
   distance: DistanceCriterion & LocationCriterion
 
@@ -40,9 +41,6 @@ export type EntityCriterion = Partial<{
 
   /** A NBT string the entity must match */
   nbt: string
-
-  /** Player properties to be checked. Fails when entity is not a player. */
-  player: PlayerCriterion
 
   /** The team the entity belongs to. */
   team: string

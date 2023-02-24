@@ -181,6 +181,8 @@ export type MCFunctionClassArguments = ({
 export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
+  public nested = 0
+
   protected tags: MCFunctionClassArguments['tags']
 
   protected lazy: boolean
@@ -192,6 +194,13 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     })
 
     this.callback = args.callback ?? (() => {})
+
+    if (this.nested !== 0) {
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < this.nested; i++) {
+        this.node.exitContext()
+      }
+    }
 
     this.lazy = !!args.lazy
     this.addToSandstoneCore = !!args.addToSandstoneCore

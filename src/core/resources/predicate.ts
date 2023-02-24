@@ -77,8 +77,23 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
     }
   }
 
-  /**
-   * @internal
-   */
+  /** @internal */
   _toMinecraftCondition = () => new this.pack.conditions.Predicate(this.core, this.name)
+
+  /** @internal */
+  toJSON() {
+    if (Array.isArray(this.predicateJSON)) {
+      return {
+        condition: 'minecraft:inverted',
+        term: {
+          condition: 'minecraft:alternative',
+          terms: this.predicateJSON.map((p) => ({
+            condition: 'minecraft:inverted',
+            term: p,
+          })),
+        },
+      } as PredicateJSON
+    }
+    return this.predicateJSON
+  }
 }

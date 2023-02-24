@@ -3,7 +3,7 @@ import { SandstonePack } from '#pack'
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
 import type {
   // eslint-disable-next-line max-len
-  AdvancementClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
+  AdvancementClassArguments, DamageTypeClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
 } from './core/index'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils'
 
@@ -91,6 +91,7 @@ export const {
   RawResource,
 
   // Variables
+  packTypes,
   Objective,
   _,
   Variable,
@@ -107,9 +108,8 @@ export const {
   dimensionMarker,
   UtilityChunk,
   makeCustomResource,
+  sleep,
 } = sandstonePack
-
-type PackTypes = LiteralUnion<'datapack'>
 
 export type DatapackConfig = {
   /**
@@ -142,9 +142,14 @@ export type DatapackConfig = {
       path?: string
     }[]
   }
+
+  /**
+   * The strategy to use when 2 resources of the same type (Advancement, MCFunctions...) have the same name.
+   */
+  onConflict?: OnConflict<ContentStrategy>
 }
 
-type PackConfigs<PackType extends PackTypes> = Record<PackType, PackType extends 'datapack' ? DatapackConfig : unknown>
+type PackConfigs<PackType extends LiteralUnion<'datapack'>> = Record<PackType, PackType extends 'datapack' ? DatapackConfig : unknown>
 
 export interface SandstoneConfig {
   /**
@@ -158,7 +163,7 @@ export interface SandstoneConfig {
    */
   name: string
 
-  packs: PackConfigs<PackTypes>
+  packs: PackConfigs<LiteralUnion<'datapack'>>
 
   /**
    * A unique identifier that is used to distinguish your variables from other Sandstone pack variables.
@@ -234,64 +239,69 @@ export interface SandstoneConfig {
       callback: (contents: string | Buffer | Promise<Buffer>) => Promise<Buffer>
     }[]
   }
+}
+
+export type ContentStrategyKind<Resource extends string, Conflict extends string> = { resource: Resource, conflict: Conflict }
+
+type ContentStrategy = (
+  /**
+   * The default conflict strategy to use for all resources.
+   *
+   * @default
+   * 'warn'
+   */
+  ContentStrategyKind<'default', BASIC_CONFLICT_STRATEGIES> |
 
   /**
-   * The strategy to use when 2 resources of the same type (Advancement, MCFunctions...) have the same name.
+   * The conflict strategy to use for Advancements.
+   * Will override the defined `default` strategy.
    */
-  onConflict?: {
-    /**
-     * The default conflict strategy to use for all resources.
-     *
-     * @default
-     * 'warn'
-     */
-    default?: BASIC_CONFLICT_STRATEGIES,
+  ContentStrategyKind<'advancements', NonNullable<AdvancementClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for damage types.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'damage_types', NonNullable<DamageTypeClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Loot Tables.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'loot_tables', NonNullable<LootTableClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for MCFunctions.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'functions', NonNullable<MCFunctionClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Predicates.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'predicates', NonNullable<PredicateClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for RecipeOptions.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'recipes', NonNullable<RecipeClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Tags.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'tags', NonNullable<TagClassArguments<any>['onConflict']>> |
+  /**
+   * The conflict strategy to use for Item modifiers.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'item_modifiers', NonNullable<ItemModifierClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Trim materials.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'trim_materials', NonNullable<TrimMaterialClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Trim patterns.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'trim_patterns', NonNullable<TrimPatternClassArguments['onConflict']>>
+)
 
-    /**
-     * The conflict strategy to use for Advancements.
-     * Will override the defined `default` strategy.
-     */
-    advancement?: AdvancementClassArguments['onConflict']
-
-    /**
-     * The conflict strategy to use for Loot Tables.
-     * Will override the defined `default` strategy.
-     */
-    lootTable?: LootTableClassArguments['onConflict']
-    /**
-     * The conflict strategy to use for MCFunctions.
-     * Will override the defined `default` strategy.
-     */
-    mcFunction?: MCFunctionClassArguments['onConflict']
-    /**
-     * The conflict strategy to use for Predicates.
-     * Will override the defined `default` strategy.
-     */
-    predicate?: PredicateClassArguments['onConflict']
-    /**
-     * The conflict strategy to use for RecipeOptions.
-     * Will override the defined `default` strategy.
-     */
-    recipe?: RecipeClassArguments['onConflict']
-    /**
-     * The conflict strategy to use for Tags.
-     * Will override the defined `default` strategy.
-     */
-    tag?: TagClassArguments<any>['onConflict']
-    /**
-     * The conflict strategy to use for Item modifiers.
-     * Will override the defined `default` strategy.
-     */
-    itemModifier?: ItemModifierClassArguments['onConflict']
-    /**
-     * The conflict strategy to use for Trim materials.
-     * Will override the defined `default` strategy.
-     */
-    trimMaterial?: TrimMaterialClassArguments['onConflict']
-    /**
-     * The conflict strategy to use for Trim patterns.
-     * Will override the defined `default` strategy.
-     */
-    trimPattern?: TrimPatternClassArguments['onConflict']
-  }
-}
+type OnConflict<Strategy extends ContentStrategy> = Record<Strategy['resource'], Strategy['conflict']>

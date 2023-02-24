@@ -8,10 +8,10 @@ import type { TimeArgument } from '#arguments'
 import type { Node } from '#core'
 import type { MCFunctionNode } from '#core/resources'
 
-type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass | MCFunctionClass | (() => (void | Promise<void>))
+type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass | (() => (void | Promise<void>))
 
 export class ScheduleCommandNode extends ContainerCommandNode<
-  ['clear', string | MCFunctionClass] | ['function', MCFunctionClass | MCFunctionClass | string | undefined, TimeArgument, ScheduleType | undefined]
+  ['clear', string | MCFunctionClass] | ['function', MCFunctionClass | string | undefined, TimeArgument, ScheduleType | undefined]
 > {
   command = 'schedule' as const
 
@@ -81,7 +81,7 @@ export class ScheduleCommand extends CommandArguments<typeof ScheduleCommandNode
 
     // A callback has been given
     if (typeof func === 'function') {
-      this.sandstoneCore.insideContext(node, func, false)
+      this.sandstoneCore.insideContext(node, func as () => void | Promise<void>, false)
       return this.finalCommand(['function', undefined, delay, type], node)
     }
 

@@ -9,12 +9,13 @@ import type {
   ItemCriterion,
   LocationCriterion,
   NumberProvider,
+  PlayerCriterion,
   PotionIdCriterion,
   SlotCriterion,
 } from './criteria'
 import type { PredicateJSON } from './predicate'
 import type { ITEMS, JSONTextComponent } from '#arguments'
-import type { AdvancementClass, MCFunctionClass } from '#core'
+import type { AdvancementClass, MCFunctionClass, PredicateClass } from '#core'
 import type { LiteralUnion } from '#utils'
 
 /** A representation of a Minecraft advancement. */
@@ -87,7 +88,7 @@ export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
    * If all of the lists each have any criteria met, the advancement is complete.
    * (basically AND grouping of OR groups)
    */
-  requirements?: (keyof this['criteria'])[] | (keyof this['criteria'])[][]
+  requirements?: (keyof this['criteria'])[][]
 
   /** An optional object representing the rewards provided when this advancement is obtained. */
   rewards?: {
@@ -230,7 +231,7 @@ type Trigger<NAME extends string, CONDITIONS extends Record<string, unknown> | u
      *    }
      *  ]
      */
-    player?: PredicateJSON
+    player?: PlayerCriterion | (PredicateClass | PredicateJSON)[]
   }
 }) : unknown)
 

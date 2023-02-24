@@ -110,7 +110,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
   predicate?: string | PredicateClass | (PredicateClass | string)[]
 
   /** Select all targets that have the specified NBT. */
-  nbt?: RootNBT | NotNBT
+  nbt?: RootNBT | NotNBT | (RootNBT | NotNBT)[]
 
   /**
    * Define a position on the X-axis in the world the selector starts at,
@@ -235,7 +235,11 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
         // Parse scores
         scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
 
-        nbt: (nbt: RootNBT) => result.push(['nbt', nbtStringifier(nbt)]),
+        // Parse potentially multiple nbt
+        nbt: (nbt: RootNBT | RootNBT[]) => {
+          const nbts = Array.isArray(nbt) ? nbt : [nbt]
+          result.push(...nbts.map((nbt_) => ['nbt', nbtStringifier(nbt_)] as const))
+        },
 
         // Parse advancements
         advancements: (advancements: AdvancementsArgument) => result.push(

@@ -1,4 +1,4 @@
-import type { MCFunctionNode } from './resources'
+import type { MCFunctionClass, MCFunctionNode } from './resources'
 import type { SandstoneCore } from './sandstoneCore'
 import type { SandstonePack } from '#pack'
 
@@ -48,6 +48,10 @@ export abstract class ContainerNode extends Node {
     this.body.unshift(...nodes)
     return nodes.length === 1 ? nodes[0] : nodes
   }
+}
+
+export abstract class AwaitNode extends ContainerNode {
+  mcfunction: MCFunctionClass = undefined as unknown as MCFunctionClass
 }
 
 /**
