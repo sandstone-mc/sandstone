@@ -50,10 +50,6 @@ export abstract class ContainerNode extends Node {
   }
 }
 
-export abstract class AwaitNode extends ContainerNode {
-  mcfunction: MCFunctionClass = undefined as unknown as MCFunctionClass
-}
-
 /**
  * A node that represents a generic command.
  */
@@ -123,4 +119,8 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> e
    * The returned node will replace
    */
   createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[], mcFunction?: MCFunctionNode } = (currentMCFunction) => ({ node: this })
+}
+
+export abstract class AwaitNode extends ContainerCommandNode {
+  mcfunction: MCFunctionClass = undefined as unknown as MCFunctionClass
 }

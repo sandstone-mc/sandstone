@@ -206,3 +206,11 @@ export function add<Value extends any | NonNullable<any>, Input extends InputObj
 
   return output
 }
+
+export type RemoveArrayRepeats<T extends readonly any[]> = {
+  [K in keyof T]: (
+      T[number] extends { [P in keyof T]: P extends K ? never : T[P] }[number]
+      ? never
+      : T[K]
+  )
+}

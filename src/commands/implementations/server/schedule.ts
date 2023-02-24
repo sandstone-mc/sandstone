@@ -79,6 +79,9 @@ export class ScheduleCommand extends CommandArguments<typeof ScheduleCommandNode
   function = (func: ScheduledFunction, delay: TimeArgument, type?: ScheduleType) => {
     const node = this.getNode()
 
+    if (func instanceof MCFunctionClass) {
+      return this.finalCommand(['function', func.name, delay, type], node)
+    }
     // A callback has been given
     if (typeof func === 'function') {
       this.sandstoneCore.insideContext(node, func as () => void | Promise<void>, false)

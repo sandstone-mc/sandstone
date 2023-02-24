@@ -176,12 +176,21 @@ export type MCFunctionClassArguments = ({
    * Whether the function should run each tick.
    */
   runEveryTick?: boolean
+
+  /**
+   * Optional. Whether to retain the execution context through async calls. Defaults to false.
+   *
+   * @warn **Waiting on Smithed Dimensions for root chunk to be functional.**
+   */
+  asyncContext?: boolean
 }) & ResourceClassArguments<'function'>
 
 export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
   public nested = 0
+
+  public asyncContext: NonNullable<MCFunctionClassArguments['asyncContext']>
 
   protected tags: MCFunctionClassArguments['tags']
 
@@ -201,6 +210,8 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
         this.node.exitContext()
       }
     }
+
+    this.asyncContext = args.asyncContext === undefined ? false : args.asyncContext
 
     this.lazy = !!args.lazy
     this.addToSandstoneCore = !!args.addToSandstoneCore

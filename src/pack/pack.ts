@@ -485,6 +485,7 @@ export class SandstonePack {
 
   UUID(source: UUIDSource = randomUUID(), holderState: 1 | Omit<number, 1> | Score | 'permanent' = 'permanent', options?: UUIDOptions) { return new UUIDClass(this.core, source, holderState as number, options) }
 
+  /** **Waiting on Smithed Dimensions to be functional.** */
   get rootChunk() {
     if (this.utilityChunks.get('0,0;smithed:void')) {
       return this.utilityChunks.get('0,0;smithed:void') as RootChunkClass
@@ -502,6 +503,7 @@ export class SandstonePack {
     ready?: TagClass<'functions'>
   } = {}
 
+  /** **Waiting on Smithed Dimensions to be functional.** */
   dimensionChunk<ID extends DimensionID, IDString extends `${ID[0]}:${ID[1]}` | ID[1], Chunk extends UtilityChunkClass<[-1875000, 200], ID>>(id: IDString, create: false | { name?: JSONTextComponent, uuid: string | UUIDinNumber }) {
     const _id = id.includes(':') ? id.split(':') as ID : [this.defaultNamespace, id] as [string, ID[1]]
     const index: UtilityChunksIndex<[-1875000, 200], ID> = `-1875000,200;${_id[0]}:${_id[1]}`
@@ -520,6 +522,7 @@ export class SandstonePack {
     return this.dimensionID('#target')
   }
 
+  /** **Waiting on Smithed Dimensions & MC-260322 to be functional.** */
   dimensionMarker() {
     // TODO: Set dimension target to current dimension some how
 
@@ -610,7 +613,7 @@ export class SandstonePack {
     }
   }
 
-  sleep = (delay: TimeArgument): PromiseLike<SleepClass> => (new SleepClass(this.core, delay)).getValue()
+  sleep = (delay: TimeArgument): PromiseLike<SleepClass> => (new SleepClass(this.core, delay)).promise()
 
   __customResourceTypes: string[] = []
 
