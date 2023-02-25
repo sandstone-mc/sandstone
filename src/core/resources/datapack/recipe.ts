@@ -1,8 +1,8 @@
-import { ContainerNode } from '../nodes'
-import { ResourceClass } from './resource'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
 
-import type { SandstoneCore } from '../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from './resource'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../resource'
 import type { MultiplePlayersArgument, RecipeJSON } from '#arguments'
 
 /**

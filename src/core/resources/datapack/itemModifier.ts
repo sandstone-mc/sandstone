@@ -1,10 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
+import { targetParser } from '#variables'
 
-import { ContainerNode } from '../nodes'
-import { ResourceClass } from './resource'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
 
-import type { SandstoneCore } from '../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from './resource'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ItemModifierJSON, MultipleEntitiesArgument,
 } from '#arguments'

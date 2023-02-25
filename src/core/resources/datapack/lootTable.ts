@@ -1,9 +1,9 @@
-import { ContainerNode } from '../nodes'
-import { ResourceClass } from './resource'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
 
 import type { LiteralUnion } from 'sandstone/utils'
-import type { SandstoneCore } from '../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from './resource'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../resource'
 import type {
   Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
 } from '#arguments'

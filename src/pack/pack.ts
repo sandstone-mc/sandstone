@@ -55,8 +55,6 @@ let tempStorage: DataClass<'storage'>
 let startTickedLoops: MCFunctionClass
 
 export class DataPack extends PackType {
-  resourceSubFolder = 'data'
-
   // TODO: typing. low priority
   readonly packMcmeta: any
 
@@ -85,6 +83,41 @@ export class DataPack extends PackType {
   }
 }
 
+export class ResourcePack extends PackType {
+  // TODO: typing. low priority
+  readonly packMcmeta: any
+
+  constructor(archiveOutput: boolean, options: { packFormat: number, description: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
+    super('datapack', 'saves/$worldName$/resources', 'resource_pack', 'resource_packs/$packName$', 'client', true, 'assets', true)
+
+    this.packMcmeta = {
+      pack: {
+        pack_format: options.packFormat,
+        description: options.description,
+      },
+    }
+
+    if (options.filter) {
+      this.packMcmeta.filter = { block: options.filter }
+    }
+  }
+
+  handleOutput = async (type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => {
+    if (type === 'output') {
+      await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta))
+    }
+    /*
+     * TODO: language
+     *
+     * language: Contains additional languages to add to the language menu
+     * Language code for a language, corresponding to a .json file with the same name in the folder assets/<namespace>/lang.
+     *  name: The full name of the language
+     *  region: The country or region name
+     *  bidirectional: If true, the language reads right to left.
+     */
+  }
+}
+
 export type DimensionID = ['minecraft', DIMENSIONS] | [string, string]
 
 export type ChunkTuple = [number, number]
@@ -102,6 +135,10 @@ export class SandstonePack {
 
   get dataPack() {
     return this.packTypes.get('datapack') as DataPack
+  }
+
+  get resourcePack() {
+    return this.packTypes.get('resourcepack') as ResourcePack
   }
 
   // Smithed Pack IDs

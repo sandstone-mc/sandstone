@@ -1,23 +1,23 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
+import { SelectorPickClass } from './abstractClasses'
 import { DataPointClass } from './Data'
 import {
-  NBT, NBTIntArray, NBTShort, SelectorPickClass,
-} from './index'
-import { parseNBT } from './nbt/parser'
+  NBT, NBTIntArray, NBTShort, parseNBT,
+} from './nbt'
 import { ResolveNBTPart } from './ResolveNBT'
 import { Score } from './Score'
 
-import type {
-  ENTITY_TYPES, JSONTextComponent, NBTObject, SingleEntityArgument,
-} from '../arguments/index'
-import type { ExecuteCommand } from '../commands/index'
-import type { MCFunctionClass, SandstoneCore } from '../core/index'
-import type { LiteralUnion } from '../utils'
-import type { ConditionTextComponentClass } from './index'
+import type { ConditionTextComponentClass } from './abstractClasses'
 import type { SelectorClass } from './Selector'
 import type { UtilityChunkMember } from './UtilityChunk'
+import type {
+  ENTITY_TYPES, JSONTextComponent, NBTObject, SingleEntityArgument,
+} from '#arguments'
+import type { ExecuteCommand } from '#commands'
+import type { MCFunctionClass, SandstoneCore } from '#core'
+import type { LiteralUnion } from '#utils'
 
 export type UUIDinNumber = [number, number, number, number]
 export type UUIDinScore = [Score, Score, Score, Score]

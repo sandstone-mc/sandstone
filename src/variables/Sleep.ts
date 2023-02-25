@@ -1,10 +1,10 @@
-import { AwaitNode } from 'sandstone/core/nodes'
+import { AwaitNode } from '#core/nodes'
 
-import { NBTIntArray } from './index'
+import { NBTIntArray } from './nbt'
 
-import type { TimeArgument } from 'sandstone/arguments/basics'
-import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
-import type { DataPointClass } from './index'
+import type { DataPointClass } from './Data'
+import type { TimeArgument } from '#arguments'
+import type { SandstoneCore } from '#core'
 
 const SLEEP_CHILD_NAME = '__sleep'
 

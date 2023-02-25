@@ -2,23 +2,20 @@
 /* eslint-disable max-len */
 import lodash from 'lodash'
 import prismarine, { NBT } from 'prismarine-nbt'
-import { add } from 'sandstone/utils'
-import { ConditionClass, relative } from 'sandstone/variables/index'
-import { ResolveNBTPart } from 'sandstone/variables/ResolveNBT'
+import { add } from '#utils'
+import { ConditionClass, relative, ResolveNBTPart } from '#variables'
 
-import { ContainerNode } from '../nodes'
-import { ResourceClass } from './resource'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
 
-import type { BlockState, StructureNBT } from 'sandstone/arguments/resources/structure'
-import type { LiteralUnion } from 'sandstone/utils'
+import type {
+  BLOCKS, BlockState, Coordinates, ENTITY_TYPES, NBTObject, RootNBT, StructureNBT,
+} from '#arguments'
+import type { ResourceClassArguments, ResourceNode, SandstoneCore } from '#core'
+import type { LiteralUnion } from '#utils'
 import type {
   DataPointClass, Score, StructureMirror, StructureRotation,
-} from 'sandstone/variables/index'
-import type { SandstoneCore } from '../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from './resource'
-import type {
-  BLOCKS, Coordinates, ENTITY_TYPES, NBTObject, RootNBT,
-} from '#arguments'
+} from '#variables'
 
 const same = lodash.isEqual
 

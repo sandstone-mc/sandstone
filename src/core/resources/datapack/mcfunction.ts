@@ -1,7 +1,9 @@
 import { makeCallable, makeClassCallable } from '#utils'
 
-import { ContainerNode } from '../nodes'
-import { CallableResourceClass } from './resource'
+import { ContainerNode } from '../../nodes'
+import {
+  CallableResourceClass,
+} from '../resource'
 import { TagClass } from './tag'
 
 import type { TimeArgument } from '#arguments/basics'

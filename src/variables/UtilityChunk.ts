@@ -1,22 +1,28 @@
 /* eslint-disable max-len */
 
 import { randomUUID } from '../utils'
+import { absolute } from './Coordinates'
+import { DataPointClass } from './Data'
+import { JSONTextComponentClass } from './JSONTextComponentClass'
 import {
-  absolute, coordinatesParser, DataPointClass, JSONTextComponentClass, NBTIntArray, NBTLong, NBTString, nbtStringifier, Score,
-} from './index'
+  NBTIntArray, NBTLong, NBTString, nbtStringifier,
+} from './nbt'
+import { coordinatesParser } from './parsers'
 import { ResolveNBTPart } from './ResolveNBT'
+import { Score } from './Score'
 import { UUIDClass } from './UUID'
 
 import type {
   _RawMCFunctionClass, LootTableClass, PredicateClass, ResourceClassArguments,
 } from 'sandstone/core/index'
-import type { StructureClass } from 'sandstone/core/resources/structure'
+import type { StructureClass } from 'sandstone/core/resources'
 import type {
   ENTITY_TYPES, JSONTextComponent, NBTObject, RootNBT,
 } from '../arguments/index'
 import type { ChunkTuple, DimensionID, SandstonePack } from '../pack/pack'
 import type { LiteralUnion } from '../utils'
-import type { DataClass, NBTInt } from './index'
+import type { DataClass } from './Data'
+import type { NBTInt } from './nbt'
 import type { UUIDinNumber } from './UUID'
 
 export class UtilityChunkClass<Chunk extends ChunkTuple, ID extends DimensionID> {

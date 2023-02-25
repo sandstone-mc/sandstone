@@ -1,4 +1,4 @@
-import type { MCFunctionClass, MCFunctionNode } from './resources'
+import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index'
 import type { SandstoneCore } from './sandstoneCore'
 import type { SandstonePack } from '#pack'
 

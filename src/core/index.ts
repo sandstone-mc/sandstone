@@ -1,3 +1,3 @@
 export * from './nodes'
-export * from './resources'
+export * from './resources/index'
 export * from './sandstoneCore'

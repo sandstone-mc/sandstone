@@ -1,9 +1,9 @@
-import { ContainerNode } from '../nodes'
-import { ResourceClass } from './resource'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
 
 import type { ConditionClass } from 'sandstone/variables/index'
-import type { SandstoneCore } from '../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from './resource'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import type { PredicateJSON } from '#arguments'
 
 /**

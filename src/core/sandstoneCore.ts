@@ -6,7 +6,7 @@ import { handleDependencies } from '../pack/dependencies'
 
 import type { SandstonePack } from 'sandstone'
 import type { AwaitNode } from './nodes'
-import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/mcfunction'
+import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
 import type { ResourceClass, ResourceNode } from './resources/resource'
 import type { GenericCoreVisitor } from './visitors'
 

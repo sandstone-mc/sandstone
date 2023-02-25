@@ -1,11 +1,11 @@
-import { ContainerNode } from '../nodes'
-import { ResourceClass } from './resource'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
 
-import type { ConditionClass } from 'sandstone/variables/index'
-import type { TagClass } from '../index'
-import type { SandstoneCore } from '../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from './resource'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../resource'
+import type { TagClass } from './tag'
 import type { TrimMaterialJSON } from '#arguments'
+import type { ConditionClass } from '#variables'
 
 let trimMaterials: undefined | TagClass<'items'>
 
