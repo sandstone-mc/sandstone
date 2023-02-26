@@ -36,13 +36,3 @@ export class LanguageClass extends ResourceClass<LanguageNode> implements ListRe
 
   unshift() {}
 }
-
-export namespace TranslationData {
-  export async function load(loader: ResourceLoader, id: string): Promise<TranslationData | null> {
-    const parsedId = parseNamespacedId(id)
-    const rPath = getResourcePath(parsedId, 'lang', 'json')
-    const data = await loader.readResourceFile(rPath)
-    if (data === null) return null
-    else return JSON.parse(data.toString('utf8'))
-  }
-}

@@ -23,7 +23,7 @@ export type TextureArguments = {
 
   sprite?: boolean | string
 
-  animate?: boolean | string | AnimationJSON
+  animate?: boolean | string | TextureAnimation
 
 } & ResourceClassArguments<'default'>
 
@@ -36,7 +36,7 @@ export class TextureClass extends ResourceClass<TextureNode> {
 
   animated: boolean
 
-  animation?: AnimationJSON
+  animation?: TextureAnimation
 
   buffer: TextureArguments['texture']
 

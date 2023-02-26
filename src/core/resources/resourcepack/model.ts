@@ -37,7 +37,7 @@ export const MAX_CUSTOM_MODEL_DATA = 16777216
 /**
  * @see https://minecraft.fandom.com/wiki/Model
  */
-export type ModelDataArguments = {
+export type ModelData = {
   parent?: string
   /**
    * Whether to shade the block using ambient occlusion
@@ -102,10 +102,28 @@ const OverridePredicates = ['angle', 'blocking', 'broken', 'cast', 'cooldown', '
  */
 type OverridePredicate = typeof OverridePredicates[number]
 
+export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
+  constructor(sandstoneCore: SandstoneCore, public resource: ModelClass) {
+    super(sandstoneCore)
+  }
+
+  getValue = () => JSON.stringify(this.resource.toJSON())
+}
+
+type MODEL_TYPES = 'block' | 'entity'
+
+export type ModelClassArguments = {
+  /**
+   * The model's JSON.
+   */
+  language?: ModelData
+
+} & ResourceClassArguments<'default'>
+
 /**
  * Helper class for modifying Minecraft model data
  */
-export class ModelClass {
+export class ModelClass extends ResourceClass<ModelNode> {
   parent: string | null = null
 
   ambientocclusion: boolean = true
@@ -116,18 +134,17 @@ export class ModelClass {
 
   display: { [type in DisplayPosition]?: DisplayTransformClass } = {}
 
-  overrides: ModelDataArguments['overrides'] = []
+  overrides: ModelData['overrides'] = []
 
-  /**
-   * Creates a new empty model
-   */
-  constructor() {}
+  constructor(core: SandstoneCore, public type: MODEL_TYPES, name: string, args: ModelClassArguments) {
+    super(core, { packType: core.pack.resourcePack }, ModelNode, core.pack.resourceToPath(name, ['models', type]), args)
+  }
 
   /**
    * Generates the Minecraft model JSON
    */
-  toJSON(): ModelDataArguments {
-    const obj: ModelDataArguments = {}
+  toJSON(): ModelData {
+    const obj: ModelData = {}
 
     if (this.parent) {
       obj.parent = this.parent
@@ -161,7 +178,7 @@ export class ModelClass {
   /**
    * Parses the Minecraft model JSON
    */
-  fromJSON(data: ModelDataArguments): ModelClass {
+  fromJSON(data: ModelData): ModelClass {
     const model = new ModelClass()
 
     if (data.parent) {
@@ -190,16 +207,16 @@ export class ModelClass {
     return model
   }
 
-  generatedItem(...layers: string[]): ModelDataArguments {
+  generatedItem(...layers: string[]): ModelData {
     if (typeof layers === 'string') layers = [layers]
-    const textures: ModelDataArguments['textures'] = {}
+    const textures: ModelData['textures'] = {}
     layers.forEach((texture, idx) => textures[`layer${idx}`] = texture)
     return {
       parent: 'minecraft:item/generated',
     }
   }
 
-  async load(loader: ResourceLoader, id: string): Promise<ModelDataArguments | null> {
+  async load(loader: ResourceLoader, id: string): Promise<ModelData | null> {
     const parsedId = parseNamespacedId(id)
     const rPath = getResourcePath(parsedId, 'models', 'json')
     const data = await loader.readResourceFile(rPath)
@@ -210,15 +227,15 @@ export class ModelClass {
   }
 }
 
-type ElementArguments = NonNullable<NonNullable<ModelDataArguments['elements']>[0]>
+type ElementArguments = NonNullable<NonNullable<ModelData['elements']>[0]>
 
 /**
  * Helper class for modifying model elements (cubes)
  */
 export class ElementClass {
-  faces: NonNullable<NonNullable<ModelDataArguments['elements']>[0]['faces']> = {}
+  faces: NonNullable<NonNullable<ModelData['elements']>[0]['faces']> = {}
 
-  rotation: NonNullable<ModelDataArguments['elements']>[0]['rotation'] | null = null
+  rotation: NonNullable<ModelData['elements']>[0]['rotation'] | null = null
 
   shade: boolean = true
 
@@ -315,7 +332,7 @@ export class ElementClass {
   }
 }
 
-type DisplayTransformArguments = NonNullable<ModelDataArguments['display']>
+type DisplayTransformArguments = NonNullable<ModelData['display']>
 
 /**
  * Helper class for modifying the model transformation when displayed

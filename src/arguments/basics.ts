@@ -56,3 +56,5 @@ export type MAP_ICONS = (
   'minecraft:red' | 'minecraft:black' |
   'red_x'
 )
+
+export type SOUND_TYPES = 'ambient' | 'block' | 'hostile' | 'master' | 'music' | 'neutral' | 'player' | 'record' | 'voice' | 'weather'
