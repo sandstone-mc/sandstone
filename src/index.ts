@@ -1,4 +1,4 @@
-import { SandstonePack } from '#pack'
+import { SandstonePack } from './pack'
 
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
 import type {

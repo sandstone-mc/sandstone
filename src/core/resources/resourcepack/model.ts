@@ -1,17 +1,11 @@
 /* eslint-disable max-len */
-import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
 import { VectorClass } from '#variables'
 
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-export const ModelResource = CustomResource('model', {
-  dataType: 'json',
-  extension: 'json',
-  save: saveResourcepackResource('assets', 'models'),
-})
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../resource'
 
 const assert = (condition: any, errorMessage: string) => {
   if (!condition) {
@@ -22,7 +16,7 @@ const assert = (condition: any, errorMessage: string) => {
 type ElementFace = {
   texture: `#${string}`
   uv?: [number, number, number, number]
-  cullface?: BlockFaceName
+  cullface?: 'north' | 'east' | 'south' | 'west' | 'up' | 'down'
   rotation?: 0 | 90 | 180 | 270
   tintindex?: number
 }
@@ -55,7 +49,7 @@ export type ModelData = {
     to: [number, number, number]
     rotation?: {
       origin: [number, number, number]
-      axis: BlockAxisName
+      axis: 'x' | 'y' | 'z'
       angle: -45 | -22.5 | 0 | 22.5 | 45
       rescale?: boolean
     }
@@ -114,9 +108,9 @@ type MODEL_TYPES = 'block' | 'entity'
 
 export type ModelClassArguments = {
   /**
-   * The model's JSON.
+   * The model's path or its JSON.
    */
-  language?: ModelData
+  model?: string | ModelData
 
 } & ResourceClassArguments<'default'>
 
@@ -124,6 +118,8 @@ export type ModelClassArguments = {
  * Helper class for modifying Minecraft model data
  */
 export class ModelClass extends ResourceClass<ModelNode> {
+  existingPath?: string
+
   parent: string | null = null
 
   ambientocclusion: boolean = true
@@ -134,10 +130,20 @@ export class ModelClass extends ResourceClass<ModelNode> {
 
   display: { [type in DisplayPosition]?: DisplayTransformClass } = {}
 
+  // TODO: Helper methods
   overrides: ModelData['overrides'] = []
 
   constructor(core: SandstoneCore, public type: MODEL_TYPES, name: string, args: ModelClassArguments) {
     super(core, { packType: core.pack.resourcePack }, ModelNode, core.pack.resourceToPath(name, ['models', type]), args)
+
+    const data = args.model
+    if (data) {
+      if (typeof data === 'string') {
+        this.existingPath = data
+      } else {
+        this.fromJSON(data)
+      }
+    }
   }
 
   /**
@@ -175,55 +181,47 @@ export class ModelClass extends ResourceClass<ModelNode> {
     return obj
   }
 
-  /**
-   * Parses the Minecraft model JSON
-   */
-  fromJSON(data: ModelData): ModelClass {
-    const model = new ModelClass()
-
-    if (data.parent) {
-      model.parent = data.parent
-    }
-    if (data.textures) {
-      model.textures = data.textures
-    }
-    if (data.display) {
-      Object.values(DisplayPositions)
-        .filter((t) => t in data.display!)
-        .forEach((t) => {
-          model.display[t] = (new DisplayTransformClass()).fromJSON(data.display![t]!)
-        })
-    }
-    if (typeof data.ambientocclusion === 'boolean') {
-      model.ambientocclusion = data.ambientocclusion
-    }
-    if (data.elements) {
-      model.elements = data.elements.map((element) => (new ElementClass(element.to, element.from)).fromJSON())
-    }
-    if (data.overrides) {
-      model.overrides = data.overrides
-    }
-
-    return model
-  }
-
   generatedItem(...layers: string[]): ModelData {
-    if (typeof layers === 'string') layers = [layers]
     const textures: ModelData['textures'] = {}
-    layers.forEach((texture, idx) => textures[`layer${idx}`] = texture)
+    // eslint-disable-next-line no-return-assign
+    layers.forEach((texture, idx) => (textures[`layer${idx}`] = texture))
     return {
       parent: 'minecraft:item/generated',
     }
   }
 
-  async load(loader: ResourceLoader, id: string): Promise<ModelData | null> {
-    const parsedId = parseNamespacedId(id)
-    const rPath = getResourcePath(parsedId, 'models', 'json')
-    const data = await loader.readResourceFile(rPath)
+  fromJSON(data: ModelData) {
+    if (data.parent) {
+      this.parent = data.parent
+    }
+    if (data.textures) {
+      this.textures = data.textures
+    }
+    if (data.display) {
+      Object.values(DisplayPositions)
+        .filter((t) => t in data.display!)
+        .forEach((t) => {
+          this.display[t] = (new DisplayTransformClass(data.display![t]!))
+        })
+    }
+    if (typeof data.ambientocclusion === 'boolean') {
+      this.ambientocclusion = data.ambientocclusion
+    }
+    if (data.elements) {
+      this.elements = data.elements.map((element) => (new ElementClass(element)))
+    }
+    if (data.overrides) {
+      this.overrides = data.overrides
+    }
+  }
 
-    if (data === null) return null
-
-    return JSON.parse(data.toString('utf8'))
+  async load() {
+    if (this.path[0] === 'minecraft') {
+      this.fromJSON(JSON.parse(await this.core.getVanillaResource(this.name)))
+    } else {
+      this.fromJSON(JSON.parse(await this.core.getExistingResource(this.existingPath!)))
+    }
+    return this
   }
 }
 
@@ -233,16 +231,28 @@ type ElementArguments = NonNullable<NonNullable<ModelData['elements']>[0]>
  * Helper class for modifying model elements (cubes)
  */
 export class ElementClass {
-  faces: NonNullable<NonNullable<ModelData['elements']>[0]['faces']> = {}
+  to: Vector3
 
-  rotation: NonNullable<ModelData['elements']>[0]['rotation'] | null = null
+  from: Vector3
+
+  faces: NonNullable<ElementArguments['faces']> = {}
+
+  rotation: ElementArguments['rotation']
 
   shade: boolean = true
 
   /**
    * Creates a new cube without any faces
    */
-  constructor(public from: Vector3, public to: Vector3) { }
+  constructor(data: ElementArguments) {
+    this.to = new Vector(...data.to)
+
+    this.from = new Vector(...data.from)
+
+    if (data.faces) this.faces = data.faces
+    if (data.rotation) this.rotation = data.rotation
+    if (data.shade) this.shade = data.shade
+  }
 
   hasFace(face: BlockFace): boolean {
     if (this.hasFaces) {
@@ -287,9 +297,11 @@ export class ElementClass {
    * Returns a shallow copy of this element
    */
   clone(): ElementClass {
-    const clone = new ElementClass(this.from, this.to)
+    const clone = new ElementClass(this.toJSON())
+
     clone.rotation = this.rotation
     clone.shade = this.shade
+
     return clone
   }
 
@@ -314,25 +326,9 @@ export class ElementClass {
 
     return obj
   }
-
-  /**
-   * Parses the Minecraft model JSON
-   */
-  fromJSON(data: ElementArguments): ElementClass {
-    const element = new ElementClass(
-      new Vector(data.from),
-      new Vector(data.to),
-    )
-
-    if (data.faces) element.faces = data.faces
-    if (data.rotation) element.rotation = data.rotation
-    if (data.shade) element.shade = data.shade
-
-    return element
-  }
 }
 
-type DisplayTransformArguments = NonNullable<ModelData['display']>
+type DisplayTransformArguments = NonNullable<NonNullable<ModelData['display']>['head']>
 
 /**
  * Helper class for modifying the model transformation when displayed
@@ -344,37 +340,33 @@ export class DisplayTransformClass {
 
   scale: Vector3 = Vector3Props.ONE
 
-  constructor() { }
+  constructor(data: DisplayTransformArguments) {
+    if (data.rotation) this.rotation = new Vector(data.rotation)
+    if (data.translation) this.translation = new Vector(data.translation)
+    if (data.scale) this.scale = new Vector(data.scale)
+  }
 
   /**
    * Returns a shallow copy of this transform
    */
   clone(): DisplayTransformClass {
-    const clone = new DisplayTransformClass()
+    const clone = new DisplayTransformClass(this.toJSON())
+
     clone.rotation = this.rotation
     clone.translation = this.translation
     clone.scale = this.scale
+
     return clone
   }
 
-  toJSON(): DisplayTransformArguments['head'] {
-    const obj: DisplayTransformArguments['head'] = {}
+  toJSON(): NonNullable<DisplayTransformArguments> {
+    const obj: DisplayTransformArguments = {}
 
     if (this.rotation.every((n) => n === 0)) obj.rotation = this.rotation.components
     if (this.translation.every((n) => n === 0)) obj.translation = this.translation.components
     if (this.scale.every((n) => n === 1)) obj.scale = this.scale.components
 
     return obj
-  }
-
-  fromJSON(data: NonNullable<DisplayTransformArguments['head']>): DisplayTransformClass {
-    const transform = new DisplayTransformClass()
-
-    if (data.rotation) transform.rotation = new Vector(data.rotation)
-    if (data.translation) transform.translation = new Vector(data.translation)
-    if (data.scale) transform.scale = new Vector(data.scale)
-
-    return transform
   }
 }
 

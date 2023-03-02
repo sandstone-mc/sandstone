@@ -3,19 +3,23 @@ import { ResourceClass } from '../resource'
 
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
+import type { TEXTURE_TYPES, TextureMeta } from '#arguments'
+import type { LiteralUnion } from '#utils'
+
+type TextureType = LiteralUnion<TEXTURE_TYPES>
 
 /**
  * A node representing a Minecraft sound.
  */
-export class TextureNode extends ContainerNode implements ResourceNode<TextureClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: TextureClass) {
+export class TextureNode<Type extends TextureType> extends ContainerNode implements ResourceNode<TextureClass<Type>> {
+  constructor(sandstoneCore: SandstoneCore, public resource: TextureClass<Type>) {
     super(sandstoneCore)
   }
 
   getValue = () => this.resource.buffer
 }
 
-export type TextureArguments = {
+export type TextureArguments<Type extends TextureType> = {
   /**
    * The texture's buffer.
    */
@@ -23,24 +27,22 @@ export type TextureArguments = {
 
   sprite?: boolean | string
 
-  animate?: boolean | string | TextureAnimation
+  meta?: TextureMeta<Type>
 
 } & ResourceClassArguments<'default'>
 
-export class TextureClass extends ResourceClass<TextureNode> {
-  type: TEXTURE_TYPES
+export class TextureClass<Type extends TextureType> extends ResourceClass<TextureNode<Type>> {
+  type: Type
 
   isSprite: boolean
 
   spriteTarget?: string
 
-  animated: boolean
+  meta?: TextureMeta<Type>
 
-  animation?: TextureAnimation
+  buffer: TextureArguments<Type>['texture']
 
-  buffer: TextureArguments['texture']
-
-  constructor(core: SandstoneCore, type: TEXTURE_TYPES, name: string, args: TextureArguments) {
+  constructor(core: SandstoneCore, type: Type, name: string, args: TextureArguments<Type>) {
     super(core, { packType: core.pack.resourcePack, extension: 'png', encoding: false }, TextureNode, core.pack.resourceToPath(name, ['textures', type]), args)
 
     this.type = type
@@ -49,22 +51,14 @@ export class TextureClass extends ResourceClass<TextureNode> {
 
     this.isSprite = args.sprite === undefined ? false : args.sprite !== false
 
-    this.animated = args.animate === undefined ? false : args.animate !== false
+    this.meta = args.meta
 
     if (typeof args.sprite === 'string') {
       this.spriteTarget = args.sprite
     }
-
-    if (this.animated) {
-      if (typeof this.animated === 'string') {
-        this.videoToAnimation(this.animated)
-      } else if (typeof this.animated === 'boolean') {
-        this.animation = {}
-      } else {
-        this.animation = args.animate
-      }
-    }
   }
 
-  videoToAnimation(path: string) {}
+  videoToAnimation(path: string) {
+    console.log('')
+  }
 }

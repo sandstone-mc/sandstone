@@ -4,94 +4,97 @@ import type { LiteralUnion } from '#utils'
 import type { ComponentClass } from '#variables/abstractClasses'
 import type { VectorClass } from '#variables/Coordinates'
 
+export type JSONContentTypes = 'plain' | 'translate' | 'score' | 'selector' | 'keybind' | 'nbt'
+
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
-type ContentTag = ({
-  /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
-  text: string | number | boolean
-} | {
-  /** A translation identifier, to be displayed as the corresponding text in the player's selected language. */
-  translate: string
+export type ContentTag<Type extends JSONContentTypes> = (
+  Type extends 'plain' ? {
+    /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
+    text: string | number | boolean
+  } : Type extends 'translate' ? {
+    /** A translation identifier, to be displayed as the corresponding text in the player's selected language. */
+    translate: string
 
-  /** Optional. Depreciated. A list of raw JSON text component arguments to be inserted into slots in the translation text.  */
-  with?: TextComponentObject[]
+    /** Optional. Depreciated. A list of raw JSON text component arguments to be inserted into slots in the translation text.  */
+    with?: ContentTag<JSONContentTypes>[]
 
-  /** Optional. A raw JSON text component that will be used in place of a translation if it is missing */
-  fallback?: TextComponentObject
-} | {
-  /**
-   * Displays a score holder's current score in an objective.
-   *
-   * Displays nothing if the given score holder or the given objective do not exist,
-   * or if the score holder is not tracked in the objective.
-   */
-  score: {
+    /** Optional. A raw JSON text component that will be used in place of a translation if it is missing */
+    fallback?: ContentTag<JSONContentTypes>
+  } : Type extends 'score' ? {
     /**
-     * The name of the score holder whose score should be displayed.
-     * This can be a selector like @p or an explicit name.
+     * Displays a score holder's current score in an objective.
+     *
+     * Displays nothing if the given score holder or the given objective do not exist,
+     * or if the score holder is not tracked in the objective.
      */
-    name: MultipleEntitiesArgument
+    score: {
+      /**
+       * The name of the score holder whose score should be displayed.
+       * This can be a selector like @p or an explicit name.
+       */
+      name: MultipleEntitiesArgument
 
-    /** The internal name of the objective to display the player's score in. */
-    objective: string
+      /** The internal name of the objective to display the player's score in. */
+      objective: string
 
-    /** Optional. If present, this value is used regardless of what the score would have been. */
-    value?: number
-  }
-} | {
+      /** Optional. If present, this value is used regardless of what the score would have been. */
+      value?: number
+    }
+  } : Type extends 'selector' ? {
+    /**
+     * An entity selector. Displayed as the name of the player or entity found by the selector.
+     *
+     * If more than one player or entity is found by the selector,
+     * their names are displayed in either the form "Name1 and Name2" or the form "Name1, Name2, Name3, and Name4".
+     */
+    selector: string
+
+    /** Optional, defaults to {"color": "gray", "text": ", "}. Used as the separator between different names, if the component selects multiple entities. */
+    separator?: JSONTextPrimitives | ContentTag<JSONContentTypes>
+  } : Type extends 'keybind' ? {
+    /**
+     * A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
+     * For example, {"keybind": "key.inventory"} will display "e" if the player is using the default control scheme.
+     */
+    keybind: string
+  } : Type extends 'nbt' ? {
+    /**
+     * The NBT path used for looking up NBT values from an entity, a block entity or an NBT storage.
+     *
+     * NBT strings display their contents.
+     * Other NBT values are displayed as SNBT with no spacing or linebreaks.
+     *
+     * How values are displayed depends on the value of `interpret`.
+     */
+    nbt: string
+
+    /**
+     * Optional.
+     * If true, the game will try to parse the text of each NBT value as a raw JSON text component.
+     *
+     * This usually only works if the value is an NBT string containing JSON, since JSON and SNBT are not compatible.
+     *
+     * If parsing fails, displays nothing.
+     *
+     * @default false
+     */
+    interpret?: boolean
+  } & NBTTarget : never
+) & ChildrenTags & FormattingTags & InteractivityTags
+
+type NBTTarget = {
   /**
-   * An entity selector. Displayed as the name of the player or entity found by the selector.
-   *
-   * If more than one player or entity is found by the selector,
-   * their names are displayed in either the form "Name1 and Name2" or the form "Name1, Name2, Name3, and Name4".
+   * The coordinates of the block entity from which the NBT value is obtained.
+   * The coordinates can be absolute or relative.
    */
-  selector: string
-
-  /** Optional, defaults to {"color": "gray", "text": ", "}. Used as the separator between different names, if the component selects multiple entities. */
-  separator?: JSONTextComponent
+  block: string | VectorClass<[string, string, string]>
 } | {
-  /**
-   * A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
-   * For example, {"keybind": "key.inventory"} will display "e" if the player is using the default control scheme.
-   */
-  keybind: string
-} | (
-    {
-      /**
-       * The NBT path used for looking up NBT values from an entity, a block entity or an NBT storage.
-       *
-       * NBT strings display their contents.
-       * Other NBT values are displayed as SNBT with no spacing or linebreaks.
-       *
-       * How values are displayed depends on the value of `interpret`.
-       */
-      nbt: string
-
-      /**
-       * Optional.
-       * If true, the game will try to parse the text of each NBT value as a raw JSON text component.
-       *
-       * This usually only works if the value is an NBT string containing JSON, since JSON and SNBT are not compatible.
-       *
-       * If parsing fails, displays nothing.
-       *
-       * @default false
-       */
-      interpret?: boolean
-    } & ({
-      /**
-       * The coordinates of the block entity from which the NBT value is obtained.
-       * The coordinates can be absolute or relative.
-       */
-      block: string | VectorClass<[string, string, string]>
-    } | {
-      /** The target selector for the entity or entities from which the NBT value is obtained. */
-      entity: MultipleEntitiesArgument
-    } | {
-      /** The namespaced ID of the command storage from which the NBT value is obtained */
-      storage: string
-    })
-  )
-)
+  /** The target selector for the entity or entities from which the NBT value is obtained. */
+  entity: MultipleEntitiesArgument
+} | {
+  /** The namespaced ID of the command storage from which the NBT value is obtained */
+  storage: string
+}
 
 type ChildrenTags = {
   /**
@@ -100,7 +103,7 @@ type ChildrenTags = {
    * Child text components inherit all formatting and interactivity from the parent component,
    * unless they explicitly override them.
    */
-  extra?: JSONTextComponent[]
+  extra?: (JSONTextPrimitives | ContentTag<JSONContentTypes>)[]
 }
 
 type FormattingTags = {
@@ -196,7 +199,7 @@ type InteractivityTags = {
      * `show_item`: The item that should be displayed.
      * `show_entity`: The entity that should be displayed.
      */
-    contents: JSONTextComponent
+    contents: JSONTextPrimitives | ContentTag<JSONContentTypes>
   } | {
     action: 'show_item'
 
@@ -228,21 +231,14 @@ type InteractivityTags = {
   })
 }
 
-/**
- * A JSON text component object.
- */
-export type TextComponentObject = (
-  ContentTag & ChildrenTags & FormattingTags & InteractivityTags
+export type JSONTextPrimitives = (
+  string |
+  boolean |
+  number |
+  ComponentClass
 )
 
 /*
  * A JSON text component, that can be displayed in several locations: in-game chat, books, signs, titles...
  */
-export type JSONTextComponent = (
-  string |
-  boolean |
-  number |
-  TextComponentObject |
-  ComponentClass |
-  JSONTextComponent[]
-)
+export type JSONTextComponent = JSONTextPrimitives | ContentTag<JSONContentTypes> | JSONTextComponent[]

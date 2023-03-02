@@ -33,7 +33,27 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     this.fontJSON = { providers: args.providers }
   }
 
-  push() {}
+  push(...providers: FontProvider[] | FontClass[]) {
+    if (providers[0] instanceof FontClass) {
+      for (const provider of providers) {
+        /** @ts-ignore */
+        this.fontJSON.providers.push(...provider.fontJSON.providers)
+      }
+    } else {
+      /** @ts-ignore */
+      this.fontJSON.providers.push(...providers)
+    }
+  }
 
-  unshift() {}
+  unshift(...providers: FontProvider[] | FontClass[]) {
+    if (providers[0] instanceof FontClass) {
+      for (const provider of providers) {
+        /** @ts-ignore */
+        this.fontJSON.providers.unshift(...provider.fontJSON.providers)
+      }
+    } else {
+      /** @ts-ignore */
+      this.fontJSON.providers.unshift(...providers)
+    }
+  }
 }

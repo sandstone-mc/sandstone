@@ -89,8 +89,24 @@ async function generate() {
 
   fs.writeFileSync('src/arguments/generated/criterion.ts', `${criterion.join('\n').slice(0, -2)}\n)\n`, () => {})
 
+  const translations = await (await fetch('https://raw.githubusercontent.com/misode/mcmeta/assets/assets/minecraft/lang/en_us.json')).json()
+
+  const keys = Object.keys(translations)
+
+  fs.writeFileSync(
+    `src/arguments/generated/translation.ts`,
+
+    `/* eslint-disable */\n` +
+    `/* Auto-generated */\n` +
+    `export type TRANSLATION_KEYS = (\n` +
+    `  '${keys.join('\' |\n  \'')}'\n` +
+    `)`,
+    () => {}
+  )
+
   const exports = registries
   exports.splice(4, 0, 'criterion')
+  exports.splice(19, 0, 'translation')
   fs.writeFileSync(`src/arguments/generated/index.ts`, exports.map(registry => `export * from './${Array.isArray(registry) ? registry[0] : registry}'\n`).join(''), () => {})
 }
 

@@ -3,6 +3,7 @@ import { ResourceClass } from '../resource'
 
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
+import type { TRANSLATION_KEYS } from '#arguments'
 
 /**
  * A node representing a Minecraft language file.
@@ -24,15 +25,39 @@ export type LanguageArguments = {
 } & ResourceClassArguments<'list'>
 
 export class LanguageClass extends ResourceClass<LanguageNode> implements ListResource {
-  languageJSON: LanguageArguments['language']
+  languageJSON: NonNullable<LanguageArguments['language']>
 
   constructor(core: SandstoneCore, name: string, args: LanguageArguments) {
     super(core, { packType: core.pack.resourcePack }, LanguageNode, core.pack.resourceToPath(name, ['lang']), args)
 
-    this.languageJSON = args.language
+    this.languageJSON = args.language || {}
   }
 
-  push() {}
+  push(...translations: NonNullable<LanguageArguments['language']>[] | LanguageClass[]) {
+    if (translations[0] instanceof LanguageClass) {
+      for (const translation of translations) {
+        /** @ts-ignore */
+        this.languageJSON = { ...this.languageJSON, ...translation.languageJSON }
+      }
+    } else {
+      for (const translation of translations) {
+        /** @ts-ignore */
+        this.languageJSON = { ...this.languageJSON, ...translation }
+      }
+    }
+  }
 
-  unshift() {}
+  unshift(...translations: NonNullable<LanguageArguments['language']>[] | LanguageClass[]) {
+    if (translations[0] instanceof LanguageClass) {
+      for (const translation of translations) {
+        /** @ts-ignore */
+        this.languageJSON = { ...translation.languageJSON, ...this.languageJSON }
+      }
+    } else {
+      for (const translation of translations) {
+        /** @ts-ignore */
+        this.languageJSON = { ...translation, ...this.languageJSON }
+      }
+    }
+  }
 }

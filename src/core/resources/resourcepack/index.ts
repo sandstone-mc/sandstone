@@ -1,3 +1,4 @@
+export * from './atlas'
 export * from './blockstate'
 export * from './font'
 export * from './language'

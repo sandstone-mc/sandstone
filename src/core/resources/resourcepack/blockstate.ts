@@ -3,6 +3,7 @@ import { ResourceClass } from '../resource'
 
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
+import type { BlockStateDefinition, BlockStateType } from '#arguments'
 
 /**
  * A node representing a Minecraft block state.
@@ -15,53 +16,81 @@ export class BlockStateNode<Type extends BlockStateType> extends ContainerNode i
   getValue = () => JSON.stringify(this.resource.blockStateJSON)
 }
 
-type BlockStateType = 'variant' | 'multipart'
-
-type Variant = {
-  model: string
-  x?: 0 | 90 | 180 | 270
-  y?: 0 | 90 | 180 | 270
-  /**
-   * If set to `true`, the textures are not rotated with the block.
-   */
-  uvlock?: boolean
-}
-
-type WeightedVariant = Variant & {
-  weight?: number
-}
-
-type StringRecord = { [state: string]: string }
-
-type MultipartCase = {
-  /**
-   * One condition or an array where at least one condition
-   * must apply
-   */
-  when: StringRecord | StringRecord[]
-  apply: Variant | WeightedVariant[]
-}
-
 export type BlockStateArguments<Type extends BlockStateType> = {
   /**
    * The block state's JSON.
    */
-  blockState?: Type extends 'variant' ? { variants: { [name: string]: Variant | WeightedVariant[] } } : { multipart: MultipartCase[] }
+  blockState?: BlockStateDefinition<Type>
 
 } & ResourceClassArguments<'list'>
 
 export class BlockStateClass<Type extends BlockStateType> extends ResourceClass<BlockStateNode<Type>> implements ListResource {
-  blockStateJSON: BlockStateArguments<Type>['blockState']
+  blockStateJSON: NonNullable<BlockStateArguments<Type>['blockState']>
 
-  constructor(core: SandstoneCore, name: string, type: Type, args: BlockStateArguments<Type>) {
+  constructor(core: SandstoneCore, name: string, public type: Type, args: BlockStateArguments<Type>) {
     super(core, { packType: core.pack.resourcePack }, BlockStateNode, core.pack.resourceToPath(name, ['blockstates']), args)
 
-    this.blockStateJSON = args.blockState
+    /** @ts-ignore */
+    this.blockStateJSON = args.blockState || (type === 'variant' ? { variants: {} } : { multipart: [] })
   }
 
-  push() {}
+  push(...states: BlockStateClass<Type>[] | BlockStateDefinition<Type>[]) {
+    if (this.type === 'variant') {
+      if (states[0] instanceof BlockStateClass) {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.variants = { ...this.blockStateJSON.variants, ...state.blockStateJSON.variants }
+        }
+      } else {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.variants = { ...this.blockStateJSON.variants, ...state.variants }
+        }
+      }
+    }
+    if (this.type === 'multipart') {
+      if (states[0] instanceof BlockStateClass) {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.multipart.push(...state.blockStateJSON.multipart)
+        }
+      } else {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.multipart.push(...state.multipart)
+        }
+      }
+    }
+  }
 
-  unshift() {}
+  unshift(...states: BlockStateClass<Type>[] | BlockStateDefinition<Type>[]) {
+    if (this.type === 'variant') {
+      if (states[0] instanceof BlockStateClass) {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.variants = { ...state.blockStateJSON.variants, ...this.blockStateJSON.variants }
+        }
+      } else {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.variants = { ...state.variants, ...this.blockStateJSON.variants }
+        }
+      }
+    }
+    if (this.type === 'multipart') {
+      if (states[0] instanceof BlockStateClass) {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.multipart.unshift(...state.blockStateJSON.multipart)
+        }
+      } else {
+        for (const state of states) {
+          /** @ts-ignore */
+          this.blockStateJSON.multipart.unshift(...state.multipart)
+        }
+      }
+    }
+  }
 
   /*
    * blockWithState<B extends keyof Blockstates>(
@@ -75,4 +104,8 @@ export class BlockStateClass<Type extends BlockStateType> extends ResourceClass<
    * return id
    * }
    */
+
+  async load() {
+
+  }
 }
