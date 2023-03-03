@@ -4,9 +4,7 @@ export type Variant = {
   model: string
   x?: 0 | 90 | 180 | 270
   y?: 0 | 90 | 180 | 270
-  /**
-   * If set to `true`, the textures are not rotated with the block.
-   */
+  /** If set to `true`, the textures are not rotated with the block. */
   uvlock?: boolean
 }
 
@@ -17,10 +15,7 @@ export type WeightedVariant = Variant & {
 export type StringRecord = { [state: string]: string }
 
 export type MultipartCase = {
-  /**
-   * One condition or an array where at least one condition
-   * must apply
-   */
+  /** One condition or an array where at least one condition must apply. */
   when: StringRecord | StringRecord[]
   apply: Variant | WeightedVariant[]
 }

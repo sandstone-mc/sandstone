@@ -3,15 +3,14 @@ import fs from 'fs-extra'
 import path from 'path'
 
 import { handleDependencies } from '../pack/dependencies'
+import { MCMetaCache } from './mcmeta'
 
 import type { SandstonePack } from 'sandstone'
+import type { MCMetaBranches } from './mcmeta'
 import type { AwaitNode } from './nodes'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
 import type { ResourceClass, ResourceNode } from './resources/resource'
 import type { GenericCoreVisitor } from './visitors'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fetch = import('node-fetch')
 
 export class SandstoneCore {
   /** All Resources */
@@ -20,6 +19,8 @@ export class SandstoneCore {
   mcfunctionStack: MCFunctionNode[]
 
   awaitNodes: Set<AwaitNode>
+
+  mcmetaCache = new MCMetaCache()
 
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new Set()
@@ -76,7 +77,7 @@ export class SandstoneCore {
 
   async getExistingResource(resource: ResourceClass): Promise<Buffer | string>
 
-  async getExistingResource(pathOrResource: string | ResourceClass, encoding: false | fs.EncodingOption = 'utf8'): Promise<Buffer | string> {
+  async getExistingResource(pathOrResource: string | ResourceClass, encoding: false | fs.EncodingOption = 'utf-8'): Promise<Buffer | string> {
     if (typeof pathOrResource === 'string') {
       if (encoding === false) {
         return fs.readFile(pathOrResource)
@@ -85,15 +86,9 @@ export class SandstoneCore {
     }
     const _path = pathOrResource.path
     if (_path[0] === 'minecraft') {
-      const type = pathOrResource.packType.resourceSubFolder as string
-      // TODO: Add cache to CLI
-      // eslint-disable-next-line max-len
-      const resource = (await (await fetch).default(`https://raw.githubusercontent.com/misode/mcmeta/${type}/${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`))
+      const type = pathOrResource.packType.resourceSubFolder as MCMetaBranches
 
-      if (encoding === 'utf8') {
-        return resource.text()
-      }
-      return resource.buffer()
+      return this.mcmetaCache.get(type, `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`, (encoding === 'utf-8') as true)
     }
     // eslint-disable-next-line max-len
     const fullPath = path.join(process.env.WORKING_DIR as string, `resources/${path.join(pathOrResource.packType.type, ..._path)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`)
@@ -102,6 +97,9 @@ export class SandstoneCore {
       return fs.readFile(fullPath)
     }
     return fs.readFile(fullPath, pathOrResource.fileEncoding)
+  }
+
+  async getVanillaResource() {
   }
 
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {

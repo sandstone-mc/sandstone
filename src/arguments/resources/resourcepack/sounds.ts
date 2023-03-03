@@ -26,7 +26,7 @@ export type SoundsDefinitions = {
       /** Optional. Default is 1.0. */
       pitch?: number
 
-      /** An integer. Chance that this sound is selected to play. Defaults to 1.*/
+      /** An integer. Chance that this sound is selected to play. Defaults to 1. */
       weight: number
 
       /**

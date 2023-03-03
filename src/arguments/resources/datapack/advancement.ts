@@ -435,8 +435,5 @@ export type AdvancementTriggers = (
     item: ItemCriterion
     /** The villager the item was purchased from. May be a list of loot table conditions that must pass in order for the trigger to activate. */
     villager: EntityCriterion
-  }> | Trigger<'minecraft:villager_trade', {
-    /** The location of the player. */
-    location: LocationCriterion
   }>
 )

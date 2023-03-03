@@ -35,7 +35,7 @@ type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown
    * - `set_damage`: Sets the item's damage value (durability) for tools.
    * - `set_enchantments`: Add `enchantments` to the item.
    * - `set_loot_table`: Sets the loot table for a container (chest etc.).
-   * - `set_lore`: Adds lore to the item
+   * - `set_lore`: Adds lore to the item.
    * - `set_name`: Adds display name of the item.
    * - `set_nbt`: Adds NBT data to the item.
    * - `set_stew_effect`: Sets the status effects for `suspicious stew`.
@@ -120,7 +120,7 @@ export type ItemModifierFunction = {
         source: string
         /** The nbt path to copy to, starting from the item's tag tag. */
         target: string
-        /** Can be `replace` to replace any existing contents of the target, `append` to append to a list, or `merge` to merge into a compound  tag. */
+        /** Can be `replace` to replace any existing contents of the target, `append` to append to a list, or `merge` to merge into a compound tag. */
         op: 'replace' | 'append' | 'merge'
       }[]
     }>
@@ -132,7 +132,7 @@ export type ItemModifierFunction = {
     }>
     | ItemModifierKind<'enchant_randomly', {
       /** List of enchantment IDs to choose from. If omitted, all enchantments applicable to the item are possible. */
-      enchantments: LiteralUnion<ENCHANTMENTS>[]
+      enchantments?: LiteralUnion<ENCHANTMENTS>[]
     }>
     | ItemModifierKind<'enchant_with_levels', {
       /** Determines whether treasure enchantments are allowed on this item. */
@@ -268,7 +268,6 @@ export type ItemModifierFunction = {
       add?: boolean
     }>
     | ItemModifierKind<'set_enchantments', {
-      // TODO: add docs
       enchantments: { [K in ENCHANTMENTS]?: NumberProvider }
       add?: boolean
     }>

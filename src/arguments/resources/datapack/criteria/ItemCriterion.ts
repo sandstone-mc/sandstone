@@ -11,10 +11,10 @@ export type ItemCriterion = Partial<{
   /** The durability of the item. */
   durability: NumberProvider
 
-  /** List of enchantments.  */
+  /** List of enchantments. */
   enchantments: EnchantmentCriterion[]
 
-  /** List of stored enchantments.  */
+  /** List of stored enchantments. */
   stored_enchantments: EnchantmentCriterion[]
 
   /** An array of item IDs. */
