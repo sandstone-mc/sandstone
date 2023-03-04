@@ -214,3 +214,10 @@ export type RemoveArrayRepeats<T extends readonly any[]> = {
       : T[K]
   )
 }
+
+export function iterateEntries(node: Map<string, any>, fn: (val: any) => any) {
+  const newNode: Record<string, any> = {}
+  // eslint-disable-next-line no-return-assign
+  node.forEach(([key, val]) => (newNode[key] = fn(val)))
+  return newNode
+}

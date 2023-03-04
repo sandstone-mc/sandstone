@@ -17,9 +17,11 @@
     "url": "https://github.com/sandstone-mc/sandstone/issues"
   },
   "dependencies": {
+    "@types/adm-zip": "^0.5.0",
     "@types/fs-extra": "^11.0.1",
     "@types/lodash": "^4.14.191",
     "@typescript/analyze-trace": "^0.4.0",
+    "adm-zip": "^0.5.10",
     "chalk": "^4",
     "fs-extra": "^11.1.0",
     "lodash": "^4.17.21",

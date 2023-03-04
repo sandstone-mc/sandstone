@@ -18,6 +18,7 @@ import {
 } from '#variables'
 import { Score } from '#variables/Score'
 
+import { DataPackDependencies, ResourcePackDependencies } from './dependencies'
 import { PackType } from './packType'
 import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
@@ -169,6 +170,9 @@ export class SandstonePack {
 
     this.packTypes = new Map()
     this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack))
+    this.packTypes.set('datapack-dependencies', new DataPackDependencies())
+    this.packTypes.set('resourcepack', new ResourcePack(false, this.packOptions.datapack))
+    this.packTypes.set('resourcepack-dependencies', new ResourcePackDependencies())
 
     this.commands = new SandstoneCommands(this)
 
