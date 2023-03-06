@@ -43,7 +43,7 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
   buffer: TextureArguments<Type>['texture']
 
   constructor(core: SandstoneCore, type: Type, name: string, args: TextureArguments<Type>) {
-    super(core, { packType: core.pack.resourcePack, extension: 'png', encoding: false }, TextureNode, core.pack.resourceToPath(name, ['textures', type]), args)
+    super(core, { packType: core.pack.resourcePack(), extension: 'png', encoding: false }, TextureNode, core.pack.resourceToPath(name, ['textures', type]), args)
 
     this.type = type
 
@@ -56,9 +56,11 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
     if (typeof args.sprite === 'string') {
       this.spriteTarget = args.sprite
     }
+
+    this.handleConflicts()
   }
 
   videoToAnimation(path: string) {
-    console.log('')
+    console.log('Unimplemented')
   }
 }

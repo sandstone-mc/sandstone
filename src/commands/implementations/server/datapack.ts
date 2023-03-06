@@ -40,14 +40,14 @@ export class DataPackCommand extends CommandArguments {
   /**
    * Disable the specified pack.
    *
-   * @param name Specifies the name of the data pack.
+   * @param name Specifies the name of the datapack.
    */
   disable = (name: string) => this.finalCommand([name])
 
   /**
    * Enable the specified pack.
    *
-   * @param name Specifies the name of the data pack.
+   * @param name Specifies the name of the datapack.
    *
    * @example
    *
@@ -61,9 +61,9 @@ export class DataPackCommand extends CommandArguments {
   enable = (name: string) => this.subCommand(['enable', name], DataPackEnableCommand, false)
 
   /**
-   * List all data packs, or list only the available/enabled ones.
+   * List all datapacks, or list only the available/enabled ones.
    *
-   * Hovering over the data packs in the chat output shows their description defined in their pack.mcmeta.
+   * Hovering over the datapacks in the chat output shows their description defined in their pack.mcmeta.
    *
    * @param typ `"available"` to only show available datapacks, `"enabled"` to only show enabled ones.
    */

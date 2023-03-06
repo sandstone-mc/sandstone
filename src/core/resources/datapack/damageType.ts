@@ -41,7 +41,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
   public damageTypeJSON: NonNullable<DamageTypeClassArguments['damageType']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DamageTypeClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack, extension: 'json' }, DamageTypeNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, DamageTypeNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
 
     this.damageTypeJSON = args.damageType as DamageTypeJSON
 

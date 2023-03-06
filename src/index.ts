@@ -3,7 +3,7 @@ import { SandstonePack } from './pack'
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
 import type {
   // eslint-disable-next-line max-len
-  AdvancementClassArguments, DamageTypeClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
+  AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MCFunctionClassArguments, ModelClassArguments, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
 } from './core/index'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils'
 
@@ -78,6 +78,8 @@ export const {
 
 export const {
   // Resources
+  RawResource,
+
   MCFunction,
   Advancement,
   DamageType,
@@ -88,7 +90,15 @@ export const {
   Tag,
   TrimMaterial,
   TrimPattern,
-  RawResource,
+
+  Atlas,
+  BlockState,
+  Font,
+  Language,
+  Model,
+  SoundEvent,
+  PlainText, // TODO: text type is any when in a workspace, w h y
+  Texture,
 
   // Variables
   packTypes,
@@ -111,6 +121,14 @@ export const {
   sleep,
 } = sandstonePack
 
+export const {
+  getVanillaResource,
+  getExistingResource,
+  mcmetaCache,
+  depend,
+
+} = sandstonePack.core
+
 export type DatapackConfig = {
   /**
    * The description of the datapack.
@@ -120,7 +138,7 @@ export type DatapackConfig = {
   description: JSONTextComponent
 
   /**
-   * The format version of the data pack.
+   * The format version of the datapack.
    * Can change depending on the versions of Minecraft.
    *
    * @see [https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta](https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta)
@@ -131,7 +149,7 @@ export type DatapackConfig = {
   features?: string[],
 
   /**
-   * Section for filtering out files from data packs applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
+   * Section for filtering out files from datapacks applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
    */
   filter?: {
     /** List of patterns */
@@ -142,14 +160,40 @@ export type DatapackConfig = {
       path?: string
     }[]
   }
-
-  /**
-   * The strategy to use when 2 resources of the same type (Advancement, MCFunctions...) have the same name.
-   */
-  onConflict?: OnConflict<ContentStrategy>
 }
 
-type PackConfigs<PackType extends LiteralUnion<'datapack'>> = Record<PackType, PackType extends 'datapack' ? DatapackConfig : unknown>
+export type ResourcePackConfig = {
+  /**
+   * The description of the resource pack.
+   * Can be a single string or a JSON Text Component
+   * (like in /tellraw or /title).
+   */
+  description: JSONTextComponent
+
+  /**
+   * The format version of the resource pack.
+   * Can change depending on the versions of Minecraft.
+   *
+   * @see [https://minecraft.fandom.com/wiki/Resource_pack#Contents](https://minecraft.fandom.com/wiki/Resource_pack#Contents)
+   */
+  packFormat: number
+
+  /**
+   * Section for filtering out files from resource packs applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
+   */
+  filter?: {
+    /** List of patterns */
+    block: {
+      /** A regular expression for the namespace of files to be filtered out. If unspecified, it applies to every namespace. */
+      namespace?: string
+      /** A regular expression for the paths of files to be filtered out. If unspecified, it applies to every file. */
+      path?: string
+    }[]
+  }
+}
+
+// eslint-disable-next-line max-len
+type PackConfigs<PackType extends LiteralUnion<'datapack' | 'resourcepack'>> = Record<PackType, PackType extends 'datapack' ? DatapackConfig : PackType extends 'resourcepack' ? ResourcePackConfig : unknown>
 
 export interface SandstoneConfig {
   /**
@@ -164,6 +208,11 @@ export interface SandstoneConfig {
   name: string
 
   packs: PackConfigs<LiteralUnion<'datapack'>>
+
+  /**
+   * The strategy to use when 2 resources of the same type (Advancement, MCFunctions...) have the same name.
+   */
+  onConflict?: Partial<OnConflict<ContentStrategy>> // TODO: Types are still screwy with this, fix.
 
   /**
    * A unique identifier that is used to distinguish your variables from other Sandstone pack variables.
@@ -301,7 +350,48 @@ type ContentStrategy = (
    * The conflict strategy to use for Trim patterns.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'trim_patterns', NonNullable<TrimPatternClassArguments['onConflict']>>
+  ContentStrategyKind<'trim_patterns', NonNullable<TrimPatternClassArguments['onConflict']>> |
+
+  /**
+   * The conflict strategy to use for Atlases.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'atlass', NonNullable<AtlasClassArguments['onConflict']>> | // atlass is not a typo. feel free to PR :trolley:
+  /**
+   * The conflict strategy to use for Block states.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'block_states', NonNullable<BlockStateArguments<any>['onConflict']>> |
+  /**
+   * The conflict strategy to use for Fonts.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'fonts', NonNullable<FontArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Languages.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'languages', NonNullable<LanguageArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Models.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'models', NonNullable<ModelClassArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Sound Events.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'sound_events', NonNullable<SoundEventArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Plain Text files.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'texts', NonNullable<PlainTextArguments['onConflict']>> |
+  /**
+   * The conflict strategy to use for Textures.
+   * Will override the defined `default` strategy.
+   */
+  ContentStrategyKind<'texture', NonNullable<TextureArguments<any>['onConflict']>>
 )
 
 type OnConflict<Strategy extends ContentStrategy> = Record<Strategy['resource'], Strategy['conflict']>

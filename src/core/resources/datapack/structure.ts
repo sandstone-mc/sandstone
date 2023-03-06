@@ -66,10 +66,10 @@ export class StructureClass extends ResourceClass<StructureNode> {
   structureNBT?: StructureNBT
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: StructureClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack, extension: 'nbt', encoding: false }, StructureNode, sandstoneCore.pack.resourceToPath(name, ['structures']), args)
+    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'nbt', encoding: false }, StructureNode, sandstoneCore.pack.resourceToPath(name, ['structures']), args)
 
     if (args.structure === undefined) {
-      this.structureBuffer = sandstoneCore.getExistingResource(this) as Promise<Buffer>
+      this.structureBuffer = sandstoneCore.getExistingResource(this, false)
     } else if (typeof args.structure === 'string') {
       this.structureBuffer = sandstoneCore.getExistingResource(args.structure, false)
     } else if (args.structure instanceof StructureClass) {

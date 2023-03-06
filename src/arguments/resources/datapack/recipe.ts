@@ -71,7 +71,7 @@ type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | un
    * - `crafting_shape`: Represents a shaped crafting recipe in a crafting table.
    * - `crafting_shapeless`: Represents a shapeless crafting recipe in a crafting table.
    * - `crafting_special_*`: Represents a crafting recipe in a crafting table that is handled with builtin logic instead of being data-driven.
-   *    When the "vanilla" data pack is disabled, they can be used to reenable desired builtin crafting recipes.
+   *    When the "vanilla" datapack is disabled, they can be used to reenable desired builtin crafting recipes.
    * - `smelting`: Represents a recipe in a furnace.
    * - `smithing`: Represents a recipe in a smithing table.
    * - `smoking`: Represents a recipe in a smoker.

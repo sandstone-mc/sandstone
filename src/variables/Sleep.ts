@@ -60,7 +60,7 @@ export class SleepClass extends AwaitNode {
       let current: DataPointClass<'storage'> = undefined as unknown as DataPointClass<'storage'>
 
       core.pack.initMCFunction.push(() => {
-        core.pack.rootChunk.createMember('armor_stand', { UUID: new NBTIntArray(stack.known) })
+        core.pack.rootChunk().createMember('armor_stand', { UUID: new NBTIntArray(stack.known) })
 
         current = core.pack.DataVariable({ Duration, Tags: [`${core.pack.defaultNamespace}.__asyncTimer`] })
       })

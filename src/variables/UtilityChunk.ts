@@ -86,7 +86,7 @@ export class DimensionChunkClass<ID extends DimensionID> extends UtilityChunkCla
   }
 
   /** Partial execute command executing as (not at) the per-dimension marker */
-  execute = () => this.pack.commands.execute.as(this.pack.rootChunk.armorStand).on('passengers').if.score(this.pack.dimensionID('@s'), '=', this.pack.dimensionTarget)
+  execute = () => this.pack.commands.execute.as(this.pack.rootChunk().armorStand).on('passengers').if.score(this.pack.dimensionID('@s'), '=', this.pack.dimensionTarget)
 
   __predicate?: PredicateClass
 
@@ -173,8 +173,8 @@ export class RootChunkClass extends UtilityChunkClass<[0, 0], ['smithed', 'void'
   constructor(pack: SandstonePack) {
     super(pack, ['smithed', 'void'], [0, 0], pack.UUID('000000fe-0000-0000-0000-000000000000'))
 
-    // TODO
-    pack.dependencies.set('smithed.forceload', true)
+    console.log('Function of Utility Chunks is delayed until the Smithed Forceload library is released.')
+    // pack.core.depend('forceload')
   }
 
   /**

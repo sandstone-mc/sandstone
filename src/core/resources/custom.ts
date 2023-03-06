@@ -47,7 +47,7 @@ export abstract class CustomResourceClass extends ResourceClass<CustomResourceNo
 
     super(
       sandstoneCore,
-      { packType: args.packType || sandstoneCore.pack.dataPack, extension: args.extension || 'json', encoding: args.encoding },
+      { packType: args.packType || sandstoneCore.pack.dataPack(), extension: args.extension || 'json', encoding: args.encoding },
       CustomResourceNode,
       // eslint-disable-next-line no-nested-ternary
       args.folder ? name.includes('/') ? name.split('/') : [name] : sandstoneCore.pack.resourceToPath(name, args.folder),

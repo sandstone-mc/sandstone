@@ -11,11 +11,11 @@ const fetch = import('node-fetch')
 export type MCMetaBranches = 'assets' | 'atlas' | 'data' | 'registries' | 'summary'
 
 export class MCMetaCache {
-  readonly baseURL = 'https://raw.githubusercontent.com/misode/mcmeta/'
+  readonly base = '/misode/mcmeta/'
 
   readonly path = path.join(process.env.WORKING_DIR as string, 'resources', 'cache', 'mcmeta')
 
-  readonly manifest = path.join(this.path, '..', 'mcmeta.json')
+  readonly manifest = path.join(this.path, '..', '..', 'mcmeta.json')
 
   readonly lockFile = path.join(this.path, '..', 'lock-mcmeta.json')
 
@@ -32,7 +32,7 @@ export class MCMetaCache {
   async load() {
     this.loaded = true
 
-    if (await fs.pathExists(this.manifest)) {
+    if (!(await fs.pathExists(this.manifest))) {
       return
     }
 
@@ -42,7 +42,7 @@ export class MCMetaCache {
 
     this.version = manifest.version
 
-    const getZip = async (branch: string) => new AdmZip(await (await (await fetch).default(`https://github.com/misode/mcmeta/archive/refs/heads/${branch}.zip`)).buffer())
+    const getZip = async (branch: string) => new AdmZip(await (await (await fetch).default(`https://github.com${this.base}archive/refs/heads/${branch}.zip`)).buffer())
 
     if (!(await fs.pathExists(this.lockFile))) {
       if (manifest.files.length > 10) {
@@ -172,10 +172,18 @@ export class MCMetaCache {
   }
 
   async save() {
-    await fs.writeFile(this.manifest, JSON.stringify({
-      branches: this.branches,
-      files: iterateEntries(this.files, (val) => val.text),
-    }))
+    if (this.files.size !== 0) {
+      await fs.writeFile(this.manifest, JSON.stringify({
+        branches: this.branches,
+        files: iterateEntries(this.files, (val) => val.text),
+      }))
+
+      await fs.writeFile(this.lockFile, JSON.stringify({
+        files: this.files,
+        version: this.version,
+        versionDate: this.versionDate,
+      }))
+    }
   }
 
   async get(branch: MCMetaBranches, relativePath: string): Promise<string>
@@ -200,7 +208,7 @@ export class MCMetaCache {
       return existing
     }
 
-    const req = await (await fetch).default(`${this.baseURL}/${branch}/${relativePath}`)
+    const req = await (await fetch).default(`https://raw.githubusercontent.com${this.base}${branch}/${relativePath}`)
 
     const file = await (text ? req.text() : req.buffer())
 
@@ -210,7 +218,7 @@ export class MCMetaCache {
   }
 
   async getVersion(lockFile?: any) {
-    const fetchVersion = async () => JSON.parse(await (await (await fetch).default('https://api.github.com/repos/misode/mcmeta/commits?sha=summary')).text()).sha as string
+    const fetchVersion = async () => JSON.parse(await (await (await fetch).default(`https://api.github.com/repos${this.base}commits?sha=summary`)).text()).sha as string
 
     const currentDate = Date()
 

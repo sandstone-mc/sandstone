@@ -7,7 +7,7 @@ import type { LiteralUnion } from '../utils'
 import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses'
 import type { NotNBT } from './nbt/NBTs'
 import type {
-  ENTITY_TYPES, GAMEMODES, Range, RootNBT, TextComponentObject,
+  ENTITY_TYPES, GAMEMODES, JSONTextComponent, Range, RootNBT,
 } from '#arguments'
 import type { PredicateClass } from '#core'
 import type { SandstonePack } from '#pack'
@@ -309,7 +309,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
   /**
    * @internal
    */
-  _toChatComponent(): TextComponentObject {
+  _toChatComponent(): JSONTextComponent {
     return {
       selector: this.toString(),
     }

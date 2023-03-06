@@ -2,8 +2,10 @@
 import fs from 'fs-extra'
 import path from 'path'
 
-import { handleDependencies } from '../pack/dependencies'
+import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies'
 import { MCMetaCache } from './mcmeta'
+import { DependencyClass } from './resources/dependency'
+import { SmithedDependencyCache } from './smithed'
 
 import type { SandstonePack } from 'sandstone'
 import type { MCMetaBranches } from './mcmeta'
@@ -21,6 +23,10 @@ export class SandstoneCore {
   awaitNodes: Set<AwaitNode>
 
   mcmetaCache = new MCMetaCache()
+
+  smithed = new SmithedDependencyCache()
+
+  dependencies: Promise<void>[] = []
 
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new Set()
@@ -75,7 +81,9 @@ export class SandstoneCore {
 
   async getExistingResource(relativePath: string, encoding: fs.EncodingOption): Promise<Buffer | string>
 
-  async getExistingResource(resource: ResourceClass): Promise<Buffer | string>
+  async getExistingResource(resource: ResourceClass, encoding?: 'utf-8'): Promise<string>
+
+  async getExistingResource(resource: ResourceClass, encoding: false | fs.EncodingOption): Promise<Buffer>
 
   async getExistingResource(pathOrResource: string | ResourceClass, encoding: false | fs.EncodingOption = 'utf-8'): Promise<Buffer | string> {
     if (typeof pathOrResource === 'string') {
@@ -99,7 +107,41 @@ export class SandstoneCore {
     return fs.readFile(fullPath, pathOrResource.fileEncoding)
   }
 
-  async getVanillaResource() {
+  async getVanillaResource(relativePath: string): Promise<string>
+
+  async getVanillaResource(relativePath: string, text: true, type: 'client' | 'server'): Promise<string>
+
+  async getVanillaResource(relativePath: string, text: false, type: 'client' | 'server'): Promise<Buffer>
+
+  async getVanillaResource(relativePath: string, text = true, type: 'client' | 'server' = 'server'): Promise<string | Buffer> {
+    return this.mcmetaCache.get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
+  }
+
+  /**
+   * Add a dependency for a Smithed Library
+   */
+  depend(dependency: string, version = 'latest') {
+    if (!this.smithed.has(dependency)) {
+      this.dependencies.push((async () => {
+        const _depend = await this.smithed.get(dependency, version)
+
+        if (!this.pack.packTypes.has('datapack-dependencies')) {
+          this.pack.packTypes.set('datapack-dependencies', new DataPackDependencies())
+        }
+
+        // eslint-disable-next-line no-new
+        new DependencyClass(this, _depend, 'server')
+
+        if (_depend.resourcepack) {
+          if (!this.pack.packTypes.has('resourcepack-dependencies')) {
+            this.pack.packTypes.set('resourcepack-dependencies', new ResourcePackDependencies())
+          }
+
+          // eslint-disable-next-line no-new
+          new DependencyClass(this, _depend, 'client')
+        }
+      })())
+    }
   }
 
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
@@ -129,6 +171,12 @@ export class SandstoneCore {
   }
 
   save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>, dry: boolean, verbose: boolean }, opts: { visitors: GenericCoreVisitor[] }) => {
+    await Promise.allSettled(this.dependencies)
+
+    await this.mcmetaCache.save()
+
+    await this.smithed.save()
+
     const resources = this.generateResources(opts)
 
     for await (const node of resources) {
@@ -154,7 +202,5 @@ export class SandstoneCore {
         await cliOptions.fileHandler(`${resourcePath}.${fileExtension}`, value)
       }
     }
-
-    handleDependencies(this.pack.dependencies)
   }
 }

@@ -31,9 +31,8 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
   texts: NonNullable<PlainTextArguments['text']> = ''
 
   constructor(core: SandstoneCore, name: string, args: PlainTextArguments) {
-    super(core, { packType: core.pack.resourcePack, extension: 'txt' }, PlainTextNode, core.pack.resourceToPath(name, ['texts']), args)
+    super(core, { packType: core.pack.resourcePack(), extension: 'txt' }, PlainTextNode, core.pack.resourceToPath(name, ['texts']), args)
 
-    // TODO
     this.texts = ''
     if (args.text) {
       if (Array.isArray(args.text)) {
@@ -42,6 +41,8 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
         this.push(args.text)
       }
     }
+
+    this.handleConflicts()
   }
 
   componentToPlainText(__text: JSONTextComponent): string {

@@ -28,9 +28,11 @@ export class LanguageClass extends ResourceClass<LanguageNode> implements ListRe
   languageJSON: NonNullable<LanguageArguments['language']>
 
   constructor(core: SandstoneCore, name: string, args: LanguageArguments) {
-    super(core, { packType: core.pack.resourcePack }, LanguageNode, core.pack.resourceToPath(name, ['lang']), args)
+    super(core, { packType: core.pack.resourcePack() }, LanguageNode, core.pack.resourceToPath(name, ['lang']), args)
 
     this.languageJSON = args.language || {}
+
+    this.handleConflicts()
   }
 
   push(...translations: NonNullable<LanguageArguments['language']>[] | LanguageClass[]) {

@@ -26,7 +26,7 @@ You don't need to remember commands syntax anymore.
 This autocompletion works for all resources: commands, predicates, loot tables, advancements...
 
 ## 📂 Better organisation of resources
-You can have multiple functions, advancements, loot tables per files - or you can keep the vanilla organisation, and have only 1 per file. Sandstone allows you to organise your data pack as you prefer, without sticking to Mojang's conventions.
+You can have multiple functions, advancements, loot tables per files - or you can keep the vanilla organisation, and have only 1 per file. Sandstone allows you to organise your datapack as you prefer, without sticking to Mojang's conventions.
 
 You also benefit from all the capabilities of a real programming language: multiline comments, indentation, documentation...
 

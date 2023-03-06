@@ -16,7 +16,7 @@ export class AtlasNode extends ContainerNode implements ResourceNode<AtlasClass>
   getValue = () => JSON.stringify(this.resource.atlasJSON)
 }
 
-export type AtlasArguments = {
+export type AtlasClassArguments = {
   /**
    * The block state's JSON.
    */
@@ -25,12 +25,14 @@ export type AtlasArguments = {
 } & ResourceClassArguments<'list'>
 
 export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {
-  atlasJSON: NonNullable<AtlasArguments['atlas']>
+  atlasJSON: NonNullable<AtlasClassArguments['atlas']>
 
-  constructor(core: SandstoneCore, name: string, args: AtlasArguments) {
-    super(core, { packType: core.pack.resourcePack }, AtlasNode, core.pack.resourceToPath(name, ['atlases']), args)
+  constructor(core: SandstoneCore, name: string, args: AtlasClassArguments) {
+    super(core, { packType: core.pack.resourcePack() }, AtlasNode, core.pack.resourceToPath(name, ['atlases']), args)
 
     this.atlasJSON = args.atlas || { sources: [] }
+
+    this.handleConflicts()
   }
 
   push(...sources: AtlasSpriteSource[] | AtlasClass[]) {

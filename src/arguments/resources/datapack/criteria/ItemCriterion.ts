@@ -26,6 +26,6 @@ export type ItemCriterion = Partial<{
   /** A brewed potion ID. */
   potion: string
 
-  /** An item data pack tag. */
+  /** An item datapack tag. */
   tag: string | TagClass<'items'>
 }>

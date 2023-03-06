@@ -28,10 +28,12 @@ export class BlockStateClass<Type extends BlockStateType> extends ResourceClass<
   blockStateJSON: NonNullable<BlockStateArguments<Type>['blockState']>
 
   constructor(core: SandstoneCore, name: string, public type: Type, args: BlockStateArguments<Type>) {
-    super(core, { packType: core.pack.resourcePack }, BlockStateNode, core.pack.resourceToPath(name, ['blockstates']), args)
+    super(core, { packType: core.pack.resourcePack() }, BlockStateNode, core.pack.resourceToPath(name, ['blockstates']), args)
 
     /** @ts-ignore */
     this.blockStateJSON = args.blockState || (type === 'variant' ? { variants: {} } : { multipart: [] })
+
+    this.handleConflicts()
   }
 
   push(...states: BlockStateClass<Type>[] | BlockStateDefinition<Type>[]) {

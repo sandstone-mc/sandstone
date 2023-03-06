@@ -1,13 +1,11 @@
 import { PackType } from './packType'
 
-import type { handlerReadFile, handlerWriteFile } from './packType'
-
 export class DataPackDependencies extends PackType {
   constructor() {
     super('datapack_dependencies', 'saves/$worldName$/datapacks', 'world/datapacks', 'datapacks', 'server', false, undefined, false)
   }
 
-  handleOutput = async (type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => {
+  handleOutput = async (type: 'output' | 'client' | 'server') => {
     if (type === 'output') {
       // TODO: run weld
     }
@@ -16,10 +14,10 @@ export class DataPackDependencies extends PackType {
 
 export class ResourcePackDependencies extends PackType {
   constructor() {
-    super('resource_pack_dependencies', 'saves/$worldName$/resources', 'resources', 'resourcepacks', 'client', true, undefined, false)
+    super('resourcepack_dependencies', 'saves/$worldName$/resources', 'resources', 'resourcepacks/$packName$_dependencies', 'client', true, undefined, false)
   }
 
-  handleOutput = async (type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => {
+  handleOutput = async (type: 'output' | 'client' | 'server') => {
     if (type === 'output') {
       // TODO: run weld
     }

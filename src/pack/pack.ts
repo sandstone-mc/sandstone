@@ -7,7 +7,7 @@ import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandston
 import { UUIDClass } from 'sandstone/variables/UUID'
 import { SandstoneCommands } from '#commands'
 import {
-  AdvancementClass, DamageTypeClass, ItemModifierClass, LootTableClass, MCFunctionClass, PredicateClass, RecipeClass, SandstoneCore, TagClass, TrimMaterialClass, TrimPatternClass,
+  AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, ItemModifierClass, LanguageClass, LootTableClass, MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
 } from '#core'
 import { Flow, SandstoneConditions } from '#flow'
 import { randomUUID } from '#utils'
@@ -18,7 +18,6 @@ import {
 } from '#variables'
 import { Score } from '#variables/Score'
 
-import { DataPackDependencies, ResourcePackDependencies } from './dependencies'
 import { PackType } from './packType'
 import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
@@ -34,13 +33,13 @@ import type {
 import type { handlerReadFile, handlerWriteFile } from './packType'
 import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON, Coordinates, DamageTypeJSON, DIMENSIONS, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, TagValuesJSON, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, DIMENSIONS, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from '#arguments'
 import type { StoreType } from '#commands'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
-  AdvancementClassArguments, DamageTypeClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, Node, PredicateClassArguments, RecipeClassArguments, TagClassArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
+  AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MCFunctionClassArguments, ModelClassArguments, Node, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
 } from '#core'
 import type { LiteralUnion, MakeInstanceCallable } from '#utils'
 import type {
@@ -88,8 +87,8 @@ export class ResourcePack extends PackType {
   // TODO: typing. low priority
   readonly packMcmeta: any
 
-  constructor(archiveOutput: boolean, options: { packFormat: number, description: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
-    super('datapack', 'saves/$worldName$/resources', 'resource_pack', 'resource_packs/$packName$', 'client', true, 'assets', true)
+  constructor(options: { packFormat: number, description: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
+    super('resourcepack', 'saves/$worldName$/resources', 'resource_pack', 'resourcepacks/$packName$', 'client', true, 'assets', true)
 
     this.packMcmeta = {
       pack: {
@@ -134,12 +133,24 @@ export class SandstonePack {
 
   packOptions = JSON.parse(process.env.PACK_OPTIONS as string)
 
-  get dataPack() {
-    return this.packTypes.get('datapack') as DataPack
+  dataPack() {
+    let pack = this.packTypes.get('datapack') as DataPack
+
+    if (!pack) {
+      pack = this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack)).get('datapack') as DataPack
+    }
+
+    return pack
   }
 
-  get resourcePack() {
-    return this.packTypes.get('resourcepack') as ResourcePack
+  resourcePack() {
+    let pack = this.packTypes.get('resourcepack') as ResourcePack
+
+    if (!pack) {
+      pack = this.packTypes.set('resourcepack', new ResourcePack(this.packOptions.resourcepack)).get('resourcepack') as ResourcePack
+    }
+
+    return pack
   }
 
   // Smithed Pack IDs
@@ -169,10 +180,6 @@ export class SandstonePack {
     this.core = new SandstoneCore(this)
 
     this.packTypes = new Map()
-    this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack))
-    this.packTypes.set('datapack-dependencies', new DataPackDependencies())
-    this.packTypes.set('resourcepack', new ResourcePack(false, this.packOptions.datapack))
-    this.packTypes.set('resourcepack-dependencies', new ResourcePackDependencies())
 
     this.commands = new SandstoneCommands(this)
 
@@ -527,13 +534,14 @@ export class SandstonePack {
   UUID(source: UUIDSource = randomUUID(), holderState: 1 | Omit<number, 1> | Score | 'permanent' = 'permanent', options?: UUIDOptions) { return new UUIDClass(this.core, source, holderState as number, options) }
 
   /** **Waiting on Smithed Dimensions to be functional.** */
-  get rootChunk() {
-    if (this.utilityChunks.get('0,0;smithed:void')) {
-      return this.utilityChunks.get('0,0;smithed:void') as RootChunkClass
-    }
-    this.utilityChunks.set('0,0;smithed:void', new RootChunkClass(this))
+  rootChunk() {
+    const root = this.utilityChunks.get('0,0;smithed:void')
 
-    return this.utilityChunks.get('0,0;smithed:void') as RootChunkClass
+    if (root) {
+      return root as RootChunkClass
+    }
+
+    return this.utilityChunks.set('0,0;smithed:void', new RootChunkClass(this)).get('0,0;smithed:void') as RootChunkClass
   }
 
   __dimensionEntryPoints: {
@@ -567,7 +575,7 @@ export class SandstonePack {
   dimensionMarker() {
     // TODO: Set dimension target to current dimension some how
 
-    return this.rootChunk.armorStand.execute.on('passengers').if.score(this.dimensionID('@s'), '=', this.dimensionTarget).on('origin')
+    return this.rootChunk().armorStand.execute.on('passengers').if.score(this.dimensionID('@s'), '=', this.dimensionTarget).on('origin')
   }
 
   UtilityChunk<ID extends DimensionID, IDString extends `${ID[0]}:${ID[1]}`, ChunkLoc extends ChunkTuple, Chunk extends UtilityChunkClass<ChunkLoc, ID>>(id: IDString, chunk: ChunkLoc, marker?: UUIDClass<'known', 'permanent'>) {
@@ -708,7 +716,7 @@ export class SandstonePack {
     class RawResource extends this.makeCustomResource[1] {
       constructor() {
         super(core, path.join('/'), {
-          type: `${Math.random()}`, packType: dataPack, extension, addToSandstoneCore: true, creator: 'user',
+          type: `${Math.random()}`, packType: dataPack(), extension, addToSandstoneCore: true, creator: 'user',
         })
       }
 
@@ -790,6 +798,76 @@ export class SandstonePack {
     onConflict: conflictDefaults('trim_pattern') as TrimPatternClassArguments['onConflict'],
     ...options,
   })
+
+  Atlas = (name: string, atlas: AtlasDefinition, options?: AtlasClassArguments) => new AtlasClass(this.core, name, {
+    atlas,
+    creator: 'user',
+    addToSandstoneCore: true,
+    onConflict: conflictDefaults('atlas') as AtlasClassArguments['onConflict'],
+    ...options,
+  })
+
+  BlockState<Type extends BlockStateType>(type: Type, name: string, blockState: BlockStateDefinition<Type>, options?: BlockStateArguments<Type>) {
+    return new BlockStateClass(this.core, name, type, {
+      blockState,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('blockstate') as BlockStateArguments<Type>['onConflict'],
+      ...options,
+    })
+  }
+
+  Font = (name: string, providers: FontProvider[], options?: FontArguments) => new FontClass(this.core, name, {
+    providers,
+    creator: 'user',
+    addToSandstoneCore: true,
+    onConflict: conflictDefaults('font') as FontArguments['onConflict'],
+    ...options,
+  })
+
+  Language = (name: string, language: LanguageArguments['language'], options?: LanguageArguments) => new LanguageClass(this.core, name, {
+    language,
+    creator: 'user',
+    addToSandstoneCore: true,
+    onConflict: conflictDefaults('language') as LanguageArguments['onConflict'],
+    ...options,
+  })
+
+  Model = (type: 'block' | 'item', name: string, model: ModelClassArguments['model'], options?: ModelClassArguments) => new ModelClass(this.core, type, name, {
+    model,
+    creator: 'user',
+    addToSandstoneCore: true,
+    onConflict: conflictDefaults('model') as ModelClassArguments['onConflict'],
+    ...options,
+  })
+
+  SoundEvent<Type extends SOUND_TYPES>(type: Type, name: string, sound: SoundEventArguments['sound'], options?: SoundEventArguments) {
+    return new SoundEventClass(this.core, type, name, {
+      sound,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('sound_event') as SoundEventArguments['onConflict'],
+      ...options,
+    })
+  }
+
+  PlainText = (name: string, text: PlainTextArguments['text'], options?: PlainTextArguments) => new PlainTextClass(this.core, name, {
+    text,
+    creator: 'user',
+    addToSandstoneCore: true,
+    onConflict: conflictDefaults('atlas') as PlainTextArguments['onConflict'],
+    ...options,
+  })
+
+  Texture<Type extends TEXTURE_TYPES>(type: Type, name: string, texture: TextureArguments<Type>['texture'], options?: TextureArguments<Type>) {
+    return new TextureClass(this.core, type, name, {
+      texture,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('sound_event') as TextureArguments<Type>['onConflict'],
+      ...options,
+    })
+  }
 
   save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>, dry: boolean, verbose: boolean }) => {
     await this.core.save(cliOptions, {

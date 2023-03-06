@@ -156,12 +156,12 @@ export type MCFunctionClassArguments = ({
    *
    * @example
    *
-   * // Run every 5 ticks, including on data pack load.
+   * // Run every 5 ticks, including on datapack load.
    * {
    *   runEvery: 5,
    * }
    *
-   * // Run every 5 ticks, but wait 5 ticks before data pack loads for 1st execution.
+   * // Run every 5 ticks, but wait 5 ticks before datapack loads for 1st execution.
    * {
    *   runEvery: 5,
    *   runOnLoad: false,
@@ -199,7 +199,7 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
   protected lazy: boolean
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments) {
-    super(core, { packType: core.pack.dataPack, extension: 'mcfunction' }, MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
+    super(core, { packType: core.pack.dataPack(), extension: 'mcfunction' }, MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
       ...args,
       addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,
     })

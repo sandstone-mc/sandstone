@@ -28,9 +28,11 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
   fontJSON: { providers: FontArguments['providers'] }
 
   constructor(core: SandstoneCore, name: string, args: FontArguments) {
-    super(core, { packType: core.pack.resourcePack }, FontNode, core.pack.resourceToPath(name, ['font']), args)
+    super(core, { packType: core.pack.resourcePack() }, FontNode, core.pack.resourceToPath(name, ['font']), args)
 
     this.fontJSON = { providers: args.providers }
+
+    this.handleConflicts()
   }
 
   push(...providers: FontProvider[] | FontClass[]) {
