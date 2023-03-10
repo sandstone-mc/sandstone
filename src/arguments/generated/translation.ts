@@ -2750,6 +2750,10 @@ export type TRANSLATION_KEYS = (
   'createWorld.tab.game.title' |
   'createWorld.tab.more.title' |
   'createWorld.tab.world.title' |
+  'credits_and_attribution.button.attribution' |
+  'credits_and_attribution.button.credits' |
+  'credits_and_attribution.button.licenses' |
+  'credits_and_attribution.screen.title' |
   'dataPack.bundle.description' |
   'dataPack.bundle.name' |
   'dataPack.title' |
@@ -4665,6 +4669,7 @@ export type TRANSLATION_KEYS = (
   'options.clouds.fancy' |
   'options.clouds.fast' |
   'options.controls' |
+  'options.credits_and_attribution' |
   'options.customizeTitle' |
   'options.damageTiltStrength' |
   'options.damageTiltStrength.tooltip' |

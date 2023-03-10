@@ -11,6 +11,7 @@ export type TAG_DAMAGE_TYPES = (
   'bypasses_enchantments' |
   'bypasses_invulnerability' |
   'bypasses_resistance' |
+  'bypasses_shield' |
   'damages_helmet' |
   'ignites_armor_stands' |
   'is_drowning' |
