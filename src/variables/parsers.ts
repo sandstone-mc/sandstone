@@ -124,7 +124,7 @@ export function targetParser(target: any): string {
     return target
   }
   if (target._toSelector) {
-    return target._toSelector.toString()
+    return target._toSelector().toString()
   }
   return target.toString()
 }

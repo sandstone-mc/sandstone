@@ -222,81 +222,79 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
   }
 
   toString() {
-    if (!Object.keys(this.arguments).length) {
+    if (!this.arguments || !Object.keys(this.arguments).length) {
       return this.target
     }
 
     const result: (readonly [string, string])[] = []
 
-    if (this.arguments) {
-      const args = { ...this.arguments }
+    const args = { ...this.arguments }
 
-      const modifiers = {
-        // Parse scores
-        scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
+    const modifiers = {
+      // Parse scores
+      scores: (scores: ScoreArgument) => result.push(['scores', parseScore(scores)]),
 
-        // Parse potentially multiple nbt
-        nbt: (nbt: RootNBT | RootNBT[]) => {
-          const nbts = Array.isArray(nbt) ? nbt : [nbt]
-          result.push(...nbts.map((nbt_) => ['nbt', nbtStringifier(nbt_)] as const))
-        },
+      // Parse potentially multiple nbt
+      nbt: (nbt: RootNBT | RootNBT[]) => {
+        const nbts = Array.isArray(nbt) ? nbt : [nbt]
+        result.push(...nbts.map((nbt_) => ['nbt', nbtStringifier(nbt_)] as const))
+      },
 
-        // Parse advancements
-        advancements: (advancements: AdvancementsArgument) => result.push(
-          ['advancements', parseAdvancements(advancements)],
-        ),
+      // Parse advancements
+      advancements: (advancements: AdvancementsArgument) => result.push(
+        ['advancements', parseAdvancements(advancements)],
+      ),
 
-        // Parse potentially multiple tags
-        tag: (tag: string | string[]) => {
-          const tags = Array.isArray(tag) ? tag : [tag]
-          result.push(...tags.map((tag_) => ['tag', tag_] as const))
-        },
+      // Parse potentially multiple tags
+      tag: (tag: string | string[]) => {
+        const tags = Array.isArray(tag) ? tag : [tag]
+        result.push(...tags.map((tag_) => ['tag', tag_] as const))
+      },
 
-        // Parse potentially multiple gamemodes
-        gamemode: (gamemode: string | string[]) => {
-          const gamemodes = Array.isArray(gamemode) ? gamemode : [gamemode]
-          result.push(...gamemodes.map((gamemode_) => ['gamemode', gamemode_] as const))
-        },
+      // Parse potentially multiple gamemodes
+      gamemode: (gamemode: string | string[]) => {
+        const gamemodes = Array.isArray(gamemode) ? gamemode : [gamemode]
+        result.push(...gamemodes.map((gamemode_) => ['gamemode', gamemode_] as const))
+      },
 
-        // Parse potentially multiple predicates
-        predicate: (predicate: string | string[]) => {
-          const predicates = Array.isArray(predicate) ? predicate : [predicate]
-          result.push(...predicates.map((pred) => ['predicate', pred] as const))
-        },
+      // Parse potentially multiple predicates
+      predicate: (predicate: string | string[]) => {
+        const predicates = Array.isArray(predicate) ? predicate : [predicate]
+        result.push(...predicates.map((pred) => ['predicate', pred] as const))
+      },
 
-        // Handle boolean values for teams
-        team: (team: string | boolean) => {
-          let teamRepr: string
+      // Handle boolean values for teams
+      team: (team: string | boolean) => {
+        let teamRepr: string
 
-          if (team === true) {
-            teamRepr = '!'
-          } else if (team === false) {
-            teamRepr = ''
-          } else {
-            teamRepr = team
-          }
-          result.push(['team', teamRepr])
-        },
-
-        distance: (range_: Range) => result.push(['distance', rangeParser(range_)]),
-      } as const
-
-      for (const [baseName, modifier] of Object.entries(modifiers)) {
-        const name = baseName as keyof typeof args
-        const value = args[name]
-
-        if (value !== undefined) {
-          modifier(value as any)
-          delete args[name]
+        if (team === true) {
+          teamRepr = '!'
+        } else if (team === false) {
+          teamRepr = ''
+        } else {
+          teamRepr = team
         }
+        result.push(['team', teamRepr])
+      },
+
+      distance: (range_: Range) => result.push(['distance', rangeParser(range_)]),
+    } as const
+
+    for (const [baseName, modifier] of Object.entries(modifiers)) {
+      const name = baseName as keyof typeof args
+      const value = args[name]
+
+      if (value !== undefined) {
+        modifier(value as any)
+        delete args[name]
       }
-
-      Object.entries(args).forEach(([key, value]) => {
-        if (value !== undefined) {
-          result.push([key, value.toString()])
-        }
-      })
     }
+
+    Object.entries(args).forEach(([key, value]) => {
+      if (value !== undefined) {
+        result.push([key, value.toString()])
+      }
+    })
 
     return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }

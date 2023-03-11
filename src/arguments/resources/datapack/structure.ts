@@ -7,7 +7,7 @@ export type StructureNBT = {
   /** [Data version](https://minecraft.fandom.com/wiki/Data_version). A positive integer. */
   DataVersion?: number
 
-  /** Size. A list of positive integers. */
+  /** A list of positive integers. */
   size: Vec3
 
   blocks: {
