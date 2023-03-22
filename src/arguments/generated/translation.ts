@@ -4312,6 +4312,7 @@ export type TRANSLATION_KEYS = (
   'mco.configure.world.subscription.month' |
   'mco.configure.world.subscription.months' |
   'mco.configure.world.subscription.recurring.daysleft' |
+  'mco.configure.world.subscription.recurring.info' |
   'mco.configure.world.subscription.start' |
   'mco.configure.world.subscription.timeleft' |
   'mco.configure.world.subscription.title' |
