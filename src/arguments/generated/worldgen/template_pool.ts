@@ -73,6 +73,12 @@ export type WORLDGEN_TEMPLATE_POOLS = (
   'pillager_outpost/feature_plates' |
   'pillager_outpost/features' |
   'pillager_outpost/towers' |
+  'trail_ruins/buildings' |
+  'trail_ruins/buildings/grouped' |
+  'trail_ruins/decor' |
+  'trail_ruins/roads' |
+  'trail_ruins/tower' |
+  'trail_ruins/tower/additions' |
   'village/common/animals' |
   'village/common/butcher_animals' |
   'village/common/cats' |

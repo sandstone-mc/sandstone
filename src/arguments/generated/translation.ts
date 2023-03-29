@@ -1258,6 +1258,7 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.cactus' |
   'block.minecraft.cake' |
   'block.minecraft.calcite' |
+  'block.minecraft.calibrated_sculk_sensor' |
   'block.minecraft.campfire' |
   'block.minecraft.candle' |
   'block.minecraft.candle_cake' |
@@ -1927,6 +1928,7 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.smooth_sandstone_stairs' |
   'block.minecraft.smooth_stone' |
   'block.minecraft.smooth_stone_slab' |
+  'block.minecraft.sniffer_egg' |
   'block.minecraft.snow' |
   'block.minecraft.snow_block' |
   'block.minecraft.soul_campfire' |
@@ -1995,6 +1997,7 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.structure_void' |
   'block.minecraft.sugar_cane' |
   'block.minecraft.sunflower' |
+  'block.minecraft.suspicious_gravel' |
   'block.minecraft.suspicious_sand' |
   'block.minecraft.sweet_berry_bush' |
   'block.minecraft.tall_grass' |
@@ -2006,6 +2009,8 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.torch' |
   'block.minecraft.torchflower' |
   'block.minecraft.torchflower_crop' |
+  'block.minecraft.pitcher_plant' |
+  'block.minecraft.pitcher_crop' |
   'block.minecraft.trapped_chest' |
   'block.minecraft.tripwire' |
   'block.minecraft.tripwire_hook' |
@@ -3852,10 +3857,26 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.potion.effect.water' |
   'item.minecraft.potion.effect.water_breathing' |
   'item.minecraft.potion.effect.weakness' |
-  'item.minecraft.pottery_shard_archer' |
-  'item.minecraft.pottery_shard_arms_up' |
-  'item.minecraft.pottery_shard_prize' |
-  'item.minecraft.pottery_shard_skull' |
+  'item.minecraft.angler_pottery_shard' |
+  'item.minecraft.archer_pottery_shard' |
+  'item.minecraft.arms_up_pottery_shard' |
+  'item.minecraft.blade_pottery_shard' |
+  'item.minecraft.brewer_pottery_shard' |
+  'item.minecraft.burn_pottery_shard' |
+  'item.minecraft.danger_pottery_shard' |
+  'item.minecraft.explorer_pottery_shard' |
+  'item.minecraft.friend_pottery_shard' |
+  'item.minecraft.heart_pottery_shard' |
+  'item.minecraft.heartbreak_pottery_shard' |
+  'item.minecraft.howl_pottery_shard' |
+  'item.minecraft.miner_pottery_shard' |
+  'item.minecraft.mourner_pottery_shard' |
+  'item.minecraft.plenty_pottery_shard' |
+  'item.minecraft.prize_pottery_shard' |
+  'item.minecraft.sheaf_pottery_shard' |
+  'item.minecraft.shelter_pottery_shard' |
+  'item.minecraft.skull_pottery_shard' |
+  'item.minecraft.snort_pottery_shard' |
   'item.minecraft.powder_snow_bucket' |
   'item.minecraft.prismarine_crystals' |
   'item.minecraft.prismarine_shard' |
@@ -3997,6 +4018,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.tipped_arrow.effect.weakness' |
   'item.minecraft.tnt_minecart' |
   'item.minecraft.torchflower_seeds' |
+  'item.minecraft.pitcher_plant' |
+  'item.minecraft.pitcher_pod' |
   'item.minecraft.totem_of_undying' |
   'item.minecraft.trader_llama_spawn_egg' |
   'item.minecraft.trident' |
@@ -5233,6 +5256,7 @@ export type TRANSLATION_KEYS = (
   'structure_block.structure_name' |
   'subtitles.ambient.cave' |
   'subtitles.block.amethyst_block.chime' |
+  'subtitles.block.amethyst_block.resonate' |
   'subtitles.block.anvil.destroy' |
   'subtitles.block.anvil.land' |
   'subtitles.block.anvil.use' |
@@ -5757,6 +5781,8 @@ export type TRANSLATION_KEYS = (
   'subtitles.entity.sniffer.searching' |
   'subtitles.entity.sniffer.sniffing' |
   'subtitles.entity.sniffer.step' |
+  'subtitles.entity.sniffer.egg_crack' |
+  'subtitles.entity.sniffer.egg_hatch' |
   'subtitles.entity.snow_golem.death' |
   'subtitles.entity.snow_golem.hurt' |
   'subtitles.entity.snowball.throw' |
@@ -5917,8 +5943,11 @@ export type TRANSLATION_KEYS = (
   'subtitles.item.book.put' |
   'subtitles.item.bottle.empty' |
   'subtitles.item.bottle.fill' |
-  'subtitles.item.brush.brush_sand_completed' |
-  'subtitles.item.brush.brushing' |
+  'subtitles.item.brush.brushing.generic' |
+  'subtitles.item.brush.brushing.sand' |
+  'subtitles.item.brush.brushing.gravel' |
+  'subtitles.item.brush.brushing.sand.complete' |
+  'subtitles.item.brush.brushing.gravel.complete' |
   'subtitles.item.bucket.empty' |
   'subtitles.item.bucket.fill' |
   'subtitles.item.bucket.fill_axolotl' |
@@ -6039,14 +6068,19 @@ export type TRANSLATION_KEYS = (
   'trim_pattern.minecraft.coast' |
   'trim_pattern.minecraft.dune' |
   'trim_pattern.minecraft.eye' |
+  'trim_pattern.minecraft.host' |
+  'trim_pattern.minecraft.raiser' |
   'trim_pattern.minecraft.rib' |
   'trim_pattern.minecraft.sentry' |
+  'trim_pattern.minecraft.shaper' |
+  'trim_pattern.minecraft.silence' |
   'trim_pattern.minecraft.snout' |
   'trim_pattern.minecraft.spire' |
   'trim_pattern.minecraft.tide' |
   'trim_pattern.minecraft.vex' |
   'trim_pattern.minecraft.ward' |
   'trim_pattern.minecraft.wild' |
+  'trim_pattern.minecraft.wayfinder' |
   'tutorial.bundleInsert.description' |
   'tutorial.bundleInsert.title' |
   'tutorial.craft_planks.description' |

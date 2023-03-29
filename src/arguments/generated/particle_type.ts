@@ -11,6 +11,7 @@ export type PARTICLE_TYPES = (
   'bubble_pop' |
   'campfire_cosy_smoke' |
   'campfire_signal_smoke' |
+  'cherry_leaves' |
   'cloud' |
   'composter' |
   'crimson_spore' |
@@ -19,7 +20,6 @@ export type PARTICLE_TYPES = (
   'damage_indicator' |
   'dolphin' |
   'dragon_breath' |
-  'dripping_cherry_leaves' |
   'dripping_dripstone_lava' |
   'dripping_dripstone_water' |
   'dripping_honey' |
@@ -29,6 +29,7 @@ export type PARTICLE_TYPES = (
   'dust' |
   'dust_color_transition' |
   'effect' |
+  'egg_crack' |
   'elder_guardian' |
   'electric_spark' |
   'enchant' |
@@ -37,7 +38,6 @@ export type PARTICLE_TYPES = (
   'entity_effect' |
   'explosion' |
   'explosion_emitter' |
-  'falling_cherry_leaves' |
   'falling_dripstone_lava' |
   'falling_dripstone_water' |
   'falling_dust' |
@@ -59,7 +59,6 @@ export type PARTICLE_TYPES = (
   'item' |
   'item_slime' |
   'item_snowball' |
-  'landing_cherry_leaves' |
   'landing_honey' |
   'landing_lava' |
   'landing_obsidian_tear' |

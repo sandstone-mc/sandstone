@@ -30,9 +30,12 @@ export type ITEMS = (
   'andesite_slab' |
   'andesite_stairs' |
   'andesite_wall' |
+  'angler_pottery_shard' |
   'anvil' |
   'apple' |
+  'archer_pottery_shard' |
   'armor_stand' |
+  'arms_up_pottery_shard' |
   'arrow' |
   'axolotl_bucket' |
   'axolotl_spawn_egg' |
@@ -107,6 +110,7 @@ export type ITEMS = (
   'blackstone_slab' |
   'blackstone_stairs' |
   'blackstone_wall' |
+  'blade_pottery_shard' |
   'blast_furnace' |
   'blaze_powder' |
   'blaze_rod' |
@@ -137,6 +141,7 @@ export type ITEMS = (
   'brain_coral_block' |
   'brain_coral_fan' |
   'bread' |
+  'brewer_pottery_shard' |
   'brewing_stand' |
   'brick' |
   'brick_slab' |
@@ -165,9 +170,11 @@ export type ITEMS = (
   'bucket' |
   'budding_amethyst' |
   'bundle' |
+  'burn_pottery_shard' |
   'cactus' |
   'cake' |
   'calcite' |
+  'calibrated_sculk_sensor' |
   'camel_spawn_egg' |
   'campfire' |
   'candle' |
@@ -307,6 +314,7 @@ export type ITEMS = (
   'cyan_wool' |
   'damaged_anvil' |
   'dandelion' |
+  'danger_pottery_shard' |
   'dark_oak_boat' |
   'dark_oak_button' |
   'dark_oak_chest_boat' |
@@ -422,6 +430,7 @@ export type ITEMS = (
   'endermite_spawn_egg' |
   'evoker_spawn_egg' |
   'experience_bottle' |
+  'explorer_pottery_shard' |
   'exposed_copper' |
   'exposed_cut_copper' |
   'exposed_cut_copper_slab' |
@@ -447,6 +456,7 @@ export type ITEMS = (
   'flowering_azalea' |
   'flowering_azalea_leaves' |
   'fox_spawn_egg' |
+  'friend_pottery_shard' |
   'frog_spawn_egg' |
   'frogspawn' |
   'furnace' |
@@ -523,6 +533,8 @@ export type ITEMS = (
   'hanging_roots' |
   'hay_block' |
   'heart_of_the_sea' |
+  'heart_pottery_shard' |
+  'heartbreak_pottery_shard' |
   'heavy_weighted_pressure_plate' |
   'hoglin_spawn_egg' |
   'honey_block' |
@@ -535,6 +547,8 @@ export type ITEMS = (
   'horn_coral_block' |
   'horn_coral_fan' |
   'horse_spawn_egg' |
+  'host_armor_trim_smithing_template' |
+  'howl_pottery_shard' |
   'husk_spawn_egg' |
   'ice' |
   'infested_chiseled_stone_bricks' |
@@ -693,6 +707,7 @@ export type ITEMS = (
   'melon_slice' |
   'milk_bucket' |
   'minecart' |
+  'miner_pottery_shard' |
   'mojang_banner_pattern' |
   'mooshroom_spawn_egg' |
   'moss_block' |
@@ -705,6 +720,7 @@ export type ITEMS = (
   'mossy_stone_brick_stairs' |
   'mossy_stone_brick_wall' |
   'mossy_stone_bricks' |
+  'mourner_pottery_shard' |
   'mud' |
   'mud_brick_slab' |
   'mud_brick_stairs' |
@@ -833,7 +849,10 @@ export type ITEMS = (
   'pink_tulip' |
   'pink_wool' |
   'piston' |
+  'pitcher_plant' |
+  'pitcher_pod' |
   'player_head' |
+  'plenty_pottery_shard' |
   'podzol' |
   'pointed_dripstone' |
   'poisonous_potato' |
@@ -867,10 +886,6 @@ export type ITEMS = (
   'porkchop' |
   'potato' |
   'potion' |
-  'pottery_shard_archer' |
-  'pottery_shard_arms_up' |
-  'pottery_shard_prize' |
-  'pottery_shard_skull' |
   'powder_snow_bucket' |
   'powered_rail' |
   'prismarine' |
@@ -882,6 +897,7 @@ export type ITEMS = (
   'prismarine_slab' |
   'prismarine_stairs' |
   'prismarine_wall' |
+  'prize_pottery_shard' |
   'pufferfish' |
   'pufferfish_bucket' |
   'pufferfish_spawn_egg' |
@@ -917,6 +933,7 @@ export type ITEMS = (
   'rabbit_spawn_egg' |
   'rabbit_stew' |
   'rail' |
+  'raiser_armor_trim_smithing_template' |
   'ravager_spawn_egg' |
   'raw_copper' |
   'raw_copper_block' |
@@ -983,18 +1000,23 @@ export type ITEMS = (
   'sea_pickle' |
   'seagrass' |
   'sentry_armor_trim_smithing_template' |
+  'shaper_armor_trim_smithing_template' |
+  'sheaf_pottery_shard' |
   'shears' |
   'sheep_spawn_egg' |
+  'shelter_pottery_shard' |
   'shield' |
   'shroomlight' |
   'shulker_box' |
   'shulker_shell' |
   'shulker_spawn_egg' |
+  'silence_armor_trim_smithing_template' |
   'silverfish_spawn_egg' |
   'skeleton_horse_spawn_egg' |
   'skeleton_skull' |
   'skeleton_spawn_egg' |
   'skull_banner_pattern' |
+  'skull_pottery_shard' |
   'slime_ball' |
   'slime_block' |
   'slime_spawn_egg' |
@@ -1014,7 +1036,9 @@ export type ITEMS = (
   'smooth_sandstone_stairs' |
   'smooth_stone' |
   'smooth_stone_slab' |
+  'sniffer_egg' |
   'sniffer_spawn_egg' |
+  'snort_pottery_shard' |
   'snout_armor_trim_smithing_template' |
   'snow' |
   'snow_block' |
@@ -1098,6 +1122,7 @@ export type ITEMS = (
   'sugar' |
   'sugar_cane' |
   'sunflower' |
+  'suspicious_gravel' |
   'suspicious_sand' |
   'suspicious_stew' |
   'sweet_berries' |
@@ -1174,6 +1199,7 @@ export type ITEMS = (
   'waxed_weathered_cut_copper' |
   'waxed_weathered_cut_copper_slab' |
   'waxed_weathered_cut_copper_stairs' |
+  'wayfinder_armor_trim_smithing_template' |
   'weathered_copper' |
   'weathered_cut_copper' |
   'weathered_cut_copper_slab' |

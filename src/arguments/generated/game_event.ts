@@ -12,7 +12,6 @@ export type GAME_EVENTS = (
   'block_place' |
   'container_close' |
   'container_open' |
-  'dispense_fail' |
   'drink' |
   'eat' |
   'elytra_glide' |
@@ -37,11 +36,24 @@ export type GAME_EVENTS = (
   'jukebox_stop_play' |
   'lightning_strike' |
   'note_block_play' |
-  'piston_contract' |
-  'piston_extend' |
   'prime_fuse' |
   'projectile_land' |
   'projectile_shoot' |
+  'resonate_1' |
+  'resonate_10' |
+  'resonate_11' |
+  'resonate_12' |
+  'resonate_13' |
+  'resonate_14' |
+  'resonate_15' |
+  'resonate_2' |
+  'resonate_3' |
+  'resonate_4' |
+  'resonate_5' |
+  'resonate_6' |
+  'resonate_7' |
+  'resonate_8' |
+  'resonate_9' |
   'sculk_sensor_tendrils_clicking' |
   'shear' |
   'shriek' |

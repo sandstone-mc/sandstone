@@ -28,6 +28,7 @@ export type SOUND_EVENTS = (
   'block.amethyst_block.fall' |
   'block.amethyst_block.hit' |
   'block.amethyst_block.place' |
+  'block.amethyst_block.resonate' |
   'block.amethyst_block.step' |
   'block.amethyst_cluster.break' |
   'block.amethyst_cluster.fall' |
@@ -553,6 +554,7 @@ export type SOUND_EVENTS = (
   'block.shroomlight.step' |
   'block.shulker_box.close' |
   'block.shulker_box.open' |
+  'block.sign.waxed_interact_fail' |
   'block.slime_block.break' |
   'block.slime_block.fall' |
   'block.slime_block.hit' |
@@ -601,6 +603,11 @@ export type SOUND_EVENTS = (
   'block.stone_button.click_on' |
   'block.stone_pressure_plate.click_off' |
   'block.stone_pressure_plate.click_on' |
+  'block.suspicious_gravel.break' |
+  'block.suspicious_gravel.fall' |
+  'block.suspicious_gravel.hit' |
+  'block.suspicious_gravel.place' |
+  'block.suspicious_gravel.step' |
   'block.suspicious_sand.break' |
   'block.suspicious_sand.fall' |
   'block.suspicious_sand.hit' |
@@ -1153,6 +1160,8 @@ export type SOUND_EVENTS = (
   'entity.sniffer.digging_stop' |
   'entity.sniffer.drop_seed' |
   'entity.sniffer.eat' |
+  'entity.sniffer.egg_crack' |
+  'entity.sniffer.egg_hatch' |
   'entity.sniffer.happy' |
   'entity.sniffer.hurt' |
   'entity.sniffer.idle' |
@@ -1342,8 +1351,11 @@ export type SOUND_EVENTS = (
   'item.bottle.empty' |
   'item.bottle.fill' |
   'item.bottle.fill_dragonbreath' |
-  'item.brush.brush_sand_completed' |
-  'item.brush.brushing' |
+  'item.brush.brushing.generic' |
+  'item.brush.brushing.gravel' |
+  'item.brush.brushing.gravel.complete' |
+  'item.brush.brushing.sand' |
+  'item.brush.brushing.sand.complete' |
   'item.bucket.empty' |
   'item.bucket.empty_axolotl' |
   'item.bucket.empty_fish' |

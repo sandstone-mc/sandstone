@@ -6,6 +6,7 @@ export type WORLDGEN_BIOMES = (
   'basalt_deltas' |
   'beach' |
   'birch_forest' |
+  'cherry_grove' |
   'cold_ocean' |
   'crimson_forest' |
   'dark_forest' |

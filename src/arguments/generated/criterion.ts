@@ -326,6 +326,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.cake' |
   'minecraft.broken:minecraft.calcite' |
   'minecraft.mined:minecraft.calcite' |
+  'minecraft.broken:minecraft.calibrated_sculk_sensor' |
+  'minecraft.mined:minecraft.calibrated_sculk_sensor' |
   'minecraft.broken:minecraft.campfire' |
   'minecraft.mined:minecraft.campfire' |
   'minecraft.broken:minecraft.candle' |
@@ -1328,6 +1330,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.piston' |
   'minecraft.broken:minecraft.piston_head' |
   'minecraft.mined:minecraft.piston_head' |
+  'minecraft.broken:minecraft.pitcher_crop' |
+  'minecraft.mined:minecraft.pitcher_crop' |
+  'minecraft.broken:minecraft.pitcher_plant' |
+  'minecraft.mined:minecraft.pitcher_plant' |
   'minecraft.broken:minecraft.player_head' |
   'minecraft.mined:minecraft.player_head' |
   'minecraft.broken:minecraft.player_wall_head' |
@@ -1680,6 +1686,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.smooth_stone' |
   'minecraft.broken:minecraft.smooth_stone_slab' |
   'minecraft.mined:minecraft.smooth_stone_slab' |
+  'minecraft.broken:minecraft.sniffer_egg' |
+  'minecraft.mined:minecraft.sniffer_egg' |
   'minecraft.broken:minecraft.snow' |
   'minecraft.mined:minecraft.snow' |
   'minecraft.broken:minecraft.snow_block' |
@@ -1810,6 +1818,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.sugar_cane' |
   'minecraft.broken:minecraft.sunflower' |
   'minecraft.mined:minecraft.sunflower' |
+  'minecraft.broken:minecraft.suspicious_gravel' |
+  'minecraft.mined:minecraft.suspicious_gravel' |
   'minecraft.broken:minecraft.suspicious_sand' |
   'minecraft.mined:minecraft.suspicious_sand' |
   'minecraft.broken:minecraft.sweet_berry_bush' |
@@ -2459,6 +2469,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.andesite_wall' |
   'minecraft.picked_up:minecraft.andesite_wall' |
   'minecraft.used:minecraft.andesite_wall' |
+  'minecraft.crafted:minecraft.angler_pottery_shard' |
+  'minecraft.dropped:minecraft.angler_pottery_shard' |
+  'minecraft.picked_up:minecraft.angler_pottery_shard' |
+  'minecraft.used:minecraft.angler_pottery_shard' |
   'minecraft.crafted:minecraft.anvil' |
   'minecraft.dropped:minecraft.anvil' |
   'minecraft.picked_up:minecraft.anvil' |
@@ -2467,10 +2481,18 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.apple' |
   'minecraft.picked_up:minecraft.apple' |
   'minecraft.used:minecraft.apple' |
+  'minecraft.crafted:minecraft.archer_pottery_shard' |
+  'minecraft.dropped:minecraft.archer_pottery_shard' |
+  'minecraft.picked_up:minecraft.archer_pottery_shard' |
+  'minecraft.used:minecraft.archer_pottery_shard' |
   'minecraft.crafted:minecraft.armor_stand' |
   'minecraft.dropped:minecraft.armor_stand' |
   'minecraft.picked_up:minecraft.armor_stand' |
   'minecraft.used:minecraft.armor_stand' |
+  'minecraft.crafted:minecraft.arms_up_pottery_shard' |
+  'minecraft.dropped:minecraft.arms_up_pottery_shard' |
+  'minecraft.picked_up:minecraft.arms_up_pottery_shard' |
+  'minecraft.used:minecraft.arms_up_pottery_shard' |
   'minecraft.crafted:minecraft.arrow' |
   'minecraft.dropped:minecraft.arrow' |
   'minecraft.picked_up:minecraft.arrow' |
@@ -2767,6 +2789,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.blackstone_wall' |
   'minecraft.picked_up:minecraft.blackstone_wall' |
   'minecraft.used:minecraft.blackstone_wall' |
+  'minecraft.crafted:minecraft.blade_pottery_shard' |
+  'minecraft.dropped:minecraft.blade_pottery_shard' |
+  'minecraft.picked_up:minecraft.blade_pottery_shard' |
+  'minecraft.used:minecraft.blade_pottery_shard' |
   'minecraft.crafted:minecraft.blast_furnace' |
   'minecraft.dropped:minecraft.blast_furnace' |
   'minecraft.picked_up:minecraft.blast_furnace' |
@@ -2887,6 +2913,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.bread' |
   'minecraft.picked_up:minecraft.bread' |
   'minecraft.used:minecraft.bread' |
+  'minecraft.crafted:minecraft.brewer_pottery_shard' |
+  'minecraft.dropped:minecraft.brewer_pottery_shard' |
+  'minecraft.picked_up:minecraft.brewer_pottery_shard' |
+  'minecraft.used:minecraft.brewer_pottery_shard' |
   'minecraft.crafted:minecraft.brewing_stand' |
   'minecraft.dropped:minecraft.brewing_stand' |
   'minecraft.picked_up:minecraft.brewing_stand' |
@@ -2999,6 +3029,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.bundle' |
   'minecraft.picked_up:minecraft.bundle' |
   'minecraft.used:minecraft.bundle' |
+  'minecraft.crafted:minecraft.burn_pottery_shard' |
+  'minecraft.dropped:minecraft.burn_pottery_shard' |
+  'minecraft.picked_up:minecraft.burn_pottery_shard' |
+  'minecraft.used:minecraft.burn_pottery_shard' |
   'minecraft.crafted:minecraft.cactus' |
   'minecraft.dropped:minecraft.cactus' |
   'minecraft.picked_up:minecraft.cactus' |
@@ -3011,6 +3045,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.calcite' |
   'minecraft.picked_up:minecraft.calcite' |
   'minecraft.used:minecraft.calcite' |
+  'minecraft.crafted:minecraft.calibrated_sculk_sensor' |
+  'minecraft.dropped:minecraft.calibrated_sculk_sensor' |
+  'minecraft.picked_up:minecraft.calibrated_sculk_sensor' |
+  'minecraft.used:minecraft.calibrated_sculk_sensor' |
   'minecraft.crafted:minecraft.camel_spawn_egg' |
   'minecraft.dropped:minecraft.camel_spawn_egg' |
   'minecraft.picked_up:minecraft.camel_spawn_egg' |
@@ -3567,6 +3605,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.dandelion' |
   'minecraft.picked_up:minecraft.dandelion' |
   'minecraft.used:minecraft.dandelion' |
+  'minecraft.crafted:minecraft.danger_pottery_shard' |
+  'minecraft.dropped:minecraft.danger_pottery_shard' |
+  'minecraft.picked_up:minecraft.danger_pottery_shard' |
+  'minecraft.used:minecraft.danger_pottery_shard' |
   'minecraft.crafted:minecraft.dark_oak_boat' |
   'minecraft.dropped:minecraft.dark_oak_boat' |
   'minecraft.picked_up:minecraft.dark_oak_boat' |
@@ -4027,6 +4069,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.experience_bottle' |
   'minecraft.picked_up:minecraft.experience_bottle' |
   'minecraft.used:minecraft.experience_bottle' |
+  'minecraft.crafted:minecraft.explorer_pottery_shard' |
+  'minecraft.dropped:minecraft.explorer_pottery_shard' |
+  'minecraft.picked_up:minecraft.explorer_pottery_shard' |
+  'minecraft.used:minecraft.explorer_pottery_shard' |
   'minecraft.crafted:minecraft.exposed_copper' |
   'minecraft.dropped:minecraft.exposed_copper' |
   'minecraft.picked_up:minecraft.exposed_copper' |
@@ -4127,6 +4173,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.fox_spawn_egg' |
   'minecraft.picked_up:minecraft.fox_spawn_egg' |
   'minecraft.used:minecraft.fox_spawn_egg' |
+  'minecraft.crafted:minecraft.friend_pottery_shard' |
+  'minecraft.dropped:minecraft.friend_pottery_shard' |
+  'minecraft.picked_up:minecraft.friend_pottery_shard' |
+  'minecraft.used:minecraft.friend_pottery_shard' |
   'minecraft.crafted:minecraft.frog_spawn_egg' |
   'minecraft.dropped:minecraft.frog_spawn_egg' |
   'minecraft.picked_up:minecraft.frog_spawn_egg' |
@@ -4431,6 +4481,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.heart_of_the_sea' |
   'minecraft.picked_up:minecraft.heart_of_the_sea' |
   'minecraft.used:minecraft.heart_of_the_sea' |
+  'minecraft.crafted:minecraft.heart_pottery_shard' |
+  'minecraft.dropped:minecraft.heart_pottery_shard' |
+  'minecraft.picked_up:minecraft.heart_pottery_shard' |
+  'minecraft.used:minecraft.heart_pottery_shard' |
+  'minecraft.crafted:minecraft.heartbreak_pottery_shard' |
+  'minecraft.dropped:minecraft.heartbreak_pottery_shard' |
+  'minecraft.picked_up:minecraft.heartbreak_pottery_shard' |
+  'minecraft.used:minecraft.heartbreak_pottery_shard' |
   'minecraft.crafted:minecraft.heavy_weighted_pressure_plate' |
   'minecraft.dropped:minecraft.heavy_weighted_pressure_plate' |
   'minecraft.picked_up:minecraft.heavy_weighted_pressure_plate' |
@@ -4479,6 +4537,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.horse_spawn_egg' |
   'minecraft.picked_up:minecraft.horse_spawn_egg' |
   'minecraft.used:minecraft.horse_spawn_egg' |
+  'minecraft.crafted:minecraft.host_armor_trim_smithing_template' |
+  'minecraft.dropped:minecraft.host_armor_trim_smithing_template' |
+  'minecraft.picked_up:minecraft.host_armor_trim_smithing_template' |
+  'minecraft.used:minecraft.host_armor_trim_smithing_template' |
+  'minecraft.crafted:minecraft.howl_pottery_shard' |
+  'minecraft.dropped:minecraft.howl_pottery_shard' |
+  'minecraft.picked_up:minecraft.howl_pottery_shard' |
+  'minecraft.used:minecraft.howl_pottery_shard' |
   'minecraft.crafted:minecraft.husk_spawn_egg' |
   'minecraft.dropped:minecraft.husk_spawn_egg' |
   'minecraft.picked_up:minecraft.husk_spawn_egg' |
@@ -5111,6 +5177,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.minecart' |
   'minecraft.picked_up:minecraft.minecart' |
   'minecraft.used:minecraft.minecart' |
+  'minecraft.crafted:minecraft.miner_pottery_shard' |
+  'minecraft.dropped:minecraft.miner_pottery_shard' |
+  'minecraft.picked_up:minecraft.miner_pottery_shard' |
+  'minecraft.used:minecraft.miner_pottery_shard' |
   'minecraft.crafted:minecraft.mojang_banner_pattern' |
   'minecraft.dropped:minecraft.mojang_banner_pattern' |
   'minecraft.picked_up:minecraft.mojang_banner_pattern' |
@@ -5159,6 +5229,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.mossy_stone_bricks' |
   'minecraft.picked_up:minecraft.mossy_stone_bricks' |
   'minecraft.used:minecraft.mossy_stone_bricks' |
+  'minecraft.crafted:minecraft.mourner_pottery_shard' |
+  'minecraft.dropped:minecraft.mourner_pottery_shard' |
+  'minecraft.picked_up:minecraft.mourner_pottery_shard' |
+  'minecraft.used:minecraft.mourner_pottery_shard' |
   'minecraft.crafted:minecraft.mud' |
   'minecraft.dropped:minecraft.mud' |
   'minecraft.picked_up:minecraft.mud' |
@@ -5671,10 +5745,22 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.piston' |
   'minecraft.picked_up:minecraft.piston' |
   'minecraft.used:minecraft.piston' |
+  'minecraft.crafted:minecraft.pitcher_plant' |
+  'minecraft.dropped:minecraft.pitcher_plant' |
+  'minecraft.picked_up:minecraft.pitcher_plant' |
+  'minecraft.used:minecraft.pitcher_plant' |
+  'minecraft.crafted:minecraft.pitcher_pod' |
+  'minecraft.dropped:minecraft.pitcher_pod' |
+  'minecraft.picked_up:minecraft.pitcher_pod' |
+  'minecraft.used:minecraft.pitcher_pod' |
   'minecraft.crafted:minecraft.player_head' |
   'minecraft.dropped:minecraft.player_head' |
   'minecraft.picked_up:minecraft.player_head' |
   'minecraft.used:minecraft.player_head' |
+  'minecraft.crafted:minecraft.plenty_pottery_shard' |
+  'minecraft.dropped:minecraft.plenty_pottery_shard' |
+  'minecraft.picked_up:minecraft.plenty_pottery_shard' |
+  'minecraft.used:minecraft.plenty_pottery_shard' |
   'minecraft.crafted:minecraft.podzol' |
   'minecraft.dropped:minecraft.podzol' |
   'minecraft.picked_up:minecraft.podzol' |
@@ -5807,22 +5893,6 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.potion' |
   'minecraft.picked_up:minecraft.potion' |
   'minecraft.used:minecraft.potion' |
-  'minecraft.crafted:minecraft.pottery_shard_archer' |
-  'minecraft.dropped:minecraft.pottery_shard_archer' |
-  'minecraft.picked_up:minecraft.pottery_shard_archer' |
-  'minecraft.used:minecraft.pottery_shard_archer' |
-  'minecraft.crafted:minecraft.pottery_shard_arms_up' |
-  'minecraft.dropped:minecraft.pottery_shard_arms_up' |
-  'minecraft.picked_up:minecraft.pottery_shard_arms_up' |
-  'minecraft.used:minecraft.pottery_shard_arms_up' |
-  'minecraft.crafted:minecraft.pottery_shard_prize' |
-  'minecraft.dropped:minecraft.pottery_shard_prize' |
-  'minecraft.picked_up:minecraft.pottery_shard_prize' |
-  'minecraft.used:minecraft.pottery_shard_prize' |
-  'minecraft.crafted:minecraft.pottery_shard_skull' |
-  'minecraft.dropped:minecraft.pottery_shard_skull' |
-  'minecraft.picked_up:minecraft.pottery_shard_skull' |
-  'minecraft.used:minecraft.pottery_shard_skull' |
   'minecraft.crafted:minecraft.powder_snow_bucket' |
   'minecraft.dropped:minecraft.powder_snow_bucket' |
   'minecraft.picked_up:minecraft.powder_snow_bucket' |
@@ -5867,6 +5937,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.prismarine_wall' |
   'minecraft.picked_up:minecraft.prismarine_wall' |
   'minecraft.used:minecraft.prismarine_wall' |
+  'minecraft.crafted:minecraft.prize_pottery_shard' |
+  'minecraft.dropped:minecraft.prize_pottery_shard' |
+  'minecraft.picked_up:minecraft.prize_pottery_shard' |
+  'minecraft.used:minecraft.prize_pottery_shard' |
   'minecraft.crafted:minecraft.pufferfish' |
   'minecraft.dropped:minecraft.pufferfish' |
   'minecraft.picked_up:minecraft.pufferfish' |
@@ -6007,6 +6081,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.rail' |
   'minecraft.picked_up:minecraft.rail' |
   'minecraft.used:minecraft.rail' |
+  'minecraft.crafted:minecraft.raiser_armor_trim_smithing_template' |
+  'minecraft.dropped:minecraft.raiser_armor_trim_smithing_template' |
+  'minecraft.picked_up:minecraft.raiser_armor_trim_smithing_template' |
+  'minecraft.used:minecraft.raiser_armor_trim_smithing_template' |
   'minecraft.crafted:minecraft.ravager_spawn_egg' |
   'minecraft.dropped:minecraft.ravager_spawn_egg' |
   'minecraft.picked_up:minecraft.ravager_spawn_egg' |
@@ -6271,6 +6349,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.sentry_armor_trim_smithing_template' |
   'minecraft.picked_up:minecraft.sentry_armor_trim_smithing_template' |
   'minecraft.used:minecraft.sentry_armor_trim_smithing_template' |
+  'minecraft.crafted:minecraft.shaper_armor_trim_smithing_template' |
+  'minecraft.dropped:minecraft.shaper_armor_trim_smithing_template' |
+  'minecraft.picked_up:minecraft.shaper_armor_trim_smithing_template' |
+  'minecraft.used:minecraft.shaper_armor_trim_smithing_template' |
+  'minecraft.crafted:minecraft.sheaf_pottery_shard' |
+  'minecraft.dropped:minecraft.sheaf_pottery_shard' |
+  'minecraft.picked_up:minecraft.sheaf_pottery_shard' |
+  'minecraft.used:minecraft.sheaf_pottery_shard' |
   'minecraft.crafted:minecraft.shears' |
   'minecraft.dropped:minecraft.shears' |
   'minecraft.picked_up:minecraft.shears' |
@@ -6279,6 +6365,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.sheep_spawn_egg' |
   'minecraft.picked_up:minecraft.sheep_spawn_egg' |
   'minecraft.used:minecraft.sheep_spawn_egg' |
+  'minecraft.crafted:minecraft.shelter_pottery_shard' |
+  'minecraft.dropped:minecraft.shelter_pottery_shard' |
+  'minecraft.picked_up:minecraft.shelter_pottery_shard' |
+  'minecraft.used:minecraft.shelter_pottery_shard' |
   'minecraft.crafted:minecraft.shield' |
   'minecraft.dropped:minecraft.shield' |
   'minecraft.picked_up:minecraft.shield' |
@@ -6299,6 +6389,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.shulker_spawn_egg' |
   'minecraft.picked_up:minecraft.shulker_spawn_egg' |
   'minecraft.used:minecraft.shulker_spawn_egg' |
+  'minecraft.crafted:minecraft.silence_armor_trim_smithing_template' |
+  'minecraft.dropped:minecraft.silence_armor_trim_smithing_template' |
+  'minecraft.picked_up:minecraft.silence_armor_trim_smithing_template' |
+  'minecraft.used:minecraft.silence_armor_trim_smithing_template' |
   'minecraft.crafted:minecraft.silverfish_spawn_egg' |
   'minecraft.dropped:minecraft.silverfish_spawn_egg' |
   'minecraft.picked_up:minecraft.silverfish_spawn_egg' |
@@ -6319,6 +6413,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.skull_banner_pattern' |
   'minecraft.picked_up:minecraft.skull_banner_pattern' |
   'minecraft.used:minecraft.skull_banner_pattern' |
+  'minecraft.crafted:minecraft.skull_pottery_shard' |
+  'minecraft.dropped:minecraft.skull_pottery_shard' |
+  'minecraft.picked_up:minecraft.skull_pottery_shard' |
+  'minecraft.used:minecraft.skull_pottery_shard' |
   'minecraft.crafted:minecraft.slime_ball' |
   'minecraft.dropped:minecraft.slime_ball' |
   'minecraft.picked_up:minecraft.slime_ball' |
@@ -6395,10 +6493,18 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.smooth_stone_slab' |
   'minecraft.picked_up:minecraft.smooth_stone_slab' |
   'minecraft.used:minecraft.smooth_stone_slab' |
+  'minecraft.crafted:minecraft.sniffer_egg' |
+  'minecraft.dropped:minecraft.sniffer_egg' |
+  'minecraft.picked_up:minecraft.sniffer_egg' |
+  'minecraft.used:minecraft.sniffer_egg' |
   'minecraft.crafted:minecraft.sniffer_spawn_egg' |
   'minecraft.dropped:minecraft.sniffer_spawn_egg' |
   'minecraft.picked_up:minecraft.sniffer_spawn_egg' |
   'minecraft.used:minecraft.sniffer_spawn_egg' |
+  'minecraft.crafted:minecraft.snort_pottery_shard' |
+  'minecraft.dropped:minecraft.snort_pottery_shard' |
+  'minecraft.picked_up:minecraft.snort_pottery_shard' |
+  'minecraft.used:minecraft.snort_pottery_shard' |
   'minecraft.crafted:minecraft.snout_armor_trim_smithing_template' |
   'minecraft.dropped:minecraft.snout_armor_trim_smithing_template' |
   'minecraft.picked_up:minecraft.snout_armor_trim_smithing_template' |
@@ -6731,6 +6837,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.sunflower' |
   'minecraft.picked_up:minecraft.sunflower' |
   'minecraft.used:minecraft.sunflower' |
+  'minecraft.crafted:minecraft.suspicious_gravel' |
+  'minecraft.dropped:minecraft.suspicious_gravel' |
+  'minecraft.picked_up:minecraft.suspicious_gravel' |
+  'minecraft.used:minecraft.suspicious_gravel' |
   'minecraft.crafted:minecraft.suspicious_sand' |
   'minecraft.dropped:minecraft.suspicious_sand' |
   'minecraft.picked_up:minecraft.suspicious_sand' |
@@ -7035,6 +7145,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.waxed_weathered_cut_copper_stairs' |
   'minecraft.picked_up:minecraft.waxed_weathered_cut_copper_stairs' |
   'minecraft.used:minecraft.waxed_weathered_cut_copper_stairs' |
+  'minecraft.crafted:minecraft.wayfinder_armor_trim_smithing_template' |
+  'minecraft.dropped:minecraft.wayfinder_armor_trim_smithing_template' |
+  'minecraft.picked_up:minecraft.wayfinder_armor_trim_smithing_template' |
+  'minecraft.used:minecraft.wayfinder_armor_trim_smithing_template' |
   'minecraft.crafted:minecraft.weathered_copper' |
   'minecraft.dropped:minecraft.weathered_copper' |
   'minecraft.picked_up:minecraft.weathered_copper' |

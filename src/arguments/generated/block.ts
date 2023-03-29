@@ -152,6 +152,7 @@ export type BLOCKS = (
   'cactus' |
   'cake' |
   'calcite' |
+  'calibrated_sculk_sensor' |
   'campfire' |
   'candle' |
   'candle_cake' |
@@ -653,6 +654,8 @@ export type BLOCKS = (
   'pink_wool' |
   'piston' |
   'piston_head' |
+  'pitcher_crop' |
+  'pitcher_plant' |
   'player_head' |
   'player_wall_head' |
   'podzol' |
@@ -829,6 +832,7 @@ export type BLOCKS = (
   'smooth_sandstone_stairs' |
   'smooth_stone' |
   'smooth_stone_slab' |
+  'sniffer_egg' |
   'snow' |
   'snow_block' |
   'soul_campfire' |
@@ -894,6 +898,7 @@ export type BLOCKS = (
   'structure_void' |
   'sugar_cane' |
   'sunflower' |
+  'suspicious_gravel' |
   'suspicious_sand' |
   'sweet_berry_bush' |
   'tall_grass' |

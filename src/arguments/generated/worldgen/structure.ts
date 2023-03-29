@@ -28,6 +28,7 @@ export type WORLDGEN_STRUCTURES = (
   'shipwreck_beached' |
   'stronghold' |
   'swamp_hut' |
+  'trail_ruins' |
   'village_desert' |
   'village_plains' |
   'village_savanna' |
