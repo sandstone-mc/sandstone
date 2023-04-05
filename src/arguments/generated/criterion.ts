@@ -352,6 +352,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.chain' |
   'minecraft.broken:minecraft.chain_command_block' |
   'minecraft.mined:minecraft.chain_command_block' |
+  'minecraft.broken:minecraft.cheese' |
+  'minecraft.mined:minecraft.cheese' |
   'minecraft.broken:minecraft.cherry_button' |
   'minecraft.mined:minecraft.cherry_button' |
   'minecraft.broken:minecraft.cherry_door' |
@@ -450,6 +452,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.copper_block' |
   'minecraft.broken:minecraft.copper_ore' |
   'minecraft.mined:minecraft.copper_ore' |
+  'minecraft.broken:minecraft.copper_sink' |
+  'minecraft.mined:minecraft.copper_sink' |
+  'minecraft.broken:minecraft.copper_spleaves' |
+  'minecraft.mined:minecraft.copper_spleaves' |
   'minecraft.broken:minecraft.cornflower' |
   'minecraft.mined:minecraft.cornflower' |
   'minecraft.broken:minecraft.cracked_deepslate_bricks' |
@@ -742,6 +748,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.farmland' |
   'minecraft.broken:minecraft.fern' |
   'minecraft.mined:minecraft.fern' |
+  'minecraft.broken:minecraft.filled_copper_sink' |
+  'minecraft.mined:minecraft.filled_copper_sink' |
   'minecraft.broken:minecraft.fire' |
   'minecraft.mined:minecraft.fire' |
   'minecraft.broken:minecraft.fire_coral' |
@@ -1270,6 +1278,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.orange_wall_banner' |
   'minecraft.broken:minecraft.orange_wool' |
   'minecraft.mined:minecraft.orange_wool' |
+  'minecraft.broken:minecraft.other_portal' |
+  'minecraft.mined:minecraft.other_portal' |
   'minecraft.broken:minecraft.oxeye_daisy' |
   'minecraft.mined:minecraft.oxeye_daisy' |
   'minecraft.broken:minecraft.oxidized_copper' |
@@ -1280,6 +1290,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.oxidized_cut_copper_slab' |
   'minecraft.broken:minecraft.oxidized_cut_copper_stairs' |
   'minecraft.mined:minecraft.oxidized_cut_copper_stairs' |
+  'minecraft.broken:minecraft.packed_air' |
+  'minecraft.mined:minecraft.packed_air' |
   'minecraft.broken:minecraft.packed_ice' |
   'minecraft.mined:minecraft.packed_ice' |
   'minecraft.broken:minecraft.packed_mud' |
@@ -1290,6 +1302,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.peony' |
   'minecraft.broken:minecraft.petrified_oak_slab' |
   'minecraft.mined:minecraft.petrified_oak_slab' |
+  'minecraft.broken:minecraft.pickaxe_block' |
+  'minecraft.mined:minecraft.pickaxe_block' |
   'minecraft.broken:minecraft.piglin_head' |
   'minecraft.mined:minecraft.piglin_head' |
   'minecraft.broken:minecraft.piglin_wall_head' |
@@ -1334,6 +1348,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.pitcher_crop' |
   'minecraft.broken:minecraft.pitcher_plant' |
   'minecraft.mined:minecraft.pitcher_plant' |
+  'minecraft.broken:minecraft.place_block' |
+  'minecraft.mined:minecraft.place_block' |
   'minecraft.broken:minecraft.player_head' |
   'minecraft.mined:minecraft.player_head' |
   'minecraft.broken:minecraft.player_wall_head' |
@@ -2162,6 +2178,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.marker' |
   'minecraft.killed:minecraft.minecart' |
   'minecraft.killed_by:minecraft.minecart' |
+  'minecraft.killed:minecraft.moon_cow' |
+  'minecraft.killed_by:minecraft.moon_cow' |
   'minecraft.killed:minecraft.mooshroom' |
   'minecraft.killed_by:minecraft.mooshroom' |
   'minecraft.killed:minecraft.mule' |
@@ -2196,6 +2214,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.rabbit' |
   'minecraft.killed:minecraft.ravager' |
   'minecraft.killed_by:minecraft.ravager' |
+  'minecraft.killed:minecraft.ray_tracing' |
+  'minecraft.killed_by:minecraft.ray_tracing' |
   'minecraft.killed:minecraft.salmon' |
   'minecraft.killed_by:minecraft.salmon' |
   'minecraft.killed:minecraft.sheep' |
@@ -2228,6 +2248,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.spider' |
   'minecraft.killed:minecraft.squid' |
   'minecraft.killed_by:minecraft.squid' |
+  'minecraft.killed:minecraft.stencil_display' |
+  'minecraft.killed_by:minecraft.stencil_display' |
   'minecraft.killed:minecraft.stray' |
   'minecraft.killed_by:minecraft.stray' |
   'minecraft.killed:minecraft.strider' |
@@ -2350,6 +2372,7 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.custom:minecraft.trigger_trapped_chest' |
   'minecraft.custom:minecraft.tune_noteblock' |
   'minecraft.custom:minecraft.use_cauldron' |
+  'minecraft.custom:minecraft.votes' |
   'minecraft.custom:minecraft.walk_on_water_one_cm' |
   'minecraft.custom:minecraft.walk_one_cm' |
   'minecraft.custom:minecraft.walk_under_water_one_cm' |
@@ -2429,6 +2452,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.air' |
   'minecraft.picked_up:minecraft.air' |
   'minecraft.used:minecraft.air' |
+  'minecraft.crafted:minecraft.air_block' |
+  'minecraft.dropped:minecraft.air_block' |
+  'minecraft.picked_up:minecraft.air_block' |
+  'minecraft.used:minecraft.air_block' |
   'minecraft.crafted:minecraft.allay_spawn_egg' |
   'minecraft.dropped:minecraft.allay_spawn_egg' |
   'minecraft.picked_up:minecraft.allay_spawn_egg' |
@@ -2721,6 +2748,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.birch_wood' |
   'minecraft.picked_up:minecraft.birch_wood' |
   'minecraft.used:minecraft.birch_wood' |
+  'minecraft.crafted:minecraft.bit' |
+  'minecraft.dropped:minecraft.bit' |
+  'minecraft.picked_up:minecraft.bit' |
+  'minecraft.used:minecraft.bit' |
   'minecraft.crafted:minecraft.black_banner' |
   'minecraft.dropped:minecraft.black_banner' |
   'minecraft.picked_up:minecraft.black_banner' |
@@ -2889,6 +2920,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.bookshelf' |
   'minecraft.picked_up:minecraft.bookshelf' |
   'minecraft.used:minecraft.bookshelf' |
+  'minecraft.crafted:minecraft.bottle_of_entity' |
+  'minecraft.dropped:minecraft.bottle_of_entity' |
+  'minecraft.picked_up:minecraft.bottle_of_entity' |
+  'minecraft.used:minecraft.bottle_of_entity' |
+  'minecraft.crafted:minecraft.bottle_of_void' |
+  'minecraft.dropped:minecraft.bottle_of_void' |
+  'minecraft.picked_up:minecraft.bottle_of_void' |
+  'minecraft.used:minecraft.bottle_of_void' |
   'minecraft.crafted:minecraft.bow' |
   'minecraft.dropped:minecraft.bow' |
   'minecraft.picked_up:minecraft.bow' |
@@ -3033,6 +3072,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.burn_pottery_shard' |
   'minecraft.picked_up:minecraft.burn_pottery_shard' |
   'minecraft.used:minecraft.burn_pottery_shard' |
+  'minecraft.crafted:minecraft.byte_tag' |
+  'minecraft.dropped:minecraft.byte_tag' |
+  'minecraft.picked_up:minecraft.byte_tag' |
+  'minecraft.used:minecraft.byte_tag' |
   'minecraft.crafted:minecraft.cactus' |
   'minecraft.dropped:minecraft.cactus' |
   'minecraft.picked_up:minecraft.cactus' |
@@ -3117,6 +3160,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.charcoal' |
   'minecraft.picked_up:minecraft.charcoal' |
   'minecraft.used:minecraft.charcoal' |
+  'minecraft.crafted:minecraft.cheese' |
+  'minecraft.dropped:minecraft.cheese' |
+  'minecraft.picked_up:minecraft.cheese' |
+  'minecraft.used:minecraft.cheese' |
   'minecraft.crafted:minecraft.cherry_boat' |
   'minecraft.dropped:minecraft.cherry_boat' |
   'minecraft.picked_up:minecraft.cherry_boat' |
@@ -3353,6 +3400,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.composter' |
   'minecraft.picked_up:minecraft.composter' |
   'minecraft.used:minecraft.composter' |
+  'minecraft.crafted:minecraft.compound_tag' |
+  'minecraft.dropped:minecraft.compound_tag' |
+  'minecraft.picked_up:minecraft.compound_tag' |
+  'minecraft.used:minecraft.compound_tag' |
   'minecraft.crafted:minecraft.conduit' |
   'minecraft.dropped:minecraft.conduit' |
   'minecraft.picked_up:minecraft.conduit' |
@@ -3401,6 +3452,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.copper_ore' |
   'minecraft.picked_up:minecraft.copper_ore' |
   'minecraft.used:minecraft.copper_ore' |
+  'minecraft.crafted:minecraft.copper_sink' |
+  'minecraft.dropped:minecraft.copper_sink' |
+  'minecraft.picked_up:minecraft.copper_sink' |
+  'minecraft.used:minecraft.copper_sink' |
+  'minecraft.crafted:minecraft.copper_spleaves' |
+  'minecraft.dropped:minecraft.copper_spleaves' |
+  'minecraft.picked_up:minecraft.copper_spleaves' |
+  'minecraft.used:minecraft.copper_spleaves' |
   'minecraft.crafted:minecraft.cornflower' |
   'minecraft.dropped:minecraft.cornflower' |
   'minecraft.picked_up:minecraft.cornflower' |
@@ -3929,6 +3988,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.donkey_spawn_egg' |
   'minecraft.picked_up:minecraft.donkey_spawn_egg' |
   'minecraft.used:minecraft.donkey_spawn_egg' |
+  'minecraft.crafted:minecraft.double_tag' |
+  'minecraft.dropped:minecraft.double_tag' |
+  'minecraft.picked_up:minecraft.double_tag' |
+  'minecraft.used:minecraft.double_tag' |
   'minecraft.crafted:minecraft.dragon_breath' |
   'minecraft.dropped:minecraft.dragon_breath' |
   'minecraft.picked_up:minecraft.dragon_breath' |
@@ -3965,6 +4028,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.dune_armor_trim_smithing_template' |
   'minecraft.picked_up:minecraft.dune_armor_trim_smithing_template' |
   'minecraft.used:minecraft.dune_armor_trim_smithing_template' |
+  'minecraft.crafted:minecraft.dupe_hack' |
+  'minecraft.dropped:minecraft.dupe_hack' |
+  'minecraft.picked_up:minecraft.dupe_hack' |
+  'minecraft.used:minecraft.dupe_hack' |
   'minecraft.crafted:minecraft.echo_shard' |
   'minecraft.dropped:minecraft.echo_shard' |
   'minecraft.picked_up:minecraft.echo_shard' |
@@ -4153,6 +4220,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.flint_and_steel' |
   'minecraft.picked_up:minecraft.flint_and_steel' |
   'minecraft.used:minecraft.flint_and_steel' |
+  'minecraft.crafted:minecraft.float_tag' |
+  'minecraft.dropped:minecraft.float_tag' |
+  'minecraft.picked_up:minecraft.float_tag' |
+  'minecraft.used:minecraft.float_tag' |
   'minecraft.crafted:minecraft.flower_banner_pattern' |
   'minecraft.dropped:minecraft.flower_banner_pattern' |
   'minecraft.picked_up:minecraft.flower_banner_pattern' |
@@ -4585,6 +4656,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.ink_sac' |
   'minecraft.picked_up:minecraft.ink_sac' |
   'minecraft.used:minecraft.ink_sac' |
+  'minecraft.crafted:minecraft.int_tag' |
+  'minecraft.dropped:minecraft.int_tag' |
+  'minecraft.picked_up:minecraft.int_tag' |
+  'minecraft.used:minecraft.int_tag' |
   'minecraft.crafted:minecraft.iron_axe' |
   'minecraft.dropped:minecraft.iron_axe' |
   'minecraft.picked_up:minecraft.iron_axe' |
@@ -4749,6 +4824,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.knowledge_book' |
   'minecraft.picked_up:minecraft.knowledge_book' |
   'minecraft.used:minecraft.knowledge_book' |
+  'minecraft.crafted:minecraft.la_baguette' |
+  'minecraft.dropped:minecraft.la_baguette' |
+  'minecraft.picked_up:minecraft.la_baguette' |
+  'minecraft.used:minecraft.la_baguette' |
   'minecraft.crafted:minecraft.ladder' |
   'minecraft.dropped:minecraft.ladder' |
   'minecraft.picked_up:minecraft.ladder' |
@@ -4781,6 +4860,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.lava_bucket' |
   'minecraft.picked_up:minecraft.lava_bucket' |
   'minecraft.used:minecraft.lava_bucket' |
+  'minecraft.crafted:minecraft.le_tricolore' |
+  'minecraft.dropped:minecraft.le_tricolore' |
+  'minecraft.picked_up:minecraft.le_tricolore' |
+  'minecraft.used:minecraft.le_tricolore' |
   'minecraft.crafted:minecraft.lead' |
   'minecraft.dropped:minecraft.lead' |
   'minecraft.picked_up:minecraft.lead' |
@@ -4813,6 +4896,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.lectern' |
   'minecraft.picked_up:minecraft.lectern' |
   'minecraft.used:minecraft.lectern' |
+  'minecraft.crafted:minecraft.left_curly' |
+  'minecraft.dropped:minecraft.left_curly' |
+  'minecraft.picked_up:minecraft.left_curly' |
+  'minecraft.used:minecraft.left_curly' |
+  'minecraft.crafted:minecraft.left_square' |
+  'minecraft.dropped:minecraft.left_square' |
+  'minecraft.picked_up:minecraft.left_square' |
+  'minecraft.used:minecraft.left_square' |
   'minecraft.crafted:minecraft.lever' |
   'minecraft.dropped:minecraft.lever' |
   'minecraft.picked_up:minecraft.lever' |
@@ -5001,6 +5092,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.lingering_potion' |
   'minecraft.picked_up:minecraft.lingering_potion' |
   'minecraft.used:minecraft.lingering_potion' |
+  'minecraft.crafted:minecraft.list_tag' |
+  'minecraft.dropped:minecraft.list_tag' |
+  'minecraft.picked_up:minecraft.list_tag' |
+  'minecraft.used:minecraft.list_tag' |
   'minecraft.crafted:minecraft.llama_spawn_egg' |
   'minecraft.dropped:minecraft.llama_spawn_egg' |
   'minecraft.picked_up:minecraft.llama_spawn_egg' |
@@ -5009,10 +5104,18 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.lodestone' |
   'minecraft.picked_up:minecraft.lodestone' |
   'minecraft.used:minecraft.lodestone' |
+  'minecraft.crafted:minecraft.long_tag' |
+  'minecraft.dropped:minecraft.long_tag' |
+  'minecraft.picked_up:minecraft.long_tag' |
+  'minecraft.used:minecraft.long_tag' |
   'minecraft.crafted:minecraft.loom' |
   'minecraft.dropped:minecraft.loom' |
   'minecraft.picked_up:minecraft.loom' |
   'minecraft.used:minecraft.loom' |
+  'minecraft.crafted:minecraft.m_banner_pattern' |
+  'minecraft.dropped:minecraft.m_banner_pattern' |
+  'minecraft.picked_up:minecraft.m_banner_pattern' |
+  'minecraft.used:minecraft.m_banner_pattern' |
   'minecraft.crafted:minecraft.magenta_banner' |
   'minecraft.dropped:minecraft.magenta_banner' |
   'minecraft.picked_up:minecraft.magenta_banner' |
@@ -5185,6 +5288,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.mojang_banner_pattern' |
   'minecraft.picked_up:minecraft.mojang_banner_pattern' |
   'minecraft.used:minecraft.mojang_banner_pattern' |
+  'minecraft.crafted:minecraft.moon_cow_spawn_egg' |
+  'minecraft.dropped:minecraft.moon_cow_spawn_egg' |
+  'minecraft.picked_up:minecraft.moon_cow_spawn_egg' |
+  'minecraft.used:minecraft.moon_cow_spawn_egg' |
   'minecraft.crafted:minecraft.mooshroom_spawn_egg' |
   'minecraft.dropped:minecraft.mooshroom_spawn_egg' |
   'minecraft.picked_up:minecraft.mooshroom_spawn_egg' |
@@ -5337,6 +5444,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.mycelium' |
   'minecraft.picked_up:minecraft.mycelium' |
   'minecraft.used:minecraft.mycelium' |
+  'minecraft.crafted:minecraft.name' |
+  'minecraft.dropped:minecraft.name' |
+  'minecraft.picked_up:minecraft.name' |
+  'minecraft.used:minecraft.name' |
   'minecraft.crafted:minecraft.name_tag' |
   'minecraft.dropped:minecraft.name_tag' |
   'minecraft.picked_up:minecraft.name_tag' |
@@ -5613,6 +5724,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.oxidized_cut_copper_stairs' |
   'minecraft.picked_up:minecraft.oxidized_cut_copper_stairs' |
   'minecraft.used:minecraft.oxidized_cut_copper_stairs' |
+  'minecraft.crafted:minecraft.packed_air' |
+  'minecraft.dropped:minecraft.packed_air' |
+  'minecraft.picked_up:minecraft.packed_air' |
+  'minecraft.used:minecraft.packed_air' |
   'minecraft.crafted:minecraft.packed_ice' |
   'minecraft.dropped:minecraft.packed_ice' |
   'minecraft.picked_up:minecraft.packed_ice' |
@@ -5657,6 +5772,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.phantom_spawn_egg' |
   'minecraft.picked_up:minecraft.phantom_spawn_egg' |
   'minecraft.used:minecraft.phantom_spawn_egg' |
+  'minecraft.crafted:minecraft.pickaxe_block' |
+  'minecraft.dropped:minecraft.pickaxe_block' |
+  'minecraft.picked_up:minecraft.pickaxe_block' |
+  'minecraft.used:minecraft.pickaxe_block' |
   'minecraft.crafted:minecraft.pig_spawn_egg' |
   'minecraft.dropped:minecraft.pig_spawn_egg' |
   'minecraft.picked_up:minecraft.pig_spawn_egg' |
@@ -5753,6 +5872,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.pitcher_pod' |
   'minecraft.picked_up:minecraft.pitcher_pod' |
   'minecraft.used:minecraft.pitcher_pod' |
+  'minecraft.crafted:minecraft.place_block' |
+  'minecraft.dropped:minecraft.place_block' |
+  'minecraft.picked_up:minecraft.place_block' |
+  'minecraft.used:minecraft.place_block' |
   'minecraft.crafted:minecraft.player_head' |
   'minecraft.dropped:minecraft.player_head' |
   'minecraft.picked_up:minecraft.player_head' |
@@ -6257,6 +6380,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.rib_armor_trim_smithing_template' |
   'minecraft.picked_up:minecraft.rib_armor_trim_smithing_template' |
   'minecraft.used:minecraft.rib_armor_trim_smithing_template' |
+  'minecraft.crafted:minecraft.right_curly' |
+  'minecraft.dropped:minecraft.right_curly' |
+  'minecraft.picked_up:minecraft.right_curly' |
+  'minecraft.used:minecraft.right_curly' |
+  'minecraft.crafted:minecraft.right_square' |
+  'minecraft.dropped:minecraft.right_square' |
+  'minecraft.picked_up:minecraft.right_square' |
+  'minecraft.used:minecraft.right_square' |
   'minecraft.crafted:minecraft.rooted_dirt' |
   'minecraft.dropped:minecraft.rooted_dirt' |
   'minecraft.picked_up:minecraft.rooted_dirt' |
@@ -6373,6 +6504,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.shield' |
   'minecraft.picked_up:minecraft.shield' |
   'minecraft.used:minecraft.shield' |
+  'minecraft.crafted:minecraft.short_tag' |
+  'minecraft.dropped:minecraft.short_tag' |
+  'minecraft.picked_up:minecraft.short_tag' |
+  'minecraft.used:minecraft.short_tag' |
   'minecraft.crafted:minecraft.shroomlight' |
   'minecraft.dropped:minecraft.shroomlight' |
   'minecraft.picked_up:minecraft.shroomlight' |
@@ -6565,6 +6700,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.spire_armor_trim_smithing_template' |
   'minecraft.picked_up:minecraft.spire_armor_trim_smithing_template' |
   'minecraft.used:minecraft.spire_armor_trim_smithing_template' |
+  'minecraft.crafted:minecraft.splash_bottle_of_entity' |
+  'minecraft.dropped:minecraft.splash_bottle_of_entity' |
+  'minecraft.picked_up:minecraft.splash_bottle_of_entity' |
+  'minecraft.used:minecraft.splash_bottle_of_entity' |
   'minecraft.crafted:minecraft.splash_potion' |
   'minecraft.dropped:minecraft.splash_potion' |
   'minecraft.picked_up:minecraft.splash_potion' |
@@ -6733,6 +6872,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.string' |
   'minecraft.picked_up:minecraft.string' |
   'minecraft.used:minecraft.string' |
+  'minecraft.crafted:minecraft.string2' |
+  'minecraft.dropped:minecraft.string2' |
+  'minecraft.picked_up:minecraft.string2' |
+  'minecraft.used:minecraft.string2' |
+  'minecraft.crafted:minecraft.string_tag' |
+  'minecraft.dropped:minecraft.string_tag' |
+  'minecraft.picked_up:minecraft.string_tag' |
+  'minecraft.used:minecraft.string_tag' |
   'minecraft.crafted:minecraft.stripped_acacia_log' |
   'minecraft.dropped:minecraft.stripped_acacia_log' |
   'minecraft.picked_up:minecraft.stripped_acacia_log' |
@@ -6853,6 +7000,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.sweet_berries' |
   'minecraft.picked_up:minecraft.sweet_berries' |
   'minecraft.used:minecraft.sweet_berries' |
+  'minecraft.crafted:minecraft.syntax_error' |
+  'minecraft.dropped:minecraft.syntax_error' |
+  'minecraft.picked_up:minecraft.syntax_error' |
+  'minecraft.used:minecraft.syntax_error' |
   'minecraft.crafted:minecraft.tadpole_bucket' |
   'minecraft.dropped:minecraft.tadpole_bucket' |
   'minecraft.picked_up:minecraft.tadpole_bucket' |
@@ -6861,6 +7012,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.tadpole_spawn_egg' |
   'minecraft.picked_up:minecraft.tadpole_spawn_egg' |
   'minecraft.used:minecraft.tadpole_spawn_egg' |
+  'minecraft.crafted:minecraft.tag' |
+  'minecraft.dropped:minecraft.tag' |
+  'minecraft.picked_up:minecraft.tag' |
+  'minecraft.used:minecraft.tag' |
   'minecraft.crafted:minecraft.tall_grass' |
   'minecraft.dropped:minecraft.tall_grass' |
   'minecraft.picked_up:minecraft.tall_grass' |

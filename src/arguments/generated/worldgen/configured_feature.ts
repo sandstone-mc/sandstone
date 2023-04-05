@@ -72,11 +72,14 @@ export type WORLDGEN_CONFIGURED_FEATURES = (
   'kelp' |
   'lake_lava' |
   'large_basalt_columns' |
+  'large_crater' |
   'large_dripstone' |
+  'lunar_base' |
   'lush_caves_clay' |
   'mangrove' |
   'mangrove_vegetation' |
   'meadow_trees' |
+  'mega_crater' |
   'mega_jungle_tree' |
   'mega_pine' |
   'mega_spruce' |
@@ -160,6 +163,7 @@ export type WORLDGEN_CONFIGURED_FEATURES = (
   'seagrass_tall' |
   'single_piece_of_grass' |
   'small_basalt_columns' |
+  'small_crater' |
   'spore_blossom' |
   'spring_lava_frozen' |
   'spring_lava_nether' |

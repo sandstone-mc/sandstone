@@ -12,6 +12,7 @@ export type ATTRIBUTES = (
   'generic.luck' |
   'generic.max_health' |
   'generic.movement_speed' |
+  'generic.scale' |
   'horse.jump_strength' |
   'zombie.spawn_reinforcements'
 )

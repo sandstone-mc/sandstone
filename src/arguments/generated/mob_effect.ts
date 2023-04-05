@@ -3,6 +3,7 @@
 export type MOB_EFFECTS = (
   'absorption' |
   'bad_omen' |
+  'big' |
   'blindness' |
   'conduit_power' |
   'darkness' |
@@ -28,6 +29,7 @@ export type MOB_EFFECTS = (
   'saturation' |
   'slow_falling' |
   'slowness' |
+  'small' |
   'speed' |
   'strength' |
   'unluck' |

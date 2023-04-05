@@ -51,6 +51,7 @@ export type PARTICLE_TYPES = (
   'fishing' |
   'flame' |
   'flash' |
+  'footstep' |
   'glow' |
   'glow_squid_ink' |
   'happy_villager' |

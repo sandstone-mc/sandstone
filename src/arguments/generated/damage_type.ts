@@ -25,10 +25,12 @@ export type DAMAGE_TYPES = (
   'lava' |
   'lightning_bolt' |
   'magic' |
+  'midas_curse' |
   'mob_attack' |
   'mob_attack_no_aggro' |
   'mob_projectile' |
   'on_fire' |
+  'on_moon' |
   'out_of_world' |
   'player_attack' |
   'player_explosion' |

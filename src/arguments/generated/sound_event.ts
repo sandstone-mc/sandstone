@@ -1456,6 +1456,7 @@ export type SOUND_EVENTS = (
   'music_disc.wait' |
   'music_disc.ward' |
   'particle.soul_escape' |
+  'the_joke' |
   'ui.button.click' |
   'ui.cartography_table.take_result' |
   'ui.loom.select_pattern' |

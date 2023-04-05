@@ -67,6 +67,7 @@ export type ENTITY_TYPES = (
   'magma_cube' |
   'marker' |
   'minecart' |
+  'moon_cow' |
   'mooshroom' |
   'mule' |
   'ocelot' |
@@ -84,6 +85,7 @@ export type ENTITY_TYPES = (
   'pufferfish' |
   'rabbit' |
   'ravager' |
+  'ray_tracing' |
   'salmon' |
   'sheep' |
   'shulker' |
@@ -100,6 +102,7 @@ export type ENTITY_TYPES = (
   'spectral_arrow' |
   'spider' |
   'squid' |
+  'stencil_display' |
   'stray' |
   'strider' |
   'tadpole' |
