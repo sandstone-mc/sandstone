@@ -569,6 +569,8 @@ export type SOUND_EVENTS = (
   'block.small_dripleaf.step' |
   'block.smithing_table.use' |
   'block.smoker.smoke' |
+  'block.sniffer.egg_crack' |
+  'block.sniffer.egg_hatch' |
   'block.snow.break' |
   'block.snow.fall' |
   'block.snow.hit' |
@@ -1160,8 +1162,6 @@ export type SOUND_EVENTS = (
   'entity.sniffer.digging_stop' |
   'entity.sniffer.drop_seed' |
   'entity.sniffer.eat' |
-  'entity.sniffer.egg_crack' |
-  'entity.sniffer.egg_hatch' |
   'entity.sniffer.happy' |
   'entity.sniffer.hurt' |
   'entity.sniffer.idle' |
@@ -1456,7 +1456,6 @@ export type SOUND_EVENTS = (
   'music_disc.wait' |
   'music_disc.ward' |
   'particle.soul_escape' |
-  'the_joke' |
   'ui.button.click' |
   'ui.cartography_table.take_result' |
   'ui.loom.select_pattern' |

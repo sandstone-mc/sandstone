@@ -3,8 +3,6 @@
 export type TRANSLATION_KEYS = (
   'accessibility.onboarding.screen.narrator' |
   'accessibility.onboarding.screen.title' |
-  'action.repeal' |
-  'action.approve' |
   'addServer.add' |
   'addServer.enterIp' |
   'addServer.enterName' |
@@ -21,10 +19,6 @@ export type TRANSLATION_KEYS = (
   'advancements.adventure.arbalistic.title' |
   'advancements.adventure.avoid_vibration.description' |
   'advancements.adventure.avoid_vibration.title' |
-  'advancements.adventure.vote_1.title' |
-  'advancements.adventure.vote_1.description' |
-  'advancements.adventure.vote_256.title' |
-  'advancements.adventure.vote_256.description' |
   'advancements.adventure.bullseye.description' |
   'advancements.adventure.bullseye.title' |
   'advancements.adventure.fall_from_world_height.description' |
@@ -389,7 +383,6 @@ export type TRANSLATION_KEYS = (
   'attribute.name.generic.movement_speed' |
   'attribute.name.horse.jump_strength' |
   'attribute.name.zombie.spawn_reinforcements' |
-  'attribute.name.generic.scale' |
   'biome.minecraft.badlands' |
   'biome.minecraft.bamboo_jungle' |
   'biome.minecraft.basalt_deltas' |
@@ -454,8 +447,6 @@ export type TRANSLATION_KEYS = (
   'biome.minecraft.windswept_hills' |
   'biome.minecraft.windswept_savanna' |
   'biome.minecraft.wooded_badlands' |
-  'block.minecraft.pickaxe_block' |
-  'block.minecraft.place_block' |
   'block.minecraft.acacia_button' |
   'block.minecraft.acacia_door' |
   'block.minecraft.acacia_fence' |
@@ -828,22 +819,6 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.banner.mojang.red' |
   'block.minecraft.banner.mojang.white' |
   'block.minecraft.banner.mojang.yellow' |
-  'block.minecraft.banner.m.black' |
-  'block.minecraft.banner.m.blue' |
-  'block.minecraft.banner.m.brown' |
-  'block.minecraft.banner.m.cyan' |
-  'block.minecraft.banner.m.gray' |
-  'block.minecraft.banner.m.green' |
-  'block.minecraft.banner.m.light_blue' |
-  'block.minecraft.banner.m.light_gray' |
-  'block.minecraft.banner.m.lime' |
-  'block.minecraft.banner.m.magenta' |
-  'block.minecraft.banner.m.orange' |
-  'block.minecraft.banner.m.pink' |
-  'block.minecraft.banner.m.purple' |
-  'block.minecraft.banner.m.red' |
-  'block.minecraft.banner.m.white' |
-  'block.minecraft.banner.m.yellow' |
   'block.minecraft.banner.piglin.black' |
   'block.minecraft.banner.piglin.blue' |
   'block.minecraft.banner.piglin.brown' |
@@ -1187,7 +1162,6 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.beacon.primary' |
   'block.minecraft.beacon.secondary' |
   'block.minecraft.bed.no_sleep' |
-  'block.minecraft.bed.no_sleep_v2' |
   'block.minecraft.bed.not_safe' |
   'block.minecraft.bed.obstructed' |
   'block.minecraft.bed.occupied' |
@@ -1292,15 +1266,11 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.cartography_table' |
   'block.minecraft.carved_pumpkin' |
   'block.minecraft.cauldron' |
-  'block.minecraft.copper_sink' |
-  'block.minecraft.copper_spleaves' |
-  'block.minecraft.filled_copper_sink' |
   'block.minecraft.cave_air' |
   'block.minecraft.cave_vines' |
   'block.minecraft.cave_vines_plant' |
   'block.minecraft.chain' |
   'block.minecraft.chain_command_block' |
-  'block.minecraft.cheese' |
   'block.minecraft.cherry_button' |
   'block.minecraft.cherry_door' |
   'block.minecraft.cherry_fence' |
@@ -1319,8 +1289,6 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.cherry_wall_sign' |
   'block.minecraft.cherry_wood' |
   'block.minecraft.chest' |
-  'block.minecraft.chest.moon' |
-  'block.minecraft.chest.lab' |
   'block.minecraft.chipped_anvil' |
   'block.minecraft.chiseled_bookshelf' |
   'block.minecraft.chiseled_deepslate' |
@@ -1478,7 +1446,6 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.dried_kelp_block' |
   'block.minecraft.dripstone_block' |
   'block.minecraft.dropper' |
-  'block.minecraft.dropper.lunar' |
   'block.minecraft.emerald_block' |
   'block.minecraft.emerald_ore' |
   'block.minecraft.enchanting_table' |
@@ -1714,7 +1681,6 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.nether_bricks' |
   'block.minecraft.nether_gold_ore' |
   'block.minecraft.nether_portal' |
-  'block.minecraft.other_portal' |
   'block.minecraft.nether_quartz_ore' |
   'block.minecraft.nether_sprouts' |
   'block.minecraft.nether_wart' |
@@ -1762,7 +1728,6 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.oxidized_cut_copper' |
   'block.minecraft.oxidized_cut_copper_slab' |
   'block.minecraft.oxidized_cut_copper_stairs' |
-  'block.minecraft.packed_air' |
   'block.minecraft.packed_ice' |
   'block.minecraft.packed_mud' |
   'block.minecraft.pearlescent_froglight' |
@@ -2853,7 +2818,6 @@ export type TRANSLATION_KEYS = (
   'death.attack.inFire' |
   'death.attack.inFire.player' |
   'death.attack.inWall' |
-  'death.attack.onMoon' |
   'death.attack.inWall.player' |
   'death.attack.lava' |
   'death.attack.lava.player' |
@@ -2905,7 +2869,6 @@ export type TRANSLATION_KEYS = (
   'death.fell.finish' |
   'death.fell.finish.item' |
   'death.fell.killer' |
-  'death.midas.turned_into_gold' |
   'deathScreen.quit.confirm' |
   'deathScreen.respawn' |
   'deathScreen.score' |
@@ -3024,8 +2987,6 @@ export type TRANSLATION_KEYS = (
   'effect.minecraft.slow_falling' |
   'effect.minecraft.slowness' |
   'effect.minecraft.speed' |
-  'effect.minecraft.big' |
-  'effect.minecraft.small' |
   'effect.minecraft.strength' |
   'effect.minecraft.unluck' |
   'effect.minecraft.water_breathing' |
@@ -3090,7 +3051,6 @@ export type TRANSLATION_KEYS = (
   'entity.minecraft.bee' |
   'entity.minecraft.blaze' |
   'entity.minecraft.block_display' |
-  'entity.minecraft.stencil_display' |
   'entity.minecraft.boat' |
   'entity.minecraft.camel' |
   'entity.minecraft.cat' |
@@ -3151,7 +3111,6 @@ export type TRANSLATION_KEYS = (
   'entity.minecraft.marker' |
   'entity.minecraft.minecart' |
   'entity.minecraft.mooshroom' |
-  'entity.minecraft.moon_cow' |
   'entity.minecraft.mule' |
   'entity.minecraft.ocelot' |
   'entity.minecraft.painting' |
@@ -3168,7 +3127,6 @@ export type TRANSLATION_KEYS = (
   'entity.minecraft.pufferfish' |
   'entity.minecraft.rabbit' |
   'entity.minecraft.ravager' |
-  'entity.minecraft.ray_tracing' |
   'entity.minecraft.salmon' |
   'entity.minecraft.sheep' |
   'entity.minecraft.shulker' |
@@ -3516,14 +3474,11 @@ export type TRANSLATION_KEYS = (
   'gui.socialInteractions.tooltip.show' |
   'gui.stats' |
   'gui.toMenu' |
+  'gui.toRealms' |
   'gui.toTitle' |
+  'gui.toWorld' |
   'gui.up' |
   'gui.yes' |
-  'gui.pending_votes.title' |
-  'gui.voting.title' |
-  'gui.voting.next' |
-  'gui.voting.prev' |
-  'gui.voting.do_it' |
   'hanging_sign.edit' |
   'instrument.minecraft.admire_goat_horn' |
   'instrument.minecraft.call_goat_horn' |
@@ -3541,7 +3496,6 @@ export type TRANSLATION_KEYS = (
   'item.canPlace' |
   'item.color' |
   'item.disabled' |
-  'rule.item.disabled' |
   'item.durability' |
   'item.dyed' |
   'item.minecraft.acacia_boat' |
@@ -3572,12 +3526,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.bone' |
   'item.minecraft.bone_meal' |
   'item.minecraft.book' |
-  'item.minecraft.air_block' |
-  'item.minecraft.bottle_of_void' |
-  'item.minecraft.bottle_of_entity' |
-  'item.minecraft.bottle_of_entity.specific' |
-  'item.minecraft.splash_bottle_of_entity' |
-  'item.minecraft.splash_bottle_of_entity.specific' |
   'item.minecraft.bow' |
   'item.minecraft.bowl' |
   'item.minecraft.bread' |
@@ -3659,7 +3607,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.elder_guardian_spawn_egg' |
   'item.minecraft.elytra' |
   'item.minecraft.emerald' |
-  'item.minecraft.ruby' |
   'item.minecraft.enchanted_book' |
   'item.minecraft.enchanted_golden_apple' |
   'item.minecraft.end_crystal' |
@@ -3715,7 +3662,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.ghast_spawn_egg' |
   'item.minecraft.ghast_tear' |
   'item.minecraft.glass_bottle' |
-  'item.minecraft.glass_bottle_air' |
   'item.minecraft.glistering_melon_slice' |
   'item.minecraft.globe_banner_pattern' |
   'item.minecraft.globe_banner_pattern.desc' |
@@ -3799,8 +3745,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.lingering_potion.effect.slowness' |
   'item.minecraft.lingering_potion.effect.strength' |
   'item.minecraft.lingering_potion.effect.swiftness' |
-  'item.minecraft.lingering_potion.effect.big' |
-  'item.minecraft.lingering_potion.effect.small' |
   'item.minecraft.lingering_potion.effect.thick' |
   'item.minecraft.lingering_potion.effect.turtle_master' |
   'item.minecraft.lingering_potion.effect.water' |
@@ -3820,10 +3764,7 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.minecart' |
   'item.minecraft.mojang_banner_pattern' |
   'item.minecraft.mojang_banner_pattern.desc' |
-  'item.minecraft.m_banner_pattern' |
-  'item.minecraft.m_banner_pattern.desc' |
   'item.minecraft.mooshroom_spawn_egg' |
-  'item.minecraft.moon_cow_spawn_egg' |
   'item.minecraft.mule_spawn_egg' |
   'item.minecraft.mushroom_stew' |
   'item.minecraft.music_disc_5' |
@@ -3913,8 +3854,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.potion.effect.slowness' |
   'item.minecraft.potion.effect.strength' |
   'item.minecraft.potion.effect.swiftness' |
-  'item.minecraft.potion.effect.big' |
-  'item.minecraft.potion.effect.small' |
   'item.minecraft.potion.effect.thick' |
   'item.minecraft.potion.effect.turtle_master' |
   'item.minecraft.potion.effect.water' |
@@ -4033,8 +3972,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.splash_potion.effect.slowness' |
   'item.minecraft.splash_potion.effect.strength' |
   'item.minecraft.splash_potion.effect.swiftness' |
-  'item.minecraft.splash_potion.effect.big' |
-  'item.minecraft.splash_potion.effect.small' |
   'item.minecraft.splash_potion.effect.thick' |
   'item.minecraft.splash_potion.effect.turtle_master' |
   'item.minecraft.splash_potion.effect.water' |
@@ -4053,7 +3990,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.stray_spawn_egg' |
   'item.minecraft.strider_spawn_egg' |
   'item.minecraft.string' |
-  'item.minecraft.string2' |
   'item.minecraft.sugar' |
   'item.minecraft.suspicious_stew' |
   'item.minecraft.sweet_berries' |
@@ -4077,8 +4013,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.tipped_arrow.effect.slowness' |
   'item.minecraft.tipped_arrow.effect.strength' |
   'item.minecraft.tipped_arrow.effect.swiftness' |
-  'item.minecraft.tipped_arrow.effect.big' |
-  'item.minecraft.tipped_arrow.effect.small' |
   'item.minecraft.tipped_arrow.effect.thick' |
   'item.minecraft.tipped_arrow.effect.turtle_master' |
   'item.minecraft.tipped_arrow.effect.water' |
@@ -4123,7 +4057,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.zombie_spawn_egg' |
   'item.minecraft.zombie_villager_spawn_egg' |
   'item.minecraft.zombified_piglin_spawn_egg' |
-  'item.minecraft.dupe_hack' |
   'item.modifiers.chest' |
   'item.modifiers.feet' |
   'item.modifiers.head' |
@@ -4132,25 +4065,6 @@ export type TRANSLATION_KEYS = (
   'item.modifiers.offhand' |
   'item.nbt_tags' |
   'item.unbreakable' |
-  'item.minecraft.name' |
-  'item.minecraft.tag' |
-  'item.minecraft.string_tag' |
-  'item.minecraft.byte_tag' |
-  'item.minecraft.short_tag' |
-  'item.minecraft.int_tag' |
-  'item.minecraft.long_tag' |
-  'item.minecraft.float_tag' |
-  'item.minecraft.double_tag' |
-  'item.minecraft.compound_tag' |
-  'item.minecraft.list_tag' |
-  'item.minecraft.left_square' |
-  'item.minecraft.right_square' |
-  'item.minecraft.left_curly' |
-  'item.minecraft.right_curly' |
-  'item.minecraft.syntax_error' |
-  'item.minecraft.bit' |
-  'item.minecraft.le_tricolore' |
-  'item.minecraft.la_baguette' |
   'itemGroup.buildingBlocks' |
   'itemGroup.coloredBlocks' |
   'itemGroup.combat' |
@@ -4307,7 +4221,6 @@ export type TRANSLATION_KEYS = (
   'key.swapOffhand' |
   'key.togglePerspective' |
   'key.use' |
-  'key.voting' |
   'language.code' |
   'language.name' |
   'language.region' |
@@ -5042,6 +4955,10 @@ export type TRANSLATION_KEYS = (
   'potion.withAmplifier' |
   'potion.withDuration' |
   'predicate.unknown' |
+  'quickplay.error.title' |
+  'quickplay.error.invalid_identifier' |
+  'quickplay.error.realm_connect' |
+  'quickplay.error.realm_permission' |
   'realms.missing.module.error.text' |
   'realms.missing.snapshot.error.text' |
   'recipe.notFound' |
@@ -5059,369 +4976,6 @@ export type TRANSLATION_KEYS = (
   'resourcePack.title' |
   'resourcePack.vanilla.description' |
   'resourcePack.vanilla.name' |
-  'rule.nothing' |
-  'rule.connector' |
-  'rule.proposal' |
-  'rule.optimize.set' |
-  'rule.optimize.change' |
-  'rule.optimize_light_engine.none' |
-  'rule.optimize_light_engine.loadshedding' |
-  'rule.optimize_light_engine.always_light' |
-  'rule.optimize_light_engine.never_light' |
-  'rule.explosion_power.set' |
-  'rule.explosion_power.change' |
-  'rule.swap_skies' |
-  'rule.disable_item_tooltips' |
-  'rule.flammability.low' |
-  'rule.flammability.medium' |
-  'rule.flammability.high' |
-  'rule.flammability.very_high' |
-  'rule.pot_gems' |
-  'rule.infinite_cakes' |
-  'rule.give_effect' |
-  'rule.spawn_egg_chance' |
-  'rule.disable_shield' |
-  'rule.item_use_speed' |
-  'rule.attack_knockback' |
-  'rule.global_pitch' |
-  'rule.other_portal' |
-  'rule.other_portal.oops' |
-  'rule.anonymize_skins' |
-  'rule.replace_item_model' |
-  'rule.replace_block_model' |
-  'rule.weather.rain.default' |
-  'rule.weather.rain.always' |
-  'rule.weather.rain.never' |
-  'rule.weather.thunder.default' |
-  'rule.weather.thunder.always' |
-  'rule.weather.thunder.never' |
-  'rule.minecart_lies' |
-  'rule.lava_water_replace' |
-  'rule.lava_blue_ice_replace' |
-  'rule.recipe.minecraft.wob' |
-  'rule.recipe.minecraft.m_banner_pattern' |
-  'rule.recipe.minecraft.string_concatenation' |
-  'rule.recipe.minecraft.diamond_drows' |
-  'rule.minecart_collisions.none' |
-  'rule.minecart_collisions.break' |
-  'rule.minecart_collisions.explode' |
-  'rule.boat_collisions.none' |
-  'rule.boat_collisions.break' |
-  'rule.boat_collisions.explode' |
-  'rule.the_joke' |
-  'rule.natural_spawn_disable' |
-  'rule.natural_spawn_replace' |
-  'rule.footprint' |
-  'rule.footprint.0' |
-  'rule.footprint.1' |
-  'rule.footprint.2' |
-  'rule.footprint.3' |
-  'rule.footprint.4' |
-  'rule.footprint.5' |
-  'rule.footprint.6' |
-  'rule.footprint.7' |
-  'rule.footprint.8' |
-  'rule.footprint.9' |
-  'rule.footprint.10' |
-  'rule.footprint.11' |
-  'rule.invisible_armor' |
-  'rule.new_vote_chance_per_tick' |
-  'rule.new_vote_approve_option_count' |
-  'rule.new_vote_repeal_option_count' |
-  'rule.new_vote_duration_minutes' |
-  'rule.new_vote_extra_effect_chance' |
-  'rule.new_vote_repeal_vote_chance' |
-  'rule.new_vote_extra_effect_max_count' |
-  'rule.new_vote_disable_opt_out' |
-  'rule.new_vote_max_approve_vote_count' |
-  'rule.new_vote_max_repeal_vote_count' |
-  'rule.new_vote_cost' |
-  'rule.obfuscate_player_names' |
-  'rule.beta_entity_ids' |
-  'rule.nbt_crafting' |
-  'rule.recipe_flip.normal_only' |
-  'rule.recipe_flip.flipped_only' |
-  'rule.recipe_flip.both' |
-  'rule.change_world_shape' |
-  'rule.normal_name_visibility' |
-  'rule.sneaking_name_visibility' |
-  'rule.name_visibility.none' |
-  'rule.name_visibility.normal' |
-  'rule.name_visibility.see_through' |
-  'rule.dinnerbonize' |
-  'rule.grummize' |
-  'rule.rideable_entities' |
-  'rule.flip_binary_gamerule' |
-  'rule.change_integer_gamerule' |
-  'rule.flintsploder' |
-  'rule.beds_on_banners' |
-  'rule.player_head_drop' |
-  'rule.charged_creepers' |
-  'rule.phantom_phantom' |
-  'rule.fix_piston' |
-  'rule.codepoint_replace' |
-  'rule.potions_of_big' |
-  'rule.potions_of_small' |
-  'rule.keep_friends_close' |
-  'rule.ai_attack' |
-  'rule.ai_attack.decorate' |
-  'rule.president' |
-  'rule.president.tag' |
-  'rule.item_despawn.despawn_none' |
-  'rule.item_despawn.keep_player_drops' |
-  'rule.item_despawn.despawn_all' |
-  'rule.item_despawn_time.set' |
-  'rule.item_despawn_time.change' |
-  'rule.text_style.hide' |
-  'rule.text_style.blank' |
-  'rule.replace_sound' |
-  'rule.text_style.black' |
-  'rule.text_style.dark_blue' |
-  'rule.text_style.dark_green' |
-  'rule.text_style.dark_aqua' |
-  'rule.text_style.dark_red' |
-  'rule.text_style.dark_purple' |
-  'rule.text_style.gold' |
-  'rule.text_style.gray' |
-  'rule.text_style.dark_gray' |
-  'rule.text_style.blue' |
-  'rule.text_style.green' |
-  'rule.text_style.aqua' |
-  'rule.text_style.red' |
-  'rule.text_style.light_purple' |
-  'rule.text_style.yellow' |
-  'rule.text_style.white' |
-  'rule.text_style.obfuscated' |
-  'rule.text_style.bold' |
-  'rule.text_style.strikethrough' |
-  'rule.text_style.underline' |
-  'rule.text_style.italic' |
-  'rule.text_style.thin' |
-  'rule.text_style.sga' |
-  'rule.text_style.illager' |
-  'rule.give_items' |
-  'rule.tnt_tennis' |
-  'rule.random_tnt_fuse' |
-  'rule.prevent_floating_trees' |
-  'rule.exploding_phantoms' |
-  'rule.undead_players' |
-  'rule.unstable_tnt' |
-  'rule.decrease_scale' |
-  'rule.default_sheep_color' |
-  'rule.biome_color.foliage' |
-  'rule.biome_color.grass' |
-  'rule.biome_color.sky' |
-  'rule.biome_color.water' |
-  'rule.biome_color.fog' |
-  'rule.biome_color.water_fog' |
-  'rule.haunted_world' |
-  'rule.increase_scale' |
-  'rule.morrowind_power_player_movement' |
-  'rule.evil_eye' |
-  'rule.reset_entity_transform' |
-  'rule.reset_scale' |
-  'rule.rowing_up_that_hill' |
-  'rule.god_of_lightning' |
-  'rule.transform_entity' |
-  'rule.endermen_block_update' |
-  'rule.autojump.off' |
-  'rule.autoJump.yes' |
-  'rule.autoJump.on' |
-  'rule.autoJump.true' |
-  'rule.autoJump.of_course' |
-  'rule.autoJump.also_default_vanilla_to_true' |
-  'rule.midas_touch' |
-  'rule.lava_spread_tick_delay' |
-  'rule.uncontrolable_lave' |
-  'rule.replace_loot_drop' |
-  'rule.loot_double_or_half' |
-  'rule.replace_recipe_output' |
-  'rule.recipe_double_or_half' |
-  'rule.stack_size_double_or_half' |
-  'rule.damage_modifier' |
-  'rule.voting_fireworks' |
-  'rule.snitch' |
-  'rule.snitch.msg' |
-  'rule.flailing.none' |
-  'rule.flailing.normal' |
-  'rule.flailing.mild' |
-  'rule.flailing.wild' |
-  'rule.flailing.extreme' |
-  'rule.flailing.windmill' |
-  'rule.food_restriction.any' |
-  'rule.food_restriction.apple' |
-  'rule.food_restriction.baked_potato' |
-  'rule.food_restriction.beef' |
-  'rule.food_restriction.beetroot' |
-  'rule.food_restriction.beetroot_soup' |
-  'rule.food_restriction.bread' |
-  'rule.food_restriction.cake' |
-  'rule.food_restriction.carrot' |
-  'rule.food_restriction.chicken' |
-  'rule.food_restriction.chorus_fruit' |
-  'rule.food_restriction.cod' |
-  'rule.food_restriction.cooked_beef' |
-  'rule.food_restriction.cooked_chicken' |
-  'rule.food_restriction.cooked_cod' |
-  'rule.food_restriction.cooked_mutton' |
-  'rule.food_restriction.cooked_porkchop' |
-  'rule.food_restriction.cooked_rabbit' |
-  'rule.food_restriction.cooked_salmon' |
-  'rule.food_restriction.cookie' |
-  'rule.food_restriction.dried_kelp' |
-  'rule.food_restriction.enchanted_golden_apple' |
-  'rule.food_restriction.glow_berries' |
-  'rule.food_restriction.golden_apple' |
-  'rule.food_restriction.golden_carrot' |
-  'rule.food_restriction.honey_bottle' |
-  'rule.food_restriction.melon_slice' |
-  'rule.food_restriction.mushroom_stew' |
-  'rule.food_restriction.mutton' |
-  'rule.food_restriction.poisonous_potato' |
-  'rule.food_restriction.porkchop' |
-  'rule.food_restriction.potato' |
-  'rule.food_restriction.pufferfish' |
-  'rule.food_restriction.pumpkin_pie' |
-  'rule.food_restriction.rabbit' |
-  'rule.food_restriction.rabbit_stew' |
-  'rule.food_restriction.rotten_flesh' |
-  'rule.food_restriction.salmon' |
-  'rule.food_restriction.spider_eye' |
-  'rule.food_restriction.suspicious_stew' |
-  'rule.food_restriction.sweet_berries' |
-  'rule.food_restriction.tropical_fish' |
-  'rule.food_restriction.inedible.apple' |
-  'rule.food_restriction.inedible.baked_potato' |
-  'rule.food_restriction.inedible.beef' |
-  'rule.food_restriction.inedible.beetroot' |
-  'rule.food_restriction.inedible.beetroot_soup' |
-  'rule.food_restriction.inedible.bread' |
-  'rule.food_restriction.inedible.cake' |
-  'rule.food_restriction.inedible.carrot' |
-  'rule.food_restriction.inedible.chicken' |
-  'rule.food_restriction.inedible.chorus_fruit' |
-  'rule.food_restriction.inedible.cod' |
-  'rule.food_restriction.inedible.cooked_beef' |
-  'rule.food_restriction.inedible.cooked_chicken' |
-  'rule.food_restriction.inedible.cooked_cod' |
-  'rule.food_restriction.inedible.cooked_mutton' |
-  'rule.food_restriction.inedible.cooked_porkchop' |
-  'rule.food_restriction.inedible.cooked_rabbit' |
-  'rule.food_restriction.inedible.cooked_salmon' |
-  'rule.food_restriction.inedible.cookie' |
-  'rule.food_restriction.inedible.dried_kelp' |
-  'rule.food_restriction.inedible.enchanted_golden_apple' |
-  'rule.food_restriction.inedible.glow_berries' |
-  'rule.food_restriction.inedible.golden_apple' |
-  'rule.food_restriction.inedible.golden_carrot' |
-  'rule.food_restriction.inedible.honey_bottle' |
-  'rule.food_restriction.inedible.melon_slice' |
-  'rule.food_restriction.inedible.mushroom_stew' |
-  'rule.food_restriction.inedible.mutton' |
-  'rule.food_restriction.inedible.poisonous_potato' |
-  'rule.food_restriction.inedible.porkchop' |
-  'rule.food_restriction.inedible.potato' |
-  'rule.food_restriction.inedible.pufferfish' |
-  'rule.food_restriction.inedible.pumpkin_pie' |
-  'rule.food_restriction.inedible.rabbit' |
-  'rule.food_restriction.inedible.rabbit_stew' |
-  'rule.food_restriction.inedible.rotten_flesh' |
-  'rule.food_restriction.inedible.salmon' |
-  'rule.food_restriction.inedible.spider_eye' |
-  'rule.food_restriction.inedible.suspicious_stew' |
-  'rule.food_restriction.inedible.sweet_berries' |
-  'rule.food_restriction.inedible.tropical_fish' |
-  'rule.food_restriction.edible' |
-  'rule.food_restriction.maybe_edible' |
-  'rule.big_heads' |
-  'rule.transparent_players' |
-  'rule.floating_heads' |
-  'rule.mbe' |
-  'rule.sticky' |
-  'rule.wheels_on_minecarts' |
-  'rule.fire_sponge' |
-  'rule.fog_off' |
-  'rule.fast_hoppers' |
-  'rule.less_gravity' |
-  'rule.air_blocks' |
-  'rule.bouncy_castle' |
-  'rule.drink_air' |
-  'rule.dupe_hack_occurrence_chance' |
-  'rule.dupe_hack_break_chance' |
-  'rule.persistent_parrots' |
-  'rule.less_interaction_updates' |
-  'rule.dead_bush_renewability' |
-  'rule.fix_qc' |
-  'rule.buttons_on_things' |
-  'rule.push_limit' |
-  'rule.mini_players' |
-  'rule.milk_every_mob' |
-  'rule.day_beds' |
-  'rule.caep.awesom' |
-  'rule.caep.squid' |
-  'rule.caep.veterinarian' |
-  'rule.caep.nyan' |
-  'rule.caep.no_circle' |
-  'rule.world_of_giants' |
-  'rule.egg_free.item' |
-  'rule.egg_free.seed' |
-  'rule.egg_free.seed_reshuffle' |
-  'rule.payment.item' |
-  'rule.payment.seed' |
-  'rule.payment.seed_reshuffle' |
-  'rule.rubies' |
-  'rule.ultra_realistic_mode' |
-  'rule.endermen_pick_up_anything' |
-  'rule.beeloons' |
-  'rule.trails_and_tails' |
-  'rule.moon.0' |
-  'rule.moon.1' |
-  'rule.moon.2' |
-  'rule.moon.3' |
-  'rule.grappling_fishing_rods' |
-  'rule.buff_fishing' |
-  'rule.fish_anything' |
-  'rule.entity_collisions' |
-  'rule.pickaxe_block' |
-  'rule.place_block' |
-  'rule.copper_sink' |
-  'rule.parent_trap' |
-  'rule.glow_bees' |
-  'rule.always_flying' |
-  'rule.remove_phantoms' |
-  'rule.day_length.set' |
-  'rule.day_length.change' |
-  'rule.dream_mode' |
-  'rule.instacheese' |
-  'rule.replace_items' |
-  'rule.copy_skin' |
-  'rule.reset_skin' |
-  'rule.only_mending_trades' |
-  'rule.bed_pvp' |
-  'rule.bed_pvp.tooltip' |
-  'rule.universal_jeb' |
-  'rule.colored_light' |
-  'rule.glowing_glow_squids' |
-  'rule.bedrock_shadows' |
-  'rule.ray_tracing' |
-  'rule.vote_result_pass_without_voters' |
-  'rule.vote_result_pass_without_votes' |
-  'rule.vote_result_show_options' |
-  'rule.vote_result_show_voters' |
-  'rule.vote_result_pick_random_if_vote_fails' |
-  'rule.quorum_percent' |
-  'rule.votes_to_win_percent' |
-  'rule.vote_max_results' |
-  'rule.vote_result_reverse_counts' |
-  'rule.tie_strategy.pick_low' |
-  'rule.tie_strategy.pick_high' |
-  'rule.tie_strategy.pick_random' |
-  'rule.tie_strategy.pick_all' |
-  'rule.tie_strategy.pick_none' |
-  'rule.tie_strategy.fail' |
-  'rule.silent_vote' |
-  'rule.zombie_apocalypse' |
-  'rule.french_mode' |
   'screenshot.failure' |
   'screenshot.success' |
   'selectServer.add' |
@@ -5476,8 +5030,6 @@ export type TRANSLATION_KEYS = (
   'selectWorld.edit.openFolder' |
   'selectWorld.edit.optimize' |
   'selectWorld.edit.resetIcon' |
-  'selectWorld.edit.resetVotes' |
-  'selectWorld.edit.resetVotes.msg' |
   'selectWorld.edit.save' |
   'selectWorld.edit.title' |
   'selectWorld.enterName' |
@@ -5631,7 +5183,6 @@ export type TRANSLATION_KEYS = (
   'stat.minecraft.interact_with_smoker' |
   'stat.minecraft.interact_with_stonecutter' |
   'stat.minecraft.jump' |
-  'stat.minecraft.votes' |
   'stat.minecraft.junk_fished' |
   'stat.minecraft.leave_game' |
   'stat.minecraft.minecart_one_cm' |
@@ -5803,8 +5354,11 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.sculk.spread' |
   'subtitles.block.shulker_box.close' |
   'subtitles.block.shulker_box.open' |
+  'subtitles.block.sign.waxed_interact_fail' |
   'subtitles.block.smithing_table.use' |
   'subtitles.block.smoker.smoke' |
+  'subtitles.block.sniffer.egg_crack' |
+  'subtitles.block.sniffer.egg_hatch' |
   'subtitles.block.sweet_berry_bush.pick_berries' |
   'subtitles.block.trapdoor.toggle' |
   'subtitles.block.tripwire.attach' |
@@ -6236,8 +5790,6 @@ export type TRANSLATION_KEYS = (
   'subtitles.entity.sniffer.searching' |
   'subtitles.entity.sniffer.sniffing' |
   'subtitles.entity.sniffer.step' |
-  'subtitles.entity.sniffer.egg_crack' |
-  'subtitles.entity.sniffer.egg_hatch' |
   'subtitles.entity.snow_golem.death' |
   'subtitles.entity.snow_golem.hurt' |
   'subtitles.entity.snowball.throw' |
@@ -6552,41 +6104,5 @@ export type TRANSLATION_KEYS = (
   'tutorial.punch_tree.title' |
   'tutorial.socialInteractions.description' |
   'tutorial.socialInteractions.title' |
-  'upgrade.minecraft.netherite_upgrade' |
-  'vote.no_resources' |
-  'vote.started' |
-  'vote.finished' |
-  'vote.failed' |
-  'vote.total_count' |
-  'vote.option_count' |
-  'vote.option_no_count' |
-  'vote.no_change' |
-  'vote.no_option' |
-  'vote.no_option.random' |
-  'vote.quorum.passed' |
-  'vote.quorum.not_reached' |
-  'vote.vote_count.minimum' |
-  'vote.voters' |
-  'vote.voter' |
-  'vote.option_won' |
-  'vote.option_won.no_effect' |
-  'vote.option_display' |
-  'vote.option_vote_title' |
-  'vote.no_more_votes' |
-  'vote.cost_diplay' |
-  'vote.count_per_proposal.description' |
-  'vote.count_per_proposal.limit' |
-  'vote.count_per_proposal.no_limit' |
-  'vote.count_per_option.description' |
-  'vote.count_per_option.limit' |
-  'vote.count_per_option.no_limit' |
-  'vote.cost' |
-  'vote.cost.xp' |
-  'vote.cost.health' |
-  'vote.tie' |
-  'vote.voted' |
-  'vote.show_current_rules' |
-  'vote.current_rules' |
-  'tooltip.too_long' |
-  'tooltip.more_like_cooltip'
+  'upgrade.minecraft.netherite_upgrade'
 )

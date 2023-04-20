@@ -20,7 +20,6 @@ export type ITEMS = (
   'acacia_wood' |
   'activator_rail' |
   'air' |
-  'air_block' |
   'allay_spawn_egg' |
   'allium' |
   'amethyst_block' |
@@ -94,7 +93,6 @@ export type ITEMS = (
   'birch_stairs' |
   'birch_trapdoor' |
   'birch_wood' |
-  'bit' |
   'black_banner' |
   'black_bed' |
   'black_candle' |
@@ -137,8 +135,6 @@ export type ITEMS = (
   'bone_meal' |
   'book' |
   'bookshelf' |
-  'bottle_of_entity' |
-  'bottle_of_void' |
   'bow' |
   'bowl' |
   'brain_coral' |
@@ -175,7 +171,6 @@ export type ITEMS = (
   'budding_amethyst' |
   'bundle' |
   'burn_pottery_shard' |
-  'byte_tag' |
   'cactus' |
   'cake' |
   'calcite' |
@@ -197,7 +192,6 @@ export type ITEMS = (
   'chainmail_helmet' |
   'chainmail_leggings' |
   'charcoal' |
-  'cheese' |
   'cherry_boat' |
   'cherry_button' |
   'cherry_chest_boat' |
@@ -257,7 +251,6 @@ export type ITEMS = (
   'comparator' |
   'compass' |
   'composter' |
-  'compound_tag' |
   'conduit' |
   'cooked_beef' |
   'cooked_chicken' |
@@ -270,8 +263,6 @@ export type ITEMS = (
   'copper_block' |
   'copper_ingot' |
   'copper_ore' |
-  'copper_sink' |
-  'copper_spleaves' |
   'cornflower' |
   'cow_spawn_egg' |
   'cracked_deepslate_bricks' |
@@ -404,7 +395,6 @@ export type ITEMS = (
   'dispenser' |
   'dolphin_spawn_egg' |
   'donkey_spawn_egg' |
-  'double_tag' |
   'dragon_breath' |
   'dragon_egg' |
   'dragon_head' |
@@ -414,7 +404,6 @@ export type ITEMS = (
   'dropper' |
   'drowned_spawn_egg' |
   'dune_armor_trim_smithing_template' |
-  'dupe_hack' |
   'echo_shard' |
   'egg' |
   'elder_guardian_spawn_egg' |
@@ -462,7 +451,6 @@ export type ITEMS = (
   'fletching_table' |
   'flint' |
   'flint_and_steel' |
-  'float_tag' |
   'flower_banner_pattern' |
   'flower_pot' |
   'flowering_azalea' |
@@ -571,7 +559,6 @@ export type ITEMS = (
   'infested_stone' |
   'infested_stone_bricks' |
   'ink_sac' |
-  'int_tag' |
   'iron_axe' |
   'iron_bars' |
   'iron_block' |
@@ -613,7 +600,6 @@ export type ITEMS = (
   'jungle_wood' |
   'kelp' |
   'knowledge_book' |
-  'la_baguette' |
   'ladder' |
   'lantern' |
   'lapis_block' |
@@ -622,7 +608,6 @@ export type ITEMS = (
   'large_amethyst_bud' |
   'large_fern' |
   'lava_bucket' |
-  'le_tricolore' |
   'lead' |
   'leather' |
   'leather_boots' |
@@ -631,8 +616,6 @@ export type ITEMS = (
   'leather_horse_armor' |
   'leather_leggings' |
   'lectern' |
-  'left_curly' |
-  'left_square' |
   'lever' |
   'light' |
   'light_blue_banner' |
@@ -680,12 +663,9 @@ export type ITEMS = (
   'lime_terracotta' |
   'lime_wool' |
   'lingering_potion' |
-  'list_tag' |
   'llama_spawn_egg' |
   'lodestone' |
-  'long_tag' |
   'loom' |
-  'm_banner_pattern' |
   'magenta_banner' |
   'magenta_bed' |
   'magenta_candle' |
@@ -729,7 +709,6 @@ export type ITEMS = (
   'minecart' |
   'miner_pottery_shard' |
   'mojang_banner_pattern' |
-  'moon_cow_spawn_egg' |
   'mooshroom_spawn_egg' |
   'moss_block' |
   'moss_carpet' |
@@ -768,7 +747,6 @@ export type ITEMS = (
   'music_disc_ward' |
   'mutton' |
   'mycelium' |
-  'name' |
   'name_tag' |
   'nautilus_shell' |
   'nether_brick' |
@@ -838,7 +816,6 @@ export type ITEMS = (
   'oxidized_cut_copper' |
   'oxidized_cut_copper_slab' |
   'oxidized_cut_copper_stairs' |
-  'packed_air' |
   'packed_ice' |
   'packed_mud' |
   'painting' |
@@ -850,7 +827,6 @@ export type ITEMS = (
   'petrified_oak_slab' |
   'phantom_membrane' |
   'phantom_spawn_egg' |
-  'pickaxe_block' |
   'pig_spawn_egg' |
   'piglin_banner_pattern' |
   'piglin_brute_spawn_egg' |
@@ -875,7 +851,6 @@ export type ITEMS = (
   'piston' |
   'pitcher_plant' |
   'pitcher_pod' |
-  'place_block' |
   'player_head' |
   'plenty_pottery_shard' |
   'podzol' |
@@ -1002,8 +977,6 @@ export type ITEMS = (
   'repeating_command_block' |
   'respawn_anchor' |
   'rib_armor_trim_smithing_template' |
-  'right_curly' |
-  'right_square' |
   'rooted_dirt' |
   'rose_bush' |
   'rotten_flesh' |
@@ -1033,7 +1006,6 @@ export type ITEMS = (
   'sheep_spawn_egg' |
   'shelter_pottery_shard' |
   'shield' |
-  'short_tag' |
   'shroomlight' |
   'shulker_box' |
   'shulker_shell' |
@@ -1082,7 +1054,6 @@ export type ITEMS = (
   'spider_eye' |
   'spider_spawn_egg' |
   'spire_armor_trim_smithing_template' |
-  'splash_bottle_of_entity' |
   'splash_potion' |
   'sponge' |
   'spore_blossom' |
@@ -1125,8 +1096,6 @@ export type ITEMS = (
   'stray_spawn_egg' |
   'strider_spawn_egg' |
   'string' |
-  'string2' |
-  'string_tag' |
   'stripped_acacia_log' |
   'stripped_acacia_wood' |
   'stripped_bamboo_block' |
@@ -1157,10 +1126,8 @@ export type ITEMS = (
   'suspicious_sand' |
   'suspicious_stew' |
   'sweet_berries' |
-  'syntax_error' |
   'tadpole_bucket' |
   'tadpole_spawn_egg' |
-  'tag' |
   'tall_grass' |
   'target' |
   'terracotta' |

@@ -20,7 +20,6 @@ export type BANNER_PATTERNS = (
   'half_horizontal_bottom' |
   'half_vertical' |
   'half_vertical_right' |
-  'm' |
   'mojang' |
   'piglin' |
   'rhombus' |

@@ -57,7 +57,6 @@ export type WORLDGEN_BIOMES = (
   'swamp' |
   'taiga' |
   'the_end' |
-  'the_moon' |
   'the_void' |
   'warm_ocean' |
   'warped_forest' |
