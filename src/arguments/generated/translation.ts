@@ -2365,7 +2365,9 @@ export type TRANSLATION_KEYS = (
   'commands.forceload.removed.single' |
   'commands.forceload.toobig' |
   'commands.function.success.multiple' |
+  'commands.function.success.multiple.result' |
   'commands.function.success.single' |
+  'commands.function.success.single.result' |
   'commands.gamemode.success.other' |
   'commands.gamemode.success.self' |
   'commands.gamerule.query' |
@@ -3859,26 +3861,26 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.potion.effect.water' |
   'item.minecraft.potion.effect.water_breathing' |
   'item.minecraft.potion.effect.weakness' |
-  'item.minecraft.angler_pottery_shard' |
-  'item.minecraft.archer_pottery_shard' |
-  'item.minecraft.arms_up_pottery_shard' |
-  'item.minecraft.blade_pottery_shard' |
-  'item.minecraft.brewer_pottery_shard' |
-  'item.minecraft.burn_pottery_shard' |
-  'item.minecraft.danger_pottery_shard' |
-  'item.minecraft.explorer_pottery_shard' |
-  'item.minecraft.friend_pottery_shard' |
-  'item.minecraft.heart_pottery_shard' |
-  'item.minecraft.heartbreak_pottery_shard' |
-  'item.minecraft.howl_pottery_shard' |
-  'item.minecraft.miner_pottery_shard' |
-  'item.minecraft.mourner_pottery_shard' |
-  'item.minecraft.plenty_pottery_shard' |
-  'item.minecraft.prize_pottery_shard' |
-  'item.minecraft.sheaf_pottery_shard' |
-  'item.minecraft.shelter_pottery_shard' |
-  'item.minecraft.skull_pottery_shard' |
-  'item.minecraft.snort_pottery_shard' |
+  'item.minecraft.angler_pottery_sherd' |
+  'item.minecraft.archer_pottery_sherd' |
+  'item.minecraft.arms_up_pottery_sherd' |
+  'item.minecraft.blade_pottery_sherd' |
+  'item.minecraft.brewer_pottery_sherd' |
+  'item.minecraft.burn_pottery_sherd' |
+  'item.minecraft.danger_pottery_sherd' |
+  'item.minecraft.explorer_pottery_sherd' |
+  'item.minecraft.friend_pottery_sherd' |
+  'item.minecraft.heart_pottery_sherd' |
+  'item.minecraft.heartbreak_pottery_sherd' |
+  'item.minecraft.howl_pottery_sherd' |
+  'item.minecraft.miner_pottery_sherd' |
+  'item.minecraft.mourner_pottery_sherd' |
+  'item.minecraft.plenty_pottery_sherd' |
+  'item.minecraft.prize_pottery_sherd' |
+  'item.minecraft.sheaf_pottery_sherd' |
+  'item.minecraft.shelter_pottery_sherd' |
+  'item.minecraft.skull_pottery_sherd' |
+  'item.minecraft.snort_pottery_sherd' |
   'item.minecraft.powder_snow_bucket' |
   'item.minecraft.prismarine_crystals' |
   'item.minecraft.prismarine_shard' |
@@ -5357,8 +5359,9 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.sign.waxed_interact_fail' |
   'subtitles.block.smithing_table.use' |
   'subtitles.block.smoker.smoke' |
-  'subtitles.block.sniffer.egg_crack' |
-  'subtitles.block.sniffer.egg_hatch' |
+  'subtitles.block.sniffer_egg.plop' |
+  'subtitles.block.sniffer_egg.crack' |
+  'subtitles.block.sniffer_egg.hatch' |
   'subtitles.block.sweet_berry_bush.pick_berries' |
   'subtitles.block.trapdoor.toggle' |
   'subtitles.block.tripwire.attach' |

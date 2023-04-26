@@ -79,6 +79,7 @@ export type WORLDGEN_TEMPLATE_POOLS = (
   'trail_ruins/roads' |
   'trail_ruins/tower' |
   'trail_ruins/tower/additions' |
+  'trail_ruins/tower/tower_top' |
   'village/common/animals' |
   'village/common/butcher_animals' |
   'village/common/cats' |

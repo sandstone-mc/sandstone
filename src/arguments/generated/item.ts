@@ -30,12 +30,12 @@ export type ITEMS = (
   'andesite_slab' |
   'andesite_stairs' |
   'andesite_wall' |
-  'angler_pottery_shard' |
+  'angler_pottery_sherd' |
   'anvil' |
   'apple' |
-  'archer_pottery_shard' |
+  'archer_pottery_sherd' |
   'armor_stand' |
-  'arms_up_pottery_shard' |
+  'arms_up_pottery_sherd' |
   'arrow' |
   'axolotl_bucket' |
   'axolotl_spawn_egg' |
@@ -110,7 +110,7 @@ export type ITEMS = (
   'blackstone_slab' |
   'blackstone_stairs' |
   'blackstone_wall' |
-  'blade_pottery_shard' |
+  'blade_pottery_sherd' |
   'blast_furnace' |
   'blaze_powder' |
   'blaze_rod' |
@@ -141,7 +141,7 @@ export type ITEMS = (
   'brain_coral_block' |
   'brain_coral_fan' |
   'bread' |
-  'brewer_pottery_shard' |
+  'brewer_pottery_sherd' |
   'brewing_stand' |
   'brick' |
   'brick_slab' |
@@ -170,7 +170,7 @@ export type ITEMS = (
   'bucket' |
   'budding_amethyst' |
   'bundle' |
-  'burn_pottery_shard' |
+  'burn_pottery_sherd' |
   'cactus' |
   'cake' |
   'calcite' |
@@ -314,7 +314,7 @@ export type ITEMS = (
   'cyan_wool' |
   'damaged_anvil' |
   'dandelion' |
-  'danger_pottery_shard' |
+  'danger_pottery_sherd' |
   'dark_oak_boat' |
   'dark_oak_button' |
   'dark_oak_chest_boat' |
@@ -430,7 +430,7 @@ export type ITEMS = (
   'endermite_spawn_egg' |
   'evoker_spawn_egg' |
   'experience_bottle' |
-  'explorer_pottery_shard' |
+  'explorer_pottery_sherd' |
   'exposed_copper' |
   'exposed_cut_copper' |
   'exposed_cut_copper_slab' |
@@ -456,7 +456,7 @@ export type ITEMS = (
   'flowering_azalea' |
   'flowering_azalea_leaves' |
   'fox_spawn_egg' |
-  'friend_pottery_shard' |
+  'friend_pottery_sherd' |
   'frog_spawn_egg' |
   'frogspawn' |
   'furnace' |
@@ -533,8 +533,8 @@ export type ITEMS = (
   'hanging_roots' |
   'hay_block' |
   'heart_of_the_sea' |
-  'heart_pottery_shard' |
-  'heartbreak_pottery_shard' |
+  'heart_pottery_sherd' |
+  'heartbreak_pottery_sherd' |
   'heavy_weighted_pressure_plate' |
   'hoglin_spawn_egg' |
   'honey_block' |
@@ -548,7 +548,7 @@ export type ITEMS = (
   'horn_coral_fan' |
   'horse_spawn_egg' |
   'host_armor_trim_smithing_template' |
-  'howl_pottery_shard' |
+  'howl_pottery_sherd' |
   'husk_spawn_egg' |
   'ice' |
   'infested_chiseled_stone_bricks' |
@@ -707,7 +707,7 @@ export type ITEMS = (
   'melon_slice' |
   'milk_bucket' |
   'minecart' |
-  'miner_pottery_shard' |
+  'miner_pottery_sherd' |
   'mojang_banner_pattern' |
   'mooshroom_spawn_egg' |
   'moss_block' |
@@ -720,7 +720,7 @@ export type ITEMS = (
   'mossy_stone_brick_stairs' |
   'mossy_stone_brick_wall' |
   'mossy_stone_bricks' |
-  'mourner_pottery_shard' |
+  'mourner_pottery_sherd' |
   'mud' |
   'mud_brick_slab' |
   'mud_brick_stairs' |
@@ -852,7 +852,7 @@ export type ITEMS = (
   'pitcher_plant' |
   'pitcher_pod' |
   'player_head' |
-  'plenty_pottery_shard' |
+  'plenty_pottery_sherd' |
   'podzol' |
   'pointed_dripstone' |
   'poisonous_potato' |
@@ -897,7 +897,7 @@ export type ITEMS = (
   'prismarine_slab' |
   'prismarine_stairs' |
   'prismarine_wall' |
-  'prize_pottery_shard' |
+  'prize_pottery_sherd' |
   'pufferfish' |
   'pufferfish_bucket' |
   'pufferfish_spawn_egg' |
@@ -1001,10 +1001,10 @@ export type ITEMS = (
   'seagrass' |
   'sentry_armor_trim_smithing_template' |
   'shaper_armor_trim_smithing_template' |
-  'sheaf_pottery_shard' |
+  'sheaf_pottery_sherd' |
   'shears' |
   'sheep_spawn_egg' |
-  'shelter_pottery_shard' |
+  'shelter_pottery_sherd' |
   'shield' |
   'shroomlight' |
   'shulker_box' |
@@ -1016,7 +1016,7 @@ export type ITEMS = (
   'skeleton_skull' |
   'skeleton_spawn_egg' |
   'skull_banner_pattern' |
-  'skull_pottery_shard' |
+  'skull_pottery_sherd' |
   'slime_ball' |
   'slime_block' |
   'slime_spawn_egg' |
@@ -1038,7 +1038,7 @@ export type ITEMS = (
   'smooth_stone_slab' |
   'sniffer_egg' |
   'sniffer_spawn_egg' |
-  'snort_pottery_shard' |
+  'snort_pottery_sherd' |
   'snout_armor_trim_smithing_template' |
   'snow' |
   'snow_block' |

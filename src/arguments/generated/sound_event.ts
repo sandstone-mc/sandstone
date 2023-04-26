@@ -569,8 +569,9 @@ export type SOUND_EVENTS = (
   'block.small_dripleaf.step' |
   'block.smithing_table.use' |
   'block.smoker.smoke' |
-  'block.sniffer.egg_crack' |
-  'block.sniffer.egg_hatch' |
+  'block.sniffer_egg.crack' |
+  'block.sniffer_egg.hatch' |
+  'block.sniffer_egg.plop' |
   'block.snow.break' |
   'block.snow.fall' |
   'block.snow.hit' |
