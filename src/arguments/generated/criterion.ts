@@ -5313,6 +5313,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.music_disc_pigstep' |
   'minecraft.picked_up:minecraft.music_disc_pigstep' |
   'minecraft.used:minecraft.music_disc_pigstep' |
+  'minecraft.crafted:minecraft.music_disc_relic' |
+  'minecraft.dropped:minecraft.music_disc_relic' |
+  'minecraft.picked_up:minecraft.music_disc_relic' |
+  'minecraft.used:minecraft.music_disc_relic' |
   'minecraft.crafted:minecraft.music_disc_stal' |
   'minecraft.dropped:minecraft.music_disc_stal' |
   'minecraft.picked_up:minecraft.music_disc_stal' |

@@ -21,6 +21,10 @@ export type TRANSLATION_KEYS = (
   'advancements.adventure.avoid_vibration.title' |
   'advancements.adventure.bullseye.description' |
   'advancements.adventure.bullseye.title' |
+  'advancements.adventure.craft_decorated_pot_using_only_sherds.description' |
+  'advancements.adventure.craft_decorated_pot_using_only_sherds.title' |
+  'advancements.adventure.trim_with_any_armor_pattern.description' |
+  'advancements.adventure.trim_with_any_armor_pattern.title' |
   'advancements.adventure.fall_from_world_height.description' |
   'advancements.adventure.fall_from_world_height.title' |
   'advancements.adventure.hero_of_the_village.description' |
@@ -39,12 +43,16 @@ export type TRANSLATION_KEYS = (
   'advancements.adventure.ol_betsy.title' |
   'advancements.adventure.play_jukebox_in_meadows.description' |
   'advancements.adventure.play_jukebox_in_meadows.title' |
+  'advancements.adventure.salvage_sherd.description' |
+  'advancements.adventure.salvage_sherd.title' |
   'advancements.adventure.root.description' |
   'advancements.adventure.root.title' |
   'advancements.adventure.shoot_arrow.description' |
   'advancements.adventure.shoot_arrow.title' |
   'advancements.adventure.sleep_in_bed.description' |
   'advancements.adventure.sleep_in_bed.title' |
+  'advancements.adventure.trim_with_all_exclusive_armor_patterns.description' |
+  'advancements.adventure.trim_with_all_exclusive_armor_patterns.title' |
   'advancements.adventure.sniper_duel.description' |
   'advancements.adventure.sniper_duel.title' |
   'advancements.adventure.spyglass_at_dragon.description' |
@@ -106,6 +114,8 @@ export type TRANSLATION_KEYS = (
   'advancements.husbandry.breed_an_animal.title' |
   'advancements.husbandry.complete_catalogue.description' |
   'advancements.husbandry.complete_catalogue.title' |
+  'advancements.husbandry.feed_snifflet.description' |
+  'advancements.husbandry.feed_snifflet.title' |
   'advancements.husbandry.fishy_business.description' |
   'advancements.husbandry.fishy_business.title' |
   'advancements.husbandry.froglights.description' |
@@ -118,8 +128,12 @@ export type TRANSLATION_KEYS = (
   'advancements.husbandry.make_a_sign_glow.title' |
   'advancements.husbandry.netherite_hoe.description' |
   'advancements.husbandry.netherite_hoe.title' |
+  'advancements.husbandry.obtain_sniffer_egg.description' |
+  'advancements.husbandry.obtain_sniffer_egg.title' |
   'advancements.husbandry.plant_seed.description' |
   'advancements.husbandry.plant_seed.title' |
+  'advancements.husbandry.plant_any_sniffer_seed.description' |
+  'advancements.husbandry.plant_any_sniffer_seed.title' |
   'advancements.husbandry.ride_a_boat_with_a_goat.description' |
   'advancements.husbandry.ride_a_boat_with_a_goat.title' |
   'advancements.husbandry.root.description' |
@@ -3791,6 +3805,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.music_disc_otherside.desc' |
   'item.minecraft.music_disc_pigstep' |
   'item.minecraft.music_disc_pigstep.desc' |
+  'item.minecraft.music_disc_relic' |
+  'item.minecraft.music_disc_relic.desc' |
   'item.minecraft.music_disc_stal' |
   'item.minecraft.music_disc_stal.desc' |
   'item.minecraft.music_disc_strad' |
@@ -4534,6 +4550,7 @@ export type TRANSLATION_KEYS = (
   'multiplayer.disconnect.invalid_player_data' |
   'multiplayer.disconnect.invalid_player_movement' |
   'multiplayer.disconnect.invalid_public_key_signature' |
+  'multiplayer.disconnect.invalid_public_key_signature.new' |
   'multiplayer.disconnect.invalid_vehicle_movement' |
   'multiplayer.disconnect.ip_banned' |
   'multiplayer.disconnect.kicked' |

@@ -741,6 +741,7 @@ export type ITEMS = (
   'music_disc_mellohi' |
   'music_disc_otherside' |
   'music_disc_pigstep' |
+  'music_disc_relic' |
   'music_disc_stal' |
   'music_disc_strad' |
   'music_disc_wait' |
