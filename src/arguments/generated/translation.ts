@@ -45,6 +45,8 @@ export type TRANSLATION_KEYS = (
   'advancements.adventure.play_jukebox_in_meadows.title' |
   'advancements.adventure.salvage_sherd.description' |
   'advancements.adventure.salvage_sherd.title' |
+  'advancements.adventure.read_power_from_chiseled_bookshelf.description' |
+  'advancements.adventure.read_power_from_chiseled_bookshelf.title' |
   'advancements.adventure.root.description' |
   'advancements.adventure.root.title' |
   'advancements.adventure.shoot_arrow.description' |
@@ -6031,6 +6033,10 @@ export type TRANSLATION_KEYS = (
   'telemetry_info.property_title' |
   'telemetry_info.screen.description' |
   'telemetry_info.screen.title' |
+  'telemetry.event.advancement_made.title' |
+  'telemetry.event.advancement_made.description' |
+  'telemetry.event.game_load_times.title' |
+  'telemetry.event.game_load_times.description' |
   'telemetry.event.optional' |
   'telemetry.event.performance_metrics.description' |
   'telemetry.event.performance_metrics.title' |
@@ -6041,6 +6047,8 @@ export type TRANSLATION_KEYS = (
   'telemetry.event.world_loaded.title' |
   'telemetry.event.world_unloaded.description' |
   'telemetry.event.world_unloaded.title' |
+  'telemetry.property.advancement_id.title' |
+  'telemetry.property.advancement_game_time.title' |
   'telemetry.property.client_id.title' |
   'telemetry.property.client_modded.title' |
   'telemetry.property.dedicated_memory_kb.title' |
@@ -6048,12 +6056,18 @@ export type TRANSLATION_KEYS = (
   'telemetry.property.frame_rate_samples.title' |
   'telemetry.property.game_mode.title' |
   'telemetry.property.game_version.title' |
+  'telemetry.property.launcher_name.title' |
+  'telemetry.property.load_time_bootstrap_ms.title' |
+  'telemetry.property.load_time_loading_overlay_ms.title' |
+  'telemetry.property.load_time_pre_window_ms.title' |
+  'telemetry.property.load_time_total_time_ms.title' |
   'telemetry.property.minecraft_session_id.title' |
   'telemetry.property.new_world.title' |
   'telemetry.property.number_of_samples.title' |
   'telemetry.property.operating_system.title' |
   'telemetry.property.opt_in.title' |
   'telemetry.property.platform.title' |
+  'telemetry.property.realms_map_content.title' |
   'telemetry.property.render_distance.title' |
   'telemetry.property.render_time_samples.title' |
   'telemetry.property.seconds_since_load.title' |
