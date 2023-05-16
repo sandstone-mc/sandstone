@@ -18,6 +18,7 @@ export type DAMAGE_TYPES = (
   'fly_into_wall' |
   'freeze' |
   'generic' |
+  'generic_kill' |
   'hot_floor' |
   'in_fire' |
   'in_wall' |
@@ -30,6 +31,7 @@ export type DAMAGE_TYPES = (
   'mob_projectile' |
   'on_fire' |
   'out_of_world' |
+  'outside_border' |
   'player_attack' |
   'player_explosion' |
   'sonic_boom' |

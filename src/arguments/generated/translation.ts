@@ -23,8 +23,6 @@ export type TRANSLATION_KEYS = (
   'advancements.adventure.bullseye.title' |
   'advancements.adventure.craft_decorated_pot_using_only_sherds.description' |
   'advancements.adventure.craft_decorated_pot_using_only_sherds.title' |
-  'advancements.adventure.trim_with_any_armor_pattern.description' |
-  'advancements.adventure.trim_with_any_armor_pattern.title' |
   'advancements.adventure.fall_from_world_height.description' |
   'advancements.adventure.fall_from_world_height.title' |
   'advancements.adventure.hero_of_the_village.description' |
@@ -43,18 +41,16 @@ export type TRANSLATION_KEYS = (
   'advancements.adventure.ol_betsy.title' |
   'advancements.adventure.play_jukebox_in_meadows.description' |
   'advancements.adventure.play_jukebox_in_meadows.title' |
-  'advancements.adventure.salvage_sherd.description' |
-  'advancements.adventure.salvage_sherd.title' |
   'advancements.adventure.read_power_from_chiseled_bookshelf.description' |
   'advancements.adventure.read_power_from_chiseled_bookshelf.title' |
   'advancements.adventure.root.description' |
   'advancements.adventure.root.title' |
+  'advancements.adventure.salvage_sherd.description' |
+  'advancements.adventure.salvage_sherd.title' |
   'advancements.adventure.shoot_arrow.description' |
   'advancements.adventure.shoot_arrow.title' |
   'advancements.adventure.sleep_in_bed.description' |
   'advancements.adventure.sleep_in_bed.title' |
-  'advancements.adventure.trim_with_all_exclusive_armor_patterns.description' |
-  'advancements.adventure.trim_with_all_exclusive_armor_patterns.title' |
   'advancements.adventure.sniper_duel.description' |
   'advancements.adventure.sniper_duel.title' |
   'advancements.adventure.spyglass_at_dragon.description' |
@@ -73,6 +69,10 @@ export type TRANSLATION_KEYS = (
   'advancements.adventure.trade_at_world_height.title' |
   'advancements.adventure.trade.description' |
   'advancements.adventure.trade.title' |
+  'advancements.adventure.trim_with_all_exclusive_armor_patterns.description' |
+  'advancements.adventure.trim_with_all_exclusive_armor_patterns.title' |
+  'advancements.adventure.trim_with_any_armor_pattern.description' |
+  'advancements.adventure.trim_with_any_armor_pattern.title' |
   'advancements.adventure.two_birds_one_arrow.description' |
   'advancements.adventure.two_birds_one_arrow.title' |
   'advancements.adventure.very_very_frightening.description' |
@@ -132,10 +132,10 @@ export type TRANSLATION_KEYS = (
   'advancements.husbandry.netherite_hoe.title' |
   'advancements.husbandry.obtain_sniffer_egg.description' |
   'advancements.husbandry.obtain_sniffer_egg.title' |
-  'advancements.husbandry.plant_seed.description' |
-  'advancements.husbandry.plant_seed.title' |
   'advancements.husbandry.plant_any_sniffer_seed.description' |
   'advancements.husbandry.plant_any_sniffer_seed.title' |
+  'advancements.husbandry.plant_seed.description' |
+  'advancements.husbandry.plant_seed.title' |
   'advancements.husbandry.ride_a_boat_with_a_goat.description' |
   'advancements.husbandry.ride_a_boat_with_a_goat.title' |
   'advancements.husbandry.root.description' |
@@ -1768,6 +1768,8 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.pink_wool' |
   'block.minecraft.piston' |
   'block.minecraft.piston_head' |
+  'block.minecraft.pitcher_crop' |
+  'block.minecraft.pitcher_plant' |
   'block.minecraft.player_head' |
   'block.minecraft.player_head.named' |
   'block.minecraft.player_wall_head' |
@@ -2025,8 +2027,6 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.torch' |
   'block.minecraft.torchflower' |
   'block.minecraft.torchflower_crop' |
-  'block.minecraft.pitcher_plant' |
-  'block.minecraft.pitcher_crop' |
   'block.minecraft.trapped_chest' |
   'block.minecraft.tripwire' |
   'block.minecraft.tripwire_hook' |
@@ -2789,8 +2789,8 @@ export type TRANSLATION_KEYS = (
   'dataPack.vanilla.description' |
   'dataPack.vanilla.name' |
   'datapackFailure.safeMode' |
-  'datapackFailure.safeMode.failed.title' |
   'datapackFailure.safeMode.failed.description' |
+  'datapackFailure.safeMode.failed.title' |
   'datapackFailure.title' |
   'death.attack.anvil' |
   'death.attack.anvil.player' |
@@ -2828,6 +2828,7 @@ export type TRANSLATION_KEYS = (
   'death.attack.freeze' |
   'death.attack.freeze.player' |
   'death.attack.generic' |
+  'death.attack.genericKill' |
   'death.attack.generic.player' |
   'death.attack.hotFloor' |
   'death.attack.hotFloor.player' |
@@ -2849,6 +2850,8 @@ export type TRANSLATION_KEYS = (
   'death.attack.onFire' |
   'death.attack.onFire.item' |
   'death.attack.onFire.player' |
+  'death.attack.outsideBorder' |
+  'death.attack.outsideBorder.player' |
   'death.attack.outOfWorld' |
   'death.attack.outOfWorld.player' |
   'death.attack.player' |
@@ -2961,6 +2964,7 @@ export type TRANSLATION_KEYS = (
   'disconnect.endOfStream' |
   'disconnect.exceeded_packet_rate' |
   'disconnect.genericReason' |
+  'disconnect.ignoring_status_request' |
   'disconnect.kicked' |
   'disconnect.loginFailed' |
   'disconnect.loginFailedInfo' |
@@ -3520,8 +3524,14 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.acacia_chest_boat' |
   'item.minecraft.allay_spawn_egg' |
   'item.minecraft.amethyst_shard' |
+  'item.minecraft.angler_pottery_shard' |
+  'item.minecraft.angler_pottery_sherd' |
   'item.minecraft.apple' |
+  'item.minecraft.archer_pottery_shard' |
+  'item.minecraft.archer_pottery_sherd' |
   'item.minecraft.armor_stand' |
+  'item.minecraft.arms_up_pottery_shard' |
+  'item.minecraft.arms_up_pottery_sherd' |
   'item.minecraft.arrow' |
   'item.minecraft.axolotl_bucket' |
   'item.minecraft.axolotl_spawn_egg' |
@@ -3537,6 +3547,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.birch_boat' |
   'item.minecraft.birch_chest_boat' |
   'item.minecraft.black_dye' |
+  'item.minecraft.blade_pottery_shard' |
+  'item.minecraft.blade_pottery_sherd' |
   'item.minecraft.blaze_powder' |
   'item.minecraft.blaze_rod' |
   'item.minecraft.blaze_spawn_egg' |
@@ -3547,6 +3559,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.bow' |
   'item.minecraft.bowl' |
   'item.minecraft.bread' |
+  'item.minecraft.brewer_pottery_shard' |
+  'item.minecraft.brewer_pottery_sherd' |
   'item.minecraft.brewing_stand' |
   'item.minecraft.brick' |
   'item.minecraft.brown_dye' |
@@ -3554,6 +3568,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.bucket' |
   'item.minecraft.bundle' |
   'item.minecraft.bundle.fullness' |
+  'item.minecraft.burn_pottery_shard' |
+  'item.minecraft.burn_pottery_sherd' |
   'item.minecraft.camel_spawn_egg' |
   'item.minecraft.carrot' |
   'item.minecraft.carrot_on_a_stick' |
@@ -3596,6 +3612,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.crossbow' |
   'item.minecraft.crossbow.projectile' |
   'item.minecraft.cyan_dye' |
+  'item.minecraft.danger_pottery_shard' |
+  'item.minecraft.danger_pottery_sherd' |
   'item.minecraft.dark_oak_boat' |
   'item.minecraft.dark_oak_chest_boat' |
   'item.minecraft.debug_stick' |
@@ -3635,6 +3653,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.endermite_spawn_egg' |
   'item.minecraft.evoker_spawn_egg' |
   'item.minecraft.experience_bottle' |
+  'item.minecraft.explorer_pottery_shard' |
+  'item.minecraft.explorer_pottery_sherd' |
   'item.minecraft.feather' |
   'item.minecraft.fermented_spider_eye' |
   'item.minecraft.filled_map' |
@@ -3675,6 +3695,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.flower_banner_pattern.desc' |
   'item.minecraft.flower_pot' |
   'item.minecraft.fox_spawn_egg' |
+  'item.minecraft.friend_pottery_shard' |
+  'item.minecraft.friend_pottery_sherd' |
   'item.minecraft.frog_spawn_egg' |
   'item.minecraft.furnace_minecart' |
   'item.minecraft.ghast_spawn_egg' |
@@ -3709,11 +3731,17 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.guardian_spawn_egg' |
   'item.minecraft.gunpowder' |
   'item.minecraft.heart_of_the_sea' |
+  'item.minecraft.heart_pottery_shard' |
+  'item.minecraft.heart_pottery_sherd' |
+  'item.minecraft.heartbreak_pottery_shard' |
+  'item.minecraft.heartbreak_pottery_sherd' |
   'item.minecraft.hoglin_spawn_egg' |
   'item.minecraft.honey_bottle' |
   'item.minecraft.honeycomb' |
   'item.minecraft.hopper_minecart' |
   'item.minecraft.horse_spawn_egg' |
+  'item.minecraft.howl_pottery_shard' |
+  'item.minecraft.howl_pottery_sherd' |
   'item.minecraft.husk_spawn_egg' |
   'item.minecraft.ink_sac' |
   'item.minecraft.iron_axe' |
@@ -3780,9 +3808,13 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.melon_slice' |
   'item.minecraft.milk_bucket' |
   'item.minecraft.minecart' |
+  'item.minecraft.miner_pottery_shard' |
+  'item.minecraft.miner_pottery_sherd' |
   'item.minecraft.mojang_banner_pattern' |
   'item.minecraft.mojang_banner_pattern.desc' |
   'item.minecraft.mooshroom_spawn_egg' |
+  'item.minecraft.mourner_pottery_shard' |
+  'item.minecraft.mourner_pottery_sherd' |
   'item.minecraft.mule_spawn_egg' |
   'item.minecraft.mushroom_stew' |
   'item.minecraft.music_disc_5' |
@@ -3851,6 +3883,10 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.piglin_spawn_egg' |
   'item.minecraft.pillager_spawn_egg' |
   'item.minecraft.pink_dye' |
+  'item.minecraft.pitcher_plant' |
+  'item.minecraft.pitcher_pod' |
+  'item.minecraft.plenty_pottery_shard' |
+  'item.minecraft.plenty_pottery_sherd' |
   'item.minecraft.poisonous_potato' |
   'item.minecraft.polar_bear_spawn_egg' |
   'item.minecraft.popped_chorus_fruit' |
@@ -3879,29 +3915,15 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.potion.effect.water' |
   'item.minecraft.potion.effect.water_breathing' |
   'item.minecraft.potion.effect.weakness' |
-  'item.minecraft.angler_pottery_sherd' |
-  'item.minecraft.archer_pottery_sherd' |
-  'item.minecraft.arms_up_pottery_sherd' |
-  'item.minecraft.blade_pottery_sherd' |
-  'item.minecraft.brewer_pottery_sherd' |
-  'item.minecraft.burn_pottery_sherd' |
-  'item.minecraft.danger_pottery_sherd' |
-  'item.minecraft.explorer_pottery_sherd' |
-  'item.minecraft.friend_pottery_sherd' |
-  'item.minecraft.heart_pottery_sherd' |
-  'item.minecraft.heartbreak_pottery_sherd' |
-  'item.minecraft.howl_pottery_sherd' |
-  'item.minecraft.miner_pottery_sherd' |
-  'item.minecraft.mourner_pottery_sherd' |
-  'item.minecraft.plenty_pottery_sherd' |
-  'item.minecraft.prize_pottery_sherd' |
-  'item.minecraft.sheaf_pottery_sherd' |
-  'item.minecraft.shelter_pottery_sherd' |
-  'item.minecraft.skull_pottery_sherd' |
-  'item.minecraft.snort_pottery_sherd' |
+  'item.minecraft.pottery_shard_archer' |
+  'item.minecraft.pottery_shard_arms_up' |
+  'item.minecraft.pottery_shard_prize' |
+  'item.minecraft.pottery_shard_skull' |
   'item.minecraft.powder_snow_bucket' |
   'item.minecraft.prismarine_crystals' |
   'item.minecraft.prismarine_shard' |
+  'item.minecraft.prize_pottery_shard' |
+  'item.minecraft.prize_pottery_sherd' |
   'item.minecraft.pufferfish' |
   'item.minecraft.pufferfish_bucket' |
   'item.minecraft.pufferfish_spawn_egg' |
@@ -3927,8 +3949,12 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.salmon_bucket' |
   'item.minecraft.salmon_spawn_egg' |
   'item.minecraft.scute' |
+  'item.minecraft.sheaf_pottery_shard' |
+  'item.minecraft.sheaf_pottery_sherd' |
   'item.minecraft.shears' |
   'item.minecraft.sheep_spawn_egg' |
+  'item.minecraft.shelter_pottery_shard' |
+  'item.minecraft.shelter_pottery_sherd' |
   'item.minecraft.shield' |
   'item.minecraft.shield.black' |
   'item.minecraft.shield.blue' |
@@ -3954,6 +3980,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.skeleton_spawn_egg' |
   'item.minecraft.skull_banner_pattern' |
   'item.minecraft.skull_banner_pattern.desc' |
+  'item.minecraft.skull_pottery_shard' |
+  'item.minecraft.skull_pottery_sherd' |
   'item.minecraft.slime_ball' |
   'item.minecraft.slime_spawn_egg' |
   'item.minecraft.smithing_template' |
@@ -3969,6 +3997,8 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.smithing_template.netherite_upgrade.ingredients' |
   'item.minecraft.smithing_template.upgrade' |
   'item.minecraft.sniffer_spawn_egg' |
+  'item.minecraft.snort_pottery_shard' |
+  'item.minecraft.snort_pottery_sherd' |
   'item.minecraft.snow_golem_spawn_egg' |
   'item.minecraft.snowball' |
   'item.minecraft.spectral_arrow' |
@@ -4040,8 +4070,6 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.tipped_arrow.effect.weakness' |
   'item.minecraft.tnt_minecart' |
   'item.minecraft.torchflower_seeds' |
-  'item.minecraft.pitcher_plant' |
-  'item.minecraft.pitcher_pod' |
   'item.minecraft.totem_of_undying' |
   'item.minecraft.trader_llama_spawn_egg' |
   'item.minecraft.trident' |
@@ -4264,9 +4292,23 @@ export type TRANSLATION_KEYS = (
   'mco.backup.button.restore' |
   'mco.backup.button.upload' |
   'mco.backup.changes.tooltip' |
+  'mco.backup.entry' |
+  'mco.backup.entry.description' |
+  'mco.backup.entry.enabledPack' |
+  'mco.backup.entry.gameDifficulty' |
+  'mco.backup.entry.gameMode' |
+  'mco.backup.entry.gameServerVersion' |
+  'mco.backup.entry.name' |
+  'mco.backup.entry.seed' |
+  'mco.backup.entry.templateName' |
+  'mco.backup.entry.undefined' |
+  'mco.backup.entry.uploaded' |
+  'mco.backup.entry.worldType' |
   'mco.backup.generate.world' |
+  'mco.backup.info.title' |
   'mco.backup.nobackups' |
   'mco.backup.restoring' |
+  'mco.backup.unknown' |
   'mco.brokenworld.download' |
   'mco.brokenworld.downloaded' |
   'mco.brokenworld.message.line1' |
@@ -4314,12 +4356,14 @@ export type TRANSLATION_KEYS = (
   'mco.configure.world.invite.narration' |
   'mco.configure.world.invite.profile.name' |
   'mco.configure.world.invited' |
+  'mco.configure.world.invited.number' |
   'mco.configure.world.invites.normal.tooltip' |
   'mco.configure.world.invites.ops.tooltip' |
   'mco.configure.world.invites.remove.tooltip' |
   'mco.configure.world.leave.question.line1' |
   'mco.configure.world.leave.question.line2' |
   'mco.configure.world.location' |
+  'mco.configure.world.minigame' |
   'mco.configure.world.name' |
   'mco.configure.world.opening' |
   'mco.configure.world.players.error' |
@@ -4349,6 +4393,9 @@ export type TRANSLATION_KEYS = (
   'mco.configure.world.spawnNPCs' |
   'mco.configure.world.spawnProtection' |
   'mco.configure.world.status' |
+  'mco.configure.world.subscription.remaining.months.days' |
+  'mco.configure.world.subscription.remaining.months' |
+  'mco.configure.world.subscription.remaining.days' |
   'mco.configure.world.subscription.day' |
   'mco.configure.world.subscription.days' |
   'mco.configure.world.subscription.expired' |
@@ -4366,6 +4413,7 @@ export type TRANSLATION_KEYS = (
   'mco.configure.world.switch.slot.subtitle' |
   'mco.configure.world.title' |
   'mco.configure.world.uninvite.question' |
+  'mco.configure.world.uninvite.player' |
   'mco.configure.worlds.title' |
   'mco.connect.authorizing' |
   'mco.connect.connecting' |
@@ -4384,7 +4432,10 @@ export type TRANSLATION_KEYS = (
   'mco.download.downloading' |
   'mco.download.extracting' |
   'mco.download.failed' |
+  'mco.download.percent' |
   'mco.download.preparing' |
+  'mco.download.resourcePack.fail' |
+  'mco.download.speed' |
   'mco.download.title' |
   'mco.error.invalid.session.message' |
   'mco.error.invalid.session.title' |
@@ -4393,9 +4444,13 @@ export type TRANSLATION_KEYS = (
   'mco.errorMessage.6003' |
   'mco.errorMessage.6004' |
   'mco.errorMessage.connectionFailure' |
+  'mco.errorMessage.generic' |
+  'mco.errorMessage.realmsService' |
+  'mco.errorMessage.realmsService.realmsError' |
   'mco.errorMessage.serviceBusy' |
   'mco.gui.button' |
   'mco.gui.ok' |
+  'mco.info' |
   'mco.invites.button.accept' |
   'mco.invites.button.reject' |
   'mco.invites.nopending' |
@@ -4418,8 +4473,9 @@ export type TRANSLATION_KEYS = (
   'mco.minigame.world.title' |
   'mco.news' |
   'mco.notification.dismiss' |
-  'mco.notification.visitUrl.message.default' |
   'mco.notification.visitUrl.buttonText.default' |
+  'mco.notification.visitUrl.message.default' |
+  'mco.question' |
   'mco.reset.world.adventure' |
   'mco.reset.world.experience' |
   'mco.reset.world.generate' |
@@ -4482,6 +4538,8 @@ export type TRANSLATION_KEYS = (
   'mco.upload.cancelled' |
   'mco.upload.close.failure' |
   'mco.upload.done' |
+  'mco.upload.entry.id' |
+  'mco.upload.entry.cheats' |
   'mco.upload.failed' |
   'mco.upload.hardcore' |
   'mco.upload.preparing' |
@@ -4492,6 +4550,13 @@ export type TRANSLATION_KEYS = (
   'mco.upload.size.failure.line2' |
   'mco.upload.uploading' |
   'mco.upload.verifying' |
+  'mco.time.now' |
+  'mco.time.secondsAgo' |
+  'mco.time.minutesAgo' |
+  'mco.time.hoursAgo' |
+  'mco.time.daysAgo' |
+  'mco.warning' |
+  'mco.worldSlot.minigame' |
   'menu.convertingLevel' |
   'menu.disconnect' |
   'menu.game' |
@@ -4626,11 +4691,11 @@ export type TRANSLATION_KEYS = (
   'narration.recipe.usage' |
   'narration.recipe.usage.more' |
   'narration.selection.usage' |
-  'narration.tab_navigation.usage' |
   'narration.slider.usage.focused' |
   'narration.slider.usage.hovered' |
   'narration.suggestion' |
   'narration.suggestion.tooltip' |
+  'narration.tab_navigation.usage' |
   'narrator.button.accessibility' |
   'narrator.button.difficulty_lock' |
   'narrator.button.difficulty_lock.locked' |
@@ -4664,8 +4729,8 @@ export type TRANSLATION_KEYS = (
   'optimizeWorld.stage.upgrading' |
   'optimizeWorld.title' |
   'options.accessibility.high_contrast' |
-  'options.accessibility.high_contrast.tooltip' |
   'options.accessibility.high_contrast.error.tooltip' |
+  'options.accessibility.high_contrast.tooltip' |
   'options.accessibility.link' |
   'options.accessibility.panorama_speed' |
   'options.accessibility.text_background' |
@@ -4976,10 +5041,10 @@ export type TRANSLATION_KEYS = (
   'potion.withAmplifier' |
   'potion.withDuration' |
   'predicate.unknown' |
-  'quickplay.error.title' |
   'quickplay.error.invalid_identifier' |
   'quickplay.error.realm_connect' |
   'quickplay.error.realm_permission' |
+  'quickplay.error.title' |
   'realms.missing.module.error.text' |
   'realms.missing.snapshot.error.text' |
   'recipe.notFound' |
@@ -5378,9 +5443,9 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.sign.waxed_interact_fail' |
   'subtitles.block.smithing_table.use' |
   'subtitles.block.smoker.smoke' |
-  'subtitles.block.sniffer_egg.plop' |
   'subtitles.block.sniffer_egg.crack' |
   'subtitles.block.sniffer_egg.hatch' |
+  'subtitles.block.sniffer_egg.plop' |
   'subtitles.block.sweet_berry_bush.pick_berries' |
   'subtitles.block.trapdoor.toggle' |
   'subtitles.block.tripwire.attach' |
@@ -5805,6 +5870,8 @@ export type TRANSLATION_KEYS = (
   'subtitles.entity.sniffer.digging_stop' |
   'subtitles.entity.sniffer.drop_seed' |
   'subtitles.entity.sniffer.eat' |
+  'subtitles.entity.sniffer.egg_crack' |
+  'subtitles.entity.sniffer.egg_hatch' |
   'subtitles.entity.sniffer.happy' |
   'subtitles.entity.sniffer.hurt' |
   'subtitles.entity.sniffer.idle' |
@@ -5973,10 +6040,10 @@ export type TRANSLATION_KEYS = (
   'subtitles.item.bottle.empty' |
   'subtitles.item.bottle.fill' |
   'subtitles.item.brush.brushing.generic' |
-  'subtitles.item.brush.brushing.sand' |
   'subtitles.item.brush.brushing.gravel' |
-  'subtitles.item.brush.brushing.sand.complete' |
   'subtitles.item.brush.brushing.gravel.complete' |
+  'subtitles.item.brush.brushing.sand' |
+  'subtitles.item.brush.brushing.sand.complete' |
   'subtitles.item.bucket.empty' |
   'subtitles.item.bucket.fill' |
   'subtitles.item.bucket.fill_axolotl' |
@@ -6033,10 +6100,10 @@ export type TRANSLATION_KEYS = (
   'telemetry_info.property_title' |
   'telemetry_info.screen.description' |
   'telemetry_info.screen.title' |
-  'telemetry.event.advancement_made.title' |
   'telemetry.event.advancement_made.description' |
-  'telemetry.event.game_load_times.title' |
+  'telemetry.event.advancement_made.title' |
   'telemetry.event.game_load_times.description' |
+  'telemetry.event.game_load_times.title' |
   'telemetry.event.optional' |
   'telemetry.event.performance_metrics.description' |
   'telemetry.event.performance_metrics.title' |
@@ -6047,8 +6114,8 @@ export type TRANSLATION_KEYS = (
   'telemetry.event.world_loaded.title' |
   'telemetry.event.world_unloaded.description' |
   'telemetry.event.world_unloaded.title' |
-  'telemetry.property.advancement_id.title' |
   'telemetry.property.advancement_game_time.title' |
+  'telemetry.property.advancement_id.title' |
   'telemetry.property.client_id.title' |
   'telemetry.property.client_modded.title' |
   'telemetry.property.dedicated_memory_kb.title' |
@@ -6120,8 +6187,8 @@ export type TRANSLATION_KEYS = (
   'trim_pattern.minecraft.tide' |
   'trim_pattern.minecraft.vex' |
   'trim_pattern.minecraft.ward' |
-  'trim_pattern.minecraft.wild' |
   'trim_pattern.minecraft.wayfinder' |
+  'trim_pattern.minecraft.wild' |
   'tutorial.bundleInsert.description' |
   'tutorial.bundleInsert.title' |
   'tutorial.craft_planks.description' |
