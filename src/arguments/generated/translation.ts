@@ -2296,6 +2296,7 @@ export type TRANSLATION_KEYS = (
   'commands.data.modify.expected_object' |
   'commands.data.modify.expected_value' |
   'commands.data.modify.invalid_index' |
+  'commands.data.modify.invalid_substring' |
   'commands.data.storage.get' |
   'commands.data.storage.modified' |
   'commands.data.storage.query' |
@@ -2829,6 +2830,7 @@ export type TRANSLATION_KEYS = (
   'death.attack.freeze.player' |
   'death.attack.generic' |
   'death.attack.genericKill' |
+  'death.attack.genericKill.player' |
   'death.attack.generic.player' |
   'death.attack.hotFloor' |
   'death.attack.hotFloor.player' |
@@ -4443,6 +4445,11 @@ export type TRANSLATION_KEYS = (
   'mco.errorMessage.6002' |
   'mco.errorMessage.6003' |
   'mco.errorMessage.6004' |
+  'mco.errorMessage.6005' |
+  'mco.errorMessage.6006' |
+  'mco.errorMessage.6007' |
+  'mco.errorMessage.6008' |
+  'mco.errorMessage.6009' |
   'mco.errorMessage.connectionFailure' |
   'mco.errorMessage.generic' |
   'mco.errorMessage.realmsService' |
