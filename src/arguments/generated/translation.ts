@@ -4369,6 +4369,7 @@ export type TRANSLATION_KEYS = (
   'mco.configure.world.name' |
   'mco.configure.world.opening' |
   'mco.configure.world.players.error' |
+  'mco.configure.world.players.inviting' |
   'mco.configure.world.players.title' |
   'mco.configure.world.pvp' |
   'mco.configure.world.reset.question.line1' |
