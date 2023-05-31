@@ -3386,6 +3386,7 @@ export type TRANSLATION_KEYS = (
   'gui.advancements' |
   'gui.all' |
   'gui.back' |
+  'gui.copy_link_to_clipboard' |
   'gui.banned.description' |
   'gui.banned.description.permanent' |
   'gui.banned.description.reason' |
@@ -4724,6 +4725,7 @@ export type TRANSLATION_KEYS = (
   'narrator.screen.usage' |
   'narrator.select' |
   'narrator.select.world' |
+  'narrator.select.world_info' |
   'narrator.toast.disabled' |
   'narrator.toast.enabled' |
   'optimizeWorld.confirm.description' |
@@ -6094,6 +6096,8 @@ export type TRANSLATION_KEYS = (
   'subtitles.ui.loom.take_result' |
   'subtitles.ui.stonecutter.take_result' |
   'subtitles.weather.rain' |
+  'symlink_warning.title' |
+  'symlink_warning.message' |
   'team.collision.always' |
   'team.collision.never' |
   'team.collision.pushOtherTeams' |
