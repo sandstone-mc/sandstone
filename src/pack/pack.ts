@@ -478,7 +478,7 @@ export class SandstonePack {
    */
   ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) => new ResolveNBTClass(this, nbt, dataPoint)
 
-  Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this, target, properties)) as any
+  Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r' | `#${string}`, properties: SelectorProperties<false, false>) => new SelectorClass(this, target, properties)) as any
 
   /** Creates a randomly generated static UUID. (changes on pack compile, should only use this if it is killed) */
   UUID(): UUIDClass<'known', 'permanent'>

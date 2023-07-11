@@ -206,7 +206,7 @@ export class SelectorClass<IsSingle extends boolean = false, IsPlayer extends bo
 
   constructor(
     protected sandstonePack: SandstonePack,
-    public target: '@s' | '@p' | '@a' | '@e' | '@r',
+    public target: '@s' | '@p' | '@a' | '@e' | '@r' | `#${string}`,
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer>,
   ) {
     this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer>
@@ -338,4 +338,5 @@ export type SelectorCreator = (
   & ((target: '@e', selectorArguments: SinglePlayerSelectorProperties) => SelectorClass<true, true>)
   & ((target: '@e', selectorArguments: SingleSelectorProperties) => SelectorClass<true, false>)
   & ((target: '@e', selectorArguments?: AnySelectorProperties) => SelectorClass<false, false>)
+  & ((target: `#${string}`, selectorArguments: SingleSelectorProperties) => SelectorClass<true, false>)
 )
