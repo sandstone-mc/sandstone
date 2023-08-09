@@ -103,6 +103,7 @@ export type WORLDGEN_CONFIGURED_FEATURES = (
   'ore_copper_small' |
   'ore_diamond_buried' |
   'ore_diamond_large' |
+  'ore_diamond_medium' |
   'ore_diamond_small' |
   'ore_diorite' |
   'ore_dirt' |

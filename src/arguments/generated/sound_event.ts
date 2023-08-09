@@ -587,6 +587,7 @@ export type SOUND_EVENTS = (
   'block.soul_soil.hit' |
   'block.soul_soil.place' |
   'block.soul_soil.step' |
+  'block.sponge.absorb' |
   'block.spore_blossom.break' |
   'block.spore_blossom.fall' |
   'block.spore_blossom.hit' |

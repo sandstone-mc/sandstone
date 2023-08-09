@@ -23,6 +23,7 @@ export type TAG_DAMAGE_TYPES = (
   'is_projectile' |
   'no_anger' |
   'no_impact' |
+  'no_knockback' |
   'witch_resistant_to' |
   'wither_immune_to'
 )

@@ -15,14 +15,13 @@ export type GAME_EVENTS = (
   'drink' |
   'eat' |
   'elytra_glide' |
+  'entity_action' |
   'entity_damage' |
   'entity_die' |
   'entity_dismount' |
   'entity_interact' |
   'entity_mount' |
   'entity_place' |
-  'entity_roar' |
-  'entity_shake' |
   'equip' |
   'explode' |
   'flap' |

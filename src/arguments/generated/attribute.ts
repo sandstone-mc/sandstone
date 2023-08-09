@@ -10,6 +10,7 @@ export type ATTRIBUTES = (
   'generic.follow_range' |
   'generic.knockback_resistance' |
   'generic.luck' |
+  'generic.max_absorption' |
   'generic.max_health' |
   'generic.movement_speed' |
   'horse.jump_strength' |
