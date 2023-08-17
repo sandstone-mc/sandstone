@@ -59,5 +59,6 @@ export type GAME_EVENTS = (
   'splash' |
   'step' |
   'swim' |
-  'teleport'
+  'teleport' |
+  'unequip'
 )

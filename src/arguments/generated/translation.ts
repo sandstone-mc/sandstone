@@ -2157,6 +2157,7 @@ export type TRANSLATION_KEYS = (
   'chat.link.warning' |
   'chat.queue' |
   'chat.square_brackets' |
+  'chat.tag.error' |
   'chat.tag.modified' |
   'chat.tag.not_secure' |
   'chat.tag.system' |
@@ -2172,6 +2173,7 @@ export type TRANSLATION_KEYS = (
   'chat.type.team.text' |
   'chat.type.text' |
   'chat.type.text.narrate' |
+  'chat.validation_error' |
   'clear.failed.multiple' |
   'clear.failed.single' |
   'color.minecraft.black' |
