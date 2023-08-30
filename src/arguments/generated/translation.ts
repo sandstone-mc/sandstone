@@ -3368,7 +3368,26 @@ export type TRANSLATION_KEYS = (
   'generator.minecraft.single_biome_surface' |
   'generator.single_biome_caves' |
   'generator.single_biome_floating_islands' |
+  'gui.abuseReport.comments' |
+  'gui.abuseReport.describe' |
+  'gui.abuseReport.discard.content' |
+  'gui.abuseReport.discard.discard' |
+  'gui.abuseReport.discard.draft' |
+  'gui.abuseReport.discard.return' |
+  'gui.abuseReport.discard.title' |
+  'gui.abuseReport.draft.content' |
+  'gui.abuseReport.draft.discard' |
+  'gui.abuseReport.draft.edit' |
+  'gui.abuseReport.draft.quittotitle.content' |
+  'gui.abuseReport.draft.quittotitle.title' |
+  'gui.abuseReport.draft.title' |
   'gui.abuseReport.error.title' |
+  'gui.abuseReport.message' |
+  'gui.abuseReport.more_comments' |
+  'gui.abuseReport.name.reporting' |
+  'gui.abuseReport.name.title' |
+  'gui.abuseReport.observed_what' |
+  'gui.abuseReport.read_info' |
   'gui.abuseReport.reason.alcohol_tobacco_drugs' |
   'gui.abuseReport.reason.alcohol_tobacco_drugs.description' |
   'gui.abuseReport.reason.child_sexual_exploitation_or_abuse' |
@@ -3377,6 +3396,8 @@ export type TRANSLATION_KEYS = (
   'gui.abuseReport.reason.defamation_impersonation_false_information.description' |
   'gui.abuseReport.reason.description' |
   'gui.abuseReport.reason.false_reporting' |
+  'gui.abuseReport.reason.generic' |
+  'gui.abuseReport.reason.generic.description' |
   'gui.abuseReport.reason.harassment_or_bullying' |
   'gui.abuseReport.reason.harassment_or_bullying.description' |
   'gui.abuseReport.reason.hate_speech' |
@@ -3391,13 +3412,23 @@ export type TRANSLATION_KEYS = (
   'gui.abuseReport.reason.terrorism_or_violent_extremism' |
   'gui.abuseReport.reason.terrorism_or_violent_extremism.description' |
   'gui.abuseReport.reason.title' |
+  'gui.abuseReport.report_sent_msg' |
+  'gui.abuseReport.select_reason' |
+  'gui.abuseReport.send' |
+  'gui.abuseReport.send.comment_too_long' |
   'gui.abuseReport.send.error_message' |
   'gui.abuseReport.send.generic_error' |
   'gui.abuseReport.send.http_error' |
   'gui.abuseReport.send.json_error' |
+  'gui.abuseReport.send.no_reason' |
   'gui.abuseReport.send.service_unavailable' |
   'gui.abuseReport.sending.title' |
   'gui.abuseReport.sent.title' |
+  'gui.abuseReport.skin.title' |
+  'gui.abuseReport.title' |
+  'gui.abuseReport.type.chat' |
+  'gui.abuseReport.type.name' |
+  'gui.abuseReport.type.skin' |
   'gui.acknowledge' |
   'gui.advancements' |
   'gui.all' |
@@ -3410,6 +3441,8 @@ export type TRANSLATION_KEYS = (
   'gui.banned.description.temporary' |
   'gui.banned.description.temporary.duration' |
   'gui.banned.description.unknownreason' |
+  'gui.banned.name.description' |
+  'gui.banned.name.title' |
   'gui.banned.reason.defamation_impersonation_false_information' |
   'gui.banned.reason.drugs' |
   'gui.banned.reason.extreme_violence_or_gore' |
@@ -3423,6 +3456,8 @@ export type TRANSLATION_KEYS = (
   'gui.banned.reason.nudity_or_pornography' |
   'gui.banned.reason.sexually_inappropriate' |
   'gui.banned.reason.spam_or_advertising' |
+  'gui.banned.skin.description' |
+  'gui.banned.skin.title' |
   'gui.banned.title.permanent' |
   'gui.banned.title.temporary' |
   'gui.cancel' |
@@ -4781,6 +4816,8 @@ export type TRANSLATION_KEYS = (
   'options.accessibility.high_contrast.error.tooltip' |
   'options.accessibility.high_contrast.tooltip' |
   'options.accessibility.link' |
+  'options.accessibility.narrator_hotkey' |
+  'options.accessibility.narrator_hotkey.tooltip' |
   'options.accessibility.panorama_speed' |
   'options.accessibility.text_background' |
   'options.accessibility.text_background_opacity' |
@@ -6209,6 +6246,7 @@ export type TRANSLATION_KEYS = (
   'title.32bit.deprecation.realms.check' |
   'title.32bit.deprecation.realms.header' |
   'title.multiplayer.disabled' |
+  'title.multiplayer.disabled.banned.name' |
   'title.multiplayer.disabled.banned.permanent' |
   'title.multiplayer.disabled.banned.temporary' |
   'title.multiplayer.lan' |
