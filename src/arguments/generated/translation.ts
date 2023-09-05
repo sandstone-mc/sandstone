@@ -2665,6 +2665,7 @@ export type TRANSLATION_KEYS = (
   'connect.joining' |
   'connect.negotiating' |
   'connect.reconfiging' |
+  'connect.reconfiguring' |
   'container.barrel' |
   'container.beacon' |
   'container.blast_furnace' |
@@ -4574,6 +4575,7 @@ export type TRANSLATION_KEYS = (
   'mco.selectServer.configure' |
   'mco.selectServer.configureRealm' |
   'mco.selectServer.create' |
+  'mco.selectServer.create.subtitle' |
   'mco.selectServer.expired' |
   'mco.selectServer.expiredList' |
   'mco.selectServer.expiredRenew' |
