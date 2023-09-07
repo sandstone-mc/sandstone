@@ -202,6 +202,7 @@ export type TRANSLATION_KEYS = (
   'advancements.nether.uneasy_alliance.title' |
   'advancements.nether.use_lodestone.description' |
   'advancements.nether.use_lodestone.title' |
+  'advancements.progress' |
   'advancements.sad_label' |
   'advancements.story.cure_zombie_villager.description' |
   'advancements.story.cure_zombie_villager.title' |
@@ -2242,6 +2243,7 @@ export type TRANSLATION_KEYS = (
   'commands.banip.invalid' |
   'commands.banip.success' |
   'commands.banlist.entry' |
+  'commands.banlist.entry.unknown' |
   'commands.banlist.list' |
   'commands.banlist.none' |
   'commands.bossbar.create.failed' |
@@ -2696,7 +2698,9 @@ export type TRANSLATION_KEYS = (
   'container.repair.cost' |
   'container.repair.expensive' |
   'container.shulkerBox' |
+  'container.shulkerBox.itemCount' |
   'container.shulkerBox.more' |
+  'container.shulkerBox.unknownContents' |
   'container.smoker' |
   'container.spectatorCantOpen' |
   'container.stonecutter' |
@@ -2912,6 +2916,7 @@ export type TRANSLATION_KEYS = (
   'deathScreen.quit.confirm' |
   'deathScreen.respawn' |
   'deathScreen.score' |
+  'deathScreen.score.value' |
   'deathScreen.spectate' |
   'deathScreen.title' |
   'deathScreen.title.hardcore' |
@@ -3261,9 +3266,13 @@ export type TRANSLATION_KEYS = (
   'entity.not_summonable' |
   'event.minecraft.raid' |
   'event.minecraft.raid.defeat' |
+  'event.minecraft.raid.defeat.full' |
   'event.minecraft.raid.raiders_remaining' |
   'event.minecraft.raid.victory' |
+  'event.minecraft.raid.victory.full' |
   'filled_map.buried_treasure' |
+  'filled_map.explorer_jungle' |
+  'filled_map.explorer_swamp' |
   'filled_map.id' |
   'filled_map.level' |
   'filled_map.locked' |
@@ -3271,6 +3280,11 @@ export type TRANSLATION_KEYS = (
   'filled_map.monument' |
   'filled_map.scale' |
   'filled_map.unknown' |
+  'filled_map.village_desert' |
+  'filled_map.village_plains' |
+  'filled_map.village_savanna' |
+  'filled_map.village_snowy' |
+  'filled_map.village_taiga' |
   'flat_world_preset.minecraft.bottomless_pit' |
   'flat_world_preset.minecraft.classic_flat' |
   'flat_world_preset.minecraft.desert' |
@@ -3323,6 +3337,8 @@ export type TRANSLATION_KEYS = (
   'gamerule.doWardenSpawning' |
   'gamerule.doWeatherCycle' |
   'gamerule.drowningDamage' |
+  'gamerule.enderPearlsVanishOnDeath' |
+  'gamerule.enderPearlsVanishOnDeath.description' |
   'gamerule.fallDamage' |
   'gamerule.fireDamage' |
   'gamerule.forgiveDeadPlayers' |
@@ -3513,6 +3529,7 @@ export type TRANSLATION_KEYS = (
   'gui.ok' |
   'gui.proceed' |
   'gui.recipebook.moreRecipes' |
+  'gui.recipebook.page' |
   'gui.recipebook.search_hint' |
   'gui.recipebook.toggleRecipes.all' |
   'gui.recipebook.toggleRecipes.blastable' |
@@ -4354,6 +4371,7 @@ export type TRANSLATION_KEYS = (
   'lanServer.start' |
   'lanServer.title' |
   'lectern.take_book' |
+  'loading.progress' |
   'mco.account.privacy.info' |
   'mco.account.privacyinfo' |
   'mco.account.update' |
@@ -4509,6 +4527,7 @@ export type TRANSLATION_KEYS = (
   'mco.download.preparing' |
   'mco.download.resourcePack.fail' |
   'mco.download.speed' |
+  'mco.download.speed.narration' |
   'mco.download.title' |
   'mco.error.invalid.session.message' |
   'mco.error.invalid.session.title' |
@@ -4632,6 +4651,7 @@ export type TRANSLATION_KEYS = (
   'mco.upload.entry.id' |
   'mco.upload.failed' |
   'mco.upload.hardcore' |
+  'mco.upload.percent' |
   'mco.upload.preparing' |
   'mco.upload.select.world.none' |
   'mco.upload.select.world.subtitle' |
@@ -4677,6 +4697,7 @@ export type TRANSLATION_KEYS = (
   'merchant.level.4' |
   'merchant.level.5' |
   'merchant.next_level' |
+  'merchant.title' |
   'merchant.trades' |
   'mirror.front_back' |
   'mirror.left_right' |
@@ -4726,6 +4747,7 @@ export type TRANSLATION_KEYS = (
   'multiplayer.player.joined' |
   'multiplayer.player.joined.renamed' |
   'multiplayer.player.left' |
+  'multiplayer.player.list.hp' |
   'multiplayer.player.list.narration' |
   'multiplayer.requiredTexturePrompt.disconnect' |
   'multiplayer.requiredTexturePrompt.line1' |
@@ -4744,6 +4766,7 @@ export type TRANSLATION_KEYS = (
   'multiplayer.status.ping' |
   'multiplayer.status.ping.narration' |
   'multiplayer.status.pinging' |
+  'multiplayer.status.player_count' |
   'multiplayer.status.player_count.narration' |
   'multiplayer.status.quitting' |
   'multiplayer.status.request_handled' |
@@ -4809,6 +4832,8 @@ export type TRANSLATION_KEYS = (
   'optimizeWorld.info.converted' |
   'optimizeWorld.info.skipped' |
   'optimizeWorld.info.total' |
+  'optimizeWorld.progress.counter' |
+  'optimizeWorld.progress.percentage' |
   'optimizeWorld.stage.counting' |
   'optimizeWorld.stage.failed' |
   'optimizeWorld.stage.finished' |
@@ -4941,6 +4966,7 @@ export type TRANSLATION_KEYS = (
   'options.key.hold' |
   'options.key.toggle' |
   'options.language' |
+  'options.languageAccuracyWarning' |
   'options.languageWarning' |
   'options.mainHand' |
   'options.mainHand.left' |
@@ -5395,6 +5421,7 @@ export type TRANSLATION_KEYS = (
   'stat.minecraft.walk_one_cm' |
   'stat.minecraft.walk_under_water_one_cm' |
   'stat.mobsButton' |
+  'stats.none' |
   'stats.tooltip.type.statistic' |
   'structure_block.button.detect_size' |
   'structure_block.button.load' |
@@ -6247,6 +6274,7 @@ export type TRANSLATION_KEYS = (
   'title.32bit.deprecation.realms' |
   'title.32bit.deprecation.realms.check' |
   'title.32bit.deprecation.realms.header' |
+  'title.credits' |
   'title.multiplayer.disabled' |
   'title.multiplayer.disabled.banned.name' |
   'title.multiplayer.disabled.banned.permanent' |
