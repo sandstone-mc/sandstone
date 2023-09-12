@@ -4803,6 +4803,10 @@ export type TRANSLATION_KEYS = (
   'narration.slider.usage.hovered' |
   'narration.suggestion' |
   'narration.suggestion.tooltip' |
+  'narration.suggestion.usage.cycle.fixed' |
+  'narration.suggestion.usage.cycle.hidable' |
+  'narration.suggestion.usage.fill.fixed' |
+  'narration.suggestion.usage.fill.hidable' |
   'narration.tab_navigation.usage' |
   'narrator.button.accessibility' |
   'narrator.button.difficulty_lock' |
@@ -4839,6 +4843,7 @@ export type TRANSLATION_KEYS = (
   'optimizeWorld.stage.finished' |
   'optimizeWorld.stage.upgrading' |
   'optimizeWorld.title' |
+  'options.accessibility' |
   'options.accessibility.high_contrast' |
   'options.accessibility.high_contrast.error.tooltip' |
   'options.accessibility.high_contrast.tooltip' |
@@ -4874,6 +4879,7 @@ export type TRANSLATION_KEYS = (
   'options.biomeBlendRadius.11' |
   'options.biomeBlendRadius.13' |
   'options.biomeBlendRadius.15' |
+  'options.chat' |
   'options.chat.color' |
   'options.chat.delay' |
   'options.chat.delay_none' |
@@ -4930,6 +4936,7 @@ export type TRANSLATION_KEYS = (
   'options.framerateLimit.max' |
   'options.fullscreen' |
   'options.fullscreen.current' |
+  'options.fullscreen.entry' |
   'options.fullscreen.resolution' |
   'options.fullscreen.unavailable' |
   'options.gamma' |
@@ -4966,6 +4973,7 @@ export type TRANSLATION_KEYS = (
   'options.key.hold' |
   'options.key.toggle' |
   'options.language' |
+  'options.language.title' |
   'options.languageAccuracyWarning' |
   'options.languageWarning' |
   'options.mainHand' |
