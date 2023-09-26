@@ -141,7 +141,7 @@ export type DatapackConfig = {
    * The format version of the datapack.
    * Can change depending on the versions of Minecraft.
    *
-   * @see [https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta](https://minecraft.gamepedia.com/Data_Pack#pack.mcmeta)
+   * @see [https://minecraft.wiki/w/Data_Pack#pack.mcmeta](https://minecraft.wiki/w/Data_Pack#pack.mcmeta)
    */
   packFormat: number
 

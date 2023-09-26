@@ -20,7 +20,7 @@ type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown
    * - `copy_nbt`: Copies nbt to the item's `tag` tag.
    * - `copy_state`: Copies state properties from dropped block to the item's `BlockStateTag` tag.
    * - `enchant_randomly`: Enchants the item with one randomly-selected enchantment. The level of the enchantment, if applicable, is random.
-   * - `enchant_with_levels`: Enchants the item, with the specified [enchantment level](https://minecraft.gamepedia.com/Enchantment_mechanics#How_Enchantments_Are_Chosen)`
+   * - `enchant_with_levels`: Enchants the item, with the specified [enchantment level](https://minecraft.wiki/w/Enchantment_mechanics#How_Enchantments_Are_Chosen)`
    *   (roughly equivalent to using an `enchantment table` at that level).
    * - `exploration_map`: Converts an empty map into an `explorer map` leading to a nearby generated structure.
    * - `explosion_decay`: For loot tables of type 'block', removes some items from a stack, if there was an explosion. Each item has a chance of 1/explosion radius to be lost.
