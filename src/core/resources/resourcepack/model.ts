@@ -30,7 +30,7 @@ type ElementFace = {
 export const MAX_CUSTOM_MODEL_DATA = 16777216
 
 /**
- * @see https://minecraft.fandom.com/wiki/Model
+ * @see https://minecraft.wiki/w/Model
  */
 export type ModelData = {
   parent?: string

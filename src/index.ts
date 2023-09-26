@@ -174,7 +174,7 @@ export type ResourcePackConfig = {
    * The format version of the resource pack.
    * Can change depending on the versions of Minecraft.
    *
-   * @see [https://minecraft.fandom.com/wiki/Resource_pack#Contents](https://minecraft.fandom.com/wiki/Resource_pack#Contents)
+   * @see [https://minecraft.wiki/w/Resource_pack#Contents](https://minecraft.wiki/w/Resource_pack#Contents)
    */
   packFormat: number
 
