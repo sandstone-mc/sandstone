@@ -41,7 +41,7 @@ export class PlaceCommand extends CommandArguments {
   jigsaw = (pool: LiteralUnion<WORLDGEN_TEMPLATE_POOLS>, target: string, maxDepth: number, pos: Coordinates = '~ ~ ~') => this.finalCommand(['jigsaw', pool, target, `${validateIntegerRange(maxDepth, 'Jigsaw max depth', 0, 7)}`, coordinatesParser(pos)])
 
   /**
-   * Places a configured structure feature. (not from `data/<namespace>/structures`, see [the wiki](https://minecraft.fandom.com/wiki/Custom_structure#Configured_Structure_Feature))
+   * Places a configured structure feature. (not from `data/<namespace>/structures`, see [the wiki](https://minecraft.wiki/w/Custom_structure#Configured_Structure_Feature))
    *
    * @param configuredStructure The configured structure feature to place.
    * @param pos Optional. Where to place.

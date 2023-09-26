@@ -4,7 +4,7 @@ import type { BLOCKS, RootNBT } from '../../index'
 type Vec3 = [number, number, number]
 
 export type StructureNBT = {
-  /** [Data version](https://minecraft.fandom.com/wiki/Data_version). A positive integer. */
+  /** [Data version](https://minecraft.wiki/w/Data_version). A positive integer. */
   DataVersion?: number
 
   /** A list of positive integers. */
