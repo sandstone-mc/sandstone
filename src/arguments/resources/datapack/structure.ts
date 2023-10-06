@@ -1,5 +1,5 @@
-import type { LiteralUnion } from 'sandstone/utils'
-import type { BLOCKS, RootNBT } from '../../index'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { BLOCKS, RootNBT } from '../../index.js'
 
 type Vec3 = [number, number, number]
 

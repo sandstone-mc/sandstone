@@ -1,14 +1,14 @@
-import { CommandNode } from '#core'
-import { JSONTextComponentClass, Score, targetParser } from '#variables'
+import { CommandNode } from 'sandstone/core/index.js'
+import { JSONTextComponentClass, Score, targetParser } from 'sandstone/variables/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
 import type {
   DISPLAY_SLOTS, JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
   ObjectiveArgument,
   OPERATORS,
-} from '#arguments'
-import type { LiteralUnion } from '#utils'
+} from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 function scoresParser(...args: unknown[]) {
   return args.map((_arg, i) => {

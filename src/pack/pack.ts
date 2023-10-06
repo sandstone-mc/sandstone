@@ -1,50 +1,50 @@
 /* eslint-disable max-len */
 /* eslint-disable no-plusplus */
-import { CustomResourceClass } from 'sandstone/core/resources/custom'
-import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
-import { SleepClass } from 'sandstone/variables/Sleep'
-import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk'
-import { UUIDClass } from 'sandstone/variables/UUID'
-import { SandstoneCommands } from '#commands'
+import { SandstoneCommands } from 'sandstone/commands/index.js'
 import {
   AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, ItemModifierClass, LanguageClass, LootTableClass, MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
-} from '#core'
-import { Flow, SandstoneConditions } from '#flow'
-import { randomUUID } from '#utils'
+} from 'sandstone/core/index.js'
+import { CustomResourceClass } from 'sandstone/core/resources/custom.js'
+import { Flow, SandstoneConditions } from 'sandstone/flow/index.js'
+import { randomUUID } from 'sandstone/utils.js'
 import {
   absolute,
   coordinatesParser,
   DataClass, DataPointClass, LabelClass, NBTIntArray, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
-} from '#variables'
-import { Score } from '#variables/Score'
+} from 'sandstone/variables/index.js'
+import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT.js'
+import { Score } from 'sandstone/variables/Score.js'
+import { SleepClass } from 'sandstone/variables/Sleep.js'
+import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk.js'
+import { UUIDClass } from 'sandstone/variables/UUID.js'
 
-import { PackType } from './packType'
+import { PackType } from './packType.js'
+import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
 import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LogVisitor,
   SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
-} from './visitors'
-import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions'
+} from './visitors/index.js'
 
-import type {
-  UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
-} from 'sandstone/variables/UUID'
-import type { handlerReadFile, handlerWriteFile } from './packType'
 import type {
   // eslint-disable-next-line max-len
   AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, DIMENSIONS, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
-} from '#arguments'
-import type { StoreType } from '#commands'
+} from 'sandstone/arguments/index.js'
+import type { StoreType } from 'sandstone/commands/index.js'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
   AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MCFunctionClassArguments, ModelClassArguments, Node, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
-} from '#core'
-import type { LiteralUnion, MakeInstanceCallable } from '#utils'
+} from 'sandstone/core/index.js'
+import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils.js'
 import type {
   DATA_PATH, DATA_TARGET, DATA_TYPES, SelectorCreator, SelectorProperties,
-} from '#variables'
+} from 'sandstone/variables/index.js'
+import type {
+  UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
+} from 'sandstone/variables/UUID.js'
+import type { handlerReadFile, handlerWriteFile } from './packType.js'
 
 export type ResourcePath = string[]
 
@@ -483,7 +483,7 @@ export class SandstonePack {
   /** Creates a randomly generated static UUID. (changes on pack compile, should only use this if it is killed) */
   UUID(): UUIDClass<'known', 'permanent'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
   UUID(source: string | UUIDinNumber): UUIDClass<'known', 'permanent'>
 
   /** Initializes with `Score`'s. */
@@ -495,7 +495,7 @@ export class SandstonePack {
   /** Initializes with a Selector. */
   UUID(source: SelectorClass<true, boolean>): UUIDClass<'selector', 'permanent'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
   UUID(source: string | UUIDinNumber, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'known', 'permanent'>
 
   /** Initializes with `Score`'s. */
@@ -507,7 +507,7 @@ export class SandstonePack {
   /** Initializes with a Selector. */
   UUID(source: SelectorClass<true, boolean>, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'selector', 'permanent'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
   UUID(source: string | UUIDinNumber, holderState: 1, options?: UUIDOptions): UUIDClass<'known', 'singleTick'>
 
   /** Initializes with 4 `Score`'s. */
@@ -519,7 +519,7 @@ export class SandstonePack {
   /** Initializes with a Selector. */
   UUID(source: SelectorClass<true, boolean>, holderState: 1, options?: UUIDOptions): UUIDClass<'selector', 'singleTick'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from '#utils'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
   UUID(source: string | UUIDinNumber, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'known', 'timed'>
 
   /** Initializes with 4 `Score`'s. */

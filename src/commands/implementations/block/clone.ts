@@ -1,10 +1,10 @@
-import { CommandNode } from '#core/nodes'
-import { coordinatesParser } from '#variables'
+import { CommandNode } from 'sandstone/core/nodes.js'
+import { coordinatesParser } from 'sandstone/variables/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { BLOCKS, Coordinates } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { BLOCKS, Coordinates } from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export class CloneCommandNode extends CommandNode {
   command = 'clone' as const

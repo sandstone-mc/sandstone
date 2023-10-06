@@ -1,11 +1,11 @@
-import { SandstonePack } from './pack'
+import { SandstonePack } from './pack/index.js'
 
-import type { JSONTextComponent } from './arguments/jsonTextComponent'
+import type { JSONTextComponent } from './arguments/jsonTextComponent.js'
 import type {
   // eslint-disable-next-line max-len
   AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MCFunctionClassArguments, ModelClassArguments, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
-} from './core/index'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils'
+} from './core/index.js'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils.js'
 
 export const sandstonePack = new SandstonePack('default', '0')
 export { SandstonePack }

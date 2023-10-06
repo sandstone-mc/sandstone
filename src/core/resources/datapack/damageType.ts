@@ -1,16 +1,16 @@
 /* eslint-disable max-len */
-import { toMinecraftResourceName } from '#utils'
+import { toMinecraftResourceName } from 'sandstone/utils.js'
 
-import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
+import { ContainerNode } from '../../nodes.js'
+import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from '../resource'
-import type { TagClass } from './tag'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import type { TagClass } from './tag.js'
 import type {
   Coordinates, DamageTypeJSON, SingleEntityArgument, TAG_DAMAGE_TYPES,
-} from '#arguments'
-import type { ComponentClass } from '#variables'
+} from 'sandstone/arguments/index.js'
+import type { ComponentClass } from 'sandstone/variables/index.js'
 
 const damageTypes: Map<string, TagClass<'damage_types'>> = new Map()
 

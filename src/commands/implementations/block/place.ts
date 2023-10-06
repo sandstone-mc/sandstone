@@ -1,18 +1,18 @@
 /* eslint-disable max-len */
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from 'sandstone/core/nodes.js'
 import {
   coordinatesParser, structureMirrorParser, structureRotationParser,
-} from '#variables'
+} from 'sandstone/variables/index.js'
 
-import { CommandArguments } from '../../helpers'
-import { validateIntegerRange } from '../../validators'
+import { CommandArguments } from '../../helpers.js'
+import { validateIntegerRange } from '../../validators.js'
 
 import type {
   Coordinates, STRUCTURES, WORLDGEN_CONFIGURED_FEATURES, WORLDGEN_STRUCTURES, WORLDGEN_TEMPLATE_POOLS,
-} from '#arguments'
-import type { StructureClass } from '#core'
-import type { LiteralUnion } from '#utils'
-import type { StructureMirror, StructureRotation } from '#variables'
+} from 'sandstone/arguments/index.js'
+import type { StructureClass } from 'sandstone/core/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { StructureMirror, StructureRotation } from 'sandstone/variables/index.js'
 
 export class PlaceCommandNode extends CommandNode {
   command = 'place' as const

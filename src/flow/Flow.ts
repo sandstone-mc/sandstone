@@ -1,10 +1,10 @@
 import {
   AndNode, ConditionNode, NotNode, OrNode,
-} from './conditions'
-import { IfStatement } from './if_else'
+} from './conditions/index.js'
+import { IfStatement } from './if_else.js'
 
-import type { SandstoneCore } from '../core'
-import type { ConditionClass } from '../variables/index'
+import type { SandstoneCore } from '../core/index.js'
+import type { ConditionClass } from '../variables/index.js'
 
 type Condition = ConditionNode | ConditionClass
 export class Flow {

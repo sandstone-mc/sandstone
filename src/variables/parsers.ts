@@ -1,8 +1,8 @@
-import { VectorClass } from './Coordinates'
+import { VectorClass } from './Coordinates.js'
 
 import type {
   Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION,
-} from '#arguments'
+} from 'sandstone/arguments/index.js'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args

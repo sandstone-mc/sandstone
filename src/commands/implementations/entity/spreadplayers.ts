@@ -1,10 +1,10 @@
-import { CommandNode } from '#core'
-import { coordinatesParser, targetParser } from '#variables'
+import { CommandNode } from 'sandstone/core/index.js'
+import { coordinatesParser, targetParser } from 'sandstone/variables/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { FinalCommandOutput } from '../../helpers'
-import type { ColumnCoordinates, MultipleEntitiesArgument } from '#arguments'
+import type { FinalCommandOutput } from '../../helpers.js'
+import type { ColumnCoordinates, MultipleEntitiesArgument } from 'sandstone/arguments/index.js'
 
 export class SpreadPlayersNode extends CommandNode {
   command = 'spreadplayers' as const

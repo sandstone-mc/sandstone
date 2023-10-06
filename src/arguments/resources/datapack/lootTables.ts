@@ -1,12 +1,12 @@
 /* eslint-disable camelcase */
-import type { NumberProvider } from './criteria'
-import type { ItemModifierFunction } from './itemModifier'
-import type { PredicateCondition } from './predicate'
 import type {
   ITEMS,
-} from '#arguments/generated'
-import type { LootTableClass, TagClass } from '#core'
-import type { LiteralUnion, WithMCNamespace } from '#utils'
+} from 'sandstone/arguments/generated/index.js'
+import type { LootTableClass, TagClass } from 'sandstone/core/index.js'
+import type { LiteralUnion, WithMCNamespace } from 'sandstone/utils.js'
+import type { NumberProvider } from './criteria/index.js'
+import type { ItemModifierFunction } from './itemModifier.js'
+import type { PredicateCondition } from './predicate.js'
 
 export class XXXXAIJIA {}
 type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {

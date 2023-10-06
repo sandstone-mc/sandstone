@@ -1,13 +1,13 @@
-import { targetParser } from '#variables'
+import { targetParser } from 'sandstone/variables/index.js'
 
-import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
+import { ContainerNode } from '../../nodes.js'
+import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ItemModifierJSON, MultipleEntitiesArgument,
-} from '#arguments'
+} from 'sandstone/arguments/index.js'
 
 /**
  * A node representing a Minecraft item modifier.

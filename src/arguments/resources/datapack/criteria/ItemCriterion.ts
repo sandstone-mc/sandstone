@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
-import type { EnchantmentCriterion, NumberProvider } from '.'
-import type { ITEMS } from '#arguments'
-import type { TagClass } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS } from 'sandstone/arguments/index.js'
+import type { TagClass } from 'sandstone/core/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { EnchantmentCriterion, NumberProvider } from './index.js'
 
 export type ItemCriterion = Partial<{
   /** Amount of the item. */

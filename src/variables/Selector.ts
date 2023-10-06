@@ -1,16 +1,16 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { nbtStringifier } from '#variables/nbt/NBTs'
-import { rangeParser } from '#variables/parsers'
+import { nbtStringifier } from 'sandstone/variables/nbt/NBTs.js'
+import { rangeParser } from 'sandstone/variables/parsers.js'
 
-import type { LiteralUnion } from '../utils'
-import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses'
-import type { NotNBT } from './nbt/NBTs'
+import type { LiteralUnion } from '../utils.js'
+import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
+import type { NotNBT } from './nbt/NBTs.js'
 import type {
   ENTITY_TYPES, GAMEMODES, JSONTextComponent, Range, RootNBT,
-} from '#arguments'
-import type { PredicateClass } from '#core'
-import type { SandstonePack } from '#pack'
+} from 'sandstone/arguments/index.js'
+import type { PredicateClass } from 'sandstone/core/index.js'
+import type { SandstonePack } from 'sandstone/pack/index.js'
 
 type ScoreArgument = Record<string, Range>
 

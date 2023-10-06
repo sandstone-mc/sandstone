@@ -1,6 +1,6 @@
-import { SingleConditionNode } from '../condition'
+import { SingleConditionNode } from '../condition.js'
 
-import type { SandstoneCore, TrimMaterialClass } from '#core'
+import type { SandstoneCore, TrimMaterialClass } from 'sandstone/core/index.js'
 
 export class TrimMaterialConditionNode extends SingleConditionNode {
   constructor(sandstoneCore: SandstoneCore, readonly trimMaterial: TrimMaterialClass) {

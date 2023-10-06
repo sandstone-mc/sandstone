@@ -1,12 +1,12 @@
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { validateIntegerRange } from '#commands/validators'
-import { CommandNode } from '#core/nodes'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers.js'
+import { validateIntegerRange } from 'sandstone/commands/validators.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { DamageTypeClass } from 'sandstone/core/index'
-import type { Coordinates, DAMAGE_TYPES, SingleEntityArgument } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { DamageTypeClass } from 'sandstone/core/index.js'
+import type { Coordinates, DAMAGE_TYPES, SingleEntityArgument } from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export class DamageCommandNode extends CommandNode {
   command = 'damage' as const

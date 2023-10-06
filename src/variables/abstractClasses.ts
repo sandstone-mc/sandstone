@@ -1,7 +1,7 @@
-import type { ConditionNode } from '../flow/index'
-import type { DataPointClass } from './index'
-import type { SelectorClass } from './Selector'
-import type { JSONTextComponent } from '#arguments/jsonTextComponent'
+import type { ConditionNode } from '../flow/index.js'
+import type { DataPointClass } from './index.js'
+import type { SelectorClass } from './Selector.js'
+import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent.js'
 
 export class ComponentClass {
   /**

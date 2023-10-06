@@ -1,0 +1,39 @@
+{
+  "autorun": true,
+  "terminals": [
+    {
+      "name": "core",
+      "icon": "folder-library",
+      "color": "terminal.ansiYellow",
+      "persistent": "sandstone--core",
+      "onlyMultiple": true,
+      "focus": true
+    },
+    {
+      "name": "cli",
+      "icon": "plug",
+      "color": "terminal.ansiRed",
+      "persistent": "sandstone-org-cli",
+      "onlyMultiple": true,
+      "cwd": "../sandstone-cli"
+    },
+    {
+      "name": "template",
+      "icon": "preview",
+      "color": "terminal.ansiCyan",
+      "persistent": "sandstone-org-template",
+      "onlyMultiple": true,
+      "cwd": "../sandstone-template"
+    },
+    {
+      "name": "Setup",
+      "icon": "zap",
+      "color": "terminal.ansiGreen",
+      "execute": false,
+      "commands": [
+        "echo \"Press enter to setup environment\"",
+        "Press enter to run me"
+      ]
+    }
+  ]
+}

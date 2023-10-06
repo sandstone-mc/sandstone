@@ -1,8 +1,8 @@
 /* eslint-disable dot-notation */
 
-import { GenericSandstoneVisitor } from './visitor'
+import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { ContainerCommandNode, MCFunctionNode } from '#core'
+import type { ContainerCommandNode, MCFunctionNode } from 'sandstone/core/index.js'
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.

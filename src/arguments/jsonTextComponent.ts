@@ -1,8 +1,8 @@
-import type { BASIC_COLORS } from './basics'
-import type { MultipleEntitiesArgument } from './selector'
-import type { LiteralUnion } from '#utils'
-import type { ComponentClass } from '#variables/abstractClasses'
-import type { VectorClass } from '#variables/Coordinates'
+import type { BASIC_COLORS } from './basics.js'
+import type { MultipleEntitiesArgument } from './selector.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { ComponentClass } from 'sandstone/variables/abstractClasses.js'
+import type { VectorClass } from 'sandstone/variables/Coordinates.js'
 
 export type JSONContentTypes = 'plain' | 'translate' | 'score' | 'selector' | 'keybind' | 'nbt'
 

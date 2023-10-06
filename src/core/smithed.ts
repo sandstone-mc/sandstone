@@ -2,9 +2,9 @@
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import path from 'path'
-import { iterateEntries } from '#utils'
+import { iterateEntries } from 'sandstone/utils.js'
 
-import type { PackData } from '#utils'
+import type { PackData } from 'sandstone/utils.js'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fetch = import('node-fetch')

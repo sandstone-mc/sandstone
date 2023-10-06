@@ -1,11 +1,11 @@
-import { CommandNode } from '#core'
-import { coordinatesParser, targetParser, VectorClass } from '#variables'
+import { CommandNode } from 'sandstone/core/index.js'
+import { coordinatesParser, targetParser, VectorClass } from 'sandstone/variables/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
 import type {
   Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument,
-} from '#arguments'
+} from 'sandstone/arguments/index.js'
 
 export class TeleportCommandNode extends CommandNode {
   command = 'tp' as const

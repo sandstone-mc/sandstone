@@ -1,16 +1,16 @@
 // @ts-nocheck
 
 /* eslint-disable camelcase */
-import type { NumberProvider } from './criteria/utils'
-import type { ObjectOrArray, PredicateCondition } from './predicate'
-import type { JSONTextComponent, LootTableEntry } from '#arguments'
-import type { BASIC_COLORS, MAP_ICONS } from '#arguments/basics'
+import type { NumberProvider } from './criteria/utils.js'
+import type { ObjectOrArray, PredicateCondition } from './predicate.js'
+import type { JSONTextComponent, LootTableEntry } from 'sandstone/arguments/index.js'
+import type { BASIC_COLORS, MAP_ICONS } from 'sandstone/arguments/basics.js'
 import type {
   ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES,
-} from '#arguments/generated'
-import type { LootTableClass } from '#core'
-import type { LiteralUnion } from '#utils'
-import type { DataInstance } from '#variables/Data'
+} from 'sandstone/arguments/generated.js'
+import type { LootTableClass } from 'sandstone/core/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { DataInstance } from 'sandstone/variables/Data.js'
 
 type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**

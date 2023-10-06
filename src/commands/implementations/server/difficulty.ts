@@ -1,8 +1,8 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { DIFFICULTIES } from '#arguments'
+import type { DIFFICULTIES } from 'sandstone/arguments/index.js'
 
 export class DifficultyCommandNode extends CommandNode {
   command = 'difficulty' as const

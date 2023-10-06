@@ -1,9 +1,9 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { GAMEMODES, MultiplePlayersArgument } from '#arguments'
+import type { GAMEMODES, MultiplePlayersArgument } from 'sandstone/arguments/index.js'
 
 // Gamemode command
 

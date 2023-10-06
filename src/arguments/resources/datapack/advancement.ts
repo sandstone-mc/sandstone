@@ -1,4 +1,7 @@
 /* eslint-disable camelcase */
+import type { ITEMS, JSONTextComponent } from 'sandstone/arguments/index.js'
+import type { AdvancementClass, MCFunctionClass, PredicateClass } from 'sandstone/core/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 import type {
   BlockIdCriterion,
   DamageCriterion,
@@ -12,11 +15,8 @@ import type {
   PlayerCriterion,
   PotionIdCriterion,
   SlotCriterion,
-} from './criteria'
-import type { PredicateJSON } from './predicate'
-import type { ITEMS, JSONTextComponent } from '#arguments'
-import type { AdvancementClass, MCFunctionClass, PredicateClass } from '#core'
-import type { LiteralUnion } from '#utils'
+} from './criteria/index.js'
+import type { PredicateJSON } from './predicate.js'
 
 /** A representation of a Minecraft advancement. */
 export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {

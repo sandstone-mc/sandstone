@@ -1,9 +1,9 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { MultipleEntitiesArgument } from '#arguments'
+import type { MultipleEntitiesArgument } from 'sandstone/arguments/index.js'
 
 export class MeCommandNode extends CommandNode<[string[]]> {
   command = 'me' as const

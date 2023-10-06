@@ -1,7 +1,7 @@
-import { IfNode } from '../if_else'
-import { ConditionNode } from './condition'
+import { IfNode } from '../if_else.js'
+import { ConditionNode } from './condition.js'
 
-import type { SandstoneCore } from '#core'
+import type { SandstoneCore } from 'sandstone/core/index.js'
 
 export class OrNode extends ConditionNode {
   variable

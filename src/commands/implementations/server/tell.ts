@@ -1,10 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { MessageOrSelector, MultiplePlayersArgument } from '#arguments'
-import type { AtLeastOne } from '#utils'
+import type { MessageOrSelector, MultiplePlayersArgument } from 'sandstone/arguments/index.js'
+import type { AtLeastOne } from 'sandstone/utils.js'
 
 export class TellCommandNode extends CommandNode<[MultiplePlayersArgument, AtLeastOne<MessageOrSelector>]> {
   command = 'w' as const

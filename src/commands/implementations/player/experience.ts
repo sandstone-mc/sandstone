@@ -1,10 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { validateIntegerRange } from '#commands/validators'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { validateIntegerRange } from 'sandstone/commands/validators.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { MultiplePlayersArgument, SinglePlayerArgument } from '#arguments'
+import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments/index.js'
 
 export class ExperienceCommandNode extends CommandNode {
   // We always use the shorthand version for compactness purposes

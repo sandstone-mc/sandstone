@@ -1,6 +1,6 @@
-import type { UUIDClass } from 'sandstone/variables/UUID'
-import type { _ShowAlias } from './basics'
-import type { SelectorClass, SelectorPickClass } from '#variables'
+import type { UUIDClass } from 'sandstone/variables/UUID.js'
+import type { _ShowAlias } from './basics.js'
+import type { SelectorClass, SelectorPickClass } from 'sandstone/variables/index.js'
 
 // Possible selectors.
 type MultipleEntitiesSelector = SelectorClass<false, false> | SelectorPickClass<false, false>

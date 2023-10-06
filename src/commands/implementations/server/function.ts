@@ -1,8 +1,8 @@
-import { CommandNode, TagClass } from '#core'
+import { CommandNode, TagClass } from 'sandstone/core/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { MCFunctionClass } from '#core'
+import type { MCFunctionClass } from 'sandstone/core/index.js'
 
 // Function command
 

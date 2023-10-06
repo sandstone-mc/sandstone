@@ -1,13 +1,13 @@
 /* eslint-disable max-len */
-import { toMinecraftResourceName } from 'sandstone/utils'
+import { toMinecraftResourceName } from 'sandstone/utils.js'
 
-import { ContainerNode } from '../nodes'
-import { ResourceClass } from './resource'
+import { ContainerNode } from '../nodes.js'
+import { ResourceClass } from './resource.js'
 
 import type fs from 'fs-extra'
-import type { PackType } from 'sandstone/pack/packType'
-import type { SandstoneCore } from '../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from './resource'
+import type { PackType } from 'sandstone/pack/packType.js'
+import type { SandstoneCore } from '../sandstoneCore.js'
+import type { ResourceClassArguments, ResourceNode } from './resource.js'
 
 /**
  * A node representing a custom resource.

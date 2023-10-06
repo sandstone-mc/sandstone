@@ -1,7 +1,7 @@
-import { ContainerNode } from '../core'
+import { ContainerNode } from '../core/index.js'
 
-import type { SandstoneCore } from '../core'
-import type { ConditionNode } from './conditions'
+import type { SandstoneCore } from '../core/index.js'
+import type { ConditionNode } from './conditions/index.js'
 
 export class IfNode extends ContainerNode {
   nextFlowNode?: IfNode | ElseNode

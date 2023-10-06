@@ -1,9 +1,9 @@
-import { CommandNode } from '#core/nodes'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { GAMERULES } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { GAMERULES } from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 // Gamerule command
 

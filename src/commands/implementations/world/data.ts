@@ -1,10 +1,10 @@
-import { CommandNode } from '#core'
-import { coordinatesParser, nbtStringifier, targetParser } from '#variables'
+import { CommandNode } from 'sandstone/core/index.js'
+import { coordinatesParser, nbtStringifier, targetParser } from 'sandstone/variables/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { Coordinates, NBTObject, SingleEntityArgument } from '#arguments'
-import type { VectorClass } from '#variables'
+import type { Coordinates, NBTObject, SingleEntityArgument } from 'sandstone/arguments/index.js'
+import type { VectorClass } from 'sandstone/variables/index.js'
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const

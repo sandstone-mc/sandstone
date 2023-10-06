@@ -1,10 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES } from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export class StopSoundCommandNode extends CommandNode {
   command = 'stopsound' as const

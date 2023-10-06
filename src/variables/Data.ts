@@ -1,12 +1,12 @@
-import { ConditionTextComponentClass, DataPointPickClass } from './abstractClasses'
-import { nbtStringifier } from './nbt/NBTs'
-import { Score } from './Score'
+import { ConditionTextComponentClass, DataPointPickClass } from './abstractClasses.js'
+import { nbtStringifier } from './nbt/NBTs.js'
+import { Score } from './Score.js'
 
 import type {
   Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument,
-} from '#arguments'
-import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from '#commands/implementations'
-import type { SandstonePack } from '#pack'
+} from 'sandstone/arguments/index.js'
+import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations/index.js'
+import type { SandstonePack } from 'sandstone/pack/index.js'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 

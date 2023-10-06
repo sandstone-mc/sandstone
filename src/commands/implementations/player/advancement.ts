@@ -1,10 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { MultiplePlayersArgument } from '#arguments'
-import type { AdvancementClass } from '#core'
+import type { MultiplePlayersArgument } from 'sandstone/arguments/index.js'
+import type { AdvancementClass } from 'sandstone/core/index.js'
 
 // Advancement command
 

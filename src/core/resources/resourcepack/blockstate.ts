@@ -1,9 +1,9 @@
-import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
+import { ContainerNode } from '../../nodes.js'
+import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import type { BlockStateDefinition, BlockStateType } from '#arguments'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import type { BlockStateDefinition, BlockStateType } from 'sandstone/arguments/index.js'
 
 /**
  * A node representing a Minecraft block state.

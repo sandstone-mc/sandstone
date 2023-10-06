@@ -1,9 +1,9 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { MultipleEntitiesArgument } from '#arguments'
+import type { MultipleEntitiesArgument } from 'sandstone/arguments/index.js'
 
 function checkTagName(tag: string) {
   if (!tag.match(/[A-Za-z0-9\-_+.]/g)) {

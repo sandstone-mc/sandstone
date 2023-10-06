@@ -1,11 +1,11 @@
-import { rangeParser } from 'sandstone/variables/parsers'
+import { rangeParser } from 'sandstone/variables/parsers.js'
 
-import { SingleConditionNode } from './condition'
+import { SingleConditionNode } from './condition.js'
 
-import type { Range } from 'sandstone/arguments/range'
-import type { ExecuteCommand } from 'sandstone/commands/implementations/entity/execute'
-import type { Score } from 'sandstone/variables/Score'
-import type { SandstoneCore } from '#core'
+import type { Range } from 'sandstone/arguments/range.js'
+import type { ExecuteCommand } from 'sandstone/commands/implementations/entity/execute.js'
+import type { Score } from 'sandstone/variables/Score.js'
+import type { SandstoneCore } from 'sandstone/core/index.js'
 
 export class CommandConditionNode extends SingleConditionNode {
   readonly variable

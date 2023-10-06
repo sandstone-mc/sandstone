@@ -1,6 +1,6 @@
-import type { ITEMS } from '../../generated'
-import type { JSONTextComponent } from '../../jsonTextComponent'
-import type { LiteralUnion } from '#utils'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { ITEMS } from '../../generated/index.js'
+import type { JSONTextComponent } from '../../jsonTextComponent.js'
 
 export type TrimPatternJSON = {
   /** A resource location (In the resource pack) of the pattern that will be used as an overlay on the armor. */

@@ -5,7 +5,7 @@ import { Type } from '@sinclair/typebox'
 import { Format } from '@sinclair/typebox/format'
 
 import type { Static } from '@sinclair/typebox'
-import type { UUIDinNumber } from './variables/UUID'
+import type { UUIDinNumber } from './variables/UUID.js'
 
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.

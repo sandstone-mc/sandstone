@@ -1,6 +1,6 @@
-import type { ITEMS } from '#arguments/generated'
-import type { TagClass } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS } from 'sandstone/arguments/generated/index.js'
+import type { TagClass } from 'sandstone/core/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 /**
  * Ensures that the given string has 3 characters or less - else, evaluates as `never`

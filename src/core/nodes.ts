@@ -1,6 +1,6 @@
-import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index'
-import type { SandstoneCore } from './sandstoneCore'
-import type { SandstonePack } from '#pack'
+import type { SandstonePack } from 'sandstone/pack/index.js'
+import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
+import type { SandstoneCore } from './sandstoneCore.js'
 
 export abstract class Node {
   constructor(public sandstoneCore: SandstoneCore) { }

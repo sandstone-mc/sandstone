@@ -1,8 +1,8 @@
-import { CommandNode } from '#core'
+import { CommandNode } from 'sandstone/core/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { ObjectiveArgument } from '#arguments'
+import type { ObjectiveArgument } from 'sandstone/arguments/index.js'
 
 export class TriggerCommandNode extends CommandNode {
   command = 'trigger' as const

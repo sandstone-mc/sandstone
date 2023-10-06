@@ -1,10 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { ITEMS, MultiplePlayersArgument } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 // Give command
 

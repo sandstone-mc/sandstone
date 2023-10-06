@@ -1,11 +1,11 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { validateIntegerRange } from '#commands/validators'
-import { CommandNode } from '#core/nodes'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { validateIntegerRange } from 'sandstone/commands/validators.js'
+import { CommandNode } from 'sandstone/core/nodes.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { ENCHANTMENTS, MultipleEntitiesArgument } from '#arguments'
-import type { LiteralUnion } from '#utils'
+import type { ENCHANTMENTS, MultipleEntitiesArgument } from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export class EnchantCommandNode extends CommandNode {
   command = 'enchant' as const

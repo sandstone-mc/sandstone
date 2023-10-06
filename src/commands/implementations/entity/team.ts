@@ -1,9 +1,9 @@
-import { CommandNode } from '#core'
-import { JSONTextComponentClass, targetParser } from '#variables'
+import { CommandNode } from 'sandstone/core/index.js'
+import { JSONTextComponentClass, targetParser } from 'sandstone/variables/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from '#arguments'
+import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from 'sandstone/arguments/index.js'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'

@@ -1,9 +1,9 @@
-import { targetParser } from 'sandstone/variables/parsers'
-import { CommandNode } from '#core'
+import { targetParser } from 'sandstone/variables/parsers.js'
+import { CommandNode } from 'sandstone/core/index.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
-import type { SingleEntityArgument } from '#arguments'
+import type { SingleEntityArgument } from 'sandstone/arguments/index.js'
 
 export class RideCommandNode extends CommandNode {
   command = 'ride' as const

@@ -1,15 +1,15 @@
-import { ComponentClass, SelectorPickClass } from './abstractClasses'
-import { rangeParser } from './parsers'
+import { ComponentClass, SelectorPickClass } from './abstractClasses.js'
+import { rangeParser } from './parsers.js'
 
-import type { NotNode } from 'sandstone/flow/index'
-import type { SandstoneCommands } from '../commands'
-import type { SandstonePack } from '../pack'
-import type { DATA_TYPES, DataPointClass } from './Data'
-import type { ObjectiveClass } from './Objective'
 import type {
   COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
-} from '#arguments'
-import type { ConditionClass } from '#variables'
+} from 'sandstone/arguments/index.js'
+import type { NotNode } from 'sandstone/flow/index.js'
+import type { ConditionClass } from 'sandstone/variables/index.js'
+import type { SandstoneCommands } from '../commands/index.js'
+import type { SandstonePack } from '../pack/index.js'
+import type { DATA_TYPES, DataPointClass } from './Data.js'
+import type { ObjectiveClass } from './Objective.js'
 
 type PlayersTarget = number | MultipleEntitiesArgument
 

@@ -1,4 +1,4 @@
-import type { NBTClass } from '#variables/nbt/NBTs'
+import type { NBTClass } from 'sandstone/variables/nbt/NBTs.js'
 
 export type NBTObject = (
   string |

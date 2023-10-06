@@ -1,5 +1,5 @@
-import type { ENTITY_TYPES } from '../../generated/entity_type'
-import type { LiteralUnion } from '#utils'
+import type { ENTITY_TYPES } from '../../generated/entity_type.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export type TextureAnimation = {
   animation: {

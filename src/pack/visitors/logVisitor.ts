@@ -1,8 +1,8 @@
 /* eslint-disable dot-notation */
 
-import { GenericSandstoneVisitor } from './visitor'
+import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { GiveCommandNode } from '#commands'
+import type { GiveCommandNode } from 'sandstone/commands/index.js'
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.

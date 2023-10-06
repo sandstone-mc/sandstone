@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
+import type { BLOCKS, ENCHANTMENTS } from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 import type {
   DamageCriterion, EntityCriterion, ItemCriterion, LocationCriterion,
   NumberProvider,
-} from './criteria'
-import type { BLOCKS, ENCHANTMENTS } from '#arguments'
-import type { LiteralUnion } from '#utils'
+} from './criteria/index.js'
 
 type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> = {
     /**

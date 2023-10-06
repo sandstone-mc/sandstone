@@ -3,9 +3,6 @@ dist
 
 .tsbuildinfo
 
-### VisualStudioCode ###
-.vscode
-
 ### VisualStudioCode Patch ###
 .history
 

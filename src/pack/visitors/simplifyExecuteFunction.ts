@@ -1,8 +1,8 @@
 /* eslint-disable dot-notation */
-import { ExecuteCommandNode, FunctionCommandNode } from '#commands'
-import { CommandNode } from '#core'
+import { ExecuteCommandNode, FunctionCommandNode } from 'sandstone/commands/index.js'
+import { CommandNode } from 'sandstone/core/index.js'
 
-import { GenericSandstoneVisitor } from './visitor'
+import { GenericSandstoneVisitor } from './visitor.js'
 
 /**
  * Simplifies an execute calling a 1-command function to a single execute, with some exceptions.

@@ -1,9 +1,9 @@
 import type {
   BANNER_PATTERNS, BLOCKS, CAT_VARIANTS, DIMENSIONS, ENTITY_TYPES, FLUIDS, GAME_EVENTS, ITEMS, PAINTING_VARIANTS, POINT_OF_INTEREST_TYPES, REGISTRIES,
   WORLDGEN_BIOMES,
-} from '#arguments'
-import type { MCFunctionClass, TagClass } from '#core'
-import type { LiteralUnion } from '#utils'
+} from 'sandstone/arguments/index.js'
+import type { MCFunctionClass, TagClass } from 'sandstone/core/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :

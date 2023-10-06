@@ -1,12 +1,12 @@
 /* eslint-disable camelcase */
-import type { PredicateJSON } from '../predicate'
-import type { DistanceCriterion, EffectCriterion } from './basic_criteria'
-import type { ItemCriterion } from './ItemCriterion'
-import type { LocationCriterion } from './LocationCriterion'
-import type { PlayerCriterion } from './PlayerCriterion'
-import type { CAT_VARIANTS, ENTITY_TYPES, MOB_EFFECTS } from '#arguments/generated'
-import type { PredicateClass, TagClass } from '#core'
-import type { LiteralUnion } from '#utils'
+import type { CAT_VARIANTS, ENTITY_TYPES, MOB_EFFECTS } from 'sandstone/arguments/generated/index.js'
+import type { PredicateClass, TagClass } from 'sandstone/core/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { PredicateJSON } from '../predicate.js'
+import type { DistanceCriterion, EffectCriterion } from './basic_criteria.js'
+import type { ItemCriterion } from './ItemCriterion.js'
+import type { LocationCriterion } from './LocationCriterion.js'
+import type { PlayerCriterion } from './PlayerCriterion.js'
 
 export type EntityCriterion = (PredicateClass | PredicateJSON)[] | Partial<{
   /** The distance of the entity */

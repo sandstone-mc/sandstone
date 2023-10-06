@@ -2,17 +2,17 @@
 import fs from 'fs-extra'
 import path from 'path'
 
-import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies'
-import { MCMetaCache } from './mcmeta'
-import { DependencyClass } from './resources/dependency'
-import { SmithedDependencyCache } from './smithed'
+import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies.js'
+import { MCMetaCache } from './mcmeta.js'
+import { DependencyClass } from './resources/dependency.js'
+import { SmithedDependencyCache } from './smithed.js'
 
 import type { SandstonePack } from 'sandstone'
-import type { MCMetaBranches } from './mcmeta'
-import type { AwaitNode } from './nodes'
-import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
-import type { ResourceClass, ResourceNode } from './resources/resource'
-import type { GenericCoreVisitor } from './visitors'
+import type { MCMetaBranches } from './mcmeta.js'
+import type { AwaitNode } from './nodes.js'
+import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction.js'
+import type { ResourceClass, ResourceNode } from './resources/resource.js'
+import type { GenericCoreVisitor } from './visitors.js'
 
 export class SandstoneCore {
   /** All Resources */

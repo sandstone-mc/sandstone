@@ -1,27 +1,27 @@
-import { MCFunctionClass } from '#core/index'
-import { ContainerCommandNode } from '#core/nodes'
-import { makeCallable, toMinecraftResourceName } from '#utils'
+import { MCFunctionClass } from 'sandstone/core/index.js'
+import { ContainerCommandNode } from 'sandstone/core/nodes.js'
+import { makeCallable, toMinecraftResourceName } from 'sandstone/utils.js'
 import {
   coordinatesParser, ObjectiveClass, rangeParser, rotationParser,
   Score,
   targetParser,
-} from '#variables'
+} from 'sandstone/variables/index.js'
 
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
-import { FunctionCommandNode } from '../server/function'
+import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
+import { FunctionCommandNode } from '../server/function.js'
 
-import type { DataPointClass } from 'sandstone/variables/Data'
+import type { DataPointClass } from 'sandstone/variables/Data.js'
 import type {
   ANCHORS,
   AXES,
   BLOCKS,
   COMPARISON_OPERATORS,
   Coordinates, DIMENSIONS, ENTITY_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Rotation, SingleEntityArgument,
-} from '#arguments'
-import type { MCFunctionNode, PredicateClass } from '#core/index'
-import type { Node } from '#core/nodes'
-import type { SandstonePack } from '#pack'
-import type { LiteralUnion } from '#utils'
+} from 'sandstone/arguments/index.js'
+import type { MCFunctionNode, PredicateClass } from 'sandstone/core/index.js'
+import type { Node } from 'sandstone/core/nodes.js'
+import type { SandstonePack } from 'sandstone/pack/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 // Execute command
 type SubCommand = [subcommand: string, ...args: unknown[]]

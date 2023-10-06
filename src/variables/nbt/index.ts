@@ -1,2 +1,2 @@
-export * from './NBTs'
-export * from './parser'
+export * from './NBTs.js'
+export * from './parser.js'

@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
   "description": "Sandstone, a Typescript library for Minecraft datapacks.",
-  "version": "0.14.0-alpha.21",
+  "version": "1.0.0-alpha.1",
   "contributors": [
     {
       "name": "TheMrZZ - Florian ERNST",
@@ -83,32 +83,21 @@
     "url": "git+https://github.com/sandstone-mc/sandstone.git"
   },
   "scripts": {
-    "build": "tsup --onSuccess \"npm run setup\"",
-    "watch": "npm run build -- --watch",
+    "build": "tsup --onSuccess \"pnpm run setup\"",
+    "watch": "pnpm run build -- --watch",
     "build-types": "tsc --emitDeclarationOnly",
     "setup-package": "node ./scripts/setupPackage.mjs",
-    "setup": "npm run build-types && npm run setup-package && echo ✔️  Successfully built Sandstone.",
-    "build-pack": "npm run build && cd dist && npm pack",
-    "publishToNpm": "npm run build && npm publish",
+    "setup": "pnpm run build-types && pnpm run setup-package && echo ✔️  Successfully built Sandstone.",
+    "build-pack": "pnpm run build && cd dist && pnpm pack",
+    "publishToNpm": "pnpm run build && pnpm publish",
     "format": "eslint src --cache --fix --quiet"
   },
+  "type": "module",
   "main": "index.js",
   "module": "index.mjs",
   "types": "index.d.ts",
   "imports": {
-    "#arguments": "sandstone/arguments",
-    "#arguments/*": "sandstone/arguments/*",
-    "#commands": "sandstone/commands",
-    "#commands/*": "sandstone/commands/*",
-    "#core": "sandstone/core",
-    "#core/*": "sandstone/core/*",
-    "#flow": "sandstone/flow",
-    "#flow/*": "sandstone/flow/*",
-    "#pack": "sandstone/pack",
-    "#pack/*": "sandstone/pack/*",
-    "#variables": "sandstone/variables",
-    "#variables/*": "sandstone/variables/*",
-    "#utils": "sandstone/utils"
+    "#sandstone/*.js": "sandstone/arguments"
   },
   "exports": {
     ".": {

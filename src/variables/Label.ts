@@ -1,12 +1,12 @@
 /* eslint-disable max-len */
-import { makeClassCallable } from 'sandstone/utils'
+import { makeClassCallable } from 'sandstone/utils.js'
 
-import { SelectorClass } from './Selector'
+import { SelectorClass } from './Selector.js'
 
-import type { MakeInstanceCallable } from 'sandstone/utils'
-import type { SandstonePack } from '../pack'
-import type { ConditionClass, SelectorPickClass } from './abstractClasses'
-import type { SelectorProperties } from './Selector'
+import type { MakeInstanceCallable } from 'sandstone/utils.js'
+import type { SandstonePack } from '../pack/index.js'
+import type { ConditionClass, SelectorPickClass } from './abstractClasses.js'
+import type { SelectorProperties } from './Selector.js'
 
 type SingleEntity = SelectorClass<true, boolean> | SelectorPickClass<true, boolean>
 

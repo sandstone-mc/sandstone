@@ -1,16 +1,16 @@
-import { toMinecraftResourceName } from 'sandstone/utils'
+import { toMinecraftResourceName } from 'sandstone/utils.js'
 
-import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
+import { ContainerNode } from '../../nodes.js'
+import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import type { MCFunctionClass } from './mcfunction'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import type { MCFunctionClass } from './mcfunction.js'
 import type {
   HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON,
-} from '#arguments'
-import type { LiteralUnion } from '#utils'
-import type { ConditionClass } from '#variables'
+} from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
+import type { ConditionClass } from 'sandstone/variables/index.js'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass {
   return typeof v === 'function'

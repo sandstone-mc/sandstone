@@ -1,3 +1,5 @@
+import { PlaceCommand } from './implementations/block/place.js'
+import { DamageCommand } from './implementations/entity/damage.js'
 import {
   AdvancementCommand,
   AttributeCommand,
@@ -55,11 +57,9 @@ import {
   TriggerCommand,
   WeatherCommand,
   WorldBorderCommand,
-} from './implementations'
-import { PlaceCommand } from './implementations/block/place'
-import { DamageCommand } from './implementations/entity/damage'
+} from './implementations/index.js'
 
-import type { SandstonePack } from '#pack'
+import type { SandstonePack } from 'sandstone/pack/index.js'
 
 export class SandstoneCommands {
   constructor(public sandstonePack: SandstonePack) {}

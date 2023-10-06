@@ -1,29 +1,29 @@
 /* eslint-disable max-len */
 
-import { randomUUID } from '../utils'
-import { absolute } from './Coordinates'
-import { DataPointClass } from './Data'
-import { JSONTextComponentClass } from './JSONTextComponentClass'
+import { randomUUID } from '../utils.js'
+import { absolute } from './Coordinates.js'
+import { DataPointClass } from './Data.js'
+import { JSONTextComponentClass } from './JSONTextComponentClass.js'
 import {
   NBTIntArray, NBTLong, NBTString, nbtStringifier,
-} from './nbt'
-import { coordinatesParser } from './parsers'
-import { ResolveNBTPart } from './ResolveNBT'
-import { Score } from './Score'
-import { UUIDClass } from './UUID'
+} from './nbt/index.js'
+import { coordinatesParser } from './parsers.js'
+import { ResolveNBTPart } from './ResolveNBT.js'
+import { Score } from './Score.js'
+import { UUIDClass } from './UUID.js'
 
 import type {
   _RawMCFunctionClass, LootTableClass, PredicateClass, ResourceClassArguments,
-} from 'sandstone/core/index'
-import type { StructureClass } from 'sandstone/core/resources'
+} from 'sandstone/core/index.js'
+import type { StructureClass } from 'sandstone/core/resources/index.js'
 import type {
   ENTITY_TYPES, JSONTextComponent, NBTObject, RootNBT,
-} from '../arguments/index'
-import type { ChunkTuple, DimensionID, SandstonePack } from '../pack/pack'
-import type { LiteralUnion } from '../utils'
-import type { DataClass } from './Data'
-import type { NBTInt } from './nbt'
-import type { UUIDinNumber } from './UUID'
+} from '../arguments/index.js'
+import type { ChunkTuple, DimensionID, SandstonePack } from '../pack/pack.js'
+import type { LiteralUnion } from '../utils.js'
+import type { DataClass } from './Data.js'
+import type { NBTInt } from './nbt/index.js'
+import type { UUIDinNumber } from './UUID.js'
 
 export class UtilityChunkClass<Chunk extends ChunkTuple, ID extends DimensionID> {
   readonly chunk

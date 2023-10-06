@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable max-len */
-import { VectorClass } from '#variables'
+import { VectorClass } from 'sandstone/variables/index.js'
 
-import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
+import { ContainerNode } from '../../nodes.js'
+import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from '../resource'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 
 const assert = (condition: any, errorMessage: string) => {
   if (!condition) {

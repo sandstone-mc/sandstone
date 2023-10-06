@@ -1,12 +1,12 @@
-import { CommandNode } from '#core/nodes'
-import { coordinatesParser, targetParser } from '#variables/parsers'
+import { CommandNode } from 'sandstone/core/nodes.js'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers.js'
 
-import { CommandArguments } from '../../helpers'
+import { CommandArguments } from '../../helpers.js'
 
 import type {
   Coordinates, MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES,
-} from '#arguments'
-import type { LiteralUnion } from '#utils'
+} from 'sandstone/arguments/index.js'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export class PlaySoundCommandNode extends CommandNode {
   command = 'playsound' as const

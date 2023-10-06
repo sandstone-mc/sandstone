@@ -1,9 +1,9 @@
-import { FunctionCommandNode } from '#commands'
-import { MCFunctionClass } from '#core'
+import { FunctionCommandNode } from 'sandstone/commands/index.js'
+import { MCFunctionClass } from 'sandstone/core/index.js'
 
-import { GenericSandstoneVisitor } from './visitor'
+import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { MCFunctionNode } from '#core'
+import type { MCFunctionNode } from 'sandstone/core/index.js'
 
 /**
  * Initialize the objectives of the pack.

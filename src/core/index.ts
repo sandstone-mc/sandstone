@@ -1,3 +1,3 @@
-export * from './nodes'
-export * from './resources/index'
-export * from './sandstoneCore'
+export * from './nodes.js'
+export * from './resources/index.js'
+export * from './sandstoneCore.js'

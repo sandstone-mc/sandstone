@@ -1,11 +1,11 @@
 import path from 'path'
 
-import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
+import { ContainerNode } from '../../nodes.js'
+import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import type { SOUND_TYPES, SoundsDefinitions } from '#arguments'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import type { SOUND_TYPES, SoundsDefinitions } from 'sandstone/arguments/index.js'
 
 const sounds: Map<string, SoundsClass> = new Map()
 
