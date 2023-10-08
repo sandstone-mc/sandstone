@@ -1,4 +1,4 @@
-import { CommandNode } from 'sandstone/core/nodes.js'
+import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 

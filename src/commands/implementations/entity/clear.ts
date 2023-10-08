@@ -1,11 +1,11 @@
-import { targetParser } from 'sandstone/variables/parsers.js'
-import { CommandNode } from 'sandstone/core/nodes.js'
+import { targetParser } from 'sandstone/variables/parsers'
+import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments/index.js'
-import type { TagClass } from 'sandstone/core/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { TagClass } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
 
 export class ClearCommandNode extends CommandNode {
   command = 'clear' as const

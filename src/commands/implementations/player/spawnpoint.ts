@@ -1,9 +1,9 @@
-import { CommandNode } from 'sandstone/core/nodes.js'
-import { coordinatesParser, targetParser } from 'sandstone/variables/index.js'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Coordinates, MultiplePlayersArgument, Rotation } from 'sandstone/arguments/index.js'
+import type { Coordinates, MultiplePlayersArgument, Rotation } from 'sandstone/arguments'
 
 export class SpawnPointCommandNode extends CommandNode {
   command = 'spawnpoint' as const

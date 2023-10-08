@@ -1,4 +1,4 @@
-import { ExecuteCommandNode } from 'sandstone/commands/index.js'
+import { ExecuteCommandNode } from 'sandstone/commands'
 
 import { GenericSandstoneVisitor } from './visitor.js'
 

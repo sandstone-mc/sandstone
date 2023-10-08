@@ -1,8 +1,8 @@
 import type { NumberProvider } from './utils.js'
 import type {
   BLOCKS, DIMENSIONS, ENCHANTMENTS, MOB_EFFECTS,
-} from 'sandstone/arguments/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+} from 'sandstone/arguments'
+import type { LiteralUnion } from 'sandstone/utils'
 
 // All the possible criteria
 export type BlockIdCriterion = LiteralUnion<BLOCKS>

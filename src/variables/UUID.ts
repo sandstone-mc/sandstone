@@ -11,10 +11,10 @@ import { Score } from './Score.js'
 
 import type {
   ENTITY_TYPES, JSONTextComponent, NBTObject, SingleEntityArgument,
-} from 'sandstone/arguments/index.js'
-import type { ExecuteCommand } from 'sandstone/commands/index.js'
-import type { MCFunctionClass, SandstoneCore } from 'sandstone/core/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+} from 'sandstone/arguments'
+import type { ExecuteCommand } from 'sandstone/commands'
+import type { MCFunctionClass, SandstoneCore } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
 import type { ConditionTextComponentClass } from './abstractClasses.js'
 import type { SelectorClass } from './Selector.js'
 import type { UtilityChunkMember } from './UtilityChunk.js'

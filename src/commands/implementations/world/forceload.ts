@@ -1,10 +1,10 @@
-import { CommandNode } from 'sandstone/core/nodes.js'
-import { coordinatesParser } from 'sandstone/variables/index.js'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { ColumnCoordinates } from 'sandstone/arguments/index.js'
-import type { VectorClass } from 'sandstone/variables/index.js'
+import type { ColumnCoordinates } from 'sandstone/arguments'
+import type { VectorClass } from 'sandstone/variables'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string): number[] {

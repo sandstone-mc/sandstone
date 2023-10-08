@@ -1,11 +1,11 @@
-import { targetParser } from 'sandstone/variables/parsers.js'
-import { validateIntegerRange } from 'sandstone/commands/validators.js'
-import { CommandNode } from 'sandstone/core/nodes.js'
+import { targetParser } from 'sandstone/variables/parsers'
+import { validateIntegerRange } from 'sandstone/commands/validators'
+import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { MOB_EFFECTS, MultipleEntitiesArgument } from 'sandstone/arguments/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { MOB_EFFECTS, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { LiteralUnion } from 'sandstone/utils'
 
 export class EffectCommandNode extends CommandNode {
   command = 'effect' as const

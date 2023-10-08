@@ -1,10 +1,10 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { ConditionClass } from 'sandstone/variables/index.js'
+import type { ConditionClass } from 'sandstone/variables'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { PredicateJSON } from 'sandstone/arguments/index.js'
+import type { PredicateJSON } from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft predicate.

@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
-import { makeClassCallable } from 'sandstone/utils.js'
+import { makeClassCallable } from 'sandstone/utils'
 
 import { SelectorClass } from './Selector.js'
 
-import type { MakeInstanceCallable } from 'sandstone/utils.js'
+import type { MakeInstanceCallable } from 'sandstone/utils'
 import type { SandstonePack } from '../pack/index.js'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses.js'
 import type { SelectorProperties } from './Selector.js'

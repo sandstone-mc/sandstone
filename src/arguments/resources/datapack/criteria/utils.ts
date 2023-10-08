@@ -1,4 +1,4 @@
-import type { ObjectiveClass } from 'sandstone/variables/index.js'
+import type { ObjectiveClass } from 'sandstone/variables'
 
 /*
  * Utility types

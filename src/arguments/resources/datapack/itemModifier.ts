@@ -3,14 +3,14 @@
 /* eslint-disable camelcase */
 import type { NumberProvider } from './criteria/utils.js'
 import type { ObjectOrArray, PredicateCondition } from './predicate.js'
-import type { JSONTextComponent, LootTableEntry } from 'sandstone/arguments/index.js'
-import type { BASIC_COLORS, MAP_ICONS } from 'sandstone/arguments/basics.js'
+import type { JSONTextComponent, LootTableEntry } from 'sandstone/arguments'
+import type { BASIC_COLORS, MAP_ICONS } from 'sandstone/arguments/basics'
 import type {
   ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES,
-} from 'sandstone/arguments/generated.js'
-import type { LootTableClass } from 'sandstone/core/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
-import type { DataInstance } from 'sandstone/variables/Data.js'
+} from 'sandstone/arguments/generated'
+import type { LootTableClass } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
+import type { DataInstance } from 'sandstone/variables/Data'
 
 type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**

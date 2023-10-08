@@ -4,8 +4,8 @@ import { ResourceClass } from '../resource.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 import type { TagClass } from './tag.js'
-import type { TrimMaterialJSON } from 'sandstone/arguments/index.js'
-import type { ConditionClass } from 'sandstone/variables/index.js'
+import type { TrimMaterialJSON } from 'sandstone/arguments'
+import type { ConditionClass } from 'sandstone/variables'
 
 let trimMaterials: undefined | TagClass<'items'>
 

@@ -1,4 +1,4 @@
-import type { VectorClass } from 'sandstone/variables/index.js'
+import type { VectorClass } from 'sandstone/variables'
 
 type AbsoluteFloat = number | `${number}`;
 type RelativeFloat = `~${number | ''}`;

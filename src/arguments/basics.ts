@@ -1,4 +1,4 @@
-import type { MultipleEntitiesArgument } from 'sandstone/arguments/index.js'
+import type { MultipleEntitiesArgument } from 'sandstone/arguments'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`

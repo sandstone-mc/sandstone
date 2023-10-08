@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import type { BLOCKS, ENCHANTMENTS } from 'sandstone/arguments/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { BLOCKS, ENCHANTMENTS } from 'sandstone/arguments'
+import type { LiteralUnion } from 'sandstone/utils'
 import type {
   DamageCriterion, EntityCriterion, ItemCriterion, LocationCriterion,
   NumberProvider,

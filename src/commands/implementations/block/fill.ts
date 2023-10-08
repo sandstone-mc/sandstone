@@ -1,10 +1,10 @@
-import { CommandNode } from 'sandstone/core/nodes.js'
-import { coordinatesParser } from 'sandstone/variables/index.js'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { BLOCKS, Coordinates } from 'sandstone/arguments/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { BLOCKS, Coordinates } from 'sandstone/arguments'
+import type { LiteralUnion } from 'sandstone/utils'
 
 export class FillCommandNode extends CommandNode {
   command = 'fill' as const

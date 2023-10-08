@@ -1,12 +1,12 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { LiteralUnion } from 'sandstone/utils'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 import type {
   Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
-} from 'sandstone/arguments/index.js'
+} from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft loot table.

@@ -1,8 +1,8 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { AdvancementJSON, MultiplePlayersArgument } from 'sandstone/arguments/index.js'
-import type { ConditionClass } from 'sandstone/variables/index.js'
+import type { AdvancementJSON, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { ConditionClass } from 'sandstone/variables'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 

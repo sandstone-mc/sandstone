@@ -53,6 +53,9 @@ dependencies:
   prismarine-nbt:
     specifier: ^2.2.1
     version: 2.2.1
+  semver:
+    specifier: ^7.5.4
+    version: 7.5.4
 
 devDependencies:
   '@types/module-alias':

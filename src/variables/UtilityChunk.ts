@@ -14,8 +14,8 @@ import { UUIDClass } from './UUID.js'
 
 import type {
   _RawMCFunctionClass, LootTableClass, PredicateClass, ResourceClassArguments,
-} from 'sandstone/core/index.js'
-import type { StructureClass } from 'sandstone/core/resources/index.js'
+} from 'sandstone/core'
+import type { StructureClass } from 'sandstone/core/resources'
 import type {
   ENTITY_TYPES, JSONTextComponent, NBTObject, RootNBT,
 } from '../arguments/index.js'

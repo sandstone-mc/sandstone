@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
-import { toMinecraftResourceName } from 'sandstone/utils.js'
+import { toMinecraftResourceName } from 'sandstone/utils'
 
 import { ContainerNode } from '../nodes.js'
 import { ResourceClass } from './resource.js'
 
 import type fs from 'fs-extra'
-import type { PackType } from 'sandstone/pack/packType.js'
+import type { PackType } from 'sandstone/pack/packType'
 import type { SandstoneCore } from '../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from './resource.js'
 

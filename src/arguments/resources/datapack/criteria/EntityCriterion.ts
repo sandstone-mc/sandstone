@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-import type { CAT_VARIANTS, ENTITY_TYPES, MOB_EFFECTS } from 'sandstone/arguments/generated/index.js'
-import type { PredicateClass, TagClass } from 'sandstone/core/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { CAT_VARIANTS, ENTITY_TYPES, MOB_EFFECTS } from 'sandstone/arguments/generated'
+import type { PredicateClass, TagClass } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
 import type { PredicateJSON } from '../predicate.js'
 import type { DistanceCriterion, EffectCriterion } from './basic_criteria.js'
 import type { ItemCriterion } from './ItemCriterion.js'

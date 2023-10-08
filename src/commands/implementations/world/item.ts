@@ -1,13 +1,13 @@
-import { CommandNode } from 'sandstone/core/nodes.js'
-import { coordinatesParser, targetParser } from 'sandstone/variables/index.js'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS,
   ITEMS, MultipleEntitiesArgument,
-} from 'sandstone/arguments/index.js'
-import type { ItemModifierClass } from 'sandstone/core/index.js'
+} from 'sandstone/arguments'
+import type { ItemModifierClass } from 'sandstone/core'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const

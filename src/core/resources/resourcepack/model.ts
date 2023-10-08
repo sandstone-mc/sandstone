@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable max-len */
-import { VectorClass } from 'sandstone/variables/index.js'
+import { VectorClass } from 'sandstone/variables'
 
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'

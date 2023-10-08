@@ -3,7 +3,7 @@ import { ResourceClass } from '../resource.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { FontProvider } from 'sandstone/arguments/index.js'
+import type { FontProvider } from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft font definition.

@@ -1,12 +1,12 @@
-import { MCFunctionClass } from 'sandstone/core/index.js'
+import { MCFunctionClass } from 'sandstone/core'
 
 import type {
   AdvancementJSON, HintedTagStringType, ItemModifierJSON, LootTableJSON, PredicateJSON, RecipeJSON, TagSingleValue,
-} from 'sandstone/arguments/index.js'
+} from 'sandstone/arguments'
 import type {
   AdvancementClassArguments, ItemModifierClassArguments, LootTableClassArguments, MCFunctionClassArguments, PredicateClassArguments, RecipeClassArguments, TagClassArguments,
-} from 'sandstone/core/index.js'
-import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties } from 'sandstone/utils.js'
+} from 'sandstone/core'
+import type { BASIC_CONFLICT_STRATEGIES, HideFunctionProperties } from 'sandstone/utils'
 import type { SandstonePack } from './pack.js'
 
 type Conflicts = {

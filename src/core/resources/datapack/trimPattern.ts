@@ -1,10 +1,10 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { ConditionClass } from 'sandstone/variables/index.js'
+import type { ConditionClass } from 'sandstone/variables'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { TrimPatternJSON } from 'sandstone/arguments/index.js'
+import type { TrimPatternJSON } from 'sandstone/arguments'
 
 type equipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
 

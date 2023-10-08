@@ -1,9 +1,9 @@
-import { CommandNode } from 'sandstone/core/nodes.js'
-import { JSONTextComponentClass } from 'sandstone/variables/index.js'
+import { CommandNode } from 'sandstone/core/nodes'
+import { JSONTextComponentClass } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments/index.js'
+import type { JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
 
 export class TellRawCommandNode extends CommandNode {
   command = 'tellraw' as const

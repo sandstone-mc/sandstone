@@ -3,9 +3,9 @@ import { rangeParser } from './parsers.js'
 
 import type {
   COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
-} from 'sandstone/arguments/index.js'
-import type { NotNode } from 'sandstone/flow/index.js'
-import type { ConditionClass } from 'sandstone/variables/index.js'
+} from 'sandstone/arguments'
+import type { NotNode } from 'sandstone/flow'
+import type { ConditionClass } from 'sandstone/variables'
 import type { SandstoneCommands } from '../commands/index.js'
 import type { SandstonePack } from '../pack/index.js'
 import type { DATA_TYPES, DataPointClass } from './Data.js'

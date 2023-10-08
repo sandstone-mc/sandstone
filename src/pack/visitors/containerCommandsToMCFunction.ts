@@ -2,7 +2,7 @@
 
 import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { ContainerCommandNode, MCFunctionNode } from 'sandstone/core/index.js'
+import type { ContainerCommandNode, MCFunctionNode } from 'sandstone/core'
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.

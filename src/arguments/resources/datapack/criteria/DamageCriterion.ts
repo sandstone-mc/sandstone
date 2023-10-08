@@ -1,5 +1,5 @@
-import type { DAMAGE_TYPES } from 'sandstone/arguments/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { DAMAGE_TYPES } from 'sandstone/arguments'
+import type { LiteralUnion } from 'sandstone/utils'
 import type { EntityCriterion } from './EntityCriterion.js'
 import type { NumberProvider } from './utils.js'
 

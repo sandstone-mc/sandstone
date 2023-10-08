@@ -7,7 +7,7 @@ import { MCMetaCache } from './mcmeta.js'
 import { DependencyClass } from './resources/dependency.js'
 import { SmithedDependencyCache } from './smithed.js'
 
-import type { SandstonePack } from 'sandstone'
+import type { SandstonePack } from 'sandstone/pack'
 import type { MCMetaBranches } from './mcmeta.js'
 import type { AwaitNode } from './nodes.js'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction.js'

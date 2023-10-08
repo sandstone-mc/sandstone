@@ -1,6 +1,6 @@
-import { AdvancementClass, MCFunctionClass } from 'sandstone/core/index.js'
+import { AdvancementClass, MCFunctionClass } from 'sandstone/core'
 
-import type { ResourceClass } from 'sandstone/core/index.js'
+import type { ResourceClass } from 'sandstone/core'
 
 export function getResourceType(resource: ResourceClass) {
   if (resource instanceof MCFunctionClass) {

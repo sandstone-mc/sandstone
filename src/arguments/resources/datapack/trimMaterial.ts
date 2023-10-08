@@ -1,4 +1,4 @@
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { LiteralUnion } from 'sandstone/utils'
 import type { ITEMS } from '../../generated/index.js'
 import type { JSONTextComponent } from '../../jsonTextComponent.js'
 

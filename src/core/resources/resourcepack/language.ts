@@ -3,7 +3,7 @@ import { ResourceClass } from '../resource.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { TRANSLATION_KEYS } from 'sandstone/arguments/index.js'
+import type { TRANSLATION_KEYS } from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft language file.

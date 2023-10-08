@@ -4,9 +4,9 @@ import { Score } from './Score.js'
 
 import type {
   Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument,
-} from 'sandstone/arguments/index.js'
-import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations/index.js'
-import type { SandstonePack } from 'sandstone/pack/index.js'
+} from 'sandstone/arguments'
+import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations'
+import type { SandstonePack } from 'sandstone/pack'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 

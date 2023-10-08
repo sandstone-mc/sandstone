@@ -1,4 +1,4 @@
-import type { SandstonePack } from 'sandstone/pack/index.js'
+import type { SandstonePack } from 'sandstone/pack'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
 import type { SandstoneCore } from './sandstoneCore.js'
 

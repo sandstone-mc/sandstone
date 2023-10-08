@@ -1,12 +1,12 @@
 import {
   ContainerCommandNode, ContainerNode,
-} from 'sandstone/core/index.js'
+} from 'sandstone/core'
 
 import type {
   AdvancementNode, CommandNode, ItemModifierNode, LootTableNode, MCFunctionNode,
   Node, PredicateNode, RecipeNode, SandstoneCore,
   TagNode, TrimMaterialNode, TrimPatternNode,
-} from 'sandstone/core/index.js'
+} from 'sandstone/core'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function ancestors(prototype: Function): string[] {

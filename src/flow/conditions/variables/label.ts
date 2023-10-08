@@ -2,8 +2,8 @@
 import { CommandConditionNode } from '../command.js'
 import { SingleConditionNode } from '../condition.js'
 
-import type { EntityLabel } from 'sandstone/variables/Label.js'
-import type { SandstoneCore } from 'sandstone/core/index.js'
+import type { EntityLabel } from 'sandstone/variables/Label'
+import type { SandstoneCore } from 'sandstone/core'
 
 export class LabelConditionNode extends SingleConditionNode {
   constructor(sandstoneCore: SandstoneCore, public label: EntityLabel) {

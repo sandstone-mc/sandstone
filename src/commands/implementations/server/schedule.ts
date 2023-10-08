@@ -1,12 +1,12 @@
-import { MCFunctionClass, TagClass } from 'sandstone/core/resources/datapack/index.js'
-import { toMinecraftResourceName } from 'sandstone/utils.js'
-import { ContainerCommandNode } from 'sandstone/core/index.js'
+import { ContainerCommandNode } from 'sandstone/core'
+import { MCFunctionClass, TagClass } from 'sandstone/core/resources/datapack/index'
+import { toMinecraftResourceName } from 'sandstone/utils'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { MCFunctionNode } from 'sandstone/core/resources/datapack/index.js'
-import type { TimeArgument } from 'sandstone/arguments/index.js'
-import type { Node } from 'sandstone/core/index.js'
+import type { TimeArgument } from 'sandstone/arguments'
+import type { Node } from 'sandstone/core'
+import type { MCFunctionNode } from 'sandstone/core/resources/datapack/index'
 
 type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass | (() => (void | Promise<void>))
 

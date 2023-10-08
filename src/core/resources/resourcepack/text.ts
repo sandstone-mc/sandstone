@@ -1,12 +1,12 @@
 /* eslint-disable no-lone-blocks */
-import { JSONTextComponentClass } from 'sandstone/variables/index.js'
+import { JSONTextComponentClass } from 'sandstone/variables'
 
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { ContentTag, JSONTextComponent } from 'sandstone/arguments/index.js'
+import type { ContentTag, JSONTextComponent } from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft text.

@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 import type {
   ITEMS,
-} from 'sandstone/arguments/generated/index.js'
-import type { LootTableClass, TagClass } from 'sandstone/core/index.js'
-import type { LiteralUnion, WithMCNamespace } from 'sandstone/utils.js'
+} from 'sandstone/arguments/generated'
+import type { LootTableClass, TagClass } from 'sandstone/core'
+import type { LiteralUnion, WithMCNamespace } from 'sandstone/utils'
 import type { NumberProvider } from './criteria/index.js'
 import type { ItemModifierFunction } from './itemModifier.js'
 import type { PredicateCondition } from './predicate.js'

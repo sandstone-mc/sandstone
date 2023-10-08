@@ -1,10 +1,10 @@
-import { CommandNode } from 'sandstone/core/nodes.js'
-import { JSONTextComponentClass, targetParser } from 'sandstone/variables/index.js'
+import { CommandNode } from 'sandstone/core/nodes'
+import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { LiteralUnion } from 'sandstone/utils'
 
 // Bossbar command
 export class BossBarCommandNode extends CommandNode {

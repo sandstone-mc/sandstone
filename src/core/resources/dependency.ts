@@ -4,7 +4,7 @@ import { ResourceClass } from './resource.js'
 import type { SandstoneCore } from '../sandstoneCore.js'
 import type { Dependency } from '../smithed.js'
 import type { ResourceNode } from './resource.js'
-import type { PackType } from 'sandstone/pack/index.js'
+import type { PackType } from 'sandstone/pack'
 
 /**
  * A node representing a custom resource.

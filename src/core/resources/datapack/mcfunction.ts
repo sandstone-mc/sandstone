@@ -1,4 +1,4 @@
-import { makeCallable, makeClassCallable } from 'sandstone/utils.js'
+import { makeCallable, makeClassCallable } from 'sandstone/utils'
 
 import { ContainerNode } from '../../nodes.js'
 import {
@@ -6,13 +6,13 @@ import {
 } from '../resource.js'
 import { TagClass } from './tag.js'
 
-import type { TimeArgument } from 'sandstone/arguments/basics.js'
-import type { ScheduleType } from 'sandstone/commands/index.js'
-import type { FinalCommandOutput } from 'sandstone/commands/helpers.js'
+import type { TimeArgument } from 'sandstone/arguments/basics'
+import type { ScheduleType } from 'sandstone/commands'
+import type { FinalCommandOutput } from 'sandstone/commands/helpers'
 import type {
   ContainerCommandNode, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
-} from 'sandstone/core/index.js'
-import type { MakeInstanceCallable } from 'sandstone/utils.js'
+} from 'sandstone/core'
+import type { MakeInstanceCallable } from 'sandstone/utils'
 
 const tags: Record<string, TagClass<'functions'>> = {}
 

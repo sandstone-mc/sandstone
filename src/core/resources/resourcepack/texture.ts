@@ -3,8 +3,8 @@ import { ResourceClass } from '../resource.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { TEXTURE_TYPES, TextureMeta } from 'sandstone/arguments/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { TEXTURE_TYPES, TextureMeta } from 'sandstone/arguments'
+import type { LiteralUnion } from 'sandstone/utils'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
 

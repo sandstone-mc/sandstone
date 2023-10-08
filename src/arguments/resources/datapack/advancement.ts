@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-import type { ITEMS, JSONTextComponent } from 'sandstone/arguments/index.js'
-import type { AdvancementClass, MCFunctionClass, PredicateClass } from 'sandstone/core/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { ITEMS, JSONTextComponent } from 'sandstone/arguments'
+import type { AdvancementClass, MCFunctionClass, PredicateClass } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
 import type {
   BlockIdCriterion,
   DamageCriterion,

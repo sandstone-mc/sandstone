@@ -1,9 +1,9 @@
 import * as util from 'util'
-import { makeCallable } from 'sandstone/utils.js'
+import { makeCallable } from 'sandstone/utils'
 
 import { parseNBT } from './parser.js'
 
-import type { NBTObject, RootNBT } from 'sandstone/arguments/index.js'
+import type { NBTObject, RootNBT } from 'sandstone/arguments'
 
 export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string;

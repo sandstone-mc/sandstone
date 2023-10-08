@@ -1,12 +1,12 @@
 /* eslint-disable no-spaced-func */
 /* eslint-disable func-call-spacing */
-import { ExecuteCommandNode } from 'sandstone/commands/index.js'
-import { SuccessConditionNode } from 'sandstone/flow/conditions/success.js'
-import { IfNode, NotNode, ScoreConditionNode } from 'sandstone/flow/index.js'
+import { ExecuteCommandNode } from 'sandstone/commands'
+import { SuccessConditionNode } from 'sandstone/flow/conditions/success'
+import { IfNode, NotNode, ScoreConditionNode } from 'sandstone/flow'
 
 import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { ConditionNode, ElseNode } from 'sandstone/flow/index.js'
+import type { ConditionNode, ElseNode } from 'sandstone/flow'
 
 function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   yield node

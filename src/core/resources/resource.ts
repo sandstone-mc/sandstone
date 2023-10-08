@@ -1,11 +1,11 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable multiline-comment-style */
 import type fs from 'fs-extra'
-import type { SandstoneCommands } from 'sandstone/commands/commands.js'
-import type { PackType } from 'sandstone/pack/packType.js'
-import type { Node, SandstoneCore } from 'sandstone/core/index.js'
-import type { ResourcePath, SandstonePack } from 'sandstone/pack/index.js'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils.js'
+import type { SandstoneCommands } from 'sandstone/commands/commands'
+import type { Node, SandstoneCore } from 'sandstone/core'
+import type { ResourcePath, SandstonePack } from 'sandstone/pack'
+import type { PackType } from 'sandstone/pack/packType'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**

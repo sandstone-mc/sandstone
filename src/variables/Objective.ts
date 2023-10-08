@@ -1,11 +1,11 @@
-import { makeClassCallable } from 'sandstone/utils.js'
+import { makeClassCallable } from 'sandstone/utils'
 
 import { JSONTextComponentClass } from './JSONTextComponentClass.js'
 import { targetParser } from './parsers.js'
 import { Score } from './Score.js'
 
-import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from 'sandstone/arguments/index.js'
-import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils.js'
+import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from 'sandstone/arguments'
+import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type { SandstonePack } from '../pack/index.js'
 
 export class _RawObjectiveClass {

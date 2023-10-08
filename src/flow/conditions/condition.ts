@@ -1,4 +1,4 @@
-import { Node } from 'sandstone/core/index.js'
+import { Node } from 'sandstone/core'
 
 export type GenericConditionType = {
   /**

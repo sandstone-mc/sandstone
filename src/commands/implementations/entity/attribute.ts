@@ -1,9 +1,9 @@
-import { targetParser } from 'sandstone/variables/parsers.js'
-import { CommandNode } from 'sandstone/core/index.js'
+import { targetParser } from 'sandstone/variables/parsers'
+import { CommandNode } from 'sandstone/core'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { SingleEntityArgument } from 'sandstone/arguments/index.js'
+import type { SingleEntityArgument } from 'sandstone/arguments'
 
 // Attribute command
 

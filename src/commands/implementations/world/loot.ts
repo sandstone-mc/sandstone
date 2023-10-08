@@ -1,15 +1,15 @@
-import { validateIntegerRange } from 'sandstone/commands/validators.js'
-import { CommandNode } from 'sandstone/core/index.js'
-import { coordinatesParser, targetParser } from 'sandstone/variables/index.js'
+import { validateIntegerRange } from 'sandstone/commands/validators'
+import { CommandNode } from 'sandstone/core'
+import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
-} from 'sandstone/arguments/index.js'
-import type { LootTableClass } from 'sandstone/core/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+} from 'sandstone/arguments'
+import type { LootTableClass } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
 
 type LootTableArgument = LootTableClass | string
 

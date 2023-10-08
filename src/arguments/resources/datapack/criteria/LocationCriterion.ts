@@ -2,9 +2,9 @@ import type {
   BLOCKS, DIMENSIONS, FLUIDS,
   STRUCTURES,
   WORLDGEN_BIOMES,
-} from 'sandstone/arguments/index.js'
-import type { TagClass } from 'sandstone/core/index.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
+} from 'sandstone/arguments'
+import type { TagClass } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
 import type { NumberProvider, PositionCriterion } from './index.js'
 
 export type LocationCriterion = Partial<{

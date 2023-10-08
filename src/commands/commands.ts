@@ -183,7 +183,7 @@ export class SandstoneCommands {
   get worldborder() { return new WorldBorderCommand(this.sandstonePack) }
 
   // Aliases
-  msg = this.tell
+  get msg() { return this.tell }
 
   get w() { return this.tell }
 

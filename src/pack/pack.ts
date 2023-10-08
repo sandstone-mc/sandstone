@@ -1,22 +1,22 @@
 /* eslint-disable max-len */
 /* eslint-disable no-plusplus */
-import { SandstoneCommands } from 'sandstone/commands/index.js'
+import { SandstoneCommands } from 'sandstone/commands'
 import {
   AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, ItemModifierClass, LanguageClass, LootTableClass, MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
-} from 'sandstone/core/index.js'
-import { CustomResourceClass } from 'sandstone/core/resources/custom.js'
-import { Flow, SandstoneConditions } from 'sandstone/flow/index.js'
-import { randomUUID } from 'sandstone/utils.js'
+} from 'sandstone/core'
+import { CustomResourceClass } from 'sandstone/core/resources/custom'
+import { Flow, SandstoneConditions } from 'sandstone/flow'
+import { randomUUID } from 'sandstone/utils'
 import {
   absolute,
   coordinatesParser,
   DataClass, DataPointClass, LabelClass, NBTIntArray, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
-} from 'sandstone/variables/index.js'
-import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT.js'
-import { Score } from 'sandstone/variables/Score.js'
-import { SleepClass } from 'sandstone/variables/Sleep.js'
-import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk.js'
-import { UUIDClass } from 'sandstone/variables/UUID.js'
+} from 'sandstone/variables'
+import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
+import { Score } from 'sandstone/variables/Score'
+import { SleepClass } from 'sandstone/variables/Sleep'
+import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk'
+import { UUIDClass } from 'sandstone/variables/UUID'
 
 import { PackType } from './packType.js'
 import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
@@ -30,20 +30,20 @@ import {
 import type {
   // eslint-disable-next-line max-len
   AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, DIMENSIONS, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
-} from 'sandstone/arguments/index.js'
-import type { StoreType } from 'sandstone/commands/index.js'
+} from 'sandstone/arguments'
+import type { ExecuteCommand, StoreType } from 'sandstone/commands'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
   AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MCFunctionClassArguments, ModelClassArguments, Node, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
-} from 'sandstone/core/index.js'
-import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils.js'
+} from 'sandstone/core'
+import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type {
   DATA_PATH, DATA_TARGET, DATA_TYPES, SelectorCreator, SelectorProperties,
-} from 'sandstone/variables/index.js'
+} from 'sandstone/variables'
 import type {
   UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
-} from 'sandstone/variables/UUID.js'
+} from 'sandstone/variables/UUID'
 import type { handlerReadFile, handlerWriteFile } from './packType.js'
 
 export type ResourcePath = string[]
@@ -203,7 +203,7 @@ export class SandstonePack {
     this.dependencies = new Map()
   }
 
-  protected setupLantern = () => {
+  setupLantern = () => {
     const loadStatus = this.Objective.create('load.status')
 
     const privateInit = this.Tag('functions', 'load:_private/init', [this.MCFunction('load:_private/init', () => {
@@ -277,7 +277,7 @@ export class SandstonePack {
     },
 
     /** Get an existing objective. */
-    get: (name: string): ObjectiveClass => new ObjectiveClass(this, name, undefined, undefined, { creator: 'user' }),
+    get: (name: string): ObjectiveClass => new ObjectiveClass(this, name, 'dummy', undefined, { creator: 'user' }),
   }
 
   __rootObjective?: ObjectiveClass
@@ -483,7 +483,7 @@ export class SandstonePack {
   /** Creates a randomly generated static UUID. (changes on pack compile, should only use this if it is killed) */
   UUID(): UUIDClass<'known', 'permanent'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
   UUID(source: string | UUIDinNumber): UUIDClass<'known', 'permanent'>
 
   /** Initializes with `Score`'s. */
@@ -495,7 +495,7 @@ export class SandstonePack {
   /** Initializes with a Selector. */
   UUID(source: SelectorClass<true, boolean>): UUIDClass<'selector', 'permanent'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
   UUID(source: string | UUIDinNumber, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'known', 'permanent'>
 
   /** Initializes with `Score`'s. */
@@ -507,7 +507,7 @@ export class SandstonePack {
   /** Initializes with a Selector. */
   UUID(source: SelectorClass<true, boolean>, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'selector', 'permanent'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
   UUID(source: string | UUIDinNumber, holderState: 1, options?: UUIDOptions): UUIDClass<'known', 'singleTick'>
 
   /** Initializes with 4 `Score`'s. */
@@ -519,7 +519,7 @@ export class SandstonePack {
   /** Initializes with a Selector. */
   UUID(source: SelectorClass<true, boolean>, holderState: 1, options?: UUIDOptions): UUIDClass<'selector', 'singleTick'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils.js'` to generate one) */
+  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
   UUID(source: string | UUIDinNumber, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'known', 'timed'>
 
   /** Initializes with 4 `Score`'s. */
@@ -534,7 +534,7 @@ export class SandstonePack {
   UUID(source: UUIDSource = randomUUID(), holderState: 1 | Omit<number, 1> | Score | 'permanent' = 'permanent', options?: UUIDOptions) { return new UUIDClass(this.core, source, holderState as number, options) }
 
   /** **Waiting on Smithed Dimensions to be functional.** */
-  rootChunk() {
+  rootChunk(): RootChunkClass {
     const root = this.utilityChunks.get('0,0;smithed:void')
 
     if (root) {
@@ -572,7 +572,7 @@ export class SandstonePack {
   }
 
   /** **Waiting on Smithed Dimensions & MC-260322 to be functional.** */
-  dimensionMarker() {
+  dimensionMarker(): ExecuteCommand {
     // TODO: Set dimension target to current dimension some how
 
     return this.rootChunk().armorStand.execute.on('passengers').if.score(this.dimensionID('@s'), '=', this.dimensionTarget).on('origin')
@@ -617,7 +617,7 @@ export class SandstonePack {
     return this.utilityChunks.get(index) as Chunk
   }
 
-  MCFunction = (name: string, callback: (this: MCFunctionClass) => void, options?: MCFunctionClassArguments) => new MCFunctionClass(this.core, name, {
+  MCFunction = (name: string, callback: (this: MCFunctionClass) => void, options?: Partial<MCFunctionClassArguments>) => new MCFunctionClass(this.core, name, {
     callback,
     creator: 'user',
     addToSandstoneCore: true,
@@ -726,7 +726,7 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: AdvancementClassArguments) => new AdvancementClass(this.core, name, {
+  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: Partial<AdvancementClassArguments>) => new AdvancementClass(this.core, name, {
     advancement,
     creator: 'user',
     addToSandstoneCore: true,
@@ -734,7 +734,7 @@ export class SandstonePack {
     ...options,
   })
 
-  DamageType = (name: string, damageType: DamageTypeJSON, options?: DamageTypeClassArguments) => new DamageTypeClass(this.core, name, {
+  DamageType = (name: string, damageType: DamageTypeJSON, options?: Partial<DamageTypeClassArguments>) => new DamageTypeClass(this.core, name, {
     damageType,
     creator: 'user',
     addToSandstoneCore: true,
@@ -742,7 +742,7 @@ export class SandstonePack {
     ...options,
   })
 
-  ItemModifier = (name: string, itemModifier: ItemModifierJSON, options?: ItemModifierClassArguments) => new ItemModifierClass(this.core, name, {
+  ItemModifier = (name: string, itemModifier: ItemModifierJSON, options?: Partial<ItemModifierClassArguments>) => new ItemModifierClass(this.core, name, {
     itemModifier,
     creator: 'user',
     addToSandstoneCore: true,
@@ -750,7 +750,7 @@ export class SandstonePack {
     ...options,
   })
 
-  LootTable = (name: string, lootTable: LootTableJSON, options?: LootTableClassArguments) => new LootTableClass(this.core, name, {
+  LootTable = (name: string, lootTable: LootTableJSON, options?: Partial<LootTableClassArguments>) => new LootTableClass(this.core, name, {
     lootTable,
     creator: 'user',
     addToSandstoneCore: true,
@@ -758,7 +758,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Predicate = (name: string, predicate: PredicateJSON, options?: PredicateClassArguments) => new PredicateClass(this.core, name, {
+  Predicate = (name: string, predicate: PredicateJSON, options?: Partial<PredicateClassArguments>) => new PredicateClass(this.core, name, {
     predicate,
     creator: 'user',
     addToSandstoneCore: true,
@@ -766,7 +766,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Recipe = (name: string, recipe: RecipeJSON, options?: RecipeClassArguments) => new RecipeClass(this.core, name, {
+  Recipe = (name: string, recipe: RecipeJSON, options?: Partial<RecipeClassArguments>) => new RecipeClass(this.core, name, {
     recipe,
     creator: 'user',
     addToSandstoneCore: true,
@@ -775,7 +775,7 @@ export class SandstonePack {
   })
 
   /** @ts-ignore */
-  Tag = <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: TagClassArguments) => new TagClass<T>(this.core, type, name, {
+  Tag = <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: Partial<TagClassArguments>) => new TagClass<T>(this.core, type, name, {
     values,
     creator: 'user',
     addToSandstoneCore: true,
@@ -783,7 +783,7 @@ export class SandstonePack {
     ...options,
   })
 
-  TrimMaterial = (name: string, trimMaterial: TrimMaterialJSON, options?: TrimMaterialClassArguments) => new TrimMaterialClass(this.core, name, {
+  TrimMaterial = (name: string, trimMaterial: TrimMaterialJSON, options?: Partial<TrimMaterialClassArguments>) => new TrimMaterialClass(this.core, name, {
     trimMaterial,
     creator: 'user',
     addToSandstoneCore: true,
@@ -791,7 +791,7 @@ export class SandstonePack {
     ...options,
   })
 
-  TrimPattern = (name: string, trimPattern: TrimPatternJSON, options?: TrimPatternClassArguments) => new TrimPatternClass(this.core, name, {
+  TrimPattern = (name: string, trimPattern: TrimPatternJSON, options?: Partial<TrimPatternClassArguments>) => new TrimPatternClass(this.core, name, {
     trimPattern,
     creator: 'user',
     addToSandstoneCore: true,
@@ -799,7 +799,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Atlas = (name: string, atlas: AtlasDefinition, options?: AtlasClassArguments) => new AtlasClass(this.core, name, {
+  Atlas = (name: string, atlas: AtlasDefinition, options?: Partial<AtlasClassArguments>) => new AtlasClass(this.core, name, {
     atlas,
     creator: 'user',
     addToSandstoneCore: true,
@@ -807,7 +807,7 @@ export class SandstonePack {
     ...options,
   })
 
-  BlockState<Type extends BlockStateType>(type: Type, name: string, blockState: BlockStateDefinition<Type>, options?: BlockStateArguments<Type>) {
+  BlockState<Type extends BlockStateType>(type: Type, name: string, blockState: BlockStateDefinition<Type>, options?: Partial<BlockStateArguments<Type>>) {
     return new BlockStateClass(this.core, name, type, {
       blockState,
       creator: 'user',
@@ -817,7 +817,7 @@ export class SandstonePack {
     })
   }
 
-  Font = (name: string, providers: FontProvider[], options?: FontArguments) => new FontClass(this.core, name, {
+  Font = (name: string, providers: FontProvider[], options?: Partial<FontArguments>) => new FontClass(this.core, name, {
     providers,
     creator: 'user',
     addToSandstoneCore: true,
@@ -825,7 +825,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Language = (name: string, language: LanguageArguments['language'], options?: LanguageArguments) => new LanguageClass(this.core, name, {
+  Language = (name: string, language: LanguageArguments['language'], options?: Partial<LanguageArguments>) => new LanguageClass(this.core, name, {
     language,
     creator: 'user',
     addToSandstoneCore: true,
@@ -833,7 +833,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Model = (type: 'block' | 'item', name: string, model: ModelClassArguments['model'], options?: ModelClassArguments) => new ModelClass(this.core, type, name, {
+  Model = (type: 'block' | 'item', name: string, model: ModelClassArguments['model'], options?: Partial<ModelClassArguments>) => new ModelClass(this.core, type, name, {
     model,
     creator: 'user',
     addToSandstoneCore: true,
@@ -841,7 +841,7 @@ export class SandstonePack {
     ...options,
   })
 
-  SoundEvent<Type extends SOUND_TYPES>(type: Type, name: string, sound: SoundEventArguments['sound'], options?: SoundEventArguments) {
+  SoundEvent<Type extends SOUND_TYPES>(type: Type, name: string, sound: SoundEventArguments['sound'], options?: Partial<SoundEventArguments>) {
     return new SoundEventClass(this.core, type, name, {
       sound,
       creator: 'user',
@@ -851,7 +851,7 @@ export class SandstonePack {
     })
   }
 
-  PlainText = (name: string, text: PlainTextArguments['text'], options?: PlainTextArguments) => new PlainTextClass(this.core, name, {
+  PlainText = (name: string, text: PlainTextArguments['text'], options?: Partial<PlainTextArguments>) => new PlainTextClass(this.core, name, {
     text,
     creator: 'user',
     addToSandstoneCore: true,
@@ -859,7 +859,7 @@ export class SandstonePack {
     ...options,
   })
 
-  Texture<Type extends TEXTURE_TYPES>(type: Type, name: string, texture: TextureArguments<Type>['texture'], options?: TextureArguments<Type>) {
+  Texture<Type extends TEXTURE_TYPES>(type: Type, name: string, texture: TextureArguments<Type>['texture'], options?: Partial<TextureArguments<Type>>) {
     return new TextureClass(this.core, type, name, {
       texture,
       creator: 'user',
