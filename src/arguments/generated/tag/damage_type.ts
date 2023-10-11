@@ -13,6 +13,7 @@ export type TAG_DAMAGE_TYPES = (
   'bypasses_invulnerability' |
   'bypasses_resistance' |
   'bypasses_shield' |
+  'can_break_armor_stand' |
   'damages_helmet' |
   'ignites_armor_stands' |
   'is_drowning' |

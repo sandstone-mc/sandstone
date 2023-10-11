@@ -2415,6 +2415,7 @@ export type TRANSLATION_KEYS = (
   'commands.jfr.start.failed' |
   'commands.jfr.started' |
   'commands.jfr.stopped' |
+  'commands.kick.owner.failed' |
   'commands.kick.success' |
   'commands.kill.success.multiple' |
   'commands.kill.success.single' |
@@ -3518,6 +3519,7 @@ export type TRANSLATION_KEYS = (
   'gui.down' |
   'gui.entity_tooltip.type' |
   'gui.hours' |
+  'gui.loadingMinecraft' |
   'gui.minutes' |
   'gui.multiLineEditBox.character_limit' |
   'gui.narrate.button' |
@@ -4617,6 +4619,9 @@ export type TRANSLATION_KEYS = (
   'mco.selectServer.purchase' |
   'mco.selectServer.trial' |
   'mco.selectServer.uninitialized' |
+  'mco.snapshotRealmsPopup.message' |
+  'mco.snapshotRealmsPopup.title' |
+  'mco.snapshotRealmsPopup.urlText' |
   'mco.template.button.publisher' |
   'mco.template.button.select' |
   'mco.template.button.trailer' |
