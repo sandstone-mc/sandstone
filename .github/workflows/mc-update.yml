@@ -13,9 +13,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - run: git checkout master
-      - run: npm install
-      - run: npm install @types/node
+      - run: pnpm install
+      - run: pnpm install @types/node
       - run: node scripts/generateLists.mjs
       - uses: EndBug/add-and-commit@v9
         with:

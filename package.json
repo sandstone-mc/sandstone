@@ -89,7 +89,6 @@
     "build-types": "tsc --emitDeclarationOnly",
     "setup-package": "node ./scripts/setupPackage.js",
     "setup": "pnpm run build-types && pnpm run setup-package && echo ✔️  Successfully built Sandstone.",
-    "build-pack": "pnpm run build && cd dist && pnpm pack",
     "publishToNpm": "pnpm run build && pnpm publish",
     "format": "eslint src --cache --fix --quiet"
   },
