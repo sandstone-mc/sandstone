@@ -20,7 +20,7 @@ jobs:
       - run: pnpm install -f --production
       - run: pnpm install @types/node
       - run: pnpm run build
-      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./dist/.npmrc
+      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
         env:
           NPM_TOKEN: ${{secrets.npm_token}}
       - run: npm publish --tag next
