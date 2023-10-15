@@ -1,4 +1,7 @@
-import { MCFunctionClass } from 'sandstone/core'
+import {
+  _RawMCFunctionClass,
+  MCFunctionClass,
+} from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import {
@@ -10,7 +13,6 @@ import {
 import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
 import { FunctionCommandNode } from '../server/function.js'
 
-import type { DataPointClass } from 'sandstone/variables/Data'
 import type {
   ANCHORS,
   AXES,
@@ -22,6 +24,7 @@ import type { MCFunctionNode, PredicateClass } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
 import type { SandstonePack } from 'sandstone/pack'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { DataPointClass } from 'sandstone/variables/Data'
 
 // Execute command
 type SubCommand = [subcommand: string, ...args: unknown[]]
@@ -302,6 +305,22 @@ export class ExecuteIfUnlessCommand extends ExecuteCommandPart {
     }
     return this.subCommand([['data']], ExecuteDataArgsCommand, false)
   }
+
+  function(func: _RawMCFunctionClass | (() => any)) {
+    if (func instanceof _RawMCFunctionClass) {
+      return this.nestedExecute(['function', toMinecraftResourceName(func.path)])
+    }
+    const name = `${this.sandstoneCore.getCurrentMCFunctionOrThrow().resource.path.slice(2).join('/')}/execute_if_function`
+
+    const _func = new MCFunctionClass(this.sandstoneCore, name, {
+      addToSandstoneCore: false,
+      creator: 'sandstone',
+      onConflict: 'rename',
+      callback: func,
+    })
+
+    return this.nestedExecute(['function', name])
+  }
 }
 
 export class ExecuteFacingEntityCommand extends ExecuteCommandPart {
@@ -466,7 +485,7 @@ export class ExecuteCommand extends ExecuteCommandPart {
       },
     })
 
-    return makeCallable(commands, (callback: () => void) => {
+    return makeCallable(commands, (callback: () => any) => {
       node.isSingleExecute = false
       this.sandstoneCore.insideContext(node, callback, false)
       return new FinalCommandOutput(node)

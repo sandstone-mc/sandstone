@@ -24,7 +24,7 @@ import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LogVisitor,
-  SimplifyExecuteFunctionVisitor, UnifyChainedExecutesVisitor,
+  SimplifyExecuteFunctionVisitor, SimplifyReturnRunFunctionVisitor, UnifyChainedExecutesVisitor,
 } from './visitors/index.js'
 
 import type {
@@ -886,6 +886,7 @@ export class SandstonePack {
         new InlineFunctionCallVisitor(this),
         new UnifyChainedExecutesVisitor(this),
         new SimplifyExecuteFunctionVisitor(this),
+        new SimplifyReturnRunFunctionVisitor(this),
 
         // Special visitors
         new AwaitBodyVisitor(this),

@@ -33,6 +33,7 @@ import {
   RawCommand,
   RecipeCommand,
   ReloadCommand,
+  ReturnCommand,
   RideCommand,
   SayCommand,
   ScheduleCommand,
@@ -133,6 +134,8 @@ export class SandstoneCommands {
   get recipe() { return new RecipeCommand(this.sandstonePack) }
 
   get reload() { return new ReloadCommand(this.sandstonePack).reload }
+
+  get returnCmd() { return new ReturnCommand(this.sandstonePack).return }
 
   get ride() { return new RideCommand(this.sandstonePack).ride }
 

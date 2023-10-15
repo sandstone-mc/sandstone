@@ -1,6 +1,6 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { validateIntegerRange } from 'sandstone/commands/validators'
 import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 

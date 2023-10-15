@@ -8,7 +8,7 @@ import type { TimeArgument } from 'sandstone/arguments'
 import type { Node } from 'sandstone/core'
 import type { MCFunctionNode } from 'sandstone/core/resources/datapack/index'
 
-type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass | (() => (void | Promise<void>))
+type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass | (() => (any | Promise<any>))
 
 export class ScheduleCommandNode extends ContainerCommandNode<
   ['clear', string | MCFunctionClass] | ['function', MCFunctionClass | string | undefined, TimeArgument, ScheduleType | undefined]

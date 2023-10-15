@@ -46,6 +46,7 @@ export const {
   raw,
   recipe,
   reload,
+  returnCmd,
   item,
   say,
   schedule,

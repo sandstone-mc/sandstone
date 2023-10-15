@@ -13,7 +13,7 @@ function getExportsObject(pathNoLib) {
     return {
       types,
       // ESM imports will match this
-      import:  realPath + '.mjs',
+      import:  realPath + '.js',
       // Everything else will match this
       default: realPath + '.js',
     }
