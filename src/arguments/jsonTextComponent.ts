@@ -4,14 +4,15 @@ import type { LiteralUnion } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables/abstractClasses'
 import type { VectorClass } from 'sandstone/variables/Coordinates'
 
-export type JSONContentTypes = 'plain' | 'translate' | 'score' | 'selector' | 'keybind' | 'nbt'
+export type JSONContentTypes = 'text' | 'translatable' | 'score' | 'selector' | 'keybind' | 'nbt'
 
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
 export type ContentTag<Type extends JSONContentTypes> = (
-  Type extends 'plain' ? {
+  Type extends 'text' ? {
+    type?: 'text'
     /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
     text: string | number | boolean
-  } : Type extends 'translate' ? {
+  } : Type extends 'translatable' ? {
     /** A translation identifier, to be displayed as the corresponding text in the player's selected language. */
     translate: string
 
@@ -21,6 +22,7 @@ export type ContentTag<Type extends JSONContentTypes> = (
     /** Optional. A raw JSON text component that will be used in place of a translation if it is missing */
     fallback?: ContentTag<JSONContentTypes>
   } : Type extends 'score' ? {
+    type?: 'score'
     /**
      * Displays a score holder's current score in an objective.
      *
@@ -41,6 +43,7 @@ export type ContentTag<Type extends JSONContentTypes> = (
       value?: number
     }
   } : Type extends 'selector' ? {
+    type?: 'selector'
     /**
      * An entity selector. Displayed as the name of the player or entity found by the selector.
      *
@@ -52,12 +55,14 @@ export type ContentTag<Type extends JSONContentTypes> = (
     /** Optional, defaults to {"color": "gray", "text": ", "}. Used as the separator between different names, if the component selects multiple entities. */
     separator?: JSONTextPrimitives | ContentTag<JSONContentTypes>
   } : Type extends 'keybind' ? {
+    type?: 'keybind'
     /**
      * A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
      * For example, {"keybind": "key.inventory"} will display "e" if the player is using the default control scheme.
      */
     keybind: string
   } : Type extends 'nbt' ? {
+    type?: 'nbt'
     /**
      * The NBT path used for looking up NBT values from an entity, a block entity or an NBT storage.
      *
@@ -240,5 +245,7 @@ export type JSONTextPrimitives = (
 
 /*
  * A JSON text component, that can be displayed in several locations: in-game chat, books, signs, titles...
+ *
+ * Warning: Empty lists are not supported by the game, but typing this way is restrictive.
  */
 export type JSONTextComponent = JSONTextPrimitives | ContentTag<JSONContentTypes> | JSONTextComponent[]

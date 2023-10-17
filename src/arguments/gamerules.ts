@@ -1,6 +1,8 @@
 export type GAMERULES = (
   'announceAdvancements' |
+  'blockExplosionDropDecay' |
   'commandBlockOutput' |
+  'commandModificationBlockLimit' |
   'disableElytraMovementCheck' |
   'disableRaids' |
   'doDaylightCycle' |
@@ -15,23 +17,31 @@ export type GAMERULES = (
   'doTileDrops' |
   'doTraderSpawning' |
   'doWeatherCycle' |
+  'doVinesSpread' |
   'drowningDamage' |
   'fallDamage' |
   'fireDamage' |
   'forgiveDeadPlayers' |
   'freezeDamage' |
+  'enderPearlsVanishOnDeath' |
   'keepInventory' |
+  'globalSoundEvents' |
+  'lavaSourceConversion' |
   'logAdminCommands' |
   'maxCommandChainLength' |
   'maxEntityCramming' |
   'mobGriefing' |
+  'mobExplosionDropDecay' |
   'naturalRegeneration' |
   'playersSleepingPercentage' |
   'randomTickSpeed' |
   'reducedDebugInfo' |
   'sendCommandFeedback' |
   'showDeathMessages' |
+  'snowAccumulationHeight' |
   'spawnRadius' |
   'spectatorsGenerateChunks' |
-  'universalAnger'
+  'tntExplosionDropDecay' |
+  'universalAnger' |
+  'waterSourceConversion'
 )

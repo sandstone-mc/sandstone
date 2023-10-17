@@ -179,6 +179,11 @@ export type ResourcePackConfig = {
    */
   packFormat: number
 
+  supported_formats: number | number[] | {
+    min_inclusive: number
+    max_inclusive: number
+  }
+
   /**
    * Section for filtering out files from resource packs applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
    */

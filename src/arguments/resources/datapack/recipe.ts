@@ -88,7 +88,9 @@ type RecipeKind<NAME extends string, VALUES extends Record<string, unknown> | un
     } : unknown
   )
 
-type KeysIngredients<T extends [string, string, string]> = Record<Exclude<CharacterOfStringsArray<T>, ' '>, ItemOrTag | ItemOrTag[]>
+type ObjectOrArray<T> = T | T[]
+
+type KeysIngredients<T extends [string, string, string]> = Record<Exclude<CharacterOfStringsArray<T>, ' '>, ObjectOrArray<ItemOrTag>>
 
 export type RecipeJSON<P1 extends string = string, P2 extends string = string, P3 extends string = string> = (
   RecipeKind<'blasting', CookingRecipe>
@@ -204,18 +206,18 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
   | RecipeKind<'smithing_trim', {
     /** Ingredient specifying an item to be trimmed. (eg. `{ tag: 'minecraft:trimmable_armor' }`) */
     base: ItemOrTag
-    /** Trim material that will be used for trimming. (eg. `{ tag: 'minecraft:trim_materials' }`)*/
-    addition: ItemOrTag
-    /** Trim template item that will be used for the trim pattern. */
-    template: ItemOrTag
+    /** Trim material that will be used for trimming. Empty List for empty slot. (eg. `{ tag: 'minecraft:trim_materials' }`)*/
+    addition: ObjectOrArray<ItemOrTag>
+    /** Trim template item that will be used for the trim pattern. Empty List for empty slot. */
+    template: ObjectOrArray<ItemOrTag>
   }>
   | RecipeKind<'smithing_transform', {
     /** Ingredient specifying an item to be transformed. (eg. `{ "tag": "minecraft:diamond_helmet" }`) */
     base: ItemOrTag
-    /** Material that will be used for transforming. (eg. `{ "tag": "minecraft:netherite_ingot" }`) */
-    addition: ItemOrTag
-    /** Template item that will be used for the item transformation. */
-    template: ItemOrTag
+    /** Material that will be used for transforming. Empty List for empty slot. (eg. `{ "tag": "minecraft:netherite_ingot" }`) */
+    addition: ObjectOrArray<ItemOrTag>
+    /** Template item that will be used for the item transformation. Empty List for empty slot. */
+    template: ObjectOrArray<ItemOrTag>
     /** Resulting transformed item */
     result: { item: LiteralUnion<ITEMS> } // Fun
   }>

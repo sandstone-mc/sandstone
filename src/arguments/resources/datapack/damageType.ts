@@ -22,4 +22,7 @@ export type DamageTypeJSON = {
    * - `intentional_game_design` Resulting translation key of `death.attack.` + message_id + `.link`.
    */
   death_message_type?: 'default' | 'fall_variants' | 'intentional_game_design'
+
+  /** Optional. Controls whether the pattern texture will be masked by the underlying armor. Defaults to `false`. */
+  decal: boolean
 }

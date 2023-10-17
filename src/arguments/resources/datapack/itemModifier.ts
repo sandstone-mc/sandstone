@@ -39,6 +39,7 @@ type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown
    * - `set_name`: Adds display name of the item.
    * - `set_nbt`: Adds NBT data to the item.
    * - `set_stew_effect`: Sets the status effects for `suspicious stew`.
+   * - `sequence`: Runs multiple modifiers in sequence.
    */
   function: LiteralUnion<TYPE>
 } & VALUES
@@ -318,7 +319,9 @@ export type ItemModifierFunction = {
         duration: NumberProvider
       }[]
     }>
-
+    | ItemModifierKind<'sequence', {
+      functions: ItemModifierFunction[]
+    }>
   )
 
 export type ItemModifierJSON = ObjectOrArray<ItemModifierFunction>

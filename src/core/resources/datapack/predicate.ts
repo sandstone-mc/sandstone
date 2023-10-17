@@ -84,14 +84,8 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
   toJSON() {
     if (Array.isArray(this.predicateJSON)) {
       return {
-        condition: 'minecraft:inverted',
-        term: {
-          condition: 'minecraft:alternative',
-          terms: this.predicateJSON.map((p) => ({
-            condition: 'minecraft:inverted',
-            term: p,
-          })),
-        },
+        condition: 'minecraft:all_of',
+        terms: this.predicateJSON,
       } as PredicateJSON
     }
     return this.predicateJSON

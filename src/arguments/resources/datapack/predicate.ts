@@ -11,7 +11,9 @@ type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> 
      * The condition's ID.
      *
      * One of:
-     * - `alternative`: Joins conditions from parameter terms with "or".
+     * - `all_of`: Joins conditions from parameter terms with "or".
+     *
+     * - `any_of`: Joins conditions from parameter terms with "or".
      *
      * - `block_state_property`: Check properties of a block state.
      *
@@ -51,7 +53,14 @@ type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> 
 export type ObjectOrArray<T> = T | T[]
 
 export type PredicateCondition = (
-  PredicateKind<'minecraft:alternative', {
+  PredicateKind<'minecraft:all_of', {
+      /**
+       * A list of conditions to join using `and`.
+       * @example
+       * terms: [{  }]
+       */
+      terms: PredicateCondition[]
+  }> | PredicateKind<'minecraft:any_of', {
       /**
        * A list of conditions to join using `or`.
        * @example
