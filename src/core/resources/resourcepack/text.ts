@@ -61,7 +61,7 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
         converted += this.componentToPlainText(_text)
       }
     } else {
-      const currentText = text as ContentTag<'plain'>
+      const currentText = text as ContentTag<'text'>
 
       if (!currentText.text) {
         throw new Error('Dynamic JSON content is not supported in plaintext')

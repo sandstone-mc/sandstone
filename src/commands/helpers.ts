@@ -26,7 +26,7 @@ export abstract class CommandArguments<NODE extends CommandNodeConstructor | und
 
   protected sandstoneCore: SandstoneCore
 
-  protected sandstoneCommands: SandstoneCommands
+  protected sandstoneCommands: SandstoneCommands<false>
 
   constructor(protected sandstonePack: SandstonePack, protected previousNode?: CommandNode, protected autoCommit = true) {
     this.sandstoneCore = sandstonePack.core

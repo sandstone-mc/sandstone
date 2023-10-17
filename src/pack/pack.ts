@@ -158,7 +158,7 @@ export class SandstonePack {
 
   readonly flow: Flow
 
-  readonly commands: SandstoneCommands
+  readonly commands: SandstoneCommands<false>
 
   readonly conditions = SandstoneConditions
 

@@ -49,7 +49,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   protected creator: NonNullable<ResourceClassArguments<any>['creator']>
 
-  protected commands: SandstoneCommands
+  protected commands: SandstoneCommands<false>
 
   protected pack: SandstonePack
 

@@ -35,7 +35,7 @@ function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [Mult
 }
 
 export class Score extends ComponentClass implements ConditionClass {
-  commands: SandstoneCommands
+  commands: SandstoneCommands<false>
 
   constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument, public objective: ObjectiveClass) {
     super()

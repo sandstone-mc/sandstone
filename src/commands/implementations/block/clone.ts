@@ -5,12 +5,13 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { BLOCKS, Coordinates } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables/Macro.js'
 
 export class CloneCommandNode extends CommandNode {
   command = 'clone' as const
 }
 
-export class CloneCommand extends CommandArguments {
+export class CloneCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = CloneCommandNode
 
   /**
@@ -34,10 +35,10 @@ export class CloneCommand extends CommandArguments {
    * // Move the current block 1 block above
    * clone(rel(0, 0, 0), rel(0, 0, 0), rel(0, 1, 0)).replace('move')
    */
-  clone = (begin: Coordinates, end: Coordinates, destination: Coordinates) => this.subCommand([begin, end, destination].map(coordinatesParser), CloneOptionsCommand, true)
+  clone = (begin: Macroable<Coordinates, MACRO>, end: Macroable<Coordinates, MACRO>, destination: Macroable<Coordinates, MACRO>) => this.subCommand([begin, end, destination].map(coordinatesParser), CloneOptionsCommand<MACRO>, true)
 }
 
-export class CloneOptionsCommand extends CommandArguments {
+export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Copy all blocks, overwriting all blocks of the destination region with the blocks from the source region.
    *
@@ -46,7 +47,7 @@ export class CloneOptionsCommand extends CommandArguments {
    * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
    * - `normal`: Don't move or force.
    */
-  replace = (mode?: 'force' | 'move' | 'normal') => this.finalCommand(['replace', mode])
+  replace = (mode?: Macroable<('force' | 'move' | 'normal'), MACRO>) => this.finalCommand(['replace', mode])
 
   /**
    * Copy only non-air blocks. Blocks in the destination region that would otherwise be overwritten by air are left unmodified.
@@ -56,7 +57,7 @@ export class CloneOptionsCommand extends CommandArguments {
    * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
    * - `normal`: Don't move or force.
    */
-  masked = (mode?: 'force' | 'move' | 'normal') => this.finalCommand(['masked', mode])
+  masked = (mode?: Macroable<('force' | 'move' | 'normal'), MACRO>) => this.finalCommand(['masked', mode])
 
   /**
    * Clones only blocks with the block id specified by `filter`.
@@ -68,5 +69,5 @@ export class CloneOptionsCommand extends CommandArguments {
    * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
    * - `normal`: Don't move or force.
    */
-  filtered = (filter: LiteralUnion<BLOCKS>, mode?: 'force' | 'move' | 'normal') => this.finalCommand(['filtered', filter, mode])
+  filtered = (filter: Macroable<LiteralUnion<BLOCKS>, MACRO>, mode?: Macroable<('force' | 'move' | 'normal'), MACRO>) => this.finalCommand(['filtered', filter, mode])
 }
