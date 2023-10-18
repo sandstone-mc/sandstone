@@ -216,6 +216,8 @@ export type SOUND_EVENTS = (
   'block.decorated_pot.break' |
   'block.decorated_pot.fall' |
   'block.decorated_pot.hit' |
+  'block.decorated_pot.insert' |
+  'block.decorated_pot.insert_fail' |
   'block.decorated_pot.place' |
   'block.decorated_pot.shatter' |
   'block.decorated_pot.step' |
@@ -306,6 +308,7 @@ export type SOUND_EVENTS = (
   'block.hanging_sign.hit' |
   'block.hanging_sign.place' |
   'block.hanging_sign.step' |
+  'block.hanging_sign.waxed_interact_fail' |
   'block.honey_block.break' |
   'block.honey_block.fall' |
   'block.honey_block.hit' |

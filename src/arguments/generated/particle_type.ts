@@ -28,6 +28,7 @@ export type PARTICLE_TYPES = (
   'dripping_water' |
   'dust' |
   'dust_color_transition' |
+  'dust_plume' |
   'effect' |
   'egg_crack' |
   'elder_guardian' |

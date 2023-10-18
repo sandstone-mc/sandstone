@@ -2198,6 +2198,7 @@ export type TRANSLATION_KEYS = (
   'command.exception' |
   'command.expected.separator' |
   'command.failed' |
+  'command.forkLimit' |
   'command.unknown.argument' |
   'command.unknown.command' |
   'commands.advancement.advancementNotFound' |
@@ -2356,6 +2357,7 @@ export type TRANSLATION_KEYS = (
   'commands.execute.conditional.fail_count' |
   'commands.execute.conditional.pass' |
   'commands.execute.conditional.pass_count' |
+  'commands.execute.function.instantiationFailure' |
   'commands.experience.add.levels.success.multiple' |
   'commands.experience.add.levels.success.single' |
   'commands.experience.add.points.success.multiple' |
@@ -2390,6 +2392,11 @@ export type TRANSLATION_KEYS = (
   'commands.function.error.missing_argument' |
   'commands.function.error.missing_arguments' |
   'commands.function.error.parse' |
+  'commands.function.instantiationFailure' |
+  'commands.function.result' |
+  'commands.function.scheduled.multiple' |
+  'commands.function.scheduled.no_functions' |
+  'commands.function.scheduled.single' |
   'commands.function.success.multiple' |
   'commands.function.success.multiple.result' |
   'commands.function.success.single' |
@@ -3353,6 +3360,8 @@ export type TRANSLATION_KEYS = (
   'gamerule.logAdminCommands' |
   'gamerule.maxCommandChainLength' |
   'gamerule.maxCommandChainLength.description' |
+  'gamerule.maxCommandForkCount' |
+  'gamerule.maxCommandForkCount.description' |
   'gamerule.maxEntityCramming' |
   'gamerule.mobExplosionDropDecay' |
   'gamerule.mobExplosionDropDecay.description' |
@@ -4415,6 +4424,13 @@ export type TRANSLATION_KEYS = (
   'mco.client.incompatible.msg.line2' |
   'mco.client.incompatible.msg.line3' |
   'mco.client.incompatible.title' |
+  'mco.compatibility.downgrade' |
+  'mco.compatibility.downgrade.description' |
+  'mco.compatibility.unverifiable.message' |
+  'mco.compatibility.unverifiable.title' |
+  'mco.compatibility.upgrade' |
+  'mco.compatibility.upgrade.description' |
+  'mco.compatibility.upgrade.title' |
   'mco.configure.current.minigame' |
   'mco.configure.world.activityfeed.disabled' |
   'mco.configure.world.backup' |
@@ -4609,6 +4625,7 @@ export type TRANSLATION_KEYS = (
   'mco.selectServer.loading' |
   'mco.selectServer.mapOnlySupportedForVersion' |
   'mco.selectServer.minigame' |
+  'mco.selectServer.minigameName' |
   'mco.selectServer.minigameNotSupportedInVersion' |
   'mco.selectServer.noRealms' |
   'mco.selectServer.note' |
@@ -4619,6 +4636,17 @@ export type TRANSLATION_KEYS = (
   'mco.selectServer.purchase' |
   'mco.selectServer.trial' |
   'mco.selectServer.uninitialized' |
+  'mco.snapshot.createSnapshotPopup.text' |
+  'mco.snapshot.createSnapshotPopup.title' |
+  'mco.snapshot.creating' |
+  'mco.snapshot.description' |
+  'mco.snapshot.friendsRealm.downgrade' |
+  'mco.snapshot.friendsRealm.upgrade' |
+  'mco.snapshot.paired' |
+  'mco.snapshot.parent.tooltip' |
+  'mco.snapshot.start' |
+  'mco.snapshot.subscription.info' |
+  'mco.snapshot.tooltip' |
   'mco.snapshotRealmsPopup.message' |
   'mco.snapshotRealmsPopup.title' |
   'mco.snapshotRealmsPopup.urlText' |
@@ -4665,6 +4693,7 @@ export type TRANSLATION_KEYS = (
   'mco.upload.size.failure.line2' |
   'mco.upload.uploading' |
   'mco.upload.verifying' |
+  'mco.version' |
   'mco.warning' |
   'mco.worldSlot.minigame' |
   'menu.convertingLevel' |
@@ -5521,6 +5550,8 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.conduit.ambient' |
   'subtitles.block.conduit.attack.target' |
   'subtitles.block.conduit.deactivate' |
+  'subtitles.block.decorated_pot.insert' |
+  'subtitles.block.decorated_pot.insert_fail' |
   'subtitles.block.decorated_pot.shatter' |
   'subtitles.block.dispenser.dispense' |
   'subtitles.block.dispenser.fail' |
@@ -5539,6 +5570,7 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.generic.place' |
   'subtitles.block.grindstone.use' |
   'subtitles.block.growing_plant.crop' |
+  'subtitles.block.hanging_sign.waxed_interact_fail' |
   'subtitles.block.honey_block.slide' |
   'subtitles.block.iron_trapdoor.close' |
   'subtitles.block.iron_trapdoor.open' |
