@@ -1,19 +1,19 @@
+import type { SelectorClass, SelectorPickClass } from 'sandstone/variables'
 import type { UUIDClass } from 'sandstone/variables/UUID'
 import type { _ShowAlias } from './basics.js'
-import type { SelectorClass, SelectorPickClass } from 'sandstone/variables'
 
 // Possible selectors.
-type MultipleEntitiesSelector = SelectorClass<false, false> | SelectorPickClass<false, false>
-type SingleEntitySelector = SelectorClass<true, false> | SelectorPickClass<true, false>
+type MultipleEntitiesSelector<MACRO extends boolean> = SelectorClass<MACRO, false, false> | SelectorPickClass<false, false>
+type SingleEntitySelector<MACRO extends boolean> = SelectorClass<MACRO, true, false> | SelectorPickClass<true, false>
 
-type MultiplePlayersSelector = SelectorClass<false, true> | SelectorPickClass<false, true>
-type SinglePlayerSelector = SelectorClass<true, true> | SelectorPickClass<true, true>
+type MultiplePlayersSelector<MACRO extends boolean> = SelectorClass<MACRO, false, true> | SelectorPickClass<false, true>
+type SinglePlayerSelector<MACRO extends boolean> = SelectorClass<MACRO, true, true> | SelectorPickClass<true, true>
 
-export type SelectorArgument<MustBeSingle extends boolean, MustBePlayer extends boolean = false> = string | (
+export type SelectorArgument<MACRO extends boolean, MustBeSingle extends boolean, MustBePlayer extends boolean = false> = string | (
     MustBePlayer extends true ? (
-      SinglePlayerSelector | (MustBeSingle extends false ? MultiplePlayersSelector : never)
+      SinglePlayerSelector<MACRO> | (MustBeSingle extends false ? MultiplePlayersSelector<MACRO> : never)
     ) : (
-      SingleEntitySelector | (MustBeSingle extends false ? MultipleEntitiesSelector : never)
+      SingleEntitySelector<MACRO> | (MustBeSingle extends false ? MultipleEntitiesSelector<MACRO> : never)
     )
 )
 
@@ -21,7 +21,7 @@ export type SelectorArgument<MustBeSingle extends boolean, MustBePlayer extends 
  * The `| _ShowAlias` is to prevent Typescript from showing the ugly "SelectorClass<??, ??>",
  * and to instead show the given name (e.g. SinglePlayerArgument).
  */
-export type SinglePlayerArgument = SelectorArgument<true, true> | _ShowAlias
-export type MultiplePlayersArgument = SelectorArgument<false, true> | SinglePlayerArgument | _ShowAlias
-export type SingleEntityArgument = SelectorArgument<true, false> | SinglePlayerArgument | UUIDClass<any, any> | _ShowAlias
-export type MultipleEntitiesArgument = SelectorArgument<false, false> | SingleEntityArgument | MultiplePlayersArgument | _ShowAlias
+export type SinglePlayerArgument<MACRO extends boolean> = SelectorArgument<MACRO, true, true> | _ShowAlias
+export type MultiplePlayersArgument<MACRO extends boolean> = SelectorArgument<MACRO, false, true> | SinglePlayerArgument<MACRO> | _ShowAlias
+export type SingleEntityArgument<MACRO extends boolean> = SelectorArgument<MACRO, true, false> | SinglePlayerArgument<MACRO> | UUIDClass<any, any> | _ShowAlias
+export type MultipleEntitiesArgument<MACRO extends boolean> = SelectorArgument<MACRO, false, false> | SingleEntityArgument<MACRO> | MultiplePlayersArgument<MACRO> | _ShowAlias

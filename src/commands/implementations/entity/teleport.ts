@@ -6,17 +6,18 @@ import { CommandArguments } from '../../helpers.js'
 import type {
   Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument,
 } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class TeleportCommandNode extends CommandNode {
   command = 'tp' as const
 }
 
-export class TeleportFacingCommand extends CommandArguments {
+export class TeleportFacingCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Specifies the coordinates to make the target(s) facing to.
    * May use tilde and caret notation to specify a position relative to the position where the command is executed.
    */
-  facing = (location: Coordinates) => this.finalCommand(['facing', coordinatesParser(location)])
+  facing = (location: Macroable<Coordinates<MACRO>, MACRO>) => this.finalCommand(['facing', coordinatesParser(location)])
 
   /**
    * Specifies the entity to make the target(s) facing to.
@@ -27,10 +28,10 @@ export class TeleportFacingCommand extends CommandArguments {
    * @param anchor Specifies whether the entity'eyes or feet to make the target(s) facing to.
    *             Must be one of eyes and feet. If not specified, defaults to eyes.
    */
-  facingEntity = (entity: SingleEntityArgument, anchor?: 'eyes' | 'feet') => this.finalCommand(['facing', targetParser(entity), anchor])
+  facingEntity = (entity: Macroable<SingleEntityArgument<MACRO>, MACRO>, anchor?: Macroable<'eyes' | 'feet', MACRO>) => this.finalCommand(['facing', targetParser(entity), anchor])
 }
 
-export class TeleportCommand extends CommandArguments {
+export class TeleportCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TeleportCommandNode
 
   tp: (
@@ -42,7 +43,7 @@ export class TeleportCommand extends CommandArguments {
        *  Specifies the entity to teleport the executer to. Must be a player name, a target selector, or a UUID‌.
        *  Permits entity other than players.
        */
-      (destinationEntity: SingleEntityArgument) => void
+      (destinationEntity: Macroable<SingleEntityArgument<MACRO>, MACRO>) => void
     ) & (
       /**
        * Teleports the executer to a given location.
@@ -51,7 +52,7 @@ export class TeleportCommand extends CommandArguments {
        *  Specifies the coordinates to teleport the executer to.
        *  May use tilde and caret notation to specify a position relative to the position where the command is executed.
        */
-      (location: Coordinates) => void
+      (location: Macroable<Coordinates<MACRO>, MACRO>) => void
     ) & (
       /**
        * Teleports entities (players, mobs, etc.) to the given entity.
@@ -64,7 +65,7 @@ export class TeleportCommand extends CommandArguments {
        *  Specifies the entity to teleport the executer to. Must be a player name, a target selector, or a UUID‌.
        *  Permits entity other than players.
        */
-      (targets: MultipleEntitiesArgument, destinationEntity: SingleEntityArgument) => void
+      (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, destinationEntity: Macroable<SingleEntityArgument<MACRO>, MACRO>) => void
     ) & (
       /**
        * Teleports entities (players, mobs, etc.) to the given location.
@@ -81,7 +82,7 @@ export class TeleportCommand extends CommandArguments {
        *  An object with two optional possibilities: `facing` or `facingEntity`,
        *  to change the direction the player is facing.
        */
-      (targets: MultipleEntitiesArgument, location: Coordinates) => TeleportFacingCommand
+      (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, location: Macroable<Coordinates<MACRO>, MACRO>) => TeleportFacingCommand<MACRO>
     ) & (
       /**
        * Teleports entities (players, mobs, etc.) to the given location, with the given rotation.
@@ -98,12 +99,12 @@ export class TeleportCommand extends CommandArguments {
        *  Specifies the rotation.
        *  Tilde notation can be used to specify a rotation relative to the target's previous rotation.
        */
-      (targets: MultipleEntitiesArgument, location: Coordinates, rotation: Rotation) => void)
+      (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, location: Macroable<Coordinates<MACRO>, MACRO>, rotation: Macroable<Rotation<MACRO>, MACRO>) => void)
   ) = (...args: unknown[]): any => {
       const parsedArgs = [...args.slice(0, 3).map(coordinatesParser), ...args.slice(3).map(targetParser)]
 
       if (parsedArgs.length === 2 && (parsedArgs[1] instanceof VectorClass || typeof parsedArgs[1] === 'string')) {
-        return this.subCommand(parsedArgs, TeleportFacingCommand, true)
+        return this.subCommand(parsedArgs, TeleportFacingCommand<MACRO>, true)
       }
 
       return this.finalCommand(parsedArgs)

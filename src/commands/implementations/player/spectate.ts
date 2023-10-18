@@ -3,13 +3,15 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { SingleEntityArgument, SinglePlayerArgument } from 'sandstone/arguments'
 
 export class SpectateCommandNode extends CommandNode {
   command = 'spectate' as const
 }
 
-export class SpectateCommand extends CommandArguments {
+export class SpectateCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = SpectateCommandNode
 
   /**

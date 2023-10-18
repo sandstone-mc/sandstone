@@ -1,4 +1,5 @@
 import { VectorClass } from './Coordinates.js'
+import { MacroArgument } from './Macro.js'
 
 import type {
   Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION,
@@ -23,13 +24,13 @@ function isRawRotation(arg: unknown): arg is [string, string] {
 }
 
 export function coordinatesParser<T>(coordinates: T): (
-  T extends Coordinates ? VectorClass<[string, string, string]> : T
+  T extends Coordinates<boolean> ? VectorClass<[string, string, string]> : T
 ) {
   return isRawCoordinates(coordinates) ? new VectorClass(coordinates) : coordinates as any
 }
 
 export function rotationParser<T>(rotation: T): (
-  T extends Rotation ? VectorClass<[string, string]> : T
+  T extends Rotation<boolean> ? VectorClass<[string, string]> : T
 ) {
   return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
 }
@@ -58,10 +59,15 @@ export const rangeParser = (range: Range): string => {
 
 export type StructureRotation = STRUCTURE_ROTATION | number | `${90 | 180 | 270}` | `-${90 | 180 | 270}`
 
-export const structureRotationParser = (rotation?: StructureRotation) => {
+export const structureRotationParser = (rotation?: StructureRotation | MacroArgument<string>) => {
   if (!rotation) {
     return 'none'
   }
+
+  if (rotation instanceof MacroArgument) {
+    return rotation
+  }
+
   const numToLiteral = (angle: number): STRUCTURE_ROTATION => {
     switch (angle) {
       case 0: return 'none'
@@ -102,7 +108,11 @@ export const structureRotationParser = (rotation?: StructureRotation) => {
 
 export type StructureMirror = STRUCTURE_MIRROR | '^x' | '^z' | 'x' | 'z' | boolean
 
-export const structureMirrorParser = (mirror?: StructureMirror): STRUCTURE_MIRROR => {
+export const structureMirrorParser = (mirror?: StructureMirror | MacroArgument<string>): STRUCTURE_MIRROR | MacroArgument<string> => {
+  if (mirror instanceof MacroArgument) {
+    return mirror
+  }
+
   if (typeof mirror === 'string') {
     const lastCharacter = mirror.slice(0, -1)
     if (lastCharacter === 'x') {

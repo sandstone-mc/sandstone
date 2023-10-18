@@ -5,12 +5,13 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { BLOCKS, Coordinates } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 export class FillCommandNode extends CommandNode {
   command = 'fill' as const
 }
 
-export class FillArgumentsCommand extends CommandArguments {
+export class FillArgumentsCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Replaces all blocks (including air) in the fill region with the specified block,
    * dropping the existing blocks (including those that are unchanged) and block contents as entities,
@@ -56,11 +57,11 @@ export class FillArgumentsCommand extends CommandArguments {
    * // Replace only furnaces facing north, with a BurnTime of 200 ticks:
    * fill(...).replace('minecraft:furnace[facing=north]{BurnTime:200}')
    */
-  replace = (filter?: LiteralUnion<BLOCKS>) => this.finalCommand(['replace', filter])
+  replace = (filter?: Macroable<LiteralUnion<BLOCKS>, MACRO>) => this.finalCommand(['replace', filter])
 }
 
 /** Adds, sets or removes player experience.  */
-export class FillCommand extends CommandArguments {
+export class FillCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = FillCommandNode
 
   /**
@@ -87,7 +88,7 @@ export class FillCommand extends CommandArguments {
    * // Replace all dirt with grass in a 9x9 blocks, centered on the player
    * fill('~-4 ~-4 ~-4', '~4 ~4 ~4', 'minecraft:grass_block').replace('minecraft:dirt')
    */
-  fill = (from: Coordinates, to: Coordinates, block: LiteralUnion<BLOCKS>) => this.subCommand(
+  fill = (from: Macroable<Coordinates<MACRO>, MACRO>, to: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<LiteralUnion<BLOCKS>, MACRO>) => this.subCommand(
     [coordinatesParser(from), coordinatesParser(to), block],
     FillArgumentsCommand,
     true,

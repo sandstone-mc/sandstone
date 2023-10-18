@@ -1,9 +1,10 @@
 import { CommandNode } from 'sandstone/core'
-import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
+import { JSONTextComponentClass, MacroArgument, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'
@@ -23,7 +24,7 @@ export class TeamCommandNode extends CommandNode {
   command = 'team' as const
 }
 
-export class TeamCommand extends CommandArguments {
+export class TeamCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TeamCommandNode
 
   /**
@@ -33,14 +34,17 @@ export class TeamCommand extends CommandArguments {
    *
    * @param displayName Specifies the team name to be displayed.
    */
-  add = (team: string, displayName?: JSONTextComponent) => this.finalCommand(['add', team, displayName ? new JSONTextComponentClass(displayName) : undefined])
+  add = (
+    team: Macroable<string, MACRO>,
+    displayName?: Macroable<JSONTextComponent, MACRO>,
+  ) => this.finalCommand(['add', team, (!displayName || displayName instanceof MacroArgument) ? displayName : new JSONTextComponentClass(displayName)])
 
   /**
    * Removes all members from a team.
    *
    * @param team Specifies the name of the team.
    */
-  empty = (team: string) => this.finalCommand(['empty', team])
+  empty = (team: Macroable<string, MACRO>) => this.finalCommand(['empty', team])
 
   /**
    * Makes specified entities join a team.
@@ -51,7 +55,7 @@ export class TeamCommand extends CommandArguments {
    * `'*'` may be used to represent all entities tracked by the scoreboard
    * If unspecified, defaults to the executor.
    */
-  join = (team: string, members?: MultipleEntitiesArgument | '*') => this.finalCommand(['join', team, targetParser(members)])
+  join = (team: Macroable<string, MACRO>, members?: Macroable<MultipleEntitiesArgument<MACRO>| '*', MACRO>) => this.finalCommand(['join', team, targetParser(members)])
 
   /**
    * Makes specified entities leave a team.
@@ -59,14 +63,14 @@ export class TeamCommand extends CommandArguments {
    * @param members Specifies the entities to leave the team.
    * `'*'` may be used to represent all entities tracked by the scoreboard
    */
-  leave = (members: MultipleEntitiesArgument | '*') => this.finalCommand(['leave', targetParser(members)])
+  leave = (members: Macroable<MultipleEntitiesArgument<MACRO> | '*', MACRO>) => this.finalCommand(['leave', targetParser(members)])
 
   /**
    * Lists all teams, or lists all members of a team if `team` is set.
    *
    * @param team Specifies the name of the team.
    */
-  list = (team?: string) => this.finalCommand(['list', targetParser(team)])
+  list = (team?: Macroable<string, MACRO>) => this.finalCommand(['list', targetParser(team)])
 
   modify: (
     /**
@@ -94,7 +98,7 @@ export class TeamCommand extends CommandArguments {
      *
      * - `suffix`: Modifies the suffix that appears after players' names in chat.
      */
-    (<T extends keyof TeamOptions>(team: string, option: T, value: TeamOptions[T]) => void) &
+    (<T extends keyof TeamOptions>(team: Macroable<string, MACRO>, option: T, value: TeamOptions[T]) => void) &
 
     /*
      * Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
@@ -127,7 +131,7 @@ export class TeamCommand extends CommandArguments {
      *
      * - `suffix`: Modifies the suffix that appears after players' names in chat.
      */
-    (<T extends string>(team: string, option: Exclude<T, keyof TeamOptions>, value: string) => void)
+    (<T extends string>(team: Macroable<string, MACRO>, option: Exclude<T, keyof TeamOptions>, value: Macroable<string, MACRO>) => void)
   ) = (...args: unknown[]) => this.finalCommand(['modify', ...args])
 
   /**
@@ -135,5 +139,5 @@ export class TeamCommand extends CommandArguments {
    *
    * @param team Specifies the name of the team.
    */
-  remove = (team: string) => this.finalCommand(['remove', team])
+  remove = (team: Macroable<string, MACRO>) => this.finalCommand(['remove', team])
 }

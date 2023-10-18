@@ -1,5 +1,5 @@
-import { SandstoneCommands } from "sandstone/commands/commands.js";
-import { SandstoneCore } from "sandstone/core/sandstoneCore.js";
+import type { SandstoneCommands } from 'sandstone/commands'
+import type { SandstoneCore } from 'sandstone/core'
 
 export class MacroArgument<LOCAL extends string> {
   protected local: LOCAL
@@ -9,12 +9,14 @@ export class MacroArgument<LOCAL extends string> {
   }
 
   /** @internal */
-  get toString() {
+  get toString(): `\${${LOCAL}}` {
     return `\${${this.local}}`
   }
 }
 
 export type Macroable<T, MACRO extends boolean> = MACRO extends true ? (T | MacroArgument<string>) : T;
+
+export type MacroString<T, MACRO extends boolean> = MACRO extends true ? (T | string) : T
 
 class _Macro {
   commands: SandstoneCommands<true>

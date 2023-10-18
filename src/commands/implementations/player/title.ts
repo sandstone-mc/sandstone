@@ -3,13 +3,15 @@ import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { JSONTextComponent, MultiplePlayersArgument, TimeArgument } from 'sandstone/arguments'
 
 export class TitleCommandNode extends CommandNode {
   command = 'title' as const
 }
 
-export class TitleArgumentsCommand extends CommandArguments {
+export class TitleArgumentsCommand<MACRO extends boolean> extends CommandArguments {
   clear = () => this.finalCommand(['clear'])
 
   reset = () => this.finalCommand(['reset'])
@@ -23,7 +25,7 @@ export class TitleArgumentsCommand extends CommandArguments {
   times = (fadeIn: TimeArgument, stay: TimeArgument, fadeOut: TimeArgument) => this.finalCommand(['times', fadeIn, stay, fadeOut])
 }
 
-export class TitleCommand extends CommandArguments {
+export class TitleCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TitleCommandNode
 
   /**

@@ -1,16 +1,17 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, MacroArgument, nbtStringifier } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { Coordinates, ENTITY_TYPES, RootNBT } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 export class SummonCommandNode extends CommandNode {
   command = 'summon' as const
 }
 
-export class SummonCommand extends CommandArguments {
+export class SummonCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = SummonCommandNode
 
   /**
@@ -22,5 +23,9 @@ export class SummonCommand extends CommandArguments {
    *
    * @param nbt Specifies the data tag for the entity.
    */
-  summon = (entity: LiteralUnion<ENTITY_TYPES>, pos?: Coordinates, nbt?: RootNBT) => this.finalCommand([entity, coordinatesParser(pos), nbt ? nbtStringifier(nbt) : undefined])
+  summon = (
+    entity: Macroable<LiteralUnion<ENTITY_TYPES>, MACRO>,
+    pos?: Macroable<Coordinates<MACRO>, MACRO>,
+    nbt?: Macroable<RootNBT, MACRO>,
+  ) => this.finalCommand([entity, coordinatesParser(pos), (!nbt || nbt instanceof MacroArgument) ? nbt : nbtStringifier(nbt)])
 }

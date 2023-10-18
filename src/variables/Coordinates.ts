@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 
-/** A root class that can be used to defined a N-dimeension vector */
+/** A root class that can be used to defined a N-dimension vector */
 export class VectorClass<T extends readonly unknown[]> {
   values: T
 

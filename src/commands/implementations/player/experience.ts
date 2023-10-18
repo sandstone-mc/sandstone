@@ -4,6 +4,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments'
 
 export class ExperienceCommandNode extends CommandNode {
@@ -12,7 +14,7 @@ export class ExperienceCommandNode extends CommandNode {
 }
 
 /** Adds, sets or removes player experience.  */
-export class ExperienceCommand extends CommandArguments {
+export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ExperienceCommandNode
 
   /**

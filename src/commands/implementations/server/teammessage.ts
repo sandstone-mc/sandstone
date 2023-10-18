@@ -2,6 +2,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { MessageOrSelector } from 'sandstone/arguments'
 import type { AtLeastOne } from 'sandstone/utils'
 
@@ -9,7 +11,7 @@ export class TeamMessageCommandNode extends CommandNode {
   command = 'tm' as const
 }
 
-export class TeamMessageCommand extends CommandArguments {
+export class TeamMessageCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TeamMessageCommandNode
 
   /**

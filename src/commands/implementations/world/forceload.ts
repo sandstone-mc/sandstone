@@ -3,6 +3,8 @@ import { coordinatesParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { ColumnCoordinates } from 'sandstone/arguments'
 import type { VectorClass } from 'sandstone/variables'
 
@@ -56,7 +58,7 @@ export class ForceLoadCommandNode extends CommandNode {
 /**
  * Force chunks to load constantly or not.
  */
-export class ForceLoadCommand extends CommandArguments {
+export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ForceLoadCommandNode
 
   /**

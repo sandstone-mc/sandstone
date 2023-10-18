@@ -3,6 +3,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { MultiplePlayersArgument } from 'sandstone/arguments'
 import type { AdvancementClass } from 'sandstone/core'
 
@@ -14,7 +16,7 @@ export class AdvancementCommandNode extends CommandNode {
 
 type AdvancementArgument = string | AdvancementClass
 
-export class AdvancementArgumentsCommand extends CommandArguments {
+export class AdvancementArgumentsCommand<MACRO extends boolean> extends CommandArguments {
   /** Adds or removes all loaded advancements. */
   everything = () => this.finalCommand(['everything'])
 
@@ -69,7 +71,7 @@ export class AdvancementArgumentsCommand extends CommandArguments {
 }
 
 /** Gives or takes an advancement from one or more players. */
-export class AdvancementCommand extends CommandArguments {
+export class AdvancementCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = AdvancementCommandNode
 
   /**

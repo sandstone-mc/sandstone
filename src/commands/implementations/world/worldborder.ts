@@ -3,6 +3,8 @@ import { coordinatesParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { ColumnCoordinates } from 'sandstone/arguments'
 
 export class WorldBorderNode extends CommandNode {
@@ -10,7 +12,7 @@ export class WorldBorderNode extends CommandNode {
 }
 
 /** These commands control the world border. */
-export class WorldBorderCommand extends CommandArguments {
+export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = WorldBorderNode
 
   /**

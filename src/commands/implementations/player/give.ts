@@ -5,6 +5,7 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 // Give command
 
@@ -12,7 +13,7 @@ export class GiveCommandNode extends CommandNode {
   command = 'give' as const
 }
 
-export class GiveCommand extends CommandArguments {
+export class GiveCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = GiveCommandNode
 
   /**
@@ -24,5 +25,9 @@ export class GiveCommand extends CommandArguments {
    *
    * @param count Specifies the number of items to give. If not specified, defaults to `1`.
    */
-  give = (targets: MultiplePlayersArgument, item: LiteralUnion<ITEMS>, count?: number) => this.finalCommand([targetParser(targets), item, count])
+  give = (
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    count?: Macroable<number, MACRO>,
+  ) => this.finalCommand([targetParser(targets), item, count])
 }

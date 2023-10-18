@@ -3,14 +3,15 @@ import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { FinalCommandOutput } from '../../helpers.js'
 import type { ColumnCoordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
+import type { FinalCommandOutput } from '../../helpers.js'
 
 export class SpreadPlayersNode extends CommandNode {
   command = 'spreadplayers' as const
 }
 
-export class SpreadPlayersCommand extends CommandArguments<typeof SpreadPlayersNode> {
+export class SpreadPlayersCommand<MACRO extends boolean> extends CommandArguments<typeof SpreadPlayersNode> {
   protected NodeType = SpreadPlayersNode
 
   spreadplayers: (
@@ -30,7 +31,13 @@ export class SpreadPlayersCommand extends CommandArguments<typeof SpreadPlayersN
      *
      * @param targets Specifies the targets to spread.
      */
-    (center: ColumnCoordinates, spreadDistance: number, maxRange: number, respectTeams: boolean, targets:MultipleEntitiesArgument) => FinalCommandOutput) & (
+    (
+      center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
+      spreadDistance: Macroable<number, MACRO>,
+      maxRange: Macroable<number, MACRO>,
+      respectTeams: Macroable<boolean, MACRO>,
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+    ) => FinalCommandOutput) & (
     /**
      * Teleports entities to random surface locations within an area.
      *
@@ -48,7 +55,14 @@ export class SpreadPlayersCommand extends CommandArguments<typeof SpreadPlayersN
      *
      * @param targets Specifies the targets to spread.
      */
-    (center: ColumnCoordinates, spreadDistance: number, maxRange: number, under: 'under', height: number, respectTeams: boolean, targets: MultipleEntitiesArgument) => FinalCommandOutput)
+    (center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
+      spreadDistance: Macroable<number, MACRO>,
+      maxRange: Macroable<number, MACRO>,
+      under: 'under',
+      height: Macroable<number, MACRO>,
+      respectTeams: Macroable<boolean, MACRO>,
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>
+    ) => FinalCommandOutput)
   ) = (...args: unknown[]) => this.finalCommand(
       [coordinatesParser(args[0]), ...args.slice(1, -1), targetParser(args.slice(-1))],
     )

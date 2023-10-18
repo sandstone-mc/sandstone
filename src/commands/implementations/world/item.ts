@@ -3,6 +3,8 @@ import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS,
   ITEMS, MultipleEntitiesArgument,
@@ -13,7 +15,7 @@ export class ItemCommandNode extends CommandNode {
   command = 'item' as const
 }
 
-export class ItemSourceCommand extends CommandArguments {
+export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Replace the slot with a specific item.
    * @param item The item to replace the slot with.
@@ -27,7 +29,7 @@ export class ItemSourceCommand extends CommandArguments {
      * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
-    block: (pos: Coordinates, slot: CONTAINER_SLOTS, modifier?: string | ItemModifierClass) => this.finalCommand(['from', 'block', pos, slot, modifier]),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: CONTAINER_SLOTS, modifier?: string | ItemModifierClass) => this.finalCommand(['from', 'block', pos, slot, modifier]),
 
     /**
      * @param targets The entity to copy items from.
@@ -39,7 +41,7 @@ export class ItemSourceCommand extends CommandArguments {
 }
 
 /** Replaces or modifies items in inventories */
-export class ItemCommand extends CommandArguments {
+export class ItemCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ItemCommandNode
 
   /** Applies a modifier to a slot in an inventory. */
@@ -49,7 +51,7 @@ export class ItemCommand extends CommandArguments {
      * @param slot The slot to apply the modifier to.
      * @param modifier The name of the modifier.
      */
-    block: (pos: Coordinates, slot: CONTAINER_SLOTS, modifier: string | ItemModifierClass) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: CONTAINER_SLOTS, modifier: string | ItemModifierClass) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
 
     /**
      * @param targets The entity/entities containing the slot to apply the modifier to.
@@ -65,7 +67,7 @@ export class ItemCommand extends CommandArguments {
      * @param pos The position of the container containing the slot to be replaced.
      * @param slot The slot to be replaced.
      */
-    block: (pos: Coordinates, slot: CONTAINER_SLOTS) => this.subCommand(['block', pos, slot], ItemSourceCommand, false),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: CONTAINER_SLOTS) => this.subCommand(['block', pos, slot], ItemSourceCommand, false),
 
     /**
      * @param targets one or more entities to modify.

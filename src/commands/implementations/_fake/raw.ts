@@ -2,6 +2,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 export class RawCommandNode extends CommandNode {
   command = '' as const
 }

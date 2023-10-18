@@ -3,6 +3,8 @@ import { coordinatesParser, nbtStringifier, targetParser } from 'sandstone/varia
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { Coordinates, NBTObject, SingleEntityArgument } from 'sandstone/arguments'
 import type { VectorClass } from 'sandstone/variables'
 
@@ -11,7 +13,7 @@ export class DataCommandNode extends CommandNode {
 }
 
 /** Allows to get, merge, modify, and remove NBT data of a block entity, entity, or Command NBT storage. */
-export class DataCommand extends CommandArguments {
+export class DataCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = DataCommandNode
 
   /** Read off the entire NBT data or the subsection of the NBT data from the targeted block position or entity, scaled by `scale` if specified. */
@@ -27,7 +29,7 @@ export class DataCommand extends CommandArguments {
   get remove() { return this.subCommand(['remove'], DataRemoveCommand, false) }
 }
 
-export class DataGetCommand extends CommandArguments {
+export class DataGetCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Get the NBT of a block at the given position.
    *
@@ -35,7 +37,7 @@ export class DataGetCommand extends CommandArguments {
    * @param path The path of the NBT to get.
    * @param scale The scale to multiply the NBT value by.
    */
-  block = (targetPos: Coordinates, path?: string, scale?: number) => this.finalCommand(['block', coordinatesParser(targetPos), path, scale])
+  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, path?: string, scale?: number) => this.finalCommand(['block', coordinatesParser(targetPos), path, scale])
 
   /**
    * Get the NBT of a given entity.
@@ -56,14 +58,14 @@ export class DataGetCommand extends CommandArguments {
   storage = (target: string, path?: string, scale?: number) => this.finalCommand(['storage', target, path, scale])
 }
 
-export class DataMergeCommand extends CommandArguments {
+export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Merge the NBT of a block at the given position, with the given NBT.
    *
    * @param targetPos The coordinates of the block to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  block = (targetPos: Coordinates, nbt: NBTObject) => this.finalCommand(['block', coordinatesParser(targetPos), nbtStringifier(nbt)])
+  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, nbt: NBTObject) => this.finalCommand(['block', coordinatesParser(targetPos), nbtStringifier(nbt)])
 
   /**
    * Merge the NBT of the given entity, with the given NBT.
@@ -82,7 +84,7 @@ export class DataMergeCommand extends CommandArguments {
   storage = (target: string, nbt: NBTObject) => this.finalCommand(['storage', target, nbtStringifier(nbt)])
 }
 
-export class DataModifyValuesCommand extends CommandArguments {
+export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArguments {
   from = {
     /**
      * Modify with the NBT of a block at the given position.
@@ -90,7 +92,7 @@ export class DataModifyValuesCommand extends CommandArguments {
      * @param sourcePosition The coordinates of the block to modify the NBT with.
      * @param sourcePath The path of the NBT to modify with.
      */
-    block: (sourcePosition: Coordinates, sourcePath: string) => this.finalCommand(['from', 'block', coordinatesParser(sourcePosition), sourcePath]),
+    block: (sourcePosition: Macroable<Coordinates<MACRO>, MACRO>, sourcePath: string) => this.finalCommand(['from', 'block', coordinatesParser(sourcePosition), sourcePath]),
 
     /**
      * Modify with the NBT of a given entity.
@@ -118,7 +120,7 @@ export class DataModifyValuesCommand extends CommandArguments {
      * @param start Optional. Index of first character to include at the start of the string.
      * @param end Optional. Index of the first character to exclude at the end of the string
      */
-    block: (sourcePosition: Coordinates, sourcePath: string, start?: number, end?: number) => {
+    block: (sourcePosition: Macroable<Coordinates<MACRO>, MACRO>, sourcePath: string, start?: number, end?: number) => {
       const command: (string | VectorClass<[string, string, string]> | number)[] = ['from', 'block', coordinatesParser(sourcePosition), sourcePath]
       if (start) {
         command.push(start)
@@ -168,7 +170,7 @@ export class DataModifyValuesCommand extends CommandArguments {
   value = (value: NBTObject) => this.finalCommand(['value', nbtStringifier(value)])
 }
 
-export class DataModifyTypeCommand extends CommandArguments {
+export class DataModifyTypeCommand<MACRO extends boolean> extends CommandArguments {
   /** Append the source data onto the end of the pointed-to list. */
   get append() {
     return this.subCommand(['append'], DataModifyValuesCommand, false)
@@ -197,14 +199,14 @@ export class DataModifyTypeCommand extends CommandArguments {
   }
 }
 
-export class DataModifyCommand extends CommandArguments {
+export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Modify the NBT of a block at the given position.
    *
    * @param targetPos The coordinates of the block to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  block = (targetPos: Coordinates, targetPath: string) => this.subCommand(['block', coordinatesParser(targetPos), targetPath], DataModifyTypeCommand, false)
+  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, targetPath: string) => this.subCommand(['block', coordinatesParser(targetPos), targetPath], DataModifyTypeCommand, false)
 
   /**
    * Modify the NBT of a given entity.
@@ -223,14 +225,14 @@ export class DataModifyCommand extends CommandArguments {
   storage = (target: string, targetPath: string) => this.subCommand(['storage', target, targetPath], DataModifyTypeCommand, false)
 }
 
-export class DataRemoveCommand extends CommandArguments {
+export class DataRemoveCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Remove the NBT of a block at the given position.
    *
    * @param targetPos The coordinates of the block to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  block = (targetPos: Coordinates, targetPath: string) => this.finalCommand(['block', coordinatesParser(targetPos), targetPath])
+  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, targetPath: string) => this.finalCommand(['block', coordinatesParser(targetPos), targetPath])
 
   /**
    * Remove the NBT of a given entity.

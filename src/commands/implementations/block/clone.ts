@@ -5,7 +5,7 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { BLOCKS, Coordinates } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables/Macro.js'
+import type { Macroable } from 'sandstone/variables'
 
 export class CloneCommandNode extends CommandNode {
   command = 'clone' as const
@@ -35,7 +35,11 @@ export class CloneCommand<MACRO extends boolean> extends CommandArguments {
    * // Move the current block 1 block above
    * clone(rel(0, 0, 0), rel(0, 0, 0), rel(0, 1, 0)).replace('move')
    */
-  clone = (begin: Macroable<Coordinates, MACRO>, end: Macroable<Coordinates, MACRO>, destination: Macroable<Coordinates, MACRO>) => this.subCommand([begin, end, destination].map(coordinatesParser), CloneOptionsCommand<MACRO>, true)
+  clone = (
+    begin: Macroable<Coordinates<MACRO>, MACRO>,
+    end: Macroable<Coordinates<MACRO>, MACRO>,
+    destination: Macroable<Coordinates<MACRO>, MACRO>,
+  ) => this.subCommand([begin, end, destination].map(coordinatesParser), CloneOptionsCommand<MACRO>, true)
 }
 
 export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments {

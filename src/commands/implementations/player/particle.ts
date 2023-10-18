@@ -3,6 +3,8 @@ import { arrayToArgsParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type {
   BLOCKS, Coordinates,
   ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
@@ -52,7 +54,7 @@ type ParticleCommandType = (
      */
     (
       name: Exclude<PARTICLE_TYPES, 'minecraft:dust' | 'minecraft:block' | 'minecraft:falling_dust' | 'minecraft:item'>,
-      pos?: Coordinates,
+      pos?: Macroable<Coordinates<MACRO>, MACRO>,
       delta?: [deltaX: number, deltaY: number, deltaZ: number],
       speed?: number,
       count?: number,
@@ -101,7 +103,7 @@ type ParticleCommandType = (
       name: 'minecraft:dust',
       colors: [red: number, green: number, blue: number, size: number],
       size: number,
-      pos?: Coordinates,
+      pos?: Macroable<Coordinates<MACRO>, MACRO>,
       delta?: [deltaX: number, deltaY: number, deltaZ: number],
       speed?: number,
       count?: number,
@@ -145,8 +147,8 @@ type ParticleCommandType = (
      */
     (
       name: 'minecraft:block' | 'minecraft:falling_dust',
-      block: LiteralUnion<BLOCKS>,
-      pos?: Coordinates,
+      block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+      pos?: Macroable<Coordinates<MACRO>, MACRO>,
       delta?: [deltaX: number, deltaY: number, deltaZ: number],
       speed?: number,
       count?: number,
@@ -189,8 +191,8 @@ type ParticleCommandType = (
      */
     (
       name: 'minecraft:item',
-      item: LiteralUnion<ITEMS>,
-      pos?: Coordinates,
+      item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+      pos?: Macroable<Coordinates<MACRO>, MACRO>,
       delta?: [deltaX: number, deltaY: number, deltaZ: number],
       speed?: number,
       count?: number,
@@ -199,7 +201,7 @@ type ParticleCommandType = (
     ) => void)
 )
 
-export class ParticleCommand extends CommandArguments {
+export class ParticleCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ParticleCommandNode
 
   particle: ParticleCommandType = (...args: unknown[]) => this.finalCommand([

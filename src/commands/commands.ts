@@ -75,7 +75,7 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get clone() { return new CloneCommand<MACRO>(this.sandstonePack).clone }
 
-  get comment() { return new CommentCommand<MACRO>(this.sandstonePack).comment }
+  get comment() { return new CommentCommand(this.sandstonePack).comment }
 
   get damage() { return new DamageCommand<MACRO>(this.sandstonePack).damage }
 
@@ -129,7 +129,7 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get playsound() { return new PlaySoundCommand<MACRO>(this.sandstonePack).playsound }
 
-  get raw() { return new RawCommand<MACRO>(this.sandstonePack).raw }
+  get raw() { return new RawCommand(this.sandstonePack).raw }
 
   get recipe() { return new RecipeCommand<MACRO>(this.sandstonePack) }
 

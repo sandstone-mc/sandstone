@@ -2,6 +2,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { GAMERULES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 
@@ -11,7 +13,7 @@ export class GameRuleCommandNode extends CommandNode {
   command = 'gamerule' as const
 }
 
-export class GameRuleCommand extends CommandArguments {
+export class GameRuleCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = GameRuleCommandNode
 
   /**
@@ -67,5 +69,5 @@ export class GameRuleCommand extends CommandArguments {
    * `maxEntityCramming`, `randomTickSpeed`, `spawnRadius`, and `maxCommandChainLength`,
    * where any integer 0 or greater affects gameplay.
    */
-  gamerule = (gamerule: LiteralUnion<GAMERULES>, value?: boolean | number) => this.finalCommand([gamerule, value])
+  gamerule = (gamerule: Macroable<LiteralUnion<GAMERULES>, MACRO>, value?: boolean | number) => this.finalCommand([gamerule, value])
 }

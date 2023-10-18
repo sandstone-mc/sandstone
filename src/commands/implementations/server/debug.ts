@@ -2,6 +2,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 export class DebugCommandNode extends CommandNode {
   command = 'debug' as const
 }
@@ -11,7 +13,7 @@ export class DebugCommandNode extends CommandNode {
  * While active, includes notifications about potential performance bottlenecks in the console.
  * When stopped, creates a profiler results file in the folder `debug`.
  */
-export class DebugCommand extends CommandArguments {
+export class DebugCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = DebugCommandNode
 
   /** Starts a new debug profiling session. */

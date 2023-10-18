@@ -2,13 +2,15 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { GAMEMODES } from 'sandstone/arguments'
 
 export class DefaultGameModeCommandNode extends CommandNode {
   command = 'defaultgamemode' as const
 }
 
-export class DefaultGameModeCommand extends CommandArguments {
+export class DefaultGameModeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = DefaultGameModeCommandNode
 
   /**

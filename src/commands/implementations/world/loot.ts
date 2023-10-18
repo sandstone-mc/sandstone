@@ -4,6 +4,8 @@ import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
@@ -17,7 +19,7 @@ export class LootCommandNode extends CommandNode {
   command = 'loot' as const
 }
 
-class LootSourceCommand extends CommandArguments {
+class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Drops items that would be dropped by fishing with the given loot table, and the given tool.
    *
@@ -27,7 +29,7 @@ class LootSourceCommand extends CommandArguments {
    *
    * @param tool Specifies an tool to fish.
    */
-  fish = (lootTable: LootTableArgument, pos: Coordinates, tool: LiteralUnion<ITEMS>) => this.finalCommand(['fish', lootTable, coordinatesParser(pos), tool])
+  fish = (lootTable: LootTableArgument, pos: Macroable<Coordinates<MACRO>, MACRO>, tool: Macroable<LiteralUnion<ITEMS>, MACRO>) => this.finalCommand(['fish', lootTable, coordinatesParser(pos), tool])
 
   /**
    * Drops items that would be dropped by the given loot table.
@@ -50,18 +52,18 @@ class LootSourceCommand extends CommandArguments {
    *
    * @param tool Specifies an tool to mine.
    */
-  mine = (pos: Coordinates, tool: LiteralUnion<ITEMS>) => this.finalCommand(['mine', coordinatesParser(pos), tool])
+  mine = (pos: Macroable<Coordinates<MACRO>, MACRO>, tool: Macroable<LiteralUnion<ITEMS>, MACRO>) => this.finalCommand(['mine', coordinatesParser(pos), tool])
 }
 
 /** Drops the given loot table into the specified inventory or into the world. */
-export class LootCommand extends CommandArguments {
+export class LootCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = LootCommandNode
 
   /**
    * Spawns item entities.
    * @param targetPos Specifies the location where item drops.
    */
-  spawn = (targetPos: Coordinates) => this.subCommand(['spawn', coordinatesParser(targetPos)], LootCommand, false)
+  spawn = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) => this.subCommand(['spawn', coordinatesParser(targetPos)], LootCommand, false)
 
   replace = {
 
@@ -91,7 +93,7 @@ export class LootCommand extends CommandArguments {
      *
      * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
      */
-    entity: (entities: MultipleEntitiesArgument, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => {
+    entity: (entities: MultipleEntitiesArgument, slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>, count?: number) => {
       if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
       return this.subCommand(['replace', 'entity', targetParser(entities), slot, count], LootSourceCommand, false)
@@ -113,7 +115,7 @@ export class LootCommand extends CommandArguments {
      *
      * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
      */
-    block: (targetPos: Coordinates, slot: LiteralUnion<CONTAINER_SLOTS>, count?: number) => {
+    block: (targetPos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>, count?: number) => {
       if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
       return this.subCommand(['replace', 'block', coordinatesParser(targetPos), slot, count], LootSourceCommand, false)
@@ -132,5 +134,5 @@ export class LootCommand extends CommandArguments {
    *
    * @param targetPos Specifies the position of a block.
    */
-  insert = (targetPos: Coordinates) => this.subCommand(['insert', coordinatesParser(targetPos)], LootSourceCommand, false)
+  insert = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) => this.subCommand(['insert', coordinatesParser(targetPos)], LootSourceCommand, false)
 }

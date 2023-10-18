@@ -1,15 +1,16 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class KillCommandNode extends CommandNode {
   command = 'kill' as const
 }
 
-export class KillCommand extends CommandArguments {
+export class KillCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = KillCommandNode
 
   /**
@@ -17,5 +18,5 @@ export class KillCommand extends CommandArguments {
    *
    * @param targets Specifies the target(s) to kill. If not specified, defaults to the executor who executed the command.
    */
-  kill = (targets?: MultipleEntitiesArgument) => this.finalCommand([targetParser(targets)])
+  kill = (targets?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.finalCommand([targetParser(targets)])
 }

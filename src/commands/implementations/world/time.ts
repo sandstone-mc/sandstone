@@ -2,6 +2,8 @@ import { CommandNode } from 'sandstone/core'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { TimeArgument } from 'sandstone/arguments'
 
 export class TimeCommandNode extends CommandNode {
@@ -11,7 +13,7 @@ export class TimeCommandNode extends CommandNode {
 /**
  * Changes or queries the world's game time.
  */
-export class TimeCommand extends CommandArguments {
+export class TimeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TimeCommandNode
 
   /**

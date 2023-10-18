@@ -1,17 +1,18 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { TagClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 export class ClearCommandNode extends CommandNode {
   command = 'clear' as const
 }
 
-export class ClearCommand extends CommandArguments {
+export class ClearCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ClearCommandNode
 
   /**
@@ -28,5 +29,9 @@ export class ClearCommand extends CommandArguments {
    *
    * If `0`, instead of clearing of items, detectes and queries the amount of specified items.
    */
-  clear = (targets?: MultiplePlayersArgument, item?: LiteralUnion<ITEMS> | TagClass<'items'>, maxCount?: number) => this.finalCommand([targetParser(targets), item, maxCount])
+  clear = (
+    targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    item?: Macroable<LiteralUnion<ITEMS> | TagClass<'items'>, MACRO>,
+    maxCount?: Macroable<number, MACRO>,
+  ) => this.finalCommand([targetParser(targets), item, maxCount])
 }

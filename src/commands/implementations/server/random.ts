@@ -3,6 +3,8 @@ import { rangeParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { Range } from 'sandstone/arguments'
 import { LiteralUnion } from 'sandstone/utils.js'
 
@@ -10,7 +12,7 @@ export class RandomCommandNode extends CommandNode {
   command = 'random' as const
 }
 
-export class RandomCommand extends CommandArguments {
+export class RandomCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = RandomCommandNode
 
   /**

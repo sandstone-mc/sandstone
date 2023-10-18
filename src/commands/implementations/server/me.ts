@@ -3,6 +3,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { MultipleEntitiesArgument } from 'sandstone/arguments'
 
 export class MeCommandNode extends CommandNode<[string[]]> {
@@ -13,7 +15,7 @@ export class MeCommandNode extends CommandNode<[string[]]> {
   }
 }
 
-export class MeCommand extends CommandArguments {
+export class MeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = MeCommandNode
 
   /**

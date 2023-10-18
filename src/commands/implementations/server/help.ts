@@ -2,11 +2,13 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 export class HelpCommandNode extends CommandNode {
   command = 'help' as const
 }
 
-export class HelpCommand extends CommandArguments {
+export class HelpCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = HelpCommandNode
 
   /**

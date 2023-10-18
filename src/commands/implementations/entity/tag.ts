@@ -1,11 +1,15 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { Macroable, MacroArgument } from 'sandstone/variables'
 
-function checkTagName(tag: string) {
+function checkTagName(tag: string | MacroArgument<string>) {
+  if (typeof tag !== 'string') {
+    return tag
+  }
   if (!tag.match(/[A-Za-z0-9\-_+.]/g)) {
     throw new Error(`Invalid tag name "${tag}": Valid characters are uppercase and lowercase letters, numbers, hyphen, underscore, plus sign and period.`)
   }
@@ -17,14 +21,14 @@ export class TagCommandNode extends CommandNode {
   command = 'tag' as const
 }
 
-export class TagArgumentsCommand extends CommandArguments {
+export class TagArgumentsCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Adds a tag to the targets.
    *
    * @param name Specifies the name of the tag to be added into the targets.
    * Valid characters are uppercase and lowercase letters, numbers, hyphen, underscore, plus sign and period.
    */
-  add = (name: string) => this.finalCommand(['add', checkTagName(name)])
+  add = (name: Macroable<string, MACRO>) => this.finalCommand(['add', checkTagName(name)])
 
   /**
    * Lists all tags on the targets.
@@ -37,10 +41,10 @@ export class TagArgumentsCommand extends CommandArguments {
    * @param name Specifies the name of the tag to be removed from the targets.
    * Valid characters are uppercase and lowercase letters, numbers, hyphen, underscore, plus sign and period.
    */
-  remove = (name: string) => this.finalCommand(['remove', checkTagName(name)])
+  remove = (name: Macroable<string, MACRO>) => this.finalCommand(['remove', checkTagName(name)])
 }
 
-export class TagCommand extends CommandArguments {
+export class TagCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TagCommandNode
 
   /**
@@ -50,5 +54,5 @@ export class TagCommand extends CommandArguments {
    *
    * @param targets Specifies the command's target.
    */
-  tag = (targets: MultipleEntitiesArgument) => this.subCommand([targetParser(targets)], TagArgumentsCommand, false)
+  tag = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.subCommand([targetParser(targets)], TagArgumentsCommand<MACRO>, false)
 }

@@ -1,7 +1,7 @@
+import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent'
 import type { ConditionNode } from '../flow/index.js'
 import type { DataPointClass } from './index.js'
 import type { SelectorClass } from './Selector.js'
-import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent'
 
 export class ComponentClass {
   /**
@@ -24,7 +24,7 @@ export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolea
   /**
    * @internal
    */
-  _toSelector(): SelectorClass<IsSingle, IsPlayer> | string {
+  _toSelector(): SelectorClass<boolean, IsSingle, IsPlayer> | string {
     throw new Error('Not implemented')
   }
 }

@@ -6,12 +6,13 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { MOB_EFFECTS, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 export class EffectCommandNode extends CommandNode {
   command = 'effect' as const
 }
 
-export class EffectCommand extends CommandArguments {
+export class EffectCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = EffectCommandNode
 
   /**
@@ -40,8 +41,8 @@ export class EffectCommand extends CommandArguments {
    * If not specified, defaults to `false`.
    */
   give = (
-    targets: MultipleEntitiesArgument,
-    effect: LiteralUnion<MOB_EFFECTS>,
+    targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+    effect: Macroable<LiteralUnion<MOB_EFFECTS>, MACRO>,
     seconds?: number | 'infinite',
     amplifier?: number,
     hideParticles?: boolean,
@@ -57,5 +58,5 @@ export class EffectCommand extends CommandArguments {
    *
    * @param effect Specifies the effect to be removed. If unspecified, clears all effects.
    */
-  clear = (targets?: MultipleEntitiesArgument, effect?: LiteralUnion<MOB_EFFECTS>) => this.finalCommand(['clear', targetParser(targets), effect])
+  clear = (targets?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, effect?: Macroable<LiteralUnion<MOB_EFFECTS>, MACRO>) => this.finalCommand(['clear', targetParser(targets), effect])
 }

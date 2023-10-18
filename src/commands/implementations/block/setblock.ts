@@ -5,12 +5,13 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { BLOCKS, Coordinates } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 export class SetBlockCommandNode extends CommandNode {
   command = 'setblock' as const
 }
 
-export class SetBlockCommand extends CommandArguments {
+export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = SetBlockCommandNode
 
   /**
@@ -27,5 +28,9 @@ export class SetBlockCommand extends CommandArguments {
    *
    * If not specified, defaults to `replace`.
    */
-  setblock = (pos: Coordinates, block: LiteralUnion<BLOCKS>, type?: 'destroy' | 'keep' | 'replace') => this.finalCommand([coordinatesParser(pos), block, type])
+  setblock = (
+    pos: Macroable<Coordinates<MACRO>, MACRO>,
+    block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+    type?: Macroable<'destroy' | 'keep' | 'replace', MACRO>,
+  ) => this.finalCommand([coordinatesParser(pos), block, type])
 }

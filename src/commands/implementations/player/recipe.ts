@@ -3,6 +3,8 @@ import { CommandNode } from 'sandstone/core'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { RecipeClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
@@ -12,7 +14,7 @@ export class RecipeCommandNode extends CommandNode {
 }
 
 /** Gives or takes (unlocks or locks) recipes for players. */
-export class RecipeCommand extends CommandArguments {
+export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = RecipeCommandNode
 
   /**

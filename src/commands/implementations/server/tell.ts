@@ -3,6 +3,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { MessageOrSelector, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { AtLeastOne } from 'sandstone/utils'
 
@@ -10,7 +12,7 @@ export class TellCommandNode extends CommandNode<[MultiplePlayersArgument, AtLea
   command = 'w' as const
 }
 
-export class TellCommand extends CommandArguments {
+export class TellCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TellCommandNode
 
   /**

@@ -3,13 +3,15 @@ import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { Coordinates, MultiplePlayersArgument, Rotation } from 'sandstone/arguments'
 
 export class SpawnPointCommandNode extends CommandNode {
   command = 'spawnpoint' as const
 }
 
-export class SpawnPointCommand extends CommandArguments {
+export class SpawnPointCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = SpawnPointCommandNode
 
   /**
@@ -23,5 +25,5 @@ export class SpawnPointCommand extends CommandArguments {
    *
    * @param angle Specifies the yaw angle to spawn with. Defaults to the direction the executor is facing.
    */
-  spawnpoint = (targets?: MultiplePlayersArgument, pos?: Coordinates, angle?: Rotation) => this.finalCommand([targetParser(targets), coordinatesParser(pos), coordinatesParser(angle)])
+  spawnpoint = (targets?: MultiplePlayersArgument, pos?: Macroable<Coordinates<MACRO>, MACRO>, angle?: Rotation) => this.finalCommand([targetParser(targets), coordinatesParser(pos), coordinatesParser(angle)])
 }

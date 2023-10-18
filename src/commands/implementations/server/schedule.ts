@@ -4,6 +4,8 @@ import { toMinecraftResourceName } from 'sandstone/utils'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type { TimeArgument } from 'sandstone/arguments'
 import type { Node } from 'sandstone/core'
 import type { MCFunctionNode } from 'sandstone/core/resources/datapack/index'
@@ -44,7 +46,7 @@ export class ScheduleCommandNode extends ContainerCommandNode<
 
 export type ScheduleType = 'append' | 'replace'
 
-export class ScheduleCommand extends CommandArguments<typeof ScheduleCommandNode> {
+export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typeof ScheduleCommandNode> {
   protected NodeType = ScheduleCommandNode
 
   /**

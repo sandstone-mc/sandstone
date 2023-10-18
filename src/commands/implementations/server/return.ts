@@ -97,7 +97,7 @@ export class ReturnCommandNode extends CommandNode {
   command = 'return' as const
 }
 
-export class ReturnCommand extends CommandArguments {
+export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ReturnCommandNode
 
   get return() {

@@ -3,6 +3,8 @@ import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
+import type { Macroable } from 'sandstone/variables'
+
 import type {
   Coordinates, MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES,
 } from 'sandstone/arguments'
@@ -12,7 +14,7 @@ export class PlaySoundCommandNode extends CommandNode {
   command = 'playsound' as const
 }
 
-export class PlaySoundCommand extends CommandArguments {
+export class PlaySoundCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = PlaySoundCommandNode
 
   /**
@@ -36,10 +38,10 @@ export class PlaySoundCommand extends CommandArguments {
    * @param targets Specifies the sound's target.
    */
   playsound = (
-    sound: LiteralUnion<SOUND_EVENTS>,
+    sound: Macroable<LiteralUnion<SOUND_EVENTS>, MACRO>,
     source: SOUND_SOURCES,
     targets: MultiplePlayersArgument,
-    sourcePosition?: Coordinates,
+    sourcePosition?: Macroable<Coordinates<MACRO>, MACRO>,
     volume?: number,
     pitch?: number,
     minVolume?: number,

@@ -4,18 +4,19 @@ import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 
 import type { SingleEntityArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class RideCommandNode extends CommandNode {
   command = 'ride' as const
 }
 
-export class RideArgumentsCommand extends CommandArguments {
+export class RideArgumentsCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Adds the target as a passenger of the mount.
    *
    * @param target Specifies the mount.
    */
-  mount = (target: SingleEntityArgument) => this.finalCommand(['mount', targetParser(target)])
+  mount = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>) => this.finalCommand(['mount', targetParser(target)])
 
   /**
    * Dismounts the target if it is mounted.
@@ -23,7 +24,7 @@ export class RideArgumentsCommand extends CommandArguments {
   dismount = () => this.finalCommand(['dismount'])
 }
 
-export class RideCommand extends CommandArguments {
+export class RideCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = RideCommandNode
 
   /**
@@ -31,5 +32,5 @@ export class RideCommand extends CommandArguments {
    *
    * @param target Specifies the command's target.
    */
-  ride = (target: SingleEntityArgument) => this.subCommand([targetParser(target)], RideArgumentsCommand, false)
+  ride = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>) => this.subCommand([targetParser(target)], RideArgumentsCommand, false)
 }
