@@ -3,9 +3,8 @@ import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { JSONTextComponent, MultiplePlayersArgument, TimeArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class TitleCommandNode extends CommandNode {
   command = 'title' as const
@@ -16,13 +15,18 @@ export class TitleArgumentsCommand<MACRO extends boolean> extends CommandArgumen
 
   reset = () => this.finalCommand(['reset'])
 
-  title = (title: JSONTextComponent) => this.finalCommand(['title', new JSONTextComponentClass(title)])
+  /* @ts-ignore */
+  title = (title: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['title', typeof title === 'object' && title.toMacro ? title : new JSONTextComponentClass(title)])
 
-  subtitle = (subtitle: JSONTextComponent) => this.finalCommand(['subtitle', new JSONTextComponentClass(subtitle)])
+  /* @ts-ignore */
+  subtitle = (subtitle: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['subtitle', typeof subtitle === 'object' && subtitle.toMacro ? subtitle : new JSONTextComponentClass(subtitle)])
 
-  actionbar = (actionbarText: JSONTextComponent) => this.finalCommand(['actionbar', new JSONTextComponentClass(actionbarText)])
+  actionbar = (actionbarText: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(
+    /* @ts-ignore */
+    ['actionbar', typeof actionbarText === 'object' && actionbarText.toMacro ? actionbarText : new JSONTextComponentClass(actionbarText)],
+  )
 
-  times = (fadeIn: TimeArgument, stay: TimeArgument, fadeOut: TimeArgument) => this.finalCommand(['times', fadeIn, stay, fadeOut])
+  times = (fadeIn: Macroable<TimeArgument, MACRO>, stay: Macroable<TimeArgument, MACRO>, fadeOut: Macroable<TimeArgument, MACRO>) => this.finalCommand(['times', fadeIn, stay, fadeOut])
 }
 
 export class TitleCommand<MACRO extends boolean> extends CommandArguments {
@@ -41,5 +45,5 @@ export class TitleCommand<MACRO extends boolean> extends CommandArguments {
    * const target = Selector('@r')
    * title('@a').actionbar(['You target is: ', target])
    */
-  title = (targets: MultiplePlayersArgument) => this.subCommand([targetParser(targets)], TitleArgumentsCommand, false)
+  title = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.subCommand([targetParser(targets)], TitleArgumentsCommand<MACRO>, false)
 }

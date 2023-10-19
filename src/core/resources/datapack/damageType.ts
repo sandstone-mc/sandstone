@@ -4,13 +4,13 @@ import { toMinecraftResourceName } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { TagClass } from './tag.js'
 import type {
   Coordinates, DamageTypeJSON, SingleEntityArgument, TAG_DAMAGE_TYPES,
 } from 'sandstone/arguments'
 import type { ComponentClass } from 'sandstone/variables'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import type { TagClass } from './tag.js'
 
 const damageTypes: Map<string, TagClass<'damage_types'>> = new Map()
 
@@ -63,29 +63,33 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
     return `death.attack.${this.damageTypeJSON.message_id}${this.damageTypeJSON.death_message_type === 'intentional_game_design' ? '.link' : ''}`
   }
 
-  damage(amount: number, context?: 'entity' | 'at', source?: Coordinates | SingleEntityArgument, cause?: SingleEntityArgument): void
+  damage(amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>): void
 
-  damage(target: SingleEntityArgument, amount: number, context?: 'entity' | 'at', source?: Coordinates | SingleEntityArgument, cause?: SingleEntityArgument): void
+  damage(target: SingleEntityArgument<false>, amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>): void
 
-  damage(...args: [amount: number, context?: 'entity' | 'at', source?: Coordinates | SingleEntityArgument, cause?: SingleEntityArgument] | [target: SingleEntityArgument, amount: number, context?: 'entity' | 'at', source?: Coordinates | SingleEntityArgument, cause?: SingleEntityArgument]) {
+  damage(...args:
+    [amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>] |
+    [target: SingleEntityArgument<false>, amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>]
+  // eslint-disable-next-line function-paren-newline
+  ) {
     const command = this.core.pack.commands.damage
     if (typeof args[0] === 'number') {
       if (args[1] === 'entity') {
         if (args[3]) {
-          return command('@s', args[0], this).by(args[2] as SingleEntityArgument).from(args[3])
+          return command('@s', args[0], this).by(args[2] as SingleEntityArgument<false>).from(args[3])
         }
-        return command('@s', args[0], this).by(args[2] as SingleEntityArgument)
+        return command('@s', args[0], this).by(args[2] as SingleEntityArgument<false>)
       }
       if (args[1] === 'at') {
-        return command('@s', args[0], this).at(args[1] as Coordinates)
+        return command('@s', args[0], this).at(args[1] as Coordinates<false>)
       }
       return command('@s', args[0], this)
     }
     if (args[2] === 'entity') {
       if (args[4]) {
-        return command(args[0], args[1] as number, this).by(args[2] as SingleEntityArgument).from(args[4])
+        return command(args[0], args[1] as number, this).by(args[2] as SingleEntityArgument<false>).from(args[4])
       }
-      return command(args[0], args[1] as number, this).by(args[2] as SingleEntityArgument)
+      return command(args[0], args[1] as number, this).by(args[2] as SingleEntityArgument<false>)
     }
     return command(args[0], args[1] as number, this)
   }

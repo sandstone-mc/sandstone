@@ -4,6 +4,7 @@ import * as util from 'util'
 import { parseNBT } from './parser.js'
 
 import type { NBTObject, RootNBT } from 'sandstone/arguments'
+import type { MacroArgument } from '../index.js'
 
 export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string;
@@ -365,7 +366,7 @@ export const NBT: NBTInterface = makeCallable({
   parse: (nbt: string) => parseNBT(NBT, nbt),
 }, dynamicNBT)
 
-export const nbtStringifier = (nbt: NBTObject): string => {
+export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
   if (typeof nbt === 'number') {
     // We have a number
     return nbt.toString()
@@ -407,6 +408,11 @@ export const nbtStringifier = (nbt: NBTObject): string => {
   if (nbt instanceof NBTClass) {
     // It's actually a "Minecraft Primitive", like 1b, and not an object
     return nbt[util.inspect.custom]()
+  }
+
+  if (nbt.toMacro) {
+    /* @ts-ignore */
+    return nbt.toMacro()
   }
 
   // It's a real object.

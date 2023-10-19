@@ -6,7 +6,7 @@ import { CommandArguments } from '../../helpers.js'
 import type { MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { Macroable, MacroArgument } from 'sandstone/variables'
 
-function checkTagName(tag: string | MacroArgument<string>) {
+function checkTagName(tag: string | MacroArgument) {
   if (typeof tag !== 'string') {
     return tag
   }

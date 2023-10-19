@@ -36,13 +36,17 @@ export function rotationParser<T>(rotation: T): (
 }
 
 // Sanitize score values. null => '', Infinity => '', any number => itself
-export const sanitizeValue = (value: number | string | null | undefined): string => {
+export const sanitizeValue = (value: MacroArgument | number | string | null | undefined): string => {
   if (value === undefined || value === null) {
     return ''
   }
 
   if (typeof value === 'string') {
     return value
+  }
+
+  if (typeof value === 'object' && value.toMacro) {
+    return value.toMacro()
   }
 
   if (Number.isFinite(value)) {
@@ -54,7 +58,7 @@ export const sanitizeValue = (value: number | string | null | undefined): string
 }
 
 // Returns the string representation of a range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
-export const rangeParser = (range: Range<boolean>): string => {
+export const rangeParser = (range: Range<boolean> | MacroArgument): string => {
   if (Array.isArray(range)) {
     return `${sanitizeValue(range[0])}..${sanitizeValue(range[1])}`
   }

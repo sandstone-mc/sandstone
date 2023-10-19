@@ -1,11 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { SingleEntityArgument, SinglePlayerArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class SpectateCommandNode extends CommandNode {
   command = 'spectate' as const
@@ -21,5 +20,5 @@ export class SpectateCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param player Specifies the spectating player. If unspecified, defaults to the executor.
    */
-  spectate = (target: SinglePlayerArgument, player?: SingleEntityArgument) => this.finalCommand([targetParser(target), player])
+  spectate = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, player?: Macroable<SinglePlayerArgument<MACRO>, MACRO>) => this.finalCommand([targetParser(target), player])
 }

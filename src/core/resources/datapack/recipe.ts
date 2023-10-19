@@ -1,9 +1,9 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
+import type { MultiplePlayersArgument, RecipeJSON } from 'sandstone/arguments'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { MultiplePlayersArgument, RecipeJSON } from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft recipe.
@@ -38,7 +38,7 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
    * Give this recipe.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  give = (players: MultiplePlayersArgument = '@s') => {
+  give = (players: MultiplePlayersArgument<false> = '@s') => {
     this.pack.commands.recipe.give(players, this.name)
   }
 
@@ -46,7 +46,7 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
    * Take this recipe.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  take = (players: MultiplePlayersArgument = '@s') => {
+  take = (players: MultiplePlayersArgument<false> = '@s') => {
     this.pack.commands.recipe.take(players, this.name)
   }
 }

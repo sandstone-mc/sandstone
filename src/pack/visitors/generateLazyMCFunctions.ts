@@ -6,11 +6,13 @@ import { GenericSandstoneVisitor } from './visitor.js'
 
 import type { FunctionCommandNode, ScheduleCommandNode } from 'sandstone/commands'
 
+// TODO: Add support for macros
+
 /**
  * Transforms an execute with several nodes into an execute calling a new function.
  */
 export class GenerateLazyMCFunction extends GenericSandstoneVisitor {
-  private generateLazyFunction(mcFunction: string | MCFunctionClass | undefined) {
+  private generateLazyFunction(mcFunction: string | MCFunctionClass<any, any> | undefined) {
     // If it's not a MCFunction / it's not lazy, there's nothing to do
     if (!(mcFunction instanceof MCFunctionClass) || !mcFunction['lazy']) {
       return
@@ -30,6 +32,7 @@ export class GenerateLazyMCFunction extends GenericSandstoneVisitor {
   }
 
   visitScheduleCommandNode = (node: ScheduleCommandNode) => {
+    /* @ts-ignore */
     this.generateLazyFunction(node.args[1])
     return this.genericVisit(node)
   }

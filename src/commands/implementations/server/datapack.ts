@@ -2,13 +2,11 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 export class DataPackCommandNode extends CommandNode {
   command = 'datapack' as const
 }
 
-export class DataPackEnableCommand<MACRO extends boolean> extends CommandArguments {
+export class DataPackEnableCommand extends CommandArguments {
   /**
    * Load this pack before all others. It will have the lowest priority.
    */
@@ -36,7 +34,7 @@ export class DataPackEnableCommand<MACRO extends boolean> extends CommandArgumen
   after = (name: string) => this.finalCommand(['after', name])
 }
 
-export class DataPackCommand<MACRO extends boolean> extends CommandArguments {
+export class DataPackCommand extends CommandArguments {
   protected NodeType = DataPackCommandNode
 
   /**

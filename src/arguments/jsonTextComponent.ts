@@ -1,8 +1,8 @@
-import type { BASIC_COLORS } from './basics.js'
-import type { MultipleEntitiesArgument } from './selector.js'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables/abstractClasses'
 import type { VectorClass } from 'sandstone/variables/Coordinates'
+import type { BASIC_COLORS } from './basics.js'
+import type { MultipleEntitiesArgument } from './selector.js'
 
 export type JSONContentTypes = 'text' | 'translatable' | 'score' | 'selector' | 'keybind' | 'nbt'
 
@@ -34,7 +34,7 @@ export type ContentTag<Type extends JSONContentTypes> = (
        * The name of the score holder whose score should be displayed.
        * This can be a selector like @p or an explicit name.
        */
-      name: MultipleEntitiesArgument
+      name: MultipleEntitiesArgument<false>
 
       /** The internal name of the objective to display the player's score in. */
       objective: string
@@ -95,7 +95,7 @@ type NBTTarget = {
   block: string | VectorClass<[string, string, string]>
 } | {
   /** The target selector for the entity or entities from which the NBT value is obtained. */
-  entity: MultipleEntitiesArgument
+  entity: MultipleEntitiesArgument<false>
 } | {
   /** The namespaced ID of the command storage from which the NBT value is obtained */
   storage: string

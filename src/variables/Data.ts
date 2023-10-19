@@ -11,8 +11,8 @@ import type { SandstonePack } from 'sandstone/pack'
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 
 export type DATA_TARGET = {
-  'entity': SingleEntityArgument,
-  'block': Coordinates,
+  'entity': SingleEntityArgument<false>,
+  'block': Coordinates<false>,
   'storage': string,
 }
 
@@ -92,7 +92,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionText
 
   select = (...path: DATA_PATH[]) => new DataPointClass(this.sandstonePack, this.type, this.currentTarget, [this.path, ...path])
 
-  protected modify = (cb: (data: DataModifyTypeCommand) => DataModifyValuesCommand, value: NBTObject | DataPointClass | DataPointPickClass) => {
+  protected modify = (cb: (data: DataModifyTypeCommand<false>) => DataModifyValuesCommand<false>, value: NBTObject | DataPointClass | DataPointPickClass) => {
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     // The value is another Data Point
@@ -111,7 +111,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionText
     return this
   }
 
-  protected string = (cb: (data: DataModifyTypeCommand) => DataModifyValuesCommand, value: DataPointClass, start: number, end?: number) => {
+  protected string = (cb: (data: DataModifyTypeCommand<false>) => DataModifyValuesCommand<false>, value: DataPointClass, start: number, end?: number) => {
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     if (!end) data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start)

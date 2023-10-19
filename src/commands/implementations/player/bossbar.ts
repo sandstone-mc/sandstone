@@ -3,10 +3,9 @@ import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 // Bossbar command
 export class BossBarCommandNode extends CommandNode {
@@ -23,14 +22,15 @@ export class BossBarCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param name The display name of the boss bar.
    */
-  add = (id: string, name: JSONTextComponent) => this.finalCommand(['add', id, new JSONTextComponentClass(name)])
+  /* @ts-ignore */
+  add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['add', id, typeof name === 'object' && name.toMacro ? name : new JSONTextComponentClass(name)])
 
   /**
    * Return the requested setting as a result of the command.
    *
    * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
    */
-  get = (id: string, setting: 'max' | 'players' | 'value' | 'visible') => this.finalCommand(['get', id, setting])
+  get = (id: Macroable<string, MACRO>, setting: Macroable<'max' | 'players' | 'value' | 'visible', MACRO>) => this.finalCommand(['get', id, setting])
 
   /**
    * Display a list of existing boss bars.
@@ -42,7 +42,7 @@ export class BossBarCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
    */
-  remove = (id: string) => this.finalCommand(['remove', id])
+  remove = (id: Macroable<string, MACRO>) => this.finalCommand(['remove', id])
 
   /**
    * Set some bossbar options.
@@ -52,7 +52,7 @@ export class BossBarCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * bossbar.set('custom:mybossbar').color('red')
    */
-  set = (id: string) => this.subCommand(['set', id], BossBarSetCommand, false)
+  set = (id: Macroable<string, MACRO>) => this.subCommand(['set', id], BossBarSetCommand<MACRO>, false)
 }
 
 export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
@@ -70,14 +70,14 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param max The new maximum value.
    */
-  max = (max: number) => this.finalCommand(['max', max])
+  max = (max: Macroable<number, MACRO>) => this.finalCommand(['max', max])
 
   /**
    * Set the boss bar's name.
    *
    * @param name The new name.
    */
-  name = (name: string) => this.finalCommand(['name', name])
+  name = (name: Macroable<string, MACRO>) => this.finalCommand(['name', name])
 
   /**
    * Change the set of players to whom the bar is visible.
@@ -85,7 +85,7 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
    */
-  players = (players?: MultiplePlayersArgument) => this.finalCommand(['players', targetParser(players)])
+  players = (players?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.finalCommand(['players', targetParser(players)])
 
   /**
    * Set the boss bar's visual amount of segments: continuous, 6 segments, 10 segments, 12 segments, or 20 segments.
@@ -93,7 +93,7 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param style The new style.
    */
-  style = (style: 'progress' | 'notched_6' | 'notched_10' | 'notched_12' | 'notched_20') => this.finalCommand(['style', style])
+  style = (style: Macroable<'progress' | 'notched_6' | 'notched_10' | 'notched_12' | 'notched_20', MACRO>) => this.finalCommand(['style', style])
 
   /**
    * Set the boss bar's current value.
@@ -101,7 +101,7 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param value The new value.
    */
-  value = (value: number) => this.finalCommand(['value', value])
+  value = (value: Macroable<number, MACRO>) => this.finalCommand(['value', value])
 
   /**
    * Set the boss bar's visibility.
@@ -109,5 +109,5 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param visible Whether the bossbar is visible or not.
    */
-  visible = (visible: boolean) => this.finalCommand(['visible', visible])
+  visible = (visible: Macroable<boolean, MACRO>) => this.finalCommand(['visible', visible])
 }

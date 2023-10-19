@@ -6,8 +6,10 @@ import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
 import { FunctionCommandNode } from './function.js'
 
 import type { SandstonePack } from 'sandstone'
+import type { SandstoneCommands } from 'sandstone/commands/commands.js'
 import type { MCFunctionNode } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
+import type { Macroable } from 'sandstone/variables'
 
 export class ReturnRunCommandNode extends ContainerCommandNode {
   command = 'return' as const
@@ -68,7 +70,7 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
   }
 }
 
-export class ReturnArgumentsCommand extends CommandArguments<typeof ReturnRunCommandNode> {
+export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArguments<typeof ReturnRunCommandNode> {
   protected NodeType = ReturnRunCommandNode
 
   /*
@@ -77,7 +79,7 @@ export class ReturnArgumentsCommand extends CommandArguments<typeof ReturnRunCom
   get run() {
     const node = this.getNode()
 
-    const commands = new Proxy(this.sandstonePack.commands, {
+    const commands = new Proxy(this.sandstonePack.commands as SandstoneCommands<MACRO>, {
       get: (target, p, receiver) => {
         // The context will automatically be exited by the node itself
         this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(node)
@@ -103,6 +105,6 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
   get return() {
     const run = new ReturnArgumentsCommand(this.sandstonePack)
 
-    return makeCallable(run, (value: number) => this.finalCommand([value]), true)
+    return makeCallable(run, (value: Macroable<number, MACRO>) => this.finalCommand([value]), true)
   }
 }

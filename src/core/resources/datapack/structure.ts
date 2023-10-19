@@ -270,7 +270,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
    */
   async load(pos: [number, number, number] = [0, 0, 0], rotation?: StructureRotation | VariableInsertion, mirror?: StructureMirror | '^xz' | 'xz' | VariableInsertion, integrity?: number | VariableInsertion, seed?: number | VariableInsertion) {
     const {
-      Variable, Data, ResolveNBT, dimensionMarker,
+      Variable, Data, ResolveNBT,
     } = this.pack
     const {
       place, fill, setblock, execute,
@@ -279,12 +279,12 @@ export class StructureClass extends ResourceClass<StructureNode> {
 
     const rel = relative(...pos)
 
+    // TODO: Replace this with a macro
     if (rotation instanceof ConditionClass || mirror instanceof ConditionClass || integrity instanceof ConditionClass || seed instanceof ConditionClass) {
       const currentLevel = Variable()
       const bottomCoordinate = Variable()
 
       currentLevel.set(Data('entity', '@s', 'Position[1]'))
-      dimensionMarker().run(() => bottomCoordinate.set(Data('entity', '@s', 'Position[1]')))
 
       execute.summon('marker').run(() => {
         Data('entity', '@s', 'Position[1]').set(bottomCoordinate, 'double')
@@ -331,7 +331,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
     }
   }
 
-  save(pos: Coordinates | [Score, Score, Score] = '~ ~ ~', size: [number, number, number] | [Score, Score, Score]) {
+  save(pos: Coordinates<false> | [Score, Score, Score] = '~ ~ ~', size: [number, number, number] | [Score, Score, Score]) {
 
   }
 

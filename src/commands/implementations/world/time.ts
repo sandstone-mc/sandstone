@@ -2,9 +2,8 @@ import { CommandNode } from 'sandstone/core'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { TimeArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class TimeCommandNode extends CommandNode {
   command = 'time' as const
@@ -24,7 +23,7 @@ export class TimeCommand<MACRO extends boolean> extends CommandArguments {
    * - `s`: a second, 20 gameticks;
    * - `t` (default and omitable): a single gametick; the default unit.
    */
-  add = (time: TimeArgument) => this.finalCommand(['add'])
+  add = (time: Macroable<TimeArgument, MACRO>) => this.finalCommand(['add', time])
 
   /**
    * Queries current time.
@@ -34,7 +33,7 @@ export class TimeCommand<MACRO extends boolean> extends CommandArguments {
    * - `gametime`: the age of the world in game ticks. (the game time modulo 2147483647)
    * - `day`: the number of in-game days passed. (the in-game daytime divided by 24000, then modulo 2147483647)
    */
-  query = (type: 'daytime' | 'gametime' | 'day') => this.finalCommand(['query', type])
+  query = (type: Macroable<'daytime' | 'gametime' | 'day', MACRO>) => this.finalCommand(['query', type])
 
   /**
    * Sets the in-game daytime.
@@ -44,5 +43,5 @@ export class TimeCommand<MACRO extends boolean> extends CommandArguments {
    * - `s`: a second, 20 gameticks;
    * - `t` (default and omitable): a single gametick; the default unit.
    */
-  set = (time: TimeArgument | 'day' | 'night' | 'noon' | 'midnight') => this.finalCommand(['set', time])
+  set = (time: Macroable<TimeArgument | 'day' | 'night' | 'noon' | 'midnight', MACRO>) => this.finalCommand(['set', time])
 }

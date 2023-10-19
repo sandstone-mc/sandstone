@@ -1,9 +1,7 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
-
-import type { Macroable } from 'sandstone/variables'
 
 import type { MultipleEntitiesArgument } from 'sandstone/arguments'
 
@@ -15,7 +13,7 @@ export class MeCommandNode extends CommandNode<[string[]]> {
   }
 }
 
-export class MeCommand<MACRO extends boolean> extends CommandArguments {
+export class MeCommand extends CommandArguments {
   protected NodeType = MeCommandNode
 
   /**
@@ -27,5 +25,5 @@ export class MeCommand<MACRO extends boolean> extends CommandArguments {
    * The game replaces entity selectors in the message with the list of selected entities' names,
    * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
    */
-  me = (...actions: (string | MultipleEntitiesArgument)[]) => this.finalCommand([actions.map(targetParser)])
+  me = (...actions: (string | MultipleEntitiesArgument<false>)[]) => this.finalCommand([actions.map(targetParser)])
 }

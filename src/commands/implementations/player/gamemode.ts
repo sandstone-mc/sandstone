@@ -1,11 +1,10 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { GAMEMODES, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 // Gamemode command
 
@@ -27,5 +26,5 @@ export class GameModeCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param targets Specifies the target(s). If not specified, defaults to the player who executes the command.
    */
-  gamemode = (gamemode: GAMEMODES, targets?: MultiplePlayersArgument) => this.finalCommand([targetParser(gamemode), targets])
+  gamemode = (gamemode: Macroable<GAMEMODES, MACRO>, targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.finalCommand([targetParser(gamemode), targets])
 }

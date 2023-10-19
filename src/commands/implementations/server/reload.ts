@@ -2,13 +2,11 @@ import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 export class ReloadCommandNode extends CommandNode {
   command = 'reload' as const
 }
 
-export class ReloadCommand<MACRO extends boolean> extends CommandArguments {
+export class ReloadCommand extends CommandArguments {
   protected NodeType = ReloadCommandNode
 
   /**

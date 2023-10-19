@@ -3,13 +3,13 @@ import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS,
   ITEMS, MultipleEntitiesArgument,
 } from 'sandstone/arguments'
 import type { ItemModifierClass } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
@@ -21,7 +21,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
    * @param item The item to replace the slot with.
    * @param count The amount of items.
    */
-  with = (item: ITEMS, count: number) => this.finalCommand(['with', item, count])
+  with = (item: Macroable<LiteralUnion<ITEMS>, MACRO>, count: Macroable<number, MACRO>) => this.finalCommand(['with', item, count])
 
   from = {
     /**
@@ -29,14 +29,22 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
      * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: CONTAINER_SLOTS, modifier?: string | ItemModifierClass) => this.finalCommand(['from', 'block', pos, slot, modifier]),
+    block: (
+      pos: Macroable<Coordinates<MACRO>, MACRO>,
+      slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>,
+      modifier?: Macroable<string | ItemModifierClass, MACRO>,
+    ) => this.finalCommand(['from', 'block', pos, slot, modifier]),
 
     /**
      * @param targets The entity to copy items from.
      * @param slot The slot to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
-    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier?: string | ItemModifierClass) => this.finalCommand(['from', 'entity', targetParser(targets), slot, modifier]),
+    entity: (
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+      slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
+      modifier?: Macroable<string | ItemModifierClass, MACRO>,
+    ) => this.finalCommand(['from', 'entity', targetParser(targets), slot, modifier]),
   }
 }
 
@@ -51,14 +59,22 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      * @param slot The slot to apply the modifier to.
      * @param modifier The name of the modifier.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: CONTAINER_SLOTS, modifier: string | ItemModifierClass) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
+    block: (
+      pos: Macroable<Coordinates<MACRO>, MACRO>,
+      slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>,
+      modifier: Macroable<string | ItemModifierClass, MACRO>,
+    ) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
 
     /**
      * @param targets The entity/entities containing the slot to apply the modifier to.
      * @param slot The slot to apply the modifier to.
      * @param modifier The name of the modifier.
      */
-    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS, modifier: string | ItemModifierClass) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
+    entity: (
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+      slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
+      modifier: Macroable<string | ItemModifierClass, MACRO>,
+    ) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
   }
 
   /** Replaces the content of a specific slot of an inventory with another. */
@@ -67,13 +83,16 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      * @param pos The position of the container containing the slot to be replaced.
      * @param slot The slot to be replaced.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: CONTAINER_SLOTS) => this.subCommand(['block', pos, slot], ItemSourceCommand, false),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) => this.subCommand(['block', pos, slot], ItemSourceCommand<MACRO>, false),
 
     /**
      * @param targets one or more entities to modify.
      *.
      * @param slot The slot to be replaced.
      */
-    entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => this.subCommand(['entity', targetParser(targets), slot], ItemSourceCommand, false),
+    entity: (
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+      slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
+    ) => this.subCommand(['entity', targetParser(targets), slot], ItemSourceCommand<MACRO>, false),
   }
 }

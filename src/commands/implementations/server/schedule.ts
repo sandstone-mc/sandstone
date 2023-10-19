@@ -4,17 +4,14 @@ import { toMinecraftResourceName } from 'sandstone/utils'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { TimeArgument } from 'sandstone/arguments'
 import type { Node } from 'sandstone/core'
 import type { MCFunctionNode } from 'sandstone/core/resources/datapack/index'
+import type { Macroable } from 'sandstone/variables'
 
-type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass | (() => (any | Promise<any>))
+type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass<any, any> | (() => (any | Promise<any>))
 
-export class ScheduleCommandNode extends ContainerCommandNode<
-  ['clear', string | MCFunctionClass] | ['function', MCFunctionClass | string | undefined, TimeArgument, ScheduleType | undefined]
-> {
+export class ScheduleCommandNode extends ContainerCommandNode {
   command = 'schedule' as const
 
   override createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[]; mcFunction?: MCFunctionNode | undefined } = (currentMCFunction) => {
@@ -55,7 +52,7 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
    * @param functionName Specify the scheduled function or `MCFunction` to be cleared.
    *
    */
-  clear = (func: MCFunctionClass | string | TagClass<'functions'>) => {
+  clear = (func: Macroable<MCFunctionClass<any, any> | string | TagClass<'functions'>, MACRO>) => {
     const result = this.finalCommand(['clear', func instanceof TagClass ? func.name : func])
     return result
   }
@@ -78,7 +75,7 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
    * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
    * If unspecified, defaults to `replace`.
    */
-  function = (func: ScheduledFunction, delay: TimeArgument, type?: ScheduleType) => {
+  function = (func: Macroable<ScheduledFunction, MACRO>, delay: Macroable<TimeArgument, MACRO>, type?: Macroable<ScheduleType, MACRO>) => {
     const node = this.getNode()
 
     if (func instanceof MCFunctionClass) {

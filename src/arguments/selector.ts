@@ -23,5 +23,5 @@ export type SelectorArgument<MACRO extends boolean, MustBeSingle extends boolean
  */
 export type SinglePlayerArgument<MACRO extends boolean> = SelectorArgument<MACRO, true, true> | _ShowAlias
 export type MultiplePlayersArgument<MACRO extends boolean> = SelectorArgument<MACRO, false, true> | SinglePlayerArgument<MACRO> | _ShowAlias
-export type SingleEntityArgument<MACRO extends boolean> = SelectorArgument<MACRO, true, false> | SinglePlayerArgument<MACRO> | UUIDClass<any, any> | _ShowAlias
+export type SingleEntityArgument<MACRO extends boolean> = SelectorArgument<MACRO, true, false> | SinglePlayerArgument<MACRO> | UUIDClass<any> | _ShowAlias
 export type MultipleEntitiesArgument<MACRO extends boolean> = SelectorArgument<MACRO, false, false> | SingleEntityArgument<MACRO> | MultiplePlayersArgument<MACRO> | _ShowAlias

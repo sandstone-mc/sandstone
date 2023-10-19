@@ -17,5 +17,5 @@ export class SayCommand<MACRO extends boolean> extends CommandArguments {
    * /say a message.
    * @param message The message to say.
    */
-  say = (message: string) => this.finalCommand([message])
+  say = (message: Macroable<string, MACRO>) => this.finalCommand([message])
 }

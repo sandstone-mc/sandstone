@@ -38,7 +38,7 @@ export type STRUCTURE_ROTATION = 'none' | 'clockwise_90' | 'counterclockwise_90'
 
 export type STRUCTURE_MIRROR = 'none' | 'front_back' | 'left_right'
 
-export type MessageOrSelector = (string | MultipleEntitiesArgument | number) | _ShowAlias
+export type MessageOrSelector = (string | MultipleEntitiesArgument<boolean> | number) | _ShowAlias
 
 export type TimeArgument = number | `${number}` | `${number}${'t' | 's' | 'd'}`
 

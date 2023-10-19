@@ -3,16 +3,16 @@ import { toMinecraftResourceName } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { MCFunctionClass } from './mcfunction.js'
 import type {
   HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { ConditionClass } from 'sandstone/variables'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import type { MCFunctionClass } from './mcfunction.js'
 
-function isMCFunctionClass(v: unknown): v is MCFunctionClass {
+function isMCFunctionClass(v: unknown): v is MCFunctionClass<undefined, undefined> {
   return typeof v === 'function'
 }
 
@@ -123,7 +123,7 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>> extends Resourc
   }
 
   /** Checks whether a given resource is in this tag. */
-  has(resource: string | MCFunctionClass | TagClass<REGISTRY>) {
+  has(resource: string | MCFunctionClass<undefined, undefined> | TagClass<REGISTRY>) {
     this.tagJSON.values.some((tagValue) => (typeof tagValue !== 'string' ? (tagValue as {id: string}).id : tagValue) === objectToString(resource as HintedTagStringType<REGISTRY>))
   }
 

@@ -1,4 +1,5 @@
 import type { SandstonePack } from 'sandstone/pack'
+import type { MacroArgument } from 'sandstone/variables/Macro.js'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
 import type { SandstoneCore } from './sandstoneCore.js'
 
@@ -66,8 +67,22 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
   }
 
   getValue() {
-    const filteredArgs = this.args.filter((arg) => arg !== undefined)
-    return `${this.command} ${filteredArgs.join(' ')}`
+    let isMacro = false
+
+    const filteredArgs: unknown[] = []
+
+    for (const arg of this.args) {
+      if (arg !== undefined) {
+        if (arg && typeof arg === 'object' && Object.hasOwn(arg, 'toMacro')) {
+          isMacro = true
+
+          filteredArgs.push((arg as MacroArgument).toMacro())
+        }
+        filteredArgs.push(arg)
+      }
+    }
+
+    return `${isMacro ? '/' : ''}${this.command} ${filteredArgs.join(' ')}`
   }
 
   /**
@@ -122,5 +137,5 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> e
 }
 
 export abstract class AwaitNode extends ContainerCommandNode {
-  mcfunction: MCFunctionClass = undefined as unknown as MCFunctionClass
+  mcfunction: MCFunctionClass<any, any> = undefined as unknown as MCFunctionClass<any, any>
 }

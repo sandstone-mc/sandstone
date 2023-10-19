@@ -5,11 +5,13 @@ import { GenericSandstoneVisitor } from './visitor.js'
 
 import type { MCFunctionNode } from 'sandstone/core'
 
+// TODO: Add support for macros
+
 /**
  * Initialize the objectives of the pack.
  */
 export class InlineFunctionCallVisitor extends GenericSandstoneVisitor {
-  deletedMCFunction: [deleted: MCFunctionClass, new: MCFunctionClass] | null = null
+  deletedMCFunction: [deleted: MCFunctionClass<any, any>, _new: MCFunctionClass<any, any>] | null = null
 
   visitFunctionCommandNode = (node: FunctionCommandNode) => {
     const mcFunction = node.args[0]

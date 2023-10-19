@@ -83,11 +83,11 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get datapack() { return new DataCommand<MACRO>(this.sandstonePack) }
 
-  get debug() { return new DebugCommand<MACRO>(this.sandstonePack) }
+  get debug() { return new DebugCommand(this.sandstonePack) }
 
-  get defaultgamemode() { return new DefaultGameModeCommand<MACRO>(this.sandstonePack).defaultgamemode }
+  get defaultgamemode() { return new DefaultGameModeCommand(this.sandstonePack).defaultgamemode }
 
-  get difficulty() { return new DifficultyCommand<MACRO>(this.sandstonePack).difficulty }
+  get difficulty() { return new DifficultyCommand(this.sandstonePack).difficulty }
 
   get effect() { return new EffectCommand<MACRO>(this.sandstonePack) }
 
@@ -109,19 +109,19 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get give() { return new GiveCommand<MACRO>(this.sandstonePack).give }
 
-  get help() { return new HelpCommand<MACRO>(this.sandstonePack).help }
+  get help() { return new HelpCommand(this.sandstonePack).help }
 
   get item() { return new ItemCommand<MACRO>(this.sandstonePack) }
 
   get kill() { return new KillCommand<MACRO>(this.sandstonePack).kill }
 
-  get list() { return new ListCommand<MACRO>(this.sandstonePack).list }
+  get list() { return new ListCommand(this.sandstonePack).list }
 
   get locate() { return new LocateCommand<MACRO>(this.sandstonePack) }
 
   get loot() { return new LootCommand<MACRO>(this.sandstonePack) }
 
-  get me() { return new MeCommand<MACRO>(this.sandstonePack).me }
+  get me() { return new MeCommand(this.sandstonePack).me }
 
   get particle() { return new ParticleCommand<MACRO>(this.sandstonePack).particle }
 
@@ -133,7 +133,7 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get recipe() { return new RecipeCommand<MACRO>(this.sandstonePack) }
 
-  get reload() { return new ReloadCommand<MACRO>(this.sandstonePack).reload }
+  get reload() { return new ReloadCommand(this.sandstonePack).reload }
 
   get returnCmd() { return new ReturnCommand<MACRO>(this.sandstonePack).return }
 
@@ -145,11 +145,11 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get scoreboard() { return new ScoreboardCommand<MACRO>(this.sandstonePack) }
 
-  get seed() { return new SeedCommand<MACRO>(this.sandstonePack).seed }
+  get seed() { return new SeedCommand(this.sandstonePack).seed }
 
   get setblock() { return new SetBlockCommand<MACRO>(this.sandstonePack).setblock }
 
-  get setidletimeout() { return new SetIdleTimeoutCommand<MACRO>(this.sandstonePack).setidletimeout }
+  get setidletimeout() { return new SetIdleTimeoutCommand(this.sandstonePack).setidletimeout }
 
   get setworldspawn() { return new SetWorldSpawnCommand<MACRO>(this.sandstonePack).setworldspawn }
 
@@ -167,7 +167,7 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get team() { return new TeamCommand<MACRO>(this.sandstonePack) }
 
-  get teammsg() { return new TeamMessageCommand<MACRO>(this.sandstonePack).teammessage }
+  get teammsg() { return new TeamMessageCommand(this.sandstonePack).teammessage }
 
   get teleport() { return new TeleportCommand<MACRO>(this.sandstonePack).tp }
 
@@ -179,7 +179,7 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get title() { return new TitleCommand<MACRO>(this.sandstonePack).title }
 
-  get trigger() { return new TriggerCommand<MACRO>(this.sandstonePack).trigger }
+  get trigger() { return new TriggerCommand(this.sandstonePack).trigger }
 
   get weather() { return new WeatherCommand<MACRO>(this.sandstonePack) }
 

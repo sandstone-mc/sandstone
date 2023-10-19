@@ -9,7 +9,7 @@ export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
   T extends 'fluids' ? LiteralUnion<FLUIDS> :
   T extends 'entity_types' ? LiteralUnion<ENTITY_TYPES> :
-  T extends 'functions' ? (LiteralUnion<string> | MCFunctionClass) :
+  T extends 'functions' ? (LiteralUnion<string> | MCFunctionClass<undefined, undefined>) :
   T extends 'items' ? LiteralUnion<ITEMS> :
   T extends 'dimensions' ? LiteralUnion<DIMENSIONS> :
   T extends 'game_events' ? LiteralUnion<GAME_EVENTS> :

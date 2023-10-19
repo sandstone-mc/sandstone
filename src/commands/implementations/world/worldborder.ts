@@ -3,9 +3,8 @@ import { coordinatesParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { ColumnCoordinates } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class WorldBorderNode extends CommandNode {
   command = 'worldborder' as const
@@ -23,14 +22,14 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
    * @param time Specifies the number of seconds it should take for the world border to move from its current diameter to the new diameter.
    * If not specified, defaults to 0.
    */
-  add = (distance: number, time?: number) => this.finalCommand(['add', distance, time])
+  add = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) => this.finalCommand(['add', distance, time])
 
   /**
    * Recenters the world boundary.
    *
    * @param pos Specifies the horizontal coordinates of the world border's center.
    */
-  center = (pos: ColumnCoordinates) => this.finalCommand(['center', coordinatesParser(pos)])
+  center = (pos: Macroable<ColumnCoordinates<MACRO>, MACRO>) => this.finalCommand(['center', coordinatesParser(pos)])
 
   damage = {
     /**
@@ -41,7 +40,7 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
      * For example, if `damagePerBlock` is 0.1, a player 5 blocks outside the world border buffer takes 0.5 damage per second
      * (damage less than half a heart might not change the visual health display, but still accumulates). Initially set to 0.2.
      */
-    amount: (damagePerBlock: number) => this.finalCommand(['damage', 'amount', damagePerBlock]),
+    amount: (damagePerBlock: Macroable<number, MACRO>) => this.finalCommand(['damage', 'amount', damagePerBlock]),
 
     /**
      * Sets the world border buffer distance to the specified value.
@@ -50,7 +49,7 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
      * @param distance Specifies the distance outside the world buffer a player must be before they start taking damage.
      * Initially set to 5.0.
      */
-    buffer: (distance: number) => this.finalCommand(['damage', 'buffer', distance]),
+    buffer: (distance: Macroable<number, MACRO>) => this.finalCommand(['damage', 'buffer', distance]),
   }
 
   /**
@@ -66,7 +65,7 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
    * @param time Specifies the number of seconds it should take for the world border to move from its current diameter to the new diameter.
    * If not specified, defaults to 0.
    */
-  set = (distance: number, time?: number) => this.finalCommand(['set', distance, time])
+  set = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) => this.finalCommand(['set', distance, time])
 
   warning = {
     /**
@@ -76,7 +75,7 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
      * @param distance Specifies the distance from the world border at which players begins to see a visual warning of the world border's proximity.
      * Initially set to 5.
      */
-    distance: (distance: number) => this.finalCommand(['warning', 'distance', distance]),
+    distance: (distance: Macroable<number, MACRO>) => this.finalCommand(['warning', 'distance', distance]),
 
     /**
      * Sets the world border warning time to the specified value.
@@ -84,6 +83,6 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
      * @param time Specifies the number of seconds that a player begins to see a visual warning before a moving world border passes their position.
      * Initially set to 15.
      */
-    time: (time: number) => this.finalCommand(['warning', 'time', time]),
+    time: (time: Macroable<number, MACRO>) => this.finalCommand(['warning', 'time', time]),
   }
 }

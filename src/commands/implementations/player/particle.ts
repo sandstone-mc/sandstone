@@ -3,13 +3,12 @@ import { arrayToArgsParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type {
   BLOCKS, Coordinates,
   ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 // Particle command
 
@@ -19,7 +18,7 @@ export class ParticleCommandNode extends CommandNode {
 
 // This command is fucking hell
 
-type ParticleCommandType = (
+type ParticleCommandType<MACRO extends boolean> = (
   (
     /**
      * Creates particles.
@@ -53,13 +52,13 @@ type ParticleCommandType = (
      * @param viewers Allows control of which player should view this particle instead of everyone in the viewing range of the particle.
      */
     (
-      name: Exclude<PARTICLE_TYPES, 'minecraft:dust' | 'minecraft:block' | 'minecraft:falling_dust' | 'minecraft:item'>,
+      name: Macroable<Exclude<PARTICLE_TYPES, 'minecraft:dust' | 'minecraft:block' | 'minecraft:falling_dust' | 'minecraft:item'>, MACRO>,
       pos?: Macroable<Coordinates<MACRO>, MACRO>,
-      delta?: [deltaX: number, deltaY: number, deltaZ: number],
-      speed?: number,
-      count?: number,
-      mode?: 'force' | 'normal',
-      viewers?: MultiplePlayersArgument
+      delta?: Macroable<[deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>], MACRO>,
+      speed?: Macroable<number, MACRO>,
+      count?: Macroable<number, MACRO>,
+      mode?: Macroable<'force' | 'normal', MACRO>,
+      viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>
     ) => void) & (
 
     /**
@@ -101,14 +100,14 @@ type ParticleCommandType = (
      */
     (
       name: 'minecraft:dust',
-      colors: [red: number, green: number, blue: number, size: number],
-      size: number,
+      colors: Macroable<[red: Macroable<number, MACRO>, green: Macroable<number, MACRO>, blue: Macroable<number, MACRO>, size: Macroable<number, MACRO>], MACRO>,
+      size: Macroable<number, MACRO>,
       pos?: Macroable<Coordinates<MACRO>, MACRO>,
-      delta?: [deltaX: number, deltaY: number, deltaZ: number],
-      speed?: number,
-      count?: number,
-      mode?: 'force' | 'normal',
-      viewers?: MultiplePlayersArgument
+      delta?: Macroable<[deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>], MACRO>,
+      speed?: Macroable<number, MACRO>,
+      count?: Macroable<number, MACRO>,
+      mode?: Macroable<'force' | 'normal', MACRO>,
+      viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>
     ) => void) & (
 
     /**
@@ -146,14 +145,14 @@ type ParticleCommandType = (
      * @param viewers Allows control of which player should view this particle instead of everyone in the viewing range of the particle.
      */
     (
-      name: 'minecraft:block' | 'minecraft:falling_dust',
+      name: Macroable<'minecraft:block' | 'minecraft:falling_dust', MACRO>,
       block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
       pos?: Macroable<Coordinates<MACRO>, MACRO>,
-      delta?: [deltaX: number, deltaY: number, deltaZ: number],
-      speed?: number,
-      count?: number,
-      mode?: 'force' | 'normal',
-      viewers?: MultiplePlayersArgument
+      delta?: Macroable<[deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>], MACRO>,
+      speed?: Macroable<number, MACRO>,
+      count?: Macroable<number, MACRO>,
+      mode?: Macroable<'force' | 'normal', MACRO>,
+      viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>
     ) => void) & (
 
     /**
@@ -193,18 +192,18 @@ type ParticleCommandType = (
       name: 'minecraft:item',
       item: Macroable<LiteralUnion<ITEMS>, MACRO>,
       pos?: Macroable<Coordinates<MACRO>, MACRO>,
-      delta?: [deltaX: number, deltaY: number, deltaZ: number],
-      speed?: number,
-      count?: number,
-      mode?: 'force' | 'normal',
-      viewers?: MultiplePlayersArgument
+      delta?: Macroable<[deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>], MACRO>,
+      speed?: Macroable<number, MACRO>,
+      count?: Macroable<number, MACRO>,
+      mode?: Macroable<'force' | 'normal', MACRO>,
+      viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>
     ) => void)
 )
 
 export class ParticleCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ParticleCommandNode
 
-  particle: ParticleCommandType = (...args: unknown[]) => this.finalCommand([
+  particle: ParticleCommandType<MACRO> = (...args: unknown[]) => this.finalCommand([
     args[0],
     arrayToArgsParser(args[1]),
     arrayToArgsParser(args[2]),

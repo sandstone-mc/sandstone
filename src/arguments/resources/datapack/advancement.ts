@@ -102,7 +102,7 @@ export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
     experience?: number
 
     /** A function to run. Function tags are not allowed. */
-    function?: string | MCFunctionClass
+    function?: string | MCFunctionClass<undefined, undefined>
   }
 
   /**

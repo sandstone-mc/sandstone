@@ -39,7 +39,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    * Grant this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grant(players: MultiplePlayersArgument = '@s', criterion?: CriteriaNames) {
+  grant(players: MultiplePlayersArgument<false> = '@s', criterion?: CriteriaNames) {
     this.pack.commands.advancement.grant(players).only(this.name, criterion)
   }
 
@@ -47,7 +47,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    * Revoke this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revoke(players: MultiplePlayersArgument = '@s', criterion?: CriteriaNames) {
+  revoke(players: MultiplePlayersArgument<false> = '@s', criterion?: CriteriaNames) {
     this.pack.commands.advancement.revoke(players).only(this.name, criterion)
   }
 
@@ -59,7 +59,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grantUntilThis(players: MultiplePlayersArgument = '@s') {
+  grantUntilThis(players: MultiplePlayersArgument<false> = '@s') {
     this.pack.commands.advancement.grant(players).until(this.name)
   }
 
@@ -71,7 +71,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revokeUntilThis(players: MultiplePlayersArgument = '@s') {
+  revokeUntilThis(players: MultiplePlayersArgument<false> = '@s') {
     this.pack.commands.advancement.revoke(players).until(this.name)
   }
 
@@ -84,7 +84,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grantFromThis(players: MultiplePlayersArgument = '@s') {
+  grantFromThis(players: MultiplePlayersArgument<false> = '@s') {
     this.pack.commands.advancement.grant(players).from(this.name)
   }
 
@@ -97,7 +97,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revokeFromThis(players: MultiplePlayersArgument = '@s') {
+  revokeFromThis(players: MultiplePlayersArgument<false> = '@s') {
     this.pack.commands.advancement.revoke(players).from(this.name)
   }
 
@@ -110,7 +110,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grantThroughThis(players: MultiplePlayersArgument = '@s') {
+  grantThroughThis(players: MultiplePlayersArgument<false> = '@s') {
     this.pack.commands.advancement.grant(players).through(this.name)
   }
 
@@ -123,7 +123,7 @@ export class AdvancementClass<CriteriaNames extends string = string> extends Res
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revokeThroughThis(players: MultiplePlayersArgument = '@s') {
+  revokeThroughThis(players: MultiplePlayersArgument<false> = '@s') {
     this.pack.commands.advancement.revoke(players).through(this.name)
   }
 

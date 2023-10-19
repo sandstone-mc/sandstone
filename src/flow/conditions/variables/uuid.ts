@@ -1,11 +1,11 @@
 import { CommandConditionNode } from '../command.js'
 import { SingleConditionNode } from '../condition.js'
 
-import type { UUIDClass } from 'sandstone/variables/UUID'
 import type { SandstoneCore } from 'sandstone/core'
+import type { UUIDClass } from 'sandstone/variables/UUID'
 
 export class UUIDConditionNode extends SingleConditionNode {
-  constructor(sandstoneCore: SandstoneCore, public UUID: UUIDClass<any, any>) {
+  constructor(sandstoneCore: SandstoneCore, public UUID: UUIDClass<any>) {
     super(sandstoneCore)
   }
 

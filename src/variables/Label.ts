@@ -8,7 +8,7 @@ import type { SandstonePack } from '../pack/index.js'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses.js'
 import type { SelectorProperties } from './Selector.js'
 
-type SingleEntity = SelectorClass<true, boolean> | SelectorPickClass<true, boolean>
+type SingleEntity = SelectorClass<false, true, boolean> | SelectorPickClass<true, boolean>
 
 /**
  * Label tag (/tag) handler
@@ -67,12 +67,12 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
   /**
    * Selects entity with the label
    */
-  public selector: SelectorClass<true, false>
+  public selector: SelectorClass<false, true, false>
 
   /**
    * Selects entity
    */
-  public originalSelector: string | SelectorClass<true, false>
+  public originalSelector: string | SelectorClass<false, true, false>
 
   /** Test for label on entity */
   public test = this as ConditionClass
@@ -82,7 +82,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
     this.label = label
 
     // Haha brrrrrrr
-    const selector = (typeof this.originalSelector === 'string' ? new SelectorClass(this.pack, '@s') : new SelectorClass(this.pack, this.originalSelector.target, { ...this.originalSelector.arguments })) as SelectorClass<true, false>
+    const selector = (typeof this.originalSelector === 'string' ? new SelectorClass(this.pack, '@s') : new SelectorClass(this.pack, this.originalSelector.target, { ...this.originalSelector.arguments })) as SelectorClass<false, true, false>
 
     if (selector.arguments) {
       if (selector.arguments.tag) {
@@ -92,7 +92,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
           selector.arguments.tag = [...selector.arguments.tag, label.fullName]
         }
       } else selector.arguments.tag = [label.fullName]
-    } else selector.arguments = { tag: [label.fullName] } as SelectorProperties<true, false>
+    } else selector.arguments = { tag: [label.fullName] } as SelectorProperties<true, false, false>
 
     this.selector = selector
   }

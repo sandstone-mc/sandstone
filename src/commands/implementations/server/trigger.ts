@@ -2,15 +2,13 @@ import { CommandNode } from 'sandstone/core'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { ObjectiveArgument } from 'sandstone/arguments'
 
 export class TriggerCommandNode extends CommandNode {
   command = 'trigger' as const
 }
 
-export class TriggerArgumentsCommand<MACRO extends boolean> extends CommandArguments {
+export class TriggerArgumentsCommand extends CommandArguments {
   /**
    * Adds `value` to the current value of `objective`.
    *
@@ -26,7 +24,7 @@ export class TriggerArgumentsCommand<MACRO extends boolean> extends CommandArgum
   set = (value: number) => this.finalCommand(['set', value])
 }
 
-export class TriggerCommand<MACRO extends boolean> extends CommandArguments {
+export class TriggerCommand extends CommandArguments {
   protected NodeType = TriggerCommandNode
 
   /**

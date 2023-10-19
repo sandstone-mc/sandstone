@@ -3,10 +3,8 @@ import { coordinatesParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { ColumnCoordinates } from 'sandstone/arguments'
-import type { VectorClass } from 'sandstone/variables'
+import type { Macroable, MacroArgument, VectorClass } from 'sandstone/variables'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string): number[] {
@@ -19,8 +17,12 @@ function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string)
   return realCoords.map((coord) => parseInt(coord.replace(/[\^~]/, '') || '0', 10))
 }
 
-function validateNumberOfChunks(from: ColumnCoordinates, to: ColumnCoordinates | undefined) {
+function validateNumberOfChunks(from: MacroArgument | ColumnCoordinates<boolean>, to: MacroArgument | ColumnCoordinates<boolean> | undefined) {
   if (!to) {
+    return
+  }
+
+  if (typeof from === 'object' || typeof to === 'object') {
     return
   }
 
@@ -74,7 +76,7 @@ export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
    * // Forceload current chunk
    * forceload.add('~ ~')
    */
-  add = (from: ColumnCoordinates, to?: ColumnCoordinates) => {
+  add = (from: Macroable<ColumnCoordinates<MACRO>, MACRO>, to?: Macroable<ColumnCoordinates<MACRO>, MACRO>) => {
     validateNumberOfChunks(from, to)
 
     return this.finalCommand(['add', coordinatesParser(from), coordinatesParser(to)])
@@ -87,7 +89,7 @@ export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
    * @param to Specified the end of the targeted chunks, in block coordinates.
    * If unspecified, only targets the chunk specified by `from`.
    */
-  remove = (from: ColumnCoordinates) => this.finalCommand(['remove', coordinatesParser(from)])
+  remove = (from: Macroable<ColumnCoordinates<MACRO>, MACRO>) => this.finalCommand(['remove', coordinatesParser(from)])
 
   /** Unforces all chunks in the dimension of the command's execution to be loaded constantly. */
   removeAll = () => this.finalCommand(['remove', 'all'])
@@ -101,5 +103,5 @@ export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    */
-  query = (pos?: ColumnCoordinates) => this.finalCommand(['query', coordinatesParser(pos)])
+  query = (pos?: Macroable<ColumnCoordinates<MACRO>, MACRO>) => this.finalCommand(['query', coordinatesParser(pos)])
 }

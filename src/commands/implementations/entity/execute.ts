@@ -270,8 +270,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
     if (typeof predicate === 'string') {
       return this.nestedExecute(['predicate', predicate], true)
     }
-    /* @ts-ignore */
-    if (predicate.toMacro) {
+    if (Object.hasOwn(predicate, 'toMacro')) {
       return this.nestedExecute(['predicate', predicate], true)
     }
     /* @ts-ignore */
@@ -339,7 +338,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
       return this.nestedExecute(['function', toMinecraftResourceName(func.path)])
     }
     /* @ts-ignore */
-    if (typeof func === 'string' || func.toMacro) {
+    if (typeof func === 'string' || Object.hasOwn(func, 'toMacro')) {
       return this.nestedExecute(['function', func])
     }
     const name = `${this.sandstoneCore.getCurrentMCFunctionOrThrow().resource.path.slice(2).join('/')}/execute_if_function`

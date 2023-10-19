@@ -3,9 +3,8 @@ import { coordinatesParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { Coordinates, Rotation } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/variables'
 
 export class SetWorldSpawnCommandNode extends CommandNode {
   command = 'setworldspawn' as const
@@ -21,5 +20,5 @@ export class SetWorldSpawnCommand<MACRO extends boolean> extends CommandArgument
    *
    * @param angle Specified the yaw angle to spawn with. Defaults to the direction the executor is facing.
    */
-  setworldspawn = (pos?: Macroable<Coordinates<MACRO>, MACRO>, angle?: Rotation) => this.finalCommand([coordinatesParser(pos), coordinatesParser(angle)])
+  setworldspawn = (pos?: Macroable<Coordinates<MACRO>, MACRO>, angle?: Macroable<Rotation<MACRO>, MACRO>) => this.finalCommand([coordinatesParser(pos), coordinatesParser(angle)])
 }

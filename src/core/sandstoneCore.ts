@@ -58,7 +58,7 @@ export class SandstoneCore {
    * @param mcfunction The MCFunction to switch to.
    * @return The newly created and active MCFunction.
    */
-  enterMCFunction = (mcfunction: _RawMCFunctionClass | MCFunctionClass): MCFunctionNode => {
+  enterMCFunction = (mcfunction: _RawMCFunctionClass<any, any> | MCFunctionClass<any, any>): MCFunctionNode => {
     /*
      * We cannot simply call mcfunction.node, because .node is protected to avoid polluting the autocompleted API.
      * However, TypeScript gives us a backdoor using this dynamic call, in a fully type-safe way.

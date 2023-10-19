@@ -21,13 +21,12 @@ import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
 import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
-  LogVisitor,
   SimplifyExecuteFunctionVisitor, SimplifyReturnRunFunctionVisitor, UnifyChainedExecutesVisitor,
 } from './visitors/index.js'
 
 import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, DIMENSIONS, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
 import type {
@@ -51,6 +50,8 @@ const conflictDefaults = (resourceType: string) => (process.env[`${resourceType.
 let tempStorage: DataClass<'storage'>
 
 let startTickedLoops: MCFunctionClass<undefined, undefined>
+
+type MCFunctionArgs = Exclude<Partial<MCFunctionClassArguments>, MCFunctionClassArguments['callback']>
 
 export class DataPack extends PackType {
   // TODO: typing. low priority
@@ -484,27 +485,27 @@ export class SandstonePack {
   MCFunction(
     name: string,
     callback: (this: MCFunctionClass<undefined, undefined>) => void,
-    options?: Partial<MCFunctionClassArguments>
+    options?: MCFunctionArgs
   ): MCFunctionClass<undefined, undefined>
 
   MCFunction<PARAMS extends MacroArgument[]>(
     name: string,
     callback: (this: MCFunctionClass<PARAMS, undefined>, ...params: PARAMS) => void,
-    options?: Partial<MCFunctionClassArguments>
+    options?: MCFunctionArgs
   ): MCFunctionClass<PARAMS, undefined>
 
   MCFunction<ENV extends MacroArgument[]>(
     name: string,
     environment_variables: ENV,
     callback: (this: MCFunctionClass<undefined, ENV>) => void,
-    options?: Partial<MCFunctionClassArguments>
+    options?: MCFunctionArgs
   ): MCFunctionClass<undefined, ENV>
 
   MCFunction<PARAMS extends MacroArgument[], ENV extends MacroArgument[]>(
     name: string,
     environment_variables: ENV,
     callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void,
-    options?: Partial<MCFunctionClassArguments>
+    options?: MCFunctionArgs
   ): MCFunctionClass<PARAMS, ENV>
 
   MCFunction<
@@ -513,12 +514,12 @@ export class SandstonePack {
     ...args: [
       name: string,
       callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends MacroArgument[] ? PARAMS : []) => void,
-      options?: Partial<MCFunctionClassArguments>
+      options?: MCFunctionArgs
     ] | [
       name: string,
       environment_variables: ENV,
       callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends MacroArgument[] ? PARAMS : []) => void,
-      options?: Partial<MCFunctionClassArguments>,
+      options?: MCFunctionArgs,
     ]
   ) {
     return new MCFunctionClass(this.core, args[0], {
@@ -778,7 +779,6 @@ export class SandstonePack {
     await this.core.save(cliOptions, {
       visitors: [
         // Initialization visitors
-        new LogVisitor(this),
         new InitObjectivesVisitor(this),
         new InitConstantsVisitor(this),
         new GenerateLazyMCFunction(this),

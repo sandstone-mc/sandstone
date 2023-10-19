@@ -1,5 +1,5 @@
 import { CommandNode } from 'sandstone/core'
-import { JSONTextComponentClass, MacroArgument, targetParser } from 'sandstone/variables'
+import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -38,7 +38,7 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
     team: Macroable<string, MACRO>,
     displayName?: Macroable<JSONTextComponent, MACRO>,
     /* @ts-ignore */
-  ) => this.finalCommand(['add', team, (!displayName || (typeof displayName === 'object' && displayName.toMacro)) ? displayName : new JSONTextComponentClass(displayName)])
+  ) => this.finalCommand(['add', team, typeof displayName === 'object' && displayName.toMacro ? displayName : new JSONTextComponentClass(displayName)])
 
   /**
    * Removes all members from a team.

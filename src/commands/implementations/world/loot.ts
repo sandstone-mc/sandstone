@@ -4,16 +4,15 @@ import { coordinatesParser, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
 } from 'sandstone/arguments'
 import type { LootTableClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
-type LootTableArgument = LootTableClass | string
+type LootTableArgument<MACRO extends boolean> = Macroable<LootTableClass | string, MACRO>
 
 export class LootCommandNode extends CommandNode {
   command = 'loot' as const
@@ -29,21 +28,25 @@ class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param tool Specifies an tool to fish.
    */
-  fish = (lootTable: LootTableArgument, pos: Macroable<Coordinates<MACRO>, MACRO>, tool: Macroable<LiteralUnion<ITEMS>, MACRO>) => this.finalCommand(['fish', lootTable, coordinatesParser(pos), tool])
+  fish = (
+    lootTable: LootTableArgument<MACRO>,
+    pos: Macroable<Coordinates<MACRO>, MACRO>,
+    tool: Macroable<LiteralUnion<ITEMS>, MACRO>,
+  ) => this.finalCommand(['fish', lootTable, coordinatesParser(pos), tool])
 
   /**
    * Drops items that would be dropped by the given loot table.
    *
    * @param lootTable Specifies which loot table to use.
    */
-  loot = (lootTable: LootTableArgument) => this.finalCommand(['loot', lootTable])
+  loot = (lootTable: LootTableArgument<MACRO>) => this.finalCommand(['loot', lootTable])
 
   /**
    * Drops items that would be dropped by killing the given entity.
    *
    * @param target Specifies one entity to kill simulatively.
    */
-  kill = (target: SingleEntityArgument) => this.finalCommand(['kill', targetParser(target)])
+  kill = (target: SingleEntityArgument<MACRO>) => this.finalCommand(['kill', targetParser(target)])
 
   /**
    * Drops items that would be dropped by mining the given block, with the given tool.
@@ -93,7 +96,7 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
      *
      * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
      */
-    entity: (entities: MultipleEntitiesArgument, slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>, count?: number) => {
+    entity: (entities: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>, count?: Macroable<number, MACRO>) => {
       if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
       return this.subCommand(['replace', 'entity', targetParser(entities), slot, count], LootSourceCommand, false)
@@ -115,7 +118,7 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
      *
      * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
      */
-    block: (targetPos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>, count?: number) => {
+    block: (targetPos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>, count?: Macroable<number, MACRO>) => {
       if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
       return this.subCommand(['replace', 'block', coordinatesParser(targetPos), slot, count], LootSourceCommand, false)
@@ -127,12 +130,12 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param players Specifies one or more players to give.
    */
-  give = (players: MultiplePlayersArgument) => this.subCommand(['give', targetParser(players)], LootSourceCommand, false)
+  give = (players: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.subCommand(['give', targetParser(players)], LootSourceCommand<MACRO>, false)
 
   /**
    * Distributes items to a container block.
    *
    * @param targetPos Specifies the position of a block.
    */
-  insert = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) => this.subCommand(['insert', coordinatesParser(targetPos)], LootSourceCommand, false)
+  insert = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) => this.subCommand(['insert', coordinatesParser(targetPos)], LootSourceCommand<MACRO>, false)
 }

@@ -1,13 +1,12 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
-
-import type { Macroable } from 'sandstone/variables'
 
 import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { RecipeClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Macroable } from 'sandstone/variables'
 
 export class RecipeCommandNode extends CommandNode {
   command = 'recipe' as const
@@ -23,7 +22,7 @@ export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
    * @param targets Specifies the player(s) to give the recipe to.
    * @param recipe Specifies a recipe to give. If `*` is specified, then all recipes will be given.
    */
-  give = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS> | RecipeClass) => this.finalCommand(['give', targetParser(targets), recipe])
+  give = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>) => this.finalCommand(['give', targetParser(targets), recipe])
 
   /**
    * Takes recipes to the player.
@@ -31,5 +30,5 @@ export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
    * @param targets Specifies the player(s) to take the recipe from.
    * @param recipe Specifies a recipe to take. If `*` is specified, then all recipes will be taken.
    */
-  take = (targets: MultiplePlayersArgument, recipe: LiteralUnion<'*' | ITEMS> | RecipeClass) => this.finalCommand(['take', targetParser(targets), recipe])
+  take = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>) => this.finalCommand(['take', targetParser(targets), recipe])
 }

@@ -1,12 +1,11 @@
-import { targetParser } from 'sandstone/variables/parsers'
 import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
-import type { Macroable } from 'sandstone/variables'
-
 import type { MultiplePlayersArgument } from 'sandstone/arguments'
 import type { AdvancementClass } from 'sandstone/core'
+import type { Macroable } from 'sandstone/variables'
 
 // Advancement command
 
@@ -29,7 +28,7 @@ export class AdvancementArgumentsCommand<MACRO extends boolean> extends CommandA
    * The command defaults to the entire advancement.
    * If specified, the command refers to merely the criterion and not the entire advancement.
    */
-  only = (advancement: AdvancementArgument, criterion?: string) => this.finalCommand(['only', advancement, criterion])
+  only = (advancement: Macroable<AdvancementArgument, MACRO>, criterion?: Macroable<string, MACRO>) => this.finalCommand(['only', advancement, criterion])
 
   /**
    * Adds or removes an advancement and all its children advancements.
@@ -43,7 +42,7 @@ export class AdvancementArgumentsCommand<MACRO extends boolean> extends CommandA
    *
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
-  from = (advancement: AdvancementArgument) => this.finalCommand(['from', advancement])
+  from = (advancement: Macroable<AdvancementArgument, MACRO>) => this.finalCommand(['from', advancement])
 
   /**
    * Specifies an advancement, and adds or removes all its parent advancements, and all its children advancements.
@@ -55,7 +54,7 @@ export class AdvancementArgumentsCommand<MACRO extends boolean> extends CommandA
    *
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
-  through = (advancement: AdvancementArgument) => this.finalCommand(['through', advancement])
+  through = (advancement: Macroable<AdvancementArgument, MACRO>) => this.finalCommand(['through', advancement])
 
   /**
    * Adds or removes an advancement and all its parent advancements until the root for addition/removal.
@@ -67,7 +66,7 @@ export class AdvancementArgumentsCommand<MACRO extends boolean> extends CommandA
    *
    * @param advancement Specifies a valid namespaced id of the advancement to target.
    */
-  until = (advancement: AdvancementArgument) => this.finalCommand(['until', advancement])
+  until = (advancement: Macroable<AdvancementArgument, MACRO>) => this.finalCommand(['until', advancement])
 }
 
 /** Gives or takes an advancement from one or more players. */
@@ -79,12 +78,12 @@ export class AdvancementCommand<MACRO extends boolean> extends CommandArguments 
    *
    * @param targets Specifies one player or more.
    */
-  grant = (targets: MultiplePlayersArgument) => this.subCommand(['grant', targetParser(targets)], AdvancementArgumentsCommand, false)
+  grant = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.subCommand(['grant', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
 
   /**
    * Removes specified advancements.
    *
    * @param targets Specifies one player or more.
    */
-  revoke = (targets: MultiplePlayersArgument) => this.subCommand(['revoke', targetParser(targets)], AdvancementArgumentsCommand, false)
+  revoke = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.subCommand(['revoke', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
 }

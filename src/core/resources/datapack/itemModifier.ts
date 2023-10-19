@@ -3,11 +3,11 @@ import { targetParser } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ItemModifierJSON, MultipleEntitiesArgument,
 } from 'sandstone/arguments'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
 
 /**
  * A node representing a Minecraft item modifier.
@@ -86,7 +86,7 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
        * @param pos The position of the container containing the slot to apply the modifier to.
        * @param slot The slot to apply the modifier to.
        */
-      block: (pos: Coordinates, slot: CONTAINER_SLOTS) => {
+      block: (pos: Coordinates<false>, slot: CONTAINER_SLOTS) => {
         this.pack.commands.item.modify.block(pos, slot, this)
       },
       /**
@@ -94,7 +94,7 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
        * @param slot The slot to apply the modifier to.
        * @param modifier The name of the modifier.
        */
-      entity: (targets: MultipleEntitiesArgument, slot: ENTITY_SLOTS) => {
+      entity: (targets: MultipleEntitiesArgument<false>, slot: ENTITY_SLOTS) => {
         this.pack.commands.item.modify.entity(targetParser(targets), slot, this)
       },
     }

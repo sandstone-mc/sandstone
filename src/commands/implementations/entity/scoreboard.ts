@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { CommandNode } from 'sandstone/core'
 import {
-  JSONTextComponentClass, MacroArgument, Score, targetParser,
+  JSONTextComponentClass, Score, targetParser,
 } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
@@ -41,8 +41,8 @@ export class ScoreboardObjectivesModifyCommand<MACRO extends boolean> extends Co
     [
       'displayname',
       /* @ts-ignore */
-      (!displayName || (typeof displayName === 'object' && displayName.toMacro)) ? displayName : new JSONTextComponentClass(displayName)
-    ]
+      typeof displayName === 'object' && displayName.toMacro ? displayName : new JSONTextComponentClass(displayName),
+    ],
   )
 
   /**
@@ -74,7 +74,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      */
     add: (objective: Macroable<ObjectiveArgument, MACRO>, criteria: Macroable<LiteralUnion<OBJECTIVE_CRITERION>, MACRO>, displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(
       /* @ts-ignore */
-      ['objectives', 'add', objective, criteria, (!displayName || (typeof displayName === 'object' && displayName.toMacro)) ? displayName : new JSONTextComponentClass(displayName)],
+      ['objectives', 'add', objective, criteria, typeof displayName === 'object' && displayName.toMacro ? displayName : new JSONTextComponentClass(displayName)],
     ),
 
     /**
