@@ -5,7 +5,7 @@ import {
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import {
-  coordinatesParser, MacroArgument, ObjectiveClass, rangeParser, rotationParser,
+  coordinatesParser, ObjectiveClass, rangeParser, rotationParser,
   Score,
   targetParser,
 } from 'sandstone/variables'
@@ -267,12 +267,14 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * @param predicate The predicate to test.
    */
   predicate(predicate: Macroable<string | PredicateClass, MACRO>) {
-    if (predicate instanceof MacroArgument) {
-      return this.nestedExecute(['predicate', predicate], true)
-    }
     if (typeof predicate === 'string') {
       return this.nestedExecute(['predicate', predicate], true)
     }
+    /* @ts-ignore */
+    if (predicate.toMacro) {
+      return this.nestedExecute(['predicate', predicate], true)
+    }
+    /* @ts-ignore */
     return this.nestedExecute(['predicate', toMinecraftResourceName(predicate.path)], true)
   }
 
@@ -332,11 +334,12 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
     return this.subCommand([['data']], ExecuteDataArgsCommand<MACRO>, false)
   }
 
-  function(func: Macroable<_RawMCFunctionClass | (() => any) | string, MACRO>) {
+  function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {
     if (func instanceof _RawMCFunctionClass) {
       return this.nestedExecute(['function', toMinecraftResourceName(func.path)])
     }
-    if (typeof func === 'string' || func instanceof MacroArgument) {
+    /* @ts-ignore */
+    if (typeof func === 'string' || func.toMacro) {
       return this.nestedExecute(['function', func])
     }
     const name = `${this.sandstoneCore.getCurrentMCFunctionOrThrow().resource.path.slice(2).join('/')}/execute_if_function`
@@ -345,7 +348,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',
-      callback: func,
+      callback: func as () => void,
     })
 
     return this.nestedExecute(['function', name])

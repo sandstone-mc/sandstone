@@ -107,7 +107,7 @@ async function generate() {
   const exports = registries
   exports.splice(4, 0, 'criterion')
   exports.splice(19, 0, 'translation')
-  fs.writeFileSync(`src/arguments/generated/index.ts`, exports.map(registry => `export * from './${Array.isArray(registry) ? registry[0] : registry}'\n`).join(''), () => {})
+  fs.writeFileSync(`src/arguments/generated/index.ts`, exports.map(registry => `export * from './${Array.isArray(registry) ? registry[0] : registry}.js'\n`).join(''), () => {})
 }
 
 generate()

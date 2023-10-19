@@ -1,4 +1,5 @@
 import { makeCallable, makeClassCallable } from 'sandstone/utils'
+import { ResolveNBTPart } from 'sandstone/variables/ResolveNBT.js'
 
 import { ContainerNode } from '../../nodes.js'
 import {
@@ -7,14 +8,24 @@ import {
 import { TagClass } from './tag.js'
 
 import type { TimeArgument } from 'sandstone/arguments/basics'
+import type { NBTObject } from 'sandstone/arguments/nbt.js'
 import type { ScheduleType } from 'sandstone/commands'
 import type { FinalCommandOutput } from 'sandstone/commands/helpers'
 import type {
   ContainerCommandNode, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
 } from 'sandstone/core'
 import type { MakeInstanceCallable } from 'sandstone/utils'
+import type { MacroArgument } from 'sandstone/variables/Macro.js'
 
 const tags: Record<string, TagClass<'functions'>> = {}
+
+interface AttributeWrapper {
+  attributes: string[];
+}
+
+type MapperA2<Wrapper extends AttributeWrapper> = {
+  [Index in keyof Wrapper['attributes']]: Wrapper['attributes'][Index];
+};
 
 /**
  * A node representing a Minecraft function.
@@ -22,7 +33,7 @@ const tags: Record<string, TagClass<'functions'>> = {}
 export class MCFunctionNode extends ContainerNode implements ResourceNode {
   contextStack: (ContainerNode | ContainerCommandNode)[]
 
-  constructor(sandstoneCore: SandstoneCore, public resource: MCFunctionClass) {
+  constructor(sandstoneCore: SandstoneCore, public resource: MCFunctionClass<any, any>) {
     super(sandstoneCore)
     this.contextStack = [this]
   }
@@ -137,6 +148,8 @@ export type MCFunctionClassArguments = ({
    * Whether the function should run when the datapack loads.
    *
    * Defaults to `true` if `runEvery` is specified, else `false`.
+   *
+   * Incompatible with macro parameters.
    */
   runOnLoad?: boolean
 
@@ -154,6 +167,8 @@ export type MCFunctionClassArguments = ({
    *
    * You can stop the automatic scheduling by running `theFunction.clearSchedule()`.
    *
+   * Incompatible with macro parameters.
+   *
    * @example
    *
    * // Run every 5 ticks, including on datapack load.
@@ -161,7 +176,7 @@ export type MCFunctionClassArguments = ({
    *   runEvery: 5,
    * }
    *
-   * // Run every 5 ticks, but wait 5 ticks before datapack loads for 1st execution.
+   * // Run every 5 ticks, but wait until 5 ticks after the datapack loads for 1st execution.
    * {
    *   runEvery: 5,
    *   runOnLoad: false,
@@ -176,6 +191,8 @@ export type MCFunctionClassArguments = ({
 
   /**
    * Whether the function should run each tick.
+   *
+   * Incompatible with macro parameters.
    */
   runEveryTick?: boolean
 
@@ -187,7 +204,7 @@ export type MCFunctionClassArguments = ({
   asyncContext?: boolean
 }) & ResourceClassArguments<'function'>
 
-export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
+export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV extends MacroArgument[] | undefined> extends CallableResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
   public nested = 0
@@ -198,7 +215,9 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
 
   protected lazy: boolean
 
-  constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments) {
+  protected env?: ENV
+
+  constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments, env?: ENV) {
     super(core, { packType: core.pack.dataPack(), extension: 'mcfunction' }, MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
       ...args,
       addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,
@@ -222,6 +241,7 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     if (args.runOnLoad) {
       core.pack.loadTags.load.push(this.name)
     } else if (args.runEveryTick) {
+      /* @ts-ignore */
       core.pack.registerTickedCommands('1t', () => this.__call__())
     }
 
@@ -232,7 +252,12 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     }
 
     if (!args.runEveryTick && args.runEvery) {
+      /* @ts-ignore */
       core.pack.registerTickedCommands(args.runEvery, () => this.__call__())
+    }
+
+    if (env) {
+      this.env = env
     }
 
     this.handleConflicts()
@@ -266,7 +291,28 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     }
   }
 
-  __call__ = (): FinalCommandOutput => this.commands.functionCmd(this.name)
+  __call__ = (..._params: PARAMS extends undefined ? [] : PARAMS): FinalCommandOutput => {
+    const args: NBTObject = {}
+    if (_params.length !== 0) {
+      for (const [i, param] of _params.entries()) {
+        // Haha funny TypeScript
+        /* @ts-ignore */
+        args[`param_${i}`] = ResolveNBTPart(param)
+
+        param['local'] = `param_${i}`
+      }
+    }
+    if (this.env) {
+      for (const [i, env] of this.env.entries()) {
+        // Haha funny TypeScript
+        /* @ts-ignore */
+        args[`env_${i}`] = ResolveNBTPart(env)
+
+        env['local'] = `env_${i}`
+      }
+    }
+    return this.commands.functionCmd(this.name)
+  }
 
   schedule = {
     clear: (): FinalCommandOutput => this.commands.schedule.clear(this.name),
@@ -283,9 +329,9 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
       },
     })
 
-    return makeCallable(commands, (...contents: _RawMCFunctionClass[] | [() => void]) => {
+    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => void]) => {
       if (contents[0] instanceof _RawMCFunctionClass) {
-        for (const mcfunction of contents as _RawMCFunctionClass[]) {
+        for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
           this.node.body.push(...mcfunction.node.body)
         }
       } else {
@@ -312,9 +358,9 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
       },
     })
 
-    return makeCallable(commands, (...contents: _RawMCFunctionClass[] | [() => void]) => {
+    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => void]) => {
       if (contents[0] instanceof _RawMCFunctionClass) {
-        for (const mcfunction of contents as _RawMCFunctionClass[]) {
+        for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
           this.node.body.unshift(...mcfunction.node.body)
         }
       } else {
@@ -326,7 +372,7 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     }, true)
   }
 
-  splice(start: number, removeItems: number | 'auto', ...contents: _RawMCFunctionClass[] | [() => void]) {
+  splice(start: number, removeItems: number | 'auto', ...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => void]) {
     const fake = new MCFunctionClass(this.core, 'fake', {
       addToSandstoneCore: false,
       creator: 'sandstone',
@@ -336,7 +382,7 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
     const fullBody: Node[] = []
 
     if (contents[0] instanceof _RawMCFunctionClass) {
-      for (const mcfunction of contents as _RawMCFunctionClass[]) {
+      for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
         fullBody.push(...mcfunction.node.body)
       }
     } else {
@@ -351,4 +397,4 @@ export class _RawMCFunctionClass extends CallableResourceClass<MCFunctionNode> {
 }
 
 export const MCFunctionClass = makeClassCallable(_RawMCFunctionClass)
-export type MCFunctionClass = MakeInstanceCallable<_RawMCFunctionClass>
+export type MCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV extends MacroArgument[] | undefined> = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>>

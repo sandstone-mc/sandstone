@@ -1,5 +1,5 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, MacroArgument, nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -27,5 +27,5 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
     entity: Macroable<LiteralUnion<ENTITY_TYPES>, MACRO>,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
     nbt?: Macroable<RootNBT, MACRO>,
-  ) => this.finalCommand([entity, coordinatesParser(pos), (!nbt || nbt instanceof MacroArgument) ? nbt : nbtStringifier(nbt)])
+  ) => this.finalCommand([entity, coordinatesParser(pos), (!nbt || (typeof nbt === 'object' && nbt.toMacro)) ? nbt : nbtStringifier(nbt as RootNBT)])
 }

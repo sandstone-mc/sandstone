@@ -1,4 +1,6 @@
-import { ComponentClass, SelectorPickClass } from './abstractClasses.js'
+import { MacroArgument } from 'sandstone/variables/Macro.js'
+
+import { SelectorPickClass } from './abstractClasses.js'
 import { rangeParser } from './parsers.js'
 
 import type {
@@ -8,10 +10,11 @@ import type { NotNode } from 'sandstone/flow'
 import type { ConditionClass } from 'sandstone/variables'
 import type { SandstoneCommands } from '../commands/index.js'
 import type { SandstonePack } from '../pack/index.js'
+import type { ComponentClass } from './abstractClasses.js'
 import type { DATA_TYPES, DataPointClass } from './Data.js'
 import type { ObjectiveClass } from './Objective.js'
 
-type PlayersTarget = number | MultipleEntitiesArgument
+type PlayersTarget = number | MultipleEntitiesArgument<false>
 
 type OperationArguments = (
   [amountOrTargetScore: number | Score] |
@@ -20,11 +23,11 @@ type OperationArguments = (
 
 function createVariable(pack: SandstonePack, amount: number): Score
 
-function createVariable(pack: SandstonePack, targets: MultipleEntitiesArgument, objective: ObjectiveArgument): Score
+function createVariable(pack: SandstonePack, targets: MultipleEntitiesArgument<false>, objective: ObjectiveArgument): Score
 
 function createVariable(pack: SandstonePack, score: Score): Score
 
-function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [MultipleEntitiesArgument, ObjectiveArgument]): Score {
+function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [MultipleEntitiesArgument<false>, ObjectiveArgument]): Score {
   const anonymousScore = pack.Variable()
 
   if (typeof args[0] === 'number' || args[0] instanceof Score) {
@@ -34,10 +37,10 @@ function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [Mult
   return anonymousScore.set(args[0], args[1])
 }
 
-export class Score extends ComponentClass implements ConditionClass {
+export class Score extends MacroArgument implements ConditionClass, ComponentClass {
   commands: SandstoneCommands<false>
 
-  constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument, public objective: ObjectiveClass) {
+  constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument<false>, public objective: ObjectiveClass) {
     super()
     this.commands = sandstonePack.commands
   }
@@ -159,7 +162,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  add(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  add(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Adds the given amount, or the other target's score, to the current entity's score.
@@ -181,7 +184,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  remove(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  remove(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Substract the given amount, or the other target's score, from the current entity's score.
@@ -203,7 +206,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multiply(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  multiply(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Multiply the current entity's score by the given value, or other target's scores.
@@ -225,7 +228,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  divide(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  divide(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Divide the current entity's score by the given value, or the other target's scores.
@@ -247,7 +250,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  modulo(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  modulo(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Divide the current entity's score by other target's scores.
@@ -269,7 +272,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  swap(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): void
+  swap(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): void
 
   /**
    * Swap the current entity's score with the other target's scores.
@@ -293,7 +296,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  plus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  plus(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the sum of the current score and the given amount or target' score.
@@ -315,7 +318,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  minus(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  minus(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given amount or target' score.
@@ -337,7 +340,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  multipliedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  multipliedBy(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the product of the current score and the given amount or target's score.
@@ -359,7 +362,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  dividedBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  dividedBy(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the division of the current score and the given amount or target's score.
@@ -381,7 +384,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  moduloBy(targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): Score
+  moduloBy(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
    * Returns a new anonymous score, equal to the modulo of the current score and the given value, or target's score.
@@ -424,7 +427,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  greaterThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly greater than the given amount or score.
@@ -446,7 +449,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  greaterOrEqualThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is greater or equal than the given amount or score.
@@ -468,7 +471,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  lowerThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly lower than the given amount or score.
@@ -490,7 +493,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lowerOrEqualThan (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  lowerOrEqualThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is lower or equal than the given amount or score.
@@ -512,7 +515,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  equalTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): ConditionClass
+  equalTo (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is equal to the given amount or score.
@@ -534,7 +537,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  notEqualTo (targets: MultipleEntitiesArgument, objective?: ObjectiveArgument): NotNode
+  notEqualTo (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): NotNode
 
   /**
    * Check if the current score is not equal to the given amount or score.
@@ -554,7 +557,7 @@ export class Score extends ComponentClass implements ConditionClass {
    *
    * @param range The range to compare the current score against.
    */
-  matches = (range: Range) => ({
+  matches = (range: Range<false>) => ({
     _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(range)]),
   })
 }

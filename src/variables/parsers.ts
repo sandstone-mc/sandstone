@@ -1,9 +1,9 @@
 import { VectorClass } from './Coordinates.js'
-import { MacroArgument } from './Macro.js'
 
 import type {
   Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION,
 } from 'sandstone/arguments'
+import type { MacroArgument } from './Macro.js'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args
@@ -36,9 +36,13 @@ export function rotationParser<T>(rotation: T): (
 }
 
 // Sanitize score values. null => '', Infinity => '', any number => itself
-export const sanitizeValue = (value: number | null | undefined): string => {
+export const sanitizeValue = (value: number | string | null | undefined): string => {
   if (value === undefined || value === null) {
     return ''
+  }
+
+  if (typeof value === 'string') {
+    return value
   }
 
   if (Number.isFinite(value)) {
@@ -50,7 +54,7 @@ export const sanitizeValue = (value: number | null | undefined): string => {
 }
 
 // Returns the string representation of a range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
-export const rangeParser = (range: Range): string => {
+export const rangeParser = (range: Range<boolean>): string => {
   if (Array.isArray(range)) {
     return `${sanitizeValue(range[0])}..${sanitizeValue(range[1])}`
   }
@@ -59,12 +63,12 @@ export const rangeParser = (range: Range): string => {
 
 export type StructureRotation = STRUCTURE_ROTATION | number | `${90 | 180 | 270}` | `-${90 | 180 | 270}`
 
-export const structureRotationParser = (rotation?: StructureRotation | MacroArgument<string>) => {
+export const structureRotationParser = (rotation?: StructureRotation | MacroArgument) => {
   if (!rotation) {
     return 'none'
   }
 
-  if (rotation instanceof MacroArgument) {
+  if (typeof rotation === 'object') {
     return rotation
   }
 
@@ -108,9 +112,9 @@ export const structureRotationParser = (rotation?: StructureRotation | MacroArgu
 
 export type StructureMirror = STRUCTURE_MIRROR | '^x' | '^z' | 'x' | 'z' | boolean
 
-export const structureMirrorParser = (mirror?: StructureMirror | MacroArgument<string>): STRUCTURE_MIRROR | MacroArgument<string> => {
-  if (mirror instanceof MacroArgument) {
-    return mirror
+export const structureMirrorParser = (mirror?: StructureMirror | MacroArgument): STRUCTURE_MIRROR => {
+  if (typeof mirror === 'object') {
+    return mirror.toMacro() as STRUCTURE_MIRROR
   }
 
   if (typeof mirror === 'string') {

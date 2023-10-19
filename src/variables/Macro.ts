@@ -1,24 +1,22 @@
 import type { SandstoneCommands } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core'
 
-export class MacroArgument<LOCAL extends string> {
-  protected local: LOCAL
+export abstract class MacroArgument {
+  protected local?: string
 
-  constructor(local: LOCAL) {
-    this.local = local
-  }
-
-  /** @internal */
-  get toString(): `\${${LOCAL}}` {
-    return `\${${this.local}}`
+  toMacro() {
+    if (!this.local) {
+      throw Error('Macro variables must be placed in environment or parameters!')
+    }
+    return `$(${this.local})`
   }
 }
 
-export type Macroable<T, MACRO extends boolean> = MACRO extends true ? (T | MacroArgument<string>) : T;
+export type Macroable<T, MACRO extends boolean> = MACRO extends true ? (T | MacroArgument) : T;
 
 export type MacroString<T, MACRO extends boolean> = MACRO extends true ? (T | string) : T
 
-class _Macro {
+export class _Macro {
   commands: SandstoneCommands<true>
 
   constructor(core: SandstoneCore) {

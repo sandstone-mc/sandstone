@@ -1,5 +1,5 @@
-import * as util from 'util'
 import { makeCallable } from 'sandstone/utils'
+import * as util from 'util'
 
 import { parseNBT } from './parser.js'
 

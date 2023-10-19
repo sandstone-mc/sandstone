@@ -1,4 +1,5 @@
 import { SandstonePack } from './pack/index.js'
+import { ResolveNBTPart } from './variables/ResolveNBT.js'
 
 import type { JSONTextComponent } from './arguments/jsonTextComponent.js'
 import type {
@@ -9,6 +10,8 @@ import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils.js'
 
 export const sandstonePack = new SandstonePack('default', '0')
 export { SandstonePack }
+
+export { ResolveNBTPart }
 
 // Commands
 export const {
@@ -114,10 +117,6 @@ export const {
   ResolveNBT,
   Selector,
   UUID,
-  rootChunk,
-  dimensionChunk,
-  dimensionMarker,
-  UtilityChunk,
   makeCustomResource,
   sleep,
 } = sandstonePack

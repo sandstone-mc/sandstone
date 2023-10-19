@@ -37,7 +37,8 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
   add = (
     team: Macroable<string, MACRO>,
     displayName?: Macroable<JSONTextComponent, MACRO>,
-  ) => this.finalCommand(['add', team, (!displayName || displayName instanceof MacroArgument) ? displayName : new JSONTextComponentClass(displayName)])
+    /* @ts-ignore */
+  ) => this.finalCommand(['add', team, (!displayName || (typeof displayName === 'object' && displayName.toMacro)) ? displayName : new JSONTextComponentClass(displayName)])
 
   /**
    * Removes all members from a team.

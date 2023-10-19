@@ -8,14 +8,12 @@ import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
 import { randomUUID } from 'sandstone/utils'
 import {
-  absolute,
   coordinatesParser,
-  DataClass, DataPointClass, LabelClass, NBTIntArray, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
+  DataClass, DataPointClass, LabelClass, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
 } from 'sandstone/variables'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
 import { Score } from 'sandstone/variables/Score'
 import { SleepClass } from 'sandstone/variables/Sleep'
-import { DimensionChunkClass, RootChunkClass, UtilityChunkClass } from 'sandstone/variables/UtilityChunk'
 import { UUIDClass } from 'sandstone/variables/UUID'
 
 import { PackType } from './packType.js'
@@ -31,7 +29,7 @@ import type {
   // eslint-disable-next-line max-len
   AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, DIMENSIONS, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from 'sandstone/arguments'
-import type { ExecuteCommand, StoreType } from 'sandstone/commands'
+import type { StoreType } from 'sandstone/commands'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
@@ -39,7 +37,7 @@ import type {
 } from 'sandstone/core'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type {
-  DATA_PATH, DATA_TARGET, DATA_TYPES, SelectorCreator, SelectorProperties,
+  DATA_PATH, DATA_TARGET, DATA_TYPES, MacroArgument, SelectorCreator, SelectorProperties,
 } from 'sandstone/variables'
 import type {
   UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
@@ -52,7 +50,7 @@ const conflictDefaults = (resourceType: string) => (process.env[`${resourceType.
 
 let tempStorage: DataClass<'storage'>
 
-let startTickedLoops: MCFunctionClass
+let startTickedLoops: MCFunctionClass<undefined, undefined>
 
 export class DataPack extends PackType {
   // TODO: typing. low priority
@@ -118,14 +116,6 @@ export class ResourcePack extends PackType {
   }
 }
 
-export type DimensionID = ['minecraft', DIMENSIONS] | [string, string]
-
-export type ChunkTuple = [number, number]
-
-export type UtilityChunksIndex<Chunk extends ChunkTuple, ID extends DimensionID> = `${Chunk[0]},${Chunk[1]};${ID[0]}:${ID[1]}`
-
-type ChunkMap<C extends ChunkTuple, ID extends DimensionID> = Map<UtilityChunksIndex<C, ID>, UtilityChunkClass<C, ID>>
-
 export class SandstonePack {
   readonly core: SandstoneCore
 
@@ -170,11 +160,9 @@ export class SandstonePack {
 
   constants: Set<number>
 
-  tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass>>
+  tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass<undefined, undefined>>>
 
   loadTags: { preLoad: TagClass<'functions'>, load: TagClass<'functions'>, postLoad: TagClass<'functions'> }
-
-  utilityChunks: ChunkMap<ChunkTuple, DimensionID>
 
   constructor(public defaultNamespace: string, public packUid: string) {
     this.core = new SandstoneCore(this)
@@ -188,7 +176,6 @@ export class SandstonePack {
 
     this.constants = new Set()
     this.tickedLoops = {}
-    this.utilityChunks = new Map()
 
     if (process.env.NAMESPACE) {
       this.defaultNamespace = process.env.NAMESPACE
@@ -363,21 +350,21 @@ export class SandstonePack {
    */
   Data<T extends DATA_TYPES>(type: T): TargetlessDataClass<T>
 
-  Data<T extends 'entity'>(type: T, target: SingleEntityArgument): DataClass<T>
+  Data<T extends 'entity'>(type: T, target: SingleEntityArgument<false>): DataClass<T>
 
   Data<T extends 'storage'>(type: T, target: string): DataClass<T>
 
-  Data<T extends 'block'>(type: T, target: Coordinates): DataClass<T>
+  Data<T extends 'block'>(type: T, target: Coordinates<false>): DataClass<T>
 
   Data<T extends DATA_TYPES>(type: T, target: undefined, path: DATA_PATH | DATA_PATH[]): TargetlessDataPointClass<T>
 
-  Data<T extends 'entity'>(type: T, target: SingleEntityArgument, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'entity'>(type: T, target: SingleEntityArgument<false>, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
 
   Data<T extends 'storage'>(type: T, target: string, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
 
-  Data<T extends 'block'>(type: T, target: Coordinates, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'block'>(type: T, target: Coordinates<false>, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target?: SingleEntityArgument | string | Coordinates, path?: DATA_PATH | DATA_PATH[]) {
+  Data<T extends DATA_TYPES>(type: T, target?: SingleEntityArgument<false> | string | Coordinates<false>, path?: DATA_PATH | DATA_PATH[]) {
     const dataPath = path ?? typeof path === 'string' ? [path] : path
     if (!path && !target) {
       return new TargetlessDataClass(this, type)
@@ -478,163 +465,81 @@ export class SandstonePack {
    */
   ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) => new ResolveNBTClass(this, nbt, dataPoint)
 
-  Selector: SelectorCreator = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false>) => new SelectorClass(this, target, properties)) as any
-
-  /** Creates a randomly generated static UUID. (changes on pack compile, should only use this if it is killed) */
-  UUID(): UUIDClass<'known', 'permanent'>
+  Selector: SelectorCreator<false> = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false, false>) => new SelectorClass(this, target, properties)) as any
 
   /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
-  UUID(source: string | UUIDinNumber): UUIDClass<'known', 'permanent'>
+  UUID(source: string | UUIDinNumber, options?: UUIDOptions): UUIDClass<'known'>
 
   /** Initializes with `Score`'s. */
-  UUID(source: UUIDinScore): UUIDClass<'scores', 'permanent'>
+  UUID(source: UUIDinScore, options?: UUIDOptions): UUIDClass<'scores'>
 
   /** Initializes with a Data Point (to a UUID int array). */
-  UUID(source: DataPointClass): UUIDClass<'data', 'permanent'>
+  UUID(source: DataPointClass, options?: UUIDOptions): UUIDClass<'data'>
 
   /** Initializes with a Selector. */
-  UUID(source: SelectorClass<true, boolean>): UUIDClass<'selector', 'permanent'>
+  UUID(source: SelectorClass<true, boolean>, options?: UUIDOptions): UUIDClass<'selector'>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
-  UUID(source: string | UUIDinNumber, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'known', 'permanent'>
+  UUID(source: UUIDSource = randomUUID(), options?: UUIDOptions) { return new UUIDClass(this.core, source, options) }
 
-  /** Initializes with `Score`'s. */
-  UUID(source: UUIDinScore, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'scores', 'permanent'>
+  MCFunction(
+    name: string,
+    callback: (this: MCFunctionClass<undefined, undefined>) => void,
+    options?: Partial<MCFunctionClassArguments>
+  ): MCFunctionClass<undefined, undefined>
 
-  /** Initializes with a Data Point (to a UUID int array). */
-  UUID(source: DataPointClass, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'data', 'permanent'>
+  MCFunction<PARAMS extends MacroArgument[]>(
+    name: string,
+    callback: (this: MCFunctionClass<PARAMS, undefined>, ...params: PARAMS) => void,
+    options?: Partial<MCFunctionClassArguments>
+  ): MCFunctionClass<PARAMS, undefined>
 
-  /** Initializes with a Selector. */
-  UUID(source: SelectorClass<true, boolean>, holderState: 'permanent', options?: UUIDOptions): UUIDClass<'selector', 'permanent'>
+  MCFunction<ENV extends MacroArgument[]>(
+    name: string,
+    environment_variables: ENV,
+    callback: (this: MCFunctionClass<undefined, ENV>) => void,
+    options?: Partial<MCFunctionClassArguments>
+  ): MCFunctionClass<undefined, ENV>
 
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
-  UUID(source: string | UUIDinNumber, holderState: 1, options?: UUIDOptions): UUIDClass<'known', 'singleTick'>
+  MCFunction<PARAMS extends MacroArgument[], ENV extends MacroArgument[]>(
+    name: string,
+    environment_variables: ENV,
+    callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void,
+    options?: Partial<MCFunctionClassArguments>
+  ): MCFunctionClass<PARAMS, ENV>
 
-  /** Initializes with 4 `Score`'s. */
-  UUID(source: UUIDinScore, holderState: 1, options?: UUIDOptions): UUIDClass<'scores', 'singleTick'>
-
-  /** Initializes with a Data Point (to a UUID int array). */
-  UUID(source: DataPointClass, holderState: 1, options?: UUIDOptions): UUIDClass<'data', 'singleTick'>
-
-  /** Initializes with a Selector. */
-  UUID(source: SelectorClass<true, boolean>, holderState: 1, options?: UUIDOptions): UUIDClass<'selector', 'singleTick'>
-
-  /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
-  UUID(source: string | UUIDinNumber, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'known', 'timed'>
-
-  /** Initializes with 4 `Score`'s. */
-  UUID(source: UUIDinScore, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'scores', 'timed'>
-
-  /** Initializes with a Data Point (to a UUID int array). */
-  UUID(source: DataPointClass, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'data', 'timed'>
-
-  /** Initializes with a Selector. */
-  UUID(source: SelectorClass<true, boolean>, holderState: Omit<number, 1> | Score, options?: UUIDOptions): UUIDClass<'selector', 'timed'>
-
-  UUID(source: UUIDSource = randomUUID(), holderState: 1 | Omit<number, 1> | Score | 'permanent' = 'permanent', options?: UUIDOptions) { return new UUIDClass(this.core, source, holderState as number, options) }
-
-  /** **Waiting on Smithed Dimensions to be functional.** */
-  rootChunk(): RootChunkClass {
-    const root = this.utilityChunks.get('0,0;smithed:void')
-
-    if (root) {
-      return root as RootChunkClass
-    }
-
-    return this.utilityChunks.set('0,0;smithed:void', new RootChunkClass(this)).get('0,0;smithed:void') as RootChunkClass
+  MCFunction<
+    PARAMS extends MacroArgument[] | undefined,
+    ENV extends MacroArgument[] | undefined>(
+    ...args: [
+      name: string,
+      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends MacroArgument[] ? PARAMS : []) => void,
+      options?: Partial<MCFunctionClassArguments>
+    ] | [
+      name: string,
+      environment_variables: ENV,
+      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends MacroArgument[] ? PARAMS : []) => void,
+      options?: Partial<MCFunctionClassArguments>,
+    ]
+  ) {
+    return new MCFunctionClass(this.core, args[0], {
+      callback: (typeof args[1] === 'function' ? args[1] : args[2]) as () => void,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
+      ...(typeof args[1] === 'function' ? args[2] : args[3]),
+    }, typeof args[1] === 'function' ? undefined : args[1]) as MCFunctionClass<PARAMS, ENV>
   }
-
-  __dimensionEntryPoints: {
-    markerMissing?: TagClass<'functions'>
-    commandBlock?: TagClass<'functions'>
-    setup?: TagClass<'functions'>
-    init?: TagClass<'functions'>
-    ready?: TagClass<'functions'>
-  } = {}
-
-  /** **Waiting on Smithed Dimensions to be functional.** */
-  dimensionChunk<ID extends DimensionID, IDString extends `${ID[0]}:${ID[1]}` | ID[1], Chunk extends UtilityChunkClass<[-1875000, 200], ID>>(id: IDString, create: false | { name?: JSONTextComponent, uuid: string | UUIDinNumber }) {
-    const _id = id.includes(':') ? id.split(':') as ID : [this.defaultNamespace, id] as [string, ID[1]]
-    const index: UtilityChunksIndex<[-1875000, 200], ID> = `-1875000,200;${_id[0]}:${_id[1]}`
-    if (this.utilityChunks.get(index)) {
-      return this.utilityChunks.get(index) as Chunk
-    }
-    this.utilityChunks.set(index, new DimensionChunkClass(this, _id, create))
-    return this.utilityChunks.get(index) as Chunk
-  }
-
-  get dimensionID() {
-    return this.Objective.create('smithed.dimensions.id', 'dummy', undefined, true)
-  }
-
-  get dimensionTarget() {
-    return this.dimensionID('#target')
-  }
-
-  /** **Waiting on Smithed Dimensions & MC-260322 to be functional.** */
-  dimensionMarker(): ExecuteCommand {
-    // TODO: Set dimension target to current dimension some how
-
-    return this.rootChunk().armorStand.execute.on('passengers').if.score(this.dimensionID('@s'), '=', this.dimensionTarget).on('origin')
-  }
-
-  UtilityChunk<ID extends DimensionID, IDString extends `${ID[0]}:${ID[1]}`, ChunkLoc extends ChunkTuple, Chunk extends UtilityChunkClass<ChunkLoc, ID>>(id: IDString, chunk: ChunkLoc, marker?: UUIDClass<'known', 'permanent'>) {
-    const _id = id.split(':') as ID
-    const index: UtilityChunksIndex<ChunkLoc, ID> = `${chunk[0]},${chunk[1]};${_id[0]}:${_id[1]}`
-
-    if (this.utilityChunks.get(index)) {
-      return this.utilityChunks.get(index) as Chunk
-    }
-    let _marker = marker
-    if (!marker) {
-      const UUID = this.UUID()
-      const summon = () => this.commands.summon('marker', absolute(chunk[0] * 16, 0, chunk[1] * 16), { UUID: new NBTIntArray(UUID.known), Tags: [`sandstone.uc.${chunk.join('.')}.${_id.join('.')}`] })
-
-      // We currently are in a MCFunction => that's where the initialization should take place
-      if (this.core.currentMCFunction) {
-        summon()
-        // Else, we should run it in the init MCFunction
-      } else {
-        this.initMCFunction.push(() => summon())
-      }
-      _marker = UUID
-    }
-    this.utilityChunks.set(index, new UtilityChunkClass(this, _id, chunk, _marker as UUIDClass<'known', 'permanent'>))
-
-    const forceload = () => {
-      this.commands.forceload.remove(absolute(chunk[0], chunk[1]))
-      this.commands.forceload.add(absolute(chunk[0], chunk[1]))
-    }
-
-    // We currently are in a MCFunction => that's where the initialization should take place
-    if (this.core.currentMCFunction) {
-      forceload()
-      // Else, we should run it in the init MCFunction
-    } else {
-      this.initMCFunction.push(() => forceload())
-    }
-
-    return this.utilityChunks.get(index) as Chunk
-  }
-
-  MCFunction = (name: string, callback: (this: MCFunctionClass) => void, options?: Partial<MCFunctionClassArguments>) => new MCFunctionClass(this.core, name, {
-    callback,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
-    ...options,
-  })
 
   appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
 
-  __initMCFunction?: MCFunctionClass
+  __initMCFunction?: MCFunctionClass<undefined, undefined>
 
   get initMCFunction() {
     if (!this.__initMCFunction) {
       this.__initMCFunction = new MCFunctionClass(this.core, `${this.defaultNamespace}:__init__`, {
         addToSandstoneCore: true,
         creator: 'sandstone',
-      })
+      }) as MCFunctionClass<undefined, undefined>
       this.loadTags.load.push(this.__initMCFunction)
 
       return this.__initMCFunction

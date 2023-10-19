@@ -1,8 +1,8 @@
 import { MacroArgument } from 'sandstone/variables'
 
 /** Ensure that a number is inside a given range. */
-export function validateIntegerRange(integer: number | MacroArgument<string>, name: string, minimum = 0, maximum = 2_147_483_647) {
-  if (integer instanceof MacroArgument) {
+export function validateIntegerRange(integer: number | MacroArgument, name: string, minimum = 0, maximum = 2_147_483_647) {
+  if (typeof integer !== 'number') {
     return integer
   }
 

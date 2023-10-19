@@ -37,7 +37,13 @@ export class ScoreboardObjectivesModifyCommand<MACRO extends boolean> extends Co
    *
    * @param displayName The new display name. Must be a JSON text component.
    */
-  displayname = (displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['displayname', (!displayName || displayName instanceof MacroArgument) ? displayName : new JSONTextComponentClass(displayName)])
+  displayname = (displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(
+    [
+      'displayname',
+      /* @ts-ignore */
+      (!displayName || (typeof displayName === 'object' && displayName.toMacro)) ? displayName : new JSONTextComponentClass(displayName)
+    ]
+  )
 
   /**
    * Change the display format of health bars.
@@ -67,7 +73,8 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      * @param displayName must be a JSON text component, defaulting to `objective` when unspecified.
      */
     add: (objective: Macroable<ObjectiveArgument, MACRO>, criteria: Macroable<LiteralUnion<OBJECTIVE_CRITERION>, MACRO>, displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(
-      ['objectives', 'add', objective, criteria, (!displayName || displayName instanceof MacroArgument) ? displayName : new JSONTextComponentClass(displayName)],
+      /* @ts-ignore */
+      ['objectives', 'add', objective, criteria, (!displayName || (typeof displayName === 'object' && displayName.toMacro)) ? displayName : new JSONTextComponentClass(displayName)],
     ),
 
     /**

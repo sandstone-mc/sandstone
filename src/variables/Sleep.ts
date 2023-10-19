@@ -1,8 +1,5 @@
 import { AwaitNode } from 'sandstone/core/nodes'
 
-import { NBTIntArray } from './nbt/index.js'
-
-import type { DataPointClass } from './Data.js'
 import type { TimeArgument } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core'
 
@@ -32,9 +29,9 @@ export class SleepClass extends AwaitNode {
       onConflict: 'rename',
     })
 
-    let schedule = this.mcfunction.name
+    const schedule = this.mcfunction.name
 
-    let type = 'append'
+    const type = 'append'
 
     if (currentFunction.resource.asyncContext) {
       const Duration = (() => {
@@ -53,37 +50,31 @@ export class SleepClass extends AwaitNode {
         return value + 1
       })()
 
-      type = 'replace'
+      // TODO: Refactor to use legacy system, haha funny relation stacks suck and macros do too
 
-      const stack = core.pack.UUID()
+      // type = 'replace'
 
-      let current: DataPointClass<'storage'> = undefined as unknown as DataPointClass<'storage'>
+      // const timer = core.pack.Objective.create('__sandstone.asyncTimer')
 
-      core.pack.initMCFunction.push(() => {
-        core.pack.rootChunk().createMember('armor_stand', { UUID: new NBTIntArray(stack.known) })
+      /*
+       * core.pack.commands.execute.summon('area_effect_cloud').run(() => {
+       *   core.pack.commands.execute.store.result.score(timer('@s')).run.time.query('gametime')
+       */
 
-        current = core.pack.DataVariable({ Duration, Tags: [`${core.pack.defaultNamespace}.__asyncTimer`] })
-      })
+      /*
+       *   timer('@s').add(Duration - 1)
+       * })
+       */
 
-      current.select('Owner').set(core.pack.Data('entity', '@s', 'UUID'))
+      /*
+       * schedule = core.pack.MCFunction(`${this.mcfunction.name}/_context`, () => {
+       *   core.pack.commands.execute.store.result.score(timer('#current')).run.time.query('gametime')
+       */
 
-      const timer = core.pack.Objective.create('__sandstone.asyncTimer')
-
-      core.pack.commands.execute.summon('area_effect_cloud').run(() => {
-        core.pack.Data('entity', '@s', '{}').set(current)
-
-        core.pack.commands.execute.store.result.score(timer('@s')).run.time.query('gametime')
-
-        timer('@s').add(Duration - 1)
-
-        core.pack.commands.ride('@s').mount(stack)
-      })
-
-      schedule = core.pack.MCFunction(`${this.mcfunction.name}/_context`, () => {
-        core.pack.commands.execute.store.result.score(timer('#current')).run.time.query('gametime')
-
-        stack.execute.on('passengers').if.score(timer('@s'), '=', timer('#current')).on('origin').at('@s').run.functionCmd(this.mcfunction)
-      }).name
+      /*
+       *   stack.execute.on('passengers').if.score(timer('@s'), '=', timer('#current')).on('origin').at('@s').run.functionCmd(this.mcfunction)
+       * }).name
+       */
     }
 
     this.args = ['function', schedule, this.delay, type]
