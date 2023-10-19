@@ -2,6 +2,7 @@
 import * as util from 'util'
 
 import { capitalize } from '../utils.js'
+import { DataPointPickClass } from './abstractClasses.js'
 import {
   NBTClass, NBTInt, NBTIntArray, NBTPrimitive,
 } from './nbt/index.js'
@@ -10,16 +11,16 @@ import { Score } from './Score.js'
 import type { NBTObject } from '../arguments/nbt.js'
 import type { SandstonePack } from '../pack/index.js'
 import type { DataPointClass, StringDataPointClass } from './Data.js'
-import type { DataPointPickClass } from './index.js'
 import type {
   NBTAllArrays, NBTAllNumbers,
   NBTAllValues, NBTString,
 } from './nbt/index.js'
 
-export class ResolveNBTClass implements DataPointPickClass {
+export class ResolveNBTClass extends DataPointPickClass {
   dataPoint: NonNullable<DataPointClass<'storage'>>
 
   constructor(private pack: SandstonePack, nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) {
+    super()
     if (dataPoint) {
       this.dataPoint = dataPoint
     } else {

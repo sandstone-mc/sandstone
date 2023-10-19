@@ -1,4 +1,5 @@
-import { ConditionTextComponentClass, DataPointPickClass } from './abstractClasses.js'
+import { DataPointPickClass } from './abstractClasses.js'
+import { MacroArgument } from './Macro.js'
 import { nbtStringifier } from './nbt/NBTs.js'
 import { Score } from './Score.js'
 
@@ -7,6 +8,7 @@ import type {
 } from 'sandstone/arguments'
 import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations'
 import type { SandstonePack } from 'sandstone/pack'
+import type { ConditionTextComponentClass } from './abstractClasses.js'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 
@@ -77,7 +79,7 @@ export class DataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   toJSON = this.toString
 }
 
-export class DataPointClass<TYPE extends DATA_TYPES = any> extends ConditionTextComponentClass {
+export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument implements ConditionTextComponentClass {
   path
 
   currentTarget: DATA_TARGET[TYPE]

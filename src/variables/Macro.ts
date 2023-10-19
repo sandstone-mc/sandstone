@@ -1,14 +1,18 @@
 import type { SandstoneCommands } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core'
 
-export abstract class MacroArgument {
+export class MacroArgument {
   protected local?: string
 
-  toMacro() {
-    if (!this.local) {
-      throw Error('Macro variables must be placed in environment or parameters!')
+  public toMacro: () => string
+
+  constructor() {
+    this.toMacro = () => {
+      if (!this.local) {
+        throw Error('Macro variables must be placed in environment or parameters!')
+      }
+      return `$(${this.local})`
     }
-    return `$(${this.local})`
   }
 }
 

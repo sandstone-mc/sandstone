@@ -1,6 +1,8 @@
+import { MacroArgument } from './Macro.js'
+
 import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent'
 import type { ConditionNode } from '../flow/index.js'
-import type { DataPointClass } from './index.js'
+import type { DataPointClass } from './Data.js'
 import type { SelectorClass } from './Selector.js'
 
 export class ComponentClass {
@@ -45,7 +47,7 @@ export class ConditionTextComponentClass extends ComponentClass implements Condi
   }
 }
 
-export class DataPointPickClass {
+export class DataPointPickClass extends MacroArgument {
   /**
    * @internal
    */
