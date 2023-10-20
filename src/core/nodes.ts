@@ -73,12 +73,13 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
 
     for (const arg of this.args) {
       if (arg !== undefined) {
-        if (arg && typeof arg === 'object' && Object.hasOwn(arg, 'toMacro')) {
+        if (arg && typeof arg === 'object' && Object.hasOwn(arg, 'toMacro') && (arg as MacroArgument)['local'].has(this.sandstoneCore.currentNode)) {
           isMacro = true
 
           filteredArgs.push((arg as MacroArgument).toMacro())
+        } else {
+          filteredArgs.push(arg)
         }
-        filteredArgs.push(arg)
       }
     }
 

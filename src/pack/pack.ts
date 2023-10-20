@@ -9,7 +9,7 @@ import { Flow, SandstoneConditions } from 'sandstone/flow'
 import { randomUUID } from 'sandstone/utils'
 import {
   coordinatesParser,
-  DataClass, DataPointClass, LabelClass, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
+  DataClass, DataPointClass, LabelClass, MacroClass, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
 } from 'sandstone/variables'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
 import { Score } from 'sandstone/variables/Score'
@@ -118,7 +118,7 @@ export class ResourcePack extends PackType {
 }
 
 export class SandstonePack {
-  readonly core: SandstoneCore
+  readonly core: SandstoneCore = new SandstoneCore(this)
 
   packTypes: Map<string, PackType>
 
@@ -166,8 +166,6 @@ export class SandstonePack {
   loadTags: { preLoad: TagClass<'functions'>, load: TagClass<'functions'>, postLoad: TagClass<'functions'> }
 
   constructor(public defaultNamespace: string, public packUid: string) {
-    this.core = new SandstoneCore(this)
-
     this.packTypes = new Map()
 
     this.commands = new SandstoneCommands(this)
@@ -189,6 +187,8 @@ export class SandstonePack {
     }
     this.setupLantern()
     this.dependencies = new Map()
+
+    this.MCFunction = this.MCFunction.bind(this)
   }
 
   setupLantern = () => {
@@ -249,7 +249,7 @@ export class SandstonePack {
      * Create a new objective. Defaults to `dummy` if unspecified.
      * @param name The name of the objective
      */
-    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent, alreadyExists?: true): ObjectiveClass => {
+    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent, alreadyExists?: boolean): ObjectiveClass => {
       let namespace: boolean = false
 
       if (name.includes('.') || name.includes('__')) {
@@ -455,7 +455,6 @@ export class SandstonePack {
       return tempStorage.select(name)
     }
     tempStorage = this.Data('storage', '__sandstone:temp')
-    this.commands.data.merge.storage('__sandstone:temp', {})
     return tempStorage.select(name)
   }
 
@@ -569,6 +568,8 @@ export class SandstonePack {
   }
 
   sleep = (delay: TimeArgument): PromiseLike<SleepClass> => (new SleepClass(this.core, delay)).promise()
+
+  readonly Macro = (new MacroClass(new SandstoneCommands(this))).commands
 
   __customResourceTypes: string[] = []
 
@@ -787,14 +788,14 @@ export class SandstonePack {
         new IfElseTransformationVisitor(this),
         new ContainerCommandsToMCFunctionVisitor(this),
 
+        // Special visitors
+        new AwaitBodyVisitor(this),
+
         // Optimization
         new InlineFunctionCallVisitor(this),
         new UnifyChainedExecutesVisitor(this),
         new SimplifyExecuteFunctionVisitor(this),
         new SimplifyReturnRunFunctionVisitor(this),
-
-        // Special visitors
-        new AwaitBodyVisitor(this),
       ],
     })
 

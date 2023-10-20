@@ -1,12 +1,13 @@
 import { CommandNode, TagClass } from 'sandstone/core'
-import {
-  type DATA_TYPES, type DataPointClass, type Macroable, nbtStringifier,
-} from 'sandstone/variables'
+import { nbtStringifier } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { RootNBT } from 'sandstone/arguments/nbt.js'
 import type { MCFunctionClass } from 'sandstone/core'
+import type {
+  DATA_TYPES, DataPointClass, DataPointPickClass, Macroable,
+} from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers.js'
 
 // Function command
@@ -26,14 +27,14 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
 
   function(mcFunction: Macroable<WithMacros, MACRO>, _: 'with', type: DATA_TYPES, target: string, path: string): FinalCommandOutput
 
-  function(mcFunction: Macroable<WithMacros, MACRO>, _: 'with', dataPoint: DataPointClass): FinalCommandOutput
+  function(mcFunction: Macroable<WithMacros, MACRO>, _: 'with', dataPoint: DataPointClass | DataPointPickClass): FinalCommandOutput
 
   function(mcFunction: Macroable<MCFunctionClass<NonNullable<any>, NonNullable<any>>, MACRO>): FinalCommandOutput
 
   function(
     mcFunction: Macroable<string | MCFunctionClass<any, any> | TagClass<'functions'>, MACRO>,
     params?: 'with' | Macroable<RootNBT, MACRO>,
-    pointOrType?: DATA_TYPES | DataPointClass,
+    pointOrType?: DATA_TYPES | DataPointClass | DataPointPickClass,
     target?: string,
     path?: string,
   ) {
@@ -45,10 +46,11 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
         if (typeof pointOrType === 'string') {
           args.push(pointOrType, target, path)
         } else {
-          args.push(pointOrType.type, pointOrType.target, pointOrType.path)
+          const point = (Object.hasOwn(pointOrType, '_toDataPoint') ? (pointOrType as DataPointPickClass)._toDataPoint : pointOrType) as DataPointClass
+
+          args.push(point.type, point.currentTarget, point.path)
         }
       } else {
-        /* @ts-ignore */
         args.push(typeof params === 'object' && params.toMacro ? params : nbtStringifier(params))
       }
     }

@@ -1,5 +1,5 @@
 import { makeCallable, makeClassCallable } from 'sandstone/utils'
-import { ResolveNBTPart } from 'sandstone/variables/ResolveNBT.js'
+import { ResolveNBTPart } from 'sandstone/variables'
 
 import { ContainerNode } from '../../nodes.js'
 import {
@@ -15,7 +15,7 @@ import type {
   ContainerCommandNode, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
 } from 'sandstone/core'
 import type { MakeInstanceCallable } from 'sandstone/utils'
-import type { MacroArgument } from 'sandstone/variables/Macro.js'
+import type { MacroArgument } from 'sandstone/variables'
 
 const tags: Record<string, TagClass<'functions'>> = {}
 
@@ -128,7 +128,11 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
     return this.contextStack.pop()
   }
 
-  getValue = () => this.body.filter((node) => node.getValue() !== null).map((node) => node.getValue()).join('\n')
+  getValue = () => {
+    this.sandstoneCore.currentNode = this.resource.name
+
+    return this.body.filter((node) => node.getValue() !== null).map((node) => node.getValue()).join('\n')
+  }
 }
 
 export type MCFunctionClassArguments = ({
@@ -137,7 +141,7 @@ export type MCFunctionClassArguments = ({
    *
    * @default () => {}
    */
-  callback?: () => void
+  callback?: (...params: MacroArgument[]) => void
 
   /**
    * If true, then the function will only be created if it is called from another function. TODO: implement this
@@ -238,8 +242,19 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
     this.addToSandstoneCore = !!args.addToSandstoneCore
     this.tags = args.tags
 
+    if (env) {
+      this.env = env
+    }
+
     if (args.runOnLoad) {
-      core.pack.loadTags.load.push(this.name)
+      if (env) {
+        core.pack.loadTags.load.push(core.pack.MCFunction(`load_${this.name.split(':')[1]}`, () => {
+          /* @ts-ignore */
+          this.__call__()
+        }))
+      } else {
+        core.pack.loadTags.load.push(this.name)
+      }
     } else if (args.runEveryTick) {
       /* @ts-ignore */
       core.pack.registerTickedCommands('1t', () => this.__call__())
@@ -254,10 +269,6 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
     if (!args.runEveryTick && args.runEvery) {
       /* @ts-ignore */
       core.pack.registerTickedCommands(args.runEvery, () => this.__call__())
-    }
-
-    if (env) {
-      this.env = env
     }
 
     this.handleConflicts()
@@ -292,25 +303,34 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
   }
 
   __call__ = (..._params: PARAMS extends undefined ? [] : PARAMS): FinalCommandOutput => {
-    const args: NBTObject = {}
-    if (_params.length !== 0) {
-      for (const [i, param] of _params.entries()) {
-        // Haha funny TypeScript
-        /* @ts-ignore */
-        args[`param_${i}`] = ResolveNBTPart(param)
+    if (this.env || _params.length !== 0) {
+      const args: NBTObject = {}
 
-        param['local'] = `param_${i}`
-      }
-    }
-    if (this.env) {
-      for (const [i, env] of this.env.entries()) {
-        // Haha funny TypeScript
-        /* @ts-ignore */
-        args[`env_${i}`] = ResolveNBTPart(env)
+      if (_params.length !== 0) {
+        for (const [i, param] of _params.entries()) {
+          // Haha funny TypeScript
+          /* @ts-ignore */
+          args[`param_${i}`] = ResolveNBTPart(param)
 
-        env['local'] = `env_${i}`
+          param['local'].set(this.name, `param_${i}`)
+        }
+        // Yeah this is cursed, but there's not really a better way to do this
+        this.node.body = []
+
+        this.core.insideContext(this.node, () => this.callback(...(_params as MacroArgument[])), false)
       }
+      if (this.env) {
+        for (const [i, env] of this.env.entries()) {
+          // Haha funny TypeScript
+          /* @ts-ignore */
+          args[`env_${i}`] = ResolveNBTPart(env)
+
+          env['local'].set(this.name, `env_${i}`)
+        }
+      }
+      return this.commands.functionCmd(this.name, 'with', this.pack.ResolveNBT(args).dataPoint)
     }
+
     return this.commands.functionCmd(this.name)
   }
 
@@ -329,7 +349,7 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
       },
     })
 
-    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => void]) => {
+    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) => {
       if (contents[0] instanceof _RawMCFunctionClass) {
         for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
           this.node.body.push(...mcfunction.node.body)
@@ -358,7 +378,7 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
       },
     })
 
-    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => void]) => {
+    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) => {
       if (contents[0] instanceof _RawMCFunctionClass) {
         for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
           this.node.body.unshift(...mcfunction.node.body)

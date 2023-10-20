@@ -1,5 +1,7 @@
 import { AwaitNode } from 'sandstone/core/nodes'
 
+import { ObjectiveClass } from './Objective.js'
+
 import type { TimeArgument } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core'
 
@@ -25,13 +27,14 @@ export class SleepClass extends AwaitNode {
 
     this.mcfunction = core.pack.MCFunction(`${currentFunction.resource.path.slice(2).join('/')}/${SLEEP_CHILD_NAME}`, () => {}, {
       addToSandstoneCore: true,
+      lazy: false,
       creator: 'sandstone',
       onConflict: 'rename',
     })
 
-    const schedule = this.mcfunction.name
+    let schedule = this.mcfunction.name
 
-    const type = 'append'
+    let type = 'append'
 
     if (currentFunction.resource.asyncContext) {
       const Duration = (() => {
@@ -47,34 +50,36 @@ export class SleepClass extends AwaitNode {
           value *= 24000
         }
 
-        return value + 1
+        return value
       })()
 
-      // TODO: Refactor to use legacy system, haha funny relation stacks suck and macros do too
+      type = 'replace'
 
-      // type = 'replace'
+      const {
+        commands, MCFunction, Label, Selector,
+      } = core.pack
 
-      // const timer = core.pack.Objective.create('__sandstone.asyncTimer')
+      const { execute } = commands
 
-      /*
-       * core.pack.commands.execute.summon('area_effect_cloud').run(() => {
-       *   core.pack.commands.execute.store.result.score(timer('@s')).run.time.query('gametime')
-       */
+      const name = `__sandstone.asyncTimer.${currentFunction.resource.name.replace(/[:/]/g, '.')}`
 
-      /*
-       *   timer('@s').add(Duration - 1)
-       * })
-       */
+      const timer = new ObjectiveClass(core.pack, name, 'dummy', undefined, { creator: 'sandstone' })
 
-      /*
-       * schedule = core.pack.MCFunction(`${this.mcfunction.name}/_context`, () => {
-       *   core.pack.commands.execute.store.result.score(timer('#current')).run.time.query('gametime')
-       */
+      execute.store.result.score(timer('@s')).run.time.query('gametime')
 
-      /*
-       *   stack.execute.on('passengers').if.score(timer('@s'), '=', timer('#current')).on('origin').at('@s').run.functionCmd(this.mcfunction)
-       * }).name
-       */
+      timer('@s').add(Duration)
+
+      const label = Label(name)
+
+      label('@s').add()
+
+      this.mcfunction.unshift(() => label('@s').remove())
+
+      schedule = MCFunction(`${this.mcfunction.name}/_context`, () => {
+        execute.store.result.score(timer('#current')).run.time.query('gametime')
+
+        execute.as(Selector('@e', { tag: label.fullName })).if.score(timer('@s'), '=', timer('#current')).at('@s').run.functionCmd(this.mcfunction)
+      }).name
     }
 
     this.args = ['function', schedule, this.delay, type]

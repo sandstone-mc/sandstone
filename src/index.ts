@@ -107,6 +107,7 @@ export const {
   // Variables
   packTypes,
   Objective,
+  Macro,
   _,
   Variable,
   flowVariable,

@@ -22,6 +22,8 @@ export class SandstoneCore {
 
   awaitNodes: Set<AwaitNode>
 
+  currentNode: string = ''
+
   mcmetaCache = new MCMetaCache()
 
   smithed = new SmithedDependencyCache()

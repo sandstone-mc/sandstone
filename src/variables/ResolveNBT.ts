@@ -20,15 +20,18 @@ export class ResolveNBTClass extends DataPointPickClass {
   dataPoint: NonNullable<DataPointClass<'storage'>>
 
   constructor(private pack: SandstonePack, nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) {
-    super()
+    super(pack.core)
     if (dataPoint) {
       this.dataPoint = dataPoint
     } else {
       this.dataPoint = this.pack.Data('storage', '__sandstone:temp', 'Resolve')
     }
 
-    this.dataPoint.set({})
-    pack.commands.data.modify.storage(this.dataPoint.currentTarget, this.dataPoint.path).set.value(this._resolveNBT(nbt))
+    const out = this._resolveNBT(nbt)
+
+    if (Object.keys(out).length !== 0) {
+      pack.commands.data.modify.storage(this.dataPoint.currentTarget, this.dataPoint.path).merge.value(this._resolveNBT(nbt))
+    }
   }
 
   /**
@@ -57,12 +60,12 @@ export class ResolveNBTClass extends DataPointPickClass {
     }
     if (nbt instanceof ResolveNBTPartClass) {
       /* @ts-ignore */
-      return this[`_resolve${capitalize(nbt.primitive.type)}`](nbt, path, index)
+      return this[`_resolve${capitalize(nbt.type)}`](nbt, path, index)
     }
     if (nbt instanceof NBTPrimitive) {
       return resolvedNBT
     }
-    for (const [key, value] of Object(nbt).entries()) {
+    for (const [key, value] of Object.entries(nbt)) {
       const resolved = this._resolveNBT(value, `${path === undefined ? '' : `${path}.`}${key}`)
       if (resolved !== undefined) {
         resolvedNBT[key] = resolved
@@ -91,7 +94,8 @@ export class ResolveNBTClass extends DataPointPickClass {
   _resolveScore(value: ResolveNBTPartClass<'score', NBTAllNumbers>, path: string, index?: number) {
     const dataPoint = this.dataPoint.select(path)
 
-    const args = [value.value, value.primitive.constructor.name.slice(3).toLowerCase(), value.scale]
+    // Yes this is cursed
+    const args = [value.value, value.primitive.toString().split(' ')[1].slice(3).toLowerCase(), value.scale]
 
     if (index) {
       const temp = this.pack.getTempStorage('Score')

@@ -89,7 +89,7 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
 
     return makeCallable(commands, (callback: () => any) => {
       node.isSingleExecute = false
-      this.sandstoneCore.insideContext(node, callback, false)
+      this.sandstoneCore.insideContext(node, callback, true)
       return new FinalCommandOutput(node)
     }, true)
   }

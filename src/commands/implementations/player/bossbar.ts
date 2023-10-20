@@ -1,5 +1,5 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
+import { parseJSONText, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -22,8 +22,7 @@ export class BossBarCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param name The display name of the boss bar.
    */
-  /* @ts-ignore */
-  add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['add', id, typeof name === 'object' && name.toMacro ? name : new JSONTextComponentClass(name)])
+  add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['add', id, parseJSONText(name)])
 
   /**
    * Return the requested setting as a result of the command.

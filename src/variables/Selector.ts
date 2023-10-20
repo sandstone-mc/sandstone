@@ -10,6 +10,7 @@ import type { PredicateClass } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
 import type { LiteralUnion } from '../utils.js'
 import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
+import type { LabelClass } from './Label.js'
 import type { Macroable } from './Macro.js'
 import type { NotNBT } from './nbt/NBTs.js'
 
@@ -18,6 +19,8 @@ type ScoreArgument<MACRO extends boolean> = Record<string, Range<MACRO>>
 type AdvancementsArgumentValue = boolean | [string, boolean] | [string, boolean][]
 
 type AdvancementsArgument = Record<string, AdvancementsArgumentValue | Record<string, AdvancementsArgumentValue>>
+
+type TypeOrArray<T> = T | T[]
 
 /**
  * If MustBeSingle is false, then anything is allowed.
@@ -61,7 +64,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
    * Selector(`@e`, { tag: ['alive', 'winner'] }) => `@e[tag=alive, tag=winner]`
    *
    */
-  tag?: Macroable<string | string[], MACRO>
+  tag?: Macroable<TypeOrArray<string | LabelClass>, MACRO>
 
   /** Filter target selection to all those with a given name. This cannot be a JSON text compound. */
   name?: Macroable<string, MACRO>

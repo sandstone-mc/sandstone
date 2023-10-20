@@ -86,7 +86,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
 
     if (selector.arguments) {
       if (selector.arguments.tag) {
-        if (typeof selector.arguments.tag === 'string') {
+        if (typeof selector.arguments.tag === 'string' || !Array.isArray(selector.arguments.tag)) {
           selector.arguments.tag = [selector.arguments.tag, label.fullName]
         } else {
           selector.arguments.tag = [...selector.arguments.tag, label.fullName]

@@ -8,7 +8,7 @@ export class AwaitBodyVisitor extends GenericSandstoneVisitor {
     const { core } = this.pack
 
     for (const { body, mcfunction } of core.awaitNodes) {
-      mcfunction['node'].body = body
+      mcfunction['node'].body.push(...body)
     }
   }
 }

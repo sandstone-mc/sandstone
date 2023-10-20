@@ -1,5 +1,5 @@
 import { CommandNode } from 'sandstone/core'
-import { JSONTextComponentClass, targetParser } from 'sandstone/variables'
+import { parseJSONText, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -15,16 +15,11 @@ export class TitleArgumentsCommand<MACRO extends boolean> extends CommandArgumen
 
   reset = () => this.finalCommand(['reset'])
 
-  /* @ts-ignore */
-  title = (title: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['title', typeof title === 'object' && title.toMacro ? title : new JSONTextComponentClass(title)])
+  title = (title: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['title', parseJSONText(title)])
 
-  /* @ts-ignore */
-  subtitle = (subtitle: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['subtitle', typeof subtitle === 'object' && subtitle.toMacro ? subtitle : new JSONTextComponentClass(subtitle)])
+  subtitle = (subtitle: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['subtitle', parseJSONText(subtitle)])
 
-  actionbar = (actionbarText: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(
-    /* @ts-ignore */
-    ['actionbar', typeof actionbarText === 'object' && actionbarText.toMacro ? actionbarText : new JSONTextComponentClass(actionbarText)],
-  )
+  actionbar = (actionbarText: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['actionbar', parseJSONText(actionbarText)])
 
   times = (fadeIn: Macroable<TimeArgument, MACRO>, stay: Macroable<TimeArgument, MACRO>, fadeOut: Macroable<TimeArgument, MACRO>) => this.finalCommand(['times', fadeIn, stay, fadeOut])
 }

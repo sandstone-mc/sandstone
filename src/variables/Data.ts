@@ -85,7 +85,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
   currentTarget: DATA_TARGET[TYPE]
 
   constructor(public sandstonePack: SandstonePack, public type: TYPE, target: DATA_TARGET[TYPE], path: DATA_PATH[]) {
-    super()
+    super(sandstonePack.core)
     this.path = NBTpathToString(path)
     this.currentTarget = target
   }

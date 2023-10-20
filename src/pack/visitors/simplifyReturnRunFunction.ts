@@ -1,5 +1,5 @@
 /* eslint-disable dot-notation */
-import { FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
+import { FunctionCommandNode, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import { CommandNode } from 'sandstone/core'
 
 import { GenericSandstoneVisitor } from './visitor.js'
@@ -27,6 +27,11 @@ export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
     const mcFunctionNode = mcFunction['node']
 
     if (mcFunctionNode.body.length > 1) {
+      if (mcFunctionNode.resource.name.includes('return_run') && !(mcFunctionNode.body[mcFunctionNode.body.length - 1] instanceof ReturnCommandNode)) {
+        mcFunction.push(() => {
+          this.core.pack.commands.returnCmd(0)
+        })
+      }
       return this.genericVisit(node)
     }
 

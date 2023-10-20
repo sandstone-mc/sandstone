@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { CommandNode } from 'sandstone/core'
 import {
-  JSONTextComponentClass, Score, targetParser,
+  parseJSONText, Score, targetParser,
 } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
@@ -37,13 +37,7 @@ export class ScoreboardObjectivesModifyCommand<MACRO extends boolean> extends Co
    *
    * @param displayName The new display name. Must be a JSON text component.
    */
-  displayname = (displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(
-    [
-      'displayname',
-      /* @ts-ignore */
-      typeof displayName === 'object' && displayName.toMacro ? displayName : new JSONTextComponentClass(displayName),
-    ],
-  )
+  displayname = (displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['displayname', parseJSONText(displayName)])
 
   /**
    * Change the display format of health bars.
@@ -74,7 +68,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      */
     add: (objective: Macroable<ObjectiveArgument, MACRO>, criteria: Macroable<LiteralUnion<OBJECTIVE_CRITERION>, MACRO>, displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(
       /* @ts-ignore */
-      ['objectives', 'add', objective, criteria, typeof displayName === 'object' && displayName.toMacro ? displayName : new JSONTextComponentClass(displayName)],
+      ['objectives', 'add', objective, criteria, parseJSONText(displayName)],
     ),
 
     /**

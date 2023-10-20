@@ -1,6 +1,5 @@
-import { MacroArgument } from 'sandstone/variables/Macro.js'
-
 import { SelectorPickClass } from './abstractClasses.js'
+import { MacroArgument } from './Macro.js'
 import { rangeParser } from './parsers.js'
 
 import type {
@@ -41,7 +40,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   commands: SandstoneCommands<false>
 
   constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument<false>, public objective: ObjectiveClass) {
-    super()
+    super(sandstonePack.core)
     this.commands = sandstonePack.commands
   }
 

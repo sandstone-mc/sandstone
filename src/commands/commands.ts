@@ -62,22 +62,32 @@ import {
 
 import type { SandstonePack } from 'sandstone/pack/index.js'
 
+function bind<CLASS, METHOD extends string>(pack: SandstonePack, _class: CLASS, method: METHOD) {
+  /* @ts-ignore */
+  const cmd = new _class(pack)
+
+  if (typeof cmd[method].bind === 'function') {
+    return cmd[method].bind(cmd)
+  }
+  throw Error('Commands binder screwed up')
+}
+
 export class SandstoneCommands<MACRO extends boolean> {
   constructor(public sandstonePack: SandstonePack) {}
 
   get advancement() { return new AdvancementCommand<MACRO>(this.sandstonePack) }
 
-  get attribute() { return new AttributeCommand<MACRO>(this.sandstonePack).attribute }
+  get attribute() { return bind(this.sandstonePack, AttributeCommand, 'attribute') as AttributeCommand<MACRO>['attribute'] }
 
   get bossbar() { return new BossBarCommand<MACRO>(this.sandstonePack) }
 
-  get clear() { return new ClearCommand<MACRO>(this.sandstonePack).clear }
+  get clear() { return bind(this.sandstonePack, ClearCommand, 'clear') as ClearCommand<MACRO>['clear'] }
 
-  get clone() { return new CloneCommand<MACRO>(this.sandstonePack).clone }
+  get clone() { return bind(this.sandstonePack, CloneCommand, 'clone') as CloneCommand<MACRO>['clone'] }
 
-  get comment() { return new CommentCommand(this.sandstonePack).comment }
+  get comment() { return bind(this.sandstonePack, CommentCommand, 'comment') as CommentCommand['comment'] }
 
-  get damage() { return new DamageCommand<MACRO>(this.sandstonePack).damage }
+  get damage() { return bind(this.sandstonePack, DamageCommand, 'damage') as DamageCommand<MACRO>['damage'] }
 
   get data() { return new DataCommand<MACRO>(this.sandstonePack) }
 
@@ -85,101 +95,101 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get debug() { return new DebugCommand(this.sandstonePack) }
 
-  get defaultgamemode() { return new DefaultGameModeCommand(this.sandstonePack).defaultgamemode }
+  get defaultgamemode() { return bind(this.sandstonePack, DefaultGameModeCommand, 'defaultgamemode') as DefaultGameModeCommand['defaultgamemode'] }
 
-  get difficulty() { return new DifficultyCommand(this.sandstonePack).difficulty }
+  get difficulty() { return bind(this.sandstonePack, DifficultyCommand, 'difficulty') as DifficultyCommand['difficulty'] }
 
   get effect() { return new EffectCommand<MACRO>(this.sandstonePack) }
 
-  get enchant() { return new EnchantCommand<MACRO>(this.sandstonePack).enchant }
+  get enchant() { return bind(this.sandstonePack, EnchantCommand, 'enchant') as EnchantCommand<MACRO>['enchant'] }
 
   get execute() { return new ExecuteCommand<MACRO>(this.sandstonePack) }
 
   get experience() { return new ExperienceCommand<MACRO>(this.sandstonePack) }
 
-  get fill() { return new FillCommand<MACRO>(this.sandstonePack).fill }
+  get fill() { return bind(this.sandstonePack, FillCommand, 'fill') as FillCommand<MACRO>['fill'] }
 
-  get functionCmd() { return new FunctionCommand<MACRO>(this.sandstonePack).function }
+  get functionCmd() { return bind(this.sandstonePack, FunctionCommand, 'function') as FunctionCommand<MACRO>['function'] }
 
   get forceload() { return new ForceLoadCommand<MACRO>(this.sandstonePack) }
 
-  get gamemode() { return new GameModeCommand<MACRO>(this.sandstonePack).gamemode }
+  get gamemode() { return bind(this.sandstonePack, GameModeCommand, 'gamemode') as GameModeCommand<MACRO>['gamemode'] }
 
-  get gamerule() { return new GameRuleCommand<MACRO>(this.sandstonePack).gamerule }
+  get gamerule() { return bind(this.sandstonePack, GameRuleCommand, 'gamerule') as GameRuleCommand<MACRO>['gamerule'] }
 
-  get give() { return new GiveCommand<MACRO>(this.sandstonePack).give }
+  get give() { return bind(this.sandstonePack, GiveCommand, 'give') as GiveCommand<MACRO>['give'] }
 
-  get help() { return new HelpCommand(this.sandstonePack).help }
+  get help() { return bind(this.sandstonePack, HelpCommand, 'help') as HelpCommand['help'] }
 
   get item() { return new ItemCommand<MACRO>(this.sandstonePack) }
 
-  get kill() { return new KillCommand<MACRO>(this.sandstonePack).kill }
+  get kill() { return bind(this.sandstonePack, KillCommand, 'kill') as KillCommand<MACRO>['kill'] }
 
-  get list() { return new ListCommand(this.sandstonePack).list }
+  get list() { return bind(this.sandstonePack, ListCommand, 'list') as ListCommand['list'] }
 
   get locate() { return new LocateCommand<MACRO>(this.sandstonePack) }
 
   get loot() { return new LootCommand<MACRO>(this.sandstonePack) }
 
-  get me() { return new MeCommand(this.sandstonePack).me }
+  get me() { return bind(this.sandstonePack, MeCommand, 'me') as MeCommand['me'] }
 
-  get particle() { return new ParticleCommand<MACRO>(this.sandstonePack).particle }
+  get particle() { return bind(this.sandstonePack, ParticleCommand, 'particle') as ParticleCommand<MACRO>['particle'] }
 
   get place() { return new PlaceCommand<MACRO>(this.sandstonePack) }
 
-  get playsound() { return new PlaySoundCommand<MACRO>(this.sandstonePack).playsound }
+  get playsound() { return bind(this.sandstonePack, PlaySoundCommand, 'playsound') as PlaySoundCommand<MACRO>['playsound'] }
 
-  get raw() { return new RawCommand(this.sandstonePack).raw }
+  get raw() { return bind(this.sandstonePack, RawCommand, 'raw') as RawCommand['raw'] }
 
   get recipe() { return new RecipeCommand<MACRO>(this.sandstonePack) }
 
-  get reload() { return new ReloadCommand(this.sandstonePack).reload }
+  get reload() { return bind(this.sandstonePack, ReloadCommand, 'reload') as ReloadCommand['reload'] }
 
   get returnCmd() { return new ReturnCommand<MACRO>(this.sandstonePack).return }
 
-  get ride() { return new RideCommand<MACRO>(this.sandstonePack).ride }
+  get ride() { return bind(this.sandstonePack, RideCommand, 'ride') as RideCommand<MACRO>['ride'] }
 
-  get say() { return new SayCommand<MACRO>(this.sandstonePack).say }
+  get say() { return bind(this.sandstonePack, SayCommand, 'say') as SayCommand<MACRO>['say'] }
 
   get schedule() { return new ScheduleCommand<MACRO>(this.sandstonePack) }
 
   get scoreboard() { return new ScoreboardCommand<MACRO>(this.sandstonePack) }
 
-  get seed() { return new SeedCommand(this.sandstonePack).seed }
+  get seed() { return bind(this.sandstonePack, SeedCommand, 'seed') as SeedCommand['seed'] }
 
-  get setblock() { return new SetBlockCommand<MACRO>(this.sandstonePack).setblock }
+  get setblock() { return bind(this.sandstonePack, SetBlockCommand, 'setblock') as SetBlockCommand<MACRO>['setblock'] }
 
-  get setidletimeout() { return new SetIdleTimeoutCommand(this.sandstonePack).setidletimeout }
+  get setidletimeout() { return bind(this.sandstonePack, SetIdleTimeoutCommand, 'setidletimeout') as SetIdleTimeoutCommand['setidletimeout'] }
 
-  get setworldspawn() { return new SetWorldSpawnCommand<MACRO>(this.sandstonePack).setworldspawn }
+  get setworldspawn() { return bind(this.sandstonePack, SetWorldSpawnCommand, 'setworldspawn') as SetWorldSpawnCommand<MACRO>['setworldspawn'] }
 
-  get spawnpoint() { return new SpawnPointCommand<MACRO>(this.sandstonePack).spawnpoint }
+  get spawnpoint() { return bind(this.sandstonePack, SpawnPointCommand, 'spawnpoint') as SpawnPointCommand<MACRO>['spawnpoint'] }
 
-  get spectate() { return new SpectateCommand<MACRO>(this.sandstonePack).spectate }
+  get spectate() { return bind(this.sandstonePack, SpectateCommand, 'spectate') as SpectateCommand<MACRO>['spectate'] }
 
-  get stopsound() { return new StopSoundCommand<MACRO>(this.sandstonePack).stopsound }
+  get stopsound() { return bind(this.sandstonePack, StopSoundCommand, 'stopsound') as StopSoundCommand<MACRO>['stopsound'] }
 
-  get spreadplayers() { return new SpreadPlayersCommand<MACRO>(this.sandstonePack).spreadplayers }
+  get spreadplayers() { return bind(this.sandstonePack, SpreadPlayersCommand, 'spreadplayers') as SpreadPlayersCommand<MACRO>['spreadplayers'] }
 
-  get summon() { return new SummonCommand<MACRO>(this.sandstonePack).summon }
+  get summon() { return bind(this.sandstonePack, SummonCommand, 'summon') as SummonCommand<MACRO>['summon'] }
 
-  get tag() { return new TagCommand<MACRO>(this.sandstonePack).tag }
+  get tag() { return bind(this.sandstonePack, TagCommand, 'tag') as TagCommand<MACRO>['tag'] }
 
   get team() { return new TeamCommand<MACRO>(this.sandstonePack) }
 
-  get teammsg() { return new TeamMessageCommand(this.sandstonePack).teammessage }
+  get teammsg() { return bind(this.sandstonePack, TeamMessageCommand, 'teammessage') as TeamMessageCommand['teammessage'] }
 
-  get teleport() { return new TeleportCommand<MACRO>(this.sandstonePack).tp }
+  get teleport() { return bind(this.sandstonePack, TeleportCommand, 'tp') as TeleportCommand<MACRO>['tp'] }
 
-  get tell() { return new TellCommand<MACRO>(this.sandstonePack).tell }
+  get tell() { return bind(this.sandstonePack, TellCommand, 'tell') as TellCommand<MACRO>['tell'] }
 
-  get tellraw() { return new TellRawCommand<MACRO>(this.sandstonePack).tellraw }
+  get tellraw() { return bind(this.sandstonePack, TellRawCommand, 'tellraw') as TellRawCommand<MACRO>['tellraw'] }
 
   get time() { return new TimeCommand<MACRO>(this.sandstonePack) }
 
-  get title() { return new TitleCommand<MACRO>(this.sandstonePack).title }
+  get title() { return bind(this.sandstonePack, TitleCommand, 'title') as TitleCommand<MACRO>['title'] }
 
-  get trigger() { return new TriggerCommand(this.sandstonePack).trigger }
+  get trigger() { return bind(this.sandstonePack, TriggerCommand, 'trigger') as TriggerCommand['trigger'] }
 
   get weather() { return new WeatherCommand<MACRO>(this.sandstonePack) }
 

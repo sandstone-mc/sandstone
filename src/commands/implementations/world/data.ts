@@ -179,7 +179,7 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
 export class DataModifyTypeCommand<MACRO extends boolean> extends CommandArguments {
   /** Append the source data onto the end of the pointed-to list. */
   get append() {
-    return this.subCommand(['append'], DataModifyValuesCommand, false)
+    return this.subCommand(['append'], DataModifyValuesCommand<MACRO>, false)
   }
 
   /**
@@ -187,21 +187,21 @@ export class DataModifyTypeCommand<MACRO extends boolean> extends CommandArgumen
    *
    * @param index The index to insert the NBT to.
    */
-  insert = (index: Macroable<number, MACRO>) => this.subCommand(['insert', index], DataModifyValuesCommand, false)
+  insert = (index: Macroable<number, MACRO>) => this.subCommand(['insert', index], DataModifyValuesCommand<MACRO>, false)
 
   /** Merge the source data into the pointed-to object. */
   get merge() {
-    return this.subCommand(['merge'], DataModifyValuesCommand, false)
+    return this.subCommand(['merge'], DataModifyValuesCommand<MACRO>, false)
   }
 
   /** Prepend the source data onto the beginning of the pointed-to list. */
   get prepend() {
-    return this.subCommand(['prepend'], DataModifyValuesCommand, false)
+    return this.subCommand(['prepend'], DataModifyValuesCommand<MACRO>, false)
   }
 
   /** Set the tag specified by `targetPath` to the source data. */
   get set() {
-    return this.subCommand(['set'], DataModifyValuesCommand, false)
+    return this.subCommand(['set'], DataModifyValuesCommand<MACRO>, false)
   }
 }
 
@@ -212,7 +212,7 @@ export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
    * @param targetPos The coordinates of the block to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) => this.subCommand(['block', coordinatesParser(targetPos), targetPath], DataModifyTypeCommand, false)
+  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) => this.subCommand(['block', coordinatesParser(targetPos), targetPath], DataModifyTypeCommand<MACRO>, false)
 
   /**
    * Modify the NBT of a given entity.
@@ -220,7 +220,7 @@ export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The entity to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) => this.subCommand(['entity', targetParser(target), targetPath], DataModifyTypeCommand, false)
+  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) => this.subCommand(['entity', targetParser(target), targetPath], DataModifyTypeCommand<MACRO>, false)
 
   /**
    * Modify the NBT from a given storage path.
@@ -228,7 +228,7 @@ export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The storage to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  storage = (target: Macroable<string, MACRO>, targetPath: Macroable<string, MACRO>) => this.subCommand(['storage', target, targetPath], DataModifyTypeCommand, false)
+  storage = (target: Macroable<string, MACRO>, targetPath: Macroable<string, MACRO>) => this.subCommand(['storage', target, targetPath], DataModifyTypeCommand<MACRO>, false)
 }
 
 export class DataRemoveCommand<MACRO extends boolean> extends CommandArguments {
