@@ -2,11 +2,14 @@ import { ContainerNode } from '../core/index.js'
 
 import type { SandstoneCore } from '../core/index.js'
 import type { ConditionNode } from './conditions/index.js'
+import type { Condition } from './Flow.js'
 
 export class IfNode extends ContainerNode {
   nextFlowNode?: IfNode | ElseNode
 
-  constructor(sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback: () => void, reset = true) {
+  protected _isElseIf = false
+
+  constructor(sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback: () => void, reset = false) {
     super(sandstoneCore)
 
     const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
@@ -36,9 +39,12 @@ export class IfStatement {
     this.node = new IfNode(sandstoneCore, condition, callback)
   }
 
-  elseIf = (condition: ConditionNode, callback: () => void) => {
-    const statement = new IfStatement(this.sandstoneCore, condition, callback)
+  elseIf = (condition: Condition, callback: () => void) => {
+    const statement = new IfStatement(this.sandstoneCore, this.sandstoneCore.pack.flow.conditionToNode(condition), callback)
     this.node.nextFlowNode = statement['getNode']()
+
+    statement.node['_isElseIf'] = true
+
     return statement
   }
 

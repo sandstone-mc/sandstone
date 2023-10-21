@@ -1,12 +1,11 @@
 /* eslint-disable no-spaced-func */
 /* eslint-disable func-call-spacing */
-import { ExecuteCommandNode } from 'sandstone/commands'
-import { SuccessConditionNode } from 'sandstone/flow/conditions/success'
-import { IfNode, NotNode, ScoreConditionNode } from 'sandstone/flow'
+import { ExecuteCommandNode, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
+import { IfNode } from 'sandstone/flow'
 
 import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { ConditionNode, ElseNode } from 'sandstone/flow'
+import type { ElseNode } from 'sandstone/flow'
 
 function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   yield node
@@ -22,12 +21,15 @@ function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
 
 export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
   visitIfNode = (node_: IfNode) => {
+    // 1. We may be an elseIf node, if so, should exit
+    if (node_['_isElseIf']) {
+      return []
+    }
+
     // Start by flattening all nodes
     const nodes = Array.from(flattenIfNode(node_))
 
-    const ifScore = this.core.pack.flowVariable
-
-    // 1. If we have a single if node. No need to store its result then.
+    // 2. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {
       return new ExecuteCommandNode(this.pack, [[node_.condition.getValue()]], {
         isSingleExecute: false,
@@ -36,33 +38,43 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
       })
     }
 
-    const { flow } = this.pack
+    // 3. We have multiple nodes, entering a new function to allow for `return`
 
-    const transformedNodes = nodes.flatMap((node, i) => {
-      const conditions: ConditionNode[] = []
+    const wrapper = new ExecuteCommandNode(this.pack, [], {
+      isFake: true,
+      isSingleExecute: false,
+      givenCallbackName: 'if',
+      body: nodes.flatMap((node, i) => {
+        const { body } = node
 
-      if (i > 0) {
-        conditions.push(new NotNode(this.core, new ScoreConditionNode(this.core, [`${ifScore}`, 'matches', '0..'])))
-      }
+        // If we have a "If" node, add the condition
+        if (node instanceof IfNode) {
+          const callbackName = i === 0 ? 'if' : 'elseif'
 
-      let callbackName: string
-      const { body } = node
+          if (body.length === 1) {
+            return new ExecuteCommandNode(this.pack, [[node.condition.getValue()]], {
+              isSingleExecute: false,
+              givenCallbackName: callbackName,
+              body: [new ReturnCommandNode(this.pack, [`run ${body[0].getValue()}`])],
+            })
+          }
 
-      // If we have a "If" node, add the condition
-      if (node instanceof IfNode) {
-        conditions.push(node.condition)
-        conditions.push(new SuccessConditionNode(this.core, ifScore))
-        callbackName = i === 0 ? 'if' : 'elseif'
-      } else {
-        callbackName = 'else'
-      }
+          const last = body[body.length - 1]
 
-      return new ExecuteCommandNode(this.pack, [[flow.and(...conditions).getValue()]], {
-        isSingleExecute: false,
-        givenCallbackName: callbackName,
-        body,
-      })
+          if (!((last instanceof ReturnCommandNode) || (last instanceof ReturnRunCommandNode))) {
+            body.push(new ReturnCommandNode(this.pack, [0]))
+          }
+
+          return new ExecuteCommandNode(this.pack, [[node.condition.getValue()]], {
+            isSingleExecute: false,
+            givenCallbackName: `${i}_${callbackName}`,
+            body,
+          })
+        }
+        // Else node, just add the body
+        return body
+      }),
     })
-    return transformedNodes
+    return [wrapper]
   }
 }

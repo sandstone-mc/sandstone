@@ -6,7 +6,7 @@ import { IfStatement } from './if_else.js'
 import type { SandstoneCore } from '../core/index.js'
 import type { ConditionClass } from '../variables/index.js'
 
-type Condition = ConditionNode | ConditionClass
+export type Condition = ConditionNode | ConditionClass
 export class Flow {
   constructor(public sandstoneCore: SandstoneCore) { }
 

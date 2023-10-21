@@ -42,6 +42,11 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
   command = 'execute' as const
 
   /**
+   * Is being used by internals to generate a function call. (eg. Flow visitor)
+   */
+  isFake: boolean
+
+  /**
    * By default, the execute is treated as single (execute.run.stuff).
    * This is set to `false` if the execute is used as a function (execute.run(() => { stuff })).
    */
@@ -53,6 +58,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
   givenCallbackName: string | undefined
 
   constructor(sandstonePack: SandstonePack, args: SubCommand[] = [], {
+    isFake = false,
     isSingleExecute = true,
     givenCallbackName = undefined as (string | undefined),
     body = [] as Node[],
@@ -61,6 +67,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     this.givenCallbackName = givenCallbackName
     this.isSingleExecute = isSingleExecute
+    this.isFake = isFake
     this.append(...body)
   }
 
@@ -91,6 +98,11 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     if (this.body.length === 0) {
       return executeString
+    }
+
+    // Yes this is cursed
+    if (this.isFake) {
+      return this.body[0].getValue()
     }
 
     return `${executeString} run ${this.body[0].getValue()}`

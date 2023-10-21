@@ -25,18 +25,33 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
 }
 
 function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(value: TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<REGISTRY>>): TagSingleValue<string> {
-  if (isMCFunctionClass(value) || isTagClass(value)) {
-    /** @ts-ignore */
+  if (isMCFunctionClass(value)) {
+    if ((value['node'].resource as MCFunctionClass<[], []>)['env']) {
+      return value['node'].sandstoneCore.pack.MCFunction(`${value.name}/_env`, () => value(), { creator: 'sandstone', onConflict: 'rename' }).name
+    }
     return value.name
   }
-
-  if (isTagObject(value) && (
-    isMCFunctionClass(value.id) || isTagClass(value.id)
-  )) {
-    return {
-      /** @ts-ignore */
-      id: value.id.name,
-      required: value.required,
+  if (isTagClass(value)) {
+    return value.name
+  }
+  if (isTagObject(value)) {
+    if (isMCFunctionClass(value.id)) {
+      if ((value.id['node'].resource as MCFunctionClass<[], []>)['env']) {
+        return {
+          id: value.id['node'].sandstoneCore.pack.MCFunction(`${value.id.name}/_env`, () => (value.id as MCFunctionClass<[], []>)(), { creator: 'sandstone', onConflict: 'rename' }).name,
+          required: value.required,
+        }
+      }
+      return {
+        id: value.id.name,
+        required: value.required,
+      }
+    }
+    if (isTagClass(value.id)) {
+      return {
+        id: value.id.name,
+        required: value.required,
+      }
     }
   }
   return value as string | TagSingleValue<string>

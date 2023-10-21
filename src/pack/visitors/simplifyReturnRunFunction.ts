@@ -27,7 +27,8 @@ export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
     const mcFunctionNode = mcFunction['node']
 
     if (mcFunctionNode.body.length > 1) {
-      if (mcFunctionNode.resource.name.includes('return_run') && !(mcFunctionNode.body[mcFunctionNode.body.length - 1] instanceof ReturnCommandNode)) {
+      const last = mcFunctionNode.body[mcFunctionNode.body.length - 1]
+      if (mcFunctionNode.resource.name.includes('return_run') && !((last instanceof ReturnCommandNode) || (last instanceof ReturnRunCommandNode))) {
         mcFunction.push(() => {
           this.core.pack.commands.returnCmd(0)
         })
