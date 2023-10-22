@@ -4,7 +4,7 @@ import path from 'path'
 
 import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies.js'
 import { MCMetaCache } from './mcmeta.js'
-import { DependencyClass } from './resources/dependency.js'
+import { SmithedDependencyClass } from './resources/dependency.js'
 import { SmithedDependencyCache } from './smithed.js'
 
 import type { SandstonePack } from 'sandstone/pack'
@@ -26,14 +26,16 @@ export class SandstoneCore {
 
   mcmetaCache = new MCMetaCache()
 
-  smithed = new SmithedDependencyCache()
+  smithed = new SmithedDependencyCache(this)
 
-  dependencies: Promise<void>[] = []
+  dependencies: Promise<SmithedDependencyClass[] | true>[] = []
 
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new Set()
     this.mcfunctionStack = []
     this.awaitNodes = new Set()
+
+    this.depend = this.depend.bind(this)
   }
 
   /**
@@ -123,27 +125,35 @@ export class SandstoneCore {
    * Add a dependency for a Smithed Library
    */
   depend(dependency: string, version = 'latest') {
-    if (!this.smithed.has(dependency)) {
-      this.dependencies.push((async () => {
+    const adding = this.dependencies.length === 0 ? false : Promise.allSettled(this.dependencies)
+
+    this.dependencies.push((async () => {
+      if (!this.smithed.loaded) {
+        await this.smithed.load()
+      }
+      if (adding) await adding
+
+      if (!this.smithed.has(dependency)) {
         const _depend = await this.smithed.get(dependency, version)
 
         if (!this.pack.packTypes.has('datapack-dependencies')) {
           this.pack.packTypes.set('datapack-dependencies', new DataPackDependencies())
         }
 
-        // eslint-disable-next-line no-new
-        new DependencyClass(this, _depend, 'server')
+        const dependencies = [new SmithedDependencyClass(this, dependency, _depend, 'server')]
 
         if (_depend.resourcepack) {
           if (!this.pack.packTypes.has('resourcepack-dependencies')) {
             this.pack.packTypes.set('resourcepack-dependencies', new ResourcePackDependencies())
           }
 
-          // eslint-disable-next-line no-new
-          new DependencyClass(this, _depend, 'client')
+          dependencies.push(new SmithedDependencyClass(this, dependency, _depend, 'client'))
         }
-      })())
-    }
+
+        return dependencies
+      }
+      return true
+    })())
   }
 
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
@@ -173,11 +183,13 @@ export class SandstoneCore {
   }
 
   save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>, dry: boolean, verbose: boolean }, opts: { visitors: GenericCoreVisitor[] }) => {
+    if (!this.smithed.loaded) {
+      await this.smithed.load()
+    }
+
     await Promise.allSettled(this.dependencies)
 
     await this.mcmetaCache.save()
-
-    await this.smithed.save()
 
     const resources = this.generateResources(opts)
 
@@ -199,7 +211,6 @@ export class SandstoneCore {
         )
       }
 
-      /* @ts-ignore */
       if (!cliOptions.dry) {
         await cliOptions.fileHandler(`${resourcePath}.${fileExtension}`, value)
       }

@@ -1,26 +1,26 @@
 import { ContainerNode } from '../nodes.js'
 import { ResourceClass } from './resource.js'
 
+import type { PackType } from 'sandstone/pack'
 import type { SandstoneCore } from '../sandstoneCore.js'
 import type { Dependency } from '../smithed.js'
 import type { ResourceNode } from './resource.js'
-import type { PackType } from 'sandstone/pack'
 
 /**
  * A node representing a custom resource.
  */
-export class DependencyNode extends ContainerNode implements ResourceNode<DependencyClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: DependencyClass) {
+export class DependencyNode extends ContainerNode implements ResourceNode<SmithedDependencyClass> {
+  constructor(sandstoneCore: SandstoneCore, public resource: SmithedDependencyClass) {
     super(sandstoneCore)
   }
 
   getValue = () => this.resource.getValue()
 }
 
-export class DependencyClass extends ResourceClass<DependencyNode> {
+export class SmithedDependencyClass extends ResourceClass<DependencyNode> {
   side: 'client' | 'server'
 
-  constructor(sandstoneCore: SandstoneCore, public dependency: Dependency, side: 'client' | 'server') {
+  constructor(sandstoneCore: SandstoneCore, name: string, public dependency: Dependency, side: 'client' | 'server') {
     super(
       sandstoneCore,
       {
@@ -29,7 +29,7 @@ export class DependencyClass extends ResourceClass<DependencyNode> {
         encoding: false,
       },
       DependencyNode,
-      ['/'],
+      [name],
       {
         addToSandstoneCore: true,
         creator: 'sandstone',
@@ -41,11 +41,11 @@ export class DependencyClass extends ResourceClass<DependencyNode> {
     this.handleConflicts()
   }
 
-  getValue() {
+  getValue(): Buffer {
     if (this.side === 'client') {
-      return this.dependency.datapack
+      return this.dependency.resourcepack as Buffer
     }
 
-    return this.dependency.resourcepack as Buffer
+    return this.dependency.datapack
   }
 }

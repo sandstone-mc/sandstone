@@ -2,21 +2,29 @@
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import path from 'path'
-import { iterateEntries } from 'sandstone/utils'
 
 import type { PackData } from 'sandstone/utils'
+import type { SandstoneCore } from './sandstoneCore.js'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fetch = import('node-fetch')
 
 type Manifest = Record<string, string>
 
-export type Dependency = { version: string, date: number, datapack: Buffer, resourcepack?: Buffer | false }
+export type Dependency = { version: string, date: number, added: boolean, datapack: Buffer, resourcepack?: Buffer | false }
+
+type LockFile = Record<string, { version: string, date: number, resourcepack: boolean }>
 
 export class SmithedDependencyCache {
+  readonly core: SandstoneCore
+
+  constructor(core: SandstoneCore) {
+    this.core = core
+  }
+
   readonly baseURL = 'https://api.smithed.dev/v2/'
 
-  readonly path = path.join(process.env.WORKING_DIR as string, 'resources', 'cache', 'smithed')
+  readonly path = path.join(process.env.WORKING_DIR as string, '../', 'resources', 'cache', 'smithed')
 
   readonly manifest = path.join(this.path, '..', '..', 'smithed.json')
 
@@ -35,45 +43,33 @@ export class SmithedDependencyCache {
 
     const manifest = JSON.parse(await fs.readFile(this.manifest, 'utf-8')) as Manifest
 
-    if (!(await fs.pathExists(this.lockFile))) {
-      for await (const [id, version] of Object.entries(manifest)) {
-        await this.get(id, version)
-      }
-
-      await fs.writeFile(this.lockFile, JSON.stringify(manifest))
-    } else {
-      const lockFile = JSON.parse(await fs.readFile(this.lockFile, 'utf-8')) as Record<string, { version: string, date: number, resourcepack: boolean }>
-
-      for await (const [id, version] of Object.entries(manifest)) {
-        if (!lockFile[id]) {
-          await this.get(id, version)
-        } else if (lockFile[id].version !== version) {
-          await this.get(id, version)
-        } else {
-          const date = Number(Date())
-
-          if (version === 'latest' && ((lockFile[id].date - date) / 36e5) > 1) {
-            lockFile[id].date = date
-
-            await this.get(id, version)
-          } else {
-            this.dependencies.set(id, {
-              version,
-              date: lockFile[id].date,
-              datapack: await fs.readFile(path.join(this.path, id, 'datapack.zip')),
-              resourcepack: lockFile[id].resourcepack ? await fs.readFile(path.join(this.path, id, 'resourcepack.zip')) : false,
-            })
-          }
-        }
-      }
-
-      await fs.writeFile(this.lockFile, JSON.stringify(lockFile))
+    for (const [id, version] of Object.entries(manifest)) {
+      this.core.depend(id, version)
     }
   }
 
   async save() {
     if (this.dependencies.size !== 0) {
-      await fs.writeFile(this.manifest, JSON.stringify(iterateEntries(this.dependencies, (val) => val.version)))
+      const dependencies: Record<string, string> = {}
+
+      for (const [dependency, { version }] of this.dependencies.entries()) {
+        dependencies[dependency] = version
+      }
+      await fs.writeFile(this.manifest, JSON.stringify(dependencies))
+
+      const lock: LockFile = {}
+
+      for (const [name, { version, date, resourcepack }] of this.dependencies.entries()) {
+        lock[name] = {
+          version,
+          date,
+          resourcepack: !(!resourcepack),
+        }
+      }
+
+      await fs.ensureDir(this.lockFile.replace(/\/lock-smithed\.json$/, ''))
+
+      await fs.writeFile(this.lockFile, JSON.stringify(lock))
     }
   }
 
@@ -85,57 +81,106 @@ export class SmithedDependencyCache {
     const existing = this.dependencies.get(dependency)
 
     if (existing && existing.version === version) {
+      existing.added = true
+
       return existing
     }
 
-    let url = `${this.baseURL}download?pack=${dependency}`
+    let result: Dependency
 
-    let hasResourcePack = false
+    await fs.ensureDir(this.lockFile.replace(/\/lock-smithed\.json$/, ''))
 
-    const pack = JSON.parse(await (await (await fetch).default(`${this.baseURL}packs/${dependency}`)).text()) as PackData
-
-    if (version === 'latest') {
-      const { versions } = pack
-
-      const ver = versions[versions.length - 1]
-
-      if (ver.downloads.resourcepack) {
-        hasResourcePack = true
+    const lockFile = await (async () => {
+      try {
+        return JSON.parse(await fs.readFile(this.lockFile, 'utf-8')) as LockFile
+      } catch (e) {
+        return false
       }
+    })()
+
+    let download = false
+
+    if (!lockFile || !lockFile[dependency] || lockFile[dependency].version !== version) {
+      download = true
     } else {
-      const ver = pack.versions.find((_ver) => _ver.name === version) as PackData['versions'][0]
+      const date = Date.now()
 
-      if (ver.downloads.resourcepack) {
-        hasResourcePack = true
+      if (version === 'latest' && ((lockFile[dependency].date - date) / 36e5) > 1) {
+        lockFile[dependency].date = date
+
+        download = true
+      } else {
+        result = this.dependencies.set(dependency, {
+          version,
+          date: lockFile[dependency].date,
+          datapack: await fs.readFile(path.join(this.path, dependency, 'datapack.zip')),
+          resourcepack: lockFile[dependency].resourcepack ? await fs.readFile(path.join(this.path, dependency, 'resourcepack.zip')) : false,
+          added: false,
+        }).get(dependency)!
       }
-
-      url += `@${version}`
     }
 
-    const files = (new AdmZip(await (await (await fetch).default(url)).buffer())).getEntries()
+    if (download) {
+      let url = `${this.baseURL}download?pack=${dependency}`
 
-    const datapack: Buffer = await new Promise((res) => {
-      files[0].getDataAsync((data) => res(data as Buffer))
-    })
+      let hasResourcePack = false
 
-    await fs.writeFile(path.join(this.path, dependency, 'datapack.zip'), datapack)
+      const pack = JSON.parse(await (await (await fetch).default(`${this.baseURL}packs/${dependency}`)).text()) as PackData
 
-    let resourcepack: Buffer | false = false
+      if (version === 'latest') {
+        const { versions } = pack
 
-    if (hasResourcePack) {
-      resourcepack = await new Promise((res) => {
-        files[1].getDataAsync((data) => res(data as Buffer))
+        const ver = versions[versions.length - 1]
+
+        if (ver.downloads.resourcepack) {
+          hasResourcePack = true
+        }
+      } else {
+        const ver = pack.versions.find((_ver) => _ver.name === version) as PackData['versions'][0]
+
+        if (ver.downloads.resourcepack) {
+          hasResourcePack = true
+        }
+
+        url += `@${version}`
+      }
+
+      const files = (new AdmZip(await (await (await fetch).default(url)).buffer())).getEntries()
+
+      const datapack: Buffer = await new Promise((res) => {
+        files[0].getDataAsync((data) => res(data as Buffer))
       })
 
-      await fs.writeFile(path.join(this.path, dependency, 'resourcepack.zip'), datapack)
+      await fs.ensureDir(path.join(this.path, dependency))
+
+      await fs.writeFile(path.join(this.path, dependency, 'datapack.zip'), datapack)
+
+      let resourcepack: Buffer | false = false
+
+      if (hasResourcePack) {
+        resourcepack = await new Promise((res) => {
+          files[1].getDataAsync((data) => res(data as Buffer))
+        })
+
+        await fs.writeFile(path.join(this.path, dependency, 'resourcepack.zip'), datapack)
+      }
+
+      result = this.dependencies.set(dependency, {
+        version,
+        date: version === 'latest' ? Date.now() : 0,
+        datapack,
+        resourcepack,
+        added: true,
+      }).get(dependency)!
+
+      await this.save()
     }
 
-    return (this.dependencies.set(dependency, {
-      version, date: version === 'latest' ? 0 : Number(Date()), datapack, resourcepack,
-    }).get(dependency)!)
+    return result!
   }
 
   has(dependency: string) {
-    return this.dependencies.has(dependency)
+    const depend = this.dependencies.get(dependency)
+    return depend && depend.added
   }
 }

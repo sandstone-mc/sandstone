@@ -79,14 +79,21 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.creator = args.creator ?? 'sandstone'
 
-    this.onConflict = args.onConflict || process.env[`${this.node.resource.path[1].toUpperCase()}_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY || 'throw'
+    const scopedStrategy = this.node.resource.path[1] ? process.env[`${this.node.resource.path[1].toUpperCase()}_CONFLICT_STRATEGY`] : false
+
+    this.onConflict = args.onConflict || scopedStrategy || process.env.DEFAULT_CONFLICT_STRATEGY || 'throw'
   }
 
   protected handleConflicts() {
     if (this.addToSandstoneCore) {
-      const resourceType = this.node.resource.path[1]
+      const resourceType = this.node.resource.path[1] || 'resources'
 
-      const conflict = [...this.core.resourceNodes].find((node) => node.resource.path.join('') === this.node.resource.path.join(''))
+      const conflict = [...this.core.resourceNodes].find((node) => {
+        if (node.resource.packType.constructor.name !== this.node.resource.packType.constructor.name) {
+          return false
+        }
+        return node.resource.path.join('') === this.node.resource.path.join('')
+      })
 
       if (conflict) {
         const oldResource = conflict.resource
