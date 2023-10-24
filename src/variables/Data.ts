@@ -146,6 +146,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
       if (value instanceof StringDataPointClass) {
         if (value.sliceBounds[1]) this.string((data) => data.set, value, value.sliceBounds[0], value.sliceBounds[1])
         else this.string((data) => data.set, value, value.sliceBounds[0])
+        return this
       }
       if (value instanceof Score) {
         this.executeStore(storeType || 'int', scale).run.scoreboard.players.get(value.target, value.objective)

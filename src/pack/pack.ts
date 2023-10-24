@@ -188,7 +188,15 @@ export class SandstonePack {
     this.setupLantern()
     this.dependencies = new Map()
 
-    this.MCFunction = this.MCFunction.bind(this)
+    // ESM is funny
+
+    for (const method of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
+      /* @ts-ignore */
+      if (method !== 'constructor' && typeof this[method] === 'function' && typeof this[method].bind === 'function') {
+        /* @ts-ignore */
+        this[method] = this[method].bind(this)
+      }
+    }
   }
 
   setupLantern = () => {

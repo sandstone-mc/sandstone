@@ -3,14 +3,16 @@ import * as util from 'util'
 
 import { capitalize } from '../utils.js'
 import { DataPointPickClass } from './abstractClasses.js'
+import { StringDataPointClass } from './Data.js'
 import {
+  NBTAnyValue,
   NBTClass, NBTInt, NBTIntArray, NBTPrimitive,
 } from './nbt/index.js'
 import { Score } from './Score.js'
 
 import type { NBTObject } from '../arguments/nbt.js'
 import type { SandstonePack } from '../pack/index.js'
-import type { DataPointClass, StringDataPointClass } from './Data.js'
+import type { DataPointClass } from './Data.js'
 import type {
   NBTAllArrays, NBTAllNumbers,
   NBTAllValues, NBTString,
@@ -46,6 +48,8 @@ export class ResolveNBTClass extends DataPointPickClass {
     if (Array.isArray(nbt)) {
       resolvedNBT = []
 
+      this.dataPoint.set([])
+
       if (resolvedNBT.length !== 0) {
         for (const [i, value] of nbt.entries()) {
           const resolved = this._resolveNBT(value, `${path === undefined ? '' : path}`, i)
@@ -65,6 +69,8 @@ export class ResolveNBTClass extends DataPointPickClass {
     if (nbt instanceof NBTPrimitive) {
       return resolvedNBT
     }
+    this.dataPoint.set({})
+
     for (const [key, value] of Object.entries(nbt)) {
       const resolved = this._resolveNBT(value, `${path === undefined ? '' : `${path}.`}${key}`)
       if (resolved !== undefined) {
@@ -77,14 +83,23 @@ export class ResolveNBTClass extends DataPointPickClass {
   /**
    * @internal
    */
-  _resolveData(value: ResolveNBTPartClass<'data', NBTAllValues>, path: string, index?: number) {
+  _resolveData(part: ResolveNBTPartClass<'data', NBTAllValues>, path: string, index?: number) {
+    const { value } = part
     const dataPoint = this.dataPoint.select(path)
 
     if (index) {
-      dataPoint.insert(value, index)
+      let _value = value
+      if (value instanceof StringDataPointClass) {
+        _value = this.pack.DataVariable(value)
+      }
+      dataPoint.insert(_value as DataPointClass, index)
       return undefined
     }
-    dataPoint.set(value)
+    if (value instanceof StringDataPointClass) {
+      dataPoint.set(value)
+      return undefined
+    }
+    dataPoint.set(value as DataPointClass)
     return undefined
   }
 
@@ -192,5 +207,5 @@ export function ResolveNBTPart<ValueType extends 'data' | 'score' | 'scores', Pr
     return new ResolveNBTPartClass<ValueType, Primitive>(value, 'score' as ValueType, (option2 || NBTInt) as Primitive, (option1 || 1) as number)
   }
 
-  return new ResolveNBTPartClass<ValueType, Primitive>(value, 'data' as ValueType, option1 as Primitive)
+  return new ResolveNBTPartClass<ValueType, Primitive>(value, 'data' as ValueType, (option1 || NBTAnyValue) as Primitive)
 }

@@ -35,7 +35,15 @@ export class SandstoneCore {
     this.mcfunctionStack = []
     this.awaitNodes = new Set()
 
-    this.depend = this.depend.bind(this)
+    // ESM is funny
+
+    for (const method of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
+      /* @ts-ignore */
+      if (method !== 'constructor' && typeof this[method] === 'function' && typeof this[method].bind === 'function') {
+        /* @ts-ignore */
+        this[method] = this[method].bind(this)
+      }
+    }
   }
 
   /**

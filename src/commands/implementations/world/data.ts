@@ -127,7 +127,7 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
      * @param end Optional. Index of the first character to exclude at the end of the string
      */
     block: (sourcePosition: Macroable<Coordinates<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>, start?: Macroable<number, MACRO>, end?: Macroable<number, MACRO>) => {
-      const command: (string | VectorClass<[string, string, string]> | number | MacroArgument)[] = ['from', 'block', coordinatesParser(sourcePosition), sourcePath]
+      const command: (string | VectorClass<[string, string, string]> | number | MacroArgument)[] = ['string', 'block', coordinatesParser(sourcePosition), sourcePath]
       if (start) {
         command.push(start)
         if (end) command.push(end)
@@ -144,7 +144,7 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
      * @param end Optional. Index of the first character to exclude at the end of the string
      */
     entity: (source: Macroable<SingleEntityArgument<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>, start?: Macroable<number, MACRO>, end?: Macroable<number, MACRO>) => {
-      const command: (Macroable<string | SingleEntityArgument<MACRO> | number, MACRO>)[] = ['from', 'entity', targetParser(source), sourcePath]
+      const command: (Macroable<string | SingleEntityArgument<MACRO> | number, MACRO>)[] = ['string', 'entity', targetParser(source), sourcePath]
       if (start) {
         command.push(start)
         if (end) command.push(end)
@@ -161,7 +161,7 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
      * @param end Optional. Index of the first character to exclude at the end of the string
      */
     storage: (source: Macroable<string, MACRO>, sourcePath: Macroable<string, MACRO>, start?: Macroable<number, MACRO>, end?: Macroable<number, MACRO>) => {
-      const command: (string | number | MacroArgument)[] = ['from', 'storage', source, sourcePath]
+      const command: (string | number | MacroArgument)[] = ['string', 'storage', source, sourcePath]
       if (start) {
         command.push(start)
         if (end) command.push(end)
