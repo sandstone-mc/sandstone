@@ -14,7 +14,7 @@ export class DataPackDependencies extends PackType {
 
 export class ResourcePackDependencies extends PackType {
   constructor() {
-    super('resourcepack_dependencies', 'saves/$worldName$/resources', 'resources', 'resourcepacks/$packName$_dependencies', 'client', false, undefined, false)
+    super('resourcepack_dependencies', 'resourcepacks', 'dependency_resources', 'resourcepacks', 'client', false, undefined, false)
   }
 
   handleOutput = async (type: 'output' | 'client' | 'server') => {
