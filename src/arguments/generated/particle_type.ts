@@ -96,5 +96,6 @@ export type PARTICLE_TYPES = (
   'wax_off' |
   'wax_on' |
   'white_ash' |
+  'white_smoke' |
   'witch'
 )

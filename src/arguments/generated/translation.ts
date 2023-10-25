@@ -1344,6 +1344,7 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.cracked_nether_bricks' |
   'block.minecraft.cracked_polished_blackstone_bricks' |
   'block.minecraft.cracked_stone_bricks' |
+  'block.minecraft.crafter' |
   'block.minecraft.crafting_table' |
   'block.minecraft.creeper_head' |
   'block.minecraft.creeper_wall_head' |
@@ -2683,6 +2684,7 @@ export type TRANSLATION_KEYS = (
   'container.cartography_table' |
   'container.chest' |
   'container.chestDouble' |
+  'container.crafter' |
   'container.crafting' |
   'container.creative' |
   'container.dispenser' |
@@ -2812,6 +2814,8 @@ export type TRANSLATION_KEYS = (
   'dataPack.trade_rebalance.name' |
   'dataPack.update_1_20.description' |
   'dataPack.update_1_20.name' |
+  'dataPack.update_1_21.description' |
+  'dataPack.update_1_21.name' |
   'dataPack.validation.back' |
   'dataPack.validation.failed' |
   'dataPack.validation.reset' |
@@ -3367,8 +3371,14 @@ export type TRANSLATION_KEYS = (
   'gamerule.mobExplosionDropDecay.description' |
   'gamerule.mobGriefing' |
   'gamerule.naturalRegeneration' |
+  'gamerule.playersNetherPortalCreativeDelay' |
+  'gamerule.playersNetherPortalCreativeDelay.description' |
+  'gamerule.playersNetherPortalDefaultDelay' |
+  'gamerule.playersNetherPortalDefaultDelay.description' |
   'gamerule.playersSleepingPercentage' |
   'gamerule.playersSleepingPercentage.description' |
+  'gamerule.projectilesCanBreakBlocks' |
+  'gamerule.projectilesCanBreakBlocks.description' |
   'gamerule.randomTickSpeed' |
   'gamerule.reducedDebugInfo' |
   'gamerule.reducedDebugInfo.description' |
@@ -3578,6 +3588,7 @@ export type TRANSLATION_KEYS = (
   'gui.socialInteractions.tooltip.report.not_reportable' |
   'gui.socialInteractions.tooltip.show' |
   'gui.stats' |
+  'gui.togglable_slot' |
   'gui.toMenu' |
   'gui.toRealms' |
   'gui.toTitle' |
@@ -4384,6 +4395,8 @@ export type TRANSLATION_KEYS = (
   'lectern.take_book' |
   'loading.progress' |
   'mco.account.privacy.info' |
+  'mco.account.privacy.info.button' |
+  'mco.account.privacy.information' |
   'mco.account.privacyinfo' |
   'mco.account.update' |
   'mco.activity.noactivity' |
@@ -5003,6 +5016,8 @@ export type TRANSLATION_KEYS = (
   'options.hideLightningFlashes.tooltip' |
   'options.hideMatchedNames' |
   'options.hideMatchedNames.tooltip' |
+  'options.hideSplashTexts' |
+  'options.hideSplashTexts.tooltip' |
   'options.invertMouse' |
   'options.key.hold' |
   'options.key.toggle' |
@@ -5209,6 +5224,21 @@ export type TRANSLATION_KEYS = (
   'recipe.toast.description' |
   'recipe.toast.title' |
   'record.nowPlaying' |
+  'recover_world.bug_tracker' |
+  'recover_world.button' |
+  'recover_world.done.failed' |
+  'recover_world.done.success' |
+  'recover_world.done.title' |
+  'recover_world.issue.missing_file' |
+  'recover_world.issue.none' |
+  'recover_world.message' |
+  'recover_world.no_fallback' |
+  'recover_world.restore' |
+  'recover_world.restoring' |
+  'recover_world.state_entry' |
+  'recover_world.state_entry.unknown' |
+  'recover_world.title' |
+  'recover_world.warning' |
   'resourcePack.broken_assets' |
   'resourcepack.downloading' |
   'resourcePack.high_contrast.name' |
@@ -5314,6 +5344,10 @@ export type TRANSLATION_KEYS = (
   'selectWorld.import_worldgen_settings.failure' |
   'selectWorld.import_worldgen_settings.select_file' |
   'selectWorld.incompatible_series' |
+  'selectWorld.incompatible.description' |
+  'selectWorld.incompatible.info' |
+  'selectWorld.incompatible.title' |
+  'selectWorld.incompatible.tooltip' |
   'selectWorld.load_folder_access' |
   'selectWorld.loading_list' |
   'selectWorld.locked' |
@@ -5328,6 +5362,7 @@ export type TRANSLATION_KEYS = (
   'selectWorld.recreate.customized.title' |
   'selectWorld.recreate.error.text' |
   'selectWorld.recreate.error.title' |
+  'selectWorld.resource_load' |
   'selectWorld.resultFolder' |
   'selectWorld.search' |
   'selectWorld.seedInfo' |
@@ -5550,6 +5585,8 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.conduit.ambient' |
   'subtitles.block.conduit.attack.target' |
   'subtitles.block.conduit.deactivate' |
+  'subtitles.block.crafter.craft' |
+  'subtitles.block.crafter.fail' |
   'subtitles.block.decorated_pot.insert' |
   'subtitles.block.decorated_pot.insert_fail' |
   'subtitles.block.decorated_pot.shatter' |
@@ -6252,6 +6289,7 @@ export type TRANSLATION_KEYS = (
   'symlink_warning.message' |
   'symlink_warning.message.pack' |
   'symlink_warning.message.world' |
+  'symlink_warning.more_info' |
   'symlink_warning.title' |
   'symlink_warning.title.pack' |
   'symlink_warning.title.world' |

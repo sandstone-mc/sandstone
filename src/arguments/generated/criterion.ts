@@ -462,6 +462,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.cracked_polished_blackstone_bricks' |
   'minecraft.broken:minecraft.cracked_stone_bricks' |
   'minecraft.mined:minecraft.cracked_stone_bricks' |
+  'minecraft.broken:minecraft.crafter' |
+  'minecraft.mined:minecraft.crafter' |
   'minecraft.broken:minecraft.crafting_table' |
   'minecraft.mined:minecraft.crafting_table' |
   'minecraft.broken:minecraft.creeper_head' |
@@ -3429,6 +3431,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.cracked_stone_bricks' |
   'minecraft.picked_up:minecraft.cracked_stone_bricks' |
   'minecraft.used:minecraft.cracked_stone_bricks' |
+  'minecraft.crafted:minecraft.crafter' |
+  'minecraft.dropped:minecraft.crafter' |
+  'minecraft.picked_up:minecraft.crafter' |
+  'minecraft.used:minecraft.crafter' |
   'minecraft.crafted:minecraft.crafting_table' |
   'minecraft.dropped:minecraft.crafting_table' |
   'minecraft.picked_up:minecraft.crafting_table' |

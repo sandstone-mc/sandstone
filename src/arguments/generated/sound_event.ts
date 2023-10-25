@@ -212,6 +212,8 @@ export type SOUND_EVENTS = (
   'block.coral_block.hit' |
   'block.coral_block.place' |
   'block.coral_block.step' |
+  'block.crafter.craft' |
+  'block.crafter.fail' |
   'block.crop.break' |
   'block.decorated_pot.break' |
   'block.decorated_pot.fall' |

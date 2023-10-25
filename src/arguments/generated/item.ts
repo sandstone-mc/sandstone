@@ -270,6 +270,7 @@ export type ITEMS = (
   'cracked_nether_bricks' |
   'cracked_polished_blackstone_bricks' |
   'cracked_stone_bricks' |
+  'crafter' |
   'crafting_table' |
   'creeper_banner_pattern' |
   'creeper_head' |

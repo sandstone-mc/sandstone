@@ -220,6 +220,7 @@ export type BLOCKS = (
   'cracked_nether_bricks' |
   'cracked_polished_blackstone_bricks' |
   'cracked_stone_bricks' |
+  'crafter' |
   'crafting_table' |
   'creeper_head' |
   'creeper_wall_head' |
