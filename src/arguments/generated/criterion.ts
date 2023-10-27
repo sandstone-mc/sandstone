@@ -392,6 +392,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.chipped_anvil' |
   'minecraft.broken:minecraft.chiseled_bookshelf' |
   'minecraft.mined:minecraft.chiseled_bookshelf' |
+  'minecraft.broken:minecraft.chiseled_copper' |
+  'minecraft.mined:minecraft.chiseled_copper' |
   'minecraft.broken:minecraft.chiseled_deepslate' |
   'minecraft.mined:minecraft.chiseled_deepslate' |
   'minecraft.broken:minecraft.chiseled_nether_bricks' |
@@ -406,6 +408,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.chiseled_sandstone' |
   'minecraft.broken:minecraft.chiseled_stone_bricks' |
   'minecraft.mined:minecraft.chiseled_stone_bricks' |
+  'minecraft.broken:minecraft.chiseled_tuff' |
+  'minecraft.mined:minecraft.chiseled_tuff' |
+  'minecraft.broken:minecraft.chiseled_tuff_bricks' |
+  'minecraft.mined:minecraft.chiseled_tuff_bricks' |
   'minecraft.broken:minecraft.chorus_flower' |
   'minecraft.mined:minecraft.chorus_flower' |
   'minecraft.broken:minecraft.chorus_plant' |
@@ -448,8 +454,16 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.conduit' |
   'minecraft.broken:minecraft.copper_block' |
   'minecraft.mined:minecraft.copper_block' |
+  'minecraft.broken:minecraft.copper_bulb' |
+  'minecraft.mined:minecraft.copper_bulb' |
+  'minecraft.broken:minecraft.copper_door' |
+  'minecraft.mined:minecraft.copper_door' |
+  'minecraft.broken:minecraft.copper_grate' |
+  'minecraft.mined:minecraft.copper_grate' |
   'minecraft.broken:minecraft.copper_ore' |
   'minecraft.mined:minecraft.copper_ore' |
+  'minecraft.broken:minecraft.copper_trapdoor' |
+  'minecraft.mined:minecraft.copper_trapdoor' |
   'minecraft.broken:minecraft.cornflower' |
   'minecraft.mined:minecraft.cornflower' |
   'minecraft.broken:minecraft.cracked_deepslate_bricks' |
@@ -732,8 +746,18 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.end_stone_bricks' |
   'minecraft.broken:minecraft.ender_chest' |
   'minecraft.mined:minecraft.ender_chest' |
+  'minecraft.broken:minecraft.exposed_chiseled_copper' |
+  'minecraft.mined:minecraft.exposed_chiseled_copper' |
   'minecraft.broken:minecraft.exposed_copper' |
   'minecraft.mined:minecraft.exposed_copper' |
+  'minecraft.broken:minecraft.exposed_copper_bulb' |
+  'minecraft.mined:minecraft.exposed_copper_bulb' |
+  'minecraft.broken:minecraft.exposed_copper_door' |
+  'minecraft.mined:minecraft.exposed_copper_door' |
+  'minecraft.broken:minecraft.exposed_copper_grate' |
+  'minecraft.mined:minecraft.exposed_copper_grate' |
+  'minecraft.broken:minecraft.exposed_copper_trapdoor' |
+  'minecraft.mined:minecraft.exposed_copper_trapdoor' |
   'minecraft.broken:minecraft.exposed_cut_copper' |
   'minecraft.mined:minecraft.exposed_cut_copper' |
   'minecraft.broken:minecraft.exposed_cut_copper_slab' |
@@ -1274,8 +1298,18 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.orange_wool' |
   'minecraft.broken:minecraft.oxeye_daisy' |
   'minecraft.mined:minecraft.oxeye_daisy' |
+  'minecraft.broken:minecraft.oxidized_chiseled_copper' |
+  'minecraft.mined:minecraft.oxidized_chiseled_copper' |
   'minecraft.broken:minecraft.oxidized_copper' |
   'minecraft.mined:minecraft.oxidized_copper' |
+  'minecraft.broken:minecraft.oxidized_copper_bulb' |
+  'minecraft.mined:minecraft.oxidized_copper_bulb' |
+  'minecraft.broken:minecraft.oxidized_copper_door' |
+  'minecraft.mined:minecraft.oxidized_copper_door' |
+  'minecraft.broken:minecraft.oxidized_copper_grate' |
+  'minecraft.mined:minecraft.oxidized_copper_grate' |
+  'minecraft.broken:minecraft.oxidized_copper_trapdoor' |
+  'minecraft.mined:minecraft.oxidized_copper_trapdoor' |
   'minecraft.broken:minecraft.oxidized_cut_copper' |
   'minecraft.mined:minecraft.oxidized_cut_copper' |
   'minecraft.broken:minecraft.oxidized_cut_copper_slab' |
@@ -1392,6 +1426,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.polished_granite_slab' |
   'minecraft.broken:minecraft.polished_granite_stairs' |
   'minecraft.mined:minecraft.polished_granite_stairs' |
+  'minecraft.broken:minecraft.polished_tuff' |
+  'minecraft.mined:minecraft.polished_tuff' |
+  'minecraft.broken:minecraft.polished_tuff_slab' |
+  'minecraft.mined:minecraft.polished_tuff_slab' |
+  'minecraft.broken:minecraft.polished_tuff_stairs' |
+  'minecraft.mined:minecraft.polished_tuff_stairs' |
+  'minecraft.broken:minecraft.polished_tuff_wall' |
+  'minecraft.mined:minecraft.polished_tuff_wall' |
   'minecraft.broken:minecraft.poppy' |
   'minecraft.mined:minecraft.poppy' |
   'minecraft.broken:minecraft.potatoes' |
@@ -1860,6 +1902,20 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.tube_coral_wall_fan' |
   'minecraft.broken:minecraft.tuff' |
   'minecraft.mined:minecraft.tuff' |
+  'minecraft.broken:minecraft.tuff_brick_slab' |
+  'minecraft.mined:minecraft.tuff_brick_slab' |
+  'minecraft.broken:minecraft.tuff_brick_stairs' |
+  'minecraft.mined:minecraft.tuff_brick_stairs' |
+  'minecraft.broken:minecraft.tuff_brick_wall' |
+  'minecraft.mined:minecraft.tuff_brick_wall' |
+  'minecraft.broken:minecraft.tuff_bricks' |
+  'minecraft.mined:minecraft.tuff_bricks' |
+  'minecraft.broken:minecraft.tuff_slab' |
+  'minecraft.mined:minecraft.tuff_slab' |
+  'minecraft.broken:minecraft.tuff_stairs' |
+  'minecraft.mined:minecraft.tuff_stairs' |
+  'minecraft.broken:minecraft.tuff_wall' |
+  'minecraft.mined:minecraft.tuff_wall' |
   'minecraft.broken:minecraft.turtle_egg' |
   'minecraft.mined:minecraft.turtle_egg' |
   'minecraft.broken:minecraft.twisting_vines' |
@@ -1916,40 +1972,90 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.water' |
   'minecraft.broken:minecraft.water_cauldron' |
   'minecraft.mined:minecraft.water_cauldron' |
+  'minecraft.broken:minecraft.waxed_chiseled_copper' |
+  'minecraft.mined:minecraft.waxed_chiseled_copper' |
   'minecraft.broken:minecraft.waxed_copper_block' |
   'minecraft.mined:minecraft.waxed_copper_block' |
+  'minecraft.broken:minecraft.waxed_copper_bulb' |
+  'minecraft.mined:minecraft.waxed_copper_bulb' |
+  'minecraft.broken:minecraft.waxed_copper_door' |
+  'minecraft.mined:minecraft.waxed_copper_door' |
+  'minecraft.broken:minecraft.waxed_copper_grate' |
+  'minecraft.mined:minecraft.waxed_copper_grate' |
+  'minecraft.broken:minecraft.waxed_copper_trapdoor' |
+  'minecraft.mined:minecraft.waxed_copper_trapdoor' |
   'minecraft.broken:minecraft.waxed_cut_copper' |
   'minecraft.mined:minecraft.waxed_cut_copper' |
   'minecraft.broken:minecraft.waxed_cut_copper_slab' |
   'minecraft.mined:minecraft.waxed_cut_copper_slab' |
   'minecraft.broken:minecraft.waxed_cut_copper_stairs' |
   'minecraft.mined:minecraft.waxed_cut_copper_stairs' |
+  'minecraft.broken:minecraft.waxed_exposed_chiseled_copper' |
+  'minecraft.mined:minecraft.waxed_exposed_chiseled_copper' |
   'minecraft.broken:minecraft.waxed_exposed_copper' |
   'minecraft.mined:minecraft.waxed_exposed_copper' |
+  'minecraft.broken:minecraft.waxed_exposed_copper_bulb' |
+  'minecraft.mined:minecraft.waxed_exposed_copper_bulb' |
+  'minecraft.broken:minecraft.waxed_exposed_copper_door' |
+  'minecraft.mined:minecraft.waxed_exposed_copper_door' |
+  'minecraft.broken:minecraft.waxed_exposed_copper_grate' |
+  'minecraft.mined:minecraft.waxed_exposed_copper_grate' |
+  'minecraft.broken:minecraft.waxed_exposed_copper_trapdoor' |
+  'minecraft.mined:minecraft.waxed_exposed_copper_trapdoor' |
   'minecraft.broken:minecraft.waxed_exposed_cut_copper' |
   'minecraft.mined:minecraft.waxed_exposed_cut_copper' |
   'minecraft.broken:minecraft.waxed_exposed_cut_copper_slab' |
   'minecraft.mined:minecraft.waxed_exposed_cut_copper_slab' |
   'minecraft.broken:minecraft.waxed_exposed_cut_copper_stairs' |
   'minecraft.mined:minecraft.waxed_exposed_cut_copper_stairs' |
+  'minecraft.broken:minecraft.waxed_oxidized_chiseled_copper' |
+  'minecraft.mined:minecraft.waxed_oxidized_chiseled_copper' |
   'minecraft.broken:minecraft.waxed_oxidized_copper' |
   'minecraft.mined:minecraft.waxed_oxidized_copper' |
+  'minecraft.broken:minecraft.waxed_oxidized_copper_bulb' |
+  'minecraft.mined:minecraft.waxed_oxidized_copper_bulb' |
+  'minecraft.broken:minecraft.waxed_oxidized_copper_door' |
+  'minecraft.mined:minecraft.waxed_oxidized_copper_door' |
+  'minecraft.broken:minecraft.waxed_oxidized_copper_grate' |
+  'minecraft.mined:minecraft.waxed_oxidized_copper_grate' |
+  'minecraft.broken:minecraft.waxed_oxidized_copper_trapdoor' |
+  'minecraft.mined:minecraft.waxed_oxidized_copper_trapdoor' |
   'minecraft.broken:minecraft.waxed_oxidized_cut_copper' |
   'minecraft.mined:minecraft.waxed_oxidized_cut_copper' |
   'minecraft.broken:minecraft.waxed_oxidized_cut_copper_slab' |
   'minecraft.mined:minecraft.waxed_oxidized_cut_copper_slab' |
   'minecraft.broken:minecraft.waxed_oxidized_cut_copper_stairs' |
   'minecraft.mined:minecraft.waxed_oxidized_cut_copper_stairs' |
+  'minecraft.broken:minecraft.waxed_weathered_chiseled_copper' |
+  'minecraft.mined:minecraft.waxed_weathered_chiseled_copper' |
   'minecraft.broken:minecraft.waxed_weathered_copper' |
   'minecraft.mined:minecraft.waxed_weathered_copper' |
+  'minecraft.broken:minecraft.waxed_weathered_copper_bulb' |
+  'minecraft.mined:minecraft.waxed_weathered_copper_bulb' |
+  'minecraft.broken:minecraft.waxed_weathered_copper_door' |
+  'minecraft.mined:minecraft.waxed_weathered_copper_door' |
+  'minecraft.broken:minecraft.waxed_weathered_copper_grate' |
+  'minecraft.mined:minecraft.waxed_weathered_copper_grate' |
+  'minecraft.broken:minecraft.waxed_weathered_copper_trapdoor' |
+  'minecraft.mined:minecraft.waxed_weathered_copper_trapdoor' |
   'minecraft.broken:minecraft.waxed_weathered_cut_copper' |
   'minecraft.mined:minecraft.waxed_weathered_cut_copper' |
   'minecraft.broken:minecraft.waxed_weathered_cut_copper_slab' |
   'minecraft.mined:minecraft.waxed_weathered_cut_copper_slab' |
   'minecraft.broken:minecraft.waxed_weathered_cut_copper_stairs' |
   'minecraft.mined:minecraft.waxed_weathered_cut_copper_stairs' |
+  'minecraft.broken:minecraft.weathered_chiseled_copper' |
+  'minecraft.mined:minecraft.weathered_chiseled_copper' |
   'minecraft.broken:minecraft.weathered_copper' |
   'minecraft.mined:minecraft.weathered_copper' |
+  'minecraft.broken:minecraft.weathered_copper_bulb' |
+  'minecraft.mined:minecraft.weathered_copper_bulb' |
+  'minecraft.broken:minecraft.weathered_copper_door' |
+  'minecraft.mined:minecraft.weathered_copper_door' |
+  'minecraft.broken:minecraft.weathered_copper_grate' |
+  'minecraft.mined:minecraft.weathered_copper_grate' |
+  'minecraft.broken:minecraft.weathered_copper_trapdoor' |
+  'minecraft.mined:minecraft.weathered_copper_trapdoor' |
   'minecraft.broken:minecraft.weathered_cut_copper' |
   'minecraft.mined:minecraft.weathered_cut_copper' |
   'minecraft.broken:minecraft.weathered_cut_copper_slab' |
@@ -3211,6 +3317,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.chiseled_bookshelf' |
   'minecraft.picked_up:minecraft.chiseled_bookshelf' |
   'minecraft.used:minecraft.chiseled_bookshelf' |
+  'minecraft.crafted:minecraft.chiseled_copper' |
+  'minecraft.dropped:minecraft.chiseled_copper' |
+  'minecraft.picked_up:minecraft.chiseled_copper' |
+  'minecraft.used:minecraft.chiseled_copper' |
   'minecraft.crafted:minecraft.chiseled_deepslate' |
   'minecraft.dropped:minecraft.chiseled_deepslate' |
   'minecraft.picked_up:minecraft.chiseled_deepslate' |
@@ -3239,6 +3349,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.chiseled_stone_bricks' |
   'minecraft.picked_up:minecraft.chiseled_stone_bricks' |
   'minecraft.used:minecraft.chiseled_stone_bricks' |
+  'minecraft.crafted:minecraft.chiseled_tuff' |
+  'minecraft.dropped:minecraft.chiseled_tuff' |
+  'minecraft.picked_up:minecraft.chiseled_tuff' |
+  'minecraft.used:minecraft.chiseled_tuff' |
+  'minecraft.crafted:minecraft.chiseled_tuff_bricks' |
+  'minecraft.dropped:minecraft.chiseled_tuff_bricks' |
+  'minecraft.picked_up:minecraft.chiseled_tuff_bricks' |
+  'minecraft.used:minecraft.chiseled_tuff_bricks' |
   'minecraft.crafted:minecraft.chorus_flower' |
   'minecraft.dropped:minecraft.chorus_flower' |
   'minecraft.picked_up:minecraft.chorus_flower' |
@@ -3395,6 +3513,18 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.copper_block' |
   'minecraft.picked_up:minecraft.copper_block' |
   'minecraft.used:minecraft.copper_block' |
+  'minecraft.crafted:minecraft.copper_bulb' |
+  'minecraft.dropped:minecraft.copper_bulb' |
+  'minecraft.picked_up:minecraft.copper_bulb' |
+  'minecraft.used:minecraft.copper_bulb' |
+  'minecraft.crafted:minecraft.copper_door' |
+  'minecraft.dropped:minecraft.copper_door' |
+  'minecraft.picked_up:minecraft.copper_door' |
+  'minecraft.used:minecraft.copper_door' |
+  'minecraft.crafted:minecraft.copper_grate' |
+  'minecraft.dropped:minecraft.copper_grate' |
+  'minecraft.picked_up:minecraft.copper_grate' |
+  'minecraft.used:minecraft.copper_grate' |
   'minecraft.crafted:minecraft.copper_ingot' |
   'minecraft.dropped:minecraft.copper_ingot' |
   'minecraft.picked_up:minecraft.copper_ingot' |
@@ -3403,6 +3533,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.copper_ore' |
   'minecraft.picked_up:minecraft.copper_ore' |
   'minecraft.used:minecraft.copper_ore' |
+  'minecraft.crafted:minecraft.copper_trapdoor' |
+  'minecraft.dropped:minecraft.copper_trapdoor' |
+  'minecraft.picked_up:minecraft.copper_trapdoor' |
+  'minecraft.used:minecraft.copper_trapdoor' |
   'minecraft.crafted:minecraft.cornflower' |
   'minecraft.dropped:minecraft.cornflower' |
   'minecraft.picked_up:minecraft.cornflower' |
@@ -4079,10 +4213,30 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.explorer_pottery_sherd' |
   'minecraft.picked_up:minecraft.explorer_pottery_sherd' |
   'minecraft.used:minecraft.explorer_pottery_sherd' |
+  'minecraft.crafted:minecraft.exposed_chiseled_copper' |
+  'minecraft.dropped:minecraft.exposed_chiseled_copper' |
+  'minecraft.picked_up:minecraft.exposed_chiseled_copper' |
+  'minecraft.used:minecraft.exposed_chiseled_copper' |
   'minecraft.crafted:minecraft.exposed_copper' |
   'minecraft.dropped:minecraft.exposed_copper' |
   'minecraft.picked_up:minecraft.exposed_copper' |
   'minecraft.used:minecraft.exposed_copper' |
+  'minecraft.crafted:minecraft.exposed_copper_bulb' |
+  'minecraft.dropped:minecraft.exposed_copper_bulb' |
+  'minecraft.picked_up:minecraft.exposed_copper_bulb' |
+  'minecraft.used:minecraft.exposed_copper_bulb' |
+  'minecraft.crafted:minecraft.exposed_copper_door' |
+  'minecraft.dropped:minecraft.exposed_copper_door' |
+  'minecraft.picked_up:minecraft.exposed_copper_door' |
+  'minecraft.used:minecraft.exposed_copper_door' |
+  'minecraft.crafted:minecraft.exposed_copper_grate' |
+  'minecraft.dropped:minecraft.exposed_copper_grate' |
+  'minecraft.picked_up:minecraft.exposed_copper_grate' |
+  'minecraft.used:minecraft.exposed_copper_grate' |
+  'minecraft.crafted:minecraft.exposed_copper_trapdoor' |
+  'minecraft.dropped:minecraft.exposed_copper_trapdoor' |
+  'minecraft.picked_up:minecraft.exposed_copper_trapdoor' |
+  'minecraft.used:minecraft.exposed_copper_trapdoor' |
   'minecraft.crafted:minecraft.exposed_cut_copper' |
   'minecraft.dropped:minecraft.exposed_cut_copper' |
   'minecraft.picked_up:minecraft.exposed_cut_copper' |
@@ -5607,10 +5761,30 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.oxeye_daisy' |
   'minecraft.picked_up:minecraft.oxeye_daisy' |
   'minecraft.used:minecraft.oxeye_daisy' |
+  'minecraft.crafted:minecraft.oxidized_chiseled_copper' |
+  'minecraft.dropped:minecraft.oxidized_chiseled_copper' |
+  'minecraft.picked_up:minecraft.oxidized_chiseled_copper' |
+  'minecraft.used:minecraft.oxidized_chiseled_copper' |
   'minecraft.crafted:minecraft.oxidized_copper' |
   'minecraft.dropped:minecraft.oxidized_copper' |
   'minecraft.picked_up:minecraft.oxidized_copper' |
   'minecraft.used:minecraft.oxidized_copper' |
+  'minecraft.crafted:minecraft.oxidized_copper_bulb' |
+  'minecraft.dropped:minecraft.oxidized_copper_bulb' |
+  'minecraft.picked_up:minecraft.oxidized_copper_bulb' |
+  'minecraft.used:minecraft.oxidized_copper_bulb' |
+  'minecraft.crafted:minecraft.oxidized_copper_door' |
+  'minecraft.dropped:minecraft.oxidized_copper_door' |
+  'minecraft.picked_up:minecraft.oxidized_copper_door' |
+  'minecraft.used:minecraft.oxidized_copper_door' |
+  'minecraft.crafted:minecraft.oxidized_copper_grate' |
+  'minecraft.dropped:minecraft.oxidized_copper_grate' |
+  'minecraft.picked_up:minecraft.oxidized_copper_grate' |
+  'minecraft.used:minecraft.oxidized_copper_grate' |
+  'minecraft.crafted:minecraft.oxidized_copper_trapdoor' |
+  'minecraft.dropped:minecraft.oxidized_copper_trapdoor' |
+  'minecraft.picked_up:minecraft.oxidized_copper_trapdoor' |
+  'minecraft.used:minecraft.oxidized_copper_trapdoor' |
   'minecraft.crafted:minecraft.oxidized_cut_copper' |
   'minecraft.dropped:minecraft.oxidized_cut_copper' |
   'minecraft.picked_up:minecraft.oxidized_cut_copper' |
@@ -5883,6 +6057,22 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.polished_granite_stairs' |
   'minecraft.picked_up:minecraft.polished_granite_stairs' |
   'minecraft.used:minecraft.polished_granite_stairs' |
+  'minecraft.crafted:minecraft.polished_tuff' |
+  'minecraft.dropped:minecraft.polished_tuff' |
+  'minecraft.picked_up:minecraft.polished_tuff' |
+  'minecraft.used:minecraft.polished_tuff' |
+  'minecraft.crafted:minecraft.polished_tuff_slab' |
+  'minecraft.dropped:minecraft.polished_tuff_slab' |
+  'minecraft.picked_up:minecraft.polished_tuff_slab' |
+  'minecraft.used:minecraft.polished_tuff_slab' |
+  'minecraft.crafted:minecraft.polished_tuff_stairs' |
+  'minecraft.dropped:minecraft.polished_tuff_stairs' |
+  'minecraft.picked_up:minecraft.polished_tuff_stairs' |
+  'minecraft.used:minecraft.polished_tuff_stairs' |
+  'minecraft.crafted:minecraft.polished_tuff_wall' |
+  'minecraft.dropped:minecraft.polished_tuff_wall' |
+  'minecraft.picked_up:minecraft.polished_tuff_wall' |
+  'minecraft.used:minecraft.polished_tuff_wall' |
   'minecraft.crafted:minecraft.popped_chorus_fruit' |
   'minecraft.dropped:minecraft.popped_chorus_fruit' |
   'minecraft.picked_up:minecraft.popped_chorus_fruit' |
@@ -6963,6 +7153,34 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.tuff' |
   'minecraft.picked_up:minecraft.tuff' |
   'minecraft.used:minecraft.tuff' |
+  'minecraft.crafted:minecraft.tuff_brick_slab' |
+  'minecraft.dropped:minecraft.tuff_brick_slab' |
+  'minecraft.picked_up:minecraft.tuff_brick_slab' |
+  'minecraft.used:minecraft.tuff_brick_slab' |
+  'minecraft.crafted:minecraft.tuff_brick_stairs' |
+  'minecraft.dropped:minecraft.tuff_brick_stairs' |
+  'minecraft.picked_up:minecraft.tuff_brick_stairs' |
+  'minecraft.used:minecraft.tuff_brick_stairs' |
+  'minecraft.crafted:minecraft.tuff_brick_wall' |
+  'minecraft.dropped:minecraft.tuff_brick_wall' |
+  'minecraft.picked_up:minecraft.tuff_brick_wall' |
+  'minecraft.used:minecraft.tuff_brick_wall' |
+  'minecraft.crafted:minecraft.tuff_bricks' |
+  'minecraft.dropped:minecraft.tuff_bricks' |
+  'minecraft.picked_up:minecraft.tuff_bricks' |
+  'minecraft.used:minecraft.tuff_bricks' |
+  'minecraft.crafted:minecraft.tuff_slab' |
+  'minecraft.dropped:minecraft.tuff_slab' |
+  'minecraft.picked_up:minecraft.tuff_slab' |
+  'minecraft.used:minecraft.tuff_slab' |
+  'minecraft.crafted:minecraft.tuff_stairs' |
+  'minecraft.dropped:minecraft.tuff_stairs' |
+  'minecraft.picked_up:minecraft.tuff_stairs' |
+  'minecraft.used:minecraft.tuff_stairs' |
+  'minecraft.crafted:minecraft.tuff_wall' |
+  'minecraft.dropped:minecraft.tuff_wall' |
+  'minecraft.picked_up:minecraft.tuff_wall' |
+  'minecraft.used:minecraft.tuff_wall' |
   'minecraft.crafted:minecraft.turtle_egg' |
   'minecraft.dropped:minecraft.turtle_egg' |
   'minecraft.picked_up:minecraft.turtle_egg' |
@@ -7091,10 +7309,30 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.water_bucket' |
   'minecraft.picked_up:minecraft.water_bucket' |
   'minecraft.used:minecraft.water_bucket' |
+  'minecraft.crafted:minecraft.waxed_chiseled_copper' |
+  'minecraft.dropped:minecraft.waxed_chiseled_copper' |
+  'minecraft.picked_up:minecraft.waxed_chiseled_copper' |
+  'minecraft.used:minecraft.waxed_chiseled_copper' |
   'minecraft.crafted:minecraft.waxed_copper_block' |
   'minecraft.dropped:minecraft.waxed_copper_block' |
   'minecraft.picked_up:minecraft.waxed_copper_block' |
   'minecraft.used:minecraft.waxed_copper_block' |
+  'minecraft.crafted:minecraft.waxed_copper_bulb' |
+  'minecraft.dropped:minecraft.waxed_copper_bulb' |
+  'minecraft.picked_up:minecraft.waxed_copper_bulb' |
+  'minecraft.used:minecraft.waxed_copper_bulb' |
+  'minecraft.crafted:minecraft.waxed_copper_door' |
+  'minecraft.dropped:minecraft.waxed_copper_door' |
+  'minecraft.picked_up:minecraft.waxed_copper_door' |
+  'minecraft.used:minecraft.waxed_copper_door' |
+  'minecraft.crafted:minecraft.waxed_copper_grate' |
+  'minecraft.dropped:minecraft.waxed_copper_grate' |
+  'minecraft.picked_up:minecraft.waxed_copper_grate' |
+  'minecraft.used:minecraft.waxed_copper_grate' |
+  'minecraft.crafted:minecraft.waxed_copper_trapdoor' |
+  'minecraft.dropped:minecraft.waxed_copper_trapdoor' |
+  'minecraft.picked_up:minecraft.waxed_copper_trapdoor' |
+  'minecraft.used:minecraft.waxed_copper_trapdoor' |
   'minecraft.crafted:minecraft.waxed_cut_copper' |
   'minecraft.dropped:minecraft.waxed_cut_copper' |
   'minecraft.picked_up:minecraft.waxed_cut_copper' |
@@ -7107,10 +7345,30 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.waxed_cut_copper_stairs' |
   'minecraft.picked_up:minecraft.waxed_cut_copper_stairs' |
   'minecraft.used:minecraft.waxed_cut_copper_stairs' |
+  'minecraft.crafted:minecraft.waxed_exposed_chiseled_copper' |
+  'minecraft.dropped:minecraft.waxed_exposed_chiseled_copper' |
+  'minecraft.picked_up:minecraft.waxed_exposed_chiseled_copper' |
+  'minecraft.used:minecraft.waxed_exposed_chiseled_copper' |
   'minecraft.crafted:minecraft.waxed_exposed_copper' |
   'minecraft.dropped:minecraft.waxed_exposed_copper' |
   'minecraft.picked_up:minecraft.waxed_exposed_copper' |
   'minecraft.used:minecraft.waxed_exposed_copper' |
+  'minecraft.crafted:minecraft.waxed_exposed_copper_bulb' |
+  'minecraft.dropped:minecraft.waxed_exposed_copper_bulb' |
+  'minecraft.picked_up:minecraft.waxed_exposed_copper_bulb' |
+  'minecraft.used:minecraft.waxed_exposed_copper_bulb' |
+  'minecraft.crafted:minecraft.waxed_exposed_copper_door' |
+  'minecraft.dropped:minecraft.waxed_exposed_copper_door' |
+  'minecraft.picked_up:minecraft.waxed_exposed_copper_door' |
+  'minecraft.used:minecraft.waxed_exposed_copper_door' |
+  'minecraft.crafted:minecraft.waxed_exposed_copper_grate' |
+  'minecraft.dropped:minecraft.waxed_exposed_copper_grate' |
+  'minecraft.picked_up:minecraft.waxed_exposed_copper_grate' |
+  'minecraft.used:minecraft.waxed_exposed_copper_grate' |
+  'minecraft.crafted:minecraft.waxed_exposed_copper_trapdoor' |
+  'minecraft.dropped:minecraft.waxed_exposed_copper_trapdoor' |
+  'minecraft.picked_up:minecraft.waxed_exposed_copper_trapdoor' |
+  'minecraft.used:minecraft.waxed_exposed_copper_trapdoor' |
   'minecraft.crafted:minecraft.waxed_exposed_cut_copper' |
   'minecraft.dropped:minecraft.waxed_exposed_cut_copper' |
   'minecraft.picked_up:minecraft.waxed_exposed_cut_copper' |
@@ -7123,10 +7381,30 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.waxed_exposed_cut_copper_stairs' |
   'minecraft.picked_up:minecraft.waxed_exposed_cut_copper_stairs' |
   'minecraft.used:minecraft.waxed_exposed_cut_copper_stairs' |
+  'minecraft.crafted:minecraft.waxed_oxidized_chiseled_copper' |
+  'minecraft.dropped:minecraft.waxed_oxidized_chiseled_copper' |
+  'minecraft.picked_up:minecraft.waxed_oxidized_chiseled_copper' |
+  'minecraft.used:minecraft.waxed_oxidized_chiseled_copper' |
   'minecraft.crafted:minecraft.waxed_oxidized_copper' |
   'minecraft.dropped:minecraft.waxed_oxidized_copper' |
   'minecraft.picked_up:minecraft.waxed_oxidized_copper' |
   'minecraft.used:minecraft.waxed_oxidized_copper' |
+  'minecraft.crafted:minecraft.waxed_oxidized_copper_bulb' |
+  'minecraft.dropped:minecraft.waxed_oxidized_copper_bulb' |
+  'minecraft.picked_up:minecraft.waxed_oxidized_copper_bulb' |
+  'minecraft.used:minecraft.waxed_oxidized_copper_bulb' |
+  'minecraft.crafted:minecraft.waxed_oxidized_copper_door' |
+  'minecraft.dropped:minecraft.waxed_oxidized_copper_door' |
+  'minecraft.picked_up:minecraft.waxed_oxidized_copper_door' |
+  'minecraft.used:minecraft.waxed_oxidized_copper_door' |
+  'minecraft.crafted:minecraft.waxed_oxidized_copper_grate' |
+  'minecraft.dropped:minecraft.waxed_oxidized_copper_grate' |
+  'minecraft.picked_up:minecraft.waxed_oxidized_copper_grate' |
+  'minecraft.used:minecraft.waxed_oxidized_copper_grate' |
+  'minecraft.crafted:minecraft.waxed_oxidized_copper_trapdoor' |
+  'minecraft.dropped:minecraft.waxed_oxidized_copper_trapdoor' |
+  'minecraft.picked_up:minecraft.waxed_oxidized_copper_trapdoor' |
+  'minecraft.used:minecraft.waxed_oxidized_copper_trapdoor' |
   'minecraft.crafted:minecraft.waxed_oxidized_cut_copper' |
   'minecraft.dropped:minecraft.waxed_oxidized_cut_copper' |
   'minecraft.picked_up:minecraft.waxed_oxidized_cut_copper' |
@@ -7139,10 +7417,30 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.waxed_oxidized_cut_copper_stairs' |
   'minecraft.picked_up:minecraft.waxed_oxidized_cut_copper_stairs' |
   'minecraft.used:minecraft.waxed_oxidized_cut_copper_stairs' |
+  'minecraft.crafted:minecraft.waxed_weathered_chiseled_copper' |
+  'minecraft.dropped:minecraft.waxed_weathered_chiseled_copper' |
+  'minecraft.picked_up:minecraft.waxed_weathered_chiseled_copper' |
+  'minecraft.used:minecraft.waxed_weathered_chiseled_copper' |
   'minecraft.crafted:minecraft.waxed_weathered_copper' |
   'minecraft.dropped:minecraft.waxed_weathered_copper' |
   'minecraft.picked_up:minecraft.waxed_weathered_copper' |
   'minecraft.used:minecraft.waxed_weathered_copper' |
+  'minecraft.crafted:minecraft.waxed_weathered_copper_bulb' |
+  'minecraft.dropped:minecraft.waxed_weathered_copper_bulb' |
+  'minecraft.picked_up:minecraft.waxed_weathered_copper_bulb' |
+  'minecraft.used:minecraft.waxed_weathered_copper_bulb' |
+  'minecraft.crafted:minecraft.waxed_weathered_copper_door' |
+  'minecraft.dropped:minecraft.waxed_weathered_copper_door' |
+  'minecraft.picked_up:minecraft.waxed_weathered_copper_door' |
+  'minecraft.used:minecraft.waxed_weathered_copper_door' |
+  'minecraft.crafted:minecraft.waxed_weathered_copper_grate' |
+  'minecraft.dropped:minecraft.waxed_weathered_copper_grate' |
+  'minecraft.picked_up:minecraft.waxed_weathered_copper_grate' |
+  'minecraft.used:minecraft.waxed_weathered_copper_grate' |
+  'minecraft.crafted:minecraft.waxed_weathered_copper_trapdoor' |
+  'minecraft.dropped:minecraft.waxed_weathered_copper_trapdoor' |
+  'minecraft.picked_up:minecraft.waxed_weathered_copper_trapdoor' |
+  'minecraft.used:minecraft.waxed_weathered_copper_trapdoor' |
   'minecraft.crafted:minecraft.waxed_weathered_cut_copper' |
   'minecraft.dropped:minecraft.waxed_weathered_cut_copper' |
   'minecraft.picked_up:minecraft.waxed_weathered_cut_copper' |
@@ -7159,10 +7457,30 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.wayfinder_armor_trim_smithing_template' |
   'minecraft.picked_up:minecraft.wayfinder_armor_trim_smithing_template' |
   'minecraft.used:minecraft.wayfinder_armor_trim_smithing_template' |
+  'minecraft.crafted:minecraft.weathered_chiseled_copper' |
+  'minecraft.dropped:minecraft.weathered_chiseled_copper' |
+  'minecraft.picked_up:minecraft.weathered_chiseled_copper' |
+  'minecraft.used:minecraft.weathered_chiseled_copper' |
   'minecraft.crafted:minecraft.weathered_copper' |
   'minecraft.dropped:minecraft.weathered_copper' |
   'minecraft.picked_up:minecraft.weathered_copper' |
   'minecraft.used:minecraft.weathered_copper' |
+  'minecraft.crafted:minecraft.weathered_copper_bulb' |
+  'minecraft.dropped:minecraft.weathered_copper_bulb' |
+  'minecraft.picked_up:minecraft.weathered_copper_bulb' |
+  'minecraft.used:minecraft.weathered_copper_bulb' |
+  'minecraft.crafted:minecraft.weathered_copper_door' |
+  'minecraft.dropped:minecraft.weathered_copper_door' |
+  'minecraft.picked_up:minecraft.weathered_copper_door' |
+  'minecraft.used:minecraft.weathered_copper_door' |
+  'minecraft.crafted:minecraft.weathered_copper_grate' |
+  'minecraft.dropped:minecraft.weathered_copper_grate' |
+  'minecraft.picked_up:minecraft.weathered_copper_grate' |
+  'minecraft.used:minecraft.weathered_copper_grate' |
+  'minecraft.crafted:minecraft.weathered_copper_trapdoor' |
+  'minecraft.dropped:minecraft.weathered_copper_trapdoor' |
+  'minecraft.picked_up:minecraft.weathered_copper_trapdoor' |
+  'minecraft.used:minecraft.weathered_copper_trapdoor' |
   'minecraft.crafted:minecraft.weathered_cut_copper' |
   'minecraft.dropped:minecraft.weathered_cut_copper' |
   'minecraft.picked_up:minecraft.weathered_cut_copper' |

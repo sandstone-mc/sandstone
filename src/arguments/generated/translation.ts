@@ -1309,6 +1309,7 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.chest' |
   'block.minecraft.chipped_anvil' |
   'block.minecraft.chiseled_bookshelf' |
+  'block.minecraft.chiseled_copper' |
   'block.minecraft.chiseled_deepslate' |
   'block.minecraft.chiseled_nether_bricks' |
   'block.minecraft.chiseled_polished_blackstone' |
@@ -1316,6 +1317,8 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.chiseled_red_sandstone' |
   'block.minecraft.chiseled_sandstone' |
   'block.minecraft.chiseled_stone_bricks' |
+  'block.minecraft.chiseled_tuff' |
+  'block.minecraft.chiseled_tuff_bricks' |
   'block.minecraft.chorus_flower' |
   'block.minecraft.chorus_plant' |
   'block.minecraft.clay' |
@@ -1337,7 +1340,11 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.composter' |
   'block.minecraft.conduit' |
   'block.minecraft.copper_block' |
+  'block.minecraft.copper_bulb' |
+  'block.minecraft.copper_door' |
+  'block.minecraft.copper_grate' |
   'block.minecraft.copper_ore' |
+  'block.minecraft.copper_trapdoor' |
   'block.minecraft.cornflower' |
   'block.minecraft.cracked_deepslate_bricks' |
   'block.minecraft.cracked_deepslate_tiles' |
@@ -1478,7 +1485,12 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.end_stone_brick_wall' |
   'block.minecraft.end_stone_bricks' |
   'block.minecraft.ender_chest' |
+  'block.minecraft.exposed_chiseled_copper' |
   'block.minecraft.exposed_copper' |
+  'block.minecraft.exposed_copper_bulb' |
+  'block.minecraft.exposed_copper_door' |
+  'block.minecraft.exposed_copper_grate' |
+  'block.minecraft.exposed_copper_trapdoor' |
   'block.minecraft.exposed_cut_copper' |
   'block.minecraft.exposed_cut_copper_slab' |
   'block.minecraft.exposed_cut_copper_stairs' |
@@ -1743,7 +1755,12 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.orange_tulip' |
   'block.minecraft.orange_wool' |
   'block.minecraft.oxeye_daisy' |
+  'block.minecraft.oxidized_chiseled_copper' |
   'block.minecraft.oxidized_copper' |
+  'block.minecraft.oxidized_copper_bulb' |
+  'block.minecraft.oxidized_copper_door' |
+  'block.minecraft.oxidized_copper_grate' |
+  'block.minecraft.oxidized_copper_trapdoor' |
   'block.minecraft.oxidized_cut_copper' |
   'block.minecraft.oxidized_cut_copper_slab' |
   'block.minecraft.oxidized_cut_copper_stairs' |
@@ -1802,6 +1819,10 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.polished_granite' |
   'block.minecraft.polished_granite_slab' |
   'block.minecraft.polished_granite_stairs' |
+  'block.minecraft.polished_tuff' |
+  'block.minecraft.polished_tuff_slab' |
+  'block.minecraft.polished_tuff_stairs' |
+  'block.minecraft.polished_tuff_wall' |
   'block.minecraft.poppy' |
   'block.minecraft.potatoes' |
   'block.minecraft.potted_acacia_sapling' |
@@ -2038,6 +2059,13 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.tube_coral_fan' |
   'block.minecraft.tube_coral_wall_fan' |
   'block.minecraft.tuff' |
+  'block.minecraft.tuff_brick_slab' |
+  'block.minecraft.tuff_brick_stairs' |
+  'block.minecraft.tuff_brick_wall' |
+  'block.minecraft.tuff_bricks' |
+  'block.minecraft.tuff_slab' |
+  'block.minecraft.tuff_stairs' |
+  'block.minecraft.tuff_wall' |
   'block.minecraft.turtle_egg' |
   'block.minecraft.twisting_vines' |
   'block.minecraft.twisting_vines_plant' |
@@ -2066,23 +2094,48 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.warped_wart_block' |
   'block.minecraft.water' |
   'block.minecraft.water_cauldron' |
+  'block.minecraft.waxed_chiseled_copper' |
   'block.minecraft.waxed_copper_block' |
+  'block.minecraft.waxed_copper_bulb' |
+  'block.minecraft.waxed_copper_door' |
+  'block.minecraft.waxed_copper_grate' |
+  'block.minecraft.waxed_copper_trapdoor' |
   'block.minecraft.waxed_cut_copper' |
   'block.minecraft.waxed_cut_copper_slab' |
   'block.minecraft.waxed_cut_copper_stairs' |
+  'block.minecraft.waxed_exposed_chiseled_copper' |
   'block.minecraft.waxed_exposed_copper' |
+  'block.minecraft.waxed_exposed_copper_bulb' |
+  'block.minecraft.waxed_exposed_copper_door' |
+  'block.minecraft.waxed_exposed_copper_grate' |
+  'block.minecraft.waxed_exposed_copper_trapdoor' |
   'block.minecraft.waxed_exposed_cut_copper' |
   'block.minecraft.waxed_exposed_cut_copper_slab' |
   'block.minecraft.waxed_exposed_cut_copper_stairs' |
+  'block.minecraft.waxed_oxidized_chiseled_copper' |
   'block.minecraft.waxed_oxidized_copper' |
+  'block.minecraft.waxed_oxidized_copper_bulb' |
+  'block.minecraft.waxed_oxidized_copper_door' |
+  'block.minecraft.waxed_oxidized_copper_grate' |
+  'block.minecraft.waxed_oxidized_copper_trapdoor' |
   'block.minecraft.waxed_oxidized_cut_copper' |
   'block.minecraft.waxed_oxidized_cut_copper_slab' |
   'block.minecraft.waxed_oxidized_cut_copper_stairs' |
+  'block.minecraft.waxed_weathered_chiseled_copper' |
   'block.minecraft.waxed_weathered_copper' |
+  'block.minecraft.waxed_weathered_copper_bulb' |
+  'block.minecraft.waxed_weathered_copper_door' |
+  'block.minecraft.waxed_weathered_copper_grate' |
+  'block.minecraft.waxed_weathered_copper_trapdoor' |
   'block.minecraft.waxed_weathered_cut_copper' |
   'block.minecraft.waxed_weathered_cut_copper_slab' |
   'block.minecraft.waxed_weathered_cut_copper_stairs' |
+  'block.minecraft.weathered_chiseled_copper' |
   'block.minecraft.weathered_copper' |
+  'block.minecraft.weathered_copper_bulb' |
+  'block.minecraft.weathered_copper_door' |
+  'block.minecraft.weathered_copper_grate' |
+  'block.minecraft.weathered_copper_trapdoor' |
   'block.minecraft.weathered_cut_copper' |
   'block.minecraft.weathered_cut_copper_slab' |
   'block.minecraft.weathered_cut_copper_stairs' |
@@ -2614,6 +2667,20 @@ export type TRANSLATION_KEYS = (
   'commands.teleport.success.entity.single' |
   'commands.teleport.success.location.multiple' |
   'commands.teleport.success.location.single' |
+  'commands.tick.query.percentiles' |
+  'commands.tick.query.rate.running' |
+  'commands.tick.query.rate.sprinting' |
+  'commands.tick.rate.success' |
+  'commands.tick.sprint.report' |
+  'commands.tick.sprint.stop.fail' |
+  'commands.tick.sprint.stop.success' |
+  'commands.tick.status.frozen' |
+  'commands.tick.status.running' |
+  'commands.tick.status.sprinting' |
+  'commands.tick.step.fail' |
+  'commands.tick.step.stop.fail' |
+  'commands.tick.step.stop.success' |
+  'commands.tick.step.success' |
   'commands.time.query' |
   'commands.time.set' |
   'commands.title.cleared.multiple' |
@@ -4248,7 +4315,11 @@ export type TRANSLATION_KEYS = (
   'jigsaw_block.keep_jigsaws' |
   'jigsaw_block.levels' |
   'jigsaw_block.name' |
+  'jigsaw_block.placement_priority' |
+  'jigsaw_block.placement_priority.tooltip' |
   'jigsaw_block.pool' |
+  'jigsaw_block.selection_priority' |
+  'jigsaw_block.selection_priority.tooltip' |
   'jigsaw_block.target' |
   'key.advancements' |
   'key.attack' |
@@ -6008,6 +6079,7 @@ export type TRANSLATION_KEYS = (
   'subtitles.entity.player.hurt_drown' |
   'subtitles.entity.player.hurt_on_fire' |
   'subtitles.entity.player.levelup' |
+  'subtitles.entity.player.teleport' |
   'subtitles.entity.polar_bear.ambient' |
   'subtitles.entity.polar_bear.ambient_baby' |
   'subtitles.entity.polar_bear.death' |
@@ -6305,6 +6377,7 @@ export type TRANSLATION_KEYS = (
   'telemetry_info.button.give_feedback' |
   'telemetry_info.button.privacy_statement' |
   'telemetry_info.button.show_data' |
+  'telemetry_info.opt_in.description' |
   'telemetry_info.property_title' |
   'telemetry_info.screen.description' |
   'telemetry_info.screen.title' |
@@ -6313,6 +6386,7 @@ export type TRANSLATION_KEYS = (
   'telemetry.event.game_load_times.description' |
   'telemetry.event.game_load_times.title' |
   'telemetry.event.optional' |
+  'telemetry.event.optional.disabled' |
   'telemetry.event.performance_metrics.description' |
   'telemetry.event.performance_metrics.title' |
   'telemetry.event.required' |
