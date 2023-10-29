@@ -1,11 +1,15 @@
+import fs from 'fs-extra'
 import { coerce } from 'semver'
 import * as util from 'util'
 
 import { Type } from '@sinclair/typebox'
 import { Format } from '@sinclair/typebox/format'
 
+import type FetchType from 'node-fetch'
 import type { Static } from '@sinclair/typebox'
 import type { UUIDinNumber } from './variables/UUID.js'
+
+export const fetch = async (...args: Parameters<typeof FetchType>) => (await import('node-fetch')).default(...args)
 
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.
@@ -326,3 +330,11 @@ export enum HTTPResponses {
 }
 
 export type ReviewState = 'verified'|'pending'|'unsubmitted'|'rejected'
+
+export async function safeWrite(...args: Partial<Parameters<typeof fs['writeFile']>>) {
+  if (typeof args[0] !== 'string') throw new Error('unimplemented')
+
+  await fs.ensureDir(args[0].replace(/\/(?:.(?!\/))+$/, ''))
+
+  return fs.writeFile(...args as Parameters<typeof fs['writeFile']>)
+}

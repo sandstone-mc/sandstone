@@ -2,12 +2,10 @@
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import path from 'path'
+import { fetch, safeWrite } from 'sandstone/utils'
 
 import type { PackData } from 'sandstone/utils'
 import type { SandstoneCore } from './sandstoneCore.js'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fetch = import('node-fetch')
 
 type Manifest = Record<string, string>
 
@@ -55,7 +53,7 @@ export class SmithedDependencyCache {
       for (const [dependency, { version }] of this.dependencies.entries()) {
         dependencies[dependency] = version
       }
-      await fs.writeFile(this.manifest, JSON.stringify(dependencies))
+      await safeWrite(this.manifest, JSON.stringify(dependencies))
 
       const lock: LockFile = {}
 
@@ -67,9 +65,7 @@ export class SmithedDependencyCache {
         }
       }
 
-      await fs.ensureDir(this.lockFile.replace(/\/lock-smithed\.json$/, ''))
-
-      await fs.writeFile(this.lockFile, JSON.stringify(lock))
+      await safeWrite(this.lockFile, JSON.stringify(lock))
     }
   }
 
@@ -87,8 +83,6 @@ export class SmithedDependencyCache {
     }
 
     let result: Dependency
-
-    await fs.ensureDir(this.lockFile.replace(/\/lock-smithed\.json$/, ''))
 
     const lockFile = await (async () => {
       try {
@@ -125,7 +119,7 @@ export class SmithedDependencyCache {
 
       let hasResourcePack = false
 
-      const pack = JSON.parse(await (await (await fetch).default(`${this.baseURL}packs/${dependency}`)).text()) as PackData
+      const pack = JSON.parse(await (await fetch(`${this.baseURL}packs/${dependency}`)).text()) as PackData
 
       if (version === 'latest') {
         const { versions } = pack
@@ -145,15 +139,13 @@ export class SmithedDependencyCache {
         url += `@${version}`
       }
 
-      const files = (new AdmZip(await (await (await fetch).default(url)).buffer())).getEntries()
+      const files = (new AdmZip(await (await fetch(url)).buffer())).getEntries()
 
       const datapack: Buffer = await new Promise((res) => {
         files[0].getDataAsync((data) => res(data as Buffer))
       })
 
-      await fs.ensureDir(path.join(this.path, dependency))
-
-      await fs.writeFile(path.join(this.path, dependency, 'datapack.zip'), datapack)
+      await safeWrite(path.join(this.path, dependency, 'datapack.zip'), datapack)
 
       let resourcepack: Buffer | false = false
 
@@ -162,7 +154,7 @@ export class SmithedDependencyCache {
           files[1].getDataAsync((data) => res(data as Buffer))
         })
 
-        await fs.writeFile(path.join(this.path, dependency, 'resourcepack.zip'), datapack)
+        await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), datapack)
       }
 
       result = this.dependencies.set(dependency, {

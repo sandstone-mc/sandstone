@@ -1,10 +1,10 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 import type { TEXTURE_TYPES, TextureMeta } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { SandstoneCore } from '../../sandstoneCore.js'
+import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
 

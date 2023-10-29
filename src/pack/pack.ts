@@ -690,7 +690,7 @@ export class SandstonePack {
   })
 
   /** @ts-ignore */
-  Tag = <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: Partial<TagClassArguments>) => new TagClass<T>(this.core, type, name, {
+  Tag = <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: Partial<TagClassArguments<T>>) => new TagClass<T>(this.core, type, name, {
     values,
     creator: 'user',
     addToSandstoneCore: true,

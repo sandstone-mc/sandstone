@@ -12,7 +12,7 @@ import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 import type { TagClass } from './tag.js'
 
-const damageTypes: Map<string, TagClass<'damage_types'>> = new Map()
+const damageTypes: Map<string, TagClass<'damage_type'>> = new Map()
 
 /**
  * A node representing a Minecraft damage type.
@@ -49,7 +49,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
       for (const flag of args.flags) {
         let tag = damageTypes.get(flag)
         if (!tag) {
-          damageTypes.set(flag, sandstoneCore.pack.Tag('damage_types', `minecraft:${flag}`, []))
+          damageTypes.set(flag, sandstoneCore.pack.Tag('damage_type', `minecraft:${flag}`, []))
           tag = damageTypes.get(flag)
         }
         tag?.push(this.name)
