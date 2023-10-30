@@ -29,7 +29,12 @@ export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'fu
    * - `rename`: Rename the new file to an iterating number (ie. func1, func2, func3)
    */
   // eslint-disable-next-line max-len
-  onConflict?: ConflictType extends 'default' ? BASIC_CONFLICT_STRATEGIES : BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
+  onConflict?: ConflictType extends 'default' ? BASIC_CONFLICT_STRATEGIES : BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend',
+
+  /**
+   * Overrides the default pack for the resource.
+   */
+  packType?: PackType
 }
 
 export type ResourceNode<T = ResourceClass<any>> = Node & {
@@ -65,7 +70,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   constructor(protected core: SandstoneCore, file: { packType: PackType, extension?: string, encoding?: fs.EncodingOption | false }, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments<any>) {
     this.node = new NodeType(core, this)
 
-    this.packType = file.packType
+    this.packType = args.packType || file.packType
 
     this.fileExtension = file.extension
     this.fileEncoding = file.encoding === undefined ? 'utf8' : file.encoding

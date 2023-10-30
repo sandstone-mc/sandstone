@@ -334,7 +334,7 @@ export type ReviewState = 'verified'|'pending'|'unsubmitted'|'rejected'
 export async function safeWrite(...args: Partial<Parameters<typeof fs['writeFile']>>) {
   if (typeof args[0] !== 'string') throw new Error('unimplemented')
 
-  await fs.ensureDir(args[0].replace(/\/(?:.(?!\/))+$/, ''))
+  await fs.ensureDir(args[0].replace(/(?:\/|\\)(?:.(?!(?:\/|\\)))+$/, ''))
 
   return fs.writeFile(...args as Parameters<typeof fs['writeFile']>)
 }
