@@ -17,7 +17,7 @@
     "url": "https://github.com/sandstone-mc/sandstone/issues"
   },
   "dependencies": {
-    "@sinclair/typebox": "^0.25.24",
+    "@sinclair/typebox": "^0.31.21",
     "@smithed-mc/data-types": "^0.1.2",
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",
