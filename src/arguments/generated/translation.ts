@@ -4676,6 +4676,8 @@ export type TRANSLATION_KEYS = (
   'mco.minigame.world.title' |
   'mco.news' |
   'mco.notification.dismiss' |
+  'mco.notification.transferSubscription.buttonText' |
+  'mco.notification.transferSubscription.message' |
   'mco.notification.visitUrl.buttonText.default' |
   'mco.notification.visitUrl.message.default' |
   'mco.question' |
