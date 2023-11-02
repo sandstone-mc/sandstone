@@ -93,6 +93,8 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
       return new FinalCommandOutput(node)
     }, true)
   }
+
+  fail = () => this.finalCommand(['fail'])
 }
 
 export class ReturnCommandNode extends CommandNode {

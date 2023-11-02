@@ -149,6 +149,11 @@ export type DatapackConfig = {
   /** List of experimental game features to enable. */
   features?: string[],
 
+  supported_formats: number | number[] | {
+    min_inclusive: number
+    max_inclusive: number
+  }
+
   /**
    * Section for filtering out files from datapacks applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
    */

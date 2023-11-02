@@ -1,5 +1,5 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import { parseJSONText } from 'sandstone/variables'
+import { parseJSONText, targetParser } from 'sandstone/variables'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -16,5 +16,5 @@ export class TellRawCommand<MACRO extends boolean> extends CommandArguments {
   tellraw = (
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
     message: Macroable<JSONTextComponent, MACRO>,
-  ) => this.finalCommand([targets, parseJSONText(message)])
+  ) => this.finalCommand([targetParser(targets), parseJSONText(message)])
 }
