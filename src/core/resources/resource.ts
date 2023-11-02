@@ -97,7 +97,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
         if (node.resource.packType.constructor.name !== this.node.resource.packType.constructor.name) {
           return false
         }
-        return node.resource.path.join('') === this.node.resource.path.join('')
+        return node.resource.packType.constructor === this.node.resource.packType.constructor && node.resource.path.join('') === this.node.resource.path.join('')
       })
 
       if (conflict) {

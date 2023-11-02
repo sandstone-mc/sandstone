@@ -141,7 +141,7 @@ export type MCFunctionClassArguments = ({
    *
    * @default () => {}
    */
-  callback?: (...params: MacroArgument[]) => void
+  callback?: (...params: [loop: MCFunctionClass<any, any>, ...params: MacroArgument[]]) => void
 
   /**
    * If true, then the function will only be created if it is called from another function. TODO: implement this
@@ -281,15 +281,11 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
        * Else, this might generate the nodes twice with fast refresh
        */
       // return
+
+      // TODO: Fix above
     }
 
-    // TODO: Fix this
-
-    // Doing .apply allows users to use `this()` inside the callback to call the MCFunction!
-
-    // this.asCallable.push(() => this.callback.apply(this.asCallable))
-
-    this.push(this.callback)
+    this.push(this.callback.bind(undefined, makeCallable(this, this.__call__)))
   }
 
   protected addToTag = (tag: string) => {
@@ -317,7 +313,8 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
         // Yeah this is cursed, but there's not really a better way to do this
         this.node.body = []
 
-        this.core.insideContext(this.node, () => this.callback(...(_params as MacroArgument[])), false)
+        /* @ts-ignore */
+        this.core.insideContext(this.node, () => this.callback(makeCallable(this, this.__call__.bind(undefined, ..._params)), ...(_params as MacroArgument[])), false)
       }
       if (this.env) {
         for (const [i, env] of this.env.entries()) {

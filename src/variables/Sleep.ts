@@ -30,6 +30,7 @@ export class SleepClass extends AwaitNode {
       lazy: false,
       creator: 'sandstone',
       onConflict: 'rename',
+      packType: currentFunction.resource.packType,
     })
 
     let schedule = this.mcfunction.name
@@ -79,6 +80,8 @@ export class SleepClass extends AwaitNode {
         execute.store.result.score(timer('#current')).run.time.query('gametime')
 
         execute.as(Selector('@e', { tag: label.fullName })).if.score(timer('@s'), '=', timer('#current')).at('@s').run.functionCmd(this.mcfunction)
+      }, {
+        packType: currentFunction.resource.packType,
       }).name
     }
 

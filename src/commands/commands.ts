@@ -8,6 +8,7 @@ import {
   CloneCommand,
   CommentCommand,
   DataCommand,
+  DataPackCommand,
   DebugCommand,
   DefaultGameModeCommand,
   DifficultyCommand,
@@ -91,7 +92,7 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get data() { return new DataCommand<MACRO>(this.sandstonePack) }
 
-  get datapack() { return new DataCommand<MACRO>(this.sandstonePack) }
+  get datapack() { return new DataPackCommand(this.sandstonePack) }
 
   get debug() { return new DebugCommand(this.sandstonePack) }
 

@@ -41,7 +41,7 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
     // 3. We have multiple nodes, entering a new function to allow for `return`
 
     const wrapper = new ExecuteCommandNode(this.pack, [], {
-      isFake: true,
+      isFake: true, // trolley
       isSingleExecute: false,
       givenCallbackName: 'if',
       body: nodes.flatMap((node, i) => {

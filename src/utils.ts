@@ -88,7 +88,7 @@ export type Either<A extends Record<string, any>, B extends Record<string, any>>
 
 export type WithMCNamespace<T extends string> = `minecraft:${T}` | T
 
-function makeCallableProxy(func: any, object: any) {
+export function makeCallableProxy(func: any, object: any) {
   return new Proxy(func, {
     get: (target, p, receiver) => object[p],
     set: (target, p, value, receiver) => {

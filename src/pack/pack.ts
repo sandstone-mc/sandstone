@@ -491,27 +491,27 @@ export class SandstonePack {
 
   MCFunction(
     name: string,
-    callback: (this: MCFunctionClass<undefined, undefined>) => void,
+    callback: (loop: MCFunctionClass<undefined, undefined>) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<undefined, undefined>
 
   MCFunction<PARAMS extends MacroArgument[]>(
     name: string,
-    callback: (this: MCFunctionClass<PARAMS, undefined>, ...params: PARAMS) => void,
+    callback: (loop: MCFunctionClass<PARAMS, undefined>, ...params: PARAMS) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<PARAMS, undefined>
 
   MCFunction<ENV extends MacroArgument[]>(
     name: string,
     environment_variables: ENV,
-    callback: (this: MCFunctionClass<undefined, ENV>) => void,
+    callback: (loop: MCFunctionClass<undefined, ENV>) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<undefined, ENV>
 
   MCFunction<PARAMS extends MacroArgument[], ENV extends MacroArgument[]>(
     name: string,
     environment_variables: ENV,
-    callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void,
+    callback: (loop: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<PARAMS, ENV>
 

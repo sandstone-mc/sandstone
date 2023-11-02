@@ -4,7 +4,7 @@ import type {
   AdvancementCommandNode, AttributeCommandNode, CloneCommandNode, DataCommandNode, ExecuteCommandNode, FunctionCommandNode, GameRuleCommandNode, SayCommandNode,
 } from 'sandstone/commands'
 import type { GenericNodeVisitor } from 'sandstone/core/visitors'
-import type { ElseNode, IfNode } from 'sandstone/flow'
+import type { ElseNode, IfNode, LoopNode } from 'sandstone/flow'
 import type { SandstonePack } from 'sandstone/pack'
 
 export class GenericSandstoneVisitor extends GenericCoreVisitor {
@@ -16,6 +16,8 @@ export class GenericSandstoneVisitor extends GenericCoreVisitor {
   visitIfNode?: GenericNodeVisitor<IfNode>
 
   visitElseNode?: GenericNodeVisitor<ElseNode>
+
+  visitLoopNode?: GenericNodeVisitor<LoopNode>
 
   // Commands
   visitAdvancementCommandNode?: GenericNodeVisitor<AdvancementCommandNode>

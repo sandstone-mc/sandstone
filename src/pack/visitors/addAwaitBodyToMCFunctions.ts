@@ -1,8 +1,5 @@
 import { GenericSandstoneVisitor } from './visitor.js'
 
-/**
- * Initialize the constants of the pack.
- */
 export class AwaitBodyVisitor extends GenericSandstoneVisitor {
   onEnd = () => {
     const { core } = this.pack

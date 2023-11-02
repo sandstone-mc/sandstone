@@ -1,4 +1,4 @@
-import { parseJSONText } from 'sandstone/variables'
+import { parseJSONText, Score } from 'sandstone/variables'
 
 import {
   AndNode, ConditionNode, NotNode, OrNode,
@@ -99,5 +99,87 @@ export class Flow {
     returnCmd.fail()
 
     return errorString
+  }
+
+  binaryMatch = (score: Score, minimum: number, maximum: number, callback: (num: number) => void) => {
+    // First, specify we didn't find a match yet
+    const foundMatch = this.sandstoneCore.pack.Variable(0)
+
+    const callCallback = (num: number) => {
+      this.if(this.and(score['=='](num), foundMatch['=='](0)), () => {
+        // If we found the correct score, call the callback & specify we found a match
+        callback(num)
+        foundMatch.set(1)
+      })
+    }
+
+    // Recursively match the score
+    const recursiveMatch = (min: number, max: number) => {
+      const diff = max - min
+
+      if (diff < 0) {
+        return
+      }
+
+      if (diff === 3) {
+        callCallback(min)
+        callCallback(min + 1)
+        callCallback(min + 2)
+        return
+      }
+      if (diff === 2) {
+        callCallback(min)
+        callCallback(min + 1)
+        return
+      }
+      if (diff === 1) {
+        callCallback(min)
+        return
+      }
+
+      const mean = Math.floor((min + max) / 2)
+
+      this.if(score['<'](mean), () => recursiveMatch(min, mean))
+      this.if(score['>='](mean), () => recursiveMatch(mean, max))
+    }
+
+    recursiveMatch(minimum, maximum)
+  }
+
+  binaryFor = (from: Score | number, to: Score | number, callback: (amount: number) => void, maximum = 128) => {
+    if (typeof from === 'number' && typeof to === 'number') {
+      callback(to - from)
+    }
+
+    const { Variable } = this.sandstoneCore.pack
+
+    const realStart = from instanceof Score ? from : Variable(from)
+    const realEnd = to instanceof Score ? to : Variable(to)
+
+    const iterations = realEnd.minus(realStart)
+
+    const _ = this
+
+    /*
+     * For all iterations above the maximum,
+     * just do a while loop that calls `maximum` times the callback,
+     * until there is less than `maximum` iterations
+     */
+    // _.while(iterations.lessThan(maximum), () => {
+    //   callback(maximum)
+    //   iterations.remove(maximum)
+    // })
+
+    /*
+     * There is now less iterations than the allowed MAXIMUM
+     * Start the binary part
+     */
+    for (let i = 1; i < maximum; i *= 2) {
+      _.if(iterations.moduloBy(2).equalTo(1), () => {
+        callback(i)
+      })
+
+      iterations.dividedBy(2)
+    }
   }
 }
