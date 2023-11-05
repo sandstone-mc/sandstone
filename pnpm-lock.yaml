@@ -48,8 +48,8 @@ dependencies:
     specifier: ^3.3.2
     version: 3.3.2
   object-hash:
-    specifier: ^2.2.0
-    version: 2.2.0
+    specifier: ^3.0.0
+    version: 3.0.0
   prismarine-nbt:
     specifier: ^2.2.1
     version: 2.2.1
@@ -68,8 +68,8 @@ devDependencies:
     specifier: ^17.0.45
     version: 17.0.45
   '@types/object-hash':
-    specifier: ^2.2.1
-    version: 2.2.1
+    specifier: ^3.0.5
+    version: 3.0.5
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.62.0
     version: 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.51.0)(typescript@5.2.2)
@@ -519,8 +519,8 @@ packages:
   /@types/node@17.0.45:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-  /@types/object-hash@2.2.1:
-    resolution: {integrity: sha512-i/rtaJFCsPljrZvP/akBqEwUP2y5cZLOmvO+JaYnz01aPknrQ+hB5MRcO7iqCUsFaYfTG8kGfKUyboA07xeDHQ==}
+  /@types/object-hash@3.0.5:
+    resolution: {integrity: sha512-WFGeSazfL5BWbEh5ACaAIs5RT6sbVIwBs1rgHUp+kZzX/gub41LEEYWTWbYnE/sKb7hDdPEsGa1Vmcaay2fS5g==}
     dev: true
 
   /@types/semver@7.5.4:
@@ -2073,8 +2073,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /object-hash@2.2.0:
-    resolution: {integrity: sha512-gScRMn0bS5fH+IuwyIFgnh9zBdo4DV+6GhygmWM9HyNJSgS0hScp1f5vjtm7oIIOiT9trXrShAkLFSc2IqKNgw==}
+  /object-hash@3.0.0:
+    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
     engines: {node: '>= 6'}
     dev: false
 
