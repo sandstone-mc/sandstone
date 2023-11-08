@@ -2372,6 +2372,7 @@ export type TRANSLATION_KEYS = (
   'commands.datapack.unknown' |
   'commands.debug.alreadyRunning' |
   'commands.debug.function.noRecursion' |
+  'commands.debug.function.noReturnRun' |
   'commands.debug.function.success.multiple' |
   'commands.debug.function.success.single' |
   'commands.debug.function.traceFailed' |
@@ -5658,6 +5659,10 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.conduit.ambient' |
   'subtitles.block.conduit.attack.target' |
   'subtitles.block.conduit.deactivate' |
+  'subtitles.block.copper_bulb.turn_off' |
+  'subtitles.block.copper_bulb.turn_on' |
+  'subtitles.block.copper_trapdoor.close' |
+  'subtitles.block.copper_trapdoor.open' |
   'subtitles.block.crafter.craft' |
   'subtitles.block.crafter.fail' |
   'subtitles.block.decorated_pot.insert' |
