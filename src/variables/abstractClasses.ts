@@ -55,3 +55,12 @@ export class DataPointPickClass extends MacroArgument {
     throw new Error('Not implemented')
   }
 }
+
+export class ConditionalDataPointPickClass extends DataPointPickClass implements ConditionClass {
+  /**
+   * @internal
+   */
+  _toMinecraftCondition(): ConditionNode {
+    throw new Error('Not implemented')
+  }
+}

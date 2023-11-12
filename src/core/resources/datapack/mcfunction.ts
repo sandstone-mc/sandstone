@@ -208,7 +208,7 @@ export type MCFunctionClassArguments = ({
   asyncContext?: boolean
 }) & ResourceClassArguments<'function'>
 
-export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV extends MacroArgument[] | undefined> extends CallableResourceClass<MCFunctionNode> {
+export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undefined, ENV extends readonly MacroArgument[] | undefined> extends CallableResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
   public nested = 0
@@ -414,4 +414,4 @@ export class _RawMCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV
 }
 
 export const MCFunctionClass = makeClassCallable(_RawMCFunctionClass)
-export type MCFunctionClass<PARAMS extends MacroArgument[] | undefined, ENV extends MacroArgument[] | undefined> = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>>
+export type MCFunctionClass<PARAMS extends readonly MacroArgument[] | undefined, ENV extends readonly MacroArgument[] | undefined> = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>>

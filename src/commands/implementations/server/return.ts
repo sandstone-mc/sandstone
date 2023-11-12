@@ -42,8 +42,10 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
       return { node: this as ReturnRunCommandNode }
     }
 
+    const namespace = currentMCFunction.resource.name.includes(':') ? `${currentMCFunction.resource.name.split(':')[0]}:` : ''
+
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${currentMCFunction.resource.path.slice(2).join('/')}/return_run`, {
+    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/return_run`, {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',

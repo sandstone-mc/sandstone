@@ -3,9 +3,9 @@ import path from 'path'
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
+import type { SOUND_TYPES, SoundsDefinitions } from 'sandstone/arguments'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { SOUND_TYPES, SoundsDefinitions } from 'sandstone/arguments'
 
 const sounds: Map<string, SoundsClass> = new Map()
 
@@ -63,7 +63,9 @@ export class SoundEventClass<Type extends SOUND_TYPES> extends ResourceClass<Sou
     this.handleConflicts()
   }
 
-  silent() {}
+  // TODO: Add sound event methods; play, stop, etc.
+
+  // silent() {}
 }
 
 /**

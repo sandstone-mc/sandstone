@@ -1,5 +1,5 @@
 import type { SandstonePack } from 'sandstone/pack'
-import type { MacroArgument } from 'sandstone/variables/Macro.js'
+import type { LoopArgument, MacroArgument } from 'sandstone/variables'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
 import type { SandstoneCore } from './sandstoneCore.js'
 
@@ -72,11 +72,18 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
     const filteredArgs: unknown[] = []
 
     for (const arg of this.args) {
-      if (arg !== undefined) {
-        if (arg && typeof arg === 'object' && Object.hasOwn(arg, 'toMacro') && (arg as MacroArgument)['local'].has(this.sandstoneCore.currentNode)) {
-          isMacro = true
+      if (arg !== undefined && arg !== null) {
+        // Yes these are cursed, unfortunately, there's not really a better way to do this as visitors only visit the root nodes.
+        if (typeof arg === 'object') {
+          if (Object.hasOwn(arg, 'toMacro') && (arg as MacroArgument)['local'].has(this.sandstoneCore.currentNode)) {
+            isMacro = true
 
-          filteredArgs.push((arg as MacroArgument).toMacro())
+            filteredArgs.push((arg as MacroArgument).toMacro())
+          } else if (Object.hasOwn(arg, 'toLoop')) {
+            filteredArgs.push((arg as LoopArgument).toLoop())
+          } else {
+            filteredArgs.push(arg)
+          }
         } else {
           filteredArgs.push(arg)
         }

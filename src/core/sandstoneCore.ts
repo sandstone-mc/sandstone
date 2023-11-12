@@ -202,27 +202,25 @@ export class SandstoneCore {
     const resources = this.generateResources(opts)
 
     for await (const node of resources) {
-      if (node.resource.addToSandstoneCore) {
-        const { packType, fileExtension } = node.resource
-        const _path = [packType.type, ...node.resource.path]
+      const { packType, fileExtension } = node.resource
+      const _path = [packType.type, ...node.resource.path]
 
-        if (packType.resourceSubFolder) {
-          _path.splice(1, 0, packType.resourceSubFolder)
-        }
-        const resourcePath = path.join(..._path)
+      if (packType.resourceSubFolder) {
+        _path.splice(1, 0, packType.resourceSubFolder)
+      }
+      const resourcePath = path.join(..._path)
 
-        const value = node.getValue()
+      const value = node.getValue()
 
-        if (cliOptions.verbose) {
-          console.log(
-            `Path: ${resourcePath}.${fileExtension}\n\n` +
-            `${typeof value === 'string' ? value : '<Buffer>'}`,
-          )
-        }
+      if (cliOptions.verbose) {
+        console.log(
+          `Path: ${resourcePath}.${fileExtension}\n\n` +
+          `${typeof value === 'string' ? value : '<Buffer>'}`,
+        )
+      }
 
-        if (!cliOptions.dry) {
-          await cliOptions.fileHandler(`${resourcePath}.${fileExtension}`, value)
-        }
+      if (!cliOptions.dry) {
+        await cliOptions.fileHandler(`${resourcePath}.${fileExtension}`, value)
       }
     }
   }

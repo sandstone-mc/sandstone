@@ -1,9 +1,9 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
+import type { AtlasDefinition, AtlasSpriteSource } from 'sandstone/arguments'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { AtlasDefinition, AtlasSpriteSource } from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft block state.

@@ -116,6 +116,8 @@ export const {
   DataVariable,
   getTempStorage,
   ResolveNBT,
+  DataIndexMap,
+  DataArray,
   Selector,
   UUID,
   makeCustomResource,

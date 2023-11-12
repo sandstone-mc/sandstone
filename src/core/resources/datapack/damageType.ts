@@ -34,7 +34,7 @@ export type DamageTypeClassArguments = {
   /**
    * Optional. Automatically adds damage type to minecraft damage type group tag flags.
    */
-  flags?: TAG_DAMAGE_TYPES[]
+  flags?: (TAG_DAMAGE_TYPES | 'bypasses_cooldown')[] // Haha funny this doesn't show up in the server reports
 }
 
 export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements ComponentClass {

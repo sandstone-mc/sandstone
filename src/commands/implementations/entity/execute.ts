@@ -29,7 +29,7 @@ import type { Macroable } from 'sandstone/variables'
 import type { DataPointClass } from 'sandstone/variables/Data'
 
 // Execute command
-type SubCommand = [subcommand: string, ...args: unknown[]]
+export type SubCommand = [subcommand: string, ...args: unknown[]]
 
 class ExecuteCommandPart<MACRO extends boolean> extends CommandArguments<typeof ExecuteCommandNode> {
   protected nestedExecute = (args: SubCommand, executable = true) => this.subCommand([args], ExecuteCommand<MACRO>, executable)
@@ -113,8 +113,10 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       return { node: this as ExecuteCommandNode }
     }
 
+    const namespace = currentMCFunction.resource.name.includes(':') ? `${currentMCFunction.resource.name.split(':')[0]}:` : ''
+
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${currentMCFunction.resource.path.slice(2).join('/')}/${this.callbackName}`, {
+    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/${this.callbackName}`, {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',

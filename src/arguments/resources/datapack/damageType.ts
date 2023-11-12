@@ -24,5 +24,5 @@ export type DamageTypeJSON = {
   death_message_type?: 'default' | 'fall_variants' | 'intentional_game_design'
 
   /** Optional. Controls whether the pattern texture will be masked by the underlying armor. Defaults to `false`. */
-  decal: boolean
+  decal?: boolean
 }

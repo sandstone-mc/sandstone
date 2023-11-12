@@ -117,7 +117,11 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     if (!end) data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start)
-    else data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start, end)
+    else if (start === 0) {
+      data.from[value.type as DATA_TYPES](value.currentTarget as any, value.path)
+    } else {
+      data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start, end)
+    }
   }
 
   protected executeStore = (storeType: StoreType, scale: number) => this.sandstonePack.commands.execute.store.result[this.type](this.currentTarget as any, this.path, storeType as StoreType, scale)
@@ -160,22 +164,22 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
   /**
    * Set the data point to the given NBT.
    */
-  merge = (value: NBTObject | DataPointClass) => this.modify((data) => data.merge, value)
+  merge = (value: NBTObject | DataPointClass | DataPointPickClass) => this.modify((data) => data.merge, value)
 
   /**
    * Append the given NBT to the current data point.
    */
-  append = (value: NBTObject | DataPointClass) => this.modify((data) => data.append, value)
+  append = (value: NBTObject | DataPointClass | DataPointPickClass) => this.modify((data) => data.append, value)
 
   /**
    * Prepend the given NBT to the current data point.
    */
-  prepend = (value: NBTObject | DataPointClass) => this.modify((data) => data.prepend, value)
+  prepend = (value: NBTObject | DataPointClass | DataPointPickClass) => this.modify((data) => data.prepend, value)
 
   /**
    * Insert the given NBT to the given index of the current data point.
    */
-  insert = (value: NBTObject | DataPointClass, index: number) => this.modify((data) => data.insert(index), value)
+  insert = (value: NBTObject | DataPointClass | DataPointPickClass, index: number) => this.modify((data) => data.insert(index), value)
 
   /**
    * Remove the current NBT value.
@@ -184,6 +188,9 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
 
   /**
    * Extracts a section of a string available for setting to another path, without modifying the original path.
+   *
+   * Use slice(0) to get a type-safe string data point; it compiles to a regular `from` argument.
+   *
    * @param start Index of first character to include at the start of the string.
    * @param end Optional. Index of the first character to exclude at the end of the string.
    */
@@ -191,7 +198,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
 
   _toMinecraftCondition = () => new this.sandstonePack.conditions.DataPoint(this.sandstonePack.core, this)
 
-  equals = (value: NBTObject | Score | DataPointClass) => new this.sandstonePack.conditions.DataPointEquals(this.sandstonePack.core, this, value)
+  equals = (value: NBTObject | Score | DataPointClass | DataPointPickClass) => new this.sandstonePack.conditions.DataPointEquals(this.sandstonePack.core, this, value)
 
   /**
    * @internal

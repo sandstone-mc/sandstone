@@ -90,63 +90,66 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   }
 
   protected handleConflicts() {
-    if (this.addToSandstoneCore) {
-      const resourceType = this.node.resource.path[1] || 'resources'
+    const resourceType = this.node.resource.path[1] || 'resources'
 
-      const conflict = [...this.core.resourceNodes].find((node) => {
-        if (node.resource.packType.constructor.name !== this.node.resource.packType.constructor.name) {
-          return false
-        }
-        return node.resource.packType.constructor === this.node.resource.packType.constructor && node.resource.path.join('') === this.node.resource.path.join('')
-      })
-
-      if (conflict) {
-        const oldResource = conflict.resource
-        const newResource = this.node.resource
-
-        switch (this.onConflict) {
-          case 'throw': {
-            // eslint-disable-next-line max-len
-            throw new Error(`Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`)
-          }
-          case 'replace': {
-            this.core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                this.core.resourceNodes.delete(node)
-              }
-            })
-            this.core.resourceNodes.add(this.node)
-          } break
-          case 'warn': {
-            console.warn([
-              'Warning:',
-              `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
-              "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
-            ].join('\n'))
-            this.core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                this.core.resourceNodes.delete(node)
-              }
-            })
-            this.core.resourceNodes.add(this.node)
-          } break
-          case 'rename': {
-            // eslint-disable-next-line no-plusplus
-            this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
-
-            this.core.resourceNodes.add(this.node)
-          } break
-          case 'prepend': {
-            (oldResource as unknown as ListResource).unshift(newResource)
-          } break
-          case 'append': {
-            (oldResource as unknown as ListResource).push(newResource)
-          } break
-          default: break
-        }
-      } else {
-        this.core.resourceNodes.add(this.node)
+    const conflict = [...this.core.resourceNodes].find((node) => {
+      if (node.resource.packType.constructor.name !== this.node.resource.packType.constructor.name) {
+        return false
       }
+      return node.resource.packType.constructor === this.node.resource.packType.constructor && node.resource.path.join('') === this.node.resource.path.join('')
+    })
+
+    let add = false
+
+    if (conflict) {
+      const oldResource = conflict.resource
+      const newResource = this.node.resource
+
+      switch (this.onConflict) {
+        case 'throw': {
+          // eslint-disable-next-line max-len
+          throw new Error(`Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`)
+        }
+        case 'replace': {
+          this.core.resourceNodes.forEach((node) => {
+            if (node.resource.path.join('') === oldResource.path.join('')) {
+              this.core.resourceNodes.delete(node)
+            }
+          })
+          add = true
+        } break
+        case 'warn': {
+          console.warn([
+            'Warning:',
+            `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
+            "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
+          ].join('\n'))
+          this.core.resourceNodes.forEach((node) => {
+            if (node.resource.path.join('') === oldResource.path.join('')) {
+              this.core.resourceNodes.delete(node)
+            }
+          })
+          add = true
+        } break
+        case 'rename': {
+          // eslint-disable-next-line no-plusplus
+          this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
+
+          add = true
+        } break
+        case 'prepend': {
+          (oldResource as unknown as ListResource).unshift(newResource)
+        } break
+        case 'append': {
+          (oldResource as unknown as ListResource).push(newResource)
+        } break
+        default: break
+      }
+    } else {
+      add = true
+    }
+    if (this.addToSandstoneCore && add) {
+      this.core.resourceNodes.add(this.node)
     }
   }
 

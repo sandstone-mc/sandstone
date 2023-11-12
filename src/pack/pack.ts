@@ -9,7 +9,8 @@ import { Flow, SandstoneConditions } from 'sandstone/flow'
 import { randomUUID } from 'sandstone/utils'
 import {
   coordinatesParser,
-  DataClass, DataPointClass, LabelClass, MacroClass, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
+  DataArray,
+  DataClass, DataIndexMap, DataPointClass, LabelClass, LoopArgument, MacroClass, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
 } from 'sandstone/variables'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
 import { Score } from 'sandstone/variables/Score'
@@ -21,12 +22,13 @@ import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
 import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
+  LoopTransformationVisitor,
   SimplifyExecuteFunctionVisitor, SimplifyReturnRunFunctionVisitor, UnifyChainedExecutesVisitor,
 } from './visitors/index.js'
 
 import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, RootNBT, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
 import type {
@@ -36,7 +38,7 @@ import type {
 } from 'sandstone/core'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type {
-  DATA_PATH, DATA_TARGET, DATA_TYPES, MacroArgument, SelectorCreator, SelectorProperties,
+  DATA_PATH, DATA_TARGET, DATA_TYPES, DataPointPickClass, MacroArgument, SelectorCreator, SelectorProperties,
 } from 'sandstone/variables'
 import type {
   UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
@@ -412,7 +414,7 @@ export class SandstonePack {
        *
        * @param name Optional. A name that can be useful for debugging.
        */
-      (initialValue?: NBTObject | DataPointClass<any>, name?: string) => DataPointClass<'storage'>
+      (initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string) => DataPointClass<'storage'>
     ) & (
       /**
        * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
@@ -427,7 +429,7 @@ export class SandstonePack {
        */
       (score: Score, storeType?: StoreType, scale?: number, name?: string) => DataPointClass<'storage'>
     )
-  ) = (...args: [initialValue?: NBTObject | DataPointClass<any>, name?: string] | [score: Score, storeType?: StoreType, scale?: number, name?: string]) => {
+  ) = (...args: [initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string] | [score: Score, storeType?: StoreType, scale?: number, name?: string]) => {
     // Get the objective
       const data = this.rootStorage()
 
@@ -449,14 +451,25 @@ export class SandstonePack {
 
       // We currently are in a MCFunction => that's where the initialization should take place
       if (this.core.currentMCFunction) {
-        return anonymousData.set(initialValue)
+        return anonymousData.set(initialValue as never)
       }
 
       // Else, we should run it in the init MCFunction
-      this.initMCFunction.push(() => anonymousData.set(initialValue))
+      this.initMCFunction.push(() => anonymousData.set(initialValue as never))
 
       return anonymousData
     }
+
+  DataIndexMap<INITIAL extends RootNBT | Record<string, DataPointClass | DataPointPickClass>>(initialize: INITIAL, dataPoint?: DataPointClass<'storage'>) {
+    return DataIndexMap(this, initialize, dataPoint) as DataIndexMap<INITIAL>
+  }
+
+  DataArray<INITIAL extends readonly NBTObject[] | readonly [string, DataPointClass | DataPointPickClass]>(
+    initialize: INITIAL,
+    dataPoint?: DataPointClass<'storage'>,
+  ) {
+    return DataArray(this, initialize, dataPoint) as DataArray<INITIAL>
+  }
 
   getTempStorage = (name: string) => {
     if (tempStorage) {
@@ -495,20 +508,20 @@ export class SandstonePack {
     options?: MCFunctionArgs
   ): MCFunctionClass<undefined, undefined>
 
-  MCFunction<PARAMS extends MacroArgument[]>(
+  MCFunction<PARAMS extends readonly MacroArgument[]>(
     name: string,
     callback: (loop: MCFunctionClass<PARAMS, undefined>, ...params: PARAMS) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<PARAMS, undefined>
 
-  MCFunction<ENV extends MacroArgument[]>(
+  MCFunction<ENV extends readonly MacroArgument[]>(
     name: string,
     environment_variables: ENV,
     callback: (loop: MCFunctionClass<undefined, ENV>) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<undefined, ENV>
 
-  MCFunction<PARAMS extends MacroArgument[], ENV extends MacroArgument[]>(
+  MCFunction<PARAMS extends readonly MacroArgument[], ENV extends readonly MacroArgument[]>(
     name: string,
     environment_variables: ENV,
     callback: (loop: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void,
@@ -516,16 +529,16 @@ export class SandstonePack {
   ): MCFunctionClass<PARAMS, ENV>
 
   MCFunction<
-    PARAMS extends MacroArgument[] | undefined,
-    ENV extends MacroArgument[] | undefined>(
+    PARAMS extends readonly MacroArgument[] | undefined,
+    ENV extends readonly MacroArgument[] | undefined>(
     ...args: [
       name: string,
-      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends MacroArgument[] ? PARAMS : []) => void,
+      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []) => void,
       options?: MCFunctionArgs
     ] | [
       name: string,
       environment_variables: ENV,
-      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends MacroArgument[] ? PARAMS : []) => void,
+      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []) => void,
       options?: MCFunctionArgs,
     ]
   ) {
@@ -577,7 +590,9 @@ export class SandstonePack {
 
   sleep = (delay: TimeArgument): PromiseLike<SleepClass> => (new SleepClass(this.core, delay)).promise()
 
-  readonly Macro = (new MacroClass(new SandstoneCommands(this))).commands
+  readonly Macro = (new MacroClass(this.core, new SandstoneCommands(this))).commands
+
+  Loop = () => new LoopArgument(this)
 
   __customResourceTypes: string[] = []
 
@@ -793,6 +808,7 @@ export class SandstonePack {
         new GenerateLazyMCFunction(this),
 
         // Transformation visitors
+        new LoopTransformationVisitor(this),
         new IfElseTransformationVisitor(this),
         new ContainerCommandsToMCFunctionVisitor(this),
 

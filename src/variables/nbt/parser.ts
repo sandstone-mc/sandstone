@@ -2,9 +2,9 @@ import nearley from 'nearley'
 
 import grammar, { isCompoundSymbol } from './grammar.js'
 
+import type { NBTObject } from 'sandstone/arguments'
 import type { NBTCompound, NBTExpression } from './grammar.js'
 import type { NBT as NBTMethods } from './NBTs.js'
-import type { NBTObject } from 'sandstone/arguments'
 
 function isCompoundNbt(nbt: any): nbt is NBTCompound {
   return !!nbt[isCompoundSymbol]

@@ -1,10 +1,10 @@
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
 
+import type { PredicateJSON } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { PredicateJSON } from 'sandstone/arguments'
 
 /**
  * A node representing a Minecraft predicate.
@@ -82,12 +82,6 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
 
   /** @internal */
   toJSON() {
-    if (Array.isArray(this.predicateJSON)) {
-      return {
-        condition: 'minecraft:all_of',
-        terms: this.predicateJSON,
-      } as PredicateJSON
-    }
     return this.predicateJSON
   }
 }

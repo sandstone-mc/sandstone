@@ -177,7 +177,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   '+=' = this.add
 
   /**
-   * Substract other target's scores from the current entity's score.
+   * Subtract other target's scores from the current entity's score.
    *
    * @param targets The targets to get the scores from.
    *
@@ -186,9 +186,9 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   remove(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): Score
 
   /**
-   * Substract the given amount, or the other target's score, from the current entity's score.
+   * Subtract the given amount, or the other target's score, from the current entity's score.
    *
-   * @param targetScore The amount to substract, or the target to get the score from.
+   * @param targetScore The amount to subtract, or the target to get the score from.
    */
   remove(amountOrTargetScore: number | Score): Score
 
@@ -197,6 +197,28 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   }
 
   '-=' = this.remove
+
+  /**
+   * Adds one to the current entity's score.
+   */
+  increase() {
+    return this.add(1)
+  }
+
+  get '++'() {
+    return this.increase()
+  }
+
+  /**
+   * Subtracts one from the current entity's score.
+   */
+  decrease() {
+    return this.remove(1)
+  }
+
+  get '--'() {
+    return this.decrease()
+  }
 
   /**
    * Multiply the current entity's score by other entities's scores.
@@ -313,7 +335,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given targets' score.
    *
-   * @param targets The targets to substract the scores from
+   * @param targets The targets to subtract the scores from
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
@@ -322,7 +344,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   /**
    * Returns a new anonymous score, equal to the difference between the current score and the given amount or target' score.
    *
-   * @param amountOrTargetScore The amount to substract, or the target to substract the score from.
+   * @param amountOrTargetScore The amount to subtract, or the target to subtract the score from.
    */
   minus(amountOrTargetScore: number | Score): Score
 

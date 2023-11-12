@@ -4,10 +4,14 @@ import {
   AndNode, ConditionNode, NotNode, OrNode,
 } from './conditions/index.js'
 import { IfStatement } from './if_else.js'
+import { ForIStatement, ForOfStatement } from './loops/index.js'
 
 import type { JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
-import type { ConditionClass, DataPointClass } from 'sandstone/variables'
+import type {
+  ConditionClass, DataArray, DataArrayInitial, DataIndexMap, DataIndexMapInitial, DataPointClass, IterableDataClass, StringDataPointClass,
+} from 'sandstone/variables'
 import type { SandstoneCore } from '../core/index.js'
+import type { ForOfIterator } from './loops/index.js'
 
 export type Condition = ConditionNode | ConditionClass
 export class Flow {
@@ -101,6 +105,35 @@ export class Flow {
     return errorString
   }
 
+  for(initial: number | Score, end: (iterator: Score) => Condition, iterate: (iterator: Score) => Score, callback: (iterator: Score | number) => any): ForIStatement
+
+  for(type: 'entry', _: 'of', iterable: IterableDataClass, callback: (entry: DataPointClass) => any): ForOfStatement<'entry', [entry: DataPointClass]>
+
+  for(type: ['key', 'value'], _: 'of', iterable: DataIndexMap<DataIndexMapInitial>, callback: (key: StringDataPointClass, value: DataPointClass) => any):
+    ForOfStatement<['key', 'value'], [key: StringDataPointClass, value: DataPointClass]>
+
+  for(type: ['i', 'entry'], _: 'of', iterable: DataArray<DataArrayInitial>, callback: (i: Score, entry: DataPointClass) => any):
+    ForOfStatement<['i', 'entry'], [i: Score, entry: DataPointClass]>
+
+  for(
+    arg1: (number | Score) | ForOfIterator,
+    arg2: ((iterator: Score) => Condition) | 'of',
+    arg3: ((iterator: Score) => Score) | IterableDataClass,
+    arg4: (() => any) | ((entry: DataPointClass) => any) | ((key: StringDataPointClass, value: DataPointClass) => any) | ((i: Score, value: DataPointClass) => any),
+  ) {
+    if (typeof arg1 === 'number' || arg1 instanceof Score) {
+      return new ForIStatement(this.sandstoneCore, arg1, arg2 as (iterator: Score) => Condition, arg3 as (iterator: Score) => Score, arg4 as (iterator: Score | number) => any)
+    }
+    // Yes these are dumb. Blame TypeScript. Yes I tried a generic, it didn't work.
+    if (arg1 === 'entry') {
+      return new ForOfStatement(this.sandstoneCore, arg1, arg3 as IterableDataClass, arg4 as ((entry: DataPointClass) => any))
+    }
+    if (arg1[0] === 'key') {
+      return new ForOfStatement(this.sandstoneCore, arg1, arg3 as IterableDataClass, arg4 as ((key: StringDataPointClass, value: DataPointClass) => any))
+    }
+    return new ForOfStatement(this.sandstoneCore, arg1, arg3 as IterableDataClass, arg4 as ((i: Score, value: DataPointClass) => any))
+  }
+
   binaryMatch = (score: Score, minimum: number, maximum: number, callback: (num: number) => void) => {
     // First, specify we didn't find a match yet
     const foundMatch = this.sandstoneCore.pack.Variable(0)
@@ -165,10 +198,12 @@ export class Flow {
      * just do a while loop that calls `maximum` times the callback,
      * until there is less than `maximum` iterations
      */
-    // _.while(iterations.lessThan(maximum), () => {
-    //   callback(maximum)
-    //   iterations.remove(maximum)
-    // })
+    /*
+     * _.while(iterations.lessThan(maximum), () => {
+     *   callback(maximum)
+     *   iterations.remove(maximum)
+     * })
+     */
 
     /*
      * There is now less iterations than the allowed MAXIMUM

@@ -111,7 +111,7 @@ export type PredicateCondition = (
       scores: Record<string, NumberProvider>
   }> | PredicateKind<'minecraft:inverted', {
       /** The condition to be negated. */
-      term: PredicateJSON
+      term: PredicateCondition | PredicateCondition[]
   }> | PredicateKind<'minecraft:killed_by_player', {
       /** If true, the condition passes if killer_player is not available. */
       inverse: boolean

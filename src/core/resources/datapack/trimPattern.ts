@@ -54,10 +54,6 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
         assetID = assetID.split(':')[1]
       }
 
-      if (assetID.includes('/')) {
-        assetID = assetID.split('/').join('/')
-      }
-
       sandstoneCore.pack.Recipe(assetID, {
         type: 'smithing_trim',
         base: { tag: 'minecraft:trimmable_armor' },
