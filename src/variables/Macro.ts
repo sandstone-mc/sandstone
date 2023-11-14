@@ -33,7 +33,7 @@ class MacroLiteral extends MacroArgument {
 
   public toMacro: () => string
 
-  constructor(public sandstoneCore: SandstoneCore, public strings: TemplateStringsArray, public macros: MacroArgument[]) {
+  constructor(public sandstoneCore: SandstoneCore, public strings: TemplateStringsArray, public macros: (MacroArgument | string)[]) {
     super(sandstoneCore)
 
     this.toMacro = () => {
@@ -45,7 +45,11 @@ class MacroLiteral extends MacroArgument {
         const macro = this.macros[i]
 
         if (macro) {
-          result += macro.toMacro()
+          if (typeof macro === 'string') {
+            result += macro
+          } else {
+            result += macro.toMacro()
+          }
         }
       }
 
@@ -57,7 +61,7 @@ class MacroLiteral extends MacroArgument {
 export class MacroClass {
   readonly commands: SandstoneCommands<true> & this['__call__']
 
-  __call__ = (strings: TemplateStringsArray, ...macros: MacroArgument[]) => new MacroLiteral(this.sandstoneCore, strings, macros)
+  __call__ = (strings: TemplateStringsArray, ...macros: (string | MacroArgument)[]) => new MacroLiteral(this.sandstoneCore, strings, macros)
 
   constructor(protected sandstoneCore: SandstoneCore, commands: SandstoneCommands<false>) {
     this.commands = makeCallable(commands, this.__call__) as unknown as SandstoneCommands<true> & this['__call__']

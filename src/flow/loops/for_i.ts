@@ -1,6 +1,6 @@
 import { LoopArgument } from 'sandstone/variables'
 
-import { IfStatement } from '../index.js'
+import { IfStatement } from '../if_else.js'
 import { LoopNode } from '../loop.js'
 
 import type { SubCommand } from 'sandstone/commands'

@@ -4,7 +4,7 @@ import {
   AndNode, ConditionNode, NotNode, OrNode,
 } from './conditions/index.js'
 import { IfStatement } from './if_else.js'
-import { ForIStatement, ForOfStatement } from './loops/index.js'
+import { ForIStatement, ForOfStatement, WhileStatement } from './loops/index.js'
 
 import type { JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
 import type {
@@ -103,6 +103,15 @@ export class Flow {
     returnCmd.fail()
 
     return errorString
+  }
+
+  while(condition: Condition, callback: () => void) {
+    return new WhileStatement(this.sandstoneCore, this.conditionToNode(condition), callback)
+  }
+
+  doWhile(condition: Condition, callback: () => void) {
+    callback()
+    return new WhileStatement(this.sandstoneCore, this.conditionToNode(condition), callback)
   }
 
   for(initial: number | Score, end: (iterator: Score) => Condition, iterate: (iterator: Score) => Score, callback: (iterator: Score | number) => any): ForIStatement
