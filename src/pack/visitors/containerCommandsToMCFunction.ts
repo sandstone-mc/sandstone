@@ -1,12 +1,8 @@
 /* eslint-disable dot-notation */
 
-import { ContainerCommandNode } from 'sandstone/core'
-
 import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { MCFunctionNode } from 'sandstone/core'
-
-let ifscore = 0
+import type { ContainerCommandNode, MCFunctionNode } from 'sandstone/core'
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.
@@ -15,22 +11,6 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
   currentMCFunction: MCFunctionNode | null = null
 
   visitContainerCommandNode = (node_: ContainerCommandNode) => {
-    function getNamed(input: any) {
-      const children: any[] = []
-      if (Array.isArray(input)) {
-        children.push(input.map((i) => getNamed(i)))
-      }
-      if (input instanceof ContainerCommandNode) {
-        children.push(input.body.map((i) => getNamed(i)))
-      }
-      if (input.constructor.name === 'ExecuteCommandNode') {
-        ifscore++
-
-        if (ifscore % 100 === 0) console.log(input.args?.[0]?.[0])
-      }
-    }
-    getNamed(node_)
-    // console.log('out:', out.length, JSON.stringify(out), '\n')
     const { node, mcFunction } = node_.createMCFunction(this.currentMCFunction)
 
     if (mcFunction) {
