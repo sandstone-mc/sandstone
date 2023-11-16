@@ -54,6 +54,9 @@ export type PARTICLE_TYPES = (
   'flash' |
   'glow' |
   'glow_squid_ink' |
+  'gust' |
+  'gust_dust' |
+  'gust_emitter' |
   'happy_villager' |
   'heart' |
   'instant_effect' |
@@ -90,6 +93,7 @@ export type PARTICLE_TYPES = (
   'squid_ink' |
   'sweep_attack' |
   'totem_of_undying' |
+  'trial_spawner_detection' |
   'underwater' |
   'vibration' |
   'warped_spore' |

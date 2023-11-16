@@ -141,6 +141,7 @@ export type ITEMS = (
   'brain_coral_block' |
   'brain_coral_fan' |
   'bread' |
+  'breeze_spawn_egg' |
   'brewer_pottery_sherd' |
   'brewing_stand' |
   'brick' |
@@ -1165,6 +1166,8 @@ export type ITEMS = (
   'totem_of_undying' |
   'trader_llama_spawn_egg' |
   'trapped_chest' |
+  'trial_key' |
+  'trial_spawner' |
   'trident' |
   'tripwire_hook' |
   'tropical_fish' |

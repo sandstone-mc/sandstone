@@ -651,6 +651,17 @@ export type SOUND_EVENTS = (
   'block.sweet_berry_bush.break' |
   'block.sweet_berry_bush.pick_berries' |
   'block.sweet_berry_bush.place' |
+  'block.trial_spawner.ambient' |
+  'block.trial_spawner.break' |
+  'block.trial_spawner.close_shutter' |
+  'block.trial_spawner.detect_player' |
+  'block.trial_spawner.eject_item' |
+  'block.trial_spawner.fall' |
+  'block.trial_spawner.hit' |
+  'block.trial_spawner.open_shutter' |
+  'block.trial_spawner.place' |
+  'block.trial_spawner.spawn_mob' |
+  'block.trial_spawner.step' |
   'block.tripwire.attach' |
   'block.tripwire.click_off' |
   'block.tripwire.click_on' |
@@ -749,6 +760,15 @@ export type SOUND_EVENTS = (
   'entity.blaze.shoot' |
   'entity.boat.paddle_land' |
   'entity.boat.paddle_water' |
+  'entity.breeze.death' |
+  'entity.breeze.hurt' |
+  'entity.breeze.idle_air' |
+  'entity.breeze.idle_ground' |
+  'entity.breeze.inhale' |
+  'entity.breeze.jump' |
+  'entity.breeze.land' |
+  'entity.breeze.shoot' |
+  'entity.breeze.slide' |
   'entity.camel.ambient' |
   'entity.camel.dash' |
   'entity.camel.dash_ready' |
@@ -893,6 +913,7 @@ export type SOUND_EVENTS = (
   'entity.generic.small_fall' |
   'entity.generic.splash' |
   'entity.generic.swim' |
+  'entity.generic.wind_burst' |
   'entity.ghast.ambient' |
   'entity.ghast.death' |
   'entity.ghast.hurt' |
@@ -1044,6 +1065,7 @@ export type SOUND_EVENTS = (
   'entity.parrot.fly' |
   'entity.parrot.hurt' |
   'entity.parrot.imitate.blaze' |
+  'entity.parrot.imitate.breeze' |
   'entity.parrot.imitate.creeper' |
   'entity.parrot.imitate.drowned' |
   'entity.parrot.imitate.elder_guardian' |

@@ -11,6 +11,7 @@ export type ENTITY_TYPES = (
   'blaze' |
   'block_display' |
   'boat' |
+  'breeze' |
   'camel' |
   'cat' |
   'cave_spider' |
@@ -115,6 +116,7 @@ export type ENTITY_TYPES = (
   'vindicator' |
   'wandering_trader' |
   'warden' |
+  'wind_charge' |
   'witch' |
   'wither' |
   'wither_skeleton' |

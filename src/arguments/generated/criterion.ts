@@ -1888,6 +1888,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.mined:minecraft.torchflower_crop' |
   'minecraft.broken:minecraft.trapped_chest' |
   'minecraft.mined:minecraft.trapped_chest' |
+  'minecraft.broken:minecraft.trial_spawner' |
+  'minecraft.mined:minecraft.trial_spawner' |
   'minecraft.broken:minecraft.tripwire' |
   'minecraft.mined:minecraft.tripwire' |
   'minecraft.broken:minecraft.tripwire_hook' |
@@ -2158,6 +2160,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.block_display' |
   'minecraft.killed:minecraft.boat' |
   'minecraft.killed_by:minecraft.boat' |
+  'minecraft.killed:minecraft.breeze' |
+  'minecraft.killed_by:minecraft.breeze' |
   'minecraft.killed:minecraft.camel' |
   'minecraft.killed_by:minecraft.camel' |
   'minecraft.killed:minecraft.cat' |
@@ -2366,6 +2370,8 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.killed_by:minecraft.wandering_trader' |
   'minecraft.killed:minecraft.warden' |
   'minecraft.killed_by:minecraft.warden' |
+  'minecraft.killed:minecraft.wind_charge' |
+  'minecraft.killed_by:minecraft.wind_charge' |
   'minecraft.killed:minecraft.witch' |
   'minecraft.killed_by:minecraft.witch' |
   'minecraft.killed:minecraft.wither' |
@@ -3021,6 +3027,10 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.bread' |
   'minecraft.picked_up:minecraft.bread' |
   'minecraft.used:minecraft.bread' |
+  'minecraft.crafted:minecraft.breeze_spawn_egg' |
+  'minecraft.dropped:minecraft.breeze_spawn_egg' |
+  'minecraft.picked_up:minecraft.breeze_spawn_egg' |
+  'minecraft.used:minecraft.breeze_spawn_egg' |
   'minecraft.crafted:minecraft.brewer_pottery_sherd' |
   'minecraft.dropped:minecraft.brewer_pottery_sherd' |
   'minecraft.picked_up:minecraft.brewer_pottery_sherd' |
@@ -7117,6 +7127,14 @@ export type OBJECTIVE_CRITERION = (
   'minecraft.dropped:minecraft.trapped_chest' |
   'minecraft.picked_up:minecraft.trapped_chest' |
   'minecraft.used:minecraft.trapped_chest' |
+  'minecraft.crafted:minecraft.trial_key' |
+  'minecraft.dropped:minecraft.trial_key' |
+  'minecraft.picked_up:minecraft.trial_key' |
+  'minecraft.used:minecraft.trial_key' |
+  'minecraft.crafted:minecraft.trial_spawner' |
+  'minecraft.dropped:minecraft.trial_spawner' |
+  'minecraft.picked_up:minecraft.trial_spawner' |
+  'minecraft.used:minecraft.trial_spawner' |
   'minecraft.crafted:minecraft.trident' |
   'minecraft.dropped:minecraft.trident' |
   'minecraft.picked_up:minecraft.trident' |

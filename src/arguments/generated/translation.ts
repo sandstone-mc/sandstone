@@ -1,6 +1,7 @@
 /* eslint-disable */
 /* Auto-generated */
 export type TRANSLATION_KEYS = (
+  'accessibility.onboarding.accessibility.button' |
   'accessibility.onboarding.screen.narrator' |
   'accessibility.onboarding.screen.title' |
   'addServer.add' |
@@ -360,6 +361,7 @@ export type TRANSLATION_KEYS = (
   'argument.rotation.incomplete' |
   'argument.scoreboardDisplaySlot.invalid' |
   'argument.scoreHolder.empty' |
+  'argument.style.invalid' |
   'argument.time.invalid_tick_count' |
   'argument.time.invalid_unit' |
   'argument.time.tick_count_too_low' |
@@ -2052,6 +2054,7 @@ export type TRANSLATION_KEYS = (
   'block.minecraft.torchflower' |
   'block.minecraft.torchflower_crop' |
   'block.minecraft.trapped_chest' |
+  'block.minecraft.trial_spawner' |
   'block.minecraft.tripwire' |
   'block.minecraft.tripwire_hook' |
   'block.minecraft.tube_coral' |
@@ -2478,6 +2481,7 @@ export type TRANSLATION_KEYS = (
   'commands.jfr.started' |
   'commands.jfr.stopped' |
   'commands.kick.owner.failed' |
+  'commands.kick.singleplayer.failed' |
   'commands.kick.success' |
   'commands.kill.success.multiple' |
   'commands.kill.success.single' |
@@ -2568,11 +2572,23 @@ export type TRANSLATION_KEYS = (
   'commands.scoreboard.objectives.display.set' |
   'commands.scoreboard.objectives.list.empty' |
   'commands.scoreboard.objectives.list.success' |
+  'commands.scoreboard.objectives.modify.displayAutoUpdate.disable' |
+  'commands.scoreboard.objectives.modify.displayAutoUpdate.enable' |
   'commands.scoreboard.objectives.modify.displayname' |
+  'commands.scoreboard.objectives.modify.objectiveFormat.clear' |
+  'commands.scoreboard.objectives.modify.objectiveFormat.set' |
   'commands.scoreboard.objectives.modify.rendertype' |
   'commands.scoreboard.objectives.remove.success' |
   'commands.scoreboard.players.add.success.multiple' |
   'commands.scoreboard.players.add.success.single' |
+  'commands.scoreboard.players.display.name.clear.success.multiple' |
+  'commands.scoreboard.players.display.name.clear.success.single' |
+  'commands.scoreboard.players.display.name.set.success.multiple' |
+  'commands.scoreboard.players.display.name.set.success.single' |
+  'commands.scoreboard.players.display.numberFormat.clear.success.multiple' |
+  'commands.scoreboard.players.display.numberFormat.clear.success.single' |
+  'commands.scoreboard.players.display.numberFormat.set.success.multiple' |
+  'commands.scoreboard.players.display.numberFormat.set.success.single' |
   'commands.scoreboard.players.enable.failed' |
   'commands.scoreboard.players.enable.invalid' |
   'commands.scoreboard.players.enable.success.multiple' |
@@ -3178,6 +3194,7 @@ export type TRANSLATION_KEYS = (
   'entity.minecraft.blaze' |
   'entity.minecraft.block_display' |
   'entity.minecraft.boat' |
+  'entity.minecraft.breeze' |
   'entity.minecraft.camel' |
   'entity.minecraft.cat' |
   'entity.minecraft.cave_spider' |
@@ -3333,6 +3350,7 @@ export type TRANSLATION_KEYS = (
   'entity.minecraft.vindicator' |
   'entity.minecraft.wandering_trader' |
   'entity.minecraft.warden' |
+  'entity.minecraft.wind_charge' |
   'entity.minecraft.witch' |
   'entity.minecraft.wither' |
   'entity.minecraft.wither_skeleton' |
@@ -3721,6 +3739,7 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.bow' |
   'item.minecraft.bowl' |
   'item.minecraft.bread' |
+  'item.minecraft.breeze_spawn_egg' |
   'item.minecraft.brewer_pottery_shard' |
   'item.minecraft.brewer_pottery_sherd' |
   'item.minecraft.brewing_stand' |
@@ -4247,6 +4266,7 @@ export type TRANSLATION_KEYS = (
   'item.minecraft.torchflower_seeds' |
   'item.minecraft.totem_of_undying' |
   'item.minecraft.trader_llama_spawn_egg' |
+  'item.minecraft.trial_key' |
   'item.minecraft.trident' |
   'item.minecraft.tropical_fish' |
   'item.minecraft.tropical_fish_bucket' |
@@ -4970,6 +4990,7 @@ export type TRANSLATION_KEYS = (
   'options.accessibility.high_contrast.tooltip' |
   'options.accessibility.link' |
   'options.accessibility.narrator_hotkey' |
+  'options.accessibility.narrator_hotkey.mac.tooltip' |
   'options.accessibility.narrator_hotkey.tooltip' |
   'options.accessibility.panorama_speed' |
   'options.accessibility.text_background' |
@@ -5726,6 +5747,12 @@ export type TRANSLATION_KEYS = (
   'subtitles.block.sponge.absorb' |
   'subtitles.block.sweet_berry_bush.pick_berries' |
   'subtitles.block.trapdoor.toggle' |
+  'subtitles.block.trial_spawner.ambient' |
+  'subtitles.block.trial_spawner.close_shutter' |
+  'subtitles.block.trial_spawner.detect_player' |
+  'subtitles.block.trial_spawner.eject_item' |
+  'subtitles.block.trial_spawner.open_shutter' |
+  'subtitles.block.trial_spawner.spawn_mob' |
   'subtitles.block.tripwire.attach' |
   'subtitles.block.tripwire.click' |
   'subtitles.block.tripwire.detach' |
@@ -5771,6 +5798,15 @@ export type TRANSLATION_KEYS = (
   'subtitles.entity.blaze.shoot' |
   'subtitles.entity.boat.paddle_land' |
   'subtitles.entity.boat.paddle_water' |
+  'subtitles.entity.breeze.death' |
+  'subtitles.entity.breeze.hurt' |
+  'subtitles.entity.breeze.idle_air' |
+  'subtitles.entity.breeze.idle_ground' |
+  'subtitles.entity.breeze.inhale' |
+  'subtitles.entity.breeze.jump' |
+  'subtitles.entity.breeze.land' |
+  'subtitles.entity.breeze.shoot' |
+  'subtitles.entity.breeze.slide' |
   'subtitles.entity.camel.ambient' |
   'subtitles.entity.camel.dash' |
   'subtitles.entity.camel.dash_ready' |
@@ -5895,6 +5931,7 @@ export type TRANSLATION_KEYS = (
   'subtitles.entity.generic.small_fall' |
   'subtitles.entity.generic.splash' |
   'subtitles.entity.generic.swim' |
+  'subtitles.entity.generic.wind_burst' |
   'subtitles.entity.ghast.ambient' |
   'subtitles.entity.ghast.death' |
   'subtitles.entity.ghast.hurt' |
@@ -6012,6 +6049,7 @@ export type TRANSLATION_KEYS = (
   'subtitles.entity.parrot.fly' |
   'subtitles.entity.parrot.hurts' |
   'subtitles.entity.parrot.imitate.blaze' |
+  'subtitles.entity.parrot.imitate.breeze' |
   'subtitles.entity.parrot.imitate.creeper' |
   'subtitles.entity.parrot.imitate.drowned' |
   'subtitles.entity.parrot.imitate.elder_guardian' |
