@@ -111,7 +111,7 @@ type ChildrenTags = {
   extra?: (JSONTextPrimitives | ContentTag<JSONContentTypes>)[]
 }
 
-type FormattingTags = {
+export type FormattingTags = {
   /** Optional. The color to render the content in. */
   color?: LiteralUnion<BASIC_COLORS>
 

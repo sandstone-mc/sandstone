@@ -3,7 +3,7 @@ import { MacroArgument } from './Macro.js'
 import { rangeParser } from './parsers.js'
 
 import type {
-  COMPARISON_OPERATORS, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
+  COMPARISON_OPERATORS, FormattingTags, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
 } from 'sandstone/arguments'
 import type { NotNode } from 'sandstone/flow'
 import type { ConditionClass } from 'sandstone/variables'
@@ -36,12 +36,26 @@ function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [Mult
   return anonymousScore.set(args[0], args[1])
 }
 
+export type ScoreDisplay = {
+  name?: JSONTextComponent,
+
+  numberformat?: 'blank' | ['styled', FormattingTags] | ['fixed', JSONTextComponent]
+}
+
 export class Score extends MacroArgument implements ConditionClass, ComponentClass {
   commands: SandstoneCommands<false>
 
-  constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument<false>, public objective: ObjectiveClass) {
+  constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument<false>, public display: ScoreDisplay | undefined, public objective: ObjectiveClass) {
     super(sandstonePack.core)
     this.commands = sandstonePack.commands
+
+    if (display !== undefined) {
+      if (sandstonePack.core.currentMCFunction) {
+        this.setDisplay(display)
+      } else {
+        sandstonePack.initMCFunction.push(() => this.setDisplay(display))
+      }
+    }
   }
 
   toString() {
@@ -104,6 +118,23 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
     this.commands.scoreboard.players.operation(this, operator, args[0], objective)
 
+    return this
+  }
+
+  setDisplay = (display: ScoreDisplay) => {
+    if (display.name) {
+      this.commands.scoreboard.players.display.name(this, display.name)
+    }
+    if (display.numberformat) {
+      if (display.numberformat === 'blank') {
+        this.commands.scoreboard.players.display.numberformat(this, 'blank')
+      } else if (display.numberformat[0] === 'styled') {
+        this.commands.scoreboard.players.display.numberformat(this, 'styled', display.numberformat[1])
+      } else {
+        this.commands.scoreboard.players.display.numberformat(this, 'fixed', display.numberformat[1])
+      }
+    }
+    this.display = display
     return this
   }
 

@@ -7,7 +7,7 @@ import {
 import { CommandArguments } from '../../helpers.js'
 
 import type {
-  DISPLAY_SLOTS, JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
+  DISPLAY_SLOTS, FormattingTags, JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION,
   ObjectiveArgument,
   OPERATORS,
 } from 'sandstone/arguments'
@@ -137,6 +137,39 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
       ...target: [target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>, targetObjective: Macroable<ObjectiveArgument, MACRO>] | [targetScore: Macroable<Score, MACRO>],
       operation: OPERATORS,
       ...source: [source: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>, sourceObjective: Macroable<ObjectiveArgument, MACRO>] | [sourceScore: Macroable<Score, MACRO>],
-  ]) => this.finalCommand(['players', 'operation', ...scoresParser(...args)]),
-  }
+    ]) => this.finalCommand(['players', 'operation', ...scoresParser(...args)]),
+
+    display: {
+      name: (...args: [
+        ...target: [target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>, targetObjective: Macroable<ObjectiveArgument, MACRO>] | [targetScore: Macroable<Score, MACRO>],
+        name: Macroable<JSONTextComponent, MACRO>,
+      ]) => {
+        if (args[0] instanceof Score) {
+          args[1] = parseJSONText(args[1] as JSONTextComponent) as any
+        } else {
+          args[2] = parseJSONText(args[2] as JSONTextComponent) as any
+        }
+        return this.finalCommand(['players', 'display', 'name', ...scoresParser(...args)])
+      },
+
+      numberformat: (...args: [
+        ...target: [target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>, targetObjective: Macroable<ObjectiveArgument, MACRO>] | [targetScore: Macroable<Score, MACRO>],
+        ...format: [format: 'blank'] | [format: 'styled', style: Macroable<FormattingTags, MACRO>] | [format: 'fixed', rightColumn: Macroable<JSONTextComponent, MACRO>],
+      ]) => {
+        if (args[1] === 'styled') {
+          args[2] = parseJSONText(args[2] as JSONTextComponent) as any
+        }
+        if (args[2] === 'styled') {
+          args[3] = parseJSONText(args[3] as JSONTextComponent) as any
+        }
+        if (args[1] === 'fixed') {
+          args[2] = parseJSONText(args[2] as JSONTextComponent) as any
+        }
+        if (args[2] === 'fixed') {
+          args[3] = parseJSONText(args[3] as JSONTextComponent) as any
+        }
+        return this.finalCommand(['players', 'display', 'numberformat', ...scoresParser(...args)])
+      },
+    } as const,
+  } as const
 }

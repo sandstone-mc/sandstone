@@ -207,12 +207,10 @@ export class Flow {
      * just do a while loop that calls `maximum` times the callback,
      * until there is less than `maximum` iterations
      */
-    /*
-     * _.while(iterations.lessThan(maximum), () => {
-     *   callback(maximum)
-     *   iterations.remove(maximum)
-     * })
-     */
+    _.while(iterations.lessThan(maximum), () => {
+      callback(maximum)
+      iterations.remove(maximum)
+    })
 
     /*
      * There is now less iterations than the allowed MAXIMUM
