@@ -2,8 +2,7 @@ import fs from 'fs-extra'
 import { coerce } from 'semver'
 import * as util from 'util'
 
-import { Type } from '@sinclair/typebox'
-import { Format } from '@sinclair/typebox/format'
+import { FormatRegistry, Type } from '@sinclair/typebox'
 
 import type FetchType from 'node-fetch'
 import type { Static } from '@sinclair/typebox'
@@ -238,7 +237,7 @@ export interface PackEntry {
     owner: string
 }
 
-Format.Set('semver', (v) => coerce(v) != null)
+FormatRegistry.Set('semver', (v) => coerce(v) != null)
 
 export const supportedMinecraftVersions = [
   '1.18',
