@@ -612,4 +612,52 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   matches = (range: Range<false>) => ({
     _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(range)]),
   })
+
+  match = (minimum: number, maximum: number, callback: (num: number) => void) => {
+    const { _ } = this.sandstonePack
+    // First, specify we didn't find a match yet
+    const foundMatch = this.sandstoneCore.pack.Variable(0)
+
+    const callCallback = (num: number) => {
+      _.if(_.and(this['=='](num), foundMatch['=='](0)), () => {
+        _.return.run(() => {
+          // If we found the correct score, call the callback & specify we found a match
+          callback(num)
+          foundMatch.set(1)
+        })
+      })
+    }
+
+    // Recursively match the score
+    const recursiveMatch = (min: number, max: number) => {
+      const diff = max - min
+
+      if (diff < 0) {
+        return
+      }
+
+      if (diff === 3) {
+        callCallback(min)
+        callCallback(min + 1)
+        callCallback(min + 2)
+        return
+      }
+      if (diff === 2) {
+        callCallback(min)
+        callCallback(min + 1)
+        return
+      }
+      if (diff === 1) {
+        callCallback(min)
+        return
+      }
+
+      const mean = Math.floor((min + max) / 2)
+
+      _.if(this['<'](mean), () => _.return.run(() => recursiveMatch(min, mean)))
+      _.if(this['>='](mean), () => _.return.run(() => recursiveMatch(mean, max)))
+    }
+
+    recursiveMatch(minimum, maximum)
+  }
 }
