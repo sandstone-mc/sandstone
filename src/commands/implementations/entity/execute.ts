@@ -340,6 +340,8 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
   /** Checks whether the data point exists or the targeted block, entity or storage has any data for a given tag. */
   data(dataPoint: DataPointClass): void
 
+  data(): ExecuteDataArgsCommand<MACRO>
+
   data(dataPoint?: DataPointClass) {
     if (dataPoint) {
       return this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as [''])

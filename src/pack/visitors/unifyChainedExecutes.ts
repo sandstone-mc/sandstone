@@ -12,9 +12,9 @@ export class UnifyChainedExecutesVisitor extends GenericSandstoneVisitor {
     }
 
     const chainedCommand = node.body[0]
-    if (chainedCommand instanceof ExecuteCommandNode) {
+    if (chainedCommand && chainedCommand instanceof ExecuteCommandNode) {
       // The chained command is an execute.
-      node.body = [chainedCommand.body[0]]
+      node.body = chainedCommand.body
 
       node.args.push(...chainedCommand.args)
     }

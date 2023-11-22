@@ -1,6 +1,6 @@
 /* eslint-disable no-spaced-func */
 /* eslint-disable func-call-spacing */
-import { ExecuteCommandNode, ReturnCommandNode } from 'sandstone/commands'
+import { ExecuteCommandNode, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import { IfNode } from 'sandstone/flow'
 
 import { GenericSandstoneVisitor } from './visitor.js'
@@ -62,7 +62,10 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
           return new ExecuteCommandNode(this.pack, [[node.condition.getValue()]], {
             isSingleExecute: false,
             givenCallbackName: `${i}_${callbackName}`,
-            body: body.map((_node) => this.genericVisit(_node)),
+            body: [new ReturnRunCommandNode(this.pack, ['run'], {
+              isSingleExecute: false,
+              body: body.map((_node) => this.genericVisit(_node)),
+            })],
           })
         }
         // Else node, just add the body

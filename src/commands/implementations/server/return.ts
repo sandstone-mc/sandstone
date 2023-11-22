@@ -107,7 +107,7 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ReturnCommandNode
 
   get return() {
-    const run = new ReturnArgumentsCommand(this.sandstonePack)
+    const run = new ReturnArgumentsCommand<MACRO>(this.sandstonePack)
 
     return makeCallable(run, (value: Macroable<number, MACRO>) => this.finalCommand([value]), true)
   }

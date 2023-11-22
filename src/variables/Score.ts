@@ -5,9 +5,9 @@ import { rangeParser } from './parsers.js'
 import type {
   COMPARISON_OPERATORS, FormattingTags, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
 } from 'sandstone/arguments'
+import type { FinalCommandOutput, SandstoneCommands } from 'sandstone/commands'
 import type { NotNode } from 'sandstone/flow'
 import type { ConditionClass } from 'sandstone/variables'
-import type { SandstoneCommands } from '../commands/index.js'
 import type { SandstonePack } from '../pack/index.js'
 import type { ComponentClass } from './abstractClasses.js'
 import type { DATA_TYPES, DataPointClass } from './Data.js'
@@ -613,51 +613,70 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(range)]),
   })
 
-  match = (minimum: number, maximum: number, callback: (num: number) => void) => {
-    const { _ } = this.sandstonePack
+  match = (minimum: number, maximum: number, callback: (returnCmd: (SandstoneCommands<false> & ((_callback: () => any) => FinalCommandOutput)), num: number) => void) => {
+    const { _, commands: { execute }, MCFunction } = this.sandstonePack
     // First, specify we didn't find a match yet
-    const foundMatch = this.sandstoneCore.pack.Variable(0)
-
     const callCallback = (num: number) => {
-      _.if(_.and(this['=='](num), foundMatch['=='](0)), () => {
-        _.return.run(() => {
-          // If we found the correct score, call the callback & specify we found a match
-          callback(num)
-          foundMatch.set(1)
-        })
-      })
+      // If we found the correct score, call the callback & specify we found a match
+      callback(execute.if.score(this, 'matches', num).run.returnCmd.run, num)
     }
 
-    // Recursively match the score
-    const recursiveMatch = (min: number, max: number) => {
-      const diff = max - min
+    // I actually have no idea why this is needed, but it is
+    const total = maximum - minimum - 1
 
-      if (diff < 0) {
-        return
-      }
+    const score = this
 
-      if (diff === 3) {
-        callCallback(min)
-        callCallback(min + 1)
-        callCallback(min + 2)
-        return
-      }
-      if (diff === 2) {
-        callCallback(min)
-        callCallback(min + 1)
-        return
-      }
-      if (diff === 1) {
-        callCallback(min)
-        return
-      }
+    // This is my personal hell
 
-      const mean = Math.floor((min + max) / 2)
+    let executeCount = 0
 
-      _.if(this['<'](mean), () => _.return.run(() => recursiveMatch(min, mean)))
-      _.if(this['>='](mean), () => _.return.run(() => recursiveMatch(mean, max)))
+    function split(currentTotal: number, current: number) {
+      if (currentTotal > 10) {
+        const chunks = Math.floor(currentTotal / 10)
+
+        if (chunks > 10) {
+          const _chunks = Math.floor(chunks / 10)
+
+          const chunkSize = Math.floor(currentTotal / _chunks)
+
+          for (let i = 0; i < _chunks; i += 1) {
+            const last = i === _chunks - 1
+
+            executeCount += 1
+
+            const localCurrent = current + chunkSize * i
+
+            execute.if.score(score, 'matches', `${localCurrent}..${localCurrent + chunkSize - (last ? 0 : 1)}`).run.returnCmd.run(() => split(chunkSize, localCurrent))
+          }
+
+          executeCount += 1
+
+          execute.if.score(score, 'matches', `${(chunkSize * _chunks) + current}..`).run.returnCmd.run(() => split((currentTotal % chunkSize) + 1, (chunkSize * _chunks) + current))
+        } else {
+          const chunkSize = Math.floor(currentTotal / chunks)
+
+          if (chunkSize > 10) {
+            executeCount += 2
+            execute.if.score(score, 'matches', `${current}..${current + 9}`).run.returnCmd.run(() => split(10, current))
+
+            execute.if.score(score, 'matches', `${10 + current}..`).run.returnCmd.run(() => split(currentTotal - 10, 10 + current))
+          } else {
+            for (let i = 0; i < chunks; i += 1) {
+              const localCurrent = (chunkSize * i) + current
+
+              executeCount += 1
+
+              execute.if.score(score, 'matches', `${localCurrent}..${localCurrent + chunkSize - 1}`).run.returnCmd.run(() => split(chunkSize, localCurrent))
+            }
+          }
+        }
+      }
+      if (currentTotal !== 0 && currentTotal <= 10) {
+        for (let i = 0; i < currentTotal; i += 1) {
+          callback(execute.if.score(score, 'matches', current + i).run.returnCmd.run, current + i)
+        }
+      }
     }
-
-    recursiveMatch(minimum, maximum)
+    split(total, minimum)
   }
 }

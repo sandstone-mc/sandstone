@@ -1,8 +1,14 @@
 /* eslint-disable dot-notation */
 
+import { ContainerCommandNode } from 'sandstone/core'
+
 import { GenericSandstoneVisitor } from './visitor.js'
 
-import type { ContainerCommandNode, MCFunctionNode } from 'sandstone/core'
+import type { MCFunctionNode } from 'sandstone/core'
+
+// let bippity = 0
+
+// let boppity = 0
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.
@@ -11,17 +17,24 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
   currentMCFunction: MCFunctionNode | null = null
 
   visitContainerCommandNode = (node_: ContainerCommandNode) => {
+    // console.log('bippity', bippity++)
     const { node, mcFunction } = node_.createMCFunction(this.currentMCFunction)
 
     if (mcFunction) {
       const visitedMCFunction = this.visitMCFunctionNode(mcFunction)
       this.core.resourceNodes.add(visitedMCFunction)
+    } else if (node instanceof ContainerCommandNode && node.body) {
+      for (const [i, child] of node.body.entries()) {
+        const visit = this.visit(child)
+        node.body.splice(i, 1, ...(Array.isArray(visit) ? visit : [visit]))
+      }
     }
 
     return Array.isArray(node) ? node.flatMap((n) => this.visit(n)) : node
   }
 
   visitMCFunctionNode = (node: MCFunctionNode) => {
+    // console.log('boppity', boppity++)
     const prev = this.currentMCFunction
 
     this.currentMCFunction = node
