@@ -1,15 +1,13 @@
-import { CommandNode, MCFunctionClass } from 'sandstone/core'
-import { ContainerCommandNode } from 'sandstone/core/nodes'
+import { CommandNode, ContainerCommandNode } from 'sandstone/core/nodes'
 import { makeCallable } from 'sandstone/utils'
 
 import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
 import { FunctionCommandNode } from './function.js'
 
 import type { SandstonePack } from 'sandstone'
-import type { SandstoneCommands } from 'sandstone/commands/commands.js'
-import type { MCFunctionNode } from 'sandstone/core'
+import type { SandstoneCommands } from 'sandstone/commands'
+import type { Macroable, MCFunctionNode } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
-import type { Macroable } from 'sandstone/variables'
 
 export class ReturnRunCommandNode extends ContainerCommandNode {
   command = 'return' as const
@@ -31,21 +29,28 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
 
   getValue = () => {
     if (this.body.length > 1) {
-      throw new Error('Execute nodes can only have one child node when toString is called.')
+      throw new Error('Return run nodes can only have one child node when toString is called.')
     }
 
-    return `${this.command} run ${this.body[0].getValue()}`
+    let command = this.body[0].getValue()
+
+    if (command.startsWith('/')) {
+      this.isMacro = true
+      command = command.slice(1)
+    }
+
+    return `${this.isMacro ? '/' : ''}${this.command} run ${command}`
   }
 
   createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
-    if (!currentMCFunction) {
+    if (this.isSingleExecute || !currentMCFunction) {
       return { node: this as ReturnRunCommandNode }
     }
 
     const namespace = currentMCFunction.resource.name.includes(':') ? `${currentMCFunction.resource.name.split(':')[0]}:` : ''
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/return_run`, {
+    const mcFunction = this.sandstonePack.MCFunction(`${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/return_run`, {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',
@@ -109,6 +114,6 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
   get return() {
     const run = new ReturnArgumentsCommand<MACRO>(this.sandstonePack)
 
-    return makeCallable(run, (value: Macroable<number, MACRO>) => this.finalCommand([value]), true)
+    return makeCallable(run, (value?: Macroable<number, MACRO>) => this.finalCommand([value || 0]), true)
   }
 }

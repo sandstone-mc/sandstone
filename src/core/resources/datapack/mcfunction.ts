@@ -1,6 +1,6 @@
 import { makeCallable, makeClassCallable } from 'sandstone/utils'
-import { ResolveNBTPart } from 'sandstone/variables'
 
+import { ResolveNBTPart } from '../../../variables/ResolveNBT.js'
 import { ContainerNode } from '../../nodes.js'
 import {
   CallableResourceClass,
@@ -12,10 +12,9 @@ import type { NBTObject } from 'sandstone/arguments/nbt.js'
 import type { ScheduleType } from 'sandstone/commands'
 import type { FinalCommandOutput } from 'sandstone/commands/helpers'
 import type {
-  ContainerCommandNode, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
+  ContainerCommandNode, MacroArgument, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
 } from 'sandstone/core'
 import type { MakeInstanceCallable } from 'sandstone/utils'
-import type { MacroArgument } from 'sandstone/variables'
 
 const tags: Record<string, TagClass<'functions'>> = {}
 

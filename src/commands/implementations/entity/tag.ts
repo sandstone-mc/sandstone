@@ -1,10 +1,10 @@
-import { CommandNode } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { MultipleEntitiesArgument } from 'sandstone/arguments'
-import type { Macroable, MacroArgument } from 'sandstone/variables'
+import type { Macroable, MacroArgument } from 'sandstone/core'
 
 function checkTagName(tag: string | MacroArgument) {
   if (typeof tag !== 'string') {

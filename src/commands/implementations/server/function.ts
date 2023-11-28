@@ -1,12 +1,13 @@
-import { CommandNode, TagClass } from 'sandstone/core'
-import { nbtStringifier } from 'sandstone/variables'
+import { CommandNode } from 'sandstone/core/nodes'
+import { TagClass } from 'sandstone/core/resources/datapack/tag'
+import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { RootNBT } from 'sandstone/arguments/nbt.js'
-import type { MCFunctionClass } from 'sandstone/core'
+import type { DataPointPickClass, Macroable, MCFunctionClass } from 'sandstone/core'
 import type {
-  DATA_TYPES, DataPointClass, DataPointPickClass, Macroable,
+  DATA_TYPES, DataPointClass,
 } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers.js'
 
@@ -16,20 +17,18 @@ export class FunctionCommandNode extends CommandNode<[string | MCFunctionClass<a
   command = 'function' as const
 }
 
-type WithMacros = MCFunctionClass<undefined, undefined> | string | TagClass<'functions'>
+type Func = MCFunctionClass<undefined, undefined> | string | TagClass<'functions'>
 
 export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = FunctionCommandNode
 
-  function(mcFunction: Macroable<WithMacros, MACRO>): FinalCommandOutput
+  function(mcFunction: Macroable<Func, MACRO>): FinalCommandOutput
 
-  function(mcFunction: Macroable<WithMacros, MACRO>, params: Macroable<RootNBT, MACRO>): FinalCommandOutput
+  function(mcFunction: Macroable<Func, MACRO>, params: Macroable<RootNBT, MACRO>): FinalCommandOutput
 
-  function(mcFunction: Macroable<WithMacros, MACRO>, _: 'with', type: DATA_TYPES, target: string, path: string): FinalCommandOutput
+  function(mcFunction: Macroable<Func, MACRO>, _: 'with', type: DATA_TYPES, target: string, path: string): FinalCommandOutput
 
-  function(mcFunction: Macroable<WithMacros, MACRO>, _: 'with', dataPoint: DataPointClass | DataPointPickClass): FinalCommandOutput
-
-  function(mcFunction: Macroable<MCFunctionClass<NonNullable<any>, NonNullable<any>>, MACRO>): FinalCommandOutput
+  function(mcFunction: Macroable<Func, MACRO>, _: 'with', dataPoint: DataPointClass | DataPointPickClass): FinalCommandOutput
 
   function(
     mcFunction: Macroable<string | MCFunctionClass<any, any> | TagClass<'functions'>, MACRO>,

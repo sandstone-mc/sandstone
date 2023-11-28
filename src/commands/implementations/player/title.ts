@@ -1,10 +1,11 @@
-import { CommandNode } from 'sandstone/core'
-import { parseJSONText, targetParser } from 'sandstone/variables'
+import { CommandNode } from 'sandstone/core/nodes'
+import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { JSONTextComponent, MultiplePlayersArgument, TimeArgument } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class TitleCommandNode extends CommandNode {
   command = 'title' as const

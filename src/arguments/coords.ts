@@ -1,4 +1,5 @@
-import type { MacroString, VectorClass } from 'sandstone/variables'
+import type { MacroString } from 'sandstone/core'
+import type { VectorClass } from 'sandstone/variables'
 
 type AbsoluteFloat<MACRO extends boolean> = MacroString<`${number}`, MACRO>;
 type RelativeFloat<MACRO extends boolean> = `~${MacroString<(number | ''), MACRO>}`;

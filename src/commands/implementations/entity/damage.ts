@@ -7,7 +7,7 @@ import { CommandArguments } from '../../helpers.js'
 import type { Coordinates, DAMAGE_TYPES, SingleEntityArgument } from 'sandstone/arguments'
 import type { DamageTypeClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class DamageCommandNode extends CommandNode {
   command = 'damage' as const

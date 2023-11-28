@@ -1,8 +1,8 @@
 import { SingleConditionNode } from '../condition.js'
 
 import type { NBTObject } from 'sandstone/arguments/nbt'
-import type { SandstoneCore } from 'sandstone/core'
-import type { DataPointClass, DataPointPickClass, Score } from 'sandstone/variables'
+import type { DataPointPickClass, SandstoneCore } from 'sandstone/core'
+import type { DataPointClass, Score } from 'sandstone/variables'
 
 export class DataPointExistsConditionNode extends SingleConditionNode {
   constructor(sandstoneCore: SandstoneCore, readonly dataPoint: DataPointClass) {
@@ -15,11 +15,24 @@ export class DataPointExistsConditionNode extends SingleConditionNode {
 }
 
 export class DataPointEqualsConditionNode extends SingleConditionNode {
+  readonly conditional: Score
+
   constructor(sandstoneCore: SandstoneCore, readonly dataPoint: DataPointClass, readonly value: NBTObject | Score | DataPointClass | DataPointPickClass) {
     super(sandstoneCore)
+
+    const { DataVariable, Variable, commands } = sandstoneCore.pack
+    const { execute } = commands
+
+    const anon = DataVariable(this.dataPoint)
+
+    this.conditional = Variable()
+
+    execute.store.result.score(this.conditional).run(() => anon.set(this.value as unknown as DataPointClass))
   }
 
+  getValue = (negated?: boolean) => (negated ? ['if', ...this.getCondition()] : ['unless', ...this.getCondition()]).join(' ')
+
   getCondition(): unknown[] {
-    return ['data', 'TODO']
+    return ['score', 'matches', '0..']
   }
 }

@@ -1,6 +1,6 @@
 import { validateIntegerRange } from 'sandstone/commands/validators'
-import { CommandNode } from 'sandstone/core'
-import { coordinatesParser, targetParser } from 'sandstone/variables'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -8,9 +8,8 @@ import type {
   CONTAINER_SLOTS,
   Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
 } from 'sandstone/arguments'
-import type { LootTableClass } from 'sandstone/core'
+import type { LootTableClass, Macroable } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
 
 type LootTableArgument<MACRO extends boolean> = Macroable<LootTableClass | string, MACRO>
 

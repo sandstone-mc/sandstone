@@ -1,11 +1,12 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
+import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
+import { coordinatesParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { Coordinates, ENTITY_TYPES, RootNBT } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
 
 export class SummonCommandNode extends CommandNode {
   command = 'summon' as const

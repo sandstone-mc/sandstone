@@ -1,4 +1,4 @@
-import { CommandNode } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
@@ -6,7 +6,7 @@ import { CommandArguments } from '../../helpers.js'
 import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { RecipeClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class RecipeCommandNode extends CommandNode {
   command = 'recipe' as const

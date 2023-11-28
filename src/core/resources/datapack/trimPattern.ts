@@ -5,8 +5,7 @@ import type { TrimPatternJSON } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-
-type equipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
+import type { EquipmentSlots } from './trimMaterial.js'
 
 /**
  * A node representing a Minecraft trim pattern.
@@ -26,13 +25,17 @@ export type TrimPatternClassArguments = {
   trimPattern?: TrimPatternJSON
 } & ResourceClassArguments<'default'> & {
   /**
+   * Optional. Defaults to true. Automatically adds trim pattern to #minecraft:trim_templates.
+   */
+  registerPatternTag?: boolean
+  /**
    * Optional. Defaults to true. Automatically adds armor trim pattern recipe.
    */
   registerPatternRecipe?: boolean
   /**
    * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
    */
-  equipmentCheck?: 'whole_inventory' | equipmentSlots | equipmentSlots[]
+  equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
 }
 
 export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements ConditionClass {
@@ -46,6 +49,10 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
     this.trimPatternJSON = args.trimPattern as TrimPatternJSON
 
     this.equipmentCheck = args.equipmentCheck
+
+    if (args.registerPatternTag !== false) {
+      sandstoneCore.pack.Tag('items', 'minecraft:trim_templates', [this.template], { onConflict: 'append' })
+    }
 
     if (args.registerPatternRecipe !== false) {
       let assetID = this.trimPatternJSON.asset_id

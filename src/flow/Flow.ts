@@ -7,13 +7,17 @@ import { IfStatement } from './if_else.js'
 import {
   binaryFor, ForIStatement, ForOfStatement, WhileStatement,
 } from './loops/index.js'
+import { CaseStatement } from './switch_case.js'
 
-import type { JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { JSONTextComponent, MultiplePlayersArgument, NBTObject } from 'sandstone/arguments'
 import type {
   ConditionClass, DataArray, DataArrayInitial, DataIndexMap, DataIndexMapInitial, DataPointClass, IterableDataClass, StringDataPointClass,
 } from 'sandstone/variables'
-import type { SandstoneCore } from '../core/index.js'
+import type { DataPointPickClass, SandstoneCore } from '../core/index.js'
 import type { ForOfIterator } from './loops/index.js'
+import type { DefaultType } from './switch_case.js'
+
+let switches = 0
 
 export type Condition = ConditionNode | ConditionClass
 export class Flow {
@@ -152,6 +156,68 @@ export class Flow {
       }
       return binaryFor(this, arg1[0], arg1[1] as Score | number, arg3 as (num: number) => any, arg1[2])
     }
+
     return new ForOfStatement(this.sandstoneCore, arg1 as ForOfIterator, arg3 as IterableDataClass, arg4 as ((i: Score, value: DataPointClass) => any))
+  }
+
+  switch<ValueType extends DataPointClass | DataPointPickClass | Score, CheckType extends ValueType extends Score ? number : NBTObject>(
+    value: ValueType,
+    cases: CaseStatement<CheckType> | DefaultType<CheckType>,
+  ): void
+
+  switch<ValueType extends DataPointClass | DataPointPickClass | Score, CheckType extends ValueType extends Score ? number : NBTObject>(
+    value: ValueType,
+    cases: ['case', CheckType, () => any][],
+    _default?: ['default', () => any],
+  ): void
+
+  switch<ValueType extends DataPointClass | DataPointPickClass | Score, CheckType extends ValueType extends Score ? number : NBTObject>(
+    value: ValueType,
+    _cases: ['case', CheckType, () => any][] | CaseStatement<CheckType> | DefaultType<CheckType>,
+    _default?: ['default', () => any],
+  ) {
+    let cases: (readonly ['case', CheckType, () => any])[]
+
+    if (_cases instanceof CaseStatement) {
+      cases = _cases['getCases']().map((c) => c['getValue']())
+    } else if (Array.isArray(_cases)) {
+      cases = _cases
+    } else {
+      cases = _cases.cases.map((c) => c['getValue']())
+      _default = ['default', _cases.default]
+    }
+    const {
+      Data, initMCFunction, MCFunction, Macro,
+    } = this.sandstoneCore.pack
+
+    // eslint-disable-next-line no-plusplus
+    const id = switches++
+
+    const values = Data('storage', `__sandstone:switch_${id}`, 'Values')
+
+    initMCFunction.push(() => values.set(cases.map(([_, v, callback], i) => {
+      MCFunction(`__sandstone:switch_${id}_case_${i}`, [], () => callback())
+
+      return { Value: v, Index: i }
+    })))
+
+    const flow = this
+
+    MCFunction(`__sandstone:switch_${id}`, [value], () => {
+      const index = Data('storage', `__sandstone:switch_${id}`, 'Index')
+
+      Macro.data.modify.storage(index.currentTarget, 'Index').set.from.storage(values.currentTarget, value.Macro`Values[{Value:${value}}}].Index`)
+
+      const _if = flow.if(index, () => {
+        MCFunction(`__sandstone:switch_${id}_inner`, [index], () => {
+          Macro.functionCmd(index.Macro`__sandstone:switch_${id}_case_${index}`)
+        })()
+      })
+      if (_default) _if.else(() => _default?.[1]())
+    })()
+  }
+
+  case<ValueType extends number | NBTObject>(value: ValueType, callback: () => any) {
+    return new CaseStatement(value, callback)
   }
 }

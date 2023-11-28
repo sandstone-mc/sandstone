@@ -5,7 +5,7 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class StopSoundCommandNode extends CommandNode {
   command = 'stopsound' as const

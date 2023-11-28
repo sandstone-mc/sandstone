@@ -1,4 +1,4 @@
-import type { MacroString } from 'sandstone/variables'
+import type { MacroString } from 'sandstone/core'
 
 export type Range<MACRO extends boolean> =
     | MacroString<number, MACRO>

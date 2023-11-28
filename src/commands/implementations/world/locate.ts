@@ -4,7 +4,7 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { POINT_OF_INTEREST_TYPES, WORLDGEN_BIOMES, WORLDGEN_STRUCTURES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class LocateCommandNode extends CommandNode {
   command = 'locate' as const

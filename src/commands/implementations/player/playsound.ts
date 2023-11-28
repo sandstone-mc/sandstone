@@ -7,7 +7,7 @@ import type {
   Coordinates, MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class PlaySoundCommandNode extends CommandNode {
   command = 'playsound' as const

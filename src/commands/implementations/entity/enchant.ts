@@ -6,7 +6,7 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { ENCHANTMENTS, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class EnchantCommandNode extends CommandNode {
   command = 'enchant' as const

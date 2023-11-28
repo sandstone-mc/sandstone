@@ -1,4 +1,4 @@
-import { targetParser } from 'sandstone/variables'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'

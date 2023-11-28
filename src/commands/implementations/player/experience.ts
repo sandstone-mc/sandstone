@@ -5,7 +5,7 @@ import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 
 import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class ExperienceCommandNode extends CommandNode {
   // We always use the shorthand version for compactness purposes

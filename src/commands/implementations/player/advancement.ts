@@ -5,7 +5,7 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { MultiplePlayersArgument } from 'sandstone/arguments'
 import type { AdvancementClass } from 'sandstone/core'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 // Advancement command
 

@@ -1,11 +1,12 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import { parseJSONText, targetParser } from 'sandstone/variables'
+import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
 
 // Bossbar command
 export class BossBarCommandNode extends CommandNode {

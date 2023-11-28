@@ -1,12 +1,14 @@
-import { makeCallable } from 'sandstone/utils'
-
-import type { SandstoneCommands } from 'sandstone/commands'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { SandstoneCore } from 'sandstone/core'
+import type { ConditionNode } from 'sandstone/flow'
+import type { ConditionClass, DataPointClass } from 'sandstone/variables'
 
 export class MacroArgument {
   protected local: Map<string, string>
 
   public toMacro: () => string
+
+  readonly Macro = (strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => new MacroLiteral(this.sandstoneCore, this.local, strings, macros)
 
   constructor(protected sandstoneCore: SandstoneCore) {
     this.local = new Map()
@@ -29,11 +31,9 @@ export function isMacroArgument(core: SandstoneCore, arg: any) {
 }
 
 class MacroLiteral extends MacroArgument {
-  public local: Map<string, string> = new Map()
-
   public toMacro: () => string
 
-  constructor(public sandstoneCore: SandstoneCore, public strings: TemplateStringsArray, public macros: (MacroArgument | string)[]) {
+  constructor(public sandstoneCore: SandstoneCore, public local: Map<string, string>, public strings: TemplateStringsArray, public macros: (MacroArgument | string | number)[]) {
     super(sandstoneCore)
 
     this.toMacro = () => {
@@ -44,10 +44,14 @@ class MacroLiteral extends MacroArgument {
 
         const macro = this.macros[i]
 
-        if (macro) {
-          if (typeof macro === 'string') {
-            result += macro
+        if (macro !== undefined && macro !== null) {
+          if (typeof macro === 'string' || typeof macro === 'number') {
+            result += `${macro}`
           } else {
+            const current = this.sandstoneCore.currentNode || this.sandstoneCore.getCurrentMCFunctionOrThrow().resource.name
+
+            macro['local'].set(current, this.local.get(current)!)
+
             result += macro.toMacro()
           }
         }
@@ -58,12 +62,20 @@ class MacroLiteral extends MacroArgument {
   }
 }
 
-export class MacroClass {
-  readonly commands: SandstoneCommands<true> & this['__call__']
+export class DataPointPickClass extends MacroArgument {
+  /**
+   * @internal
+   */
+  _toDataPoint(): DataPointClass<'storage'> {
+    throw new Error('Not implemented')
+  }
+}
 
-  __call__ = (strings: TemplateStringsArray, ...macros: (string | MacroArgument)[]) => new MacroLiteral(this.sandstoneCore, strings, macros)
-
-  constructor(protected sandstoneCore: SandstoneCore, commands: SandstoneCommands<false>) {
-    this.commands = makeCallable(commands, this.__call__) as unknown as SandstoneCommands<true> & this['__call__']
+export class ConditionalDataPointPickClass extends DataPointPickClass implements ConditionClass {
+  /**
+   * @internal
+   */
+  _toMinecraftCondition(): ConditionNode {
+    throw new Error('Not implemented')
   }
 }

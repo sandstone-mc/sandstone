@@ -1,5 +1,4 @@
-import { DataPointPickClass } from './abstractClasses.js'
-import { MacroArgument } from './Macro.js'
+import { DataPointPickClass, MacroArgument } from '../core/Macro.js'
 import { nbtStringifier } from './nbt/NBTs.js'
 import { Score } from './Score.js'
 

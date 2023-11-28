@@ -1,8 +1,7 @@
 /* eslint-disable max-len */
-import { CommandNode } from 'sandstone/core'
-import {
-  parseJSONText, Score, targetParser,
-} from 'sandstone/variables'
+import { CommandNode } from 'sandstone/core/nodes'
+import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
+import { targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -11,13 +10,18 @@ import type {
   ObjectiveArgument,
   OPERATORS,
 } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Score } from 'sandstone/variables'
+
+// Yes this sucks
+
+const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'unaryOperation')
 
 function scoresParser(...args: unknown[]) {
   return args.map((_arg, i) => {
     const arg = _arg as any
-    if (arg instanceof Score) {
+    if (isScore(arg)) {
       return [arg.target, arg.objective]
     }
     if (arg?._toSelector) {
@@ -144,7 +148,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
         ...target: [target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>, targetObjective: Macroable<ObjectiveArgument, MACRO>] | [targetScore: Macroable<Score, MACRO>],
         name: Macroable<JSONTextComponent, MACRO>,
       ]) => {
-        if (args[0] instanceof Score) {
+        if (isScore(args[1])) {
           args[1] = parseJSONText(args[1] as JSONTextComponent) as any
         } else {
           args[2] = parseJSONText(args[2] as JSONTextComponent) as any

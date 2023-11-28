@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import * as util from 'util'
 
+import { DataPointPickClass } from '../core/Macro.js'
 import { capitalize } from '../utils.js'
-import { DataPointPickClass } from './abstractClasses.js'
 import { StringDataPointClass } from './Data.js'
 import {
   NBTAnyValue,

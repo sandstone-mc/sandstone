@@ -2,7 +2,8 @@
 /* eslint-disable no-plusplus */
 import { SandstoneCommands } from 'sandstone/commands'
 import {
-  AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, ItemModifierClass, LanguageClass, LootTableClass, MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
+  AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, ItemModifierClass, LanguageClass, LootTableClass,
+  MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
 } from 'sandstone/core'
 import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
@@ -10,7 +11,7 @@ import { randomUUID } from 'sandstone/utils'
 import {
   coordinatesParser,
   DataArray,
-  DataClass, DataIndexMap, DataPointClass, LabelClass, LoopArgument, MacroClass, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
+  DataClass, DataIndexMap, DataPointClass, LabelClass, LoopArgument, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
 } from 'sandstone/variables'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
 import { Score } from 'sandstone/variables/Score'
@@ -34,11 +35,12 @@ import type { StoreType } from 'sandstone/commands'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
-  AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MCFunctionClassArguments, ModelClassArguments, Node, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
+  AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, DataPointPickClass, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MacroArgument,
+  MCFunctionClassArguments, ModelClassArguments, Node, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
 } from 'sandstone/core'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type {
-  DATA_PATH, DATA_TARGET, DATA_TYPES, DataPointPickClass, MacroArgument, SelectorCreator, SelectorProperties,
+  DATA_PATH, DATA_TARGET, DATA_TYPES, SelectorCreator, SelectorProperties,
 } from 'sandstone/variables'
 import type {
   UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
@@ -54,6 +56,10 @@ let tempStorage: DataClass<'storage'>
 let startTickedLoops: MCFunctionClass<undefined, undefined>
 
 type MCFunctionArgs = Exclude<Partial<MCFunctionClassArguments>, MCFunctionClassArguments['callback']>
+
+const foo: MCFunctionArgs = {
+  addToSandstoneCore: false,
+}
 
 export class DataPack extends PackType {
   // TODO: typing. low priority
@@ -153,6 +159,8 @@ export class SandstonePack {
 
   readonly commands: SandstoneCommands<false>
 
+  readonly Macro: SandstoneCommands<true>
+
   readonly conditions = SandstoneConditions
 
   objectives: Set<ObjectiveClass>
@@ -171,6 +179,9 @@ export class SandstonePack {
     this.packTypes = new Map()
 
     this.commands = new SandstoneCommands(this)
+
+    // SandstonePack.Macro is only a type hack
+    this.Macro = this.commands as unknown as SandstoneCommands<true>
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
@@ -504,6 +515,11 @@ export class SandstonePack {
 
   MCFunction(
     name: string,
+    options?: MCFunctionArgs
+  ): MCFunctionClass<undefined, undefined>
+
+  MCFunction(
+    name: string,
     callback: (loop: MCFunctionClass<undefined, undefined>) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<undefined, undefined>
@@ -533,6 +549,9 @@ export class SandstonePack {
     ENV extends readonly MacroArgument[] | undefined>(
     ...args: [
       name: string,
+      options?: MCFunctionArgs
+    ] |[
+      name: string,
       callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []) => void,
       options?: MCFunctionArgs
     ] | [
@@ -548,7 +567,7 @@ export class SandstonePack {
       addToSandstoneCore: true,
       onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
       ...(typeof args[1] === 'function' ? args[2] : args[3]),
-    }, typeof args[1] === 'function' ? undefined : args[1]) as MCFunctionClass<PARAMS, ENV>
+    }, (typeof args[1] !== 'function' && Array.isArray(args[1])) ? args[1] : undefined) as MCFunctionClass<PARAMS, ENV>
   }
 
   appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
@@ -590,8 +609,6 @@ export class SandstonePack {
 
   sleep = (delay: TimeArgument): PromiseLike<SleepClass> => (new SleepClass(this.core, delay)).promise()
 
-  readonly Macro = (new MacroClass(this.core, new SandstoneCommands(this))).commands
-
   Loop = () => new LoopArgument(this)
 
   __customResourceTypes: string[] = []
@@ -614,6 +631,8 @@ export class SandstonePack {
   RawResource(pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
 
   RawResource(...args: [path: string, contents: string | Buffer | Promise<Buffer>] | [pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>]) {
+    const [core, CustomResource] = this.makeCustomResource
+
     if (args[0] instanceof PackType) {
       const _path = args[1] as string
       const path = _path.includes('/') ? _path.split('/') : [_path]
@@ -621,9 +640,7 @@ export class SandstonePack {
 
       path[path.length - 1] = path[path.length - 1].replace(`.${extension}`, '')
 
-      const { core } = this
-
-      class RawResource extends this.makeCustomResource[1] {
+      class RawResource extends CustomResource {
         constructor() {
           super(core, path.join('/'), {
             type: `${Math.random()}`, packType: args[0] as PackType, extension, addToSandstoneCore: true, creator: 'user',
@@ -641,12 +658,12 @@ export class SandstonePack {
 
     path[path.length - 1] = path[path.length - 1].replace(`.${extension}`, '')
 
-    const { core, dataPack } = this
+    const { dataPack } = this
 
-    class RawResource extends this.makeCustomResource[1] {
+    class RawResource extends CustomResource {
       constructor() {
         super(core, path.join('/'), {
-          type: `${Math.random()}`, packType: dataPack(), extension, addToSandstoneCore: true, creator: 'user',
+          type: `${Math.random()}`, extension, addToSandstoneCore: true, creator: 'user',
         })
       }
 

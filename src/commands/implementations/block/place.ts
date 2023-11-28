@@ -1,7 +1,7 @@
 import { CommandNode } from 'sandstone/core/nodes'
 import {
   coordinatesParser, structureMirrorParser, structureRotationParser,
-} from 'sandstone/variables'
+} from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 import { validateIntegerRange } from '../../validators.js'
@@ -9,9 +9,9 @@ import { validateIntegerRange } from '../../validators.js'
 import type {
   Coordinates, STRUCTURES, WORLDGEN_CONFIGURED_FEATURES, WORLDGEN_STRUCTURES, WORLDGEN_TEMPLATE_POOLS,
 } from 'sandstone/arguments'
-import type { StructureClass } from 'sandstone/core'
+import type { Macroable, StructureClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable, StructureMirror, StructureRotation } from 'sandstone/variables'
+import type { StructureMirror, StructureRotation } from 'sandstone/variables'
 
 export class PlaceCommandNode extends CommandNode {
   command = 'place' as const

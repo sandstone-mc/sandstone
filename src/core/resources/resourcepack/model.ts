@@ -147,6 +147,8 @@ export class ModelClass extends ResourceClass<ModelNode> {
     this.handleConflicts()
   }
 
+  toString = () => `${this.path[0]}:${this.path.slice(2)}`
+
   /**
    * Generates the Minecraft model JSON
    */

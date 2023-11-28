@@ -1,14 +1,9 @@
-import {
-  _RawMCFunctionClass,
-  MCFunctionClass,
-} from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import {
-  coordinatesParser, ObjectiveClass, rangeParser, rotationParser,
-  Score,
+  coordinatesParser, rangeParser, rotationParser,
   targetParser,
-} from 'sandstone/variables'
+} from 'sandstone/variables/parsers'
 
 import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
 import { FunctionCommandNode } from '../server/function.js'
@@ -21,15 +16,27 @@ import type {
   Coordinates, DIMENSIONS, ENTITY_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Range, Rotation, SingleEntityArgument,
 } from 'sandstone/arguments'
 import type { SandstoneCommands } from 'sandstone/commands'
-import type { MCFunctionNode, PredicateClass } from 'sandstone/core'
+import type {
+  Macroable, MacroArgument, MCFunctionNode, PredicateClass,
+} from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
+import type {
+  _RawMCFunctionClass,
+} from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
 import type { DataPointClass } from 'sandstone/variables/Data'
+import type { ObjectiveClass } from 'sandstone/variables/Objective.js'
+import type { Score } from 'sandstone/variables/Score.js'
 
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]
+
+// Yes these suck
+
+const isObjective = (arg: any): arg is ObjectiveClass => typeof arg === 'object' && Object.hasOwn(arg, 'reset')
+
+const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'unaryOperation')
 
 class ExecuteCommandPart<MACRO extends boolean> extends CommandArguments<typeof ExecuteCommandNode> {
   protected nestedExecute = (args: SubCommand, executable = true) => this.subCommand([args], ExecuteCommand<MACRO>, executable)
@@ -93,8 +100,25 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     // This will be the execute string without "run"
     const flattenedArgs = this.args.flat(1)
-    const filteredArgs = flattenedArgs.filter((arg) => arg !== undefined)
-    const executeString = `${this.command} ${filteredArgs.join(' ')}`
+    const args = []
+
+    for (const arg of flattenedArgs) {
+      if (arg !== undefined && arg !== null) {
+        // Yes these are cursed, unfortunately, there's not really a better way to do this as visitors only visit the root nodes.
+        if (typeof arg === 'object') {
+          if (Object.hasOwn(arg, 'toMacro') && (arg as MacroArgument)['local'].has(this.sandstoneCore.currentNode)) {
+            this.isMacro = true
+
+            args.push((arg as MacroArgument).toMacro())
+          } else {
+            args.push(arg)
+          }
+        } else {
+          args.push(arg)
+        }
+      }
+    }
+    const executeString = `${this.command} ${args.join(' ')}`
 
     if (this.body.length === 0) {
       return executeString
@@ -105,7 +129,14 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       return this.body[0].getValue()
     }
 
-    return `${executeString} run ${this.body[0].getValue()}`
+    let command = this.body[0].getValue()
+
+    if (command.startsWith('/')) {
+      this.isMacro = true
+      command = command.slice(1)
+    }
+
+    return `${this.isMacro ? '/' : ''}${executeString} run ${command}`
   }
 
   createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
@@ -116,8 +147,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     const namespace = currentMCFunction.resource.name.includes(':') ? `${currentMCFunction.resource.name.split(':')[0]}:` : ''
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = new MCFunctionClass(this.sandstoneCore, `${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/${this.callbackName}`, {
-      addToSandstoneCore: false,
+    const mcFunction = this.sandstonePack.MCFunction(`${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/${this.callbackName}`, {
       creator: 'sandstone',
       onConflict: 'rename',
     })
@@ -194,7 +224,7 @@ export class ExecuteStoreArgsCommand<MACRO extends boolean> extends ExecuteComma
    * @param playerScore The player's score to override.
    */
   score(...args: [targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, objective: Macroable<ObjectiveArgument, MACRO>] | [playerScore: Macroable<Score, MACRO>]) {
-    if (args[0] instanceof Score) {
+    if (isScore(args[0])) {
       return this.nestedExecute(['score', args[0]])
     }
     return this.nestedExecute(['score', targetParser(args[0]), args[1]])
@@ -307,17 +337,17 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
   score(...args: any[]) {
     const finalArgs: string[] = []
 
-    if (args[0] instanceof Score) {
+    if (isScore(args[0])) {
       finalArgs.push(args[0].target.toString(), args[0].objective.name, args[1])
-      if (args[2] instanceof Score) {
+      if (isScore(args[2])) {
         finalArgs.push(args[2].target.toString(), args[2].objective.name)
       } else {
         finalArgs.push(rangeParser(args[2]))
       }
     } else {
-      finalArgs.push(targetParser(args[0]), args[1] instanceof ObjectiveClass ? args[1].name : args[1], args[2])
+      finalArgs.push(targetParser(args[0]), isObjective(args[1]) ? args[1].name : args[1], args[2])
       if (args[4]) {
-        finalArgs.push(targetParser(args[3]), args[4] instanceof ObjectiveClass ? args[4].name : args[4])
+        finalArgs.push(targetParser(args[3]), isObjective(args[4]) ? args[4].name : args[4])
       } else {
         finalArgs.push(rangeParser(args[3]))
       }
@@ -350,8 +380,8 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
   }
 
   function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {
-    if (func instanceof _RawMCFunctionClass) {
-      return this.nestedExecute(['function', toMinecraftResourceName(func.path)])
+    if (typeof func === 'object' && Object.hasOwn(func, 'addToTag')) {
+      return this.nestedExecute(['function', toMinecraftResourceName((func as _RawMCFunctionClass<[], []>).path)])
     }
     /* @ts-ignore */
     if (typeof func === 'string' || Object.hasOwn(func, 'toMacro')) {
@@ -359,7 +389,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
     }
     const name = `${this.sandstoneCore.getCurrentMCFunctionOrThrow().resource.path.slice(2).join('/')}/execute_if_function`
 
-    const _func = new MCFunctionClass(this.sandstoneCore, name, {
+    const _func = this.sandstonePack.MCFunction(name, {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'rename',

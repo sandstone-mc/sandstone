@@ -11,7 +11,7 @@ import type { SandstonePack } from 'sandstone/pack'
 import type { LiteralUnion } from '../utils.js'
 import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
 import type { LabelClass } from './Label.js'
-import type { Macroable } from './Macro.js'
+import type { Macroable } from '../core/Macro.js'
 import type { NotNBT } from './nbt/NBTs.js'
 
 type ScoreArgument<MACRO extends boolean> = Record<string, Range<MACRO>>

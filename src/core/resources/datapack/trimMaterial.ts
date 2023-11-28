@@ -9,7 +9,7 @@ import type { TagClass } from './tag.js'
 
 let trimMaterials: undefined | TagClass<'items'>
 
-type equipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
+export type EquipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
 
 /**
  * A node representing a Minecraft trim material.
@@ -35,7 +35,7 @@ export type TrimMaterialClassArguments = {
   /**
    * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
    */
-  equipmentCheck?: 'whole_inventory' | equipmentSlots | equipmentSlots[]
+  equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
 }
 
 export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implements ConditionClass {

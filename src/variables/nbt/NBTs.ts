@@ -4,7 +4,7 @@ import * as util from 'util'
 import { parseNBT } from './parser.js'
 
 import type { NBTObject, RootNBT } from 'sandstone/arguments'
-import type { MacroArgument } from '../index.js'
+import type { MacroArgument } from 'sandstone/core'
 
 export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string;
@@ -410,7 +410,7 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
     return nbt[util.inspect.custom]()
   }
 
-  if (nbt.toMacro) {
+  if (typeof nbt === 'object' && nbt.toMacro) {
     /* @ts-ignore */
     return nbt.toMacro()
   }

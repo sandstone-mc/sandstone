@@ -1,5 +1,5 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import { arrayToArgsParser } from 'sandstone/variables'
+import { arrayToArgsParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
@@ -7,8 +7,8 @@ import type {
   BLOCKS, Coordinates,
   ITEMS, MultiplePlayersArgument, PARTICLE_TYPES,
 } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
 
 // Particle command
 

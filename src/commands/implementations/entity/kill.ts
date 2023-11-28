@@ -4,7 +4,7 @@ import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 
 import type { MultipleEntitiesArgument } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class KillCommandNode extends CommandNode {
   command = 'kill' as const

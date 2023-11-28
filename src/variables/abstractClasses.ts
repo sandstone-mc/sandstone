@@ -1,8 +1,5 @@
-import { MacroArgument } from './Macro.js'
-
 import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent'
 import type { ConditionNode } from '../flow/index.js'
-import type { DataPointClass } from './Data.js'
 import type { SelectorClass } from './Selector.js'
 
 export class ComponentClass {
@@ -39,24 +36,6 @@ export class ConditionTextComponentClass extends ComponentClass implements Condi
     throw new Error('Not implemented')
   }
 
-  /**
-   * @internal
-   */
-  _toMinecraftCondition(): ConditionNode {
-    throw new Error('Not implemented')
-  }
-}
-
-export class DataPointPickClass extends MacroArgument {
-  /**
-   * @internal
-   */
-  _toDataPoint(): DataPointClass<'storage'> {
-    throw new Error('Not implemented')
-  }
-}
-
-export class ConditionalDataPointPickClass extends DataPointPickClass implements ConditionClass {
   /**
    * @internal
    */

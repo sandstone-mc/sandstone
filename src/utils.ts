@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from 'fs-extra'
 import { coerce } from 'semver'
 import * as util from 'util'
@@ -6,6 +7,7 @@ import { FormatRegistry, Type } from '@sinclair/typebox'
 
 import type FetchType from 'node-fetch'
 import type { Static } from '@sinclair/typebox'
+import type { MultipleEntitiesArgument } from './arguments/selector.js'
 import type { UUIDinNumber } from './variables/UUID.js'
 
 export const fetch = async (...args: Parameters<typeof FetchType>) => (await import('node-fetch')).default(...args)
@@ -336,4 +338,8 @@ export async function safeWrite(...args: Partial<Parameters<typeof fs['writeFile
   await fs.ensureDir(args[0].replace(/(?:\/|\\)(?:.(?!(?:\/|\\)))+$/, ''))
 
   return fs.writeFile(...args as Parameters<typeof fs['writeFile']>)
+}
+
+export function sanitizeTarget(target: MultipleEntitiesArgument<false>) {
+  return `${target}`.toLowerCase().replaceAll(/-|=|\[|\]|\{|\}|:|"|'|,|@/g, '_')
 }

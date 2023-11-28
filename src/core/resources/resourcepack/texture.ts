@@ -60,6 +60,10 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
     this.handleConflicts()
   }
 
+  toString() {
+    return `${this.path[0]}:${this.path.slice(2)}`
+  }
+
   videoToAnimation(path: string) {
     console.log('Unimplemented')
   }

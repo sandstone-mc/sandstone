@@ -1,10 +1,10 @@
-import { CommandNode } from 'sandstone/core'
-import { coordinatesParser } from 'sandstone/variables'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { ColumnCoordinates } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class WorldBorderNode extends CommandNode {
   command = 'worldborder' as const

@@ -1,9 +1,9 @@
-import { CommandNode } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type { TimeArgument } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class TimeCommandNode extends CommandNode {
   command = 'time' as const

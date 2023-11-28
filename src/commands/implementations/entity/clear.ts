@@ -6,7 +6,7 @@ import { CommandArguments } from '../../helpers.js'
 import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { TagClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/variables'
+import type { Macroable } from 'sandstone/core'
 
 export class ClearCommandNode extends CommandNode {
   command = 'clear' as const
