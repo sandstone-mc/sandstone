@@ -1,9 +1,10 @@
+import { type MacroArgument, isMacroArgument } from '../core/Macro.js'
 import { VectorClass } from './Coordinates.js'
 
 import type {
   Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION,
 } from 'sandstone/arguments'
-import type { MacroArgument } from '../core/Macro.js'
+import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
 // PARSERS
 export function arrayToArgsParser(args: unknown): (
   typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args
@@ -36,7 +37,7 @@ export function rotationParser<T>(rotation: T): (
 }
 
 // Sanitize score values. null => '', Infinity => '', any number => itself
-export const sanitizeValue = (value: MacroArgument | number | string | null | undefined): string => {
+export const sanitizeValue = (core: SandstoneCore, value: MacroArgument | number | string | null | undefined): string => {
   if (value === undefined || value === null) {
     return ''
   }
@@ -45,8 +46,8 @@ export const sanitizeValue = (value: MacroArgument | number | string | null | un
     return value
   }
 
-  if (typeof value === 'object' && value.toMacro) {
-    return value.toMacro()
+  if (isMacroArgument(core, value)) {
+    return (value as MacroArgument).toMacro()
   }
 
   if (Number.isFinite(value)) {
@@ -58,9 +59,9 @@ export const sanitizeValue = (value: MacroArgument | number | string | null | un
 }
 
 // Returns the string representation of a range. [0, null] => '0..', [-Infinity, 5] => '..5', 8 => '8'
-export const rangeParser = (range: Range<boolean> | MacroArgument): string => {
+export const rangeParser = (core: SandstoneCore, range: Range<boolean> | MacroArgument): string => {
   if (Array.isArray(range)) {
-    return `${sanitizeValue(range[0])}..${sanitizeValue(range[1])}`
+    return `${sanitizeValue(core, range[0])}..${sanitizeValue(core, range[1])}`
   }
   return range.toString()
 }

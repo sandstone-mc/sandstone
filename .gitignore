@@ -1,7 +1,7 @@
 ### Dist folder ###
 dist
 
-.tsbuildinfo
+tsconfig.tsbuildinfo
 
 ### VisualStudioCode Patch ###
 .history

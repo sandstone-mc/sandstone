@@ -336,56 +336,35 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
     function: (delay: TimeArgument, type: ScheduleType): FinalCommandOutput => this.commands.schedule.function(this.name, delay, type),
   }
 
-  get push() {
-    const commands = new Proxy(this.pack.commands, {
-      get: (target, p, receiver) => {
-        this.core.enterMCFunction(this)
-        this.core.insideContext(this.node, () => (this.pack.commands as any)[p], false)
-        this.core.exitMCFunction()
-      },
-    })
-
-    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) => {
-      if (contents[0] instanceof _RawMCFunctionClass) {
-        for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
-          this.node.body.push(...mcfunction.node.body)
-        }
-      } else {
-        this.core.enterMCFunction(this)
-        this.core.insideContext(this.node, contents[0], false)
-        this.core.exitMCFunction()
+  push(...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) {
+    if (contents[0] instanceof _RawMCFunctionClass) {
+      for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
+        this.node.body.push(...mcfunction.node.body)
       }
-    }, true)
+    } else {
+      this.core.enterMCFunction(this)
+      this.core.insideContext(this.node, contents[0], false)
+      this.core.exitMCFunction()
+    }
   }
 
-  get unshift() {
+  unshift(...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) {
     const fake = new MCFunctionClass(this.core, 'fake', {
       addToSandstoneCore: false,
       creator: 'sandstone',
       onConflict: 'ignore',
     })
 
-    const commands = new Proxy(this.pack.commands, {
-      get: (target, p, receiver) => {
-        this.core.enterMCFunction(fake)
-        this.core.insideContext(fake.node, () => (this.pack.commands as any)[p], false)
-        this.core.exitMCFunction()
-        this.node.body.unshift(...fake.node.body)
-      },
-    })
-
-    return makeCallable(commands, (...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) => {
-      if (contents[0] instanceof _RawMCFunctionClass) {
-        for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
-          this.node.body.unshift(...mcfunction.node.body)
-        }
-      } else {
-        this.core.enterMCFunction(fake)
-        this.core.insideContext(fake.node, contents[0], false)
-        this.core.exitMCFunction()
-        this.node.body.unshift(...fake.node.body)
+    if (contents[0] instanceof _RawMCFunctionClass) {
+      for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
+        this.node.body.unshift(...mcfunction.node.body)
       }
-    }, true)
+    } else {
+      this.core.enterMCFunction(fake)
+      this.core.insideContext(fake.node, contents[0], false)
+      this.core.exitMCFunction()
+      this.node.body.unshift(...fake.node.body)
+    }
   }
 
   splice(start: number, removeItems: number | 'auto', ...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => void]) {

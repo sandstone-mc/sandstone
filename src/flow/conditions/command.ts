@@ -28,6 +28,6 @@ export class CommandConditionNode extends SingleConditionNode {
       /** @ts-ignore */
       return this.result(this.variable)._toMinecraftCondition().getCondition()
     }
-    return ['score', this.variable, 'matches', rangeParser(this.result)]
+    return ['score', this.variable, 'matches', rangeParser(this.sandstoneCore, this.result)]
   }
 }

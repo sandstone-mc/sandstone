@@ -1,6 +1,5 @@
 node_modules
 .prettierrc.js
-.tsbuildinfo
 .eslintignore
 .eslintrc.cjs
 .editorconfig

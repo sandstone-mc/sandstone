@@ -1,3 +1,7 @@
+import {
+  type Macroable, type MacroArgument, type MCFunctionNode, type PredicateClass,
+  isMacroArgument,
+} from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import {
@@ -16,9 +20,6 @@ import type {
   Coordinates, DIMENSIONS, ENTITY_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Range, Rotation, SingleEntityArgument,
 } from 'sandstone/arguments'
 import type { SandstoneCommands } from 'sandstone/commands'
-import type {
-  Macroable, MacroArgument, MCFunctionNode, PredicateClass,
-} from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
 import type {
   _RawMCFunctionClass,
@@ -106,7 +107,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       if (arg !== undefined && arg !== null) {
         // Yes these are cursed, unfortunately, there's not really a better way to do this as visitors only visit the root nodes.
         if (typeof arg === 'object') {
-          if (Object.hasOwn(arg, 'toMacro') && (arg as MacroArgument)['local'].has(this.sandstoneCore.currentNode)) {
+          if (isMacroArgument(this.sandstoneCore, arg)) {
             this.isMacro = true
 
             args.push((arg as MacroArgument).toMacro())
@@ -131,12 +132,12 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     let command = this.body[0].getValue()
 
-    if (command.startsWith('/')) {
+    if (command.startsWith('$')) {
       this.isMacro = true
       command = command.slice(1)
     }
 
-    return `${this.isMacro ? '/' : ''}${executeString} run ${command}`
+    return `${this.isMacro ? '$' : ''}${executeString} run ${command}`
   }
 
   createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
@@ -342,14 +343,14 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
       if (isScore(args[2])) {
         finalArgs.push(args[2].target.toString(), args[2].objective.name)
       } else {
-        finalArgs.push(rangeParser(args[2]))
+        finalArgs.push(rangeParser(this.sandstoneCore, args[2]))
       }
     } else {
       finalArgs.push(targetParser(args[0]), isObjective(args[1]) ? args[1].name : args[1], args[2])
       if (args[4]) {
         finalArgs.push(targetParser(args[3]), isObjective(args[4]) ? args[4].name : args[4])
       } else {
-        finalArgs.push(rangeParser(args[3]))
+        finalArgs.push(rangeParser(this.sandstoneCore, args[3]))
       }
     }
     return this.nestedExecute(['score', ...finalArgs], true)

@@ -3,11 +3,12 @@
 import { SandstoneCommands } from 'sandstone/commands'
 import {
   AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, ItemModifierClass, LanguageClass, LootTableClass,
+  MacroLiteral,
   MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
 } from 'sandstone/core'
 import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
-import { randomUUID } from 'sandstone/utils'
+import { makeCallable, randomUUID } from 'sandstone/utils'
 import {
   coordinatesParser,
   DataArray,
@@ -159,7 +160,7 @@ export class SandstonePack {
 
   readonly commands: SandstoneCommands<false>
 
-  readonly Macro: SandstoneCommands<true>
+  readonly Macro: SandstoneCommands<true> & ((strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => MacroLiteral)
 
   readonly conditions = SandstoneConditions
 
@@ -181,7 +182,7 @@ export class SandstonePack {
     this.commands = new SandstoneCommands(this)
 
     // SandstonePack.Macro is only a type hack
-    this.Macro = this.commands as unknown as SandstoneCommands<true>
+    this.Macro = makeCallable(this.commands, (strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => new MacroLiteral(this.core, strings, macros), true) as unknown as this['Macro']
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
@@ -407,8 +408,6 @@ export class SandstonePack {
     if (!this.__rootStorage) {
       this.__rootStorage = new DataPointClass(this, 'storage', '__sandstone:variable', [])
 
-      this.initMCFunction.push.data.merge.storage('__sandstone:variable', {})
-
       return this.__rootStorage
     }
 
@@ -532,14 +531,14 @@ export class SandstonePack {
 
   MCFunction<ENV extends readonly MacroArgument[]>(
     name: string,
-    environment_variables: ENV,
+    environmentVariables: ENV,
     callback: (loop: MCFunctionClass<undefined, ENV>) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<undefined, ENV>
 
   MCFunction<PARAMS extends readonly MacroArgument[], ENV extends readonly MacroArgument[]>(
     name: string,
-    environment_variables: ENV,
+    environmentVariables: ENV,
     callback: (loop: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void,
     options?: MCFunctionArgs
   ): MCFunctionClass<PARAMS, ENV>
@@ -556,7 +555,7 @@ export class SandstonePack {
       options?: MCFunctionArgs
     ] | [
       name: string,
-      environment_variables: ENV,
+      environmentVariables: ENV,
       callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []) => void,
       options?: MCFunctionArgs,
     ]

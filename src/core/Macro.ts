@@ -8,12 +8,18 @@ export class MacroArgument {
 
   public toMacro: () => string
 
-  readonly Macro = (strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => new MacroLiteral(this.sandstoneCore, this.local, strings, macros)
-
   constructor(protected sandstoneCore: SandstoneCore) {
     this.local = new Map()
 
-    this.toMacro = () => `$(${this.local.get(this.sandstoneCore.currentNode) || this.local.get(this.sandstoneCore.getCurrentMCFunctionOrThrow().resource.name)})`
+    this.toMacro = () => {
+      let currentMCFunctionName: string = ''
+      try {
+        currentMCFunctionName = sandstoneCore.getCurrentMCFunctionOrThrow().resource.name
+      // eslint-disable-next-line no-empty
+      } catch (e) {}
+
+      return `$(${this.local.get(this.sandstoneCore.currentNode) || this.local.get(currentMCFunctionName)})`
+    }
   }
 }
 
@@ -25,15 +31,21 @@ export function isMacroArgument(core: SandstoneCore, arg: any) {
   if (typeof arg === 'object' && Object.hasOwn(arg, 'toMacro')) {
     // eslint-disable-next-line prefer-destructuring
     const local = (arg as MacroArgument)['local']
-    if (local.has(core.getCurrentMCFunctionOrThrow().resource.name) || local.has(core.currentNode)) return arg as MacroArgument
+
+    let currentMCFunctionName: string = ''
+    try {
+      currentMCFunctionName = core.getCurrentMCFunctionOrThrow().resource.name
+    // eslint-disable-next-line no-empty
+    } catch (e) {}
+    if (arg instanceof MacroLiteral || local.has(currentMCFunctionName) || local.has(core.currentNode)) return arg as MacroArgument
   }
   return undefined
 }
 
-class MacroLiteral extends MacroArgument {
+export class MacroLiteral extends MacroArgument {
   public toMacro: () => string
 
-  constructor(public sandstoneCore: SandstoneCore, public local: Map<string, string>, public strings: TemplateStringsArray, public macros: (MacroArgument | string | number)[]) {
+  constructor(public sandstoneCore: SandstoneCore, public strings: TemplateStringsArray, public macros: (MacroArgument | string | number)[]) {
     super(sandstoneCore)
 
     this.toMacro = () => {
@@ -48,10 +60,6 @@ class MacroLiteral extends MacroArgument {
           if (typeof macro === 'string' || typeof macro === 'number') {
             result += `${macro}`
           } else {
-            const current = this.sandstoneCore.currentNode || this.sandstoneCore.getCurrentMCFunctionOrThrow().resource.name
-
-            macro['local'].set(current, this.local.get(current)!)
-
             result += macro.toMacro()
           }
         }

@@ -613,7 +613,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    * @param range The range to compare the current score against.
    */
   matches = (range: Range<false>) => ({
-    _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(range)]),
+    _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(this.sandstoneCore, range)]),
   })
 
   match = (minimum: number, maximum: number, callback: (num: number) => void) => {
@@ -634,6 +634,6 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
       MCFunction(`__sandstone:score_match/${matcher}/${i}`, () => callback(i))
     }
 
-    return MCFunction(`__sandstone:score_match/${matcher}`, [score], () => Macro.returnCmd.run.functionCmd(score.Macro`__sandstone:score_match/${matcher}/${score}`))
+    return MCFunction(`__sandstone:score_match/${matcher}`, [score], () => Macro.returnCmd.run.functionCmd(Macro`__sandstone:score_match/${matcher}/${score}`))
   }
 }

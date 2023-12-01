@@ -67,9 +67,8 @@
     "outDir": "./dist", /* Redirect output structure to the directory. */
     "rootDir": "src",
     // "composite": true, /* Enable project compilation */
-    "tsBuildInfoFile": ".tsbuildinfo", /* Specify file to store incremental compilation information */
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo", /* Specify file to store incremental compilation information */
     // "removeComments": true,                /* Do not emit comments to output. */
-    // "noEmit": true,                        /* Do not emit outputs. */
     // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
     // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
     "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
@@ -107,7 +106,7 @@
     // "emitDecoratorMetadata": true, /* Enables experimental support for emitting type metadata for decorators. */
     /* Advanced Options */
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
     "src"

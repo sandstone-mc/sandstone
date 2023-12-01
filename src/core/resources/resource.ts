@@ -72,8 +72,8 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.packType = args.packType || file.packType
 
-    this.fileExtension = file.extension
-    this.fileEncoding = file.encoding === undefined ? 'utf8' : file.encoding
+    this.fileExtension = file.extension || 'json'
+    this.fileEncoding = file.encoding ?? 'utf8'
 
     this.pack = core.pack
     this.commands = core.pack.commands

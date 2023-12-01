@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
-  "description": "Sandstone, a Typescript library for Minecraft datapacks.",
-  "version": "1.0.0-alpha.6",
+  "description": "Sandstone, a Typescript library for Minecraft datapacks & resource packs.",
+  "version": "1.0.0-beta.0",
   "contributors": [
     {
       "name": "TheMrZZ - Florian ERNST",
@@ -65,7 +65,7 @@
   "engines": {
     "node": ">=12.22.3"
   },
-  "homepage": "https://sandstone-documentation.vercel.app/",
+  "homepage": "https://sandstone.dev",
   "keywords": [
     "autocompletion",
     "creator",

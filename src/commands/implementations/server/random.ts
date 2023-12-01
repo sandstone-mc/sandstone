@@ -4,8 +4,8 @@ import { rangeParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 
 import type { Range } from 'sandstone/arguments'
-import type { LiteralUnion } from 'sandstone/utils.js'
 import type { Macroable } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils.js'
 
 export class RandomCommandNode extends CommandNode {
   command = 'random' as const
@@ -25,7 +25,7 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
     if (typeof sequence === 'string' && !sequence.includes(':')) {
       seq = `${this.sandstonePack.defaultNamespace}:${seq}`
     }
-    return this.finalCommand(['value', rangeParser(range), seq])
+    return this.finalCommand(['value', rangeParser(this.sandstoneCore, range), seq])
   }
 
   /**
@@ -39,7 +39,7 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
     if (sequence && typeof sequence === 'string' && !sequence.includes(':')) {
       seq = `${this.sandstonePack.defaultNamespace}:${seq}`
     }
-    return this.finalCommand(['roll', rangeParser(range), seq])
+    return this.finalCommand(['roll', rangeParser(this.sandstoneCore, range), seq])
   }
 
   /**

@@ -249,14 +249,14 @@ export interface SandstoneConfig {
     /**
      * The world to save the packs in.
      *
-     * Incompatible with `root` and `path`.
+     * Incompatible with `root`.
      */
     world?: string
 
     /**
      * Whether to save the resource pack & datapack in the `.minecraft/datapacks` & `.minecraft/resource_pack` folders.
      *
-     * Incompatible with `world` and `path`.
+     * Incompatible with `world`.
      */
     root?: true
 

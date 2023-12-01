@@ -6,12 +6,12 @@ import { rangeParser } from 'sandstone/variables/parsers'
 import type {
   ENTITY_TYPES, GAMEMODES, JSONTextComponent, Range, RootNBT,
 } from 'sandstone/arguments'
-import type { PredicateClass } from 'sandstone/core'
+import type { PredicateClass, SandstoneCore } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
+import type { Macroable } from '../core/Macro.js'
 import type { LiteralUnion } from '../utils.js'
 import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
 import type { LabelClass } from './Label.js'
-import type { Macroable } from '../core/Macro.js'
 import type { NotNBT } from './nbt/NBTs.js'
 
 type ScoreArgument<MACRO extends boolean> = Record<string, Range<MACRO>>
@@ -184,8 +184,8 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
 )
 
 // Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'
-function parseScore(scores: ScoreArgument<boolean>): string {
-  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, rangeParser(value)].join('=')).join(', ')}}`
+function parseScore(core: SandstoneCore, scores: ScoreArgument<boolean>): string {
+  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, rangeParser(core, value)].join('=')).join(', ')}}`
 }
 
 // Returns the string representation of advancements
@@ -236,7 +236,7 @@ export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = fal
 
     const modifiers = {
       // Parse scores
-      scores: (scores: ScoreArgument<MACRO>) => result.push(['scores', parseScore(scores)]),
+      scores: (scores: ScoreArgument<MACRO>) => result.push(['scores', parseScore(this.sandstonePack.core, scores)]),
 
       // Parse potentially multiple nbt
       nbt: (nbt: RootNBT | RootNBT[]) => {
@@ -281,7 +281,7 @@ export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = fal
         result.push(['team', teamRepr])
       },
 
-      distance: (range_: Range<MACRO>) => result.push(['distance', rangeParser(range_)]),
+      distance: (range_: Range<MACRO>) => result.push(['distance', rangeParser(this.sandstonePack.core, range_)]),
     } as const
 
     for (const [baseName, modifier] of Object.entries(modifiers)) {

@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from 'fs-extra'
 import { coerce } from 'semver'
@@ -6,11 +7,14 @@ import * as util from 'util'
 import { FormatRegistry, Type } from '@sinclair/typebox'
 
 import type FetchType from 'node-fetch'
+import type { Response } from 'node-fetch'
 import type { Static } from '@sinclair/typebox'
 import type { MultipleEntitiesArgument } from './arguments/selector.js'
 import type { UUIDinNumber } from './variables/UUID.js'
 
-export const fetch = async (...args: Parameters<typeof FetchType>) => (await import('node-fetch')).default(...args)
+/* @ts-ignore */
+export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) => Promise<Response> = Object.hasOwn(globalThis, 'fetch') ?
+  globalThis.fetch : async (...args: Parameters<typeof FetchType>) => ((await import('node-fetch')).default(...args) as unknown as Promise<Response>)
 
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.

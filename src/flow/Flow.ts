@@ -206,11 +206,11 @@ export class Flow {
     MCFunction(`__sandstone:switch_${id}`, [value], () => {
       const index = Data('storage', `__sandstone:switch_${id}`, 'Index')
 
-      Macro.data.modify.storage(index.currentTarget, 'Index').set.from.storage(values.currentTarget, value.Macro`Values[{Value:${value}}}].Index`)
+      Macro.data.modify.storage(index.currentTarget, 'Index').set.from.storage(values.currentTarget, Macro`Values[{Value:${value}}}].Index`)
 
       const _if = flow.if(index, () => {
         MCFunction(`__sandstone:switch_${id}_inner`, [index], () => {
-          Macro.functionCmd(index.Macro`__sandstone:switch_${id}_case_${index}`)
+          Macro.functionCmd(Macro`__sandstone:switch_${id}_case_${index}`)
         })()
       })
       if (_default) _if.else(() => _default?.[1]())

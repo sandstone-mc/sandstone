@@ -34,12 +34,12 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
 
     let command = this.body[0].getValue()
 
-    if (command.startsWith('/')) {
+    if (command.startsWith('$')) {
       this.isMacro = true
       command = command.slice(1)
     }
 
-    return `${this.isMacro ? '/' : ''}${this.command} run ${command}`
+    return `${this.isMacro ? '$' : ''}${this.command} run ${command}`
   }
 
   createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
