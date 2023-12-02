@@ -282,6 +282,11 @@ export interface SandstoneConfig {
      * A server path to save the server-side packs at.
      */
     serverPath?: string
+
+    /**
+     * Whether to force enable/disable symlinks. Defaults to false. Useful if you want to enable symlinks on Windows.
+     */
+    enableSymlinks?: boolean
   }
 
   /** Some scripts that can run at defined moments. */
