@@ -1,4 +1,5 @@
 import { SandstonePack } from './pack/index.js'
+import * as coordinates from './variables/Coordinates.js'
 import { ResolveNBTPart } from './variables/ResolveNBT.js'
 
 import type { JSONTextComponent } from './arguments/jsonTextComponent.js'
@@ -123,6 +124,17 @@ export const {
   makeCustomResource,
   sleep,
 } = sandstonePack
+
+// Utils
+export const {
+  absolute,
+  relative,
+  local,
+} = coordinates
+
+export const abs = absolute
+export const rel = relative
+export const loc = local
 
 export const {
   getVanillaResource,
