@@ -112,6 +112,7 @@ export const {
   _,
   Variable,
   flowVariable,
+  Trigger,
   Label,
   Data,
   DataVariable,

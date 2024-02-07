@@ -197,7 +197,6 @@ export class MCMetaCache {
   async get(branch: MCMetaBranches, relativePath: string, text: false): Promise<Buffer>
 
   async get(branch: MCMetaBranches, relativePath: string, text = true) {
-    console.log(branch, relativePath)
     if (!this.loaded) {
       await this.load()
     }

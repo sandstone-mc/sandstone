@@ -1,4 +1,6 @@
-import { DataPointPickClass, MacroArgument } from '../core/Macro.js'
+import {
+  DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral,
+} from '../core/Macro.js'
 import { nbtStringifier } from './nbt/NBTs.js'
 import { Score } from './Score.js'
 
@@ -17,22 +19,54 @@ export type DATA_TARGET = {
   'storage': string,
 }
 
-export type DATA_PATH = string | Record<string, NBTObject> | NBTObject[]
+export type DATA_PATH = string | MacroArgument | Record<string, NBTObject> | NBTObject[]
 
-export function NBTpathToString(path: DATA_PATH[]) {
-  let result = ''
-  for (const p of path) {
-    if (typeof p === 'string') {
-      if (result.length > 0) {
-        result += '.'
+export function NBTpathToString(pack: SandstonePack, paths: DATA_PATH[]) {
+  const parsedPaths: string[] = []
+
+  // Awful hack
+  /* @ts-ignore */
+  const parsedMacros: MacroArgument[] = [undefined]
+
+  let hasMacro = false
+
+  for (const [i, path] of paths.entries()) {
+    if (typeof path === 'object') {
+      if (isMacroArgument(pack.core, path)) {
+        hasMacro = true
+
+        if (Object.hasOwn(path, 'macros')) {
+          const { strings, macros } = path as MacroLiteral
+          for (const [j, macro] of macros.entries()) {
+            parsedPaths.push(strings[j])
+            if (typeof macro === 'string' || typeof macro === 'number') {
+              parsedPaths.push(`${macro}`)
+            } else {
+              parsedMacros.push(macro)
+            }
+          }
+          const last = strings[strings.length - 1]
+          if (last !== '') parsedPaths.push(`${last}.`)
+        } else {
+          parsedMacros.push(path as MacroArgument)
+        }
+      } else {
+        parsedPaths.push(nbtStringifier(path))
       }
-      result += p
-    } else {
-      result += nbtStringifier(p)
+    } else if (path !== '') {
+      parsedPaths.push(`${path}${(i === paths.length - 1) ? '' : '.'}`)
     }
   }
 
-  return result
+  if (hasMacro) {
+    /*
+     * I don't actually use the special properties of TemplateStringsArray, so I can just force cast it
+     *
+     * Also, since Macro.<command> is just a type-hack, I can just force cast this to string
+     */
+    return new MacroLiteral(pack.core, parsedPaths as unknown as TemplateStringsArray, parsedMacros) as unknown as string
+  }
+  return parsedPaths.join('')
 }
 
 export class TargetlessDataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
@@ -47,7 +81,7 @@ export class TargetlessDataPointClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   path
 
   constructor(protected sandstonePack: SandstonePack, public type: TYPE, path: DATA_PATH[]) {
-    this.path = NBTpathToString(path)
+    this.path = NBTpathToString(sandstonePack, path)
   }
 
   target = (target: DATA_TARGET[TYPE]) => new DataPointClass(this.sandstonePack, this.type, target, [this.path])
@@ -85,8 +119,12 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
 
   constructor(public sandstonePack: SandstonePack, public type: TYPE, target: DATA_TARGET[TYPE], path: DATA_PATH[]) {
     super(sandstonePack.core)
-    this.path = NBTpathToString(path)
+    this.path = NBTpathToString(sandstonePack, path)
     this.currentTarget = target
+
+    if (this.type === 'storage' && (target as string).indexOf(':') === -1) {
+      this.currentTarget = `${this.sandstonePack.core.pack.defaultNamespace}:${target}` as DATA_TARGET[TYPE]
+    }
   }
 
   target = (target: DATA_TARGET[TYPE]) => new DataPointClass(this.sandstonePack, this.type, target, [this.path])

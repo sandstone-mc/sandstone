@@ -120,9 +120,9 @@ export class Flow {
     return new WhileStatement(this.sandstoneCore, this.conditionToNode(condition), callback)
   }
 
-  for(initial: number | Score, end: (iterator: Score) => Condition, iterate: (iterator: Score) => Score, callback: (iterator: Score | number) => any): ForIStatement
+  for(initial: number | Score, end: (iterator: Score) => Condition, iterate: (iterator: Score) => Score, callback: (iterator: Score | number, _continue: () => void) => any): ForIStatement
 
-  for(range: [start: number | Score, end: number | Score], type: 'iterate', callback: (iterator: Score) => any): ForIStatement
+  for(range: [start: number | Score, end: number | Score], type: 'iterate', callback: (iterator: Score, _continue: () => void) => any): ForIStatement
 
   for(range: [start: number | Score, end: number | Score, maximum?: number], type: 'binary', callback: (num: number) => any): void
 
@@ -137,8 +137,9 @@ export class Flow {
   for(
     arg1: (number | Score) | ForOfIterator | [start: number | Score, end: number | Score, maximum?: number],
     arg2: ((iterator: Score) => Condition) | 'of' | 'iterate' | 'binary',
-    arg3: ((iterator: Score) => Score) | IterableDataClass | ((num: number) => any) | ((iterator: Score) => any),
-    arg4?: (() => any) | ((entry: DataPointClass) => any) | ((key: StringDataPointClass, value: DataPointClass) => any) | ((i: Score, value: DataPointClass) => any),
+    arg3: ((iterator: Score) => Score) | IterableDataClass | ((num: number) => any) | ((iterator: Score, _continue: () => void) => any),
+    // eslint-disable-next-line max-len
+    arg4?: ((iterator: Score, _continue: () => void) => any) | ((entry: DataPointClass) => any) | ((key: StringDataPointClass, value: DataPointClass) => any) | ((i: Score, value: DataPointClass) => any),
   ) {
     if (typeof arg1 === 'number' || arg1 instanceof Score) {
       return new ForIStatement(this.sandstoneCore, arg1, arg2 as (iterator: Score) => Condition, arg3 as (iterator: Score) => Score, arg4 as (iterator: Score | number) => any)

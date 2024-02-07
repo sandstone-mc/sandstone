@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 import { ExecuteCommandNode, FunctionCommandNode } from 'sandstone/commands'
 import { CommandNode } from 'sandstone/core/nodes'
+import { LoopArgument } from 'sandstone/variables'
 
 import { GenericSandstoneVisitor } from './visitor.js'
 
@@ -31,10 +32,37 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
     }
 
     // We know the function is a single-node function.
-    const command = mcFunctionNode.body[0]
+    let command = mcFunctionNode.body[0]
 
     if (!(command instanceof CommandNode)) {
       return this.genericVisit(node)
+    }
+
+    if (command instanceof LoopArgument) {
+      return new FunctionCommandNode(this.pack, mcFunctionNode.resource.name)
+    }
+
+    // Yes this should be recursive, but I'm lazy. This cleans up Flow's mess.
+    if (command instanceof FunctionCommandNode) {
+      const innerMCFunction = command.args[0]
+
+      if (typeof innerMCFunction === 'string') {
+        return this.genericVisit(node)
+      }
+
+      console.log('please')
+
+      const innerMCFunctionNode = innerMCFunction['node']
+
+      if (innerMCFunctionNode.body.length > 1) {
+        return this.genericVisit(node)
+      }
+
+      command = innerMCFunctionNode.body[0]
+
+      if (innerMCFunction['creator'] === 'sandstone') {
+        this.core.resourceNodes.delete(innerMCFunctionNode)
+      }
     }
 
     /*
@@ -45,8 +73,8 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
       return this.genericVisit(node)
     }
 
-    // We can safely simplify the execute. If the called command is not a user-created MCFunction, we can safely delete it.
-    node.body = [command]
+    // We can safely simplify the execute. If the called command is not a user-created MCFunction, we can safely delete it.]
+    node.body = [this.genericVisit(command)]
 
     if (mcFunction['creator'] === 'sandstone') {
       this.core.resourceNodes.delete(mcFunctionNode)

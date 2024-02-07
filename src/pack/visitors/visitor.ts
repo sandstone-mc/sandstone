@@ -6,18 +6,23 @@ import type {
 import type { GenericNodeVisitor } from 'sandstone/core/visitors'
 import type { ElseNode, IfNode, LoopNode } from 'sandstone/flow'
 import type { SandstonePack } from 'sandstone/pack'
+import type { LoopArgument } from 'sandstone/variables'
 
 export class GenericSandstoneVisitor extends GenericCoreVisitor {
   constructor(public readonly pack: SandstonePack) {
     super(pack.core)
   }
 
-  // Other
+  // Flow
   visitIfNode?: GenericNodeVisitor<IfNode>
 
   visitElseNode?: GenericNodeVisitor<ElseNode>
 
   visitLoopNode?: GenericNodeVisitor<LoopNode>
+
+  // Variables
+
+  visitLoopArgumentNode?: GenericNodeVisitor<LoopArgument>
 
   // Commands
   visitAdvancementCommandNode?: GenericNodeVisitor<AdvancementCommandNode>

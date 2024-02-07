@@ -25,12 +25,12 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
       this.core.resourceNodes.add(visitedMCFunction)
     } else if (node instanceof ContainerCommandNode && node.body) {
       for (const [i, child] of node.body.entries()) {
-        const visit = this.visit(child)
+        const visit = this.genericVisit(child)
         node.body.splice(i, 1, ...(Array.isArray(visit) ? visit : [visit]))
       }
     }
 
-    return Array.isArray(node) ? node.flatMap((n) => this.visit(n)) : node
+    return Array.isArray(node) ? node.flatMap((n) => this.genericVisit(n)) : node
   }
 
   visitMCFunctionNode = (node: MCFunctionNode) => {
@@ -39,8 +39,12 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
 
     this.currentMCFunction = node
 
+    this.core.currentNode = node.resource.name
+
     // Visit the children of this node
     const result = this.genericVisit(node)
+
+    this.core.currentNode = prev?.resource.name ?? ''
 
     this.currentMCFunction = prev
 

@@ -616,7 +616,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(this.sandstoneCore, range)]),
   })
 
-  match = (minimum: number, maximum: number, callback: (num: number) => void) => {
+  match = (minimum: number, maximum: number, callback: (num: number) => any) => {
     const { MCFunction, Macro } = this.sandstonePack
 
     if (maximum > 1000) {

@@ -5,8 +5,8 @@ import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 
 import type { MOB_EFFECTS, MultipleEntitiesArgument } from 'sandstone/arguments'
-import type { LiteralUnion } from 'sandstone/utils'
 import type { Macroable } from 'sandstone/core'
+import type { LiteralUnion } from 'sandstone/utils'
 
 export class EffectCommandNode extends CommandNode {
   command = 'effect' as const

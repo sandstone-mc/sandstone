@@ -1,14 +1,16 @@
 import { CommandNode } from 'sandstone/core/nodes'
+import { nbtStringifier } from 'sandstone/variables'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 
 import { CommandArguments } from '../../helpers.js'
 
 import type {
   CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS,
-  ITEMS, MultipleEntitiesArgument,
+  ITEMS, MultipleEntitiesArgument, RootNBT,
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { FinalCommandOutput } from '../../helpers.js'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
@@ -20,7 +22,26 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
    * @param item The item to replace the slot with.
    * @param count The amount of items.
    */
-  with = (item: Macroable<LiteralUnion<ITEMS>, MACRO>, count: Macroable<number, MACRO>) => this.finalCommand(['with', item, count])
+  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, count: Macroable<number, MACRO>): FinalCommandOutput
+
+  /**
+   * Replace the slot with a specific item.
+   * @param item The item to replace the slot with.
+   * @param nbt The nbt of the item to replace the slot with.
+   * @param count The amount of items.
+   */
+  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, nbt: Macroable<RootNBT, MACRO>, count: Macroable<number, MACRO>): FinalCommandOutput
+
+  with(
+    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    countOrNBT?: Macroable<number | RootNBT, MACRO>,
+    count?: Macroable<number, MACRO>,
+  ) {
+    if (typeof countOrNBT === 'object') {
+      return this.finalCommand(['with', `${item}${nbtStringifier(countOrNBT)}`, count])
+    }
+    return this.finalCommand(['with', item, countOrNBT])
+  }
 
   from = {
     /**
@@ -82,7 +103,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      * @param pos The position of the container containing the slot to be replaced.
      * @param slot The slot to be replaced.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) => this.subCommand(['block', pos, slot], ItemSourceCommand<MACRO>, false),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) => this.subCommand(['replace', 'block', pos, slot], ItemSourceCommand<MACRO>, false),
 
     /**
      * @param targets one or more entities to modify.
@@ -92,6 +113,6 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
       slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
-    ) => this.subCommand(['entity', targetParser(targets), slot], ItemSourceCommand<MACRO>, false),
+    ) => this.subCommand(['replace', 'entity', targetParser(targets), slot], ItemSourceCommand<MACRO>, false),
   }
 }

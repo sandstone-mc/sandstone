@@ -1,3 +1,4 @@
+import { type Macroable, type MacroArgument, isMacroArgument } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
@@ -5,8 +6,7 @@ import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 
 import type { Coordinates, NBTObject, SingleEntityArgument } from 'sandstone/arguments'
-import type { Macroable, MacroArgument } from 'sandstone/core'
-import type { VectorClass } from 'sandstone/variables'
+import type { DataPointClass, VectorClass } from 'sandstone/variables'
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const
@@ -111,12 +111,18 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
     entity: (source: Macroable<SingleEntityArgument<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>) => this.finalCommand(['from', 'entity', targetParser(source), sourcePath]),
 
     /**
-     * Modify with the NBT of a given storage path.
+     * Modify with the NBT of a given storage point or path.
      *
-     * @param source The storage path to modify the NBT with.
-     * @param sourcePath The path of the NBT to modify with.
+     * @param source The storage point or target to modify the NBT with.
+     *
+     * @param sourcePath If a point isn't specified, the path of the NBT to modify with.
      */
-    storage: (source: Macroable<string, MACRO>, sourcePath: Macroable<string, MACRO>) => this.finalCommand(['from', 'storage', source, sourcePath]),
+    storage: ((...args: [
+      source: DataPointClass<'storage'>
+    ] | [
+      source: Macroable<string, MACRO>, sourcePath: Macroable<string, MACRO>
+      /* @ts-ignore */
+    ]) => this.finalCommand(['from', 'storage', isMacroArgument(this.sandstoneCore, args[0]) || (typeof args[0] === 'string' ? args[0] : `${args[0].currentTarget} ${args[0].path}`), args[1]])),
   }
 
   string = {

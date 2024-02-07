@@ -10,10 +10,10 @@ export class LoopArgument extends Node {
   }
 
   getValue() {
-    throw new Error('Loop arguments are not supported in Minecraft. This must be postprocessed.')
+    return this.toLoop()
   }
 
   toLoop() {
-    return this.pack.commands.functionCmd(this.pack.core.currentNode)['node'].getValue()
+    return `function ${this.pack.core.currentNode}`
   }
 }

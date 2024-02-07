@@ -1,41 +1,32 @@
+import { type SubCommand, ExecuteCommandNode } from 'sandstone/commands'
 import { LoopArgument } from 'sandstone/variables'
 
-import { IfStatement } from '../if_else.js'
 import { LoopNode } from '../loop.js'
 
-import type { SubCommand } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
 import type { Score } from 'sandstone/variables'
 import type { Condition } from '../index.js'
 
 export class ForINode extends LoopNode {
   // eslint-disable-next-line max-len
-  constructor(sandstoneCore: SandstoneCore, initialValue: number | Score, endCondition: (iterator: Score) => Condition, iterate: (iterator: Score) => Score, callback: (iterator: number | Score) => any) {
-    callback(initialValue)
-
-    // Since we're calling the callback once regardless, we need to increase the initial value by 1
-
-    let initial = initialValue
-
-    if (typeof initial === 'number') {
-      initial += 1
-    }
-
+  constructor(sandstoneCore: SandstoneCore, initialValue: number | Score, endCondition: (iterator: Score) => Condition, iterate: (iterator: Score) => Score, callback: (iterator: number | Score, _continue: () => void) => any) {
     const iterator = sandstoneCore.pack.Variable(initialValue, 'loop_iterator')
-
-    if (typeof initial !== 'number') {
-      iterator.increase()
-    }
 
     const condition = sandstoneCore.pack._.conditionToNode(endCondition(iterator))
 
     const value = condition.getValue().split(' ')
 
-    const conditionValue: SubCommand = [value[0], value.join(' ')]
+    const conditionValue: SubCommand = [value[0], value.slice(1).join(' ')]
 
-    super(sandstoneCore, [conditionValue], () => callback(iterator), () => {
+    const _continue = () => sandstoneCore.pack.commands.returnCmd.run(() => new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], { body: [new LoopArgument(sandstoneCore.pack)] }))
+
+    callback(iterator, _continue)
+
+    iterate(iterator)
+
+    super(sandstoneCore, [conditionValue], () => callback(iterator, _continue), () => {
       iterate(iterator)
-      return new IfStatement(sandstoneCore, condition, () => new LoopArgument(sandstoneCore.pack))
+      return new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], { body: [new LoopArgument(sandstoneCore.pack)] })
     })
   }
 }

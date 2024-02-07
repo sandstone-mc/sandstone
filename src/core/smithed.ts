@@ -139,7 +139,7 @@ export class SmithedDependencyCache {
         url += `@${version}`
       }
 
-      const files = (new AdmZip(await (await fetch(url)).buffer())).getEntries()
+      const files = (new AdmZip(Buffer.from(await (await fetch(url)).arrayBuffer()))).getEntries()
 
       const datapack: Buffer = await new Promise((res) => {
         files[0].getDataAsync((data) => res(data as Buffer))

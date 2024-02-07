@@ -2,7 +2,7 @@
 /* eslint-disable no-plusplus */
 import { SandstoneCommands } from 'sandstone/commands'
 import {
-  AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, ItemModifierClass, LanguageClass, LootTableClass,
+  AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, isMacroArgument, ItemModifierClass, LanguageClass, LootTableClass,
   MacroLiteral,
   MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
 } from 'sandstone/core'
@@ -10,14 +10,10 @@ import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
 import { makeCallable, randomUUID } from 'sandstone/utils'
 import {
-  coordinatesParser,
-  DataArray,
-  DataClass, DataIndexMap, DataPointClass, LabelClass, LoopArgument, ObjectiveClass, SelectorClass, TargetlessDataClass, TargetlessDataPointClass, VectorClass,
+  coordinatesParser, DataArray, DataClass, DataIndexMap, DataPointClass, LabelClass, LoopArgument, ObjectiveClass, Score, SelectorClass, SleepClass, TargetlessDataClass, TargetlessDataPointClass, TriggerClass, UUIDClass,
+  VectorClass,
 } from 'sandstone/variables'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
-import { Score } from 'sandstone/variables/Score'
-import { SleepClass } from 'sandstone/variables/Sleep'
-import { UUIDClass } from 'sandstone/variables/UUID'
 
 import { PackType } from './packType.js'
 import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
@@ -41,11 +37,8 @@ import type {
 } from 'sandstone/core'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type {
-  DATA_PATH, DATA_TARGET, DATA_TYPES, SelectorCreator, SelectorProperties,
+  DATA_PATH, DATA_TARGET, DATA_TYPES, SelectorCreator, SelectorProperties, TriggerHandler, UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
 } from 'sandstone/variables'
-import type {
-  UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
-} from 'sandstone/variables/UUID'
 import type { handlerReadFile, handlerWriteFile } from './packType.js'
 
 export type ResourcePath = string[]
@@ -358,6 +351,8 @@ export class SandstonePack {
     return this.rootObjective('if_result')
   }
 
+  Trigger = (name: string, callback: TriggerHandler, pollingEvery = 1) => new TriggerClass(this.core, name, callback, pollingEvery)
+
   /**
    * Creates a new label
    * @param label Label/tag name
@@ -375,20 +370,23 @@ export class SandstonePack {
 
   Data<T extends 'entity'>(type: T, target: SingleEntityArgument<false>): DataClass<T>
 
-  Data<T extends 'storage'>(type: T, target: string): DataClass<T>
+  Data<T extends 'storage'>(type: T, target: MacroArgument | string): DataClass<T>
 
   Data<T extends 'block'>(type: T, target: Coordinates<false>): DataClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target: undefined, path: DATA_PATH | DATA_PATH[]): TargetlessDataPointClass<T>
+  Data<T extends DATA_TYPES>(type: T, target: undefined, path: MacroArgument | DATA_PATH | DATA_PATH[]): TargetlessDataPointClass<T>
 
-  Data<T extends 'entity'>(type: T, target: SingleEntityArgument<false>, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'entity'>(type: T, target: SingleEntityArgument<false>, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>
 
-  Data<T extends 'storage'>(type: T, target: string, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'storage'>(type: T, target: MacroArgument | string, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>
 
-  Data<T extends 'block'>(type: T, target: Coordinates<false>, path: DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'block'>(type: T, target: Coordinates<false>, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target?: SingleEntityArgument<false> | string | Coordinates<false>, path?: DATA_PATH | DATA_PATH[]) {
+  Data<T extends DATA_TYPES>(type: T, target?: SingleEntityArgument<false> | string | Coordinates<false> | MacroArgument, path?: MacroArgument | DATA_PATH | DATA_PATH[]) {
     const dataPath = path ?? typeof path === 'string' ? [path] : path
+
+    // Since Macros technically don't need to be used with `Macro.`, this is fine. Its hacky. But whatever.
+
     if (!path && !target) {
       return new TargetlessDataClass(this, type)
     }
@@ -396,7 +394,7 @@ export class SandstonePack {
       return new TargetlessDataPointClass(this, type, dataPath as DATA_PATH[])
     }
     if (!path) {
-      return new DataClass(this, type, (type === 'block' ? coordinatesParser(target) : target) as DATA_TARGET[T])
+      return new DataClass(this, type, (isMacroArgument(this.core, target) || (type === 'block' ? coordinatesParser(target) : target)) as DATA_TARGET[T])
     }
 
     return new DataPointClass(this, type, (target instanceof VectorClass ? coordinatesParser(target) : target) as DATA_TARGET[T], dataPath as DATA_PATH[])
@@ -565,8 +563,8 @@ export class SandstonePack {
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
-      ...(typeof args[1] === 'function' ? args[2] : args[3]),
-    }, (typeof args[1] !== 'function' && Array.isArray(args[1])) ? args[1] : undefined) as MCFunctionClass<PARAMS, ENV>
+      ...(Array.isArray(args[1]) ? args[3] : (args[2] || args[1])),
+    }, (Array.isArray(args[1])) ? args[1] : undefined) as MCFunctionClass<PARAMS, ENV>
   }
 
   appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
@@ -590,6 +588,9 @@ export class SandstonePack {
    * Register commands that will be ticked at the rate you specify
    */
   registerTickedCommands(runEvery: TimeArgument, callback: () => void) {
+    if (typeof runEvery === 'number') {
+      runEvery = `${runEvery}t` // Normalize map key
+    }
     if (this.tickedLoops[runEvery]) {
       this.tickedLoops[runEvery].push(callback)
     } else {

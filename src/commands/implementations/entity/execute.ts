@@ -125,12 +125,12 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       return executeString
     }
 
+    let command = this.body[0].getValue()
+
     // Yes this is cursed
     if (this.isFake) {
-      return this.body[0].getValue()
+      return command
     }
-
-    let command = this.body[0].getValue()
 
     if (command.startsWith('$')) {
       this.isMacro = true

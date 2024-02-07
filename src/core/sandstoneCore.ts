@@ -22,7 +22,7 @@ export class SandstoneCore {
 
   awaitNodes: Set<AwaitNode>
 
-  currentNode: string = ''
+  currentNode = ''
 
   mcmetaCache = new MCMetaCache()
 
