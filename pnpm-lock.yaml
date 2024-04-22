@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@sinclair/typebox':
-    specifier: ^0.31.21
-    version: 0.31.21
+    specifier: ^0.32.22
+    version: 0.32.22
   '@smithed-mc/data-types':
     specifier: ^0.1.2
     version: 0.1.2
@@ -469,8 +469,8 @@ packages:
     resolution: {integrity: sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ==}
     dev: false
 
-  /@sinclair/typebox@0.31.21:
-    resolution: {integrity: sha512-Wtq/K44EMkREaXytK+2c5DrygtYsH7ZxT0StQL8HMJz2BoOM7NZ/xfrUFBVuZxDrhJCoXf5Im282P2CCz5DHwQ==}
+  /@sinclair/typebox@0.32.22:
+    resolution: {integrity: sha512-4uH8BLhNbptL2UkfS/a63tQ6uZGGZ4DT6zFq7ZkE+KQi7/56ZYkkWniAqz4bUr4cZGfoR83zRvSh39ZpH8DKDw==}
     dev: false
 
   /@smithed-mc/data-types@0.1.2:
