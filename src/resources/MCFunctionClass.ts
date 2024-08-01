@@ -191,7 +191,7 @@ export class MCFunctionClass<R extends void | Promise<void> = void | Promise<voi
 
     // If the command was scheduled to run each n ticks, add the /schedule command
     if (runEachDelay) {
-      this.datapack.commandsRoot.schedule.function(this.name, runEachDelay, 'append')
+      this.datapack.commandsRoot.schedule.function(this.name, runEachDelay, 'replace')
     }
 
     const afterCall = () => {
