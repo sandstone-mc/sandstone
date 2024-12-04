@@ -16,7 +16,7 @@ import type { Score } from 'sandstone/variables'
 
 // Yes this sucks
 
-const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'unaryOperation')
+const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'setDisplay')
 
 function scoresParser(...args: unknown[]) {
   return args.map((_arg, i) => {
