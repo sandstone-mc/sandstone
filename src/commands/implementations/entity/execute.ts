@@ -37,7 +37,7 @@ export type SubCommand = [subcommand: string, ...args: unknown[]]
 
 const isObjective = (arg: any): arg is ObjectiveClass => typeof arg === 'object' && Object.hasOwn(arg, 'reset')
 
-const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'unaryOperation')
+const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'setDisplay')
 
 class ExecuteCommandPart<MACRO extends boolean> extends CommandArguments<typeof ExecuteCommandNode> {
   protected nestedExecute = (args: SubCommand, executable = true) => this.subCommand([args], ExecuteCommand<MACRO>, executable)
