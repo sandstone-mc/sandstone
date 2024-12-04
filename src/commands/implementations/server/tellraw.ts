@@ -17,5 +17,5 @@ export class TellRawCommand<MACRO extends boolean> extends CommandArguments {
   tellraw = (
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
     message: Macroable<JSONTextComponent, MACRO>,
-  ) => this.finalCommand([targetParser(targets), parseJSONText(message)])
+  ) => this.finalCommand([targetParser(targets), parseJSONText(this.sandstoneCore, message)])
 }

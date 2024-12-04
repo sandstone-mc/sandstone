@@ -16,11 +16,11 @@ export class TitleArgumentsCommand<MACRO extends boolean> extends CommandArgumen
 
   reset = () => this.finalCommand(['reset'])
 
-  title = (title: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['title', parseJSONText(title)])
+  title = (title: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['title', parseJSONText(this.sandstoneCore, title)])
 
-  subtitle = (subtitle: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['subtitle', parseJSONText(subtitle)])
+  subtitle = (subtitle: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['subtitle', parseJSONText(this.sandstoneCore, subtitle)])
 
-  actionbar = (actionbarText: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['actionbar', parseJSONText(actionbarText)])
+  actionbar = (actionbarText: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['actionbar', parseJSONText(this.sandstoneCore, actionbarText)])
 
   times = (fadeIn: Macroable<TimeArgument, MACRO>, stay: Macroable<TimeArgument, MACRO>, fadeOut: Macroable<TimeArgument, MACRO>) => this.finalCommand(['times', fadeIn, stay, fadeOut])
 }

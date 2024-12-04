@@ -92,12 +92,12 @@ export class Flow {
       tellraw(broadcast || '@a', fullError)
     }
 
-    const errorString = parseJSONText(fullError) as unknown as string
+    const errorString = parseJSONText(this.sandstoneCore, fullError) as unknown as string
 
     if (dataPoint !== false) {
       let point
       if (dataPoint === undefined) {
-        point = DataVariable(parseJSONText(fullError) as unknown as string)
+        point = DataVariable(parseJSONText(this.sandstoneCore, fullError) as unknown as string)
       } else {
         point = dataPoint.set(errorString)
       }

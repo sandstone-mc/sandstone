@@ -1,14 +1,16 @@
+import { type MacroArgument, isMacroArgument } from '../core/Macro.js'
+
 import type { JSONTextComponent } from 'sandstone/arguments'
-import type { MacroArgument } from '../core/Macro.js'
+import type { SandstoneCore } from '../core/sandstoneCore.js'
 
 function toComponent(c: any): JSONTextComponent {
   return c._toSelector?.() ?? c._toChatComponent?.() ?? c.toJSON?.() ?? c
 }
 
-export function parseJSONText(jsonText: undefined | MacroArgument | JSONTextComponent): undefined | MacroArgument | JSONTextComponentClass {
+export function parseJSONText(core: SandstoneCore, jsonText: undefined | MacroArgument | JSONTextComponent): undefined | MacroArgument | JSONTextComponentClass {
   if (jsonText === undefined) return undefined
 
-  if (typeof jsonText === 'object' && Object.hasOwn(jsonText, 'toMacro')) {
+  if (isMacroArgument(core, jsonText)) {
     return jsonText as MacroArgument
   }
 

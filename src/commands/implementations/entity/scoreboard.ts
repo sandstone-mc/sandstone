@@ -41,7 +41,7 @@ export class ScoreboardObjectivesModifyCommand<MACRO extends boolean> extends Co
    *
    * @param displayName The new display name. Must be a JSON text component.
    */
-  displayname = (displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['displayname', parseJSONText(displayName)])
+  displayname = (displayName?: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['displayname', parseJSONText(this.sandstoneCore, displayName)])
 
   /**
    * Change the display format of health bars.
@@ -149,9 +149,9 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
         name: Macroable<JSONTextComponent, MACRO>,
       ]) => {
         if (isScore(args[1])) {
-          args[1] = parseJSONText(args[1] as JSONTextComponent) as any
+          args[1] = parseJSONText(this.sandstoneCore, args[1] as JSONTextComponent) as any
         } else {
-          args[2] = parseJSONText(args[2] as JSONTextComponent) as any
+          args[2] = parseJSONText(this.sandstoneCore, args[2] as JSONTextComponent) as any
         }
         return this.finalCommand(['players', 'display', 'name', ...scoresParser(...args)])
       },
@@ -161,16 +161,16 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
         ...format: [format: 'blank'] | [format: 'styled', style: Macroable<FormattingTags, MACRO>] | [format: 'fixed', rightColumn: Macroable<JSONTextComponent, MACRO>],
       ]) => {
         if (args[1] === 'styled') {
-          args[2] = parseJSONText(args[2] as JSONTextComponent) as any
+          args[2] = parseJSONText(this.sandstoneCore, args[2] as JSONTextComponent) as any
         }
         if (args[2] === 'styled') {
-          args[3] = parseJSONText(args[3] as JSONTextComponent) as any
+          args[3] = parseJSONText(this.sandstoneCore, args[3] as JSONTextComponent) as any
         }
         if (args[1] === 'fixed') {
-          args[2] = parseJSONText(args[2] as JSONTextComponent) as any
+          args[2] = parseJSONText(this.sandstoneCore, args[2] as JSONTextComponent) as any
         }
         if (args[2] === 'fixed') {
-          args[3] = parseJSONText(args[3] as JSONTextComponent) as any
+          args[3] = parseJSONText(this.sandstoneCore, args[3] as JSONTextComponent) as any
         }
         return this.finalCommand(['players', 'display', 'numberformat', ...scoresParser(...args)])
       },

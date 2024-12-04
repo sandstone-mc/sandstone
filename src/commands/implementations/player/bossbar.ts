@@ -23,7 +23,7 @@ export class BossBarCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param name The display name of the boss bar.
    */
-  add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['add', id, parseJSONText(name)])
+  add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['add', id, parseJSONText(this.sandstoneCore, name)])
 
   /**
    * Return the requested setting as a result of the command.
