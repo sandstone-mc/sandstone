@@ -5,7 +5,7 @@ import { CommandArguments } from '../../helpers.js'
 
 import type { Range } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
-import type { LiteralUnion } from 'sandstone/utils.js'
+import type { LiteralUnion } from '../../../utils.js'
 
 export class RandomCommandNode extends CommandNode {
   command = 'random' as const

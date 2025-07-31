@@ -21,6 +21,7 @@ import {
   ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LoopTransformationVisitor,
+  OrTransformationVisitor,
   SimplifyExecuteFunctionVisitor, SimplifyReturnRunFunctionVisitor, UnifyChainedExecutesVisitor,
 } from './visitors/index.js'
 
@@ -124,7 +125,11 @@ export class SandstonePack {
 
   packTypes: Map<string, PackType>
 
-  packOptions = JSON.parse(process.env.PACK_OPTIONS as string)
+  packOptions = process.env.PACK_OPTIONS ? JSON.parse(process.env.PACK_OPTIONS) : {
+    datapack: {
+      packFormat: 31,
+    },
+  }
 
   dataPack() {
     let pack = this.packTypes.get('datapack') as DataPack
@@ -826,6 +831,7 @@ export class SandstonePack {
 
         // Transformation visitors
         new LoopTransformationVisitor(this),
+        new OrTransformationVisitor(this),
         new IfElseTransformationVisitor(this),
         new ContainerCommandsToMCFunctionVisitor(this),
 

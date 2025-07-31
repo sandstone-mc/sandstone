@@ -9,10 +9,12 @@ import type {
 import type { PredicateClass, SandstoneCore } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
 import type { Macroable } from '../core/Macro.js'
-import type { LiteralUnion } from '../utils.js'
+import { formatDebugString, type LiteralUnion } from '../utils.js'
 import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
 import type { LabelClass } from './Label.js'
 import type { NotNBT } from './nbt/NBTs.js'
+
+import * as util from 'node:util'
 
 type ScoreArgument<MACRO extends boolean> = Record<string, Range<MACRO>>
 
@@ -326,6 +328,10 @@ export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = fal
 
   protected toJSON() {
     return this.toString()
+  }
+
+  [util.inspect.custom]() {
+    return formatDebugString(this.constructor.name, this.toString(), undefined, undefined)
   }
 }
 

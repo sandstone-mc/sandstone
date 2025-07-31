@@ -1,4 +1,4 @@
-import { makeClassCallable } from 'sandstone/utils'
+import { formatDebugString, makeClassCallable } from 'sandstone/utils'
 
 import { JSONTextComponentClass } from './JSONTextComponentClass.js'
 import { targetParser } from './parsers.js'
@@ -8,6 +8,7 @@ import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION }
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type { SandstonePack } from '../pack/index.js'
 import type { ScoreDisplay } from './Score.js'
+import * as util from 'node:util'
 
 export class _RawObjectiveClass {
   display: JSONTextComponentClass | undefined
@@ -36,6 +37,16 @@ export class _RawObjectiveClass {
   toString() {
     return this.name
   }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, {
+      name: this.name,
+      criteria: this.criteria,
+      display: this.display,
+      creator: this.creator,
+    }, undefined, options.indent)
+  }
+
 
   toJSON = this.toString
 

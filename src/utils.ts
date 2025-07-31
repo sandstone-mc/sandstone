@@ -12,6 +12,8 @@ import type { Static } from '@sinclair/typebox'
 import type { MultipleEntitiesArgument } from './arguments/selector.js'
 import type { UUIDinNumber } from './variables/UUID.js'
 
+import type { Node } from './core/nodes.js'
+
 /* @ts-ignore */
 export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) => Promise<Response> = Object.hasOwn(globalThis, 'fetch') ?
   globalThis.fetch : async (...args: Parameters<typeof FetchType>) => ((await import('node-fetch')).default(...args) as unknown as Promise<Response>)
@@ -346,4 +348,45 @@ export async function safeWrite(...args: Partial<Parameters<typeof fs['writeFile
 
 export function sanitizeTarget(target: MultipleEntitiesArgument<false>) {
   return `${target}`.toLowerCase().replaceAll(/-|=|\[|\]|\{|\}|:|"|'|,|@/g, '_')
+}
+
+/**
+ * Formats a debug string for a class instance, including its arguments and body.
+ * Must be called from the [util.inspect.custom] method.
+ * 
+ * @param className The name of the class.
+ * @param args The arguments passed to the class instance. It can be an array or an object.
+ * @param body The body of the class instance, typically an array of nodes.
+ * @param currentIndent The current indentation level.
+ */
+export function formatDebugString(className: string, args: undefined | any[] | Record<string, any> | string, body: Node[] | undefined, currentIndent: string | undefined ) {
+  const FIXED_INDENT = '  '
+  const indent = currentIndent || ''
+  const nextIndent = indent + FIXED_INDENT
+  const options = { indent: nextIndent } as any
+
+  let argsString
+  if (typeof args === 'string') {
+    argsString = args
+  } else if (Array.isArray(args)) {
+    argsString = args.map((arg) => util.inspect(arg, options)).join(', ')
+  } else if (args && typeof args === 'object') {
+    argsString = Object.entries(args).map(([key, value]) => `${key}: ${util.inspect(value, options)}`).join(', ')
+  } else {
+    argsString = ''
+  }
+
+  const bodyString = typeof body === 'undefined' ? '' : body.map((node) => {
+    return util.inspect(node, options)
+  }).join(`\n${nextIndent}`)
+
+  const rainbowBracketColors = ['yellow', 'green', 'cyan', 'blue', 'magenta', 'redBright', 'yellowBright', 'greenBright', 'cyanBright', 'blueBright', 'magentaBright'] as const
+  const bracketColor = rainbowBracketColors[(indent.length / FIXED_INDENT.length) % rainbowBracketColors.length]
+
+  const realArgsString = argsString.length === 0 ? '' : `(${argsString})`
+  const realBodyString = bodyString.length === 0 ? '' : ` ${util.styleText(bracketColor, '{')}\n${nextIndent}${bodyString}\n${indent}${util.styleText(bracketColor, '}')}`
+
+  const classNameString = (util as any).styleText('green', className)
+  
+  return `${classNameString}${realArgsString}${realBodyString}`
 }

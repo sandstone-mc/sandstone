@@ -27,13 +27,13 @@ function isRawRotation(arg: unknown): arg is [string, string] {
 export function coordinatesParser<T>(coordinates: T): (
   T extends Coordinates<boolean> ? VectorClass<[string, string, string]> : T
 ) {
-  return isRawCoordinates(coordinates) ? new VectorClass(coordinates) : coordinates as any
+  return isRawCoordinates(coordinates) ? new VectorClass(coordinates) as any : coordinates as any
 }
 
 export function rotationParser<T>(rotation: T): (
   T extends Rotation<boolean> ? VectorClass<[string, string]> : T
 ) {
-  return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
+  return isRawRotation(rotation) ? new VectorClass(rotation) as any : rotation as any
 }
 
 // Sanitize score values. null => '', Infinity => '', any number => itself

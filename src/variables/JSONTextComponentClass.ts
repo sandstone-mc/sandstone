@@ -2,6 +2,8 @@ import { type MacroArgument, isMacroArgument } from '../core/Macro.js'
 
 import type { JSONTextComponent } from 'sandstone/arguments'
 import type { SandstoneCore } from '../core/sandstoneCore.js'
+import * as util from 'node:util'
+import { formatDebugString } from '../utils.js'
 
 function toComponent(c: any): JSONTextComponent {
   return c._toSelector?.() ?? c._toChatComponent?.() ?? c.toJSON?.() ?? c
@@ -47,5 +49,9 @@ export class JSONTextComponentClass {
 
   toJSON() {
     return JSON.parse(this.toString())
+  }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, this.toString(), undefined, options.indent)
   }
 }

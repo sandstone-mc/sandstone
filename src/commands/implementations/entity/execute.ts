@@ -563,7 +563,13 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
       },
     })
 
-    return makeCallable(commands, (callback: () => any) => {
+    return makeCallable(commands, (...args: [callback: () => any] | [name: string, callback: () => any]) => {
+      const callback = args.length === 1 ? args[0] : args[1]
+
+      if (args.length === 2) {
+        node.givenCallbackName = args[0]
+      }
+      
       node.isSingleExecute = false
       this.sandstoneCore.insideContext(node, callback, false)
       return new FinalCommandOutput(node)

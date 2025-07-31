@@ -59,7 +59,7 @@ export class MCMetaCache {
             contents = contents.toString('utf-8')
           }
 
-          await safeWrite(path.join(this.path, file), contents)
+          await safeWrite(path.join(this.path, file), contents as any)
 
           this.files.set(file, { contents, text: text as false })
         }
@@ -101,7 +101,7 @@ export class MCMetaCache {
               contents = contents.toString('utf-8')
             }
 
-            await safeWrite(path.join(this.path, file), contents)
+            await safeWrite(path.join(this.path, file), contents as any)
 
             this.files.set(file, { contents, text: text as false })
           }
@@ -137,7 +137,7 @@ export class MCMetaCache {
                 contents = contents.toString('utf-8')
               }
 
-              await safeWrite(path.join(this.path, file), contents)
+              await safeWrite(path.join(this.path, file), contents as any)
 
               this.files.set(file, { contents, text: text as false })
             }
@@ -218,7 +218,7 @@ export class MCMetaCache {
 
     const finalPath = path.join(this.path, fullPath)
 
-    await safeWrite(finalPath, file)
+    await safeWrite(finalPath, file as any)
 
     return (this.files.set(fullPath, { text, contents: file }).get(fullPath)!).contents as Buffer | string
   }

@@ -140,7 +140,7 @@ export const loc = local
 export const {
   getVanillaResource,
   getExistingResource,
-  mcmetaCache,
+  getMcMetaCache,
   depend,
 
 } = sandstonePack.core

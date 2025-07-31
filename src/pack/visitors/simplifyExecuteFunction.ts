@@ -50,8 +50,6 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
         return this.genericVisit(node)
       }
 
-      console.log('please')
-
       const innerMCFunctionNode = innerMCFunction['node']
 
       if (innerMCFunctionNode.body.length > 1) {

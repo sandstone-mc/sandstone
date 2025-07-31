@@ -1,33 +1,44 @@
+import { reset } from 'chalk/index.js'
 import { ContainerNode } from '../core/index.js'
 
-import type { SandstoneCore } from '../core/index.js'
+import type { Node, SandstoneCore } from '../core/index.js'
 import type { ConditionNode } from './conditions/index.js'
 import type { Condition } from './Flow.js'
+import * as util from 'node:util'
+import { formatDebugString } from '../utils.js'
 
 export class IfNode extends ContainerNode {
   nextFlowNode?: IfNode | ElseNode
 
   protected _isElseIf = false
 
-  constructor(sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback: () => void, reset = false) {
+  constructor(sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback?: () => void) {
     super(sandstoneCore)
 
-    const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
-
-    if (reset) {
-      currentNode.resource.push(() => sandstoneCore.pack.flowVariable.reset())
-    }
-
-    if (callback.toString() !== '() => {}') {
+    if (callback && callback.toString() !== '() => {}') {
       // Generate the body of the If node.
-      currentNode.enterContext(this)
-      this.callback()
-      currentNode.exitContext()
+      this.sandstoneCore.insideContext(this, callback, true)
     }
   }
 
   getValue = () => {
     throw new Error('Minecraft does not support if statements. This must be postprocessed.')
+  }
+
+  [util.inspect.custom](depth: number, options: any) {
+    const indent = options.indent || ''
+    const currentFormatting = formatDebugString(this.constructor.name, {
+      condition: this.condition,
+      isElseIf: this._isElseIf,
+    }, this.body, indent)
+
+    if (!this.nextFlowNode) {
+      return currentFormatting
+    }
+
+    const nextFormatting = util.inspect(this.nextFlowNode, options)
+
+    return `${currentFormatting}\n${indent}${nextFormatting}`
   }
 }
 

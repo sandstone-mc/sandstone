@@ -145,7 +145,7 @@ export class SmithedDependencyCache {
         files[0].getDataAsync((data) => res(data as Buffer))
       })
 
-      await safeWrite(path.join(this.path, dependency, 'datapack.zip'), datapack)
+      await safeWrite(path.join(this.path, dependency, 'datapack.zip'), datapack as any)
 
       let resourcepack: Buffer | false = false
 
@@ -154,7 +154,7 @@ export class SmithedDependencyCache {
           files[1].getDataAsync((data) => res(data as Buffer))
         })
 
-        await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), datapack)
+        await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), resourcepack as any)
       }
 
       result = this.dependencies.set(dependency, {

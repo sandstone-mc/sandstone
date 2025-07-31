@@ -10,7 +10,7 @@ import { SmithedDependencyCache } from './smithed.js'
 import type { SandstonePack } from 'sandstone/pack'
 import type { MCMetaBranches } from './mcmeta.js'
 import type { AwaitNode } from './nodes.js'
-import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction.js'
+import { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction.js'
 import type { ResourceClass, ResourceNode } from './resources/resource.js'
 import type { GenericCoreVisitor } from './visitors.js'
 
@@ -24,9 +24,9 @@ export class SandstoneCore {
 
   currentNode = ''
 
-  mcmetaCache = new MCMetaCache()
+  _mcMetaCache: MCMetaCache | undefined
 
-  smithed = new SmithedDependencyCache(this)
+  _smithed: SmithedDependencyCache | undefined
 
   dependencies: Promise<SmithedDependencyClass[] | true>[] = []
 
@@ -87,6 +87,11 @@ export class SandstoneCore {
    */
   exitMCFunction = () => this.mcfunctionStack.pop()
 
+  getMcMetaCache = () => {
+    return this._mcMetaCache ??= new MCMetaCache()
+  }
+
+
   async getExistingResource(relativePath: string): Promise<string>
 
   async getExistingResource(relativePath: string, encoding: false): Promise<Buffer>
@@ -108,7 +113,7 @@ export class SandstoneCore {
     if (_path[0] === 'minecraft') {
       const type = pathOrResource.packType.resourceSubFolder as MCMetaBranches
 
-      return this.mcmetaCache.get(type, `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`, (encoding === 'utf-8') as true)
+      return this.getMcMetaCache().get(type, `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`, (encoding === 'utf-8') as true)
     }
     // eslint-disable-next-line max-len
     const fullPath = path.join(process.env.WORKING_DIR as string, `resources/${path.join(pathOrResource.packType.type, ..._path)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`)
@@ -126,7 +131,11 @@ export class SandstoneCore {
   async getVanillaResource(relativePath: string, text: false, type: 'client' | 'server'): Promise<Buffer>
 
   async getVanillaResource(relativePath: string, text = true, type: 'client' | 'server' = 'server'): Promise<string | Buffer> {
-    return this.mcmetaCache.get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
+    return this.getMcMetaCache().get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
+  }
+
+  getSmithed = () => {
+    return this._smithed ??= new SmithedDependencyCache(this)
   }
 
   /**
@@ -136,13 +145,14 @@ export class SandstoneCore {
     const adding = this.dependencies.length === 0 ? false : Promise.allSettled(this.dependencies)
 
     this.dependencies.push((async () => {
-      if (!this.smithed.loaded) {
-        await this.smithed.load()
+      const smithed = this.getSmithed()
+      if (!smithed.loaded) {
+        await smithed.load()
       }
       if (adding) await adding
 
-      if (!this.smithed.has(dependency)) {
-        const _depend = await this.smithed.get(dependency, version)
+      if (!smithed.has(dependency)) {
+        const _depend = await smithed.get(dependency, version)
 
         if (!this.pack.packTypes.has('datapack-dependencies')) {
           this.pack.packTypes.set('datapack-dependencies', new DataPackDependencies())
@@ -191,13 +201,16 @@ export class SandstoneCore {
   }
 
   save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>, dry: boolean, verbose: boolean }, opts: { visitors: GenericCoreVisitor[] }) => {
-    if (!this.smithed.loaded) {
-      await this.smithed.load()
+    if (this._smithed && !this._smithed.loaded) {
+      await this._smithed.load()
     }
 
     await Promise.allSettled(this.dependencies)
 
-    await this.mcmetaCache.save()
+    if (this._mcMetaCache && !this._mcMetaCache.loaded) {
+      await this._mcMetaCache.load()
+      await this._mcMetaCache.save()
+    }
 
     const resources = this.generateResources(opts)
 

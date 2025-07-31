@@ -13,6 +13,8 @@ import type { SandstonePack } from '../pack/index.js'
 import type { ComponentClass } from './abstractClasses.js'
 import type { DATA_TYPES, DataPointClass } from './Data.js'
 import type { ObjectiveClass } from './Objective.js'
+import * as util from 'node:util'
+import { formatDebugString } from '../utils.js'
 
 type PlayersTarget = number | MultipleEntitiesArgument<false>
 
@@ -635,5 +637,13 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     }
 
     return MCFunction(`__sandstone:score_match/${matcher}`, [score], () => Macro.returnCmd.run.functionCmd(Macro`__sandstone:score_match/${matcher}/${score}`))
+  }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, {
+      target: this.target,
+      display: this.display,
+      objective: this.objective.name,
+    }, undefined, options.indent)
   }
 }

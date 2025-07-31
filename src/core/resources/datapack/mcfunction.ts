@@ -1,4 +1,4 @@
-import { makeCallable, makeClassCallable } from 'sandstone/utils'
+import { formatDebugString, makeCallable, makeClassCallable } from 'sandstone/utils'
 
 import { ResolveNBTPart } from '../../../variables/ResolveNBT.js'
 import { ContainerNode } from '../../nodes.js'
@@ -14,7 +14,8 @@ import type { FinalCommandOutput } from 'sandstone/commands/helpers'
 import type {
   ContainerCommandNode, MacroArgument, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
 } from 'sandstone/core'
-import type { MakeInstanceCallable } from 'sandstone/utils'
+import type { MakeInstanceCallable } from '../../../utils.js'
+import * as util from 'node:util'
 
 const tags: Record<string, TagClass<'functions'>> = {}
 
@@ -132,6 +133,12 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
 
     return this.body.filter((node) => node.getValue() !== null).map((node) => node.getValue()).join('\n')
   }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, {
+      name: this.resource.name,
+    }, this.body, options.indent)
+  }
 }
 
 export type MCFunctionClassArguments = ({
@@ -221,6 +228,16 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
   protected env?: ENV
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments, env?: ENV) {
+    if (name.startsWith('./')) {
+      // We have a relative name.
+      const currentMCFunctionName = core.currentMCFunction?.resource.name
+      if (!currentMCFunctionName) {
+        throw new Error('Cannot use relative paths outside of an existing MCFunction.')
+      }
+
+      name = currentMCFunctionName + '/' + name.slice(2)
+    }
+
     super(core, { packType: core.pack.dataPack(), extension: 'mcfunction' }, MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
       ...args,
       addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,

@@ -4,23 +4,53 @@ import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
 import type { SandstoneCore } from './sandstoneCore.js'
+import { formatDebugString } from '../utils.js'
+import * as util from 'node:util'
 
 export abstract class Node {
   constructor(public sandstoneCore: SandstoneCore) { }
 
+
+  [util.inspect.custom](depth: number, options: any) {
+    return `${this.constructor.name}()`;
+  }
+
   abstract getValue(): any
+
+  type = this.constructor.name
 }
 
 /**
  * A node that includes other nodes.
  */
 export abstract class ContainerNode extends Node {
-  body: Node[]
+  _body: Node[]
 
   constructor(sandstoneCore: SandstoneCore) {
     super(sandstoneCore)
-    this.body = []
+
+    this._body = []
   }
+
+  get body(): Node[] {
+    return this._body
+  }
+
+  set body(body: Node[]) {
+    this._body = body
+  }
+
+  generateBody(callback: () => void): Node[] {
+    // Enter the current node's body
+    this.sandstoneCore.insideContext(this, () => {
+      callback()
+    })
+
+    // Return the body of this node.
+    return this.body
+  }
+
+
 
   /**
    * Appends a node at the end of this node's body.
@@ -50,6 +80,10 @@ export abstract class ContainerNode extends Node {
   prepend(...nodes: Node[]) {
     this.body.unshift(...nodes)
     return nodes.length === 1 ? nodes[0] : nodes
+  }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, undefined, this.body, options.indent)
   }
 }
 
@@ -106,6 +140,10 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
 
     return this.sandstonePack.appendNode(this)
   }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, this.args, undefined, options.indent)
+  }
 }
 
 /**
@@ -114,11 +152,30 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
 export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> extends CommandNode<ARGS> implements ContainerNode {
   abstract command: string
 
-  body: Node[]
+  _body: Node[]
 
   constructor(sandstonePack: SandstonePack, ...args: ARGS) {
     super(sandstonePack, ...args)
-    this.body = []
+    this._body = []
+  }
+
+  get body(): Node[] {
+    return this._body
+  }
+
+  set body(body: Node[]) {
+    this._body = body
+  }
+
+  generateBody(callback: () => void): Node[] {
+    // Enter the current node's body
+    this.sandstoneCore.insideContext(this, () => {
+      callback()
+    })
+
+    // Return the body of this node.
+    this._body = this.body
+    return this._body
   }
 
   /**
@@ -135,6 +192,10 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> e
   prepend(node: Node) {
     this.body.unshift(node)
     return node
+  }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, this.args, this.body, options.indent)
   }
 
   /**
