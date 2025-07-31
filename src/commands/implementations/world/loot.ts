@@ -1,15 +1,18 @@
-import { validateIntegerRange } from 'sandstone/commands/validators'
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type {
   CONTAINER_SLOTS,
-  Coordinates, ENTITY_SLOTS, ITEMS, MultipleEntitiesArgument, MultiplePlayersArgument, SingleEntityArgument,
+  Coordinates,
+  ENTITY_SLOTS,
+  ITEMS,
+  MultipleEntitiesArgument,
+  MultiplePlayersArgument,
+  SingleEntityArgument,
 } from 'sandstone/arguments'
+import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { LootTableClass, Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 type LootTableArgument<MACRO extends boolean> = Macroable<LootTableClass | string, MACRO>
 
@@ -54,7 +57,8 @@ class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param tool Specifies an tool to mine.
    */
-  mine = (pos: Macroable<Coordinates<MACRO>, MACRO>, tool: Macroable<LiteralUnion<ITEMS>, MACRO>) => this.finalCommand(['mine', coordinatesParser(pos), tool])
+  mine = (pos: Macroable<Coordinates<MACRO>, MACRO>, tool: Macroable<LiteralUnion<ITEMS>, MACRO>) =>
+    this.finalCommand(['mine', coordinatesParser(pos), tool])
 }
 
 /** Drops the given loot table into the specified inventory or into the world. */
@@ -65,10 +69,10 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    * Spawns item entities.
    * @param targetPos Specifies the location where item drops.
    */
-  spawn = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) => this.subCommand(['spawn', coordinatesParser(targetPos)], LootCommand, false)
+  spawn = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) =>
+    this.subCommand(['spawn', coordinatesParser(targetPos)], LootCommand, false)
 
   replace = {
-
     /**
      * Distributes items to entities.
      *
@@ -95,7 +99,11 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
      *
      * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
      */
-    entity: (entities: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>, count?: Macroable<number, MACRO>) => {
+    entity: (
+      entities: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+      slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
+      count?: Macroable<number, MACRO>,
+    ) => {
       if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
       return this.subCommand(['replace', 'entity', targetParser(entities), slot, count], LootSourceCommand, false)
@@ -117,7 +125,11 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
      *
      * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
      */
-    block: (targetPos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>, count?: Macroable<number, MACRO>) => {
+    block: (
+      targetPos: Macroable<Coordinates<MACRO>, MACRO>,
+      slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>,
+      count?: Macroable<number, MACRO>,
+    ) => {
       if (count) validateIntegerRange(count, 'count', 0, 2_147_483_647)
 
       return this.subCommand(['replace', 'block', coordinatesParser(targetPos), slot, count], LootSourceCommand, false)
@@ -129,12 +141,14 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param players Specifies one or more players to give.
    */
-  give = (players: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.subCommand(['give', targetParser(players)], LootSourceCommand<MACRO>, false)
+  give = (players: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+    this.subCommand(['give', targetParser(players)], LootSourceCommand<MACRO>, false)
 
   /**
    * Distributes items to a container block.
    *
    * @param targetPos Specifies the position of a block.
    */
-  insert = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) => this.subCommand(['insert', coordinatesParser(targetPos)], LootSourceCommand<MACRO>, false)
+  insert = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) =>
+    this.subCommand(['insert', coordinatesParser(targetPos)], LootSourceCommand<MACRO>, false)
 }

@@ -1,11 +1,9 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { BLOCKS, Coordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { coordinatesParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class CloneCommandNode extends CommandNode {
   command = 'clone' as const
@@ -51,7 +49,7 @@ export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments
    * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
    * - `normal`: Don't move or force.
    */
-  replace = (mode?: Macroable<('force' | 'move' | 'normal'), MACRO>) => this.finalCommand(['replace', mode])
+  replace = (mode?: Macroable<'force' | 'move' | 'normal', MACRO>) => this.finalCommand(['replace', mode])
 
   /**
    * Copy only non-air blocks. Blocks in the destination region that would otherwise be overwritten by air are left unmodified.
@@ -61,7 +59,7 @@ export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments
    * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
    * - `normal`: Don't move or force.
    */
-  masked = (mode?: Macroable<('force' | 'move' | 'normal'), MACRO>) => this.finalCommand(['masked', mode])
+  masked = (mode?: Macroable<'force' | 'move' | 'normal', MACRO>) => this.finalCommand(['masked', mode])
 
   /**
    * Clones only blocks with the block id specified by `filter`.
@@ -73,5 +71,6 @@ export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments
    * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
    * - `normal`: Don't move or force.
    */
-  filtered = (filter: Macroable<LiteralUnion<BLOCKS>, MACRO>, mode?: Macroable<('force' | 'move' | 'normal'), MACRO>) => this.finalCommand(['filtered', filter, mode])
+  filtered = (filter: Macroable<LiteralUnion<BLOCKS>, MACRO>, mode?: Macroable<'force' | 'move' | 'normal', MACRO>) =>
+    this.finalCommand(['filtered', filter, mode])
 }

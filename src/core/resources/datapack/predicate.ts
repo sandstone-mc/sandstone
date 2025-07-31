@@ -1,16 +1,18 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { PredicateJSON } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft predicate.
  */
 export class PredicateNode extends ContainerNode implements ResourceNode<PredicateClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: PredicateClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: PredicateClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -30,7 +32,13 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
   public predicateJSON: NonNullable<PredicateClassArguments['predicate']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: PredicateClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, PredicateNode, sandstoneCore.pack.resourceToPath(name, ['predicates']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      PredicateNode,
+      sandstoneCore.pack.resourceToPath(name, ['predicates']),
+      args,
+    )
 
     this.predicateJSON = args.predicate as PredicateJSON
 

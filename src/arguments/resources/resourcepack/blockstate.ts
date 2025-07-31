@@ -20,4 +20,6 @@ export type MultipartCase = {
   apply: Variant | WeightedVariant[]
 }
 
-export type BlockStateDefinition<Type extends BlockStateType> = Type extends 'variant' ? { variants: { [name: string]: Variant | WeightedVariant[] } } : { multipart: MultipartCase[] }
+export type BlockStateDefinition<Type extends BlockStateType> = Type extends 'variant'
+  ? { variants: { [name: string]: Variant | WeightedVariant[] } }
+  : { multipart: MultipartCase[] }

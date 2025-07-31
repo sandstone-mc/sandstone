@@ -1,17 +1,19 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { TrimPatternJSON } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 import type { EquipmentSlots } from './trimMaterial.js'
 
 /**
  * A node representing a Minecraft trim pattern.
  */
 export class TrimPatternNode extends ContainerNode implements ResourceNode<TrimPatternClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: TrimPatternClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: TrimPatternClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -24,19 +26,19 @@ export type TrimPatternClassArguments = {
    */
   trimPattern?: TrimPatternJSON
 } & ResourceClassArguments<'default'> & {
-  /**
-   * Optional. Defaults to true. Automatically adds trim pattern to #minecraft:trim_templates.
-   */
-  registerPatternTag?: boolean
-  /**
-   * Optional. Defaults to true. Automatically adds armor trim pattern recipe.
-   */
-  registerPatternRecipe?: boolean
-  /**
-   * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
-   */
-  equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
-}
+    /**
+     * Optional. Defaults to true. Automatically adds trim pattern to #minecraft:trim_templates.
+     */
+    registerPatternTag?: boolean
+    /**
+     * Optional. Defaults to true. Automatically adds armor trim pattern recipe.
+     */
+    registerPatternRecipe?: boolean
+    /**
+     * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
+     */
+    equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
+  }
 
 export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements ConditionClass {
   public trimPatternJSON: NonNullable<TrimPatternClassArguments['trimPattern']>
@@ -44,7 +46,13 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
   readonly equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimPatternClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, TrimPatternNode, sandstoneCore.pack.resourceToPath(name, ['trim_patterns']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      TrimPatternNode,
+      sandstoneCore.pack.resourceToPath(name, ['trim_patterns']),
+      args,
+    )
 
     this.trimPatternJSON = args.trimPattern as TrimPatternJSON
 

@@ -1,16 +1,18 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { AdvancementJSON, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft advancement.
  */
 export class AdvancementNode extends ContainerNode implements ResourceNode<AdvancementClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: AdvancementClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: AdvancementClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -24,11 +26,20 @@ export type AdvancementClassArguments<CriteriaNames extends string = string> = {
   advancement?: AdvancementJSON<CriteriaNames>
 } & ResourceClassArguments<'default'>
 
-export class AdvancementClass<CriteriaNames extends string = string> extends ResourceClass<AdvancementNode> implements ConditionClass {
+export class AdvancementClass<CriteriaNames extends string = string>
+  extends ResourceClass<AdvancementNode>
+  implements ConditionClass
+{
   public advancementJSON: NonNullable<AdvancementClassArguments['advancement']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<CriteriaNames>) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, AdvancementNode, sandstoneCore.pack.resourceToPath(name, ['advancements']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      AdvancementNode,
+      sandstoneCore.pack.resourceToPath(name, ['advancements']),
+      args,
+    )
 
     this.advancementJSON = args.advancement as AdvancementJSON
 

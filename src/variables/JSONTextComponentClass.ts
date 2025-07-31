@@ -1,15 +1,18 @@
-import { type MacroArgument, isMacroArgument } from '../core/Macro.js'
+import * as util from 'node:util'
 
 import type { JSONTextComponent } from 'sandstone/arguments'
+import { isMacroArgument, type MacroArgument } from '../core/Macro.js'
 import type { SandstoneCore } from '../core/sandstoneCore.js'
-import * as util from 'node:util'
 import { formatDebugString } from '../utils.js'
 
 function toComponent(c: any): JSONTextComponent {
   return c._toSelector?.() ?? c._toChatComponent?.() ?? c.toJSON?.() ?? c
 }
 
-export function parseJSONText(core: SandstoneCore, jsonText: undefined | MacroArgument | JSONTextComponent): undefined | MacroArgument | JSONTextComponentClass {
+export function parseJSONText(
+  core: SandstoneCore,
+  jsonText: undefined | MacroArgument | JSONTextComponent,
+): undefined | MacroArgument | JSONTextComponentClass {
   if (jsonText === undefined) return undefined
 
   if (isMacroArgument(core, jsonText)) {
@@ -28,23 +31,27 @@ export class JSONTextComponentClass {
 
   toString() {
     // We want a compact output
-    return JSON.stringify(toComponent(this.jsonTextComponent), (key: string, value: any) => {
-      /*
-       * If we are in an array, our component could be a custom object (like a Selector) that is directly used as a chat component.
-       * Therefore, we must try to transform it into a chat component, or a json object.
-       * If not possible, we fallback on the original value.
-       */
-      if (Array.isArray(this)) {
+    return JSON.stringify(
+      toComponent(this.jsonTextComponent),
+      (key: string, value: any) => {
         /*
-         * The value given is not the real original value, but sometimes it is the stringified value.
-         * Therefore, we must get back the real one.
+         * If we are in an array, our component could be a custom object (like a Selector) that is directly used as a chat component.
+         * Therefore, we must try to transform it into a chat component, or a json object.
+         * If not possible, we fallback on the original value.
          */
-        const realValue = this[parseInt(key, 10)] as any
-        return toComponent(realValue)
-      }
+        if (Array.isArray(this)) {
+          /*
+           * The value given is not the real original value, but sometimes it is the stringified value.
+           * Therefore, we must get back the real one.
+           */
+          const realValue = this[Number.parseInt(key, 10)] as any
+          return toComponent(realValue)
+        }
 
-      return toComponent(value)
-    }, 0)
+        return toComponent(value)
+      },
+      0,
+    )
   }
 
   toJSON() {

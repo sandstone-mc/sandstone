@@ -1,27 +1,23 @@
 /* eslint-disable max-len */
-import * as util from 'util'
-
-import { DataPointPickClass } from '../core/Macro.js'
-import { capitalize } from '../utils.js'
-import { StringDataPointClass } from './Data.js'
-import {
-  NBTAnyValue,
-  NBTClass, NBTInt, NBTIntArray, NBTPrimitive,
-} from './nbt/index.js'
-import { Score } from './Score.js'
-
+import * as util from 'node:util'
 import type { NBTObject } from '../arguments/nbt.js'
+import { DataPointPickClass } from '../core/Macro.js'
 import type { SandstonePack } from '../pack/index.js'
+import { capitalize } from '../utils.js'
 import type { DataPointClass } from './Data.js'
-import type {
-  NBTAllArrays, NBTAllNumbers,
-  NBTAllValues, NBTString,
-} from './nbt/index.js'
+import { StringDataPointClass } from './Data.js'
+import type { NBTAllArrays, NBTAllNumbers, NBTAllValues, NBTString } from './nbt/index.js'
+import { NBTAnyValue, NBTClass, NBTInt, NBTIntArray, NBTPrimitive } from './nbt/index.js'
+import { Score } from './Score.js'
 
 export class ResolveNBTClass extends DataPointPickClass {
   dataPoint: NonNullable<DataPointClass<'storage'>>
 
-  constructor(private pack: SandstonePack, nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) {
+  constructor(
+    private pack: SandstonePack,
+    nbt: NBTObject,
+    dataPoint?: DataPointClass<'storage'>,
+  ) {
     super(pack.core)
     if (dataPoint) {
       this.dataPoint = dataPoint
@@ -32,7 +28,9 @@ export class ResolveNBTClass extends DataPointPickClass {
     const out = this._resolveNBT(nbt)
 
     if (Object.keys(out).length !== 0) {
-      pack.commands.data.modify.storage(this.dataPoint.currentTarget, this.dataPoint.path).merge.value(this._resolveNBT(nbt))
+      pack.commands.data.modify
+        .storage(this.dataPoint.currentTarget, this.dataPoint.path)
+        .merge.value(this._resolveNBT(nbt))
     }
   }
 
@@ -165,7 +163,10 @@ export class ResolveNBTClass extends DataPointPickClass {
   }
 }
 
-export class ResolveNBTPartClass<ValueType extends 'data' | 'score' | 'scores', Primitive extends NBTAllValues> extends NBTClass {
+export class ResolveNBTPartClass<
+  ValueType extends 'data' | 'score' | 'scores',
+  Primitive extends NBTAllValues,
+> extends NBTClass {
   value
 
   type: ValueType
@@ -174,7 +175,12 @@ export class ResolveNBTPartClass<ValueType extends 'data' | 'score' | 'scores', 
 
   scale?: number
 
-  constructor(value: StringDataPointClass | DataPointClass | Score | Score[], type: ValueType, primitive: Primitive, scale?: number) {
+  constructor(
+    value: StringDataPointClass | DataPointClass | Score | Score[],
+    type: ValueType,
+    primitive: Primitive,
+    scale?: number,
+  ) {
     super()
 
     this.value = value
@@ -195,17 +201,43 @@ export function ResolveNBTPart(data: StringDataPointClass): ResolveNBTPartClass<
 
 export function ResolveNBTPart(data: DataPointClass<any>, type: NBTAllValues): ResolveNBTPartClass<'data', NBTAllValues>
 
-export function ResolveNBTPart(score: Score, scale?: number, type?: NBTAllNumbers): ResolveNBTPartClass<'score', typeof NBTInt | NBTAllNumbers>
+export function ResolveNBTPart(
+  score: Score,
+  scale?: number,
+  type?: NBTAllNumbers,
+): ResolveNBTPartClass<'score', typeof NBTInt | NBTAllNumbers>
 
-export function ResolveNBTPart(scores: Score[], scale?: number, type?: NBTAllArrays): ResolveNBTPartClass<'scores', typeof NBTIntArray | NBTAllArrays>
+export function ResolveNBTPart(
+  scores: Score[],
+  scale?: number,
+  type?: NBTAllArrays,
+): ResolveNBTPartClass<'scores', typeof NBTIntArray | NBTAllArrays>
 
-export function ResolveNBTPart<ValueType extends 'data' | 'score' | 'scores', Primitive extends NBTAllValues>(value: StringDataPointClass | DataPointClass<any> | Score | Score[], option1?: number | Primitive, option2?: Primitive) {
+export function ResolveNBTPart<ValueType extends 'data' | 'score' | 'scores', Primitive extends NBTAllValues>(
+  value: StringDataPointClass | DataPointClass<any> | Score | Score[],
+  option1?: number | Primitive,
+  option2?: Primitive,
+) {
   if (Array.isArray(value)) {
-    return new ResolveNBTPartClass<ValueType, Primitive>(value, 'scores' as ValueType, (option2 || NBTIntArray) as Primitive, (option1 || 1) as number)
+    return new ResolveNBTPartClass<ValueType, Primitive>(
+      value,
+      'scores' as ValueType,
+      (option2 || NBTIntArray) as Primitive,
+      (option1 || 1) as number,
+    )
   }
   if (value instanceof Score) {
-    return new ResolveNBTPartClass<ValueType, Primitive>(value, 'score' as ValueType, (option2 || NBTInt) as Primitive, (option1 || 1) as number)
+    return new ResolveNBTPartClass<ValueType, Primitive>(
+      value,
+      'score' as ValueType,
+      (option2 || NBTInt) as Primitive,
+      (option1 || 1) as number,
+    )
   }
 
-  return new ResolveNBTPartClass<ValueType, Primitive>(value, 'data' as ValueType, (option1 || NBTAnyValue) as Primitive)
+  return new ResolveNBTPartClass<ValueType, Primitive>(
+    value,
+    'data' as ValueType,
+    (option1 || NBTAnyValue) as Primitive,
+  )
 }

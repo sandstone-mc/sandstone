@@ -1,15 +1,11 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { TagClass } from 'sandstone/core/resources/datapack/tag'
-import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { RootNBT } from 'sandstone/arguments/nbt.js'
 import type { DataPointPickClass, Macroable, MCFunctionClass } from 'sandstone/core'
-import type {
-  DATA_TYPES, DataPointClass,
-} from 'sandstone/variables'
+import { CommandNode } from 'sandstone/core/nodes'
+import { TagClass } from 'sandstone/core/resources/datapack/tag'
+import type { DATA_TYPES, DataPointClass } from 'sandstone/variables'
+import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import type { FinalCommandOutput } from '../../helpers.js'
+import { CommandArguments } from '../../helpers.js'
 
 // Function command
 
@@ -26,9 +22,19 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
 
   function(mcFunction: Macroable<Func, MACRO>, params: Macroable<RootNBT, MACRO>): FinalCommandOutput
 
-  function(mcFunction: Macroable<Func, MACRO>, _: 'with', type: DATA_TYPES, target: string, path: string): FinalCommandOutput
+  function(
+    mcFunction: Macroable<Func, MACRO>,
+    _: 'with',
+    type: DATA_TYPES,
+    target: string,
+    path: string,
+  ): FinalCommandOutput
 
-  function(mcFunction: Macroable<Func, MACRO>, _: 'with', dataPoint: DataPointClass | DataPointPickClass): FinalCommandOutput
+  function(
+    mcFunction: Macroable<Func, MACRO>,
+    _: 'with',
+    dataPoint: DataPointClass | DataPointPickClass,
+  ): FinalCommandOutput
 
   function(
     mcFunction: Macroable<string | MCFunctionClass<any, any> | TagClass<'functions'>, MACRO>,
@@ -45,7 +51,9 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
         if (typeof pointOrType === 'string') {
           args.push(pointOrType, target, path)
         } else {
-          const point = (Object.hasOwn(pointOrType, '_toDataPoint') ? (pointOrType as DataPointPickClass)._toDataPoint : pointOrType) as DataPointClass
+          const point = (
+            Object.hasOwn(pointOrType, '_toDataPoint') ? (pointOrType as DataPointPickClass)._toDataPoint : pointOrType
+          ) as DataPointClass
 
           args.push(point.type, point.currentTarget, point.path)
         }

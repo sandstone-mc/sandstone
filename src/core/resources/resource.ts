@@ -29,7 +29,9 @@ export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'fu
    * - `rename`: Rename the new file to an iterating number (ie. func1, func2, func3)
    */
   // eslint-disable-next-line max-len
-  onConflict?: ConflictType extends 'default' ? BASIC_CONFLICT_STRATEGIES : BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend',
+  onConflict?: ConflictType extends 'default'
+    ? BASIC_CONFLICT_STRATEGIES
+    : BASIC_CONFLICT_STRATEGIES | 'append' | 'prepend'
 
   /**
    * Overrides the default pack for the resource.
@@ -44,7 +46,7 @@ export type ResourceNode<T = ResourceClass<any>> = Node & {
 export type ResourceNodeConstructor<N extends Node> = new (sandstoneCore: SandstoneCore, resource: any) => N
 
 export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> {
-  protected node: N
+  node: N
 
   packType
 
@@ -52,11 +54,11 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   fileEncoding
 
-  protected creator: NonNullable<ResourceClassArguments<any>['creator']>
+  creator: NonNullable<ResourceClassArguments<any>['creator']>
 
-  protected commands: SandstoneCommands<false>
+  commands: SandstoneCommands<false>
 
-  protected pack: SandstonePack
+  pack: SandstonePack
 
   path
 
@@ -67,7 +69,13 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   renameIndex = 2
 
   // eslint-disable-next-line max-len
-  constructor(protected core: SandstoneCore, file: { packType: PackType, extension?: string, encoding?: fs.EncodingOption | false }, NodeType: ResourceNodeConstructor<N>, path: ResourcePath, args: ResourceClassArguments<any>) {
+  constructor(
+    protected core: SandstoneCore,
+    file: { packType: PackType; extension?: string; encoding?: fs.EncodingOption | false },
+    NodeType: ResourceNodeConstructor<N>,
+    path: ResourcePath,
+    args: ResourceClassArguments<any>,
+  ) {
     this.node = new NodeType(core, this)
 
     this.packType = args.packType || file.packType
@@ -84,7 +92,9 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.creator = args.creator ?? 'sandstone'
 
-    const scopedStrategy = this.node.resource.path[1] ? process.env[`${this.node.resource.path[1].toUpperCase()}_CONFLICT_STRATEGY`] : false
+    const scopedStrategy = this.node.resource.path[1]
+      ? process.env[`${this.node.resource.path[1].toUpperCase()}_CONFLICT_STRATEGY`]
+      : false
 
     this.onConflict = args.onConflict || scopedStrategy || process.env.DEFAULT_CONFLICT_STRATEGY || 'throw'
   }
@@ -96,7 +106,10 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
       if (node.resource.packType.constructor.name !== this.node.resource.packType.constructor.name) {
         return false
       }
-      return node.resource.packType.constructor === this.node.resource.packType.constructor && node.resource.path.join('') === this.node.resource.path.join('')
+      return (
+        node.resource.packType.constructor === this.node.resource.packType.constructor &&
+        node.resource.path.join('') === this.node.resource.path.join('')
+      )
     })
 
     let add = false
@@ -108,42 +121,57 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
       switch (this.onConflict) {
         case 'throw': {
           // eslint-disable-next-line max-len
-          throw new Error(`Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`)
+          throw new Error(
+            `Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`,
+          )
         }
-        case 'replace': {
-          this.core.resourceNodes.forEach((node) => {
-            if (node.resource.path.join('') === oldResource.path.join('')) {
-              this.core.resourceNodes.delete(node)
-            }
-          })
-          add = true
-        } break
-        case 'warn': {
-          console.warn([
-            'Warning:',
-            `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
-            "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
-          ].join('\n'))
-          this.core.resourceNodes.forEach((node) => {
-            if (node.resource.path.join('') === oldResource.path.join('')) {
-              this.core.resourceNodes.delete(node)
-            }
-          })
-          add = true
-        } break
-        case 'rename': {
-          // eslint-disable-next-line no-plusplus
-          this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
+        case 'replace':
+          {
+            this.core.resourceNodes.forEach((node) => {
+              if (node.resource.path.join('') === oldResource.path.join('')) {
+                this.core.resourceNodes.delete(node)
+              }
+            })
+            add = true
+          }
+          break
+        case 'warn':
+          {
+            console.warn(
+              [
+                'Warning:',
+                `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
+                "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
+              ].join('\n'),
+            )
+            this.core.resourceNodes.forEach((node) => {
+              if (node.resource.path.join('') === oldResource.path.join('')) {
+                this.core.resourceNodes.delete(node)
+              }
+            })
+            add = true
+          }
+          break
+        case 'rename':
+          {
+            // eslint-disable-next-line no-plusplus
+            this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
 
-          add = true
-        } break
-        case 'prepend': {
-          (oldResource as unknown as ListResource).unshift(newResource)
-        } break
-        case 'append': {
-          (oldResource as unknown as ListResource).push(newResource)
-        } break
-        default: break
+            add = true
+          }
+          break
+        case 'prepend':
+          {
+            ;(oldResource as unknown as ListResource).unshift(newResource)
+          }
+          break
+        case 'append':
+          {
+            ;(oldResource as unknown as ListResource).push(newResource)
+          }
+          break
+        default:
+          break
       }
     } else {
       add = true
@@ -159,7 +187,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
     return `${this.path[0]}:${this.path.slice(2).join('/')}`
   }
 
-  protected generate = () => {}
+  generate = () => {}
 
   toString(): string {
     return this.name
@@ -175,11 +203,6 @@ export abstract class CallableResourceClass<N extends ResourceNode = ResourceNod
       throw new Error('Class has not been made callable.')
     }
     return this._that
-  }
-
-  private makeCallable(mcFunctionClass: this & this['__call__']) {
-    this._that = mcFunctionClass
-    this.node.resource = mcFunctionClass
   }
 
   abstract __call__: (...args: any) => any

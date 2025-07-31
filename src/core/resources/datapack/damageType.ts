@@ -1,15 +1,12 @@
 /* eslint-disable max-len */
+
+import type { Coordinates, DamageTypeJSON, SingleEntityArgument, TAG_DAMAGE_TYPES } from 'sandstone/arguments'
 import { toMinecraftResourceName } from 'sandstone/utils'
-
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
-import type {
-  Coordinates, DamageTypeJSON, SingleEntityArgument, TAG_DAMAGE_TYPES,
-} from 'sandstone/arguments'
 import type { ComponentClass } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 import type { TagClass } from './tag.js'
 
 const damageTypes: Map<string, TagClass<'damage_type'>> = new Map()
@@ -18,7 +15,10 @@ const damageTypes: Map<string, TagClass<'damage_type'>> = new Map()
  * A node representing a Minecraft damage type.
  */
 export class DamageTypeNode extends ContainerNode implements ResourceNode<DamageTypeClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: DamageTypeClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: DamageTypeClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -31,17 +31,23 @@ export type DamageTypeClassArguments = {
    */
   damageType?: DamageTypeJSON
 } & ResourceClassArguments<'default'> & {
-  /**
-   * Optional. Automatically adds damage type to minecraft damage type group tag flags.
-   */
-  flags?: (TAG_DAMAGE_TYPES | 'bypasses_cooldown')[] // Haha funny this doesn't show up in the server reports
-}
+    /**
+     * Optional. Automatically adds damage type to minecraft damage type group tag flags.
+     */
+    flags?: (TAG_DAMAGE_TYPES | 'bypasses_cooldown')[] // Haha funny this doesn't show up in the server reports
+  }
 
 export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements ComponentClass {
   public damageTypeJSON: NonNullable<DamageTypeClassArguments['damageType']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DamageTypeClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, DamageTypeNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      DamageTypeNode,
+      sandstoneCore.pack.resourceToPath(name, ['trim_materials']),
+      args,
+    )
 
     this.damageTypeJSON = args.damageType as DamageTypeJSON
 
@@ -63,20 +69,45 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
     return `death.attack.${this.damageTypeJSON.message_id}${this.damageTypeJSON.death_message_type === 'intentional_game_design' ? '.link' : ''}`
   }
 
-  damage(amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>): void
+  damage(
+    amount: number,
+    context?: 'entity' | 'at',
+    source?: Coordinates<false> | SingleEntityArgument<false>,
+    cause?: SingleEntityArgument<false>,
+  ): void
 
-  damage(target: SingleEntityArgument<false>, amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>): void
+  damage(
+    target: SingleEntityArgument<false>,
+    amount: number,
+    context?: 'entity' | 'at',
+    source?: Coordinates<false> | SingleEntityArgument<false>,
+    cause?: SingleEntityArgument<false>,
+  ): void
 
-  damage(...args:
-    [amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>] |
-    [target: SingleEntityArgument<false>, amount: number, context?: 'entity' | 'at', source?: Coordinates<false> | SingleEntityArgument<false>, cause?: SingleEntityArgument<false>]
-  // eslint-disable-next-line function-paren-newline
+  damage(
+    ...args:
+      | [
+          amount: number,
+          context?: 'entity' | 'at',
+          source?: Coordinates<false> | SingleEntityArgument<false>,
+          cause?: SingleEntityArgument<false>,
+        ]
+      | [
+          target: SingleEntityArgument<false>,
+          amount: number,
+          context?: 'entity' | 'at',
+          source?: Coordinates<false> | SingleEntityArgument<false>,
+          cause?: SingleEntityArgument<false>,
+        ]
+    // eslint-disable-next-line function-paren-newline
   ) {
     const command = this.core.pack.commands.damage
     if (typeof args[0] === 'number') {
       if (args[1] === 'entity') {
         if (args[3]) {
-          return command('@s', args[0], this).by(args[2] as SingleEntityArgument<false>).from(args[3])
+          return command('@s', args[0], this)
+            .by(args[2] as SingleEntityArgument<false>)
+            .from(args[3])
         }
         return command('@s', args[0], this).by(args[2] as SingleEntityArgument<false>)
       }
@@ -87,7 +118,9 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
     }
     if (args[2] === 'entity') {
       if (args[4]) {
-        return command(args[0], args[1] as number, this).by(args[2] as SingleEntityArgument<false>).from(args[4])
+        return command(args[0], args[1] as number, this)
+          .by(args[2] as SingleEntityArgument<false>)
+          .from(args[4])
       }
       return command(args[0], args[1] as number, this).by(args[2] as SingleEntityArgument<false>)
     }

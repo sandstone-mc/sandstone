@@ -1,10 +1,8 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { ColumnCoordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class WorldBorderNode extends CommandNode {
   command = 'worldborder' as const
@@ -22,7 +20,8 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
    * @param time Specifies the number of seconds it should take for the world border to move from its current diameter to the new diameter.
    * If not specified, defaults to 0.
    */
-  add = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) => this.finalCommand(['add', distance, time])
+  add = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) =>
+    this.finalCommand(['add', distance, time])
 
   /**
    * Recenters the world boundary.
@@ -65,7 +64,8 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
    * @param time Specifies the number of seconds it should take for the world border to move from its current diameter to the new diameter.
    * If not specified, defaults to 0.
    */
-  set = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) => this.finalCommand(['set', distance, time])
+  set = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) =>
+    this.finalCommand(['set', distance, time])
 
   warning = {
     /**

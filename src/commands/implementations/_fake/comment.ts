@@ -1,14 +1,16 @@
-import { CommandNode } from 'sandstone/core/nodes'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { CommandArguments } from '../../helpers.js'
 
 export class CommentCommandNode extends CommandNode<[unknown[]]> {
   command = '#' as const
 
   getValue() {
-    return this.args[0].join(' ').split('\n').map((line) => `# ${line}`).join('\n')
+    return this.args[0]
+      .join(' ')
+      .split('\n')
+      .map((line) => `# ${line}`)
+      .join('\n')
   }
 }
 

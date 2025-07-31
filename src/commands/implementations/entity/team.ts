@@ -1,11 +1,9 @@
+import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
 import { targetParser } from 'sandstone/variables/parsers'
-
 import { CommandArguments } from '../../helpers.js'
-
-import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/core'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'
@@ -35,10 +33,8 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param displayName Specifies the team name to be displayed.
    */
-  add = (
-    team: Macroable<string, MACRO>,
-    displayName?: Macroable<JSONTextComponent, MACRO>,
-  ) => this.finalCommand(['add', team, parseJSONText(this.sandstoneCore, displayName)])
+  add = (team: Macroable<string, MACRO>, displayName?: Macroable<JSONTextComponent, MACRO>) =>
+    this.finalCommand(['add', team, parseJSONText(this.sandstoneCore, displayName)])
 
   /**
    * Removes all members from a team.
@@ -56,7 +52,8 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
    * `'*'` may be used to represent all entities tracked by the scoreboard
    * If unspecified, defaults to the executor.
    */
-  join = (team: Macroable<string, MACRO>, members?: Macroable<MultipleEntitiesArgument<MACRO>| '*', MACRO>) => this.finalCommand(['join', team, targetParser(members)])
+  join = (team: Macroable<string, MACRO>, members?: Macroable<MultipleEntitiesArgument<MACRO> | '*', MACRO>) =>
+    this.finalCommand(['join', team, targetParser(members)])
 
   /**
    * Makes specified entities leave a team.
@@ -64,7 +61,8 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
    * @param members Specifies the entities to leave the team.
    * `'*'` may be used to represent all entities tracked by the scoreboard
    */
-  leave = (members: Macroable<MultipleEntitiesArgument<MACRO> | '*', MACRO>) => this.finalCommand(['leave', targetParser(members)])
+  leave = (members: Macroable<MultipleEntitiesArgument<MACRO> | '*', MACRO>) =>
+    this.finalCommand(['leave', targetParser(members)])
 
   /**
    * Lists all teams, or lists all members of a team if `team` is set.
@@ -73,34 +71,32 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
    */
   list = (team?: Macroable<string, MACRO>) => this.finalCommand(['list', targetParser(team)])
 
-  modify: (
-    /**
-     * Modifies the option of the team.
-     *
-     * Value must be one of the following:
-     *
-     * - `collisionRule`: Decide what entities entities on this team can push.
-     *
-     * - `color`: Decide the color of the team and players in chat, above their head, on the Tab menu, and on the sidebar.
-     * Also changes the color of the outline of the entities caused by the Glowing effect.
-     *
-     * - `deathMessageVisibility`: Decide whose death messages can be seen in chat.
-     *
-     * - `displayName`: Set the display name of the team.
-     *
-     * - `friendlyFire`: Enable/Disable players inflicting damage on each other when on the same team.
-     * (Note: players can still inflict status effects on each other.) Does not affect non-player entities on a team.
-     *
-     * - `nametagVisibility`: Decide whose name tags above their heads can be seen.
-     *
-     * - `prefix`: Modifies the prefix that appears before players' names in chat.
-     *
-     * - `seeFriendlyInvisibles`: Decide if players can see invisible players on their team as semi-transparent or completely invisible.
-     *
-     * - `suffix`: Modifies the suffix that appears after players' names in chat.
-     */
-    (<T extends keyof TeamOptions>(team: Macroable<string, MACRO>, option: T, value: TeamOptions[T]) => void) &
-
+  modify: /**
+   * Modifies the option of the team.
+   *
+   * Value must be one of the following:
+   *
+   * - `collisionRule`: Decide what entities entities on this team can push.
+   *
+   * - `color`: Decide the color of the team and players in chat, above their head, on the Tab menu, and on the sidebar.
+   * Also changes the color of the outline of the entities caused by the Glowing effect.
+   *
+   * - `deathMessageVisibility`: Decide whose death messages can be seen in chat.
+   *
+   * - `displayName`: Set the display name of the team.
+   *
+   * - `friendlyFire`: Enable/Disable players inflicting damage on each other when on the same team.
+   * (Note: players can still inflict status effects on each other.) Does not affect non-player entities on a team.
+   *
+   * - `nametagVisibility`: Decide whose name tags above their heads can be seen.
+   *
+   * - `prefix`: Modifies the prefix that appears before players' names in chat.
+   *
+   * - `seeFriendlyInvisibles`: Decide if players can see invisible players on their team as semi-transparent or completely invisible.
+   *
+   * - `suffix`: Modifies the suffix that appears after players' names in chat.
+   */
+  (<T extends keyof TeamOptions>(team: Macroable<string, MACRO>, option: T, value: TeamOptions[T]) => void) &
     /*
      * Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
      * We need T to capture the exact value of the string (like "foo"),
@@ -132,8 +128,11 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
      *
      * - `suffix`: Modifies the suffix that appears after players' names in chat.
      */
-    (<T extends string>(team: Macroable<string, MACRO>, option: Exclude<T, keyof TeamOptions>, value: Macroable<string, MACRO>) => void)
-  ) = (...args: unknown[]) => this.finalCommand(['modify', ...args])
+    (<T extends string>(
+      team: Macroable<string, MACRO>,
+      option: Exclude<T, keyof TeamOptions>,
+      value: Macroable<string, MACRO>,
+    ) => void) = (...args: unknown[]) => this.finalCommand(['modify', ...args])
 
   /**
    * Removes a team.

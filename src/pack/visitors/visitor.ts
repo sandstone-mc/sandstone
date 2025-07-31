@@ -1,9 +1,15 @@
-import { GenericCoreVisitor } from 'sandstone/core/visitors'
-
 import type {
-  AdvancementCommandNode, AttributeCommandNode, CloneCommandNode, DataCommandNode, ExecuteCommandNode, FunctionCommandNode, GameRuleCommandNode, SayCommandNode,
+  AdvancementCommandNode,
+  AttributeCommandNode,
+  CloneCommandNode,
+  DataCommandNode,
+  ExecuteCommandNode,
+  FunctionCommandNode,
+  GameRuleCommandNode,
+  SayCommandNode,
 } from 'sandstone/commands'
 import type { GenericNodeVisitor } from 'sandstone/core/visitors'
+import { GenericCoreVisitor } from 'sandstone/core/visitors'
 import type { ElseNode, IfNode, LoopNode } from 'sandstone/flow'
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'

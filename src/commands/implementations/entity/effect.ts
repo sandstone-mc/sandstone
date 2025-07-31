@@ -1,12 +1,10 @@
-import { validateIntegerRange } from 'sandstone/commands/validators'
-import { CommandNode } from 'sandstone/core/nodes'
-import { targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { MOB_EFFECTS, MultipleEntitiesArgument } from 'sandstone/arguments'
+import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class EffectCommandNode extends CommandNode {
   command = 'effect' as const
@@ -58,5 +56,8 @@ export class EffectCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param effect Specifies the effect to be removed. If unspecified, clears all effects.
    */
-  clear = (targets?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, effect?: Macroable<LiteralUnion<MOB_EFFECTS>, MACRO>) => this.finalCommand(['clear', targetParser(targets), effect])
+  clear = (
+    targets?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+    effect?: Macroable<LiteralUnion<MOB_EFFECTS>, MACRO>,
+  ) => this.finalCommand(['clear', targetParser(targets), effect])
 }

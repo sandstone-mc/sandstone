@@ -1,13 +1,11 @@
-import { CommandNode, ContainerCommandNode } from 'sandstone/core/nodes'
-import { makeCallable } from 'sandstone/utils'
-
-import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
-import { FunctionCommandNode } from './function.js'
-
 import type { SandstonePack } from 'sandstone'
 import type { SandstoneCommands } from 'sandstone/commands'
 import type { Macroable, MCFunctionNode } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
+import { CommandNode, ContainerCommandNode } from 'sandstone/core/nodes'
+import { makeCallable } from 'sandstone/utils'
+import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
+import { FunctionCommandNode } from './function.js'
 
 export class ReturnRunCommandNode extends ContainerCommandNode {
   command = 'return' as const
@@ -18,10 +16,11 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
    */
   isSingleExecute: boolean
 
-  constructor(sandstonePack: SandstonePack, args: [...args: unknown[]] = [], {
-    isSingleExecute = true,
-    body = [] as Node[],
-  } = {}) {
+  constructor(
+    sandstonePack: SandstonePack,
+    args: [...args: unknown[]] = [],
+    { isSingleExecute = true, body = [] as Node[] } = {},
+  ) {
     super(sandstonePack, ...args)
     this.isSingleExecute = isSingleExecute
     this.append(...body)
@@ -47,15 +46,20 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
       return { node: this as ReturnRunCommandNode }
     }
 
-    const namespace = currentMCFunction.resource.name.includes(':') ? `${currentMCFunction.resource.name.split(':')[0]}:` : ''
+    const namespace = currentMCFunction.resource.name.includes(':')
+      ? `${currentMCFunction.resource.name.split(':')[0]}:`
+      : ''
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = this.sandstonePack.MCFunction(`${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/return_run`, {
-      addToSandstoneCore: false,
-      creator: 'sandstone',
-      onConflict: 'rename',
-    })
-    const mcFunctionNode = mcFunction['node']
+    const mcFunction = this.sandstonePack.MCFunction(
+      `${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/return_run`,
+      {
+        addToSandstoneCore: false,
+        creator: 'sandstone',
+        onConflict: 'rename',
+      },
+    )
+    const mcFunctionNode = mcFunction.node
     mcFunctionNode.body = this.body
 
     // Return an execute calling this MCFunction.
@@ -94,11 +98,15 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
       },
     })
 
-    return makeCallable(commands, (callback: () => any) => {
-      node.isSingleExecute = false
-      this.sandstoneCore.insideContext(node, callback, true)
-      return new FinalCommandOutput(node)
-    }, true)
+    return makeCallable(
+      commands,
+      (callback: () => any) => {
+        node.isSingleExecute = false
+        this.sandstoneCore.insideContext(node, callback, true)
+        return new FinalCommandOutput(node)
+      },
+      true,
+    )
   }
 
   fail = () => this.finalCommand(['fail'])

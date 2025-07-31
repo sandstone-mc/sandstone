@@ -1,8 +1,6 @@
 import { ExecuteCommandNode } from 'sandstone/commands'
-
-import { GenericSandstoneVisitor } from './visitor.js'
-
 import type { LoopNode } from 'sandstone/flow'
+import { GenericSandstoneVisitor } from './visitor.js'
 
 /**
  * Initialize the constants of the pack.

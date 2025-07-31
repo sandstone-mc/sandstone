@@ -4,7 +4,7 @@ import type { ConditionNode } from 'sandstone/flow'
 import type { ConditionClass, DataPointClass } from 'sandstone/variables'
 
 export class MacroArgument {
-  protected local: Map<string, string>
+  public local: Map<string, string>
 
   public toMacro: () => string
 
@@ -15,29 +15,30 @@ export class MacroArgument {
       let currentMCFunctionName: string = ''
       try {
         currentMCFunctionName = sandstoneCore.getCurrentMCFunctionOrThrow().resource.name
-      // eslint-disable-next-line no-empty
-      } catch (e) {}
+        // eslint-disable-next-line no-empty
+      } catch (_e) {}
 
       return `$(${this.local.get(this.sandstoneCore.currentNode) || this.local.get(currentMCFunctionName)})`
     }
   }
 }
 
-export type Macroable<T, MACRO extends boolean> = MACRO extends true ? (T | MacroArgument) : T;
+export type Macroable<T, MACRO extends boolean> = MACRO extends true ? T | MacroArgument : T
 
-export type MacroString<T, MACRO extends boolean> = MACRO extends true ? (T | string) : T
+export type MacroString<T, MACRO extends boolean> = MACRO extends true ? T | string : T
 
 export function isMacroArgument(core: SandstoneCore, arg: any) {
   if (typeof arg === 'object' && Object.hasOwn(arg, 'toMacro')) {
     // eslint-disable-next-line prefer-destructuring
-    const local = (arg as MacroArgument)['local']
+    const local = (arg as MacroArgument).local
 
     let currentMCFunctionName: string = ''
     try {
       currentMCFunctionName = core.getCurrentMCFunctionOrThrow().resource.name
-    // eslint-disable-next-line no-empty
-    } catch (e) {}
-    if (arg instanceof MacroLiteral || local.has(currentMCFunctionName) || local.has(core.currentNode)) return arg as MacroArgument
+      // eslint-disable-next-line no-empty
+    } catch (_e) {}
+    if (arg instanceof MacroLiteral || local.has(currentMCFunctionName) || local.has(core.currentNode))
+      return arg as MacroArgument
   }
   return undefined
 }
@@ -45,7 +46,11 @@ export function isMacroArgument(core: SandstoneCore, arg: any) {
 export class MacroLiteral extends MacroArgument {
   public toMacro: () => string
 
-  constructor(public sandstoneCore: SandstoneCore, public strings: TemplateStringsArray, public macros: (MacroArgument | string | number)[]) {
+  constructor(
+    public sandstoneCore: SandstoneCore,
+    public strings: TemplateStringsArray,
+    public macros: (MacroArgument | string | number)[],
+  ) {
     super(sandstoneCore)
 
     this.toMacro = () => {

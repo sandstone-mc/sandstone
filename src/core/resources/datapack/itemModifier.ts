@@ -1,19 +1,24 @@
-import { targetParser } from 'sandstone/variables/parsers'
-
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type {
-  CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS, ItemModifierJSON, MultipleEntitiesArgument,
+  CONTAINER_SLOTS,
+  Coordinates,
+  ENTITY_SLOTS,
+  ItemModifierJSON,
+  MultipleEntitiesArgument,
 } from 'sandstone/arguments'
+import { targetParser } from 'sandstone/variables/parsers'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft item modifier.
  */
 export class ItemModifierNode extends ContainerNode implements ResourceNode<ItemModifierClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: ItemModifierClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: ItemModifierClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -33,7 +38,13 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
   public itemModifierJSON: NonNullable<ItemModifierClassArguments['itemModifier']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ItemModifierClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, ItemModifierNode, sandstoneCore.pack.resourceToPath(name, ['item_modifiers']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      ItemModifierNode,
+      sandstoneCore.pack.resourceToPath(name, ['item_modifiers']),
+      args,
+    )
 
     this.itemModifierJSON = args.itemModifier as ItemModifierJSON
 

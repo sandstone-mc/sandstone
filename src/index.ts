@@ -1,13 +1,29 @@
-import { SandstonePack } from './pack/index.js'
-import * as coordinates from './variables/Coordinates.js'
-import { ResolveNBTPart } from './variables/ResolveNBT.js'
-
 import type { JSONTextComponent } from './arguments/jsonTextComponent.js'
 import type {
   // eslint-disable-next-line max-len
-  AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MCFunctionClassArguments, ModelClassArguments, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
+  AdvancementClassArguments,
+  AtlasClassArguments,
+  BlockStateArguments,
+  DamageTypeClassArguments,
+  FontArguments,
+  ItemModifierClassArguments,
+  LanguageArguments,
+  LootTableClassArguments,
+  MCFunctionClassArguments,
+  ModelClassArguments,
+  PlainTextArguments,
+  PredicateClassArguments,
+  RecipeClassArguments,
+  SoundEventArguments,
+  TagClassArguments,
+  TextureArguments,
+  TrimMaterialClassArguments,
+  TrimPatternClassArguments,
 } from './core/index.js'
+import { SandstonePack } from './pack/index.js'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils.js'
+import * as coordinates from './variables/Coordinates.js'
+import { ResolveNBTPart } from './variables/ResolveNBT.js'
 
 export const sandstonePack = new SandstonePack('default', '0')
 export { SandstonePack }
@@ -127,23 +143,13 @@ export const {
 } = sandstonePack
 
 // Utils
-export const {
-  absolute,
-  relative,
-  local,
-} = coordinates
+export const { absolute, relative, local } = coordinates
 
 export const abs = absolute
 export const rel = relative
 export const loc = local
 
-export const {
-  getVanillaResource,
-  getExistingResource,
-  getMcMetaCache,
-  depend,
-
-} = sandstonePack.core
+export const { getVanillaResource, getExistingResource, getMcMetaCache, depend } = sandstonePack.core
 
 export type DatapackConfig = {
   /**
@@ -162,12 +168,15 @@ export type DatapackConfig = {
   packFormat: number
 
   /** List of experimental game features to enable. */
-  features?: string[],
+  features?: string[]
 
-  supported_formats: number | number[] | {
-    min_inclusive: number
-    max_inclusive: number
-  }
+  supported_formats:
+    | number
+    | number[]
+    | {
+        min_inclusive: number
+        max_inclusive: number
+      }
 
   /**
    * Section for filtering out files from datapacks applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
@@ -199,10 +208,13 @@ export type ResourcePackConfig = {
    */
   packFormat: number
 
-  supported_formats: number | number[] | {
-    min_inclusive: number
-    max_inclusive: number
-  }
+  supported_formats:
+    | number
+    | number[]
+    | {
+        min_inclusive: number
+        max_inclusive: number
+      }
 
   /**
    * Section for filtering out files from resource packs applied below this one. Any file that matches one of the patterns inside `block` will be treated as if it was not present in the pack at all.
@@ -219,7 +231,10 @@ export type ResourcePackConfig = {
 }
 
 // eslint-disable-next-line max-len
-type PackConfigs<PackType extends LiteralUnion<'datapack' | 'resourcepack'>> = Record<PackType, PackType extends 'datapack' ? DatapackConfig : PackType extends 'resourcepack' ? ResourcePackConfig : unknown>
+type PackConfigs<PackType extends LiteralUnion<'datapack' | 'resourcepack'>> = Record<
+  PackType,
+  PackType extends 'datapack' ? DatapackConfig : PackType extends 'resourcepack' ? ResourcePackConfig : unknown
+>
 
 export interface SandstoneConfig {
   /**
@@ -293,24 +308,26 @@ export interface SandstoneConfig {
   /** Some scripts that can run at defined moments. */
   scripts?: {
     /** A script running before Sandstone starts importing source files. */
-    beforeAll?: () => (void | Promise<void>)
+    beforeAll?: () => void | Promise<void>
 
     /** A script running before Sandstone starts saving the files. */
-    beforeSave?: () => (void | Promise<void>)
+    beforeSave?: () => void | Promise<void>
 
     /** A script running after Sandstone saved all files. */
-    afterAll?: () => (void | Promise<void>)
+    afterAll?: () => void | Promise<void>
   }
 
   resources?: {
     /** Path regex of files to exclude from the output. */
-    exclude?: {
-      /** From `SandstonePack` (your code in `./src`). */
-      generated?: RegExp[]
+    exclude?:
+      | {
+          /** From `SandstonePack` (your code in `./src`). */
+          generated?: RegExp[]
 
-      /** From `./resources`. */
-      existing?: RegExp[]
-    } | RegExp[]
+          /** From `./resources`. */
+          existing?: RegExp[]
+        }
+      | RegExp[]
 
     /** Handle files before they are written to the output. */
     handle?: {
@@ -321,108 +338,110 @@ export interface SandstoneConfig {
   }
 }
 
-export type ContentStrategyKind<Resource extends string, Conflict extends string> = { resource: Resource, conflict: Conflict }
+export type ContentStrategyKind<Resource extends string, Conflict extends string> = {
+  resource: Resource
+  conflict: Conflict
+}
 
-type ContentStrategy = (
+type ContentStrategy =
   /**
    * The default conflict strategy to use for all resources.
    *
    * @default
    * 'warn'
    */
-  ContentStrategyKind<'default', BASIC_CONFLICT_STRATEGIES> |
+  | ContentStrategyKind<'default', BASIC_CONFLICT_STRATEGIES>
 
   /**
    * The conflict strategy to use for Advancements.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'advancements', NonNullable<AdvancementClassArguments['onConflict']>> |
+  | ContentStrategyKind<'advancements', NonNullable<AdvancementClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for damage types.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'damage_types', NonNullable<DamageTypeClassArguments['onConflict']>> |
+  | ContentStrategyKind<'damage_types', NonNullable<DamageTypeClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Loot Tables.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'loot_tables', NonNullable<LootTableClassArguments['onConflict']>> |
+  | ContentStrategyKind<'loot_tables', NonNullable<LootTableClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for MCFunctions.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'functions', NonNullable<MCFunctionClassArguments['onConflict']>> |
+  | ContentStrategyKind<'functions', NonNullable<MCFunctionClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Predicates.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'predicates', NonNullable<PredicateClassArguments['onConflict']>> |
+  | ContentStrategyKind<'predicates', NonNullable<PredicateClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for RecipeOptions.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'recipes', NonNullable<RecipeClassArguments['onConflict']>> |
+  | ContentStrategyKind<'recipes', NonNullable<RecipeClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Tags.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'tags', NonNullable<TagClassArguments<any>['onConflict']>> |
+  | ContentStrategyKind<'tags', NonNullable<TagClassArguments<any>['onConflict']>>
   /**
    * The conflict strategy to use for Item modifiers.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'item_modifiers', NonNullable<ItemModifierClassArguments['onConflict']>> |
+  | ContentStrategyKind<'item_modifiers', NonNullable<ItemModifierClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Trim materials.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'trim_materials', NonNullable<TrimMaterialClassArguments['onConflict']>> |
+  | ContentStrategyKind<'trim_materials', NonNullable<TrimMaterialClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Trim patterns.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'trim_patterns', NonNullable<TrimPatternClassArguments['onConflict']>> |
+  | ContentStrategyKind<'trim_patterns', NonNullable<TrimPatternClassArguments['onConflict']>>
 
   /**
    * The conflict strategy to use for Atlases.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'atlass', NonNullable<AtlasClassArguments['onConflict']>> | // atlass is not a typo. feel free to PR :trolley:
+  | ContentStrategyKind<'atlass', NonNullable<AtlasClassArguments['onConflict']>> // atlass is not a typo. feel free to PR :trolley:
   /**
    * The conflict strategy to use for Block states.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'block_states', NonNullable<BlockStateArguments<any>['onConflict']>> |
+  | ContentStrategyKind<'block_states', NonNullable<BlockStateArguments<any>['onConflict']>>
   /**
    * The conflict strategy to use for Fonts.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'fonts', NonNullable<FontArguments['onConflict']>> |
+  | ContentStrategyKind<'fonts', NonNullable<FontArguments['onConflict']>>
   /**
    * The conflict strategy to use for Languages.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'languages', NonNullable<LanguageArguments['onConflict']>> |
+  | ContentStrategyKind<'languages', NonNullable<LanguageArguments['onConflict']>>
   /**
    * The conflict strategy to use for Models.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'models', NonNullable<ModelClassArguments['onConflict']>> |
+  | ContentStrategyKind<'models', NonNullable<ModelClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Sound Events.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'sound_events', NonNullable<SoundEventArguments['onConflict']>> |
+  | ContentStrategyKind<'sound_events', NonNullable<SoundEventArguments['onConflict']>>
   /**
    * The conflict strategy to use for Plain Text files.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'texts', NonNullable<PlainTextArguments['onConflict']>> |
+  | ContentStrategyKind<'texts', NonNullable<PlainTextArguments['onConflict']>>
   /**
    * The conflict strategy to use for Textures.
    * Will override the defined `default` strategy.
    */
-  ContentStrategyKind<'texture', NonNullable<TextureArguments<any>['onConflict']>>
-)
+  | ContentStrategyKind<'texture', NonNullable<TextureArguments<any>['onConflict']>>
 
 type OnConflict<Strategy extends ContentStrategy> = Record<Strategy['resource'], Strategy['conflict']>

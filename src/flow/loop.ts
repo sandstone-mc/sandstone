@@ -1,10 +1,14 @@
-import { ContainerNode } from '../core/index.js'
-
 import type { SubCommand } from 'sandstone/commands'
 import type { SandstoneCore } from '../core/index.js'
+import { ContainerNode } from '../core/index.js'
 
 export class LoopNode extends ContainerNode {
-  constructor(sandstoneCore: SandstoneCore, public executeArgs: SubCommand[], public callback: () => void, public loopback: () => void) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public executeArgs: SubCommand[],
+    public callback: () => void,
+    public loopback: () => void,
+  ) {
     super(sandstoneCore)
 
     if (callback.toString() !== '() => {}') {

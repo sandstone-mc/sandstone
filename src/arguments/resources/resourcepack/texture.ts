@@ -1,5 +1,5 @@
-import type { ENTITY_TYPES } from '../../generated/entity_type.js'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { ENTITY_TYPES } from '../../generated/entity_type.js'
 
 export type TextureAnimation = {
   animation: {
@@ -12,12 +12,15 @@ export type TextureAnimation = {
     /** Optional. An integer. Sets the default time for each frame in increments of one game tick. Defaults to 1. */
     frametime?: number
     /** Optional. Defaults to displaying all the frames from top to bottom. */
-    frames?: ({
-      /** A number corresponding to position of a frame from the top, with the top frame being 0. */
-      index: number
-      /** The time in ticks to show this frame, overriding `frametime` above. */
-      time: number
-    } | number)[]
+    frames?: (
+      | {
+          /** A number corresponding to position of a frame from the top, with the top frame being 0. */
+          index: number
+          /** The time in ticks to show this frame, overriding `frametime` above. */
+          time: number
+        }
+      | number
+    )[]
   }
 }
 
@@ -40,11 +43,24 @@ export type TextureColormap = {
 }
 
 // eslint-disable-next-line max-len
-export type TEXTURE_TYPES = 'block' | 'colormap' | 'effect' | `entity/${ENTITY_TYPES}` | 'environment' | 'font' | 'gui' | 'item' | 'map' | 'misc' | 'mob_effect' | 'models/armor' | 'painting' | 'particle' | 'trims'
+export type TEXTURE_TYPES =
+  | 'block'
+  | 'colormap'
+  | 'effect'
+  | `entity/${ENTITY_TYPES}`
+  | 'environment'
+  | 'font'
+  | 'gui'
+  | 'item'
+  | 'map'
+  | 'misc'
+  | 'mob_effect'
+  | 'models/armor'
+  | 'painting'
+  | 'particle'
+  | 'trims'
 
 // TODO: Find which texture types actually support animations.
-export type TextureMeta<Type extends LiteralUnion<TEXTURE_TYPES>> = (
-  TextureAnimation
-  & (Type extends 'entity/villager' ? TextureVillager : unknown)
-  & (Type extends 'colormap' ? TextureColormap : unknown)
-)
+export type TextureMeta<Type extends LiteralUnion<TEXTURE_TYPES>> = TextureAnimation &
+  (Type extends 'entity/villager' ? TextureVillager : unknown) &
+  (Type extends 'colormap' ? TextureColormap : unknown)

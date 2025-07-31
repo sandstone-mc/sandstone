@@ -1,31 +1,32 @@
-import { formatDebugString, makeCallable, makeClassCallable } from 'sandstone/utils'
-
-import { ResolveNBTPart } from '../../../variables/ResolveNBT.js'
-import { ContainerNode } from '../../nodes.js'
-import {
-  CallableResourceClass,
-} from '../resource.js'
-import { TagClass } from './tag.js'
-
+import * as util from 'node:util'
 import type { TimeArgument } from 'sandstone/arguments/basics'
 import type { NBTObject } from 'sandstone/arguments/nbt.js'
 import type { ScheduleType } from 'sandstone/commands'
 import type { FinalCommandOutput } from 'sandstone/commands/helpers'
 import type {
-  ContainerCommandNode, MacroArgument, Node, ResourceClassArguments, ResourceNode, SandstoneCore,
+  ContainerCommandNode,
+  MacroArgument,
+  Node,
+  ResourceClassArguments,
+  ResourceNode,
+  SandstoneCore,
 } from 'sandstone/core'
+import { formatDebugString, makeCallable, makeClassCallable } from 'sandstone/utils'
 import type { MakeInstanceCallable } from '../../../utils.js'
-import * as util from 'node:util'
+import { ResolveNBTPart } from '../../../variables/ResolveNBT.js'
+import { ContainerNode } from '../../nodes.js'
+import { CallableResourceClass } from '../resource.js'
+import { TagClass } from './tag.js'
 
 const tags: Record<string, TagClass<'functions'>> = {}
 
-interface AttributeWrapper {
-  attributes: string[];
-}
+// interface AttributeWrapper {
+//  attributes: string[]
+// }
 
-type MapperA2<Wrapper extends AttributeWrapper> = {
-  [Index in keyof Wrapper['attributes']]: Wrapper['attributes'][Index];
-};
+// type MapperA2<Wrapper extends AttributeWrapper> = {
+//  [Index in keyof Wrapper['attributes']]: Wrapper['attributes'][Index]
+// }
 
 /**
  * A node representing a Minecraft function.
@@ -33,7 +34,10 @@ type MapperA2<Wrapper extends AttributeWrapper> = {
 export class MCFunctionNode extends ContainerNode implements ResourceNode {
   contextStack: (ContainerNode | ContainerCommandNode)[]
 
-  constructor(sandstoneCore: SandstoneCore, public resource: MCFunctionClass<any, any>) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: MCFunctionClass<any, any>,
+  ) {
     super(sandstoneCore)
     this.contextStack = [this]
   }
@@ -122,7 +126,9 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
     }
 
     if (this.contextStack.length === 1) {
-      throw new Error('It is forbidden for a MCFunction to exit its latest context, since the MCFunction itself must be in the context stack.')
+      throw new Error(
+        'It is forbidden for a MCFunction to exit its latest context, since the MCFunction itself must be in the context stack.',
+      )
     }
 
     return this.contextStack.pop()
@@ -131,17 +137,25 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
   getValue = () => {
     this.sandstoneCore.currentNode = this.resource.name
 
-    return this.body.filter((node) => node.getValue() !== null).map((node) => node.getValue()).join('\n')
-  }
+    return this.body
+      .filter((node) => node.getValue() !== null)
+      .map((node) => node.getValue())
+      .join('\n')
+  };
 
   [util.inspect.custom](depth: number, options: any) {
-    return formatDebugString(this.constructor.name, {
-      name: this.resource.name,
-    }, this.body, options.indent)
+    return formatDebugString(
+      this.constructor.name,
+      {
+        name: this.resource.name,
+      },
+      this.body,
+      options.indent,
+    )
   }
 }
 
-export type MCFunctionClassArguments = ({
+export type MCFunctionClassArguments = {
   /**
    * The callback to run when the MCFunction is generated.
    *
@@ -212,20 +226,23 @@ export type MCFunctionClassArguments = ({
    * @warn **Waiting on Smithed Dimensions for root chunk to be functional.**
    */
   asyncContext?: boolean
-}) & ResourceClassArguments<'function'>
+} & ResourceClassArguments<'function'>
 
-export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undefined, ENV extends readonly MacroArgument[] | undefined> extends CallableResourceClass<MCFunctionNode> {
+export class _RawMCFunctionClass<
+  PARAMS extends readonly MacroArgument[] | undefined,
+  ENV extends readonly MacroArgument[] | undefined,
+> extends CallableResourceClass<MCFunctionNode> {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
   public nested = 0
 
   public asyncContext: NonNullable<MCFunctionClassArguments['asyncContext']>
 
-  protected tags: MCFunctionClassArguments['tags']
+  tags: MCFunctionClassArguments['tags']
 
-  protected lazy: boolean
+  lazy: boolean
 
-  protected env?: ENV
+  env?: ENV
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments, env?: ENV) {
     if (name.startsWith('./')) {
@@ -235,13 +252,19 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
         throw new Error('Cannot use relative paths outside of an existing MCFunction.')
       }
 
-      name = currentMCFunctionName + '/' + name.slice(2)
+      name = `${currentMCFunctionName}/${name.slice(2)}`
     }
 
-    super(core, { packType: core.pack.dataPack(), extension: 'mcfunction' }, MCFunctionNode, core.pack.resourceToPath(name, ['functions']), {
-      ...args,
-      addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,
-    })
+    super(
+      core,
+      { packType: core.pack.dataPack(), extension: 'mcfunction' },
+      MCFunctionNode,
+      core.pack.resourceToPath(name, ['functions']),
+      {
+        ...args,
+        addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,
+      },
+    )
 
     this.callback = args.callback ?? (() => {})
 
@@ -264,10 +287,12 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
 
     if (args.runOnLoad) {
       if (env) {
-        core.pack.loadTags.load.push(core.pack.MCFunction(`load_${this.name.split(':')[1]}`, () => {
-          /* @ts-ignore */
-          this.__call__()
-        }))
+        core.pack.loadTags.load.push(
+          core.pack.MCFunction(`load_${this.name.split(':')[1]}`, () => {
+            /* @ts-ignore */
+            this.__call__()
+          }),
+        )
       } else {
         core.pack.loadTags.load.push(this.name)
       }
@@ -290,14 +315,13 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
     this.handleConflicts()
   }
 
-  protected generate = () => {
+  generate = () => {
     if (this.node.body.length > 0) {
       /*
        * Don't generate resource if the node already has commands.
        * Else, this might generate the nodes twice with fast refresh
        */
       // return
-
       // TODO: Fix above
     }
 
@@ -309,7 +333,10 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
       tags[tag].push(this.name)
     } else {
       tags[tag] = new TagClass(this.core, 'functions', tag, {
-        values: [this.name], addToSandstoneCore: true, creator: 'sandstone', onConflict: 'append',
+        values: [this.name],
+        addToSandstoneCore: true,
+        creator: 'sandstone',
+        onConflict: 'append',
       })
     }
   }
@@ -324,13 +351,21 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
           /* @ts-ignore */
           args[`param_${i}`] = ResolveNBTPart(param)
 
-          param['local'].set(this.name, `param_${i}`)
+          param.local.set(this.name, `param_${i}`)
         }
         // Yeah this is cursed, but there's not really a better way to do this
         this.node.body = []
 
         /* @ts-ignore */
-        this.core.insideContext(this.node, () => this.callback(makeCallable(this, this.__call__.bind(undefined, ..._params)), ...(_params as MacroArgument[])), false)
+        this.core.insideContext(
+          this.node,
+          () =>
+            this.callback(
+              makeCallable(this, (this as any).__call__.bind(undefined, ..._params)),
+              ...(_params as MacroArgument[]),
+            ),
+          false,
+        )
       }
       if (this.env) {
         for (const [i, env] of this.env.entries()) {
@@ -338,7 +373,7 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
           /* @ts-ignore */
           args[`env_${i}`] = ResolveNBTPart(env)
 
-          env['local'].set(this.name, `env_${i}`)
+          env.local.set(this.name, `env_${i}`)
         }
       }
       return this.commands.functionCmd(this.name, 'with', this.pack.ResolveNBT(args).dataPoint)
@@ -350,7 +385,8 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
   schedule = {
     clear: (): FinalCommandOutput => this.commands.schedule.clear(this.name),
 
-    function: (delay: TimeArgument, type: ScheduleType): FinalCommandOutput => this.commands.schedule.function(this.name, delay, type),
+    function: (delay: TimeArgument, type: ScheduleType): FinalCommandOutput =>
+      this.commands.schedule.function(this.name, delay, type),
   }
 
   push(...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) {
@@ -409,4 +445,7 @@ export class _RawMCFunctionClass<PARAMS extends readonly MacroArgument[] | undef
 }
 
 export const MCFunctionClass = makeClassCallable(_RawMCFunctionClass)
-export type MCFunctionClass<PARAMS extends readonly MacroArgument[] | undefined, ENV extends readonly MacroArgument[] | undefined> = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>>
+export type MCFunctionClass<
+  PARAMS extends readonly MacroArgument[] | undefined,
+  ENV extends readonly MacroArgument[] | undefined,
+> = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>>

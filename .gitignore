@@ -46,3 +46,7 @@ pids
 # Commands JSON file
 _commands.json
 commands.json
+
+# IDE
+.idea
+.vscode

@@ -1,19 +1,20 @@
-import { ContainerCommandNode } from 'sandstone/core/nodes'
-import { TagClass } from 'sandstone/core/resources/datapack/tag'
-import { toMinecraftResourceName } from 'sandstone/utils'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { TimeArgument } from 'sandstone/arguments'
 import type { Macroable, Node } from 'sandstone/core'
+import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { MCFunctionClass, MCFunctionNode } from 'sandstone/core/resources/datapack/index'
+import { TagClass } from 'sandstone/core/resources/datapack/tag'
+import { toMinecraftResourceName } from 'sandstone/utils'
+import { CommandArguments } from '../../helpers.js'
 
-type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass<any, any> | (() => (any | Promise<any>))
+type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
 
 export class ScheduleCommandNode extends ContainerCommandNode {
   command = 'schedule' as const
 
-  override createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[]; mcFunction?: MCFunctionNode | undefined } = (currentMCFunction) => {
+  override createMCFunction: (currentMCFunction: MCFunctionNode | null) => {
+    node: Node | Node[]
+    mcFunction?: MCFunctionNode | undefined
+  } = (currentMCFunction) => {
     if (this.body.length === 0 || this.args[0] === 'clear' || !currentMCFunction) {
       return { node: this }
     }
@@ -25,12 +26,15 @@ export class ScheduleCommandNode extends ContainerCommandNode {
     }
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = this.sandstonePack.MCFunction(`${toMinecraftResourceName(currentMCFunction.resource.path)}/${func ?? 'schedule'}`, {
-      addToSandstoneCore: false,
-      creator: 'sandstone',
-      onConflict: 'rename',
-    })
-    const mcFunctionNode = mcFunction['node']
+    const mcFunction = this.sandstonePack.MCFunction(
+      `${toMinecraftResourceName(currentMCFunction.resource.path)}/${func ?? 'schedule'}`,
+      {
+        addToSandstoneCore: false,
+        creator: 'sandstone',
+        onConflict: 'rename',
+      },
+    )
+    const mcFunctionNode = mcFunction.node
     mcFunctionNode.body = this.body
     this.body = []
 
@@ -74,7 +78,11 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
    * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
    * If unspecified, defaults to `replace`.
    */
-  function = (func: Macroable<ScheduledFunction, MACRO>, delay: Macroable<TimeArgument, MACRO>, type?: Macroable<ScheduleType, MACRO>) => {
+  function = (
+    func: Macroable<ScheduledFunction, MACRO>,
+    delay: Macroable<TimeArgument, MACRO>,
+    type?: Macroable<ScheduleType, MACRO>,
+  ) => {
     const node = this.getNode()
 
     if (typeof func === 'object' && Object.hasOwn(func, 'addToTag')) {

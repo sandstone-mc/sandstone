@@ -6,7 +6,7 @@ import { GenericSandstoneVisitor } from './visitor.js'
 export class InitObjectivesVisitor extends GenericSandstoneVisitor {
   onStart = () => {
     const { pack } = this
-    const { commands, core } = pack
+    const { commands } = pack
 
     // Register all created objectives
     const sandstoneRegisteredObjectives = new Set<string>()
@@ -20,7 +20,7 @@ export class InitObjectivesVisitor extends GenericSandstoneVisitor {
             throw new Error(`An objective named "${obj.name}" has been created twice.`)
           }
 
-          if (obj['creator'] === 'user') {
+          if (obj.creator === 'user') {
             userRegisteredObjectives.add(obj.name)
           } else {
             // Sandstone can create several objectives with identical names, it's okay.

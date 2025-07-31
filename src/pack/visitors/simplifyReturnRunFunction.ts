@@ -24,7 +24,7 @@ export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
       return this.genericVisit(node)
     }
 
-    const mcFunctionNode = mcFunction['node']
+    const mcFunctionNode = mcFunction.node
 
     if (mcFunctionNode.body.length > 1) {
       return this.genericVisit(node)
@@ -48,7 +48,7 @@ export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
     // We can safely simplify the execute. If the called command is not a user-created MCFunction, we can safely delete it.
     node.body = [this.genericVisit(command)]
 
-    if (mcFunction['creator'] === 'sandstone') {
+    if (mcFunction.creator === 'sandstone') {
       this.core.resourceNodes.delete(mcFunctionNode)
     }
 

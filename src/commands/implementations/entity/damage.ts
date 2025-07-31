@@ -1,13 +1,10 @@
-import { validateIntegerRange } from 'sandstone/commands/validators'
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { Coordinates, DAMAGE_TYPES, SingleEntityArgument } from 'sandstone/arguments'
-import type { DamageTypeClass } from 'sandstone/core'
+import { validateIntegerRange } from 'sandstone/commands/validators'
+import type { DamageTypeClass, Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/core'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class DamageCommandNode extends CommandNode {
   command = 'damage' as const
@@ -24,7 +21,8 @@ export class DamageSourceCommand<MACRO extends boolean> extends CommandArguments
   /**
    * @param entity Entity inflicting the damage.
    */
-  by = (entity: Macroable<SingleEntityArgument<MACRO>, MACRO>) => this.subCommand(['by', targetParser(entity)], DamageCauseCommand)
+  by = (entity: Macroable<SingleEntityArgument<MACRO>, MACRO>) =>
+    this.subCommand(['by', targetParser(entity)], DamageCauseCommand)
 
   /**
    * Where the damage originated at (when no entity caused the damage).

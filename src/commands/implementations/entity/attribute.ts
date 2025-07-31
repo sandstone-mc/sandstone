@@ -1,10 +1,8 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { SingleEntityArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 // Attribute command
 
@@ -46,7 +44,8 @@ export class AttributeOperationCommand<MACRO extends boolean> extends CommandArg
   remove = (uuid: Macroable<string, MACRO>) => this.finalCommand(['modifier', 'remove', uuid])
 
   /** Returns the value of the modifier with the specified UUID. */
-  getModifierValue = (uuid: Macroable<string, MACRO>, scale?: Macroable<number, MACRO>) => this.finalCommand(['modifier', 'value', 'get', uuid, scale])
+  getModifierValue = (uuid: Macroable<string, MACRO>, scale?: Macroable<number, MACRO>) =>
+    this.finalCommand(['modifier', 'value', 'get', uuid, scale])
 }
 
 /**
@@ -55,5 +54,6 @@ export class AttributeOperationCommand<MACRO extends boolean> extends CommandArg
 export class AttributeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = AttributeCommandNode
 
-  attribute = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, attribute: Macroable<string, MACRO>) => this.finalCommand([targetParser(target), attribute])
+  attribute = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, attribute: Macroable<string, MACRO>) =>
+    this.finalCommand([targetParser(target), attribute])
 }

@@ -1,11 +1,13 @@
-import { SingleConditionNode } from '../condition.js'
-
 import type { NBTObject } from 'sandstone/arguments/nbt'
 import type { DataPointPickClass, SandstoneCore } from 'sandstone/core'
 import type { DataPointClass, Score } from 'sandstone/variables'
+import { SingleConditionNode } from '../condition.js'
 
 export class DataPointExistsConditionNode extends SingleConditionNode {
-  constructor(sandstoneCore: SandstoneCore, readonly dataPoint: DataPointClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    readonly dataPoint: DataPointClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -17,7 +19,11 @@ export class DataPointExistsConditionNode extends SingleConditionNode {
 export class DataPointEqualsConditionNode extends SingleConditionNode {
   readonly conditional: Score
 
-  constructor(sandstoneCore: SandstoneCore, readonly dataPoint: DataPointClass, readonly value: NBTObject | Score | DataPointClass | DataPointPickClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    readonly dataPoint: DataPointClass,
+    readonly value: NBTObject | Score | DataPointClass | DataPointPickClass,
+  ) {
     super(sandstoneCore)
 
     const { DataVariable, Variable, commands } = sandstoneCore.pack
@@ -30,7 +36,8 @@ export class DataPointEqualsConditionNode extends SingleConditionNode {
     execute.store.result.score(this.conditional).run(() => anon.set(this.value as unknown as DataPointClass))
   }
 
-  getValue = (negated?: boolean) => (negated ? ['if', ...this.getCondition()] : ['unless', ...this.getCondition()]).join(' ')
+  getValue = (negated?: boolean) =>
+    (negated ? ['if', ...this.getCondition()] : ['unless', ...this.getCondition()]).join(' ')
 
   getCondition(): unknown[] {
     return ['score', 'matches', '0..']

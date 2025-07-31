@@ -1,15 +1,17 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { AtlasDefinition, AtlasSpriteSource } from 'sandstone/arguments'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft block state.
  */
 export class AtlasNode extends ContainerNode implements ResourceNode<AtlasClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: AtlasClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: AtlasClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -21,7 +23,6 @@ export type AtlasClassArguments = {
    * The block state's JSON.
    */
   atlas?: AtlasDefinition
-
 } & ResourceClassArguments<'list'>
 
 export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {

@@ -1,18 +1,17 @@
-import { type MacroArgument, isMacroArgument } from './Macro.js'
+import * as util from 'node:util'
 
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
+import { formatDebugString } from '../utils.js'
+import { isMacroArgument, type MacroArgument } from './Macro.js'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
 import type { SandstoneCore } from './sandstoneCore.js'
-import { formatDebugString } from '../utils.js'
-import * as util from 'node:util'
 
 export abstract class Node {
-  constructor(public sandstoneCore: SandstoneCore) { }
-
+  constructor(public sandstoneCore: SandstoneCore) {}
 
   [util.inspect.custom](depth: number, options: any) {
-    return `${this.constructor.name}()`;
+    return `${this.constructor.name}()`
   }
 
   abstract getValue(): any
@@ -49,8 +48,6 @@ export abstract class ContainerNode extends Node {
     // Return the body of this node.
     return this.body
   }
-
-
 
   /**
    * Appends a node at the end of this node's body.
@@ -99,7 +96,10 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
 
   isMacro = false
 
-  constructor(public sandstonePack: SandstonePack, ...args: ARGS) {
+  constructor(
+    public sandstonePack: SandstonePack,
+    ...args: ARGS
+  ) {
     super(sandstonePack.core)
     this.args = args
   }
@@ -149,7 +149,10 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
 /**
  * A node that includes other nodes.
  */
-export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> extends CommandNode<ARGS> implements ContainerNode {
+export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]>
+  extends CommandNode<ARGS>
+  implements ContainerNode
+{
   abstract command: string
 
   _body: Node[]
@@ -204,7 +207,8 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> e
    *
    * The returned node will replace
    */
-  createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[], mcFunction?: MCFunctionNode } = (currentMCFunction) => ({ node: this })
+  createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[]; mcFunction?: MCFunctionNode } =
+    (currentMCFunction) => ({ node: this })
 }
 
 export abstract class AwaitNode extends ContainerCommandNode {

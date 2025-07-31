@@ -1,11 +1,9 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { rangeParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { Range } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { rangeParser } from 'sandstone/variables/parsers'
 import type { LiteralUnion } from '../../../utils.js'
+import { CommandArguments } from '../../helpers.js'
 
 export class RandomCommandNode extends CommandNode {
   command = 'random' as const

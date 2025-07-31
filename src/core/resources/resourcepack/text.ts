@@ -1,18 +1,20 @@
 /* eslint-disable no-lone-blocks */
-import { JSONTextComponentClass } from 'sandstone/variables'
-
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
 
 import type { ContentTag, JSONTextComponent } from 'sandstone/arguments'
+import { JSONTextComponentClass } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft text.
  */
 export class PlainTextNode extends ContainerNode implements ResourceNode<PlainTextClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: PlainTextClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: PlainTextClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -24,14 +26,19 @@ export type PlainTextArguments = {
    * The text.
    */
   text?: string | JSONTextComponent | string[] | JSONTextComponent[]
-
 } & ResourceClassArguments<'list'>
 
 export class PlainTextClass extends ResourceClass<PlainTextNode> implements ListResource {
   texts: NonNullable<PlainTextArguments['text']> = ''
 
   constructor(core: SandstoneCore, name: string, args: PlainTextArguments) {
-    super(core, { packType: core.pack.resourcePack(), extension: 'txt' }, PlainTextNode, core.pack.resourceToPath(name, ['texts']), args)
+    super(
+      core,
+      { packType: core.pack.resourcePack(), extension: 'txt' },
+      PlainTextNode,
+      core.pack.resourceToPath(name, ['texts']),
+      args,
+    )
 
     this.texts = ''
     if (args.text) {
@@ -46,7 +53,7 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
   }
 
   componentToPlainText(__text: JSONTextComponent): string {
-    const text = (new JSONTextComponentClass(__text).toJSON()) as JSONTextComponent
+    const text = new JSONTextComponentClass(__text).toJSON() as JSONTextComponent
 
     let converted = ''
 
@@ -73,7 +80,24 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
           throw new Error('Hex codes are not supported in plaintext')
         }
         // eslint-disable-next-line max-len
-        const colors = ['black', 'dark_blue', 'dark_green', 'dark_aqua', 'dark_red', 'dark_purple', 'gold', 'gray', 'dark_gray', 'blue', 'green', 'aqua', 'red', 'light_purple', 'yellow', 'white'] as const
+        const colors = [
+          'black',
+          'dark_blue',
+          'dark_green',
+          'dark_aqua',
+          'dark_red',
+          'dark_purple',
+          'gold',
+          'gray',
+          'dark_gray',
+          'blue',
+          'green',
+          'aqua',
+          'red',
+          'light_purple',
+          'yellow',
+          'white',
+        ] as const
 
         converted = `§${colors.indexOf(color as 'black').toString(16)}`
       }

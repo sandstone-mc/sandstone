@@ -1,19 +1,21 @@
 /* eslint-disable max-len */
-import { toMinecraftResourceName } from 'sandstone/utils'
-
-import { ContainerNode } from '../nodes.js'
-import { ResourceClass } from './resource.js'
 
 import type fs from 'fs-extra'
 import type { PackType } from 'sandstone/pack/packType'
+import { toMinecraftResourceName } from 'sandstone/utils'
+import { ContainerNode } from '../nodes.js'
 import type { SandstoneCore } from '../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from './resource.js'
+import { ResourceClass } from './resource.js'
 
 /**
  * A node representing a custom resource.
  */
 export class CustomResourceNode extends ContainerNode implements ResourceNode<CustomResourceClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: CustomResourceClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: CustomResourceClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -22,10 +24,10 @@ export class CustomResourceNode extends ContainerNode implements ResourceNode<Cu
 
 export type CustomResourceClassArguments = {
   /** The custom resource type. */
-  type: string,
+  type: string
 
   /** Optional. The Pack this resource is exported into. Defaults to the datapack. */
-  packType?: PackType,
+  packType?: PackType
 
   /** Optional. The folder in the pack where the resource gets stored. Defaults to the root of the pack without a namespace. */
   folder?: string[]
@@ -47,10 +49,18 @@ export abstract class CustomResourceClass extends ResourceClass<CustomResourceNo
 
     super(
       sandstoneCore,
-      { packType: args.packType || sandstoneCore.pack.dataPack(), extension: args.extension || 'json', encoding: args.encoding },
+      {
+        packType: args.packType || sandstoneCore.pack.dataPack(),
+        extension: args.extension || 'json',
+        encoding: args.encoding,
+      },
       CustomResourceNode,
       // eslint-disable-next-line no-nested-ternary
-      args.folder ? name.includes('/') ? name.split('/') : [name] : sandstoneCore.pack.resourceToPath(name, args.folder),
+      args.folder
+        ? name.includes('/')
+          ? name.split('/')
+          : [name]
+        : sandstoneCore.pack.resourceToPath(name, args.folder),
       args,
     )
 

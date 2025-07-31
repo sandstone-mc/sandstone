@@ -1,12 +1,10 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
-import { targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
+import { targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 // Bossbar command
 export class BossBarCommandNode extends CommandNode {
@@ -23,14 +21,16 @@ export class BossBarCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param name The display name of the boss bar.
    */
-  add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) => this.finalCommand(['add', id, parseJSONText(this.sandstoneCore, name)])
+  add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) =>
+    this.finalCommand(['add', id, parseJSONText(this.sandstoneCore, name)])
 
   /**
    * Return the requested setting as a result of the command.
    *
    * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
    */
-  get = (id: Macroable<string, MACRO>, setting: Macroable<'max' | 'players' | 'value' | 'visible', MACRO>) => this.finalCommand(['get', id, setting])
+  get = (id: Macroable<string, MACRO>, setting: Macroable<'max' | 'players' | 'value' | 'visible', MACRO>) =>
+    this.finalCommand(['get', id, setting])
 
   /**
    * Display a list of existing boss bars.
@@ -85,7 +85,8 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
    */
-  players = (players?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.finalCommand(['players', targetParser(players)])
+  players = (players?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+    this.finalCommand(['players', targetParser(players)])
 
   /**
    * Set the boss bar's visual amount of segments: continuous, 6 segments, 10 segments, 12 segments, or 20 segments.
@@ -93,7 +94,8 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param style The new style.
    */
-  style = (style: Macroable<'progress' | 'notched_6' | 'notched_10' | 'notched_12' | 'notched_20', MACRO>) => this.finalCommand(['style', style])
+  style = (style: Macroable<'progress' | 'notched_6' | 'notched_10' | 'notched_12' | 'notched_20', MACRO>) =>
+    this.finalCommand(['style', style])
 
   /**
    * Set the boss bar's current value.

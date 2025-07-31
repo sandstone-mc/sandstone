@@ -1,13 +1,11 @@
-import { makeCallable } from 'sandstone/utils'
-import * as util from 'util'
-
-import { parseNBT } from './parser.js'
-
+import * as util from 'node:util'
 import type { NBTObject, RootNBT } from 'sandstone/arguments'
 import type { MacroArgument } from 'sandstone/core'
+import { makeCallable } from 'sandstone/utils'
+import { parseNBT } from './parser.js'
 
 export abstract class NBTClass {
-  abstract [util.inspect.custom]: () => string;
+  abstract [util.inspect.custom]: () => string
 
   toString = this[util.inspect.custom]
 }
@@ -27,23 +25,33 @@ export class NBTPrimitive extends NBTClass {
 }
 
 export class NBTLong extends NBTPrimitive {
-  constructor(value: number) { super(value, 'l') }
+  constructor(value: number) {
+    super(value, 'l')
+  }
 }
 
 export class NBTByte extends NBTPrimitive {
-  constructor(value: number) { super(value, 'b') }
+  constructor(value: number) {
+    super(value, 'b')
+  }
 }
 
 export class NBTShort extends NBTPrimitive {
-  constructor(value: number) { super(value, 's') }
+  constructor(value: number) {
+    super(value, 's')
+  }
 }
 
 export class NBTFloat extends NBTPrimitive {
-  constructor(value: number) { super(value, 'f') }
+  constructor(value: number) {
+    super(value, 'f')
+  }
 }
 
 export class NBTDouble extends NBTPrimitive {
-  constructor(value: number) { super(value, 'd') }
+  constructor(value: number) {
+    super(value, 'd')
+  }
 }
 
 export class NBTTypedArray extends NBTClass {
@@ -61,15 +69,21 @@ export class NBTTypedArray extends NBTClass {
 }
 
 export class NBTLongArray extends NBTTypedArray {
-  constructor(values: number[]) { super(values, 'L') }
+  constructor(values: number[]) {
+    super(values, 'L')
+  }
 }
 
 export class NBTByteArray extends NBTTypedArray {
-  constructor(values: number[]) { super(values, 'B') }
+  constructor(values: number[]) {
+    super(values, 'B')
+  }
 }
 
 export class NBTIntArray extends NBTTypedArray {
-  constructor(values: number[]) { super(values, 'I') }
+  constructor(values: number[]) {
+    super(values, 'I')
+  }
 }
 
 export class NotNBT extends NBTClass {
@@ -100,7 +114,10 @@ export class NBTAnyValue extends NBTPrimitive {}
 
 export type NBTAllValues = NBTAllPrimitives | NBTAnyValue
 
-function customNumber<T extends number | number[], C extends NBTSimpleClasses>(num: T, _class: C): T extends number ? C : C[] {
+function customNumber<T extends number | number[], C extends NBTSimpleClasses>(
+  num: T,
+  _class: C,
+): T extends number ? C : C[] {
   if (Array.isArray(num)) {
     return num.map((n) => new _class(n)) as any
   }
@@ -109,7 +126,9 @@ function customNumber<T extends number | number[], C extends NBTSimpleClasses>(n
 
 function dynamicNBT(template: TemplateStringsArray, ...args: unknown[]): NBTObject {
   const mixedArgs = template.flatMap((s, i) => [s, args[i]]).slice(0, -1) // Remove the last argument, which will always be undefined
-  const result = mixedArgs.map((element: any) => (element instanceof NBTClass ? nbtStringifier(element) : element.toString())).join('')
+  const result = mixedArgs
+    .map((element: any) => (element instanceof NBTClass ? nbtStringifier(element) : element.toString()))
+    .join('')
 
   return parseNBT(NBT, result)
 }
@@ -245,7 +264,7 @@ interface NBTInterface {
    *
    * summon(..., { Test: NBT.intArray([0, 1, 2]) }) // => { Test: [I; 0, 1, 2] }
    */
-  intArray(intNumbers: number[]): NBTIntArray,
+  intArray(intNumbers: number[]): NBTIntArray
 
   /**
    * Transforms an array into a Byte array.
@@ -257,7 +276,7 @@ interface NBTInterface {
    *
    * summon(..., { Test: NBT.byteArray([0, 1, 2]) }) // => { Test: [B; 0, 1, 2] }
    */
-  byteArray(intNumbers: number[]): NBTByteArray,
+  byteArray(intNumbers: number[]): NBTByteArray
 
   /**
    * Transforms an array into a Long array.
@@ -269,7 +288,7 @@ interface NBTInterface {
    *
    * summon(..., { Test: NBT.longArray([0, 1, 2]) }) // => { Test: [L; 0, 1, 2] }
    */
-  longArray(longNumbers: number[]): NBTLongArray,
+  longArray(longNumbers: number[]): NBTLongArray
 
   /**
    * Used to check for the absence of a NBT in a selector.
@@ -342,29 +361,32 @@ interface NBTInterface {
 }
 
 // TODO: Look into the weird typing on this
-export const NBT: NBTInterface = makeCallable({
-  float: (num: number | number[]): any => customNumber(num, NBTFloat),
+export const NBT: NBTInterface = makeCallable(
+  {
+    float: (num: number | number[]): any => customNumber(num, NBTFloat),
 
-  double: (num: number | number[]): any => customNumber(num, NBTDouble),
+    double: (num: number | number[]): any => customNumber(num, NBTDouble),
 
-  byte: (num: number | number[]): any => customNumber(num, NBTByte),
+    byte: (num: number | number[]): any => customNumber(num, NBTByte),
 
-  short: (num: number | number[]): any => customNumber(num, NBTShort),
+    short: (num: number | number[]): any => customNumber(num, NBTShort),
 
-  long: (num: number | number[]): any => customNumber(num, NBTLong),
+    long: (num: number | number[]): any => customNumber(num, NBTLong),
 
-  intArray: (numbers: number[]): any => new NBTIntArray(numbers),
+    intArray: (numbers: number[]): any => new NBTIntArray(numbers),
 
-  longArray: (numbers: number[]): any => new NBTLongArray(numbers),
+    longArray: (numbers: number[]): any => new NBTLongArray(numbers),
 
-  byteArray: (numbers: number[]): any => new NBTByteArray(numbers),
+    byteArray: (numbers: number[]): any => new NBTByteArray(numbers),
 
-  not: (nbt: RootNBT) => new NotNBT(nbt),
+    not: (nbt: RootNBT) => new NotNBT(nbt),
 
-  stringify: (nbt: NBTObject) => nbtStringifier(nbt),
+    stringify: (nbt: NBTObject) => nbtStringifier(nbt),
 
-  parse: (nbt: string) => parseNBT(NBT, nbt),
-}, dynamicNBT)
+    parse: (nbt: string) => parseNBT(NBT, nbt),
+  },
+  dynamicNBT,
+)
 
 export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
   if (typeof nbt === 'number') {
@@ -385,10 +407,10 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
      * util.inspect will end up creating a template string, invalid for Minecraft.
      */
     const inspectedStr = util.inspect(nbt, {
-      breakLength: +Infinity,
+      breakLength: Number.POSITIVE_INFINITY,
       compact: true,
-      maxStringLength: +Infinity,
-      depth: +Infinity,
+      maxStringLength: Number.POSITIVE_INFINITY,
+      depth: Number.POSITIVE_INFINITY,
     })
 
     if (inspectedStr[0] === '`') {
@@ -416,6 +438,8 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
   }
 
   // It's a real object.
-  const objectStr = Object.entries(nbt).map(([key, value]) => `${key}:${nbtStringifier(value as NBTObject)}`).join(',')
+  const objectStr = Object.entries(nbt)
+    .map(([key, value]) => `${key}:${nbtStringifier(value as NBTObject)}`)
+    .join(',')
   return `{${objectStr}}`
 }

@@ -1,14 +1,15 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
-import { SelectorPickClass } from './abstractClasses.js'
-import { NBTIntArray } from './nbt/index.js'
-import { ResolveNBTPart } from './ResolveNBT.js'
 
 import type { JSONTextComponent } from 'sandstone/arguments'
+import type { ExecuteCommand } from 'sandstone/commands/index.js'
 import type { SandstoneCore } from 'sandstone/core'
 import type { ConditionTextComponentClass } from './abstractClasses.js'
+import { SelectorPickClass } from './abstractClasses.js'
 import type { DataPointClass } from './Data.js'
+import { NBTIntArray } from './nbt/index.js'
+import { ResolveNBTPart } from './ResolveNBT.js'
 import type { Score } from './Score.js'
 import type { SelectorClass } from './Selector.js'
 
@@ -18,11 +19,10 @@ export type UUIDinScore = [Score, Score, Score, Score]
 export type UUIDSource = string | UUIDinNumber | UUIDinScore | SelectorPickClass<true, boolean> | DataPointClass
 
 // Conversion methods ported from https://github.com/AjaxGb/mc-uuid-converter/blob/master/convert.js
-const UUIDData = new DataView((new Uint8Array(16)).buffer)
+const UUIDData = new DataView(new Uint8Array(16).buffer)
 const UUID_GROUP_SIZES = [8, 4, 4, 4, 12]
 
 export type UUIDOptions = {
-
   /** Can set source types for the UUID that you did not set in `source`. */
   sources?: {
     /**
@@ -50,22 +50,28 @@ export type UUIDOptions = {
   }
 }
 
-export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'> implements ConditionTextComponentClass, SelectorPickClass<true, false> {
+export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
+  implements ConditionTextComponentClass, SelectorPickClass<true, false>
+{
   readonly primarySource: PrimarySource
 
-  known!: PrimarySource extends 'known' ? UUIDinNumber : (UUIDinNumber | undefined)
+  known!: PrimarySource extends 'known' ? UUIDinNumber : UUIDinNumber | undefined
 
-  scores!: PrimarySource extends 'scores' ? UUIDinScore : (UUIDinScore | undefined)
+  scores!: PrimarySource extends 'scores' ? UUIDinScore : UUIDinScore | undefined
 
-  data!: PrimarySource extends 'data' ? DataPointClass : (DataPointClass | undefined)
+  data!: PrimarySource extends 'data' ? DataPointClass : DataPointClass | undefined
 
-  selector!: PrimarySource extends 'selector' ? SelectorClass<true, boolean> : (SelectorClass<true, boolean> | undefined)
+  selector!: PrimarySource extends 'selector' ? SelectorClass<true, boolean> : SelectorClass<true, boolean> | undefined
 
   /**
    *
    * @param _source A primary source for the UUID. Either a UUID string, a UUID integer array, 4 scores set to the UUID, a selector, or a Data Point set to the UUID.
    */
-  constructor(protected core: SandstoneCore, _source: UUIDSource, options?: UUIDOptions) {
+  constructor(
+    protected core: SandstoneCore,
+    _source: UUIDSource,
+    options?: UUIDOptions,
+  ) {
     let source = _source
 
     if (typeof source === 'string') {
@@ -146,7 +152,9 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
         UUIDData.setInt32(i * 4, array[i], false)
       }
 
-      const hex = UUIDData.getBigUint64(0, false).toString(16).padStart(16, '0') + UUIDData.getBigUint64(8, false).toString(16).padStart(16, '0')
+      const hex =
+        UUIDData.getBigUint64(0, false).toString(16).padStart(16, '0') +
+        UUIDData.getBigUint64(8, false).toString(16).padStart(16, '0')
       const groups = []
       let groupStart = 0
       for (const groupSize of UUID_GROUP_SIZES) {
@@ -166,39 +174,44 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
 
   setScores(scores?: UUIDinScore | [UUIDinScore]) {
     const { core } = this
-    const {
-      Data, getTempStorage, initMCFunction, Variable,
-    } = core.pack
+    const { Data, getTempStorage, initMCFunction, Variable } = core.pack
 
     const handleConversions = (_scores: UUIDinScore) => {
       switch (this.primarySource) {
-        case 'known': {
-          for (let i = 0; i < 4; i++) {
-            _scores[i].set((this.known as UUIDinNumber)[i])
+        case 'known':
+          {
+            for (let i = 0; i < 4; i++) {
+              _scores[i].set((this.known as UUIDinNumber)[i])
+            }
           }
-        } break
-        case 'data': {
-          const storagePoint = this.data as DataPointClass<'storage'>
+          break
+        case 'data':
+          {
+            const storagePoint = this.data as DataPointClass<'storage'>
 
-          if (storagePoint.type !== 'storage') {
-            const dataPoint = getTempStorage('UUID')
+            if (storagePoint.type !== 'storage') {
+              const dataPoint = getTempStorage('UUID')
 
-            dataPoint.set(storagePoint)
+              dataPoint.set(storagePoint)
+            }
+            for (let i = 0; i < 4; i++) {
+              _scores[i].set(storagePoint.select([i]))
+            }
           }
-          for (let i = 0; i < 4; i++) {
-            _scores[i].set(storagePoint.select([i]))
-          }
-        } break
-        case 'selector': {
-          const storagePoint = getTempStorage('UUID')
+          break
+        case 'selector':
+          {
+            const storagePoint = getTempStorage('UUID')
 
-          storagePoint.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
+            storagePoint.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
 
-          for (let i = 0; i < 4; i++) {
-            _scores[i].set(storagePoint.select([i]))
+            for (let i = 0; i < 4; i++) {
+              _scores[i].set(storagePoint.select([i]))
+            }
           }
-        } break
-        default: break
+          break
+        default:
+          break
       }
     }
 
@@ -211,7 +224,7 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
       if (core.mcfunctionStack.length !== 0) {
         /* @ts-ignore */
         core.getCurrentMCFunctionOrThrow().resource.push(() => handleConversions(scores[0]))
-      // UUIDClass is being constructed outside of a MCFunction
+        // UUIDClass is being constructed outside of a MCFunction
       } else {
         /* @ts-ignore */
         initMCFunction.push(() => handleConversions(scores[0]))
@@ -225,29 +238,37 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
 
   setData(data?: DataPointClass | DataPointClass[]) {
     if (Array.isArray(data) || data === undefined) {
-      const {
-        Data, DataVariable, ResolveNBT,
-      } = this.core.pack
+      const { Data, DataVariable, ResolveNBT } = this.core.pack
 
       // User doesn't want to set up a storage location
       if (data === undefined) {
         this.data = DataVariable(undefined, '__sandstone')
-      // User has set a storage location
+        // User has set a storage location
       } else {
         this.data = data[0]
       }
 
       switch (this.primarySource) {
-        case 'known': {
-          this.data.set(new NBTIntArray(this.known as UUIDinNumber))
-        } break
-        case 'scores': {
-          ResolveNBT((this.scores as UUIDinScore).map((score) => ResolveNBTPart(score)), this.data)
-        } break
-        case 'selector': {
-          this.data.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
-        } break
-        default: break
+        case 'known':
+          {
+            this.data.set(new NBTIntArray(this.known as UUIDinNumber))
+          }
+          break
+        case 'scores':
+          {
+            ResolveNBT(
+              (this.scores as UUIDinScore).map((score) => ResolveNBTPart(score)),
+              this.data,
+            )
+          }
+          break
+        case 'selector':
+          {
+            this.data.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
+          }
+          break
+        default:
+          break
       }
     } else {
       this.data = data
@@ -262,7 +283,7 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
   }
 
   /** Partial execute command executing as (not at) the entity */
-  get execute() {
+  get execute(): ExecuteCommand<false> {
     const { execute } = this.core.pack.commands
     if (this.known) {
       return execute.as(this.arrayToString())
@@ -271,7 +292,7 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
       return execute.as(this.selector)
     }
     // TODO: Refactor to use macro
-    return execute.as
+    return execute.as as any
   }
 
   toString() {
@@ -301,7 +322,7 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
    * @internal
    */
   /* @ts-ignore */
-  _toMinecraftCondition = () => (new this.core.pack.conditions.UUID(this.core, this)) as ConditionClass
+  _toMinecraftCondition = () => new this.core.pack.conditions.UUID(this.core, this) as ConditionClass
 
   /**
    * @internal

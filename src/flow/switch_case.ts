@@ -1,16 +1,20 @@
 import type { NBTObject } from 'sandstone/arguments'
 
 export type DefaultType<ValueType extends number | NBTObject> = {
-  cases: CaseStatement<ValueType>[];
-  default: () => any;
+  cases: CaseStatement<ValueType>[]
+  default: () => any
 }
 
 export class CaseStatement<ValueType extends number | NBTObject> {
-  constructor(readonly value: ValueType, readonly callback: () => any, readonly previous?: CaseStatement<ValueType>[]) {}
+  constructor(
+    readonly value: ValueType,
+    readonly callback: () => any,
+    readonly previous?: CaseStatement<ValueType>[],
+  ) {}
 
-  protected getCases = () => (this.previous ? [...this.previous, this] : [this])
+  getCases = () => (this.previous ? [...this.previous, this] : [this])
 
-  protected getValue(): readonly ['case', ValueType, () => any] {
+  getValue(): readonly ['case', ValueType, () => any] {
     return ['case', this.value, this.callback]
   }
 

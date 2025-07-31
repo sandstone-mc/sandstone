@@ -1,16 +1,18 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { nbtStringifier } from 'sandstone/variables'
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type {
-  CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS,
-  ITEMS, MultipleEntitiesArgument, RootNBT,
+  CONTAINER_SLOTS,
+  Coordinates,
+  ENTITY_SLOTS,
+  ITEMS,
+  MultipleEntitiesArgument,
+  RootNBT,
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers.js'
+import { CommandArguments } from '../../helpers.js'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
@@ -30,7 +32,11 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
    * @param nbt The nbt of the item to replace the slot with.
    * @param count The amount of items.
    */
-  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, nbt: Macroable<RootNBT, MACRO>, count: Macroable<number, MACRO>): FinalCommandOutput
+  with(
+    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    nbt: Macroable<RootNBT, MACRO>,
+    count: Macroable<number, MACRO>,
+  ): FinalCommandOutput
 
   with(
     item: Macroable<LiteralUnion<ITEMS>, MACRO>,
@@ -103,7 +109,8 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      * @param pos The position of the container containing the slot to be replaced.
      * @param slot The slot to be replaced.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) => this.subCommand(['replace', 'block', pos, slot], ItemSourceCommand<MACRO>, false),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) =>
+      this.subCommand(['replace', 'block', pos, slot], ItemSourceCommand<MACRO>, false),
 
     /**
      * @param targets one or more entities to modify.

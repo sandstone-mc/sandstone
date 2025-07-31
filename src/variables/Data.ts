@@ -1,22 +1,17 @@
-import {
-  DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral,
-} from '../core/Macro.js'
-import { nbtStringifier } from './nbt/NBTs.js'
-import { Score } from './Score.js'
-
-import type {
-  Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument,
-} from 'sandstone/arguments'
+import type { Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument } from 'sandstone/arguments'
 import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations'
 import type { SandstonePack } from 'sandstone/pack'
+import { DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral } from '../core/Macro.js'
 import type { ConditionTextComponentClass } from './abstractClasses.js'
+import { nbtStringifier } from './nbt/NBTs.js'
+import { Score } from './Score.js'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 
 export type DATA_TARGET = {
-  'entity': SingleEntityArgument<false>,
-  'block': Coordinates<false>,
-  'storage': string,
+  entity: SingleEntityArgument<false>
+  block: Coordinates<false>
+  storage: string
 }
 
 export type DATA_PATH = string | MacroArgument | Record<string, NBTObject> | NBTObject[]
@@ -54,7 +49,7 @@ export function NBTpathToString(pack: SandstonePack, paths: DATA_PATH[]) {
         parsedPaths.push(nbtStringifier(path))
       }
     } else if (path !== '') {
-      parsedPaths.push(`${path}${(i === paths.length - 1) ? '' : '.'}`)
+      parsedPaths.push(`${path}${i === paths.length - 1 ? '' : '.'}`)
     }
   }
 
@@ -64,13 +59,20 @@ export function NBTpathToString(pack: SandstonePack, paths: DATA_PATH[]) {
      *
      * Also, since Macro.<command> is just a type-hack, I can just force cast this to string
      */
-    return new MacroLiteral(pack.core, parsedPaths as unknown as TemplateStringsArray, parsedMacros) as unknown as string
+    return new MacroLiteral(
+      pack.core,
+      parsedPaths as unknown as TemplateStringsArray,
+      parsedMacros,
+    ) as unknown as string
   }
   return parsedPaths.join('')
 }
 
 export class TargetlessDataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
-  constructor(protected sandstonePack: SandstonePack, public type: TYPE) {}
+  constructor(
+    protected sandstonePack: SandstonePack,
+    public type: TYPE,
+  ) {}
 
   target = (target: DATA_TARGET[TYPE]) => new DataClass(this.sandstonePack, this.type, target)
 
@@ -80,7 +82,11 @@ export class TargetlessDataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
 export class TargetlessDataPointClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   path
 
-  constructor(protected sandstonePack: SandstonePack, public type: TYPE, path: DATA_PATH[]) {
+  constructor(
+    protected sandstonePack: SandstonePack,
+    public type: TYPE,
+    path: DATA_PATH[],
+  ) {
     this.path = NBTpathToString(sandstonePack, path)
   }
 
@@ -92,7 +98,11 @@ export class TargetlessDataPointClass<TYPE extends DATA_TYPES = DATA_TYPES> {
 export class DataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   currentTarget
 
-  constructor(protected sandstonePack: SandstonePack, public type: TYPE, target: DATA_TARGET[TYPE]) {
+  constructor(
+    protected sandstonePack: SandstonePack,
+    public type: TYPE,
+    target: DATA_TARGET[TYPE],
+  ) {
     this.currentTarget = target
   }
 
@@ -112,12 +122,20 @@ export class DataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   toJSON = this.toString
 }
 
-export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument implements ConditionTextComponentClass {
+export class DataPointClass<TYPE extends DATA_TYPES = any>
+  extends MacroArgument
+  implements ConditionTextComponentClass
+{
   path
 
   currentTarget: DATA_TARGET[TYPE]
 
-  constructor(public sandstonePack: SandstonePack, public type: TYPE, target: DATA_TARGET[TYPE], path: DATA_PATH[]) {
+  constructor(
+    public sandstonePack: SandstonePack,
+    public type: TYPE,
+    target: DATA_TARGET[TYPE],
+    path: DATA_PATH[],
+  ) {
     super(sandstonePack.core)
     this.path = NBTpathToString(sandstonePack, path)
     this.currentTarget = target
@@ -129,9 +147,13 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
 
   target = (target: DATA_TARGET[TYPE]) => new DataPointClass(this.sandstonePack, this.type, target, [this.path])
 
-  select = (...path: DATA_PATH[]) => new DataPointClass(this.sandstonePack, this.type, this.currentTarget, [this.path, ...path])
+  select = (...path: DATA_PATH[]) =>
+    new DataPointClass(this.sandstonePack, this.type, this.currentTarget, [this.path, ...path])
 
-  protected modify = (cb: (data: DataModifyTypeCommand<false>) => DataModifyValuesCommand<false>, value: NBTObject | DataPointClass | DataPointPickClass) => {
+  protected modify = (
+    cb: (data: DataModifyTypeCommand<false>) => DataModifyValuesCommand<false>,
+    value: NBTObject | DataPointClass | DataPointPickClass,
+  ) => {
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     // The value is another Data Point
@@ -150,7 +172,12 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
     return this
   }
 
-  protected string = (cb: (data: DataModifyTypeCommand<false>) => DataModifyValuesCommand<false>, value: DataPointClass, start: number, end?: number) => {
+  protected string = (
+    cb: (data: DataModifyTypeCommand<false>) => DataModifyValuesCommand<false>,
+    value: DataPointClass,
+    start: number,
+    end?: number,
+  ) => {
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     if (!end) data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start)
@@ -161,42 +188,47 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
     }
   }
 
-  protected executeStore = (storeType: StoreType, scale: number) => this.sandstonePack.commands.execute.store.result[this.type](this.currentTarget as any, this.path, storeType as StoreType, scale)
+  protected executeStore = (storeType: StoreType, scale: number) =>
+    this.sandstonePack.commands.execute.store.result[this.type](
+      this.currentTarget as any,
+      this.path,
+      storeType as StoreType,
+      scale,
+    )
 
-  set: (
-    /**
-     * Set the data point to the given NBT.
-     */
-    ((value: NBTObject | DataPointClass) => DataPointClass) &
-
+  set: /**
+   * Set the data point to the given NBT.
+   */
+  ((value: NBTObject | DataPointClass) => DataPointClass) &
     /**
      * Set the data point to the given Data Point Pick
      */
     ((value: DataPointPickClass) => DataPointClass) &
-
     /**
      * Set the data point to the given score, with a given type and a scale.
      */
     ((value: Score, storeType?: StoreType, scale?: number) => DataPointClass) &
-
     /**
      * Set the data point to the given NBT string.
      */
-    ((value: StringDataPointClass) => DataPointClass)
-  ) = (value: NBTObject | DataPointClass | DataPointPickClass | Score, storeType?: StoreType, scale: number = 1) => {
-      if (value instanceof StringDataPointClass) {
-        if (value.sliceBounds[1]) this.string((data) => data.set, value, value.sliceBounds[0], value.sliceBounds[1])
-        else this.string((data) => data.set, value, value.sliceBounds[0])
-        return this
-      }
-      if (value instanceof Score) {
-        this.executeStore(storeType || 'int', scale).run.scoreboard.players.get(value.target, value.objective)
-        return this
-      }
-
-      this.modify((data) => data.set, value)
+    ((value: StringDataPointClass) => DataPointClass) = (
+    value: NBTObject | DataPointClass | DataPointPickClass | Score,
+    storeType?: StoreType,
+    scale: number = 1,
+  ) => {
+    if (value instanceof StringDataPointClass) {
+      if (value.sliceBounds[1]) this.string((data) => data.set, value, value.sliceBounds[0], value.sliceBounds[1])
+      else this.string((data) => data.set, value, value.sliceBounds[0])
       return this
     }
+    if (value instanceof Score) {
+      this.executeStore(storeType || 'int', scale).run.scoreboard.players.get(value.target, value.objective)
+      return this
+    }
+
+    this.modify((data) => data.set, value)
+    return this
+  }
 
   /**
    * Set the data point to the given NBT.
@@ -216,7 +248,8 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
   /**
    * Insert the given NBT to the given index of the current data point.
    */
-  insert = (value: NBTObject | DataPointClass | DataPointPickClass, index: number) => this.modify((data) => data.insert(index), value)
+  insert = (value: NBTObject | DataPointClass | DataPointPickClass, index: number) =>
+    this.modify((data) => data.insert(index), value)
 
   /**
    * Remove the current NBT value.
@@ -231,25 +264,35 @@ export class DataPointClass<TYPE extends DATA_TYPES = any> extends MacroArgument
    * @param start Index of first character to include at the start of the string.
    * @param end Optional. Index of the first character to exclude at the end of the string.
    */
-  slice = (start: number, end?: number) => new StringDataPointClass(this.sandstonePack, this.type, this.currentTarget, this.path, start, end)
+  slice = (start: number, end?: number) =>
+    new StringDataPointClass(this.sandstonePack, this.type, this.currentTarget, this.path, start, end)
 
   _toMinecraftCondition = () => new this.sandstonePack.conditions.DataPoint(this.sandstonePack.core, this)
 
-  equals = (value: NBTObject | Score | DataPointClass | DataPointPickClass) => new this.sandstonePack.conditions.DataPointEquals(this.sandstonePack.core, this, value)
+  equals = (value: NBTObject | Score | DataPointClass | DataPointPickClass) =>
+    new this.sandstonePack.conditions.DataPointEquals(this.sandstonePack.core, this, value)
 
   /**
    * @internal
    */
-  _toChatComponent = () => ({
-    nbt: this.path,
-    [this.type]: this.currentTarget,
-  }) as unknown as JSONTextComponent
+  _toChatComponent = () =>
+    ({
+      nbt: this.path,
+      [this.type]: this.currentTarget,
+    }) as unknown as JSONTextComponent
 }
 
 export class StringDataPointClass<TYPE extends DATA_TYPES = any> extends DataPointClass {
   readonly sliceBounds: [number] | [number, number]
 
-  constructor(public sandstonePack: SandstonePack, public type: TYPE, target: DATA_TARGET[TYPE], path: DATA_PATH, start: number, end?: number) {
+  constructor(
+    public sandstonePack: SandstonePack,
+    public type: TYPE,
+    target: DATA_TARGET[TYPE],
+    path: DATA_PATH,
+    start: number,
+    end?: number,
+  ) {
     super(sandstonePack, type, target, [path])
 
     this.sliceBounds = [start]

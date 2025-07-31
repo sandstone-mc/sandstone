@@ -1,11 +1,9 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { BLOCKS, Coordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { coordinatesParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class FillCommandNode extends CommandNode {
   command = 'fill' as const
@@ -88,9 +86,9 @@ export class FillCommand<MACRO extends boolean> extends CommandArguments {
    * // Replace all dirt with grass in a 9x9 blocks, centered on the player
    * fill('~-4 ~-4 ~-4', '~4 ~4 ~4', 'minecraft:grass_block').replace('minecraft:dirt')
    */
-  fill = (from: Macroable<Coordinates<MACRO>, MACRO>, to: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<LiteralUnion<BLOCKS>, MACRO>) => this.subCommand(
-    [coordinatesParser(from), coordinatesParser(to), block],
-    FillArgumentsCommand,
-    true,
-  )
+  fill = (
+    from: Macroable<Coordinates<MACRO>, MACRO>,
+    to: Macroable<Coordinates<MACRO>, MACRO>,
+    block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+  ) => this.subCommand([coordinatesParser(from), coordinatesParser(to), block], FillArgumentsCommand, true)
 }

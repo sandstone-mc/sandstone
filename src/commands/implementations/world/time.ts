@@ -1,9 +1,7 @@
-import { CommandNode } from 'sandstone/core/nodes'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { TimeArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { CommandArguments } from '../../helpers.js'
 
 export class TimeCommandNode extends CommandNode {
   command = 'time' as const
@@ -43,5 +41,6 @@ export class TimeCommand<MACRO extends boolean> extends CommandArguments {
    * - `s`: a second, 20 gameticks;
    * - `t` (default and omitable): a single gametick; the default unit.
    */
-  set = (time: Macroable<TimeArgument | 'day' | 'night' | 'noon' | 'midnight', MACRO>) => this.finalCommand(['set', time])
+  set = (time: Macroable<TimeArgument | 'day' | 'night' | 'noon' | 'midnight', MACRO>) =>
+    this.finalCommand(['set', time])
 }

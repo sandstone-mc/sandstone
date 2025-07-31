@@ -1,8 +1,6 @@
-import type { NumberProvider } from './utils.js'
-import type {
-  BLOCKS, DIMENSIONS, ENCHANTMENTS, MOB_EFFECTS,
-} from 'sandstone/arguments'
+import type { BLOCKS, DIMENSIONS, ENCHANTMENTS, MOB_EFFECTS } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { NumberProvider } from './utils.js'
 
 // All the possible criteria
 export type BlockIdCriterion = LiteralUnion<BLOCKS>
@@ -32,7 +30,8 @@ export type PositionCriterion = Partial<{
 export type DistanceCriterion = Partial<{
   absolute: NumberProvider
   horizontal: NumberProvider
-}> & PositionCriterion
+}> &
+  PositionCriterion
 
 export type EnchantmentCriterion = {
   /** An enchantment ID. */
@@ -46,9 +45,14 @@ export type PotionIdCriterion = string
 
 export type DimensionCriterion = LiteralUnion<DIMENSIONS>
 
-export type EffectCriterion = Partial<Record<LiteralUnion<MOB_EFFECTS>, {
-  /** The effect amplifier. */
-  amplifier?: NumberProvider
-  /** The effect duration in ticks. */
-  duration?: NumberProvider
-}>>
+export type EffectCriterion = Partial<
+  Record<
+    LiteralUnion<MOB_EFFECTS>,
+    {
+      /** The effect amplifier. */
+      amplifier?: NumberProvider
+      /** The effect duration in ticks. */
+      duration?: NumberProvider
+    }
+  >
+>

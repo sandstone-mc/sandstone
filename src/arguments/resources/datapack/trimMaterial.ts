@@ -3,7 +3,10 @@ import type { ITEMS } from '../../generated/index.js'
 import type { JSONTextComponent } from '../../jsonTextComponent.js'
 
 /** Key is armor material, value is a string which will be used in the resource pack. */
-export type OverrideArmorMaterials = Record<LiteralUnion<'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'turtle' | 'netherite'>, string>
+export type OverrideArmorMaterials = Record<
+  LiteralUnion<'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'turtle' | 'netherite'>,
+  string
+>
 
 export type TrimMaterialJSON = {
   /** A string which will be used in the resource pack for the color palette. */

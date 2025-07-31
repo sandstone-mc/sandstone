@@ -1,9 +1,11 @@
+import type { SandstoneCore, TrimPatternClass } from 'sandstone/core'
 import { SingleConditionNode } from '../condition.js'
 
-import type { SandstoneCore, TrimPatternClass } from 'sandstone/core'
-
 export class TrimPatternConditionNode extends SingleConditionNode {
-  constructor(sandstoneCore: SandstoneCore, readonly trimPattern: TrimPatternClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    readonly trimPattern: TrimPatternClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -23,13 +25,18 @@ export class TrimPatternConditionNode extends SingleConditionNode {
       },
     }
 
-    for (const slot of trimPattern.equipmentCheck ? [...trimPattern.equipmentCheck] : ['mainhand', 'offhand', 'head', 'chest', 'legs', 'feet']) {
+    for (const slot of trimPattern.equipmentCheck
+      ? [...trimPattern.equipmentCheck]
+      : ['mainhand', 'offhand', 'head', 'chest', 'legs', 'feet']) {
       slotCheck[slot] = {
         nbt: `{Trim:{pattern:"${trimPattern.name}"}}`,
       }
     }
 
-    const predicate = this.sandstoneCore.pack.Predicate(`trim_pattern/${trimPattern.path.slice(1).join('/')}`, slotCheck)
+    const predicate = this.sandstoneCore.pack.Predicate(
+      `trim_pattern/${trimPattern.path.slice(1).join('/')}`,
+      slotCheck,
+    )
 
     return ['predicate', predicate.name]
   }

@@ -1,9 +1,7 @@
-import { CommandNode } from 'sandstone/core/nodes'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { MessageOrSelector } from 'sandstone/arguments'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { AtLeastOne } from 'sandstone/utils'
+import { CommandArguments } from '../../helpers.js'
 
 export class TeamMessageCommandNode extends CommandNode {
   command = 'tm' as const
@@ -22,5 +20,5 @@ export class TeamMessageCommand extends CommandArguments {
    *
    * At least one message is necessary.
    */
-  teammessage = (...messages: AtLeastOne<MessageOrSelector>) => { }
+  teammessage = (...messages: AtLeastOne<MessageOrSelector>) => {}
 }

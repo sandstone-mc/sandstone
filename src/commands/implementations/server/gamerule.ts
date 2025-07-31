@@ -1,11 +1,10 @@
 /* eslint-disable max-len */
-import { CommandNode } from 'sandstone/core/nodes'
-
-import { CommandArguments } from '../../helpers.js'
 
 import type { GAMERULES } from 'sandstone/arguments'
-import type { LiteralUnion } from 'sandstone/utils'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import type { LiteralUnion } from 'sandstone/utils'
+import { CommandArguments } from '../../helpers.js'
 
 // Gamerule command
 
@@ -69,5 +68,6 @@ export class GameRuleCommand<MACRO extends boolean> extends CommandArguments {
    * `maxEntityCramming`, `randomTickSpeed`, `spawnRadius`, and `maxCommandChainLength`,
    * where any integer 0 or greater affects gameplay.
    */
-  gamerule = (gamerule: Macroable<LiteralUnion<GAMERULES>, MACRO>, value?: Macroable<boolean | number, MACRO>) => this.finalCommand([gamerule, value])
+  gamerule = (gamerule: Macroable<LiteralUnion<GAMERULES>, MACRO>, value?: Macroable<boolean | number, MACRO>) =>
+    this.finalCommand([gamerule, value])
 }

@@ -1,12 +1,10 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { BLOCKS, Coordinates, RootNBT } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers.js'
+import { CommandArguments } from '../../helpers.js'
 
 export class SetBlockCommandNode extends CommandNode {
   command = 'setblock' as const

@@ -1,11 +1,9 @@
+import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments'
 import { validateIntegerRange } from 'sandstone/commands/validators'
+import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
-
 import { CommandArguments } from '../../helpers.js'
-
-import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/core'
 
 export class ExperienceCommandNode extends CommandNode {
   // We always use the shorthand version for compactness purposes
@@ -33,7 +31,11 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * If unspecified, defaults to `points`.
    */
-  add = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, amount: Macroable<number, MACRO>, type?: Macroable<'level' | 'points', MACRO>) => {
+  add = (
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    amount: Macroable<number, MACRO>,
+    type?: Macroable<'level' | 'points', MACRO>,
+  ) => {
     validateIntegerRange(amount, 'amount', -2147483648, 2147483647)
     return this.finalCommand([targetParser(targets), amount, type])
   }
@@ -54,7 +56,11 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * If unspecified, defaults to `points`.
    */
-  set = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, amount: Macroable<number, MACRO>, type?: Macroable<'level' | 'points', MACRO>) => {
+  set = (
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    amount: Macroable<number, MACRO>,
+    type?: Macroable<'level' | 'points', MACRO>,
+  ) => {
     validateIntegerRange(amount, 'amount', 0, 2147483647)
     return this.finalCommand([targets, amount, type])
   }
@@ -70,5 +76,6 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * If unspecified, defaults to `points`.
    */
-  query = (target: Macroable<SinglePlayerArgument<MACRO>, MACRO>, type?: Macroable<'level' | 'points', MACRO>) => this.finalCommand([target, type])
+  query = (target: Macroable<SinglePlayerArgument<MACRO>, MACRO>, type?: Macroable<'level' | 'points', MACRO>) =>
+    this.finalCommand([target, type])
 }

@@ -1,24 +1,28 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { ColumnCoordinates } from 'sandstone/arguments'
-import type { Macroable, MacroArgument } from 'sandstone/core'
+import type { MacroArgument, Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { VectorClass } from 'sandstone/variables'
+import { coordinatesParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string): number[] {
   if (typeof coords === 'string') {
-    return coords.replace(/[~^]/, '').split(' ').map((i) => Number(i))
+    return coords
+      .replace(/[~^]/, '')
+      .split(' ')
+      .map((i) => Number(i))
   }
 
   const realCoords = Array.isArray(coords) ? coords : coords.values
 
-  return realCoords.map((coord) => parseInt(coord.replace(/[\^~]/, '') || '0', 10))
+  return realCoords.map((coord) => Number.parseInt(coord.replace(/[\^~]/, '') || '0', 10))
 }
 
-function validateNumberOfChunks(from: MacroArgument | ColumnCoordinates<boolean>, to: MacroArgument | ColumnCoordinates<boolean> | undefined) {
+function validateNumberOfChunks(
+  from: MacroArgument | ColumnCoordinates<boolean>,
+  to: MacroArgument | ColumnCoordinates<boolean> | undefined,
+) {
   if (!to) {
     return
   }
@@ -30,10 +34,10 @@ function validateNumberOfChunks(from: MacroArgument | ColumnCoordinates<boolean>
   const coords = [...from, ...to].map(coordinatesParser)
 
   if (
-  // If all coordinates are:
-    coords.every((c) => c[0] === '~') // Relative
-      || coords.every((c) => c[0] === '^') // or local
-      || coords.every((c) => c[0].match(/0-9/)) // or absolute
+    // If all coordinates are:
+    coords.every((c) => c[0] === '~') || // Relative
+    coords.every((c) => c[0] === '^') || // or local
+    coords.every((c) => c[0].match(/0-9/)) // or absolute
   ) {
     /*
      * Then we can calculate before-hand the number of affected chunks, and throw an error
@@ -49,7 +53,9 @@ function validateNumberOfChunks(from: MacroArgument | ColumnCoordinates<boolean>
     const affectedChunks = chunksX * chunksZ
 
     if (affectedChunks > 256) {
-      throw new Error(`Impossible to forceload more than 256 chunks. From "${from}" to "${to}", at least ${affectedChunks} would be forceloaded.`)
+      throw new Error(
+        `Impossible to forceload more than 256 chunks. From "${from}" to "${to}", at least ${affectedChunks} would be forceloaded.`,
+      )
     }
   }
 }

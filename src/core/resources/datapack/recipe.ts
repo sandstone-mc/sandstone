@@ -1,15 +1,17 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { MultiplePlayersArgument, RecipeJSON } from 'sandstone/arguments'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft recipe.
  */
 export class RecipeNode extends ContainerNode implements ResourceNode<RecipeClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: RecipeClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: RecipeClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -27,7 +29,13 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
   public recipeJSON: NonNullable<RecipeClassArguments['recipe']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: RecipeClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, RecipeNode, sandstoneCore.pack.resourceToPath(name, ['recipes']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      RecipeNode,
+      sandstoneCore.pack.resourceToPath(name, ['recipes']),
+      args,
+    )
 
     this.recipeJSON = args.recipe
 

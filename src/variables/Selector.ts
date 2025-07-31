@@ -1,20 +1,17 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
-import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
-import { rangeParser } from 'sandstone/variables/parsers'
 
-import type {
-  ENTITY_TYPES, GAMEMODES, JSONTextComponent, Range, RootNBT,
-} from 'sandstone/arguments'
+import * as util from 'node:util'
+import type { ENTITY_TYPES, GAMEMODES, JSONTextComponent, Range, RootNBT } from 'sandstone/arguments'
 import type { PredicateClass, SandstoneCore } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
+import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
+import { rangeParser } from 'sandstone/variables/parsers'
 import type { Macroable } from '../core/Macro.js'
 import { formatDebugString, type LiteralUnion } from '../utils.js'
 import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
 import type { LabelClass } from './Label.js'
 import type { NotNBT } from './nbt/NBTs.js'
-
-import * as util from 'node:util'
 
 type ScoreArgument<MACRO extends boolean> = Record<string, Range<MACRO>>
 
@@ -38,7 +35,7 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
    *
    * Only unsigned values are allowed.
    */
-  distance?: Macroable<Range<MACRO>, MACRO>,
+  distance?: Macroable<Range<MACRO>, MACRO>
 
   /** Filter target selection based on their scores in the specified objectives. */
   scores?: Macroable<ScoreArgument<MACRO>, MACRO>
@@ -153,61 +150,69 @@ export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extend
    * as measured from the closest corner of the entities' hitboxes
    */
   dz?: Macroable<number, MACRO>
-} & (
-  MustBeSingle extends true ? { limit: Macroable<0 | 1, MACRO> } : { limit?: Macroable<number, MACRO> }
-) & (
-  MustBePlayer extends true ? {
-    /**
-     * Filter target selection to those of a specific entity type.
-     *
-     * Multiple values are allowed, when passed as an array.
-     *
-     * @example
-     *
-     * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
-     *
-     * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
-     */
-    type: 'minecraft:player'
-  } : {
-    /**
-     * Filter target selection to those of a specific entity type.
-     *
-     * Multiple values are allowed, when passed as an array.
-     *
-     * @example
-     *
-     * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
-     *
-     * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
-     */
-    type?: Macroable<LiteralUnion<ENTITY_TYPES> | LiteralUnion<ENTITY_TYPES>[], MACRO>
-  }
-)
+} & (MustBeSingle extends true ? { limit: Macroable<0 | 1, MACRO> } : { limit?: Macroable<number, MACRO> }) &
+  (MustBePlayer extends true
+    ? {
+        /**
+         * Filter target selection to those of a specific entity type.
+         *
+         * Multiple values are allowed, when passed as an array.
+         *
+         * @example
+         *
+         * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
+         *
+         * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
+         */
+        type: 'minecraft:player'
+      }
+    : {
+        /**
+         * Filter target selection to those of a specific entity type.
+         *
+         * Multiple values are allowed, when passed as an array.
+         *
+         * @example
+         *
+         * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
+         *
+         * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
+         */
+        type?: Macroable<LiteralUnion<ENTITY_TYPES> | LiteralUnion<ENTITY_TYPES>[], MACRO>
+      })
 
 // Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'
 function parseScore(core: SandstoneCore, scores: ScoreArgument<boolean>): string {
-  return `{${Object.entries(scores).map(([scoreName, value]) => [scoreName, rangeParser(core, value)].join('=')).join(', ')}}`
+  return `{${Object.entries(scores)
+    .map(([scoreName, value]) => [scoreName, rangeParser(core, value)].join('='))
+    .join(', ')}}`
 }
 
 // Returns the string representation of advancements
 function parseAdvancements(advancements: AdvancementsArgument): string {
-  return `{${Object.entries(advancements).map(([advancementName, value]) => {
-    if (typeof value === 'boolean') {
-      return [advancementName, value].join('=')
-    }
-    if (Array.isArray(value)) {
-      if (Array.isArray(value[0])) {
-        return [advancementName, `{${value.map((_value) => (_value as [string, boolean]).join('=')).join(',')}}`].join('=')
+  return `{${Object.entries(advancements)
+    .map(([advancementName, value]) => {
+      if (typeof value === 'boolean') {
+        return [advancementName, value].join('=')
       }
-      return [advancementName, `{${value.join('=')}}`].join('=')
-    }
+      if (Array.isArray(value)) {
+        if (Array.isArray(value[0])) {
+          return [
+            advancementName,
+            `{${value.map((_value) => (_value as [string, boolean]).join('=')).join(',')}}`,
+          ].join('=')
+        }
+        return [advancementName, `{${value.join('=')}}`].join('=')
+      }
 
-    return [advancementName, parseAdvancements(value)].join('=')
-  }).join(', ')}}`
+      return [advancementName, parseAdvancements(value)].join('=')
+    })
+    .join(', ')}}`
 }
 
-export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = false, IsPlayer extends boolean = false> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer> {
+export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = false, IsPlayer extends boolean = false>
+  implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>
+{
   arguments: SelectorProperties<IsSingle, IsPlayer, MACRO>
 
   constructor(
@@ -215,7 +220,7 @@ export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = fal
     public target: '@s' | '@p' | '@a' | '@e' | '@r',
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer, MACRO>,
   ) {
-    this.arguments = selectorArguments ?? {} as SelectorProperties<IsSingle, IsPlayer, MACRO>
+    this.arguments = selectorArguments ?? ({} as SelectorProperties<IsSingle, IsPlayer, MACRO>)
   }
 
   // Custom actions //
@@ -247,9 +252,8 @@ export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = fal
       },
 
       // Parse advancements
-      advancements: (advancements: AdvancementsArgument) => result.push(
-        ['advancements', parseAdvancements(advancements)],
-      ),
+      advancements: (advancements: AdvancementsArgument) =>
+        result.push(['advancements', parseAdvancements(advancements)]),
 
       // Parse potentially multiple tags
       tag: (tag: string | string[]) => {
@@ -340,12 +344,22 @@ export type AnySelectorProperties<MACRO extends boolean> = SelectorProperties<fa
 export type SingleSelectorProperties<MACRO extends boolean> = SelectorProperties<true, false, MACRO>
 export type SinglePlayerSelectorProperties<MACRO extends boolean> = SelectorProperties<true, true, MACRO>
 
-export type SelectorCreator<MACRO extends boolean> = (
-  & ((target: '@p' | '@r', selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'limit' | 'type'>) => SelectorClass<MACRO, true, true>)
-  & ((target: '@s', selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'limit'>) => SelectorClass<MACRO, true, true>)
-  & ((target: '@a', selectorArguments: Omit<SingleSelectorProperties<MACRO>, 'type'>) => SelectorClass<MACRO, true, true>)
-  & ((target: '@a', selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'type'>) => SelectorClass<MACRO, false, true>)
-  & ((target: '@e', selectorArguments: SinglePlayerSelectorProperties<MACRO>) => SelectorClass<MACRO, true, true>)
-  & ((target: '@e', selectorArguments: SingleSelectorProperties<MACRO>) => SelectorClass<MACRO, true, false>)
-  & ((target: '@e', selectorArguments?: AnySelectorProperties<MACRO>) => SelectorClass<MACRO, false, false>)
-)
+export type SelectorCreator<MACRO extends boolean> = ((
+  target: '@p' | '@r',
+  selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'limit' | 'type'>,
+) => SelectorClass<MACRO, true, true>) &
+  ((
+    target: '@s',
+    selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'limit'>,
+  ) => SelectorClass<MACRO, true, true>) &
+  ((
+    target: '@a',
+    selectorArguments: Omit<SingleSelectorProperties<MACRO>, 'type'>,
+  ) => SelectorClass<MACRO, true, true>) &
+  ((
+    target: '@a',
+    selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'type'>,
+  ) => SelectorClass<MACRO, false, true>) &
+  ((target: '@e', selectorArguments: SinglePlayerSelectorProperties<MACRO>) => SelectorClass<MACRO, true, true>) &
+  ((target: '@e', selectorArguments: SingleSelectorProperties<MACRO>) => SelectorClass<MACRO, true, false>) &
+  ((target: '@e', selectorArguments?: AnySelectorProperties<MACRO>) => SelectorClass<MACRO, false, false>)

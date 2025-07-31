@@ -1,18 +1,24 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type {
-  Coordinates, ENTITY_SLOTS, LootTableJSON, MultipleEntitiesArgument, MultiplePlayersArgument,
+  Coordinates,
+  ENTITY_SLOTS,
+  LootTableJSON,
+  MultipleEntitiesArgument,
+  MultiplePlayersArgument,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft loot table.
  */
 export class LootTableNode extends ContainerNode implements ResourceNode<LootTableClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: LootTableClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: LootTableClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -30,7 +36,13 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
   public lootTableJSON: NonNullable<LootTableClassArguments['lootTable']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: LootTableClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, LootTableNode, sandstoneCore.pack.resourceToPath(name, ['loot_tables']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      LootTableNode,
+      sandstoneCore.pack.resourceToPath(name, ['loot_tables']),
+      args,
+    )
 
     this.lootTableJSON = args.lootTable as LootTableJSON
 
@@ -64,7 +76,8 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
    *
    * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
    */
-  replaceBlock = (targetPos: Coordinates<false>, slot: string, count?: number) => this.pack.commands.loot.replace.block(targetPos, slot, count).loot(this.name)
+  replaceBlock = (targetPos: Coordinates<false>, slot: string, count?: number) =>
+    this.pack.commands.loot.replace.block(targetPos, slot, count).loot(this.name)
 
   /**
    * Replace an entity slot with the items.
@@ -82,7 +95,8 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
    *
    * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
    */
-  replaceEntity = (entities: MultipleEntitiesArgument<false>, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) => this.pack.commands.loot.replace.entity(entities, slot, count).loot(this.name)
+  replaceEntity = (entities: MultipleEntitiesArgument<false>, slot: LiteralUnion<ENTITY_SLOTS>, count?: number) =>
+    this.pack.commands.loot.replace.entity(entities, slot, count).loot(this.name)
 
   toString = () => this.name
 
