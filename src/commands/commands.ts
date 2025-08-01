@@ -1,6 +1,7 @@
 import type { SandstonePack } from 'sandstone/pack/index.js'
 import { PlaceCommand } from './implementations/block/place.js'
 import { DamageCommand } from './implementations/entity/damage.js'
+import { RandomCommand } from './implementations/server/random.js'
 import {
   AdvancementCommand,
   AttributeCommand,
@@ -205,6 +206,10 @@ export class SandstoneCommands<MACRO extends boolean> {
 
   get playsound() {
     return bind(this.sandstonePack, PlaySoundCommand, 'playsound') as PlaySoundCommand<MACRO>['playsound']
+  }
+
+  get random() {
+    return new RandomCommand<MACRO>(this.sandstonePack)
   }
 
   get raw() {

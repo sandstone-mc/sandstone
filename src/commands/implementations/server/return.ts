@@ -108,8 +108,6 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
       true,
     )
   }
-
-  fail = () => this.finalCommand(['fail'])
 }
 
 export class ReturnCommandNode extends CommandNode {
@@ -122,6 +120,15 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
   get return() {
     const run = new ReturnArgumentsCommand<MACRO>(this.sandstonePack)
 
-    return makeCallable(run, (value?: Macroable<number, MACRO>) => this.finalCommand([value || 0]), true)
+    return makeCallable(
+      {
+        run: run.run,
+        fail: this.fail,
+      },
+      (value?: Macroable<number, MACRO>) => this.finalCommand([value || 0]),
+      true,
+    )
   }
+
+  fail = () => this.finalCommand(['fail'])
 }

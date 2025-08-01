@@ -34,10 +34,10 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
   add = (
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
     amount: Macroable<number, MACRO>,
-    type?: Macroable<'level' | 'points', MACRO>,
+    type?: Macroable<'levels' | 'points', MACRO>,
   ) => {
     validateIntegerRange(amount, 'amount', -2147483648, 2147483647)
-    return this.finalCommand([targetParser(targets), amount, type])
+    return this.finalCommand(['add', targetParser(targets), amount, type])
   }
 
   /**
@@ -59,10 +59,10 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
   set = (
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
     amount: Macroable<number, MACRO>,
-    type?: Macroable<'level' | 'points', MACRO>,
+    type?: Macroable<'levels' | 'points', MACRO>,
   ) => {
     validateIntegerRange(amount, 'amount', 0, 2147483647)
-    return this.finalCommand([targets, amount, type])
+    return this.finalCommand(['set', targets, amount, type])
   }
 
   /**
@@ -76,6 +76,6 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * If unspecified, defaults to `points`.
    */
-  query = (target: Macroable<SinglePlayerArgument<MACRO>, MACRO>, type?: Macroable<'level' | 'points', MACRO>) =>
-    this.finalCommand([target, type])
+  query = (target: Macroable<SinglePlayerArgument<MACRO>, MACRO>, type?: Macroable<'levels' | 'points', MACRO>) =>
+    this.finalCommand(['query', target, type])
 }

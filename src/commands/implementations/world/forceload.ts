@@ -3,7 +3,7 @@ import type { MacroArgument, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { VectorClass } from 'sandstone/variables'
 import { coordinatesParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers.js'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string): number[] {
@@ -92,11 +92,15 @@ export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Unforces the chunk at the `from` position (through to `to` if set) in the dimension of the command's execution to be loaded constantly.
    *
-   * @param from Specifies the start of the targeted chunks, in block coordinates.
+   * @param from Specifies the start of the targeted chunks, in block coordinates. Can be 'all' to unforce all chunks.
    * @param to Specified the end of the targeted chunks, in block coordinates.
    * If unspecified, only targets the chunk specified by `from`.
    */
-  remove = (from: Macroable<ColumnCoordinates<MACRO>, MACRO>) => this.finalCommand(['remove', coordinatesParser(from)])
+  remove = (from: Macroable<ColumnCoordinates<MACRO>, MACRO>, to?: Macroable<ColumnCoordinates<MACRO>, MACRO>) => {
+    validateNumberOfChunks(from, to)
+
+    return this.finalCommand(['remove', coordinatesParser(from), coordinatesParser(to)])
+  }
 
   /** Unforces all chunks in the dimension of the command's execution to be loaded constantly. */
   removeAll = () => this.finalCommand(['remove', 'all'])

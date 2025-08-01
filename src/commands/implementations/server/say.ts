@@ -4,7 +4,7 @@ import { CommandArguments } from '../../helpers.js'
 
 // Say command
 
-export class SayCommandNode extends CommandNode<['string']> {
+export class SayCommandNode extends CommandNode<[string]> {
   command = 'say' as const
 }
 

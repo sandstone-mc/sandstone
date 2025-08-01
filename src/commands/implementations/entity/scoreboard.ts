@@ -91,7 +91,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      * Data is deleted from the objectives list and entity scores,
      * and if it was on a display list it is no longer displayed
      */
-    remove: (objective: Macroable<ObjectiveArgument, MACRO>) => this.finalCommand(['remove', objective]),
+    remove: (objective: Macroable<ObjectiveArgument, MACRO>) => this.finalCommand(['objectives', 'remove', objective]),
 
     /**
      * Display score info for the objective in the given slot.
@@ -101,7 +101,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      * @param objective The objective to display. If not provided, this display slot is cleared.
      */
     setdisplay: (slot: Macroable<DISPLAY_SLOTS, MACRO>, objective?: Macroable<ObjectiveArgument, MACRO>) =>
-      this.finalCommand(['setdisplay', slot, objective]),
+      this.finalCommand(['objectives', 'setdisplay', slot, objective]),
 
     /**
      * Modify the display of the objective.
@@ -109,7 +109,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      * @param objective The objective to modify.
      */
     modify: (objective: Macroable<ObjectiveArgument, MACRO>) =>
-      this.subCommand(['modify', objective], ScoreboardObjectivesModifyCommand, false),
+      this.subCommand(['objectives', 'modify', objective], ScoreboardObjectivesModifyCommand, false),
   }
 
   /** All commands related to scoreboard players. */

@@ -77,7 +77,7 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param name The new name.
    */
-  name = (name: Macroable<string, MACRO>) => this.finalCommand(['name', name])
+  name = (name: Macroable<string, MACRO>) => this.finalCommand(['name', parseJSONText(this.sandstoneCore, name)])
 
   /**
    * Change the set of players to whom the bar is visible.

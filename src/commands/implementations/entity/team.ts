@@ -9,13 +9,12 @@ interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'
   color: BASIC_COLORS
   deathMessageVisibility: 'never' | 'hideForOtherTeams' | 'hideForOwnTeam' | 'always'
-  displayName: JSONTextComponent
   friendlyFire: boolean
   nametagVisibility: 'never' | 'hideForOtherTeams' | 'hideForOwnTeam' | 'always'
-  prefix: JSONTextComponent
   seeFriendlyInvisibles: boolean
 
-  /** Hey */
+  displayName: JSONTextComponent
+  prefix: JSONTextComponent
   suffix: JSONTextComponent
 }
 
@@ -69,7 +68,7 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param team Specifies the name of the team.
    */
-  list = (team?: Macroable<string, MACRO>) => this.finalCommand(['list', targetParser(team)])
+  list = (team?: Macroable<string, MACRO>) => this.finalCommand(['list', team ? targetParser(team) : undefined])
 
   modify: /**
    * Modifies the option of the team.
@@ -132,7 +131,12 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
       team: Macroable<string, MACRO>,
       option: Exclude<T, keyof TeamOptions>,
       value: Macroable<string, MACRO>,
-    ) => void) = (...args: unknown[]) => this.finalCommand(['modify', ...args])
+    ) => void) = (team: Macroable<string, MACRO>, option: string, value: unknown) => {
+    if (['displayName', 'prefix', 'suffix'].includes(option)) {
+      value = parseJSONText(this.sandstoneCore, value as JSONTextComponent)
+    }
+    this.finalCommand(['modify', team, option, value])
+  }
 
   /**
    * Removes a team.

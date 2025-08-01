@@ -143,7 +143,22 @@ export const structureMirrorParser = (mirror?: StructureMirror | MacroArgument):
   return 'none'
 }
 
+/**
+ * Parses a target into a string representation.
+ * If the target is a string, it is returned as is.
+ * If the target has a `_toSelector` method, it is called to get the string representation.
+ * If the target has a `toMacro` method, it is called to get the string representation.
+ * Otherwise, the `toString` method is called to get the string representation.
+ *
+ * If the target is undefined, an error is thrown.
+ * @param target The target to parse.
+ * @returns The string representation of the target.
+ */
 export function targetParser(target: any): string {
+  if (target === undefined) {
+    throw new Error('Target cannot be undefined.')
+  }
+
   if (typeof target === 'string') {
     return target
   }
