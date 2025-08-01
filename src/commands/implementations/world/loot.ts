@@ -55,9 +55,9 @@ class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param pos Specifies the position of a block.
    *
-   * @param tool Specifies an tool to mine.
+   * @param tool Specifies an tool to mine. If unspecified, defaults to `mainhand`.
    */
-  mine = (pos: Macroable<Coordinates<MACRO>, MACRO>, tool: Macroable<LiteralUnion<ITEMS>, MACRO>) =>
+  mine = (pos: Macroable<Coordinates<MACRO>, MACRO>, tool?: Macroable<LiteralUnion<ITEMS>, MACRO>) =>
     this.finalCommand(['mine', coordinatesParser(pos), tool])
 }
 

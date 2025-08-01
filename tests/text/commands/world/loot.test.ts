@@ -1,4 +1,4 @@
-import { loot } from 'sandstone'
+import { loot, rel } from 'sandstone'
 import { describe, it } from 'vitest'
 import { compareSingleOutputText } from '../../../utils'
 
@@ -17,7 +17,7 @@ describe('Loot Command', () => {
 
   it('should generate loot give mine command', async () => {
     await compareSingleOutputText(() => {
-      loot.give('@p').mine('~ ~ ~')
+      loot.give('@p').mine(rel(0, 0, 0))
     }, ['loot give @p mine ~ ~ ~'])
   })
 

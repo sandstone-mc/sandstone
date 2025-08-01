@@ -1,4 +1,4 @@
-import { execute } from 'sandstone'
+import { abs, execute, rel } from 'sandstone'
 import { describe, it } from 'vitest'
 import { compareSingleOutputText } from '../../../utils'
 
@@ -18,19 +18,19 @@ describe('Execute Command', () => {
 
     it('should generate execute positioned command', async () => {
       await compareSingleOutputText(() => {
-        execute.positioned('0 64 0').run.say('Hello!')
+        execute.positioned(abs(0, 64, 0)).run.say('Hello!')
       }, ['execute positioned 0 64 0 run say Hello!'])
     })
 
     it('should generate execute rotated command', async () => {
       await compareSingleOutputText(() => {
-        execute.rotated('0 0').run.say('Hello!')
+        execute.rotated(abs(0, 0)).run.say('Hello!')
       }, ['execute rotated 0 0 run say Hello!'])
     })
 
     it('should generate execute facing command', async () => {
       await compareSingleOutputText(() => {
-        execute.facing('0 64 0').run.say('Hello!')
+        execute.facing(abs(0, 64, 0)).run.say('Hello!')
       }, ['execute facing 0 64 0 run say Hello!'])
     })
 
@@ -62,7 +62,7 @@ describe('Execute Command', () => {
 
     it('should generate execute if block command', async () => {
       await compareSingleOutputText(() => {
-        execute.if.block('~ ~ ~', 'stone').run.say('Stone found!')
+        execute.if.block(rel(0, 0, 0), 'stone').run.say('Stone found!')
       }, ['execute if block ~ ~ ~ stone run say Stone found!'])
     })
 

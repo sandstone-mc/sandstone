@@ -65,7 +65,7 @@ export class DataPackCommand extends CommandArguments {
    *
    * Hovering over the datapacks in the chat output shows their description defined in their pack.mcmeta.
    *
-   * @param typ `"available"` to only show available datapacks, `"enabled"` to only show enabled ones.
+   * @param type `"available"` to only show available datapacks, `"enabled"` to only show enabled ones.
    */
-  list = (type: 'available' | 'enabled') => this.finalCommand(['list', type])
+  list = (type?: 'available' | 'enabled') => this.finalCommand(['list', type])
 }

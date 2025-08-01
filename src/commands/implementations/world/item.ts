@@ -22,9 +22,9 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Replace the slot with a specific item.
    * @param item The item to replace the slot with.
-   * @param count The amount of items.
+   * @param count The amount of items. If not specified, defaults to 1.
    */
-  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, count: Macroable<number, MACRO>): FinalCommandOutput
+  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, count?: Macroable<number, MACRO>): FinalCommandOutput
 
   /**
    * Replace the slot with a specific item.
