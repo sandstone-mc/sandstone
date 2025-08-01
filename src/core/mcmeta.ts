@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import path from 'node:path'
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'

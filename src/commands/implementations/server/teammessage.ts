@@ -20,5 +20,5 @@ export class TeamMessageCommand extends CommandArguments {
    *
    * At least one message is necessary.
    */
-  teammessage = (...messages: AtLeastOne<MessageOrSelector>) => {}
+  teammessage = (...messages: AtLeastOne<MessageOrSelector>) => this.finalCommand(messages)
 }

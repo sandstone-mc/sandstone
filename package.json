@@ -45,7 +45,9 @@
     "husky": "^7.0.4",
     "ts-node": "^10.9.2",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   },
   "directories": {
     "doc": "docs",
@@ -74,15 +76,17 @@
     "url": "git+https://github.com/sandstone-mc/sandstone.git"
   },
   "scripts": {
-    "build": "tsup --onSuccess \"pnpm run setup\"",
-    "watch": "tsup --onSuccess \"pnpm run setup\" --watch",
-    "build-types": "tsc",
+    "build": "tsup --tsconfig tsconfig.build.json --onSuccess \"pnpm run setup\"",
+    "watch": "tsup --tsconfig tsconfig.build.json --onSuccess \"pnpm run setup\" --watch",
+    "build-types": "tsc --project tsconfig.build.json",
     "setup-package": "node ./scripts/setupPackage.mjs",
     "setup": "pnpm run build-types && pnpm run setup-package && echo ✔️  Successfully built Sandstone.",
     "publishToNpm": "pnpm run build && pnpm publish",
     "format": "biome format --write src",
     "lint": "biome lint src",
-    "check": "biome check --write src"
+    "check": "biome check --write src",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "type": "module",
   "main": "index.js",

@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "types": ["node", "vitest/globals"],
+    "module": "commonjs"
+  },
+  "include": ["**/*.ts", "**/*.test.ts"],
+  "references": [{ "path": "../tsconfig.build.json" }]
+}

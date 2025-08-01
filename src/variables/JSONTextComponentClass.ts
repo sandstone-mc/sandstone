@@ -1,9 +1,8 @@
 import * as util from 'node:util'
-
 import type { JSONTextComponent } from 'sandstone/arguments'
-import { isMacroArgument, type MacroArgument } from '../core/Macro.js'
-import type { SandstoneCore } from '../core/sandstoneCore.js'
-import { formatDebugString } from '../utils.js'
+import { isMacroArgument, type MacroArgument } from 'sandstone/core/Macro.js'
+import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
+import { formatDebugString } from 'sandstone/utils.js'
 
 function toComponent(c: any): JSONTextComponent {
   return c._toSelector?.() ?? c._toChatComponent?.() ?? c.toJSON?.() ?? c

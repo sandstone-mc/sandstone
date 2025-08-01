@@ -8,14 +8,14 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "**",
-      "!*.js",
-      "!**/*.js",
+      "src/**",
+      "tests/**",
       "!node_modules/**",
-      "!build/**",
+      "!build/**", 
       "!dist/**",
       "!scripts/**",
-      "!coverage/**"
+      "!coverage/**",
+      "!*.js"
     ]
   },
   "formatter": {

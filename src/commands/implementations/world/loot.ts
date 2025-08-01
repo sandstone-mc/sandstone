@@ -70,7 +70,7 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    * @param targetPos Specifies the location where item drops.
    */
   spawn = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) =>
-    this.subCommand(['spawn', coordinatesParser(targetPos)], LootCommand, false)
+    this.subCommand(['spawn', coordinatesParser(targetPos)], LootSourceCommand, false)
 
   replace = {
     /**

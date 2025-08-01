@@ -55,5 +55,5 @@ export class AttributeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = AttributeCommandNode
 
   attribute = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, attribute: Macroable<string, MACRO>) =>
-    this.finalCommand([targetParser(target), attribute])
+    this.subCommand([targetParser(target), attribute], AttributeOperationCommand, false)
 }
