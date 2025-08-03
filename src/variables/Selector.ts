@@ -13,7 +13,7 @@ import type { ConditionTextComponentClass, SelectorPickClass } from './abstractC
 import type { LabelClass } from './Label.js'
 import type { NotNBT } from './nbt/NBTs.js'
 
-type ScoreArgument<MACRO extends boolean> = Record<string, Range<MACRO>>
+type ScoreArgument<MACRO extends boolean = false> = Record<string, Range<MACRO>>
 
 type AdvancementsArgumentValue = boolean | [string, boolean] | [string, boolean][]
 
@@ -25,7 +25,11 @@ type TypeOrArray<T> = T | T[]
  * If MustBeSingle is false, then anything is allowed.
  * If it is true, then you must provide limit=1 or limit=0.
  */
-export type SelectorProperties<MustBeSingle extends boolean, MustBePlayer extends boolean, MACRO extends boolean> = {
+export type SelectorProperties<
+  MustBeSingle extends boolean,
+  MustBePlayer extends boolean,
+  MACRO extends boolean = false,
+> = {
   /**
    * Filter target selection based on their Euclidean distances from some point,
    * searching for the target's feet (a point at the bottom of the center of their hitbox).
@@ -210,8 +214,11 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
     .join(', ')}}`
 }
 
-export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = false, IsPlayer extends boolean = false>
-  implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>
+export class SelectorClass<
+  MACRO extends boolean = false,
+  IsSingle extends boolean = false,
+  IsPlayer extends boolean = false,
+> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>
 {
   arguments: SelectorProperties<IsSingle, IsPlayer, MACRO>
 
@@ -340,11 +347,11 @@ export class SelectorClass<MACRO extends boolean, IsSingle extends boolean = fal
 }
 
 // Possible selector properties
-export type AnySelectorProperties<MACRO extends boolean> = SelectorProperties<false, false, MACRO>
-export type SingleSelectorProperties<MACRO extends boolean> = SelectorProperties<true, false, MACRO>
-export type SinglePlayerSelectorProperties<MACRO extends boolean> = SelectorProperties<true, true, MACRO>
+export type AnySelectorProperties<MACRO extends boolean = false> = SelectorProperties<false, false, MACRO>
+export type SingleSelectorProperties<MACRO extends boolean = false> = SelectorProperties<true, false, MACRO>
+export type SinglePlayerSelectorProperties<MACRO extends boolean = false> = SelectorProperties<true, true, MACRO>
 
-export type SelectorCreator<MACRO extends boolean> = ((
+export type SelectorCreator<MACRO extends boolean = false> = ((
   target: '@p' | '@r',
   selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'limit' | 'type'>,
 ) => SelectorClass<MACRO, true, true>) &

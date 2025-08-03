@@ -1,6 +1,6 @@
 import type { MacroString } from 'sandstone/core'
 
-export type Range<MACRO extends boolean> =
+export type Range<MACRO extends boolean = false> =
   | MacroString<number, MACRO>
   | `${number}`
   | `${MacroString<number, MACRO>}..`

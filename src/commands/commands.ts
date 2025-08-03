@@ -1,7 +1,6 @@
 import type { SandstonePack } from 'sandstone/pack/index.js'
 import { PlaceCommand } from './implementations/block/place.js'
 import { DamageCommand } from './implementations/entity/damage.js'
-import { RandomCommand } from './implementations/server/random.js'
 import {
   AdvancementCommand,
   AttributeCommand,
@@ -62,6 +61,7 @@ import {
   WeatherCommand,
   WorldBorderCommand,
 } from './implementations/index.js'
+import { RandomCommand } from './implementations/server/random.js'
 
 function bind<CLASS, METHOD extends string>(pack: SandstonePack, _class: CLASS, method: METHOD) {
   /* @ts-ignore */
@@ -73,7 +73,7 @@ function bind<CLASS, METHOD extends string>(pack: SandstonePack, _class: CLASS, 
   throw Error('Commands binder screwed up')
 }
 
-export class SandstoneCommands<MACRO extends boolean> {
+export class SandstoneCommands<MACRO extends boolean = false> {
   constructor(public sandstonePack: SandstonePack) {}
 
   get advancement() {

@@ -146,6 +146,12 @@ export const {
 } = sandstonePack
 
 export * from './arguments/index.js'
+export type { Condition } from './flow/index.js'
+export {
+  ObjectiveClass,
+  Score,
+  SelectorClass,
+} from './variables/index.js'
 
 // Utils
 export const { absolute, relative, local } = coordinates
