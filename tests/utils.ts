@@ -72,7 +72,6 @@ export async function getGeneratedFunctionsText(callback: () => void): Promise<R
     fileHandler: async (relativePath: string, content: string) => {
       const [_datapack, _data, namespace, type, ...name] = relativePath.split('/')
       if (type === 'functions') {
-        console.log(`Processing function: ${relativePath}`)
         const mcName = `${namespace}:${name.join('/').split('.')[0]}`
         accumulatedResults[mcName] = content
           .split('\n')
