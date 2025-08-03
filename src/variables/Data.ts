@@ -1,8 +1,9 @@
 import type { Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument } from 'sandstone/arguments'
 import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations'
+import { ConditionNode } from 'sandstone/flow/index.js'
 import type { SandstonePack } from 'sandstone/pack'
 import { DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral } from '../core/Macro.js'
-import type { ConditionTextComponentClass } from './abstractClasses.js'
+import type { ConditionClass, ConditionTextComponentClass } from './abstractClasses.js'
 import { nbtStringifier } from './nbt/NBTs.js'
 import { Score } from './Score.js'
 
@@ -95,7 +96,7 @@ export class TargetlessDataPointClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   select = (...path: DATA_PATH[]) => new TargetlessDataPointClass(this.sandstonePack, this.type, [this.path, ...path])
 }
 
-export class DataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
+export class DataClass<TYPE extends DATA_TYPES = any> {
   currentTarget
 
   constructor(
@@ -117,7 +118,7 @@ export class DataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
 
   select = (...path: DATA_PATH[]) => new DataPointClass(this.sandstonePack, this.type, this.currentTarget, path)
 
-  toString = () => this.currentTarget
+  toString = () => this.currentTarget.toString()
 
   toJSON = this.toString
 }
@@ -163,7 +164,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
     }
 
     if (value instanceof DataPointPickClass) {
-      this.set(value._toDataPoint())
+      this.set(value._toDataPoint() as any)
       return this
     }
 
@@ -267,7 +268,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
   slice = (start: number, end?: number) =>
     new StringDataPointClass(this.sandstonePack, this.type, this.currentTarget, this.path, start, end)
 
-  _toMinecraftCondition = () => new this.sandstonePack.conditions.DataPoint(this.sandstonePack.core, this)
+  _toMinecraftCondition = () => new this.sandstonePack.conditions.DataPointExists(this.sandstonePack.core, this)
 
   equals = (value: NBTObject | Score | DataPointClass | DataPointPickClass) =>
     new this.sandstonePack.conditions.DataPointEquals(this.sandstonePack.core, this, value)

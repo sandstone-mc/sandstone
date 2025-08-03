@@ -1,4 +1,12 @@
-import type { JSONTextComponent, MultiplePlayersArgument, NBTObject } from 'sandstone/arguments'
+import type {
+  BLOCKS,
+  Coordinates,
+  JSONTextComponent,
+  MultipleEntitiesArgument,
+  MultiplePlayersArgument,
+  NBTObject,
+  WORLDGEN_BIOMES,
+} from 'sandstone/arguments'
 import type {
   ConditionClass,
   DataArray,
@@ -10,8 +18,9 @@ import type {
   StringDataPointClass,
 } from 'sandstone/variables'
 import { parseJSONText, Score } from 'sandstone/variables'
-import type { DataPointPickClass, SandstoneCore } from '../core/index.js'
-import { AndNode, ConditionNode, NotNode, OrNode } from './conditions/index.js'
+import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core/index.js'
+import type { LiteralUnion } from '../utils.js'
+import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions } from './conditions/index.js'
 import { IfStatement } from './if_else.js'
 import type { ForOfIterator } from './loops/index.js'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops/index.js'
@@ -310,5 +319,116 @@ export class Flow {
 
   case<ValueType extends number | NBTObject>(value: ValueType, callback: () => any) {
     return new CaseStatement(value, callback)
+  }
+
+  // Conditions
+  /**
+   * Checks for a specific biome in a given position.
+   * @param coordinates Position to test.
+   * @param biome Biome(s) to test for (can be a tag).
+   */
+  biome = (coordinates: Coordinates, biome: LiteralUnion<WORLDGEN_BIOMES>) => {
+    return new SandstoneConditions.Biome(this.sandstoneCore, coordinates, biome)
+  }
+
+  /**
+   * Compares the block at a given position to a given block ID.
+   * @param position Position of a target block to test.
+   * @param block Block(s) to test for (can be a tag).
+   */
+  block = (position: Coordinates, block: LiteralUnion<BLOCKS>) => {
+    return new SandstoneConditions.Block(this.sandstoneCore, position, block)
+  }
+
+  /**
+   * Compares the blocks in two equally sized volumes.
+   * @param start Start position of the first volume.
+   * @end End position of the first volume.
+   * @param destination Start position of the second volume.
+   * @param scan_mode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored
+   */
+  blocks = (start: Coordinates, end: Coordinates, destination: Coordinates, scan_mode: 'all' | 'masked' = 'all') => {
+    return new SandstoneConditions.Blocks(this.sandstoneCore, start, end, destination, scan_mode)
+  }
+
+  /**
+   * Checks whether the targeted block, entity or storage has any data tag for a given path.
+   *
+   * You must provide a Data instance.
+   *
+   * ⚠️ You should prefer using the Data instance as a direct condition, as this function is only here for completeness.
+   *
+   * @example
+   * _.if(_.data(Data('entity', '@s', 'myData')), () => {
+   *   // Do something if the data exists
+   * })
+   *
+   * // You should however prefer using the Data instance directly:
+   * _.if(Data('entity', '@s', 'myData'), () => {
+   *  // Do something if the data exists
+   * })
+   *
+   * @param data Data instance to check.
+   */
+  data = (data: DataPointClass) => {
+    return new SandstoneConditions.DataPointExists(this.sandstoneCore, data)
+  }
+
+  /**
+   * Checks if the execution is in a matching dimension.
+   * @param dimension Dimension to check for.
+   */
+  dimension = (dimension: LiteralUnion<string>) => {
+    return new SandstoneConditions.Dimension(this.sandstoneCore, dimension)
+  }
+
+  /**
+   * Checks a function or function tag and matches the return value(s). If a tag is given, all functions run regardless of the results of prior functions.
+   * @param function_ Function to check for.
+   */
+  function_ = (function_: LiteralUnion<string> | MCFunctionClass<any, any>) => {
+    if (typeof function_ === 'string') {
+      return new SandstoneConditions.Function(this.sandstoneCore, function_)
+    }
+    return new SandstoneConditions.Function(this.sandstoneCore, function_.name)
+  }
+
+  /**
+   * Checks whether one or more entities exist.
+   *
+   * @example
+   * _.if(_.entity('@a[tag=example]'), () => {
+   *   // Do something if the entity exists
+   * })
+   *
+   * // ⚠️ You can use a Selector directly to achieve the same result:
+   * _.if(Selector('@a', {tag: 'example'}), () => {
+   *   // Do something if the entity exists
+   * })
+   *
+   * @param targets Entity targets to check for.
+   */
+  entity = (targets: MultipleEntitiesArgument) => {
+    return new SandstoneConditions.Selector(this.sandstoneCore, targets.toString())
+  }
+
+  /**
+   * Checks if chunks at a given position is fully loaded.
+   * @param position Position to check.
+   */
+  chunksLoaded = (position: Coordinates) => {
+    return new SandstoneConditions.Loaded(this.sandstoneCore, position)
+  }
+
+  /**
+   * Checks whether the predicate successes.
+   *
+   * @param predicate Predicate to check.
+   */
+  predicate = (predicate: LiteralUnion<string> | PredicateClass) => {
+    if (typeof predicate === 'string') {
+      return new SandstoneConditions.Predicate(this.sandstoneCore, predicate)
+    }
+    return new SandstoneConditions.Predicate(this.sandstoneCore, predicate.name)
   }
 }

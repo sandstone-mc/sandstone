@@ -9,7 +9,7 @@ import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import { rangeParser } from 'sandstone/variables/parsers'
 import type { Macroable } from '../core/Macro.js'
 import { formatDebugString, type LiteralUnion } from '../utils.js'
-import type { ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
+import type { ConditionClass, ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
 import type { LabelClass } from './Label.js'
 import type { NotNBT } from './nbt/NBTs.js'
 
@@ -218,7 +218,7 @@ export class SelectorClass<
   MACRO extends boolean = false,
   IsSingle extends boolean = false,
   IsPlayer extends boolean = false,
-> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>
+> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass
 {
   arguments: SelectorProperties<IsSingle, IsPlayer, MACRO>
 
