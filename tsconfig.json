@@ -1,7 +1,31 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.build.json" },
-    { "path": "./tests/tsconfig.json" }
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "sandstone": [
+        "./src/index.ts"
+      ],
+      "sandstone/*": [
+        "./src/*"
+      ]
+    },
+    "types": [
+      "node"
+    ],
+    "module": "NodeNext",
+    "target": "ESNEXT",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": ".",
+    "stripInternal": true,
+  },
+  "include": [
+    "src",
+    "tests",
   ]
 }

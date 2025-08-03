@@ -1,7 +1,7 @@
 import { MCFunction, sandstonePack, say } from 'sandstone'
+import { SayCommandNode } from 'sandstone/commands'
 import type { CommandNode, Node } from 'sandstone/core'
 import { describe, expect, it } from 'vitest'
-import { SayCommandNode } from '../dist/commands'
 
 type ConstructorArgsWithoutFirst<T extends new (...args: any) => any> = T extends new (
   first: any,
