@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
+  run_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,3 +27,30 @@ jobs:
 
     - name: Run tests
       run: pnpm run test:run
+
+  ensure_import_works:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: latest
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build the project
+      run: pnpm run build
+    
+    - name: Ensure importing the "sandstone" package works
+      run: |
+        node -e "import 'sandstone'"
