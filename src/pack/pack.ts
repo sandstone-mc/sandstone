@@ -260,27 +260,7 @@ export class SandstonePack {
         },
       }
 
-  dataPack() {
-    let pack = this.packTypes.get('datapack') as DataPack
-
-    if (!pack) {
-      pack = this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack)).get('datapack') as DataPack
-    }
-
-    return pack
-  }
-
-  resourcePack() {
-    let pack = this.packTypes.get('resourcepack') as ResourcePack
-
-    if (!pack) {
-      pack = this.packTypes
-        .set('resourcepack', new ResourcePack(this.packOptions.resourcepack))
-        .get('resourcepack') as ResourcePack
-    }
-
-    return pack
-  }
+  __initMCFunction?: MCFunctionClass<undefined, undefined>
 
   // Smithed Pack IDs
   dependencies: Map<string, boolean>
@@ -305,6 +285,8 @@ export class SandstonePack {
   tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass<undefined, undefined>>>
 
   loadTags: { preLoad: TagClass<'functions'>; load: TagClass<'functions'>; postLoad: TagClass<'functions'> }
+
+  __rootObjective?: ObjectiveClass
 
   constructor(
     public defaultNamespace: string,
@@ -349,6 +331,55 @@ export class SandstonePack {
         this[method] = this[method].bind(this)
       }
     }
+  }
+
+  /**
+   * Performs a full reset of the pack.
+   */
+  reset = () => {
+    this.core.reset()
+    this.packTypes.clear()
+    this.__rootObjective = undefined
+    this.__initMCFunction = undefined
+    this.objectives.clear()
+    this.constants.clear()
+    this.tickedLoops = {}
+    this.dependencies.clear()
+    this.loadTags = {
+      preLoad: this.Tag('functions', 'load:pre_load', []),
+      load: this.Tag('functions', 'load:load', []),
+      postLoad: this.Tag('functions', 'load:post_load', []),
+    }
+    this.setupLantern()
+    if (process.env.NAMESPACE) {
+      this.defaultNamespace = process.env.NAMESPACE
+    }
+
+    // Initialize getters
+    this.rootObjective
+    this.initMCFunction
+  }
+
+  dataPack() {
+    let pack = this.packTypes.get('datapack') as DataPack
+
+    if (!pack) {
+      pack = this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack)).get('datapack') as DataPack
+    }
+
+    return pack
+  }
+
+  resourcePack() {
+    let pack = this.packTypes.get('resourcepack') as ResourcePack
+
+    if (!pack) {
+      pack = this.packTypes
+        .set('resourcepack', new ResourcePack(this.packOptions.resourcepack))
+        .get('resourcepack') as ResourcePack
+    }
+
+    return pack
   }
 
   setupLantern = () => {
@@ -417,19 +448,7 @@ export class SandstonePack {
       display?: JSONTextComponent,
       alreadyExists?: boolean,
     ): ObjectiveClass => {
-      let namespace: boolean = false
-
-      if (name.includes('.') || name.includes('__')) {
-        namespace = true
-      }
-
-      const objective = new ObjectiveClass(
-        this,
-        namespace ? name : `${this.defaultNamespace}.${name}`,
-        criteria as string,
-        display,
-        { creator: 'user' },
-      )
+      const objective = new ObjectiveClass(this, name, criteria as string, display, { creator: 'user' })
 
       if (!alreadyExists) {
         this.registerNewObjective(objective)
@@ -440,8 +459,6 @@ export class SandstonePack {
     /** Get an existing objective. */
     get: (name: string): ObjectiveClass => new ObjectiveClass(this, name, 'dummy', undefined, { creator: 'user' }),
   }
-
-  __rootObjective?: ObjectiveClass
 
   get rootObjective() {
     if (this.__rootObjective) {
@@ -772,8 +789,6 @@ export class SandstonePack {
   }
 
   appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
-
-  __initMCFunction?: MCFunctionClass<undefined, undefined>
 
   get initMCFunction() {
     if (!this.__initMCFunction) {

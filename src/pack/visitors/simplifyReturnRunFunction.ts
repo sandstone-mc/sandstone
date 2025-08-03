@@ -1,4 +1,3 @@
-/* eslint-disable dot-notation */
 import { FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import { CommandNode } from 'sandstone/core/nodes'
 

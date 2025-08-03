@@ -45,6 +45,16 @@ export class SandstoneCore {
     }
   }
 
+  reset = () => {
+    this.resourceNodes.clear()
+    this.mcfunctionStack = []
+    this.awaitNodes.clear()
+    this.currentNode = ''
+    this._mcMetaCache = undefined
+    this._smithed = undefined
+    this.dependencies = []
+  }
+
   /**
    * The current MCFunction.
    */
