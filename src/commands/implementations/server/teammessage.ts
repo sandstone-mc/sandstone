@@ -11,14 +11,18 @@ export class TeamMessageCommand extends CommandArguments {
   protected NodeType = TeamMessageCommandNode
 
   /**
-   * Specifies a message to send to team.
+   * Send message to your team.
    *
-   * @param messages Must be plain text messages.
-   * Can include spaces as well as target selectors.
-   * The game replaces entity selectors in the message with the list of selected entities' names,
-   * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
+   * @param messages Message content to send to team members.
+   *                Multiple arguments are joined with spaces.
+   *                Can include entity selectors.
    *
-   * At least one message is necessary.
+   * @example
+   * ```ts
+   * teammessage('Enemy spotted at base!')         // Team chat message
+   * teammessage('Found', '@e[type=zombie]', 'zombies')  // Message with selectors
+   * teammessage('Need backup at coordinates 100 64 200')
+   * ```
    */
   teammessage = (...messages: AtLeastOne<MessageOrSelector>) => this.finalCommand(messages)
 }

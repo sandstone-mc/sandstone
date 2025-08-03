@@ -14,13 +14,46 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = SummonCommandNode
 
   /**
-   * Summons an entity.
+   * Summon an entity at the specified location.
+   * 
+   * Creates a new entity in the world with optional positioning and NBT data.
+   * The entity will be created with default properties unless overridden by NBT.
+   * 
+   * **Entity Categories:**
+   * - **Mobs:** 'minecraft:zombie', 'minecraft:villager', 'minecraft:cow'
+   * - **Items:** 'minecraft:item' (requires Item NBT)
+   * - **Projectiles:** 'minecraft:arrow', 'minecraft:fireball'
+   * - **Vehicles:** 'minecraft:boat', 'minecraft:minecart'
+   * - **Utility:** 'minecraft:armor_stand', 'minecraft:item_frame'
+   * - **Effects:** 'minecraft:area_effect_cloud', 'minecraft:marker'
    *
-   * @param entity Specifies the entity to be summoned.
+   * @param entity The entity type to summon. Must be a valid entity ID.
+   *              Examples: 'minecraft:zombie', 'minecraft:cow', 'minecraft:armor_stand'
    *
-   * @param pos Specifies the position to summon the entity. If not specified, defaults to the position of the command's execution.
+   * @param pos Optional position where to summon the entity.
+   *           Defaults to command execution location if not specified.
+   *           Supports absolute, relative, and local coordinates.
    *
-   * @param nbt Specifies the data tag for the entity.
+   * @param nbt Optional NBT data to configure the entity's properties.
+   *           Controls attributes, equipment, behavior, appearance, and more.
+   * 
+   * @example
+   * ```ts
+   * // Basic entity summoning
+   * summon('minecraft:cow')                    // At current location
+   * summon('minecraft:zombie', [100, 64, 200]) // At specific coordinates
+   * summon('minecraft:villager', ['~5', '~', '~']) // Relative position
+   * 
+   * // Custom boss mob
+   * summon('minecraft:zombie', [0, 64, 0], {
+   *   CustomName: '{"text":"Guardian","color":"gold"}',
+   *   Health: 50,
+   *   Attributes: [
+   *     {Name: 'generic.max_health', Base: 50},
+   *     {Name: 'generic.attack_damage', Base: 10}
+   *   ]
+   * })
+   * ```
    */
   summon = (
     entity: Macroable<LiteralUnion<ENTITY_TYPES>, MACRO>,

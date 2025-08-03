@@ -216,6 +216,27 @@ type ParticleCommandType<MACRO extends boolean> =
 export class ParticleCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ParticleCommandNode
 
+  /**
+   * Create particle effects.
+   *
+   * @param name Particle type to create.
+   *            Examples: 'minecraft:heart', 'minecraft:smoke', 'minecraft:dust'
+   *
+   * @param pos Optional position for particles. Defaults to executor position.
+   * @param delta Optional spawn area size [x, y, z]. Larger values spread particles more.
+   * @param speed Optional particle speed/motion.
+   * @param count Optional number of particles to create.
+   * @param mode Optional display mode: 'normal' or 'force' (force shows to more players).
+   * @param viewers Optional player selector to show particles to.
+   *
+   * @example
+   * ```ts
+   * particle('minecraft:heart', abs(100, 70, 200))           // Heart at position
+   * particle('minecraft:smoke', rel(0, 1, 0), [1, 1, 1], 0.1, 10)  // Smoke cloud
+   * particle('minecraft:dust', [1.0, 0.5, 0.5, 1.0], abs(0, 70, 0)) // Pink dust
+   * particle('minecraft:block', 'minecraft:stone', rel(0, 0, 0))     // Stone particles
+   * ```
+   */
   particle: ParticleCommandType<MACRO> = (...args: unknown[]) =>
     this.finalCommand([
       args[0],

@@ -12,22 +12,36 @@ export class SpreadPlayersNode extends CommandNode {
 export class SpreadPlayersCommand<MACRO extends boolean> extends CommandArguments<typeof SpreadPlayersNode> {
   protected NodeType = SpreadPlayersNode
 
-  spreadplayers: /**
+  /**
    * Teleports entities to random surface locations within an area.
    *
-   * @param center Specifies the center of the region to spread targets to. You must only specify the `x` and the `z` coordinates.
+   * @param center Center coordinates of the spread area (x, z coordinates only).
+   *              Examples: [0, 0], [100, -50], rel(10, 20)
    *
-   * @param spreadDistance Specifies the minimum distance between targets.
+   * @param spreadDistance Minimum distance between spread entities.
+   *                      Must be positive. Larger values spread entities further apart.
    *
-   * @param maxRange Specifies the maximum distance on each horizontal axis from the center of the area to spread targets
-   * (thus, the area is square, not circular).
+   * @param maxRange Maximum distance from center to spread entities.
+   *               Creates a square area of (maxRange * 2) on each side.
    *
-   * @param respectTeams Specifies whether to keep teams together.
-   * If `true`, targets on the same team will be teleported to the same location.
+   * @param respectTeams Whether to keep teams together when spreading.
+   *                   If true, team members teleport to the same location.
    *
-   * @param targets Specifies the targets to spread.
+   * @param targets Entity selector for targets to spread.
+   *              Examples: '@a', '@e[type=player]', '@a[team=red]'
+   *
+   * @example
+   * ```ts
+   * // Basic player spreading
+   * spreadplayers([0, 0], 5, 100, false, '@a')     // Spread all players randomly
+   * spreadplayers([50, -25], 10, 200, true, '@a')  // Keep teams together
+   *
+   * // Spread specific groups
+   * spreadplayers([0, 0], 8, 150, false, '@a[team=hunters]')
+   * spreadplayers(rel(0, 0), 3, 50, false, '@e[type=villager]')
+   * ```
    */
-  ((
+  spreadplayers: ((
     center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
     spreadDistance: Macroable<number, MACRO>,
     maxRange: Macroable<number, MACRO>,
@@ -35,21 +49,22 @@ export class SpreadPlayersCommand<MACRO extends boolean> extends CommandArgument
     targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
   ) => FinalCommandOutput) &
     /**
-     * Teleports entities to random surface locations within an area.
+     * Teleports entities to random surface locations within an area with height limit.
      *
-     * @param center Specifies the center of the region to spread targets to.
+     * @param center Center coordinates of the spread area (x, z coordinates only).
+     * @param spreadDistance Minimum distance between spread entities.
+     * @param maxRange Maximum distance from center to spread entities.
+     * @param under Literal string 'under' to enable height limiting.
+     * @param height Maximum Y coordinate for spread locations.
+     * @param respectTeams Whether to keep teams together when spreading.
+     * @param targets Entity selector for targets to spread.
      *
-     * @param spreadDistance Specifies the minimum distance between targets.
-     *
-     * @param maxRange Specifies the maximum distance on each horizontal axis from the center of the area to spread targets
-     * (thus, the area is square, not circular).
-     *
-     * @param height Specifies the maximum height for resulting positions.
-     *
-     * @param respectTeams Specifies whether to keep teams together.
-     * If `true`, targets on the same team will be teleported to the same location.
-     *
-     * @param targets Specifies the targets to spread.
+     * @example
+     * ```ts
+     * // Underground spreading
+     * spreadplayers([0, 0], 5, 100, 'under', 60, false, '@a')  // Spread below Y=60
+     * spreadplayers([25, 25], 8, 75, 'under', 40, true, '@a[team=miners]')
+     * ```
      */
     ((
       center: Macroable<ColumnCoordinates<MACRO>, MACRO>,

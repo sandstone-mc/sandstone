@@ -13,13 +13,23 @@ export class StopSoundCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = StopSoundCommandNode
 
   /**
-   * Stops a given sound.
+   * Stop playing sounds for players.
    *
-   * @param targets Specifies the command's target.
+   * @param targets Player selector to stop sounds for.
+   *               Examples: '@p', '@a', 'PlayerName'
    *
-   * @param source Specifies which category in the Music & Sound options the sound falls under. If it is *, stop sound of all category.
+   * @param source Optional sound category to stop. Use '*' for all categories.
+   *              Examples: 'master', 'music', 'ambient', 'block', '*'
    *
-   * @param sound Specifies the sound to stop.
+   * @param sound Optional specific sound to stop.
+   *             Examples: 'minecraft:entity.pig.ambient', 'minecraft:block.note_block.harp'
+   *
+   * @example
+   * ```ts
+   * stopsound('@a')                                    // Stop all sounds for all players
+   * stopsound('@p', 'music')                          // Stop music for nearest player
+   * stopsound('@a', '*', 'minecraft:entity.pig.ambient') // Stop pig sounds for all
+   * ```
    */
   stopsound = (
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,

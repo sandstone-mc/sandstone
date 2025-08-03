@@ -10,10 +10,12 @@ export class ReloadCommand extends CommandArguments {
   protected NodeType = ReloadCommandNode
 
   /**
-   * Reloads the current datapacks.
+   * Reload all datapacks.
    *
-   * If a datapack has invalid data (such as an invalid recipe format),
-   * changes are not applied and the game continues using the previous data.
+   * @example
+   * ```ts
+   * reload()    // Reload all datapacks
+   * ```
    */
   reload = () => this.finalCommand([])
 }

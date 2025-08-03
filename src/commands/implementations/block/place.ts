@@ -19,8 +19,6 @@ export class PlaceCommandNode extends CommandNode {
 
 export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = PlaceCommandNode
-
-  // TODO: When working on worldgen add Feature Class here
   /**
    * Attempts to place a worldgen feature.
    *

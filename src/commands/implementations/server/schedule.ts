@@ -50,10 +50,16 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
   protected NodeType = ScheduleCommandNode
 
   /**
-   * Removes a scheduled function.
+   * Cancel a scheduled function.
    *
-   * @param functionName Specify the scheduled function or `MCFunction` to be cleared.
+   * @param func Function name, MCFunction, or function tag to unschedule.
+   *            Examples: 'minecraft:my_timer', myFunction, '#mypack:timers'
    *
+   * @example
+   * ```ts
+   * schedule.clear('minecraft:my_timer')     // Cancel scheduled function
+   * schedule.clear(myScheduledFunction)      // Cancel Sandstone function
+   * ```
    */
   clear = (func: Macroable<MCFunctionClass<any, any> | string | TagClass<'functions'>, MACRO>) => {
     const result = this.finalCommand(['clear', func instanceof TagClass ? func.name : func])
@@ -61,22 +67,24 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
   }
 
   /**
-   * Delays the execution of a function. Executes the function after specified amount of time passes.
+   * Schedule function execution after a delay.
    *
-   * @param functionName Specify the function, the `MCFunction` or the callback to be scheduled.
+   * @param func Function to schedule. Can be name, MCFunction, tag, or callback.
+   *            Examples: 'minecraft:timer', myFunction, '#mypack:events', () => {...}
    *
-   * @param delay Specify the delay time.
+   * @param delay Time delay before execution.
+   *             Examples: '5s' (5 seconds), '100t' (100 ticks), '1d' (1 day)
    *
-   * Must be a time in Minecraft. It must be a single-precision floating point number suffixed with a unit. Units include:
-   * - d: an in-game day, 24000 gameticks;
-   * - s: a second, 20 gameticks;
-   * - t (default and omitable): a single gametick; the default unit.
+   * @param type Optional scheduling mode: 'replace' or 'append'.
+   *            'replace' cancels existing schedules, 'append' allows multiple.
+   *            Defaults to 'replace'.
    *
-   * The time is set to the closest integer tick after unit conversion. For example. .5d is same as 12000 ticks.
-   *
-   * @param type
-   * `replace` simply replaces the current function's schedule time. `append` allows multiple schedules to exist at different times.
-   * If unspecified, defaults to `replace`.
+   * @example
+   * ```ts
+   * schedule.function('minecraft:timer', '30s')          // Schedule in 30 seconds
+   * schedule.function(myFunction, '100t', 'append')      // Schedule in 100 ticks
+   * schedule.function(() => { say('Hello!') }, '5s')     // Schedule callback
+   * ```
    */
   function = (
     func: Macroable<ScheduledFunction, MACRO>,

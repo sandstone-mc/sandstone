@@ -17,40 +17,69 @@ export class BossBarCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Create a new boss bar.
    *
-   * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
+   * @param id Unique boss bar identifier (namespaced ID).
+   *          Examples: 'minecraft:my_bar', 'custom:health', 'mypack:timer'
    *
-   * @param name The display name of the boss bar.
+   * @param name Display name for the boss bar.
+   *            Supports JSON text formatting.
+   *
+   * @example
+   * ```ts
+   * bossbar.add('custom:health', 'Player Health')
+   * bossbar.add('mypack:timer', {text: 'Time Remaining', color: 'red'})
+   * ```
    */
   add = (id: Macroable<string, MACRO>, name: Macroable<JSONTextComponent, MACRO>) =>
     this.finalCommand(['add', id, parseJSONText(this.sandstoneCore, name)])
 
   /**
-   * Return the requested setting as a result of the command.
+   * Get boss bar property value.
    *
-   * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
+   * @param id Boss bar identifier to query.
+   * @param setting Property to get: 'max', 'players', 'value', or 'visible'.
+   *
+   * @example
+   * ```ts
+   * bossbar.get('custom:health', 'value')    // Get current value
+   * bossbar.get('mypack:timer', 'max')       // Get maximum value
+   * ```
    */
   get = (id: Macroable<string, MACRO>, setting: Macroable<'max' | 'players' | 'value' | 'visible', MACRO>) =>
     this.finalCommand(['get', id, setting])
 
   /**
-   * Display a list of existing boss bars.
+   * List all existing boss bars.
+   *
+   * @example
+   * ```ts
+   * bossbar.list()    // Show all boss bars
+   * ```
    */
   list = () => this.finalCommand(['list'])
 
   /**
-   * Remove an existing bossbar.
+   * Remove a boss bar.
    *
-   * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
+   * @param id Boss bar identifier to remove.
+   *
+   * @example
+   * ```ts
+   * bossbar.remove('custom:health')
+   * bossbar.remove('mypack:timer')
+   * ```
    */
   remove = (id: Macroable<string, MACRO>) => this.finalCommand(['remove', id])
 
   /**
-   * Set some bossbar options.
+   * Modify boss bar properties.
    *
-   * @param id Specifies a unique boss bar. Has the form of Namespaced ID (Note: "namespace:" defaults to "minecraft:" if absent.)
+   * @param id Boss bar identifier to modify.
    *
    * @example
-   * bossbar.set('custom:mybossbar').color('red')
+   * ```ts
+   * bossbar.set('custom:health').color('red').max(100).value(75)
+   * bossbar.set('mypack:timer').players('@a').visible(true)
+   * ```
    */
   set = (id: Macroable<string, MACRO>) => this.subCommand(['set', id], BossBarSetCommand<MACRO>, false)
 }

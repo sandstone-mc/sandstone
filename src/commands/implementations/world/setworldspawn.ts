@@ -12,11 +12,22 @@ export class SetWorldSpawnCommand<MACRO extends boolean> extends CommandArgument
   protected NodeType = SetWorldSpawnCommandNode
 
   /**
-   * Sets the world spawn.
+   * Set world spawn point.
    *
-   * @param pos Specifies the coordinates of the world spawn. If not specified, defaults to the block position of the command's execution.
+   * @param pos Optional coordinates for world spawn.
+   *           Defaults to current command execution position.
+   *           Examples: [0, 70, 0], abs(100, 64, 200), rel(0, 5, 0)
    *
-   * @param angle Specified the yaw angle to spawn with. Defaults to the direction the executor is facing.
+   * @param angle Optional yaw angle for spawn direction.
+   *             Defaults to current executor facing direction.
+   *             Examples: [90, 0], [180, -10]
+   *
+   * @example
+   * ```ts
+   * setworldspawn()                      // Set spawn at current location
+   * setworldspawn([0, 70, 0])           // Set spawn at coordinates
+   * setworldspawn(abs(100, 64, 200), [90, 0])  // With specific direction
+   * ```
    */
   setworldspawn = (pos?: Macroable<Coordinates<MACRO>, MACRO>, angle?: Macroable<Rotation<MACRO>, MACRO>) =>
     this.finalCommand([coordinatesParser(pos), coordinatesParser(angle)])

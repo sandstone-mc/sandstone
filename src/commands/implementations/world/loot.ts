@@ -61,13 +61,21 @@ class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
     this.finalCommand(['mine', coordinatesParser(pos), tool])
 }
 
-/** Drops the given loot table into the specified inventory or into the world. */
 export class LootCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = LootCommandNode
 
   /**
-   * Spawns item entities.
-   * @param targetPos Specifies the location where item drops.
+   * Drop loot items in the world.
+   *
+   * @param targetPos Coordinates where items will be dropped.
+   *                 Examples: [100, 70, 200], abs(0, 64, 0), rel(0, 1, 0)
+   *
+   * @example
+   * ```ts
+   * loot.spawn([100, 70, 200]).loot('minecraft:chests/simple_dungeon')
+   * loot.spawn(rel(0, 1, 0)).kill('@e[type=zombie,limit=1]')
+   * loot.spawn(abs(0, 64, 0)).mine(rel(0, -1, 0), 'minecraft:diamond_pickaxe')
+   * ```
    */
   spawn = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) =>
     this.subCommand(['spawn', coordinatesParser(targetPos)], LootSourceCommand, false)
@@ -137,17 +145,31 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
   }
 
   /**
-   * Gives items to players, ignoring empty item stacks.
+   * Give loot items to players.
    *
-   * @param players Specifies one or more players to give.
+   * @param players Player selector to give items to.
+   *               Examples: '@p', '@a', 'PlayerName'
+   *
+   * @example
+   * ```ts
+   * loot.give('@a').loot('minecraft:chests/end_city_treasure')
+   * loot.give('@p').fish('minecraft:gameplay/fishing', rel(0, 0, 0), 'minecraft:fishing_rod')
+   * ```
    */
   give = (players: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
     this.subCommand(['give', targetParser(players)], LootSourceCommand<MACRO>, false)
 
   /**
-   * Distributes items to a container block.
+   * Insert loot items into container block.
    *
-   * @param targetPos Specifies the position of a block.
+   * @param targetPos Container block coordinates.
+   *                 Examples: [100, 70, 200], abs(0, 64, 0)
+   *
+   * @example
+   * ```ts
+   * loot.insert([100, 70, 200]).loot('minecraft:chests/village_blacksmith')
+   * loot.insert(abs(0, 64, 0)).mine(rel(0, -1, 0))
+   * ```
    */
   insert = (targetPos: Macroable<Coordinates<MACRO>, MACRO>) =>
     this.subCommand(['insert', coordinatesParser(targetPos)], LootSourceCommand<MACRO>, false)

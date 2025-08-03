@@ -26,25 +26,19 @@ export class TriggerCommand extends CommandArguments {
   protected NodeType = TriggerCommandNode
 
   /**
-   * Modifies a scoreboard objective with a "trigger" criterion.
-   * Allows non-operator players to modify their own scoreboard objectives under tightly controlled conditions.
-   * Often used to let players activate systems made by operators or mapmakers.
+   * Modify trigger scoreboard objective.
    *
-   * @param objective An enabled scoreboard objective with the "trigger" criterion.
+   * @param objective Trigger-type objective to modify.
+   *                 Must be enabled for the player executing the command.
+   *                 Examples: 'my_trigger', triggerObjective
    *
    * @example
-   *
-   * // Adds 1 to the current value of `myobjective`.
-   * trigger('myobjective')
-   *
-   * // Adds 2 to the current value of `objective`
-   * trigger('myobjective').add(2)
-   *
-   * // Sets the value of `objective` to 5
-   * trigger('myobjective').set(5)
-   *
-   * // If you created an objective via createObjective, and it is enabled, you can use it:
-   * trigger(myObjective).add(2)
+   * ```ts
+   * trigger('my_trigger')              // Add 1 to trigger
+   * trigger('settings').add(5)         // Add 5 to settings trigger
+   * trigger('menu').set(3)             // Set menu trigger to 3
+   * trigger(myTriggerObj).add(10)      // Use Sandstone objective
+   * ```
    */
   trigger = (objective: ObjectiveArgument) => this.subCommand([objective], TriggerArgumentsCommand, false)
 }

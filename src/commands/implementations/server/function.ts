@@ -18,6 +18,26 @@ type Func = MCFunctionClass<undefined, undefined> | string | TagClass<'functions
 export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = FunctionCommandNode
 
+  /**
+   * Call a function or function tag.
+   *
+   * @param mcFunction Function to call. Can be function name, MCFunction object, or function tag.
+   *                  Examples: 'minecraft:foo', myFunction, '#mypack:init_functions'
+   *
+   * @param params Optional parameters or 'with' keyword for data context.
+   * @param pointOrType Optional data type or data point for 'with' clause.
+   * @param target Optional target for data context.
+   * @param path Optional path for data context.
+   *
+   * @example
+   * ```ts
+   * func('minecraft:load')                    // Call vanilla function
+   * func(myFunction)                         // Call Sandstone function
+   * func('#mypack:tick_functions')           // Call function tag
+   * func('minecraft:test', {x: 100})         // Call with parameters
+   * func('minecraft:process', 'with', 'entity', '@s', 'Tags')  // With data context
+   * ```
+   */
   function(mcFunction: Macroable<Func, MACRO>): FinalCommandOutput
 
   function(mcFunction: Macroable<Func, MACRO>, params: Macroable<RootNBT, MACRO>): FinalCommandOutput

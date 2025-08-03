@@ -34,17 +34,19 @@ export class TitleCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TitleCommandNode
 
   /**
-   * Controls text displayed on the screen.
+   * Display title text on player screens.
    *
-   * @param targets Specifies the player(s) to display a screen title to.
+   * @param targets Player selector to show title to.
+   *               Examples: '@p', '@a', 'PlayerName', '@a[team=red]'
    *
    * @example
-   * // Displays a red "Hello World" as title
-   * title('@a').title([{text: 'Hello World', color: 'red'}])
-   *
-   * // Displays a target to kill in the actionbar
-   * const target = Selector('@r')
-   * title('@a').actionbar(['You target is: ', target])
+   * ```ts
+   * title('@a').title('Hello World')                    // Main title
+   * title('@p').subtitle('Welcome back!')               // Subtitle
+   * title('@a').actionbar('Health: 20/20')             // Action bar text
+   * title('@p').times(10, 70, 20)                      // Fade in/stay/fade out ticks
+   * title('@a').clear()                                 // Clear current title
+   * ```
    */
   title = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
     this.subCommand([targetParser(targets)], TitleArgumentsCommand<MACRO>, false)

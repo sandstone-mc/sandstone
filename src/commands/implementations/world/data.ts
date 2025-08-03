@@ -10,26 +10,61 @@ export class DataCommandNode extends CommandNode {
   command = 'data' as const
 }
 
-/** Allows to get, merge, modify, and remove NBT data of a block entity, entity, or Command NBT storage. */
 export class DataCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = DataCommandNode
 
-  /** Read off the entire NBT data or the subsection of the NBT data from the targeted block position or entity, scaled by `scale` if specified. */
+  /**
+   * Read NBT data from blocks, entities, or storage.
+   *
+   * @example
+   * ```ts
+   * data.get.block([100, 70, 200], 'Items[0]', 1)      // Get block NBT
+   * data.get.entity('@p', 'Health')                    // Get player health
+   * data.get.storage('minecraft:temp', 'value')        // Get storage data
+   * ```
+   */
   get get() {
     return this.subCommand(['get'], DataGetCommand<MACRO>, false)
   }
 
-  /** Merge the NBT data from the sourced block position or entity with the specified `nbt` data. */
+  /**
+   * Merge NBT data into blocks, entities, or storage.
+   *
+   * @example
+   * ```ts
+   * data.merge.block([100, 70, 200], {Items: []})      // Merge block NBT
+   * data.merge.entity('@p', {Health: 20})              // Merge entity NBT
+   * data.merge.storage('minecraft:temp', {flag: true}) // Merge storage data
+   * ```
+   */
   get merge() {
     return this.subCommand(['merge'], DataMergeCommand<MACRO>, false)
   }
 
-  /** Modify the NBT data from the sourced block position or entity, with the specified operation and the given NBT. */
+  /**
+   * Modify NBT data in blocks, entities, or storage.
+   *
+   * @example
+   * ```ts
+   * data.modify.entity('@p', 'Health').set.value(20)                    // Set health
+   * data.modify.block([100, 70, 200], 'Items').append.value({id: 'stone'}) // Add item
+   * data.modify.storage('minecraft:temp', 'list').prepend.from.entity('@p', 'Inventory[0]')
+   * ```
+   */
   get modify() {
     return this.subCommand(['modify'], DataModifyCommand<MACRO>, false)
   }
 
-  /** Removes NBT data at `path` from the targeted block position or entity. Player NBT data cannot be removed. */
+  /**
+   * Remove NBT data from blocks, entities, or storage.
+   *
+   * @example
+   * ```ts
+   * data.remove.block([100, 70, 200], 'Items[0]')      // Remove block NBT
+   * data.remove.entity('@e[type=item]', 'Motion')      // Remove entity motion
+   * data.remove.storage('minecraft:temp', 'old_data')  // Remove storage data
+   * ```
+   */
   get remove() {
     return this.subCommand(['remove'], DataRemoveCommand<MACRO>, false)
   }

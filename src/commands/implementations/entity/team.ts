@@ -26,107 +26,100 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TeamCommandNode
 
   /**
-   * Creates a new team.
+   * Create a new team.
    *
-   * @param team Specifies the name of the team.
+   * @param team Team name identifier.
+   *            Examples: 'red', 'blue', 'hunters', 'defenders'
    *
-   * @param displayName Specifies the team name to be displayed.
+   * @param displayName Optional display name shown in UI.
+   *                   Supports JSON text formatting.
+   *
+   * @example
+   * ```ts
+   * team.add('red')                              // Create team 'red'
+   * team.add('blue', 'Blue Team')                // With display name
+   * team.add('winners', {text: 'Winners!', color: 'gold'})
+   * ```
    */
   add = (team: Macroable<string, MACRO>, displayName?: Macroable<JSONTextComponent, MACRO>) =>
     this.finalCommand(['add', team, parseJSONText(this.sandstoneCore, displayName)])
 
   /**
-   * Removes all members from a team.
+   * Remove all members from a team.
    *
-   * @param team Specifies the name of the team.
+   * @param team Team name to empty.
+   *
+   * @example
+   * ```ts
+   * team.empty('red')     // Remove all members from red team
+   * ```
    */
   empty = (team: Macroable<string, MACRO>) => this.finalCommand(['empty', team])
 
   /**
-   * Makes specified entities join a team.
+   * Add entities to a team.
    *
-   * @param team Specifies the name of the team.
+   * @param team Team name to join.
+   * @param members Entity selector or '*' for all scoreboard entities.
+   *               Defaults to command executor if not specified.
    *
-   * @param members Specifies the entities to join the team.
-   * `'*'` may be used to represent all entities tracked by the scoreboard
-   * If unspecified, defaults to the executor.
+   * @example
+   * ```ts
+   * team.join('red', '@p')              // Add nearest player to red team
+   * team.join('blue', '@a[team=!blue]') // Add non-blue players to blue
+   * team.join('hunters', '*')           // Add all entities to hunters
+   * ```
    */
   join = (team: Macroable<string, MACRO>, members?: Macroable<MultipleEntitiesArgument<MACRO> | '*', MACRO>) =>
     this.finalCommand(['join', team, targetParser(members)])
 
   /**
-   * Makes specified entities leave a team.
+   * Remove entities from their teams.
    *
-   * @param members Specifies the entities to leave the team.
-   * `'*'` may be used to represent all entities tracked by the scoreboard
+   * @param members Entity selector or '*' for all scoreboard entities.
+   *
+   * @example
+   * ```ts
+   * team.leave('@p')      // Remove nearest player from team
+   * team.leave('@a')      // Remove all players from teams
+   * team.leave('*')       // Remove all entities from teams
+   * ```
    */
   leave = (members: Macroable<MultipleEntitiesArgument<MACRO> | '*', MACRO>) =>
     this.finalCommand(['leave', targetParser(members)])
 
   /**
-   * Lists all teams, or lists all members of a team if `team` is set.
+   * List teams or team members.
    *
-   * @param team Specifies the name of the team.
+   * @param team Optional team name to list members of.
+   *            If not specified, lists all teams.
+   *
+   * @example
+   * ```ts
+   * team.list()         // List all teams
+   * team.list('red')    // List red team members
+   * ```
    */
   list = (team?: Macroable<string, MACRO>) => this.finalCommand(['list', team ? targetParser(team) : undefined])
 
-  modify: /**
-   * Modifies the option of the team.
+  /**
+   * Modify team properties.
    *
-   * Value must be one of the following:
+   * @param team Team name to modify.
+   * @param option Property to change: 'color', 'displayName', 'friendlyFire', 
+   *              'collisionRule', 'nametagVisibility', 'deathMessageVisibility',
+   *              'seeFriendlyInvisibles', 'prefix', 'suffix'
+   * @param value New value for the property.
    *
-   * - `collisionRule`: Decide what entities entities on this team can push.
-   *
-   * - `color`: Decide the color of the team and players in chat, above their head, on the Tab menu, and on the sidebar.
-   * Also changes the color of the outline of the entities caused by the Glowing effect.
-   *
-   * - `deathMessageVisibility`: Decide whose death messages can be seen in chat.
-   *
-   * - `displayName`: Set the display name of the team.
-   *
-   * - `friendlyFire`: Enable/Disable players inflicting damage on each other when on the same team.
-   * (Note: players can still inflict status effects on each other.) Does not affect non-player entities on a team.
-   *
-   * - `nametagVisibility`: Decide whose name tags above their heads can be seen.
-   *
-   * - `prefix`: Modifies the prefix that appears before players' names in chat.
-   *
-   * - `seeFriendlyInvisibles`: Decide if players can see invisible players on their team as semi-transparent or completely invisible.
-   *
-   * - `suffix`: Modifies the suffix that appears after players' names in chat.
+   * @example
+   * ```ts
+   * team.modify('red', 'color', 'red')               // Set team color
+   * team.modify('blue', 'friendlyFire', false)       // Disable friendly fire
+   * team.modify('hunters', 'prefix', '[HUNTER] ')    // Add prefix
+   * team.modify('defenders', 'displayName', 'The Defenders')
+   * ```
    */
-  (<T extends keyof TeamOptions>(team: Macroable<string, MACRO>, option: T, value: TeamOptions[T]) => void) &
-    /*
-     * Here, for the 2nd overload, we can't do Exclude<string, keyof TeamOptions> because this doesn't work in Typescript.
-     * We need T to capture the exact value of the string (like "foo"),
-     * and the type of the parameter becomes Exclude<"foo", keyof TeamOptions> which works.
-     */
-
-    /**
-     * Modifies the option of the team.
-     *
-     * Value must be one of the following:
-     *
-     * - `collisionRule`: Decide what entities entities on this team can push.
-     *
-     * - `color`: Decide the color of the team and players in chat, above their head, on the Tab menu, and on the sidebar.
-     * Also changes the color of the outline of the entities caused by the Glowing effect.
-     *
-     * - `deathMessageVisibility`: Decide whose death messages can be seen in chat.
-     *
-     * - `displayName`: Set the display name of the team.
-     *
-     * - `friendlyFire`: Enable/Disable players inflicting damage on each other when on the same team.
-     * (Note: players can still inflict status effects on each other.) Does not affect non-player entities on a team.
-     *
-     * - `nametagVisibility`: Decide whose name tags above their heads can be seen.
-     *
-     * - `prefix`: Modifies the prefix that appears before players' names in chat.
-     *
-     * - `seeFriendlyInvisibles`: Decide if players can see invisible players on their team as semi-transparent or completely invisible.
-     *
-     * - `suffix`: Modifies the suffix that appears after players' names in chat.
-     */
+  modify: (<T extends keyof TeamOptions>(team: Macroable<string, MACRO>, option: T, value: TeamOptions[T]) => void) &
     (<T extends string>(
       team: Macroable<string, MACRO>,
       option: Exclude<T, keyof TeamOptions>,
@@ -139,9 +132,14 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
   }
 
   /**
-   * Removes a team.
+   * Delete a team.
    *
-   * @param team Specifies the name of the team.
+   * @param team Team name to remove.
+   *
+   * @example
+   * ```ts
+   * team.remove('red')    // Delete red team
+   * ```
    */
   remove = (team: Macroable<string, MACRO>) => this.finalCommand(['remove', team])
 }

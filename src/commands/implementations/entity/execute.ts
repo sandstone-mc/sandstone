@@ -493,31 +493,58 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
   protected NodeType = ExecuteCommandNode
 
   /**
-   * Updates the command's position, aligning to its current block position (an integer). Only applies along specified axes.
-   * This is akin to flooring the coordinates – i.e. rounding them downwards. It updates the meaning of `~ ~ ~` and `^ ^ ^`.
+   * Align execution position to block coordinates.
    *
-   * @param axes Any non-repeating combination of the characters 'x', 'y', and 'z'.
+   * @param axes Coordinate axes to align ('x', 'y', 'z', or combinations like 'xy').
+   *            Floors coordinates on specified axes.
+   *
+   * @example
+   * ```ts
+   * execute.align('xyz').run.teleport('@s', rel(0, 1, 0))  // Align to block grid
+   * execute.as('@a').align('y').run.setblock(rel(0, 0, 0), 'minecraft:stone')
+   * ```
    */
   align = (axes: Macroable<AXES, MACRO>) => this.nestedExecute(['align', axes])
 
   /**
-   * Stores the distance from the feet to the eyes of the entity that is executing the command in the anchor, which is part of the command context.
-   * Effectively re-centers `^ ^ ^` on either the eyes or feet, also changing the angle the `facing` sub-command works off of.
+   * Set execution anchor point.
    *
-   * @param anchor Whether to anchor the executed command to eye level or feet level
+   * @param anchor Anchor position: 'eyes' or 'feet'.
+   *              Changes the reference point for `^ ^ ^` coordinates.
+   *
+   * @example
+   * ```ts
+   * execute.anchored('eyes').run.particle('minecraft:heart', abs(0, 0, 0))
+   * execute.as('@p').anchored('feet').run.summon('minecraft:armor_stand')
+   * ```
    */
   anchored = (anchor: Macroable<ANCHORS, MACRO>) => this.nestedExecute(['anchored', anchor])
 
   /**
-   * Sets the command sender to target entity, without changing position, rotation, dimension, or anchor
+   * Change command executor.
    *
-   * @param targets Target entity/entities to become the new sender.
+   * @param targets Entity selector to execute as.
+   *               Changes @s reference without affecting position/rotation.
+   *
+   * @example
+   * ```ts
+   * execute.as('@a').run.say('Hello from everyone!')
+   * execute.as('@e[type=zombie]').run.damage('@s', 10)
+   * ```
    */
   as = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['as', targetParser(targets)])
 
   /**
-   * Sets the command position, rotation, and dimension to match those of an entity/entities; does not change sender
-   * @param targets Target entity/entities to match position, rotation, and dimension with
+   * Change execution position and rotation to match entity.
+   *
+   * @param targets Entity selector to copy position/rotation from.
+   *               Does not change command executor (@s).
+   *
+   * @example
+   * ```ts
+   * execute.at('@p').run.summon('minecraft:lightning_bolt')
+   * execute.as('@a').at('@e[type=villager,limit=1]').run.teleport('@s', rel(0, 5, 0))
+   * ```
    */
   at = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['at', targetParser(targets)])
 

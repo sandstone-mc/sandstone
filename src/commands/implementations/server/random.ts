@@ -13,10 +13,19 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = RandomCommandNode
 
   /**
-   * Generate a random integer.
+   * Generate random number for command results.
    *
-   * @param range Integer between minimum and maximum.
-   * @param sequence Namespaced ID of random sequence to use, created upon use.
+   * @param range Number range for random generation.
+   *             Examples: {min: 1, max: 10}, [5, 15], 20
+   *
+   * @param sequence Random sequence identifier for reproducible results.
+   *                Examples: 'my_sequence', 'mypack:dice', 'combat_rng'
+   *
+   * @example
+   * ```ts
+   * random.value({min: 1, max: 6}, 'dice')        // D6 roll
+   * random.value([10, 20], 'damage_roll')         // 10-20 damage
+   * ```
    */
   value = (range: Macroable<Range<MACRO>, MACRO>, sequence: Macroable<string, MACRO>) => {
     let seq = sequence
@@ -27,10 +36,16 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
   }
 
   /**
-   * Generate a random integer and broadcasts it to all players.
+   * Generate random number and broadcast result to all players.
    *
-   * @param range Integer between minimum and maximum.
-   * @param sequence Optional. Namespaced ID of random sequence to use, created upon use.
+   * @param range Number range for random generation.
+   * @param sequence Optional random sequence identifier.
+   *
+   * @example
+   * ```ts
+   * random.roll({min: 1, max: 100})              // 1-100 roll
+   * random.roll([1, 20], 'public_dice')          // D20 with sequence
+   * ```
    */
   roll = (range: Macroable<Range<MACRO>, MACRO>, sequence?: Macroable<string, MACRO>) => {
     let seq = sequence
@@ -41,13 +56,18 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
   }
 
   /**
-   * Reset a random number sequence.
+   * Reset random sequence with new seed.
    *
-   * @param sequence Namespaced ID of random sequence to reset, created if non-existent.
-   * @param seed Optional. Long that seeds the new sequence.
-   * @param includeWorldSeed Optional. Whether to include the world seed in the random. Defaults to false.
-   * @param includeSequenceID Optional. Whether to include the sequence ID in the random. Defaults to false.
-   * @returns
+   * @param sequence Sequence identifier to reset. Use '*' for all sequences.
+   * @param seed Optional seed value for reproducible randomness.
+   * @param includeWorldSeed Optional. Include world seed in calculation.
+   * @param includeSequenceID Optional. Include sequence ID in calculation.
+   *
+   * @example
+   * ```ts
+   * random.reset('dice', 12345)                  // Reset with specific seed
+   * random.reset('*')                            // Reset all sequences
+   * ```
    */
   reset = (
     sequence: Macroable<LiteralUnion<'*'>, MACRO>,

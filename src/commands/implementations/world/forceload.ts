@@ -64,24 +64,24 @@ export class ForceLoadCommandNode extends CommandNode {
   command = 'forceload' as const
 }
 
-/**
- * Force chunks to load constantly or not.
- */
 export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ForceLoadCommandNode
 
   /**
-   * Forces the chunk at the `from` position (through to `to` if set) in the dimension of the command's execution to be loaded constantly.
+   * Force chunks to stay loaded.
    *
-   * Fails if more than 256 chunks are added at once.
+   * @param from Starting chunk coordinates (x, z block positions).
+   *            Examples: [0, 0], [100, -200], rel(0, 0)
    *
-   * @param from Specifies the start of the targeted chunks, in block coordinates.
-   * @param to Specified the end of the targeted chunks, in block coordinates.
-   * If unspecified, only targets the chunk specified by `from`.
+   * @param to Optional ending chunk coordinates for area selection.
+   *          If not specified, only forces single chunk.
    *
    * @example
-   * // Forceload current chunk
-   * forceload.add('~ ~')
+   * ```ts
+   * forceload.add([0, 0])              // Force single chunk at origin
+   * forceload.add([0, 0], [32, 32])    // Force 3x3 chunk area
+   * forceload.add(rel(0, 0))           // Force current chunk
+   * ```
    */
   add = (from: Macroable<ColumnCoordinates<MACRO>, MACRO>, to?: Macroable<ColumnCoordinates<MACRO>, MACRO>) => {
     validateNumberOfChunks(from, to)
@@ -90,11 +90,16 @@ export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
   }
 
   /**
-   * Unforces the chunk at the `from` position (through to `to` if set) in the dimension of the command's execution to be loaded constantly.
+   * Stop forcing chunks to stay loaded.
    *
-   * @param from Specifies the start of the targeted chunks, in block coordinates. Can be 'all' to unforce all chunks.
-   * @param to Specified the end of the targeted chunks, in block coordinates.
-   * If unspecified, only targets the chunk specified by `from`.
+   * @param from Starting chunk coordinates to unforce.
+   * @param to Optional ending coordinates for area selection.
+   *
+   * @example
+   * ```ts
+   * forceload.remove([0, 0])           // Unforce single chunk
+   * forceload.remove([0, 0], [32, 32]) // Unforce chunk area
+   * ```
    */
   remove = (from: Macroable<ColumnCoordinates<MACRO>, MACRO>, to?: Macroable<ColumnCoordinates<MACRO>, MACRO>) => {
     validateNumberOfChunks(from, to)
@@ -102,17 +107,27 @@ export class ForceLoadCommand<MACRO extends boolean> extends CommandArguments {
     return this.finalCommand(['remove', coordinatesParser(from), coordinatesParser(to)])
   }
 
-  /** Unforces all chunks in the dimension of the command's execution to be loaded constantly. */
+  /**
+   * Stop forcing all chunks in current dimension.
+   *
+   * @example
+   * ```ts
+   * forceload.removeAll()    // Unforce all chunks
+   * ```
+   */
   removeAll = () => this.finalCommand(['remove', 'all'])
 
   /**
-   * If chunk coordinates are given, displays whether the specified chunk in the dimension of the command's execution is force loaded.
-   * Otherwise, lists which chunks in the dimension of the command's execution are force loaded.
+   * Check which chunks are force loaded.
    *
-   * @param pos Specifies a chunk to query, in block coordinates.
-   * If unspecified, lists which chunks are force loaded.
+   * @param pos Optional chunk coordinates to check specifically.
+   *           If not specified, lists all force loaded chunks.
    *
    * @example
+   * ```ts
+   * forceload.query()        // List all force loaded chunks
+   * forceload.query([0, 0])  // Check if specific chunk is force loaded
+   * ```
    */
   query = (pos?: Macroable<ColumnCoordinates<MACRO>, MACRO>) => this.finalCommand(['query', coordinatesParser(pos)])
 }

@@ -11,13 +11,18 @@ export class MeCommand extends CommandArguments {
   protected NodeType = MeCommandNode
 
   /**
-   * Displays a message about yourself.
+   * Send action message describing what you are doing.
    *
-   * @param actions Specifies the messages to display. They will be joined with a whitespace.
+   * @param actions Text segments and entity selectors for the action message.
+   *               Multiple arguments joined with spaces.
+   *               Entity selectors get resolved to player names.
    *
-   * Each action can be a message or a selector.
-   * The game replaces entity selectors in the message with the list of selected entities' names,
-   * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
+   * @example
+   * ```ts
+   * me('waves at everyone')              // "* PlayerName waves at everyone"
+   * me('thanks', '@p', 'for the help')   // "* PlayerName thanks NearestPlayer for the help"
+   * me('activates the ancient mechanism')
+   * ```
    */
   me = (...actions: (string | MultipleEntitiesArgument<false>)[]) => this.finalCommand(actions.map(targetParser))
 }

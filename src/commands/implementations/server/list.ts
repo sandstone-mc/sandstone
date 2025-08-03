@@ -10,9 +10,16 @@ export class ListCommand extends CommandArguments {
   protected NodeType = ListCommandNode
 
   /**
-   * Shows the names of all currently-connected players.
+   * Display list of online players.
    *
-   * @param uuid Whether to show player UUIDs alongside names. Defaults to false.
+   * @param uuids Optional flag to show player UUIDs alongside names.
+   *             Defaults to false (names only).
+   *
+   * @example
+   * ```ts
+   * list()          // Show player names
+   * list(true)      // Show names and UUIDs
+   * ```
    */
   list = (uuids?: boolean) => this.finalCommand([uuids ? 'uuids' : undefined])
 }

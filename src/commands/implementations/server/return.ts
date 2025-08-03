@@ -84,8 +84,18 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
 export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArguments<typeof ReturnRunCommandNode> {
   protected NodeType = ReturnRunCommandNode
 
-  /*
-   * Run a command and return its result.
+  /**
+   * Execute a command and return its result value.
+   * 
+   * This allows functions to return specific values based on command execution results.
+   * The returned value can be used by the caller for conditional logic or stored in objectives.
+   * 
+   * Can be used in two ways:
+   * - Chain with other commands: return.run.say('hello')
+   * - With a callback function: return.run(() => { commands })
+   * 
+   * @example
+   * return.run.execute.if.score('@p', 'health').matches([1, 10]).run.return(1)
    */
   get run() {
     const node = this.getNode()
@@ -117,6 +127,29 @@ export class ReturnCommandNode extends CommandNode {
 export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ReturnCommandNode
 
+  /**
+   * Return from a function with a specific value or failure state.
+   * 
+   * Functions normally return 1 when successful. This command allows returning
+   * custom values or indicating failure. The return value can be captured by
+   * the caller using `execute store result`.
+   * 
+   * @param value Optional integer value to return (0-2147483647). Defaults to 0 if not specified.
+   *              Higher values typically indicate better success or more significant results.
+   * 
+   * @example
+   * ```ts
+   * // Return success with a specific value
+   * return.return(42)
+   * 
+   * // Return default value (0)
+   * return.return()
+   * 
+   * // Return based on conditions
+   * execute.if.entity('@p[tag=vip]').run.return(100)  // VIP bonus
+   * execute.unless.entity('@p[tag=vip]').run.return(50) // Regular bonus
+   * ```
+   */
   get return() {
     const run = new ReturnArgumentsCommand<MACRO>(this.sandstonePack)
 
@@ -130,5 +163,26 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
     )
   }
 
+  /**
+   * Return from a function with a failure state.
+   * 
+   * Immediately exits the function and returns 0, indicating failure.
+   * This is equivalent to `return.return(0)` but more semantically clear
+   * when you want to explicitly indicate failure.
+   * 
+   * Useful for error handling and early exits when conditions aren't met.
+   * 
+   * @example
+   * ```ts
+   * // Early exit on invalid conditions
+   * execute.unless.entity('@p').run.return.fail() // No player found
+   * 
+   * // Validation check
+   * execute.if.score('@p', 'level').matches([..0]).run.return.fail() // Invalid level
+   * 
+   * // Error handling
+   * execute.unless.block('~ ~ ~', 'minecraft:chest').run.return.fail() // Expected chest not found
+   * ```
+   */
   fail = () => this.finalCommand(['fail'])
 }

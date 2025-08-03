@@ -13,18 +13,48 @@ export class ClearCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ClearCommandNode
 
   /**
-   * Clears items from player inventory, including items being dragged by the player.
+   * Clear items from player inventories.
    *
-   * @param targets Specifies the player(s) whose items are cleared.
-   * If not specified, defaults to the player who executes the command.
+   * Removes items from all inventory slots including main inventory, hotbar,
+   * armor slots, offhand, and crafting grid. Can target specific items,
+   * limit quantities, or clear everything.
    *
-   * @param item Specifies the item to be cleared. If not specified, all items are cleared.
+   * @param targets Optional player selector specifying whose inventory to clear.
+   *               Defaults to command executor if not specified.
+   *               Examples: '@p', '@a', 'PlayerName', '@a[team=red]'
    *
-   * @param maxCount Specifies the maximum number of items to be cleared.
+   * @param item Optional item type or tag to target for removal.
+   *            If not specified, ALL items are cleared.
+   *            Examples:
+   *            - 'minecraft:diamond' - specific item type
+   *            - '#minecraft:logs' - item tag (all log types)
+   *            - 'minecraft:diamond_sword' - specific tool
    *
-   * If not specified, all items that match `item` are cleared.
+   * @param maxCount Optional maximum number of items to remove.
+   *                If not specified, removes ALL matching items.
+   *                Special value `0` enables detection mode - counts items without removing them.
    *
-   * If `0`, instead of clearing of items, detectes and queries the amount of specified items.
+   * @example
+   * ```ts
+   * // Clear everything from your inventory
+   * clear()
+   *
+   * // Clear all items from specific player
+   * clear('PlayerName')
+   *
+   * // Remove specific item types
+   * clear('@p', 'minecraft:dirt')              // All dirt
+   * clear('@a', 'minecraft:diamond_sword')     // All diamond swords
+   * clear('@p', '#minecraft:boats')            // All boat types
+   *
+   * // Quantity-limited clearing
+   * clear('@p', 'minecraft:cobblestone', 64)   // Remove up to 64 cobblestone
+   * clear('@a', 'minecraft:arrow', 32)         // Remove up to 32 arrows each
+   *
+   * // Detection mode (count without removing)
+   * clear('@p', 'minecraft:gold_ingot', 0)     // Count gold ingots
+   * clear('@a', '#minecraft:tools', 0)         // Count all tools
+   * ```
    */
   clear = (
     targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,

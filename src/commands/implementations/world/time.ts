@@ -7,9 +7,6 @@ export class TimeCommandNode extends CommandNode {
   command = 'time' as const
 }
 
-/**
- * Changes or queries the world's game time.
- */
 export class TimeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = TimeCommandNode
 

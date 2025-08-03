@@ -13,25 +13,46 @@ export class CloneCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = CloneCommandNode
 
   /**
-   * Clones blocks from one region to another.
+   * Clone blocks from a source region to a destination.
+   * 
+   * Copies all blocks within the defined 3D region to the new location.
+   * The source region is defined by two opposite corners, and the destination
+   * is the corresponding corner where the copied region will be placed.
+   * 
+   * **Region Definition:**
+   * - Source region: defined by any two opposite corners (begin/end)
+   * - Destination: the corner of the target region that corresponds to the "lowest" corner
+   *   (minimum X, Y, Z values) of the source region
+   * 
+   * **Coordinate Systems:**
+   * - Absolute: `[100, 64, 200]` - exact world coordinates
+   * - Relative: `['~5', '~1', '~-3']` - relative to command execution point
+   * - Local: `['^2', '^', '^-1']` - relative to facing direction
    *
-   * @param begin Specifies the coordinates of the first corner blocks of the source region.
+   * @param begin One corner of the source region to copy from.
+   *              Can be any corner - the command automatically determines the bounds.
    *
-   * @param end Specifies the coordinates of the opposing corner blocks of the source region.
+   * @param end The opposite corner of the source region.
+   *            Together with `begin`, defines the complete 3D area to copy.
    *
-   * @param destination Specifies the lower northwest corner of the destination region.
-   * It corresponds to the block with the lowest X-axis, Y-axis and Z-axis value.
-   *
+   * @param destination The target location for the copied region.
+   *                   This corresponds to where the "minimum corner" of the source
+   *                   region will be placed (lowest X, Y, Z coordinates).
+   * 
+   * @returns CloneOptionsCommand for chaining filtering and mode options.
+   * 
    * @example
-   *
-   * // Clone blocks from `0 0 0` to `8 8 8` at the current location.
-   * clone(abs(0, 0, 0), abs(8, 8, 8), rel(0, 0, 0))
-   *
-   * // Same as above, but only clone dirt blocks.
-   * clone(abs(0, 0, 0), abs(8, 8, 8), rel(0, 0, 0)).filtered('minecraft:dirt')
-   *
-   * // Move the current block 1 block above
-   * clone(rel(0, 0, 0), rel(0, 0, 0), rel(0, 1, 0)).replace('move')
+   * ```ts
+   * // Copy a house from one location to another
+   * clone([100, 64, 100], [120, 80, 120], [200, 64, 200])
+   * 
+   * // Copy relative to current position
+   * clone(['~-10', '~', '~-10'], ['~10', '~20', '~10'], ['~50', '~', '~'])
+   * 
+   * // Copy with options
+   * clone(template_start, template_end, build_location).masked('normal')
+   * clone(old_location, old_end, new_location).replace('move') // Move structure
+   * ```
    */
   clone = (
     begin: Macroable<Coordinates<MACRO>, MACRO>,
@@ -42,34 +63,100 @@ export class CloneCommand<MACRO extends boolean> extends CommandArguments {
 
 export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments {
   /**
-   * Copy all blocks, overwriting all blocks of the destination region with the blocks from the source region.
+   * Copy all blocks, completely replacing the destination region.
+   * 
+   * This mode copies every block from the source, including air blocks,
+   * completely overwriting whatever exists at the destination. This is
+   * the most comprehensive copying mode.
+   * 
+   * **Behavior:** 
+   * - Copies ALL blocks (including air)
+   * - Completely overwrites destination region
+   * - Preserves exact structure including empty spaces
    *
-   * @param mode One of these three:
-   * - `force`: Force the clone even if the source and destination regions overlap.
-   * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
-   * - `normal`: Don't move or force.
+   * @param mode Optional operation mode:
+   *            - `'normal'` (default): Standard copying behavior
+   *            - `'force'`: Allow copying even if source and destination overlap
+   *            - `'move'`: Copy then replace source region with air (relocate structure)
+   * 
+   * @example
+   * ```ts
+   * // Standard replacement copy
+   * clone(source, source_end, dest).replace()
+   * 
+   * // Move a structure to new location
+   * clone([100, 64, 100], [110, 74, 110], [200, 64, 200]).replace('move')
+   * 
+   * // Force copy overlapping regions
+   * clone(['~-5', '~', '~-5'], ['~5', '~10', '~5'], ['~3', '~', '~3']).replace('force')
+   * ```
    */
   replace = (mode?: Macroable<'force' | 'move' | 'normal', MACRO>) => this.finalCommand(['replace', mode])
 
   /**
-   * Copy only non-air blocks. Blocks in the destination region that would otherwise be overwritten by air are left unmodified.
+   * Copy only solid blocks, preserving existing blocks where source has air.
+   * 
+   * This mode only copies non-air blocks from the source region. Air blocks
+   * in the source are ignored, leaving whatever blocks exist at the destination
+   * unchanged. Perfect for merging structures or adding details.
+   * 
+   * **Behavior:**
+   * - Only copies solid (non-air) blocks
+   * - Leaves existing destination blocks where source has air
+   * - Great for layering or merging structures
    *
-   * @param mode One of these three:
-   * - `force`: Force the clone even if the source and destination regions overlap.
-   * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
-   * - `normal`: Don't move or force.
+   * @param mode Optional operation mode (same as replace):
+   *            - `'normal'` (default): Standard masked copying
+   *            - `'force'`: Allow overlapping regions
+   *            - `'move'`: Move only the solid blocks, leave air gaps
+   * 
+   * @example
+   * ```ts
+   * // Add decorations without removing existing structure
+   * clone(decoration_source, decoration_end, building_location).masked()
+   * 
+   * // Merge two structures together
+   * clone(detail_template, detail_end, base_structure).masked('normal')
+   * 
+   * // Move only the solid parts of a structure
+   * clone(partial_build, partial_end, new_location).masked('move')
+   * ```
    */
   masked = (mode?: Macroable<'force' | 'move' | 'normal', MACRO>) => this.finalCommand(['masked', mode])
 
   /**
-   * Clones only blocks with the block id specified by `filter`.
+   * Copy only blocks of a specific type.
+   * 
+   * This mode applies a filter, copying only blocks that match the specified
+   * block type. All other blocks (including air) are ignored, leaving the
+   * destination unchanged where non-matching blocks exist in the source.
+   * 
+   * **Behavior:**
+   * - Only copies blocks matching the filter
+   * - Ignores all other block types
+   * - Useful for extracting specific materials or patterns
    *
-   * @param filter The block ID to clone.
+   * @param filter The specific block type to copy. Examples:
+   *              - `'minecraft:stone'` - only stone blocks
+   *              - `'minecraft:oak_log'` - only oak logs
+   *              - `'minecraft:redstone_wire'` - only redstone wiring
    *
-   * @param mode One of these three:
-   * - `force`: Force the clone even if the source and destination regions overlap.
-   * - `move`: Clone the source region to the destination region, then replace the source region with air. When used in filtered mask mode, only the cloned blocks are replaced with air.
-   * - `normal`: Don't move or force.
+   * @param mode Optional operation mode (same as other modes):
+   *            - `'normal'` (default): Standard filtered copying
+   *            - `'force'`: Allow overlapping regions
+   *            - `'move'`: Move only the filtered blocks, replace with air
+   * 
+   * @example
+   * ```ts
+   * // Copy only the stone foundation
+   * clone(building_source, building_end, new_site).filtered('minecraft:stone')
+   * 
+   * // Extract redstone circuit pattern
+   * clone(machine_source, machine_end, circuit_area).filtered('minecraft:redstone_wire')
+   * 
+   * // Move only wooden parts of structure
+   * clone(house_source, house_end, new_location).filtered('minecraft:oak_planks', 'move')
+   * ```
    */
   filtered = (filter: Macroable<LiteralUnion<BLOCKS>, MACRO>, mode?: Macroable<'force' | 'move' | 'normal', MACRO>) =>
     this.finalCommand(['filtered', filter, mode])

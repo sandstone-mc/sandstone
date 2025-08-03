@@ -10,14 +10,19 @@ export class HelpCommand extends CommandArguments {
   protected NodeType = HelpCommandNode
 
   /**
-   * Shows usages for one command, or lists of commands.
+   * Display command help information.
    *
-   * @param command_ Specifies the command name to provide help for.
-   * Entering more specific parameters of that command is allowed.
+   * @param command Optional command name to get help for.
+   *               If not specified, lists all available commands.
    *
-   * If unspecified, lists all commands.
+   * @param parameters Additional command parameters for more specific help.
    *
-   * @param parameters More specific parameters of the command.
+   * @example
+   * ```ts
+   * help()                    // List all commands
+   * help('give')              // Get help for give command
+   * help('execute', 'if')     // Get help for execute if subcommand
+   * ```
    */
   help = (command?: string, ...parameters: string[]) => this.finalCommand([command, ...parameters])
 }

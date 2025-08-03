@@ -12,12 +12,20 @@ export class TellCommand<_MACRO extends boolean> extends CommandArguments {
   protected NodeType = TellCommandNode
 
   /**
-   * Sends a private message to one or more players.
-   * @param targets Specifies the player(s) to send the message to.
-   * @param messages Specified the message to tell. They will be joined with whitespaces.
-   * Can include target selectors.
-   * The game replaces entity selectors in the message with the list of selected entities' names,
-   * which is formatted as "name1 and name2" for two entities, or "name1, name2, ... and namen" for n entities.
+   * Send private message to players.
+   *
+   * @param targets Player selector to send message to.
+   *               Examples: '@p', '@a', 'PlayerName'
+   *
+   * @param messages Message content to send. Multiple arguments joined with spaces.
+   *                Can include entity selectors that get resolved to names.
+   *
+   * @example
+   * ```ts
+   * tell('@p', 'Hello there!')                    // Private message
+   * tell('@a', 'Welcome', '@p', 'to the server')  // Message with selectors
+   * tell('PlayerName', 'You have', '5', 'items')  // Multiple message parts
+   * ```
    */
   tell = (targets: MultiplePlayersArgument<false>, ...messages: AtLeastOne<MessageOrSelector>) =>
     this.finalCommand([targetParser(targets), messages])
