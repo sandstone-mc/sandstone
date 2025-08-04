@@ -299,7 +299,7 @@ export class ExecuteDataArgsCommand<MACRO extends boolean> extends ExecuteComman
    * @param path Data tag to check for.
    */
   block = (pos: Macroable<Coordinates<MACRO>, MACRO>, path: Macroable<string, MACRO>) =>
-    this.nestedExecute(['block', coordinatesParser(pos), path], true)
+    this.nestedExecute(['data', 'block', coordinatesParser(pos), path], true)
 
   /**
    * Checks whether the targeted entity has any data for a given tag
@@ -307,7 +307,7 @@ export class ExecuteDataArgsCommand<MACRO extends boolean> extends ExecuteComman
    * @param path Data tag to check for.
    */
   entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, path: Macroable<string, MACRO>) =>
-    this.nestedExecute(['entity', targetParser(target), path], true)
+    this.nestedExecute(['data', 'entity', targetParser(target), path], true)
 
   /**
    * Checks whether the targeted storage has any data for a given tag
@@ -315,7 +315,7 @@ export class ExecuteDataArgsCommand<MACRO extends boolean> extends ExecuteComman
    * @param path Data tag to check for.
    */
   storage = (source: Macroable<string, MACRO>, path: Macroable<string, MACRO>) =>
-    this.nestedExecute(['storage', source, path], true)
+    this.nestedExecute(['data', 'storage', source, path], true)
 }
 
 export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -328,6 +328,24 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    */
   block = (pos: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<LiteralUnion<BLOCKS>, MACRO>) =>
     this.nestedExecute(['block', coordinatesParser(pos), block], true)
+
+  /**
+   * Compares the blocks in two equally sized volumes.
+   * @param start Start position of the first volume.
+   * @param end End position of the first volume.
+   * @param destination Start position of the second volume.
+   * @param scan_mode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored
+   */
+  blocks = (
+    start: Macroable<Coordinates<MACRO>, MACRO>,
+    end: Macroable<Coordinates<MACRO>, MACRO>,
+    destination: Macroable<Coordinates<MACRO>, MACRO>,
+    scan_mode: Macroable<'all' | 'masked', MACRO>,
+  ) =>
+    this.nestedExecute(
+      ['blocks', coordinatesParser(start), coordinatesParser(end), coordinatesParser(destination), scan_mode],
+      true,
+    )
 
   /**
    * Checks whether one or more entities exist.
@@ -415,15 +433,11 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
   loaded = (pos: Macroable<Coordinates<MACRO>, MACRO>) => this.nestedExecute(['loaded', coordinatesParser(pos)])
 
   /** Checks whether the data point exists or the targeted block, entity or storage has any data for a given tag. */
-  data(dataPoint: DataPointClass): void
-
-  data(): ExecuteDataArgsCommand<MACRO>
-
-  data(dataPoint?: DataPointClass) {
-    if (dataPoint) {
-      return this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as [''])
-    }
-    return this.subCommand([['data']], ExecuteDataArgsCommand<MACRO>, false)
+  get data(): ExecuteDataArgsCommand<MACRO> & ((data: DataPointClass) => ExecuteCommand<MACRO>) {
+    return makeCallable(
+      new ExecuteDataArgsCommand<MACRO>(this.sandstonePack, this.previousNode),
+      (dataPoint: DataPointClass) => this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as ['']),
+    )
   }
 
   function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {

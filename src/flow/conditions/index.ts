@@ -18,7 +18,7 @@ export const SandstoneConditions = {
   Biome: variables.BiomeConditionNode,
   Block: variables.BlockConditionNode,
   Blocks: variables.BlocksConditionNode,
-  Dimension: variables.FunctionConditionNode,
+  Dimension: variables.DimensionConditionNode,
   Function: variables.FunctionConditionNode,
   Loaded: variables.LoadedConditionNode,
   DataPointExists: variables.DataPointExistsConditionNode,

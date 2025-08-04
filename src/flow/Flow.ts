@@ -343,7 +343,7 @@ export class Flow {
   /**
    * Compares the blocks in two equally sized volumes.
    * @param start Start position of the first volume.
-   * @end End position of the first volume.
+   * @param end End position of the first volume.
    * @param destination Start position of the second volume.
    * @param scan_mode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored
    */

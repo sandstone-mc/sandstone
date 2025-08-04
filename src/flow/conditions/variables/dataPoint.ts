@@ -11,7 +11,7 @@ export class DataPointExistsConditionNode extends SingleConditionNode {
     super(sandstoneCore)
   }
 
-  getCondition(): unknown[] {
+  getCondition(): string[] {
     return ['data', this.dataPoint.type, this.dataPoint.currentTarget, this.dataPoint.path]
   }
 }
