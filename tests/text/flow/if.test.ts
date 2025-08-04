@@ -1,6 +1,6 @@
 import { _, Data, execute, MCFunction, Objective, say } from 'sandstone'
-import { describe, it } from 'vitest'
-import { compareOutputText } from '../../utils'
+import { describe, expect, it } from 'vitest'
+import { compareOutputText, getGeneratedFunctionsText } from '../../utils'
 
 describe('If/Else tests', () => {
   const objective = Objective.get('test')
@@ -179,4 +179,44 @@ describe('If/Else tests', () => {
       },
     )
   })
+
+  it('Should be fast to compile iteratively', async () => {
+    getGeneratedFunctionsText(() => {
+      MCFunction(
+        'default:test',
+        () => {
+          for (let i = 0; i < 1_000; i++) {
+            _.if(_.block('~ ~ ~', 'acacia_button'), () => {
+              say('wow!')
+            })
+          }
+        },
+        {
+          onConflict: 'replace',
+        },
+      )
+    })
+  }, 2_000) // Should compile in less than 2s
+
+  it('Should be fast to compile recursively', async () => {
+    function createIf(i: number): void {
+      if (i >= 1_000) return
+      _.if(_.block('~ ~ ~', 'acacia_button'), () => {
+        say('wow!')
+        createIf(i + 1)
+      })
+    }
+
+    getGeneratedFunctionsText(() => {
+      MCFunction(
+        'default:test',
+        () => {
+          createIf(0)
+        },
+        {
+          onConflict: 'replace',
+        },
+      )
+    })
+  }, 2_000) // Should compile in less than 2 seconds
 })

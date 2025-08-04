@@ -7,6 +7,34 @@ import type { ResourcePath, SandstonePack } from 'sandstone/pack'
 import type { PackType } from 'sandstone/pack/packType'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 
+function arraysEqual(a: string[], b: string[]) {
+  if (a === b) return true
+  if (a == null || b == null) return false
+  if (a.length !== b.length) return false
+
+  for (let i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false
+  }
+  return true
+}
+
+/**
+ * Check if two nodes have the same name.
+ */
+function nodesHaveSameName<T extends ResourceNode>(a: T, b: T): boolean {
+  if (a === b) {
+    return true
+  }
+
+  // 1. First, ensure they are in the same packType
+  if (a.resource.packType.constructor.name !== b.resource.packType.constructor.name) {
+    return false
+  }
+
+  // 2. Then, check if they have the same path (same resource type + namespace + full name)
+  return arraysEqual(a.resource.path, b.resource.path)
+}
+
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**
    * Whether the associated Node should be added to Sandstone Core.
@@ -102,15 +130,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   protected handleConflicts() {
     const resourceType = this.node.resource.path[1] || 'resources'
 
-    const conflict = [...this.core.resourceNodes].find((node) => {
-      if (node.resource.packType.constructor.name !== this.node.resource.packType.constructor.name) {
-        return false
-      }
-      return (
-        node.resource.packType.constructor === this.node.resource.packType.constructor &&
-        node.resource.path.join('') === this.node.resource.path.join('')
-      )
-    })
+    const conflict = [...this.core.resourceNodes].find((node) => nodesHaveSameName(node, this.node))
 
     let add = false
 
@@ -120,7 +140,6 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
       switch (this.onConflict) {
         case 'throw': {
-          // eslint-disable-next-line max-len
           throw new Error(
             `Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`,
           )
@@ -154,9 +173,9 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
           break
         case 'rename':
           {
-            // eslint-disable-next-line no-plusplus
-            this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
-
+            this.path[this.path.length - 1] += oldResource.renameIndex.toString()
+            // Future resources clashing on the same name will have a higher index
+            oldResource.renameIndex += 1
             add = true
           }
           break
@@ -185,6 +204,10 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   get name(): string {
     return `${this.path[0]}:${this.path.slice(2).join('/')}`
+  }
+
+  get namespace(): string {
+    return this.path[0]
   }
 
   generate = () => {}

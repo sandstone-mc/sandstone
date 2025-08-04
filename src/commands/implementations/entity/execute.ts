@@ -161,18 +161,11 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       return { node: this as ExecuteCommandNode }
     }
 
-    const namespace = currentMCFunction.resource.name.includes(':')
-      ? `${currentMCFunction.resource.name.split(':')[0]}:`
-      : ''
-
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = this.sandstonePack.MCFunction(
-      `${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/${this.callbackName}`,
-      {
-        creator: 'sandstone',
-        onConflict: 'rename',
-      },
-    )
+    const mcFunction = this.sandstonePack.MCFunction(`${currentMCFunction.resource.name}/${this.callbackName}`, {
+      creator: 'sandstone',
+      onConflict: 'rename',
+    })
     const mcFunctionNode = mcFunction.node
     mcFunctionNode.body = this.body
 
