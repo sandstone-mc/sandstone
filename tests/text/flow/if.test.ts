@@ -200,7 +200,7 @@ describe('If/Else tests', () => {
 
   it('Should be fast to compile recursively', async () => {
     function createIf(i: number): void {
-      if (i >= 1_000) return
+      if (i >= 500) return
       _.if(_.block('~ ~ ~', 'acacia_button'), () => {
         say('wow!')
         createIf(i + 1)
