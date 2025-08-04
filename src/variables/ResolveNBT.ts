@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import * as util from 'node:util'
+import * as util from 'util'
 import type { NBTObject } from '../arguments/nbt.js'
 import { DataPointPickClass } from '../core/Macro.js'
 import type { SandstonePack } from '../pack/index.js'

@@ -1,6 +1,5 @@
 /* eslint-disable no-plusplus */
 
-import * as util from 'node:util'
 import type {
   COMPARISON_OPERATORS,
   FormattingTags,
@@ -13,6 +12,7 @@ import type {
 import type { SandstoneCommands } from 'sandstone/commands'
 import type { NotNode } from 'sandstone/flow'
 import type { ConditionClass } from 'sandstone/variables'
+import * as util from 'util'
 import { MacroArgument } from '../core/Macro.js'
 import type { SandstonePack } from '../pack/index.js'
 import { formatDebugString } from '../utils.js'

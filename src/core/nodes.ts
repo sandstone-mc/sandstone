@@ -1,7 +1,6 @@
-import * as util from 'node:util'
-
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
+import * as util from 'util'
 import { formatDebugString } from '../utils.js'
 import { isMacroArgument, type MacroArgument } from './Macro.js'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'

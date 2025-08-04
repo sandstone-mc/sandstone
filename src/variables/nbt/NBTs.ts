@@ -1,7 +1,7 @@
-import * as util from 'node:util'
 import type { NBTObject, RootNBT } from 'sandstone/arguments'
 import type { MacroArgument } from 'sandstone/core'
 import { makeCallable } from 'sandstone/utils'
+import * as util from 'util'
 import { parseNBT } from './parser.js'
 
 export abstract class NBTClass {

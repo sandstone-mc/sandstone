@@ -1,13 +1,13 @@
 /* eslint-disable operator-linebreak */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import * as util from 'node:util'
 import type { Static } from '@sinclair/typebox'
 import { FormatRegistry, Type } from '@sinclair/typebox'
 import fs from 'fs-extra'
 import type FetchType from 'node-fetch'
 import type { Response } from 'node-fetch'
 import { coerce } from 'semver'
+import * as util from 'util'
 import type { MultipleEntitiesArgument } from './arguments/selector.js'
 import type { Node } from './core/nodes.js'
 import type { UUIDinNumber } from './variables/UUID.js'

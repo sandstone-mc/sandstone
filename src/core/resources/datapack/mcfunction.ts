@@ -1,4 +1,3 @@
-import * as util from 'node:util'
 import type { TimeArgument } from 'sandstone/arguments/basics'
 import type { NBTObject } from 'sandstone/arguments/nbt.js'
 import type { ScheduleType } from 'sandstone/commands'
@@ -12,6 +11,7 @@ import type {
   SandstoneCore,
 } from 'sandstone/core'
 import { formatDebugString, makeCallable, makeClassCallable } from 'sandstone/utils'
+import * as util from 'util'
 import type { MakeInstanceCallable } from '../../../utils.js'
 import { ResolveNBTPart } from '../../../variables/ResolveNBT.js'
 import { ContainerNode } from '../../nodes.js'
@@ -238,10 +238,13 @@ export class _RawMCFunctionClass<
 
   public asyncContext: NonNullable<MCFunctionClassArguments['asyncContext']>
 
+  /** @internal */
   tags: MCFunctionClassArguments['tags']
 
+  /** @internal */
   lazy: boolean
 
+  /** @internal */
   env?: ENV
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments, env?: ENV) {
@@ -315,6 +318,7 @@ export class _RawMCFunctionClass<
     this.handleConflicts()
   }
 
+  /** @internal */
   generate = () => {
     if (this.node.body.length > 0) {
       /*

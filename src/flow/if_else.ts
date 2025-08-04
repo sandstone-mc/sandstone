@@ -1,5 +1,5 @@
-import * as util from 'node:util'
 import { reset } from 'chalk/index.js'
+import * as util from 'util'
 
 import type { Node, SandstoneCore } from '../core/index.js'
 import { ContainerNode } from '../core/index.js'
@@ -86,18 +86,16 @@ export class IfStatement {
 }
 
 export class ElseNode extends ContainerNode {
-  constructor(
-    sandstoneCore: SandstoneCore,
-    public callback: () => void,
-  ) {
+  constructor(sandstoneCore: SandstoneCore, callback: () => void) {
     super(sandstoneCore)
 
     // Generate the body of the If node.
     this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(this)
-    this.callback()
+    callback()
     this.sandstoneCore.currentMCFunction?.exitContext()
   }
 
+  /** @internal */
   getValue = () => null
 }
 
@@ -112,5 +110,6 @@ export class ElseStatement {
     this.node = new ElseNode(sandstoneCore, callback)
   }
 
+  /** @internal */
   getNode = () => this.node
 }

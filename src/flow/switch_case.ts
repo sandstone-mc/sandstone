@@ -12,8 +12,10 @@ export class CaseStatement<ValueType extends number | NBTObject> {
     readonly previous?: CaseStatement<ValueType>[],
   ) {}
 
+  /** @internal */
   getCases = () => (this.previous ? [...this.previous, this] : [this])
 
+  /** @internal */
   getValue(): readonly ['case', ValueType, () => any] {
     return ['case', this.value, this.callback]
   }

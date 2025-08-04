@@ -1,12 +1,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
 
-import * as util from 'node:util'
 import type { ENTITY_TYPES, GAMEMODES, JSONTextComponent, Range, RootNBT } from 'sandstone/arguments'
 import type { PredicateClass, SandstoneCore } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import { rangeParser } from 'sandstone/variables/parsers'
+import * as util from 'util'
 import type { Macroable } from '../core/Macro.js'
 import { formatDebugString, type LiteralUnion } from '../utils.js'
 import type { ConditionClass, ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'

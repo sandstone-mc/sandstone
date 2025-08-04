@@ -1,7 +1,7 @@
-import * as util from 'node:util'
 import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from 'sandstone/arguments'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import { formatDebugString, makeClassCallable } from 'sandstone/utils'
+import * as util from 'util'
 import type { SandstonePack } from '../pack/index.js'
 import { JSONTextComponentClass } from './JSONTextComponentClass.js'
 import { targetParser } from './parsers.js'
@@ -13,6 +13,7 @@ export class _RawObjectiveClass {
 
   _displayRaw: JSONTextComponent | undefined
 
+  /** @internal */
   creator: 'user' | 'sandstone'
 
   constructor(

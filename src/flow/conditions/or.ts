@@ -1,6 +1,6 @@
-import * as util from 'node:util'
 import type { SandstoneCore } from 'sandstone/core'
 import type { Score } from 'sandstone/variables/Score.js'
+import * as util from 'util'
 import { ScoreboardCommandNode } from '../../commands/implementations/entity/scoreboard.js'
 import { formatDebugString } from '../../utils.js'
 import { IfNode } from '../if_else.js'
