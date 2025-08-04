@@ -7,34 +7,6 @@ import type { ResourcePath, SandstonePack } from 'sandstone/pack'
 import type { PackType } from 'sandstone/pack/packType'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 
-function arraysEqual(a: string[], b: string[]) {
-  if (a === b) return true
-  if (a == null || b == null) return false
-  if (a.length !== b.length) return false
-
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false
-  }
-  return true
-}
-
-/**
- * Check if two nodes have the same name.
- */
-function nodesHaveSameName<T extends ResourceNode>(a: T, b: T): boolean {
-  if (a === b) {
-    return true
-  }
-
-  // 1. First, ensure they are in the same packType
-  if (a.resource.packType.constructor.name !== b.resource.packType.constructor.name) {
-    return false
-  }
-
-  // 2. Then, check if they have the same path (same resource type + namespace + full name)
-  return arraysEqual(a.resource.path, b.resource.path)
-}
-
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**
    * Whether the associated Node should be added to Sandstone Core.
@@ -130,7 +102,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   protected handleConflicts() {
     const resourceType = this.node.resource.path[1] || 'resources'
 
-    const conflict = [...this.core.resourceNodes].find((node) => nodesHaveSameName(node, this.node))
+    const conflict = this.core.resourceNodes.get(this.node)
 
     let add = false
 
@@ -146,11 +118,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
         }
         case 'replace':
           {
-            this.core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                this.core.resourceNodes.delete(node)
-              }
-            })
+            this.core.resourceNodes.delete(conflict)
             add = true
           }
           break
@@ -163,11 +131,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
                 "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
               ].join('\n'),
             )
-            this.core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                this.core.resourceNodes.delete(node)
-              }
-            })
+            this.core.resourceNodes.delete(conflict)
             add = true
           }
           break
@@ -235,4 +199,58 @@ export abstract class ListResource {
   public push(...args: any[]) {}
 
   public unshift(...args: any[]) {}
+}
+
+/**
+ * A Map-like structure to store ResourceNodes, allowing for easy iteration and management of resources.
+ * It uses the resource's path + packType as the key, ensuring that resources with the same path are treated as the same resource.
+ */
+export class ResourceNodesMap<T extends ResourceNode = ResourceNode> {
+  private nodes = new Map<string, T>()
+
+  constructor(iterable: Iterable<T> = []) {
+    for (const value of iterable) {
+      this.add(value)
+    }
+  }
+
+  forEach(callback: (value: T) => void): void {
+    this.nodes.forEach((value) => {
+      callback(value)
+    })
+  }
+
+  private getKey(value: T): string {
+    return `${value.resource.packType.constructor.name}|${value.resource.path.join('/')}`
+  }
+
+  add(value: T): this {
+    this.nodes.set(this.getKey(value), value)
+    return this
+  }
+
+  delete(value: T): boolean {
+    return this.nodes.delete(this.getKey(value))
+  }
+
+  clear(): void {
+    this.nodes.clear()
+  }
+
+  [Symbol.iterator](): Iterator<T> {
+    return this.nodes.values()[Symbol.iterator]()
+  }
+
+  get size(): number {
+    return this.nodes.size
+  }
+
+  /**
+   * Check if a resource node is present in the set, **based on its path and packType**, and returns it.
+   * @param node The resource node to check.
+   * @returns The resource node if it exists, otherwise `undefined`.
+   */
+  get(node: T): T | undefined {
+    return this.nodes.get(this.getKey(node))
+  }
 }
