@@ -76,21 +76,15 @@ export const structureRotationParser = (rotation?: StructureRotation | MacroArgu
   }
 
   const numToLiteral = (angle: number): STRUCTURE_ROTATION => {
+    /** biome-ignore format: excessive formatting */
     switch (angle) {
-      case 0:
-        return 'none'
-      case 90:
-        return 'clockwise_90'
-      case 180:
-        return '180'
-      case 270:
-        return 'counterclockwise_90'
-      case -90:
-        return 'counterclockwise_90'
-      case -180:
-        return '180'
-      case -270:
-        return 'clockwise_90'
+      case 0: return 'none'
+      case 90: return 'clockwise_90'
+      case 180: return '180'
+      case 270: return 'counterclockwise_90'
+      case -90: return 'counterclockwise_90'
+      case -180: return '180'
+      case -270: return 'clockwise_90'
       default: {
         if (!Number.isInteger(angle / 90)) {
           throw new Error('Structure rotation must be in increments of 90!')
