@@ -32,6 +32,7 @@ import {
   MeCommand,
   ParticleCommand,
   PlaySoundCommand,
+  RandomCommand,
   RawCommand,
   RecipeCommand,
   ReloadCommand,
@@ -61,7 +62,6 @@ import {
   WeatherCommand,
   WorldBorderCommand,
 } from './implementations/index.js'
-import { RandomCommand } from './implementations/server/random.js'
 
 function bind<CLASS, METHOD extends string>(pack: SandstonePack, _class: CLASS, method: METHOD) {
   /* @ts-ignore */

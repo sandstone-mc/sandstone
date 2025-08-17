@@ -1,12 +1,9 @@
-// @ts-nocheck
-
-/* eslint-disable camelcase */
 import type { JSONTextComponent, LootTableEntry } from 'sandstone/arguments'
 import type { BASIC_COLORS, MAP_ICONS } from 'sandstone/arguments/basics'
 import type { ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES } from 'sandstone/arguments/generated'
 import type { LootTableClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { DataInstance } from 'sandstone/variables/Data'
+import type { DataPointClass } from 'sandstone/variables/Data'
 import type { NumberProvider } from './criteria/utils.js'
 import type { ObjectOrArray, PredicateCondition } from './predicate.js'
 
@@ -128,7 +125,7 @@ export type ItemModifierFunction = {
             }
           | {
               type: 'minecraft:storage'
-              source: string | DataInstance<'storage'>
+              source: string | DataPointClass<'storage'>
             }
 
         /** A list of operations. */
