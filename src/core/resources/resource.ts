@@ -102,15 +102,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   protected handleConflicts() {
     const resourceType = this.node.resource.path[1] || 'resources'
 
-    const conflict = [...this.core.resourceNodes].find((node) => {
-      if (node.resource.packType.constructor.name !== this.node.resource.packType.constructor.name) {
-        return false
-      }
-      return (
-        node.resource.packType.constructor === this.node.resource.packType.constructor &&
-        node.resource.path.join('') === this.node.resource.path.join('')
-      )
-    })
+    const conflict = this.core.resourceNodes.get(this.node)
 
     let add = false
 
@@ -120,18 +112,13 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
       switch (this.onConflict) {
         case 'throw': {
-          // eslint-disable-next-line max-len
           throw new Error(
             `Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`,
           )
         }
         case 'replace':
           {
-            this.core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                this.core.resourceNodes.delete(node)
-              }
-            })
+            this.core.resourceNodes.delete(conflict)
             add = true
           }
           break
@@ -144,19 +131,15 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
                 "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
               ].join('\n'),
             )
-            this.core.resourceNodes.forEach((node) => {
-              if (node.resource.path.join('') === oldResource.path.join('')) {
-                this.core.resourceNodes.delete(node)
-              }
-            })
+            this.core.resourceNodes.delete(conflict)
             add = true
           }
           break
         case 'rename':
           {
-            // eslint-disable-next-line no-plusplus
-            this.path[this.path.length - 1] += `${oldResource.renameIndex++}`
-
+            this.path[this.path.length - 1] += oldResource.renameIndex.toString()
+            // Future resources clashing on the same name will have a higher index
+            oldResource.renameIndex += 1
             add = true
           }
           break
@@ -187,6 +170,10 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
     return `${this.path[0]}:${this.path.slice(2).join('/')}`
   }
 
+  get namespace(): string {
+    return this.path[0]
+  }
+
   generate = () => {}
 
   toString(): string {
@@ -212,4 +199,58 @@ export abstract class ListResource {
   public push(...args: any[]) {}
 
   public unshift(...args: any[]) {}
+}
+
+/**
+ * A Map-like structure to store ResourceNodes, allowing for easy iteration and management of resources.
+ * It uses the resource's path + packType as the key, ensuring that resources with the same path are treated as the same resource.
+ */
+export class ResourceNodesMap<T extends ResourceNode = ResourceNode> {
+  private nodes = new Map<string, T>()
+
+  constructor(iterable: Iterable<T> = []) {
+    for (const value of iterable) {
+      this.add(value)
+    }
+  }
+
+  forEach(callback: (value: T) => void): void {
+    this.nodes.forEach((value) => {
+      callback(value)
+    })
+  }
+
+  private getKey(value: T): string {
+    return `${value.resource.packType.constructor.name}|${value.resource.path.join('/')}`
+  }
+
+  add(value: T): this {
+    this.nodes.set(this.getKey(value), value)
+    return this
+  }
+
+  delete(value: T): boolean {
+    return this.nodes.delete(this.getKey(value))
+  }
+
+  clear(): void {
+    this.nodes.clear()
+  }
+
+  [Symbol.iterator](): Iterator<T> {
+    return this.nodes.values()[Symbol.iterator]()
+  }
+
+  get size(): number {
+    return this.nodes.size
+  }
+
+  /**
+   * Check if a resource node is present in the set, **based on its path and packType**, and returns it.
+   * @param node The resource node to check.
+   * @returns The resource node if it exists, otherwise `undefined`.
+   */
+  get(node: T): T | undefined {
+    return this.nodes.get(this.getKey(node))
+  }
 }

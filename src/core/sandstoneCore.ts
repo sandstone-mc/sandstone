@@ -9,13 +9,13 @@ import { MCMetaCache } from './mcmeta.js'
 import type { AwaitNode } from './nodes.js'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction.js'
 import { SmithedDependencyClass } from './resources/dependency.js'
-import type { ResourceClass, ResourceNode } from './resources/resource.js'
+import { type ResourceClass, ResourceNode, ResourceNodesMap } from './resources/resource.js'
 import { SmithedDependencyCache } from './smithed.js'
 import type { GenericCoreVisitor } from './visitors.js'
 
 export class SandstoneCore {
   /** All Resources */
-  resourceNodes: Set<ResourceNode>
+  resourceNodes: ResourceNodesMap
 
   mcfunctionStack: MCFunctionNode[]
 
@@ -30,7 +30,7 @@ export class SandstoneCore {
   dependencies: Promise<SmithedDependencyClass[] | true>[] = []
 
   constructor(public pack: SandstonePack) {
-    this.resourceNodes = new Set()
+    this.resourceNodes = new ResourceNodesMap()
     this.mcfunctionStack = []
     this.awaitNodes = new Set()
 
@@ -202,7 +202,7 @@ export class SandstoneCore {
   }
 
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
-    const originalResources = new Set(this.resourceNodes)
+    const originalResources = new ResourceNodesMap(this.resourceNodes)
 
     // First, generate all the resources.
     for (const { resource } of this.resourceNodes) {
