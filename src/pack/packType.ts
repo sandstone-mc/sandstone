@@ -22,7 +22,9 @@ export abstract class PackType {
   readonly archiveOutput: boolean
 
   /** `output` executes from `<workspace>/.sandstone/output/$packName$_<type>`*/
-  readonly handleOutput: undefined | ((type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => Promise<void>)
+  readonly handleOutput:
+    | undefined
+    | ((type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => Promise<void>)
 
   /**
    * @param type eg. datapack or resource_pack
@@ -34,7 +36,16 @@ export abstract class PackType {
    * @param resourceSubFolder Optional. Defines sub folder for resources to go; eg. data or assets (use handleOutput if you want to bypass this)
    */
   // eslint-disable-next-line max-len
-  constructor(type: string, clientPath: string, serverPath: string, rootPath: string, networkSides: 'client' | 'server' | 'both', archiveOutput: boolean = false, resourceSubFolder?: string, namespaced: boolean = false) {
+  constructor(
+    type: string,
+    clientPath: string,
+    serverPath: string,
+    rootPath: string,
+    networkSides: 'client' | 'server' | 'both',
+    archiveOutput: boolean = false,
+    resourceSubFolder?: string,
+    namespaced: boolean = false,
+  ) {
     this.type = type
 
     this.clientPath = clientPath

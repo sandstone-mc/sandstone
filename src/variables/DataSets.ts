@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable max-len */
-import { ConditionalDataPointPickClass } from '../core/Macro.js'
-import { DataPointClass } from './Data.js'
-import { Score } from './Score.js'
 
 import type { NBTObject, RootNBT } from 'sandstone/arguments'
 import type { DataPointPickClass } from 'sandstone/core'
 import type { ConditionNode } from 'sandstone/flow'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { Macroable } from '../core/Macro.js'
+import { ConditionalDataPointPickClass } from '../core/Macro.js'
 import type { SandstonePack } from '../pack/index.js'
 import type { StringDataPointClass } from './Data.js'
+import { DataPointClass } from './Data.js'
+import { Score } from './Score.js'
 
 export abstract class IterableDataClass extends ConditionalDataPointPickClass {
   iterator(callback: (dataPoints: [DataPointClass] | [StringDataPointClass, DataPointClass]) => void): () => void {
@@ -34,9 +34,9 @@ type GetKeys<T> = T extends unknown[]
   ? T extends [] // special case empty tuple => no keys
     ? never
     : '0' extends keyof T // any tuple with at least one element
-    ? Exclude<keyof T, keyof []>
-    : number // other array
-  : keyof T; // not an array
+      ? Exclude<keyof T, keyof []>
+      : number // other array
+  : keyof T // not an array
 
 export type DataIndexMapInitial = RootNBT | Record<string, DataPointClass | DataPointPickClass>
 
@@ -45,7 +45,12 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
 
   dataPoint: NonNullable<DataPointClass<'storage'>>
 
-  constructor(private pack: SandstonePack, private initialize: INITIAL, dataPoint?: DataPointClass<'storage'>) {
+  constructor(
+    private pack: SandstonePack,
+    // biome-ignore lint/correctness/noUnusedPrivateClassMembers: not sure why it's here... anyway
+    private initialize: INITIAL,
+    dataPoint?: DataPointClass<'storage'>,
+  ) {
     super(pack.core)
 
     if (dataPoint) {
@@ -103,7 +108,11 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
    */
   size = () => this.dataPoint.select('Entries')
 
-  last = () => [this.dataPoint.select('Entries[-1][0]').slice(0), this.dataPoint.select('Entries[-1][1]')] as readonly [key: StringDataPointClass, value: DataPointClass]
+  last = () =>
+    [this.dataPoint.select('Entries[-1][0]').slice(0), this.dataPoint.select('Entries[-1][1]')] as readonly [
+      key: StringDataPointClass,
+      value: DataPointClass,
+    ]
 
   /**
    * @returns The index of the entry.
@@ -136,9 +145,7 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
 
       return index
     }
-    const {
-      Macro, MCFunction, Variable, DataVariable,
-    } = this.pack
+    const { Macro, MCFunction, Variable, DataVariable } = this.pack
 
     let _key: DataPointClass
 
@@ -159,7 +166,9 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
     MCFunction('__sandstone:variable/index_map/set', [_key!], () => {
       const indexData = DataVariable().set(index)
 
-      Macro.data.modify.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Index[${_key}]`).set.from.storage(indexData.currentTarget, indexData.path)
+      Macro.data.modify
+        .storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Index[${_key}]`)
+        .set.from.storage(indexData.currentTarget, indexData.path)
     })()
 
     this.dataPoint.select('Entries').append([])
@@ -175,14 +184,14 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
 
   // If the map was declared with a DataPointClass, return that class type to retain child type safety, otherwise return a normal DataPointClass
 
-  get(key: GetKeys<INITIAL>): INITIAL[typeof key] extends DataPointClass ? INITIAL[typeof key] : DataPointClass<'storage'>
+  get(
+    key: GetKeys<INITIAL>,
+  ): INITIAL[typeof key] extends DataPointClass ? INITIAL[typeof key] : DataPointClass<'storage'>
 
   get(key: Macroable<string, true>): DataPointClass<'storage'>
 
   get(key: Macroable<LiteralUnion<GetKeys<INITIAL>>, true>) {
-    const {
-      MCFunction, Macro, DataVariable,
-    } = this.pack
+    const { MCFunction, Macro, DataVariable } = this.pack
 
     if (typeof key === 'string') {
       if (this.entries[key]) {
@@ -194,7 +203,9 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
       const value = DataVariable()
 
       MCFunction('__sandstone:variable/index_map/get', [index], () => {
-        Macro.data.modify.storage(value.currentTarget, value.path).set.from.storage(this.dataPoint.currentTarget, Macro`Entries[${index}]`)
+        Macro.data.modify
+          .storage(value.currentTarget, value.path)
+          .set.from.storage(this.dataPoint.currentTarget, Macro`Entries[${index}]`)
       })()
 
       return value
@@ -214,10 +225,14 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
     MCFunction('__sandstone:variable/index_map/get', [_key!], () => {
       const index = DataVariable()
 
-      Macro.data.modify.storage(index.currentTarget, index.path).set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Index[${_key}]`)
+      Macro.data.modify
+        .storage(index.currentTarget, index.path)
+        .set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Index[${_key}]`)
 
       MCFunction('__sandstone:variable/index_map/_get', [index], () => {
-        Macro.data.modify.storage(output.currentTarget, output.path).set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Entries[${index}]`)
+        Macro.data.modify
+          .storage(output.currentTarget, output.path)
+          .set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Entries[${index}]`)
       })()
     })()
 
@@ -249,12 +264,16 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
     const index = DataVariable()
 
     MCFunction('__sandstone:variable/index_map/remove', [_key], () => {
-      Macro.data.modify.storage(index.currentTarget, index.path).set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Index[${_key}]`)
+      Macro.data.modify
+        .storage(index.currentTarget, index.path)
+        .set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Index[${_key}]`)
 
       Macro.data.remove.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Index[${_key}]`)
 
       MCFunction('__sandstone:variable/index_map/_remove', [index], () => {
-        Macro.data.modify.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Entries[${index}]`).set.value(0)
+        Macro.data.modify
+          .storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}.Entries[${index}]`)
+          .set.value(0)
       })()
     })()
 
@@ -273,7 +292,11 @@ export type DataArrayInitial = readonly NBTObject[] | readonly [string, DataPoin
 export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDataClass {
   dataPoint: NonNullable<DataPointClass<'storage'>>
 
-  constructor(private pack: SandstonePack, initialize: INITIAL, dataPoint?: DataPointClass<'storage'>) {
+  constructor(
+    private pack: SandstonePack,
+    initialize: INITIAL,
+    dataPoint?: DataPointClass<'storage'>,
+  ) {
     super(pack.core)
 
     if (dataPoint) {
@@ -333,12 +356,18 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
 
     MCFunction('__sandstone:variable/array/set', [index], () => {
       if (value instanceof DataPointClass) {
-        Macro.data.modify.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`).set.from.storage(value.currentTarget, value.path)
+        Macro.data.modify
+          .storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`)
+          .set.from.storage(value.currentTarget, value.path)
       } else if (typeof value === 'object' && Object.hasOwn(value, '_toDataPoint')) {
         const point = (value as DataPointPickClass)._toDataPoint()
-        Macro.data.modify.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`).set.from.storage(point.currentTarget, point.path)
+        Macro.data.modify
+          .storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`)
+          .set.from.storage(point.currentTarget, point.path)
       } else {
-        Macro.data.modify.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`).set.value(value)
+        Macro.data.modify
+          .storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`)
+          .set.value(value)
       }
     })()
     return this
@@ -366,7 +395,9 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
     const output = DataVariable()
 
     MCFunction('__sandstone:variable/array/get', [index], () => {
-      Macro.data.modify.storage(output.currentTarget, output.path).set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`)
+      Macro.data.modify
+        .storage(output.currentTarget, output.path)
+        .set.from.storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`)
     })()
 
     return output
@@ -393,7 +424,11 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
   }
 }
 
-export function DataIndexMap<INITIAL extends DataIndexMapInitial>(pack: SandstonePack, initialize: INITIAL, dataPoint?: DataPointClass<'storage'>) {
+export function DataIndexMap<INITIAL extends DataIndexMapInitial>(
+  pack: SandstonePack,
+  initialize: INITIAL,
+  dataPoint?: DataPointClass<'storage'>,
+) {
   const indexMap = new DataIndexMapClass(pack, initialize, dataPoint)
 
   return new Proxy(indexMap, {
@@ -414,10 +449,14 @@ export function DataIndexMap<INITIAL extends DataIndexMapInitial>(pack: Sandston
 
       return true
     },
-  }) as DataIndexMapClass<INITIAL> & { [K in keyof INITIAL]: DataIndexMapInitial[string] } & { [K in string]: DataIndexMapInitial[string] }
+  }) as DataIndexMapClass<INITIAL> & { [K in keyof INITIAL]: DataIndexMapInitial[string] } & {
+    [K in string]: DataIndexMapInitial[string]
+  }
 }
 
-export type DataIndexMap<INITIAL extends DataIndexMapInitial> = DataIndexMapClass<INITIAL> & { [K in keyof INITIAL]: DataIndexMapInitial[string] } & { [K in string]: DataIndexMapInitial[string] }
+export type DataIndexMap<INITIAL extends DataIndexMapInitial> = DataIndexMapClass<INITIAL> & {
+  [K in keyof INITIAL]: DataIndexMapInitial[string]
+} & { [K in string]: DataIndexMapInitial[string] }
 
 export function DataArray<INITIAL extends DataArrayInitial>(
   pack: SandstonePack,
@@ -444,7 +483,11 @@ export function DataArray<INITIAL extends DataArrayInitial>(
 
       return true
     },
-  }) as DataArrayClass<INITIAL> & { [K in keyof INITIAL]: DataArrayInitial[number] } & { [K in number]: DataArrayInitial[number] }
+  }) as DataArrayClass<INITIAL> & { [K in keyof INITIAL]: DataArrayInitial[number] } & {
+    [K in number]: DataArrayInitial[number]
+  }
 }
 
-export type DataArray<INITIAL extends DataArrayInitial> = DataArrayClass<INITIAL> & { [K in keyof INITIAL]: DataArrayInitial[number] } & { [K in number]: DataArrayInitial[number] }
+export type DataArray<INITIAL extends DataArrayInitial> = DataArrayClass<INITIAL> & {
+  [K in keyof INITIAL]: DataArrayInitial[number]
+} & { [K in number]: DataArrayInitial[number] }

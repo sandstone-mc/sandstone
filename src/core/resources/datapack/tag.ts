@@ -1,15 +1,11 @@
-import { toMinecraftResourceName } from 'sandstone/utils'
-
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
-import type {
-  HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON,
-} from 'sandstone/arguments'
+import type { HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ConditionClass } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 import type { MCFunctionClass } from './mcfunction.js'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass<undefined, undefined> {
@@ -24,10 +20,15 @@ function isTagObject<T>(v: TagSingleValue<T>): v is Exclude<TagSingleValue<T>, T
   return typeof v === 'object'
 }
 
-function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(value: TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<REGISTRY>>): TagSingleValue<string> {
+function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
+  value: TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<REGISTRY>>,
+): TagSingleValue<string> {
   if (isMCFunctionClass(value)) {
-    if ((value['node'].resource as MCFunctionClass<[], []>)['env']) {
-      return value['node'].sandstoneCore.pack.MCFunction(`${value.name}/_env`, () => value(), { creator: 'sandstone', onConflict: 'rename' }).name
+    if ((value.node.resource as MCFunctionClass<[], []>).env) {
+      return value.node.sandstoneCore.pack.MCFunction(`${value.name}/_env`, () => value(), {
+        creator: 'sandstone',
+        onConflict: 'rename',
+      }).name
     }
     return value.name
   }
@@ -36,9 +37,13 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(value: TagSin
   }
   if (isTagObject(value)) {
     if (isMCFunctionClass(value.id)) {
-      if ((value.id['node'].resource as MCFunctionClass<[], []>)['env']) {
+      if ((value.id.node.resource as MCFunctionClass<[], []>).env) {
         return {
-          id: value.id['node'].sandstoneCore.pack.MCFunction(`${value.id.name}/_env`, () => (value.id as MCFunctionClass<[], []>)(), { creator: 'sandstone', onConflict: 'rename' }).name,
+          id: value.id.node.sandstoneCore.pack.MCFunction(
+            `${value.id.name}/_env`,
+            () => (value.id as MCFunctionClass<[], []>)(),
+            { creator: 'sandstone', onConflict: 'rename' },
+          ).name,
           required: value.required,
         }
       }
@@ -66,7 +71,10 @@ type TagJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = {
  * A node representing a Minecraft tag.
  */
 export class TagNode extends ContainerNode implements ResourceNode<TagClass<LiteralUnion<REGISTRIES>>> {
-  constructor(sandstoneCore: SandstoneCore, public resource: TagClass<LiteralUnion<REGISTRIES>>) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: TagClass<LiteralUnion<REGISTRIES>>,
+  ) {
     super(sandstoneCore)
   }
 
@@ -83,28 +91,39 @@ export type TagClassArguments<REGISTRY extends LiteralUnion<REGISTRIES>> = {
    * Whether to replace existing Tags with the same name.
    */
   replace?: boolean
+} & ResourceClassArguments<'list'> &
+  (REGISTRY extends 'functions'
+    ? {
+        /**
+         * Whether the tag should run on load
+         */
+        runOnLoad?: boolean
 
-} & ResourceClassArguments<'list'> & (REGISTRY extends 'functions' ? ({
-  /**
-   * Whether the tag should run on load
-   */
-  runOnLoad?: boolean
-
-  /**
-   * Whether the function should run each tick.
-   */
-  runEveryTick?: boolean
-}) : unknown)
+        /**
+         * Whether the function should run each tick.
+         */
+        runEveryTick?: boolean
+      }
+    : unknown)
 
 type Resource<T extends LiteralUnion<REGISTRIES>> = TagSingleValue<HintedTagStringType<T>> | TagClass<T>
 
-export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>> extends ResourceClass implements ListResource, ConditionClass {
+export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
+  extends ResourceClass
+  implements ListResource, ConditionClass
+{
   readonly type: REGISTRY
 
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
 
   constructor(sandstoneCore: SandstoneCore, type: REGISTRY, name: string, args: TagClassArguments<REGISTRY>) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, TagNode, sandstoneCore.pack.resourceToPath(name, ['tags', type]), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      TagNode,
+      sandstoneCore.pack.resourceToPath(name, ['tags', type]),
+      args,
+    )
 
     this.type = type
 
@@ -113,7 +132,10 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>> extends Resourc
       values: [],
     }
 
-    this.tagJSON.values = Array.from(args.values as TagValuesJSON<REGISTRY>, objectToString) as unknown as TagValuesJSON<REGISTRY>
+    this.tagJSON.values = Array.from(
+      args.values as TagValuesJSON<REGISTRY>,
+      objectToString,
+    ) as unknown as TagValuesJSON<REGISTRY>
 
     this.handleConflicts()
   }
@@ -134,12 +156,16 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>> extends Resourc
     for (const resource of _resources) {
       resources.push(objectToString(resource))
     }
-    this.tagJSON.values.push(...resources as HintedTagStringType<REGISTRY>[])
+    this.tagJSON.values.push(...(resources as HintedTagStringType<REGISTRY>[]))
   }
 
   /** Checks whether a given resource is in this tag. */
   has(resource: string | MCFunctionClass<undefined, undefined> | TagClass<REGISTRY>) {
-    this.tagJSON.values.some((tagValue) => (typeof tagValue !== 'string' ? (tagValue as {id: string}).id : tagValue) === objectToString(resource as HintedTagStringType<REGISTRY>))
+    this.tagJSON.values.some(
+      (tagValue) =>
+        (typeof tagValue !== 'string' ? (tagValue as { id: string }).id : tagValue) ===
+        objectToString(resource as HintedTagStringType<REGISTRY>),
+    )
   }
 
   toString() {

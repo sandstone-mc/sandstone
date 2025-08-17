@@ -1,23 +1,29 @@
-import {
-  ContainerCommandNode, ContainerNode,
-} from 'sandstone/core'
-
 import type {
-  AdvancementNode, CommandNode, ItemModifierNode, LootTableNode, MCFunctionNode,
-  Node, PredicateNode, RecipeNode, SandstoneCore,
-  TagNode, TrimMaterialNode, TrimPatternNode,
+  AdvancementNode,
+  CommandNode,
+  ItemModifierNode,
+  LootTableNode,
+  MCFunctionNode,
+  Node,
+  PredicateNode,
+  RecipeNode,
+  SandstoneCore,
+  TagNode,
+  TrimMaterialNode,
+  TrimPatternNode,
 } from 'sandstone/core'
+import { ContainerCommandNode, ContainerNode } from 'sandstone/core'
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// biome-ignore lint/complexity/noBannedTypes: It takes a constructor so we can't use better types.
 export function ancestors(prototype: Function): string[] {
   if (!prototype.name) {
     return []
   }
 
-  return [prototype.name, ...(ancestors(Object.getPrototypeOf(prototype)))]
+  return [prototype.name, ...ancestors(Object.getPrototypeOf(prototype))]
 }
 
-export type NodeVisitorMethod = ((node_: Node) => Node | Node[])
+export type NodeVisitorMethod = (node_: Node) => Node | Node[]
 
 export type GenericNodeVisitor<N extends Node> = (node: N) => Node | Node[]
 
@@ -37,7 +43,7 @@ export class GenericCoreVisitor {
     return method
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // biome-ignore lint/complexity/noBannedTypes: It takes a constructor so we can't use better types.
   private getNodeMethods = (prototype: Function): NodeVisitorMethod => {
     // First, try to hit the cache
     const key = prototype.name

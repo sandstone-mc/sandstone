@@ -1,17 +1,17 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import {
-  coordinatesParser, structureMirrorParser, structureRotationParser,
-} from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-import { validateIntegerRange } from '../../validators.js'
-
 import type {
-  Coordinates, STRUCTURES, WORLDGEN_CONFIGURED_FEATURES, WORLDGEN_STRUCTURES, WORLDGEN_TEMPLATE_POOLS,
+  Coordinates,
+  STRUCTURES,
+  WORLDGEN_CONFIGURED_FEATURES,
+  WORLDGEN_STRUCTURES,
+  WORLDGEN_TEMPLATE_POOLS,
 } from 'sandstone/arguments'
 import type { Macroable, StructureClass } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { StructureMirror, StructureRotation } from 'sandstone/variables'
+import { coordinatesParser, structureMirrorParser, structureRotationParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
+import { validateIntegerRange } from '../../validators.js'
 
 export class PlaceCommandNode extends CommandNode {
   command = 'place' as const
@@ -45,7 +45,14 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
     target: Macroable<string, MACRO>,
     maxDepth: Macroable<number, MACRO>,
     pos: Macroable<Coordinates<MACRO>, MACRO> = '~ ~ ~' as Coordinates<MACRO>,
-  ) => this.finalCommand(['jigsaw', pool, target, `${validateIntegerRange(maxDepth, 'Jigsaw max depth', 0, 7)}`, coordinatesParser(pos)])
+  ) =>
+    this.finalCommand([
+      'jigsaw',
+      pool,
+      target,
+      `${validateIntegerRange(maxDepth, 'Jigsaw max depth', 0, 7)}`,
+      coordinatesParser(pos),
+    ])
 
   /**
    * Places a configured structure feature. (not from `data/<namespace>/structures`, see [the wiki](https://minecraft.wiki/w/Custom_structure#Configured_Structure_Feature))
@@ -76,6 +83,14 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
     integrity = 1,
     seed = 0,
   ) => {
-    this.finalCommand(['template', `${structure}`, coordinatesParser(pos), structureRotationParser(rotation), structureMirrorParser(mirror), `${integrity}`, `${seed}`])
+    this.finalCommand([
+      'template',
+      `${structure}`,
+      coordinatesParser(pos),
+      structureRotationParser(rotation),
+      structureMirrorParser(mirror),
+      `${integrity}`,
+      `${seed}`,
+    ])
   }
 }

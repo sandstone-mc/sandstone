@@ -1,4 +1,6 @@
 import { Node } from 'sandstone/core'
+import * as util from 'util'
+import { formatDebugString } from '../../utils.js'
 
 export type GenericConditionType = {
   /**
@@ -26,6 +28,10 @@ export abstract class SingleConditionNode extends ConditionNode {
     const keyword = negated ? 'unless' : 'if'
 
     return [keyword, ...this.getCondition()].join(' ')
+  };
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, this.getValue(), undefined, options.indent)
   }
 }
 

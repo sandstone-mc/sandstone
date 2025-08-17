@@ -6,23 +6,36 @@ export class DebugCommandNode extends CommandNode {
   command = 'debug' as const
 }
 
-/**
- * Starts or stops a debugging session.
- * While active, includes notifications about potential performance bottlenecks in the console.
- * When stopped, creates a profiler results file in the folder `debug`.
- */
 export class DebugCommand extends CommandArguments {
   protected NodeType = DebugCommandNode
 
-  /** Starts a new debug profiling session. */
+  /**
+   * Start debug profiling session.
+   *
+   * @example
+   * ```ts
+   * debug.start()    // Begin profiling
+   * ```
+   */
   start = () => this.finalCommand(['start'])
 
-  /** Stops the active debug profiling session. */
+  /**
+   * Stop debug profiling session.
+   *
+   * @example
+   * ```ts
+   * debug.stop()     // End profiling and save results
+   * ```
+   */
   stop = () => this.finalCommand(['stop'])
 
   /**
-   * Used to get more detailed information while debugging performance.
-   * Saves information in the `.minecraft\debug` folder in the form of a zip file.
+   * Generate detailed debug report.
+   *
+   * @example
+   * ```ts
+   * debug.report()   // Create performance report
+   * ```
    */
   report = () => this.finalCommand(['report'])
 }

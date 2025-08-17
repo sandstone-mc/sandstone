@@ -1,15 +1,21 @@
+import type { BlockStateDefinition, BlockStateType } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { BlockStateDefinition, BlockStateType } from 'sandstone/arguments'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft block state.
  */
-export class BlockStateNode<Type extends BlockStateType> extends ContainerNode implements ResourceNode<BlockStateClass<Type>> {
-  constructor(sandstoneCore: SandstoneCore, public resource: BlockStateClass<Type>) {
+export class BlockStateNode<Type extends BlockStateType>
+  extends ContainerNode
+  implements ResourceNode<BlockStateClass<Type>>
+{
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: BlockStateClass<Type>,
+  ) {
     super(sandstoneCore)
   }
 
@@ -21,14 +27,27 @@ export type BlockStateArguments<Type extends BlockStateType> = {
    * The block state's JSON.
    */
   blockState?: BlockStateDefinition<Type>
-
 } & ResourceClassArguments<'list'>
 
-export class BlockStateClass<Type extends BlockStateType> extends ResourceClass<BlockStateNode<Type>> implements ListResource {
+export class BlockStateClass<Type extends BlockStateType>
+  extends ResourceClass<BlockStateNode<Type>>
+  implements ListResource
+{
   blockStateJSON: NonNullable<BlockStateArguments<Type>['blockState']>
 
-  constructor(core: SandstoneCore, name: string, public type: Type, args: BlockStateArguments<Type>) {
-    super(core, { packType: core.pack.resourcePack() }, BlockStateNode, core.pack.resourceToPath(name, ['blockstates']), args)
+  constructor(
+    core: SandstoneCore,
+    name: string,
+    public type: Type,
+    args: BlockStateArguments<Type>,
+  ) {
+    super(
+      core,
+      { packType: core.pack.resourcePack() },
+      BlockStateNode,
+      core.pack.resourceToPath(name, ['blockstates']),
+      args,
+    )
 
     /** @ts-ignore */
     this.blockStateJSON = args.blockState || (type === 'variant' ? { variants: {} } : { multipart: [] })
@@ -107,7 +126,5 @@ export class BlockStateClass<Type extends BlockStateType> extends ResourceClass<
    * }
    */
 
-  async load() {
-
-  }
+  async load() {}
 }

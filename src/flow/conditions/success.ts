@@ -1,10 +1,13 @@
-import { SingleExecuteNode } from './condition.js'
-
-import type { Score } from 'sandstone/variables/Score'
 import type { SandstoneCore } from 'sandstone/core'
 
+import type { Score } from 'sandstone/variables/Score'
+import { SingleExecuteNode } from './condition.js'
+
 export class SuccessConditionNode extends SingleExecuteNode {
-  constructor(sandstoneCore: SandstoneCore, readonly score: Score) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    readonly score: Score,
+  ) {
     super(sandstoneCore)
   }
 

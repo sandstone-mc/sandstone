@@ -1,10 +1,8 @@
 /* eslint-disable dot-notation */
 
-import { MCFunctionClass } from 'sandstone/core'
-
-import { GenericSandstoneVisitor } from './visitor.js'
-
 import type { FunctionCommandNode, ScheduleCommandNode } from 'sandstone/commands'
+import { MCFunctionClass } from 'sandstone/core'
+import { GenericSandstoneVisitor } from './visitor.js'
 
 // TODO: Add support for macros
 
@@ -14,14 +12,14 @@ import type { FunctionCommandNode, ScheduleCommandNode } from 'sandstone/command
 export class GenerateLazyMCFunction extends GenericSandstoneVisitor {
   private generateLazyFunction(mcFunction: string | MCFunctionClass<any, any> | undefined) {
     // If it's not a MCFunction / it's not lazy, there's nothing to do
-    if (!(mcFunction instanceof MCFunctionClass) || !mcFunction['lazy']) {
+    if (!(mcFunction instanceof MCFunctionClass) || !mcFunction.lazy) {
       return
     }
 
-    const mcFunctionNode = mcFunction['node']
+    const mcFunctionNode = mcFunction.node
 
     // We can generate the function.
-    mcFunction['generate']()
+    mcFunction.generate()
 
     this.visit(mcFunctionNode)
   }

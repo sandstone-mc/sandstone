@@ -1,9 +1,11 @@
+import type { SandstoneCore } from 'sandstone/core'
 import { SingleConditionNode } from '../condition.js'
 
-import type { SandstoneCore } from 'sandstone/core'
-
 export class SelectorConditionNode extends SingleConditionNode {
-  constructor(sandstoneCore: SandstoneCore, public selector: string) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public selector: string,
+  ) {
     super(sandstoneCore)
   }
 

@@ -1,16 +1,18 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { nbtStringifier } from 'sandstone/variables'
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type {
-  CONTAINER_SLOTS, Coordinates, ENTITY_SLOTS,
-  ITEMS, MultipleEntitiesArgument, RootNBT,
+  CONTAINER_SLOTS,
+  Coordinates,
+  ENTITY_SLOTS,
+  ITEMS,
+  MultipleEntitiesArgument,
+  RootNBT,
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers.js'
+import { CommandArguments } from '../../helpers.js'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
@@ -20,9 +22,9 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Replace the slot with a specific item.
    * @param item The item to replace the slot with.
-   * @param count The amount of items.
+   * @param count The amount of items. If not specified, defaults to 1.
    */
-  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, count: Macroable<number, MACRO>): FinalCommandOutput
+  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, count?: Macroable<number, MACRO>): FinalCommandOutput
 
   /**
    * Replace the slot with a specific item.
@@ -30,7 +32,11 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
    * @param nbt The nbt of the item to replace the slot with.
    * @param count The amount of items.
    */
-  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, nbt: Macroable<RootNBT, MACRO>, count: Macroable<number, MACRO>): FinalCommandOutput
+  with(
+    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    nbt: Macroable<RootNBT, MACRO>,
+    count: Macroable<number, MACRO>,
+  ): FinalCommandOutput
 
   with(
     item: Macroable<LiteralUnion<ITEMS>, MACRO>,
@@ -68,16 +74,23 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
   }
 }
 
-/** Replaces or modifies items in inventories */
 export class ItemCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ItemCommandNode
 
-  /** Applies a modifier to a slot in an inventory. */
+  /**
+   * Apply item modifiers to inventory slots.
+   *
+   * @example
+   * ```ts
+   * item.modify.block([100, 70, 200], 'container.0', 'mypack:enchant_modifier')
+   * item.modify.entity('@p', 'weapon.mainhand', 'minecraft:enchant_with_levels')
+   * ```
+   */
   modify = {
     /**
-     * @param pos The position of the container containing the slot to apply the modifier to.
-     * @param slot The slot to apply the modifier to.
-     * @param modifier The name of the modifier.
+     * @param pos Container block coordinates.
+     * @param slot Container slot identifier.
+     * @param modifier Item modifier to apply.
      */
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
@@ -86,9 +99,9 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
     ) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
 
     /**
-     * @param targets The entity/entities containing the slot to apply the modifier to.
-     * @param slot The slot to apply the modifier to.
-     * @param modifier The name of the modifier.
+     * @param targets Entity selector for targets.
+     * @param slot Entity slot identifier.
+     * @param modifier Item modifier to apply.
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
@@ -97,18 +110,26 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
     ) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
   }
 
-  /** Replaces the content of a specific slot of an inventory with another. */
+  /**
+   * Replace items in inventory slots.
+   *
+   * @example
+   * ```ts
+   * item.replace.block([100, 70, 200], 'container.0').with('minecraft:diamond', 5)
+   * item.replace.entity('@p', 'weapon.mainhand').from.block([0, 70, 0], 'container.1')
+   * ```
+   */
   replace = {
     /**
-     * @param pos The position of the container containing the slot to be replaced.
-     * @param slot The slot to be replaced.
+     * @param pos Container block coordinates.
+     * @param slot Container slot to replace.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) => this.subCommand(['replace', 'block', pos, slot], ItemSourceCommand<MACRO>, false),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) =>
+      this.subCommand(['replace', 'block', pos, slot], ItemSourceCommand<MACRO>, false),
 
     /**
-     * @param targets one or more entities to modify.
-     *.
-     * @param slot The slot to be replaced.
+     * @param targets Entity selector for targets.
+     * @param slot Entity slot to replace.
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,

@@ -1,11 +1,9 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { BLOCKS, Coordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
+import { coordinatesParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class FillCommandNode extends CommandNode {
   command = 'fill' as const
@@ -13,84 +11,186 @@ export class FillCommandNode extends CommandNode {
 
 export class FillArgumentsCommand<MACRO extends boolean> extends CommandArguments {
   /**
-   * Replaces all blocks (including air) in the fill region with the specified block,
-   * dropping the existing blocks (including those that are unchanged) and block contents as entities,
-   * as if they had been mined with an unenchanted diamond shovel or pickaxe.
-   *
-   * (Blocks that can be mined only with shears, such as vines, do not drop; neither do liquids.)
+   * Fill mode: destroy existing blocks and drop their items.
+   * 
+   * Replaces all blocks in the region while dropping items as if the blocks
+   * were broken by a player with appropriate tools. This preserves resources
+   * but creates item entities that need to be collected.
+   * 
+   * **Behavior:**
+   * - Breaks all existing blocks in the region
+   * - Drops items as if mined with proper tools
+   * - Creates item entities that can be picked up
+   * - Plays block breaking sounds and particles
+   * 
+   * **Note:** Some blocks (like vines) that require shears won't drop items.
+   * 
+   * @example
+   * ```ts
+   * // Mine out a region while keeping the resources
+   * fill(['~-5', '~', '~-5'], ['~5', '~10', '~5'], 'minecraft:air').destroy()
+   * 
+   * // Replace stone with diamonds, dropping the stone
+   * fill([0, 60, 0], [10, 70, 10], 'minecraft:diamond_block').destroy()
+   * ```
    */
   destroy = () => this.finalCommand(['destroy'])
 
   /**
-   * Replaces only the blocks on the outer edge of the fill region with the specified block.
-   *
-   * Inner blocks are changed to air, dropping their contents as entities but not themselves.
-   *
-   * If the fill region has no inner blocks (because it is smaller than three blocks in at least one dimension),
-   * acts like `replace`.
+   * Fill mode: create hollow structure (walls only, air inside).
+   * 
+   * Creates a hollow box or shell with the specified block, removing the interior
+   * and replacing it with air. Perfect for creating rooms, containers, or shells.
+   * 
+   * **Behavior:**
+   * - Places blocks only on the outer surfaces (walls, floor, ceiling)
+   * - Fills interior with air, dropping interior block contents
+   * - For regions smaller than 3 blocks in any dimension, acts like replace
+   * 
+   * @example
+   * ```ts
+   * // Create a hollow stone room
+   * fill([0, 64, 0], [10, 74, 10], 'minecraft:stone').hollow()
+   * 
+   * // Build a glass observatory with clear interior
+   * fill(['~-5', '~', '~-5'], ['~5', '~10', '~5'], 'minecraft:glass').hollow()
+   * ```
    */
   hollow = () => this.finalCommand(['hollow'])
 
   /**
-   * Replaces only the air blocks in the fill region with the specified block.
+   * Fill mode: only fill air blocks, preserve existing blocks.
+   * 
+   * Places the specified block only in locations that are currently air,
+   * leaving all existing solid blocks unchanged. Great for adding supports
+   * or filling gaps without destroying existing work.
+   * 
+   * **Behavior:**
+   * - Only affects air blocks
+   * - Preserves all existing solid blocks
+   * - Perfect for non-destructive building
+   * 
+   * @example
+   * ```ts
+   * // Add stone support beams without damaging existing structure
+   * fill([base.x, base.y, base.z], [base.x + 20, base.y + 5, base.z + 20], 'minecraft:stone').keep()
+   * 
+   * // Fill water/lava gaps with blocks
+   * fill(['~-10', '~-5', '~-10'], ['~10', '~', '~10'], 'minecraft:cobblestone').keep()
+   * ```
    */
   keep = () => this.finalCommand(['keep'])
 
   /**
-   * Replaces only the blocks on the outer edge of the fill region with the specified block.
-   *
-   * Inner blocks are not affected.
-   *
-   * If the fill region has no inner blocks (because it is smaller than three blocks in at least one dimension),
-   * acts like `replace`.
+   * Fill mode: create outline/frame (edges only, preserve interior).
+   * 
+   * Places blocks only on the outer edges/surfaces of the region while
+   * leaving the interior completely unchanged. Creates frames, borders,
+   * or outlines without affecting the inside.
+   * 
+   * **Behavior:**
+   * - Only places blocks on outer surfaces
+   * - Interior blocks remain completely unchanged
+   * - For small regions (< 3 blocks), acts like replace
+   * 
+   * @example
+   * ```ts
+   * // Create a gold frame around an area
+   * fill(['~-8', '~-1', '~-8'], ['~8', '~8', '~8'], 'minecraft:gold_block').outline()
+   * 
+   * // Border a farm area with fences
+   * fill([farm.x, farm.y, farm.z], [farm.x + 15, farm.y + 2, farm.z + 15], 'minecraft:oak_fence').outline()
+   * ```
    */
   outline = () => this.finalCommand(['outline'])
 
   /**
-   * Replaces all blocks (including air) in the fill region with the specified block,
-   * without dropping blocks or block contents as entities.
+   * Fill mode: replace all blocks (default) or specific block types.
+   * 
+   * The standard fill mode that replaces all blocks in the region. Optionally,
+   * you can specify a filter to only replace specific block types, leaving
+   * other blocks unchanged.
+   * 
+   * **Behavior without filter:**
+   * - Replaces ALL blocks (including air)
+   * - No items are dropped (blocks are destroyed silently)
+   * - Fastest and most complete fill mode
+   * 
+   * **Behavior with filter:**
+   * - Only replaces blocks matching the filter
+   * - Other blocks remain unchanged
+   * - Useful for selective replacement
    *
-   * Optionally, instead of specifying a data tag for the replacing block,
-   * block ID and data values may be specified to limit which blocks are replaced.
-   *
+   * @param filter Optional block type to limit replacement to.
+   *              Only blocks of this type will be replaced.
+   *              Examples: 'minecraft:stone', 'minecraft:dirt', 'minecraft:air'
+   * 
    * @example
-   * // Replace only furnaces facing north, with a BurnTime of 200 ticks:
-   * fill(...).replace('minecraft:furnace[facing=north]{BurnTime:200}')
+   * ```ts
+   * // Standard fill - replace everything
+   * fill([0, 64, 0], [10, 74, 10], 'minecraft:stone').replace()
+   * 
+   * // Replace only dirt blocks with grass
+   * fill(['~-20', '~-5', '~-20'], ['~20', '~', '~20'], 'minecraft:grass_block').replace('minecraft:dirt')
+   * 
+   * // Convert all stone to diamond blocks
+   * fill(mine_area_start, mine_area_end, 'minecraft:diamond_block').replace('minecraft:stone')
+   * ```
    */
   replace = (filter?: Macroable<LiteralUnion<BLOCKS>, MACRO>) => this.finalCommand(['replace', filter])
 }
 
-/** Adds, sets or removes player experience.  */
 export class FillCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = FillCommandNode
 
   /**
-   * Fills all or parts of a region with a specific block.
+   * Fill a 3D region with the specified block.
+   * 
+   * Defines a rectangular region between two opposite corners and fills it
+   * with the specified block type. The region can be up to 32,768 blocks total.
+   * Returns a command object for chaining fill mode options.
+   * 
+   * **Region Definition:**
+   * - Any two opposite corners define the region boundaries
+   * - The command automatically calculates the full 3D area
+   * - Supports all coordinate systems (absolute, relative, local)
+   * 
+   * **Size Limits:**
+   * - Maximum 32,768 blocks total in the region
+   * - No individual dimension limits (could be 1x1x32768 or 32x32x32)
    *
-   * @param from
-   * Specifies the first corner blocks of the region to be filled (the "fill region").
+   * @param from One corner of the region to fill.
+   *            Can be any corner - the command determines the bounds automatically.
+   *            Supports absolute `[100, 64, 200]`, relative `['~-5', '~', '~5']`,
+   *            and local `['^10', '^', '^-5']` coordinates.
    *
-   * Block position is the coordinates of the point at the lower northwest corner of a block,
-   * corresponding to the lowest X-axis, Y-axis and Z-axis point of the block.
+   * @param to The opposite corner of the region.
+   *          Together with `from`, defines the complete 3D volume to fill.
+   *          Must use the same coordinate system as `from`.
    *
-   * @param to
-   * Specifies the second, opposite corner blocks of the region to be filled (the "fill region").
-   *
-   * @param block Specifies the block to fill the region with.
-   *
+   * @param block The block type to fill the region with.
+   *             Examples: 'minecraft:stone', 'minecraft:air', 'minecraft:oak_planks'
+   *             Can include block states: 'minecraft:oak_log[axis=y]'
+   * 
+   * @returns FillArgumentsCommand for chaining mode options (.replace(), .hollow(), etc.)
+   * 
    * @example
-   * // Fill a block of 9x9 blocks, centered on the player
-   * fill('~-4 ~-4 ~-4', '~4 ~4 ~4', 'minecraft:diamond_block')
-   *
-   * // Fill a hollow block of 9x9 blocks, centered on the player
-   * fill('~-4 ~-4 ~-4', '~4 ~4 ~4', 'minecraft:diamond_block').hollow()
-   *
-   * // Replace all dirt with grass in a 9x9 blocks, centered on the player
-   * fill('~-4 ~-4 ~-4', '~4 ~4 ~4', 'minecraft:grass_block').replace('minecraft:dirt')
+   * ```ts
+   * // Basic solid fill
+   * fill([0, 64, 0], [10, 74, 10], 'minecraft:cobblestone')
+   * 
+   * // Relative to current position
+   * fill(['~-5', '~-1', '~-5'], ['~5', '~3', '~5'], 'minecraft:glass')
+   * 
+   * // With fill mode options
+   * fill(corner1, corner2, 'minecraft:stone').hollow()  // Hollow structure
+   * fill(area_start, area_end, 'minecraft:air').keep()  // Only fill air blocks
+   * fill(old_area, old_end, 'minecraft:grass').replace('minecraft:dirt') // Replace dirt only
+   * ```
    */
-  fill = (from: Macroable<Coordinates<MACRO>, MACRO>, to: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<LiteralUnion<BLOCKS>, MACRO>) => this.subCommand(
-    [coordinatesParser(from), coordinatesParser(to), block],
-    FillArgumentsCommand,
-    true,
-  )
+  fill = (
+    from: Macroable<Coordinates<MACRO>, MACRO>,
+    to: Macroable<Coordinates<MACRO>, MACRO>,
+    block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+  ) => this.subCommand([coordinatesParser(from), coordinatesParser(to), block], FillArgumentsCommand, true)
 }

@@ -1,33 +1,44 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { ColumnCoordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class WorldBorderNode extends CommandNode {
   command = 'worldborder' as const
 }
 
-/** These commands control the world border. */
 export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = WorldBorderNode
 
   /**
-   * Increases or decreases the world border diameter.
+   * Expand or shrink world border.
    *
-   * @param distance Specifies the number of blocks to add to the world border diameter.
+   * @param distance Blocks to add to world border diameter.
+   *                Positive values expand, negative values shrink.
    *
-   * @param time Specifies the number of seconds it should take for the world border to move from its current diameter to the new diameter.
-   * If not specified, defaults to 0.
+   * @param time Optional transition time in seconds. Defaults to instant.
+   *
+   * @example
+   * ```ts
+   * worldborder.add(100)         // Expand by 100 blocks instantly
+   * worldborder.add(-50, 30)     // Shrink by 50 blocks over 30 seconds
+   * ```
    */
-  add = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) => this.finalCommand(['add', distance, time])
+  add = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) =>
+    this.finalCommand(['add', distance, time])
 
   /**
-   * Recenters the world boundary.
+   * Set world border center position.
    *
-   * @param pos Specifies the horizontal coordinates of the world border's center.
+   * @param pos Center coordinates (x, z only).
+   *           Examples: [0, 0], [100, -200], rel(50, 25)
+   *
+   * @example
+   * ```ts
+   * worldborder.center([0, 0])        // Center at world origin
+   * worldborder.center([100, -200])   // Move center to coordinates
+   * ```
    */
   center = (pos: Macroable<ColumnCoordinates<MACRO>, MACRO>) => this.finalCommand(['center', coordinatesParser(pos)])
 
@@ -53,19 +64,29 @@ export class WorldBorderCommand<MACRO extends boolean> extends CommandArguments 
   }
 
   /**
-   * Returns the current world border diameter.
+   * Get current world border diameter.
+   *
+   * @example
+   * ```ts
+   * worldborder.get()    // Query current border size
+   * ```
    */
   get = () => this.finalCommand(['get'])
 
   /**
-   * Sets the world border diameter.
+   * Set world border diameter.
    *
-   * @param distance Specifies the new diameter for the world border.
+   * @param distance New border diameter in blocks.
+   * @param time Optional transition time in seconds.
    *
-   * @param time Specifies the number of seconds it should take for the world border to move from its current diameter to the new diameter.
-   * If not specified, defaults to 0.
+   * @example
+   * ```ts
+   * worldborder.set(1000)        // Set border to 1000 blocks instantly
+   * worldborder.set(500, 60)     // Shrink to 500 blocks over 1 minute
+   * ```
    */
-  set = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) => this.finalCommand(['set', distance, time])
+  set = (distance: Macroable<number, MACRO>, time?: Macroable<number, MACRO>) =>
+    this.finalCommand(['set', distance, time])
 
   warning = {
     /**

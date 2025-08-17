@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import path from 'node:path'
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import lodash from 'lodash'
-import path from 'path'
 import { fetch, safeWrite } from 'sandstone/utils'
 
 export type MCMetaBranches = 'assets' | 'atlas' | 'data' | 'registries' | 'summary'
@@ -22,7 +21,7 @@ export class MCMetaCache {
 
   branches: MCMetaBranches[] = []
 
-  files: Map<string, { text: boolean, contents: Buffer | string | false }> = new Map()
+  files: Map<string, { text: boolean; contents: Buffer | string | false }> = new Map()
 
   loaded = false
 
@@ -39,7 +38,8 @@ export class MCMetaCache {
 
     this.version = manifest.version
 
-    const getZip = async (branch: string) => new AdmZip(await (await fetch(`https://github.com${this.base}archive/refs/heads/${branch}.zip`)).buffer())
+    const getZip = async (branch: string) =>
+      new AdmZip(await (await fetch(`https://github.com${this.base}archive/refs/heads/${branch}.zip`)).buffer())
 
     if (!(await fs.pathExists(this.lockFile))) {
       if (manifest.files.length > 10) {
@@ -59,7 +59,7 @@ export class MCMetaCache {
             contents = contents.toString('utf-8')
           }
 
-          await safeWrite(path.join(this.path, file), contents)
+          await safeWrite(path.join(this.path, file), contents as any)
 
           this.files.set(file, { contents, text: text as false })
         }
@@ -72,11 +72,14 @@ export class MCMetaCache {
         }
       }
 
-      await safeWrite(this.lockFile, JSON.stringify({
-        files: manifest.files,
-        version: manifest.version === 'latest' ? await this.getVersion(false) : manifest.version as string,
-        versionDate: this.versionDate,
-      }))
+      await safeWrite(
+        this.lockFile,
+        JSON.stringify({
+          files: manifest.files,
+          version: manifest.version === 'latest' ? await this.getVersion(false) : (manifest.version as string),
+          versionDate: this.versionDate,
+        }),
+      )
     } else {
       const lockFile = JSON.parse(await fs.readFile(this.lockFile, 'utf-8'))
 
@@ -101,7 +104,7 @@ export class MCMetaCache {
               contents = contents.toString('utf-8')
             }
 
-            await safeWrite(path.join(this.path, file), contents)
+            await safeWrite(path.join(this.path, file), contents as any)
 
             this.files.set(file, { contents, text: text as false })
           }
@@ -137,7 +140,7 @@ export class MCMetaCache {
                 contents = contents.toString('utf-8')
               }
 
-              await safeWrite(path.join(this.path, file), contents)
+              await safeWrite(path.join(this.path, file), contents as any)
 
               this.files.set(file, { contents, text: text as false })
             }
@@ -152,11 +155,14 @@ export class MCMetaCache {
         }
       }
 
-      await safeWrite(this.lockFile, JSON.stringify({
-        files: manifest.files,
-        version: manifest.version === 'latest' ? await this.getVersion(false) : manifest.version as string,
-        versionDate: this.versionDate,
-      }))
+      await safeWrite(
+        this.lockFile,
+        JSON.stringify({
+          files: manifest.files,
+          version: manifest.version === 'latest' ? await this.getVersion(false) : (manifest.version as string),
+          versionDate: this.versionDate,
+        }),
+      )
     }
 
     this.branches = manifest.branches
@@ -176,17 +182,23 @@ export class MCMetaCache {
         files[_path] = text
       }
 
-      await safeWrite(this.manifest, JSON.stringify({
-        files,
-        branches: this.branches,
-        version: this.version,
-      }))
+      await safeWrite(
+        this.manifest,
+        JSON.stringify({
+          files,
+          branches: this.branches,
+          version: this.version,
+        }),
+      )
 
-      await safeWrite(this.lockFile, JSON.stringify({
-        files,
-        version: this.version,
-        versionDate: this.versionDate || Date.now(),
-      }))
+      await safeWrite(
+        this.lockFile,
+        JSON.stringify({
+          files,
+          version: this.version,
+          versionDate: this.versionDate || Date.now(),
+        }),
+      )
     }
   }
 
@@ -218,19 +230,20 @@ export class MCMetaCache {
 
     const finalPath = path.join(this.path, fullPath)
 
-    await safeWrite(finalPath, file)
+    await safeWrite(finalPath, file as any)
 
-    return (this.files.set(fullPath, { text, contents: file }).get(fullPath)!).contents as Buffer | string
+    return this.files.set(fullPath, { text, contents: file }).get(fullPath)?.contents as Buffer | string
   }
 
   async getVersion(lockFile?: any) {
-    const fetchVersion = async () => (await (await fetch(`https://api.github.com/repos${this.base}commits?sha=summary`)).json() as any).sha as string
+    const fetchVersion = async () =>
+      ((await (await fetch(`https://api.github.com/repos${this.base}commits?sha=summary`)).json()) as any).sha as string
 
     const currentDate = Date.now()
 
     if (lockFile) {
       // If it has been over 6 hours since it was checked.
-      if (((lockFile.versionDate - currentDate) / 36e5) > 6) {
+      if ((lockFile.versionDate - currentDate) / 36e5 > 6) {
         this.versionDate = currentDate
 
         return fetchVersion()

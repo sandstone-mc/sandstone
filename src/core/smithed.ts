@@ -1,17 +1,23 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+
+import path from 'node:path'
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
-import path from 'path'
-import { fetch, safeWrite } from 'sandstone/utils'
-
 import type { PackData } from 'sandstone/utils'
+import { fetch, safeWrite } from 'sandstone/utils'
 import type { SandstoneCore } from './sandstoneCore.js'
 
 type Manifest = Record<string, string>
 
-export type Dependency = { version: string, date: number, added: boolean, datapack: Buffer, resourcepack?: Buffer | false }
+export type Dependency = {
+  version: string
+  date: number
+  added: boolean
+  datapack: Buffer
+  resourcepack?: Buffer | false
+}
 
-type LockFile = Record<string, { version: string, date: number, resourcepack: boolean }>
+type LockFile = Record<string, { version: string; date: number; resourcepack: boolean }>
 
 export class SmithedDependencyCache {
   readonly core: SandstoneCore
@@ -61,7 +67,7 @@ export class SmithedDependencyCache {
         lock[name] = {
           version,
           date,
-          resourcepack: !(!resourcepack),
+          resourcepack: !!resourcepack,
         }
       }
 
@@ -87,7 +93,7 @@ export class SmithedDependencyCache {
     const lockFile = await (async () => {
       try {
         return JSON.parse(await fs.readFile(this.lockFile, 'utf-8')) as LockFile
-      } catch (e) {
+      } catch (_e) {
         return false
       }
     })()
@@ -99,18 +105,22 @@ export class SmithedDependencyCache {
     } else {
       const date = Date.now()
 
-      if (version === 'latest' && ((lockFile[dependency].date - date) / 36e5) > 1) {
+      if (version === 'latest' && (lockFile[dependency].date - date) / 36e5 > 1) {
         lockFile[dependency].date = date
 
         download = true
       } else {
-        result = this.dependencies.set(dependency, {
-          version,
-          date: lockFile[dependency].date,
-          datapack: await fs.readFile(path.join(this.path, dependency, 'datapack.zip')),
-          resourcepack: lockFile[dependency].resourcepack ? await fs.readFile(path.join(this.path, dependency, 'resourcepack.zip')) : false,
-          added: false,
-        }).get(dependency)!
+        result = this.dependencies
+          .set(dependency, {
+            version,
+            date: lockFile[dependency].date,
+            datapack: await fs.readFile(path.join(this.path, dependency, 'datapack.zip')),
+            resourcepack: lockFile[dependency].resourcepack
+              ? await fs.readFile(path.join(this.path, dependency, 'resourcepack.zip'))
+              : false,
+            added: false,
+          })
+          .get(dependency)!
       }
     }
 
@@ -139,13 +149,13 @@ export class SmithedDependencyCache {
         url += `@${version}`
       }
 
-      const files = (new AdmZip(Buffer.from(await (await fetch(url)).arrayBuffer()))).getEntries()
+      const files = new AdmZip(Buffer.from(await (await fetch(url)).arrayBuffer())).getEntries()
 
       const datapack: Buffer = await new Promise((res) => {
         files[0].getDataAsync((data) => res(data as Buffer))
       })
 
-      await safeWrite(path.join(this.path, dependency, 'datapack.zip'), datapack)
+      await safeWrite(path.join(this.path, dependency, 'datapack.zip'), datapack as any)
 
       let resourcepack: Buffer | false = false
 
@@ -154,16 +164,18 @@ export class SmithedDependencyCache {
           files[1].getDataAsync((data) => res(data as Buffer))
         })
 
-        await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), datapack)
+        await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), resourcepack as any)
       }
 
-      result = this.dependencies.set(dependency, {
-        version,
-        date: version === 'latest' ? Date.now() : 0,
-        datapack,
-        resourcepack,
-        added: true,
-      }).get(dependency)!
+      result = this.dependencies
+        .set(dependency, {
+          version,
+          date: version === 'latest' ? Date.now() : 0,
+          datapack,
+          resourcepack,
+          added: true,
+        })
+        .get(dependency)!
 
       await this.save()
     }

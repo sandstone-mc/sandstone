@@ -1,6 +1,5 @@
-import { SingleConditionNode } from '../condition.js'
-
 import type { SandstoneCore } from 'sandstone/core'
+import { SingleConditionNode } from '../condition.js'
 
 export class AdvancementConditionNode extends SingleConditionNode {
   protected advancementArgument: any

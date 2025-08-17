@@ -1,6 +1,6 @@
+import type { GAMEMODES } from 'sandstone/arguments/basics'
 import type { EntityCriterion } from './EntityCriterion.js'
 import type { NumberProvider } from './utils.js'
-import type { GAMEMODES } from 'sandstone/arguments/basics'
 
 export type PlayerCriterion = Partial<{
   /** A map of advancements to check. */
@@ -29,17 +29,16 @@ export type PlayerCriterion = Partial<{
     /**
      * The statistic base.
      */
-    type: (
-      'minecraft:custom' |
-      'minecraft:crafted' |
-      'minecraft:used' |
-      'minecraft:broken' |
-      'minecraft:mined' |
-      'minecraft:killed' |
-      'minecraft:picked_up' |
-      'minecraft:dropped' |
-      'minecraft:killed_by'
-    )
+    type:
+      | 'minecraft:custom'
+      | 'minecraft:crafted'
+      | 'minecraft:used'
+      | 'minecraft:broken'
+      | 'minecraft:mined'
+      | 'minecraft:killed'
+      | 'minecraft:picked_up'
+      | 'minecraft:dropped'
+      | 'minecraft:killed_by'
 
     /** The statistic ID. Mostly mimics the criteria used for defining scoreboard objectives. */
     stat: string

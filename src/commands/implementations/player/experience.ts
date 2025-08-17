@@ -1,74 +1,80 @@
+import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments'
 import { validateIntegerRange } from 'sandstone/commands/validators'
+import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
-
 import { CommandArguments } from '../../helpers.js'
-
-import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/core'
 
 export class ExperienceCommandNode extends CommandNode {
   // We always use the shorthand version for compactness purposes
   command = 'xp' as const
 }
 
-/** Adds, sets or removes player experience.  */
 export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ExperienceCommandNode
 
   /**
-   * Adds experience to the player(s).
+   * Add experience to players.
    *
-   * @param targets Specifies the target(s) of the command.
+   * @param targets Player selector to give experience to.
+   *               Examples: '@p', '@a', 'PlayerName'
    *
-   * @param amount
-   * Specifies the amount of experience points or levels to give to the player.
-   * Negative values remove experience instead of adding them.
+   * @param amount Experience amount to add. Negative values remove experience.
+   *              Range: -2,147,483,648 to 2,147,483,647
    *
-   * Must be between `-2147483648` and `2147483647` (inclusive).
+   * @param type Optional experience type: 'levels' or 'points'.
+   *            Defaults to 'points' if not specified.
    *
-   * @param type
-   * If `level`, adds levels of experience to the player.
-   * If `points`, add points of experience to the player.
-   *
-   * If unspecified, defaults to `points`.
+   * @example
+   * ```ts
+   * experience.add('@p', 100)                 // Add 100 XP points
+   * experience.add('@a', 5, 'levels')         // Add 5 XP levels
+   * experience.add('@p', -50, 'points')       // Remove 50 XP points
+   * ```
    */
-  add = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, amount: Macroable<number, MACRO>, type?: Macroable<'level' | 'points', MACRO>) => {
+  add = (
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    amount: Macroable<number, MACRO>,
+    type?: Macroable<'levels' | 'points', MACRO>,
+  ) => {
     validateIntegerRange(amount, 'amount', -2147483648, 2147483647)
-    return this.finalCommand([targetParser(targets), amount, type])
+    return this.finalCommand(['add', targetParser(targets), amount, type])
   }
 
   /**
-   * Sets the experience of the player(s).
+   * Set player experience to specific amount.
    *
-   * @param targets Specifies the target(s) of the command.
+   * @param targets Player selector to set experience for.
+   * @param amount Experience amount to set. Range: 0 to 2,147,483,647
+   * @param type Optional experience type: 'levels' or 'points'. Defaults to 'points'.
    *
-   * @param amount
-   * Specifies the amount of experience points or levels to be set to the player.
-   *
-   * Must be between `0` and `2147483647` (inclusive).
-   *
-   * @param type
-   * If `level`, sets the levels of experience of the player.
-   * If `points`, sets the points of experience of the player.
-   *
-   * If unspecified, defaults to `points`.
+   * @example
+   * ```ts
+   * experience.set('@p', 1000)              // Set to 1000 XP points
+   * experience.set('@a', 30, 'levels')      // Set to level 30
+   * ```
    */
-  set = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, amount: Macroable<number, MACRO>, type?: Macroable<'level' | 'points', MACRO>) => {
+  set = (
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    amount: Macroable<number, MACRO>,
+    type?: Macroable<'levels' | 'points', MACRO>,
+  ) => {
     validateIntegerRange(amount, 'amount', 0, 2147483647)
-    return this.finalCommand([targets, amount, type])
+    return this.finalCommand(['set', targets, amount, type])
   }
 
   /**
-   * Queries the experience of the player.
+   * Get player's current experience.
    *
-   * @param target Specifies the target of the command.
+   * @param target Single player to query experience from.
+   * @param type Optional experience type: 'levels' or 'points'. Defaults to 'points'.
    *
-   * @param type
-   * If `level`, queries the levels of experience of the player.
-   * If `points`, queries the points of experience of the player.
-   *
-   * If unspecified, defaults to `points`.
+   * @example
+   * ```ts
+   * experience.query('@p')                  // Get XP points
+   * experience.query('PlayerName', 'levels') // Get XP level
+   * ```
    */
-  query = (target: Macroable<SinglePlayerArgument<MACRO>, MACRO>, type?: Macroable<'level' | 'points', MACRO>) => this.finalCommand([target, type])
+  query = (target: Macroable<SinglePlayerArgument<MACRO>, MACRO>, type?: Macroable<'levels' | 'points', MACRO>) =>
+    this.finalCommand(['query', target, type])
 }

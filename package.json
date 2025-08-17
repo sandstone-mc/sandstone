@@ -19,10 +19,6 @@
   "dependencies": {
     "@sinclair/typebox": "^0.31.21",
     "@smithed-mc/data-types": "^0.1.2",
-    "@types/adm-zip": "^0.5.2",
-    "@types/fs-extra": "^11.0.2",
-    "@types/lodash": "^4.14.199",
-    "@types/semver": "^7.5.3",
     "@typescript/analyze-trace": "^0.4.0",
     "adm-zip": "^0.5.10",
     "chalk": "^4.1.2",
@@ -36,26 +32,22 @@
     "semver": "^7.5.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.1.3",
+    "@types/adm-zip": "^0.5.2",
+    "@types/fs-extra": "^11.0.2",
+    "@types/lodash": "^4.14.199",
     "@types/module-alias": "^2.0.2",
     "@types/nearley": "^2.11.3",
-    "@types/node": "^17.0.45",
+    "@types/node": "^22.13.17",
     "@types/object-hash": "^3.0.5",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.51.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.10.0",
-    "eslint-import-resolver-typescript": "^2.7.1",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
+    "@types/semver": "^7.5.3",
     "glob": "^10.3.10",
     "husky": "^7.0.4",
-    "prettier": "^2.8.8",
-    "ts-node": "^10.9.1",
-    "tsup": "^7.2.0",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   },
   "directories": {
     "doc": "docs",
@@ -63,7 +55,7 @@
     "lib": "src"
   },
   "engines": {
-    "node": ">=12.22.3"
+    "node": ">=22.13.17"
   },
   "homepage": "https://sandstone.dev",
   "keywords": [
@@ -84,13 +76,17 @@
     "url": "git+https://github.com/sandstone-mc/sandstone.git"
   },
   "scripts": {
-    "build": "tsup --onSuccess \"pnpm run setup\"",
-    "watch": "pnpm run build -- --watch",
-    "build-types": "tsc",
+    "build": "tsup --tsconfig tsconfig.build.json --onSuccess \"pnpm run setup\"",
+    "watch": "tsup --tsconfig tsconfig.build.json --onSuccess \"pnpm run setup\" --watch",
+    "build-types": "tsc --project tsconfig.build.json",
     "setup-package": "node ./scripts/setupPackage.mjs",
     "setup": "pnpm run build-types && pnpm run setup-package && echo ✔️  Successfully built Sandstone.",
     "publishToNpm": "pnpm run build && pnpm publish",
-    "format": "eslint src --cache --fix --quiet"
+    "format": "biome format --write src",
+    "lint": "biome lint src",
+    "check": "biome check --write src",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "type": "module",
   "main": "index.js",

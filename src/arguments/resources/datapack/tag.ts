@@ -1,10 +1,21 @@
 import type {
-  BANNER_PATTERNS, BLOCKS, CAT_VARIANTS, DIMENSIONS, ENTITY_TYPES, FLUIDS, GAME_EVENTS, ITEMS, PAINTING_VARIANTS, POINT_OF_INTEREST_TYPES, REGISTRIES,
+  BANNER_PATTERNS,
+  BLOCKS,
+  CAT_VARIANTS,
+  DIMENSIONS,
+  ENTITY_TYPES,
+  FLUIDS,
+  GAME_EVENTS,
+  ITEMS,
+  PAINTING_VARIANTS,
+  POINT_OF_INTEREST_TYPES,
+  REGISTRIES,
   WORLDGEN_BIOMES,
 } from 'sandstone/arguments'
 import type { MCFunctionClass, TagClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
 
+/** biome-ignore format: excessive formatting */
 export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
   T extends 'blocks' ? LiteralUnion<BLOCKS> :
   T extends 'fluids' ? LiteralUnion<FLUIDS> :
@@ -21,6 +32,8 @@ export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
   string
 )
 
-export type TagSingleValue<T> = T | { id: T, required: boolean }
+export type TagSingleValue<T> = T | { id: T; required: boolean }
 
-export type TagValuesJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = TagSingleValue<HintedTagStringType<REGISTRY> | TagClass<LiteralUnion<REGISTRIES>> >[]
+export type TagValuesJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = TagSingleValue<
+  HintedTagStringType<REGISTRY> | TagClass<LiteralUnion<REGISTRIES>>
+>[]

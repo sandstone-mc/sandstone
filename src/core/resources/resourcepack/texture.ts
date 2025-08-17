@@ -1,10 +1,9 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { TEXTURE_TYPES, TextureMeta } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
 
@@ -12,7 +11,10 @@ type TextureType = LiteralUnion<TEXTURE_TYPES>
  * A node representing a Minecraft sound.
  */
 export class TextureNode<Type extends TextureType> extends ContainerNode implements ResourceNode<TextureClass<Type>> {
-  constructor(sandstoneCore: SandstoneCore, public resource: TextureClass<Type>) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: TextureClass<Type>,
+  ) {
     super(sandstoneCore)
   }
 
@@ -28,7 +30,6 @@ export type TextureArguments<Type extends TextureType> = {
   sprite?: boolean | string
 
   meta?: TextureMeta<Type>
-
 } & ResourceClassArguments<'default'>
 
 export class TextureClass<Type extends TextureType> extends ResourceClass<TextureNode<Type>> {
@@ -43,7 +44,13 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
   buffer: TextureArguments<Type>['texture']
 
   constructor(core: SandstoneCore, type: Type, name: string, args: TextureArguments<Type>) {
-    super(core, { packType: core.pack.resourcePack(), extension: 'png', encoding: false }, TextureNode, core.pack.resourceToPath(name, ['textures', type]), args)
+    super(
+      core,
+      { packType: core.pack.resourcePack(), extension: 'png', encoding: false },
+      TextureNode,
+      core.pack.resourceToPath(name, ['textures', type]),
+      args,
+    )
 
     this.type = type
 

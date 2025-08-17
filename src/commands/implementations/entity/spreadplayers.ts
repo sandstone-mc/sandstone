@@ -1,11 +1,9 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { ColumnCoordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers.js'
+import { CommandArguments } from '../../helpers.js'
 
 export class SpreadPlayersNode extends CommandNode {
   command = 'spreadplayers' as const
@@ -14,56 +12,68 @@ export class SpreadPlayersNode extends CommandNode {
 export class SpreadPlayersCommand<MACRO extends boolean> extends CommandArguments<typeof SpreadPlayersNode> {
   protected NodeType = SpreadPlayersNode
 
-  spreadplayers: (
-    (
+  /**
+   * Teleports entities to random surface locations within an area.
+   *
+   * @param center Center coordinates of the spread area (x, z coordinates only).
+   *              Examples: [0, 0], [100, -50], rel(10, 20)
+   *
+   * @param spreadDistance Minimum distance between spread entities.
+   *                      Must be positive. Larger values spread entities further apart.
+   *
+   * @param maxRange Maximum distance from center to spread entities.
+   *               Creates a square area of (maxRange * 2) on each side.
+   *
+   * @param respectTeams Whether to keep teams together when spreading.
+   *                   If true, team members teleport to the same location.
+   *
+   * @param targets Entity selector for targets to spread.
+   *              Examples: '@a', '@e[type=player]', '@a[team=red]'
+   *
+   * @example
+   * ```ts
+   * // Basic player spreading
+   * spreadplayers([0, 0], 5, 100, false, '@a')     // Spread all players randomly
+   * spreadplayers([50, -25], 10, 200, true, '@a')  // Keep teams together
+   *
+   * // Spread specific groups
+   * spreadplayers([0, 0], 8, 150, false, '@a[team=hunters]')
+   * spreadplayers(rel(0, 0), 3, 50, false, '@e[type=villager]')
+   * ```
+   */
+  spreadplayers: ((
+    center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
+    spreadDistance: Macroable<number, MACRO>,
+    maxRange: Macroable<number, MACRO>,
+    respectTeams: Macroable<boolean, MACRO>,
+    targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+  ) => FinalCommandOutput) &
     /**
-     * Teleports entities to random surface locations within an area.
+     * Teleports entities to random surface locations within an area with height limit.
      *
-     * @param center Specifies the center of the region to spread targets to. You must only specify the `x` and the `z` coordinates.
+     * @param center Center coordinates of the spread area (x, z coordinates only).
+     * @param spreadDistance Minimum distance between spread entities.
+     * @param maxRange Maximum distance from center to spread entities.
+     * @param under Literal string 'under' to enable height limiting.
+     * @param height Maximum Y coordinate for spread locations.
+     * @param respectTeams Whether to keep teams together when spreading.
+     * @param targets Entity selector for targets to spread.
      *
-     * @param spreadDistance Specifies the minimum distance between targets.
-     *
-     * @param maxRange Specifies the maximum distance on each horizontal axis from the center of the area to spread targets
-     * (thus, the area is square, not circular).
-     *
-     * @param respectTeams Specifies whether to keep teams together.
-     * If `true`, targets on the same team will be teleported to the same location.
-     *
-     * @param targets Specifies the targets to spread.
+     * @example
+     * ```ts
+     * // Underground spreading
+     * spreadplayers([0, 0], 5, 100, 'under', 60, false, '@a')  // Spread below Y=60
+     * spreadplayers([25, 25], 8, 75, 'under', 40, true, '@a[team=miners]')
+     * ```
      */
-    (
+    ((
       center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
-      spreadDistance: Macroable<number, MACRO>,
-      maxRange: Macroable<number, MACRO>,
-      respectTeams: Macroable<boolean, MACRO>,
-      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-    ) => FinalCommandOutput) & (
-    /**
-     * Teleports entities to random surface locations within an area.
-     *
-     * @param center Specifies the center of the region to spread targets to.
-     *
-     * @param spreadDistance Specifies the minimum distance between targets.
-     *
-     * @param maxRange Specifies the maximum distance on each horizontal axis from the center of the area to spread targets
-     * (thus, the area is square, not circular).
-     *
-     * @param height Specifies the maximum height for resulting positions.
-     *
-     * @param respectTeams Specifies whether to keep teams together.
-     * If `true`, targets on the same team will be teleported to the same location.
-     *
-     * @param targets Specifies the targets to spread.
-     */
-    (center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
       spreadDistance: Macroable<number, MACRO>,
       maxRange: Macroable<number, MACRO>,
       under: 'under',
       height: Macroable<number, MACRO>,
       respectTeams: Macroable<boolean, MACRO>,
-      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>
-    ) => FinalCommandOutput)
-  ) = (...args: unknown[]) => this.finalCommand(
-      [coordinatesParser(args[0]), ...args.slice(1, -1), targetParser(args.slice(-1))],
-    )
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+    ) => FinalCommandOutput) = (...args: unknown[]) =>
+    this.finalCommand([coordinatesParser(args[0]), ...args.slice(1, -1), targetParser(args.slice(-1))])
 }

@@ -2,7 +2,13 @@ import { Score } from 'sandstone/variables'
 
 import type { Flow } from '../Flow.js'
 
-export function binaryFor(flow: Flow, from: Score | number, to: Score | number, callback: (amount: number) => void, maximum = 128) {
+export function binaryFor(
+  flow: Flow,
+  from: Score | number,
+  to: Score | number,
+  callback: (amount: number) => void,
+  maximum = 128,
+) {
   if (typeof from === 'number' && typeof to === 'number') {
     callback(to - from)
   }

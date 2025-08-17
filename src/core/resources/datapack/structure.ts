@@ -1,21 +1,23 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 import lodash from 'lodash'
-import prismarine, { NBT } from 'prismarine-nbt'
-import { add } from 'sandstone/utils'
-import { ConditionClass, relative, ResolveNBTPart } from 'sandstone/variables'
-
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
+import prismarine, { type NBT } from 'prismarine-nbt'
 import type {
-  BLOCKS, BlockState, Coordinates, ENTITY_TYPES, NBTObject, RootNBT, StructureNBT,
+  BLOCKS,
+  BlockState,
+  Coordinates,
+  ENTITY_TYPES,
+  NBTObject,
+  RootNBT,
+  StructureNBT,
 } from 'sandstone/arguments'
 import type { ResourceClassArguments, ResourceNode, SandstoneCore } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type {
-  DataPointClass, Score, StructureMirror, StructureRotation,
-} from 'sandstone/variables'
+import { add } from 'sandstone/utils'
+import type { DataPointClass, Score, StructureMirror, StructureRotation } from 'sandstone/variables'
+import { ConditionClass, ResolveNBTPart, relative } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
+import { ResourceClass } from '../resource.js'
 
 const same = lodash.isEqual
 
@@ -23,28 +25,36 @@ const same = lodash.isEqual
  * A node representing a Minecraft trim material.
  */
 export class StructureNode extends ContainerNode implements ResourceNode<StructureClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: StructureClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: StructureClass,
+  ) {
     super(sandstoneCore)
   }
 
-  getValue = () => (this.resource.structureNBT ? encodeStructure(this.resource.structure() as StructureNBT) : this.resource.structureBuffer)
+  getValue = () =>
+    this.resource.structureNBT
+      ? encodeStructure(this.resource.structure() as StructureNBT)
+      : this.resource.structureBuffer
 }
 
 type Block = {
-  id: LiteralUnion<BLOCKS>,
+  id: LiteralUnion<BLOCKS>
   state?: { [key: string]: string }
   /* Must use NBT Primitives! */
   nbt?: RootNBT
 }
 
 type StructureEntry = {
-  block?: Block | Block[],
-  entities?: [{
-    id: LiteralUnion<ENTITY_TYPES>,
-    /* Must use NBT Primitives! */
-    nbt?: RootNBT,
-    offset?: [number, number, number]
-  }]
+  block?: Block | Block[]
+  entities?: [
+    {
+      id: LiteralUnion<ENTITY_TYPES>
+      /* Must use NBT Primitives! */
+      nbt?: RootNBT
+      offset?: [number, number, number]
+    },
+  ]
 }
 
 export type StructureClassArguments = {
@@ -66,7 +76,13 @@ export class StructureClass extends ResourceClass<StructureNode> {
   structureNBT?: StructureNBT
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: StructureClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'nbt', encoding: false }, StructureNode, sandstoneCore.pack.resourceToPath(name, ['structures']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'nbt', encoding: false },
+      StructureNode,
+      sandstoneCore.pack.resourceToPath(name, ['structures']),
+      args,
+    )
 
     if (args.structure === undefined) {
       this.structureBuffer = sandstoneCore.getExistingResource(this, false)
@@ -123,33 +139,42 @@ export class StructureClass extends ResourceClass<StructureNode> {
     }
 
     for (const block of _NBT.blocks) {
-      const convert = (_block: BlockState) => ({ id: _block.Name, state: _block.Properties, ...add({ nbt: block.nbt }) })
+      const convert = (_block: BlockState) => ({
+        id: _block.Name,
+        state: _block.Properties,
+        ...add({ nbt: block.nbt }),
+      })
 
       array[block.pos[0]][block.pos[1]][block.pos[2]] = {
         /* @ts-ignore */
-        block: (NBT.palettes ? NBT.palettes.map((palette) => convert(palette[block.state])) : convert(NBT.palette[block.state])),
+        block: _NBT?.palettes
+          ? _NBT.palettes.map((palette) => convert(palette[block.state]))
+          : convert(_NBT.palette![block.state]),
       } as StructureEntry
     }
 
     for (const entity of _NBT.entities) {
       array[entity.blockPos[0]][entity.blockPos[1]][entity.blockPos[2]] += {
-        entity: [{
-          id: entity.nbt.id,
-          nbt: (() => {
-            const nbt = { ...entity.nbt }
-            delete nbt.id
-            return nbt
-          })(),
-          offset: (() => {
-            const diff = (num1: number, num2: number) => (Math.sign(num1) === -1 ? (Math.abs(num1) - Math.abs(num2)) * -1 : num1 - num2)
+        entity: [
+          {
+            id: entity.nbt.id,
+            nbt: (() => {
+              const nbt = { ...entity.nbt }
+              delete nbt.id
+              return nbt
+            })(),
+            offset: (() => {
+              const diff = (num1: number, num2: number) =>
+                Math.sign(num1) === -1 ? (Math.abs(num1) - Math.abs(num2)) * -1 : num1 - num2
 
-            return [
-              diff(entity.pos[0], entity.blockPos[0]),
-              diff(entity.pos[1], entity.blockPos[1]),
-              diff(entity.pos[2], entity.blockPos[2]),
-            ]
-          })(),
-        }],
+              return [
+                diff(entity.pos[0], entity.blockPos[0]),
+                diff(entity.pos[1], entity.blockPos[1]),
+                diff(entity.pos[2], entity.blockPos[2]),
+              ]
+            })(),
+          },
+        ],
       }
     }
 
@@ -241,7 +266,9 @@ export class StructureClass extends ResourceClass<StructureNode> {
           if (entry[1].entities) {
             for (const entity of entry[1].entities) {
               nbt.push({
-                pos: entity.offset ? [layer[0] + entity.offset[0], row[0] + entity.offset[1], entry[0] + entity.offset[2]] : [layer[0], row[0], entry[0]],
+                pos: entity.offset
+                  ? [layer[0] + entity.offset[0], row[0] + entity.offset[1], entry[0] + entity.offset[2]]
+                  : [layer[0], row[0], entry[0]],
                 blockPos: [layer[0], row[0], entry[0]],
                 nbt: {
                   id: entity.id,
@@ -268,19 +295,26 @@ export class StructureClass extends ResourceClass<StructureNode> {
    * @param integrity Optional. How complete the structure will be. Must be a float between 1.0 & 0.0 (inclusive), if below 1 the structure will be randomly degraded.
    * @param seed Optional. Integer applied to the integrity random. Defaults to 0.
    */
-  async load(pos: [number, number, number] = [0, 0, 0], rotation?: StructureRotation | VariableInsertion, mirror?: StructureMirror | '^xz' | 'xz' | VariableInsertion, integrity?: number | VariableInsertion, seed?: number | VariableInsertion) {
-    const {
-      Variable, Data, ResolveNBT,
-    } = this.pack
-    const {
-      place, fill, setblock, execute,
-    } = this.pack.commands
+  async load(
+    pos: [number, number, number] = [0, 0, 0],
+    rotation?: StructureRotation | VariableInsertion,
+    mirror?: StructureMirror | '^xz' | 'xz' | VariableInsertion,
+    integrity?: number | VariableInsertion,
+    seed?: number | VariableInsertion,
+  ) {
+    const { Variable, Data, ResolveNBT } = this.pack
+    const { place, fill, setblock, execute } = this.pack.commands
     const structure = place.template
 
     const rel = relative(...pos)
 
     // TODO: Replace this with a macro
-    if (rotation instanceof ConditionClass || mirror instanceof ConditionClass || integrity instanceof ConditionClass || seed instanceof ConditionClass) {
+    if (
+      rotation instanceof ConditionClass ||
+      mirror instanceof ConditionClass ||
+      integrity instanceof ConditionClass ||
+      seed instanceof ConditionClass
+    ) {
       const currentLevel = Variable()
       const bottomCoordinate = Variable()
 
@@ -311,7 +345,10 @@ export class StructureClass extends ResourceClass<StructureNode> {
         await this.readBuffer()
       }
 
-      const temp = new StructureClass(this.core, '__sandstone:temp', { addToSandstoneCore: false, creator: 'sandstone' })
+      const temp = new StructureClass(this.core, '__sandstone:temp', {
+        addToSandstoneCore: false,
+        creator: 'sandstone',
+      })
 
       const coords = (this.structureNBT as RootNBT).size as [number, number, number]
       // TODO: Calculate with rotation
@@ -327,13 +364,21 @@ export class StructureClass extends ResourceClass<StructureNode> {
 
       structure(temp, rel, 'none', '^z', integrity as number, seed as number)
     } else {
-      structure(this, rel, rotation as StructureRotation, mirror as StructureMirror, integrity as number, seed as number)
+      structure(
+        this,
+        rel,
+        rotation as StructureRotation,
+        mirror as StructureMirror,
+        integrity as number,
+        seed as number,
+      )
     }
   }
 
-  save(pos: Coordinates<false> | [Score, Score, Score] = '~ ~ ~', size: [number, number, number] | [Score, Score, Score]) {
-
-  }
+  save(
+    pos: Coordinates<false> | [Score, Score, Score] = '~ ~ ~',
+    size: [number, number, number] | [Score, Score, Score],
+  ) {}
 
   toString() {
     return this.name
@@ -343,43 +388,64 @@ export class StructureClass extends ResourceClass<StructureNode> {
 const objectMap = (obj: any, fn: any) => Object.fromEntries(Object.entries(obj).map(([k, v], i) => fn(v, k, i)))
 
 function encodeStructure(nbt: StructureNBT) {
-  const {
-    comp, list, int, double, string, writeUncompressed,
-  } = prismarine
+  const { comp, list, int, double, string, writeUncompressed } = prismarine
 
-  return writeUncompressed(comp({
-    DataVersion: int(nbt.DataVersion as number),
-    size: list(comp(nbt.size.map((axis) => int(axis)))),
-    blocks: list(comp(nbt.blocks.map((block) => ({
-      state: int(block.state),
-      pos: list(comp(block.pos.map((axis) => int(axis)))),
-      /**
-       *  ...add({
-       * nbt: fun(block.nbt), // TODO
-       *}),
-       */
-    })))),
-    entities: list(comp(nbt.entities.map((entity) => ({
-      pos: list(comp(entity.pos.map((axis) => double(axis)))),
-      blockPos: list(comp(entity.blockPos.map((axis) => int(axis)))),
-      // nbt: fun(entity.nbt), // TODO
-    })))),
-    // eslint-disable-next-line no-nested-ternary
-    ...(nbt.palette
-      ? {
-        palette: list(comp(nbt.palette.map((block) => ({
-          Name: string(block.Name),
-          Properties: list(comp(objectMap(block.Properties, (v: string, k: string) => [string(k), string(v)]))),
-        })))),
-      }
-      : nbt.palettes ? {
-        palettes: list(comp(nbt.palettes.map((palette) => palette.map((block) => ({
-          Name: string(block.Name),
-          Properties: list(comp(objectMap(block.Properties, (v: string, k: string) => [string(k), string(v)]))),
-        }))))),
-      } : {}
-    ),
-  }) as unknown as NBT)
+  return writeUncompressed(
+    comp({
+      DataVersion: int(nbt.DataVersion as number),
+      size: list(comp(nbt.size.map((axis) => int(axis)))),
+      blocks: list(
+        comp(
+          nbt.blocks.map((block) => ({
+            state: int(block.state),
+            pos: list(comp(block.pos.map((axis) => int(axis)))),
+            /**
+             *  ...add({
+             * nbt: fun(block.nbt), // TODO
+             *}),
+             */
+          })),
+        ),
+      ),
+      entities: list(
+        comp(
+          nbt.entities.map((entity) => ({
+            pos: list(comp(entity.pos.map((axis) => double(axis)))),
+            blockPos: list(comp(entity.blockPos.map((axis) => int(axis)))),
+            // nbt: fun(entity.nbt), // TODO
+          })),
+        ),
+      ),
+      // eslint-disable-next-line no-nested-ternary
+      ...(nbt.palette
+        ? {
+            palette: list(
+              comp(
+                nbt.palette.map((block) => ({
+                  Name: string(block.Name),
+                  Properties: list(comp(objectMap(block.Properties, (v: string, k: string) => [string(k), string(v)]))),
+                })),
+              ),
+            ),
+          }
+        : nbt.palettes
+          ? {
+              palettes: list(
+                comp(
+                  nbt.palettes.map((palette) =>
+                    palette.map((block) => ({
+                      Name: string(block.Name),
+                      Properties: list(
+                        comp(objectMap(block.Properties, (v: string, k: string) => [string(k), string(v)])),
+                      ),
+                    })),
+                  ),
+                ),
+              ),
+            }
+          : {}),
+    }) as unknown as NBT,
+  )
 }
 
 async function decodeStructure(buffer: Buffer) {

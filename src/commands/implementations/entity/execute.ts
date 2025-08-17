@@ -1,34 +1,37 @@
-import {
-  type Macroable, type MacroArgument, type MCFunctionNode, type PredicateClass,
-  isMacroArgument,
-} from 'sandstone/core'
-import { ContainerCommandNode } from 'sandstone/core/nodes'
-import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
-import {
-  coordinatesParser, rangeParser, rotationParser,
-  targetParser,
-} from 'sandstone/variables/parsers'
-
-import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
-import { FunctionCommandNode } from '../server/function.js'
-
 import type {
   ANCHORS,
   AXES,
   BLOCKS,
   COMPARISON_OPERATORS,
-  Coordinates, DIMENSIONS, ENTITY_TYPES, MultipleEntitiesArgument, ObjectiveArgument, Range, Rotation, SingleEntityArgument,
+  Coordinates,
+  DIMENSIONS,
+  ENTITY_TYPES,
+  MultipleEntitiesArgument,
+  ObjectiveArgument,
+  Range,
+  Rotation,
+  SingleEntityArgument,
 } from 'sandstone/arguments'
 import type { SandstoneCommands } from 'sandstone/commands'
+import {
+  isMacroArgument,
+  type MacroArgument,
+  type Macroable,
+  type MCFunctionNode,
+  type PredicateClass,
+} from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
-import type {
-  _RawMCFunctionClass,
-} from 'sandstone/core/resources/datapack/mcfunction'
+import { ContainerCommandNode } from 'sandstone/core/nodes'
+import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
 import type { LiteralUnion } from 'sandstone/utils'
+import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective.js'
+import { coordinatesParser, rangeParser, rotationParser, targetParser } from 'sandstone/variables/parsers'
 import type { Score } from 'sandstone/variables/Score.js'
+import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
+import { FunctionCommandNode } from '../server/function.js'
 
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]
@@ -40,11 +43,20 @@ const isObjective = (arg: any): arg is ObjectiveClass => typeof arg === 'object'
 const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'setDisplay')
 
 class ExecuteCommandPart<MACRO extends boolean> extends CommandArguments<typeof ExecuteCommandNode> {
-  protected nestedExecute = (args: SubCommand, executable = true) => this.subCommand([args], ExecuteCommand<MACRO>, executable)
+  protected nestedExecute = (args: SubCommand, executable = true) =>
+    this.subCommand([args], ExecuteCommand<MACRO>, executable)
 }
 
 export type StoreType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double'
-export type RelationType = 'attacker' | 'controller' | 'leasher' | 'origin' | 'owner' | 'passengers' | 'target' | 'vehicle'
+export type RelationType =
+  | 'attacker'
+  | 'controller'
+  | 'leasher'
+  | 'origin'
+  | 'owner'
+  | 'passengers'
+  | 'target'
+  | 'vehicle'
 
 export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
   command = 'execute' as const
@@ -65,12 +77,16 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
    */
   givenCallbackName: string | undefined
 
-  constructor(sandstonePack: SandstonePack, args: SubCommand[] = [], {
-    isFake = false,
-    isSingleExecute = true,
-    givenCallbackName = undefined as (string | undefined),
-    body = [] as Node[],
-  } = {}) {
+  constructor(
+    sandstonePack: SandstonePack,
+    args: SubCommand[] = [],
+    {
+      isFake = false,
+      isSingleExecute = true,
+      givenCallbackName = undefined as string | undefined,
+      body = [] as Node[],
+    } = {},
+  ) {
     super(sandstonePack, ...args)
 
     this.givenCallbackName = givenCallbackName
@@ -145,14 +161,12 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       return { node: this as ExecuteCommandNode }
     }
 
-    const namespace = currentMCFunction.resource.name.includes(':') ? `${currentMCFunction.resource.name.split(':')[0]}:` : ''
-
     // Create a new MCFunctionNode with the body of the ExecuteNode.
-    const mcFunction = this.sandstonePack.MCFunction(`${namespace}${currentMCFunction.resource.path.slice(2).join('/')}/${this.callbackName}`, {
+    const mcFunction = this.sandstonePack.MCFunction(`${currentMCFunction.resource.name}/${this.callbackName}`, {
       creator: 'sandstone',
       onConflict: 'rename',
     })
-    const mcFunctionNode = mcFunction['node']
+    const mcFunctionNode = mcFunction.node
     mcFunctionNode.body = this.body
 
     // Return an execute calling this MCFunction.
@@ -191,7 +205,8 @@ export class ExecuteStoreArgsCommand<MACRO extends boolean> extends ExecuteComma
    *
    * @param type Whether to overwrite the bossbar's current value or its max value.
    */
-  bossbar = (id: Macroable<string, MACRO>, type: Macroable<'max' | 'value', MACRO>) => this.nestedExecute(['bossbar', id, type])
+  bossbar = (id: Macroable<string, MACRO>, type: Macroable<'max' | 'value', MACRO>) =>
+    this.nestedExecute(['bossbar', id, type])
 
   /**
    * Save the final command's return value in one of an entity's data tags.
@@ -224,7 +239,11 @@ export class ExecuteStoreArgsCommand<MACRO extends boolean> extends ExecuteComma
    *
    * @param playerScore The player's score to override.
    */
-  score(...args: [targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, objective: Macroable<ObjectiveArgument, MACRO>] | [playerScore: Macroable<Score, MACRO>]) {
+  score(
+    ...args:
+      | [targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, objective: Macroable<ObjectiveArgument, MACRO>]
+      | [playerScore: Macroable<Score, MACRO>]
+  ) {
     if (isScore(args[0])) {
       return this.nestedExecute(['score', args[0]])
     }
@@ -272,21 +291,24 @@ export class ExecuteDataArgsCommand<MACRO extends boolean> extends ExecuteComman
    * @param pos Position of the block to be tested.
    * @param path Data tag to check for.
    */
-  block = (pos: Macroable<Coordinates<MACRO>, MACRO>, path: Macroable<string, MACRO>) => this.nestedExecute(['block', coordinatesParser(pos), path], true)
+  block = (pos: Macroable<Coordinates<MACRO>, MACRO>, path: Macroable<string, MACRO>) =>
+    this.nestedExecute(['data', 'block', coordinatesParser(pos), path], true)
 
   /**
    * Checks whether the targeted entity has any data for a given tag
    * @param target One single entity to be tested.
    * @param path Data tag to check for.
    */
-  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, path: Macroable<string, MACRO>) => this.nestedExecute(['entity', targetParser(target), path], true)
+  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, path: Macroable<string, MACRO>) =>
+    this.nestedExecute(['data', 'entity', targetParser(target), path], true)
 
   /**
    * Checks whether the targeted storage has any data for a given tag
    * @param source The storage to check in.
    * @param path Data tag to check for.
    */
-  storage = (source: Macroable<string, MACRO>, path: Macroable<string, MACRO>) => this.nestedExecute(['storage', source, path], true)
+  storage = (source: Macroable<string, MACRO>, path: Macroable<string, MACRO>) =>
+    this.nestedExecute(['data', 'storage', source, path], true)
 }
 
 export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -297,14 +319,34 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    *
    * @param block A block to test against.
    */
-  block = (pos: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<LiteralUnion<BLOCKS>, MACRO>) => this.nestedExecute(['block', coordinatesParser(pos), block], true)
+  block = (pos: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<LiteralUnion<BLOCKS>, MACRO>) =>
+    this.nestedExecute(['block', coordinatesParser(pos), block], true)
+
+  /**
+   * Compares the blocks in two equally sized volumes.
+   * @param start Start position of the first volume.
+   * @param end End position of the first volume.
+   * @param destination Start position of the second volume.
+   * @param scan_mode Specifies whether all blocks in the source volume should be compared, or if air blocks should be masked/ignored
+   */
+  blocks = (
+    start: Macroable<Coordinates<MACRO>, MACRO>,
+    end: Macroable<Coordinates<MACRO>, MACRO>,
+    destination: Macroable<Coordinates<MACRO>, MACRO>,
+    scan_mode: Macroable<'all' | 'masked', MACRO>,
+  ) =>
+    this.nestedExecute(
+      ['blocks', coordinatesParser(start), coordinatesParser(end), coordinatesParser(destination), scan_mode],
+      true,
+    )
 
   /**
    * Checks whether one or more entities exist.
    *
    * @param targets The target entities to check.
    */
-  entity = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['entity', targetParser(targets)], true)
+  entity = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) =>
+    this.nestedExecute(['entity', targetParser(targets)], true)
 
   /**
    * Checks whether the `predicate` evaluates to a positive result.
@@ -326,14 +368,29 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * Check a score against either another score or a given range.
    */
   // eslint-disable-next-line max-len
-  score(firstTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>, firstObjective: Macroable<string | ObjectiveClass, MACRO>, comparison: 'matches', value: Macroable<Range<MACRO>, MACRO>): ExecuteCommand<MACRO>
+  score(
+    firstTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+    firstObjective: Macroable<string | ObjectiveClass, MACRO>,
+    comparison: 'matches',
+    value: Macroable<Range<MACRO>, MACRO>,
+  ): ExecuteCommand<MACRO>
 
   // eslint-disable-next-line max-len
-  score(firstTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>, firstObjective: Macroable<string | ObjectiveClass, MACRO>, comparison: Macroable<COMPARISON_OPERATORS, MACRO>, otherTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>, otherObjective: Macroable<string | ObjectiveClass, true>): ExecuteCommand<MACRO>
+  score(
+    firstTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+    firstObjective: Macroable<string | ObjectiveClass, MACRO>,
+    comparison: Macroable<COMPARISON_OPERATORS, MACRO>,
+    otherTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+    otherObjective: Macroable<string | ObjectiveClass, true>,
+  ): ExecuteCommand<MACRO>
 
   score(firstScore: Score, comparison: 'matches', value: Macroable<Range<MACRO>, MACRO>): ExecuteCommand<MACRO>
 
-  score(firstScore: Score, comparison: Macroable<COMPARISON_OPERATORS, MACRO>, otherScore: Macroable<Score, MACRO>): ExecuteCommand<MACRO>
+  score(
+    firstScore: Score,
+    comparison: Macroable<COMPARISON_OPERATORS, MACRO>,
+    otherScore: Macroable<Score, MACRO>,
+  ): ExecuteCommand<MACRO>
 
   score(...args: any[]) {
     const finalArgs: string[] = []
@@ -369,15 +426,11 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
   loaded = (pos: Macroable<Coordinates<MACRO>, MACRO>) => this.nestedExecute(['loaded', coordinatesParser(pos)])
 
   /** Checks whether the data point exists or the targeted block, entity or storage has any data for a given tag. */
-  data(dataPoint: DataPointClass): void
-
-  data(): ExecuteDataArgsCommand<MACRO>
-
-  data(dataPoint?: DataPointClass) {
-    if (dataPoint) {
-      return this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as [''])
-    }
-    return this.subCommand([['data']], ExecuteDataArgsCommand<MACRO>, false)
+  get data(): ExecuteDataArgsCommand<MACRO> & ((data: DataPointClass) => ExecuteCommand<MACRO>) {
+    return makeCallable(
+      new ExecuteDataArgsCommand<MACRO>(this.sandstonePack, this.previousNode),
+      (dataPoint: DataPointClass) => this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as ['']),
+    )
   }
 
   function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {
@@ -409,7 +462,8 @@ export class ExecuteFacingEntityCommand<MACRO extends boolean> extends ExecuteCo
    *
    * @param anchor Whether to point at the target's eyes or feet.
    */
-  entity = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, anchor: Macroable<ANCHORS, MACRO> = 'feet') => this.nestedExecute(['entity', targetParser(targets), anchor])
+  entity = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, anchor: Macroable<ANCHORS, MACRO> = 'feet') =>
+    this.nestedExecute(['entity', targetParser(targets), anchor])
 }
 
 export class ExecutePositionedCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -428,7 +482,9 @@ export class ExecutePositionedCommand<MACRO extends boolean> extends ExecuteComm
    * - `motion_blocking_no_leaves` Any non-leaf motion blocking material.
    * - `ocean_floor` Any non-fluid motion blocking material.
    */
-  over = (heightMap: Macroable<'world_surface' | 'motion_blocking' | 'motion_blocking_no_leaves' | 'ocean_floor', MACRO>) => this.nestedExecute(['over', heightMap])
+  over = (
+    heightMap: Macroable<'world_surface' | 'motion_blocking' | 'motion_blocking_no_leaves' | 'ocean_floor', MACRO>,
+  ) => this.nestedExecute(['over', heightMap])
 }
 
 export class ExecuteRotatedAsCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -444,31 +500,58 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
   protected NodeType = ExecuteCommandNode
 
   /**
-   * Updates the command's position, aligning to its current block position (an integer). Only applies along specified axes.
-   * This is akin to flooring the coordinates – i.e. rounding them downwards. It updates the meaning of `~ ~ ~` and `^ ^ ^`.
+   * Align execution position to block coordinates.
    *
-   * @param axes Any non-repeating combination of the characters 'x', 'y', and 'z'.
+   * @param axes Coordinate axes to align ('x', 'y', 'z', or combinations like 'xy').
+   *            Floors coordinates on specified axes.
+   *
+   * @example
+   * ```ts
+   * execute.align('xyz').run.teleport('@s', rel(0, 1, 0))  // Align to block grid
+   * execute.as('@a').align('y').run.setblock(rel(0, 0, 0), 'minecraft:stone')
+   * ```
    */
   align = (axes: Macroable<AXES, MACRO>) => this.nestedExecute(['align', axes])
 
   /**
-   * Stores the distance from the feet to the eyes of the entity that is executing the command in the anchor, which is part of the command context.
-   * Effectively re-centers `^ ^ ^` on either the eyes or feet, also changing the angle the `facing` sub-command works off of.
+   * Set execution anchor point.
    *
-   * @param anchor Whether to anchor the executed command to eye level or feet level
+   * @param anchor Anchor position: 'eyes' or 'feet'.
+   *              Changes the reference point for `^ ^ ^` coordinates.
+   *
+   * @example
+   * ```ts
+   * execute.anchored('eyes').run.particle('minecraft:heart', abs(0, 0, 0))
+   * execute.as('@p').anchored('feet').run.summon('minecraft:armor_stand')
+   * ```
    */
   anchored = (anchor: Macroable<ANCHORS, MACRO>) => this.nestedExecute(['anchored', anchor])
 
   /**
-   * Sets the command sender to target entity, without changing position, rotation, dimension, or anchor
+   * Change command executor.
    *
-   * @param targets Target entity/entities to become the new sender.
+   * @param targets Entity selector to execute as.
+   *               Changes @s reference without affecting position/rotation.
+   *
+   * @example
+   * ```ts
+   * execute.as('@a').run.say('Hello from everyone!')
+   * execute.as('@e[type=zombie]').run.damage('@s', 10)
+   * ```
    */
   as = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['as', targetParser(targets)])
 
   /**
-   * Sets the command position, rotation, and dimension to match those of an entity/entities; does not change sender
-   * @param targets Target entity/entities to match position, rotation, and dimension with
+   * Change execution position and rotation to match entity.
+   *
+   * @param targets Entity selector to copy position/rotation from.
+   *               Does not change command executor (@s).
+   *
+   * @example
+   * ```ts
+   * execute.at('@p').run.summon('minecraft:lightning_bolt')
+   * execute.as('@a').at('@e[type=villager,limit=1]').run.teleport('@s', rel(0, 5, 0))
+   * ```
    */
   at = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['at', targetParser(targets)])
 
@@ -563,10 +646,20 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
       },
     })
 
-    return makeCallable(commands, (callback: () => any) => {
-      node.isSingleExecute = false
-      this.sandstoneCore.insideContext(node, callback, false)
-      return new FinalCommandOutput(node)
-    }, true)
+    return makeCallable(
+      commands,
+      (...args: [callback: () => any] | [name: string, callback: () => any]) => {
+        const callback = args.length === 1 ? args[0] : args[1]
+
+        if (args.length === 2) {
+          node.givenCallbackName = args[0]
+        }
+
+        node.isSingleExecute = false
+        this.sandstoneCore.insideContext(node, callback, false)
+        return new FinalCommandOutput(node)
+      },
+      true,
+    )
   }
 }

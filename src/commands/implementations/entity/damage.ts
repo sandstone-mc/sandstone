@@ -1,13 +1,10 @@
-import { validateIntegerRange } from 'sandstone/commands/validators'
-import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { Coordinates, DAMAGE_TYPES, SingleEntityArgument } from 'sandstone/arguments'
-import type { DamageTypeClass } from 'sandstone/core'
+import { validateIntegerRange } from 'sandstone/commands/validators'
+import type { DamageTypeClass, Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/core'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class DamageCommandNode extends CommandNode {
   command = 'damage' as const
@@ -24,7 +21,8 @@ export class DamageSourceCommand<MACRO extends boolean> extends CommandArguments
   /**
    * @param entity Entity inflicting the damage.
    */
-  by = (entity: Macroable<SingleEntityArgument<MACRO>, MACRO>) => this.subCommand(['by', targetParser(entity)], DamageCauseCommand)
+  by = (entity: Macroable<SingleEntityArgument<MACRO>, MACRO>) =>
+    this.subCommand(['by', targetParser(entity)], DamageCauseCommand)
 
   /**
    * Where the damage originated at (when no entity caused the damage).
@@ -36,13 +34,46 @@ export class DamageCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = DamageCommandNode
 
   /**
-   * Deals damage.
+   * Deal damage to the specified entity.
    *
-   * @param target Specifies the target.
+   * Applies direct damage that bypasses normal game damage calculations,
+   * armor, and resistance effects. The damage is applied instantly and
+   * can be attributed to specific sources for proper death messages.
    *
-   * @param amount Specifies the amount of damage to be dealt.
+   * @param target The entity to damage. Must be a single entity selector.
+   *              Examples: '@p', '@e[type=zombie,limit=1]', 'PlayerName'
    *
-   * @param damageType This determines how the damage affects the entity as well as which death message is displayed
+   * @param amount Damage amount to deal (0-1,000,000).
+   *              Float values are allowed. 0 damage still triggers hit effects.
+   *
+   * @param damageType Optional damage type affecting death messages and game mechanics.
+   *                  Defaults to generic damage if not specified.
+   *
+   * @returns DamageSourceCommand for chaining .by() or .at() attribution
+   *
+   * @example
+   * ```ts
+   * // Basic damage application
+   * damage('@p', 10)                           // 10 generic damage
+   * damage('@e[type=cow,limit=1]', 20, 'minecraft:player_attack')
+   *
+   * // Environmental damage
+   * damage('@a[y=..10]', 5, 'minecraft:lava')  // Lava damage to underground players
+   * damage('@e[type=!player]', 100, 'minecraft:void') // Void damage to mobs
+   *
+   * // Combat simulation
+   * damage('@e[type=zombie]', 15, 'minecraft:arrow').by('@p') // Arrow shot by player
+   * damage('@p', 8, 'minecraft:mob_attack').by('@e[type=skeleton,limit=1]')
+   *
+   * // Complex attribution
+   * damage('@e[type=creeper]', 50, 'minecraft:explosion')
+   *   .by('@e[type=tnt,limit=1]')
+   *   .from('@p') // Player lit TNT that exploded creeper
+   *
+   * // Custom mechanics
+   * damage('@a[scores={health=..5}]', 2, 'minecraft:magic') // Low health penalty
+   * damage('@e[tag=boss]', 1000, 'minecraft:generic') // Instant boss kill
+   * ```
    */
   damage = (
     target: Macroable<SingleEntityArgument<MACRO>, MACRO>,

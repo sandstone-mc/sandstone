@@ -3,10 +3,9 @@
 import { VectorClass } from 'sandstone/variables'
 
 import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 const assert = (condition: any, errorMessage: string) => {
   if (!condition) {
@@ -40,11 +39,16 @@ export type ModelData = {
    */
   ambientocclusion?: boolean
   textures?: { particle?: string } & { [name: string]: string }
-  display?: Partial<Record<DisplayPosition, Partial<{
-    rotation: [number, number, number]
-    translation: [number, number, number]
-    scale: [number, number, number]
-  }>>>
+  display?: Partial<
+    Record<
+      DisplayPosition,
+      Partial<{
+        rotation: [number, number, number]
+        translation: [number, number, number]
+        scale: [number, number, number]
+      }>
+    >
+  >
   elements?: {
     from: [number, number, number]
     to: [number, number, number]
@@ -70,11 +74,37 @@ export type ModelData = {
   }[]
 }
 
-const DisplayPositions = ['thirdpirson_righthand', 'thirdpirson_lefthand', 'firstpirson_righthand', 'firstpirson_lefthand', 'gui', 'head', 'ground', 'fixed'] as const
+const DisplayPositions = [
+  'thirdpirson_righthand',
+  'thirdpirson_lefthand',
+  'firstpirson_righthand',
+  'firstpirson_lefthand',
+  'gui',
+  'head',
+  'ground',
+  'fixed',
+] as const
 
-type DisplayPosition = typeof DisplayPositions[number]
+type DisplayPosition = (typeof DisplayPositions)[number]
 
-const OverridePredicates = ['angle', 'blocking', 'broken', 'cast', 'cooldown', 'damage', 'damaged', 'lefthanded', 'pull', 'pulling', 'charged', 'firework', 'throwing', 'time', 'custom_model_data', 'trim_material'] as const
+const OverridePredicates = [
+  'angle',
+  'blocking',
+  'broken',
+  'cast',
+  'cooldown',
+  'damage',
+  'damaged',
+  'lefthanded',
+  'pull',
+  'pulling',
+  'charged',
+  'firework',
+  'throwing',
+  'time',
+  'custom_model_data',
+  'trim_material',
+] as const
 
 /**
  * - `angle` Used on compasses to determine the current angle, expressed in a decimal value of less than one.
@@ -95,10 +125,13 @@ const OverridePredicates = ['angle', 'blocking', 'broken', 'cast', 'cooldown', '
  * - `custom_model_data` Used on any item and is compared to the CustomModelData NBT, expressed in an integer value. The number is still internally converted to
  * float, causing a precision loss for some numbers above 16 million. If the value read from the item data is greater than or equal to the value used for the predicate, the predicate is positive.
  */
-type OverridePredicate = typeof OverridePredicates[number]
+type OverridePredicate = (typeof OverridePredicates)[number]
 
 export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: ModelClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: ModelClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -110,7 +143,6 @@ export type ModelClassArguments = {
    * The model's path or its JSON.
    */
   model?: string | ModelData
-
 } & ResourceClassArguments<'default'>
 
 /**
@@ -132,8 +164,19 @@ export class ModelClass extends ResourceClass<ModelNode> {
   // TODO: Helper methods
   overrides: ModelData['overrides'] = []
 
-  constructor(core: SandstoneCore, public type: 'block' | 'item', name: string, args: ModelClassArguments) {
-    super(core, { packType: core.pack.resourcePack() }, ModelNode, core.pack.resourceToPath(name, ['models', type]), args)
+  constructor(
+    core: SandstoneCore,
+    public type: 'block' | 'item',
+    name: string,
+    args: ModelClassArguments,
+  ) {
+    super(
+      core,
+      { packType: core.pack.resourcePack() },
+      ModelNode,
+      core.pack.resourceToPath(name, ['models', type]),
+      args,
+    )
 
     const data = args.model
     if (data) {
@@ -186,8 +229,9 @@ export class ModelClass extends ResourceClass<ModelNode> {
 
   generatedItem(...layers: string[]): ModelData {
     const textures: ModelData['textures'] = {}
-    // eslint-disable-next-line no-return-assign
-    layers.forEach((texture, idx) => (textures[`layer${idx}`] = texture))
+    layers.forEach((texture, idx) => {
+      textures[`layer${idx}`] = texture
+    })
     return {
       parent: 'minecraft:item/generated',
     }
@@ -204,14 +248,14 @@ export class ModelClass extends ResourceClass<ModelNode> {
       Object.values(DisplayPositions)
         .filter((t) => t in data.display!)
         .forEach((t) => {
-          this.display[t] = (new DisplayTransformClass(data.display![t]!))
+          this.display[t] = new DisplayTransformClass(data.display?.[t]!)
         })
     }
     if (typeof data.ambientocclusion === 'boolean') {
       this.ambientocclusion = data.ambientocclusion
     }
     if (data.elements) {
-      this.elements = data.elements.map((element) => (new ElementClass(element)))
+      this.elements = data.elements.map((element) => new ElementClass(element))
     }
     if (data.overrides) {
       this.overrides = data.overrides
@@ -281,7 +325,11 @@ export class ElementClass {
 
     const faces = Object.entries(this.faces) as [BlockFaceName, ElementFace][]
 
-    faces.filter(([fname, face]) => predicate(BlockFace.fromName(fname), face)).forEach(([fname, face]) => { clone.faces[fname] = face })
+    faces
+      .filter(([fname, face]) => predicate(BlockFace.fromName(fname), face))
+      .forEach(([fname, face]) => {
+        clone.faces[fname] = face
+      })
     return clone
   }
 
@@ -380,8 +428,7 @@ export class DisplayTransformClass {
  * ```
  */
 type IndexOf<A extends unknown[] | readonly unknown[]> = _IndexOf<A>
-type _IndexOf<A extends unknown[] | readonly unknown[], _S extends number[] = []> =
-  _S['length'] extends A['length']
+type _IndexOf<A extends unknown[] | readonly unknown[], _S extends number[] = []> = _S['length'] extends A['length']
   ? _S[number]
   : _IndexOf<A, [_S['length'], ..._S]>
 /**
@@ -395,8 +442,7 @@ type _IndexOf<A extends unknown[] | readonly unknown[], _S extends number[] = []
  * ```
  */
 type ArrayOfLength<L extends number, T> = _ArrayOfLength<L, T>
-type _ArrayOfLength<L extends number, T, _S extends T[] = []> =
-  _S['length'] extends L
+type _ArrayOfLength<L extends number, T, _S extends T[] = []> = _S['length'] extends L
   ? _S
   : _ArrayOfLength<L, T, [..._S, T]>
 
@@ -409,8 +455,9 @@ type _ArrayOfLength<L extends number, T, _S extends T[] = []> =
  * ```
  */
 type EnumerateInt<A extends number> = _EnumerateInt<A>
-type _EnumerateInt<A extends number, _S extends number[] = []> =
-  A extends _S['length'] ? _S[number] : _EnumerateInt<A, [..._S, _S['length']]>
+type _EnumerateInt<A extends number, _S extends number[] = []> = A extends _S['length']
+  ? _S[number]
+  : _EnumerateInt<A, [..._S, _S['length']]>
 
 /**
  * Enumerates all numbers from A to exclusively B as a type.
@@ -420,36 +467,36 @@ type _EnumerateInt<A extends number, _S extends number[] = []> =
  * type Nums = EnumerateRange<2, 6>
  * ```
  */
-type EnumerateRange<A extends number, B extends number> = _EnumerateRange<B, ArrayOfLength<A, 0>>
-type _EnumerateRange<A extends number, B extends number[], C extends number[] = []> =
-  A extends B['length']
-  ? C[number]
-  : _EnumerateRange<A, [...B, 0], [...C, B['length']]>
+// type EnumerateRange<A extends number, B extends number> = _EnumerateRange<B, ArrayOfLength<A, 0>>
+// type _EnumerateRange<A extends number, B extends number[], C extends number[] = []> = A extends B['length']
+//  ? C[number]
+//  : _EnumerateRange<A, [...B, 0], [...C, B['length']]>
 
 /**
  * Get the length of an array as a type.
  */
-type Length<A extends unknown[] | readonly unknown[]> = A['length']
+// type Length<A extends unknown[] | readonly unknown[]> = A['length']
 
 type Stringifyable = string | number | bigint | boolean | null | undefined
 type StringifyList<L extends Stringifyable[] | readonly Stringifyable[]> = _StringifyList<L>
-type _StringifyList<L extends Stringifyable[] | readonly Stringifyable[], R extends string[] = []> =
-  L['length'] extends R['length']
-  ? R
-  : _StringifyList<L, [...R, `${L[R['length']]}`]>
+type _StringifyList<
+  L extends Stringifyable[] | readonly Stringifyable[],
+  R extends string[] = [],
+> = L['length'] extends R['length'] ? R : _StringifyList<L, [...R, `${L[R['length']]}`]>
 type PrefixStrings<P extends Stringifyable, S extends Stringifyable[] | readonly Stringifyable[]> = _PrefixStrings<P, S>
-type _PrefixStrings<P extends Stringifyable, S extends Stringifyable[] | readonly Stringifyable[], R extends string[] = []> =
-  S['length'] extends R['length']
-  ? R
-  : _PrefixStrings<P, S, [...R, `${P}${S[R['length']]}`]>
+type _PrefixStrings<
+  P extends Stringifyable,
+  S extends Stringifyable[] | readonly Stringifyable[],
+  R extends string[] = [],
+> = S['length'] extends R['length'] ? R : _PrefixStrings<P, S, [...R, `${P}${S[R['length']]}`]>
 
 // Compatible vector / array
 type CArray<T extends readonly number[]> = ArrayOfLength<T['length'], number>
 type CVector<T extends readonly number[]> = Vector<CArray<T>>
 
-type Vector4 = Vector<ArrayOfLength<4, number>>
+// type Vector4 = Vector<ArrayOfLength<4, number>>
 type Vector3 = Vector<ArrayOfLength<3, number>>
-type Vector2 = Vector<ArrayOfLength<2, number>>
+// type Vector2 = Vector<ArrayOfLength<2, number>>
 
 class Vector<T extends number[]> {
   readonly dimensions: T['length']
@@ -539,9 +586,7 @@ class Vector<T extends number[]> {
    */
   map(mapFn: (n: T[IndexOf<T>], i: IndexOf<T>) => number): CVector<T> {
     // @ts-ignore TS can't handle the types
-    return new Vector(
-      this._values.map(mapFn as (n: number, i: number) => number),
-    ) as CVector<T>
+    return new Vector(this._values.map(mapFn as (n: number, i: number) => number)) as CVector<T>
   }
 
   round(): Vector<T> {
@@ -576,9 +621,7 @@ class Vector<T extends number[]> {
       // @ts-ignore TS is broken here
       assert(args.length === this.dimensions, 'Vectors do not have a matching length')
       // @ts-ignore TS can't handle the types
-      return new Vector(
-        Object.freeze(this._values.map((n, i) => n + (args as any)[i])),
-      ) as Vector<T>
+      return new Vector(Object.freeze(this._values.map((n, i) => n + (args as any)[i]))) as Vector<T>
     }
     // @ts-ignore TS is broken here
     const other = args[0]
@@ -588,9 +631,7 @@ class Vector<T extends number[]> {
         Object.freeze(this._values.map<number>((n, i) => n + other._values[i]!) as any),
       ) as unknown as CVector<T>
     }
-    return new Vector(
-      Object.freeze(this._values.map((n) => n + other)),
-    ) as unknown as CVector<T>
+    return new Vector(Object.freeze(this._values.map((n) => n + other))) as unknown as CVector<T>
   }
 
   sub(vector: CVector<T>): CVector<T>
@@ -605,9 +646,7 @@ class Vector<T extends number[]> {
       // @ts-ignore TS is broken here
       assert(args.length === this.dimensions, 'Vectors do not have a matching length')
       // @ts-ignore TS can't handle the types
-      return new Vector(
-        Object.freeze(this._values.map((n, i) => n - (args as any)[i])),
-      ) as Vector<T>
+      return new Vector(Object.freeze(this._values.map((n, i) => n - (args as any)[i]))) as Vector<T>
     }
     // @ts-ignore TS is broken here
     const other = args[0]
@@ -617,9 +656,7 @@ class Vector<T extends number[]> {
         Object.freeze(this._values.map<number>((n, i) => n - other._values[i]!) as any),
       ) as unknown as CVector<T>
     }
-    return new Vector(
-      Object.freeze(this._values.map((n) => n - other)),
-    ) as unknown as CVector<T>
+    return new Vector(Object.freeze(this._values.map((n) => n - other))) as unknown as CVector<T>
   }
 
   mul(vector: CVector<T>): CVector<T>
@@ -634,9 +671,7 @@ class Vector<T extends number[]> {
       // @ts-ignore TS is broken here
       assert(args.length === this.dimensions, 'Vectors do not have a matching length')
       // @ts-ignore TS can't handle the types
-      return new Vector(
-        Object.freeze(this._values.map((n, i) => n * (args as any)[i])),
-      ) as Vector<T>
+      return new Vector(Object.freeze(this._values.map((n, i) => n * (args as any)[i]))) as Vector<T>
     }
     // @ts-ignore TS is broken here
     const other = args[0]
@@ -646,9 +681,7 @@ class Vector<T extends number[]> {
         Object.freeze(this._values.map<number>((n, i) => n * other._values[i]!) as any),
       ) as unknown as CVector<T>
     }
-    return new Vector(
-      Object.freeze(this._values.map((n) => n * other)),
-    ) as unknown as CVector<T>
+    return new Vector(Object.freeze(this._values.map((n) => n * other))) as unknown as CVector<T>
   }
 
   div(vector: CVector<T>): CVector<T>
@@ -663,9 +696,7 @@ class Vector<T extends number[]> {
       // @ts-ignore TS is broken here
       assert(args.length === this.dimensions, 'Vectors do not have a matching length')
       // @ts-ignore TS can't handle the types
-      return new Vector(
-        Object.freeze(this._values.map((n, i) => n / (args as any)[i])),
-      ) as Vector<T>
+      return new Vector(Object.freeze(this._values.map((n, i) => n / (args as any)[i]))) as Vector<T>
     }
     // @ts-ignore TS is broken here
     const other = args[0]
@@ -675,91 +706,98 @@ class Vector<T extends number[]> {
         Object.freeze(this._values.map<number>((n, i) => n / other._values[i]!) as any),
       ) as unknown as CVector<T>
     }
-    return new Vector(
-      Object.freeze(this._values.map((n) => n / other)),
-    ) as unknown as CVector<T>
+    return new Vector(Object.freeze(this._values.map((n) => n / other))) as unknown as CVector<T>
   }
 
   toCoordsAbs(): VectorClass<StringifyList<T>> {
-    return new VectorClass(
-      this._values.map((n) => `${n}` as const) as StringifyList<T>,
-    )
+    return new VectorClass(this._values.map((n) => `${n}` as const) as StringifyList<T>)
   }
 
   toCoordsRel(): VectorClass<PrefixStrings<'~', T>> {
-    return new VectorClass(
-      this._values.map((n) => `~${n}` as const) as PrefixStrings<'~', T>,
-    )
+    return new VectorClass(this._values.map((n) => `~${n}` as const) as PrefixStrings<'~', T>)
   }
 
   toCoordsLoc(): VectorClass<PrefixStrings<'^', T>> {
-    return new VectorClass(
-      this._values.map((n) => `^${n}` as const) as PrefixStrings<'^', T>,
-    )
+    return new VectorClass(this._values.map((n) => `^${n}` as const) as PrefixStrings<'^', T>)
   }
 }
 
-const Vector2Props = {
-  ZERO: new Vector(0, 0) as Vector2,
-  ONE: new Vector(1, 1) as Vector2,
-}
+// const _Vector2Props = {
+//   ZERO: new Vector(0, 0) as Vector2,
+//   ONE: new Vector(1, 1) as Vector2,
+// }
 
-function vec2(x: number, y: number): Vector2
-function vec2(array: ArrayOfLength<2, number>): Vector2
-function vec2(vector: Vector2): Vector2
-function vec2(x: number | ArrayOfLength<2, number> | Vector2, y?: number): Vector2 {
-  if (typeof x === 'number') { return new Vector(x, y!) }
-  return new Vector(x)
-}
+// function vec2(x: number, y: number): Vector2
+// function vec2(array: ArrayOfLength<2, number>): Vector2
+// function vec2(vector: Vector2): Vector2
+// function vec2(x: number | ArrayOfLength<2, number> | Vector2, y?: number): Vector2 {
+//   if (typeof x === 'number') {
+//     return new Vector(x, y!)
+//   }
+//   return new Vector(x)
+// }
 
 const Vector3Props = {
   ZERO: new Vector(0, 0, 0) as Vector3,
   ONE: new Vector(1, 1, 1) as Vector3,
 }
 
-function vec3(x: number, y: number, z: number): Vector3
-function vec3(array: ArrayOfLength<3, number>): Vector3
-function vec3(vector: Vector3): Vector3
-function vec3(x: number | ArrayOfLength<3, number> | Vector3, y?: number, z?: number): Vector3 {
-  if (typeof x === 'number') { return new Vector(x, y!, z!) }
-  return new Vector(x)
-}
+// function vec3(x: number, y: number, z: number): Vector3
+// function vec3(array: ArrayOfLength<3, number>): Vector3
+// function vec3(vector: Vector3): Vector3
+// function vec3(x: number | ArrayOfLength<3, number> | Vector3, y?: number, z?: number): Vector3 {
+//   if (typeof x === 'number') {
+//     return new Vector(x, y!, z!)
+//   }
+//   return new Vector(x)
+// }
 
-const Vector4Props = {
-  ZERO: new Vector(0, 0, 0, 0) as Vector4,
-  ONE: new Vector(1, 1, 1, 1) as Vector4,
-}
+// const _Vector4Props = {
+//   ZERO: new Vector(0, 0, 0, 0) as Vector4,
+//   ONE: new Vector(1, 1, 1, 1) as Vector4,
+// }
 
-function vec4(x: number, y: number, z: number, w: number): Vector4
-function vec4(array: ArrayOfLength<4, number>): Vector4
-function vec4(vector: Vector4): Vector4
-function vec4(x: number | ArrayOfLength<4, number> | Vector4, y?: number, z?: number, w?: number): Vector4 {
-  if (typeof x === 'number') { return new Vector(x, y!, z!, w!) }
-  return new Vector(x)
-}
+// function vec4(x: number, y: number, z: number, w: number): Vector4
+// function vec4(array: ArrayOfLength<4, number>): Vector4
+// function vec4(vector: Vector4): Vector4
+// function vec4(x: number | ArrayOfLength<4, number> | Vector4, y?: number, z?: number, w?: number): Vector4 {
+//   if (typeof x === 'number') {
+//     return new Vector(x, y!, z!, w!)
+//   }
+//   return new Vector(x)
+// }
 
-function vecN<N extends number>(...comps: ArrayOfLength<N, number>): Vector<ArrayOfLength<N, number>>
-function vecN<N extends number>(array: ArrayOfLength<N, number>): Vector<ArrayOfLength<N, number>>
-function vecN<N extends number>(vector: ArrayOfLength<N, number>): Vector<ArrayOfLength<N, number>>
-function vecN<N extends number>(...args: ArrayOfLength<N, number> | [ArrayOfLength<N, number> | Vector<ArrayOfLength<N, number>>]): Vector<ArrayOfLength<N, number>> {
-  if (typeof (args as unknown[])[0] === 'number') { return new Vector(args as ArrayOfLength<N, number>) }
-  return new Vector((args as unknown[])[0] as ArrayOfLength<N, number> | Vector<ArrayOfLength<N, number>>)
-}
+// function vecN<N extends number>(...comps: ArrayOfLength<N, number>): Vector<ArrayOfLength<N, number>>
+// function vecN<N extends number>(array: ArrayOfLength<N, number>): Vector<ArrayOfLength<N, number>>
+// function vecN<N extends number>(vector: ArrayOfLength<N, number>): Vector<ArrayOfLength<N, number>>
+// function vecN<N extends number>(
+//   ...args: ArrayOfLength<N, number> | [ArrayOfLength<N, number> | Vector<ArrayOfLength<N, number>>]
+// ): Vector<ArrayOfLength<N, number>> {
+//   if (typeof (args as unknown[])[0] === 'number') {
+//     return new Vector(args as ArrayOfLength<N, number>)
+//   }
+//   return new Vector((args as unknown[])[0] as ArrayOfLength<N, number> | Vector<ArrayOfLength<N, number>>)
+// }
 
-export type BlockFaceName = 'north' | 'east' | 'south' | 'west' | 'up' | 'down';
-export type BlockAxisName = 'x' | 'y' | 'z';
+export type BlockFaceName = 'north' | 'east' | 'south' | 'west' | 'up' | 'down'
+export type BlockAxisName = 'x' | 'y' | 'z'
 
-type Unconst<A extends readonly unknown[], _S extends unknown[] = []> =
-  A['length'] extends _S['length']
+type Unconst<A extends readonly unknown[], _S extends unknown[] = []> = A['length'] extends _S['length']
   ? _S
-  : Unconst<A, [..._S, A[_S['length']]]>;
+  : Unconst<A, [..._S, A[_S['length']]]>
 
 export class BlockFace<
   Name extends BlockFaceName = BlockFaceName,
   Idx extends EnumerateInt<6> = EnumerateInt<6>,
   Normal extends Readonly<ArrayOfLength<3, -1 | 0 | 1>> = Readonly<ArrayOfLength<3, -1 | 0 | 1>>,
-  OppositeName extends 'North' | 'East' | 'South' | 'West' | 'Up' | 'Down' = 'North' | 'East' | 'South' | 'West' | 'Up' | 'Down'
-  > {
+  OppositeName extends 'North' | 'East' | 'South' | 'West' | 'Up' | 'Down' =
+    | 'North'
+    | 'East'
+    | 'South'
+    | 'West'
+    | 'Up'
+    | 'Down',
+> {
   public static readonly North = new BlockFace('north' as const, 0, [0, 0, -1] as const, 'South' as const)
 
   public static readonly East = new BlockFace('east' as const, 1, [1, 0, 0] as const, 'West' as const)
@@ -772,31 +810,38 @@ export class BlockFace<
 
   public static readonly Down = new BlockFace('down' as const, 5, [0, -1, 0] as const, 'Up' as const)
 
-  public static fromName(name: 'north'): (typeof BlockFace)['North'];
+  public static fromName(name: 'north'): (typeof BlockFace)['North']
 
-  public static fromName(name: 'east'): (typeof BlockFace)['East'];
+  public static fromName(name: 'east'): (typeof BlockFace)['East']
 
-  public static fromName(name: 'south'): (typeof BlockFace)['South'];
+  public static fromName(name: 'south'): (typeof BlockFace)['South']
 
-  public static fromName(name: 'west'): (typeof BlockFace)['West'];
+  public static fromName(name: 'west'): (typeof BlockFace)['West']
 
-  public static fromName(name: 'up'): (typeof BlockFace)['Up'];
+  public static fromName(name: 'up'): (typeof BlockFace)['Up']
 
-  public static fromName(name: 'down'): (typeof BlockFace)['Down'];
+  public static fromName(name: 'down'): (typeof BlockFace)['Down']
 
-  public static fromName(name: BlockFaceName): BlockFace;
+  public static fromName(name: BlockFaceName): BlockFace
 
-  public static fromName(name: string): BlockFace | null;
+  public static fromName(name: string): BlockFace | null
 
   public static fromName(name: string): BlockFace | null {
     switch (name) {
-      case 'north': return this.North
-      case 'east': return this.East
-      case 'south': return this.South
-      case 'west': return this.West
-      case 'up': return this.Up
-      case 'down': return this.Down
-      default: return null
+      case 'north':
+        return this.North
+      case 'east':
+        return this.East
+      case 'south':
+        return this.South
+      case 'west':
+        return this.West
+      case 'up':
+        return this.Up
+      case 'down':
+        return this.Down
+      default:
+        return null
     }
   }
 
@@ -832,9 +877,9 @@ export class BlockFace<
     if (normal[0] !== 0) this.axis = 'x' as any
     else if (normal[1] !== 0) this.axis = 'y' as any
     else this.axis = 'z' as any
-    this.isSide = (this.axis !== 'y') as any;
+    this.isSide = (this.axis !== 'y') as any
     // is set correctly later
-    (this as any).opposite = opposite
+    ;(this as any).opposite = opposite
   }
 
   public toString(): Name {
@@ -856,6 +901,6 @@ const BLOCK_FACES = Object.freeze([
 ] as const)
 
 BlockFace.forEach((face) => {
-  const opp: keyof typeof BlockFace = face.opposite as any;
-  (face as any).opposite = BlockFace[opp]
+  const opp: keyof typeof BlockFace = face.opposite as any
+  ;(face as any).opposite = BlockFace[opp]
 })

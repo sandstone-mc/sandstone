@@ -1,9 +1,7 @@
-import { AwaitNode } from 'sandstone/core/nodes'
-
-import { ObjectiveClass } from './Objective.js'
-
 import type { TimeArgument } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core'
+import { AwaitNode } from 'sandstone/core/nodes'
+import { ObjectiveClass } from './Objective.js'
 
 const SLEEP_CHILD_NAME = '__sleep'
 
@@ -14,7 +12,10 @@ export class SleepClass extends AwaitNode {
 
   protected inSleepFunction: boolean
 
-  constructor(core: SandstoneCore, public delay: TimeArgument) {
+  constructor(
+    core: SandstoneCore,
+    public delay: TimeArgument,
+  ) {
     super(core.pack)
 
     const currentFunction = core.getCurrentMCFunctionOrThrow()
@@ -25,13 +26,17 @@ export class SleepClass extends AwaitNode {
 
     currentFunction.resource.nested += 1
 
-    this.mcfunction = core.pack.MCFunction(`${currentFunction.resource.path.slice(2).join('/')}/${SLEEP_CHILD_NAME}`, () => {}, {
-      addToSandstoneCore: true,
-      lazy: false,
-      creator: 'sandstone',
-      onConflict: 'rename',
-      packType: currentFunction.resource.packType,
-    })
+    this.mcfunction = core.pack.MCFunction(
+      `${currentFunction.resource.path.slice(2).join('/')}/${SLEEP_CHILD_NAME}`,
+      () => {},
+      {
+        addToSandstoneCore: true,
+        lazy: false,
+        creator: 'sandstone',
+        onConflict: 'rename',
+        packType: currentFunction.resource.packType,
+      },
+    )
 
     let schedule = this.mcfunction.name
 
@@ -56,9 +61,7 @@ export class SleepClass extends AwaitNode {
 
       type = 'replace'
 
-      const {
-        commands, MCFunction, Label, Selector,
-      } = core.pack
+      const { commands, MCFunction, Label, Selector } = core.pack
 
       const { execute } = commands
 
@@ -76,13 +79,21 @@ export class SleepClass extends AwaitNode {
 
       this.mcfunction.unshift(() => label('@s').remove())
 
-      schedule = MCFunction(`${this.mcfunction.name}/_context`, () => {
-        execute.store.result.score(timer('#current')).run.time.query('gametime')
+      schedule = MCFunction(
+        `${this.mcfunction.name}/_context`,
+        () => {
+          execute.store.result.score(timer('#current')).run.time.query('gametime')
 
-        execute.as(Selector('@e', { tag: label.fullName })).if.score(timer('@s'), '=', timer('#current')).at('@s').run.functionCmd(this.mcfunction)
-      }, {
-        packType: currentFunction.resource.packType,
-      }).name
+          execute
+            .as(Selector('@e', { tag: label.fullName }))
+            .if.score(timer('@s'), '=', timer('#current'))
+            .at('@s')
+            .run.functionCmd(this.mcfunction)
+        },
+        {
+          packType: currentFunction.resource.packType,
+        },
+      ).name
     }
 
     this.args = ['function', schedule, this.delay, type]
@@ -93,11 +104,11 @@ export class SleepClass extends AwaitNode {
   }
 
   promise() {
-    return ({
-      then: (async (onfullfilled?: () => (void | Promise<void>)) => {
+    return {
+      then: (async (onfullfilled?: () => void | Promise<void>) => {
         await onfullfilled?.()
         return this
       }) as any,
-    })
+    }
   }
 }

@@ -1,29 +1,24 @@
+import type { SandstoneCore } from 'sandstone/core'
+import type { Score } from 'sandstone/variables/Score.js'
+import * as util from 'util'
+import { ScoreboardCommandNode } from '../../commands/implementations/entity/scoreboard.js'
+import { formatDebugString } from '../../utils.js'
 import { IfNode } from '../if_else.js'
 import { ConditionNode } from './condition.js'
 
-import type { SandstoneCore } from 'sandstone/core'
-
 export class OrNode extends ConditionNode {
-  variable
-
-  constructor(sandstoneCore: SandstoneCore, public conditions: ConditionNode[]) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public conditions: ConditionNode[],
+  ) {
     super(sandstoneCore)
-
-    const { Variable, _ } = sandstoneCore.pack
-
-    this.variable = Variable(undefined, 'condition')
-
-    const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
-
-    currentNode.resource.push(() => {
-      this.variable.reset()
-
-      for (const condition of conditions) {
-        // eslint-disable-next-line no-new
-        new IfNode(sandstoneCore, condition, () => this.variable.add(1), false)
-      }
-    })
   }
 
-  getValue = (negated?: boolean | undefined) => this.variable.matches('1..')._toMinecraftCondition().getValue(negated)
+  getValue = (negated?: boolean | undefined) => {
+    throw new Error('Minecraft does not support OR conditions. This must be processed.')
+  };
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, this.conditions, undefined, options.indent)
+  }
 }

@@ -1,15 +1,19 @@
-import { type SubCommand, ExecuteCommandNode } from 'sandstone/commands'
-import { LoopArgument } from 'sandstone/variables'
-
-import { LoopNode } from '../loop.js'
-
+import { ExecuteCommandNode, type SubCommand } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
 import type { Score } from 'sandstone/variables'
+import { LoopArgument } from 'sandstone/variables'
 import type { Condition } from '../index.js'
+import { LoopNode } from '../loop.js'
 
 export class ForINode extends LoopNode {
   // eslint-disable-next-line max-len
-  constructor(sandstoneCore: SandstoneCore, initialValue: number | Score, endCondition: (iterator: Score) => Condition, iterate: (iterator: Score) => Score, callback: (iterator: number | Score, _continue: () => void) => any) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    initialValue: number | Score,
+    endCondition: (iterator: Score) => Condition,
+    iterate: (iterator: Score) => Score,
+    callback: (iterator: number | Score, _continue: () => void) => any,
+  ) {
     const iterator = sandstoneCore.pack.Variable(initialValue, 'loop_iterator')
 
     const condition = sandstoneCore.pack._.conditionToNode(endCondition(iterator))
@@ -18,16 +22,29 @@ export class ForINode extends LoopNode {
 
     const conditionValue: SubCommand = [value[0], value.slice(1).join(' ')]
 
-    const _continue = () => sandstoneCore.pack.commands.returnCmd.run(() => new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], { body: [new LoopArgument(sandstoneCore.pack)] }))
+    const _continue = () =>
+      sandstoneCore.pack.commands.returnCmd.run(
+        () =>
+          new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], {
+            body: [new LoopArgument(sandstoneCore.pack)],
+          }),
+      )
 
     callback(iterator, _continue)
 
     iterate(iterator)
 
-    super(sandstoneCore, [conditionValue], () => callback(iterator, _continue), () => {
-      iterate(iterator)
-      return new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], { body: [new LoopArgument(sandstoneCore.pack)] })
-    })
+    super(
+      sandstoneCore,
+      [conditionValue],
+      () => callback(iterator, _continue),
+      () => {
+        iterate(iterator)
+        return new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], {
+          body: [new LoopArgument(sandstoneCore.pack)],
+        })
+      },
+    )
   }
 }
 

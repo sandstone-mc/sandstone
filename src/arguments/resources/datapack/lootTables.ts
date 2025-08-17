@@ -1,7 +1,5 @@
 /* eslint-disable camelcase */
-import type {
-  ITEMS,
-} from 'sandstone/arguments/generated'
+import type { ITEMS } from 'sandstone/arguments/generated'
 import type { LootTableClass, TagClass } from 'sandstone/core'
 import type { LiteralUnion, WithMCNamespace } from 'sandstone/utils'
 import type { NumberProvider } from './criteria/index.js'
@@ -65,44 +63,65 @@ export type LootTableEntry = {
    */
   quality?: number
 } & (
-    EntryType<'item', {
-      /**
-       * ID name of the item to be produced, e.g. `diamond`.
-       * The default, if not changed by functions, is a stack of 1 of the default instance of the item.
-       */
-      name: LiteralUnion<ITEMS>
-    }>
-    | EntryType<'tag', {
-      /** Tag to be used, e.g. `arrows`. */
-      name: string | TagClass<'items'>
+  | EntryType<
+      'item',
+      {
+        /**
+         * ID name of the item to be produced, e.g. `diamond`.
+         * The default, if not changed by functions, is a stack of 1 of the default instance of the item.
+         */
+        name: LiteralUnion<ITEMS>
+      }
+    >
+  | EntryType<
+      'tag',
+      {
+        /** Tag to be used, e.g. `arrows`. */
+        name: string | TagClass<'items'>
 
-      /**
-       * If set to `true`, it chooses one item of the tag, each with the same weight and quality.
-       * If `false`, it generates one of each of the items in the tag.
-       */
-      expand?: boolean
-    }>
-    | EntryType<'loot_table', {
-      /** Loot table to be used, e.g. `gameplay/fishing/junk` */
-      name: string | LootTableClass
-    }>
-    | EntryType<'dynamic', {
-      /** Can be contents for block entity contents or self for banners and player skulls. */
-      name: 'contents' | 'self'
-    }>
-    | EntryType<'group', {
-      /** A list of entries that are used to generate loot. Can be used for convenience, e.g. if one condition applies for multiple entries. */
-      children: LootTableEntry[]
-    }>
-    | EntryType<'alternatives', {
-      /** A list of entries of which the first, and only the first, successful entry gets generated. */
-      children: LootTableEntry[]
-    }>
-    | EntryType<'sequence', {
-      /** A list of entries that are used until the first entry fails. After an entry fails, no more entries of this list are generated */
-      children: LootTableEntry[]
-    }>
-  )
+        /**
+         * If set to `true`, it chooses one item of the tag, each with the same weight and quality.
+         * If `false`, it generates one of each of the items in the tag.
+         */
+        expand?: boolean
+      }
+    >
+  | EntryType<
+      'loot_table',
+      {
+        /** Loot table to be used, e.g. `gameplay/fishing/junk` */
+        name: string | LootTableClass
+      }
+    >
+  | EntryType<
+      'dynamic',
+      {
+        /** Can be contents for block entity contents or self for banners and player skulls. */
+        name: 'contents' | 'self'
+      }
+    >
+  | EntryType<
+      'group',
+      {
+        /** A list of entries that are used to generate loot. Can be used for convenience, e.g. if one condition applies for multiple entries. */
+        children: LootTableEntry[]
+      }
+    >
+  | EntryType<
+      'alternatives',
+      {
+        /** A list of entries of which the first, and only the first, successful entry gets generated. */
+        children: LootTableEntry[]
+      }
+    >
+  | EntryType<
+      'sequence',
+      {
+        /** A list of entries that are used until the first entry fails. After an entry fails, no more entries of this list are generated */
+        children: LootTableEntry[]
+      }
+    >
+)
 
 type LootTablePoll = {
   /**
@@ -176,13 +195,19 @@ export type LootTableJSON = {
    * - `generic` if none of the above apply.
    */
   type?: WithMCNamespace<
-    'empty' | 'entity' |
-    'block' | 'chest' |
-    'fishing' | 'gift' |
-    'advancement_reward' | 'barter' |
-    'command' | 'selector' |
-    'advancement_entity' | 'generic'
-  >,
+    | 'empty'
+    | 'entity'
+    | 'block'
+    | 'chest'
+    | 'fishing'
+    | 'gift'
+    | 'advancement_reward'
+    | 'barter'
+    | 'command'
+    | 'selector'
+    | 'advancement_entity'
+    | 'generic'
+  >
 
   /**
    * Applies functions to all item stacks produced by this table.

@@ -1,12 +1,11 @@
 /* eslint-disable max-len */
-import { makeClassCallable } from 'sandstone/utils'
-
-import { SelectorClass } from './Selector.js'
 
 import type { MakeInstanceCallable } from 'sandstone/utils'
+import { makeClassCallable } from 'sandstone/utils'
 import type { SandstonePack } from '../pack/index.js'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses.js'
 import type { SelectorProperties } from './Selector.js'
+import { SelectorClass } from './Selector.js'
 
 type SingleEntity = SelectorClass<false, true, boolean> | SelectorPickClass<true, boolean>
 
@@ -29,7 +28,11 @@ export class _RawLabelClass {
    */
   public description?: string
 
-  constructor(private pack: SandstonePack, name: string, description?: string) {
+  constructor(
+    private pack: SandstonePack,
+    name: string,
+    description?: string,
+  ) {
     if (name.includes('.')) {
       this.name = name.split('.').slice(1).join('.')
       this.fullName = name
@@ -77,12 +80,20 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
   /** Test for label on entity */
   public test = this as ConditionClass
 
-  constructor(private pack: SandstonePack, entity: SingleEntity, label: _RawLabelClass) {
+  constructor(
+    private pack: SandstonePack,
+    entity: SingleEntity,
+    label: _RawLabelClass,
+  ) {
     this.originalSelector = entity._toSelector()
     this.label = label
 
     // Haha brrrrrrr
-    const selector = (typeof this.originalSelector === 'string' ? new SelectorClass(this.pack, '@s') : new SelectorClass(this.pack, this.originalSelector.target, { ...this.originalSelector.arguments })) as SelectorClass<false, true, false>
+    const selector = (
+      typeof this.originalSelector === 'string'
+        ? new SelectorClass(this.pack, '@s')
+        : new SelectorClass(this.pack, this.originalSelector.target, { ...this.originalSelector.arguments })
+    ) as SelectorClass<false, true, false>
 
     if (selector.arguments) {
       if (selector.arguments.tag) {
@@ -115,8 +126,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
       if (set) this.add()
       else this.remove()
     } else {
-      this.pack._.if(set, () => this.add())
-        .else(() => this.remove())
+      this.pack._.if(set, () => this.add()).else(() => this.remove())
     }
   }
 
@@ -124,8 +134,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
    * Toggle label on/off for entity
    */
   public toggle() {
-    this.pack._.if(this.test, () => this.remove())
-      .else(() => this.add())
+    this.pack._.if(this.test, () => this.remove()).else(() => this.add())
   }
 
   /**

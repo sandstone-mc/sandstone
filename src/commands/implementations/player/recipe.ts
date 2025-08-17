@@ -1,34 +1,56 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
-import type { RecipeClass } from 'sandstone/core'
+import type { Macroable, RecipeClass } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from 'sandstone/core'
+import { targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 export class RecipeCommandNode extends CommandNode {
   command = 'recipe' as const
 }
 
-/** Gives or takes (unlocks or locks) recipes for players. */
 export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = RecipeCommandNode
 
   /**
-   * Gives recipes to the player.
+   * Unlock recipes for players.
    *
-   * @param targets Specifies the player(s) to give the recipe to.
-   * @param recipe Specifies a recipe to give. If `*` is specified, then all recipes will be given.
+   * @param targets Player selector to give recipes to.
+   *               Examples: '@p', '@a', 'PlayerName', '@a[team=builders]'
+   *
+   * @param recipe Recipe to unlock. Use '*' for all recipes.
+   *              Examples: 'minecraft:iron_sword', 'minecraft:bread', '*'
+   *
+   * @example
+   * ```ts
+   * recipe.give('@p', 'minecraft:iron_sword')       // Unlock iron sword recipe
+   * recipe.give('@a', '*')                         // Unlock all recipes
+   * recipe.give('@a[team=builders]', 'minecraft:stone_bricks')
+   * ```
    */
-  give = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>) => this.finalCommand(['give', targetParser(targets), recipe])
+  give = (
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>,
+  ) => this.finalCommand(['give', targetParser(targets), recipe])
 
   /**
-   * Takes recipes to the player.
+   * Lock recipes for players.
    *
-   * @param targets Specifies the player(s) to take the recipe from.
-   * @param recipe Specifies a recipe to take. If `*` is specified, then all recipes will be taken.
+   * @param targets Player selector to take recipes from.
+   *               Examples: '@p', '@a', 'PlayerName', '@a[team=novices]'
+   *
+   * @param recipe Recipe to lock. Use '*' for all recipes.
+   *              Examples: 'minecraft:diamond_sword', 'minecraft:cake', '*'
+   *
+   * @example
+   * ```ts
+   * recipe.take('@p', 'minecraft:diamond_sword')    // Lock diamond sword recipe
+   * recipe.take('@a', '*')                         // Lock all recipes
+   * recipe.take('@a[team=beginners]', 'minecraft:enchanting_table')
+   * ```
    */
-  take = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>) => this.finalCommand(['take', targetParser(targets), recipe])
+  take = (
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>,
+  ) => this.finalCommand(['take', targetParser(targets), recipe])
 }

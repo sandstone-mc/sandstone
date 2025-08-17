@@ -1,22 +1,21 @@
 /* eslint-disable operator-linebreak */
+
+import path from 'node:path'
 import fs from 'fs-extra'
-import path from 'path'
-
-import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies.js'
-import { MCMetaCache } from './mcmeta.js'
-import { SmithedDependencyClass } from './resources/dependency.js'
-import { SmithedDependencyCache } from './smithed.js'
-
 import type { SandstonePack } from 'sandstone/pack'
+import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies.js'
 import type { MCMetaBranches } from './mcmeta.js'
+import { MCMetaCache } from './mcmeta.js'
 import type { AwaitNode } from './nodes.js'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction.js'
-import type { ResourceClass, ResourceNode } from './resources/resource.js'
+import { SmithedDependencyClass } from './resources/dependency.js'
+import { type ResourceClass, ResourceNode, ResourceNodesMap } from './resources/resource.js'
+import { SmithedDependencyCache } from './smithed.js'
 import type { GenericCoreVisitor } from './visitors.js'
 
 export class SandstoneCore {
   /** All Resources */
-  resourceNodes: Set<ResourceNode>
+  resourceNodes: ResourceNodesMap
 
   mcfunctionStack: MCFunctionNode[]
 
@@ -24,14 +23,14 @@ export class SandstoneCore {
 
   currentNode = ''
 
-  mcmetaCache = new MCMetaCache()
+  _mcMetaCache: MCMetaCache | undefined
 
-  smithed = new SmithedDependencyCache(this)
+  _smithed: SmithedDependencyCache | undefined
 
   dependencies: Promise<SmithedDependencyClass[] | true>[] = []
 
   constructor(public pack: SandstonePack) {
-    this.resourceNodes = new Set()
+    this.resourceNodes = new ResourceNodesMap()
     this.mcfunctionStack = []
     this.awaitNodes = new Set()
 
@@ -44,6 +43,16 @@ export class SandstoneCore {
         this[method] = this[method].bind(this)
       }
     }
+  }
+
+  reset = () => {
+    this.resourceNodes.clear()
+    this.mcfunctionStack = []
+    this.awaitNodes.clear()
+    this.currentNode = ''
+    this._mcMetaCache = undefined
+    this._smithed = undefined
+    this.dependencies = []
   }
 
   /**
@@ -63,7 +72,8 @@ export class SandstoneCore {
     return currentMCFunction
   }
 
-  insideContext: MCFunctionNode['insideContext'] = (...args) => this.getCurrentMCFunctionOrThrow().insideContext(...args)
+  insideContext: MCFunctionNode['insideContext'] = (...args) =>
+    this.getCurrentMCFunctionOrThrow().insideContext(...args)
 
   /**
    * Create a new MCFunction with the given name, and switch the currently active MCFunction to it.
@@ -76,7 +86,7 @@ export class SandstoneCore {
      * However, TypeScript gives us a backdoor using this dynamic call, in a fully type-safe way.
      */
     // eslint-disable-next-line prefer-destructuring, dot-notation
-    const node = mcfunction['node']
+    const node = mcfunction.node
     this.mcfunctionStack.push(node)
     return node
   }
@@ -86,6 +96,11 @@ export class SandstoneCore {
    * @return The previously active MCFunction.
    */
   exitMCFunction = () => this.mcfunctionStack.pop()
+
+  getMcMetaCache = () => {
+    this._mcMetaCache ??= new MCMetaCache()
+    return this._mcMetaCache
+  }
 
   async getExistingResource(relativePath: string): Promise<string>
 
@@ -97,7 +112,10 @@ export class SandstoneCore {
 
   async getExistingResource(resource: ResourceClass, encoding: false | fs.EncodingOption): Promise<Buffer>
 
-  async getExistingResource(pathOrResource: string | ResourceClass, encoding: false | fs.EncodingOption = 'utf-8'): Promise<Buffer | string> {
+  async getExistingResource(
+    pathOrResource: string | ResourceClass,
+    encoding: false | fs.EncodingOption = 'utf-8',
+  ): Promise<Buffer | string> {
     if (typeof pathOrResource === 'string') {
       if (encoding === false) {
         return fs.readFile(pathOrResource)
@@ -108,10 +126,17 @@ export class SandstoneCore {
     if (_path[0] === 'minecraft') {
       const type = pathOrResource.packType.resourceSubFolder as MCMetaBranches
 
-      return this.mcmetaCache.get(type, `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`, (encoding === 'utf-8') as true)
+      return this.getMcMetaCache().get(
+        type,
+        `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
+        (encoding === 'utf-8') as true,
+      )
     }
     // eslint-disable-next-line max-len
-    const fullPath = path.join(process.env.WORKING_DIR as string, `resources/${path.join(pathOrResource.packType.type, ..._path)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`)
+    const fullPath = path.join(
+      process.env.WORKING_DIR as string,
+      `resources/${path.join(pathOrResource.packType.type, ..._path)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
+    )
 
     if (pathOrResource.fileEncoding === false) {
       return fs.readFile(fullPath)
@@ -125,8 +150,17 @@ export class SandstoneCore {
 
   async getVanillaResource(relativePath: string, text: false, type: 'client' | 'server'): Promise<Buffer>
 
-  async getVanillaResource(relativePath: string, text = true, type: 'client' | 'server' = 'server'): Promise<string | Buffer> {
-    return this.mcmetaCache.get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
+  async getVanillaResource(
+    relativePath: string,
+    text = true,
+    type: 'client' | 'server' = 'server',
+  ): Promise<string | Buffer> {
+    return this.getMcMetaCache().get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
+  }
+
+  getSmithed = () => {
+    this._smithed ??= new SmithedDependencyCache(this)
+    return this._smithed
   }
 
   /**
@@ -135,41 +169,44 @@ export class SandstoneCore {
   depend(dependency: string, version = 'latest') {
     const adding = this.dependencies.length === 0 ? false : Promise.allSettled(this.dependencies)
 
-    this.dependencies.push((async () => {
-      if (!this.smithed.loaded) {
-        await this.smithed.load()
-      }
-      if (adding) await adding
-
-      if (!this.smithed.has(dependency)) {
-        const _depend = await this.smithed.get(dependency, version)
-
-        if (!this.pack.packTypes.has('datapack-dependencies')) {
-          this.pack.packTypes.set('datapack-dependencies', new DataPackDependencies())
+    this.dependencies.push(
+      (async () => {
+        const smithed = this.getSmithed()
+        if (!smithed.loaded) {
+          await smithed.load()
         }
+        if (adding) await adding
 
-        const dependencies = [new SmithedDependencyClass(this, dependency, _depend, 'server')]
+        if (!smithed.has(dependency)) {
+          const _depend = await smithed.get(dependency, version)
 
-        if (_depend.resourcepack) {
-          if (!this.pack.packTypes.has('resourcepack-dependencies')) {
-            this.pack.packTypes.set('resourcepack-dependencies', new ResourcePackDependencies())
+          if (!this.pack.packTypes.has('datapack-dependencies')) {
+            this.pack.packTypes.set('datapack-dependencies', new DataPackDependencies())
           }
 
-          dependencies.push(new SmithedDependencyClass(this, dependency, _depend, 'client'))
-        }
+          const dependencies = [new SmithedDependencyClass(this, dependency, _depend, 'server')]
 
-        return dependencies
-      }
-      return true
-    })())
+          if (_depend.resourcepack) {
+            if (!this.pack.packTypes.has('resourcepack-dependencies')) {
+              this.pack.packTypes.set('resourcepack-dependencies', new ResourcePackDependencies())
+            }
+
+            dependencies.push(new SmithedDependencyClass(this, dependency, _depend, 'client'))
+          }
+
+          return dependencies
+        }
+        return true
+      })(),
+    )
   }
 
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
-    const originalResources = new Set(this.resourceNodes)
+    const originalResources = new ResourceNodesMap(this.resourceNodes)
 
     // First, generate all the resources.
     for (const { resource } of this.resourceNodes) {
-      resource['generate']()
+      resource.generate()
     }
 
     // Then, transform all the nodes with the given visitors.
@@ -190,14 +227,20 @@ export class SandstoneCore {
     return finalResources
   }
 
-  save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>, dry: boolean, verbose: boolean }, opts: { visitors: GenericCoreVisitor[] }) => {
-    if (!this.smithed.loaded) {
-      await this.smithed.load()
+  save = async (
+    cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>; dry: boolean; verbose: boolean },
+    opts: { visitors: GenericCoreVisitor[] },
+  ) => {
+    if (this._smithed && !this._smithed.loaded) {
+      await this._smithed.load()
     }
 
     await Promise.allSettled(this.dependencies)
 
-    await this.mcmetaCache.save()
+    if (this._mcMetaCache && !this._mcMetaCache.loaded) {
+      await this._mcMetaCache.load()
+      await this._mcMetaCache.save()
+    }
 
     const resources = this.generateResources(opts)
 
@@ -213,10 +256,7 @@ export class SandstoneCore {
       const value = node.getValue()
 
       if (cliOptions.verbose) {
-        console.log(
-          `Path: ${resourcePath}.${fileExtension}\n\n` +
-          `${typeof value === 'string' ? value : '<Buffer>'}`,
-        )
+        console.log(`Path: ${resourcePath}.${fileExtension}\n\n` + `${typeof value === 'string' ? value : '<Buffer>'}`)
       }
 
       if (!cliOptions.dry) {

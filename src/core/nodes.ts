@@ -1,25 +1,51 @@
-import { type MacroArgument, isMacroArgument } from './Macro.js'
-
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
+import * as util from 'util'
+import { formatDebugString } from '../utils.js'
+import { isMacroArgument, type MacroArgument } from './Macro.js'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
 import type { SandstoneCore } from './sandstoneCore.js'
 
 export abstract class Node {
-  constructor(public sandstoneCore: SandstoneCore) { }
+  constructor(public sandstoneCore: SandstoneCore) {}
+
+  [util.inspect.custom](depth: number, options: any) {
+    return `${this.constructor.name}()`
+  }
 
   abstract getValue(): any
+
+  type = this.constructor.name
 }
 
 /**
  * A node that includes other nodes.
  */
 export abstract class ContainerNode extends Node {
-  body: Node[]
+  _body: Node[]
 
   constructor(sandstoneCore: SandstoneCore) {
     super(sandstoneCore)
-    this.body = []
+
+    this._body = []
+  }
+
+  get body(): Node[] {
+    return this._body
+  }
+
+  set body(body: Node[]) {
+    this._body = body
+  }
+
+  generateBody(callback: () => void): Node[] {
+    // Enter the current node's body
+    this.sandstoneCore.insideContext(this, () => {
+      callback()
+    })
+
+    // Return the body of this node.
+    return this.body
   }
 
   /**
@@ -51,6 +77,10 @@ export abstract class ContainerNode extends Node {
     this.body.unshift(...nodes)
     return nodes.length === 1 ? nodes[0] : nodes
   }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, undefined, this.body, options.indent)
+  }
 }
 
 /**
@@ -65,7 +95,10 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
 
   isMacro = false
 
-  constructor(public sandstonePack: SandstonePack, ...args: ARGS) {
+  constructor(
+    public sandstonePack: SandstonePack,
+    ...args: ARGS
+  ) {
     super(sandstonePack.core)
     this.args = args
   }
@@ -106,19 +139,45 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
 
     return this.sandstonePack.appendNode(this)
   }
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, this.args, undefined, options.indent)
+  }
 }
 
 /**
  * A node that includes other nodes.
  */
-export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> extends CommandNode<ARGS> implements ContainerNode {
+export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]>
+  extends CommandNode<ARGS>
+  implements ContainerNode
+{
   abstract command: string
 
-  body: Node[]
+  _body: Node[]
 
   constructor(sandstonePack: SandstonePack, ...args: ARGS) {
     super(sandstonePack, ...args)
-    this.body = []
+    this._body = []
+  }
+
+  get body(): Node[] {
+    return this._body
+  }
+
+  set body(body: Node[]) {
+    this._body = body
+  }
+
+  generateBody(callback: () => void): Node[] {
+    // Enter the current node's body
+    this.sandstoneCore.insideContext(this, () => {
+      callback()
+    })
+
+    // Return the body of this node.
+    this._body = this.body
+    return this._body
   }
 
   /**
@@ -137,13 +196,18 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]> e
     return node
   }
 
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(this.constructor.name, this.args, this.body, options.indent)
+  }
+
   /**
    * Create a MCFunction from this node.
    * It shouldn't be added to Sandstone's core.
    *
    * The returned node will replace
    */
-  createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[], mcFunction?: MCFunctionNode } = (currentMCFunction) => ({ node: this })
+  createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[]; mcFunction?: MCFunctionNode } =
+    (currentMCFunction) => ({ node: this })
 }
 
 export abstract class AwaitNode extends ContainerCommandNode {

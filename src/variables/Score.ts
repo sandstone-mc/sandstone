@@ -1,35 +1,49 @@
 /* eslint-disable no-plusplus */
-import { MacroArgument } from '../core/Macro.js'
-import { SelectorPickClass } from './abstractClasses.js'
-import { rangeParser } from './parsers.js'
 
 import type {
-  COMPARISON_OPERATORS, FormattingTags, JSONTextComponent, MultipleEntitiesArgument, ObjectiveArgument, OPERATORS, Range,
+  COMPARISON_OPERATORS,
+  FormattingTags,
+  JSONTextComponent,
+  MultipleEntitiesArgument,
+  ObjectiveArgument,
+  OPERATORS,
+  Range,
 } from 'sandstone/arguments'
 import type { SandstoneCommands } from 'sandstone/commands'
 import type { NotNode } from 'sandstone/flow'
 import type { ConditionClass } from 'sandstone/variables'
+import * as util from 'util'
+import { MacroArgument } from '../core/Macro.js'
 import type { SandstonePack } from '../pack/index.js'
+import { formatDebugString } from '../utils.js'
 import type { ComponentClass } from './abstractClasses.js'
+import { SelectorPickClass } from './abstractClasses.js'
 import type { DATA_TYPES, DataPointClass } from './Data.js'
 import type { ObjectiveClass } from './Objective.js'
+import { rangeParser } from './parsers.js'
 
 type PlayersTarget = number | MultipleEntitiesArgument<false>
 
-type OperationArguments = (
-  [amountOrTargetScore: number | Score] |
-  [targets: PlayersTarget, objective?: ObjectiveArgument]
-)
+type OperationArguments =
+  | [amountOrTargetScore: number | Score]
+  | [targets: PlayersTarget, objective?: ObjectiveArgument]
 
 let matchers = 0
 
 function createVariable(pack: SandstonePack, amount: number): Score
 
-function createVariable(pack: SandstonePack, targets: MultipleEntitiesArgument<false>, objective: ObjectiveArgument): Score
+function createVariable(
+  pack: SandstonePack,
+  targets: MultipleEntitiesArgument<false>,
+  objective: ObjectiveArgument,
+): Score
 
 function createVariable(pack: SandstonePack, score: Score): Score
 
-function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [MultipleEntitiesArgument<false>, ObjectiveArgument]): Score {
+function createVariable(
+  pack: SandstonePack,
+  ...args: [number] | [Score] | [MultipleEntitiesArgument<false>, ObjectiveArgument]
+): Score {
   const anonymousScore = pack.Variable()
 
   if (typeof args[0] === 'number' || args[0] instanceof Score) {
@@ -40,7 +54,7 @@ function createVariable(pack: SandstonePack, ...args: [number] | [Score] | [Mult
 }
 
 export type ScoreDisplay = {
-  name?: JSONTextComponent,
+  name?: JSONTextComponent
 
   numberformat?: 'blank' | ['styled', FormattingTags] | ['fixed', JSONTextComponent]
 }
@@ -48,7 +62,12 @@ export type ScoreDisplay = {
 export class Score extends MacroArgument implements ConditionClass, ComponentClass {
   commands: SandstoneCommands<false>
 
-  constructor(public sandstonePack: SandstonePack, public target: MultipleEntitiesArgument<false>, public display: ScoreDisplay | undefined, public objective: ObjectiveClass) {
+  constructor(
+    public sandstonePack: SandstonePack,
+    public target: MultipleEntitiesArgument<false>,
+    public display: ScoreDisplay | undefined,
+    public objective: ObjectiveClass,
+  ) {
     super(sandstonePack.core)
     this.commands = sandstonePack.commands
 
@@ -89,13 +108,17 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   /**
    * @internal
    */
-  _toMinecraftCondition = () => this.sandstonePack._.not(new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', '0']))
+  _toMinecraftCondition = () =>
+    this.sandstonePack._.not(
+      new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
+        `${this.target}`,
+        `${this.objective}`,
+        'matches',
+        '0',
+      ]),
+    )
 
-  private unaryOperation(
-    operation: 'add' | 'remove' | 'set',
-    operator: OPERATORS,
-    ...args: OperationArguments
-  ): this {
+  private unaryOperation(operation: 'add' | 'remove' | 'set', operator: OPERATORS, ...args: OperationArguments): this {
     if (typeof args[0] === 'number') {
       this.commands.scoreboard.players[operation](this, args[0])
     } else if (args[0] instanceof Score) {
@@ -178,12 +201,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     if (typeof args[0] === 'object' && !(args[0] instanceof SelectorPickClass) && !(args[0] instanceof Score)) {
       const [data, scale] = args as [DataPointClass<DATA_TYPES>, number?]
 
-      this.commands.execute.store.result.score(this).run.data.get[data.type](data.currentTarget as any, data.path, scale)
+      this.commands.execute.store.result
+        .score(this)
+        .run.data.get[data.type](data.currentTarget as any, data.path, scale)
 
       return this
     }
 
-    return this.unaryOperation('set', '=', ...args as OperationArguments)
+    return this.unaryOperation('set', '=', ...(args as OperationArguments))
   }
 
   '=' = this.set
@@ -455,23 +480,31 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   '%' = this.moduloBy
 
   /** COMPARISONS OPERATORS */
-  private comparison(
-    operator: COMPARISON_OPERATORS,
-    matchesRange: string,
-    args: OperationArguments,
-  ): ConditionClass {
+  private comparison(operator: COMPARISON_OPERATORS, matchesRange: string, args: OperationArguments): ConditionClass {
     const playerScore = this
 
     if (typeof args[0] === 'number') {
       return {
-        _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${playerScore.target}`, `${playerScore.objective}`, 'matches', matchesRange]),
+        _toMinecraftCondition: () =>
+          new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
+            `${playerScore.target}`,
+            `${playerScore.objective}`,
+            'matches',
+            matchesRange,
+          ]),
       }
     }
 
     const endArgs = args[1] ? args : [args[0]]
     return {
       // eslint-disable-next-line max-len
-      _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${playerScore.target}`, `${playerScore.objective}`, operator, ...(endArgs.map((arg) => (arg as any).toString()))]),
+      _toMinecraftCondition: () =>
+        new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
+          `${playerScore.target}`,
+          `${playerScore.objective}`,
+          operator,
+          ...endArgs.map((arg) => (arg as any).toString()),
+        ]),
     }
   }
 
@@ -482,14 +515,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
+  greaterThan(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly greater than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  greaterThan (amountOrTargetScore: number | Score) : ConditionClass
+  greaterThan(amountOrTargetScore: number | Score): ConditionClass
 
   greaterThan(...args: OperationArguments) {
     return this.comparison('>', `${typeof args[0] === 'number' ? args[0] + 1 : null}..`, args)
@@ -504,14 +537,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterOrEqualThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
+  greaterOrEqualThan(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is greater or equal than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score compare the current score against.
    */
-  greaterOrEqualThan (amountOrTargetScore: number | Score) : ConditionClass
+  greaterOrEqualThan(amountOrTargetScore: number | Score): ConditionClass
 
   greaterOrEqualThan(...args: OperationArguments) {
     return this.comparison('>=', `${args[0]}..`, args)
@@ -526,14 +559,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lessThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
+  lessThan(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is strictly lower than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  lessThan (amountOrTargetScore: number | Score) : ConditionClass
+  lessThan(amountOrTargetScore: number | Score): ConditionClass
 
   lessThan(...args: OperationArguments) {
     return this.comparison('<', `..${typeof args[0] === 'number' ? args[0] - 1 : null}`, args)
@@ -548,14 +581,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lessOrEqualThan (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
+  lessOrEqualThan(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is lower or equal than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score target to compare the current score against.
    */
-  lessOrEqualThan (amountOrTargetScore: number | Score) : ConditionClass
+  lessOrEqualThan(amountOrTargetScore: number | Score): ConditionClass
 
   lessOrEqualThan(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
@@ -570,14 +603,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  equalTo (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
+  equalTo(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is equal to the given amount or score.
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  equalTo (amountOrTargetScore: number | Score) : ConditionClass
+  equalTo(amountOrTargetScore: number | Score): ConditionClass
 
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)
@@ -592,14 +625,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  notEqualTo (targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): NotNode
+  notEqualTo(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): NotNode
 
   /**
    * Check if the current score is not equal to the given amount or score.
    *
    * @param amountOrTargetScore The amount or score to compare the current score against.
    */
-  notEqualTo (amountOrTargetScore: number | Score) : NotNode
+  notEqualTo(amountOrTargetScore: number | Score): NotNode
 
   notEqualTo(...args: OperationArguments) {
     return this.sandstonePack._.not(this.comparison('=', args[0].toString(), args))
@@ -613,7 +646,13 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    * @param range The range to compare the current score against.
    */
   matches = (range: Range<false>) => ({
-    _toMinecraftCondition: () => new this.sandstonePack.conditions.Score(this.sandstonePack.core, [`${this.target}`, `${this.objective}`, 'matches', rangeParser(this.sandstoneCore, range)]),
+    _toMinecraftCondition: () =>
+      new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
+        `${this.target}`,
+        `${this.objective}`,
+        'matches',
+        rangeParser(this.sandstoneCore, range),
+      ]),
   })
 
   match = (minimum: number, maximum: number, callback: (num: number) => any) => {
@@ -621,8 +660,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
     if (maximum > 1000) {
       console.warn(
-        `\nWarning: Score.match() will have to create ${maximum - minimum} mcfunction files, this *will* take a while. `
-        + 'Consider only compiling this once and saving it to external resources.',
+        `\nWarning: Score.match() will have to create ${maximum - minimum} mcfunction files, this *will* take a while. ` +
+          'Consider only compiling this once and saving it to external resources.',
       )
     }
 
@@ -634,6 +673,21 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
       MCFunction(`__sandstone:score_match/${matcher}/${i}`, () => callback(i))
     }
 
-    return MCFunction(`__sandstone:score_match/${matcher}`, [score], () => Macro.returnCmd.run.functionCmd(Macro`__sandstone:score_match/${matcher}/${score}`))
+    return MCFunction(`__sandstone:score_match/${matcher}`, [score], () =>
+      Macro.returnCmd.run.functionCmd(Macro`__sandstone:score_match/${matcher}/${score}`),
+    )
+  };
+
+  [util.inspect.custom](depth: number, options: any) {
+    return formatDebugString(
+      this.constructor.name,
+      {
+        target: this.target,
+        display: this.display,
+        objective: this.objective.name,
+      },
+      undefined,
+      options.indent,
+    )
   }
 }

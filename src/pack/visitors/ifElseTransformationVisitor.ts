@@ -1,11 +1,9 @@
 /* eslint-disable no-spaced-func */
 /* eslint-disable func-call-spacing */
 import { ExecuteCommandNode, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
-import { IfNode } from 'sandstone/flow'
-
-import { GenericSandstoneVisitor } from './visitor.js'
-
 import type { ElseNode } from 'sandstone/flow'
+import { IfNode } from 'sandstone/flow'
+import { GenericSandstoneVisitor } from './visitor.js'
 
 function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   yield node
@@ -22,7 +20,7 @@ function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
 export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
   visitIfNode = (node_: IfNode) => {
     // 1. We may be an elseIf node, if so, should exit
-    if (node_['_isElseIf']) {
+    if (node_._isElseIf) {
       return []
     }
 
@@ -31,11 +29,13 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
 
     // 2. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {
-      return new ExecuteCommandNode(this.pack, [[node_.condition.getValue()]], {
+      const wrapper = new ExecuteCommandNode(this.pack, [[node_.condition.getValue()]], {
         isSingleExecute: false,
         givenCallbackName: 'if',
-        body: node_.body.map((_node) => this.genericVisit(_node)),
+        body: node_.body,
       })
+
+      return this.visit(wrapper)
     }
 
     // 3. We have multiple nodes, entering a new function to allow for `return`
@@ -62,16 +62,18 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
           return new ExecuteCommandNode(this.pack, [[node.condition.getValue()]], {
             isSingleExecute: false,
             givenCallbackName: `${i}_${callbackName}`,
-            body: [new ReturnRunCommandNode(this.pack, ['run'], {
-              isSingleExecute: false,
-              body: body.map((_node) => this.genericVisit(_node)),
-            })],
+            body: [
+              new ReturnRunCommandNode(this.pack, ['run'], {
+                isSingleExecute: false,
+                body: body,
+              }),
+            ],
           })
         }
         // Else node, just add the body
-        return body.map((_node) => this.genericVisit(_node))
+        return body
       }),
     })
-    return [wrapper]
+    return this.visit(wrapper)
   }
 }

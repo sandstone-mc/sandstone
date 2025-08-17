@@ -1,14 +1,11 @@
-import { type MacroArgument, isMacroArgument } from '../core/Macro.js'
-import { VectorClass } from './Coordinates.js'
-
-import type {
-  Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION,
-} from 'sandstone/arguments'
+import type { Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
+import { isMacroArgument, type MacroArgument } from '../core/Macro.js'
+import { VectorClass } from './Coordinates.js'
 // PARSERS
-export function arrayToArgsParser(args: unknown): (
-  typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args
-) {
+export function arrayToArgsParser(
+  args: unknown,
+): typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args {
   if (Array.isArray(args) && args.length === 3) {
     return new VectorClass(args.map((arg) => arg.toString()))
   }
@@ -24,20 +21,21 @@ function isRawRotation(arg: unknown): arg is [string, string] {
   return Array.isArray(arg) && arg.length === 2 && arg.every((c) => typeof c === 'string')
 }
 
-export function coordinatesParser<T>(coordinates: T): (
-  T extends Coordinates<boolean> ? VectorClass<[string, string, string]> : T
-) {
-  return isRawCoordinates(coordinates) ? new VectorClass(coordinates) : coordinates as any
+export function coordinatesParser<T>(
+  coordinates: T,
+): T extends Coordinates<boolean> ? VectorClass<[string, string, string]> : T {
+  return isRawCoordinates(coordinates) ? (new VectorClass(coordinates) as any) : (coordinates as any)
 }
 
-export function rotationParser<T>(rotation: T): (
-  T extends Rotation<boolean> ? VectorClass<[string, string]> : T
-) {
-  return isRawRotation(rotation) ? new VectorClass(rotation) : rotation as any
+export function rotationParser<T>(rotation: T): T extends Rotation<boolean> ? VectorClass<[string, string]> : T {
+  return isRawRotation(rotation) ? (new VectorClass(rotation) as any) : (rotation as any)
 }
 
 // Sanitize score values. null => '', Infinity => '', any number => itself
-export const sanitizeValue = (core: SandstoneCore, value: MacroArgument | number | string | null | undefined): string => {
+export const sanitizeValue = (
+  core: SandstoneCore,
+  value: MacroArgument | number | string | null | undefined,
+): string => {
   if (value === undefined || value === null) {
     return ''
   }
@@ -78,6 +76,7 @@ export const structureRotationParser = (rotation?: StructureRotation | MacroArgu
   }
 
   const numToLiteral = (angle: number): STRUCTURE_ROTATION => {
+    /** biome-ignore format: excessive formatting */
     switch (angle) {
       case 0: return 'none'
       case 90: return 'clockwise_90'
@@ -138,7 +137,22 @@ export const structureMirrorParser = (mirror?: StructureMirror | MacroArgument):
   return 'none'
 }
 
+/**
+ * Parses a target into a string representation.
+ * If the target is a string, it is returned as is.
+ * If the target has a `_toSelector` method, it is called to get the string representation.
+ * If the target has a `toMacro` method, it is called to get the string representation.
+ * Otherwise, the `toString` method is called to get the string representation.
+ *
+ * If the target is undefined, an error is thrown.
+ * @param target The target to parse.
+ * @returns The string representation of the target.
+ */
 export function targetParser(target: any): string {
+  if (target === undefined) {
+    throw new Error('Target cannot be undefined.')
+  }
+
   if (typeof target === 'string') {
     return target
   }

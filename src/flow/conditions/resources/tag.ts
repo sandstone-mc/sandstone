@@ -1,10 +1,14 @@
 // Block tag (~ ~ ~), Entity tag (@s)
-import { SingleConditionNode } from '../condition.js'
 
 import type { SandstoneCore } from 'sandstone/core'
+import { SingleConditionNode } from '../condition.js'
 
 export class TagConditionNode extends SingleConditionNode {
-  constructor(sandstoneCore: SandstoneCore, public type: 'blocks' | 'entity_types', public tag: string) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public type: 'blocks' | 'entity_types',
+    public tag: string,
+  ) {
     super(sandstoneCore)
   }
 

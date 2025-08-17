@@ -1,10 +1,8 @@
-import { CommandNode } from 'sandstone/core/nodes'
-import { targetParser } from 'sandstone/variables/parsers'
-
-import { CommandArguments } from '../../helpers.js'
-
 import type { SingleEntityArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { targetParser } from 'sandstone/variables/parsers'
+import { CommandArguments } from '../../helpers.js'
 
 // Attribute command
 
@@ -46,14 +44,42 @@ export class AttributeOperationCommand<MACRO extends boolean> extends CommandArg
   remove = (uuid: Macroable<string, MACRO>) => this.finalCommand(['modifier', 'remove', uuid])
 
   /** Returns the value of the modifier with the specified UUID. */
-  getModifierValue = (uuid: Macroable<string, MACRO>, scale?: Macroable<number, MACRO>) => this.finalCommand(['modifier', 'value', 'get', uuid, scale])
+  getModifierValue = (uuid: Macroable<string, MACRO>, scale?: Macroable<number, MACRO>) =>
+    this.finalCommand(['modifier', 'value', 'get', uuid, scale])
 }
 
-/**
- * Used to change or read attributes.
- */
 export class AttributeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = AttributeCommandNode
 
-  attribute = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, attribute: Macroable<string, MACRO>) => this.finalCommand([targetParser(target), attribute])
+  /**
+   * Modify or query entity attributes.
+   *
+   * @param target Entity whose attributes to modify.
+   *              Must be a single living entity.
+   *              Examples: '@p', '@e[type=zombie,limit=1]', 'PlayerName'
+   *
+   * @param attribute Attribute identifier to modify.
+   *                 Examples: 'minecraft:generic.max_health', 'minecraft:generic.movement_speed',
+   *                          'minecraft:generic.attack_damage', 'minecraft:generic.armor'
+   *
+   * @example
+   * ```ts
+   * // Get attribute values
+   * attribute('@p', 'minecraft:generic.max_health').get()        // Get total health
+   * attribute('@p', 'minecraft:generic.movement_speed').baseGet() // Get base speed
+   *
+   * // Set base attribute values
+   * attribute('@p', 'minecraft:generic.max_health').baseSet(40)   // 40 max health
+   * attribute('@e[type=zombie]', 'minecraft:generic.movement_speed').baseSet(0.5)
+   *
+   * // Add attribute modifiers
+   * attribute('@p', 'minecraft:generic.attack_damage')
+   *   .add('speed-boost', 'Speed Boost', 0.5, 'multiply')
+   *
+   * // Remove modifiers
+   * attribute('@p', 'minecraft:generic.movement_speed').remove('speed-boost')
+   * ```
+   */
+  attribute = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, attribute: Macroable<string, MACRO>) =>
+    this.subCommand([targetParser(target), attribute], AttributeOperationCommand, false)
 }

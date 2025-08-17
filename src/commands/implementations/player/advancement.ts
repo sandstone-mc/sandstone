@@ -1,11 +1,8 @@
+import type { MultiplePlayersArgument } from 'sandstone/arguments'
+import type { AdvancementClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
-
 import { CommandArguments } from '../../helpers.js'
-
-import type { MultiplePlayersArgument } from 'sandstone/arguments'
-import type { AdvancementClass } from 'sandstone/core'
-import type { Macroable } from 'sandstone/core'
 
 // Advancement command
 
@@ -28,7 +25,8 @@ export class AdvancementArgumentsCommand<MACRO extends boolean> extends CommandA
    * The command defaults to the entire advancement.
    * If specified, the command refers to merely the criterion and not the entire advancement.
    */
-  only = (advancement: Macroable<AdvancementArgument, MACRO>, criterion?: Macroable<string, MACRO>) => this.finalCommand(['only', advancement, criterion])
+  only = (advancement: Macroable<AdvancementArgument, MACRO>, criterion?: Macroable<string, MACRO>) =>
+    this.finalCommand(['only', advancement, criterion])
 
   /**
    * Adds or removes an advancement and all its children advancements.
@@ -69,21 +67,39 @@ export class AdvancementArgumentsCommand<MACRO extends boolean> extends CommandA
   until = (advancement: Macroable<AdvancementArgument, MACRO>) => this.finalCommand(['until', advancement])
 }
 
-/** Gives or takes an advancement from one or more players. */
 export class AdvancementCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = AdvancementCommandNode
 
   /**
-   * Adds specified advancements.
+   * Grant advancements to players.
    *
-   * @param targets Specifies one player or more.
+   * @param targets Player selector to grant advancements to.
+   *               Examples: '@p', '@a', 'PlayerName', '@a[team=red]'
+   *
+   * @example
+   * ```ts
+   * advancement.grant('@p').everything()                    // Grant all advancements
+   * advancement.grant('@a').only('minecraft:story/mine_stone')  // Grant specific advancement
+   * advancement.grant('@p').from('minecraft:story/root')   // Grant advancement and children
+   * advancement.grant('@a').until('minecraft:story/smelt_iron') // Grant parents up to advancement
+   * ```
    */
-  grant = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.subCommand(['grant', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
+  grant = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+    this.subCommand(['grant', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
 
   /**
-   * Removes specified advancements.
+   * Revoke advancements from players.
    *
-   * @param targets Specifies one player or more.
+   * @param targets Player selector to revoke advancements from.
+   *               Examples: '@p', '@a', 'PlayerName', '@a[team=blue]'
+   *
+   * @example
+   * ```ts
+   * advancement.revoke('@p').everything()                   // Remove all advancements
+   * advancement.revoke('@a').only('minecraft:story/mine_stone') // Remove specific advancement
+   * advancement.revoke('@p').through('minecraft:story/root')    // Remove advancement tree
+   * ```
    */
-  revoke = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) => this.subCommand(['revoke', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
+  revoke = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+    this.subCommand(['revoke', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
 }

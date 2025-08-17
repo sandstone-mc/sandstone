@@ -1,0 +1,66 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "sandstone": [
+        "./src/index.ts"
+      ],
+      "sandstone/*": [
+        "./src/*"
+      ],
+      "#arguments": [
+        "src/arguments"
+      ],
+      "#arguments/*": [
+        "src/arguments/*"
+      ],
+      "#commands": [
+        "src/commands"
+      ],
+      "#commands/*": [
+        "src/commands/*"
+      ],
+      "#core": [
+        "src/core"
+      ],
+      "#core/*": [
+        "src/core/*"
+      ],
+      "#flow": [
+        "src/flow"
+      ],
+      "#flow/*": [
+        "src/flow/*"
+      ],
+      "#pack": [
+        "src/pack"
+      ],
+      "#pack/*": [
+        "src/pack/*"
+      ],
+      "#variables": [
+        "src/variables"
+      ],
+      "#variables/*": [
+        "src/variables/*"
+      ],
+      "#utils": [
+        "src/utils"
+      ]
+    },
+    "types": [
+      "node"
+    ],
+    "module": "NodeNext",
+    "target": "ESNEXT",
+    "incremental": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "stripInternal": true
+  }
+}

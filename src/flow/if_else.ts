@@ -1,56 +1,84 @@
-import { ContainerNode } from '../core/index.js'
+import { reset } from 'chalk/index.js'
+import * as util from 'util'
 
-import type { SandstoneCore } from '../core/index.js'
+import type { Node, SandstoneCore } from '../core/index.js'
+import { ContainerNode } from '../core/index.js'
+import { formatDebugString } from '../utils.js'
 import type { ConditionNode } from './conditions/index.js'
 import type { Condition } from './Flow.js'
 
 export class IfNode extends ContainerNode {
   nextFlowNode?: IfNode | ElseNode
 
-  protected _isElseIf = false
+  _isElseIf = false
 
-  constructor(sandstoneCore: SandstoneCore, public condition: ConditionNode, public callback: () => void, reset = false) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public condition: ConditionNode,
+    public callback?: () => void,
+  ) {
     super(sandstoneCore)
 
-    const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
-
-    if (reset) {
-      currentNode.resource.push(() => sandstoneCore.pack.flowVariable.reset())
-    }
-
-    if (callback.toString() !== '() => {}') {
+    if (callback && callback.toString() !== '() => {}') {
       // Generate the body of the If node.
-      currentNode.enterContext(this)
-      this.callback()
-      currentNode.exitContext()
+      this.sandstoneCore.insideContext(this, callback, true)
     }
   }
 
   getValue = () => {
     throw new Error('Minecraft does not support if statements. This must be postprocessed.')
+  };
+
+  [util.inspect.custom](depth: number, options: any) {
+    const indent = options.indent || ''
+    const currentFormatting = formatDebugString(
+      this.constructor.name,
+      {
+        condition: this.condition,
+        isElseIf: this._isElseIf,
+      },
+      this.body,
+      indent,
+    )
+
+    if (!this.nextFlowNode) {
+      return currentFormatting
+    }
+
+    const nextFormatting = util.inspect(this.nextFlowNode, options)
+
+    return `${currentFormatting}\n${indent}${nextFormatting}`
   }
 }
 
 export class IfStatement {
   protected node: IfNode
 
-  constructor(protected sandstoneCore: SandstoneCore, protected condition: ConditionNode, protected callback: () => void) {
+  constructor(
+    protected sandstoneCore: SandstoneCore,
+    protected condition: ConditionNode,
+    protected callback: () => void,
+  ) {
     // Generate the body of the If node.
     this.node = new IfNode(sandstoneCore, condition, callback)
   }
 
   elseIf = (condition: Condition, callback: () => void) => {
-    const statement = new IfStatement(this.sandstoneCore, this.sandstoneCore.pack.flow.conditionToNode(condition), callback)
-    this.node.nextFlowNode = statement['getNode']()
+    const statement = new IfStatement(
+      this.sandstoneCore,
+      this.sandstoneCore.pack.flow.conditionToNode(condition),
+      callback,
+    )
+    this.node.nextFlowNode = statement.getNode()
 
-    statement.node['_isElseIf'] = true
+    statement.node._isElseIf = true
 
     return statement
   }
 
   else = (callback: () => void) => {
     const statement = new ElseStatement(this.sandstoneCore, callback)
-    this.node.nextFlowNode = statement['getNode']()
+    this.node.nextFlowNode = statement.getNode()
     return statement
   }
 
@@ -58,25 +86,30 @@ export class IfStatement {
 }
 
 export class ElseNode extends ContainerNode {
-  constructor(sandstoneCore: SandstoneCore, public callback: () => void) {
+  constructor(sandstoneCore: SandstoneCore, callback: () => void) {
     super(sandstoneCore)
 
     // Generate the body of the If node.
     this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(this)
-    this.callback()
+    callback()
     this.sandstoneCore.currentMCFunction?.exitContext()
   }
 
+  /** @internal */
   getValue = () => null
 }
 
 export class ElseStatement {
   protected node: ElseNode
 
-  constructor(protected sandstoneCore: SandstoneCore, protected callback: () => void) {
+  constructor(
+    protected sandstoneCore: SandstoneCore,
+    protected callback: () => void,
+  ) {
     // Generate the body of the If node.
     this.node = new ElseNode(sandstoneCore, callback)
   }
 
-  protected getNode = () => this.node
+  /** @internal */
+  getNode = () => this.node
 }

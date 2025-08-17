@@ -1,49 +1,138 @@
 /* eslint-disable max-len */
 /* eslint-disable no-plusplus */
-import { SandstoneCommands } from 'sandstone/commands'
-import {
-  AdvancementClass, AtlasClass, BlockStateClass, DamageTypeClass, FontClass, isMacroArgument, ItemModifierClass, LanguageClass, LootTableClass,
-  MacroLiteral,
-  MCFunctionClass, ModelClass, PlainTextClass, PredicateClass, RecipeClass, SandstoneCore, SoundEventClass, TagClass, TextureClass, TrimMaterialClass, TrimPatternClass,
-} from 'sandstone/core'
-import { CustomResourceClass } from 'sandstone/core/resources/custom'
-import { Flow, SandstoneConditions } from 'sandstone/flow'
-import { makeCallable, randomUUID } from 'sandstone/utils'
-import {
-  coordinatesParser, DataArray, DataClass, DataIndexMap, DataPointClass, LabelClass, LoopArgument, ObjectiveClass, Score, SelectorClass, SleepClass, TargetlessDataClass, TargetlessDataPointClass, TriggerClass, UUIDClass,
-  VectorClass,
-} from 'sandstone/variables'
-import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
-
-import { PackType } from './packType.js'
-import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
-import {
-  ContainerCommandsToMCFunctionVisitor, GenerateLazyMCFunction, IfElseTransformationVisitor, InitConstantsVisitor, InitObjectivesVisitor,
-  InlineFunctionCallVisitor,
-  LoopTransformationVisitor,
-  SimplifyExecuteFunctionVisitor, SimplifyReturnRunFunctionVisitor, UnifyChainedExecutesVisitor,
-} from './visitors/index.js'
 
 import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON, AtlasDefinition, BlockStateDefinition, BlockStateType, Coordinates, DamageTypeJSON, FontProvider, ItemModifierJSON, JSONTextComponent, LootTableJSON, NBTObject, OBJECTIVE_CRITERION, PredicateJSON, RecipeJSON, REGISTRIES, RootNBT, SingleEntityArgument, SOUND_TYPES, TagValuesJSON, TEXTURE_TYPES, TimeArgument, TrimMaterialJSON, TrimPatternJSON,
+  AdvancementJSON,
+  AtlasDefinition,
+  BlockStateDefinition,
+  BlockStateType,
+  Coordinates,
+  DamageTypeJSON,
+  FontProvider,
+  ItemModifierJSON,
+  JSONTextComponent,
+  LootTableJSON,
+  NBTObject,
+  OBJECTIVE_CRITERION,
+  PredicateJSON,
+  REGISTRIES,
+  RecipeJSON,
+  RootNBT,
+  SingleEntityArgument,
+  SOUND_TYPES,
+  TagValuesJSON,
+  TEXTURE_TYPES,
+  TimeArgument,
+  TrimMaterialJSON,
+  TrimPatternJSON,
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
+import { SandstoneCommands } from 'sandstone/commands'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
-  AdvancementClassArguments, AtlasClassArguments, BlockStateArguments, DamageTypeClassArguments, DataPointPickClass, FontArguments, ItemModifierClassArguments, LanguageArguments, LootTableClassArguments, MacroArgument,
-  MCFunctionClassArguments, ModelClassArguments, Node, PlainTextArguments, PredicateClassArguments, RecipeClassArguments, SoundEventArguments, TagClassArguments, TextureArguments, TrimMaterialClassArguments, TrimPatternClassArguments,
+  AdvancementClassArguments,
+  AtlasClassArguments,
+  BlockStateArguments,
+  DamageTypeClassArguments,
+  DataPointPickClass,
+  FontArguments,
+  ItemModifierClassArguments,
+  LanguageArguments,
+  LootTableClassArguments,
+  MacroArgument,
+  MCFunctionClassArguments,
+  ModelClassArguments,
+  Node,
+  PlainTextArguments,
+  PredicateClassArguments,
+  RecipeClassArguments,
+  SoundEventArguments,
+  TagClassArguments,
+  TextureArguments,
+  TrimMaterialClassArguments,
+  TrimPatternClassArguments,
 } from 'sandstone/core'
+import {
+  AdvancementClass,
+  AtlasClass,
+  BlockStateClass,
+  DamageTypeClass,
+  FontClass,
+  ItemModifierClass,
+  isMacroArgument,
+  LanguageClass,
+  LootTableClass,
+  MacroLiteral,
+  MCFunctionClass,
+  ModelClass,
+  PlainTextClass,
+  PredicateClass,
+  RecipeClass,
+  SandstoneCore,
+  SoundEventClass,
+  TagClass,
+  TextureClass,
+  TrimMaterialClass,
+  TrimPatternClass,
+} from 'sandstone/core'
+import { CustomResourceClass } from 'sandstone/core/resources/custom'
+import { Flow, SandstoneConditions } from 'sandstone/flow'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
+import { makeCallable, randomUUID } from 'sandstone/utils'
 import type {
-  DATA_PATH, DATA_TARGET, DATA_TYPES, SelectorCreator, SelectorProperties, TriggerHandler, UUIDinNumber, UUIDinScore, UUIDOptions, UUIDSource,
+  DATA_PATH,
+  DATA_TARGET,
+  DATA_TYPES,
+  SelectorCreator,
+  SelectorProperties,
+  TriggerHandler,
+  UUIDinNumber,
+  UUIDinScore,
+  UUIDOptions,
+  UUIDSource,
 } from 'sandstone/variables'
+import {
+  coordinatesParser,
+  DataArray,
+  DataClass,
+  DataIndexMap,
+  DataPointClass,
+  LabelClass,
+  LoopArgument,
+  ObjectiveClass,
+  Score,
+  SelectorClass,
+  SleepClass,
+  TargetlessDataClass,
+  TargetlessDataPointClass,
+  TriggerClass,
+  UUIDClass,
+  VectorClass,
+} from 'sandstone/variables'
+import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
 import type { handlerReadFile, handlerWriteFile } from './packType.js'
+import { PackType } from './packType.js'
+import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
+import {
+  ContainerCommandsToMCFunctionVisitor,
+  GenerateLazyMCFunction,
+  IfElseTransformationVisitor,
+  InitConstantsVisitor,
+  InitObjectivesVisitor,
+  InlineFunctionCallVisitor,
+  LoopTransformationVisitor,
+  OrTransformationVisitor,
+  SimplifyExecuteFunctionVisitor,
+  SimplifyReturnRunFunctionVisitor,
+  UnifyChainedExecutesVisitor,
+} from './visitors/index.js'
 
 export type ResourcePath = string[]
 
-const conflictDefaults = (resourceType: string) => (process.env[`${resourceType.toUpperCase()}S_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY) as string
+const conflictDefaults = (resourceType: string) =>
+  (process.env[`${resourceType.toUpperCase()}S_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY) as string
 
 let tempStorage: DataClass<'storage'>
 
@@ -51,7 +140,7 @@ let startTickedLoops: MCFunctionClass<undefined, undefined>
 
 type MCFunctionArgs = Exclude<Partial<MCFunctionClassArguments>, MCFunctionClassArguments['callback']>
 
-const foo: MCFunctionArgs = {
+const _foo: MCFunctionArgs = {
   addToSandstoneCore: false,
 }
 
@@ -59,8 +148,25 @@ export class DataPack extends PackType {
   // TODO: typing. low priority
   readonly packMcmeta: any
 
-  constructor(archiveOutput: boolean, options: { packFormat: number, description: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
-    super('datapack', 'saves/$worldName$/datapacks/$packName$', 'world/datapacks/$packName$', 'datapacks/$packName$', 'server', archiveOutput, 'data', true)
+  constructor(
+    archiveOutput: boolean,
+    options: {
+      packFormat: number
+      description: JSONTextComponent
+      features?: string[]
+      filter?: { namespace?: string; path?: string }[]
+    },
+  ) {
+    super(
+      'datapack',
+      'saves/$worldName$/datapacks/$packName$',
+      'world/datapacks/$packName$',
+      'datapacks/$packName$',
+      'server',
+      archiveOutput,
+      'data',
+      true,
+    )
 
     this.packMcmeta = {
       pack: {
@@ -77,7 +183,11 @@ export class DataPack extends PackType {
     }
   }
 
-  handleOutput = async (type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => {
+  handleOutput = async (
+    type: 'output' | 'client' | 'server',
+    readFile: handlerReadFile,
+    writeFile: handlerWriteFile,
+  ) => {
     if (type === 'output') {
       await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta))
     }
@@ -88,8 +198,22 @@ export class ResourcePack extends PackType {
   // TODO: typing. low priority
   readonly packMcmeta: any
 
-  constructor(options: { packFormat: number, description: JSONTextComponent, features?: string[], filter?: { namespace?: string, path?: string }[] }) {
-    super('resourcepack', 'saves/$worldName$/resources', 'resource_pack', 'resourcepacks/$packName$', 'client', true, 'assets', true)
+  constructor(options: {
+    packFormat: number
+    description: JSONTextComponent
+    features?: string[]
+    filter?: { namespace?: string; path?: string }[]
+  }) {
+    super(
+      'resourcepack',
+      'saves/$worldName$/resources',
+      'resource_pack',
+      'resourcepacks/$packName$',
+      'client',
+      true,
+      'assets',
+      true,
+    )
 
     this.packMcmeta = {
       pack: {
@@ -103,7 +227,11 @@ export class ResourcePack extends PackType {
     }
   }
 
-  handleOutput = async (type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => {
+  handleOutput = async (
+    type: 'output' | 'client' | 'server',
+    readFile: handlerReadFile,
+    writeFile: handlerWriteFile,
+  ) => {
     if (type === 'output') {
       await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta))
     }
@@ -124,27 +252,15 @@ export class SandstonePack {
 
   packTypes: Map<string, PackType>
 
-  packOptions = JSON.parse(process.env.PACK_OPTIONS as string)
+  packOptions = process.env.PACK_OPTIONS
+    ? JSON.parse(process.env.PACK_OPTIONS)
+    : {
+        datapack: {
+          packFormat: 31,
+        },
+      }
 
-  dataPack() {
-    let pack = this.packTypes.get('datapack') as DataPack
-
-    if (!pack) {
-      pack = this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack)).get('datapack') as DataPack
-    }
-
-    return pack
-  }
-
-  resourcePack() {
-    let pack = this.packTypes.get('resourcepack') as ResourcePack
-
-    if (!pack) {
-      pack = this.packTypes.set('resourcepack', new ResourcePack(this.packOptions.resourcepack)).get('resourcepack') as ResourcePack
-    }
-
-    return pack
-  }
+  __initMCFunction?: MCFunctionClass<undefined, undefined>
 
   // Smithed Pack IDs
   dependencies: Map<string, boolean>
@@ -153,7 +269,8 @@ export class SandstonePack {
 
   readonly commands: SandstoneCommands<false>
 
-  readonly Macro: SandstoneCommands<true> & ((strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => MacroLiteral)
+  readonly Macro: SandstoneCommands<true> &
+    ((strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => MacroLiteral)
 
   readonly conditions = SandstoneConditions
 
@@ -167,15 +284,25 @@ export class SandstonePack {
 
   tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass<undefined, undefined>>>
 
-  loadTags: { preLoad: TagClass<'functions'>, load: TagClass<'functions'>, postLoad: TagClass<'functions'> }
+  loadTags: { preLoad: TagClass<'functions'>; load: TagClass<'functions'>; postLoad: TagClass<'functions'> }
 
-  constructor(public defaultNamespace: string, public packUid: string) {
+  __rootObjective?: ObjectiveClass
+
+  constructor(
+    public defaultNamespace: string,
+    public packUid: string,
+  ) {
     this.packTypes = new Map()
 
     this.commands = new SandstoneCommands(this)
 
     // SandstonePack.Macro is only a type hack
-    this.Macro = makeCallable(this.commands, (strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => new MacroLiteral(this.core, strings, macros), true) as unknown as this['Macro']
+    this.Macro = makeCallable(
+      this.commands,
+      (strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) =>
+        new MacroLiteral(this.core, strings, macros),
+      true,
+    ) as unknown as this['Macro']
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
@@ -206,13 +333,64 @@ export class SandstonePack {
     }
   }
 
+  /**
+   * Performs a full reset of the pack.
+   */
+  reset = () => {
+    this.core.reset()
+    this.packTypes.clear()
+    this.__rootObjective = undefined
+    this.__initMCFunction = undefined
+    this.objectives.clear()
+    this.constants.clear()
+    this.tickedLoops = {}
+    this.dependencies.clear()
+    this.loadTags = {
+      preLoad: this.Tag('functions', 'load:pre_load', []),
+      load: this.Tag('functions', 'load:load', []),
+      postLoad: this.Tag('functions', 'load:post_load', []),
+    }
+    this.setupLantern()
+    if (process.env.NAMESPACE) {
+      this.defaultNamespace = process.env.NAMESPACE
+    }
+
+    // Initialize getters
+    this.rootObjective
+    this.initMCFunction
+  }
+
+  dataPack() {
+    let pack = this.packTypes.get('datapack') as DataPack
+
+    if (!pack) {
+      pack = this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack)).get('datapack') as DataPack
+    }
+
+    return pack
+  }
+
+  resourcePack() {
+    let pack = this.packTypes.get('resourcepack') as ResourcePack
+
+    if (!pack) {
+      pack = this.packTypes
+        .set('resourcepack', new ResourcePack(this.packOptions.resourcepack))
+        .get('resourcepack') as ResourcePack
+    }
+
+    return pack
+  }
+
   setupLantern = () => {
     const loadStatus = this.Objective.create('load.status')
 
-    const privateInit = this.Tag('functions', 'load:_private/init', [this.MCFunction('load:_private/init', () => {
-      this.commands.comment('Reset scoreboards so packs can set values accurate for current load.')
-      loadStatus.reset()
-    })])
+    const privateInit = this.Tag('functions', 'load:_private/init', [
+      this.MCFunction('load:_private/init', () => {
+        this.commands.comment('Reset scoreboards so packs can set values accurate for current load.')
+        loadStatus.reset()
+      }),
+    ])
 
     const privateLoad = this.Tag('functions', 'load:_private/load', [
       privateInit,
@@ -231,7 +409,7 @@ export class SandstonePack {
     let fullName = name
 
     if (name.includes(':')) {
-      ([namespace, fullName] = name.split(':'))
+      ;[namespace, fullName] = name.split(':')
     }
 
     const fullPath = fullName.split('/')
@@ -263,15 +441,35 @@ export class SandstonePack {
     /**
      * Create a new objective. Defaults to `dummy` if unspecified.
      * @param name The name of the objective
+     * @param criteria The criteria for the objective
+     * @param display The display information for the objective
+     * @param options Optional. Options for the objective.
+     * @param options.alreadyExists If true, the objective will not be registered as a new one. Defaults to false.
+     * @param options.useDefaultNamespace If true (the default), the objective will be created in the default namespace.
+     *                            For example, if the default namespace is `sandstone`, then the objective will be created as `sandstone.objective_name`.
+     *                            If false, the objective will be created without a namespace.
+     *                            This argument is ignored if the `name` already contains a namespace (determined by the presence of a dot `"."` or a double underscore `"__"`).
      */
-    create: (name: string, criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy', display?: JSONTextComponent, alreadyExists?: boolean): ObjectiveClass => {
-      let namespace: boolean = false
+    create: (
+      name: string,
+      criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy',
+      display?: JSONTextComponent,
+      options: {
+        alreadyExists?: boolean
+        useDefaultNamespace?: boolean
+      } = {},
+    ): ObjectiveClass => {
+      let { alreadyExists = false, useDefaultNamespace = true } = options
 
       if (name.includes('.') || name.includes('__')) {
-        namespace = true
+        useDefaultNamespace = false
       }
 
-      const objective = new ObjectiveClass(this, namespace ? name : `${this.defaultNamespace}.${name}`, criteria as string, display, { creator: 'user' })
+      if (useDefaultNamespace) {
+        name = `${this.defaultNamespace}.${name}`
+      }
+
+      const objective = new ObjectiveClass(this, name, criteria as string, display, { creator: 'user' })
 
       if (!alreadyExists) {
         this.registerNewObjective(objective)
@@ -279,79 +477,83 @@ export class SandstonePack {
       return objective
     },
 
-    /** Get an existing objective. */
+    /**
+     * Get an existing objective. Sandstone will not check if the objective really exists.
+     * @param name The name of the objective
+     */
     get: (name: string): ObjectiveClass => new ObjectiveClass(this, name, 'dummy', undefined, { creator: 'user' }),
   }
-
-  __rootObjective?: ObjectiveClass
 
   get rootObjective() {
     if (this.__rootObjective) {
       return this.__rootObjective
     }
-    this.__rootObjective = this.Objective.create('__sandstone', 'dummy', [{ text: 'Sandstone', color: 'gold' }, ' internals'])
+    this.__rootObjective = this.Objective.create('__sandstone', 'dummy', [
+      { text: 'Sandstone', color: 'gold' },
+      ' internals',
+    ])
     return this.__rootObjective
   }
 
-  Variable: (
-    (
-      /**
-       * Creates a dynamic numeric variable, represented by an anonymous & unique score.
-       *
-       * @param initialValue The initial value of the variable. If left unspecified,
-       * or if `undefined`, then the score will not be initialized.
-       *
-       * @param name A name that can be useful for debugging.
-       */
-      (initialValue?: number | Score | undefined, name?: string) => Score
-    ) & (
-      /**
-       * Creates a dynamic numeric variable, represented by an anonymous & unique score.
-       *
-       * @param nbt The NBT value to set the Variable to.
-       *
-       * @param scale The scale to multiply the value by. Defaults to 1.
-       *
-       * @param name A name that can be useful for debugging.
-       */
-      (nbt: DataPointClass, scale?: number, name?: string) => Score
-    )
-  ) = (...args: [initialValue?: number | Score | undefined, name?: string] | [nbt: DataPointClass, scale?: number, name?: string]) => {
+  Variable: /**
+   * Creates a dynamic numeric variable, represented by an anonymous & unique score.
+   *
+   * @param initialValue The initial value of the variable. If left unspecified,
+   * or if `undefined`, then the score will not be initialized.
+   *
+   * @param name A name that can be useful for debugging.
+   */
+  ((initialValue?: number | Score | undefined, name?: string) => Score) &
+    /**
+     * Creates a dynamic numeric variable, represented by an anonymous & unique score.
+     *
+     * @param nbt The NBT value to set the Variable to.
+     *
+     * @param scale The scale to multiply the value by. Defaults to 1.
+     *
+     * @param name A name that can be useful for debugging.
+     */
+    ((nbt: DataPointClass, scale?: number, name?: string) => Score) = (
+    ...args:
+      | [initialValue?: number | Score | undefined, name?: string]
+      | [nbt: DataPointClass, scale?: number, name?: string]
+  ) => {
     // Get the objective
-      const score = this.rootObjective
+    const score = this.rootObjective
 
-      if (args[0] instanceof DataPointClass) {
-        const [nbt, scale, name] = args
-        // If the value is a data point, leverage the .set method
-        return this.Variable(undefined, name).set(nbt, scale as number)
-      }
+    if (args[0] instanceof DataPointClass) {
+      const [nbt, scale, name] = args
+      // If the value is a data point, leverage the .set method
+      return this.Variable(undefined, name).set(nbt, scale as number)
+    }
 
-      const [initialValue, name] = args
+    const [initialValue, name] = args
 
-      // Get the specific anonymous score
-      const anonymousScore = score(`${name ?? 'anon'}_${this.packUid}_${this.anonymousScoreId++}`)
+    // Get the specific anonymous score
+    const anonymousScore = score(`${name ?? 'anon'}_${this.packUid}_${this.anonymousScoreId++}`)
 
-      // No initial value => we can directly return the score
-      if (initialValue === undefined) {
-        return anonymousScore
-      }
-
-      // We currently are in a MCFunction => that's where the initialization should take place
-      if (this.core.currentMCFunction) {
-        return anonymousScore.set(initialValue)
-      }
-
-      // Else, we should run it in the init MCFunction
-      this.initMCFunction.push(() => anonymousScore.set(initialValue))
-
+    // No initial value => we can directly return the score
+    if (initialValue === undefined) {
       return anonymousScore
     }
+
+    // We currently are in a MCFunction => that's where the initialization should take place
+    if (this.core.currentMCFunction) {
+      return anonymousScore.set(initialValue)
+    }
+
+    // Else, we should run it in the init MCFunction
+    this.initMCFunction.push(() => anonymousScore.set(initialValue))
+
+    return anonymousScore
+  }
 
   get flowVariable() {
     return this.rootObjective('if_result')
   }
 
-  Trigger = (name: string, callback: TriggerHandler, pollingEvery = 1) => new TriggerClass(this.core, name, callback, pollingEvery)
+  Trigger = (name: string, callback: TriggerHandler, pollingEvery = 1) =>
+    new TriggerClass(this.core, name, callback, pollingEvery)
 
   /**
    * Creates a new label
@@ -374,16 +576,36 @@ export class SandstonePack {
 
   Data<T extends 'block'>(type: T, target: Coordinates<false>): DataClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target: undefined, path: MacroArgument | DATA_PATH | DATA_PATH[]): TargetlessDataPointClass<T>
+  Data<T extends DATA_TYPES>(
+    type: T,
+    target: undefined,
+    path: MacroArgument | DATA_PATH | DATA_PATH[],
+  ): TargetlessDataPointClass<T>
 
-  Data<T extends 'entity'>(type: T, target: SingleEntityArgument<false>, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'entity'>(
+    type: T,
+    target: SingleEntityArgument<false>,
+    path: MacroArgument | DATA_PATH | DATA_PATH[],
+  ): DataPointClass<T>
 
-  Data<T extends 'storage'>(type: T, target: MacroArgument | string, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'storage'>(
+    type: T,
+    target: MacroArgument | string,
+    path: MacroArgument | DATA_PATH | DATA_PATH[],
+  ): DataPointClass<T>
 
-  Data<T extends 'block'>(type: T, target: Coordinates<false>, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>
+  Data<T extends 'block'>(
+    type: T,
+    target: Coordinates<false>,
+    path: MacroArgument | DATA_PATH | DATA_PATH[],
+  ): DataPointClass<T>
 
-  Data<T extends DATA_TYPES>(type: T, target?: SingleEntityArgument<false> | string | Coordinates<false> | MacroArgument, path?: MacroArgument | DATA_PATH | DATA_PATH[]) {
-    const dataPath = path ?? typeof path === 'string' ? [path] : path
+  Data<T extends DATA_TYPES>(
+    type: T,
+    target?: SingleEntityArgument<false> | string | Coordinates<false> | MacroArgument,
+    path?: MacroArgument | DATA_PATH | DATA_PATH[],
+  ) {
+    const dataPath = (path ?? typeof path === 'string') ? [path] : path
 
     // Since Macros technically don't need to be used with `Macro.`, this is fine. Its hacky. But whatever.
 
@@ -394,10 +616,20 @@ export class SandstonePack {
       return new TargetlessDataPointClass(this, type, dataPath as DATA_PATH[])
     }
     if (!path) {
-      return new DataClass(this, type, (isMacroArgument(this.core, target) || (type === 'block' ? coordinatesParser(target) : target)) as DATA_TARGET[T])
+      return new DataClass(
+        this,
+        type,
+        (isMacroArgument(this.core, target) ||
+          (type === 'block' ? coordinatesParser(target) : target)) as DATA_TARGET[T],
+      )
     }
 
-    return new DataPointClass(this, type, (target instanceof VectorClass ? coordinatesParser(target) : target) as DATA_TARGET[T], dataPath as DATA_PATH[])
+    return new DataPointClass(
+      this,
+      type,
+      (target instanceof VectorClass ? coordinatesParser(target) : target) as DATA_TARGET[T],
+      dataPath as DATA_PATH[],
+    )
   }
 
   __rootStorage?: DataPointClass
@@ -412,63 +644,65 @@ export class SandstonePack {
     return this.__rootStorage
   }
 
-  DataVariable: (
-    (
-      /**
-       * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
-       *
-       * @param initialValue Optional. The initial value of the variable. If left unspecified,
-       * or if `undefined`, then the Data Point will not be initialized.
-       *
-       * @param name Optional. A name that can be useful for debugging.
-       */
-      (initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string) => DataPointClass<'storage'>
-    ) & (
-      /**
-       * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
-       *
-       * @param score The Score to set the data variable to.
-       *
-       * @param storeType Optional. The number type you want to store. Defaults to int.
-       *
-       * @param scale Optional. The scale to multiply the value by. Defaults to 1.
-       *
-       * @param name Optional. A name that can be useful for debugging.
-       */
-      (score: Score, storeType?: StoreType, scale?: number, name?: string) => DataPointClass<'storage'>
-    )
-  ) = (...args: [initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string] | [score: Score, storeType?: StoreType, scale?: number, name?: string]) => {
+  DataVariable: /**
+   * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
+   *
+   * @param initialValue Optional. The initial value of the variable. If left unspecified,
+   * or if `undefined`, then the Data Point will not be initialized.
+   *
+   * @param name Optional. A name that can be useful for debugging.
+   */
+  ((initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string) => DataPointClass<'storage'>) &
+    /**
+     * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
+     *
+     * @param score The Score to set the data variable to.
+     *
+     * @param storeType Optional. The number type you want to store. Defaults to int.
+     *
+     * @param scale Optional. The scale to multiply the value by. Defaults to 1.
+     *
+     * @param name Optional. A name that can be useful for debugging.
+     */
+    ((score: Score, storeType?: StoreType, scale?: number, name?: string) => DataPointClass<'storage'>) = (
+    ...args:
+      | [initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string]
+      | [score: Score, storeType?: StoreType, scale?: number, name?: string]
+  ) => {
     // Get the objective
-      const data = this.rootStorage()
+    const data = this.rootStorage()
 
-      if (args[0] instanceof Score) {
-        const [score, storeType, scale, name] = args
-        // If the value is a score, leverage the .set method
-        return this.DataVariable(undefined, name).set(score, (storeType || 'int') as StoreType, scale || 1)
-      }
+    if (args[0] instanceof Score) {
+      const [score, storeType, scale, name] = args
+      // If the value is a score, leverage the .set method
+      return this.DataVariable(undefined, name).set(score, (storeType || 'int') as StoreType, scale || 1)
+    }
 
-      const [initialValue, name] = args
+    const [initialValue, name] = args
 
-      // Get the specific anonymous data point
-      const anonymousData = data.select(`${name ?? 'anon'}_${this.packUid}_${this.anonymousDataId++}`)
+    // Get the specific anonymous data point
+    const anonymousData = data.select(`${name ?? 'anon'}_${this.packUid}_${this.anonymousDataId++}`)
 
-      // No initial value => we can directly return the data point
-      if (initialValue === undefined) {
-        return anonymousData
-      }
-
-      // We currently are in a MCFunction => that's where the initialization should take place
-      if (this.core.currentMCFunction) {
-        return anonymousData.set(initialValue as never)
-      }
-
-      // Else, we should run it in the init MCFunction
-      this.initMCFunction.push(() => anonymousData.set(initialValue as never))
-
+    // No initial value => we can directly return the data point
+    if (initialValue === undefined) {
       return anonymousData
     }
 
-  DataIndexMap<INITIAL extends RootNBT | Record<string, DataPointClass | DataPointPickClass>>(initialize: INITIAL, dataPoint?: DataPointClass<'storage'>) {
+    // We currently are in a MCFunction => that's where the initialization should take place
+    if (this.core.currentMCFunction) {
+      return anonymousData.set(initialValue as never)
+    }
+
+    // Else, we should run it in the init MCFunction
+    this.initMCFunction.push(() => anonymousData.set(initialValue as never))
+
+    return anonymousData
+  }
+
+  DataIndexMap<INITIAL extends RootNBT | Record<string, DataPointClass | DataPointPickClass>>(
+    initialize: INITIAL,
+    dataPoint?: DataPointClass<'storage'>,
+  ) {
     return DataIndexMap(this, initialize, dataPoint) as DataIndexMap<INITIAL>
   }
 
@@ -494,7 +728,10 @@ export class SandstonePack {
    */
   ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) => new ResolveNBTClass(this, nbt, dataPoint)
 
-  Selector: SelectorCreator<false> = ((target: '@s' | '@p' | '@a' | '@e' | '@r', properties: SelectorProperties<false, false, false>) => new SelectorClass(this, target, properties)) as any
+  Selector: SelectorCreator<false> = ((
+    target: '@s' | '@p' | '@a' | '@e' | '@r',
+    properties: SelectorProperties<false, false, false>,
+  ) => new SelectorClass(this, target, properties)) as any
 
   /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
   UUID(source: string | UUIDinNumber, options?: UUIDOptions): UUIDClass<'known'>
@@ -508,68 +745,74 @@ export class SandstonePack {
   /** Initializes with a Selector. */
   UUID(source: SelectorClass<true, boolean>, options?: UUIDOptions): UUIDClass<'selector'>
 
-  UUID(source: UUIDSource = randomUUID(), options?: UUIDOptions) { return new UUIDClass(this.core, source, options) }
+  UUID(source: UUIDSource = randomUUID(), options?: UUIDOptions) {
+    return new UUIDClass(this.core, source, options)
+  }
 
-  MCFunction(
-    name: string,
-    options?: MCFunctionArgs
-  ): MCFunctionClass<undefined, undefined>
+  MCFunction(name: string, options?: MCFunctionArgs): MCFunctionClass<undefined, undefined>
 
   MCFunction(
     name: string,
     callback: (loop: MCFunctionClass<undefined, undefined>) => void,
-    options?: MCFunctionArgs
+    options?: MCFunctionArgs,
   ): MCFunctionClass<undefined, undefined>
 
   MCFunction<PARAMS extends readonly MacroArgument[]>(
     name: string,
     callback: (loop: MCFunctionClass<PARAMS, undefined>, ...params: PARAMS) => void,
-    options?: MCFunctionArgs
+    options?: MCFunctionArgs,
   ): MCFunctionClass<PARAMS, undefined>
 
   MCFunction<ENV extends readonly MacroArgument[]>(
     name: string,
     environmentVariables: ENV,
     callback: (loop: MCFunctionClass<undefined, ENV>) => void,
-    options?: MCFunctionArgs
+    options?: MCFunctionArgs,
   ): MCFunctionClass<undefined, ENV>
 
   MCFunction<PARAMS extends readonly MacroArgument[], ENV extends readonly MacroArgument[]>(
     name: string,
     environmentVariables: ENV,
     callback: (loop: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void,
-    options?: MCFunctionArgs
+    options?: MCFunctionArgs,
   ): MCFunctionClass<PARAMS, ENV>
 
-  MCFunction<
-    PARAMS extends readonly MacroArgument[] | undefined,
-    ENV extends readonly MacroArgument[] | undefined>(
-    ...args: [
-      name: string,
-      options?: MCFunctionArgs
-    ] |[
-      name: string,
-      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []) => void,
-      options?: MCFunctionArgs
-    ] | [
-      name: string,
-      environmentVariables: ENV,
-      callback: (this: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []) => void,
-      options?: MCFunctionArgs,
-    ]
+  MCFunction<PARAMS extends readonly MacroArgument[] | undefined, ENV extends readonly MacroArgument[] | undefined>(
+    ...args:
+      | [name: string, options?: MCFunctionArgs]
+      | [
+          name: string,
+          callback: (
+            this: MCFunctionClass<PARAMS, ENV>,
+            ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []
+          ) => void,
+          options?: MCFunctionArgs,
+        ]
+      | [
+          name: string,
+          environmentVariables: ENV,
+          callback: (
+            this: MCFunctionClass<PARAMS, ENV>,
+            ...params: PARAMS extends readonly MacroArgument[] ? PARAMS : []
+          ) => void,
+          options?: MCFunctionArgs,
+        ]
   ) {
-    return new MCFunctionClass(this.core, args[0], {
-      callback: (typeof args[1] === 'function' ? args[1] : args[2]) as () => void,
-      creator: 'user',
-      addToSandstoneCore: true,
-      onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
-      ...(Array.isArray(args[1]) ? args[3] : (args[2] || args[1])),
-    }, (Array.isArray(args[1])) ? args[1] : undefined) as MCFunctionClass<PARAMS, ENV>
+    return new MCFunctionClass(
+      this.core,
+      args[0],
+      {
+        callback: (typeof args[1] === 'function' ? args[1] : args[2]) as () => void,
+        creator: 'user',
+        addToSandstoneCore: true,
+        onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
+        ...(Array.isArray(args[1]) ? args[3] : args[2] || args[1]),
+      },
+      Array.isArray(args[1]) ? args[1] : undefined,
+    ) as MCFunctionClass<PARAMS, ENV>
   }
 
   appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
-
-  __initMCFunction?: MCFunctionClass<undefined, undefined>
 
   get initMCFunction() {
     if (!this.__initMCFunction) {
@@ -599,7 +842,9 @@ export class SandstonePack {
         callback()
       })
       if (!startTickedLoops) {
-        startTickedLoops = this.MCFunction('__sandstone:ticked/start', () => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
+        startTickedLoops = this.MCFunction('__sandstone:ticked/start', () =>
+          this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'),
+        )
         this.loadTags.load.push(startTickedLoops)
       } else {
         startTickedLoops.push(() => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
@@ -607,7 +852,7 @@ export class SandstonePack {
     }
   }
 
-  sleep = (delay: TimeArgument): PromiseLike<SleepClass> => (new SleepClass(this.core, delay)).promise()
+  sleep = (delay: TimeArgument): PromiseLike<SleepClass> => new SleepClass(this.core, delay).promise()
 
   Loop = () => new LoopArgument(this)
 
@@ -630,7 +875,11 @@ export class SandstonePack {
   /** Creates a resource in the given pack, path must include file extension. */
   RawResource(pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
 
-  RawResource(...args: [path: string, contents: string | Buffer | Promise<Buffer>] | [pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>]) {
+  RawResource(
+    ...args:
+      | [path: string, contents: string | Buffer | Promise<Buffer>]
+      | [pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>]
+  ) {
     const [core, CustomResource] = this.makeCustomResource
 
     if (args[0] instanceof PackType) {
@@ -643,7 +892,11 @@ export class SandstonePack {
       class RawResource extends CustomResource {
         constructor() {
           super(core, path.join('/'), {
-            type: `${Math.random()}`, packType: args[0] as PackType, extension, addToSandstoneCore: true, creator: 'user',
+            type: `${Math.random()}`,
+            packType: args[0] as PackType,
+            extension,
+            addToSandstoneCore: true,
+            creator: 'user',
           })
         }
 
@@ -658,12 +911,13 @@ export class SandstonePack {
 
     path[path.length - 1] = path[path.length - 1].replace(`.${extension}`, '')
 
-    const { dataPack } = this
-
     class RawResource extends CustomResource {
       constructor() {
         super(core, path.join('/'), {
-          type: `${Math.random()}`, extension, addToSandstoneCore: true, creator: 'user',
+          type: `${Math.random()}`,
+          extension,
+          addToSandstoneCore: true,
+          creator: 'user',
         })
       }
 
@@ -673,88 +927,112 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement = <T extends string>(name: string, advancement: AdvancementJSON<T>, options?: Partial<AdvancementClassArguments>) => new AdvancementClass(this.core, name, {
-    advancement,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('advancement') as AdvancementClassArguments['onConflict'],
-    ...options,
-  })
+  Advancement = <T extends string>(
+    name: string,
+    advancement: AdvancementJSON<T>,
+    options?: Partial<AdvancementClassArguments>,
+  ) =>
+    new AdvancementClass(this.core, name, {
+      advancement,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('advancement') as AdvancementClassArguments['onConflict'],
+      ...options,
+    })
 
-  DamageType = (name: string, damageType: DamageTypeJSON, options?: Partial<DamageTypeClassArguments>) => new DamageTypeClass(this.core, name, {
-    damageType,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('damage_type') as DamageTypeClassArguments['onConflict'],
-    ...options,
-  })
+  DamageType = (name: string, damageType: DamageTypeJSON, options?: Partial<DamageTypeClassArguments>) =>
+    new DamageTypeClass(this.core, name, {
+      damageType,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('damage_type') as DamageTypeClassArguments['onConflict'],
+      ...options,
+    })
 
-  ItemModifier = (name: string, itemModifier: ItemModifierJSON, options?: Partial<ItemModifierClassArguments>) => new ItemModifierClass(this.core, name, {
-    itemModifier,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('item_modifier') as ItemModifierClassArguments['onConflict'],
-    ...options,
-  })
+  ItemModifier = (name: string, itemModifier: ItemModifierJSON, options?: Partial<ItemModifierClassArguments>) =>
+    new ItemModifierClass(this.core, name, {
+      itemModifier,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('item_modifier') as ItemModifierClassArguments['onConflict'],
+      ...options,
+    })
 
-  LootTable = (name: string, lootTable: LootTableJSON, options?: Partial<LootTableClassArguments>) => new LootTableClass(this.core, name, {
-    lootTable,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('loot_table') as LootTableClassArguments['onConflict'],
-    ...options,
-  })
+  LootTable = (name: string, lootTable: LootTableJSON, options?: Partial<LootTableClassArguments>) =>
+    new LootTableClass(this.core, name, {
+      lootTable,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('loot_table') as LootTableClassArguments['onConflict'],
+      ...options,
+    })
 
-  Predicate = (name: string, predicate: PredicateJSON, options?: Partial<PredicateClassArguments>) => new PredicateClass(this.core, name, {
-    predicate,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('predicate') as PredicateClassArguments['onConflict'],
-    ...options,
-  })
+  Predicate = (name: string, predicate: PredicateJSON, options?: Partial<PredicateClassArguments>) =>
+    new PredicateClass(this.core, name, {
+      predicate,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('predicate') as PredicateClassArguments['onConflict'],
+      ...options,
+    })
 
-  Recipe = (name: string, recipe: RecipeJSON, options?: Partial<RecipeClassArguments>) => new RecipeClass(this.core, name, {
-    recipe,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],
-    ...options,
-  })
+  Recipe = (name: string, recipe: RecipeJSON, options?: Partial<RecipeClassArguments>) =>
+    new RecipeClass(this.core, name, {
+      recipe,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],
+      ...options,
+    })
 
   /** @ts-ignore */
-  Tag = <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: Partial<TagClassArguments<T>>) => new TagClass<T>(this.core, type, name, {
-    values,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('tag') as TagClassArguments<T>['onConflict'],
-    ...options,
-  })
+  Tag = <T extends LiteralUnion<REGISTRIES>>(
+    type: T,
+    name: string,
+    values: TagValuesJSON<T>,
+    options?: Partial<TagClassArguments<T>>,
+  ) =>
+    new TagClass<T>(this.core, type, name, {
+      values,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('tag') as TagClassArguments<T>['onConflict'],
+      ...options,
+    })
 
-  TrimMaterial = (name: string, trimMaterial: TrimMaterialJSON, options?: Partial<TrimMaterialClassArguments>) => new TrimMaterialClass(this.core, name, {
-    trimMaterial,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('trim_material') as TrimMaterialClassArguments['onConflict'],
-    ...options,
-  })
+  TrimMaterial = (name: string, trimMaterial: TrimMaterialJSON, options?: Partial<TrimMaterialClassArguments>) =>
+    new TrimMaterialClass(this.core, name, {
+      trimMaterial,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('trim_material') as TrimMaterialClassArguments['onConflict'],
+      ...options,
+    })
 
-  TrimPattern = (name: string, trimPattern: TrimPatternJSON, options?: Partial<TrimPatternClassArguments>) => new TrimPatternClass(this.core, name, {
-    trimPattern,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('trim_pattern') as TrimPatternClassArguments['onConflict'],
-    ...options,
-  })
+  TrimPattern = (name: string, trimPattern: TrimPatternJSON, options?: Partial<TrimPatternClassArguments>) =>
+    new TrimPatternClass(this.core, name, {
+      trimPattern,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('trim_pattern') as TrimPatternClassArguments['onConflict'],
+      ...options,
+    })
 
-  Atlas = (name: string, atlas: AtlasDefinition, options?: Partial<AtlasClassArguments>) => new AtlasClass(this.core, name, {
-    atlas,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('atlas') as AtlasClassArguments['onConflict'],
-    ...options,
-  })
+  Atlas = (name: string, atlas: AtlasDefinition, options?: Partial<AtlasClassArguments>) =>
+    new AtlasClass(this.core, name, {
+      atlas,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('atlas') as AtlasClassArguments['onConflict'],
+      ...options,
+    })
 
-  BlockState<Type extends BlockStateType>(type: Type, name: string, blockState: BlockStateDefinition<Type>, options?: Partial<BlockStateArguments<Type>>) {
+  BlockState<Type extends BlockStateType>(
+    type: Type,
+    name: string,
+    blockState: BlockStateDefinition<Type>,
+    options?: Partial<BlockStateArguments<Type>>,
+  ) {
     return new BlockStateClass(this.core, name, type, {
       blockState,
       creator: 'user',
@@ -764,31 +1042,44 @@ export class SandstonePack {
     })
   }
 
-  Font = (name: string, providers: FontProvider[], options?: Partial<FontArguments>) => new FontClass(this.core, name, {
-    providers,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('font') as FontArguments['onConflict'],
-    ...options,
-  })
+  Font = (name: string, providers: FontProvider[], options?: Partial<FontArguments>) =>
+    new FontClass(this.core, name, {
+      providers,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('font') as FontArguments['onConflict'],
+      ...options,
+    })
 
-  Language = (name: string, language: LanguageArguments['language'], options?: Partial<LanguageArguments>) => new LanguageClass(this.core, name, {
-    language,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('language') as LanguageArguments['onConflict'],
-    ...options,
-  })
+  Language = (name: string, language: LanguageArguments['language'], options?: Partial<LanguageArguments>) =>
+    new LanguageClass(this.core, name, {
+      language,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('language') as LanguageArguments['onConflict'],
+      ...options,
+    })
 
-  Model = (type: 'block' | 'item', name: string, model: ModelClassArguments['model'], options?: Partial<ModelClassArguments>) => new ModelClass(this.core, type, name, {
-    model,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('model') as ModelClassArguments['onConflict'],
-    ...options,
-  })
+  Model = (
+    type: 'block' | 'item',
+    name: string,
+    model: ModelClassArguments['model'],
+    options?: Partial<ModelClassArguments>,
+  ) =>
+    new ModelClass(this.core, type, name, {
+      model,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('model') as ModelClassArguments['onConflict'],
+      ...options,
+    })
 
-  SoundEvent<Type extends SOUND_TYPES>(type: Type, name: string, sound: SoundEventArguments['sound'], options?: Partial<SoundEventArguments>) {
+  SoundEvent<Type extends SOUND_TYPES>(
+    type: Type,
+    name: string,
+    sound: SoundEventArguments['sound'],
+    options?: Partial<SoundEventArguments>,
+  ) {
     return new SoundEventClass(this.core, type, name, {
       sound,
       creator: 'user',
@@ -798,15 +1089,21 @@ export class SandstonePack {
     })
   }
 
-  PlainText = (name: string, text: PlainTextArguments['text'], options?: Partial<PlainTextArguments>) => new PlainTextClass(this.core, name, {
-    text,
-    creator: 'user',
-    addToSandstoneCore: true,
-    onConflict: conflictDefaults('atlas') as PlainTextArguments['onConflict'],
-    ...options,
-  })
+  PlainText = (name: string, text: PlainTextArguments['text'], options?: Partial<PlainTextArguments>) =>
+    new PlainTextClass(this.core, name, {
+      text,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('atlas') as PlainTextArguments['onConflict'],
+      ...options,
+    })
 
-  Texture<Type extends TEXTURE_TYPES>(type: Type, name: string, texture: TextureArguments<Type>['texture'], options?: Partial<TextureArguments<Type>>) {
+  Texture<Type extends TEXTURE_TYPES>(
+    type: Type,
+    name: string,
+    texture: TextureArguments<Type>['texture'],
+    options?: Partial<TextureArguments<Type>>,
+  ) {
     return new TextureClass(this.core, type, name, {
       texture,
       creator: 'user',
@@ -816,7 +1113,11 @@ export class SandstonePack {
     })
   }
 
-  save = async (cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>, dry: boolean, verbose: boolean }) => {
+  save = async (cliOptions: {
+    fileHandler: (relativePath: string, content: any) => Promise<void>
+    dry: boolean
+    verbose: boolean
+  }) => {
     await this.core.save(cliOptions, {
       visitors: [
         // Initialization visitors
@@ -826,6 +1127,7 @@ export class SandstonePack {
 
         // Transformation visitors
         new LoopTransformationVisitor(this),
+        new OrTransformationVisitor(this),
         new IfElseTransformationVisitor(this),
         new ContainerCommandsToMCFunctionVisitor(this),
 

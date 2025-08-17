@@ -38,34 +38,46 @@ export class DataPackCommand extends CommandArguments {
   protected NodeType = DataPackCommandNode
 
   /**
-   * Disable the specified pack.
+   * Disable a datapack.
    *
-   * @param name Specifies the name of the datapack.
+   * @param name Datapack name to disable.
+   *            Examples: 'minecraft', 'vanilla', 'mypack'
+   *
+   * @example
+   * ```ts
+   * datapack.disable('mypack')        // Disable specific pack
+   * ```
    */
   disable = (name: string) => this.finalCommand([name])
 
   /**
-   * Enable the specified pack.
+   * Enable a datapack with priority control.
    *
-   * @param name Specifies the name of the datapack.
+   * @param name Datapack name to enable.
+   *            Examples: 'mypack', 'additional_features'
    *
    * @example
-   *
-   * // Enable `myDatapack`, and give it the highest priority
-   * datapack.enable('myDatapack').last()
-   *
-   * // Enable `myDatapack`, just before `importantDatapack`.
-   * // `mydatapack` will have a lower priority.
-   * datapack.enable('myDatapack').before('importantDatapack')
+   * ```ts
+   * datapack.enable('mypack').last()               // Highest priority
+   * datapack.enable('mypack').first()              // Lowest priority
+   * datapack.enable('mypack').before('vanilla')    // Load before vanilla
+   * datapack.enable('mypack').after('base_pack')   // Load after base_pack
+   * ```
    */
   enable = (name: string) => this.subCommand(['enable', name], DataPackEnableCommand, false)
 
   /**
-   * List all datapacks, or list only the available/enabled ones.
+   * List datapacks.
    *
-   * Hovering over the datapacks in the chat output shows their description defined in their pack.mcmeta.
+   * @param type Optional filter: 'available' shows all packs, 'enabled' shows active packs.
+   *            If not specified, shows all datapacks.
    *
-   * @param typ `"available"` to only show available datapacks, `"enabled"` to only show enabled ones.
+   * @example
+   * ```ts
+   * datapack.list()                  // List all datapacks
+   * datapack.list('enabled')         // List only enabled packs
+   * datapack.list('available')       // List available packs
+   * ```
    */
-  list = (type: 'available' | 'enabled') => this.finalCommand(['list', type])
+  list = (type?: 'available' | 'enabled') => this.finalCommand(['list', type])
 }

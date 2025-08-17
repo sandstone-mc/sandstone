@@ -2,10 +2,11 @@ export type FontProvider = FontProviderBitmap | FontProviderLegacyUnicode | Font
 
 export type FontProviderType = FontProvider['type']
 
-export type FontProviderFor<T extends FontProviderType> =
-  T extends 'bitmap' ? FontProviderBitmap
-  : T extends 'legacy_unicode' ? FontProviderLegacyUnicode
-  : FontProviderTrueType
+export type FontProviderFor<T extends FontProviderType> = T extends 'bitmap'
+  ? FontProviderBitmap
+  : T extends 'legacy_unicode'
+    ? FontProviderLegacyUnicode
+    : FontProviderTrueType
 
 export type FontProviderBitmap = {
   type: 'bitmap'

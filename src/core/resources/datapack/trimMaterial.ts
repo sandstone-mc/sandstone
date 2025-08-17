@@ -1,10 +1,9 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { TrimMaterialJSON } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 import type { TagClass } from './tag.js'
 
 let trimMaterials: undefined | TagClass<'items'>
@@ -15,7 +14,10 @@ export type EquipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' 
  * A node representing a Minecraft trim material.
  */
 export class TrimMaterialNode extends ContainerNode implements ResourceNode<TrimMaterialClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: TrimMaterialClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: TrimMaterialClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -28,15 +30,15 @@ export type TrimMaterialClassArguments = {
    */
   trimMaterial?: TrimMaterialJSON
 } & ResourceClassArguments<'default'> & {
-  /**
-   * Optional. Defaults to true. Automatically adds trim material to #minecraft:trim_materials.
-   */
-  registerMaterial?: boolean
-  /**
-   * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
-   */
-  equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
-}
+    /**
+     * Optional. Defaults to true. Automatically adds trim material to #minecraft:trim_materials.
+     */
+    registerMaterial?: boolean
+    /**
+     * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
+     */
+    equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
+  }
 
 export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implements ConditionClass {
   public trimMaterialJSON: NonNullable<TrimMaterialClassArguments['trimMaterial']>
@@ -44,7 +46,13 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
   readonly equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimMaterialClassArguments) {
-    super(sandstoneCore, { packType: sandstoneCore.pack.dataPack(), extension: 'json' }, TrimMaterialNode, sandstoneCore.pack.resourceToPath(name, ['trim_materials']), args)
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      TrimMaterialNode,
+      sandstoneCore.pack.resourceToPath(name, ['trim_materials']),
+      args,
+    )
 
     this.trimMaterialJSON = args.trimMaterial as TrimMaterialJSON
 

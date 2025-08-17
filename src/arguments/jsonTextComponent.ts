@@ -7,99 +7,115 @@ import type { MultipleEntitiesArgument } from './selector.js'
 export type JSONContentTypes = 'text' | 'translatable' | 'score' | 'selector' | 'keybind' | 'nbt'
 
 // To be valid, a chat component must contain one content tag: text, translate, score, selector, keybind, or nbt.
-export type ContentTag<Type extends JSONContentTypes> = (
-  Type extends 'text' ? {
-    type?: 'text'
-    /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
-    text: string | number | boolean
-  } : Type extends 'translatable' ? {
-    /** A translation identifier, to be displayed as the corresponding text in the player's selected language. */
-    translate: string
-
-    /** Optional. Depreciated. A list of raw JSON text component arguments to be inserted into slots in the translation text.  */
-    with?: ContentTag<JSONContentTypes>[]
-
-    /** Optional. A raw JSON text component that will be used in place of a translation if it is missing */
-    fallback?: ContentTag<JSONContentTypes>
-  } : Type extends 'score' ? {
-    type?: 'score'
-    /**
-     * Displays a score holder's current score in an objective.
-     *
-     * Displays nothing if the given score holder or the given objective do not exist,
-     * or if the score holder is not tracked in the objective.
-     */
-    score: {
-      /**
-       * The name of the score holder whose score should be displayed.
-       * This can be a selector like @p or an explicit name.
-       */
-      name: MultipleEntitiesArgument<false>
-
-      /** The internal name of the objective to display the player's score in. */
-      objective: string
-
-      /** Optional. If present, this value is used regardless of what the score would have been. */
-      value?: number
+export type ContentTag<Type extends JSONContentTypes> = (Type extends 'text'
+  ? {
+      type?: 'text'
+      /** A string containing plain text to display directly. Can also be a number or boolean that is displayed directly. */
+      text: string | number | boolean
     }
-  } : Type extends 'selector' ? {
-    type?: 'selector'
-    /**
-     * An entity selector. Displayed as the name of the player or entity found by the selector.
-     *
-     * If more than one player or entity is found by the selector,
-     * their names are displayed in either the form "Name1 and Name2" or the form "Name1, Name2, Name3, and Name4".
-     */
-    selector: string
+  : Type extends 'translatable'
+    ? {
+        /** A translation identifier, to be displayed as the corresponding text in the player's selected language. */
+        translate: string
 
-    /** Optional, defaults to {"color": "gray", "text": ", "}. Used as the separator between different names, if the component selects multiple entities. */
-    separator?: JSONTextPrimitives | ContentTag<JSONContentTypes>
-  } : Type extends 'keybind' ? {
-    type?: 'keybind'
-    /**
-     * A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
-     * For example, {"keybind": "key.inventory"} will display "e" if the player is using the default control scheme.
-     */
-    keybind: string
-  } : Type extends 'nbt' ? {
-    type?: 'nbt'
-    /**
-     * The NBT path used for looking up NBT values from an entity, a block entity or an NBT storage.
-     *
-     * NBT strings display their contents.
-     * Other NBT values are displayed as SNBT with no spacing or linebreaks.
-     *
-     * How values are displayed depends on the value of `interpret`.
-     */
-    nbt: string
+        /** Optional. Depreciated. A list of raw JSON text component arguments to be inserted into slots in the translation text.  */
+        with?: ContentTag<JSONContentTypes>[]
 
-    /**
-     * Optional.
-     * If true, the game will try to parse the text of each NBT value as a raw JSON text component.
-     *
-     * This usually only works if the value is an NBT string containing JSON, since JSON and SNBT are not compatible.
-     *
-     * If parsing fails, displays nothing.
-     *
-     * @default false
-     */
-    interpret?: boolean
-  } & NBTTarget : never
-) & ChildrenTags & FormattingTags & InteractivityTags
+        /** Optional. A raw JSON text component that will be used in place of a translation if it is missing */
+        fallback?: ContentTag<JSONContentTypes>
+      }
+    : Type extends 'score'
+      ? {
+          type?: 'score'
+          /**
+           * Displays a score holder's current score in an objective.
+           *
+           * Displays nothing if the given score holder or the given objective do not exist,
+           * or if the score holder is not tracked in the objective.
+           */
+          score: {
+            /**
+             * The name of the score holder whose score should be displayed.
+             * This can be a selector like @p or an explicit name.
+             */
+            name: MultipleEntitiesArgument<false>
 
-type NBTTarget = {
-  /**
-   * The coordinates of the block entity from which the NBT value is obtained.
-   * The coordinates can be absolute or relative.
-   */
-  block: string | VectorClass<[string, string, string]>
-} | {
-  /** The target selector for the entity or entities from which the NBT value is obtained. */
-  entity: MultipleEntitiesArgument<false>
-} | {
-  /** The namespaced ID of the command storage from which the NBT value is obtained */
-  storage: string
-}
+            /** The internal name of the objective to display the player's score in. */
+            objective: string
+
+            /** Optional. If present, this value is used regardless of what the score would have been. */
+            value?: number
+          }
+        }
+      : Type extends 'selector'
+        ? {
+            type?: 'selector'
+            /**
+             * An entity selector. Displayed as the name of the player or entity found by the selector.
+             *
+             * If more than one player or entity is found by the selector,
+             * their names are displayed in either the form "Name1 and Name2" or the form "Name1, Name2, Name3, and Name4".
+             */
+            selector: string
+
+            /** Optional, defaults to {"color": "gray", "text": ", "}. Used as the separator between different names, if the component selects multiple entities. */
+            separator?: JSONTextPrimitives | ContentTag<JSONContentTypes>
+          }
+        : Type extends 'keybind'
+          ? {
+              type?: 'keybind'
+              /**
+               * A keybind identifier, to be displayed as the name of the button that is currently bound to a certain action.
+               * For example, {"keybind": "key.inventory"} will display "e" if the player is using the default control scheme.
+               */
+              keybind: string
+            }
+          : Type extends 'nbt'
+            ? {
+                type?: 'nbt'
+                /**
+                 * The NBT path used for looking up NBT values from an entity, a block entity or an NBT storage.
+                 *
+                 * NBT strings display their contents.
+                 * Other NBT values are displayed as SNBT with no spacing or linebreaks.
+                 *
+                 * How values are displayed depends on the value of `interpret`.
+                 */
+                nbt: string
+
+                /**
+                 * Optional.
+                 * If true, the game will try to parse the text of each NBT value as a raw JSON text component.
+                 *
+                 * This usually only works if the value is an NBT string containing JSON, since JSON and SNBT are not compatible.
+                 *
+                 * If parsing fails, displays nothing.
+                 *
+                 * @default false
+                 */
+                interpret?: boolean
+              } & NBTTarget
+            : never) &
+  ChildrenTags &
+  FormattingTags &
+  InteractivityTags
+
+type NBTTarget =
+  | {
+      /**
+       * The coordinates of the block entity from which the NBT value is obtained.
+       * The coordinates can be absolute or relative.
+       */
+      block: string | VectorClass<[string, string, string]>
+    }
+  | {
+      /** The target selector for the entity or entities from which the NBT value is obtained. */
+      entity: MultipleEntitiesArgument<false>
+    }
+  | {
+      /** The namespaced ID of the command storage from which the NBT value is obtained */
+      storage: string
+    }
 
 type ChildrenTags = {
   /**
@@ -185,63 +201,61 @@ type InteractivityTags = {
   }
 
   /** Optional. Allows for a tooltip to be displayed when the player hovers their mouse over text. */
-  hoverEvent?: ({
-    /**
-     * The type of tooltip to show.
-     *
-     * Valid values are:
-     * - `show_text `: Shows a raw JSON text component.
-     * - `show_item `: Shows the tooltip of an item as if it was being hovering over it in an inventory.
-     * - `show_entity `: Shows an entity's name, type, and UUID. Used by `selector`.
-     */
-    action: 'show_text'
+  hoverEvent?:
+    | {
+        /**
+         * The type of tooltip to show.
+         *
+         * Valid values are:
+         * - `show_text `: Shows a raw JSON text component.
+         * - `show_item `: Shows the tooltip of an item as if it was being hovering over it in an inventory.
+         * - `show_entity `: Shows an entity's name, type, and UUID. Used by `selector`.
+         */
+        action: 'show_text'
 
-    /**
-     * The formatting of this tag varies depending on the action.
-     *
-     * `show_text`: Another raw JSON text component. Can be any valid text component type: string, array, or object.
-     * Note that clickEvent and hoverEvent do not function within the tooltip.
-     * `show_item`: The item that should be displayed.
-     * `show_entity`: The entity that should be displayed.
-     */
-    contents: JSONTextPrimitives | ContentTag<JSONContentTypes>
-  } | {
-    action: 'show_item'
+        /**
+         * The formatting of this tag varies depending on the action.
+         *
+         * `show_text`: Another raw JSON text component. Can be any valid text component type: string, array, or object.
+         * Note that clickEvent and hoverEvent do not function within the tooltip.
+         * `show_item`: The item that should be displayed.
+         * `show_entity`: The entity that should be displayed.
+         */
+        contents: JSONTextPrimitives | ContentTag<JSONContentTypes>
+      }
+    | {
+        action: 'show_item'
 
-    /** The item that should be displayed. */
-    contents: {
-      /** The namespaced item ID. Present `minecraft:air` if invalid. */
-      id: string
+        /** The item that should be displayed. */
+        contents: {
+          /** The namespaced item ID. Present `minecraft:air` if invalid. */
+          id: string
 
-      /** Optional. Size of the item stack. */
-      count?: number
+          /** Optional. Size of the item stack. */
+          count?: number
 
-      /** Optional. A string containing the serialized NBT of the additional information about the item. */
-      tag?: string
-    }
-  } | {
-    action: 'show_entity'
+          /** Optional. A string containing the serialized NBT of the additional information about the item. */
+          tag?: string
+        }
+      }
+    | {
+        action: 'show_entity'
 
-    /** The entity that should be displayed */
-    contents: {
-      /** Optional. Hidden if not present. A raw JSON text that is displayed as the name of the entity. */
-      name?: string
+        /** The entity that should be displayed */
+        contents: {
+          /** Optional. Hidden if not present. A raw JSON text that is displayed as the name of the entity. */
+          name?: string
 
-      /** A string containing the type of the entity. Should be a namespaced entity ID. Present `minecraft:pig` if invalid. */
-      type: string
+          /** A string containing the type of the entity. Should be a namespaced entity ID. Present `minecraft:pig` if invalid. */
+          type: string
 
-      /** A string containing the UUID of the entity in the hyphenated hexadecimal format. Should be a valid UUID. */
-      id: string
-    }
-  })
+          /** A string containing the UUID of the entity in the hyphenated hexadecimal format. Should be a valid UUID. */
+          id: string
+        }
+      }
 }
 
-export type JSONTextPrimitives = (
-  string |
-  boolean |
-  number |
-  ComponentClass
-)
+export type JSONTextPrimitives = string | boolean | number | ComponentClass
 
 /*
  * A JSON text component, that can be displayed in several locations: in-game chat, books, signs, titles...

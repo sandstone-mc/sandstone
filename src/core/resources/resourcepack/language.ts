@@ -1,15 +1,18 @@
+import type { TRANSLATION_KEYS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import type { TRANSLATION_KEYS } from 'sandstone/arguments'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft language file.
  */
 export class LanguageNode extends ContainerNode implements ResourceNode<LanguageClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: LanguageClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: LanguageClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -21,7 +24,6 @@ export type LanguageArguments = {
    * The language's JSON.
    */
   language?: Partial<Record<TRANSLATION_KEYS, string>> | { [key: string]: string }
-
 } & ResourceClassArguments<'list'>
 
 export class LanguageClass extends ResourceClass<LanguageNode> implements ListResource {

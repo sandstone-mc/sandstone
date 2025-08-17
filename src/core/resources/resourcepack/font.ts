@@ -1,15 +1,17 @@
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-
 import type { FontProvider } from 'sandstone/arguments'
+import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
+import { ResourceClass } from '../resource.js'
 
 /**
  * A node representing a Minecraft font definition.
  */
 export class FontNode extends ContainerNode implements ResourceNode<FontClass> {
-  constructor(sandstoneCore: SandstoneCore, public resource: FontClass) {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: FontClass,
+  ) {
     super(sandstoneCore)
   }
 
@@ -21,7 +23,6 @@ export type FontArguments = {
    * The font's JSON.
    */
   providers: FontProvider[] | []
-
 } & ResourceClassArguments<'list'>
 
 export class FontClass extends ResourceClass<FontNode> implements ListResource {
