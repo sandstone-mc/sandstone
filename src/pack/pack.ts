@@ -441,13 +441,29 @@ export class SandstonePack {
     /**
      * Create a new objective. Defaults to `dummy` if unspecified.
      * @param name The name of the objective
+     * @param criteria The criteria for the objective
+     * @param display The display information for the objective
+     * @param alreadyExists If true, the objective will not be registered as a new one.
+     * @param useDefaultNamespace If true (the default), the objective will be created in the default namespace.
+     *                            For example, if the default namespace is `sandstone`, then the objective will be created as `sandstone.objective_name`.
+     *                            If false, the objective will be created without a namespace.
+     *                            This argument is ignored if the `name` already contains a namespace (determined by the presence of a dot `"."` or a double underscore `"__"`).
      */
     create: (
       name: string,
       criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy',
       display?: JSONTextComponent,
       alreadyExists?: boolean,
+      useDefaultNamespace: boolean = true,
     ): ObjectiveClass => {
+      if (name.includes(':') || name.includes('__')) {
+        useDefaultNamespace = false
+      }
+
+      if (useDefaultNamespace) {
+        name = `${this.defaultNamespace}.${name}`
+      }
+
       const objective = new ObjectiveClass(this, name, criteria as string, display, { creator: 'user' })
 
       if (!alreadyExists) {
