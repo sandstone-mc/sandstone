@@ -7,7 +7,8 @@ describe('Scoreboard Command', () => {
     it('should generate scoreboard objectives add command', async () => {
       await compareSingleOutputText(() => {
         scoreboard.objectives.add('test', 'dummy')
-      }, ['scoreboard objectives add test dummy'])
+        scoreboard.objectives.add('test', 'dummy', 'Test Objective')
+      }, ['scoreboard objectives add test dummy', 'scoreboard objectives add test dummy "Test Objective"'])
     })
 
     it('should generate scoreboard objectives list command', async () => {

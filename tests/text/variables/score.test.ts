@@ -3,14 +3,59 @@ import { describe, expect, it } from 'vitest'
 import { compareOutputText, getGeneratedFunctionsText } from '../../utils'
 
 describe('Variable tests', () => {
-  it('should create objectives correctly', async () => {
-    const generated = await getGeneratedFunctionsText(() => {
-      Objective.create('test', 'dummy')
+  describe('Objective creation', () => {
+    it('should create objectives correctly', async () => {
+      const generated = await getGeneratedFunctionsText(() => {
+        Objective.create('test', 'dummy')
 
-      MCFunction('default:test', () => {})
+        MCFunction('default:test', () => {})
+      })
+
+      expect(generated['default:__init__']).to.include('scoreboard objectives add default.test dummy')
     })
 
-    expect(generated['default:__init__']).to.include('scoreboard objectives add test dummy')
+    it('should create objectives with custom display text', async () => {
+      const generated = await getGeneratedFunctionsText(() => {
+        Objective.create('test', 'dummy', 'Test Objective')
+
+        MCFunction('default:test', () => {})
+      })
+
+      expect(generated['default:__init__']).to.include('scoreboard objectives add default.test dummy "Test Objective"')
+    })
+
+    it('should create objectives without namespacing if specified', async () => {
+      const generated = await getGeneratedFunctionsText(() => {
+        Objective.create('test', 'dummy', 'Test Objective', {
+          useDefaultNamespace: false,
+        })
+
+        MCFunction('default:test', () => {})
+      })
+
+      expect(generated['default:__init__']).to.include('scoreboard objectives add test dummy "Test Objective"')
+    })
+
+    describe('Already-namespaced objective creation', async () => {
+      it('should accept already-namespaced objective names with a dot .', async () => {
+        const generated = await getGeneratedFunctionsText(() => {
+          Objective.create('foo.test', 'dummy')
+
+          MCFunction('default:test', () => {})
+        })
+
+        expect(generated['default:__init__']).to.include('scoreboard objectives add foo.test dummy')
+      })
+      it('should accept already-namespaced objective names with a double underscore __', async () => {
+        const generated = await getGeneratedFunctionsText(() => {
+          Objective.create('foo__test', 'dummy')
+
+          MCFunction('default:test', () => {})
+        })
+
+        expect(generated['default:__init__']).to.include('scoreboard objectives add foo__test dummy')
+      })
+    })
   })
 
   it('should handle score selection', async () => {
