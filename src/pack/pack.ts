@@ -472,7 +472,10 @@ export class SandstonePack {
       return objective
     },
 
-    /** Get an existing objective. */
+    /**
+     * Get an existing objective. Sandstone will not check if the objective really exists.
+     * @param name The name of the objective
+     */
     get: (name: string): ObjectiveClass => new ObjectiveClass(this, name, 'dummy', undefined, { creator: 'user' }),
   }
 
