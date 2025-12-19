@@ -1,10 +1,10 @@
-import type { ItemPredicate } from 'sandstone/generated/data/advancement/predicate'
-import type { BlockEntityTarget, EntityTarget } from 'sandstone/generated/data/loot'
-import type { ContainerComponents } from 'sandstone/generated/data/loot/function'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { ItemStack } from 'sandstone/generated/world/item'
-import type { ITEM_SLOTS } from 'sandstone/arguments'
+import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.js'
+import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot.js'
+import type { ContainerComponents } from 'sandstone/arguments/generated/data/loot/function.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
+import type { ITEM_SLOTS } from 'sandstone/arguments.js'
 import type { LiteralUnion, NBTInt } from 'sandstone'
 
 export type ContentsSlotSource = {

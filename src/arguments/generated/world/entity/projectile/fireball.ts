@@ -1,5 +1,5 @@
-import type { ProjectileBase } from 'sandstone/generated/world/entity/projectile'
-import type { ItemStack } from 'sandstone/generated/world/item'
+import type { ProjectileBase } from 'sandstone/arguments/generated/world/entity/projectile.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTDouble, NBTInt } from 'sandstone'
 
 export type AcceleratingProjectileBase = (ProjectileBase & {

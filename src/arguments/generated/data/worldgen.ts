@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { NonEmptyWeightedList } from 'sandstone/generated/util'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.js'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BottomBiasHeightProvider = (UniformHeightProvider & {

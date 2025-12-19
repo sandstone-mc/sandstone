@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { BlockEntity } from 'sandstone/generated/world/block'
-import type { Skull } from 'sandstone/generated/world/block/head'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
+import type { Skull } from 'sandstone/arguments/generated/world/block/head.js'
 
 type BlockDispatcherMap = {
     'acacia_hanging_sign': BlockAcaciaHangingSign

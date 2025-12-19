@@ -1,5 +1,5 @@
-import type { EntityBase } from 'sandstone/generated/world/entity'
-import type { ItemStack } from 'sandstone/generated/world/item'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTLong } from 'sandstone'
 
 export type OminousItemSpawner = (EntityBase & {

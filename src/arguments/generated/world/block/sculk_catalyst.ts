@@ -1,5 +1,5 @@
-import type { Direction } from 'sandstone/generated/util/direction'
-import type { BlockEntity } from 'sandstone/generated/world/block'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.js'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTInt, NBTList } from 'sandstone'
 
 export type ChargeCursor = {

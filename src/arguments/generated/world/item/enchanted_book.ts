@@ -1,4 +1,4 @@
-import type { Enchantment, ItemBase } from 'sandstone/generated/world/item'
+import type { Enchantment, ItemBase } from 'sandstone/arguments/generated/world/item.js'
 
 export type EnchantedBook = (ItemBase & {
     StoredEnchantments?: Array<Enchantment>

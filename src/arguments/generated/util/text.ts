@@ -1,10 +1,10 @@
-import type { Dialog } from 'sandstone/generated/data/dialog'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { Profile } from 'sandstone/generated/util/avatar'
-import type { RGBA } from 'sandstone/generated/util/color'
-import type { ItemStack } from 'sandstone/generated/world/item'
-import type { Coordinates, MultipleEntitiesArgument, TRANSLATION_KEYS } from 'sandstone/arguments'
+import type { Dialog } from 'sandstone/arguments/generated/data/dialog.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { Profile } from 'sandstone/arguments/generated/util/avatar.js'
+import type { RGBA } from 'sandstone/arguments/generated/util/color.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
+import type { Coordinates, MultipleEntitiesArgument, TRANSLATION_KEYS } from 'sandstone/arguments.js'
 import type { DataPointClass, LiteralUnion, NBTInt, NBTList, ObjectiveClass, ScoreClass } from 'sandstone'
 
 export type ChangePage = {

@@ -1,4 +1,4 @@
-import type { MobBase } from 'sandstone/generated/world/entity/mob'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
 import type { NBTInt, NBTIntArray } from 'sandstone'
 
 export type Phantom = (MobBase & {

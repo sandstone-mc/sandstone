@@ -1,8 +1,8 @@
-import type { PlacedFeatureRef } from 'sandstone/generated/data/worldgen/feature/placement'
-import type { ProcessorListRef } from 'sandstone/generated/data/worldgen/processor_list'
-import type { LiquidSettings } from 'sandstone/generated/data/worldgen/structure'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
+import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement.js'
+import type { ProcessorListRef } from 'sandstone/arguments/generated/data/worldgen/processor_list.js'
+import type { LiquidSettings } from 'sandstone/arguments/generated/data/worldgen/structure.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { NBTInt } from 'sandstone'
 
 export type Element = ({

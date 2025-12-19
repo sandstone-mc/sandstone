@@ -1,5 +1,5 @@
-import type { BlockEntity } from 'sandstone/generated/world/block'
-import type { AnyEntity } from 'sandstone/generated/world/entity'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
+import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.js'
 import type { NBTInt, NBTIntArray } from 'sandstone'
 
 export type Bee = {

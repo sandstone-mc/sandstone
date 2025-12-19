@@ -1,6 +1,6 @@
-import type { TestEnvironment } from 'sandstone/generated/data/gametest/test_environment'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
+import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { NBTInt } from 'sandstone'
 
 export type BlockBasedTestInstance = TestData

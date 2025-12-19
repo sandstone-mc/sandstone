@@ -1,6 +1,6 @@
-import type { FlatGeneratorSettings } from 'sandstone/generated/data/worldgen/dimension/chunk_generator'
-import type { Dimension } from 'sandstone/generated/data/worldgen/dimension'
-import type { Registry } from 'sandstone/generated/registry'
+import type { FlatGeneratorSettings } from 'sandstone/arguments/generated/data/worldgen/dimension/chunk_generator.js'
+import type { Dimension } from 'sandstone/arguments/generated/data/worldgen/dimension.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 
 export type FlatGeneratorPreset = {
     display: Registry['minecraft:item']

@@ -1,4 +1,4 @@
-import type { Breedable } from 'sandstone/generated/world/entity/mob/breedable'
-import type { NeutralMob } from 'sandstone/generated/world/entity/mob'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.js'
+import type { NeutralMob } from 'sandstone/arguments/generated/world/entity/mob.js'
 
 export type PolarBear = (Breedable & NeutralMob)

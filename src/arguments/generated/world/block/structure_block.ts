@@ -1,5 +1,5 @@
-import type { Registry } from 'sandstone/generated/registry'
-import type { BlockEntity } from 'sandstone/generated/world/block'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTFloat, NBTInt, NBTLong } from 'sandstone'
 
 export type Mirror = ('NONE' | 'LEFT_RIGHT' | 'FRONT_BACK')

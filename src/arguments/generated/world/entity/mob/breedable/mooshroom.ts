@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { MooshroomType } from 'sandstone/generated/world/component/entity'
-import type { Breedable } from 'sandstone/generated/world/entity/mob/breedable'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { MooshroomType } from 'sandstone/arguments/generated/world/component/entity.js'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.js'
 
 export type Mooshroom = (Breedable & {
     /**

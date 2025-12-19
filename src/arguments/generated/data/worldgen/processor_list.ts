@@ -1,7 +1,7 @@
-import type { HeightmapType, IntProvider } from 'sandstone/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { BlockState } from 'sandstone/generated/util/block_state'
+import type { HeightmapType, IntProvider } from 'sandstone/arguments/generated/data/worldgen.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type AppendLoot = {

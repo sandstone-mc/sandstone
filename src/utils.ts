@@ -25,7 +25,9 @@ export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) =
  * Allows to get autocompletion on string unions, while still allowing generic strings.
  * @see https://github.com/microsoft/TypeScript/issues/29729#issuecomment-700527227
  */
-export type LiteralUnion<T extends string> = T | (string & Record<never, never>)
+export type LiteralUnion<T extends string> = T | (`${any}${string}` & Record<never, never>)
+
+export type NamespacedLiteralUnion<T extends string> = T | (`${string}:${string}` & Record<never, never>)
 
 export type AtLeastOne<T> = [T, ...T[]]
 
@@ -416,3 +418,15 @@ export function formatDebugString(
 
   return `${classNameString}${realArgsString}${realBodyString}`
 }
+
+type GetConstructorArgs<T> = T extends new (...args: infer U) => any ? U : never
+export class Set<T> extends global.Set<T> {
+    constructor(...args: GetConstructorArgs<typeof global.Set<T>>) {
+        super(...args)
+    }
+    has(value: unknown) {
+        return super.has(value as any)
+    }
+}
+
+export type SetType<T> = T extends Set<infer U> ? U : never

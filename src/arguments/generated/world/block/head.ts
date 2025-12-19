@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Profile } from 'sandstone/generated/util/avatar'
-import type { BlockEntity } from 'sandstone/generated/world/block'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Profile } from 'sandstone/arguments/generated/util/avatar.js'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTIntArray } from 'sandstone'
 
 export type Properties = {

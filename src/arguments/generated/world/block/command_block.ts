@@ -1,5 +1,5 @@
-import type { Text } from 'sandstone/generated/util/text'
-import type { BlockEntity, Nameable } from 'sandstone/generated/world/block'
+import type { Text } from 'sandstone/arguments/generated/util/text.js'
+import type { BlockEntity, Nameable } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTInt, NBTLong } from 'sandstone'
 
 export type BaseCommandBlock = {

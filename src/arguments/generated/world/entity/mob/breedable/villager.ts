@@ -1,8 +1,8 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { Breedable } from 'sandstone/generated/world/entity/mob/breedable'
-import type { MobBase } from 'sandstone/generated/world/entity/mob'
-import type { ItemCost, ItemStack } from 'sandstone/generated/world/item'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.js'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
+import type { ItemCost, ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTByte, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
 
 export type Offers = {

@@ -1,4 +1,4 @@
-import type { DynamicCustomAction, DynamicRunCommand } from 'sandstone/generated/data/dialog/action'
+import type { DynamicCustomAction, DynamicRunCommand } from 'sandstone/arguments/generated/data/dialog/action.js'
 import type {
     ChangePage,
     CopyToClipboard,
@@ -7,7 +7,7 @@ import type {
     RunCommand,
     ShowDialog,
     SuggestCommand,
-} from 'sandstone/generated/util/text'
+} from 'sandstone/arguments/generated/util/text.js'
 
 type DialogActionDispatcherMap = {
     'change_page': DialogActionChangePage

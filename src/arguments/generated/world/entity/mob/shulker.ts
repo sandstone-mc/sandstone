@@ -1,5 +1,5 @@
-import type { DyeColorInt } from 'sandstone/generated/util/color'
-import type { MobBase } from 'sandstone/generated/world/entity/mob'
+import type { DyeColorInt } from 'sandstone/arguments/generated/util/color.js'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
 
 export type AttachFace = (0 | 1 | 2 | 3 | 4 | 5)
 

@@ -1,5 +1,5 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { TRANSLATION_KEYS } from 'sandstone/arguments'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { TRANSLATION_KEYS } from 'sandstone/arguments.js'
 import type { LiteralUnion, NBTFloat, NBTInt } from 'sandstone'
 
 export type Sound = ({

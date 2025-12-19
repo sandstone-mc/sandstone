@@ -1,7 +1,7 @@
-import type { NumberProvider } from 'sandstone/generated/data/util'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { SlotSource } from 'sandstone/generated/util/slot'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/util.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { SlotSource } from 'sandstone/arguments/generated/util/slot.js'
 import type { NBTInt } from 'sandstone'
 
 export type BlockEntityTarget = 'block_entity'

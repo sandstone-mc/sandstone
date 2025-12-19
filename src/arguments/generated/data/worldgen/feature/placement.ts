@@ -1,8 +1,13 @@
-import type { CarveStep, HeightmapType, HeightProvider, IntProvider } from 'sandstone/generated/data/worldgen'
-import type { BlockPredicate } from 'sandstone/generated/data/worldgen/feature/block_predicate'
-import type { ConfiguredFeatureRef } from 'sandstone/generated/data/worldgen/feature'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
+import type {
+    CarveStep,
+    HeightmapType,
+    HeightProvider,
+    IntProvider,
+} from 'sandstone/arguments/generated/data/worldgen.js'
+import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.js'
+import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BlockPredicateFilter = {

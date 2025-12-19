@@ -1,4 +1,4 @@
-import type { Registry } from 'sandstone/generated/registry'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 
 type StatisticTypeDispatcherMap = {
     'broken': StatisticTypeBroken

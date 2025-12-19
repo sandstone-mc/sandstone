@@ -1,4 +1,4 @@
-import type { TRANSLATION_KEYS } from 'sandstone/arguments'
+import type { TRANSLATION_KEYS } from 'sandstone/arguments.js'
 import type { LiteralUnion } from 'sandstone'
 
 export type Lang = ({

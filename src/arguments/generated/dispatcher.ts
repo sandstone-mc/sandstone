@@ -1,29 +1,31 @@
-import type { SymbolMcdocBlockItemStates } from 'sandstone/generated/_builtin/block_item_states'
-import type { SymbolMcdocBlockStateKeys } from 'sandstone/generated/_builtin/block_state_keys'
-import type { SymbolMcdocBlockStates } from 'sandstone/generated/_builtin/block_states'
-import type { SymbolMcdocCustomData } from 'sandstone/generated/_builtin/custom_data'
+import type { SymbolMcdocBlockItemStates } from 'sandstone/arguments/generated/_builtin/block_item_states.js'
+import type { SymbolMcdocBlockStateKeys } from 'sandstone/arguments/generated/_builtin/block_state_keys.js'
+import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/_builtin/block_states.js'
+import type { SymbolMcdocCustomData } from 'sandstone/arguments/generated/_builtin/custom_data.js'
 import type {
     SymbolMcdocCustomDynamicEventAdditions,
-} from 'sandstone/generated/_builtin/custom_dynamic_event_additions'
-import type { SymbolMcdocCustomDynamicEventKeys } from 'sandstone/generated/_builtin/custom_dynamic_event_keys'
-import type { SymbolMcdocCustomEvent } from 'sandstone/generated/_builtin/custom_event'
-import type { SymbolMcdocFluidStateKeys } from 'sandstone/generated/_builtin/fluid_state_keys'
-import type { SymbolMcdocFluidStates } from 'sandstone/generated/_builtin/fluid_states'
-import type { SymbolMcdocMarkerData } from 'sandstone/generated/_builtin/marker_data'
-import type { SymbolBlockEntity } from 'sandstone/generated/_dispatcher/block_entity'
-import type { SymbolBlock } from 'sandstone/generated/_dispatcher/block'
-import type { SymbolDialogAction } from 'sandstone/generated/_dispatcher/dialog_action'
+} from 'sandstone/arguments/generated/_builtin/custom_dynamic_event_additions.js'
+import type {
+    SymbolMcdocCustomDynamicEventKeys,
+} from 'sandstone/arguments/generated/_builtin/custom_dynamic_event_keys.js'
+import type { SymbolMcdocCustomEvent } from 'sandstone/arguments/generated/_builtin/custom_event.js'
+import type { SymbolMcdocFluidStateKeys } from 'sandstone/arguments/generated/_builtin/fluid_state_keys.js'
+import type { SymbolMcdocFluidStates } from 'sandstone/arguments/generated/_builtin/fluid_states.js'
+import type { SymbolMcdocMarkerData } from 'sandstone/arguments/generated/_builtin/marker_data.js'
+import type { SymbolBlockEntity } from 'sandstone/arguments/generated/_dispatcher/block_entity.js'
+import type { SymbolBlock } from 'sandstone/arguments/generated/_dispatcher/block.js'
+import type { SymbolDialogAction } from 'sandstone/arguments/generated/_dispatcher/dialog_action.js'
 import type {
     SymbolEnvironmentAttributeColorModifier,
-} from 'sandstone/generated/_dispatcher/environment_attribute_color_modifier'
-import type { SymbolGameRule } from 'sandstone/generated/_dispatcher/game_rule'
-import type { SymbolReputationPartValue } from 'sandstone/generated/_dispatcher/reputation_part_value'
-import type { SymbolResource } from 'sandstone/generated/_dispatcher/resource'
-import type { SymbolSoundType } from 'sandstone/generated/_dispatcher/sound_type'
-import type { SymbolStatisticType } from 'sandstone/generated/_dispatcher/statistic_type'
-import type { SymbolUniformValue } from 'sandstone/generated/_dispatcher/uniform_value'
-import type { SymbolSpriteSource } from 'sandstone/generated/assets/atlas'
-import type { SymbolGlyphProvider } from 'sandstone/generated/assets/font'
+} from 'sandstone/arguments/generated/_dispatcher/environment_attribute_color_modifier.js'
+import type { SymbolGameRule } from 'sandstone/arguments/generated/_dispatcher/game_rule.js'
+import type { SymbolReputationPartValue } from 'sandstone/arguments/generated/_dispatcher/reputation_part_value.js'
+import type { SymbolResource } from 'sandstone/arguments/generated/_dispatcher/resource.js'
+import type { SymbolSoundType } from 'sandstone/arguments/generated/_dispatcher/sound_type.js'
+import type { SymbolStatisticType } from 'sandstone/arguments/generated/_dispatcher/statistic_type.js'
+import type { SymbolUniformValue } from 'sandstone/arguments/generated/_dispatcher/uniform_value.js'
+import type { SymbolSpriteSource } from 'sandstone/arguments/generated/assets/atlas.js'
+import type { SymbolGlyphProvider } from 'sandstone/arguments/generated/assets/font.js'
 import type {
     SymbolConditionalItemProperty,
     SymbolItemModel,
@@ -31,89 +33,100 @@ import type {
     SymbolSelectItemProperty,
     SymbolSpecialItemModel,
     SymbolTintSource,
-} from 'sandstone/generated/assets/item_definition'
-import type { SymbolGuiSpriteScaling } from 'sandstone/generated/assets/texture_meta'
-import type { SymbolEntitySubPredicate } from 'sandstone/generated/data/advancement/predicate'
-import type { SymbolTrigger } from 'sandstone/generated/data/advancement/trigger'
-import type { SymbolDialogBody } from 'sandstone/generated/data/dialog/body'
-import type { SymbolInputControl } from 'sandstone/generated/data/dialog/input'
-import type { SymbolDialog } from 'sandstone/generated/data/dialog'
-import type { SymbolEffectComponent } from 'sandstone/generated/data/enchantment/effect_component'
+} from 'sandstone/arguments/generated/assets/item_definition.js'
+import type { SymbolGuiSpriteScaling } from 'sandstone/arguments/generated/assets/texture_meta.js'
+import type { SymbolEntitySubPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.js'
+import type { SymbolTrigger } from 'sandstone/arguments/generated/data/advancement/trigger.js'
+import type { SymbolDialogBody } from 'sandstone/arguments/generated/data/dialog/body.js'
+import type { SymbolInputControl } from 'sandstone/arguments/generated/data/dialog/input.js'
+import type { SymbolDialog } from 'sandstone/arguments/generated/data/dialog.js'
+import type { SymbolEffectComponent } from 'sandstone/arguments/generated/data/enchantment/effect_component.js'
 import type {
     SymbolEntityEffect,
     SymbolLocationBasedEffect,
     SymbolValueEffect,
-} from 'sandstone/generated/data/enchantment/effect'
-import type { SymbolLevelBasedValue } from 'sandstone/generated/data/enchantment/level_based_value'
-import type { SymbolEnchantmentProvider } from 'sandstone/generated/data/enchantment/provider'
-import type { SymbolTestInstance } from 'sandstone/generated/data/gametest'
-import type { SymbolTestEnvironmentDefinition } from 'sandstone/generated/data/gametest/test_environment'
-import type { SymbolLootCondition } from 'sandstone/generated/data/loot/condition'
+} from 'sandstone/arguments/generated/data/enchantment/effect.js'
+import type { SymbolLevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.js'
+import type { SymbolEnchantmentProvider } from 'sandstone/arguments/generated/data/enchantment/provider.js'
+import type { SymbolTestInstance } from 'sandstone/arguments/generated/data/gametest.js'
+import type { SymbolTestEnvironmentDefinition } from 'sandstone/arguments/generated/data/gametest/test_environment.js'
+import type { SymbolLootCondition } from 'sandstone/arguments/generated/data/loot/condition.js'
 import type {
     SymbolApplyBonusFormula,
     SymbolListOperation,
     SymbolLootFunction,
-} from 'sandstone/generated/data/loot/function'
-import type { SymbolLootPoolEntry } from 'sandstone/generated/data/loot'
-import type { SymbolRecipeSerializer } from 'sandstone/generated/data/recipe'
-import type { SymbolStorage } from 'sandstone/generated/data/storage'
+} from 'sandstone/arguments/generated/data/loot/function.js'
+import type { SymbolLootPoolEntry } from 'sandstone/arguments/generated/data/loot.js'
+import type { SymbolRecipeSerializer } from 'sandstone/arguments/generated/data/recipe.js'
+import type { SymbolStorage } from 'sandstone/arguments/generated/data/storage.js'
 import type {
     SymbolNbtProvider,
     SymbolNumberProvider,
     SymbolRandomIntGenerator,
     SymbolScoreProvider,
-} from 'sandstone/generated/data/util'
-import type { SymbolSpawnCondition } from 'sandstone/generated/data/variants'
-import type { SymbolEnvironmentAttributeFloatModifier } from 'sandstone/generated/data/worldgen/attribute/modifier'
-import type { SymbolEnvironmentAttribute } from 'sandstone/generated/data/worldgen/attribute'
-import type { SymbolCarverConfig } from 'sandstone/generated/data/worldgen/carver'
-import type { SymbolDensityFunction } from 'sandstone/generated/data/worldgen/density_function'
+} from 'sandstone/arguments/generated/data/util.js'
+import type { SymbolSpawnCondition } from 'sandstone/arguments/generated/data/variants.js'
+import type {
+    SymbolEnvironmentAttributeFloatModifier,
+} from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.js'
+import type { SymbolEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.js'
+import type { SymbolCarverConfig } from 'sandstone/arguments/generated/data/worldgen/carver.js'
+import type { SymbolDensityFunction } from 'sandstone/arguments/generated/data/worldgen/density_function.js'
 import type {
     SymbolBiomeSource,
     SymbolMultiNoiseBiomeSource,
-} from 'sandstone/generated/data/worldgen/dimension/biome_source'
-import type { SymbolChunkGenerator } from 'sandstone/generated/data/worldgen/dimension/chunk_generator'
-import type { SymbolBlockPredicate } from 'sandstone/generated/data/worldgen/feature/block_predicate'
-import type { SymbolBlockStateProvider } from 'sandstone/generated/data/worldgen/feature/block_state_provider'
-import type { SymbolDecoratorConfig } from 'sandstone/generated/data/worldgen/feature/decorator'
-import type { SymbolPlacementModifier } from 'sandstone/generated/data/worldgen/feature/placement'
-import type { SymbolBlockPlacer, SymbolFeatureConfig } from 'sandstone/generated/data/worldgen/feature'
+} from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.js'
+import type { SymbolChunkGenerator } from 'sandstone/arguments/generated/data/worldgen/dimension/chunk_generator.js'
+import type { SymbolBlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.js'
+import type {
+    SymbolBlockStateProvider,
+} from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.js'
+import type { SymbolDecoratorConfig } from 'sandstone/arguments/generated/data/worldgen/feature/decorator.js'
+import type { SymbolPlacementModifier } from 'sandstone/arguments/generated/data/worldgen/feature/placement.js'
+import type { SymbolBlockPlacer, SymbolFeatureConfig } from 'sandstone/arguments/generated/data/worldgen/feature.js'
 import type {
     SymbolFeatureSize,
     SymbolFoliagePlacer,
     SymbolRootPlacer,
     SymbolTreeDecorator,
     SymbolTrunkPlacer,
-} from 'sandstone/generated/data/worldgen/feature/tree'
+} from 'sandstone/arguments/generated/data/worldgen/feature/tree.js'
 import type {
     SymbolPosRuleTest,
     SymbolRuleBlockEntityModifier,
     SymbolRuleTest,
     SymbolTemplateProcessor,
-} from 'sandstone/generated/data/worldgen/processor_list'
-import type { SymbolStructurePlacement } from 'sandstone/generated/data/worldgen/structure_set'
+} from 'sandstone/arguments/generated/data/worldgen/processor_list.js'
+import type { SymbolStructurePlacement } from 'sandstone/arguments/generated/data/worldgen/structure_set.js'
 import type {
     SymbolJigsawMaxDistanceFromCenter,
     SymbolStructureConfig,
     SymbolWorldgenPoolAliasBinding,
-} from 'sandstone/generated/data/worldgen/structure'
-import type { SymbolSurfaceCondition, SymbolSurfaceRule } from 'sandstone/generated/data/worldgen/surface_rule'
-import type { SymbolFloatProvider, SymbolHeightProvider, SymbolIntProvider } from 'sandstone/generated/data/worldgen'
-import type { SymbolTemplatePoolElement } from 'sandstone/generated/data/worldgen/template_pool'
-import type { SymbolEnvironmentAttributeArgbColorModifier } from 'sandstone/generated/util/color'
-import type { SymbolPositionSource } from 'sandstone/generated/util/game_event'
-import type { SymbolMemoryModule } from 'sandstone/generated/util/memory'
-import type { SymbolParticle } from 'sandstone/generated/util/particle'
-import type { SymbolSlotSource } from 'sandstone/generated/util/slot'
-import type { SymbolClickEvent, SymbolHoverEvent } from 'sandstone/generated/util/text'
+} from 'sandstone/arguments/generated/data/worldgen/structure.js'
+import type {
+    SymbolSurfaceCondition,
+    SymbolSurfaceRule,
+} from 'sandstone/arguments/generated/data/worldgen/surface_rule.js'
+import type {
+    SymbolFloatProvider,
+    SymbolHeightProvider,
+    SymbolIntProvider,
+} from 'sandstone/arguments/generated/data/worldgen.js'
+import type { SymbolTemplatePoolElement } from 'sandstone/arguments/generated/data/worldgen/template_pool.js'
+import type { SymbolEnvironmentAttributeArgbColorModifier } from 'sandstone/arguments/generated/util/color.js'
+import type { SymbolPositionSource } from 'sandstone/arguments/generated/util/game_event.js'
+import type { SymbolMemoryModule } from 'sandstone/arguments/generated/util/memory.js'
+import type { SymbolParticle } from 'sandstone/arguments/generated/util/particle.js'
+import type { SymbolSlotSource } from 'sandstone/arguments/generated/util/slot.js'
+import type { SymbolClickEvent, SymbolHoverEvent } from 'sandstone/arguments/generated/util/text.js'
 import type {
     SymbolAttributeDisplay,
     SymbolConsumeEffect,
     SymbolDataComponent,
-} from 'sandstone/generated/world/component/item'
-import type { SymbolDataComponentPredicate } from 'sandstone/generated/world/component/predicate'
-import type { SymbolEntity } from 'sandstone/generated/world/entity/boat'
-import type { SymbolItem } from 'sandstone/generated/world/item/spawn_item'
+} from 'sandstone/arguments/generated/world/component/item.js'
+import type { SymbolDataComponentPredicate } from 'sandstone/arguments/generated/world/component/predicate.js'
+import type { SymbolEntity } from 'sandstone/arguments/generated/world/entity/boat.js'
+import type { SymbolItem } from 'sandstone/arguments/generated/world/item/spawn_item.js'
 
 type DispatcherRequiredArgs = {
     'mcdoc:block_item_states': [

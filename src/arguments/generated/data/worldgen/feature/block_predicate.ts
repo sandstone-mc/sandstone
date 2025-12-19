@@ -1,7 +1,7 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { BlockState } from 'sandstone/generated/util/block_state'
-import type { Direction } from 'sandstone/generated/util/direction'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.js'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type BlockPredicate = ({

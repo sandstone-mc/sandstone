@@ -1,4 +1,4 @@
-import type { TextStyle } from 'sandstone/generated/util/text'
+import type { TextStyle } from 'sandstone/arguments/generated/util/text.js'
 
 export type ChatDecoration = ({
     translation_key: string

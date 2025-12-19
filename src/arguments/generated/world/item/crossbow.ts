@@ -1,4 +1,4 @@
-import type { ItemBase, ItemStack } from 'sandstone/generated/world/item'
+import type { ItemBase, ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTList } from 'sandstone'
 
 export type Crossbow = (ItemBase & {

@@ -1,5 +1,5 @@
-import type { AttributeTrackBase } from 'sandstone/generated/data/timeline'
-import type { MoonPhase, SoundEventRef } from 'sandstone/generated/data/util'
+import type { AttributeTrackBase } from 'sandstone/arguments/generated/data/timeline.js'
+import type { MoonPhase, SoundEventRef } from 'sandstone/arguments/generated/data/util.js'
 import type {
     BooleanAttributeModifier,
     BooleanModifierType,
@@ -9,13 +9,13 @@ import type {
     FloatModifierType,
     OverrideModifier,
     TranslucentColorAttributeModifier,
-} from 'sandstone/generated/data/worldgen/attribute/modifier'
-import type { BiomeMusic, BiomeSoundAdditions, MoodSound } from 'sandstone/generated/data/worldgen/biome'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
-import type { StringARGB, StringRGB } from 'sandstone/generated/util/color'
-import type { Particle } from 'sandstone/generated/util/particle'
-import type { Text } from 'sandstone/generated/util/text'
+} from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.js'
+import type { BiomeMusic, BiomeSoundAdditions, MoodSound } from 'sandstone/arguments/generated/data/worldgen/biome.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color.js'
+import type { Particle } from 'sandstone/arguments/generated/util/particle.js'
+import type { Text } from 'sandstone/arguments/generated/util/text.js'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type AmbientParticle = {

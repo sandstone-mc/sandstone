@@ -1,9 +1,9 @@
-import type { TrialSpawnerConfig } from 'sandstone/generated/data/trial_spawner'
-import type { Registry } from 'sandstone/generated/registry'
-import type { InclusiveRange, WeightedEntry } from 'sandstone/generated/util'
-import type { EquipmentSlot } from 'sandstone/generated/util/slot'
-import type { BlockEntity } from 'sandstone/generated/world/block'
-import type { AnyEntity } from 'sandstone/generated/world/entity'
+import type { TrialSpawnerConfig } from 'sandstone/arguments/generated/data/trial_spawner.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { InclusiveRange, WeightedEntry } from 'sandstone/arguments/generated/util.js'
+import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot.js'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
+import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.js'
 import type { NBTFloat, NBTInt, NBTList, NBTLong, NBTShort } from 'sandstone'
 
 export type CustomSpawnRules = {

@@ -1,5 +1,5 @@
-import type { DirectionByte } from 'sandstone/generated/util/direction'
-import type { ProjectileBase } from 'sandstone/generated/world/entity/projectile'
+import type { DirectionByte } from 'sandstone/arguments/generated/util/direction.js'
+import type { ProjectileBase } from 'sandstone/arguments/generated/world/entity/projectile.js'
 import type { NBTDouble, NBTInt, NBTIntArray } from 'sandstone'
 
 export type BulletTarget = {

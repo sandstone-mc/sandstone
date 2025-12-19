@@ -1,4 +1,4 @@
-import type { BlockState } from 'sandstone/generated/util/block_state'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
 
 export type BlockPalette = ({
     palette: Array<BlockState>

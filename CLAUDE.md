@@ -14,33 +14,183 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Code Architecture
 
-Sandstone is a TypeScript library for generating Minecraft datapacks and resource packs. The architecture is modular with clear separation of concerns:
+Sandstone is a TypeScript library for generating Minecraft datapacks and resource packs programmatically. It provides a type-safe, fluent API with ~7,500 lines of source code across 200+ TypeScript files.
 
-### Core Modules
+### Directory Structure
 
-- **`src/index.ts`**: Main entry point exporting all public APIs including commands, resources, variables, and utilities
-- **`src/core/`**: Core functionality including SandstoneCore class, resource management, and the visitor pattern for AST transformations
-- **`src/pack/`**: Pack creation and management, including SandstonePack class and build visitors
-- **`src/commands/`**: Minecraft command implementations organized by category (block, entity, player, server, world)
-- **`src/arguments/`**: Type-safe argument definitions for commands and resources, including generated types from Minecraft data
-- **`src/variables/`**: Variable system including Scores, Selectors, NBT handling, and coordinate systems  
-- **`src/flow/`**: Control flow abstractions (if/else, loops, switches) that compile to optimized Minecraft commands
-- **`src/core/resources/`**: Resource classes for both datapacks (functions, advancements, loot tables) and resource packs (textures, models, sounds)
+```
+src/
+├── arguments/           # Type-safe argument definitions
+│   ├── generated/       # Auto-generated types from Minecraft data
+│   │   ├── _builtin/    # Built-in Minecraft types (block states, custom data)
+│   │   ├── _dispatcher/ # Dispatcher types for polymorphic features
+│   │   ├── _registry/   # Registry types (ITEMS, BLOCKS, ENTITY_TYPES, etc.)
+│   │   ├── assets/      # Resource pack asset types
+│   │   ├── data/        # Datapack data types (advancement, loot, recipes)
+│   │   ├── util/        # Utility types (GlobalPos, WeightedList)
+│   │   ├── world/       # World block, entity, item component types
+│   │   ├── registry.ts  # Main Registry type export
+│   │   ├── dispatcher.ts
+│   │   ├── pack.ts
+│   │   └── util.ts
+│   ├── resources/       # Resource argument definitions
+│   │   ├── datapack/    # Advancement, loot table, predicate args
+│   │   └── resourcepack/ # Atlas, blockstate, font, model args
+│   └── *.ts             # Core argument types (basics, nbt, selector, coords)
+├── core/                # Core engine and AST infrastructure
+│   ├── sandstoneCore.ts # Central engine managing resources and MCFunctions
+│   ├── nodes.ts         # AST node base classes (Node, ContainerNode, CommandNode)
+│   ├── visitors.ts      # Visitor pattern for AST transformations
+│   ├── Macro.ts         # Macro argument system
+│   └── resources/       # Resource implementations
+│       ├── resource.ts  # Base ResourceClass and ResourceNode
+│       ├── datapack/    # MCFunction, Advancement, LootTable, etc.
+│       └── resourcepack/ # Atlas, BlockState, Texture, Font, etc.
+├── pack/                # Pack management and build system
+│   ├── pack.ts          # SandstonePack main class
+│   ├── packType.ts      # PackType definitions (datapack/resourcepack)
+│   └── visitors/        # AST transformation visitors
+│       ├── ifElseTransformationVisitor.ts
+│       ├── loopTransformationVisitor.ts
+│       ├── inlineFunctionCallVisitor.ts
+│       ├── simplifyExecuteFunction.ts
+│       └── ...
+├── commands/            # Minecraft command implementations
+│   ├── commands.ts      # SandstoneCommands registry
+│   └── implementations/ # Individual command classes (50+ commands)
+│       ├── block/       # clone, fill, place, setblock
+│       ├── entity/      # attribute, damage, effect, summon
+│       ├── player/      # gamemode, give, particle
+│       ├── server/      # datapack, reload, difficulty
+│       └── world/       # seed, weather, time, locate
+├── variables/           # Variable and expression system
+│   ├── Objective.ts     # Scoreboard objective wrapper
+│   ├── Score.ts         # Scoreboard score variable
+│   ├── Selector.ts      # Entity selector with fluent builder
+│   ├── Data.ts          # NBT data path navigation
+│   ├── Coordinates.ts   # Coordinate systems (absolute, relative, local)
+│   └── nbt/             # NBT manipulation utilities
+├── flow/                # Control flow abstractions
+│   ├── Flow.ts          # Main Flow class (if/else, loops, switch)
+│   ├── conditions/      # Condition types and builders
+│   └── ...
+└── index.ts             # Main entry point exporting public API
+```
+
+### Core Components
+
+#### AST System (`src/core/nodes.ts`)
+- **Node**: Abstract base for all AST nodes with `sandstoneCore` context
+- **ContainerNode**: Nodes containing a body of other nodes (functions, loops)
+- **CommandNode**: Represents Minecraft commands with arguments
+- **MCFunctionNode**: Represents Minecraft functions as containers with context stack
+
+#### SandstoneCore (`src/core/sandstoneCore.ts`)
+Central engine managing:
+- `resourceNodes`: Map of all created resources
+- `mcfunctionStack`: Stack tracking active MCFunction context
+- `enterMCFunction()` / `exitMCFunction()`: Context switching
+- `currentMCFunction`: Getter for active function
+
+#### Resource System (`src/core/resources/resource.ts`)
+- **ResourceClass**: Abstract base for all resources with conflict resolution
+- **Conflict strategies**: throw, replace, ignore, append, prepend, rename
+- **Datapack resources**: MCFunction, Advancement, LootTable, Predicate, Recipe, Tag
+- **ResourcePack resources**: Texture, BlockState, Model, Font, SoundEvent, Atlas
+
+#### Visitor Pattern (`src/pack/visitors/`)
+AST transformation visitors for:
+- Converting container commands to MCFunctions
+- Transforming if/else and loop constructs
+- Initializing constants and objectives
+- Inlining function calls
+- Simplifying execute commands
 
 ### Key Design Patterns
 
-- **Visitor Pattern**: Used extensively for AST transformations in `src/pack/visitors/` to optimize generated commands
-- **Resource Management**: Central resource registry with conflict resolution strategies
-- **Type Safety**: Heavy use of TypeScript generics and literal types for Minecraft data validation
-- **Fluent API**: Command chaining and builder patterns throughout the API surface
+- **Visitor Pattern**: AST transformations in `src/pack/visitors/`
+- **Builder Pattern**: Fluent API for commands, selectors, data paths
+- **Resource Registry**: Central management with conflict resolution
+- **Context Management**: Stack-based context for nested structures
+- **Type Safety**: Generated registry types + TypeScript generics
 
-### Build System
+### Generated Types System
 
-- **tsup**: Primary build tool configured in `tsup.config.mjs` for CommonJS output
-- **TypeScript**: Separate type generation step required via `build-types` script
-- **Package Setup**: Post-build setup script in `scripts/setupPackage.mjs` handles final package preparation
-- **Biome**: Used for linting and formatting instead of ESLint/Prettier
+The `src/arguments/generated/` directory contains auto-generated TypeScript definitions from [vanilla-mcdoc](https://github.com/SpyglassMC/vanilla-mcdoc) & [mcmeta](https://github.com/misode/mcmeta).
 
-### Generated Code
+#### Three-Tier Type System
 
-The `src/arguments/generated/` directory contains auto-generated TypeScript definitions from Minecraft registry data. These provide type-safe access to blocks, items, entities, and other game resources.
+1. **Registry Types** (`_registry/`): Exhaustive enums for all Minecraft resources (ITEMS, BLOCKS, ENTITY_TYPES, etc.)
+2. **Dispatcher Types** (`_dispatcher/`): Multi-dispatch for polymorphic features
+3. **Built-in Types** (`_builtin/`): Fundamental structures (block states, custom data)
+
+#### Using Generated Types
+
+Import the `Registry` type and access specific registries using bracket notation:
+
+```typescript
+import type { Registry } from 'sandstone/arguments/generated/registry'
+
+type Item = Registry['minecraft:item']
+type EntityType = Registry['minecraft:entity_type']
+type Block = Registry['minecraft:block']
+```
+
+#### Registry Key Reference
+
+| Old Type | Registry Key |
+|----------|--------------|
+| `ITEMS` | `Registry['minecraft:item']` |
+| `BLOCKS` | `Registry['minecraft:block']` |
+| `ENTITY_TYPES` | `Registry['minecraft:entity_type']` |
+| `ATTRIBUTES` | `Registry['minecraft:attribute']` |
+| `ENCHANTMENTS` | `Registry['minecraft:enchantment']` |
+| `STRUCTURES` | `Registry['minecraft:structure']` |
+| `MOB_EFFECTS` | `Registry['minecraft:mob_effect']` |
+| `CAT_VARIANTS` | `Registry['minecraft:cat_variant']` |
+| `DIMENSIONS` | `Registry['minecraft:dimension']` |
+| `FLUIDS` | `Registry['minecraft:fluid']` |
+| `PARTICLE_TYPES` | `Registry['minecraft:particle_type']` |
+| `POINT_OF_INTEREST_TYPES` | `Registry['minecraft:point_of_interest_type']` |
+| `WORLDGEN_BIOMES` | `Registry['minecraft:worldgen/biome']` |
+| `WORLDGEN_STRUCTURES` | `Registry['minecraft:worldgen/structure']` |
+
+### Files Requiring Migration
+
+#### Direct imports from old generated paths (broken imports)
+
+| File | Old Import | Types Used |
+|------|------------|------------|
+| `src/arguments/resources/resourcepack/texture.ts` | `'../../generated/entity_type.js'` | `ENTITY_TYPES` |
+| `src/arguments/resources/datapack/trimPattern.ts` | `'../../generated/index.js'` | `ITEMS` |
+| `src/arguments/resources/datapack/trimMaterial.ts` | `'../../generated/index.js'` | `ITEMS` |
+| `src/arguments/resources/datapack/lootTables.ts` | `'sandstone/arguments/generated'` | `ITEMS` |
+| `src/arguments/resources/datapack/itemModifier.ts` | `'sandstone/arguments/generated'` | `ATTRIBUTES`, `BLOCKS`, `ENCHANTMENTS`, `STRUCTURES` |
+| `src/arguments/resources/datapack/recipe.ts` | `'sandstone/arguments/generated'` | `ITEMS` |
+| `src/arguments/resources/datapack/criteria/EntityCriterion.ts` | `'sandstone/arguments/generated'` | `CAT_VARIANTS`, `ENTITY_TYPES`, `MOB_EFFECTS` |
+
+#### Imports from `sandstone/arguments` (need re-export or migration)
+
+| File | Types Used |
+|------|------------|
+| `src/variables/Selector.ts` | `ENTITY_TYPES` |
+| `src/flow/conditions/variables/block.ts` | `BLOCKS` |
+| `src/flow/conditions/variables/dimension.ts` | `DIMENSIONS` |
+| `src/flow/conditions/variables/biome.ts` | `WORLDGEN_BIOMES` |
+| `src/commands/implementations/block/setblock.ts` | `BLOCKS` |
+| `src/commands/implementations/block/fill.ts` | `BLOCKS` |
+| `src/commands/implementations/block/clone.ts` | `BLOCKS` |
+| `src/commands/implementations/entity/summon.ts` | `ENTITY_TYPES` |
+| `src/commands/implementations/entity/effect.ts` | `MOB_EFFECTS` |
+| `src/commands/implementations/entity/enchant.ts` | `ENCHANTMENTS` |
+| `src/commands/implementations/entity/clear.ts` | `ITEMS` |
+| `src/commands/implementations/player/give.ts` | `ITEMS` |
+| `src/commands/implementations/player/recipe.ts` | `ITEMS` |
+| `src/commands/implementations/player/particle.ts` | `BLOCKS`, `ITEMS`, `PARTICLE_TYPES` |
+| `src/commands/implementations/world/locate.ts` | `POINT_OF_INTEREST_TYPES`, `WORLDGEN_BIOMES`, `WORLDGEN_STRUCTURES` |
+| `src/arguments/resources/datapack/structure.ts` | `BLOCKS` |
+| `src/arguments/resources/datapack/advancement.ts` | `ITEMS` |
+| `src/arguments/resources/datapack/predicate.ts` | `BLOCKS`, `ENCHANTMENTS` |
+| `src/arguments/resources/datapack/criteria/basic_criteria.ts` | `BLOCKS`, `DIMENSIONS`, `ENCHANTMENTS`, `MOB_EFFECTS` |
+| `src/arguments/resources/datapack/criteria/LocationCriterion.ts` | `BLOCKS`, `DIMENSIONS`, `FLUIDS`, `STRUCTURES`, `WORLDGEN_BIOMES` |
+| `src/arguments/resources/datapack/criteria/ItemCriterion.ts` | `ITEMS` |

@@ -1,5 +1,5 @@
-import type { Registry } from 'sandstone/generated/registry'
-import type { ItemStack } from 'sandstone/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTDouble, NBTInt, NBTIntArray, NBTLong } from 'sandstone'
 
 export type Vault = {

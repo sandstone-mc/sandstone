@@ -1,6 +1,6 @@
-import type { Registry } from 'sandstone/generated/registry'
-import type { MobEffectInstance } from 'sandstone/generated/util/effect'
-import type { ItemBase } from 'sandstone/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { MobEffectInstance } from 'sandstone/arguments/generated/util/effect.js'
+import type { ItemBase } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTInt } from 'sandstone'
 
 export type EffectItem = (ItemBase & {

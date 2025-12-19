@@ -1,8 +1,8 @@
-import type { ItemDisplayContext } from 'sandstone/generated/assets/model'
-import type { BlockState } from 'sandstone/generated/util/block_state'
-import type { Text } from 'sandstone/generated/util/text'
-import type { EntityBase } from 'sandstone/generated/world/entity'
-import type { ItemStack } from 'sandstone/generated/world/item'
+import type { ItemDisplayContext } from 'sandstone/arguments/generated/assets/model.js'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
+import type { Text } from 'sandstone/arguments/generated/util/text.js'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type AxisAngle = {

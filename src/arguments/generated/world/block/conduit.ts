@@ -1,4 +1,4 @@
-import type { BlockEntity } from 'sandstone/generated/world/block'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTIntArray, NBTLong } from 'sandstone'
 
 export type Conduit = (BlockEntity & {

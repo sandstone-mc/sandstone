@@ -1,5 +1,5 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 
 export type FluidState = ({
     [S in Extract<Registry['minecraft:fluid'], string>]?: {

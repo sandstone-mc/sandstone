@@ -1,9 +1,9 @@
-import type { Registry } from 'sandstone/generated/registry'
-import type { GlobalPos } from 'sandstone/generated/util'
-import type { SlottedItem } from 'sandstone/generated/util/slot'
-import type { AnyEntity } from 'sandstone/generated/world/entity'
-import type { LivingEntity } from 'sandstone/generated/world/entity/mob'
-import type { ItemStack } from 'sandstone/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { GlobalPos } from 'sandstone/arguments/generated/util.js'
+import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.js'
+import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.js'
+import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
 
 export type Abilities = {

@@ -3,12 +3,12 @@ import type {
     EntityPredicate,
     ItemPredicate,
     LocationPredicate,
-} from 'sandstone/generated/data/advancement/predicate'
-import type { LevelBasedValue } from 'sandstone/generated/data/enchantment/level_based_value'
-import type { EntityTarget, LootCondition } from 'sandstone/generated/data/loot'
-import type { IntRange, NumberProvider } from 'sandstone/generated/data/util'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
+} from 'sandstone/arguments/generated/data/advancement/predicate.js'
+import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.js'
+import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/data/loot.js'
+import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { NBTFloat, NBTInt, NBTLong, ObjectiveClass } from 'sandstone'
 
 export type AllOf = {

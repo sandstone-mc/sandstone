@@ -1,6 +1,6 @@
-import type { Registry } from 'sandstone/generated/registry'
-import type { SlottedItem } from 'sandstone/generated/util/slot'
-import type { BlockEntity, Lockable, Nameable } from 'sandstone/generated/world/block'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.js'
+import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTByte, NBTInt, NBTList, NBTLong } from 'sandstone'
 
 export type Container27 = (ContainerBase & {

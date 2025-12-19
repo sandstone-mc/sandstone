@@ -1,4 +1,4 @@
-import type { BlendToGray } from 'sandstone/generated/data/worldgen/attribute/modifier'
+import type { BlendToGray } from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.js'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type DyeColor = (

@@ -1,6 +1,6 @@
-import type { Registry } from 'sandstone/generated/registry'
-import type { AnyEntity } from 'sandstone/generated/world/entity'
-import type { ItemStack } from 'sandstone/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTInt, NBTLong } from 'sandstone'
 
 export type ContainerLoot = {

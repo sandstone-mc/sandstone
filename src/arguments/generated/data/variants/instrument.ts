@@ -1,5 +1,5 @@
-import type { SoundEventRef } from 'sandstone/generated/data/util'
-import type { Text } from 'sandstone/generated/util/text'
+import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.js'
+import type { Text } from 'sandstone/arguments/generated/util/text.js'
 import type { NBTFloat } from 'sandstone'
 
 export type Instrument = {

@@ -1,4 +1,4 @@
-import type { MobBase, NeutralMob } from 'sandstone/generated/world/entity/mob'
+import type { MobBase, NeutralMob } from 'sandstone/arguments/generated/world/entity/mob.js'
 
 export type ZombiePigman = (MobBase & NeutralMob & {
     /**

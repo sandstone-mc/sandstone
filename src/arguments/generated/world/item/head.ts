@@ -1,4 +1,4 @@
-import type { ItemBase } from 'sandstone/generated/world/item'
+import type { ItemBase } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTIntArray } from 'sandstone'
 
 export type PlayerHead = (ItemBase & {

@@ -1,7 +1,7 @@
-import type { GlobalEnvironmentAttributeMap } from 'sandstone/generated/data/worldgen/attribute'
-import type { ChunkGenerator } from 'sandstone/generated/data/worldgen/dimension/chunk_generator'
-import type { IntProvider } from 'sandstone/generated/data/worldgen'
-import type { Registry } from 'sandstone/generated/registry'
+import type { GlobalEnvironmentAttributeMap } from 'sandstone/arguments/generated/data/worldgen/attribute.js'
+import type { ChunkGenerator } from 'sandstone/arguments/generated/data/worldgen/dimension/chunk_generator.js'
+import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type CardinalLightType = ('default' | 'nether')

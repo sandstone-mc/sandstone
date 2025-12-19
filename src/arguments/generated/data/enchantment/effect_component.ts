@@ -3,11 +3,11 @@ import type {
     EntityEffect,
     LocationBasedEffect,
     ValueEffect,
-} from 'sandstone/generated/data/enchantment/effect'
-import type { LootCondition } from 'sandstone/generated/data/loot'
-import type { SoundEventRef } from 'sandstone/generated/data/util'
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
-import type { Registry } from 'sandstone/generated/registry'
+} from 'sandstone/arguments/generated/data/enchantment/effect.js'
+import type { LootCondition } from 'sandstone/arguments/generated/data/loot.js'
+import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 
 export type AmmoUseEnchantmentEffect = {
     /**

@@ -1,4 +1,4 @@
-import type { AgeableMob, MobBase } from 'sandstone/generated/world/entity/mob'
+import type { AgeableMob, MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
 import type { NBTInt } from 'sandstone'
 
 export type Dolphin = (MobBase & AgeableMob & {

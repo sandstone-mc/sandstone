@@ -1,7 +1,7 @@
-import type { Registry } from 'sandstone/generated/registry'
-import type { DirectionInt } from 'sandstone/generated/util/direction'
-import type { BlockEntity } from 'sandstone/generated/world/block'
-import type { ItemStack } from 'sandstone/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { DirectionInt } from 'sandstone/arguments/generated/util/direction.js'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTLong } from 'sandstone'
 
 export type BrushableBlock = (BlockEntity & {

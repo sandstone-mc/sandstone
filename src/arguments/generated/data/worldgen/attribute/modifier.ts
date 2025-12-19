@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/generated/dispatcher'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { NBTFloat } from 'sandstone'
 
 export type BlendToGray = {
