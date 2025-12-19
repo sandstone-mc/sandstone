@@ -1,10 +1,10 @@
-import type { ITEMS, MultiplePlayersArgument, RootNBT } from 'sandstone/arguments'
+import type { MultiplePlayersArgument, RootNBT } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core'
-import type { LiteralUnion } from 'sandstone/utils'
 import { nbtStringifier, targetParser } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers.js'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 // Give command
 
@@ -92,7 +92,7 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
    */
   give(
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    item: Macroable<Registry['minecraft:item'], MACRO>,
     count?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
@@ -109,14 +109,14 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
    */
   give(
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    item: Macroable<Registry['minecraft:item'], MACRO>,
     nbt: Macroable<RootNBT, MACRO>,
     count?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
   give(
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    item: Macroable<Registry['minecraft:item'], MACRO>,
     countOrNBT?: Macroable<number | RootNBT, MACRO>,
     count?: Macroable<number, MACRO>,
   ) {

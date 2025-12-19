@@ -1,10 +1,10 @@
-import type { ENCHANTMENTS, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { MultipleEntitiesArgument } from 'sandstone/arguments'
 import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class EnchantCommandNode extends CommandNode {
   command = 'enchant' as const
@@ -38,7 +38,7 @@ export class EnchantCommand<MACRO extends boolean> extends CommandArguments {
    */
   enchant = (
     targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-    enchantment: Macroable<LiteralUnion<ENCHANTMENTS>, MACRO>,
+    enchantment: Macroable<Registry['minecraft:enchantment'], MACRO>,
     level?: number,
   ) => {
     if (level) validateIntegerRange(level, 'level', 0, 2_147_483_647)

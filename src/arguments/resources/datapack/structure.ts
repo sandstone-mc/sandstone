@@ -1,5 +1,5 @@
-import type { LiteralUnion } from 'sandstone/utils'
-import type { BLOCKS, RootNBT } from '../../index.js'
+import type { RootNBT } from '../../index.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type Vec3 = [number, number, number]
 
@@ -36,7 +36,7 @@ export type StructureNBT = {
 }
 
 export type BlockState = {
-  Name: LiteralUnion<BLOCKS>
+  Name: Registry['minecraft:block']
   Properties?: {
     [key: string]: string
   }

@@ -2,7 +2,7 @@ import type {
   CONTAINER_SLOTS,
   Coordinates,
   ENTITY_SLOTS,
-  ITEMS,
+  Registry['minecraft:item'],
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
   SingleEntityArgument,
@@ -13,6 +13,7 @@ import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type LootTableArgument<MACRO extends boolean> = Macroable<LootTableClass | string, MACRO>
 
@@ -33,7 +34,7 @@ class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
   fish = (
     lootTable: LootTableArgument<MACRO>,
     pos: Macroable<Coordinates<MACRO>, MACRO>,
-    tool: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    tool: Macroable<Registry['minecraft:item'], MACRO>,
   ) => this.finalCommand(['fish', lootTable, coordinatesParser(pos), tool])
 
   /**
@@ -57,7 +58,7 @@ class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param tool Specifies an tool to mine. If unspecified, defaults to `mainhand`.
    */
-  mine = (pos: Macroable<Coordinates<MACRO>, MACRO>, tool?: Macroable<LiteralUnion<ITEMS>, MACRO>) =>
+  mine = (pos: Macroable<Coordinates<MACRO>, MACRO>, tool?: Macroable<Registry['minecraft:item'], MACRO>) =>
     this.finalCommand(['mine', coordinatesParser(pos), tool])
 }
 

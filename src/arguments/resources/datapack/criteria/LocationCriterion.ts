@@ -1,16 +1,15 @@
-import type { BLOCKS, DIMENSIONS, FLUIDS, STRUCTURES, WORLDGEN_BIOMES } from 'sandstone/arguments'
 import type { TagClass } from 'sandstone/core'
-import type { LiteralUnion } from 'sandstone/utils'
 import type { NumberProvider, PositionCriterion } from './index.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type LocationCriterion = Partial<{
   /** The biome the entity is currently in. */
-  biome: LiteralUnion<WORLDGEN_BIOMES>
+  biome: Registry['minecraft:worldgen/biome']
 
   /* The block at the location. */
   block: Partial<{
     /** An array of block IDs. */
-    blocks: LiteralUnion<BLOCKS>[]
+    blocks: Registry['minecraft:block'][]
 
     /** The block Tag. */
     tag: string | TagClass<'blocks'>
@@ -23,10 +22,10 @@ export type LocationCriterion = Partial<{
   }>
 
   /** The dimension the entity is currently in. */
-  dimension: LiteralUnion<DIMENSIONS>
+  dimension: Registry['minecraft:dimension']
 
   /** Name of a structure. */
-  structure: LiteralUnion<STRUCTURES>
+  structure: Registry['minecraft:structure']
 
   /**
    * The fluid at the location.
@@ -49,7 +48,7 @@ export type LocationCriterion = Partial<{
    */
   fluid: Partial<{
     /** The fluid ID. */
-    fluid: LiteralUnion<FLUIDS>
+    fluid: Registry['minecraft:fluid']
 
     /** The fluid Tag. */
     tag: string | TagClass<'fluids'>

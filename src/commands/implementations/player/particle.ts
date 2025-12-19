@@ -1,9 +1,9 @@
-import type { BLOCKS, Coordinates, ITEMS, MultiplePlayersArgument, PARTICLE_TYPES } from 'sandstone/arguments'
+import type { Coordinates, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { arrayToArgsParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 // Particle command
 
@@ -47,7 +47,7 @@ type ParticleCommandType<MACRO extends boolean> =
    */
   ((
     name: Macroable<
-      Exclude<PARTICLE_TYPES, 'minecraft:dust' | 'minecraft:block' | 'minecraft:falling_dust' | 'minecraft:item'>,
+      Exclude<Registry['minecraft:particle_type'], 'minecraft:dust' | 'minecraft:block' | 'minecraft:falling_dust' | 'minecraft:item'>,
       MACRO
     >,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
@@ -155,7 +155,7 @@ type ParticleCommandType<MACRO extends boolean> =
      */
     ((
       name: Macroable<'minecraft:block' | 'minecraft:falling_dust', MACRO>,
-      block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+      block: Macroable<Registry['minecraft:block'], MACRO>,
       pos?: Macroable<Coordinates<MACRO>, MACRO>,
       delta?: Macroable<
         [deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>],
@@ -201,7 +201,7 @@ type ParticleCommandType<MACRO extends boolean> =
      */
     ((
       name: 'minecraft:item',
-      item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+      item: Macroable<Registry['minecraft:item'], MACRO>,
       pos?: Macroable<Coordinates<MACRO>, MACRO>,
       delta?: Macroable<
         [deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>],

@@ -3,21 +3,21 @@
 import lodash from 'lodash'
 import prismarine, { type NBT } from 'prismarine-nbt'
 import type {
-  BLOCKS,
+  Registry['minecraft:block'],
   BlockState,
   Coordinates,
-  ENTITY_TYPES,
+  Registry['minecraft:entity_type'],
   NBTObject,
   RootNBT,
   StructureNBT,
 } from 'sandstone/arguments'
 import type { ResourceClassArguments, ResourceNode, SandstoneCore } from 'sandstone/core'
-import type { LiteralUnion } from 'sandstone/utils'
 import { add } from 'sandstone/utils'
 import type { DataPointClass, Score, StructureMirror, StructureRotation } from 'sandstone/variables'
 import { ConditionClass, ResolveNBTPart, relative } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 const same = lodash.isEqual
 
@@ -39,7 +39,7 @@ export class StructureNode extends ContainerNode implements ResourceNode<Structu
 }
 
 type Block = {
-  id: LiteralUnion<BLOCKS>
+  id: Registry['minecraft:block']
   state?: { [key: string]: string }
   /* Must use NBT Primitives! */
   nbt?: RootNBT
@@ -49,7 +49,7 @@ type StructureEntry = {
   block?: Block | Block[]
   entities?: [
     {
-      id: LiteralUnion<ENTITY_TYPES>
+      id: Registry['minecraft:entity_type']
       /* Must use NBT Primitives! */
       nbt?: RootNBT
       offset?: [number, number, number]

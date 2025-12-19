@@ -1,14 +1,14 @@
-import type { Coordinates, WORLDGEN_BIOMES } from 'sandstone'
+import type { Coordinates } from 'sandstone'
 import type { SandstoneCore } from 'sandstone/core'
 import { coordinatesParser } from 'sandstone/variables'
-import type { LiteralUnion } from '../../../utils.js'
 import { SingleConditionNode } from '../condition.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class BiomeConditionNode extends SingleConditionNode {
   constructor(
     sandstoneCore: SandstoneCore,
     private coordinates: Coordinates,
-    private biome: LiteralUnion<WORLDGEN_BIOMES>,
+    private biome: Registry['minecraft:worldgen/biome'],
   ) {
     super(sandstoneCore)
   }

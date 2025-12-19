@@ -1,10 +1,10 @@
-import type { Coordinates, ENTITY_TYPES, RootNBT } from 'sandstone/arguments'
+import type { Coordinates, RootNBT } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class SummonCommandNode extends CommandNode {
   command = 'summon' as const
@@ -56,7 +56,7 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
    * ```
    */
   summon = (
-    entity: Macroable<LiteralUnion<ENTITY_TYPES>, MACRO>,
+    entity: Macroable<Registry['minecraft:entity_type'], MACRO>,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
     nbt?: Macroable<RootNBT, MACRO>,
   ) =>

@@ -1,6 +1,6 @@
-import type { ITEMS } from 'sandstone/arguments/generated'
 import type { TagClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 /**
  * Ensures that the given string has 3 characters or less - else, evaluates as `never`
@@ -47,7 +47,7 @@ type SPECIAL_CRAFTING_RECIPES =
 type ItemOrTag =
   | {
       /** The item. */
-      item: LiteralUnion<ITEMS>
+      item: Registry['minecraft:item']
     }
   | {
       /** An item tag. */
@@ -59,7 +59,7 @@ type CookingRecipe = {
   ingredient: ItemOrTag | ItemOrTag[]
 
   /** The output item of the recipe. */
-  result: LiteralUnion<ITEMS>
+  result: Registry['minecraft:item']
 
   /** The output experience of the recipe. */
   experience: number
@@ -177,7 +177,7 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
             /** The output item of the recipe. */
             result: {
               /** The resulting item. */
-              item: LiteralUnion<ITEMS>
+              item: Registry['minecraft:item']
 
               /**
                * Optional. The amount of the item.
@@ -196,7 +196,7 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
       {
         ingredients: ItemOrTag[]
         result: {
-          item: LiteralUnion<ITEMS>
+          item: Registry['minecraft:item']
           count?: number
         }
       }
@@ -221,7 +221,7 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
         /** The ingredient or the list of ingredients for the recipe. */
         ingredient: ItemOrTag | ItemOrTag[]
         /** The output item of the recipe. */
-        result: LiteralUnion<ITEMS>
+        result: Registry['minecraft:item']
         /** The amount of the output item. */
         count: number
       }
@@ -247,6 +247,6 @@ export type RecipeJSON<P1 extends string = string, P2 extends string = string, P
         /** Template item that will be used for the item transformation. Empty List for empty slot. */
         template: ObjectOrArray<ItemOrTag>
         /** Resulting transformed item */
-        result: { item: LiteralUnion<ITEMS> } // Fun
+        result: { item: Registry['minecraft:item'] } // Fun
       }
     >

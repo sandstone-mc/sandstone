@@ -1,8 +1,7 @@
 /* eslint-disable camelcase */
-import type { ITEMS } from 'sandstone/arguments'
 import type { TagClass } from 'sandstone/core'
-import type { LiteralUnion } from 'sandstone/utils'
 import type { EnchantmentCriterion, NumberProvider } from './index.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type ItemCriterion = Partial<{
   /** Amount of the item. */
@@ -18,7 +17,7 @@ export type ItemCriterion = Partial<{
   stored_enchantments: EnchantmentCriterion[]
 
   /** An array of item IDs. */
-  items: LiteralUnion<ITEMS>[]
+  items: Registry['minecraft:item'][]
 
   /** An NBT string. */
   nbt: string

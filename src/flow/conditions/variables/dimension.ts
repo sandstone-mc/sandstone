@@ -1,12 +1,11 @@
-import type { DIMENSIONS } from 'sandstone'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
 import { SingleConditionNode } from '../condition.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class DimensionConditionNode extends SingleConditionNode {
   constructor(
     sandstoneCore: SandstoneCore,
-    private dimension: LiteralUnion<DIMENSIONS>,
+    private dimension: Registry['minecraft:dimension'],
   ) {
     super(sandstoneCore)
   }

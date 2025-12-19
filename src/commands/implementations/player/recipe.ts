@@ -1,9 +1,10 @@
-import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MultiplePlayersArgument } from 'sandstone/arguments'
 import type { Macroable, RecipeClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class RecipeCommandNode extends CommandNode {
   command = 'recipe' as const

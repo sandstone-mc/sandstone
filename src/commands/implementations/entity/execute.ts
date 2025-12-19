@@ -1,11 +1,11 @@
 import type {
   ANCHORS,
   AXES,
-  BLOCKS,
+  Registry['minecraft:block'],
   COMPARISON_OPERATORS,
   Coordinates,
-  DIMENSIONS,
-  ENTITY_TYPES,
+  Registry['minecraft:dimension'],
+  Registry['minecraft:entity_type'],
   MultipleEntitiesArgument,
   ObjectiveArgument,
   Range,
@@ -24,7 +24,6 @@ import type { Node } from 'sandstone/core/nodes'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
-import type { LiteralUnion } from 'sandstone/utils'
 import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective.js'
@@ -32,6 +31,7 @@ import { coordinatesParser, rangeParser, rotationParser, targetParser } from 'sa
 import type { Score } from 'sandstone/variables/Score.js'
 import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
 import { FunctionCommandNode } from '../server/function.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]
@@ -319,7 +319,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    *
    * @param block A block to test against.
    */
-  block = (pos: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<LiteralUnion<BLOCKS>, MACRO>) =>
+  block = (pos: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<Registry['minecraft:block'], MACRO>) =>
     this.nestedExecute(['block', coordinatesParser(pos), block], true)
 
   /**
@@ -417,7 +417,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * Checks whether the current dimension matches the given one.
    * @param dimension Dimension to check against.
    */
-  dimension = (dimension: Macroable<LiteralUnion<DIMENSIONS>, MACRO>) => this.nestedExecute(['dimension', dimension])
+  dimension = (dimension: Macroable<Registry['minecraft:dimension'], MACRO>) => this.nestedExecute(['dimension', dimension])
 
   /**
    * Checks whether the targeted block is in a chunk that is fully loaded (entity-processing chunk).
@@ -574,7 +574,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    *
    * @param dimension Name of the new execution dimension.
    */
-  in = (dimension: Macroable<LiteralUnion<DIMENSIONS>, MACRO>) => this.nestedExecute(['in', dimension])
+  in = (dimension: Macroable<Registry['minecraft:dimension'], MACRO>) => this.nestedExecute(['in', dimension])
 
   /**
    * Sets the command executor to a related entity.
@@ -619,7 +619,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    * Summons an entity at the command position and sets the command executor to said newly summoned entity.
    * @param entityType Entity to summon.
    */
-  summon(entityType: Macroable<LiteralUnion<ENTITY_TYPES>, MACRO>) {
+  summon(entityType: Macroable<Registry['minecraft:entity_type'], MACRO>) {
     return this.nestedExecute(['summon', entityType])
   }
 

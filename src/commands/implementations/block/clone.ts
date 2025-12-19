@@ -1,9 +1,9 @@
-import type { BLOCKS, Coordinates } from 'sandstone/arguments'
+import type { Coordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class CloneCommandNode extends CommandNode {
   command = 'clone' as const
@@ -158,6 +158,6 @@ export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments
    * clone(house_source, house_end, new_location).filtered('minecraft:oak_planks', 'move')
    * ```
    */
-  filtered = (filter: Macroable<LiteralUnion<BLOCKS>, MACRO>, mode?: Macroable<'force' | 'move' | 'normal', MACRO>) =>
+  filtered = (filter: Macroable<Registry['minecraft:block'], MACRO>, mode?: Macroable<'force' | 'move' | 'normal', MACRO>) =>
     this.finalCommand(['filtered', filter, mode])
 }

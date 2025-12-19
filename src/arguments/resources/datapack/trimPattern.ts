@@ -1,6 +1,5 @@
-import type { LiteralUnion } from 'sandstone/utils'
-import type { ITEMS } from '../../generated/index.js'
 import type { JSONTextComponent } from '../../jsonTextComponent.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type TrimPatternJSON = {
   /** A resource location (In the resource pack) of the pattern that will be used as an overlay on the armor. */
@@ -10,5 +9,5 @@ export type TrimPatternJSON = {
   description: JSONTextComponent
 
   /** The item used in the smithing table for this pattern. */
-  template_item: LiteralUnion<ITEMS>
+  template_item: Registry['minecraft:item']
 }

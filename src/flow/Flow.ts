@@ -1,11 +1,11 @@
 import type {
-  BLOCKS,
+  Registry['minecraft:block'],
   Coordinates,
   JSONTextComponent,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
   NBTObject,
-  WORLDGEN_BIOMES,
+  Registry['minecraft:worldgen/biome'],
 } from 'sandstone/arguments'
 import type {
   ConditionClass,
@@ -26,6 +26,7 @@ import type { ForOfIterator } from './loops/index.js'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops/index.js'
 import type { DefaultType } from './switch_case.js'
 import { CaseStatement } from './switch_case.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 let switches = 0
 
@@ -327,7 +328,7 @@ export class Flow {
    * @param coordinates Position to test.
    * @param biome Biome(s) to test for (can be a tag).
    */
-  biome = (coordinates: Coordinates, biome: LiteralUnion<WORLDGEN_BIOMES>) => {
+  biome = (coordinates: Coordinates, biome: Registry['minecraft:worldgen/biome']) => {
     return new SandstoneConditions.Biome(this.sandstoneCore, coordinates, biome)
   }
 
@@ -336,7 +337,7 @@ export class Flow {
    * @param position Position of a target block to test.
    * @param block Block(s) to test for (can be a tag).
    */
-  block = (position: Coordinates, block: LiteralUnion<BLOCKS>) => {
+  block = (position: Coordinates, block: Registry['minecraft:block']) => {
     return new SandstoneConditions.Block(this.sandstoneCore, position, block)
   }
 

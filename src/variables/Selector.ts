@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
 
-import type { ENTITY_TYPES, GAMEMODES, JSONTextComponent, Range, RootNBT } from 'sandstone/arguments'
+import type { GAMEMODES, JSONTextComponent, Range, RootNBT } from 'sandstone/arguments'
 import type { PredicateClass, SandstoneCore } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
@@ -12,6 +12,7 @@ import { formatDebugString, type LiteralUnion } from '../utils.js'
 import type { ConditionClass, ConditionTextComponentClass, SelectorPickClass } from './abstractClasses.js'
 import type { LabelClass } from './Label.js'
 import type { NotNBT } from './nbt/NBTs.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type ScoreArgument<MACRO extends boolean = false> = Record<string, Range<MACRO>>
 
@@ -182,7 +183,7 @@ export type SelectorProperties<
          *
          * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
          */
-        type?: Macroable<LiteralUnion<ENTITY_TYPES> | LiteralUnion<ENTITY_TYPES>[], MACRO>
+        type?: Macroable<Registry['minecraft:entity_type'] | Registry['minecraft:entity_type'][], MACRO>
       })
 
 // Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'

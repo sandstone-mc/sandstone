@@ -2,7 +2,7 @@ import type {
   CONTAINER_SLOTS,
   Coordinates,
   ENTITY_SLOTS,
-  ITEMS,
+  Registry['minecraft:item'],
   MultipleEntitiesArgument,
   RootNBT,
 } from 'sandstone/arguments'
@@ -13,6 +13,7 @@ import { nbtStringifier } from 'sandstone/variables'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers.js'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
@@ -24,7 +25,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
    * @param item The item to replace the slot with.
    * @param count The amount of items. If not specified, defaults to 1.
    */
-  with(item: Macroable<LiteralUnion<ITEMS>, MACRO>, count?: Macroable<number, MACRO>): FinalCommandOutput
+  with(item: Macroable<Registry['minecraft:item'], MACRO>, count?: Macroable<number, MACRO>): FinalCommandOutput
 
   /**
    * Replace the slot with a specific item.
@@ -33,13 +34,13 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
    * @param count The amount of items.
    */
   with(
-    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    item: Macroable<Registry['minecraft:item'], MACRO>,
     nbt: Macroable<RootNBT, MACRO>,
     count: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
   with(
-    item: Macroable<LiteralUnion<ITEMS>, MACRO>,
+    item: Macroable<Registry['minecraft:item'], MACRO>,
     countOrNBT?: Macroable<number | RootNBT, MACRO>,
     count?: Macroable<number, MACRO>,
   ) {

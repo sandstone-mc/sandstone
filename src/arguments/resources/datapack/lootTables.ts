@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
-import type { ITEMS } from 'sandstone/arguments/generated'
 import type { LootTableClass, TagClass } from 'sandstone/core'
-import type { LiteralUnion, WithMCNamespace } from 'sandstone/utils'
+import type { WithMCNamespace } from 'sandstone/utils'
 import type { NumberProvider } from './criteria/index.js'
 import type { ItemModifierFunction } from './itemModifier.js'
 import type { PredicateCondition } from './predicate.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class XXXXAIJIA {}
 type EntryType<TYPE extends string, VALUES extends Record<string, unknown>> = {
@@ -70,7 +70,7 @@ export type LootTableEntry = {
          * ID name of the item to be produced, e.g. `diamond`.
          * The default, if not changed by functions, is a stack of 1 of the default instance of the item.
          */
-        name: LiteralUnion<ITEMS>
+        name: Registry['minecraft:item']
       }
     >
   | EntryType<

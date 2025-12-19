@@ -1,14 +1,14 @@
-import type { BLOCKS, Coordinates } from 'sandstone'
+import type { Coordinates } from 'sandstone'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
-import type { LiteralUnion } from 'sandstone/utils.js'
 import { coordinatesParser } from 'sandstone/variables'
 import { SingleConditionNode } from '../condition.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class BlockConditionNode extends SingleConditionNode {
   constructor(
     sandstoneCore: SandstoneCore,
     private position: Coordinates,
-    private block: LiteralUnion<BLOCKS>,
+    private block: Registry['minecraft:block'],
   ) {
     super(sandstoneCore)
   }

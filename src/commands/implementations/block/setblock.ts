@@ -1,10 +1,10 @@
-import type { BLOCKS, Coordinates, RootNBT } from 'sandstone/arguments'
+import type { Coordinates, RootNBT } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers.js'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class SetBlockCommandNode extends CommandNode {
   command = 'setblock' as const
@@ -50,7 +50,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
 
   setblock(
     pos: Macroable<Coordinates<MACRO>, MACRO>,
-    block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+    block: Macroable<Registry['minecraft:block'], MACRO>,
     type?: Macroable<'destroy' | 'keep' | 'replace', MACRO>,
   ): FinalCommandOutput
 
@@ -102,14 +102,14 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    */
   setblock(
     pos: Macroable<Coordinates<MACRO>, MACRO>,
-    block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+    block: Macroable<Registry['minecraft:block'], MACRO>,
     nbt?: Macroable<RootNBT, MACRO>,
     type?: Macroable<'destroy' | 'keep' | 'replace', MACRO>,
   ): FinalCommandOutput
 
   setblock(
     pos: Macroable<Coordinates<MACRO>, MACRO>,
-    block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+    block: Macroable<Registry['minecraft:block'], MACRO>,
     nbtOrType?: Macroable<RootNBT | 'destroy' | 'keep' | 'replace', MACRO>,
     type?: Macroable<'destroy' | 'keep' | 'replace', MACRO>,
   ) {

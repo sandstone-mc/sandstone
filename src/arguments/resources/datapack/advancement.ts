@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
-import type { ITEMS, JSONTextComponent } from 'sandstone/arguments'
+import type { JSONTextComponent } from 'sandstone/arguments'
 import type { AdvancementClass, MCFunctionClass, PredicateClass } from 'sandstone/core'
-import type { LiteralUnion } from 'sandstone/utils'
 import type {
   BlockIdCriterion,
   DamageCriterion,
@@ -17,6 +16,7 @@ import type {
   SlotCriterion,
 } from './criteria/index.js'
 import type { PredicateJSON } from './predicate.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 /** A representation of a Minecraft advancement. */
 export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
@@ -25,7 +25,7 @@ export interface AdvancementJSON<CRITERIA_NAMES extends string = string> {
     /** The data for the icon. */
     icon: {
       /** The item id. */
-      item: LiteralUnion<ITEMS>
+      item: Registry['minecraft:item']
 
       /** The nbt data of the item. Must be a string. */
       nbt?: string
@@ -546,7 +546,7 @@ export type AdvancementTriggers =
         /** The redstone signal that will come out of the target block. */
         signal_strength: number
         /** The projectile used to hit the target block. */
-        projectile: LiteralUnion<ITEMS>
+        projectile: Registry['minecraft:item']
         /** Entity predicate for the player who shot or threw the projectile. May be a list of loot table conditions that must pass in order for the trigger to activate. */
         shooter: EntityCriterion
       }

@@ -3,12 +3,12 @@
 /* eslint-disable camelcase */
 import type { JSONTextComponent, LootTableEntry } from 'sandstone/arguments'
 import type { BASIC_COLORS, MAP_ICONS } from 'sandstone/arguments/basics'
-import type { ATTRIBUTES, BLOCKS, ENCHANTMENTS, STRUCTURES } from 'sandstone/arguments/generated'
 import type { LootTableClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { DataInstance } from 'sandstone/variables/Data'
 import type { NumberProvider } from './criteria/utils.js'
 import type { ObjectOrArray, PredicateCondition } from './predicate.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown>> = {
   /**
@@ -52,7 +52,7 @@ export type ItemModifierFunction = {
       'apply_bonus',
       {
         /** Enchantment ID used for level calculation. */
-        enchantment: LiteralUnion<ENCHANTMENTS>
+        enchantment: Registry['minecraft:enchantment']
       } & (
         | {
             /**
@@ -146,7 +146,7 @@ export type ItemModifierFunction = {
       'copy_state',
       {
         /** A block ID. Function fails if the block doesn't match. */
-        block?: LiteralUnion<BLOCKS>
+        block?: Registry['minecraft:block']
         /** A list of property names to copy. */
         properties: string[]
       }
@@ -155,7 +155,7 @@ export type ItemModifierFunction = {
       'enchant_randomly',
       {
         /** List of enchantment IDs to choose from. If omitted, all enchantments applicable to the item are possible. */
-        enchantments?: LiteralUnion<ENCHANTMENTS>[]
+        enchantments?: Registry['minecraft:enchantment'][]
       }
     >
   | ItemModifierKind<
@@ -171,7 +171,7 @@ export type ItemModifierFunction = {
       'exploration_map',
       {
         /** The type of generated structure to locate. Accepts any of the StructureTypes used by the `/locate` command (case insensitive). */
-        destination: LiteralUnion<STRUCTURES>
+        destination: Registry['minecraft:structure']
         /**
          * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
          * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
@@ -252,7 +252,7 @@ export type ItemModifierFunction = {
         /** The modifiers to apply to the item. */
         modifiers: {
           name: string
-          attribute: LiteralUnion<ATTRIBUTES>
+          attribute: Registry['minecraft:attribute']
           operation: 'addition' | 'multiply_base' | 'multiply_total'
           amount: NumberProvider
           id?: string
@@ -333,7 +333,7 @@ export type ItemModifierFunction = {
   | ItemModifierKind<
       'set_enchantments',
       {
-        enchantments: { [K in ENCHANTMENTS]?: NumberProvider }
+        enchantments: { [K in Registry['minecraft:enchantment']]?: NumberProvider }
         add?: boolean
       }
     >
@@ -393,7 +393,7 @@ export type ItemModifierFunction = {
         /** The effects to apply. */
         effects: {
           /** The effect ID. */
-          type: LiteralUnion<ENCHANTMENTS>
+          type: Registry['minecraft:enchantment']
           /** The duration of the effect. */
           duration: NumberProvider
         }[]

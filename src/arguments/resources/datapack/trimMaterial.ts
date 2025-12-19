@@ -1,6 +1,6 @@
 import type { LiteralUnion } from 'sandstone/utils'
-import type { ITEMS } from '../../generated/index.js'
 import type { JSONTextComponent } from '../../jsonTextComponent.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 /** Key is armor material, value is a string which will be used in the resource pack. */
 export type OverrideArmorMaterials = Record<
@@ -16,7 +16,7 @@ export type TrimMaterialJSON = {
   description: JSONTextComponent
 
   /** The item used in the smithing table for this material. */
-  ingredient: LiteralUnion<ITEMS>
+  ingredient: Registry['minecraft:item']
 
   /** Model override predicate float between 1 & 0. */
   item_model_index: number

@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import type { CAT_VARIANTS, ENTITY_TYPES, MOB_EFFECTS } from 'sandstone/arguments/generated'
 import type { PredicateClass, TagClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { PredicateJSON } from '../predicate.js'
@@ -7,6 +6,7 @@ import type { DistanceCriterion, EffectCriterion } from './basic_criteria.js'
 import type { ItemCriterion } from './ItemCriterion.js'
 import type { LocationCriterion } from './LocationCriterion.js'
 import type { PlayerCriterion } from './PlayerCriterion.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type EntityCriterion =
   | (PredicateClass | PredicateJSON)[]
@@ -15,7 +15,7 @@ export type EntityCriterion =
       distance: DistanceCriterion & LocationCriterion
 
       /** A list of status effects. The key is the effect type. */
-      effects: Record<MOB_EFFECTS, EffectCriterion>
+      effects: Record<Registry['minecraft:mob_effect'], EffectCriterion>
 
       /** A list of equipment the entity must match. */
       equipment: Partial<Record<'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet', ItemCriterion>>
@@ -48,7 +48,7 @@ export type EntityCriterion =
       team: string
 
       /** An entity ID. */
-      type: LiteralUnion<ENTITY_TYPES> | TagClass<'entity_types'>
+      type: Registry['minecraft:entity_type'] | TagClass<'entity_types'>
 
       /** The entity which this entity is targeting for attacks. */
       targeted_entity: EntityCriterion
@@ -88,7 +88,7 @@ type TypeSpecific =
   | TypeSpecificKind<
       'cat',
       {
-        variant: LiteralUnion<CAT_VARIANTS>
+        variant: Registry['minecraft:cat_variant']
       }
     >
   | TypeSpecificKind<

@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
-import type { BLOCKS, ENCHANTMENTS } from 'sandstone/arguments'
-import type { LiteralUnion } from 'sandstone/utils'
 import type {
+import type { Registry } from 'sandstone/arguments/generated/registry'
   DamageCriterion,
   EntityCriterion,
   ItemCriterion,
@@ -83,7 +82,7 @@ export type PredicateCondition =
           'minecraft:block_state_property',
           {
             /** A block ID. The test fails if the block doesn't match. */
-            block: LiteralUnion<BLOCKS>
+            block: Registry['minecraft:block']
             /** A map of block property names to values. All values are strings. The test fails if the block doesn't match. */
             properties?: Record<string, string>
           }
@@ -207,7 +206,7 @@ export type PredicateCondition =
           'minecraft:table_bonus',
           {
             /** Id of enchantment. */
-            enchantment: LiteralUnion<ENCHANTMENTS>
+            enchantment: Registry['minecraft:enchantment']
             /** List of probabilities for enchantment level, indexed from 0. */
             chances: number[]
           }

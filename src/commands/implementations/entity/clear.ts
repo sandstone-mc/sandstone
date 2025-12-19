@@ -1,9 +1,9 @@
-import type { ITEMS, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MultiplePlayersArgument } from 'sandstone/arguments'
 import type { Macroable, TagClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class ClearCommandNode extends CommandNode {
   command = 'clear' as const
@@ -58,7 +58,7 @@ export class ClearCommand<MACRO extends boolean> extends CommandArguments {
    */
   clear = (
     targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    item?: Macroable<LiteralUnion<ITEMS> | TagClass<'items'>, MACRO>,
+    item?: Macroable<Registry['minecraft:item'] | TagClass<'items'>, MACRO>,
     maxCount?: Macroable<number, MACRO>,
   ) => this.finalCommand([targetParser(targets), item, maxCount])
 }

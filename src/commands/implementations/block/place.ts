@@ -1,8 +1,8 @@
 import type {
   Coordinates,
-  STRUCTURES,
+  Registry['minecraft:structure'],
   WORLDGEN_CONFIGURED_FEATURES,
-  WORLDGEN_STRUCTURES,
+  Registry['minecraft:worldgen/structure'],
   WORLDGEN_TEMPLATE_POOLS,
 } from 'sandstone/arguments'
 import type { Macroable, StructureClass } from 'sandstone/core'
@@ -12,6 +12,7 @@ import type { StructureMirror, StructureRotation } from 'sandstone/variables'
 import { coordinatesParser, structureMirrorParser, structureRotationParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 import { validateIntegerRange } from '../../validators.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class PlaceCommandNode extends CommandNode {
   command = 'place' as const
@@ -61,7 +62,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
    * @param pos Optional. Where to place.
    */
   structure = (
-    configuredStructure: Macroable<LiteralUnion<WORLDGEN_STRUCTURES>, MACRO>,
+    configuredStructure: Macroable<Registry['minecraft:worldgen/structure'], MACRO>,
     pos: Macroable<Coordinates<MACRO>, MACRO> = '~ ~ ~' as Coordinates<MACRO>,
   ) => this.finalCommand(['structure', configuredStructure, coordinatesParser(pos)])
 
@@ -76,7 +77,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
    * @param seed Optional. Integer applied to the integrity random. Defaults to 0.
    */
   template = (
-    structure: Macroable<LiteralUnion<STRUCTURES>, MACRO> | StructureClass,
+    structure: Macroable<Registry['minecraft:structure'], MACRO> | StructureClass,
     pos: Macroable<Coordinates<MACRO>, MACRO> = '~ ~ ~' as Coordinates<MACRO>,
     rotation?: Macroable<StructureRotation, MACRO>,
     mirror?: Macroable<StructureMirror, MACRO>,

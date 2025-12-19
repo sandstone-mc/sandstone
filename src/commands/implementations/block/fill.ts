@@ -1,9 +1,9 @@
-import type { BLOCKS, Coordinates } from 'sandstone/arguments'
+import type { Coordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class FillCommandNode extends CommandNode {
   command = 'fill' as const
@@ -137,7 +137,7 @@ export class FillArgumentsCommand<MACRO extends boolean> extends CommandArgument
    * fill(mine_area_start, mine_area_end, 'minecraft:diamond_block').replace('minecraft:stone')
    * ```
    */
-  replace = (filter?: Macroable<LiteralUnion<BLOCKS>, MACRO>) => this.finalCommand(['replace', filter])
+  replace = (filter?: Macroable<Registry['minecraft:block'], MACRO>) => this.finalCommand(['replace', filter])
 }
 
 export class FillCommand<MACRO extends boolean> extends CommandArguments {
@@ -191,6 +191,6 @@ export class FillCommand<MACRO extends boolean> extends CommandArguments {
   fill = (
     from: Macroable<Coordinates<MACRO>, MACRO>,
     to: Macroable<Coordinates<MACRO>, MACRO>,
-    block: Macroable<LiteralUnion<BLOCKS>, MACRO>,
+    block: Macroable<Registry['minecraft:block'], MACRO>,
   ) => this.subCommand([coordinatesParser(from), coordinatesParser(to), block], FillArgumentsCommand, true)
 }

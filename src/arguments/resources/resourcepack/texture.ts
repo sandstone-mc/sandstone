@@ -1,5 +1,5 @@
 import type { LiteralUnion } from 'sandstone/utils'
-import type { ENTITY_TYPES } from '../../generated/entity_type.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type TextureAnimation = {
   animation: {
@@ -47,7 +47,7 @@ export type TEXTURE_TYPES =
   | 'block'
   | 'colormap'
   | 'effect'
-  | `entity/${ENTITY_TYPES}`
+  | `entity/${Registry['minecraft:entity_type']}`
   | 'environment'
   | 'font'
   | 'gui'

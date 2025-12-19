@@ -1,8 +1,7 @@
-import type { POINT_OF_INTEREST_TYPES, WORLDGEN_BIOMES, WORLDGEN_STRUCTURES } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { CommandArguments } from '../../helpers.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class LocateCommandNode extends CommandNode {
   command = 'locate' as const
@@ -46,7 +45,7 @@ export class LocateCommand<MACRO extends boolean> extends CommandArguments {
    * locate.structure('minecraft:bastion_remnant')    // Then tp to coordinates
    * ```
    */
-  structure = (structure: Macroable<LiteralUnion<WORLDGEN_STRUCTURES>, MACRO>) =>
+  structure = (structure: Macroable<Registry['minecraft:worldgen/structure'], MACRO>) =>
     this.finalCommand(['structure', structure])
 
   /**
@@ -84,7 +83,7 @@ export class LocateCommand<MACRO extends boolean> extends CommandArguments {
    * locate.biome('minecraft:dark_forest')      // Dark oak and mansions
    * ```
    */
-  biome = (biome: Macroable<LiteralUnion<WORLDGEN_BIOMES>, MACRO>) => this.finalCommand(['biome', biome])
+  biome = (biome: Macroable<Registry['minecraft:worldgen/biome'], MACRO>) => this.finalCommand(['biome', biome])
 
   /**
    * Find the nearest point of interest (POI) of the specified type.
@@ -105,6 +104,6 @@ export class LocateCommand<MACRO extends boolean> extends CommandArguments {
    *                       Must be a valid point of interest identifier.
    * 
    * @example\n   * ```ts\n   * // Find villager job sites\n   * locate.poi('minecraft:weaponsmith')    // Grindstone/smithing table\n   * locate.poi('minecraft:librarian')      // Lectern for book trades\n   * locate.poi('minecraft:armorer')        // Blast furnace for armor\n   * \n   * // Find functional areas\n   * locate.poi('minecraft:meeting')        // Village meeting point\n   * locate.poi('minecraft:home')           // Available beds\n   * ```\n   */
-  poi = (pointOfInterest: Macroable<LiteralUnion<POINT_OF_INTEREST_TYPES>, MACRO>) =>
+  poi = (pointOfInterest: Macroable<Registry['minecraft:point_of_interest_type'], MACRO>) =>
     this.finalCommand(['poi', pointOfInterest])
 }
