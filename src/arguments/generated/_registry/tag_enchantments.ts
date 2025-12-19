@@ -1,0 +1,31 @@
+import { Set } from 'sandstone'
+import type { NamespacedLiteralUnion, SetType } from 'sandstone'
+
+export type TAG_ENCHANTMENTS = (
+    | NamespacedLiteralUnion<SetType<typeof TAG_ENCHANTMENTS_SET>>
+    | `minecraft:${SetType<typeof TAG_ENCHANTMENTS_SET>}`)
+
+export const TAG_ENCHANTMENTS_SET = new Set([
+    'curse',
+    'double_trade_price',
+    'exclusive_set/armor',
+    'exclusive_set/boots',
+    'exclusive_set/bow',
+    'exclusive_set/crossbow',
+    'exclusive_set/damage',
+    'exclusive_set/mining',
+    'exclusive_set/riptide',
+    'in_enchanting_table',
+    'non_treasure',
+    'on_mob_spawn_equipment',
+    'on_random_loot',
+    'on_traded_equipment',
+    'prevents_bee_spawns_when_mining',
+    'prevents_decorated_pot_shattering',
+    'prevents_ice_melting',
+    'prevents_infested_spawns',
+    'smelts_loot',
+    'tooltip_order',
+    'tradeable',
+    'treasure',
+] as const)

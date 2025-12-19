@@ -1,0 +1,49 @@
+import { Set } from 'sandstone'
+import type { NamespacedLiteralUnion, SetType } from 'sandstone'
+
+export type MOB_EFFECTS = (
+    | NamespacedLiteralUnion<SetType<typeof MOB_EFFECTS_SET>>
+    | `minecraft:${SetType<typeof MOB_EFFECTS_SET>}`)
+
+export const MOB_EFFECTS_SET = new Set([
+    'absorption',
+    'bad_omen',
+    'blindness',
+    'breath_of_the_nautilus',
+    'conduit_power',
+    'darkness',
+    'dolphins_grace',
+    'fire_resistance',
+    'glowing',
+    'haste',
+    'health_boost',
+    'hero_of_the_village',
+    'hunger',
+    'infested',
+    'instant_damage',
+    'instant_health',
+    'invisibility',
+    'jump_boost',
+    'levitation',
+    'luck',
+    'mining_fatigue',
+    'nausea',
+    'night_vision',
+    'oozing',
+    'poison',
+    'raid_omen',
+    'regeneration',
+    'resistance',
+    'saturation',
+    'slow_falling',
+    'slowness',
+    'speed',
+    'strength',
+    'trial_omen',
+    'unluck',
+    'water_breathing',
+    'weakness',
+    'weaving',
+    'wind_charged',
+    'wither',
+] as const)

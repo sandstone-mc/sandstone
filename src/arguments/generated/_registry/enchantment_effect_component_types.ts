@@ -1,0 +1,40 @@
+import { Set } from 'sandstone'
+import type { NamespacedLiteralUnion, SetType } from 'sandstone'
+
+export type ENCHANTMENT_EFFECT_COMPONENT_TYPES = (
+    | NamespacedLiteralUnion<SetType<typeof ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET>>
+    | `minecraft:${SetType<typeof ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET>}`)
+
+export const ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET = new Set([
+    'ammo_use',
+    'armor_effectiveness',
+    'attributes',
+    'block_experience',
+    'crossbow_charge_time',
+    'crossbow_charging_sounds',
+    'damage',
+    'damage_immunity',
+    'damage_protection',
+    'equipment_drops',
+    'fishing_luck_bonus',
+    'fishing_time_reduction',
+    'hit_block',
+    'item_damage',
+    'knockback',
+    'location_changed',
+    'mob_experience',
+    'post_attack',
+    'post_piercing_attack',
+    'prevent_armor_change',
+    'prevent_equipment_drop',
+    'projectile_count',
+    'projectile_piercing',
+    'projectile_spawned',
+    'projectile_spread',
+    'repair_with_xp',
+    'smash_damage_per_fallen_block',
+    'tick',
+    'trident_return_acceleration',
+    'trident_sound',
+    'trident_spin_attack_strength',
+] as const)

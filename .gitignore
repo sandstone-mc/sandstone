@@ -50,3 +50,7 @@ commands.json
 # IDE
 .idea
 .vscode
+
+# mcdoc-ts-generator
+cachehttp
+dummy

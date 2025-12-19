@@ -1,0 +1,52 @@
+import { Set } from 'sandstone'
+import type { NamespacedLiteralUnion, SetType } from 'sandstone'
+
+export type ENCHANTMENTS = (
+    | NamespacedLiteralUnion<SetType<typeof ENCHANTMENTS_SET>>
+    | `minecraft:${SetType<typeof ENCHANTMENTS_SET>}`)
+
+export const ENCHANTMENTS_SET = new Set([
+    'aqua_affinity',
+    'bane_of_arthropods',
+    'binding_curse',
+    'blast_protection',
+    'breach',
+    'channeling',
+    'density',
+    'depth_strider',
+    'efficiency',
+    'feather_falling',
+    'fire_aspect',
+    'fire_protection',
+    'flame',
+    'fortune',
+    'frost_walker',
+    'impaling',
+    'infinity',
+    'knockback',
+    'looting',
+    'loyalty',
+    'luck_of_the_sea',
+    'lunge',
+    'lure',
+    'mending',
+    'multishot',
+    'piercing',
+    'power',
+    'projectile_protection',
+    'protection',
+    'punch',
+    'quick_charge',
+    'respiration',
+    'riptide',
+    'sharpness',
+    'silk_touch',
+    'smite',
+    'soul_speed',
+    'sweeping_edge',
+    'swift_sneak',
+    'thorns',
+    'unbreaking',
+    'vanishing_curse',
+    'wind_burst',
+] as const)
