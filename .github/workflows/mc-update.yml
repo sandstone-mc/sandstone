@@ -24,7 +24,7 @@ jobs:
       - run: git checkout master
       - run: pnpm install
       - run: pnpm install @types/node
-      - run: node scripts/generateLists.mjs
+      - run: pnpm --package=@sandstone-mc/mcdoc-ts-generator -c dlx 'mcdoc-ts-generator --out-dir "src/arguments/generated/" --no-tsconfig'
       - uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
