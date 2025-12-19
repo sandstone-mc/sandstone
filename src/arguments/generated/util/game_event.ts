@@ -138,9 +138,9 @@ type PositionSourceFallback = (PositionSourceBlock | PositionSourceEntity)
 type PositionSourceBlock = BlockPositionSource
 type PositionSourceEntity = EntityPositionSource
 export type SymbolPositionSource<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? PositionSourceDispatcherMap
     : CASE extends 'keys' ? PositionSourceKeys : CASE extends '%fallback' ? PositionSourceFallback : never

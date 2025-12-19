@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type JUKEBOX_SONGS = (
-    | NamespacedLiteralUnion<SetType<typeof JUKEBOX_SONGS_SET>>
-    | `minecraft:${SetType<typeof JUKEBOX_SONGS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof JUKEBOX_SONGS_SET>>
+  | `minecraft:${SetType<typeof JUKEBOX_SONGS_SET>}`)
 
 export const JUKEBOX_SONGS_SET = new Set([
     '11',

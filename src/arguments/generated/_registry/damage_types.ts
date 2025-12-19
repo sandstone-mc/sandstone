@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type DAMAGE_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof DAMAGE_TYPES_SET>>
-    | `minecraft:${SetType<typeof DAMAGE_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof DAMAGE_TYPES_SET>>
+  | `minecraft:${SetType<typeof DAMAGE_TYPES_SET>}`)
 
 export const DAMAGE_TYPES_SET = new Set([
     'arrow',

@@ -2,22 +2,22 @@ import type { BlendToGray } from 'sandstone/arguments/generated/data/worldgen/at
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type DyeColor = (
-    | 'white'
-    | 'orange'
-    | 'magenta'
-    | 'light_blue'
-    | 'yellow'
-    | 'lime'
-    | 'pink'
-    | 'gray'
-    | 'light_gray'
-    | 'cyan'
-    | 'purple'
-    | 'blue'
-    | 'brown'
-    | 'green'
-    | 'red'
-    | 'black')
+  | 'white'
+  | 'orange'
+  | 'magenta'
+  | 'light_blue'
+  | 'yellow'
+  | 'lime'
+  | 'pink'
+  | 'gray'
+  | 'light_gray'
+  | 'cyan'
+  | 'purple'
+  | 'blue'
+  | 'brown'
+  | 'green'
+  | 'red'
+  | 'black')
 
 export type DyeColorByte = (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15)
 
@@ -130,12 +130,12 @@ type EnvironmentAttributeArgbColorModifierDispatcherMap = {
 }
 type EnvironmentAttributeArgbColorModifierKeys = keyof EnvironmentAttributeArgbColorModifierDispatcherMap
 type EnvironmentAttributeArgbColorModifierFallback = (
-    | EnvironmentAttributeArgbColorModifierAdd
-    | EnvironmentAttributeArgbColorModifierAlphaBlend
-    | EnvironmentAttributeArgbColorModifierBlendToGray
-    | EnvironmentAttributeArgbColorModifierMultiply
-    | EnvironmentAttributeArgbColorModifierOverride
-    | EnvironmentAttributeArgbColorModifierSubtract)
+  | EnvironmentAttributeArgbColorModifierAdd
+  | EnvironmentAttributeArgbColorModifierAlphaBlend
+  | EnvironmentAttributeArgbColorModifierBlendToGray
+  | EnvironmentAttributeArgbColorModifierMultiply
+  | EnvironmentAttributeArgbColorModifierOverride
+  | EnvironmentAttributeArgbColorModifierSubtract)
 type EnvironmentAttributeArgbColorModifierNoneType = StringARGB
 type EnvironmentAttributeArgbColorModifierAdd = StringRGB
 type EnvironmentAttributeArgbColorModifierAlphaBlend = StringARGB
@@ -144,10 +144,10 @@ type EnvironmentAttributeArgbColorModifierMultiply = (StringRGB | StringARGB)
 type EnvironmentAttributeArgbColorModifierOverride = StringARGB
 type EnvironmentAttributeArgbColorModifierSubtract = StringRGB
 export type SymbolEnvironmentAttributeArgbColorModifier<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EnvironmentAttributeArgbColorModifierDispatcherMap
     : CASE extends 'keys'
         ? EnvironmentAttributeArgbColorModifierKeys

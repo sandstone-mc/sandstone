@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ENCHANTMENT_EFFECT_COMPONENT_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET>>
-    | `minecraft:${SetType<typeof ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET>>
+  | `minecraft:${SetType<typeof ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET>}`)
 
 export const ENCHANTMENT_EFFECT_COMPONENT_TYPES_SET = new Set([
     'ammo_use',

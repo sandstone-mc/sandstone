@@ -34,8 +34,8 @@ export type InsideWorldBoundsPredicate = PredicateOffset
 
 export type MatchingBlocksPredicate = (PredicateOffset & {
     blocks: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
 })
 
 export type MatchingBlockTagPredicate = (PredicateOffset & {
@@ -44,8 +44,8 @@ export type MatchingBlockTagPredicate = (PredicateOffset & {
 
 export type MatchingFluidsPredicate = (PredicateOffset & {
     fluids: (
-        | Array<Registry['minecraft:fluid']> | (
-        Registry['minecraft:fluid'] | `#${Registry['minecraft:tag/fluid']}` | TagClass<'fluid'>))
+      | Array<Registry['minecraft:fluid']> | (
+      Registry['minecraft:fluid'] | `#${Registry['minecraft:tag/fluid']}` | TagClass<'fluid'>))
 })
 
 export type NotPredicate = {
@@ -110,16 +110,16 @@ type BlockPredicateDispatcherMap = {
 }
 type BlockPredicateKeys = keyof BlockPredicateDispatcherMap
 type BlockPredicateFallback = (
-    | BlockPredicateAllOf
-    | BlockPredicateAnyOf
-    | BlockPredicateHasSturdyFace
-    | BlockPredicateInsideWorldBounds
-    | BlockPredicateMatchingBlockTag
-    | BlockPredicateMatchingBlocks
-    | BlockPredicateMatchingFluids
-    | BlockPredicateNot
-    | BlockPredicateUnobstructed
-    | BlockPredicateWouldSurvive)
+  | BlockPredicateAllOf
+  | BlockPredicateAnyOf
+  | BlockPredicateHasSturdyFace
+  | BlockPredicateInsideWorldBounds
+  | BlockPredicateMatchingBlockTag
+  | BlockPredicateMatchingBlocks
+  | BlockPredicateMatchingFluids
+  | BlockPredicateNot
+  | BlockPredicateUnobstructed
+  | BlockPredicateWouldSurvive)
 type BlockPredicateAllOf = CombiningPredicate
 type BlockPredicateAnyOf = CombiningPredicate
 type BlockPredicateHasSturdyFace = HasSturdyFacePredicate
@@ -131,9 +131,9 @@ type BlockPredicateNot = NotPredicate
 type BlockPredicateUnobstructed = UnobstructedPredicate
 type BlockPredicateWouldSurvive = WouldSurvivePredicate
 export type SymbolBlockPredicate<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? BlockPredicateDispatcherMap
     : CASE extends 'keys' ? BlockPredicateKeys : CASE extends '%fallback' ? BlockPredicateFallback : never

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ENVIRONMENT_ATTRIBUTES = (
-    | NamespacedLiteralUnion<SetType<typeof ENVIRONMENT_ATTRIBUTES_SET>>
-    | `minecraft:${SetType<typeof ENVIRONMENT_ATTRIBUTES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ENVIRONMENT_ATTRIBUTES_SET>>
+  | `minecraft:${SetType<typeof ENVIRONMENT_ATTRIBUTES_SET>}`)
 
 export const ENVIRONMENT_ATTRIBUTES_SET = new Set([
     'audio/ambient_sounds',

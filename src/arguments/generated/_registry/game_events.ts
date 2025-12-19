@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type GAME_EVENTS = (
-    | NamespacedLiteralUnion<SetType<typeof GAME_EVENTS_SET>>
-    | `minecraft:${SetType<typeof GAME_EVENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof GAME_EVENTS_SET>>
+  | `minecraft:${SetType<typeof GAME_EVENTS_SET>}`)
 
 export const GAME_EVENTS_SET = new Set([
     'block_activate',

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TAG_ENTITY_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof TAG_ENTITY_TYPES_SET>>
-    | `minecraft:${SetType<typeof TAG_ENTITY_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TAG_ENTITY_TYPES_SET>>
+  | `minecraft:${SetType<typeof TAG_ENTITY_TYPES_SET>}`)
 
 export const TAG_ENTITY_TYPES_SET = new Set([
     'accepts_iron_golem_gift',

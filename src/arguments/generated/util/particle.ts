@@ -206,25 +206,25 @@ type ParticleDispatcherMap = {
 }
 type ParticleKeys = keyof ParticleDispatcherMap
 type ParticleFallback = (
-    | ParticleBlock
-    | ParticleBlockCrumble
-    | ParticleBlockMarker
-    | ParticleDragonBreath
-    | ParticleDust
-    | ParticleDustColorTransition
-    | ParticleDustPillar
-    | ParticleEffect
-    | ParticleEntityEffect
-    | ParticleFallingDust
-    | ParticleFlash
-    | ParticleInstantEffect
-    | ParticleItem
-    | ParticleSculkCharge
-    | ParticleShriek
-    | ParticleTintedLeaves
-    | ParticleTrail
-    | ParticleVibration
-    | ParticleFallbackType)
+  | ParticleBlock
+  | ParticleBlockCrumble
+  | ParticleBlockMarker
+  | ParticleDragonBreath
+  | ParticleDust
+  | ParticleDustColorTransition
+  | ParticleDustPillar
+  | ParticleEffect
+  | ParticleEntityEffect
+  | ParticleFallingDust
+  | ParticleFlash
+  | ParticleInstantEffect
+  | ParticleItem
+  | ParticleSculkCharge
+  | ParticleShriek
+  | ParticleTintedLeaves
+  | ParticleTrail
+  | ParticleVibration
+  | ParticleFallbackType)
 type ParticleFallbackType = Record<string, never>
 type ParticleNoneType = unknown
 type ParticleBlock = BlockParticle
@@ -246,10 +246,10 @@ type ParticleTintedLeaves = TintedLeavesParticle
 type ParticleTrail = TrailParticle
 type ParticleVibration = VibrationParticle
 export type SymbolParticle<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ParticleDispatcherMap
     : CASE extends 'keys'
         ? ParticleKeys

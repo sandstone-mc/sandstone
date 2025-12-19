@@ -39,13 +39,13 @@ export type ClickEvent = ({
 }[ClickEventAction])
 
 export type ClickEventAction = (
-    | 'open_url'
-    | 'run_command'
-    | 'suggest_command'
-    | 'change_page'
-    | 'copy_to_clipboard'
-    | 'show_dialog'
-    | 'custom')
+  | 'open_url'
+  | 'run_command'
+  | 'suggest_command'
+  | 'change_page'
+  | 'copy_to_clipboard'
+  | 'show_dialog'
+  | 'custom')
 
 export type CopyToClipboard = {
     /**
@@ -85,65 +85,65 @@ export type HoverEvent = ({
 export type HoverEventAction = ('show_text' | 'show_item' | 'show_entity')
 
 export type Keybind = (
-    | 'key.advancements'
-    | 'key.attack'
-    | 'key.back'
-    | 'key.chat'
-    | 'key.command'
-    | 'key.debug.clearChat'
-    | 'key.debug.copyLocation'
-    | 'key.debug.copyRecreateCommand'
-    | 'key.debug.crash'
-    | 'key.debug.debugOptions'
-    | 'key.debug.dumpDynamicTextures'
-    | 'key.debug.dumpVersion'
-    | 'key.debug.focusPause'
-    | 'key.debug.fpsCharts'
-    | 'key.debug.lightmapTexture'
-    | 'key.debug.modifier'
-    | 'key.debug.networkCharts'
-    | 'key.debug.overlay'
-    | 'key.debug.profiling'
-    | 'key.debug.profilingChart'
-    | 'key.debug.reloadChunk'
-    | 'key.debug.reloadResourcePacks'
-    | 'key.debug.showAdvancedTooltips'
-    | 'key.debug.showChunkBorders'
-    | 'key.debug.showHitboxes'
-    | 'key.debug.spectate'
-    | 'key.debug.switchGameMode'
-    | 'key.drop'
-    | 'key.forward'
-    | 'key.fullscreen'
-    | 'key.hotbar.1'
-    | 'key.hotbar.2'
-    | 'key.hotbar.3'
-    | 'key.hotbar.4'
-    | 'key.hotbar.5'
-    | 'key.hotbar.6'
-    | 'key.hotbar.7'
-    | 'key.hotbar.8'
-    | 'key.hotbar.9'
-    | 'key.inventory'
-    | 'key.jump'
-    | 'key.left'
-    | 'key.loadToolbarActivator'
-    | 'key.pickItem'
-    | 'key.playerlist'
-    | 'key.quickActions'
-    | 'key.right'
-    | 'key.saveToolbarActivator'
-    | 'key.screenshot'
-    | 'key.smoothCamera'
-    | 'key.sneak'
-    | 'key.spectatorHotbar'
-    | 'key.spectatorOutlines'
-    | 'key.sprint'
-    | 'key.swapOffhand'
-    | 'key.toggleGui'
-    | 'key.togglePerspective'
-    | 'key.toggleSpectatorShaderEffects'
-    | 'key.use')
+  | 'key.advancements'
+  | 'key.attack'
+  | 'key.back'
+  | 'key.chat'
+  | 'key.command'
+  | 'key.debug.clearChat'
+  | 'key.debug.copyLocation'
+  | 'key.debug.copyRecreateCommand'
+  | 'key.debug.crash'
+  | 'key.debug.debugOptions'
+  | 'key.debug.dumpDynamicTextures'
+  | 'key.debug.dumpVersion'
+  | 'key.debug.focusPause'
+  | 'key.debug.fpsCharts'
+  | 'key.debug.lightmapTexture'
+  | 'key.debug.modifier'
+  | 'key.debug.networkCharts'
+  | 'key.debug.overlay'
+  | 'key.debug.profiling'
+  | 'key.debug.profilingChart'
+  | 'key.debug.reloadChunk'
+  | 'key.debug.reloadResourcePacks'
+  | 'key.debug.showAdvancedTooltips'
+  | 'key.debug.showChunkBorders'
+  | 'key.debug.showHitboxes'
+  | 'key.debug.spectate'
+  | 'key.debug.switchGameMode'
+  | 'key.drop'
+  | 'key.forward'
+  | 'key.fullscreen'
+  | 'key.hotbar.1'
+  | 'key.hotbar.2'
+  | 'key.hotbar.3'
+  | 'key.hotbar.4'
+  | 'key.hotbar.5'
+  | 'key.hotbar.6'
+  | 'key.hotbar.7'
+  | 'key.hotbar.8'
+  | 'key.hotbar.9'
+  | 'key.inventory'
+  | 'key.jump'
+  | 'key.left'
+  | 'key.loadToolbarActivator'
+  | 'key.pickItem'
+  | 'key.playerlist'
+  | 'key.quickActions'
+  | 'key.right'
+  | 'key.saveToolbarActivator'
+  | 'key.screenshot'
+  | 'key.smoothCamera'
+  | 'key.sneak'
+  | 'key.spectatorHotbar'
+  | 'key.spectatorOutlines'
+  | 'key.sprint'
+  | 'key.swapOffhand'
+  | 'key.toggleGui'
+  | 'key.togglePerspective'
+  | 'key.toggleSpectatorShaderEffects'
+  | 'key.use')
 
 export type OpenUrl = {
     url: `${any}${string}` | URL
@@ -239,22 +239,22 @@ export type TextBase = ({
 } & TextStyle)
 
 export type TextColor = (
-    | 'black'
-    | 'dark_blue'
-    | 'dark_green'
-    | 'dark_aqua'
-    | 'dark_red'
-    | 'dark_purple'
-    | 'gold'
-    | 'gray'
-    | 'dark_gray'
-    | 'blue'
-    | 'green'
-    | 'aqua'
-    | 'red'
-    | 'light_purple'
-    | 'yellow'
-    | 'white')
+  | 'black'
+  | 'dark_blue'
+  | 'dark_green'
+  | 'dark_aqua'
+  | 'dark_red'
+  | 'dark_purple'
+  | 'gold'
+  | 'gray'
+  | 'dark_gray'
+  | 'blue'
+  | 'green'
+  | 'aqua'
+  | 'red'
+  | 'light_purple'
+  | 'yellow'
+  | 'white')
 
 export type TextNbtBase = ({
     interpret?: boolean
@@ -430,13 +430,13 @@ type ClickEventDispatcherMap = {
 }
 type ClickEventKeys = keyof ClickEventDispatcherMap
 type ClickEventFallback = (
-    | ClickEventChangePage
-    | ClickEventCopyToClipboard
-    | ClickEventCustom
-    | ClickEventOpenUrl
-    | ClickEventRunCommand
-    | ClickEventShowDialog
-    | ClickEventSuggestCommand)
+  | ClickEventChangePage
+  | ClickEventCopyToClipboard
+  | ClickEventCustom
+  | ClickEventOpenUrl
+  | ClickEventRunCommand
+  | ClickEventShowDialog
+  | ClickEventSuggestCommand)
 type ClickEventChangePage = ChangePage
 type ClickEventCopyToClipboard = CopyToClipboard
 type ClickEventCustom = CustomAction
@@ -445,10 +445,10 @@ type ClickEventRunCommand = RunCommand
 type ClickEventShowDialog = ShowDialog
 type ClickEventSuggestCommand = SuggestCommand
 export type SymbolClickEvent<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ClickEventDispatcherMap
     : CASE extends 'keys' ? ClickEventKeys : CASE extends '%fallback' ? ClickEventFallback : never
 type HoverEventDispatcherMap = {
@@ -465,9 +465,9 @@ type HoverEventShowEntity = ShowEntity
 type HoverEventShowItem = ShowItem
 type HoverEventShowText = ShowText
 export type SymbolHoverEvent<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? HoverEventDispatcherMap
     : CASE extends 'keys' ? HoverEventKeys : CASE extends '%fallback' ? HoverEventFallback : never

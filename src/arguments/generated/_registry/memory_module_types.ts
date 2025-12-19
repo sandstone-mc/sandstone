@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type MEMORY_MODULE_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof MEMORY_MODULE_TYPES_SET>>
-    | `minecraft:${SetType<typeof MEMORY_MODULE_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof MEMORY_MODULE_TYPES_SET>>
+  | `minecraft:${SetType<typeof MEMORY_MODULE_TYPES_SET>}`)
 
 export const MEMORY_MODULE_TYPES_SET = new Set([
     'admiring_disabled',

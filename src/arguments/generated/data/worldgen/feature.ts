@@ -278,14 +278,14 @@ export type GeodeBlockSettings = {
      * Blocks that will not be replaced by the geode.
      */
     cannot_replace: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
     /**
      * When encountering an invalid block, feature placement is cancelled.
      */
     invalid_blocks: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
 }
 
 export type GeodeConfig = {
@@ -550,8 +550,8 @@ export type MultifaceGrowthConfig = {
     can_place_on_ceiling?: boolean
     can_place_on_wall?: boolean
     can_be_placed_on?: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
 }
 
 export type NetherForestVegetationConfig = ({
@@ -783,8 +783,8 @@ export type RootSystemConfig = {
         max: 64
     }>
     root_replaceable: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
     root_state_provider: BlockStateProvider
     hanging_root_state_provider: BlockStateProvider
     allowed_tree_position: BlockPredicate
@@ -868,8 +868,8 @@ export type SimpleBlockConfig = {
 
 export type SimpleRandomSelectorConfig = {
     features: (
-        | Array<FeatureRef> | (
-        Registry['minecraft:worldgen/placed_feature'] | `#${string}:${string}` | TagClass<'worldgen/placed_feature'>))
+      | Array<FeatureRef> | (
+      Registry['minecraft:worldgen/placed_feature'] | `#${string}:${string}` | TagClass<'worldgen/placed_feature'>))
 }
 
 export type SmallDripstoneConfig = {
@@ -915,8 +915,8 @@ export type SpringConfig = {
     hole_count: NBTInt
     requires_block_below: boolean
     valid_blocks: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
 }
 
 export type TargetBlock = {
@@ -1043,10 +1043,10 @@ type BlockPlacerColumnPlacer = ColumnPlacer
 type BlockPlacerDoublePlantPlacer = Record<string, never>
 type BlockPlacerSimpleBlockPlacer = Record<string, never>
 export type SymbolBlockPlacer<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? BlockPlacerDispatcherMap
     : CASE extends 'keys' ? BlockPlacerKeys : CASE extends '%fallback' ? BlockPlacerFallback : never
 type FeatureConfigDispatcherMap = {
@@ -1155,57 +1155,57 @@ type FeatureConfigDispatcherMap = {
 }
 type FeatureConfigKeys = keyof FeatureConfigDispatcherMap
 type FeatureConfigFallback = (
-    | FeatureConfigBamboo
-    | FeatureConfigBasaltColumns
-    | FeatureConfigBlockColumn
-    | FeatureConfigBlockPile
-    | FeatureConfigDecorated
-    | FeatureConfigDeltaFeature
-    | FeatureConfigDisk
-    | FeatureConfigDripstoneCluster
-    | FeatureConfigEmeraldOre
-    | FeatureConfigEndGateway
-    | FeatureConfigEndSpike
-    | FeatureConfigFallenTree
-    | FeatureConfigFillLayer
-    | FeatureConfigFlower
-    | FeatureConfigForestRock
-    | FeatureConfigFossil
-    | FeatureConfigGeode
-    | FeatureConfigGlowLichen
-    | FeatureConfigGrowingPlant
-    | FeatureConfigHugeBrownMushroom
-    | FeatureConfigHugeFungus
-    | FeatureConfigHugeRedMushroom
-    | FeatureConfigIcePatch
-    | FeatureConfigIceberg
-    | FeatureConfigLake
-    | FeatureConfigLargeDripstone
-    | FeatureConfigMultifaceGrowth
-    | FeatureConfigNetherForestVegetation
-    | FeatureConfigNetherrackReplaceBlobs
-    | FeatureConfigNoBonemealFlower
-    | FeatureConfigNoSurfaceOre
-    | FeatureConfigOre
-    | FeatureConfigPointedDripstone
-    | FeatureConfigRandomBooleanSelector
-    | FeatureConfigRandomPatch
-    | FeatureConfigRandomSelector
-    | FeatureConfigReplaceSingleBlock
-    | FeatureConfigRootSystem
-    | FeatureConfigScatteredOre
-    | FeatureConfigSculkPatch
-    | FeatureConfigSeaPickle
-    | FeatureConfigSeagrass
-    | FeatureConfigSimpleBlock
-    | FeatureConfigSimpleRandomSelector
-    | FeatureConfigSmallDripstone
-    | FeatureConfigSpringFeature
-    | FeatureConfigTree
-    | FeatureConfigTwistingVines
-    | FeatureConfigUnderwaterMagma
-    | FeatureConfigVegetationPatch
-    | FeatureConfigWaterloggedVegetationPatch)
+  | FeatureConfigBamboo
+  | FeatureConfigBasaltColumns
+  | FeatureConfigBlockColumn
+  | FeatureConfigBlockPile
+  | FeatureConfigDecorated
+  | FeatureConfigDeltaFeature
+  | FeatureConfigDisk
+  | FeatureConfigDripstoneCluster
+  | FeatureConfigEmeraldOre
+  | FeatureConfigEndGateway
+  | FeatureConfigEndSpike
+  | FeatureConfigFallenTree
+  | FeatureConfigFillLayer
+  | FeatureConfigFlower
+  | FeatureConfigForestRock
+  | FeatureConfigFossil
+  | FeatureConfigGeode
+  | FeatureConfigGlowLichen
+  | FeatureConfigGrowingPlant
+  | FeatureConfigHugeBrownMushroom
+  | FeatureConfigHugeFungus
+  | FeatureConfigHugeRedMushroom
+  | FeatureConfigIcePatch
+  | FeatureConfigIceberg
+  | FeatureConfigLake
+  | FeatureConfigLargeDripstone
+  | FeatureConfigMultifaceGrowth
+  | FeatureConfigNetherForestVegetation
+  | FeatureConfigNetherrackReplaceBlobs
+  | FeatureConfigNoBonemealFlower
+  | FeatureConfigNoSurfaceOre
+  | FeatureConfigOre
+  | FeatureConfigPointedDripstone
+  | FeatureConfigRandomBooleanSelector
+  | FeatureConfigRandomPatch
+  | FeatureConfigRandomSelector
+  | FeatureConfigReplaceSingleBlock
+  | FeatureConfigRootSystem
+  | FeatureConfigScatteredOre
+  | FeatureConfigSculkPatch
+  | FeatureConfigSeaPickle
+  | FeatureConfigSeagrass
+  | FeatureConfigSimpleBlock
+  | FeatureConfigSimpleRandomSelector
+  | FeatureConfigSmallDripstone
+  | FeatureConfigSpringFeature
+  | FeatureConfigTree
+  | FeatureConfigTwistingVines
+  | FeatureConfigUnderwaterMagma
+  | FeatureConfigVegetationPatch
+  | FeatureConfigWaterloggedVegetationPatch)
 type FeatureConfigBamboo = ProbabilityConfig
 type FeatureConfigBasaltColumns = ColumnsConfig
 type FeatureConfigBlockColumn = BlockColumnConfig
@@ -1258,9 +1258,9 @@ type FeatureConfigUnderwaterMagma = UnderwaterMagmaConfig
 type FeatureConfigVegetationPatch = VegetationPatchConfig
 type FeatureConfigWaterloggedVegetationPatch = VegetationPatchConfig
 export type SymbolFeatureConfig<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? FeatureConfigDispatcherMap
     : CASE extends 'keys' ? FeatureConfigKeys : CASE extends '%fallback' ? FeatureConfigFallback : never

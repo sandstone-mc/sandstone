@@ -109,13 +109,13 @@ type SurfaceConditionDispatcherMap = {
 }
 type SurfaceConditionKeys = keyof SurfaceConditionDispatcherMap
 type SurfaceConditionFallback = (
-    | SurfaceConditionBiome
-    | SurfaceConditionNoiseThreshold
-    | SurfaceConditionNot
-    | SurfaceConditionStoneDepth
-    | SurfaceConditionVerticalGradient
-    | SurfaceConditionWater
-    | SurfaceConditionYAbove)
+  | SurfaceConditionBiome
+  | SurfaceConditionNoiseThreshold
+  | SurfaceConditionNot
+  | SurfaceConditionStoneDepth
+  | SurfaceConditionVerticalGradient
+  | SurfaceConditionWater
+  | SurfaceConditionYAbove)
 type SurfaceConditionBiome = BiomeCondition
 type SurfaceConditionNoiseThreshold = NoiseThresholdCondition
 type SurfaceConditionNot = NotCondition
@@ -124,10 +124,10 @@ type SurfaceConditionVerticalGradient = VerticalGradientCondition
 type SurfaceConditionWater = WaterCondition
 type SurfaceConditionYAbove = YAboveCondition
 export type SymbolSurfaceCondition<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SurfaceConditionDispatcherMap
     : CASE extends 'keys' ? SurfaceConditionKeys : CASE extends '%fallback' ? SurfaceConditionFallback : never
 type SurfaceRuleDispatcherMap = {
@@ -144,9 +144,9 @@ type SurfaceRuleBlock = BlockRule
 type SurfaceRuleCondition = ConditionRule
 type SurfaceRuleSequence = SequenceRule
 export type SymbolSurfaceRule<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SurfaceRuleDispatcherMap
     : CASE extends 'keys' ? SurfaceRuleKeys : CASE extends '%fallback' ? SurfaceRuleFallback : never

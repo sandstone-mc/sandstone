@@ -296,11 +296,11 @@ export type MangroveRootPlacement = {
         max: 1
     }>
     can_grow_through: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
     muddy_roots_in: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
     muddy_roots_provider: BlockStateProvider
 }
 
@@ -579,8 +579,8 @@ export type UpwardsBranchingTrunkPlacer = {
         max: 1
     }>
     can_grow_through: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
 }
 type FeatureSizeDispatcherMap = {
     'three_layers_feature_size': FeatureSizeThreeLayersFeatureSize
@@ -593,10 +593,10 @@ type FeatureSizeFallback = (FeatureSizeThreeLayersFeatureSize | FeatureSizeTwoLa
 type FeatureSizeThreeLayersFeatureSize = ThreeLayersFeatureSize
 type FeatureSizeTwoLayersFeatureSize = TwoLayersFeatureSize
 export type SymbolFeatureSize<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? FeatureSizeDispatcherMap
     : CASE extends 'keys' ? FeatureSizeKeys : CASE extends '%fallback' ? FeatureSizeFallback : never
 type FoliagePlacerDispatcherMap = {
@@ -621,15 +621,15 @@ type FoliagePlacerDispatcherMap = {
 }
 type FoliagePlacerKeys = keyof FoliagePlacerDispatcherMap
 type FoliagePlacerFallback = (
-    | FoliagePlacerBlobFoliagePlacer
-    | FoliagePlacerBushFoliagePlacer
-    | FoliagePlacerCherryFoliagePlacer
-    | FoliagePlacerFancyFoliagePlacer
-    | FoliagePlacerJungleFoliagePlacer
-    | FoliagePlacerMegaPineFoliagePlacer
-    | FoliagePlacerPineFoliagePlacer
-    | FoliagePlacerRandomSpreadFoliagePlacer
-    | FoliagePlacerSpruceFoliagePlacer)
+  | FoliagePlacerBlobFoliagePlacer
+  | FoliagePlacerBushFoliagePlacer
+  | FoliagePlacerCherryFoliagePlacer
+  | FoliagePlacerFancyFoliagePlacer
+  | FoliagePlacerJungleFoliagePlacer
+  | FoliagePlacerMegaPineFoliagePlacer
+  | FoliagePlacerPineFoliagePlacer
+  | FoliagePlacerRandomSpreadFoliagePlacer
+  | FoliagePlacerSpruceFoliagePlacer)
 type FoliagePlacerBlobFoliagePlacer = HeightFoliagePlacer
 type FoliagePlacerBushFoliagePlacer = HeightFoliagePlacer
 type FoliagePlacerCherryFoliagePlacer = CherryFoliagePlacer
@@ -640,10 +640,10 @@ type FoliagePlacerPineFoliagePlacer = PineFoliagePlacer
 type FoliagePlacerRandomSpreadFoliagePlacer = RandomSpreadFoliagePlacer
 type FoliagePlacerSpruceFoliagePlacer = SprucePineFoliagePlacer
 export type SymbolFoliagePlacer<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? FoliagePlacerDispatcherMap
     : CASE extends 'keys' ? FoliagePlacerKeys : CASE extends '%fallback' ? FoliagePlacerFallback : never
 type RootPlacerDispatcherMap = {
@@ -654,10 +654,10 @@ type RootPlacerKeys = keyof RootPlacerDispatcherMap
 type RootPlacerFallback = (RootPlacerMangroveRootPlacer)
 type RootPlacerMangroveRootPlacer = MangroveRootPlacer
 export type SymbolRootPlacer<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? RootPlacerDispatcherMap
     : CASE extends 'keys' ? RootPlacerKeys : CASE extends '%fallback' ? RootPlacerFallback : never
 type TreeDecoratorDispatcherMap = {
@@ -682,15 +682,15 @@ type TreeDecoratorDispatcherMap = {
 }
 type TreeDecoratorKeys = keyof TreeDecoratorDispatcherMap
 type TreeDecoratorFallback = (
-    | TreeDecoratorAlterGround
-    | TreeDecoratorAttachedToLeaves
-    | TreeDecoratorAttachedToLogs
-    | TreeDecoratorBeehive
-    | TreeDecoratorCocoa
-    | TreeDecoratorCreakingHeart
-    | TreeDecoratorLeaveVine
-    | TreeDecoratorPaleMoss
-    | TreeDecoratorPlaceOnGround)
+  | TreeDecoratorAlterGround
+  | TreeDecoratorAttachedToLeaves
+  | TreeDecoratorAttachedToLogs
+  | TreeDecoratorBeehive
+  | TreeDecoratorCocoa
+  | TreeDecoratorCreakingHeart
+  | TreeDecoratorLeaveVine
+  | TreeDecoratorPaleMoss
+  | TreeDecoratorPlaceOnGround)
 type TreeDecoratorAlterGround = AlterGroundTreeDecorator
 type TreeDecoratorAttachedToLeaves = AttachedToLeavesTreeDecorator
 type TreeDecoratorAttachedToLogs = AttachedToLogsTreeDecorator
@@ -701,10 +701,10 @@ type TreeDecoratorLeaveVine = LeaveVineTreeDecorator
 type TreeDecoratorPaleMoss = PaleMossTreeDecorator
 type TreeDecoratorPlaceOnGround = PlaceOnGroundTreeDecorator
 export type SymbolTreeDecorator<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TreeDecoratorDispatcherMap
     : CASE extends 'keys' ? TreeDecoratorKeys : CASE extends '%fallback' ? TreeDecoratorFallback : never
 type TrunkPlacerDispatcherMap = {
@@ -729,15 +729,15 @@ type TrunkPlacerDispatcherMap = {
 }
 type TrunkPlacerKeys = keyof TrunkPlacerDispatcherMap
 type TrunkPlacerFallback = (
-    | TrunkPlacerBendingTrunkPlacer
-    | TrunkPlacerCherryTrunkPlacer
-    | TrunkPlacerDarkOakTrunkPlacer
-    | TrunkPlacerFancyTrunkPlacer
-    | TrunkPlacerForkingTrunkPlacer
-    | TrunkPlacerGiantTrunkPlacer
-    | TrunkPlacerMegaJungleTrunkPlacer
-    | TrunkPlacerStraightTrunkPlacer
-    | TrunkPlacerUpwardsBranchingTrunkPlacer)
+  | TrunkPlacerBendingTrunkPlacer
+  | TrunkPlacerCherryTrunkPlacer
+  | TrunkPlacerDarkOakTrunkPlacer
+  | TrunkPlacerFancyTrunkPlacer
+  | TrunkPlacerForkingTrunkPlacer
+  | TrunkPlacerGiantTrunkPlacer
+  | TrunkPlacerMegaJungleTrunkPlacer
+  | TrunkPlacerStraightTrunkPlacer
+  | TrunkPlacerUpwardsBranchingTrunkPlacer)
 type TrunkPlacerBendingTrunkPlacer = BendingTrunkPlacer
 type TrunkPlacerCherryTrunkPlacer = CherryTrunkPlacer
 type TrunkPlacerDarkOakTrunkPlacer = Record<string, never>
@@ -748,9 +748,9 @@ type TrunkPlacerMegaJungleTrunkPlacer = Record<string, never>
 type TrunkPlacerStraightTrunkPlacer = Record<string, never>
 type TrunkPlacerUpwardsBranchingTrunkPlacer = UpwardsBranchingTrunkPlacer
 export type SymbolTrunkPlacer<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TrunkPlacerDispatcherMap
     : CASE extends 'keys' ? TrunkPlacerKeys : CASE extends '%fallback' ? TrunkPlacerFallback : never

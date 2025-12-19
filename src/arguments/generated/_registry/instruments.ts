@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type INSTRUMENTS = (
-    | NamespacedLiteralUnion<SetType<typeof INSTRUMENTS_SET>>
-    | `minecraft:${SetType<typeof INSTRUMENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof INSTRUMENTS_SET>>
+  | `minecraft:${SetType<typeof INSTRUMENTS_SET>}`)
 
 export const INSTRUMENTS_SET = new Set([
     'admire_goat_horn',

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type EQUIPMENTS = (
-    | NamespacedLiteralUnion<SetType<typeof EQUIPMENTS_SET>>
-    | `minecraft:${SetType<typeof EQUIPMENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof EQUIPMENTS_SET>>
+  | `minecraft:${SetType<typeof EQUIPMENTS_SET>}`)
 
 export const EQUIPMENTS_SET = new Set([
     'armadillo_scute',

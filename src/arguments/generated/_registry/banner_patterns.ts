@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type BANNER_PATTERNS = (
-    | NamespacedLiteralUnion<SetType<typeof BANNER_PATTERNS_SET>>
-    | `minecraft:${SetType<typeof BANNER_PATTERNS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof BANNER_PATTERNS_SET>>
+  | `minecraft:${SetType<typeof BANNER_PATTERNS_SET>}`)
 
 export const BANNER_PATTERNS_SET = new Set([
     'base',

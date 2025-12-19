@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ACTIVITIES = (
-    | NamespacedLiteralUnion<SetType<typeof ACTIVITIES_SET>>
-    | `minecraft:${SetType<typeof ACTIVITIES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ACTIVITIES_SET>>
+  | `minecraft:${SetType<typeof ACTIVITIES_SET>}`)
 
 export const ACTIVITIES_SET = new Set([
     'admire_item',

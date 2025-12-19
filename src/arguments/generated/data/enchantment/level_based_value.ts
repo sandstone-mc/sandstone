@@ -78,12 +78,12 @@ type LevelBasedValueDispatcherMap = {
 }
 type LevelBasedValueKeys = keyof LevelBasedValueDispatcherMap
 type LevelBasedValueFallback = (
-    | LevelBasedValueClamped
-    | LevelBasedValueExponent
-    | LevelBasedValueFraction
-    | LevelBasedValueLevelsSquared
-    | LevelBasedValueLinear
-    | LevelBasedValueLookup)
+  | LevelBasedValueClamped
+  | LevelBasedValueExponent
+  | LevelBasedValueFraction
+  | LevelBasedValueLevelsSquared
+  | LevelBasedValueLinear
+  | LevelBasedValueLookup)
 type LevelBasedValueClamped = ClampedLevelValue
 type LevelBasedValueExponent = ExponentLevelValue
 type LevelBasedValueFraction = FractionLevelValue
@@ -91,9 +91,9 @@ type LevelBasedValueLevelsSquared = SquaredLevelValue
 type LevelBasedValueLinear = LinearLevelValue
 type LevelBasedValueLookup = LookupLevelValue
 export type SymbolLevelBasedValue<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? LevelBasedValueDispatcherMap
     : CASE extends 'keys' ? LevelBasedValueKeys : CASE extends '%fallback' ? LevelBasedValueFallback : never

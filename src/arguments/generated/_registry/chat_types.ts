@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type CHAT_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof CHAT_TYPES_SET>>
-    | `minecraft:${SetType<typeof CHAT_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof CHAT_TYPES_SET>>
+  | `minecraft:${SetType<typeof CHAT_TYPES_SET>}`)
 
 export const CHAT_TYPES_SET = new Set([
     'chat',

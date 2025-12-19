@@ -74,18 +74,18 @@ type TemplatePoolElementDispatcherMap = {
 }
 type TemplatePoolElementKeys = keyof TemplatePoolElementDispatcherMap
 type TemplatePoolElementFallback = (
-    | TemplatePoolElementFeaturePoolElement
-    | TemplatePoolElementLegacySinglePoolElement
-    | TemplatePoolElementListPoolElement
-    | TemplatePoolElementSinglePoolElement)
+  | TemplatePoolElementFeaturePoolElement
+  | TemplatePoolElementLegacySinglePoolElement
+  | TemplatePoolElementListPoolElement
+  | TemplatePoolElementSinglePoolElement)
 type TemplatePoolElementFeaturePoolElement = FeatureElement
 type TemplatePoolElementLegacySinglePoolElement = SingleElement
 type TemplatePoolElementListPoolElement = ListElement
 type TemplatePoolElementSinglePoolElement = SingleElement
 export type SymbolTemplatePoolElement<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TemplatePoolElementDispatcherMap
     : CASE extends 'keys' ? TemplatePoolElementKeys : CASE extends '%fallback' ? TemplatePoolElementFallback : never

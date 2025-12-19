@@ -88,14 +88,14 @@ export type MinMaxBounds<T> = (T | {
 })
 
 export type MoonPhase = (
-    | 'full_moon'
-    | 'waning_gibbous'
-    | 'third_quarter'
-    | 'waning_crescent'
-    | 'new_moon'
-    | 'waxing_crescent'
-    | 'first_quarter'
-    | 'waxing_gibbous')
+  | 'full_moon'
+  | 'waning_gibbous'
+  | 'third_quarter'
+  | 'waning_crescent'
+  | 'new_moon'
+  | 'waxing_crescent'
+  | 'first_quarter'
+  | 'waxing_gibbous')
 
 /**
  * *either*
@@ -117,14 +117,14 @@ export type NbtProvider = (NbtContextTarget | ({
 }[Registry['minecraft:loot_nbt_provider_type']]))
 
 export type NbtProviderSource = (
-    | 'this'
-    | 'killer'
-    | 'attacker'
-    | 'direct_killer'
-    | 'direct_attacker'
-    | 'killer_player'
-    | 'attacking_player'
-    | 'block_entity')
+  | 'this'
+  | 'killer'
+  | 'attacker'
+  | 'direct_killer'
+  | 'direct_attacker'
+  | 'killer_player'
+  | 'attacking_player'
+  | 'block_entity')
 
 export type NumberProvider = (NBTFloat | ({
     [S in Extract<Registry['minecraft:loot_number_provider_type'], string>]?: ({
@@ -224,10 +224,10 @@ type NbtProviderFallback = (NbtProviderContext | NbtProviderStorage)
 type NbtProviderContext = ContextNbtProvider
 type NbtProviderStorage = StorageNbtProvider
 export type SymbolNbtProvider<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? NbtProviderDispatcherMap
     : CASE extends 'keys' ? NbtProviderKeys : CASE extends '%fallback' ? NbtProviderFallback : never
 type NumberProviderDispatcherMap = {
@@ -248,13 +248,13 @@ type NumberProviderDispatcherMap = {
 }
 type NumberProviderKeys = keyof NumberProviderDispatcherMap
 type NumberProviderFallback = (
-    | NumberProviderBinomial
-    | NumberProviderConstant
-    | NumberProviderEnchantmentLevel
-    | NumberProviderScore
-    | NumberProviderStorage
-    | NumberProviderSum
-    | NumberProviderUniform)
+  | NumberProviderBinomial
+  | NumberProviderConstant
+  | NumberProviderEnchantmentLevel
+  | NumberProviderScore
+  | NumberProviderStorage
+  | NumberProviderSum
+  | NumberProviderUniform)
 type NumberProviderNoneType = UniformNumberProvider
 type NumberProviderBinomial = BinomialNumberProvider
 type NumberProviderConstant = ConstantNumberProvider
@@ -264,10 +264,10 @@ type NumberProviderStorage = StorageNumberProvider
 type NumberProviderSum = SumNumberProvider
 type NumberProviderUniform = UniformNumberProvider
 export type SymbolNumberProvider<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? NumberProviderDispatcherMap
     : CASE extends 'keys'
         ? NumberProviderKeys
@@ -287,10 +287,10 @@ type RandomIntGeneratorBinomial = BinomialIntGenerator
 type RandomIntGeneratorConstant = ConstantIntGenerator
 type RandomIntGeneratorUniform = UniformIntGenerator
 export type SymbolRandomIntGenerator<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? RandomIntGeneratorDispatcherMap
     : CASE extends 'keys'
         ? RandomIntGeneratorKeys
@@ -308,9 +308,9 @@ type ScoreProviderFallback = (ScoreProviderContext | ScoreProviderFixed)
 type ScoreProviderContext = ContextScoreProvider
 type ScoreProviderFixed = FixedScoreProvider
 export type SymbolScoreProvider<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ScoreProviderDispatcherMap
     : CASE extends 'keys' ? ScoreProviderKeys : CASE extends '%fallback' ? ScoreProviderFallback : never

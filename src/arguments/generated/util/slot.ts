@@ -27,17 +27,17 @@ export type ContentsSlotSource = {
 export type EquipmentSlot = ('mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet' | 'body' | 'saddle')
 
 export type EquipmentSlotGroup = (
-    | 'mainhand'
-    | 'offhand'
-    | 'head'
-    | 'chest'
-    | 'legs'
-    | 'feet'
-    | 'hand'
-    | 'armor'
-    | 'any'
-    | 'body'
-    | 'saddle')
+  | 'mainhand'
+  | 'offhand'
+  | 'head'
+  | 'chest'
+  | 'legs'
+  | 'feet'
+  | 'hand'
+  | 'armor'
+  | 'any'
+  | 'body'
+  | 'saddle')
 
 export type FilterSlotSource = {
     slot_source: SlotSource
@@ -106,12 +106,12 @@ type SlotSourceDispatcherMap = {
 }
 type SlotSourceKeys = keyof SlotSourceDispatcherMap
 type SlotSourceFallback = (
-    | SlotSourceContents
-    | SlotSourceEmpty
-    | SlotSourceFiltered
-    | SlotSourceGroup
-    | SlotSourceLimitSlots
-    | SlotSourceSlotRange)
+  | SlotSourceContents
+  | SlotSourceEmpty
+  | SlotSourceFiltered
+  | SlotSourceGroup
+  | SlotSourceLimitSlots
+  | SlotSourceSlotRange)
 type SlotSourceContents = ContentsSlotSource
 type SlotSourceEmpty = Record<string, never>
 type SlotSourceFiltered = FilterSlotSource
@@ -119,9 +119,9 @@ type SlotSourceGroup = GroupSlotSource
 type SlotSourceLimitSlots = LimitCountSlotSource
 type SlotSourceSlotRange = RangeSlotSource
 export type SymbolSlotSource<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SlotSourceDispatcherMap
     : CASE extends 'keys' ? SlotSourceKeys : CASE extends '%fallback' ? SlotSourceFallback : never

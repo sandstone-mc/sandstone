@@ -10,11 +10,11 @@ type McdocFluidStatesDispatcherMap = {
 }
 type McdocFluidStatesKeys = keyof McdocFluidStatesDispatcherMap
 type McdocFluidStatesFallback = (
-    | McdocFluidStatesFlowingLava
-    | McdocFluidStatesFlowingWater
-    | McdocFluidStatesLava
-    | McdocFluidStatesWater
-    | McdocFluidStatesFallbackType)
+  | McdocFluidStatesFlowingLava
+  | McdocFluidStatesFlowingWater
+  | McdocFluidStatesLava
+  | McdocFluidStatesWater
+  | McdocFluidStatesFallbackType)
 type McdocFluidStatesFallbackType = ({
     [Key in `${any}${string}`]?: string;
 })
@@ -36,13 +36,11 @@ type McdocFluidStatesWater = {
     falling?: ('false' | 'true')
 }
 export type SymbolMcdocFluidStates<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? McdocFluidStatesDispatcherMap
     : CASE extends 'keys'
         ? McdocFluidStatesKeys
-        : CASE extends '%fallback'
-            ? McdocFluidStatesFallback
-            : CASE extends '%none' ? McdocFluidStatesNoneType : never
+        : CASE extends '%fallback' ? McdocFluidStatesFallback : CASE extends '%none' ? McdocFluidStatesNoneType : never

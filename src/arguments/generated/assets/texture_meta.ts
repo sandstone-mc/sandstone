@@ -238,9 +238,9 @@ type GuiSpriteScalingNineSlice = NineSlice
 type GuiSpriteScalingStretch = Record<string, never>
 type GuiSpriteScalingTile = TileScaling
 export type SymbolGuiSpriteScaling<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? GuiSpriteScalingDispatcherMap
     : CASE extends 'keys' ? GuiSpriteScalingKeys : CASE extends '%fallback' ? GuiSpriteScalingFallback : never

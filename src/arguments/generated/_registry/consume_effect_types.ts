@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type CONSUME_EFFECT_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof CONSUME_EFFECT_TYPES_SET>>
-    | `minecraft:${SetType<typeof CONSUME_EFFECT_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof CONSUME_EFFECT_TYPES_SET>>
+  | `minecraft:${SetType<typeof CONSUME_EFFECT_TYPES_SET>}`)
 
 export const CONSUME_EFFECT_TYPES_SET = new Set([
     'apply_effects',

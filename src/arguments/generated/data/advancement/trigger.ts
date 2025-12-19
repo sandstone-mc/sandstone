@@ -482,65 +482,65 @@ type TriggerDispatcherMap = {
 }
 type TriggerKeys = keyof TriggerDispatcherMap
 type TriggerFallback = (
-    | TriggerAllayDropItemOnBlock
-    | TriggerAnyBlockUse
-    | TriggerBeeNestDestroyed
-    | TriggerBredAnimals
-    | TriggerBrewedPotion
-    | TriggerChangedDimension
-    | TriggerChanneledLightning
-    | TriggerConstructBeacon
-    | TriggerConsumeItem
-    | TriggerCrafterRecipeCrafted
-    | TriggerCuredZombieVillager
-    | TriggerDefaultBlockUse
-    | TriggerEffectsChanged
-    | TriggerEnchantedItem
-    | TriggerEnterBlock
-    | TriggerEntityHurtPlayer
-    | TriggerEntityKilledPlayer
-    | TriggerFallAfterExplosion
-    | TriggerFallFromHeight
-    | TriggerFilledBucket
-    | TriggerFishingRodHooked
-    | TriggerHeroOfTheVillage
-    | TriggerImpossible
-    | TriggerInventoryChanged
-    | TriggerItemDurabilityChanged
-    | TriggerItemUsedOnBlock
-    | TriggerKillMobNearSculkCatalyst
-    | TriggerKilledByArrow
-    | TriggerKilledByCrossbow
-    | TriggerLevitation
-    | TriggerLightningStrike
-    | TriggerLocation
-    | TriggerNetherTravel
-    | TriggerPlacedBlock
-    | TriggerPlayerGeneratesContainerLoot
-    | TriggerPlayerHurtEntity
-    | TriggerPlayerInteractedWithEntity
-    | TriggerPlayerKilledEntity
-    | TriggerPlayerShearedEquipment
-    | TriggerRecipeCrafted
-    | TriggerRecipeUnlocked
-    | TriggerRideEntityInLava
-    | TriggerSafelyHarvestHoney
-    | TriggerShotCrossbow
-    | TriggerSleptInBed
-    | TriggerSlideDownBlock
-    | TriggerSpearMobs
-    | TriggerStartedRiding
-    | TriggerSummonedEntity
-    | TriggerTameAnimal
-    | TriggerTargetHit
-    | TriggerThrownItemPickedUpByEntity
-    | TriggerThrownItemPickedUpByPlayer
-    | TriggerTick
-    | TriggerUsedEnderEye
-    | TriggerUsedTotem
-    | TriggerUsingItem
-    | TriggerVillagerTrade
-    | TriggerVoluntaryExile)
+  | TriggerAllayDropItemOnBlock
+  | TriggerAnyBlockUse
+  | TriggerBeeNestDestroyed
+  | TriggerBredAnimals
+  | TriggerBrewedPotion
+  | TriggerChangedDimension
+  | TriggerChanneledLightning
+  | TriggerConstructBeacon
+  | TriggerConsumeItem
+  | TriggerCrafterRecipeCrafted
+  | TriggerCuredZombieVillager
+  | TriggerDefaultBlockUse
+  | TriggerEffectsChanged
+  | TriggerEnchantedItem
+  | TriggerEnterBlock
+  | TriggerEntityHurtPlayer
+  | TriggerEntityKilledPlayer
+  | TriggerFallAfterExplosion
+  | TriggerFallFromHeight
+  | TriggerFilledBucket
+  | TriggerFishingRodHooked
+  | TriggerHeroOfTheVillage
+  | TriggerImpossible
+  | TriggerInventoryChanged
+  | TriggerItemDurabilityChanged
+  | TriggerItemUsedOnBlock
+  | TriggerKillMobNearSculkCatalyst
+  | TriggerKilledByArrow
+  | TriggerKilledByCrossbow
+  | TriggerLevitation
+  | TriggerLightningStrike
+  | TriggerLocation
+  | TriggerNetherTravel
+  | TriggerPlacedBlock
+  | TriggerPlayerGeneratesContainerLoot
+  | TriggerPlayerHurtEntity
+  | TriggerPlayerInteractedWithEntity
+  | TriggerPlayerKilledEntity
+  | TriggerPlayerShearedEquipment
+  | TriggerRecipeCrafted
+  | TriggerRecipeUnlocked
+  | TriggerRideEntityInLava
+  | TriggerSafelyHarvestHoney
+  | TriggerShotCrossbow
+  | TriggerSleptInBed
+  | TriggerSlideDownBlock
+  | TriggerSpearMobs
+  | TriggerStartedRiding
+  | TriggerSummonedEntity
+  | TriggerTameAnimal
+  | TriggerTargetHit
+  | TriggerThrownItemPickedUpByEntity
+  | TriggerThrownItemPickedUpByPlayer
+  | TriggerTick
+  | TriggerUsedEnderEye
+  | TriggerUsedTotem
+  | TriggerUsingItem
+  | TriggerVillagerTrade
+  | TriggerVoluntaryExile)
 type TriggerAllayDropItemOnBlock = Conditions<AllayDropItemOnBlock>
 type TriggerAnyBlockUse = Conditions<AnyBlockUse>
 type TriggerBeeNestDestroyed = Conditions<BeeNestDestroyed>
@@ -601,9 +601,9 @@ type TriggerUsingItem = Conditions<UsingItem>
 type TriggerVillagerTrade = Conditions<VillagerTrade>
 type TriggerVoluntaryExile = Conditions<Location>
 export type SymbolTrigger<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TriggerDispatcherMap
     : CASE extends 'keys' ? TriggerKeys : CASE extends '%fallback' ? TriggerFallback : never

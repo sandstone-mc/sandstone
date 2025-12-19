@@ -147,19 +147,19 @@ export type Condition = ({
 }[ConditionalPropertyType])
 
 export type ConditionalPropertyType = (
-    | 'broken'
-    | 'bundle/has_selected_item'
-    | 'carried'
-    | 'component'
-    | 'custom_model_data'
-    | 'damaged'
-    | 'extended_view'
-    | 'fishing_rod/cast'
-    | 'has_component'
-    | 'keybind_down'
-    | 'selected'
-    | 'using_item'
-    | 'view_entity')
+  | 'broken'
+  | 'bundle/has_selected_item'
+  | 'carried'
+  | 'component'
+  | 'custom_model_data'
+  | 'damaged'
+  | 'extended_view'
+  | 'fishing_rod/cast'
+  | 'has_component'
+  | 'keybind_down'
+  | 'selected'
+  | 'using_item'
+  | 'view_entity')
 
 export type ConstantTint = {
     /**
@@ -431,14 +431,14 @@ export type ItemModel = ({
 }[ItemModeltype])
 
 export type ItemModeltype = (
-    | 'bundle/selected_item'
-    | 'composite'
-    | 'condition'
-    | 'empty'
-    | 'model'
-    | 'range_dispatch'
-    | 'select'
-    | 'special')
+  | 'bundle/selected_item'
+  | 'composite'
+  | 'condition'
+  | 'empty'
+  | 'model'
+  | 'range_dispatch'
+  | 'select'
+  | 'special')
 
 export type KeybindDown = {
     /**
@@ -562,16 +562,16 @@ export type ModelTint = ({
 }[TintSourceType])
 
 export type NumericPropertyType = (
-    | 'bundle/fullness'
-    | 'compass'
-    | 'cooldown'
-    | 'count'
-    | 'crossbow/pull'
-    | 'custom_model_data'
-    | 'damage'
-    | 'time'
-    | 'use_cycle'
-    | 'use_duration')
+  | 'bundle/fullness'
+  | 'compass'
+  | 'cooldown'
+  | 'count'
+  | 'crossbow/pull'
+  | 'custom_model_data'
+  | 'damage'
+  | 'time'
+  | 'use_cycle'
+  | 'use_duration')
 
 export type PotionTint = {
     /**
@@ -654,16 +654,16 @@ export type SelectCases<T> = {
 }
 
 export type SelectPropertyType = (
-    | 'block_state'
-    | 'charge_type'
-    | 'component'
-    | 'context_dimension'
-    | 'context_entity_type'
-    | 'custom_model_data'
-    | 'display_context'
-    | 'local_time'
-    | 'main_hand'
-    | 'trim_material')
+  | 'block_state'
+  | 'charge_type'
+  | 'component'
+  | 'context_dimension'
+  | 'context_entity_type'
+  | 'custom_model_data'
+  | 'display_context'
+  | 'local_time'
+  | 'main_hand'
+  | 'trim_material')
 
 export type ShulkerBox = {
     /**
@@ -757,19 +757,19 @@ export type SpecialModel = ({
 }[SpecialModelType])
 
 export type SpecialModelType = (
-    | 'banner'
-    | 'bed'
-    | 'conduit'
-    | 'chest'
-    | 'copper_golem_statue'
-    | 'decorated_pot'
-    | 'hanging_sign'
-    | 'head'
-    | 'player_head'
-    | 'shield'
-    | 'shulker_box'
-    | 'standing_sign'
-    | 'trident')
+  | 'banner'
+  | 'bed'
+  | 'conduit'
+  | 'chest'
+  | 'copper_golem_statue'
+  | 'decorated_pot'
+  | 'hanging_sign'
+  | 'head'
+  | 'player_head'
+  | 'shield'
+  | 'shulker_box'
+  | 'standing_sign'
+  | 'trident')
 
 export type StandingSign = {
     /**
@@ -822,14 +822,14 @@ export type Time = {
 export type TimeSource = ('daytime' | 'moon_phase' | 'random')
 
 export type TintSourceType = (
-    | 'constant'
-    | 'custom_model_data'
-    | 'dye'
-    | 'firework'
-    | 'grass'
-    | 'map_color'
-    | 'potion'
-    | 'team')
+  | 'constant'
+  | 'custom_model_data'
+  | 'dye'
+  | 'firework'
+  | 'grass'
+  | 'map_color'
+  | 'potion'
+  | 'team')
 
 export type TrimMaterial = SelectCases<Registry['minecraft:trim_material']>
 
@@ -853,18 +853,18 @@ export type UseDuration = {
 export type ViewEntity = Record<string, never>
 
 export type WoodType = (
-    | 'oak'
-    | 'spruce'
-    | 'birch'
-    | 'acacia'
-    | 'cherry'
-    | 'jungle'
-    | 'dark_oak'
-    | 'pale_oak'
-    | 'mangrove'
-    | 'bamboo'
-    | 'crimson'
-    | 'warped')
+  | 'oak'
+  | 'spruce'
+  | 'birch'
+  | 'acacia'
+  | 'cherry'
+  | 'jungle'
+  | 'dark_oak'
+  | 'pale_oak'
+  | 'mangrove'
+  | 'bamboo'
+  | 'crimson'
+  | 'warped')
 type ConditionalItemPropertyDispatcherMap = {
     'component': ConditionalItemPropertyComponent
     'minecraft:component': ConditionalItemPropertyComponent
@@ -879,12 +879,12 @@ type ConditionalItemPropertyDispatcherMap = {
 }
 type ConditionalItemPropertyKeys = keyof ConditionalItemPropertyDispatcherMap
 type ConditionalItemPropertyFallback = (
-    | ConditionalItemPropertyComponent
-    | ConditionalItemPropertyCustomModelData
-    | ConditionalItemPropertyHasComponent
-    | ConditionalItemPropertyKeybindDown
-    | ConditionalItemPropertyViewEntity
-    | ConditionalItemPropertyFallbackType)
+  | ConditionalItemPropertyComponent
+  | ConditionalItemPropertyCustomModelData
+  | ConditionalItemPropertyHasComponent
+  | ConditionalItemPropertyKeybindDown
+  | ConditionalItemPropertyViewEntity
+  | ConditionalItemPropertyFallbackType)
 type ConditionalItemPropertyFallbackType = Record<string, never>
 type ConditionalItemPropertyComponent = ComponentFlags
 type ConditionalItemPropertyCustomModelData = CustomModelDataFlags
@@ -892,10 +892,10 @@ type ConditionalItemPropertyHasComponent = HasComponent
 type ConditionalItemPropertyKeybindDown = KeybindDown
 type ConditionalItemPropertyViewEntity = ViewEntity
 export type SymbolConditionalItemProperty<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ConditionalItemPropertyDispatcherMap
     : CASE extends 'keys'
         ? ConditionalItemPropertyKeys
@@ -918,13 +918,13 @@ type ItemModelDispatcherMap = {
 }
 type ItemModelKeys = keyof ItemModelDispatcherMap
 type ItemModelFallback = (
-    | ItemModelBundleSelectedItem
-    | ItemModelComposite
-    | ItemModelCondition
-    | ItemModelModel
-    | ItemModelRangeDispatch
-    | ItemModelSelect
-    | ItemModelSpecial)
+  | ItemModelBundleSelectedItem
+  | ItemModelComposite
+  | ItemModelCondition
+  | ItemModelModel
+  | ItemModelRangeDispatch
+  | ItemModelSelect
+  | ItemModelSpecial)
 type ItemModelBundleSelectedItem = Record<string, never>
 type ItemModelComposite = Composite
 type ItemModelCondition = Condition
@@ -933,10 +933,10 @@ type ItemModelRangeDispatch = RangeDispatch
 type ItemModelSelect = Select
 type ItemModelSpecial = Special
 export type SymbolItemModel<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ItemModelDispatcherMap
     : CASE extends 'keys' ? ItemModelKeys : CASE extends '%fallback' ? ItemModelFallback : never
 type NumericItemPropertyDispatcherMap = {
@@ -957,14 +957,14 @@ type NumericItemPropertyDispatcherMap = {
 }
 type NumericItemPropertyKeys = keyof NumericItemPropertyDispatcherMap
 type NumericItemPropertyFallback = (
-    | NumericItemPropertyCompass
-    | NumericItemPropertyCount
-    | NumericItemPropertyCustomModelData
-    | NumericItemPropertyDamage
-    | NumericItemPropertyTime
-    | NumericItemPropertyUseCycle
-    | NumericItemPropertyUseDuration
-    | NumericItemPropertyFallbackType)
+  | NumericItemPropertyCompass
+  | NumericItemPropertyCount
+  | NumericItemPropertyCustomModelData
+  | NumericItemPropertyDamage
+  | NumericItemPropertyTime
+  | NumericItemPropertyUseCycle
+  | NumericItemPropertyUseDuration
+  | NumericItemPropertyFallbackType)
 type NumericItemPropertyFallbackType = Record<string, never>
 type NumericItemPropertyCompass = Compass
 type NumericItemPropertyCount = Count
@@ -974,10 +974,10 @@ type NumericItemPropertyTime = Time
 type NumericItemPropertyUseCycle = UseCycle
 type NumericItemPropertyUseDuration = UseDuration
 export type SymbolNumericItemProperty<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? NumericItemPropertyDispatcherMap
     : CASE extends 'keys' ? NumericItemPropertyKeys : CASE extends '%fallback' ? NumericItemPropertyFallback : never
 type SelectItemPropertyDispatcherMap = {
@@ -1004,17 +1004,17 @@ type SelectItemPropertyDispatcherMap = {
 }
 type SelectItemPropertyKeys = keyof SelectItemPropertyDispatcherMap
 type SelectItemPropertyFallback = (
-    | SelectItemPropertyBlockState
-    | SelectItemPropertyChargeType
-    | SelectItemPropertyComponent
-    | SelectItemPropertyContextDimension
-    | SelectItemPropertyContextEntityType
-    | SelectItemPropertyCustomModelData
-    | SelectItemPropertyDisplayContext
-    | SelectItemPropertyLocalTime
-    | SelectItemPropertyMainHand
-    | SelectItemPropertyTrimMaterial
-    | SelectItemPropertyFallbackType)
+  | SelectItemPropertyBlockState
+  | SelectItemPropertyChargeType
+  | SelectItemPropertyComponent
+  | SelectItemPropertyContextDimension
+  | SelectItemPropertyContextEntityType
+  | SelectItemPropertyCustomModelData
+  | SelectItemPropertyDisplayContext
+  | SelectItemPropertyLocalTime
+  | SelectItemPropertyMainHand
+  | SelectItemPropertyTrimMaterial
+  | SelectItemPropertyFallbackType)
 type SelectItemPropertyFallbackType = SelectCases<string>
 type SelectItemPropertyBlockState = BlockState
 type SelectItemPropertyChargeType = ChargeType
@@ -1027,10 +1027,10 @@ type SelectItemPropertyLocalTime = LocalTime
 type SelectItemPropertyMainHand = MainHand
 type SelectItemPropertyTrimMaterial = TrimMaterial
 export type SymbolSelectItemProperty<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SelectItemPropertyDispatcherMap
     : CASE extends 'keys' ? SelectItemPropertyKeys : CASE extends '%fallback' ? SelectItemPropertyFallback : never
 type SpecialItemModelDispatcherMap = {
@@ -1053,15 +1053,15 @@ type SpecialItemModelDispatcherMap = {
 }
 type SpecialItemModelKeys = keyof SpecialItemModelDispatcherMap
 type SpecialItemModelFallback = (
-    | SpecialItemModelBanner
-    | SpecialItemModelBed
-    | SpecialItemModelChest
-    | SpecialItemModelCopperGolemStatue
-    | SpecialItemModelHangingSign
-    | SpecialItemModelHead
-    | SpecialItemModelShulkerBox
-    | SpecialItemModelStandingSign
-    | SpecialItemModelFallbackType)
+  | SpecialItemModelBanner
+  | SpecialItemModelBed
+  | SpecialItemModelChest
+  | SpecialItemModelCopperGolemStatue
+  | SpecialItemModelHangingSign
+  | SpecialItemModelHead
+  | SpecialItemModelShulkerBox
+  | SpecialItemModelStandingSign
+  | SpecialItemModelFallbackType)
 type SpecialItemModelFallbackType = Record<string, never>
 type SpecialItemModelBanner = Banner
 type SpecialItemModelBed = Bed
@@ -1072,10 +1072,10 @@ type SpecialItemModelHead = Head
 type SpecialItemModelShulkerBox = ShulkerBox
 type SpecialItemModelStandingSign = StandingSign
 export type SymbolSpecialItemModel<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SpecialItemModelDispatcherMap
     : CASE extends 'keys' ? SpecialItemModelKeys : CASE extends '%fallback' ? SpecialItemModelFallback : never
 type TintSourceDispatcherMap = {
@@ -1098,14 +1098,14 @@ type TintSourceDispatcherMap = {
 }
 type TintSourceKeys = keyof TintSourceDispatcherMap
 type TintSourceFallback = (
-    | TintSourceConstant
-    | TintSourceCustomModelData
-    | TintSourceDye
-    | TintSourceFirework
-    | TintSourceGrass
-    | TintSourceMapColor
-    | TintSourcePotion
-    | TintSourceTeam)
+  | TintSourceConstant
+  | TintSourceCustomModelData
+  | TintSourceDye
+  | TintSourceFirework
+  | TintSourceGrass
+  | TintSourceMapColor
+  | TintSourcePotion
+  | TintSourceTeam)
 type TintSourceConstant = ConstantTint
 type TintSourceCustomModelData = CustomModelDataTint
 type TintSourceDye = DyeTint
@@ -1115,9 +1115,9 @@ type TintSourceMapColor = MapColorTint
 type TintSourcePotion = PotionTint
 type TintSourceTeam = TeamTint
 export type SymbolTintSource<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TintSourceDispatcherMap
     : CASE extends 'keys' ? TintSourceKeys : CASE extends '%fallback' ? TintSourceFallback : never

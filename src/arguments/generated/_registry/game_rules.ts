@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type GAME_RULES = (
-    | NamespacedLiteralUnion<SetType<typeof GAME_RULES_SET>>
-    | `minecraft:${SetType<typeof GAME_RULES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof GAME_RULES_SET>>
+  | `minecraft:${SetType<typeof GAME_RULES_SET>}`)
 
 export const GAME_RULES_SET = new Set([
     'advance_time',

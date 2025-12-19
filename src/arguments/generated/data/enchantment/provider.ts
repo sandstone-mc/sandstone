@@ -51,12 +51,12 @@ export type EnchantmentProvider = ({
  * List length range: 1..
  */
 export type EnchantmentsType = ((
-    | Registry['minecraft:enchantment']
-    | `#${Registry['minecraft:tag/enchantment']}`
-    | TagClass<'enchantment'>) | NBTList<Registry['minecraft:enchantment'], {
-        leftExclusive: false
-        min: 1
-    }>)
+  | Registry['minecraft:enchantment']
+  | `#${Registry['minecraft:tag/enchantment']}`
+  | TagClass<'enchantment'>) | NBTList<Registry['minecraft:enchantment'], {
+      leftExclusive: false
+      min: 1
+  }>)
 
 export type SingleProvider = {
     enchantment: Registry['minecraft:enchantment']
@@ -72,16 +72,16 @@ type EnchantmentProviderDispatcherMap = {
 }
 type EnchantmentProviderKeys = keyof EnchantmentProviderDispatcherMap
 type EnchantmentProviderFallback = (
-    | EnchantmentProviderByCost
-    | EnchantmentProviderByCostWithDifficulty
-    | EnchantmentProviderSingle)
+  | EnchantmentProviderByCost
+  | EnchantmentProviderByCostWithDifficulty
+  | EnchantmentProviderSingle)
 type EnchantmentProviderByCost = ByCostEnchantmentProvider
 type EnchantmentProviderByCostWithDifficulty = ByCostWithDifficultyEnchantmentProvider
 type EnchantmentProviderSingle = SingleProvider
 export type SymbolEnchantmentProvider<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EnchantmentProviderDispatcherMap
     : CASE extends 'keys' ? EnchantmentProviderKeys : CASE extends '%fallback' ? EnchantmentProviderFallback : never

@@ -78,47 +78,47 @@ export type AttributeModifier = ({
 })
 
 export type BannerPattern = (
-    | 'base'
-    | 'square_bottom_left'
-    | 'square_bottom_right'
-    | 'square_top_left'
-    | 'square_top_right'
-    | 'stripe_bottom'
-    | 'stripe_top'
-    | 'stripe_left'
-    | 'stripe_right'
-    | 'stripe_center'
-    | 'stripe_middle'
-    | 'stripe_downright'
-    | 'stripe_downleft'
-    | 'small_stripes'
-    | 'cross'
-    | 'straight_cross'
-    | 'triangle_bottom'
-    | 'triangle_top'
-    | 'triangles_bottom'
-    | 'triangles_top'
-    | 'diagonal_left'
-    | 'diagonal_up_right'
-    | 'diagonal_up_left'
-    | 'diagonal_right'
-    | 'circle'
-    | 'rhombus'
-    | 'half_vertical'
-    | 'half_horizontal'
-    | 'half_vertical_right'
-    | 'half_horizontal_bottom'
-    | 'border'
-    | 'curly_border'
-    | 'gradient'
-    | 'gradient_up'
-    | 'bricks'
-    | 'globe'
-    | 'creeper'
-    | 'skull'
-    | 'flower'
-    | 'mojang'
-    | 'piglin')
+  | 'base'
+  | 'square_bottom_left'
+  | 'square_bottom_right'
+  | 'square_top_left'
+  | 'square_top_right'
+  | 'stripe_bottom'
+  | 'stripe_top'
+  | 'stripe_left'
+  | 'stripe_right'
+  | 'stripe_center'
+  | 'stripe_middle'
+  | 'stripe_downright'
+  | 'stripe_downleft'
+  | 'small_stripes'
+  | 'cross'
+  | 'straight_cross'
+  | 'triangle_bottom'
+  | 'triangle_top'
+  | 'triangles_bottom'
+  | 'triangles_top'
+  | 'diagonal_left'
+  | 'diagonal_up_right'
+  | 'diagonal_up_left'
+  | 'diagonal_right'
+  | 'circle'
+  | 'rhombus'
+  | 'half_vertical'
+  | 'half_horizontal'
+  | 'half_vertical_right'
+  | 'half_horizontal_bottom'
+  | 'border'
+  | 'curly_border'
+  | 'gradient'
+  | 'gradient_up'
+  | 'bricks'
+  | 'globe'
+  | 'creeper'
+  | 'skull'
+  | 'flower'
+  | 'mojang'
+  | 'piglin')
 
 export type BannerPatternLayer = {
     pattern: Registry['minecraft:banner_pattern']
@@ -208,12 +208,12 @@ export type CopyName = ({
 } & Conditions)
 
 export type CopyNameSource = (
-    | 'this'
-    | 'killer'
-    | 'attacking_entity'
-    | 'killer_player'
-    | 'last_damage_player'
-    | 'block_entity')
+  | 'this'
+  | 'killer'
+  | 'attacking_entity'
+  | 'killer_player'
+  | 'last_damage_player'
+  | 'block_entity')
 
 export type CopyNbt = ({
     source: NbtProvider
@@ -267,8 +267,8 @@ export type EnchantRandomly = ({
      * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
      */
     options?: ((
-        | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-        | Array<Registry['minecraft:enchantment']>)
+      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
+      | Array<Registry['minecraft:enchantment']>)
     /**
      * Whether to only enchant with item-compatible enchantments. Defaults to `true`.
      *
@@ -292,8 +292,8 @@ export type EnchantWithLevels = ({
      * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
      */
     options?: ((
-        | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-        | Array<Registry['minecraft:enchantment']>)
+      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
+      | Array<Registry['minecraft:enchantment']>)
     /**
      * Whether to add `additional_trade_cost` component to the enchanted item.
      * Additional cost value is equal to the level cost determined by `levels`.
@@ -405,33 +405,33 @@ export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_
 export type LootingEnchant = (EnchantedCountBase & Conditions)
 
 export type MapDecoration = (
-    | 'mansion'
-    | 'monument'
-    | 'player'
-    | 'frame'
-    | 'red_marker'
-    | 'blue_marker'
-    | 'target_x'
-    | 'target_point'
-    | 'player_off_map'
-    | 'player_off_limits'
-    | 'red_x'
-    | 'banner_white'
-    | 'banner_orange'
-    | 'banner_magenta'
-    | 'banner_light_blue'
-    | 'banner_yellow'
-    | 'banner_lime'
-    | 'banner_pink'
-    | 'banner_gray'
-    | 'banner_light_gray'
-    | 'banner_cyan'
-    | 'banner_purple'
-    | 'banner_blue'
-    | 'banner_brown'
-    | 'banner_green'
-    | 'banner_red'
-    | 'banner_black')
+  | 'mansion'
+  | 'monument'
+  | 'player'
+  | 'frame'
+  | 'red_marker'
+  | 'blue_marker'
+  | 'target_x'
+  | 'target_point'
+  | 'player_off_map'
+  | 'player_off_limits'
+  | 'red_x'
+  | 'banner_white'
+  | 'banner_orange'
+  | 'banner_magenta'
+  | 'banner_light_blue'
+  | 'banner_yellow'
+  | 'banner_lime'
+  | 'banner_pink'
+  | 'banner_gray'
+  | 'banner_light_gray'
+  | 'banner_cyan'
+  | 'banner_purple'
+  | 'banner_blue'
+  | 'banner_brown'
+  | 'banner_green'
+  | 'banner_red'
+  | 'banner_black')
 
 export type ModifyContents = ({
     /**
@@ -755,8 +755,8 @@ export type SetRandomPotion = ({
      * Defaults to all potions.
      */
     options?: ((
-        | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
-        | Registry['minecraft:potion'])
+      | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
+      | Registry['minecraft:potion'])
 } & Conditions)
 
 export type SetStewEffect = ({
@@ -792,15 +792,15 @@ export type StewEffect = {
 }
 
 export type ToggleableDataComponent = (
-    | 'attribute_modifiers'
-    | 'can_break'
-    | 'can_place_on'
-    | 'dyed_color'
-    | 'enchantments'
-    | 'jukebox_playable'
-    | 'stored_enchantments'
-    | 'trim'
-    | 'unbreakable')
+  | 'attribute_modifiers'
+  | 'can_break'
+  | 'can_place_on'
+  | 'dyed_color'
+  | 'enchantments'
+  | 'jukebox_playable'
+  | 'stored_enchantments'
+  | 'trim'
+  | 'unbreakable')
 
 export type ToggleTooltips = ({
     /**
@@ -826,17 +826,17 @@ type ApplyBonusFormulaDispatcherMap = {
 }
 type ApplyBonusFormulaKeys = keyof ApplyBonusFormulaDispatcherMap
 type ApplyBonusFormulaFallback = (
-    | ApplyBonusFormulaBinomialWithBonusCount
-    | ApplyBonusFormulaOreDrops
-    | ApplyBonusFormulaUniformBonusCount)
+  | ApplyBonusFormulaBinomialWithBonusCount
+  | ApplyBonusFormulaOreDrops
+  | ApplyBonusFormulaUniformBonusCount)
 type ApplyBonusFormulaBinomialWithBonusCount = BinomialWithBonusCountFormula
 type ApplyBonusFormulaOreDrops = Record<string, never>
 type ApplyBonusFormulaUniformBonusCount = UniformBonusFormula
 export type SymbolApplyBonusFormula<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ApplyBonusFormulaDispatcherMap
     : CASE extends 'keys' ? ApplyBonusFormulaKeys : CASE extends '%fallback' ? ApplyBonusFormulaFallback : never
 type ListOperationDispatcherMap = {
@@ -851,19 +851,19 @@ type ListOperationDispatcherMap = {
 }
 type ListOperationKeys = keyof ListOperationDispatcherMap
 type ListOperationFallback = (
-    | ListOperationAppend
-    | ListOperationInsert
-    | ListOperationReplaceAll
-    | ListOperationReplaceSection)
+  | ListOperationAppend
+  | ListOperationInsert
+  | ListOperationReplaceAll
+  | ListOperationReplaceSection)
 type ListOperationAppend = Record<string, never>
 type ListOperationInsert = InsertListOperation
 type ListOperationReplaceAll = Record<string, never>
 type ListOperationReplaceSection = ReplaceSectionListOperation
 export type SymbolListOperation<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ListOperationDispatcherMap
     : CASE extends 'keys' ? ListOperationKeys : CASE extends '%fallback' ? ListOperationFallback : never
 type LootFunctionDispatcherMap = {
@@ -962,52 +962,52 @@ type LootFunctionDispatcherMap = {
 }
 type LootFunctionKeys = keyof LootFunctionDispatcherMap
 type LootFunctionFallback = (
-    | LootFunctionApplyBonus
-    | LootFunctionCopyComponents
-    | LootFunctionCopyCustomData
-    | LootFunctionCopyName
-    | LootFunctionCopyNbt
-    | LootFunctionCopyState
-    | LootFunctionDiscard
-    | LootFunctionEnchantRandomly
-    | LootFunctionEnchantWithLevels
-    | LootFunctionEnchantedCountIncrease
-    | LootFunctionExplorationMap
-    | LootFunctionExplosionDecay
-    | LootFunctionFillPlayerHead
-    | LootFunctionFiltered
-    | LootFunctionFurnaceSmelt
-    | LootFunctionLimitCount
-    | LootFunctionLootingEnchant
-    | LootFunctionModifyContents
-    | LootFunctionReference
-    | LootFunctionSequence
-    | LootFunctionSetAttributes
-    | LootFunctionSetBannerPattern
-    | LootFunctionSetBookCover
-    | LootFunctionSetComponents
-    | LootFunctionSetContents
-    | LootFunctionSetCount
-    | LootFunctionSetCustomData
-    | LootFunctionSetCustomModelData
-    | LootFunctionSetDamage
-    | LootFunctionSetEnchantments
-    | LootFunctionSetFireworkExplosion
-    | LootFunctionSetFireworks
-    | LootFunctionSetInstrument
-    | LootFunctionSetItem
-    | LootFunctionSetLootTable
-    | LootFunctionSetLore
-    | LootFunctionSetName
-    | LootFunctionSetNbt
-    | LootFunctionSetOminousBottleAmplifier
-    | LootFunctionSetPotion
-    | LootFunctionSetRandomDyes
-    | LootFunctionSetRandomPotion
-    | LootFunctionSetStewEffect
-    | LootFunctionSetWritableBookPages
-    | LootFunctionSetWrittenBookPages
-    | LootFunctionToggleTooltips)
+  | LootFunctionApplyBonus
+  | LootFunctionCopyComponents
+  | LootFunctionCopyCustomData
+  | LootFunctionCopyName
+  | LootFunctionCopyNbt
+  | LootFunctionCopyState
+  | LootFunctionDiscard
+  | LootFunctionEnchantRandomly
+  | LootFunctionEnchantWithLevels
+  | LootFunctionEnchantedCountIncrease
+  | LootFunctionExplorationMap
+  | LootFunctionExplosionDecay
+  | LootFunctionFillPlayerHead
+  | LootFunctionFiltered
+  | LootFunctionFurnaceSmelt
+  | LootFunctionLimitCount
+  | LootFunctionLootingEnchant
+  | LootFunctionModifyContents
+  | LootFunctionReference
+  | LootFunctionSequence
+  | LootFunctionSetAttributes
+  | LootFunctionSetBannerPattern
+  | LootFunctionSetBookCover
+  | LootFunctionSetComponents
+  | LootFunctionSetContents
+  | LootFunctionSetCount
+  | LootFunctionSetCustomData
+  | LootFunctionSetCustomModelData
+  | LootFunctionSetDamage
+  | LootFunctionSetEnchantments
+  | LootFunctionSetFireworkExplosion
+  | LootFunctionSetFireworks
+  | LootFunctionSetInstrument
+  | LootFunctionSetItem
+  | LootFunctionSetLootTable
+  | LootFunctionSetLore
+  | LootFunctionSetName
+  | LootFunctionSetNbt
+  | LootFunctionSetOminousBottleAmplifier
+  | LootFunctionSetPotion
+  | LootFunctionSetRandomDyes
+  | LootFunctionSetRandomPotion
+  | LootFunctionSetStewEffect
+  | LootFunctionSetWritableBookPages
+  | LootFunctionSetWrittenBookPages
+  | LootFunctionToggleTooltips)
 type LootFunctionApplyBonus = ApplyBonus
 type LootFunctionCopyComponents = CopyComponents
 type LootFunctionCopyCustomData = CopyNbt
@@ -1055,9 +1055,9 @@ type LootFunctionSetWritableBookPages = SetWriteableBookPages
 type LootFunctionSetWrittenBookPages = SetWrittenBookPages
 type LootFunctionToggleTooltips = ToggleTooltips
 export type SymbolLootFunction<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? LootFunctionDispatcherMap
     : CASE extends 'keys' ? LootFunctionKeys : CASE extends '%fallback' ? LootFunctionFallback : never

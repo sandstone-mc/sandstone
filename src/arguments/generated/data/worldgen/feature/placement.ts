@@ -181,20 +181,20 @@ type PlacementModifierDispatcherMap = {
 }
 type PlacementModifierKeys = keyof PlacementModifierDispatcherMap
 type PlacementModifierFallback = (
-    | PlacementModifierBlockPredicateFilter
-    | PlacementModifierCarvingMask
-    | PlacementModifierCount
-    | PlacementModifierCountOnEveryLayer
-    | PlacementModifierEnvironmentScan
-    | PlacementModifierFixedPlacement
-    | PlacementModifierHeightRange
-    | PlacementModifierHeightmap
-    | PlacementModifierNoiseBasedCount
-    | PlacementModifierNoiseThresholdCount
-    | PlacementModifierRandomOffset
-    | PlacementModifierRarityFilter
-    | PlacementModifierSurfaceRelativeThresholdFilter
-    | PlacementModifierSurfaceWaterDepthFilter)
+  | PlacementModifierBlockPredicateFilter
+  | PlacementModifierCarvingMask
+  | PlacementModifierCount
+  | PlacementModifierCountOnEveryLayer
+  | PlacementModifierEnvironmentScan
+  | PlacementModifierFixedPlacement
+  | PlacementModifierHeightRange
+  | PlacementModifierHeightmap
+  | PlacementModifierNoiseBasedCount
+  | PlacementModifierNoiseThresholdCount
+  | PlacementModifierRandomOffset
+  | PlacementModifierRarityFilter
+  | PlacementModifierSurfaceRelativeThresholdFilter
+  | PlacementModifierSurfaceWaterDepthFilter)
 type PlacementModifierBlockPredicateFilter = BlockPredicateFilter
 type PlacementModifierCarvingMask = CarvingMaskModifier
 type PlacementModifierCount = CountModifier
@@ -210,9 +210,9 @@ type PlacementModifierRarityFilter = RarityFilter
 type PlacementModifierSurfaceRelativeThresholdFilter = SurfaceRelativeThresholdFilter
 type PlacementModifierSurfaceWaterDepthFilter = SurfaceWaterDepthFilter
 export type SymbolPlacementModifier<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? PlacementModifierDispatcherMap
     : CASE extends 'keys' ? PlacementModifierKeys : CASE extends '%fallback' ? PlacementModifierFallback : never

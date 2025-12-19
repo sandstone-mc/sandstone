@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type RECIPE_SERIALIZERS = (
-    | NamespacedLiteralUnion<SetType<typeof RECIPE_SERIALIZERS_SET>>
-    | `minecraft:${SetType<typeof RECIPE_SERIALIZERS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof RECIPE_SERIALIZERS_SET>>
+  | `minecraft:${SetType<typeof RECIPE_SERIALIZERS_SET>}`)
 
 export const RECIPE_SERIALIZERS_SET = new Set([
     'blasting',

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TEXTURES = (
-    | NamespacedLiteralUnion<SetType<typeof TEXTURES_SET>>
-    | `minecraft:${SetType<typeof TEXTURES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TEXTURES_SET>>
+  | `minecraft:${SetType<typeof TEXTURES_SET>}`)
 
 export const TEXTURES_SET = new Set([
     'block/acacia_door_bottom',

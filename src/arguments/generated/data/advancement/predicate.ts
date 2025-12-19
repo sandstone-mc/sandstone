@@ -35,16 +35,16 @@ export type AxolotlPredicate = {
 
 export type BlockPredicate<S = undefined> = {
     blocks?: ((
-        | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
-        | Array<Registry['minecraft:block']>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>)
     state?: (S extends undefined ? Dispatcher<'mcdoc:block_states', [
         '%none',
     ]> : (S extends keyof Dispatcher<'mcdoc:block_states'>
         ? Dispatcher<'mcdoc:block_states'>[S]
         : Record<string, unknown>))
     nbt?: ((
-        | `${any}${string}` | NBTClass) | (
-        S extends keyof Dispatcher<'minecraft:block'> ? Dispatcher<'minecraft:block'>[S] : Record<string, unknown>))
+      | `${any}${string}` | NBTClass) | (
+      S extends keyof Dispatcher<'minecraft:block'> ? Dispatcher<'minecraft:block'>[S] : Record<string, unknown>))
     /**
      * Match exact data component values on the block entity.
      */
@@ -74,8 +74,8 @@ export type BoatPredicate = {
 
 export type CatPredicate = {
     variant: ((
-        | Registry['minecraft:cat_variant'] | `#${string}:${string}` | TagClass<'cat_variant'>)
-        | Array<Registry['minecraft:cat_variant']>)
+      | Registry['minecraft:cat_variant'] | `#${string}:${string}` | TagClass<'cat_variant'>)
+      | Array<Registry['minecraft:cat_variant']>)
 }
 
 export type DamagePredicate = {
@@ -141,8 +141,8 @@ export type DistancePredicate = {
 
 export type EnchantmentPredicate = {
     enchantments?: ((
-        | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-        | Array<Registry['minecraft:enchantment']>)
+      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
+      | Array<Registry['minecraft:enchantment']>)
     levels?: MinMaxBounds<NBTInt>
 }
 
@@ -160,13 +160,13 @@ export type EntityFlagsPredicate = {
 
 export type EntityPredicate<S = undefined> = {
     type?: ((
-        | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
-        | Array<Registry['minecraft:entity_type']>)
+      | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
+      | Array<Registry['minecraft:entity_type']>)
     type_specific?: EntitySubPredicate
     team?: `${any}${string}`
     nbt?: ((
-        | `${any}${string}` | NBTClass) | (
-        S extends keyof Dispatcher<'minecraft:entity'> ? Dispatcher<'minecraft:entity'>[S] : Record<string, unknown>))
+      | `${any}${string}` | NBTClass) | (
+      S extends keyof Dispatcher<'minecraft:entity'> ? Dispatcher<'minecraft:entity'>[S] : Record<string, unknown>))
     location?: LocationPredicate
     distance?: DistancePredicate
     flags?: EntityFlagsPredicate
@@ -224,8 +224,8 @@ export type FishingHookPredicate = {
 
 export type FluidPredicate = {
     fluids?: ((
-        | Registry['minecraft:fluid'] | `#${Registry['minecraft:tag/fluid']}` | TagClass<'fluid'>)
-        | Array<Registry['minecraft:fluid']>)
+      | Registry['minecraft:fluid'] | `#${Registry['minecraft:tag/fluid']}` | TagClass<'fluid'>)
+      | Array<Registry['minecraft:fluid']>)
     state?: ({
         [Key in `${any}${string}`]?: (MinMaxBounds<NBTInt> | boolean | string);
     })
@@ -243,8 +243,8 @@ export type FoxPredicate = {
 
 export type FrogPredicate = {
     variant: ((
-        | Registry['minecraft:frog_variant'] | `#${string}:${string}` | TagClass<'frog_variant'>)
-        | Array<Registry['minecraft:frog_variant']>)
+      | Registry['minecraft:frog_variant'] | `#${string}:${string}` | TagClass<'frog_variant'>)
+      | Array<Registry['minecraft:frog_variant']>)
 }
 
 export type GameMode = ('survival' | 'creative' | 'adventure' | 'spectator')
@@ -266,8 +266,8 @@ export type HorsePredicate = {
 
 export type ItemPredicate = {
     items?: ((
-        | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
-        | Array<Registry['minecraft:item']>)
+      | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
+      | Array<Registry['minecraft:item']>)
     count?: MinMaxBounds<NBTInt>
     components?: DataComponentExactPredicate
     predicates?: DataComponentPredicate
@@ -297,15 +297,15 @@ export type LocationPredicate = {
         z?: MinMaxBounds<NBTFloat>
     }
     biomes?: ((
-            | Registry['minecraft:worldgen/biome']
-            | `#${Registry['minecraft:tag/worldgen/biome']}`
-            | TagClass<'worldgen/biome'>)
-        | Array<Registry['minecraft:worldgen/biome']>)
+        | Registry['minecraft:worldgen/biome']
+        | `#${Registry['minecraft:tag/worldgen/biome']}`
+        | TagClass<'worldgen/biome'>)
+      | Array<Registry['minecraft:worldgen/biome']>)
     structures?: ((
-            | Registry['minecraft:worldgen/structure']
-            | `#${Registry['minecraft:tag/worldgen/structure']}`
-            | TagClass<'worldgen/structure'>)
-        | Array<Registry['minecraft:worldgen/structure']>)
+        | Registry['minecraft:worldgen/structure']
+        | `#${Registry['minecraft:tag/worldgen/structure']}`
+        | TagClass<'worldgen/structure'>)
+      | Array<Registry['minecraft:worldgen/structure']>)
     dimension?: Registry['minecraft:dimension']
     /**
      * Calculated using: `max(sky-darkening, block)`.
@@ -357,10 +357,10 @@ export type MovementPredicate = {
 
 export type PaintingPredicate = {
     variant: ((
-            | Registry['minecraft:painting_variant']
-            | `#${Registry['minecraft:tag/painting_variant']}`
-            | TagClass<'painting_variant'>)
-        | Array<Registry['minecraft:painting_variant']>)
+        | Registry['minecraft:painting_variant']
+        | `#${Registry['minecraft:tag/painting_variant']}`
+        | TagClass<'painting_variant'>)
+      | Array<Registry['minecraft:painting_variant']>)
 }
 
 export type ParrotPredicate = {
@@ -452,24 +452,24 @@ export type SlimePredicate = {
 }
 
 export type SpecificType = (
-    | 'any'
-    | 'axolotl'
-    | 'boat'
-    | 'cat'
-    | 'fishing_hook'
-    | 'fox'
-    | 'frog'
-    | 'horse'
-    | 'lightning'
-    | 'llama'
-    | 'mooshroom'
-    | 'painting'
-    | 'parrot'
-    | 'player'
-    | 'rabbit'
-    | 'slime'
-    | 'tropical_fish'
-    | 'villager')
+  | 'any'
+  | 'axolotl'
+  | 'boat'
+  | 'cat'
+  | 'fishing_hook'
+  | 'fox'
+  | 'frog'
+  | 'horse'
+  | 'lightning'
+  | 'llama'
+  | 'mooshroom'
+  | 'painting'
+  | 'parrot'
+  | 'player'
+  | 'rabbit'
+  | 'slime'
+  | 'tropical_fish'
+  | 'villager')
 
 export type StatisticPredicate = ({
     [S in Extract<Registry['minecraft:stat_type'], string>]?: {
@@ -509,8 +509,8 @@ export type VillagerPredicate = {
 
 export type WolfPredicate = {
     variant: ((
-        | Registry['minecraft:wolf_variant'] | `#${string}:${string}` | TagClass<'wolf_variant'>)
-        | Array<Registry['minecraft:wolf_variant']>)
+      | Registry['minecraft:wolf_variant'] | `#${string}:${string}` | TagClass<'wolf_variant'>)
+      | Array<Registry['minecraft:wolf_variant']>)
 }
 type EntitySubPredicateDispatcherMap = {
     'axolotl': EntitySubPredicateAxolotl
@@ -558,27 +558,27 @@ type EntitySubPredicateDispatcherMap = {
 }
 type EntitySubPredicateKeys = keyof EntitySubPredicateDispatcherMap
 type EntitySubPredicateFallback = (
-    | EntitySubPredicateAxolotl
-    | EntitySubPredicateBoat
-    | EntitySubPredicateCat
-    | EntitySubPredicateFishingHook
-    | EntitySubPredicateFox
-    | EntitySubPredicateFrog
-    | EntitySubPredicateHorse
-    | EntitySubPredicateLightning
-    | EntitySubPredicateLlama
-    | EntitySubPredicateMooshroom
-    | EntitySubPredicatePainting
-    | EntitySubPredicateParrot
-    | EntitySubPredicatePlayer
-    | EntitySubPredicateRabbit
-    | EntitySubPredicateRaider
-    | EntitySubPredicateSalmon
-    | EntitySubPredicateSheep
-    | EntitySubPredicateSlime
-    | EntitySubPredicateTropicalFish
-    | EntitySubPredicateVillager
-    | EntitySubPredicateWolf)
+  | EntitySubPredicateAxolotl
+  | EntitySubPredicateBoat
+  | EntitySubPredicateCat
+  | EntitySubPredicateFishingHook
+  | EntitySubPredicateFox
+  | EntitySubPredicateFrog
+  | EntitySubPredicateHorse
+  | EntitySubPredicateLightning
+  | EntitySubPredicateLlama
+  | EntitySubPredicateMooshroom
+  | EntitySubPredicatePainting
+  | EntitySubPredicateParrot
+  | EntitySubPredicatePlayer
+  | EntitySubPredicateRabbit
+  | EntitySubPredicateRaider
+  | EntitySubPredicateSalmon
+  | EntitySubPredicateSheep
+  | EntitySubPredicateSlime
+  | EntitySubPredicateTropicalFish
+  | EntitySubPredicateVillager
+  | EntitySubPredicateWolf)
 type EntitySubPredicateAxolotl = AxolotlPredicate
 type EntitySubPredicateBoat = BoatPredicate
 type EntitySubPredicateCat = CatPredicate
@@ -601,9 +601,9 @@ type EntitySubPredicateTropicalFish = TropicalFishPredicate
 type EntitySubPredicateVillager = VillagerPredicate
 type EntitySubPredicateWolf = WolfPredicate
 export type SymbolEntitySubPredicate<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EntitySubPredicateDispatcherMap
     : CASE extends 'keys' ? EntitySubPredicateKeys : CASE extends '%fallback' ? EntitySubPredicateFallback : never

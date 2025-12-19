@@ -103,9 +103,9 @@ type TestInstanceFallback = (TestInstanceBlockBased | TestInstanceFunction)
 type TestInstanceBlockBased = BlockBasedTestInstance
 type TestInstanceFunction = FunctionTestInstance
 export type SymbolTestInstance<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TestInstanceDispatcherMap
     : CASE extends 'keys' ? TestInstanceKeys : CASE extends '%fallback' ? TestInstanceFallback : never

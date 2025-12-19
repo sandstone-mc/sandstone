@@ -159,16 +159,16 @@ export type DiscreteAttribute<T> = {
 
 export type EnvironmentAttributeMap<K> = ({
     [Key in Extract<K, string>]?: ((
-        | Key extends keyof Dispatcher<'minecraft:environment_attribute'> ?
-            ('value' extends keyof Dispatcher<'minecraft:environment_attribute'>[Key]
-                ? Dispatcher<'minecraft:environment_attribute'>[Key]['value']
-                : Record<string, unknown>)
-            : Record<string, unknown>) | (
-        Key extends keyof Dispatcher<'minecraft:environment_attribute'> ?
-            ('modifier' extends keyof Dispatcher<'minecraft:environment_attribute'>[Key]
-                ? Dispatcher<'minecraft:environment_attribute'>[Key]['modifier']
-                : Record<string, unknown>)
-            : Record<string, unknown>));
+      | Key extends keyof Dispatcher<'minecraft:environment_attribute'> ?
+          ('value' extends keyof Dispatcher<'minecraft:environment_attribute'>[Key]
+              ? Dispatcher<'minecraft:environment_attribute'>[Key]['value']
+              : Record<string, unknown>)
+          : Record<string, unknown>) | (
+      Key extends keyof Dispatcher<'minecraft:environment_attribute'> ?
+          ('modifier' extends keyof Dispatcher<'minecraft:environment_attribute'>[Key]
+              ? Dispatcher<'minecraft:environment_attribute'>[Key]['modifier']
+              : Record<string, unknown>)
+          : Record<string, unknown>));
 })
 
 export type FloatAttribute<T> = {
@@ -350,55 +350,55 @@ type EnvironmentAttributeDispatcherMap = {
 }
 type EnvironmentAttributeKeys = keyof EnvironmentAttributeDispatcherMap
 type EnvironmentAttributeFallback = (
-    | EnvironmentAttributeAudioAmbientSounds
-    | EnvironmentAttributeAudioBackgroundMusic
-    | EnvironmentAttributeAudioFireflyBushSounds
-    | EnvironmentAttributeAudioMusicVolume
-    | EnvironmentAttributeGameplayBabyVillagerActivity
-    | EnvironmentAttributeGameplayBedRule
-    | EnvironmentAttributeGameplayBeesStayInHive
-    | EnvironmentAttributeGameplayCanPillagerPatrolSpawn
-    | EnvironmentAttributeGameplayCanStartRaid
-    | EnvironmentAttributeGameplayCatWakingUpGiftChance
-    | EnvironmentAttributeGameplayCreakingActive
-    | EnvironmentAttributeGameplayEyeblossomOpen
-    | EnvironmentAttributeGameplayFastLava
-    | EnvironmentAttributeGameplayIncreasedFireBurnout
-    | EnvironmentAttributeGameplayMonstersBurn
-    | EnvironmentAttributeGameplayNetherPortalSpawnsPiglin
-    | EnvironmentAttributeGameplayPiglinsZombify
-    | EnvironmentAttributeGameplayRespawnAnchorWorks
-    | EnvironmentAttributeGameplaySkyLightLevel
-    | EnvironmentAttributeGameplaySnowGolemMelts
-    | EnvironmentAttributeGameplaySurfaceSlimeSpawnChance
-    | EnvironmentAttributeGameplayTurtleEggHatchChance
-    | EnvironmentAttributeGameplayVillagerActivity
-    | EnvironmentAttributeGameplayWaterEvaporates
-    | EnvironmentAttributeVisualAmbientLightColor
-    | EnvironmentAttributeVisualAmbientParticles
-    | EnvironmentAttributeVisualBlockLightTint
-    | EnvironmentAttributeVisualCloudColor
-    | EnvironmentAttributeVisualCloudFogEndDistance
-    | EnvironmentAttributeVisualCloudHeight
-    | EnvironmentAttributeVisualDefaultDripstoneParticle
-    | EnvironmentAttributeVisualFogColor
-    | EnvironmentAttributeVisualFogEndDistance
-    | EnvironmentAttributeVisualFogStartDistance
-    | EnvironmentAttributeVisualMoonAngle
-    | EnvironmentAttributeVisualMoonPhase
-    | EnvironmentAttributeVisualNightVisionColor
-    | EnvironmentAttributeVisualSkyColor
-    | EnvironmentAttributeVisualSkyFogEndDistance
-    | EnvironmentAttributeVisualSkyLightColor
-    | EnvironmentAttributeVisualSkyLightFactor
-    | EnvironmentAttributeVisualStarAngle
-    | EnvironmentAttributeVisualStarBrightness
-    | EnvironmentAttributeVisualSunAngle
-    | EnvironmentAttributeVisualSunriseSunsetColor
-    | EnvironmentAttributeVisualWaterFogColor
-    | EnvironmentAttributeVisualWaterFogEndDistance
-    | EnvironmentAttributeVisualWaterFogStartDistance
-    | EnvironmentAttributeFallbackType)
+  | EnvironmentAttributeAudioAmbientSounds
+  | EnvironmentAttributeAudioBackgroundMusic
+  | EnvironmentAttributeAudioFireflyBushSounds
+  | EnvironmentAttributeAudioMusicVolume
+  | EnvironmentAttributeGameplayBabyVillagerActivity
+  | EnvironmentAttributeGameplayBedRule
+  | EnvironmentAttributeGameplayBeesStayInHive
+  | EnvironmentAttributeGameplayCanPillagerPatrolSpawn
+  | EnvironmentAttributeGameplayCanStartRaid
+  | EnvironmentAttributeGameplayCatWakingUpGiftChance
+  | EnvironmentAttributeGameplayCreakingActive
+  | EnvironmentAttributeGameplayEyeblossomOpen
+  | EnvironmentAttributeGameplayFastLava
+  | EnvironmentAttributeGameplayIncreasedFireBurnout
+  | EnvironmentAttributeGameplayMonstersBurn
+  | EnvironmentAttributeGameplayNetherPortalSpawnsPiglin
+  | EnvironmentAttributeGameplayPiglinsZombify
+  | EnvironmentAttributeGameplayRespawnAnchorWorks
+  | EnvironmentAttributeGameplaySkyLightLevel
+  | EnvironmentAttributeGameplaySnowGolemMelts
+  | EnvironmentAttributeGameplaySurfaceSlimeSpawnChance
+  | EnvironmentAttributeGameplayTurtleEggHatchChance
+  | EnvironmentAttributeGameplayVillagerActivity
+  | EnvironmentAttributeGameplayWaterEvaporates
+  | EnvironmentAttributeVisualAmbientLightColor
+  | EnvironmentAttributeVisualAmbientParticles
+  | EnvironmentAttributeVisualBlockLightTint
+  | EnvironmentAttributeVisualCloudColor
+  | EnvironmentAttributeVisualCloudFogEndDistance
+  | EnvironmentAttributeVisualCloudHeight
+  | EnvironmentAttributeVisualDefaultDripstoneParticle
+  | EnvironmentAttributeVisualFogColor
+  | EnvironmentAttributeVisualFogEndDistance
+  | EnvironmentAttributeVisualFogStartDistance
+  | EnvironmentAttributeVisualMoonAngle
+  | EnvironmentAttributeVisualMoonPhase
+  | EnvironmentAttributeVisualNightVisionColor
+  | EnvironmentAttributeVisualSkyColor
+  | EnvironmentAttributeVisualSkyFogEndDistance
+  | EnvironmentAttributeVisualSkyLightColor
+  | EnvironmentAttributeVisualSkyLightFactor
+  | EnvironmentAttributeVisualStarAngle
+  | EnvironmentAttributeVisualStarBrightness
+  | EnvironmentAttributeVisualSunAngle
+  | EnvironmentAttributeVisualSunriseSunsetColor
+  | EnvironmentAttributeVisualWaterFogColor
+  | EnvironmentAttributeVisualWaterFogEndDistance
+  | EnvironmentAttributeVisualWaterFogStartDistance
+  | EnvironmentAttributeFallbackType)
 type EnvironmentAttributeFallbackType = DiscreteAttribute<unknown>
 type EnvironmentAttributeAudioAmbientSounds = DiscreteAttribute<AmbientSounds>
 type EnvironmentAttributeAudioBackgroundMusic = DiscreteAttribute<BackgroundMusic>
@@ -495,11 +495,9 @@ type EnvironmentAttributeVisualWaterFogEndDistance = FloatAttribute<NBTFloat<{
 }>>
 type EnvironmentAttributeVisualWaterFogStartDistance = FloatAttribute<NBTFloat>
 export type SymbolEnvironmentAttribute<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EnvironmentAttributeDispatcherMap
-    : CASE extends 'keys'
-        ? EnvironmentAttributeKeys
-        : CASE extends '%fallback' ? EnvironmentAttributeFallback : never
+    : CASE extends 'keys' ? EnvironmentAttributeKeys : CASE extends '%fallback' ? EnvironmentAttributeFallback : never

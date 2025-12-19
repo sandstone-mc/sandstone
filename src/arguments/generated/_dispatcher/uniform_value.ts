@@ -18,13 +18,13 @@ type UniformValueDispatcherMap = {
 }
 type UniformValueKeys = keyof UniformValueDispatcherMap
 type UniformValueFallback = (
-    | UniformValueFloat
-    | UniformValueInt
-    | UniformValueIvec3
-    | UniformValueMatrix4x4
-    | UniformValueVec2
-    | UniformValueVec3
-    | UniformValueVec4)
+  | UniformValueFloat
+  | UniformValueInt
+  | UniformValueIvec3
+  | UniformValueMatrix4x4
+  | UniformValueVec2
+  | UniformValueVec3
+  | UniformValueVec4)
 type UniformValueFloat = NBTFloat
 type UniformValueInt = NBTInt
 type UniformValueIvec3 = NBTList<NBTInt, {
@@ -58,9 +58,9 @@ type UniformValueVec4 = NBTList<NBTFloat, {
     max: 4
 }>
 export type SymbolUniformValue<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? UniformValueDispatcherMap
     : CASE extends 'keys' ? UniformValueKeys : CASE extends '%fallback' ? UniformValueFallback : never

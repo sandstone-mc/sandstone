@@ -392,37 +392,37 @@ type EffectComponentDispatcherMap = {
 }
 type EffectComponentKeys = keyof EffectComponentDispatcherMap
 type EffectComponentFallback = (
-    | EffectComponentAmmoUse
-    | EffectComponentArmorEffectiveness
-    | EffectComponentAttributes
-    | EffectComponentBlockExperience
-    | EffectComponentCrossbowChargeSounds
-    | EffectComponentCrossbowChargeTime
-    | EffectComponentDamage
-    | EffectComponentDamageImmunity
-    | EffectComponentDamageProtection
-    | EffectComponentEquipmentDrops
-    | EffectComponentFishingLuckBonus
-    | EffectComponentFishingTimeReduction
-    | EffectComponentHitBlock
-    | EffectComponentItemDamage
-    | EffectComponentKnockback
-    | EffectComponentLocationChanged
-    | EffectComponentMobExperience
-    | EffectComponentPostAttack
-    | EffectComponentPostPiercingAttack
-    | EffectComponentPreventArmorChange
-    | EffectComponentPreventEquipmentDrop
-    | EffectComponentProjectileCount
-    | EffectComponentProjectilePiercing
-    | EffectComponentProjectileSpawned
-    | EffectComponentProjectileSpread
-    | EffectComponentRepairWithXp
-    | EffectComponentSmashDamagePerBlockFallen
-    | EffectComponentTick
-    | EffectComponentTridentReturnAcceleration
-    | EffectComponentTridentSound
-    | EffectComponentTridentSpinAttackStrength)
+  | EffectComponentAmmoUse
+  | EffectComponentArmorEffectiveness
+  | EffectComponentAttributes
+  | EffectComponentBlockExperience
+  | EffectComponentCrossbowChargeSounds
+  | EffectComponentCrossbowChargeTime
+  | EffectComponentDamage
+  | EffectComponentDamageImmunity
+  | EffectComponentDamageProtection
+  | EffectComponentEquipmentDrops
+  | EffectComponentFishingLuckBonus
+  | EffectComponentFishingTimeReduction
+  | EffectComponentHitBlock
+  | EffectComponentItemDamage
+  | EffectComponentKnockback
+  | EffectComponentLocationChanged
+  | EffectComponentMobExperience
+  | EffectComponentPostAttack
+  | EffectComponentPostPiercingAttack
+  | EffectComponentPreventArmorChange
+  | EffectComponentPreventEquipmentDrop
+  | EffectComponentProjectileCount
+  | EffectComponentProjectilePiercing
+  | EffectComponentProjectileSpawned
+  | EffectComponentProjectileSpread
+  | EffectComponentRepairWithXp
+  | EffectComponentSmashDamagePerBlockFallen
+  | EffectComponentTick
+  | EffectComponentTridentReturnAcceleration
+  | EffectComponentTridentSound
+  | EffectComponentTridentSpinAttackStrength)
 type EffectComponentAmmoUse = Array<AmmoUseEnchantmentEffect>
 type EffectComponentArmorEffectiveness = Array<DamageEnchantmentEffect>
 type EffectComponentAttributes = Array<AttributeEffect>
@@ -455,9 +455,9 @@ type EffectComponentTridentReturnAcceleration = Array<TridentReturnAccelerationE
 type EffectComponentTridentSound = Array<SoundEventRef>
 type EffectComponentTridentSpinAttackStrength = ValueEffect
 export type SymbolEffectComponent<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EffectComponentDispatcherMap
     : CASE extends 'keys' ? EffectComponentKeys : CASE extends '%fallback' ? EffectComponentFallback : never

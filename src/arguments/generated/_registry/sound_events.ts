@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type SOUND_EVENTS = (
-    | NamespacedLiteralUnion<SetType<typeof SOUND_EVENTS_SET>>
-    | `minecraft:${SetType<typeof SOUND_EVENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof SOUND_EVENTS_SET>>
+  | `minecraft:${SetType<typeof SOUND_EVENTS_SET>}`)
 
 export const SOUND_EVENTS_SET = new Set([
     'ambient.basalt_deltas.additions',

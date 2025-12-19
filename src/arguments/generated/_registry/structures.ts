@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type STRUCTURES = (
-    | NamespacedLiteralUnion<SetType<typeof STRUCTURES_SET>>
-    | `minecraft:${SetType<typeof STRUCTURES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof STRUCTURES_SET>>
+  | `minecraft:${SetType<typeof STRUCTURES_SET>}`)
 
 export const STRUCTURES_SET = new Set([
     'ancient_city/city/entrance/entrance_connector',

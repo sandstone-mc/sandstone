@@ -7,19 +7,19 @@ import type { NBTInt, TagClass } from 'sandstone'
 export type Enchantment = {
     description: Text
     exclusive_set?: ((
-        | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-        | Array<Registry['minecraft:enchantment']>)
+      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
+      | Array<Registry['minecraft:enchantment']>)
     supported_items: ((
-        | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
-        | Array<Registry['minecraft:item']>)
+      | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
+      | Array<Registry['minecraft:item']>)
     /**
      * Item types for which this Enchantment shows up in Enchanting Tables and on traded equipment.
      *
      * Must be a subset of `supported_items`.
      */
     primary_items?: ((
-        | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
-        | Array<Registry['minecraft:item']>)
+      | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
+      | Array<Registry['minecraft:item']>)
     /**
      * How commonly the Enchantment appears, compared to the total combined `weight` of all available Enchantments.
      *

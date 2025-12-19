@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_FEATURES = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_FEATURES_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_FEATURES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_FEATURES_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_FEATURES_SET>}`)
 
 export const WORLDGEN_FEATURES_SET = new Set([
     'bamboo',

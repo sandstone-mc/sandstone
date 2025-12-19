@@ -31,15 +31,15 @@ type DialogActionDispatcherMap = {
 }
 type DialogActionKeys = keyof DialogActionDispatcherMap
 type DialogActionFallback = (
-    | DialogActionChangePage
-    | DialogActionCopyToClipboard
-    | DialogActionCustom
-    | DialogActionDynamicCustom
-    | DialogActionDynamicRunCommand
-    | DialogActionOpenUrl
-    | DialogActionRunCommand
-    | DialogActionShowDialog
-    | DialogActionSuggestCommand)
+  | DialogActionChangePage
+  | DialogActionCopyToClipboard
+  | DialogActionCustom
+  | DialogActionDynamicCustom
+  | DialogActionDynamicRunCommand
+  | DialogActionOpenUrl
+  | DialogActionRunCommand
+  | DialogActionShowDialog
+  | DialogActionSuggestCommand)
 type DialogActionChangePage = ChangePage
 type DialogActionCopyToClipboard = CopyToClipboard
 type DialogActionCustom = CustomAction
@@ -50,9 +50,9 @@ type DialogActionRunCommand = RunCommand
 type DialogActionShowDialog = ShowDialog
 type DialogActionSuggestCommand = SuggestCommand
 export type SymbolDialogAction<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? DialogActionDispatcherMap
     : CASE extends 'keys' ? DialogActionKeys : CASE extends '%fallback' ? DialogActionFallback : never

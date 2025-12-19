@@ -36,10 +36,10 @@ export type Biome = {
         [Key in Extract<Registry['minecraft:entity_type'], string>]?: MobSpawnCost;
     })
     carvers: (
-        | Array<CarverRef> | (
-            | Registry['minecraft:worldgen/configured_carver']
-            | `#${string}:${string}`
-            | TagClass<'worldgen/configured_carver'>))
+      | Array<CarverRef> | (
+        | Registry['minecraft:worldgen/configured_carver']
+        | `#${string}:${string}`
+        | TagClass<'worldgen/configured_carver'>))
     /**
      * Value:
      * List length range: ..11
@@ -50,25 +50,25 @@ export type Biome = {
 }
 
 export type BiomeCategory = (
-    | 'beach'
-    | 'desert'
-    | 'extreme_hills'
-    | 'forest'
-    | 'icy'
-    | 'jungle'
-    | 'mesa'
-    | 'mountain'
-    | 'mushroom'
-    | 'nether'
-    | 'none'
-    | 'ocean'
-    | 'plains'
-    | 'river'
-    | 'savanna'
-    | 'swamp'
-    | 'taiga'
-    | 'the_end'
-    | 'underground')
+  | 'beach'
+  | 'desert'
+  | 'extreme_hills'
+  | 'forest'
+  | 'icy'
+  | 'jungle'
+  | 'mesa'
+  | 'mountain'
+  | 'mushroom'
+  | 'nether'
+  | 'none'
+  | 'ocean'
+  | 'plains'
+  | 'river'
+  | 'savanna'
+  | 'swamp'
+  | 'taiga'
+  | 'the_end'
+  | 'underground')
 
 export type BiomeEffects = {
     water_color: StringRGB
@@ -125,14 +125,14 @@ export type BiomeSoundAdditions = {
 export type GrassColorModifier = ('none' | 'dark_forest' | 'swamp')
 
 export type MobCategory = (
-    | 'monster'
-    | 'creature'
-    | 'ambient'
-    | 'axolotls'
-    | 'underground_water_creature'
-    | 'water_creature'
-    | 'water_ambient'
-    | 'misc')
+  | 'monster'
+  | 'creature'
+  | 'ambient'
+  | 'axolotls'
+  | 'underground_water_creature'
+  | 'water_creature'
+  | 'water_ambient'
+  | 'misc')
 
 export type MobSpawnCost = {
     energy_budget: (NBTDouble | number)

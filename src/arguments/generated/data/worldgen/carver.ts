@@ -58,8 +58,8 @@ export type ConfiguredCarver = ({
                 max: 1
             }>
             replaceable?: (
-                | Array<Registry['minecraft:block']> | (
-                Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+              | Array<Registry['minecraft:block']> | (
+              Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
         } & {
             y: HeightProvider
             yScale: FloatProvider<NBTFloat>
@@ -84,9 +84,9 @@ type CarverConfigCanyon = CanyonConfig
 type CarverConfigCave = CaveConfig
 type CarverConfigNetherCave = CaveConfig
 export type SymbolCarverConfig<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? CarverConfigDispatcherMap
     : CASE extends 'keys' ? CarverConfigKeys : CASE extends '%fallback' ? CarverConfigFallback : never

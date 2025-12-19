@@ -120,64 +120,64 @@ type GameRuleDispatcherMap = {
 }
 type GameRuleKeys = keyof GameRuleDispatcherMap
 type GameRuleFallback = (
-    | GameRuleAdvanceTime
-    | GameRuleAdvanceWeather
-    | GameRuleAllowEnteringNetherUsingPortals
-    | GameRuleBlockDrops
-    | GameRuleBlockExplosionDropDecay
-    | GameRuleCommandBlockOutput
-    | GameRuleCommandBlocksWork
-    | GameRuleDrowningDamage
-    | GameRuleElytraMovementCheck
-    | GameRuleEnderPearlsVanishOnDeath
-    | GameRuleEntityDrops
-    | GameRuleFallDamage
-    | GameRuleFireDamage
-    | GameRuleFireSpreadRadiusAroundPlayer
-    | GameRuleForgiveDeadPlayers
-    | GameRuleFreezeDamage
-    | GameRuleGlobalSoundEvents
-    | GameRuleImmediateRespawn
-    | GameRuleKeepInventory
-    | GameRuleLavaSourceConversion
-    | GameRuleLimitedCrafting
-    | GameRuleLocatorBar
-    | GameRuleLogAdminCommands
-    | GameRuleMaxBlockModifications
-    | GameRuleMaxCommandForks
-    | GameRuleMaxCommandSequenceLength
-    | GameRuleMaxEntityCramming
-    | GameRuleMaxMinecartSpeed
-    | GameRuleMaxSnowAccumulationHeight
-    | GameRuleMobDrops
-    | GameRuleMobExplosionDropDecay
-    | GameRuleMobGriefing
-    | GameRuleNaturalHealthRegeneration
-    | GameRulePlayerMovementCheck
-    | GameRulePlayersNetherPortalCreativeDelay
-    | GameRulePlayersNetherPortalDefaultDelay
-    | GameRulePlayersSleepingPercentage
-    | GameRuleProjectilesCanBreakBlocks
-    | GameRulePvp
-    | GameRuleRaids
-    | GameRuleRandomTickSpeed
-    | GameRuleReducedDebugInfo
-    | GameRuleRespawnRadius
-    | GameRuleSendCommandFeedback
-    | GameRuleShowDeathMessages
-    | GameRuleSpawnMobs
-    | GameRuleSpawnMonsters
-    | GameRuleSpawnPatrols
-    | GameRuleSpawnPhantoms
-    | GameRuleSpawnWanderingTraders
-    | GameRuleSpawnWardens
-    | GameRuleSpawnerBlocksWork
-    | GameRuleSpectatorsGenerateChunks
-    | GameRuleSpreadVines
-    | GameRuleTntExplodes
-    | GameRuleTntExplosionDropDecay
-    | GameRuleUniversalAnger
-    | GameRuleWaterSourceConversion)
+  | GameRuleAdvanceTime
+  | GameRuleAdvanceWeather
+  | GameRuleAllowEnteringNetherUsingPortals
+  | GameRuleBlockDrops
+  | GameRuleBlockExplosionDropDecay
+  | GameRuleCommandBlockOutput
+  | GameRuleCommandBlocksWork
+  | GameRuleDrowningDamage
+  | GameRuleElytraMovementCheck
+  | GameRuleEnderPearlsVanishOnDeath
+  | GameRuleEntityDrops
+  | GameRuleFallDamage
+  | GameRuleFireDamage
+  | GameRuleFireSpreadRadiusAroundPlayer
+  | GameRuleForgiveDeadPlayers
+  | GameRuleFreezeDamage
+  | GameRuleGlobalSoundEvents
+  | GameRuleImmediateRespawn
+  | GameRuleKeepInventory
+  | GameRuleLavaSourceConversion
+  | GameRuleLimitedCrafting
+  | GameRuleLocatorBar
+  | GameRuleLogAdminCommands
+  | GameRuleMaxBlockModifications
+  | GameRuleMaxCommandForks
+  | GameRuleMaxCommandSequenceLength
+  | GameRuleMaxEntityCramming
+  | GameRuleMaxMinecartSpeed
+  | GameRuleMaxSnowAccumulationHeight
+  | GameRuleMobDrops
+  | GameRuleMobExplosionDropDecay
+  | GameRuleMobGriefing
+  | GameRuleNaturalHealthRegeneration
+  | GameRulePlayerMovementCheck
+  | GameRulePlayersNetherPortalCreativeDelay
+  | GameRulePlayersNetherPortalDefaultDelay
+  | GameRulePlayersSleepingPercentage
+  | GameRuleProjectilesCanBreakBlocks
+  | GameRulePvp
+  | GameRuleRaids
+  | GameRuleRandomTickSpeed
+  | GameRuleReducedDebugInfo
+  | GameRuleRespawnRadius
+  | GameRuleSendCommandFeedback
+  | GameRuleShowDeathMessages
+  | GameRuleSpawnMobs
+  | GameRuleSpawnMonsters
+  | GameRuleSpawnPatrols
+  | GameRuleSpawnPhantoms
+  | GameRuleSpawnWanderingTraders
+  | GameRuleSpawnWardens
+  | GameRuleSpawnerBlocksWork
+  | GameRuleSpectatorsGenerateChunks
+  | GameRuleSpreadVines
+  | GameRuleTntExplodes
+  | GameRuleTntExplosionDropDecay
+  | GameRuleUniversalAnger
+  | GameRuleWaterSourceConversion)
 type GameRuleAdvanceTime = boolean
 type GameRuleAdvanceWeather = boolean
 type GameRuleAllowEnteringNetherUsingPortals = boolean
@@ -260,9 +260,9 @@ type GameRuleTntExplosionDropDecay = boolean
 type GameRuleUniversalAnger = boolean
 type GameRuleWaterSourceConversion = boolean
 export type SymbolGameRule<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? GameRuleDispatcherMap
     : CASE extends 'keys' ? GameRuleKeys : CASE extends '%fallback' ? GameRuleFallback : never

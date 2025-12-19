@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type DEBUG_SUBSCRIPTIONS = (
-    | NamespacedLiteralUnion<SetType<typeof DEBUG_SUBSCRIPTIONS_SET>>
-    | `minecraft:${SetType<typeof DEBUG_SUBSCRIPTIONS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof DEBUG_SUBSCRIPTIONS_SET>>
+  | `minecraft:${SetType<typeof DEBUG_SUBSCRIPTIONS_SET>}`)
 
 export const DEBUG_SUBSCRIPTIONS_SET = new Set([
     'bee_hives',

@@ -11,20 +11,20 @@ type EnvironmentAttributeColorModifierDispatcherMap = {
 }
 type EnvironmentAttributeColorModifierKeys = keyof EnvironmentAttributeColorModifierDispatcherMap
 type EnvironmentAttributeColorModifierFallback = (
-    | EnvironmentAttributeColorModifierAlphaBlend
-    | EnvironmentAttributeColorModifierBlendToGray
-    | EnvironmentAttributeColorModifierOverride
-    | EnvironmentAttributeColorModifierFallbackType)
+  | EnvironmentAttributeColorModifierAlphaBlend
+  | EnvironmentAttributeColorModifierBlendToGray
+  | EnvironmentAttributeColorModifierOverride
+  | EnvironmentAttributeColorModifierFallbackType)
 type EnvironmentAttributeColorModifierFallbackType = StringRGB
 type EnvironmentAttributeColorModifierNoneType = StringRGB
 type EnvironmentAttributeColorModifierAlphaBlend = StringARGB
 type EnvironmentAttributeColorModifierBlendToGray = BlendToGray
 type EnvironmentAttributeColorModifierOverride = StringRGB
 export type SymbolEnvironmentAttributeColorModifier<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EnvironmentAttributeColorModifierDispatcherMap
     : CASE extends 'keys'
         ? EnvironmentAttributeColorModifierKeys

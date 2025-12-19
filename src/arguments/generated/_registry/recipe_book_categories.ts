@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type RECIPE_BOOK_CATEGORIES = (
-    | NamespacedLiteralUnion<SetType<typeof RECIPE_BOOK_CATEGORIES_SET>>
-    | `minecraft:${SetType<typeof RECIPE_BOOK_CATEGORIES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof RECIPE_BOOK_CATEGORIES_SET>>
+  | `minecraft:${SetType<typeof RECIPE_BOOK_CATEGORIES_SET>}`)
 
 export const RECIPE_BOOK_CATEGORIES_SET = new Set([
     'blast_furnace_blocks',

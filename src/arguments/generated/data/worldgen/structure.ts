@@ -168,12 +168,12 @@ export type RuinedPortal = {
 }
 
 export type RuinedPortalPlacement = (
-    | 'on_land_surface'
-    | 'partly_buried'
-    | 'on_ocean_floor'
-    | 'in_mountain'
-    | 'underground'
-    | 'in_nether')
+  | 'on_land_surface'
+  | 'partly_buried'
+  | 'on_ocean_floor'
+  | 'in_mountain'
+  | 'underground'
+  | 'in_nether')
 
 export type RuinedPortalSetup = {
     /**
@@ -242,10 +242,10 @@ export type Structure = ({
     [S in Extract<Registry['minecraft:worldgen/structure_type'], string>]?: ({
         type: S
         biomes: (
-            | Array<Registry['minecraft:worldgen/biome']> | (
-                | Registry['minecraft:worldgen/biome']
-                | `#${Registry['minecraft:tag/worldgen/biome']}`
-                | TagClass<'worldgen/biome'>))
+          | Array<Registry['minecraft:worldgen/biome']> | (
+            | Registry['minecraft:worldgen/biome']
+            | `#${Registry['minecraft:tag/worldgen/biome']}`
+            | TagClass<'worldgen/biome'>))
         /**
          * The step when the structure generates.
          *
@@ -295,10 +295,10 @@ type JigsawMaxDistanceFromCenterDispatcherMap = {
 }
 type JigsawMaxDistanceFromCenterKeys = keyof JigsawMaxDistanceFromCenterDispatcherMap
 type JigsawMaxDistanceFromCenterFallback = (
-    | JigsawMaxDistanceFromCenterBeardBox
-    | JigsawMaxDistanceFromCenterBeardThin
-    | JigsawMaxDistanceFromCenterBury
-    | JigsawMaxDistanceFromCenterFallbackType)
+  | JigsawMaxDistanceFromCenterBeardBox
+  | JigsawMaxDistanceFromCenterBeardThin
+  | JigsawMaxDistanceFromCenterBury
+  | JigsawMaxDistanceFromCenterFallbackType)
 type JigsawMaxDistanceFromCenterFallbackType = (NBTInt<{
     min: 1
 }> | JigsawDistanceLimits<NBTInt<{
@@ -325,10 +325,10 @@ type JigsawMaxDistanceFromCenterBury = (NBTInt<{
     min: 1
 }>>)
 export type SymbolJigsawMaxDistanceFromCenter<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? JigsawMaxDistanceFromCenterDispatcherMap
     : CASE extends 'keys'
         ? JigsawMaxDistanceFromCenterKeys
@@ -377,25 +377,25 @@ type StructureConfigDispatcherMap = {
 }
 type StructureConfigKeys = keyof StructureConfigDispatcherMap
 type StructureConfigFallback = (
-    | StructureConfigBastionRemnant
-    | StructureConfigBuriedTreasure
-    | StructureConfigDesertPyramid
-    | StructureConfigEndCity
-    | StructureConfigFortress
-    | StructureConfigIgloo
-    | StructureConfigJigsaw
-    | StructureConfigJungleTemple
-    | StructureConfigMineshaft
-    | StructureConfigNetherFossil
-    | StructureConfigOceanMonument
-    | StructureConfigOceanRuin
-    | StructureConfigPillagerOutpost
-    | StructureConfigRuinedPortal
-    | StructureConfigShipwreck
-    | StructureConfigStronghold
-    | StructureConfigSwampHut
-    | StructureConfigVillage
-    | StructureConfigWoodlandMansion)
+  | StructureConfigBastionRemnant
+  | StructureConfigBuriedTreasure
+  | StructureConfigDesertPyramid
+  | StructureConfigEndCity
+  | StructureConfigFortress
+  | StructureConfigIgloo
+  | StructureConfigJigsaw
+  | StructureConfigJungleTemple
+  | StructureConfigMineshaft
+  | StructureConfigNetherFossil
+  | StructureConfigOceanMonument
+  | StructureConfigOceanRuin
+  | StructureConfigPillagerOutpost
+  | StructureConfigRuinedPortal
+  | StructureConfigShipwreck
+  | StructureConfigStronghold
+  | StructureConfigSwampHut
+  | StructureConfigVillage
+  | StructureConfigWoodlandMansion)
 type StructureConfigBastionRemnant = Jigsaw
 type StructureConfigBuriedTreasure = BuriedTreasure
 type StructureConfigDesertPyramid = Record<string, never>
@@ -416,10 +416,10 @@ type StructureConfigSwampHut = Record<string, never>
 type StructureConfigVillage = Jigsaw
 type StructureConfigWoodlandMansion = Record<string, never>
 export type SymbolStructureConfig<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? StructureConfigDispatcherMap
     : CASE extends 'keys' ? StructureConfigKeys : CASE extends '%fallback' ? StructureConfigFallback : never
 type WorldgenPoolAliasBindingDispatcherMap = {
@@ -432,17 +432,17 @@ type WorldgenPoolAliasBindingDispatcherMap = {
 }
 type WorldgenPoolAliasBindingKeys = keyof WorldgenPoolAliasBindingDispatcherMap
 type WorldgenPoolAliasBindingFallback = (
-    | WorldgenPoolAliasBindingDirect
-    | WorldgenPoolAliasBindingRandom
-    | WorldgenPoolAliasBindingRandomGroup)
+  | WorldgenPoolAliasBindingDirect
+  | WorldgenPoolAliasBindingRandom
+  | WorldgenPoolAliasBindingRandomGroup)
 type WorldgenPoolAliasBindingDirect = DirectPoolAlias
 type WorldgenPoolAliasBindingRandom = RandomPoolAlias
 type WorldgenPoolAliasBindingRandomGroup = RandomGroupPoolAlias
 export type SymbolWorldgenPoolAliasBinding<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? WorldgenPoolAliasBindingDispatcherMap
     : CASE extends 'keys'
         ? WorldgenPoolAliasBindingKeys

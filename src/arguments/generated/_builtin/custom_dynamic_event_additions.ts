@@ -5,10 +5,10 @@ type McdocCustomDynamicEventAdditionsKeys = keyof McdocCustomDynamicEventAdditio
 type McdocCustomDynamicEventAdditionsFallback = (McdocCustomDynamicEventAdditionsFallbackType)
 type McdocCustomDynamicEventAdditionsFallbackType = UnknownDynamicAdditions
 export type SymbolMcdocCustomDynamicEventAdditions<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? McdocCustomDynamicEventAdditionsDispatcherMap
     : CASE extends 'keys'
         ? McdocCustomDynamicEventAdditionsKeys

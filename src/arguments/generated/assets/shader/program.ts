@@ -2,18 +2,18 @@ import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BlendFactor = (
-    | '0'
-    | 'zero'
-    | '1'
-    | 'one'
-    | 'srccolor'
-    | '1-srccolor'
-    | 'dstcolor'
-    | '1-dstcolor'
-    | 'srcalpha'
-    | '1-srcalpha'
-    | 'dstalpha'
-    | '1-dstalpha')
+  | '0'
+  | 'zero'
+  | '1'
+  | 'one'
+  | 'srccolor'
+  | '1-srccolor'
+  | 'dstcolor'
+  | '1-dstcolor'
+  | 'srcalpha'
+  | '1-srcalpha'
+  | 'dstalpha'
+  | '1-dstalpha')
 
 export type BlendFunc = ('add' | 'subtract' | 'reversesubtract' | 'reverse_subtract' | 'min' | 'max')
 

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ENCHANTMENTS = (
-    | NamespacedLiteralUnion<SetType<typeof ENCHANTMENTS_SET>>
-    | `minecraft:${SetType<typeof ENCHANTMENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ENCHANTMENTS_SET>>
+  | `minecraft:${SetType<typeof ENCHANTMENTS_SET>}`)
 
 export const ENCHANTMENTS_SET = new Set([
     'aqua_affinity',

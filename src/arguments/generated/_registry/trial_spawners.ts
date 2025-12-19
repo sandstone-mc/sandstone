@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TRIAL_SPAWNERS = (
-    | NamespacedLiteralUnion<SetType<typeof TRIAL_SPAWNERS_SET>>
-    | `minecraft:${SetType<typeof TRIAL_SPAWNERS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TRIAL_SPAWNERS_SET>>
+  | `minecraft:${SetType<typeof TRIAL_SPAWNERS_SET>}`)
 
 export const TRIAL_SPAWNERS_SET = new Set([
     'trial_chamber/breeze/normal',

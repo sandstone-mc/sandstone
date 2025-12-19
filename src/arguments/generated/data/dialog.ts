@@ -131,9 +131,9 @@ export type NoticeDialog = (DialogBase & {
 
 export type RedirectDialog = (ButtonListDialogBase & {
     dialogs: (
-        | Array<(Registry['minecraft:dialog'] | Dialog)> | (
-        Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'>)
-        | Dialog)
+      | Array<(Registry['minecraft:dialog'] | Dialog)> | (
+      Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'>)
+      | Dialog)
 })
 
 export type ServerLinksDialog = ButtonListDialogBase
@@ -157,9 +157,9 @@ type DialogMultiAction = MultiActionDialog
 type DialogNotice = NoticeDialog
 type DialogServerLinks = ServerLinksDialog
 export type SymbolDialog<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? DialogDispatcherMap
     : CASE extends 'keys' ? DialogKeys : CASE extends '%fallback' ? DialogFallback : never

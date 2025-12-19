@@ -103,13 +103,13 @@ type BlockStateProviderDispatcherMap = {
 }
 type BlockStateProviderKeys = keyof BlockStateProviderDispatcherMap
 type BlockStateProviderFallback = (
-    | BlockStateProviderDualNoiseProvider
-    | BlockStateProviderNoiseProvider
-    | BlockStateProviderNoiseThresholdProvider
-    | BlockStateProviderRandomizedIntStateProvider
-    | BlockStateProviderRotatedBlockProvider
-    | BlockStateProviderSimpleStateProvider
-    | BlockStateProviderWeightedStateProvider)
+  | BlockStateProviderDualNoiseProvider
+  | BlockStateProviderNoiseProvider
+  | BlockStateProviderNoiseThresholdProvider
+  | BlockStateProviderRandomizedIntStateProvider
+  | BlockStateProviderRotatedBlockProvider
+  | BlockStateProviderSimpleStateProvider
+  | BlockStateProviderWeightedStateProvider)
 type BlockStateProviderDualNoiseProvider = DualNoiseProvider
 type BlockStateProviderNoiseProvider = NoiseProvider
 type BlockStateProviderNoiseThresholdProvider = NoiseThresholdProvider
@@ -118,9 +118,9 @@ type BlockStateProviderRotatedBlockProvider = SimpleStateProvider
 type BlockStateProviderSimpleStateProvider = SimpleStateProvider
 type BlockStateProviderWeightedStateProvider = WeightedBlockStateProvider
 export type SymbolBlockStateProvider<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? BlockStateProviderDispatcherMap
     : CASE extends 'keys' ? BlockStateProviderKeys : CASE extends '%fallback' ? BlockStateProviderFallback : never

@@ -194,71 +194,71 @@ type ResourceDispatcherMap = {
 }
 type ResourceKeys = keyof ResourceDispatcherMap
 type ResourceFallback = (
-    | ResourceAdvancement
-    | ResourceAtlas
-    | ResourceBannerPattern
-    | ResourceBlockDefinition
-    | ResourceCatVariant
-    | ResourceChatType
-    | ResourceChickenVariant
-    | ResourceCowVariant
-    | ResourceCredits
-    | ResourceDamageType
-    | ResourceDialog
-    | ResourceDimension
-    | ResourceDimensionType
-    | ResourceEnchantment
-    | ResourceEnchantmentProvider
-    | ResourceEquipment
-    | ResourceFont
-    | ResourceFrogVariant
-    | ResourceGpuWarnlist
-    | ResourceInstrument
-    | ResourceItemDefinition
-    | ResourceItemModifier
-    | ResourceJukeboxSong
-    | ResourceLang
-    | ResourceLangDeprecated
-    | ResourceLootTable
-    | ResourceModel
-    | ResourcePaintingVariant
-    | ResourceParticle
-    | ResourcePigVariant
-    | ResourcePostEffect
-    | ResourcePredicate
-    | ResourceRecipe
-    | ResourceRegionalCompliancies
-    | ResourceShader
-    | ResourceSounds
-    | ResourceTestEnvironment
-    | ResourceTestInstance
-    | ResourceTextureMeta
-    | ResourceTimeline
-    | ResourceTradeSet
-    | ResourceTrialSpawner
-    | ResourceTrimMaterial
-    | ResourceTrimPattern
-    | ResourceVillagerTrade
-    | ResourceWaypointStyle
-    | ResourceWolfSoundVariant
-    | ResourceWolfVariant
-    | ResourceWorldgenBiome
-    | ResourceWorldgenConfiguredCarver
-    | ResourceWorldgenConfiguredFeature
-    | ResourceWorldgenConfiguredStructureFeature
-    | ResourceWorldgenConfiguredSurfaceBuilder
-    | ResourceWorldgenDensityFunction
-    | ResourceWorldgenFlatLevelGeneratorPreset
-    | ResourceWorldgenMultiNoiseBiomeSourceParameterList
-    | ResourceWorldgenNoise
-    | ResourceWorldgenNoiseSettings
-    | ResourceWorldgenPlacedFeature
-    | ResourceWorldgenProcessorList
-    | ResourceWorldgenStructure
-    | ResourceWorldgenStructureSet
-    | ResourceWorldgenTemplatePool
-    | ResourceWorldgenWorldPreset
-    | ResourceZombieNautilusVariant)
+  | ResourceAdvancement
+  | ResourceAtlas
+  | ResourceBannerPattern
+  | ResourceBlockDefinition
+  | ResourceCatVariant
+  | ResourceChatType
+  | ResourceChickenVariant
+  | ResourceCowVariant
+  | ResourceCredits
+  | ResourceDamageType
+  | ResourceDialog
+  | ResourceDimension
+  | ResourceDimensionType
+  | ResourceEnchantment
+  | ResourceEnchantmentProvider
+  | ResourceEquipment
+  | ResourceFont
+  | ResourceFrogVariant
+  | ResourceGpuWarnlist
+  | ResourceInstrument
+  | ResourceItemDefinition
+  | ResourceItemModifier
+  | ResourceJukeboxSong
+  | ResourceLang
+  | ResourceLangDeprecated
+  | ResourceLootTable
+  | ResourceModel
+  | ResourcePaintingVariant
+  | ResourceParticle
+  | ResourcePigVariant
+  | ResourcePostEffect
+  | ResourcePredicate
+  | ResourceRecipe
+  | ResourceRegionalCompliancies
+  | ResourceShader
+  | ResourceSounds
+  | ResourceTestEnvironment
+  | ResourceTestInstance
+  | ResourceTextureMeta
+  | ResourceTimeline
+  | ResourceTradeSet
+  | ResourceTrialSpawner
+  | ResourceTrimMaterial
+  | ResourceTrimPattern
+  | ResourceVillagerTrade
+  | ResourceWaypointStyle
+  | ResourceWolfSoundVariant
+  | ResourceWolfVariant
+  | ResourceWorldgenBiome
+  | ResourceWorldgenConfiguredCarver
+  | ResourceWorldgenConfiguredFeature
+  | ResourceWorldgenConfiguredStructureFeature
+  | ResourceWorldgenConfiguredSurfaceBuilder
+  | ResourceWorldgenDensityFunction
+  | ResourceWorldgenFlatLevelGeneratorPreset
+  | ResourceWorldgenMultiNoiseBiomeSourceParameterList
+  | ResourceWorldgenNoise
+  | ResourceWorldgenNoiseSettings
+  | ResourceWorldgenPlacedFeature
+  | ResourceWorldgenProcessorList
+  | ResourceWorldgenStructure
+  | ResourceWorldgenStructureSet
+  | ResourceWorldgenTemplatePool
+  | ResourceWorldgenWorldPreset
+  | ResourceZombieNautilusVariant)
 type ResourceAdvancement = Advancement
 type ResourceAtlas = Atlas
 type ResourceBannerPattern = BannerPattern
@@ -325,9 +325,9 @@ type ResourceWorldgenTemplatePool = TemplatePool
 type ResourceWorldgenWorldPreset = WorldPreset
 type ResourceZombieNautilusVariant = ZombieNautilusVariant
 export type SymbolResource<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ResourceDispatcherMap
     : CASE extends 'keys' ? ResourceKeys : CASE extends '%fallback' ? ResourceFallback : never

@@ -8,10 +8,10 @@ export type BiomeCheck = {
      * Checks if the entity is spawning in specific biomes.
      */
     biomes: ((
-            | Registry['minecraft:worldgen/biome']
-            | `#${Registry['minecraft:tag/worldgen/biome']}`
-            | TagClass<'worldgen/biome'>)
-        | Array<Registry['minecraft:worldgen/biome']>)
+        | Registry['minecraft:worldgen/biome']
+        | `#${Registry['minecraft:tag/worldgen/biome']}`
+        | TagClass<'worldgen/biome'>)
+      | Array<Registry['minecraft:worldgen/biome']>)
 }
 
 export type MoonBrightnessCheck = {
@@ -56,10 +56,10 @@ export type StructureCheck = {
      * Checks if the entity is spawning in specific structures.
      */
     structures: ((
-            | Registry['minecraft:worldgen/structure']
-            | `#${Registry['minecraft:tag/worldgen/structure']}`
-            | TagClass<'worldgen/structure'>)
-        | Array<Registry['minecraft:worldgen/structure']>)
+        | Registry['minecraft:worldgen/structure']
+        | `#${Registry['minecraft:tag/worldgen/structure']}`
+        | TagClass<'worldgen/structure'>)
+      | Array<Registry['minecraft:worldgen/structure']>)
 }
 type SpawnConditionDispatcherMap = {
     'biome': SpawnConditionBiome
@@ -75,9 +75,9 @@ type SpawnConditionBiome = BiomeCheck
 type SpawnConditionMoonBrightness = MoonBrightnessCheck
 type SpawnConditionStructure = StructureCheck
 export type SymbolSpawnCondition<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SpawnConditionDispatcherMap
     : CASE extends 'keys' ? SpawnConditionKeys : CASE extends '%fallback' ? SpawnConditionFallback : never

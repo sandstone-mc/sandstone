@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_PROCESSOR_LISTS = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_PROCESSOR_LISTS_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_PROCESSOR_LISTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_PROCESSOR_LISTS_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_PROCESSOR_LISTS_SET>}`)
 
 export const WORLDGEN_PROCESSOR_LISTS_SET = new Set([
     'ancient_city_generic_degradation',

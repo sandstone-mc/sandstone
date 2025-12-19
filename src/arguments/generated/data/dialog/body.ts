@@ -78,9 +78,9 @@ type DialogBodyFallback = (DialogBodyItem | DialogBodyPlainMessage)
 type DialogBodyItem = ItemBody
 type DialogBodyPlainMessage = PlainMessage
 export type SymbolDialogBody<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? DialogBodyDispatcherMap
     : CASE extends 'keys' ? DialogBodyKeys : CASE extends '%fallback' ? DialogBodyFallback : never

@@ -14,8 +14,8 @@ export type Dimension = {
 export type DimensionType = {
     attributes?: GlobalEnvironmentAttributeMap
     timelines?: ((
-        | Registry['minecraft:timeline'] | `#${Registry['minecraft:tag/timeline']}` | TagClass<'timeline'>)
-        | Array<Registry['minecraft:timeline']>)
+      | Registry['minecraft:timeline'] | `#${Registry['minecraft:tag/timeline']}` | TagClass<'timeline'>)
+      | Array<Registry['minecraft:timeline']>)
     /**
      * Affects the weather, lighting engine and respawning rules.
      */

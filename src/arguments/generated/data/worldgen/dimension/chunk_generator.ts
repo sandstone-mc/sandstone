@@ -33,8 +33,8 @@ export type FlatGeneratorSettings = {
     features?: boolean
     layers: Array<FlatGeneratorLayer>
     structure_overrides?: (
-        | Array<Registry['minecraft:worldgen/structure_set']> | (
-        Registry['minecraft:worldgen/structure_set'] | `#${string}:${string}` | TagClass<'worldgen/structure_set'>))
+      | Array<Registry['minecraft:worldgen/structure_set']> | (
+      Registry['minecraft:worldgen/structure_set'] | `#${string}:${string}` | TagClass<'worldgen/structure_set'>))
 }
 
 export type Noise = {
@@ -52,9 +52,9 @@ type ChunkGeneratorFallback = (ChunkGeneratorFlat | ChunkGeneratorNoise)
 type ChunkGeneratorFlat = Flat
 type ChunkGeneratorNoise = Noise
 export type SymbolChunkGenerator<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ChunkGeneratorDispatcherMap
     : CASE extends 'keys' ? ChunkGeneratorKeys : CASE extends '%fallback' ? ChunkGeneratorFallback : never

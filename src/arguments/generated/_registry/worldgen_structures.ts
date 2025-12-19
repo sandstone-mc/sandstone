@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_STRUCTURES = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_STRUCTURES_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_STRUCTURES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_STRUCTURES_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_STRUCTURES_SET>}`)
 
 export const WORLDGEN_STRUCTURES_SET = new Set([
     'ancient_city',

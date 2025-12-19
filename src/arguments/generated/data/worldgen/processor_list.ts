@@ -57,8 +57,8 @@ export type BlockRot = {
         max: 1
     }>
     rottable_blocks?: (
-        | Array<Registry['minecraft:block']> | (
-        Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
 }
 
 export type BlockStateMatch = {
@@ -212,10 +212,10 @@ type PosRuleTestFallback = (PosRuleTestAxisAlignedLinearPos | PosRuleTestLinearP
 type PosRuleTestAxisAlignedLinearPos = AxisAlignedLinearPos
 type PosRuleTestLinearPos = LinearPos
 export type SymbolPosRuleTest<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? PosRuleTestDispatcherMap
     : CASE extends 'keys' ? PosRuleTestKeys : CASE extends '%fallback' ? PosRuleTestFallback : never
 type RuleBlockEntityModifierDispatcherMap = {
@@ -230,19 +230,19 @@ type RuleBlockEntityModifierDispatcherMap = {
 }
 type RuleBlockEntityModifierKeys = keyof RuleBlockEntityModifierDispatcherMap
 type RuleBlockEntityModifierFallback = (
-    | RuleBlockEntityModifierAppendLoot
-    | RuleBlockEntityModifierAppendStatic
-    | RuleBlockEntityModifierClear
-    | RuleBlockEntityModifierPassthrough)
+  | RuleBlockEntityModifierAppendLoot
+  | RuleBlockEntityModifierAppendStatic
+  | RuleBlockEntityModifierClear
+  | RuleBlockEntityModifierPassthrough)
 type RuleBlockEntityModifierAppendLoot = AppendLoot
 type RuleBlockEntityModifierAppendStatic = AppendStatic
 type RuleBlockEntityModifierClear = Record<string, never>
 type RuleBlockEntityModifierPassthrough = Record<string, never>
 export type SymbolRuleBlockEntityModifier<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? RuleBlockEntityModifierDispatcherMap
     : CASE extends 'keys'
         ? RuleBlockEntityModifierKeys
@@ -261,21 +261,21 @@ type RuleTestDispatcherMap = {
 }
 type RuleTestKeys = keyof RuleTestDispatcherMap
 type RuleTestFallback = (
-    | RuleTestBlockMatch
-    | RuleTestBlockstateMatch
-    | RuleTestRandomBlockMatch
-    | RuleTestRandomBlockstateMatch
-    | RuleTestTagMatch)
+  | RuleTestBlockMatch
+  | RuleTestBlockstateMatch
+  | RuleTestRandomBlockMatch
+  | RuleTestRandomBlockstateMatch
+  | RuleTestTagMatch)
 type RuleTestBlockMatch = BlockMatch
 type RuleTestBlockstateMatch = BlockStateMatch
 type RuleTestRandomBlockMatch = RandomBlockMatch
 type RuleTestRandomBlockstateMatch = RandomBlockStateMatch
 type RuleTestTagMatch = TagMatch
 export type SymbolRuleTest<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? RuleTestDispatcherMap
     : CASE extends 'keys' ? RuleTestKeys : CASE extends '%fallback' ? RuleTestFallback : never
 type TemplateProcessorDispatcherMap = {
@@ -296,13 +296,13 @@ type TemplateProcessorDispatcherMap = {
 }
 type TemplateProcessorKeys = keyof TemplateProcessorDispatcherMap
 type TemplateProcessorFallback = (
-    | TemplateProcessorBlockAge
-    | TemplateProcessorBlockIgnore
-    | TemplateProcessorBlockRot
-    | TemplateProcessorCapped
-    | TemplateProcessorGravity
-    | TemplateProcessorProtectedBlocks
-    | TemplateProcessorRule)
+  | TemplateProcessorBlockAge
+  | TemplateProcessorBlockIgnore
+  | TemplateProcessorBlockRot
+  | TemplateProcessorCapped
+  | TemplateProcessorGravity
+  | TemplateProcessorProtectedBlocks
+  | TemplateProcessorRule)
 type TemplateProcessorBlockAge = BlockAge
 type TemplateProcessorBlockIgnore = BlockIgnore
 type TemplateProcessorBlockRot = BlockRot
@@ -311,9 +311,9 @@ type TemplateProcessorGravity = Gravity
 type TemplateProcessorProtectedBlocks = ProtectedBlocks
 type TemplateProcessorRule = Rule
 export type SymbolTemplateProcessor<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TemplateProcessorDispatcherMap
     : CASE extends 'keys' ? TemplateProcessorKeys : CASE extends '%fallback' ? TemplateProcessorFallback : never

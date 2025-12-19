@@ -235,26 +235,26 @@ type LootConditionDispatcherMap = {
 }
 type LootConditionKeys = keyof LootConditionDispatcherMap
 type LootConditionFallback = (
-    | LootConditionAllOf
-    | LootConditionAlternative
-    | LootConditionAnyOf
-    | LootConditionBlockStateProperty
-    | LootConditionDamageSourceProperties
-    | LootConditionEnchantmentActiveCheck
-    | LootConditionEntityProperties
-    | LootConditionEntityScores
-    | LootConditionInverted
-    | LootConditionKilledByPlayer
-    | LootConditionLocationCheck
-    | LootConditionMatchTool
-    | LootConditionRandomChance
-    | LootConditionRandomChanceWithEnchantedBonus
-    | LootConditionRandomChanceWithLooting
-    | LootConditionReference
-    | LootConditionTableBonus
-    | LootConditionTimeCheck
-    | LootConditionValueCheck
-    | LootConditionWeatherCheck)
+  | LootConditionAllOf
+  | LootConditionAlternative
+  | LootConditionAnyOf
+  | LootConditionBlockStateProperty
+  | LootConditionDamageSourceProperties
+  | LootConditionEnchantmentActiveCheck
+  | LootConditionEntityProperties
+  | LootConditionEntityScores
+  | LootConditionInverted
+  | LootConditionKilledByPlayer
+  | LootConditionLocationCheck
+  | LootConditionMatchTool
+  | LootConditionRandomChance
+  | LootConditionRandomChanceWithEnchantedBonus
+  | LootConditionRandomChanceWithLooting
+  | LootConditionReference
+  | LootConditionTableBonus
+  | LootConditionTimeCheck
+  | LootConditionValueCheck
+  | LootConditionWeatherCheck)
 type LootConditionAllOf = AllOf
 type LootConditionAlternative = Alternative
 type LootConditionAnyOf = AnyOf
@@ -276,9 +276,9 @@ type LootConditionTimeCheck = TimeCheck
 type LootConditionValueCheck = ValueCheck
 type LootConditionWeatherCheck = WeatherCheck
 export type SymbolLootCondition<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? LootConditionDispatcherMap
     : CASE extends 'keys' ? LootConditionKeys : CASE extends '%fallback' ? LootConditionFallback : never

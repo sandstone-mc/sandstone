@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TRIM_PATTERNS = (
-    | NamespacedLiteralUnion<SetType<typeof TRIM_PATTERNS_SET>>
-    | `minecraft:${SetType<typeof TRIM_PATTERNS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TRIM_PATTERNS_SET>>
+  | `minecraft:${SetType<typeof TRIM_PATTERNS_SET>}`)
 
 export const TRIM_PATTERNS_SET = new Set([
     'bolt',

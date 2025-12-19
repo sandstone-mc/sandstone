@@ -7,10 +7,10 @@ export type TradeSet = {
      * Possible trade generators.
      */
     trades: ((
-            | Registry['minecraft:villager_trade']
-            | `#${Registry['minecraft:tag/villager_trade']}`
-            | TagClass<'villager_trade'>)
-        | Array<Registry['minecraft:villager_trade']>)
+        | Registry['minecraft:villager_trade']
+        | `#${Registry['minecraft:tag/villager_trade']}`
+        | TagClass<'villager_trade'>)
+      | Array<Registry['minecraft:villager_trade']>)
     /**
      * Amount of trades to be generated. \
      * Clamps to an integer of at least `1`.

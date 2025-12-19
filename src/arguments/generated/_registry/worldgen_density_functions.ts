@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_DENSITY_FUNCTIONS = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_DENSITY_FUNCTIONS_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_DENSITY_FUNCTIONS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_DENSITY_FUNCTIONS_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_DENSITY_FUNCTIONS_SET>}`)
 
 export const WORLDGEN_DENSITY_FUNCTIONS_SET = new Set([
     'end/base_3d_noise',

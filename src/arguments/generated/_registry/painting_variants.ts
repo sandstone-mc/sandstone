@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type PAINTING_VARIANTS = (
-    | NamespacedLiteralUnion<SetType<typeof PAINTING_VARIANTS_SET>>
-    | `minecraft:${SetType<typeof PAINTING_VARIANTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof PAINTING_VARIANTS_SET>>
+  | `minecraft:${SetType<typeof PAINTING_VARIANTS_SET>}`)
 
 export const PAINTING_VARIANTS_SET = new Set([
     'alban',

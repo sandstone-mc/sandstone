@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type POINT_OF_INTEREST_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof POINT_OF_INTEREST_TYPES_SET>>
-    | `minecraft:${SetType<typeof POINT_OF_INTEREST_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof POINT_OF_INTEREST_TYPES_SET>>
+  | `minecraft:${SetType<typeof POINT_OF_INTEREST_TYPES_SET>}`)
 
 export const POINT_OF_INTEREST_TYPES_SET = new Set([
     'armorer',

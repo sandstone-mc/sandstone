@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type DECORATED_POT_PATTERNS = (
-    | NamespacedLiteralUnion<SetType<typeof DECORATED_POT_PATTERNS_SET>>
-    | `minecraft:${SetType<typeof DECORATED_POT_PATTERNS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof DECORATED_POT_PATTERNS_SET>>
+  | `minecraft:${SetType<typeof DECORATED_POT_PATTERNS_SET>}`)
 
 export const DECORATED_POT_PATTERNS_SET = new Set([
     'angler',

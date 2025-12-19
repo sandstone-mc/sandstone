@@ -145,9 +145,9 @@ type EnvironmentAttributeFloatModifierDispatcherMap<T> = {
 }
 type EnvironmentAttributeFloatModifierKeys = keyof EnvironmentAttributeFloatModifierDispatcherMap<unknown>
 type EnvironmentAttributeFloatModifierFallback<T> = (
-    | EnvironmentAttributeFloatModifierAlphaBlend<T>
-    | EnvironmentAttributeFloatModifierOverride<T>
-    | EnvironmentAttributeFloatModifierFallbackType<T>)
+  | EnvironmentAttributeFloatModifierAlphaBlend<T>
+  | EnvironmentAttributeFloatModifierOverride<T>
+  | EnvironmentAttributeFloatModifierFallbackType<T>)
 export type EnvironmentAttributeFloatModifierFallbackType<T> = NBTFloat
 
 export type EnvironmentAttributeFloatModifierNoneType<T> = T
@@ -157,10 +157,10 @@ export type EnvironmentAttributeFloatModifierAlphaBlend<T> = FloatWithAlpha
 export type EnvironmentAttributeFloatModifierOverride<T> = T
 
 export type SymbolEnvironmentAttributeFloatModifier<T, CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EnvironmentAttributeFloatModifierDispatcherMap<T>
     : CASE extends 'keys'
         ? EnvironmentAttributeFloatModifierKeys

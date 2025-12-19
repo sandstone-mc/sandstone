@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TAG_GAME_EVENTS = (
-    | NamespacedLiteralUnion<SetType<typeof TAG_GAME_EVENTS_SET>>
-    | `minecraft:${SetType<typeof TAG_GAME_EVENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TAG_GAME_EVENTS_SET>>
+  | `minecraft:${SetType<typeof TAG_GAME_EVENTS_SET>}`)
 
 export const TAG_GAME_EVENTS_SET = new Set([
     'allay_can_listen',

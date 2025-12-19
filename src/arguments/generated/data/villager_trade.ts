@@ -51,6 +51,6 @@ export type VillagerTrade = {
      * 2. has the specified enchantments.
      */
     double_trade_price_enchantments?: ((
-        | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-        | Registry['minecraft:enchantment'])
+      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
+      | Registry['minecraft:enchantment'])
 }

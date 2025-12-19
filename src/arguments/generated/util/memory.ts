@@ -526,60 +526,60 @@ type MemoryModuleDispatcherMap = {
 }
 type MemoryModuleKeys = keyof MemoryModuleDispatcherMap
 type MemoryModuleFallback = (
-    | MemoryModuleAdmiringDisabled
-    | MemoryModuleAdmiringItem
-    | MemoryModuleAngryAt
-    | MemoryModuleAttackTargetCooldown
-    | MemoryModuleBreezeJumpCooldown
-    | MemoryModuleBreezeJumpInhaling
-    | MemoryModuleBreezeJumpTarget
-    | MemoryModuleBreezeLeavingWater
-    | MemoryModuleBreezeShoot
-    | MemoryModuleBreezeShootCharging
-    | MemoryModuleBreezeShootCooldown
-    | MemoryModuleBreezeShootRecover
-    | MemoryModuleChargeCooldownTicks
-    | MemoryModuleDangerDetectedRecently
-    | MemoryModuleDigCooldown
-    | MemoryModuleGazeCooldownTicks
-    | MemoryModuleGolemDetectedRecently
-    | MemoryModuleHasHuntingCooldown
-    | MemoryModuleHome
-    | MemoryModuleHuntedRecently
-    | MemoryModuleIsEmerging
-    | MemoryModuleIsInWater
-    | MemoryModuleIsPanicking
-    | MemoryModuleIsPregnant
-    | MemoryModuleIsSniffing
-    | MemoryModuleIsTempted
-    | MemoryModuleItemPickupCooldownTicks
-    | MemoryModuleJobSite
-    | MemoryModuleLastSlept
-    | MemoryModuleLastWoken
-    | MemoryModuleLastWorkedAtPoi
-    | MemoryModuleLikedNoteblock
-    | MemoryModuleLikedNoteblockCooldownTicks
-    | MemoryModuleLikedPlayer
-    | MemoryModuleLongJumpCoolingDown
-    | MemoryModuleMeetingPoint
-    | MemoryModulePlayDeadTicks
-    | MemoryModulePotentialJobSite
-    | MemoryModuleRamCooldownTicks
-    | MemoryModuleRecentProjectile
-    | MemoryModuleRoarSoundCooldown
-    | MemoryModuleRoarSoundDelay
-    | MemoryModuleSniffCooldown
-    | MemoryModuleSnifferExploredPositions
-    | MemoryModuleSonicBoomCooldown
-    | MemoryModuleSonicBoomSoundCooldown
-    | MemoryModuleSonicBoomSoundDelay
-    | MemoryModuleTemptationCooldownTicks
-    | MemoryModuleTouchCooldown
-    | MemoryModuleUniversalAnger
-    | MemoryModuleUnreachableTransportBlockPositions
-    | MemoryModuleVibrationCooldown
-    | MemoryModuleVisitedBlockPositions
-    | MemoryModuleFallbackType)
+  | MemoryModuleAdmiringDisabled
+  | MemoryModuleAdmiringItem
+  | MemoryModuleAngryAt
+  | MemoryModuleAttackTargetCooldown
+  | MemoryModuleBreezeJumpCooldown
+  | MemoryModuleBreezeJumpInhaling
+  | MemoryModuleBreezeJumpTarget
+  | MemoryModuleBreezeLeavingWater
+  | MemoryModuleBreezeShoot
+  | MemoryModuleBreezeShootCharging
+  | MemoryModuleBreezeShootCooldown
+  | MemoryModuleBreezeShootRecover
+  | MemoryModuleChargeCooldownTicks
+  | MemoryModuleDangerDetectedRecently
+  | MemoryModuleDigCooldown
+  | MemoryModuleGazeCooldownTicks
+  | MemoryModuleGolemDetectedRecently
+  | MemoryModuleHasHuntingCooldown
+  | MemoryModuleHome
+  | MemoryModuleHuntedRecently
+  | MemoryModuleIsEmerging
+  | MemoryModuleIsInWater
+  | MemoryModuleIsPanicking
+  | MemoryModuleIsPregnant
+  | MemoryModuleIsSniffing
+  | MemoryModuleIsTempted
+  | MemoryModuleItemPickupCooldownTicks
+  | MemoryModuleJobSite
+  | MemoryModuleLastSlept
+  | MemoryModuleLastWoken
+  | MemoryModuleLastWorkedAtPoi
+  | MemoryModuleLikedNoteblock
+  | MemoryModuleLikedNoteblockCooldownTicks
+  | MemoryModuleLikedPlayer
+  | MemoryModuleLongJumpCoolingDown
+  | MemoryModuleMeetingPoint
+  | MemoryModulePlayDeadTicks
+  | MemoryModulePotentialJobSite
+  | MemoryModuleRamCooldownTicks
+  | MemoryModuleRecentProjectile
+  | MemoryModuleRoarSoundCooldown
+  | MemoryModuleRoarSoundDelay
+  | MemoryModuleSniffCooldown
+  | MemoryModuleSnifferExploredPositions
+  | MemoryModuleSonicBoomCooldown
+  | MemoryModuleSonicBoomSoundCooldown
+  | MemoryModuleSonicBoomSoundDelay
+  | MemoryModuleTemptationCooldownTicks
+  | MemoryModuleTouchCooldown
+  | MemoryModuleUniversalAnger
+  | MemoryModuleUnreachableTransportBlockPositions
+  | MemoryModuleVibrationCooldown
+  | MemoryModuleVisitedBlockPositions
+  | MemoryModuleFallbackType)
 type MemoryModuleFallbackType = never
 type MemoryModuleAdmiringDisabled = AdmiringDisable
 type MemoryModuleAdmiringItem = AdmiringItem
@@ -635,9 +635,9 @@ type MemoryModuleUnreachableTransportBlockPositions = UnreachableTransportBlockP
 type MemoryModuleVibrationCooldown = VibrationCooldown
 type MemoryModuleVisitedBlockPositions = VisitedBlockPositions
 export type SymbolMemoryModule<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? MemoryModuleDispatcherMap
     : CASE extends 'keys' ? MemoryModuleKeys : CASE extends '%fallback' ? MemoryModuleFallback : never

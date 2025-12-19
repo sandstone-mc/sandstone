@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_MATERIAL_CONDITIONS = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_MATERIAL_CONDITIONS_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_MATERIAL_CONDITIONS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_MATERIAL_CONDITIONS_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_MATERIAL_CONDITIONS_SET>}`)
 
 export const WORLDGEN_MATERIAL_CONDITIONS_SET = new Set([
     'above_preliminary_surface',

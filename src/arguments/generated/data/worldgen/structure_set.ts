@@ -25,10 +25,10 @@ export type ConcentricRingsPlacement = {
         min: 1
     }>
     preferred_biomes: (
-        | Array<Registry['minecraft:worldgen/biome']> | (
-            | Registry['minecraft:worldgen/biome']
-            | `#${Registry['minecraft:tag/worldgen/biome']}`
-            | TagClass<'worldgen/biome'>))
+      | Array<Registry['minecraft:worldgen/biome']> | (
+        | Registry['minecraft:worldgen/biome']
+        | `#${Registry['minecraft:tag/worldgen/biome']}`
+        | TagClass<'worldgen/biome'>))
 }
 
 export type ExclusionZone = {
@@ -151,9 +151,9 @@ type StructurePlacementFallback = (StructurePlacementConcentricRings | Structure
 type StructurePlacementConcentricRings = ConcentricRingsPlacement
 type StructurePlacementRandomSpread = RandomSpreadPlacement
 export type SymbolStructurePlacement<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? StructurePlacementDispatcherMap
     : CASE extends 'keys' ? StructurePlacementKeys : CASE extends '%fallback' ? StructurePlacementFallback : never

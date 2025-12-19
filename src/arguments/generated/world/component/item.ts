@@ -331,8 +331,8 @@ export type DamageReduction = {
      * If not specified, any damage type is accepted for this reduction.
      */
     type?: ((
-        | Registry['minecraft:damage_type'] | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>)
-        | Array<Registry['minecraft:damage_type']>)
+      | Registry['minecraft:damage_type'] | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>)
+      | Array<Registry['minecraft:damage_type']>)
     /**
      * Constant amount of damage to be blocked.
      */
@@ -433,8 +433,8 @@ export type Equippable = {
      * Limits which entities can equip this item.
      */
     allowed_entities?: ((
-        | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
-        | Array<Registry['minecraft:entity_type']>)
+      | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
+      | Array<Registry['minecraft:entity_type']>)
     /**
      * Whether the item can be equipped by using a dispenser. Defaults to `true`.
      */
@@ -569,19 +569,19 @@ export type ItemDamageFunction = {
 }
 
 export type ItemUseAnimation = (
-    | 'none'
-    | 'eat'
-    | 'drink'
-    | 'block'
-    | 'bow'
-    | 'spear'
-    | 'trident'
-    | 'spear'
-    | 'crossbow'
-    | 'spyglass'
-    | 'toot_horn'
-    | 'brush'
-    | 'bundle')
+  | 'none'
+  | 'eat'
+  | 'drink'
+  | 'block'
+  | 'bow'
+  | 'spear'
+  | 'trident'
+  | 'spear'
+  | 'crossbow'
+  | 'spyglass'
+  | 'toot_horn'
+  | 'brush'
+  | 'bundle')
 
 export type JukeboxPlayable = {
     song: Registry['minecraft:jukebox_song']
@@ -726,14 +726,14 @@ export type Rarity = ('common' | 'uncommon' | 'rare' | 'epic')
 
 export type RemoveEffectsConsumeEffect = {
     effects: ((
-        | Registry['minecraft:mob_effect'] | `#${string}:${string}` | TagClass<'mob_effect'>)
-        | Array<Registry['minecraft:mob_effect']>)
+      | Registry['minecraft:mob_effect'] | `#${string}:${string}` | TagClass<'mob_effect'>)
+      | Array<Registry['minecraft:mob_effect']>)
 }
 
 export type Repairable = {
     items: ((
-        | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
-        | Array<Registry['minecraft:item']>)
+      | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
+      | Array<Registry['minecraft:item']>)
 }
 
 export type SuspiciousStewEffect = {
@@ -809,8 +809,8 @@ export type Tool = {
 
 export type ToolRule = {
     blocks: ((
-        | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
-        | Array<Registry['minecraft:block']>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>)
     /**
      * Overrides the default mining speed.
      */
@@ -954,10 +954,10 @@ type AttributeDisplayDefault = Record<string, never>
 type AttributeDisplayHidden = Record<string, never>
 type AttributeDisplayOverride = AttributeDisplayTextOverride
 export type SymbolAttributeDisplay<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? AttributeDisplayDispatcherMap
     : CASE extends 'keys' ? AttributeDisplayKeys : CASE extends '%fallback' ? AttributeDisplayFallback : never
 type ConsumeEffectDispatcherMap = {
@@ -974,21 +974,21 @@ type ConsumeEffectDispatcherMap = {
 }
 type ConsumeEffectKeys = keyof ConsumeEffectDispatcherMap
 type ConsumeEffectFallback = (
-    | ConsumeEffectApplyEffects
-    | ConsumeEffectClearAllEffects
-    | ConsumeEffectPlaySound
-    | ConsumeEffectRemoveEffects
-    | ConsumeEffectTeleportRandomly)
+  | ConsumeEffectApplyEffects
+  | ConsumeEffectClearAllEffects
+  | ConsumeEffectPlaySound
+  | ConsumeEffectRemoveEffects
+  | ConsumeEffectTeleportRandomly)
 type ConsumeEffectApplyEffects = ApplyEffectsConsumeEffect
 type ConsumeEffectClearAllEffects = Record<string, never>
 type ConsumeEffectPlaySound = PlaySoundConsumeEffect
 type ConsumeEffectRemoveEffects = RemoveEffectsConsumeEffect
 type ConsumeEffectTeleportRandomly = TeleportRandomlyConsumeEffect
 export type SymbolConsumeEffect<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ConsumeEffectDispatcherMap
     : CASE extends 'keys' ? ConsumeEffectKeys : CASE extends '%fallback' ? ConsumeEffectFallback : never
 type DataComponentDispatcherMap = {
@@ -1205,111 +1205,111 @@ type DataComponentDispatcherMap = {
 }
 type DataComponentKeys = keyof DataComponentDispatcherMap
 type DataComponentFallback = (
-    | DataComponentAdditionalTradeCost
-    | DataComponentAttackRange
-    | DataComponentAttributeModifiers
-    | DataComponentAxolotlVariant
-    | DataComponentBannerPatterns
-    | DataComponentBaseColor
-    | DataComponentBees
-    | DataComponentBlockEntityData
-    | DataComponentBlockState
-    | DataComponentBlocksAttacks
-    | DataComponentBreakSound
-    | DataComponentBucketEntityData
-    | DataComponentBundleContents
-    | DataComponentCanBreak
-    | DataComponentCanPlaceOn
-    | DataComponentCatCollar
-    | DataComponentCatVariant
-    | DataComponentChargedProjectiles
-    | DataComponentChickenVariant
-    | DataComponentConsumable
-    | DataComponentContainer
-    | DataComponentContainerLoot
-    | DataComponentCowVariant
-    | DataComponentCustomData
-    | DataComponentCustomModelData
-    | DataComponentCustomName
-    | DataComponentDamage
-    | DataComponentDamageResistant
-    | DataComponentDamageType
-    | DataComponentDeathProtection
-    | DataComponentDebugStickState
-    | DataComponentDyedColor
-    | DataComponentEnchantable
-    | DataComponentEnchantmentGlintOverride
-    | DataComponentEnchantments
-    | DataComponentEntityData
-    | DataComponentEquippable
-    | DataComponentFireResistant
-    | DataComponentFireworkExplosion
-    | DataComponentFireworks
-    | DataComponentFood
-    | DataComponentFoxVariant
-    | DataComponentFrogVariant
-    | DataComponentGlider
-    | DataComponentHideAdditionalTooltip
-    | DataComponentHideTooltip
-    | DataComponentHorseVariant
-    | DataComponentInstrument
-    | DataComponentIntangibleProjectile
-    | DataComponentItemModel
-    | DataComponentItemName
-    | DataComponentJukeboxPlayable
-    | DataComponentKineticWeapon
-    | DataComponentLlamaVariant
-    | DataComponentLock
-    | DataComponentLodestoneTracker
-    | DataComponentLore
-    | DataComponentMapColor
-    | DataComponentMapDecorations
-    | DataComponentMapId
-    | DataComponentMaxDamage
-    | DataComponentMaxStackSize
-    | DataComponentMinimumAttackCharge
-    | DataComponentMooshroomVariant
-    | DataComponentNoteBlockSound
-    | DataComponentOminousBottleAmplifier
-    | DataComponentPaintingVariant
-    | DataComponentParrotVariant
-    | DataComponentPiercingWeapon
-    | DataComponentPigVariant
-    | DataComponentPotDecorations
-    | DataComponentPotionContents
-    | DataComponentPotionDurationScale
-    | DataComponentProfile
-    | DataComponentProvidesBannerPatterns
-    | DataComponentProvidesTrimMaterial
-    | DataComponentRabbitVariant
-    | DataComponentRarity
-    | DataComponentRecipes
-    | DataComponentRepairCost
-    | DataComponentRepairable
-    | DataComponentSalmonSize
-    | DataComponentSheepColor
-    | DataComponentShulkerColor
-    | DataComponentStoredEnchantments
-    | DataComponentSuspiciousStewEffects
-    | DataComponentSwingAnimation
-    | DataComponentTool
-    | DataComponentTooltipDisplay
-    | DataComponentTooltipStyle
-    | DataComponentTrim
-    | DataComponentTropicalFishBaseColor
-    | DataComponentTropicalFishPattern
-    | DataComponentTropicalFishPatternColor
-    | DataComponentUnbreakable
-    | DataComponentUseCooldown
-    | DataComponentUseEffects
-    | DataComponentUseRemainder
-    | DataComponentVillagerVariant
-    | DataComponentWeapon
-    | DataComponentWolfCollar
-    | DataComponentWolfSoundVariant
-    | DataComponentWolfVariant
-    | DataComponentWritableBookContent
-    | DataComponentWrittenBookContent)
+  | DataComponentAdditionalTradeCost
+  | DataComponentAttackRange
+  | DataComponentAttributeModifiers
+  | DataComponentAxolotlVariant
+  | DataComponentBannerPatterns
+  | DataComponentBaseColor
+  | DataComponentBees
+  | DataComponentBlockEntityData
+  | DataComponentBlockState
+  | DataComponentBlocksAttacks
+  | DataComponentBreakSound
+  | DataComponentBucketEntityData
+  | DataComponentBundleContents
+  | DataComponentCanBreak
+  | DataComponentCanPlaceOn
+  | DataComponentCatCollar
+  | DataComponentCatVariant
+  | DataComponentChargedProjectiles
+  | DataComponentChickenVariant
+  | DataComponentConsumable
+  | DataComponentContainer
+  | DataComponentContainerLoot
+  | DataComponentCowVariant
+  | DataComponentCustomData
+  | DataComponentCustomModelData
+  | DataComponentCustomName
+  | DataComponentDamage
+  | DataComponentDamageResistant
+  | DataComponentDamageType
+  | DataComponentDeathProtection
+  | DataComponentDebugStickState
+  | DataComponentDyedColor
+  | DataComponentEnchantable
+  | DataComponentEnchantmentGlintOverride
+  | DataComponentEnchantments
+  | DataComponentEntityData
+  | DataComponentEquippable
+  | DataComponentFireResistant
+  | DataComponentFireworkExplosion
+  | DataComponentFireworks
+  | DataComponentFood
+  | DataComponentFoxVariant
+  | DataComponentFrogVariant
+  | DataComponentGlider
+  | DataComponentHideAdditionalTooltip
+  | DataComponentHideTooltip
+  | DataComponentHorseVariant
+  | DataComponentInstrument
+  | DataComponentIntangibleProjectile
+  | DataComponentItemModel
+  | DataComponentItemName
+  | DataComponentJukeboxPlayable
+  | DataComponentKineticWeapon
+  | DataComponentLlamaVariant
+  | DataComponentLock
+  | DataComponentLodestoneTracker
+  | DataComponentLore
+  | DataComponentMapColor
+  | DataComponentMapDecorations
+  | DataComponentMapId
+  | DataComponentMaxDamage
+  | DataComponentMaxStackSize
+  | DataComponentMinimumAttackCharge
+  | DataComponentMooshroomVariant
+  | DataComponentNoteBlockSound
+  | DataComponentOminousBottleAmplifier
+  | DataComponentPaintingVariant
+  | DataComponentParrotVariant
+  | DataComponentPiercingWeapon
+  | DataComponentPigVariant
+  | DataComponentPotDecorations
+  | DataComponentPotionContents
+  | DataComponentPotionDurationScale
+  | DataComponentProfile
+  | DataComponentProvidesBannerPatterns
+  | DataComponentProvidesTrimMaterial
+  | DataComponentRabbitVariant
+  | DataComponentRarity
+  | DataComponentRecipes
+  | DataComponentRepairCost
+  | DataComponentRepairable
+  | DataComponentSalmonSize
+  | DataComponentSheepColor
+  | DataComponentShulkerColor
+  | DataComponentStoredEnchantments
+  | DataComponentSuspiciousStewEffects
+  | DataComponentSwingAnimation
+  | DataComponentTool
+  | DataComponentTooltipDisplay
+  | DataComponentTooltipStyle
+  | DataComponentTrim
+  | DataComponentTropicalFishBaseColor
+  | DataComponentTropicalFishPattern
+  | DataComponentTropicalFishPatternColor
+  | DataComponentUnbreakable
+  | DataComponentUseCooldown
+  | DataComponentUseEffects
+  | DataComponentUseRemainder
+  | DataComponentVillagerVariant
+  | DataComponentWeapon
+  | DataComponentWolfCollar
+  | DataComponentWolfSoundVariant
+  | DataComponentWolfVariant
+  | DataComponentWritableBookContent
+  | DataComponentWrittenBookContent)
 type DataComponentAdditionalTradeCost = NBTInt
 type DataComponentAttackRange = AttackRange
 type DataComponentAttributeModifiers = Array<AttributeModifier>
@@ -1409,8 +1409,8 @@ type DataComponentPotionDurationScale = NBTFloat<{
 }>
 type DataComponentProfile = Profile
 type DataComponentProvidesBannerPatterns = (
-    | `#${Registry['minecraft:tag/banner_pattern']}`
-    | TagClass<'banner_pattern'>)
+  | `#${Registry['minecraft:tag/banner_pattern']}`
+  | TagClass<'banner_pattern'>)
 type DataComponentProvidesTrimMaterial = Registry['minecraft:trim_material']
 type DataComponentRabbitVariant = RabbitVariant
 type DataComponentRarity = Rarity
@@ -1444,9 +1444,9 @@ type DataComponentWolfVariant = Registry['minecraft:wolf_variant']
 type DataComponentWritableBookContent = WritableBookContent
 type DataComponentWrittenBookContent = WrittenBookContent
 export type SymbolDataComponent<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? DataComponentDispatcherMap
     : CASE extends 'keys' ? DataComponentKeys : CASE extends '%fallback' ? DataComponentFallback : never

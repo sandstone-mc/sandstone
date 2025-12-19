@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type MAP_DECORATION_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof MAP_DECORATION_TYPES_SET>>
-    | `minecraft:${SetType<typeof MAP_DECORATION_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof MAP_DECORATION_TYPES_SET>>
+  | `minecraft:${SetType<typeof MAP_DECORATION_TYPES_SET>}`)
 
 export const MAP_DECORATION_TYPES_SET = new Set([
     'banner_black',

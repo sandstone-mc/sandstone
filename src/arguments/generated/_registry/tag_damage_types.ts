@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TAG_DAMAGE_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof TAG_DAMAGE_TYPES_SET>>
-    | `minecraft:${SetType<typeof TAG_DAMAGE_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TAG_DAMAGE_TYPES_SET>>
+  | `minecraft:${SetType<typeof TAG_DAMAGE_TYPES_SET>}`)
 
 export const TAG_DAMAGE_TYPES_SET = new Set([
     'always_hurts_ender_dragons',

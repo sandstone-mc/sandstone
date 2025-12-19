@@ -14,8 +14,8 @@ export type AttributeModifiersPredicate = {
 
 export type AttributeModifiersPredicateEntry = {
     attribute?: ((
-        | Registry['minecraft:attribute'] | `#${string}:${string}` | TagClass<'attribute'>)
-        | Array<Registry['minecraft:attribute']>)
+      | Registry['minecraft:attribute'] | `#${string}:${string}` | TagClass<'attribute'>)
+      | Array<Registry['minecraft:attribute']>)
     id?: `${string}:${string}`
     amount?: MinMaxBounds<(NBTDouble | number)>
     /**
@@ -104,17 +104,17 @@ export type ItemDamagePredicate = {
 
 export type JukeboxPlayablePredicate = {
     song?: ((
-        | Registry['minecraft:jukebox_song'] | `#${string}:${string}` | TagClass<'jukebox_song'>)
-        | Array<Registry['minecraft:jukebox_song']>)
+      | Registry['minecraft:jukebox_song'] | `#${string}:${string}` | TagClass<'jukebox_song'>)
+      | Array<Registry['minecraft:jukebox_song']>)
 }
 
 export type TrimPredicate = {
     material?: ((
-        | Registry['minecraft:trim_material'] | `#${string}:${string}` | TagClass<'trim_material'>)
-        | Array<Registry['minecraft:trim_material']>)
+      | Registry['minecraft:trim_material'] | `#${string}:${string}` | TagClass<'trim_material'>)
+      | Array<Registry['minecraft:trim_material']>)
     pattern?: ((
-        | Registry['minecraft:trim_pattern'] | `#${string}:${string}` | TagClass<'trim_pattern'>)
-        | Array<Registry['minecraft:trim_pattern']>)
+      | Registry['minecraft:trim_pattern'] | `#${string}:${string}` | TagClass<'trim_pattern'>)
+      | Array<Registry['minecraft:trim_pattern']>)
 }
 
 export type WritableBookPredicate = {
@@ -166,21 +166,21 @@ type DataComponentPredicateDispatcherMap = {
 }
 type DataComponentPredicateKeys = keyof DataComponentPredicateDispatcherMap
 type DataComponentPredicateFallback = (
-    | DataComponentPredicateAttributeModifiers
-    | DataComponentPredicateBundleContents
-    | DataComponentPredicateContainer
-    | DataComponentPredicateCustomData
-    | DataComponentPredicateDamage
-    | DataComponentPredicateEnchantments
-    | DataComponentPredicateFireworkExplosion
-    | DataComponentPredicateFireworks
-    | DataComponentPredicateJukeboxPlayable
-    | DataComponentPredicatePotionContents
-    | DataComponentPredicateStoredEnchantments
-    | DataComponentPredicateTrim
-    | DataComponentPredicateWritableBookContent
-    | DataComponentPredicateWrittenBookContent
-    | DataComponentPredicateFallbackType)
+  | DataComponentPredicateAttributeModifiers
+  | DataComponentPredicateBundleContents
+  | DataComponentPredicateContainer
+  | DataComponentPredicateCustomData
+  | DataComponentPredicateDamage
+  | DataComponentPredicateEnchantments
+  | DataComponentPredicateFireworkExplosion
+  | DataComponentPredicateFireworks
+  | DataComponentPredicateJukeboxPlayable
+  | DataComponentPredicatePotionContents
+  | DataComponentPredicateStoredEnchantments
+  | DataComponentPredicateTrim
+  | DataComponentPredicateWritableBookContent
+  | DataComponentPredicateWrittenBookContent
+  | DataComponentPredicateFallbackType)
 type DataComponentPredicateFallbackType = never
 type DataComponentPredicateAttributeModifiers = AttributeModifiersPredicate
 type DataComponentPredicateBundleContents = BundleContentsPredicate
@@ -192,17 +192,17 @@ type DataComponentPredicateFireworkExplosion = FireworkExplosionPredicate
 type DataComponentPredicateFireworks = FireworksPredicate
 type DataComponentPredicateJukeboxPlayable = JukeboxPlayablePredicate
 type DataComponentPredicatePotionContents = ((
-    | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
-    | Array<Registry['minecraft:potion']>)
+  | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
+  | Array<Registry['minecraft:potion']>)
 type DataComponentPredicateStoredEnchantments = Array<EnchantmentPredicate>
 type DataComponentPredicateTrim = TrimPredicate
 type DataComponentPredicateWritableBookContent = WritableBookPredicate
 type DataComponentPredicateWrittenBookContent = WrittenBookPredicate
 export type SymbolDataComponentPredicate<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? DataComponentPredicateDispatcherMap
     : CASE extends 'keys'
         ? DataComponentPredicateKeys

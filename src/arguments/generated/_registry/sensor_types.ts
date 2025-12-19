@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type SENSOR_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof SENSOR_TYPES_SET>>
-    | `minecraft:${SetType<typeof SENSOR_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof SENSOR_TYPES_SET>>
+  | `minecraft:${SetType<typeof SENSOR_TYPES_SET>}`)
 
 export const SENSOR_TYPES_SET = new Set([
     'armadillo_scare_detected',

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type MOB_EFFECTS = (
-    | NamespacedLiteralUnion<SetType<typeof MOB_EFFECTS_SET>>
-    | `minecraft:${SetType<typeof MOB_EFFECTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof MOB_EFFECTS_SET>>
+  | `minecraft:${SetType<typeof MOB_EFFECTS_SET>}`)
 
 export const MOB_EFFECTS_SET = new Set([
     'absorption',

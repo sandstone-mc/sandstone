@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TRADE_SETS = (
-    | NamespacedLiteralUnion<SetType<typeof TRADE_SETS_SET>>
-    | `minecraft:${SetType<typeof TRADE_SETS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TRADE_SETS_SET>>
+  | `minecraft:${SetType<typeof TRADE_SETS_SET>}`)
 
 export const TRADE_SETS_SET = new Set([
     'armorer/level_1',

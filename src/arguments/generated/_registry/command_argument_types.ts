@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type COMMAND_ARGUMENT_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof COMMAND_ARGUMENT_TYPES_SET>>
-    | `minecraft:${SetType<typeof COMMAND_ARGUMENT_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof COMMAND_ARGUMENT_TYPES_SET>>
+  | `minecraft:${SetType<typeof COMMAND_ARGUMENT_TYPES_SET>}`)
 
 export const COMMAND_ARGUMENT_TYPES_SET = new Set([
     'angle',

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type PARTICLE_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof PARTICLE_TYPES_SET>>
-    | `minecraft:${SetType<typeof PARTICLE_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof PARTICLE_TYPES_SET>>
+  | `minecraft:${SetType<typeof PARTICLE_TYPES_SET>}`)
 
 export const PARTICLE_TYPES_SET = new Set([
     'angry_villager',

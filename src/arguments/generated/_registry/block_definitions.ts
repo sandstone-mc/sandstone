@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type BLOCK_DEFINITIONS = (
-    | NamespacedLiteralUnion<SetType<typeof BLOCK_DEFINITIONS_SET>>
-    | `minecraft:${SetType<typeof BLOCK_DEFINITIONS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof BLOCK_DEFINITIONS_SET>>
+  | `minecraft:${SetType<typeof BLOCK_DEFINITIONS_SET>}`)
 
 export const BLOCK_DEFINITIONS_SET = new Set([
     'acacia_button',

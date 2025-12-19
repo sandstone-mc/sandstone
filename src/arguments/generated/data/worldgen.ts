@@ -37,17 +37,17 @@ export type ConstantIntProvider<T> = {
 }
 
 export type DecorationStep = (
-    | 'raw_generation'
-    | 'lakes'
-    | 'local_modifications'
-    | 'underground_structures'
-    | 'surface_structures'
-    | 'strongholds'
-    | 'underground_ores'
-    | 'underground_decoration'
-    | 'fluid_springs'
-    | 'vegetal_decoration'
-    | 'top_layer_modification')
+  | 'raw_generation'
+  | 'lakes'
+  | 'local_modifications'
+  | 'underground_structures'
+  | 'surface_structures'
+  | 'strongholds'
+  | 'underground_ores'
+  | 'underground_decoration'
+  | 'fluid_springs'
+  | 'vegetal_decoration'
+  | 'top_layer_modification')
 
 export type FloatProvider<T> = (T | ({
     [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
@@ -60,12 +60,12 @@ export type FloatProvider<T> = (T | ({
 }[Registry['minecraft:float_provider_type']]))
 
 export type HeightmapType = (
-    | 'MOTION_BLOCKING'
-    | 'MOTION_BLOCKING_NO_LEAVES'
-    | 'OCEAN_FLOOR'
-    | 'OCEAN_FLOOR_WG'
-    | 'WORLD_SURFACE'
-    | 'WORLD_SURFACE_WG')
+  | 'MOTION_BLOCKING'
+  | 'MOTION_BLOCKING_NO_LEAVES'
+  | 'OCEAN_FLOOR'
+  | 'OCEAN_FLOOR_WG'
+  | 'WORLD_SURFACE'
+  | 'WORLD_SURFACE_WG')
 
 export type HeightProvider = (({
     [S in Extract<Registry['minecraft:height_provider_type'], string>]?: ({
@@ -127,10 +127,10 @@ type FloatProviderDispatcherMap<T> = {
 }
 type FloatProviderKeys = keyof FloatProviderDispatcherMap<unknown>
 type FloatProviderFallback<T> = (
-    | FloatProviderClampedNormal<T>
-    | FloatProviderConstant<T>
-    | FloatProviderTrapezoid<T>
-    | FloatProviderUniform<T>)
+  | FloatProviderClampedNormal<T>
+  | FloatProviderConstant<T>
+  | FloatProviderTrapezoid<T>
+  | FloatProviderUniform<T>)
 export type FloatProviderClampedNormal<T> = {
     min: T
     max: T
@@ -154,10 +154,10 @@ export type FloatProviderUniform<T> = {
 }
 
 export type SymbolFloatProvider<T, CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? FloatProviderDispatcherMap<T>
     : CASE extends 'keys' ? FloatProviderKeys : CASE extends '%fallback' ? FloatProviderFallback<T> : never
 type HeightProviderDispatcherMap = {
@@ -176,12 +176,12 @@ type HeightProviderDispatcherMap = {
 }
 type HeightProviderKeys = keyof HeightProviderDispatcherMap
 type HeightProviderFallback = (
-    | HeightProviderBiasedToBottom
-    | HeightProviderConstant
-    | HeightProviderTrapezoid
-    | HeightProviderUniform
-    | HeightProviderVeryBiasedToBottom
-    | HeightProviderWeightedList)
+  | HeightProviderBiasedToBottom
+  | HeightProviderConstant
+  | HeightProviderTrapezoid
+  | HeightProviderUniform
+  | HeightProviderVeryBiasedToBottom
+  | HeightProviderWeightedList)
 type HeightProviderBiasedToBottom = BottomBiasHeightProvider
 type HeightProviderConstant = ConstantHeightProvider
 type HeightProviderTrapezoid = TrapezoidHeightProvider
@@ -189,10 +189,10 @@ type HeightProviderUniform = UniformHeightProvider
 type HeightProviderVeryBiasedToBottom = BottomBiasHeightProvider
 type HeightProviderWeightedList = WeightListHeightProvider
 export type SymbolHeightProvider<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? HeightProviderDispatcherMap
     : CASE extends 'keys' ? HeightProviderKeys : CASE extends '%fallback' ? HeightProviderFallback : never
 type IntProviderDispatcherMap<T> = {
@@ -211,12 +211,12 @@ type IntProviderDispatcherMap<T> = {
 }
 type IntProviderKeys = keyof IntProviderDispatcherMap<unknown>
 type IntProviderFallback<T> = (
-    | IntProviderBiasedToBottom<T>
-    | IntProviderClamped<T>
-    | IntProviderClampedNormal<T>
-    | IntProviderConstant<T>
-    | IntProviderUniform<T>
-    | IntProviderWeightedList<T>)
+  | IntProviderBiasedToBottom<T>
+  | IntProviderClamped<T>
+  | IntProviderClampedNormal<T>
+  | IntProviderConstant<T>
+  | IntProviderUniform<T>
+  | IntProviderWeightedList<T>)
 export type IntProviderBiasedToBottom<T> = UniformIntProvider<T>
 
 export type IntProviderClamped<T> = ClampedIntProvider<T>
@@ -232,9 +232,9 @@ export type IntProviderWeightedList<T> = {
 }
 
 export type SymbolIntProvider<T, CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? IntProviderDispatcherMap<T>
     : CASE extends 'keys' ? IntProviderKeys : CASE extends '%fallback' ? IntProviderFallback<T> : never

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TAG_WORLDGEN_STRUCTURES = (
-    | NamespacedLiteralUnion<SetType<typeof TAG_WORLDGEN_STRUCTURES_SET>>
-    | `minecraft:${SetType<typeof TAG_WORLDGEN_STRUCTURES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TAG_WORLDGEN_STRUCTURES_SET>>
+  | `minecraft:${SetType<typeof TAG_WORLDGEN_STRUCTURES_SET>}`)
 
 export const TAG_WORLDGEN_STRUCTURES_SET = new Set([
     'cats_spawn_as_black',

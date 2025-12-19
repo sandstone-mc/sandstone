@@ -180,32 +180,32 @@ type DecoratorConfigDispatcherMap = {
 }
 type DecoratorConfigKeys = keyof DecoratorConfigDispatcherMap
 type DecoratorConfigFallback = (
-    | DecoratorConfigCarvingMask
-    | DecoratorConfigCaveSurface
-    | DecoratorConfigChance
-    | DecoratorConfigCount
-    | DecoratorConfigCountExtra
-    | DecoratorConfigCountMultilayer
-    | DecoratorConfigCountNoise
-    | DecoratorConfigCountNoiseBiased
-    | DecoratorConfigDarkOakTree
-    | DecoratorConfigDecorated
-    | DecoratorConfigDepthAverage
-    | DecoratorConfigEndGateway
-    | DecoratorConfigFire
-    | DecoratorConfigGlowstone
-    | DecoratorConfigHeightmap
-    | DecoratorConfigHeightmapSpreadDouble
-    | DecoratorConfigIceberg
-    | DecoratorConfigLavaLake
-    | DecoratorConfigNope
-    | DecoratorConfigRange
-    | DecoratorConfigRangeBiased
-    | DecoratorConfigRangeVeryBiased
-    | DecoratorConfigSpread32Above
-    | DecoratorConfigSquare
-    | DecoratorConfigWaterDepthThreshold
-    | DecoratorConfigWaterLake)
+  | DecoratorConfigCarvingMask
+  | DecoratorConfigCaveSurface
+  | DecoratorConfigChance
+  | DecoratorConfigCount
+  | DecoratorConfigCountExtra
+  | DecoratorConfigCountMultilayer
+  | DecoratorConfigCountNoise
+  | DecoratorConfigCountNoiseBiased
+  | DecoratorConfigDarkOakTree
+  | DecoratorConfigDecorated
+  | DecoratorConfigDepthAverage
+  | DecoratorConfigEndGateway
+  | DecoratorConfigFire
+  | DecoratorConfigGlowstone
+  | DecoratorConfigHeightmap
+  | DecoratorConfigHeightmapSpreadDouble
+  | DecoratorConfigIceberg
+  | DecoratorConfigLavaLake
+  | DecoratorConfigNope
+  | DecoratorConfigRange
+  | DecoratorConfigRangeBiased
+  | DecoratorConfigRangeVeryBiased
+  | DecoratorConfigSpread32Above
+  | DecoratorConfigSquare
+  | DecoratorConfigWaterDepthThreshold
+  | DecoratorConfigWaterLake)
 type DecoratorConfigCarvingMask = CarvingMaskConfig
 type DecoratorConfigCaveSurface = CaveSurface
 type DecoratorConfigChance = ChanceConfig
@@ -233,9 +233,9 @@ type DecoratorConfigSquare = Record<string, never>
 type DecoratorConfigWaterDepthThreshold = WaterDepthThresholdConfig
 type DecoratorConfigWaterLake = ChanceConfig
 export type SymbolDecoratorConfig<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? DecoratorConfigDispatcherMap
     : CASE extends 'keys' ? DecoratorConfigKeys : CASE extends '%fallback' ? DecoratorConfigFallback : never

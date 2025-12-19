@@ -4,13 +4,13 @@ import type { NBTIntArray, NBTList } from 'sandstone'
 export type HumanoidArm = ('left' | 'right')
 
 export type PlayerModelPart = (
-    | 'cape'
-    | 'jacket'
-    | 'left_sleeve'
-    | 'right_sleeve'
-    | 'left_pants_leg'
-    | 'right_pants_leg'
-    | 'hat')
+  | 'cape'
+  | 'jacket'
+  | 'left_sleeve'
+  | 'right_sleeve'
+  | 'left_pants_leg'
+  | 'right_pants_leg'
+  | 'hat')
 
 export type PlayerModelType = ('wide' | 'slim')
 

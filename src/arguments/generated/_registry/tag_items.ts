@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TAG_ITEMS = (
-    | NamespacedLiteralUnion<SetType<typeof TAG_ITEMS_SET>>
-    | `minecraft:${SetType<typeof TAG_ITEMS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TAG_ITEMS_SET>>
+  | `minecraft:${SetType<typeof TAG_ITEMS_SET>}`)
 
 export const TAG_ITEMS_SET = new Set([
     'acacia_logs',

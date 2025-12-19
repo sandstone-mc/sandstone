@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_TREE_DECORATOR_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_TREE_DECORATOR_TYPES_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_TREE_DECORATOR_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_TREE_DECORATOR_TYPES_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_TREE_DECORATOR_TYPES_SET>}`)
 
 export const WORLDGEN_TREE_DECORATOR_TYPES_SET = new Set([
     'alter_ground',

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_NOISES = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_NOISES_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_NOISES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_NOISES_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_NOISES_SET>}`)
 
 export const WORLDGEN_NOISES_SET = new Set([
     'aquifer_barrier',

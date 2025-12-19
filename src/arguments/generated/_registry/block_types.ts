@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type BLOCK_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof BLOCK_TYPES_SET>>
-    | `minecraft:${SetType<typeof BLOCK_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof BLOCK_TYPES_SET>>
+  | `minecraft:${SetType<typeof BLOCK_TYPES_SET>}`)
 
 export const BLOCK_TYPES_SET = new Set([
     'air',

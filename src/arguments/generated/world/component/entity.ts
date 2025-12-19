@@ -15,15 +15,15 @@ export type RabbitVariant = ('brown' | 'white' | 'black' | 'white_splotched' | '
 export type SalmonType = ('small' | 'medium' | 'large')
 
 export type TropicalFishPattern = (
-    | 'kob'
-    | 'sunstreak'
-    | 'snooper'
-    | 'dasher'
-    | 'brinely'
-    | 'spotty'
-    | 'flopper'
-    | 'stripey'
-    | 'glitter'
-    | 'blockfish'
-    | 'betty'
-    | 'clayfish')
+  | 'kob'
+  | 'sunstreak'
+  | 'snooper'
+  | 'dasher'
+  | 'brinely'
+  | 'spotty'
+  | 'flopper'
+  | 'stripey'
+  | 'glitter'
+  | 'blockfish'
+  | 'betty'
+  | 'clayfish')

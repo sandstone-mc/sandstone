@@ -224,18 +224,18 @@ type RecipeSerializerDispatcherMap = {
 }
 type RecipeSerializerKeys = keyof RecipeSerializerDispatcherMap
 type RecipeSerializerFallback = (
-    | RecipeSerializerBlasting
-    | RecipeSerializerCampfireCooking
-    | RecipeSerializerCraftingShaped
-    | RecipeSerializerCraftingShapeless
-    | RecipeSerializerCraftingTransmute
-    | RecipeSerializerSmelting
-    | RecipeSerializerSmithing
-    | RecipeSerializerSmithingTransform
-    | RecipeSerializerSmithingTrim
-    | RecipeSerializerSmoking
-    | RecipeSerializerStonecutting
-    | RecipeSerializerFallbackType)
+  | RecipeSerializerBlasting
+  | RecipeSerializerCampfireCooking
+  | RecipeSerializerCraftingShaped
+  | RecipeSerializerCraftingShapeless
+  | RecipeSerializerCraftingTransmute
+  | RecipeSerializerSmelting
+  | RecipeSerializerSmithing
+  | RecipeSerializerSmithingTransform
+  | RecipeSerializerSmithingTrim
+  | RecipeSerializerSmoking
+  | RecipeSerializerStonecutting
+  | RecipeSerializerFallbackType)
 type RecipeSerializerFallbackType = Record<string, never>
 type RecipeSerializerBlasting = Smelting
 type RecipeSerializerCampfireCooking = Smelting
@@ -249,9 +249,9 @@ type RecipeSerializerSmithingTrim = SmithingTrim
 type RecipeSerializerSmoking = Smelting
 type RecipeSerializerStonecutting = Stonecutting
 export type SymbolRecipeSerializer<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? RecipeSerializerDispatcherMap
     : CASE extends 'keys' ? RecipeSerializerKeys : CASE extends '%fallback' ? RecipeSerializerFallback : never

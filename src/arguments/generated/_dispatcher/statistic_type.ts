@@ -22,16 +22,16 @@ type StatisticTypeDispatcherMap = {
 }
 type StatisticTypeKeys = keyof StatisticTypeDispatcherMap
 type StatisticTypeFallback = (
-    | StatisticTypeBroken
-    | StatisticTypeCrafted
-    | StatisticTypeCustom
-    | StatisticTypeDropped
-    | StatisticTypeKilled
-    | StatisticTypeKilledBy
-    | StatisticTypeMined
-    | StatisticTypePickedUp
-    | StatisticTypeUsed
-    | StatisticTypeFallbackType)
+  | StatisticTypeBroken
+  | StatisticTypeCrafted
+  | StatisticTypeCustom
+  | StatisticTypeDropped
+  | StatisticTypeKilled
+  | StatisticTypeKilledBy
+  | StatisticTypeMined
+  | StatisticTypePickedUp
+  | StatisticTypeUsed
+  | StatisticTypeFallbackType)
 type StatisticTypeFallbackType = string
 type StatisticTypeBroken = Registry['minecraft:item']
 type StatisticTypeCrafted = Registry['minecraft:item']
@@ -43,9 +43,9 @@ type StatisticTypeMined = Registry['minecraft:block']
 type StatisticTypePickedUp = Registry['minecraft:item']
 type StatisticTypeUsed = Registry['minecraft:item']
 export type SymbolStatisticType<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? StatisticTypeDispatcherMap
     : CASE extends 'keys' ? StatisticTypeKeys : CASE extends '%fallback' ? StatisticTypeFallback : never

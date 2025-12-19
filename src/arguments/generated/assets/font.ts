@@ -133,12 +133,12 @@ type GlyphProviderDispatcherMap = {
 }
 type GlyphProviderKeys = keyof GlyphProviderDispatcherMap
 type GlyphProviderFallback = (
-    | GlyphProviderBitmap
-    | GlyphProviderLegacyUnicode
-    | GlyphProviderReference
-    | GlyphProviderSpace
-    | GlyphProviderTtf
-    | GlyphProviderUnihex)
+  | GlyphProviderBitmap
+  | GlyphProviderLegacyUnicode
+  | GlyphProviderReference
+  | GlyphProviderSpace
+  | GlyphProviderTtf
+  | GlyphProviderUnihex)
 type GlyphProviderBitmap = BitmapProvider
 type GlyphProviderLegacyUnicode = LegacyUnicodeProvider
 type GlyphProviderReference = ReferenceProvider
@@ -146,9 +146,9 @@ type GlyphProviderSpace = SpaceProvider
 type GlyphProviderTtf = TtfProvider
 type GlyphProviderUnihex = UnihexProvider
 export type SymbolGlyphProvider<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? GlyphProviderDispatcherMap
     : CASE extends 'keys' ? GlyphProviderKeys : CASE extends '%fallback' ? GlyphProviderFallback : never

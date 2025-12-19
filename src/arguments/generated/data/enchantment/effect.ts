@@ -91,8 +91,8 @@ export type ApplyMobEffectEntityEffect = {
      * If multiple mob effects are specified, a random effect is selected.
      */
     to_apply: ((
-        | Registry['minecraft:mob_effect'] | `#${string}:${string}` | TagClass<'mob_effect'>)
-        | Array<Registry['minecraft:mob_effect']>)
+      | Registry['minecraft:mob_effect'] | `#${string}:${string}` | TagClass<'mob_effect'>)
+      | Array<Registry['minecraft:mob_effect']>)
     min_duration: LevelBasedValue
     max_duration: LevelBasedValue
     min_amplifier: LevelBasedValue
@@ -175,8 +175,8 @@ export type ExplodeEntityEffect = {
      * List of Blocks or hash-prefixed Block Tag specifying which blocks fully block the explosion.
      */
     immune_blocks?: ((
-        | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
-        | Array<Registry['minecraft:block']>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>)
     /**
      * If omitted, the default explosion knockback is applied.
      */
@@ -403,8 +403,8 @@ export type SummonEntityEffect = {
      * If multiple entity types are specified, a random entity type is selected.
      */
     entity: ((
-        | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
-        | Array<Registry['minecraft:entity_type']>)
+      | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
+      | Array<Registry['minecraft:entity_type']>)
     /**
      * Whether the summoned entity should join the team of the owner of the Enchanted Item.
      */
@@ -454,22 +454,22 @@ type EntityEffectDispatcherMap = {
 }
 type EntityEffectKeys = keyof EntityEffectDispatcherMap
 type EntityEffectFallback = (
-    | EntityEffectAllOf
-    | EntityEffectApplyExhaustion
-    | EntityEffectApplyImpulse
-    | EntityEffectApplyMobEffect
-    | EntityEffectChangeItemDamage
-    | EntityEffectDamageEntity
-    | EntityEffectDamageItem
-    | EntityEffectExplode
-    | EntityEffectIgnite
-    | EntityEffectPlaySound
-    | EntityEffectReplaceBlock
-    | EntityEffectReplaceDisk
-    | EntityEffectRunFunction
-    | EntityEffectSetBlockProperties
-    | EntityEffectSpawnParticles
-    | EntityEffectSummonEntity)
+  | EntityEffectAllOf
+  | EntityEffectApplyExhaustion
+  | EntityEffectApplyImpulse
+  | EntityEffectApplyMobEffect
+  | EntityEffectChangeItemDamage
+  | EntityEffectDamageEntity
+  | EntityEffectDamageItem
+  | EntityEffectExplode
+  | EntityEffectIgnite
+  | EntityEffectPlaySound
+  | EntityEffectReplaceBlock
+  | EntityEffectReplaceDisk
+  | EntityEffectRunFunction
+  | EntityEffectSetBlockProperties
+  | EntityEffectSpawnParticles
+  | EntityEffectSummonEntity)
 type EntityEffectAllOf = AllOfEntityEffect
 type EntityEffectApplyExhaustion = ApplyExhaustionEntityEffect
 type EntityEffectApplyImpulse = ApplyImpulseEntityEffect
@@ -487,10 +487,10 @@ type EntityEffectSetBlockProperties = SetBlockPropertiesEntityEffect
 type EntityEffectSpawnParticles = SpawnParticlesEntityEffect
 type EntityEffectSummonEntity = SummonEntityEffect
 export type SymbolEntityEffect<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? EntityEffectDispatcherMap
     : CASE extends 'keys' ? EntityEffectKeys : CASE extends '%fallback' ? EntityEffectFallback : never
 type LocationBasedEffectDispatcherMap = {
@@ -531,23 +531,23 @@ type LocationBasedEffectDispatcherMap = {
 }
 type LocationBasedEffectKeys = keyof LocationBasedEffectDispatcherMap
 type LocationBasedEffectFallback = (
-    | LocationBasedEffectAllOf
-    | LocationBasedEffectApplyExhaustion
-    | LocationBasedEffectApplyImpulse
-    | LocationBasedEffectApplyMobEffect
-    | LocationBasedEffectAttribute
-    | LocationBasedEffectChangeItemDamage
-    | LocationBasedEffectDamageEntity
-    | LocationBasedEffectDamageItem
-    | LocationBasedEffectExplode
-    | LocationBasedEffectIgnite
-    | LocationBasedEffectPlaySound
-    | LocationBasedEffectReplaceBlock
-    | LocationBasedEffectReplaceDisk
-    | LocationBasedEffectRunFunction
-    | LocationBasedEffectSetBlockProperties
-    | LocationBasedEffectSpawnParticles
-    | LocationBasedEffectSummonEntity)
+  | LocationBasedEffectAllOf
+  | LocationBasedEffectApplyExhaustion
+  | LocationBasedEffectApplyImpulse
+  | LocationBasedEffectApplyMobEffect
+  | LocationBasedEffectAttribute
+  | LocationBasedEffectChangeItemDamage
+  | LocationBasedEffectDamageEntity
+  | LocationBasedEffectDamageItem
+  | LocationBasedEffectExplode
+  | LocationBasedEffectIgnite
+  | LocationBasedEffectPlaySound
+  | LocationBasedEffectReplaceBlock
+  | LocationBasedEffectReplaceDisk
+  | LocationBasedEffectRunFunction
+  | LocationBasedEffectSetBlockProperties
+  | LocationBasedEffectSpawnParticles
+  | LocationBasedEffectSummonEntity)
 type LocationBasedEffectAllOf = AllOfLocationBasedEffect
 type LocationBasedEffectApplyExhaustion = ApplyExhaustionEntityEffect
 type LocationBasedEffectApplyImpulse = ApplyImpulseEntityEffect
@@ -566,10 +566,10 @@ type LocationBasedEffectSetBlockProperties = SetBlockPropertiesEntityEffect
 type LocationBasedEffectSpawnParticles = SpawnParticlesEntityEffect
 type LocationBasedEffectSummonEntity = SummonEntityEffect
 export type SymbolLocationBasedEffect<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? LocationBasedEffectDispatcherMap
     : CASE extends 'keys' ? LocationBasedEffectKeys : CASE extends '%fallback' ? LocationBasedEffectFallback : never
 type ValueEffectDispatcherMap = {
@@ -588,12 +588,12 @@ type ValueEffectDispatcherMap = {
 }
 type ValueEffectKeys = keyof ValueEffectDispatcherMap
 type ValueEffectFallback = (
-    | ValueEffectAdd
-    | ValueEffectAllOf
-    | ValueEffectExponential
-    | ValueEffectMultiply
-    | ValueEffectRemoveBinomial
-    | ValueEffectSet)
+  | ValueEffectAdd
+  | ValueEffectAllOf
+  | ValueEffectExponential
+  | ValueEffectMultiply
+  | ValueEffectRemoveBinomial
+  | ValueEffectSet)
 type ValueEffectAdd = AddEffectValue
 type ValueEffectAllOf = AllOfEffectValue
 type ValueEffectExponential = ExponentialEffectValue
@@ -601,9 +601,9 @@ type ValueEffectMultiply = MultiplyEffectValue
 type ValueEffectRemoveBinomial = ReduceBinomialEffectValue
 type ValueEffectSet = SetEffectValue
 export type SymbolValueEffect<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ValueEffectDispatcherMap
     : CASE extends 'keys' ? ValueEffectKeys : CASE extends '%fallback' ? ValueEffectFallback : never

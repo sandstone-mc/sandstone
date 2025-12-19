@@ -23,15 +23,15 @@ export type DynamicPoolEntry = ({
 } & SingletonPoolEntry)
 
 export type EntityTarget = (
-    | 'this'
-    | 'killer'
-    | 'attacker'
-    | 'direct_killer'
-    | 'direct_attacker'
-    | 'killer_player'
-    | 'attacking_player'
-    | 'target_entity'
-    | 'interacting_entity')
+  | 'this'
+  | 'killer'
+  | 'attacker'
+  | 'direct_killer'
+  | 'direct_attacker'
+  | 'killer_player'
+  | 'attacking_player'
+  | 'target_entity'
+  | 'interacting_entity')
 
 export type ItemPoolEntry = ({
     name: Registry['minecraft:item']
@@ -48,59 +48,59 @@ export type LootCondition = ({
 }[Registry['minecraft:loot_condition_type']])
 
 export type LootConditionType = (
-    | 'alternative'
-    | 'block_state_property'
-    | 'damage_source_properties'
-    | 'entity_properties'
-    | 'entity_scores'
-    | 'inverted'
-    | 'killed_by_player'
-    | 'location_check'
-    | 'match_tool'
-    | 'random_chance'
-    | 'random_chance_with_looting'
-    | 'reference'
-    | 'survives_explosion'
-    | 'table_bonus'
-    | 'time_check'
-    | 'weather_check')
+  | 'alternative'
+  | 'block_state_property'
+  | 'damage_source_properties'
+  | 'entity_properties'
+  | 'entity_scores'
+  | 'inverted'
+  | 'killed_by_player'
+  | 'location_check'
+  | 'match_tool'
+  | 'random_chance'
+  | 'random_chance_with_looting'
+  | 'reference'
+  | 'survives_explosion'
+  | 'table_bonus'
+  | 'time_check'
+  | 'weather_check')
 
 export type LootContextType = (
-    | 'empty'
-    | 'chest'
-    | 'command'
-    | 'selector'
-    | 'fishing'
-    | 'entity'
-    | 'gift'
-    | 'barter'
-    | 'advancement_reward'
-    | 'advancement_entity'
-    | 'advancement_location'
-    | 'generic'
-    | 'block'
-    | 'block_use'
-    | 'equipment'
-    | 'archaeology'
-    | 'vault'
-    | 'shearing'
-    | 'enchanted_damage'
-    | 'enchanted_item'
-    | 'enchanted_location'
-    | 'enchanted_entity'
-    | 'hit_block'
-    | 'block_interact'
-    | 'entity_interact')
+  | 'empty'
+  | 'chest'
+  | 'command'
+  | 'selector'
+  | 'fishing'
+  | 'entity'
+  | 'gift'
+  | 'barter'
+  | 'advancement_reward'
+  | 'advancement_entity'
+  | 'advancement_location'
+  | 'generic'
+  | 'block'
+  | 'block_use'
+  | 'equipment'
+  | 'archaeology'
+  | 'vault'
+  | 'shearing'
+  | 'enchanted_damage'
+  | 'enchanted_item'
+  | 'enchanted_location'
+  | 'enchanted_entity'
+  | 'hit_block'
+  | 'block_interact'
+  | 'entity_interact')
 
 export type LootEntryType = (
-    | 'alternatives'
-    | 'dynamic'
-    | 'empty'
-    | 'group'
-    | 'item'
-    | 'loot_table'
-    | 'sequence'
-    | 'tag')
+  | 'alternatives'
+  | 'dynamic'
+  | 'empty'
+  | 'group'
+  | 'item'
+  | 'loot_table'
+  | 'sequence'
+  | 'tag')
 
 export type LootFunction = ({
     [S in Extract<Registry['minecraft:loot_function_type'], string>]?: ({
@@ -111,27 +111,27 @@ export type LootFunction = ({
 }[Registry['minecraft:loot_function_type']])
 
 export type LootFunctionType = (
-    | 'apply_bonus'
-    | 'copy_name'
-    | 'copy_nbt'
-    | 'copy_state'
-    | 'enchant_randomly'
-    | 'enchant_with_levels'
-    | 'explosion_decay'
-    | 'exploration_map'
-    | 'fill_player_head'
-    | 'furnace_smelt'
-    | 'limit_count'
-    | 'looting_enchant'
-    | 'set_attributes'
-    | 'set_contents'
-    | 'set_count'
-    | 'set_damage'
-    | 'set_loot_table'
-    | 'set_lore'
-    | 'set_name'
-    | 'set_nbt'
-    | 'set_stew_effect')
+  | 'apply_bonus'
+  | 'copy_name'
+  | 'copy_nbt'
+  | 'copy_state'
+  | 'enchant_randomly'
+  | 'enchant_with_levels'
+  | 'explosion_decay'
+  | 'exploration_map'
+  | 'fill_player_head'
+  | 'furnace_smelt'
+  | 'limit_count'
+  | 'looting_enchant'
+  | 'set_attributes'
+  | 'set_contents'
+  | 'set_count'
+  | 'set_damage'
+  | 'set_loot_table'
+  | 'set_lore'
+  | 'set_name'
+  | 'set_nbt'
+  | 'set_stew_effect')
 
 export type LootPool = {
     rolls: NumberProvider
@@ -243,15 +243,15 @@ type LootPoolEntryDispatcherMap = {
 }
 type LootPoolEntryKeys = keyof LootPoolEntryDispatcherMap
 type LootPoolEntryFallback = (
-    | LootPoolEntryAlternatives
-    | LootPoolEntryDynamic
-    | LootPoolEntryEmpty
-    | LootPoolEntryGroup
-    | LootPoolEntryItem
-    | LootPoolEntryLootTable
-    | LootPoolEntrySequence
-    | LootPoolEntrySlots
-    | LootPoolEntryTag)
+  | LootPoolEntryAlternatives
+  | LootPoolEntryDynamic
+  | LootPoolEntryEmpty
+  | LootPoolEntryGroup
+  | LootPoolEntryItem
+  | LootPoolEntryLootTable
+  | LootPoolEntrySequence
+  | LootPoolEntrySlots
+  | LootPoolEntryTag)
 type LootPoolEntryAlternatives = CompositePoolEntry
 type LootPoolEntryDynamic = DynamicPoolEntry
 type LootPoolEntryEmpty = SingletonPoolEntry
@@ -262,9 +262,9 @@ type LootPoolEntrySequence = CompositePoolEntry
 type LootPoolEntrySlots = SlotsPoolEntry
 type LootPoolEntryTag = TagPoolEntry
 export type SymbolLootPoolEntry<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? LootPoolEntryDispatcherMap
     : CASE extends 'keys' ? LootPoolEntryKeys : CASE extends '%fallback' ? LootPoolEntryFallback : never

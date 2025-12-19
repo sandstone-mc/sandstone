@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_STRUCTURE_POOL_ELEMENTS = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_STRUCTURE_POOL_ELEMENTS_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_STRUCTURE_POOL_ELEMENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_STRUCTURE_POOL_ELEMENTS_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_STRUCTURE_POOL_ELEMENTS_SET>}`)
 
 export const WORLDGEN_STRUCTURE_POOL_ELEMENTS_SET = new Set([
     'empty_pool_element',

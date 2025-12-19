@@ -73,21 +73,21 @@ type TestEnvironmentDefinitionDispatcherMap = {
 }
 type TestEnvironmentDefinitionKeys = keyof TestEnvironmentDefinitionDispatcherMap
 type TestEnvironmentDefinitionFallback = (
-    | TestEnvironmentDefinitionAllOf
-    | TestEnvironmentDefinitionFunction
-    | TestEnvironmentDefinitionGameRules
-    | TestEnvironmentDefinitionTimeOfDay
-    | TestEnvironmentDefinitionWeather)
+  | TestEnvironmentDefinitionAllOf
+  | TestEnvironmentDefinitionFunction
+  | TestEnvironmentDefinitionGameRules
+  | TestEnvironmentDefinitionTimeOfDay
+  | TestEnvironmentDefinitionWeather)
 type TestEnvironmentDefinitionAllOf = AllOffTestEnvironment
 type TestEnvironmentDefinitionFunction = FunctionTestEnvironment
 type TestEnvironmentDefinitionGameRules = GameRulesTestEnvironment
 type TestEnvironmentDefinitionTimeOfDay = TimeOfDayTestEnvironment
 type TestEnvironmentDefinitionWeather = WeatherTestEnvironment
 export type SymbolTestEnvironmentDefinition<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? TestEnvironmentDefinitionDispatcherMap
     : CASE extends 'keys'
         ? TestEnvironmentDefinitionKeys

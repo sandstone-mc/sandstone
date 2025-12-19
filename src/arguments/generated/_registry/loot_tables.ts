@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type LOOT_TABLES = (
-    | NamespacedLiteralUnion<SetType<typeof LOOT_TABLES_SET>>
-    | `minecraft:${SetType<typeof LOOT_TABLES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof LOOT_TABLES_SET>>
+  | `minecraft:${SetType<typeof LOOT_TABLES_SET>}`)
 
 export const LOOT_TABLES_SET = new Set([
     'archaeology/desert_pyramid',

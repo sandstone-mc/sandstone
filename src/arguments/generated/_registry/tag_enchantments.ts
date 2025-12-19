@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TAG_ENCHANTMENTS = (
-    | NamespacedLiteralUnion<SetType<typeof TAG_ENCHANTMENTS_SET>>
-    | `minecraft:${SetType<typeof TAG_ENCHANTMENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TAG_ENCHANTMENTS_SET>>
+  | `minecraft:${SetType<typeof TAG_ENCHANTMENTS_SET>}`)
 
 export const TAG_ENCHANTMENTS_SET = new Set([
     'curse',

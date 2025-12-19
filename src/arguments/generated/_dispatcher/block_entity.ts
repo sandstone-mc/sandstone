@@ -120,49 +120,49 @@ type BlockEntityDispatcherMap = {
 }
 type BlockEntityKeys = keyof BlockEntityDispatcherMap
 type BlockEntityFallback = (
-    | BlockEntityBanner
-    | BlockEntityBarrel
-    | BlockEntityBeacon
-    | BlockEntityBeehive
-    | BlockEntityBlastFurnace
-    | BlockEntityBrewingStand
-    | BlockEntityBrushableBlock
-    | BlockEntityCalibratedSculkSensor
-    | BlockEntityCampfire
-    | BlockEntityChest
-    | BlockEntityChiseledBookshelf
-    | BlockEntityCommandBlock
-    | BlockEntityComparator
-    | BlockEntityConduit
-    | BlockEntityCrafter
-    | BlockEntityCreakingHeart
-    | BlockEntityDecoratedPot
-    | BlockEntityDispenser
-    | BlockEntityDropper
-    | BlockEntityEnchantingTable
-    | BlockEntityEndGateway
-    | BlockEntityFurnace
-    | BlockEntityHangingSign
-    | BlockEntityHopper
-    | BlockEntityJigsaw
-    | BlockEntityJukebox
-    | BlockEntityLectern
-    | BlockEntityMobSpawner
-    | BlockEntityMovingPiston
-    | BlockEntitySculkCatalyst
-    | BlockEntitySculkSensor
-    | BlockEntitySculkShrieker
-    | BlockEntityShelf
-    | BlockEntityShulkerBox
-    | BlockEntitySign
-    | BlockEntitySkull
-    | BlockEntitySmoker
-    | BlockEntityStructureBlock
-    | BlockEntityTestBlock
-    | BlockEntityTestInstanceBlock
-    | BlockEntityTrappedChest
-    | BlockEntityTrialSpawner
-    | BlockEntityVault)
+  | BlockEntityBanner
+  | BlockEntityBarrel
+  | BlockEntityBeacon
+  | BlockEntityBeehive
+  | BlockEntityBlastFurnace
+  | BlockEntityBrewingStand
+  | BlockEntityBrushableBlock
+  | BlockEntityCalibratedSculkSensor
+  | BlockEntityCampfire
+  | BlockEntityChest
+  | BlockEntityChiseledBookshelf
+  | BlockEntityCommandBlock
+  | BlockEntityComparator
+  | BlockEntityConduit
+  | BlockEntityCrafter
+  | BlockEntityCreakingHeart
+  | BlockEntityDecoratedPot
+  | BlockEntityDispenser
+  | BlockEntityDropper
+  | BlockEntityEnchantingTable
+  | BlockEntityEndGateway
+  | BlockEntityFurnace
+  | BlockEntityHangingSign
+  | BlockEntityHopper
+  | BlockEntityJigsaw
+  | BlockEntityJukebox
+  | BlockEntityLectern
+  | BlockEntityMobSpawner
+  | BlockEntityMovingPiston
+  | BlockEntitySculkCatalyst
+  | BlockEntitySculkSensor
+  | BlockEntitySculkShrieker
+  | BlockEntityShelf
+  | BlockEntityShulkerBox
+  | BlockEntitySign
+  | BlockEntitySkull
+  | BlockEntitySmoker
+  | BlockEntityStructureBlock
+  | BlockEntityTestBlock
+  | BlockEntityTestInstanceBlock
+  | BlockEntityTrappedChest
+  | BlockEntityTrialSpawner
+  | BlockEntityVault)
 type BlockEntityBanner = Banner
 type BlockEntityBarrel = Container27
 type BlockEntityBeacon = Beacon
@@ -207,9 +207,9 @@ type BlockEntityTrappedChest = Container27
 type BlockEntityTrialSpawner = TrialSpawner
 type BlockEntityVault = Vault
 export type SymbolBlockEntity<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? BlockEntityDispatcherMap
     : CASE extends 'keys' ? BlockEntityKeys : CASE extends '%fallback' ? BlockEntityFallback : never

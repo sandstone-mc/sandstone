@@ -5,27 +5,27 @@ import type { NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
 export type Axis = ('x' | 'y' | 'z')
 
 export type CustomizableItemDisplayContext = (
-    | 'firstperson_righthand'
-    | 'firstperson_lefthand'
-    | 'thirdperson_righthand'
-    | 'thirdperson_lefthand'
-    | 'gui'
-    | 'head'
-    | 'ground'
-    | 'fixed'
-    | 'on_shelf')
+  | 'firstperson_righthand'
+  | 'firstperson_lefthand'
+  | 'thirdperson_righthand'
+  | 'thirdperson_lefthand'
+  | 'gui'
+  | 'head'
+  | 'ground'
+  | 'fixed'
+  | 'on_shelf')
 
 export type ItemDisplayContext = (
-    | 'none'
-    | 'firstperson_righthand'
-    | 'firstperson_lefthand'
-    | 'thirdperson_righthand'
-    | 'thirdperson_lefthand'
-    | 'gui'
-    | 'head'
-    | 'ground'
-    | 'fixed'
-    | 'on_shelf')
+  | 'none'
+  | 'firstperson_righthand'
+  | 'firstperson_lefthand'
+  | 'thirdperson_righthand'
+  | 'thirdperson_lefthand'
+  | 'gui'
+  | 'head'
+  | 'ground'
+  | 'fixed'
+  | 'on_shelf')
 
 export type Model = {
     parent?: Registry['minecraft:model']
@@ -202,22 +202,22 @@ export type ModelOverride = {
 export type ModelRef = Registry['minecraft:model']
 
 export type Predicates = (
-    | 'angle'
-    | 'blocking'
-    | 'broken'
-    | 'cast'
-    | 'charged'
-    | 'cooldown'
-    | 'custom_model_data'
-    | 'damage'
-    | 'damaged'
-    | 'firework'
-    | 'honey_level'
-    | 'lefthanded'
-    | 'level'
-    | 'pull'
-    | 'pulling'
-    | 'throwing'
-    | 'time'
-    | 'tooting'
-    | 'trim_type')
+  | 'angle'
+  | 'blocking'
+  | 'broken'
+  | 'cast'
+  | 'charged'
+  | 'cooldown'
+  | 'custom_model_data'
+  | 'damage'
+  | 'damaged'
+  | 'firework'
+  | 'honey_level'
+  | 'lefthanded'
+  | 'level'
+  | 'pull'
+  | 'pulling'
+  | 'throwing'
+  | 'time'
+  | 'tooting'
+  | 'trim_type')

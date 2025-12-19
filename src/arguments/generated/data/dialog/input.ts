@@ -211,18 +211,18 @@ type InputControlDispatcherMap = {
 }
 type InputControlKeys = keyof InputControlDispatcherMap
 type InputControlFallback = (
-    | InputControlBoolean
-    | InputControlNumberRange
-    | InputControlSingleOption
-    | InputControlText)
+  | InputControlBoolean
+  | InputControlNumberRange
+  | InputControlSingleOption
+  | InputControlText)
 type InputControlBoolean = BooleanInput
 type InputControlNumberRange = NumberRangeInput
 type InputControlSingleOption = SingleOptionInput
 type InputControlText = TextInput
 export type SymbolInputControl<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? InputControlDispatcherMap
     : CASE extends 'keys' ? InputControlKeys : CASE extends '%fallback' ? InputControlFallback : never

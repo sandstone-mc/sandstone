@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type CUSTOM_STATS = (
-    | NamespacedLiteralUnion<SetType<typeof CUSTOM_STATS_SET>>
-    | `minecraft:${SetType<typeof CUSTOM_STATS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof CUSTOM_STATS_SET>>
+  | `minecraft:${SetType<typeof CUSTOM_STATS_SET>}`)
 
 export const CUSTOM_STATS_SET = new Set([
     'animals_bred',

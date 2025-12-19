@@ -12,10 +12,10 @@ type SoundTypeNoneType = Registry['minecraft:sound']
 type SoundTypeEvent = `${string}:${string}`
 type SoundTypeFile = Registry['minecraft:sound']
 export type SymbolSoundType<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SoundTypeDispatcherMap
     : CASE extends 'keys'
         ? SoundTypeKeys

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ITEM_DEFINITIONS = (
-    | NamespacedLiteralUnion<SetType<typeof ITEM_DEFINITIONS_SET>>
-    | `minecraft:${SetType<typeof ITEM_DEFINITIONS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ITEM_DEFINITIONS_SET>>
+  | `minecraft:${SetType<typeof ITEM_DEFINITIONS_SET>}`)
 
 export const ITEM_DEFINITIONS_SET = new Set([
     'acacia_boat',

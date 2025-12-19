@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TRIGGER_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof TRIGGER_TYPES_SET>>
-    | `minecraft:${SetType<typeof TRIGGER_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TRIGGER_TYPES_SET>>
+  | `minecraft:${SetType<typeof TRIGGER_TYPES_SET>}`)
 
 export const TRIGGER_TYPES_SET = new Set([
     'allay_drop_item_on_block',

@@ -14,11 +14,11 @@ type ReputationPartValueDispatcherMap = {
 }
 type ReputationPartValueKeys = keyof ReputationPartValueDispatcherMap
 type ReputationPartValueFallback = (
-    | ReputationPartValueMajorNegative
-    | ReputationPartValueMajorPositive
-    | ReputationPartValueMinorNegative
-    | ReputationPartValueMinorPositive
-    | ReputationPartValueTrading)
+  | ReputationPartValueMajorNegative
+  | ReputationPartValueMajorPositive
+  | ReputationPartValueMinorNegative
+  | ReputationPartValueMinorPositive
+  | ReputationPartValueTrading)
 type ReputationPartValueMajorNegative = NBTInt<{
     min: 5
     max: 100
@@ -36,9 +36,9 @@ type ReputationPartValueTrading = NBTInt<{
     max: 25
 }>
 export type SymbolReputationPartValue<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? ReputationPartValueDispatcherMap
     : CASE extends 'keys' ? ReputationPartValueKeys : CASE extends '%fallback' ? ReputationPartValueFallback : never

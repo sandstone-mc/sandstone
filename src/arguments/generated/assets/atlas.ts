@@ -119,20 +119,20 @@ type SpriteSourceDispatcherMap = {
 }
 type SpriteSourceKeys = keyof SpriteSourceDispatcherMap
 type SpriteSourceFallback = (
-    | SpriteSourceDirectory
-    | SpriteSourceFilter
-    | SpriteSourcePalettedPermutations
-    | SpriteSourceSingle
-    | SpriteSourceUnstitch)
+  | SpriteSourceDirectory
+  | SpriteSourceFilter
+  | SpriteSourcePalettedPermutations
+  | SpriteSourceSingle
+  | SpriteSourceUnstitch)
 type SpriteSourceDirectory = Directory
 type SpriteSourceFilter = Filter
 type SpriteSourcePalettedPermutations = PalettedPermutations
 type SpriteSourceSingle = Single
 type SpriteSourceUnstitch = Unstitch
 export type SymbolSpriteSource<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? SpriteSourceDispatcherMap
     : CASE extends 'keys' ? SpriteSourceKeys : CASE extends '%fallback' ? SpriteSourceFallback : never

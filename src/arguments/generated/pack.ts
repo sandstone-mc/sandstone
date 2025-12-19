@@ -8,14 +8,14 @@ export type BlockPattern = {
 }
 
 export type FeatureFlag = (
-    | 'vanilla'
-    | 'update_1_20'
-    | 'bundle'
-    | 'trade_rebalance'
-    | 'update_1_21'
-    | 'redstone_experiments'
-    | 'minecart_improvements'
-    | 'winter_drop')
+  | 'vanilla'
+  | 'update_1_20'
+  | 'bundle'
+  | 'trade_rebalance'
+  | 'update_1_21'
+  | 'redstone_experiments'
+  | 'minecart_improvements'
+  | 'winter_drop')
 
 export type Pack = {
     pack: {

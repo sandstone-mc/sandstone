@@ -20,10 +20,10 @@ export type Checkerboard = {
         max: 62
     }>
     biomes: (
-        | Array<Registry['minecraft:worldgen/biome']> | (
-            | Registry['minecraft:worldgen/biome']
-            | `#${Registry['minecraft:tag/worldgen/biome']}`
-            | TagClass<'worldgen/biome'>))
+      | Array<Registry['minecraft:worldgen/biome']> | (
+        | Registry['minecraft:worldgen/biome']
+        | `#${Registry['minecraft:tag/worldgen/biome']}`
+        | TagClass<'worldgen/biome'>))
 }
 
 /**
@@ -128,21 +128,21 @@ type BiomeSourceDispatcherMap = {
 }
 type BiomeSourceKeys = keyof BiomeSourceDispatcherMap
 type BiomeSourceFallback = (
-    | BiomeSourceCheckerboard
-    | BiomeSourceFixed
-    | BiomeSourceMultiNoise
-    | BiomeSourceTheEnd
-    | BiomeSourceVanillaLayered)
+  | BiomeSourceCheckerboard
+  | BiomeSourceFixed
+  | BiomeSourceMultiNoise
+  | BiomeSourceTheEnd
+  | BiomeSourceVanillaLayered)
 type BiomeSourceCheckerboard = Checkerboard
 type BiomeSourceFixed = Fixed
 type BiomeSourceMultiNoise = MultiNoise
 type BiomeSourceTheEnd = TheEnd
 type BiomeSourceVanillaLayered = VanillaLayered
 export type SymbolBiomeSource<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? BiomeSourceDispatcherMap
     : CASE extends 'keys' ? BiomeSourceKeys : CASE extends '%fallback' ? BiomeSourceFallback : never
 type MultiNoiseBiomeSourceDispatcherMap = {}
@@ -151,10 +151,10 @@ type MultiNoiseBiomeSourceFallback = (MultiNoiseBiomeSourceFallbackType)
 type MultiNoiseBiomeSourceFallbackType = Record<string, never>
 type MultiNoiseBiomeSourceNoneType = DirectMultiNoise
 export type SymbolMultiNoiseBiomeSource<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? MultiNoiseBiomeSourceDispatcherMap
     : CASE extends 'keys'
         ? MultiNoiseBiomeSourceKeys

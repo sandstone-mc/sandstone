@@ -227,38 +227,38 @@ type DensityFunctionDispatcherMap = {
 }
 type DensityFunctionKeys = keyof DensityFunctionDispatcherMap
 type DensityFunctionFallback = (
-    | DensityFunctionAbs
-    | DensityFunctionAdd
-    | DensityFunctionBlendDensity
-    | DensityFunctionCache2d
-    | DensityFunctionCacheAllInCell
-    | DensityFunctionCacheOnce
-    | DensityFunctionClamp
-    | DensityFunctionConstant
-    | DensityFunctionCube
-    | DensityFunctionFindTopSurface
-    | DensityFunctionFlatCache
-    | DensityFunctionHalfNegative
-    | DensityFunctionInterpolated
-    | DensityFunctionInvert
-    | DensityFunctionMax
-    | DensityFunctionMin
-    | DensityFunctionMul
-    | DensityFunctionNoise
-    | DensityFunctionOldBlendedNoise
-    | DensityFunctionQuarterNegative
-    | DensityFunctionRangeChoice
-    | DensityFunctionShift
-    | DensityFunctionShiftA
-    | DensityFunctionShiftB
-    | DensityFunctionShiftedNoise
-    | DensityFunctionSlide
-    | DensityFunctionSpline
-    | DensityFunctionSquare
-    | DensityFunctionSqueeze
-    | DensityFunctionTerrainShaperSpline
-    | DensityFunctionWeirdScaledSampler
-    | DensityFunctionYClampedGradient)
+  | DensityFunctionAbs
+  | DensityFunctionAdd
+  | DensityFunctionBlendDensity
+  | DensityFunctionCache2d
+  | DensityFunctionCacheAllInCell
+  | DensityFunctionCacheOnce
+  | DensityFunctionClamp
+  | DensityFunctionConstant
+  | DensityFunctionCube
+  | DensityFunctionFindTopSurface
+  | DensityFunctionFlatCache
+  | DensityFunctionHalfNegative
+  | DensityFunctionInterpolated
+  | DensityFunctionInvert
+  | DensityFunctionMax
+  | DensityFunctionMin
+  | DensityFunctionMul
+  | DensityFunctionNoise
+  | DensityFunctionOldBlendedNoise
+  | DensityFunctionQuarterNegative
+  | DensityFunctionRangeChoice
+  | DensityFunctionShift
+  | DensityFunctionShiftA
+  | DensityFunctionShiftB
+  | DensityFunctionShiftedNoise
+  | DensityFunctionSlide
+  | DensityFunctionSpline
+  | DensityFunctionSquare
+  | DensityFunctionSqueeze
+  | DensityFunctionTerrainShaperSpline
+  | DensityFunctionWeirdScaledSampler
+  | DensityFunctionYClampedGradient)
 type DensityFunctionAbs = OneArgument
 type DensityFunctionAdd = TwoArguments
 type DensityFunctionBlendDensity = OneArgument
@@ -292,9 +292,9 @@ type DensityFunctionTerrainShaperSpline = TerrainShaperSpline
 type DensityFunctionWeirdScaledSampler = WeirdScaledSampler
 type DensityFunctionYClampedGradient = YClampedGradient
 export type SymbolDensityFunction<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? DensityFunctionDispatcherMap
     : CASE extends 'keys' ? DensityFunctionKeys : CASE extends '%fallback' ? DensityFunctionFallback : never

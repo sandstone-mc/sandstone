@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ENTITY_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof ENTITY_TYPES_SET>>
-    | `minecraft:${SetType<typeof ENTITY_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ENTITY_TYPES_SET>>
+  | `minecraft:${SetType<typeof ENTITY_TYPES_SET>}`)
 
 export const ENTITY_TYPES_SET = new Set([
     'acacia_boat',

@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ADVANCEMENTS = (
-    | NamespacedLiteralUnion<SetType<typeof ADVANCEMENTS_SET>>
-    | `minecraft:${SetType<typeof ADVANCEMENTS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ADVANCEMENTS_SET>>
+  | `minecraft:${SetType<typeof ADVANCEMENTS_SET>}`)
 
 export const ADVANCEMENTS_SET = new Set([
     'adventure/adventuring_time',

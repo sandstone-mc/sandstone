@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type TAG_WORLDGEN_BIOMES = (
-    | NamespacedLiteralUnion<SetType<typeof TAG_WORLDGEN_BIOMES_SET>>
-    | `minecraft:${SetType<typeof TAG_WORLDGEN_BIOMES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof TAG_WORLDGEN_BIOMES_SET>>
+  | `minecraft:${SetType<typeof TAG_WORLDGEN_BIOMES_SET>}`)
 
 export const TAG_WORLDGEN_BIOMES_SET = new Set([
     'allows_surface_slime_spawns',

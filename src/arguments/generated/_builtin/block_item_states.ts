@@ -8,10 +8,10 @@ type McdocBlockItemStatesNoneType = ({
     [Key in `${any}${string}`]?: string;
 })
 export type SymbolMcdocBlockItemStates<CASE extends
-    | 'map'
-    | 'keys'
-    | '%fallback'
-    | '%none' = 'map'> = CASE extends 'map'
+  | 'map'
+  | 'keys'
+  | '%fallback'
+  | '%none' = 'map'> = CASE extends 'map'
     ? McdocBlockItemStatesDispatcherMap
     : CASE extends 'keys'
         ? McdocBlockItemStatesKeys

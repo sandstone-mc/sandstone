@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type WORLDGEN_WORLD_PRESETS = (
-    | NamespacedLiteralUnion<SetType<typeof WORLDGEN_WORLD_PRESETS_SET>>
-    | `minecraft:${SetType<typeof WORLDGEN_WORLD_PRESETS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof WORLDGEN_WORLD_PRESETS_SET>>
+  | `minecraft:${SetType<typeof WORLDGEN_WORLD_PRESETS_SET>}`)
 
 export const WORLDGEN_WORLD_PRESETS_SET = new Set([
     'amplified',

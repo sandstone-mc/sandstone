@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type DATA_COMPONENT_PREDICATE_TYPES = (
-    | NamespacedLiteralUnion<SetType<typeof DATA_COMPONENT_PREDICATE_TYPES_SET>>
-    | `minecraft:${SetType<typeof DATA_COMPONENT_PREDICATE_TYPES_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof DATA_COMPONENT_PREDICATE_TYPES_SET>>
+  | `minecraft:${SetType<typeof DATA_COMPONENT_PREDICATE_TYPES_SET>}`)
 
 export const DATA_COMPONENT_PREDICATE_TYPES_SET = new Set([
     'attribute_modifiers',

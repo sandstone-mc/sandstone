@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type ENCHANTMENT_PROVIDERS = (
-    | NamespacedLiteralUnion<SetType<typeof ENCHANTMENT_PROVIDERS_SET>>
-    | `minecraft:${SetType<typeof ENCHANTMENT_PROVIDERS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof ENCHANTMENT_PROVIDERS_SET>>
+  | `minecraft:${SetType<typeof ENCHANTMENT_PROVIDERS_SET>}`)
 
 export const ENCHANTMENT_PROVIDERS_SET = new Set([
     'enderman_loot_drop',

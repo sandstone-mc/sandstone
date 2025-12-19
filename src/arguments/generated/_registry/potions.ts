@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type POTIONS = (
-    | NamespacedLiteralUnion<SetType<typeof POTIONS_SET>>
-    | `minecraft:${SetType<typeof POTIONS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof POTIONS_SET>>
+  | `minecraft:${SetType<typeof POTIONS_SET>}`)
 
 export const POTIONS_SET = new Set([
     'awkward',

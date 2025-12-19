@@ -2,8 +2,8 @@ import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
 export type CREATIVE_MODE_TABS = (
-    | NamespacedLiteralUnion<SetType<typeof CREATIVE_MODE_TABS_SET>>
-    | `minecraft:${SetType<typeof CREATIVE_MODE_TABS_SET>}`)
+  | NamespacedLiteralUnion<SetType<typeof CREATIVE_MODE_TABS_SET>>
+  | `minecraft:${SetType<typeof CREATIVE_MODE_TABS_SET>}`)
 
 export const CREATIVE_MODE_TABS_SET = new Set([
     'building_blocks',
