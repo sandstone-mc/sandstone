@@ -4,7 +4,7 @@ import type { ContainerComponents } from 'sandstone/arguments/generated/data/loo
 import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
-import type { ITEM_SLOTS } from 'sandstone/arguments'
+import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { LiteralUnion, NBTInt } from 'sandstone'
 
 export type ContentsSlotSource = {
@@ -71,7 +71,7 @@ export type RangeSlotSource = {
      * *item 1*
      */
     source: (EntityTarget | BlockEntityTarget)
-    slots: LiteralUnion<ITEM_SLOTS>
+    slots: LiteralUnion<ENTITY_SLOTS>
 }
 
 export type SlotSource = (TypedSlotSource | Array<TypedSlotSource>)

@@ -1,6 +1,6 @@
 import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { _RawFunctionClass, NBTInt } from 'sandstone'
+import type { MCFunctionClass, NBTInt } from 'sandstone'
 
 export type AllOffTestEnvironment = {
     definitions: Array<TestEnvironment>
@@ -12,8 +12,8 @@ export type BoolGameRule = {
 }
 
 export type FunctionTestEnvironment = {
-    setup?: (`${string}:${string}` | _RawFunctionClass)
-    teardown?: (`${string}:${string}` | _RawFunctionClass)
+    setup?: (`${string}:${string}` | MCFunctionClass)
+    teardown?: (`${string}:${string}` | MCFunctionClass)
 }
 
 export type GameRulesTestEnvironment = {

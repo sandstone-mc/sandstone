@@ -17,7 +17,7 @@ import type {
     TropicalFishPattern,
 } from 'sandstone/arguments/generated/world/component/entity.js'
 import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat.js'
-import type { ITEM_SLOTS } from 'sandstone/arguments'
+import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { LiteralUnion, NBTClass, NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type AxolotlPredicate = {
@@ -184,7 +184,7 @@ export type EntityPredicate<S = undefined> = {
         [Key in Extract<Registry['minecraft:mob_effect'], string>]?: MobEffectPredicate;
     })
     slots?: ({
-        [Key in Extract<LiteralUnion<ITEM_SLOTS>, string>]?: ItemPredicate;
+        [Key in Extract<LiteralUnion<ENTITY_SLOTS>, string>]?: ItemPredicate;
     })
     movement?: MovementPredicate
     /**

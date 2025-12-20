@@ -7,7 +7,7 @@ import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.js'
 import type { Particle } from 'sandstone/arguments/generated/util/particle.js'
-import type { _RawFunctionClass, NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { MCFunctionClass, NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type AddEffectValue = {
     value: LevelBasedValue
@@ -362,7 +362,7 @@ export type ReplaceDiskEntityEffect = (ReplaceBlockEntityEffect & {
 })
 
 export type RunFunctionEntityEffect = {
-    function: (`${string}:${string}` | _RawFunctionClass)
+    function: (`${string}:${string}` | MCFunctionClass)
 }
 
 export type SetBlockPropertiesEntityEffect = {

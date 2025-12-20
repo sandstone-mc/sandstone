@@ -32,7 +32,7 @@ export type TextureArguments<Type extends TextureType> = {
   meta?: TextureMeta<Type>
 } & ResourceClassArguments<'default'>
 
-export class TextureClass<Type extends TextureType> extends ResourceClass<TextureNode<Type>> {
+export class TextureClass<Type extends TextureType = 'block'> extends ResourceClass<TextureNode<Type>> {
   type: Type
 
   isSprite: boolean

@@ -148,8 +148,6 @@ export const {
   sleep,
 } = sandstonePack
 
-const foo = Selector('@s')
-
 export * from './variables/nbt/NBTs.js'
 
 export * from './arguments/index.js'
@@ -158,7 +156,20 @@ export {
   ObjectiveClass,
   Score,
   SelectorClass,
+  LabelClass,
+  UUIDClass,
+  DataPointClass,
 } from './variables/index.js'
+
+export {
+  MCFunctionClass
+} from './core/index.js'
+
+export {
+  AdvancementClass,
+  TagClass,
+  TextureClass,
+} from './core/resources/index.js'
 
 // Utils
 export const { absolute, relative, local } = coordinates

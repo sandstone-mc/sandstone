@@ -5,7 +5,7 @@ import type { Profile } from 'sandstone/arguments/generated/util/avatar.js'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.js'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
-import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, ScoreClass } from 'sandstone'
+import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, Score } from 'sandstone'
 
 export type ChangePage = {
     /**
@@ -279,7 +279,7 @@ export type TextObject = (({
 } & TextBase) | ({
     score: {
         objective: `${any}${string}` | ObjectiveClass
-        name: `${any}${string}` | ScoreClass
+        name: `${any}${string}` | Score
     }
     type?: 'score'
 } & TextBase) | ({

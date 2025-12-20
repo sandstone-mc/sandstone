@@ -2,7 +2,7 @@ import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchant
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot.js'
 import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, ScoreClass } from 'sandstone'
+import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, Score } from 'sandstone'
 
 export type BinomialIntGenerator = {
     /**
@@ -63,7 +63,7 @@ export type EnchantmentLevelProvider = {
 }
 
 export type FixedScoreProvider = {
-    name: `${any}${string}` | ScoreClass
+    name: `${any}${string}` | Score
 }
 
 export type IntLimiter = {

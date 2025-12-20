@@ -2,7 +2,7 @@ import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { Text } from 'sandstone/arguments/generated/util/text.js'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
-import type { _RawFunctionClass, AdvancementClass, NBTClass, NBTInt, NBTList } from 'sandstone'
+import type { MCFunctionClass, AdvancementClass, NBTClass, NBTInt, NBTList } from 'sandstone'
 
 export type Advancement = {
     /**
@@ -104,7 +104,7 @@ export type AdvancementRewards = {
     /**
      * Function to run as the player (not at). Function group tags are not allowed.
      */
-    function?: (`${string}:${string}` | _RawFunctionClass)
+    function?: (`${string}:${string}` | MCFunctionClass)
     /**
      * Loot tables to give.
      */

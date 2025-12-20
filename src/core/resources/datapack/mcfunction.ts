@@ -450,6 +450,6 @@ export class _RawMCFunctionClass<
 
 export const MCFunctionClass = makeClassCallable(_RawMCFunctionClass)
 export type MCFunctionClass<
-  PARAMS extends readonly MacroArgument[] | undefined,
-  ENV extends readonly MacroArgument[] | undefined,
+  PARAMS extends readonly MacroArgument[] | undefined = undefined,
+  ENV extends readonly MacroArgument[] | undefined = undefined,
 > = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>>

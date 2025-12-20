@@ -24,31 +24,33 @@ export class NBTPrimitive extends NBTClass {
   [util.inspect.custom] = () => `${this.value}${this.unit}`
 }
 
-export class NBTLong extends NBTPrimitive {
+type NBTRange = { min?: number, max?: number, leftExclusive?: boolean, rightExclusive?: boolean }
+
+export class NBTLong<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
     super(value, 'l')
   }
 }
 
-export class NBTByte extends NBTPrimitive {
+export class NBTByte<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
     super(value, 'b')
   }
 }
 
-export class NBTShort extends NBTPrimitive {
+export class NBTShort<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
     super(value, 's')
   }
 }
 
-export class NBTFloat extends NBTPrimitive {
+export class NBTFloat<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
     super(value, 'f')
   }
 }
 
-export class NBTDouble extends NBTPrimitive {
+export class NBTDouble<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
     super(value, 'd')
   }
@@ -68,22 +70,33 @@ export class NBTTypedArray extends NBTClass {
   [util.inspect.custom] = () => `[${this.unit};${this.values.length === 0 ? '' : this.values.join(',')}]`
 }
 
-export class NBTLongArray extends NBTTypedArray {
+export class NBTLongArray<Range extends NBTRange = {}> extends NBTTypedArray {
   constructor(values: number[]) {
     super(values, 'L')
   }
 }
 
-export class NBTByteArray extends NBTTypedArray {
+export class NBTByteArray<Range extends NBTRange = {}> extends NBTTypedArray {
   constructor(values: number[]) {
     super(values, 'B')
   }
 }
 
-export class NBTIntArray extends NBTTypedArray {
+export class NBTIntArray<Range extends NBTRange = {}> extends NBTTypedArray {
   constructor(values: number[]) {
     super(values, 'I')
   }
+}
+
+export class NBTList<Type extends any, Range extends NBTRange = {}> extends NBTClass {
+  values: Type[]
+
+  constructor(values: Type[]) {
+    super()
+    this.values = values
+  }
+
+  [util.inspect.custom] = () => `[${this.values.length === 0 ? '' : this.values.join(',')}]`
 }
 
 export class NotNBT extends NBTClass {
@@ -99,7 +112,7 @@ export class NotNBT extends NBTClass {
 
 export type NBTSimpleClasses = typeof NBTLong | typeof NBTShort | typeof NBTByte | typeof NBTFloat | typeof NBTDouble
 
-export class NBTInt extends NBTPrimitive {}
+export class NBTInt<Range extends NBTRange = {}> extends NBTPrimitive {}
 
 export type NBTAllNumbers = typeof NBTInt | NBTSimpleClasses
 
