@@ -3,10 +3,9 @@
 import lodash from 'lodash'
 import prismarine, { type NBT } from 'prismarine-nbt'
 import type {
-  Registry['minecraft:block'],
+  Registry,
   BlockState,
   Coordinates,
-  Registry['minecraft:entity_type'],
   NBTObject,
   RootNBT,
   StructureNBT,
@@ -17,7 +16,6 @@ import type { DataPointClass, Score, StructureMirror, StructureRotation } from '
 import { ConditionClass, ResolveNBTPart, relative } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
-import type { Registry } from 'sandstone/arguments/generated/registry'
 
 const same = lodash.isEqual
 

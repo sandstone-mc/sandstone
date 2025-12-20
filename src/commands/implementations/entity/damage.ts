@@ -1,4 +1,4 @@
-import type { Coordinates, DAMAGE_TYPES, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, Registry, SingleEntityArgument } from 'sandstone/arguments'
 import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { DamageTypeClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -78,7 +78,7 @@ export class DamageCommand<MACRO extends boolean> extends CommandArguments {
   damage = (
     target: Macroable<SingleEntityArgument<MACRO>, MACRO>,
     amount: Macroable<number, MACRO>,
-    damageType?: Macroable<LiteralUnion<DAMAGE_TYPES> | DamageTypeClass, MACRO>,
+    damageType?: Macroable<Registry['minecraft:damage_type'] | DamageTypeClass, MACRO>,
   ) => {
     validateIntegerRange(amount, 'amount', 0, 1_000_000)
     return this.subCommand([targetParser(target), amount, damageType], DamageSourceCommand)

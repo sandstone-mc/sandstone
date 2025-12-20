@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import type {
 import type { Registry } from 'sandstone/arguments/generated/registry'
+import type {
   DamageCriterion,
   EntityCriterion,
   ItemCriterion,

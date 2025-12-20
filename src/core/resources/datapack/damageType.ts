@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import type { Coordinates, DamageTypeJSON, SingleEntityArgument, TAG_DAMAGE_TYPES } from 'sandstone/arguments'
+import type { Coordinates, DamageTypeJSON, SingleEntityArgument, Registry } from 'sandstone/arguments'
 import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
@@ -34,7 +34,7 @@ export type DamageTypeClassArguments = {
     /**
      * Optional. Automatically adds damage type to minecraft damage type group tag flags.
      */
-    flags?: (TAG_DAMAGE_TYPES | 'bypasses_cooldown')[] // Haha funny this doesn't show up in the server reports
+    flags?: (Registry['minecraft:tag/damage_type'] | 'bypasses_cooldown')[] // Haha funny this doesn't show up in the server reports
   }
 
 export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements ComponentClass {
@@ -45,7 +45,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       DamageTypeNode,
-      sandstoneCore.pack.resourceToPath(name, ['trim_materials']),
+      sandstoneCore.pack.resourceToPath(name, ['damage_types']),
       args,
     )
 
@@ -58,7 +58,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
           damageTypes.set(flag, sandstoneCore.pack.Tag('damage_type', `minecraft:${flag}`, []))
           tag = damageTypes.get(flag)
         }
-        tag?.push(this.name)
+        tag!.push(this)
       }
     }
 

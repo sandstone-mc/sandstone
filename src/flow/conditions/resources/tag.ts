@@ -6,14 +6,14 @@ import { SingleConditionNode } from '../condition.js'
 export class TagConditionNode extends SingleConditionNode {
   constructor(
     sandstoneCore: SandstoneCore,
-    public type: 'blocks' | 'entity_types',
-    public tag: string,
+    public type: 'block' | 'entity_type',
+    public tag: `${string}:${string}`,
   ) {
     super(sandstoneCore)
   }
 
   getCondition(): unknown[] {
-    if (this.type === 'blocks') {
+    if (this.type === 'block') {
       return ['block', '~ ~ ~', `#${this.tag}`]
     }
     return ['entity', this.sandstoneCore.pack.Selector('@s', { type: `#${this.tag}` })]

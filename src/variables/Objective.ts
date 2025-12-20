@@ -1,4 +1,4 @@
-import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERION } from 'sandstone/arguments'
+import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERIA } from 'sandstone/arguments'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import { formatDebugString, makeClassCallable } from 'sandstone/utils'
 import * as util from 'util'
@@ -19,7 +19,7 @@ export class _RawObjectiveClass {
   constructor(
     protected sandstonePack: SandstonePack,
     public name: string,
-    public criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy',
+    public criteria: LiteralUnion<OBJECTIVE_CRITERIA> = 'dummy',
     display: JSONTextComponent | undefined,
     opts: { creator: 'user' | 'sandstone' },
   ) {

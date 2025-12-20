@@ -136,61 +136,10 @@ type EntityType = Registry['minecraft:entity_type']
 type Block = Registry['minecraft:block']
 ```
 
-#### Registry Key Reference
+## Known Type Errors
 
-| Old Type | Registry Key |
-|----------|--------------|
-| `ITEMS` | `Registry['minecraft:item']` |
-| `BLOCKS` | `Registry['minecraft:block']` |
-| `ENTITY_TYPES` | `Registry['minecraft:entity_type']` |
-| `ATTRIBUTES` | `Registry['minecraft:attribute']` |
-| `ENCHANTMENTS` | `Registry['minecraft:enchantment']` |
-| `STRUCTURES` | `Registry['minecraft:structure']` |
-| `MOB_EFFECTS` | `Registry['minecraft:mob_effect']` |
-| `CAT_VARIANTS` | `Registry['minecraft:cat_variant']` |
-| `DIMENSIONS` | `Registry['minecraft:dimension']` |
-| `FLUIDS` | `Registry['minecraft:fluid']` |
-| `PARTICLE_TYPES` | `Registry['minecraft:particle_type']` |
-| `POINT_OF_INTEREST_TYPES` | `Registry['minecraft:point_of_interest_type']` |
-| `WORLDGEN_BIOMES` | `Registry['minecraft:worldgen/biome']` |
-| `WORLDGEN_STRUCTURES` | `Registry['minecraft:worldgen/structure']` |
+Files with type errors requiring fixes (excluding `src/arguments/generated/`):
 
-### Files Requiring Migration
-
-#### Direct imports from old generated paths (broken imports)
-
-| File | Old Import | Types Used |
-|------|------------|------------|
-| `src/arguments/resources/resourcepack/texture.ts` | `'../../generated/entity_type.js'` | `ENTITY_TYPES` |
-| `src/arguments/resources/datapack/trimPattern.ts` | `'../../generated/index.js'` | `ITEMS` |
-| `src/arguments/resources/datapack/trimMaterial.ts` | `'../../generated/index.js'` | `ITEMS` |
-| `src/arguments/resources/datapack/lootTables.ts` | `'sandstone/arguments/generated'` | `ITEMS` |
-| `src/arguments/resources/datapack/itemModifier.ts` | `'sandstone/arguments/generated'` | `ATTRIBUTES`, `BLOCKS`, `ENCHANTMENTS`, `STRUCTURES` |
-| `src/arguments/resources/datapack/recipe.ts` | `'sandstone/arguments/generated'` | `ITEMS` |
-| `src/arguments/resources/datapack/criteria/EntityCriterion.ts` | `'sandstone/arguments/generated'` | `CAT_VARIANTS`, `ENTITY_TYPES`, `MOB_EFFECTS` |
-
-#### Imports from `sandstone/arguments` (need re-export or migration)
-
-| File | Types Used |
-|------|------------|
-| `src/variables/Selector.ts` | `ENTITY_TYPES` |
-| `src/flow/conditions/variables/block.ts` | `BLOCKS` |
-| `src/flow/conditions/variables/dimension.ts` | `DIMENSIONS` |
-| `src/flow/conditions/variables/biome.ts` | `WORLDGEN_BIOMES` |
-| `src/commands/implementations/block/setblock.ts` | `BLOCKS` |
-| `src/commands/implementations/block/fill.ts` | `BLOCKS` |
-| `src/commands/implementations/block/clone.ts` | `BLOCKS` |
-| `src/commands/implementations/entity/summon.ts` | `ENTITY_TYPES` |
-| `src/commands/implementations/entity/effect.ts` | `MOB_EFFECTS` |
-| `src/commands/implementations/entity/enchant.ts` | `ENCHANTMENTS` |
-| `src/commands/implementations/entity/clear.ts` | `ITEMS` |
-| `src/commands/implementations/player/give.ts` | `ITEMS` |
-| `src/commands/implementations/player/recipe.ts` | `ITEMS` |
-| `src/commands/implementations/player/particle.ts` | `BLOCKS`, `ITEMS`, `PARTICLE_TYPES` |
-| `src/commands/implementations/world/locate.ts` | `POINT_OF_INTEREST_TYPES`, `WORLDGEN_BIOMES`, `WORLDGEN_STRUCTURES` |
-| `src/arguments/resources/datapack/structure.ts` | `BLOCKS` |
-| `src/arguments/resources/datapack/advancement.ts` | `ITEMS` |
-| `src/arguments/resources/datapack/predicate.ts` | `BLOCKS`, `ENCHANTMENTS` |
-| `src/arguments/resources/datapack/criteria/basic_criteria.ts` | `BLOCKS`, `DIMENSIONS`, `ENCHANTMENTS`, `MOB_EFFECTS` |
-| `src/arguments/resources/datapack/criteria/LocationCriterion.ts` | `BLOCKS`, `DIMENSIONS`, `FLUIDS`, `STRUCTURES`, `WORLDGEN_BIOMES` |
-| `src/arguments/resources/datapack/criteria/ItemCriterion.ts` | `ITEMS` |
+10. `src/core/resources/datapack/mcfunction.ts` - Type mismatch
+11. `src/core/resources/resource.ts` - Type mismatch
+13. `src/flow/conditions/resources/tag.ts` - Overload mismatch

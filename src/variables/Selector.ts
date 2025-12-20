@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 import type { GAMEMODES, JSONTextComponent, Range, RootNBT } from 'sandstone/arguments'
-import type { PredicateClass, SandstoneCore } from 'sandstone/core'
+import type { PredicateClass, SandstoneCore, TagClass } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import { rangeParser } from 'sandstone/variables/parsers'
@@ -21,6 +21,8 @@ type AdvancementsArgumentValue = boolean | [string, boolean] | [string, boolean]
 type AdvancementsArgument = Record<string, AdvancementsArgumentValue | Record<string, AdvancementsArgumentValue>>
 
 type TypeOrArray<T> = T | T[]
+
+type NegatableTagOrEntryOrList<T extends string> = T | `#${T}` | `!${T}` | `!#${T}` | (T | `#${T}` | `!${T}` | `!#${T}`)[]
 
 /**
  * If MustBeSingle is false, then anything is allowed.
@@ -81,15 +83,13 @@ export type SelectorProperties<
    * - `random`: Sort randomly. (Default for `@r`)
    * - `arbitrary`: Do not sort. (Default for `@e`, `@a`)
    */
-  sort?: 'nearest' | 'furthest' | 'random' | 'abitrary'
+  sort?: 'nearest' | 'furthest' | 'random' | 'arbitrary'
 
   /** Filter target selection based on their experience levels. This naturally filters out all non-player targets. */
   level?: Macroable<Range<MACRO>, MACRO>
 
   /** Filter target selection to those who are in the specified game mode. */
   gamemode?: Macroable<LiteralUnion<GAMEMODES | `!${GAMEMODES}`> | `!${GAMEMODES}`[], MACRO>
-
-  // Selecting targets by vertical rotation
 
   /**
    * Filter target selection based on their vertical rotation, measured in degrees.
@@ -169,7 +169,7 @@ export type SelectorProperties<
          *
          * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
          */
-        type: 'minecraft:player'
+        type: 'minecraft:player' | 'player'
       }
     : {
         /**
@@ -183,7 +183,7 @@ export type SelectorProperties<
          *
          * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
          */
-        type?: Macroable<Registry['minecraft:entity_type'] | Registry['minecraft:entity_type'][], MACRO>
+        type?: Macroable<NegatableTagOrEntryOrList<Registry['minecraft:entity_type']> | TagClass<'entity_type'>, MACRO>
       })
 
 // Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'
@@ -225,7 +225,7 @@ export class SelectorClass<
 
   constructor(
     protected sandstonePack: SandstonePack,
-    public target: '@s' | '@p' | '@a' | '@e' | '@r',
+    public target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r',
     selectorArguments?: SelectorProperties<IsSingle, IsPlayer, MACRO>,
   ) {
     this.arguments = selectorArguments ?? ({} as SelectorProperties<IsSingle, IsPlayer, MACRO>)
@@ -346,28 +346,3 @@ export class SelectorClass<
     return formatDebugString(this.constructor.name, this.toString(), undefined, undefined)
   }
 }
-
-// Possible selector properties
-export type AnySelectorProperties<MACRO extends boolean = false> = SelectorProperties<false, false, MACRO>
-export type SingleSelectorProperties<MACRO extends boolean = false> = SelectorProperties<true, false, MACRO>
-export type SinglePlayerSelectorProperties<MACRO extends boolean = false> = SelectorProperties<true, true, MACRO>
-
-export type SelectorCreator<MACRO extends boolean = false> = ((
-  target: '@p' | '@r',
-  selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'limit' | 'type'>,
-) => SelectorClass<MACRO, true, true>) &
-  ((
-    target: '@s',
-    selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'limit'>,
-  ) => SelectorClass<MACRO, true, true>) &
-  ((
-    target: '@a',
-    selectorArguments: Omit<SingleSelectorProperties<MACRO>, 'type'>,
-  ) => SelectorClass<MACRO, true, true>) &
-  ((
-    target: '@a',
-    selectorArguments?: Omit<AnySelectorProperties<MACRO>, 'type'>,
-  ) => SelectorClass<MACRO, false, true>) &
-  ((target: '@e', selectorArguments: SinglePlayerSelectorProperties<MACRO>) => SelectorClass<MACRO, true, true>) &
-  ((target: '@e', selectorArguments: SingleSelectorProperties<MACRO>) => SelectorClass<MACRO, true, false>) &
-  ((target: '@e', selectorArguments?: AnySelectorProperties<MACRO>) => SelectorClass<MACRO, false, false>)

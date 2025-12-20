@@ -1,7 +1,6 @@
 import type { MultiplePlayersArgument } from 'sandstone/arguments'
 import type { Macroable, RecipeClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 import type { Registry } from 'sandstone/arguments/generated/registry'
@@ -31,7 +30,7 @@ export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
    */
   give = (
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>,
+    recipe: Macroable<'*' | Registry['minecraft:item'] | RecipeClass, MACRO>,
   ) => this.finalCommand(['give', targetParser(targets), recipe])
 
   /**
@@ -52,6 +51,6 @@ export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
    */
   take = (
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    recipe: Macroable<LiteralUnion<'*' | ITEMS> | RecipeClass, MACRO>,
+    recipe: Macroable<'*' | Registry['minecraft:item'] | RecipeClass, MACRO>,
   ) => this.finalCommand(['take', targetParser(targets), recipe])
 }

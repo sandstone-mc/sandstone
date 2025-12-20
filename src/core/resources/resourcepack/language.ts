@@ -1,9 +1,10 @@
-import type { TRANSLATION_KEYS } from 'sandstone/arguments'
+import { LiteralUnion, SetType } from 'sandstone/utils.js'
 import { ContainerNode } from '../../nodes.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
 import { ResourceClass } from '../resource.js'
+import { TRANSLATION_KEYS_SET } from 'sandstone/arguments/generated/_registry/translation_keys.js'
 
 /**
  * A node representing a Minecraft language file.
@@ -23,7 +24,7 @@ export type LanguageArguments = {
   /**
    * The language's JSON.
    */
-  language?: Partial<Record<TRANSLATION_KEYS, string>> | { [key: string]: string }
+  language?: Partial<Record<LiteralUnion<SetType<typeof TRANSLATION_KEYS_SET>>, string>>
 } & ResourceClassArguments<'list'>
 
 export class LanguageClass extends ResourceClass<LanguageNode> implements ListResource {

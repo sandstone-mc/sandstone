@@ -1,7 +1,7 @@
-import type { DAMAGE_TYPES } from 'sandstone/arguments'
-import type { LiteralUnion } from 'sandstone/utils'
+import type { Registry } from 'sandstone/arguments'
 import type { EntityCriterion } from './EntityCriterion.js'
 import type { NumberProvider } from './utils.js'
+import { DamageTypeClass } from 'sandstone/core/index.js'
 
 export type DamageCriterion = Partial<{
   /** Checks if the damage was successfully blocked. */
@@ -18,7 +18,7 @@ export type DamageCriterion = Partial<{
 
   /** Checks the type of damage done. */
   tags: {
-    id: LiteralUnion<DAMAGE_TYPES>
+    id: Registry['minecraft:damage_type'] | DamageTypeClass
     expected: boolean
   }[]
 }>

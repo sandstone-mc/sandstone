@@ -1,9 +1,6 @@
 import type {
   Coordinates,
-  Registry['minecraft:structure'],
-  WORLDGEN_CONFIGURED_FEATURES,
-  Registry['minecraft:worldgen/structure'],
-  WORLDGEN_TEMPLATE_POOLS,
+  Registry,
 } from 'sandstone/arguments'
 import type { Macroable, StructureClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -12,7 +9,6 @@ import type { StructureMirror, StructureRotation } from 'sandstone/variables'
 import { coordinatesParser, structureMirrorParser, structureRotationParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 import { validateIntegerRange } from '../../validators.js'
-import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class PlaceCommandNode extends CommandNode {
   command = 'place' as const
@@ -29,7 +25,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
    * @param pos Optional. Where the placement should be tried.
    */
   feature = (
-    feature: Macroable<LiteralUnion<WORLDGEN_CONFIGURED_FEATURES>, MACRO>,
+    feature: Macroable<Registry['minecraft:worldgen/configured_feature'], MACRO>,
     pos: Macroable<Coordinates<MACRO>, MACRO> = '~ ~ ~' as Coordinates<MACRO>,
   ) => this.finalCommand(['feature', feature, coordinatesParser(pos)])
 
@@ -42,7 +38,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
    * @param pos Optional. Where to place.
    */
   jigsaw = (
-    pool: Macroable<LiteralUnion<WORLDGEN_TEMPLATE_POOLS>, MACRO>,
+    pool: Macroable<Registry['minecraft:worldgen/template_pool'], MACRO>,
     target: Macroable<string, MACRO>,
     maxDepth: Macroable<number, MACRO>,
     pos: Macroable<Coordinates<MACRO>, MACRO> = '~ ~ ~' as Coordinates<MACRO>,

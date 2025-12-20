@@ -1,11 +1,9 @@
 import type {
   ANCHORS,
   AXES,
-  Registry['minecraft:block'],
+  Registry,
   COMPARISON_OPERATORS,
   Coordinates,
-  Registry['minecraft:dimension'],
-  Registry['minecraft:entity_type'],
   MultipleEntitiesArgument,
   ObjectiveArgument,
   Range,
@@ -31,7 +29,6 @@ import { coordinatesParser, rangeParser, rotationParser, targetParser } from 'sa
 import type { Score } from 'sandstone/variables/Score.js'
 import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
 import { FunctionCommandNode } from '../server/function.js'
-import type { Registry } from 'sandstone/arguments/generated/registry'
 
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]

@@ -1,8 +1,7 @@
 import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { Text } from 'sandstone/arguments/generated/util/text.js'
-import type { TRANSLATION_KEYS } from 'sandstone/arguments.js'
-import type { LiteralUnion, NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BooleanInput = {
     /**
@@ -68,7 +67,7 @@ export type NumberRangeInput = {
      * `%1$s` is replaced by `label`; `%2$s` is replaced by current value of the slider.
      * Defaults to `options.generic_value`.
      */
-    label_format?: LiteralUnion<TRANSLATION_KEYS>
+    label_format?: Registry['minecraft:translation_key']
     /**
      * Start value, inclusive.
      */

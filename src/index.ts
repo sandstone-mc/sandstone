@@ -21,7 +21,8 @@ import type {
   TrimPatternClassArguments,
 } from './core/index.js'
 import { SandstonePack } from './pack/index.js'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, Set, SetType } from './utils.js'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, SetType } from './utils.js'
+import { Set } from './utils.js'
 import * as coordinates from './variables/Coordinates.js'
 import { ResolveNBTPart } from './variables/ResolveNBT.js'
 
@@ -146,6 +147,8 @@ export const {
   makeCustomResource,
   sleep,
 } = sandstonePack
+
+const foo = Selector('@s')
 
 export * from './variables/nbt/NBTs.js'
 

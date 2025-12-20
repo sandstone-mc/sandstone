@@ -437,7 +437,7 @@ export function DataIndexMap<INITIAL extends DataIndexMapInitial>(
         return Reflect.get(target, p, receiver)
       }
 
-      return target.get(p as string)
+      return target.get(p as any)
     },
 
     set(target, p, value, receiver) {
@@ -445,7 +445,7 @@ export function DataIndexMap<INITIAL extends DataIndexMapInitial>(
         return Reflect.set(target, p, value, receiver)
       }
 
-      target.set(p as string, value)
+      target.set(p as any, value)
 
       return true
     },

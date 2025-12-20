@@ -5,7 +5,7 @@ import type {
   FormattingTags,
   JSONTextComponent,
   MultipleEntitiesArgument,
-  OBJECTIVE_CRITERION,
+  OBJECTIVE_CRITERIA,
   ObjectiveArgument,
   OPERATORS,
 } from 'sandstone/arguments'
@@ -117,7 +117,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      */
     add: (
       objective: Macroable<ObjectiveArgument, MACRO>,
-      criteria: Macroable<LiteralUnion<OBJECTIVE_CRITERION>, MACRO>,
+      criteria: Macroable<LiteralUnion<OBJECTIVE_CRITERIA>, MACRO>,
       displayName?: Macroable<JSONTextComponent, MACRO>,
     ) => this.finalCommand(['objectives', 'add', objective, criteria, parseJSONText(this.sandstoneCore, displayName)]),
 

@@ -47,7 +47,7 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
   give = (players: MultiplePlayersArgument<false> = '@s') => {
-    this.pack.commands.recipe.give(players, this.name)
+    this.pack.commands.recipe.give(players, this)
   }
 
   /**
@@ -55,6 +55,6 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
   take = (players: MultiplePlayersArgument<false> = '@s') => {
-    this.pack.commands.recipe.take(players, this.name)
+    this.pack.commands.recipe.take(players, this)
   }
 }

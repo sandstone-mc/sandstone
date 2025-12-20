@@ -4,8 +4,8 @@ import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { Profile } from 'sandstone/arguments/generated/util/avatar.js'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.js'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
-import type { Coordinates, MultipleEntitiesArgument, TRANSLATION_KEYS } from 'sandstone/arguments.js'
-import type { DataPointClass, LiteralUnion, NBTInt, NBTList, ObjectiveClass, ScoreClass } from 'sandstone'
+import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, ScoreClass } from 'sandstone'
 
 export type ChangePage = {
     /**
@@ -265,7 +265,7 @@ export type TextObject = (({
     text: string
     type?: 'text'
 } & TextBase) | ({
-    translate: LiteralUnion<TRANSLATION_KEYS>
+    translate: Registry['minecraft:translation_key']
     fallback?: string
     /**
      * Value:

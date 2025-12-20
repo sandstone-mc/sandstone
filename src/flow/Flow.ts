@@ -1,11 +1,10 @@
 import type {
-  Registry['minecraft:block'],
+  Registry,
   Coordinates,
   JSONTextComponent,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
   NBTObject,
-  Registry['minecraft:worldgen/biome'],
 } from 'sandstone/arguments'
 import type {
   ConditionClass,
@@ -26,7 +25,6 @@ import type { ForOfIterator } from './loops/index.js'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops/index.js'
 import type { DefaultType } from './switch_case.js'
 import { CaseStatement } from './switch_case.js'
-import type { Registry } from 'sandstone/arguments/generated/registry'
 
 let switches = 0
 
@@ -379,7 +377,7 @@ export class Flow {
    * Checks if the execution is in a matching dimension.
    * @param dimension Dimension to check for.
    */
-  dimension = (dimension: LiteralUnion<string>) => {
+  dimension = (dimension: Registry['minecraft:dimension']) => {
     return new SandstoneConditions.Dimension(this.sandstoneCore, dimension)
   }
 
@@ -387,7 +385,7 @@ export class Flow {
    * Checks a function or function tag and matches the return value(s). If a tag is given, all functions run regardless of the results of prior functions.
    * @param function_ Function to check for.
    */
-  function_ = (function_: LiteralUnion<string> | MCFunctionClass<any, any>) => {
+  function_ = (function_: `${string}:${string}` | MCFunctionClass<undefined, undefined>) => {
     if (typeof function_ === 'string') {
       return new SandstoneConditions.Function(this.sandstoneCore, function_)
     }

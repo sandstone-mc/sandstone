@@ -2,7 +2,7 @@ import type {
   CONTAINER_SLOTS,
   Coordinates,
   ENTITY_SLOTS,
-  Registry['minecraft:item'],
+  Registry,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
   SingleEntityArgument,
@@ -13,7 +13,6 @@ import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
-import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type LootTableArgument<MACRO extends boolean> = Macroable<LootTableClass | string, MACRO>
 

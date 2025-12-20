@@ -1,7 +1,6 @@
-import type { Coordinates, MultiplePlayersArgument, SOUND_EVENTS, SOUND_SOURCES } from 'sandstone/arguments'
+import type { Coordinates, MultiplePlayersArgument, Registry, SOUND_SOURCES } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers.js'
 
@@ -39,7 +38,7 @@ export class PlaySoundCommand<MACRO extends boolean> extends CommandArguments {
    * ```
    */
   playsound = (
-    sound: Macroable<LiteralUnion<SOUND_EVENTS>, MACRO>,
+    sound: Macroable<Registry['minecraft:sound_event'], MACRO>,
     source: Macroable<SOUND_SOURCES, MACRO>,
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
     sourcePosition?: Macroable<Coordinates<MACRO>, MACRO>,

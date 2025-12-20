@@ -1,7 +1,7 @@
 import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item.js'
-import type { CRAFTING_INGREDIENT } from 'sandstone/arguments.js'
+import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')

@@ -1,6 +1,6 @@
 import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { TRANSLATION_KEYS } from 'sandstone/arguments.js'
-import type { LiteralUnion, NBTFloat, NBTInt } from 'sandstone'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type Sound = ({
     [S in Extract<SoundType, string>]?: {
@@ -78,7 +78,7 @@ export type SoundEventRegistration = {
     /**
      * Translated as the subtitle when Show Subtitles is enabled. Section sign formatting codes are supported.
      */
-    subtitle?: LiteralUnion<TRANSLATION_KEYS>
+    subtitle?: Registry['minecraft:translation_key']
 }
 
 export type Sounds = ({

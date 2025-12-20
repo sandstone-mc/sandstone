@@ -2,7 +2,7 @@ import type {
   CONTAINER_SLOTS,
   Coordinates,
   ENTITY_SLOTS,
-  Registry['minecraft:item'],
+  Registry,
   MultipleEntitiesArgument,
   RootNBT,
 } from 'sandstone/arguments'
@@ -13,7 +13,6 @@ import { nbtStringifier } from 'sandstone/variables'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers.js'
 import { CommandArguments } from '../../helpers.js'
-import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const

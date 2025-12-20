@@ -10,7 +10,7 @@ import type {
   ResourceNode,
   SandstoneCore,
 } from 'sandstone/core'
-import { formatDebugString, makeCallable, makeClassCallable } from 'sandstone/utils'
+import { formatDebugString, makeCallable, makeClassCallable, toMinecraftResourceName } from 'sandstone/utils'
 import * as util from 'util'
 import type { MakeInstanceCallable } from '../../../utils.js'
 import { ResolveNBTPart } from '../../../variables/ResolveNBT.js'
@@ -297,7 +297,7 @@ export class _RawMCFunctionClass<
           }),
         )
       } else {
-        core.pack.loadTags.load.push(this.name)
+        core.pack.loadTags.load.push(toMinecraftResourceName(this.path))
       }
     } else if (args.runEveryTick) {
       /* @ts-ignore */

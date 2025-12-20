@@ -1,5 +1,4 @@
-import type { TRANSLATION_KEYS } from 'sandstone/arguments.js'
-import type { LiteralUnion } from 'sandstone'
+import type { Registry } from 'sandstone/arguments/generated/registry.js'
 
 export type Lang = ({
     [Key in `${any}${string}`]?: string;
@@ -9,11 +8,11 @@ export type LangDeprecated = {
     /**
      * List of removed translation keys.
      */
-    removed: Array<LiteralUnion<TRANSLATION_KEYS>>
+    removed: Array<Registry['minecraft:translation_key']>
     /**
      * Mapping renamed translation keys from old to new keys.
      */
     renamed: ({
-        [Key in `${any}${string}`]?: LiteralUnion<TRANSLATION_KEYS>;
+        [Key in `${any}${string}`]?: Registry['minecraft:translation_key'];
     })
 }

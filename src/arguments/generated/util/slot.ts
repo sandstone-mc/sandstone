@@ -4,7 +4,7 @@ import type { ContainerComponents } from 'sandstone/arguments/generated/data/loo
 import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
-import type { ITEM_SLOTS } from 'sandstone/arguments.js'
+import type { ITEM_SLOTS } from 'sandstone/arguments'
 import type { LiteralUnion, NBTInt } from 'sandstone'
 
 export type ContentsSlotSource = {

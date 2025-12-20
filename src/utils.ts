@@ -181,7 +181,7 @@ export type PartialFunction<
   TO extends number | undefined = undefined,
 > = (...args: SlicedArguments<T, FROM, TO>) => ReturnType<T>
 
-export function toMinecraftResourceName(path: readonly string[], typeNested: number = 1): string {
+export function toMinecraftResourceName(path: readonly string[], typeNested: number = 1): `${string}:${string}` {
   const [namespace, ...folders] = path
 
   folders.splice(0, typeNested)

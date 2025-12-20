@@ -1,4 +1,5 @@
 import type {
+  CONTAINER_SLOTS,
   Coordinates,
   ENTITY_SLOTS,
   LootTableJSON,
@@ -76,7 +77,7 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
    *
    * @param count Specifies the number of consecutive slots to be filled. Must be between 0 and 2147483647 (inclusive).
    */
-  replaceBlock = (targetPos: Coordinates<false>, slot: string, count?: number) =>
+  replaceBlock = (targetPos: Coordinates<false>, slot: LiteralUnion<CONTAINER_SLOTS>, count?: number) =>
     this.pack.commands.loot.replace.block(targetPos, slot, count).loot(this.name)
 
   /**

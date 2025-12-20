@@ -14,7 +14,6 @@ import type {
   JSONTextComponent,
   LootTableJSON,
   NBTObject,
-  OBJECTIVE_CRITERION,
   PredicateJSON,
   REGISTRIES,
   RecipeJSON,
@@ -26,6 +25,8 @@ import type {
   TimeArgument,
   TrimMaterialJSON,
   TrimPatternJSON,
+  Registry,
+  OBJECTIVE_CRITERIA,
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
 import { SandstoneCommands } from 'sandstone/commands'
@@ -85,7 +86,6 @@ import type {
   DATA_PATH,
   DATA_TARGET,
   DATA_TYPES,
-  SelectorCreator,
   SelectorProperties,
   TriggerHandler,
   UUIDinNumber,
@@ -284,7 +284,7 @@ export class SandstonePack {
 
   tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass<undefined, undefined>>>
 
-  loadTags: { preLoad: TagClass<'functions'>; load: TagClass<'functions'>; postLoad: TagClass<'functions'> }
+  loadTags: { preLoad: TagClass<'function'>; load: TagClass<'function'>; postLoad: TagClass<'function'> }
 
   __rootObjective?: ObjectiveClass
 
@@ -315,9 +315,9 @@ export class SandstonePack {
     }
 
     this.loadTags = {
-      preLoad: this.Tag('functions', 'load:pre_load', []),
-      load: this.Tag('functions', 'load:load', []),
-      postLoad: this.Tag('functions', 'load:post_load', []),
+      preLoad: this.Tag('function', 'load:pre_load', []),
+      load: this.Tag('function', 'load:load', []),
+      postLoad: this.Tag('function', 'load:post_load', []),
     }
     this.setupLantern()
     this.dependencies = new Map()
@@ -346,9 +346,9 @@ export class SandstonePack {
     this.tickedLoops = {}
     this.dependencies.clear()
     this.loadTags = {
-      preLoad: this.Tag('functions', 'load:pre_load', []),
-      load: this.Tag('functions', 'load:load', []),
-      postLoad: this.Tag('functions', 'load:post_load', []),
+      preLoad: this.Tag('function', 'load:pre_load', []),
+      load: this.Tag('function', 'load:load', []),
+      postLoad: this.Tag('function', 'load:post_load', []),
     }
     this.setupLantern()
     if (process.env.NAMESPACE) {
@@ -385,7 +385,7 @@ export class SandstonePack {
   setupLantern = () => {
     const loadStatus = this.Objective.create('load.status')
 
-    const privateInit = this.Tag('functions', 'load:_private/init', [
+    const privateInit = this.Tag('function', 'load:_private/init', [
       this.MCFunction('load:_private/init', () => {
         this.commands.comment('Reset scoreboards so packs can set values accurate for current load.')
         loadStatus.reset()
@@ -445,14 +445,14 @@ export class SandstonePack {
      * @param display The display information for the objective
      * @param options Optional. Options for the objective.
      * @param options.alreadyExists If true, the objective will not be registered as a new one. Defaults to false.
-     * @param options.useDefaultNamespace If true (the default), the objective will be created in the default namespace.
-     *                            For example, if the default namespace is `sandstone`, then the objective will be created as `sandstone.objective_name`.
-     *                            If false, the objective will be created without a namespace.
+     * @param options.useDefaultNamespace If true (the default), the objective will be created in the default namespace. \
+     *                            For example, if the default namespace is `sandstone`, then the objective will be created as `sandstone.objective_name`. \
+     *                            If false, the objective will be created without a namespace. \
      *                            This argument is ignored if the `name` already contains a namespace (determined by the presence of a dot `"."` or a double underscore `"__"`).
      */
     create: (
       name: string,
-      criteria: LiteralUnion<OBJECTIVE_CRITERION> = 'dummy',
+      criteria: LiteralUnion<OBJECTIVE_CRITERIA> = 'dummy',
       display?: JSONTextComponent,
       options: {
         alreadyExists?: boolean
@@ -469,7 +469,7 @@ export class SandstonePack {
         name = `${this.defaultNamespace}.${name}`
       }
 
-      const objective = new ObjectiveClass(this, name, criteria as string, display, { creator: 'user' })
+      const objective = new ObjectiveClass(this, name, criteria, display, { creator: 'user' })
 
       if (!alreadyExists) {
         this.registerNewObjective(objective)
@@ -728,10 +728,28 @@ export class SandstonePack {
    */
   ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) => new ResolveNBTClass(this, nbt, dataPoint)
 
-  Selector: SelectorCreator<false> = ((
-    target: '@s' | '@p' | '@a' | '@e' | '@r',
-    properties: SelectorProperties<false, false, false>,
-  ) => new SelectorClass(this, target, properties)) as any
+  Selector(target: '@e'): SelectorClass<false, false, false>
+
+  Selector(target: '@a'): SelectorClass<false, false, true>
+
+  Selector(target: '@s' | '@n'): SelectorClass<false, true, false>
+
+  Selector(target: '@p' | '@r', selectorArguments?: Omit<Omit<SelectorProperties<false, false, false>, 'type'>, 'limit'>): SelectorClass<false, true, true>
+
+  Selector<PROPERTIES extends Omit<SelectorProperties<false, false, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES): 
+    SelectorClass<false, true, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
+
+  Selector<PROPERTIES extends Omit<SelectorProperties<false, false, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES): 
+    SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, true>
+
+  Selector<PROPERTIES extends SelectorProperties<false, false, false>>(target: '@e', selectorArguments: PROPERTIES): 
+    SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
+
+  Selector(target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r', selectorArguments?: SelectorProperties<boolean, boolean, boolean>) {
+    return new SelectorClass(this, target, selectorArguments)
+  }
+
+  UUID(): UUIDClass<'known'>
 
   /** Initializes with a static UUID. (you can use `import { randomUUID } from 'sandstone/utils'` to generate one) */
   UUID(source: string | UUIDinNumber, options?: UUIDOptions): UUIDClass<'known'>
