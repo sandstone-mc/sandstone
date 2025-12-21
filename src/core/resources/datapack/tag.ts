@@ -1,4 +1,4 @@
-import type { HintedTagStringType, REGISTRIES, TagSingleValue, TagValuesJSON } from 'sandstone/arguments'
+import type { REGISTRIES, Registry } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ConditionClass } from 'sandstone/variables'
@@ -69,10 +69,25 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
   return value as string | TagSingleValue<string>
 }
 
+// Tag uses hardcoded types because its a simple base schema with lots of sandstone-related customization
+
 type TagJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = {
   replace: boolean
   values: TagValuesJSON<REGISTRY>
 }
+
+/** biome-ignore format: excessive formatting */
+export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
+  T extends 'function' ? (MCFunctionClass<undefined, undefined> | `${string}:${string}`) :
+  `minecraft:${T}` extends keyof Registry ? Registry[`minecraft:${T}`] :
+  string
+)
+
+export type TagSingleValue<T> = T | { id: T; required: boolean }
+
+export type TagValuesJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = TagSingleValue<
+  HintedTagStringType<REGISTRY> | TagClass<LiteralUnion<REGISTRIES>>
+>[]
 
 /**
  * A node representing a Minecraft tag.

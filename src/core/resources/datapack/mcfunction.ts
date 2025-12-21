@@ -262,7 +262,7 @@ export class _RawMCFunctionClass<
       core,
       { packType: core.pack.dataPack(), extension: 'mcfunction' },
       MCFunctionNode,
-      core.pack.resourceToPath(name, ['functions']),
+      core.pack.resourceToPath(name, ['function']),
       {
         ...args,
         addToSandstoneCore: args.lazy ? false : args.addToSandstoneCore,

@@ -1,8 +1,8 @@
 import type {
   CONTAINER_SLOTS,
   Coordinates,
+  Dispatcher,
   ENTITY_SLOTS,
-  ItemModifierJSON,
   MultipleEntitiesArgument,
 } from 'sandstone/arguments'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -25,28 +25,30 @@ export class ItemModifierNode extends ContainerNode implements ResourceNode<Item
   getValue = () => JSON.stringify(this.resource.itemModifierJSON)
 }
 
+type ItemModifierJSON = Dispatcher<'minecraft:resource'>['item_modifier']
+
 export type ItemModifierClassArguments = {
   /**
    * The item modifier's JSON.
    */
-  itemModifier?: ItemModifierJSON
+  itemModifier: ItemModifierJSON
 } & ResourceClassArguments<'list'>
 
 type Modifier = ItemModifierJSON | ItemModifierClass
 
 export class ItemModifierClass extends ResourceClass<ItemModifierNode> implements ListResource {
-  public itemModifierJSON: NonNullable<ItemModifierClassArguments['itemModifier']>
+  public itemModifierJSON: ItemModifierClassArguments['itemModifier']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ItemModifierClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       ItemModifierNode,
-      sandstoneCore.pack.resourceToPath(name, ['item_modifiers']),
+      sandstoneCore.pack.resourceToPath(name, ['item_modifier']),
       args,
     )
 
-    this.itemModifierJSON = args.itemModifier as ItemModifierJSON
+    this.itemModifierJSON = args.itemModifier
 
     this.handleConflicts()
   }

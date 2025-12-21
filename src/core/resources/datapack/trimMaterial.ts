@@ -6,7 +6,7 @@ import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 import { ResourceClass } from '../resource.js'
 import type { TagClass } from './tag.js'
 
-let trimMaterials: undefined | TagClass<'items'>
+let trimMaterials: undefined | TagClass<'item'>
 
 export type EquipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
 
@@ -50,7 +50,7 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TrimMaterialNode,
-      sandstoneCore.pack.resourceToPath(name, ['trim_materials']),
+      sandstoneCore.pack.resourceToPath(name, ['trim_material']),
       args,
     )
 
@@ -59,7 +59,7 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
     this.equipmentCheck = args.equipmentCheck
 
     if (args.registerMaterial !== false) {
-      if (!trimMaterials) trimMaterials = sandstoneCore.pack.Tag('items', 'minecraft:trim_materials', [this.material])
+      if (!trimMaterials) trimMaterials = sandstoneCore.pack.Tag('item', 'minecraft:trim_materials', [this.material])
       else trimMaterials.push(this.material)
     }
 

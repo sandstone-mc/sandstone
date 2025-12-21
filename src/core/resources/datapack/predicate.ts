@@ -1,4 +1,4 @@
-import type { PredicateJSON } from 'sandstone/arguments'
+import type { Dispatcher } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
@@ -19,6 +19,8 @@ export class PredicateNode extends ContainerNode implements ResourceNode<Predica
   getValue = () => JSON.stringify(this.resource.predicateJSON)
 }
 
+type PredicateJSON = Dispatcher<'minecraft:resource'>['predicate']
+
 export type PredicateClassArguments = {
   /**
    * The predicate's JSON.
@@ -36,7 +38,7 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       PredicateNode,
-      sandstoneCore.pack.resourceToPath(name, ['predicates']),
+      sandstoneCore.pack.resourceToPath(name, ['predicate']),
       args,
     )
 

@@ -50,7 +50,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TrimPatternNode,
-      sandstoneCore.pack.resourceToPath(name, ['trim_patterns']),
+      sandstoneCore.pack.resourceToPath(name, ['trim_pattern']),
       args,
     )
 
@@ -59,7 +59,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
     this.equipmentCheck = args.equipmentCheck
 
     if (args.registerPatternTag !== false) {
-      sandstoneCore.pack.Tag('items', 'minecraft:trim_templates', [this.template], { onConflict: 'append' })
+      sandstoneCore.pack.Tag('item', 'minecraft:trim_templates', [this.template], { onConflict: 'append' })
     }
 
     if (args.registerPatternRecipe !== false) {

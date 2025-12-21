@@ -1,8 +1,8 @@
 import type {
   CONTAINER_SLOTS,
   Coordinates,
+  Dispatcher,
   ENTITY_SLOTS,
-  LootTableJSON,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
 } from 'sandstone/arguments'
@@ -30,22 +30,22 @@ export type LootTableClassArguments = {
   /**
    * The loot table's JSON.
    */
-  lootTable?: LootTableJSON
+  lootTable: Dispatcher<'minecraft:resource'>['loot_table']
 } & ResourceClassArguments<'default'>
 
 export class LootTableClass extends ResourceClass<LootTableNode> {
-  public lootTableJSON: NonNullable<LootTableClassArguments['lootTable']>
+  public lootTableJSON: LootTableClassArguments['lootTable']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: LootTableClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       LootTableNode,
-      sandstoneCore.pack.resourceToPath(name, ['loot_tables']),
+      sandstoneCore.pack.resourceToPath(name, ['loot_table']),
       args,
     )
 
-    this.lootTableJSON = args.lootTable as LootTableJSON
+    this.lootTableJSON = args.lootTable
 
     this.handleConflicts()
   }

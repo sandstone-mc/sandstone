@@ -3,7 +3,6 @@
 
 import type {
   // eslint-disable-next-line max-len
-  AdvancementJSON,
   AtlasDefinition,
   BlockStateDefinition,
   BlockStateType,
@@ -128,11 +127,12 @@ import {
   SimplifyReturnRunFunctionVisitor,
   UnifyChainedExecutesVisitor,
 } from './visitors/index.js'
+import { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 
 export type ResourcePath = string[]
 
 const conflictDefaults = (resourceType: string) =>
-  (process.env[`${resourceType.toUpperCase()}S_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY) as string
+  (process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY) as string
 
 let tempStorage: DataClass<'storage'>
 
@@ -392,14 +392,14 @@ export class SandstonePack {
       }),
     ])
 
-    const privateLoad = this.Tag('functions', 'load:_private/load', [
+    const privateLoad = this.Tag('function', 'load:_private/load', [
       privateInit,
       { id: this.loadTags.preLoad, required: false },
       { id: this.loadTags.load, required: false },
       { id: this.loadTags.postLoad, required: false },
     ])
 
-    this.Tag('functions', 'minecraft:load', [privateLoad])
+    this.Tag('function', 'minecraft:load', [privateLoad])
 
     this.initMCFunction.push(() => loadStatus(this.defaultNamespace).set(process.env.LOAD_VERSION || 1))
   }
@@ -945,18 +945,19 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement = <T extends string>(
+  Advancement<AdvancementJSON extends Dispatcher<'minecraft:resource'>['advancement']>(
     name: string,
-    advancement: AdvancementJSON<T>,
-    options?: Partial<AdvancementClassArguments>,
-  ) =>
-    new AdvancementClass(this.core, name, {
+    advancement: AdvancementJSON,
+    options?: Omit<Partial<AdvancementClassArguments>, 'advancement'>,
+  ) {
+    return new AdvancementClass(this.core, name, {
       advancement,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('advancement') as AdvancementClassArguments['onConflict'],
       ...options,
     })
+  }
 
   DamageType = (name: string, damageType: DamageTypeJSON, options?: Partial<DamageTypeClassArguments>) =>
     new DamageTypeClass(this.core, name, {

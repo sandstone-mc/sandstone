@@ -1,13 +1,14 @@
 /* eslint-disable max-len */
 
-import type { Coordinates, DamageTypeJSON, SingleEntityArgument, Registry } from 'sandstone/arguments'
-import { toMinecraftResourceName } from 'sandstone/utils'
+import type { Coordinates, Dispatcher, SingleEntityArgument } from 'sandstone/arguments'
+import { SetType, toMinecraftResourceName } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
 import { ResourceClass } from '../resource.js'
 import type { TagClass } from './tag.js'
+import { TAG_DAMAGE_TYPES_SET } from 'sandstone/arguments/generated/_registry/tag_damage_types.js'
 
 const damageTypes: Map<string, TagClass<'damage_type'>> = new Map()
 
@@ -29,27 +30,27 @@ export type DamageTypeClassArguments = {
   /**
    * The damage type's JSON.
    */
-  damageType?: DamageTypeJSON
+  damageType: Dispatcher<'minecraft:resource'>['damage_type']
 } & ResourceClassArguments<'default'> & {
     /**
      * Optional. Automatically adds damage type to minecraft damage type group tag flags.
      */
-    flags?: (Registry['minecraft:tag/damage_type'] | 'bypasses_cooldown')[] // Haha funny this doesn't show up in the server reports
+    flags?: (SetType<typeof TAG_DAMAGE_TYPES_SET> | 'bypasses_cooldown')[] // Haha funny bypasses_cooldown doesn't show up in the server reports
   }
 
 export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements ComponentClass {
-  public damageTypeJSON: NonNullable<DamageTypeClassArguments['damageType']>
+  public damageTypeJSON: DamageTypeClassArguments['damageType']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DamageTypeClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       DamageTypeNode,
-      sandstoneCore.pack.resourceToPath(name, ['damage_types']),
+      sandstoneCore.pack.resourceToPath(name, ['damage_type']),
       args,
     )
 
-    this.damageTypeJSON = args.damageType as DamageTypeJSON
+    this.damageTypeJSON = args.damageType
 
     if (args.flags) {
       for (const flag of args.flags) {

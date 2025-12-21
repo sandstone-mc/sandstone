@@ -1,4 +1,4 @@
-import type { AdvancementJSON, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { Dispatcher, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
@@ -19,29 +19,29 @@ export class AdvancementNode extends ContainerNode implements ResourceNode<Advan
   getValue = () => JSON.stringify(this.resource.advancementJSON)
 }
 
-export type AdvancementClassArguments<CriteriaNames extends string = string> = {
+export type AdvancementClassArguments<AdvancementJSON extends Dispatcher<'minecraft:resource'>['advancement'] | undefined = undefined> = {
   /**
    * The advancement's JSON.
    */
-  advancement?: AdvancementJSON<CriteriaNames>
+  advancement: AdvancementJSON
 } & ResourceClassArguments<'default'>
 
-export class AdvancementClass<CriteriaNames extends string = string>
+export class AdvancementClass<AdvancementJSON extends Dispatcher<'minecraft:resource'>['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
   implements ConditionClass
 {
-  public advancementJSON: NonNullable<AdvancementClassArguments['advancement']>
+  public advancementJSON: AdvancementClassArguments<AdvancementJSON>['advancement']
 
-  constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<CriteriaNames>) {
+  constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<AdvancementJSON>) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       AdvancementNode,
-      sandstoneCore.pack.resourceToPath(name, ['advancements']),
+      sandstoneCore.pack.resourceToPath(name, ['advancement']),
       args,
     )
 
-    this.advancementJSON = args.advancement as AdvancementJSON
+    this.advancementJSON = args.advancement
 
     this.handleConflicts()
   }
@@ -50,7 +50,7 @@ export class AdvancementClass<CriteriaNames extends string = string>
    * Grant this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grant(players: MultiplePlayersArgument<false> = '@s', criterion?: CriteriaNames) {
+  grant(players: MultiplePlayersArgument<false> = '@s', criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
     this.pack.commands.advancement.grant(players).only(this.name, criterion)
   }
 
@@ -58,7 +58,7 @@ export class AdvancementClass<CriteriaNames extends string = string>
    * Revoke this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revoke(players: MultiplePlayersArgument<false> = '@s', criterion?: CriteriaNames) {
+  revoke(players: MultiplePlayersArgument<false> = '@s', criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
     this.pack.commands.advancement.revoke(players).only(this.name, criterion)
   }
 

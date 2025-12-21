@@ -20,7 +20,7 @@ import { ResourceClass } from '../resource.js'
 const same = lodash.isEqual
 
 /**
- * A node representing a Minecraft trim material.
+ * A node representing a Minecraft structure.
  */
 export class StructureNode extends ContainerNode implements ResourceNode<StructureClass> {
   constructor(
@@ -39,7 +39,7 @@ export class StructureNode extends ContainerNode implements ResourceNode<Structu
 type Block = {
   id: Registry['minecraft:block']
   state?: { [key: string]: string }
-  /* Must use NBT Primitives! */
+  /** Must use NBT Primitives! */
   nbt?: RootNBT
 }
 
@@ -78,7 +78,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'nbt', encoding: false },
       StructureNode,
-      sandstoneCore.pack.resourceToPath(name, ['structures']),
+      sandstoneCore.pack.resourceToPath(name, ['structure']),
       args,
     )
 

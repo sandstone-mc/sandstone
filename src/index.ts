@@ -385,88 +385,88 @@ type ContentStrategy =
    * The conflict strategy to use for Advancements.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'advancements', NonNullable<AdvancementClassArguments['onConflict']>>
+  | ContentStrategyKind<'advancement', NonNullable<AdvancementClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for damage types.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'damage_types', NonNullable<DamageTypeClassArguments['onConflict']>>
+  | ContentStrategyKind<'damage_type', NonNullable<DamageTypeClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Loot Tables.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'loot_tables', NonNullable<LootTableClassArguments['onConflict']>>
+  | ContentStrategyKind<'loot_table', NonNullable<LootTableClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for MCFunctions.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'functions', NonNullable<MCFunctionClassArguments['onConflict']>>
+  | ContentStrategyKind<'function', NonNullable<MCFunctionClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Predicates.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'predicates', NonNullable<PredicateClassArguments['onConflict']>>
+  | ContentStrategyKind<'predicate', NonNullable<PredicateClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for RecipeOptions.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'recipes', NonNullable<RecipeClassArguments['onConflict']>>
+  | ContentStrategyKind<'recipe', NonNullable<RecipeClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Tags.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'tags', NonNullable<TagClassArguments<any>['onConflict']>>
+  | ContentStrategyKind<'tag', NonNullable<TagClassArguments<any>['onConflict']>>
   /**
    * The conflict strategy to use for Item modifiers.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'item_modifiers', NonNullable<ItemModifierClassArguments['onConflict']>>
+  | ContentStrategyKind<'item_modifier', NonNullable<ItemModifierClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Trim materials.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'trim_materials', NonNullable<TrimMaterialClassArguments['onConflict']>>
+  | ContentStrategyKind<'trim_material', NonNullable<TrimMaterialClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Trim patterns.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'trim_patterns', NonNullable<TrimPatternClassArguments['onConflict']>>
+  | ContentStrategyKind<'trim_pattern', NonNullable<TrimPatternClassArguments['onConflict']>>
 
   /**
    * The conflict strategy to use for Atlases.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'atlass', NonNullable<AtlasClassArguments['onConflict']>> // atlass is not a typo. feel free to PR :trolley:
+  | ContentStrategyKind<'atlas', NonNullable<AtlasClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Block states.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'block_states', NonNullable<BlockStateArguments<any>['onConflict']>>
+  | ContentStrategyKind<'block_state', NonNullable<BlockStateArguments<any>['onConflict']>>
   /**
    * The conflict strategy to use for Fonts.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'fonts', NonNullable<FontArguments['onConflict']>>
+  | ContentStrategyKind<'font', NonNullable<FontArguments['onConflict']>>
   /**
    * The conflict strategy to use for Languages.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'languages', NonNullable<LanguageArguments['onConflict']>>
+  | ContentStrategyKind<'lang', NonNullable<LanguageArguments['onConflict']>>
   /**
    * The conflict strategy to use for Models.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'models', NonNullable<ModelClassArguments['onConflict']>>
+  | ContentStrategyKind<'model', NonNullable<ModelClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Sound Events.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'sound_events', NonNullable<SoundEventArguments['onConflict']>>
+  | ContentStrategyKind<'sound_event', NonNullable<SoundEventArguments['onConflict']>>
   /**
    * The conflict strategy to use for Plain Text files.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'texts', NonNullable<PlainTextArguments['onConflict']>>
+  | ContentStrategyKind<'text', NonNullable<PlainTextArguments['onConflict']>>
   /**
    * The conflict strategy to use for Textures.
    * Will override the defined `default` strategy.

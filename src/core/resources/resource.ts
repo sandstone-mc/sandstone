@@ -92,8 +92,10 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.creator = args.creator ?? 'sandstone'
 
+    const strategy_path = this.node.resource.path[1] === undefined ? '' : this.node.resource.path[1].endsWith('ses') ? this.node.resource.path[1].slice(0,-2) : this.node.resource.path[1].slice(0, -1)
+
     const scopedStrategy = this.node.resource.path[1]
-      ? process.env[`${this.node.resource.path[1].toUpperCase()}_CONFLICT_STRATEGY`] as LiteralUnion<BASIC_CONFLICT_STRATEGIES>
+      ? process.env[`${strategy_path.toUpperCase()}_CONFLICT_STRATEGY`] as LiteralUnion<BASIC_CONFLICT_STRATEGIES>
       : undefined
     const defaultStrategy = process.env.DEFAULT_CONFLICT_STRATEGY === undefined
       ? undefined

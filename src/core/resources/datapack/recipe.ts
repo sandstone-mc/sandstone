@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument, RecipeJSON } from 'sandstone/arguments'
+import type { Dispatcher, MultiplePlayersArgument } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ResourceClassArguments, ResourceNode } from '../resource.js'
@@ -22,7 +22,7 @@ export type RecipeClassArguments = {
   /**
    * The recipe's JSON.
    */
-  recipe: RecipeJSON
+  recipe: Dispatcher<'minecraft:resource'>['recipe']
 } & ResourceClassArguments<'default'>
 
 export class RecipeClass extends ResourceClass<RecipeNode> {
@@ -33,7 +33,7 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       RecipeNode,
-      sandstoneCore.pack.resourceToPath(name, ['recipes']),
+      sandstoneCore.pack.resourceToPath(name, ['recipe']),
       args,
     )
 
