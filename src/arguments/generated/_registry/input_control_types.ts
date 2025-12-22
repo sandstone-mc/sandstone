@@ -6,8 +6,8 @@ export type INPUT_CONTROL_TYPES = (
   | `minecraft:${SetType<typeof INPUT_CONTROL_TYPES_SET>}`)
 
 export const INPUT_CONTROL_TYPES_SET = new Set([
-    'boolean',
-    'number_range',
-    'single_option',
-    'text',
+  'boolean',
+  'number_range',
+  'single_option',
+  'text',
 ] as const)

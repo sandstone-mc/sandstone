@@ -6,8 +6,8 @@ export type WORLDGEN_MATERIAL_RULES = (
   | `minecraft:${SetType<typeof WORLDGEN_MATERIAL_RULES_SET>}`)
 
 export const WORLDGEN_MATERIAL_RULES_SET = new Set([
-    'bandlands',
-    'block',
-    'condition',
-    'sequence',
+  'bandlands',
+  'block',
+  'condition',
+  'sequence',
 ] as const)

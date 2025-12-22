@@ -6,5 +6,5 @@ export type TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS = (
   | `minecraft:${SetType<typeof TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS_SET>}`)
 
 export const TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS_SET = new Set([
-    'visible',
+  'visible',
 ] as const)

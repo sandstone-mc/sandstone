@@ -3,7 +3,7 @@ import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/b
 export type Gene = ('normal' | 'lazy' | 'worried' | 'playful' | 'brown' | 'weak' | 'aggressive')
 
 export type Panda = (Breedable & {
-    /**
+  /**
      * Displayed gene.
      * If this gene is recessive and 'HiddenGene' is not the same, the panda will display the 'normal' gene.
      *
@@ -17,8 +17,8 @@ export type Panda = (Breedable & {
      *  - Weak(`weak`): (recessive)
      *  - Aggressive(`aggressive`): (dominant)
      */
-    MainGene?: Gene
-    /**
+  MainGene?: Gene
+  /**
      * Hidden gene.
      *
      * Value:
@@ -31,5 +31,5 @@ export type Panda = (Breedable & {
      *  - Weak(`weak`): (recessive)
      *  - Aggressive(`aggressive`): (dominant)
      */
-    HiddenGene?: Gene
+  HiddenGene?: Gene
 })

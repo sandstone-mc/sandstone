@@ -6,6 +6,6 @@ export type DIALOG_BODY_TYPES = (
   | `minecraft:${SetType<typeof DIALOG_BODY_TYPES_SET>}`)
 
 export const DIALOG_BODY_TYPES_SET = new Set([
-    'item',
-    'plain_message',
+  'item',
+  'plain_message',
 ] as const)

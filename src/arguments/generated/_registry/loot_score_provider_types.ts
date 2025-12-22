@@ -6,6 +6,6 @@ export type LOOT_SCORE_PROVIDER_TYPES = (
   | `minecraft:${SetType<typeof LOOT_SCORE_PROVIDER_TYPES_SET>}`)
 
 export const LOOT_SCORE_PROVIDER_TYPES_SET = new Set([
-    'context',
-    'fixed',
+  'context',
+  'fixed',
 ] as const)

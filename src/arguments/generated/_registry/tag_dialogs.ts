@@ -6,6 +6,6 @@ export type TAG_DIALOGS = (
   | `minecraft:${SetType<typeof TAG_DIALOGS_SET>}`)
 
 export const TAG_DIALOGS_SET = new Set([
-    'pause_screen_additions',
-    'quick_actions',
+  'pause_screen_additions',
+  'quick_actions',
 ] as const)

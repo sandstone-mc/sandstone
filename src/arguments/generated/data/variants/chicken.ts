@@ -4,15 +4,15 @@ import type { Registry } from 'sandstone/arguments/generated/registry.js'
 export type ChickenModelType = ('normal' | 'cold')
 
 export type ChickenVariant = ({
-    /**
+  /**
      * Value:
      *
      *  - Normal(`normal`)
      *  - Cold(`cold`)
      */
-    model?: ChickenModelType
-    /**
+  model?: ChickenModelType
+  /**
      * The chicken texture to use for this variant.
      */
-    asset_id: Registry['minecraft:texture']
+  asset_id: Registry['minecraft:texture']
 } & SpawnPrioritySelectors)

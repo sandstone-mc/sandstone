@@ -6,5 +6,5 @@ export type TEST_ENVIRONMENTS = (
   | `minecraft:${SetType<typeof TEST_ENVIRONMENTS_SET>}`)
 
 export const TEST_ENVIRONMENTS_SET = new Set([
-    'default',
+  'default',
 ] as const)

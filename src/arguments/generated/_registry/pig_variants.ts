@@ -6,7 +6,7 @@ export type PIG_VARIANTS = (
   | `minecraft:${SetType<typeof PIG_VARIANTS_SET>}`)
 
 export const PIG_VARIANTS_SET = new Set([
-    'cold',
-    'temperate',
-    'warm',
+  'cold',
+  'temperate',
+  'warm',
 ] as const)

@@ -6,6 +6,6 @@ export type WORLDGEN_FEATURE_SIZE_TYPES = (
   | `minecraft:${SetType<typeof WORLDGEN_FEATURE_SIZE_TYPES_SET>}`)
 
 export const WORLDGEN_FEATURE_SIZE_TYPES_SET = new Set([
-    'three_layers_feature_size',
-    'two_layers_feature_size',
+  'three_layers_feature_size',
+  'two_layers_feature_size',
 ] as const)

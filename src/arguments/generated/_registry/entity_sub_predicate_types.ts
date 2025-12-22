@@ -6,10 +6,10 @@ export type ENTITY_SUB_PREDICATE_TYPES = (
   | `minecraft:${SetType<typeof ENTITY_SUB_PREDICATE_TYPES_SET>}`)
 
 export const ENTITY_SUB_PREDICATE_TYPES_SET = new Set([
-    'fishing_hook',
-    'lightning',
-    'player',
-    'raider',
-    'sheep',
-    'slime',
+  'fishing_hook',
+  'lightning',
+  'player',
+  'raider',
+  'sheep',
+  'slime',
 ] as const)

@@ -6,11 +6,11 @@ export type WORLDGEN_NOISE_SETTINGSES = (
   | `minecraft:${SetType<typeof WORLDGEN_NOISE_SETTINGSES_SET>}`)
 
 export const WORLDGEN_NOISE_SETTINGSES_SET = new Set([
-    'amplified',
-    'caves',
-    'end',
-    'floating_islands',
-    'large_biomes',
-    'nether',
-    'overworld',
+  'amplified',
+  'caves',
+  'end',
+  'floating_islands',
+  'large_biomes',
+  'nether',
+  'overworld',
 ] as const)

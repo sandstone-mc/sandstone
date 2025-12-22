@@ -6,6 +6,6 @@ export type POSITION_SOURCE_TYPES = (
   | `minecraft:${SetType<typeof POSITION_SOURCE_TYPES_SET>}`)
 
 export const POSITION_SOURCE_TYPES_SET = new Set([
-    'block',
-    'entity',
+  'block',
+  'entity',
 ] as const)

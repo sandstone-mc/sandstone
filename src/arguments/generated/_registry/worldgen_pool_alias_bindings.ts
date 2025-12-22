@@ -6,7 +6,7 @@ export type WORLDGEN_POOL_ALIAS_BINDINGS = (
   | `minecraft:${SetType<typeof WORLDGEN_POOL_ALIAS_BINDINGS_SET>}`)
 
 export const WORLDGEN_POOL_ALIAS_BINDINGS_SET = new Set([
-    'direct',
-    'random',
-    'random_group',
+  'direct',
+  'random',
+  'random_group',
 ] as const)

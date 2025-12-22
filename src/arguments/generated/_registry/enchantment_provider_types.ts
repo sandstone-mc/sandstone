@@ -6,7 +6,7 @@ export type ENCHANTMENT_PROVIDER_TYPES = (
   | `minecraft:${SetType<typeof ENCHANTMENT_PROVIDER_TYPES_SET>}`)
 
 export const ENCHANTMENT_PROVIDER_TYPES_SET = new Set([
-    'by_cost',
-    'by_cost_with_difficulty',
-    'single',
+  'by_cost',
+  'by_cost_with_difficulty',
+  'single',
 ] as const)

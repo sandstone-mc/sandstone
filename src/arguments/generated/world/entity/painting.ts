@@ -4,7 +4,7 @@ import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/en
 export type Facing = (0 | 1 | 2 | 3)
 
 export type Painting = (BlockAttachedEntity & {
-    /**
+  /**
      * Direction it is facing.
      *
      * Value:
@@ -14,9 +14,9 @@ export type Painting = (BlockAttachedEntity & {
      *  - North(`2`)
      *  - East(`3`)
      */
-    facing?: Facing
-    /**
+  facing?: Facing
+  /**
      * Type of painting.
      */
-    variant?: Registry['minecraft:painting_variant']
+  variant?: Registry['minecraft:painting_variant']
 })

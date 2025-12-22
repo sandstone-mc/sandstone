@@ -6,13 +6,13 @@ export type STAT_TYPES = (
   | `minecraft:${SetType<typeof STAT_TYPES_SET>}`)
 
 export const STAT_TYPES_SET = new Set([
-    'broken',
-    'crafted',
-    'custom',
-    'dropped',
-    'killed',
-    'killed_by',
-    'mined',
-    'picked_up',
-    'used',
+  'broken',
+  'crafted',
+  'custom',
+  'dropped',
+  'killed',
+  'killed_by',
+  'mined',
+  'picked_up',
+  'used',
 ] as const)

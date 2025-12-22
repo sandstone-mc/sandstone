@@ -6,7 +6,7 @@ export type NUMBER_FORMAT_TYPES = (
   | `minecraft:${SetType<typeof NUMBER_FORMAT_TYPES_SET>}`)
 
 export const NUMBER_FORMAT_TYPES_SET = new Set([
-    'blank',
-    'fixed',
-    'styled',
+  'blank',
+  'fixed',
+  'styled',
 ] as const)

@@ -6,10 +6,10 @@ export type SLOT_SOURCE_TYPES = (
   | `minecraft:${SetType<typeof SLOT_SOURCE_TYPES_SET>}`)
 
 export const SLOT_SOURCE_TYPES_SET = new Set([
-    'contents',
-    'empty',
-    'filtered',
-    'group',
-    'limit_slots',
-    'slot_range',
+  'contents',
+  'empty',
+  'filtered',
+  'group',
+  'limit_slots',
+  'slot_range',
 ] as const)

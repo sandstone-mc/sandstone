@@ -6,10 +6,10 @@ export type ENCHANTMENT_LEVEL_BASED_VALUE_TYPES = (
   | `minecraft:${SetType<typeof ENCHANTMENT_LEVEL_BASED_VALUE_TYPES_SET>}`)
 
 export const ENCHANTMENT_LEVEL_BASED_VALUE_TYPES_SET = new Set([
-    'clamped',
-    'exponent',
-    'fraction',
-    'levels_squared',
-    'linear',
-    'lookup',
+  'clamped',
+  'exponent',
+  'fraction',
+  'levels_squared',
+  'linear',
+  'lookup',
 ] as const)

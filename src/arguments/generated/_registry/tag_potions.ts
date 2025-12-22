@@ -6,5 +6,5 @@ export type TAG_POTIONS = (
   | `minecraft:${SetType<typeof TAG_POTIONS_SET>}`)
 
 export const TAG_POTIONS_SET = new Set([
-    'tradeable',
+  'tradeable',
 ] as const)

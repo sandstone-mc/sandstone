@@ -8,20 +8,20 @@ import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, Score } from 'sandstone'
 
 export type ChangePage = {
-    /**
+  /**
      * The page number to go to.
      *
      * Value:
      * Range: 1..
      */
-    page: NBTInt<{
-        min: 1
-    }>
+  page: NBTInt<{
+    min: 1
+  }>
 }
 
 export type ClickEvent = ({
-    [S in Extract<ClickEventAction, string>]?: ({
-        /**
+  [S in Extract<ClickEventAction, string>]?: ({
+    /**
          * Value:
          *
          *  - OpenUrl(`open_url`)
@@ -32,10 +32,10 @@ export type ClickEvent = ({
          *  - ShowDialog(`show_dialog`)
          *  - Custom(`custom`)
          */
-        action: S
-    } & (S extends keyof Dispatcher<'minecraft:click_event'>
-        ? Dispatcher<'minecraft:click_event'>[S]
-        : Record<string, unknown>));
+    action: S
+  } & (S extends keyof Dispatcher<'minecraft:click_event'>
+    ? Dispatcher<'minecraft:click_event'>[S]
+    : Record<string, unknown>));
 }[ClickEventAction])
 
 export type ClickEventAction = (
@@ -48,38 +48,38 @@ export type ClickEventAction = (
   | 'custom')
 
 export type CopyToClipboard = {
-    /**
+  /**
      * The text value to copy to the clipboard.
      */
-    value: string
+  value: string
 }
 
 export type CustomAction = ({
-    [S in Extract<`${string}:${string}`, string>]?: {
-        /**
+  [S in Extract<`${string}:${string}`, string>]?: {
+    /**
          * ID of a custom action.
          * Has no functionality on vanilla servers.
          */
-        id: S
-        payload?: (S extends keyof Dispatcher<'mcdoc:custom_event'>
-            ? Dispatcher<'mcdoc:custom_event'>[S]
-            : Record<string, unknown>)
-    };
+    id: S
+    payload?: (S extends keyof Dispatcher<'mcdoc:custom_event'>
+      ? Dispatcher<'mcdoc:custom_event'>[S]
+      : Record<string, unknown>)
+  };
 }[`${string}:${string}`])
 
 export type HoverEvent = ({
-    [S in Extract<HoverEventAction, string>]?: ({
-        /**
+  [S in Extract<HoverEventAction, string>]?: ({
+    /**
          * Value:
          *
          *  - ShowText(`show_text`)
          *  - ShowItem(`show_item`)
          *  - ShowEntity(`show_entity`)
          */
-        action: S
-    } & (S extends keyof Dispatcher<'minecraft:hover_event'>
-        ? Dispatcher<'minecraft:hover_event'>[S]
-        : Record<string, unknown>));
+    action: S
+  } & (S extends keyof Dispatcher<'minecraft:hover_event'>
+    ? Dispatcher<'minecraft:hover_event'>[S]
+    : Record<string, unknown>));
 }[HoverEventAction])
 
 export type HoverEventAction = ('show_text' | 'show_item' | 'show_entity')
@@ -146,21 +146,21 @@ export type Keybind = (
   | 'key.use')
 
 export type OpenUrl = {
-    url: `${any}${string}` | URL
+  url: `${any}${string}` | URL
 }
 
 export type RunCommand = {
-    command: `${any}${string}`
+  command: `${any}${string}`
 }
 
 export type ShowDialog = {
-    dialog: (Registry['minecraft:dialog'] | Dialog)
+  dialog: (Registry['minecraft:dialog'] | Dialog)
 }
 
 export type ShowEntity = ({
-    contents?: {
-        type: Registry['minecraft:entity_type']
-        /**
+  contents?: {
+    type: Registry['minecraft:entity_type']
+    /**
          * Value:
          * *either*
          *
@@ -170,17 +170,17 @@ export type ShowEntity = ({
          *
          * *item 1*
          */
-        id: (NBTList<NBTInt, {
-            leftExclusive: false
-            rightExclusive: false
-            min: 4
-            max: 4
-        }> | string)
-        name?: Text
-    }
+    id: (NBTList<NBTInt, {
+      leftExclusive: false
+      rightExclusive: false
+      min: 4
+      max: 4
+    }> | string)
+    name?: Text
+  }
 } & {
-    id: Registry['minecraft:entity_type']
-    /**
+  id: Registry['minecraft:entity_type']
+  /**
      * Value:
      * *either*
      *
@@ -190,23 +190,23 @@ export type ShowEntity = ({
      *
      * *item 1*
      */
-    uuid: (NBTList<NBTInt, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 4
-        max: 4
-    }> | string)
-    name?: Text
+  uuid: (NBTList<NBTInt, {
+    leftExclusive: false
+    rightExclusive: false
+    min: 4
+    max: 4
+  }> | string)
+  name?: Text
 })
 
 export type ShowItem = ItemStack
 
 export type ShowText = {
-    value: Text
+  value: Text
 }
 
 export type SuggestCommand = {
-    command: `${any}${string}`
+  command: `${any}${string}`
 }
 
 /**
@@ -223,19 +223,19 @@ export type SuggestCommand = {
  * List length range: 1..
  */
 export type Text = (string | TextObject | NBTList<Text, {
-    leftExclusive: false
-    min: 1
+  leftExclusive: false
+  min: 1
 }>)
 
 export type TextBase = ({
-    /**
+  /**
      * Value:
      * List length range: 1..
      */
-    extra?: NBTList<Text, {
-        leftExclusive: false
-        min: 1
-    }>
+  extra?: NBTList<Text, {
+    leftExclusive: false
+    min: 1
+  }>
 } & TextStyle)
 
 export type TextColor = (
@@ -257,37 +257,37 @@ export type TextColor = (
   | 'white')
 
 export type TextNbtBase = ({
-    interpret?: boolean
-    separator?: Text
+  interpret?: boolean
+  separator?: Text
 } & TextBase)
 
 export type TextObject = (({
-    text: string
-    type?: 'text'
+  text: string
+  type?: 'text'
 } & TextBase) | ({
-    translate: Registry['minecraft:translation_key']
-    fallback?: string
-    /**
+  translate: Registry['minecraft:translation_key']
+  fallback?: string
+  /**
      * Value:
      * List length range: 1..
      */
-    with?: NBTList<Text, {
-        leftExclusive: false
-        min: 1
-    }>
-    type?: 'translatable'
+  with?: NBTList<Text, {
+    leftExclusive: false
+    min: 1
+  }>
+  type?: 'translatable'
 } & TextBase) | ({
-    score: {
-        objective: `${any}${string}` | ObjectiveClass
-        name: `${any}${string}` | Score
-    }
-    type?: 'score'
+  score: {
+    objective: `${any}${string}` | ObjectiveClass
+    name: `${any}${string}` | Score
+  }
+  type?: 'score'
 } & TextBase) | ({
-    selector: MultipleEntitiesArgument
-    separator?: Text
-    type?: 'selector'
+  selector: MultipleEntitiesArgument
+  separator?: Text
+  type?: 'selector'
 } & TextBase) | ({
-    /**
+  /**
      * Value:
      *
      *  - Advancements(`key.advancements`)
@@ -350,43 +350,43 @@ export type TextObject = (({
      *  - ToggleSpectatorShaderEffects(`key.toggleSpectatorShaderEffects`)
      *  - Use(`key.use`)
      */
-    keybind: Keybind
-    type?: 'keybind'
+  keybind: Keybind
+  type?: 'keybind'
 } & TextBase) | ({
-    block: Coordinates
-    nbt: `${any}${string}` | DataPointClass
-    source?: 'block'
-    type?: 'nbt'
+  block: Coordinates
+  nbt: `${any}${string}` | DataPointClass
+  source?: 'block'
+  type?: 'nbt'
 } & TextNbtBase) | ({
-    entity: MultipleEntitiesArgument
-    nbt: `${any}${string}` | DataPointClass
-    source?: 'entity'
-    type?: 'nbt'
+  entity: MultipleEntitiesArgument
+  nbt: `${any}${string}` | DataPointClass
+  source?: 'entity'
+  type?: 'nbt'
 } & TextNbtBase) | ({
-    storage: `${string}:${string}`
-    nbt: `${any}${string}` | DataPointClass
-    source?: 'storage'
-    type?: 'nbt'
+  storage: `${string}:${string}`
+  nbt: `${any}${string}` | DataPointClass
+  source?: 'storage'
+  type?: 'nbt'
 } & TextNbtBase) | ({
-    /**
+  /**
      * Defaults to `minecraft:blocks`.
      */
-    atlas?: Registry['minecraft:atlas']
-    sprite: Registry['minecraft:texture']
-    object?: 'atlas'
-    type?: 'object'
+  atlas?: Registry['minecraft:atlas']
+  sprite: Registry['minecraft:texture']
+  object?: 'atlas'
+  type?: 'object'
 } & TextBase) | ({
-    player: Profile
-    /**
+  player: Profile
+  /**
      * Whether the head layer is rendered. Defaults to `true`.
      */
-    hat?: boolean
-    object?: 'player'
-    type?: 'object'
+  hat?: boolean
+  object?: 'player'
+  type?: 'object'
 } & TextBase))
 
 export type TextStyle = {
-    /**
+  /**
      * Value:
      * *either*
      *
@@ -396,37 +396,37 @@ export type TextStyle = {
      *
      *
      */
-    color?: (`#${string}` | TextColor)
-    /**
+  color?: (`#${string}` | TextColor)
+  /**
      * Overrides the shadow properties of the text.
      * If specified as 0, the shadow will never be displayed.
      */
-    shadow_color?: RGBA
-    font?: Registry['minecraft:font']
-    bold?: boolean
-    italic?: boolean
-    underlined?: boolean
-    strikethrough?: boolean
-    obfuscated?: boolean
-    insertion?: string
-    click_event?: ClickEvent
-    hover_event?: HoverEvent
+  shadow_color?: RGBA
+  font?: Registry['minecraft:font']
+  bold?: boolean
+  italic?: boolean
+  underlined?: boolean
+  strikethrough?: boolean
+  obfuscated?: boolean
+  insertion?: string
+  click_event?: ClickEvent
+  hover_event?: HoverEvent
 }
 type ClickEventDispatcherMap = {
-    'change_page': ClickEventChangePage
-    'minecraft:change_page': ClickEventChangePage
-    'copy_to_clipboard': ClickEventCopyToClipboard
-    'minecraft:copy_to_clipboard': ClickEventCopyToClipboard
-    'custom': ClickEventCustom
-    'minecraft:custom': ClickEventCustom
-    'open_url': ClickEventOpenUrl
-    'minecraft:open_url': ClickEventOpenUrl
-    'run_command': ClickEventRunCommand
-    'minecraft:run_command': ClickEventRunCommand
-    'show_dialog': ClickEventShowDialog
-    'minecraft:show_dialog': ClickEventShowDialog
-    'suggest_command': ClickEventSuggestCommand
-    'minecraft:suggest_command': ClickEventSuggestCommand
+  'change_page': ClickEventChangePage
+  'minecraft:change_page': ClickEventChangePage
+  'copy_to_clipboard': ClickEventCopyToClipboard
+  'minecraft:copy_to_clipboard': ClickEventCopyToClipboard
+  'custom': ClickEventCustom
+  'minecraft:custom': ClickEventCustom
+  'open_url': ClickEventOpenUrl
+  'minecraft:open_url': ClickEventOpenUrl
+  'run_command': ClickEventRunCommand
+  'minecraft:run_command': ClickEventRunCommand
+  'show_dialog': ClickEventShowDialog
+  'minecraft:show_dialog': ClickEventShowDialog
+  'suggest_command': ClickEventSuggestCommand
+  'minecraft:suggest_command': ClickEventSuggestCommand
 }
 type ClickEventKeys = keyof ClickEventDispatcherMap
 type ClickEventFallback = (
@@ -449,15 +449,15 @@ export type SymbolClickEvent<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? ClickEventDispatcherMap
-    : CASE extends 'keys' ? ClickEventKeys : CASE extends '%fallback' ? ClickEventFallback : never
+  ? ClickEventDispatcherMap
+  : CASE extends 'keys' ? ClickEventKeys : CASE extends '%fallback' ? ClickEventFallback : never
 type HoverEventDispatcherMap = {
-    'show_entity': HoverEventShowEntity
-    'minecraft:show_entity': HoverEventShowEntity
-    'show_item': HoverEventShowItem
-    'minecraft:show_item': HoverEventShowItem
-    'show_text': HoverEventShowText
-    'minecraft:show_text': HoverEventShowText
+  'show_entity': HoverEventShowEntity
+  'minecraft:show_entity': HoverEventShowEntity
+  'show_item': HoverEventShowItem
+  'minecraft:show_item': HoverEventShowItem
+  'show_text': HoverEventShowText
+  'minecraft:show_text': HoverEventShowText
 }
 type HoverEventKeys = keyof HoverEventDispatcherMap
 type HoverEventFallback = (HoverEventShowEntity | HoverEventShowItem | HoverEventShowText)
@@ -469,5 +469,5 @@ export type SymbolHoverEvent<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? HoverEventDispatcherMap
-    : CASE extends 'keys' ? HoverEventKeys : CASE extends '%fallback' ? HoverEventFallback : never
+  ? HoverEventDispatcherMap
+  : CASE extends 'keys' ? HoverEventKeys : CASE extends '%fallback' ? HoverEventFallback : never

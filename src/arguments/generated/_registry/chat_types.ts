@@ -6,11 +6,11 @@ export type CHAT_TYPES = (
   | `minecraft:${SetType<typeof CHAT_TYPES_SET>}`)
 
 export const CHAT_TYPES_SET = new Set([
-    'chat',
-    'emote_command',
-    'msg_command_incoming',
-    'msg_command_outgoing',
-    'say_command',
-    'team_msg_command_incoming',
-    'team_msg_command_outgoing',
+  'chat',
+  'emote_command',
+  'msg_command_incoming',
+  'msg_command_outgoing',
+  'say_command',
+  'team_msg_command_incoming',
+  'team_msg_command_outgoing',
 ] as const)

@@ -6,13 +6,13 @@ export type WOLF_VARIANTS = (
   | `minecraft:${SetType<typeof WOLF_VARIANTS_SET>}`)
 
 export const WOLF_VARIANTS_SET = new Set([
-    'ashen',
-    'black',
-    'chestnut',
-    'pale',
-    'rusty',
-    'snowy',
-    'spotted',
-    'striped',
-    'woods',
+  'ashen',
+  'black',
+  'chestnut',
+  'pale',
+  'rusty',
+  'snowy',
+  'spotted',
+  'striped',
+  'woods',
 ] as const)

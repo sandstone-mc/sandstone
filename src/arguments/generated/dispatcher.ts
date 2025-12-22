@@ -3,10 +3,10 @@ import type { SymbolMcdocBlockStateKeys } from 'sandstone/arguments/generated/_b
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/_builtin/block_states.js'
 import type { SymbolMcdocCustomData } from 'sandstone/arguments/generated/_builtin/custom_data.js'
 import type {
-    SymbolMcdocCustomDynamicEventAdditions,
+  SymbolMcdocCustomDynamicEventAdditions,
 } from 'sandstone/arguments/generated/_builtin/custom_dynamic_event_additions.js'
 import type {
-    SymbolMcdocCustomDynamicEventKeys,
+  SymbolMcdocCustomDynamicEventKeys,
 } from 'sandstone/arguments/generated/_builtin/custom_dynamic_event_keys.js'
 import type { SymbolMcdocCustomEvent } from 'sandstone/arguments/generated/_builtin/custom_event.js'
 import type { SymbolMcdocFluidStateKeys } from 'sandstone/arguments/generated/_builtin/fluid_state_keys.js'
@@ -16,7 +16,7 @@ import type { SymbolBlockEntity } from 'sandstone/arguments/generated/_dispatche
 import type { SymbolBlock } from 'sandstone/arguments/generated/_dispatcher/block.js'
 import type { SymbolDialogAction } from 'sandstone/arguments/generated/_dispatcher/dialog_action.js'
 import type {
-    SymbolEnvironmentAttributeColorModifier,
+  SymbolEnvironmentAttributeColorModifier,
 } from 'sandstone/arguments/generated/_dispatcher/environment_attribute_color_modifier.js'
 import type { SymbolGameRule } from 'sandstone/arguments/generated/_dispatcher/game_rule.js'
 import type { SymbolReputationPartValue } from 'sandstone/arguments/generated/_dispatcher/reputation_part_value.js'
@@ -27,12 +27,12 @@ import type { SymbolUniformValue } from 'sandstone/arguments/generated/_dispatch
 import type { SymbolSpriteSource } from 'sandstone/arguments/generated/assets/atlas.js'
 import type { SymbolGlyphProvider } from 'sandstone/arguments/generated/assets/font.js'
 import type {
-    SymbolConditionalItemProperty,
-    SymbolItemModel,
-    SymbolNumericItemProperty,
-    SymbolSelectItemProperty,
-    SymbolSpecialItemModel,
-    SymbolTintSource,
+  SymbolConditionalItemProperty,
+  SymbolItemModel,
+  SymbolNumericItemProperty,
+  SymbolSelectItemProperty,
+  SymbolSpecialItemModel,
+  SymbolTintSource,
 } from 'sandstone/arguments/generated/assets/item_definition.js'
 import type { SymbolGuiSpriteScaling } from 'sandstone/arguments/generated/assets/texture_meta.js'
 import type { SymbolEntitySubPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.js'
@@ -42,9 +42,9 @@ import type { SymbolInputControl } from 'sandstone/arguments/generated/data/dial
 import type { SymbolDialog } from 'sandstone/arguments/generated/data/dialog.js'
 import type { SymbolEffectComponent } from 'sandstone/arguments/generated/data/enchantment/effect_component.js'
 import type {
-    SymbolEntityEffect,
-    SymbolLocationBasedEffect,
-    SymbolValueEffect,
+  SymbolEntityEffect,
+  SymbolLocationBasedEffect,
+  SymbolValueEffect,
 } from 'sandstone/arguments/generated/data/enchantment/effect.js'
 import type { SymbolLevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.js'
 import type { SymbolEnchantmentProvider } from 'sandstone/arguments/generated/data/enchantment/provider.js'
@@ -52,65 +52,65 @@ import type { SymbolTestInstance } from 'sandstone/arguments/generated/data/game
 import type { SymbolTestEnvironmentDefinition } from 'sandstone/arguments/generated/data/gametest/test_environment.js'
 import type { SymbolLootCondition } from 'sandstone/arguments/generated/data/loot/condition.js'
 import type {
-    SymbolApplyBonusFormula,
-    SymbolListOperation,
-    SymbolLootFunction,
+  SymbolApplyBonusFormula,
+  SymbolListOperation,
+  SymbolLootFunction,
 } from 'sandstone/arguments/generated/data/loot/function.js'
 import type { SymbolLootPoolEntry } from 'sandstone/arguments/generated/data/loot.js'
 import type { SymbolRecipeSerializer } from 'sandstone/arguments/generated/data/recipe.js'
 import type { SymbolStorage } from 'sandstone/arguments/generated/data/storage.js'
 import type {
-    SymbolNbtProvider,
-    SymbolNumberProvider,
-    SymbolRandomIntGenerator,
-    SymbolScoreProvider,
+  SymbolNbtProvider,
+  SymbolNumberProvider,
+  SymbolRandomIntGenerator,
+  SymbolScoreProvider,
 } from 'sandstone/arguments/generated/data/util.js'
 import type { SymbolSpawnCondition } from 'sandstone/arguments/generated/data/variants.js'
 import type {
-    SymbolEnvironmentAttributeFloatModifier,
+  SymbolEnvironmentAttributeFloatModifier,
 } from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.js'
 import type { SymbolEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.js'
 import type { SymbolCarverConfig } from 'sandstone/arguments/generated/data/worldgen/carver.js'
 import type { SymbolDensityFunction } from 'sandstone/arguments/generated/data/worldgen/density_function.js'
 import type {
-    SymbolBiomeSource,
-    SymbolMultiNoiseBiomeSource,
+  SymbolBiomeSource,
+  SymbolMultiNoiseBiomeSource,
 } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.js'
 import type { SymbolChunkGenerator } from 'sandstone/arguments/generated/data/worldgen/dimension/chunk_generator.js'
 import type { SymbolBlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.js'
 import type {
-    SymbolBlockStateProvider,
+  SymbolBlockStateProvider,
 } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.js'
 import type { SymbolDecoratorConfig } from 'sandstone/arguments/generated/data/worldgen/feature/decorator.js'
 import type { SymbolPlacementModifier } from 'sandstone/arguments/generated/data/worldgen/feature/placement.js'
 import type { SymbolBlockPlacer, SymbolFeatureConfig } from 'sandstone/arguments/generated/data/worldgen/feature.js'
 import type {
-    SymbolFeatureSize,
-    SymbolFoliagePlacer,
-    SymbolRootPlacer,
-    SymbolTreeDecorator,
-    SymbolTrunkPlacer,
+  SymbolFeatureSize,
+  SymbolFoliagePlacer,
+  SymbolRootPlacer,
+  SymbolTreeDecorator,
+  SymbolTrunkPlacer,
 } from 'sandstone/arguments/generated/data/worldgen/feature/tree.js'
 import type {
-    SymbolPosRuleTest,
-    SymbolRuleBlockEntityModifier,
-    SymbolRuleTest,
-    SymbolTemplateProcessor,
+  SymbolPosRuleTest,
+  SymbolRuleBlockEntityModifier,
+  SymbolRuleTest,
+  SymbolTemplateProcessor,
 } from 'sandstone/arguments/generated/data/worldgen/processor_list.js'
 import type { SymbolStructurePlacement } from 'sandstone/arguments/generated/data/worldgen/structure_set.js'
 import type {
-    SymbolJigsawMaxDistanceFromCenter,
-    SymbolStructureConfig,
-    SymbolWorldgenPoolAliasBinding,
+  SymbolJigsawMaxDistanceFromCenter,
+  SymbolStructureConfig,
+  SymbolWorldgenPoolAliasBinding,
 } from 'sandstone/arguments/generated/data/worldgen/structure.js'
 import type {
-    SymbolSurfaceCondition,
-    SymbolSurfaceRule,
+  SymbolSurfaceCondition,
+  SymbolSurfaceRule,
 } from 'sandstone/arguments/generated/data/worldgen/surface_rule.js'
 import type {
-    SymbolFloatProvider,
-    SymbolHeightProvider,
-    SymbolIntProvider,
+  SymbolFloatProvider,
+  SymbolHeightProvider,
+  SymbolIntProvider,
 } from 'sandstone/arguments/generated/data/worldgen.js'
 import type { SymbolTemplatePoolElement } from 'sandstone/arguments/generated/data/worldgen/template_pool.js'
 import type { SymbolEnvironmentAttributeArgbColorModifier } from 'sandstone/arguments/generated/util/color.js'
@@ -120,722 +120,722 @@ import type { SymbolParticle } from 'sandstone/arguments/generated/util/particle
 import type { SymbolSlotSource } from 'sandstone/arguments/generated/util/slot.js'
 import type { SymbolClickEvent, SymbolHoverEvent } from 'sandstone/arguments/generated/util/text.js'
 import type {
-    SymbolAttributeDisplay,
-    SymbolConsumeEffect,
-    SymbolDataComponent,
+  SymbolAttributeDisplay,
+  SymbolConsumeEffect,
+  SymbolDataComponent,
 } from 'sandstone/arguments/generated/world/component/item.js'
 import type { SymbolDataComponentPredicate } from 'sandstone/arguments/generated/world/component/predicate.js'
 import type { SymbolEntity } from 'sandstone/arguments/generated/world/entity/boat.js'
 import type { SymbolItem } from 'sandstone/arguments/generated/world/item/spawn_item.js'
 
 type DispatcherRequiredArgs = {
-    'mcdoc:block_item_states': [
-    ]
-    'mcdoc:block_state_keys': [
-    ]
-    'mcdoc:block_states': [
-    ]
-    'mcdoc:custom_data': [
-    ]
-    'mcdoc:custom_dynamic_event_additions': [
-    ]
-    'mcdoc:custom_dynamic_event_keys': [
-    ]
-    'mcdoc:custom_event': [
-    ]
-    'mcdoc:fluid_states': [
-    ]
-    'mcdoc:marker_data': [
-    ]
-    'minecraft:apply_bonus_formula': [
-    ]
-    'minecraft:attribute_display': [
-    ]
-    'minecraft:biome_source': [
-    ]
-    'minecraft:block': [
-    ]
-    'minecraft:block_entity': [
-    ]
-    'minecraft:block_placer': [
-    ]
-    'minecraft:block_predicate': [
-    ]
-    'minecraft:block_state_provider': [
-    ]
-    'minecraft:carver_config': [
-    ]
-    'minecraft:chunk_generator': [
-    ]
-    'minecraft:click_event': [
-    ]
-    'minecraft:conditional_item_property': [
-    ]
-    'minecraft:consume_effect': [
-    ]
-    'minecraft:data_component': [
-    ]
-    'minecraft:data_component_predicate': [
-    ]
-    'minecraft:decorator_config': [
-    ]
-    'minecraft:density_function': [
-    ]
-    'minecraft:dialog': [
-    ]
-    'minecraft:dialog_action': [
-    ]
-    'minecraft:dialog_body': [
-    ]
-    'minecraft:effect_component': [
-    ]
-    'minecraft:enchantment_provider': [
-    ]
-    'minecraft:entity': [
-    ]
-    'minecraft:entity_effect': [
-    ]
-    'minecraft:entity_sub_predicate': [
-    ]
-    'minecraft:environment_attribute': [
-    ]
-    'minecraft:environment_attribute_argb_color_modifier': [
-    ]
-    'minecraft:environment_attribute_color_modifier': [
-    ]
-    'minecraft:environment_attribute_float_modifier': [
-        unknown,
-    ]
-    'minecraft:feature_config': [
-    ]
-    'minecraft:feature_size': [
-    ]
-    'minecraft:float_provider': [
-        unknown,
-    ]
-    'minecraft:foliage_placer': [
-    ]
-    'minecraft:game_rule': [
-    ]
-    'minecraft:glyph_provider': [
-    ]
-    'minecraft:gui_sprite_scaling': [
-    ]
-    'minecraft:height_provider': [
-    ]
-    'minecraft:hover_event': [
-    ]
-    'minecraft:input_control': [
-    ]
-    'minecraft:int_provider': [
-        unknown,
-    ]
-    'minecraft:item': [
-    ]
-    'minecraft:item_model': [
-    ]
-    'minecraft:jigsaw_max_distance_from_center': [
-    ]
-    'minecraft:level_based_value': [
-    ]
-    'minecraft:list_operation': [
-    ]
-    'minecraft:location_based_effect': [
-    ]
-    'minecraft:loot_condition': [
-    ]
-    'minecraft:loot_function': [
-    ]
-    'minecraft:loot_pool_entry': [
-    ]
-    'minecraft:memory_module': [
-    ]
-    'minecraft:multi_noise_biome_source': [
-    ]
-    'minecraft:nbt_provider': [
-    ]
-    'minecraft:number_provider': [
-    ]
-    'minecraft:numeric_item_property': [
-    ]
-    'minecraft:particle': [
-    ]
-    'minecraft:placement_modifier': [
-    ]
-    'minecraft:pos_rule_test': [
-    ]
-    'minecraft:position_source': [
-    ]
-    'minecraft:random_int_generator': [
-    ]
-    'minecraft:recipe_serializer': [
-    ]
-    'minecraft:reputation_part_value': [
-    ]
-    'minecraft:resource': [
-    ]
-    'minecraft:root_placer': [
-    ]
-    'minecraft:rule_block_entity_modifier': [
-    ]
-    'minecraft:rule_test': [
-    ]
-    'minecraft:score_provider': [
-    ]
-    'minecraft:select_item_property': [
-    ]
-    'minecraft:slot_source': [
-    ]
-    'minecraft:sound_type': [
-    ]
-    'minecraft:spawn_condition': [
-    ]
-    'minecraft:special_item_model': [
-    ]
-    'minecraft:sprite_source': [
-    ]
-    'minecraft:statistic_type': [
-    ]
-    'minecraft:storage': [
-    ]
-    'minecraft:structure_config': [
-    ]
-    'minecraft:structure_placement': [
-    ]
-    'minecraft:surface_condition': [
-    ]
-    'minecraft:surface_rule': [
-    ]
-    'minecraft:template_pool_element': [
-    ]
-    'minecraft:template_processor': [
-    ]
-    'minecraft:test_environment_definition': [
-    ]
-    'minecraft:test_instance': [
-    ]
-    'minecraft:tint_source': [
-    ]
-    'minecraft:tree_decorator': [
-    ]
-    'minecraft:trigger': [
-    ]
-    'minecraft:trunk_placer': [
-    ]
-    'minecraft:uniform_value': [
-    ]
-    'minecraft:value_effect': [
-    ]
-    'minecraft:worldgen/pool_alias_binding': [
-    ]
-    'mcdoc:fluid_state_keys': [
-    ]
+  'mcdoc:block_item_states': [
+  ]
+  'mcdoc:block_state_keys': [
+  ]
+  'mcdoc:block_states': [
+  ]
+  'mcdoc:custom_data': [
+  ]
+  'mcdoc:custom_dynamic_event_additions': [
+  ]
+  'mcdoc:custom_dynamic_event_keys': [
+  ]
+  'mcdoc:custom_event': [
+  ]
+  'mcdoc:fluid_states': [
+  ]
+  'mcdoc:marker_data': [
+  ]
+  'minecraft:apply_bonus_formula': [
+  ]
+  'minecraft:attribute_display': [
+  ]
+  'minecraft:biome_source': [
+  ]
+  'minecraft:block': [
+  ]
+  'minecraft:block_entity': [
+  ]
+  'minecraft:block_placer': [
+  ]
+  'minecraft:block_predicate': [
+  ]
+  'minecraft:block_state_provider': [
+  ]
+  'minecraft:carver_config': [
+  ]
+  'minecraft:chunk_generator': [
+  ]
+  'minecraft:click_event': [
+  ]
+  'minecraft:conditional_item_property': [
+  ]
+  'minecraft:consume_effect': [
+  ]
+  'minecraft:data_component': [
+  ]
+  'minecraft:data_component_predicate': [
+  ]
+  'minecraft:decorator_config': [
+  ]
+  'minecraft:density_function': [
+  ]
+  'minecraft:dialog': [
+  ]
+  'minecraft:dialog_action': [
+  ]
+  'minecraft:dialog_body': [
+  ]
+  'minecraft:effect_component': [
+  ]
+  'minecraft:enchantment_provider': [
+  ]
+  'minecraft:entity': [
+  ]
+  'minecraft:entity_effect': [
+  ]
+  'minecraft:entity_sub_predicate': [
+  ]
+  'minecraft:environment_attribute': [
+  ]
+  'minecraft:environment_attribute_argb_color_modifier': [
+  ]
+  'minecraft:environment_attribute_color_modifier': [
+  ]
+  'minecraft:environment_attribute_float_modifier': [
+    unknown,
+  ]
+  'minecraft:feature_config': [
+  ]
+  'minecraft:feature_size': [
+  ]
+  'minecraft:float_provider': [
+    unknown,
+  ]
+  'minecraft:foliage_placer': [
+  ]
+  'minecraft:game_rule': [
+  ]
+  'minecraft:glyph_provider': [
+  ]
+  'minecraft:gui_sprite_scaling': [
+  ]
+  'minecraft:height_provider': [
+  ]
+  'minecraft:hover_event': [
+  ]
+  'minecraft:input_control': [
+  ]
+  'minecraft:int_provider': [
+    unknown,
+  ]
+  'minecraft:item': [
+  ]
+  'minecraft:item_model': [
+  ]
+  'minecraft:jigsaw_max_distance_from_center': [
+  ]
+  'minecraft:level_based_value': [
+  ]
+  'minecraft:list_operation': [
+  ]
+  'minecraft:location_based_effect': [
+  ]
+  'minecraft:loot_condition': [
+  ]
+  'minecraft:loot_function': [
+  ]
+  'minecraft:loot_pool_entry': [
+  ]
+  'minecraft:memory_module': [
+  ]
+  'minecraft:multi_noise_biome_source': [
+  ]
+  'minecraft:nbt_provider': [
+  ]
+  'minecraft:number_provider': [
+  ]
+  'minecraft:numeric_item_property': [
+  ]
+  'minecraft:particle': [
+  ]
+  'minecraft:placement_modifier': [
+  ]
+  'minecraft:pos_rule_test': [
+  ]
+  'minecraft:position_source': [
+  ]
+  'minecraft:random_int_generator': [
+  ]
+  'minecraft:recipe_serializer': [
+  ]
+  'minecraft:reputation_part_value': [
+  ]
+  'minecraft:resource': [
+  ]
+  'minecraft:root_placer': [
+  ]
+  'minecraft:rule_block_entity_modifier': [
+  ]
+  'minecraft:rule_test': [
+  ]
+  'minecraft:score_provider': [
+  ]
+  'minecraft:select_item_property': [
+  ]
+  'minecraft:slot_source': [
+  ]
+  'minecraft:sound_type': [
+  ]
+  'minecraft:spawn_condition': [
+  ]
+  'minecraft:special_item_model': [
+  ]
+  'minecraft:sprite_source': [
+  ]
+  'minecraft:statistic_type': [
+  ]
+  'minecraft:storage': [
+  ]
+  'minecraft:structure_config': [
+  ]
+  'minecraft:structure_placement': [
+  ]
+  'minecraft:surface_condition': [
+  ]
+  'minecraft:surface_rule': [
+  ]
+  'minecraft:template_pool_element': [
+  ]
+  'minecraft:template_processor': [
+  ]
+  'minecraft:test_environment_definition': [
+  ]
+  'minecraft:test_instance': [
+  ]
+  'minecraft:tint_source': [
+  ]
+  'minecraft:tree_decorator': [
+  ]
+  'minecraft:trigger': [
+  ]
+  'minecraft:trunk_placer': [
+  ]
+  'minecraft:uniform_value': [
+  ]
+  'minecraft:value_effect': [
+  ]
+  'minecraft:worldgen/pool_alias_binding': [
+  ]
+  'mcdoc:fluid_state_keys': [
+  ]
 }
 type DefaultArgs<R extends keyof DispatcherRequiredArgs> = DispatcherRequiredArgs[R]['length'] extends 0 ? [
 ] : never
 type ApplyDispatcher<R extends keyof DispatcherRequiredArgs, Args extends Array<unknown>> = R extends 'mcdoc:fluid_state_keys' ? Args extends [
-    '%fallback',
+  '%fallback',
 ] ? SymbolMcdocFluidStateKeys<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocFluidStateKeys<'%none'> : Args extends [
-        ] ? SymbolMcdocFluidStateKeys<'map'> : never : R extends 'minecraft:worldgen/pool_alias_binding' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocFluidStateKeys<'%none'> : Args extends [
+    ] ? SymbolMcdocFluidStateKeys<'map'> : never : R extends 'minecraft:worldgen/pool_alias_binding' ? Args extends [
+  '%fallback',
 ] ? SymbolWorldgenPoolAliasBinding<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolWorldgenPoolAliasBinding<'%none'> : Args extends [
-        ] ? SymbolWorldgenPoolAliasBinding<'map'> : never : R extends 'minecraft:value_effect' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolWorldgenPoolAliasBinding<'%none'> : Args extends [
+    ] ? SymbolWorldgenPoolAliasBinding<'map'> : never : R extends 'minecraft:value_effect' ? Args extends [
+  '%fallback',
 ] ? SymbolValueEffect<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolValueEffect<'%none'> : Args extends [
-        ] ? SymbolValueEffect<'map'> : never : R extends 'minecraft:uniform_value' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolValueEffect<'%none'> : Args extends [
+    ] ? SymbolValueEffect<'map'> : never : R extends 'minecraft:uniform_value' ? Args extends [
+  '%fallback',
 ] ? SymbolUniformValue<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolUniformValue<'%none'> : Args extends [
-        ] ? SymbolUniformValue<'map'> : never : R extends 'minecraft:trunk_placer' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolUniformValue<'%none'> : Args extends [
+    ] ? SymbolUniformValue<'map'> : never : R extends 'minecraft:trunk_placer' ? Args extends [
+  '%fallback',
 ] ? SymbolTrunkPlacer<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTrunkPlacer<'%none'> : Args extends [
-        ] ? SymbolTrunkPlacer<'map'> : never : R extends 'minecraft:trigger' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTrunkPlacer<'%none'> : Args extends [
+    ] ? SymbolTrunkPlacer<'map'> : never : R extends 'minecraft:trigger' ? Args extends [
+  '%fallback',
 ] ? SymbolTrigger<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTrigger<'%none'> : Args extends [
-        ] ? SymbolTrigger<'map'> : never : R extends 'minecraft:tree_decorator' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTrigger<'%none'> : Args extends [
+    ] ? SymbolTrigger<'map'> : never : R extends 'minecraft:tree_decorator' ? Args extends [
+  '%fallback',
 ] ? SymbolTreeDecorator<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTreeDecorator<'%none'> : Args extends [
-        ] ? SymbolTreeDecorator<'map'> : never : R extends 'minecraft:tint_source' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTreeDecorator<'%none'> : Args extends [
+    ] ? SymbolTreeDecorator<'map'> : never : R extends 'minecraft:tint_source' ? Args extends [
+  '%fallback',
 ] ? SymbolTintSource<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTintSource<'%none'> : Args extends [
-        ] ? SymbolTintSource<'map'> : never : R extends 'minecraft:test_instance' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTintSource<'%none'> : Args extends [
+    ] ? SymbolTintSource<'map'> : never : R extends 'minecraft:test_instance' ? Args extends [
+  '%fallback',
 ] ? SymbolTestInstance<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTestInstance<'%none'> : Args extends [
-        ] ? SymbolTestInstance<'map'> : never : R extends 'minecraft:test_environment_definition' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTestInstance<'%none'> : Args extends [
+    ] ? SymbolTestInstance<'map'> : never : R extends 'minecraft:test_environment_definition' ? Args extends [
+  '%fallback',
 ] ? SymbolTestEnvironmentDefinition<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTestEnvironmentDefinition<'%none'> : Args extends [
-        ] ? SymbolTestEnvironmentDefinition<'map'> : never : R extends 'minecraft:template_processor' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTestEnvironmentDefinition<'%none'> : Args extends [
+    ] ? SymbolTestEnvironmentDefinition<'map'> : never : R extends 'minecraft:template_processor' ? Args extends [
+  '%fallback',
 ] ? SymbolTemplateProcessor<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTemplateProcessor<'%none'> : Args extends [
-        ] ? SymbolTemplateProcessor<'map'> : never : R extends 'minecraft:template_pool_element' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTemplateProcessor<'%none'> : Args extends [
+    ] ? SymbolTemplateProcessor<'map'> : never : R extends 'minecraft:template_pool_element' ? Args extends [
+  '%fallback',
 ] ? SymbolTemplatePoolElement<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolTemplatePoolElement<'%none'> : Args extends [
-        ] ? SymbolTemplatePoolElement<'map'> : never : R extends 'minecraft:surface_rule' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolTemplatePoolElement<'%none'> : Args extends [
+    ] ? SymbolTemplatePoolElement<'map'> : never : R extends 'minecraft:surface_rule' ? Args extends [
+  '%fallback',
 ] ? SymbolSurfaceRule<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSurfaceRule<'%none'> : Args extends [
-        ] ? SymbolSurfaceRule<'map'> : never : R extends 'minecraft:surface_condition' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSurfaceRule<'%none'> : Args extends [
+    ] ? SymbolSurfaceRule<'map'> : never : R extends 'minecraft:surface_condition' ? Args extends [
+  '%fallback',
 ] ? SymbolSurfaceCondition<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSurfaceCondition<'%none'> : Args extends [
-        ] ? SymbolSurfaceCondition<'map'> : never : R extends 'minecraft:structure_placement' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSurfaceCondition<'%none'> : Args extends [
+    ] ? SymbolSurfaceCondition<'map'> : never : R extends 'minecraft:structure_placement' ? Args extends [
+  '%fallback',
 ] ? SymbolStructurePlacement<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolStructurePlacement<'%none'> : Args extends [
-        ] ? SymbolStructurePlacement<'map'> : never : R extends 'minecraft:structure_config' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolStructurePlacement<'%none'> : Args extends [
+    ] ? SymbolStructurePlacement<'map'> : never : R extends 'minecraft:structure_config' ? Args extends [
+  '%fallback',
 ] ? SymbolStructureConfig<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolStructureConfig<'%none'> : Args extends [
-        ] ? SymbolStructureConfig<'map'> : never : R extends 'minecraft:storage' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolStructureConfig<'%none'> : Args extends [
+    ] ? SymbolStructureConfig<'map'> : never : R extends 'minecraft:storage' ? Args extends [
+  '%fallback',
 ] ? SymbolStorage<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolStorage<'%none'> : Args extends [
-        ] ? SymbolStorage<'map'> : never : R extends 'minecraft:statistic_type' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolStorage<'%none'> : Args extends [
+    ] ? SymbolStorage<'map'> : never : R extends 'minecraft:statistic_type' ? Args extends [
+  '%fallback',
 ] ? SymbolStatisticType<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolStatisticType<'%none'> : Args extends [
-        ] ? SymbolStatisticType<'map'> : never : R extends 'minecraft:sprite_source' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolStatisticType<'%none'> : Args extends [
+    ] ? SymbolStatisticType<'map'> : never : R extends 'minecraft:sprite_source' ? Args extends [
+  '%fallback',
 ] ? SymbolSpriteSource<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSpriteSource<'%none'> : Args extends [
-        ] ? SymbolSpriteSource<'map'> : never : R extends 'minecraft:special_item_model' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSpriteSource<'%none'> : Args extends [
+    ] ? SymbolSpriteSource<'map'> : never : R extends 'minecraft:special_item_model' ? Args extends [
+  '%fallback',
 ] ? SymbolSpecialItemModel<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSpecialItemModel<'%none'> : Args extends [
-        ] ? SymbolSpecialItemModel<'map'> : never : R extends 'minecraft:spawn_condition' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSpecialItemModel<'%none'> : Args extends [
+    ] ? SymbolSpecialItemModel<'map'> : never : R extends 'minecraft:spawn_condition' ? Args extends [
+  '%fallback',
 ] ? SymbolSpawnCondition<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSpawnCondition<'%none'> : Args extends [
-        ] ? SymbolSpawnCondition<'map'> : never : R extends 'minecraft:sound_type' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSpawnCondition<'%none'> : Args extends [
+    ] ? SymbolSpawnCondition<'map'> : never : R extends 'minecraft:sound_type' ? Args extends [
+  '%fallback',
 ] ? SymbolSoundType<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSoundType<'%none'> : Args extends [
-        ] ? SymbolSoundType<'map'> : never : R extends 'minecraft:slot_source' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSoundType<'%none'> : Args extends [
+    ] ? SymbolSoundType<'map'> : never : R extends 'minecraft:slot_source' ? Args extends [
+  '%fallback',
 ] ? SymbolSlotSource<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSlotSource<'%none'> : Args extends [
-        ] ? SymbolSlotSource<'map'> : never : R extends 'minecraft:select_item_property' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSlotSource<'%none'> : Args extends [
+    ] ? SymbolSlotSource<'map'> : never : R extends 'minecraft:select_item_property' ? Args extends [
+  '%fallback',
 ] ? SymbolSelectItemProperty<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolSelectItemProperty<'%none'> : Args extends [
-        ] ? SymbolSelectItemProperty<'map'> : never : R extends 'minecraft:score_provider' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolSelectItemProperty<'%none'> : Args extends [
+    ] ? SymbolSelectItemProperty<'map'> : never : R extends 'minecraft:score_provider' ? Args extends [
+  '%fallback',
 ] ? SymbolScoreProvider<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolScoreProvider<'%none'> : Args extends [
-        ] ? SymbolScoreProvider<'map'> : never : R extends 'minecraft:rule_test' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolScoreProvider<'%none'> : Args extends [
+    ] ? SymbolScoreProvider<'map'> : never : R extends 'minecraft:rule_test' ? Args extends [
+  '%fallback',
 ] ? SymbolRuleTest<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolRuleTest<'%none'> : Args extends [
-        ] ? SymbolRuleTest<'map'> : never : R extends 'minecraft:rule_block_entity_modifier' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolRuleTest<'%none'> : Args extends [
+    ] ? SymbolRuleTest<'map'> : never : R extends 'minecraft:rule_block_entity_modifier' ? Args extends [
+  '%fallback',
 ] ? SymbolRuleBlockEntityModifier<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolRuleBlockEntityModifier<'%none'> : Args extends [
-        ] ? SymbolRuleBlockEntityModifier<'map'> : never : R extends 'minecraft:root_placer' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolRuleBlockEntityModifier<'%none'> : Args extends [
+    ] ? SymbolRuleBlockEntityModifier<'map'> : never : R extends 'minecraft:root_placer' ? Args extends [
+  '%fallback',
 ] ? SymbolRootPlacer<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolRootPlacer<'%none'> : Args extends [
-        ] ? SymbolRootPlacer<'map'> : never : R extends 'minecraft:resource' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolRootPlacer<'%none'> : Args extends [
+    ] ? SymbolRootPlacer<'map'> : never : R extends 'minecraft:resource' ? Args extends [
+  '%fallback',
 ] ? SymbolResource<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolResource<'%none'> : Args extends [
-        ] ? SymbolResource<'map'> : never : R extends 'minecraft:reputation_part_value' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolResource<'%none'> : Args extends [
+    ] ? SymbolResource<'map'> : never : R extends 'minecraft:reputation_part_value' ? Args extends [
+  '%fallback',
 ] ? SymbolReputationPartValue<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolReputationPartValue<'%none'> : Args extends [
-        ] ? SymbolReputationPartValue<'map'> : never : R extends 'minecraft:recipe_serializer' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolReputationPartValue<'%none'> : Args extends [
+    ] ? SymbolReputationPartValue<'map'> : never : R extends 'minecraft:recipe_serializer' ? Args extends [
+  '%fallback',
 ] ? SymbolRecipeSerializer<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolRecipeSerializer<'%none'> : Args extends [
-        ] ? SymbolRecipeSerializer<'map'> : never : R extends 'minecraft:random_int_generator' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolRecipeSerializer<'%none'> : Args extends [
+    ] ? SymbolRecipeSerializer<'map'> : never : R extends 'minecraft:random_int_generator' ? Args extends [
+  '%fallback',
 ] ? SymbolRandomIntGenerator<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolRandomIntGenerator<'%none'> : Args extends [
-        ] ? SymbolRandomIntGenerator<'map'> : never : R extends 'minecraft:position_source' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolRandomIntGenerator<'%none'> : Args extends [
+    ] ? SymbolRandomIntGenerator<'map'> : never : R extends 'minecraft:position_source' ? Args extends [
+  '%fallback',
 ] ? SymbolPositionSource<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolPositionSource<'%none'> : Args extends [
-        ] ? SymbolPositionSource<'map'> : never : R extends 'minecraft:pos_rule_test' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolPositionSource<'%none'> : Args extends [
+    ] ? SymbolPositionSource<'map'> : never : R extends 'minecraft:pos_rule_test' ? Args extends [
+  '%fallback',
 ] ? SymbolPosRuleTest<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolPosRuleTest<'%none'> : Args extends [
-        ] ? SymbolPosRuleTest<'map'> : never : R extends 'minecraft:placement_modifier' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolPosRuleTest<'%none'> : Args extends [
+    ] ? SymbolPosRuleTest<'map'> : never : R extends 'minecraft:placement_modifier' ? Args extends [
+  '%fallback',
 ] ? SymbolPlacementModifier<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolPlacementModifier<'%none'> : Args extends [
-        ] ? SymbolPlacementModifier<'map'> : never : R extends 'minecraft:particle' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolPlacementModifier<'%none'> : Args extends [
+    ] ? SymbolPlacementModifier<'map'> : never : R extends 'minecraft:particle' ? Args extends [
+  '%fallback',
 ] ? SymbolParticle<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolParticle<'%none'> : Args extends [
-        ] ? SymbolParticle<'map'> : never : R extends 'minecraft:numeric_item_property' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolParticle<'%none'> : Args extends [
+    ] ? SymbolParticle<'map'> : never : R extends 'minecraft:numeric_item_property' ? Args extends [
+  '%fallback',
 ] ? SymbolNumericItemProperty<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolNumericItemProperty<'%none'> : Args extends [
-        ] ? SymbolNumericItemProperty<'map'> : never : R extends 'minecraft:number_provider' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolNumericItemProperty<'%none'> : Args extends [
+    ] ? SymbolNumericItemProperty<'map'> : never : R extends 'minecraft:number_provider' ? Args extends [
+  '%fallback',
 ] ? SymbolNumberProvider<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolNumberProvider<'%none'> : Args extends [
-        ] ? SymbolNumberProvider<'map'> : never : R extends 'minecraft:nbt_provider' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolNumberProvider<'%none'> : Args extends [
+    ] ? SymbolNumberProvider<'map'> : never : R extends 'minecraft:nbt_provider' ? Args extends [
+  '%fallback',
 ] ? SymbolNbtProvider<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolNbtProvider<'%none'> : Args extends [
-        ] ? SymbolNbtProvider<'map'> : never : R extends 'minecraft:multi_noise_biome_source' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolNbtProvider<'%none'> : Args extends [
+    ] ? SymbolNbtProvider<'map'> : never : R extends 'minecraft:multi_noise_biome_source' ? Args extends [
+  '%fallback',
 ] ? SymbolMultiNoiseBiomeSource<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMultiNoiseBiomeSource<'%none'> : Args extends [
-        ] ? SymbolMultiNoiseBiomeSource<'map'> : never : R extends 'minecraft:memory_module' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMultiNoiseBiomeSource<'%none'> : Args extends [
+    ] ? SymbolMultiNoiseBiomeSource<'map'> : never : R extends 'minecraft:memory_module' ? Args extends [
+  '%fallback',
 ] ? SymbolMemoryModule<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMemoryModule<'%none'> : Args extends [
-        ] ? SymbolMemoryModule<'map'> : never : R extends 'minecraft:loot_pool_entry' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMemoryModule<'%none'> : Args extends [
+    ] ? SymbolMemoryModule<'map'> : never : R extends 'minecraft:loot_pool_entry' ? Args extends [
+  '%fallback',
 ] ? SymbolLootPoolEntry<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolLootPoolEntry<'%none'> : Args extends [
-        ] ? SymbolLootPoolEntry<'map'> : never : R extends 'minecraft:loot_function' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolLootPoolEntry<'%none'> : Args extends [
+    ] ? SymbolLootPoolEntry<'map'> : never : R extends 'minecraft:loot_function' ? Args extends [
+  '%fallback',
 ] ? SymbolLootFunction<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolLootFunction<'%none'> : Args extends [
-        ] ? SymbolLootFunction<'map'> : never : R extends 'minecraft:loot_condition' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolLootFunction<'%none'> : Args extends [
+    ] ? SymbolLootFunction<'map'> : never : R extends 'minecraft:loot_condition' ? Args extends [
+  '%fallback',
 ] ? SymbolLootCondition<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolLootCondition<'%none'> : Args extends [
-        ] ? SymbolLootCondition<'map'> : never : R extends 'minecraft:location_based_effect' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolLootCondition<'%none'> : Args extends [
+    ] ? SymbolLootCondition<'map'> : never : R extends 'minecraft:location_based_effect' ? Args extends [
+  '%fallback',
 ] ? SymbolLocationBasedEffect<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolLocationBasedEffect<'%none'> : Args extends [
-        ] ? SymbolLocationBasedEffect<'map'> : never : R extends 'minecraft:list_operation' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolLocationBasedEffect<'%none'> : Args extends [
+    ] ? SymbolLocationBasedEffect<'map'> : never : R extends 'minecraft:list_operation' ? Args extends [
+  '%fallback',
 ] ? SymbolListOperation<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolListOperation<'%none'> : Args extends [
-        ] ? SymbolListOperation<'map'> : never : R extends 'minecraft:level_based_value' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolListOperation<'%none'> : Args extends [
+    ] ? SymbolListOperation<'map'> : never : R extends 'minecraft:level_based_value' ? Args extends [
+  '%fallback',
 ] ? SymbolLevelBasedValue<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolLevelBasedValue<'%none'> : Args extends [
-        ] ? SymbolLevelBasedValue<'map'> : never : R extends 'minecraft:jigsaw_max_distance_from_center' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolLevelBasedValue<'%none'> : Args extends [
+    ] ? SymbolLevelBasedValue<'map'> : never : R extends 'minecraft:jigsaw_max_distance_from_center' ? Args extends [
+  '%fallback',
 ] ? SymbolJigsawMaxDistanceFromCenter<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolJigsawMaxDistanceFromCenter<'%none'> : Args extends [
-        ] ? SymbolJigsawMaxDistanceFromCenter<'map'> : never : R extends 'minecraft:item_model' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolJigsawMaxDistanceFromCenter<'%none'> : Args extends [
+    ] ? SymbolJigsawMaxDistanceFromCenter<'map'> : never : R extends 'minecraft:item_model' ? Args extends [
+  '%fallback',
 ] ? SymbolItemModel<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolItemModel<'%none'> : Args extends [
-        ] ? SymbolItemModel<'map'> : never : R extends 'minecraft:item' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolItemModel<'%none'> : Args extends [
+    ] ? SymbolItemModel<'map'> : never : R extends 'minecraft:item' ? Args extends [
+  '%fallback',
 ] ? SymbolItem<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolItem<'%none'> : Args extends [
-        ] ? SymbolItem<'map'> : never : R extends 'minecraft:input_control' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolItem<'%none'> : Args extends [
+    ] ? SymbolItem<'map'> : never : R extends 'minecraft:input_control' ? Args extends [
+  '%fallback',
 ] ? SymbolInputControl<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolInputControl<'%none'> : Args extends [
-        ] ? SymbolInputControl<'map'> : never : R extends 'minecraft:hover_event' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolInputControl<'%none'> : Args extends [
+    ] ? SymbolInputControl<'map'> : never : R extends 'minecraft:hover_event' ? Args extends [
+  '%fallback',
 ] ? SymbolHoverEvent<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolHoverEvent<'%none'> : Args extends [
-        ] ? SymbolHoverEvent<'map'> : never : R extends 'minecraft:height_provider' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolHoverEvent<'%none'> : Args extends [
+    ] ? SymbolHoverEvent<'map'> : never : R extends 'minecraft:height_provider' ? Args extends [
+  '%fallback',
 ] ? SymbolHeightProvider<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolHeightProvider<'%none'> : Args extends [
-        ] ? SymbolHeightProvider<'map'> : never : R extends 'minecraft:gui_sprite_scaling' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolHeightProvider<'%none'> : Args extends [
+    ] ? SymbolHeightProvider<'map'> : never : R extends 'minecraft:gui_sprite_scaling' ? Args extends [
+  '%fallback',
 ] ? SymbolGuiSpriteScaling<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolGuiSpriteScaling<'%none'> : Args extends [
-        ] ? SymbolGuiSpriteScaling<'map'> : never : R extends 'minecraft:glyph_provider' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolGuiSpriteScaling<'%none'> : Args extends [
+    ] ? SymbolGuiSpriteScaling<'map'> : never : R extends 'minecraft:glyph_provider' ? Args extends [
+  '%fallback',
 ] ? SymbolGlyphProvider<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolGlyphProvider<'%none'> : Args extends [
-        ] ? SymbolGlyphProvider<'map'> : never : R extends 'minecraft:game_rule' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolGlyphProvider<'%none'> : Args extends [
+    ] ? SymbolGlyphProvider<'map'> : never : R extends 'minecraft:game_rule' ? Args extends [
+  '%fallback',
 ] ? SymbolGameRule<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolGameRule<'%none'> : Args extends [
-        ] ? SymbolGameRule<'map'> : never : R extends 'minecraft:foliage_placer' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolGameRule<'%none'> : Args extends [
+    ] ? SymbolGameRule<'map'> : never : R extends 'minecraft:foliage_placer' ? Args extends [
+  '%fallback',
 ] ? SymbolFoliagePlacer<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolFoliagePlacer<'%none'> : Args extends [
-        ] ? SymbolFoliagePlacer<'map'> : never : R extends 'minecraft:feature_size' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolFoliagePlacer<'%none'> : Args extends [
+    ] ? SymbolFoliagePlacer<'map'> : never : R extends 'minecraft:feature_size' ? Args extends [
+  '%fallback',
 ] ? SymbolFeatureSize<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolFeatureSize<'%none'> : Args extends [
-        ] ? SymbolFeatureSize<'map'> : never : R extends 'minecraft:feature_config' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolFeatureSize<'%none'> : Args extends [
+    ] ? SymbolFeatureSize<'map'> : never : R extends 'minecraft:feature_config' ? Args extends [
+  '%fallback',
 ] ? SymbolFeatureConfig<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolFeatureConfig<'%none'> : Args extends [
-        ] ? SymbolFeatureConfig<'map'> : never : R extends 'minecraft:environment_attribute_color_modifier' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolFeatureConfig<'%none'> : Args extends [
+    ] ? SymbolFeatureConfig<'map'> : never : R extends 'minecraft:environment_attribute_color_modifier' ? Args extends [
+  '%fallback',
 ] ? SymbolEnvironmentAttributeColorModifier<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEnvironmentAttributeColorModifier<'%none'> : Args extends [
-        ] ? SymbolEnvironmentAttributeColorModifier<'map'> : never : R extends 'minecraft:environment_attribute_argb_color_modifier' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEnvironmentAttributeColorModifier<'%none'> : Args extends [
+    ] ? SymbolEnvironmentAttributeColorModifier<'map'> : never : R extends 'minecraft:environment_attribute_argb_color_modifier' ? Args extends [
+  '%fallback',
 ] ? SymbolEnvironmentAttributeArgbColorModifier<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> : Args extends [
-        ] ? SymbolEnvironmentAttributeArgbColorModifier<'map'> : never : R extends 'minecraft:environment_attribute' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> : Args extends [
+    ] ? SymbolEnvironmentAttributeArgbColorModifier<'map'> : never : R extends 'minecraft:environment_attribute' ? Args extends [
+  '%fallback',
 ] ? SymbolEnvironmentAttribute<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEnvironmentAttribute<'%none'> : Args extends [
-        ] ? SymbolEnvironmentAttribute<'map'> : never : R extends 'minecraft:entity_sub_predicate' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEnvironmentAttribute<'%none'> : Args extends [
+    ] ? SymbolEnvironmentAttribute<'map'> : never : R extends 'minecraft:entity_sub_predicate' ? Args extends [
+  '%fallback',
 ] ? SymbolEntitySubPredicate<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEntitySubPredicate<'%none'> : Args extends [
-        ] ? SymbolEntitySubPredicate<'map'> : never : R extends 'minecraft:entity_effect' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEntitySubPredicate<'%none'> : Args extends [
+    ] ? SymbolEntitySubPredicate<'map'> : never : R extends 'minecraft:entity_effect' ? Args extends [
+  '%fallback',
 ] ? SymbolEntityEffect<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEntityEffect<'%none'> : Args extends [
-        ] ? SymbolEntityEffect<'map'> : never : R extends 'minecraft:entity' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEntityEffect<'%none'> : Args extends [
+    ] ? SymbolEntityEffect<'map'> : never : R extends 'minecraft:entity' ? Args extends [
+  '%fallback',
 ] ? SymbolEntity<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEntity<'%none'> : Args extends [
-        ] ? SymbolEntity<'map'> : never : R extends 'minecraft:enchantment_provider' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEntity<'%none'> : Args extends [
+    ] ? SymbolEntity<'map'> : never : R extends 'minecraft:enchantment_provider' ? Args extends [
+  '%fallback',
 ] ? SymbolEnchantmentProvider<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEnchantmentProvider<'%none'> : Args extends [
-        ] ? SymbolEnchantmentProvider<'map'> : never : R extends 'minecraft:effect_component' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEnchantmentProvider<'%none'> : Args extends [
+    ] ? SymbolEnchantmentProvider<'map'> : never : R extends 'minecraft:effect_component' ? Args extends [
+  '%fallback',
 ] ? SymbolEffectComponent<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolEffectComponent<'%none'> : Args extends [
-        ] ? SymbolEffectComponent<'map'> : never : R extends 'minecraft:dialog_body' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolEffectComponent<'%none'> : Args extends [
+    ] ? SymbolEffectComponent<'map'> : never : R extends 'minecraft:dialog_body' ? Args extends [
+  '%fallback',
 ] ? SymbolDialogBody<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolDialogBody<'%none'> : Args extends [
-        ] ? SymbolDialogBody<'map'> : never : R extends 'minecraft:dialog_action' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolDialogBody<'%none'> : Args extends [
+    ] ? SymbolDialogBody<'map'> : never : R extends 'minecraft:dialog_action' ? Args extends [
+  '%fallback',
 ] ? SymbolDialogAction<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolDialogAction<'%none'> : Args extends [
-        ] ? SymbolDialogAction<'map'> : never : R extends 'minecraft:dialog' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolDialogAction<'%none'> : Args extends [
+    ] ? SymbolDialogAction<'map'> : never : R extends 'minecraft:dialog' ? Args extends [
+  '%fallback',
 ] ? SymbolDialog<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolDialog<'%none'> : Args extends [
-        ] ? SymbolDialog<'map'> : never : R extends 'minecraft:density_function' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolDialog<'%none'> : Args extends [
+    ] ? SymbolDialog<'map'> : never : R extends 'minecraft:density_function' ? Args extends [
+  '%fallback',
 ] ? SymbolDensityFunction<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolDensityFunction<'%none'> : Args extends [
-        ] ? SymbolDensityFunction<'map'> : never : R extends 'minecraft:decorator_config' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolDensityFunction<'%none'> : Args extends [
+    ] ? SymbolDensityFunction<'map'> : never : R extends 'minecraft:decorator_config' ? Args extends [
+  '%fallback',
 ] ? SymbolDecoratorConfig<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolDecoratorConfig<'%none'> : Args extends [
-        ] ? SymbolDecoratorConfig<'map'> : never : R extends 'minecraft:data_component_predicate' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolDecoratorConfig<'%none'> : Args extends [
+    ] ? SymbolDecoratorConfig<'map'> : never : R extends 'minecraft:data_component_predicate' ? Args extends [
+  '%fallback',
 ] ? SymbolDataComponentPredicate<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolDataComponentPredicate<'%none'> : Args extends [
-        ] ? SymbolDataComponentPredicate<'map'> : never : R extends 'minecraft:data_component' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolDataComponentPredicate<'%none'> : Args extends [
+    ] ? SymbolDataComponentPredicate<'map'> : never : R extends 'minecraft:data_component' ? Args extends [
+  '%fallback',
 ] ? SymbolDataComponent<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolDataComponent<'%none'> : Args extends [
-        ] ? SymbolDataComponent<'map'> : never : R extends 'minecraft:consume_effect' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolDataComponent<'%none'> : Args extends [
+    ] ? SymbolDataComponent<'map'> : never : R extends 'minecraft:consume_effect' ? Args extends [
+  '%fallback',
 ] ? SymbolConsumeEffect<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolConsumeEffect<'%none'> : Args extends [
-        ] ? SymbolConsumeEffect<'map'> : never : R extends 'minecraft:conditional_item_property' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolConsumeEffect<'%none'> : Args extends [
+    ] ? SymbolConsumeEffect<'map'> : never : R extends 'minecraft:conditional_item_property' ? Args extends [
+  '%fallback',
 ] ? SymbolConditionalItemProperty<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolConditionalItemProperty<'%none'> : Args extends [
-        ] ? SymbolConditionalItemProperty<'map'> : never : R extends 'minecraft:click_event' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolConditionalItemProperty<'%none'> : Args extends [
+    ] ? SymbolConditionalItemProperty<'map'> : never : R extends 'minecraft:click_event' ? Args extends [
+  '%fallback',
 ] ? SymbolClickEvent<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolClickEvent<'%none'> : Args extends [
-        ] ? SymbolClickEvent<'map'> : never : R extends 'minecraft:chunk_generator' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolClickEvent<'%none'> : Args extends [
+    ] ? SymbolClickEvent<'map'> : never : R extends 'minecraft:chunk_generator' ? Args extends [
+  '%fallback',
 ] ? SymbolChunkGenerator<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolChunkGenerator<'%none'> : Args extends [
-        ] ? SymbolChunkGenerator<'map'> : never : R extends 'minecraft:carver_config' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolChunkGenerator<'%none'> : Args extends [
+    ] ? SymbolChunkGenerator<'map'> : never : R extends 'minecraft:carver_config' ? Args extends [
+  '%fallback',
 ] ? SymbolCarverConfig<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolCarverConfig<'%none'> : Args extends [
-        ] ? SymbolCarverConfig<'map'> : never : R extends 'minecraft:block_state_provider' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolCarverConfig<'%none'> : Args extends [
+    ] ? SymbolCarverConfig<'map'> : never : R extends 'minecraft:block_state_provider' ? Args extends [
+  '%fallback',
 ] ? SymbolBlockStateProvider<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolBlockStateProvider<'%none'> : Args extends [
-        ] ? SymbolBlockStateProvider<'map'> : never : R extends 'minecraft:block_predicate' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolBlockStateProvider<'%none'> : Args extends [
+    ] ? SymbolBlockStateProvider<'map'> : never : R extends 'minecraft:block_predicate' ? Args extends [
+  '%fallback',
 ] ? SymbolBlockPredicate<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolBlockPredicate<'%none'> : Args extends [
-        ] ? SymbolBlockPredicate<'map'> : never : R extends 'minecraft:block_placer' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolBlockPredicate<'%none'> : Args extends [
+    ] ? SymbolBlockPredicate<'map'> : never : R extends 'minecraft:block_placer' ? Args extends [
+  '%fallback',
 ] ? SymbolBlockPlacer<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolBlockPlacer<'%none'> : Args extends [
-        ] ? SymbolBlockPlacer<'map'> : never : R extends 'minecraft:block_entity' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolBlockPlacer<'%none'> : Args extends [
+    ] ? SymbolBlockPlacer<'map'> : never : R extends 'minecraft:block_entity' ? Args extends [
+  '%fallback',
 ] ? SymbolBlockEntity<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolBlockEntity<'%none'> : Args extends [
-        ] ? SymbolBlockEntity<'map'> : never : R extends 'minecraft:block' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolBlockEntity<'%none'> : Args extends [
+    ] ? SymbolBlockEntity<'map'> : never : R extends 'minecraft:block' ? Args extends [
+  '%fallback',
 ] ? SymbolBlock<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolBlock<'%none'> : Args extends [
-        ] ? SymbolBlock<'map'> : never : R extends 'minecraft:biome_source' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolBlock<'%none'> : Args extends [
+    ] ? SymbolBlock<'map'> : never : R extends 'minecraft:biome_source' ? Args extends [
+  '%fallback',
 ] ? SymbolBiomeSource<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolBiomeSource<'%none'> : Args extends [
-        ] ? SymbolBiomeSource<'map'> : never : R extends 'minecraft:attribute_display' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolBiomeSource<'%none'> : Args extends [
+    ] ? SymbolBiomeSource<'map'> : never : R extends 'minecraft:attribute_display' ? Args extends [
+  '%fallback',
 ] ? SymbolAttributeDisplay<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolAttributeDisplay<'%none'> : Args extends [
-        ] ? SymbolAttributeDisplay<'map'> : never : R extends 'minecraft:apply_bonus_formula' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolAttributeDisplay<'%none'> : Args extends [
+    ] ? SymbolAttributeDisplay<'map'> : never : R extends 'minecraft:apply_bonus_formula' ? Args extends [
+  '%fallback',
 ] ? SymbolApplyBonusFormula<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolApplyBonusFormula<'%none'> : Args extends [
-        ] ? SymbolApplyBonusFormula<'map'> : never : R extends 'mcdoc:marker_data' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolApplyBonusFormula<'%none'> : Args extends [
+    ] ? SymbolApplyBonusFormula<'map'> : never : R extends 'mcdoc:marker_data' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocMarkerData<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocMarkerData<'%none'> : Args extends [
-        ] ? SymbolMcdocMarkerData<'map'> : never : R extends 'mcdoc:fluid_states' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocMarkerData<'%none'> : Args extends [
+    ] ? SymbolMcdocMarkerData<'map'> : never : R extends 'mcdoc:fluid_states' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocFluidStates<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocFluidStates<'%none'> : Args extends [
-        ] ? SymbolMcdocFluidStates<'map'> : never : R extends 'mcdoc:custom_event' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocFluidStates<'%none'> : Args extends [
+    ] ? SymbolMcdocFluidStates<'map'> : never : R extends 'mcdoc:custom_event' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocCustomEvent<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocCustomEvent<'%none'> : Args extends [
-        ] ? SymbolMcdocCustomEvent<'map'> : never : R extends 'mcdoc:custom_dynamic_event_keys' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocCustomEvent<'%none'> : Args extends [
+    ] ? SymbolMcdocCustomEvent<'map'> : never : R extends 'mcdoc:custom_dynamic_event_keys' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocCustomDynamicEventKeys<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocCustomDynamicEventKeys<'%none'> : Args extends [
-        ] ? SymbolMcdocCustomDynamicEventKeys<'map'> : never : R extends 'mcdoc:custom_dynamic_event_additions' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocCustomDynamicEventKeys<'%none'> : Args extends [
+    ] ? SymbolMcdocCustomDynamicEventKeys<'map'> : never : R extends 'mcdoc:custom_dynamic_event_additions' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocCustomDynamicEventAdditions<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocCustomDynamicEventAdditions<'%none'> : Args extends [
-        ] ? SymbolMcdocCustomDynamicEventAdditions<'map'> : never : R extends 'mcdoc:custom_data' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocCustomDynamicEventAdditions<'%none'> : Args extends [
+    ] ? SymbolMcdocCustomDynamicEventAdditions<'map'> : never : R extends 'mcdoc:custom_data' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocCustomData<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocCustomData<'%none'> : Args extends [
-        ] ? SymbolMcdocCustomData<'map'> : never : R extends 'mcdoc:block_states' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocCustomData<'%none'> : Args extends [
+    ] ? SymbolMcdocCustomData<'map'> : never : R extends 'mcdoc:block_states' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocBlockStates<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocBlockStates<'%none'> : Args extends [
-        ] ? SymbolMcdocBlockStates<'map'> : never : R extends 'mcdoc:block_state_keys' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocBlockStates<'%none'> : Args extends [
+    ] ? SymbolMcdocBlockStates<'map'> : never : R extends 'mcdoc:block_state_keys' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocBlockStateKeys<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocBlockStateKeys<'%none'> : Args extends [
-        ] ? SymbolMcdocBlockStateKeys<'map'> : never : R extends 'mcdoc:block_item_states' ? Args extends [
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocBlockStateKeys<'%none'> : Args extends [
+    ] ? SymbolMcdocBlockStateKeys<'map'> : never : R extends 'mcdoc:block_item_states' ? Args extends [
+  '%fallback',
 ] ? SymbolMcdocBlockItemStates<'%fallback'> : Args extends [
-        '%none',
-    ] ? SymbolMcdocBlockItemStates<'%none'> : Args extends [
-        ] ? SymbolMcdocBlockItemStates<'map'> : never : R extends 'minecraft:int_provider' ? Args extends [
-    infer A,
-    '%fallback',
+    '%none',
+  ] ? SymbolMcdocBlockItemStates<'%none'> : Args extends [
+    ] ? SymbolMcdocBlockItemStates<'map'> : never : R extends 'minecraft:int_provider' ? Args extends [
+  infer A,
+  '%fallback',
 ] ? SymbolIntProvider<A, '%fallback'> : Args extends [
-        infer A,
-        '%none',
-    ] ? SymbolIntProvider<A, '%none'> : Args extends [
-            infer A,
-        ] ? SymbolIntProvider<A, 'map'> : never : R extends 'minecraft:float_provider' ? Args extends [
     infer A,
-    '%fallback',
+    '%none',
+  ] ? SymbolIntProvider<A, '%none'> : Args extends [
+      infer A,
+    ] ? SymbolIntProvider<A, 'map'> : never : R extends 'minecraft:float_provider' ? Args extends [
+  infer A,
+  '%fallback',
 ] ? SymbolFloatProvider<A, '%fallback'> : Args extends [
-        infer A,
-        '%none',
-    ] ? SymbolFloatProvider<A, '%none'> : Args extends [
-            infer A,
-        ] ? SymbolFloatProvider<A, 'map'> : never : R extends 'minecraft:environment_attribute_float_modifier' ? Args extends [
     infer A,
-    '%fallback',
+    '%none',
+  ] ? SymbolFloatProvider<A, '%none'> : Args extends [
+      infer A,
+    ] ? SymbolFloatProvider<A, 'map'> : never : R extends 'minecraft:environment_attribute_float_modifier' ? Args extends [
+  infer A,
+  '%fallback',
 ] ? SymbolEnvironmentAttributeFloatModifier<A, '%fallback'> : Args extends [
-        infer A,
-        '%none',
-    ] ? SymbolEnvironmentAttributeFloatModifier<A, '%none'> : Args extends [
-            infer A,
-        ] ? SymbolEnvironmentAttributeFloatModifier<A, 'map'> : never : never
+    infer A,
+    '%none',
+  ] ? SymbolEnvironmentAttributeFloatModifier<A, '%none'> : Args extends [
+      infer A,
+    ] ? SymbolEnvironmentAttributeFloatModifier<A, 'map'> : never : never
 export type Dispatcher<R extends keyof DispatcherRequiredArgs, Args extends Array<unknown> = DefaultArgs<R>> = ApplyDispatcher<R, Args>

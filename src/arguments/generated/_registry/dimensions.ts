@@ -6,7 +6,7 @@ export type DIMENSIONS = (
   | `minecraft:${SetType<typeof DIMENSIONS_SET>}`)
 
 export const DIMENSIONS_SET = new Set([
-    'overworld',
-    'the_end',
-    'the_nether',
+  'overworld',
+  'the_end',
+  'the_nether',
 ] as const)

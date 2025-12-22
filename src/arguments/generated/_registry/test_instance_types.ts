@@ -6,6 +6,6 @@ export type TEST_INSTANCE_TYPES = (
   | `minecraft:${SetType<typeof TEST_INSTANCE_TYPES_SET>}`)
 
 export const TEST_INSTANCE_TYPES_SET = new Set([
-    'block_based',
-    'function',
+  'block_based',
+  'function',
 ] as const)

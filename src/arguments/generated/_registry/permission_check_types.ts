@@ -6,6 +6,6 @@ export type PERMISSION_CHECK_TYPES = (
   | `minecraft:${SetType<typeof PERMISSION_CHECK_TYPES_SET>}`)
 
 export const PERMISSION_CHECK_TYPES_SET = new Set([
-    'always_pass',
-    'require',
+  'always_pass',
+  'require',
 ] as const)

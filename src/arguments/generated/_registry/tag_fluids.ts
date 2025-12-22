@@ -6,6 +6,6 @@ export type TAG_FLUIDS = (
   | `minecraft:${SetType<typeof TAG_FLUIDS_SET>}`)
 
 export const TAG_FLUIDS_SET = new Set([
-    'lava',
-    'water',
+  'lava',
+  'water',
 ] as const)

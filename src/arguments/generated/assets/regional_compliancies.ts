@@ -252,12 +252,12 @@ export type Code = (
   | 'ZWE')
 
 export type Notification = {
-    delay?: NBTLong
-    period: NBTLong
-    title: string
-    message: string
+  delay?: NBTLong
+  period: NBTLong
+  title: string
+  message: string
 }
 
 export type RegionalCompliancies = ({
-    [Key in Extract<Code, string>]?: Array<Notification>;
+  [Key in Extract<Code, string>]?: Array<Notification>;
 })

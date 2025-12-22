@@ -6,8 +6,8 @@ export type WORLDGEN_BIOME_SOURCES = (
   | `minecraft:${SetType<typeof WORLDGEN_BIOME_SOURCES_SET>}`)
 
 export const WORLDGEN_BIOME_SOURCES_SET = new Set([
-    'checkerboard',
-    'fixed',
-    'multi_noise',
-    'the_end',
+  'checkerboard',
+  'fixed',
+  'multi_noise',
+  'the_end',
 ] as const)

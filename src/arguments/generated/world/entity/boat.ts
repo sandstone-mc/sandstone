@@ -13,13 +13,13 @@ import type { ItemFrame } from 'sandstone/arguments/generated/world/entity/item_
 import type { Item } from 'sandstone/arguments/generated/world/entity/item.js'
 import type { Marker } from 'sandstone/arguments/generated/world/entity/marker.js'
 import type {
-    ChestMinecart,
-    CommandBlockMinecart,
-    FurnaceMinecart,
-    HopperMinecart,
-    Minecart,
-    SpawnerMinecart,
-    TntMinecart,
+  ChestMinecart,
+  CommandBlockMinecart,
+  FurnaceMinecart,
+  HopperMinecart,
+  Minecart,
+  SpawnerMinecart,
+  TntMinecart,
 } from 'sandstone/arguments/generated/world/entity/minecart.js'
 import type { Allay } from 'sandstone/arguments/generated/world/entity/mob/allay.js'
 import type { ArmorStand } from 'sandstone/arguments/generated/world/entity/mob/armor_stand.js'
@@ -36,13 +36,13 @@ import type { Frog } from 'sandstone/arguments/generated/world/entity/mob/breeda
 import type { Goat } from 'sandstone/arguments/generated/world/entity/mob/breedable/goat.js'
 import type { Hoglin } from 'sandstone/arguments/generated/world/entity/mob/breedable/hoglin.js'
 import type {
-    Camel,
-    ChestedHorse,
-    Horse,
-    HorseBase,
-    Llama,
-    SkeletonHorse,
-    TraderLlama,
+  Camel,
+  ChestedHorse,
+  Horse,
+  HorseBase,
+  Llama,
+  SkeletonHorse,
+  TraderLlama,
 } from 'sandstone/arguments/generated/world/entity/mob/breedable/horse.js'
 import type { Mooshroom } from 'sandstone/arguments/generated/world/entity/mob/breedable/mooshroom.js'
 import type { Ocelot } from 'sandstone/arguments/generated/world/entity/mob/breedable/ocelot.js'
@@ -71,11 +71,11 @@ import type { Phantom } from 'sandstone/arguments/generated/world/entity/mob/pha
 import type { Piglin, PiglinBase } from 'sandstone/arguments/generated/world/entity/mob/piglin.js'
 import type { Player } from 'sandstone/arguments/generated/world/entity/mob/player.js'
 import type {
-    Pillager,
-    RaiderBase,
-    Ravager,
-    Spellcaster,
-    Vindicator,
+  Pillager,
+  RaiderBase,
+  Ravager,
+  Spellcaster,
+  Vindicator,
 } from 'sandstone/arguments/generated/world/entity/mob/raider.js'
 import type { Shulker } from 'sandstone/arguments/generated/world/entity/mob/shulker.js'
 import type { Skeleton } from 'sandstone/arguments/generated/world/entity/mob/skeleton.js'
@@ -92,11 +92,11 @@ import type { OminousItemSpawner } from 'sandstone/arguments/generated/world/ent
 import type { Painting } from 'sandstone/arguments/generated/world/entity/painting.js'
 import type { Arrow, SpectralArrow, Trident } from 'sandstone/arguments/generated/world/entity/projectile/arrow.js'
 import type {
-    AcceleratingProjectileBase,
-    DespawnableProjectileBase,
-    FireballBase,
-    LargeFireball,
-    WitherSkull,
+  AcceleratingProjectileBase,
+  DespawnableProjectileBase,
+  FireballBase,
+  LargeFireball,
+  WitherSkull,
 } from 'sandstone/arguments/generated/world/entity/projectile/fireball.js'
 import type { FireWorkRocket } from 'sandstone/arguments/generated/world/entity/projectile/firework_rocket.js'
 import type { LlamaSpit } from 'sandstone/arguments/generated/world/entity/projectile.js'
@@ -119,347 +119,347 @@ export type BoatType = (
   | 'cherry')
 
 export type ChestBoat = (Boat & {
-    /**
+  /**
      * Loot table that will populate this chest boat.
      */
-    LootTable?: (Registry['minecraft:loot_table'] | '')
-    /**
+  LootTable?: (Registry['minecraft:loot_table'] | '')
+  /**
      * Seed of the loot table.
      */
-    LootTableSeed?: NBTLong
-    /**
+  LootTableSeed?: NBTLong
+  /**
      * Slots from 0 to 26.
      *
      * Value:
      * List length range: 0..27
      */
-    Items?: NBTList<SlottedItem<NBTByte<{
-        min: 0
-        max: 26
-    }>>, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 27
-    }>
+  Items?: NBTList<SlottedItem<NBTByte<{
+    min: 0
+    max: 26
+  }>>, {
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 27
+  }>
 })
 type EntityDispatcherMap = {
-    'acacia_boat': EntityAcaciaBoat
-    'minecraft:acacia_boat': EntityAcaciaBoat
-    'acacia_chest_boat': EntityAcaciaChestBoat
-    'minecraft:acacia_chest_boat': EntityAcaciaChestBoat
-    'allay': EntityAllay
-    'minecraft:allay': EntityAllay
-    'area_effect_cloud': EntityAreaEffectCloud
-    'minecraft:area_effect_cloud': EntityAreaEffectCloud
-    'armadillo': EntityArmadillo
-    'minecraft:armadillo': EntityArmadillo
-    'armor_stand': EntityArmorStand
-    'minecraft:armor_stand': EntityArmorStand
-    'arrow': EntityArrow
-    'minecraft:arrow': EntityArrow
-    'axolotl': EntityAxolotl
-    'minecraft:axolotl': EntityAxolotl
-    'bamboo_chest_raft': EntityBambooChestRaft
-    'minecraft:bamboo_chest_raft': EntityBambooChestRaft
-    'bamboo_raft': EntityBambooRaft
-    'minecraft:bamboo_raft': EntityBambooRaft
-    'bat': EntityBat
-    'minecraft:bat': EntityBat
-    'bee': EntityBee
-    'minecraft:bee': EntityBee
-    'birch_boat': EntityBirchBoat
-    'minecraft:birch_boat': EntityBirchBoat
-    'birch_chest_boat': EntityBirchChestBoat
-    'minecraft:birch_chest_boat': EntityBirchChestBoat
-    'blaze': EntityBlaze
-    'minecraft:blaze': EntityBlaze
-    'block_display': EntityBlockDisplay
-    'minecraft:block_display': EntityBlockDisplay
-    'boat': EntityBoat
-    'minecraft:boat': EntityBoat
-    'bogged': EntityBogged
-    'minecraft:bogged': EntityBogged
-    'breeze': EntityBreeze
-    'minecraft:breeze': EntityBreeze
-    'breeze_wind_charge': EntityBreezeWindCharge
-    'minecraft:breeze_wind_charge': EntityBreezeWindCharge
-    'camel': EntityCamel
-    'minecraft:camel': EntityCamel
-    'camel_husk': EntityCamelHusk
-    'minecraft:camel_husk': EntityCamelHusk
-    'cat': EntityCat
-    'minecraft:cat': EntityCat
-    'cave_spider': EntityCaveSpider
-    'minecraft:cave_spider': EntityCaveSpider
-    'cherry_boat': EntityCherryBoat
-    'minecraft:cherry_boat': EntityCherryBoat
-    'cherry_chest_boat': EntityCherryChestBoat
-    'minecraft:cherry_chest_boat': EntityCherryChestBoat
-    'chest_boat': EntityChestBoat
-    'minecraft:chest_boat': EntityChestBoat
-    'chest_minecart': EntityChestMinecart
-    'minecraft:chest_minecart': EntityChestMinecart
-    'chicken': EntityChicken
-    'minecraft:chicken': EntityChicken
-    'cod': EntityCod
-    'minecraft:cod': EntityCod
-    'command_block_minecart': EntityCommandBlockMinecart
-    'minecraft:command_block_minecart': EntityCommandBlockMinecart
-    'copper_golem': EntityCopperGolem
-    'minecraft:copper_golem': EntityCopperGolem
-    'cow': EntityCow
-    'minecraft:cow': EntityCow
-    'creaking': EntityCreaking
-    'minecraft:creaking': EntityCreaking
-    'creaking_transient': EntityCreakingTransient
-    'minecraft:creaking_transient': EntityCreakingTransient
-    'creeper': EntityCreeper
-    'minecraft:creeper': EntityCreeper
-    'dark_oak_boat': EntityDarkOakBoat
-    'minecraft:dark_oak_boat': EntityDarkOakBoat
-    'dark_oak_chest_boat': EntityDarkOakChestBoat
-    'minecraft:dark_oak_chest_boat': EntityDarkOakChestBoat
-    'dolphin': EntityDolphin
-    'minecraft:dolphin': EntityDolphin
-    'donkey': EntityDonkey
-    'minecraft:donkey': EntityDonkey
-    'dragon_fireball': EntityDragonFireball
-    'minecraft:dragon_fireball': EntityDragonFireball
-    'drowned': EntityDrowned
-    'minecraft:drowned': EntityDrowned
-    'egg': EntityEgg
-    'minecraft:egg': EntityEgg
-    'elder_guardian': EntityElderGuardian
-    'minecraft:elder_guardian': EntityElderGuardian
-    'end_crystal': EntityEndCrystal
-    'minecraft:end_crystal': EntityEndCrystal
-    'ender_dragon': EntityEnderDragon
-    'minecraft:ender_dragon': EntityEnderDragon
-    'ender_pearl': EntityEnderPearl
-    'minecraft:ender_pearl': EntityEnderPearl
-    'enderman': EntityEnderman
-    'minecraft:enderman': EntityEnderman
-    'endermite': EntityEndermite
-    'minecraft:endermite': EntityEndermite
-    'evoker': EntityEvoker
-    'minecraft:evoker': EntityEvoker
-    'evoker_fangs': EntityEvokerFangs
-    'minecraft:evoker_fangs': EntityEvokerFangs
-    'experience_bottle': EntityExperienceBottle
-    'minecraft:experience_bottle': EntityExperienceBottle
-    'experience_orb': EntityExperienceOrb
-    'minecraft:experience_orb': EntityExperienceOrb
-    'eye_of_ender': EntityEyeOfEnder
-    'minecraft:eye_of_ender': EntityEyeOfEnder
-    'falling_block': EntityFallingBlock
-    'minecraft:falling_block': EntityFallingBlock
-    'fireball': EntityFireball
-    'minecraft:fireball': EntityFireball
-    'firework_rocket': EntityFireworkRocket
-    'minecraft:firework_rocket': EntityFireworkRocket
-    'fox': EntityFox
-    'minecraft:fox': EntityFox
-    'frog': EntityFrog
-    'minecraft:frog': EntityFrog
-    'furnace_minecart': EntityFurnaceMinecart
-    'minecraft:furnace_minecart': EntityFurnaceMinecart
-    'ghast': EntityGhast
-    'minecraft:ghast': EntityGhast
-    'giant': EntityGiant
-    'minecraft:giant': EntityGiant
-    'glow_item_frame': EntityGlowItemFrame
-    'minecraft:glow_item_frame': EntityGlowItemFrame
-    'glow_squid': EntityGlowSquid
-    'minecraft:glow_squid': EntityGlowSquid
-    'goat': EntityGoat
-    'minecraft:goat': EntityGoat
-    'guardian': EntityGuardian
-    'minecraft:guardian': EntityGuardian
-    'hoglin': EntityHoglin
-    'minecraft:hoglin': EntityHoglin
-    'hopper_minecart': EntityHopperMinecart
-    'minecraft:hopper_minecart': EntityHopperMinecart
-    'horse': EntityHorse
-    'minecraft:horse': EntityHorse
-    'husk': EntityHusk
-    'minecraft:husk': EntityHusk
-    'illusioner': EntityIllusioner
-    'minecraft:illusioner': EntityIllusioner
-    'interaction': EntityInteraction
-    'minecraft:interaction': EntityInteraction
-    'iron_golem': EntityIronGolem
-    'minecraft:iron_golem': EntityIronGolem
-    'item': EntityItem
-    'minecraft:item': EntityItem
-    'item_display': EntityItemDisplay
-    'minecraft:item_display': EntityItemDisplay
-    'item_frame': EntityItemFrame
-    'minecraft:item_frame': EntityItemFrame
-    'jungle_boat': EntityJungleBoat
-    'minecraft:jungle_boat': EntityJungleBoat
-    'jungle_chest_boat': EntityJungleChestBoat
-    'minecraft:jungle_chest_boat': EntityJungleChestBoat
-    'leash_knot': EntityLeashKnot
-    'minecraft:leash_knot': EntityLeashKnot
-    'lingering_potion': EntityLingeringPotion
-    'minecraft:lingering_potion': EntityLingeringPotion
-    'llama': EntityLlama
-    'minecraft:llama': EntityLlama
-    'llama_spit': EntityLlamaSpit
-    'minecraft:llama_spit': EntityLlamaSpit
-    'magma_cube': EntityMagmaCube
-    'minecraft:magma_cube': EntityMagmaCube
-    'mangrove_boat': EntityMangroveBoat
-    'minecraft:mangrove_boat': EntityMangroveBoat
-    'mangrove_chest_boat': EntityMangroveChestBoat
-    'minecraft:mangrove_chest_boat': EntityMangroveChestBoat
-    'mannequin': EntityMannequin
-    'minecraft:mannequin': EntityMannequin
-    'marker': EntityMarker
-    'minecraft:marker': EntityMarker
-    'minecart': EntityMinecart
-    'minecraft:minecart': EntityMinecart
-    'mooshroom': EntityMooshroom
-    'minecraft:mooshroom': EntityMooshroom
-    'mule': EntityMule
-    'minecraft:mule': EntityMule
-    'nautilus': EntityNautilus
-    'minecraft:nautilus': EntityNautilus
-    'oak_boat': EntityOakBoat
-    'minecraft:oak_boat': EntityOakBoat
-    'oak_chest_boat': EntityOakChestBoat
-    'minecraft:oak_chest_boat': EntityOakChestBoat
-    'ocelot': EntityOcelot
-    'minecraft:ocelot': EntityOcelot
-    'ominous_item_spawner': EntityOminousItemSpawner
-    'minecraft:ominous_item_spawner': EntityOminousItemSpawner
-    'painting': EntityPainting
-    'minecraft:painting': EntityPainting
-    'pale_oak_boat': EntityPaleOakBoat
-    'minecraft:pale_oak_boat': EntityPaleOakBoat
-    'pale_oak_chest_boat': EntityPaleOakChestBoat
-    'minecraft:pale_oak_chest_boat': EntityPaleOakChestBoat
-    'panda': EntityPanda
-    'minecraft:panda': EntityPanda
-    'parched': EntityParched
-    'minecraft:parched': EntityParched
-    'parrot': EntityParrot
-    'minecraft:parrot': EntityParrot
-    'phantom': EntityPhantom
-    'minecraft:phantom': EntityPhantom
-    'pig': EntityPig
-    'minecraft:pig': EntityPig
-    'piglin': EntityPiglin
-    'minecraft:piglin': EntityPiglin
-    'piglin_brute': EntityPiglinBrute
-    'minecraft:piglin_brute': EntityPiglinBrute
-    'pillager': EntityPillager
-    'minecraft:pillager': EntityPillager
-    'player': EntityPlayer
-    'minecraft:player': EntityPlayer
-    'polar_bear': EntityPolarBear
-    'minecraft:polar_bear': EntityPolarBear
-    'potion': EntityPotion
-    'minecraft:potion': EntityPotion
-    'pufferfish': EntityPufferfish
-    'minecraft:pufferfish': EntityPufferfish
-    'rabbit': EntityRabbit
-    'minecraft:rabbit': EntityRabbit
-    'ravager': EntityRavager
-    'minecraft:ravager': EntityRavager
-    'salmon': EntitySalmon
-    'minecraft:salmon': EntitySalmon
-    'sheep': EntitySheep
-    'minecraft:sheep': EntitySheep
-    'shulker': EntityShulker
-    'minecraft:shulker': EntityShulker
-    'shulker_bullet': EntityShulkerBullet
-    'minecraft:shulker_bullet': EntityShulkerBullet
-    'silverfish': EntitySilverfish
-    'minecraft:silverfish': EntitySilverfish
-    'skeleton': EntitySkeleton
-    'minecraft:skeleton': EntitySkeleton
-    'skeleton_horse': EntitySkeletonHorse
-    'minecraft:skeleton_horse': EntitySkeletonHorse
-    'slime': EntitySlime
-    'minecraft:slime': EntitySlime
-    'small_fireball': EntitySmallFireball
-    'minecraft:small_fireball': EntitySmallFireball
-    'sniffer': EntitySniffer
-    'minecraft:sniffer': EntitySniffer
-    'snow_golem': EntitySnowGolem
-    'minecraft:snow_golem': EntitySnowGolem
-    'snowball': EntitySnowball
-    'minecraft:snowball': EntitySnowball
-    'spawner_minecart': EntitySpawnerMinecart
-    'minecraft:spawner_minecart': EntitySpawnerMinecart
-    'spectral_arrow': EntitySpectralArrow
-    'minecraft:spectral_arrow': EntitySpectralArrow
-    'spider': EntitySpider
-    'minecraft:spider': EntitySpider
-    'splash_potion': EntitySplashPotion
-    'minecraft:splash_potion': EntitySplashPotion
-    'spruce_boat': EntitySpruceBoat
-    'minecraft:spruce_boat': EntitySpruceBoat
-    'spruce_chest_boat': EntitySpruceChestBoat
-    'minecraft:spruce_chest_boat': EntitySpruceChestBoat
-    'squid': EntitySquid
-    'minecraft:squid': EntitySquid
-    'stray': EntityStray
-    'minecraft:stray': EntityStray
-    'strider': EntityStrider
-    'minecraft:strider': EntityStrider
-    'tadpole': EntityTadpole
-    'minecraft:tadpole': EntityTadpole
-    'text_display': EntityTextDisplay
-    'minecraft:text_display': EntityTextDisplay
-    'tnt': EntityTnt
-    'minecraft:tnt': EntityTnt
-    'tnt_minecart': EntityTntMinecart
-    'minecraft:tnt_minecart': EntityTntMinecart
-    'trader_llama': EntityTraderLlama
-    'minecraft:trader_llama': EntityTraderLlama
-    'trident': EntityTrident
-    'minecraft:trident': EntityTrident
-    'tropical_fish': EntityTropicalFish
-    'minecraft:tropical_fish': EntityTropicalFish
-    'turtle': EntityTurtle
-    'minecraft:turtle': EntityTurtle
-    'vex': EntityVex
-    'minecraft:vex': EntityVex
-    'villager': EntityVillager
-    'minecraft:villager': EntityVillager
-    'vindicator': EntityVindicator
-    'minecraft:vindicator': EntityVindicator
-    'wandering_trader': EntityWanderingTrader
-    'minecraft:wandering_trader': EntityWanderingTrader
-    'warden': EntityWarden
-    'minecraft:warden': EntityWarden
-    'witch': EntityWitch
-    'minecraft:witch': EntityWitch
-    'wither': EntityWither
-    'minecraft:wither': EntityWither
-    'wither_skeleton': EntityWitherSkeleton
-    'minecraft:wither_skeleton': EntityWitherSkeleton
-    'wither_skull': EntityWitherSkull
-    'minecraft:wither_skull': EntityWitherSkull
-    'wolf': EntityWolf
-    'minecraft:wolf': EntityWolf
-    'zoglin': EntityZoglin
-    'minecraft:zoglin': EntityZoglin
-    'zombie': EntityZombie
-    'minecraft:zombie': EntityZombie
-    'zombie_horse': EntityZombieHorse
-    'minecraft:zombie_horse': EntityZombieHorse
-    'zombie_nautilus': EntityZombieNautilus
-    'minecraft:zombie_nautilus': EntityZombieNautilus
-    'zombie_pigman': EntityZombiePigman
-    'minecraft:zombie_pigman': EntityZombiePigman
-    'zombie_villager': EntityZombieVillager
-    'minecraft:zombie_villager': EntityZombieVillager
-    'zombified_piglin': EntityZombifiedPiglin
-    'minecraft:zombified_piglin': EntityZombifiedPiglin
+  'acacia_boat': EntityAcaciaBoat
+  'minecraft:acacia_boat': EntityAcaciaBoat
+  'acacia_chest_boat': EntityAcaciaChestBoat
+  'minecraft:acacia_chest_boat': EntityAcaciaChestBoat
+  'allay': EntityAllay
+  'minecraft:allay': EntityAllay
+  'area_effect_cloud': EntityAreaEffectCloud
+  'minecraft:area_effect_cloud': EntityAreaEffectCloud
+  'armadillo': EntityArmadillo
+  'minecraft:armadillo': EntityArmadillo
+  'armor_stand': EntityArmorStand
+  'minecraft:armor_stand': EntityArmorStand
+  'arrow': EntityArrow
+  'minecraft:arrow': EntityArrow
+  'axolotl': EntityAxolotl
+  'minecraft:axolotl': EntityAxolotl
+  'bamboo_chest_raft': EntityBambooChestRaft
+  'minecraft:bamboo_chest_raft': EntityBambooChestRaft
+  'bamboo_raft': EntityBambooRaft
+  'minecraft:bamboo_raft': EntityBambooRaft
+  'bat': EntityBat
+  'minecraft:bat': EntityBat
+  'bee': EntityBee
+  'minecraft:bee': EntityBee
+  'birch_boat': EntityBirchBoat
+  'minecraft:birch_boat': EntityBirchBoat
+  'birch_chest_boat': EntityBirchChestBoat
+  'minecraft:birch_chest_boat': EntityBirchChestBoat
+  'blaze': EntityBlaze
+  'minecraft:blaze': EntityBlaze
+  'block_display': EntityBlockDisplay
+  'minecraft:block_display': EntityBlockDisplay
+  'boat': EntityBoat
+  'minecraft:boat': EntityBoat
+  'bogged': EntityBogged
+  'minecraft:bogged': EntityBogged
+  'breeze': EntityBreeze
+  'minecraft:breeze': EntityBreeze
+  'breeze_wind_charge': EntityBreezeWindCharge
+  'minecraft:breeze_wind_charge': EntityBreezeWindCharge
+  'camel': EntityCamel
+  'minecraft:camel': EntityCamel
+  'camel_husk': EntityCamelHusk
+  'minecraft:camel_husk': EntityCamelHusk
+  'cat': EntityCat
+  'minecraft:cat': EntityCat
+  'cave_spider': EntityCaveSpider
+  'minecraft:cave_spider': EntityCaveSpider
+  'cherry_boat': EntityCherryBoat
+  'minecraft:cherry_boat': EntityCherryBoat
+  'cherry_chest_boat': EntityCherryChestBoat
+  'minecraft:cherry_chest_boat': EntityCherryChestBoat
+  'chest_boat': EntityChestBoat
+  'minecraft:chest_boat': EntityChestBoat
+  'chest_minecart': EntityChestMinecart
+  'minecraft:chest_minecart': EntityChestMinecart
+  'chicken': EntityChicken
+  'minecraft:chicken': EntityChicken
+  'cod': EntityCod
+  'minecraft:cod': EntityCod
+  'command_block_minecart': EntityCommandBlockMinecart
+  'minecraft:command_block_minecart': EntityCommandBlockMinecart
+  'copper_golem': EntityCopperGolem
+  'minecraft:copper_golem': EntityCopperGolem
+  'cow': EntityCow
+  'minecraft:cow': EntityCow
+  'creaking': EntityCreaking
+  'minecraft:creaking': EntityCreaking
+  'creaking_transient': EntityCreakingTransient
+  'minecraft:creaking_transient': EntityCreakingTransient
+  'creeper': EntityCreeper
+  'minecraft:creeper': EntityCreeper
+  'dark_oak_boat': EntityDarkOakBoat
+  'minecraft:dark_oak_boat': EntityDarkOakBoat
+  'dark_oak_chest_boat': EntityDarkOakChestBoat
+  'minecraft:dark_oak_chest_boat': EntityDarkOakChestBoat
+  'dolphin': EntityDolphin
+  'minecraft:dolphin': EntityDolphin
+  'donkey': EntityDonkey
+  'minecraft:donkey': EntityDonkey
+  'dragon_fireball': EntityDragonFireball
+  'minecraft:dragon_fireball': EntityDragonFireball
+  'drowned': EntityDrowned
+  'minecraft:drowned': EntityDrowned
+  'egg': EntityEgg
+  'minecraft:egg': EntityEgg
+  'elder_guardian': EntityElderGuardian
+  'minecraft:elder_guardian': EntityElderGuardian
+  'end_crystal': EntityEndCrystal
+  'minecraft:end_crystal': EntityEndCrystal
+  'ender_dragon': EntityEnderDragon
+  'minecraft:ender_dragon': EntityEnderDragon
+  'ender_pearl': EntityEnderPearl
+  'minecraft:ender_pearl': EntityEnderPearl
+  'enderman': EntityEnderman
+  'minecraft:enderman': EntityEnderman
+  'endermite': EntityEndermite
+  'minecraft:endermite': EntityEndermite
+  'evoker': EntityEvoker
+  'minecraft:evoker': EntityEvoker
+  'evoker_fangs': EntityEvokerFangs
+  'minecraft:evoker_fangs': EntityEvokerFangs
+  'experience_bottle': EntityExperienceBottle
+  'minecraft:experience_bottle': EntityExperienceBottle
+  'experience_orb': EntityExperienceOrb
+  'minecraft:experience_orb': EntityExperienceOrb
+  'eye_of_ender': EntityEyeOfEnder
+  'minecraft:eye_of_ender': EntityEyeOfEnder
+  'falling_block': EntityFallingBlock
+  'minecraft:falling_block': EntityFallingBlock
+  'fireball': EntityFireball
+  'minecraft:fireball': EntityFireball
+  'firework_rocket': EntityFireworkRocket
+  'minecraft:firework_rocket': EntityFireworkRocket
+  'fox': EntityFox
+  'minecraft:fox': EntityFox
+  'frog': EntityFrog
+  'minecraft:frog': EntityFrog
+  'furnace_minecart': EntityFurnaceMinecart
+  'minecraft:furnace_minecart': EntityFurnaceMinecart
+  'ghast': EntityGhast
+  'minecraft:ghast': EntityGhast
+  'giant': EntityGiant
+  'minecraft:giant': EntityGiant
+  'glow_item_frame': EntityGlowItemFrame
+  'minecraft:glow_item_frame': EntityGlowItemFrame
+  'glow_squid': EntityGlowSquid
+  'minecraft:glow_squid': EntityGlowSquid
+  'goat': EntityGoat
+  'minecraft:goat': EntityGoat
+  'guardian': EntityGuardian
+  'minecraft:guardian': EntityGuardian
+  'hoglin': EntityHoglin
+  'minecraft:hoglin': EntityHoglin
+  'hopper_minecart': EntityHopperMinecart
+  'minecraft:hopper_minecart': EntityHopperMinecart
+  'horse': EntityHorse
+  'minecraft:horse': EntityHorse
+  'husk': EntityHusk
+  'minecraft:husk': EntityHusk
+  'illusioner': EntityIllusioner
+  'minecraft:illusioner': EntityIllusioner
+  'interaction': EntityInteraction
+  'minecraft:interaction': EntityInteraction
+  'iron_golem': EntityIronGolem
+  'minecraft:iron_golem': EntityIronGolem
+  'item': EntityItem
+  'minecraft:item': EntityItem
+  'item_display': EntityItemDisplay
+  'minecraft:item_display': EntityItemDisplay
+  'item_frame': EntityItemFrame
+  'minecraft:item_frame': EntityItemFrame
+  'jungle_boat': EntityJungleBoat
+  'minecraft:jungle_boat': EntityJungleBoat
+  'jungle_chest_boat': EntityJungleChestBoat
+  'minecraft:jungle_chest_boat': EntityJungleChestBoat
+  'leash_knot': EntityLeashKnot
+  'minecraft:leash_knot': EntityLeashKnot
+  'lingering_potion': EntityLingeringPotion
+  'minecraft:lingering_potion': EntityLingeringPotion
+  'llama': EntityLlama
+  'minecraft:llama': EntityLlama
+  'llama_spit': EntityLlamaSpit
+  'minecraft:llama_spit': EntityLlamaSpit
+  'magma_cube': EntityMagmaCube
+  'minecraft:magma_cube': EntityMagmaCube
+  'mangrove_boat': EntityMangroveBoat
+  'minecraft:mangrove_boat': EntityMangroveBoat
+  'mangrove_chest_boat': EntityMangroveChestBoat
+  'minecraft:mangrove_chest_boat': EntityMangroveChestBoat
+  'mannequin': EntityMannequin
+  'minecraft:mannequin': EntityMannequin
+  'marker': EntityMarker
+  'minecraft:marker': EntityMarker
+  'minecart': EntityMinecart
+  'minecraft:minecart': EntityMinecart
+  'mooshroom': EntityMooshroom
+  'minecraft:mooshroom': EntityMooshroom
+  'mule': EntityMule
+  'minecraft:mule': EntityMule
+  'nautilus': EntityNautilus
+  'minecraft:nautilus': EntityNautilus
+  'oak_boat': EntityOakBoat
+  'minecraft:oak_boat': EntityOakBoat
+  'oak_chest_boat': EntityOakChestBoat
+  'minecraft:oak_chest_boat': EntityOakChestBoat
+  'ocelot': EntityOcelot
+  'minecraft:ocelot': EntityOcelot
+  'ominous_item_spawner': EntityOminousItemSpawner
+  'minecraft:ominous_item_spawner': EntityOminousItemSpawner
+  'painting': EntityPainting
+  'minecraft:painting': EntityPainting
+  'pale_oak_boat': EntityPaleOakBoat
+  'minecraft:pale_oak_boat': EntityPaleOakBoat
+  'pale_oak_chest_boat': EntityPaleOakChestBoat
+  'minecraft:pale_oak_chest_boat': EntityPaleOakChestBoat
+  'panda': EntityPanda
+  'minecraft:panda': EntityPanda
+  'parched': EntityParched
+  'minecraft:parched': EntityParched
+  'parrot': EntityParrot
+  'minecraft:parrot': EntityParrot
+  'phantom': EntityPhantom
+  'minecraft:phantom': EntityPhantom
+  'pig': EntityPig
+  'minecraft:pig': EntityPig
+  'piglin': EntityPiglin
+  'minecraft:piglin': EntityPiglin
+  'piglin_brute': EntityPiglinBrute
+  'minecraft:piglin_brute': EntityPiglinBrute
+  'pillager': EntityPillager
+  'minecraft:pillager': EntityPillager
+  'player': EntityPlayer
+  'minecraft:player': EntityPlayer
+  'polar_bear': EntityPolarBear
+  'minecraft:polar_bear': EntityPolarBear
+  'potion': EntityPotion
+  'minecraft:potion': EntityPotion
+  'pufferfish': EntityPufferfish
+  'minecraft:pufferfish': EntityPufferfish
+  'rabbit': EntityRabbit
+  'minecraft:rabbit': EntityRabbit
+  'ravager': EntityRavager
+  'minecraft:ravager': EntityRavager
+  'salmon': EntitySalmon
+  'minecraft:salmon': EntitySalmon
+  'sheep': EntitySheep
+  'minecraft:sheep': EntitySheep
+  'shulker': EntityShulker
+  'minecraft:shulker': EntityShulker
+  'shulker_bullet': EntityShulkerBullet
+  'minecraft:shulker_bullet': EntityShulkerBullet
+  'silverfish': EntitySilverfish
+  'minecraft:silverfish': EntitySilverfish
+  'skeleton': EntitySkeleton
+  'minecraft:skeleton': EntitySkeleton
+  'skeleton_horse': EntitySkeletonHorse
+  'minecraft:skeleton_horse': EntitySkeletonHorse
+  'slime': EntitySlime
+  'minecraft:slime': EntitySlime
+  'small_fireball': EntitySmallFireball
+  'minecraft:small_fireball': EntitySmallFireball
+  'sniffer': EntitySniffer
+  'minecraft:sniffer': EntitySniffer
+  'snow_golem': EntitySnowGolem
+  'minecraft:snow_golem': EntitySnowGolem
+  'snowball': EntitySnowball
+  'minecraft:snowball': EntitySnowball
+  'spawner_minecart': EntitySpawnerMinecart
+  'minecraft:spawner_minecart': EntitySpawnerMinecart
+  'spectral_arrow': EntitySpectralArrow
+  'minecraft:spectral_arrow': EntitySpectralArrow
+  'spider': EntitySpider
+  'minecraft:spider': EntitySpider
+  'splash_potion': EntitySplashPotion
+  'minecraft:splash_potion': EntitySplashPotion
+  'spruce_boat': EntitySpruceBoat
+  'minecraft:spruce_boat': EntitySpruceBoat
+  'spruce_chest_boat': EntitySpruceChestBoat
+  'minecraft:spruce_chest_boat': EntitySpruceChestBoat
+  'squid': EntitySquid
+  'minecraft:squid': EntitySquid
+  'stray': EntityStray
+  'minecraft:stray': EntityStray
+  'strider': EntityStrider
+  'minecraft:strider': EntityStrider
+  'tadpole': EntityTadpole
+  'minecraft:tadpole': EntityTadpole
+  'text_display': EntityTextDisplay
+  'minecraft:text_display': EntityTextDisplay
+  'tnt': EntityTnt
+  'minecraft:tnt': EntityTnt
+  'tnt_minecart': EntityTntMinecart
+  'minecraft:tnt_minecart': EntityTntMinecart
+  'trader_llama': EntityTraderLlama
+  'minecraft:trader_llama': EntityTraderLlama
+  'trident': EntityTrident
+  'minecraft:trident': EntityTrident
+  'tropical_fish': EntityTropicalFish
+  'minecraft:tropical_fish': EntityTropicalFish
+  'turtle': EntityTurtle
+  'minecraft:turtle': EntityTurtle
+  'vex': EntityVex
+  'minecraft:vex': EntityVex
+  'villager': EntityVillager
+  'minecraft:villager': EntityVillager
+  'vindicator': EntityVindicator
+  'minecraft:vindicator': EntityVindicator
+  'wandering_trader': EntityWanderingTrader
+  'minecraft:wandering_trader': EntityWanderingTrader
+  'warden': EntityWarden
+  'minecraft:warden': EntityWarden
+  'witch': EntityWitch
+  'minecraft:witch': EntityWitch
+  'wither': EntityWither
+  'minecraft:wither': EntityWither
+  'wither_skeleton': EntityWitherSkeleton
+  'minecraft:wither_skeleton': EntityWitherSkeleton
+  'wither_skull': EntityWitherSkull
+  'minecraft:wither_skull': EntityWitherSkull
+  'wolf': EntityWolf
+  'minecraft:wolf': EntityWolf
+  'zoglin': EntityZoglin
+  'minecraft:zoglin': EntityZoglin
+  'zombie': EntityZombie
+  'minecraft:zombie': EntityZombie
+  'zombie_horse': EntityZombieHorse
+  'minecraft:zombie_horse': EntityZombieHorse
+  'zombie_nautilus': EntityZombieNautilus
+  'minecraft:zombie_nautilus': EntityZombieNautilus
+  'zombie_pigman': EntityZombiePigman
+  'minecraft:zombie_pigman': EntityZombiePigman
+  'zombie_villager': EntityZombieVillager
+  'minecraft:zombie_villager': EntityZombieVillager
+  'zombified_piglin': EntityZombifiedPiglin
+  'minecraft:zombified_piglin': EntityZombifiedPiglin
 }
 type EntityKeys = keyof EntityDispatcherMap
 type EntityFallback = (
@@ -784,5 +784,5 @@ export type SymbolEntity<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? EntityDispatcherMap
-    : CASE extends 'keys' ? EntityKeys : CASE extends '%fallback' ? EntityFallback : never
+  ? EntityDispatcherMap
+  : CASE extends 'keys' ? EntityKeys : CASE extends '%fallback' ? EntityFallback : never

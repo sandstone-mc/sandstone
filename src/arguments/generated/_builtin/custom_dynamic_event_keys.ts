@@ -7,7 +7,7 @@ export type SymbolMcdocCustomDynamicEventKeys<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? McdocCustomDynamicEventKeysDispatcherMap
-    : CASE extends 'keys'
-        ? McdocCustomDynamicEventKeysKeys
-        : CASE extends '%fallback' ? McdocCustomDynamicEventKeysFallback : never
+  ? McdocCustomDynamicEventKeysDispatcherMap
+  : CASE extends 'keys'
+    ? McdocCustomDynamicEventKeysKeys
+    : CASE extends '%fallback' ? McdocCustomDynamicEventKeysFallback : never

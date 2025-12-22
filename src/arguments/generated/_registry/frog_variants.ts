@@ -6,7 +6,7 @@ export type FROG_VARIANTS = (
   | `minecraft:${SetType<typeof FROG_VARIANTS_SET>}`)
 
 export const FROG_VARIANTS_SET = new Set([
-    'cold',
-    'temperate',
-    'warm',
+  'cold',
+  'temperate',
+  'warm',
 ] as const)

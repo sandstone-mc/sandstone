@@ -6,6 +6,6 @@ export type TAG_WORLDGEN_WORLD_PRESETS = (
   | `minecraft:${SetType<typeof TAG_WORLDGEN_WORLD_PRESETS_SET>}`)
 
 export const TAG_WORLDGEN_WORLD_PRESETS_SET = new Set([
-    'extended',
-    'normal',
+  'extended',
+  'normal',
 ] as const)

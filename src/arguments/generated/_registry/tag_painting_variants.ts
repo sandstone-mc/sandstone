@@ -6,5 +6,5 @@ export type TAG_PAINTING_VARIANTS = (
   | `minecraft:${SetType<typeof TAG_PAINTING_VARIANTS_SET>}`)
 
 export const TAG_PAINTING_VARIANTS_SET = new Set([
-    'placeable',
+  'placeable',
 ] as const)

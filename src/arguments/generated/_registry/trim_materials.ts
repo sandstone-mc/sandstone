@@ -6,15 +6,15 @@ export type TRIM_MATERIALS = (
   | `minecraft:${SetType<typeof TRIM_MATERIALS_SET>}`)
 
 export const TRIM_MATERIALS_SET = new Set([
-    'amethyst',
-    'copper',
-    'diamond',
-    'emerald',
-    'gold',
-    'iron',
-    'lapis',
-    'netherite',
-    'quartz',
-    'redstone',
-    'resin',
+  'amethyst',
+  'copper',
+  'diamond',
+  'emerald',
+  'gold',
+  'iron',
+  'lapis',
+  'netherite',
+  'quartz',
+  'redstone',
+  'resin',
 ] as const)

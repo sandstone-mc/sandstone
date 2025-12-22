@@ -4,50 +4,50 @@ import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTIntArray } from 'sandstone'
 
 export type Properties = {
-    textures?: Array<Texture>
+  textures?: Array<Texture>
 }
 
 export type Skull = (BlockEntity & {
-    /**
+  /**
      * Name of the owner, if exists will be converted to SkullOwner.
      */
-    ExtraType?: string
-    /**
+  ExtraType?: string
+  /**
      * Sound to play when played with a note block.
      * Only works on player head.
      */
-    note_block_sound?: Dispatcher<'minecraft:data_component'>['note_block_sound']
-    /**
+  note_block_sound?: Dispatcher<'minecraft:data_component'>['note_block_sound']
+  /**
      * Only works on player head.
      */
-    profile?: Profile
-    custom_name?: Dispatcher<'minecraft:data_component'>['custom_name']
+  profile?: Profile
+  custom_name?: Dispatcher<'minecraft:data_component'>['custom_name']
 })
 
 export type SkullOwner = {
-    /**
+  /**
      * Optional.
      *
      * Value:
      * Array length range: 4
      */
-    Id?: NBTIntArray<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 4
-        max: 4
-    }>
-    /**
+  Id?: NBTIntArray<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 4
+    max: 4
+  }>
+  /**
      * If missing appears as a steve head.
      */
-    Name?: string
-    Properties?: Properties
+  Name?: string
+  Properties?: Properties
 }
 
 export type Texture = {
-    Signature?: string
-    /**
+  Signature?: string
+  /**
      * Base64 encoded JSON value of the texture index.
      */
-    Value?: string
+  Value?: string
 }

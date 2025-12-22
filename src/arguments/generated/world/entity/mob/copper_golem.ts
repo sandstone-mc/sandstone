@@ -2,7 +2,7 @@ import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
 import type { NBTLong } from 'sandstone'
 
 export type CopperGolem = (MobBase & {
-    /**
+  /**
      * Gametime in ticks when the copper golem oxidizes
      * -2 represents "waxed"
      * -1 will be replaced with a random time between 504000 and 552000 ticks later
@@ -10,8 +10,8 @@ export type CopperGolem = (MobBase & {
      * Value:
      * Range: -2..
      */
-    next_weather_age?: NBTLong<{}>
-    /**
+  next_weather_age?: NBTLong<{}>
+  /**
      * Value:
      *
      *  - Unaffected(`unaffected`)
@@ -19,7 +19,7 @@ export type CopperGolem = (MobBase & {
      *  - Weathered(`weathered`)
      *  - Oxidized(`oxidized`)
      */
-    weather_state?: WeatherState
+  weather_state?: WeatherState
 })
 
 export type WeatherState = ('unaffected' | 'exposed' | 'weathered' | 'oxidized')

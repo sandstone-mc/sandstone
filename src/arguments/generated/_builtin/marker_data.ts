@@ -7,5 +7,5 @@ export type SymbolMcdocMarkerData<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? McdocMarkerDataDispatcherMap
-    : CASE extends 'keys' ? McdocMarkerDataKeys : CASE extends '%fallback' ? McdocMarkerDataFallback : never
+  ? McdocMarkerDataDispatcherMap
+  : CASE extends 'keys' ? McdocMarkerDataKeys : CASE extends '%fallback' ? McdocMarkerDataFallback : never

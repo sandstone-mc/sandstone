@@ -6,7 +6,7 @@ export type DIALOGS = (
   | `minecraft:${SetType<typeof DIALOGS_SET>}`)
 
 export const DIALOGS_SET = new Set([
-    'custom_options',
-    'quick_actions',
-    'server_links',
+  'custom_options',
+  'quick_actions',
+  'server_links',
 ] as const)

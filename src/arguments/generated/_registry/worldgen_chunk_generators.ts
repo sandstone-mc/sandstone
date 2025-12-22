@@ -6,7 +6,7 @@ export type WORLDGEN_CHUNK_GENERATORS = (
   | `minecraft:${SetType<typeof WORLDGEN_CHUNK_GENERATORS_SET>}`)
 
 export const WORLDGEN_CHUNK_GENERATORS_SET = new Set([
-    'debug',
-    'flat',
-    'noise',
+  'debug',
+  'flat',
+  'noise',
 ] as const)

@@ -6,11 +6,11 @@ export type VILLAGER_TYPES = (
   | `minecraft:${SetType<typeof VILLAGER_TYPES_SET>}`)
 
 export const VILLAGER_TYPES_SET = new Set([
-    'desert',
-    'jungle',
-    'plains',
-    'savanna',
-    'snow',
-    'swamp',
-    'taiga',
+  'desert',
+  'jungle',
+  'plains',
+  'savanna',
+  'snow',
+  'swamp',
+  'taiga',
 ] as const)

@@ -3,11 +3,11 @@ import type { BannerPatternLayer } from 'sandstone/arguments/generated/world/blo
 import type { ItemBase } from 'sandstone/arguments/generated/world/item.js'
 
 export type Shield = (ItemBase & {
-    /**
+  /**
      * Banner Data.
      */
-    BlockEntityTag?: {
-        /**
+  BlockEntityTag?: {
+    /**
          * Base color.
          *
          * Value:
@@ -29,7 +29,7 @@ export type Shield = (ItemBase & {
          *  - Red(`14`)
          *  - Black(`15`)
          */
-        Base?: DyeColorInt
-        Patterns?: Array<BannerPatternLayer>
-    }
+    Base?: DyeColorInt
+    Patterns?: Array<BannerPatternLayer>
+  }
 })

@@ -1,10 +1,10 @@
 export type Credits = Array<{
-    /**
+  /**
      * Company segment.
      */
-    section: string
-    disciplines: Array<{
-        /**
+  section: string
+  disciplines: Array<{
+    /**
          * Value:
          * *either*
          *
@@ -14,13 +14,13 @@ export type Credits = Array<{
          *
          * String length range: 0
          */
-        discipline: (`${any}${string}` | `${any}${string}`)
-        titles: Array<{
-            title: string
-            /**
+    discipline: (`${any}${string}` | `${any}${string}`)
+    titles: Array<{
+      title: string
+      /**
              * Employees with the title.
              */
-            names: Array<string>
-        }>
+      names: Array<string>
     }>
+  }>
 }>

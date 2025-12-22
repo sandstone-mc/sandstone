@@ -2,34 +2,34 @@ import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
 import type { NBTFloat } from 'sandstone'
 
 export type BlendToGray = {
-    /**
+  /**
      * The gray color is `brightness * (0.3 * r + 0.59 * g + 0.11 * b)`.
      *
      * Value:
      * Range: 0..1
      */
-    brightness: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
-    /**
+  brightness: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
+  /**
      * The factor to mix with.
      *
      * Value:
      * Range: 0..1
      */
-    factor: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
+  factor: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
 }
 
 export type BooleanAttributeModifier = {
-    /**
+  /**
      * Value:
      *
      *  - Override(`override`)
@@ -40,15 +40,15 @@ export type BooleanAttributeModifier = {
      *  - Xor(`xor`)
      *  - Xnor(`xnor`)
      */
-    modifier: BooleanModifierType
-    argument: boolean
+  modifier: BooleanModifierType
+  argument: boolean
 }
 
 export type BooleanModifierType = ('override' | 'and' | 'nand' | 'or' | 'nor' | 'xor' | 'xnor')
 
 export type ColorAttributeModifier = ({
-    [S in Extract<ColorModifierType, string>]?: {
-        /**
+  [S in Extract<ColorModifierType, string>]?: {
+    /**
          * Value:
          *
          *  - Override(`override`)
@@ -58,20 +58,20 @@ export type ColorAttributeModifier = ({
          *  - AlphaBlend(`alpha_blend`)
          *  - BlendToGray(`blend_to_gray`)
          */
-        modifier: S
-        argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_color_modifier', [
-            '%none',
-        ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_color_modifier'>
-            ? Dispatcher<'minecraft:environment_attribute_color_modifier'>[S]
-            : Record<string, unknown>))
-    };
+    modifier: S
+    argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_color_modifier', [
+      '%none',
+    ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_color_modifier'>
+      ? Dispatcher<'minecraft:environment_attribute_color_modifier'>[S]
+      : Record<string, unknown>))
+  };
 }[ColorModifierType])
 
 export type ColorModifierType = ('override' | 'add' | 'subtract' | 'multiply' | 'alpha_blend' | 'blend_to_gray')
 
 export type FloatAttributeModifier<T> = ({
-    [S in Extract<FloatModifierType, string>]?: {
-        /**
+  [S in Extract<FloatModifierType, string>]?: {
+    /**
          * Value:
          *
          *  - Override(`override`)
@@ -82,44 +82,44 @@ export type FloatAttributeModifier<T> = ({
          *  - Maximum(`maximum`)
          *  - AlphaBlend(`alpha_blend`)
          */
-        modifier: S
-        argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
-            T,
-            '%none',
-        ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_float_modifier', [
-            T,
-        ]> ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
-                T,
-            ]>[S] : Record<string, unknown>))
-    };
+    modifier: S
+    argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
+      T,
+      '%none',
+    ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_float_modifier', [
+      T,
+    ]> ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
+        T,
+      ]>[S] : Record<string, unknown>))
+  };
 }[FloatModifierType])
 
 export type FloatModifierType = ('override' | 'add' | 'subtract' | 'multiply' | 'minimum' | 'maximum' | 'alpha_blend')
 
 export type FloatWithAlpha = {
-    value: NBTFloat
-    /**
+  value: NBTFloat
+  /**
      * Defaults to 1.0
      *
      * Value:
      * Range: 0..1
      */
-    alpha?: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
+  alpha?: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
 }
 
 export type OverrideModifier<T> = {
-    modifier: 'override'
-    argument: T
+  modifier: 'override'
+  argument: T
 }
 
 export type TranslucentColorAttributeModifier = ({
-    [S in Extract<ColorModifierType, string>]?: {
-        /**
+  [S in Extract<ColorModifierType, string>]?: {
+    /**
          * Value:
          *
          *  - Override(`override`)
@@ -129,19 +129,19 @@ export type TranslucentColorAttributeModifier = ({
          *  - AlphaBlend(`alpha_blend`)
          *  - BlendToGray(`blend_to_gray`)
          */
-        modifier: S
-        argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier', [
-            '%none',
-        ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>
-            ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>[S]
-            : Record<string, unknown>))
-    };
+    modifier: S
+    argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier', [
+      '%none',
+    ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>
+      ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>[S]
+      : Record<string, unknown>))
+  };
 }[ColorModifierType])
 type EnvironmentAttributeFloatModifierDispatcherMap<T> = {
-    'alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>
-    'minecraft:alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>
-    'override': EnvironmentAttributeFloatModifierOverride<T>
-    'minecraft:override': EnvironmentAttributeFloatModifierOverride<T>
+  'alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>
+  'minecraft:alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>
+  'override': EnvironmentAttributeFloatModifierOverride<T>
+  'minecraft:override': EnvironmentAttributeFloatModifierOverride<T>
 }
 type EnvironmentAttributeFloatModifierKeys = keyof EnvironmentAttributeFloatModifierDispatcherMap<unknown>
 type EnvironmentAttributeFloatModifierFallback<T> = (
@@ -161,9 +161,9 @@ export type SymbolEnvironmentAttributeFloatModifier<T, CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? EnvironmentAttributeFloatModifierDispatcherMap<T>
-    : CASE extends 'keys'
-        ? EnvironmentAttributeFloatModifierKeys
-        : CASE extends '%fallback'
-            ? EnvironmentAttributeFloatModifierFallback<T>
-            : CASE extends '%none' ? EnvironmentAttributeFloatModifierNoneType<T> : never
+  ? EnvironmentAttributeFloatModifierDispatcherMap<T>
+  : CASE extends 'keys'
+    ? EnvironmentAttributeFloatModifierKeys
+    : CASE extends '%fallback'
+      ? EnvironmentAttributeFloatModifierFallback<T>
+      : CASE extends '%none' ? EnvironmentAttributeFloatModifierNoneType<T> : never

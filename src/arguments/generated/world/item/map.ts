@@ -2,7 +2,7 @@ import type { Display, ItemBase } from 'sandstone/arguments/generated/world/item
 import type { NBTDouble, NBTFloat, NBTInt } from 'sandstone'
 
 export type Decoration = {
-    /**
+  /**
      * Decoration type.
      *
      * Value:
@@ -35,57 +35,57 @@ export type Decoration = {
      *  - BlackBanner(`25`)
      *  - RedX(`26`)
      */
-    type: IconByteId
-    /**
+  type: IconByteId
+  /**
      * World x position.
      */
-    x: (NBTDouble | number)
-    /**
+  x: (NBTDouble | number)
+  /**
      * World z position.
      */
-    z: (NBTDouble | number)
-    /**
+  z: (NBTDouble | number)
+  /**
      * Rotation of the decoration, measured in degrees clockwise.
      */
-    rot: NBTFloat
+  rot: NBTFloat
 }
 
 export type FilledMap = (ItemBase & {
-    /**
+  /**
      * Map number, representing the shared state holding map contents and markers.
      */
-    map?: NBTInt
-    /**
+  map?: NBTInt
+  /**
      * Amount to increase the current map scale by when crafting.
      *
      * Value:
      * Range: 1..
      */
-    map_scale_direction?: NBTInt<{
-        min: 1
-    }>
-    /**
+  map_scale_direction?: NBTInt<{
+    min: 1
+  }>
+  /**
      * Whether the map should be locked after being taken out of the cartography table.
      */
-    map_to_lock?: boolean
-    /**
+  map_to_lock?: boolean
+  /**
      * Decorations on the map.
      */
-    Decorations?: Array<(Decoration & {
-        /**
+  Decorations?: Array<(Decoration & {
+    /**
          * An arbitrary unique string identifying the decoration.
          */
-        id: string
-    })>
-    /**
+    id: string
+  })>
+  /**
      * Display for the item.
      */
-    display?: (Display & {
-        /**
+  display?: (Display & {
+    /**
          * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
          */
-        MapColor?: NBTInt
-    })
+    MapColor?: NBTInt
+  })
 })
 
 export type IconByteId = (

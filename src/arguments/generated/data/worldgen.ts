@@ -4,13 +4,13 @@ import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.js
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BottomBiasHeightProvider = (UniformHeightProvider & {
-    /**
+  /**
      * Value:
      * Range: 1..
      */
-    inner?: NBTInt<{
-        min: 1
-    }>
+  inner?: NBTInt<{
+    min: 1
+  }>
 })
 
 export type CarveStep = ('air' | 'liquid')
@@ -18,22 +18,22 @@ export type CarveStep = ('air' | 'liquid')
 export type CaveSurface = ('floor' | 'ceiling')
 
 export type ClampedIntProvider<T> = {
-    min_inclusive: T
-    max_inclusive: T
-    source: IntProvider<NBTInt>
+  min_inclusive: T
+  max_inclusive: T
+  source: IntProvider<NBTInt>
 }
 
 export type ClampedNormalIntProvider<T> = (UniformIntProvider<T> & {
-    mean: NBTFloat
-    deviation: NBTFloat
+  mean: NBTFloat
+  deviation: NBTFloat
 })
 
 export type ConstantHeightProvider = {
-    value: VerticalAnchor
+  value: VerticalAnchor
 }
 
 export type ConstantIntProvider<T> = {
-    value: T
+  value: T
 }
 
 export type DecorationStep = (
@@ -50,13 +50,13 @@ export type DecorationStep = (
   | 'top_layer_modification')
 
 export type FloatProvider<T> = (T | ({
-    [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
-        type: S
-    } & (S extends keyof Dispatcher<'minecraft:float_provider', [
-        T,
-    ]> ? Dispatcher<'minecraft:float_provider', [
-            T,
-        ]>[S] : Record<string, unknown>));
+  [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
+    type: S
+  } & (S extends keyof Dispatcher<'minecraft:float_provider', [
+    T,
+  ]> ? Dispatcher<'minecraft:float_provider', [
+      T,
+    ]>[S] : Record<string, unknown>));
 }[Registry['minecraft:float_provider_type']]))
 
 export type HeightmapType = (
@@ -68,62 +68,62 @@ export type HeightmapType = (
   | 'WORLD_SURFACE_WG')
 
 export type HeightProvider = (({
-    [S in Extract<Registry['minecraft:height_provider_type'], string>]?: ({
-        type: S
-    } & (S extends keyof Dispatcher<'minecraft:height_provider'>
-        ? Dispatcher<'minecraft:height_provider'>[S]
-        : Record<string, unknown>));
+  [S in Extract<Registry['minecraft:height_provider_type'], string>]?: ({
+    type: S
+  } & (S extends keyof Dispatcher<'minecraft:height_provider'>
+    ? Dispatcher<'minecraft:height_provider'>[S]
+    : Record<string, unknown>));
 }[Registry['minecraft:height_provider_type']]) | VerticalAnchor)
 
 export type IntProvider<T> = (T | ({
-    [S in Extract<Registry['minecraft:int_provider_type'], string>]?: ({
-        type: S
-    } & (S extends keyof Dispatcher<'minecraft:int_provider', [
-        T,
-    ]> ? Dispatcher<'minecraft:int_provider', [
-            T,
-        ]>[S] : Record<string, unknown>));
+  [S in Extract<Registry['minecraft:int_provider_type'], string>]?: ({
+    type: S
+  } & (S extends keyof Dispatcher<'minecraft:int_provider', [
+    T,
+  ]> ? Dispatcher<'minecraft:int_provider', [
+      T,
+    ]>[S] : Record<string, unknown>));
 }[Registry['minecraft:int_provider_type']]))
 
 export type TrapezoidHeightProvider = (UniformHeightProvider & {
-    plateau?: NBTInt
+  plateau?: NBTInt
 })
 
 export type UniformHeightProvider = {
-    min_inclusive: VerticalAnchor
-    max_inclusive: VerticalAnchor
+  min_inclusive: VerticalAnchor
+  max_inclusive: VerticalAnchor
 }
 
 export type UniformInt<Base, Spread> = (Base | {
-    base: Base
-    spread: Spread
+  base: Base
+  spread: Spread
 })
 
 export type UniformIntProvider<T> = {
-    min_inclusive: T
-    max_inclusive: T
+  min_inclusive: T
+  max_inclusive: T
 }
 
 export type VerticalAnchor = ({
-    absolute: NBTInt
+  absolute: NBTInt
 } | {
-    above_bottom: NBTInt
+  above_bottom: NBTInt
 } | {
-    below_top: NBTInt
+  below_top: NBTInt
 })
 
 export type WeightListHeightProvider = {
-    distribution: NonEmptyWeightedList<HeightProvider>
+  distribution: NonEmptyWeightedList<HeightProvider>
 }
 type FloatProviderDispatcherMap<T> = {
-    'clamped_normal': FloatProviderClampedNormal<T>
-    'minecraft:clamped_normal': FloatProviderClampedNormal<T>
-    'constant': FloatProviderConstant<T>
-    'minecraft:constant': FloatProviderConstant<T>
-    'trapezoid': FloatProviderTrapezoid<T>
-    'minecraft:trapezoid': FloatProviderTrapezoid<T>
-    'uniform': FloatProviderUniform<T>
-    'minecraft:uniform': FloatProviderUniform<T>
+  'clamped_normal': FloatProviderClampedNormal<T>
+  'minecraft:clamped_normal': FloatProviderClampedNormal<T>
+  'constant': FloatProviderConstant<T>
+  'minecraft:constant': FloatProviderConstant<T>
+  'trapezoid': FloatProviderTrapezoid<T>
+  'minecraft:trapezoid': FloatProviderTrapezoid<T>
+  'uniform': FloatProviderUniform<T>
+  'minecraft:uniform': FloatProviderUniform<T>
 }
 type FloatProviderKeys = keyof FloatProviderDispatcherMap<unknown>
 type FloatProviderFallback<T> = (
@@ -132,25 +132,25 @@ type FloatProviderFallback<T> = (
   | FloatProviderTrapezoid<T>
   | FloatProviderUniform<T>)
 export type FloatProviderClampedNormal<T> = {
-    min: T
-    max: T
-    mean: NBTFloat
-    deviation: NBTFloat
+  min: T
+  max: T
+  mean: NBTFloat
+  deviation: NBTFloat
 }
 
 export type FloatProviderConstant<T> = {
-    value: T
+  value: T
 }
 
 export type FloatProviderTrapezoid<T> = {
-    min: T
-    max: T
-    plateau: NBTFloat
+  min: T
+  max: T
+  plateau: NBTFloat
 }
 
 export type FloatProviderUniform<T> = {
-    min_inclusive: T
-    max_exclusive: T
+  min_inclusive: T
+  max_exclusive: T
 }
 
 export type SymbolFloatProvider<T, CASE extends
@@ -158,21 +158,21 @@ export type SymbolFloatProvider<T, CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? FloatProviderDispatcherMap<T>
-    : CASE extends 'keys' ? FloatProviderKeys : CASE extends '%fallback' ? FloatProviderFallback<T> : never
+  ? FloatProviderDispatcherMap<T>
+  : CASE extends 'keys' ? FloatProviderKeys : CASE extends '%fallback' ? FloatProviderFallback<T> : never
 type HeightProviderDispatcherMap = {
-    'biased_to_bottom': HeightProviderBiasedToBottom
-    'minecraft:biased_to_bottom': HeightProviderBiasedToBottom
-    'constant': HeightProviderConstant
-    'minecraft:constant': HeightProviderConstant
-    'trapezoid': HeightProviderTrapezoid
-    'minecraft:trapezoid': HeightProviderTrapezoid
-    'uniform': HeightProviderUniform
-    'minecraft:uniform': HeightProviderUniform
-    'very_biased_to_bottom': HeightProviderVeryBiasedToBottom
-    'minecraft:very_biased_to_bottom': HeightProviderVeryBiasedToBottom
-    'weighted_list': HeightProviderWeightedList
-    'minecraft:weighted_list': HeightProviderWeightedList
+  'biased_to_bottom': HeightProviderBiasedToBottom
+  'minecraft:biased_to_bottom': HeightProviderBiasedToBottom
+  'constant': HeightProviderConstant
+  'minecraft:constant': HeightProviderConstant
+  'trapezoid': HeightProviderTrapezoid
+  'minecraft:trapezoid': HeightProviderTrapezoid
+  'uniform': HeightProviderUniform
+  'minecraft:uniform': HeightProviderUniform
+  'very_biased_to_bottom': HeightProviderVeryBiasedToBottom
+  'minecraft:very_biased_to_bottom': HeightProviderVeryBiasedToBottom
+  'weighted_list': HeightProviderWeightedList
+  'minecraft:weighted_list': HeightProviderWeightedList
 }
 type HeightProviderKeys = keyof HeightProviderDispatcherMap
 type HeightProviderFallback = (
@@ -193,21 +193,21 @@ export type SymbolHeightProvider<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? HeightProviderDispatcherMap
-    : CASE extends 'keys' ? HeightProviderKeys : CASE extends '%fallback' ? HeightProviderFallback : never
+  ? HeightProviderDispatcherMap
+  : CASE extends 'keys' ? HeightProviderKeys : CASE extends '%fallback' ? HeightProviderFallback : never
 type IntProviderDispatcherMap<T> = {
-    'biased_to_bottom': IntProviderBiasedToBottom<T>
-    'minecraft:biased_to_bottom': IntProviderBiasedToBottom<T>
-    'clamped': IntProviderClamped<T>
-    'minecraft:clamped': IntProviderClamped<T>
-    'clamped_normal': IntProviderClampedNormal<T>
-    'minecraft:clamped_normal': IntProviderClampedNormal<T>
-    'constant': IntProviderConstant<T>
-    'minecraft:constant': IntProviderConstant<T>
-    'uniform': IntProviderUniform<T>
-    'minecraft:uniform': IntProviderUniform<T>
-    'weighted_list': IntProviderWeightedList<T>
-    'minecraft:weighted_list': IntProviderWeightedList<T>
+  'biased_to_bottom': IntProviderBiasedToBottom<T>
+  'minecraft:biased_to_bottom': IntProviderBiasedToBottom<T>
+  'clamped': IntProviderClamped<T>
+  'minecraft:clamped': IntProviderClamped<T>
+  'clamped_normal': IntProviderClampedNormal<T>
+  'minecraft:clamped_normal': IntProviderClampedNormal<T>
+  'constant': IntProviderConstant<T>
+  'minecraft:constant': IntProviderConstant<T>
+  'uniform': IntProviderUniform<T>
+  'minecraft:uniform': IntProviderUniform<T>
+  'weighted_list': IntProviderWeightedList<T>
+  'minecraft:weighted_list': IntProviderWeightedList<T>
 }
 type IntProviderKeys = keyof IntProviderDispatcherMap<unknown>
 type IntProviderFallback<T> = (
@@ -228,7 +228,7 @@ export type IntProviderConstant<T> = ConstantIntProvider<T>
 export type IntProviderUniform<T> = UniformIntProvider<T>
 
 export type IntProviderWeightedList<T> = {
-    distribution: NonEmptyWeightedList<IntProvider<T>>
+  distribution: NonEmptyWeightedList<IntProvider<T>>
 }
 
 export type SymbolIntProvider<T, CASE extends
@@ -236,5 +236,5 @@ export type SymbolIntProvider<T, CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? IntProviderDispatcherMap<T>
-    : CASE extends 'keys' ? IntProviderKeys : CASE extends '%fallback' ? IntProviderFallback<T> : never
+  ? IntProviderDispatcherMap<T>
+  : CASE extends 'keys' ? IntProviderKeys : CASE extends '%fallback' ? IntProviderFallback<T> : never

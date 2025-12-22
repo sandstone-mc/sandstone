@@ -3,7 +3,7 @@ import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/genera
 import type { NBTByte, NBTList, NBTShort } from 'sandstone'
 
 export type BrewingStand = (BlockEntity & Nameable & Lockable & {
-    /**
+  /**
      * * 0: left brewing slot
      * * 1: middle brewing slot
      * * 2: right brewing slot
@@ -13,21 +13,21 @@ export type BrewingStand = (BlockEntity & Nameable & Lockable & {
      * Value:
      * List length range: 0..5
      */
-    Items?: NBTList<SlottedItem<NBTByte<{
-        min: 0
-        max: 4
-    }>>, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 5
-    }>
-    /**
+  Items?: NBTList<SlottedItem<NBTByte<{
+    min: 0
+    max: 4
+  }>>, {
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 5
+  }>
+  /**
      * Number of ticks until the brewing is complete.
      */
-    BrewTime?: NBTShort
-    /**
+  BrewTime?: NBTShort
+  /**
      * Amount of fuel the brewing stand has left.
      */
-    Fuel?: NBTByte
+  Fuel?: NBTByte
 })

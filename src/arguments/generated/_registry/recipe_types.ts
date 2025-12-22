@@ -6,11 +6,11 @@ export type RECIPE_TYPES = (
   | `minecraft:${SetType<typeof RECIPE_TYPES_SET>}`)
 
 export const RECIPE_TYPES_SET = new Set([
-    'blasting',
-    'campfire_cooking',
-    'crafting',
-    'smelting',
-    'smithing',
-    'smoking',
-    'stonecutting',
+  'blasting',
+  'campfire_cooking',
+  'crafting',
+  'smelting',
+  'smithing',
+  'smoking',
+  'stonecutting',
 ] as const)

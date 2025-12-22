@@ -2,15 +2,15 @@ import type { ItemBase } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTByte, NBTIntArray } from 'sandstone'
 
 export type Explosion = {
-    /**
+  /**
      * Whether the explosion should flicker.
      */
-    Flicker?: boolean
-    /**
+  Flicker?: boolean
+  /**
      * Whether the explosion should have a trail.
      */
-    Trail?: boolean
-    /**
+  Trail?: boolean
+  /**
      * Value:
      *
      *  - SmallBall(`0`)
@@ -19,33 +19,33 @@ export type Explosion = {
      *  - Creeper(`3`)
      *  - Burst(`4`)
      */
-    Type?: ExplosionType
-    /**
+  Type?: ExplosionType
+  /**
      * Colors of the explosion.
      * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
      */
-    Colors?: NBTIntArray
-    /**
+  Colors?: NBTIntArray
+  /**
      * Colors of the explosion fade.
      * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
      */
-    FadeColors?: NBTIntArray
+  FadeColors?: NBTIntArray
 }
 
 export type ExplosionType = (0 | 1 | 2 | 3 | 4)
 
 export type FireworkRocket = (ItemBase & {
-    Fireworks?: Fireworks
+  Fireworks?: Fireworks
 })
 
 export type Fireworks = {
-    /**
+  /**
      * Duration of flight.
      */
-    Flight?: NBTByte
-    Explosions?: Array<Explosion>
+  Flight?: NBTByte
+  Explosions?: Array<Explosion>
 }
 
 export type FireworkStar = (ItemBase & {
-    Explosion?: Explosion
+  Explosion?: Explosion
 })

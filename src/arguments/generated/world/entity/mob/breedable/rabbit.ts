@@ -2,7 +2,7 @@ import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/b
 import type { NBTInt } from 'sandstone'
 
 export type Rabbit = (Breedable & {
-    /**
+  /**
      * Value:
      *
      *  - Brown(`0`)
@@ -13,11 +13,11 @@ export type Rabbit = (Breedable & {
      *  - SaltAndPepper(`5`)
      *  - Killer(`99`)
      */
-    RabbitType?: RabbitType
-    /**
+  RabbitType?: RabbitType
+  /**
      * Ticks down once a carrot crop is eaten
      */
-    MoreCarrotTicks?: NBTInt
+  MoreCarrotTicks?: NBTInt
 })
 
 export type RabbitType = (0 | 1 | 2 | 3 | 4 | 5 | 99)

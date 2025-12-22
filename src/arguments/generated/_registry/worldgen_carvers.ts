@@ -6,7 +6,7 @@ export type WORLDGEN_CARVERS = (
   | `minecraft:${SetType<typeof WORLDGEN_CARVERS_SET>}`)
 
 export const WORLDGEN_CARVERS_SET = new Set([
-    'canyon',
-    'cave',
-    'nether_cave',
+  'canyon',
+  'cave',
+  'nether_cave',
 ] as const)

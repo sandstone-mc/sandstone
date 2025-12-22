@@ -4,11 +4,11 @@ import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
 export type AttachFace = (0 | 1 | 2 | 3 | 4 | 5)
 
 export type Shulker = (MobBase & {
-    /**
+  /**
      * Whether it is peeking.
      */
-    Peek?: boolean
-    /**
+  Peek?: boolean
+  /**
      * Which face it is attached to.
      *
      * Value:
@@ -20,8 +20,8 @@ export type Shulker = (MobBase & {
      *  - West(`4`)
      *  - East(`5`)
      */
-    AttachFace?: AttachFace
-    /**
+  AttachFace?: AttachFace
+  /**
      * Value:
      * *either*
      *
@@ -31,7 +31,7 @@ export type Shulker = (MobBase & {
      *
      *
      */
-    Color?: (DyeColorInt | ShulkerColor)
+  Color?: (DyeColorInt | ShulkerColor)
 })
 
 export type ShulkerColor = (16)

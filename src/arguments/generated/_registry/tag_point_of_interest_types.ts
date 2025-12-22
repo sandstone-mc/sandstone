@@ -6,7 +6,7 @@ export type TAG_POINT_OF_INTEREST_TYPES = (
   | `minecraft:${SetType<typeof TAG_POINT_OF_INTEREST_TYPES_SET>}`)
 
 export const TAG_POINT_OF_INTEREST_TYPES_SET = new Set([
-    'acquirable_job_site',
-    'bee_home',
-    'village',
+  'acquirable_job_site',
+  'bee_home',
+  'village',
 ] as const)

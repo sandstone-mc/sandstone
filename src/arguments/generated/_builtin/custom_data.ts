@@ -7,5 +7,5 @@ export type SymbolMcdocCustomData<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? McdocCustomDataDispatcherMap
-    : CASE extends 'keys' ? McdocCustomDataKeys : CASE extends '%fallback' ? McdocCustomDataFallback : never
+  ? McdocCustomDataDispatcherMap
+  : CASE extends 'keys' ? McdocCustomDataKeys : CASE extends '%fallback' ? McdocCustomDataFallback : never

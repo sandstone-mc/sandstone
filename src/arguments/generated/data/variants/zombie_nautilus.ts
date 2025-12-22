@@ -4,15 +4,15 @@ import type { Registry } from 'sandstone/arguments/generated/registry.js'
 export type ZombieNautilusModelType = ('normal' | 'warm')
 
 export type ZombieNautilusVariant = ({
-    /**
+  /**
      * Value:
      *
      *  - Normal(`normal`)
      *  - Warm(`warm`)
      */
-    model?: ZombieNautilusModelType
-    /**
+  model?: ZombieNautilusModelType
+  /**
      * The zombie nautilus texture to use for this variant.
      */
-    asset_id: Registry['minecraft:texture']
+  asset_id: Registry['minecraft:texture']
 } & SpawnPrioritySelectors)

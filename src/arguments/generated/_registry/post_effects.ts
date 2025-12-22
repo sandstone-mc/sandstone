@@ -6,10 +6,10 @@ export type POST_EFFECTS = (
   | `minecraft:${SetType<typeof POST_EFFECTS_SET>}`)
 
 export const POST_EFFECTS_SET = new Set([
-    'blur',
-    'creeper',
-    'entity_outline',
-    'invert',
-    'spider',
-    'transparency',
+  'blur',
+  'creeper',
+  'entity_outline',
+  'invert',
+  'spider',
+  'transparency',
 ] as const)

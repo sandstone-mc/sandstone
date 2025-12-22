@@ -1,24 +1,24 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.js'
 
 type StatisticTypeDispatcherMap = {
-    'broken': StatisticTypeBroken
-    'minecraft:broken': StatisticTypeBroken
-    'crafted': StatisticTypeCrafted
-    'minecraft:crafted': StatisticTypeCrafted
-    'custom': StatisticTypeCustom
-    'minecraft:custom': StatisticTypeCustom
-    'dropped': StatisticTypeDropped
-    'minecraft:dropped': StatisticTypeDropped
-    'killed': StatisticTypeKilled
-    'minecraft:killed': StatisticTypeKilled
-    'killed_by': StatisticTypeKilledBy
-    'minecraft:killed_by': StatisticTypeKilledBy
-    'mined': StatisticTypeMined
-    'minecraft:mined': StatisticTypeMined
-    'picked_up': StatisticTypePickedUp
-    'minecraft:picked_up': StatisticTypePickedUp
-    'used': StatisticTypeUsed
-    'minecraft:used': StatisticTypeUsed
+  'broken': StatisticTypeBroken
+  'minecraft:broken': StatisticTypeBroken
+  'crafted': StatisticTypeCrafted
+  'minecraft:crafted': StatisticTypeCrafted
+  'custom': StatisticTypeCustom
+  'minecraft:custom': StatisticTypeCustom
+  'dropped': StatisticTypeDropped
+  'minecraft:dropped': StatisticTypeDropped
+  'killed': StatisticTypeKilled
+  'minecraft:killed': StatisticTypeKilled
+  'killed_by': StatisticTypeKilledBy
+  'minecraft:killed_by': StatisticTypeKilledBy
+  'mined': StatisticTypeMined
+  'minecraft:mined': StatisticTypeMined
+  'picked_up': StatisticTypePickedUp
+  'minecraft:picked_up': StatisticTypePickedUp
+  'used': StatisticTypeUsed
+  'minecraft:used': StatisticTypeUsed
 }
 type StatisticTypeKeys = keyof StatisticTypeDispatcherMap
 type StatisticTypeFallback = (
@@ -47,5 +47,5 @@ export type SymbolStatisticType<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? StatisticTypeDispatcherMap
-    : CASE extends 'keys' ? StatisticTypeKeys : CASE extends '%fallback' ? StatisticTypeFallback : never
+  ? StatisticTypeDispatcherMap
+  : CASE extends 'keys' ? StatisticTypeKeys : CASE extends '%fallback' ? StatisticTypeFallback : never

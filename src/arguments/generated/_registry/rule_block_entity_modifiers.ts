@@ -6,8 +6,8 @@ export type RULE_BLOCK_ENTITY_MODIFIERS = (
   | `minecraft:${SetType<typeof RULE_BLOCK_ENTITY_MODIFIERS_SET>}`)
 
 export const RULE_BLOCK_ENTITY_MODIFIERS_SET = new Set([
-    'append_loot',
-    'append_static',
-    'clear',
-    'passthrough',
+  'append_loot',
+  'append_static',
+  'clear',
+  'passthrough',
 ] as const)

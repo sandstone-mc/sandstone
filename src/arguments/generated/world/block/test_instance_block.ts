@@ -5,19 +5,19 @@ import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
 import type { NBTIntArray } from 'sandstone'
 
 export type TestInstanceBlock = (BlockEntity & {
-    data?: {
-        test?: Registry['minecraft:test_instance']
-        /**
+  data?: {
+    test?: Registry['minecraft:test_instance']
+    /**
          * Value:
          * Array length range: 3
          */
-        size: NBTIntArray<{
-            leftExclusive: false
-            rightExclusive: false
-            min: 3
-            max: 3
-        }>
-        /**
+    size: NBTIntArray<{
+      leftExclusive: false
+      rightExclusive: false
+      min: 3
+      max: 3
+    }>
+    /**
          * Value:
          *
          *  - None(`none`)
@@ -25,31 +25,31 @@ export type TestInstanceBlock = (BlockEntity & {
          *  - Clockwise180(`180`)
          *  - CounterClockwise90(`counterclockwise_90`)
          */
-        rotation: Rotation
-        ignore_entities: boolean
-        /**
+    rotation: Rotation
+    ignore_entities: boolean
+    /**
          * Value:
          *
          *  - Cleared(`cleared`)
          *  - Running(`running`)
          *  - Finished(`finished`)
          */
-        status: TestInstanceBlockStatus
-        error_message?: Text
-    }
-    errors?: Array<{
-        /**
+    status: TestInstanceBlockStatus
+    error_message?: Text
+  }
+  errors?: Array<{
+    /**
          * Value:
          * Array length range: 3
          */
-        pos: NBTIntArray<{
-            leftExclusive: false
-            rightExclusive: false
-            min: 3
-            max: 3
-        }>
-        text: Text
+    pos: NBTIntArray<{
+      leftExclusive: false
+      rightExclusive: false
+      min: 3
+      max: 3
     }>
+    text: Text
+  }>
 })
 
 export type TestInstanceBlockStatus = ('cleared' | 'running' | 'finished')

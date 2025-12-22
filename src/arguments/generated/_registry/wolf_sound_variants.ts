@@ -6,11 +6,11 @@ export type WOLF_SOUND_VARIANTS = (
   | `minecraft:${SetType<typeof WOLF_SOUND_VARIANTS_SET>}`)
 
 export const WOLF_SOUND_VARIANTS_SET = new Set([
-    'angry',
-    'big',
-    'classic',
-    'cute',
-    'grumpy',
-    'puglin',
-    'sad',
+  'angry',
+  'big',
+  'classic',
+  'cute',
+  'grumpy',
+  'puglin',
+  'sad',
 ] as const)

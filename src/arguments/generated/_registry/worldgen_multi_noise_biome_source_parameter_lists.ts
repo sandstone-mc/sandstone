@@ -6,6 +6,6 @@ export type WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS = (
   | `minecraft:${SetType<typeof WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS_SET>}`)
 
 export const WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS_SET = new Set([
-    'nether',
-    'overworld',
+  'nether',
+  'overworld',
 ] as const)

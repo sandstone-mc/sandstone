@@ -6,5 +6,5 @@ export type WORLDGEN_ROOT_PLACER_TYPES = (
   | `minecraft:${SetType<typeof WORLDGEN_ROOT_PLACER_TYPES_SET>}`)
 
 export const WORLDGEN_ROOT_PLACER_TYPES_SET = new Set([
-    'mangrove_root_placer',
+  'mangrove_root_placer',
 ] as const)

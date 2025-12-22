@@ -6,9 +6,9 @@ export type CONSUME_EFFECT_TYPES = (
   | `minecraft:${SetType<typeof CONSUME_EFFECT_TYPES_SET>}`)
 
 export const CONSUME_EFFECT_TYPES_SET = new Set([
-    'apply_effects',
-    'clear_all_effects',
-    'play_sound',
-    'remove_effects',
-    'teleport_randomly',
+  'apply_effects',
+  'clear_all_effects',
+  'play_sound',
+  'remove_effects',
+  'teleport_randomly',
 ] as const)

@@ -6,8 +6,8 @@ export type TAG_TIMELINES = (
   | `minecraft:${SetType<typeof TAG_TIMELINES_SET>}`)
 
 export const TAG_TIMELINES_SET = new Set([
-    'in_end',
-    'in_nether',
-    'in_overworld',
-    'universal',
+  'in_end',
+  'in_nether',
+  'in_overworld',
+  'universal',
 ] as const)

@@ -1,32 +1,32 @@
 import type { TextStyle } from 'sandstone/arguments/generated/util/text.js'
 
 export type ChatDecoration = ({
-    translation_key: string
-    parameters: Array<ChatDecorationParameter>
+  translation_key: string
+  parameters: Array<ChatDecorationParameter>
 } & {
-    style?: TextStyle
+  style?: TextStyle
 })
 
 export type ChatDecorationParameter = ('sender' | 'content' | 'team_name' | 'target')
 
 export type ChatType = {
-    chat?: ChatDecoration
-    narration?: ChatDecoration
+  chat?: ChatDecoration
+  narration?: ChatDecoration
 }
 
 export type Narration = {
-    decoration?: ChatDecoration
-    /**
+  decoration?: ChatDecoration
+  /**
      * Value:
      *
      *  - Chat(`chat`)
      *  - System(`system`)
      */
-    priority: NarrationPriority
+  priority: NarrationPriority
 }
 
 export type NarrationPriority = ('chat' | 'system')
 
 export type TextDisplay = {
-    decoration?: ChatDecoration
+  decoration?: ChatDecoration
 }

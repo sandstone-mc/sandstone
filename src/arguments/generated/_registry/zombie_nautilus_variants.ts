@@ -6,6 +6,6 @@ export type ZOMBIE_NAUTILUS_VARIANTS = (
   | `minecraft:${SetType<typeof ZOMBIE_NAUTILUS_VARIANTS_SET>}`)
 
 export const ZOMBIE_NAUTILUS_VARIANTS_SET = new Set([
-    'temperate',
-    'warm',
+  'temperate',
+  'warm',
 ] as const)

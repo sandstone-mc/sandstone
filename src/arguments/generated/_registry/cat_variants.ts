@@ -6,15 +6,15 @@ export type CAT_VARIANTS = (
   | `minecraft:${SetType<typeof CAT_VARIANTS_SET>}`)
 
 export const CAT_VARIANTS_SET = new Set([
-    'all_black',
-    'black',
-    'british_shorthair',
-    'calico',
-    'jellie',
-    'persian',
-    'ragdoll',
-    'red',
-    'siamese',
-    'tabby',
-    'white',
+  'all_black',
+  'black',
+  'british_shorthair',
+  'calico',
+  'jellie',
+  'persian',
+  'ragdoll',
+  'red',
+  'siamese',
+  'tabby',
+  'white',
 ] as const)

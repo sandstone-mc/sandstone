@@ -6,7 +6,7 @@ export type TAG_INSTRUMENTS = (
   | `minecraft:${SetType<typeof TAG_INSTRUMENTS_SET>}`)
 
 export const TAG_INSTRUMENTS_SET = new Set([
-    'goat_horns',
-    'regular_goat_horns',
-    'screaming_goat_horns',
+  'goat_horns',
+  'regular_goat_horns',
+  'screaming_goat_horns',
 ] as const)

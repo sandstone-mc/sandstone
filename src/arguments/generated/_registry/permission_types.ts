@@ -6,6 +6,6 @@ export type PERMISSION_TYPES = (
   | `minecraft:${SetType<typeof PERMISSION_TYPES_SET>}`)
 
 export const PERMISSION_TYPES_SET = new Set([
-    'atom',
-    'command_level',
+  'atom',
+  'command_level',
 ] as const)

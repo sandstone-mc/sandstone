@@ -6,6 +6,6 @@ export type LOOT_NBT_PROVIDER_TYPES = (
   | `minecraft:${SetType<typeof LOOT_NBT_PROVIDER_TYPES_SET>}`)
 
 export const LOOT_NBT_PROVIDER_TYPES_SET = new Set([
-    'context',
-    'storage',
+  'context',
+  'storage',
 ] as const)

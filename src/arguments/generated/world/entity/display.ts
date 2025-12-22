@@ -6,60 +6,60 @@ import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type AxisAngle = {
-    /**
+  /**
      * Local position of the axis in [x, y, z].
      *
      * Value:
      * List length range: 3
      */
-    axis: NBTList<NBTFloat, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-    }>
-    /**
+  axis: NBTList<NBTFloat, {
+    leftExclusive: false
+    rightExclusive: false
+    min: 3
+    max: 3
+  }>
+  /**
      * Angle to rotate around the axis in radians.
      */
-    angle: NBTFloat
+  angle: NBTFloat
 }
 
 export type Billboard = ('fixed' | 'vertical' | 'horizontal' | 'center')
 
 export type BlockDisplay = (DisplayBase & {
-    /**
+  /**
      * Block state to display. Can display most block entities (eg. Chests, Beds, Furnaces, etc).
      *
      * Does not display specially rendered block entities (eg. The bell in a bell block, an end gateway, the book on an enchantment table, a banner, a sign, etc).
      */
-    block_state?: BlockState
+  block_state?: BlockState
 })
 
 export type Brightness = {
-    /**
+  /**
      * Value of skylight.
      *
      * Value:
      * Range: 0..15
      */
-    sky: NBTInt<{
-        min: 0
-        max: 15
-    }>
-    /**
+  sky: NBTInt<{
+    min: 0
+    max: 15
+  }>
+  /**
      * Value of block light.
      *
      * Value:
      * Range: 0..15
      */
-    block: NBTInt<{
-        min: 0
-        max: 15
-    }>
+  block: NBTInt<{
+    min: 0
+    max: 15
+  }>
 }
 
 export type DisplayBase = (EntityBase & {
-    /**
+  /**
      * Transformation applied to model (after normal entity orientation). Defaults to identity. Interpolated.
      *
      * For an easy GUI, check out [Misode's tool](https://misode.github.io/transformation/).
@@ -68,30 +68,30 @@ export type DisplayBase = (EntityBase & {
      *
      * Supports storing a [non-canonical matrix form](https://gist.github.com/MulverineX/f473dbfd7cc8dadb326074fef05ad76a) describing a row-major matrix, which is automatically decomposed by the game with a performance cost.
      */
-    transformation?: Transformation
-    /**
+  transformation?: Transformation
+  /**
      * Size of shadow. Defaults to 0 (no shadow). Interpolated.
      *
      * Value:
      * Range: 0..
      */
-    shadow_radius?: NBTFloat<{
-        leftExclusive: false
-        min: 0
-    }>
-    /**
+  shadow_radius?: NBTFloat<{
+    leftExclusive: false
+    min: 0
+  }>
+  /**
      * Strength of the shadow. Controls the opacity of the shadow as a function of distance to the block below. Defaults to 1. Interpolated.
      *
      * Value:
      * Range: 0..1
      */
-    shadow_strength?: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
-    /**
+  shadow_strength?: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
+  /**
      * Ticks after the next client tick to wait until starting the interpolation.
      *
      * Info:
@@ -110,27 +110,27 @@ export type DisplayBase = (EntityBase & {
      *
      * Negative values are allowed, will cause an instant jump to the subtracted duration value, then interpolation will continue as normal.
      */
-    start_interpolation?: NBTInt
-    /**
+  start_interpolation?: NBTInt
+  /**
      * Ticks the interpolation should take to complete.
      *
      * Value:
      * Range: 0..
      */
-    interpolation_duration?: NBTInt<{
-        min: 0
-    }>
-    /**
+  interpolation_duration?: NBTInt<{
+    min: 0
+  }>
+  /**
      * How long in game ticks the entity takes to interpolate from its starting location to its destination when teleported. Defaults to 0 (no interpolation).
      *
      * Value:
      * Range: 0..59
      */
-    teleport_duration?: NBTInt<{
-        min: 0
-        max: 59
-    }>
-    /**
+  teleport_duration?: NBTInt<{
+    min: 0
+    max: 59
+  }>
+  /**
      * Controls if the model should pivot to face the player when rendered. Defaults to `fixed`.
      *
      * Value:
@@ -140,22 +140,22 @@ export type DisplayBase = (EntityBase & {
      *  - Horizontal(`horizontal`): Pivot around the horizontal axis.
      *  - Center(`center`): Pivot around both axes.
      */
-    billboard?: Billboard
-    /**
+  billboard?: Billboard
+  /**
      * When defined, overrides light values used for rendering. Omitted by default (which means rendering uses values from the entity position).
      */
-    brightness?: Brightness
-    /**
+  brightness?: Brightness
+  /**
      * Maximum view range of this entity. Actual distance depends on client-side render distance and entity distance scaling. Default value 1.0 (roughly the same as fireball).
      *
      * Value:
      * Range: 0..
      */
-    view_range?: NBTFloat<{
-        leftExclusive: false
-        min: 0
-    }>
-    /**
+  view_range?: NBTFloat<{
+    leftExclusive: false
+    min: 0
+  }>
+  /**
      * Describe width of the culling bounding box.
      *
      * Bounding box spans vertically from y to y+height and horizontally width/2 in all directions from the entity position.
@@ -165,11 +165,11 @@ export type DisplayBase = (EntityBase & {
      * Value:
      * Range: 0..
      */
-    width?: NBTFloat<{
-        leftExclusive: false
-        min: 0
-    }>
-    /**
+  width?: NBTFloat<{
+    leftExclusive: false
+    min: 0
+  }>
+  /**
      * Describes height of the culling bounding box.
      *
      * Bounding box spans vertically from y to y+height and horizontally width/2 in all directions from the entity position.
@@ -179,24 +179,24 @@ export type DisplayBase = (EntityBase & {
      * Value:
      * Range: 0..
      */
-    height?: NBTFloat<{
-        leftExclusive: false
-        min: 0
-    }>
-    /**
+  height?: NBTFloat<{
+    leftExclusive: false
+    min: 0
+  }>
+  /**
      * Override glow border color. If set to 0, uses team color. Defaults to 0.
      *
      * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
      */
-    glow_color_override?: (0 | NBTInt)
+  glow_color_override?: (0 | NBTInt)
 })
 
 export type ItemDisplay = (DisplayBase & {
-    /**
+  /**
      * Item stack to display.
      */
-    item?: ItemStack
-    /**
+  item?: ItemStack
+  /**
      * Describes item model transform applied to item (as defined in the `display` section in model JSON). Defaults to `fixed`.
      *
      * Value:
@@ -212,7 +212,7 @@ export type ItemDisplay = (DisplayBase & {
      *  - Fixed(`fixed`)
      *  - OnShelf(`on_shelf`)
      */
-    item_display?: ItemDisplayContext
+  item_display?: ItemDisplayContext
 })
 
 /**
@@ -225,57 +225,57 @@ export type ItemDisplay = (DisplayBase & {
  * *item 1*
  */
 export type Rotation = (NBTList<NBTFloat, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
+  leftExclusive: false
+  rightExclusive: false
+  min: 4
+  max: 4
 }> | AxisAngle)
 
 export type TextAlignment = ('center' | 'left' | 'right')
 
 export type TextDisplay = (DisplayBase & {
-    /**
+  /**
      * Text to display. Components are resolved with the executor set to the display entity and the position set to `0 0 0`.
      */
-    text?: Text
-    /**
+  text?: Text
+  /**
      * Line width in pixels used to split lines (note: new line can also be added with `\n` characters). Defaults to 200.
      *
      * Value:
      * Range: 0..
      */
-    line_width?: NBTInt<{
-        min: 0
-    }>
-    /**
+  line_width?: NBTInt<{
+    min: 0
+  }>
+  /**
      * Opacity (alpha component) of rendered text. Defaults to 255. Interpolated.
      *
      * Value:
      * Range: 0..255
      */
-    text_opacity?: NBTInt<{
-        min: 0
-    }>
-    /**
+  text_opacity?: NBTInt<{
+    min: 0
+  }>
+  /**
      * Color of background. Includes alpha channel. Defaults to 0x40000000. Interpolated.
      *
      * Calculated as `ALPHA << 24 | RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
      */
-    background?: NBTInt
-    /**
+  background?: NBTInt
+  /**
      * If true, overrides `background` & rendering uses default text background color (same as in chat). Defaults to false.
      */
-    default_background?: boolean
-    /**
+  default_background?: boolean
+  /**
      * Whether to display the text with shadows. Defaults to false.
      */
-    shadow?: boolean
-    /**
+  shadow?: boolean
+  /**
      * Whether the text should be visible through opaque blocks. Defaults to false.
      */
-    see_through?: boolean
+  see_through?: boolean
 } & {
-    /**
+  /**
      * How text should be aligned. Defaults to `center`.
      *
      * Value:
@@ -284,7 +284,7 @@ export type TextDisplay = (DisplayBase & {
      *  - Left(`left`)
      *  - Right(`right`)
      */
-    alignment?: TextAlignment
+  alignment?: TextAlignment
 })
 
 /**
@@ -297,41 +297,41 @@ export type TextDisplay = (DisplayBase & {
  * List length range: 16
  */
 export type Transformation = ({
-    /**
+  /**
      * Translation in [x, y, z].
      *
      * Value:
      * List length range: 3
      */
-    translation: NBTList<NBTFloat, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-    }>
-    /**
+  translation: NBTList<NBTFloat, {
+    leftExclusive: false
+    rightExclusive: false
+    min: 3
+    max: 3
+  }>
+  /**
      * Using this rotation is enough for most transformations.
      */
-    left_rotation: Rotation
-    /**
+  left_rotation: Rotation
+  /**
      * For more complex transformations. Applied **before** scaling.
      */
-    right_rotation: Rotation
-    /**
+  right_rotation: Rotation
+  /**
      * Scale in [x, y, z].
      *
      * Value:
      * List length range: 3
      */
-    scale: NBTList<NBTFloat, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-    }>
-} | NBTList<NBTFloat, {
+  scale: NBTList<NBTFloat, {
     leftExclusive: false
     rightExclusive: false
-    min: 16
-    max: 16
+    min: 3
+    max: 3
+  }>
+} | NBTList<NBTFloat, {
+  leftExclusive: false
+  rightExclusive: false
+  min: 16
+  max: 16
 }>)

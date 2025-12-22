@@ -6,5 +6,5 @@ export type TEST_INSTANCES = (
   | `minecraft:${SetType<typeof TEST_INSTANCES_SET>}`)
 
 export const TEST_INSTANCES_SET = new Set([
-    'always_pass',
+  'always_pass',
 ] as const)

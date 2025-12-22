@@ -2,5 +2,5 @@ import type { DebugStickState } from 'sandstone/arguments/generated/world/compon
 import type { ItemBase } from 'sandstone/arguments/generated/world/item.js'
 
 export type DebugStick = (ItemBase & {
-    DebugProperty?: DebugStickState
+  DebugProperty?: DebugStickState
 })

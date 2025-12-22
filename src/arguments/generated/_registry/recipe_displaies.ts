@@ -6,9 +6,9 @@ export type RECIPE_DISPLAIES = (
   | `minecraft:${SetType<typeof RECIPE_DISPLAIES_SET>}`)
 
 export const RECIPE_DISPLAIES_SET = new Set([
-    'crafting_shaped',
-    'crafting_shapeless',
-    'furnace',
-    'smithing',
-    'stonecutter',
+  'crafting_shaped',
+  'crafting_shapeless',
+  'furnace',
+  'smithing',
+  'stonecutter',
 ] as const)

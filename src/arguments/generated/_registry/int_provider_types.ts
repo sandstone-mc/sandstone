@@ -6,10 +6,10 @@ export type INT_PROVIDER_TYPES = (
   | `minecraft:${SetType<typeof INT_PROVIDER_TYPES_SET>}`)
 
 export const INT_PROVIDER_TYPES_SET = new Set([
-    'biased_to_bottom',
-    'clamped',
-    'clamped_normal',
-    'constant',
-    'uniform',
-    'weighted_list',
+  'biased_to_bottom',
+  'clamped',
+  'clamped_normal',
+  'constant',
+  'uniform',
+  'weighted_list',
 ] as const)

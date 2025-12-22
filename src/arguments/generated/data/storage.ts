@@ -1,5 +1,5 @@
 export type UnknownStorage = ({
-    [Key in `${any}${string}`]?: unknown;
+  [Key in `${any}${string}`]?: unknown;
 })
 type StorageDispatcherMap = {}
 type StorageKeys = keyof StorageDispatcherMap
@@ -10,5 +10,5 @@ export type SymbolStorage<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? StorageDispatcherMap
-    : CASE extends 'keys' ? StorageKeys : CASE extends '%fallback' ? StorageFallback : never
+  ? StorageDispatcherMap
+  : CASE extends 'keys' ? StorageKeys : CASE extends '%fallback' ? StorageFallback : never

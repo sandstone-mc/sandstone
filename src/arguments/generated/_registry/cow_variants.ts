@@ -6,7 +6,7 @@ export type COW_VARIANTS = (
   | `minecraft:${SetType<typeof COW_VARIANTS_SET>}`)
 
 export const COW_VARIANTS_SET = new Set([
-    'cold',
-    'temperate',
-    'warm',
+  'cold',
+  'temperate',
+  'warm',
 ] as const)

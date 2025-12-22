@@ -6,7 +6,7 @@ export type CHICKEN_VARIANTS = (
   | `minecraft:${SetType<typeof CHICKEN_VARIANTS_SET>}`)
 
 export const CHICKEN_VARIANTS_SET = new Set([
-    'cold',
-    'temperate',
-    'warm',
+  'cold',
+  'temperate',
+  'warm',
 ] as const)

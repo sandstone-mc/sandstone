@@ -6,8 +6,8 @@ export type FLOAT_PROVIDER_TYPES = (
   | `minecraft:${SetType<typeof FLOAT_PROVIDER_TYPES_SET>}`)
 
 export const FLOAT_PROVIDER_TYPES_SET = new Set([
-    'clamped_normal',
-    'constant',
-    'trapezoid',
-    'uniform',
+  'clamped_normal',
+  'constant',
+  'trapezoid',
+  'uniform',
 ] as const)

@@ -6,8 +6,8 @@ export type TIMELINES = (
   | `minecraft:${SetType<typeof TIMELINES_SET>}`)
 
 export const TIMELINES_SET = new Set([
-    'day',
-    'early_game',
-    'moon',
-    'villager_schedule',
+  'day',
+  'early_game',
+  'moon',
+  'villager_schedule',
 ] as const)

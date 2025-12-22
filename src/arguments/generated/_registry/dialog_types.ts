@@ -6,9 +6,9 @@ export type DIALOG_TYPES = (
   | `minecraft:${SetType<typeof DIALOG_TYPES_SET>}`)
 
 export const DIALOG_TYPES_SET = new Set([
-    'confirmation',
-    'dialog_list',
-    'multi_action',
-    'notice',
-    'server_links',
+  'confirmation',
+  'dialog_list',
+  'multi_action',
+  'notice',
+  'server_links',
 ] as const)

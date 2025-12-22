@@ -8,7 +8,7 @@ import type { Keybind } from 'sandstone/arguments/generated/util/text.js'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type Banner = {
-    /**
+  /**
      * Value:
      *
      *  - White(`white`)
@@ -28,49 +28,49 @@ export type Banner = {
      *  - Red(`red`)
      *  - Black(`black`)
      */
-    color: DyeColor
+  color: DyeColor
 }
 
 export type Bed = {
-    /**
+  /**
      * Value:
      *
      * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/bed/`
      */
-    texture: `${string}:${string}`
+  texture: `${string}:${string}`
 }
 
 export type BlockState = ({
-    block_state_property: Dispatcher<'mcdoc:block_state_keys', [
-        '%fallback',
-    ]>
+  block_state_property: Dispatcher<'mcdoc:block_state_keys', [
+    '%fallback',
+  ]>
 } & SelectCases<string>)
 
 export type ChargeType = SelectCases<CrossbowChargeType>
 
 export type Chest = {
-    /**
+  /**
      * Value:
      *
      * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/chest/`
      */
-    texture: `${string}:${string}`
-    /**
+  texture: `${string}:${string}`
+  /**
      * Defaults to `0`.
      *
      * Value:
      * Range: 0..1
      */
-    openness?: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
+  openness?: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
 }
 
 export type Compass = {
-    /**
+  /**
      * Value:
      *
      *  - None(`none`): Always an invalid target.
@@ -78,50 +78,50 @@ export type Compass = {
      *  - Lodestone(`lodestone`): Points at the location stored in the `lodestone_tracker` component.
      *  - Recovery(`recovery`): Points at the last player death location.
      */
-    target: CompassTarget
-    /**
+  target: CompassTarget
+  /**
      * Whether to oscillate for some time around target before settling. Defaults to true.
      */
-    wobble?: boolean
+  wobble?: boolean
 }
 
 export type CompassTarget = ('none' | 'spawn' | 'lodestone' | 'recovery')
 
 export type ComponentFlags = ({
-    [S in Extract<Registry['minecraft:data_component_predicate_type'], string>]?: {
-        /**
+  [S in Extract<Registry['minecraft:data_component_predicate_type'], string>]?: {
+    /**
          * The component predicate to check.
          */
-        predicate: S
-        /**
+    predicate: S
+    /**
          * The predicate-specific value.
          */
-        value: (S extends keyof Dispatcher<'minecraft:data_component_predicate'>
-            ? Dispatcher<'minecraft:data_component_predicate'>[S]
-            : Record<string, unknown>)
-    };
+    value: (S extends keyof Dispatcher<'minecraft:data_component_predicate'>
+      ? Dispatcher<'minecraft:data_component_predicate'>[S]
+      : Record<string, unknown>)
+  };
 }[Registry['minecraft:data_component_predicate_type']])
 
 export type ComponentStrings = ({
-    [S in Extract<Registry['minecraft:data_component_type'], string>]?: ({
-        /**
+  [S in Extract<Registry['minecraft:data_component_type'], string>]?: ({
+    /**
          * The component type to check the values of.
          * If the selected value comes from a registry that the client doesn't have access to,
          * the entry will be silently ignored.
          */
-        component: S
-    } & SelectCases<(S extends keyof Dispatcher<'minecraft:data_component'>
-        ? Dispatcher<'minecraft:data_component'>[S]
-        : Record<string, unknown>)>);
+    component: S
+  } & SelectCases<(S extends keyof Dispatcher<'minecraft:data_component'>
+    ? Dispatcher<'minecraft:data_component'>[S]
+    : Record<string, unknown>)>);
 }[Registry['minecraft:data_component_type']])
 
 export type Composite = {
-    models: Array<ItemModel>
+  models: Array<ItemModel>
 }
 
 export type Condition = ({
-    [S in Extract<ConditionalPropertyType, string>]?: ({
-        /**
+  [S in Extract<ConditionalPropertyType, string>]?: ({
+    /**
          * Value:
          *
          *  - Broken(`broken`)
@@ -138,12 +138,12 @@ export type Condition = ({
          *  - UsingItem(`using_item`)
          *  - ViewEntity(`view_entity`)
          */
-        property: (S | `minecraft:${S}`)
-        on_true: ItemModel
-        on_false: ItemModel
-    } & (S extends keyof Dispatcher<'minecraft:conditional_item_property'>
-        ? Dispatcher<'minecraft:conditional_item_property'>[S]
-        : Record<string, unknown>));
+    property: (S | `minecraft:${S}`)
+    on_true: ItemModel
+    on_false: ItemModel
+  } & (S extends keyof Dispatcher<'minecraft:conditional_item_property'>
+    ? Dispatcher<'minecraft:conditional_item_property'>[S]
+    : Record<string, unknown>));
 }[ConditionalPropertyType])
 
 export type ConditionalPropertyType = (
@@ -162,10 +162,10 @@ export type ConditionalPropertyType = (
   | 'view_entity')
 
 export type ConstantTint = {
-    /**
+  /**
      * Constant tint color to apply.
      */
-    value: RGB
+  value: RGB
 }
 
 export type ContextDimension = SelectCases<Registry['minecraft:dimension']>
@@ -173,7 +173,7 @@ export type ContextDimension = SelectCases<Registry['minecraft:dimension']>
 export type ContextEntityType = SelectCases<Registry['minecraft:entity_type']>
 
 export type CopperGolemStatue = {
-    /**
+  /**
      * Value:
      *
      *  - Standing(`standing`)
@@ -181,88 +181,88 @@ export type CopperGolemStatue = {
      *  - Running(`running`)
      *  - Star(`star`)
      */
-    pose: CopperGolemStatuePose
-    texture: string
+  pose: CopperGolemStatuePose
+  texture: string
 }
 
 export type CopperGolemStatuePose = ('standing' | 'sitting' | 'running' | 'star')
 
 export type Count = {
-    /**
+  /**
      * If false, returns count clamped to `0..max_stack_size`.
      * If true, returns count divided by the `max_stack_size` component, clamped to `0..1`.
      * Defaults to true.
      */
-    normalize?: boolean
+  normalize?: boolean
 }
 
 export type CrossbowChargeType = ('none' | 'arrow' | 'rocket')
 
 export type CustomModelDataFlags = {
-    /**
+  /**
      * The index of the `flags` list in the `custom_model_data` component. Defaults to 0.
      *
      * Value:
      * Range: 0..
      */
-    index?: NBTInt<{
-        min: 0
-    }>
+  index?: NBTInt<{
+    min: 0
+  }>
 }
 
 export type CustomModelDataFloats = {
-    /**
+  /**
      * The index of the `floats` list in the `custom_model_data` component. Defaults to 0.
      *
      * Value:
      * Range: 0..
      */
-    index?: NBTInt<{
-        min: 0
-    }>
+  index?: NBTInt<{
+    min: 0
+  }>
 }
 
 export type CustomModelDataStrings = ({
-    /**
+  /**
      * The index of the `strings` list in the `custom_model_data` component. Defaults to 0.
      *
      * Value:
      * Range: 0..
      */
-    index?: NBTInt<{
-        min: 0
-    }>
+  index?: NBTInt<{
+    min: 0
+  }>
 } & SelectCases<string>)
 
 export type CustomModelDataTint = {
-    /**
+  /**
      * The index of the `colors` list in the `custom_model_data` component. Defaults to 0.
      *
      * Value:
      * Range: 0..
      */
-    index?: NBTInt<{
-        min: 0
-    }>
-    /**
+  index?: NBTInt<{
+    min: 0
+  }>
+  /**
      * Tint to apply when the `custom_model_data` component is not present, or when it doesn't have a color in the specified index.
      */
-    default: RGB
+  default: RGB
 }
 
 export type Damage = {
-    /**
+  /**
      * If false, returns value of damage, clamped to `0..max_damage`.
      * If true, returns value of damage divided by the `max_damage` component, clamped to `0..1`.
      * Defaults to true.
      */
-    normalize?: boolean
+  normalize?: boolean
 }
 
 export type DisplayContext = SelectCases<ItemDisplayContext>
 
 export type DyeTint = {
-    /**
+  /**
      * Tint to apply when the `dyed_color` component is not present.
      *
      * Value:
@@ -274,16 +274,16 @@ export type DyeTint = {
      *
      * List length range: 3
      */
-    default: (NBTInt | NBTList<NBTFloat, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-    }>)
+  default: (NBTInt | NBTList<NBTFloat, {
+    leftExclusive: false
+    rightExclusive: false
+    min: 3
+    max: 3
+  }>)
 }
 
 export type FireworkTint = {
-    /**
+  /**
      * Tint to apply when the `firework_explosion` component is not present.
      *
      * Value:
@@ -295,39 +295,39 @@ export type FireworkTint = {
      *
      * List length range: 3
      */
-    default: (NBTInt | NBTList<NBTFloat, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-    }>)
+  default: (NBTInt | NBTList<NBTFloat, {
+    leftExclusive: false
+    rightExclusive: false
+    min: 3
+    max: 3
+  }>)
 }
 
 export type GrassTint = {
-    /**
+  /**
      * Value:
      * Range: 0..1
      */
-    temperature: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
-    /**
+  temperature: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
+  /**
      * Value:
      * Range: 0..1
      */
-    downfall: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
+  downfall: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
 }
 
 export type HangingSign = {
-    /**
+  /**
      * Value:
      *
      *  - Oak(`oak`)
@@ -343,25 +343,25 @@ export type HangingSign = {
      *  - Crimson(`crimson`)
      *  - Warped(`warped`)
      */
-    wood_type: WoodType
-    /**
+  wood_type: WoodType
+  /**
      * Value:
      *
      * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/signs/hanging/`
      */
-    texture: `${string}:${string}`
+  texture: `${string}:${string}`
 }
 
 export type HasComponent = {
-    component: Registry['minecraft:data_component_type']
-    /**
+  component: Registry['minecraft:data_component_type']
+  /**
      * Whether the default components should be handled as "no component". Defaults to false.
      */
-    ignore_default?: boolean
+  ignore_default?: boolean
 }
 
 export type Head = ({
-    /**
+  /**
      * Value:
      *
      *  - Creeper(`creeper`)
@@ -372,47 +372,47 @@ export type Head = ({
      *  - WitherSkeleton(`wither_skeleton`)
      *  - Zombie(`zombie`)
      */
-    kind: HeadType
-    /**
+  kind: HeadType
+  /**
      * Controls the animation time for piglin and dragon heads. Defaults to `0`.
      */
-    animation?: NBTFloat
+  animation?: NBTFloat
 } & {
-    /**
+  /**
      * Texture to use instead of the texture from `kind`.
      *
      * Value:
      *
      * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/`
      */
-    texture?: `${string}:${string}`
+  texture?: `${string}:${string}`
 })
 
 export type HeadType = ('creeper' | 'dragon' | 'piglin' | 'player' | 'skeleton' | 'wither_skeleton' | 'zombie')
 
 export type ItemDefinition = {
-    model: ItemModel
-    /**
+  model: ItemModel
+  /**
      * Whether the down-and-up animation should be played in first-person view when the item stack is changed.
      * Defaults to `true`.
      */
-    hand_animation_on_swap?: boolean
-    /**
+  hand_animation_on_swap?: boolean
+  /**
      * Whether the item model is allowed to be bigger than its item slot.
      * Defaults to `false`, which clips the item model in GUI to the item slot size.
      * The behavior of `true` is **not** officially supported.
      */
-    oversized_in_gui?: boolean
-    /**
+  oversized_in_gui?: boolean
+  /**
      * How fast the item moves up and down when swapping items in hotbar.
      * Defaults to 1.0
      */
-    swap_animation_scale?: NBTFloat
+  swap_animation_scale?: NBTFloat
 }
 
 export type ItemModel = ({
-    [S in Extract<ItemModeltype, string>]?: ({
-        /**
+  [S in Extract<ItemModeltype, string>]?: ({
+    /**
          * Value:
          *
          *  - BundleSelectedItem(`bundle/selected_item`)
@@ -424,10 +424,10 @@ export type ItemModel = ({
          *  - Select(`select`)
          *  - Special(`special`)
          */
-        type: (S | `minecraft:${S}`)
-    } & (S extends keyof Dispatcher<'minecraft:item_model'>
-        ? Dispatcher<'minecraft:item_model'>[S]
-        : Record<string, unknown>));
+    type: (S | `minecraft:${S}`)
+  } & (S extends keyof Dispatcher<'minecraft:item_model'>
+    ? Dispatcher<'minecraft:item_model'>[S]
+    : Record<string, unknown>));
 }[ItemModeltype])
 
 export type ItemModeltype = (
@@ -441,7 +441,7 @@ export type ItemModeltype = (
   | 'special')
 
 export type KeybindDown = {
-    /**
+  /**
      * The keybind ID to check for.
      *
      * Value:
@@ -506,44 +506,44 @@ export type KeybindDown = {
      *  - ToggleSpectatorShaderEffects(`key.toggleSpectatorShaderEffects`)
      *  - Use(`key.use`)
      */
-    keybind: Keybind
+  keybind: Keybind
 }
 
 export type LocalTime = ({
-    /**
+  /**
      * Format to use for time formatting.
      * Examples: `yyyy-MM-dd`, `HH:mm:ss`.
      */
-    pattern: (`${number}-${number}-${number}` | `${number}:${number}:${number}`)
-    /**
+  pattern: (`${number}-${number}-${number}` | `${number}:${number}:${number}`)
+  /**
      * Defaults to the root locale.
      * Examples: `en_US`, `cs_AU@numbers=thai;calendar=japanese`.
      */
-    locale?: string
-    /**
+  locale?: string
+  /**
      * Defaults to the timezone set on the client.
      * Examples: `Europe/Stockholm`, `GMT+0:45`.
      */
-    time_zone?: string
+  time_zone?: string
 } & SelectCases<string>)
 
 export type MainHand = SelectCases<HumanoidArm>
 
 export type MapColorTint = {
-    /**
+  /**
      * Tint to apply when the `map_color` component is not present.
      */
-    default: RGB
+  default: RGB
 }
 
 export type Model = {
-    model: ModelRef
-    tints?: Array<ModelTint>
+  model: ModelRef
+  tints?: Array<ModelTint>
 }
 
 export type ModelTint = ({
-    [S in Extract<TintSourceType, string>]?: ({
-        /**
+  [S in Extract<TintSourceType, string>]?: ({
+    /**
          * Value:
          *
          *  - Constant(`constant`)
@@ -555,10 +555,10 @@ export type ModelTint = ({
          *  - Potion(`potion`)
          *  - Team(`team`)
          */
-        type: (S | `minecraft:${S}`)
-    } & (S extends keyof Dispatcher<'minecraft:tint_source'>
-        ? Dispatcher<'minecraft:tint_source'>[S]
-        : Record<string, unknown>));
+    type: (S | `minecraft:${S}`)
+  } & (S extends keyof Dispatcher<'minecraft:tint_source'>
+    ? Dispatcher<'minecraft:tint_source'>[S]
+    : Record<string, unknown>));
 }[TintSourceType])
 
 export type NumericPropertyType = (
@@ -574,15 +574,15 @@ export type NumericPropertyType = (
   | 'use_duration')
 
 export type PotionTint = {
-    /**
+  /**
      * Tint to apply when the `potion_contents` component is not present, or it has no effects and no `custom_color` is set.
      */
-    default: RGB
+  default: RGB
 }
 
 export type RangeDispatch = ({
-    [S in Extract<NumericPropertyType, string>]?: ({
-        /**
+  [S in Extract<NumericPropertyType, string>]?: ({
+    /**
          * Value:
          *
          *  - BundleFullness(`bundle/fullness`)
@@ -596,31 +596,31 @@ export type RangeDispatch = ({
          *  - UseCycle(`use_cycle`)
          *  - UseDuration(`use_duration`)
          */
-        property: (S | `minecraft:${S}`)
-        /**
+    property: (S | `minecraft:${S}`)
+    /**
          * Factor to multiply the property value with. Defaults to 1.
          */
-        scale?: NBTFloat
-        /**
+    scale?: NBTFloat
+    /**
          * List of ranges. Will select last entry with threshold less or equal to value.
          * Order does not matter, list will be sorted by threshold in ascending order.
          */
-        entries: Array<{
-            threshold: NBTFloat
-            model: ItemModel
-        }>
-        /**
+    entries: Array<{
+      threshold: NBTFloat
+      model: ItemModel
+    }>
+    /**
          * Item model to render if no entries were less or equal to the value.
          */
-        fallback?: ItemModel
-    } & (S extends keyof Dispatcher<'minecraft:numeric_item_property'>
-        ? Dispatcher<'minecraft:numeric_item_property'>[S]
-        : Record<string, unknown>));
+    fallback?: ItemModel
+  } & (S extends keyof Dispatcher<'minecraft:numeric_item_property'>
+    ? Dispatcher<'minecraft:numeric_item_property'>[S]
+    : Record<string, unknown>));
 }[NumericPropertyType])
 
 export type Select = ({
-    [S in Extract<SelectPropertyType, string>]?: ({
-        /**
+  [S in Extract<SelectPropertyType, string>]?: ({
+    /**
          * Value:
          *
          *  - BlockState(`block_state`)
@@ -634,23 +634,23 @@ export type Select = ({
          *  - MainHand(`main_hand`)
          *  - TrimMaterial(`trim_material`)
          */
-        property: (S | `minecraft:${S}`)
-        /**
+    property: (S | `minecraft:${S}`)
+    /**
          * Item model to render if none of the cases matched the value.
          */
-        fallback?: ItemModel
-    } & (S extends keyof Dispatcher<'minecraft:select_item_property'>
-        ? Dispatcher<'minecraft:select_item_property'>[S]
-        : Record<string, unknown>));
+    fallback?: ItemModel
+  } & (S extends keyof Dispatcher<'minecraft:select_item_property'>
+    ? Dispatcher<'minecraft:select_item_property'>[S]
+    : Record<string, unknown>));
 }[SelectPropertyType])
 
 export type SelectCase<T> = {
-    when: (T | Array<T>)
-    model: ItemModel
+  when: (T | Array<T>)
+  model: ItemModel
 }
 
 export type SelectCases<T> = {
-    cases: Array<SelectCase<T>>
+  cases: Array<SelectCase<T>>
 }
 
 export type SelectPropertyType = (
@@ -666,23 +666,23 @@ export type SelectPropertyType = (
   | 'trim_material')
 
 export type ShulkerBox = {
-    /**
+  /**
      * Value:
      *
      * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/shulker/`
      */
-    texture: `${string}:${string}`
-    /**
+  texture: `${string}:${string}`
+  /**
      * Value:
      * Range: 0..1
      */
-    openness?: NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
-        min: 0
-        max: 1
-    }>
-    /**
+  openness?: NBTFloat<{
+    leftExclusive: false
+    rightExclusive: false
+    min: 0
+    max: 1
+  }>
+  /**
      * Defaults to `up`.
      *
      * Value:
@@ -694,16 +694,16 @@ export type ShulkerBox = {
      *  - South(`south`)
      *  - West(`west`)
      */
-    orientation?: Direction
+  orientation?: Direction
 }
 
 export type Special = {
-    /**
+  /**
      * Renders a special hardcoded model.
      */
-    model: ({
-        [S in Extract<SpecialModelType, string>]?: ({
-            /**
+  model: ({
+    [S in Extract<SpecialModelType, string>]?: ({
+      /**
              * Value:
              *
              *  - Banner(`banner`)
@@ -720,20 +720,20 @@ export type Special = {
              *  - StandingSign(`standing_sign`)
              *  - Trident(`trident`)
              */
-            type: (S | `minecraft:${S}`)
-        } & (S extends keyof Dispatcher<'minecraft:special_item_model'>
-            ? Dispatcher<'minecraft:special_item_model'>[S]
-            : Record<string, unknown>));
-    }[SpecialModelType])
-    /**
+      type: (S | `minecraft:${S}`)
+    } & (S extends keyof Dispatcher<'minecraft:special_item_model'>
+      ? Dispatcher<'minecraft:special_item_model'>[S]
+      : Record<string, unknown>));
+  }[SpecialModelType])
+  /**
      * Base model, providing transformations, particle texture and GUI light.
      */
-    base: ModelRef
+  base: ModelRef
 }
 
 export type SpecialModel = ({
-    [S in Extract<SpecialModelType, string>]?: ({
-        /**
+  [S in Extract<SpecialModelType, string>]?: ({
+    /**
          * Value:
          *
          *  - Banner(`banner`)
@@ -750,10 +750,10 @@ export type SpecialModel = ({
          *  - StandingSign(`standing_sign`)
          *  - Trident(`trident`)
          */
-        type: (S | `minecraft:${S}`)
-    } & (S extends keyof Dispatcher<'minecraft:special_item_model'>
-        ? Dispatcher<'minecraft:special_item_model'>[S]
-        : Record<string, unknown>));
+    type: (S | `minecraft:${S}`)
+  } & (S extends keyof Dispatcher<'minecraft:special_item_model'>
+    ? Dispatcher<'minecraft:special_item_model'>[S]
+    : Record<string, unknown>));
 }[SpecialModelType])
 
 export type SpecialModelType = (
@@ -772,7 +772,7 @@ export type SpecialModelType = (
   | 'trident')
 
 export type StandingSign = {
-    /**
+  /**
      * Value:
      *
      *  - Oak(`oak`)
@@ -788,35 +788,35 @@ export type StandingSign = {
      *  - Crimson(`crimson`)
      *  - Warped(`warped`)
      */
-    wood_type: WoodType
-    /**
+  wood_type: WoodType
+  /**
      * Value:
      *
      * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/signs/`
      */
-    texture: `${string}:${string}`
+  texture: `${string}:${string}`
 }
 
 export type TeamTint = {
-    /**
+  /**
      * Tint to apply when there is no context entity, entity is not in a team or the team has no color.
      */
-    default: RGB
+  default: RGB
 }
 
 export type Time = {
-    /**
+  /**
      * Value:
      *
      *  - Daytime(`daytime`)
      *  - MoonPhase(`moon_phase`)
      *  - Random(`random`)
      */
-    source: TimeSource
-    /**
+  source: TimeSource
+  /**
      * Whether to oscillate for some time around target before settling. Defaults to true.
      */
-    wobble?: boolean
+  wobble?: boolean
 }
 
 export type TimeSource = ('daytime' | 'moon_phase' | 'random')
@@ -834,20 +834,20 @@ export type TintSourceType = (
 export type TrimMaterial = SelectCases<Registry['minecraft:trim_material']>
 
 export type UseCycle = {
-    /**
+  /**
      * returns remaining item use ticks modulo `period`.
      * Defaults to 1.
      */
-    period?: NBTFloat
+  period?: NBTFloat
 }
 
 export type UseDuration = {
-    /**
+  /**
      * If true, returns remaining item use ticks.
      * If false, returns item use ticks so far.
      * Defaults to false.
      */
-    remaining?: boolean
+  remaining?: boolean
 }
 
 export type ViewEntity = Record<string, never>
@@ -866,16 +866,16 @@ export type WoodType = (
   | 'crimson'
   | 'warped')
 type ConditionalItemPropertyDispatcherMap = {
-    'component': ConditionalItemPropertyComponent
-    'minecraft:component': ConditionalItemPropertyComponent
-    'custom_model_data': ConditionalItemPropertyCustomModelData
-    'minecraft:custom_model_data': ConditionalItemPropertyCustomModelData
-    'has_component': ConditionalItemPropertyHasComponent
-    'minecraft:has_component': ConditionalItemPropertyHasComponent
-    'keybind_down': ConditionalItemPropertyKeybindDown
-    'minecraft:keybind_down': ConditionalItemPropertyKeybindDown
-    'view_entity': ConditionalItemPropertyViewEntity
-    'minecraft:view_entity': ConditionalItemPropertyViewEntity
+  'component': ConditionalItemPropertyComponent
+  'minecraft:component': ConditionalItemPropertyComponent
+  'custom_model_data': ConditionalItemPropertyCustomModelData
+  'minecraft:custom_model_data': ConditionalItemPropertyCustomModelData
+  'has_component': ConditionalItemPropertyHasComponent
+  'minecraft:has_component': ConditionalItemPropertyHasComponent
+  'keybind_down': ConditionalItemPropertyKeybindDown
+  'minecraft:keybind_down': ConditionalItemPropertyKeybindDown
+  'view_entity': ConditionalItemPropertyViewEntity
+  'minecraft:view_entity': ConditionalItemPropertyViewEntity
 }
 type ConditionalItemPropertyKeys = keyof ConditionalItemPropertyDispatcherMap
 type ConditionalItemPropertyFallback = (
@@ -896,25 +896,25 @@ export type SymbolConditionalItemProperty<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? ConditionalItemPropertyDispatcherMap
-    : CASE extends 'keys'
-        ? ConditionalItemPropertyKeys
-        : CASE extends '%fallback' ? ConditionalItemPropertyFallback : never
+  ? ConditionalItemPropertyDispatcherMap
+  : CASE extends 'keys'
+    ? ConditionalItemPropertyKeys
+    : CASE extends '%fallback' ? ConditionalItemPropertyFallback : never
 type ItemModelDispatcherMap = {
-    'bundle/selected_item': ItemModelBundleSelectedItem
-    'minecraft:bundle/selected_item': ItemModelBundleSelectedItem
-    'composite': ItemModelComposite
-    'minecraft:composite': ItemModelComposite
-    'condition': ItemModelCondition
-    'minecraft:condition': ItemModelCondition
-    'model': ItemModelModel
-    'minecraft:model': ItemModelModel
-    'range_dispatch': ItemModelRangeDispatch
-    'minecraft:range_dispatch': ItemModelRangeDispatch
-    'select': ItemModelSelect
-    'minecraft:select': ItemModelSelect
-    'special': ItemModelSpecial
-    'minecraft:special': ItemModelSpecial
+  'bundle/selected_item': ItemModelBundleSelectedItem
+  'minecraft:bundle/selected_item': ItemModelBundleSelectedItem
+  'composite': ItemModelComposite
+  'minecraft:composite': ItemModelComposite
+  'condition': ItemModelCondition
+  'minecraft:condition': ItemModelCondition
+  'model': ItemModelModel
+  'minecraft:model': ItemModelModel
+  'range_dispatch': ItemModelRangeDispatch
+  'minecraft:range_dispatch': ItemModelRangeDispatch
+  'select': ItemModelSelect
+  'minecraft:select': ItemModelSelect
+  'special': ItemModelSpecial
+  'minecraft:special': ItemModelSpecial
 }
 type ItemModelKeys = keyof ItemModelDispatcherMap
 type ItemModelFallback = (
@@ -937,23 +937,23 @@ export type SymbolItemModel<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? ItemModelDispatcherMap
-    : CASE extends 'keys' ? ItemModelKeys : CASE extends '%fallback' ? ItemModelFallback : never
+  ? ItemModelDispatcherMap
+  : CASE extends 'keys' ? ItemModelKeys : CASE extends '%fallback' ? ItemModelFallback : never
 type NumericItemPropertyDispatcherMap = {
-    'compass': NumericItemPropertyCompass
-    'minecraft:compass': NumericItemPropertyCompass
-    'count': NumericItemPropertyCount
-    'minecraft:count': NumericItemPropertyCount
-    'custom_model_data': NumericItemPropertyCustomModelData
-    'minecraft:custom_model_data': NumericItemPropertyCustomModelData
-    'damage': NumericItemPropertyDamage
-    'minecraft:damage': NumericItemPropertyDamage
-    'time': NumericItemPropertyTime
-    'minecraft:time': NumericItemPropertyTime
-    'use_cycle': NumericItemPropertyUseCycle
-    'minecraft:use_cycle': NumericItemPropertyUseCycle
-    'use_duration': NumericItemPropertyUseDuration
-    'minecraft:use_duration': NumericItemPropertyUseDuration
+  'compass': NumericItemPropertyCompass
+  'minecraft:compass': NumericItemPropertyCompass
+  'count': NumericItemPropertyCount
+  'minecraft:count': NumericItemPropertyCount
+  'custom_model_data': NumericItemPropertyCustomModelData
+  'minecraft:custom_model_data': NumericItemPropertyCustomModelData
+  'damage': NumericItemPropertyDamage
+  'minecraft:damage': NumericItemPropertyDamage
+  'time': NumericItemPropertyTime
+  'minecraft:time': NumericItemPropertyTime
+  'use_cycle': NumericItemPropertyUseCycle
+  'minecraft:use_cycle': NumericItemPropertyUseCycle
+  'use_duration': NumericItemPropertyUseDuration
+  'minecraft:use_duration': NumericItemPropertyUseDuration
 }
 type NumericItemPropertyKeys = keyof NumericItemPropertyDispatcherMap
 type NumericItemPropertyFallback = (
@@ -978,29 +978,29 @@ export type SymbolNumericItemProperty<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? NumericItemPropertyDispatcherMap
-    : CASE extends 'keys' ? NumericItemPropertyKeys : CASE extends '%fallback' ? NumericItemPropertyFallback : never
+  ? NumericItemPropertyDispatcherMap
+  : CASE extends 'keys' ? NumericItemPropertyKeys : CASE extends '%fallback' ? NumericItemPropertyFallback : never
 type SelectItemPropertyDispatcherMap = {
-    'block_state': SelectItemPropertyBlockState
-    'minecraft:block_state': SelectItemPropertyBlockState
-    'charge_type': SelectItemPropertyChargeType
-    'minecraft:charge_type': SelectItemPropertyChargeType
-    'component': SelectItemPropertyComponent
-    'minecraft:component': SelectItemPropertyComponent
-    'context_dimension': SelectItemPropertyContextDimension
-    'minecraft:context_dimension': SelectItemPropertyContextDimension
-    'context_entity_type': SelectItemPropertyContextEntityType
-    'minecraft:context_entity_type': SelectItemPropertyContextEntityType
-    'custom_model_data': SelectItemPropertyCustomModelData
-    'minecraft:custom_model_data': SelectItemPropertyCustomModelData
-    'display_context': SelectItemPropertyDisplayContext
-    'minecraft:display_context': SelectItemPropertyDisplayContext
-    'local_time': SelectItemPropertyLocalTime
-    'minecraft:local_time': SelectItemPropertyLocalTime
-    'main_hand': SelectItemPropertyMainHand
-    'minecraft:main_hand': SelectItemPropertyMainHand
-    'trim_material': SelectItemPropertyTrimMaterial
-    'minecraft:trim_material': SelectItemPropertyTrimMaterial
+  'block_state': SelectItemPropertyBlockState
+  'minecraft:block_state': SelectItemPropertyBlockState
+  'charge_type': SelectItemPropertyChargeType
+  'minecraft:charge_type': SelectItemPropertyChargeType
+  'component': SelectItemPropertyComponent
+  'minecraft:component': SelectItemPropertyComponent
+  'context_dimension': SelectItemPropertyContextDimension
+  'minecraft:context_dimension': SelectItemPropertyContextDimension
+  'context_entity_type': SelectItemPropertyContextEntityType
+  'minecraft:context_entity_type': SelectItemPropertyContextEntityType
+  'custom_model_data': SelectItemPropertyCustomModelData
+  'minecraft:custom_model_data': SelectItemPropertyCustomModelData
+  'display_context': SelectItemPropertyDisplayContext
+  'minecraft:display_context': SelectItemPropertyDisplayContext
+  'local_time': SelectItemPropertyLocalTime
+  'minecraft:local_time': SelectItemPropertyLocalTime
+  'main_hand': SelectItemPropertyMainHand
+  'minecraft:main_hand': SelectItemPropertyMainHand
+  'trim_material': SelectItemPropertyTrimMaterial
+  'minecraft:trim_material': SelectItemPropertyTrimMaterial
 }
 type SelectItemPropertyKeys = keyof SelectItemPropertyDispatcherMap
 type SelectItemPropertyFallback = (
@@ -1031,25 +1031,25 @@ export type SymbolSelectItemProperty<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? SelectItemPropertyDispatcherMap
-    : CASE extends 'keys' ? SelectItemPropertyKeys : CASE extends '%fallback' ? SelectItemPropertyFallback : never
+  ? SelectItemPropertyDispatcherMap
+  : CASE extends 'keys' ? SelectItemPropertyKeys : CASE extends '%fallback' ? SelectItemPropertyFallback : never
 type SpecialItemModelDispatcherMap = {
-    'banner': SpecialItemModelBanner
-    'minecraft:banner': SpecialItemModelBanner
-    'bed': SpecialItemModelBed
-    'minecraft:bed': SpecialItemModelBed
-    'chest': SpecialItemModelChest
-    'minecraft:chest': SpecialItemModelChest
-    'copper_golem_statue': SpecialItemModelCopperGolemStatue
-    'minecraft:copper_golem_statue': SpecialItemModelCopperGolemStatue
-    'hanging_sign': SpecialItemModelHangingSign
-    'minecraft:hanging_sign': SpecialItemModelHangingSign
-    'head': SpecialItemModelHead
-    'minecraft:head': SpecialItemModelHead
-    'shulker_box': SpecialItemModelShulkerBox
-    'minecraft:shulker_box': SpecialItemModelShulkerBox
-    'standing_sign': SpecialItemModelStandingSign
-    'minecraft:standing_sign': SpecialItemModelStandingSign
+  'banner': SpecialItemModelBanner
+  'minecraft:banner': SpecialItemModelBanner
+  'bed': SpecialItemModelBed
+  'minecraft:bed': SpecialItemModelBed
+  'chest': SpecialItemModelChest
+  'minecraft:chest': SpecialItemModelChest
+  'copper_golem_statue': SpecialItemModelCopperGolemStatue
+  'minecraft:copper_golem_statue': SpecialItemModelCopperGolemStatue
+  'hanging_sign': SpecialItemModelHangingSign
+  'minecraft:hanging_sign': SpecialItemModelHangingSign
+  'head': SpecialItemModelHead
+  'minecraft:head': SpecialItemModelHead
+  'shulker_box': SpecialItemModelShulkerBox
+  'minecraft:shulker_box': SpecialItemModelShulkerBox
+  'standing_sign': SpecialItemModelStandingSign
+  'minecraft:standing_sign': SpecialItemModelStandingSign
 }
 type SpecialItemModelKeys = keyof SpecialItemModelDispatcherMap
 type SpecialItemModelFallback = (
@@ -1076,25 +1076,25 @@ export type SymbolSpecialItemModel<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? SpecialItemModelDispatcherMap
-    : CASE extends 'keys' ? SpecialItemModelKeys : CASE extends '%fallback' ? SpecialItemModelFallback : never
+  ? SpecialItemModelDispatcherMap
+  : CASE extends 'keys' ? SpecialItemModelKeys : CASE extends '%fallback' ? SpecialItemModelFallback : never
 type TintSourceDispatcherMap = {
-    'constant': TintSourceConstant
-    'minecraft:constant': TintSourceConstant
-    'custom_model_data': TintSourceCustomModelData
-    'minecraft:custom_model_data': TintSourceCustomModelData
-    'dye': TintSourceDye
-    'minecraft:dye': TintSourceDye
-    'firework': TintSourceFirework
-    'minecraft:firework': TintSourceFirework
-    'grass': TintSourceGrass
-    'minecraft:grass': TintSourceGrass
-    'map_color': TintSourceMapColor
-    'minecraft:map_color': TintSourceMapColor
-    'potion': TintSourcePotion
-    'minecraft:potion': TintSourcePotion
-    'team': TintSourceTeam
-    'minecraft:team': TintSourceTeam
+  'constant': TintSourceConstant
+  'minecraft:constant': TintSourceConstant
+  'custom_model_data': TintSourceCustomModelData
+  'minecraft:custom_model_data': TintSourceCustomModelData
+  'dye': TintSourceDye
+  'minecraft:dye': TintSourceDye
+  'firework': TintSourceFirework
+  'minecraft:firework': TintSourceFirework
+  'grass': TintSourceGrass
+  'minecraft:grass': TintSourceGrass
+  'map_color': TintSourceMapColor
+  'minecraft:map_color': TintSourceMapColor
+  'potion': TintSourcePotion
+  'minecraft:potion': TintSourcePotion
+  'team': TintSourceTeam
+  'minecraft:team': TintSourceTeam
 }
 type TintSourceKeys = keyof TintSourceDispatcherMap
 type TintSourceFallback = (
@@ -1119,5 +1119,5 @@ export type SymbolTintSource<CASE extends
   | 'keys'
   | '%fallback'
   | '%none' = 'map'> = CASE extends 'map'
-    ? TintSourceDispatcherMap
-    : CASE extends 'keys' ? TintSourceKeys : CASE extends '%fallback' ? TintSourceFallback : never
+  ? TintSourceDispatcherMap
+  : CASE extends 'keys' ? TintSourceKeys : CASE extends '%fallback' ? TintSourceFallback : never

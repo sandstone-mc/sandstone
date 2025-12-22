@@ -6,5 +6,5 @@ export type TEST_FUNCTIONS = (
   | `minecraft:${SetType<typeof TEST_FUNCTIONS_SET>}`)
 
 export const TEST_FUNCTIONS_SET = new Set([
-    'always_pass',
+  'always_pass',
 ] as const)

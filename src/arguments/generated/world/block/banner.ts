@@ -4,11 +4,11 @@ import type { DyeColor } from 'sandstone/arguments/generated/util/color.js'
 import type { BlockEntity, Nameable } from 'sandstone/arguments/generated/world/block.js'
 
 export type Banner = (BlockEntity & Nameable & {
-    patterns?: Array<BannerPatternLayer>
+  patterns?: Array<BannerPatternLayer>
 })
 
 export type BannerPatternLayer = {
-    /**
+  /**
      * The dye color of the pattern.
      *
      * Value:
@@ -30,11 +30,11 @@ export type BannerPatternLayer = {
      *  - Red(`red`)
      *  - Black(`black`)
      */
-    color: DyeColor
-    /**
+  color: DyeColor
+  /**
      * The banner pattern.
      */
-    pattern: (Registry['minecraft:banner_pattern'] | BannerPattern)
+  pattern: (Registry['minecraft:banner_pattern'] | BannerPattern)
 }
 
 export type BannerPatternType = (

@@ -2,11 +2,11 @@ import type { DyeColorByte } from 'sandstone/arguments/generated/util/color.js'
 import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.js'
 
 export type Sheep = (Breedable & {
-    /**
+  /**
      * Whether it has been shorn.
      */
-    Sheared?: boolean
-    /**
+  Sheared?: boolean
+  /**
      * Value:
      *
      *  - White(`0`)
@@ -26,5 +26,5 @@ export type Sheep = (Breedable & {
      *  - Red(`14`)
      *  - Black(`15`)
      */
-    Color?: DyeColorByte
+  Color?: DyeColorByte
 })

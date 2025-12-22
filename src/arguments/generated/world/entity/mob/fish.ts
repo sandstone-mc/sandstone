@@ -3,14 +3,14 @@ import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
 import type { NBTInt } from 'sandstone'
 
 export type Fish = (MobBase & {
-    /**
+  /**
      * If it was released from a bucket.
      */
-    FromBucket?: boolean
+  FromBucket?: boolean
 })
 
 export type Pufferfish = (Fish & {
-    /**
+  /**
      * How puffed it is.
      *
      * Value:
@@ -19,13 +19,13 @@ export type Pufferfish = (Fish & {
      *  - HalfPuffed(`1`)
      *  - Puffed(`2`)
      */
-    PuffState?: PuffState
+  PuffState?: PuffState
 })
 
 export type PuffState = (0 | 1 | 2)
 
 export type Salmon = (Fish & {
-    /**
+  /**
      * The size variant of the salmon.
      *
      * Value:
@@ -34,9 +34,9 @@ export type Salmon = (Fish & {
      *  - Medium(`medium`)
      *  - Large(`large`)
      */
-    type?: SalmonType
+  type?: SalmonType
 })
 
 export type TropicalFish = (Fish & {
-    Variant?: NBTInt
+  Variant?: NBTInt
 })

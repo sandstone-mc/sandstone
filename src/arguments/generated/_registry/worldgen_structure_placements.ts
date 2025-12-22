@@ -6,6 +6,6 @@ export type WORLDGEN_STRUCTURE_PLACEMENTS = (
   | `minecraft:${SetType<typeof WORLDGEN_STRUCTURE_PLACEMENTS_SET>}`)
 
 export const WORLDGEN_STRUCTURE_PLACEMENTS_SET = new Set([
-    'concentric_rings',
-    'random_spread',
+  'concentric_rings',
+  'random_spread',
 ] as const)

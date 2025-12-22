@@ -6,10 +6,10 @@ export type ENCHANTMENT_VALUE_EFFECT_TYPES = (
   | `minecraft:${SetType<typeof ENCHANTMENT_VALUE_EFFECT_TYPES_SET>}`)
 
 export const ENCHANTMENT_VALUE_EFFECT_TYPES_SET = new Set([
-    'add',
-    'all_of',
-    'exponential',
-    'multiply',
-    'remove_binomial',
-    'set',
+  'add',
+  'all_of',
+  'exponential',
+  'multiply',
+  'remove_binomial',
+  'set',
 ] as const)
