@@ -22,7 +22,7 @@ export type RecipeClassArguments = {
   /**
    * The recipe's JSON.
    */
-  recipe: Dispatcher<'minecraft:resource'>['recipe']
+  recipe: NonNullable<Dispatcher<'minecraft:resource'>['recipe']>
 } & ResourceClassArguments<'default'>
 
 export class RecipeClass extends ResourceClass<RecipeNode> {

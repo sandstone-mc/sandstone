@@ -24,7 +24,7 @@ export class NBTPrimitive extends NBTClass {
   [util.inspect.custom] = () => `${this.value}${this.unit}`
 }
 
-type NBTRange = { min?: number, max?: number, leftExclusive?: boolean, rightExclusive?: boolean }
+export type NBTRange = { min?: number, max?: number, leftExclusive?: boolean, rightExclusive?: boolean }
 
 export class NBTLong<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
@@ -47,6 +47,12 @@ export class NBTShort<Range extends NBTRange = {}> extends NBTPrimitive {
 export class NBTFloat<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
     super(value, 'f')
+  }
+}
+
+export class NBTInt<Range extends NBTRange = {}> extends NBTPrimitive {
+  constructor(value: number) {
+    super(value, 'i')
   }
 }
 
@@ -89,14 +95,14 @@ export class NBTIntArray<Range extends NBTRange = {}> extends NBTTypedArray {
 }
 
 export class NBTList<Type extends any, Range extends NBTRange = {}> extends NBTClass {
-  values: Type[]
+  _values: Type[]
 
   constructor(values: Type[]) {
     super()
-    this.values = values
+    this._values = values
   }
 
-  [util.inspect.custom] = () => `[${this.values.length === 0 ? '' : this.values.join(',')}]`
+  [util.inspect.custom] = () => `[${this._values.length === 0 ? '' : this._values.join(',')}]`
 }
 
 export class NotNBT extends NBTClass {
@@ -110,11 +116,11 @@ export class NotNBT extends NBTClass {
   [util.inspect.custom] = () => `!${nbtStringifier(this.nbt)}`
 }
 
-export type NBTSimpleClasses = typeof NBTLong | typeof NBTShort | typeof NBTByte | typeof NBTFloat | typeof NBTDouble
+export type NBTAllNumberClasses<Range extends NBTRange = {}> = NBTLong<Range> | NBTShort<Range> | NBTByte<Range> | NBTFloat<Range> | NBTDouble<Range> | NBTInt<Range>
 
-export class NBTInt<Range extends NBTRange = {}> extends NBTPrimitive {}
+export type NBTSimpleClasses<Range extends NBTRange = {}> = typeof NBTLong<Range> | typeof NBTShort<Range> | typeof NBTByte<Range> | typeof NBTFloat<Range> | typeof NBTDouble<Range> | typeof NBTInt<Range>
 
-export type NBTAllNumbers = typeof NBTInt | NBTSimpleClasses
+export type NBTAllNumbers<Range extends NBTRange = {}> = NBTSimpleClasses<Range>
 
 export type NBTAllArrays = typeof NBTTypedArray | typeof NBTLongArray | typeof NBTByteArray | typeof NBTIntArray
 

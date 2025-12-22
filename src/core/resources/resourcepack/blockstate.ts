@@ -1,9 +1,13 @@
-import type { BlockStateDefinition, BlockStateType } from 'sandstone/arguments'
+import type { Dispatcher } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes.js'
 
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
 import { ResourceClass } from '../resource.js'
+import { AllKeys } from 'sandstone/utils.js'
+
+type BlockStateJSON = Dispatcher<'minecraft:resource'>['block_definition']
+type BlockStateType = AllKeys<Dispatcher<'minecraft:resource'>['block_definition']>
 
 /**
  * A node representing a Minecraft block state.
@@ -26,7 +30,7 @@ export type BlockStateArguments<Type extends BlockStateType> = {
   /**
    * The block state's JSON.
    */
-  blockState?: BlockStateDefinition<Type>
+  blockState: Dispatcher<'minecraft:resource'>['block_definition']
 } & ResourceClassArguments<'list'>
 
 export class BlockStateClass<Type extends BlockStateType>
@@ -55,8 +59,8 @@ export class BlockStateClass<Type extends BlockStateType>
     this.handleConflicts()
   }
 
-  push(...states: BlockStateClass<Type>[] | BlockStateDefinition<Type>[]) {
-    if (this.type === 'variant') {
+  push(...states: BlockStateClass<Type>[] | BlockStateJSON[]) {
+    if (this.type === 'variants') {
       if (states[0] instanceof BlockStateClass) {
         for (const state of states) {
           /** @ts-ignore */
@@ -84,8 +88,8 @@ export class BlockStateClass<Type extends BlockStateType>
     }
   }
 
-  unshift(...states: BlockStateClass<Type>[] | BlockStateDefinition<Type>[]) {
-    if (this.type === 'variant') {
+  unshift(...states: BlockStateClass<Type>[] | BlockStateJSON[]) {
+    if (this.type === 'variants') {
       if (states[0] instanceof BlockStateClass) {
         for (const state of states) {
           /** @ts-ignore */
@@ -112,19 +116,6 @@ export class BlockStateClass<Type extends BlockStateType>
       }
     }
   }
-
-  /*
-   * blockWithState<B extends keyof Blockstates>(
-   * block: LiteralUnion<B>,
-   * state?: (B extends keyof Blockstates ? Blockstates[B] : Blockstates[keyof Blockstates]) | { [name: string]: string},
-   * ): string {
-   * let id: string = block
-   * if (state) {
-   *  id += `[${Object.entries(state).map(([name, val]) => `${name}=${val}`).join(',')}]`
-   * }
-   * return id
-   * }
-   */
 
   async load() {}
 }

@@ -25,7 +25,7 @@ export type PredicateClassArguments = {
   /**
    * The predicate's JSON.
    */
-  predicate?: PredicateJSON
+  predicate: PredicateJSON
 } & ResourceClassArguments<'list'>
 
 type Predicate = PredicateJSON | PredicateClass
@@ -42,7 +42,7 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
       args,
     )
 
-    this.predicateJSON = args.predicate as PredicateJSON
+    this.predicateJSON = args.predicate
 
     this.handleConflicts()
   }

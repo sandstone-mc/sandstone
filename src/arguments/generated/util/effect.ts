@@ -111,13 +111,13 @@ export type EffectIntId = (
 export type MobEffectInstance = {
     id: Registry['minecraft:mob_effect']
     /**
-     * Level I does not have this field, following levels start at `1`. Defaults to Level I.
+     * Level I having value 0. Defaults to 0.
      *
      * Value:
-     * Range: 1..
+     * Range: 0..
      */
     amplifier?: NBTByte<{
-        min: 1
+        min: 0
     }>
     /**
      * Duration of the effect in ticks. Infinite is represented by `-1`.

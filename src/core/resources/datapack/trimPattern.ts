@@ -1,4 +1,4 @@
-import type { TrimPatternJSON } from 'sandstone/arguments'
+import type { Dispatcher } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
@@ -24,7 +24,7 @@ export type TrimPatternClassArguments = {
   /**
    * The trim pattern's JSON.
    */
-  trimPattern?: TrimPatternJSON
+  trimPattern?: Dispatcher<'minecraft:resource'>['trim_pattern']
 } & ResourceClassArguments<'default'> & {
     /**
      * Optional. Defaults to true. Automatically adds trim pattern to #minecraft:trim_templates.
@@ -54,7 +54,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
       args,
     )
 
-    this.trimPatternJSON = args.trimPattern as TrimPatternJSON
+    this.trimPatternJSON = args.trimPattern
 
     this.equipmentCheck = args.equipmentCheck
 
@@ -63,7 +63,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements 
     }
 
     if (args.registerPatternRecipe !== false) {
-      let assetID = this.trimPatternJSON.asset_id
+      let assetID = this.trimPatternJSON.asset_id as string
 
       if (assetID.includes(':')) {
         assetID = assetID.split(':')[1]

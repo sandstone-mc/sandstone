@@ -1,4 +1,4 @@
-import type { FontProvider } from 'sandstone/arguments'
+import { GlyphProvider } from 'sandstone/arguments/generated/assets/font.js'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
@@ -22,7 +22,7 @@ export type FontArguments = {
   /**
    * The font's JSON.
    */
-  providers: FontProvider[] | []
+  providers: GlyphProvider[] | []
 } & ResourceClassArguments<'list'>
 
 export class FontClass extends ResourceClass<FontNode> implements ListResource {
@@ -36,7 +36,7 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     this.handleConflicts()
   }
 
-  push(...providers: FontProvider[] | FontClass[]) {
+  push(...providers: GlyphProvider[] | FontClass[]) {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */
@@ -48,7 +48,7 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     }
   }
 
-  unshift(...providers: FontProvider[] | FontClass[]) {
+  unshift(...providers: GlyphProvider[] | FontClass[]) {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */

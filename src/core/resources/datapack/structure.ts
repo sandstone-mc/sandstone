@@ -3,21 +3,26 @@
 import lodash from 'lodash'
 import prismarine, { type NBT } from 'prismarine-nbt'
 import type {
+  Dispatcher,
   Registry,
-  BlockState,
   Coordinates,
   NBTObject,
   RootNBT,
-  StructureNBT,
 } from 'sandstone/arguments'
 import type { ResourceClassArguments, ResourceNode, SandstoneCore } from 'sandstone/core'
 import { add } from 'sandstone/utils'
-import type { DataPointClass, Score, StructureMirror, StructureRotation } from 'sandstone/variables'
-import { ConditionClass, ResolveNBTPart, relative } from 'sandstone/variables'
+import type { DataPointClass, NBTAllNumberClasses, NBTRange, Score, StructureMirror, StructureRotation } from 'sandstone/variables'
+import { ConditionClass, NBTPrimitive, ResolveNBTPart, relative } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import { ResourceClass } from '../resource.js'
+import { StructureNBT } from 'sandstone/arguments/generated/data/structure.js'
+import { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
 
 const same = lodash.isEqual
+
+const extractNumber = <Range extends NBTRange>(double: number | NBTAllNumberClasses<Range>) => double instanceof NBTPrimitive ? double.value : (double as number)
+const diff = (num1: number, num2: number) =>
+  Math.sign(num1) === -1 ? (Math.abs(num1) - Math.abs(num2)) * -1 : num1 - num2
 
 /**
  * A node representing a Minecraft structure.
@@ -46,12 +51,14 @@ type Block = {
 type StructureEntry = {
   block?: Block | Block[]
   entities?: [
-    {
-      id: Registry['minecraft:entity_type']
-      /* Must use NBT Primitives! */
-      nbt?: RootNBT
-      offset?: [number, number, number]
-    },
+    ({
+      [ID in Registry['minecraft:entity_type']]: {
+        id: ID
+        /* Must use NBT Primitives! */
+        nbt?: ID extends keyof Dispatcher<'minecraft:entity'> ? Dispatcher<'minecraft:entity'>[ID] : RootNBT
+        offset?: [number, number, number]
+      }
+    }[Registry['minecraft:entity_type']]),
   ]
 }
 
@@ -67,6 +74,8 @@ export type StructureClassArguments = {
 } & ResourceClassArguments<'default'> // Yes I could implement append/prepend ie. structure merging, will I? No :). Feel free to PR.
 
 type VariableInsertion = Score | DataPointClass<'storage'>
+
+// TODO: This should probably be rewritten
 
 export class StructureClass extends ResourceClass<StructureNode> {
   structureBuffer?: Promise<Buffer>
@@ -126,51 +135,48 @@ export class StructureClass extends ResourceClass<StructureNode> {
     const _NBT = this.structureNBT as StructureNBT
     const array: any = [[[]]]
 
-    for (let x = 0; x < _NBT.size[0]; x++) {
+    const size = _NBT.size._values
+
+    for (let x = 0; x < size[0].value; x++) {
       array.push([])
-      for (let y = _NBT.size[1]; y--; y > 0) {
+      for (let y = size[1].value; y--; y > 0) {
         array[x].push([])
-        for (let z = _NBT.size[2]; z--; z > 0) {
+        for (let z = size[2].value; z--; z > 0) {
           array[x][y].push({})
         }
       }
     }
 
     for (const block of _NBT.blocks) {
-      const convert = (_block: BlockState) => ({
+      const convert = (_block: NonNullable<BlockState>) => ({
         id: _block.Name,
         state: _block.Properties,
         ...add({ nbt: block.nbt }),
       })
 
-      array[block.pos[0]][block.pos[1]][block.pos[2]] = {
+      array[block.pos._values[0].value][block.pos._values[1].value][block.pos._values[2].value] = {
         /* @ts-ignore */
-        block: _NBT?.palettes
-          ? _NBT.palettes.map((palette) => convert(palette[block.state]))
-          : convert(_NBT.palette![block.state]),
+        block: 'palettes' in _NBT
+          ? _NBT.palettes.map((palette) => convert(palette[block.state.value]!))
+          : convert(_NBT.palette![block.state.value]!),
       } as StructureEntry
     }
 
     for (const entity of _NBT.entities) {
-      array[entity.blockPos[0]][entity.blockPos[1]][entity.blockPos[2]] += {
+      array[entity.blockPos._values[0].value][entity.blockPos._values[1].value][entity.blockPos._values[2].value] += {
         entity: [
           {
-            id: entity.nbt.id,
+            id: entity.nbt!.id,
             nbt: (() => {
-              const nbt = { ...entity.nbt }
+              const nbt = { ...(entity.nbt!), id: undefined }
               delete nbt.id
               return nbt
             })(),
-            offset: (() => {
-              const diff = (num1: number, num2: number) =>
-                Math.sign(num1) === -1 ? (Math.abs(num1) - Math.abs(num2)) * -1 : num1 - num2
-
-              return [
-                diff(entity.pos[0], entity.blockPos[0]),
-                diff(entity.pos[1], entity.blockPos[1]),
-                diff(entity.pos[2], entity.blockPos[2]),
-              ]
-            })(),
+            offset: (() => [
+              diff(extractNumber(entity.pos._values[0]), entity.blockPos._values[0].value),
+              diff(extractNumber(entity.pos._values[1]), entity.blockPos._values[1].value),
+              diff(extractNumber(entity.pos._values[2]), entity.blockPos._values[2].value),
+            ])(),
           },
         ],
       }
@@ -268,8 +274,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
                   ? [layer[0] + entity.offset[0], row[0] + entity.offset[1], entry[0] + entity.offset[2]]
                   : [layer[0], row[0], entry[0]],
                 blockPos: [layer[0], row[0], entry[0]],
-                nbt: {
-                  id: entity.id,
+                nbt: {                  id: entity.id,
                   ...add(entity.nbt),
                 },
               })
@@ -390,13 +395,13 @@ function encodeStructure(nbt: StructureNBT) {
 
   return writeUncompressed(
     comp({
-      DataVersion: int(nbt.DataVersion as number),
-      size: list(comp(nbt.size.map((axis) => int(axis)))),
+      DataVersion: int(extractNumber(nbt.DataVersion)),
+      size: list(comp(nbt.size._values.map((axis) => int(extractNumber(axis))))),
       blocks: list(
         comp(
           nbt.blocks.map((block) => ({
-            state: int(block.state),
-            pos: list(comp(block.pos.map((axis) => int(axis)))),
+            state: int(extractNumber(block.state)),
+            pos: list(comp(block.pos._values.map((axis) => int(extractNumber(axis))))),
             /**
              *  ...add({
              * nbt: fun(block.nbt), // TODO
@@ -408,40 +413,38 @@ function encodeStructure(nbt: StructureNBT) {
       entities: list(
         comp(
           nbt.entities.map((entity) => ({
-            pos: list(comp(entity.pos.map((axis) => double(axis)))),
-            blockPos: list(comp(entity.blockPos.map((axis) => int(axis)))),
+            pos: list(comp(entity.pos._values.map((axis) => double(extractNumber(axis))))),
+            blockPos: list(comp(entity.blockPos._values.map((axis) => int(extractNumber(axis))))),
             // nbt: fun(entity.nbt), // TODO
           })),
         ),
       ),
       // eslint-disable-next-line no-nested-ternary
-      ...(nbt.palette
+      ...('palette' in nbt
         ? {
             palette: list(
               comp(
                 nbt.palette.map((block) => ({
-                  Name: string(block.Name),
-                  Properties: list(comp(objectMap(block.Properties, (v: string, k: string) => [string(k), string(v)]))),
+                  Name: string(block!.Name),
+                  Properties: list(comp(objectMap(block!.Properties, (v: string, k: string) => [string(k), string(v)]))),
                 })),
               ),
             ),
           }
-        : nbt.palettes
-          ? {
-              palettes: list(
-                comp(
-                  nbt.palettes.map((palette) =>
-                    palette.map((block) => ({
-                      Name: string(block.Name),
-                      Properties: list(
-                        comp(objectMap(block.Properties, (v: string, k: string) => [string(k), string(v)])),
-                      ),
-                    })),
+        : {
+          palettes: list(
+            comp(
+              nbt.palettes.map((palette) =>
+                palette.map((block) => ({
+                  Name: string(block!.Name),
+                  Properties: list(
+                    comp(objectMap(block!.Properties, (v: string, k: string) => [string(k), string(v)])),
                   ),
-                ),
+                })),
               ),
-            }
-          : {}),
+            ),
+          ),
+        }),
     }) as unknown as NBT,
   )
 }

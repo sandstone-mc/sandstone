@@ -419,6 +419,8 @@ export function formatDebugString(
   return `${classNameString}${realArgsString}${realBodyString}`
 }
 
+export type AllKeys<T> = T extends T ? keyof T: never
+
 type GetConstructorArgs<T> = T extends new (...args: infer U) => any ? U : never
 export class Set<T> extends global.Set<T> {
     constructor(...args: GetConstructorArgs<typeof global.Set<T>>) {

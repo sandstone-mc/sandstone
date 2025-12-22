@@ -1,11 +1,12 @@
-import type { AtlasDefinition, AtlasSpriteSource } from 'sandstone/arguments'
+import type { Dispatcher } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
 import { ResourceClass } from '../resource.js'
+import { SpriteSource } from 'sandstone/arguments/generated/assets/atlas.js'
 
 /**
- * A node representing a Minecraft block state.
+ * A node representing a Minecraft atlas.
  */
 export class AtlasNode extends ContainerNode implements ResourceNode<AtlasClass> {
   constructor(
@@ -20,9 +21,9 @@ export class AtlasNode extends ContainerNode implements ResourceNode<AtlasClass>
 
 export type AtlasClassArguments = {
   /**
-   * The block state's JSON.
+   * The atlas JSON.
    */
-  atlas?: AtlasDefinition
+  atlas?: Dispatcher<'minecraft:resource'>['atlas']
 } & ResourceClassArguments<'list'>
 
 export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {
@@ -36,7 +37,7 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     this.handleConflicts()
   }
 
-  push(...sources: AtlasSpriteSource[] | AtlasClass[]) {
+  push(...sources: SpriteSource[] | AtlasClass[]) {
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */
@@ -48,7 +49,7 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     }
   }
 
-  unshift(...sources: AtlasSpriteSource[] | AtlasClass[]) {
+  unshift(...sources: SpriteSource[] | AtlasClass[]) {
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */
@@ -59,17 +60,4 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
       this.atlasJSON.sources.unshift(...sources)
     }
   }
-
-  /*
-   * blockWithState<B extends keyof Blockstates>(
-   * block: LiteralUnion<B>,
-   * state?: (B extends keyof Blockstates ? Blockstates[B] : Blockstates[keyof Blockstates]) | { [name: string]: string},
-   * ): string {
-   * let id: string = block
-   * if (state) {
-   *  id += `[${Object.entries(state).map(([name, val]) => `${name}=${val}`).join(',')}]`
-   * }
-   * return id
-   * }
-   */
 }

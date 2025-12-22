@@ -33,7 +33,7 @@ export class LanguageClass extends ResourceClass<LanguageNode> implements ListRe
   constructor(core: SandstoneCore, name: string, args: LanguageArguments) {
     super(core, { packType: core.pack.resourcePack() }, LanguageNode, core.pack.resourceToPath(name, ['lang']), args)
 
-    this.languageJSON = args.language || {}
+    this.languageJSON = args.language ?? {}
 
     this.handleConflicts()
   }

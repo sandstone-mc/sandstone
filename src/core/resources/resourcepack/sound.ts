@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type { SOUND_TYPES, SoundsDefinitions } from 'sandstone/arguments'
+import type { Dispatcher, SOUND_TYPES } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
@@ -75,7 +75,7 @@ export class SoundEventClass<Type extends SOUND_TYPES> extends ResourceClass<Sou
             .get(this.path[0])
         }
 
-        ;(def as SoundsClass).push(this)
+        def!.push(this)
       }
     }
 
@@ -101,15 +101,17 @@ export class SoundsNode extends ContainerNode implements ResourceNode<SoundsClas
   getValue = () => JSON.stringify(this.resource.soundsJSON)
 }
 
+type SoundsJSON = NonNullable<Dispatcher<'minecraft:resource'>['sounds']>
+
 export type SoundsArguments = {
   /**
    * The sounds definition map.
    */
-  definitions?: SoundsDefinitions
+  definitions?: SoundsJSON
 } & ResourceClassArguments<'default'>
 
 export class SoundsClass extends ResourceClass<SoundsNode> implements ListResource {
-  soundsJSON: SoundsDefinitions | Promise<SoundsDefinitions>
+  soundsJSON: SoundsJSON | Promise<SoundsJSON>
 
   constructor(core: SandstoneCore, namespace: string, args: SoundsArguments) {
     super(
@@ -120,7 +122,7 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
       args,
     )
 
-    if (args.definitions) {
+    if (args.definitions !== undefined) {
       this.soundsJSON = args.definitions
     } else {
       this.soundsJSON = (async () => JSON.parse(await (core.getExistingResource(this) as Promise<string>)))()
@@ -133,7 +135,7 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
         const def = _sounds as SoundsClass
         const s = await this.soundsJSON
 
-        // TODO: Implement sound event options
+        // TODO: Implement sound event merging
         this.soundsJSON = { ...s, ...def }
       }
     } else {
@@ -155,7 +157,7 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
         const def = _sounds as SoundsClass
         const s = await this.soundsJSON
 
-        // TODO: Implement sound event options
+        // TODO: Implement sound event merging
         this.soundsJSON = { ...def, ...s }
       }
     } else {

@@ -1,4 +1,4 @@
-import type { TrimMaterialJSON } from 'sandstone/arguments'
+import type { Dispatcher } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
@@ -28,17 +28,18 @@ export type TrimMaterialClassArguments = {
   /**
    * The trim material's JSON.
    */
-  trimMaterial?: TrimMaterialJSON
-} & ResourceClassArguments<'default'> & {
-    /**
-     * Optional. Defaults to true. Automatically adds trim material to #minecraft:trim_materials.
-     */
-    registerMaterial?: boolean
-    /**
-     * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
-     */
-    equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
-  }
+  trimMaterial: Dispatcher<'minecraft:resource'>['trim_material']
+
+  /**
+   * Optional. Defaults to true. Automatically adds trim material to #minecraft:trim_materials.
+   */
+  registerMaterial?: boolean
+
+  /**
+   * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
+   */
+  equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
+} & ResourceClassArguments<'default'>
 
 export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implements ConditionClass {
   public trimMaterialJSON: NonNullable<TrimMaterialClassArguments['trimMaterial']>
@@ -54,7 +55,7 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
       args,
     )
 
-    this.trimMaterialJSON = args.trimMaterial as TrimMaterialJSON
+    this.trimMaterialJSON = args.trimMaterial
 
     this.equipmentCheck = args.equipmentCheck
 
