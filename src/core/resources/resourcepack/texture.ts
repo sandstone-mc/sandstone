@@ -1,4 +1,4 @@
-import type { TEXTURE_TYPES, TextureMeta } from 'sandstone/arguments'
+import type { Dispatcher, TEXTURE_TYPES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes.js'
 import type { SandstoneCore } from '../../sandstoneCore.js'
@@ -7,8 +7,18 @@ import { ResourceClass } from '../resource.js'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
 
+type TextureMetaAll = Dispatcher<'minecraft:resource'>['texture_meta']
+
+// TODO: Find which texture types actually support animations.
+type TextureMeta<Type extends TextureType> = (
+  Type extends 'entity/villager' ? Omit<Omit<TextureMetaAll, 'texture'>, 'gui'> :
+  Type extends 'colormap' ? Omit<Omit<TextureMetaAll, 'villager'>, 'gui'> :
+  Type extends 'gui' ? Omit<Omit<TextureMetaAll, 'villager'>, 'texture'> :
+  Omit<Omit<Omit<TextureMetaAll, 'villager'>, 'texture'>, 'gui'>
+)
+
 /**
- * A node representing a Minecraft sound.
+ * A node representing a Minecraft texture.
  */
 export class TextureNode<Type extends TextureType> extends ContainerNode implements ResourceNode<TextureClass<Type>> {
   constructor(

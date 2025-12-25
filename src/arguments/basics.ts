@@ -1,4 +1,4 @@
-import type { MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { MultipleEntitiesArgument, Registry } from 'sandstone/arguments'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
@@ -107,3 +107,20 @@ export type SOUND_TYPES =
   | 'record'
   | 'voice'
   | 'weather'
+
+export type TEXTURE_TYPES =
+  | 'block'
+  | 'colormap'
+  | 'effect'
+  | `entity/${Registry['minecraft:entity_type']}`
+  | 'environment'
+  | 'font'
+  | 'gui'
+  | 'item'
+  | 'map'
+  | 'misc'
+  | 'mob_effect'
+  | 'models/armor'
+  | 'painting'
+  | 'particle'
+  | 'trims'

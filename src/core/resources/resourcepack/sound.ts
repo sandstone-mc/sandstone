@@ -132,7 +132,7 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
   async push(...soundEvents: SoundsClass[] | SoundEventClass<SOUND_TYPES>[]) {
     if (soundEvents[0] instanceof SoundsClass) {
       for await (const _sounds of soundEvents) {
-        const def = _sounds as SoundsClass
+        const def = await (_sounds as SoundsClass).soundsJSON
         const s = await this.soundsJSON
 
         // TODO: Implement sound event merging
@@ -154,7 +154,7 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
   async unshift(...soundEvents: SoundsClass[] | SoundEventClass<SOUND_TYPES>[]) {
     if (soundEvents[0] instanceof SoundsClass) {
       for await (const _sounds of soundEvents) {
-        const def = _sounds as SoundsClass
+        const def = await (_sounds as SoundsClass).soundsJSON
         const s = await this.soundsJSON
 
         // TODO: Implement sound event merging
