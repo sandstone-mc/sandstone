@@ -1,11 +1,11 @@
 import type { Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument } from 'sandstone/arguments'
 import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations'
-import { ConditionNode } from 'sandstone/flow/index.js'
+import { ConditionNode } from 'sandstone/flow'
 import type { SandstonePack } from 'sandstone/pack'
-import { DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral } from '../core/Macro.js'
-import type { ConditionClass, ConditionTextComponentClass } from './abstractClasses.js'
-import { nbtStringifier } from './nbt/NBTs.js'
-import { Score } from './Score.js'
+import { DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral } from '../core/Macro'
+import type { ConditionClass, ConditionTextComponentClass } from './abstractClasses'
+import { nbtStringifier } from './nbt/NBTs'
+import { Score } from './Score'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
 

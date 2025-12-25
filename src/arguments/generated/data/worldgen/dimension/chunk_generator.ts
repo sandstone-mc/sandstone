@@ -1,7 +1,7 @@
-import type { BiomeSource } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.js'
-import type { NoiseGeneratorSettingsRef } from 'sandstone/arguments/generated/data/worldgen/noise_settings.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { BiomeSource } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source'
+import type { NoiseGeneratorSettingsRef } from 'sandstone/arguments/generated/data/worldgen/noise_settings'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt, TagClass } from 'sandstone'
 
 export type ChunkGenerator = ({

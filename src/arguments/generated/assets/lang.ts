@@ -1,4 +1,4 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type Lang = ({
   [Key in `${any}${string}`]?: string;

@@ -1,10 +1,10 @@
 import type { SandstoneCore } from 'sandstone/core'
-import type { Score } from 'sandstone/variables/Score.js'
+import type { Score } from 'sandstone/variables/Score'
 import * as util from 'util'
-import { ScoreboardCommandNode } from '../../commands/implementations/entity/scoreboard.js'
-import { formatDebugString } from '../../utils.js'
-import { IfNode } from '../if_else.js'
-import { ConditionNode } from './condition.js'
+import { ScoreboardCommandNode } from '../../commands/implementations/entity/scoreboard'
+import { formatDebugString } from '../../utils'
+import { IfNode } from '../if_else'
+import { ConditionNode } from './condition'
 
 export class OrNode extends ConditionNode {
   constructor(

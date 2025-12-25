@@ -1,4 +1,4 @@
-import type { SOUND_TYPES } from '../../basics.js'
+import type { SOUND_TYPES } from '../../basics'
 
 /** Assumed to be in `minecraft`, namespace can be defined with `:`. */
 type SoundEvent = `${SOUND_TYPES}.${string}`

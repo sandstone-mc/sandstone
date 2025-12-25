@@ -1,5 +1,5 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block'
 import type { NBTInt } from 'sandstone'
 
 export type Beacon = (BlockEntity & Nameable & Lockable & {

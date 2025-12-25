@@ -1,8 +1,8 @@
-import type { MobCategory, SpawnerData } from 'sandstone/arguments/generated/data/worldgen/biome.js'
-import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/arguments/generated/data/worldgen.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.js'
+import type { MobCategory, SpawnerData } from 'sandstone/arguments/generated/data/worldgen/biome'
+import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/arguments/generated/data/worldgen'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type BiomeTemperature = ('cold' | 'warm')

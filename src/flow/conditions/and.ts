@@ -1,5 +1,5 @@
 import type { SandstoneCore } from 'sandstone/core'
-import { ConditionNode } from './condition.js'
+import { ConditionNode } from './condition'
 
 export class AndNode extends ConditionNode {
   constructor(

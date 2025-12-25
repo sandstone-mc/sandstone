@@ -3,7 +3,7 @@
 import { ExecuteCommandNode, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import type { ElseNode } from 'sandstone/flow'
 import { IfNode } from 'sandstone/flow'
-import { GenericSandstoneVisitor } from './visitor.js'
+import { GenericSandstoneVisitor } from './visitor'
 
 function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   yield node

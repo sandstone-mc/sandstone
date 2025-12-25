@@ -1,4 +1,4 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type SoundTypeDispatcherMap = {
   'event': SoundTypeEvent

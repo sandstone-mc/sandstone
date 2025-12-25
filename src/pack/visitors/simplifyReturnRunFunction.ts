@@ -1,7 +1,7 @@
 import { FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import { CommandNode } from 'sandstone/core/nodes'
 
-import { GenericSandstoneVisitor } from './visitor.js'
+import { GenericSandstoneVisitor } from './visitor'
 
 /**
  * Simplifies a return run calling a 1-command function to a single execute, with some exceptions.

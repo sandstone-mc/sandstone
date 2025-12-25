@@ -1,4 +1,4 @@
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
 import type { NBTInt, NBTShort } from 'sandstone'
 
 export type ExperienceOrb = (EntityBase & {

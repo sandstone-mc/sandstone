@@ -8,9 +8,9 @@ import type FetchType from 'node-fetch'
 import type { Response } from 'node-fetch'
 import { coerce } from 'semver'
 import * as util from 'util'
-import type { MultipleEntitiesArgument } from './arguments/selector.js'
-import type { Node } from './core/nodes.js'
-import type { UUIDinNumber } from './variables/UUID.js'
+import type { MultipleEntitiesArgument } from './arguments/selector'
+import type { Node } from './core/nodes'
+import type { UUIDinNumber } from './variables/UUID'
 
 /* @ts-ignore */
 export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) => Promise<Response> = Object.hasOwn(

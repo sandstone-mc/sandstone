@@ -3,7 +3,7 @@ import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'

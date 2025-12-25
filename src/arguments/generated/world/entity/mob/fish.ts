@@ -1,5 +1,5 @@
-import type { SalmonType } from 'sandstone/arguments/generated/world/component/entity.js'
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
+import type { SalmonType } from 'sandstone/arguments/generated/world/component/entity'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
 import type { NBTInt } from 'sandstone'
 
 export type Fish = (MobBase & {

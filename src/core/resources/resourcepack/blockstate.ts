@@ -1,10 +1,10 @@
 import type { Dispatcher } from 'sandstone/arguments'
-import { ContainerNode } from '../../nodes.js'
+import { ContainerNode } from '../../nodes'
 
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource.js'
-import { ResourceClass } from '../resource.js'
-import { AllKeys } from 'sandstone/utils.js'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
+import { ResourceClass } from '../resource'
+import { AllKeys } from 'sandstone/utils'
 
 type BlockStateJSON = Dispatcher<'minecraft:resource'>['block_definition']
 type BlockStateType = AllKeys<Dispatcher<'minecraft:resource'>['block_definition']>

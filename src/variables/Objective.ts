@@ -2,11 +2,11 @@ import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERIA } 
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import { formatDebugString, makeClassCallable } from 'sandstone/utils'
 import * as util from 'util'
-import type { SandstonePack } from '../pack/index.js'
-import { JSONTextComponentClass } from './JSONTextComponentClass.js'
-import { targetParser } from './parsers.js'
-import type { ScoreDisplay } from './Score.js'
-import { Score } from './Score.js'
+import type { SandstonePack } from '../pack'
+import { JSONTextComponentClass } from './JSONTextComponentClass'
+import { targetParser } from './parsers'
+import type { ScoreDisplay } from './Score'
+import { Score } from './Score'
 
 export class _RawObjectiveClass {
   display: JSONTextComponentClass | undefined

@@ -13,10 +13,10 @@ import type { ResourceClassArguments, ResourceNode, SandstoneCore } from 'sandst
 import { add } from 'sandstone/utils'
 import type { DataPointClass, NBTAllNumberClasses, NBTRange, Score, StructureMirror, StructureRotation } from 'sandstone/variables'
 import { ConditionClass, NBTPrimitive, ResolveNBTPart, relative } from 'sandstone/variables'
-import { ContainerNode } from '../../nodes.js'
-import { ResourceClass } from '../resource.js'
-import { StructureNBT } from 'sandstone/arguments/generated/data/structure.js'
-import { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
+import { ContainerNode } from '../../nodes'
+import { ResourceClass } from '../resource'
+import { StructureNBT } from 'sandstone/arguments/generated/data/structure'
+import { BlockState } from 'sandstone/arguments/generated/util/block_state'
 
 const same = lodash.isEqual
 

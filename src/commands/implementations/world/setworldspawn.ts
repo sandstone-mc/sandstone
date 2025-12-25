@@ -2,7 +2,7 @@ import type { Coordinates, Rotation } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class SetWorldSpawnCommandNode extends CommandNode {
   command = 'setworldspawn' as const

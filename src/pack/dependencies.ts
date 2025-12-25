@@ -1,4 +1,4 @@
-import { PackType } from './packType.js'
+import { PackType } from './packType'
 
 export class DataPackDependencies extends PackType {
   constructor() {

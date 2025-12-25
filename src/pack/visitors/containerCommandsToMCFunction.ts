@@ -2,7 +2,7 @@
 
 import type { MCFunctionNode } from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core'
-import { GenericSandstoneVisitor } from './visitor.js'
+import { GenericSandstoneVisitor } from './visitor'
 
 // let bippity = 0
 

@@ -1,4 +1,4 @@
-import type { NumberProvider } from './utils.js'
+import type { NumberProvider } from './utils'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 // All the possible criteria

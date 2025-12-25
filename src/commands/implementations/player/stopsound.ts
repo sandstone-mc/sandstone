@@ -2,7 +2,7 @@ import type { MultiplePlayersArgument, Registry, SOUND_SOURCES } from 'sandstone
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class StopSoundCommandNode extends CommandNode {
   command = 'stopsound' as const

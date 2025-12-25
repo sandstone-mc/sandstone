@@ -1,5 +1,5 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTClass } from 'sandstone'
 
 export type CustomData = (CustomDataMap | (`${any}${string}` | NBTClass))

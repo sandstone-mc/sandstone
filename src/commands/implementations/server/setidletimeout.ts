@@ -1,6 +1,6 @@
 import { CommandNode } from 'sandstone/core/nodes'
 
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class SetIdleTimeoutCommandNode extends CommandNode {
   command = 'setidletimeout' as const

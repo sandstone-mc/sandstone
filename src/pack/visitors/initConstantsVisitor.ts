@@ -1,4 +1,4 @@
-import { GenericSandstoneVisitor } from './visitor.js'
+import { GenericSandstoneVisitor } from './visitor'
 
 /**
  * Initialize the constants of the pack.

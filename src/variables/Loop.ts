@@ -1,6 +1,6 @@
-import { Node } from '../core/nodes.js'
+import { Node } from '../core/nodes'
 
-import type { SandstonePack } from '../pack/index.js'
+import type { SandstonePack } from '../pack'
 
 export class LoopArgument extends Node {
   constructor(private pack: SandstonePack) {

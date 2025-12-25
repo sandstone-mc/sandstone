@@ -1,11 +1,11 @@
-import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot.js'
+import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot'
 import type {
   DataComponentExactPredicate,
   DataComponentPredicate,
-} from 'sandstone/arguments/generated/world/component.js'
+} from 'sandstone/arguments/generated/world/component'
 import type {
   AxolotlVariant,
   FoxType,
@@ -15,8 +15,8 @@ import type {
   ParrotVariant,
   RabbitVariant,
   TropicalFishPattern,
-} from 'sandstone/arguments/generated/world/component/entity.js'
-import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat.js'
+} from 'sandstone/arguments/generated/world/component/entity'
+import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { LiteralUnion, NBTClass, NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
 

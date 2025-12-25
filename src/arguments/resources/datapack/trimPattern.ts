@@ -1,4 +1,4 @@
-import type { JSONTextComponent } from '../../jsonTextComponent.js'
+import type { JSONTextComponent } from '../../jsonTextComponent'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type TrimPatternJSON = {

@@ -2,8 +2,8 @@ import type { ColumnCoordinates, MultipleEntitiesArgument } from 'sandstone/argu
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import type { FinalCommandOutput } from '../../helpers.js'
-import { CommandArguments } from '../../helpers.js'
+import type { FinalCommandOutput } from '../../helpers'
+import { CommandArguments } from '../../helpers'
 
 export class SpreadPlayersNode extends CommandNode {
   command = 'spreadplayers' as const

@@ -1,6 +1,6 @@
-import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.js'
-import type { SpawnPrioritySelectors } from 'sandstone/arguments/generated/data/variants.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { SoundEventRef } from 'sandstone/arguments/generated/data/util'
+import type { SpawnPrioritySelectors } from 'sandstone/arguments/generated/data/variants'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type WolfSoundVariant = {
   ambient_sound: SoundEventRef

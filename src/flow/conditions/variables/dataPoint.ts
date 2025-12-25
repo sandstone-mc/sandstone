@@ -1,7 +1,7 @@
 import type { NBTObject } from 'sandstone/arguments/nbt'
 import type { DataPointPickClass, SandstoneCore } from 'sandstone/core'
 import type { DataPointClass, Score } from 'sandstone/variables'
-import { SingleConditionNode } from '../condition.js'
+import { SingleConditionNode } from '../condition'
 
 export class DataPointExistsConditionNode extends SingleConditionNode {
   constructor(

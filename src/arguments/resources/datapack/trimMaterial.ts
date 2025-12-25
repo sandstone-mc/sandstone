@@ -1,5 +1,5 @@
 import type { LiteralUnion } from 'sandstone/utils'
-import type { JSONTextComponent } from '../../jsonTextComponent.js'
+import type { JSONTextComponent } from '../../jsonTextComponent'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 /** Key is armor material, value is a string which will be used in the resource pack. */

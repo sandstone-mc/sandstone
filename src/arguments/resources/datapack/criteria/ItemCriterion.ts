@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import type { TagClass } from 'sandstone/core'
-import type { EnchantmentCriterion, NumberProvider } from './index.js'
+import type { EnchantmentCriterion, NumberProvider } from '.'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type ItemCriterion = Partial<{

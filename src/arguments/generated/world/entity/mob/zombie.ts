@@ -2,8 +2,8 @@ import type {
   Offers,
   PlayerReputationPart,
   VillagerData,
-} from 'sandstone/arguments/generated/world/entity/mob/breedable/villager.js'
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
+} from 'sandstone/arguments/generated/world/entity/mob/breedable/villager'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
 import type { NBTInt, NBTIntArray } from 'sandstone'
 
 export type Zombie = (MobBase & {

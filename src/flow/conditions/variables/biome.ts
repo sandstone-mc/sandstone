@@ -1,7 +1,7 @@
 import type { Coordinates } from 'sandstone'
 import type { SandstoneCore } from 'sandstone/core'
 import { coordinatesParser } from 'sandstone/variables'
-import { SingleConditionNode } from '../condition.js'
+import { SingleConditionNode } from '../condition'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class BiomeConditionNode extends SingleConditionNode {

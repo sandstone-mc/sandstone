@@ -3,12 +3,12 @@
 import type { Coordinates, Dispatcher, SingleEntityArgument } from 'sandstone/arguments'
 import { SetType, toMinecraftResourceName } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables'
-import { ContainerNode } from '../../nodes.js'
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-import { ResourceClass } from '../resource.js'
-import type { TagClass } from './tag.js'
-import { TAG_DAMAGE_TYPES_SET } from 'sandstone/arguments/generated/_registry/tag_damage_types.js'
+import { ContainerNode } from '../../nodes'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../resource'
+import { ResourceClass } from '../resource'
+import type { TagClass } from './tag'
+import { TAG_DAMAGE_TYPES_SET } from 'sandstone/arguments/generated/_registry/tag_damage_types'
 
 const damageTypes: Map<string, TagClass<'damage_type'>> = new Map()
 

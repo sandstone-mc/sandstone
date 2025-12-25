@@ -1,4 +1,4 @@
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
 import type { NBTFloat, NBTIntArray, NBTLong } from 'sandstone'
 
 export type Action = {

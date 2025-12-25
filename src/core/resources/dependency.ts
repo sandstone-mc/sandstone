@@ -1,9 +1,9 @@
 import type { PackType } from 'sandstone/pack'
-import { ContainerNode } from '../nodes.js'
-import type { SandstoneCore } from '../sandstoneCore.js'
-import type { Dependency } from '../smithed.js'
-import type { ResourceNode } from './resource.js'
-import { ResourceClass } from './resource.js'
+import { ContainerNode } from '../nodes'
+import type { SandstoneCore } from '../sandstoneCore'
+import type { Dependency } from '../smithed'
+import type { ResourceNode } from './resource'
+import { ResourceClass } from './resource'
 
 /**
  * A node representing a custom resource.

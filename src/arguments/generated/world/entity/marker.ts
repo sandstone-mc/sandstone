@@ -1,3 +1,3 @@
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
 
 export type Marker = EntityBase

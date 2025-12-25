@@ -1,6 +1,6 @@
 import { Score } from 'sandstone/variables'
 
-import type { Flow } from '../Flow.js'
+import type { Flow } from '../Flow'
 
 export function binaryFor(
   flow: Flow,

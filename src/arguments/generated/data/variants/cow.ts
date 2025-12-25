@@ -1,5 +1,5 @@
-import type { SpawnPrioritySelectors } from 'sandstone/arguments/generated/data/variants.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { SpawnPrioritySelectors } from 'sandstone/arguments/generated/data/variants'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type CowModelType = ('normal' | 'cold' | 'warm')
 

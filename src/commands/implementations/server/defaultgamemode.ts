@@ -1,6 +1,6 @@
 import type { GAMEMODES } from 'sandstone/arguments'
 import { CommandNode } from 'sandstone/core/nodes'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class DefaultGameModeCommandNode extends CommandNode {
   command = 'defaultgamemode' as const

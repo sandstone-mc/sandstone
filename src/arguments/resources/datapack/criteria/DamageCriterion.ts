@@ -1,7 +1,7 @@
 import type { Registry } from 'sandstone/arguments'
-import type { EntityCriterion } from './EntityCriterion.js'
-import type { NumberProvider } from './utils.js'
-import { DamageTypeClass } from 'sandstone/core/index.js'
+import type { EntityCriterion } from './EntityCriterion'
+import type { NumberProvider } from './utils'
+import { DamageTypeClass } from 'sandstone/core'
 
 export type DamageCriterion = Partial<{
   /** Checks if the damage was successfully blocked. */

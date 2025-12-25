@@ -1,6 +1,6 @@
 import { CommandNode } from 'sandstone/core/nodes'
 
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class SeedCommandNode extends CommandNode {
   command = 'seed' as const

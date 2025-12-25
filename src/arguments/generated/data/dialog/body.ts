@@ -1,7 +1,7 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { Text } from 'sandstone/arguments/generated/util/text.js'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTInt } from 'sandstone'
 
 export type DialogBody = ({

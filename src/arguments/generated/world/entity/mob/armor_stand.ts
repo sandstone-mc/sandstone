@@ -1,4 +1,4 @@
-import type { EntityEquipment, LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.js'
+import type { EntityEquipment, LivingEntity } from 'sandstone/arguments/generated/world/entity/mob'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type ArmorStand = (LivingEntity & {

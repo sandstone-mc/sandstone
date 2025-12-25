@@ -1,9 +1,9 @@
-import type { NoiseParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.js'
-import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
-import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.js'
+import type { NoiseParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source'
+import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
+import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BaseNoiseProvider = {

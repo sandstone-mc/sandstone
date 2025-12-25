@@ -12,7 +12,7 @@ import type { LootTableClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 type LootTableArgument<MACRO extends boolean> = Macroable<LootTableClass | string, MACRO>
 

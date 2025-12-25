@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 import type { PredicateClass, TagClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { PredicateJSON } from '../predicate.js'
-import type { DistanceCriterion, EffectCriterion } from './basic_criteria.js'
-import type { ItemCriterion } from './ItemCriterion.js'
-import type { LocationCriterion } from './LocationCriterion.js'
-import type { PlayerCriterion } from './PlayerCriterion.js'
+import type { PredicateJSON } from '../predicate'
+import type { DistanceCriterion, EffectCriterion } from './basic_criteria'
+import type { ItemCriterion } from './ItemCriterion'
+import type { LocationCriterion } from './LocationCriterion'
+import type { PlayerCriterion } from './PlayerCriterion'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type EntityCriterion =

@@ -3,7 +3,7 @@ import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class ExperienceCommandNode extends CommandNode {
   // We always use the shorthand version for compactness purposes

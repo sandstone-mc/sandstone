@@ -14,8 +14,8 @@ import type {
   PlayerCriterion,
   PotionIdCriterion,
   SlotCriterion,
-} from './criteria/index.js'
-import type { PredicateJSON } from './predicate.js'
+} from './criteria'
+import type { PredicateJSON } from './predicate'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 /** A representation of a Minecraft advancement. */

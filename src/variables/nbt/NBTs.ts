@@ -2,7 +2,7 @@ import type { NBTObject, RootNBT } from 'sandstone/arguments'
 import type { MacroArgument } from 'sandstone/core'
 import { makeCallable } from 'sandstone/utils'
 import * as util from 'util'
-import { parseNBT } from './parser.js'
+import { parseNBT } from './parser'
 
 export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string

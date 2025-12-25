@@ -1,11 +1,11 @@
-import type { RootNBT } from 'sandstone/arguments/nbt.js'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 import type { DataPointPickClass, Macroable, MCFunctionClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { DATA_TYPES, DataPointClass } from 'sandstone/variables'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
-import type { FinalCommandOutput } from '../../helpers.js'
-import { CommandArguments } from '../../helpers.js'
+import type { FinalCommandOutput } from '../../helpers'
+import { CommandArguments } from '../../helpers'
 
 // Function command
 

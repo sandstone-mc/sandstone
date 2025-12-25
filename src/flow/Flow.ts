@@ -17,14 +17,14 @@ import type {
   StringDataPointClass,
 } from 'sandstone/variables'
 import { parseJSONText, Score } from 'sandstone/variables'
-import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core/index.js'
-import type { LiteralUnion } from '../utils.js'
-import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions } from './conditions/index.js'
-import { IfStatement } from './if_else.js'
-import type { ForOfIterator } from './loops/index.js'
-import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops/index.js'
-import type { DefaultType } from './switch_case.js'
-import { CaseStatement } from './switch_case.js'
+import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
+import type { LiteralUnion } from '../utils'
+import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions } from './conditions'
+import { IfStatement } from './if_else'
+import type { ForOfIterator } from './loops'
+import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops'
+import type { DefaultType } from './switch_case'
+import { CaseStatement } from './switch_case'
 
 let switches = 0
 

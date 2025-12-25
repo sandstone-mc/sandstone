@@ -1,4 +1,4 @@
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
 import type { NBTByte, NBTShort } from 'sandstone'
 
 export type Creeper = (MobBase & {

@@ -2,7 +2,7 @@ import type { Coordinates, MultiplePlayersArgument, Registry, SOUND_SOURCES } fr
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class PlaySoundCommandNode extends CommandNode {
   command = 'playsound' as const

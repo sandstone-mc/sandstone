@@ -1,7 +1,7 @@
 import type { TimeArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class TimeCommandNode extends CommandNode {
   command = 'time' as const

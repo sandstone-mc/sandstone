@@ -1,7 +1,7 @@
-import { ExecuteCommandNode, ScoreboardCommandNode } from '../../commands/index.js'
-import { ContainerCommandNode, ContainerNode, type Node } from '../../core/index.js'
-import { AndNode, type ConditionNode, IfNode, NotNode, OrNode } from '../../flow/index.js'
-import { GenericSandstoneVisitor } from './visitor.js'
+import { ExecuteCommandNode, ScoreboardCommandNode } from '../../commands'
+import { ContainerCommandNode, ContainerNode, type Node } from '../../core'
+import { AndNode, type ConditionNode, IfNode, NotNode, OrNode } from '../../flow'
+import { GenericSandstoneVisitor } from './visitor'
 
 export class OrTransformationVisitor extends GenericSandstoneVisitor {
   visitIfNode = (node_: IfNode) => {

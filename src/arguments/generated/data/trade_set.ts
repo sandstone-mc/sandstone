@@ -1,5 +1,5 @@
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/util'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { TagClass } from 'sandstone'
 
 export type TradeSet = {

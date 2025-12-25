@@ -1,7 +1,7 @@
 import type { SandstoneCore } from 'sandstone/core'
 import { _RawMCFunctionClass, type MCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
-import { ObjectiveClass } from './Objective.js'
-import type { Score } from './Score.js'
+import { ObjectiveClass } from './Objective'
+import type { Score } from './Score'
 
 const checkTriggers: Record<number, MCFunctionClass<undefined, undefined>> = {}
 

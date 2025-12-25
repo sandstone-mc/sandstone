@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type FallingBlock<S = undefined> = (EntityBase & {

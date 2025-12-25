@@ -1,10 +1,10 @@
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
 import * as util from 'util'
-import { formatDebugString } from '../utils.js'
-import { isMacroArgument, type MacroArgument } from './Macro.js'
-import type { MCFunctionClass, MCFunctionNode } from './resources/datapack/index.js'
-import type { SandstoneCore } from './sandstoneCore.js'
+import { formatDebugString } from '../utils'
+import { isMacroArgument, type MacroArgument } from './Macro'
+import type { MCFunctionClass, MCFunctionNode } from './resources/datapack'
+import type { SandstoneCore } from './sandstoneCore'
 
 export abstract class Node {
   constructor(public sandstoneCore: SandstoneCore) {}

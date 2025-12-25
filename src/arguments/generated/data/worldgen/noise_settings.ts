@@ -1,12 +1,12 @@
-import type { CubicSpline, DensityFunctionRef } from 'sandstone/arguments/generated/data/worldgen/density_function.js'
-import type { ClimateParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.js'
+import type { CubicSpline, DensityFunctionRef } from 'sandstone/arguments/generated/data/worldgen/density_function'
+import type { ClimateParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source'
 import type {
   ConcentricRingsPlacement,
   RandomSpreadPlacement,
-} from 'sandstone/arguments/generated/data/worldgen/structure_set.js'
-import type { SurfaceRule } from 'sandstone/arguments/generated/data/worldgen/surface_rule.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
+} from 'sandstone/arguments/generated/data/worldgen/structure_set'
+import type { SurfaceRule } from 'sandstone/arguments/generated/data/worldgen/surface_rule'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { NBTDouble, NBTFloat, NBTInt } from 'sandstone'
 
 export type NoiseGeneratorSettings = ({

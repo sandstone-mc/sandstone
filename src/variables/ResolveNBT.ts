@@ -1,14 +1,14 @@
 /* eslint-disable max-len */
 import * as util from 'util'
-import type { NBTObject } from '../arguments/nbt.js'
-import { DataPointPickClass } from '../core/Macro.js'
-import type { SandstonePack } from '../pack/index.js'
-import { capitalize } from '../utils.js'
-import type { DataPointClass } from './Data.js'
-import { StringDataPointClass } from './Data.js'
-import type { NBTAllArrays, NBTAllNumbers, NBTAllValues, NBTString } from './nbt/index.js'
-import { NBTAnyValue, NBTClass, NBTInt, NBTIntArray, NBTPrimitive } from './nbt/index.js'
-import { Score } from './Score.js'
+import type { NBTObject } from '../arguments/nbt'
+import { DataPointPickClass } from '../core/Macro'
+import type { SandstonePack } from '../pack'
+import { capitalize } from '../utils'
+import type { DataPointClass } from './Data'
+import { StringDataPointClass } from './Data'
+import type { NBTAllArrays, NBTAllNumbers, NBTAllValues, NBTString } from './nbt'
+import { NBTAnyValue, NBTClass, NBTInt, NBTIntArray, NBTPrimitive } from './nbt'
+import { Score } from './Score'
 
 export class ResolveNBTClass extends DataPointPickClass {
   dataPoint: NonNullable<DataPointClass<'storage'>>

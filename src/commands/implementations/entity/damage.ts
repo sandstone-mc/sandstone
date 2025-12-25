@@ -4,7 +4,7 @@ import type { DamageTypeClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class DamageCommandNode extends CommandNode {
   command = 'damage' as const

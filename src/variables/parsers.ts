@@ -1,7 +1,7 @@
 import type { Coordinates, Range, Rotation, STRUCTURE_MIRROR, STRUCTURE_ROTATION } from 'sandstone/arguments'
-import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
-import { isMacroArgument, type MacroArgument } from '../core/Macro.js'
-import { VectorClass } from './Coordinates.js'
+import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
+import { isMacroArgument, type MacroArgument } from '../core/Macro'
+import { VectorClass } from './Coordinates'
 // PARSERS
 export function arrayToArgsParser(
   args: unknown,

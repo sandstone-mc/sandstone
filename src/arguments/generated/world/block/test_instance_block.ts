@@ -1,7 +1,7 @@
-import type { Rotation } from 'sandstone/arguments/generated/data/gametest.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { Text } from 'sandstone/arguments/generated/util/text.js'
-import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
+import type { Rotation } from 'sandstone/arguments/generated/data/gametest'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
 import type { NBTIntArray } from 'sandstone'
 
 export type TestInstanceBlock = (BlockEntity & {

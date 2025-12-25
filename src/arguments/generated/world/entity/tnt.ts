@@ -1,5 +1,5 @@
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
 import type { NBTFloat, NBTIntArray, NBTShort } from 'sandstone'
 
 export type Tnt = (EntityBase & {

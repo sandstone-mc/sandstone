@@ -1,8 +1,8 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { DyeColorByte } from 'sandstone/arguments/generated/util/color.js'
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.js'
-import type { NeutralMob } from 'sandstone/arguments/generated/world/entity/mob.js'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { DyeColorByte } from 'sandstone/arguments/generated/util/color'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
+import type { NeutralMob } from 'sandstone/arguments/generated/world/entity/mob'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTIntArray } from 'sandstone'
 
 export type Cat = (Tamable & {

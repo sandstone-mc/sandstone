@@ -1,6 +1,6 @@
 import type { GAMEMODES } from 'sandstone/arguments/basics'
-import type { EntityCriterion } from './EntityCriterion.js'
-import type { NumberProvider } from './utils.js'
+import type { EntityCriterion } from './EntityCriterion'
+import type { NumberProvider } from './utils'
 
 export type PlayerCriterion = Partial<{
   /** A map of advancements to check. */

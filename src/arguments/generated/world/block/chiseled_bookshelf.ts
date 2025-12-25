@@ -1,5 +1,5 @@
-import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.js'
-import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
+import type { SlottedItem } from 'sandstone/arguments/generated/util/slot'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
 import type { NBTByte, NBTInt, NBTList } from 'sandstone'
 
 export type ChiseledBookshelf = (BlockEntity & {

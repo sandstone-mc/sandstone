@@ -1,12 +1,12 @@
-export * from './and.js'
-export * from './condition.js'
-export * from './not.js'
-export * from './or.js'
-export * from './resources/index.js'
-export * from './variables/index.js'
+export * from './and'
+export * from './condition'
+export * from './not'
+export * from './or'
+export * from './resources'
+export * from './variables'
 
-import * as resources from './resources/index.js'
-import * as variables from './variables/index.js'
+import * as resources from './resources'
+import * as variables from './variables'
 
 export const SandstoneConditions = {
   Advancement: resources.AdvancementConditionNode,

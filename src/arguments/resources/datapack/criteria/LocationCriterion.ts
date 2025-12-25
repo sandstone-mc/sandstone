@@ -1,5 +1,5 @@
 import type { TagClass } from 'sandstone/core'
-import type { NumberProvider, PositionCriterion } from './index.js'
+import type { NumberProvider, PositionCriterion } from '.'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type LocationCriterion = Partial<{

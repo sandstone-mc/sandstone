@@ -1,3 +1,3 @@
-export * from './commands.js'
-export * from './helpers.js'
-export * from './implementations/index.js'
+export * from './commands'
+export * from './helpers'
+export * from './implementations'

@@ -2,8 +2,8 @@ import type { MultiplePlayersArgument, RootNBT } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core'
 import { nbtStringifier, targetParser } from 'sandstone/variables'
-import type { FinalCommandOutput } from '../../helpers.js'
-import { CommandArguments } from '../../helpers.js'
+import type { FinalCommandOutput } from '../../helpers'
+import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 // Give command

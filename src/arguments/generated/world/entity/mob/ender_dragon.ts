@@ -1,4 +1,4 @@
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
 
 export type DragonPhase = (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10)
 

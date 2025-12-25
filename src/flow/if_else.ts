@@ -1,11 +1,11 @@
-import { reset } from 'chalk/index.js'
+import { reset } from 'chalk'
 import * as util from 'util'
 
-import type { Node, SandstoneCore } from '../core/index.js'
-import { ContainerNode } from '../core/index.js'
-import { formatDebugString } from '../utils.js'
-import type { ConditionNode } from './conditions/index.js'
-import type { Condition } from './Flow.js'
+import type { Node, SandstoneCore } from '../core'
+import { ContainerNode } from '../core'
+import { formatDebugString } from '../utils'
+import type { ConditionNode } from './conditions'
+import type { Condition } from './Flow'
 
 export class IfNode extends ContainerNode {
   nextFlowNode?: IfNode | ElseNode

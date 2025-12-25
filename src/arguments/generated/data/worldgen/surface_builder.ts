@@ -1,5 +1,5 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 
 export type Config = {
   top_material: BlockState

@@ -111,9 +111,9 @@ import {
   VectorClass,
 } from 'sandstone/variables'
 import { ResolveNBTClass } from 'sandstone/variables/ResolveNBT'
-import type { handlerReadFile, handlerWriteFile } from './packType.js'
-import { PackType } from './packType.js'
-import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions.js'
+import type { handlerReadFile, handlerWriteFile } from './packType'
+import { PackType } from './packType'
+import { AwaitBodyVisitor } from './visitors/addAwaitBodyToMCFunctions'
 import {
   ContainerCommandsToMCFunctionVisitor,
   GenerateLazyMCFunction,
@@ -126,8 +126,8 @@ import {
   SimplifyExecuteFunctionVisitor,
   SimplifyReturnRunFunctionVisitor,
   UnifyChainedExecutesVisitor,
-} from './visitors/index.js'
-import { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
+} from './visitors'
+import { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 
 export type ResourcePath = string[]
 

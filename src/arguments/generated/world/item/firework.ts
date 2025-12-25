@@ -1,4 +1,4 @@
-import type { ItemBase } from 'sandstone/arguments/generated/world/item.js'
+import type { ItemBase } from 'sandstone/arguments/generated/world/item'
 import type { NBTByte, NBTIntArray } from 'sandstone'
 
 export type Explosion = {

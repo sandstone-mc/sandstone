@@ -6,7 +6,7 @@ import type {
   ItemCriterion,
   LocationCriterion,
   NumberProvider,
-} from './criteria/index.js'
+} from './criteria'
 
 type PredicateKind<NAME extends string, VALUES extends Record<string, unknown>> = {
   /**

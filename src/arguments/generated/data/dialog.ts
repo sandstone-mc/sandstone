@@ -1,9 +1,9 @@
-import type { ClickAction } from 'sandstone/arguments/generated/data/dialog/action.js'
-import type { DialogBody } from 'sandstone/arguments/generated/data/dialog/body.js'
-import type { InputControl } from 'sandstone/arguments/generated/data/dialog/input.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { Text } from 'sandstone/arguments/generated/util/text.js'
+import type { ClickAction } from 'sandstone/arguments/generated/data/dialog/action'
+import type { DialogBody } from 'sandstone/arguments/generated/data/dialog/body'
+import type { InputControl } from 'sandstone/arguments/generated/data/dialog/input'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type AfterAction = ('close' | 'none' | 'wait_for_response')

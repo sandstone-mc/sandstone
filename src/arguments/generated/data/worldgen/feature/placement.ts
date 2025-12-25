@@ -3,11 +3,11 @@ import type {
   HeightmapType,
   HeightProvider,
   IntProvider,
-} from 'sandstone/arguments/generated/data/worldgen.js'
-import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.js'
-import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+} from 'sandstone/arguments/generated/data/worldgen'
+import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate'
+import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BlockPredicateFilter = {

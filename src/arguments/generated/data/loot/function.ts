@@ -1,4 +1,4 @@
-import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.js'
+import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate'
 import type {
   BlockEntityTarget,
   EntityTarget,
@@ -6,17 +6,17 @@ import type {
   LootCondition,
   LootFunction,
   LootPoolEntry,
-} from 'sandstone/arguments/generated/data/loot.js'
-import type { IntRange, NbtProvider, NumberProvider } from 'sandstone/arguments/generated/data/util.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.js'
-import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.js'
-import type { Filterable } from 'sandstone/arguments/generated/util.js'
-import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot.js'
-import type { Text } from 'sandstone/arguments/generated/util/text.js'
-import type { CustomData, DataComponentPatch } from 'sandstone/arguments/generated/world/component.js'
-import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.js'
+} from 'sandstone/arguments/generated/data/loot'
+import type { IntRange, NbtProvider, NumberProvider } from 'sandstone/arguments/generated/data/util'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute'
+import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color'
+import type { Filterable } from 'sandstone/arguments/generated/util'
+import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot'
+import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { CustomData, DataComponentPatch } from 'sandstone/arguments/generated/world/component'
+import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item'
 import type { DataPointClass, NBTClass, NBTFloat, NBTInt, NBTLong, TagClass } from 'sandstone'
 
 export type ApplyBonus = ({

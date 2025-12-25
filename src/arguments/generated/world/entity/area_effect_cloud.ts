@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Particle } from 'sandstone/arguments/generated/util/particle.js'
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Particle } from 'sandstone/arguments/generated/util/particle'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
 import type { NBTFloat, NBTInt, NBTIntArray } from 'sandstone'
 
 export type AreaEffectCloud = (EntityBase & {

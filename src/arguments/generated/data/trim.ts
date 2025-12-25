@@ -1,5 +1,5 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { Text } from 'sandstone/arguments/generated/util/text.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { Text } from 'sandstone/arguments/generated/util/text'
 
 export type ArmorMaterial = ('leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'netherite' | 'turtle')
 

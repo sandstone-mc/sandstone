@@ -1,4 +1,4 @@
-import type { RootNBT } from '../../index.js'
+import type { RootNBT } from '../..'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type Vec3 = [number, number, number]

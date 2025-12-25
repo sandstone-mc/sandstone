@@ -1,7 +1,7 @@
 import type { SandstoneCore } from 'sandstone/core'
 import type { CommandNode } from 'sandstone/core/nodes'
 import type { SandstonePack } from 'sandstone/pack'
-import type { SandstoneCommands } from './commands.js'
+import type { SandstoneCommands } from './commands'
 
 type InstanceTypeOr<NODE extends (new (...args: any) => CommandNode) | undefined, X> = NODE extends undefined
   ? X

@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item'
 import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 

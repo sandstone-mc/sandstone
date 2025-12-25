@@ -15,7 +15,7 @@ import type { LiteralUnion } from 'sandstone/utils'
 import type { Score } from 'sandstone/variables'
 import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 // Yes this sucks
 

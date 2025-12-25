@@ -1,7 +1,7 @@
 import { FunctionCommandNode } from 'sandstone/commands'
 import type { MCFunctionNode } from 'sandstone/core'
 import { MCFunctionClass } from 'sandstone/core'
-import { GenericSandstoneVisitor } from './visitor.js'
+import { GenericSandstoneVisitor } from './visitor'
 
 // TODO: Add support for macros
 

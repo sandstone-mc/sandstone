@@ -1,10 +1,10 @@
 import type { SubCommand } from 'sandstone/commands'
-import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
+import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import type { DataPointClass, IterableDataClass, Score, StringDataPointClass } from 'sandstone/variables'
 import { LoopArgument } from 'sandstone/variables'
-import { IfStatement } from '../if_else.js'
-import type { ConditionNode } from '../index.js'
-import { LoopNode } from '../loop.js'
+import { IfStatement } from '../if_else'
+import type { ConditionNode } from '..'
+import { LoopNode } from '../loop'
 
 export type ForOfIterator = 'entry' | ['i', 'entry'] | ['key', 'value']
 

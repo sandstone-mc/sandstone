@@ -1,10 +1,10 @@
-import type { ItemDisplayContext, ModelRef } from 'sandstone/arguments/generated/assets/model.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar.js'
-import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.js'
-import type { Direction } from 'sandstone/arguments/generated/util/direction.js'
-import type { Keybind } from 'sandstone/arguments/generated/util/text.js'
+import type { ItemDisplayContext, ModelRef } from 'sandstone/arguments/generated/assets/model'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar'
+import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color'
+import type { Direction } from 'sandstone/arguments/generated/util/direction'
+import type { Keybind } from 'sandstone/arguments/generated/util/text'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type Banner = {

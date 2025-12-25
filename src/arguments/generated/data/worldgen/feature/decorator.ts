@@ -3,9 +3,9 @@ import type {
   HeightmapType,
   HeightProvider,
   IntProvider,
-} from 'sandstone/arguments/generated/data/worldgen.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+} from 'sandstone/arguments/generated/data/worldgen'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type CarvingMaskConfig = {

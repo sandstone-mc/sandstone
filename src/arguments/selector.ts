@@ -1,6 +1,6 @@
 import type { SelectorClass, SelectorPickClass } from 'sandstone/variables'
 import type { UUIDClass } from 'sandstone/variables/UUID'
-import type { _ShowAlias } from './basics.js'
+import type { _ShowAlias } from './basics'
 
 // Possible selectors.
 type MultipleEntitiesSelector<MACRO extends boolean = false> =

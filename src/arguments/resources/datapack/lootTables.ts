@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 import type { LootTableClass, TagClass } from 'sandstone/core'
 import type { WithMCNamespace } from 'sandstone/utils'
-import type { NumberProvider } from './criteria/index.js'
-import type { ItemModifierFunction } from './itemModifier.js'
-import type { PredicateCondition } from './predicate.js'
+import type { NumberProvider } from './criteria'
+import type { ItemModifierFunction } from './itemModifier'
+import type { PredicateCondition } from './predicate'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export class XXXXAIJIA {}

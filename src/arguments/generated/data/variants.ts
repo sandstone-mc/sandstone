@@ -1,6 +1,6 @@
-import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
 
 export type BiomeCheck = {

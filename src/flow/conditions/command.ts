@@ -3,7 +3,7 @@ import type { ExecuteCommand } from 'sandstone/commands/implementations/entity/e
 import type { SandstoneCore } from 'sandstone/core'
 import { rangeParser } from 'sandstone/variables/parsers'
 import type { Score } from 'sandstone/variables/Score'
-import { SingleConditionNode } from './condition.js'
+import { SingleConditionNode } from './condition'
 
 export class CommandConditionNode extends SingleConditionNode {
   readonly variable

@@ -1,7 +1,7 @@
 import type { TimeArgument } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core'
 import { AwaitNode } from 'sandstone/core/nodes'
-import { ObjectiveClass } from './Objective.js'
+import { ObjectiveClass } from './Objective'
 
 const SLEEP_CHILD_NAME = '__sleep'
 

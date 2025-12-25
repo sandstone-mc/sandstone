@@ -1,4 +1,4 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt, NBTIntArray, NBTList } from 'sandstone'
 
 export type Filterable<T> = ({

@@ -1,6 +1,6 @@
-import type { VibrationListener } from 'sandstone/arguments/generated/util/game_event.js'
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
+import type { VibrationListener } from 'sandstone/arguments/generated/util/game_event'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTInt, NBTList } from 'sandstone'
 
 export type Allay = (MobBase & {

@@ -1,6 +1,6 @@
 import { ExecuteCommandNode } from 'sandstone/commands'
 
-import { GenericSandstoneVisitor } from './visitor.js'
+import { GenericSandstoneVisitor } from './visitor'
 
 /**
  * Transforms several chained execute.run.execute.run... into a single execute

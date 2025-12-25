@@ -6,8 +6,8 @@ import type { BASIC_COLORS, MAP_ICONS } from 'sandstone/arguments/basics'
 import type { LootTableClass } from 'sandstone/core'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { DataInstance } from 'sandstone/variables/Data'
-import type { NumberProvider } from './criteria/utils.js'
-import type { ObjectOrArray, PredicateCondition } from './predicate.js'
+import type { NumberProvider } from './criteria/utils'
+import type { ObjectOrArray, PredicateCondition } from './predicate'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type ItemModifierKind<TYPE extends string, VALUES extends Record<string, unknown>> = {

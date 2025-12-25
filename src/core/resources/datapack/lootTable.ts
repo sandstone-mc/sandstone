@@ -7,10 +7,10 @@ import type {
   MultiplePlayersArgument,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
-import { ContainerNode } from '../../nodes.js'
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-import { ResourceClass } from '../resource.js'
+import { ContainerNode } from '../../nodes'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../resource'
+import { ResourceClass } from '../resource'
 
 /**
  * A node representing a Minecraft loot table.

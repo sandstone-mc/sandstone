@@ -1,10 +1,10 @@
 import type { Dispatcher } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
-import { ContainerNode } from '../../nodes.js'
-import type { SandstoneCore } from '../../sandstoneCore.js'
-import type { ResourceClassArguments, ResourceNode } from '../resource.js'
-import { ResourceClass } from '../resource.js'
-import type { TagClass } from './tag.js'
+import { ContainerNode } from '../../nodes'
+import type { SandstoneCore } from '../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../resource'
+import { ResourceClass } from '../resource'
+import type { TagClass } from './tag'
 
 let trimMaterials: undefined | TagClass<'item'>
 

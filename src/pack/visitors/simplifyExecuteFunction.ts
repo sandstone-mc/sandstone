@@ -3,7 +3,7 @@ import { ExecuteCommandNode, FunctionCommandNode } from 'sandstone/commands'
 import { CommandNode } from 'sandstone/core/nodes'
 import { LoopArgument } from 'sandstone/variables'
 
-import { GenericSandstoneVisitor } from './visitor.js'
+import { GenericSandstoneVisitor } from './visitor'
 
 /**
  * Simplifies an execute calling a 1-command function to a single execute, with some exceptions.

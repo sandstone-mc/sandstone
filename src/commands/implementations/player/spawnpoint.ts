@@ -2,7 +2,7 @@ import type { Coordinates, MultiplePlayersArgument, Rotation } from 'sandstone/a
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class SpawnPointCommandNode extends CommandNode {
   command = 'spawnpoint' as const

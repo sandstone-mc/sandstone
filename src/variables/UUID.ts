@@ -3,15 +3,15 @@
 /* eslint-disable max-len */
 
 import type { JSONTextComponent } from 'sandstone/arguments'
-import type { ExecuteCommand } from 'sandstone/commands/index.js'
+import type { ExecuteCommand } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core'
-import type { ConditionTextComponentClass } from './abstractClasses.js'
-import { SelectorPickClass } from './abstractClasses.js'
-import type { DataPointClass } from './Data.js'
-import { NBTIntArray } from './nbt/index.js'
-import { ResolveNBTPart } from './ResolveNBT.js'
-import type { Score } from './Score.js'
-import type { SelectorClass } from './Selector.js'
+import type { ConditionTextComponentClass } from './abstractClasses'
+import { SelectorPickClass } from './abstractClasses'
+import type { DataPointClass } from './Data'
+import { NBTIntArray } from './nbt'
+import { ResolveNBTPart } from './ResolveNBT'
+import type { Score } from './Score'
+import type { SelectorClass } from './Selector'
 
 export type UUIDinNumber = [number, number, number, number]
 export type UUIDinScore = [Score, Score, Score, Score]

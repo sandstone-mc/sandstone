@@ -1,5 +1,5 @@
 import type { TimeArgument } from 'sandstone/arguments/basics'
-import type { NBTObject } from 'sandstone/arguments/nbt.js'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 import type { ScheduleType } from 'sandstone/commands'
 import type { FinalCommandOutput } from 'sandstone/commands/helpers'
 import type {
@@ -12,11 +12,11 @@ import type {
 } from 'sandstone/core'
 import { formatDebugString, makeCallable, makeClassCallable, toMinecraftResourceName } from 'sandstone/utils'
 import * as util from 'util'
-import type { MakeInstanceCallable } from '../../../utils.js'
-import { ResolveNBTPart } from '../../../variables/ResolveNBT.js'
-import { ContainerNode } from '../../nodes.js'
-import { CallableResourceClass } from '../resource.js'
-import { TagClass } from './tag.js'
+import type { MakeInstanceCallable } from '../../../utils'
+import { ResolveNBTPart } from '../../../variables/ResolveNBT'
+import { ContainerNode } from '../../nodes'
+import { CallableResourceClass } from '../resource'
+import { TagClass } from './tag'
 
 const tags: Record<string, TagClass<'functions'>> = {}
 

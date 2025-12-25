@@ -1,4 +1,4 @@
-import type { UnknownDynamicAdditions } from 'sandstone/arguments/generated/util/custom_event.js'
+import type { UnknownDynamicAdditions } from 'sandstone/arguments/generated/util/custom_event'
 
 type McdocCustomDynamicEventAdditionsDispatcherMap = {}
 type McdocCustomDynamicEventAdditionsKeys = keyof McdocCustomDynamicEventAdditionsDispatcherMap

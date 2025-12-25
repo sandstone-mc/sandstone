@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { RGBA } from 'sandstone/arguments/generated/util/color.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { RGBA } from 'sandstone/arguments/generated/util/color'
 import type { NBTInt } from 'sandstone'
 
 export type AuxTarget = {

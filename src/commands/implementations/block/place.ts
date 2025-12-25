@@ -7,8 +7,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import type { StructureMirror, StructureRotation } from 'sandstone/variables'
 import { coordinatesParser, structureMirrorParser, structureRotationParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
-import { validateIntegerRange } from '../../validators.js'
+import { CommandArguments } from '../../helpers'
+import { validateIntegerRange } from '../../validators'
 
 export class PlaceCommandNode extends CommandNode {
   command = 'place' as const

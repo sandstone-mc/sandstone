@@ -1,4 +1,4 @@
-import type { RGB } from 'sandstone/arguments/generated/util/color.js'
+import type { RGB } from 'sandstone/arguments/generated/util/color'
 
 export type Dyeable = {
   /**

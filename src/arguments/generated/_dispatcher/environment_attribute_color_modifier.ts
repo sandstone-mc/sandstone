@@ -1,5 +1,5 @@
-import type { BlendToGray } from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.js'
-import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color.js'
+import type { BlendToGray } from 'sandstone/arguments/generated/data/worldgen/attribute/modifier'
+import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color'
 
 type EnvironmentAttributeColorModifierDispatcherMap = {
   'alpha_blend': EnvironmentAttributeColorModifierAlphaBlend

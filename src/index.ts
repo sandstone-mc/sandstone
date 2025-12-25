@@ -1,4 +1,4 @@
-import type { JSONTextComponent } from './arguments/jsonTextComponent.js'
+import type { JSONTextComponent } from './arguments/jsonTextComponent'
 import type {
   // eslint-disable-next-line max-len
   AdvancementClassArguments,
@@ -19,12 +19,12 @@ import type {
   TextureArguments,
   TrimMaterialClassArguments,
   TrimPatternClassArguments,
-} from './core/index.js'
-import { SandstonePack } from './pack/index.js'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, SetType } from './utils.js'
-import { Set } from './utils.js'
-import * as coordinates from './variables/Coordinates.js'
-import { ResolveNBTPart } from './variables/ResolveNBT.js'
+} from './core'
+import { SandstonePack } from './pack'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, SetType } from './utils'
+import { Set } from './utils'
+import * as coordinates from './variables/Coordinates'
+import { ResolveNBTPart } from './variables/ResolveNBT'
 
 export const sandstonePack = new SandstonePack('default', '0')
 export { SandstonePack }
@@ -148,10 +148,10 @@ export const {
   sleep,
 } = sandstonePack
 
-export * from './variables/nbt/NBTs.js'
+export * from './variables/nbt/NBTs'
 
-export * from './arguments/index.js'
-export type { Condition } from './flow/index.js'
+export * from './arguments'
+export type { Condition } from './flow'
 export {
   ObjectiveClass,
   Score,
@@ -159,17 +159,17 @@ export {
   LabelClass,
   UUIDClass,
   DataPointClass,
-} from './variables/index.js'
+} from './variables'
 
 export {
   MCFunctionClass
-} from './core/index.js'
+} from './core'
 
 export {
   AdvancementClass,
   TagClass,
   TextureClass,
-} from './core/resources/index.js'
+} from './core/resources'
 
 // Utils
 export const { absolute, relative, local } = coordinates

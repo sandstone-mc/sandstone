@@ -3,7 +3,7 @@ import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { VectorClass } from 'sandstone/variables/Coordinates'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class TeleportCommandNode extends CommandNode {
   command = 'tp' as const

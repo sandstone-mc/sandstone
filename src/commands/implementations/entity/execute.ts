@@ -24,11 +24,11 @@ import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfu
 import type { SandstonePack } from 'sandstone/pack'
 import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
-import type { ObjectiveClass } from 'sandstone/variables/Objective.js'
+import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import { coordinatesParser, rangeParser, rotationParser, targetParser } from 'sandstone/variables/parsers'
-import type { Score } from 'sandstone/variables/Score.js'
-import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
-import { FunctionCommandNode } from '../server/function.js'
+import type { Score } from 'sandstone/variables/Score'
+import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { FunctionCommandNode } from '../server/function'
 
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]

@@ -5,7 +5,7 @@ import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import type { PackData } from 'sandstone/utils'
 import { fetch, safeWrite } from 'sandstone/utils'
-import type { SandstoneCore } from './sandstoneCore.js'
+import type { SandstoneCore } from './sandstoneCore'
 
 type Manifest = Record<string, string>
 

@@ -2,7 +2,7 @@ import type { MessageOrSelector, MultiplePlayersArgument } from 'sandstone/argum
 import { CommandNode } from 'sandstone/core/nodes'
 import type { AtLeastOne } from 'sandstone/utils'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class TellCommandNode extends CommandNode<[MultiplePlayersArgument<false>, AtLeastOne<MessageOrSelector>]> {
   command = 'w' as const

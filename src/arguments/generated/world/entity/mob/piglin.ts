@@ -1,5 +1,5 @@
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.js'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTInt, NBTList } from 'sandstone'
 
 export type Piglin = (PiglinBase & {

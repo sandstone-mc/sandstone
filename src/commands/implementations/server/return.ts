@@ -4,8 +4,8 @@ import type { Macroable, MCFunctionNode } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
 import { CommandNode, ContainerCommandNode } from 'sandstone/core/nodes'
 import { makeCallable } from 'sandstone/utils'
-import { CommandArguments, FinalCommandOutput } from '../../helpers.js'
-import { FunctionCommandNode } from './function.js'
+import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { FunctionCommandNode } from './function'
 
 export class ReturnRunCommandNode extends ContainerCommandNode {
   command = 'return' as const

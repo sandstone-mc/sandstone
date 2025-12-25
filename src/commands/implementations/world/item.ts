@@ -11,8 +11,8 @@ import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
 import { nbtStringifier } from 'sandstone/variables'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import type { FinalCommandOutput } from '../../helpers.js'
-import { CommandArguments } from '../../helpers.js'
+import type { FinalCommandOutput } from '../../helpers'
+import { CommandArguments } from '../../helpers'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const

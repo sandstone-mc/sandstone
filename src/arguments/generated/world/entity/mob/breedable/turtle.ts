@@ -1,4 +1,4 @@
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.js'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
 import type { NBTIntArray } from 'sandstone'
 
 export type Turtle = (Breedable & {

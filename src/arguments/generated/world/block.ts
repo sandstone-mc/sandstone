@@ -1,8 +1,8 @@
-import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.js'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { Text } from 'sandstone/arguments/generated/util/text.js'
-import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component.js'
+import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component'
 import type { NBTInt } from 'sandstone'
 
 export type BlockEntity = {

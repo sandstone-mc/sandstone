@@ -5,12 +5,12 @@ import type { NBTObject, RootNBT } from 'sandstone/arguments'
 import type { DataPointPickClass } from 'sandstone/core'
 import type { ConditionNode } from 'sandstone/flow'
 import type { LiteralUnion } from 'sandstone/utils'
-import type { Macroable } from '../core/Macro.js'
-import { ConditionalDataPointPickClass } from '../core/Macro.js'
-import type { SandstonePack } from '../pack/index.js'
-import type { StringDataPointClass } from './Data.js'
-import { DataPointClass } from './Data.js'
-import { Score } from './Score.js'
+import type { Macroable } from '../core/Macro'
+import { ConditionalDataPointPickClass } from '../core/Macro'
+import type { SandstonePack } from '../pack'
+import type { StringDataPointClass } from './Data'
+import { DataPointClass } from './Data'
+import { Score } from './Score'
 
 export abstract class IterableDataClass extends ConditionalDataPointPickClass {
   iterator(callback: (dataPoints: [DataPointClass] | [StringDataPointClass, DataPointClass]) => void): () => void {

@@ -1,4 +1,4 @@
-import type { ModelRef } from 'sandstone/arguments/generated/assets/model.js'
+import type { ModelRef } from 'sandstone/arguments/generated/assets/model'
 import type { NBTInt } from 'sandstone'
 
 export type BlockStateDefinition = ({

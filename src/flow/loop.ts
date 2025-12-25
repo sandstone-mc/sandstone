@@ -1,6 +1,6 @@
 import type { SubCommand } from 'sandstone/commands'
-import type { SandstoneCore } from '../core/index.js'
-import { ContainerNode } from '../core/index.js'
+import type { SandstoneCore } from '../core'
+import { ContainerNode } from '../core'
 
 export class LoopNode extends ContainerNode {
   constructor(

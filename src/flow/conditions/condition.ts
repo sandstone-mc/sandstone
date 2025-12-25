@@ -1,6 +1,6 @@
 import { Node } from 'sandstone/core'
 import * as util from 'util'
-import { formatDebugString } from '../../utils.js'
+import { formatDebugString } from '../../utils'
 
 export type GenericConditionType = {
   /**

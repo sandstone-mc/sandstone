@@ -1,9 +1,9 @@
 import { ExecuteCommandNode, type SubCommand } from 'sandstone/commands'
-import type { SandstoneCore } from 'sandstone/core/sandstoneCore.js'
+import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import type { Score } from 'sandstone/variables'
 import { LoopArgument } from 'sandstone/variables'
-import type { Condition } from '../index.js'
-import { LoopNode } from '../loop.js'
+import type { Condition } from '..'
+import { LoopNode } from '../loop'
 
 export class ForINode extends LoopNode {
   // eslint-disable-next-line max-len

@@ -3,7 +3,7 @@ import type { MacroArgument, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { VectorClass } from 'sandstone/variables'
 import { coordinatesParser } from 'sandstone/variables/parsers'
-import { CommandArguments, type FinalCommandOutput } from '../../helpers.js'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
 /** Parses coordinates, and returns numbers. Looses the relative/local/absolute information. */
 function coordinatesToNumbers(coords: string[] | VectorClass<string[]> | string): number[] {

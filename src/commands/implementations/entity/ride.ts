@@ -2,7 +2,7 @@ import type { SingleEntityArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class RideCommandNode extends CommandNode {
   command = 'ride' as const

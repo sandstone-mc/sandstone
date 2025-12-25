@@ -1,6 +1,6 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { GlobalPos } from 'sandstone/arguments/generated/util.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { GlobalPos } from 'sandstone/arguments/generated/util'
 import type { NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
 
 export type AdmiringDisable = (ExpirableValue & {

@@ -1,6 +1,6 @@
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { BlockEntity } from 'sandstone/arguments/generated/world/block.js'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.js'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTList, NBTLong } from 'sandstone'
 
 export type DecoratedPot = (BlockEntity & {

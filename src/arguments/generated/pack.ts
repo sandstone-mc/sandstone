@@ -1,5 +1,5 @@
-import type { InclusiveRange } from 'sandstone/arguments/generated/util.js'
-import type { Text } from 'sandstone/arguments/generated/util/text.js'
+import type { InclusiveRange } from 'sandstone/arguments/generated/util'
+import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { NBTInt, NBTList } from 'sandstone'
 
 export type BlockPattern = {

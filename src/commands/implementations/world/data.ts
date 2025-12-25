@@ -4,7 +4,7 @@ import { CommandNode } from 'sandstone/core/nodes'
 import type { DataPointClass, VectorClass } from 'sandstone/variables'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers.js'
+import { CommandArguments } from '../../helpers'
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const

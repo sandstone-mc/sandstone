@@ -1,8 +1,8 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher.js'
-import type { Registry } from 'sandstone/arguments/generated/registry.js'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state.js'
-import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color.js'
-import type { SingleItem } from 'sandstone/arguments/generated/world/item.js'
+import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
+import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color'
+import type { SingleItem } from 'sandstone/arguments/generated/world/item'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BlockParticle = {
