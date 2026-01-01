@@ -1,6 +1,5 @@
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value'
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, Score } from 'sandstone'
 
@@ -111,9 +110,7 @@ export type NbtContextTarget = (EntityTarget | BlockEntityTarget)
 export type NbtProvider = (NbtContextTarget | ({
   [S in Extract<Registry['minecraft:loot_nbt_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:nbt_provider'>
-    ? Dispatcher<'minecraft:nbt_provider'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolNbtProvider ? SymbolNbtProvider[S] : Record<string, unknown>));
 }[Registry['minecraft:loot_nbt_provider_type']]))
 
 export type NbtProviderSource = (
@@ -129,11 +126,9 @@ export type NbtProviderSource = (
 export type NumberProvider = (NBTFloat | ({
   [S in Extract<Registry['minecraft:loot_number_provider_type'], string>]?: ({
     type?: S
-  } & (S extends undefined ? Dispatcher<'minecraft:number_provider', [
-    '%none',
-  ]> : (S extends keyof Dispatcher<'minecraft:number_provider'>
-    ? Dispatcher<'minecraft:number_provider'>[S]
-    : Record<string, unknown>)));
+  } & (S extends undefined
+    ? SymbolNumberProvider<'%none'> :
+    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : Record<string, unknown>)));
 }[Registry['minecraft:loot_number_provider_type']]))
 
 export type RandomIntGenerator = (NBTInt | ({
@@ -146,11 +141,9 @@ export type RandomIntGenerator = (NBTInt | ({
          *  - Constant(`constant`)
          */
     type?: S
-  } & (S extends undefined ? Dispatcher<'minecraft:random_int_generator', [
-    '%none',
-  ]> : (S extends keyof Dispatcher<'minecraft:random_int_generator'>
-    ? Dispatcher<'minecraft:random_int_generator'>[S]
-    : Record<string, unknown>)));
+  } & (S extends undefined
+    ? SymbolRandomIntGenerator<'%none'> :
+    (S extends keyof SymbolRandomIntGenerator ? SymbolRandomIntGenerator[S] : Record<string, unknown>)));
 }[RandomIntGeneratorType]))
 
 export type RandomIntGeneratorType = ('uniform' | 'binomial' | 'constant')
@@ -178,9 +171,7 @@ export type ScoreNumberProvider = {
 export type ScoreProvider = (EntityTarget | ({
   [S in Extract<Registry['minecraft:loot_score_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:score_provider'>
-    ? Dispatcher<'minecraft:score_provider'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolScoreProvider ? SymbolScoreProvider[S] : Record<string, unknown>));
 }[Registry['minecraft:loot_score_provider_type']]))
 
 export type SoundEventRef = (Registry['minecraft:sound_event'] | {

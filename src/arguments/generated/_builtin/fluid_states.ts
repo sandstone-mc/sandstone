@@ -15,7 +15,7 @@ type McdocFluidStatesFallback = (
   | McdocFluidStatesLava
   | McdocFluidStatesWater
   | McdocFluidStatesFallbackType)
-type McdocFluidStatesFallbackType = ({
+export type McdocFluidStatesFallbackType = ({
   [Key in `${any}${string}`]?: string;
 })
 type McdocFluidStatesNoneType = ({

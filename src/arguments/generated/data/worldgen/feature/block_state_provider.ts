@@ -1,6 +1,5 @@
 import type { NoiseParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source'
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
@@ -22,9 +21,7 @@ export type BaseNoiseProvider = {
 export type BlockStateProvider = ({
   [S in Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:block_state_provider'>
-    ? Dispatcher<'minecraft:block_state_provider'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/block_state_provider_type']])
 
 export type DualNoiseProvider = (BaseNoiseProvider & {

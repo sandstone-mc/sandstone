@@ -127,7 +127,7 @@ import {
   SimplifyReturnRunFunctionVisitor,
   UnifyChainedExecutesVisitor,
 } from './visitors'
-import { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
 
 export type ResourcePath = string[]
 
@@ -945,7 +945,7 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement<AdvancementJSON extends Dispatcher<'minecraft:resource'>['advancement']>(
+  Advancement<AdvancementJSON extends SymbolResource['advancement']>(
     name: string,
     advancement: AdvancementJSON,
     options?: Omit<Partial<AdvancementClassArguments>, 'advancement'>,

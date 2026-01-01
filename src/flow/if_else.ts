@@ -1,7 +1,6 @@
-import { reset } from 'chalk'
 import * as util from 'util'
 
-import type { Node, SandstoneCore } from '../core'
+import type { SandstoneCore } from '../core'
 import { ContainerNode } from '../core'
 import { formatDebugString } from '../utils'
 import type { ConditionNode } from './conditions'

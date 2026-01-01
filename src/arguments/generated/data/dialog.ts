@@ -1,7 +1,6 @@
 import type { ClickAction } from 'sandstone/arguments/generated/data/dialog/action'
 import type { DialogBody } from 'sandstone/arguments/generated/data/dialog/body'
 import type { InputControl } from 'sandstone/arguments/generated/data/dialog/input'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
@@ -51,7 +50,7 @@ export type ConfirmationDialog = (DialogBase & {
 export type Dialog = ({
   [S in Extract<Registry['minecraft:dialog_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:dialog'> ? Dispatcher<'minecraft:dialog'>[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolDialog ? SymbolDialog[S] : Record<string, unknown>));
 }[Registry['minecraft:dialog_type']])
 
 export type DialogBase = {

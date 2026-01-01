@@ -1,7 +1,8 @@
 import { Set } from 'sandstone'
-import type { NamespacedLiteralUnion, SetType } from 'sandstone'
+import type { LiteralUnion, SetType } from 'sandstone'
 
-export type SOUNDS = (NamespacedLiteralUnion<SetType<typeof SOUNDS_SET>> | `minecraft:${SetType<typeof SOUNDS_SET>}`)
+// TODO
+export type SOUNDS = (LiteralUnion<SetType<typeof SOUNDS_SET>> | `minecraft:${SetType<typeof SOUNDS_SET>}`)
 
 export const SOUNDS_SET = new Set([
   'ambient/cave/cave1',

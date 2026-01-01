@@ -1,14 +1,8 @@
-import type { Dispatcher } from 'sandstone/arguments'
-import type { ConditionClass } from 'sandstone/variables'
+import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
-import type { TagClass } from './tag'
-
-let trimMaterials: undefined | TagClass<'item'>
-
-export type EquipmentSlots = 'mainhand' | 'offhand' | 'head' | 'chest' | 'legs' | 'feet'
 
 /**
  * A node representing a Minecraft trim material.
@@ -24,27 +18,16 @@ export class TrimMaterialNode extends ContainerNode implements ResourceNode<Trim
   getValue = () => JSON.stringify(this.resource.trimMaterialJSON)
 }
 
+// TODO: Investigate potential abstractions
 export type TrimMaterialClassArguments = {
   /**
    * The trim material's JSON.
    */
-  trimMaterial: Dispatcher<'minecraft:resource'>['trim_material']
-
-  /**
-   * Optional. Defaults to true. Automatically adds trim material to #minecraft:trim_materials.
-   */
-  registerMaterial?: boolean
-
-  /**
-   * Defaults to all equipment slots. Equipment slots to check in predicate condition, `whole_inventory` will use an `if data` check.
-   */
-  equipmentCheck?: 'whole_inventory' | EquipmentSlots | EquipmentSlots[]
+  trimMaterial: SymbolResource['trim_material']
 } & ResourceClassArguments<'default'>
 
-export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implements ConditionClass {
+export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
   public trimMaterialJSON: NonNullable<TrimMaterialClassArguments['trimMaterial']>
-
-  readonly equipmentCheck
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimMaterialClassArguments) {
     super(
@@ -57,13 +40,6 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
 
     this.trimMaterialJSON = args.trimMaterial
 
-    this.equipmentCheck = args.equipmentCheck
-
-    if (args.registerMaterial !== false) {
-      if (!trimMaterials) trimMaterials = sandstoneCore.pack.Tag('item', 'minecraft:trim_materials', [this.material])
-      else trimMaterials.push(this.material)
-    }
-
     this.handleConflicts()
   }
 
@@ -71,19 +47,4 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implement
   get assetName() {
     return this.trimMaterialJSON.asset_name
   }
-
-  /** Model override predicate float between 1 & 0. */
-  get overrideIndex() {
-    return this.trimMaterialJSON.item_model_index
-  }
-
-  /** The item used in the smithing table for this material. */
-  get material() {
-    return this.trimMaterialJSON.ingredient
-  }
-
-  /**
-   * @internal
-   */
-  _toMinecraftCondition = () => new this.pack.conditions.TrimMaterial(this.core, this)
 }

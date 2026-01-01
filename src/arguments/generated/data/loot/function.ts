@@ -8,7 +8,7 @@ import type {
   LootPoolEntry,
 } from 'sandstone/arguments/generated/data/loot'
 import type { IntRange, NbtProvider, NumberProvider } from 'sandstone/arguments/generated/data/util'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolDataComponent, SymbolMcdocBlockStateKeys } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute'
 import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color'
@@ -30,9 +30,7 @@ export type ApplyBonus = ({
          *  - BinomialWithBonusCount(`binomial_with_bonus_count`)
          */
     formula: (S | `minecraft:${S}`)
-  } & (S extends keyof Dispatcher<'minecraft:apply_bonus_formula'>
-    ? Dispatcher<'minecraft:apply_bonus_formula'>[S]
-    : Record<string, unknown>) & Conditions);
+  } & (S extends keyof SymbolApplyBonusFormula ? SymbolApplyBonusFormula[S] : Record<string, unknown>) & Conditions);
 }[ApplyBonusFormula])
 
 export type ApplyBonusFormula = ('ore_drops' | 'uniform_bonus_count' | 'binomial_with_bonus_count')
@@ -236,11 +234,9 @@ export type CopyNbtStrategy = ('replace' | 'append' | 'merge')
 export type CopyState = ({
   [S in Extract<Registry['minecraft:block'], string>]?: ({
     block: S
-    properties: Array<(S extends undefined ? Dispatcher<'mcdoc:block_state_keys', [
-      '%none',
-    ]> : (S extends keyof Dispatcher<'mcdoc:block_state_keys'>
-      ? Dispatcher<'mcdoc:block_state_keys'>[S]
-      : Record<string, unknown>))>
+    properties: Array<(S extends undefined
+      ? SymbolMcdocBlockStateKeys<'%none'> :
+      (S extends keyof SymbolMcdocBlockStateKeys ? SymbolMcdocBlockStateKeys[S] : Record<string, unknown>))>
   } & Conditions);
 }[Registry['minecraft:block']])
 
@@ -395,9 +391,7 @@ export type ListOperation = ({
          *  - ReplaceSection(`replace_section`)
          */
     mode: S
-  } & (S extends keyof Dispatcher<'minecraft:list_operation'>
-    ? Dispatcher<'minecraft:list_operation'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolListOperation ? SymbolListOperation[S] : Record<string, unknown>));
 }[ListOperationMode])
 
 export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_section')
@@ -643,7 +637,7 @@ export type SetFireworks = ({
     min: 0
   }>
   explosions?: ({
-    values: Array<Dispatcher<'minecraft:data_component'>['firework_explosion']>
+    values: Array<SymbolDataComponent['firework_explosion']>
   } & ListOperation)
 } & Conditions)
 

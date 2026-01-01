@@ -9,7 +9,7 @@ import type {
 } from 'sandstone/arguments/generated/data/advancement/predicate'
 import type { LootCondition } from 'sandstone/arguments/generated/data/loot'
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
@@ -96,11 +96,9 @@ export type EnchantedItem = (TriggerBase & {
 export type EnterBlock = ({
   [S in Extract<Registry['minecraft:block'], string>]?: (TriggerBase & {
     block?: S
-    state?: (S extends undefined ? Dispatcher<'mcdoc:block_states', [
-      '%none',
-    ]> : (S extends keyof Dispatcher<'mcdoc:block_states'>
-      ? Dispatcher<'mcdoc:block_states'>[S]
-      : Record<string, unknown>))
+    state?: (S extends undefined
+      ? SymbolMcdocBlockStates<'%none'> :
+      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : Record<string, unknown>))
   });
 }[Registry['minecraft:block']])
 

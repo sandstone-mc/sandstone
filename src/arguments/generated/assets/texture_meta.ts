@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { NBTFloat, NBTInt, NBTIntArray } from 'sandstone'
 
 export type GuiSpriteScaling = ({
@@ -11,9 +10,7 @@ export type GuiSpriteScaling = ({
          *  - NineSlice(`nine_slice`)
          */
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:gui_sprite_scaling'>
-    ? Dispatcher<'minecraft:gui_sprite_scaling'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolGuiSpriteScaling ? SymbolGuiSpriteScaling[S] : Record<string, unknown>));
 }[GuiSpriteScalingType])
 
 export type GuiSpriteScalingType = ('stretch' | 'tile' | 'nine_slice')

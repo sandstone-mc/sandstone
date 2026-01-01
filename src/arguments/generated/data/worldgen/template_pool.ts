@@ -1,16 +1,13 @@
 import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement'
 import type { ProcessorListRef } from 'sandstone/arguments/generated/data/worldgen/processor_list'
 import type { LiquidSettings } from 'sandstone/arguments/generated/data/worldgen/structure'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt } from 'sandstone'
 
 export type Element = ({
   [S in Extract<Registry['minecraft:worldgen/structure_pool_element'], string>]?: ({
     element_type: S
-  } & (S extends keyof Dispatcher<'minecraft:template_pool_element'>
-    ? Dispatcher<'minecraft:template_pool_element'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolTemplatePoolElement ? SymbolTemplatePoolElement[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/structure_pool_element']])
 
 export type ElementBase = {

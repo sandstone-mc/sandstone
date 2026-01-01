@@ -1,15 +1,12 @@
 import type { BiomeSource } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source'
 import type { NoiseGeneratorSettingsRef } from 'sandstone/arguments/generated/data/worldgen/noise_settings'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt, TagClass } from 'sandstone'
 
 export type ChunkGenerator = ({
   [S in Extract<Registry['minecraft:worldgen/chunk_generator'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:chunk_generator'>
-    ? Dispatcher<'minecraft:chunk_generator'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolChunkGenerator ? SymbolChunkGenerator[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/chunk_generator']])
 
 export type Flat = {

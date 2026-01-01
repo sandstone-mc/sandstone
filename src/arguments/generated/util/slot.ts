@@ -1,7 +1,6 @@
 import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate'
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot'
 import type { ContainerComponents } from 'sandstone/arguments/generated/data/loot/function'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
@@ -86,9 +85,7 @@ export type SlottedItem<T> = (ItemStack & {
 export type TypedSlotSource = ({
   [S in Extract<Registry['minecraft:slot_source_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:slot_source'>
-    ? Dispatcher<'minecraft:slot_source'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolSlotSource ? SymbolSlotSource[S] : Record<string, unknown>));
 }[Registry['minecraft:slot_source_type']])
 type SlotSourceDispatcherMap = {
   'contents': SlotSourceContents

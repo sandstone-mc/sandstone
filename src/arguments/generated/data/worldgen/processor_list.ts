@@ -1,5 +1,5 @@
 import type { HeightmapType, IntProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
@@ -9,7 +9,7 @@ export type AppendLoot = {
 }
 
 export type AppendStatic<S = undefined> = {
-  data: (S extends keyof Dispatcher<'minecraft:block'> ? Dispatcher<'minecraft:block'>[S] : Record<string, unknown>)
+  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : Record<string, unknown>)
 }
 
 export type Axis = ('x' | 'y' | 'z')
@@ -32,9 +32,7 @@ export type BlockAge = {
 export type BlockEntityModifier = ({
   [S in Extract<Registry['minecraft:rule_block_entity_modifier'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:rule_block_entity_modifier'>
-    ? Dispatcher<'minecraft:rule_block_entity_modifier'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : Record<string, unknown>));
 }[Registry['minecraft:rule_block_entity_modifier']])
 
 export type BlockIgnore = {
@@ -127,17 +125,13 @@ export type LinearPos = {
 export type PosRuleTest = ({
   [S in Extract<Registry['minecraft:pos_rule_test'], string>]?: ({
     predicate_type: S
-  } & (S extends keyof Dispatcher<'minecraft:pos_rule_test'>
-    ? Dispatcher<'minecraft:pos_rule_test'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : Record<string, unknown>));
 }[Registry['minecraft:pos_rule_test']])
 
 export type Processor = ({
   [S in Extract<Registry['minecraft:worldgen/structure_processor'], string>]?: ({
     processor_type: S
-  } & (S extends keyof Dispatcher<'minecraft:template_processor'>
-    ? Dispatcher<'minecraft:template_processor'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/structure_processor']])
 
 export type ProcessorList = (Array<Processor> | {
@@ -193,9 +187,7 @@ export type Rule = {
 export type RuleTest = ({
   [S in Extract<Registry['minecraft:rule_test'], string>]?: ({
     predicate_type: S
-  } & (S extends keyof Dispatcher<'minecraft:rule_test'>
-    ? Dispatcher<'minecraft:rule_test'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : Record<string, unknown>));
 }[Registry['minecraft:rule_test']])
 
 export type TagMatch = {

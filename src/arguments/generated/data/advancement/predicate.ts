@@ -1,5 +1,10 @@
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type {
+  SymbolBlock,
+  SymbolEntity,
+  SymbolMcdocBlockStates,
+  SymbolStatisticType,
+} from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot'
 import type {
@@ -37,14 +42,10 @@ export type BlockPredicate<S = undefined> = {
   blocks?: ((
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>)
-  state?: (S extends undefined ? Dispatcher<'mcdoc:block_states', [
-    '%none',
-  ]> : (S extends keyof Dispatcher<'mcdoc:block_states'>
-    ? Dispatcher<'mcdoc:block_states'>[S]
-    : Record<string, unknown>))
-  nbt?: ((
-      | `${any}${string}` | NBTClass) | (
-      S extends keyof Dispatcher<'minecraft:block'> ? Dispatcher<'minecraft:block'>[S] : Record<string, unknown>))
+  state?: (S extends undefined
+    ? SymbolMcdocBlockStates<'%none'> :
+    (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : Record<string, unknown>))
+  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : Record<string, unknown>))
   /**
      * Match exact data component values on the block entity.
      */
@@ -164,9 +165,7 @@ export type EntityPredicate<S = undefined> = {
       | Array<Registry['minecraft:entity_type']>)
   type_specific?: EntitySubPredicate
   team?: `${any}${string}`
-  nbt?: ((
-      | `${any}${string}` | NBTClass) | (
-      S extends keyof Dispatcher<'minecraft:entity'> ? Dispatcher<'minecraft:entity'>[S] : Record<string, unknown>))
+  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : Record<string, unknown>))
   location?: LocationPredicate
   distance?: DistancePredicate
   flags?: EntityFlagsPredicate
@@ -213,9 +212,7 @@ export type EntityPredicate<S = undefined> = {
 export type EntitySubPredicate = ({
   [S in Extract<Registry['minecraft:entity_sub_predicate_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:entity_sub_predicate'>
-    ? Dispatcher<'minecraft:entity_sub_predicate'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolEntitySubPredicate ? SymbolEntitySubPredicate[S] : Record<string, unknown>));
 }[Registry['minecraft:entity_sub_predicate_type']])
 
 export type FishingHookPredicate = {
@@ -474,9 +471,7 @@ export type SpecificType = (
 export type StatisticPredicate = ({
   [S in Extract<Registry['minecraft:stat_type'], string>]?: {
     type: S
-    stat: (S extends keyof Dispatcher<'minecraft:statistic_type'>
-      ? Dispatcher<'minecraft:statistic_type'>[S]
-      : Record<string, unknown>)
+    stat: (S extends keyof SymbolStatisticType ? SymbolStatisticType[S] : Record<string, unknown>)
     value: MinMaxBounds<NBTInt>
   };
 }[Registry['minecraft:stat_type']])

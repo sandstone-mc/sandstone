@@ -1,4 +1,4 @@
-import type { Dispatcher, TEXTURE_TYPES } from 'sandstone/arguments'
+import type { SymbolResource, TEXTURE_TYPES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -7,7 +7,7 @@ import { ResourceClass } from '../resource'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
 
-type TextureMetaAll = Dispatcher<'minecraft:resource'>['texture_meta']
+type TextureMetaAll = SymbolResource['texture_meta']
 
 // TODO: Find which texture types actually support animations.
 type TextureMeta<Type extends TextureType> = (

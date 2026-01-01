@@ -181,7 +181,7 @@ type DataComponentPredicateFallback = (
   | DataComponentPredicateWritableBookContent
   | DataComponentPredicateWrittenBookContent
   | DataComponentPredicateFallbackType)
-type DataComponentPredicateFallbackType = never
+export type DataComponentPredicateFallbackType = never
 type DataComponentPredicateAttributeModifiers = AttributeModifiersPredicate
 type DataComponentPredicateBundleContents = BundleContentsPredicate
 type DataComponentPredicateContainer = ContainerPredicate

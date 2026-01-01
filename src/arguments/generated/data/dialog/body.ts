@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
@@ -7,9 +6,7 @@ import type { NBTInt } from 'sandstone'
 export type DialogBody = ({
   [S in Extract<Registry['minecraft:dialog_body_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:dialog_body'>
-    ? Dispatcher<'minecraft:dialog_body'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolDialogBody ? SymbolDialogBody[S] : Record<string, unknown>));
 }[Registry['minecraft:dialog_body_type']])
 
 export type ItemBody = {

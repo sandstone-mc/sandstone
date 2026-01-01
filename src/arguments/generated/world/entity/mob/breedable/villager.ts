@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolReputationPartValue } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
 import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
@@ -49,9 +49,7 @@ export type PlayerReputationPart = ({
          *    Decays by 2 every 20 minutes.
          */
     Type?: S
-    Value?: (S extends keyof Dispatcher<'minecraft:reputation_part_value'>
-      ? Dispatcher<'minecraft:reputation_part_value'>[S]
-      : Record<string, unknown>)
+    Value?: (S extends keyof SymbolReputationPartValue ? SymbolReputationPartValue[S] : Record<string, unknown>)
     /**
          * UUID of the player that caused the gossip-worthy event(s) related to this reputation part.
          *

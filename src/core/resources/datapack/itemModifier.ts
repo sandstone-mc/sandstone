@@ -1,9 +1,9 @@
 import type {
   CONTAINER_SLOTS,
   Coordinates,
-  Dispatcher,
   ENTITY_SLOTS,
   MultipleEntitiesArgument,
+  SymbolResource,
 } from 'sandstone/arguments'
 import { targetParser } from 'sandstone/variables/parsers'
 import { ContainerNode } from '../../nodes'
@@ -25,7 +25,7 @@ export class ItemModifierNode extends ContainerNode implements ResourceNode<Item
   getValue = () => JSON.stringify(this.resource.itemModifierJSON)
 }
 
-type ItemModifierJSON = Dispatcher<'minecraft:resource'>['item_modifier']
+type ItemModifierJSON = SymbolResource['item_modifier']
 
 export type ItemModifierClassArguments = {
   /**

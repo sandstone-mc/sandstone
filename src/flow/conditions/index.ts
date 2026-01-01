@@ -12,8 +12,6 @@ export const SandstoneConditions = {
   Advancement: resources.AdvancementConditionNode,
   Predicate: resources.PredicateConditionNode,
   Tag: resources.TagConditionNode,
-  TrimMaterial: resources.TrimMaterialConditionNode,
-  TrimPattern: resources.TrimPatternConditionNode,
 
   Biome: variables.BiomeConditionNode,
   Block: variables.BlockConditionNode,

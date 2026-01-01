@@ -1,5 +1,5 @@
 import type { NumberProvider } from 'sandstone/arguments/generated/data/util'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolMcdocBlockItemStates } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { LegacyOperation } from 'sandstone/arguments/generated/util/attribute'
 import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot'
@@ -67,11 +67,9 @@ export type BlockItem<S = undefined> = (ItemBase & {
   /**
      * Blockstate that the placed block will have.
      */
-  BlockStateTag?: (S extends undefined ? Dispatcher<'mcdoc:block_item_states', [
-    '%none',
-  ]> : (S extends keyof Dispatcher<'mcdoc:block_item_states'>
-    ? Dispatcher<'mcdoc:block_item_states'>[S]
-    : Record<string, unknown>))
+  BlockStateTag?: (S extends undefined
+    ? SymbolMcdocBlockItemStates<'%none'> :
+    (S extends keyof SymbolMcdocBlockItemStates ? SymbolMcdocBlockItemStates[S] : Record<string, unknown>))
 })
 
 export type Display = {

@@ -1,4 +1,7 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type {
+  SymbolEnvironmentAttributeArgbColorModifier,
+  SymbolEnvironmentAttributeColorModifier,
+} from 'sandstone/arguments/generated/dispatcher'
 import type { NBTFloat } from 'sandstone'
 
 export type BlendToGray = {
@@ -59,11 +62,11 @@ export type ColorAttributeModifier = ({
          *  - BlendToGray(`blend_to_gray`)
          */
     modifier: S
-    argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_color_modifier', [
-      '%none',
-    ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_color_modifier'>
-      ? Dispatcher<'minecraft:environment_attribute_color_modifier'>[S]
-      : Record<string, unknown>))
+    argument: (S extends undefined
+      ? SymbolEnvironmentAttributeColorModifier<'%none'> :
+      (S extends keyof SymbolEnvironmentAttributeColorModifier
+        ? SymbolEnvironmentAttributeColorModifier[S]
+        : Record<string, unknown>))
   };
 }[ColorModifierType])
 
@@ -83,14 +86,11 @@ export type FloatAttributeModifier<T> = ({
          *  - AlphaBlend(`alpha_blend`)
          */
     modifier: S
-    argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
-      T,
-      '%none',
-    ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_float_modifier', [
-      T,
-    ]> ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
-        T,
-      ]>[S] : Record<string, unknown>))
+    argument: (S extends undefined
+      ? SymbolEnvironmentAttributeFloatModifier<T, '%none'> :
+      (S extends keyof SymbolEnvironmentAttributeFloatModifier<T>
+        ? SymbolEnvironmentAttributeFloatModifier<T>[S]
+        : Record<string, unknown>))
   };
 }[FloatModifierType])
 
@@ -130,11 +130,11 @@ export type TranslucentColorAttributeModifier = ({
          *  - BlendToGray(`blend_to_gray`)
          */
     modifier: S
-    argument: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier', [
-      '%none',
-    ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>
-      ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>[S]
-      : Record<string, unknown>))
+    argument: (S extends undefined
+      ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> :
+      (S extends keyof SymbolEnvironmentAttributeArgbColorModifier
+        ? SymbolEnvironmentAttributeArgbColorModifier[S]
+        : Record<string, unknown>))
   };
 }[ColorModifierType])
 type EnvironmentAttributeFloatModifierDispatcherMap<T> = {

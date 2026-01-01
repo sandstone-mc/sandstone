@@ -2,7 +2,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
-import { Dispatcher } from 'sandstone/arguments'
+import { SymbolResource } from 'sandstone/arguments'
 
 export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
   constructor(
@@ -15,7 +15,7 @@ export class ModelNode extends ContainerNode implements ResourceNode<ModelClass>
   getValue = () => JSON.stringify(this.resource.modelJSON)
 }
 
-type ModelData = Dispatcher<'minecraft:resource'>['model']
+type ModelData = SymbolResource['model']
 
 export type ModelClassArguments = {
   /**

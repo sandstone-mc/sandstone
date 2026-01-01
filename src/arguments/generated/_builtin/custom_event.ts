@@ -1,7 +1,8 @@
 type McdocCustomEventDispatcherMap = {}
 type McdocCustomEventKeys = keyof McdocCustomEventDispatcherMap
 type McdocCustomEventFallback = (McdocCustomEventFallbackType)
-type McdocCustomEventFallbackType = unknown
+export type McdocCustomEventFallbackType = unknown
+
 export type SymbolMcdocCustomEvent<CASE extends
   | 'map'
   | 'keys'

@@ -1,24 +1,28 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type {
+  SymbolDataComponent,
+  SymbolDataComponentPredicate,
+  SymbolMcdocCustomData,
+} from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTClass } from 'sandstone'
 
 export type CustomData = (CustomDataMap | (`${any}${string}` | NBTClass))
 
 export type CustomDataMap = ({
-  [Key in `${any}${string}`]?: (Key extends keyof Dispatcher<'mcdoc:custom_data'>
-    ? Dispatcher<'mcdoc:custom_data'>[Key]
+  [Key in `${any}${string}`]?: (Key extends keyof SymbolMcdocCustomData
+    ? SymbolMcdocCustomData[Key]
     : Record<string, unknown>);
 })
 
 export type DataComponentExactPredicate = ({
-  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: (Key extends keyof Dispatcher<'minecraft:data_component'>
-    ? Dispatcher<'minecraft:data_component'>[Key]
+  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: (Key extends keyof SymbolDataComponent
+    ? SymbolDataComponent[Key]
     : Record<string, unknown>);
 })
 
 export type DataComponentPatch = (({
-  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: (Key extends keyof Dispatcher<'minecraft:data_component'>
-    ? Dispatcher<'minecraft:data_component'>[Key]
+  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: (Key extends keyof SymbolDataComponent
+    ? SymbolDataComponent[Key]
     : Record<string, unknown>);
 }) & ({
   [Key in Extract<Registry['minecraft:data_component_type'], string>]?: Record<string, never>;

@@ -3,7 +3,8 @@ import type { UnknownDynamicAdditions } from 'sandstone/arguments/generated/util
 type McdocCustomDynamicEventAdditionsDispatcherMap = {}
 type McdocCustomDynamicEventAdditionsKeys = keyof McdocCustomDynamicEventAdditionsDispatcherMap
 type McdocCustomDynamicEventAdditionsFallback = (McdocCustomDynamicEventAdditionsFallbackType)
-type McdocCustomDynamicEventAdditionsFallbackType = UnknownDynamicAdditions
+export type McdocCustomDynamicEventAdditionsFallbackType = UnknownDynamicAdditions
+
 export type SymbolMcdocCustomDynamicEventAdditions<CASE extends
   | 'map'
   | 'keys'

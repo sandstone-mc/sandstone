@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type { Dispatcher, SOUND_TYPES } from 'sandstone/arguments'
+import type { SymbolResource, SOUND_TYPES } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
@@ -101,7 +101,7 @@ export class SoundsNode extends ContainerNode implements ResourceNode<SoundsClas
   getValue = () => JSON.stringify(this.resource.soundsJSON)
 }
 
-type SoundsJSON = NonNullable<Dispatcher<'minecraft:resource'>['sounds']>
+type SoundsJSON = NonNullable<SymbolResource['sounds']>
 
 export type SoundsArguments = {
   /**

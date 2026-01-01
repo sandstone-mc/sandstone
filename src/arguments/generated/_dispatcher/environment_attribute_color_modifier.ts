@@ -15,7 +15,7 @@ type EnvironmentAttributeColorModifierFallback = (
   | EnvironmentAttributeColorModifierBlendToGray
   | EnvironmentAttributeColorModifierOverride
   | EnvironmentAttributeColorModifierFallbackType)
-type EnvironmentAttributeColorModifierFallbackType = StringRGB
+export type EnvironmentAttributeColorModifierFallbackType = StringRGB
 type EnvironmentAttributeColorModifierNoneType = StringRGB
 type EnvironmentAttributeColorModifierAlphaBlend = StringARGB
 type EnvironmentAttributeColorModifierBlendToGray = BlendToGray

@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { GlobalPos } from 'sandstone/arguments/generated/util'
 import type { NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
@@ -283,8 +282,8 @@ export type MeetingPoint = (ExpirableValue & {
 })
 
 export type Memories = ({
-  [Key in Extract<Registry['minecraft:memory_module_type'], string>]?: (Key extends keyof Dispatcher<'minecraft:memory_module'>
-    ? Dispatcher<'minecraft:memory_module'>[Key]
+  [Key in Extract<Registry['minecraft:memory_module_type'], string>]?: (Key extends keyof SymbolMemoryModule
+    ? SymbolMemoryModule[Key]
     : Record<string, unknown>);
 })
 
@@ -580,7 +579,7 @@ type MemoryModuleFallback = (
   | MemoryModuleVibrationCooldown
   | MemoryModuleVisitedBlockPositions
   | MemoryModuleFallbackType)
-type MemoryModuleFallbackType = never
+export type MemoryModuleFallbackType = never
 type MemoryModuleAdmiringDisabled = AdmiringDisable
 type MemoryModuleAdmiringItem = AdmiringItem
 type MemoryModuleAngryAt = AngryAt

@@ -32,7 +32,7 @@ type StatisticTypeFallback = (
   | StatisticTypePickedUp
   | StatisticTypeUsed
   | StatisticTypeFallbackType)
-type StatisticTypeFallbackType = string
+export type StatisticTypeFallbackType = string
 type StatisticTypeBroken = Registry['minecraft:item']
 type StatisticTypeCrafted = Registry['minecraft:item']
 type StatisticTypeCustom = Registry['minecraft:custom_stat']

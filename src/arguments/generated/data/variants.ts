@@ -1,5 +1,4 @@
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
 
@@ -24,9 +23,7 @@ export type MoonBrightnessCheck = {
 export type SpawnCondition = ({
   [S in Extract<Registry['minecraft:spawn_condition_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:spawn_condition'>
-    ? Dispatcher<'minecraft:spawn_condition'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolSpawnCondition ? SymbolSpawnCondition[S] : Record<string, unknown>));
 }[Registry['minecraft:spawn_condition_type']])
 
 export type SpawnPrioritySelector = {

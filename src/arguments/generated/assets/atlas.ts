@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTDouble } from 'sandstone'
 
@@ -73,9 +72,7 @@ export type SpriteSource = ({
          *  - PalettedPermutations(`paletted_permutations`)
          */
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:sprite_source'>
-    ? Dispatcher<'minecraft:sprite_source'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolSpriteSource ? SymbolSpriteSource[S] : Record<string, unknown>));
 }[SpriteSourceType])
 
 export type SpriteSourceType = ('single' | 'directory' | 'filter' | 'unstitch' | 'paletted_permutations')

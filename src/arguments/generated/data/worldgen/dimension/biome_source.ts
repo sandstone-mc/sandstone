@@ -1,13 +1,10 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
 
 export type BiomeSource = ({
   [S in Extract<Registry['minecraft:worldgen/biome_source'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:biome_source'>
-    ? Dispatcher<'minecraft:biome_source'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolBiomeSource ? SymbolBiomeSource[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/biome_source']])
 
 export type Checkerboard = {
@@ -81,11 +78,9 @@ export type Fixed = {
 export type MultiNoise = ({
   [S in Extract<Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list'], string>]?: (MultiNoiseBase & {
     preset?: S
-  } & (S extends undefined ? Dispatcher<'minecraft:multi_noise_biome_source', [
-    '%none',
-  ]> : (S extends keyof Dispatcher<'minecraft:multi_noise_biome_source'>
-    ? Dispatcher<'minecraft:multi_noise_biome_source'>[S]
-    : Record<string, unknown>)));
+  } & (S extends undefined
+    ? SymbolMultiNoiseBiomeSource<'%none'> :
+    (S extends keyof SymbolMultiNoiseBiomeSource ? SymbolMultiNoiseBiomeSource[S] : Record<string, unknown>)));
 }[Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list']])
 
 export type MultiNoiseBase = Record<string, never>
@@ -148,7 +143,7 @@ export type SymbolBiomeSource<CASE extends
 type MultiNoiseBiomeSourceDispatcherMap = {}
 type MultiNoiseBiomeSourceKeys = keyof MultiNoiseBiomeSourceDispatcherMap
 type MultiNoiseBiomeSourceFallback = (MultiNoiseBiomeSourceFallbackType)
-type MultiNoiseBiomeSourceFallbackType = Record<string, never>
+export type MultiNoiseBiomeSourceFallbackType = Record<string, never>
 type MultiNoiseBiomeSourceNoneType = DirectMultiNoise
 export type SymbolMultiNoiseBiomeSource<CASE extends
   | 'map'

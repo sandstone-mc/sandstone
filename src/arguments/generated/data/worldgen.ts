@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
 import type { NBTFloat, NBTInt } from 'sandstone'
@@ -52,11 +51,7 @@ export type DecorationStep = (
 export type FloatProvider<T> = (T | ({
   [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:float_provider', [
-    T,
-  ]> ? Dispatcher<'minecraft:float_provider', [
-      T,
-    ]>[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolFloatProvider<T> ? SymbolFloatProvider<T>[S] : Record<string, unknown>));
 }[Registry['minecraft:float_provider_type']]))
 
 export type HeightmapType = (
@@ -70,19 +65,13 @@ export type HeightmapType = (
 export type HeightProvider = (({
   [S in Extract<Registry['minecraft:height_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:height_provider'>
-    ? Dispatcher<'minecraft:height_provider'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolHeightProvider ? SymbolHeightProvider[S] : Record<string, unknown>));
 }[Registry['minecraft:height_provider_type']]) | VerticalAnchor)
 
 export type IntProvider<T> = (T | ({
   [S in Extract<Registry['minecraft:int_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:int_provider', [
-    T,
-  ]> ? Dispatcher<'minecraft:int_provider', [
-      T,
-    ]>[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolIntProvider<T> ? SymbolIntProvider<T>[S] : Record<string, unknown>));
 }[Registry['minecraft:int_provider_type']]))
 
 export type TrapezoidHeightProvider = (UniformHeightProvider & {

@@ -3,7 +3,7 @@ import type { SoundEventRef } from 'sandstone/arguments/generated/data/util'
 import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate'
 import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider'
 import type { FloatProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute'
 import type { Particle } from 'sandstone/arguments/generated/util/particle'
@@ -157,9 +157,7 @@ export type DamageItemEffect = {
 export type EntityEffect = ({
   [S in Extract<Registry['minecraft:enchantment_entity_effect_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:entity_effect'>
-    ? Dispatcher<'minecraft:entity_effect'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolEntityEffect ? SymbolEntityEffect[S] : Record<string, unknown>));
 }[Registry['minecraft:enchantment_entity_effect_type']])
 
 export type ExplodeEntityEffect = {
@@ -250,9 +248,7 @@ export type IgniteEntityEffect = {
 export type LocationBasedEffect = ({
   [S in Extract<Registry['minecraft:enchantment_location_based_effect_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:location_based_effect'>
-    ? Dispatcher<'minecraft:location_based_effect'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolLocationBasedEffect ? SymbolLocationBasedEffect[S] : Record<string, unknown>));
 }[Registry['minecraft:enchantment_location_based_effect_type']])
 
 export type MultiplyEffectValue = {
@@ -366,7 +362,7 @@ export type RunFunctionEntityEffect = {
 }
 
 export type SetBlockPropertiesEntityEffect = {
-  properties: Dispatcher<'minecraft:data_component'>['block_state']
+  properties: SymbolDataComponent['block_state']
   /**
      * Relative coordinates to offset the block by. Defaults to `[0, 0, 0]`.
      *
@@ -414,9 +410,7 @@ export type SummonEntityEffect = {
 export type ValueEffect = ({
   [S in Extract<Registry['minecraft:enchantment_value_effect_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:value_effect'>
-    ? Dispatcher<'minecraft:value_effect'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolValueEffect ? SymbolValueEffect[S] : Record<string, unknown>));
 }[Registry['minecraft:enchantment_value_effect_type']])
 type EntityEffectDispatcherMap = {
   'all_of': EntityEffectAllOf

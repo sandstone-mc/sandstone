@@ -1,7 +1,7 @@
 type McdocBlockItemStatesDispatcherMap = {}
 type McdocBlockItemStatesKeys = keyof McdocBlockItemStatesDispatcherMap
 type McdocBlockItemStatesFallback = (McdocBlockItemStatesFallbackType)
-type McdocBlockItemStatesFallbackType = ({
+export type McdocBlockItemStatesFallbackType = ({
   [Key in `${any}${string}`]?: string;
 })
 type McdocBlockItemStatesNoneType = ({

@@ -11,7 +11,11 @@ import type {
   TranslucentColorAttributeModifier,
 } from 'sandstone/arguments/generated/data/worldgen/attribute/modifier'
 import type { BiomeMusic, BiomeSoundAdditions, MoodSound } from 'sandstone/arguments/generated/data/worldgen/biome'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type {
+  SymbolEnvironmentAttributeArgbColorModifier,
+  SymbolEnvironmentAttributeColorModifier,
+  SymbolEnvironmentAttributeFloatModifier,
+} from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color'
 import type { Particle } from 'sandstone/arguments/generated/util/particle'
@@ -62,11 +66,11 @@ export type ARGBColorAttribute = {
         ticks: NBTInt<{
           min: 0
         }>
-        value: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier', [
-          '%none',
-        ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>
-          ? Dispatcher<'minecraft:environment_attribute_argb_color_modifier'>[S]
-          : Record<string, unknown>))
+        value: (S extends undefined
+          ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> :
+          (S extends keyof SymbolEnvironmentAttributeArgbColorModifier
+            ? SymbolEnvironmentAttributeArgbColorModifier[S]
+            : Record<string, unknown>))
       }>
     });
   }[ColorModifierType])
@@ -159,14 +163,14 @@ export type DiscreteAttribute<T> = {
 
 export type EnvironmentAttributeMap<K> = ({
   [Key in Extract<K, string>]?: ((
-      | Key extends keyof Dispatcher<'minecraft:environment_attribute'> ?
-        ('value' extends keyof Dispatcher<'minecraft:environment_attribute'>[Key]
-          ? Dispatcher<'minecraft:environment_attribute'>[Key]['value']
+      | Key extends keyof SymbolEnvironmentAttribute ?
+        ('value' extends keyof SymbolEnvironmentAttribute[Key]
+          ? SymbolEnvironmentAttribute[Key]['value']
           : Record<string, unknown>)
         : Record<string, unknown>) | (
-      Key extends keyof Dispatcher<'minecraft:environment_attribute'> ?
-        ('modifier' extends keyof Dispatcher<'minecraft:environment_attribute'>[Key]
-          ? Dispatcher<'minecraft:environment_attribute'>[Key]['modifier']
+      Key extends keyof SymbolEnvironmentAttribute ?
+        ('modifier' extends keyof SymbolEnvironmentAttribute[Key]
+          ? SymbolEnvironmentAttribute[Key]['modifier']
           : Record<string, unknown>)
         : Record<string, unknown>));
 })
@@ -196,14 +200,11 @@ export type FloatAttribute<T> = {
         ticks: NBTInt<{
           min: 0
         }>
-        value: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
-          T,
-          '%none',
-        ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_float_modifier', [
-          T,
-        ]> ? Dispatcher<'minecraft:environment_attribute_float_modifier', [
-            T,
-          ]>[S] : Record<string, unknown>))
+        value: (S extends undefined
+          ? SymbolEnvironmentAttributeFloatModifier<T, '%none'> :
+          (S extends keyof SymbolEnvironmentAttributeFloatModifier<T>
+            ? SymbolEnvironmentAttributeFloatModifier<T>[S]
+            : Record<string, unknown>))
       }>
     });
   }[FloatModifierType])
@@ -239,11 +240,11 @@ export type RGBColorAttribute = {
         ticks: NBTInt<{
           min: 0
         }>
-        value: (S extends undefined ? Dispatcher<'minecraft:environment_attribute_color_modifier', [
-          '%none',
-        ]> : (S extends keyof Dispatcher<'minecraft:environment_attribute_color_modifier'>
-          ? Dispatcher<'minecraft:environment_attribute_color_modifier'>[S]
-          : Record<string, unknown>))
+        value: (S extends undefined
+          ? SymbolEnvironmentAttributeColorModifier<'%none'> :
+          (S extends keyof SymbolEnvironmentAttributeColorModifier
+            ? SymbolEnvironmentAttributeColorModifier[S]
+            : Record<string, unknown>))
       }>
     });
   }[ColorModifierType])
@@ -399,7 +400,7 @@ type EnvironmentAttributeFallback = (
   | EnvironmentAttributeVisualWaterFogEndDistance
   | EnvironmentAttributeVisualWaterFogStartDistance
   | EnvironmentAttributeFallbackType)
-type EnvironmentAttributeFallbackType = DiscreteAttribute<unknown>
+export type EnvironmentAttributeFallbackType = DiscreteAttribute<unknown>
 type EnvironmentAttributeAudioAmbientSounds = DiscreteAttribute<AmbientSounds>
 type EnvironmentAttributeAudioBackgroundMusic = DiscreteAttribute<BackgroundMusic>
 type EnvironmentAttributeAudioFireflyBushSounds = BooleanAttribute

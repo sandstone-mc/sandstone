@@ -1,6 +1,25 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.build.json" }
-  ]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "sandstone": [
+        "./src/index.ts"
+      ],
+      "sandstone/*": [
+        "./src/*"
+      ],
+    },
+    "module": "preserve",
+    "target": "ESNEXT",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "stripInternal": true,
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "src"
+  }
 }

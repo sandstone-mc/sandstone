@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTList } from 'sandstone'
 
@@ -23,9 +22,7 @@ export type LevelBasedValue = (NBTFloat | LevelBasedValueMap)
 export type LevelBasedValueMap = ({
   [S in Extract<Registry['minecraft:enchantment_level_based_value_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:level_based_value'>
-    ? Dispatcher<'minecraft:level_based_value'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolLevelBasedValue ? SymbolLevelBasedValue[S] : Record<string, unknown>));
 }[Registry['minecraft:enchantment_level_based_value_type']])
 
 export type LinearLevelValue = {

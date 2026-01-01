@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments'
+import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -6,8 +6,8 @@ import type { ListResource, ResourceClassArguments, ResourceNode } from '../reso
 import { ResourceClass } from '../resource'
 import { AllKeys } from 'sandstone/utils'
 
-type BlockStateJSON = Dispatcher<'minecraft:resource'>['block_definition']
-type BlockStateType = AllKeys<Dispatcher<'minecraft:resource'>['block_definition']>
+type BlockStateJSON = NonNullable<SymbolResource['block_definition']>
+type BlockStateType = AllKeys<BlockStateJSON>
 
 /**
  * A node representing a Minecraft block state.
@@ -30,14 +30,14 @@ export type BlockStateArguments<Type extends BlockStateType> = {
   /**
    * The block state's JSON.
    */
-  blockState: Dispatcher<'minecraft:resource'>['block_definition']
+  blockState: BlockStateJSON
 } & ResourceClassArguments<'list'>
 
 export class BlockStateClass<Type extends BlockStateType>
   extends ResourceClass<BlockStateNode<Type>>
   implements ListResource
 {
-  blockStateJSON: NonNullable<BlockStateArguments<Type>['blockState']>
+  blockStateJSON: BlockStateJSON
 
   constructor(
     core: SandstoneCore,

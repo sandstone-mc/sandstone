@@ -1,7 +1,8 @@
 type McdocCustomDataDispatcherMap = {}
 type McdocCustomDataKeys = keyof McdocCustomDataDispatcherMap
 type McdocCustomDataFallback = (McdocCustomDataFallbackType)
-type McdocCustomDataFallbackType = unknown
+export type McdocCustomDataFallbackType = unknown
+
 export type SymbolMcdocCustomData<CASE extends
   | 'map'
   | 'keys'

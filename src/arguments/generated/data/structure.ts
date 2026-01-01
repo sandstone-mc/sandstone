@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity'
 import type { NBTDouble, NBTInt, NBTList } from 'sandstone'
@@ -54,9 +54,7 @@ export type StructureNBT = ({
       min: 3
       max: 3
     }>
-    nbt?: Dispatcher<'minecraft:block', [
-      '%fallback',
-    ]>
+    nbt?: SymbolBlock<'%fallback'>
   }>
   entities: Array<{
     /**

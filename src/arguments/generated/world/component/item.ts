@@ -3,7 +3,10 @@ import type { DamageType } from 'sandstone/arguments/generated/data/damage_type'
 import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util'
 import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type {
+  SymbolMcdocBlockItemStates,
+  SymbolMcdocBlockStateKeys,
+} from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute'
 import type { Profile } from 'sandstone/arguments/generated/util/avatar'
@@ -135,9 +138,7 @@ export type AttributeDisplay = ({
          *  - Override(`override`): Replaces the shown attribute modifier text.
          */
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:attribute_display'>
-    ? Dispatcher<'minecraft:attribute_display'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolAttributeDisplay ? SymbolAttributeDisplay[S] : Record<string, unknown>));
 }[AttributeDisplayType])
 
 export type AttributeDisplayTextOverride = {
@@ -313,9 +314,7 @@ export type Consumable = {
 export type ConsumeEffect = ({
   [S in Extract<Registry['minecraft:consume_effect_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:consume_effect'>
-    ? Dispatcher<'minecraft:consume_effect'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolConsumeEffect ? SymbolConsumeEffect[S] : Record<string, unknown>));
 }[Registry['minecraft:consume_effect_type']])
 
 export type CustomModelData = {
@@ -370,8 +369,8 @@ export type DeathProtection = {
 }
 
 export type DebugStickState = ({
-  [Key in Extract<Registry['minecraft:block'], string>]?: (Key extends keyof Dispatcher<'mcdoc:block_state_keys'>
-    ? Dispatcher<'mcdoc:block_state_keys'>[Key]
+  [Key in Extract<Registry['minecraft:block'], string>]?: (Key extends keyof SymbolMcdocBlockStateKeys
+    ? SymbolMcdocBlockStateKeys[Key]
     : Record<string, unknown>);
 })
 
@@ -1318,9 +1317,7 @@ type DataComponentBannerPatterns = Array<BannerPatternLayer>
 type DataComponentBaseColor = DyeColor
 type DataComponentBees = Array<Occupant>
 type DataComponentBlockEntityData = (BlockEntityData | (`${any}${string}` | NBTClass))
-type DataComponentBlockState = Dispatcher<'mcdoc:block_item_states', [
-  '%fallback',
-]>
+type DataComponentBlockState = SymbolMcdocBlockItemStates<'%fallback'>
 type DataComponentBlocksAttacks = blocks_attacks
 type DataComponentBreakSound = SoundEventRef
 type DataComponentBucketEntityData = (BucketEntityData | (`${any}${string}` | NBTClass))

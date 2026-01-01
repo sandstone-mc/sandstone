@@ -4,7 +4,8 @@ export type UnknownStorage = ({
 type StorageDispatcherMap = {}
 type StorageKeys = keyof StorageDispatcherMap
 type StorageFallback = (StorageFallbackType)
-type StorageFallbackType = UnknownStorage
+export type StorageFallbackType = UnknownStorage
+
 export type SymbolStorage<CASE extends
   | 'map'
   | 'keys'

@@ -1,5 +1,4 @@
 import type { FloatProvider, HeightProvider, VerticalAnchor } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
@@ -65,9 +64,7 @@ export type ConfiguredCarver = ({
       yScale: FloatProvider<NBTFloat>
       lava_level: VerticalAnchor
       debug_settings?: CarverDebugSettings
-    } & (S extends keyof Dispatcher<'minecraft:carver_config'>
-      ? Dispatcher<'minecraft:carver_config'>[S]
-      : Record<string, unknown>))
+    } & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : Record<string, unknown>))
   };
 }[Registry['minecraft:worldgen/carver']])
 type CarverConfigDispatcherMap = {

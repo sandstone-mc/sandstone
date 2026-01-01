@@ -1,6 +1,5 @@
 import type { MobCategory, SpawnerData } from 'sandstone/arguments/generated/data/worldgen/biome'
 import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
@@ -41,11 +40,11 @@ export type Jigsaw<S = undefined> = ({
      *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
      */
   project_start_to_heightmap?: HeightmapType
-  max_distance_from_center: (S extends undefined ? Dispatcher<'minecraft:jigsaw_max_distance_from_center', [
-    '%none',
-  ]> : (S extends keyof Dispatcher<'minecraft:jigsaw_max_distance_from_center'>
-    ? Dispatcher<'minecraft:jigsaw_max_distance_from_center'>[S]
-    : Record<string, unknown>))
+  max_distance_from_center: (S extends undefined
+    ? SymbolJigsawMaxDistanceFromCenter<'%none'> :
+    (S extends keyof SymbolJigsawMaxDistanceFromCenter
+      ? SymbolJigsawMaxDistanceFromCenter[S]
+      : Record<string, unknown>))
   use_expansion_hack: boolean
 } & {
   /**
@@ -149,9 +148,7 @@ export type OceanRuin = {
 export type PoolAlias = ({
   [S in Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:worldgen/pool_alias_binding'>
-    ? Dispatcher<'minecraft:worldgen/pool_alias_binding'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolWorldgenPoolAliasBinding ? SymbolWorldgenPoolAliasBinding[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/pool_alias_binding']])
 
 export type RandomGroupPoolAlias = {
@@ -277,9 +274,7 @@ export type Structure = ({
     spawn_overrides: ({
       [Key in Extract<MobCategory, string>]?: SpawnOverride;
     })
-  } & (S extends keyof Dispatcher<'minecraft:structure_config'>
-    ? Dispatcher<'minecraft:structure_config'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolStructureConfig ? SymbolStructureConfig[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/structure_type']])
 
 export type StructureRef = (Registry['minecraft:worldgen/structure'] | Structure)
@@ -299,7 +294,7 @@ type JigsawMaxDistanceFromCenterFallback = (
   | JigsawMaxDistanceFromCenterBeardThin
   | JigsawMaxDistanceFromCenterBury
   | JigsawMaxDistanceFromCenterFallbackType)
-type JigsawMaxDistanceFromCenterFallbackType = (NBTInt<{
+export type JigsawMaxDistanceFromCenterFallbackType = (NBTInt<{
   min: 1
 }> | JigsawDistanceLimits<NBTInt<{
   min: 1

@@ -6,7 +6,6 @@ import type {
 } from 'sandstone/arguments/generated/data/worldgen'
 import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate'
 import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
@@ -102,9 +101,7 @@ export type PlacedFeatureRef = (Registry['minecraft:worldgen/placed_feature'] | 
 export type PlacementModifier = ({
   [S in Extract<Registry['minecraft:worldgen/placement_modifier_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:placement_modifier'>
-    ? Dispatcher<'minecraft:placement_modifier'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolPlacementModifier ? SymbolPlacementModifier[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/placement_modifier_type']])
 
 export type RandomOffsetModifier = {

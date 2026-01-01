@@ -1,5 +1,5 @@
 import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolBlockEntity } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component'
@@ -21,9 +21,7 @@ export type BlockEntity = {
 export type BlockEntityData = ({
   [S in Extract<Registry['minecraft:block_entity_type'], string>]?: ({
     id: S
-  } & (S extends keyof Dispatcher<'minecraft:block_entity'>
-    ? Dispatcher<'minecraft:block_entity'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockEntity ? SymbolBlockEntity[S] : Record<string, unknown>));
 }[Registry['minecraft:block_entity_type']])
 
 export type Lockable = {

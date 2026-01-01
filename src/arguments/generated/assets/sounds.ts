@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolSoundType } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
@@ -13,11 +13,9 @@ export type Sound = ({
          *  - SoundEvent(`event`): An already defined event.
          */
     type?: S
-    name: (S extends undefined ? Dispatcher<'minecraft:sound_type', [
-      '%none',
-    ]> : (S extends keyof Dispatcher<'minecraft:sound_type'>
-      ? Dispatcher<'minecraft:sound_type'>[S]
-      : Record<string, unknown>))
+    name: (S extends undefined
+      ? SymbolSoundType<'%none'> :
+      (S extends keyof SymbolSoundType ? SymbolSoundType[S] : Record<string, unknown>))
     /**
          * Defaults to 1.0.
          *
@@ -69,7 +67,7 @@ export type SoundEventRegistration = {
   /**
      * The sound files this sound event uses. One sound is randomly selected to play when the event is triggered. Defaults to assumed path.
      */
-  sounds?: Array<(string | Sound)>
+  sounds?: Array<(Registry['minecraft:sound'] | Sound)>
   /**
      * If true the sounds listed should replace the ones listed in the minecraft sounds.json for this sound event.
      * False if the sounds listed should be added. If undefined. Defaults to false.

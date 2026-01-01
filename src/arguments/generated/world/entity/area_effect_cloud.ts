@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher'
 import type { Particle } from 'sandstone/arguments/generated/util/particle'
 import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
 import type { NBTFloat, NBTInt, NBTIntArray } from 'sandstone'
@@ -56,7 +56,7 @@ export type AreaEffectCloud = (EntityBase & {
      * If present, the particle that the area effect cloud displays instead of the default `entity_effect` particle based on the potion contents.
      */
   custom_particle?: Particle
-  potion_contents?: Dispatcher<'minecraft:data_component'>['potion_contents']
+  potion_contents?: SymbolDataComponent['potion_contents']
   /**
      * The duration of the potion effect applied is scaled by this factor. Defaults to `1`.
      * Will be `0.25` when throwing lingering potions.

@@ -1,4 +1,4 @@
-import type { Dispatcher, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { SymbolResource, MultiplePlayersArgument } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,7 +22,7 @@ export type RecipeClassArguments = {
   /**
    * The recipe's JSON.
    */
-  recipe: NonNullable<Dispatcher<'minecraft:resource'>['recipe']>
+  recipe: NonNullable<SymbolResource['recipe']>
 } & ResourceClassArguments<'default'>
 
 export class RecipeClass extends ResourceClass<RecipeNode> {

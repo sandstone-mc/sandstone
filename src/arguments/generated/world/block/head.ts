@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher'
 import type { Profile } from 'sandstone/arguments/generated/util/avatar'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
 import type { NBTIntArray } from 'sandstone'
@@ -16,12 +16,12 @@ export type Skull = (BlockEntity & {
      * Sound to play when played with a note block.
      * Only works on player head.
      */
-  note_block_sound?: Dispatcher<'minecraft:data_component'>['note_block_sound']
+  note_block_sound?: SymbolDataComponent['note_block_sound']
   /**
      * Only works on player head.
      */
   profile?: Profile
-  custom_name?: Dispatcher<'minecraft:data_component'>['custom_name']
+  custom_name?: SymbolDataComponent['custom_name']
 })
 
 export type SkullOwner = {

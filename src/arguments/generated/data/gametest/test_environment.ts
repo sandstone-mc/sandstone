@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { MCFunctionClass, NBTInt } from 'sandstone'
 
@@ -18,8 +18,8 @@ export type FunctionTestEnvironment = {
 
 export type GameRulesTestEnvironment = {
   rules: ({
-    [Key in Extract<Registry['minecraft:game_rule'], string>]?: (Key extends keyof Dispatcher<'minecraft:game_rule'>
-      ? Dispatcher<'minecraft:game_rule'>[Key]
+    [Key in Extract<Registry['minecraft:game_rule'], string>]?: (Key extends keyof SymbolGameRule
+      ? SymbolGameRule[Key]
       : Record<string, unknown>);
   })
 }
@@ -32,8 +32,8 @@ export type IntGameRule = {
 export type TestEnvironment = ({
   [S in Extract<Registry['minecraft:test_environment_definition_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:test_environment_definition'>
-    ? Dispatcher<'minecraft:test_environment_definition'>[S]
+  } & (S extends keyof SymbolTestEnvironmentDefinition
+    ? SymbolTestEnvironmentDefinition[S]
     : Record<string, unknown>));
 }[Registry['minecraft:test_environment_definition_type']])
 

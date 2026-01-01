@@ -459,7 +459,7 @@ type ItemFallback = (
   | ItemZombieVillagerSpawnEgg
   | ItemZombifiedPiglinSpawnEgg
   | ItemFallbackType)
-type ItemFallbackType = ItemBase
+export type ItemFallbackType = ItemBase
 type ItemAcaciaBoat = SpawnItem
 type ItemAcaciaChestBoat = SpawnItem
 type ItemAllaySpawnEgg = SpawnItem

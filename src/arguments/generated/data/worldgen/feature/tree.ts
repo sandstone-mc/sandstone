@@ -1,6 +1,5 @@
 import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider'
 import type { IntProvider, UniformIntProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Direction } from 'sandstone/arguments/generated/util/direction'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
@@ -223,9 +222,7 @@ export type FallenTreeConfig = {
 export type FeatureSize = ({
   [S in Extract<Registry['minecraft:worldgen/feature_size_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:feature_size'>
-    ? Dispatcher<'minecraft:feature_size'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolFeatureSize ? SymbolFeatureSize[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/feature_size_type']])
 
 export type FoliagePlacer = ({
@@ -239,9 +236,7 @@ export type FoliagePlacer = ({
       min: 0
       max: 16
     }>>
-  } & (S extends keyof Dispatcher<'minecraft:foliage_placer'>
-    ? Dispatcher<'minecraft:foliage_placer'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolFoliagePlacer ? SymbolFoliagePlacer[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/foliage_placer_type']])
 
 export type HeightFoliagePlacer = {
@@ -408,9 +403,7 @@ export type RootPlacer = ({
     root_provider: BlockStateProvider
     trunk_offset_y: IntProvider<NBTInt>
     above_root_placement?: AboveRootPlacement
-  } & (S extends keyof Dispatcher<'minecraft:root_placer'>
-    ? Dispatcher<'minecraft:root_placer'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolRootPlacer ? SymbolRootPlacer[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/root_placer_type']])
 
 export type SprucePineFoliagePlacer = {
@@ -488,9 +481,7 @@ export type TreeConfig = {
 export type TreeDecorator = ({
   [S in Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:tree_decorator'>
-    ? Dispatcher<'minecraft:tree_decorator'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolTreeDecorator ? SymbolTreeDecorator[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/tree_decorator_type']])
 
 export type TrunkPlacer = ({
@@ -520,9 +511,7 @@ export type TrunkPlacer = ({
       min: 0
       max: 24
     }>
-  } & (S extends keyof Dispatcher<'minecraft:trunk_placer'>
-    ? Dispatcher<'minecraft:trunk_placer'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolTrunkPlacer ? SymbolTrunkPlacer[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/trunk_placer_type']])
 
 export type TwoLayersFeatureSize = {

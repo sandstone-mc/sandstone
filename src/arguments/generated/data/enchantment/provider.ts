@@ -1,5 +1,4 @@
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
 
@@ -36,9 +35,7 @@ export type ByCostWithDifficultyEnchantmentProvider = {
 export type EnchantmentProvider = ({
   [S in Extract<Registry['minecraft:enchantment_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:enchantment_provider'>
-    ? Dispatcher<'minecraft:enchantment_provider'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolEnchantmentProvider ? SymbolEnchantmentProvider[S] : Record<string, unknown>));
 }[Registry['minecraft:enchantment_provider_type']])
 
 /**

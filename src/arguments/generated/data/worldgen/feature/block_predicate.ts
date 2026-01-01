@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { Direction } from 'sandstone/arguments/generated/util/direction'
@@ -7,9 +6,7 @@ import type { NBTInt, NBTList, TagClass } from 'sandstone'
 export type BlockPredicate = ({
   [S in Extract<Registry['minecraft:block_predicate_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:block_predicate'>
-    ? Dispatcher<'minecraft:block_predicate'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockPredicate ? SymbolBlockPredicate[S] : Record<string, unknown>));
 }[Registry['minecraft:block_predicate_type']])
 
 export type CombiningPredicate = {

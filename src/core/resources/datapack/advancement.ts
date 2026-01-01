@@ -1,4 +1,4 @@
-import type { Dispatcher, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MultiplePlayersArgument, SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -19,14 +19,14 @@ export class AdvancementNode extends ContainerNode implements ResourceNode<Advan
   getValue = () => JSON.stringify(this.resource.advancementJSON)
 }
 
-export type AdvancementClassArguments<AdvancementJSON extends Dispatcher<'minecraft:resource'>['advancement'] | undefined = undefined> = {
+export type AdvancementClassArguments<AdvancementJSON extends SymbolResource['advancement'] | undefined = undefined> = {
   /**
    * The advancement's JSON.
    */
   advancement: AdvancementJSON
 } & ResourceClassArguments<'default'>
 
-export class AdvancementClass<AdvancementJSON extends Dispatcher<'minecraft:resource'>['advancement'] | undefined = undefined>
+export class AdvancementClass<AdvancementJSON extends SymbolResource['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
   implements ConditionClass
 {

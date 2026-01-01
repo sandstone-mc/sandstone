@@ -1,5 +1,5 @@
 import type { Dialog } from 'sandstone/arguments/generated/data/dialog'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolMcdocCustomEvent } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Profile } from 'sandstone/arguments/generated/util/avatar'
 import type { RGBA } from 'sandstone/arguments/generated/util/color'
@@ -33,9 +33,7 @@ export type ClickEvent = ({
          *  - Custom(`custom`)
          */
     action: S
-  } & (S extends keyof Dispatcher<'minecraft:click_event'>
-    ? Dispatcher<'minecraft:click_event'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolClickEvent ? SymbolClickEvent[S] : Record<string, unknown>));
 }[ClickEventAction])
 
 export type ClickEventAction = (
@@ -61,9 +59,7 @@ export type CustomAction = ({
          * Has no functionality on vanilla servers.
          */
     id: S
-    payload?: (S extends keyof Dispatcher<'mcdoc:custom_event'>
-      ? Dispatcher<'mcdoc:custom_event'>[S]
-      : Record<string, unknown>)
+    payload?: (S extends keyof SymbolMcdocCustomEvent ? SymbolMcdocCustomEvent[S] : Record<string, unknown>)
   };
 }[`${string}:${string}`])
 
@@ -77,9 +73,7 @@ export type HoverEvent = ({
          *  - ShowEntity(`show_entity`)
          */
     action: S
-  } & (S extends keyof Dispatcher<'minecraft:hover_event'>
-    ? Dispatcher<'minecraft:hover_event'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolHoverEvent ? SymbolHoverEvent[S] : Record<string, unknown>));
 }[HoverEventAction])
 
 export type HoverEventAction = ('show_text' | 'show_item' | 'show_entity')

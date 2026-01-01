@@ -3,7 +3,7 @@
 import lodash from 'lodash'
 import prismarine, { type NBT } from 'prismarine-nbt'
 import type {
-  Dispatcher,
+  SymbolEntity,
   Registry,
   Coordinates,
   NBTObject,
@@ -55,7 +55,7 @@ type StructureEntry = {
       [ID in Registry['minecraft:entity_type']]: {
         id: ID
         /* Must use NBT Primitives! */
-        nbt?: ID extends keyof Dispatcher<'minecraft:entity'> ? Dispatcher<'minecraft:entity'>[ID] : RootNBT
+        nbt?: ID extends keyof SymbolEntity ? SymbolEntity[ID] : RootNBT
         offset?: [number, number, number]
       }
     }[Registry['minecraft:entity_type']]),

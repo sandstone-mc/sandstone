@@ -19,15 +19,14 @@
   "dependencies": {
     "@sinclair/typebox": "^0.31.21",
     "@smithed-mc/data-types": "^0.1.2",
+    "@types/nearley": "^2.11.5",
     "@typescript/analyze-trace": "^0.4.0",
     "adm-zip": "^0.5.10",
-    "chalk": "^4.1.2",
     "fs-extra": "^11.1.1",
     "lodash": "^4.17.21",
     "nanoid": "^3.3.6",
     "nearley": "^2.20.1",
     "node-fetch": "^3.3.2",
-    "object-hash": "^3.0.0",
     "prismarine-nbt": "^2.2.1",
     "semver": "^7.5.4"
   },
@@ -36,22 +35,11 @@
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",
     "@types/lodash": "^4.14.199",
-    "@types/module-alias": "^2.0.2",
-    "@types/nearley": "^2.11.3",
     "@types/node": "^22.13.17",
-    "@types/object-hash": "^3.0.5",
     "@types/semver": "^7.5.3",
-    "glob": "^10.3.10",
-    "husky": "^7.0.4",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.5.0",
-    "typescript": "^5.8.3",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4"
+    "typescript": "^5.8.3"
   },
   "directories": {
-    "doc": "docs",
-    "test": "tests",
     "lib": "src"
   },
   "engines": {
@@ -85,8 +73,7 @@
     "format": "biome format --write src",
     "lint": "biome lint src",
     "check": "biome check --write src",
-    "test": "vitest",
-    "test:run": "vitest run"
+    "build-types-new": "tsc --emitDeclarationOnly --traceResolution"
   },
   "type": "module",
   "main": "index.js",

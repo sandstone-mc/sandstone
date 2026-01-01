@@ -1,10 +1,10 @@
 import type {
   CONTAINER_SLOTS,
   Coordinates,
-  Dispatcher,
   ENTITY_SLOTS,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
+  SymbolResource,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
@@ -30,7 +30,7 @@ export type LootTableClassArguments = {
   /**
    * The loot table's JSON.
    */
-  lootTable: Dispatcher<'minecraft:resource'>['loot_table']
+  lootTable: SymbolResource['loot_table']
 } & ResourceClassArguments<'default'>
 
 export class LootTableClass extends ResourceClass<LootTableNode> {

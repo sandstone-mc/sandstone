@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item'
 import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
@@ -125,9 +124,7 @@ export type ItemResult = {
 export type Recipe = ({
   [S in Extract<Registry['minecraft:recipe_serializer'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:recipe_serializer'>
-    ? Dispatcher<'minecraft:recipe_serializer'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : Record<string, unknown>));
 }[Registry['minecraft:recipe_serializer']])
 
 export type Smelting = {
@@ -236,7 +233,7 @@ type RecipeSerializerFallback = (
   | RecipeSerializerSmoking
   | RecipeSerializerStonecutting
   | RecipeSerializerFallbackType)
-type RecipeSerializerFallbackType = Record<string, never>
+export type RecipeSerializerFallbackType = Record<string, never>
 type RecipeSerializerBlasting = Smelting
 type RecipeSerializerCampfireCooking = Smelting
 type RecipeSerializerCraftingShaped = CraftingShaped

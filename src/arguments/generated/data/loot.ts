@@ -1,5 +1,5 @@
 import type { NumberProvider } from 'sandstone/arguments/generated/data/util'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolLootCondition, SymbolLootFunction } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { SlotSource } from 'sandstone/arguments/generated/util/slot'
 import type { NBTInt } from 'sandstone'
@@ -42,9 +42,7 @@ export type ItemStackTarget = 'tool'
 export type LootCondition = ({
   [S in Extract<Registry['minecraft:loot_condition_type'], string>]?: ({
     condition: S
-  } & (S extends keyof Dispatcher<'minecraft:loot_condition'>
-    ? Dispatcher<'minecraft:loot_condition'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : Record<string, unknown>));
 }[Registry['minecraft:loot_condition_type']])
 
 export type LootConditionType = (
@@ -105,9 +103,7 @@ export type LootEntryType = (
 export type LootFunction = ({
   [S in Extract<Registry['minecraft:loot_function_type'], string>]?: ({
     function: S
-  } & (S extends keyof Dispatcher<'minecraft:loot_function'>
-    ? Dispatcher<'minecraft:loot_function'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : Record<string, unknown>));
 }[Registry['minecraft:loot_function_type']])
 
 export type LootFunctionType = (
@@ -144,9 +140,7 @@ export type LootPool = {
 export type LootPoolEntry = ({
   [S in Extract<Registry['minecraft:loot_pool_entry_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:loot_pool_entry'>
-    ? Dispatcher<'minecraft:loot_pool_entry'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolLootPoolEntry ? SymbolLootPoolEntry[S] : Record<string, unknown>));
 }[Registry['minecraft:loot_pool_entry_type']])
 
 export type LootPoolEntryBase = {

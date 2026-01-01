@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
@@ -37,9 +36,7 @@ export type EntityPositionSource = {
 export type PositionSource = ({
   [S in Extract<Registry['minecraft:position_source_type'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:position_source'>
-    ? Dispatcher<'minecraft:position_source'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolPositionSource ? SymbolPositionSource[S] : Record<string, unknown>));
 }[Registry['minecraft:position_source_type']])
 
 export type ReceivingEvent = {

@@ -3501,7 +3501,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysZombieHead
   | McdocBlockStateKeysZombieWallHead
   | McdocBlockStateKeysFallbackType)
-type McdocBlockStateKeysFallbackType = string
+export type McdocBlockStateKeysFallbackType = string
 type McdocBlockStateKeysNoneType = string
 type McdocBlockStateKeysAcaciaButton = ('face' | 'facing' | 'powered')
 type McdocBlockStateKeysAcaciaDoor = ('facing' | 'half' | 'hinge' | 'open' | 'powered')

@@ -1,5 +1,4 @@
 import type { CaveSurface, VerticalAnchor } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { NBTFloat, NBTInt } from 'sandstone'
@@ -47,17 +46,13 @@ export type StoneDepthCondition = {
 export type SurfaceCondition = ({
   [S in Extract<Registry['minecraft:worldgen/material_condition'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:surface_condition'>
-    ? Dispatcher<'minecraft:surface_condition'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolSurfaceCondition ? SymbolSurfaceCondition[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/material_condition']])
 
 export type SurfaceRule = ({
   [S in Extract<Registry['minecraft:worldgen/material_rule'], string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:surface_rule'>
-    ? Dispatcher<'minecraft:surface_rule'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolSurfaceRule ? SymbolSurfaceRule[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/material_rule']])
 
 export type VerticalGradientCondition = {

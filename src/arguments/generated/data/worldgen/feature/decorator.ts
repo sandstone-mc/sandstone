@@ -4,7 +4,6 @@ import type {
   HeightProvider,
   IntProvider,
 } from 'sandstone/arguments/generated/data/worldgen'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
@@ -36,9 +35,7 @@ export type ChanceConfig = {
 export type ConfiguredDecorator = ({
   [S in Extract<`${string}:${string}`, string>]?: {
     type: S
-    config: (S extends keyof Dispatcher<'minecraft:decorator_config'>
-      ? Dispatcher<'minecraft:decorator_config'>[S]
-      : Record<string, unknown>)
+    config: (S extends keyof SymbolDecoratorConfig ? SymbolDecoratorConfig[S] : Record<string, unknown>)
   };
 }[`${string}:${string}`])
 

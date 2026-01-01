@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import type { Coordinates, Dispatcher, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, SingleEntityArgument, SymbolResource } from 'sandstone/arguments'
 import { SetType, toMinecraftResourceName } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
@@ -30,7 +30,7 @@ export type DamageTypeClassArguments = {
   /**
    * The damage type's JSON.
    */
-  damageType: Dispatcher<'minecraft:resource'>['damage_type']
+  damageType: SymbolResource['damage_type']
 } & ResourceClassArguments<'default'> & {
     /**
      * Optional. Automatically adds damage type to minecraft damage type group tag flags.

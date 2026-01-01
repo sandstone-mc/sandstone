@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolEntity } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { CustomData } from 'sandstone/arguments/generated/world/component'
@@ -10,7 +10,7 @@ export type AnyEntity = ({
          * The ID of this entity. Not present on player entities.
          */
     id: S
-  } & (S extends keyof Dispatcher<'minecraft:entity'> ? Dispatcher<'minecraft:entity'>[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolEntity ? SymbolEntity[S] : Record<string, unknown>));
 }[Registry['minecraft:entity_type']])
 
 export type BlockAttachedEntity = (EntityBase & {

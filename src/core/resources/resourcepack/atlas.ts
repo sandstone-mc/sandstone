@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments'
+import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
@@ -23,7 +23,7 @@ export type AtlasClassArguments = {
   /**
    * The atlas JSON.
    */
-  atlas?: Dispatcher<'minecraft:resource'>['atlas']
+  atlas?: SymbolResource['atlas']
 } & ResourceClassArguments<'list'>
 
 export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {

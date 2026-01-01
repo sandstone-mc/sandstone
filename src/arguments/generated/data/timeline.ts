@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolEnvironmentAttribute } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
@@ -60,9 +60,9 @@ export type CubicBezierEase = {
 export type EasingType = (SimpleEasingType | CubicBezierEase)
 
 export type EnvironmentAttributeTrackMap = ({
-  [Key in Extract<Registry['minecraft:environment_attribute'], string>]?: (Key extends keyof Dispatcher<'minecraft:environment_attribute'> ?
-    ('attribute_track' extends keyof Dispatcher<'minecraft:environment_attribute'>[Key]
-      ? Dispatcher<'minecraft:environment_attribute'>[Key]['attribute_track']
+  [Key in Extract<Registry['minecraft:environment_attribute'], string>]?: (Key extends keyof SymbolEnvironmentAttribute ?
+    ('attribute_track' extends keyof SymbolEnvironmentAttribute[Key]
+      ? SymbolEnvironmentAttribute[Key]['attribute_track']
       : Record<string, unknown>)
     : Record<string, unknown>);
 })

@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
@@ -118,9 +117,7 @@ export type StructurePlacement = ({
       min: 3
       max: 3
     }>
-  } & (S extends keyof Dispatcher<'minecraft:structure_placement'>
-    ? Dispatcher<'minecraft:structure_placement'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolStructurePlacement ? SymbolStructurePlacement[S] : Record<string, unknown>));
 }[Registry['minecraft:worldgen/structure_placement']])
 
 export type StructureSet = {

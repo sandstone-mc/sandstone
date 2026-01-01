@@ -1,7 +1,8 @@
 type McdocCustomDynamicEventKeysDispatcherMap = {}
 type McdocCustomDynamicEventKeysKeys = keyof McdocCustomDynamicEventKeysDispatcherMap
 type McdocCustomDynamicEventKeysFallback = (McdocCustomDynamicEventKeysFallbackType)
-type McdocCustomDynamicEventKeysFallbackType = string
+export type McdocCustomDynamicEventKeysFallbackType = string
+
 export type SymbolMcdocCustomDynamicEventKeys<CASE extends
   | 'map'
   | 'keys'

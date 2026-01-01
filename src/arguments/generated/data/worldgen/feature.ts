@@ -5,7 +5,6 @@ import type { ConfiguredDecorator } from 'sandstone/arguments/generated/data/wor
 import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement'
 import type { FallenTreeConfig, TreeConfig } from 'sandstone/arguments/generated/data/worldgen/feature/tree'
 import type { ProcessorListRef, RuleTest } from 'sandstone/arguments/generated/data/worldgen/processor_list'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { Direction } from 'sandstone/arguments/generated/util/direction'
@@ -43,9 +42,7 @@ export type BlockPileConfig = {
 export type BlockPlacer = ({
   [S in Extract<`${string}:${string}`, string>]?: ({
     type: S
-  } & (S extends keyof Dispatcher<'minecraft:block_placer'>
-    ? Dispatcher<'minecraft:block_placer'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockPlacer ? SymbolBlockPlacer[S] : Record<string, unknown>));
 }[`${string}:${string}`])
 
 export type ColumnPlacer = {
@@ -68,9 +65,7 @@ export type ColumnsConfig = {
 export type ConfiguredFeature = ({
   [S in Extract<Registry['minecraft:worldgen/feature'], string>]?: {
     type: S
-    config: (S extends keyof Dispatcher<'minecraft:feature_config'>
-      ? Dispatcher<'minecraft:feature_config'>[S]
-      : Record<string, unknown>)
+    config: (S extends keyof SymbolFeatureConfig ? SymbolFeatureConfig[S] : Record<string, unknown>)
   };
 }[Registry['minecraft:worldgen/feature']])
 

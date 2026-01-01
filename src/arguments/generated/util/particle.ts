@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color'
@@ -90,11 +89,9 @@ export type LegacyTranslucentParticle = NBTList<NBTFloat, {
 export type Particle = ({
   [S in Extract<Registry['minecraft:particle_type'], string>]?: ({
     type: S
-  } & (S extends undefined ? Dispatcher<'minecraft:particle', [
-    '%none',
-  ]> : (S extends keyof Dispatcher<'minecraft:particle'>
-    ? Dispatcher<'minecraft:particle'>[S]
-    : Record<string, unknown>)));
+  } & (S extends undefined
+    ? SymbolParticle<'%none'> :
+    (S extends keyof SymbolParticle ? SymbolParticle[S] : Record<string, unknown>)));
 }[Registry['minecraft:particle_type']])
 
 export type SafePositionSource = {
@@ -225,7 +222,7 @@ type ParticleFallback = (
   | ParticleTrail
   | ParticleVibration
   | ParticleFallbackType)
-type ParticleFallbackType = Record<string, never>
+export type ParticleFallbackType = Record<string, never>
 type ParticleNoneType = unknown
 type ParticleBlock = BlockParticle
 type ParticleBlockCrumble = BlockParticle

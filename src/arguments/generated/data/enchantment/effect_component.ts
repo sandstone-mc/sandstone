@@ -6,7 +6,6 @@ import type {
 } from 'sandstone/arguments/generated/data/enchantment/effect'
 import type { LootCondition } from 'sandstone/arguments/generated/data/loot'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 
 export type AmmoUseEnchantmentEffect = {
@@ -82,8 +81,8 @@ export type DamageProtectionEnchantmentEffect = {
 }
 
 export type EnchantmentEffectComponentMap = ({
-  [Key in Extract<Registry['minecraft:enchantment_effect_component_type'], string>]?: (Key extends keyof Dispatcher<'minecraft:effect_component'>
-    ? Dispatcher<'minecraft:effect_component'>[Key]
+  [Key in Extract<Registry['minecraft:enchantment_effect_component_type'], string>]?: (Key extends keyof SymbolEffectComponent
+    ? SymbolEffectComponent[Key]
     : Record<string, unknown>);
 })
 

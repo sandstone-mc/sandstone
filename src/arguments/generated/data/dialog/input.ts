@@ -1,4 +1,4 @@
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type { SymbolMcdocCustomDynamicEventKeys } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
@@ -40,12 +40,8 @@ export type InputControl = ({
          *
          * *item 1*
          */
-    key: (`${any}${string}` | Dispatcher<'mcdoc:custom_dynamic_event_keys', [
-      '%fallback',
-    ]>)
-  } & (S extends keyof Dispatcher<'minecraft:input_control'>
-    ? Dispatcher<'minecraft:input_control'>[S]
-    : Record<string, unknown>));
+    key: (`${any}${string}` | SymbolMcdocCustomDynamicEventKeys<'%fallback'>)
+  } & (S extends keyof SymbolInputControl ? SymbolInputControl[S] : Record<string, unknown>));
 }[Registry['minecraft:input_control_type']])
 
 export type NumberRangeInput = {

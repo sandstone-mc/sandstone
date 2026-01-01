@@ -3501,7 +3501,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesZombieHead
   | McdocBlockStatesZombieWallHead
   | McdocBlockStatesFallbackType)
-type McdocBlockStatesFallbackType = ({
+export type McdocBlockStatesFallbackType = ({
   [Key in `${any}${string}`]?: string;
 })
 type McdocBlockStatesNoneType = ({

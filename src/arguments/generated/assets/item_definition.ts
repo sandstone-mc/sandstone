@@ -1,5 +1,9 @@
 import type { ItemDisplayContext, ModelRef } from 'sandstone/arguments/generated/assets/model'
-import type { Dispatcher } from 'sandstone/arguments/generated/dispatcher'
+import type {
+  SymbolDataComponent,
+  SymbolDataComponentPredicate,
+  SymbolMcdocBlockStateKeys,
+} from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar'
 import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color'
@@ -41,9 +45,7 @@ export type Bed = {
 }
 
 export type BlockState = ({
-  block_state_property: Dispatcher<'mcdoc:block_state_keys', [
-    '%fallback',
-  ]>
+  block_state_property: SymbolMcdocBlockStateKeys<'%fallback'>
 } & SelectCases<string>)
 
 export type ChargeType = SelectCases<CrossbowChargeType>
@@ -96,8 +98,8 @@ export type ComponentFlags = ({
     /**
          * The predicate-specific value.
          */
-    value: (S extends keyof Dispatcher<'minecraft:data_component_predicate'>
-      ? Dispatcher<'minecraft:data_component_predicate'>[S]
+    value: (S extends keyof SymbolDataComponentPredicate
+      ? SymbolDataComponentPredicate[S]
       : Record<string, unknown>)
   };
 }[Registry['minecraft:data_component_predicate_type']])
@@ -110,9 +112,7 @@ export type ComponentStrings = ({
          * the entry will be silently ignored.
          */
     component: S
-  } & SelectCases<(S extends keyof Dispatcher<'minecraft:data_component'>
-    ? Dispatcher<'minecraft:data_component'>[S]
-    : Record<string, unknown>)>);
+  } & SelectCases<(S extends keyof SymbolDataComponent ? SymbolDataComponent[S] : Record<string, unknown>)>);
 }[Registry['minecraft:data_component_type']])
 
 export type Composite = {
@@ -141,9 +141,7 @@ export type Condition = ({
     property: (S | `minecraft:${S}`)
     on_true: ItemModel
     on_false: ItemModel
-  } & (S extends keyof Dispatcher<'minecraft:conditional_item_property'>
-    ? Dispatcher<'minecraft:conditional_item_property'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolConditionalItemProperty ? SymbolConditionalItemProperty[S] : Record<string, unknown>));
 }[ConditionalPropertyType])
 
 export type ConditionalPropertyType = (
@@ -425,9 +423,7 @@ export type ItemModel = ({
          *  - Special(`special`)
          */
     type: (S | `minecraft:${S}`)
-  } & (S extends keyof Dispatcher<'minecraft:item_model'>
-    ? Dispatcher<'minecraft:item_model'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolItemModel ? SymbolItemModel[S] : Record<string, unknown>));
 }[ItemModeltype])
 
 export type ItemModeltype = (
@@ -556,9 +552,7 @@ export type ModelTint = ({
          *  - Team(`team`)
          */
     type: (S | `minecraft:${S}`)
-  } & (S extends keyof Dispatcher<'minecraft:tint_source'>
-    ? Dispatcher<'minecraft:tint_source'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolTintSource ? SymbolTintSource[S] : Record<string, unknown>));
 }[TintSourceType])
 
 export type NumericPropertyType = (
@@ -613,9 +607,7 @@ export type RangeDispatch = ({
          * Item model to render if no entries were less or equal to the value.
          */
     fallback?: ItemModel
-  } & (S extends keyof Dispatcher<'minecraft:numeric_item_property'>
-    ? Dispatcher<'minecraft:numeric_item_property'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolNumericItemProperty ? SymbolNumericItemProperty[S] : Record<string, unknown>));
 }[NumericPropertyType])
 
 export type Select = ({
@@ -639,9 +631,7 @@ export type Select = ({
          * Item model to render if none of the cases matched the value.
          */
     fallback?: ItemModel
-  } & (S extends keyof Dispatcher<'minecraft:select_item_property'>
-    ? Dispatcher<'minecraft:select_item_property'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolSelectItemProperty ? SymbolSelectItemProperty[S] : Record<string, unknown>));
 }[SelectPropertyType])
 
 export type SelectCase<T> = {
@@ -721,9 +711,7 @@ export type Special = {
              *  - Trident(`trident`)
              */
       type: (S | `minecraft:${S}`)
-    } & (S extends keyof Dispatcher<'minecraft:special_item_model'>
-      ? Dispatcher<'minecraft:special_item_model'>[S]
-      : Record<string, unknown>));
+    } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : Record<string, unknown>));
   }[SpecialModelType])
   /**
      * Base model, providing transformations, particle texture and GUI light.
@@ -751,9 +739,7 @@ export type SpecialModel = ({
          *  - Trident(`trident`)
          */
     type: (S | `minecraft:${S}`)
-  } & (S extends keyof Dispatcher<'minecraft:special_item_model'>
-    ? Dispatcher<'minecraft:special_item_model'>[S]
-    : Record<string, unknown>));
+  } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : Record<string, unknown>));
 }[SpecialModelType])
 
 export type SpecialModelType = (
@@ -885,7 +871,7 @@ type ConditionalItemPropertyFallback = (
   | ConditionalItemPropertyKeybindDown
   | ConditionalItemPropertyViewEntity
   | ConditionalItemPropertyFallbackType)
-type ConditionalItemPropertyFallbackType = Record<string, never>
+export type ConditionalItemPropertyFallbackType = Record<string, never>
 type ConditionalItemPropertyComponent = ComponentFlags
 type ConditionalItemPropertyCustomModelData = CustomModelDataFlags
 type ConditionalItemPropertyHasComponent = HasComponent
@@ -965,7 +951,7 @@ type NumericItemPropertyFallback = (
   | NumericItemPropertyUseCycle
   | NumericItemPropertyUseDuration
   | NumericItemPropertyFallbackType)
-type NumericItemPropertyFallbackType = Record<string, never>
+export type NumericItemPropertyFallbackType = Record<string, never>
 type NumericItemPropertyCompass = Compass
 type NumericItemPropertyCount = Count
 type NumericItemPropertyCustomModelData = CustomModelDataFloats
@@ -1015,7 +1001,7 @@ type SelectItemPropertyFallback = (
   | SelectItemPropertyMainHand
   | SelectItemPropertyTrimMaterial
   | SelectItemPropertyFallbackType)
-type SelectItemPropertyFallbackType = SelectCases<string>
+export type SelectItemPropertyFallbackType = SelectCases<string>
 type SelectItemPropertyBlockState = BlockState
 type SelectItemPropertyChargeType = ChargeType
 type SelectItemPropertyComponent = ComponentStrings
@@ -1062,7 +1048,7 @@ type SpecialItemModelFallback = (
   | SpecialItemModelShulkerBox
   | SpecialItemModelStandingSign
   | SpecialItemModelFallbackType)
-type SpecialItemModelFallbackType = Record<string, never>
+export type SpecialItemModelFallbackType = Record<string, never>
 type SpecialItemModelBanner = Banner
 type SpecialItemModelBed = Bed
 type SpecialItemModelChest = Chest
