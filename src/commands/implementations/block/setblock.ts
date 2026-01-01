@@ -131,12 +131,11 @@ foo.setblock('~ ~ ~', 'chest', {
       "minecraft:bees": [{
         entity_data: {
           id: 'bat',
-          BatFlags: false
+          BatFlags: false,
         },
         min_ticks_in_hive: new NBTInt(1),
         ticks_in_hive: new NBTInt(2)
       }]
     }
   }],
-  foo: 'bar'
 } as const)

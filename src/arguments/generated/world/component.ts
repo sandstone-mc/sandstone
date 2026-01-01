@@ -20,12 +20,8 @@ export type DataComponentExactPredicate = ({
     : Record<string, unknown>);
 })
 
-export type DataComponentPatch = (({
-  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: (Key extends keyof SymbolDataComponent
-    ? SymbolDataComponent[Key]
-    : Record<string, unknown>);
-}) & ({
-  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: Record<string, never>;
-}))
+export type DataComponentPatch = ({
+  [Key in keyof SymbolDataComponent]?: (SymbolDataComponent[Key]);
+})
 
 export type DataComponentPredicate = Record<string, never>
