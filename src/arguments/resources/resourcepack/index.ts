@@ -1,6 +1,0 @@
-export * from './atlas'
-export * from './blockstate'
-export * from './font'
-export * from './sounds'
-export * from './text'
-export * from './texture'
