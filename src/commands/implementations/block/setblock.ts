@@ -1,7 +1,7 @@
-import type { Coordinates, RootNBT } from 'sandstone/arguments'
+import type { Coordinates, RootNBT,SymbolBlockEntity } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, NBTByte, NBTInt, NBTList, nbtStringifier } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
@@ -100,10 +100,10 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    * })
    * ```
    */
-  setblock(
+  setblock<BLOCK extends Macroable<Registry['minecraft:block'], MACRO>>(
     pos: Macroable<Coordinates<MACRO>, MACRO>,
-    block: Macroable<Registry['minecraft:block'], MACRO>,
-    nbt?: Macroable<RootNBT, MACRO>,
+    block: BLOCK,
+    nbt?: Macroable<BLOCK extends keyof SymbolBlockEntity ? NonNullable<SymbolBlockEntity[BLOCK]> : SymbolBlockEntity<'%fallback'>, MACRO>,
     type?: Macroable<'destroy' | 'keep' | 'replace', MACRO>,
   ): FinalCommandOutput
 
@@ -119,3 +119,24 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
     return this.finalCommand([coordinatesParser(pos), block, nbtOrType])
   }
 }
+
+const foo = new SetBlockCommand<false>({} as unknown as any)
+
+foo.setblock('~ ~ ~', 'chest', {
+  Items: [{
+    id: 'acacia_boat',
+    count: new NBTInt(1),
+    Slot: new NBTByte(0),
+    components: {
+      "minecraft:bees": [{
+        entity_data: {
+          id: 'bat',
+          BatFlags: false
+        },
+        min_ticks_in_hive: new NBTInt(1),
+        ticks_in_hive: new NBTInt(2)
+      }]
+    }
+  }],
+  foo: 'bar'
+} as const)

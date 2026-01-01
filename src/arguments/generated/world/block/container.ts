@@ -10,15 +10,10 @@ export type Container27 = (ContainerBase & {
      * Value:
      * List length range: 0..27
      */
-  Items?: NBTList<SlottedItem<NBTByte<{
+  Items?: SlottedItem<NBTByte<{
     min: 0
     max: 26
-  }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 27
-  }>
+  }>>[]
 })
 
 export type Container9 = (ContainerBase & {
