@@ -29,14 +29,11 @@ export type AnyOf = {
   terms: Array<LootCondition>
 }
 
-export type BlockStateProperty = ({
-  [S in Extract<Registry['minecraft:block'], string>]?: {
-    block: S
-    properties?: (S extends undefined
-      ? SymbolMcdocBlockStates<'%none'> :
-      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : Record<string, unknown>))
-  };
-}[Registry['minecraft:block']])
+export type BlockStateProperty = {
+  block: Registry['minecraft:block']
+  properties?: SymbolMcdocBlockStates<'%none'>
+}
+
 
 export type DamageSourceProperties = {
   predicate: DamageSourcePredicate

@@ -6,19 +6,19 @@ import type { ListResource, ResourceClassArguments, ResourceNode } from '../reso
 import { ResourceClass } from '../resource'
 import { AllKeys } from 'sandstone/utils'
 
-type BlockStateJSON = NonNullable<SymbolResource['block_definition']>
-type BlockStateType = AllKeys<BlockStateJSON>
+export type BlockStateJSON = NonNullable<SymbolResource['block_definition']>
+export type BlockStateType = AllKeys<BlockStateJSON>
 
 /**
  * A node representing a Minecraft block state.
  */
-export class BlockStateNode<Type extends BlockStateType>
+export class BlockStateNode<JSON extends BlockStateJSON>
   extends ContainerNode
-  implements ResourceNode<BlockStateClass<Type>>
+  implements ResourceNode<BlockStateClass<JSON>>
 {
   constructor(
     sandstoneCore: SandstoneCore,
-    public resource: BlockStateClass<Type>,
+    public resource: BlockStateClass<JSON>,
   ) {
     super(sandstoneCore)
   }
@@ -26,24 +26,25 @@ export class BlockStateNode<Type extends BlockStateType>
   getValue = () => JSON.stringify(this.resource.blockStateJSON)
 }
 
-export type BlockStateArguments<Type extends BlockStateType> = {
+export type BlockStateArguments<JSON extends BlockStateJSON> = {
   /**
    * The block state's JSON.
    */
-  blockState: BlockStateJSON
+  blockState: JSON
 } & ResourceClassArguments<'list'>
 
-export class BlockStateClass<Type extends BlockStateType>
-  extends ResourceClass<BlockStateNode<Type>>
+export class BlockStateClass<JSON extends BlockStateJSON, Type = Extract<AllKeys<JSON>, BlockStateType>>
+  extends ResourceClass<BlockStateNode<JSON>>
   implements ListResource
 {
-  blockStateJSON: BlockStateJSON
+  blockStateJSON: JSON
+
+  type: Type
 
   constructor(
     core: SandstoneCore,
     name: string,
-    public type: Type,
-    args: BlockStateArguments<Type>,
+    args: BlockStateArguments<JSON>,
   ) {
     super(
       core,
@@ -53,13 +54,14 @@ export class BlockStateClass<Type extends BlockStateType>
       args,
     )
 
-    /** @ts-ignore */
-    this.blockStateJSON = args.blockState || (type === 'variant' ? { variants: {} } : { multipart: [] })
+    this.blockStateJSON = args.blockState
+
+    this.type = Object.keys(this.blockStateJSON)[0] as Type
 
     this.handleConflicts()
   }
 
-  push(...states: BlockStateClass<Type>[] | BlockStateJSON[]) {
+  push(...states: BlockStateClass<any, Type>[] | BlockStateJSON[]) {
     if (this.type === 'variants') {
       if (states[0] instanceof BlockStateClass) {
         for (const state of states) {
@@ -88,7 +90,7 @@ export class BlockStateClass<Type extends BlockStateType>
     }
   }
 
-  unshift(...states: BlockStateClass<Type>[] | BlockStateJSON[]) {
+  unshift(...states: BlockStateClass<any, Type>[] | BlockStateJSON[]) {
     if (this.type === 'variants') {
       if (states[0] instanceof BlockStateClass) {
         for (const state of states) {

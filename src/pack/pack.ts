@@ -3,27 +3,15 @@
 
 import type {
   // eslint-disable-next-line max-len
-  AtlasDefinition,
-  BlockStateDefinition,
-  BlockStateType,
   Coordinates,
-  DamageTypeJSON,
-  FontProvider,
-  ItemModifierJSON,
   JSONTextComponent,
-  LootTableJSON,
   NBTObject,
-  PredicateJSON,
   REGISTRIES,
-  RecipeJSON,
   RootNBT,
   SingleEntityArgument,
   SOUND_TYPES,
-  TagValuesJSON,
   TEXTURE_TYPES,
   TimeArgument,
-  TrimMaterialJSON,
-  TrimPatternJSON,
   Registry,
   OBJECTIVE_CRITERIA,
 } from 'sandstone/arguments'
@@ -35,6 +23,7 @@ import type {
   AdvancementClassArguments,
   AtlasClassArguments,
   BlockStateArguments,
+  BlockStateJSON,
   DamageTypeClassArguments,
   DataPointPickClass,
   FontArguments,
@@ -50,6 +39,7 @@ import type {
   RecipeClassArguments,
   SoundEventArguments,
   TagClassArguments,
+  TagValuesJSON,
   TextureArguments,
   TrimMaterialClassArguments,
   TrimPatternClassArguments,
@@ -128,6 +118,7 @@ import {
   UnifyChainedExecutesVisitor,
 } from './visitors'
 import { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
+import { GlyphProvider } from 'sandstone/arguments/generated/assets/font';
 
 export type ResourcePath = string[]
 
@@ -945,7 +936,7 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement<AdvancementJSON extends SymbolResource['advancement']>(
+  Advancement<AdvancementJSON extends NonNullable<SymbolResource['advancement']>>(
     name: string,
     advancement: AdvancementJSON,
     options?: Omit<Partial<AdvancementClassArguments>, 'advancement'>,
@@ -959,7 +950,7 @@ export class SandstonePack {
     })
   }
 
-  DamageType = (name: string, damageType: DamageTypeJSON, options?: Partial<DamageTypeClassArguments>) =>
+  DamageType = (name: string, damageType: NonNullable<SymbolResource['damage_type']>, options?: Partial<DamageTypeClassArguments>) =>
     new DamageTypeClass(this.core, name, {
       damageType,
       creator: 'user',
@@ -968,7 +959,7 @@ export class SandstonePack {
       ...options,
     })
 
-  ItemModifier = (name: string, itemModifier: ItemModifierJSON, options?: Partial<ItemModifierClassArguments>) =>
+  ItemModifier = (name: string, itemModifier: NonNullable<SymbolResource['item_modifier']>, options?: Partial<Omit<ItemModifierClassArguments, 'itemModifier'>>) =>
     new ItemModifierClass(this.core, name, {
       itemModifier,
       creator: 'user',
@@ -977,7 +968,7 @@ export class SandstonePack {
       ...options,
     })
 
-  LootTable = (name: string, lootTable: LootTableJSON, options?: Partial<LootTableClassArguments>) =>
+  LootTable = (name: string, lootTable: NonNullable<SymbolResource['loot_table']>, options?: Partial<LootTableClassArguments>) =>
     new LootTableClass(this.core, name, {
       lootTable,
       creator: 'user',
@@ -986,7 +977,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Predicate = (name: string, predicate: PredicateJSON, options?: Partial<PredicateClassArguments>) =>
+  Predicate = (name: string, predicate: NonNullable<SymbolResource['predicate']>, options?: Partial<PredicateClassArguments>) =>
     new PredicateClass(this.core, name, {
       predicate,
       creator: 'user',
@@ -995,7 +986,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Recipe = (name: string, recipe: RecipeJSON, options?: Partial<RecipeClassArguments>) =>
+  Recipe = (name: string, recipe: NonNullable<SymbolResource['recipe']>, options?: Partial<RecipeClassArguments>) =>
     new RecipeClass(this.core, name, {
       recipe,
       creator: 'user',
@@ -1019,7 +1010,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TrimMaterial = (name: string, trimMaterial: TrimMaterialJSON, options?: Partial<TrimMaterialClassArguments>) =>
+  TrimMaterial = (name: string, trimMaterial: NonNullable<SymbolResource['trim_material']>, options?: Partial<TrimMaterialClassArguments>) =>
     new TrimMaterialClass(this.core, name, {
       trimMaterial,
       creator: 'user',
@@ -1028,7 +1019,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TrimPattern = (name: string, trimPattern: TrimPatternJSON, options?: Partial<TrimPatternClassArguments>) =>
+  TrimPattern = (name: string, trimPattern: NonNullable<SymbolResource['trim_pattern']>, options?: Partial<TrimPatternClassArguments>) =>
     new TrimPatternClass(this.core, name, {
       trimPattern,
       creator: 'user',
@@ -1037,7 +1028,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Atlas = (name: string, atlas: AtlasDefinition, options?: Partial<AtlasClassArguments>) =>
+  Atlas = (name: string, atlas: NonNullable<SymbolResource['atlas']>, options?: Partial<AtlasClassArguments>) =>
     new AtlasClass(this.core, name, {
       atlas,
       creator: 'user',
@@ -1046,22 +1037,21 @@ export class SandstonePack {
       ...options,
     })
 
-  BlockState<Type extends BlockStateType>(
-    type: Type,
+  BlockState<JSON extends BlockStateJSON>(
     name: string,
-    blockState: BlockStateDefinition<Type>,
-    options?: Partial<BlockStateArguments<Type>>,
+    blockState: JSON,
+    options?: Partial<BlockStateArguments<JSON>>,
   ) {
-    return new BlockStateClass(this.core, name, type, {
+    return new BlockStateClass(this.core, name, {
       blockState,
       creator: 'user',
       addToSandstoneCore: true,
-      onConflict: conflictDefaults('blockstate') as BlockStateArguments<Type>['onConflict'],
+      onConflict: conflictDefaults('blockstate') as BlockStateArguments<JSON>['onConflict'],
       ...options,
     })
   }
 
-  Font = (name: string, providers: FontProvider[], options?: Partial<FontArguments>) =>
+  Font = (name: string, providers: GlyphProvider[], options?: Partial<FontArguments>) =>
     new FontClass(this.core, name, {
       providers,
       creator: 'user',

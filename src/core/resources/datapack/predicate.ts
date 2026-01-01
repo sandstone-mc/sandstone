@@ -19,7 +19,7 @@ export class PredicateNode extends ContainerNode implements ResourceNode<Predica
   getValue = () => JSON.stringify(this.resource.predicateJSON)
 }
 
-type PredicateJSON = SymbolResource['predicate']
+type PredicateJSON = NonNullable<SymbolResource['predicate']>
 
 export type PredicateClassArguments = {
   /**
