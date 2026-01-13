@@ -38,7 +38,10 @@
     "@types/lodash": "^4.14.199",
     "@types/node": "^22.13.17",
     "@types/semver": "^7.5.3",
-    "typescript": "^5.9.3"
+    "dts-bundle-generator": "^9.5.1",
+    "oxc-transform": "^0.108.0",
+    "typescript": "^5.9.3",
+    "unplugin-isolated-decl": "^0.15.7"
   },
   "directories": {
     "lib": "src"
@@ -65,101 +68,53 @@
     "url": "git+https://github.com/sandstone-mc/sandstone.git"
   },
   "scripts": {
-    "build": "tsup --tsconfig tsconfig.build.json --onSuccess \"pnpm run setup\"",
-    "watch": "tsup --tsconfig tsconfig.build.json --onSuccess \"pnpm run setup\" --watch",
-    "build-types": "tsc --project tsconfig.build.json",
+    "build": "bun run scripts/build.mjs",
+    "prepack": "pnpm run build",
     "setup-package": "node ./scripts/setupPackage.mjs",
-    "setup": "pnpm run build-types && pnpm run setup-package && echo ✔️  Successfully built Sandstone.",
     "publishToNpm": "pnpm run build && pnpm publish",
     "format": "biome format --write src",
     "lint": "biome lint src",
-    "check": "biome check --write src",
-    "build-types-new": "tsc --emitDeclarationOnly --traceResolution"
+    "check": "biome check --write src"
   },
   "type": "module",
-  "main": "index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
-      "default": "./dist/*.js"
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
     },
     "./arguments": {
       "types": "./dist/arguments/index.d.ts",
-      "import": "./dist/arguments/index.js",
-      "default": "./dist/arguments/index.js"
-    },
-    "./arguments/generated": {
-      "types": "./dist/arguments/generated/index.d.ts",
-      "import": "./dist/arguments/generated/index.js",
-      "default": "./dist/arguments/generated/index.js"
-    },
-    "./arguments/resources": {
-      "types": "./dist/arguments/resources/index.d.ts",
-      "import": "./dist/arguments/resources/index.js",
-      "default": "./dist/arguments/resources/index.js"
-    },
-    "./arguments/resources/criteria": {
-      "types": "./dist/arguments/resources/criteria/index.d.ts",
-      "import": "./dist/arguments/resources/criteria/index.js",
-      "default": "./dist/arguments/resources/criteria/index.js"
+      "import": "./dist/arguments/index.mjs",
+      "default": "./dist/arguments/index.cjs"
     },
     "./commands": {
       "types": "./dist/commands/index.d.ts",
-      "import": "./dist/commands/index.js",
-      "default": "./dist/commands/index.js"
-    },
-    "./commands/implementations": {
-      "types": "./dist/commands/implementations/index.d.ts",
-      "import": "./dist/commands/implementations/index.js",
-      "default": "./dist/commands/implementations/index.js"
+      "import": "./dist/commands/index.mjs",
+      "default": "./dist/commands/index.cjs"
     },
     "./core": {
       "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js",
-      "default": "./dist/core/index.js"
-    },
-    "./core/resources": {
-      "types": "./dist/core/resources/index.d.ts",
-      "import": "./dist/core/resources/index.js",
-      "default": "./dist/core/resources/index.js"
+      "import": "./dist/core/index.mjs",
+      "default": "./dist/core/index.cjs"
     },
     "./flow": {
       "types": "./dist/flow/index.d.ts",
-      "import": "./dist/flow/index.js",
-      "default": "./dist/flow/index.js"
-    },
-    "./flow/conditions": {
-      "types": "./dist/flow/conditions/index.d.ts",
-      "import": "./dist/flow/conditions/index.js",
-      "default": "./dist/flow/conditions/index.js"
+      "import": "./dist/flow/index.mjs",
+      "default": "./dist/flow/index.cjs"
     },
     "./pack": {
       "types": "./dist/pack/index.d.ts",
-      "import": "./dist/pack/index.js",
-      "default": "./dist/pack/index.js"
-    },
-    "./pack/visitors": {
-      "types": "./dist/pack/visitors/index.d.ts",
-      "import": "./dist/pack/visitors/index.js",
-      "default": "./dist/pack/visitors/index.js"
+      "import": "./dist/pack/index.mjs",
+      "default": "./dist/pack/index.cjs"
     },
     "./variables": {
       "types": "./dist/variables/index.d.ts",
-      "import": "./dist/variables/index.js",
-      "default": "./dist/variables/index.js"
-    },
-    "./variables/nbt": {
-      "types": "./dist/variables/nbt/index.d.ts",
-      "import": "./dist/variables/nbt/index.js",
-      "default": "./dist/variables/nbt/index.js"
+      "import": "./dist/variables/index.mjs",
+      "default": "./dist/variables/index.cjs"
     }
   },
   "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"

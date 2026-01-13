@@ -1,7 +1,7 @@
 import type { Coordinates, RootNBT,SymbolBlockEntity } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, NBTByte, NBTInt, NBTList, nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
@@ -119,23 +119,3 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
     return this.finalCommand([coordinatesParser(pos), block, nbtOrType])
   }
 }
-
-const foo = new SetBlockCommand<false>({} as unknown as any)
-
-foo.setblock('~ ~ ~', 'chest', {
-  Items: [{
-    id: 'acacia_boat',
-    count: new NBTInt(1),
-    Slot: new NBTByte(0),
-    components: {
-      "minecraft:bees": [{
-        entity_data: {
-          id: 'bat',
-          BatFlags: false,
-        },
-        min_ticks_in_hive: new NBTInt(1),
-        ticks_in_hive: new NBTInt(2)
-      }]
-    }
-  }],
-} as const)

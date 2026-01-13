@@ -12,9 +12,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Format**: `pnpm run format` or `biome format --write src` - Formats code using Biome
 - **Check**: `pnpm run check` or `biome check --write src` - Runs Biome check with auto-fix
 
+**Note**: The setup script (`scripts/setupPackage.mjs`) auto-generates package.json exports by scanning `src/` for `index.ts` files. Always run `pnpm run setup` after adding new export entry points.
+
+## Requirements
+
+- Node.js >= 22.13.17
+- pnpm (version managed via packageManager field)
+
+## Code Style
+
+- 2-space indentation, single quotes, no semicolons (except ASI edge cases)
+- 120 character line width
+- Trailing commas in all contexts
+- Use `type` imports where possible (`import type { ... }`)
+- Array types use shorthand syntax (`T[]` not `Array<T>`)
+
 ## Code Architecture
 
-Sandstone is a TypeScript library for generating Minecraft datapacks and resource packs programmatically. It provides a type-safe, fluent API with ~7,500 lines of source code across 200+ TypeScript files.
+Sandstone is a TypeScript library for generating Minecraft datapacks and resource packs programmatically. It provides a type-safe, fluent API. Note that ~400 files in `src/arguments/generated/` are auto-generated from Minecraft data sources.
 
 ### Directory Structure
 
@@ -140,6 +155,6 @@ type Block = Registry['minecraft:block']
 
 Files with type errors requiring fixes (excluding `src/arguments/generated/`):
 
-10. `src/core/resources/datapack/mcfunction.ts` - Type mismatch
-11. `src/core/resources/resource.ts` - Type mismatch
-13. `src/flow/conditions/resources/tag.ts` - Overload mismatch
+1. `src/core/resources/datapack/mcfunction.ts` - Type mismatch
+2. `src/core/resources/resource.ts` - Type mismatch
+3. `src/flow/conditions/resources/tag.ts` - Overload mismatch

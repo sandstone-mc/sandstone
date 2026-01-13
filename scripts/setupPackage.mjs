@@ -1,5 +1,5 @@
 // @ts-check
-import { resolve, join, relative, parse } from 'path/posix'
+import { join } from 'path/posix'
 import fs from 'fs/promises'
 
 /**
@@ -8,68 +8,38 @@ import fs from 'fs/promises'
 function getExportsObject(pathNoLib) {
     const realPath = './' + pathNoLib
 
-    const types = realPath + '.d.ts'
-
     return {
-      types,
-      // ESM imports will match this
-      import:  realPath + '.js',
-      // Everything else will match this
-      default: realPath + '.js',
+      types: realPath + '.d.ts',
+      import: realPath + '.mjs',
+      require: realPath + '.cjs',
     }
 }
 
-/**
- * @param {string} path
- */
-async function getExportsForDirectory(path) {
+// Only include exports for subpaths that have built bundles
+const subpaths = ['arguments', 'commands', 'core', 'flow', 'pack', 'variables']
+
+const exports = { '.': getExportsObject('index') }
+
+for (const subpath of subpaths) {
     try {
-        const relPath = relative('src', path)
-
-        const p = parse(relPath)
-        const importPath = './' + join(p.dir, p.name)
-
-        await fs.access(join(path, 'index.ts'))
-        exports[importPath] = getExportsObject(join(importPath, 'index'))
-    }
-    catch (e) {
-        // Index doesn't exist
+        // Check if the built file exists
+        await fs.access(join('dist', subpath, 'index.mjs'))
+        exports['./' + subpath] = getExportsObject(join(subpath, 'index'))
+    } catch {
+        // Skip if not built
     }
 }
-
-/**
- * @param {string} dir
- * @yields {{path: string, isDirectory: boolean}}
- */
-async function* getFiles(dir) {
-  const dirents = await fs.readdir(dir, { withFileTypes: true });
-  for (const dirent of dirents) {
-    const res = resolve(dir, dirent.name);
-    const isDirectory = dirent.isDirectory();
-
-    if (isDirectory) {
-      yield getExportsForDirectory(res)
-      yield* getFiles(res)
-    }
-  }
-}
-
-const exports = { '.': getExportsObject('index'), './*': getExportsObject('*') }
-
-// Await all the files
-for await (const _ of getFiles('src')) {}
 
 const packageJson = JSON.parse((await fs.readFile('package.json')).toString('utf-8'))
 delete packageJson.exports
 packageJson.exports = exports
 packageJson.scripts = {};
 packageJson.devDependencies = {};
-if (packageJson.main.startsWith("dist/")) {
-  packageJson.main = packageJson.main.slice(9);
-}
-if (packageJson.types.startsWith("dist/")) {
-  packageJson.types = packageJson.types.slice(9);
-}
+
+// Fix paths for dist package (remove ./dist/ prefix)
+packageJson.main = './index.cjs'
+packageJson.module = './index.mjs'
+packageJson.types = './index.d.ts'
 
 // Remove sandstone from dependencies
 delete packageJson.dependencies.sandstone
