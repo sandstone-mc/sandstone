@@ -75,6 +75,7 @@ import type {
   DATA_PATH,
   DATA_TARGET,
   DATA_TYPES,
+  ItemPredicateItem,
   SelectorProperties,
   TriggerHandler,
   UUIDinNumber,
@@ -88,6 +89,7 @@ import {
   DataClass,
   DataIndexMap,
   DataPointClass,
+  ItemPredicateClass,
   LabelClass,
   LoopArgument,
   ObjectiveClass,
@@ -552,6 +554,31 @@ export class SandstonePack {
    * @param description Label description (optional)
    */
   Label = (label: string, description?: string) => new LabelClass(this, label, description)
+
+  /**
+   * Creates an item predicate for use in commands like `clear` and `execute if items`.
+   *
+   * @param itemType The item to match: an item ID, item tag (prefixed with #), or '*' for any item.
+   *
+   * @example
+   * ```ts
+   * // Match specific item
+   * ItemPredicate('minecraft:diamond_sword')
+   *
+   * // Match item tag
+   * ItemPredicate('#minecraft:swords')
+   *
+   * // Match any item with conditions
+   * ItemPredicate('*').count({ max: 16 })
+   *
+   * // Complex predicate
+   * ItemPredicate('minecraft:diamond_sword')
+   *   .match('minecraft:enchantments', [{ enchantment: 'minecraft:sharpness', levels: { min: 3 } }])
+   *   .has('minecraft:custom_name')
+   *   .without('minecraft:damage')
+   * ```
+   */
+  ItemPredicate = (itemType: ItemPredicateItem) => new ItemPredicateClass(this, itemType)
 
   /**
    * Creates a new Data Class Instance

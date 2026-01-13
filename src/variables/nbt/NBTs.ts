@@ -408,6 +408,9 @@ export const NBT: NBTInterface = makeCallable(
 )
 
 export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
+  if (nbt === null || nbt === undefined) {
+    throw new Error(`Nullish nbt values are not allowed`)
+  }
   if (typeof nbt === 'number') {
     // We have a number
     return nbt.toString()
@@ -451,9 +454,14 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
     return nbt[util.inspect.custom]()
   }
 
-  if (typeof nbt === 'object' && nbt.toMacro) {
-    /* @ts-ignore */
-    return nbt.toMacro()
+  if (typeof nbt === 'object') {
+    if ('toNBT' in nbt) {
+      // @ts-ignore
+      return nbt.toNBT()
+    } else if ('toMacro' in nbt) {
+      // @ts-ignore
+      return nbt.toMacro()
+    }
   }
 
   // It's a real object.

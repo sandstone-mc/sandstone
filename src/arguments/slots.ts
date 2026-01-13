@@ -54,9 +54,16 @@ export type CONTAINER_SLOTS =
   | 'container.52'
   | 'container.53'
 
-type ARMOR_SLOTS = 'armor.chest' | 'armor.feet' | 'armor.head' | 'armor.legs'
+type ARMOR_SLOTS = 'armor.chest' | 'armor.feet' | 'armor.head' | 'armor.legs' | 'armor.body'
 
 type WEAPON_SLOTS = 'weapon.mainhand' | 'weapon.offhand'
+
+type PLAYER_SLOTS =
+  | 'player.cursor'
+  | 'player.crafting.0'
+  | 'player.crafting.1'
+  | 'player.crafting.2'
+  | 'player.crafting.3'
 
 type ENDERCHEST_SLOTS =
   | 'enderchest.0'
@@ -130,7 +137,6 @@ type INVENTORY_SLOTS =
 type HORSE_SLOTS =
   | 'horse.saddle'
   | 'horse.chest'
-  | 'horse.armor'
   | 'horse.0'
   | 'horse.1'
   | 'horse.2'
@@ -161,8 +167,28 @@ export type ENTITY_SLOTS =
   | CONTAINER_SLOTS
   | ARMOR_SLOTS
   | WEAPON_SLOTS
+  | PLAYER_SLOTS
+  | 'contents'
   | ENDERCHEST_SLOTS
   | HOTBAR_SLOTS
   | INVENTORY_SLOTS
   | HORSE_SLOTS
   | VILLAGER_SLOT
+
+/** Slot selectors for block entity inventories (e.g., chests, hoppers). */
+export type ContainerSlotSelector =
+  | CONTAINER_SLOTS
+  | 'container.*'
+
+/** Slot selectors for entity inventories. */
+export type EntitySlotSelector =
+  | ENTITY_SLOTS
+  | 'armor.*'
+  | 'weapon.*'
+  | 'player.crafting.*'
+  | 'container.*'
+  | 'enderchest.*'
+  | 'hotbar.*'
+  | 'inventory.*'
+  | 'horse.*'
+  | 'villager.*'

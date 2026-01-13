@@ -18,7 +18,7 @@ import { ContainerNode } from '../../nodes'
 import { CallableResourceClass } from '../resource'
 import { TagClass } from './tag'
 
-const tags: Record<string, TagClass<'functions'>> = {}
+const tags: Record<string, TagClass<'function'>> = {}
 
 // interface AttributeWrapper {
 //  attributes: string[]
@@ -180,7 +180,7 @@ export type MCFunctionClassArguments = {
   /**
    * The function tags to put this function in.
    */
-  tags?: readonly (string | TagClass<'functions'>)[]
+  tags?: readonly (string | TagClass<'function'>)[]
 
   /**
    * If specified, the function will run every given time.
@@ -333,11 +333,23 @@ export class _RawMCFunctionClass<
   }
 
   protected addToTag = (tag: string) => {
-    if (tags[tag]) {
-      tags[tag].push(this.name)
+    let func: MCFunctionClass<undefined, undefined>
+    if (this.env !== undefined) {
+      func = this.core.pack.MCFunction(toMinecraftResourceName([...this.path, 'tag_call']), {
+        addToSandstoneCore: true,
+        creator: 'sandstone',
+        onConflict: 'rename',
+        // @ts-ignore: this breaks functions with parameters
+        callback: () => this.__call__()
+      })
     } else {
-      tags[tag] = new TagClass(this.core, 'functions', tag, {
-        values: [this.name],
+      func = this as unknown as MCFunctionClass<undefined, undefined>
+    }
+    if (tags[tag]) {
+      tags[tag].push(func)
+    } else {
+      tags[tag] = new TagClass(this.core, 'function', tag, {
+        values: [func],
         addToSandstoneCore: true,
         creator: 'sandstone',
         onConflict: 'append',

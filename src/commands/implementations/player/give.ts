@@ -1,10 +1,11 @@
-import type { MultiplePlayersArgument, RootNBT } from 'sandstone/arguments'
+import type { MultiplePlayersArgument, RootNBT, SymbolDataComponent } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core'
 import { nbtStringifier, targetParser } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
+import { MemberModifiers } from 'sandstone/utils';
 
 // Give command
 
@@ -17,112 +18,122 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
 
   /**
    * Give items to players.
-   * 
-   * Adds the specified items directly to player inventories. If inventory is full,
-   * excess items are dropped at the player's location. Supports both basic items
-   * and complex items with custom NBT data.
-   * 
-   * **Item Distribution:**
-   * - Items go to the first available inventory slots
-   * - Follows normal stacking rules (64 for most items, 16 for tools, etc.)
-   * - Excess items drop on the ground if inventory is full
-   * - Preserves all NBT data including enchantments and custom names
-   * 
-   * **NBT Support:**
-   * - Enchantments: Add any enchantment at any level
-   * - Display: Custom names and lore text
-   * - Attributes: Modify item stats and properties
-   * - Custom: Any additional NBT data for special behaviors
    *
-   * @param targets Players to give items to.
-   *               Examples: '@p', '@a', 'PlayerName', '@a[team=winners]'
+   * Adds the specified items directly to player inventories. If the inventory
+   * is full, excess items are dropped at the player's location.
    *
-   * @param item The item type to give.
-   *            Examples: 'minecraft:diamond', 'minecraft:diamond_sword', 'minecraft:stone'
+   * @param targets Players to give items to (e.g., `'@p'`, `'@a'`, `'PlayerName'`).
+   *
+   * @param item The item type to give (e.g., `'minecraft:diamond'`).
    *
    * @param count Optional quantity to give (defaults to 1).
-   *             Can exceed normal stack limits - will create multiple stacks.
-   * 
-   * @param nbt Optional NBT data for custom item properties.
-   *           Used in the 4-parameter variant for complex items.
-   * 
+   *
    * @example
    * ```ts
-   * // Basic item giving
-   * give('@p', 'minecraft:apple', 5)                    // 5 apples to nearest player
-   * give('@a', 'minecraft:diamond', 10)                 // 10 diamonds to all players
-   * give('PlayerName', 'minecraft:iron_sword')          // 1 iron sword to specific player
-   * 
-   * // Team and group rewards
-   * give('@a[team=red]', 'minecraft:emerald', 20)       // Team rewards
-   * give('@a[scores={quest=5..}]', 'minecraft:gold_ingot', 50) // Quest completion
-   * 
-   * // Custom items with NBT
+   * give('@p', 'minecraft:apple', 5)
+   * give('@a', 'minecraft:diamond', 10)
+   * give('PlayerName', 'minecraft:emerald', 20)
+   * ```
+   */
+  give(
+    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    item: Macroable<Registry['minecraft:item'], MACRO>,
+    count?: number,
+  ): FinalCommandOutput
+
+  /**
+   * Give items with component modifications to players.
+   *
+   * Adds items with custom data components to player inventories. Components
+   * allow customizing enchantments, display names, lore, attributes, and more.
+   *
+   * @param targets Players to give items to (e.g., `'@p'`, `'@a'`, `'PlayerName'`).
+   *
+   * @param item The item type to give (e.g., `'minecraft:diamond_sword'`).
+   *
+   * @param components Data component modifications for the item. Prefix a
+   *                  component key with `!` and use `{}` as the value to
+   *                  remove a default component.
+   *
+   * @param count Optional quantity to give (defaults to 1).
+   *
+   * @example
+   * ```ts
+   * // Enchanted sword with custom name
    * give('@p', 'minecraft:diamond_sword', {
-   *   Enchantments: [
-   *     {id: 'minecraft:sharpness', lvl: 10},
-   *     {id: 'minecraft:unbreaking', lvl: 3}
-   *   ],
-   *   display: {
-   *     Name: '{"text":"Excalibur","color":"gold","bold":true}',
-   *     Lore: ['{"text":"A legendary blade","color":"gray","italic":true}']
+   *   'minecraft:enchantments': {
+   *     'minecraft:sharpness': 5,
+   *     'minecraft:unbreaking': 3,
    *   },
-   *   Unbreakable: 1
-   * }, 1)
-   * 
-   * // Custom armor with attributes
-   * give('@p', 'minecraft:diamond_chestplate', {
-   *   Enchantments: [{id: 'minecraft:protection', lvl: 4}],
-   *   AttributeModifiers: [{
-   *     AttributeName: 'generic.max_health',
-   *     Name: 'health_boost',
-   *     Amount: 10.0,
-   *     Operation: 0,
-   *     UUID: [I; 1, 2, 3, 4]
-   *   }]
+   *   'minecraft:custom_name': 'Excalibur',
+   *   'minecraft:lore': ['A legendary blade'],
    * })
-   * 
-   * // Special items
+   *
+   * // Unbreakable chestplate with bonus health
+   * give('@p', 'minecraft:diamond_chestplate', {
+   *   'minecraft:unbreakable': {},
+   *   'minecraft:attribute_modifiers': [{
+   *     type: 'minecraft:max_health',
+   *     amount: 4,
+   *     operation: 'add_value',
+   *     slot: 'chest',
+   *     id: 'my_pack:health_boost',
+   *   }],
+   * })
+   *
+   * // Remove default attributes from a tool
+   * give('@p', 'minecraft:diamond_pickaxe', {
+   *   '!minecraft:attribute_modifiers': {},
+   * })
+   *
+   * // Written book
    * give('@a', 'minecraft:written_book', {
-   *   title: 'Server Rules',
-   *   author: 'Admin',
-   *   pages: ['{"text":"Welcome to the server!"}']
+   *   'minecraft:written_book_content': {
+   *     title: 'Server Rules',
+   *     author: 'Admin',
+   *     pages: ['Welcome to the server!'],
+   *   },
    * })
    * ```
    */
   give(
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
     item: Macroable<Registry['minecraft:item'], MACRO>,
-    count?: Macroable<number, MACRO>,
-  ): FinalCommandOutput
-
-  /**
-   * Gives an item to one or more players with nbt.
-   *
-   * @param targets Specifies the target(s) to give item(s) to.
-   *
-   * @param item Specifies the item to give.
-   *
-   * @param nbt Specifies the nbt of the item to give.
-   *
-   * @param count Specifies the number of items to give. If not specified, defaults to `1`.
-   */
-  give(
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    item: Macroable<Registry['minecraft:item'], MACRO>,
-    nbt: Macroable<RootNBT, MACRO>,
+    components: Macroable<MemberModifiers<SymbolDataComponent>, MACRO>,
     count?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
   give(
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
     item: Macroable<Registry['minecraft:item'], MACRO>,
-    countOrNBT?: Macroable<number | RootNBT, MACRO>,
+    countOrComponents?: Macroable<any, MACRO>,
     count?: Macroable<number, MACRO>,
   ) {
-    if (typeof countOrNBT === 'object') {
-      return this.finalCommand([targetParser(targets), `${item}${nbtStringifier(countOrNBT)}`, count])
+    if (typeof countOrComponents === 'object') {
+      return this.finalCommand([targetParser(targets), `${item}${componentPatchStringifier(countOrComponents as any)}`, count])
     }
-    return this.finalCommand([targetParser(targets), item, countOrNBT])
+    return this.finalCommand([targetParser(targets), item, countOrComponents])
   }
+}
+
+export function componentPatchStringifier(components: Record<string, RootNBT | Record<string, never>>) {
+  if (Object.hasOwn(components, 'toMacro')) {
+    // @ts-ignore
+    return components.toMacro()
+  }
+  const resultPairs: string[] = []
+
+  for (const [key, value] of Object.entries(components)) {
+    if (key.startsWith('!')) {
+      if (typeof value === 'object' && Object.keys(value).length === 0) {
+        resultPairs.push(`${key}={}`)
+      } else {
+        throw new Error(`Attempted to insert a negation component patch of ${key} with a value, use {} instead.`)
+      }
+    } else {
+      resultPairs.push(`${key}=${nbtStringifier(value)}`)
+    }
+  }
+
+  return `[${resultPairs.join(',')}]`
 }

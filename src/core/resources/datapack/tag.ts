@@ -1,4 +1,4 @@
-import type { REGISTRIES, Registry } from 'sandstone/arguments'
+import type { NBTSerializable, REGISTRIES, Registry } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ConditionClass } from 'sandstone/variables'
@@ -139,7 +139,7 @@ type Resource<T extends LiteralUnion<REGISTRIES>> = Add<
 
 export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   extends ResourceClass
-  implements ListResource, ConditionClass
+  implements ListResource, ConditionClass, NBTSerializable
 {
   readonly type: REGISTRY
 
@@ -202,6 +202,10 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   }
 
   toJSON() {
+    return this.name
+  }
+
+  toNBT() {
     return this.name
   }
 

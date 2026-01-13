@@ -3,7 +3,9 @@ import type {
   AXES,
   Registry,
   COMPARISON_OPERATORS,
+  ContainerSlotSelector,
   Coordinates,
+  EntitySlotSelector,
   MultipleEntitiesArgument,
   ObjectiveArgument,
   Range,
@@ -25,6 +27,7 @@ import type { SandstonePack } from 'sandstone/pack'
 import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
+import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import { coordinatesParser, rangeParser, rotationParser, targetParser } from 'sandstone/variables/parsers'
 import type { Score } from 'sandstone/variables/Score'
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
@@ -308,6 +311,78 @@ export class ExecuteDataArgsCommand<MACRO extends boolean> extends ExecuteComman
     this.nestedExecute(['data', 'storage', source, path], true)
 }
 
+/**
+ * Item predicate for matching items in inventory slots.
+ *
+ * Can be a string (item ID, item tag, or item ID with component predicates)
+ * or an ItemPredicateClass built using the `items()` function.
+ *
+ * @example
+ * ```ts
+ * // String format
+ * 'minecraft:diamond'
+ * '#minecraft:logs'
+ * 'minecraft:diamond_sword[minecraft:enchantments~{sharpness:5}]'
+ *
+ * // Builder format
+ * items('minecraft:diamond_sword').match('minecraft:enchantments', [...])
+ * ```
+ */
+export type ItemPredicate = string | ItemPredicateClass
+
+export class ExecuteItemsCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
+  /**
+   * Test for items in a block entity's inventory slots.
+   *
+   * @param sourcePos Position of the block entity to test.
+   *
+   * @param slots Slots to test (e.g., `'container.*'`, `'container.0'`).
+   *
+   * @param itemPredicate Item predicate to match against.
+   *
+   * @example
+   * ```ts
+   * // Check if chest has any diamonds
+   * execute.if.items.block([0, 64, 0], 'container.*', 'minecraft:diamond')
+   *
+   * // Check for specific slot
+   * execute.if.items.block([0, 64, 0], 'container.0', '#minecraft:logs')
+   * ```
+   */
+  block = (
+    sourcePos: Macroable<Coordinates<MACRO>, MACRO>,
+    slots: Macroable<ContainerSlotSelector, MACRO>,
+    itemPredicate: Macroable<ItemPredicate, MACRO>,
+  ) => this.nestedExecute(['items', 'block', coordinatesParser(sourcePos), slots, itemPredicate], true)
+
+  /**
+   * Test for items in an entity's inventory slots.
+   *
+   * @param source Entity to test.
+   *
+   * @param slots Slots to test (e.g., `'inventory.*'`, `'hotbar.0'`, `'armor.chest'`).
+   *
+   * @param itemPredicate Item predicate to match against.
+   *
+   * @example
+   * ```ts
+   * // Check if player has any diamonds
+   * execute.if.items.entity('@p', 'inventory.*', 'minecraft:diamond')
+   *
+   * // Check hotbar for tools
+   * execute.if.items.entity('@s', 'hotbar.*', '#minecraft:tools')
+   *
+   * // Check for enchanted sword
+   * execute.if.items.entity('@p', 'weapon.mainhand', 'minecraft:diamond_sword')
+   * ```
+   */
+  entity = (
+    source: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+    slots: Macroable<EntitySlotSelector, MACRO>,
+    itemPredicate: Macroable<ItemPredicate, MACRO>,
+  ) => this.nestedExecute(['items', 'entity', targetParser(source), slots, itemPredicate], true)
+}
+
 export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
   /**
    * Compares the block at a given position to a given block.
@@ -428,6 +503,11 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
       new ExecuteDataArgsCommand<MACRO>(this.sandstonePack, this.previousNode),
       (dataPoint: DataPointClass) => this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as ['']),
     )
+  }
+
+  /** Tests for items in block entity or entity inventory slots. */
+  get items() {
+    return new ExecuteItemsCommand<MACRO>(this.sandstonePack, this.previousNode)
   }
 
   function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {

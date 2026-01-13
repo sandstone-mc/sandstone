@@ -13,7 +13,7 @@ export class FunctionCommandNode extends CommandNode<[string | MCFunctionClass<a
   command = 'function' as const
 }
 
-type Func = MCFunctionClass<undefined, undefined> | string | TagClass<'functions'>
+type Func = MCFunctionClass<undefined, undefined> | string | TagClass<'function'>
 
 export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = FunctionCommandNode
@@ -57,7 +57,7 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   ): FinalCommandOutput
 
   function(
-    mcFunction: Macroable<string | MCFunctionClass<any, any> | TagClass<'functions'>, MACRO>,
+    mcFunction: Macroable<string | MCFunctionClass<any, any> | TagClass<'function'>, MACRO>,
     params?: 'with' | Macroable<RootNBT, MACRO>,
     pointOrType?: DATA_TYPES | DataPointClass | DataPointPickClass,
     target?: string,

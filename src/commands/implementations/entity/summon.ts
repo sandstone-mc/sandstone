@@ -1,4 +1,4 @@
-import type { Coordinates, RootNBT } from 'sandstone/arguments'
+import type { Coordinates, RootNBT,SymbolEntity } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
@@ -55,14 +55,15 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
    * })
    * ```
    */
-  summon = (
-    entity: Macroable<Registry['minecraft:entity_type'], MACRO>,
+  summon<ENTITY extends Macroable<Registry['minecraft:entity_type'], MACRO>>(
+    entity: ENTITY,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
-    nbt?: Macroable<RootNBT, MACRO>,
-  ) =>
-    this.finalCommand([
+    nbt?: Macroable<ENTITY extends keyof SymbolEntity ? NonNullable<SymbolEntity[ENTITY]> : RootNBT, MACRO>,
+  ) {
+    return this.finalCommand([
       entity,
       coordinatesParser(pos),
-      !nbt || (typeof nbt === 'object' && nbt.toMacro) ? nbt : nbtStringifier(nbt as RootNBT),
+      nbtStringifier(nbt as RootNBT),
     ])
+  }
 }

@@ -1,6 +1,7 @@
 export * from './abstractClasses'
 export * from './Coordinates'
 export * from './Data'
+export * from './ItemPredicate'
 export * from './DataSets'
 export * from './JSONTextComponentClass'
 export * from './Label'

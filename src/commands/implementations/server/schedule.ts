@@ -6,7 +6,7 @@ import { TagClass } from 'sandstone/core/resources/datapack/tag'
 import { toMinecraftResourceName } from 'sandstone/utils'
 import { CommandArguments } from '../../helpers'
 
-type ScheduledFunction = string | TagClass<'functions'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
+type ScheduledFunction = string | TagClass<'function'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
 
 export class ScheduleCommandNode extends ContainerCommandNode {
   command = 'schedule' as const
@@ -61,7 +61,7 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
    * schedule.clear(myScheduledFunction)      // Cancel Sandstone function
    * ```
    */
-  clear = (func: Macroable<MCFunctionClass<any, any> | string | TagClass<'functions'>, MACRO>) => {
+  clear = (func: Macroable<MCFunctionClass<any, any> | string | TagClass<'function'>, MACRO>) => {
     const result = this.finalCommand(['clear', func instanceof TagClass ? func.name : func])
     return result
   }

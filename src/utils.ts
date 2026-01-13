@@ -27,7 +27,7 @@ export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) =
  */
 export type LiteralUnion<T extends string> = T | (`${any}${string}` & Record<never, never>)
 
-export type NamespacedLiteralUnion<T extends string> = T | (`${string}:${string}` & Record<never, never>)
+export type NamespacedLiteralUnion<T extends string> = T | `${string}:${string}`
 
 export type AtLeastOne<T> = [T, ...T[]]
 
@@ -432,3 +432,81 @@ export class Set<T> extends global.Set<T> {
 }
 
 export type SetType<T> = T extends Set<infer U> ? U : never
+
+type TestMembers<T, TestDispatcher> = {
+  [K in keyof T]: TestDispatcher[K extends keyof TestDispatcher ? K : never]
+}
+
+type NegatedMembers<T> = {
+  [K in keyof T as `!${Extract<K, string>}`]: Record<string, never>
+}
+
+export type MemberModifiers<T> = T & NegatedMembers<T>
+
+type UnknownKey<UnknownValue> = {
+  [K in `${string}:${string}`]: UnknownValue
+}
+
+type UnknownNegatableKey<UnknownValue> = ({
+  [K in `!${string}:${string}`]: Record<string, never>
+} & {
+  [K in `${string}:${string}`]: UnknownValue | Record<string, never>
+})
+
+type McdocIDMapBase<Dispatcher, UnknownValue> = Dispatcher & UnknownKey<UnknownValue>
+
+/**
+ * A mapping of dispatcher IDs to their corresponding value types.
+ * 
+ * Also supports unknown namespaced IDs.
+ * 
+ * Must specify at least one key.
+ * 
+ * ----
+ * 
+ * Disclaimers:
+ * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game. 
+ * - Unknown IDs will not satisfy the Typed requirement of specifying at least one key, so either a known key must be also specified or `as any` must be placed at the end of the object.
+ */
+export type McdocIDMap<Dispatcher, UnknownValue> = Partial<McdocIDMapBase<Dispatcher, UnknownValue>> & {
+    [K in keyof Dispatcher]-?: Record<K, McdocIDMapBase<Dispatcher, UnknownValue>[K]>
+}[keyof Dispatcher]
+
+type McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue> = TestMembers<Dispatcher, TestDispatcher> & UnknownKey<UnknownValue>
+
+/**
+ * A mapping of dispatcher IDs to their corresponding value types.
+ * 
+ * Also supports unknown namespaced IDs.
+ * 
+ * Must specify at least one key.
+ * 
+ * ----
+ * 
+ * Disclaimers:
+ * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game. 
+ * - Unknown IDs will not satisfy the Typed requirement of specifying at least one key, so either a known key must be also specified or `as any` must be placed at the end of the object.
+ */
+export type McdocIDTestMap<Dispatcher, TestDispatcher, UnknownValue> = Partial<McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue>> & {
+    [K in keyof TestMembers<Dispatcher, TestDispatcher>]-?: Record<K, McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue>[K]>
+}[keyof TestMembers<Dispatcher, TestDispatcher>]
+
+type McdocNegatableIDMapBase<Dispatcher, UnknownValue> = MemberModifiers<Dispatcher> & UnknownNegatableKey<UnknownValue>
+
+/**
+ * A mapping of dispatcher IDs to their corresponding value types, with support for negated keys that equal an empty object.
+ * 
+ * Also supports unknown namespaced IDs and negated unknown namespaced IDs.
+ * 
+ * Must specify at least one key.
+ * 
+ * ----
+ * 
+ * Disclaimers:
+ * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button` and `!acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game. 
+ * - Unknown IDs will not satisfy the Typed requirement of specifying at least one key, so either a known key must be also specified or `as any` must be placed at the end of the object.
+ * - The object type will allow non-negated Unknown IDs specified to an empty object, this is due to a types limitation, but will cause an error in-game.
+ */
+export type McdocNegatableIDMap<Dispatcher, UnknownValue> = Partial<McdocNegatableIDMapBase<Dispatcher, UnknownValue>> & {
+    [K in keyof MemberModifiers<Dispatcher>]-?: Record<K, McdocNegatableIDMapBase<Dispatcher, UnknownValue>[K]>
+}[keyof MemberModifiers<Dispatcher>]
