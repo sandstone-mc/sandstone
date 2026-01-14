@@ -5,37 +5,37 @@ import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, Score } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type ChangePage = {
   /**
-     * The page number to go to.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * The page number to go to.
+   *
+   * Value:
+   * Range: 1..
+   */
   page: NBTInt<{
     min: 1
   }>
 }
 
-export type ClickEvent = ({
+export type ClickEvent = NonNullable<({
   [S in Extract<ClickEventAction, string>]?: ({
     /**
-         * Value:
-         *
-         *  - OpenUrl(`open_url`)
-         *  - RunCommand(`run_command`)
-         *  - SuggestCommand(`suggest_command`)
-         *  - ChangePage(`change_page`)
-         *  - CopyToClipboard(`copy_to_clipboard`)
-         *  - ShowDialog(`show_dialog`)
-         *  - Custom(`custom`)
-         */
+     * Value:
+     *
+     *  - OpenUrl(`open_url`)
+     *  - RunCommand(`run_command`)
+     *  - SuggestCommand(`suggest_command`)
+     *  - ChangePage(`change_page`)
+     *  - CopyToClipboard(`copy_to_clipboard`)
+     *  - ShowDialog(`show_dialog`)
+     *  - Custom(`custom`)
+     */
     action: S
   } & (S extends keyof SymbolClickEvent ? SymbolClickEvent[S] : RootNBT));
-}[ClickEventAction])
+}[ClickEventAction])>
 
 export type ClickEventAction = (
   | 'open_url'
@@ -48,34 +48,36 @@ export type ClickEventAction = (
 
 export type CopyToClipboard = {
   /**
-     * The text value to copy to the clipboard.
-     */
+   * The text value to copy to the clipboard.
+   */
   value: string
 }
 
-export type CustomAction = ({
+export type CustomAction = NonNullable<({
   [S in Extract<`${string}:${string}`, string>]?: {
     /**
-         * ID of a custom action.
-         * Has no functionality on vanilla servers.
-         */
+     * ID of a custom action.
+     * Has no functionality on vanilla servers.
+     */
     id: S
-    payload?: (S extends keyof SymbolMcdocCustomEvent ? SymbolMcdocCustomEvent[S] : NBTObject)
+    payload?: (S extends keyof SymbolMcdocCustomEvent
+      ? SymbolMcdocCustomEvent[S]
+      : SymbolMcdocCustomEvent<'%unknown'>)
   };
-}[`${string}:${string}`])
+}[`${string}:${string}`])>
 
-export type HoverEvent = ({
+export type HoverEvent = NonNullable<({
   [S in Extract<HoverEventAction, string>]?: ({
     /**
-         * Value:
-         *
-         *  - ShowText(`show_text`)
-         *  - ShowItem(`show_item`)
-         *  - ShowEntity(`show_entity`)
-         */
+     * Value:
+     *
+     *  - ShowText(`show_text`)
+     *  - ShowItem(`show_item`)
+     *  - ShowEntity(`show_entity`)
+     */
     action: S
   } & (S extends keyof SymbolHoverEvent ? SymbolHoverEvent[S] : RootNBT));
-}[HoverEventAction])
+}[HoverEventAction])>
 
 export type HoverEventAction = ('show_text' | 'show_item' | 'show_entity')
 
@@ -156,15 +158,15 @@ export type ShowEntity = ({
   contents?: {
     type: Registry['minecraft:entity_type']
     /**
-         * Value:
-         * *either*
-         *
-         * List length range: 4
-         *
-         * *or*
-         *
-         * *item 1*
-         */
+     * Value:
+     * *either*
+     *
+     * List length range: 4
+     *
+     * *or*
+     *
+     * *item 1*
+     */
     id: (NBTList<NBTInt, {
       leftExclusive: false
       rightExclusive: false
@@ -176,15 +178,15 @@ export type ShowEntity = ({
 } & {
   id: Registry['minecraft:entity_type']
   /**
-     * Value:
-     * *either*
-     *
-     * List length range: 4
-     *
-     * *or*
-     *
-     * *item 1*
-     */
+   * Value:
+   * *either*
+   *
+   * List length range: 4
+   *
+   * *or*
+   *
+   * *item 1*
+   */
   uuid: (NBTList<NBTInt, {
     leftExclusive: false
     rightExclusive: false
@@ -204,19 +206,6 @@ export type SuggestCommand = {
   command: `${any}${string}`
 }
 
-/**
- * *either*
- *
- * *item 0*
- *
- * *or*
- *
- * *item 1*
- *
- * *or*
- *
- * List length range: 1..
- */
 export type Text = (string | TextObject | NBTList<(string | TextObject), {
   leftExclusive: false
   min: 1
@@ -224,9 +213,9 @@ export type Text = (string | TextObject | NBTList<(string | TextObject), {
 
 export type TextBase = ({
   /**
-     * Value:
-     * List length range: 1..
-     */
+   * Value:
+   * List length range: 1..
+   */
   extra?: NBTList<Text, {
     leftExclusive: false
     min: 1
@@ -263,90 +252,88 @@ export type TextObject = (({
   translate: Registry['minecraft:translation_key']
   fallback?: string
   /**
-     * Value:
-     * List length range: 1..
-     */
+   * Value:
+   * List length range: 1..
+   */
   with?: NBTList<Text, {
     leftExclusive: false
     min: 1
   }>
   type?: 'translatable'
-} & TextBase) | (
-  Score | ({
-    score: {
-      objective: `${any}${string}` | ObjectiveClass
-      name: `${any}${string}`
-    }
-    type?: 'score'
-  } & TextBase)
-) | ({
+} & TextBase) | ({
+  score: {
+    objective: `${any}${string}` | ObjectiveClass
+    name: `${any}${string}` | Score
+  }
+  type?: 'score'
+} & TextBase) | ({
   selector: MultipleEntitiesArgument
   separator?: Text
   type?: 'selector'
 } & TextBase) | ({
   /**
-     * Value:
-     *
-     *  - Advancements(`key.advancements`)
-     *  - Attack(`key.attack`)
-     *  - Back(`key.back`)
-     *  - Chat(`key.chat`)
-     *  - Command(`key.command`)
-     *  - DebugClearChat(`key.debug.clearChat`)
-     *  - DebugCopyLocation(`key.debug.copyLocation`)
-     *  - DebugCopyRecreateCommand(`key.debug.copyRecreateCommand`)
-     *  - DebugCrash(`key.debug.crash`)
-     *  - DebugOptionsMenu(`key.debug.debugOptions`)
-     *  - DebugDumpDynamicTextures(`key.debug.dumpDynamicTextures`)
-     *  - DebugDumpVersion(`key.debug.dumpVersion`)
-     *  - DebugFocusPause(`key.debug.focusPause`)
-     *  - DebugFpsCharts(`key.debug.fpsCharts`)
-     *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
-     *  - DebugModifier(`key.debug.modifier`)
-     *  - DebugNetworkCharts(`key.debug.networkCharts`)
-     *  - DebugOverlay(`key.debug.overlay`)
-     *  - DebugProfiling(`key.debug.profiling`)
-     *  - DebugProfilingChart(`key.debug.profilingChart`)
-     *  - DebugReloadChunk(`key.debug.reloadChunk`)
-     *  - DebugReloadResourcePacks(`key.debug.reloadResourcePacks`)
-     *  - DebugShowAdvancedTooltips(`key.debug.showAdvancedTooltips`)
-     *  - DebugShowChunkBorders(`key.debug.showChunkBorders`)
-     *  - DebugShowHitboxes(`key.debug.showHitboxes`)
-     *  - DebugSpectate(`key.debug.spectate`)
-     *  - DebugSwitchGameMode(`key.debug.switchGameMode`)
-     *  - Drop(`key.drop`)
-     *  - Forward(`key.forward`)
-     *  - Fullscreen(`key.fullscreen`)
-     *  - Hotbar1(`key.hotbar.1`)
-     *  - Hotbar2(`key.hotbar.2`)
-     *  - Hotbar3(`key.hotbar.3`)
-     *  - Hotbar4(`key.hotbar.4`)
-     *  - Hotbar5(`key.hotbar.5`)
-     *  - Hotbar6(`key.hotbar.6`)
-     *  - Hotbar7(`key.hotbar.7`)
-     *  - Hotbar8(`key.hotbar.8`)
-     *  - Hotbar9(`key.hotbar.9`)
-     *  - Inventory(`key.inventory`)
-     *  - Jump(`key.jump`)
-     *  - Left(`key.left`)
-     *  - LoadToolbarActivator(`key.loadToolbarActivator`)
-     *  - PickItem(`key.pickItem`)
-     *  - Playerlist(`key.playerlist`)
-     *  - QuickActions(`key.quickActions`)
-     *  - Right(`key.right`)
-     *  - SaveToolbarActivator(`key.saveToolbarActivator`)
-     *  - Screenshot(`key.screenshot`)
-     *  - SmoothCamera(`key.smoothCamera`)
-     *  - Sneak(`key.sneak`)
-     *  - SpectatorHotbar(`key.spectatorHotbar`)
-     *  - SpectatorOutlines(`key.spectatorOutlines`)
-     *  - Sprint(`key.sprint`)
-     *  - SwapOffhand(`key.swapOffhand`)
-     *  - ToggleGui(`key.toggleGui`)
-     *  - TogglePerspective(`key.togglePerspective`)
-     *  - ToggleSpectatorShaderEffects(`key.toggleSpectatorShaderEffects`)
-     *  - Use(`key.use`)
-     */
+   * Value:
+   *
+   *  - Advancements(`key.advancements`)
+   *  - Attack(`key.attack`)
+   *  - Back(`key.back`)
+   *  - Chat(`key.chat`)
+   *  - Command(`key.command`)
+   *  - DebugClearChat(`key.debug.clearChat`)
+   *  - DebugCopyLocation(`key.debug.copyLocation`)
+   *  - DebugCopyRecreateCommand(`key.debug.copyRecreateCommand`)
+   *  - DebugCrash(`key.debug.crash`)
+   *  - DebugOptionsMenu(`key.debug.debugOptions`)
+   *  - DebugDumpDynamicTextures(`key.debug.dumpDynamicTextures`)
+   *  - DebugDumpVersion(`key.debug.dumpVersion`)
+   *  - DebugFocusPause(`key.debug.focusPause`)
+   *  - DebugFpsCharts(`key.debug.fpsCharts`)
+   *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
+   *  - DebugModifier(`key.debug.modifier`)
+   *  - DebugNetworkCharts(`key.debug.networkCharts`)
+   *  - DebugOverlay(`key.debug.overlay`)
+   *  - DebugProfiling(`key.debug.profiling`)
+   *  - DebugProfilingChart(`key.debug.profilingChart`)
+   *  - DebugReloadChunk(`key.debug.reloadChunk`)
+   *  - DebugReloadResourcePacks(`key.debug.reloadResourcePacks`)
+   *  - DebugShowAdvancedTooltips(`key.debug.showAdvancedTooltips`)
+   *  - DebugShowChunkBorders(`key.debug.showChunkBorders`)
+   *  - DebugShowHitboxes(`key.debug.showHitboxes`)
+   *  - DebugSpectate(`key.debug.spectate`)
+   *  - DebugSwitchGameMode(`key.debug.switchGameMode`)
+   *  - Drop(`key.drop`)
+   *  - Forward(`key.forward`)
+   *  - Fullscreen(`key.fullscreen`)
+   *  - Hotbar1(`key.hotbar.1`)
+   *  - Hotbar2(`key.hotbar.2`)
+   *  - Hotbar3(`key.hotbar.3`)
+   *  - Hotbar4(`key.hotbar.4`)
+   *  - Hotbar5(`key.hotbar.5`)
+   *  - Hotbar6(`key.hotbar.6`)
+   *  - Hotbar7(`key.hotbar.7`)
+   *  - Hotbar8(`key.hotbar.8`)
+   *  - Hotbar9(`key.hotbar.9`)
+   *  - Inventory(`key.inventory`)
+   *  - Jump(`key.jump`)
+   *  - Left(`key.left`)
+   *  - LoadToolbarActivator(`key.loadToolbarActivator`)
+   *  - PickItem(`key.pickItem`)
+   *  - Playerlist(`key.playerlist`)
+   *  - QuickActions(`key.quickActions`)
+   *  - Right(`key.right`)
+   *  - SaveToolbarActivator(`key.saveToolbarActivator`)
+   *  - Screenshot(`key.screenshot`)
+   *  - SmoothCamera(`key.smoothCamera`)
+   *  - Sneak(`key.sneak`)
+   *  - SpectatorHotbar(`key.spectatorHotbar`)
+   *  - SpectatorOutlines(`key.spectatorOutlines`)
+   *  - Sprint(`key.sprint`)
+   *  - SwapOffhand(`key.swapOffhand`)
+   *  - ToggleGui(`key.toggleGui`)
+   *  - TogglePerspective(`key.togglePerspective`)
+   *  - ToggleSpectatorShaderEffects(`key.toggleSpectatorShaderEffects`)
+   *  - Use(`key.use`)
+   */
   keybind: Keybind
   type?: 'keybind'
 } & TextBase) | ({
@@ -366,8 +353,8 @@ export type TextObject = (({
   type?: 'nbt'
 } & TextNbtBase) | ({
   /**
-     * Defaults to `minecraft:blocks`.
-     */
+   * Defaults to `minecraft:blocks`.
+   */
   atlas?: Registry['minecraft:atlas']
   sprite: Registry['minecraft:texture']
   object?: 'atlas'
@@ -375,8 +362,8 @@ export type TextObject = (({
 } & TextBase) | ({
   player: Profile
   /**
-     * Whether the head layer is rendered. Defaults to `true`.
-     */
+   * Whether the head layer is rendered. Defaults to `true`.
+   */
   hat?: boolean
   object?: 'player'
   type?: 'object'
@@ -384,20 +371,20 @@ export type TextObject = (({
 
 export type TextStyle = {
   /**
-     * Value:
-     * *either*
-     *
-     * *item 0*
-     *
-     * *or*
-     *
-     *
-     */
+   * Value:
+   * *either*
+   *
+   * *item 0*
+   *
+   * *or*
+   *
+   *
+   */
   color?: (`#${string}` | TextColor)
   /**
-     * Overrides the shadow properties of the text.
-     * If specified as 0, the shadow will never be displayed.
-     */
+   * Overrides the shadow properties of the text.
+   * If specified as 0, the shadow will never be displayed.
+   */
   shadow_color?: RGBA
   font?: Registry['minecraft:font']
   bold?: boolean
@@ -445,7 +432,8 @@ export type SymbolClickEvent<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ClickEventDispatcherMap
   : CASE extends 'keys' ? ClickEventKeys : CASE extends '%fallback' ? ClickEventFallback : never
 type HoverEventDispatcherMap = {
@@ -465,6 +453,7 @@ export type SymbolHoverEvent<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? HoverEventDispatcherMap
   : CASE extends 'keys' ? HoverEventKeys : CASE extends '%fallback' ? HoverEventFallback : never

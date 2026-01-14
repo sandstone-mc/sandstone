@@ -9,20 +9,20 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { FluidState } from 'sandstone/arguments/generated/util/fluid_state.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type BlockColumnConfig = {
   /**
-     * Value:
-     *
-     *  - Down(`down`)
-     *  - Up(`up`)
-     *  - North(`north`)
-     *  - East(`east`)
-     *  - South(`south`)
-     *  - West(`west`)
-     */
+   * Value:
+   *
+   *  - Down(`down`)
+   *  - Up(`up`)
+   *  - North(`north`)
+   *  - East(`east`)
+   *  - South(`south`)
+   *  - West(`west`)
+   */
   direction: Direction
   allowed_placement: BlockPredicate
   prioritize_tip: boolean
@@ -40,11 +40,11 @@ export type BlockPileConfig = {
   state_provider: BlockStateProvider
 }
 
-export type BlockPlacer = ({
+export type BlockPlacer = NonNullable<({
   [S in Extract<`${string}:${string}`, string>]?: ({
     type: S
   } & (S extends keyof SymbolBlockPlacer ? SymbolBlockPlacer[S] : RootNBT));
-}[`${string}:${string}`])
+}[`${string}:${string}`])>
 
 export type ColumnPlacer = {
   size: IntProvider<NBTInt<{
@@ -63,12 +63,12 @@ export type ColumnsConfig = {
   }>>
 }
 
-export type ConfiguredFeature = ({
+export type ConfiguredFeature = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/feature'], string>]?: {
     type: S
-    config: (S extends keyof SymbolFeatureConfig ? SymbolFeatureConfig[S] : NBTObject)
+    config: (S extends keyof SymbolFeatureConfig ? SymbolFeatureConfig[S] : RootNBT)
   };
-}[Registry['minecraft:worldgen/feature']])
+}[Registry['minecraft:worldgen/feature']])>
 
 export type ConfiguredFeatureRef = (Registry['minecraft:worldgen/configured_feature'] | ConfiguredFeature)
 
@@ -97,9 +97,9 @@ export type DiskConfig = {
     max: 8
   }>>
   /**
-     * Value:
-     * Range: 0..4
-     */
+   * Value:
+   * Range: 0..4
+   */
   half_height: NBTInt<{
     min: 0
     max: 4
@@ -109,9 +109,9 @@ export type DiskConfig = {
 
 export type DripstoneClusterConfig = {
   /**
-     * Value:
-     * Range: 1..512
-     */
+   * Value:
+   * Range: 1..512
+   */
   floor_to_ceiling_search_range: NBTInt<{
     min: 1
   }>
@@ -122,19 +122,19 @@ export type DripstoneClusterConfig = {
     min: 0
   }>>
   /**
-     * Max height difference between the stalagmite and stalactite.
-     *
-     * Value:
-     * Range: 0..64
-     */
+   * Max height difference between the stalagmite and stalactite.
+   *
+   * Value:
+   * Range: 0..64
+   */
   max_stalagmite_stalactite_height_diff: NBTInt<{
     min: 0
     max: 64
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   height_deviation: NBTInt<{
     min: 1
     max: 64
@@ -153,9 +153,9 @@ export type DripstoneClusterConfig = {
     min: 0
   }>>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance_of_dripstone_column_at_max_distance_from_center: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -163,17 +163,17 @@ export type DripstoneClusterConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   max_distance_from_edge_affecting_chance_of_dripstone_column: NBTInt<{
     min: 1
     max: 64
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   max_distance_from_center_affecting_height_bias: NBTInt<{
     min: 1
     max: 64
@@ -188,9 +188,9 @@ export type EmeraldOreConfig = {
 export type EndGatewayConfig = {
   exact: boolean
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   exit?: NBTList<NBTInt, {
     leftExclusive: false
     rightExclusive: false
@@ -211,9 +211,9 @@ export type EndSpikeConfig = {
   spikes: Array<EndSpike>
   crystal_invulnerable?: boolean
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   crystal_beam_target?: NBTList<NBTInt, {
     leftExclusive: false
     rightExclusive: false
@@ -227,9 +227,9 @@ export type FeatureRef = PlacedFeatureRef
 export type FillLayerConfig = {
   state: BlockState
   /**
-     * Value:
-     * Range: 0..255
-     */
+   * Value:
+   * Range: 0..255
+   */
   height: NBTInt<{
     min: 0
   }>
@@ -241,11 +241,11 @@ export type ForestRockConfig = {
 
 export type FossilConfig = {
   /**
-     * If more corners are exposed to air, feature placement is cancelled.
-     *
-     * Value:
-     * Range: 0..7
-     */
+   * If more corners are exposed to air, feature placement is cancelled.
+   *
+   * Value:
+   * Range: 0..7
+   */
   max_empty_corners_allowed: NBTInt<{
     min: 0
     max: 7
@@ -263,22 +263,22 @@ export type GeodeBlockSettings = {
   middle_layer_provider: BlockStateProvider
   outer_layer_provider: BlockStateProvider
   /**
-     * Value:
-     * List length range: 1..
-     */
+   * Value:
+   * List length range: 1..
+   */
   inner_placements: NBTList<BlockState, {
     leftExclusive: false
     min: 1
   }>
   /**
-     * Blocks that will not be replaced by the geode.
-     */
+   * Blocks that will not be replaced by the geode.
+   */
   cannot_replace: (
       | Array<Registry['minecraft:block']> | (
       Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
   /**
-     * When encountering an invalid block, feature placement is cancelled.
-     */
+   * When encountering an invalid block, feature placement is cancelled.
+   */
   invalid_blocks: (
       | Array<Registry['minecraft:block']> | (
       Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
@@ -289,9 +289,9 @@ export type GeodeConfig = {
   layers: GeodeLayerSettings
   crack: GeodeCrackSettings
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   noise_multiplier?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -299,9 +299,9 @@ export type GeodeConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   use_potential_placements_chance?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -309,9 +309,9 @@ export type GeodeConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   use_alternate_layer0_chance?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -338,9 +338,9 @@ export type GeodeConfig = {
 
 export type GeodeCrackSettings = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   generate_crack_chance?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -348,18 +348,18 @@ export type GeodeCrackSettings = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..5
-     */
+   * Value:
+   * Range: 0..5
+   */
   base_crack_size?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..10
-     */
+   * Value:
+   * Range: 0..10
+   */
   crack_point_offset?: NBTInt<{
     min: 0
     max: 10
@@ -368,36 +368,36 @@ export type GeodeCrackSettings = {
 
 export type GeodeLayerSettings = {
   /**
-     * Value:
-     * Range: 0.01..50
-     */
+   * Value:
+   * Range: 0.01..50
+   */
   filling?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0.01..50
-     */
+   * Value:
+   * Range: 0.01..50
+   */
   inner_layer?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0.01..50
-     */
+   * Value:
+   * Range: 0.01..50
+   */
   middle_layer?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0.01..50
-     */
+   * Value:
+   * Range: 0.01..50
+   */
   outer_layer?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -407,15 +407,15 @@ export type GeodeLayerSettings = {
 
 export type GrowingPlantConfig = {
   /**
-     * Value:
-     *
-     *  - Down(`down`)
-     *  - Up(`up`)
-     *  - North(`north`)
-     *  - East(`east`)
-     *  - South(`south`)
-     *  - West(`west`)
-     */
+   * Value:
+   *
+   *  - Down(`down`)
+   *  - Up(`up`)
+   *  - North(`north`)
+   *  - East(`east`)
+   *  - South(`south`)
+   *  - West(`west`)
+   */
   direction: Direction
   allow_water: boolean
   height_distribution: Array<GrowingPlantHeight>
@@ -454,9 +454,9 @@ export type LakeConfig = {
 
 export type LargeDripstoneConfig = {
   /**
-     * Value:
-     * Range: 1..512
-     */
+   * Value:
+   * Range: 1..512
+   */
   floor_to_ceiling_search_range?: NBTInt<{
     min: 1
   }>
@@ -470,9 +470,9 @@ export type LargeDripstoneConfig = {
     min: 0
   }>>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   max_column_radius_to_cave_height_ratio: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -495,17 +495,17 @@ export type LargeDripstoneConfig = {
     min: 0
   }>>
   /**
-     * Value:
-     * Range: 0..100
-     */
+   * Value:
+   * Range: 0..100
+   */
   min_radius_for_wind: NBTInt<{
     min: 0
     max: 100
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   min_bluntness_for_wind: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -518,24 +518,24 @@ export type MultifaceBlock = ('glow_lichen' | 'sculk_vein')
 
 export type MultifaceGrowthConfig = {
   /**
-     * Value:
-     *
-     *  - GlowLichen(`glow_lichen`)
-     *  - SculkVein(`sculk_vein`)
-     */
+   * Value:
+   *
+   *  - GlowLichen(`glow_lichen`)
+   *  - SculkVein(`sculk_vein`)
+   */
   block?: (MultifaceBlock | `minecraft:${MultifaceBlock}`)
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   search_range?: NBTInt<{
     min: 1
     max: 64
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance_of_spreading?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -554,16 +554,16 @@ export type NetherForestVegetationConfig = ({
   state_provider: BlockStateProvider
 } & {
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   spread_width: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   spread_height: NBTInt<{
     min: 1
   }>
@@ -581,19 +581,19 @@ export type NetherrackReplaceBlobsConfig = {
 export type OreConfig = {
   targets: Array<TargetBlock>
   /**
-     * Value:
-     * Range: 0..64
-     */
+   * Value:
+   * Range: 0..64
+   */
   size: NBTInt<{
     min: 0
     max: 64
   }>
   /**
-     * Chance that feature placement will be discarded if the ore is exposed to air blocks.
-     *
-     * Value:
-     * Range: 0..1
-     */
+   * Chance that feature placement will be discarded if the ore is exposed to air blocks.
+   *
+   * Value:
+   * Range: 0..1
+   */
   discard_chance_on_air_exposure: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -604,9 +604,9 @@ export type OreConfig = {
 
 export type PointedDripstoneConfig = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance_of_taller_dripstone?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -614,9 +614,9 @@ export type PointedDripstoneConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance_of_directional_spread?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -624,9 +624,9 @@ export type PointedDripstoneConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance_of_spread_radius2?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -634,9 +634,9 @@ export type PointedDripstoneConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance_of_spread_radius3?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -647,9 +647,9 @@ export type PointedDripstoneConfig = {
 
 export type ProbabilityConfig = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -665,30 +665,30 @@ export type RandomBooleanSelector = {
 
 export type RandomPatchConfig = ({
   /**
-     * How many attempts will be made to find a placement. Defaults to 128.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * How many attempts will be made to find a placement. Defaults to 128.
+   *
+   * Value:
+   * Range: 1..
+   */
   tries?: NBTInt<{
     min: 1
   }>
 } & {
   /**
-     * Defaults to 7.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Defaults to 7.
+   *
+   * Value:
+   * Range: 0..
+   */
   xz_spread?: NBTInt<{
     min: 0
   }>
   /**
-     * Defaults to 3.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Defaults to 3.
+   *
+   * Value:
+   * Range: 0..
+   */
   y_spread?: NBTInt<{
     min: 0
   }>
@@ -698,9 +698,9 @@ export type RandomPatchConfig = ({
 export type RandomSelector = {
   features: Array<{
     /**
-         * Value:
-         * Range: 0..1
-         */
+     * Value:
+     * Range: 0..1
+     */
     chance: NBTFloat<{
       leftExclusive: false
       rightExclusive: false
@@ -718,62 +718,62 @@ export type ReplaceSingleBlockConfig = {
 
 export type RootSystemConfig = {
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   required_vertical_space_for_tree: NBTInt<{
     min: 1
     max: 64
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   root_radius: NBTInt<{
     min: 1
     max: 64
   }>
   /**
-     * Value:
-     * Range: 1..256
-     */
+   * Value:
+   * Range: 1..256
+   */
   root_placement_attempts: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 1..4096
-     */
+   * Value:
+   * Range: 1..4096
+   */
   root_column_max_height: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   hanging_root_radius: NBTInt<{
     min: 1
     max: 64
   }>
   /**
-     * Value:
-     * Range: 1..16
-     */
+   * Value:
+   * Range: 1..16
+   */
   hanging_roots_vertical_span: NBTInt<{
     min: 1
     max: 16
   }>
   /**
-     * Value:
-     * Range: 0..256
-     */
+   * Value:
+   * Range: 0..256
+   */
   hanging_root_placement_attempts: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   allowed_vertical_water_for_tree: NBTInt<{
     min: 1
     max: 64
@@ -797,49 +797,49 @@ export type RuleBasedBlockStateProvider = {
 
 export type SculkPatchConfig = {
   /**
-     * Value:
-     * Range: 1..32
-     */
+   * Value:
+   * Range: 1..32
+   */
   charge_count: NBTInt<{
     min: 1
     max: 32
   }>
   /**
-     * Value:
-     * Range: 1..500
-     */
+   * Value:
+   * Range: 1..500
+   */
   amount_per_charge: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   spread_attempts: NBTInt<{
     min: 1
     max: 64
   }>
   /**
-     * Value:
-     * Range: 0..8
-     */
+   * Value:
+   * Range: 0..8
+   */
   growth_rounds: NBTInt<{
     min: 0
     max: 8
   }>
   /**
-     * Value:
-     * Range: 0..8
-     */
+   * Value:
+   * Range: 0..8
+   */
   spread_rounds: NBTInt<{
     min: 0
     max: 8
   }>
   extra_rare_growths: IntProvider<NBTInt>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   catalyst_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -857,8 +857,8 @@ export type SeaPickleConfig = {
 export type SimpleBlockConfig = {
   to_place: BlockStateProvider
   /**
-     * Whether to schedule a block update. Defaults to `false`.
-     */
+   * Whether to schedule a block update. Defaults to `false`.
+   */
   schedule_tick?: boolean
 }
 
@@ -870,33 +870,33 @@ export type SimpleRandomSelectorConfig = {
 
 export type SmallDripstoneConfig = {
   /**
-     * Value:
-     * Range: 0..100
-     */
+   * Value:
+   * Range: 0..100
+   */
   max_placements?: NBTInt<{
     min: 0
     max: 100
   }>
   /**
-     * Value:
-     * Range: 0..20
-     */
+   * Value:
+   * Range: 0..20
+   */
   empty_space_search_radius?: NBTInt<{
     min: 0
     max: 20
   }>
   /**
-     * Value:
-     * Range: 0..20
-     */
+   * Value:
+   * Range: 0..20
+   */
   max_offset_from_origin?: NBTInt<{
     min: 0
     max: 20
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance_of_taller_dripstone?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -922,23 +922,23 @@ export type TargetBlock = {
 
 export type TwistingVinesConfig = {
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   spread_width: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   spread_height: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   max_height: NBTInt<{
     min: 1
   }>
@@ -946,24 +946,24 @@ export type TwistingVinesConfig = {
 
 export type UnderwaterMagmaConfig = {
   /**
-     * Value:
-     * Range: 0..512
-     */
+   * Value:
+   * Range: 0..512
+   */
   floor_search_range: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..64
-     */
+   * Value:
+   * Range: 0..64
+   */
   placement_radius_around_floor: NBTInt<{
     min: 0
     max: 64
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   placement_probability_per_valid_position: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -974,26 +974,26 @@ export type UnderwaterMagmaConfig = {
 
 export type VegetationPatchConfig = {
   /**
-     * Value:
-     *
-     *  - Floor(`floor`)
-     *  - Ceiling(`ceiling`)
-     */
+   * Value:
+   *
+   *  - Floor(`floor`)
+   *  - Ceiling(`ceiling`)
+   */
   surface: CaveSurface
   depth: IntProvider<NBTInt<{
     min: 1
   }>>
   /**
-     * Value:
-     * Range: 1..256
-     */
+   * Value:
+   * Range: 1..256
+   */
   vertical_range: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   extra_bottom_block_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -1001,9 +1001,9 @@ export type VegetationPatchConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   extra_edge_column_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -1011,9 +1011,9 @@ export type VegetationPatchConfig = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   vegetation_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -1042,7 +1042,8 @@ export type SymbolBlockPlacer<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? BlockPlacerDispatcherMap
   : CASE extends 'keys' ? BlockPlacerKeys : CASE extends '%fallback' ? BlockPlacerFallback : never
 type FeatureConfigDispatcherMap = {
@@ -1257,6 +1258,7 @@ export type SymbolFeatureConfig<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? FeatureConfigDispatcherMap
   : CASE extends 'keys' ? FeatureConfigKeys : CASE extends '%fallback' ? FeatureConfigFallback : never

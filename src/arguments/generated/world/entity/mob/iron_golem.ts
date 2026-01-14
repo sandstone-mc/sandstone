@@ -2,7 +2,7 @@ import type { MobBase, NeutralMob } from 'sandstone/arguments/generated/world/en
 
 export type IronGolem = (MobBase & NeutralMob & {
   /**
-     * Whether a player created it.
-     */
+   * Whether a player created it.
+   */
   PlayerCreated?: boolean
 })

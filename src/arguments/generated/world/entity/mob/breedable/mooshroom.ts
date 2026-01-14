@@ -4,11 +4,11 @@ import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/b
 
 export type Mooshroom = (Breedable & {
   /**
-     * Value:
-     *
-     *  - Red(`red`)
-     *  - Brown(`brown`)
-     */
+   * Value:
+   *
+   *  - Red(`red`)
+   *  - Brown(`brown`)
+   */
   Type?: MooshroomType
   stew_effects?: SymbolDataComponent['suspicious_stew_effects']
 })

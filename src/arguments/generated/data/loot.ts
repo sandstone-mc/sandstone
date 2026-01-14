@@ -2,8 +2,8 @@ import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolLootCondition, SymbolLootFunction } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { SlotSource } from 'sandstone/arguments/generated/util/slot.ts'
-import type { NBTInt } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTInt } from 'sandstone'
 
 export type BlockEntityTarget = 'block_entity'
 
@@ -15,11 +15,11 @@ export type DynamicDrops = ('contents' | 'sherds')
 
 export type DynamicPoolEntry = ({
   /**
-     * Value:
-     *
-     *  - Contents(`contents`): Drops the items in a shulker box.
-     *  - Sherds(`sherds`): Drops the sherds of a decorated pot.
-     */
+   * Value:
+   *
+   *  - Contents(`contents`): Drops the items in a shulker box.
+   *  - Sherds(`sherds`): Drops the sherds of a decorated pot.
+   */
   name: (DynamicDrops | `minecraft:${DynamicDrops}`)
 } & SingletonPoolEntry)
 
@@ -40,11 +40,11 @@ export type ItemPoolEntry = ({
 
 export type ItemStackTarget = 'tool'
 
-export type LootCondition = ({
+export type LootCondition = NonNullable<({
   [S in Extract<Registry['minecraft:loot_condition_type'], string>]?: ({
     condition: S
   } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT));
-}[Registry['minecraft:loot_condition_type']])
+}[Registry['minecraft:loot_condition_type']])>
 
 export type LootConditionType = (
   | 'alternative'
@@ -101,11 +101,11 @@ export type LootEntryType = (
   | 'sequence'
   | 'tag')
 
-export type LootFunction = ({
+export type LootFunction = NonNullable<({
   [S in Extract<Registry['minecraft:loot_function_type'], string>]?: ({
     function: S
   } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT));
-}[Registry['minecraft:loot_function_type']])
+}[Registry['minecraft:loot_function_type']])>
 
 export type LootFunctionType = (
   | 'apply_bonus'
@@ -138,11 +138,11 @@ export type LootPool = {
   conditions?: Array<LootCondition>
 }
 
-export type LootPoolEntry = ({
+export type LootPoolEntry = NonNullable<({
   [S in Extract<Registry['minecraft:loot_pool_entry_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolLootPoolEntry ? SymbolLootPoolEntry[S] : RootNBT));
-}[Registry['minecraft:loot_pool_entry_type']])
+}[Registry['minecraft:loot_pool_entry_type']])>
 
 export type LootPoolEntryBase = {
   conditions?: Array<LootCondition>
@@ -150,42 +150,42 @@ export type LootPoolEntryBase = {
 
 export type LootTable = {
   /**
-     * Value:
-     *
-     *  - Empty(`empty`)
-     *  - Chest(`chest`)
-     *  - Command(`command`)
-     *  - Selector(`selector`)
-     *  - Fishing(`fishing`)
-     *  - Entity(`entity`)
-     *  - Gift(`gift`)
-     *  - Barter(`barter`)
-     *  - AdvancementReward(`advancement_reward`)
-     *  - AdvancementEntity(`advancement_entity`)
-     *  - AdvancementLocation(`advancement_location`)
-     *  - Generic(`generic`)
-     *  - Block(`block`)
-     *  - BlockUse(`block_use`)
-     *  - Equipment(`equipment`)
-     *  - Archaeology(`archaeology`)
-     *  - Vault(`vault`)
-     *  - Shearing(`shearing`)
-     *  - EnchantedDamage(`enchanted_damage`)
-     *  - EnchantedItem(`enchanted_item`)
-     *  - EnchantedLocation(`enchanted_location`)
-     *  - EnchantedEntity(`enchanted_entity`)
-     *  - HitBlock(`hit_block`)
-     *  - BlockInteract(`block_interact`)
-     *  - EntityInteract(`entity_interact`)
-     */
+   * Value:
+   *
+   *  - Empty(`empty`)
+   *  - Chest(`chest`)
+   *  - Command(`command`)
+   *  - Selector(`selector`)
+   *  - Fishing(`fishing`)
+   *  - Entity(`entity`)
+   *  - Gift(`gift`)
+   *  - Barter(`barter`)
+   *  - AdvancementReward(`advancement_reward`)
+   *  - AdvancementEntity(`advancement_entity`)
+   *  - AdvancementLocation(`advancement_location`)
+   *  - Generic(`generic`)
+   *  - Block(`block`)
+   *  - BlockUse(`block_use`)
+   *  - Equipment(`equipment`)
+   *  - Archaeology(`archaeology`)
+   *  - Vault(`vault`)
+   *  - Shearing(`shearing`)
+   *  - EnchantedDamage(`enchanted_damage`)
+   *  - EnchantedItem(`enchanted_item`)
+   *  - EnchantedLocation(`enchanted_location`)
+   *  - EnchantedEntity(`enchanted_entity`)
+   *  - HitBlock(`hit_block`)
+   *  - BlockInteract(`block_interact`)
+   *  - EntityInteract(`entity_interact`)
+   */
   type?: (LootContextType | `minecraft:${LootContextType}`)
   pools?: Array<LootPool>
   functions?: Array<LootFunction>
   /**
-     * Value:
-     *
-     * Value: Defines a `minecraft:random_sequence` id.
-     */
+   * Value:
+   *
+   * Value: Defines a `minecraft:random_sequence` id.
+   */
   random_sequence?: `${string}:${string}`
 }
 
@@ -195,9 +195,9 @@ export type LootTablePoolEntry = ({
 
 export type SingletonPoolEntry = ({
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   weight?: NBTInt<{
     min: 1
   }>
@@ -212,8 +212,8 @@ export type SlotsPoolEntry = ({
 export type TagPoolEntry = ({
   name: (Registry['minecraft:tag/item'])
   /**
-     * If `true`, drops a random item from the tag. If `false`, drops all items in the tag.
-     */
+   * If `true`, drops a random item from the tag. If `false`, drops all items in the tag.
+   */
   expand: boolean
 } & SingletonPoolEntry)
 type LootPoolEntryDispatcherMap = {
@@ -260,6 +260,7 @@ export type SymbolLootPoolEntry<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? LootPoolEntryDispatcherMap
   : CASE extends 'keys' ? LootPoolEntryKeys : CASE extends '%fallback' ? LootPoolEntryFallback : never

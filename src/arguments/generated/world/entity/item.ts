@@ -4,20 +4,20 @@ import type { NBTIntArray, NBTLong, NBTShort } from 'sandstone'
 
 export type Item = (EntityBase & {
   /**
-     * Ticks it has existed.
-     */
+   * Ticks it has existed.
+   */
   Age?: NBTShort
   Health?: NBTShort
   /**
-     * Ticks until an entity can pick up this item.
-     */
+   * Ticks until an entity can pick up this item.
+   */
   PickupDelay?: NBTShort
   /**
-     * Only this entity can pick up the item.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * Only this entity can pick up the item.
+   *
+   * Value:
+   * Array length range: 4
+   */
   Owner?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -25,11 +25,11 @@ export type Item = (EntityBase & {
     max: 4
   }>
   /**
-     * Player who threw the item. Can be set and/or changed to any entity.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * Player who threw the item. Can be set and/or changed to any entity.
+   *
+   * Value:
+   * Array length range: 4
+   */
   Thrower?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -41,11 +41,11 @@ export type Item = (EntityBase & {
 
 export type Uuid = {
   /**
-     * Lower bits of the target player's UUID
-     */
+   * Lower bits of the target player's UUID
+   */
   L?: NBTLong
   /**
-     * Upper bits of the target player's UUID
-     */
+   * Upper bits of the target player's UUID
+   */
   M?: NBTLong
 }

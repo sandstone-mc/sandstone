@@ -18,8 +18,8 @@ import type { SuspiciousStew } from 'sandstone/arguments/generated/world/item/su
 
 export type SpawnItem = (ItemBase & {
   /**
-     * Data of the spawned entity.
-     */
+   * Data of the spawned entity.
+   */
   EntityTag?: AnyEntity
 })
 type ItemDispatcherMap = {
@@ -608,6 +608,9 @@ export type SymbolItem<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ItemDispatcherMap
-  : CASE extends 'keys' ? ItemKeys : CASE extends '%fallback' ? ItemFallback : never
+  : CASE extends 'keys'
+    ? ItemKeys
+    : CASE extends '%fallback' ? ItemFallback : CASE extends '%unknown' ? ItemFallbackType : never

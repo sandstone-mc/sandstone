@@ -5,16 +5,16 @@ export type ArmorMaterial = ('leather' | 'chainmail' | 'iron' | 'gold' | 'diamon
 
 export type TrimMaterial = {
   /**
-     * ID which will be used in the resource pack.
-     */
+   * ID which will be used in the resource pack.
+   */
   asset_name: string
   /**
-     * Text displayed in the item tooltip.
-     */
+   * Text displayed in the item tooltip.
+   */
   description: Text
   /**
-     * Armor materials that should have a different color palette.
-     */
+   * Armor materials that should have a different color palette.
+   */
   override_armor_assets?: ({
     [Key in Extract<Registry['minecraft:equipment'], string>]?: string;
   })
@@ -22,19 +22,19 @@ export type TrimMaterial = {
 
 export type TrimPattern = {
   /**
-     * ID of the pattern that will be used in the resource pack as an overlay on the armor.
-     *
-     * Value:
-     *
-     * Value: A minecraft:texture ID within a path root of `(namespace)/textures/trims/models/armor/`
-     */
+   * ID of the pattern that will be used in the resource pack as an overlay on the armor.
+   *
+   * Value:
+   *
+   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/trims/models/armor/`
+   */
   asset_id: `${string}:${string}`
   /**
-     * Text displayed in the item tooltip.
-     */
+   * Text displayed in the item tooltip.
+   */
   description: Text
   /**
-     * Whether the pattern texture will be masked based on the underlying armor. Defaults to `false`.
-     */
+   * Whether the pattern texture will be masked based on the underlying armor. Defaults to `false`.
+   */
   decal?: boolean
 }

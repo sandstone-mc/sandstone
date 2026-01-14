@@ -2,27 +2,27 @@ import type { HeightmapType, IntProvider } from 'sandstone/arguments/generated/d
 import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AppendLoot = {
   loot_table: Registry['minecraft:loot_table']
 }
 
 export type AppendStatic<S = undefined> = {
-  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : NBTObject)
+  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT)
 }
 
 export type Axis = ('x' | 'y' | 'z')
 
 export type AxisAlignedLinearPos = ({
   /**
-     * Value:
-     *
-     *  - X(`x`)
-     *  - Y(`y`)
-     *  - Z(`z`)
-     */
+   * Value:
+   *
+   *  - X(`x`)
+   *  - Y(`y`)
+   *  - Z(`z`)
+   */
   axis: Axis
 } & LinearPos)
 
@@ -30,11 +30,11 @@ export type BlockAge = {
   mossiness: NBTFloat
 }
 
-export type BlockEntityModifier = ({
+export type BlockEntityModifier = NonNullable<({
   [S in Extract<Registry['minecraft:rule_block_entity_modifier'], string>]?: ({
     type: S
   } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : RootNBT));
-}[Registry['minecraft:rule_block_entity_modifier']])
+}[Registry['minecraft:rule_block_entity_modifier']])>
 
 export type BlockIgnore = {
   blocks: Array<BlockState>
@@ -46,9 +46,9 @@ export type BlockMatch = {
 
 export type BlockRot = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   integrity: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -73,38 +73,38 @@ export type Capped = {
 
 export type Gravity = {
   /**
-     * Value:
-     *
-     *  - MotionBlocking(`MOTION_BLOCKING`)
-     *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
-     *  - OceanFloor(`OCEAN_FLOOR`)
-     *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
-     *  - WorldSurface(`WORLD_SURFACE`)
-     *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
-     */
+   * Value:
+   *
+   *  - MotionBlocking(`MOTION_BLOCKING`)
+   *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
+   *  - OceanFloor(`OCEAN_FLOOR`)
+   *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
+   *  - WorldSurface(`WORLD_SURFACE`)
+   *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
+   */
   heightmap: HeightmapType
   offset: NBTInt
 }
 
 export type LinearPos = {
   /**
-     * Value:
-     * Range: 0..255
-     */
+   * Value:
+   * Range: 0..255
+   */
   min_dist?: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..255
-     */
+   * Value:
+   * Range: 0..255
+   */
   max_dist?: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   min_chance?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -112,9 +112,9 @@ export type LinearPos = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   max_chance?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -123,17 +123,17 @@ export type LinearPos = {
   }>
 }
 
-export type PosRuleTest = ({
+export type PosRuleTest = NonNullable<({
   [S in Extract<Registry['minecraft:pos_rule_test'], string>]?: ({
     predicate_type: S
   } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : RootNBT));
-}[Registry['minecraft:pos_rule_test']])
+}[Registry['minecraft:pos_rule_test']])>
 
-export type Processor = ({
+export type Processor = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/structure_processor'], string>]?: ({
     processor_type: S
   } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : RootNBT));
-}[Registry['minecraft:worldgen/structure_processor']])
+}[Registry['minecraft:worldgen/structure_processor']])>
 
 export type ProcessorList = (Array<Processor> | {
   processors: Array<Processor>
@@ -156,9 +156,9 @@ export type ProtectedBlocks = {
 export type RandomBlockMatch = {
   block: Registry['minecraft:block']
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -170,9 +170,9 @@ export type RandomBlockMatch = {
 export type RandomBlockStateMatch = {
   block_state: BlockState
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -185,11 +185,11 @@ export type Rule = {
   rules: Array<ProcessorRule>
 }
 
-export type RuleTest = ({
+export type RuleTest = NonNullable<({
   [S in Extract<Registry['minecraft:rule_test'], string>]?: ({
     predicate_type: S
   } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : RootNBT));
-}[Registry['minecraft:rule_test']])
+}[Registry['minecraft:rule_test']])>
 
 export type TagMatch = {
   tag: (Registry['minecraft:tag/block'])
@@ -208,7 +208,8 @@ export type SymbolPosRuleTest<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? PosRuleTestDispatcherMap
   : CASE extends 'keys' ? PosRuleTestKeys : CASE extends '%fallback' ? PosRuleTestFallback : never
 type RuleBlockEntityModifierDispatcherMap = {
@@ -235,7 +236,8 @@ export type SymbolRuleBlockEntityModifier<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? RuleBlockEntityModifierDispatcherMap
   : CASE extends 'keys'
     ? RuleBlockEntityModifierKeys
@@ -268,7 +270,8 @@ export type SymbolRuleTest<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? RuleTestDispatcherMap
   : CASE extends 'keys' ? RuleTestKeys : CASE extends '%fallback' ? RuleTestFallback : never
 type TemplateProcessorDispatcherMap = {
@@ -307,6 +310,7 @@ export type SymbolTemplateProcessor<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? TemplateProcessorDispatcherMap
   : CASE extends 'keys' ? TemplateProcessorKeys : CASE extends '%fallback' ? TemplateProcessorFallback : never

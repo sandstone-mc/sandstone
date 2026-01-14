@@ -210,6 +210,7 @@ export type SymbolBlockEntity<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? BlockEntityDispatcherMap
   : CASE extends 'keys' ? BlockEntityKeys : CASE extends '%fallback' ? BlockEntityFallback : never

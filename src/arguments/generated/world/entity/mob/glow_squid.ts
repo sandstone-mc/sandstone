@@ -3,7 +3,7 @@ import type { NBTInt } from 'sandstone'
 
 export type GlowSquid = (MobBase & AgeableMob & {
   /**
-     * Ticks that it will wait before glowing.
-     */
+   * Ticks that it will wait before glowing.
+   */
   DarkTicksRemaining?: NBTInt
 })

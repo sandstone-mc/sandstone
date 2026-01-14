@@ -120,19 +120,19 @@ export type BoatType = (
 
 export type ChestBoat = (Boat & {
   /**
-     * Loot table that will populate this chest boat.
-     */
+   * Loot table that will populate this chest boat.
+   */
   LootTable?: (Registry['minecraft:loot_table'] | '')
   /**
-     * Seed of the loot table.
-     */
+   * Seed of the loot table.
+   */
   LootTableSeed?: NBTLong
   /**
-     * Slots from 0 to 26.
-     *
-     * Value:
-     * List length range: 0..27
-     */
+   * Slots from 0 to 26.
+   *
+   * Value:
+   * List length range: 0..27
+   */
   Items?: NBTList<SlottedItem<NBTByte<{
     min: 0
     max: 26
@@ -783,6 +783,7 @@ export type SymbolEntity<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? EntityDispatcherMap
   : CASE extends 'keys' ? EntityKeys : CASE extends '%fallback' ? EntityFallback : never

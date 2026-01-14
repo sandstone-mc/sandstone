@@ -3,11 +3,11 @@ import type { NBTIntArray, NBTLong } from 'sandstone'
 
 export type Conduit = (BlockEntity & {
   /**
-     * The hostile mob that the conduit is currently attacking.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * The hostile mob that the conduit is currently attacking.
+   *
+   * Value:
+   * Array length range: 4
+   */
   Target?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -18,11 +18,11 @@ export type Conduit = (BlockEntity & {
 
 export type TargetUuid = {
   /**
-     * Upper bits of the target's UUID
-     */
+   * Upper bits of the target's UUID
+   */
   M?: NBTLong
   /**
-     * Lower bits of the target's UUID
-     */
+   * Lower bits of the target's UUID
+   */
   L?: NBTLong
 }

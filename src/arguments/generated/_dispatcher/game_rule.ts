@@ -263,6 +263,7 @@ export type SymbolGameRule<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? GameRuleDispatcherMap
   : CASE extends 'keys' ? GameRuleKeys : CASE extends '%fallback' ? GameRuleFallback : never

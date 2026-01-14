@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type Clamp = {
   input: DensityFunction
@@ -29,14 +29,14 @@ export type FindTopSurface = {
   density: DensityFunctionRef
   upper_bound: DensityFunctionRef
   /**
-     * Value:
-     * Range: -4064..4062
-     */
+   * Value:
+   * Range: -4064..4062
+   */
   lower_bound: NBTInt<{}>
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   cell_height: NBTInt<{
     min: 1
   }>
@@ -62,9 +62,9 @@ export type OldBlendedNoise = {
   xz_factor: NBTFloat
   y_factor: NBTFloat
   /**
-     * Value:
-     * Range: 1..8
-     */
+   * Value:
+   * Range: 1..8
+   */
   smear_scale_multiplier: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -112,12 +112,12 @@ export type TerrainCoordinate = ('continents' | 'erosion' | 'weirdness' | 'ridge
 
 export type TerrainShaperSpline = {
   /**
-     * Value:
-     *
-     *  - Offset(`offset`)
-     *  - Factor(`factor`)
-     *  - Jaggedness(`jaggedness`)
-     */
+   * Value:
+   *
+   *  - Offset(`offset`)
+   *  - Factor(`factor`)
+   *  - Jaggedness(`jaggedness`)
+   */
   spline: SplineType
   min_value: NoiseRange
   max_value: NoiseRange
@@ -133,11 +133,11 @@ export type TwoArguments = {
 
 export type WeirdScaledSampler = {
   /**
-     * Value:
-     *
-     *  - Type1(`type_1`)
-     *  - Type2(`type_2`)
-     */
+   * Value:
+   *
+   *  - Type1(`type_1`)
+   *  - Type2(`type_2`)
+   */
   rarity_value_mapper: RarityType
   noise: Registry['minecraft:worldgen/noise']
   input: DensityFunctionRef
@@ -145,14 +145,14 @@ export type WeirdScaledSampler = {
 
 export type YClampedGradient = {
   /**
-     * Value:
-     * Range: -4064..4062
-     */
+   * Value:
+   * Range: -4064..4062
+   */
   from_y: NBTInt<{}>
   /**
-     * Value:
-     * Range: -4064..4062
-     */
+   * Value:
+   * Range: -4064..4062
+   */
   to_y: NBTInt<{}>
   from_value: NoiseRange
   to_value: NoiseRange
@@ -293,6 +293,7 @@ export type SymbolDensityFunction<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? DensityFunctionDispatcherMap
   : CASE extends 'keys' ? DensityFunctionKeys : CASE extends '%fallback' ? DensityFunctionFallback : never

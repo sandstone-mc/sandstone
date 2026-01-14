@@ -7,49 +7,49 @@ import type { TagClass } from 'sandstone'
 
 export type VillagerTrade = {
   /**
-     * Price item required by the merchant, count is modified depending on demand & per-player context.
-     */
+   * Price item required by the merchant. \
+   * The count is affected by various factors, including offered item, demand and player reputation.
+   */
   wants: TradeCost
   /**
-     * Second item required by the merchant, count does not change.
-     */
+   * Second item required by the merchant. \
+   * The count is not affected by any factors.
+   */
   additional_wants?: TradeCost
   /**
-     * Item being offered by the merchant.
-     */
+   * Item being offered by the merchant.
+   */
   gives: ItemStack
   /**
-     * Modifiers applied to the `gives` item. \
-     * Does **not** support `reference` item modifier. \
-     * Can affect the count of `wants` with the `additional_trade_cost` component. \
-     * After modifying the cost, the `additional_trade_cost` component is removed. \
-     */
+   * Modifiers applied to the `gives` item. \
+   * Does **not** support `reference` item modifier. \
+   * Some modifiers can affect the price through the `additional_trade_cost` transient component. \
+   * The `additional_trade_cost` component is not saved on the offered item.
+   */
   given_item_modifiers?: Array<ItemModifier>
   /**
-     * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`. \
-     * Clamps to an integer of at least `1`.
-     */
+   * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`. \
+   * Clamps to a positive integer.
+   */
   max_uses?: NumberProvider
   /**
-     * How much demand & reputation each affect the count of `wants`, is serialized as `priceMultiplier`. Defaults to `0.0`. \
-     * Clamps to a positive float.
-     */
+   * How much demand & reputation each affect the price, is serialized as `priceMultiplier`. Defaults to `0.0`. \
+   * Clamps to a non-negative float.
+   */
   reputation_discount?: NumberProvider
   /**
-     * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`. \
-     * Clamps to a positive integer.
-     */
+   * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`. \
+   * Clamps to a non-negative integer.
+   */
   xp?: NumberProvider
   /**
-     * Check whether the trade should be offered by the merchant. \
-     * Does **not** support the `reference` predicate.
-     */
+   * Check whether the trade should be offered by the merchant. \
+   * Does **not** support the `reference` predicate.
+   */
   merchant_predicate?: Predicate
   /**
-     * Doubles the `additional_trade_cost` value if the resulting item of `given_item_modifiers`:
-     * 1. has `additional_trade_cost` component, and
-     * 2. has the specified enchantments.
-     */
+   * If the offered enchanted book has the specified enchantments, the price will be affected by doubling the `additional_trade_cost` transient component.
+   */
   double_trade_price_enchantments?: ((
       | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
       | Array<Registry['minecraft:enchantment']>)

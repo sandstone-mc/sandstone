@@ -3,11 +3,11 @@ import type { NBTInt } from 'sandstone'
 
 export type Endermite = (MobBase & {
   /**
-     * How long it has existed.
-     */
+   * How long it has existed.
+   */
   Lifetime?: NBTInt
   /**
-     * Whether enderman should attack it.
-     */
+   * Whether enderman should attack it.
+   */
   PlayerSpawned?: boolean
 })

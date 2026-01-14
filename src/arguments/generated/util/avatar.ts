@@ -16,17 +16,17 @@ export type PlayerModelType = ('wide' | 'slim')
 
 export type Profile = ({
   /**
-     * Username of a player profile.
-     * If `id` doesn't exist, this field is used to fetch the current skin of the profile.
-     */
+   * Username of a player profile.
+   * If `id` doesn't exist, this field is used to fetch the current skin of the profile.
+   */
   name?: string
   /**
-     * UUID of the player profile.
-     * If `name` doesn't exist, this field is used to fetch the current skin of the profile.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * UUID of the player profile.
+   * If `name` doesn't exist, this field is used to fetch the current skin of the profile.
+   *
+   * Value:
+   * Array length range: 4
+   */
   id?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -34,17 +34,17 @@ export type Profile = ({
     max: 4
   }>
   /**
-     * Resolved textures hosted on the minecraft CDN.
-     *
-     * Value:
-     * *either*
-     *
-     * List length range: 0..16
-     *
-     * *or*
-     *
-     * *item 1*
-     */
+   * Resolved textures hosted on the minecraft CDN.
+   *
+   * Value:
+   * *either*
+   *
+   * List length range: 0..16
+   *
+   * *or*
+   *
+   * *item 1*
+   */
   properties?: (NBTList<ProfileProperty, {
     leftExclusive: false
     rightExclusive: false
@@ -52,42 +52,42 @@ export type Profile = ({
     max: 16
   }> | ProfilePropertyMap)
   /**
-     * Skin texture override.
-     */
+   * Skin texture override.
+   */
   texture?: Registry['minecraft:texture']
   /**
-     * Cape texture override.
-     */
+   * Cape texture override.
+   */
   cape?: Registry['minecraft:texture']
   /**
-     * Elytra texture override.
-     * If this texture is not present either as override or in player profile, the cape texture is used.
-     * If the cape texture is also not present, the default elytra texture is used.
-     */
+   * Elytra texture override.
+   * If this texture is not present either as override or in player profile, the cape texture is used.
+   * If the cape texture is also not present, the default elytra texture is used.
+   */
   elytra?: Registry['minecraft:texture']
   /**
-     * Model type override.
-     *
-     * Value:
-     *
-     *  - Wide(`wide`)
-     *  - Slim(`slim`)
-     */
+   * Model type override.
+   *
+   * Value:
+   *
+   *  - Wide(`wide`)
+   *  - Slim(`slim`)
+   */
   model?: PlayerModelType
 } | string)
 
 export type ProfileProperty = {
   /**
-     * Usually `textures`.
-     */
+   * Usually `textures`.
+   */
   name: string
   /**
-     * Base64 encoded JSON value of the texture index.
-     */
+   * Base64 encoded JSON value of the texture index.
+   */
   value: string
   /**
-     * Verifies the hash of the resulting texture.
-     */
+   * Verifies the hash of the resulting texture.
+   */
   signature?: string
 }
 

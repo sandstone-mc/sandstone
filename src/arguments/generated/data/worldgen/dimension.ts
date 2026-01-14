@@ -18,26 +18,26 @@ export type DimensionType = {
       | Registry['minecraft:timeline'] | `#${Registry['minecraft:tag/timeline']}` | TagClass<'timeline'>)
       | Array<Registry['minecraft:timeline']>)
   /**
-     * Affects the weather, lighting engine and respawning rules.
-     */
+   * Affects the weather, lighting engine and respawning rules.
+   */
   has_skylight: boolean
   /**
-     * Affects the weather, map items and respawning rules.
-     */
+   * Affects the weather, map items and respawning rules.
+   */
   has_ceiling: boolean
   /**
-     * Value:
-     * Range: 0.00001..30000000
-     */
+   * Value:
+   * Range: 0.00001..30000000
+   */
   coordinate_scale: (NBTDouble<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }> | number)
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   ambient_light: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -45,55 +45,55 @@ export type DimensionType = {
     max: 1
   }>
   /**
-     * Defaults to `false`.
-     */
+   * Defaults to `false`.
+   */
   has_fixed_time?: boolean
   /**
-     * Portals can't spawn and chorus fruit can't teleport players above this height.
-     *
-     * Value:
-     * Range: 0..4064
-     */
+   * Portals can't spawn and chorus fruit can't teleport players above this height.
+   *
+   * Value:
+   * Range: 0..4064
+   */
   logical_height: NBTInt<{
     min: 0
   }>
   /**
-     * Skybox type.
-     * Defaults to `overworld`.
-     *
-     * Value:
-     *
-     *  - None(`none`)
-     *  - Overworld(`overworld`)
-     *  - End(`end`)
-     */
+   * Skybox type.
+   * Defaults to `overworld`.
+   *
+   * Value:
+   *
+   *  - None(`none`)
+   *  - Overworld(`overworld`)
+   *  - End(`end`)
+   */
   skybox?: SkyboxType
   /**
-     * The direction of cardinal lighting that affects blocks.
-     *
-     * Value:
-     *
-     *  - Default(`default`)
-     *  - Nether(`nether`)
-     */
+   * The direction of cardinal lighting that affects blocks.
+   *
+   * Value:
+   *
+   *  - Default(`default`)
+   *  - Nether(`nether`)
+   */
   cardinal_light?: CardinalLightType
   /**
-     * Block tag defining what blocks keep fire infinitely burning.
-     */
+   * Block tag defining what blocks keep fire infinitely burning.
+   */
   infiniburn: (`#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
   /**
-     * The minimum height in which blocks can exist.
-     *
-     * Value:
-     * Range: -2032..2031
-     */
+   * The minimum height in which blocks can exist.
+   *
+   * Value:
+   * Range: -2032..2031
+   */
   min_y: NBTInt<{}>
   /**
-     * The total height in which blocks can exist. Max Y = Min Y + Height.
-     *
-     * Value:
-     * Range: 16..4064
-     */
+   * The total height in which blocks can exist. Max Y = Min Y + Height.
+   *
+   * Value:
+   * Range: 16..4064
+   */
   height: NBTInt<{
     min: 1
   }>
@@ -102,9 +102,9 @@ export type DimensionType = {
     max: 15
   }>>
   /**
-     * Value:
-     * Range: 0..15
-     */
+   * Value:
+   * Range: 0..15
+   */
   monster_spawn_block_light_limit: NBTInt<{
     min: 0
     max: 15

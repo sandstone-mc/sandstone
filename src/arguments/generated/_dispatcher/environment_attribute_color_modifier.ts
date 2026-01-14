@@ -24,10 +24,13 @@ export type SymbolEnvironmentAttributeColorModifier<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? EnvironmentAttributeColorModifierDispatcherMap
   : CASE extends 'keys'
     ? EnvironmentAttributeColorModifierKeys
     : CASE extends '%fallback'
       ? EnvironmentAttributeColorModifierFallback
-      : CASE extends '%none' ? EnvironmentAttributeColorModifierNoneType : never
+      : CASE extends '%none'
+        ? EnvironmentAttributeColorModifierNoneType
+        : CASE extends '%unknown' ? EnvironmentAttributeColorModifierFallbackType : never

@@ -1,9 +1,10 @@
+import type { DiscreteAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color.ts'
 import type { SingleItem } from 'sandstone/arguments/generated/world/item.ts'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BlockParticle = {
   block_state: (Registry['minecraft:block'] | BlockState)
@@ -11,9 +12,9 @@ export type BlockParticle = {
 
 export type DragonBreathParticle = {
   /**
-     * Multiplier of initial velocity.
-     * Defaults to 1.0
-     */
+   * Multiplier of initial velocity.
+   * Defaults to 1.0
+   */
   power?: NBTFloat
 }
 
@@ -23,9 +24,9 @@ export type DustColorTransitionParticle = {
   from_color: DustColor
   to_color: DustColor
   /**
-     * Value:
-     * Range: 0.01..4
-     */
+   * Value:
+   * Range: 0.01..4
+   */
   scale: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -36,9 +37,9 @@ export type DustColorTransitionParticle = {
 export type DustParticle = {
   color: DustColor
   /**
-     * Value:
-     * Range: 0.01..4
-     */
+   * Value:
+   * Range: 0.01..4
+   */
   scale: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -48,9 +49,9 @@ export type DustParticle = {
 
 export type EffectParticle = {
   /**
-     * Multiplier of initial velocity.
-     * Defaults to 1.0
-     */
+   * Multiplier of initial velocity.
+   * Defaults to 1.0
+   */
   power?: NBTFloat
   color?: RGB
 }
@@ -87,20 +88,20 @@ export type LegacyTranslucentParticle = NBTList<NBTFloat, {
   max: 4
 }>
 
-export type Particle = ({
+export type Particle = NonNullable<({
   [S in Extract<Registry['minecraft:particle_type'], string>]?: ({
     type: S
   } & (S extends undefined
     ? SymbolParticle<'%none'> :
-    (S extends keyof SymbolParticle ? SymbolParticle[S] : RootNBT)));
-}[Registry['minecraft:particle_type']])
+    (S extends keyof SymbolParticle ? SymbolParticle[S] : SymbolParticle<'%unknown'>)));
+}[Registry['minecraft:particle_type']])>
 
 export type SafePositionSource = {
   type: 'block'
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   pos: NBTList<NBTInt, {
     leftExclusive: false
     rightExclusive: false
@@ -111,18 +112,18 @@ export type SafePositionSource = {
 
 export type SculkChargeParticle = {
   /**
-     * Angle the particle texture is rotated to, measured in radians (π ~ 3.14 for 180° clockwise, negative for counter clockwise).
-     */
+   * Angle the particle texture is rotated to, measured in radians (π ~ 3.14 for 180° clockwise, negative for counter clockwise).
+   */
   roll: NBTFloat
 }
 
 export type ShriekParticle = {
   /**
-     * Ticks until the particle renders.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Ticks until the particle renders.
+   *
+   * Value:
+   * Range: 0..
+   */
   delay: NBTInt<{
     min: 0
   }>
@@ -134,9 +135,9 @@ export type TintedLeavesParticle = {
 
 export type TrailParticle = {
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   target: NBTList<(NBTDouble | number), {
     leftExclusive: false
     rightExclusive: false
@@ -145,9 +146,9 @@ export type TrailParticle = {
   }>
   color: RGB
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   duration: NBTInt<{
     min: 1
   }>
@@ -159,8 +160,8 @@ export type VibrationParticle = VibrationParticleData
 
 export type VibrationParticleData = {
   /**
-     * Ticks in which to interpolate the particle's initial position to the destination.
-     */
+   * Ticks in which to interpolate the particle's initial position to the destination.
+   */
   arrival_in_ticks: NBTInt
   destination: SafePositionSource
 }
@@ -224,7 +225,7 @@ type ParticleFallback = (
   | ParticleVibration
   | ParticleFallbackType)
 export type ParticleFallbackType = Record<string, never>
-type ParticleNoneType = unknown
+type ParticleNoneType = NBTObject
 type ParticleBlock = BlockParticle
 type ParticleBlockCrumble = BlockParticle
 type ParticleBlockMarker = BlockParticle
@@ -247,8 +248,11 @@ export type SymbolParticle<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ParticleDispatcherMap
   : CASE extends 'keys'
     ? ParticleKeys
-    : CASE extends '%fallback' ? ParticleFallback : CASE extends '%none' ? ParticleNoneType : never
+    : CASE extends '%fallback'
+      ? ParticleFallback
+      : CASE extends '%none' ? ParticleNoneType : CASE extends '%unknown' ? ParticleFallbackType : never

@@ -65,9 +65,9 @@ export type PackFormat = (NBTInt | NBTList<NBTInt, {
 
 export type PackOverlay = {
   /**
-     * Value:
-     * String length range: 1..
-     */
+   * Value:
+   * String length range: 1..
+   */
   directory: `${any}${string}`
   formats?: InclusiveRange<NBTInt>
   min_format?: PackFormat

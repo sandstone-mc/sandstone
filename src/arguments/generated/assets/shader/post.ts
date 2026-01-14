@@ -1,8 +1,8 @@
 import type { SymbolUniformValue } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AuxTarget = {
   name: string
@@ -23,13 +23,13 @@ export type InternalTarget = {
   width?: NBTInt
   height?: NBTInt
   /**
-     * If `true`, target will be persistent across frames. Defaults to `false`.
-     * The contents of the target will be cleared when the screen is resized.
-     */
+   * If `true`, target will be persistent across frames. Defaults to `false`.
+   * The contents of the target will be cleared when the screen is resized.
+   */
   persistent?: boolean
   /**
-     * Target will be filled with this color when created or cleared. Defaults to `0`.
-     */
+   * Target will be filled with this color when created or cleared. Defaults to `0`.
+   */
   clear_color?: RGBA
 }
 
@@ -68,16 +68,16 @@ export type TextureInput = {
   location: string
   sampler_name: string
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   width: NBTInt<{
     min: 1
   }>
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   height: NBTInt<{
     min: 1
   }>
@@ -88,27 +88,27 @@ export type UniformBlocks = ({
   [Key in `${any}${string}`]?: Array<UniformValue>;
 })
 
-export type UniformValue = ({
+export type UniformValue = NonNullable<({
   [S in Extract<UniformValueType, string>]?: ({
     /**
-         * Unused by the game, but good to set in practice.
-         */
+     * Unused by the game, but good to set in practice.
+     */
     name?: string
   } & {
     /**
-         * Value:
-         *
-         *  - Int(`int`)
-         *  - Ivec3(`ivec3`)
-         *  - Float(`float`)
-         *  - Vec2(`vec2`)
-         *  - Vec3(`vec3`)
-         *  - Vec4(`vec4`)
-         *  - Matrix4x4(`matrix4x4`)
-         */
+     * Value:
+     *
+     *  - Int(`int`)
+     *  - Ivec3(`ivec3`)
+     *  - Float(`float`)
+     *  - Vec2(`vec2`)
+     *  - Vec3(`vec3`)
+     *  - Vec4(`vec4`)
+     *  - Matrix4x4(`matrix4x4`)
+     */
     type: S
-    value: (S extends keyof SymbolUniformValue ? SymbolUniformValue[S] : NBTObject)
+    value: (S extends keyof SymbolUniformValue ? SymbolUniformValue[S] : RootNBT)
   });
-}[UniformValueType])
+}[UniformValueType])>
 
 export type UniformValueType = ('int' | 'ivec3' | 'float' | 'vec2' | 'vec3' | 'vec4' | 'matrix4x4')

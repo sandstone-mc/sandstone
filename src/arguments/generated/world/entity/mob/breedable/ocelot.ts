@@ -2,7 +2,7 @@ import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/b
 
 export type Ocelot = (Breedable & {
   /**
-     * Whether it trusts players.
-     */
+   * Whether it trusts players.
+   */
   Trusting?: boolean
 })

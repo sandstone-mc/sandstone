@@ -1,43 +1,43 @@
 import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type FallingBlock<S = undefined> = (EntityBase & {
   /**
-     * NBT data for the placed block.
-     */
-  TileEntityData?: (S extends keyof SymbolBlock ? SymbolBlock[S] : NBTObject)
+   * NBT data for the placed block.
+   */
+  TileEntityData?: (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT)
   /**
-     * Block state for the placed block. Defaults to sand.
-     */
+   * Block state for the placed block. Defaults to sand.
+   */
   BlockState?: BlockState
   /**
-     * Ticks it has existed.
-     */
+   * Ticks it has existed.
+   */
   Time?: NBTInt
   /**
-     * Whether it should drop as a block when destroyed.
-     */
+   * Whether it should drop as a block when destroyed.
+   */
   DropItem?: boolean
   /**
-     * Whether this it should hurt entities.
-     */
+   * Whether this it should hurt entities.
+   */
   HurtEntities?: boolean
   /**
-     * Maximum damage it should deal.
-     */
+   * Maximum damage it should deal.
+   */
   FallHurtMax?: NBTInt
   /**
-     * Damage multiplier.
-     */
+   * Damage multiplier.
+   */
   FallHurtAmount?: NBTFloat
   /**
-     * Whether the block should be destroyed instead of placed after landing on a solid block.
-     * When `true`, the block is not dropped as an item, even if the DropItem tag is set to `true`.
-     * However, if the entity is deleted due to its Time value being too high, this tag is ignored and an item is dropped depending on the `DropItem` tag.
-     * Defaults to `1` for falling suspicious sand and suspicious gravel, and `0` for the other vanilla falling blocks and any summoned falling block.
-     */
+   * Whether the block should be destroyed instead of placed after landing on a solid block.
+   * When `true`, the block is not dropped as an item, even if the DropItem tag is set to `true`.
+   * However, if the entity is deleted due to its Time value being too high, this tag is ignored and an item is dropped depending on the `DropItem` tag.
+   * Defaults to `1` for falling suspicious sand and suspicious gravel, and `0` for the other vanilla falling blocks and any summoned falling block.
+   */
   CancelDrop?: boolean
 })

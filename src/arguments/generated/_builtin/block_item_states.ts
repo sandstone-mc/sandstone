@@ -11,10 +11,13 @@ export type SymbolMcdocBlockItemStates<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? McdocBlockItemStatesDispatcherMap
   : CASE extends 'keys'
     ? McdocBlockItemStatesKeys
     : CASE extends '%fallback'
       ? McdocBlockItemStatesFallback
-      : CASE extends '%none' ? McdocBlockItemStatesNoneType : never
+      : CASE extends '%none'
+        ? McdocBlockItemStatesNoneType
+        : CASE extends '%unknown' ? McdocBlockItemStatesFallbackType : never

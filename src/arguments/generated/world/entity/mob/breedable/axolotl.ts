@@ -2,20 +2,20 @@ import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/b
 
 export type Axolotl = (Breedable & {
   /**
-     * The variant of the axolotl.
-     *
-     * Value:
-     *
-     *  - Lucy(`0`)
-     *  - Wild(`1`)
-     *  - Gold(`2`)
-     *  - Cyan(`3`)
-     *  - Blue(`4`)
-     */
+   * The variant of the axolotl.
+   *
+   * Value:
+   *
+   *  - Lucy(`0`)
+   *  - Wild(`1`)
+   *  - Gold(`2`)
+   *  - Cyan(`3`)
+   *  - Blue(`4`)
+   */
   Variant?: AxolotlVariantInt
   /**
-     * If this axolotl was released from a bucket.
-     */
+   * If this axolotl was released from a bucket.
+   */
   FromBucket?: boolean
 })
 

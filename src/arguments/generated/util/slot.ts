@@ -4,23 +4,23 @@ import type { ContainerComponents } from 'sandstone/arguments/generated/data/loo
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { LiteralUnion, NBTInt } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type ContentsSlotSource = {
   /**
-     * The slots to search.
-     */
+   * The slots to search.
+   */
   slot_source: SlotSource
   /**
-     * If an item targeted by `slot_source` has this container component, selects all items inside.
-     *
-     * Value:
-     *
-     *  - Container(`container`)
-     *  - BundleContents(`bundle_contents`)
-     *  - ChargedProjectiles(`charged_projectiles`)
-     */
+   * If an item targeted by `slot_source` has this container component, selects all items inside.
+   *
+   * Value:
+   *
+   *  - Container(`container`)
+   *  - BundleContents(`bundle_contents`)
+   *  - ChargedProjectiles(`charged_projectiles`)
+   */
   component: (ContainerComponents | `minecraft:${ContainerComponents}`)
 }
 
@@ -51,9 +51,9 @@ export type GroupSlotSource = {
 export type LimitCountSlotSource = {
   slot_source: SlotSource
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   limit: NBTInt<{
     min: 1
   }>
@@ -61,33 +61,33 @@ export type LimitCountSlotSource = {
 
 export type RangeSlotSource = {
   /**
-     * Value:
-     * *either*
-     *
-     *
-     *
-     * *or*
-     *
-     * *item 1*
-     */
+   * Value:
+   * *either*
+   *
+   *
+   *
+   * *or*
+   *
+   * *item 1*
+   */
   source: (EntityTarget | BlockEntityTarget)
   slots: LiteralUnion<ENTITY_SLOTS>
 }
 
 export type SlotSource = (TypedSlotSource | Array<TypedSlotSource>)
 
-export type SlottedItem<T> = (ItemStack & {
+export type SlottedItem<T extends NBTObject> = (ItemStack & {
   /**
-     * Inventory slot the item is in
-     */
+   * Inventory slot the item is in
+   */
   Slot?: T
 })
 
-export type TypedSlotSource = ({
+export type TypedSlotSource = NonNullable<({
   [S in Extract<Registry['minecraft:slot_source_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolSlotSource ? SymbolSlotSource[S] : RootNBT));
-}[Registry['minecraft:slot_source_type']])
+}[Registry['minecraft:slot_source_type']])>
 type SlotSourceDispatcherMap = {
   'contents': SlotSourceContents
   'minecraft:contents': SlotSourceContents
@@ -120,6 +120,7 @@ export type SymbolSlotSource<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? SlotSourceDispatcherMap
   : CASE extends 'keys' ? SlotSourceKeys : CASE extends '%fallback' ? SlotSourceFallback : never

@@ -4,8 +4,8 @@ import type { NBTIntArray, NBTLong } from 'sandstone'
 
 export type Fox = (Breedable & {
   /**
-     * List of trusted players.
-     */
+   * List of trusted players.
+   */
   Trusted?: Array<NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -13,35 +13,35 @@ export type Fox = (Breedable & {
     max: 4
   }>>
   /**
-     * Whether it is sleeping.
-     */
+   * Whether it is sleeping.
+   */
   Sleeping?: boolean
   /**
-     * The type of fox.
-     *
-     * Value:
-     *
-     *  - Red(`red`)
-     *  - Snow(`snow`)
-     */
+   * The type of fox.
+   *
+   * Value:
+   *
+   *  - Red(`red`)
+   *  - Snow(`snow`)
+   */
   Type?: FoxType
   /**
-     * Whether it is sitting.
-     */
+   * Whether it is sitting.
+   */
   Sitting?: boolean
   /**
-     * Whether it is crouching.
-     */
+   * Whether it is crouching.
+   */
   Crouching?: boolean
 })
 
 export type TrustedUUID = {
   /**
-     * Lower bits of the trusted player's UUID.
-     */
+   * Lower bits of the trusted player's UUID.
+   */
   L?: NBTLong
   /**
-     * Upper bits of the trusted player's UUID.
-     */
+   * Upper bits of the trusted player's UUID.
+   */
   M?: NBTLong
 }

@@ -1,7 +1,6 @@
 import { Set } from 'sandstone'
 import type { LiteralUnion, SetType } from 'sandstone'
 
-// TODO
 export type SOUNDS = (LiteralUnion<SetType<typeof SOUNDS_SET>> | `minecraft:${SetType<typeof SOUNDS_SET>}`)
 
 export const SOUNDS_SET = new Set([

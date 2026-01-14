@@ -1,7 +1,7 @@
 import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { MCFunctionClass, NBTInt } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AllOffTestEnvironment = {
   definitions: Array<TestEnvironment>
@@ -15,9 +15,9 @@ export type BoolGameRule = {
 export type ClockTimeTestEnvironment = {
   clock: `${string}:${string}`
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   time: NBTInt<{
     min: 0
   }>
@@ -32,7 +32,7 @@ export type GameRulesTestEnvironment = {
   rules: ({
     [Key in Extract<Registry['minecraft:game_rule'], string>]?: (Key extends keyof SymbolGameRule
       ? SymbolGameRule[Key]
-      : NBTObject);
+      : RootNBT);
   })
 }
 
@@ -41,19 +41,17 @@ export type IntGameRule = {
   value: NBTInt
 }
 
-export type TestEnvironment = ({
+export type TestEnvironment = NonNullable<({
   [S in Extract<Registry['minecraft:test_environment_definition_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolTestEnvironmentDefinition
-    ? SymbolTestEnvironmentDefinition[S]
-    : RootNBT));
-}[Registry['minecraft:test_environment_definition_type']])
+  } & (S extends keyof SymbolTestEnvironmentDefinition ? SymbolTestEnvironmentDefinition[S] : RootNBT));
+}[Registry['minecraft:test_environment_definition_type']])>
 
 export type TimeOfDayTestEnvironment = {
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   time: NBTInt<{
     min: 0
   }>
@@ -63,12 +61,12 @@ export type Weather = ('clear' | 'rain' | 'thunder')
 
 export type WeatherTestEnvironment = {
   /**
-     * Value:
-     *
-     *  - Clear(`clear`)
-     *  - Rain(`rain`)
-     *  - Thunder(`thunder`)
-     */
+   * Value:
+   *
+   *  - Clear(`clear`)
+   *  - Rain(`rain`)
+   *  - Thunder(`thunder`)
+   */
   weather: Weather
 }
 type TestEnvironmentDefinitionDispatcherMap = {
@@ -103,7 +101,8 @@ export type SymbolTestEnvironmentDefinition<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? TestEnvironmentDefinitionDispatcherMap
   : CASE extends 'keys'
     ? TestEnvironmentDefinitionKeys

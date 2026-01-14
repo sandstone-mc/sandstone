@@ -10,15 +10,15 @@ export type DespawnableProjectileBase = AcceleratingProjectileBase
 
 export type FireballBase = (DespawnableProjectileBase & {
   /**
-     * Item it should render as.
-     */
+   * Item it should render as.
+   */
   Item?: ItemStack
 })
 
 export type LargeFireball = (FireballBase & {
   /**
-     * Explosion radius.
-     */
+   * Explosion radius.
+   */
   ExplosionPower?: NBTInt
 })
 

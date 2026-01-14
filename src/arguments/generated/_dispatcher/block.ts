@@ -714,6 +714,7 @@ export type SymbolBlock<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? BlockDispatcherMap
   : CASE extends 'keys' ? BlockKeys : CASE extends '%fallback' ? BlockFallback : never

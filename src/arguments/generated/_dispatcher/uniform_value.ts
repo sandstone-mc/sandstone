@@ -61,6 +61,7 @@ export type SymbolUniformValue<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? UniformValueDispatcherMap
   : CASE extends 'keys' ? UniformValueKeys : CASE extends '%fallback' ? UniformValueFallback : never

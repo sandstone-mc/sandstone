@@ -2,13 +2,13 @@ import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 
 export type TestBlock = (BlockEntity & {
   /**
-     * Value:
-     *
-     *  - Start(`start`)
-     *  - Log(`log`)
-     *  - Fail(`fail`)
-     *  - Accept(`accept`)
-     */
+   * Value:
+   *
+   *  - Start(`start`)
+   *  - Log(`log`)
+   *  - Fail(`fail`)
+   *  - Accept(`accept`)
+   */
   mode?: TestBlockMode
   message?: string
   powered?: boolean

@@ -9,28 +9,28 @@ export type Properties = {
 
 export type Skull = (BlockEntity & {
   /**
-     * Name of the owner, if exists will be converted to SkullOwner.
-     */
+   * Name of the owner, if exists will be converted to SkullOwner.
+   */
   ExtraType?: string
   /**
-     * Sound to play when played with a note block.
-     * Only works on player head.
-     */
+   * Sound to play when played with a note block.
+   * Only works on player head.
+   */
   note_block_sound?: SymbolDataComponent['note_block_sound']
   /**
-     * Only works on player head.
-     */
+   * Only works on player head.
+   */
   profile?: Profile
   custom_name?: SymbolDataComponent['custom_name']
 })
 
 export type SkullOwner = {
   /**
-     * Optional.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * Optional.
+   *
+   * Value:
+   * Array length range: 4
+   */
   Id?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -38,8 +38,8 @@ export type SkullOwner = {
     max: 4
   }>
   /**
-     * If missing appears as a steve head.
-     */
+   * If missing appears as a steve head.
+   */
   Name?: string
   Properties?: Properties
 }
@@ -47,7 +47,7 @@ export type SkullOwner = {
 export type Texture = {
   Signature?: string
   /**
-     * Base64 encoded JSON value of the texture index.
-     */
+   * Base64 encoded JSON value of the texture index.
+   */
   Value?: string
 }

@@ -4,16 +4,16 @@ import type { NBTInt } from 'sandstone'
 
 export type FireWorkRocket = (ProjectileBase & {
   /**
-     * Ticks it has existed.
-     */
+   * Ticks it has existed.
+   */
   Life?: NBTInt
   /**
-     * Ticks it will exist.
-     */
+   * Ticks it will exist.
+   */
   LifeTime?: NBTInt
   /**
-     * Whether it should move at an angle.
-     */
+   * Whether it should move at an angle.
+   */
   ShotAtAngle?: boolean
   FireworksItem?: ItemStack
 })

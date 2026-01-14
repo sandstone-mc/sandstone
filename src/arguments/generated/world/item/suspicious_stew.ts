@@ -5,11 +5,11 @@ import type { NBTInt } from 'sandstone'
 export type Effect = {
   EffectId?: EffectId
   /**
-     * Duration in ticks.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * Duration in ticks.
+   *
+   * Value:
+   * Range: 1..
+   */
   EffectDuration?: NBTInt<{
     min: 1
   }>
@@ -17,7 +17,7 @@ export type Effect = {
 
 export type SuspiciousStew = (ItemBase & {
   /**
-     * Effects this stew will give.
-     */
+   * Effects this stew will give.
+   */
   Effects?: Array<Effect>
 })

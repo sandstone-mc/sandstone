@@ -15,7 +15,8 @@ export type SymbolSoundType<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? SoundTypeDispatcherMap
   : CASE extends 'keys'
     ? SoundTypeKeys

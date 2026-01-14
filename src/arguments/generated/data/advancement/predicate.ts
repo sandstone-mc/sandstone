@@ -23,19 +23,19 @@ import type {
 } from 'sandstone/arguments/generated/world/component/entity.ts'
 import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat.ts'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { LiteralUnion, NBTClass, NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AxolotlPredicate = {
   /**
-     * Value:
-     *
-     *  - Lucy(`lucy`)
-     *  - Wild(`wild`)
-     *  - Gold(`gold`)
-     *  - Cyan(`cyan`)
-     *  - Blue(`blue`): The rare variant.
-     */
+   * Value:
+   *
+   *  - Lucy(`lucy`)
+   *  - Wild(`wild`)
+   *  - Gold(`gold`)
+   *  - Cyan(`cyan`)
+   *  - Blue(`blue`): The rare variant.
+   */
   variant: AxolotlVariant
 }
 
@@ -45,32 +45,32 @@ export type BlockPredicate<S = undefined> = {
       | Array<Registry['minecraft:block']>)
   state?: (S extends undefined
     ? SymbolMcdocBlockStates<'%none'> :
-    (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : NBTObject))
-  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : NBTObject))
+    (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>))
+  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT))
   /**
-     * Match exact data component values on the block entity.
-     */
+   * Match exact data component values on the block entity.
+   */
   components?: DataComponentExactPredicate
   /**
-     * Test data component values on the block entity.
-     */
+   * Test data component values on the block entity.
+   */
   predicates?: DataComponentPredicate
 }
 
 export type BoatPredicate = {
   /**
-     * Value:
-     *
-     *  - Oak(`oak`)
-     *  - Spruce(`spruce`)
-     *  - Birch(`birch`)
-     *  - Jungle(`jungle`)
-     *  - Acacia(`acacia`)
-     *  - DarkOak(`dark_oak`)
-     *  - Mangrove(`mangrove`)
-     *  - Bamboo(`bamboo`)
-     *  - Cherry(`cherry`)
-     */
+   * Value:
+   *
+   *  - Oak(`oak`)
+   *  - Spruce(`spruce`)
+   *  - Birch(`birch`)
+   *  - Jungle(`jungle`)
+   *  - Acacia(`acacia`)
+   *  - DarkOak(`dark_oak`)
+   *  - Mangrove(`mangrove`)
+   *  - Bamboo(`bamboo`)
+   *  - Cherry(`cherry`)
+   */
   variant: BoatType
 }
 
@@ -82,54 +82,54 @@ export type CatPredicate = {
 
 export type DamagePredicate = {
   /**
-     * Amount of incoming damage before damage reduction.
-     */
+   * Amount of incoming damage before damage reduction.
+   */
   dealt?: MinMaxBounds<NBTFloat>
   /**
-     * Amount of incoming damage after damage reduction.
-     */
+   * Amount of incoming damage after damage reduction.
+   */
   taken?: MinMaxBounds<NBTFloat>
   /**
-     * Whether the damage was successfully blocked.
-     */
+   * Whether the damage was successfully blocked.
+   */
   blocked?: boolean
   /**
-     * Source of the damage (eg: a skeleton shooting an arrow or player igniting tnt).
-     */
+   * Source of the damage (eg: a skeleton shooting an arrow or player igniting tnt).
+   */
   source_entity?: EntityPredicate
   /**
-     * The type of the damage source.
-     */
+   * The type of the damage source.
+   */
   type?: DamageSourcePredicate
 }
 
 export type DamageSourcePredicate = {
   /**
-     * Damage type tags that the damage type is in.
-     */
+   * Damage type tags that the damage type is in.
+   */
   tags?: Array<DamageTagPredicate>
   /**
-     * Source of the damage (eg: a skeleton shooting an arrow or player igniting tnt).
-     */
+   * Source of the damage (eg: a skeleton shooting an arrow or player igniting tnt).
+   */
   source_entity?: EntityPredicate
   /**
-     * Direct entity responsible for the damage (eg: the arrow or tnt).
-     */
+   * Direct entity responsible for the damage (eg: the arrow or tnt).
+   */
   direct_entity?: EntityPredicate
   /**
-     * Damage is direct when its direct and source entities are the same.
-     */
+   * Damage is direct when its direct and source entities are the same.
+   */
   is_direct?: boolean
 }
 
 export type DamageTagPredicate = {
   /**
-     * The damage type tag to check.
-     */
+   * The damage type tag to check.
+   */
   id: (Registry['minecraft:tag/damage_type'])
   /**
-     * Whether the damage is expected to have or not have the tag.
-     */
+   * Whether the damage is expected to have or not have the tag.
+   */
   expected: boolean
 }
 
@@ -166,7 +166,7 @@ export type EntityPredicate<S = undefined> = {
       | Array<Registry['minecraft:entity_type']>)
   type_specific?: EntitySubPredicate
   team?: `${any}${string}`
-  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : NBTObject))
+  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT))
   location?: LocationPredicate
   distance?: DistancePredicate
   flags?: EntityFlagsPredicate
@@ -177,8 +177,8 @@ export type EntityPredicate<S = undefined> = {
   passenger?: EntityPredicate
   stepping_on?: LocationPredicate
   /**
-     * The entity that a mob's AI/aggro is targeting.
-     */
+   * The entity that a mob's AI/aggro is targeting.
+   */
   targeted_entity?: EntityPredicate
   effects?: ({
     [Key in Extract<Registry['minecraft:mob_effect'], string>]?: MobEffectPredicate;
@@ -188,33 +188,33 @@ export type EntityPredicate<S = undefined> = {
   })
   movement?: MovementPredicate
   /**
-     * True every `n` ticks of an entity's lifetime.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * True every `n` ticks of an entity's lifetime.
+   *
+   * Value:
+   * Range: 1..
+   */
   periodic_tick?: NBTInt<{
     min: 1
   }>
   /**
-     * Whether the block at most 0.5 blocks below the entity is present which can affect its movement.
-     */
+   * Whether the block at most 0.5 blocks below the entity is present which can affect its movement.
+   */
   movement_affected_by?: LocationPredicate
   /**
-     * Match exact data component values on the entity.
-     */
+   * Match exact data component values on the entity.
+   */
   components?: DataComponentExactPredicate
   /**
-     * Test data component values on the entity.
-     */
+   * Test data component values on the entity.
+   */
   predicates?: DataComponentPredicate
 }
 
-export type EntitySubPredicate = ({
+export type EntitySubPredicate = NonNullable<({
   [S in Extract<Registry['minecraft:entity_sub_predicate_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolEntitySubPredicate ? SymbolEntitySubPredicate[S] : RootNBT));
-}[Registry['minecraft:entity_sub_predicate_type']])
+}[Registry['minecraft:entity_sub_predicate_type']])>
 
 export type FishingHookPredicate = {
   in_open_water?: boolean
@@ -231,11 +231,11 @@ export type FluidPredicate = {
 
 export type FoxPredicate = {
   /**
-     * Value:
-     *
-     *  - Red(`red`)
-     *  - Snow(`snow`)
-     */
+   * Value:
+   *
+   *  - Red(`red`)
+   *  - Snow(`snow`)
+   */
   variant: FoxType
 }
 
@@ -249,16 +249,16 @@ export type GameMode = ('survival' | 'creative' | 'adventure' | 'spectator')
 
 export type HorsePredicate = {
   /**
-     * Value:
-     *
-     *  - White(`white`)
-     *  - Creamy(`creamy`)
-     *  - Chestnut(`chestnut`)
-     *  - Brown(`brown`)
-     *  - Black(`black`)
-     *  - Gray(`gray`)
-     *  - DarkBrown(`dark_brown`)
-     */
+   * Value:
+   *
+   *  - White(`white`)
+   *  - Creamy(`creamy`)
+   *  - Chestnut(`chestnut`)
+   *  - Brown(`brown`)
+   *  - Black(`black`)
+   *  - Gray(`gray`)
+   *  - DarkBrown(`dark_brown`)
+   */
   variant: HorseVariant
 }
 
@@ -278,13 +278,13 @@ export type LightningBoltPredicate = {
 
 export type LlamaPredicate = {
   /**
-     * Value:
-     *
-     *  - Creamy(`creamy`)
-     *  - White(`white`)
-     *  - Brown(`brown`)
-     *  - Gray(`gray`)
-     */
+   * Value:
+   *
+   *  - Creamy(`creamy`)
+   *  - White(`white`)
+   *  - Brown(`brown`)
+   *  - Gray(`gray`)
+   */
   variant: LlamaVariant
 }
 
@@ -306,8 +306,8 @@ export type LocationPredicate = {
       | Array<Registry['minecraft:worldgen/structure']>)
   dimension?: Registry['minecraft:dimension']
   /**
-     * Calculated using: `max(sky-darkening, block)`.
-     */
+   * Calculated using: `max(sky-darkening, block)`.
+   */
   light?: {
     light?: MinMaxBounds<NBTInt<{
       min: 0
@@ -317,12 +317,12 @@ export type LocationPredicate = {
   block?: BlockPredicate
   fluid?: FluidPredicate
   /**
-     * Whether the block is above (5 blocks or less) a campfire or soul campfire.
-     */
+   * Whether the block is above (5 blocks or less) a campfire or soul campfire.
+   */
   smokey?: boolean
   /**
-     * Whether the location has the maximum possible level of sky light
-     */
+   * Whether the location has the maximum possible level of sky light
+   */
   can_see_sky?: boolean
 }
 
@@ -335,11 +335,11 @@ export type MobEffectPredicate = {
 
 export type MooshroomPredicate = {
   /**
-     * Value:
-     *
-     *  - Red(`red`)
-     *  - Brown(`brown`)
-     */
+   * Value:
+   *
+   *  - Red(`red`)
+   *  - Brown(`brown`)
+   */
   variant: MooshroomType
 }
 
@@ -363,14 +363,14 @@ export type PaintingPredicate = {
 
 export type ParrotPredicate = {
   /**
-     * Value:
-     *
-     *  - RedBlue(`red_blue`)
-     *  - Blue(`blue`)
-     *  - Green(`green`)
-     *  - YellowBlue(`yellow_blue`)
-     *  - Gray(`gray`)
-     */
+   * Value:
+   *
+   *  - RedBlue(`red_blue`)
+   *  - Blue(`blue`)
+   *  - Green(`green`)
+   *  - YellowBlue(`yellow_blue`)
+   *  - Gray(`gray`)
+   */
   variant: ParrotVariant
 }
 
@@ -382,8 +382,8 @@ export type PlayerPredicate = {
   })
   gamemode?: Array<GameMode>
   /**
-     * Experience/XP level.
-     */
+   * Experience/XP level.
+   */
   level?: MinMaxBounds<NBTInt>
   recipes?: ({
     [Key in Extract<Registry['minecraft:recipe'], string>]?: boolean;
@@ -391,8 +391,8 @@ export type PlayerPredicate = {
   stats?: Array<StatisticPredicate>
   looking_at?: EntityPredicate
   /**
-     * Checks the movement keys of the player.
-     */
+   * Checks the movement keys of the player.
+   */
   input?: {
     forward?: boolean
     backward?: boolean
@@ -410,16 +410,16 @@ export type PlayerPredicate = {
 
 export type RabbitPredicate = {
   /**
-     * Value:
-     *
-     *  - Brown(`brown`)
-     *  - White(`white`)
-     *  - Black(`black`)
-     *  - WhiteSplotched(`white_splotched`)
-     *  - Gold(`gold`)
-     *  - Salt(`salt`)
-     *  - Evil(`evil`): Killer rabbit
-     */
+   * Value:
+   *
+   *  - Brown(`brown`)
+   *  - White(`white`)
+   *  - Black(`black`)
+   *  - WhiteSplotched(`white_splotched`)
+   *  - Gold(`gold`)
+   *  - Salt(`salt`)
+   *  - Evil(`evil`): Killer rabbit
+   */
   variant: RabbitVariant
 }
 
@@ -430,12 +430,12 @@ export type RaiderPredicate = {
 
 export type SalmonPredicate = {
   /**
-     * Value:
-     *
-     *  - Small(`small`)
-     *  - Medium(`medium`)
-     *  - Large(`large`)
-     */
+   * Value:
+   *
+   *  - Small(`small`)
+   *  - Medium(`medium`)
+   *  - Large(`large`)
+   */
   variant?: SalmonVariant
 }
 
@@ -469,33 +469,33 @@ export type SpecificType = (
   | 'tropical_fish'
   | 'villager')
 
-export type StatisticPredicate = ({
+export type StatisticPredicate = NonNullable<({
   [S in Extract<Registry['minecraft:stat_type'], string>]?: {
     type: S
-    stat: (S extends keyof SymbolStatisticType ? SymbolStatisticType[S] : NBTObject)
+    stat: (S extends keyof SymbolStatisticType ? SymbolStatisticType[S] : SymbolStatisticType<'%unknown'>)
     value: MinMaxBounds<NBTInt>
   };
-}[Registry['minecraft:stat_type']])
+}[Registry['minecraft:stat_type']])>
 
 export type TropicalFishPredicate = {
   /**
-     * The pattern of the tropical fish.
-     *
-     * Value:
-     *
-     *  - Kob(`kob`)
-     *  - Sunstreak(`sunstreak`)
-     *  - Snooper(`snooper`)
-     *  - Dasher(`dasher`)
-     *  - Brinely(`brinely`)
-     *  - Spotty(`spotty`)
-     *  - Flopper(`flopper`)
-     *  - Stripey(`stripey`)
-     *  - Glitter(`glitter`)
-     *  - Blockfish(`blockfish`)
-     *  - Betty(`betty`)
-     *  - Clayfish(`clayfish`)
-     */
+   * The pattern of the tropical fish.
+   *
+   * Value:
+   *
+   *  - Kob(`kob`)
+   *  - Sunstreak(`sunstreak`)
+   *  - Snooper(`snooper`)
+   *  - Dasher(`dasher`)
+   *  - Brinely(`brinely`)
+   *  - Spotty(`spotty`)
+   *  - Flopper(`flopper`)
+   *  - Stripey(`stripey`)
+   *  - Glitter(`glitter`)
+   *  - Blockfish(`blockfish`)
+   *  - Betty(`betty`)
+   *  - Clayfish(`clayfish`)
+   */
   variant: TropicalFishPattern
 }
 
@@ -600,6 +600,7 @@ export type SymbolEntitySubPredicate<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? EntitySubPredicateDispatcherMap
   : CASE extends 'keys' ? EntitySubPredicateKeys : CASE extends '%fallback' ? EntitySubPredicateFallback : never

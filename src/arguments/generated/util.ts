@@ -1,21 +1,22 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTInt, NBTIntArray, NBTList, NBTObject } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
+import type { NBTInt, NBTIntArray, NBTList } from 'sandstone'
 
-export type Filterable<T> = ({
+export type Filterable<T extends NBTObject> = ({
   raw: T
   /**
-     * Shown only to players with chat filtering enabled.
-     */
+   * Shown only to players with chat filtering enabled.
+   */
   filtered?: T
 } | T)
 
 export type GlobalPos = {
   /**
-     * Coordinates of the location in [x, y, z]
-     *
-     * Value:
-     * Array length range: 3
-     */
+   * Coordinates of the location in [x, y, z]
+   *
+   * Value:
+   * Array length range: 3
+   */
   pos: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -23,8 +24,8 @@ export type GlobalPos = {
     max: 3
   }>
   /**
-     * Dimension of the location
-     */
+   * Dimension of the location
+   */
   dimension: Registry['minecraft:dimension']
 }
 
@@ -43,15 +44,15 @@ export type NonEmptyWeightedList<T extends NBTObject> = NBTList<WeightedEntry<T>
   min: 1
 }>
 
-export type WeightedEntry<T> = {
+export type WeightedEntry<T extends NBTObject> = {
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   weight: NBTInt<{
     min: 0
   }>
   data: T
 }
 
-export type WeightedList<T> = Array<WeightedEntry<T>>
+export type WeightedList<T extends NBTObject> = Array<WeightedEntry<T>>

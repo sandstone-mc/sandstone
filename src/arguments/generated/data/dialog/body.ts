@@ -1,48 +1,48 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTInt } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTInt } from 'sandstone'
 
-export type DialogBody = ({
+export type DialogBody = NonNullable<({
   [S in Extract<Registry['minecraft:dialog_body_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolDialogBody ? SymbolDialogBody[S] : RootNBT));
-}[Registry['minecraft:dialog_body_type']])
+}[Registry['minecraft:dialog_body_type']])>
 
 export type ItemBody = {
   item: ItemStack
   /**
-     * The description text rendered to the right of item.
-     */
+   * The description text rendered to the right of item.
+   */
   description?: (PlainMessage | Text)
   /**
-     * Whether count and damage bar are rendered over the item.
-     * Defaults to `true`.
-     */
+   * Whether count and damage bar are rendered over the item.
+   * Defaults to `true`.
+   */
   show_decorations?: boolean
   /**
-     * Whether item tooltip shows up when the item is hovered.
-     * Defaults to `true`.
-     */
+   * Whether item tooltip shows up when the item is hovered.
+   * Defaults to `true`.
+   */
   show_tooltip?: boolean
   /**
-     * Width of the item.
-     * Defaults to 16.
-     *
-     * Value:
-     * Range: 1..256
-     */
+   * Width of the item.
+   * Defaults to 16.
+   *
+   * Value:
+   * Range: 1..256
+   */
   width?: NBTInt<{
     min: 1
   }>
   /**
-     * Height of the item.
-     * Defaults to 16.
-     *
-     * Value:
-     * Range: 1..256
-     */
+   * Height of the item.
+   * Defaults to 16.
+   *
+   * Value:
+   * Range: 1..256
+   */
   height?: NBTInt<{
     min: 1
   }>
@@ -50,17 +50,17 @@ export type ItemBody = {
 
 export type PlainMessage = {
   /**
-     * A multiline label.
-     * Click events in the text trigger `after_action` like any other action.
-     */
+   * A multiline label.
+   * Click events in the text trigger `after_action` like any other action.
+   */
   contents: Text
   /**
-     * Maximum width of message.
-     * Defaults to 200.
-     *
-     * Value:
-     * Range: 1..1024
-     */
+   * Maximum width of message.
+   * Defaults to 200.
+   *
+   * Value:
+   * Range: 1..1024
+   */
   width?: NBTInt<{
     min: 1
   }>
@@ -79,6 +79,7 @@ export type SymbolDialogBody<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? DialogBodyDispatcherMap
   : CASE extends 'keys' ? DialogBodyKeys : CASE extends '%fallback' ? DialogBodyFallback : never

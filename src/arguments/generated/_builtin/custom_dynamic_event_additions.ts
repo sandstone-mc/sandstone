@@ -9,8 +9,11 @@ export type SymbolMcdocCustomDynamicEventAdditions<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? McdocCustomDynamicEventAdditionsDispatcherMap
   : CASE extends 'keys'
     ? McdocCustomDynamicEventAdditionsKeys
-    : CASE extends '%fallback' ? McdocCustomDynamicEventAdditionsFallback : never
+    : CASE extends '%fallback'
+      ? McdocCustomDynamicEventAdditionsFallback
+      : CASE extends '%unknown' ? McdocCustomDynamicEventAdditionsFallbackType : never

@@ -11,8 +11,8 @@ import type { LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type AllayDropItemOnBlock = (TriggerBase & {
   location?: Array<LootCondition>
@@ -25,12 +25,12 @@ export type AnyBlockUse = (TriggerBase & {
 export type BeeNestDestroyed = (TriggerBase & {
   block?: Registry['minecraft:block']
   /**
-     * Number of bees that were inside the bee nest/beehive before it was broken.
-     */
+   * Number of bees that were inside the bee nest/beehive before it was broken.
+   */
   num_bees_inside?: NBTInt
   /**
-     * Item used to break the block.
-     */
+   * Item used to break the block.
+   */
   item?: ItemPredicate
 })
 
@@ -55,14 +55,14 @@ export type ChanneledLightning = (TriggerBase & {
 
 export type CompositeEntity = (EntityPredicate | Array<LootCondition>)
 
-export type Conditions<C> = {
+export type Conditions<C extends NBTObject> = {
   conditions?: C
 }
 
 export type ConstructBeacon = (TriggerBase & {
   /**
-     * Tier of the updated beacon base.
-     */
+   * Tier of the updated beacon base.
+   */
   level?: MinMaxBounds<NBTInt>
 })
 
@@ -77,8 +77,8 @@ export type CuredZombieVillager = (TriggerBase & {
 
 export type DefaultBlockUse = (TriggerBase & {
   /**
-     * The location of the block.
-     */
+   * The location of the block.
+   */
   location?: Array<LootCondition>
 })
 
@@ -94,14 +94,14 @@ export type EnchantedItem = (TriggerBase & {
   levels?: MinMaxBounds<NBTInt>
 })
 
-export type EnterBlock = ({
+export type EnterBlock = NonNullable<({
   [S in Extract<Registry['minecraft:block'], string>]?: (TriggerBase & {
     block?: S
     state?: (S extends undefined
       ? SymbolMcdocBlockStates<'%none'> :
-      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : NBTObject))
+      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>))
   });
-}[Registry['minecraft:block']])
+}[Registry['minecraft:block']])>
 
 export type EntityHurtPlayer = (TriggerBase & {
   damage?: DamagePredicate
@@ -129,32 +129,32 @@ export type FilledBucket = (TriggerBase & {
 
 export type FishingRodHooked = (TriggerBase & {
   /**
-     * Entity that was pulled.
-     */
+   * Entity that was pulled.
+   */
   entity?: CompositeEntity
   /**
-     * Item that was caught.
-     */
+   * Item that was caught.
+   */
   item?: ItemPredicate
   /**
-     * Fishing rod used.
-     */
+   * Fishing rod used.
+   */
   rod?: ItemPredicate
 })
 
 export type InventoryChanged = (TriggerBase & {
   slots?: {
     /**
-         * Amount of empty slots.
-         */
+     * Amount of empty slots.
+     */
     empty?: MinMaxBounds<NBTInt>
     /**
-         * Amount of occupied slots.
-         */
+     * Amount of occupied slots.
+     */
     occupied?: MinMaxBounds<NBTInt>
     /**
-         * Amount of slots that are a full stack.
-         */
+     * Amount of slots that are a full stack.
+     */
     full?: MinMaxBounds<NBTInt>
   }
   items?: Array<ItemPredicate>
@@ -162,16 +162,16 @@ export type InventoryChanged = (TriggerBase & {
 
 export type ItemDurabilityChanged = (TriggerBase & {
   /**
-     * Change in durability (negative numbers are used to indicate a decrease in durability).
-     */
+   * Change in durability (negative numbers are used to indicate a decrease in durability).
+   */
   delta?: MinMaxBounds<NBTInt>
   /**
-     * The resulting durability.
-     */
+   * The resulting durability.
+   */
   durability?: MinMaxBounds<NBTInt>
   /**
-     * The item before its durability changed.
-     */
+   * The item before its durability changed.
+   */
   item?: ItemPredicate
 })
 
@@ -181,20 +181,20 @@ export type ItemUsedOnBlock = (TriggerBase & {
 
 export type KilledByArrow = (TriggerBase & {
   /**
-     * How many different types of entities were killed.
-     */
+   * How many different types of entities were killed.
+   */
   unique_entity_types?: MinMaxBounds<NBTInt>
   /**
-     * The weapon item that was used to fire the arrow.
-     */
+   * The weapon item that was used to fire the arrow.
+   */
   fired_from_weapon?: ItemPredicate
   victims?: Array<CompositeEntity>
 })
 
 export type KilledByCrossbow = (TriggerBase & {
   /**
-     * How many different types of entities were killed.
-     */
+   * How many different types of entities were killed.
+   */
   unique_entity_types?: MinMaxBounds<NBTInt>
   victims?: Array<CompositeEntity>
 })
@@ -218,19 +218,19 @@ export type Location = TriggerBase
 
 export type NetherTravel = (TriggerBase & {
   /**
-     * Where in the Overworld the player was when they travelled to the Nether.
-     */
+   * Where in the Overworld the player was when they travelled to the Nether.
+   */
   start_position?: LocationPredicate
   /**
-     * How far the player now is from the coordinate they started at in the Overworld before travelling.
-     */
+   * How far the player now is from the coordinate they started at in the Overworld before travelling.
+   */
   distance?: DistancePredicate
 })
 
 export type PlacedBlock = (TriggerBase & {
   /**
-     * Where the block was placed.
-     */
+   * Where the block was placed.
+   */
   location?: Array<LootCondition>
 })
 
@@ -256,9 +256,9 @@ export type PlayerKilledEntity = (TriggerBase & {
 export type RecipeCrafted = (TriggerBase & {
   recipe_id: Registry['minecraft:recipe']
   /**
-     * Value:
-     * List length range: 1..9
-     */
+   * Value:
+   * List length range: 1..9
+   */
   ingredients?: NBTList<ItemPredicate, {
     leftExclusive: false
     rightExclusive: false
@@ -271,7 +271,7 @@ export type RecipeUnlocked = (TriggerBase & {
   recipe: Registry['minecraft:recipe']
 })
 
-export type RequiredConditions<C> = {
+export type RequiredConditions<C extends NBTObject> = {
   conditions: C
 }
 
@@ -290,8 +290,8 @@ export type SafelyHarvestHoney = (TriggerBase & {
 
 export type ShotCrossbow = (TriggerBase & {
   /**
-     * Crossbow that was used.
-     */
+   * Crossbow that was used.
+   */
   item?: ItemPredicate
 })
 
@@ -301,9 +301,9 @@ export type SlideDownBlock = (TriggerBase & {
 
 export type SpearMobs = (TriggerBase & {
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   count?: NBTInt<{
     min: 1
   }>
@@ -339,8 +339,8 @@ export type TriggerBase = {
 
 export type UsedEnderEye = (TriggerBase & {
   /**
-     * Horizontal distance between the player and the stronghold.
-     */
+   * Horizontal distance between the player and the stronghold.
+   */
   distance?: MinMaxBounds<NBTFloat>
 })
 
@@ -355,8 +355,8 @@ export type UsingItem = (TriggerBase & {
 export type VillagerTrade = (TriggerBase & {
   villager?: CompositeEntity
   /**
-     * Item that was purchased. `count` tag checks the item count from one trade, not the total amount traded for.
-     */
+   * Item that was purchased. `count` tag checks the item count from one trade, not the total amount traded for.
+   */
   item?: ItemPredicate
 })
 type TriggerDispatcherMap = {
@@ -603,6 +603,7 @@ export type SymbolTrigger<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? TriggerDispatcherMap
   : CASE extends 'keys' ? TriggerKeys : CASE extends '%fallback' ? TriggerFallback : never

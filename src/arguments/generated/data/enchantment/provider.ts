@@ -1,43 +1,43 @@
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTInt, NBTList, TagClass } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type ByCostEnchantmentProvider = {
   enchantments: EnchantmentsType
   /**
-     * Cost to use for the Enchanting process.
-     */
+   * Cost to use for the Enchanting process.
+   */
   cost: IntProvider<NBTInt>
 }
 
 export type ByCostWithDifficultyEnchantmentProvider = {
   enchantments: EnchantmentsType
   /**
-     * Positive integer representing the minimum possible cost
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Positive integer representing the minimum possible cost
+   *
+   * Value:
+   * Range: 0..
+   */
   min_cost: NBTInt<{
     min: 0
   }>
   /**
-     * Span of the cost randomization when the special factor is at its maximum.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Span of the cost randomization when the special factor is at its maximum.
+   *
+   * Value:
+   * Range: 0..
+   */
   max_cost_span: NBTInt<{
     min: 0
   }>
 }
 
-export type EnchantmentProvider = ({
+export type EnchantmentProvider = NonNullable<({
   [S in Extract<Registry['minecraft:enchantment_provider_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolEnchantmentProvider ? SymbolEnchantmentProvider[S] : RootNBT));
-}[Registry['minecraft:enchantment_provider_type']])
+}[Registry['minecraft:enchantment_provider_type']])>
 
 /**
  * *either*
@@ -80,6 +80,7 @@ export type SymbolEnchantmentProvider<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? EnchantmentProviderDispatcherMap
   : CASE extends 'keys' ? EnchantmentProviderKeys : CASE extends '%fallback' ? EnchantmentProviderFallback : never

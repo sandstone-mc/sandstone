@@ -10,9 +10,9 @@ export type Bee = {
 
 export type Beehive = (BlockEntity & {
   /**
-     * Value:
-     * Array length range: 3
-     */
+   * Value:
+   * Array length range: 3
+   */
   flower_pos?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false

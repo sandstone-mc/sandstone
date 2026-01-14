@@ -4,19 +4,19 @@ import type { NBTLong } from 'sandstone'
 
 export type Owner = {
   /**
-     * Upper bits of the owner's UUID.
-     */
+   * Upper bits of the owner's UUID.
+   */
   M?: NBTLong
   /**
-     * Lower bits of the owner's UUID.
-     */
+   * Lower bits of the owner's UUID.
+   */
   L?: NBTLong
 }
 
 export type Potion = (Throwable & {
   /**
-     * Item representation of the potion.
-     */
+   * Item representation of the potion.
+   */
   Item?: ItemStack
 })
 
@@ -24,7 +24,7 @@ export type Throwable = ProjectileBase
 
 export type ThrowableItem = (Throwable & {
   /**
-     * Item representation of the projectile.
-     */
+   * Item representation of the projectile.
+   */
   Item?: ItemStack
 })

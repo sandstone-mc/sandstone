@@ -1,14 +1,14 @@
 import type { BiomeSource } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
 import type { NoiseGeneratorSettingsRef } from 'sandstone/arguments/generated/data/worldgen/noise_settings.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTInt, TagClass } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTInt, TagClass } from 'sandstone'
 
-export type ChunkGenerator = ({
+export type ChunkGenerator = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/chunk_generator'], string>]?: ({
     type: S
   } & (S extends keyof SymbolChunkGenerator ? SymbolChunkGenerator[S] : RootNBT));
-}[Registry['minecraft:worldgen/chunk_generator']])
+}[Registry['minecraft:worldgen/chunk_generator']])>
 
 export type Flat = {
   settings: FlatGeneratorSettings
@@ -16,9 +16,9 @@ export type Flat = {
 
 export type FlatGeneratorLayer = {
   /**
-     * Value:
-     * Range: 0..4096
-     */
+   * Value:
+   * Range: 0..4096
+   */
   height: NBTInt<{
     min: 0
   }>
@@ -53,6 +53,7 @@ export type SymbolChunkGenerator<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ChunkGeneratorDispatcherMap
   : CASE extends 'keys' ? ChunkGeneratorKeys : CASE extends '%fallback' ? ChunkGeneratorFallback : never

@@ -3,7 +3,7 @@ import type { MobBase, NeutralMob } from 'sandstone/arguments/generated/world/en
 
 export type Enderman = (MobBase & NeutralMob & {
   /**
-     * Block it is carrying.
-     */
+   * Block it is carrying.
+   */
   carriedBlockState?: BlockState
 })

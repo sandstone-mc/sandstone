@@ -5,11 +5,11 @@ import type { NBTByte, NBTInt, NBTList, NBTLong } from 'sandstone'
 
 export type Container27 = (ContainerBase & {
   /**
-     * Slots from 0 to 26.
-     *
-     * Value:
-     * List length range: 0..27
-     */
+   * Slots from 0 to 26.
+   *
+   * Value:
+   * List length range: 0..27
+   */
   Items?: NBTList<SlottedItem<NBTByte<{
     min: 0
     max: 26
@@ -23,11 +23,11 @@ export type Container27 = (ContainerBase & {
 
 export type Container9 = (ContainerBase & {
   /**
-     * Slots from 0 to 8.
-     *
-     * Value:
-     * List length range: 0..9
-     */
+   * Slots from 0 to 8.
+   *
+   * Value:
+   * List length range: 0..9
+   */
   Items?: NBTList<SlottedItem<NBTByte<{
     min: 0
     max: 8
@@ -41,22 +41,22 @@ export type Container9 = (ContainerBase & {
 
 export type ContainerBase = (BlockEntity & Nameable & Lockable & {
   /**
-     * Loot table that will populate this container.
-     */
+   * Loot table that will populate this container.
+   */
   LootTable?: (Registry['minecraft:loot_table'] | '')
   /**
-     * Seed of the loot table.
-     */
+   * Seed of the loot table.
+   */
   LootTableSeed?: NBTLong
 })
 
 export type Hopper = (ContainerBase & {
   /**
-     * Slots from 0 to 4.
-     *
-     * Value:
-     * List length range: 0..5
-     */
+   * Slots from 0 to 4.
+   *
+   * Value:
+   * List length range: 0..5
+   */
   Items?: NBTList<SlottedItem<NBTByte<{
     min: 0
     max: 4
@@ -67,18 +67,18 @@ export type Hopper = (ContainerBase & {
     max: 5
   }>
   /**
-     * Ticks until an item can be transferred.
-     */
+   * Ticks until an item can be transferred.
+   */
   TransferCooldown?: NBTInt
 })
 
 export type Shelf = (ContainerBase & {
   /**
-     * Slots from 0 to 2.
-     *
-     * Value:
-     * List length range: 0..3
-     */
+   * Slots from 0 to 2.
+   *
+   * Value:
+   * List length range: 0..3
+   */
   Items?: NBTList<SlottedItem<NBTByte<{
     min: 0
     max: 2
@@ -89,7 +89,7 @@ export type Shelf = (ContainerBase & {
     max: 3
   }>
   /**
-     * Defaults to `false`.
-     */
+   * Defaults to `false`.
+   */
   align_items_to_bottom?: boolean
 })

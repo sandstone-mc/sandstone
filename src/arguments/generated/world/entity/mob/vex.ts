@@ -3,11 +3,11 @@ import type { NBTInt, NBTIntArray } from 'sandstone'
 
 export type Vex = (MobBase & {
   /**
-     * Coordinates of the center of its wander bounds.
-     *
-     * Value:
-     * Array length range: 3
-     */
+   * Coordinates of the center of its wander bounds.
+   *
+   * Value:
+   * Array length range: 3
+   */
   bound_pos?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -15,15 +15,15 @@ export type Vex = (MobBase & {
     max: 3
   }>
   /**
-     * Ticks until it starts to die.
-     */
+   * Ticks until it starts to die.
+   */
   life_ticks?: NBTInt
   /**
-     * The owner of this vex.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * The owner of this vex.
+   *
+   * Value:
+   * Array length range: 4
+   */
   owner?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false

@@ -18,12 +18,12 @@ export type WolfSoundVariant = {
 
 export type WolfVariant = ({
   /**
-     * The texture set to use for this wolf variant.
-     */
+   * The texture set to use for this wolf variant.
+   */
   assets: WolfVariantAssetInfo
   /**
-     * The baby texture set to use for this wolf variant.
-     */
+   * The baby texture set to use for this wolf variant.
+   */
   baby_assets: WolfVariantAssetInfo
 } & SpawnPrioritySelectors)
 

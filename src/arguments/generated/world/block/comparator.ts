@@ -3,7 +3,7 @@ import type { NBTInt } from 'sandstone'
 
 export type Comparator = (BlockEntity & {
   /**
-     * Strength of the redstone output.
-     */
+   * Strength of the redstone output.
+   */
   OutputSignal?: NBTInt
 })

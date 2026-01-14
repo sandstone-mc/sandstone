@@ -3,19 +3,19 @@ import type { NBTInt, NBTIntArray, NBTLong } from 'sandstone'
 
 export type EndGateway = (BlockEntity & {
   /**
-     * In game ticks.
-     */
+   * In game ticks.
+   */
   Age?: NBTLong
   /**
-     * Whether to teleport to the exact location.
-     */
+   * Whether to teleport to the exact location.
+   */
   ExactTeleport?: boolean
   /**
-     * Coordinates of where to teleport entities to.
-     *
-     * Value:
-     * Array length range: 3
-     */
+   * Coordinates of where to teleport entities to.
+   *
+   * Value:
+   * Array length range: 3
+   */
   exit_portal?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false

@@ -1,29 +1,29 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTDouble } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTDouble } from 'sandstone'
 
 export type Atlas = {
   /**
-     * List of sprite sources which can add or remove sprite textures to this atlas.
-     */
+   * List of sprite sources which can add or remove sprite textures to this atlas.
+   */
   sources: Array<SpriteSource>
 }
 
 export type Directory = {
   /**
-     * Directory of texture locations to include, relative to the `textures` folder, not including the trailing `/`.
-     */
+   * Directory of texture locations to include, relative to the `textures` folder, not including the trailing `/`.
+   */
   source: string
   /**
-     * The sprite name prefix, usually ending with `/`.
-     */
+   * The sprite name prefix, usually ending with `/`.
+   */
   prefix: string
 }
 
 export type Filter = {
   /**
-     * Pattern to remove sprite identifiers already in the atlas. The order of sprite sources is important.
-     */
+   * Pattern to remove sprite identifiers already in the atlas. The order of sprite sources is important.
+   */
   pattern: FilterPattern
 }
 
@@ -39,64 +39,64 @@ export type PalettedPermutations = {
     [Key in `${any}${string}`]?: Registry['minecraft:texture'];
   })
   /**
-     * Value to use when joining the texture and permutation names to produce the sprite name.
-     * Defaults to `_`.
-     */
+   * Value to use when joining the texture and permutation names to produce the sprite name.
+   * Defaults to `_`.
+   */
   separator?: string
 }
 
 export type Single = {
   /**
-     * A single texture location of the source.
-     */
+   * A single texture location of the source.
+   */
   resource: Registry['minecraft:texture']
   /**
-     * The identifier of the sprite that can referenced.
-     * If not specified, matches `resource`.
-     *
-     * Value:
-     *
-     * Value: Defines a `minecraft:texture` id.
-     */
+   * The identifier of the sprite that can referenced.
+   * If not specified, matches `resource`.
+   *
+   * Value:
+   *
+   * Value: Defines a `minecraft:texture` id.
+   */
   sprite?: `${string}:${string}`
 }
 
-export type SpriteSource = ({
+export type SpriteSource = NonNullable<({
   [S in Extract<SpriteSourceType, string>]?: ({
     /**
-         * Value:
-         *
-         *  - Single(`single`)
-         *  - Directory(`directory`)
-         *  - Filter(`filter`)
-         *  - Unstitch(`unstitch`)
-         *  - PalettedPermutations(`paletted_permutations`)
-         */
+     * Value:
+     *
+     *  - Single(`single`)
+     *  - Directory(`directory`)
+     *  - Filter(`filter`)
+     *  - Unstitch(`unstitch`)
+     *  - PalettedPermutations(`paletted_permutations`)
+     */
     type: S
   } & (S extends keyof SymbolSpriteSource ? SymbolSpriteSource[S] : RootNBT));
-}[SpriteSourceType])
+}[SpriteSourceType])>
 
 export type SpriteSourceType = ('single' | 'directory' | 'filter' | 'unstitch' | 'paletted_permutations')
 
 export type Unstitch = {
   resource: Registry['minecraft:texture']
   /**
-     * If set to the resource width, regions will use pixel coordinates.
-     */
+   * If set to the resource width, regions will use pixel coordinates.
+   */
   divisor_x?: (NBTDouble | number)
   /**
-     * If set to the resource height, regions will use pixel coordinates.
-     */
+   * If set to the resource height, regions will use pixel coordinates.
+   */
   divisor_y?: (NBTDouble | number)
   regions: Array<UnstitchRegion>
 }
 
 export type UnstitchRegion = {
   /**
-     * Value:
-     *
-     * Value: Defines a `minecraft:texture` id.
-     */
+   * Value:
+   *
+   * Value: Defines a `minecraft:texture` id.
+   */
   sprite: `${string}:${string}`
   x: (NBTDouble | number)
   y: (NBTDouble | number)
@@ -131,6 +131,7 @@ export type SymbolSpriteSource<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? SpriteSourceDispatcherMap
   : CASE extends 'keys' ? SpriteSourceKeys : CASE extends '%fallback' ? SpriteSourceFallback : never

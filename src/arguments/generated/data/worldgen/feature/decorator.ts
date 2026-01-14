@@ -5,16 +5,16 @@ import type {
   IntProvider,
 } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type CarvingMaskConfig = {
   /**
-     * Value:
-     *
-     *  - Air(`air`)
-     *  - Liquid(`liquid`)
-     */
+   * Value:
+   *
+   *  - Air(`air`)
+   *  - Liquid(`liquid`)
+   */
   step: CarveStep
 }
 
@@ -25,20 +25,20 @@ export type CaveSurface = {
 
 export type ChanceConfig = {
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   chance: NBTInt<{
     min: 0
   }>
 }
 
-export type ConfiguredDecorator = ({
+export type ConfiguredDecorator = NonNullable<({
   [S in Extract<`${string}:${string}`, string>]?: {
     type: S
-    config: (S extends keyof SymbolDecoratorConfig ? SymbolDecoratorConfig[S] : NBTObject)
+    config: (S extends keyof SymbolDecoratorConfig ? SymbolDecoratorConfig[S] : RootNBT)
   };
-}[`${string}:${string}`])
+}[`${string}:${string}`])>
 
 export type CountConfig = {
   count: IntProvider<NBTInt<{
@@ -48,23 +48,23 @@ export type CountConfig = {
 
 export type CountExtraConfig = {
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   count: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   extra_count: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   extra_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -97,15 +97,15 @@ export type DepthAverageConfig = {
 
 export type HeightmapConfig = {
   /**
-     * Value:
-     *
-     *  - MotionBlocking(`MOTION_BLOCKING`)
-     *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
-     *  - OceanFloor(`OCEAN_FLOOR`)
-     *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
-     *  - WorldSurface(`WORLD_SURFACE`)
-     *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
-     */
+   * Value:
+   *
+   *  - MotionBlocking(`MOTION_BLOCKING`)
+   *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
+   *  - OceanFloor(`OCEAN_FLOOR`)
+   *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
+   *  - WorldSurface(`WORLD_SURFACE`)
+   *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
+   */
   heightmap: HeightmapType
 }
 
@@ -234,6 +234,7 @@ export type SymbolDecoratorConfig<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? DecoratorConfigDispatcherMap
   : CASE extends 'keys' ? DecoratorConfigKeys : CASE extends '%fallback' ? DecoratorConfigFallback : never

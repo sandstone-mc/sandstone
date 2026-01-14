@@ -1,21 +1,21 @@
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, Score } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BinomialIntGenerator = {
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   n: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   p: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -43,18 +43,18 @@ export type ContextNbtProvider = {
 
 export type ContextScoreProvider = {
   /**
-     * Value:
-     *
-     *  - This(`this`)
-     *  - Killer(`killer`)
-     *  - Attacker(`attacker`)
-     *  - DirectKiller(`direct_killer`)
-     *  - DirectAttacker(`direct_attacker`)
-     *  - KillerPlayer(`killer_player`)
-     *  - AttackingPlayer(`attacking_player`)
-     *  - TargetEntity(`target_entity`)
-     *  - InteractingEntity(`interacting_entity`)
-     */
+   * Value:
+   *
+   *  - This(`this`)
+   *  - Killer(`killer`)
+   *  - Attacker(`attacker`)
+   *  - DirectKiller(`direct_killer`)
+   *  - DirectAttacker(`direct_attacker`)
+   *  - KillerPlayer(`killer_player`)
+   *  - AttackingPlayer(`attacking_player`)
+   *  - TargetEntity(`target_entity`)
+   *  - InteractingEntity(`interacting_entity`)
+   */
   target: EntityTarget
 }
 
@@ -73,16 +73,16 @@ export type IntLimiter = {
 
 export type IntRange = (NBTInt | {
   /**
-     * Clamped to an integer.
-     */
+   * Clamps to an integer.
+   */
   min?: NumberProvider
   /**
-     * Clamped to an integer.
-     */
+   * Clamps to an integer.
+   */
   max?: NumberProvider
 })
 
-export type MinMaxBounds<T> = (T | {
+export type MinMaxBounds<T extends NBTObject> = (T | {
   min?: T
   max?: T
 })
@@ -135,12 +135,12 @@ export type NumberProvider = (NBTFloat | ({
 export type RandomIntGenerator = (NBTInt | ({
   [S in Extract<RandomIntGeneratorType, string>]?: ({
     /**
-         * Value:
-         *
-         *  - Uniform(`uniform`)
-         *  - Binomial(`binomial`)
-         *  - Constant(`constant`)
-         */
+     * Value:
+     *
+     *  - Uniform(`uniform`)
+     *  - Binomial(`binomial`)
+     *  - Constant(`constant`)
+     */
     type?: S
   } & (S extends undefined
     ? SymbolRandomIntGenerator<'%none'> :
@@ -178,8 +178,8 @@ export type ScoreProvider = (EntityTarget | ({
 export type SoundEventRef = (Registry['minecraft:sound_event'] | {
   sound_id: (`${string}:${string}` | '')
   /**
-     * Range in blocks. If the player is further than this range from the source of the sound, the sound will be inaudible. If omitted, the sound will have a variable range.
-     */
+   * Range in blocks. If the player is further than this range from the source of the sound, the sound will be inaudible. If omitted, the sound will have a variable range.
+   */
   range?: NBTFloat
 })
 
@@ -219,7 +219,8 @@ export type SymbolNbtProvider<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? NbtProviderDispatcherMap
   : CASE extends 'keys' ? NbtProviderKeys : CASE extends '%fallback' ? NbtProviderFallback : never
 type NumberProviderDispatcherMap = {
@@ -259,7 +260,8 @@ export type SymbolNumberProvider<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? NumberProviderDispatcherMap
   : CASE extends 'keys'
     ? NumberProviderKeys
@@ -282,7 +284,8 @@ export type SymbolRandomIntGenerator<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? RandomIntGeneratorDispatcherMap
   : CASE extends 'keys'
     ? RandomIntGeneratorKeys
@@ -303,6 +306,7 @@ export type SymbolScoreProvider<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ScoreProviderDispatcherMap
   : CASE extends 'keys' ? ScoreProviderKeys : CASE extends '%fallback' ? ScoreProviderFallback : never

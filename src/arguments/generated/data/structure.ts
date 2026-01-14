@@ -7,25 +7,25 @@ export type BlockPalette = ({
   palette: Array<BlockState>
 } | {
   /**
-     * Sets of different block states used in the structure, a random palette gets selected based on coordinates.
-     */
+   * Sets of different block states used in the structure, a random palette gets selected based on coordinates.
+   */
   palettes: Array<Array<BlockState>>
 })
 
 export type StructureNBT = ({
   /**
-     * [Data version](https://minecraft.wiki/w/Data_version).
-     *
-     * Value:
-     * Range: 0..
-     */
+   * [Data version](https://minecraft.wiki/w/Data_version).
+   *
+   * Value:
+   * Range: 0..
+   */
   DataVersion: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   size: NBTList<NBTInt<{
     min: 0
   }>, {
@@ -36,16 +36,16 @@ export type StructureNBT = ({
   }>
   blocks: Array<{
     /**
-         * Value:
-         * Range: 0..
-         */
+     * Value:
+     * Range: 0..
+     */
     state: NBTInt<{
       min: 0
     }>
     /**
-         * Value:
-         * List length range: 3
-         */
+     * Value:
+     * List length range: 3
+     */
     pos: NBTList<NBTInt<{
       min: 0
     }>, {
@@ -58,9 +58,9 @@ export type StructureNBT = ({
   }>
   entities: Array<{
     /**
-         * Value:
-         * List length range: 3
-         */
+     * Value:
+     * List length range: 3
+     */
     pos: NBTList<(NBTDouble<{
       leftExclusive: false
       min: 0
@@ -71,9 +71,9 @@ export type StructureNBT = ({
       max: 3
     }>
     /**
-         * Value:
-         * List length range: 3
-         */
+     * Value:
+     * List length range: 3
+     */
     blockPos: NBTList<NBTInt<{
       min: 0
     }>, {

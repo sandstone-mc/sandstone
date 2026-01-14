@@ -332,6 +332,7 @@ export type SymbolResource<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ResourceDispatcherMap
   : CASE extends 'keys' ? ResourceKeys : CASE extends '%fallback' ? ResourceFallback : never

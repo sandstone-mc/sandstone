@@ -3,19 +3,19 @@ import type { NBTByte, NBTShort } from 'sandstone'
 
 export type Creeper = (MobBase & {
   /**
-     * Whether it is being struck by lightning.
-     */
+   * Whether it is being struck by lightning.
+   */
   powered?: boolean
   /**
-     * Radius of the explosion.
-     */
+   * Radius of the explosion.
+   */
   ExplosionRadius?: NBTByte
   /**
-     * Ticks until it explodes.
-     */
+   * Ticks until it explodes.
+   */
   Fuse?: NBTShort
   /**
-     * Whether it was lit with flint and steel.
-     */
+   * Whether it was lit with flint and steel.
+   */
   ignited?: boolean
 })

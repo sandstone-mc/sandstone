@@ -3,13 +3,13 @@ import type { NBTInt, NBTIntArray, NBTLong } from 'sandstone'
 
 export type EvokerFangs = (EntityBase & {
   /**
-     * Ticks until the fangs pop out of the ground.
-     */
+   * Ticks until the fangs pop out of the ground.
+   */
   Warmup?: NBTInt
   /**
-     * Value:
-     * Array length range: 4
-     */
+   * Value:
+   * Array length range: 4
+   */
   Owner?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -20,11 +20,11 @@ export type EvokerFangs = (EntityBase & {
 
 export type Owner = {
   /**
-     * Upper bits of the owner's UUID.
-     */
+   * Upper bits of the owner's UUID.
+   */
   OwnerUUIDMost?: NBTLong
   /**
-     * Lower bits of the owner's UUID.
-     */
+   * Lower bits of the owner's UUID.
+   */
   OwnerUUIDLeast?: NBTLong
 }

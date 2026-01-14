@@ -5,8 +5,8 @@ import type { NBTInt } from 'sandstone'
 export type AxolotlBucket = (ItemBase & {
   EntityTag?: AnyEntity
   /**
-     * Turns into the `Variant` entity tag.
-     */
+   * Turns into the `Variant` entity tag.
+   */
   BucketVariantTag?: NBTInt
 })
 

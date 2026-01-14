@@ -1,8 +1,8 @@
 import type { CaveSurface, VerticalAnchor } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BiomeCondition = {
   biome_is: Array<Registry['minecraft:worldgen/biome']>
@@ -34,27 +34,27 @@ export type SequenceRule = {
 export type StoneDepthCondition = {
   offset: NBTInt
   /**
-     * Value:
-     *
-     *  - Floor(`floor`)
-     *  - Ceiling(`ceiling`)
-     */
+   * Value:
+   *
+   *  - Floor(`floor`)
+   *  - Ceiling(`ceiling`)
+   */
   surface_type: CaveSurface
   add_surface_depth: boolean
   secondary_depth_range: NBTInt
 }
 
-export type SurfaceCondition = ({
+export type SurfaceCondition = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/material_condition'], string>]?: ({
     type: S
   } & (S extends keyof SymbolSurfaceCondition ? SymbolSurfaceCondition[S] : RootNBT));
-}[Registry['minecraft:worldgen/material_condition']])
+}[Registry['minecraft:worldgen/material_condition']])>
 
-export type SurfaceRule = ({
+export type SurfaceRule = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/material_rule'], string>]?: ({
     type: S
   } & (S extends keyof SymbolSurfaceRule ? SymbolSurfaceRule[S] : RootNBT));
-}[Registry['minecraft:worldgen/material_rule']])
+}[Registry['minecraft:worldgen/material_rule']])>
 
 export type VerticalGradientCondition = {
   random_name: string
@@ -65,9 +65,9 @@ export type VerticalGradientCondition = {
 export type WaterCondition = {
   offset: NBTInt
   /**
-     * Value:
-     * Range: -20..20
-     */
+   * Value:
+   * Range: -20..20
+   */
   surface_depth_multiplier: NBTInt<{
     min: -20
     max: 20
@@ -78,9 +78,9 @@ export type WaterCondition = {
 export type YAboveCondition = {
   anchor: VerticalAnchor
   /**
-     * Value:
-     * Range: -20..20
-     */
+   * Value:
+   * Range: -20..20
+   */
   surface_depth_multiplier: NBTInt<{
     min: -20
     max: 20
@@ -123,7 +123,8 @@ export type SymbolSurfaceCondition<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? SurfaceConditionDispatcherMap
   : CASE extends 'keys' ? SurfaceConditionKeys : CASE extends '%fallback' ? SurfaceConditionFallback : never
 type SurfaceRuleDispatcherMap = {
@@ -143,6 +144,7 @@ export type SymbolSurfaceRule<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? SurfaceRuleDispatcherMap
   : CASE extends 'keys' ? SurfaceRuleKeys : CASE extends '%fallback' ? SurfaceRuleFallback : never

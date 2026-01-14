@@ -11,11 +11,11 @@ export type Properties = {
 
 export type SkullOwner = {
   /**
-     * Optional.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * Optional.
+   *
+   * Value:
+   * Array length range: 4
+   */
   Id?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -23,8 +23,8 @@ export type SkullOwner = {
     max: 4
   }>
   /**
-     * Name of the owner, if missing appears as a steve head.
-     */
+   * Name of the owner, if missing appears as a steve head.
+   */
   Name?: string
   Properties?: Properties
 }
@@ -32,7 +32,7 @@ export type SkullOwner = {
 export type Texture = {
   Signature?: string
   /**
-     * Base64 encoded JSON value of the texture index.
-     */
+   * Base64 encoded JSON value of the texture index.
+   */
   Value?: string
 }

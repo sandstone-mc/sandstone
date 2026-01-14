@@ -1,18 +1,18 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
 
-export type BiomeSource = ({
+export type BiomeSource = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/biome_source'], string>]?: ({
     type: S
   } & (S extends keyof SymbolBiomeSource ? SymbolBiomeSource[S] : RootNBT));
-}[Registry['minecraft:worldgen/biome_source']])
+}[Registry['minecraft:worldgen/biome_source']])>
 
 export type Checkerboard = {
   /**
-     * Value:
-     * Range: 0..62
-     */
+   * Value:
+   * Range: 0..62
+   */
   scale?: NBTInt<{
     min: 0
     max: 62
@@ -54,9 +54,9 @@ export type ClimateParameters = {
   weirdness: ClimateParameter
   depth: ClimateParameter
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   offset: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -76,23 +76,25 @@ export type Fixed = {
   biome: Registry['minecraft:worldgen/biome']
 }
 
-export type MultiNoise = ({
+export type MultiNoise = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list'], string>]?: (MultiNoiseBase & {
     preset?: S
   } & (S extends undefined
     ? SymbolMultiNoiseBiomeSource<'%none'> :
-    (S extends keyof SymbolMultiNoiseBiomeSource ? SymbolMultiNoiseBiomeSource[S] : RootNBT)));
-}[Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list']])
+    (S extends keyof SymbolMultiNoiseBiomeSource
+      ? SymbolMultiNoiseBiomeSource[S]
+      : SymbolMultiNoiseBiomeSource<'%unknown'>)));
+}[Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list']])>
 
 export type MultiNoiseBase = Record<string, never>
 
 export type MultiNoiseBiomeSourceParameterList = {
   /**
-     * Value:
-     *
-     *  - Nether(`nether`)
-     *  - Overworld(`overworld`)
-     */
+   * Value:
+   *
+   *  - Nether(`nether`)
+   *  - Overworld(`overworld`)
+   */
   preset: (MultiNoisePreset | `minecraft:${MultiNoisePreset}`)
 }
 
@@ -138,7 +140,8 @@ export type SymbolBiomeSource<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? BiomeSourceDispatcherMap
   : CASE extends 'keys' ? BiomeSourceKeys : CASE extends '%fallback' ? BiomeSourceFallback : never
 type MultiNoiseBiomeSourceDispatcherMap = {}
@@ -150,10 +153,13 @@ export type SymbolMultiNoiseBiomeSource<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? MultiNoiseBiomeSourceDispatcherMap
   : CASE extends 'keys'
     ? MultiNoiseBiomeSourceKeys
     : CASE extends '%fallback'
       ? MultiNoiseBiomeSourceFallback
-      : CASE extends '%none' ? MultiNoiseBiomeSourceNoneType : never
+      : CASE extends '%none'
+        ? MultiNoiseBiomeSourceNoneType
+        : CASE extends '%unknown' ? MultiNoiseBiomeSourceFallbackType : never

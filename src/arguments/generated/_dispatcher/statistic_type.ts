@@ -46,6 +46,9 @@ export type SymbolStatisticType<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? StatisticTypeDispatcherMap
-  : CASE extends 'keys' ? StatisticTypeKeys : CASE extends '%fallback' ? StatisticTypeFallback : never
+  : CASE extends 'keys'
+    ? StatisticTypeKeys
+    : CASE extends '%fallback' ? StatisticTypeFallback : CASE extends '%unknown' ? StatisticTypeFallbackType : never

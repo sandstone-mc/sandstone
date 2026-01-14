@@ -3,20 +3,20 @@ import type { NBTInt } from 'sandstone'
 
 export type Rabbit = (Breedable & {
   /**
-     * Value:
-     *
-     *  - Brown(`0`)
-     *  - White(`1`)
-     *  - Black(`2`)
-     *  - BlackAndWhite(`3`)
-     *  - Gold(`4`)
-     *  - SaltAndPepper(`5`)
-     *  - Killer(`99`)
-     */
+   * Value:
+   *
+   *  - Brown(`0`)
+   *  - White(`1`)
+   *  - Black(`2`)
+   *  - BlackAndWhite(`3`)
+   *  - Gold(`4`)
+   *  - SaltAndPepper(`5`)
+   *  - Killer(`99`)
+   */
   RabbitType?: RabbitType
   /**
-     * Ticks down once a carrot crop is eaten
-     */
+   * Ticks down once a carrot crop is eaten
+   */
   MoreCarrotTicks?: NBTInt
 })
 

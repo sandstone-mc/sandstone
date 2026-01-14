@@ -2,22 +2,22 @@ import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldg
 import type { ProcessorListRef } from 'sandstone/arguments/generated/data/worldgen/processor_list.ts'
 import type { LiquidSettings } from 'sandstone/arguments/generated/data/worldgen/structure.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTInt } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTInt } from 'sandstone'
 
-export type Element = ({
+export type Element = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/structure_pool_element'], string>]?: ({
     element_type: S
   } & (S extends keyof SymbolTemplatePoolElement ? SymbolTemplatePoolElement[S] : RootNBT));
-}[Registry['minecraft:worldgen/structure_pool_element']])
+}[Registry['minecraft:worldgen/structure_pool_element']])>
 
 export type ElementBase = {
   /**
-     * Value:
-     *
-     *  - Rigid(`rigid`)
-     *  - TerrainMatching(`terrain_matching`)
-     */
+   * Value:
+   *
+   *  - Rigid(`rigid`)
+   *  - TerrainMatching(`terrain_matching`)
+   */
   projection: Projection
 }
 
@@ -35,11 +35,11 @@ export type SingleElement = (ElementBase & {
   location: Registry['minecraft:structure']
   processors: ProcessorListRef
   /**
-     * Value:
-     *
-     *  - ApplyWaterlogging(`apply_waterlogging`)
-     *  - IgnoreWaterlogging(`ignore_waterlogging`)
-     */
+   * Value:
+   *
+   *  - ApplyWaterlogging(`apply_waterlogging`)
+   *  - IgnoreWaterlogging(`ignore_waterlogging`)
+   */
   override_liquid_settings?: LiquidSettings
 })
 
@@ -52,9 +52,9 @@ export type TemplatePool = ({
 
 export type WeightedElement = {
   /**
-     * Value:
-     * Range: 1..150
-     */
+   * Value:
+   * Range: 1..150
+   */
   weight: NBTInt<{
     min: 1
   }>
@@ -84,6 +84,7 @@ export type SymbolTemplatePoolElement<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? TemplatePoolElementDispatcherMap
   : CASE extends 'keys' ? TemplatePoolElementKeys : CASE extends '%fallback' ? TemplatePoolElementFallback : never

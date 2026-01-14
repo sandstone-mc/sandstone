@@ -28,7 +28,10 @@ export { SymbolLootFunction } from './data/loot/function.ts'
 
 export { SymbolDataComponent } from './world/component/item.ts'
 
-export { SymbolMultiNoiseBiomeSource, MultiNoiseBiomeSourceFallbackType } from './data/worldgen/dimension/biome_source.ts'
+export {
+  SymbolMultiNoiseBiomeSource,
+  MultiNoiseBiomeSourceFallbackType,
+} from './data/worldgen/dimension/biome_source.ts'
 
 export { SymbolBlock } from './_dispatcher/block.ts'
 

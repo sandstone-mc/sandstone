@@ -4,11 +4,11 @@ import type { NBTByte, NBTInt, NBTList } from 'sandstone'
 
 export type ChiseledBookshelf = (BlockEntity & {
   /**
-     * Slots from 0 to 5.
-     *
-     * Value:
-     * List length range: 0..6
-     */
+   * Slots from 0 to 5.
+   *
+   * Value:
+   * List length range: 0..6
+   */
   Items?: NBTList<SlottedItem<NBTByte<{
     min: 0
     max: 5
@@ -19,9 +19,9 @@ export type ChiseledBookshelf = (BlockEntity & {
     max: 6
   }>
   /**
-     * Value:
-     * Range: 0..5
-     */
+   * Value:
+   * Range: 0..5
+   */
   last_interacted_slot?: NBTInt<{
     min: 0
     max: 5

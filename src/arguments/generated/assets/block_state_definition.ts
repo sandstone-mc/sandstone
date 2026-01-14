@@ -8,8 +8,8 @@ export type BlockStateDefinition = ({
 } | {
   multipart: Array<{
     /**
-         * One condition or an array where at least one condition must apply.
-         */
+     * One condition or an array where at least one condition must apply.
+     */
     when?: MultiPartCondition
     apply: ModelVariant
   }>
@@ -18,8 +18,8 @@ export type BlockStateDefinition = ({
 export type BlockStateDefinitionMultipart = {
   multipart: Array<{
     /**
-         * One condition or an array where at least one condition must apply.
-         */
+     * One condition or an array where at least one condition must apply.
+     */
     when?: MultiPartCondition
     apply: ModelVariant
   }>
@@ -33,9 +33,9 @@ export type BlockStateDefinitionVariant = {
 
 export type ModelVariant = (ModelVariantBase | Array<(ModelVariantBase & {
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   weight?: NBTInt<{
     min: 1
   }>
@@ -47,8 +47,8 @@ export type ModelVariantBase = {
   y?: (0 | 90 | 180 | 270)
   z?: (0 | 90 | 180 | 270)
   /**
-     * If set to `true`, the textures are not rotated with the block.
-     */
+   * If set to `true`, the textures are not rotated with the block.
+   */
   uvlock?: boolean
 }
 

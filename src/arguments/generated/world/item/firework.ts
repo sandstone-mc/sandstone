@@ -3,32 +3,32 @@ import type { NBTByte, NBTIntArray } from 'sandstone'
 
 export type Explosion = {
   /**
-     * Whether the explosion should flicker.
-     */
+   * Whether the explosion should flicker.
+   */
   Flicker?: boolean
   /**
-     * Whether the explosion should have a trail.
-     */
+   * Whether the explosion should have a trail.
+   */
   Trail?: boolean
   /**
-     * Value:
-     *
-     *  - SmallBall(`0`)
-     *  - LargeBall(`1`)
-     *  - Star(`2`)
-     *  - Creeper(`3`)
-     *  - Burst(`4`)
-     */
+   * Value:
+   *
+   *  - SmallBall(`0`)
+   *  - LargeBall(`1`)
+   *  - Star(`2`)
+   *  - Creeper(`3`)
+   *  - Burst(`4`)
+   */
   Type?: ExplosionType
   /**
-     * Colors of the explosion.
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * Colors of the explosion.
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   Colors?: NBTIntArray
   /**
-     * Colors of the explosion fade.
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * Colors of the explosion fade.
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   FadeColors?: NBTIntArray
 }
 
@@ -40,8 +40,8 @@ export type FireworkRocket = (ItemBase & {
 
 export type Fireworks = {
   /**
-     * Duration of flight.
-     */
+   * Duration of flight.
+   */
   Flight?: NBTByte
   Explosions?: Array<Explosion>
 }

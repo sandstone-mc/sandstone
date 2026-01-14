@@ -39,6 +39,7 @@ export type SymbolReputationPartValue<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ReputationPartValueDispatcherMap
   : CASE extends 'keys' ? ReputationPartValueKeys : CASE extends '%fallback' ? ReputationPartValueFallback : never

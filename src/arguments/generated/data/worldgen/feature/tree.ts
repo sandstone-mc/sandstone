@@ -2,15 +2,15 @@ import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worl
 import type { IntProvider, UniformIntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
-import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type AboveRootPlacement = {
   above_root_provider: BlockStateProvider
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   above_root_placement_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -25,9 +25,9 @@ export type AlterGroundTreeDecorator = {
 
 export type AttachedToLeavesTreeDecorator = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -35,34 +35,34 @@ export type AttachedToLeavesTreeDecorator = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   exclusion_radius_xz: NBTInt<{
     min: 0
     max: 16
   }>
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   exclusion_radius_y: NBTInt<{
     min: 0
     max: 16
   }>
   /**
-     * Value:
-     * Range: 1..16
-     */
+   * Value:
+   * Range: 1..16
+   */
   required_empty_blocks: NBTInt<{
     min: 1
     max: 16
   }>
   block_provider: BlockStateProvider
   /**
-     * Value:
-     * List length range: 1..
-     */
+   * Value:
+   * List length range: 1..
+   */
   directions: NBTList<Direction, {
     leftExclusive: false
     min: 1
@@ -71,9 +71,9 @@ export type AttachedToLeavesTreeDecorator = {
 
 export type AttachedToLogsTreeDecorator = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -82,9 +82,9 @@ export type AttachedToLogsTreeDecorator = {
   }>
   block_provider: BlockStateProvider
   /**
-     * Value:
-     * List length range: 1..
-     */
+   * Value:
+   * List length range: 1..
+   */
   directions: NBTList<Direction, {
     leftExclusive: false
     min: 1
@@ -93,9 +93,9 @@ export type AttachedToLogsTreeDecorator = {
 
 export type BeehiveTreeDecorator = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -110,9 +110,9 @@ export type BendingTrunkPlacer = {
     max: 64
   }>>
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   min_height_for_leaves?: NBTInt<{
     min: 1
   }>
@@ -124,9 +124,9 @@ export type CherryFoliagePlacer = {
     max: 16
   }>>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   wide_bottom_layer_hole_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -134,9 +134,9 @@ export type CherryFoliagePlacer = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   corner_hole_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -144,9 +144,9 @@ export type CherryFoliagePlacer = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   hanging_leaves_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -154,9 +154,9 @@ export type CherryFoliagePlacer = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   hanging_leaves_extension_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -186,9 +186,9 @@ export type CherryTrunkPlacer = {
 
 export type CocoaTreeDecorator = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -199,9 +199,9 @@ export type CocoaTreeDecorator = {
 
 export type CreakingHeartTreeDecorator = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -220,13 +220,13 @@ export type FallenTreeConfig = {
   log_decorators: Array<TreeDecorator>
 }
 
-export type FeatureSize = ({
+export type FeatureSize = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/feature_size_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolFeatureSize ? SymbolFeatureSize[S] : RootNBT));
-}[Registry['minecraft:worldgen/feature_size_type']])
+}[Registry['minecraft:worldgen/feature_size_type']])>
 
-export type FoliagePlacer = ({
+export type FoliagePlacer = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/foliage_placer_type'], string>]?: ({
     type: S
     radius: IntProvider<NBTInt<{
@@ -238,13 +238,13 @@ export type FoliagePlacer = ({
       max: 16
     }>>
   } & (S extends keyof SymbolFoliagePlacer ? SymbolFoliagePlacer[S] : RootNBT));
-}[Registry['minecraft:worldgen/foliage_placer_type']])
+}[Registry['minecraft:worldgen/foliage_placer_type']])>
 
 export type HeightFoliagePlacer = {
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   height: NBTInt<{
     min: 0
     max: 16
@@ -253,9 +253,9 @@ export type HeightFoliagePlacer = {
 
 export type LeaveVineTreeDecorator = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -266,25 +266,25 @@ export type LeaveVineTreeDecorator = {
 
 export type MangroveRootPlacement = {
   /**
-     * Value:
-     * Range: 1..12
-     */
+   * Value:
+   * Range: 1..12
+   */
   max_root_width: NBTInt<{
     min: 1
     max: 12
   }>
   /**
-     * Value:
-     * Range: 1..64
-     */
+   * Value:
+   * Range: 1..64
+   */
   max_root_length: NBTInt<{
     min: 1
     max: 64
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   random_skew_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -313,9 +313,9 @@ export type MegaPineFoliagePlacer = {
 
 export type PaleMossTreeDecorator = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   leaves_probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -323,9 +323,9 @@ export type PaleMossTreeDecorator = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   trunk_probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -333,9 +333,9 @@ export type PaleMossTreeDecorator = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   ground_probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -353,35 +353,35 @@ export type PineFoliagePlacer = {
 
 export type PlaceOnGroundTreeDecorator = {
   /**
-     * Defaults to `128`.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * Defaults to `128`.
+   *
+   * Value:
+   * Range: 1..
+   */
   tries?: NBTInt<{
     min: 1
   }>
   /**
-     * Defaults to `2`.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Defaults to `2`.
+   *
+   * Value:
+   * Range: 0..
+   */
   radius?: NBTInt<{
     min: 0
   }>
   /**
-     * Defaults to `1`.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Defaults to `1`.
+   *
+   * Value:
+   * Range: 0..
+   */
   height?: NBTInt<{
     min: 0
   }>
   /**
-     * The block to place on the ground.
-     */
+   * The block to place on the ground.
+   */
   block_state_provider: BlockStateProvider
 }
 
@@ -390,22 +390,22 @@ export type RandomSpreadFoliagePlacer = {
     min: 1
   }>>
   /**
-     * Value:
-     * Range: 0..256
-     */
+   * Value:
+   * Range: 0..256
+   */
   leaf_placement_attempts: NBTInt<{
     min: 0
   }>
 }
 
-export type RootPlacer = ({
+export type RootPlacer = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/root_placer_type'], string>]?: ({
     type: S
     root_provider: BlockStateProvider
     trunk_offset_y: IntProvider<NBTInt>
     above_root_placement?: AboveRootPlacement
   } & (S extends keyof SymbolRootPlacer ? SymbolRootPlacer[S] : RootNBT));
-}[Registry['minecraft:worldgen/root_placer_type']])
+}[Registry['minecraft:worldgen/root_placer_type']])>
 
 export type SprucePineFoliagePlacer = {
   trunk_height: IntProvider<NBTInt<{
@@ -416,50 +416,50 @@ export type SprucePineFoliagePlacer = {
 
 export type ThreeLayersFeatureSize = {
   /**
-     * Value:
-     * Range: 0..80
-     */
+   * Value:
+   * Range: 0..80
+   */
   min_clipped_height?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..80
-     */
+   * Value:
+   * Range: 0..80
+   */
   limit?: NBTInt<{
     min: 0
     max: 80
   }>
   /**
-     * Value:
-     * Range: 0..80
-     */
+   * Value:
+   * Range: 0..80
+   */
   upper_limit?: NBTInt<{
     min: 0
     max: 80
   }>
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   lower_size?: NBTInt<{
     min: 0
     max: 16
   }>
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   middle_size?: NBTInt<{
     min: 0
     max: 16
   }>
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   upper_size?: NBTInt<{
     min: 0
     max: 16
@@ -479,72 +479,72 @@ export type TreeConfig = {
   decorators: Array<TreeDecorator>
 }
 
-export type TreeDecorator = ({
+export type TreeDecorator = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolTreeDecorator ? SymbolTreeDecorator[S] : RootNBT));
-}[Registry['minecraft:worldgen/tree_decorator_type']])
+}[Registry['minecraft:worldgen/tree_decorator_type']])>
 
-export type TrunkPlacer = ({
+export type TrunkPlacer = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/trunk_placer_type'], string>]?: ({
     type: S
     /**
-         * Value:
-         * Range: 0..32
-         */
+     * Value:
+     * Range: 0..32
+     */
     base_height: NBTInt<{
       min: 0
       max: 32
     }>
     /**
-         * Value:
-         * Range: 0..24
-         */
+     * Value:
+     * Range: 0..24
+     */
     height_rand_a: NBTInt<{
       min: 0
       max: 24
     }>
     /**
-         * Value:
-         * Range: 0..24
-         */
+     * Value:
+     * Range: 0..24
+     */
     height_rand_b: NBTInt<{
       min: 0
       max: 24
     }>
   } & (S extends keyof SymbolTrunkPlacer ? SymbolTrunkPlacer[S] : RootNBT));
-}[Registry['minecraft:worldgen/trunk_placer_type']])
+}[Registry['minecraft:worldgen/trunk_placer_type']])>
 
 export type TwoLayersFeatureSize = {
   /**
-     * Value:
-     * Range: 0..80
-     */
+   * Value:
+   * Range: 0..80
+   */
   min_clipped_height?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..81
-     */
+   * Value:
+   * Range: 0..81
+   */
   limit?: NBTInt<{
     min: 0
     max: 81
   }>
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   lower_size?: NBTInt<{
     min: 0
     max: 16
   }>
   /**
-     * Value:
-     * Range: 0..16
-     */
+   * Value:
+   * Range: 0..16
+   */
   upper_size?: NBTInt<{
     min: 0
     max: 16
@@ -559,9 +559,9 @@ export type UpwardsBranchingTrunkPlacer = {
     min: 0
   }>>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   place_branch_per_log_probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -586,7 +586,8 @@ export type SymbolFeatureSize<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? FeatureSizeDispatcherMap
   : CASE extends 'keys' ? FeatureSizeKeys : CASE extends '%fallback' ? FeatureSizeFallback : never
 type FoliagePlacerDispatcherMap = {
@@ -633,7 +634,8 @@ export type SymbolFoliagePlacer<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? FoliagePlacerDispatcherMap
   : CASE extends 'keys' ? FoliagePlacerKeys : CASE extends '%fallback' ? FoliagePlacerFallback : never
 type RootPlacerDispatcherMap = {
@@ -647,7 +649,8 @@ export type SymbolRootPlacer<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? RootPlacerDispatcherMap
   : CASE extends 'keys' ? RootPlacerKeys : CASE extends '%fallback' ? RootPlacerFallback : never
 type TreeDecoratorDispatcherMap = {
@@ -694,7 +697,8 @@ export type SymbolTreeDecorator<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? TreeDecoratorDispatcherMap
   : CASE extends 'keys' ? TreeDecoratorKeys : CASE extends '%fallback' ? TreeDecoratorFallback : never
 type TrunkPlacerDispatcherMap = {
@@ -741,6 +745,7 @@ export type SymbolTrunkPlacer<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? TrunkPlacerDispatcherMap
   : CASE extends 'keys' ? TrunkPlacerKeys : CASE extends '%fallback' ? TrunkPlacerFallback : never

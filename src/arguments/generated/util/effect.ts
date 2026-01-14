@@ -111,43 +111,43 @@ export type EffectIntId = (
 export type MobEffectInstance = {
   id: Registry['minecraft:mob_effect']
   /**
-     * Level I having value 0. Defaults to 0.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Level I having value 0. Defaults to 0.
+   *
+   * Value:
+   * Range: 0..
+   */
   amplifier?: NBTByte<{
     min: 0
   }>
   /**
-     * Duration of the effect in ticks. Infinite is represented by `-1`.
-     *
-     * Value:
-     * *either*
-     *
-     * *item 0*
-     *
-     * *or*
-     *
-     * Range: 1..
-     */
+   * Duration of the effect in ticks. Infinite is represented by `-1`.
+   *
+   * Value:
+   * *either*
+   *
+   * *item 0*
+   *
+   * *or*
+   *
+   * Range: 1..
+   */
   duration?: (-1 | NBTInt<{
     min: 1
   }>)
   /**
-     * Whether the effect appears as a HUD icon in addition to in the inventory GUI (same behavior as beacons when `true`). Defaults to `false`.
-     */
+   * Whether the effect appears as a HUD icon in addition to in the inventory GUI (same behavior as beacons when `true`). Defaults to `false`.
+   */
   ambient?: boolean
   /**
-     * Defaults to `true`.
-     */
+   * Defaults to `true`.
+   */
   show_particles?: boolean
   /**
-     * Whether the effect appears in the inventory GUI. Defaults to `true`
-     */
+   * Whether the effect appears in the inventory GUI. Defaults to `true`
+   */
   show_icon?: boolean
   /**
-     * A lower amplifier effect of the same type.
-     */
+   * A lower amplifier effect of the same type.
+   */
   hidden_effect?: MobEffectInstance
 }

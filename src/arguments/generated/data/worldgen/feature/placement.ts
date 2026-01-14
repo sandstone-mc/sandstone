@@ -7,8 +7,8 @@ import type {
 import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.ts'
 import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BlockPredicateFilter = {
   predicate: BlockPredicate
@@ -16,11 +16,11 @@ export type BlockPredicateFilter = {
 
 export type CarvingMaskModifier = {
   /**
-     * Value:
-     *
-     *  - Air(`air`)
-     *  - Liquid(`liquid`)
-     */
+   * Value:
+   *
+   *  - Air(`air`)
+   *  - Liquid(`liquid`)
+   */
   step: CarveStep
 }
 
@@ -32,16 +32,16 @@ export type CountModifier = {
 
 export type EnvironmentScanModifier = {
   /**
-     * Value:
-     *
-     *  - Up(`up`)
-     *  - Down(`down`)
-     */
+   * Value:
+   *
+   *  - Up(`up`)
+   *  - Down(`down`)
+   */
   direction_of_search: SearchDirection
   /**
-     * Value:
-     * Range: 1..32
-     */
+   * Value:
+   * Range: 1..32
+   */
   max_steps: NBTInt<{
     min: 1
     max: 32
@@ -52,8 +52,8 @@ export type EnvironmentScanModifier = {
 
 export type FixedPlacementModifier = {
   /**
-     * Fixed list of block positions to place the feature at.
-     */
+   * Fixed list of block positions to place the feature at.
+   */
   positions: Array<NBTList<NBTInt, {
     leftExclusive: false
     rightExclusive: false
@@ -64,15 +64,15 @@ export type FixedPlacementModifier = {
 
 export type HeightmapModifier = {
   /**
-     * Value:
-     *
-     *  - MotionBlocking(`MOTION_BLOCKING`)
-     *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
-     *  - OceanFloor(`OCEAN_FLOOR`)
-     *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
-     *  - WorldSurface(`WORLD_SURFACE`)
-     *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
-     */
+   * Value:
+   *
+   *  - MotionBlocking(`MOTION_BLOCKING`)
+   *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
+   *  - OceanFloor(`OCEAN_FLOOR`)
+   *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
+   *  - WorldSurface(`WORLD_SURFACE`)
+   *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
+   */
   heightmap: HeightmapType
 }
 
@@ -99,11 +99,11 @@ export type PlacedFeature = {
 
 export type PlacedFeatureRef = (Registry['minecraft:worldgen/placed_feature'] | PlacedFeature)
 
-export type PlacementModifier = ({
+export type PlacementModifier = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/placement_modifier_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolPlacementModifier ? SymbolPlacementModifier[S] : RootNBT));
-}[Registry['minecraft:worldgen/placement_modifier_type']])
+}[Registry['minecraft:worldgen/placement_modifier_type']])>
 
 export type RandomOffsetModifier = {
   xz_spread: IntProvider<NBTInt<{
@@ -118,9 +118,9 @@ export type RandomOffsetModifier = {
 
 export type RarityFilter = {
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   chance: NBTInt<{
     min: 0
   }>
@@ -130,15 +130,15 @@ export type SearchDirection = ('up' | 'down')
 
 export type SurfaceRelativeThresholdFilter = {
   /**
-     * Value:
-     *
-     *  - MotionBlocking(`MOTION_BLOCKING`)
-     *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
-     *  - OceanFloor(`OCEAN_FLOOR`)
-     *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
-     *  - WorldSurface(`WORLD_SURFACE`)
-     *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
-     */
+   * Value:
+   *
+   *  - MotionBlocking(`MOTION_BLOCKING`)
+   *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
+   *  - OceanFloor(`OCEAN_FLOOR`)
+   *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
+   *  - WorldSurface(`WORLD_SURFACE`)
+   *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
+   */
   heightmap: HeightmapType
   min_inclusive?: NBTInt
   max_inclusive?: NBTInt
@@ -211,6 +211,7 @@ export type SymbolPlacementModifier<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? PlacementModifierDispatcherMap
   : CASE extends 'keys' ? PlacementModifierKeys : CASE extends '%fallback' ? PlacementModifierFallback : never

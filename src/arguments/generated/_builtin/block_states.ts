@@ -7630,8 +7630,13 @@ export type SymbolMcdocBlockStates<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? McdocBlockStatesDispatcherMap
   : CASE extends 'keys'
     ? McdocBlockStatesKeys
-    : CASE extends '%fallback' ? McdocBlockStatesFallback : CASE extends '%none' ? McdocBlockStatesNoneType : never
+    : CASE extends '%fallback'
+      ? McdocBlockStatesFallback
+      : CASE extends '%none'
+        ? McdocBlockStatesNoneType
+        : CASE extends '%unknown' ? McdocBlockStatesFallbackType : never

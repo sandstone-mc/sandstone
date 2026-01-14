@@ -2,7 +2,6 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
 
@@ -10,24 +9,24 @@ export type CraftingBookCategory = ('building' | 'redstone' | 'equipment' | 'mis
 
 export type CraftingShaped = {
   /**
-     * Identifier to group multiple recipes in the recipe book.
-     */
+   * Identifier to group multiple recipes in the recipe book.
+   */
   group?: string
   /**
-     * Identifier for the category this goes in the recipe book.
-     *
-     * Value:
-     *
-     *  - Building(`building`)
-     *  - Redstone(`redstone`)
-     *  - Equipment(`equipment`)
-     *  - Misc(`misc`)
-     */
+   * Identifier for the category this goes in the recipe book.
+   *
+   * Value:
+   *
+   *  - Building(`building`)
+   *  - Redstone(`redstone`)
+   *  - Equipment(`equipment`)
+   *  - Misc(`misc`)
+   */
   category?: CraftingBookCategory
   /**
-     * Value:
-     * List length range: 1..3
-     */
+   * Value:
+   * List length range: 1..3
+   */
   pattern: NBTList<`${any}${string}`, {
     leftExclusive: false
     rightExclusive: false
@@ -39,28 +38,28 @@ export type CraftingShaped = {
   })
   result: (ItemStack | Registry['minecraft:item'])
   /**
-     * Determines if a notification is shown when unlocking this recipe. Defaults to true.
-     */
+   * Determines if a notification is shown when unlocking this recipe. Defaults to true.
+   */
   show_notification?: boolean
 }
 
 export type CraftingShapeless = {
   group?: string
   /**
-     * Identifier for the category this goes in the recipe book.
-     *
-     * Value:
-     *
-     *  - Building(`building`)
-     *  - Redstone(`redstone`)
-     *  - Equipment(`equipment`)
-     *  - Misc(`misc`)
-     */
+   * Identifier for the category this goes in the recipe book.
+   *
+   * Value:
+   *
+   *  - Building(`building`)
+   *  - Redstone(`redstone`)
+   *  - Equipment(`equipment`)
+   *  - Misc(`misc`)
+   */
   category?: CraftingBookCategory
   /**
-     * Value:
-     * List length range: 1..9
-     */
+   * Value:
+   * List length range: 1..9
+   */
   ingredients: NBTList<Ingredient, {
     leftExclusive: false
     rightExclusive: false
@@ -73,27 +72,27 @@ export type CraftingShapeless = {
 export type CraftingTransmute = {
   group?: string
   /**
-     * Identifier for the category this goes in the recipe book.
-     *
-     * Value:
-     *
-     *  - Building(`building`)
-     *  - Redstone(`redstone`)
-     *  - Equipment(`equipment`)
-     *  - Misc(`misc`)
-     */
+   * Identifier for the category this goes in the recipe book.
+   *
+   * Value:
+   *
+   *  - Building(`building`)
+   *  - Redstone(`redstone`)
+   *  - Equipment(`equipment`)
+   *  - Misc(`misc`)
+   */
   category?: CraftingBookCategory
   /**
-     * The ingredient that will transfer its data components to the result item.
-     */
+   * The ingredient that will transfer its data components to the result item.
+   */
   input: Ingredient
   /**
-     * An additional ingredient.
-     */
+   * An additional ingredient.
+   */
   material: Ingredient
   /**
-     * The result item that will be merged with the input ingredient.
-     */
+   * The result item that will be merged with the input ingredient.
+   */
   result: (Registry['minecraft:item'] | ItemStack)
 }
 
@@ -122,23 +121,23 @@ export type ItemResult = {
   count?: NBTInt
 }
 
-export type Recipe = ({
+export type Recipe = NonNullable<({
   [S in Extract<Registry['minecraft:recipe_serializer'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : RootNBT));
-}[Registry['minecraft:recipe_serializer']])
+  } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : SymbolRecipeSerializer<'%unknown'>));
+}[Registry['minecraft:recipe_serializer']])>
 
 export type Smelting = {
   group?: string
   /**
-     * Identifier for the category this goes in the recipe book.
-     *
-     * Value:
-     *
-     *  - Food(`food`)
-     *  - Blocks(`blocks`)
-     *  - Misc(`misc`)
-     */
+   * Identifier for the category this goes in the recipe book.
+   *
+   * Value:
+   *
+   *  - Food(`food`)
+   *  - Blocks(`blocks`)
+   *  - Misc(`misc`)
+   */
   category?: CookingBookCategory
   ingredient: Ingredient
   result: (ItemStack | Registry['minecraft:item'])
@@ -154,40 +153,40 @@ export type Smithing = {
 
 export type SmithingTransform = ({
   /**
-     * Ingredient specifying an item to be transformed.
-     */
+   * Ingredient specifying an item to be transformed.
+   */
   base: Ingredient
   /**
-     * Resulting transformed item.
-     */
+   * Resulting transformed item.
+   */
   result: (ItemStack | Registry['minecraft:item'])
 } & {
   /**
-     * Material that will be used.
-     */
+   * Material that will be used.
+   */
   addition?: Ingredient
   /**
-     * Template item that will be used for the pattern.
-     */
+   * Template item that will be used for the pattern.
+   */
   template?: Ingredient
 })
 
 export type SmithingTrim = {
   /**
-     * Ingredient specifying an item to be trimmed.
-     */
+   * Ingredient specifying an item to be trimmed.
+   */
   base: Ingredient
   /**
-     * Material that will be used.
-     */
+   * Material that will be used.
+   */
   addition: Ingredient
   /**
-     * Template item that will be used for the pattern.
-     */
+   * Template item that will be used for the pattern.
+   */
   template: Ingredient
   /**
-     * The trim pattern to apply to the result item.
-     */
+   * The trim pattern to apply to the result item.
+   */
   pattern: Registry['minecraft:trim_pattern']
 }
 
@@ -250,6 +249,11 @@ export type SymbolRecipeSerializer<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? RecipeSerializerDispatcherMap
-  : CASE extends 'keys' ? RecipeSerializerKeys : CASE extends '%fallback' ? RecipeSerializerFallback : never
+  : CASE extends 'keys'
+    ? RecipeSerializerKeys
+    : CASE extends '%fallback'
+      ? RecipeSerializerFallback
+      : CASE extends '%unknown' ? RecipeSerializerFallbackType : never

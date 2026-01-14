@@ -33,19 +33,19 @@ import type {
 } from 'sandstone/arguments/generated/world/component/entity.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTByte, NBTClass, NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AdventureModePredicate = (Array<BlockPredicate> | BlockPredicate)
 
 export type ApplyEffectsConsumeEffect = {
   effects: Array<MobEffectInstance>
   /**
-     * Chance the effects will be applied once consumed.
-     *
-     * Value:
-     * Range: 0..1
-     */
+   * Chance the effects will be applied once consumed.
+   *
+   * Value:
+   * Range: 0..1
+   */
   probability?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -56,60 +56,60 @@ export type ApplyEffectsConsumeEffect = {
 
 export type AttackRange = {
   /**
-     * Minimum distance to the target to be considered valid.
-     * Defaults to 0.0
-     *
-     * Value:
-     * Range: 0..64
-     */
+   * Minimum distance to the target to be considered valid.
+   * Defaults to 0.0
+   *
+   * Value:
+   * Range: 0..64
+   */
   min_reach?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Maximum distance to the target to be considered valid.
-     * Defaults to 3.0
-     *
-     * Value:
-     * Range: 0..64
-     */
+   * Maximum distance to the target to be considered valid.
+   * Defaults to 3.0
+   *
+   * Value:
+   * Range: 0..64
+   */
   max_reach?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Minimum distance from the creative mode attacker to the target to be considered valid.
-     * Defaults to 0.0
-     *
-     * Value:
-     * Range: 0..64
-     */
+   * Minimum distance from the creative mode attacker to the target to be considered valid.
+   * Defaults to 0.0
+   *
+   * Value:
+   * Range: 0..64
+   */
   min_creative_reach?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * Maximum distance from the creative mode attacker to the target to be considered valid.
-     * Defaults to 5.0
-     *
-     * Value:
-     * Range: 0..64
-     */
+   * Maximum distance from the creative mode attacker to the target to be considered valid.
+   * Defaults to 5.0
+   *
+   * Value:
+   * Range: 0..64
+   */
   max_creative_reach?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }>
   /**
-     * The margin applied to the target bounding box when checking for valid hitbox collision.
-     * Defaults to 0.3
-     *
-     * Value:
-     * Range: 0..1
-     */
+   * The margin applied to the target bounding box when checking for valid hitbox collision.
+   * Defaults to 0.3
+   *
+   * Value:
+   * Range: 0..1
+   */
   hitbox_margin?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -117,11 +117,11 @@ export type AttackRange = {
     max: 1
   }>
   /**
-     * The multiplier applied to `min_reach` and `max_reach` when the user is a mob.
-     *
-     * Value:
-     * Range: 0..2
-     */
+   * The multiplier applied to `min_reach` and `max_reach` when the user is a mob.
+   *
+   * Value:
+   * Range: 0..2
+   */
   mob_factor?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -129,23 +129,23 @@ export type AttackRange = {
   }>
 }
 
-export type AttributeDisplay = ({
+export type AttributeDisplay = NonNullable<({
   [S in Extract<AttributeDisplayType, string>]?: ({
     /**
-         * Value:
-         *
-         *  - Default(`default`): Shows the calculated attribute modifier values on the tooltip.
-         *  - Hidden(`hidden`): Does not show the attribute modifier entry in tooltips.
-         *  - Override(`override`): Replaces the shown attribute modifier text.
-         */
+     * Value:
+     *
+     *  - Default(`default`): Shows the calculated attribute modifier values on the tooltip.
+     *  - Hidden(`hidden`): Does not show the attribute modifier entry in tooltips.
+     *  - Override(`override`): Replaces the shown attribute modifier text.
+     */
     type: S
   } & (S extends keyof SymbolAttributeDisplay ? SymbolAttributeDisplay[S] : RootNBT));
-}[AttributeDisplayType])
+}[AttributeDisplayType])>
 
 export type AttributeDisplayTextOverride = {
   /**
-     * The text contents to show for this attribute modifer entry.
-     */
+   * The text contents to show for this attribute modifer entry.
+   */
   value: Text
 }
 
@@ -154,46 +154,46 @@ export type AttributeDisplayType = ('default' | 'hidden' | 'override')
 export type AttributeModifier = {
   type: Registry['minecraft:attribute']
   /**
-     * Used when equipping and unequipping the item to identify which modifier to add or remove from the entity.
-     */
+   * Used when equipping and unequipping the item to identify which modifier to add or remove from the entity.
+   */
   id: `${string}:${string}`
   /**
-     * Change in the attribute.
-     */
+   * Change in the attribute.
+   */
   amount: (NBTDouble | number)
   /**
-     * Value:
-     *
-     *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
-     *  - AddMultipliedBase(`add_multiplied_base`):
-     *    Multiplies the current value of the attribute by `(1 + x)`,
-     *    where `x` is the sum of the modifiers' amounts.
-     *  - AddMultipliedTotal(`add_multiplied_total`):
-     *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
-     *    where `x` is the amount of the particular modifier.
-     */
+   * Value:
+   *
+   *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
+   *  - AddMultipliedBase(`add_multiplied_base`):
+   *    Multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the sum of the modifiers' amounts.
+   *  - AddMultipliedTotal(`add_multiplied_total`):
+   *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the amount of the particular modifier.
+   */
   operation: AttributeOperation
   /**
-     * Slot or slot type the item must be in for the modifier to take effect. Defaults to `any`.
-     *
-     * Value:
-     *
-     *  - Mainhand(`mainhand`)
-     *  - Offhand(`offhand`)
-     *  - Head(`head`)
-     *  - Chest(`chest`)
-     *  - Legs(`legs`)
-     *  - Feet(`feet`)
-     *  - Hand(`hand`)
-     *  - Armor(`armor`)
-     *  - Any(`any`)
-     *  - Body(`body`)
-     *  - Saddle(`saddle`)
-     */
+   * Slot or slot type the item must be in for the modifier to take effect. Defaults to `any`.
+   *
+   * Value:
+   *
+   *  - Mainhand(`mainhand`)
+   *  - Offhand(`offhand`)
+   *  - Head(`head`)
+   *  - Chest(`chest`)
+   *  - Legs(`legs`)
+   *  - Feet(`feet`)
+   *  - Hand(`hand`)
+   *  - Armor(`armor`)
+   *  - Any(`any`)
+   *  - Body(`body`)
+   *  - Saddle(`saddle`)
+   */
   slot?: EquipmentSlotGroup
   /**
-     * Controls how this modifier is shown in the item tooltip.
-     */
+   * Controls how this modifier is shown in the item tooltip.
+   */
   display?: AttributeDisplay
 }
 
@@ -204,53 +204,53 @@ export type AttributeModifiers = {
 
 export type blocks_attacks = {
   /**
-     * Number of seconds that right-click must be held before successfully blocking attacks.
-     * Defaults to `0`.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Number of seconds that right-click must be held before successfully blocking attacks.
+   * Defaults to `0`.
+   *
+   * Value:
+   * Range: 0..
+   */
   block_delay_seconds?: NBTFloat<{
     leftExclusive: false
     min: 0
   }>
   /**
-     * Multiplier applied to the number of seconds that the item will be on cooldown for when attacked by a disabling attack (`disable_blocking_for_seconds` on the `weapon` component).
-     * Defaults to `1`.
-     * If `0`, this item can never be disabled by attacks.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Multiplier applied to the number of seconds that the item will be on cooldown for when attacked by a disabling attack (`disable_blocking_for_seconds` on the `weapon` component).
+   * Defaults to `1`.
+   * If `0`, this item can never be disabled by attacks.
+   *
+   * Value:
+   * Range: 0..
+   */
   disable_cooldown_scale?: NBTFloat<{
     leftExclusive: false
     min: 0
   }>
   /**
-     * Controls how much damage should be blocked in a given attack. If not specified, all damage is blocked.
-     * Each entry in the list contributes an amount of damage to be blocked, optionally filtered by a damage type.
-     * Each entry adds to blocked damage, determined by `clamp(base + factor * dealt_damage, 0, dealt_damage)`.
-     * The final damage applied in the attack to the entity is determined by `dealt_damage - clamp(blocked_damage, 0, dealt_damage)`.
-     */
+   * Controls how much damage should be blocked in a given attack. If not specified, all damage is blocked.
+   * Each entry in the list contributes an amount of damage to be blocked, optionally filtered by a damage type.
+   * Each entry adds to blocked damage, determined by `clamp(base + factor * dealt_damage, 0, dealt_damage)`.
+   * The final damage applied in the attack to the entity is determined by `dealt_damage - clamp(blocked_damage, 0, dealt_damage)`.
+   */
   damage_reductions?: Array<DamageReduction>
   /**
-     * Controls how much damage should be applied to the item from a given attack.
-     * If not specified, a point of durability is removed for every point of damage dealt.
-     * The final damage applied to the item is determined by `floor(base + factor * dealt_damage)`.
-     * The final value may be negative, causing the item to be repaired.
-     */
+   * Controls how much damage should be applied to the item from a given attack.
+   * If not specified, a point of durability is removed for every point of damage dealt.
+   * The final damage applied to the item is determined by `floor(base + factor * dealt_damage)`.
+   * The final value may be negative, causing the item to be repaired.
+   */
   item_damage?: ItemDamageFunction
   /**
-     * Sound played when an attack is successfully blocked.
-     */
+   * Sound played when an attack is successfully blocked.
+   */
   block_sound?: SoundEventRef
   /**
-     * Sound played when the item goes on its disabled cooldown due to an attack.
-     */
+   * Sound played when the item goes on its disabled cooldown due to an attack.
+   */
   disabled_sound?: SoundEventRef
   /**
-     * Damage types in this tag are bypassing the blocking
-     */
+   * Damage types in this tag are bypassing the blocking
+   */
   bypassed_by?: (`#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>)
 }
 
@@ -258,65 +258,65 @@ export type BookGeneration = (0 | 1 | 2 | 3)
 
 export type BucketEntityData = (AnyEntity & {
   /**
-     * Turns into the expiry time of the memory module `has_hunting_cooldown` for axolotls.
-     */
+   * Turns into the expiry time of the memory module `has_hunting_cooldown` for axolotls.
+   */
   HuntingCooldown: NBTLong
   /**
-     * Turns into the `Variant` entity tag for tropical fish.
-     */
+   * Turns into the `Variant` entity tag for tropical fish.
+   */
   BucketVariantTag: NBTInt
 })
 
 export type Consumable = {
   /**
-     * Time taken for a player to consume the item. Defaults to 1.6.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Time taken for a player to consume the item. Defaults to 1.6.
+   *
+   * Value:
+   * Range: 0..
+   */
   consume_seconds?: NBTFloat<{
     leftExclusive: false
     min: 0
   }>
   /**
-     * View model/arms animation used during consumption of the item. Defaults to `eat`.
-     *
-     * Value:
-     *
-     *  - None(`none`)
-     *  - Eat(`eat`)
-     *  - Drink(`drink`)
-     *  - Block(`block`)
-     *  - Bow(`bow`)
-     *  - OldTrident(`spear`): Used for Tridents.
-     *  - Trident(`trident`)
-     *  - Spear(`spear`)
-     *  - Crossbow(`crossbow`)
-     *  - Spyglass(`spyglass`)
-     *  - TootHorn(`toot_horn`): Used for Goat Horns.
-     *  - Brush(`brush`)
-     *  - Bundle(`bundle`)
-     */
+   * View model/arms animation used during consumption of the item. Defaults to `eat`.
+   *
+   * Value:
+   *
+   *  - None(`none`)
+   *  - Eat(`eat`)
+   *  - Drink(`drink`)
+   *  - Block(`block`)
+   *  - Bow(`bow`)
+   *  - OldTrident(`spear`): Used for Tridents.
+   *  - Trident(`trident`)
+   *  - Spear(`spear`)
+   *  - Crossbow(`crossbow`)
+   *  - Spyglass(`spyglass`)
+   *  - TootHorn(`toot_horn`): Used for Goat Horns.
+   *  - Brush(`brush`)
+   *  - Bundle(`bundle`)
+   */
   animation?: ItemUseAnimation
   /**
-     * Sound played during and on completion of item consumption.
-     */
+   * Sound played during and on completion of item consumption.
+   */
   sound?: SoundEventRef
   /**
-     * Whether the `item` particle is emitted while consuming the item. Defaults to `true`.
-     */
+   * Whether the `item` particle is emitted while consuming the item. Defaults to `true`.
+   */
   has_consume_particles?: boolean
   /**
-     * Side effects which take place after consuming the item.
-     */
+   * Side effects which take place after consuming the item.
+   */
   on_consume_effects?: Array<ConsumeEffect>
 }
 
-export type ConsumeEffect = ({
+export type ConsumeEffect = NonNullable<({
   [S in Extract<Registry['minecraft:consume_effect_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolConsumeEffect ? SymbolConsumeEffect[S] : RootNBT));
-}[Registry['minecraft:consume_effect_type']])
+}[Registry['minecraft:consume_effect_type']])>
 
 export type CustomModelData = {
   floats?: Array<NBTFloat>
@@ -327,27 +327,27 @@ export type CustomModelData = {
 
 export type DamageReduction = {
   /**
-     * An optional damage type to filter this reduction by.
-     * If not specified, any damage type is accepted for this reduction.
-     */
+   * An optional damage type to filter this reduction by.
+   * If not specified, any damage type is accepted for this reduction.
+   */
   type?: ((
       | Registry['minecraft:damage_type'] | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>)
       | Array<Registry['minecraft:damage_type']>)
   /**
-     * Constant amount of damage to be blocked.
-     */
+   * Constant amount of damage to be blocked.
+   */
   base: NBTFloat
   /**
-     * Fraction of the dealt damage that should be blocked.
-     */
+   * Fraction of the dealt damage that should be blocked.
+   */
   factor: NBTFloat
   /**
-     * Maximum angle between facing direction and incoming attack direction for the blocking to be effective
-     *
-     * Value:
-     * Range: 0<..
-     * Minimum is exclusive; must be higher than 0
-     */
+   * Maximum angle between facing direction and incoming attack direction for the blocking to be effective
+   *
+   * Value:
+   * Range: 0<..
+   * Minimum is exclusive; must be higher than 0
+   */
   horizontal_blocking_angle?: NBTFloat<{
     leftExclusive: true
     min: 1
@@ -356,39 +356,39 @@ export type DamageReduction = {
 
 export type DamageResistant = {
   /**
-     * The damage types which the item is resistant to when in entity form.
-     * Additionally, this also affects whether the equipped item will be damaged when the wearer is hurt by a specified damage type.
-     */
+   * The damage types which the item is resistant to when in entity form.
+   * Additionally, this also affects whether the equipped item will be damaged when the wearer is hurt by a specified damage type.
+   */
   types: (`#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>)
 }
 
 export type DeathProtection = {
   /**
-     * Effects applied when the item protects the holder.
-     */
+   * Effects applied when the item protects the holder.
+   */
   death_effects?: Array<ConsumeEffect>
 }
 
 export type DebugStickState = ({
   [Key in Extract<Registry['minecraft:block'], string>]?: (Key extends keyof SymbolMcdocBlockStateKeys
     ? SymbolMcdocBlockStateKeys[Key]
-    : NBTObject);
+    : SymbolMcdocBlockStateKeys<'%unknown'>);
 })
 
 export type DyedColor = {
   /**
-     * Color of the armor.
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * Color of the armor.
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   rgb: NBTInt
   show_in_tooltip?: boolean
 }
 
 export type Enchantable = {
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   value: NBTInt<{
     min: 1
   }>
@@ -407,101 +407,101 @@ export type Enchantments = {
 
 export type Equippable = {
   /**
-     * Value:
-     *
-     *  - Mainhand(`mainhand`)
-     *  - Offhand(`offhand`)
-     *  - Head(`head`)
-     *  - Chest(`chest`)
-     *  - Legs(`legs`)
-     *  - Feet(`feet`)
-     *  - Body(`body`)
-     *  - Saddle(`saddle`)
-     */
+   * Value:
+   *
+   *  - Mainhand(`mainhand`)
+   *  - Offhand(`offhand`)
+   *  - Head(`head`)
+   *  - Chest(`chest`)
+   *  - Legs(`legs`)
+   *  - Feet(`feet`)
+   *  - Body(`body`)
+   *  - Saddle(`saddle`)
+   */
   slot: EquipmentSlot
   /**
-     * Sound event to play when the item is equipped.
-     * If not specified, the default armor equip sound will be played.
-     */
+   * Sound event to play when the item is equipped.
+   * If not specified, the default armor equip sound will be played.
+   */
   equip_sound?: SoundEventRef
   asset_id?: Registry['minecraft:equipment']
   /**
-     * The overlay texture that should render in first person when equipped.
-     */
+   * The overlay texture that should render in first person when equipped.
+   */
   camera_overlay?: Registry['minecraft:texture']
   /**
-     * Limits which entities can equip this item.
-     */
+   * Limits which entities can equip this item.
+   */
   allowed_entities?: ((
       | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
       | Array<Registry['minecraft:entity_type']>)
   /**
-     * Whether the item can be equipped by using a dispenser. Defaults to `true`.
-     */
+   * Whether the item can be equipped by using a dispenser. Defaults to `true`.
+   */
   dispensable?: boolean
   /**
-     * Whether the item can be equipped by right-clicking. Defaults to `true`.
-     */
+   * Whether the item can be equipped by right-clicking. Defaults to `true`.
+   */
   swappable?: boolean
   /**
-     * Whether the item will be damaged when the wearer is damaged. Defaults to `true`.
-     */
+   * Whether the item will be damaged when the wearer is damaged. Defaults to `true`.
+   */
   damage_on_hurt?: boolean
   /**
-     * Whether players can equip this item onto a target mob by right-clicking it (as long as this item can be equipped on the target at all).
-     * The item will not be equipped if the target already has an item in the relevant slot.
-     * Defaults to `false`.
-     */
+   * Whether players can equip this item onto a target mob by right-clicking it (as long as this item can be equipped on the target at all).
+   * The item will not be equipped if the target already has an item in the relevant slot.
+   * Defaults to `false`.
+   */
   equip_on_interact?: boolean
   /**
-     * Whether players can use shears to remove this item from a mob by right-clicking it (as long as other shearing conditions are satisfied).
-     * Defaults to `false`.
-     */
+   * Whether players can use shears to remove this item from a mob by right-clicking it (as long as other shearing conditions are satisfied).
+   * Defaults to `false`.
+   */
   can_be_sheared?: boolean
   /**
-     * Sound event to play when the item is sheared from a mob.
-     * If not specified, the default shearing sound (`item.shears.snip`) will be played.
-     */
+   * Sound event to play when the item is sheared from a mob.
+   * If not specified, the default shearing sound (`item.shears.snip`) will be played.
+   */
   shearing_sound?: SoundEventRef
 }
 
 export type Explosion = {
   /**
-     * The shape of the explosion.
-     *
-     * Value:
-     *
-     *  - SmallBall(`small_ball`)
-     *  - LargeBall(`large_ball`)
-     *  - Star(`star`)
-     *  - Creeper(`creeper`)
-     *  - Burst(`burst`)
-     */
+   * The shape of the explosion.
+   *
+   * Value:
+   *
+   *  - SmallBall(`small_ball`)
+   *  - LargeBall(`large_ball`)
+   *  - Star(`star`)
+   *  - Creeper(`creeper`)
+   *  - Burst(`burst`)
+   */
   shape: FireworkShape
   /**
-     * Colors of the initial particles of the explosion, randomly selected from.
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * Colors of the initial particles of the explosion, randomly selected from.
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   colors?: Array<NBTInt>
   /**
-     * Colors of the fading particles of the explosion
-     */
+   * Colors of the fading particles of the explosion
+   */
   fade_colors?: Array<NBTInt>
   /**
-     * Added to a firework star via Diamond.
-     */
+   * Added to a firework star via Diamond.
+   */
   has_trail?: boolean
   /**
-     * Added to a firework star via Glowstone Dust.
-     */
+   * Added to a firework star via Glowstone Dust.
+   */
   has_twinkle?: boolean
 }
 
 export type Fireworks = {
   /**
-     * Value:
-     * List length range: 0..256
-     */
+   * Value:
+   * List length range: 0..256
+   */
   explosions?: NBTList<Explosion, {
     leftExclusive: false
     rightExclusive: false
@@ -513,32 +513,32 @@ export type FireworkShape = ('small_ball' | 'large_ball' | 'star' | 'creeper' | 
 
 export type Food = {
   /**
-     * Food points/haunches restored when eaten (capped to 20.0).
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Food points/haunches restored when eaten (capped to 20.0).
+   *
+   * Value:
+   * Range: 0..
+   */
   nutrition: NBTInt<{
     min: 0
   }>
   /**
-     * Exact value added to the player's saturation level, capped at whatever the [new] food points value is.
-     */
+   * Exact value added to the player's saturation level, capped at whatever the [new] food points value is.
+   */
   saturation: NBTFloat
   /**
-     * Whether the item can be eaten when the player's food points/haunches are full. Defaults to `false`
-     */
+   * Whether the item can be eaten when the player's food points/haunches are full. Defaults to `false`
+   */
   can_always_eat?: boolean
 }
 
 export type FoodEffect = {
   effect: MobEffectInstance
   /**
-     * Chance for the effect to be applied. Defaults to 1.
-     *
-     * Value:
-     * Range: 0..1
-     */
+   * Chance for the effect to be applied. Defaults to 1.
+   *
+   * Value:
+   * Range: 0..1
+   */
   probability?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -549,22 +549,22 @@ export type FoodEffect = {
 
 export type ItemDamageFunction = {
   /**
-     * Minimum amount of damage dealt by the attack before this item damage is applied to the item.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * Minimum amount of damage dealt by the attack before this item damage is applied to the item.
+   *
+   * Value:
+   * Range: 0..
+   */
   threshold: NBTFloat<{
     leftExclusive: false
     min: 0
   }>
   /**
-     * Constant amount of damage applied to the item, if `threshold` is passed.
-     */
+   * Constant amount of damage applied to the item, if `threshold` is passed.
+   */
   base: NBTFloat
   /**
-     * Fraction of the dealt damage that should be applied to the item, if `threshold` is passed.
-     */
+   * Fraction of the dealt damage that should be applied to the item, if `threshold` is passed.
+   */
   factor: NBTFloat
 }
 
@@ -590,22 +590,22 @@ export type JukeboxPlayable = {
 
 export type KineticWeapon = {
   /**
-     * The time in ticks required for charging.
-     * Defaults to 0
-     *
-     * Value:
-     * Range: 0..
-     */
+   * The time in ticks required for charging.
+   * Defaults to 0
+   *
+   * Value:
+   * Range: 0..
+   */
   delay_ticks?: NBTInt<{
     min: 0
   }>
   /**
-     * The cooldown in ticks after hitting, and loosing contact with an entity before being able to hit it again
-     * Defaults to 10
-     *
-     * Value:
-     * Range: 0..
-     */
+   * The cooldown in ticks after hitting, and loosing contact with an entity before being able to hit it again
+   * Defaults to 10
+   *
+   * Value:
+   * Range: 0..
+   */
   contact_cooldown_ticks?: NBTInt<{
     min: 0
   }>
@@ -613,70 +613,70 @@ export type KineticWeapon = {
   knockback_conditions?: KineticWeaponEffectCondition
   damage_conditions?: KineticWeaponEffectCondition
   /**
-     * The distance the item moves out of hand during animation.
-     * Defaults to 0.0
-     */
+   * The distance the item moves out of hand during animation.
+   * Defaults to 0.0
+   */
   forward_movement?: NBTFloat
   /**
-     * The multiplier for the final damage from the relative speed.
-     * Defaults to 1.0
-     */
+   * The multiplier for the final damage from the relative speed.
+   * Defaults to 1.0
+   */
   damage_multiplier?: NBTFloat
   /**
-     * Sound to play when the weapon is engaged.
-     */
+   * Sound to play when the weapon is engaged.
+   */
   sound?: SoundEventRef
   /**
-     * Sound to play when the weapon hits an entity.
-     */
+   * Sound to play when the weapon hits an entity.
+   */
   hit_sound?: SoundEventRef
 }
 
 export type KineticWeaponEffectCondition = {
   /**
-     * The duration in ticks this condition can pass.
-     * Starts counting after charged.
-     */
+   * The duration in ticks this condition can pass.
+   * Starts counting after charged.
+   */
   max_duration_ticks: NBTInt
   /**
-     * The minimum attacker speed required.
-     * Defaults to 0.0
-     */
+   * The minimum attacker speed required.
+   * Defaults to 0.0
+   */
   min_speed?: NBTFloat
   /**
-     * The minimum relative speed required.
-     * Defaults to 0.0
-     */
+   * The minimum relative speed required.
+   * Defaults to 0.0
+   */
   min_relative_speed?: NBTFloat
 }
 
 export type LodestoneTracker = {
   /**
-     * Location of the lodestone. Optional. If not set, the compass will spin randomly.
-     */
+   * Location of the lodestone. Optional. If not set, the compass will spin randomly.
+   */
   target?: GlobalPos
   /**
-     * When `true`, the component is removed when the lodestone is broken. When `false`, the component is kept. Defaults to true.
-     */
+   * When `true`, the component is removed when the lodestone is broken. When `false`, the component is kept. Defaults to true.
+   */
   tracked?: boolean
 }
 
 export type MapDecoration = {
   /**
-     * Decoration type.
-     */
+   * Decoration type.
+   */
   type: Registry['minecraft:map_decoration_type']
   /**
-     * World x position.
-     */
+   * World x position.
+   */
   x: (NBTDouble | number)
   /**
-     * World z position.
-     */
+   * World z position.
+   */
   z: (NBTDouble | number)
   /**
-     * Rotation of the decoration, measured in degrees clockwise.
-     */
+   * Rotation of the decoration, measured in degrees clockwise.
+   */
   rotation: NBTFloat
 }
 
@@ -686,22 +686,22 @@ export type MapDecorations = ({
 
 export type PiercingWeapon = {
   /**
-     * Whether the attack deals knockback.
-     * Defaults to `true`.
-     */
+   * Whether the attack deals knockback.
+   * Defaults to `true`.
+   */
   deals_knockback?: boolean
   /**
-     * Whether the attack dismounts the target.
-     * Defaults to `false`.
-     */
+   * Whether the attack dismounts the target.
+   * Defaults to `false`.
+   */
   dismounts?: boolean
   /**
-     * Sound to play when using the weapon to attack.
-     */
+   * Sound to play when using the weapon to attack.
+   */
   sound?: SoundEventRef
   /**
-     * Sound to play when the weapon hits an entity.
-     */
+   * Sound to play when the weapon hits an entity.
+   */
   hit_sound?: SoundEventRef
 }
 
@@ -712,12 +712,12 @@ export type PlaySoundConsumeEffect = {
 export type PotionContents = {
   potion?: Registry['minecraft:potion']
   /**
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   custom_color?: NBTInt
   /**
-     * If present, is used to generate the item name using the translation key `item.minecraft.<potion_type>.effect.<custom_name>`.
-     */
+   * If present, is used to generate the item name using the translation key `item.minecraft.<potion_type>.effect.<custom_name>`.
+   */
   custom_name?: string
   custom_effects?: Array<MobEffectInstance>
 }
@@ -739,11 +739,11 @@ export type Repairable = {
 export type SuspiciousStewEffect = {
   id: Registry['minecraft:mob_effect']
   /**
-     * Duration of the effect in ticks. Defaults to `160`; 8 seconds.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * Duration of the effect in ticks. Defaults to `160`; 8 seconds.
+   *
+   * Value:
+   * Range: 1..
+   */
   duration?: NBTInt<{
     min: 1
   }>
@@ -751,23 +751,23 @@ export type SuspiciousStewEffect = {
 
 export type SwingAnimation = {
   /**
-     * The animation type to play when attacking or interacting using this item.
-     * Defaults to `whack`.
-     *
-     * Value:
-     *
-     *  - None(`none`)
-     *  - Whack(`whack`)
-     *  - Stab(`stab`)
-     */
+   * The animation type to play when attacking or interacting using this item.
+   * Defaults to `whack`.
+   *
+   * Value:
+   *
+   *  - None(`none`)
+   *  - Whack(`whack`)
+   *  - Stab(`stab`)
+   */
   type?: SwingAnimationType
   /**
-     * The animation duration in ticks.
-     * Defaults to 6
-     *
-     * Value:
-     * Range: 1..
-     */
+   * The animation duration in ticks.
+   * Defaults to 6
+   *
+   * Value:
+   * Range: 1..
+   */
   duration?: NBTInt<{
     min: 1
   }>
@@ -777,11 +777,11 @@ export type SwingAnimationType = ('none' | 'whack' | 'stab')
 
 export type TeleportRandomlyConsumeEffect = {
   /**
-     * Defaults to 16.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * Defaults to 16.
+   *
+   * Value:
+   * Range: 1..
+   */
   diameter?: NBTFloat<{
     leftExclusive: false
     min: 1
@@ -790,20 +790,20 @@ export type TeleportRandomlyConsumeEffect = {
 
 export type Tool = {
   /**
-     * Blocks that this tool has a special behavior with.
-     */
+   * Blocks that this tool has a special behavior with.
+   */
   rules: Array<ToolRule>
   /**
-     * Used if no rules override it. Defaults to 1.0.
-     */
+   * Used if no rules override it. Defaults to 1.0.
+   */
   default_mining_speed?: NBTFloat
   /**
-     * Amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer.
-     */
+   * Amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer.
+   */
   damage_per_block?: NBTInt
   /**
-     * If `false`, players cannot break blocks while holding this tool in creative mode. Defaults to `true`.
-     */
+   * If `false`, players cannot break blocks while holding this tool in creative mode. Defaults to `true`.
+   */
   can_destroy_blocks_in_creative?: boolean
 }
 
@@ -812,34 +812,34 @@ export type ToolRule = {
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>)
   /**
-     * Overrides the default mining speed.
-     */
+   * Overrides the default mining speed.
+   */
   speed?: NBTFloat
   /**
-     * Overrides whether or not this tool is considered correct to mine at its most efficient speed, and to drop items if the block's loot table requires it.
-     */
+   * Overrides whether or not this tool is considered correct to mine at its most efficient speed, and to drop items if the block's loot table requires it.
+   */
   correct_for_drops?: boolean
 }
 
 export type TooltipDisplay = {
   /**
-     * If `true`, the item will have no tooltip when hovered. Defaults to `false`.
-     */
+   * If `true`, the item will have no tooltip when hovered. Defaults to `false`.
+   */
   hide_tooltip?: boolean
   /**
-     * List of components that should be hidden in the item tooltip.
-     */
+   * List of components that should be hidden in the item tooltip.
+   */
   hidden_components?: Array<Registry['minecraft:data_component_type']>
 }
 
 export type Trim = {
   /**
-     * The trim material of this item..
-     */
+   * The trim material of this item..
+   */
   material: (Registry['minecraft:trim_material'] | TrimMaterial)
   /**
-     * The trim pattern of this item.
-     */
+   * The trim pattern of this item.
+   */
   pattern: (Registry['minecraft:trim_pattern'] | TrimPattern)
 }
 
@@ -847,40 +847,40 @@ export type Unbreakable = Record<string, never>
 
 export type UseCooldown = {
   /**
-     * Time the cooldown will last.
-     *
-     * Value:
-     * Range: 0<..
-     * Minimum is exclusive; must be higher than 0
-     */
+   * Time the cooldown will last.
+   *
+   * Value:
+   * Range: 0<..
+   * Minimum is exclusive; must be higher than 0
+   */
   seconds: NBTFloat<{
     leftExclusive: true
     min: 1
   }>
   /**
-     * If present, this item will be part of a cooldown group and no longer share cooldowns with its base item type.
-     * Instead, cooldowns applied to this item will only be shared with any other items that are part of the same cooldown group.
-     *
-     * Value:
-     *
-     * Value: Defines a `minecraft:cooldown_group` id.
-     */
+   * If present, this item will be part of a cooldown group and no longer share cooldowns with its base item type.
+   * Instead, cooldowns applied to this item will only be shared with any other items that are part of the same cooldown group.
+   *
+   * Value:
+   *
+   * Value: Defines a `minecraft:cooldown_group` id.
+   */
   cooldown_group?: `${string}:${string}`
 }
 
 export type UseEffects = {
   /**
-     * Whether the player can sprint while using this item.
-     * Defaults to `false`.
-     */
+   * Whether the player can sprint while using this item.
+   * Defaults to `false`.
+   */
   can_sprint?: boolean
   /**
-     * The speed multiplier applied to the player while using this item.
-     * Defaults to 0.2
-     *
-     * Value:
-     * Range: 0..1
-     */
+   * The speed multiplier applied to the player while using this item.
+   * Defaults to 0.2
+   *
+   * Value:
+   * Range: 0..1
+   */
   speed_multiplier?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -888,28 +888,28 @@ export type UseEffects = {
     max: 1
   }>
   /**
-     * Whether using this item emits game events (`item_interact_start` and `item_interact_finish`).
-     * Defaults to `true`.
-     */
+   * Whether using this item emits game events (`item_interact_start` and `item_interact_finish`).
+   * Defaults to `true`.
+   */
   interact_vibrations?: boolean
 }
 
 export type Weapon = {
   /**
-     * The amount to damage to the weapon item for each attack performed. Defaults to `1`.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * The amount to damage to the weapon item for each attack performed. Defaults to `1`.
+   *
+   * Value:
+   * Range: 0..
+   */
   item_damage_per_attack?: NBTInt<{
     min: 0
   }>
   /**
-     * If non-zero, will disable a blocking shield on successful attack for the specified amount of seconds.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * If non-zero, will disable a blocking shield on successful attack for the specified amount of seconds.
+   *
+   * Value:
+   * Range: 0..
+   */
   disable_blocking_for_seconds?: NBTFloat<{
     leftExclusive: false
     min: 0
@@ -925,19 +925,19 @@ export type WrittenBookContent = {
   title: Filterable<`${any}${string}`>
   author: string
   /**
-     * Number of times this written book has been copied. Defaults to 0. If the value is greater than 1, the book cannot be copied.
-     *
-     * Value:
-     *
-     *  - Original(`0`)
-     *  - Copy(`1`)
-     *  - CopyOfCopy(`2`)
-     *  - Tattered(`3`)
-     */
+   * Number of times this written book has been copied. Defaults to 0. If the value is greater than 1, the book cannot be copied.
+   *
+   * Value:
+   *
+   *  - Original(`0`)
+   *  - Copy(`1`)
+   *  - CopyOfCopy(`2`)
+   *  - Tattered(`3`)
+   */
   generation?: BookGeneration
   /**
-     * Whether the dynamic content on the pages has been resolved.
-     */
+   * Whether the dynamic content on the pages has been resolved.
+   */
   resolved?: boolean
 }
 type AttributeDisplayDispatcherMap = {
@@ -957,7 +957,8 @@ export type SymbolAttributeDisplay<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? AttributeDisplayDispatcherMap
   : CASE extends 'keys' ? AttributeDisplayKeys : CASE extends '%fallback' ? AttributeDisplayFallback : never
 type ConsumeEffectDispatcherMap = {
@@ -988,7 +989,8 @@ export type SymbolConsumeEffect<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ConsumeEffectDispatcherMap
   : CASE extends 'keys' ? ConsumeEffectKeys : CASE extends '%fallback' ? ConsumeEffectFallback : never
 type DataComponentDispatcherMap = {
@@ -1445,6 +1447,7 @@ export type SymbolDataComponent<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? DataComponentDispatcherMap
   : CASE extends 'keys' ? DataComponentKeys : CASE extends '%fallback' ? DataComponentFallback : never

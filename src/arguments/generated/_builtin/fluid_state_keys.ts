@@ -22,6 +22,7 @@ export type SymbolMcdocFluidStateKeys<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? McdocFluidStateKeysDispatcherMap
   : CASE extends 'keys' ? McdocFluidStateKeysKeys : CASE extends '%fallback' ? McdocFluidStateKeysFallback : never

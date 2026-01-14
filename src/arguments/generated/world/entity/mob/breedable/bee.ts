@@ -4,9 +4,9 @@ import type { NBTInt, NBTIntArray } from 'sandstone'
 
 export type Bee = (Breedable & NeutralMob & {
   /**
-     * Value:
-     * Array length range: 3
-     */
+   * Value:
+   * Array length range: 3
+   */
   hive_pos?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -14,11 +14,11 @@ export type Bee = (Breedable & NeutralMob & {
     max: 3
   }>
   /**
-     * Position of the flower the bee is circling
-     *
-     * Value:
-     * Array length range: 3
-     */
+   * Position of the flower the bee is circling
+   *
+   * Value:
+   * Array length range: 3
+   */
   flower_pos?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false
@@ -26,35 +26,35 @@ export type Bee = (Breedable & NeutralMob & {
     max: 3
   }>
   /**
-     * Whether the bee has nectar.
-     */
+   * Whether the bee has nectar.
+   */
   HasNectar?: boolean
   /**
-     * Whether the bee has stung an entity.
-     */
+   * Whether the bee has stung an entity.
+   */
   HasStung?: boolean
   /**
-     * Ticks since the bee has pollinated a crop.
-     */
+   * Ticks since the bee has pollinated a crop.
+   */
   TicksSincePollination?: NBTInt
   /**
-     * Ticks until the bee can enter its hive.
-     */
+   * Ticks until the bee can enter its hive.
+   */
   CannotEnterHiveTicks?: NBTInt
   /**
-     * Crops grown since the bee has gathered nectar.
-     */
+   * Crops grown since the bee has gathered nectar.
+   */
   CropsGrownSincePollination?: NBTInt
   /**
-     * Ticks the bee will be angry for.
-     */
+   * Ticks the bee will be angry for.
+   */
   Anger?: NBTInt
   /**
-     * Player that has attacked the bee.
-     *
-     * Value:
-     * Array length range: 4
-     */
+   * Player that has attacked the bee.
+   *
+   * Value:
+   * Array length range: 4
+   */
   HurtBy?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false

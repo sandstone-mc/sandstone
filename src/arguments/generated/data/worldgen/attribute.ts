@@ -20,15 +20,15 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color.ts'
 import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AmbientParticle = {
   particle: Particle
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -49,21 +49,21 @@ export type ARGBColorAttribute = {
   attribute_track: ({
     [S in Extract<ColorModifierType, string>]?: (AttributeTrackBase & {
       /**
-             * Value:
-             *
-             *  - Override(`override`)
-             *  - Add(`add`)
-             *  - Subtract(`subtract`)
-             *  - Multiply(`multiply`)
-             *  - AlphaBlend(`alpha_blend`)
-             *  - BlendToGray(`blend_to_gray`)
-             */
+       * Value:
+       *
+       *  - Override(`override`)
+       *  - Add(`add`)
+       *  - Subtract(`subtract`)
+       *  - Multiply(`multiply`)
+       *  - AlphaBlend(`alpha_blend`)
+       *  - BlendToGray(`blend_to_gray`)
+       */
       modifier?: S
       keyframes: Array<{
         /**
-                 * Value:
-                 * Range: 0..
-                 */
+         * Value:
+         * Range: 0..
+         */
         ticks: NBTInt<{
           min: 0
         }>
@@ -71,7 +71,7 @@ export type ARGBColorAttribute = {
           ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> :
           (S extends keyof SymbolEnvironmentAttributeArgbColorModifier
             ? SymbolEnvironmentAttributeArgbColorModifier[S]
-            : NBTObject))
+            : RootNBT))
       }>
     });
   }[ColorModifierType])
@@ -79,35 +79,35 @@ export type ARGBColorAttribute = {
 
 export type BackgroundMusic = {
   /**
-     * Default music to play
-     */
+   * Default music to play
+   */
   default?: BiomeMusic
   /**
-     * Overrides default music when underwater
-     */
+   * Overrides default music when underwater
+   */
   underwater?: BiomeMusic
   /**
-     * Overrides default music when in creative mode
-     */
+   * Overrides default music when in creative mode
+   */
   creative?: BiomeMusic
 }
 
 export type BedRule = {
   /**
-     * Value:
-     *
-     *  - Always(`always`)
-     *  - WhenDark(`when_dark`)
-     *  - Never(`never`)
-     */
+   * Value:
+   *
+   *  - Always(`always`)
+   *  - WhenDark(`when_dark`)
+   *  - Never(`never`)
+   */
   can_sleep: BedRuleType
   /**
-     * Value:
-     *
-     *  - Always(`always`)
-     *  - WhenDark(`when_dark`)
-     *  - Never(`never`)
-     */
+   * Value:
+   *
+   *  - Always(`always`)
+   *  - WhenDark(`when_dark`)
+   *  - Never(`never`)
+   */
   can_set_spawn: BedRuleType
   explodes?: boolean
   error_message?: Text
@@ -120,22 +120,22 @@ export type BooleanAttribute = {
   modifier: BooleanAttributeModifier
   attribute_track: (AttributeTrackBase & {
     /**
-         * Value:
-         *
-         *  - Override(`override`)
-         *  - And(`and`)
-         *  - Nand(`nand`)
-         *  - Or(`or`)
-         *  - Nor(`nor`)
-         *  - Xor(`xor`)
-         *  - Xnor(`xnor`)
-         */
+     * Value:
+     *
+     *  - Override(`override`)
+     *  - And(`and`)
+     *  - Nand(`nand`)
+     *  - Or(`or`)
+     *  - Nor(`nor`)
+     *  - Xor(`xor`)
+     *  - Xnor(`xnor`)
+     */
     modifier?: BooleanModifierType
     keyframes: Array<{
       /**
-             * Value:
-             * Range: 0..
-             */
+       * Value:
+       * Range: 0..
+       */
       ticks: NBTInt<{
         min: 0
       }>
@@ -144,16 +144,16 @@ export type BooleanAttribute = {
   })
 }
 
-export type DiscreteAttribute<T> = {
+export type DiscreteAttribute<T extends NBTObject> = {
   value: T
   modifier: OverrideModifier<T>
   attribute_track: (AttributeTrackBase & {
     modifier?: 'override'
     keyframes: Array<{
       /**
-             * Value:
-             * Range: 0..
-             */
+       * Value:
+       * Range: 0..
+       */
       ticks: NBTInt<{
         min: 0
       }>
@@ -162,42 +162,42 @@ export type DiscreteAttribute<T> = {
   })
 }
 
-export type EnvironmentAttributeMap<K> = ({
+export type EnvironmentAttributeMap<K extends NBTObject> = ({
   [Key in Extract<K, string>]?: ((
       | Key extends keyof SymbolEnvironmentAttribute ?
         ('value' extends keyof SymbolEnvironmentAttribute[Key]
           ? SymbolEnvironmentAttribute[Key]['value']
-          : NBTObject)
-        : NBTObject) | (
+          : SymbolEnvironmentAttribute<'%unknown'>)
+        : SymbolEnvironmentAttribute<'%unknown'>) | (
       Key extends keyof SymbolEnvironmentAttribute ?
         ('modifier' extends keyof SymbolEnvironmentAttribute[Key]
           ? SymbolEnvironmentAttribute[Key]['modifier']
-          : NBTObject)
-        : NBTObject));
+          : SymbolEnvironmentAttribute<'%unknown'>)
+        : SymbolEnvironmentAttribute<'%unknown'>));
 })
 
-export type FloatAttribute<T> = {
+export type FloatAttribute<T extends NBTObject> = {
   value: T
   modifier: FloatAttributeModifier<T>
   attribute_track: ({
     [S in Extract<FloatModifierType, string>]?: (AttributeTrackBase & {
       /**
-             * Value:
-             *
-             *  - Override(`override`)
-             *  - Add(`add`)
-             *  - Subtract(`subtract`)
-             *  - Multiply(`multiply`)
-             *  - Minimum(`minimum`)
-             *  - Maximum(`maximum`)
-             *  - AlphaBlend(`alpha_blend`)
-             */
+       * Value:
+       *
+       *  - Override(`override`)
+       *  - Add(`add`)
+       *  - Subtract(`subtract`)
+       *  - Multiply(`multiply`)
+       *  - Minimum(`minimum`)
+       *  - Maximum(`maximum`)
+       *  - AlphaBlend(`alpha_blend`)
+       */
       modifier?: S
       keyframes: Array<{
         /**
-                 * Value:
-                 * Range: 0..
-                 */
+         * Value:
+         * Range: 0..
+         */
         ticks: NBTInt<{
           min: 0
         }>
@@ -205,7 +205,7 @@ export type FloatAttribute<T> = {
           ? SymbolEnvironmentAttributeFloatModifier<T, '%none'> :
           (S extends keyof SymbolEnvironmentAttributeFloatModifier<T>
             ? SymbolEnvironmentAttributeFloatModifier<T>[S]
-            : NBTObject))
+            : SymbolEnvironmentAttributeFloatModifier<T, '%unknown'>))
       }>
     });
   }[FloatModifierType])
@@ -223,21 +223,21 @@ export type RGBColorAttribute = {
   attribute_track: ({
     [S in Extract<ColorModifierType, string>]?: (AttributeTrackBase & {
       /**
-             * Value:
-             *
-             *  - Override(`override`)
-             *  - Add(`add`)
-             *  - Subtract(`subtract`)
-             *  - Multiply(`multiply`)
-             *  - AlphaBlend(`alpha_blend`)
-             *  - BlendToGray(`blend_to_gray`)
-             */
+       * Value:
+       *
+       *  - Override(`override`)
+       *  - Add(`add`)
+       *  - Subtract(`subtract`)
+       *  - Multiply(`multiply`)
+       *  - AlphaBlend(`alpha_blend`)
+       *  - BlendToGray(`blend_to_gray`)
+       */
       modifier?: S
       keyframes: Array<{
         /**
-                 * Value:
-                 * Range: 0..
-                 */
+         * Value:
+         * Range: 0..
+         */
         ticks: NBTInt<{
           min: 0
         }>
@@ -245,7 +245,7 @@ export type RGBColorAttribute = {
           ? SymbolEnvironmentAttributeColorModifier<'%none'> :
           (S extends keyof SymbolEnvironmentAttributeColorModifier
             ? SymbolEnvironmentAttributeColorModifier[S]
-            : NBTObject))
+            : SymbolEnvironmentAttributeColorModifier<'%unknown'>))
       }>
     });
   }[ColorModifierType])
@@ -401,7 +401,7 @@ type EnvironmentAttributeFallback = (
   | EnvironmentAttributeVisualWaterFogEndDistance
   | EnvironmentAttributeVisualWaterFogStartDistance
   | EnvironmentAttributeFallbackType)
-export type EnvironmentAttributeFallbackType = DiscreteAttribute<unknown>
+export type EnvironmentAttributeFallbackType = DiscreteAttribute<NBTObject>
 type EnvironmentAttributeAudioAmbientSounds = DiscreteAttribute<AmbientSounds>
 type EnvironmentAttributeAudioBackgroundMusic = DiscreteAttribute<BackgroundMusic>
 type EnvironmentAttributeAudioFireflyBushSounds = BooleanAttribute
@@ -500,6 +500,11 @@ export type SymbolEnvironmentAttribute<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? EnvironmentAttributeDispatcherMap
-  : CASE extends 'keys' ? EnvironmentAttributeKeys : CASE extends '%fallback' ? EnvironmentAttributeFallback : never
+  : CASE extends 'keys'
+    ? EnvironmentAttributeKeys
+    : CASE extends '%fallback'
+      ? EnvironmentAttributeFallback
+      : CASE extends '%unknown' ? EnvironmentAttributeFallbackType : never

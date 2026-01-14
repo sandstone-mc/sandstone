@@ -1,15 +1,15 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BitmapProvider = {
   file: string
   height?: NBTInt
   ascent: NBTInt
   /**
-     * Value:
-     * List length range: 1..
-     */
+   * Value:
+   * List length range: 1..
+   */
   chars: NBTList<`${any}${string}`, {
     leftExclusive: false
     min: 1
@@ -22,24 +22,24 @@ export type Font = {
 
 export type FontOption = ('uniform' | 'jp')
 
-export type GlyphProvider = ({
+export type GlyphProvider = NonNullable<({
   [S in Extract<GlyphProviderType, string>]?: ({
     /**
-         * Value:
-         *
-         *  - Bitmap(`bitmap`)
-         *  - TrueType(`ttf`)
-         *  - Space(`space`)
-         *  - LegacyUnicode(`legacy_unicode`)
-         *  - Unihex(`unihex`)
-         *  - Reference(`reference`)
-         */
+     * Value:
+     *
+     *  - Bitmap(`bitmap`)
+     *  - TrueType(`ttf`)
+     *  - Space(`space`)
+     *  - LegacyUnicode(`legacy_unicode`)
+     *  - Unihex(`unihex`)
+     *  - Reference(`reference`)
+     */
     type: S
     filter?: ({
       [Key in Extract<FontOption, string>]?: boolean;
     })
   } & (S extends keyof SymbolGlyphProvider ? SymbolGlyphProvider[S] : RootNBT));
-}[GlyphProviderType])
+}[GlyphProviderType])>
 
 export type GlyphProviderType = ('bitmap' | 'ttf' | 'space' | 'legacy_unicode' | 'unihex' | 'reference')
 
@@ -63,9 +63,9 @@ export type TtfProvider = {
   size?: NBTFloat
   oversample?: NBTFloat
   /**
-     * Value:
-     * List length range: 2
-     */
+   * Value:
+   * List length range: 2
+   */
   shift?: NBTList<NBTFloat, {
     leftExclusive: false
     rightExclusive: false
@@ -77,28 +77,28 @@ export type TtfProvider = {
 
 export type UnihexOverrideRange = {
   /**
-     * Minimum in codepoint range (inclusive).
-     */
+   * Minimum in codepoint range (inclusive).
+   */
   from: string
   /**
-     * Maximum in codepoint range (inclusive).
-     */
+   * Maximum in codepoint range (inclusive).
+   */
   to: string
   /**
-     * Position of left-most column of the glyph.
-     *
-     * Value:
-     * Range: 0..255
-     */
+   * Position of left-most column of the glyph.
+   *
+   * Value:
+   * Range: 0..255
+   */
   left: NBTInt<{
     min: 0
   }>
   /**
-     * Position of right-most column of the glyph.
-     *
-     * Value:
-     * Range: 0..255
-     */
+   * Position of right-most column of the glyph.
+   *
+   * Value:
+   * Range: 0..255
+   */
   right: NBTInt<{
     min: 0
   }>
@@ -106,13 +106,13 @@ export type UnihexOverrideRange = {
 
 export type UnihexProvider = ({
   /**
-     * ZIP archive containing one or more *.hex files (files in archive with different extensions are ignored).
-     */
+   * ZIP archive containing one or more *.hex files (files in archive with different extensions are ignored).
+   */
   hex_file: string
 } & {
   /**
-     * List of ranges to override the size of.
-     */
+   * List of ranges to override the size of.
+   */
   size_overrides?: Array<UnihexOverrideRange>
 })
 type GlyphProviderDispatcherMap = {
@@ -147,6 +147,7 @@ export type SymbolGlyphProvider<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? GlyphProviderDispatcherMap
   : CASE extends 'keys' ? GlyphProviderKeys : CASE extends '%fallback' ? GlyphProviderFallback : never

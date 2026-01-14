@@ -1,5 +1,8 @@
+import type { DiscreteAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
+
 export type UnknownStorage = ({
-  [Key in `${any}${string}`]?: unknown;
+  [Key in `${any}${string}`]?: NBTObject;
 })
 type StorageDispatcherMap = {}
 type StorageKeys = keyof StorageDispatcherMap
@@ -10,6 +13,9 @@ export type SymbolStorage<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? StorageDispatcherMap
-  : CASE extends 'keys' ? StorageKeys : CASE extends '%fallback' ? StorageFallback : never
+  : CASE extends 'keys'
+    ? StorageKeys
+    : CASE extends '%fallback' ? StorageFallback : CASE extends '%unknown' ? StorageFallbackType : never

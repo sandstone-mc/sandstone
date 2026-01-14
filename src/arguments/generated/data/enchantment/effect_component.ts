@@ -7,16 +7,16 @@ import type {
 import type { LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTObject } from 'sandstone/arguments/nbt.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type AmmoUseEnchantmentEffect = {
   /**
-     * Predicate context: Item Parameters.
-     */
+   * Predicate context: Item Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of ammunition being used up.
-     */
+   * Amount of ammunition being used up.
+   */
   effect: ValueEffect
 }
 
@@ -24,306 +24,306 @@ export type AttackTarget = ('attacker' | 'damaging_entity' | 'victim')
 
 export type BlockExperienceEnchantmentEffect = {
   /**
-     * Predicate context: Item Parameters.
-     */
+   * Predicate context: Item Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of experience awarded.
-     */
+   * Amount of experience awarded.
+   */
   effect: ValueEffect
 }
 
 export type CrossbowChargeSoundsEnchantmentEffect = {
   /**
-     * Start of charging.
-     */
+   * Start of charging.
+   */
   start?: SoundEventRef
   /**
-     * Middle of charging.
-     */
+   * Middle of charging.
+   */
   mid?: SoundEventRef
   /**
-     * End of charging.
-     */
+   * End of charging.
+   */
   end?: SoundEventRef
 }
 
 export type DamageEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Determines armor effectiveness; `0.0` for no effect, `1.0` for full effect.
-     */
+   * Determines armor effectiveness; `0.0` for no effect, `1.0` for full effect.
+   */
   effect: ValueEffect
 }
 
 export type DamageImmunityEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Dummy value; this is a boolean effect.
-     */
+   * Dummy value; this is a boolean effect.
+   */
   effect: Record<string, never>
 }
 
 export type DamageProtectionEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of damage being absorbed; as "fake armor".
-     */
+   * Amount of damage being absorbed; as "fake armor".
+   */
   effect: ValueEffect
 }
 
 export type EnchantmentEffectComponentMap = ({
   [Key in Extract<Registry['minecraft:enchantment_effect_component_type'], string>]?: (Key extends keyof SymbolEffectComponent
     ? SymbolEffectComponent[Key]
-    : NBTObject);
+    : RootNBT);
 })
 
 export type EquipmentDropsEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Chance between `0.0` and `1.0` of an equipped piece dropping.
-     */
+   * Chance between `0.0` and `1.0` of an equipped piece dropping.
+   */
   effect: ValueEffect
   /**
-     * Which subject needs to be enchanted for the effect to apply.
-     */
+   * Which subject needs to be enchanted for the effect to apply.
+   */
   enchanted: ('attacker' | 'victim')
 }
 
 export type FishingLuckBonusEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the player fishing.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the player fishing.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of luck being added.
-     */
+   * Amount of luck being added.
+   */
   effect: ValueEffect
 }
 
 export type FishingTimeReductionEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the player fishing.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the player fishing.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Time reduction in seconds (higher values mean less time until a fish bites).
-     */
+   * Time reduction in seconds (higher values mean less time until a fish bites).
+   */
   effect: ValueEffect
 }
 
 export type HitBlockEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the entity hitting the Block, unless during a projectile attack, then, `this` is the projectile.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the entity hitting the Block, unless during a projectile attack, then, `this` is the projectile.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * On the entity hitting the Block
-     */
+   * On the entity hitting the Block
+   */
   effect: EntityEffect
 }
 
 export type ItemDamageEnchantmentEffect = {
   /**
-     * Predicate context: Item Parameters.
-     */
+   * Predicate context: Item Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of damage being dealt to the item.
-     */
+   * Amount of damage being dealt to the item.
+   */
   effect: ValueEffect
 }
 
 export type KnockbackEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of knockback being applied.
-     */
+   * Amount of knockback being applied.
+   */
   effect: ValueEffect
 }
 
 export type LocationChangedEnchantmentEffect = {
   /**
-     * Predicate context: Location Parameters.
-     */
+   * Predicate context: Location Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * On the entity changing location.
-     */
+   * On the entity changing location.
+   */
   effect: LocationBasedEffect
 }
 
 export type MobExperienceEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the killed mob.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the killed mob.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of experience awarded.
-     */
+   * Amount of experience awarded.
+   */
   effect: ValueEffect
 }
 
 export type PostAttackEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Examples:
-     * - A Fire Aspect Enchant would specify that when the attacker is enchanted, the ignite effect is applied, and the affected party is the victim.
-     * - Thorns would specify that when the victim is enchanted, the damage_entity effect is applied, and the affected party is the attacker.
-     */
+   * Examples:
+   * - A Fire Aspect Enchant would specify that when the attacker is enchanted, the ignite effect is applied, and the affected party is the victim.
+   * - Thorns would specify that when the victim is enchanted, the damage_entity effect is applied, and the affected party is the attacker.
+   */
   effect: EntityEffect
   /**
-     * Value:
-     *
-     *  - Attacker(`attacker`)
-     *  - DamagingEntity(`damaging_entity`)
-     *  - Victim(`victim`)
-     */
+   * Value:
+   *
+   *  - Attacker(`attacker`)
+   *  - DamagingEntity(`damaging_entity`)
+   *  - Victim(`victim`)
+   */
   enchanted: AttackTarget
   /**
-     * Value:
-     *
-     *  - Attacker(`attacker`)
-     *  - DamagingEntity(`damaging_entity`)
-     *  - Victim(`victim`)
-     */
+   * Value:
+   *
+   *  - Attacker(`attacker`)
+   *  - DamagingEntity(`damaging_entity`)
+   *  - Victim(`victim`)
+   */
   affected: AttackTarget
 }
 
 export type PostPiercingAttackEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * The effect to apply on attacker.
-     */
+   * The effect to apply on attacker.
+   */
   effect: EntityEffect
 }
 
 export type ProjectileCountEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the entity drawing the weapon.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the entity drawing the weapon.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of projectiles being loaded/drawn.
-     */
+   * Amount of projectiles being loaded/drawn.
+   */
   effect: ValueEffect
 }
 
 export type ProjectilePiercingEnchantmentEffect = {
   /**
-     * Predicate context: Item Parameters.
-     *
-     * Tool is the ammunition item.
-     */
+   * Predicate context: Item Parameters.
+   *
+   * Tool is the ammunition item.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of entities the projectile will pierce through before despawning.
-     */
+   * Amount of entities the projectile will pierce through before despawning.
+   */
   effect: ValueEffect
 }
 
 export type ProjectileSpawnedEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the newly spawned projectile.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the newly spawned projectile.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * On the newly spawned projectile.
-     */
+   * On the newly spawned projectile.
+   */
   effect: EntityEffect
 }
 
 export type ProjectileSpreadEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the entity shooting the projectile.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the entity shooting the projectile.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Maximum spread of projectiles measured in degrees from the aim line.
-     */
+   * Maximum spread of projectiles measured in degrees from the aim line.
+   */
   effect: ValueEffect
 }
 
 export type RepairWithXpEnchantmentEffect = {
   /**
-     * Predicate context: Item Parameters.
-     */
+   * Predicate context: Item Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of durability increase per experience point, `mending` uses 2x.
-     */
+   * Amount of durability increase per experience point, `mending` uses 2x.
+   */
   effect: ValueEffect
 }
 
 export type SmashDamagePerBlockFallenEnchantmentEffect = {
   /**
-     * Predicate context: Damage Parameters.
-     */
+   * Predicate context: Damage Parameters.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of damage dealt per block fallen.
-     */
+   * Amount of damage dealt per block fallen.
+   */
   effect: ValueEffect
 }
 
 export type TickEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the entity with the Enchanted Item.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the entity with the Enchanted Item.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * On every tick. Performance recommendation: don't use with `run_function` unless necessary.
-     */
+   * On every tick. Performance recommendation: don't use with `run_function` unless necessary.
+   */
   effect: EntityEffect
 }
 
 export type TridentReturnAccelerationEnchantmentEffect = {
   /**
-     * Predicate context: Entity Parameters.
-     *
-     * `this` is the trident entity.
-     */
+   * Predicate context: Entity Parameters.
+   *
+   * `this` is the trident entity.
+   */
   requirements?: (LootCondition | Array<LootCondition>)
   /**
-     * Amount of acceleration applied to the returning trident.
-     */
+   * Amount of acceleration applied to the returning trident.
+   */
   effect: ValueEffect
 }
 type EffectComponentDispatcherMap = {
@@ -458,6 +458,7 @@ export type SymbolEffectComponent<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? EffectComponentDispatcherMap
   : CASE extends 'keys' ? EffectComponentKeys : CASE extends '%fallback' ? EffectComponentFallback : never

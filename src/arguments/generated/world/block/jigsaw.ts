@@ -2,29 +2,29 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 
 export type Jigsaw = {
   /**
-     * How the resultant structure can be transformed.
-     *
-     * Value:
-     *
-     *  - Rollable(`rollable`): The structure can be rotated
-     *  - Aligned(`aligned`): The structure cannot be transformed
-     */
+   * How the resultant structure can be transformed.
+   *
+   * Value:
+   *
+   *  - Rollable(`rollable`): The structure can be rotated
+   *  - Aligned(`aligned`): The structure cannot be transformed
+   */
   joint?: JointType
   /**
-     * Structure pool this will "spawn" in.
-     */
+   * Structure pool this will "spawn" in.
+   */
   pool?: Registry['minecraft:worldgen/template_pool']
   /**
-     * ID this will "spawn" in.
-     */
+   * ID this will "spawn" in.
+   */
   name?: string
   /**
-     * ID of the type of jigsaw this will be "spawned" from.
-     */
+   * ID of the type of jigsaw this will be "spawned" from.
+   */
   target?: string
   /**
-     * Final block state of the jigsaw.
-     */
+   * Final block state of the jigsaw.
+   */
   final_state?: string
 }
 

@@ -1,14 +1,14 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
-import type { NBTInt, NBTList, TagClass } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTInt, NBTList, TagClass } from 'sandstone'
 
-export type BlockPredicate = ({
+export type BlockPredicate = NonNullable<({
   [S in Extract<Registry['minecraft:block_predicate_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolBlockPredicate ? SymbolBlockPredicate[S] : RootNBT));
-}[Registry['minecraft:block_predicate_type']])
+}[Registry['minecraft:block_predicate_type']])>
 
 export type CombiningPredicate = {
   predicates: Array<BlockPredicate>
@@ -16,15 +16,15 @@ export type CombiningPredicate = {
 
 export type HasSturdyFacePredicate = (PredicateOffset & {
   /**
-     * Value:
-     *
-     *  - Down(`down`)
-     *  - Up(`up`)
-     *  - North(`north`)
-     *  - East(`east`)
-     *  - South(`south`)
-     *  - West(`west`)
-     */
+   * Value:
+   *
+   *  - Down(`down`)
+   *  - Up(`up`)
+   *  - North(`north`)
+   *  - East(`east`)
+   *  - South(`south`)
+   *  - West(`west`)
+   */
   direction: Direction
 })
 
@@ -52,11 +52,11 @@ export type NotPredicate = {
 
 export type PredicateOffset = {
   /**
-     * The block offset to check.
-     *
-     * Value:
-     * List length range: 3
-     */
+   * The block offset to check.
+   *
+   * Value:
+   * List length range: 3
+   */
   offset?: NBTList<NBTInt<{
     min: -16
     max: 16
@@ -70,9 +70,9 @@ export type PredicateOffset = {
 
 export type UnobstructedPredicate = {
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   offset?: NBTList<NBTInt, {
     leftExclusive: false
     rightExclusive: false
@@ -132,6 +132,7 @@ export type SymbolBlockPredicate<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? BlockPredicateDispatcherMap
   : CASE extends 'keys' ? BlockPredicateKeys : CASE extends '%fallback' ? BlockPredicateFallback : never

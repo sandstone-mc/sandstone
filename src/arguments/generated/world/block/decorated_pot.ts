@@ -5,11 +5,11 @@ import type { NBTList, NBTLong } from 'sandstone'
 
 export type DecoratedPot = (BlockEntity & {
   /**
-     * Item ID of what was used for each side of the pot.
-     *
-     * Value:
-     * List length range: 4
-     */
+   * Item ID of what was used for each side of the pot.
+   *
+   * Value:
+   * List length range: 4
+   */
   sherds?: NBTList<(Sherd | `minecraft:${Sherd}`), {
     leftExclusive: false
     rightExclusive: false
@@ -17,12 +17,12 @@ export type DecoratedPot = (BlockEntity & {
     max: 4
   }>
   /**
-     * Loot table that will populate this container.
-     */
+   * Loot table that will populate this container.
+   */
   LootTable?: (Registry['minecraft:loot_table'] | '')
   /**
-     * Seed of the loot table.
-     */
+   * Seed of the loot table.
+   */
   LootTableSeed?: NBTLong
   item?: ItemStack
 })

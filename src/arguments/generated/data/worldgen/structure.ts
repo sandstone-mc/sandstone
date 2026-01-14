@@ -2,8 +2,8 @@ import type { MobCategory, SpawnerData } from 'sandstone/arguments/generated/dat
 import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type BiomeTemperature = ('cold' | 'warm')
 
@@ -19,9 +19,9 @@ export type DirectPoolAlias = {
 export type Jigsaw<S = undefined> = ({
   start_pool: Registry['minecraft:worldgen/template_pool']
   /**
-     * Value:
-     * Range: 1..20
-     */
+   * Value:
+   * Range: 1..20
+   */
   size: NBTInt<{
     min: 1
     max: 20
@@ -31,68 +31,68 @@ export type Jigsaw<S = undefined> = ({
   start_height: HeightProvider
   start_jigsaw_name?: `${string}:${string}`
   /**
-     * Value:
-     *
-     *  - MotionBlocking(`MOTION_BLOCKING`)
-     *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
-     *  - OceanFloor(`OCEAN_FLOOR`)
-     *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
-     *  - WorldSurface(`WORLD_SURFACE`)
-     *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
-     */
+   * Value:
+   *
+   *  - MotionBlocking(`MOTION_BLOCKING`)
+   *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
+   *  - OceanFloor(`OCEAN_FLOOR`)
+   *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
+   *  - WorldSurface(`WORLD_SURFACE`)
+   *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
+   */
   project_start_to_heightmap?: HeightmapType
   max_distance_from_center: (S extends undefined
     ? SymbolJigsawMaxDistanceFromCenter<'%none'> :
     (S extends keyof SymbolJigsawMaxDistanceFromCenter
       ? SymbolJigsawMaxDistanceFromCenter[S]
-      : NBTObject))
+      : SymbolJigsawMaxDistanceFromCenter<'%unknown'>))
   use_expansion_hack: boolean
 } & {
   /**
-     * Value:
-     * *either*
-     *
-     * Range: 0..
-     *
-     * *or*
-     *
-     * *item 1*
-     */
+   * Value:
+   * *either*
+   *
+   * Range: 0..
+   *
+   * *or*
+   *
+   * *item 1*
+   */
   dimension_padding?: (NBTInt<{
     min: 0
   }> | {
     /**
-         * Value:
-         * Range: 0..
-         */
+     * Value:
+     * Range: 0..
+     */
     bottom?: NBTInt<{
       min: 0
     }>
     /**
-         * Value:
-         * Range: 0..
-         */
+     * Value:
+     * Range: 0..
+     */
     top?: NBTInt<{
       min: 0
     }>
   })
   /**
-     * Value:
-     *
-     *  - ApplyWaterlogging(`apply_waterlogging`)
-     *  - IgnoreWaterlogging(`ignore_waterlogging`)
-     */
+   * Value:
+   *
+   *  - ApplyWaterlogging(`apply_waterlogging`)
+   *  - IgnoreWaterlogging(`ignore_waterlogging`)
+   */
   liquid_settings?: LiquidSettings
 })
 
-export type JigsawDistanceLimits<T> = {
+export type JigsawDistanceLimits<T extends NBTObject> = {
   horizontal: T
   /**
-     * Defaults to 4096
-     *
-     * Value:
-     * Range: 1..4096
-     */
+   * Defaults to 4096
+   *
+   * Value:
+   * Range: 1..4096
+   */
   vertical?: NBTInt<{
     min: 1
   }>
@@ -102,11 +102,11 @@ export type LiquidSettings = ('apply_waterlogging' | 'ignore_waterlogging')
 
 export type Mineshaft = {
   /**
-     * Value:
-     *
-     *  - Normal(`normal`)
-     *  - Mesa(`mesa`)
-     */
+   * Value:
+   *
+   *  - Normal(`normal`)
+   *  - Mesa(`mesa`)
+   */
   mineshaft_type: MineshaftType
 }
 
@@ -118,16 +118,16 @@ export type NetherFossil = {
 
 export type OceanRuin = {
   /**
-     * Value:
-     *
-     *  - Cold(`cold`)
-     *  - Warm(`warm`)
-     */
+   * Value:
+   *
+   *  - Cold(`cold`)
+   *  - Warm(`warm`)
+   */
   biome_temp: BiomeTemperature
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   large_probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -135,9 +135,9 @@ export type OceanRuin = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   cluster_probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -146,11 +146,11 @@ export type OceanRuin = {
   }>
 }
 
-export type PoolAlias = ({
+export type PoolAlias = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>]?: ({
     type: S
   } & (S extends keyof SymbolWorldgenPoolAliasBinding ? SymbolWorldgenPoolAliasBinding[S] : RootNBT));
-}[Registry['minecraft:worldgen/pool_alias_binding']])
+}[Registry['minecraft:worldgen/pool_alias_binding']])>
 
 export type RandomGroupPoolAlias = {
   groups: NonEmptyWeightedList<Array<PoolAlias>>
@@ -175,20 +175,20 @@ export type RuinedPortalPlacement = (
 
 export type RuinedPortalSetup = {
   /**
-     * Value:
-     *
-     *  - OnLandSurface(`on_land_surface`)
-     *  - PartlyBuried(`partly_buried`)
-     *  - OnOceanFloor(`on_ocean_floor`)
-     *  - InMountain(`in_mountain`)
-     *  - Underground(`underground`)
-     *  - InNether(`in_nether`)
-     */
+   * Value:
+   *
+   *  - OnLandSurface(`on_land_surface`)
+   *  - PartlyBuried(`partly_buried`)
+   *  - OnOceanFloor(`on_ocean_floor`)
+   *  - InMountain(`in_mountain`)
+   *  - Underground(`underground`)
+   *  - InNether(`in_nether`)
+   */
   placement: RuinedPortalPlacement
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   air_pocket_probability: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -196,9 +196,9 @@ export type RuinedPortalSetup = {
     max: 1
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   mossiness: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -210,9 +210,9 @@ export type RuinedPortalSetup = {
   can_be_cold: boolean
   replace_with_blackstone: boolean
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   weight: NBTFloat<{
     leftExclusive: false
     min: 0
@@ -227,16 +227,16 @@ export type Shipwreck = {
 
 export type SpawnOverride = {
   /**
-     * Value:
-     *
-     *  - Piece(`piece`)
-     *  - Full(`full`)
-     */
+   * Value:
+   *
+   *  - Piece(`piece`)
+   *  - Full(`full`)
+   */
   bounding_box: BoundingBox
   spawns: Array<SpawnerData>
 }
 
-export type Structure = ({
+export type Structure = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/structure_type'], string>]?: ({
     type: S
     biomes: (
@@ -245,38 +245,38 @@ export type Structure = ({
             | `#${Registry['minecraft:tag/worldgen/biome']}`
             | TagClass<'worldgen/biome'>))
     /**
-         * The step when the structure generates.
-         *
-         * Value:
-         *
-         *  - RawGeneration(`raw_generation`)
-         *  - Lakes(`lakes`)
-         *  - LocalModifications(`local_modifications`)
-         *  - UndergroundStructures(`underground_structures`)
-         *  - SurfaceStructures(`surface_structures`)
-         *  - Strongholds(`strongholds`)
-         *  - UndergroundOres(`underground_ores`)
-         *  - UndergroundDecoration(`underground_decoration`)
-         *  - FluidSprings(`fluid_springs`)
-         *  - VegetalDecoration(`vegetal_decoration`)
-         *  - TopLayerModification(`top_layer_modification`)
-         */
+     * The step when the structure generates.
+     *
+     * Value:
+     *
+     *  - RawGeneration(`raw_generation`)
+     *  - Lakes(`lakes`)
+     *  - LocalModifications(`local_modifications`)
+     *  - UndergroundStructures(`underground_structures`)
+     *  - SurfaceStructures(`surface_structures`)
+     *  - Strongholds(`strongholds`)
+     *  - UndergroundOres(`underground_ores`)
+     *  - UndergroundDecoration(`underground_decoration`)
+     *  - FluidSprings(`fluid_springs`)
+     *  - VegetalDecoration(`vegetal_decoration`)
+     *  - TopLayerModification(`top_layer_modification`)
+     */
     step: DecorationStep
     /**
-         * Value:
-         *
-         *  - None(`none`)
-         *  - BeardThin(`beard_thin`)
-         *  - BeardBox(`beard_box`)
-         *  - Bury(`bury`)
-         *  - Encapsulate(`encapsulate`)
-         */
+     * Value:
+     *
+     *  - None(`none`)
+     *  - BeardThin(`beard_thin`)
+     *  - BeardBox(`beard_box`)
+     *  - Bury(`bury`)
+     *  - Encapsulate(`encapsulate`)
+     */
     terrain_adaptation?: TerrainAdaptation
     spawn_overrides: ({
       [Key in Extract<MobCategory, string>]?: SpawnOverride;
     })
   } & (S extends keyof SymbolStructureConfig ? SymbolStructureConfig[S] : RootNBT));
-}[Registry['minecraft:worldgen/structure_type']])
+}[Registry['minecraft:worldgen/structure_type']])>
 
 export type StructureRef = (Registry['minecraft:worldgen/structure'] | Structure)
 
@@ -324,13 +324,16 @@ export type SymbolJigsawMaxDistanceFromCenter<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? JigsawMaxDistanceFromCenterDispatcherMap
   : CASE extends 'keys'
     ? JigsawMaxDistanceFromCenterKeys
     : CASE extends '%fallback'
       ? JigsawMaxDistanceFromCenterFallback
-      : CASE extends '%none' ? JigsawMaxDistanceFromCenterNoneType : never
+      : CASE extends '%none'
+        ? JigsawMaxDistanceFromCenterNoneType
+        : CASE extends '%unknown' ? JigsawMaxDistanceFromCenterFallbackType : never
 type StructureConfigDispatcherMap = {
   'bastion_remnant': StructureConfigBastionRemnant
   'minecraft:bastion_remnant': StructureConfigBastionRemnant
@@ -415,7 +418,8 @@ export type SymbolStructureConfig<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? StructureConfigDispatcherMap
   : CASE extends 'keys' ? StructureConfigKeys : CASE extends '%fallback' ? StructureConfigFallback : never
 type WorldgenPoolAliasBindingDispatcherMap = {
@@ -438,7 +442,8 @@ export type SymbolWorldgenPoolAliasBinding<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? WorldgenPoolAliasBindingDispatcherMap
   : CASE extends 'keys'
     ? WorldgenPoolAliasBindingKeys

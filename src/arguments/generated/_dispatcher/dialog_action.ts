@@ -53,6 +53,7 @@ export type SymbolDialogAction<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? DialogActionDispatcherMap
   : CASE extends 'keys' ? DialogActionKeys : CASE extends '%fallback' ? DialogActionFallback : never

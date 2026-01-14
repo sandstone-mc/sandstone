@@ -13,8 +13,8 @@ import type { NBTFloat, NBTInt, NBTLong, ObjectiveClass } from 'sandstone'
 
 export type AllOf = {
   /**
-     * Passes when all of these conditions pass.
-     */
+   * Passes when all of these conditions pass.
+   */
   terms: Array<LootCondition>
 }
 
@@ -24,8 +24,8 @@ export type Alternative = {
 
 export type AnyOf = {
   /**
-     * Passes when any of these conditions pass.
-     */
+   * Passes when any of these conditions pass.
+   */
   terms: Array<LootCondition>
 }
 
@@ -33,7 +33,6 @@ export type BlockStateProperty = {
   block: Registry['minecraft:block']
   properties?: SymbolMcdocBlockStates<'%none'>
 }
-
 
 export type DamageSourceProperties = {
   predicate: DamageSourcePredicate
@@ -45,36 +44,36 @@ export type EnchantmentActiveCheck = {
 
 export type EntityProperties = {
   /**
-     * Value:
-     *
-     *  - This(`this`)
-     *  - Killer(`killer`)
-     *  - Attacker(`attacker`)
-     *  - DirectKiller(`direct_killer`)
-     *  - DirectAttacker(`direct_attacker`)
-     *  - KillerPlayer(`killer_player`)
-     *  - AttackingPlayer(`attacking_player`)
-     *  - TargetEntity(`target_entity`)
-     *  - InteractingEntity(`interacting_entity`)
-     */
+   * Value:
+   *
+   *  - This(`this`)
+   *  - Killer(`killer`)
+   *  - Attacker(`attacker`)
+   *  - DirectKiller(`direct_killer`)
+   *  - DirectAttacker(`direct_attacker`)
+   *  - KillerPlayer(`killer_player`)
+   *  - AttackingPlayer(`attacking_player`)
+   *  - TargetEntity(`target_entity`)
+   *  - InteractingEntity(`interacting_entity`)
+   */
   entity: EntityTarget
   predicate: EntityPredicate
 }
 
 export type EntityScores = {
   /**
-     * Value:
-     *
-     *  - This(`this`)
-     *  - Killer(`killer`)
-     *  - Attacker(`attacker`)
-     *  - DirectKiller(`direct_killer`)
-     *  - DirectAttacker(`direct_attacker`)
-     *  - KillerPlayer(`killer_player`)
-     *  - AttackingPlayer(`attacking_player`)
-     *  - TargetEntity(`target_entity`)
-     *  - InteractingEntity(`interacting_entity`)
-     */
+   * Value:
+   *
+   *  - This(`this`)
+   *  - Killer(`killer`)
+   *  - Attacker(`attacker`)
+   *  - DirectKiller(`direct_killer`)
+   *  - DirectAttacker(`direct_attacker`)
+   *  - KillerPlayer(`killer_player`)
+   *  - AttackingPlayer(`attacking_player`)
+   *  - TargetEntity(`target_entity`)
+   *  - InteractingEntity(`interacting_entity`)
+   */
   entity: EntityTarget
   scores: ({
     [Key in Extract<string | ObjectiveClass, string>]?: IntRange;
@@ -102,16 +101,16 @@ export type MatchTool = {
 
 export type RandomChance = {
   /**
-     * Clamps to a float between `0` & `1` (inclusive).
-     */
+   * Clamps to a float between `0` & `1` (inclusive).
+   */
   chance: NumberProvider
 }
 
 export type RandomChanceWithEnchantedBonus = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   unenchanted_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -124,9 +123,9 @@ export type RandomChanceWithEnchantedBonus = {
 
 export type RandomChanceWithLooting = {
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -134,23 +133,23 @@ export type RandomChanceWithLooting = {
     max: 1
   }>
   /**
-     * Looting adjustment to the base success rate. Formula is `chance + (looting_level * looting_multiplier)` .
-     */
+   * Looting adjustment to the base success rate. Formula is `chance + (looting_level * looting_multiplier)` .
+   */
   looting_multiplier: NBTFloat
 }
 
 export type Reference = {
   /**
-     * A cyclic reference causes a parsing failure.
-     */
+   * A cyclic reference causes a parsing failure.
+   */
   name: `${string}:${string}`
 }
 
 export type TableBonus = {
   enchantment: Registry['minecraft:enchantment']
   /**
-     * Probabilities for each enchantment level
-     */
+   * Probabilities for each enchantment level
+   */
   chances: Array<NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -161,28 +160,28 @@ export type TableBonus = {
 
 export type TimeCheck = {
   /**
-     * The world clock to check.
-     */
+   * The world clock to check.
+   */
   clock: `${string}:${string}`
   /**
-     * Check the current game tick.
-     */
+   * Check the current game tick.
+   */
   value: IntRange
   /**
-     * Game tick supplied to `value` check gets modulo-divided by this.
-     * For example, if set to 24000, `value` operates on a time period of days.
-     */
+   * Game tick supplied to `value` check gets modulo-divided by this.
+   * For example, if set to 24000, `value` operates on a time period of days.
+   */
   period?: NBTLong
 }
 
 export type ValueCheck = {
   /**
-     * Clamps to an integer.
-     */
+   * Clamps to an integer.
+   */
   value: NumberProvider
   /**
-     * Passes when `value` is within this range.
-     */
+   * Passes when `value` is within this range.
+   */
   range: IntRange
 }
 
@@ -278,6 +277,7 @@ export type SymbolLootCondition<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? LootConditionDispatcherMap
   : CASE extends 'keys' ? LootConditionKeys : CASE extends '%fallback' ? LootConditionFallback : never

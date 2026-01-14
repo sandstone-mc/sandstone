@@ -5,18 +5,18 @@ export type ChickenModelType = ('normal' | 'cold')
 
 export type ChickenVariant = ({
   /**
-     * Value:
-     *
-     *  - Normal(`normal`)
-     *  - Cold(`cold`)
-     */
+   * Value:
+   *
+   *  - Normal(`normal`)
+   *  - Cold(`cold`)
+   */
   model?: ChickenModelType
   /**
-     * The chicken texture to use for this variant.
-     */
+   * The chicken texture to use for this variant.
+   */
   asset_id: Registry['minecraft:texture']
   /**
-     * The baby chicken texture to use for this variant.
-     */
+   * The baby chicken texture to use for this variant.
+   */
   baby_asset_id: Registry['minecraft:texture']
 } & SpawnPrioritySelectors)

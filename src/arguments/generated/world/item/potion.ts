@@ -5,15 +5,15 @@ import type { NBTInt } from 'sandstone'
 
 export type EffectItem = (ItemBase & {
   /**
-     * List of the effects that will be applied with this item.
-     */
+   * List of the effects that will be applied with this item.
+   */
   custom_potion_effects?: Array<MobEffectInstance>
   /**
-     * Default potion effect
-     */
+   * Default potion effect
+   */
   Potion?: Registry['minecraft:potion']
   /**
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   CustomPotionColor?: NBTInt
 })

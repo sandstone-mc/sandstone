@@ -6,6 +6,7 @@ import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
 
 export type AttributeModifiersPredicate = {
@@ -19,32 +20,32 @@ export type AttributeModifiersPredicateEntry = {
   id?: `${string}:${string}`
   amount?: MinMaxBounds<(NBTDouble | number)>
   /**
-     * Value:
-     *
-     *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
-     *  - AddMultipliedBase(`add_multiplied_base`):
-     *    Multiplies the current value of the attribute by `(1 + x)`,
-     *    where `x` is the sum of the modifiers' amounts.
-     *  - AddMultipliedTotal(`add_multiplied_total`):
-     *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
-     *    where `x` is the amount of the particular modifier.
-     */
+   * Value:
+   *
+   *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
+   *  - AddMultipliedBase(`add_multiplied_base`):
+   *    Multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the sum of the modifiers' amounts.
+   *  - AddMultipliedTotal(`add_multiplied_total`):
+   *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the amount of the particular modifier.
+   */
   operation?: AttributeOperation
   /**
-     * Value:
-     *
-     *  - Mainhand(`mainhand`)
-     *  - Offhand(`offhand`)
-     *  - Head(`head`)
-     *  - Chest(`chest`)
-     *  - Legs(`legs`)
-     *  - Feet(`feet`)
-     *  - Hand(`hand`)
-     *  - Armor(`armor`)
-     *  - Any(`any`)
-     *  - Body(`body`)
-     *  - Saddle(`saddle`)
-     */
+   * Value:
+   *
+   *  - Mainhand(`mainhand`)
+   *  - Offhand(`offhand`)
+   *  - Head(`head`)
+   *  - Chest(`chest`)
+   *  - Legs(`legs`)
+   *  - Feet(`feet`)
+   *  - Hand(`hand`)
+   *  - Armor(`armor`)
+   *  - Any(`any`)
+   *  - Body(`body`)
+   *  - Saddle(`saddle`)
+   */
   slot?: EquipmentSlotGroup
 }
 
@@ -52,24 +53,24 @@ export type BundleContentsPredicate = {
   items?: CollectionPredicate<ItemPredicate>
 }
 
-export type CollectionPredicate<P> = {
+export type CollectionPredicate<P extends NBTObject> = {
   /**
-     * A list of tests. For each test, there must be at least one entry whose contents match exactly.
-     */
+   * A list of tests. For each test, there must be at least one entry whose contents match exactly.
+   */
   contains?: Array<P>
   count?: Array<{
     /**
-         * The contents an entry's text must match exactly.
-         */
+     * The contents an entry's text must match exactly.
+     */
     test: P
     /**
-         * The number of entries that must match the test.
-         */
+     * The number of entries that must match the test.
+     */
     count: MinMaxBounds<NBTInt>
   }>
   /**
-     * When set, total number of entries in the this collection.
-     */
+   * When set, total number of entries in the this collection.
+   */
   size?: MinMaxBounds<NBTInt>
 }
 
@@ -79,14 +80,14 @@ export type ContainerPredicate = {
 
 export type FireworkExplosionPredicate = {
   /**
-     * Value:
-     *
-     *  - SmallBall(`small_ball`)
-     *  - LargeBall(`large_ball`)
-     *  - Star(`star`)
-     *  - Creeper(`creeper`)
-     *  - Burst(`burst`)
-     */
+   * Value:
+   *
+   *  - SmallBall(`small_ball`)
+   *  - LargeBall(`large_ball`)
+   *  - Star(`star`)
+   *  - Creeper(`creeper`)
+   *  - Burst(`burst`)
+   */
   shape?: FireworkShape
   has_twinkle?: boolean
   has_trail?: boolean
@@ -119,15 +120,15 @@ export type TrimPredicate = {
 
 export type WritableBookPredicate = {
   /**
-     * Matches the raw text, instead of filtered.
-     */
+   * Matches the raw text, instead of filtered.
+   */
   pages?: CollectionPredicate<string>
 }
 
 export type WrittenBookPredicate = {
   /**
-     * Matches the raw text, instead of filtered.
-     */
+   * Matches the raw text, instead of filtered.
+   */
   pages?: CollectionPredicate<Text>
   author?: string
   title?: string
@@ -202,8 +203,11 @@ export type SymbolDataComponentPredicate<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? DataComponentPredicateDispatcherMap
   : CASE extends 'keys'
     ? DataComponentPredicateKeys
-    : CASE extends '%fallback' ? DataComponentPredicateFallback : never
+    : CASE extends '%fallback'
+      ? DataComponentPredicateFallback
+      : CASE extends '%unknown' ? DataComponentPredicateFallbackType : never

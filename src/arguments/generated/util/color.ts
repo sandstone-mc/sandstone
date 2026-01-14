@@ -147,7 +147,8 @@ export type SymbolEnvironmentAttributeArgbColorModifier<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? EnvironmentAttributeArgbColorModifierDispatcherMap
   : CASE extends 'keys'
     ? EnvironmentAttributeArgbColorModifierKeys

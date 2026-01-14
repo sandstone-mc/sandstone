@@ -12,16 +12,16 @@ export type Biome = {
   downfall: NBTFloat
   has_precipitation: boolean
   /**
-     * Value:
-     *
-     *  - None(`none`)
-     *  - Frozen(`frozen`)
-     */
+   * Value:
+   *
+   *  - None(`none`)
+   *  - Frozen(`frozen`)
+   */
   temperature_modifier?: TemperatureModifier
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   creature_spawn_probability?: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -41,9 +41,9 @@ export type Biome = {
         | `#${string}:${string}`
         | TagClass<'worldgen/configured_carver'>))
   /**
-     * Value:
-     * List length range: ..11
-     */
+   * Value:
+   * List length range: ..11
+   */
   features: NBTList<(Array<PlacedFeatureRef> | (`#${string}:${string}` | TagClass<'worldgen/placed_feature'>)), {
     rightExclusive: false
   }>
@@ -76,44 +76,44 @@ export type BiomeEffects = {
   foliage_color?: StringRGB
   dry_foliage_color?: StringRGB
   /**
-     * Value:
-     *
-     *  - None(`none`)
-     *  - DarkForest(`dark_forest`)
-     *  - Swamp(`swamp`)
-     */
+   * Value:
+   *
+   *  - None(`none`)
+   *  - DarkForest(`dark_forest`)
+   *  - Swamp(`swamp`)
+   */
   grass_color_modifier?: GrassColorModifier
 }
 
 export type BiomeMusic = ({
   sound: SoundEventRef
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   min_delay: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   max_delay: NBTInt<{
     min: 0
   }>
 } & {
   /**
-     * Defaults to `false`.
-     */
+   * Defaults to `false`.
+   */
   replace_current_music?: boolean
 })
 
 export type BiomeSoundAdditions = {
   sound: SoundEventRef
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   tick_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false

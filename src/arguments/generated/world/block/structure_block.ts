@@ -11,77 +11,77 @@ export type Rotation = ('NONE' | 'CLOCKWISE_90' | 'CLOCKWISE_180' | 'COUNTERCLOC
 export type StructureBlock = (BlockEntity & {
   name?: (Registry['minecraft:structure'] | '')
   /**
-     * Author of the structure.
-     */
+   * Author of the structure.
+   */
   author?: string
   /**
-     * Custom data for the structure. Stores the data id for "DATA" mode.
-     */
+   * Custom data for the structure. Stores the data id for "DATA" mode.
+   */
   metadata?: string
   /**
-     * Relative offset.
-     */
+   * Relative offset.
+   */
   posX?: NBTInt
   /**
-     * Relative offset.
-     */
+   * Relative offset.
+   */
   posY?: NBTInt
   /**
-     * Relative offset.
-     */
+   * Relative offset.
+   */
   posZ?: NBTInt
   sizeX?: NBTInt
   sizeY?: NBTInt
   sizeZ?: NBTInt
   /**
-     * Value:
-     *
-     *  - None(`NONE`)
-     *  - Clockwise90(`CLOCKWISE_90`)
-     *  - Clockwise180(`CLOCKWISE_180`)
-     *  - CounterClockwise90(`COUNTERCLOCKWISE_90`)
-     */
+   * Value:
+   *
+   *  - None(`NONE`)
+   *  - Clockwise90(`CLOCKWISE_90`)
+   *  - Clockwise180(`CLOCKWISE_180`)
+   *  - CounterClockwise90(`COUNTERCLOCKWISE_90`)
+   */
   rotation?: Rotation
   /**
-     * Value:
-     *
-     *  - None(`NONE`)
-     *  - LeftRight(`LEFT_RIGHT`)
-     *  - FrontBack(`FRONT_BACK`)
-     */
+   * Value:
+   *
+   *  - None(`NONE`)
+   *  - LeftRight(`LEFT_RIGHT`)
+   *  - FrontBack(`FRONT_BACK`)
+   */
   mirror?: Mirror
   /**
-     * Value:
-     *
-     *  - Save(`SAVE`)
-     *  - Load(`LOAD`)
-     *  - Data(`DATA`)
-     *  - Corner(`CORNER`)
-     */
+   * Value:
+   *
+   *  - Save(`SAVE`)
+   *  - Load(`LOAD`)
+   *  - Data(`DATA`)
+   *  - Corner(`CORNER`)
+   */
   mode?: Mode
   ignoreEntities?: boolean
   /**
-     * Whether to show the bounding box.
-     */
+   * Whether to show the bounding box.
+   */
   showboundingbox?: boolean
   /**
-     * Whether it has been powered by redstone.
-     */
+   * Whether it has been powered by redstone.
+   */
   powered?: boolean
   /**
-     * Whether to show invisible blocks inside the bounding box.
-     */
+   * Whether to show invisible blocks inside the bounding box.
+   */
   showair?: boolean
   /**
-     * If set to `true`, the blocks in the placed structure will trigger block (entity) updates and shape updates. Defaults to `false`.
-     */
+   * If set to `true`, the blocks in the placed structure will trigger block (entity) updates and shape updates. Defaults to `false`.
+   */
   strict?: boolean
   /**
-     * Chance for each block to stay.
-     */
+   * Chance for each block to stay.
+   */
   integrity?: NBTFloat
   /**
-     * Seed for the integrity random.
-     */
+   * Seed for the integrity random.
+   */
   seed?: NBTLong
 })

@@ -38,9 +38,9 @@ export type Model = {
   display?: ({
     [Key in Extract<CustomizableItemDisplayContext, string>]?: {
       /**
-             * Value:
-             * List length range: 3
-             */
+       * Value:
+       * List length range: 3
+       */
       rotation?: NBTList<NBTFloat, {
         leftExclusive: false
         rightExclusive: false
@@ -48,9 +48,9 @@ export type Model = {
         max: 3
       }>
       /**
-             * Value:
-             * List length range: 3
-             */
+       * Value:
+       * List length range: 3
+       */
       translation?: NBTList<NBTFloat<{
         leftExclusive: false
         rightExclusive: false
@@ -61,9 +61,9 @@ export type Model = {
         max: 3
       }>
       /**
-             * Value:
-             * List length range: 3
-             */
+       * Value:
+       * List length range: 3
+       */
       scale?: NBTList<NBTFloat<{
         leftExclusive: false
         rightExclusive: false
@@ -79,9 +79,9 @@ export type Model = {
 
 export type ModelElement = {
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   from: NBTList<NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -92,9 +92,9 @@ export type ModelElement = {
     max: 3
   }>
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   to: NBTList<NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -108,9 +108,9 @@ export type ModelElement = {
     [Key in Extract<Direction, string>]?: {
       texture: `#${string}`
       /**
-             * Value:
-             * List length range: 4
-             */
+       * Value:
+       * List length range: 4
+       */
       uv?: NBTList<NBTFloat, {
         leftExclusive: false
         rightExclusive: false
@@ -118,15 +118,15 @@ export type ModelElement = {
         max: 4
       }>
       /**
-             * Value:
-             *
-             *  - Down(`down`)
-             *  - Up(`up`)
-             *  - North(`north`)
-             *  - East(`east`)
-             *  - South(`south`)
-             *  - West(`west`)
-             */
+       * Value:
+       *
+       *  - Down(`down`)
+       *  - Up(`up`)
+       *  - North(`north`)
+       *  - East(`east`)
+       *  - South(`south`)
+       *  - West(`west`)
+       */
       cullface?: Direction
       rotation?: (0 | 90 | 180 | 270)
       tintindex?: NBTInt
@@ -135,9 +135,9 @@ export type ModelElement = {
   rotation?: ModelElementRotation
   shade?: boolean
   /**
-     * Value:
-     * Range: 0..15
-     */
+   * Value:
+   * Range: 0..15
+   */
   light_emission?: NBTInt<{
     min: 0
     max: 15
@@ -147,9 +147,9 @@ export type ModelElement = {
 export type ModelElementFace = {
   texture: `#${string}`
   /**
-     * Value:
-     * List length range: 4
-     */
+   * Value:
+   * List length range: 4
+   */
   uv?: NBTList<NBTFloat, {
     leftExclusive: false
     rightExclusive: false
@@ -157,15 +157,15 @@ export type ModelElementFace = {
     max: 4
   }>
   /**
-     * Value:
-     *
-     *  - Down(`down`)
-     *  - Up(`up`)
-     *  - North(`north`)
-     *  - East(`east`)
-     *  - South(`south`)
-     *  - West(`west`)
-     */
+   * Value:
+   *
+   *  - Down(`down`)
+   *  - Up(`up`)
+   *  - North(`north`)
+   *  - East(`east`)
+   *  - South(`south`)
+   *  - West(`west`)
+   */
   cullface?: Direction
   rotation?: (0 | 90 | 180 | 270)
   tintindex?: NBTInt
@@ -177,9 +177,9 @@ export type ModelElementRotation = (ModelElementRotationBase & ({
 
 export type ModelElementRotationBase = {
   /**
-     * Value:
-     * List length range: 3
-     */
+   * Value:
+   * List length range: 3
+   */
   origin: NBTList<NBTFloat, {
     leftExclusive: false
     rightExclusive: false
@@ -187,8 +187,8 @@ export type ModelElementRotationBase = {
     max: 3
   }>
   /**
-     * Defaults to `false`.
-     */
+   * Defaults to `false`.
+   */
   rescale?: boolean
 }
 

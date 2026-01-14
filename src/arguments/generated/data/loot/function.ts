@@ -17,62 +17,62 @@ import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { DataPointClass, NBTClass, NBTFloat, NBTInt, NBTLong, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
-export type ApplyBonus = ({
+export type ApplyBonus = NonNullable<({
   [S in Extract<ApplyBonusFormula, string>]?: ({
     enchantment: Registry['minecraft:enchantment']
     /**
-         * Value:
-         *
-         *  - OreDrops(`ore_drops`)
-         *  - UniformBonusCount(`uniform_bonus_count`)
-         *  - BinomialWithBonusCount(`binomial_with_bonus_count`)
-         */
+     * Value:
+     *
+     *  - OreDrops(`ore_drops`)
+     *  - UniformBonusCount(`uniform_bonus_count`)
+     *  - BinomialWithBonusCount(`binomial_with_bonus_count`)
+     */
     formula: (S | `minecraft:${S}`)
   } & (S extends keyof SymbolApplyBonusFormula ? SymbolApplyBonusFormula[S] : RootNBT) & Conditions);
-}[ApplyBonusFormula])
+}[ApplyBonusFormula])>
 
 export type ApplyBonusFormula = ('ore_drops' | 'uniform_bonus_count' | 'binomial_with_bonus_count')
 
 export type AttributeModifier = ({
   /**
-     * Attribute type to modify.
-     */
+   * Attribute type to modify.
+   */
   attribute: Registry['minecraft:attribute']
   amount: NumberProvider
   /**
-     * The operation used for this modifier.
-     *
-     * Value:
-     *
-     *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
-     *  - AddMultipliedBase(`add_multiplied_base`):
-     *    Multiplies the current value of the attribute by `(1 + x)`,
-     *    where `x` is the sum of the modifiers' amounts.
-     *  - AddMultipliedTotal(`add_multiplied_total`):
-     *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
-     *    where `x` is the amount of the particular modifier.
-     */
+   * The operation used for this modifier.
+   *
+   * Value:
+   *
+   *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
+   *  - AddMultipliedBase(`add_multiplied_base`):
+   *    Multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the sum of the modifiers' amounts.
+   *  - AddMultipliedTotal(`add_multiplied_total`):
+   *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the amount of the particular modifier.
+   */
   operation: AttributeOperation
   /**
-     * If a list, one of the listed slots will be chosen randomly.
-     *
-     * Value:
-     * *either*
-     *
-     *
-     *
-     * *or*
-     *
-     * *item 1*
-     */
+   * If a list, one of the listed slots will be chosen randomly.
+   *
+   * Value:
+   * *either*
+   *
+   *
+   *
+   * *or*
+   *
+   * *item 1*
+   */
   slot: (EquipmentSlotGroup | Array<EquipmentSlotGroup>)
 } & {
   /**
-     * The unique identifier of this attribute modifier.
-     */
+   * The unique identifier of this attribute modifier.
+   */
   id: `${string}:${string}`
 })
 
@@ -122,25 +122,25 @@ export type BannerPattern = (
 export type BannerPatternLayer = {
   pattern: Registry['minecraft:banner_pattern']
   /**
-     * Value:
-     *
-     *  - White(`white`)
-     *  - Orange(`orange`)
-     *  - Magenta(`magenta`)
-     *  - LightBlue(`light_blue`)
-     *  - Yellow(`yellow`)
-     *  - Lime(`lime`)
-     *  - Pink(`pink`)
-     *  - Gray(`gray`)
-     *  - LightGray(`light_gray`)
-     *  - Cyan(`cyan`)
-     *  - Purple(`purple`)
-     *  - Blue(`blue`)
-     *  - Brown(`brown`)
-     *  - Green(`green`)
-     *  - Red(`red`)
-     *  - Black(`black`)
-     */
+   * Value:
+   *
+   *  - White(`white`)
+   *  - Orange(`orange`)
+   *  - Magenta(`magenta`)
+   *  - LightBlue(`light_blue`)
+   *  - Yellow(`yellow`)
+   *  - Lime(`lime`)
+   *  - Pink(`pink`)
+   *  - Gray(`gray`)
+   *  - LightGray(`light_gray`)
+   *  - Cyan(`cyan`)
+   *  - Purple(`purple`)
+   *  - Blue(`blue`)
+   *  - Brown(`brown`)
+   *  - Green(`green`)
+   *  - Red(`red`)
+   *  - Black(`black`)
+   */
   color: DyeColor
 }
 
@@ -148,9 +148,9 @@ export type BinomialWithBonusCountFormula = {
   parameters: {
     extra: NBTInt
     /**
-         * Value:
-         * Range: 0..1
-         */
+     * Value:
+     * Range: 0..1
+     */
     probability: NBTFloat<{
       leftExclusive: false
       rightExclusive: false
@@ -168,41 +168,41 @@ export type ContainerComponents = ('container' | 'bundle_contents' | 'charged_pr
 
 export type CopyComponents = ({
   /**
-     * Value:
-     * *either*
-     *
-     * *item 0*
-     *
-     * *or*
-     *
-     *
-     *
-     * *or*
-     *
-     * *item 2*
-     */
+   * Value:
+   * *either*
+   *
+   * *item 0*
+   *
+   * *or*
+   *
+   *
+   *
+   * *or*
+   *
+   * *item 2*
+   */
   source: (BlockEntityTarget | EntityTarget | ItemStackTarget)
   /**
-     * If omitted, all components present are included
-     */
+   * If omitted, all components present are included
+   */
   include?: Array<Registry['minecraft:data_component_type']>
   /**
-     * Defaults to none.
-     */
+   * Defaults to none.
+   */
   exclude?: Array<Registry['minecraft:data_component_type']>
 } & Conditions)
 
 export type CopyName = ({
   /**
-     * Value:
-     * *either*
-     *
-     *
-     *
-     * *or*
-     *
-     * *item 1*
-     */
+   * Value:
+   * *either*
+   *
+   *
+   *
+   * *or*
+   *
+   * *item 1*
+   */
   source: (EntityTarget | BlockEntityTarget)
 } & Conditions)
 
@@ -220,153 +220,155 @@ export type CopyNbt = ({
     source: `${any}${string}` | DataPointClass
     target: `${any}${string}` | DataPointClass
     /**
-         * Value:
-         *
-         *  - Replace(`replace`): Replace any existing contents of the target.
-         *  - Append(`append`): Append to a list.
-         *  - Merge(`merge`): Merge into a compound tag.
-         */
+     * Value:
+     *
+     *  - Replace(`replace`): Replace any existing contents of the target.
+     *  - Append(`append`): Append to a list.
+     *  - Merge(`merge`): Merge into a compound tag.
+     */
     op: CopyNbtStrategy
   }>
 } & Conditions)
 
 export type CopyNbtStrategy = ('replace' | 'append' | 'merge')
 
-export type CopyState = ({
+export type CopyState = NonNullable<({
   [S in Extract<Registry['minecraft:block'], string>]?: ({
     block: S
     properties: Array<(S extends undefined
       ? SymbolMcdocBlockStateKeys<'%none'> :
-      (S extends keyof SymbolMcdocBlockStateKeys ? SymbolMcdocBlockStateKeys[S] : NBTObject))>
+      (S extends keyof SymbolMcdocBlockStateKeys
+        ? SymbolMcdocBlockStateKeys[S]
+        : SymbolMcdocBlockStateKeys<'%unknown'>))>
   } & Conditions);
-}[Registry['minecraft:block']])
+}[Registry['minecraft:block']])>
 
 export type EnchantedCountBase = {
   /**
-     * If the number is fractional the result is rounded *after* the number was multiplied by the looting level.
-     */
+   * If the number is fractional the result is rounded *after* the number was multiplied by the looting level.
+   */
   count: NumberProvider
   /**
-     * Limits the count of the item to a range.
-     */
+   * Limits the count of the item to a range.
+   */
   limit?: NBTInt
 }
 
 export type EnchantedCountIncrease = (EnchantedCountBase & {
   /**
-     * Enchantment that increases yields.
-     */
+   * Enchantment that increases yields.
+   */
   enchantment: Registry['minecraft:enchantment']
 } & Conditions)
 
 export type EnchantRandomly = ({
   /**
-     * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
-     */
+   * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
+   */
   options?: ((
       | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
       | Array<Registry['minecraft:enchantment']>)
   /**
-     * Whether to only enchant with item-compatible enchantments. Defaults to `true`.
-     *
-     * Note: Books are considered compatible with all Enchantments.
-     */
+   * Whether to only enchant with item-compatible enchantments. Defaults to `true`.
+   *
+   * Note: Books are considered compatible with all Enchantments.
+   */
   only_compatible?: boolean
   /**
-     * Whether to add `additional_trade_cost` component to the enchanted item.
-     * Additional cost value is determined by the enchantment level, with the formula `2 + random(0, 5 + level * 10) + 3 * level`.
-     * Defaults to `false`.
-     */
+   * Whether to add `additional_trade_cost` component to the enchanted item.
+   * Additional cost value is determined by the enchantment level, with the formula `2 + random(0, 5 + level * 10) + 3 * level`.
+   * Defaults to `false`.
+   */
   include_additional_cost_component?: boolean
 } & Conditions)
 
 export type EnchantWithLevels = ({
   /**
-     * The levels to enchant this item with.
-     */
+   * The levels to enchant this item with.
+   */
   levels: NumberProvider
   /**
-     * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
-     */
+   * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
+   */
   options?: ((
       | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
       | Array<Registry['minecraft:enchantment']>)
   /**
-     * Whether to add `additional_trade_cost` component to the enchanted item.
-     * Additional cost value is equal to the level cost determined by `levels`.
-     * Defaults to `false`.
-     */
+   * Whether to add `additional_trade_cost` component to the enchanted item.
+   * Additional cost value is equal to the level cost determined by `levels`.
+   * Defaults to `false`.
+   */
   include_additional_cost_component?: boolean
 } & Conditions)
 
 export type ExplorationMap = ({
   /**
-     * Generated structure to locate. Accepts any of the structure types used by the `/locate` command. Defaults to buried treasure.
-     */
+   * Generated structure to locate. Accepts any of the structure types used by the `/locate` command. Defaults to buried treasure.
+   */
   destination?: (Registry['minecraft:tag/worldgen/structure'])
   /**
-     * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
-     * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
-     */
+   * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
+   * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
+   */
   decoration?: Registry['minecraft:map_decoration_type']
   /**
-     * Defaults to 2.
-     */
+   * Defaults to 2.
+   */
   zoom?: NBTInt
   /**
-     * The size, in chunks, of the area to search for structures.
-     * The area checked is square, not circular.
-     * Radius `0` causes only the current chunk to be searched, radius `1` causes the current chunk and eight adjacent chunks to be searched, and so on.
-     * Defaults to `50`.
-     */
+   * The size, in chunks, of the area to search for structures.
+   * The area checked is square, not circular.
+   * Radius `0` causes only the current chunk to be searched, radius `1` causes the current chunk and eight adjacent chunks to be searched, and so on.
+   * Defaults to `50`.
+   */
   search_radius?: NBTInt
   /**
-     * Whether to not search in chunks that have already been generated. Defaults to `true`.
-     */
+   * Whether to not search in chunks that have already been generated. Defaults to `true`.
+   */
   skip_existing_chunks?: boolean
 } & Conditions)
 
 export type FillPlayerHead = ({
   /**
-     * `this` to use the entity that died or the player that gained the advancement, opened the container, or broke the block.
-     *
-     * Value:
-     *
-     *  - This(`this`)
-     *  - Killer(`killer`)
-     *  - Attacker(`attacker`)
-     *  - DirectKiller(`direct_killer`)
-     *  - DirectAttacker(`direct_attacker`)
-     *  - KillerPlayer(`killer_player`)
-     *  - AttackingPlayer(`attacking_player`)
-     *  - TargetEntity(`target_entity`)
-     *  - InteractingEntity(`interacting_entity`)
-     */
+   * `this` to use the entity that died or the player that gained the advancement, opened the container, or broke the block.
+   *
+   * Value:
+   *
+   *  - This(`this`)
+   *  - Killer(`killer`)
+   *  - Attacker(`attacker`)
+   *  - DirectKiller(`direct_killer`)
+   *  - DirectAttacker(`direct_attacker`)
+   *  - KillerPlayer(`killer_player`)
+   *  - AttackingPlayer(`attacking_player`)
+   *  - TargetEntity(`target_entity`)
+   *  - InteractingEntity(`interacting_entity`)
+   */
   entity: EntityTarget
 } & Conditions)
 
 export type Filtered = ({
   /**
-     * Item predicate to select items to modify.
-     */
+   * Item predicate to select items to modify.
+   */
   item_filter: ItemPredicate
   /**
-     * Loot function to apply to the item when `item_filter` passes.
-     */
+   * Loot function to apply to the item when `item_filter` passes.
+   */
   on_pass?: (LootFunction | Array<LootFunction>)
   /**
-     * Loot function to apply to the item when `item_filter` fails.
-     */
+   * Loot function to apply to the item when `item_filter` fails.
+   */
   on_fail?: (LootFunction | Array<LootFunction>)
 } & Conditions)
 
 export type InsertListOperation = {
   /**
-     * The offset in the list to insert into. Defaults to 0.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * The offset in the list to insert into. Defaults to 0.
+   *
+   * Value:
+   * Range: 0..
+   */
   offset?: NBTInt<{
     min: 0
   }>
@@ -374,26 +376,26 @@ export type InsertListOperation = {
 
 export type LimitCount = ({
   /**
-     * Limits the count of the item to a range.
-     */
+   * Limits the count of the item to a range.
+   */
   limit: IntRange
 } & Conditions)
 
-export type ListOperation = ({
+export type ListOperation = NonNullable<({
   [S in Extract<ListOperationMode, string>]?: ({
     /**
-         * Determines how the existing list should be modified.
-         *
-         * Value:
-         *
-         *  - Append(`append`)
-         *  - Insert(`insert`)
-         *  - ReplaceAll(`replace_all`)
-         *  - ReplaceSection(`replace_section`)
-         */
+     * Determines how the existing list should be modified.
+     *
+     * Value:
+     *
+     *  - Append(`append`)
+     *  - Insert(`insert`)
+     *  - ReplaceAll(`replace_all`)
+     *  - ReplaceSection(`replace_section`)
+     */
     mode: S
   } & (S extends keyof SymbolListOperation ? SymbolListOperation[S] : RootNBT));
-}[ListOperationMode])
+}[ListOperationMode])>
 
 export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_section')
 
@@ -430,44 +432,44 @@ export type MapDecoration = (
 
 export type ModifyContents = ({
   /**
-     * Describes target component's items to modify.
-     *
-     * Value:
-     *
-     *  - Container(`container`)
-     *  - BundleContents(`bundle_contents`)
-     *  - ChargedProjectiles(`charged_projectiles`)
-     */
+   * Describes target component's items to modify.
+   *
+   * Value:
+   *
+   *  - Container(`container`)
+   *  - BundleContents(`bundle_contents`)
+   *  - ChargedProjectiles(`charged_projectiles`)
+   */
   component: (ContainerComponents | `minecraft:${ContainerComponents}`)
   /**
-     * Applied to every item inside container.
-     */
+   * Applied to every item inside container.
+   */
   modifier: (LootFunction | Array<LootFunction>)
 } & Conditions)
 
 export type Reference = ({
   /**
-     * Item modifier to reference.
-     */
+   * Item modifier to reference.
+   */
   name: `${string}:${string}`
 } & Conditions)
 
 export type ReplaceSectionListOperation = {
   /**
-     * The offset of the section to replace. Defaults to 0.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * The offset of the section to replace. Defaults to 0.
+   *
+   * Value:
+   * Range: 0..
+   */
   offset?: NBTInt<{
     min: 0
   }>
   /**
-     * The size of the section to replace. Defaults to size of the new list.
-     *
-     * Value:
-     * Range: 0..
-     */
+   * The size of the section to replace. Defaults to size of the new list.
+   *
+   * Value:
+   * Range: 0..
+   */
   size?: NBTInt<{
     min: 0
   }>
@@ -475,48 +477,48 @@ export type ReplaceSectionListOperation = {
 
 export type Sequence = {
   /**
-     * List of functions to apply to this item.
-     */
+   * List of functions to apply to this item.
+   */
   functions: Array<LootFunction>
 }
 
 export type SetAttributes = ({
   /**
-     * List of attribute modifiers to apply to this item.
-     */
+   * List of attribute modifiers to apply to this item.
+   */
   modifiers: Array<AttributeModifier>
   /**
-     * Whether to replace existing attributes (otherwise append to existing). Defaults to `true`.
-     */
+   * Whether to replace existing attributes (otherwise append to existing). Defaults to `true`.
+   */
   replace?: boolean
 } & Conditions)
 
 export type SetBannerPattern = ({
   /**
-     * List of banner pattern layers.
-     */
+   * List of banner pattern layers.
+   */
   patterns: Array<BannerPatternLayer>
   /**
-     * Whether to add to the banner pattern list.
-     */
+   * Whether to add to the banner pattern list.
+   */
   append: boolean
 } & Conditions)
 
 export type SetBookCover = ({
   /**
-     * If omitted, the original title is kept (or an empty string is used if there was no component)
-     */
+   * If omitted, the original title is kept (or an empty string is used if there was no component)
+   */
   title?: Filterable<`${any}${string}`>
   /**
-     * If omitted, the original author is kept (or an empty string is used if there was no component)
-     */
+   * If omitted, the original author is kept (or an empty string is used if there was no component)
+   */
   author?: string
   /**
-     * If omitted, the original generation is kept (or 0 is used if there was no component)
-     *
-     * Value:
-     * Range: 0..3
-     */
+   * If omitted, the original generation is kept (or 0 is used if there was no component)
+   *
+   * Value:
+   * Range: 0..3
+   */
   generation?: NBTInt<{
     min: 0
     max: 3
@@ -529,14 +531,14 @@ export type SetComponents = ({
 
 export type SetContents = ({
   /**
-     * Describes target component to be filled with items.
-     *
-     * Value:
-     *
-     *  - Container(`container`)
-     *  - BundleContents(`bundle_contents`)
-     *  - ChargedProjectiles(`charged_projectiles`)
-     */
+   * Describes target component to be filled with items.
+   *
+   * Value:
+   *
+   *  - Container(`container`)
+   *  - BundleContents(`bundle_contents`)
+   *  - ChargedProjectiles(`charged_projectiles`)
+   */
   component: (ContainerComponents | `minecraft:${ContainerComponents}`)
   entries: Array<LootPoolEntry>
 } & Conditions)
@@ -544,8 +546,8 @@ export type SetContents = ({
 export type SetCount = ({
   count: NumberProvider
   /**
-     * Whether to add to the existing count. Defaults to `false`.
-     */
+   * Whether to add to the existing count. Defaults to `false`.
+   */
   add?: boolean
 } & Conditions)
 
@@ -570,70 +572,70 @@ export type SetCustomModelData = ({
 
 export type SetDamage = ({
   /**
-     * Decimal percentage. Can be negative when used in combination with `add`. \
-     * Clamps to a float between `-1` & `1` (inclusive).
-     */
+   * Decimal percentage. Can be negative when used in combination with `add`. \
+   * Clamps to a float between `-1` & `1` (inclusive).
+   */
   damage: NumberProvider
   /**
-     * Whether to add to the existing damage of the item. Defaults to `false`.
-     */
+   * Whether to add to the existing damage of the item. Defaults to `false`.
+   */
   add?: boolean
 } & Conditions)
 
 export type SetEnchantments = ({
   /**
-     * A map of enchantments to levels. Setting an enchantment to `0` removes it from the item. \
-     * Each level is clamped to a positive integer.
-     */
+   * A map of enchantments to levels. Setting an enchantment to `0` removes it from the item. \
+   * Each level is clamped to a positive integer.
+   */
   enchantments: ({
     [Key in Extract<Registry['minecraft:enchantment'], string>]?: NumberProvider;
   })
   /**
-     * Whether to add to the level of each enchantment. Defaults to `false`.
-     */
+   * Whether to add to the level of each enchantment. Defaults to `false`.
+   */
   add?: boolean
 } & Conditions)
 
 export type SetFireworkExplosion = ({
   /**
-     * If omitted, the original shape is kept (or `small_ball` is used if there was no component).
-     *
-     * Value:
-     *
-     *  - SmallBall(`small_ball`)
-     *  - LargeBall(`large_ball`)
-     *  - Star(`star`)
-     *  - Creeper(`creeper`)
-     *  - Burst(`burst`)
-     */
+   * If omitted, the original shape is kept (or `small_ball` is used if there was no component).
+   *
+   * Value:
+   *
+   *  - SmallBall(`small_ball`)
+   *  - LargeBall(`large_ball`)
+   *  - Star(`star`)
+   *  - Creeper(`creeper`)
+   *  - Burst(`burst`)
+   */
   shape?: FireworkShape
   /**
-     * If omitted, the original colors are kept (or `[]` is used if there was no component).
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * If omitted, the original colors are kept (or `[]` is used if there was no component).
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   colors?: Array<NBTInt>
   /**
-     * If omitted, the original fade colors are kept (or `[]` is used if there was no component).
-     * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
-     */
+   * If omitted, the original fade colors are kept (or `[]` is used if there was no component).
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
   fade_colors?: Array<NBTInt>
   /**
-     * If omitted, the original `has_trail` value is kept (or `false` is used if there was no component).
-     */
+   * If omitted, the original `has_trail` value is kept (or `false` is used if there was no component).
+   */
   trail?: boolean
   /**
-     * If omitted, the original `has_twinkle` value is kept (or `false` is used if there was no component).
-     */
+   * If omitted, the original `has_twinkle` value is kept (or `false` is used if there was no component).
+   */
   twinkle?: boolean
 } & Conditions)
 
 export type SetFireworks = ({
   /**
-     * If omitted, the flight duration of the item is left untouched - or set to 0 if the component did not exist before.
-     *
-     * Value:
-     * Range: 0..255
-     */
+   * If omitted, the flight duration of the item is left untouched - or set to 0 if the component did not exist before.
+   *
+   * Value:
+   * Range: 0..255
+   */
   flight_duration?: NBTInt<{
     min: 0
   }>
@@ -644,8 +646,8 @@ export type SetFireworks = ({
 
 export type SetInstrument = ({
   /**
-     * Sets the instrument tag for a goat horn.
-     */
+   * Sets the instrument tag for a goat horn.
+   */
   options: (`#${Registry['minecraft:tag/instrument']}` | TagClass<'instrument'>)
 } & Conditions)
 
@@ -655,65 +657,65 @@ export type SetItem = ({
 
 export type SetLootTable = ({
   /**
-     * The block entity type of the container.
-     */
+   * The block entity type of the container.
+   */
   type: Registry['minecraft:block_entity_type']
   /**
-     * The loot table to set to the container block item.
-     */
+   * The loot table to set to the container block item.
+   */
   name: Registry['minecraft:loot_table']
   /**
-     * The container seed to use. Defaults to a random seed.
-     */
+   * The container seed to use. Defaults to a random seed.
+   */
   seed?: NBTLong
 } & Conditions)
 
 export type SetLore = ({
   /**
-     * The entity used to resolve the text components.
-     *
-     * Value:
-     *
-     *  - This(`this`)
-     *  - Killer(`killer`)
-     *  - Attacker(`attacker`)
-     *  - DirectKiller(`direct_killer`)
-     *  - DirectAttacker(`direct_attacker`)
-     *  - KillerPlayer(`killer_player`)
-     *  - AttackingPlayer(`attacking_player`)
-     *  - TargetEntity(`target_entity`)
-     *  - InteractingEntity(`interacting_entity`)
-     */
+   * The entity used to resolve the text components.
+   *
+   * Value:
+   *
+   *  - This(`this`)
+   *  - Killer(`killer`)
+   *  - Attacker(`attacker`)
+   *  - DirectKiller(`direct_killer`)
+   *  - DirectAttacker(`direct_attacker`)
+   *  - KillerPlayer(`killer_player`)
+   *  - AttackingPlayer(`attacking_player`)
+   *  - TargetEntity(`target_entity`)
+   *  - InteractingEntity(`interacting_entity`)
+   */
   entity?: EntityTarget
   lore: Array<Text>
 } & ListOperation & Conditions)
 
 export type SetName = ({
   /**
-     * Specifies the entity to act as the target `@s` in the JSON text component.
-     *
-     * Value:
-     *
-     *  - This(`this`)
-     *  - Killer(`killer`)
-     *  - Attacker(`attacker`)
-     *  - DirectKiller(`direct_killer`)
-     *  - DirectAttacker(`direct_attacker`)
-     *  - KillerPlayer(`killer_player`)
-     *  - AttackingPlayer(`attacking_player`)
-     *  - TargetEntity(`target_entity`)
-     *  - InteractingEntity(`interacting_entity`)
-     */
+   * Specifies the entity to act as the target `@s` in the JSON text component.
+   *
+   * Value:
+   *
+   *  - This(`this`)
+   *  - Killer(`killer`)
+   *  - Attacker(`attacker`)
+   *  - DirectKiller(`direct_killer`)
+   *  - DirectAttacker(`direct_attacker`)
+   *  - KillerPlayer(`killer_player`)
+   *  - AttackingPlayer(`attacking_player`)
+   *  - TargetEntity(`target_entity`)
+   *  - InteractingEntity(`interacting_entity`)
+   */
   entity?: EntityTarget
   name: Text
   /**
-     * Which name component to set. Defaults to `custom_name`.
-     *
-     * Value:
-     *
-     *  - ItemName(`item_name`)
-     *  - CustomName(`custom_name`)
-     */
+   * Which name component to set. Defaults to `custom_name`.
+   *
+   * Value:
+   *
+   *  - ItemName(`item_name`)
+   *  - CustomName(`custom_name`)
+   */
   target?: SetNameTarget
 } & Conditions)
 
@@ -729,26 +731,26 @@ export type SetOminousBottleAmplifier = ({
 
 export type SetPotion = ({
   /**
-     * The potion identifier.
-     */
+   * The potion identifier.
+   */
   id: Registry['minecraft:potion']
 } & Conditions)
 
 export type SetRandomDyes = ({
   /**
-     * Applies specified number of random dyes to the item.
-     * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye.
-     * The same dye color can be selected multiple times.
-     * Only has effect on `#dyeable` items.
-     */
+   * Applies specified number of random dyes to the item.
+   * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye.
+   * The same dye color can be selected multiple times.
+   * Only has effect on `#dyeable` items.
+   */
   number_of_dyes: NumberProvider
 } & Conditions)
 
 export type SetRandomPotion = ({
   /**
-     * Possible potions to select from.
-     * Defaults to all potions.
-     */
+   * Possible potions to select from.
+   * Defaults to all potions.
+   */
   options?: ((
       | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
       | Registry['minecraft:potion'])
@@ -756,33 +758,33 @@ export type SetRandomPotion = ({
 
 export type SetStewEffect = ({
   /**
-     * Sets the status effects for suspicious stew.
-     */
+   * Sets the status effects for suspicious stew.
+   */
   effects?: Array<StewEffect>
 } & Conditions)
 
 export type SetWriteableBookPages = ({
   /**
-     * Sets the pages of a book and quill.
-     */
+   * Sets the pages of a book and quill.
+   */
   pages: Array<Filterable<string>>
 } & ListOperation & Conditions)
 
 export type SetWrittenBookPages = ({
   /**
-     * Sets the pages of a written book.
-     */
+   * Sets the pages of a written book.
+   */
   pages: Array<Filterable<Text>>
 } & ListOperation & Conditions)
 
 export type StewEffect = {
   /**
-     * The status effect of this stew effect.
-     */
+   * The status effect of this stew effect.
+   */
   type: Registry['minecraft:mob_effect']
   /**
-     * The duration of this stew effect, in seconds.
-     */
+   * The duration of this stew effect, in seconds.
+   */
   duration: NumberProvider
 }
 
@@ -799,8 +801,8 @@ export type ToggleableDataComponent = (
 
 export type ToggleTooltips = ({
   /**
-     * Toggles which tooltips are shown.
-     */
+   * Toggles which tooltips are shown.
+   */
   toggles: ({
     [Key in Extract<Registry['minecraft:data_component_type'], string>]?: boolean;
   })
@@ -831,7 +833,8 @@ export type SymbolApplyBonusFormula<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ApplyBonusFormulaDispatcherMap
   : CASE extends 'keys' ? ApplyBonusFormulaKeys : CASE extends '%fallback' ? ApplyBonusFormulaFallback : never
 type ListOperationDispatcherMap = {
@@ -858,7 +861,8 @@ export type SymbolListOperation<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? ListOperationDispatcherMap
   : CASE extends 'keys' ? ListOperationKeys : CASE extends '%fallback' ? ListOperationFallback : never
 type LootFunctionDispatcherMap = {
@@ -1053,6 +1057,7 @@ export type SymbolLootFunction<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? LootFunctionDispatcherMap
   : CASE extends 'keys' ? LootFunctionKeys : CASE extends '%fallback' ? LootFunctionFallback : never

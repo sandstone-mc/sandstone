@@ -1,29 +1,30 @@
 import type { RGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type Dyeable = {
   /**
-     * If specified, this layer will be tinted by the color contained in the `dyed_color` component.
-     * If the item is not dyeable or not dyed, it will be tinted by this color.
-     * If not specified and the item is not dyed, the layer will be hidden.
-     */
+   * If specified, this layer will be tinted by the color contained in the `dyed_color` component.
+   * If the item is not dyeable or not dyed, it will be tinted by this color.
+   * If not specified and the item is not dyed, the layer will be hidden.
+   */
   color_when_undyed?: RGB
 }
 
 export type Equipment = {
   /**
-     * List of layers for each model layer type.
-     */
+   * List of layers for each model layer type.
+   */
   layers: Layers
 }
 
-export type Layer<T> = {
+export type Layer<T extends NBTObject> = {
   /**
-     * Texture location for this layer, inside `entity/equipment/<layer>/`.
-     */
+   * Texture location for this layer, inside `entity/equipment/<layer>/`.
+   */
   texture: T
   /**
-     * Configures how this layer behaves when dyed (in the `#dyeable` item tag, and has the `dyed_color` component).
-     */
+   * Configures how this layer behaves when dyed (in the `#dyeable` item tag, and has the `dyed_color` component).
+   */
   dyeable?: Dyeable
 }
 
@@ -46,10 +47,10 @@ export type Layers = {
   skeleton_horse_saddle?: Array<Layer<`${string}:${string}`>>
 }
 
-export type WingsLayer<T> = (Layer<T> & {
+export type WingsLayer<T extends NBTObject> = (Layer<T> & {
   /**
-     * Whether this layer texture should be overridden by the player's custom elytra texture.
-     * Defaults to `false`.
-     */
+   * Whether this layer texture should be overridden by the player's custom elytra texture.
+   * Defaults to `false`.
+   */
   use_player_texture?: boolean
 })

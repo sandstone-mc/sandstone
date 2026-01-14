@@ -1,8 +1,8 @@
 import type { FloatProvider, HeightProvider, VerticalAnchor } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
-import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type CanyonConfig = {
   vertical_rotation: FloatProvider<NBTFloat>
@@ -13,9 +13,9 @@ export type CanyonShape = {
   distance_factor: FloatProvider<NBTFloat>
   thickness: FloatProvider<NBTFloat>
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   width_smoothness: NBTInt<{
     min: 0
   }>
@@ -43,14 +43,14 @@ export type CaveConfig = {
   }>>
 }
 
-export type ConfiguredCarver = ({
+export type ConfiguredCarver = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/carver'], string>]?: {
     type: S
     config: ({
       /**
-             * Value:
-             * Range: 0..1
-             */
+       * Value:
+       * Range: 0..1
+       */
       probability: NBTFloat<{
         leftExclusive: false
         rightExclusive: false
@@ -67,7 +67,7 @@ export type ConfiguredCarver = ({
       debug_settings?: CarverDebugSettings
     } & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT))
   };
-}[Registry['minecraft:worldgen/carver']])
+}[Registry['minecraft:worldgen/carver']])>
 type CarverConfigDispatcherMap = {
   'canyon': CarverConfigCanyon
   'minecraft:canyon': CarverConfigCanyon
@@ -85,6 +85,7 @@ export type SymbolCarverConfig<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? CarverConfigDispatcherMap
   : CASE extends 'keys' ? CarverConfigKeys : CASE extends '%fallback' ? CarverConfigFallback : never

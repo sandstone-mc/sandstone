@@ -8,52 +8,52 @@ export type Arrow = ArrowBase
 
 export type ArrowBase = (ProjectileBase & {
   /**
-     * Shake it creates.
-     */
+   * Shake it creates.
+   */
   shake?: NBTByte
   /**
-     * How players can pick up it.
-     *
-     * Value:
-     *
-     *  - None(`0`)
-     *  - Any(`1`)
-     *  - Creative(`2`)
-     */
+   * How players can pick up it.
+   *
+   * Value:
+   *
+   *  - None(`0`)
+   *  - Any(`1`)
+   *  - Creative(`2`)
+   */
   pickup?: Pickup
   /**
-     * Ticks since it last moved.
-     */
+   * Ticks since it last moved.
+   */
   life?: NBTShort
   /**
-     * Damage it should deal.
-     */
+   * Damage it should deal.
+   */
   damage?: (NBTDouble | number)
   /**
-     * Whether it is in the ground.
-     */
+   * Whether it is in the ground.
+   */
   inGround?: boolean
   /**
-     * Block it is in.
-     */
+   * Block it is in.
+   */
   inBlockState?: BlockState
   /**
-     * Whether it should do critical damage.
-     */
+   * Whether it should do critical damage.
+   */
   crit?: boolean
   /**
-     * The item which has shot this arrow.
-     */
+   * The item which has shot this arrow.
+   */
   weapon?: ItemStack
   /**
-     * Number of entities it can pass through.
-     */
+   * Number of entities it can pass through.
+   */
   PierceLevel?: NBTByte
   /**
-     * Sound event to play when it hits something.
-     *
-     * Can only be vanilla sound events
-     */
+   * Sound event to play when it hits something.
+   *
+   * Can only be vanilla sound events
+   */
   SoundEvent?: Registry['minecraft:sound_event']
   item?: ItemStack
 })
@@ -62,14 +62,14 @@ export type Pickup = (0 | 1 | 2)
 
 export type SpectralArrow = (ArrowBase & {
   /**
-     * Ticks the glowing effect lasts.
-     */
+   * Ticks the glowing effect lasts.
+   */
   Duration?: NBTInt
 })
 
 export type Trident = (ArrowBase & {
   /**
-     * Whether it has already damaged an entity.
-     */
+   * Whether it has already damaged an entity.
+   */
   DealtDamage?: boolean
 })

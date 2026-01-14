@@ -10,17 +10,17 @@ export type ContainerLoot = {
 
 export type ContainerSlot = {
   /**
-     * The slot ID of the container.
-     *
-     * Value:
-     * Range: 0..255
-     */
+   * The slot ID of the container.
+   *
+   * Value:
+   * Range: 0..255
+   */
   slot: NBTInt<{
     min: 0
   }>
   /**
-     * The item stack in this container slot.
-     */
+   * The item stack in this container slot.
+   */
   item: ItemStack
 }
 

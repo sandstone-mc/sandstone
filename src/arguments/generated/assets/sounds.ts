@@ -1,82 +1,82 @@
 import type { SymbolSoundType } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
-export type Sound = ({
+export type Sound = NonNullable<({
   [S in Extract<SoundType, string>]?: {
     /**
-         * Changes how `name` is interpreted. Defaults to `sound`.
-         *
-         * Value:
-         *
-         *  - File(`file`): A file.
-         *  - SoundEvent(`event`): An already defined event.
-         */
+     * Changes how `name` is interpreted. Defaults to `sound`.
+     *
+     * Value:
+     *
+     *  - File(`file`): A file.
+     *  - SoundEvent(`event`): An already defined event.
+     */
     type?: S
     name: (S extends undefined
       ? SymbolSoundType<'%none'> :
-      (S extends keyof SymbolSoundType ? SymbolSoundType[S] : NBTObject))
+      (S extends keyof SymbolSoundType ? SymbolSoundType[S] : RootNBT))
     /**
-         * Defaults to 1.0.
-         *
-         * Value:
-         * Range: 0<..
-         * Minimum is exclusive; must be higher than 0
-         */
+     * Defaults to 1.0.
+     *
+     * Value:
+     * Range: 0<..
+     * Minimum is exclusive; must be higher than 0
+     */
     volume?: NBTFloat<{
       leftExclusive: true
       min: 1
     }>
     /**
-         * Default is 1.0.
-         *
-         * Value:
-         * Range: 0<..
-         * Minimum is exclusive; must be higher than 0
-         */
+     * Default is 1.0.
+     *
+     * Value:
+     * Range: 0<..
+     * Minimum is exclusive; must be higher than 0
+     */
     pitch?: NBTFloat<{
       leftExclusive: true
       min: 1
     }>
     /**
-         * Chance that this sound is selected to play. Defaults to 1.
-         *
-         * Value:
-         * Range: 1..
-         */
+     * Chance that this sound is selected to play. Defaults to 1.
+     *
+     * Value:
+     * Range: 1..
+     */
     weight?: NBTInt<{
       min: 1
     }>
     /**
-         * Whether the sound should be loaded when loading the pack instead of when the sound is played. Used by the underwater ambience. Defaults to false.
-         */
+     * Whether the sound should be loaded when loading the pack instead of when the sound is played. Used by the underwater ambience. Defaults to false.
+     */
     preload?: boolean
     /**
-         * If true it will be streamed from its file. Sounds longer than a few seconds should enable this to avoid lag. Defaults to false.
-         * When false many instances of the sound can be ran at the same time. When true only allows 4 instances (of that type) can be played.
-         */
+     * If true it will be streamed from its file. Sounds longer than a few seconds should enable this to avoid lag. Defaults to false.
+     * When false many instances of the sound can be ran at the same time. When true only allows 4 instances (of that type) can be played.
+     */
     stream?: boolean
     /**
-         * Modify sound reduction rate based on distance. Defaults to 16.
-         */
+     * Modify sound reduction rate based on distance. Defaults to 16.
+     */
     attenuation_distance?: NBTInt
   };
-}[SoundType])
+}[SoundType])>
 
 export type SoundEventRegistration = {
   /**
-     * The sound files this sound event uses. One sound is randomly selected to play when the event is triggered. Defaults to assumed path.
-     */
+   * The sound files this sound event uses. One sound is randomly selected to play when the event is triggered. Defaults to assumed path.
+   */
   sounds?: Array<(Registry['minecraft:sound'] | Sound)>
   /**
-     * If true the sounds listed should replace the ones listed in the minecraft sounds.json for this sound event.
-     * False if the sounds listed should be added. If undefined. Defaults to false.
-     */
+   * If true the sounds listed should replace the ones listed in the minecraft sounds.json for this sound event.
+   * False if the sounds listed should be added. If undefined. Defaults to false.
+   */
   replace?: boolean
   /**
-     * Translated as the subtitle when Show Subtitles is enabled. Section sign formatting codes are supported.
-     */
+   * Translated as the subtitle when Show Subtitles is enabled. Section sign formatting codes are supported.
+   */
   subtitle?: Registry['minecraft:translation_key']
 }
 

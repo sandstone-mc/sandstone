@@ -7,30 +7,30 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type Advancement = {
   /**
-     * If present, advancement will be visible in the advancement tabs.
-     */
+   * If present, advancement will be visible in the advancement tabs.
+   */
   display?: AdvancementDisplay
   /**
-     * If this field is absent, this advancement is a root advancement.
-     * Circular references cause a loading failure.
-     */
+   * If this field is absent, this advancement is a root advancement.
+   * Circular references cause a loading failure.
+   */
   parent?: (Registry['minecraft:advancement'] | AdvancementClass)
   /**
-     * If `requirements` is not defined, all defined criteria will be required.
-     */
+   * If `requirements` is not defined, all defined criteria will be required.
+   */
   criteria: ({
     [Key in `${any}${string}`]?: AdvancementCriterion;
   })
   /**
-     * If all criteria are required at once, this may be omitted.
-     *
-     * Contains all of the `criteria` keys.
-     *
-     * If all of the lists each have at least one criteria met, the advancement is complete (basically AND grouping of OR groups).
-     *
-     * Value:
-     * List length range: 1..
-     */
+   * If all criteria are required at once, this may be omitted.
+   *
+   * Contains all of the `criteria` keys.
+   *
+   * If all of the lists each have at least one criteria met, the advancement is complete (basically AND grouping of OR groups).
+   *
+   * Value:
+   * List length range: 1..
+   */
   requirements?: NBTList<NBTList<`${any}${string}`, {
     leftExclusive: false
     min: 1
@@ -39,56 +39,56 @@ export type Advancement = {
     min: 1
   }>
   /**
-     * Provided to the player when this advancement is obtained.
-     */
+   * Provided to the player when this advancement is obtained.
+   */
   rewards?: AdvancementRewards
   /**
-     * Defaults to `false`. The vanilla game client only reads this for advancements from the `minecraft` namespace.
-     */
+   * Defaults to `false`. The vanilla game client only reads this for advancements from the `minecraft` namespace.
+   */
   sends_telemetry_event?: boolean
 }
 
-export type AdvancementCriterion = ({
+export type AdvancementCriterion = NonNullable<({
   [S in Extract<Registry['minecraft:trigger_type'], string>]?: ({
     /**
-         * Many triggers can occur multiple times, however, the reward will only be provided multiple times if the advancement is first revoked, which is often done within the function reward.
-         */
+     * Many triggers can occur multiple times, however, the reward will only be provided multiple times if the advancement is first revoked, which is often done within the function reward.
+     */
     trigger: S
   } & (S extends keyof SymbolTrigger ? SymbolTrigger[S] : RootNBT));
-}[Registry['minecraft:trigger_type']])
+}[Registry['minecraft:trigger_type']])>
 
 export type AdvancementDisplay = {
   icon: ItemStack
   title: Text
   description: Text
   /**
-     * Used for the advancement tab (root advancement only).
-     */
+   * Used for the advancement tab (root advancement only).
+   */
   background?: Registry['minecraft:texture']
   /**
-     * Controls the advancement tile frame. Defaults to `task`.
-     *
-     * Value:
-     *
-     *  - Task(`task`): Normal border.
-     *  - Challenge(`challenge`): Fancy spiked border (used for the kill all mobs advancement).
-     *  - Goal(`goal`): Rounded border (used for the full beacon advancement).
-     */
+   * Controls the advancement tile frame. Defaults to `task`.
+   *
+   * Value:
+   *
+   *  - Task(`task`): Normal border.
+   *  - Challenge(`challenge`): Fancy spiked border (used for the kill all mobs advancement).
+   *  - Goal(`goal`): Rounded border (used for the full beacon advancement).
+   */
   frame?: AdvancementFrame
   /**
-     * Whether to show the toast pop up after completing this advancement. Defaults to `true`.
-     */
+   * Whether to show the toast pop up after completing this advancement. Defaults to `true`.
+   */
   show_toast?: boolean
   /**
-     * Whether to announce in the chat when this advancement has been completed. Defaults to `true`.
-     */
+   * Whether to announce in the chat when this advancement has been completed. Defaults to `true`.
+   */
   announce_to_chat?: boolean
   /**
-     * Whether or not to hide this advancement and all its children from the advancement screen,
-     * until this advancement have been completed.
-     * Has no effect on root advancements themselves, but still affects all their children.
-     * Defaults to `false`.
-     */
+   * Whether or not to hide this advancement and all its children from the advancement screen,
+   * until this advancement have been completed.
+   * Has no effect on root advancements themselves, but still affects all their children.
+   * Defaults to `false`.
+   */
   hidden?: boolean
 }
 
@@ -101,20 +101,20 @@ export type AdvancementIcon = {
 
 export type AdvancementRewards = {
   /**
-     * Function to run as the player (not at). Function group tags are not allowed.
-     */
+   * Function to run as the player (not at). Function group tags are not allowed.
+   */
   function?: (`${string}:${string}` | MCFunctionClass)
   /**
-     * Loot tables to give.
-     */
+   * Loot tables to give.
+   */
   loot?: Array<Registry['minecraft:loot_table']>
   /**
-     * Recipes to unlock.
-     */
+   * Recipes to unlock.
+   */
   recipes?: Array<Registry['minecraft:recipe']>
   /**
-     * XP to add.
-     */
+   * XP to add.
+   */
   experience?: NBTInt
 }
 

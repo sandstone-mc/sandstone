@@ -4,9 +4,9 @@ import type { NBTInt, NBTIntArray } from 'sandstone'
 export type Crafter = (BlockEntity & {
   crafting_ticks_remaining?: NBTInt
   /**
-     * Value:
-     * Array length range: ..9
-     */
+   * Value:
+   * Array length range: ..9
+   */
   disabled_slots?: NBTIntArray<{
     rightExclusive: false
   }>

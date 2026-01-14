@@ -1,13 +1,13 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BottomBiasHeightProvider = (UniformHeightProvider & {
   /**
-     * Value:
-     * Range: 1..
-     */
+   * Value:
+   * Range: 1..
+   */
   inner?: NBTInt<{
     min: 1
   }>
@@ -17,13 +17,13 @@ export type CarveStep = ('air' | 'liquid')
 
 export type CaveSurface = ('floor' | 'ceiling')
 
-export type ClampedIntProvider<T> = {
+export type ClampedIntProvider<T extends NBTObject> = {
   min_inclusive: T
   max_inclusive: T
   source: IntProvider<NBTInt>
 }
 
-export type ClampedNormalIntProvider<T> = (UniformIntProvider<T> & {
+export type ClampedNormalIntProvider<T extends NBTObject> = (UniformIntProvider<T> & {
   mean: NBTFloat
   deviation: NBTFloat
 })
@@ -32,7 +32,7 @@ export type ConstantHeightProvider = {
   value: VerticalAnchor
 }
 
-export type ConstantIntProvider<T> = {
+export type ConstantIntProvider<T extends NBTObject> = {
   value: T
 }
 
@@ -49,7 +49,7 @@ export type DecorationStep = (
   | 'vegetal_decoration'
   | 'top_layer_modification')
 
-export type FloatProvider<T> = (T | ({
+export type FloatProvider<T extends NBTObject> = (T | ({
   [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolFloatProvider<T> ? SymbolFloatProvider<T>[S] : RootNBT));
@@ -84,12 +84,12 @@ export type UniformHeightProvider = {
   max_inclusive: VerticalAnchor
 }
 
-export type UniformInt<Base, Spread> = (Base | {
+export type UniformInt<Base extends NBTObject, Spread extends NBTObject> = (Base | {
   base: Base
   spread: Spread
 })
 
-export type UniformIntProvider<T> = {
+export type UniformIntProvider<T extends NBTObject> = {
   min_inclusive: T
   max_inclusive: T
 }
@@ -105,7 +105,7 @@ export type VerticalAnchor = ({
 export type WeightListHeightProvider = {
   distribution: NonEmptyWeightedList<HeightProvider>
 }
-type FloatProviderDispatcherMap<T> = {
+type FloatProviderDispatcherMap<T extends NBTObject> = {
   'clamped_normal': FloatProviderClampedNormal<T>
   'minecraft:clamped_normal': FloatProviderClampedNormal<T>
   'constant': FloatProviderConstant<T>
@@ -115,39 +115,40 @@ type FloatProviderDispatcherMap<T> = {
   'uniform': FloatProviderUniform<T>
   'minecraft:uniform': FloatProviderUniform<T>
 }
-type FloatProviderKeys = keyof FloatProviderDispatcherMap<unknown>
-type FloatProviderFallback<T> = (
+type FloatProviderKeys = keyof FloatProviderDispatcherMap<NBTObject>
+type FloatProviderFallback<T extends NBTObject> = (
   | FloatProviderClampedNormal<T>
   | FloatProviderConstant<T>
   | FloatProviderTrapezoid<T>
   | FloatProviderUniform<T>)
-export type FloatProviderClampedNormal<T> = {
+export type FloatProviderClampedNormal<T extends NBTObject> = {
   min: T
   max: T
   mean: NBTFloat
   deviation: NBTFloat
 }
 
-export type FloatProviderConstant<T> = {
+export type FloatProviderConstant<T extends NBTObject> = {
   value: T
 }
 
-export type FloatProviderTrapezoid<T> = {
+export type FloatProviderTrapezoid<T extends NBTObject> = {
   min: T
   max: T
   plateau: NBTFloat
 }
 
-export type FloatProviderUniform<T> = {
+export type FloatProviderUniform<T extends NBTObject> = {
   min_inclusive: T
   max_exclusive: T
 }
 
-export type SymbolFloatProvider<T, CASE extends
+export type SymbolFloatProvider<T extends NBTObject, CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? FloatProviderDispatcherMap<T>
   : CASE extends 'keys' ? FloatProviderKeys : CASE extends '%fallback' ? FloatProviderFallback<T> : never
 type HeightProviderDispatcherMap = {
@@ -182,7 +183,8 @@ export type SymbolHeightProvider<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? HeightProviderDispatcherMap
   : CASE extends 'keys' ? HeightProviderKeys : CASE extends '%fallback' ? HeightProviderFallback : never
 type IntProviderDispatcherMap<T extends NBTObject> = {
@@ -207,15 +209,15 @@ type IntProviderFallback<T extends NBTObject> = (
   | IntProviderConstant<T>
   | IntProviderUniform<T>
   | IntProviderWeightedList<T>)
-export type IntProviderBiasedToBottom<T> = UniformIntProvider<T>
+export type IntProviderBiasedToBottom<T extends NBTObject> = UniformIntProvider<T>
 
-export type IntProviderClamped<T> = ClampedIntProvider<T>
+export type IntProviderClamped<T extends NBTObject> = ClampedIntProvider<T>
 
-export type IntProviderClampedNormal<T> = ClampedNormalIntProvider<T>
+export type IntProviderClampedNormal<T extends NBTObject> = ClampedNormalIntProvider<T>
 
-export type IntProviderConstant<T> = ConstantIntProvider<T>
+export type IntProviderConstant<T extends NBTObject> = ConstantIntProvider<T>
 
-export type IntProviderUniform<T> = UniformIntProvider<T>
+export type IntProviderUniform<T extends NBTObject> = UniformIntProvider<T>
 
 export type IntProviderWeightedList<T extends NBTObject> = {
   distribution: NonEmptyWeightedList<IntProvider<T>>
@@ -225,6 +227,7 @@ export type SymbolIntProvider<T extends NBTObject, CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? IntProviderDispatcherMap<T>
   : CASE extends 'keys' ? IntProviderKeys : CASE extends '%fallback' ? IntProviderFallback<T> : never

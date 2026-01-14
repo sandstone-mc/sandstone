@@ -1,36 +1,35 @@
 import type { SymbolEnvironmentAttribute } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AttributeTrackBase = {
   /**
-     * Defaults to `linear`.
-     * For visualization, check out: https://easings.net/
-     */
+   * Defaults to `linear`.
+   * For visualization, check out: https://easings.net/
+   */
   ease?: EasingType
 }
 
 export type CubicBezierEase = {
   /**
-     * `[x1, y1, x2, y2]`
-     * For an easy GUI, check out: https://cubic-bezier.com/
-     *
-     * Value:
-     * Range: 0..1
-     *
-     * *or*
-     *
-     * *item 1*
-     *
-     * *or*
-     *
-     * Range: 0..1
-     *
-     * *or*
-     *
-     * *item 3*
-     */
+   * `[x1, y1, x2, y2]`
+   * For an easy GUI, check out: https://cubic-bezier.com/
+   *
+   * Value:
+   * Range: 0..1
+   *
+   * *or*
+   *
+   * *item 1*
+   *
+   * *or*
+   *
+   * Range: 0..1
+   *
+   * *or*
+   *
+   * *item 3*
+   */
   cubic_bezier: [
     NBTFloat<{
       leftExclusive: false
@@ -64,8 +63,8 @@ export type EnvironmentAttributeTrackMap = ({
   [Key in Extract<Registry['minecraft:environment_attribute'], string>]?: (Key extends keyof SymbolEnvironmentAttribute ?
     ('attribute_track' extends keyof SymbolEnvironmentAttribute[Key]
       ? SymbolEnvironmentAttribute[Key]['attribute_track']
-      : NBTObject)
-    : NBTObject);
+      : SymbolEnvironmentAttribute<'%unknown'>)
+    : SymbolEnvironmentAttribute<'%unknown'>);
 })
 
 export type SimpleEasingType = (
@@ -104,17 +103,17 @@ export type SimpleEasingType = (
 
 export type Timeline = {
   /**
-     * When not present, the timeline will not repeat.
-     *
-     * Value:
-     * Range: 1..
-     */
+   * When not present, the timeline will not repeat.
+   *
+   * Value:
+   * Range: 1..
+   */
   period_ticks?: NBTInt<{
     min: 1
   }>
   /**
-     * The world clock this timeline is tied to.
-     */
+   * The world clock this timeline is tied to.
+   */
   clock: `${string}:${string}`
   time_markers?: TimeMarkerMap
   tracks?: EnvironmentAttributeTrackMap
@@ -122,22 +121,22 @@ export type Timeline = {
 
 export type TimeMarker = {
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   ticks: NBTInt<{
     min: 0
   }>
   /**
-     * Whether the time marker shows up in command suggestions. \
-     * The time marker is still available in commands even if it is not suggested. \
-     * Defaults to `false`.
-     */
+   * Whether the time marker shows up in command suggestions. \
+   * The time marker is still available in commands even if it is not suggested. \
+   * Defaults to `false`.
+   */
   show_in_commands?: boolean
 }
 
 export type TimeMarkerMap = ({
-  [Key in `${any}${string}`]?: (NBTInt<{
+  [Key in Extract<`${any}${string}`, string>]?: (NBTInt<{
     min: 0
   }> | TimeMarker);
 })

@@ -8,9 +8,9 @@ export type TestInstanceBlock = (BlockEntity & {
   data?: {
     test?: Registry['minecraft:test_instance']
     /**
-         * Value:
-         * Array length range: 3
-         */
+     * Value:
+     * Array length range: 3
+     */
     size: NBTIntArray<{
       leftExclusive: false
       rightExclusive: false
@@ -18,30 +18,30 @@ export type TestInstanceBlock = (BlockEntity & {
       max: 3
     }>
     /**
-         * Value:
-         *
-         *  - None(`none`)
-         *  - Clockwise90(`clockwise_90`)
-         *  - Clockwise180(`180`)
-         *  - CounterClockwise90(`counterclockwise_90`)
-         */
+     * Value:
+     *
+     *  - None(`none`)
+     *  - Clockwise90(`clockwise_90`)
+     *  - Clockwise180(`180`)
+     *  - CounterClockwise90(`counterclockwise_90`)
+     */
     rotation: Rotation
     ignore_entities: boolean
     /**
-         * Value:
-         *
-         *  - Cleared(`cleared`)
-         *  - Running(`running`)
-         *  - Finished(`finished`)
-         */
+     * Value:
+     *
+     *  - Cleared(`cleared`)
+     *  - Running(`running`)
+     *  - Finished(`finished`)
+     */
     status: TestInstanceBlockStatus
     error_message?: Text
   }
   errors?: Array<{
     /**
-         * Value:
-         * Array length range: 3
-         */
+     * Value:
+     * Array length range: 3
+     */
     pos: NBTIntArray<{
       leftExclusive: false
       rightExclusive: false

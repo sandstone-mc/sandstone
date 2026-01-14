@@ -17,11 +17,11 @@ export type ChatType = {
 export type Narration = {
   decoration?: ChatDecoration
   /**
-     * Value:
-     *
-     *  - Chat(`chat`)
-     *  - System(`system`)
-     */
+   * Value:
+   *
+   *  - Chat(`chat`)
+   *  - System(`system`)
+   */
   priority: NarrationPriority
 }
 

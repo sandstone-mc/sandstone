@@ -14,8 +14,8 @@ export type NoiseGeneratorSettings = ({
   default_fluid: BlockState
   sea_level: NBTInt
   /**
-     * If true, mobs will not spawn during generation.
-     */
+   * If true, mobs will not spawn during generation.
+   */
   disable_mob_generation: boolean
   legacy_random_source: boolean
   noise: NoiseSettings
@@ -29,10 +29,10 @@ export type NoiseGeneratorSettings = ({
 
 export type NoiseGeneratorSettingsRef = (Registry['minecraft:worldgen/noise_settings'] | ({
   /**
-     * Value:
-     *
-     * Value: Defines a `minecraft:worldgen/noise_settings` id.
-     */
+   * Value:
+   *
+   * Value: Defines a `minecraft:worldgen/noise_settings` id.
+   */
   name: `${string}:${string}`
 } & NoiseGeneratorSettings))
 
@@ -56,36 +56,36 @@ export type NoiseRouter = {
 
 export type NoiseSamplingSettings = {
   /**
-     * Value:
-     * Range: 0.001..1000
-     */
+   * Value:
+   * Range: 0.001..1000
+   */
   xz_scale: (NBTDouble<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }> | number)
   /**
-     * Value:
-     * Range: 0.001..1000
-     */
+   * Value:
+   * Range: 0.001..1000
+   */
   y_scale: (NBTDouble<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }> | number)
   /**
-     * Value:
-     * Range: 0.001..1000
-     */
+   * Value:
+   * Range: 0.001..1000
+   */
   xz_factor: (NBTDouble<{
     leftExclusive: false
     rightExclusive: false
     min: 0
   }> | number)
   /**
-     * Value:
-     * Range: 0.001..1000
-     */
+   * Value:
+   * Range: 0.001..1000
+   */
   y_factor: (NBTDouble<{
     leftExclusive: false
     rightExclusive: false
@@ -95,33 +95,33 @@ export type NoiseSamplingSettings = {
 
 export type NoiseSettings = {
   /**
-     * Minimum height where blocks start generating.
-     *
-     * Value:
-     * Range: -2048..2047
-     */
+   * Minimum height where blocks start generating.
+   *
+   * Value:
+   * Range: -2048..2047
+   */
   min_y: NBTInt<{}>
   /**
-     * The total height where blocks can generate. Max Y = Min Y + Height.
-     *
-     * Value:
-     * Range: 0..4096
-     */
+   * The total height where blocks can generate. Max Y = Min Y + Height.
+   *
+   * Value:
+   * Range: 0..4096
+   */
   height: NBTInt<{
     min: 0
   }>
   /**
-     * Value:
-     * Range: 1..4
-     */
+   * Value:
+   * Range: 1..4
+   */
   size_horizontal: NBTInt<{
     min: 1
     max: 4
   }>
   /**
-     * Value:
-     * Range: 1..4
-     */
+   * Value:
+   * Range: 1..4
+   */
   size_vertical: NBTInt<{
     min: 1
     max: 4
@@ -130,21 +130,21 @@ export type NoiseSettings = {
 
 export type NoiseSlideSettings = {
   /**
-     * The target density. Positive values add terrain and negative values remove terrain.
-     */
+   * The target density. Positive values add terrain and negative values remove terrain.
+   */
   target: NBTFloat
   /**
-     * Defines a range of 'Size * Size vertical * 4' blocks where the existing density and target are interpolated.
-     *
-     * Value:
-     * Range: 0..256
-     */
+   * Defines a range of 'Size * Size vertical * 4' blocks where the existing density and target are interpolated.
+   *
+   * Value:
+   * Range: 0..256
+   */
   size: NBTInt<{
     min: 0
   }>
   /**
-     * Defines an range of 'Offset * Size vertical * 4' blocks where the density is set to the target.
-     */
+   * Defines an range of 'Offset * Size vertical * 4' blocks where the density is set to the target.
+   */
   offset: NBTInt
 }
 

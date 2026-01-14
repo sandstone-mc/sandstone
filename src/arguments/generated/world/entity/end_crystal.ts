@@ -9,15 +9,15 @@ export type BeamTarget = {
 
 export type EndCrystal = (EntityBase & {
   /**
-     * Whether to show the base of the end crystal.
-     */
+   * Whether to show the base of the end crystal.
+   */
   ShowBottom?: boolean
   /**
-     * Coordinates that the beam is pointing to
-     *
-     * Value:
-     * Array length range: 3
-     */
+   * Coordinates that the beam is pointing to
+   *
+   * Value:
+   * Array length range: 3
+   */
   beam_target?: NBTIntArray<{
     leftExclusive: false
     rightExclusive: false

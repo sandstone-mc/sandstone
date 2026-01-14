@@ -5,44 +5,44 @@ import type { NBTList } from 'sandstone'
 
 export type OldSign = (BlockEntity & {
   /**
-     * Color the text has been dyed.
-     *
-     * Value:
-     *
-     *  - White(`white`)
-     *  - Orange(`orange`)
-     *  - Magenta(`magenta`)
-     *  - LightBlue(`light_blue`)
-     *  - Yellow(`yellow`)
-     *  - Lime(`lime`)
-     *  - Pink(`pink`)
-     *  - Gray(`gray`)
-     *  - LightGray(`light_gray`)
-     *  - Cyan(`cyan`)
-     *  - Purple(`purple`)
-     *  - Blue(`blue`)
-     *  - Brown(`brown`)
-     *  - Green(`green`)
-     *  - Red(`red`)
-     *  - Black(`black`)
-     */
+   * Color the text has been dyed.
+   *
+   * Value:
+   *
+   *  - White(`white`)
+   *  - Orange(`orange`)
+   *  - Magenta(`magenta`)
+   *  - LightBlue(`light_blue`)
+   *  - Yellow(`yellow`)
+   *  - Lime(`lime`)
+   *  - Pink(`pink`)
+   *  - Gray(`gray`)
+   *  - LightGray(`light_gray`)
+   *  - Cyan(`cyan`)
+   *  - Purple(`purple`)
+   *  - Blue(`blue`)
+   *  - Brown(`brown`)
+   *  - Green(`green`)
+   *  - Red(`red`)
+   *  - Black(`black`)
+   */
   Color?: DyeColor
   GlowingText?: boolean
   /**
-     * First line of text.
-     */
+   * First line of text.
+   */
   Text1?: `${any}${string}`
   /**
-     * Second line of text.
-     */
+   * Second line of text.
+   */
   Text2?: `${any}${string}`
   /**
-     * Third line of text.
-     */
+   * Third line of text.
+   */
   Text3?: `${any}${string}`
   /**
-     * Fourth line of text.
-     */
+   * Fourth line of text.
+   */
   Text4?: `${any}${string}`
 })
 
@@ -50,8 +50,8 @@ export type Sign = (BlockEntity & {
   back_text?: SignText
   front_text?: SignText
   /**
-     * Whether the sign has been made uneditable by applying wax.
-     */
+   * Whether the sign has been made uneditable by applying wax.
+   */
   is_waxed?: boolean
 })
 
@@ -68,29 +68,29 @@ export type SignLines = NBTList<Text, {
 export type SignText = {
   messages: SignLines
   /**
-     * Shown to players with the profanity filter enabled on Realms.
-     */
+   * Shown to players with the profanity filter enabled on Realms.
+   */
   filtered_messages?: SignLines
   /**
-     * Value:
-     *
-     *  - White(`white`)
-     *  - Orange(`orange`)
-     *  - Magenta(`magenta`)
-     *  - LightBlue(`light_blue`)
-     *  - Yellow(`yellow`)
-     *  - Lime(`lime`)
-     *  - Pink(`pink`)
-     *  - Gray(`gray`)
-     *  - LightGray(`light_gray`)
-     *  - Cyan(`cyan`)
-     *  - Purple(`purple`)
-     *  - Blue(`blue`)
-     *  - Brown(`brown`)
-     *  - Green(`green`)
-     *  - Red(`red`)
-     *  - Black(`black`)
-     */
+   * Value:
+   *
+   *  - White(`white`)
+   *  - Orange(`orange`)
+   *  - Magenta(`magenta`)
+   *  - LightBlue(`light_blue`)
+   *  - Yellow(`yellow`)
+   *  - Lime(`lime`)
+   *  - Pink(`pink`)
+   *  - Gray(`gray`)
+   *  - LightGray(`light_gray`)
+   *  - Cyan(`cyan`)
+   *  - Purple(`purple`)
+   *  - Blue(`blue`)
+   *  - Brown(`brown`)
+   *  - Green(`green`)
+   *  - Red(`red`)
+   *  - Black(`black`)
+   */
   color?: DyeColor
   has_glowing_text?: boolean
 }

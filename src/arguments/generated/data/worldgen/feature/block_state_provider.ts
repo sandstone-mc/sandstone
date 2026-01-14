@@ -3,27 +3,27 @@ import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BaseNoiseProvider = {
   seed: NBTInt
   noise: NoiseParameters
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   scale: NBTFloat<{
     leftExclusive: false
     min: 0
   }>
 }
 
-export type BlockStateProvider = ({
+export type BlockStateProvider = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>]?: ({
     type: S
   } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT));
-}[Registry['minecraft:worldgen/block_state_provider_type']])
+}[Registry['minecraft:worldgen/block_state_provider_type']])>
 
 export type DualNoiseProvider = (BaseNoiseProvider & {
   variety: InclusiveRange<NBTInt<{
@@ -32,9 +32,9 @@ export type DualNoiseProvider = (BaseNoiseProvider & {
   }>>
   slow_noise: NoiseParameters
   /**
-     * Value:
-     * Range: 0..
-     */
+   * Value:
+   * Range: 0..
+   */
   slow_scale: NBTFloat<{
     leftExclusive: false
     min: 0
@@ -48,17 +48,17 @@ export type NoiseProvider = (BaseNoiseProvider & {
 
 export type NoiseThresholdProvider = (BaseNoiseProvider & {
   /**
-     * Value:
-     * Range: -1..1
-     */
+   * Value:
+   * Range: -1..1
+   */
   threshold: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
   }>
   /**
-     * Value:
-     * Range: 0..1
-     */
+   * Value:
+   * Range: 0..1
+   */
   high_chance: NBTFloat<{
     leftExclusive: false
     rightExclusive: false
@@ -119,6 +119,7 @@ export type SymbolBlockStateProvider<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
-  | '%none' = 'map'> = CASE extends 'map'
+  | '%none'
+  | '%unknown' = 'map'> = CASE extends 'map'
   ? BlockStateProviderDispatcherMap
   : CASE extends 'keys' ? BlockStateProviderKeys : CASE extends '%fallback' ? BlockStateProviderFallback : never
