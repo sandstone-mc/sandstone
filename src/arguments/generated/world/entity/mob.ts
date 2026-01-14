@@ -6,7 +6,7 @@ import type { Memories } from 'sandstone/arguments/generated/util/memory.ts'
 import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot.ts'
 import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTLong, NBTShort } from 'sandstone'
+import type { NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTLong, NBTShort } from 'sandstone'
 
 export type AgeableMob = {
   /**
@@ -68,6 +68,31 @@ export type DropChances = ({
 
 export type EntityEquipment = ({
   [Key in Extract<EquipmentSlot, string>]?: ItemStack;
+})
+
+export type FallDamageLogicData = ({
+  /**
+     * Added mid-air after being hit by an explosion.
+     *
+     * Value:
+     * List length range: 3
+     */
+  current_explosion_impact_pos?: NBTList<(NBTDouble | number), {
+    leftExclusive: false
+    rightExclusive: false
+    min: 3
+    max: 3
+  }>
+} & {
+  /**
+     * Used by fall damage logic. Decreases by 1 every tick.
+     *
+     * Value:
+     * Range: 0..
+     */
+  current_impulse_context_reset_grace_time?: NBTInt<{
+    min: 0
+  }>
 })
 
 export type LivingEntity = (EntityBase & {
@@ -158,7 +183,7 @@ export type LivingEntity = (EntityBase & {
     max: 100
   }>
   locator_bar_icon?: WaypointIcon
-})
+} & FallDamageLogicData)
 
 export type MobBase = (LivingEntity & {
   /**

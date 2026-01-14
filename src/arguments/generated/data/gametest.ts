@@ -83,6 +83,15 @@ export type TestData = {
      * If `false`, test is enclosed in barrier blocks. If `true`, the top is left open.
      */
   sky_access?: boolean
+  /**
+     * Additional padding in blocks placed around the structure. Defaults to `0`.
+     *
+     * Value:
+     * Range: 0..128
+     */
+  padding?: NBTInt<{
+    min: 0
+  }>
 }
 
 export type TestInstance = ({

@@ -161,6 +161,10 @@ export type TableBonus = {
 
 export type TimeCheck = {
   /**
+     * The world clock to check.
+     */
+  clock: `${string}:${string}`
+  /**
      * Check the current game tick.
      */
   value: IntRange

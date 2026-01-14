@@ -124,8 +124,8 @@ export type Recipe = {
      * Count adjuster of the `buy` item based on demand.
      *
      * Minus twice the number of times the villager has the trade in stock.
-     *  When restocking subtract the number of possible purchases before running out of stock and add twice the number of actually made purchases.
-     *  When the demand becomes positive, the count is increased by the initial count times `priceMultiplier` times the demand.
+     * When restocking subtract the number of possible purchases before running out of stock and add twice the number of actually made purchases.
+     * When the demand becomes positive, the count is increased by the initial count times `priceMultiplier` times the demand.
      */
   demand?: NBTInt
 }
@@ -194,11 +194,11 @@ export type Villager = (Breedable & VillagerBase & {
      * After `250` the XP will continue to increase, but will do nothing more.
      *
      * Trade tiers:
-     *  - `0..9`     - Tier 1: Novice
-     *  - `10..69`   - Tier 2: Apprentice
-     *  - `70..149`  - Tier 3: Journeyman
-     *  - `150..249` - Tier 4: Expert
-     *  - `250..`    - Tier 5: Master
+     * - `0..9`     - Tier 1: Novice
+     * - `10..69`   - Tier 2: Apprentice
+     * - `70..149`  - Tier 3: Journeyman
+     * - `150..249` - Tier 4: Expert
+     * - `250..`    - Tier 5: Master
      *
      * Value:
      * Range: 0..

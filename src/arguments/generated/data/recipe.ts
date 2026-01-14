@@ -1,5 +1,5 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -37,7 +37,7 @@ export type CraftingShaped = {
   key: ({
     [Key in Extract<CRAFTING_INGREDIENT, string>]?: Ingredient;
   })
-  result: ItemStack
+  result: (ItemStack | Registry['minecraft:item'])
   /**
      * Determines if a notification is shown when unlocking this recipe. Defaults to true.
      */
@@ -67,7 +67,7 @@ export type CraftingShapeless = {
     min: 1
     max: 9
   }>
-  result: ItemStack
+  result: (ItemStack | Registry['minecraft:item'])
 }
 
 export type CraftingTransmute = {
@@ -141,7 +141,7 @@ export type Smelting = {
      */
   category?: CookingBookCategory
   ingredient: Ingredient
-  result: SingleItem
+  result: (ItemStack | Registry['minecraft:item'])
   experience?: NBTFloat
   cookingtime?: NBTInt
 }
@@ -160,7 +160,7 @@ export type SmithingTransform = ({
   /**
      * Resulting transformed item.
      */
-  result: ItemStack
+  result: (ItemStack | Registry['minecraft:item'])
 } & {
   /**
      * Material that will be used.
@@ -194,7 +194,7 @@ export type SmithingTrim = {
 export type Stonecutting = {
   group?: string
   ingredient: Ingredient
-  result: ItemStack
+  result: (ItemStack | Registry['minecraft:item'])
 }
 type RecipeSerializerDispatcherMap = {
   'blasting': RecipeSerializerBlasting

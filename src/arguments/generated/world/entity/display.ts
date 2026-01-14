@@ -99,8 +99,8 @@ export type DisplayBase = (EntityBase & {
      * All interpolated properties are part of a single interpolation set.
      *
      * Any update to an interpolated property will cause all values of the interpolation set to be saved as "current".
-     *   - Data command executions that do not change the value of a property (even if it's present in NBT) do not count as updates.
-     *   - Updates are synchronized to clients at most once per tick, so multiple updates within a single command or a function will still count as a single update.
+     *  - Data command executions that do not change the value of a property (even if it's present in NBT) do not count as updates.
+     *  - Updates are synchronized to clients at most once per tick, so multiple updates within a single command or a function will still count as a single update.
      *
      * Previous current values are saved as "previous".
      *

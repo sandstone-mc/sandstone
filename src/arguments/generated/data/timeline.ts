@@ -112,5 +112,32 @@ export type Timeline = {
   period_ticks?: NBTInt<{
     min: 1
   }>
+  /**
+     * The world clock this timeline is tied to.
+     */
+  clock: `${string}:${string}`
+  time_markers?: TimeMarkerMap
   tracks?: EnvironmentAttributeTrackMap
 }
+
+export type TimeMarker = {
+  /**
+     * Value:
+     * Range: 0..
+     */
+  ticks: NBTInt<{
+    min: 0
+  }>
+  /**
+     * Whether the time marker shows up in command suggestions. \
+     * The time marker is still available in commands even if it is not suggested. \
+     * Defaults to `false`.
+     */
+  show_in_commands?: boolean
+}
+
+export type TimeMarkerMap = ({
+  [Key in `${any}${string}`]?: (NBTInt<{
+    min: 0
+  }> | TimeMarker);
+})

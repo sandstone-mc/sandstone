@@ -13,6 +13,7 @@ export type Dimension = {
 
 export type DimensionType = {
   attributes?: GlobalEnvironmentAttributeMap
+  default_clock?: `${string}:${string}`
   timelines?: ((
       | Registry['minecraft:timeline'] | `#${Registry['minecraft:tag/timeline']}` | TagClass<'timeline'>)
       | Array<Registry['minecraft:timeline']>)

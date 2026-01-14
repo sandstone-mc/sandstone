@@ -15,4 +15,8 @@ export type PigVariant = ({
      * The pig texture to use for this variant.
      */
   asset_id: Registry['minecraft:texture']
+  /**
+     * The baby pig texture to use for this variant.
+     */
+  baby_asset_id: Registry['minecraft:texture']
 } & SpawnPrioritySelectors)

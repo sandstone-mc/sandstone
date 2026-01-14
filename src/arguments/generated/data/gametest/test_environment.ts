@@ -12,6 +12,17 @@ export type BoolGameRule = {
   value: boolean
 }
 
+export type ClockTimeTestEnvironment = {
+  clock: `${string}:${string}`
+  /**
+     * Value:
+     * Range: 0..
+     */
+  time: NBTInt<{
+    min: 0
+  }>
+}
+
 export type FunctionTestEnvironment = {
   setup?: (`${string}:${string}` | MCFunctionClass)
   teardown?: (`${string}:${string}` | MCFunctionClass)
@@ -63,6 +74,8 @@ export type WeatherTestEnvironment = {
 type TestEnvironmentDefinitionDispatcherMap = {
   'all_of': TestEnvironmentDefinitionAllOf
   'minecraft:all_of': TestEnvironmentDefinitionAllOf
+  'clock_time': TestEnvironmentDefinitionClockTime
+  'minecraft:clock_time': TestEnvironmentDefinitionClockTime
   'function': TestEnvironmentDefinitionFunction
   'minecraft:function': TestEnvironmentDefinitionFunction
   'game_rules': TestEnvironmentDefinitionGameRules
@@ -75,11 +88,13 @@ type TestEnvironmentDefinitionDispatcherMap = {
 type TestEnvironmentDefinitionKeys = keyof TestEnvironmentDefinitionDispatcherMap
 type TestEnvironmentDefinitionFallback = (
   | TestEnvironmentDefinitionAllOf
+  | TestEnvironmentDefinitionClockTime
   | TestEnvironmentDefinitionFunction
   | TestEnvironmentDefinitionGameRules
   | TestEnvironmentDefinitionTimeOfDay
   | TestEnvironmentDefinitionWeather)
 type TestEnvironmentDefinitionAllOf = AllOffTestEnvironment
+type TestEnvironmentDefinitionClockTime = ClockTimeTestEnvironment
 type TestEnvironmentDefinitionFunction = FunctionTestEnvironment
 type TestEnvironmentDefinitionGameRules = GameRulesTestEnvironment
 type TestEnvironmentDefinitionTimeOfDay = TimeOfDayTestEnvironment

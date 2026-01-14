@@ -4,7 +4,7 @@ import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTObject, NBTShort } from 'sandstone'
+import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
 
 export type Abilities = {
   /**
@@ -225,31 +225,6 @@ export type Player = (LivingEntity & {
      * Ender pearls thrown by this player.
      */
   ender_pearls?: Array<EnderPearl>
-  /**
-     * Used by the game for wind charges.
-     */
-  ignore_fall_damage_from_current_explosion?: boolean
-  /**
-     * Added mid-air after being hit by an explosion.
-     *
-     * Value:
-     * List length range: 3
-     */
-  current_explosion_impact_pos?: NBTList<(NBTDouble | number), {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
-  /**
-     * Used by fall damage logic. Decreases by 1 every tick.
-     *
-     * Value:
-     * Range: 0..
-     */
-  current_impulse_context_reset_grace_time: NBTInt<{
-    min: 0
-  }>
   CustomName?: never
   CustomNameVisible?: never
 })
