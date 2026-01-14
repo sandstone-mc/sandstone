@@ -1,4 +1,4 @@
-import type { VibrationListener } from 'sandstone/arguments/generated/util/game_event'
+import type { VibrationListener } from 'sandstone/arguments/generated/util/game_event.ts'
 import type { NBTInt } from 'sandstone'
 
 export type SculkSensor = {

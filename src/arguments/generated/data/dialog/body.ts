@@ -1,8 +1,8 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Text } from 'sandstone/arguments/generated/util/text'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTInt } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type DialogBody = ({
   [S in Extract<Registry['minecraft:dialog_body_type'], string>]?: ({

@@ -1,9 +1,9 @@
-import type { SymbolEntity } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Text } from 'sandstone/arguments/generated/util/text'
-import type { CustomData } from 'sandstone/arguments/generated/world/component'
+import type { SymbolEntity } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type { LabelClass, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type AnyEntity = NonNullable<({
   [S in Extract<Registry['minecraft:entity_type'], string>]?: ({

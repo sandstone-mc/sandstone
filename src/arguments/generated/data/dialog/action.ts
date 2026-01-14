@@ -1,9 +1,9 @@
 import type {
   SymbolDialogAction,
   SymbolMcdocCustomDynamicEventAdditions,
-} from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
+} from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type ClickAction = ({
   [S in Extract<Registry['minecraft:dialog_action_type'], string>]?: ({

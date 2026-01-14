@@ -1,5 +1,5 @@
-import type { EffectId } from 'sandstone/arguments/generated/util/effect'
-import type { ItemBase } from 'sandstone/arguments/generated/world/item'
+import type { EffectId } from 'sandstone/arguments/generated/util/effect.ts'
+import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTInt } from 'sandstone'
 
 export type Effect = {

@@ -1,6 +1,6 @@
-import type { HumanoidArm, PlayerModelPart, Profile } from 'sandstone/arguments/generated/util/avatar'
-import type { Text } from 'sandstone/arguments/generated/util/text'
-import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob'
+import type { HumanoidArm, PlayerModelPart, Profile } from 'sandstone/arguments/generated/util/avatar.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
 
 export type Mannequin = (LivingEntity & {
   profile?: Profile

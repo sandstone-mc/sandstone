@@ -1,4 +1,4 @@
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { NBTIntArray, NBTLong } from 'sandstone'
 
 export type LlamaSpit = ProjectileBase

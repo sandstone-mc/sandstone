@@ -1,5 +1,5 @@
-import type { AnyEntity } from 'sandstone/arguments/generated/world/entity'
-import type { ItemBase } from 'sandstone/arguments/generated/world/item'
+import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
+import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTInt } from 'sandstone'
 
 export type AxolotlBucket = (ItemBase & {

@@ -6,13 +6,13 @@ import type {
   ItemPredicate,
   LocationPredicate,
   MobEffectPredicate,
-} from 'sandstone/arguments/generated/data/advancement/predicate'
-import type { LootCondition } from 'sandstone/arguments/generated/data/loot'
-import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
-import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+} from 'sandstone/arguments/generated/data/advancement/predicate.ts'
+import type { LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
+import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
+import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AllayDropItemOnBlock = (TriggerBase & {
   location?: Array<LootCondition>

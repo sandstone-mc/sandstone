@@ -1,4 +1,4 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTIntArray, NBTList } from 'sandstone'
 
 export type HumanoidArm = ('left' | 'right')

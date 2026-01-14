@@ -1,8 +1,8 @@
-import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value'
-import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
+import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, Score } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BinomialIntGenerator = {
   /**

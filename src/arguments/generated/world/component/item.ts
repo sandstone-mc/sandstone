@@ -1,25 +1,25 @@
-import type { BlockPredicate, ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate'
-import type { DamageType } from 'sandstone/arguments/generated/data/damage_type'
-import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim'
-import type { SoundEventRef } from 'sandstone/arguments/generated/data/util'
-import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument'
+import type { BlockPredicate, ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
+import type { DamageType } from 'sandstone/arguments/generated/data/damage_type.ts'
+import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim.ts'
+import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
+import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument.ts'
 import type {
   SymbolMcdocBlockItemStates,
   SymbolMcdocBlockStateKeys,
-} from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute'
-import type { Profile } from 'sandstone/arguments/generated/util/avatar'
-import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color'
-import type { MobEffectInstance } from 'sandstone/arguments/generated/util/effect'
-import type { Filterable, GlobalPos } from 'sandstone/arguments/generated/util'
-import type { EquipmentSlot, EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot'
-import type { Text } from 'sandstone/arguments/generated/util/text'
-import type { BannerPatternLayer } from 'sandstone/arguments/generated/world/block/banner'
-import type { BlockEntityData } from 'sandstone/arguments/generated/world/block'
-import type { Sherd } from 'sandstone/arguments/generated/world/block/decorated_pot'
-import type { ContainerLoot, ContainerSlot, Occupant } from 'sandstone/arguments/generated/world/component/block'
-import type { CustomData } from 'sandstone/arguments/generated/world/component'
+} from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.ts'
+import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
+import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { MobEffectInstance } from 'sandstone/arguments/generated/util/effect.ts'
+import type { Filterable, GlobalPos } from 'sandstone/arguments/generated/util.ts'
+import type { EquipmentSlot, EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { BannerPatternLayer } from 'sandstone/arguments/generated/world/block/banner.ts'
+import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.ts'
+import type { Sherd } from 'sandstone/arguments/generated/world/block/decorated_pot.ts'
+import type { ContainerLoot, ContainerSlot, Occupant } from 'sandstone/arguments/generated/world/component/block.ts'
+import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type {
   AxolotlVariant,
   FoxType,
@@ -30,11 +30,11 @@ import type {
   RabbitVariant,
   SalmonType,
   TropicalFishPattern,
-} from 'sandstone/arguments/generated/world/component/entity'
-import type { AnyEntity } from 'sandstone/arguments/generated/world/entity'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+} from 'sandstone/arguments/generated/world/component/entity.ts'
+import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTByte, NBTClass, NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AdventureModePredicate = (Array<BlockPredicate> | BlockPredicate)
 

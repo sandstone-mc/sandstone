@@ -1,5 +1,5 @@
-import type { FoxType } from 'sandstone/arguments/generated/world/component/entity'
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
+import type { FoxType } from 'sandstone/arguments/generated/world/component/entity.ts'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
 import type { NBTIntArray, NBTLong } from 'sandstone'
 
 export type Fox = (Breedable & {

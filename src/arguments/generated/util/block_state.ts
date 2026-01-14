@@ -1,6 +1,6 @@
-import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type BlockState = ({
   [S in Extract<Registry['minecraft:block'], string>]?: {

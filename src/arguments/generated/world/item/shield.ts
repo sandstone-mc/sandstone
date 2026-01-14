@@ -1,6 +1,6 @@
-import type { DyeColorInt } from 'sandstone/arguments/generated/util/color'
-import type { BannerPatternLayer } from 'sandstone/arguments/generated/world/block/banner'
-import type { ItemBase } from 'sandstone/arguments/generated/world/item'
+import type { DyeColorInt } from 'sandstone/arguments/generated/util/color.ts'
+import type { BannerPatternLayer } from 'sandstone/arguments/generated/world/block/banner.ts'
+import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 
 export type Shield = (ItemBase & {
   /**

@@ -1,10 +1,10 @@
-import type { SymbolReputationPartValue } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
-import type { ItemCost, ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { SymbolReputationPartValue } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.ts'
+import type { ItemCost, ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTByte, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type Offers = {
   /**

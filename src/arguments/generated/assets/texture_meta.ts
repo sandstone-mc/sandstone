@@ -1,5 +1,5 @@
 import type { NBTFloat, NBTInt, NBTIntArray } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type GuiSpriteScaling = ({
   [S in Extract<GuiSpriteScalingType, string>]?: ({

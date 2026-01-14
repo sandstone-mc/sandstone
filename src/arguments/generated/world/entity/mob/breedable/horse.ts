@@ -1,5 +1,5 @@
-import type { SlottedItem } from 'sandstone/arguments/generated/util/slot'
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
+import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
 import type { NBTByte, NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
 
 export type Camel = (HorseBase & {

@@ -1,9 +1,9 @@
-import type { SymbolTrigger } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Text } from 'sandstone/arguments/generated/util/text'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { SymbolTrigger } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { AdvancementClass, MCFunctionClass, NBTClass, NBTInt, NBTList } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type Advancement = {
   /**

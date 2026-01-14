@@ -1,9 +1,9 @@
 import type {
   SymbolEnvironmentAttributeArgbColorModifier,
   SymbolEnvironmentAttributeColorModifier,
-} from 'sandstone/arguments/generated/dispatcher'
+} from 'sandstone/arguments/generated/dispatcher.ts'
 import type { NBTFloat } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type BlendToGray = {
   /**

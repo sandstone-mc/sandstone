@@ -1,9 +1,9 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
-import type { SlottedItem } from 'sandstone/arguments/generated/util/slot'
-import type { BaseCommandBlock } from 'sandstone/arguments/generated/world/block/command_block'
-import type { SpawnerEntry, SpawnPotential } from 'sandstone/arguments/generated/world/block/spawner'
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
+import type { BaseCommandBlock } from 'sandstone/arguments/generated/world/block/command_block.ts'
+import type { SpawnerEntry, SpawnPotential } from 'sandstone/arguments/generated/world/block/spawner.ts'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, NBTShort } from 'sandstone'
 
 export type ChestMinecart = (Minecart & ContainerMinecart & {

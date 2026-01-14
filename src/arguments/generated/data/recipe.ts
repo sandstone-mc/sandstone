@@ -1,8 +1,8 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item.ts'
 import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
 

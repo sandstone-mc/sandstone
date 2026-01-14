@@ -3,10 +3,10 @@ import type {
   HeightmapType,
   HeightProvider,
   IntProvider,
-} from 'sandstone/arguments/generated/data/worldgen'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+} from 'sandstone/arguments/generated/data/worldgen.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type CarvingMaskConfig = {
   /**

@@ -1,4 +1,4 @@
-import type { AgeableMob, MobBase } from 'sandstone/arguments/generated/world/entity/mob'
+import type { AgeableMob, MobBase } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { NBTInt, NBTIntArray } from 'sandstone'
 
 export type Breedable = (MobBase & AgeableMob & {

@@ -1,7 +1,7 @@
-import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { MCFunctionClass, NBTInt } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AllOffTestEnvironment = {
   definitions: Array<TestEnvironment>

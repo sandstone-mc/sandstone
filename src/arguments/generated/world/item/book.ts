@@ -1,6 +1,6 @@
-import type { Filterable } from 'sandstone/arguments/generated/util'
-import type { BookGeneration } from 'sandstone/arguments/generated/world/component/item'
-import type { ItemBase } from 'sandstone/arguments/generated/world/item'
+import type { Filterable } from 'sandstone/arguments/generated/util.ts'
+import type { BookGeneration } from 'sandstone/arguments/generated/world/component/item.ts'
+import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 
 export type WritableBook = (ItemBase & {
   pages?: Array<string>

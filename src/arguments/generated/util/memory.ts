@@ -1,7 +1,7 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { GlobalPos } from 'sandstone/arguments/generated/util'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { GlobalPos } from 'sandstone/arguments/generated/util.ts'
 import type { NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AdmiringDisable = (ExpirableValue & {
   /**

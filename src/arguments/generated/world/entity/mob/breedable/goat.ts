@@ -1,4 +1,4 @@
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
 
 export type Goat = (Breedable & {
   /**

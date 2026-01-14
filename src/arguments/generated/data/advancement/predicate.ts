@@ -1,16 +1,16 @@
-import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
+import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type {
   SymbolBlock,
   SymbolEntity,
   SymbolMcdocBlockStates,
   SymbolStatisticType,
-} from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot'
+} from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot.ts'
 import type {
   DataComponentExactPredicate,
   DataComponentPredicate,
-} from 'sandstone/arguments/generated/world/component'
+} from 'sandstone/arguments/generated/world/component.ts'
 import type {
   AxolotlVariant,
   FoxType,
@@ -20,11 +20,11 @@ import type {
   ParrotVariant,
   RabbitVariant,
   TropicalFishPattern,
-} from 'sandstone/arguments/generated/world/component/entity'
-import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat'
+} from 'sandstone/arguments/generated/world/component/entity.ts'
+import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat.ts'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { LiteralUnion, NBTClass, NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AxolotlPredicate = {
   /**

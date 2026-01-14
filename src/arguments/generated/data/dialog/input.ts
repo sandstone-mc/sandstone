@@ -1,8 +1,8 @@
-import type { SymbolMcdocCustomDynamicEventKeys } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { SymbolMcdocCustomDynamicEventKeys } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BooleanInput = {
   /**

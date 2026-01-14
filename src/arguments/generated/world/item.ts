@@ -1,13 +1,13 @@
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util'
-import type { SymbolMcdocBlockItemStates } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { LegacyOperation } from 'sandstone/arguments/generated/util/attribute'
-import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot'
-import type { BlockEntityData } from 'sandstone/arguments/generated/world/block'
-import type { DataComponentExactPredicate, DataComponentPatch } from 'sandstone/arguments/generated/world/component'
-import type { Trim } from 'sandstone/arguments/generated/world/component/item'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { SymbolMcdocBlockItemStates } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { LegacyOperation } from 'sandstone/arguments/generated/util/attribute.ts'
+import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot.ts'
+import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.ts'
+import type { DataComponentExactPredicate, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
+import type { Trim } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { NBTDouble, NBTInt, NBTIntArray, NBTShort } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AttributeModifier = {
   AttributeName?: Registry['minecraft:attribute']

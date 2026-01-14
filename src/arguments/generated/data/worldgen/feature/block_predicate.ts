@@ -1,8 +1,8 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
-import type { Direction } from 'sandstone/arguments/generated/util/direction'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BlockPredicate = ({
   [S in Extract<Registry['minecraft:block_predicate_type'], string>]?: ({

@@ -1,9 +1,9 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
-import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color'
-import type { SingleItem } from 'sandstone/arguments/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color.ts'
+import type { SingleItem } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BlockParticle = {
   block_state: (Registry['minecraft:block'] | BlockState)

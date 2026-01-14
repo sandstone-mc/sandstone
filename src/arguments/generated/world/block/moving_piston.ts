@@ -1,5 +1,5 @@
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
-import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { NBTFloat } from 'sandstone'
 
 export type Facing = (0 | 1 | 2 | 3 | 4 | 5)

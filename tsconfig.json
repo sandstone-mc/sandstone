@@ -20,6 +20,7 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "src",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": true
   }
 }

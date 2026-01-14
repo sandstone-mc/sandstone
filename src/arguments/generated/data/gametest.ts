@@ -1,7 +1,7 @@
-import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTInt } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BlockBasedTestInstance = TestData
 

@@ -1,9 +1,9 @@
-import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement'
-import type { ProcessorListRef } from 'sandstone/arguments/generated/data/worldgen/processor_list'
-import type { LiquidSettings } from 'sandstone/arguments/generated/data/worldgen/structure'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
+import type { ProcessorListRef } from 'sandstone/arguments/generated/data/worldgen/processor_list.ts'
+import type { LiquidSettings } from 'sandstone/arguments/generated/data/worldgen/structure.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTInt } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type Element = ({
   [S in Extract<Registry['minecraft:worldgen/structure_pool_element'], string>]?: ({

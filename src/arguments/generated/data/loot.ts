@@ -1,9 +1,9 @@
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util'
-import type { SymbolLootCondition, SymbolLootFunction } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { SlotSource } from 'sandstone/arguments/generated/util/slot'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { SymbolLootCondition, SymbolLootFunction } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { SlotSource } from 'sandstone/arguments/generated/util/slot.ts'
 import type { NBTInt } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BlockEntityTarget = 'block_entity'
 

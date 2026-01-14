@@ -1,8 +1,8 @@
-import type { SymbolUniformValue } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { RGBA } from 'sandstone/arguments/generated/util/color'
+import type { SymbolUniformValue } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
 import type { NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AuxTarget = {
   name: string

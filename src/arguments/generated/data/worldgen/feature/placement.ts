@@ -3,12 +3,12 @@ import type {
   HeightmapType,
   HeightProvider,
   IntProvider,
-} from 'sandstone/arguments/generated/data/worldgen'
-import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate'
-import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+} from 'sandstone/arguments/generated/data/worldgen.ts'
+import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.ts'
+import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BlockPredicateFilter = {
   predicate: BlockPredicate

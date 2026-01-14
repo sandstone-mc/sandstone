@@ -1,7 +1,7 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
-import type { ProjectileBase } from 'sandstone/arguments/generated/world/entity/projectile'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { ProjectileBase } from 'sandstone/arguments/generated/world/entity/projectile.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTByte, NBTDouble, NBTInt, NBTShort } from 'sandstone'
 
 export type Arrow = ArrowBase

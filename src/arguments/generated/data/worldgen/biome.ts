@@ -1,9 +1,9 @@
-import type { SoundEventRef } from 'sandstone/arguments/generated/data/util'
-import type { PositionalEnvironmentAttributeMap } from 'sandstone/arguments/generated/data/worldgen/attribute'
-import type { CarverRef } from 'sandstone/arguments/generated/data/worldgen/carver'
-import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { StringRGB } from 'sandstone/arguments/generated/util/color'
+import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
+import type { PositionalEnvironmentAttributeMap } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
+import type { CarverRef } from 'sandstone/arguments/generated/data/worldgen/carver.ts'
+import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { StringRGB } from 'sandstone/arguments/generated/util/color.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type Biome = {

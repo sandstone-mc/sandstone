@@ -1,5 +1,5 @@
-import type { DyeColorByte } from 'sandstone/arguments/generated/util/color'
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
+import type { DyeColorByte } from 'sandstone/arguments/generated/util/color.ts'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
 
 export type Sheep = (Breedable & {
   /**

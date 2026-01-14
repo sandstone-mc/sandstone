@@ -1,9 +1,9 @@
-import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider'
-import type { IntProvider, UniformIntProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Direction } from 'sandstone/arguments/generated/util/direction'
+import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
+import type { IntProvider, UniformIntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type AboveRootPlacement = {
   above_root_provider: BlockStateProvider

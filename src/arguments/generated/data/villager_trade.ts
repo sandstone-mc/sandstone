@@ -1,8 +1,8 @@
-import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier'
-import type { Predicate } from 'sandstone/arguments/generated/data/predicate'
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { ItemStack, TradeCost } from 'sandstone/arguments/generated/world/item'
+import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
+import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { ItemStack, TradeCost } from 'sandstone/arguments/generated/world/item.ts'
 import type { TagClass } from 'sandstone'
 
 export type VillagerTrade = {

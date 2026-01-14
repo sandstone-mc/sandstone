@@ -1,6 +1,6 @@
-import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
-import type { AnyEntity } from 'sandstone/arguments/generated/world/entity'
+import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { NBTDouble, NBTInt, NBTList } from 'sandstone'
 
 export type BlockPalette = ({

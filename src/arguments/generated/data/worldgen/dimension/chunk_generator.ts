@@ -1,8 +1,8 @@
-import type { BiomeSource } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source'
-import type { NoiseGeneratorSettingsRef } from 'sandstone/arguments/generated/data/worldgen/noise_settings'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { BiomeSource } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
+import type { NoiseGeneratorSettingsRef } from 'sandstone/arguments/generated/data/worldgen/noise_settings.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTInt, TagClass } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type ChunkGenerator = ({
   [S in Extract<Registry['minecraft:worldgen/chunk_generator'], string>]?: ({

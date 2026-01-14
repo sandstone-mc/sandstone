@@ -1,7 +1,7 @@
-import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BiomeCheck = {
   /**

@@ -1,4 +1,4 @@
-import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 
 export type TestBlock = (BlockEntity & {
   /**

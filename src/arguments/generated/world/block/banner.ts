@@ -1,7 +1,7 @@
-import type { BannerPattern } from 'sandstone/arguments/generated/data/variants/banner_pattern'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { DyeColor } from 'sandstone/arguments/generated/util/color'
-import type { BlockEntity, Nameable } from 'sandstone/arguments/generated/world/block'
+import type { BannerPattern } from 'sandstone/arguments/generated/data/variants/banner_pattern.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { DyeColor } from 'sandstone/arguments/generated/util/color.ts'
+import type { BlockEntity, Nameable } from 'sandstone/arguments/generated/world/block.ts'
 
 export type Banner = (BlockEntity & Nameable & {
   patterns?: Array<BannerPatternLayer>

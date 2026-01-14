@@ -1,10 +1,10 @@
-import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate'
-import type { SymbolBlockEntity } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Text } from 'sandstone/arguments/generated/util/text'
-import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component'
+import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
+import type { SymbolBlockEntity } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { NBTInt } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BlockEntity = {
   id?: Registry['minecraft:block_entity_type']

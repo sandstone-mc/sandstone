@@ -1,5 +1,5 @@
-import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTLong } from 'sandstone'
 
 export type Jukebox = (BlockEntity & {

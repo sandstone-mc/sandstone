@@ -1,10 +1,10 @@
-import type { ClickAction } from 'sandstone/arguments/generated/data/dialog/action'
-import type { DialogBody } from 'sandstone/arguments/generated/data/dialog/body'
-import type { InputControl } from 'sandstone/arguments/generated/data/dialog/input'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { ClickAction } from 'sandstone/arguments/generated/data/dialog/action.ts'
+import type { DialogBody } from 'sandstone/arguments/generated/data/dialog/body.ts'
+import type { InputControl } from 'sandstone/arguments/generated/data/dialog/input.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type AfterAction = ('close' | 'none' | 'wait_for_response')
 

@@ -1,5 +1,5 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/entity'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/entity.ts'
 
 export type Facing = (0 | 1 | 2 | 3)
 

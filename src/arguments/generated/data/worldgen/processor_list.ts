@@ -1,9 +1,9 @@
-import type { HeightmapType, IntProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
+import type { HeightmapType, IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
+import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AppendLoot = {
   loot_table: Registry['minecraft:loot_table']

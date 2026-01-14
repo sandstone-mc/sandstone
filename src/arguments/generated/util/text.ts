@@ -1,12 +1,12 @@
-import type { Dialog } from 'sandstone/arguments/generated/data/dialog'
-import type { SymbolMcdocCustomEvent } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Profile } from 'sandstone/arguments/generated/util/avatar'
-import type { RGBA } from 'sandstone/arguments/generated/util/color'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { Dialog } from 'sandstone/arguments/generated/data/dialog.ts'
+import type { SymbolMcdocCustomEvent } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
+import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, Score } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type ChangePage = {
   /**

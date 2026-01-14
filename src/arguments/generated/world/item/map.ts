@@ -1,4 +1,4 @@
-import type { Display, ItemBase } from 'sandstone/arguments/generated/world/item'
+import type { Display, ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTDouble, NBTFloat, NBTInt } from 'sandstone'
 
 export type Decoration = {

@@ -3,12 +3,12 @@ import type {
   EntityPredicate,
   ItemPredicate,
   LocationPredicate,
-} from 'sandstone/arguments/generated/data/advancement/predicate'
-import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value'
-import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/data/loot'
-import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util'
-import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
+} from 'sandstone/arguments/generated/data/advancement/predicate.ts'
+import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
+import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
+import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTFloat, NBTInt, NBTLong, ObjectiveClass } from 'sandstone'
 
 export type AllOf = {

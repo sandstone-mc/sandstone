@@ -1,6 +1,6 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { WeightedList } from 'sandstone/arguments/generated/util'
-import type { SpawnPotential } from 'sandstone/arguments/generated/world/block/spawner'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { WeightedList } from 'sandstone/arguments/generated/util.ts'
+import type { SpawnPotential } from 'sandstone/arguments/generated/world/block/spawner.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type TrialSpawnerConfig = {

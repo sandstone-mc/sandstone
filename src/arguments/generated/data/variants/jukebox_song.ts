@@ -1,5 +1,5 @@
-import type { SoundEventRef } from 'sandstone/arguments/generated/data/util'
-import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type JukeboxSong = {

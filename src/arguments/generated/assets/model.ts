@@ -1,5 +1,5 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { Direction } from 'sandstone/arguments/generated/util/direction'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
 
 export type Axis = ('x' | 'y' | 'z')

@@ -1,6 +1,6 @@
-import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher'
-import type { Profile } from 'sandstone/arguments/generated/util/avatar'
-import type { BlockEntity } from 'sandstone/arguments/generated/world/block'
+import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
+import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { NBTIntArray } from 'sandstone'
 
 export type Properties = {

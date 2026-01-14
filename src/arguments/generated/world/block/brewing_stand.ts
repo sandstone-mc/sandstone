@@ -1,5 +1,5 @@
-import type { SlottedItem } from 'sandstone/arguments/generated/util/slot'
-import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block'
+import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
+import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block.ts'
 import type { NBTByte, NBTList, NBTShort } from 'sandstone'
 
 export type BrewingStand = (BlockEntity & Nameable & Lockable & {

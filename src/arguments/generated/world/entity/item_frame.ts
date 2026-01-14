@@ -1,5 +1,5 @@
-import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/entity'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/entity.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTByte, NBTFloat } from 'sandstone'
 
 export type Facing = (0 | 1 | 2 | 3 | 4 | 5)

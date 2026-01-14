@@ -1,4 +1,4 @@
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { NBTInt } from 'sandstone'
 
 export type Tadpole = (MobBase & {

@@ -1,7 +1,7 @@
-import type { EnchantmentEffectComponentMap } from 'sandstone/arguments/generated/data/enchantment/effect_component'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot'
-import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { EnchantmentEffectComponentMap } from 'sandstone/arguments/generated/data/enchantment/effect_component.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTInt, TagClass } from 'sandstone'
 
 export type Enchantment = {

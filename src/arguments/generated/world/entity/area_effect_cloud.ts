@@ -1,6 +1,6 @@
-import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher'
-import type { Particle } from 'sandstone/arguments/generated/util/particle'
-import type { EntityBase } from 'sandstone/arguments/generated/world/entity'
+import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
+import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { NBTFloat, NBTInt, NBTIntArray } from 'sandstone'
 
 export type AreaEffectCloud = (EntityBase & {

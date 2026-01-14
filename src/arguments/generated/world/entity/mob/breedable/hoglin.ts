@@ -1,4 +1,4 @@
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
 import type { NBTInt } from 'sandstone'
 
 export type Hoglin = (Breedable & {

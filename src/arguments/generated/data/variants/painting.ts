@@ -1,4 +1,4 @@
-import type { Text } from 'sandstone/arguments/generated/util/text'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTInt } from 'sandstone'
 
 export type PaintingVariant = {

@@ -1,16 +1,16 @@
-import type { ItemDisplayContext, ModelRef } from 'sandstone/arguments/generated/assets/model'
+import type { ItemDisplayContext, ModelRef } from 'sandstone/arguments/generated/assets/model.ts'
 import type {
   SymbolDataComponent,
   SymbolDataComponentPredicate,
   SymbolMcdocBlockStateKeys,
-} from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar'
-import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color'
-import type { Direction } from 'sandstone/arguments/generated/util/direction'
-import type { Keybind } from 'sandstone/arguments/generated/util/text'
+} from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar.ts'
+import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
+import type { Keybind } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
-import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type Banner = {
   /**

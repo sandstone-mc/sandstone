@@ -1,5 +1,5 @@
-import type { ProjectileBase } from 'sandstone/arguments/generated/world/entity/projectile'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { ProjectileBase } from 'sandstone/arguments/generated/world/entity/projectile.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTLong } from 'sandstone'
 
 export type Owner = {

@@ -1,8 +1,8 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { DyeColorByte } from 'sandstone/arguments/generated/util/color'
-import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable'
-import type { NeutralMob } from 'sandstone/arguments/generated/world/entity/mob'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { DyeColorByte } from 'sandstone/arguments/generated/util/color.ts'
+import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
+import type { NeutralMob } from 'sandstone/arguments/generated/world/entity/mob.ts'
+import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTIntArray } from 'sandstone'
 
 export type Cat = (Tamable & {

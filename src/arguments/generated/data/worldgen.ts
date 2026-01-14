@@ -1,7 +1,7 @@
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BottomBiasHeightProvider = (UniformHeightProvider & {
   /**

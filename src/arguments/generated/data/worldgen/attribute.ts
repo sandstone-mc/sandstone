@@ -1,5 +1,5 @@
-import type { AttributeTrackBase } from 'sandstone/arguments/generated/data/timeline'
-import type { MoonPhase, SoundEventRef } from 'sandstone/arguments/generated/data/util'
+import type { AttributeTrackBase } from 'sandstone/arguments/generated/data/timeline.ts'
+import type { MoonPhase, SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type {
   BooleanAttributeModifier,
   BooleanModifierType,
@@ -9,19 +9,19 @@ import type {
   FloatModifierType,
   OverrideModifier,
   TranslucentColorAttributeModifier,
-} from 'sandstone/arguments/generated/data/worldgen/attribute/modifier'
-import type { BiomeMusic, BiomeSoundAdditions, MoodSound } from 'sandstone/arguments/generated/data/worldgen/biome'
+} from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.ts'
+import type { BiomeMusic, BiomeSoundAdditions, MoodSound } from 'sandstone/arguments/generated/data/worldgen/biome.ts'
 import type {
   SymbolEnvironmentAttributeArgbColorModifier,
   SymbolEnvironmentAttributeColorModifier,
   SymbolEnvironmentAttributeFloatModifier,
-} from 'sandstone/arguments/generated/dispatcher'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color'
-import type { Particle } from 'sandstone/arguments/generated/util/particle'
-import type { Text } from 'sandstone/arguments/generated/util/text'
+} from 'sandstone/arguments/generated/dispatcher.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
+import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type AmbientParticle = {
   particle: Particle

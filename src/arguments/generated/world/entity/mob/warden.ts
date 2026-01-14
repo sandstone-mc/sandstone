@@ -1,5 +1,5 @@
-import type { VibrationListener } from 'sandstone/arguments/generated/util/game_event'
-import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
+import type { VibrationListener } from 'sandstone/arguments/generated/util/game_event.ts'
+import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { NBTInt, NBTIntArray } from 'sandstone'
 
 export type AngerManagement = {

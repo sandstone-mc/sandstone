@@ -1,10 +1,10 @@
-import type { NoiseParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source'
-import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
-import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
+import type { NoiseParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
+import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
-import type { RootNBT } from 'sandstone/arguments/nbt'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type BaseNoiseProvider = {
   seed: NBTInt
