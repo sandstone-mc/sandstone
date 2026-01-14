@@ -157,6 +157,8 @@ type ResourceDispatcherMap = {
   'minecraft:wolf_sound_variant': ResourceWolfSoundVariant
   'wolf_variant': ResourceWolfVariant
   'minecraft:wolf_variant': ResourceWolfVariant
+  'world_clock': ResourceWorldClock
+  'minecraft:world_clock': ResourceWorldClock
   'worldgen/biome': ResourceWorldgenBiome
   'minecraft:worldgen/biome': ResourceWorldgenBiome
   'worldgen/configured_carver': ResourceWorldgenConfiguredCarver
@@ -242,6 +244,7 @@ type ResourceFallback = (
   | ResourceWaypointStyle
   | ResourceWolfSoundVariant
   | ResourceWolfVariant
+  | ResourceWorldClock
   | ResourceWorldgenBiome
   | ResourceWorldgenConfiguredCarver
   | ResourceWorldgenConfiguredFeature
@@ -307,6 +310,7 @@ type ResourceVillagerTrade = VillagerTrade
 type ResourceWaypointStyle = WaypointStyle
 type ResourceWolfSoundVariant = WolfSoundVariant
 type ResourceWolfVariant = WolfVariant
+type ResourceWorldClock = Record<string, never>
 type ResourceWorldgenBiome = Biome
 type ResourceWorldgenConfiguredCarver = ConfiguredCarver
 type ResourceWorldgenConfiguredFeature = ConfiguredFeature

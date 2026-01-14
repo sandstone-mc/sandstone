@@ -7,8 +7,8 @@ export type TEST_ENVIRONMENT_DEFINITION_TYPES = (
 
 export const TEST_ENVIRONMENT_DEFINITION_TYPES_SET = new Set([
   'all_of',
+  'clock_time',
   'function',
   'game_rules',
-  'time_of_day',
   'weather',
 ] as const)

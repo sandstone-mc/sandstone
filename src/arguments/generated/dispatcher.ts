@@ -1,8 +1,12 @@
-export { SymbolMcdocBlockItemStates, McdocBlockItemStatesFallbackType } from './_builtin/block_item_states.ts'
-
 export { SymbolMcdocBlockStateKeys, McdocBlockStateKeysFallbackType } from './_builtin/block_state_keys.ts'
 
 export { SymbolMcdocBlockStates, McdocBlockStatesFallbackType } from './_builtin/block_states.ts'
+
+export { SymbolMcdocFluidStates, McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
+
+export { SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'
+
+export { SymbolMcdocBlockItemStates, McdocBlockItemStatesFallbackType } from './_builtin/block_item_states.ts'
 
 export { SymbolMcdocCustomData, McdocCustomDataFallbackType } from './_builtin/custom_data.ts'
 
@@ -17,8 +21,6 @@ export {
 } from './_builtin/custom_dynamic_event_keys.ts'
 
 export { SymbolMcdocCustomEvent, McdocCustomEventFallbackType } from './_builtin/custom_event.ts'
-
-export { SymbolMcdocFluidStates, McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
 
 export { SymbolMcdocMarkerData, McdocMarkerDataFallbackType } from './_builtin/marker_data.ts'
 
@@ -147,5 +149,3 @@ export { SymbolTestInstance } from './data/gametest.ts'
 export { SymbolTrigger } from './data/advancement/trigger.ts'
 
 export { SymbolUniformValue } from './_dispatcher/uniform_value.ts'
-
-export { SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'

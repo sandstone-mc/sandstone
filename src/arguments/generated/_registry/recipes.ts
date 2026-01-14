@@ -816,6 +816,7 @@ export const RECIPES_SET = new Set([
   'muddy_mangrove_roots',
   'mushroom_stew',
   'music_disc_5',
+  'name_tag',
   'nether_brick',
   'nether_brick_fence',
   'nether_brick_slab',

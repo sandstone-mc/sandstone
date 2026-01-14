@@ -122,6 +122,7 @@ export const TAG_ITEMS_SET = new Set([
   'mangrove_logs',
   'map_invisibility_equipment',
   'meat',
+  'metal_nuggets',
   'nautilus_bucket_food',
   'nautilus_food',
   'nautilus_taming_items',

@@ -42,7 +42,6 @@ export const MEMORY_MODULE_TYPES_SET = new Set([
   'hunted_recently',
   'hurt_by',
   'hurt_by_entity',
-  'interactable_doors',
   'interaction_target',
   'is_emerging',
   'is_in_water',

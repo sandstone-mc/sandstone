@@ -1522,6 +1522,7 @@ export const ADVANCEMENTS_SET = new Set([
   'recipes/tools/light_gray_bundle',
   'recipes/tools/lime_bundle',
   'recipes/tools/magenta_bundle',
+  'recipes/tools/name_tag',
   'recipes/tools/netherite_axe_smithing',
   'recipes/tools/netherite_hoe_smithing',
   'recipes/tools/netherite_pickaxe_smithing',

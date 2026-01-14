@@ -6,6 +6,10 @@ export type TAG_FLUIDS = (
   | `minecraft:${SetType<typeof TAG_FLUIDS_SET>}`)
 
 export const TAG_FLUIDS_SET = new Set([
+  'bubble_column_can_occupy',
   'lava',
+  'supports_frogspawn',
+  'supports_lily_pad',
+  'supports_sugar_cane_adjacently',
   'water',
 ] as const)
