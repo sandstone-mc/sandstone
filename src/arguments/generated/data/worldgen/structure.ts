@@ -3,6 +3,7 @@ import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/ar
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type BiomeTemperature = ('cold' | 'warm')
 
@@ -44,7 +45,7 @@ export type Jigsaw<S = undefined> = ({
     ? SymbolJigsawMaxDistanceFromCenter<'%none'> :
     (S extends keyof SymbolJigsawMaxDistanceFromCenter
       ? SymbolJigsawMaxDistanceFromCenter[S]
-      : Record<string, unknown>))
+      : NBTObject))
   use_expansion_hack: boolean
 } & {
   /**
@@ -148,7 +149,7 @@ export type OceanRuin = {
 export type PoolAlias = ({
   [S in Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolWorldgenPoolAliasBinding ? SymbolWorldgenPoolAliasBinding[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolWorldgenPoolAliasBinding ? SymbolWorldgenPoolAliasBinding[S] : RootNBT));
 }[Registry['minecraft:worldgen/pool_alias_binding']])
 
 export type RandomGroupPoolAlias = {
@@ -274,7 +275,7 @@ export type Structure = ({
     spawn_overrides: ({
       [Key in Extract<MobCategory, string>]?: SpawnOverride;
     })
-  } & (S extends keyof SymbolStructureConfig ? SymbolStructureConfig[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolStructureConfig ? SymbolStructureConfig[S] : RootNBT));
 }[Registry['minecraft:worldgen/structure_type']])
 
 export type StructureRef = (Registry['minecraft:worldgen/structure'] | Structure)

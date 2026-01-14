@@ -2,6 +2,7 @@ import type { FloatProvider, HeightProvider, VerticalAnchor } from 'sandstone/ar
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type CanyonConfig = {
   vertical_rotation: FloatProvider<NBTFloat>
@@ -64,7 +65,7 @@ export type ConfiguredCarver = ({
       yScale: FloatProvider<NBTFloat>
       lava_level: VerticalAnchor
       debug_settings?: CarverDebugSettings
-    } & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : Record<string, unknown>))
+    } & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT))
   };
 }[Registry['minecraft:worldgen/carver']])
 type CarverConfigDispatcherMap = {

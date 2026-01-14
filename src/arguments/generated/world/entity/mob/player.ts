@@ -4,7 +4,7 @@ import type { SlottedItem } from 'sandstone/arguments/generated/util/slot'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity'
 import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
-import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
+import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTObject, NBTShort } from 'sandstone'
 
 export type Abilities = {
   /**

@@ -1,4 +1,4 @@
-import type { MultipleEntitiesArgument, Registry } from 'sandstone/arguments'
+import type { MultipleEntitiesArgument, NBTSerializable, Registry } from 'sandstone/arguments'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
@@ -57,7 +57,11 @@ export type SOUND_SOURCES =
   | 'voice'
 
 // When used as `type XX = YY | _ShowAlias`, forces Typescript to show the alias type (XX) and not the real one (YY).
-export class _ShowAlias {}
+export class _ShowAlias implements NBTSerializable {
+  toNBT(): string {
+    throw new Error('You\'re not supposed to use the _ShowAlias class directly')
+  }
+}
 
 export type STRUCTURE_ROTATION = 'none' | 'clockwise_90' | 'counterclockwise_90' | '180'
 

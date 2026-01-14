@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
 
-import type { GAMEMODES, JSONTextComponent, Range, RootNBT } from 'sandstone/arguments'
+import type { GAMEMODES, JSONTextComponent, NBTSerializable, Range, RootNBT } from 'sandstone/arguments'
 import type { PredicateClass, SandstoneCore, TagClass } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
@@ -219,7 +219,7 @@ export class SelectorClass<
   MACRO extends boolean = false,
   IsSingle extends boolean = false,
   IsPlayer extends boolean = false,
-> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass
+> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable
 {
   arguments: SelectorProperties<IsSingle, IsPlayer, MACRO>
 
@@ -339,6 +339,10 @@ export class SelectorClass<
   }
 
   protected toJSON() {
+    return this.toString()
+  }
+
+  toNBT() {
     return this.toString()
   }
 

@@ -1,5 +1,5 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { NBTInt, NBTIntArray, NBTList } from 'sandstone'
+import type { NBTInt, NBTIntArray, NBTList, NBTObject } from 'sandstone'
 
 export type Filterable<T> = ({
   raw: T
@@ -28,7 +28,7 @@ export type GlobalPos = {
   dimension: Registry['minecraft:dimension']
 }
 
-export type InclusiveRange<T> = (T | NBTList<T, {
+export type InclusiveRange<T extends NBTObject> = (T | NBTList<T, {
   leftExclusive: false
   rightExclusive: false
   min: 2
@@ -38,7 +38,7 @@ export type InclusiveRange<T> = (T | NBTList<T, {
   max_inclusive: T
 })
 
-export type NonEmptyWeightedList<T> = NBTList<WeightedEntry<T>, {
+export type NonEmptyWeightedList<T extends NBTObject> = NBTList<WeightedEntry<T>, {
   leftExclusive: false
   min: 1
 }>

@@ -1,5 +1,5 @@
 import type { TimeArgument } from 'sandstone/arguments/basics'
-import type { NBTObject } from 'sandstone/arguments/nbt'
+import type { NBTObject, NBTSerializable } from 'sandstone/arguments/nbt'
 import type { ScheduleType } from 'sandstone/commands'
 import type { FinalCommandOutput } from 'sandstone/commands/helpers'
 import type {
@@ -231,7 +231,7 @@ export type MCFunctionClassArguments = {
 export class _RawMCFunctionClass<
   PARAMS extends readonly MacroArgument[] | undefined,
   ENV extends readonly MacroArgument[] | undefined,
-> extends CallableResourceClass<MCFunctionNode> {
+> extends CallableResourceClass<MCFunctionNode> implements NBTSerializable {
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
   public nested = 0
@@ -458,10 +458,17 @@ export class _RawMCFunctionClass<
 
     this.node.body.splice(start, removeItems === 'auto' ? fullBody.length : removeItems, ...fullBody)
   }
+
+  /**
+   * @internal
+   */
+  toNBT() {
+    return toMinecraftResourceName(this.path)
+  }
 }
 
 export const MCFunctionClass = makeClassCallable(_RawMCFunctionClass)
 export type MCFunctionClass<
   PARAMS extends readonly MacroArgument[] | undefined = undefined,
   ENV extends readonly MacroArgument[] | undefined = undefined,
-> = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>>
+> = MakeInstanceCallable<_RawMCFunctionClass<PARAMS, ENV>> & NBTSerializable

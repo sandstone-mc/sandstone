@@ -325,7 +325,7 @@ export class ExecuteDataArgsCommand<MACRO extends boolean> extends ExecuteComman
  * 'minecraft:diamond_sword[minecraft:enchantments~{sharpness:5}]'
  *
  * // Builder format
- * items('minecraft:diamond_sword').match('minecraft:enchantments', [...])
+ * ItemPredicate('minecraft:diamond_sword').match('minecraft:enchantments', [...])
  * ```
  */
 export type ItemPredicate = string | ItemPredicateClass
@@ -347,13 +347,18 @@ export class ExecuteItemsCommand<MACRO extends boolean> extends ExecuteCommandPa
    *
    * // Check for specific slot
    * execute.if.items.block([0, 64, 0], 'container.0', '#minecraft:logs')
+   *
+   * // Using builder for complex predicates
+   * execute.if.items.block([0, 64, 0], 'container.*',
+   *   ItemPredicate('minecraft:diamond_sword').match('minecraft:enchantments', [...])
+   * )
    * ```
    */
   block = (
     sourcePos: Macroable<Coordinates<MACRO>, MACRO>,
     slots: Macroable<ContainerSlotSelector, MACRO>,
     itemPredicate: Macroable<ItemPredicate, MACRO>,
-  ) => this.nestedExecute(['items', 'block', coordinatesParser(sourcePos), slots, itemPredicate], true)
+  ) => this.nestedExecute(['items', 'block', coordinatesParser(sourcePos), slots, `${itemPredicate}`], true)
 
   /**
    * Test for items in an entity's inventory slots.
@@ -372,15 +377,22 @@ export class ExecuteItemsCommand<MACRO extends boolean> extends ExecuteCommandPa
    * // Check hotbar for tools
    * execute.if.items.entity('@s', 'hotbar.*', '#minecraft:tools')
    *
-   * // Check for enchanted sword
-   * execute.if.items.entity('@p', 'weapon.mainhand', 'minecraft:diamond_sword')
+   * // Check for enchanted sword with builder
+   * execute.if.items.entity('@p', 'weapon.mainhand',
+   *   ItemPredicate('minecraft:diamond_sword').has('minecraft:enchantments')
+   * )
+   *
+   * // Count items using store
+   * execute.store.result(score).if.items.entity('@p', 'inventory.*',
+   *   ItemPredicate('*').match('minecraft:damage', { durability: { max: 10 } })
+   * )
    * ```
    */
   entity = (
     source: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
     slots: Macroable<EntitySlotSelector, MACRO>,
     itemPredicate: Macroable<ItemPredicate, MACRO>,
-  ) => this.nestedExecute(['items', 'entity', targetParser(source), slots, itemPredicate], true)
+  ) => this.nestedExecute(['items', 'entity', targetParser(source), slots, `${itemPredicate}`], true)
 }
 
 export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {

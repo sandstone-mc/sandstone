@@ -8,6 +8,7 @@ import { formatDebugString } from '../utils'
 import { MacroArgument,
 TagClass } from 'sandstone/core';
 import { NBTObject } from 'sandstone/arguments';
+import type { ItemModelBuilder } from 'sandstone/core/resources/resourcepack/itemDefinition';
 
 /** Item type: specific item, tag, or wildcard */
 export type ItemPredicateItem = Registry['minecraft:item'] | `#${string}` | TagClass<'item'> | '*'
@@ -63,7 +64,7 @@ export class ItemPredicateClass {
 
   private readonly itemType: ItemPredicateItem
 
-  private readonly testGroups: OrGroup[] = []
+  protected readonly testGroups: OrGroup[] = []
 
   constructor(pack: SandstonePack, itemType: ItemPredicateItem) {
     this.pack = pack
@@ -155,6 +156,32 @@ export class ItemPredicateClass {
     }
 
     return this
+  }
+
+  /**
+   * Create an item model builder from this predicate.
+   * The builder inherits all predicate tests and adds model-specific methods
+   * for building ItemModel JSON for resource packs.
+   *
+   * @example
+   * ```ts
+   * ItemPredicate('minecraft:diamond_sword')
+   *   .has('minecraft:enchantments')
+   *   .without('minecraft:damage')
+   *   .model()
+   *   .onTrue('custom:enchanted_pristine')
+   *   .onFalse('minecraft:item/diamond_sword')
+   * ```
+   */
+  model(): ItemModelBuilder {
+    // Dynamic import to avoid circular dependency
+    const { ItemModelBuilder } = require('sandstone/core/resources/resourcepack/itemDefinition')
+    const builder = new ItemModelBuilder(this.pack)
+    // Copy test groups to the new builder
+    for (const group of this.testGroups) {
+      builder.testGroups.push([...group])
+    }
+    return builder
   }
 
   private addTest(test: TestEntry): void {

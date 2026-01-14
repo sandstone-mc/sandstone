@@ -2,6 +2,7 @@ import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchant
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, Score } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BinomialIntGenerator = {
   /**
@@ -110,7 +111,7 @@ export type NbtContextTarget = (EntityTarget | BlockEntityTarget)
 export type NbtProvider = (NbtContextTarget | ({
   [S in Extract<Registry['minecraft:loot_nbt_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolNbtProvider ? SymbolNbtProvider[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolNbtProvider ? SymbolNbtProvider[S] : RootNBT));
 }[Registry['minecraft:loot_nbt_provider_type']]))
 
 export type NbtProviderSource = (
@@ -128,7 +129,7 @@ export type NumberProvider = (NBTFloat | ({
     type?: S
   } & (S extends undefined
     ? SymbolNumberProvider<'%none'> :
-    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : Record<string, unknown>)));
+    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)));
 }[Registry['minecraft:loot_number_provider_type']]))
 
 export type RandomIntGenerator = (NBTInt | ({
@@ -143,7 +144,7 @@ export type RandomIntGenerator = (NBTInt | ({
     type?: S
   } & (S extends undefined
     ? SymbolRandomIntGenerator<'%none'> :
-    (S extends keyof SymbolRandomIntGenerator ? SymbolRandomIntGenerator[S] : Record<string, unknown>)));
+    (S extends keyof SymbolRandomIntGenerator ? SymbolRandomIntGenerator[S] : RootNBT)));
 }[RandomIntGeneratorType]))
 
 export type RandomIntGeneratorType = ('uniform' | 'binomial' | 'constant')
@@ -171,7 +172,7 @@ export type ScoreNumberProvider = {
 export type ScoreProvider = (EntityTarget | ({
   [S in Extract<Registry['minecraft:loot_score_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolScoreProvider ? SymbolScoreProvider[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolScoreProvider ? SymbolScoreProvider[S] : RootNBT));
 }[Registry['minecraft:loot_score_provider_type']]))
 
 export type SoundEventRef = (Registry['minecraft:sound_event'] | {

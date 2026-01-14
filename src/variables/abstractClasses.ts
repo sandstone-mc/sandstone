@@ -1,6 +1,7 @@
 import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent'
 import type { ConditionNode } from '../flow'
 import type { SelectorClass } from './Selector'
+import { NBTSerializable } from 'sandstone/arguments'
 
 export class ComponentClass {
   /**
@@ -19,11 +20,17 @@ export class ConditionClass {
   }
 }
 
-export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> {
+export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> implements NBTSerializable {
   /**
    * @internal
    */
   _toSelector(): SelectorClass<boolean, IsSingle, IsPlayer> | string {
+    throw new Error('Not implemented')
+  }
+  /**
+   * @internal
+   */
+  toNBT(): string {
     throw new Error('Not implemented')
   }
 }

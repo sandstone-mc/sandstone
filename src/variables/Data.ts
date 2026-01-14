@@ -1,4 +1,4 @@
-import type { Coordinates, JSONTextComponent, NBTObject, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, JSONTextComponent, NBTObject, NBTSerializable, SingleEntityArgument } from 'sandstone/arguments'
 import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations'
 import { ConditionNode } from 'sandstone/flow'
 import type { SandstonePack } from 'sandstone/pack'
@@ -125,7 +125,7 @@ export class DataClass<TYPE extends DATA_TYPES = any> {
 
 export class DataPointClass<TYPE extends DATA_TYPES = any>
   extends MacroArgument
-  implements ConditionTextComponentClass
+  implements ConditionTextComponentClass, NBTSerializable
 {
   path
 
@@ -281,6 +281,11 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
       nbt: this.path,
       [this.type]: this.currentTarget,
     }) as unknown as JSONTextComponent
+  
+  /**
+   * @internal
+   */
+  toNBT = () => nbtStringifier(this._toChatComponent() as NBTObject)
 }
 
 export class StringDataPointClass<TYPE extends DATA_TYPES = any> extends DataPointClass {

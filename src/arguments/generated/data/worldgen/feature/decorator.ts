@@ -6,6 +6,7 @@ import type {
 } from 'sandstone/arguments/generated/data/worldgen'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type CarvingMaskConfig = {
   /**
@@ -35,7 +36,7 @@ export type ChanceConfig = {
 export type ConfiguredDecorator = ({
   [S in Extract<`${string}:${string}`, string>]?: {
     type: S
-    config: (S extends keyof SymbolDecoratorConfig ? SymbolDecoratorConfig[S] : Record<string, unknown>)
+    config: (S extends keyof SymbolDecoratorConfig ? SymbolDecoratorConfig[S] : NBTObject)
   };
 }[`${string}:${string}`])
 

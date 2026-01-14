@@ -1,6 +1,7 @@
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type ByCostEnchantmentProvider = {
   enchantments: EnchantmentsType
@@ -35,7 +36,7 @@ export type ByCostWithDifficultyEnchantmentProvider = {
 export type EnchantmentProvider = ({
   [S in Extract<Registry['minecraft:enchantment_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolEnchantmentProvider ? SymbolEnchantmentProvider[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolEnchantmentProvider ? SymbolEnchantmentProvider[S] : RootNBT));
 }[Registry['minecraft:enchantment_provider_type']])
 
 /**

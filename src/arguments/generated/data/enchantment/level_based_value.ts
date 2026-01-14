@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTList } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type ClampedLevelValue = {
   value: LevelBasedValue
@@ -22,7 +23,7 @@ export type LevelBasedValue = (NBTFloat | LevelBasedValueMap)
 export type LevelBasedValueMap = ({
   [S in Extract<Registry['minecraft:enchantment_level_based_value_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolLevelBasedValue ? SymbolLevelBasedValue[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolLevelBasedValue ? SymbolLevelBasedValue[S] : RootNBT));
 }[Registry['minecraft:enchantment_level_based_value_type']])
 
 export type LinearLevelValue = {

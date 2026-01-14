@@ -3,6 +3,7 @@ import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color'
 import type { SingleItem } from 'sandstone/arguments/generated/world/item'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BlockParticle = {
   block_state: (Registry['minecraft:block'] | BlockState)
@@ -91,7 +92,7 @@ export type Particle = ({
     type: S
   } & (S extends undefined
     ? SymbolParticle<'%none'> :
-    (S extends keyof SymbolParticle ? SymbolParticle[S] : Record<string, unknown>)));
+    (S extends keyof SymbolParticle ? SymbolParticle[S] : RootNBT)));
 }[Registry['minecraft:particle_type']])
 
 export type SafePositionSource = {

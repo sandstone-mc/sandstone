@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BlockPositionSource = {
   /**
@@ -36,7 +37,7 @@ export type EntityPositionSource = {
 export type PositionSource = ({
   [S in Extract<Registry['minecraft:position_source_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolPositionSource ? SymbolPositionSource[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolPositionSource ? SymbolPositionSource[S] : RootNBT));
 }[Registry['minecraft:position_source_type']])
 
 export type ReceivingEvent = {

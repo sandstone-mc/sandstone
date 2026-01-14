@@ -27,7 +27,7 @@ export class ResolveNBTClass extends DataPointPickClass {
 
     const out = this._resolveNBT(nbt)
 
-    if (Object.keys(out).length !== 0) {
+    if (out !== undefined && Object.keys(out).length !== 0) {
       pack.commands.data.modify
         .storage(this.dataPoint.currentTarget, this.dataPoint.path)
         .merge.value(this._resolveNBT(nbt))

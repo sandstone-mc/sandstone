@@ -34,6 +34,7 @@ import type {
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTByte, NBTClass, NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type AdventureModePredicate = (Array<BlockPredicate> | BlockPredicate)
 
@@ -138,7 +139,7 @@ export type AttributeDisplay = ({
          *  - Override(`override`): Replaces the shown attribute modifier text.
          */
     type: S
-  } & (S extends keyof SymbolAttributeDisplay ? SymbolAttributeDisplay[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolAttributeDisplay ? SymbolAttributeDisplay[S] : RootNBT));
 }[AttributeDisplayType])
 
 export type AttributeDisplayTextOverride = {
@@ -314,7 +315,7 @@ export type Consumable = {
 export type ConsumeEffect = ({
   [S in Extract<Registry['minecraft:consume_effect_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolConsumeEffect ? SymbolConsumeEffect[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolConsumeEffect ? SymbolConsumeEffect[S] : RootNBT));
 }[Registry['minecraft:consume_effect_type']])
 
 export type CustomModelData = {
@@ -371,7 +372,7 @@ export type DeathProtection = {
 export type DebugStickState = ({
   [Key in Extract<Registry['minecraft:block'], string>]?: (Key extends keyof SymbolMcdocBlockStateKeys
     ? SymbolMcdocBlockStateKeys[Key]
-    : Record<string, unknown>);
+    : NBTObject);
 })
 
 export type DyedColor = {

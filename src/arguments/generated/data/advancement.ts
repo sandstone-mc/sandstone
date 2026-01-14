@@ -3,6 +3,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { AdvancementClass, MCFunctionClass, NBTClass, NBTInt, NBTList } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type Advancement = {
   /**
@@ -53,7 +54,7 @@ export type AdvancementCriterion = ({
          * Many triggers can occur multiple times, however, the reward will only be provided multiple times if the advancement is first revoked, which is often done within the function reward.
          */
     trigger: S
-  } & (S extends keyof SymbolTrigger ? SymbolTrigger[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolTrigger ? SymbolTrigger[S] : RootNBT));
 }[Registry['minecraft:trigger_type']])
 
 export type AdvancementDisplay = {

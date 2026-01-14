@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type Clamp = {
   input: DensityFunction
@@ -19,7 +20,7 @@ export type CubicSpline = (NBTFloat | {
 export type DensityFunction = (NoiseRange | ({
   [S in Extract<Registry['minecraft:worldgen/density_function_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolDensityFunction ? SymbolDensityFunction[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolDensityFunction ? SymbolDensityFunction[S] : RootNBT));
 }[Registry['minecraft:worldgen/density_function_type']]))
 
 export type DensityFunctionRef = (Registry['minecraft:worldgen/density_function'] | DensityFunction)

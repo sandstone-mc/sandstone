@@ -1,4 +1,5 @@
 import type { NBTFloat, NBTInt, NBTIntArray } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type GuiSpriteScaling = ({
   [S in Extract<GuiSpriteScalingType, string>]?: ({
@@ -10,7 +11,7 @@ export type GuiSpriteScaling = ({
          *  - NineSlice(`nine_slice`)
          */
     type: S
-  } & (S extends keyof SymbolGuiSpriteScaling ? SymbolGuiSpriteScaling[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolGuiSpriteScaling ? SymbolGuiSpriteScaling[S] : RootNBT));
 }[GuiSpriteScalingType])
 
 export type GuiSpriteScalingType = ('stretch' | 'tile' | 'nine_slice')

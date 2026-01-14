@@ -1,6 +1,7 @@
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BiomeCheck = {
   /**
@@ -23,7 +24,7 @@ export type MoonBrightnessCheck = {
 export type SpawnCondition = ({
   [S in Extract<Registry['minecraft:spawn_condition_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolSpawnCondition ? SymbolSpawnCondition[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolSpawnCondition ? SymbolSpawnCondition[S] : RootNBT));
 }[Registry['minecraft:spawn_condition_type']])
 
 export type SpawnPrioritySelector = {

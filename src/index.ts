@@ -1,4 +1,5 @@
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
+import { SetBlockCommand } from './commands'
 import type {
   // eslint-disable-next-line max-len
   AdvancementClassArguments,
@@ -78,7 +79,6 @@ export const {
   schedule,
   scoreboard,
   seed,
-  setblock,
   setidletimeout,
   setworldspawn,
   spawnpoint,
@@ -102,6 +102,8 @@ export const {
   xp,
   tell,
 } = sandstonePack.commands
+
+export const setblock = sandstonePack.commands.setblock as SetBlockCommand<false>['setblock']
 
 export const {
   // Resources

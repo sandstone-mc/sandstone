@@ -1,6 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
 import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt'
 
 export type BottomBiasHeightProvider = (UniformHeightProvider & {
   /**
@@ -51,7 +52,7 @@ export type DecorationStep = (
 export type FloatProvider<T> = (T | ({
   [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolFloatProvider<T> ? SymbolFloatProvider<T>[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolFloatProvider<T> ? SymbolFloatProvider<T>[S] : RootNBT));
 }[Registry['minecraft:float_provider_type']]))
 
 export type HeightmapType = (
@@ -65,13 +66,13 @@ export type HeightmapType = (
 export type HeightProvider = (({
   [S in Extract<Registry['minecraft:height_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolHeightProvider ? SymbolHeightProvider[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolHeightProvider ? SymbolHeightProvider[S] : RootNBT));
 }[Registry['minecraft:height_provider_type']]) | VerticalAnchor)
 
-export type IntProvider<T> = (T | ({
+export type IntProvider<T extends NBTObject> = (T | ({
   [S in Extract<Registry['minecraft:int_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolIntProvider<T> ? SymbolIntProvider<T>[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolIntProvider<T> ? SymbolIntProvider<T>[S] : RootNBT));
 }[Registry['minecraft:int_provider_type']]))
 
 export type TrapezoidHeightProvider = (UniformHeightProvider & {
@@ -184,7 +185,7 @@ export type SymbolHeightProvider<CASE extends
   | '%none' = 'map'> = CASE extends 'map'
   ? HeightProviderDispatcherMap
   : CASE extends 'keys' ? HeightProviderKeys : CASE extends '%fallback' ? HeightProviderFallback : never
-type IntProviderDispatcherMap<T> = {
+type IntProviderDispatcherMap<T extends NBTObject> = {
   'biased_to_bottom': IntProviderBiasedToBottom<T>
   'minecraft:biased_to_bottom': IntProviderBiasedToBottom<T>
   'clamped': IntProviderClamped<T>
@@ -198,8 +199,8 @@ type IntProviderDispatcherMap<T> = {
   'weighted_list': IntProviderWeightedList<T>
   'minecraft:weighted_list': IntProviderWeightedList<T>
 }
-type IntProviderKeys = keyof IntProviderDispatcherMap<unknown>
-type IntProviderFallback<T> = (
+type IntProviderKeys = keyof IntProviderDispatcherMap<NBTObject>
+type IntProviderFallback<T extends NBTObject> = (
   | IntProviderBiasedToBottom<T>
   | IntProviderClamped<T>
   | IntProviderClampedNormal<T>
@@ -216,11 +217,11 @@ export type IntProviderConstant<T> = ConstantIntProvider<T>
 
 export type IntProviderUniform<T> = UniformIntProvider<T>
 
-export type IntProviderWeightedList<T> = {
+export type IntProviderWeightedList<T extends NBTObject> = {
   distribution: NonEmptyWeightedList<IntProvider<T>>
 }
 
-export type SymbolIntProvider<T, CASE extends
+export type SymbolIntProvider<T extends NBTObject, CASE extends
   | 'map'
   | 'keys'
   | '%fallback'

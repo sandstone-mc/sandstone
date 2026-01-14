@@ -4,6 +4,7 @@ import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/b
 import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob'
 import type { ItemCost, ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTByte, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type Offers = {
   /**
@@ -49,7 +50,7 @@ export type PlayerReputationPart = ({
          *    Decays by 2 every 20 minutes.
          */
     Type?: S
-    Value?: (S extends keyof SymbolReputationPartValue ? SymbolReputationPartValue[S] : Record<string, unknown>)
+    Value?: (S extends keyof SymbolReputationPartValue ? SymbolReputationPartValue[S] : NBTObject)
     /**
          * UUID of the player that caused the gossip-worthy event(s) related to this reputation part.
          *

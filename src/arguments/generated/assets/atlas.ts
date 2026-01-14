@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTDouble } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type Atlas = {
   /**
@@ -72,7 +73,7 @@ export type SpriteSource = ({
          *  - PalettedPermutations(`paletted_permutations`)
          */
     type: S
-  } & (S extends keyof SymbolSpriteSource ? SymbolSpriteSource[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolSpriteSource ? SymbolSpriteSource[S] : RootNBT));
 }[SpriteSourceType])
 
 export type SpriteSourceType = ('single' | 'directory' | 'filter' | 'unstitch' | 'paletted_permutations')

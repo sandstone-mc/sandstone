@@ -4,6 +4,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util'
 import type { NBTFloat, NBTInt } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BaseNoiseProvider = {
   seed: NBTInt
@@ -21,7 +22,7 @@ export type BaseNoiseProvider = {
 export type BlockStateProvider = ({
   [S in Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT));
 }[Registry['minecraft:worldgen/block_state_provider_type']])
 
 export type DualNoiseProvider = (BaseNoiseProvider & {

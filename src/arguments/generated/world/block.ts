@@ -4,6 +4,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component'
 import type { NBTInt } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BlockEntity = {
   id?: Registry['minecraft:block_entity_type']
@@ -21,7 +22,7 @@ export type BlockEntity = {
 export type BlockEntityData = ({
   [S in Extract<Registry['minecraft:block_entity_type'], string>]?: ({
     id: S
-  } & (S extends keyof SymbolBlockEntity ? SymbolBlockEntity[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockEntity ? SymbolBlockEntity[S] : RootNBT));
 }[Registry['minecraft:block_entity_type']])
 
 export type Lockable = {

@@ -2,11 +2,12 @@ import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { NBTInt } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type DialogBody = ({
   [S in Extract<Registry['minecraft:dialog_body_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolDialogBody ? SymbolDialogBody[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolDialogBody ? SymbolDialogBody[S] : RootNBT));
 }[Registry['minecraft:dialog_body_type']])
 
 export type ItemBody = {

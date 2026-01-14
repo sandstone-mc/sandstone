@@ -2,11 +2,12 @@ import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { Direction } from 'sandstone/arguments/generated/util/direction'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BlockPredicate = ({
   [S in Extract<Registry['minecraft:block_predicate_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolBlockPredicate ? SymbolBlockPredicate[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockPredicate ? SymbolBlockPredicate[S] : RootNBT));
 }[Registry['minecraft:block_predicate_type']])
 
 export type CombiningPredicate = {

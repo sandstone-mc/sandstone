@@ -21,6 +21,7 @@ import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/c
 import type { Particle } from 'sandstone/arguments/generated/util/particle'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type AmbientParticle = {
   particle: Particle
@@ -70,7 +71,7 @@ export type ARGBColorAttribute = {
           ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> :
           (S extends keyof SymbolEnvironmentAttributeArgbColorModifier
             ? SymbolEnvironmentAttributeArgbColorModifier[S]
-            : Record<string, unknown>))
+            : NBTObject))
       }>
     });
   }[ColorModifierType])
@@ -166,13 +167,13 @@ export type EnvironmentAttributeMap<K> = ({
       | Key extends keyof SymbolEnvironmentAttribute ?
         ('value' extends keyof SymbolEnvironmentAttribute[Key]
           ? SymbolEnvironmentAttribute[Key]['value']
-          : Record<string, unknown>)
-        : Record<string, unknown>) | (
+          : NBTObject)
+        : NBTObject) | (
       Key extends keyof SymbolEnvironmentAttribute ?
         ('modifier' extends keyof SymbolEnvironmentAttribute[Key]
           ? SymbolEnvironmentAttribute[Key]['modifier']
-          : Record<string, unknown>)
-        : Record<string, unknown>));
+          : NBTObject)
+        : NBTObject));
 })
 
 export type FloatAttribute<T> = {
@@ -204,7 +205,7 @@ export type FloatAttribute<T> = {
           ? SymbolEnvironmentAttributeFloatModifier<T, '%none'> :
           (S extends keyof SymbolEnvironmentAttributeFloatModifier<T>
             ? SymbolEnvironmentAttributeFloatModifier<T>[S]
-            : Record<string, unknown>))
+            : NBTObject))
       }>
     });
   }[FloatModifierType])
@@ -244,7 +245,7 @@ export type RGBColorAttribute = {
           ? SymbolEnvironmentAttributeColorModifier<'%none'> :
           (S extends keyof SymbolEnvironmentAttributeColorModifier
             ? SymbolEnvironmentAttributeColorModifier[S]
-            : Record<string, unknown>))
+            : NBTObject))
       }>
     });
   }[ColorModifierType])

@@ -2,6 +2,7 @@ import type { SymbolUniformValue } from 'sandstone/arguments/generated/dispatche
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { RGBA } from 'sandstone/arguments/generated/util/color'
 import type { NBTInt } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type AuxTarget = {
   name: string
@@ -106,7 +107,7 @@ export type UniformValue = ({
          *  - Matrix4x4(`matrix4x4`)
          */
     type: S
-    value: (S extends keyof SymbolUniformValue ? SymbolUniformValue[S] : Record<string, unknown>)
+    value: (S extends keyof SymbolUniformValue ? SymbolUniformValue[S] : NBTObject)
   });
 }[UniformValueType])
 

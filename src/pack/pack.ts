@@ -27,6 +27,8 @@ import type {
   DamageTypeClassArguments,
   DataPointPickClass,
   FontArguments,
+  ItemModelDefinitionClassArguments,
+  ItemModelDefinitionInput,
   ItemModifierClassArguments,
   LanguageArguments,
   LootTableClassArguments,
@@ -50,6 +52,7 @@ import {
   BlockStateClass,
   DamageTypeClass,
   FontClass,
+  ItemModelDefinitionClass,
   ItemModifierClass,
   isMacroArgument,
   LanguageClass,
@@ -1107,6 +1110,56 @@ export class SandstonePack {
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('model') as ModelClassArguments['onConflict'],
+      ...options,
+    })
+
+  /**
+   * Creates an item definition resource for controlling how items are rendered.
+   *
+   * @param name The resource name (e.g., 'mypack:diamond_sword')
+   * @param definition The item definition - can be:
+   *   - Raw ItemModelDefinition JSON
+   *   - Raw ItemModel JSON (will be wrapped)
+   *   - An ItemModelBuilder instance
+   *   - A callback receiving an ItemModelBuilder
+   * @param options Optional resource options
+   *
+   * @example
+   * ```ts
+   * // Raw JSON
+   * pack.ItemModelDefinition('mypack:custom_item', {
+   *   type: 'model',
+   *   model: 'minecraft:item/diamond_sword'
+   * })
+   *
+   * // Callback with predicate-style builder
+   * pack.ItemModelDefinition('mypack:named_sword', (model) =>
+   *   model
+   *     .has('minecraft:custom_name')
+   *     .onTrue('custom:named_sword')
+   *     .onFalse('minecraft:item/diamond_sword')
+   * )
+   *
+   * // From ItemPredicate via model() method
+   * pack.ItemModelDefinition('mypack:diamond_sword',
+   *   pack.ItemPredicate('minecraft:diamond_sword')
+   *     .has('minecraft:enchantments')
+   *     .model()
+   *     .onTrue('custom:enchanted')
+   *     .onFalse('minecraft:item/diamond_sword')
+   * )
+   * ```
+   */
+  ItemModelDefinition = (
+    name: string,
+    definition: ItemModelDefinitionInput,
+    options?: Partial<Omit<ItemModelDefinitionClassArguments, 'definition'>>,
+  ) =>
+    new ItemModelDefinitionClass(this.core, name, {
+      definition,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('item_definition') as ItemModelDefinitionClassArguments['onConflict'],
       ...options,
     })
 

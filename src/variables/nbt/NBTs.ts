@@ -94,16 +94,16 @@ export class NBTIntArray<Range extends NBTRange = {}> extends NBTTypedArray {
   }
 }
 
-export class NBTList<Type extends any, Range extends NBTRange = {}> extends NBTClass {
-  _values: Type[]
-
-  constructor(values: Type[]) {
-    super()
-    this._values = values
+type NonEmptyList<Type extends NBTObject> = (
+  Type[] 
+  & { 
+    0: Type,
+    
   }
+)
 
-  [util.inspect.custom] = () => `[${this._values.length === 0 ? '' : this._values.join(',')}]`
-}
+// TODO
+export type NBTList<Type extends NBTObject, Range extends NBTRange = {}> = Range['min'] extends 1 ? Range['leftExclusive'] extends false ? (Type[] & { 0: Type }) : Type[] : Type[]
 
 export class NotNBT extends NBTClass {
   nbt

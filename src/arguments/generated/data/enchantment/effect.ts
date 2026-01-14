@@ -7,7 +7,8 @@ import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatch
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute'
 import type { Particle } from 'sandstone/arguments/generated/util/particle'
-import type { MCFunctionClass, NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { MCFunctionClass, NamespacedLiteralUnion, NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt'
 
 export type AddEffectValue = {
   value: LevelBasedValue
@@ -155,11 +156,10 @@ export type DamageItemEffect = {
 }
 
 export type EntityEffect = ({
-  [S in Extract<Registry['minecraft:enchantment_entity_effect_type'], string>]?: ({
+  [S in NamespacedLiteralUnion<keyof SymbolEntityEffect>]?: ({
     type: S
-  } & (S extends keyof SymbolEntityEffect ? SymbolEntityEffect[S] : Record<string, unknown>));
-}[Registry['minecraft:enchantment_entity_effect_type']])
-
+  } & (S extends keyof SymbolEntityEffect ? SymbolEntityEffect[S] : RootNBT));
+}[NamespacedLiteralUnion<keyof SymbolEntityEffect>])
 export type ExplodeEntityEffect = {
   /**
      * Whether the explosion should be attributed to the user of the enchanted tool.
@@ -245,11 +245,11 @@ export type IgniteEntityEffect = {
   duration: LevelBasedValue
 }
 
-export type LocationBasedEffect = ({
+export type LocationBasedEffect = NonNullable<({
   [S in Extract<Registry['minecraft:enchantment_location_based_effect_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolLocationBasedEffect ? SymbolLocationBasedEffect[S] : Record<string, unknown>));
-}[Registry['minecraft:enchantment_location_based_effect_type']])
+  } & (S extends keyof SymbolLocationBasedEffect ? SymbolLocationBasedEffect[S] : RootNBT));
+}[Registry['minecraft:enchantment_location_based_effect_type']])>
 
 export type MultiplyEffectValue = {
   /**
@@ -410,7 +410,7 @@ export type SummonEntityEffect = {
 export type ValueEffect = ({
   [S in Extract<Registry['minecraft:enchantment_value_effect_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolValueEffect ? SymbolValueEffect[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolValueEffect ? SymbolValueEffect[S] : RootNBT));
 }[Registry['minecraft:enchantment_value_effect_type']])
 type EntityEffectDispatcherMap = {
   'all_of': EntityEffectAllOf

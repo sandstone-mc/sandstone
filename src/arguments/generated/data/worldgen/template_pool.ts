@@ -3,11 +3,12 @@ import type { ProcessorListRef } from 'sandstone/arguments/generated/data/worldg
 import type { LiquidSettings } from 'sandstone/arguments/generated/data/worldgen/structure'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type Element = ({
   [S in Extract<Registry['minecraft:worldgen/structure_pool_element'], string>]?: ({
     element_type: S
-  } & (S extends keyof SymbolTemplatePoolElement ? SymbolTemplatePoolElement[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolTemplatePoolElement ? SymbolTemplatePoolElement[S] : RootNBT));
 }[Registry['minecraft:worldgen/structure_pool_element']])
 
 export type ElementBase = {

@@ -5,6 +5,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { LiteralUnion, NBTInt } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type ContentsSlotSource = {
   /**
@@ -85,7 +86,7 @@ export type SlottedItem<T> = (ItemStack & {
 export type TypedSlotSource = ({
   [S in Extract<Registry['minecraft:slot_source_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolSlotSource ? SymbolSlotSource[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolSlotSource ? SymbolSlotSource[S] : RootNBT));
 }[Registry['minecraft:slot_source_type']])
 type SlotSourceDispatcherMap = {
   'contents': SlotSourceContents

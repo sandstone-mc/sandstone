@@ -5,13 +5,15 @@ import type {
   FormattingTags,
   JSONTextComponent,
   MultipleEntitiesArgument,
+  NBTObject,
+  NBTSerializable,
   ObjectiveArgument,
   OPERATORS,
   Range,
 } from 'sandstone/arguments'
 import type { SandstoneCommands } from 'sandstone/commands'
 import type { NotNode } from 'sandstone/flow'
-import type { ConditionClass } from 'sandstone/variables'
+import { nbtStringifier, type ConditionClass } from 'sandstone/variables'
 import * as util from 'util'
 import { MacroArgument } from '../core/Macro'
 import type { SandstonePack } from '../pack'
@@ -59,7 +61,7 @@ export type ScoreDisplay = {
   numberformat?: 'blank' | ['styled', FormattingTags] | ['fixed', JSONTextComponent]
 }
 
-export class Score extends MacroArgument implements ConditionClass, ComponentClass {
+export class Score extends MacroArgument implements ConditionClass, ComponentClass, NBTSerializable {
   commands: SandstoneCommands<false>
 
   constructor(
@@ -84,16 +86,12 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     return `${this.target} ${this.objective}`
   }
 
+  toNBT() {
+    return nbtStringifier(this._toChatComponent() as NBTObject)
+  }
+
   toJSON() {
-    return {
-      type: 'minecraft:score',
-      target: {
-        type: 'minecraft:fixed',
-        name: this.target.toString(),
-      },
-      score: this.objective.toString(),
-      scale: 1,
-    } as const
+    return this._toChatComponent()
   }
 
   /**

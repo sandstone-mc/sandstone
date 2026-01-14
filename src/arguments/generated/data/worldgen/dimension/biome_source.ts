@@ -1,10 +1,11 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BiomeSource = ({
   [S in Extract<Registry['minecraft:worldgen/biome_source'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolBiomeSource ? SymbolBiomeSource[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolBiomeSource ? SymbolBiomeSource[S] : RootNBT));
 }[Registry['minecraft:worldgen/biome_source']])
 
 export type Checkerboard = {
@@ -80,7 +81,7 @@ export type MultiNoise = ({
     preset?: S
   } & (S extends undefined
     ? SymbolMultiNoiseBiomeSource<'%none'> :
-    (S extends keyof SymbolMultiNoiseBiomeSource ? SymbolMultiNoiseBiomeSource[S] : Record<string, unknown>)));
+    (S extends keyof SymbolMultiNoiseBiomeSource ? SymbolMultiNoiseBiomeSource[S] : RootNBT)));
 }[Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list']])
 
 export type MultiNoiseBase = Record<string, never>

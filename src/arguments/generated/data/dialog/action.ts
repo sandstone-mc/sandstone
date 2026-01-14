@@ -3,11 +3,12 @@ import type {
   SymbolMcdocCustomDynamicEventAdditions,
 } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type ClickAction = ({
   [S in Extract<Registry['minecraft:dialog_action_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolDialogAction ? SymbolDialogAction[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolDialogAction ? SymbolDialogAction[S] : RootNBT));
 }[Registry['minecraft:dialog_action_type']])
 
 export type DynamicCustomAction = ({
@@ -22,7 +23,7 @@ export type DynamicCustomAction = ({
          */
     additions?: (S extends keyof SymbolMcdocCustomDynamicEventAdditions
       ? SymbolMcdocCustomDynamicEventAdditions[S]
-      : Record<string, unknown>)
+      : NBTObject)
   };
 }[`${string}:${string}`])
 

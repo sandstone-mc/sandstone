@@ -10,6 +10,7 @@ import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color'
 import type { Direction } from 'sandstone/arguments/generated/util/direction'
 import type { Keybind } from 'sandstone/arguments/generated/util/text'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type Banner = {
   /**
@@ -100,7 +101,7 @@ export type ComponentFlags = ({
          */
     value: (S extends keyof SymbolDataComponentPredicate
       ? SymbolDataComponentPredicate[S]
-      : Record<string, unknown>)
+      : NBTObject)
   };
 }[Registry['minecraft:data_component_predicate_type']])
 
@@ -112,7 +113,7 @@ export type ComponentStrings = ({
          * the entry will be silently ignored.
          */
     component: S
-  } & SelectCases<(S extends keyof SymbolDataComponent ? SymbolDataComponent[S] : Record<string, unknown>)>);
+  } & SelectCases<(S extends keyof SymbolDataComponent ? SymbolDataComponent[S] : RootNBT)>);
 }[Registry['minecraft:data_component_type']])
 
 export type Composite = {
@@ -141,7 +142,7 @@ export type Condition = ({
     property: (S | `minecraft:${S}`)
     on_true: ItemModel
     on_false: ItemModel
-  } & (S extends keyof SymbolConditionalItemProperty ? SymbolConditionalItemProperty[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolConditionalItemProperty ? SymbolConditionalItemProperty[S] : RootNBT));
 }[ConditionalPropertyType])
 
 export type ConditionalPropertyType = (
@@ -423,7 +424,7 @@ export type ItemModel = ({
          *  - Special(`special`)
          */
     type: (S | `minecraft:${S}`)
-  } & (S extends keyof SymbolItemModel ? SymbolItemModel[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolItemModel ? SymbolItemModel[S] : RootNBT));
 }[ItemModeltype])
 
 export type ItemModeltype = (
@@ -552,7 +553,7 @@ export type ModelTint = ({
          *  - Team(`team`)
          */
     type: (S | `minecraft:${S}`)
-  } & (S extends keyof SymbolTintSource ? SymbolTintSource[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolTintSource ? SymbolTintSource[S] : RootNBT));
 }[TintSourceType])
 
 export type NumericPropertyType = (
@@ -607,7 +608,7 @@ export type RangeDispatch = ({
          * Item model to render if no entries were less or equal to the value.
          */
     fallback?: ItemModel
-  } & (S extends keyof SymbolNumericItemProperty ? SymbolNumericItemProperty[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolNumericItemProperty ? SymbolNumericItemProperty[S] : RootNBT));
 }[NumericPropertyType])
 
 export type Select = ({
@@ -631,7 +632,7 @@ export type Select = ({
          * Item model to render if none of the cases matched the value.
          */
     fallback?: ItemModel
-  } & (S extends keyof SymbolSelectItemProperty ? SymbolSelectItemProperty[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolSelectItemProperty ? SymbolSelectItemProperty[S] : RootNBT));
 }[SelectPropertyType])
 
 export type SelectCase<T> = {
@@ -711,7 +712,7 @@ export type Special = {
              *  - Trident(`trident`)
              */
       type: (S | `minecraft:${S}`)
-    } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : Record<string, unknown>));
+    } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : RootNBT));
   }[SpecialModelType])
   /**
      * Base model, providing transformations, particle texture and GUI light.
@@ -739,7 +740,7 @@ export type SpecialModel = ({
          *  - Trident(`trident`)
          */
     type: (S | `minecraft:${S}`)
-  } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : RootNBT));
 }[SpecialModelType])
 
 export type SpecialModelType = (

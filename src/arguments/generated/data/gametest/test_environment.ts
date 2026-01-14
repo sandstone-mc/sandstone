@@ -1,6 +1,7 @@
 import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { MCFunctionClass, NBTInt } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type AllOffTestEnvironment = {
   definitions: Array<TestEnvironment>
@@ -20,7 +21,7 @@ export type GameRulesTestEnvironment = {
   rules: ({
     [Key in Extract<Registry['minecraft:game_rule'], string>]?: (Key extends keyof SymbolGameRule
       ? SymbolGameRule[Key]
-      : Record<string, unknown>);
+      : NBTObject);
   })
 }
 
@@ -34,7 +35,7 @@ export type TestEnvironment = ({
     type: S
   } & (S extends keyof SymbolTestEnvironmentDefinition
     ? SymbolTestEnvironmentDefinition[S]
-    : Record<string, unknown>));
+    : RootNBT));
 }[Registry['minecraft:test_environment_definition_type']])
 
 export type TimeOfDayTestEnvironment = {

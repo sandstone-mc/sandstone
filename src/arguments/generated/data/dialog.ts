@@ -4,6 +4,7 @@ import type { InputControl } from 'sandstone/arguments/generated/data/dialog/inp
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type AfterAction = ('close' | 'none' | 'wait_for_response')
 
@@ -50,7 +51,7 @@ export type ConfirmationDialog = (DialogBase & {
 export type Dialog = ({
   [S in Extract<Registry['minecraft:dialog_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolDialog ? SymbolDialog[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolDialog ? SymbolDialog[S] : RootNBT));
 }[Registry['minecraft:dialog_type']])
 
 export type DialogBase = {

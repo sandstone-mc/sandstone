@@ -2,6 +2,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { ItemStack, SingleItem } from 'sandstone/arguments/generated/world/item'
 import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
 
@@ -124,7 +125,7 @@ export type ItemResult = {
 export type Recipe = ({
   [S in Extract<Registry['minecraft:recipe_serializer'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : RootNBT));
 }[Registry['minecraft:recipe_serializer']])
 
 export type Smelting = {

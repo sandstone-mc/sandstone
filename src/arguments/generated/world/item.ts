@@ -7,6 +7,7 @@ import type { BlockEntityData } from 'sandstone/arguments/generated/world/block'
 import type { DataComponentExactPredicate, DataComponentPatch } from 'sandstone/arguments/generated/world/component'
 import type { Trim } from 'sandstone/arguments/generated/world/component/item'
 import type { NBTDouble, NBTInt, NBTIntArray, NBTShort } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type AttributeModifier = {
   AttributeName?: Registry['minecraft:attribute']
@@ -69,7 +70,7 @@ export type BlockItem<S = undefined> = (ItemBase & {
      */
   BlockStateTag?: (S extends undefined
     ? SymbolMcdocBlockItemStates<'%none'> :
-    (S extends keyof SymbolMcdocBlockItemStates ? SymbolMcdocBlockItemStates[S] : Record<string, unknown>))
+    (S extends keyof SymbolMcdocBlockItemStates ? SymbolMcdocBlockItemStates[S] : NBTObject))
 })
 
 export type Display = {

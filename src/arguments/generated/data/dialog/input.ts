@@ -2,6 +2,7 @@ import type { SymbolMcdocCustomDynamicEventKeys } from 'sandstone/arguments/gene
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BooleanInput = {
   /**
@@ -41,7 +42,7 @@ export type InputControl = ({
          * *item 1*
          */
     key: (`${any}${string}` | SymbolMcdocCustomDynamicEventKeys<'%fallback'>)
-  } & (S extends keyof SymbolInputControl ? SymbolInputControl[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolInputControl ? SymbolInputControl[S] : RootNBT));
 }[Registry['minecraft:input_control_type']])
 
 export type NumberRangeInput = {

@@ -2,7 +2,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 
-import type { JSONTextComponent } from 'sandstone/arguments'
+import type { JSONTextComponent, NBTSerializable } from 'sandstone/arguments'
 import type { ExecuteCommand } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core'
 import type { ConditionTextComponentClass } from './abstractClasses'
@@ -51,7 +51,7 @@ export type UUIDOptions = {
 }
 
 export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
-  implements ConditionTextComponentClass, SelectorPickClass<true, false>
+  implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSerializable
 {
   readonly primarySource: PrimarySource
 
@@ -333,5 +333,17 @@ export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | '
       throw new Error('Cannot create a selector without a UUID or existing selector')
     }
     return selector
+  }
+
+  /**
+   * @internal
+   */
+  toNBT() {
+    const selector = this._toSelector()
+
+    if (typeof selector === 'string') {
+      return selector
+    }
+    return selector.toNBT()
   }
 }

@@ -6,6 +6,7 @@ import type { RGBA } from 'sandstone/arguments/generated/util/color'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item'
 import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, Score } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type ChangePage = {
   /**
@@ -33,7 +34,7 @@ export type ClickEvent = ({
          *  - Custom(`custom`)
          */
     action: S
-  } & (S extends keyof SymbolClickEvent ? SymbolClickEvent[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolClickEvent ? SymbolClickEvent[S] : RootNBT));
 }[ClickEventAction])
 
 export type ClickEventAction = (
@@ -59,7 +60,7 @@ export type CustomAction = ({
          * Has no functionality on vanilla servers.
          */
     id: S
-    payload?: (S extends keyof SymbolMcdocCustomEvent ? SymbolMcdocCustomEvent[S] : Record<string, unknown>)
+    payload?: (S extends keyof SymbolMcdocCustomEvent ? SymbolMcdocCustomEvent[S] : NBTObject)
   };
 }[`${string}:${string}`])
 
@@ -73,7 +74,7 @@ export type HoverEvent = ({
          *  - ShowEntity(`show_entity`)
          */
     action: S
-  } & (S extends keyof SymbolHoverEvent ? SymbolHoverEvent[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolHoverEvent ? SymbolHoverEvent[S] : RootNBT));
 }[HoverEventAction])
 
 export type HoverEventAction = ('show_text' | 'show_item' | 'show_entity')
@@ -216,7 +217,7 @@ export type SuggestCommand = {
  *
  * List length range: 1..
  */
-export type Text = (string | TextObject | NBTList<Text, {
+export type Text = (string | TextObject | NBTList<(string | TextObject), {
   leftExclusive: false
   min: 1
 }>)
@@ -270,13 +271,15 @@ export type TextObject = (({
     min: 1
   }>
   type?: 'translatable'
-} & TextBase) | ({
-  score: {
-    objective: `${any}${string}` | ObjectiveClass
-    name: `${any}${string}` | Score
-  }
-  type?: 'score'
-} & TextBase) | ({
+} & TextBase) | (
+  Score | ({
+    score: {
+      objective: `${any}${string}` | ObjectiveClass
+      name: `${any}${string}`
+    }
+    type?: 'score'
+  } & TextBase)
+) | ({
   selector: MultipleEntitiesArgument
   separator?: Text
   type?: 'selector'

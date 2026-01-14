@@ -24,6 +24,7 @@ import type {
 import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { LiteralUnion, NBTClass, NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type AxolotlPredicate = {
   /**
@@ -44,8 +45,8 @@ export type BlockPredicate<S = undefined> = {
       | Array<Registry['minecraft:block']>)
   state?: (S extends undefined
     ? SymbolMcdocBlockStates<'%none'> :
-    (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : Record<string, unknown>))
-  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : Record<string, unknown>))
+    (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : NBTObject))
+  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : NBTObject))
   /**
      * Match exact data component values on the block entity.
      */
@@ -165,7 +166,7 @@ export type EntityPredicate<S = undefined> = {
       | Array<Registry['minecraft:entity_type']>)
   type_specific?: EntitySubPredicate
   team?: `${any}${string}`
-  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : Record<string, unknown>))
+  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : NBTObject))
   location?: LocationPredicate
   distance?: DistancePredicate
   flags?: EntityFlagsPredicate
@@ -212,7 +213,7 @@ export type EntityPredicate<S = undefined> = {
 export type EntitySubPredicate = ({
   [S in Extract<Registry['minecraft:entity_sub_predicate_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolEntitySubPredicate ? SymbolEntitySubPredicate[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolEntitySubPredicate ? SymbolEntitySubPredicate[S] : RootNBT));
 }[Registry['minecraft:entity_sub_predicate_type']])
 
 export type FishingHookPredicate = {
@@ -471,7 +472,7 @@ export type SpecificType = (
 export type StatisticPredicate = ({
   [S in Extract<Registry['minecraft:stat_type'], string>]?: {
     type: S
-    stat: (S extends keyof SymbolStatisticType ? SymbolStatisticType[S] : Record<string, unknown>)
+    stat: (S extends keyof SymbolStatisticType ? SymbolStatisticType[S] : NBTObject)
     value: MinMaxBounds<NBTInt>
   };
 }[Registry['minecraft:stat_type']])

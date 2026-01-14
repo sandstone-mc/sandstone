@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type ConcentricRingsPlacement = {
   /**
@@ -117,7 +118,7 @@ export type StructurePlacement = ({
       min: 3
       max: 3
     }>
-  } & (S extends keyof SymbolStructurePlacement ? SymbolStructurePlacement[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolStructurePlacement ? SymbolStructurePlacement[S] : RootNBT));
 }[Registry['minecraft:worldgen/structure_placement']])
 
 export type StructureSet = {

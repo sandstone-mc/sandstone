@@ -1,6 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { GlobalPos } from 'sandstone/arguments/generated/util'
 import type { NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type AdmiringDisable = (ExpirableValue & {
   /**
@@ -284,7 +285,7 @@ export type MeetingPoint = (ExpirableValue & {
 export type Memories = ({
   [Key in Extract<Registry['minecraft:memory_module_type'], string>]?: (Key extends keyof SymbolMemoryModule
     ? SymbolMemoryModule[Key]
-    : Record<string, unknown>);
+    : NBTObject);
 })
 
 export type PlayDeadTicks = (ExpirableValue & {

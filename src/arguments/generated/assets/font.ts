@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BitmapProvider = {
   file: string
@@ -37,7 +38,7 @@ export type GlyphProvider = ({
     filter?: ({
       [Key in Extract<FontOption, string>]?: boolean;
     })
-  } & (S extends keyof SymbolGlyphProvider ? SymbolGlyphProvider[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolGlyphProvider ? SymbolGlyphProvider[S] : RootNBT));
 }[GlyphProviderType])
 
 export type GlyphProviderType = ('bitmap' | 'ttf' | 'space' | 'legacy_unicode' | 'unihex' | 'reference')

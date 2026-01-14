@@ -10,6 +10,7 @@ import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { Direction } from 'sandstone/arguments/generated/util/direction'
 import type { FluidState } from 'sandstone/arguments/generated/util/fluid_state'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type BlockColumnConfig = {
   /**
@@ -42,7 +43,7 @@ export type BlockPileConfig = {
 export type BlockPlacer = ({
   [S in Extract<`${string}:${string}`, string>]?: ({
     type: S
-  } & (S extends keyof SymbolBlockPlacer ? SymbolBlockPlacer[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolBlockPlacer ? SymbolBlockPlacer[S] : RootNBT));
 }[`${string}:${string}`])
 
 export type ColumnPlacer = {
@@ -65,7 +66,7 @@ export type ColumnsConfig = {
 export type ConfiguredFeature = ({
   [S in Extract<Registry['minecraft:worldgen/feature'], string>]?: {
     type: S
-    config: (S extends keyof SymbolFeatureConfig ? SymbolFeatureConfig[S] : Record<string, unknown>)
+    config: (S extends keyof SymbolFeatureConfig ? SymbolFeatureConfig[S] : NBTObject)
   };
 }[Registry['minecraft:worldgen/feature']])
 

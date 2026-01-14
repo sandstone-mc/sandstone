@@ -3,13 +3,14 @@ import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type AppendLoot = {
   loot_table: Registry['minecraft:loot_table']
 }
 
 export type AppendStatic<S = undefined> = {
-  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : Record<string, unknown>)
+  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : NBTObject)
 }
 
 export type Axis = ('x' | 'y' | 'z')
@@ -32,7 +33,7 @@ export type BlockAge = {
 export type BlockEntityModifier = ({
   [S in Extract<Registry['minecraft:rule_block_entity_modifier'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : RootNBT));
 }[Registry['minecraft:rule_block_entity_modifier']])
 
 export type BlockIgnore = {
@@ -125,13 +126,13 @@ export type LinearPos = {
 export type PosRuleTest = ({
   [S in Extract<Registry['minecraft:pos_rule_test'], string>]?: ({
     predicate_type: S
-  } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : RootNBT));
 }[Registry['minecraft:pos_rule_test']])
 
 export type Processor = ({
   [S in Extract<Registry['minecraft:worldgen/structure_processor'], string>]?: ({
     processor_type: S
-  } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : RootNBT));
 }[Registry['minecraft:worldgen/structure_processor']])
 
 export type ProcessorList = (Array<Processor> | {
@@ -187,7 +188,7 @@ export type Rule = {
 export type RuleTest = ({
   [S in Extract<Registry['minecraft:rule_test'], string>]?: ({
     predicate_type: S
-  } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : RootNBT));
 }[Registry['minecraft:rule_test']])
 
 export type TagMatch = {

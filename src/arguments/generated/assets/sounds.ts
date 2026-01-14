@@ -1,6 +1,7 @@
 import type { SymbolSoundType } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type Sound = ({
   [S in Extract<SoundType, string>]?: {
@@ -15,7 +16,7 @@ export type Sound = ({
     type?: S
     name: (S extends undefined
       ? SymbolSoundType<'%none'> :
-      (S extends keyof SymbolSoundType ? SymbolSoundType[S] : Record<string, unknown>))
+      (S extends keyof SymbolSoundType ? SymbolSoundType[S] : NBTObject))
     /**
          * Defaults to 1.0.
          *

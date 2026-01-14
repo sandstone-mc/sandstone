@@ -12,6 +12,7 @@ import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type AllayDropItemOnBlock = (TriggerBase & {
   location?: Array<LootCondition>
@@ -98,7 +99,7 @@ export type EnterBlock = ({
     block?: S
     state?: (S extends undefined
       ? SymbolMcdocBlockStates<'%none'> :
-      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : Record<string, unknown>))
+      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : NBTObject))
   });
 }[Registry['minecraft:block']])
 

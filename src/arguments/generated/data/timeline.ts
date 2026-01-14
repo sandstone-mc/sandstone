@@ -1,6 +1,7 @@
 import type { SymbolEnvironmentAttribute } from 'sandstone/arguments/generated/dispatcher'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type AttributeTrackBase = {
   /**
@@ -63,8 +64,8 @@ export type EnvironmentAttributeTrackMap = ({
   [Key in Extract<Registry['minecraft:environment_attribute'], string>]?: (Key extends keyof SymbolEnvironmentAttribute ?
     ('attribute_track' extends keyof SymbolEnvironmentAttribute[Key]
       ? SymbolEnvironmentAttribute[Key]['attribute_track']
-      : Record<string, unknown>)
-    : Record<string, unknown>);
+      : NBTObject)
+    : NBTObject);
 })
 
 export type SimpleEasingType = (

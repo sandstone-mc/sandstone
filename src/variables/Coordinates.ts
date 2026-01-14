@@ -1,7 +1,8 @@
+import { NBTSerializable } from 'sandstone/arguments'
 import { inspect } from 'util'
 
 /** A root class that can be used to defined a N-dimension vector */
-export class VectorClass<T extends readonly unknown[]> {
+export class VectorClass<T extends readonly unknown[]> implements NBTSerializable {
   values: T
 
   constructor(values: T) {
@@ -17,6 +18,10 @@ export class VectorClass<T extends readonly unknown[]> {
   }
 
   toJSON() {
+    return this.toString()
+  }
+
+  toNBT() {
     return this.toString()
   }
 

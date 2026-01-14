@@ -1,4 +1,4 @@
-import type { JSONTextComponent, MultipleEntitiesArgument, OBJECTIVE_CRITERIA } from 'sandstone/arguments'
+import type { JSONTextComponent, MultipleEntitiesArgument, NBTSerializable, OBJECTIVE_CRITERIA } from 'sandstone/arguments'
 import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import { formatDebugString, makeClassCallable } from 'sandstone/utils'
 import * as util from 'util'
@@ -8,7 +8,7 @@ import { targetParser } from './parsers'
 import type { ScoreDisplay } from './Score'
 import { Score } from './Score'
 
-export class _RawObjectiveClass {
+export class _RawObjectiveClass implements NBTSerializable {
   display: JSONTextComponentClass | undefined
 
   _displayRaw: JSONTextComponent | undefined
@@ -54,8 +54,10 @@ export class _RawObjectiveClass {
 
   toJSON = this.toString
 
+  toNBT = this.toString
+
   __call__ = this.ScoreHolder
 }
 
 export const ObjectiveClass = makeClassCallable(_RawObjectiveClass)
-export type ObjectiveClass = MakeInstanceCallable<_RawObjectiveClass>
+export type ObjectiveClass = MakeInstanceCallable<_RawObjectiveClass> & NBTSerializable

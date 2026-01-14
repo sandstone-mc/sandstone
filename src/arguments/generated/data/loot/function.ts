@@ -18,6 +18,7 @@ import type { Text } from 'sandstone/arguments/generated/util/text'
 import type { CustomData, DataComponentPatch } from 'sandstone/arguments/generated/world/component'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item'
 import type { DataPointClass, NBTClass, NBTFloat, NBTInt, NBTLong, TagClass } from 'sandstone'
+import type { RootNBT, NBTObject } from 'sandstone/arguments/nbt'
 
 export type ApplyBonus = ({
   [S in Extract<ApplyBonusFormula, string>]?: ({
@@ -30,7 +31,7 @@ export type ApplyBonus = ({
          *  - BinomialWithBonusCount(`binomial_with_bonus_count`)
          */
     formula: (S | `minecraft:${S}`)
-  } & (S extends keyof SymbolApplyBonusFormula ? SymbolApplyBonusFormula[S] : Record<string, unknown>) & Conditions);
+  } & (S extends keyof SymbolApplyBonusFormula ? SymbolApplyBonusFormula[S] : RootNBT) & Conditions);
 }[ApplyBonusFormula])
 
 export type ApplyBonusFormula = ('ore_drops' | 'uniform_bonus_count' | 'binomial_with_bonus_count')
@@ -236,7 +237,7 @@ export type CopyState = ({
     block: S
     properties: Array<(S extends undefined
       ? SymbolMcdocBlockStateKeys<'%none'> :
-      (S extends keyof SymbolMcdocBlockStateKeys ? SymbolMcdocBlockStateKeys[S] : Record<string, unknown>))>
+      (S extends keyof SymbolMcdocBlockStateKeys ? SymbolMcdocBlockStateKeys[S] : NBTObject))>
   } & Conditions);
 }[Registry['minecraft:block']])
 
@@ -391,7 +392,7 @@ export type ListOperation = ({
          *  - ReplaceSection(`replace_section`)
          */
     mode: S
-  } & (S extends keyof SymbolListOperation ? SymbolListOperation[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolListOperation ? SymbolListOperation[S] : RootNBT));
 }[ListOperationMode])
 
 export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_section')

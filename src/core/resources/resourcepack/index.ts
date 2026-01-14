@@ -1,6 +1,7 @@
 export * from './atlas'
 export * from './blockstate'
 export * from './font'
+export * from './itemDefinition'
 export * from './language'
 export * from './model'
 export * from './sound'

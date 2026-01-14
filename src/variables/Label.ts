@@ -151,4 +151,9 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
    * @internal
    */
   _toSelector = () => this.selector._toSelector()
+
+  /**
+   * @internal
+   */
+  toNBT = () => this.selector._toSelector().toNBT()
 }

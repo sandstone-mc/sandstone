@@ -1,6 +1,7 @@
 import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { NBTInt } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt'
 
 export type BlockBasedTestInstance = TestData
 
@@ -87,7 +88,7 @@ export type TestData = {
 export type TestInstance = ({
   [S in Extract<Registry['minecraft:test_instance_type'], string>]?: ({
     type: S
-  } & (S extends keyof SymbolTestInstance ? SymbolTestInstance[S] : Record<string, unknown>));
+  } & (S extends keyof SymbolTestInstance ? SymbolTestInstance[S] : RootNBT));
 }[Registry['minecraft:test_instance_type']])
 type TestInstanceDispatcherMap = {
   'block_based': TestInstanceBlockBased

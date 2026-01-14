@@ -3,6 +3,7 @@ import type {
   SymbolEnvironmentAttributeColorModifier,
 } from 'sandstone/arguments/generated/dispatcher'
 import type { NBTFloat } from 'sandstone'
+import type { NBTObject } from 'sandstone/arguments/nbt'
 
 export type BlendToGray = {
   /**
@@ -66,7 +67,7 @@ export type ColorAttributeModifier = ({
       ? SymbolEnvironmentAttributeColorModifier<'%none'> :
       (S extends keyof SymbolEnvironmentAttributeColorModifier
         ? SymbolEnvironmentAttributeColorModifier[S]
-        : Record<string, unknown>))
+        : NBTObject))
   };
 }[ColorModifierType])
 
@@ -90,7 +91,7 @@ export type FloatAttributeModifier<T> = ({
       ? SymbolEnvironmentAttributeFloatModifier<T, '%none'> :
       (S extends keyof SymbolEnvironmentAttributeFloatModifier<T>
         ? SymbolEnvironmentAttributeFloatModifier<T>[S]
-        : Record<string, unknown>))
+        : NBTObject))
   };
 }[FloatModifierType])
 
@@ -134,7 +135,7 @@ export type TranslucentColorAttributeModifier = ({
       ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> :
       (S extends keyof SymbolEnvironmentAttributeArgbColorModifier
         ? SymbolEnvironmentAttributeArgbColorModifier[S]
-        : Record<string, unknown>))
+        : NBTObject))
   };
 }[ColorModifierType])
 type EnvironmentAttributeFloatModifierDispatcherMap<T> = {

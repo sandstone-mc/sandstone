@@ -135,7 +135,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
     const _NBT = this.structureNBT as StructureNBT
     const array: any = [[[]]]
 
-    const size = _NBT.size._values
+    const size = _NBT.size
 
     for (let x = 0; x < size[0].value; x++) {
       array.push([])
@@ -154,7 +154,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
         ...add({ nbt: block.nbt }),
       })
 
-      array[block.pos._values[0].value][block.pos._values[1].value][block.pos._values[2].value] = {
+      array[block.pos[0].value][block.pos[1].value][block.pos[2].value] = {
         /* @ts-ignore */
         block: 'palettes' in _NBT
           ? _NBT.palettes.map((palette) => convert(palette[block.state.value]!))
@@ -163,7 +163,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
     }
 
     for (const entity of _NBT.entities) {
-      array[entity.blockPos._values[0].value][entity.blockPos._values[1].value][entity.blockPos._values[2].value] += {
+      array[entity.blockPos[0].value][entity.blockPos[1].value][entity.blockPos[2].value] += {
         entity: [
           {
             id: entity.nbt!.id,
@@ -173,9 +173,9 @@ export class StructureClass extends ResourceClass<StructureNode> {
               return nbt
             })(),
             offset: (() => [
-              diff(extractNumber(entity.pos._values[0]), entity.blockPos._values[0].value),
-              diff(extractNumber(entity.pos._values[1]), entity.blockPos._values[1].value),
-              diff(extractNumber(entity.pos._values[2]), entity.blockPos._values[2].value),
+              diff(extractNumber(entity.pos[0]), entity.blockPos[0].value),
+              diff(extractNumber(entity.pos[1]), entity.blockPos[1].value),
+              diff(extractNumber(entity.pos[2]), entity.blockPos[2].value),
             ])(),
           },
         ],
@@ -396,12 +396,12 @@ function encodeStructure(nbt: StructureNBT) {
   return writeUncompressed(
     comp({
       DataVersion: int(extractNumber(nbt.DataVersion)),
-      size: list(comp(nbt.size._values.map((axis) => int(extractNumber(axis))))),
+      size: list(comp(nbt.size.map((axis) => int(extractNumber(axis))))),
       blocks: list(
         comp(
           nbt.blocks.map((block) => ({
             state: int(extractNumber(block.state)),
-            pos: list(comp(block.pos._values.map((axis) => int(extractNumber(axis))))),
+            pos: list(comp(block.pos.map((axis) => int(extractNumber(axis))))),
             /**
              *  ...add({
              * nbt: fun(block.nbt), // TODO
@@ -413,8 +413,8 @@ function encodeStructure(nbt: StructureNBT) {
       entities: list(
         comp(
           nbt.entities.map((entity) => ({
-            pos: list(comp(entity.pos._values.map((axis) => double(extractNumber(axis))))),
-            blockPos: list(comp(entity.blockPos._values.map((axis) => int(extractNumber(axis))))),
+            pos: list(comp(entity.pos.map((axis) => double(extractNumber(axis))))),
+            blockPos: list(comp(entity.blockPos.map((axis) => int(extractNumber(axis))))),
             // nbt: fun(entity.nbt), // TODO
           })),
         ),
