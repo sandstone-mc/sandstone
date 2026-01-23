@@ -22,53 +22,94 @@ import type {
   // eslint-disable-next-line max-len
   AdvancementClassArguments,
   AtlasClassArguments,
+  BannerPatternClassArguments,
   BlockStateArguments,
   BlockStateJSON,
+  ChatTypeClassArguments,
   DamageTypeClassArguments,
   DataPointPickClass,
+  DialogClassArguments,
+  EnchantmentClassArguments,
+  EnchantmentProviderClassArguments,
+  EquipmentClassArguments,
   FontArguments,
+  InstrumentClassArguments,
   ItemModelDefinitionClassArguments,
   ItemModelDefinitionInput,
   ItemModifierClassArguments,
+  JukeboxSongClassArguments,
   LanguageArguments,
   LootTableClassArguments,
   MacroArgument,
   MCFunctionClassArguments,
   ModelClassArguments,
   Node,
+  ParticleClassArguments,
   PlainTextArguments,
+  PostEffectClassArguments,
   PredicateClassArguments,
   RecipeClassArguments,
+  ShaderClassArguments,
   SoundEventArguments,
   TagClassArguments,
   TagValuesJSON,
+  TestEnvironmentClassArguments,
+  TestInstanceClassArguments,
   TextureArguments,
+  TimelineClassArguments,
+  TradeSetClassArguments,
+  TrialSpawnerClassArguments,
   TrimMaterialClassArguments,
   TrimPatternClassArguments,
+  VariantClassArguments,
+  VariantType,
+  VillagerTradeClassArguments,
+  WaypointStyleClassArguments,
+  WorldClockClassArguments,
 } from 'sandstone/core'
 import {
   AdvancementClass,
   AtlasClass,
+  BannerPatternClass,
   BlockStateClass,
+  ChatTypeClass,
   DamageTypeClass,
+  DialogClass,
+  EnchantmentClass,
+  EnchantmentProviderClass,
+  EquipmentClass,
   FontClass,
+  InstrumentClass,
+  isMacroArgument,
   ItemModelDefinitionClass,
   ItemModifierClass,
-  isMacroArgument,
+  JukeboxSongClass,
   LanguageClass,
   LootTableClass,
   MacroLiteral,
   MCFunctionClass,
   ModelClass,
+  ParticleClass,
   PlainTextClass,
+  PostEffectClass,
   PredicateClass,
   RecipeClass,
   SandstoneCore,
+  ShaderClass,
   SoundEventClass,
   TagClass,
+  TestEnvironmentClass,
+  TestInstanceClass,
   TextureClass,
+  TimelineClass,
+  TradeSetClass,
+  TrialSpawnerClass,
   TrimMaterialClass,
   TrimPatternClass,
+  VariantClass,
+  VillagerTradeClass,
+  WaypointStyleClass,
+  WorldClockClass,
 } from 'sandstone/core'
 import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
@@ -1058,6 +1099,141 @@ export class SandstonePack {
       ...options,
     })
 
+  BannerPattern = (name: string, bannerPattern: NonNullable<SymbolResource['banner_pattern']>, options?: Partial<BannerPatternClassArguments>) =>
+    new BannerPatternClass(this.core, name, {
+      bannerPattern,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('banner_pattern') as BannerPatternClassArguments['onConflict'],
+      ...options,
+    })
+
+  ChatType = (name: string, chatType: NonNullable<SymbolResource['chat_type']>, options?: Partial<ChatTypeClassArguments>) =>
+    new ChatTypeClass(this.core, name, {
+      chatType,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('chat_type') as ChatTypeClassArguments['onConflict'],
+      ...options,
+    })
+
+  Dialog = (name: string, dialog: NonNullable<SymbolResource['dialog']>, options?: Partial<DialogClassArguments>) =>
+    new DialogClass(this.core, name, {
+      dialog,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('dialog') as DialogClassArguments['onConflict'],
+      ...options,
+    })
+
+  Enchantment = (name: string, enchantment: NonNullable<SymbolResource['enchantment']>, options?: Partial<EnchantmentClassArguments>) =>
+    new EnchantmentClass(this.core, name, {
+      enchantment,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('enchantment') as EnchantmentClassArguments['onConflict'],
+      ...options,
+    })
+
+  EnchantmentProvider = (name: string, enchantmentProvider: NonNullable<SymbolResource['enchantment_provider']>, options?: Partial<EnchantmentProviderClassArguments>) =>
+    new EnchantmentProviderClass(this.core, name, {
+      enchantmentProvider,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('enchantment_provider') as EnchantmentProviderClassArguments['onConflict'],
+      ...options,
+    })
+
+  Instrument = (name: string, instrument: NonNullable<SymbolResource['instrument']>, options?: Partial<InstrumentClassArguments>) =>
+    new InstrumentClass(this.core, name, {
+      instrument,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('instrument') as InstrumentClassArguments['onConflict'],
+      ...options,
+    })
+
+  JukeboxSong = (name: string, jukeboxSong: NonNullable<SymbolResource['jukebox_song']>, options?: Partial<JukeboxSongClassArguments>) =>
+    new JukeboxSongClass(this.core, name, {
+      jukeboxSong,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('jukebox_song') as JukeboxSongClassArguments['onConflict'],
+      ...options,
+    })
+
+  TestEnvironment = (name: string, testEnvironment: NonNullable<SymbolResource['test_environment']>, options?: Partial<TestEnvironmentClassArguments>) =>
+    new TestEnvironmentClass(this.core, name, {
+      testEnvironment,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('test_environment') as TestEnvironmentClassArguments['onConflict'],
+      ...options,
+    })
+
+  TestInstance = (name: string, testInstance: NonNullable<SymbolResource['test_instance']>, options?: Partial<TestInstanceClassArguments>) =>
+    new TestInstanceClass(this.core, name, {
+      testInstance,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('test_instance') as TestInstanceClassArguments['onConflict'],
+      ...options,
+    })
+
+  Timeline = (name: string, timeline: NonNullable<SymbolResource['timeline']>, options?: Partial<TimelineClassArguments>) =>
+    new TimelineClass(this.core, name, {
+      timeline,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('timeline') as TimelineClassArguments['onConflict'],
+      ...options,
+    })
+
+  WorldClock = (name: string, worldClock: NonNullable<SymbolResource['world_clock']>, options?: Partial<WorldClockClassArguments>) =>
+    new WorldClockClass(this.core, name, {
+      worldClock,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('world_clock') as WorldClockClassArguments['onConflict'],
+      ...options,
+    })
+
+  TradeSet = (name: string, tradeSet: NonNullable<SymbolResource['trade_set']>, options?: Partial<TradeSetClassArguments>) =>
+    new TradeSetClass(this.core, name, {
+      tradeSet,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('trade_set') as TradeSetClassArguments['onConflict'],
+      ...options,
+    })
+
+  TrialSpawner = (name: string, trialSpawner: NonNullable<SymbolResource['trial_spawner']>, options?: Partial<TrialSpawnerClassArguments>) =>
+    new TrialSpawnerClass(this.core, name, {
+      trialSpawner,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('trial_spawner') as TrialSpawnerClassArguments['onConflict'],
+      ...options,
+    })
+
+  VillagerTrade = (name: string, villagerTrade: NonNullable<SymbolResource['villager_trade']>, options?: Partial<VillagerTradeClassArguments>) =>
+    new VillagerTradeClass(this.core, name, {
+      villagerTrade,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('villager_trade') as VillagerTradeClassArguments['onConflict'],
+      ...options,
+    })
+
+  Variant = <T extends VariantType>(type: T, name: string, variant: NonNullable<SymbolResource[`${T}_variant`]>, options?: Partial<VariantClassArguments<T>>) =>
+    new VariantClass(this.core, type, name, {
+      variant,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults(`${type}_variant`) as VariantClassArguments<T>['onConflict'],
+      ...options,
+    })
+
   Atlas = (name: string, atlas: NonNullable<SymbolResource['atlas']>, options?: Partial<AtlasClassArguments>) =>
     new AtlasClass(this.core, name, {
       atlas,
@@ -1201,6 +1377,51 @@ export class SandstonePack {
       ...options,
     })
   }
+
+  Equipment = (name: string, equipment: NonNullable<SymbolResource['equipment']>, options?: Partial<EquipmentClassArguments>) =>
+    new EquipmentClass(this.core, name, {
+      equipment,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('equipment') as EquipmentClassArguments['onConflict'],
+      ...options,
+    })
+
+  Particle = (name: string, particle: NonNullable<SymbolResource['particle']>, options?: Partial<ParticleClassArguments>) =>
+    new ParticleClass(this.core, name, {
+      particle,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('particle') as ParticleClassArguments['onConflict'],
+      ...options,
+    })
+
+  PostEffect = (name: string, postEffect: NonNullable<SymbolResource['post_effect']>, options?: Partial<PostEffectClassArguments>) =>
+    new PostEffectClass(this.core, name, {
+      postEffect,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('post_effect') as PostEffectClassArguments['onConflict'],
+      ...options,
+    })
+
+  Shader = (name: string, shader: NonNullable<SymbolResource['shader']>, options?: Partial<ShaderClassArguments>) =>
+    new ShaderClass(this.core, name, {
+      shader,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('shader') as ShaderClassArguments['onConflict'],
+      ...options,
+    })
+
+  WaypointStyle = (name: string, waypointStyle: NonNullable<SymbolResource['waypoint_style']>, options?: Partial<WaypointStyleClassArguments>) =>
+    new WaypointStyleClass(this.core, name, {
+      waypointStyle,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('waypoint_style') as WaypointStyleClassArguments['onConflict'],
+      ...options,
+    })
 
   save = async (cliOptions: {
     fileHandler: (relativePath: string, content: any) => Promise<void>

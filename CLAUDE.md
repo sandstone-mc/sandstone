@@ -4,20 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 
-- **Build**: `bun run build` - Builds the project using tsup and runs setup
-- **Watch**: `bun run watch` - Builds with watch mode
 - **Type checking**: `bun run build-types` - Generates TypeScript declaration files
-- **Setup**: `bun run setup` - Builds types and sets up package (required after build)
-- **Lint**: `bun run lint` or `biome lint src` - Lints TypeScript files using Biome
-- **Format**: `bun run format` or `biome format --write src` - Formats code using Biome
-- **Check**: `bun run check` or `biome check --write src` - Runs Biome check with auto-fix
+
+Note: ignore the rest for now
 
 ## Todo Directory
 
 The `todo/` directory contains planning and tracking documents for ongoing development:
 
-- `new_resources.md` - List of Minecraft resources that need to be implemented in Sandstone
-- `new_resources_plan.md` - Detailed implementation plans for each pending resource, including code patterns and SandstonePack factory methods
 - `oxlint_migration.md` - Plan for migrating from Biome to OxLint, including mcdoc-ts-generator updates
 
 **Note**: Update this section whenever files are added to or removed from the `todo/` directory.
