@@ -4,8 +4,6 @@ export { SymbolMcdocBlockStates, McdocBlockStatesFallbackType } from './_builtin
 
 export { SymbolMcdocFluidStates, McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
 
-export { SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'
-
 export { SymbolMcdocBlockItemStates, McdocBlockItemStatesFallbackType } from './_builtin/block_item_states.ts'
 
 export { SymbolMcdocCustomData, McdocCustomDataFallbackType } from './_builtin/custom_data.ts'
@@ -152,3 +150,5 @@ export { SymbolTestInstance } from './data/gametest.ts'
 export { SymbolTrigger } from './data/advancement/trigger.ts'
 
 export { SymbolUniformValue } from './_dispatcher/uniform_value.ts'
+
+export { SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'

@@ -93,7 +93,7 @@ export type CraftingTransmute = {
   /**
    * The result item that will be merged with the input ingredient.
    */
-  result: (Registry['minecraft:item'] | ItemStack)
+  result: (ItemStack | Registry['minecraft:item'])
 }
 
 /**

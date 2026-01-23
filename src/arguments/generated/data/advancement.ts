@@ -58,7 +58,7 @@ export type AdvancementCriterion = NonNullable<({
 }[Registry['minecraft:trigger_type']])>
 
 export type AdvancementDisplay = {
-  icon: ItemStack
+  icon: (ItemStack | Registry['minecraft:item'])
   title: Text
   description: Text
   /**

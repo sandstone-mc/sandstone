@@ -7732,6 +7732,7 @@ export const TRANSLATION_KEYS_SET = new Set([
   'test.error.sequence.condition_already_triggered',
   'test.error.sequence.condition_not_triggered',
   'test.error.sequence.invalid_tick',
+  'test.error.sequence.minimum_tick',
   'test.error.sequence.not_completed',
   'test.error.set_biome',
   'test.error.spawn_failure',

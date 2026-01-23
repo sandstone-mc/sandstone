@@ -119,14 +119,14 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
 export function componentPatchStringifier(components: Record<string, RootNBT | Record<string, never>>) {
   if (Object.hasOwn(components, 'toMacro')) {
     // @ts-ignore
-    return components.toMacro()
+    return components.toMacro() as string
   }
   const resultPairs: string[] = []
 
   for (const [key, value] of Object.entries(components)) {
     if (key.startsWith('!')) {
       if (typeof value === 'object' && Object.keys(value).length === 0) {
-        resultPairs.push(`${key}={}`)
+        resultPairs.push(`!${key}={}`)
       } else {
         throw new Error(`Attempted to insert a negation component patch of ${key} with a value, use {} instead.`)
       }
