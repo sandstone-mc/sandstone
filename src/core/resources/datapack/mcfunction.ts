@@ -340,7 +340,7 @@ export class _RawMCFunctionClass<
         creator: 'sandstone',
         onConflict: 'rename',
         // @ts-ignore: this breaks functions with parameters
-        callback: () => this.__call__()
+        callback: () => this.__call__(),
       })
     } else {
       func = this as unknown as MCFunctionClass<undefined, undefined>

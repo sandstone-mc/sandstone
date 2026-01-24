@@ -150,8 +150,7 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
  */
 export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]>
   extends CommandNode<ARGS>
-  implements ContainerNode
-{
+  implements ContainerNode {
   abstract command: string
 
   _body: Node[]

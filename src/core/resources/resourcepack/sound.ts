@@ -12,8 +12,7 @@ const sounds: Map<string, SoundsClass> = new Map()
  */
 export class SoundEventNode<Type extends SOUND_TYPES>
   extends ContainerNode
-  implements ResourceNode<SoundEventClass<Type>>
-{
+  implements ResourceNode<SoundEventClass<Type>> {
   constructor(
     sandstoneCore: SandstoneCore,
     public resource: SoundEventClass<Type>,

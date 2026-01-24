@@ -2,7 +2,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
-import { SymbolResource } from 'sandstone/arguments'
+import type { SymbolResource } from 'sandstone/arguments'
 
 export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
   constructor(

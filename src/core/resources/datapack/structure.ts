@@ -15,8 +15,8 @@ import type { DataPointClass, NBTAllNumberClasses, NBTRange, Score, StructureMir
 import { ConditionClass, NBTPrimitive, ResolveNBTPart, relative } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import { ResourceClass } from '../resource'
-import { StructureNBT } from 'sandstone/arguments/generated/data/structure'
-import { BlockState } from 'sandstone/arguments/generated/util/block_state'
+import type { StructureNBT } from 'sandstone/arguments/generated/data/structure'
+import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 
 const same = lodash.isEqual
 

@@ -7,7 +7,7 @@ import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
 import type { MCFunctionClass } from './mcfunction'
-import { DamageTypeClass } from './damageType'
+import type { DamageTypeClass } from './damageType'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass<any, any> {
   return typeof v === 'function'
@@ -139,8 +139,7 @@ type Resource<T extends LiteralUnion<REGISTRIES>> = Add<
 
 export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   extends ResourceClass
-  implements ListResource, ConditionClass, NBTSerializable
-{
+  implements ListResource, ConditionClass, NBTSerializable {
   readonly type: REGISTRY
 
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>

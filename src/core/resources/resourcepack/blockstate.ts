@@ -4,7 +4,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
-import { AllKeys } from 'sandstone/utils'
+import type { AllKeys } from 'sandstone/utils'
 
 export type BlockStateJSON = NonNullable<SymbolResource['block_definition']>
 export type BlockStateType = AllKeys<BlockStateJSON>
@@ -14,8 +14,7 @@ export type BlockStateType = AllKeys<BlockStateJSON>
  */
 export class BlockStateNode<JSON extends BlockStateJSON>
   extends ContainerNode
-  implements ResourceNode<BlockStateClass<JSON>>
-{
+  implements ResourceNode<BlockStateClass<JSON>> {
   constructor(
     sandstoneCore: SandstoneCore,
     public resource: BlockStateClass<JSON>,
@@ -35,8 +34,7 @@ export type BlockStateArguments<JSON extends BlockStateJSON> = {
 
 export class BlockStateClass<JSON extends BlockStateJSON, Type = Extract<AllKeys<JSON>, BlockStateType>>
   extends ResourceClass<BlockStateNode<JSON>>
-  implements ListResource
-{
+  implements ListResource {
   blockStateJSON: JSON
 
   type: Type

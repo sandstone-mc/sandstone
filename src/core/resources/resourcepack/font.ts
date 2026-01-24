@@ -1,4 +1,4 @@
-import { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
+import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'

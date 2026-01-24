@@ -3,7 +3,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
-import { SpriteSource } from 'sandstone/arguments/generated/assets/atlas'
+import type { SpriteSource } from 'sandstone/arguments/generated/assets/atlas'
 
 /**
  * A node representing a Minecraft atlas.

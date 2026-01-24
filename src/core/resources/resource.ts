@@ -133,7 +133,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
               [
                 'Warning:',
                 `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
-                "The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: '/* other option */' }.",
+                'The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: \'/* other option */\' }.',
               ].join('\n'),
             )
             this.core.resourceNodes.delete(conflict)

@@ -28,8 +28,7 @@ export type AdvancementClassArguments<AdvancementJSON extends SymbolResource['ad
 
 export class AdvancementClass<AdvancementJSON extends SymbolResource['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
-  implements ConditionClass
-{
+  implements ConditionClass {
   public advancementJSON: AdvancementClassArguments<AdvancementJSON>['advancement']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<AdvancementJSON>) {

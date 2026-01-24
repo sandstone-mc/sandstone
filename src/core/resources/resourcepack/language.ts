@@ -1,10 +1,10 @@
-import { LiteralUnion, SetType } from 'sandstone/utils'
+import type { LiteralUnion, SetType } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
-import { TRANSLATION_KEYS_SET } from 'sandstone/arguments/generated/_registry/translation_keys'
+import type { TRANSLATION_KEYS_SET } from 'sandstone/arguments/generated/_registry/translation_keys'
 
 /**
  * A node representing a Minecraft language file.

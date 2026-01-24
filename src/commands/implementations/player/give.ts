@@ -5,7 +5,7 @@ import { nbtStringifier, targetParser } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
-import { MemberModifiers } from 'sandstone/utils';
+import type { MemberModifiers } from 'sandstone/utils'
 
 // Give command
 

@@ -5,8 +5,8 @@ import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
-import { BLOCKS_SET } from 'sandstone/arguments/generated/_registry/blocks'
-import { NamespacedLiteralUnion, SetType } from 'sandstone/utils'
+import type { BLOCKS_SET } from 'sandstone/arguments/generated/_registry/blocks'
+import type { NamespacedLiteralUnion, SetType } from 'sandstone/utils'
 
 /** Converts stringified boolean/numeric literals to actual booleans/numbers */
 type ParseLiteral<T> =
@@ -148,15 +148,15 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
     block: Macroable<Registry['minecraft:block'], MACRO>,
     arg3?: any,
     arg4?: any,
-    arg5?: any
+    arg5?: any,
   ) {
     if (arg3 === undefined && arg4 === undefined) {
       return this.finalCommand([coordinatesParser(pos), block, arg5]) as FinalCommandOutput
     }
-    const state = typeof arg3 === undefined ? 
+    const state = typeof arg3 === 'undefined' ?
       ''
       : blockStateStringifier(arg3 as any as Record<string, string | number | boolean>)
-    const nbt = typeof arg4 === 'string' || arg4 === undefined ? 
+    const nbt = typeof arg4 === 'string' || arg4 === undefined ?
       ''
       : nbtStringifier(arg4 as any as NBTObject)
     const setblockType = typeof arg4 === 'string' ? arg4 : arg5

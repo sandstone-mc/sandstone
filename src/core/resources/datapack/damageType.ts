@@ -1,14 +1,15 @@
 /* eslint-disable max-len */
 
 import type { Coordinates, SingleEntityArgument, SymbolResource } from 'sandstone/arguments'
-import { SetType, toMinecraftResourceName } from 'sandstone/utils'
+import type { SetType } from 'sandstone/utils'
+import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
 import type { TagClass } from './tag'
-import { TAG_DAMAGE_TYPES_SET } from 'sandstone/arguments/generated/_registry/tag_damage_types'
+import type { TAG_DAMAGE_TYPES_SET } from 'sandstone/arguments/generated/_registry/tag_damage_types'
 
 const damageTypes: Map<string, TagClass<'damage_type'>> = new Map()
 
