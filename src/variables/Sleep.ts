@@ -105,6 +105,7 @@ export class SleepClass extends AwaitNode {
 
   promise() {
     return {
+      // oxlint-disable-next-line no-thenable
       then: (async (onfullfilled?: () => void | Promise<void>) => {
         await onfullfilled?.()
         return this

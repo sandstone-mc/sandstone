@@ -1,4 +1,4 @@
-import { NBTSerializable } from 'sandstone/arguments'
+import type { NBTSerializable } from 'sandstone/arguments'
 import { inspect } from 'util'
 
 /** A root class that can be used to defined a N-dimension vector */

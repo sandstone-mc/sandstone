@@ -1,7 +1,7 @@
 import type { NBTClass } from 'sandstone/variables/nbt/NBTs'
 
 export interface NBTSerializable {
-    toNBT(): string
+  toNBT(): string
 }
 
 export type NBTObject = string | number | boolean | URL | undefined | NBTSerializable | { [key: string]: NBTObject | undefined } | NBTObject[] | NBTClass

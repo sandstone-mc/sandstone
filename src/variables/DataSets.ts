@@ -13,7 +13,7 @@ import { DataPointClass } from './Data'
 import { Score } from './Score'
 
 export abstract class IterableDataClass extends ConditionalDataPointPickClass {
-  iterator(callback: (dataPoints: [DataPointClass] | [StringDataPointClass, DataPointClass]) => void): () => void {
+  iterator(_callback: (dataPoints: [DataPointClass] | [StringDataPointClass, DataPointClass]) => void): () => void {
     throw new Error('Not implemented')
   }
 

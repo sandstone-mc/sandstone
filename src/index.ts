@@ -1,7 +1,6 @@
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
-import { SetBlockCommand } from './commands'
+import type { SetBlockCommand } from './commands'
 import type {
-  // eslint-disable-next-line max-len
   AdvancementClassArguments,
   AtlasClassArguments,
   BannerPatternClassArguments,
@@ -14,6 +13,7 @@ import type {
   EquipmentClassArguments,
   FontArguments,
   InstrumentClassArguments,
+  ItemModelDefinitionClassArguments,
   ItemModifierClassArguments,
   JukeboxSongClassArguments,
   LanguageArguments,
@@ -204,7 +204,7 @@ export {
 } from './variables'
 
 export {
-  MCFunctionClass
+  MCFunctionClass,
 } from './core'
 
 export {
@@ -473,6 +473,81 @@ type ContentStrategy =
    * Will override the defined `default` strategy.
    */
   | ContentStrategyKind<'trim_pattern', NonNullable<TrimPatternClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Banner patterns.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'banner_pattern', NonNullable<BannerPatternClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Chat types.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'chat_type', NonNullable<ChatTypeClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Dialogs.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'dialog', NonNullable<DialogClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Enchantments.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'enchantment', NonNullable<EnchantmentClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Enchantment providers.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'enchantment_provider', NonNullable<EnchantmentProviderClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Instruments.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'instrument', NonNullable<InstrumentClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Jukebox songs.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'jukebox_song', NonNullable<JukeboxSongClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Test environments.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'test_environment', NonNullable<TestEnvironmentClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Test instances.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'test_instance', NonNullable<TestInstanceClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Timelines.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'timeline', NonNullable<TimelineClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Trade sets.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'trade_set', NonNullable<TradeSetClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Trial spawners.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'trial_spawner', NonNullable<TrialSpawnerClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Variants.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'variant', NonNullable<VariantClassArguments<any>['onConflict']>>
+  /**
+   * The conflict strategy to use for Villager trades.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'villager_trade', NonNullable<VillagerTradeClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for World clocks.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'world_clock', NonNullable<WorldClockClassArguments['onConflict']>>
 
   /**
    * The conflict strategy to use for Atlases.
@@ -514,5 +589,35 @@ type ContentStrategy =
    * Will override the defined `default` strategy.
    */
   | ContentStrategyKind<'texture', NonNullable<TextureArguments<any>['onConflict']>>
+  /**
+   * The conflict strategy to use for Equipment.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'equipment', NonNullable<EquipmentClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Particles.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'particle', NonNullable<ParticleClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Post effects.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'post_effect', NonNullable<PostEffectClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Shaders.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'shader', NonNullable<ShaderClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Waypoint styles.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'waypoint_style', NonNullable<WaypointStyleClassArguments['onConflict']>>
+  /**
+   * The conflict strategy to use for Item model definitions.
+   * Will override the defined `default` strategy.
+   */
+  | ContentStrategyKind<'item_definition', NonNullable<ItemModelDefinitionClassArguments['onConflict']>>
 
 type OnConflict<Strategy extends ContentStrategy> = Record<Strategy['resource'], Strategy['conflict']>

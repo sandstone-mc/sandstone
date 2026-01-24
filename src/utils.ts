@@ -19,7 +19,7 @@ export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) =
 )
   ? globalThis.fetch
   : async (...args: Parameters<typeof FetchType>) =>
-      (await import('node-fetch')).default(...args) as unknown as Promise<Response>
+    (await import('node-fetch')).default(...args) as unknown as Promise<Response>
 
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.
@@ -106,12 +106,12 @@ export type WithMCNamespace<T extends string> = `minecraft:${T}` | T
 
 export function makeCallableProxy(func: any, object: any) {
   return new Proxy(func, {
-    get: (target, p, receiver) => object[p],
-    set: (target, p, value, receiver) => {
+    get: (_t, p, _r) => object[p],
+    set: (_t, p, value, _r) => {
       object[p] = value
       return value
     },
-    getPrototypeOf: (target) => Object.getPrototypeOf(object),
+    getPrototypeOf: (_t) => Object.getPrototypeOf(object),
   }) as any
 }
 
@@ -122,7 +122,7 @@ type CallableClass = new (...args: any[]) => CallableInstance
 
 export function makeClassCallable<C extends CallableClass>(Class_: C): MakeClassCallable<C> {
   return new Proxy(Class_, {
-    construct: (target, argArray, newTarget) => {
+    construct: (_t, argArray, _nt) => {
       const obj = new Class_(...argArray)
       const result = makeCallableProxy(obj.__call__, obj)
       // TODO: Figure this out
@@ -388,10 +388,10 @@ export function formatDebugString(
     typeof body === 'undefined'
       ? ''
       : body
-          .map((node) => {
-            return util.inspect(node, options)
-          })
-          .join(`\n${nextIndent}`)
+        .map((node) => {
+          return util.inspect(node, options)
+        })
+        .join(`\n${nextIndent}`)
 
   const rainbowBracketColors = [
     'yellow',
@@ -419,16 +419,13 @@ export function formatDebugString(
   return `${classNameString}${realArgsString}${realBodyString}`
 }
 
-export type AllKeys<T> = T extends T ? keyof T: never
+export type AllKeys<T> = T extends T ? keyof T : never
 
-type GetConstructorArgs<T> = T extends new (...args: infer U) => any ? U : never
 export class Set<T> extends global.Set<T> {
-    constructor(...args: GetConstructorArgs<typeof global.Set<T>>) {
-        super(...args)
-    }
-    has(value: unknown) {
-        return super.has(value as any)
-    }
+
+  has(value: unknown) {
+    return super.has(value as any)
+  }
 }
 
 export type SetType<T> = T extends Set<infer U> ? U : never
@@ -465,11 +462,11 @@ type McdocIDMapBase<Dispatcher, UnknownValue> = Dispatcher & UnknownKey<UnknownV
  * ----
  * 
  * Disclaimers:
- * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game. 
+ * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game.
  * - Unknown IDs will not satisfy the Typed requirement of specifying at least one key, so either a known key must be also specified or `as any` must be placed at the end of the object.
  */
 export type McdocIDMap<Dispatcher, UnknownValue> = Partial<McdocIDMapBase<Dispatcher, UnknownValue>> & {
-    [K in keyof Dispatcher]-?: Record<K, McdocIDMapBase<Dispatcher, UnknownValue>[K]>
+  [K in keyof Dispatcher]-?: Record<K, McdocIDMapBase<Dispatcher, UnknownValue>[K]>
 }[keyof Dispatcher]
 
 type McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue> = TestMembers<Dispatcher, TestDispatcher> & UnknownKey<UnknownValue>
@@ -484,11 +481,11 @@ type McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue> = TestMembers<
  * ----
  * 
  * Disclaimers:
- * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game. 
+ * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game.
  * - Unknown IDs will not satisfy the Typed requirement of specifying at least one key, so either a known key must be also specified or `as any` must be placed at the end of the object.
  */
 export type McdocIDTestMap<Dispatcher, TestDispatcher, UnknownValue> = Partial<McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue>> & {
-    [K in keyof TestMembers<Dispatcher, TestDispatcher>]-?: Record<K, McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue>[K]>
+  [K in keyof TestMembers<Dispatcher, TestDispatcher>]-?: Record<K, McdocIDTestMapBase<Dispatcher, TestDispatcher, UnknownValue>[K]>
 }[keyof TestMembers<Dispatcher, TestDispatcher>]
 
 type McdocNegatableIDMapBase<Dispatcher, UnknownValue> = MemberModifiers<Dispatcher> & UnknownNegatableKey<UnknownValue>
@@ -503,10 +500,10 @@ type McdocNegatableIDMapBase<Dispatcher, UnknownValue> = MemberModifiers<Dispatc
  * ----
  * 
  * Disclaimers:
- * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button` and `!acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game. 
+ * - Do not reference an ID multiple times. Multiple keys for the same ID (e.g. `acacia_button` and `minecraft:acacia_button` and `!acacia_button`) will not cause a Typescript error due to limitations, but will cause an error in-game.
  * - Unknown IDs will not satisfy the Typed requirement of specifying at least one key, so either a known key must be also specified or `as any` must be placed at the end of the object.
  * - The object type will allow non-negated Unknown IDs specified to an empty object, this is due to a types limitation, but will cause an error in-game.
  */
 export type McdocNegatableIDMap<Dispatcher, UnknownValue> = Partial<McdocNegatableIDMapBase<Dispatcher, UnknownValue>> & {
-    [K in keyof MemberModifiers<Dispatcher>]-?: Record<K, McdocNegatableIDMapBase<Dispatcher, UnknownValue>[K]>
+  [K in keyof MemberModifiers<Dispatcher>]-?: Record<K, McdocNegatableIDMapBase<Dispatcher, UnknownValue>[K]>
 }[keyof MemberModifiers<Dispatcher>]

@@ -167,7 +167,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
 
 export function blockStateStringifier(state: Record<string, string | number | boolean>) {
   let resultPairs: string[] = []
-  
+
   for (const [key, value] of Object.entries(Object.entries(state))) {
     resultPairs.push(`${key}=${value}`)
   }

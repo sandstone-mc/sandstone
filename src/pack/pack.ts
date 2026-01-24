@@ -12,7 +12,6 @@ import type {
   SOUND_TYPES,
   TEXTURE_TYPES,
   TimeArgument,
-  Registry,
   OBJECTIVE_CRITERIA,
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
@@ -163,8 +162,8 @@ import {
   SimplifyReturnRunFunctionVisitor,
   UnifyChainedExecutesVisitor,
 } from './visitors'
-import { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
-import { GlyphProvider } from 'sandstone/arguments/generated/assets/font';
+import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
+import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 
 export type ResourcePath = string[]
 
@@ -393,7 +392,9 @@ export class SandstonePack {
     }
 
     // Initialize getters
+    // oxlint-disable-next-line
     this.rootObjective
+    // oxlint-disable-next-line
     this.initMCFunction
   }
 
@@ -532,7 +533,7 @@ export class SandstonePack {
     return this.__rootObjective
   }
 
-  Variable: /**
+  /**
    * Creates a dynamic numeric variable, represented by an anonymous & unique score.
    *
    * @param initialValue The initial value of the variable. If left unspecified,
@@ -540,21 +541,24 @@ export class SandstonePack {
    *
    * @param name A name that can be useful for debugging.
    */
-  ((initialValue?: number | Score | undefined, name?: string) => Score) &
-    /**
-     * Creates a dynamic numeric variable, represented by an anonymous & unique score.
-     *
-     * @param nbt The NBT value to set the Variable to.
-     *
-     * @param scale The scale to multiply the value by. Defaults to 1.
-     *
-     * @param name A name that can be useful for debugging.
-     */
-    ((nbt: DataPointClass, scale?: number, name?: string) => Score) = (
+  Variable(initialValue?: number | Score | undefined, name?: string): Score
+
+  /**
+   * Creates a dynamic numeric variable, represented by an anonymous & unique score.
+   *
+   * @param nbt The NBT value to set the Variable to.
+   *
+   * @param scale The scale to multiply the value by. Defaults to 1.
+   *
+   * @param name A name that can be useful for debugging.
+   */
+  Variable(nbt: DataPointClass, scale?: number, name?: string): Score
+
+  Variable(
     ...args:
       | [initialValue?: number | Score | undefined, name?: string]
       | [nbt: DataPointClass, scale?: number, name?: string]
-  ) => {
+  ): Score {
     // Get the objective
     const score = this.rootObjective
 
@@ -706,7 +710,7 @@ export class SandstonePack {
     return this.__rootStorage
   }
 
-  DataVariable: /**
+  /**
    * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
    *
    * @param initialValue Optional. The initial value of the variable. If left unspecified,
@@ -714,23 +718,26 @@ export class SandstonePack {
    *
    * @param name Optional. A name that can be useful for debugging.
    */
-  ((initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string) => DataPointClass<'storage'>) &
-    /**
-     * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
-     *
-     * @param score The Score to set the data variable to.
-     *
-     * @param storeType Optional. The number type you want to store. Defaults to int.
-     *
-     * @param scale Optional. The scale to multiply the value by. Defaults to 1.
-     *
-     * @param name Optional. A name that can be useful for debugging.
-     */
-    ((score: Score, storeType?: StoreType, scale?: number, name?: string) => DataPointClass<'storage'>) = (
+  DataVariable(initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string): DataPointClass<'storage'>
+
+  /**
+   * Creates a dynamic data variable, represented by an anonymous & unique Data Point.
+   *
+   * @param score The Score to set the data variable to.
+   *
+   * @param storeType Optional. The number type you want to store. Defaults to int.
+   *
+   * @param scale Optional. The scale to multiply the value by. Defaults to 1.
+   *
+   * @param name Optional. A name that can be useful for debugging.
+   */
+  DataVariable(score: Score, storeType?: StoreType, scale?: number, name?: string): DataPointClass<'storage'>
+
+  DataVariable(
     ...args:
       | [initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string]
       | [score: Score, storeType?: StoreType, scale?: number, name?: string]
-  ) => {
+  ): DataPointClass<'storage'> {
     // Get the objective
     const data = this.rootStorage()
 
@@ -798,13 +805,13 @@ export class SandstonePack {
 
   Selector(target: '@p' | '@r', selectorArguments?: Omit<Omit<SelectorProperties<false, false, false>, 'type'>, 'limit'>): SelectorClass<false, true, true>
 
-  Selector<PROPERTIES extends Omit<SelectorProperties<false, false, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES): 
+  Selector<PROPERTIES extends Omit<SelectorProperties<false, false, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES):
     SelectorClass<false, true, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
 
-  Selector<PROPERTIES extends Omit<SelectorProperties<false, false, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES): 
+  Selector<PROPERTIES extends Omit<SelectorProperties<false, false, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES):
     SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, true>
 
-  Selector<PROPERTIES extends SelectorProperties<false, false, false>>(target: '@e', selectorArguments: PROPERTIES): 
+  Selector<PROPERTIES extends SelectorProperties<false, false, false>>(target: '@e', selectorArguments: PROPERTIES):
     SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
 
   Selector(target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r', selectorArguments?: SelectorProperties<boolean, boolean, boolean>) {

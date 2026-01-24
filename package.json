@@ -32,13 +32,14 @@
     "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.3",
     "@sandstone-mc/mcdoc-ts-generator": "^0.1.16",
+    "@stylistic/eslint-plugin": "^5.7.1",
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",
     "@types/lodash": "^4.14.199",
     "@types/node": "^22.13.17",
     "@types/semver": "^7.5.3",
+    "oxlint": "^1.41.0",
     "typescript": "^5.9.3"
   },
   "directories": {
@@ -72,9 +73,8 @@
     "setup-package": "node ./scripts/setupPackage.mjs",
     "setup": "pnpm run build-types && pnpm run setup-package && echo ✔️  Successfully built Sandstone.",
     "publishToNpm": "pnpm run build && pnpm publish",
-    "format": "biome format --write src",
-    "lint": "biome lint src",
-    "check": "biome check --write src",
+    "format": "bun oxlint src --fix",
+    "lint": "bun oxlint src",
     "update-from-mcdoc": "mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig"
   },
   "type": "module",
@@ -163,5 +163,8 @@
       "default": "./dist/variables/nbt/index.js"
     }
   },
-  "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"
+  "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6",
+  "patchedDependencies": {
+    "@stylistic/eslint-plugin@5.7.1": "patches/@stylistic%2Feslint-plugin@5.7.1.patch"
+  }
 }

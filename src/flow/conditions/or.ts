@@ -1,9 +1,6 @@
 import type { SandstoneCore } from 'sandstone/core'
-import type { Score } from 'sandstone/variables/Score'
 import * as util from 'util'
-import { ScoreboardCommandNode } from '../../commands/implementations/entity/scoreboard'
 import { formatDebugString } from '../../utils'
-import { IfNode } from '../if_else'
 import { ConditionNode } from './condition'
 
 export class OrNode extends ConditionNode {
@@ -14,8 +11,8 @@ export class OrNode extends ConditionNode {
     super(sandstoneCore)
   }
 
-  getValue = (negated?: boolean | undefined) => {
-    throw new Error('Minecraft does not support OR conditions. This must be processed.')
+  getValue = (_negated?: boolean | undefined) => {
+    throw new Error('Minecraft does not support OR conditions. This should never happen and must be processed.')
   };
 
   [util.inspect.custom](depth: number, options: any) {

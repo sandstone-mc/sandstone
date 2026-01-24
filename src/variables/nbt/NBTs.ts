@@ -26,6 +26,8 @@ export class NBTPrimitive extends NBTClass {
 
 export type NBTRange = { min?: number, max?: number, leftExclusive?: boolean, rightExclusive?: boolean }
 
+/* oxlint-disable no-unused-vars */
+
 export class NBTLong<Range extends NBTRange = {}> extends NBTPrimitive {
   constructor(value: number) {
     super(value, 'l')
@@ -94,13 +96,13 @@ export class NBTIntArray<Range extends NBTRange = {}> extends NBTTypedArray {
   }
 }
 
-type NonEmptyList<Type extends NBTObject> = (
-  Type[] 
-  & { 
-    0: Type,
-    
-  }
-)
+// type NonEmptyList<Type extends NBTObject> = (
+//   Type[]
+//   & {
+//     0: Type,
+
+//   }
+// )
 
 // TODO
 export type NBTList<Type extends NBTObject, Range extends NBTRange = {}> = Range['min'] extends 1 ? Range['leftExclusive'] extends false ? (Type[] & { 0: Type }) : Type[] : Type[]
@@ -409,7 +411,7 @@ export const NBT: NBTInterface = makeCallable(
 
 export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
   if (nbt === null || nbt === undefined) {
-    throw new Error(`Nullish nbt values are not allowed`)
+    throw new Error('Nullish nbt values are not allowed')
   }
   if (typeof nbt === 'number') {
     // We have a number

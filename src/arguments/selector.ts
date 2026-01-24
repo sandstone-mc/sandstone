@@ -24,8 +24,8 @@ export type SelectorArgument<
 > =
   | string
   | (MustBePlayer extends true
-      ? SinglePlayerSelector<MACRO> | (MustBeSingle extends false ? MultiplePlayersSelector<MACRO> : never)
-      : SingleEntitySelector<MACRO> | (MustBeSingle extends false ? MultipleEntitiesSelector<MACRO> : never))
+    ? SinglePlayerSelector<MACRO> | (MustBeSingle extends false ? MultiplePlayersSelector<MACRO> : never)
+    : SingleEntitySelector<MACRO> | (MustBeSingle extends false ? MultipleEntitiesSelector<MACRO> : never))
 
 /*
  * The `| _ShowAlias` is to prevent Typescript from showing the ugly "SelectorClass<??, ??>",

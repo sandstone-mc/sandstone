@@ -5,10 +5,11 @@ import type { SandstonePack } from 'sandstone/pack'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import * as util from 'util'
 import { formatDebugString } from '../utils'
-import { MacroArgument,
-TagClass } from 'sandstone/core';
-import { NBTObject } from 'sandstone/arguments';
-import type { ItemModelBuilder } from 'sandstone/core/resources/resourcepack/itemDefinition';
+import type { MacroArgument } from 'sandstone/core'
+import {
+  TagClass } from 'sandstone/core'
+import type { NBTObject } from 'sandstone/arguments'
+import type { ItemModelBuilder } from 'sandstone/core/resources/resourcepack/itemDefinition'
 
 /** Item type: specific item, tag, or wildcard */
 export type ItemPredicateItem = Registry['minecraft:item'] | `#${string}` | TagClass<'item'> | '*'
@@ -138,7 +139,7 @@ export class ItemPredicateClass {
    * // Produces: *[!minecraft:damage|minecraft:damage=0]
    * ```
    */
-  or(...builders: Array<(item: ItemPredicateClass) => ItemPredicateClass>): this {
+  or(...builders: ((item: ItemPredicateClass) => ItemPredicateClass)[]): this {
     const orGroup: OrGroup = []
 
     for (const builderFn of builders) {

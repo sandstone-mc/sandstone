@@ -219,8 +219,7 @@ export class SelectorClass<
   MACRO extends boolean = false,
   IsSingle extends boolean = false,
   IsPlayer extends boolean = false,
-> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable
-{
+> implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable {
   arguments: SelectorProperties<IsSingle, IsPlayer, MACRO>
 
   constructor(

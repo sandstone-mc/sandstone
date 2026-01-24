@@ -4,7 +4,6 @@ import type {
 } from 'sandstone/arguments'
 import type { Macroable, StructureClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import type { StructureMirror, StructureRotation } from 'sandstone/variables'
 import { coordinatesParser, structureMirrorParser, structureRotationParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers'

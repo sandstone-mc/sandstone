@@ -1,7 +1,7 @@
 import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent'
 import type { ConditionNode } from '../flow'
 import type { SelectorClass } from './Selector'
-import { NBTSerializable } from 'sandstone/arguments'
+import type { NBTSerializable } from 'sandstone/arguments'
 
 export class ComponentClass {
   /**

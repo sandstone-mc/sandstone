@@ -479,6 +479,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
   /** COMPARISONS OPERATORS */
   private comparison(operator: COMPARISON_OPERATORS, matchesRange: string, args: OperationArguments): ConditionClass {
+    // oxlint-disable-next-line no-this-alias
     const playerScore = this
 
     if (typeof args[0] === 'number') {
@@ -665,6 +666,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
     const matcher = matchers++
 
+    // oxlint-disable-next-line no-this-alias
     const score = this
 
     for (let i = minimum; i < maximum; i++) {

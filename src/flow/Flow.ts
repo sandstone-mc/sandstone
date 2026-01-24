@@ -298,6 +298,7 @@ export class Flow {
       ),
     )
 
+    // oxlint-disable-next-line no-this-alias
     const flow = this
 
     MCFunction(`__sandstone:switch_${id}`, [value], () => {

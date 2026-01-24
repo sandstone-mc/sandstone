@@ -2,7 +2,6 @@ import type { Coordinates, Registry, SingleEntityArgument } from 'sandstone/argu
 import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { DamageTypeClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers'
 

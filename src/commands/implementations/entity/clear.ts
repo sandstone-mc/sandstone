@@ -1,7 +1,7 @@
 import type { MultiplePlayersArgument } from 'sandstone/arguments'
 import type { Macroable, TagClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
+import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import { targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'

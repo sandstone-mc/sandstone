@@ -23,7 +23,7 @@ const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.ha
 
 function scoresParser(...args: unknown[]) {
   return args
-    .map((_arg, i) => {
+    .map((_arg, _i) => {
       const arg = _arg as any
       if (isScore(arg)) {
         return [arg.target, arg.objective]

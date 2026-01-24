@@ -1,0 +1,13 @@
+diff --git a/dist/rules/list-style.js b/dist/rules/list-style.js
+index 078a3a73240a5876d38c6797ada0b367b3c5dbe1..f7b69ad67f999ad6f2a400012e8200020d22a6fb 100644
+--- a/dist/rules/list-style.js
++++ b/dist/rules/list-style.js
+@@ -83,7 +83,7 @@ var list_style_default = createRule({
+ 		defaultOptions: [{
+ 			singleLine: {
+ 				spacing: "never",
+-				maxItems: Number.POSITIVE_INFINITY
++				maxItems: 9007199254740991
+ 			},
+ 			multiLine: { minItems: 0 },
+ 			overrides: { "{}": { singleLine: { spacing: "always" } } }

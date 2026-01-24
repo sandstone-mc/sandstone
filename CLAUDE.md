@@ -4,17 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 
+- **Build**: `bun run build` - Builds the project using tsup and runs setup
+- **Watch**: `bun run watch` - Builds with watch mode
 - **Type checking**: `bun run build-types` - Generates TypeScript declaration files
-
-Note: ignore the rest for now
+- **Setup**: `bun run setup` - Builds types and sets up package (required after build)
+- **Lint**: `bun run lint` or `bun oxlint src` - Lints TypeScript files using OxLint
+- **Format/Fix**: `bun run format` or `bun oxlint src --fix` - Lints and auto-fixes issues
 
 ## Todo Directory
 
-The `todo/` directory contains planning and tracking documents for ongoing development:
-
-- `oxlint_migration.md` - Plan for migrating from Biome to OxLint, including mcdoc-ts-generator updates
-
-**Note**: Update this section whenever files are added to or removed from the `todo/` directory.
+The `todo/` directory contains planning and tracking documents for ongoing development. Currently empty.
 
 ## Code Architecture
 

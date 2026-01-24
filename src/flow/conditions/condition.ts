@@ -38,5 +38,5 @@ export abstract class SingleConditionNode extends ConditionNode {
 export abstract class SingleExecuteNode extends ConditionNode {
   abstract getCondition(): unknown[]
 
-  getValue = (negated = false) => this.getCondition().join(' ')
+  getValue = (_negated = false) => this.getCondition().join(' ')
 }

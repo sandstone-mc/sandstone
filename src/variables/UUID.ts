@@ -51,8 +51,7 @@ export type UUIDOptions = {
 }
 
 export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
-  implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSerializable
-{
+implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSerializable {
   readonly primarySource: PrimarySource
 
   known!: PrimarySource extends 'known' ? UUIDinNumber : UUIDinNumber | undefined
