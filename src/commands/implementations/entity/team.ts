@@ -103,13 +103,13 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
   list = (team?: Macroable<string, MACRO>) => this.finalCommand(['list', team ? targetParser(team) : undefined])
 
   /**
-   * Modify team properties.
+   * Modify team properties with type-safe options.
    *
    * @param team Team name to modify.
-   * @param option Property to change: 'color', 'displayName', 'friendlyFire', 
+   * @param option Property to change: 'color', 'displayName', 'friendlyFire',
    *              'collisionRule', 'nametagVisibility', 'deathMessageVisibility',
    *              'seeFriendlyInvisibles', 'prefix', 'suffix'
-   * @param value New value for the property.
+   * @param value New value for the property (type depends on option).
    *
    * @example
    * ```ts
@@ -119,12 +119,22 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
    * team.modify('defenders', 'displayName', 'The Defenders')
    * ```
    */
-  modify: (<T extends keyof TeamOptions>(team: Macroable<string, MACRO>, option: T, value: TeamOptions[T]) => void) &
-    (<T extends string>(
-      team: Macroable<string, MACRO>,
-      option: Exclude<T, keyof TeamOptions>,
-      value: Macroable<string, MACRO>,
-    ) => void) = (team: Macroable<string, MACRO>, option: string, value: unknown) => {
+  modify<T extends keyof TeamOptions>(team: Macroable<string, MACRO>, option: T, value: TeamOptions[T]): void
+
+  /**
+   * Modify team properties with custom option string.
+   *
+   * @param team Team name to modify.
+   * @param option Custom property name.
+   * @param value String value for the property.
+   */
+  modify<T extends string>(
+    team: Macroable<string, MACRO>,
+    option: Exclude<T, keyof TeamOptions>,
+    value: Macroable<string, MACRO>,
+  ): void
+
+  modify(team: Macroable<string, MACRO>, option: string, value: unknown) {
     if (['displayName', 'prefix', 'suffix'].includes(option)) {
       value = parseJSONText(this.sandstoneCore, value as JSONTextComponent)
     }

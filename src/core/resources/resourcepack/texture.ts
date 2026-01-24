@@ -81,7 +81,8 @@ export class TextureClass<Type extends TextureType = 'block'> extends ResourceCl
     return `${this.path[0]}:${this.path.slice(2)}`
   }
 
-  videoToAnimation(path: string) {
-    console.log('Unimplemented')
+  // TODO
+  videoToAnimation(_path: string) {
+    console.log('[TextureClass#videoToAnimation] Unimplemented')
   }
 }

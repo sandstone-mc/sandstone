@@ -9,7 +9,7 @@ import type { SandstoneCore } from './sandstoneCore'
 export abstract class Node {
   constructor(public sandstoneCore: SandstoneCore) {}
 
-  [util.inspect.custom](depth: number, options: any) {
+  [util.inspect.custom](_depth: number, _options: any) {
     return `${this.constructor.name}()`
   }
 
@@ -206,7 +206,7 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]>
    * The returned node will replace
    */
   createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[]; mcFunction?: MCFunctionNode } =
-    (currentMCFunction) => ({ node: this })
+    (_currentMCFunction) => ({ node: this })
 }
 
 export abstract class AwaitNode extends ContainerCommandNode {

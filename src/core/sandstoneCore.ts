@@ -9,7 +9,7 @@ import { MCMetaCache } from './mcmeta'
 import type { AwaitNode } from './nodes'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
 import { SmithedDependencyClass } from './resources/dependency'
-import { type ResourceClass, ResourceNode, ResourceNodesMap } from './resources/resource'
+import { type ResourceClass, ResourceNodesMap } from './resources/resource'
 import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
 

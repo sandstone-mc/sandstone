@@ -201,9 +201,9 @@ export abstract class CallableResourceClass<N extends ResourceNode = ResourceNod
 }
 
 export abstract class ListResource {
-  public push(...args: any[]) {}
+  public push(..._args: any[]) {}
 
-  public unshift(...args: any[]) {}
+  public unshift(..._args: any[]) {}
 }
 
 /**

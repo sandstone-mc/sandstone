@@ -16,7 +16,7 @@ export class MacroArgument {
       try {
         currentMCFunctionName = sandstoneCore.getCurrentMCFunctionOrThrow().resource.name
         // eslint-disable-next-line no-empty
-      } catch (_e) {}
+      } catch {}
 
       return `$(${this.local.get(this.sandstoneCore.currentNode) || this.local.get(currentMCFunctionName)})`
     }
@@ -36,7 +36,7 @@ export function isMacroArgument(core: SandstoneCore, arg: any) {
     try {
       currentMCFunctionName = core.getCurrentMCFunctionOrThrow().resource.name
       // eslint-disable-next-line no-empty
-    } catch (_e) {}
+    } catch {}
     if (arg instanceof MacroLiteral || local.has(currentMCFunctionName) || local.has(core.currentNode))
       return arg as MacroArgument
   }

@@ -288,13 +288,16 @@ export class SandstonePack {
 
   packTypes: Map<string, PackType>
 
-  packOptions = process.env.PACK_OPTIONS
-    ? JSON.parse(process.env.PACK_OPTIONS)
-    : {
-        datapack: {
-          packFormat: 31,
-        },
-      }
+  get packOptions() {
+    if (typeof process.env.PACK_OPTIONS === 'string' && process.env.PACK_OPTIONS.startsWith('{')) {
+      return JSON.parse(process.env.PACK_OPTIONS)
+    }
+    return {
+      datapack: {
+        packFormat: 31,
+      },
+    }
+  }
 
   __initMCFunction?: MCFunctionClass<undefined, undefined>
 

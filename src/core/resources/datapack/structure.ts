@@ -378,10 +378,13 @@ export class StructureClass extends ResourceClass<StructureNode> {
     }
   }
 
+  // TODO
   save(
-    pos: Coordinates<false> | [Score, Score, Score] = '~ ~ ~',
-    size: [number, number, number] | [Score, Score, Score],
-  ) {}
+    _pos: Coordinates<false> | [Score, Score, Score] = '~ ~ ~',
+    _size: [number, number, number] | [Score, Score, Score],
+  ) {
+    throw new Error('[StructureClass#save] Unimplemented')
+  }
 
   toString() {
     return this.name
@@ -422,15 +425,15 @@ function encodeStructure(nbt: StructureNBT) {
       // eslint-disable-next-line no-nested-ternary
       ...('palette' in nbt
         ? {
-            palette: list(
-              comp(
-                nbt.palette.map((block) => ({
-                  Name: string(block!.Name),
-                  Properties: list(comp(objectMap(block!.Properties, (v: string, k: string) => [string(k), string(v)]))),
-                })),
-              ),
+          palette: list(
+            comp(
+              nbt.palette.map((block) => ({
+                Name: string(block!.Name),
+                Properties: list(comp(objectMap(block!.Properties, (v: string, k: string) => [string(k), string(v)]))),
+              })),
             ),
-          }
+          ),
+        }
         : {
           palettes: list(
             comp(

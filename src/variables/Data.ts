@@ -195,26 +195,31 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
       scale,
     )
 
-  set: /**
+  /**
    * Set the data point to the given NBT.
    */
-  ((value: NBTObject | DataPointClass) => DataPointClass) &
-    /**
-     * Set the data point to the given Data Point Pick
-     */
-    ((value: DataPointPickClass) => DataPointClass) &
-    /**
-     * Set the data point to the given score, with a given type and a scale.
-     */
-    ((value: Score, storeType?: StoreType, scale?: number) => DataPointClass) &
-    /**
-     * Set the data point to the given NBT string.
-     */
-    ((value: StringDataPointClass) => DataPointClass) = (
-    value: NBTObject | DataPointClass | DataPointPickClass | Score,
+  set(value: NBTObject | DataPointClass): DataPointClass
+
+  /**
+   * Set the data point to the given Data Point Pick.
+   */
+  set(value: DataPointPickClass): DataPointClass
+
+  /**
+   * Set the data point to the given score, with a given type and a scale.
+   */
+  set(value: Score, storeType?: StoreType, scale?: number): DataPointClass
+
+  /**
+   * Set the data point to the given NBT string.
+   */
+  set(value: StringDataPointClass): DataPointClass
+
+  set(
+    value: NBTObject | DataPointClass | DataPointPickClass | Score | StringDataPointClass,
     storeType?: StoreType,
     scale: number = 1,
-  ) => {
+  ) {
     if (value instanceof StringDataPointClass) {
       if (value.sliceBounds[1]) this.string((data) => data.set, value, value.sliceBounds[0], value.sliceBounds[1])
       else this.string((data) => data.set, value, value.sliceBounds[0])

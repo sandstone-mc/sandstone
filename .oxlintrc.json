@@ -75,7 +75,7 @@
     "no-with": "error",
     "no-var": "error",
 
-    "@stylistic/indent": ["error", 2, { "ignoredNodes": ["TSConditionalType", "TSConditionalType *", "TSTypeAliasDeclaration TSTypeLiteral", "TSTypeAliasDeclaration TSTupleType"] }],
+    "@stylistic/indent": ["error", 2, { "ignoredNodes": ["TSConditionalType", "TSConditionalType *", "TSTypeAliasDeclaration TSTypeLiteral", "TSTypeAliasDeclaration TSTupleType", "TSUnionType TSTypeLiteral", "TSUnionType TSTypeLiteral *", "TSTypeAliasDeclaration TSUnionType", "TSTypeAliasDeclaration TSUnionType *", "TSUnionType TSTupleType", "TSUnionType TSTupleType *", "TSDeclareMethod TSTypeAnnotation", "TSDeclareMethod TSTypeAnnotation *", "MethodDefinition TSTypeAnnotation", "MethodDefinition TSTypeAnnotation *"] }],
     "@stylistic/quotes": ["error", "single"],
     "@stylistic/semi": ["error", "never"],
     "@stylistic/comma-dangle": ["error", "always-multiline"],

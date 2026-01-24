@@ -41,39 +41,43 @@ export class SpreadPlayersCommand<MACRO extends boolean> extends CommandArgument
    * spreadplayers(rel(0, 0), 3, 50, false, '@e[type=villager]')
    * ```
    */
-  spreadplayers: ((
+  spreadplayers(
     center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
     spreadDistance: Macroable<number, MACRO>,
     maxRange: Macroable<number, MACRO>,
     respectTeams: Macroable<boolean, MACRO>,
     targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-  ) => FinalCommandOutput) &
-    /**
-     * Teleports entities to random surface locations within an area with height limit.
-     *
-     * @param center Center coordinates of the spread area (x, z coordinates only).
-     * @param spreadDistance Minimum distance between spread entities.
-     * @param maxRange Maximum distance from center to spread entities.
-     * @param under Literal string 'under' to enable height limiting.
-     * @param height Maximum Y coordinate for spread locations.
-     * @param respectTeams Whether to keep teams together when spreading.
-     * @param targets Entity selector for targets to spread.
-     *
-     * @example
-     * ```ts
-     * // Underground spreading
-     * spreadplayers([0, 0], 5, 100, 'under', 60, false, '@a')  // Spread below Y=60
-     * spreadplayers([25, 25], 8, 75, 'under', 40, true, '@a[team=miners]')
-     * ```
-     */
-    ((
-      center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
-      spreadDistance: Macroable<number, MACRO>,
-      maxRange: Macroable<number, MACRO>,
-      under: 'under',
-      height: Macroable<number, MACRO>,
-      respectTeams: Macroable<boolean, MACRO>,
-      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-    ) => FinalCommandOutput) = (...args: unknown[]) =>
-    this.finalCommand([coordinatesParser(args[0]), ...args.slice(1, -1), targetParser(args.slice(-1))])
+  ): FinalCommandOutput
+
+  /**
+   * Teleports entities to random surface locations within an area with height limit.
+   *
+   * @param center Center coordinates of the spread area (x, z coordinates only).
+   * @param spreadDistance Minimum distance between spread entities.
+   * @param maxRange Maximum distance from center to spread entities.
+   * @param under Literal string 'under' to enable height limiting.
+   * @param height Maximum Y coordinate for spread locations.
+   * @param respectTeams Whether to keep teams together when spreading.
+   * @param targets Entity selector for targets to spread.
+   *
+   * @example
+   * ```ts
+   * // Underground spreading
+   * spreadplayers([0, 0], 5, 100, 'under', 60, false, '@a')  // Spread below Y=60
+   * spreadplayers([25, 25], 8, 75, 'under', 40, true, '@a[team=miners]')
+   * ```
+   */
+  spreadplayers(
+    center: Macroable<ColumnCoordinates<MACRO>, MACRO>,
+    spreadDistance: Macroable<number, MACRO>,
+    maxRange: Macroable<number, MACRO>,
+    under: 'under',
+    height: Macroable<number, MACRO>,
+    respectTeams: Macroable<boolean, MACRO>,
+    targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+  ): FinalCommandOutput
+
+  spreadplayers(...args: unknown[]) {
+    return this.finalCommand([coordinatesParser(args[0]), ...args.slice(1, -1), targetParser(args.at(-1))])
+  }
 }

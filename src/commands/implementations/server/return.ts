@@ -101,7 +101,7 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
     const node = this.getNode()
 
     const commands = new Proxy(this.sandstonePack.commands as SandstoneCommands<MACRO>, {
-      get: (target, p, receiver) => {
+      get: (_t, p, _r) => {
         // The context will automatically be exited by the node itself
         this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(node)
         return (this.sandstonePack.commands as any)[p]

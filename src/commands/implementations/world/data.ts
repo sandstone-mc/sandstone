@@ -137,51 +137,55 @@ export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
     this.finalCommand(['storage', target, nbtStringifier(nbt)])
 }
 
+class DataModifyFromCommand<MACRO extends boolean> extends CommandArguments {
+  /**
+   * Modify with the NBT of a block at the given position.
+   *
+   * @param sourcePosition The coordinates of the block to modify the NBT with.
+   * @param sourcePath The path of the NBT to modify with.
+   */
+  block = (sourcePosition: Macroable<Coordinates<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>) =>
+    this.finalCommand(['block', coordinatesParser(sourcePosition), sourcePath])
+
+  /**
+   * Modify with the NBT of a given entity.
+   *
+   * @param source The entity to modify the NBT with.
+   * @param sourcePath The path of the NBT to modify with.
+   */
+  entity = (source: Macroable<SingleEntityArgument<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>) =>
+    this.finalCommand(['entity', targetParser(source), sourcePath])
+
+  /**
+   * Modify with the NBT of a given storage data point.
+   *
+   * @param source The storage data point to modify the NBT with.
+   */
+  storage(source: DataPointClass<'storage'>): void
+
+  /**
+   * Modify with the NBT of a given storage path.
+   *
+   * @param source The storage target to modify the NBT with.
+   * @param sourcePath The path of the NBT to modify with.
+   */
+  storage(source: Macroable<string, MACRO>, sourcePath: Macroable<string, MACRO>): void
+
+  storage(source: DataPointClass<'storage'> | Macroable<string, MACRO>, sourcePath?: Macroable<string, MACRO>) {
+    let storageArg: string | MacroArgument
+    if (isMacroArgument(this.sandstoneCore, source) || typeof source === 'string') {
+      storageArg = source
+    } else {
+      const dataPoint = source as DataPointClass<'storage'>
+      storageArg = `${dataPoint.currentTarget} ${dataPoint.path}`
+    }
+    return this.finalCommand(['storage', storageArg, sourcePath])
+  }
+}
+
 export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArguments {
-  from = {
-    /**
-     * Modify with the NBT of a block at the given position.
-     *
-     * @param sourcePosition The coordinates of the block to modify the NBT with.
-     * @param sourcePath The path of the NBT to modify with.
-     */
-    block: (sourcePosition: Macroable<Coordinates<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>) =>
-      this.finalCommand(['from', 'block', coordinatesParser(sourcePosition), sourcePath]),
-
-    /**
-     * Modify with the NBT of a given entity.
-     *
-     * @param source The entity to modify the NBT with.
-     * @param sourcePath The path of the NBT to modify with.
-     */
-    entity: (source: Macroable<SingleEntityArgument<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>) =>
-      this.finalCommand(['from', 'entity', targetParser(source), sourcePath]),
-
-    /**
-     * Modify with the NBT of a given storage point or path.
-     *
-     * @param source The storage point or target to modify the NBT with.
-     *
-     * @param sourcePath If a point isn't specified, the path of the NBT to modify with.
-     */
-    storage: (
-      ...args:
-        | [source: DataPointClass<'storage'>]
-        | [
-            source: Macroable<string, MACRO>,
-            sourcePath: Macroable<string, MACRO>,
-            /* @ts-ignore */
-          ]
-    ) => {
-      return this.finalCommand([
-        'from',
-        'storage',
-        isMacroArgument(this.sandstoneCore, args[0]) ||
-          // @ts-expect-error
-          (typeof args[0] === 'string' ? args[0] : `${args[0].currentTarget} ${args[0].path}`),
-        args[1],
-      ])
-    },
+  get from() {
+    return this.subCommand(['from'], DataModifyFromCommand<MACRO>, false)
   }
 
   string = {

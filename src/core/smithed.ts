@@ -93,7 +93,7 @@ export class SmithedDependencyCache {
     const lockFile = await (async () => {
       try {
         return JSON.parse(await fs.readFile(this.lockFile, 'utf-8')) as LockFile
-      } catch (_e) {
+      } catch {
         return false
       }
     })()

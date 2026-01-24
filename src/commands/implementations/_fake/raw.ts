@@ -1,4 +1,3 @@
-import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { CommandArguments } from '../../helpers'
 
