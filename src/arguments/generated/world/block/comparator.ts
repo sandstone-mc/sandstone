@@ -5,5 +5,5 @@ export type Comparator = (BlockEntity & {
   /**
    * Strength of the redstone output.
    */
-  OutputSignal?: NBTInt
+  OutputSignal?: NBTInt,
 })

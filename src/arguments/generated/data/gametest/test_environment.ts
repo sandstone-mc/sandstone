@@ -4,47 +4,47 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { MCFunctionClass, NBTInt } from 'sandstone'
 
 export type AllOffTestEnvironment = {
-  definitions: Array<TestEnvironment>
+  definitions: Array<TestEnvironment>,
 }
 
 export type BoolGameRule = {
-  rule: `${any}${string}`
-  value: boolean
+  rule: `${any}${string}`,
+  value: boolean,
 }
 
 export type ClockTimeTestEnvironment = {
-  clock: `${string}:${string}`
+  clock: `${string}:${string}`,
   /**
    * Value:
    * Range: 0..
    */
   time: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 }
 
 export type FunctionTestEnvironment = {
-  setup?: (`${string}:${string}` | MCFunctionClass)
-  teardown?: (`${string}:${string}` | MCFunctionClass)
+  setup?: (`${string}:${string}` | MCFunctionClass),
+  teardown?: (`${string}:${string}` | MCFunctionClass),
 }
 
 export type GameRulesTestEnvironment = {
   rules: ({
     [Key in Extract<Registry['minecraft:game_rule'], string>]?: (Key extends keyof SymbolGameRule
       ? SymbolGameRule[Key]
-      : RootNBT);
-  })
+      : RootNBT)
+  }),
 }
 
 export type IntGameRule = {
-  rule: `${any}${string}`
-  value: NBTInt
+  rule: `${any}${string}`,
+  value: NBTInt,
 }
 
 export type TestEnvironment = NonNullable<({
   [S in Extract<Registry['minecraft:test_environment_definition_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolTestEnvironmentDefinition ? SymbolTestEnvironmentDefinition[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolTestEnvironmentDefinition ? SymbolTestEnvironmentDefinition[S] : RootNBT))
 }[Registry['minecraft:test_environment_definition_type']])>
 
 export type TimeOfDayTestEnvironment = {
@@ -53,8 +53,8 @@ export type TimeOfDayTestEnvironment = {
    * Range: 0..
    */
   time: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 }
 
 export type Weather = ('clear' | 'rain' | 'thunder')
@@ -67,21 +67,21 @@ export type WeatherTestEnvironment = {
    *  - Rain(`rain`)
    *  - Thunder(`thunder`)
    */
-  weather: Weather
+  weather: Weather,
 }
 type TestEnvironmentDefinitionDispatcherMap = {
-  'all_of': TestEnvironmentDefinitionAllOf
-  'minecraft:all_of': TestEnvironmentDefinitionAllOf
-  'clock_time': TestEnvironmentDefinitionClockTime
-  'minecraft:clock_time': TestEnvironmentDefinitionClockTime
-  'function': TestEnvironmentDefinitionFunction
-  'minecraft:function': TestEnvironmentDefinitionFunction
-  'game_rules': TestEnvironmentDefinitionGameRules
-  'minecraft:game_rules': TestEnvironmentDefinitionGameRules
-  'time_of_day': TestEnvironmentDefinitionTimeOfDay
-  'minecraft:time_of_day': TestEnvironmentDefinitionTimeOfDay
-  'weather': TestEnvironmentDefinitionWeather
-  'minecraft:weather': TestEnvironmentDefinitionWeather
+  'all_of': TestEnvironmentDefinitionAllOf,
+  'minecraft:all_of': TestEnvironmentDefinitionAllOf,
+  'clock_time': TestEnvironmentDefinitionClockTime,
+  'minecraft:clock_time': TestEnvironmentDefinitionClockTime,
+  'function': TestEnvironmentDefinitionFunction,
+  'minecraft:function': TestEnvironmentDefinitionFunction,
+  'game_rules': TestEnvironmentDefinitionGameRules,
+  'minecraft:game_rules': TestEnvironmentDefinitionGameRules,
+  'time_of_day': TestEnvironmentDefinitionTimeOfDay,
+  'minecraft:time_of_day': TestEnvironmentDefinitionTimeOfDay,
+  'weather': TestEnvironmentDefinitionWeather,
+  'minecraft:weather': TestEnvironmentDefinitionWeather,
 }
 type TestEnvironmentDefinitionKeys = keyof TestEnvironmentDefinitionDispatcherMap
 type TestEnvironmentDefinitionFallback = (

@@ -28,13 +28,13 @@ export type ItemDisplayContext = (
   | 'on_shelf')
 
 export type Model = {
-  parent?: Registry['minecraft:model']
-  ambientocclusion?: boolean
-  gui_light?: ('front' | 'side')
+  parent?: Registry['minecraft:model'],
+  ambientocclusion?: boolean,
+  gui_light?: ('front' | 'side'),
   textures?: ({
-    [Key in `${any}${string}`]?: `${any}${string}` | `#${string}` | TextureClass;
-  })
-  elements?: Array<ModelElement>
+    [Key in `${any}${string}`]?: `${any}${string}` | `#${string}` | TextureClass
+  }),
+  elements?: Array<ModelElement>,
   display?: ({
     [Key in Extract<CustomizableItemDisplayContext, string>]?: {
       /**
@@ -42,39 +42,39 @@ export type Model = {
        * List length range: 3
        */
       rotation?: NBTList<NBTFloat, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-      }>
+        leftExclusive: false,
+        rightExclusive: false,
+        min: 3,
+        max: 3,
+      }>,
       /**
        * Value:
        * List length range: 3
        */
       translation?: NBTList<NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
+        leftExclusive: false,
+        rightExclusive: false,
       }>, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-      }>
+        leftExclusive: false,
+        rightExclusive: false,
+        min: 3,
+        max: 3,
+      }>,
       /**
        * Value:
        * List length range: 3
        */
       scale?: NBTList<NBTFloat<{
-        leftExclusive: false
-        rightExclusive: false
+        leftExclusive: false,
+        rightExclusive: false,
       }>, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 3
-        max: 3
-      }>
-    };
-  })
+        leftExclusive: false,
+        rightExclusive: false,
+        min: 3,
+        max: 3,
+      }>,
+    }
+  }),
 }
 
 export type ModelElement = {
@@ -83,40 +83,40 @@ export type ModelElement = {
    * List length range: 3
    */
   from: NBTList<NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
+    leftExclusive: false,
+    rightExclusive: false,
   }>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Value:
    * List length range: 3
    */
   to: NBTList<NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
+    leftExclusive: false,
+    rightExclusive: false,
   }>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   faces: ({
     [Key in Extract<Direction, string>]?: {
-      texture: `#${string}`
+      texture: `#${string}`,
       /**
        * Value:
        * List length range: 4
        */
       uv?: NBTList<NBTFloat, {
-        leftExclusive: false
-        rightExclusive: false
-        min: 4
-        max: 4
-      }>
+        leftExclusive: false,
+        rightExclusive: false,
+        min: 4,
+        max: 4,
+      }>,
       /**
        * Value:
        *
@@ -127,35 +127,35 @@ export type ModelElement = {
        *  - South(`south`)
        *  - West(`west`)
        */
-      cullface?: Direction
-      rotation?: (0 | 90 | 180 | 270)
-      tintindex?: NBTInt
-    };
-  })
-  rotation?: ModelElementRotation
-  shade?: boolean
+      cullface?: Direction,
+      rotation?: (0 | 90 | 180 | 270),
+      tintindex?: NBTInt,
+    }
+  }),
+  rotation?: ModelElementRotation,
+  shade?: boolean,
   /**
    * Value:
    * Range: 0..15
    */
   light_emission?: NBTInt<{
-    min: 0
-    max: 15
-  }>
+    min: 0,
+    max: 15,
+  }>,
 }
 
 export type ModelElementFace = {
-  texture: `#${string}`
+  texture: `#${string}`,
   /**
    * Value:
    * List length range: 4
    */
   uv?: NBTList<NBTFloat, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
   /**
    * Value:
    *
@@ -166,13 +166,13 @@ export type ModelElementFace = {
    *  - South(`south`)
    *  - West(`west`)
    */
-  cullface?: Direction
-  rotation?: (0 | 90 | 180 | 270)
-  tintindex?: NBTInt
+  cullface?: Direction,
+  rotation?: (0 | 90 | 180 | 270),
+  tintindex?: NBTInt,
 }
 
 export type ModelElementRotation = (ModelElementRotationBase & ({
-  [Key in Extract<Axis, string>]?: NBTFloat;
+  [Key in Extract<Axis, string>]?: NBTFloat
 }))
 
 export type ModelElementRotationBase = {
@@ -181,22 +181,22 @@ export type ModelElementRotationBase = {
    * List length range: 3
    */
   origin: NBTList<NBTFloat, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Defaults to `false`.
    */
-  rescale?: boolean
+  rescale?: boolean,
 }
 
 export type ModelOverride = {
   predicate: ({
-    [Key in Extract<Predicates, string>]?: NBTFloat;
-  })
-  model: ModelRef
+    [Key in Extract<Predicates, string>]?: NBTFloat
+  }),
+  model: ModelRef,
 }
 
 export type ModelRef = Registry['minecraft:model']

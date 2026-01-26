@@ -13,11 +13,11 @@ export type BlendToGray = {
    * Range: 0..1
    */
   brightness: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
   /**
    * The factor to mix with.
    *
@@ -25,11 +25,11 @@ export type BlendToGray = {
    * Range: 0..1
    */
   factor: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
 }
 
 export type BooleanAttributeModifier = {
@@ -44,8 +44,8 @@ export type BooleanAttributeModifier = {
    *  - Xor(`xor`)
    *  - Xnor(`xnor`)
    */
-  modifier: BooleanModifierType
-  argument: boolean
+  modifier: BooleanModifierType,
+  argument: boolean,
 }
 
 export type BooleanModifierType = ('override' | 'and' | 'nand' | 'or' | 'nor' | 'xor' | 'xnor')
@@ -62,13 +62,13 @@ export type ColorAttributeModifier = NonNullable<({
      *  - AlphaBlend(`alpha_blend`)
      *  - BlendToGray(`blend_to_gray`)
      */
-    modifier: S
+    modifier: S,
     argument: (S extends undefined
       ? SymbolEnvironmentAttributeColorModifier<'%none'> :
       (S extends keyof SymbolEnvironmentAttributeColorModifier
         ? SymbolEnvironmentAttributeColorModifier[S]
-        : SymbolEnvironmentAttributeColorModifier<'%unknown'>))
-  };
+        : SymbolEnvironmentAttributeColorModifier<'%unknown'>)),
+  }
 }[ColorModifierType])>
 
 export type ColorModifierType = ('override' | 'add' | 'subtract' | 'multiply' | 'alpha_blend' | 'blend_to_gray')
@@ -86,19 +86,19 @@ export type FloatAttributeModifier<T extends NBTObject> = ({
      *  - Maximum(`maximum`)
      *  - AlphaBlend(`alpha_blend`)
      */
-    modifier: S
+    modifier: S,
     argument: (S extends undefined
       ? SymbolEnvironmentAttributeFloatModifier<T, '%none'> :
       (S extends keyof SymbolEnvironmentAttributeFloatModifier<T>
         ? SymbolEnvironmentAttributeFloatModifier<T>[S]
-        : SymbolEnvironmentAttributeFloatModifier<T, '%unknown'>))
-  };
+        : SymbolEnvironmentAttributeFloatModifier<T, '%unknown'>)),
+  }
 }[FloatModifierType])
 
 export type FloatModifierType = ('override' | 'add' | 'subtract' | 'multiply' | 'minimum' | 'maximum' | 'alpha_blend')
 
 export type FloatWithAlpha = {
-  value: NBTFloat
+  value: NBTFloat,
   /**
    * Defaults to 1.0
    *
@@ -106,16 +106,16 @@ export type FloatWithAlpha = {
    * Range: 0..1
    */
   alpha?: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
 }
 
 export type OverrideModifier<T extends NBTObject> = {
-  modifier: 'override'
-  argument: T
+  modifier: 'override',
+  argument: T,
 }
 
 export type TranslucentColorAttributeModifier = NonNullable<({
@@ -130,19 +130,19 @@ export type TranslucentColorAttributeModifier = NonNullable<({
      *  - AlphaBlend(`alpha_blend`)
      *  - BlendToGray(`blend_to_gray`)
      */
-    modifier: S
+    modifier: S,
     argument: (S extends undefined
       ? SymbolEnvironmentAttributeArgbColorModifier<'%none'> :
       (S extends keyof SymbolEnvironmentAttributeArgbColorModifier
         ? SymbolEnvironmentAttributeArgbColorModifier[S]
-        : RootNBT))
-  };
+        : RootNBT)),
+  }
 }[ColorModifierType])>
 type EnvironmentAttributeFloatModifierDispatcherMap<T extends NBTObject> = {
-  'alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>
-  'minecraft:alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>
-  'override': EnvironmentAttributeFloatModifierOverride<T>
-  'minecraft:override': EnvironmentAttributeFloatModifierOverride<T>
+  'alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>,
+  'minecraft:alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>,
+  'override': EnvironmentAttributeFloatModifierOverride<T>,
+  'minecraft:override': EnvironmentAttributeFloatModifierOverride<T>,
 }
 type EnvironmentAttributeFloatModifierKeys = keyof EnvironmentAttributeFloatModifierDispatcherMap<NBTObject>
 type EnvironmentAttributeFloatModifierFallback<T extends NBTObject> = (

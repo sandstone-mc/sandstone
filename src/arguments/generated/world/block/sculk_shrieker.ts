@@ -2,6 +2,6 @@ import type { VibrationListener } from 'sandstone/arguments/generated/util/game_
 import type { NBTInt } from 'sandstone'
 
 export type SculkShrieker = {
-  warning_level?: NBTInt
-  listener?: VibrationListener
+  warning_level?: NBTInt,
+  listener?: VibrationListener,
 }

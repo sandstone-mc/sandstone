@@ -5,11 +5,11 @@ export type EndGateway = (BlockEntity & {
   /**
    * In game ticks.
    */
-  Age?: NBTLong
+  Age?: NBTLong,
   /**
    * Whether to teleport to the exact location.
    */
-  ExactTeleport?: boolean
+  ExactTeleport?: boolean,
   /**
    * Coordinates of where to teleport entities to.
    *
@@ -17,15 +17,15 @@ export type EndGateway = (BlockEntity & {
    * Array length range: 3
    */
   exit_portal?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
 })
 
 export type ExitPortal = {
-  X?: NBTInt
-  Y?: NBTInt
-  Z?: NBTInt
+  X?: NBTInt,
+  Y?: NBTInt,
+  Z?: NBTInt,
 }

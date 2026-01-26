@@ -10,15 +10,15 @@ import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
 
 export type AttributeModifiersPredicate = {
-  modifiers?: CollectionPredicate<AttributeModifiersPredicateEntry>
+  modifiers?: CollectionPredicate<AttributeModifiersPredicateEntry>,
 }
 
 export type AttributeModifiersPredicateEntry = {
   attribute?: ((
       | Registry['minecraft:attribute'] | `#${string}:${string}` | TagClass<'attribute'>)
-      | Array<Registry['minecraft:attribute']>)
-  id?: `${string}:${string}`
-  amount?: MinMaxBounds<(NBTDouble | number)>
+      | Array<Registry['minecraft:attribute']>),
+  id?: `${string}:${string}`,
+  amount?: MinMaxBounds<(NBTDouble | number)>,
   /**
    * Value:
    *
@@ -30,7 +30,7 @@ export type AttributeModifiersPredicateEntry = {
    *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
    *    where `x` is the amount of the particular modifier.
    */
-  operation?: AttributeOperation
+  operation?: AttributeOperation,
   /**
    * Value:
    *
@@ -46,36 +46,36 @@ export type AttributeModifiersPredicateEntry = {
    *  - Body(`body`)
    *  - Saddle(`saddle`)
    */
-  slot?: EquipmentSlotGroup
+  slot?: EquipmentSlotGroup,
 }
 
 export type BundleContentsPredicate = {
-  items?: CollectionPredicate<ItemPredicate>
+  items?: CollectionPredicate<ItemPredicate>,
 }
 
 export type CollectionPredicate<P extends NBTObject> = {
   /**
    * A list of tests. For each test, there must be at least one entry whose contents match exactly.
    */
-  contains?: Array<P>
+  contains?: Array<P>,
   count?: Array<{
     /**
      * The contents an entry's text must match exactly.
      */
-    test: P
+    test: P,
     /**
      * The number of entries that must match the test.
      */
-    count: MinMaxBounds<NBTInt>
-  }>
+    count: MinMaxBounds<NBTInt>,
+  }>,
   /**
    * When set, total number of entries in the this collection.
    */
-  size?: MinMaxBounds<NBTInt>
+  size?: MinMaxBounds<NBTInt>,
 }
 
 export type ContainerPredicate = {
-  items?: CollectionPredicate<ItemPredicate>
+  items?: CollectionPredicate<ItemPredicate>,
 }
 
 export type FireworkExplosionPredicate = {
@@ -88,82 +88,82 @@ export type FireworkExplosionPredicate = {
    *  - Creeper(`creeper`)
    *  - Burst(`burst`)
    */
-  shape?: FireworkShape
-  has_twinkle?: boolean
-  has_trail?: boolean
+  shape?: FireworkShape,
+  has_twinkle?: boolean,
+  has_trail?: boolean,
 }
 
 export type FireworksPredicate = {
-  explosions?: CollectionPredicate<FireworkExplosionPredicate>
-  flight_duration?: MinMaxBounds<NBTInt>
+  explosions?: CollectionPredicate<FireworkExplosionPredicate>,
+  flight_duration?: MinMaxBounds<NBTInt>,
 }
 
 export type ItemDamagePredicate = {
-  damage?: MinMaxBounds<NBTInt>
-  durability?: MinMaxBounds<NBTInt>
+  damage?: MinMaxBounds<NBTInt>,
+  durability?: MinMaxBounds<NBTInt>,
 }
 
 export type JukeboxPlayablePredicate = {
   song?: ((
       | Registry['minecraft:jukebox_song'] | `#${string}:${string}` | TagClass<'jukebox_song'>)
-      | Array<Registry['minecraft:jukebox_song']>)
+      | Array<Registry['minecraft:jukebox_song']>),
 }
 
 export type TrimPredicate = {
   material?: ((
       | Registry['minecraft:trim_material'] | `#${string}:${string}` | TagClass<'trim_material'>)
-      | Array<Registry['minecraft:trim_material']>)
+      | Array<Registry['minecraft:trim_material']>),
   pattern?: ((
       | Registry['minecraft:trim_pattern'] | `#${string}:${string}` | TagClass<'trim_pattern'>)
-      | Array<Registry['minecraft:trim_pattern']>)
+      | Array<Registry['minecraft:trim_pattern']>),
 }
 
 export type WritableBookPredicate = {
   /**
    * Matches the raw text, instead of filtered.
    */
-  pages?: CollectionPredicate<string>
+  pages?: CollectionPredicate<string>,
 }
 
 export type WrittenBookPredicate = {
   /**
    * Matches the raw text, instead of filtered.
    */
-  pages?: CollectionPredicate<Text>
-  author?: string
-  title?: string
-  generation?: MinMaxBounds<NBTInt>
-  resolved?: boolean
+  pages?: CollectionPredicate<Text>,
+  author?: string,
+  title?: string,
+  generation?: MinMaxBounds<NBTInt>,
+  resolved?: boolean,
 }
 type DataComponentPredicateDispatcherMap = {
-  'attribute_modifiers': DataComponentPredicateAttributeModifiers
-  'minecraft:attribute_modifiers': DataComponentPredicateAttributeModifiers
-  'bundle_contents': DataComponentPredicateBundleContents
-  'minecraft:bundle_contents': DataComponentPredicateBundleContents
-  'container': DataComponentPredicateContainer
-  'minecraft:container': DataComponentPredicateContainer
-  'custom_data': DataComponentPredicateCustomData
-  'minecraft:custom_data': DataComponentPredicateCustomData
-  'damage': DataComponentPredicateDamage
-  'minecraft:damage': DataComponentPredicateDamage
-  'enchantments': DataComponentPredicateEnchantments
-  'minecraft:enchantments': DataComponentPredicateEnchantments
-  'firework_explosion': DataComponentPredicateFireworkExplosion
-  'minecraft:firework_explosion': DataComponentPredicateFireworkExplosion
-  'fireworks': DataComponentPredicateFireworks
-  'minecraft:fireworks': DataComponentPredicateFireworks
-  'jukebox_playable': DataComponentPredicateJukeboxPlayable
-  'minecraft:jukebox_playable': DataComponentPredicateJukeboxPlayable
-  'potion_contents': DataComponentPredicatePotionContents
-  'minecraft:potion_contents': DataComponentPredicatePotionContents
-  'stored_enchantments': DataComponentPredicateStoredEnchantments
-  'minecraft:stored_enchantments': DataComponentPredicateStoredEnchantments
-  'trim': DataComponentPredicateTrim
-  'minecraft:trim': DataComponentPredicateTrim
-  'writable_book_content': DataComponentPredicateWritableBookContent
-  'minecraft:writable_book_content': DataComponentPredicateWritableBookContent
-  'written_book_content': DataComponentPredicateWrittenBookContent
-  'minecraft:written_book_content': DataComponentPredicateWrittenBookContent
+  'attribute_modifiers': DataComponentPredicateAttributeModifiers,
+  'minecraft:attribute_modifiers': DataComponentPredicateAttributeModifiers,
+  'bundle_contents': DataComponentPredicateBundleContents,
+  'minecraft:bundle_contents': DataComponentPredicateBundleContents,
+  'container': DataComponentPredicateContainer,
+  'minecraft:container': DataComponentPredicateContainer,
+  'custom_data': DataComponentPredicateCustomData,
+  'minecraft:custom_data': DataComponentPredicateCustomData,
+  'damage': DataComponentPredicateDamage,
+  'minecraft:damage': DataComponentPredicateDamage,
+  'enchantments': DataComponentPredicateEnchantments,
+  'minecraft:enchantments': DataComponentPredicateEnchantments,
+  'firework_explosion': DataComponentPredicateFireworkExplosion,
+  'minecraft:firework_explosion': DataComponentPredicateFireworkExplosion,
+  'fireworks': DataComponentPredicateFireworks,
+  'minecraft:fireworks': DataComponentPredicateFireworks,
+  'jukebox_playable': DataComponentPredicateJukeboxPlayable,
+  'minecraft:jukebox_playable': DataComponentPredicateJukeboxPlayable,
+  'potion_contents': DataComponentPredicatePotionContents,
+  'minecraft:potion_contents': DataComponentPredicatePotionContents,
+  'stored_enchantments': DataComponentPredicateStoredEnchantments,
+  'minecraft:stored_enchantments': DataComponentPredicateStoredEnchantments,
+  'trim': DataComponentPredicateTrim,
+  'minecraft:trim': DataComponentPredicateTrim,
+  'writable_book_content': DataComponentPredicateWritableBookContent,
+  'minecraft:writable_book_content': DataComponentPredicateWritableBookContent,
+  'written_book_content': DataComponentPredicateWrittenBookContent,
+  'minecraft:written_book_content': DataComponentPredicateWrittenBookContent,
 }
 type DataComponentPredicateKeys = keyof DataComponentPredicateDispatcherMap
 type DataComponentPredicateFallback = (

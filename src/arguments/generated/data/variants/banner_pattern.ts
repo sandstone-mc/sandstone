@@ -6,9 +6,9 @@ export type BannerPattern = {
    *
    * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/banner/`
    */
-  asset_id: `${string}:${string}`
+  asset_id: `${string}:${string}`,
   /**
    * Translation key prefix per dye color (e.g. `block.minecraft.banner.custom.pattern` resolves to `block.minecraft.banner.custom.pattern.<dye color>`).
    */
-  translation_key: string
+  translation_key: string,
 }

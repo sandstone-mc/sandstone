@@ -6,18 +6,18 @@ export type Camel = (HorseBase & {
   /**
    * Whether it is sitting.
    */
-  IsSitting?: boolean
+  IsSitting?: boolean,
   /**
    * The tick when it started changing its pose.
    */
-  LastPoseTick?: NBTLong
+  LastPoseTick?: NBTLong,
 })
 
 export type ChestedHorse = (HorseBase & {
   /**
    * Whether it has a chest.
    */
-  ChestedHorse?: boolean
+  ChestedHorse?: boolean,
   /**
    * Slots from 0 to 14.
    *
@@ -25,14 +25,14 @@ export type ChestedHorse = (HorseBase & {
    * List length range: 0..15
    */
   Items?: NBTList<(SlottedItem<NBTByte<{
-    min: 0
-    max: 14
+    min: 0,
+    max: 14,
   }>> | Record<string, never>), {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 15
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 15,
+  }>,
 })
 
 export type Horse = (HorseBase & {
@@ -77,7 +77,7 @@ export type Horse = (HorseBase & {
    *  - Gray_With_Black_Dots(`1029`)
    *  - DarkBrown_With_Black_Dots(`1030`)
    */
-  Variant?: HorseVariantAndMarkings
+  Variant?: HorseVariantAndMarkings,
 })
 
 export type HorseBase = (Breedable & {
@@ -85,15 +85,15 @@ export type HorseBase = (Breedable & {
    * Unknown use.
    * Remains `0` even if it was bred.
    */
-  Bred?: boolean
+  Bred?: boolean,
   /**
    * Whether it is eating a haystack.
    */
-  EatingHaystack?: boolean
+  EatingHaystack?: boolean,
   /**
    * Whether it has been tamed.
    */
-  Tame?: boolean
+  Tame?: boolean,
   /**
    * Higher values make it easier to tame. Increases with feeding.
    *
@@ -101,9 +101,9 @@ export type HorseBase = (Breedable & {
    * Range: 0..100
    */
   Temper?: NBTInt<{
-    min: 0
-    max: 100
-  }>
+    min: 0,
+    max: 100,
+  }>,
   /**
    * Player who tamed it.
    *
@@ -111,11 +111,11 @@ export type HorseBase = (Breedable & {
    * Array length range: 4
    */
   Owner?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 })
 
 export type HorseVariantAndMarkings = (
@@ -163,9 +163,9 @@ export type Llama = (ChestedHorse & {
    * Range: 1..5
    */
   Strength?: NBTInt<{
-    min: 1
-    max: 5
-  }>
+    min: 1,
+    max: 5,
+  }>,
   /**
    * The variant of this llama.
    *
@@ -176,7 +176,7 @@ export type Llama = (ChestedHorse & {
    *  - Brown(`2`)
    *  - Gray(`3`)
    */
-  Variant?: LlamaVariantInt
+  Variant?: LlamaVariantInt,
 })
 
 export type LlamaVariantInt = (0 | 1 | 2 | 3)
@@ -185,16 +185,16 @@ export type SkeletonHorse = (HorseBase & {
   /**
    * Whether it was spawned by a trap.
    */
-  SkeletonTrap?: boolean
+  SkeletonTrap?: boolean,
   /**
    * Ticks it has existed.
    */
-  SkeletonTrapTime?: NBTInt
+  SkeletonTrapTime?: NBTInt,
 })
 
 export type TraderLlama = (Llama & {
   /**
    * When it will despawn.
    */
-  DespawnDelay?: NBTInt
+  DespawnDelay?: NBTInt,
 })

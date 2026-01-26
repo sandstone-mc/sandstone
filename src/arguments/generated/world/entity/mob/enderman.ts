@@ -5,5 +5,5 @@ export type Enderman = (MobBase & NeutralMob & {
   /**
    * Block it is carrying.
    */
-  carriedBlockState?: BlockState
+  carriedBlockState?: BlockState,
 })

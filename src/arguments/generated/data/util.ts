@@ -10,35 +10,35 @@ export type BinomialIntGenerator = {
    * Range: 0..
    */
   n: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Value:
    * Range: 0..1
    */
   p: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
 }
 
 export type BinomialNumberProvider = {
-  n: NumberProvider
-  p: NumberProvider
+  n: NumberProvider,
+  p: NumberProvider,
 }
 
 export type ConstantIntGenerator = {
-  value: NBTInt
+  value: NBTInt,
 }
 
 export type ConstantNumberProvider = {
-  value: NBTFloat
+  value: NBTFloat,
 }
 
 export type ContextNbtProvider = {
-  target: NbtContextTarget
+  target: NbtContextTarget,
 }
 
 export type ContextScoreProvider = {
@@ -55,36 +55,36 @@ export type ContextScoreProvider = {
    *  - TargetEntity(`target_entity`)
    *  - InteractingEntity(`interacting_entity`)
    */
-  target: EntityTarget
+  target: EntityTarget,
 }
 
 export type EnchantmentLevelProvider = {
-  amount: LevelBasedValue
+  amount: LevelBasedValue,
 }
 
 export type FixedScoreProvider = {
-  name: `${any}${string}` | Score
+  name: `${any}${string}` | Score,
 }
 
 export type IntLimiter = {
-  min?: NBTInt
-  max?: NBTInt
+  min?: NBTInt,
+  max?: NBTInt,
 }
 
 export type IntRange = (NBTInt | {
   /**
    * Clamps to an integer.
    */
-  min?: NumberProvider
+  min?: NumberProvider,
   /**
    * Clamps to an integer.
    */
-  max?: NumberProvider
+  max?: NumberProvider,
 })
 
 export type MinMaxBounds<T extends NBTObject> = (T | {
-  min?: T
-  max?: T
+  min?: T,
+  max?: T,
 })
 
 export type MoonPhase = (
@@ -110,8 +110,8 @@ export type NbtContextTarget = (EntityTarget | BlockEntityTarget)
 
 export type NbtProvider = (NbtContextTarget | ({
   [S in Extract<Registry['minecraft:loot_nbt_provider_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolNbtProvider ? SymbolNbtProvider[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolNbtProvider ? SymbolNbtProvider[S] : RootNBT))
 }[Registry['minecraft:loot_nbt_provider_type']]))
 
 export type NbtProviderSource = (
@@ -126,10 +126,10 @@ export type NbtProviderSource = (
 
 export type NumberProvider = (NBTFloat | ({
   [S in Extract<Registry['minecraft:loot_number_provider_type'], string>]?: ({
-    type?: S
+    type?: S,
   } & (S extends undefined
     ? SymbolNumberProvider<'%none'> :
-    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)));
+    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)))
 }[Registry['minecraft:loot_number_provider_type']]))
 
 export type RandomIntGenerator = (NBTInt | ({
@@ -141,23 +141,23 @@ export type RandomIntGenerator = (NBTInt | ({
      *  - Binomial(`binomial`)
      *  - Constant(`constant`)
      */
-    type?: S
+    type?: S,
   } & (S extends undefined
     ? SymbolRandomIntGenerator<'%none'> :
-    (S extends keyof SymbolRandomIntGenerator ? SymbolRandomIntGenerator[S] : RootNBT)));
+    (S extends keyof SymbolRandomIntGenerator ? SymbolRandomIntGenerator[S] : RootNBT)))
 }[RandomIntGeneratorType]))
 
 export type RandomIntGeneratorType = ('uniform' | 'binomial' | 'constant')
 
 export type RandomValueBounds = (NBTFloat | {
-  min: NBTFloat
-  max: NBTFloat
+  min: NBTFloat,
+  max: NBTFloat,
 })
 
 export type ScoreNumberProvider = {
-  target: ScoreProvider
-  score: `${any}${string}` | ObjectiveClass
-  scale?: NBTFloat
+  target: ScoreProvider,
+  score: `${any}${string}` | ObjectiveClass,
+  scale?: NBTFloat,
 }
 
 /**
@@ -171,45 +171,45 @@ export type ScoreNumberProvider = {
  */
 export type ScoreProvider = (EntityTarget | ({
   [S in Extract<Registry['minecraft:loot_score_provider_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolScoreProvider ? SymbolScoreProvider[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolScoreProvider ? SymbolScoreProvider[S] : RootNBT))
 }[Registry['minecraft:loot_score_provider_type']]))
 
 export type SoundEventRef = (Registry['minecraft:sound_event'] | {
-  sound_id: (`${string}:${string}` | '')
+  sound_id: (`${string}:${string}` | ''),
   /**
    * Range in blocks. If the player is further than this range from the source of the sound, the sound will be inaudible. If omitted, the sound will have a variable range.
    */
-  range?: NBTFloat
+  range?: NBTFloat,
 })
 
 export type StorageNbtProvider = {
-  source: `${string}:${string}`
+  source: `${string}:${string}`,
 }
 
 export type StorageNumberProvider = {
-  storage: `${string}:${string}`
-  path: `${any}${string}` | DataPointClass
+  storage: `${string}:${string}`,
+  path: `${any}${string}` | DataPointClass,
 }
 
 export type SumNumberProvider = {
-  summands: Array<NumberProvider>
+  summands: Array<NumberProvider>,
 }
 
 export type UniformIntGenerator = {
-  min?: NBTInt
-  max?: NBTInt
+  min?: NBTInt,
+  max?: NBTInt,
 }
 
 export type UniformNumberProvider = {
-  min?: NumberProvider
-  max?: NumberProvider
+  min?: NumberProvider,
+  max?: NumberProvider,
 }
 type NbtProviderDispatcherMap = {
-  'context': NbtProviderContext
-  'minecraft:context': NbtProviderContext
-  'storage': NbtProviderStorage
-  'minecraft:storage': NbtProviderStorage
+  'context': NbtProviderContext,
+  'minecraft:context': NbtProviderContext,
+  'storage': NbtProviderStorage,
+  'minecraft:storage': NbtProviderStorage,
 }
 type NbtProviderKeys = keyof NbtProviderDispatcherMap
 type NbtProviderFallback = (NbtProviderContext | NbtProviderStorage)
@@ -224,20 +224,20 @@ export type SymbolNbtProvider<CASE extends
   ? NbtProviderDispatcherMap
   : CASE extends 'keys' ? NbtProviderKeys : CASE extends '%fallback' ? NbtProviderFallback : never
 type NumberProviderDispatcherMap = {
-  'binomial': NumberProviderBinomial
-  'minecraft:binomial': NumberProviderBinomial
-  'constant': NumberProviderConstant
-  'minecraft:constant': NumberProviderConstant
-  'enchantment_level': NumberProviderEnchantmentLevel
-  'minecraft:enchantment_level': NumberProviderEnchantmentLevel
-  'score': NumberProviderScore
-  'minecraft:score': NumberProviderScore
-  'storage': NumberProviderStorage
-  'minecraft:storage': NumberProviderStorage
-  'sum': NumberProviderSum
-  'minecraft:sum': NumberProviderSum
-  'uniform': NumberProviderUniform
-  'minecraft:uniform': NumberProviderUniform
+  'binomial': NumberProviderBinomial,
+  'minecraft:binomial': NumberProviderBinomial,
+  'constant': NumberProviderConstant,
+  'minecraft:constant': NumberProviderConstant,
+  'enchantment_level': NumberProviderEnchantmentLevel,
+  'minecraft:enchantment_level': NumberProviderEnchantmentLevel,
+  'score': NumberProviderScore,
+  'minecraft:score': NumberProviderScore,
+  'storage': NumberProviderStorage,
+  'minecraft:storage': NumberProviderStorage,
+  'sum': NumberProviderSum,
+  'minecraft:sum': NumberProviderSum,
+  'uniform': NumberProviderUniform,
+  'minecraft:uniform': NumberProviderUniform,
 }
 type NumberProviderKeys = keyof NumberProviderDispatcherMap
 type NumberProviderFallback = (
@@ -267,12 +267,12 @@ export type SymbolNumberProvider<CASE extends
     ? NumberProviderKeys
     : CASE extends '%fallback' ? NumberProviderFallback : CASE extends '%none' ? NumberProviderNoneType : never
 type RandomIntGeneratorDispatcherMap = {
-  'binomial': RandomIntGeneratorBinomial
-  'minecraft:binomial': RandomIntGeneratorBinomial
-  'constant': RandomIntGeneratorConstant
-  'minecraft:constant': RandomIntGeneratorConstant
-  'uniform': RandomIntGeneratorUniform
-  'minecraft:uniform': RandomIntGeneratorUniform
+  'binomial': RandomIntGeneratorBinomial,
+  'minecraft:binomial': RandomIntGeneratorBinomial,
+  'constant': RandomIntGeneratorConstant,
+  'minecraft:constant': RandomIntGeneratorConstant,
+  'uniform': RandomIntGeneratorUniform,
+  'minecraft:uniform': RandomIntGeneratorUniform,
 }
 type RandomIntGeneratorKeys = keyof RandomIntGeneratorDispatcherMap
 type RandomIntGeneratorFallback = (RandomIntGeneratorBinomial | RandomIntGeneratorConstant | RandomIntGeneratorUniform)
@@ -293,10 +293,10 @@ export type SymbolRandomIntGenerator<CASE extends
       ? RandomIntGeneratorFallback
       : CASE extends '%none' ? RandomIntGeneratorNoneType : never
 type ScoreProviderDispatcherMap = {
-  'context': ScoreProviderContext
-  'minecraft:context': ScoreProviderContext
-  'fixed': ScoreProviderFixed
-  'minecraft:fixed': ScoreProviderFixed
+  'context': ScoreProviderContext,
+  'minecraft:context': ScoreProviderContext,
+  'fixed': ScoreProviderFixed,
+  'minecraft:fixed': ScoreProviderFixed,
 }
 type ScoreProviderKeys = keyof ScoreProviderDispatcherMap
 type ScoreProviderFallback = (ScoreProviderContext | ScoreProviderFixed)

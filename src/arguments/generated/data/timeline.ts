@@ -7,7 +7,7 @@ export type AttributeTrackBase = {
    * Defaults to `linear`.
    * For visualization, check out: https://easings.net/
    */
-  ease?: EasingType
+  ease?: EasingType,
 }
 
 export type CubicBezierEase = {
@@ -32,20 +32,20 @@ export type CubicBezierEase = {
    */
   cubic_bezier: [
     NBTFloat<{
-      leftExclusive: false
-      rightExclusive: false
-      min: 0
-      max: 1
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 0,
+      max: 1,
     }>,
     NBTFloat,
     NBTFloat<{
-      leftExclusive: false
-      rightExclusive: false
-      min: 0
-      max: 1
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 0,
+      max: 1,
     }>,
     NBTFloat,
-  ]
+  ],
 }
 
 /**
@@ -64,7 +64,7 @@ export type EnvironmentAttributeTrackMap = ({
     ('attribute_track' extends keyof SymbolEnvironmentAttribute[Key]
       ? SymbolEnvironmentAttribute[Key]['attribute_track']
       : SymbolEnvironmentAttribute<'%unknown'>)
-    : SymbolEnvironmentAttribute<'%unknown'>);
+    : SymbolEnvironmentAttribute<'%unknown'>)
 })
 
 export type SimpleEasingType = (
@@ -109,14 +109,14 @@ export type Timeline = {
    * Range: 1..
    */
   period_ticks?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * The world clock this timeline is tied to.
    */
-  clock: `${string}:${string}`
-  time_markers?: TimeMarkerMap
-  tracks?: EnvironmentAttributeTrackMap
+  clock: `${string}:${string}`,
+  time_markers?: TimeMarkerMap,
+  tracks?: EnvironmentAttributeTrackMap,
 }
 
 export type TimeMarker = {
@@ -125,18 +125,18 @@ export type TimeMarker = {
    * Range: 0..
    */
   ticks: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Whether the time marker shows up in command suggestions. \
    * The time marker is still available in commands even if it is not suggested. \
    * Defaults to `false`.
    */
-  show_in_commands?: boolean
+  show_in_commands?: boolean,
 }
 
 export type TimeMarkerMap = ({
   [Key in Extract<`${any}${string}`, string>]?: (NBTInt<{
-    min: 0
-  }> | TimeMarker);
+    min: 0,
+  }> | TimeMarker)
 })

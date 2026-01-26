@@ -10,7 +10,7 @@ export type Offers = {
   /**
    * Trades it has to offer.
    */
-  Recipes?: Array<Recipe>
+  Recipes?: Array<Recipe>,
 }
 
 export type PlayerReputationPart = NonNullable<({
@@ -49,8 +49,8 @@ export type PlayerReputationPart = NonNullable<({
      *
      *    Decays by 2 every 20 minutes.
      */
-    Type?: S
-    Value?: (S extends keyof SymbolReputationPartValue ? SymbolReputationPartValue[S] : RootNBT)
+    Type?: S,
+    Value?: (S extends keyof SymbolReputationPartValue ? SymbolReputationPartValue[S] : RootNBT),
     /**
      * UUID of the player that caused the gossip-worthy event(s) related to this reputation part.
      *
@@ -58,12 +58,12 @@ export type PlayerReputationPart = NonNullable<({
      * Array length range: 4
      */
     Target?: NBTIntArray<{
-      leftExclusive: false
-      rightExclusive: false
-      min: 4
-      max: 4
-    }>
-  };
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 4,
+      max: 4,
+    }>,
+  }
 }[ReputationPart])>
 
 export type Recipe = {
@@ -72,7 +72,7 @@ export type Recipe = {
    *
    * Experience amount is `3 + random(0, 3)` plus `5` if the trade is causing the merchant to increase in tier.
    */
-  rewardExp?: boolean
+  rewardExp?: boolean,
   /**
    * Maximum number of uses for this trade before the merchant has to restock.
    *
@@ -80,8 +80,8 @@ export type Recipe = {
    * Range: 0..
    */
   maxUses?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Times this trade has been used since the merchant last restocked.
    *
@@ -89,20 +89,20 @@ export type Recipe = {
    * Range: 0..
    */
   uses?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Price item required by the merchant, count is modified depending on `demand` & per-player context.
    */
-  buy?: ItemCost
+  buy?: ItemCost,
   /**
    * Second item required by the merchant, count does not change.
    */
-  buyB?: ItemCost
+  buyB?: ItemCost,
   /**
    * Item being offered by the merchant.
    */
-  sell?: ItemStack
+  sell?: ItemStack,
   /**
    * XP the merchant gains from the trade.
    *
@@ -110,16 +110,16 @@ export type Recipe = {
    * Range: 0..
    */
   xp?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * How much demand & reputation each affect the count of the `buy` item.
    */
-  priceMultiplier?: NBTFloat
+  priceMultiplier?: NBTFloat,
   /**
    * Modifier added to the original count of the `buy` item.
    */
-  specialPrice?: NBTInt
+  specialPrice?: NBTInt,
   /**
    * Count adjuster of the `buy` item based on demand.
    *
@@ -127,13 +127,13 @@ export type Recipe = {
    * When restocking subtract the number of possible purchases before running out of stock and add twice the number of actually made purchases.
    * When the demand becomes positive, the count is increased by the initial count times `priceMultiplier` times the demand.
    */
-  demand?: NBTInt
+  demand?: NBTInt,
 }
 
 export type ReputationPart = ('major_negative' | 'minor_negative' | 'major_positive' | 'minor_positive' | 'trading')
 
 export type Villager = (Breedable & VillagerBase & {
-  VillagerData?: VillagerData
+  VillagerData?: VillagerData,
   /**
    * Determines whether the villager will be available to reproduce.
    *
@@ -149,9 +149,9 @@ export type Villager = (Breedable & VillagerBase & {
    * Range: 0..12
    */
   FoodLevel?: NBTByte<{
-    min: 0
-    max: 12
-  }>
+    min: 0,
+    max: 12,
+  }>,
   /**
    * Affects per-player reputation which affects trade offer pricing and iron golem behavior.
    *
@@ -163,17 +163,17 @@ export type Villager = (Breedable & VillagerBase & {
    *
    * Once a reputation part decays to zero it is removed from the list.
    */
-  Gossips?: Array<PlayerReputationPart>
+  Gossips?: Array<PlayerReputationPart>,
   /**
    * Last game-tick every gossip significance `Value` could have decayed.
    *
    * Once this reaches 24k (20 minutes) less than the current game tick a decay occurs again.
    */
-  LastGossipDecay?: NBTLong
+  LastGossipDecay?: NBTLong,
   /**
    * Last game-tick it removed `uses` & updated `demand` of every trade offer by going to its `job_site`.
    */
-  LastRestock?: NBTLong
+  LastRestock?: NBTLong,
   /**
    * Times it has reset the `uses` & updated `demand` of every trade offer by going to its `job_site` in the past 12k ticks (10 minutes).
    *
@@ -185,9 +185,9 @@ export type Villager = (Breedable & VillagerBase & {
    * Range: 0..2
    */
   RestocksToday?: NBTInt<{
-    min: 0
-    max: 2
-  }>
+    min: 0,
+    max: 2,
+  }>,
   /**
    * XP it has, increases when trades are used by each trade offer's `xp` value.
    *
@@ -204,8 +204,8 @@ export type Villager = (Breedable & VillagerBase & {
    * Range: 0..
    */
   Xp?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 })
 
 export type VillagerBase = {
@@ -216,31 +216,31 @@ export type VillagerBase = {
    * List length range: 0..8
    */
   Inventory?: NBTList<ItemStack, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 8
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 8,
+  }>,
   /**
    * Trade offers it has.
    */
-  Offers?: Offers
+  Offers?: Offers,
 }
 
 export type VillagerData = {
   /**
    * Used for trading and badge rendering.
    */
-  level?: NBTInt
-  profession?: Registry['minecraft:villager_profession']
-  type?: Registry['minecraft:villager_type']
+  level?: NBTInt,
+  profession?: Registry['minecraft:villager_profession'],
+  type?: Registry['minecraft:villager_type'],
 }
 
 export type WanderingTrader = (MobBase & VillagerBase & {
   /**
    * Ticks until it despawns.
    */
-  DespawnDelay?: NBTInt
+  DespawnDelay?: NBTInt,
   /**
    * Where it is heading to.
    *
@@ -248,15 +248,15 @@ export type WanderingTrader = (MobBase & VillagerBase & {
    * Array length range: 3
    */
   wander_target?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
 })
 
 export type WanderTarget = {
-  X?: NBTInt
-  Y?: NBTInt
-  Z?: NBTInt
+  X?: NBTInt,
+  Y?: NBTInt,
+  Z?: NBTInt,
 }

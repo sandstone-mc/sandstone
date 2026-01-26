@@ -12,11 +12,11 @@ export type Axolotl = (Breedable & {
    *  - Cyan(`3`)
    *  - Blue(`4`)
    */
-  Variant?: AxolotlVariantInt
+  Variant?: AxolotlVariantInt,
   /**
    * If this axolotl was released from a bucket.
    */
-  FromBucket?: boolean
+  FromBucket?: boolean,
 })
 
 export type AxolotlVariantInt = (0 | 1 | 2 | 3 | 4)

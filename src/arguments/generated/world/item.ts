@@ -10,11 +10,11 @@ import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTInt, NBTIntArray, NBTShort } from 'sandstone'
 
 export type AttributeModifier = {
-  AttributeName?: Registry['minecraft:attribute']
+  AttributeName?: Registry['minecraft:attribute'],
   /**
    * Identifying name of the modifier, has no real effect.
    */
-  Name?: string
+  Name?: string,
   /**
    * Slot that the modifier is active in.
    *
@@ -32,7 +32,7 @@ export type AttributeModifier = {
    *  - Body(`body`)
    *  - Saddle(`saddle`)
    */
-  Slot?: EquipmentSlotGroup
+  Slot?: EquipmentSlotGroup,
   /**
    * Value:
    *
@@ -46,25 +46,25 @@ export type AttributeModifier = {
    *    Functions the same as Operation 1 if there is only a single modifier with operation 1 or 2.
    *    However, for multiple modifiers it will multiply the modifiers rather than adding them
    */
-  Operation?: LegacyOperation
+  Operation?: LegacyOperation,
   /**
    * Change in the attribute.
    */
-  Amount?: (NBTDouble | number)
+  Amount?: (NBTDouble | number),
   /**
    * Value:
    * Array length range: 4
    */
   UUID?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 }
 
 export type BlockItem<S = undefined> = (ItemBase & {
-  BlockEntityTag?: BlockEntityData
+  BlockEntityTag?: BlockEntityData,
   /**
    * Blockstate that the placed block will have.
    */
@@ -72,25 +72,25 @@ export type BlockItem<S = undefined> = (ItemBase & {
     ? SymbolMcdocBlockItemStates<'%none'> :
     (S extends keyof SymbolMcdocBlockItemStates
       ? SymbolMcdocBlockItemStates[S]
-      : SymbolMcdocBlockItemStates<'%unknown'>))
+      : SymbolMcdocBlockItemStates<'%unknown'>)),
 })
 
 export type Display = {
   /**
    * A JSON text component.
    */
-  Name?: `${any}${string}`
+  Name?: `${any}${string}`,
   /**
    * A list of JSON text components, each element being a lore line.
    */
-  Lore?: Array<`${any}${string}`>
+  Lore?: Array<`${any}${string}`>,
 }
 
 export type Enchantment = {
   /**
    * Which enchantment is being described.
    */
-  id?: Registry['minecraft:enchantment']
+  id?: Registry['minecraft:enchantment'],
   /**
    * Which level the enchantment is.
    *
@@ -98,62 +98,62 @@ export type Enchantment = {
    * Range: 0..255
    */
   lvl?: NBTShort<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 }
 
 export type HideFlags = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)
 
 export type ItemBase = (({
-  [Key in `${any}${string}`]?: NBTObject;
+  [Key in `${any}${string}`]?: NBTObject
 }) & {
   /**
    * Damage that an item has. Only used for tools, armor, etc.
    */
-  Damage?: NBTInt
+  Damage?: NBTInt,
   /**
    * Whether the item should be unbreakable.
    * Only used for tools, armor, etc.
    */
-  Unbreakable?: boolean
+  Unbreakable?: boolean,
   /**
    * List of the block states that can be destroyed by this item when holding it in adventure mode.
    */
-  CanDestroy?: Array<`${any}${string}`>
+  CanDestroy?: Array<`${any}${string}`>,
   /**
    * List of blockstates that this block item can be placed on.
    */
-  CanPlaceOn?: Array<`${any}${string}`>
+  CanPlaceOn?: Array<`${any}${string}`>,
   /**
    * Tag that describes the custom model an item will take.
    * Used by the `custom_model_data` model overrides predicate.
    * Has certain restrictions due to float conversion.
    */
-  CustomModelData?: NBTInt
+  CustomModelData?: NBTInt,
   /**
    * List of enchantments that are on the item.
    */
-  Enchantments?: Array<Enchantment>
+  Enchantments?: Array<Enchantment>,
   /**
    * Number of experience levels to add to the base level cost when repairing, combining, or renaming this item with an anvil.
    */
-  RepairCost?: NBTInt
+  RepairCost?: NBTInt,
   /**
    * Applied to an entity that has equipped the item.
    */
-  AttributeModifiers?: Array<AttributeModifier>
+  AttributeModifiers?: Array<AttributeModifier>,
   /**
    * Display settings.
    */
-  display?: Display
+  display?: Display,
   /**
    * Bitfield for which flags to hide on an item.
    */
-  HideFlags?: NBTInt
+  HideFlags?: NBTInt,
   /**
    * Trim to apply to the item & armor when worn.
    */
-  Trim?: Trim
+  Trim?: Trim,
 })
 
 export type ItemCost = ItemStackOfComponent<DataComponentExactPredicate>
@@ -169,9 +169,9 @@ export type ItemStackOfComponent<T extends NBTObject> = (SingleItemOfComponent<T
    * Range: 1..99
    */
   count?: NBTInt<{
-    min: 1
-    max: 99
-  }>
+    min: 1,
+    max: 99,
+  }>,
 })
 
 export type SingleItem = SingleItemOfComponent<DataComponentPatch>
@@ -180,8 +180,8 @@ export type SingleItemOfComponent<T extends NBTObject> = {
   /**
    * ID of the item.
    */
-  id: Registry['minecraft:item']
-  components?: T
+  id: Registry['minecraft:item'],
+  components?: T,
 }
 
 export type TradeCost = (SingleItemOfComponent<DataComponentExactPredicate> & {
@@ -189,5 +189,5 @@ export type TradeCost = (SingleItemOfComponent<DataComponentExactPredicate> & {
    * Number of items in the stack.
    * Defaults to `1`.
    */
-  count?: NumberProvider
+  count?: NumberProvider,
 })

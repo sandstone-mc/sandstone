@@ -3,8 +3,8 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
 
 export type Mannequin = (LivingEntity & {
-  profile?: Profile
-  hidden_layers?: Array<PlayerModelPart>
+  profile?: Profile,
+  hidden_layers?: Array<PlayerModelPart>,
   /**
    * Defaults to `right`.
    *
@@ -13,7 +13,7 @@ export type Mannequin = (LivingEntity & {
    *  - Left(`left`)
    *  - Right(`right`)
    */
-  main_hand?: HumanoidArm
+  main_hand?: HumanoidArm,
   /**
    * Defaults to `standing`.
    *
@@ -25,21 +25,21 @@ export type Mannequin = (LivingEntity & {
    *  - FallFlying(`fall_flying`)
    *  - Sleeping(`sleeping`)
    */
-  pose?: MannequinPose
+  pose?: MannequinPose,
   /**
    * Defaults to `false`.
    */
-  immovable?: boolean
+  immovable?: boolean,
   /**
    * Text shown below the name tag.
    * Defaults to the translated `entity.minecraft.mannequin.label`.
    */
-  description?: Text
+  description?: Text,
   /**
    * Whether the below name text is displayed.
    * Defaults to `false`.
    */
-  hide_description?: boolean
+  hide_description?: boolean,
 })
 
 export type MannequinPose = ('standing' | 'crouching' | 'swimming' | 'fall_flying' | 'sleeping')

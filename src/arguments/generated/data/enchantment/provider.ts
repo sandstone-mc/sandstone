@@ -4,15 +4,15 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type ByCostEnchantmentProvider = {
-  enchantments: EnchantmentsType
+  enchantments: EnchantmentsType,
   /**
    * Cost to use for the Enchanting process.
    */
-  cost: IntProvider<NBTInt>
+  cost: IntProvider<NBTInt>,
 }
 
 export type ByCostWithDifficultyEnchantmentProvider = {
-  enchantments: EnchantmentsType
+  enchantments: EnchantmentsType,
   /**
    * Positive integer representing the minimum possible cost
    *
@@ -20,8 +20,8 @@ export type ByCostWithDifficultyEnchantmentProvider = {
    * Range: 0..
    */
   min_cost: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Span of the cost randomization when the special factor is at its maximum.
    *
@@ -29,14 +29,14 @@ export type ByCostWithDifficultyEnchantmentProvider = {
    * Range: 0..
    */
   max_cost_span: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 }
 
 export type EnchantmentProvider = NonNullable<({
   [S in Extract<Registry['minecraft:enchantment_provider_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolEnchantmentProvider ? SymbolEnchantmentProvider[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolEnchantmentProvider ? SymbolEnchantmentProvider[S] : RootNBT))
 }[Registry['minecraft:enchantment_provider_type']])>
 
 /**
@@ -52,21 +52,21 @@ export type EnchantmentsType = ((
   | Registry['minecraft:enchantment']
   | `#${Registry['minecraft:tag/enchantment']}`
   | TagClass<'enchantment'>) | NBTList<Registry['minecraft:enchantment'], {
-    leftExclusive: false
-    min: 1
+    leftExclusive: false,
+    min: 1,
   }>)
 
 export type SingleProvider = {
-  enchantment: Registry['minecraft:enchantment']
-  level: IntProvider<NBTInt>
+  enchantment: Registry['minecraft:enchantment'],
+  level: IntProvider<NBTInt>,
 }
 type EnchantmentProviderDispatcherMap = {
-  'by_cost': EnchantmentProviderByCost
-  'minecraft:by_cost': EnchantmentProviderByCost
-  'by_cost_with_difficulty': EnchantmentProviderByCostWithDifficulty
-  'minecraft:by_cost_with_difficulty': EnchantmentProviderByCostWithDifficulty
-  'single': EnchantmentProviderSingle
-  'minecraft:single': EnchantmentProviderSingle
+  'by_cost': EnchantmentProviderByCost,
+  'minecraft:by_cost': EnchantmentProviderByCost,
+  'by_cost_with_difficulty': EnchantmentProviderByCostWithDifficulty,
+  'minecraft:by_cost_with_difficulty': EnchantmentProviderByCostWithDifficulty,
+  'single': EnchantmentProviderSingle,
+  'minecraft:single': EnchantmentProviderSingle,
 }
 type EnchantmentProviderKeys = keyof EnchantmentProviderDispatcherMap
 type EnchantmentProviderFallback = (

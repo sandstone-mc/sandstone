@@ -20,5 +20,5 @@ export type EnderDragon = (MobBase & {
    *  - Dying(`9`)
    *  - Hovering(`10`)
    */
-  DragonPhase?: DragonPhase
+  DragonPhase?: DragonPhase,
 })

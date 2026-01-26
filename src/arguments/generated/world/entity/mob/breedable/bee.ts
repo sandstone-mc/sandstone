@@ -8,11 +8,11 @@ export type Bee = (Breedable & NeutralMob & {
    * Array length range: 3
    */
   hive_pos?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Position of the flower the bee is circling
    *
@@ -20,35 +20,35 @@ export type Bee = (Breedable & NeutralMob & {
    * Array length range: 3
    */
   flower_pos?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Whether the bee has nectar.
    */
-  HasNectar?: boolean
+  HasNectar?: boolean,
   /**
    * Whether the bee has stung an entity.
    */
-  HasStung?: boolean
+  HasStung?: boolean,
   /**
    * Ticks since the bee has pollinated a crop.
    */
-  TicksSincePollination?: NBTInt
+  TicksSincePollination?: NBTInt,
   /**
    * Ticks until the bee can enter its hive.
    */
-  CannotEnterHiveTicks?: NBTInt
+  CannotEnterHiveTicks?: NBTInt,
   /**
    * Crops grown since the bee has gathered nectar.
    */
-  CropsGrownSincePollination?: NBTInt
+  CropsGrownSincePollination?: NBTInt,
   /**
    * Ticks the bee will be angry for.
    */
-  Anger?: NBTInt
+  Anger?: NBTInt,
   /**
    * Player that has attacked the bee.
    *
@@ -56,21 +56,21 @@ export type Bee = (Breedable & NeutralMob & {
    * Array length range: 4
    */
   HurtBy?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 })
 
 export type FlowerPos = {
-  X?: NBTInt
-  Y?: NBTInt
-  Z?: NBTInt
+  X?: NBTInt,
+  Y?: NBTInt,
+  Z?: NBTInt,
 }
 
 export type HivePos = {
-  X?: NBTInt
-  Y?: NBTInt
-  Z?: NBTInt
+  X?: NBTInt,
+  Y?: NBTInt,
+  Z?: NBTInt,
 }

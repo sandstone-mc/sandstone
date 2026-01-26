@@ -2,12 +2,12 @@ import type { BlendToGray } from 'sandstone/arguments/generated/data/worldgen/at
 import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/color.ts'
 
 type EnvironmentAttributeColorModifierDispatcherMap = {
-  'alpha_blend': EnvironmentAttributeColorModifierAlphaBlend
-  'minecraft:alpha_blend': EnvironmentAttributeColorModifierAlphaBlend
-  'blend_to_gray': EnvironmentAttributeColorModifierBlendToGray
-  'minecraft:blend_to_gray': EnvironmentAttributeColorModifierBlendToGray
-  'override': EnvironmentAttributeColorModifierOverride
-  'minecraft:override': EnvironmentAttributeColorModifierOverride
+  'alpha_blend': EnvironmentAttributeColorModifierAlphaBlend,
+  'minecraft:alpha_blend': EnvironmentAttributeColorModifierAlphaBlend,
+  'blend_to_gray': EnvironmentAttributeColorModifierBlendToGray,
+  'minecraft:blend_to_gray': EnvironmentAttributeColorModifierBlendToGray,
+  'override': EnvironmentAttributeColorModifierOverride,
+  'minecraft:override': EnvironmentAttributeColorModifierOverride,
 }
 type EnvironmentAttributeColorModifierKeys = keyof EnvironmentAttributeColorModifierDispatcherMap
 type EnvironmentAttributeColorModifierFallback = (

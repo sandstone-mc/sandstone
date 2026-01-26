@@ -28,7 +28,7 @@ export type BlendMode = {
    *  - Min(`min`)
    *  - Max(`max`)
    */
-  func?: BlendFunc
+  func?: BlendFunc,
   /**
    * Value:
    *
@@ -45,7 +45,7 @@ export type BlendMode = {
    *  - DstAlpha(`dstalpha`)
    *  - OneDstAlpha(`1-dstalpha`)
    */
-  srcrgb?: BlendFactor
+  srcrgb?: BlendFactor,
   /**
    * Value:
    *
@@ -62,7 +62,7 @@ export type BlendMode = {
    *  - DstAlpha(`dstalpha`)
    *  - OneDstAlpha(`1-dstalpha`)
    */
-  dstrgb?: BlendFactor
+  dstrgb?: BlendFactor,
   /**
    * Value:
    *
@@ -79,7 +79,7 @@ export type BlendMode = {
    *  - DstAlpha(`dstalpha`)
    *  - OneDstAlpha(`1-dstalpha`)
    */
-  srcalpha?: BlendFactor
+  srcalpha?: BlendFactor,
   /**
    * Value:
    *
@@ -96,7 +96,7 @@ export type BlendMode = {
    *  - DstAlpha(`dstalpha`)
    *  - OneDstAlpha(`1-dstalpha`)
    */
-  dstalpha?: BlendFactor
+  dstalpha?: BlendFactor,
 }
 
 export type Defines = {
@@ -104,31 +104,31 @@ export type Defines = {
    * Values that will be injected as `#define <key> <value>` at the top of the file.
    */
   values?: ({
-    [Key in `${any}${string}`]?: string;
-  })
+    [Key in `${any}${string}`]?: string
+  }),
   /**
    * Flags that will be injected as `#define <key>` at the top of the file.
    */
-  flags?: Array<string>
+  flags?: Array<string>,
 }
 
 export type Sampler = {
-  name: string
+  name: string,
 }
 
 export type ShaderProgram = {
-  vertex: `${string}:${string}`
-  fragment: `${string}:${string}`
-  samplers?: Array<Sampler>
-  uniforms: Array<Uniform>
+  vertex: `${string}:${string}`,
+  fragment: `${string}:${string}`,
+  samplers?: Array<Sampler>,
+  uniforms: Array<Uniform>,
   /**
    * Defines GLSL directives to be injected into the shader source.
    */
-  defines?: Defines
+  defines?: Defines,
 }
 
 export type Uniform = {
-  name: string
+  name: string,
   /**
    * Value:
    *
@@ -138,9 +138,9 @@ export type Uniform = {
    *  - Matrix3x3(`matrix3x3`)
    *  - Matrix4x4(`matrix4x4`)
    */
-  type: UniformType
-  count: NBTInt
-  values: Array<NBTFloat>
+  type: UniformType,
+  count: NBTInt,
+  values: Array<NBTFloat>,
 }
 
 export type UniformType = ('int' | 'float' | 'matrix2x2' | 'matrix3x3' | 'matrix4x4')

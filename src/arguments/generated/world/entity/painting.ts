@@ -14,9 +14,9 @@ export type Painting = (BlockAttachedEntity & {
    *  - North(`2`)
    *  - East(`3`)
    */
-  facing?: Facing
+  facing?: Facing,
   /**
    * Type of painting.
    */
-  variant?: Registry['minecraft:painting_variant']
+  variant?: Registry['minecraft:painting_variant'],
 })

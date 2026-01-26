@@ -6,7 +6,7 @@
     "no-extra-boolean-cast": "error",
     "no-useless-catch": "error",
     "no-useless-constructor": "error",
-    "no-lone-blocks": "error",
+    "no-lone-blocks": "off",
     "no-useless-rename": "error",
     "no-unneeded-ternary": "error",
     "no-void": "error",
@@ -43,7 +43,8 @@
     "@typescript-eslint/no-extra-non-null-assertion": "error",
     "@typescript-eslint/no-unsafe-declaration-merging": "error",
     "@typescript-eslint/array-type": "off",
-    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
+    "@typescript-eslint/no-import-type-side-effects": "error",
 
     "prefer-const": "error",
     "prefer-exponentiation-operator": "error",
@@ -75,7 +76,7 @@
     "no-with": "error",
     "no-var": "error",
 
-    "@stylistic/indent": ["error", 2, { "ignoredNodes": ["TSConditionalType", "TSConditionalType *", "TSTypeAliasDeclaration TSTypeLiteral", "TSTypeAliasDeclaration TSTupleType", "TSUnionType TSTypeLiteral", "TSUnionType TSTypeLiteral *", "TSTypeAliasDeclaration TSUnionType", "TSTypeAliasDeclaration TSUnionType *", "TSUnionType TSTupleType", "TSUnionType TSTupleType *", "TSDeclareMethod TSTypeAnnotation", "TSDeclareMethod TSTypeAnnotation *", "MethodDefinition TSTypeAnnotation", "MethodDefinition TSTypeAnnotation *"] }],
+    "@stylistic/indent": ["error", 2, { "SwitchCase": 1, "ignoredNodes": ["TSConditionalType", "TSConditionalType *", "TSTypeAliasDeclaration TSTypeLiteral", "TSTypeAliasDeclaration TSTupleType", "TSUnionType TSTypeLiteral", "TSUnionType TSTypeLiteral *", "TSTypeAliasDeclaration TSUnionType", "TSTypeAliasDeclaration TSUnionType *", "TSUnionType TSTupleType", "TSUnionType TSTupleType *", "TSDeclareMethod TSTypeAnnotation", "TSDeclareMethod TSTypeAnnotation *", "MethodDefinition TSTypeAnnotation", "MethodDefinition TSTypeAnnotation *"] }],
     "@stylistic/quotes": ["error", "single"],
     "@stylistic/semi": ["error", "never"],
     "@stylistic/comma-dangle": ["error", "always-multiline"],

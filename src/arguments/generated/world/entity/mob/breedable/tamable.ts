@@ -28,8 +28,8 @@ export type Cat = (Tamable & {
    *  - Red(`14`)
    *  - Black(`15`)
    */
-  CollarColor?: DyeColorByte
-  variant?: Registry['minecraft:cat_variant']
+  CollarColor?: DyeColorByte,
+  variant?: Registry['minecraft:cat_variant'],
 })
 
 export type CatType = (-1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10)
@@ -44,7 +44,7 @@ export type Parrot = (Tamable & {
    *  - YellowBlue(`3`)
    *  - Gray(`4`)
    */
-  Variant?: ParrotVariantInt
+  Variant?: ParrotVariantInt,
 })
 
 export type ParrotVariantInt = (0 | 1 | 2 | 3 | 4)
@@ -55,15 +55,15 @@ export type Tamable = (Breedable & {
    * Array length range: 4
    */
   Owner?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
   /**
    * Whether the mob is sitting.
    */
-  Sitting?: boolean
+  Sitting?: boolean,
 })
 
 export type Wolf = (Tamable & NeutralMob & {
@@ -89,8 +89,8 @@ export type Wolf = (Tamable & NeutralMob & {
    *  - Red(`14`)
    *  - Black(`15`)
    */
-  CollarColor?: DyeColorByte
-  body_armor_item?: ItemStack
-  variant?: Registry['minecraft:wolf_variant']
-  sound_variant?: Registry['minecraft:wolf_sound_variant']
+  CollarColor?: DyeColorByte,
+  body_armor_item?: ItemStack,
+  variant?: Registry['minecraft:wolf_variant'],
+  sound_variant?: Registry['minecraft:wolf_sound_variant'],
 })

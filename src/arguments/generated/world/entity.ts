@@ -10,8 +10,8 @@ export type AnyEntity = NonNullable<({
     /**
      * The ID of this entity. Not present on player entities.
      */
-    id: S
-  } & (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT));
+    id: S,
+  } & (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT))
 }[Registry['minecraft:entity_type']])>
 
 export type BlockAttachedEntity = (EntityBase & {
@@ -20,11 +20,11 @@ export type BlockAttachedEntity = (EntityBase & {
    * Array length range: 3
    */
   block_pos?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
 })
 
 export type EntityBase = {
@@ -33,21 +33,21 @@ export type EntityBase = {
    * List length range: 3
    */
   Pos?: NBTList<(NBTDouble | number), {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Value:
    * List length range: 3
    */
   Motion?: NBTList<(NBTDouble | number), {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Rotation in [y-rotation, x-rotation]
    *
@@ -55,82 +55,82 @@ export type EntityBase = {
    * List length range: 2
    */
   Rotation?: NBTList<NBTFloat, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 2
-    max: 2
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 2,
+    max: 2,
+  }>,
   /**
    * How far the entity has fallen.
    */
-  fall_distance?: (NBTDouble | number)
+  fall_distance?: (NBTDouble | number),
   /**
    * Ticks of fire left, or if negative, ticks until the entity starts to burn.
    */
-  Fire?: NBTShort
+  Fire?: NBTShort,
   /**
    * Ticks of air left.
    */
-  Air?: NBTShort
+  Air?: NBTShort,
   /**
    * Whether the entity has visual fire.
    */
-  HasVisualFire?: boolean
+  HasVisualFire?: boolean,
   /**
    * Whether the entity is on the ground.
    */
-  OnGround?: boolean
+  OnGround?: boolean,
   /**
    * Whether the entity should be effected by gravity.
    */
-  NoGravity?: boolean
+  NoGravity?: boolean,
   /**
    * Whether the entity should take damage.
    */
-  Invulnerable?: boolean
+  Invulnerable?: boolean,
   /**
    * How long until the entity can go through a nether portal.
    */
-  PortalCooldown?: NBTInt
+  PortalCooldown?: NBTInt,
   /**
    * Value:
    * Array length range: 4
    */
   UUID?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
-  CustomName?: Text
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
+  CustomName?: Text,
   /**
    * Whether the custom name should always be visible.
    */
-  CustomNameVisible?: boolean
+  CustomNameVisible?: boolean,
   /**
    * Whether the entity should make any sound.
    */
-  Silent?: boolean
+  Silent?: boolean,
   /**
    * Passengers on the entity.
    */
-  Passengers?: Array<AnyEntity>
+  Passengers?: Array<AnyEntity>,
   /**
    * Whether the entity should glow.
    */
-  Glowing?: boolean
+  Glowing?: boolean,
   /**
    * Labelling tags on the entity.
    */
-  Tags?: Array<`${any}${string}` | LabelClass>
+  Tags?: Array<`${any}${string}` | LabelClass>,
   /**
    * Any stored data
    */
-  data?: CustomData
+  data?: CustomData,
   /**
    * Ticks that this entity has been freezing. Although this tag is defined for all entities,
    * it is actually only used by mobs that are not in the `freeze_immune_entity_types` entity type tag.
    * This increases by one every tick the entity is in powdered snow, and decreases by two when it's out of it.
    */
-  TicksFrozen?: NBTInt
+  TicksFrozen?: NBTInt,
 }

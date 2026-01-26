@@ -4,5 +4,5 @@ export type Ocelot = (Breedable & {
   /**
    * Whether it trusts players.
    */
-  Trusting?: boolean
+  Trusting?: boolean,
 })

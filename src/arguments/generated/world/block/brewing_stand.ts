@@ -14,20 +14,20 @@ export type BrewingStand = (BlockEntity & Nameable & Lockable & {
    * List length range: 0..5
    */
   Items?: NBTList<SlottedItem<NBTByte<{
-    min: 0
-    max: 4
+    min: 0,
+    max: 4,
   }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 5
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 5,
+  }>,
   /**
    * Number of ticks until the brewing is complete.
    */
-  BrewTime?: NBTShort
+  BrewTime?: NBTShort,
   /**
    * Amount of fuel the brewing stand has left.
    */
-  Fuel?: NBTByte
+  Fuel?: NBTByte,
 })

@@ -7,7 +7,7 @@ import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BlockParticle = {
-  block_state: (Registry['minecraft:block'] | BlockState)
+  block_state: (Registry['minecraft:block'] | BlockState),
 }
 
 export type DragonBreathParticle = {
@@ -15,36 +15,36 @@ export type DragonBreathParticle = {
    * Multiplier of initial velocity.
    * Defaults to 1.0
    */
-  power?: NBTFloat
+  power?: NBTFloat,
 }
 
 export type DustColor = RGB
 
 export type DustColorTransitionParticle = {
-  from_color: DustColor
-  to_color: DustColor
+  from_color: DustColor,
+  to_color: DustColor,
   /**
    * Value:
    * Range: 0.01..4
    */
   scale: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
 }
 
 export type DustParticle = {
-  color: DustColor
+  color: DustColor,
   /**
    * Value:
    * Range: 0.01..4
    */
   scale: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
 }
 
 export type EffectParticle = {
@@ -52,69 +52,69 @@ export type EffectParticle = {
    * Multiplier of initial velocity.
    * Defaults to 1.0
    */
-  power?: NBTFloat
-  color?: RGB
+  power?: NBTFloat,
+  color?: RGB,
 }
 
 export type EntityEffectParticle = {
-  color: TranslucentParticle
+  color: TranslucentParticle,
 }
 
 export type FlashParticle = {
-  color: TranslucentParticle
+  color: TranslucentParticle,
 }
 
 export type ItemParticle = {
-  item: (Registry['minecraft:item'] | SingleItem)
+  item: (Registry['minecraft:item'] | SingleItem),
 }
 
 /**
  * List length range: 3
  */
 export type LegacyDustColor = NBTList<NBTFloat, {
-  leftExclusive: false
-  rightExclusive: false
-  min: 3
-  max: 3
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 3,
+  max: 3,
 }>
 
 /**
  * List length range: 4
  */
 export type LegacyTranslucentParticle = NBTList<NBTFloat, {
-  leftExclusive: false
-  rightExclusive: false
-  min: 4
-  max: 4
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 4,
+  max: 4,
 }>
 
 export type Particle = NonNullable<({
   [S in Extract<Registry['minecraft:particle_type'], string>]?: ({
-    type: S
+    type: S,
   } & (S extends undefined
     ? SymbolParticle<'%none'> :
-    (S extends keyof SymbolParticle ? SymbolParticle[S] : SymbolParticle<'%unknown'>)));
+    (S extends keyof SymbolParticle ? SymbolParticle[S] : SymbolParticle<'%unknown'>)))
 }[Registry['minecraft:particle_type']])>
 
 export type SafePositionSource = {
-  type: 'block'
+  type: 'block',
   /**
    * Value:
    * List length range: 3
    */
   pos: NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
 }
 
 export type SculkChargeParticle = {
   /**
    * Angle the particle texture is rotated to, measured in radians (π ~ 3.14 for 180° clockwise, negative for counter clockwise).
    */
-  roll: NBTFloat
+  roll: NBTFloat,
 }
 
 export type ShriekParticle = {
@@ -125,12 +125,12 @@ export type ShriekParticle = {
    * Range: 0..
    */
   delay: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 }
 
 export type TintedLeavesParticle = {
-  color: RGBA
+  color: RGBA,
 }
 
 export type TrailParticle = {
@@ -139,19 +139,19 @@ export type TrailParticle = {
    * List length range: 3
    */
   target: NBTList<(NBTDouble | number), {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
-  color: RGB
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  color: RGB,
   /**
    * Value:
    * Range: 1..
    */
   duration: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
 }
 
 export type TranslucentParticle = RGBA
@@ -162,46 +162,46 @@ export type VibrationParticleData = {
   /**
    * Ticks in which to interpolate the particle's initial position to the destination.
    */
-  arrival_in_ticks: NBTInt
-  destination: SafePositionSource
+  arrival_in_ticks: NBTInt,
+  destination: SafePositionSource,
 }
 type ParticleDispatcherMap = {
-  'block': ParticleBlock
-  'minecraft:block': ParticleBlock
-  'block_crumble': ParticleBlockCrumble
-  'minecraft:block_crumble': ParticleBlockCrumble
-  'block_marker': ParticleBlockMarker
-  'minecraft:block_marker': ParticleBlockMarker
-  'dragon_breath': ParticleDragonBreath
-  'minecraft:dragon_breath': ParticleDragonBreath
-  'dust': ParticleDust
-  'minecraft:dust': ParticleDust
-  'dust_color_transition': ParticleDustColorTransition
-  'minecraft:dust_color_transition': ParticleDustColorTransition
-  'dust_pillar': ParticleDustPillar
-  'minecraft:dust_pillar': ParticleDustPillar
-  'effect': ParticleEffect
-  'minecraft:effect': ParticleEffect
-  'entity_effect': ParticleEntityEffect
-  'minecraft:entity_effect': ParticleEntityEffect
-  'falling_dust': ParticleFallingDust
-  'minecraft:falling_dust': ParticleFallingDust
-  'flash': ParticleFlash
-  'minecraft:flash': ParticleFlash
-  'instant_effect': ParticleInstantEffect
-  'minecraft:instant_effect': ParticleInstantEffect
-  'item': ParticleItem
-  'minecraft:item': ParticleItem
-  'sculk_charge': ParticleSculkCharge
-  'minecraft:sculk_charge': ParticleSculkCharge
-  'shriek': ParticleShriek
-  'minecraft:shriek': ParticleShriek
-  'tinted_leaves': ParticleTintedLeaves
-  'minecraft:tinted_leaves': ParticleTintedLeaves
-  'trail': ParticleTrail
-  'minecraft:trail': ParticleTrail
-  'vibration': ParticleVibration
-  'minecraft:vibration': ParticleVibration
+  'block': ParticleBlock,
+  'minecraft:block': ParticleBlock,
+  'block_crumble': ParticleBlockCrumble,
+  'minecraft:block_crumble': ParticleBlockCrumble,
+  'block_marker': ParticleBlockMarker,
+  'minecraft:block_marker': ParticleBlockMarker,
+  'dragon_breath': ParticleDragonBreath,
+  'minecraft:dragon_breath': ParticleDragonBreath,
+  'dust': ParticleDust,
+  'minecraft:dust': ParticleDust,
+  'dust_color_transition': ParticleDustColorTransition,
+  'minecraft:dust_color_transition': ParticleDustColorTransition,
+  'dust_pillar': ParticleDustPillar,
+  'minecraft:dust_pillar': ParticleDustPillar,
+  'effect': ParticleEffect,
+  'minecraft:effect': ParticleEffect,
+  'entity_effect': ParticleEntityEffect,
+  'minecraft:entity_effect': ParticleEntityEffect,
+  'falling_dust': ParticleFallingDust,
+  'minecraft:falling_dust': ParticleFallingDust,
+  'flash': ParticleFlash,
+  'minecraft:flash': ParticleFlash,
+  'instant_effect': ParticleInstantEffect,
+  'minecraft:instant_effect': ParticleInstantEffect,
+  'item': ParticleItem,
+  'minecraft:item': ParticleItem,
+  'sculk_charge': ParticleSculkCharge,
+  'minecraft:sculk_charge': ParticleSculkCharge,
+  'shriek': ParticleShriek,
+  'minecraft:shriek': ParticleShriek,
+  'tinted_leaves': ParticleTintedLeaves,
+  'minecraft:tinted_leaves': ParticleTintedLeaves,
+  'trail': ParticleTrail,
+  'minecraft:trail': ParticleTrail,
+  'vibration': ParticleVibration,
+  'minecraft:vibration': ParticleVibration,
 }
 type ParticleKeys = keyof ParticleDispatcherMap
 type ParticleFallback = (

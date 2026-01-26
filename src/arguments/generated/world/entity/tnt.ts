@@ -6,20 +6,20 @@ export type Tnt = (EntityBase & {
   /**
    * Ticks until it explodes.
    */
-  fuse?: NBTShort
+  fuse?: NBTShort,
   /**
    * Defaults to tnt.
    */
-  block_state?: BlockState
+  block_state?: BlockState,
   /**
    * Value:
    * Range: 0..128
    */
   explosion_power?: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
   /**
    * The entity that primed this TNT.
    *
@@ -27,9 +27,9 @@ export type Tnt = (EntityBase & {
    * Array length range: 4
    */
   owner?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 })

@@ -6,9 +6,9 @@ export type Beacon = (BlockEntity & Nameable & Lockable & {
   /**
    * Number of levels from the pyramid.
    */
-  Levels?: NBTInt
-  primary_effect?: Registry['minecraft:mob_effect']
-  secondary_effect?: Registry['minecraft:mob_effect']
+  Levels?: NBTInt,
+  primary_effect?: Registry['minecraft:mob_effect'],
+  secondary_effect?: Registry['minecraft:mob_effect'],
 })
 
 export type NoneId = -1

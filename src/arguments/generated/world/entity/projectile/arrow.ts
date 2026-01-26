@@ -10,7 +10,7 @@ export type ArrowBase = (ProjectileBase & {
   /**
    * Shake it creates.
    */
-  shake?: NBTByte
+  shake?: NBTByte,
   /**
    * How players can pick up it.
    *
@@ -20,42 +20,42 @@ export type ArrowBase = (ProjectileBase & {
    *  - Any(`1`)
    *  - Creative(`2`)
    */
-  pickup?: Pickup
+  pickup?: Pickup,
   /**
    * Ticks since it last moved.
    */
-  life?: NBTShort
+  life?: NBTShort,
   /**
    * Damage it should deal.
    */
-  damage?: (NBTDouble | number)
+  damage?: (NBTDouble | number),
   /**
    * Whether it is in the ground.
    */
-  inGround?: boolean
+  inGround?: boolean,
   /**
    * Block it is in.
    */
-  inBlockState?: BlockState
+  inBlockState?: BlockState,
   /**
    * Whether it should do critical damage.
    */
-  crit?: boolean
+  crit?: boolean,
   /**
    * The item which has shot this arrow.
    */
-  weapon?: ItemStack
+  weapon?: ItemStack,
   /**
    * Number of entities it can pass through.
    */
-  PierceLevel?: NBTByte
+  PierceLevel?: NBTByte,
   /**
    * Sound event to play when it hits something.
    *
    * Can only be vanilla sound events
    */
-  SoundEvent?: Registry['minecraft:sound_event']
-  item?: ItemStack
+  SoundEvent?: Registry['minecraft:sound_event'],
+  item?: ItemStack,
 })
 
 export type Pickup = (0 | 1 | 2)
@@ -64,12 +64,12 @@ export type SpectralArrow = (ArrowBase & {
   /**
    * Ticks the glowing effect lasts.
    */
-  Duration?: NBTInt
+  Duration?: NBTInt,
 })
 
 export type Trident = (ArrowBase & {
   /**
    * Whether it has already damaged an entity.
    */
-  DealtDamage?: boolean
+  DealtDamage?: boolean,
 })

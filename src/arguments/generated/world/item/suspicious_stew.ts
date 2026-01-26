@@ -3,7 +3,7 @@ import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTInt } from 'sandstone'
 
 export type Effect = {
-  EffectId?: EffectId
+  EffectId?: EffectId,
   /**
    * Duration in ticks.
    *
@@ -11,13 +11,13 @@ export type Effect = {
    * Range: 1..
    */
   EffectDuration?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
 }
 
 export type SuspiciousStew = (ItemBase & {
   /**
    * Effects this stew will give.
    */
-  Effects?: Array<Effect>
+  Effects?: Array<Effect>,
 })

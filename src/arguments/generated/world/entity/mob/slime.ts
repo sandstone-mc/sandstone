@@ -7,10 +7,10 @@ export type Slime = (MobBase & {
    * Range: 0..126
    */
   Size?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Whether it is on the ground.
    */
-  wasOnGround?: boolean
+  wasOnGround?: boolean,
 })

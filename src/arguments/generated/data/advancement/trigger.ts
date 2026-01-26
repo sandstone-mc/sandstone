@@ -15,131 +15,131 @@ import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type AllayDropItemOnBlock = (TriggerBase & {
-  location?: Array<LootCondition>
+  location?: Array<LootCondition>,
 })
 
 export type AnyBlockUse = (TriggerBase & {
-  location?: Array<LootCondition>
+  location?: Array<LootCondition>,
 })
 
 export type BeeNestDestroyed = (TriggerBase & {
-  block?: Registry['minecraft:block']
+  block?: Registry['minecraft:block'],
   /**
    * Number of bees that were inside the bee nest/beehive before it was broken.
    */
-  num_bees_inside?: NBTInt
+  num_bees_inside?: NBTInt,
   /**
    * Item used to break the block.
    */
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 
 export type BredAnimals = (TriggerBase & {
-  parent?: CompositeEntity
-  partner?: CompositeEntity
-  child?: CompositeEntity
+  parent?: CompositeEntity,
+  partner?: CompositeEntity,
+  child?: CompositeEntity,
 })
 
 export type BrewedPotion = (TriggerBase & {
-  potion?: Registry['minecraft:potion']
+  potion?: Registry['minecraft:potion'],
 })
 
 export type ChangedDimension = (TriggerBase & {
-  from?: Registry['minecraft:dimension']
-  to?: Registry['minecraft:dimension']
+  from?: Registry['minecraft:dimension'],
+  to?: Registry['minecraft:dimension'],
 })
 
 export type ChanneledLightning = (TriggerBase & {
-  victims?: Array<CompositeEntity>
+  victims?: Array<CompositeEntity>,
 })
 
 export type CompositeEntity = (EntityPredicate | Array<LootCondition>)
 
 export type Conditions<C extends NBTObject> = {
-  conditions?: C
+  conditions?: C,
 }
 
 export type ConstructBeacon = (TriggerBase & {
   /**
    * Tier of the updated beacon base.
    */
-  level?: MinMaxBounds<NBTInt>
+  level?: MinMaxBounds<NBTInt>,
 })
 
 export type ConsumeItem = (TriggerBase & {
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 
 export type CuredZombieVillager = (TriggerBase & {
-  villager?: CompositeEntity
-  zombie?: CompositeEntity
+  villager?: CompositeEntity,
+  zombie?: CompositeEntity,
 })
 
 export type DefaultBlockUse = (TriggerBase & {
   /**
    * The location of the block.
    */
-  location?: Array<LootCondition>
+  location?: Array<LootCondition>,
 })
 
 export type EffectsChanged = (TriggerBase & {
   effects?: ({
-    [Key in Extract<Registry['minecraft:mob_effect'], string>]?: MobEffectPredicate;
-  })
-  source?: CompositeEntity
+    [Key in Extract<Registry['minecraft:mob_effect'], string>]?: MobEffectPredicate
+  }),
+  source?: CompositeEntity,
 })
 
 export type EnchantedItem = (TriggerBase & {
-  item?: ItemPredicate
-  levels?: MinMaxBounds<NBTInt>
+  item?: ItemPredicate,
+  levels?: MinMaxBounds<NBTInt>,
 })
 
 export type EnterBlock = NonNullable<({
   [S in Extract<Registry['minecraft:block'], string>]?: (TriggerBase & {
-    block?: S
+    block?: S,
     state?: (S extends undefined
       ? SymbolMcdocBlockStates<'%none'> :
-      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>))
-  });
+      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>)),
+  })
 }[Registry['minecraft:block']])>
 
 export type EntityHurtPlayer = (TriggerBase & {
-  damage?: DamagePredicate
+  damage?: DamagePredicate,
 })
 
 export type EntityKilledPlayer = (TriggerBase & {
-  entity?: CompositeEntity
-  killing_blow?: DamageSourcePredicate
+  entity?: CompositeEntity,
+  killing_blow?: DamageSourcePredicate,
 })
 
 export type FallAfterExplosion = (TriggerBase & {
-  start_position?: LocationPredicate
-  distance?: DistancePredicate
-  cause?: CompositeEntity
+  start_position?: LocationPredicate,
+  distance?: DistancePredicate,
+  cause?: CompositeEntity,
 })
 
 export type FallFromHeight = (TriggerBase & {
-  start_position?: LocationPredicate
-  distance?: DistancePredicate
+  start_position?: LocationPredicate,
+  distance?: DistancePredicate,
 })
 
 export type FilledBucket = (TriggerBase & {
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 
 export type FishingRodHooked = (TriggerBase & {
   /**
    * Entity that was pulled.
    */
-  entity?: CompositeEntity
+  entity?: CompositeEntity,
   /**
    * Item that was caught.
    */
-  item?: ItemPredicate
+  item?: ItemPredicate,
   /**
    * Fishing rod used.
    */
-  rod?: ItemPredicate
+  rod?: ItemPredicate,
 })
 
 export type InventoryChanged = (TriggerBase & {
@@ -147,71 +147,71 @@ export type InventoryChanged = (TriggerBase & {
     /**
      * Amount of empty slots.
      */
-    empty?: MinMaxBounds<NBTInt>
+    empty?: MinMaxBounds<NBTInt>,
     /**
      * Amount of occupied slots.
      */
-    occupied?: MinMaxBounds<NBTInt>
+    occupied?: MinMaxBounds<NBTInt>,
     /**
      * Amount of slots that are a full stack.
      */
-    full?: MinMaxBounds<NBTInt>
-  }
-  items?: Array<ItemPredicate>
+    full?: MinMaxBounds<NBTInt>,
+  },
+  items?: Array<ItemPredicate>,
 })
 
 export type ItemDurabilityChanged = (TriggerBase & {
   /**
    * Change in durability (negative numbers are used to indicate a decrease in durability).
    */
-  delta?: MinMaxBounds<NBTInt>
+  delta?: MinMaxBounds<NBTInt>,
   /**
    * The resulting durability.
    */
-  durability?: MinMaxBounds<NBTInt>
+  durability?: MinMaxBounds<NBTInt>,
   /**
    * The item before its durability changed.
    */
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 
 export type ItemUsedOnBlock = (TriggerBase & {
-  location?: Array<LootCondition>
+  location?: Array<LootCondition>,
 })
 
 export type KilledByArrow = (TriggerBase & {
   /**
    * How many different types of entities were killed.
    */
-  unique_entity_types?: MinMaxBounds<NBTInt>
+  unique_entity_types?: MinMaxBounds<NBTInt>,
   /**
    * The weapon item that was used to fire the arrow.
    */
-  fired_from_weapon?: ItemPredicate
-  victims?: Array<CompositeEntity>
+  fired_from_weapon?: ItemPredicate,
+  victims?: Array<CompositeEntity>,
 })
 
 export type KilledByCrossbow = (TriggerBase & {
   /**
    * How many different types of entities were killed.
    */
-  unique_entity_types?: MinMaxBounds<NBTInt>
-  victims?: Array<CompositeEntity>
+  unique_entity_types?: MinMaxBounds<NBTInt>,
+  victims?: Array<CompositeEntity>,
 })
 
 export type KillMobNearSculkCatalyst = (TriggerBase & {
-  entity?: EntityPredicate
-  killing_blow?: DamageSourcePredicate
+  entity?: EntityPredicate,
+  killing_blow?: DamageSourcePredicate,
 })
 
 export type Levitation = (TriggerBase & {
-  distance?: DistancePredicate
-  duration?: MinMaxBounds<NBTInt>
+  distance?: DistancePredicate,
+  duration?: MinMaxBounds<NBTInt>,
 })
 
 export type LightningStrike = (TriggerBase & {
-  lightning?: CompositeEntity
-  bystander?: CompositeEntity
+  lightning?: CompositeEntity,
+  bystander?: CompositeEntity,
 })
 
 export type Location = TriggerBase
@@ -220,83 +220,83 @@ export type NetherTravel = (TriggerBase & {
   /**
    * Where in the Overworld the player was when they travelled to the Nether.
    */
-  start_position?: LocationPredicate
+  start_position?: LocationPredicate,
   /**
    * How far the player now is from the coordinate they started at in the Overworld before travelling.
    */
-  distance?: DistancePredicate
+  distance?: DistancePredicate,
 })
 
 export type PlacedBlock = (TriggerBase & {
   /**
    * Where the block was placed.
    */
-  location?: Array<LootCondition>
+  location?: Array<LootCondition>,
 })
 
 export type PlayerGeneratesContainerLoot = (TriggerBase & {
-  loot_table: Registry['minecraft:loot_table']
+  loot_table: Registry['minecraft:loot_table'],
 })
 
 export type PlayerHurtEntity = (TriggerBase & {
-  damage?: DamagePredicate
-  entity?: CompositeEntity
+  damage?: DamagePredicate,
+  entity?: CompositeEntity,
 })
 
 export type PlayerInteract = (TriggerBase & {
-  item?: ItemPredicate
-  entity?: CompositeEntity
+  item?: ItemPredicate,
+  entity?: CompositeEntity,
 })
 
 export type PlayerKilledEntity = (TriggerBase & {
-  entity?: CompositeEntity
-  killing_blow?: DamageSourcePredicate
+  entity?: CompositeEntity,
+  killing_blow?: DamageSourcePredicate,
 })
 
 export type RecipeCrafted = (TriggerBase & {
-  recipe_id: Registry['minecraft:recipe']
+  recipe_id: Registry['minecraft:recipe'],
   /**
    * Value:
    * List length range: 1..9
    */
   ingredients?: NBTList<ItemPredicate, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 1
-    max: 9
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 1,
+    max: 9,
+  }>,
 })
 
 export type RecipeUnlocked = (TriggerBase & {
-  recipe: Registry['minecraft:recipe']
+  recipe: Registry['minecraft:recipe'],
 })
 
 export type RequiredConditions<C extends NBTObject> = {
-  conditions: C
+  conditions: C,
 }
 
 export type RideEntityInLava = (TriggerBase & {
-  start_position?: LocationPredicate
-  distance?: DistancePredicate
+  start_position?: LocationPredicate,
+  distance?: DistancePredicate,
 })
 
 export type SafelyHarvestHoney = (TriggerBase & {
   block?: {
-    block?: Registry['minecraft:block']
-    tag?: (Registry['minecraft:tag/block'])
-  }
-  item?: ItemPredicate
+    block?: Registry['minecraft:block'],
+    tag?: (Registry['minecraft:tag/block']),
+  },
+  item?: ItemPredicate,
 })
 
 export type ShotCrossbow = (TriggerBase & {
   /**
    * Crossbow that was used.
    */
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 
 export type SlideDownBlock = (TriggerBase & {
-  block?: Registry['minecraft:block']
+  block?: Registry['minecraft:block'],
 })
 
 export type SpearMobs = (TriggerBase & {
@@ -305,179 +305,179 @@ export type SpearMobs = (TriggerBase & {
    * Range: 1..
    */
   count?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
 })
 
 export type SummonedEntity = (TriggerBase & {
-  entity?: CompositeEntity
+  entity?: CompositeEntity,
 })
 
 export type TameAnimal = (TriggerBase & {
-  entity?: CompositeEntity
+  entity?: CompositeEntity,
 })
 
 export type TargetHit = (TriggerBase & {
-  projectile?: CompositeEntity
-  shooter?: CompositeEntity
-  signal_strength?: MinMaxBounds<NBTInt>
+  projectile?: CompositeEntity,
+  shooter?: CompositeEntity,
+  signal_strength?: MinMaxBounds<NBTInt>,
 })
 
 export type ThrownItemPickedUpByEntity = (TriggerBase & {
-  item?: ItemPredicate
-  entity?: CompositeEntity
+  item?: ItemPredicate,
+  entity?: CompositeEntity,
 })
 
 export type ThrownItemPickedUpByPlayer = (TriggerBase & {
-  item?: ItemPredicate
-  entity?: CompositeEntity
+  item?: ItemPredicate,
+  entity?: CompositeEntity,
 })
 
 export type TriggerBase = {
-  player?: CompositeEntity
+  player?: CompositeEntity,
 }
 
 export type UsedEnderEye = (TriggerBase & {
   /**
    * Horizontal distance between the player and the stronghold.
    */
-  distance?: MinMaxBounds<NBTFloat>
+  distance?: MinMaxBounds<NBTFloat>,
 })
 
 export type UsedTotem = (TriggerBase & {
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 
 export type UsingItem = (TriggerBase & {
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 
 export type VillagerTrade = (TriggerBase & {
-  villager?: CompositeEntity
+  villager?: CompositeEntity,
   /**
    * Item that was purchased. `count` tag checks the item count from one trade, not the total amount traded for.
    */
-  item?: ItemPredicate
+  item?: ItemPredicate,
 })
 type TriggerDispatcherMap = {
-  'allay_drop_item_on_block': TriggerAllayDropItemOnBlock
-  'minecraft:allay_drop_item_on_block': TriggerAllayDropItemOnBlock
-  'any_block_use': TriggerAnyBlockUse
-  'minecraft:any_block_use': TriggerAnyBlockUse
-  'bee_nest_destroyed': TriggerBeeNestDestroyed
-  'minecraft:bee_nest_destroyed': TriggerBeeNestDestroyed
-  'bred_animals': TriggerBredAnimals
-  'minecraft:bred_animals': TriggerBredAnimals
-  'brewed_potion': TriggerBrewedPotion
-  'minecraft:brewed_potion': TriggerBrewedPotion
-  'changed_dimension': TriggerChangedDimension
-  'minecraft:changed_dimension': TriggerChangedDimension
-  'channeled_lightning': TriggerChanneledLightning
-  'minecraft:channeled_lightning': TriggerChanneledLightning
-  'construct_beacon': TriggerConstructBeacon
-  'minecraft:construct_beacon': TriggerConstructBeacon
-  'consume_item': TriggerConsumeItem
-  'minecraft:consume_item': TriggerConsumeItem
-  'crafter_recipe_crafted': TriggerCrafterRecipeCrafted
-  'minecraft:crafter_recipe_crafted': TriggerCrafterRecipeCrafted
-  'cured_zombie_villager': TriggerCuredZombieVillager
-  'minecraft:cured_zombie_villager': TriggerCuredZombieVillager
-  'default_block_use': TriggerDefaultBlockUse
-  'minecraft:default_block_use': TriggerDefaultBlockUse
-  'effects_changed': TriggerEffectsChanged
-  'minecraft:effects_changed': TriggerEffectsChanged
-  'enchanted_item': TriggerEnchantedItem
-  'minecraft:enchanted_item': TriggerEnchantedItem
-  'enter_block': TriggerEnterBlock
-  'minecraft:enter_block': TriggerEnterBlock
-  'entity_hurt_player': TriggerEntityHurtPlayer
-  'minecraft:entity_hurt_player': TriggerEntityHurtPlayer
-  'entity_killed_player': TriggerEntityKilledPlayer
-  'minecraft:entity_killed_player': TriggerEntityKilledPlayer
-  'fall_after_explosion': TriggerFallAfterExplosion
-  'minecraft:fall_after_explosion': TriggerFallAfterExplosion
-  'fall_from_height': TriggerFallFromHeight
-  'minecraft:fall_from_height': TriggerFallFromHeight
-  'filled_bucket': TriggerFilledBucket
-  'minecraft:filled_bucket': TriggerFilledBucket
-  'fishing_rod_hooked': TriggerFishingRodHooked
-  'minecraft:fishing_rod_hooked': TriggerFishingRodHooked
-  'hero_of_the_village': TriggerHeroOfTheVillage
-  'minecraft:hero_of_the_village': TriggerHeroOfTheVillage
-  'impossible': TriggerImpossible
-  'minecraft:impossible': TriggerImpossible
-  'inventory_changed': TriggerInventoryChanged
-  'minecraft:inventory_changed': TriggerInventoryChanged
-  'item_durability_changed': TriggerItemDurabilityChanged
-  'minecraft:item_durability_changed': TriggerItemDurabilityChanged
-  'item_used_on_block': TriggerItemUsedOnBlock
-  'minecraft:item_used_on_block': TriggerItemUsedOnBlock
-  'kill_mob_near_sculk_catalyst': TriggerKillMobNearSculkCatalyst
-  'minecraft:kill_mob_near_sculk_catalyst': TriggerKillMobNearSculkCatalyst
-  'killed_by_arrow': TriggerKilledByArrow
-  'minecraft:killed_by_arrow': TriggerKilledByArrow
-  'killed_by_crossbow': TriggerKilledByCrossbow
-  'minecraft:killed_by_crossbow': TriggerKilledByCrossbow
-  'levitation': TriggerLevitation
-  'minecraft:levitation': TriggerLevitation
-  'lightning_strike': TriggerLightningStrike
-  'minecraft:lightning_strike': TriggerLightningStrike
-  'location': TriggerLocation
-  'minecraft:location': TriggerLocation
-  'nether_travel': TriggerNetherTravel
-  'minecraft:nether_travel': TriggerNetherTravel
-  'placed_block': TriggerPlacedBlock
-  'minecraft:placed_block': TriggerPlacedBlock
-  'player_generates_container_loot': TriggerPlayerGeneratesContainerLoot
-  'minecraft:player_generates_container_loot': TriggerPlayerGeneratesContainerLoot
-  'player_hurt_entity': TriggerPlayerHurtEntity
-  'minecraft:player_hurt_entity': TriggerPlayerHurtEntity
-  'player_interacted_with_entity': TriggerPlayerInteractedWithEntity
-  'minecraft:player_interacted_with_entity': TriggerPlayerInteractedWithEntity
-  'player_killed_entity': TriggerPlayerKilledEntity
-  'minecraft:player_killed_entity': TriggerPlayerKilledEntity
-  'player_sheared_equipment': TriggerPlayerShearedEquipment
-  'minecraft:player_sheared_equipment': TriggerPlayerShearedEquipment
-  'recipe_crafted': TriggerRecipeCrafted
-  'minecraft:recipe_crafted': TriggerRecipeCrafted
-  'recipe_unlocked': TriggerRecipeUnlocked
-  'minecraft:recipe_unlocked': TriggerRecipeUnlocked
-  'ride_entity_in_lava': TriggerRideEntityInLava
-  'minecraft:ride_entity_in_lava': TriggerRideEntityInLava
-  'safely_harvest_honey': TriggerSafelyHarvestHoney
-  'minecraft:safely_harvest_honey': TriggerSafelyHarvestHoney
-  'shot_crossbow': TriggerShotCrossbow
-  'minecraft:shot_crossbow': TriggerShotCrossbow
-  'slept_in_bed': TriggerSleptInBed
-  'minecraft:slept_in_bed': TriggerSleptInBed
-  'slide_down_block': TriggerSlideDownBlock
-  'minecraft:slide_down_block': TriggerSlideDownBlock
-  'spear_mobs': TriggerSpearMobs
-  'minecraft:spear_mobs': TriggerSpearMobs
-  'started_riding': TriggerStartedRiding
-  'minecraft:started_riding': TriggerStartedRiding
-  'summoned_entity': TriggerSummonedEntity
-  'minecraft:summoned_entity': TriggerSummonedEntity
-  'tame_animal': TriggerTameAnimal
-  'minecraft:tame_animal': TriggerTameAnimal
-  'target_hit': TriggerTargetHit
-  'minecraft:target_hit': TriggerTargetHit
-  'thrown_item_picked_up_by_entity': TriggerThrownItemPickedUpByEntity
-  'minecraft:thrown_item_picked_up_by_entity': TriggerThrownItemPickedUpByEntity
-  'thrown_item_picked_up_by_player': TriggerThrownItemPickedUpByPlayer
-  'minecraft:thrown_item_picked_up_by_player': TriggerThrownItemPickedUpByPlayer
-  'tick': TriggerTick
-  'minecraft:tick': TriggerTick
-  'used_ender_eye': TriggerUsedEnderEye
-  'minecraft:used_ender_eye': TriggerUsedEnderEye
-  'used_totem': TriggerUsedTotem
-  'minecraft:used_totem': TriggerUsedTotem
-  'using_item': TriggerUsingItem
-  'minecraft:using_item': TriggerUsingItem
-  'villager_trade': TriggerVillagerTrade
-  'minecraft:villager_trade': TriggerVillagerTrade
-  'voluntary_exile': TriggerVoluntaryExile
-  'minecraft:voluntary_exile': TriggerVoluntaryExile
+  'allay_drop_item_on_block': TriggerAllayDropItemOnBlock,
+  'minecraft:allay_drop_item_on_block': TriggerAllayDropItemOnBlock,
+  'any_block_use': TriggerAnyBlockUse,
+  'minecraft:any_block_use': TriggerAnyBlockUse,
+  'bee_nest_destroyed': TriggerBeeNestDestroyed,
+  'minecraft:bee_nest_destroyed': TriggerBeeNestDestroyed,
+  'bred_animals': TriggerBredAnimals,
+  'minecraft:bred_animals': TriggerBredAnimals,
+  'brewed_potion': TriggerBrewedPotion,
+  'minecraft:brewed_potion': TriggerBrewedPotion,
+  'changed_dimension': TriggerChangedDimension,
+  'minecraft:changed_dimension': TriggerChangedDimension,
+  'channeled_lightning': TriggerChanneledLightning,
+  'minecraft:channeled_lightning': TriggerChanneledLightning,
+  'construct_beacon': TriggerConstructBeacon,
+  'minecraft:construct_beacon': TriggerConstructBeacon,
+  'consume_item': TriggerConsumeItem,
+  'minecraft:consume_item': TriggerConsumeItem,
+  'crafter_recipe_crafted': TriggerCrafterRecipeCrafted,
+  'minecraft:crafter_recipe_crafted': TriggerCrafterRecipeCrafted,
+  'cured_zombie_villager': TriggerCuredZombieVillager,
+  'minecraft:cured_zombie_villager': TriggerCuredZombieVillager,
+  'default_block_use': TriggerDefaultBlockUse,
+  'minecraft:default_block_use': TriggerDefaultBlockUse,
+  'effects_changed': TriggerEffectsChanged,
+  'minecraft:effects_changed': TriggerEffectsChanged,
+  'enchanted_item': TriggerEnchantedItem,
+  'minecraft:enchanted_item': TriggerEnchantedItem,
+  'enter_block': TriggerEnterBlock,
+  'minecraft:enter_block': TriggerEnterBlock,
+  'entity_hurt_player': TriggerEntityHurtPlayer,
+  'minecraft:entity_hurt_player': TriggerEntityHurtPlayer,
+  'entity_killed_player': TriggerEntityKilledPlayer,
+  'minecraft:entity_killed_player': TriggerEntityKilledPlayer,
+  'fall_after_explosion': TriggerFallAfterExplosion,
+  'minecraft:fall_after_explosion': TriggerFallAfterExplosion,
+  'fall_from_height': TriggerFallFromHeight,
+  'minecraft:fall_from_height': TriggerFallFromHeight,
+  'filled_bucket': TriggerFilledBucket,
+  'minecraft:filled_bucket': TriggerFilledBucket,
+  'fishing_rod_hooked': TriggerFishingRodHooked,
+  'minecraft:fishing_rod_hooked': TriggerFishingRodHooked,
+  'hero_of_the_village': TriggerHeroOfTheVillage,
+  'minecraft:hero_of_the_village': TriggerHeroOfTheVillage,
+  'impossible': TriggerImpossible,
+  'minecraft:impossible': TriggerImpossible,
+  'inventory_changed': TriggerInventoryChanged,
+  'minecraft:inventory_changed': TriggerInventoryChanged,
+  'item_durability_changed': TriggerItemDurabilityChanged,
+  'minecraft:item_durability_changed': TriggerItemDurabilityChanged,
+  'item_used_on_block': TriggerItemUsedOnBlock,
+  'minecraft:item_used_on_block': TriggerItemUsedOnBlock,
+  'kill_mob_near_sculk_catalyst': TriggerKillMobNearSculkCatalyst,
+  'minecraft:kill_mob_near_sculk_catalyst': TriggerKillMobNearSculkCatalyst,
+  'killed_by_arrow': TriggerKilledByArrow,
+  'minecraft:killed_by_arrow': TriggerKilledByArrow,
+  'killed_by_crossbow': TriggerKilledByCrossbow,
+  'minecraft:killed_by_crossbow': TriggerKilledByCrossbow,
+  'levitation': TriggerLevitation,
+  'minecraft:levitation': TriggerLevitation,
+  'lightning_strike': TriggerLightningStrike,
+  'minecraft:lightning_strike': TriggerLightningStrike,
+  'location': TriggerLocation,
+  'minecraft:location': TriggerLocation,
+  'nether_travel': TriggerNetherTravel,
+  'minecraft:nether_travel': TriggerNetherTravel,
+  'placed_block': TriggerPlacedBlock,
+  'minecraft:placed_block': TriggerPlacedBlock,
+  'player_generates_container_loot': TriggerPlayerGeneratesContainerLoot,
+  'minecraft:player_generates_container_loot': TriggerPlayerGeneratesContainerLoot,
+  'player_hurt_entity': TriggerPlayerHurtEntity,
+  'minecraft:player_hurt_entity': TriggerPlayerHurtEntity,
+  'player_interacted_with_entity': TriggerPlayerInteractedWithEntity,
+  'minecraft:player_interacted_with_entity': TriggerPlayerInteractedWithEntity,
+  'player_killed_entity': TriggerPlayerKilledEntity,
+  'minecraft:player_killed_entity': TriggerPlayerKilledEntity,
+  'player_sheared_equipment': TriggerPlayerShearedEquipment,
+  'minecraft:player_sheared_equipment': TriggerPlayerShearedEquipment,
+  'recipe_crafted': TriggerRecipeCrafted,
+  'minecraft:recipe_crafted': TriggerRecipeCrafted,
+  'recipe_unlocked': TriggerRecipeUnlocked,
+  'minecraft:recipe_unlocked': TriggerRecipeUnlocked,
+  'ride_entity_in_lava': TriggerRideEntityInLava,
+  'minecraft:ride_entity_in_lava': TriggerRideEntityInLava,
+  'safely_harvest_honey': TriggerSafelyHarvestHoney,
+  'minecraft:safely_harvest_honey': TriggerSafelyHarvestHoney,
+  'shot_crossbow': TriggerShotCrossbow,
+  'minecraft:shot_crossbow': TriggerShotCrossbow,
+  'slept_in_bed': TriggerSleptInBed,
+  'minecraft:slept_in_bed': TriggerSleptInBed,
+  'slide_down_block': TriggerSlideDownBlock,
+  'minecraft:slide_down_block': TriggerSlideDownBlock,
+  'spear_mobs': TriggerSpearMobs,
+  'minecraft:spear_mobs': TriggerSpearMobs,
+  'started_riding': TriggerStartedRiding,
+  'minecraft:started_riding': TriggerStartedRiding,
+  'summoned_entity': TriggerSummonedEntity,
+  'minecraft:summoned_entity': TriggerSummonedEntity,
+  'tame_animal': TriggerTameAnimal,
+  'minecraft:tame_animal': TriggerTameAnimal,
+  'target_hit': TriggerTargetHit,
+  'minecraft:target_hit': TriggerTargetHit,
+  'thrown_item_picked_up_by_entity': TriggerThrownItemPickedUpByEntity,
+  'minecraft:thrown_item_picked_up_by_entity': TriggerThrownItemPickedUpByEntity,
+  'thrown_item_picked_up_by_player': TriggerThrownItemPickedUpByPlayer,
+  'minecraft:thrown_item_picked_up_by_player': TriggerThrownItemPickedUpByPlayer,
+  'tick': TriggerTick,
+  'minecraft:tick': TriggerTick,
+  'used_ender_eye': TriggerUsedEnderEye,
+  'minecraft:used_ender_eye': TriggerUsedEnderEye,
+  'used_totem': TriggerUsedTotem,
+  'minecraft:used_totem': TriggerUsedTotem,
+  'using_item': TriggerUsingItem,
+  'minecraft:using_item': TriggerUsingItem,
+  'villager_trade': TriggerVillagerTrade,
+  'minecraft:villager_trade': TriggerVillagerTrade,
+  'voluntary_exile': TriggerVoluntaryExile,
+  'minecraft:voluntary_exile': TriggerVoluntaryExile,
 }
 type TriggerKeys = keyof TriggerDispatcherMap
 type TriggerFallback = (

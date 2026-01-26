@@ -9,15 +9,15 @@ export type Vex = (MobBase & {
    * Array length range: 3
    */
   bound_pos?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Ticks until it starts to die.
    */
-  life_ticks?: NBTInt
+  life_ticks?: NBTInt,
   /**
    * The owner of this vex.
    *
@@ -25,9 +25,9 @@ export type Vex = (MobBase & {
    * Array length range: 4
    */
   owner?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 })

@@ -32,7 +32,7 @@
     "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@sandstone-mc/mcdoc-ts-generator": "^0.1.16",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.1.18",
     "@stylistic/eslint-plugin": "^5.7.1",
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",

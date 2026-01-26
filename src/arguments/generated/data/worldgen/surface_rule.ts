@@ -5,103 +5,103 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BiomeCondition = {
-  biome_is: Array<Registry['minecraft:worldgen/biome']>
+  biome_is: Array<Registry['minecraft:worldgen/biome']>,
 }
 
 export type BlockRule = {
-  result_state: BlockState
+  result_state: BlockState,
 }
 
 export type ConditionRule = {
-  if_true: SurfaceCondition
-  then_run: SurfaceRule
+  if_true: SurfaceCondition,
+  then_run: SurfaceRule,
 }
 
 export type NoiseThresholdCondition = {
-  noise: Registry['minecraft:worldgen/noise']
-  min_threshold: NBTFloat
-  max_threshold: NBTFloat
+  noise: Registry['minecraft:worldgen/noise'],
+  min_threshold: NBTFloat,
+  max_threshold: NBTFloat,
 }
 
 export type NotCondition = {
-  invert: SurfaceCondition
+  invert: SurfaceCondition,
 }
 
 export type SequenceRule = {
-  sequence: Array<SurfaceRule>
+  sequence: Array<SurfaceRule>,
 }
 
 export type StoneDepthCondition = {
-  offset: NBTInt
+  offset: NBTInt,
   /**
    * Value:
    *
    *  - Floor(`floor`)
    *  - Ceiling(`ceiling`)
    */
-  surface_type: CaveSurface
-  add_surface_depth: boolean
-  secondary_depth_range: NBTInt
+  surface_type: CaveSurface,
+  add_surface_depth: boolean,
+  secondary_depth_range: NBTInt,
 }
 
 export type SurfaceCondition = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/material_condition'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolSurfaceCondition ? SymbolSurfaceCondition[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolSurfaceCondition ? SymbolSurfaceCondition[S] : RootNBT))
 }[Registry['minecraft:worldgen/material_condition']])>
 
 export type SurfaceRule = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/material_rule'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolSurfaceRule ? SymbolSurfaceRule[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolSurfaceRule ? SymbolSurfaceRule[S] : RootNBT))
 }[Registry['minecraft:worldgen/material_rule']])>
 
 export type VerticalGradientCondition = {
-  random_name: string
-  true_at_and_below: VerticalAnchor
-  false_at_and_above: VerticalAnchor
+  random_name: string,
+  true_at_and_below: VerticalAnchor,
+  false_at_and_above: VerticalAnchor,
 }
 
 export type WaterCondition = {
-  offset: NBTInt
+  offset: NBTInt,
   /**
    * Value:
    * Range: -20..20
    */
   surface_depth_multiplier: NBTInt<{
-    min: -20
-    max: 20
-  }>
-  add_stone_depth: boolean
+    min: -20,
+    max: 20,
+  }>,
+  add_stone_depth: boolean,
 }
 
 export type YAboveCondition = {
-  anchor: VerticalAnchor
+  anchor: VerticalAnchor,
   /**
    * Value:
    * Range: -20..20
    */
   surface_depth_multiplier: NBTInt<{
-    min: -20
-    max: 20
-  }>
-  add_stone_depth: boolean
+    min: -20,
+    max: 20,
+  }>,
+  add_stone_depth: boolean,
 }
 type SurfaceConditionDispatcherMap = {
-  'biome': SurfaceConditionBiome
-  'minecraft:biome': SurfaceConditionBiome
-  'noise_threshold': SurfaceConditionNoiseThreshold
-  'minecraft:noise_threshold': SurfaceConditionNoiseThreshold
-  'not': SurfaceConditionNot
-  'minecraft:not': SurfaceConditionNot
-  'stone_depth': SurfaceConditionStoneDepth
-  'minecraft:stone_depth': SurfaceConditionStoneDepth
-  'vertical_gradient': SurfaceConditionVerticalGradient
-  'minecraft:vertical_gradient': SurfaceConditionVerticalGradient
-  'water': SurfaceConditionWater
-  'minecraft:water': SurfaceConditionWater
-  'y_above': SurfaceConditionYAbove
-  'minecraft:y_above': SurfaceConditionYAbove
+  'biome': SurfaceConditionBiome,
+  'minecraft:biome': SurfaceConditionBiome,
+  'noise_threshold': SurfaceConditionNoiseThreshold,
+  'minecraft:noise_threshold': SurfaceConditionNoiseThreshold,
+  'not': SurfaceConditionNot,
+  'minecraft:not': SurfaceConditionNot,
+  'stone_depth': SurfaceConditionStoneDepth,
+  'minecraft:stone_depth': SurfaceConditionStoneDepth,
+  'vertical_gradient': SurfaceConditionVerticalGradient,
+  'minecraft:vertical_gradient': SurfaceConditionVerticalGradient,
+  'water': SurfaceConditionWater,
+  'minecraft:water': SurfaceConditionWater,
+  'y_above': SurfaceConditionYAbove,
+  'minecraft:y_above': SurfaceConditionYAbove,
 }
 type SurfaceConditionKeys = keyof SurfaceConditionDispatcherMap
 type SurfaceConditionFallback = (
@@ -128,12 +128,12 @@ export type SymbolSurfaceCondition<CASE extends
   ? SurfaceConditionDispatcherMap
   : CASE extends 'keys' ? SurfaceConditionKeys : CASE extends '%fallback' ? SurfaceConditionFallback : never
 type SurfaceRuleDispatcherMap = {
-  'block': SurfaceRuleBlock
-  'minecraft:block': SurfaceRuleBlock
-  'condition': SurfaceRuleCondition
-  'minecraft:condition': SurfaceRuleCondition
-  'sequence': SurfaceRuleSequence
-  'minecraft:sequence': SurfaceRuleSequence
+  'block': SurfaceRuleBlock,
+  'minecraft:block': SurfaceRuleBlock,
+  'condition': SurfaceRuleCondition,
+  'minecraft:condition': SurfaceRuleCondition,
+  'sequence': SurfaceRuleSequence,
+  'minecraft:sequence': SurfaceRuleSequence,
 }
 type SurfaceRuleKeys = keyof SurfaceRuleDispatcherMap
 type SurfaceRuleFallback = (SurfaceRuleBlock | SurfaceRuleCondition | SurfaceRuleSequence)

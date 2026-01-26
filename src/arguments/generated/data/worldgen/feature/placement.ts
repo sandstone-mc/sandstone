@@ -11,7 +11,7 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BlockPredicateFilter = {
-  predicate: BlockPredicate
+  predicate: BlockPredicate,
 }
 
 export type CarvingMaskModifier = {
@@ -21,13 +21,13 @@ export type CarvingMaskModifier = {
    *  - Air(`air`)
    *  - Liquid(`liquid`)
    */
-  step: CarveStep
+  step: CarveStep,
 }
 
 export type CountModifier = {
   count: IntProvider<NBTInt<{
-    min: 0
-  }>>
+    min: 0,
+  }>>,
 }
 
 export type EnvironmentScanModifier = {
@@ -37,17 +37,17 @@ export type EnvironmentScanModifier = {
    *  - Up(`up`)
    *  - Down(`down`)
    */
-  direction_of_search: SearchDirection
+  direction_of_search: SearchDirection,
   /**
    * Value:
    * Range: 1..32
    */
   max_steps: NBTInt<{
-    min: 1
-    max: 32
-  }>
-  target_condition: BlockPredicate
-  allowed_search_condition?: BlockPredicate
+    min: 1,
+    max: 32,
+  }>,
+  target_condition: BlockPredicate,
+  allowed_search_condition?: BlockPredicate,
 }
 
 export type FixedPlacementModifier = {
@@ -55,11 +55,11 @@ export type FixedPlacementModifier = {
    * Fixed list of block positions to place the feature at.
    */
   positions: Array<NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>>,
 }
 
 export type HeightmapModifier = {
@@ -73,47 +73,47 @@ export type HeightmapModifier = {
    *  - WorldSurface(`WORLD_SURFACE`)
    *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
    */
-  heightmap: HeightmapType
+  heightmap: HeightmapType,
 }
 
 export type HeightRangeModifier = {
-  height: HeightProvider
+  height: HeightProvider,
 }
 
 export type NoiseBasedCountModifier = {
-  noise_to_count_ratio: NBTInt
-  noise_factor: NBTFloat
-  noise_offset?: NBTFloat
+  noise_to_count_ratio: NBTInt,
+  noise_factor: NBTFloat,
+  noise_offset?: NBTFloat,
 }
 
 export type NoiseThresholdCountModifier = {
-  noise_level: NBTFloat
-  below_noise: NBTInt
-  above_noise: NBTInt
+  noise_level: NBTFloat,
+  below_noise: NBTInt,
+  above_noise: NBTInt,
 }
 
 export type PlacedFeature = {
-  feature: ConfiguredFeatureRef
-  placement: Array<PlacementModifier>
+  feature: ConfiguredFeatureRef,
+  placement: Array<PlacementModifier>,
 }
 
 export type PlacedFeatureRef = (Registry['minecraft:worldgen/placed_feature'] | PlacedFeature)
 
 export type PlacementModifier = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/placement_modifier_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolPlacementModifier ? SymbolPlacementModifier[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolPlacementModifier ? SymbolPlacementModifier[S] : RootNBT))
 }[Registry['minecraft:worldgen/placement_modifier_type']])>
 
 export type RandomOffsetModifier = {
   xz_spread: IntProvider<NBTInt<{
-    min: -16
-    max: 16
-  }>>
+    min: -16,
+    max: 16,
+  }>>,
   y_spread: IntProvider<NBTInt<{
-    min: -16
-    max: 16
-  }>>
+    min: -16,
+    max: 16,
+  }>>,
 }
 
 export type RarityFilter = {
@@ -122,8 +122,8 @@ export type RarityFilter = {
    * Range: 0..
    */
   chance: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 }
 
 export type SearchDirection = ('up' | 'down')
@@ -139,43 +139,43 @@ export type SurfaceRelativeThresholdFilter = {
    *  - WorldSurface(`WORLD_SURFACE`)
    *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
    */
-  heightmap: HeightmapType
-  min_inclusive?: NBTInt
-  max_inclusive?: NBTInt
+  heightmap: HeightmapType,
+  min_inclusive?: NBTInt,
+  max_inclusive?: NBTInt,
 }
 
 export type SurfaceWaterDepthFilter = {
-  max_water_depth: NBTInt
+  max_water_depth: NBTInt,
 }
 type PlacementModifierDispatcherMap = {
-  'block_predicate_filter': PlacementModifierBlockPredicateFilter
-  'minecraft:block_predicate_filter': PlacementModifierBlockPredicateFilter
-  'carving_mask': PlacementModifierCarvingMask
-  'minecraft:carving_mask': PlacementModifierCarvingMask
-  'count': PlacementModifierCount
-  'minecraft:count': PlacementModifierCount
-  'count_on_every_layer': PlacementModifierCountOnEveryLayer
-  'minecraft:count_on_every_layer': PlacementModifierCountOnEveryLayer
-  'environment_scan': PlacementModifierEnvironmentScan
-  'minecraft:environment_scan': PlacementModifierEnvironmentScan
-  'fixed_placement': PlacementModifierFixedPlacement
-  'minecraft:fixed_placement': PlacementModifierFixedPlacement
-  'height_range': PlacementModifierHeightRange
-  'minecraft:height_range': PlacementModifierHeightRange
-  'heightmap': PlacementModifierHeightmap
-  'minecraft:heightmap': PlacementModifierHeightmap
-  'noise_based_count': PlacementModifierNoiseBasedCount
-  'minecraft:noise_based_count': PlacementModifierNoiseBasedCount
-  'noise_threshold_count': PlacementModifierNoiseThresholdCount
-  'minecraft:noise_threshold_count': PlacementModifierNoiseThresholdCount
-  'random_offset': PlacementModifierRandomOffset
-  'minecraft:random_offset': PlacementModifierRandomOffset
-  'rarity_filter': PlacementModifierRarityFilter
-  'minecraft:rarity_filter': PlacementModifierRarityFilter
-  'surface_relative_threshold_filter': PlacementModifierSurfaceRelativeThresholdFilter
-  'minecraft:surface_relative_threshold_filter': PlacementModifierSurfaceRelativeThresholdFilter
-  'surface_water_depth_filter': PlacementModifierSurfaceWaterDepthFilter
-  'minecraft:surface_water_depth_filter': PlacementModifierSurfaceWaterDepthFilter
+  'block_predicate_filter': PlacementModifierBlockPredicateFilter,
+  'minecraft:block_predicate_filter': PlacementModifierBlockPredicateFilter,
+  'carving_mask': PlacementModifierCarvingMask,
+  'minecraft:carving_mask': PlacementModifierCarvingMask,
+  'count': PlacementModifierCount,
+  'minecraft:count': PlacementModifierCount,
+  'count_on_every_layer': PlacementModifierCountOnEveryLayer,
+  'minecraft:count_on_every_layer': PlacementModifierCountOnEveryLayer,
+  'environment_scan': PlacementModifierEnvironmentScan,
+  'minecraft:environment_scan': PlacementModifierEnvironmentScan,
+  'fixed_placement': PlacementModifierFixedPlacement,
+  'minecraft:fixed_placement': PlacementModifierFixedPlacement,
+  'height_range': PlacementModifierHeightRange,
+  'minecraft:height_range': PlacementModifierHeightRange,
+  'heightmap': PlacementModifierHeightmap,
+  'minecraft:heightmap': PlacementModifierHeightmap,
+  'noise_based_count': PlacementModifierNoiseBasedCount,
+  'minecraft:noise_based_count': PlacementModifierNoiseBasedCount,
+  'noise_threshold_count': PlacementModifierNoiseThresholdCount,
+  'minecraft:noise_threshold_count': PlacementModifierNoiseThresholdCount,
+  'random_offset': PlacementModifierRandomOffset,
+  'minecraft:random_offset': PlacementModifierRandomOffset,
+  'rarity_filter': PlacementModifierRarityFilter,
+  'minecraft:rarity_filter': PlacementModifierRarityFilter,
+  'surface_relative_threshold_filter': PlacementModifierSurfaceRelativeThresholdFilter,
+  'minecraft:surface_relative_threshold_filter': PlacementModifierSurfaceRelativeThresholdFilter,
+  'surface_water_depth_filter': PlacementModifierSurfaceWaterDepthFilter,
+  'minecraft:surface_water_depth_filter': PlacementModifierSurfaceWaterDepthFilter,
 }
 type PlacementModifierKeys = keyof PlacementModifierDispatcherMap
 type PlacementModifierFallback = (

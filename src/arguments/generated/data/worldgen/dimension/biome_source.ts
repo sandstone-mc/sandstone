@@ -4,8 +4,8 @@ import type { NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sa
 
 export type BiomeSource = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/biome_source'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolBiomeSource ? SymbolBiomeSource[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolBiomeSource ? SymbolBiomeSource[S] : RootNBT))
 }[Registry['minecraft:worldgen/biome_source']])>
 
 export type Checkerboard = {
@@ -14,14 +14,14 @@ export type Checkerboard = {
    * Range: 0..62
    */
   scale?: NBTInt<{
-    min: 0
-    max: 62
-  }>
+    min: 0,
+    max: 62,
+  }>,
   biomes: (
       | Array<Registry['minecraft:worldgen/biome']> | (
         | Registry['minecraft:worldgen/biome']
         | `#${Registry['minecraft:tag/worldgen/biome']}`
-        | TagClass<'worldgen/biome'>))
+        | TagClass<'worldgen/biome'>)),
 }
 
 /**
@@ -34,56 +34,56 @@ export type Checkerboard = {
  * List length range: 2
  */
 export type ClimateParameter = (NBTFloat<{
-  leftExclusive: false
-  rightExclusive: false
+  leftExclusive: false,
+  rightExclusive: false,
 }> | NBTList<NBTFloat<{
-  leftExclusive: false
-  rightExclusive: false
+  leftExclusive: false,
+  rightExclusive: false,
 }>, {
-  leftExclusive: false
-  rightExclusive: false
-  min: 2
-  max: 2
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 2,
+  max: 2,
 }>)
 
 export type ClimateParameters = {
-  temperature: ClimateParameter
-  humidity: ClimateParameter
-  continentalness: ClimateParameter
-  erosion: ClimateParameter
-  weirdness: ClimateParameter
-  depth: ClimateParameter
+  temperature: ClimateParameter,
+  humidity: ClimateParameter,
+  continentalness: ClimateParameter,
+  erosion: ClimateParameter,
+  weirdness: ClimateParameter,
+  depth: ClimateParameter,
   /**
    * Value:
    * Range: 0..1
    */
   offset: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
 }
 
 export type DirectMultiNoise = {
   biomes: Array<{
-    biome: Registry['minecraft:worldgen/biome']
-    parameters: ClimateParameters
-  }>
+    biome: Registry['minecraft:worldgen/biome'],
+    parameters: ClimateParameters,
+  }>,
 }
 
 export type Fixed = {
-  biome: Registry['minecraft:worldgen/biome']
+  biome: Registry['minecraft:worldgen/biome'],
 }
 
 export type MultiNoise = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list'], string>]?: (MultiNoiseBase & {
-    preset?: S
+    preset?: S,
   } & (S extends undefined
     ? SymbolMultiNoiseBiomeSource<'%none'> :
     (S extends keyof SymbolMultiNoiseBiomeSource
       ? SymbolMultiNoiseBiomeSource[S]
-      : SymbolMultiNoiseBiomeSource<'%unknown'>)));
+      : SymbolMultiNoiseBiomeSource<'%unknown'>)))
 }[Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list']])>
 
 export type MultiNoiseBase = Record<string, never>
@@ -95,34 +95,34 @@ export type MultiNoiseBiomeSourceParameterList = {
    *  - Nether(`nether`)
    *  - Overworld(`overworld`)
    */
-  preset: (MultiNoisePreset | `minecraft:${MultiNoisePreset}`)
+  preset: (MultiNoisePreset | `minecraft:${MultiNoisePreset}`),
 }
 
 export type MultiNoisePreset = ('nether' | 'overworld')
 
 export type NoiseParameters = {
-  firstOctave: NBTInt
-  amplitudes: Array<(NBTDouble | number)>
+  firstOctave: NBTInt,
+  amplitudes: Array<(NBTDouble | number)>,
 }
 
 export type TheEnd = Record<string, never>
 
 export type VanillaLayered = {
-  seed: NBTLong
-  large_biomes?: boolean
-  legacy_biome_init_layer?: boolean
+  seed: NBTLong,
+  large_biomes?: boolean,
+  legacy_biome_init_layer?: boolean,
 }
 type BiomeSourceDispatcherMap = {
-  'checkerboard': BiomeSourceCheckerboard
-  'minecraft:checkerboard': BiomeSourceCheckerboard
-  'fixed': BiomeSourceFixed
-  'minecraft:fixed': BiomeSourceFixed
-  'multi_noise': BiomeSourceMultiNoise
-  'minecraft:multi_noise': BiomeSourceMultiNoise
-  'the_end': BiomeSourceTheEnd
-  'minecraft:the_end': BiomeSourceTheEnd
-  'vanilla_layered': BiomeSourceVanillaLayered
-  'minecraft:vanilla_layered': BiomeSourceVanillaLayered
+  'checkerboard': BiomeSourceCheckerboard,
+  'minecraft:checkerboard': BiomeSourceCheckerboard,
+  'fixed': BiomeSourceFixed,
+  'minecraft:fixed': BiomeSourceFixed,
+  'multi_noise': BiomeSourceMultiNoise,
+  'minecraft:multi_noise': BiomeSourceMultiNoise,
+  'the_end': BiomeSourceTheEnd,
+  'minecraft:the_end': BiomeSourceTheEnd,
+  'vanilla_layered': BiomeSourceVanillaLayered,
+  'minecraft:vanilla_layered': BiomeSourceVanillaLayered,
 }
 type BiomeSourceKeys = keyof BiomeSourceDispatcherMap
 type BiomeSourceFallback = (

@@ -8,31 +8,31 @@ export type BulletTarget = {
    * Array length range: 4
    */
   UUID?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
   /**
    * X block coordinate of the it.
    */
-  X?: NBTInt
+  X?: NBTInt,
   /**
    * Y block coordinate of the it.
    */
-  Y?: NBTInt
+  Y?: NBTInt,
   /**
    * Z block coordinate of the it.
    */
-  Z?: NBTInt
+  Z?: NBTInt,
 }
 
 export type ShulkerBullet = (ProjectileBase & {
   /**
    * Steps it takes to reach the target
    */
-  Steps?: NBTInt
-  Target?: BulletTarget
+  Steps?: NBTInt,
+  Target?: BulletTarget,
   /**
    * Value:
    *
@@ -43,17 +43,17 @@ export type ShulkerBullet = (ProjectileBase & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  Dir?: DirectionByte
+  Dir?: DirectionByte,
   /**
    * X offset to move based on the target's location.
    */
-  TXD?: (NBTDouble | number)
+  TXD?: (NBTDouble | number),
   /**
    * Y offset to move based on the target's location.
    */
-  TYD?: (NBTDouble | number)
+  TYD?: (NBTDouble | number),
   /**
    * Z offset to move based on the target's location.
    */
-  TZD?: (NBTDouble | number)
+  TZD?: (NBTDouble | number),
 })

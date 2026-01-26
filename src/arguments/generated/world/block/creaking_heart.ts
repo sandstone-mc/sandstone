@@ -9,9 +9,9 @@ export type CreakingHeart = (BlockEntity & {
    * List length range: 4
    */
   creaking?: NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 })

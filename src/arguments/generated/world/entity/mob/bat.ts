@@ -4,5 +4,5 @@ export type Bat = (MobBase & {
   /**
    * Whether it is upside down.
    */
-  BatFlags?: boolean
+  BatFlags?: boolean,
 })

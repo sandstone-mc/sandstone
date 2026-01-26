@@ -11,31 +11,31 @@ export type BiomeCheck = {
         | Registry['minecraft:worldgen/biome']
         | `#${Registry['minecraft:tag/worldgen/biome']}`
         | TagClass<'worldgen/biome'>)
-      | Array<Registry['minecraft:worldgen/biome']>)
+      | Array<Registry['minecraft:worldgen/biome']>),
 }
 
 export type MoonBrightnessCheck = {
   /**
    * Checks if the current moon brightness is within a certain range.
    */
-  range: MinMaxBounds<(NBTDouble | number)>
+  range: MinMaxBounds<(NBTDouble | number)>,
 }
 
 export type SpawnCondition = NonNullable<({
   [S in Extract<Registry['minecraft:spawn_condition_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolSpawnCondition ? SymbolSpawnCondition[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolSpawnCondition ? SymbolSpawnCondition[S] : RootNBT))
 }[Registry['minecraft:spawn_condition_type']])>
 
 export type SpawnPrioritySelector = {
   /**
    * The spawn condition to check. If not present, the condition always matches.
    */
-  condition?: SpawnCondition
+  condition?: SpawnCondition,
   /**
    * The spawn priority to use.
    */
-  priority: NBTInt
+  priority: NBTInt,
 }
 
 export type SpawnPrioritySelectors = {
@@ -46,7 +46,7 @@ export type SpawnPrioritySelectors = {
    * - A random entry is picked out of the remaining ones
    * - If no conditions are remaining, the variant remains unchanged from the default
    */
-  spawn_conditions: Array<SpawnPrioritySelector>
+  spawn_conditions: Array<SpawnPrioritySelector>,
 }
 
 export type StructureCheck = {
@@ -57,15 +57,15 @@ export type StructureCheck = {
         | Registry['minecraft:worldgen/structure']
         | `#${Registry['minecraft:tag/worldgen/structure']}`
         | TagClass<'worldgen/structure'>)
-      | Array<Registry['minecraft:worldgen/structure']>)
+      | Array<Registry['minecraft:worldgen/structure']>),
 }
 type SpawnConditionDispatcherMap = {
-  'biome': SpawnConditionBiome
-  'minecraft:biome': SpawnConditionBiome
-  'moon_brightness': SpawnConditionMoonBrightness
-  'minecraft:moon_brightness': SpawnConditionMoonBrightness
-  'structure': SpawnConditionStructure
-  'minecraft:structure': SpawnConditionStructure
+  'biome': SpawnConditionBiome,
+  'minecraft:biome': SpawnConditionBiome,
+  'moon_brightness': SpawnConditionMoonBrightness,
+  'minecraft:moon_brightness': SpawnConditionMoonBrightness,
+  'structure': SpawnConditionStructure,
+  'minecraft:structure': SpawnConditionStructure,
 }
 type SpawnConditionKeys = keyof SpawnConditionDispatcherMap
 type SpawnConditionFallback = (SpawnConditionBiome | SpawnConditionMoonBrightness | SpawnConditionStructure)

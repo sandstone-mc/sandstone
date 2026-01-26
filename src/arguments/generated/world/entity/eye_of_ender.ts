@@ -5,5 +5,5 @@ export type EyeOfEnder = (EntityBase & {
   /**
    * Item to render as.
    */
-  Item?: ItemStack
+  Item?: ItemStack,
 })

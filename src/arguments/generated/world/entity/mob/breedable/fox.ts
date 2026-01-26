@@ -7,15 +7,15 @@ export type Fox = (Breedable & {
    * List of trusted players.
    */
   Trusted?: Array<NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>>,
   /**
    * Whether it is sleeping.
    */
-  Sleeping?: boolean
+  Sleeping?: boolean,
   /**
    * The type of fox.
    *
@@ -24,24 +24,24 @@ export type Fox = (Breedable & {
    *  - Red(`red`)
    *  - Snow(`snow`)
    */
-  Type?: FoxType
+  Type?: FoxType,
   /**
    * Whether it is sitting.
    */
-  Sitting?: boolean
+  Sitting?: boolean,
   /**
    * Whether it is crouching.
    */
-  Crouching?: boolean
+  Crouching?: boolean,
 })
 
 export type TrustedUUID = {
   /**
    * Lower bits of the trusted player's UUID.
    */
-  L?: NBTLong
+  L?: NBTLong,
   /**
    * Upper bits of the trusted player's UUID.
    */
-  M?: NBTLong
+  M?: NBTLong,
 }

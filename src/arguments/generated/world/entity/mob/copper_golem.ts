@@ -10,7 +10,7 @@ export type CopperGolem = (MobBase & {
    * Value:
    * Range: -2..
    */
-  next_weather_age?: NBTLong<{}>
+  next_weather_age?: NBTLong<{}>,
   /**
    * Value:
    *
@@ -19,7 +19,7 @@ export type CopperGolem = (MobBase & {
    *  - Weathered(`weathered`)
    *  - Oxidized(`oxidized`)
    */
-  weather_state?: WeatherState
+  weather_state?: WeatherState,
 })
 
 export type WeatherState = ('unaffected' | 'exposed' | 'weathered' | 'oxidized')

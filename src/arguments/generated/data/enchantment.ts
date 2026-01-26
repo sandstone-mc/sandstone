@@ -5,13 +5,13 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTInt, TagClass } from 'sandstone'
 
 export type Enchantment = {
-  description: Text
+  description: Text,
   exclusive_set?: ((
       | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-      | Array<Registry['minecraft:enchantment']>)
+      | Array<Registry['minecraft:enchantment']>),
   supported_items: ((
       | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
-      | Array<Registry['minecraft:item']>)
+      | Array<Registry['minecraft:item']>),
   /**
    * Item types for which this Enchantment shows up in Enchanting Tables and on traded equipment.
    *
@@ -19,7 +19,7 @@ export type Enchantment = {
    */
   primary_items?: ((
       | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
-      | Array<Registry['minecraft:item']>)
+      | Array<Registry['minecraft:item']>),
   /**
    * How commonly the Enchantment appears, compared to the total combined `weight` of all available Enchantments.
    *
@@ -27,8 +27,8 @@ export type Enchantment = {
    * Range: 1..1024
    */
   weight: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Maximum level of the enchantment.
    *
@@ -36,16 +36,16 @@ export type Enchantment = {
    * Range: 1..255
    */
   max_level: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Minimum experience cost.
    */
-  min_cost: EnchantmentCost
+  min_cost: EnchantmentCost,
   /**
    * Maximum experience cost.
    */
-  max_cost: EnchantmentCost
+  max_cost: EnchantmentCost,
   /**
    * Halved when an Enchantment is added to a book.
    * The effective fee is multiplied by the level of the Enchantment.
@@ -54,19 +54,19 @@ export type Enchantment = {
    * Range: 0..
    */
   anvil_cost: NBTInt<{
-    min: 0
-  }>
-  slots: Array<EquipmentSlotGroup>
-  effects?: EnchantmentEffectComponentMap
+    min: 0,
+  }>,
+  slots: Array<EquipmentSlotGroup>,
+  effects?: EnchantmentEffectComponentMap,
 }
 
 export type EnchantmentCost = {
   /**
    * Base cost at level 1.
    */
-  base: NBTInt
+  base: NBTInt,
   /**
    * Cost increase per level above 1.
    */
-  per_level_above_first: NBTInt
+  per_level_above_first: NBTInt,
 }

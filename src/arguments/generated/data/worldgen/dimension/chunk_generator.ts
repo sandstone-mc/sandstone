@@ -6,12 +6,12 @@ import type { NBTInt, TagClass } from 'sandstone'
 
 export type ChunkGenerator = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/chunk_generator'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolChunkGenerator ? SymbolChunkGenerator[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolChunkGenerator ? SymbolChunkGenerator[S] : RootNBT))
 }[Registry['minecraft:worldgen/chunk_generator']])>
 
 export type Flat = {
-  settings: FlatGeneratorSettings
+  settings: FlatGeneratorSettings,
 }
 
 export type FlatGeneratorLayer = {
@@ -20,30 +20,30 @@ export type FlatGeneratorLayer = {
    * Range: 0..4096
    */
   height: NBTInt<{
-    min: 0
-  }>
-  block: Registry['minecraft:block']
+    min: 0,
+  }>,
+  block: Registry['minecraft:block'],
 }
 
 export type FlatGeneratorSettings = {
-  biome?: Registry['minecraft:worldgen/biome']
-  lakes?: boolean
-  features?: boolean
-  layers: Array<FlatGeneratorLayer>
+  biome?: Registry['minecraft:worldgen/biome'],
+  lakes?: boolean,
+  features?: boolean,
+  layers: Array<FlatGeneratorLayer>,
   structure_overrides?: (
       | Array<Registry['minecraft:worldgen/structure_set']> | (
-      Registry['minecraft:worldgen/structure_set'] | `#${string}:${string}` | TagClass<'worldgen/structure_set'>))
+      Registry['minecraft:worldgen/structure_set'] | `#${string}:${string}` | TagClass<'worldgen/structure_set'>)),
 }
 
 export type Noise = {
-  settings: NoiseGeneratorSettingsRef
-  biome_source: BiomeSource
+  settings: NoiseGeneratorSettingsRef,
+  biome_source: BiomeSource,
 }
 type ChunkGeneratorDispatcherMap = {
-  'flat': ChunkGeneratorFlat
-  'minecraft:flat': ChunkGeneratorFlat
-  'noise': ChunkGeneratorNoise
-  'minecraft:noise': ChunkGeneratorNoise
+  'flat': ChunkGeneratorFlat,
+  'minecraft:flat': ChunkGeneratorFlat,
+  'noise': ChunkGeneratorNoise,
+  'minecraft:noise': ChunkGeneratorNoise,
 }
 type ChunkGeneratorKeys = keyof ChunkGeneratorDispatcherMap
 type ChunkGeneratorFallback = (ChunkGeneratorFlat | ChunkGeneratorNoise)

@@ -1,12 +1,12 @@
 type McdocFluidStateKeysDispatcherMap = {
-  'flowing_lava': McdocFluidStateKeysFlowingLava
-  'minecraft:flowing_lava': McdocFluidStateKeysFlowingLava
-  'flowing_water': McdocFluidStateKeysFlowingWater
-  'minecraft:flowing_water': McdocFluidStateKeysFlowingWater
-  'lava': McdocFluidStateKeysLava
-  'minecraft:lava': McdocFluidStateKeysLava
-  'water': McdocFluidStateKeysWater
-  'minecraft:water': McdocFluidStateKeysWater
+  'flowing_lava': McdocFluidStateKeysFlowingLava,
+  'minecraft:flowing_lava': McdocFluidStateKeysFlowingLava,
+  'flowing_water': McdocFluidStateKeysFlowingWater,
+  'minecraft:flowing_water': McdocFluidStateKeysFlowingWater,
+  'lava': McdocFluidStateKeysLava,
+  'minecraft:lava': McdocFluidStateKeysLava,
+  'water': McdocFluidStateKeysWater,
+  'minecraft:water': McdocFluidStateKeysWater,
 }
 type McdocFluidStateKeysKeys = keyof McdocFluidStateKeysDispatcherMap
 type McdocFluidStateKeysFallback = (

@@ -9,9 +9,9 @@ export type TestBlock = (BlockEntity & {
    *  - Fail(`fail`)
    *  - Accept(`accept`)
    */
-  mode?: TestBlockMode
-  message?: string
-  powered?: boolean
+  mode?: TestBlockMode,
+  message?: string,
+  powered?: boolean,
 })
 
 export type TestBlockMode = ('start' | 'log' | 'fail' | 'accept')

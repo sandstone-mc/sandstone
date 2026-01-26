@@ -3,18 +3,18 @@ import type { BookGeneration } from 'sandstone/arguments/generated/world/compone
 import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 
 export type WritableBook = (ItemBase & {
-  pages?: Array<string>
+  pages?: Array<string>,
 })
 
 export type WrittenBook = (ItemBase & {
   /**
    * Whether the dynamic content on the pages has been resolved.
    */
-  resolved?: boolean
+  resolved?: boolean,
   /**
    * Pages of the book as JSON text components.
    */
-  pages?: Array<Filterable<`${any}${string}`>>
+  pages?: Array<Filterable<`${any}${string}`>>,
   /**
    * Generation of the book. 0 = original, 1 = copy of original, 2 = copy of copy, 3 = tattered.
    *
@@ -25,7 +25,7 @@ export type WrittenBook = (ItemBase & {
    *  - CopyOfCopy(`2`)
    *  - Tattered(`3`)
    */
-  generation?: BookGeneration
-  author?: string
-  title?: Filterable<string>
+  generation?: BookGeneration,
+  author?: string,
+  title?: Filterable<string>,
 })

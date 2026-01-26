@@ -10,11 +10,11 @@ export type BlockPositionSource = {
    * List length range: 3
    */
   pos: NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
 }
 
 export type EntityPositionSource = {
@@ -23,25 +23,25 @@ export type EntityPositionSource = {
    * List length range: 4
    */
   source_entity: NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
   /**
    * offset from the entity's feet to the source position
    */
-  y_offset?: NBTFloat
+  y_offset?: NBTFloat,
 }
 
 export type PositionSource = NonNullable<({
   [S in Extract<Registry['minecraft:position_source_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolPositionSource ? SymbolPositionSource[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolPositionSource ? SymbolPositionSource[S] : RootNBT))
 }[Registry['minecraft:position_source_type']])>
 
 export type ReceivingEvent = {
-  game_event: Registry['minecraft:game_event']
+  game_event: Registry['minecraft:game_event'],
   /**
    * Distance in blocks to the source
    *
@@ -49,9 +49,9 @@ export type ReceivingEvent = {
    * Range: 0..
    */
   distance: NBTFloat<{
-    leftExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    min: 0,
+  }>,
   /**
    * Origin of the event
    *
@@ -59,11 +59,11 @@ export type ReceivingEvent = {
    * List length range: 3
    */
   pos: NBTList<NBTFloat, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * UUID of the source entity of the event, if one exists
    *
@@ -71,11 +71,11 @@ export type ReceivingEvent = {
    * List length range: 4
    */
   source?: NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
   /**
    * UUID of the owner of the projectile, if one exists
    *
@@ -83,15 +83,15 @@ export type ReceivingEvent = {
    * List length range: 4
    */
   projectile_owner?: NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 }
 
 export type VibrationListener = {
-  source: PositionSource
+  source: PositionSource,
   /**
    * Range in blocks where vibrations can be detected
    *
@@ -99,12 +99,12 @@ export type VibrationListener = {
    * Range: 1..
    */
   range: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Event that is being received, if any
    */
-  event?: ReceivingEvent
+  event?: ReceivingEvent,
   /**
    * Distance in blocks to the event that is being received
    *
@@ -112,9 +112,9 @@ export type VibrationListener = {
    * Range: 0..
    */
   event_distance?: NBTFloat<{
-    leftExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    min: 0,
+  }>,
   /**
    * Delay in ticks until the event reaches this listener
    *
@@ -122,14 +122,14 @@ export type VibrationListener = {
    * Range: 1..
    */
   event_delay?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
 }
 type PositionSourceDispatcherMap = {
-  'block': PositionSourceBlock
-  'minecraft:block': PositionSourceBlock
-  'entity': PositionSourceEntity
-  'minecraft:entity': PositionSourceEntity
+  'block': PositionSourceBlock,
+  'minecraft:block': PositionSourceBlock,
+  'entity': PositionSourceEntity,
+  'minecraft:entity': PositionSourceEntity,
 }
 type PositionSourceKeys = keyof PositionSourceDispatcherMap
 type PositionSourceFallback = (PositionSourceBlock | PositionSourceEntity)

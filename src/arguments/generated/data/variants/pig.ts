@@ -10,13 +10,13 @@ export type PigVariant = ({
    *  - Normal(`normal`)
    *  - Cold(`cold`)
    */
-  model?: PigModelType
+  model?: PigModelType,
   /**
    * The pig texture to use for this variant.
    */
-  asset_id: Registry['minecraft:texture']
+  asset_id: Registry['minecraft:texture'],
   /**
    * The baby pig texture to use for this variant.
    */
-  baby_asset_id: Registry['minecraft:texture']
+  baby_asset_id: Registry['minecraft:texture'],
 } & SpawnPrioritySelectors)

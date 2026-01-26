@@ -8,15 +8,15 @@ export type BrushableBlock = (BlockEntity & {
   /**
    * Loot table that will decide the brushed loot.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | '')
+  LootTable?: (Registry['minecraft:loot_table'] | ''),
   /**
    * Seed of the loot table.
    */
-  LootTableSeed?: NBTLong
+  LootTableSeed?: NBTLong,
   /**
    * Item that was rolled from the loot table, which is currently peeking out.
    */
-  item?: ItemStack
+  item?: ItemStack,
   /**
    * Direction of the block that was interacted with.
    * Write-only, is not saved by the game.
@@ -30,5 +30,5 @@ export type BrushableBlock = (BlockEntity & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  hit_direction?: DirectionInt
+  hit_direction?: DirectionInt,
 })

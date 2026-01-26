@@ -3,7 +3,7 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTFloat } from 'sandstone'
 
 export type Instrument = {
-  sound_event: SoundEventRef
+  sound_event: SoundEventRef,
   /**
    * Maximum range in blocks that the sound can be heard
    *
@@ -12,9 +12,9 @@ export type Instrument = {
    * Minimum is exclusive; must be higher than 0
    */
   range: NBTFloat<{
-    leftExclusive: true
-    min: 1
-  }>
+    leftExclusive: true,
+    min: 1,
+  }>,
   /**
    * Duration of use in seconds, used as item cooldown
    *
@@ -23,8 +23,8 @@ export type Instrument = {
    * Minimum is exclusive; must be higher than 0
    */
   use_duration: NBTFloat<{
-    leftExclusive: true
-    min: 1
-  }>
-  description: Text
+    leftExclusive: true,
+    min: 1,
+  }>,
+  description: Text,
 }

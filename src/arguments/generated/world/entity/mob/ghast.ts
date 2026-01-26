@@ -9,6 +9,6 @@ export type Ghast = (MobBase & {
    * Range: 0..
    */
   ExplosionPower?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 })

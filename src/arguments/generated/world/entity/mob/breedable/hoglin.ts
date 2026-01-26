@@ -5,13 +5,13 @@ export type Hoglin = (Breedable & {
   /**
    * Whether it will not transform to a zoglin when it is in the Overword.
    */
-  IsImmuneToZombification?: boolean
+  IsImmuneToZombification?: boolean,
   /**
    * Whether it cannot be hunted by piglins
    */
-  CannotBeHunted?: boolean
+  CannotBeHunted?: boolean,
   /**
    * The number of ticks it has been in the overworld.
    */
-  TimeInOverworld?: NBTInt
+  TimeInOverworld?: NBTInt,
 })

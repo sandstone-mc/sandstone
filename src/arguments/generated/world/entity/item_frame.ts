@@ -17,12 +17,12 @@ export type ItemFrame = (BlockAttachedEntity & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  Facing?: Facing
-  Item?: ItemStack
+  Facing?: Facing,
+  Item?: ItemStack,
   /**
    * Chance the item has to drop.
    */
-  ItemDropChance?: NBTFloat
+  ItemDropChance?: NBTFloat,
   /**
    * Rotation of the item.
    *
@@ -30,16 +30,16 @@ export type ItemFrame = (BlockAttachedEntity & {
    * Range: 0..7
    */
   ItemRotation?: NBTByte<{
-    min: 0
-    max: 7
-  }>
+    min: 0,
+    max: 7,
+  }>,
   /**
    * Whether the item frame should be invisible.
    * The item inside the frame is not effected.
    */
-  Invisible?: boolean
+  Invisible?: boolean,
   /**
    * Whether the item frame should not be able to be broken and should disallow the item to be moved.
    */
-  Fixed?: boolean
+  Fixed?: boolean,
 })

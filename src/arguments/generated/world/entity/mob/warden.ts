@@ -6,7 +6,7 @@ export type AngerManagement = {
   /**
    * Suspects that have angered the warden.
    */
-  suspects?: Array<Suspect>
+  suspects?: Array<Suspect>,
 }
 
 export type Suspect = {
@@ -17,27 +17,27 @@ export type Suspect = {
    * Range: 1..150
    */
   anger?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Value:
    * Array length range: 4
    */
   uuid?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 }
 
 export type Warden = (MobBase & {
   /**
    * Anger management
    */
-  anger?: AngerManagement
+  anger?: AngerManagement,
   /**
    * Vibration listener
    */
-  listener?: VibrationListener
+  listener?: VibrationListener,
 })

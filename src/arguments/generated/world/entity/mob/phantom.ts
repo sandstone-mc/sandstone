@@ -9,17 +9,17 @@ export type Phantom = (MobBase & {
    * Array length range: 3
    */
   anchor_pos?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
   /**
    * Value:
    * Range: 0..64
    */
   size?: NBTInt<{
-    min: 0
-    max: 64
-  }>
+    min: 0,
+    max: 64,
+  }>,
 })

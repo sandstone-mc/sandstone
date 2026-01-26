@@ -1,24 +1,24 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 
 type StatisticTypeDispatcherMap = {
-  'broken': StatisticTypeBroken
-  'minecraft:broken': StatisticTypeBroken
-  'crafted': StatisticTypeCrafted
-  'minecraft:crafted': StatisticTypeCrafted
-  'custom': StatisticTypeCustom
-  'minecraft:custom': StatisticTypeCustom
-  'dropped': StatisticTypeDropped
-  'minecraft:dropped': StatisticTypeDropped
-  'killed': StatisticTypeKilled
-  'minecraft:killed': StatisticTypeKilled
-  'killed_by': StatisticTypeKilledBy
-  'minecraft:killed_by': StatisticTypeKilledBy
-  'mined': StatisticTypeMined
-  'minecraft:mined': StatisticTypeMined
-  'picked_up': StatisticTypePickedUp
-  'minecraft:picked_up': StatisticTypePickedUp
-  'used': StatisticTypeUsed
-  'minecraft:used': StatisticTypeUsed
+  'broken': StatisticTypeBroken,
+  'minecraft:broken': StatisticTypeBroken,
+  'crafted': StatisticTypeCrafted,
+  'minecraft:crafted': StatisticTypeCrafted,
+  'custom': StatisticTypeCustom,
+  'minecraft:custom': StatisticTypeCustom,
+  'dropped': StatisticTypeDropped,
+  'minecraft:dropped': StatisticTypeDropped,
+  'killed': StatisticTypeKilled,
+  'minecraft:killed': StatisticTypeKilled,
+  'killed_by': StatisticTypeKilledBy,
+  'minecraft:killed_by': StatisticTypeKilledBy,
+  'mined': StatisticTypeMined,
+  'minecraft:mined': StatisticTypeMined,
+  'picked_up': StatisticTypePickedUp,
+  'minecraft:picked_up': StatisticTypePickedUp,
+  'used': StatisticTypeUsed,
+  'minecraft:used': StatisticTypeUsed,
 }
 type StatisticTypeKeys = keyof StatisticTypeDispatcherMap
 type StatisticTypeFallback = (

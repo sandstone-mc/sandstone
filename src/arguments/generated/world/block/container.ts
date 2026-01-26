@@ -11,14 +11,14 @@ export type Container27 = (ContainerBase & {
    * List length range: 0..27
    */
   Items?: NBTList<SlottedItem<NBTByte<{
-    min: 0
-    max: 26
+    min: 0,
+    max: 26,
   }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 27
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 27,
+  }>,
 })
 
 export type Container9 = (ContainerBase & {
@@ -29,25 +29,25 @@ export type Container9 = (ContainerBase & {
    * List length range: 0..9
    */
   Items?: NBTList<SlottedItem<NBTByte<{
-    min: 0
-    max: 8
+    min: 0,
+    max: 8,
   }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 9
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 9,
+  }>,
 })
 
 export type ContainerBase = (BlockEntity & Nameable & Lockable & {
   /**
    * Loot table that will populate this container.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | '')
+  LootTable?: (Registry['minecraft:loot_table'] | ''),
   /**
    * Seed of the loot table.
    */
-  LootTableSeed?: NBTLong
+  LootTableSeed?: NBTLong,
 })
 
 export type Hopper = (ContainerBase & {
@@ -58,18 +58,18 @@ export type Hopper = (ContainerBase & {
    * List length range: 0..5
    */
   Items?: NBTList<SlottedItem<NBTByte<{
-    min: 0
-    max: 4
+    min: 0,
+    max: 4,
   }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 5
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 5,
+  }>,
   /**
    * Ticks until an item can be transferred.
    */
-  TransferCooldown?: NBTInt
+  TransferCooldown?: NBTInt,
 })
 
 export type Shelf = (ContainerBase & {
@@ -80,16 +80,16 @@ export type Shelf = (ContainerBase & {
    * List length range: 0..3
    */
   Items?: NBTList<SlottedItem<NBTByte<{
-    min: 0
-    max: 2
+    min: 0,
+    max: 2,
   }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 3,
+  }>,
   /**
    * Defaults to `false`.
    */
-  align_items_to_bottom?: boolean
+  align_items_to_bottom?: boolean,
 })

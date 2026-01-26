@@ -8,7 +8,7 @@ import type { NBTInt } from 'sandstone'
 export type BlockEntityTarget = 'block_entity'
 
 export type CompositePoolEntry = ({
-  children: Array<LootPoolEntry>
+  children: Array<LootPoolEntry>,
 } & LootPoolEntryBase)
 
 export type DynamicDrops = ('contents' | 'sherds')
@@ -20,7 +20,7 @@ export type DynamicPoolEntry = ({
    *  - Contents(`contents`): Drops the items in a shulker box.
    *  - Sherds(`sherds`): Drops the sherds of a decorated pot.
    */
-  name: (DynamicDrops | `minecraft:${DynamicDrops}`)
+  name: (DynamicDrops | `minecraft:${DynamicDrops}`),
 } & SingletonPoolEntry)
 
 export type EntityTarget = (
@@ -35,15 +35,15 @@ export type EntityTarget = (
   | 'interacting_entity')
 
 export type ItemPoolEntry = ({
-  name: Registry['minecraft:item']
+  name: Registry['minecraft:item'],
 } & SingletonPoolEntry)
 
 export type ItemStackTarget = 'tool'
 
 export type LootCondition = NonNullable<({
   [S in Extract<Registry['minecraft:loot_condition_type'], string>]?: ({
-    condition: S
-  } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT));
+    condition: S,
+  } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT))
 }[Registry['minecraft:loot_condition_type']])>
 
 export type LootConditionType = (
@@ -103,8 +103,8 @@ export type LootEntryType = (
 
 export type LootFunction = NonNullable<({
   [S in Extract<Registry['minecraft:loot_function_type'], string>]?: ({
-    function: S
-  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT));
+    function: S,
+  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
 }[Registry['minecraft:loot_function_type']])>
 
 export type LootFunctionType = (
@@ -131,21 +131,21 @@ export type LootFunctionType = (
   | 'set_stew_effect')
 
 export type LootPool = {
-  rolls: NumberProvider
-  bonus_rolls?: NumberProvider
-  entries: Array<LootPoolEntry>
-  functions?: Array<LootFunction>
-  conditions?: Array<LootCondition>
+  rolls: NumberProvider,
+  bonus_rolls?: NumberProvider,
+  entries: Array<LootPoolEntry>,
+  functions?: Array<LootFunction>,
+  conditions?: Array<LootCondition>,
 }
 
 export type LootPoolEntry = NonNullable<({
   [S in Extract<Registry['minecraft:loot_pool_entry_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolLootPoolEntry ? SymbolLootPoolEntry[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolLootPoolEntry ? SymbolLootPoolEntry[S] : RootNBT))
 }[Registry['minecraft:loot_pool_entry_type']])>
 
 export type LootPoolEntryBase = {
-  conditions?: Array<LootCondition>
+  conditions?: Array<LootCondition>,
 }
 
 export type LootTable = {
@@ -178,19 +178,19 @@ export type LootTable = {
    *  - BlockInteract(`block_interact`)
    *  - EntityInteract(`entity_interact`)
    */
-  type?: (LootContextType | `minecraft:${LootContextType}`)
-  pools?: Array<LootPool>
-  functions?: Array<LootFunction>
+  type?: (LootContextType | `minecraft:${LootContextType}`),
+  pools?: Array<LootPool>,
+  functions?: Array<LootFunction>,
   /**
    * Value:
    *
    * Value: Defines a `minecraft:random_sequence` id.
    */
-  random_sequence?: `${string}:${string}`
+  random_sequence?: `${string}:${string}`,
 }
 
 export type LootTablePoolEntry = ({
-  value: (Registry['minecraft:loot_table'] | LootTable)
+  value: (Registry['minecraft:loot_table'] | LootTable),
 } & SingletonPoolEntry)
 
 export type SingletonPoolEntry = ({
@@ -199,42 +199,42 @@ export type SingletonPoolEntry = ({
    * Range: 1..
    */
   weight?: NBTInt<{
-    min: 1
-  }>
-  quality?: NBTInt
-  functions?: Array<LootFunction>
+    min: 1,
+  }>,
+  quality?: NBTInt,
+  functions?: Array<LootFunction>,
 } & LootPoolEntryBase)
 
 export type SlotsPoolEntry = ({
-  slot_source: SlotSource
+  slot_source: SlotSource,
 } & SingletonPoolEntry)
 
 export type TagPoolEntry = ({
-  name: (Registry['minecraft:tag/item'])
+  name: (Registry['minecraft:tag/item']),
   /**
    * If `true`, drops a random item from the tag. If `false`, drops all items in the tag.
    */
-  expand: boolean
+  expand: boolean,
 } & SingletonPoolEntry)
 type LootPoolEntryDispatcherMap = {
-  'alternatives': LootPoolEntryAlternatives
-  'minecraft:alternatives': LootPoolEntryAlternatives
-  'dynamic': LootPoolEntryDynamic
-  'minecraft:dynamic': LootPoolEntryDynamic
-  'empty': LootPoolEntryEmpty
-  'minecraft:empty': LootPoolEntryEmpty
-  'group': LootPoolEntryGroup
-  'minecraft:group': LootPoolEntryGroup
-  'item': LootPoolEntryItem
-  'minecraft:item': LootPoolEntryItem
-  'loot_table': LootPoolEntryLootTable
-  'minecraft:loot_table': LootPoolEntryLootTable
-  'sequence': LootPoolEntrySequence
-  'minecraft:sequence': LootPoolEntrySequence
-  'slots': LootPoolEntrySlots
-  'minecraft:slots': LootPoolEntrySlots
-  'tag': LootPoolEntryTag
-  'minecraft:tag': LootPoolEntryTag
+  'alternatives': LootPoolEntryAlternatives,
+  'minecraft:alternatives': LootPoolEntryAlternatives,
+  'dynamic': LootPoolEntryDynamic,
+  'minecraft:dynamic': LootPoolEntryDynamic,
+  'empty': LootPoolEntryEmpty,
+  'minecraft:empty': LootPoolEntryEmpty,
+  'group': LootPoolEntryGroup,
+  'minecraft:group': LootPoolEntryGroup,
+  'item': LootPoolEntryItem,
+  'minecraft:item': LootPoolEntryItem,
+  'loot_table': LootPoolEntryLootTable,
+  'minecraft:loot_table': LootPoolEntryLootTable,
+  'sequence': LootPoolEntrySequence,
+  'minecraft:sequence': LootPoolEntrySequence,
+  'slots': LootPoolEntrySlots,
+  'minecraft:slots': LootPoolEntrySlots,
+  'tag': LootPoolEntryTag,
+  'minecraft:tag': LootPoolEntryTag,
 }
 type LootPoolEntryKeys = keyof LootPoolEntryDispatcherMap
 type LootPoolEntryFallback = (

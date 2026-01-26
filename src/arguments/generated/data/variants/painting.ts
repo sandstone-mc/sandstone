@@ -7,7 +7,7 @@ export type PaintingVariant = {
    *
    * Value: A minecraft:texture ID within a path root of `(namespace)/textures/painting/`
    */
-  asset_id: `${string}:${string}`
+  asset_id: `${string}:${string}`,
   /**
    * Dimension in blocks.
    *
@@ -15,9 +15,9 @@ export type PaintingVariant = {
    * Range: 1..16
    */
   width: NBTInt<{
-    min: 1
-    max: 16
-  }>
+    min: 1,
+    max: 16,
+  }>,
   /**
    * Dimension in blocks.
    *
@@ -25,9 +25,9 @@ export type PaintingVariant = {
    * Range: 1..16
    */
   height: NBTInt<{
-    min: 1
-    max: 16
-  }>
-  title: Text
-  author: Text
+    min: 1,
+    max: 16,
+  }>,
+  title: Text,
+  author: Text,
 }

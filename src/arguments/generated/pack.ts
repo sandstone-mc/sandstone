@@ -3,8 +3,8 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTInt, NBTList } from 'sandstone'
 
 export type BlockPattern = {
-  namespace?: `${any}${string}` | RegExp
-  path?: `${any}${string}` | RegExp
+  namespace?: `${any}${string}` | RegExp,
+  path?: `${any}${string}` | RegExp,
 }
 
 export type FeatureFlag = (
@@ -19,23 +19,23 @@ export type FeatureFlag = (
 
 export type Pack = {
   pack: {
-    description: Text
-    pack_format?: NBTInt
-    supported_formats?: InclusiveRange<NBTInt>
-    min_format?: PackFormat
-    max_format?: PackFormat
-  }
-  filter?: PackFilter
-  features?: PackFeatures
-  overlays?: PackOverlays
+    description: Text,
+    pack_format?: NBTInt,
+    supported_formats?: InclusiveRange<NBTInt>,
+    min_format?: PackFormat,
+    max_format?: PackFormat,
+  },
+  filter?: PackFilter,
+  features?: PackFeatures,
+  overlays?: PackOverlays,
 }
 
 export type PackFeatures = {
-  enabled: Array<(FeatureFlag | `minecraft:${FeatureFlag}`)>
+  enabled: Array<(FeatureFlag | `minecraft:${FeatureFlag}`)>,
 }
 
 export type PackFilter = {
-  block: Array<BlockPattern>
+  block: Array<BlockPattern>,
 }
 
 /**
@@ -52,14 +52,14 @@ export type PackFilter = {
  * *item 0*
  */
 export type PackFormat = (NBTInt | NBTList<NBTInt, {
-  leftExclusive: false
-  rightExclusive: false
-  min: 1
-  max: 1
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 1,
+  max: 1,
 }> | [
   NBTInt,
   NBTInt<{
-    min: 0
+    min: 0,
   }>,
 ])
 
@@ -68,12 +68,12 @@ export type PackOverlay = {
    * Value:
    * String length range: 1..
    */
-  directory: `${any}${string}`
-  formats?: InclusiveRange<NBTInt>
-  min_format?: PackFormat
-  max_format?: PackFormat
+  directory: `${any}${string}`,
+  formats?: InclusiveRange<NBTInt>,
+  min_format?: PackFormat,
+  max_format?: PackFormat,
 }
 
 export type PackOverlays = {
-  entries: Array<PackOverlay>
+  entries: Array<PackOverlay>,
 }

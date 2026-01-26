@@ -4,5 +4,5 @@ export type Zoglin = (MobBase & {
   /**
    * Whether it is a baby.
    */
-  IsBaby?: boolean
+  IsBaby?: boolean,
 })

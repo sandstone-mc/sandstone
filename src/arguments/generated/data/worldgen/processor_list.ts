@@ -6,11 +6,11 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type AppendLoot = {
-  loot_table: Registry['minecraft:loot_table']
+  loot_table: Registry['minecraft:loot_table'],
 }
 
 export type AppendStatic<S = undefined> = {
-  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT)
+  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT),
 }
 
 export type Axis = ('x' | 'y' | 'z')
@@ -23,25 +23,25 @@ export type AxisAlignedLinearPos = ({
    *  - Y(`y`)
    *  - Z(`z`)
    */
-  axis: Axis
+  axis: Axis,
 } & LinearPos)
 
 export type BlockAge = {
-  mossiness: NBTFloat
+  mossiness: NBTFloat,
 }
 
 export type BlockEntityModifier = NonNullable<({
   [S in Extract<Registry['minecraft:rule_block_entity_modifier'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : RootNBT))
 }[Registry['minecraft:rule_block_entity_modifier']])>
 
 export type BlockIgnore = {
-  blocks: Array<BlockState>
+  blocks: Array<BlockState>,
 }
 
 export type BlockMatch = {
-  block: Registry['minecraft:block']
+  block: Registry['minecraft:block'],
 }
 
 export type BlockRot = {
@@ -50,25 +50,25 @@ export type BlockRot = {
    * Range: 0..1
    */
   integrity: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
   rottable_blocks?: (
       | Array<Registry['minecraft:block']> | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>))
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
 }
 
 export type BlockStateMatch = {
-  block_state: BlockState
+  block_state: BlockState,
 }
 
 export type Capped = {
-  delegate: Processor
+  delegate: Processor,
   limit: IntProvider<NBTInt<{
-    min: 0
-  }>>
+    min: 0,
+  }>>,
 }
 
 export type Gravity = {
@@ -82,8 +82,8 @@ export type Gravity = {
    *  - WorldSurface(`WORLD_SURFACE`)
    *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
    */
-  heightmap: HeightmapType
-  offset: NBTInt
+  heightmap: HeightmapType,
+  offset: NBTInt,
 }
 
 export type LinearPos = {
@@ -92,113 +92,113 @@ export type LinearPos = {
    * Range: 0..255
    */
   min_dist?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Value:
    * Range: 0..255
    */
   max_dist?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Value:
    * Range: 0..1
    */
   min_chance?: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
   /**
    * Value:
    * Range: 0..1
    */
   max_chance?: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
 }
 
 export type PosRuleTest = NonNullable<({
   [S in Extract<Registry['minecraft:pos_rule_test'], string>]?: ({
-    predicate_type: S
-  } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : RootNBT));
+    predicate_type: S,
+  } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : RootNBT))
 }[Registry['minecraft:pos_rule_test']])>
 
 export type Processor = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/structure_processor'], string>]?: ({
-    processor_type: S
-  } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : RootNBT));
+    processor_type: S,
+  } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : RootNBT))
 }[Registry['minecraft:worldgen/structure_processor']])>
 
 export type ProcessorList = (Array<Processor> | {
-  processors: Array<Processor>
+  processors: Array<Processor>,
 })
 
 export type ProcessorListRef = (Registry['minecraft:worldgen/processor_list'] | ProcessorList)
 
 export type ProcessorRule = {
-  position_predicate?: PosRuleTest
-  location_predicate: RuleTest
-  input_predicate: RuleTest
-  output_state: BlockState
-  block_entity_modifier?: BlockEntityModifier
+  position_predicate?: PosRuleTest,
+  location_predicate: RuleTest,
+  input_predicate: RuleTest,
+  output_state: BlockState,
+  block_entity_modifier?: BlockEntityModifier,
 }
 
 export type ProtectedBlocks = {
-  value: (`#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+  value: (`#${Registry['minecraft:tag/block']}` | TagClass<'block'>),
 }
 
 export type RandomBlockMatch = {
-  block: Registry['minecraft:block']
+  block: Registry['minecraft:block'],
   /**
    * Value:
    * Range: 0..1
    */
   probability: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
 }
 
 export type RandomBlockStateMatch = {
-  block_state: BlockState
+  block_state: BlockState,
   /**
    * Value:
    * Range: 0..1
    */
   probability: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
 }
 
 export type Rule = {
-  rules: Array<ProcessorRule>
+  rules: Array<ProcessorRule>,
 }
 
 export type RuleTest = NonNullable<({
   [S in Extract<Registry['minecraft:rule_test'], string>]?: ({
-    predicate_type: S
-  } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : RootNBT));
+    predicate_type: S,
+  } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : RootNBT))
 }[Registry['minecraft:rule_test']])>
 
 export type TagMatch = {
-  tag: (Registry['minecraft:tag/block'])
+  tag: (Registry['minecraft:tag/block']),
 }
 type PosRuleTestDispatcherMap = {
-  'axis_aligned_linear_pos': PosRuleTestAxisAlignedLinearPos
-  'minecraft:axis_aligned_linear_pos': PosRuleTestAxisAlignedLinearPos
-  'linear_pos': PosRuleTestLinearPos
-  'minecraft:linear_pos': PosRuleTestLinearPos
+  'axis_aligned_linear_pos': PosRuleTestAxisAlignedLinearPos,
+  'minecraft:axis_aligned_linear_pos': PosRuleTestAxisAlignedLinearPos,
+  'linear_pos': PosRuleTestLinearPos,
+  'minecraft:linear_pos': PosRuleTestLinearPos,
 }
 type PosRuleTestKeys = keyof PosRuleTestDispatcherMap
 type PosRuleTestFallback = (PosRuleTestAxisAlignedLinearPos | PosRuleTestLinearPos)
@@ -213,14 +213,14 @@ export type SymbolPosRuleTest<CASE extends
   ? PosRuleTestDispatcherMap
   : CASE extends 'keys' ? PosRuleTestKeys : CASE extends '%fallback' ? PosRuleTestFallback : never
 type RuleBlockEntityModifierDispatcherMap = {
-  'append_loot': RuleBlockEntityModifierAppendLoot
-  'minecraft:append_loot': RuleBlockEntityModifierAppendLoot
-  'append_static': RuleBlockEntityModifierAppendStatic
-  'minecraft:append_static': RuleBlockEntityModifierAppendStatic
-  'clear': RuleBlockEntityModifierClear
-  'minecraft:clear': RuleBlockEntityModifierClear
-  'passthrough': RuleBlockEntityModifierPassthrough
-  'minecraft:passthrough': RuleBlockEntityModifierPassthrough
+  'append_loot': RuleBlockEntityModifierAppendLoot,
+  'minecraft:append_loot': RuleBlockEntityModifierAppendLoot,
+  'append_static': RuleBlockEntityModifierAppendStatic,
+  'minecraft:append_static': RuleBlockEntityModifierAppendStatic,
+  'clear': RuleBlockEntityModifierClear,
+  'minecraft:clear': RuleBlockEntityModifierClear,
+  'passthrough': RuleBlockEntityModifierPassthrough,
+  'minecraft:passthrough': RuleBlockEntityModifierPassthrough,
 }
 type RuleBlockEntityModifierKeys = keyof RuleBlockEntityModifierDispatcherMap
 type RuleBlockEntityModifierFallback = (
@@ -243,16 +243,16 @@ export type SymbolRuleBlockEntityModifier<CASE extends
     ? RuleBlockEntityModifierKeys
     : CASE extends '%fallback' ? RuleBlockEntityModifierFallback : never
 type RuleTestDispatcherMap = {
-  'block_match': RuleTestBlockMatch
-  'minecraft:block_match': RuleTestBlockMatch
-  'blockstate_match': RuleTestBlockstateMatch
-  'minecraft:blockstate_match': RuleTestBlockstateMatch
-  'random_block_match': RuleTestRandomBlockMatch
-  'minecraft:random_block_match': RuleTestRandomBlockMatch
-  'random_blockstate_match': RuleTestRandomBlockstateMatch
-  'minecraft:random_blockstate_match': RuleTestRandomBlockstateMatch
-  'tag_match': RuleTestTagMatch
-  'minecraft:tag_match': RuleTestTagMatch
+  'block_match': RuleTestBlockMatch,
+  'minecraft:block_match': RuleTestBlockMatch,
+  'blockstate_match': RuleTestBlockstateMatch,
+  'minecraft:blockstate_match': RuleTestBlockstateMatch,
+  'random_block_match': RuleTestRandomBlockMatch,
+  'minecraft:random_block_match': RuleTestRandomBlockMatch,
+  'random_blockstate_match': RuleTestRandomBlockstateMatch,
+  'minecraft:random_blockstate_match': RuleTestRandomBlockstateMatch,
+  'tag_match': RuleTestTagMatch,
+  'minecraft:tag_match': RuleTestTagMatch,
 }
 type RuleTestKeys = keyof RuleTestDispatcherMap
 type RuleTestFallback = (
@@ -275,20 +275,20 @@ export type SymbolRuleTest<CASE extends
   ? RuleTestDispatcherMap
   : CASE extends 'keys' ? RuleTestKeys : CASE extends '%fallback' ? RuleTestFallback : never
 type TemplateProcessorDispatcherMap = {
-  'block_age': TemplateProcessorBlockAge
-  'minecraft:block_age': TemplateProcessorBlockAge
-  'block_ignore': TemplateProcessorBlockIgnore
-  'minecraft:block_ignore': TemplateProcessorBlockIgnore
-  'block_rot': TemplateProcessorBlockRot
-  'minecraft:block_rot': TemplateProcessorBlockRot
-  'capped': TemplateProcessorCapped
-  'minecraft:capped': TemplateProcessorCapped
-  'gravity': TemplateProcessorGravity
-  'minecraft:gravity': TemplateProcessorGravity
-  'protected_blocks': TemplateProcessorProtectedBlocks
-  'minecraft:protected_blocks': TemplateProcessorProtectedBlocks
-  'rule': TemplateProcessorRule
-  'minecraft:rule': TemplateProcessorRule
+  'block_age': TemplateProcessorBlockAge,
+  'minecraft:block_age': TemplateProcessorBlockAge,
+  'block_ignore': TemplateProcessorBlockIgnore,
+  'minecraft:block_ignore': TemplateProcessorBlockIgnore,
+  'block_rot': TemplateProcessorBlockRot,
+  'minecraft:block_rot': TemplateProcessorBlockRot,
+  'capped': TemplateProcessorCapped,
+  'minecraft:capped': TemplateProcessorCapped,
+  'gravity': TemplateProcessorGravity,
+  'minecraft:gravity': TemplateProcessorGravity,
+  'protected_blocks': TemplateProcessorProtectedBlocks,
+  'minecraft:protected_blocks': TemplateProcessorProtectedBlocks,
+  'rule': TemplateProcessorRule,
+  'minecraft:rule': TemplateProcessorRule,
 }
 type TemplateProcessorKeys = keyof TemplateProcessorDispatcherMap
 type TemplateProcessorFallback = (

@@ -19,7 +19,7 @@
         "semver": "^7.5.4",
       },
       "devDependencies": {
-        "@sandstone-mc/mcdoc-ts-generator": "^0.1.16",
+        "@sandstone-mc/mcdoc-ts-generator": "^0.1.18",
         "@stylistic/eslint-plugin": "^5.7.1",
         "@types/adm-zip": "^0.5.2",
         "@types/fs-extra": "^11.0.2",
@@ -77,7 +77,7 @@
 
     "@oxlint/win32-x64": ["@oxlint/win32-x64@1.41.0", "", { "os": "win32", "cpu": "x64" }, "sha512-dVBXkZ6MGLd3owV7jvuqJsZwiF3qw7kEkDVsYVpS/O96eEvlHcxVbaPjJjrTBgikXqyC22vg3dxBU7MW0utGfw=="],
 
-    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.1.16", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.10", "@spyglassmc/core": "^0.4.39", "@spyglassmc/java-edition": "^0.3.51", "@spyglassmc/mcdoc": "^0.3.43", "@stylistic/eslint-plugin": "^5.6.1", "@typescript-eslint/parser": "^8.49.0", "eslint": "^9.39.2", "ts-pattern": "^5.9.0" }, "peerDependencies": { "typescript": "^5.0.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-jP6CE3YC+XGCFjzHayp9fUz5zyXVo/XhQ3BE+H2kAlZYVC6u5XCDlafv9HvF9Ou4ig7qKis+BiaF9kQtxJAXjg=="],
+    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.1.18", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.10", "@spyglassmc/core": "^0.4.39", "@spyglassmc/java-edition": "^0.3.51", "@spyglassmc/mcdoc": "^0.3.43", "@stylistic/eslint-plugin": "^5.6.1", "@typescript-eslint/parser": "^8.49.0", "eslint": "^9.39.2", "ts-pattern": "^5.9.0" }, "peerDependencies": { "typescript": "^5.0.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-6RTyDCdxminW3WzNjwkL2bShkb6z6Y+8UXnPtLgXXoVYh+IwubH9vbKNHRbeYpH6e8u8JlL2uIyWnKbdPstZUw=="],
 
     "@seahax/eslint-plugin-wrap": ["@seahax/eslint-plugin-wrap@0.6.10", "", { "dependencies": { "@types/eslint": "^9.6.1", "@typescript-eslint/utils": "^8.48.0" }, "peerDependencies": { "@typescript-eslint/parser": "^8.48.0", "eslint": "^9.39.1", "typescript": "^5.9.3" } }, "sha512-HrlkEvngHD+V8eCX3CPD4mTjenmQPXVSXu7609EvoUlsm+PEe+oPCONGjjVSzFYz6OJ9pikD8d4x7ctB+t5ozw=="],
 
@@ -581,8 +581,6 @@
 
     "@eslint-community/eslint-utils/eslint-visitor-keys": ["eslint-visitor-keys@3.4.3", "", {}, "sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag=="],
 
-    "@sandstone-mc/mcdoc-ts-generator/@stylistic/eslint-plugin": ["@stylistic/eslint-plugin@5.7.0", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.9.1", "@typescript-eslint/types": "^8.52.0", "eslint-visitor-keys": "^5.0.0", "espree": "^11.0.0", "estraverse": "^5.3.0", "picomatch": "^4.0.3" }, "peerDependencies": { "eslint": ">=9.0.0" } }, "sha512-PsSugIf9ip1H/mWKj4bi/BlEoerxXAda9ByRFsYuwsmr6af9NxJL0AaiNXs8Le7R21QR5KMiD/KdxZZ71LjAxQ=="],
-
     "@smithed-mc/data-types/@sinclair/typebox": ["@sinclair/typebox@0.25.24", "", {}, "sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ=="],
 
     "@types/adm-zip/@types/node": ["@types/node@17.0.45", "", {}, "sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw=="],
@@ -626,12 +624,6 @@
     "to-buffer/isarray": ["isarray@2.0.5", "", {}, "sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw=="],
 
     "uri-js/punycode": ["punycode@2.3.0", "", {}, "sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA=="],
-
-    "@sandstone-mc/mcdoc-ts-generator/@stylistic/eslint-plugin/@typescript-eslint/types": ["@typescript-eslint/types@8.53.0", "", {}, "sha512-Bmh9KX31Vlxa13+PqPvt4RzKRN1XORYSLlAE+sO1i28NkisGbTtSLFVB3l7PWdHtR3E0mVMuC7JilWJ99m2HxQ=="],
-
-    "@sandstone-mc/mcdoc-ts-generator/@stylistic/eslint-plugin/eslint-visitor-keys": ["eslint-visitor-keys@5.0.0", "", {}, "sha512-A0XeIi7CXU7nPlfHS9loMYEKxUaONu/hTEzHTGba9Huu94Cq1hPivf+DE5erJozZOky0LfvXAyrV/tcswpLI0Q=="],
-
-    "@sandstone-mc/mcdoc-ts-generator/@stylistic/eslint-plugin/espree": ["espree@11.0.0", "", { "dependencies": { "acorn": "^8.15.0", "acorn-jsx": "^5.3.2", "eslint-visitor-keys": "^5.0.0" } }, "sha512-+gMeWRrIh/NsG+3NaLeWHuyeyk70p2tbvZIWBYcqQ4/7Xvars6GYTZNhF1sIeLcc6Wb11He5ffz3hsHyXFrw5A=="],
 
     "@typescript-eslint/typescript-estree/minimatch/brace-expansion": ["brace-expansion@2.0.2", "", { "dependencies": { "balanced-match": "^1.0.0" } }, "sha512-Jt0vHyM+jmUBqojB7E1NIYadt0vI0Qxjxd2TErW94wDz+E2LAm5vKMXXwg6ZZBTHPuUlDgQHKXvjGBdfcF1ZDQ=="],
 

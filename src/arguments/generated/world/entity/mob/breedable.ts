@@ -9,8 +9,8 @@ export type Breedable = (MobBase & AgeableMob & {
    * Range: 0..
    */
   InLove?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Player that caused this mob to breed.
    *
@@ -18,9 +18,9 @@ export type Breedable = (MobBase & AgeableMob & {
    * Array length range: 4
    */
   LoveCause?: NBTIntArray<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
 })

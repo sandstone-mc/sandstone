@@ -4,9 +4,9 @@ export type ZombiePigman = (MobBase & NeutralMob & {
   /**
    * Whether it is a baby.
    */
-  IsBaby?: boolean
+  IsBaby?: boolean,
   /**
    * Last player to hit a zombie pigman in this zombie pigman's detection range.
    */
-  HurtBy?: `${any}${string}`
+  HurtBy?: `${any}${string}`,
 })

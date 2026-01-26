@@ -1,10 +1,10 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 
 type SoundTypeDispatcherMap = {
-  'event': SoundTypeEvent
-  'minecraft:event': SoundTypeEvent
-  'file': SoundTypeFile
-  'minecraft:file': SoundTypeFile
+  'event': SoundTypeEvent,
+  'minecraft:event': SoundTypeEvent,
+  'file': SoundTypeFile,
+  'minecraft:file': SoundTypeFile,
 }
 type SoundTypeKeys = keyof SoundTypeDispatcherMap
 type SoundTypeFallback = (SoundTypeEvent | SoundTypeFile)

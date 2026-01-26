@@ -5,5 +5,5 @@ export type Wither = (MobBase & {
   /**
    * Ticks it is invulnerable for.
    */
-  Invul?: NBTInt
+  Invul?: NBTInt,
 })

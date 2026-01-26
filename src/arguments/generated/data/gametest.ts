@@ -9,7 +9,7 @@ export type FunctionTestInstance = (TestData & {
   /**
    * Test function (Java code) to run.
    */
-  function: Registry['minecraft:test_function']
+  function: Registry['minecraft:test_function'],
 })
 
 export type Rotation = ('none' | 'clockwise_90' | '180' | 'counterclockwise_90')
@@ -18,11 +18,11 @@ export type TestData = {
   /**
    * The test environment to run this test as part of.
    */
-  environment: (Registry['minecraft:test_environment'] | TestEnvironment)
+  environment: (Registry['minecraft:test_environment'] | TestEnvironment),
   /**
    * Structure NBT file to use for the test.
    */
-  structure: Registry['minecraft:structure']
+  structure: Registry['minecraft:structure'],
   /**
    * Maximum number of ticks allowed to pass before the test is considered timed out.
    *
@@ -30,8 +30,8 @@ export type TestData = {
    * Range: 1..
    */
   max_ticks: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Ticks to wait after placing the structure before starting the test. Defaults to `0`.
    *
@@ -39,12 +39,12 @@ export type TestData = {
    * Range: 0..
    */
   setup_ticks?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
   /**
    * Whether the test is considered required to pass for the full test suite to pass. Defaults to `true`.
    */
-  required?: boolean
+  required?: boolean,
   /**
    * Rotation to apply to the test structure. Defaults to `none`.
    *
@@ -55,11 +55,11 @@ export type TestData = {
    *  - Clockwise180(`180`)
    *  - CounterClockwise90(`counterclockwise_90`)
    */
-  rotation?: Rotation
+  rotation?: Rotation,
   /**
    * If `true`, test is not included as part of automated test runs. Defaults to `false`.
    */
-  manual_only?: boolean
+  manual_only?: boolean,
   /**
    * Number of attempts to run the test. Defaults to `1`.
    *
@@ -67,8 +67,8 @@ export type TestData = {
    * Range: 1..
    */
   max_attempts?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Number of attempts that must succeed for the test to be considered successful. Defaults to `1`.
    *
@@ -76,13 +76,13 @@ export type TestData = {
    * Range: 1..
    */
   required_successes?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Whether the test needs clear access to the sky. Defaults to `false`.
    * If `false`, test is enclosed in barrier blocks. If `true`, the top is left open.
    */
-  sky_access?: boolean
+  sky_access?: boolean,
   /**
    * Additional padding in blocks placed around the structure. Defaults to `0`.
    *
@@ -90,20 +90,20 @@ export type TestData = {
    * Range: 0..128
    */
   padding?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 }
 
 export type TestInstance = NonNullable<({
   [S in Extract<Registry['minecraft:test_instance_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolTestInstance ? SymbolTestInstance[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolTestInstance ? SymbolTestInstance[S] : RootNBT))
 }[Registry['minecraft:test_instance_type']])>
 type TestInstanceDispatcherMap = {
-  'block_based': TestInstanceBlockBased
-  'minecraft:block_based': TestInstanceBlockBased
-  'function': TestInstanceFunction
-  'minecraft:function': TestInstanceFunction
+  'block_based': TestInstanceBlockBased,
+  'minecraft:block_based': TestInstanceBlockBased,
+  'function': TestInstanceFunction,
+  'minecraft:function': TestInstanceFunction,
 }
 type TestInstanceKeys = keyof TestInstanceDispatcherMap
 type TestInstanceFallback = (TestInstanceBlockBased | TestInstanceFunction)

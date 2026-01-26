@@ -9,9 +9,9 @@ export type Creaking = (MobBase & {
    * List length range: 3
    */
   home_pos?: NBTList<NBTInt, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 3
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
 })

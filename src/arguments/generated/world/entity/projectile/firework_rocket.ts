@@ -6,14 +6,14 @@ export type FireWorkRocket = (ProjectileBase & {
   /**
    * Ticks it has existed.
    */
-  Life?: NBTInt
+  Life?: NBTInt,
   /**
    * Ticks it will exist.
    */
-  LifeTime?: NBTInt
+  LifeTime?: NBTInt,
   /**
    * Whether it should move at an angle.
    */
-  ShotAtAngle?: boolean
-  FireworksItem?: ItemStack
+  ShotAtAngle?: boolean,
+  FireworksItem?: ItemStack,
 })

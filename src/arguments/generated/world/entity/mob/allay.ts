@@ -7,7 +7,7 @@ export type Allay = (MobBase & {
   /**
    * Ticks until the allay can duplicate. This is set to 6000 game ticks (5 minutes) when the allay duplicates.
    */
-  DuplicationCooldown?: NBTInt
+  DuplicationCooldown?: NBTInt,
   /**
    * Items it has picked up. Note that the item given by the player is in
    * the allay's `HandItems[0]` tag, not here.
@@ -16,13 +16,13 @@ export type Allay = (MobBase & {
    * List length range: 1
    */
   Inventory?: NBTList<ItemStack, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 1
-    max: 1
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 1,
+    max: 1,
+  }>,
   /**
    * Vibration game event listener.
    */
-  listener?: VibrationListener
+  listener?: VibrationListener,
 })

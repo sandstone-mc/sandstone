@@ -8,27 +8,27 @@ export type BooleanInput = {
   /**
    * Label displayed to the right of control.
    */
-  label: Text
+  label: Text,
   /**
    * Initial value of the control.
    * Defaults to `false` (unchecked).
    */
-  initial?: boolean
+  initial?: boolean,
   /**
    * String to send when the control is checked.
    * Defaults to `"true"`.
    */
-  on_true?: string
+  on_true?: string,
   /**
    * String to send when the control is unchecked.
    * Defaults to `"false"`.
    */
-  on_false?: string
+  on_false?: string,
 }
 
 export type InputControl = NonNullable<({
   [S in Extract<Registry['minecraft:input_control_type'], string>]?: ({
-    type: S
+    type: S,
     /**
      * The input key, which is used to build macro command and generate custom action payload.
      *
@@ -41,8 +41,8 @@ export type InputControl = NonNullable<({
      *
      * *item 1*
      */
-    key: (`${any}${string}` | SymbolMcdocCustomDynamicEventKeys<'%fallback'>)
-  } & (S extends keyof SymbolInputControl ? SymbolInputControl[S] : RootNBT));
+    key: (`${any}${string}` | SymbolMcdocCustomDynamicEventKeys<'%fallback'>),
+  } & (S extends keyof SymbolInputControl ? SymbolInputControl[S] : RootNBT))
 }[Registry['minecraft:input_control_type']])>
 
 export type NumberRangeInput = {
@@ -53,26 +53,26 @@ export type NumberRangeInput = {
    * Range: 1..1024
    */
   width?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Label displayed on the slider.
    */
-  label: Text
+  label: Text,
   /**
    * The translation to be used for building label.
    * `%1$s` is replaced by `label`; `%2$s` is replaced by current value of the slider.
    * Defaults to `options.generic_value`.
    */
-  label_format?: Registry['minecraft:translation_key']
+  label_format?: Registry['minecraft:translation_key'],
   /**
    * Start value, inclusive.
    */
-  start: NBTFloat
+  start: NBTFloat,
   /**
    * End value, inclusive.
    */
-  end: NBTFloat
+  end: NBTFloat,
   /**
    * Step size of the input.
    * If not present, any value from range is allowed.
@@ -82,31 +82,31 @@ export type NumberRangeInput = {
    * Minimum is exclusive; must be higher than 0
    */
   step?: NBTFloat<{
-    leftExclusive: true
-    min: 1
-  }>
+    leftExclusive: true,
+    min: 1,
+  }>,
   /**
    * Initial value of the slider. Rounded down nearest step.
    * Defaults to the middle of the range.
    */
-  initial?: NBTFloat
+  initial?: NBTFloat,
 }
 
 export type Option = {
   /**
    * String to send on submit.
    */
-  id: string
+  id: string,
   /**
    * Label displayed on the button.
    * When not present, `id` will be used instead.
    */
-  display?: Text
+  display?: Text,
   /**
    * Whether this option is the initial value.
    * Only one option can have this field set to `true`.
    */
-  initial?: boolean
+  initial?: boolean,
 }
 
 export type SingleOptionInput = {
@@ -117,24 +117,24 @@ export type SingleOptionInput = {
    * Range: 1..1024
    */
   width?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Label displayed on the button.
    */
-  label: Text
+  label: Text,
   /**
    * Defaults to `true`.
    */
-  label_visible?: boolean
+  label_visible?: boolean,
   /**
    * Value:
    * List length range: 1..
    */
   options: NBTList<(Option | string), {
-    leftExclusive: false
-    min: 1
-  }>
+    leftExclusive: false,
+    min: 1,
+  }>,
 }
 
 export type TextInput = {
@@ -145,21 +145,21 @@ export type TextInput = {
    * Range: 1..1024
    */
   width?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * Label displayed to the left of control.
    */
-  label: Text
+  label: Text,
   /**
    * Defaults to `true`.
    */
-  label_visible?: boolean
+  label_visible?: boolean,
   /**
    * Initial contents of the text input.
    * Defaults to `""` (empty string).
    */
-  initial?: string
+  initial?: string,
   /**
    * Maximum length of input
    * Defaults to 32.
@@ -168,8 +168,8 @@ export type TextInput = {
    * Range: 1..
    */
   max_length?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
   /**
    * If present, allows users to input multiple lines.
    */
@@ -179,8 +179,8 @@ export type TextInput = {
      * Range: 1..
      */
     max_lines?: NBTInt<{
-      min: 1
-    }>
+      min: 1,
+    }>,
     /**
      * Height of the input.
      * If this field is not present:
@@ -191,19 +191,19 @@ export type TextInput = {
      * Range: 1..512
      */
     height?: NBTInt<{
-      min: 1
-    }>
-  }
+      min: 1,
+    }>,
+  },
 }
 type InputControlDispatcherMap = {
-  'boolean': InputControlBoolean
-  'minecraft:boolean': InputControlBoolean
-  'number_range': InputControlNumberRange
-  'minecraft:number_range': InputControlNumberRange
-  'single_option': InputControlSingleOption
-  'minecraft:single_option': InputControlSingleOption
-  'text': InputControlText
-  'minecraft:text': InputControlText
+  'boolean': InputControlBoolean,
+  'minecraft:boolean': InputControlBoolean,
+  'number_range': InputControlNumberRange,
+  'minecraft:number_range': InputControlNumberRange,
+  'single_option': InputControlSingleOption,
+  'minecraft:single_option': InputControlSingleOption,
+  'text': InputControlText,
+  'minecraft:text': InputControlText,
 }
 type InputControlKeys = keyof InputControlDispatcherMap
 type InputControlFallback = (

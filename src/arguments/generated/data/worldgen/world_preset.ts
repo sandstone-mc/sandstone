@@ -3,12 +3,12 @@ import type { Dimension } from 'sandstone/arguments/generated/data/worldgen/dime
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 
 export type FlatGeneratorPreset = {
-  display: Registry['minecraft:item']
-  settings: FlatGeneratorSettings
+  display: Registry['minecraft:item'],
+  settings: FlatGeneratorSettings,
 }
 
 export type WorldPreset = {
   dimensions: ({
-    [Key in Extract<Registry['minecraft:dimension'], string>]?: Dimension;
-  })
+    [Key in Extract<Registry['minecraft:dimension'], string>]?: Dimension
+  }),
 }

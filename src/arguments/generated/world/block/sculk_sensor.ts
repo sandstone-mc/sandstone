@@ -7,11 +7,11 @@ export type SculkSensor = {
    * Range: 1..15
    */
   last_vibration_frequency?: NBTInt<{
-    min: 1
-    max: 15
-  }>
+    min: 1,
+    max: 15,
+  }>,
   /**
    * Vibration listener
    */
-  listener?: VibrationListener
+  listener?: VibrationListener,
 }

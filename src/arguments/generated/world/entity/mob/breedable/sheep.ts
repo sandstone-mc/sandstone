@@ -5,7 +5,7 @@ export type Sheep = (Breedable & {
   /**
    * Whether it has been shorn.
    */
-  Sheared?: boolean
+  Sheared?: boolean,
   /**
    * Value:
    *
@@ -26,5 +26,5 @@ export type Sheep = (Breedable & {
    *  - Red(`14`)
    *  - Black(`15`)
    */
-  Color?: DyeColorByte
+  Color?: DyeColorByte,
 })

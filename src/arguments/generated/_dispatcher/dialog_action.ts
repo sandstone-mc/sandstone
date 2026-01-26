@@ -10,24 +10,24 @@ import type {
 } from 'sandstone/arguments/generated/util/text.ts'
 
 type DialogActionDispatcherMap = {
-  'change_page': DialogActionChangePage
-  'minecraft:change_page': DialogActionChangePage
-  'copy_to_clipboard': DialogActionCopyToClipboard
-  'minecraft:copy_to_clipboard': DialogActionCopyToClipboard
-  'custom': DialogActionCustom
-  'minecraft:custom': DialogActionCustom
-  'dynamic/custom': DialogActionDynamicCustom
-  'minecraft:dynamic/custom': DialogActionDynamicCustom
-  'dynamic/run_command': DialogActionDynamicRunCommand
-  'minecraft:dynamic/run_command': DialogActionDynamicRunCommand
-  'open_url': DialogActionOpenUrl
-  'minecraft:open_url': DialogActionOpenUrl
-  'run_command': DialogActionRunCommand
-  'minecraft:run_command': DialogActionRunCommand
-  'show_dialog': DialogActionShowDialog
-  'minecraft:show_dialog': DialogActionShowDialog
-  'suggest_command': DialogActionSuggestCommand
-  'minecraft:suggest_command': DialogActionSuggestCommand
+  'change_page': DialogActionChangePage,
+  'minecraft:change_page': DialogActionChangePage,
+  'copy_to_clipboard': DialogActionCopyToClipboard,
+  'minecraft:copy_to_clipboard': DialogActionCopyToClipboard,
+  'custom': DialogActionCustom,
+  'minecraft:custom': DialogActionCustom,
+  'dynamic/custom': DialogActionDynamicCustom,
+  'minecraft:dynamic/custom': DialogActionDynamicCustom,
+  'dynamic/run_command': DialogActionDynamicRunCommand,
+  'minecraft:dynamic/run_command': DialogActionDynamicRunCommand,
+  'open_url': DialogActionOpenUrl,
+  'minecraft:open_url': DialogActionOpenUrl,
+  'run_command': DialogActionRunCommand,
+  'minecraft:run_command': DialogActionRunCommand,
+  'show_dialog': DialogActionShowDialog,
+  'minecraft:show_dialog': DialogActionShowDialog,
+  'suggest_command': DialogActionSuggestCommand,
+  'minecraft:suggest_command': DialogActionSuggestCommand,
 }
 type DialogActionKeys = keyof DialogActionDispatcherMap
 type DialogActionFallback = (

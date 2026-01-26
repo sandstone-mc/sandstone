@@ -9,23 +9,23 @@ export type Jigsaw = {
    *  - Rollable(`rollable`): The structure can be rotated
    *  - Aligned(`aligned`): The structure cannot be transformed
    */
-  joint?: JointType
+  joint?: JointType,
   /**
    * Structure pool this will "spawn" in.
    */
-  pool?: Registry['minecraft:worldgen/template_pool']
+  pool?: Registry['minecraft:worldgen/template_pool'],
   /**
    * ID this will "spawn" in.
    */
-  name?: string
+  name?: string,
   /**
    * ID of the type of jigsaw this will be "spawned" from.
    */
-  target?: string
+  target?: string,
   /**
    * Final block state of the jigsaw.
    */
-  final_state?: string
+  final_state?: string,
 }
 
 export type JointType = ('rollable' | 'aligned')

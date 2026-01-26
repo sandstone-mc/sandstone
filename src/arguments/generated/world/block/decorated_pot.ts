@@ -11,20 +11,20 @@ export type DecoratedPot = (BlockEntity & {
    * List length range: 4
    */
   sherds?: NBTList<(Sherd | `minecraft:${Sherd}`), {
-    leftExclusive: false
-    rightExclusive: false
-    min: 4
-    max: 4
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
   /**
    * Loot table that will populate this container.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | '')
+  LootTable?: (Registry['minecraft:loot_table'] | ''),
   /**
    * Seed of the loot table.
    */
-  LootTableSeed?: NBTLong
-  item?: ItemStack
+  LootTableSeed?: NBTLong,
+  item?: ItemStack,
 })
 
 export type Sherd = (

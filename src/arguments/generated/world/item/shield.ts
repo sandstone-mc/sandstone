@@ -29,7 +29,7 @@ export type Shield = (ItemBase & {
      *  - Red(`14`)
      *  - Black(`15`)
      */
-    Base?: DyeColorInt
-    Patterns?: Array<BannerPatternLayer>
-  }
+    Base?: DyeColorInt,
+    Patterns?: Array<BannerPatternLayer>,
+  },
 })

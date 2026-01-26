@@ -10,14 +10,14 @@ export type Armadillo = (Breedable & {
    *  - Scared(`scared`)
    *  - Unrolling(`unrolling`)
    */
-  state?: ArmadilloState
+  state?: ArmadilloState,
   /**
    * Value:
    * Range: 0..
    */
   scute_time?: NBTInt<{
-    min: 0
-  }>
+    min: 0,
+  }>,
 })
 
 export type ArmadilloState = ('idle' | 'rolling' | 'scared' | 'unrolling')

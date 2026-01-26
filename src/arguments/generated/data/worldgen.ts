@@ -9,8 +9,8 @@ export type BottomBiasHeightProvider = (UniformHeightProvider & {
    * Range: 1..
    */
   inner?: NBTInt<{
-    min: 1
-  }>
+    min: 1,
+  }>,
 })
 
 export type CarveStep = ('air' | 'liquid')
@@ -18,22 +18,22 @@ export type CarveStep = ('air' | 'liquid')
 export type CaveSurface = ('floor' | 'ceiling')
 
 export type ClampedIntProvider<T extends NBTObject> = {
-  min_inclusive: T
-  max_inclusive: T
-  source: IntProvider<NBTInt>
+  min_inclusive: T,
+  max_inclusive: T,
+  source: IntProvider<NBTInt>,
 }
 
 export type ClampedNormalIntProvider<T extends NBTObject> = (UniformIntProvider<T> & {
-  mean: NBTFloat
-  deviation: NBTFloat
+  mean: NBTFloat,
+  deviation: NBTFloat,
 })
 
 export type ConstantHeightProvider = {
-  value: VerticalAnchor
+  value: VerticalAnchor,
 }
 
 export type ConstantIntProvider<T extends NBTObject> = {
-  value: T
+  value: T,
 }
 
 export type DecorationStep = (
@@ -51,8 +51,8 @@ export type DecorationStep = (
 
 export type FloatProvider<T extends NBTObject> = (T | ({
   [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolFloatProvider<T> ? SymbolFloatProvider<T>[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolFloatProvider<T> ? SymbolFloatProvider<T>[S] : RootNBT))
 }[Registry['minecraft:float_provider_type']]))
 
 export type HeightmapType = (
@@ -65,55 +65,55 @@ export type HeightmapType = (
 
 export type HeightProvider = (({
   [S in Extract<Registry['minecraft:height_provider_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolHeightProvider ? SymbolHeightProvider[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolHeightProvider ? SymbolHeightProvider[S] : RootNBT))
 }[Registry['minecraft:height_provider_type']]) | VerticalAnchor)
 
 export type IntProvider<T extends NBTObject> = (T | ({
   [S in Extract<Registry['minecraft:int_provider_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolIntProvider<T> ? SymbolIntProvider<T>[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolIntProvider<T> ? SymbolIntProvider<T>[S] : RootNBT))
 }[Registry['minecraft:int_provider_type']]))
 
 export type TrapezoidHeightProvider = (UniformHeightProvider & {
-  plateau?: NBTInt
+  plateau?: NBTInt,
 })
 
 export type UniformHeightProvider = {
-  min_inclusive: VerticalAnchor
-  max_inclusive: VerticalAnchor
+  min_inclusive: VerticalAnchor,
+  max_inclusive: VerticalAnchor,
 }
 
 export type UniformInt<Base extends NBTObject, Spread extends NBTObject> = (Base | {
-  base: Base
-  spread: Spread
+  base: Base,
+  spread: Spread,
 })
 
 export type UniformIntProvider<T extends NBTObject> = {
-  min_inclusive: T
-  max_inclusive: T
+  min_inclusive: T,
+  max_inclusive: T,
 }
 
 export type VerticalAnchor = ({
-  absolute: NBTInt
+  absolute: NBTInt,
 } | {
-  above_bottom: NBTInt
+  above_bottom: NBTInt,
 } | {
-  below_top: NBTInt
+  below_top: NBTInt,
 })
 
 export type WeightListHeightProvider = {
-  distribution: NonEmptyWeightedList<HeightProvider>
+  distribution: NonEmptyWeightedList<HeightProvider>,
 }
 type FloatProviderDispatcherMap<T extends NBTObject> = {
-  'clamped_normal': FloatProviderClampedNormal<T>
-  'minecraft:clamped_normal': FloatProviderClampedNormal<T>
-  'constant': FloatProviderConstant<T>
-  'minecraft:constant': FloatProviderConstant<T>
-  'trapezoid': FloatProviderTrapezoid<T>
-  'minecraft:trapezoid': FloatProviderTrapezoid<T>
-  'uniform': FloatProviderUniform<T>
-  'minecraft:uniform': FloatProviderUniform<T>
+  'clamped_normal': FloatProviderClampedNormal<T>,
+  'minecraft:clamped_normal': FloatProviderClampedNormal<T>,
+  'constant': FloatProviderConstant<T>,
+  'minecraft:constant': FloatProviderConstant<T>,
+  'trapezoid': FloatProviderTrapezoid<T>,
+  'minecraft:trapezoid': FloatProviderTrapezoid<T>,
+  'uniform': FloatProviderUniform<T>,
+  'minecraft:uniform': FloatProviderUniform<T>,
 }
 type FloatProviderKeys = keyof FloatProviderDispatcherMap<NBTObject>
 type FloatProviderFallback<T extends NBTObject> = (
@@ -122,25 +122,25 @@ type FloatProviderFallback<T extends NBTObject> = (
   | FloatProviderTrapezoid<T>
   | FloatProviderUniform<T>)
 export type FloatProviderClampedNormal<T extends NBTObject> = {
-  min: T
-  max: T
-  mean: NBTFloat
-  deviation: NBTFloat
+  min: T,
+  max: T,
+  mean: NBTFloat,
+  deviation: NBTFloat,
 }
 
 export type FloatProviderConstant<T extends NBTObject> = {
-  value: T
+  value: T,
 }
 
 export type FloatProviderTrapezoid<T extends NBTObject> = {
-  min: T
-  max: T
-  plateau: NBTFloat
+  min: T,
+  max: T,
+  plateau: NBTFloat,
 }
 
 export type FloatProviderUniform<T extends NBTObject> = {
-  min_inclusive: T
-  max_exclusive: T
+  min_inclusive: T,
+  max_exclusive: T,
 }
 
 export type SymbolFloatProvider<T extends NBTObject, CASE extends
@@ -152,18 +152,18 @@ export type SymbolFloatProvider<T extends NBTObject, CASE extends
   ? FloatProviderDispatcherMap<T>
   : CASE extends 'keys' ? FloatProviderKeys : CASE extends '%fallback' ? FloatProviderFallback<T> : never
 type HeightProviderDispatcherMap = {
-  'biased_to_bottom': HeightProviderBiasedToBottom
-  'minecraft:biased_to_bottom': HeightProviderBiasedToBottom
-  'constant': HeightProviderConstant
-  'minecraft:constant': HeightProviderConstant
-  'trapezoid': HeightProviderTrapezoid
-  'minecraft:trapezoid': HeightProviderTrapezoid
-  'uniform': HeightProviderUniform
-  'minecraft:uniform': HeightProviderUniform
-  'very_biased_to_bottom': HeightProviderVeryBiasedToBottom
-  'minecraft:very_biased_to_bottom': HeightProviderVeryBiasedToBottom
-  'weighted_list': HeightProviderWeightedList
-  'minecraft:weighted_list': HeightProviderWeightedList
+  'biased_to_bottom': HeightProviderBiasedToBottom,
+  'minecraft:biased_to_bottom': HeightProviderBiasedToBottom,
+  'constant': HeightProviderConstant,
+  'minecraft:constant': HeightProviderConstant,
+  'trapezoid': HeightProviderTrapezoid,
+  'minecraft:trapezoid': HeightProviderTrapezoid,
+  'uniform': HeightProviderUniform,
+  'minecraft:uniform': HeightProviderUniform,
+  'very_biased_to_bottom': HeightProviderVeryBiasedToBottom,
+  'minecraft:very_biased_to_bottom': HeightProviderVeryBiasedToBottom,
+  'weighted_list': HeightProviderWeightedList,
+  'minecraft:weighted_list': HeightProviderWeightedList,
 }
 type HeightProviderKeys = keyof HeightProviderDispatcherMap
 type HeightProviderFallback = (
@@ -188,18 +188,18 @@ export type SymbolHeightProvider<CASE extends
   ? HeightProviderDispatcherMap
   : CASE extends 'keys' ? HeightProviderKeys : CASE extends '%fallback' ? HeightProviderFallback : never
 type IntProviderDispatcherMap<T extends NBTObject> = {
-  'biased_to_bottom': IntProviderBiasedToBottom<T>
-  'minecraft:biased_to_bottom': IntProviderBiasedToBottom<T>
-  'clamped': IntProviderClamped<T>
-  'minecraft:clamped': IntProviderClamped<T>
-  'clamped_normal': IntProviderClampedNormal<T>
-  'minecraft:clamped_normal': IntProviderClampedNormal<T>
-  'constant': IntProviderConstant<T>
-  'minecraft:constant': IntProviderConstant<T>
-  'uniform': IntProviderUniform<T>
-  'minecraft:uniform': IntProviderUniform<T>
-  'weighted_list': IntProviderWeightedList<T>
-  'minecraft:weighted_list': IntProviderWeightedList<T>
+  'biased_to_bottom': IntProviderBiasedToBottom<T>,
+  'minecraft:biased_to_bottom': IntProviderBiasedToBottom<T>,
+  'clamped': IntProviderClamped<T>,
+  'minecraft:clamped': IntProviderClamped<T>,
+  'clamped_normal': IntProviderClampedNormal<T>,
+  'minecraft:clamped_normal': IntProviderClampedNormal<T>,
+  'constant': IntProviderConstant<T>,
+  'minecraft:constant': IntProviderConstant<T>,
+  'uniform': IntProviderUniform<T>,
+  'minecraft:uniform': IntProviderUniform<T>,
+  'weighted_list': IntProviderWeightedList<T>,
+  'minecraft:weighted_list': IntProviderWeightedList<T>,
 }
 type IntProviderKeys = keyof IntProviderDispatcherMap<NBTObject>
 type IntProviderFallback<T extends NBTObject> = (
@@ -220,7 +220,7 @@ export type IntProviderConstant<T extends NBTObject> = ConstantIntProvider<T>
 export type IntProviderUniform<T extends NBTObject> = UniformIntProvider<T>
 
 export type IntProviderWeightedList<T extends NBTObject> = {
-  distribution: NonEmptyWeightedList<IntProvider<T>>
+  distribution: NonEmptyWeightedList<IntProvider<T>>,
 }
 
 export type SymbolIntProvider<T extends NBTObject, CASE extends

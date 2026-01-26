@@ -4,5 +4,5 @@ export type SnowGolem = (MobBase & {
   /**
    * Whether it has a pumpkin.
    */
-  Pumpkin?: boolean
+  Pumpkin?: boolean,
 })

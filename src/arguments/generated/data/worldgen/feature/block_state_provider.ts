@@ -7,43 +7,43 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BaseNoiseProvider = {
-  seed: NBTInt
-  noise: NoiseParameters
+  seed: NBTInt,
+  noise: NoiseParameters,
   /**
    * Value:
    * Range: 0..
    */
   scale: NBTFloat<{
-    leftExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    min: 0,
+  }>,
 }
 
 export type BlockStateProvider = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>]?: ({
-    type: S
-  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT));
+    type: S,
+  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT))
 }[Registry['minecraft:worldgen/block_state_provider_type']])>
 
 export type DualNoiseProvider = (BaseNoiseProvider & {
   variety: InclusiveRange<NBTInt<{
-    min: 1
-    max: 64
-  }>>
-  slow_noise: NoiseParameters
+    min: 1,
+    max: 64,
+  }>>,
+  slow_noise: NoiseParameters,
   /**
    * Value:
    * Range: 0..
    */
   slow_scale: NBTFloat<{
-    leftExclusive: false
-    min: 0
-  }>
-  states: Array<BlockState>
+    leftExclusive: false,
+    min: 0,
+  }>,
+  states: Array<BlockState>,
 })
 
 export type NoiseProvider = (BaseNoiseProvider & {
-  states: Array<BlockState>
+  states: Array<BlockState>,
 })
 
 export type NoiseThresholdProvider = (BaseNoiseProvider & {
@@ -52,52 +52,52 @@ export type NoiseThresholdProvider = (BaseNoiseProvider & {
    * Range: -1..1
    */
   threshold: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+  }>,
   /**
    * Value:
    * Range: 0..1
    */
   high_chance: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 1
-  }>
-  default_state: BlockState
-  low_states: Array<BlockState>
-  high_states: Array<BlockState>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  default_state: BlockState,
+  low_states: Array<BlockState>,
+  high_states: Array<BlockState>,
 })
 
 export type RandomizedIntStateProvider = {
-  property: string
-  values: IntProvider<NBTInt>
-  source: BlockStateProvider
+  property: string,
+  values: IntProvider<NBTInt>,
+  source: BlockStateProvider,
 }
 
 export type SimpleStateProvider = {
-  state: BlockState
+  state: BlockState,
 }
 
 export type WeightedBlockStateProvider = {
-  entries: NonEmptyWeightedList<BlockState>
+  entries: NonEmptyWeightedList<BlockState>,
 }
 type BlockStateProviderDispatcherMap = {
-  'dual_noise_provider': BlockStateProviderDualNoiseProvider
-  'minecraft:dual_noise_provider': BlockStateProviderDualNoiseProvider
-  'noise_provider': BlockStateProviderNoiseProvider
-  'minecraft:noise_provider': BlockStateProviderNoiseProvider
-  'noise_threshold_provider': BlockStateProviderNoiseThresholdProvider
-  'minecraft:noise_threshold_provider': BlockStateProviderNoiseThresholdProvider
-  'randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider
-  'minecraft:randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider
-  'rotated_block_provider': BlockStateProviderRotatedBlockProvider
-  'minecraft:rotated_block_provider': BlockStateProviderRotatedBlockProvider
-  'simple_state_provider': BlockStateProviderSimpleStateProvider
-  'minecraft:simple_state_provider': BlockStateProviderSimpleStateProvider
-  'weighted_state_provider': BlockStateProviderWeightedStateProvider
-  'minecraft:weighted_state_provider': BlockStateProviderWeightedStateProvider
+  'dual_noise_provider': BlockStateProviderDualNoiseProvider,
+  'minecraft:dual_noise_provider': BlockStateProviderDualNoiseProvider,
+  'noise_provider': BlockStateProviderNoiseProvider,
+  'minecraft:noise_provider': BlockStateProviderNoiseProvider,
+  'noise_threshold_provider': BlockStateProviderNoiseThresholdProvider,
+  'minecraft:noise_threshold_provider': BlockStateProviderNoiseThresholdProvider,
+  'randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider,
+  'minecraft:randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider,
+  'rotated_block_provider': BlockStateProviderRotatedBlockProvider,
+  'minecraft:rotated_block_provider': BlockStateProviderRotatedBlockProvider,
+  'simple_state_provider': BlockStateProviderSimpleStateProvider,
+  'minecraft:simple_state_provider': BlockStateProviderSimpleStateProvider,
+  'weighted_state_provider': BlockStateProviderWeightedStateProvider,
+  'minecraft:weighted_state_provider': BlockStateProviderWeightedStateProvider,
 }
 type BlockStateProviderKeys = keyof BlockStateProviderDispatcherMap
 type BlockStateProviderFallback = (

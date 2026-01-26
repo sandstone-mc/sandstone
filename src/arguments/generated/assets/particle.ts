@@ -1,3 +1,3 @@
 export type Particle = {
-  textures: Array<`${string}:${string}`>
+  textures: Array<`${string}:${string}`>,
 }

@@ -17,7 +17,7 @@ export type Panda = (Breedable & {
    *  - Weak(`weak`): (recessive)
    *  - Aggressive(`aggressive`): (dominant)
    */
-  MainGene?: Gene
+  MainGene?: Gene,
   /**
    * Hidden gene.
    *
@@ -31,5 +31,5 @@ export type Panda = (Breedable & {
    *  - Weak(`weak`): (recessive)
    *  - Aggressive(`aggressive`): (dominant)
    */
-  HiddenGene?: Gene
+  HiddenGene?: Gene,
 })

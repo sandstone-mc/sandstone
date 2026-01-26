@@ -9,13 +9,13 @@ export type Crossbow = (ItemBase & {
    * List length range: 0..3
    */
   ChargedProjectiles?: NBTList<ItemStack, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 3
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 3,
+  }>,
   /**
    * Whether the crossbow is charged.
    */
-  Charged?: boolean
+  Charged?: boolean,
 })

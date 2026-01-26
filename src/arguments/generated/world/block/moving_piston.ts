@@ -8,7 +8,7 @@ export type MovingPiston = (BlockEntity & {
   /**
    * Moving block represented by the moving piston.
    */
-  blockState?: BlockState
+  blockState?: BlockState,
   /**
    * The direction it is moving.
    *
@@ -21,14 +21,14 @@ export type MovingPiston = (BlockEntity & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  facing?: Facing
+  facing?: Facing,
   /**
    * How far it has moved.
    */
-  progress?: NBTFloat
-  extending?: boolean
+  progress?: NBTFloat,
+  extending?: boolean,
   /**
    * Whether the moving piston is the piston head.
    */
-  source?: boolean
+  source?: boolean,
 })

@@ -5,5 +5,5 @@ export type Skeleton = (MobBase & {
   /**
    * Time until it converts to a stray.
    */
-  StrayConversionTime?: NBTInt
+  StrayConversionTime?: NBTInt,
 })

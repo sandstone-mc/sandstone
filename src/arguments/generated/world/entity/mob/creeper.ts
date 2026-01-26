@@ -5,17 +5,17 @@ export type Creeper = (MobBase & {
   /**
    * Whether it is being struck by lightning.
    */
-  powered?: boolean
+  powered?: boolean,
   /**
    * Radius of the explosion.
    */
-  ExplosionRadius?: NBTByte
+  ExplosionRadius?: NBTByte,
   /**
    * Ticks until it explodes.
    */
-  Fuse?: NBTShort
+  Fuse?: NBTShort,
   /**
    * Whether it was lit with flint and steel.
    */
-  ignited?: boolean
+  ignited?: boolean,
 })

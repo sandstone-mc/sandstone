@@ -14,14 +14,14 @@ export type ChestMinecart = (Minecart & ContainerMinecart & {
    * List length range: 0..27
    */
   Items?: NBTList<SlottedItem<NBTByte<{
-    min: 0
-    max: 26
+    min: 0,
+    max: 26,
   }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 27
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 27,
+  }>,
 })
 
 export type CommandBlockMinecart = (Minecart & BaseCommandBlock)
@@ -30,26 +30,26 @@ export type ContainerMinecart = {
   /**
    * Loot table that will populate this minecart.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | '')
+  LootTable?: (Registry['minecraft:loot_table'] | ''),
   /**
    * Seed of the loot table.
    */
-  LootTableSeed?: NBTLong
+  LootTableSeed?: NBTLong,
 }
 
 export type FurnaceMinecart = (Minecart & {
   /**
    * Acceleration in x axis.
    */
-  PushX?: (NBTDouble | number)
+  PushX?: (NBTDouble | number),
   /**
    * Acceleration in z axis.
    */
-  PushZ?: (NBTDouble | number)
+  PushZ?: (NBTDouble | number),
   /**
    * Ticks until the fuel runs out.
    */
-  Fuel?: NBTShort
+  Fuel?: NBTShort,
 })
 
 export type HopperMinecart = (Minecart & ContainerMinecart & {
@@ -60,89 +60,89 @@ export type HopperMinecart = (Minecart & ContainerMinecart & {
    * List length range: 0..5
    */
   Items?: NBTList<SlottedItem<NBTByte<{
-    min: 0
-    max: 4
+    min: 0,
+    max: 4,
   }>>, {
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-    max: 5
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 5,
+  }>,
   /**
    * Ticks until an item can be transferred.
    */
-  TransferCooldown?: NBTInt
+  TransferCooldown?: NBTInt,
   /**
    * Whether it should pick up items.
    */
-  Enabled?: boolean
+  Enabled?: boolean,
 })
 
 export type Minecart = (EntityBase & {
   /**
    * Custom block to display.
    */
-  DisplayState?: BlockState
+  DisplayState?: BlockState,
   /**
    * Vertical offset of the block display.
    */
-  DisplayOffset?: NBTInt
+  DisplayOffset?: NBTInt,
 })
 
 export type SpawnerMinecart = (Minecart & {
   /**
    * List of potential entities to place next.
    */
-  SpawnPotentials?: Array<SpawnPotential>
+  SpawnPotentials?: Array<SpawnPotential>,
   /**
    * Data for the next mob to place.
    * Will be overwritten by `SpawnPotentials`.
    */
-  SpawnData?: SpawnerEntry
+  SpawnData?: SpawnerEntry,
   /**
    * Number of entities that will be placed.
    */
-  SpawnCount: NBTShort
+  SpawnCount: NBTShort,
   /**
    * Range that the spawned entities will be placed in.
    */
-  SpawnRange?: NBTShort
+  SpawnRange?: NBTShort,
   /**
    * Ticks until the next spawn.
    */
-  Delay?: NBTShort
+  Delay?: NBTShort,
   /**
    * Minimum random delay for the next spawn.
    */
-  MinSpawnDelay?: NBTShort
+  MinSpawnDelay?: NBTShort,
   /**
    * Maximum random delay for the next spawn.
    */
-  MaxSpawnDelay?: NBTShort
+  MaxSpawnDelay?: NBTShort,
   /**
    * Maximum number of entities nearby.
    */
-  MaxNearbyEntities?: NBTShort
+  MaxNearbyEntities?: NBTShort,
   /**
    * Radius in blocks that a player has to be within to spawn entities.
    */
-  RequiredPlayerRange?: NBTShort
+  RequiredPlayerRange?: NBTShort,
 })
 
 export type TntMinecart = (Minecart & {
   /**
    * Ticks until it explodes.
    */
-  fuse?: NBTInt
+  fuse?: NBTInt,
   /**
    * Value:
    * Range: 0..128
    */
   explosion_power?: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
   /**
    * Controls the amount of added damage depending on the speed of the minecart.
    *
@@ -150,8 +150,8 @@ export type TntMinecart = (Minecart & {
    * Range: 0..128
    */
   explosion_speed_factor?: NBTFloat<{
-    leftExclusive: false
-    rightExclusive: false
-    min: 0
-  }>
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
 })

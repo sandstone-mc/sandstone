@@ -6,41 +6,41 @@ export type BaseCommandBlock = {
   /**
    * The command to run.
    */
-  Command?: `${any}${string}`
+  Command?: `${any}${string}`,
   /**
    * Success count of the last command.
    */
-  SuccessCount?: NBTInt
+  SuccessCount?: NBTInt,
   /**
    * Output of the last command.
    */
-  LastOutput?: Text
+  LastOutput?: Text,
   /**
    * Whether to record command output.
    */
-  TrackOutput?: boolean
+  TrackOutput?: boolean,
   /**
    * Whether to record the tick of the latest command execution.
    */
-  UpdateLastExecution?: boolean
+  UpdateLastExecution?: boolean,
   /**
    * Tick of the latest command execution.
    */
-  LastExecution?: NBTLong
+  LastExecution?: NBTLong,
 }
 
 export type CommandBlock = (BlockEntity & Nameable & BaseCommandBlock & {
   /**
    * Whether it is powered by redstone.
    */
-  powered?: boolean
+  powered?: boolean,
   /**
    * Whether it is automatically powered.
    */
-  auto?: boolean
+  auto?: boolean,
   /**
    * Whether the previous command block was successful when the command block was executed.
    * This is always true for non-conditional command blocks.
    */
-  conditionMet?: boolean
+  conditionMet?: boolean,
 })

@@ -3,13 +3,13 @@ import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTInt } from 'sandstone'
 
 export type AxolotlBucket = (ItemBase & {
-  EntityTag?: AnyEntity
+  EntityTag?: AnyEntity,
   /**
    * Turns into the `Variant` entity tag.
    */
-  BucketVariantTag?: NBTInt
+  BucketVariantTag?: NBTInt,
 })
 
 export type BasicFishBucket = {
-  EntityTag?: AnyEntity
+  EntityTag?: AnyEntity,
 }

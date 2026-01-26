@@ -9,18 +9,18 @@ export type Advancement = {
   /**
    * If present, advancement will be visible in the advancement tabs.
    */
-  display?: AdvancementDisplay
+  display?: AdvancementDisplay,
   /**
    * If this field is absent, this advancement is a root advancement.
    * Circular references cause a loading failure.
    */
-  parent?: (Registry['minecraft:advancement'] | AdvancementClass)
+  parent?: (Registry['minecraft:advancement'] | AdvancementClass),
   /**
    * If `requirements` is not defined, all defined criteria will be required.
    */
   criteria: ({
-    [Key in `${any}${string}`]?: AdvancementCriterion;
-  })
+    [Key in `${any}${string}`]?: AdvancementCriterion
+  }),
   /**
    * If all criteria are required at once, this may be omitted.
    *
@@ -32,20 +32,20 @@ export type Advancement = {
    * List length range: 1..
    */
   requirements?: NBTList<NBTList<`${any}${string}`, {
-    leftExclusive: false
-    min: 1
+    leftExclusive: false,
+    min: 1,
   }>, {
-    leftExclusive: false
-    min: 1
-  }>
+    leftExclusive: false,
+    min: 1,
+  }>,
   /**
    * Provided to the player when this advancement is obtained.
    */
-  rewards?: AdvancementRewards
+  rewards?: AdvancementRewards,
   /**
    * Defaults to `false`. The vanilla game client only reads this for advancements from the `minecraft` namespace.
    */
-  sends_telemetry_event?: boolean
+  sends_telemetry_event?: boolean,
 }
 
 export type AdvancementCriterion = NonNullable<({
@@ -53,18 +53,18 @@ export type AdvancementCriterion = NonNullable<({
     /**
      * Many triggers can occur multiple times, however, the reward will only be provided multiple times if the advancement is first revoked, which is often done within the function reward.
      */
-    trigger: S
-  } & (S extends keyof SymbolTrigger ? SymbolTrigger[S] : RootNBT));
+    trigger: S,
+  } & (S extends keyof SymbolTrigger ? SymbolTrigger[S] : RootNBT))
 }[Registry['minecraft:trigger_type']])>
 
 export type AdvancementDisplay = {
-  icon: (ItemStack | Registry['minecraft:item'])
-  title: Text
-  description: Text
+  icon: (ItemStack | Registry['minecraft:item']),
+  title: Text,
+  description: Text,
   /**
    * Used for the advancement tab (root advancement only).
    */
-  background?: Registry['minecraft:texture']
+  background?: Registry['minecraft:texture'],
   /**
    * Controls the advancement tile frame. Defaults to `task`.
    *
@@ -74,48 +74,48 @@ export type AdvancementDisplay = {
    *  - Challenge(`challenge`): Fancy spiked border (used for the kill all mobs advancement).
    *  - Goal(`goal`): Rounded border (used for the full beacon advancement).
    */
-  frame?: AdvancementFrame
+  frame?: AdvancementFrame,
   /**
    * Whether to show the toast pop up after completing this advancement. Defaults to `true`.
    */
-  show_toast?: boolean
+  show_toast?: boolean,
   /**
    * Whether to announce in the chat when this advancement has been completed. Defaults to `true`.
    */
-  announce_to_chat?: boolean
+  announce_to_chat?: boolean,
   /**
    * Whether or not to hide this advancement and all its children from the advancement screen,
    * until this advancement have been completed.
    * Has no effect on root advancements themselves, but still affects all their children.
    * Defaults to `false`.
    */
-  hidden?: boolean
+  hidden?: boolean,
 }
 
 export type AdvancementFrame = ('task' | 'challenge' | 'goal')
 
 export type AdvancementIcon = {
-  item: Registry['minecraft:item']
-  nbt?: `${any}${string}` | NBTClass
+  item: Registry['minecraft:item'],
+  nbt?: `${any}${string}` | NBTClass,
 }
 
 export type AdvancementRewards = {
   /**
    * Function to run as the player (not at). Function group tags are not allowed.
    */
-  function?: (`${string}:${string}` | MCFunctionClass)
+  function?: (`${string}:${string}` | MCFunctionClass),
   /**
    * Loot tables to give.
    */
-  loot?: Array<Registry['minecraft:loot_table']>
+  loot?: Array<Registry['minecraft:loot_table']>,
   /**
    * Recipes to unlock.
    */
-  recipes?: Array<Registry['minecraft:recipe']>
+  recipes?: Array<Registry['minecraft:recipe']>,
   /**
    * XP to add.
    */
-  experience?: NBTInt
+  experience?: NBTInt,
 }
 
 export type Trigger = (

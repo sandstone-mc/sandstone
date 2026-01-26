@@ -5,9 +5,9 @@ export type Endermite = (MobBase & {
   /**
    * How long it has existed.
    */
-  Lifetime?: NBTInt
+  Lifetime?: NBTInt,
   /**
    * Whether enderman should attack it.
    */
-  PlayerSpawned?: boolean
+  PlayerSpawned?: boolean,
 })
