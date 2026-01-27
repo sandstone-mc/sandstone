@@ -1,4 +1,5 @@
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
+import type { SandstoneContext } from './context'
 import type { SetBlockCommand } from './commands'
 import type {
   AdvancementClassArguments,
@@ -46,9 +47,54 @@ import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, S
 import { Set } from './utils'
 import * as coordinates from './variables/Coordinates'
 import { ResolveNBTPart } from './variables/ResolveNBT'
+import { setSandstoneContext, hasContext, getSandstoneContext } from './context'
 
-export const sandstonePack = new SandstonePack('default', '0')
+// Singleton pack instance - lazily initialized
+let _sandstonePack: SandstonePack | undefined
+
+/**
+ * Get the global SandstonePack singleton.
+ * Uses context if available, otherwise creates a default pack.
+ */
+export const sandstonePack: SandstonePack = new Proxy({} as SandstonePack, {
+  get(_target, prop) {
+    if (!_sandstonePack) {
+      if (hasContext()) {
+        const ctx = getSandstoneContext()
+        _sandstonePack = new SandstonePack(ctx.namespace, ctx.packUid)
+      } else {
+        _sandstonePack = new SandstonePack('default', '0')
+      }
+    }
+    return (_sandstonePack as any)[prop]
+  },
+})
+
 export { SandstonePack }
+
+// Context management (for CLI)
+export { setSandstoneContext, getSandstoneContext, hasContext, resetContext } from './context'
+export type { SandstoneContext }
+
+/**
+ * Create a new SandstonePack with explicit context.
+ * This is the preferred way to create packs from the CLI.
+ */
+export function createSandstonePack(context: SandstoneContext): SandstonePack {
+  setSandstoneContext(context)
+  _sandstonePack = new SandstonePack(context.namespace, context.packUid)
+  return _sandstonePack
+}
+
+/**
+ * Reset the global pack instance. Used by CLI between builds.
+ */
+export function resetSandstonePack(): void {
+  if (_sandstonePack) {
+    _sandstonePack.reset()
+  }
+  _sandstonePack = undefined
+}
 
 export { LiteralUnion, NamespacedLiteralUnion, Set, SetType }
 

@@ -6,6 +6,7 @@ import type { Node, SandstoneCore } from 'sandstone/core'
 import type { ResourcePath, SandstonePack } from 'sandstone/pack'
 import type { PackType } from 'sandstone/pack/packType'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
+import { getSandstoneContext, hasContext } from 'sandstone/context'
 
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**
@@ -94,12 +95,12 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     const strategy_path = this.node.resource.path[1] === undefined ? '' : this.node.resource.path[1].endsWith('ses') ? this.node.resource.path[1].slice(0,-2) : this.node.resource.path[1].slice(0, -1)
 
-    const scopedStrategy = this.node.resource.path[1]
-      ? process.env[`${strategy_path.toUpperCase()}_CONFLICT_STRATEGY`] as LiteralUnion<BASIC_CONFLICT_STRATEGIES>
+    // Get conflict strategies from context if available, otherwise use defaults
+    const conflictStrategies = hasContext() ? getSandstoneContext().conflictStrategies : undefined
+    const scopedStrategy = this.node.resource.path[1] && conflictStrategies
+      ? conflictStrategies[strategy_path] as LiteralUnion<BASIC_CONFLICT_STRATEGIES>
       : undefined
-    const defaultStrategy = process.env.DEFAULT_CONFLICT_STRATEGY === undefined
-      ? undefined
-      : process.env.DEFAULT_CONFLICT_STRATEGY as LiteralUnion<BASIC_CONFLICT_STRATEGIES>
+    const defaultStrategy = conflictStrategies?.default as LiteralUnion<BASIC_CONFLICT_STRATEGIES> | undefined
 
     this.onConflict = args.onConflict ?? scopedStrategy ?? defaultStrategy ?? 'throw'
   }

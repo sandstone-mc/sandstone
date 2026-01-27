@@ -88,7 +88,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
       }
     } else if (source instanceof SelectorPickClass) {
       this.primarySource = 'selector' as PrimarySource
-      this.selector = source._toSelector() as SelectorClass<true, boolean>
+      this.selector = source._toSelector() as SelectorClass<false, true, boolean>
     } else {
       this.primarySource = 'data' as PrimarySource
       this.data = source
@@ -160,7 +160,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
         groups.push(hex.substring(groupStart, groupStart + groupSize))
         groupStart += groupSize
       }
-      return groups.join('-')
+      return groups.join('-') as `${string}-${string}-${string}-${string}`
     }
     throw new Error('Cannot convert a non-existent UUID array to a string!')
   }
@@ -202,7 +202,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
           {
             const storagePoint = getTempStorage('UUID')
 
-            storagePoint.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
+            storagePoint.set(Data('entity', this.selector!, 'UUID'))
 
             for (let i = 0; i < 4; i++) {
               _scores[i].set(storagePoint.select([i]))
@@ -263,7 +263,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
           break
         case 'selector':
           {
-            this.data.set(Data('entity', this.selector as SelectorClass<true, any>, 'UUID'))
+            this.data.set(Data('entity', this.selector as SelectorClass<false, true, false>, 'UUID'))
           }
           break
         default:
@@ -276,7 +276,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
   }
 
   /** Selector for the entity with the UUID. If `known` is set this will go unused. */
-  setSelector(selector: SelectorClass<true, any>) {
+  setSelector(selector: SelectorClass<false, true, false>) {
     this.selector = selector
     return this
   }
@@ -327,7 +327,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
    * @internal
    */
   public _toSelector() {
-    const selector = this.known ? this.arrayToString() : this.selector
+    const selector = this.known ? this.arrayToString() : this.selector!
     if (!selector) {
       throw new Error('Cannot create a selector without a UUID or existing selector')
     }

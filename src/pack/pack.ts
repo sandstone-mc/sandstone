@@ -16,6 +16,7 @@ import type {
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
 import { SandstoneCommands } from 'sandstone/commands'
+import { getSandstoneContext, hasContext } from 'sandstone/context'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
@@ -167,8 +168,11 @@ import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 
 export type ResourcePath = string[]
 
-const conflictDefaults = (resourceType: string) =>
-  (process.env[`${resourceType.toUpperCase()}_CONFLICT_STRATEGY`] || process.env.DEFAULT_CONFLICT_STRATEGY) as string
+const conflictDefaults = (resourceType: string) => {
+  if (!hasContext()) return undefined
+  const strategies = getSandstoneContext().conflictStrategies
+  return (strategies?.[resourceType] || strategies?.default) as string | undefined
+}
 
 let tempStorage: DataClass<'storage'>
 
@@ -289,12 +293,17 @@ export class SandstonePack {
   packTypes: Map<string, PackType>
 
   get packOptions() {
-    if (typeof process.env.PACK_OPTIONS === 'string' && process.env.PACK_OPTIONS.startsWith('{')) {
-      return JSON.parse(process.env.PACK_OPTIONS)
+    if (hasContext()) {
+      return getSandstoneContext().packOptions
     }
     return {
       datapack: {
-        packFormat: 31,
+        packFormat: 61,
+        description: 'A Sandstone datapack',
+      },
+      resourcepack: {
+        packFormat: 46,
+        description: 'A Sandstone resource pack',
       },
     }
   }
@@ -349,8 +358,9 @@ export class SandstonePack {
     this.constants = new Set()
     this.tickedLoops = {}
 
-    if (process.env.NAMESPACE) {
-      this.defaultNamespace = process.env.NAMESPACE
+    // Override namespace from context if available
+    if (hasContext()) {
+      this.defaultNamespace = getSandstoneContext().namespace
     }
 
     this.loadTags = {
@@ -390,8 +400,9 @@ export class SandstonePack {
       postLoad: this.Tag('function', 'load:post_load', []),
     }
     this.setupLantern()
-    if (process.env.NAMESPACE) {
-      this.defaultNamespace = process.env.NAMESPACE
+    // Override namespace from context if available
+    if (hasContext()) {
+      this.defaultNamespace = getSandstoneContext().namespace
     }
 
     // Initialize getters
@@ -405,7 +416,8 @@ export class SandstonePack {
     let pack = this.packTypes.get('datapack') as DataPack
 
     if (!pack) {
-      pack = this.packTypes.set('datapack', new DataPack(false, this.packOptions.datapack)).get('datapack') as DataPack
+      const options = this.packOptions.datapack ?? { packFormat: 31, description: 'A Sandstone datapack' }
+      pack = this.packTypes.set('datapack', new DataPack(false, options)).get('datapack') as DataPack
     }
 
     return pack
@@ -415,8 +427,9 @@ export class SandstonePack {
     let pack = this.packTypes.get('resourcepack') as ResourcePack
 
     if (!pack) {
+      const options = this.packOptions.resourcepack ?? { packFormat: 31, description: 'A Sandstone resource pack' }
       pack = this.packTypes
-        .set('resourcepack', new ResourcePack(this.packOptions.resourcepack))
+        .set('resourcepack', new ResourcePack(options))
         .get('resourcepack') as ResourcePack
     }
 
@@ -442,7 +455,8 @@ export class SandstonePack {
 
     this.Tag('function', 'minecraft:load', [privateLoad])
 
-    this.initMCFunction.push(() => loadStatus(this.defaultNamespace).set(process.env.LOAD_VERSION || 1))
+    const loadVersion = hasContext() ? (getSandstoneContext().loadVersion ?? 1) : 1
+    this.initMCFunction.push(() => loadStatus(this.defaultNamespace).set(loadVersion))
   }
 
   resourceToPath = (name: string, resourceFolders?: string[]): ResourcePath => {

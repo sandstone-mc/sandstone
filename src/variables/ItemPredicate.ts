@@ -5,9 +5,8 @@ import type { SandstonePack } from 'sandstone/pack'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import * as util from 'util'
 import { formatDebugString } from '../utils'
-import type { MacroArgument } from 'sandstone/core'
-import {
-  TagClass } from 'sandstone/core'
+import type { MacroArgument } from 'sandstone/core/Macro'
+import { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { NBTObject } from 'sandstone/arguments'
 import type { ItemModelBuilder } from 'sandstone/core/resources/resourcepack/itemDefinition'
 

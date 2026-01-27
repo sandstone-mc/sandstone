@@ -2,6 +2,7 @@
 
 import path from 'node:path'
 import fs from 'fs-extra'
+import { getSandstoneContext } from 'sandstone/context'
 import type { SandstonePack } from 'sandstone/pack'
 import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies'
 import type { MCMetaBranches } from './mcmeta'
@@ -134,7 +135,7 @@ export class SandstoneCore {
     }
     // eslint-disable-next-line max-len
     const fullPath = path.join(
-      process.env.WORKING_DIR as string,
+      getSandstoneContext().workingDir,
       `resources/${path.join(pathOrResource.packType.type, ..._path)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
     )
 

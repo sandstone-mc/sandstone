@@ -2,6 +2,7 @@ import path from 'node:path'
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import lodash from 'lodash'
+import { getSandstoneContext } from 'sandstone/context'
 import { fetch, safeWrite } from 'sandstone/utils'
 
 export type MCMetaBranches = 'assets' | 'atlas' | 'data' | 'registries' | 'summary'
@@ -9,11 +10,17 @@ export type MCMetaBranches = 'assets' | 'atlas' | 'data' | 'registries' | 'summa
 export class MCMetaCache {
   readonly base = '/misode/mcmeta/'
 
-  readonly path = path.join(process.env.WORKING_DIR as string, '..', 'resources', 'cache', 'mcmeta')
+  get path() {
+    return path.join(getSandstoneContext().workingDir, '..', 'resources', 'cache', 'mcmeta')
+  }
 
-  readonly manifest = path.join(this.path, '..', '..', 'mcmeta.json')
+  get manifest() {
+    return path.join(this.path, '..', '..', 'mcmeta.json')
+  }
 
-  readonly lockFile = path.join(this.path, '..', 'lock-mcmeta.json')
+  get lockFile() {
+    return path.join(this.path, '..', 'lock-mcmeta.json')
+  }
 
   version: string = 'latest'
 

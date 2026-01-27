@@ -3,6 +3,7 @@
 import path from 'node:path'
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
+import { getSandstoneContext } from 'sandstone/context'
 import type { PackData } from 'sandstone/utils'
 import { fetch, safeWrite } from 'sandstone/utils'
 import type { SandstoneCore } from './sandstoneCore'
@@ -28,11 +29,17 @@ export class SmithedDependencyCache {
 
   readonly baseURL = 'https://api.smithed.dev/v2/'
 
-  readonly path = path.join(process.env.WORKING_DIR as string, '../', 'resources', 'cache', 'smithed')
+  get path() {
+    return path.join(getSandstoneContext().workingDir, '../', 'resources', 'cache', 'smithed')
+  }
 
-  readonly manifest = path.join(this.path, '..', '..', 'smithed.json')
+  get manifest() {
+    return path.join(this.path, '..', '..', 'smithed.json')
+  }
 
-  readonly lockFile = path.join(this.path, '..', 'lock-smithed.json')
+  get lockFile() {
+    return path.join(this.path, '..', 'lock-smithed.json')
+  }
 
   dependencies: Map<string, Dependency> = new Map()
 
