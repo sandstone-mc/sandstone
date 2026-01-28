@@ -1,4 +1,4 @@
-import type { SingleEntityArgument, SinglePlayerArgument } from 'sandstone/arguments'
+import type { SingleEntityArgumentOf, SinglePlayerArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -27,8 +27,8 @@ export class SpectateCommand<MACRO extends boolean> extends CommandArguments {
    * spectate('@e[type=villager,limit=1]', '@p') // Nearest player spectates villager
    * ```
    */
-  spectate = (
-    target: Macroable<SingleEntityArgument<MACRO>, MACRO>,
-    player?: Macroable<SinglePlayerArgument<MACRO>, MACRO>,
+  spectate = <T extends string, P extends string>(
+    target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
+    player?: Macroable<SinglePlayerArgumentOf<MACRO, P>, MACRO>,
   ) => this.finalCommand([targetParser(target), player])
 }

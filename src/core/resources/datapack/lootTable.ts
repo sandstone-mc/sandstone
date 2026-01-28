@@ -4,6 +4,7 @@ import type {
   ENTITY_SLOTS,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
+  MultiplePlayersArgumentOf,
   SymbolResource,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
@@ -54,7 +55,9 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
    * Gives items, ignoring empty item stacks.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  give = (players: MultiplePlayersArgument<false> = '@s') => this.pack.commands.loot.give(players).loot(this.name)
+  give<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
+    return this.pack.commands.loot.give(players).loot(this.name)
+  }
 
   /**
    * Distributes items to container.

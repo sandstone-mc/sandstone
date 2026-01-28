@@ -1,4 +1,4 @@
-import type { Coordinates, Registry, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, Registry, SingleEntityArgumentOf } from 'sandstone/arguments'
 import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { DamageTypeClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -13,14 +13,14 @@ class DamageCauseCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * @param cause Cause of the damage, in the case of indirect damage.
    */
-  from = (cause: Macroable<SingleEntityArgument<MACRO>, MACRO>) => this.finalCommand(['from', targetParser(cause)])
+  from = <T extends string>(cause: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>) => this.finalCommand(['from', targetParser(cause)])
 }
 
 export class DamageSourceCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * @param entity Entity inflicting the damage.
    */
-  by = (entity: Macroable<SingleEntityArgument<MACRO>, MACRO>) =>
+  by = <T extends string>(entity: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>) =>
     this.subCommand(['by', targetParser(entity)], DamageCauseCommand)
 
   /**
@@ -74,8 +74,8 @@ export class DamageCommand<MACRO extends boolean> extends CommandArguments {
    * damage('@e[tag=boss]', 1000, 'minecraft:generic') // Instant boss kill
    * ```
    */
-  damage = (
-    target: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+  damage = <T extends string>(
+    target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
     amount: Macroable<number, MACRO>,
     damageType?: Macroable<Registry['minecraft:damage_type'] | DamageTypeClass, MACRO>,
   ) => {

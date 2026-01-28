@@ -71,19 +71,19 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
     return `death.attack.${this.damageTypeJSON.message_id}${this.damageTypeJSON.death_message_type === 'intentional_game_design' ? '.link' : ''}`
   }
 
-  damage(
+  damage<T extends string = '@s'>(
     amount: number,
     context?: 'entity' | 'at',
-    source?: Coordinates<false> | SingleEntityArgument<false>,
-    cause?: SingleEntityArgument<false>,
+    source?: Coordinates<false> | SingleEntityArgument<false> | T,
+    cause?: SingleEntityArgument<false> | T,
   ): void
 
-  damage(
-    target: SingleEntityArgument<false>,
+  damage<T extends string, S extends string = '@s', C extends string = '@s'>(
+    target: SingleEntityArgument<false> | T,
     amount: number,
     context?: 'entity' | 'at',
-    source?: Coordinates<false> | SingleEntityArgument<false>,
-    cause?: SingleEntityArgument<false>,
+    source?: Coordinates<false> | SingleEntityArgument<false> | S,
+    cause?: SingleEntityArgument<false> | C,
   ): void
 
   damage(
@@ -107,26 +107,26 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
     if (typeof args[0] === 'number') {
       if (args[1] === 'entity') {
         if (args[3]) {
-          return command('@s', args[0], this)
-            .by(args[2] as SingleEntityArgument<false>)
-            .from(args[3])
+          return command('@s' as any, args[0], this)
+            .by(args[2] as any)
+            .from(args[3] as any)
         }
-        return command('@s', args[0], this).by(args[2] as SingleEntityArgument<false>)
+        return command('@s' as any, args[0], this).by(args[2] as any)
       }
       if (args[1] === 'at') {
-        return command('@s', args[0], this).at(args[1] as Coordinates<false>)
+        return command('@s' as any, args[0], this).at(args[1] as Coordinates<false>)
       }
-      return command('@s', args[0], this)
+      return command('@s' as any, args[0], this)
     }
     if (args[2] === 'entity') {
       if (args[4]) {
-        return command(args[0], args[1] as number, this)
-          .by(args[2] as SingleEntityArgument<false>)
-          .from(args[4])
+        return command(args[0] as any, args[1] as number, this)
+          .by(args[2] as any)
+          .from(args[4] as any)
       }
-      return command(args[0], args[1] as number, this).by(args[2] as SingleEntityArgument<false>)
+      return command(args[0] as any, args[1] as number, this).by(args[2] as any)
     }
-    return command(args[0], args[1] as number, this)
+    return command(args[0] as any, args[1] as number, this)
   }
 
   /** @internal */

@@ -1,4 +1,4 @@
-import type { Coordinates, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { Coordinates, MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { arrayToArgsParser } from 'sandstone/variables/parsers'
@@ -58,7 +58,7 @@ type ParticleCommandType<MACRO extends boolean> =
     speed?: Macroable<number, MACRO>,
     count?: Macroable<number, MACRO>,
     mode?: Macroable<'force' | 'normal', MACRO>,
-    viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
   ) => void) &
     /**
      * Creates dust particles.
@@ -117,7 +117,7 @@ type ParticleCommandType<MACRO extends boolean> =
       speed?: Macroable<number, MACRO>,
       count?: Macroable<number, MACRO>,
       mode?: Macroable<'force' | 'normal', MACRO>,
-      viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+      viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
     ) => void) &
     /**
      * Creates block or falling dust particles.
@@ -164,7 +164,7 @@ type ParticleCommandType<MACRO extends boolean> =
       speed?: Macroable<number, MACRO>,
       count?: Macroable<number, MACRO>,
       mode?: Macroable<'force' | 'normal', MACRO>,
-      viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+      viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
     ) => void) &
     /**
      * Creates item particles.
@@ -210,7 +210,7 @@ type ParticleCommandType<MACRO extends boolean> =
       speed?: Macroable<number, MACRO>,
       count?: Macroable<number, MACRO>,
       mode?: Macroable<'force' | 'normal', MACRO>,
-      viewers?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+      viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
     ) => void)
 
 export class ParticleCommand<MACRO extends boolean> extends CommandArguments {

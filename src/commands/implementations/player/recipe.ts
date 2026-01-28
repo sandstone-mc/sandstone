@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { Macroable, RecipeClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -28,8 +28,8 @@ export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
    * recipe.give('@a[team=builders]', 'minecraft:stone_bricks')
    * ```
    */
-  give = (
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  give = <T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     recipe: Macroable<'*' | Registry['minecraft:item'] | RecipeClass, MACRO>,
   ) => this.finalCommand(['give', targetParser(targets), recipe])
 
@@ -49,8 +49,8 @@ export class RecipeCommand<MACRO extends boolean> extends CommandArguments {
    * recipe.take('@a[team=beginners]', 'minecraft:enchanting_table')
    * ```
    */
-  take = (
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  take = <T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     recipe: Macroable<'*' | Registry['minecraft:item'] | RecipeClass, MACRO>,
   ) => this.finalCommand(['take', targetParser(targets), recipe])
 }

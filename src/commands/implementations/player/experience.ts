@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument, SinglePlayerArgument } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf, SinglePlayerArgumentOf } from 'sandstone/arguments'
 import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -32,8 +32,8 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    * experience.add('@p', -50, 'points')       // Remove 50 XP points
    * ```
    */
-  add = (
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  add = <T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     amount: Macroable<number, MACRO>,
     type?: Macroable<'levels' | 'points', MACRO>,
   ) => {
@@ -54,8 +54,8 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    * experience.set('@a', 30, 'levels')      // Set to level 30
    * ```
    */
-  set = (
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  set = <T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     amount: Macroable<number, MACRO>,
     type?: Macroable<'levels' | 'points', MACRO>,
   ) => {
@@ -75,6 +75,6 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    * experience.query('PlayerName', 'levels') // Get XP level
    * ```
    */
-  query = (target: Macroable<SinglePlayerArgument<MACRO>, MACRO>, type?: Macroable<'levels' | 'points', MACRO>) =>
+  query = <T extends string>(target: Macroable<SinglePlayerArgumentOf<MACRO, T>, MACRO>, type?: Macroable<'levels' | 'points', MACRO>) =>
     this.finalCommand(['query', target, type])
 }

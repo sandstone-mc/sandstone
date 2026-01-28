@@ -1,4 +1,4 @@
-import type { SingleEntityArgument } from 'sandstone/arguments'
+import type { SingleEntityArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -80,6 +80,6 @@ export class AttributeCommand<MACRO extends boolean> extends CommandArguments {
    * attribute('@p', 'minecraft:generic.movement_speed').remove('speed-boost')
    * ```
    */
-  attribute = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, attribute: Macroable<string, MACRO>) =>
+  attribute = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, attribute: Macroable<string, MACRO>) =>
     this.subCommand([targetParser(target), attribute], AttributeOperationCommand, false)
 }

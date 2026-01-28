@@ -5,6 +5,7 @@ import type {
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
   NBTObject,
+  MultiplePlayersArgumentOf,
 } from 'sandstone/arguments'
 import type {
   ConditionClass,
@@ -100,9 +101,9 @@ export class Flow {
     dataPoint: DataPointClass,
   ): DataPointClass
 
-  public throw(
+  public throw<T extends string>(
     error?: JSONTextComponent,
-    broadcast?: MultiplePlayersArgument<false> | false,
+    broadcast?: MultiplePlayersArgumentOf<false, T> | false,
     dataPoint?: DataPointClass | false,
   ) {
     const { pack, getCurrentMCFunctionOrThrow } = this.sandstoneCore
@@ -120,7 +121,7 @@ export class Flow {
     ]
 
     if (broadcast !== false) {
-      tellraw(broadcast || '@a', fullError)
+      tellraw(broadcast || '@a' as MultiplePlayersArgumentOf<false, T>, fullError)
     }
 
     const errorString = parseJSONText(this.sandstoneCore, fullError) as unknown as string

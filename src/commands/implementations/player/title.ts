@@ -1,4 +1,4 @@
-import type { JSONTextComponent, MultiplePlayersArgument, TimeArgument } from 'sandstone/arguments'
+import type { JSONTextComponent, MultiplePlayersArgumentOf, TimeArgument } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
@@ -48,6 +48,6 @@ export class TitleCommand<MACRO extends boolean> extends CommandArguments {
    * title('@a').clear()                                 // Clear current title
    * ```
    */
-  title = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+  title = <T extends string>(targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>) =>
     this.subCommand([targetParser(targets)], TitleArgumentsCommand<MACRO>, false)
 }

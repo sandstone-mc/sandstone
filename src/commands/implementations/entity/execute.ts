@@ -10,7 +10,7 @@ import type {
   ObjectiveArgument,
   Range,
   Rotation,
-  SingleEntityArgument,
+  SingleEntityArgumentOf,
 } from 'sandstone/arguments'
 import type { SandstoneCommands } from 'sandstone/commands'
 import {
@@ -223,8 +223,8 @@ export class ExecuteStoreArgsCommand<MACRO extends boolean> extends ExecuteComma
    *
    * @param scale Multiplier to apply before storing value. Defaults to 1.
    */
-  entity = (
-    target: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+  entity = <T extends string>(
+    target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
     path: Macroable<string, MACRO>,
     type: Macroable<StoreType, MACRO>,
     scale?: Macroable<number, MACRO>,
@@ -299,7 +299,7 @@ export class ExecuteDataArgsCommand<MACRO extends boolean> extends ExecuteComman
    * @param target One single entity to be tested.
    * @param path Data tag to check for.
    */
-  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, path: Macroable<string, MACRO>) =>
+  entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, path: Macroable<string, MACRO>) =>
     this.nestedExecute(['data', 'entity', targetParser(target), path], true)
 
   /**
@@ -452,19 +452,19 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * Check a score against either another score or a given range.
    */
   // eslint-disable-next-line max-len
-  score(
-    firstTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+  score<T extends string>(
+    firstTarget: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
     firstObjective: Macroable<string | ObjectiveClass, MACRO>,
     comparison: 'matches',
     value: Macroable<Range<MACRO>, MACRO>,
   ): ExecuteCommand<MACRO>
 
   // eslint-disable-next-line max-len
-  score(
-    firstTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+  score<T extends string, O extends string>(
+    firstTarget: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
     firstObjective: Macroable<string | ObjectiveClass, MACRO>,
     comparison: Macroable<COMPARISON_OPERATORS, MACRO>,
-    otherTarget: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+    otherTarget: Macroable<SingleEntityArgumentOf<MACRO, O>, MACRO>,
     otherObjective: Macroable<string | ObjectiveClass, true>,
   ): ExecuteCommand<MACRO>
 

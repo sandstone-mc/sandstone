@@ -1,4 +1,4 @@
-import type { Coordinates, NBTObject, SingleEntityArgument, SingleEntityArgumentOf } from 'sandstone/arguments'
+import type { Coordinates, NBTObject, SingleEntityArgumentOf } from 'sandstone/arguments'
 import { isMacroArgument, type MacroArgument, type Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { DataPointClass, VectorClass } from 'sandstone/variables'

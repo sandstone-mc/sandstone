@@ -1,4 +1,4 @@
-import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
@@ -114,7 +114,7 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
    */
-  players = (players?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+  players = <T extends string>(players?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>) =>
     this.finalCommand(['players', targetParser(players)])
 
   /**

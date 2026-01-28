@@ -1,4 +1,4 @@
-import type { Coordinates, MultiplePlayersArgument, Registry, SOUND_SOURCES } from 'sandstone/arguments'
+import type { Coordinates, MultiplePlayersArgumentOf, Registry, SOUND_SOURCES } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
@@ -37,10 +37,10 @@ export class PlaySoundCommand<MACRO extends boolean> extends CommandArguments {
    * playsound('minecraft:entity.experience_orb.pickup', 'player', '@a', rel(0, 0, 0), 1.0, 2.0)
    * ```
    */
-  playsound = (
+  playsound = <T extends string>(
     sound: Macroable<Registry['minecraft:sound_event'], MACRO>,
     source: Macroable<SOUND_SOURCES, MACRO>,
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     sourcePosition?: Macroable<Coordinates<MACRO>, MACRO>,
     volume?: Macroable<number, MACRO>,
     pitch?: Macroable<number, MACRO>,

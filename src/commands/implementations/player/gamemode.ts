@@ -1,4 +1,4 @@
-import type { GAMEMODES, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { GAMEMODES, MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -76,6 +76,6 @@ export class GameModeCommand<MACRO extends boolean> extends CommandArguments {
    * gamemode('1', '@p')  // Creative mode using numeric ID
    * ```
    */
-  gamemode = (gamemode: Macroable<GAMEMODES, MACRO>, targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+  gamemode = <T extends string>(gamemode: Macroable<GAMEMODES, MACRO>, targets?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>) =>
     this.finalCommand([targetParser(gamemode), targets])
 }

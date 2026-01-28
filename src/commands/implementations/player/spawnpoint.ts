@@ -1,4 +1,4 @@
-import type { Coordinates, MultiplePlayersArgument, Rotation } from 'sandstone/arguments'
+import type { Coordinates, MultiplePlayersArgumentOf, Rotation } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
@@ -34,8 +34,8 @@ export class SpawnPointCommand<MACRO extends boolean> extends CommandArguments {
    * spawnpoint('@a', abs(0, 70, 0), [90, 0])      // Set spawn with specific facing direction
    * ```
    */
-  spawnpoint = (
-    targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  spawnpoint = <T extends string>(
+    targets?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
     angle?: Macroable<Rotation<MACRO>, MACRO>,
   ) => this.finalCommand([targetParser(targets), coordinatesParser(pos), coordinatesParser(angle)])

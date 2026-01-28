@@ -1,4 +1,4 @@
-import type { JSONTextComponent, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { JSONTextComponent, MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
@@ -68,6 +68,6 @@ export class TellRawCommand<MACRO extends boolean> extends CommandArguments {
    * })
    * ```
    */
-  tellraw = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>, message: Macroable<JSONTextComponent, MACRO>) =>
+  tellraw = <T extends string>(targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>, message: Macroable<JSONTextComponent, MACRO>) =>
     this.finalCommand([targetParser(targets), parseJSONText(this.sandstoneCore, message)])
 }

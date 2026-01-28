@@ -1,4 +1,4 @@
-import type { Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, MultipleEntitiesArgument, Rotation, SingleEntityArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { VectorClass } from 'sandstone/variables/Coordinates'
@@ -26,7 +26,7 @@ export class TeleportFacingCommand<MACRO extends boolean> extends CommandArgumen
    * @param anchor Specifies whether the entity'eyes or feet to make the target(s) facing to.
    *             Must be one of eyes and feet. If not specified, defaults to eyes.
    */
-  facingEntity = (entity: Macroable<SingleEntityArgument<MACRO>, MACRO>, anchor?: Macroable<'eyes' | 'feet', MACRO>) =>
+  facingEntity = <T extends string>(entity: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, anchor?: Macroable<'eyes' | 'feet', MACRO>) =>
     this.finalCommand(['facing', targetParser(entity), anchor])
 }
 
@@ -40,7 +40,7 @@ export class TeleportCommand<MACRO extends boolean> extends CommandArguments {
    *                         Must be a player name, a target selector, or a UUID.
    *                         Permits entity other than players.
    */
-  tp(destinationEntity: Macroable<SingleEntityArgument<MACRO>, MACRO>): void
+  tp<T extends string>(destinationEntity: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>): void
 
   /**
    * Teleports the executor to a given location.
@@ -62,9 +62,9 @@ export class TeleportCommand<MACRO extends boolean> extends CommandArguments {
    *                         Must be a player name, a target selector, or a UUID.
    *                         Permits entity other than players.
    */
-  tp(
+  tp<T extends string>(
     targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-    destinationEntity: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+    destinationEntity: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
   ): void
 
   /**

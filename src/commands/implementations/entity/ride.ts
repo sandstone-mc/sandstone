@@ -1,4 +1,4 @@
-import type { SingleEntityArgument } from 'sandstone/arguments'
+import type { SingleEntityArgumentOf } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -14,7 +14,7 @@ export class RideArgumentsCommand<MACRO extends boolean> extends CommandArgument
    *
    * @param target Specifies the mount.
    */
-  mount = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>) => this.finalCommand(['mount', targetParser(target)])
+  mount = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>) => this.finalCommand(['mount', targetParser(target)])
 
   /**
    * Dismounts the target if it is mounted.
@@ -45,6 +45,6 @@ export class RideCommand<MACRO extends boolean> extends CommandArguments {
    * ride('PlayerName').mount('@e[type=boat,limit=1]')
    * ```
    */
-  ride = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>) =>
+  ride = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>) =>
     this.subCommand([targetParser(target)], RideArgumentsCommand, false)
 }

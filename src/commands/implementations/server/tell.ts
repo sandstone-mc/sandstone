@@ -1,10 +1,10 @@
-import type { MessageOrSelector, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MessageOrSelector, MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { AtLeastOne } from 'sandstone/utils'
 import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers'
 
-export class TellCommandNode extends CommandNode<[MultiplePlayersArgument<false>, AtLeastOne<MessageOrSelector>]> {
+export class TellCommandNode extends CommandNode<[MultiplePlayersArgumentOf<false, string>, AtLeastOne<MessageOrSelector>]> {
   command = 'w' as const
 }
 
@@ -27,6 +27,6 @@ export class TellCommand<_MACRO extends boolean> extends CommandArguments {
    * tell('PlayerName', 'You have', '5', 'items')  // Multiple message parts
    * ```
    */
-  tell = (targets: MultiplePlayersArgument<false>, ...messages: AtLeastOne<MessageOrSelector>) =>
+  tell = <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, ...messages: AtLeastOne<MessageOrSelector>) =>
     this.finalCommand([targetParser(targets), messages])
 }

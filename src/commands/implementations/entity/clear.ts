@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { Macroable, TagClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
@@ -50,8 +50,8 @@ export class ClearCommand<MACRO extends boolean> extends CommandArguments {
    * clear('@p', 'minecraft:cobblestone', 64)
    * ```
    */
-  clear(
-    targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  clear<T extends string>(
+    targets?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     item?: Macroable<Registry['minecraft:item'] | TagClass<'item'>, MACRO>,
     maxCount?: Macroable<number, MACRO>,
   ): FinalCommandOutput
@@ -86,14 +86,14 @@ export class ClearCommand<MACRO extends boolean> extends CommandArguments {
    * clear('@p', ItemPredicate('#minecraft:swords').without('minecraft:enchantments'))
    * ```
    */
-  clear(
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO> | undefined,
+  clear<T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO> | undefined,
     predicate: ItemPredicateClass,
     maxCount?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
-  clear(
-    targets?: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  clear<T extends string>(
+    targets?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     itemOrPredicate?: Macroable<Registry['minecraft:item'] | TagClass<'item'>, MACRO> | ItemPredicateClass,
     maxCount?: Macroable<number, MACRO>,
   ) {

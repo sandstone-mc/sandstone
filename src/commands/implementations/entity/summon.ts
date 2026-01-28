@@ -1,4 +1,4 @@
-import type { Coordinates, RootNBT,SymbolEntity } from 'sandstone/arguments'
+import type { Coordinates, RootNBT, SymbolEntity } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'

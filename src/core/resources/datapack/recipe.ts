@@ -1,4 +1,4 @@
-import type { SymbolResource, MultiplePlayersArgument } from 'sandstone/arguments'
+import type { SymbolResource, MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -46,15 +46,15 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
    * Give this recipe.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  give = (players: MultiplePlayersArgument<false> = '@s') => {
-    this.pack.commands.recipe.give(players, this)
+  give<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
+    return this.pack.commands.recipe.give(players, this)
   }
 
   /**
    * Take this recipe.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  take = (players: MultiplePlayersArgument<false> = '@s') => {
-    this.pack.commands.recipe.take(players, this)
+  take<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
+    return this.pack.commands.recipe.take(players, this)
   }
 }

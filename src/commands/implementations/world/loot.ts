@@ -4,8 +4,8 @@ import type {
   ENTITY_SLOTS,
   Registry,
   MultipleEntitiesArgument,
-  MultiplePlayersArgument,
-  SingleEntityArgument,
+  SingleEntityArgumentOf,
+  MultiplePlayersArgumentOf,
 } from 'sandstone/arguments'
 import { validateIntegerRange } from 'sandstone/commands/validators'
 import type { LootTableClass, Macroable } from 'sandstone/core'
@@ -48,7 +48,9 @@ class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param target Specifies one entity to kill simulatively.
    */
-  kill = (target: SingleEntityArgument<MACRO>) => this.finalCommand(['kill', targetParser(target)])
+  kill<T extends string>(target: SingleEntityArgumentOf<MACRO, T>) {
+    return this.finalCommand(['kill', targetParser(target)])
+  }
 
   /**
    * Drops items that would be dropped by mining the given block, with the given tool.
@@ -156,8 +158,9 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    * loot.give('@p').fish('minecraft:gameplay/fishing', rel(0, 0, 0), 'minecraft:fishing_rod')
    * ```
    */
-  give = (players: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
-    this.subCommand(['give', targetParser(players)], LootSourceCommand<MACRO>, false)
+  give<T extends string>(players: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>) {
+    return this.subCommand(['give', targetParser(players)], LootSourceCommand<MACRO>, false)
+  }
 
   /**
    * Insert loot items into container block.

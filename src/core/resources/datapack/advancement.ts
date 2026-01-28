@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument, SymbolResource } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf, SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -49,16 +49,16 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    * Grant this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grant(players: MultiplePlayersArgument<false> = '@s', criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
-    this.pack.commands.advancement.grant(players).only(this.name, criterion)
+  grant<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>, criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
+    this.pack.commands.advancement.grant(players as any).only(this.name, criterion)
   }
 
   /**
    * Revoke this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revoke(players: MultiplePlayersArgument<false> = '@s', criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
-    this.pack.commands.advancement.revoke(players).only(this.name, criterion)
+  revoke<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>, criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
+    this.pack.commands.advancement.revoke(players as any).only(this.name, criterion)
   }
 
   /**
@@ -69,8 +69,8 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grantUntilThis(players: MultiplePlayersArgument<false> = '@s') {
-    this.pack.commands.advancement.grant(players).until(this.name)
+  grantUntilThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
+    this.pack.commands.advancement.grant(players as any).until(this.name)
   }
 
   /**
@@ -81,8 +81,8 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revokeUntilThis(players: MultiplePlayersArgument<false> = '@s') {
-    this.pack.commands.advancement.revoke(players).until(this.name)
+  revokeUntilThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
+    this.pack.commands.advancement.revoke(players as any).until(this.name)
   }
 
   /**
@@ -94,7 +94,7 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grantFromThis(players: MultiplePlayersArgument<false> = '@s') {
+  grantFromThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
     this.pack.commands.advancement.grant(players).from(this.name)
   }
 
@@ -107,7 +107,7 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revokeFromThis(players: MultiplePlayersArgument<false> = '@s') {
+  revokeFromThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>){
     this.pack.commands.advancement.revoke(players).from(this.name)
   }
 
@@ -120,7 +120,7 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grantThroughThis(players: MultiplePlayersArgument<false> = '@s') {
+  grantThroughThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
     this.pack.commands.advancement.grant(players).through(this.name)
   }
 
@@ -133,7 +133,7 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revokeThroughThis(players: MultiplePlayersArgument<false> = '@s') {
+  revokeThroughThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
     this.pack.commands.advancement.revoke(players).through(this.name)
   }
 

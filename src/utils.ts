@@ -436,19 +436,19 @@ type TestMembers<T, TestDispatcher> = {
 }
 
 type NegatedMembers<T> = {
-  [K in keyof T as `!${Extract<K, string>}`]: Record<string, never>
+  [K in keyof T as `!${Extract<K, string>}`]?: Record<string, never>
 }
 
-export type MemberModifiers<T> = T & NegatedMembers<T>
+export type MemberModifiers<T> = Partial<T> & NegatedMembers<T>
 
 type UnknownKey<UnknownValue> = {
-  [K in `${string}:${string}`]: UnknownValue
+  [K in `${string}:${string}`]?: UnknownValue
 }
 
 type UnknownNegatableKey<UnknownValue> = ({
-  [K in `!${string}:${string}`]: Record<string, never>
+  [K in `!${string}:${string}`]?: Record<string, never>
 } & {
-  [K in `${string}:${string}`]: UnknownValue | Record<string, never>
+  [K in `${string}:${string}`]?: UnknownValue | Record<string, never>
 })
 
 type McdocIDMapBase<Dispatcher, UnknownValue> = Dispatcher & UnknownKey<UnknownValue>

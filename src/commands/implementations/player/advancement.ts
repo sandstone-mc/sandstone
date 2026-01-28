@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { AdvancementClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -84,7 +84,7 @@ export class AdvancementCommand<MACRO extends boolean> extends CommandArguments 
    * advancement.grant('@a').until('minecraft:story/smelt_iron') // Grant parents up to advancement
    * ```
    */
-  grant = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+  grant = <T extends string>(targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>) =>
     this.subCommand(['grant', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
 
   /**
@@ -100,6 +100,6 @@ export class AdvancementCommand<MACRO extends boolean> extends CommandArguments 
    * advancement.revoke('@p').through('minecraft:story/root')    // Remove advancement tree
    * ```
    */
-  revoke = (targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>) =>
+  revoke = <T extends string>(targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>) =>
     this.subCommand(['revoke', targetParser(targets)], AdvancementArgumentsCommand<MACRO>, false)
 }

@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument, Registry, SOUND_SOURCES } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf, Registry, SOUND_SOURCES } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -30,8 +30,8 @@ export class StopSoundCommand<MACRO extends boolean> extends CommandArguments {
    * stopsound('@a', '*', 'minecraft:entity.pig.ambient') // Stop pig sounds for all
    * ```
    */
-  stopsound = (
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  stopsound = <T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     source?: Macroable<SOUND_SOURCES | '*', MACRO>,
     sound?: Macroable<Registry['minecraft:sound_event'], MACRO>,
   ) => this.finalCommand([targetParser(targets), source, sound])
