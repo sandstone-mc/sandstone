@@ -58,6 +58,11 @@ export type SOUND_SOURCES =
 
 // When used as `type XX = YY | _ShowAlias`, forces Typescript to show the alias type (XX) and not the real one (YY).
 export class _ShowAlias implements NBTSerializable {
+  /**
+   * Phantom brand to prevent structural typing from matching other NBTSerializable classes.
+   */
+  declare readonly __showAliasBrand: never
+
   toNBT(): string {
     throw new Error('You\'re not supposed to use the _ShowAlias class directly')
   }

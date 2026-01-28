@@ -139,6 +139,7 @@ import {
   ObjectiveClass,
   Score,
   SelectorClass,
+  SelectorPickClass,
   SleepClass,
   TargetlessDataClass,
   TargetlessDataPointClass,
@@ -831,8 +832,9 @@ export class SandstonePack {
   Selector<PROPERTIES extends SelectorProperties<false, false, false>>(target: '@e', selectorArguments: PROPERTIES):
     SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
 
-  Selector(target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r', selectorArguments?: SelectorProperties<boolean, boolean, boolean>) {
-    return new SelectorClass(this, target, selectorArguments)
+  Selector(target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r', selectorArguments?: SelectorProperties<boolean, boolean, boolean>):
+    SelectorClass<false, boolean, boolean> {
+    return new SelectorClass(this, target, selectorArguments) as SelectorClass<false, boolean, boolean>
   }
 
   UUID(): UUIDClass<'known'>
@@ -847,7 +849,7 @@ export class SandstonePack {
   UUID(source: DataPointClass, options?: UUIDOptions): UUIDClass<'data'>
 
   /** Initializes with a Selector. */
-  UUID(source: SelectorClass<true, boolean>, options?: UUIDOptions): UUIDClass<'selector'>
+  UUID(source: SelectorPickClass<true, boolean>, options?: UUIDOptions): UUIDClass<'selector'>
 
   UUID(source: UUIDSource = randomUUID(), options?: UUIDOptions) {
     return new UUIDClass(this.core, source, options)

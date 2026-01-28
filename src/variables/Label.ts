@@ -64,6 +64,11 @@ export const LabelClass = makeClassCallable(_RawLabelClass)
 export type LabelClass = MakeInstanceCallable<_RawLabelClass>
 
 export class EntityLabel implements ConditionClass, SelectorPickClass<true, false> {
+  /**
+   * Phantom brand property for TypeScript type discrimination.
+   */
+  declare readonly __selectorPickBrand: { single: true; player: false }
+
   /** Label */
   public label
 
@@ -75,7 +80,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
   /**
    * Selects entity
    */
-  public originalSelector: string | SelectorClass<false, true, false>
+  public originalSelector: string | SelectorClass<false, true, true> | SelectorClass<false, true, false> | SelectorClass<false, true, boolean>
 
   /** Test for label on entity */
   public test = this as ConditionClass

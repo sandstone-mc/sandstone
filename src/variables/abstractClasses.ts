@@ -22,9 +22,15 @@ export class ConditionClass {
 
 export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> implements NBTSerializable {
   /**
+   * Phantom brand property for TypeScript to distinguish between different
+   * SelectorPickClass type parameter combinations. Does not exist at runtime.
+   */
+  declare readonly __selectorPickBrand: { single: IsSingle; player: IsPlayer }
+
+  /**
    * @internal
    */
-  _toSelector(): SelectorClass<boolean, IsSingle, IsPlayer> | string {
+  _toSelector(): SelectorClass<false, IsSingle, IsPlayer> | string {
     throw new Error('Not implemented')
   }
   /**

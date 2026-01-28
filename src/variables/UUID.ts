@@ -46,12 +46,18 @@ export type UUIDOptions = {
     data?: true | [DataPointClass] | DataPointClass
 
     /** Selector for the entity with the UUID. If `known` is set this will go unused. */
-    selector?: SelectorClass<true, boolean>
+    selector?: SelectorClass<false, true, boolean>
   }
 }
 
 export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
-implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSerializable {
+implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSerializable {
+  /**
+   * Phantom brand property for TypeScript type discrimination.
+   * Uses `boolean` for player since a UUID can reference any entity type.
+   */
+  declare readonly __selectorPickBrand: { single: true; player: boolean }
+
   readonly primarySource: PrimarySource
 
   known!: PrimarySource extends 'known' ? UUIDinNumber : UUIDinNumber | undefined
@@ -60,7 +66,9 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
 
   data!: PrimarySource extends 'data' ? DataPointClass : DataPointClass | undefined
 
-  selector!: PrimarySource extends 'selector' ? SelectorClass<true, boolean> : SelectorClass<true, boolean> | undefined
+  selector!: PrimarySource extends 'selector'
+    ? SelectorClass<false, true, boolean>
+    : SelectorClass<false, true, boolean> | undefined
 
   /**
    *
@@ -88,7 +96,10 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
       }
     } else if (source instanceof SelectorPickClass) {
       this.primarySource = 'selector' as PrimarySource
-      this.selector = source._toSelector() as SelectorClass<false, true, boolean>
+      const selectorResult = source._toSelector()
+      if (typeof selectorResult !== 'string') {
+        this.selector = selectorResult
+      }
     } else {
       this.primarySource = 'data' as PrimarySource
       this.data = source
@@ -276,7 +287,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, false>, NBTSeria
   }
 
   /** Selector for the entity with the UUID. If `known` is set this will go unused. */
-  setSelector(selector: SelectorClass<false, true, false>) {
+  setSelector(selector: SelectorClass<false, true, boolean>) {
     this.selector = selector
     return this
   }

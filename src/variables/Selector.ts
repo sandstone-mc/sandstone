@@ -220,6 +220,18 @@ export class SelectorClass<
   IsSingle extends boolean = false,
   IsPlayer extends boolean = false,
 > implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable {
+  /**
+   * Phantom brand property for TypeScript to distinguish between different
+   * SelectorClass type parameter combinations. Does not exist at runtime.
+   */
+  declare readonly __selectorBrand: { macro: MACRO; single: IsSingle; player: IsPlayer }
+
+  /**
+   * Phantom brand property required by SelectorPickClass interface.
+   * Does not exist at runtime.
+   */
+  declare readonly __selectorPickBrand: { single: IsSingle; player: IsPlayer }
+
   arguments: SelectorProperties<IsSingle, IsPlayer, MACRO>
 
   constructor(
@@ -333,8 +345,10 @@ export class SelectorClass<
   /**
    * @internal
    */
-  _toSelector(): SelectorClass<MACRO, IsSingle, IsPlayer> {
-    return this
+  _toSelector(): SelectorClass<false, IsSingle, IsPlayer> {
+    // Cast is safe - the MACRO type parameter only affects type checking,
+    // not the runtime structure of the object
+    return this as unknown as SelectorClass<false, IsSingle, IsPlayer>
   }
 
   protected toJSON() {
