@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument, RootNBT, SymbolDataComponent } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf, RootNBT, SymbolDataComponent } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core'
 import { nbtStringifier, targetParser } from 'sandstone/variables'
@@ -35,8 +35,8 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
    * give('PlayerName', 'minecraft:emerald', 20)
    * ```
    */
-  give(
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  give<T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     item: Macroable<Registry['minecraft:item'], MACRO>,
     count?: number,
   ): FinalCommandOutput
@@ -96,15 +96,15 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
    * })
    * ```
    */
-  give(
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  give<T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     item: Macroable<Registry['minecraft:item'], MACRO>,
     components: Macroable<MemberModifiers<SymbolDataComponent>, MACRO>,
     count?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
-  give(
-    targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
+  give<T extends string>(
+    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     item: Macroable<Registry['minecraft:item'], MACRO>,
     countOrComponents?: Macroable<any, MACRO>,
     count?: Macroable<number, MACRO>,

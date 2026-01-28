@@ -19,37 +19,50 @@ type MultipleEntitySelectorLiteral = AllSelectorLiterals
 /** Selector literals that can target multiple players (excludes @e, @n) */
 type MultiplePlayerSelectorLiteral = '@a' | '@p' | '@r' | '@s'
 
-// ===== String argument types with exclusions =====
+// ===== String argument validation types =====
 
 /**
- * Represents a player name or UUID string.
- * Uses `string & {}` to give lower priority than specific string literals,
- * allowing TypeScript to reject known-bad literals when explicitly passed.
+ * Validates a string for single entity context.
+ * Rejects '@a' and '@e' literals, allows everything else.
  */
-type PlayerNameOrUUID = string & {}
+export type ValidateSingleEntityString<T extends string> = T extends '@a' | '@e' ? never : T
 
 /**
- * String argument for single entity: allows single-entity selectors and player names,
- * but NOT @a or @e literals.
+ * Validates a string for single player context.
+ * Rejects '@a', '@e', and '@n' literals, allows everything else.
  */
-type SingleEntityStringArgument = SingleEntitySelectorLiteral | Exclude<PlayerNameOrUUID, '@a' | '@e'>
+export type ValidateSinglePlayerString<T extends string> = T extends '@a' | '@e' | '@n' ? never : T
 
 /**
- * String argument for single player: allows single-player selectors and player names,
- * but NOT @a, @e, or @n literals.
+ * Validates a string for multiple players context.
+ * Rejects '@e' and '@n' literals, allows everything else.
  */
-type SinglePlayerStringArgument = SinglePlayerSelectorLiteral | Exclude<PlayerNameOrUUID, '@a' | '@e' | '@n'>
+export type ValidateMultiplePlayersString<T extends string> = T extends '@e' | '@n' ? never : T
+
+// ===== Non-generic string argument types (for backwards compatibility) =====
 
 /**
- * String argument for multiple entities: allows all selectors and any string.
+ * String argument for single entity (non-generic version).
+ * Use ValidateSingleEntityString<T> in generic contexts for full validation.
  */
-type MultipleEntityStringArgument = AllSelectorLiterals | PlayerNameOrUUID
+type SingleEntityStringArgument = SingleEntitySelectorLiteral | (string & {})
 
 /**
- * String argument for multiple players: allows player-targeting selectors and player names,
- * but NOT @e or @n literals.
+ * String argument for single player (non-generic version).
+ * Use ValidateSinglePlayerString<T> in generic contexts for full validation.
  */
-type MultiplePlayerStringArgument = MultiplePlayerSelectorLiteral | Exclude<PlayerNameOrUUID, '@e' | '@n'>
+type SinglePlayerStringArgument = SinglePlayerSelectorLiteral | (string & {})
+
+/**
+ * String argument for multiple entities.
+ */
+type MultipleEntityStringArgument = AllSelectorLiterals | (string & {})
+
+/**
+ * String argument for multiple players (non-generic version).
+ * Use ValidateMultiplePlayersString<T> in generic contexts for full validation.
+ */
+type MultiplePlayerStringArgument = MultiplePlayerSelectorLiteral | (string & {})
 
 // ===== Selector class type combinations =====
 
@@ -170,3 +183,71 @@ export type MultipleEntitiesArgument<MACRO extends boolean = false> =
   | SelectorPickClass<false, boolean>
   | SelectorPickClass<boolean, boolean>
   | _ShowAlias
+
+// ===== Generic argument types with string literal validation =====
+
+/**
+ * Matches SelectorPickClass instances that are NOT SelectorClass.
+ * SelectorClass has __selectorBrand, other SelectorPickClass subclasses (UUIDClass, EntityLabel) don't.
+ * This allows accepting "picked" entities without enforcing IsPlayer, while still
+ * enforcing IsPlayer on raw SelectorClass instances.
+ */
+type PureSelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> =
+  SelectorPickClass<IsSingle, IsPlayer> & { __selectorBrand?: never }
+
+/**
+ * Generic version of SinglePlayerArgument that validates string literals.
+ * Use this with a generic type parameter to reject invalid selectors like '@e'.
+ *
+ * @example
+ * ```ts
+ * function foo<T extends string>(target: SinglePlayerArgumentOf<false, T>) { ... }
+ * foo('@s')  // OK
+ * foo('@e')  // Error: '@e' is not assignable to 'never'
+ * ```
+ */
+export type SinglePlayerArgumentOf<MACRO extends boolean, T extends string> =
+  | ValidateSinglePlayerString<T>
+  | SelectorClass<MACRO, true, true>
+  // Pure SelectorPickClass (not SelectorClass) - player not enforced
+  | PureSelectorPickClass<true, true>
+  | PureSelectorPickClass<true, false>
+  | PureSelectorPickClass<true, boolean>
+
+/**
+ * Generic version of SingleEntityArgument that validates string literals.
+ * Use this with a generic type parameter to reject invalid selectors like '@e' or '@a'.
+ *
+ * @example
+ * ```ts
+ * function foo<T extends string>(target: SingleEntityArgumentOf<false, T>) { ... }
+ * foo('@s')  // OK
+ * foo('@e')  // Error: '@e' is not assignable to 'never'
+ * ```
+ */
+export type SingleEntityArgumentOf<MACRO extends boolean, T extends string> =
+  | ValidateSingleEntityString<T>
+  | SelectorClass<MACRO, true, true>
+  | SelectorClass<MACRO, true, false>
+  // Pure SelectorPickClass (not SelectorClass) - player not enforced
+  | PureSelectorPickClass<true, true>
+  | PureSelectorPickClass<true, false>
+  | PureSelectorPickClass<true, boolean>
+  | UUIDClass<any>
+
+/**
+ * Generic version of MultiplePlayersArgument that validates string literals.
+ * Use this with a generic type parameter to reject invalid selectors like '@e' or '@n'.
+ */
+export type MultiplePlayersArgumentOf<MACRO extends boolean, T extends string> =
+  | ValidateMultiplePlayersString<T>
+  | SelectorClass<MACRO, true, true>
+  | SelectorClass<MACRO, false, true>
+  // Pure SelectorPickClass (not SelectorClass) - player not enforced
+  | PureSelectorPickClass<true, true>
+  | PureSelectorPickClass<true, false>
+  | PureSelectorPickClass<true, boolean>
+  | PureSelectorPickClass<false, true>
+  | PureSelectorPickClass<false, false>
+  | PureSelectorPickClass<false, boolean>
+  | PureSelectorPickClass<boolean, boolean>

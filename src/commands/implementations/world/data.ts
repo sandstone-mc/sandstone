@@ -1,4 +1,4 @@
-import type { Coordinates, NBTObject, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, NBTObject, SingleEntityArgument, SingleEntityArgumentOf } from 'sandstone/arguments'
 import { isMacroArgument, type MacroArgument, type Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { DataPointClass, VectorClass } from 'sandstone/variables'
@@ -91,8 +91,8 @@ export class DataGetCommand<MACRO extends boolean> extends CommandArguments {
    * @param path The path of the NBT to get.
    * @param scale The scale to multiply the NBT value by.
    */
-  entity = (
-    target: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+  entity = <T extends string>(
+    target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
     path?: Macroable<string, MACRO>,
     scale?: Macroable<number, MACRO>,
   ) => this.finalCommand(['entity', targetParser(target), path, scale])
@@ -124,7 +124,7 @@ export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The entity to merge the NBT with.
    * @param nbt The NBT to merge with.
    */
-  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, nbt: Macroable<NBTObject, MACRO>) =>
+  entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, nbt: Macroable<NBTObject, MACRO>) =>
     this.finalCommand(['entity', targetParser(target), nbtStringifier(nbt)])
 
   /**
@@ -153,7 +153,7 @@ class DataModifyFromCommand<MACRO extends boolean> extends CommandArguments {
    * @param source The entity to modify the NBT with.
    * @param sourcePath The path of the NBT to modify with.
    */
-  entity = (source: Macroable<SingleEntityArgument<MACRO>, MACRO>, sourcePath: Macroable<string, MACRO>) =>
+  entity = <T extends string>(source: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, sourcePath: Macroable<string, MACRO>) =>
     this.finalCommand(['entity', targetParser(source), sourcePath])
 
   /**
@@ -224,13 +224,13 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
      * @param start Optional. Index of first character to include at the start of the string.
      * @param end Optional. Index of the first character to exclude at the end of the string
      */
-    entity: (
-      source: Macroable<SingleEntityArgument<MACRO>, MACRO>,
+    entity: <T extends string>(
+      source: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
       sourcePath: Macroable<string, MACRO>,
       start?: Macroable<number, MACRO>,
       end?: Macroable<number, MACRO>,
     ) => {
-      const command: Macroable<string | SingleEntityArgument<MACRO> | number, MACRO>[] = [
+      const command: Macroable<string | SingleEntityArgumentOf<MACRO, T> | number, MACRO>[] = [
         'string',
         'entity',
         targetParser(source),
@@ -318,7 +318,7 @@ export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The entity to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) =>
+  entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, targetPath: Macroable<string, MACRO>) =>
     this.subCommand(['entity', targetParser(target), targetPath], DataModifyTypeCommand<MACRO>, false)
 
   /**
@@ -347,7 +347,7 @@ export class DataRemoveCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The entity to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  entity = (target: Macroable<SingleEntityArgument<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) =>
+  entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, targetPath: Macroable<string, MACRO>) =>
     this.finalCommand(['entity', targetParser(target), targetPath])
 
   /**
