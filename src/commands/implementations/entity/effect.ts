@@ -45,6 +45,7 @@ export class EffectCommand<MACRO extends boolean> extends CommandArguments {
    * @param amplifier Effect strength level (0-based).
    *                 0 = Level I, 1 = Level II, 2 = Level III, etc.
    *                 Higher levels increase effect potency.
+   *                 Maximum level is 127.
    *                 Defaults to 0 (Level I).
    *
    * @param hideParticles Whether to hide effect particles and HUD indicators.
@@ -85,6 +86,7 @@ export class EffectCommand<MACRO extends boolean> extends CommandArguments {
     hideParticles?: boolean,
   ) => {
     if (seconds && seconds !== 'infinite') validateIntegerRange(seconds, 'seconds', 0, 1_000_000)
+    if (amplifier) validateIntegerRange(amplifier, 'amplifier', 0, 127)
     return this.finalCommand(['give', targetParser(targets), effect, seconds, amplifier, hideParticles])
   }
 

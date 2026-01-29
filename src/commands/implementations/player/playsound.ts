@@ -17,11 +17,13 @@ export class PlaySoundCommand<MACRO extends boolean> extends CommandArguments {
    * @param sound Sound event to play.
    *             Examples: 'minecraft:entity.pig.ambient', 'minecraft:block.note_block.harp'
    *
-   * @param source Sound category for volume control.
+   * @param source Optional Sound category for volume control.
    *              Examples: 'master', 'music', 'ambient', 'block', 'player'
+   *              Defaults to 'master' if not specified.
    *
    * @param targets Player selector to play sound for.
    *               Examples: '@p', '@a', 'PlayerName'
+   *               Defaults to '@s' if not specified.
    *
    * @param sourcePosition Optional position where sound originates from.
    *                      Defaults to target's position if not specified.
@@ -39,8 +41,8 @@ export class PlaySoundCommand<MACRO extends boolean> extends CommandArguments {
    */
   playsound = <T extends string>(
     sound: Macroable<Registry['minecraft:sound_event'], MACRO>,
-    source: Macroable<SOUND_SOURCES, MACRO>,
-    targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
+    source?: Macroable<SOUND_SOURCES, MACRO>,
+    targets?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     sourcePosition?: Macroable<Coordinates<MACRO>, MACRO>,
     volume?: Macroable<number, MACRO>,
     pitch?: Macroable<number, MACRO>,

@@ -9,23 +9,23 @@ import type { BLOCKS_SET } from 'sandstone/arguments/generated/_registry/blocks'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone/utils'
 
 /** Converts stringified boolean/numeric literals to actual booleans/numbers */
-type ParseLiteral<T> =
+export type ParseLiteral<T> =
   T extends 'true' | 'false' ? boolean :
   T extends `${infer N extends number}` ? N :
   T
 
 /** Converts block state types from stringified literals to proper primitives */
-type ParseBlockState<T> = {
+export type ParseBlockState<T> = {
   [K in keyof T]: ParseLiteral<T[K]>
 }
 
-type BlockEntityName = keyof SymbolBlock
+export type BlockEntityName = keyof SymbolBlock
 
-type BlockEntity = NamespacedLiteralUnion<BlockEntityName>
+export type BlockEntity = NamespacedLiteralUnion<BlockEntityName>
 
-type BlockStaticName = keyof Omit<Record<SetType<typeof BLOCKS_SET>, false>, BlockEntityName>
+export type BlockStaticName = keyof Omit<Record<SetType<typeof BLOCKS_SET>, false>, BlockEntityName>
 
-type BlockStatic = (NamespacedLiteralUnion<BlockStaticName> | `minecraft:${BlockStaticName}`)
+export type BlockStatic = (NamespacedLiteralUnion<BlockStaticName> | `minecraft:${BlockStaticName}`)
 
 export class SetBlockCommandNode extends CommandNode {
   command = 'setblock' as const
@@ -58,6 +58,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    *            - `'replace'` (default): Silently replace any existing block
    *            - `'destroy'`: Break existing block, dropping items and playing sound
    *            - `'keep'`: Only place if the target location is air
+   *            - `'strict'`: Replace without issuing block updates
    *
    * @example
    * ```ts
@@ -75,6 +76,9 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    *
    * // Break existing block first
    * setblock([spawn.x, spawn.y, spawn.z], 'minecraft:beacon', {}, 'destroy')
+   * 
+   * // Keeps invalid wall state and doesn't disturb nearby invalid walls
+   * setblock([spawn.x, spawn.y, spawn.z], 'minecraft:stone_brick_wall', { up: true }, 'strict')
    * ```
    */
 
@@ -82,7 +86,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
     state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>> : Record<string, string | boolean | number>, MACRO>,
-    type?: 'destroy' | 'keep' | 'replace',
+    type?: 'destroy' | 'keep' | 'replace' | 'strict',
   ): FinalCommandOutput
 
   /**
@@ -140,7 +144,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
     block: BLOCK,
     state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>> : Record<string, string | boolean | number>, MACRO>,
     nbt?: Macroable<BLOCK extends keyof SymbolBlock ? NonNullable<SymbolBlock[BLOCK]> : SymbolBlock<'%fallback'>, MACRO>,
-    type?: 'destroy' | 'keep' | 'replace',
+    type?: 'destroy' | 'keep' | 'replace' | 'strict',
   ): FinalCommandOutput
 
   setblock(

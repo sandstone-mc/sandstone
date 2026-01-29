@@ -1,249 +1,153 @@
-import type { Coordinates, MultiplePlayersArgumentOf } from 'sandstone/arguments'
+import type { Coordinates, MultiplePlayersArgumentOf, RootNBT, SymbolParticle, Registry, AbsoluteCoordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { arrayToArgsParser } from 'sandstone/variables/parsers'
+import { arrayToArgsParser, coordinatesParser, nbtStringifier, VectorClass } from 'sandstone/variables'
+import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
-import type { Registry } from 'sandstone/arguments/generated/registry'
-
-// Particle command
 
 export class ParticleCommandNode extends CommandNode {
   command = 'particle' as const
 }
 
-// This command is fucking hell
+/** Particle types that have configurable options (SNBT data) */
+type ParticleWithOptions = SymbolParticle<'keys'>
 
-type ParticleCommandType<MACRO extends boolean> =
-  /**
-   * Creates particles.
-   *
-   * @param name Specifies the particle to create.
-   *
-   * @param pos Specifies the position at which to create the particle. If not specified, defaults to the position of the executor.
-   *
-   * @param delta
-   * Specifies the size of the 3-dimensional cuboid volume to spawn particles in, centered on position `pos`, and multiplied by about 8 (using 1 1 1 specifies a cuboid of about 8×8×8 in size).
-   * Negative values may be used, but have the same effect as their positive counterparts (using -1 -1 -1 still equates to an 8×8×8 cuboid).
-   *
-   * Note that the generated particles aren't evenly distributed over the cuboid, instead it uses a Gaussian distribution resulting in a particle-gradient most dense at the center.
-   * Tilde and caret notation may be used, the resulting coordinates are then used as delta.
-   *
-   * - Exception 1: When `name` is entity_effect or ambient_entity_effect, a `count` of 0 causes the `delta` and `speed` to act like RGBE values instead, ranging from 0.0 to 1.0.
-   *   The three `delta` values give red, green, and blue components for the color; the `speed` provides an exponent that makes the colors brighter or dimmer, with 128 being a default.
-   * - Exception 2: When `count` is set to 0, the `delta` instead acts as motion values for the particle, with `speed` acting as a multiplier.
-   *   `dx`, `dy` and `dz` instead becomes `motion:x`, `motion:y` and `motion:z` respectively. Particles that don't have any motion to begin with are not affected by this (Example: barrier).
-   * - Exception 3: When `name` is note, a `count` of 0 causes `dx` to act as a color modifier, with `speed` acting as a multiplier.
-   *   Starts at green with the hue moving backward as this increments.
-   *
-   * @param speed Specifies the speed of the particle. Does not work on all particles (Example: `angry_villager`).
-   *
-   * @param count Specifies the number of particle effects to create. If 0, it results in a single particle.
-   * See the exceptions on `delta` for why having a <count> of 0 can be useful.
-   *
-   * @param mode Specifies the display mode: `normal` or `force`.
-   * Setting `force` allows the particle(s) to be seen up to 256 blocks away and by players that use the minimal particles setting.
-   *
-   * @param viewers Allows control of which player should view this particle instead of everyone in the viewing range of the particle.
-   */
-  ((
-    name: Macroable<
-      Exclude<Registry['minecraft:particle_type'], 'minecraft:dust' | 'minecraft:block' | 'minecraft:falling_dust' | 'minecraft:item'>,
-      MACRO
-    >,
-    pos?: Macroable<Coordinates<MACRO>, MACRO>,
-    delta?: Macroable<
-      [deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>],
-      MACRO
-    >,
-    speed?: Macroable<number, MACRO>,
-    count?: Macroable<number, MACRO>,
-    mode?: Macroable<'force' | 'normal', MACRO>,
-    viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
-  ) => void) &
-    /**
-     * Creates dust particles.
-     *
-     * @param name Specifies the particle to create.
-     *
-     * @param colors The three color channel parameters, representing red, green, and blue, each being a value in the range 0 to 1. For example, `[1.0, 0.5, 0.5]` creates a pink particle.
-     *
-     * If one or more values are greater than 1, the particles change their colors. The greater the values the greater is the range of different colors.
-     *
-     * @param size The size of the dust particle.
-     *
-     * @param pos Specifies the position at which to create the particle. If not specified, defaults to the position of the executor.
-     *
-     * @param delta
-     * Specifies the size of the 3-dimensional cuboid volume to spawn particles in, centered on position `pos`, and multiplied by about 8 (using 1 1 1 specifies a cuboid of about 8×8×8 in size).
-     * Negative values may be used, but have the same effect as their positive counterparts (using -1 -1 -1 still equates to an 8×8×8 cuboid).
-     *
-     * Note that the generated particles aren't evenly distributed over the cuboid, instead it uses a Gaussian distribution resulting in a particle-gradient most dense at the center.
-     * Tilde and caret notation may be used, the resulting coordinates are then used as delta.
-     *
-     * - Exception 1: When `name` is entity_effect or ambient_entity_effect, a `count` of 0 causes the `delta` and `speed` to act like RGBE values instead, ranging from 0.0 to 1.0.
-     *   The three `delta` values give red, green, and blue components for the color; the `speed` provides an exponent that makes the colors brighter or dimmer, with 128 being a default.
-     * - Exception 2: When `count` is set to 0, the `delta` instead acts as motion values for the particle, with `speed` acting as a multiplier.
-     *   `dx`, `dy` and `dz` instead becomes `motion:x`, `motion:y` and `motion:z` respectively. Particles that don't have any motion to begin with are not affected by this (Example: barrier).
-     * - Exception 3: When `name` is note, a `count` of 0 causes `dx` to act as a color modifier, with `speed` acting as a multiplier.
-     *   Starts at green with the hue moving backward as this increments.
-     *
-     * @param speed Specifies the speed of the particle. Does not work on all particles (Example: `angry_villager`).
-     *
-     * @param count Specifies the number of particle effects to create. If 0, it results in a single particle.
-     * See the exceptions on `delta` for why having a <count> of 0 can be useful.
-     *
-     * @param mode Specifies the display mode: `normal` or `force`.
-     * Setting `force` allows the particle(s) to be seen up to 256 blocks away and by players that use the minimal particles setting.
-     *
-     * @param viewers Allows control of which player should view this particle instead of everyone in the viewing range of the particle.
-     */
-    ((
-      name: 'minecraft:dust',
-      colors: Macroable<
-        [
-          red: Macroable<number, MACRO>,
-          green: Macroable<number, MACRO>,
-          blue: Macroable<number, MACRO>,
-          size: Macroable<number, MACRO>,
-        ],
-        MACRO
-      >,
-      size: Macroable<number, MACRO>,
-      pos?: Macroable<Coordinates<MACRO>, MACRO>,
-      delta?: Macroable<
-        [deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>],
-        MACRO
-      >,
-      speed?: Macroable<number, MACRO>,
-      count?: Macroable<number, MACRO>,
-      mode?: Macroable<'force' | 'normal', MACRO>,
-      viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
-    ) => void) &
-    /**
-     * Creates block or falling dust particles.
-     *
-     * @param name Specifies the particle to create.
-     *
-     * @param block Specifies the block from which the particle will take the texture. Can specify a block state.
-     * For example, `minecraft:grass_block[snowy=true]`.
-     *
-     * @param pos Specifies the position at which to create the particle. If not specified, defaults to the position of the executor.
-     *
-     * @param delta
-     * Specifies the size of the 3-dimensional cuboid volume to spawn particles in, centered on position `pos`, and multiplied by about 8 (using 1 1 1 specifies a cuboid of about 8×8×8 in size).
-     * Negative values may be used, but have the same effect as their positive counterparts (using -1 -1 -1 still equates to an 8×8×8 cuboid).
-     *
-     * Note that the generated particles aren't evenly distributed over the cuboid, instead it uses a Gaussian distribution resulting in a particle-gradient most dense at the center.
-     * Tilde and caret notation may be used, the resulting coordinates are then used as delta.
-     *
-     * - Exception 1: When `name` is entity_effect or ambient_entity_effect, a `count` of 0 causes the `delta` and `speed` to act like RGBE values instead, ranging from 0.0 to 1.0.
-     *   The three `delta` values give red, green, and blue components for the color; the `speed` provides an exponent that makes the colors brighter or dimmer, with 128 being a default.
-     * - Exception 2: When `count` is set to 0, the `delta` instead acts as motion values for the particle, with `speed` acting as a multiplier.
-     *   `dx`, `dy` and `dz` instead becomes `motion:x`, `motion:y` and `motion:z` respectively. Particles that don't have any motion to begin with are not affected by this (Example: barrier).
-     * - Exception 3: When `name` is note, a `count` of 0 causes `dx` to act as a color modifier, with `speed` acting as a multiplier.
-     *   Starts at green with the hue moving backward as this increments.
-     *
-     * @param speed Specifies the speed of the particle. Does not work on all particles (Example: `angry_villager`).
-     *
-     * @param count Specifies the number of particle effects to create. If 0, it results in a single particle.
-     * See the exceptions on `delta` for why having a <count> of 0 can be useful.
-     *
-     * @param mode Specifies the display mode: `normal` or `force`.
-     * Setting `force` allows the particle(s) to be seen up to 256 blocks away and by players that use the minimal particles setting.
-     *
-     * @param viewers Allows control of which player should view this particle instead of everyone in the viewing range of the particle.
-     */
-    ((
-      name: Macroable<'minecraft:block' | 'minecraft:falling_dust', MACRO>,
-      block: Macroable<Registry['minecraft:block'], MACRO>,
-      pos?: Macroable<Coordinates<MACRO>, MACRO>,
-      delta?: Macroable<
-        [deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>],
-        MACRO
-      >,
-      speed?: Macroable<number, MACRO>,
-      count?: Macroable<number, MACRO>,
-      mode?: Macroable<'force' | 'normal', MACRO>,
-      viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
-    ) => void) &
-    /**
-     * Creates item particles.
-     *
-     * @param name Specifies the particle to create.
-     *
-     * @param item Specifies the item from which the particle will take the texture.
-     *
-     * @param pos Specifies the position at which to create the particle. If not specified, defaults to the position of the executor.
-     *
-     * @param delta
-     * Specifies the size of the 3-dimensional cuboid volume to spawn particles in, centered on position `pos`, and multiplied by about 8 (using 1 1 1 specifies a cuboid of about 8×8×8 in size).
-     * Negative values may be used, but have the same effect as their positive counterparts (using -1 -1 -1 still equates to an 8×8×8 cuboid).
-     *
-     * Note that the generated particles aren't evenly distributed over the cuboid, instead it uses a Gaussian distribution resulting in a particle-gradient most dense at the center.
-     * Tilde and caret notation may be used, the resulting coordinates are then used as delta.
-     *
-     * - Exception 1: When `name` is entity_effect or ambient_entity_effect, a `count` of 0 causes the `delta` and `speed` to act like RGBE values instead, ranging from 0.0 to 1.0.
-     *   The three `delta` values give red, green, and blue components for the color; the `speed` provides an exponent that makes the colors brighter or dimmer, with 128 being a default.
-     * - Exception 2: When `count` is set to 0, the `delta` instead acts as motion values for the particle, with `speed` acting as a multiplier.
-     *   `dx`, `dy` and `dz` instead becomes `motion:x`, `motion:y` and `motion:z` respectively. Particles that don't have any motion to begin with are not affected by this (Example: barrier).
-     * - Exception 3: When `name` is note, a `count` of 0 causes `dx` to act as a color modifier, with `speed` acting as a multiplier.
-     *   Starts at green with the hue moving backward as this increments.
-     *
-     * @param speed Specifies the speed of the particle. Does not work on all particles (Example: `angry_villager`).
-     *
-     * @param count Specifies the number of particle effects to create. If 0, it results in a single particle.
-     * See the exceptions on `delta` for why having a <count> of 0 can be useful.
-     *
-     * @param mode Specifies the display mode: `normal` or `force`.
-     * Setting `force` allows the particle(s) to be seen up to 256 blocks away and by players that use the minimal particles setting.
-     *
-     * @param viewers Allows control of which player should view this particle instead of everyone in the viewing range of the particle.
-     */
-    ((
-      name: 'minecraft:item',
-      item: Macroable<Registry['minecraft:item'], MACRO>,
-      pos?: Macroable<Coordinates<MACRO>, MACRO>,
-      delta?: Macroable<
-        [deltaX: Macroable<number, MACRO>, deltaY: Macroable<number, MACRO>, deltaZ: Macroable<number, MACRO>],
-        MACRO
-      >,
-      speed?: Macroable<number, MACRO>,
-      count?: Macroable<number, MACRO>,
-      mode?: Macroable<'force' | 'normal', MACRO>,
-      viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
-    ) => void)
+/** Particle types that have no special options */
+type SimpleParticle = Exclude<Registry['minecraft:particle_type'], ParticleWithOptions>
 
 export class ParticleCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = ParticleCommandNode
 
   /**
-   * Create particle effects.
+   * Create simple particle effects without special options.
    *
-   * @param name Particle type to create.
-   *            Examples: 'minecraft:heart', 'minecraft:smoke', 'minecraft:dust'
+   * @param name Particle type to create. Only accepts particles that don't require special options.
    *
-   * @param pos Optional position for particles. Defaults to executor position.
-   * @param delta Optional spawn area size [x, y, z]. Larger values spread particles more.
-   * @param speed Optional particle speed/motion.
-   * @param count Optional number of particles to create.
-   * @param mode Optional display mode: 'normal' or 'force' (force shows to more players).
-   * @param viewers Optional player selector to show particles to.
+   * @param pos Position to spawn particles. Defaults to executor position.
+   *
+   * @param delta Spawn volume size [x, y, z], multiplied by ~8. Uses Gaussian distribution.
+   *              When count=0, acts as motion vector instead.
+   *
+   * @param speed Particle speed/motion multiplier.
+   *
+   * @param count Number of particles. When 0, spawns single particle with delta as motion.
+   *
+   * @param mode Display mode: 'normal' (default) or 'force' (visible up to 256 blocks, ignores particle settings).
+   *
+   * @param viewers Player selector to show particles to instead of all nearby players.
    *
    * @example
    * ```ts
-   * particle('minecraft:heart', abs(100, 70, 200))           // Heart at position
-   * particle('minecraft:smoke', rel(0, 1, 0), [1, 1, 1], 0.1, 10)  // Smoke cloud
-   * particle('minecraft:dust', [1.0, 0.5, 0.5, 1.0], abs(0, 70, 0)) // Pink dust
-   * particle('minecraft:block', 'minecraft:stone', rel(0, 0, 0))     // Stone particles
+   * particle('minecraft:heart', abs(100, 70, 200))
+   * particle('minecraft:smoke', rel(0, 1, 0), [1, 1, 1], 0.1, 10)
+   * particle('minecraft:flame', '~ ~1 ~', [0.5, 0.5, 0.5], 0.02, 50, 'force')
    * ```
    */
-  particle: ParticleCommandType<MACRO> = (...args: unknown[]) =>
-    this.finalCommand([
-      args[0],
-      arrayToArgsParser(args[1]),
-      arrayToArgsParser(args[2]),
-      arrayToArgsParser(args[3]),
-      arrayToArgsParser(args[4]),
-      ...args.slice(5),
-    ])
+  particle(
+    name: Macroable<SimpleParticle, MACRO>,
+    pos?: Macroable<Coordinates<MACRO>, MACRO>,
+    delta?: Macroable<AbsoluteCoordinates<MACRO>, MACRO>,
+    speed?: Macroable<number, MACRO>,
+    count?: Macroable<number, MACRO>,
+    mode?: Macroable<'force' | 'normal', MACRO>,
+    viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
+  ): FinalCommandOutput
+
+  /**
+   * Create particle effects with configurable options as SNBT.
+   *
+   * Options are specified as an NBT object and appended to the particle ID as SNBT.
+   * Each particle type has specific options available (e.g., dust has color and scale).
+   *
+   * @param name Particle type that supports options (dust, block, item, etc.) or any string for custom particles.
+   *
+   * @param options Particle-specific options as NBT. Type-checked based on particle type.
+   *               For unknown particles, accepts any NBTObject as fallback.
+   *
+   * @param pos Position to spawn particles. Defaults to executor position.
+   *
+   * @param delta Spawn volume size [x, y, z], multiplied by ~8. Uses Gaussian distribution.
+   *              When count=0, acts as motion vector instead.
+   *
+   * @param speed Particle speed/motion multiplier.
+   *
+   * @param count Number of particles. When 0, spawns single particle with delta as motion.
+   *
+   * @param mode Display mode: 'normal' (default) or 'force' (visible up to 256 blocks, ignores particle settings).
+   *
+   * @param viewers Player selector to show particles to instead of all nearby players.
+   *
+   * @example
+   * ```ts
+   * // Dust particle with color and scale
+   * particle('minecraft:dust', { color: [1.0, 0.5, 0.5], scale: 1.5 }, abs(0, 70, 0))
+   *
+   * // Block particle
+   * particle('minecraft:block', { block_state: 'minecraft:stone' }, rel(0, 0, 0))
+   *
+   * // Item particle
+   * particle('minecraft:item', { item: 'minecraft:diamond' }, '~ ~1 ~')
+   *
+   * // Dust color transition
+   * particle('minecraft:dust_color_transition', {
+   *   from_color: [1.0, 0.0, 0.0],
+   *   to_color: [0.0, 0.0, 1.0],
+   *   scale: 1.0
+   * }, abs(0, 64, 0))
+   *
+   * // Trail particle
+   * particle('minecraft:trail', {
+   *   target: [100.0, 64.0, 100.0],
+   *   color: [0.0, 1.0, 0.0],
+   *   duration: 20
+   * })
+   * ```
+   */
+  particle<PARTICLE extends Macroable<keyof SymbolParticle | `${string}:${string}`, MACRO>>(
+    name: PARTICLE,
+    options: Macroable<
+      PARTICLE extends keyof SymbolParticle ? SymbolParticle[PARTICLE] : RootNBT,
+      MACRO
+    >,
+    pos?: Macroable<Coordinates<MACRO>, MACRO>,
+    delta?: Macroable<AbsoluteCoordinates<MACRO>, MACRO>,
+    speed?: Macroable<number, MACRO>,
+    count?: Macroable<number, MACRO>,
+    mode?: Macroable<'force' | 'normal', MACRO>,
+    viewers?: Macroable<MultiplePlayersArgumentOf<MACRO, string>, MACRO>,
+  ): FinalCommandOutput
+
+  particle(
+    name: Macroable<Registry['minecraft:particle_type'] | `${string}:${string}`, MACRO>,
+    arg2?: any,
+    arg3?: any,
+    arg4?: any,
+    arg5?: any,
+    arg6?: any,
+    arg7?: any,
+    arg8?: any,
+  ) {
+    // Check if arg2 is an options object (has options) or position/coordinates (no options)
+    const hasOptions = arg2 !== undefined && typeof arg2 === 'object' && !isCoordinates(arg2)
+
+    // Destructure args based on whether options are present
+    const [particleName, pos, delta, speed, count, mode, viewers] = hasOptions
+      ? [`${name}${nbtStringifier(arg2 as RootNBT)}`, arg3, arg4, arg5, arg6, arg7, arg8]
+      : [name, arg2, arg3, arg4, arg5, arg6, arg7]
+
+    return this.finalCommand([
+      particleName,
+      pos === undefined ? '~ ~ ~' : coordinatesParser(pos),
+      delta === undefined ? '0 0 0' : coordinatesParser(delta),
+      speed ?? '0',
+      count ?? '1',
+      mode ?? 'normal',
+      ...(viewers === undefined ? [] : [viewers]),
+    ]) as FinalCommandOutput
+  }
+}
+
+/** Check if a value looks like coordinates (string or array with coordinate-like values) */
+function isCoordinates(value: unknown): boolean {
+  return typeof value === 'string' || value instanceof VectorClass || Array.isArray(value)
 }

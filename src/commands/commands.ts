@@ -113,7 +113,7 @@ export class SandstoneCommands<MACRO extends boolean = false> {
   }
 
   get debug() {
-    return new DebugCommand(this.sandstonePack)
+    return new DebugCommand<MACRO>(this.sandstonePack)
   }
 
   get defaultgamemode() {

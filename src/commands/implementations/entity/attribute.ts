@@ -10,44 +10,6 @@ export class AttributeCommandNode extends CommandNode {
   command = 'attribute' as const
 }
 
-export class AttributeOperationCommand<MACRO extends boolean> extends CommandArguments {
-  /**
-   * Returns the total value of the specified attribute.
-   * @category attribute
-   */
-  get = (scale?: Macroable<number, MACRO>) => this.finalCommand(['get', scale])
-
-  /**
-   * Returns the base value of the specified attribute.
-   * @category attribute
-   */
-  baseGet = (scale?: Macroable<number, MACRO>) => this.finalCommand(['base', 'get', scale])
-
-  /**
-   * Overwrites the base value of the specified attribute with the given value.
-   * @category attribute
-   */
-  baseSet = (value: Macroable<number, MACRO>) => this.finalCommand(['base', 'set', value])
-
-  /**
-   * Adds an attribute modifier with the specified properties if no modifier with the same UUID already existed.
-   * @category attribute
-   */
-  add = (
-    uuid: Macroable<string, MACRO>,
-    name: Macroable<string, MACRO>,
-    value: Macroable<number, MACRO>,
-    modifier: Macroable<'add' | 'multiply' | 'multiply_base', MACRO>,
-  ) => this.finalCommand(['modifier', 'add', uuid, name, value, modifier])
-
-  /** Removes the attribute modifier with the specified UUID. */
-  remove = (uuid: Macroable<string, MACRO>) => this.finalCommand(['modifier', 'remove', uuid])
-
-  /** Returns the value of the modifier with the specified UUID. */
-  getModifierValue = (uuid: Macroable<string, MACRO>, scale?: Macroable<number, MACRO>) =>
-    this.finalCommand(['modifier', 'value', 'get', uuid, scale])
-}
-
 export class AttributeCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = AttributeCommandNode
 
@@ -82,4 +44,47 @@ export class AttributeCommand<MACRO extends boolean> extends CommandArguments {
    */
   attribute = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, attribute: Macroable<string, MACRO>) =>
     this.subCommand([targetParser(target), attribute], AttributeOperationCommand, false)
+}
+
+export class AttributeOperationCommand<MACRO extends boolean> extends CommandArguments {
+  /**
+   * Returns the total value of the specified attribute.
+   * @category attribute
+   */
+  get = (scale?: Macroable<number, MACRO>) => this.finalCommand(['get', scale])
+
+  /**
+   * Returns the base value of the specified attribute.
+   * @category attribute
+   */
+  baseGet = (scale?: Macroable<number, MACRO>) => this.finalCommand(['base', 'get', scale])
+
+  /**
+   * Overwrites the base value of the specified attribute with the given value.
+   * @category attribute
+   */
+  baseSet = (value: Macroable<number, MACRO>) => this.finalCommand(['base', 'set', value])
+
+  /**
+   * Overwrites the base value of the specified attribute with the stock value.
+   * @category attribute
+   */
+  baseReset = (value: Macroable<number, MACRO>) => this.finalCommand(['base', 'reset', value])
+
+  /**
+   * Adds an attribute modifier with the specified properties if no modifier with the same ID already existed.
+   * @category attribute
+   */
+  add = (
+    id: Macroable<`${string}:${string}`, MACRO>,
+    value: Macroable<number, MACRO>,
+    modifier: Macroable<'add_value' | 'add_multiplied_base' | 'add_multiplied_total', MACRO>,
+  ) => this.finalCommand(['modifier', 'add', id, value, modifier])
+
+  /** Removes the attribute modifier with the specified ID. */
+  remove = (id: Macroable<`${string}:${string}`, MACRO>) => this.finalCommand(['modifier', 'remove', id])
+
+  /** Returns the value of the modifier with the specified ID. */
+  getModifierValue = (id: Macroable<`${string}:${string}`, MACRO>, scale?: Macroable<number, MACRO>) =>
+    this.finalCommand(['modifier', 'value', 'get', id, scale])
 }

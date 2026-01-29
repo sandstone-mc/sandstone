@@ -168,7 +168,7 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
     this.handleConflicts()
   }
 
-  get name(): `#${string}` {
+  get name(): `#${string}:${string}` {
     return `#${toMinecraftResourceName(this.path, 2)}`
   }
 

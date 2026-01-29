@@ -13,6 +13,8 @@ export class PlaceCommandNode extends CommandNode {
   command = 'place' as const
 }
 
+type MaxDepth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20
+
 export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = PlaceCommandNode
 
@@ -33,13 +35,13 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param pool Configured structure template pool.
    * @param target Jigsaw with the target name will be anchored to the `pos` or current location. If multiple jigsaws have this name a random one will be the anchor.
-   * @param maxDepth Max depth of the jigsaw. Must be an integer between 1 & 7 (inclusive).
+   * @param maxDepth Max depth of the jigsaw. Must be an integer between 1 & 20.
    * @param pos Optional. Where to place.
    */
   jigsaw = (
     pool: Macroable<Registry['minecraft:worldgen/template_pool'], MACRO>,
     target: Macroable<string, MACRO>,
-    maxDepth: Macroable<number, MACRO>,
+    maxDepth: Macroable<MaxDepth, MACRO>,
     pos: Macroable<Coordinates<MACRO>, MACRO> = '~ ~ ~' as Coordinates<MACRO>,
   ) =>
     this.finalCommand([
@@ -69,7 +71,8 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
    * @param rotation Optional. Rotation to apply to the structure.
    * @param mirror Optional. Mirroring to apply to the structure.
    * @param integrity Optional. How complete the structure will be. Must be a float between 1.0 & 0.0 (inclusive), if below 1 the structure will be randomly degraded.
-   * @param seed Optional. Integer applied to the integrity random. Defaults to 0.
+   * @param seed Optional. Integer applied to the `integrity` random. Defaults to 0.
+   * @param mode Optional. `'strict'` will prevent block updates from being issued. Defaults to issuing block states.
    */
   template = (
     structure: Macroable<Registry['minecraft:structure'], MACRO> | StructureClass,
@@ -78,6 +81,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
     mirror?: Macroable<StructureMirror, MACRO>,
     integrity = 1,
     seed = 0,
+    mode?: 'strict'
   ) => {
     this.finalCommand([
       'template',
@@ -87,6 +91,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
       structureMirrorParser(mirror),
       `${integrity}`,
       `${seed}`,
+      ...(mode === undefined ? [] : [mode]),
     ])
   }
 }

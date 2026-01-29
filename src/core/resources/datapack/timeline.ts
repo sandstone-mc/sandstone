@@ -3,6 +3,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
+import { toMinecraftResourceName } from 'sandstone/utils'
 
 // ============================================================================
 // Timeline
@@ -87,5 +88,13 @@ export class WorldClockClass extends ResourceClass<WorldClockNode> {
     this.worldClockJSON = args.worldClock
 
     this.handleConflicts()
+  }
+
+  get name(): `${string}:${string}` {
+    return toMinecraftResourceName(this.path)
+  }
+
+  toString() {
+    return this.name
   }
 }

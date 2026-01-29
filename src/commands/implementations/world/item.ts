@@ -1,10 +1,10 @@
 import type {
-  CONTAINER_SLOTS,
   Coordinates,
-  ENTITY_SLOTS,
   Registry,
   MultipleEntitiesArgument,
   RootNBT,
+  EntitySlotSelector,
+  ContainerSlotSelector,
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -57,7 +57,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
      */
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>,
+      slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>,
       modifier?: Macroable<string | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['from', 'block', pos, slot, modifier]),
 
@@ -68,7 +68,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
+      slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
       modifier?: Macroable<string | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['from', 'entity', targetParser(targets), slot, modifier]),
   }
@@ -94,7 +94,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      */
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>,
+      slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>,
       modifier: Macroable<string | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
 
@@ -105,7 +105,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
+      slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
       modifier: Macroable<string | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
   }
@@ -124,7 +124,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      * @param pos Container block coordinates.
      * @param slot Container slot to replace.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<CONTAINER_SLOTS>, MACRO>) =>
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>) =>
       this.subCommand(['replace', 'block', pos, slot], ItemSourceCommand<MACRO>, false),
 
     /**
@@ -133,7 +133,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<ENTITY_SLOTS>, MACRO>,
+      slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
     ) => this.subCommand(['replace', 'entity', targetParser(targets), slot], ItemSourceCommand<MACRO>, false),
   }
 }

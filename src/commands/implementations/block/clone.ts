@@ -211,109 +211,185 @@ export class CloneToDimensionCommand<MACRO extends boolean> extends CommandArgum
     this.subCommand(['to', dimension, coordinatesParser(destination)], CloneOptionsCommand<MACRO>, true)
 }
 
-// TODO: These are chainable. Similar issues arise with the other block manipulation commands.
 export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Copy all blocks, completely replacing the destination region.
-   * 
+   *
    * This mode copies every block from the source, including air blocks,
    * completely overwriting whatever exists at the destination,
    * issuing relevant block updates. This is the most comprehensive copying mode.
-   * 
+   *
    * **Behavior:**
    * - Copies ALL blocks (including air)
    * - Completely overwrites destination region
    * - Preserves exact structure including empty spaces
    *
-   * @param mode Optional operation mode:
-   *            - `'normal'` (default): Standard copying behavior
-   *            - `'force'`: Allow copying even if source and destination overlap
-   *            - `'move'`: Copy then replace source region with air (relocate structure)
-   * 
    * @example
    * ```ts
    * // Standard replacement copy
    * clone(source, source_end, dest).replace()
-   * 
+   *
    * // Move a structure to new location
-   * clone([100, 64, 100], [110, 74, 110], [200, 64, 200]).replace('move')
-   * 
+   * clone([100, 64, 100], [110, 74, 110], [200, 64, 200]).replace().move()
+   *
    * // Force copy overlapping regions
-   * clone(['~-5', '~', '~-5'], ['~5', '~10', '~5'], ['~3', '~', '~3']).replace('force')
+   * clone(['~-5', '~', '~-5'], ['~5', '~10', '~5'], ['~3', '~', '~3']).replace().force()
    * ```
    */
-  replace = (mode?: Macroable<'force' | 'move' | 'normal', MACRO>) => this.finalCommand(['replace', mode])
+  replace = () => this.subCommand(['replace'], CloneModeCommand, true)
 
   /**
-   * This mode copies blocks from the source without issuing block updates.
+   * Copy blocks from the source without issuing block updates.
+   *
+   * Can be used alone or chained with a filter mode (replace/masked/filtered).
+   *
+   * @example
+   * ```ts
+   * // Strict mode alone
+   * clone(source, source_end, dest).strict()
+   *
+   * // Strict with filter mode
+   * clone(source, source_end, dest).strict().replace()
+   * clone(source, source_end, dest).strict().masked().force()
+   * clone(source, source_end, dest).strict().filtered('minecraft:stone').move()
+   * ```
    */
-  strict = () => this.finalCommand(['strict'])
+  strict = () => this.subCommand(['strict'], CloneStrictOptionsCommand<MACRO>, true)
 
   /**
    * Copy only solid blocks, preserving existing blocks where source has air.
-   * 
+   *
    * This mode only copies non-air blocks from the source region. Air blocks
    * in the source are ignored, leaving whatever blocks exist at the destination
    * unchanged. Perfect for merging structures or adding details.
-   * 
+   *
    * **Behavior:**
    * - Only copies solid (non-air) blocks
    * - Leaves existing destination blocks where source has air
    * - Great for layering or merging structures
    *
-   * @param mode Optional operation mode (same as replace):
-   *            - `'normal'` (default): Standard masked copying
-   *            - `'force'`: Allow overlapping regions
-   *            - `'move'`: Move only the solid blocks, leave air gaps
-   * 
    * @example
    * ```ts
    * // Add decorations without removing existing structure
    * clone(decoration_source, decoration_end, building_location).masked()
-   * 
+   *
    * // Merge two structures together
-   * clone(detail_template, detail_end, base_structure).masked('normal')
-   * 
+   * clone(detail_template, detail_end, base_structure).masked().normal()
+   *
    * // Move only the solid parts of a structure
-   * clone(partial_build, partial_end, new_location).masked('move')
+   * clone(partial_build, partial_end, new_location).masked().move()
    * ```
    */
-  masked = (mode?: Macroable<'force' | 'move' | 'normal', MACRO>) => this.finalCommand(['masked', mode])
+  masked = () => this.subCommand(['masked'], CloneModeCommand, true)
 
   /**
-   * Copy only blocks of a specific type.
-   * 
+   * Copy only blocks matching the specified filter.
+   *
    * This mode applies a filter, copying only blocks that match the specified
-   * block type. All other blocks (including air) are ignored, leaving the
+   * block predicate. All other blocks (including air) are ignored, leaving the
    * destination unchanged where non-matching blocks exist in the source.
-   * 
+   *
    * **Behavior:**
    * - Only copies blocks matching the filter
    * - Ignores all other block types
    * - Useful for extracting specific materials or patterns
    *
-   * @param filter The specific block type to copy. Examples:
+   * @param filter Block predicate specifying which blocks to copy. Examples:
    *              - `'minecraft:stone'` - only stone blocks
    *              - `'minecraft:oak_log'` - only oak logs
-   *              - `'minecraft:redstone_wire'` - only redstone wiring
+   *              - `'#minecraft:logs'` - any log block (tag)
    *
-   * @param mode Optional operation mode (same as other modes):
-   *            - `'normal'` (default): Standard filtered copying
-   *            - `'force'`: Allow overlapping regions
-   *            - `'move'`: Move only the filtered blocks, replace with air
-   * 
    * @example
    * ```ts
    * // Copy only the stone foundation
    * clone(building_source, building_end, new_site).filtered('minecraft:stone')
-   * 
+   *
    * // Extract redstone circuit pattern
    * clone(machine_source, machine_end, circuit_area).filtered('minecraft:redstone_wire')
-   * 
+   *
    * // Move only wooden parts of structure
-   * clone(house_source, house_end, new_location).filtered('minecraft:oak_planks', 'move')
+   * clone(house_source, house_end, new_location).filtered('minecraft:oak_planks').move()
    * ```
    */
-  filtered = (filter: Macroable<Registry['minecraft:block'], MACRO>, mode?: Macroable<'force' | 'move' | 'normal', MACRO>) =>
-    this.finalCommand(['filtered', filter, mode])
+  filtered = (filter: Macroable<Registry['minecraft:block'], MACRO>) =>
+    this.subCommand(['filtered', filter], CloneModeCommand, true)
+}
+
+/**
+ * Provides filter mode options after `strict` has been called.
+ * This class is executable on its own (strict with no filter mode).
+ */
+export class CloneStrictOptionsCommand<MACRO extends boolean> extends CommandArguments {
+  /**
+   * Copy all blocks, completely replacing the destination region (without block updates).
+   *
+   * @example
+   * ```ts
+   * clone(source, source_end, dest).strict().replace()
+   * clone(source, source_end, dest).strict().replace().force()
+   * ```
+   */
+  replace = () => this.subCommand(['replace'], CloneModeCommand, true)
+
+  /**
+   * Copy only solid blocks, preserving existing blocks where source has air (without block updates).
+   *
+   * @example
+   * ```ts
+   * clone(decoration_source, decoration_end, building_location).strict().masked()
+   * clone(decoration_source, decoration_end, building_location).strict().masked().move()
+   * ```
+   */
+  masked = () => this.subCommand(['masked'], CloneModeCommand, true)
+
+  /**
+   * Copy only blocks matching the filter (without block updates).
+   *
+   * @param filter Block predicate specifying which blocks to copy.
+   *
+   * @example
+   * ```ts
+   * clone(building_source, building_end, new_site).strict().filtered('minecraft:stone')
+   * clone(building_source, building_end, new_site).strict().filtered('minecraft:stone').force()
+   * ```
+   */
+  filtered = (filter: Macroable<Registry['minecraft:block'], MACRO>) =>
+    this.subCommand(['filtered', filter], CloneModeCommand, true)
+}
+
+
+/**
+ * Provides clone mode options: force, move, or normal.
+ * This class is executable on its own (defaults to normal behavior).
+ */
+export class CloneModeCommand extends CommandArguments {
+  /**
+   * Allow copying even if source and destination regions overlap.
+   *
+   * @example
+   * ```ts
+   * clone(['~-5', '~', '~-5'], ['~5', '~10', '~5'], ['~3', '~', '~3']).replace().force()
+   * ```
+   */
+  force = () => this.finalCommand(['force'])
+
+  /**
+   * Copy then replace source region with air (relocate structure).
+   *
+   * @example
+   * ```ts
+   * clone([100, 64, 100], [110, 74, 110], [200, 64, 200]).replace().move()
+   * ```
+   */
+  move = () => this.finalCommand(['move'])
+
+  /**
+   * Standard copying behavior (default).
+   *
+   * @example
+   * ```ts
+   * clone(source, source_end, dest).replace().normal()
+   * ```
+   */
+  normal = () => this.finalCommand(['normal'])
 }

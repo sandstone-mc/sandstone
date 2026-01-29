@@ -6,6 +6,9 @@ type RelativeFloat<MACRO extends boolean = false> = `~${MacroString<number | '',
 type LocalFloat<MACRO extends boolean = false> = `^${MacroString<number | '', MACRO>}`
 type AbsoluteOrRelativeFloat<MACRO extends boolean = false> = AbsoluteFloat<MACRO> | RelativeFloat<MACRO>
 
+type AbsoluteVec3<MACRO extends boolean = false> =
+  `${AbsoluteFloat<MACRO>} ${AbsoluteFloat<MACRO>} ${AbsoluteFloat<MACRO>}`
+
 type AbsoluteOrRelativeVec3<MACRO extends boolean = false> =
   `${AbsoluteOrRelativeFloat<MACRO>} ${AbsoluteOrRelativeFloat<MACRO>} ${AbsoluteOrRelativeFloat<MACRO>}`
 type LocalVec3<MACRO extends boolean = false> = `${LocalFloat<MACRO>} ${LocalFloat<MACRO>} ${LocalFloat<MACRO>}`
@@ -13,6 +16,11 @@ type LocalVec3<MACRO extends boolean = false> = `${LocalFloat<MACRO>} ${LocalFlo
 type AbsoluteOrRelativeVec2<MACRO extends boolean = false> =
   `${AbsoluteOrRelativeFloat<MACRO>} ${AbsoluteOrRelativeFloat<MACRO>}`
 type LocalVec2<MACRO extends boolean = false> = `${LocalFloat<MACRO>} ${LocalFloat<MACRO>}`
+
+export type AbsoluteCoordinates<MACRO extends boolean = false> =
+  | [x: string, y: string, z: string]
+  | VectorClass<[string, string, string]>
+  | AbsoluteVec3<MACRO>
 
 export type Coordinates<MACRO extends boolean = false> =
   | [x: string, y: string, z: string]

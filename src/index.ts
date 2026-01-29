@@ -1,6 +1,6 @@
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
 import type { SandstoneContext } from './context'
-import type { SetBlockCommand } from './commands'
+import type { FillCommand, SetBlockCommand } from './commands'
 import type {
   AdvancementClassArguments,
   AtlasClassArguments,
@@ -103,7 +103,7 @@ export { ResolveNBTPart }
 // Commands must go through sandstonePack.commands at call time for the same reason as pack methods.
 type SandstoneCommands = SandstonePack['commands']
 // Exclude setblock since it needs explicit type annotation due to complex generics
-type CommandKeys = Exclude<keyof SandstoneCommands, 'setblock'>
+type CommandKeys = Exclude<keyof SandstoneCommands, 'setblock' | 'fill'>
 
 const commandsProxy = new Proxy({} as Pick<SandstoneCommands, CommandKeys>, {
   get<K extends CommandKeys>(_: unknown, prop: K): SandstoneCommands[K] {
@@ -128,7 +128,6 @@ export const {
   enchant,
   execute,
   experience,
-  fill,
   functionCmd,
   forceload,
   gamemode,
@@ -182,6 +181,10 @@ export const {
 // setblock needs explicit type annotation due to complex generics
 export const setblock: SetBlockCommand<false>['setblock'] = ((...args: unknown[]) =>
   (sandstonePack.commands.setblock as CallableFunction)(...args)) as SetBlockCommand<false>['setblock']
+
+// fill needs explicit type annotation due to complex generics
+export const fill: FillCommand<false>['fill'] = ((...args: unknown[]) =>
+  (sandstonePack.commands.fill as CallableFunction)(...args)) as FillCommand<false>['fill']
 
 // Pack method exports must go through sandstonePack at call time, not capture at module load time.
 // This proxy ensures each method call uses the current pack instance set by createSandstonePack().
