@@ -1,7 +1,6 @@
 export * from './basics'
 export * from './coords'
 export * from './displaySlots'
-export * from './gamerules'
 export * from './generated/registry'
 export * from './generated/dispatcher'
 export * from './jsonTextComponent'

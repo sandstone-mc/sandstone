@@ -1,9 +1,8 @@
 /* eslint-disable max-len */
 
-import type { GAMERULES } from 'sandstone/arguments'
+import type { Registry } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion } from 'sandstone/utils'
 import { CommandArguments } from '../../helpers'
 
 // Gamerule command
@@ -34,6 +33,6 @@ export class GameRuleCommand<MACRO extends boolean> extends CommandArguments {
    * gamerule('doDaylightCycle', false)     // Stop day/night cycle
    * ```
    */
-  gamerule = (gamerule: Macroable<LiteralUnion<GAMERULES>, MACRO>, value?: Macroable<boolean | number, MACRO>) =>
+  gamerule = (gamerule: Macroable<Registry['minecraft:game_rule'], MACRO>, value?: Macroable<boolean | number, MACRO>) =>
     this.finalCommand([gamerule, value])
 }
