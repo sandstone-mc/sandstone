@@ -100,7 +100,24 @@ export { LiteralUnion, NamespacedLiteralUnion, Set, SetType }
 
 export { ResolveNBTPart }
 
-// Commands
+// Commands must go through sandstonePack.commands at call time for the same reason as pack methods.
+type SandstoneCommands = SandstonePack['commands']
+type CommandKeys =
+  | 'advancement' | 'attribute' | 'bossbar' | 'clear' | 'clone' | 'comment' | 'damage' | 'data'
+  | 'datapack' | 'debug' | 'defaultgamemode' | 'difficulty' | 'effect' | 'enchant' | 'execute'
+  | 'experience' | 'fill' | 'functionCmd' | 'forceload' | 'gamemode' | 'gamerule' | 'give' | 'help'
+  | 'kill' | 'list' | 'locate' | 'loot' | 'me' | 'msg' | 'particle' | 'playsound' | 'place' | 'random'
+  | 'raw' | 'recipe' | 'reload' | 'returnCmd' | 'ride' | 'item' | 'say' | 'schedule' | 'scoreboard'
+  | 'seed' | 'setidletimeout' | 'setworldspawn' | 'spawnpoint' | 'spectate' | 'spreadplayers'
+  | 'stopsound' | 'summon' | 'tag' | 'team' | 'teammsg' | 'teleport' | 'tellraw' | 'time' | 'title'
+  | 'trigger' | 'w' | 'weather' | 'worldborder' | 'tm' | 'tp' | 'xp' | 'tell'
+
+const commandsProxy = new Proxy({} as Pick<SandstoneCommands, CommandKeys>, {
+  get<K extends CommandKeys>(_: unknown, prop: K): SandstoneCommands[K] {
+    return ((...args: unknown[]) => (sandstonePack.commands[prop] as CallableFunction)(...args)) as SandstoneCommands[K]
+  },
+})
+
 export const {
   advancement,
   attribute,
@@ -167,9 +184,30 @@ export const {
   tp,
   xp,
   tell,
-} = sandstonePack.commands
+} = commandsProxy
 
-export const setblock = sandstonePack.commands.setblock as SetBlockCommand<false>['setblock']
+// setblock needs explicit type annotation due to complex generics
+export const setblock: SetBlockCommand<false>['setblock'] = ((...args: unknown[]) =>
+  (sandstonePack.commands.setblock as CallableFunction)(...args)) as SetBlockCommand<false>['setblock']
+
+// Pack method exports must go through sandstonePack at call time, not capture at module load time.
+// This proxy ensures each method call uses the current pack instance set by createSandstonePack().
+type PackMethodKeys =
+  | 'RawResource' | 'MCFunction' | 'Advancement' | 'BannerPattern' | 'ChatType' | 'DamageType'
+  | 'Dialog' | 'Enchantment' | 'EnchantmentProvider' | 'Instrument' | 'ItemModifier' | 'JukeboxSong'
+  | 'LootTable' | 'Predicate' | 'Recipe' | 'Tag' | 'TestEnvironment' | 'TestInstance' | 'Timeline'
+  | 'TradeSet' | 'TrialSpawner' | 'TrimMaterial' | 'TrimPattern' | 'Variant' | 'VillagerTrade' | 'WorldClock'
+  | 'Atlas' | 'BlockState' | 'Equipment' | 'Font' | 'Language' | 'Model' | 'Particle' | 'PostEffect'
+  | 'Shader' | 'SoundEvent' | 'PlainText' | 'Texture' | 'WaypointStyle'
+  | 'packTypes' | 'Objective' | 'Macro' | '_' | 'Variable' | 'flowVariable' | 'Trigger' | 'Label'
+  | 'Data' | 'DataVariable' | 'getTempStorage' | 'ResolveNBT' | 'DataIndexMap' | 'DataArray'
+  | 'Selector' | 'UUID' | 'makeCustomResource' | 'sleep'
+
+const packMethodsProxy = new Proxy({} as Pick<SandstonePack, PackMethodKeys>, {
+  get<K extends PackMethodKeys>(_: unknown, prop: K): SandstonePack[K] {
+    return ((...args: unknown[]) => (sandstonePack[prop] as CallableFunction)(...args)) as SandstonePack[K]
+  },
+})
 
 export const {
   // Resources
@@ -234,7 +272,7 @@ export const {
   UUID,
   makeCustomResource,
   sleep,
-} = sandstonePack
+} = packMethodsProxy
 
 export * from './variables/nbt/NBTs'
 
