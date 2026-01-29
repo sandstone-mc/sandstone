@@ -102,15 +102,8 @@ export { ResolveNBTPart }
 
 // Commands must go through sandstonePack.commands at call time for the same reason as pack methods.
 type SandstoneCommands = SandstonePack['commands']
-type CommandKeys =
-  | 'advancement' | 'attribute' | 'bossbar' | 'clear' | 'clone' | 'comment' | 'damage' | 'data'
-  | 'datapack' | 'debug' | 'defaultgamemode' | 'difficulty' | 'effect' | 'enchant' | 'execute'
-  | 'experience' | 'fill' | 'functionCmd' | 'forceload' | 'gamemode' | 'gamerule' | 'give' | 'help'
-  | 'kill' | 'list' | 'locate' | 'loot' | 'me' | 'msg' | 'particle' | 'playsound' | 'place' | 'random'
-  | 'raw' | 'recipe' | 'reload' | 'returnCmd' | 'ride' | 'item' | 'say' | 'schedule' | 'scoreboard'
-  | 'seed' | 'setidletimeout' | 'setworldspawn' | 'spawnpoint' | 'spectate' | 'spreadplayers'
-  | 'stopsound' | 'summon' | 'tag' | 'team' | 'teammsg' | 'teleport' | 'tellraw' | 'time' | 'title'
-  | 'trigger' | 'w' | 'weather' | 'worldborder' | 'tm' | 'tp' | 'xp' | 'tell'
+// Exclude setblock since it needs explicit type annotation due to complex generics
+type CommandKeys = Exclude<keyof SandstoneCommands, 'setblock'>
 
 const commandsProxy = new Proxy({} as Pick<SandstoneCommands, CommandKeys>, {
   get<K extends CommandKeys>(_: unknown, prop: K): SandstoneCommands[K] {
@@ -192,16 +185,13 @@ export const setblock: SetBlockCommand<false>['setblock'] = ((...args: unknown[]
 
 // Pack method exports must go through sandstonePack at call time, not capture at module load time.
 // This proxy ensures each method call uses the current pack instance set by createSandstonePack().
-type PackMethodKeys =
-  | 'RawResource' | 'MCFunction' | 'Advancement' | 'BannerPattern' | 'ChatType' | 'DamageType'
-  | 'Dialog' | 'Enchantment' | 'EnchantmentProvider' | 'Instrument' | 'ItemModifier' | 'JukeboxSong'
-  | 'LootTable' | 'Predicate' | 'Recipe' | 'Tag' | 'TestEnvironment' | 'TestInstance' | 'Timeline'
-  | 'TradeSet' | 'TrialSpawner' | 'TrimMaterial' | 'TrimPattern' | 'Variant' | 'VillagerTrade' | 'WorldClock'
-  | 'Atlas' | 'BlockState' | 'Equipment' | 'Font' | 'Language' | 'Model' | 'Particle' | 'PostEffect'
-  | 'Shader' | 'SoundEvent' | 'PlainText' | 'Texture' | 'WaypointStyle'
-  | 'packTypes' | 'Objective' | 'Macro' | '_' | 'Variable' | 'flowVariable' | 'Trigger' | 'Label'
-  | 'Data' | 'DataVariable' | 'getTempStorage' | 'ResolveNBT' | 'DataIndexMap' | 'DataArray'
-  | 'Selector' | 'UUID' | 'makeCustomResource' | 'sleep'
+type PackNonMethodKeys =
+  | 'core' | 'packTypes' | 'packOptions' | '__initMCFunction' | 'dependencies' | 'flow' | 'commands'
+  | 'conditions' | 'objectives' | 'anonymousScoreId' | 'anonymousDataId' | 'constants' | 'tickedLoops'
+  | 'loadTags' | '__rootObjective' | 'defaultNamespace' | 'packUid'
+  | 'reset' | 'appendNode' | 'initMCFunction' | 'save' | 'resourceToPath' | 'rootObjective'
+  | 'setupLantern' | 'dataPack' | 'resourcePack' | 'registerTickedCommands' | 'ItemModelDefinition'
+type PackMethodKeys = Exclude<keyof SandstonePack, PackNonMethodKeys>
 
 const packMethodsProxy = new Proxy({} as Pick<SandstonePack, PackMethodKeys>, {
   get<K extends PackMethodKeys>(_: unknown, prop: K): SandstonePack[K] {
@@ -254,7 +244,6 @@ export const {
   WaypointStyle,
 
   // Variables
-  packTypes,
   Objective,
   Macro,
   _,
