@@ -42,11 +42,10 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
     return this.finalCommand(['create', test, width, height, depth])
   }
 
-  // TODO: Improve description
   /**
-   * "Verify" one or more tests.
+   * Verify (run) all of the selected tests 400 times each; 100 iterations per cardinal direction.
    * 
-   * @param testSelector Select test(s) to "verify" through a mojank glob pattern.
+   * @param testSelector Select test(s) to verify through a mojank glob pattern.
    *                      - `*` - matches from 0 to any number of alphanumeric characters.
    *                      - `?` - matches exactly one alphanumeric character.
    * 
@@ -59,7 +58,7 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
   verify = (testSelector: Macroable<TestInstanceClass | TEST_INSTANCE_SELECTOR, MACRO>) =>
     this.finalCommand(['verify', testSelector])
 
-  // TODO: Improve rotationSteps documentation
+
   /**
    * Run one or more tests.
    * 
@@ -73,28 +72,28 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
    *                      - `custom:foo/*_test_?` - matches IDs in the `foo` subfolder in the `custom` namespace \
    *                        that end in `_test_` followed by one additional character (probably a number).
    * 
-   * @param repeat Optional. Times to repeat each test in different batches, one being no repetition. Defaults to `1`.
-   * @param untilFail Optional. Whether the tests should be stopped as soon as one iteration fails. Defaults to `false`.
-   * @param rotationSteps Optional. Extra `90` degree steps to apply to the tests. Defaults to `0`.
+   * @param repeat Optional. Times to repeat each test, one being no repetition. Defaults to `1`.
+   * @param untilFail Optional. Whether each individual test in the run will stop repeating if they fail once. Defaults to `false`.
+   * @param rotation Optional. Static rotation to apply to every test structure for the entire run. Defaults to `0`.
    * @param gridLength Optional. Number of tests to place per row in the grid layout, width increases dynamically with test count. Defaults to `8`.
    */
   run(
     testSelector: Macroable<TestInstanceClass | TEST_INSTANCE_SELECTOR, MACRO>,
     repeat?: Macroable<number, MACRO>,
     untilFail?: Macroable<boolean, MACRO>,
-    rotationSteps?: Macroable<number, MACRO>,
+    rotation?: Macroable<0 | 90 | 180 | 270, MACRO>,
     gridLength?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
   /**
-   * Run targeted tests.
+   * Run targeted test(s).
    * 
    * @param target Which test(s) to target:
-   *                - `'closest'` - Only one, the closest test instance block.
-   *                - `'that'` - Only one, the first test bounding box directly in front of the execution context rotation/position.
-   *                - `'these'` - All test instance blocks within 250 blocks of the execution context position.
+   *                - `'closest'` - Targets the single closest test instance block (execution position).
+   *                - `'that'` - Targets a single test instance block via the structure bounding box that is being targeted (execution position and rotation).
+   *                - `'these'` - Targets all test instance blocks within 250 blocks (execution position).
    * @param repeat Optional. Times to repeat each test, one being no repetition. Defaults to `1`.
-   * @param untilFail Optional. Whether the tests should be stopped as soon as one iteration fails. Defaults to `false`.
+   * @param untilFail Optional. Whether each individual test in the run will stop repeating if they fail once. Defaults to `false`.
    */
   run(
     target: 'closest' | 'that' | 'these',
@@ -106,7 +105,7 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
     testSelector: any,
     repeat: Macroable<number, MACRO> = 1,
     untilFail: Macroable<boolean, MACRO> = false,
-    rotationSteps: Macroable<number, MACRO> = 0,
+    rotation: Macroable<0 | 90 | 180 | 270, MACRO> = 0,
     gridLength: Macroable<number, MACRO> = 8,
   ) {
     if (
@@ -116,44 +115,52 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
     ) {
       return this.finalCommand([`run${testSelector}`, repeat, untilFail])
     }
-    return this.finalCommand(['run', testSelector, repeat, untilFail, rotationSteps, gridLength])
+    return this.finalCommand(['run', testSelector, repeat, untilFail, typeof rotation === 'number' ? rotation / 90 : rotation, gridLength])
   }
 
   /**
-   * Run all tests in `LAST_FAILED_TESTS`.
+   * Re-runs all of the tests that failed in the last run.
+   * 
+   * When starting any test run (whether its multiple tests or a single test, including when using this method),
+   * the internal list of failed tests is reset. After the test run completes or is stopped, all failed tests are added to the list.
    */
   runFailed(): FinalCommandOutput
 
   /**
-   * Run all tests in `LAST_FAILED_TESTS`.
+   * Re-runs all of the tests that failed in the last run.
+   * 
+   * When starting any test run (whether its multiple tests or a single test, including when using this method),
+   * the internal list of failed tests is reset. After the test run completes or is stopped, all failed tests are added to the list.
    * 
    * @param repeat Times to repeat each test, one being no repetition.
-   * @param untilFail Optional. Whether the test should be stopped as soon as one iteration fails. Defaults to `false`.
-   * @param rotationSteps Optional. Extra `90` degree steps to apply to the tests. Defaults to `0`.
+   * @param untilFail Optional. each individual test in the run will stop repeating if they fail once. Defaults to `false`.
+   * @param rotation Optional. Static rotation to apply to every test structure for the entire run. Defaults to `0`.
    * @param gridLength Optional. Number of tests to place per row in the grid layout, width increases dynamically with test count. Defaults to `8`.
    */
   runFailed(
     repeat: Macroable<number, MACRO>,
     untilFail?: Macroable<boolean, MACRO>,
-    rotationSteps?: Macroable<number, MACRO>,
+    rotation?: Macroable<0 | 90 | 180 | 270, MACRO>,
     gridLength?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
   /**
-   * Run all tests in `LAST_FAILED_TESTS`.
+   * Re-runs all `TestData#required` tests that failed in the last run.
    * 
-   * @param onlyRequired Whether to only run tests with `TestData#required` set to true.
+   * When starting any test run (whether its multiple tests or a single test, including when using this method),
+   * the internal list of failed tests is reset. After the test run completes or is stopped, all failed tests are added to the list.
+   * 
    * @param repeat Optional. Times to repeat each test, one being no repetition. Defaults to `1`.
    */
   runFailed(
-    onlyRequired: boolean,
+    onlyRequired: true,
     repeat?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
   runFailed(
     repeatOrOnlyRequired?: Macroable<number | boolean, MACRO>,
     untilFailOrRepeat?: Macroable<number | boolean, MACRO>,
-    rotationSteps: Macroable<number, MACRO> = 0,
+    rotation: Macroable<0 | 90 | 180 | 270, MACRO> = 0,
     gridLength: Macroable<number, MACRO> = 8,
   ) {
     if (repeatOrOnlyRequired === undefined) {
@@ -165,7 +172,7 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
     }
     untilFailOrRepeat = untilFailOrRepeat ?? false
 
-    return this.finalCommand(['runfailed', repeatOrOnlyRequired, untilFailOrRepeat, rotationSteps, gridLength])
+    return this.finalCommand(['runfailed', repeatOrOnlyRequired, untilFailOrRepeat, typeof rotation === 'number' ? rotation / 90 : rotation, gridLength])
   }
 
   /**
@@ -201,12 +208,12 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
     this.finalCommand(['pos', variableName])
 
   /**
-   * Resets the test structure(s) for the test(s).
+   * Resets the test state & structure(s) for the targeted test(s).
    * 
    * @param target Which test(s) to target:
-   *                - `'closest'` - Only one, the closest test instance block.
-   *                - `'that'` - Only one, the first test bounding box directly in front of the execution context rotation/position.
-   *                - `'these'` - All test instance blocks within 250 blocks of the execution context position.
+   *                - `'closest'` - Targets the single closest test instance block (execution position).
+   *                - `'that'` - Targets a single test instance block via the structure bounding box that is being targeted (execution position and rotation).
+   *                - `'these'` - Targets all test instance blocks within 250 blocks (execution position).
    */
   reset = (target: 'closest' | 'that' | 'these') =>
     this.finalCommand([`reset${target}`])
@@ -222,9 +229,8 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
    * Removes the structure(s) and blocks associated with test(s).
    * 
    * @param target Which test(s) to target:
-   *                - `'closest'` - Only one, the closest test instance block.
-   *                - `'that'` - Only one, the first test bounding box directly in front of the execution context rotation/position.
-   *                - `'these'` - All test instance blocks within 250 blocks of the execution context position.
+   *                - `'that'` - Targets a single test instance block via the structure bounding box that is being targeted (execution position and rotation).
+   *                - `'these'` - Targets all test instance blocks within 250 blocks (execution position).
    */
   clear(target: 'that' | 'these'): FinalCommandOutput
 
