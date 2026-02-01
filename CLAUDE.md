@@ -138,3 +138,138 @@ type Item = Registry['minecraft:item']
 type EntityType = Registry['minecraft:entity_type']
 type Block = Registry['minecraft:block']
 ```
+
+### Command Implementation
+
+Commands are implemented in `src/commands/implementations/` organized by category (block, entity, player, server, world).
+
+#### File Structure
+
+Each command file contains:
+1. **CommandNode class**: Extends `CommandNode`, sets `command` property to the Minecraft command name
+2. **Command class**: Extends `CommandArguments`, implements the command's methods
+3. **Subcommand classes** (if needed): For chained command syntax
+
+```typescript
+// Example: src/commands/implementations/server/stopwatch.ts
+import type { Macroable } from 'sandstone/core'
+import { CommandNode } from 'sandstone/core/nodes'
+import { CommandArguments, FinalCommandOutput } from '../../helpers'
+
+export class StopwatchCommandNode extends CommandNode {
+  command = 'stopwatch' as const
+}
+
+export class StopwatchCommand<MACRO extends boolean> extends CommandArguments {
+  protected NodeType = StopwatchCommandNode
+
+  create = (id: Macroable<`${string}:${string}`, MACRO>): FinalCommandOutput =>
+    this.finalCommand(['create', id])
+
+  query = (id: Macroable<`${string}:${string}`, MACRO>, scale: Macroable<number, MACRO>): FinalCommandOutput =>
+    this.finalCommand(['query', id, scale])
+}
+```
+
+#### Command Method Patterns
+
+- **`finalCommand(args)`**: Terminal command, returns `FinalCommandOutput`
+- **`subCommand(args, NextClass, executable)`**: Returns another command class for chaining
+
+#### Subcommand Classes
+
+When a command has chained syntax (e.g., `rotate <target> facing <location>`), create a subcommand class:
+
+```typescript
+export class RotateCommand<MACRO extends boolean> extends CommandArguments {
+  protected NodeType = RotateCommandNode
+
+  rotate<T extends string>(target, rotation): FinalCommandOutput
+  rotate<T extends string>(target): RotateFacingArguments<MACRO>  // Returns subcommand
+
+  rotate<T extends string>(target, rotation?) {
+    if (rotation !== undefined) {
+      return this.finalCommand([targetParser(target), coordinatesParser(rotation)])
+    }
+    return this.subCommand([targetParser(target)], RotateFacingArguments<MACRO>, false)
+  }
+}
+
+// IMPORTANT: Subcommand classes MUST be exported to avoid TypeScript errors
+export class RotateFacingArguments<MACRO extends boolean> extends CommandArguments {
+  facing = (location): FinalCommandOutput => this.finalCommand(['facing', coordinatesParser(location)])
+  facingEntity = (entity, anchor?): FinalCommandOutput => this.finalCommand(['facing', 'entity', targetParser(entity), anchor])
+}
+```
+
+#### Registration (3 Steps)
+
+**1. Export from `implementations/index.ts`:**
+```typescript
+export * from './server/stopwatch'
+```
+
+**2. Add to `commands.ts`:**
+```typescript
+// Import
+import { StopwatchCommand } from './implementations'
+
+// Add getter in SandstoneCommands class (alphabetical order)
+get stopwatch() {
+  return new StopwatchCommand<MACRO>(this.sandstonePack)
+}
+```
+
+**Getter patterns:**
+- Multiple methods → `new CommandClass<MACRO>(this.sandstonePack)`
+- Single entry method → `bind(this.sandstonePack, CommandClass, 'methodName') as CommandClass<MACRO>['methodName']`
+
+**3. Export from `src/index.ts`:**
+```typescript
+export const {
+  // ... other commands (alphabetical)
+  stopwatch,
+  // ...
+} = commandsProxy
+```
+
+#### Common Argument Types
+
+```typescript
+import type {
+  Coordinates,                    // [x, y, z] position
+  Rotation,                       // [yaw, pitch] rotation
+  SingleEntityArgument,           // Single entity selector
+  MultipleEntitiesArgument,       // Multiple entities selector
+  MultiplePlayersArgument,        // Multiple players selector
+} from 'sandstone/arguments'
+
+import type { Macroable } from 'sandstone/core'  // Wraps types for macro support
+```
+
+#### Argument Parsers
+
+Use parsers from `sandstone/variables/parsers` for complex arguments:
+- `targetParser(target)` - Entity selectors
+- `coordinatesParser(coords)` - Coordinates and rotations
+- `nbtStringifier(nbt)` - NBT objects to SNBT strings
+
+#### JSDoc Style
+
+```typescript
+/**
+ * Brief description of the command.
+ *
+ * Additional details about behavior.
+ *
+ * @see https://minecraft.wiki/w/Commands/commandname
+ */
+export class CommandNameCommand<MACRO extends boolean> extends CommandArguments {
+  /**
+   * Method description.
+   *
+   * @param paramName Description of parameter.
+   */
+  methodName = (paramName: Type): FinalCommandOutput => ...
+}
+```

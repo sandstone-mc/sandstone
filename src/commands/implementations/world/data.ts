@@ -137,7 +137,7 @@ export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
     this.finalCommand(['storage', target, nbtStringifier(nbt)])
 }
 
-class DataModifyFromCommand<MACRO extends boolean> extends CommandArguments {
+export class DataModifyFromCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Modify with the NBT of a block at the given position.
    *

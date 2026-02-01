@@ -12,11 +12,13 @@ import {
   DataPackCommand,
   DebugCommand,
   DefaultGameModeCommand,
+  DialogCommand,
   DifficultyCommand,
   EffectCommand,
   EnchantCommand,
   ExecuteCommand,
   ExperienceCommand,
+  FillBiomeCommand,
   FillCommand,
   ForceLoadCommand,
   FunctionCommand,
@@ -25,18 +27,21 @@ import {
   GiveCommand,
   HelpCommand,
   ItemCommand,
+  JFRCommand,
   KillCommand,
   ListCommand,
   LocateCommand,
   LootCommand,
   MeCommand,
   ParticleCommand,
+  PerfCommand,
   PlaySoundCommand,
   RawCommand,
   RecipeCommand,
   ReloadCommand,
   ReturnCommand,
   RideCommand,
+  RotateCommand,
   SayCommand,
   ScheduleCommand,
   ScoreboardCommand,
@@ -48,16 +53,22 @@ import {
   SpectateCommand,
   SpreadPlayersCommand,
   StopSoundCommand,
+  StopwatchCommand,
   SummonCommand,
+  SwingCommand,
   TagCommand,
   TeamCommand,
   TeamMessageCommand,
   TeleportCommand,
   TellCommand,
   TellRawCommand,
+  TestCommand,
   TimeCommand,
   TitleCommand,
+  TransferCommand,
   TriggerCommand,
+  VersionCommand,
+  WaypointCommand,
   WeatherCommand,
   WorldBorderCommand,
 } from './implementations'
@@ -116,6 +127,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
     return new DebugCommand<MACRO>(this.sandstonePack)
   }
 
+  get dialog() {
+    return new DialogCommand<MACRO>(this.sandstonePack)
+  }
+
   get defaultgamemode() {
     return bind(
       this.sandstonePack,
@@ -148,6 +163,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
     return bind(this.sandstonePack, FillCommand, 'fill') as FillCommand<MACRO>['fill']
   }
 
+  get fillbiome() {
+    return bind(this.sandstonePack, FillBiomeCommand, 'fillbiome') as FillBiomeCommand<MACRO>['fillbiome']
+  }
+
   get functionCmd() {
     return bind(this.sandstonePack, FunctionCommand, 'function') as FunctionCommand<MACRO>['function']
   }
@@ -176,6 +195,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
     return new ItemCommand<MACRO>(this.sandstonePack)
   }
 
+  get jfr() {
+    return new JFRCommand(this.sandstonePack)
+  }
+
   get kill() {
     return bind(this.sandstonePack, KillCommand, 'kill') as KillCommand<MACRO>['kill']
   }
@@ -198,6 +221,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
 
   get particle() {
     return bind(this.sandstonePack, ParticleCommand, 'particle') as ParticleCommand<MACRO>['particle']
+  }
+
+  get perf() {
+    return new PerfCommand(this.sandstonePack)
   }
 
   get place() {
@@ -230,6 +257,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
 
   get ride() {
     return bind(this.sandstonePack, RideCommand, 'ride') as RideCommand<MACRO>['ride']
+  }
+
+  get rotate() {
+    return bind(this.sandstonePack, RotateCommand, 'rotate') as RotateCommand<MACRO>['rotate']
   }
 
   get say() {
@@ -276,6 +307,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
     return bind(this.sandstonePack, StopSoundCommand, 'stopsound') as StopSoundCommand<MACRO>['stopsound']
   }
 
+  get stopwatch() {
+    return new StopwatchCommand<MACRO>(this.sandstonePack)
+  }
+
   get spreadplayers() {
     return bind(
       this.sandstonePack,
@@ -286,6 +321,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
 
   get summon() {
     return bind(this.sandstonePack, SummonCommand, 'summon') as SummonCommand<MACRO>['summon']
+  }
+
+  get swing() {
+    return bind(this.sandstonePack, SwingCommand, 'swing') as SwingCommand<MACRO>['swing']
   }
 
   get tag() {
@@ -312,6 +351,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
     return bind(this.sandstonePack, TellRawCommand, 'tellraw') as TellRawCommand<MACRO>['tellraw']
   }
 
+  get test() {
+    return new TestCommand<MACRO>(this.sandstonePack)
+  }
+
   get time() {
     return new TimeCommand<MACRO>(this.sandstonePack)
   }
@@ -322,6 +365,18 @@ export class SandstoneCommands<MACRO extends boolean = false> {
 
   get trigger() {
     return bind(this.sandstonePack, TriggerCommand, 'trigger') as TriggerCommand['trigger']
+  }
+
+  get transfer() {
+    return bind(this.sandstonePack, TransferCommand, 'transfer') as TransferCommand<MACRO>['transfer']
+  }
+
+  get version() {
+    return bind(this.sandstonePack, VersionCommand, 'version') as VersionCommand['version']
+  }
+
+  get waypoint() {
+    return new WaypointCommand<MACRO>(this.sandstonePack)
   }
 
   get weather() {

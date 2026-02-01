@@ -20,7 +20,7 @@ export class LootCommandNode extends CommandNode {
   command = 'loot' as const
 }
 
-class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
+export class LootSourceCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Drops items that would be dropped by fishing with the given loot table, and the given tool.
    *

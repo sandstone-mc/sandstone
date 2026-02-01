@@ -9,7 +9,7 @@ export class DamageCommandNode extends CommandNode {
   command = 'damage' as const
 }
 
-class DamageCauseCommand<MACRO extends boolean> extends CommandArguments {
+export class DamageCauseCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * @param cause Cause of the damage, in the case of indirect damage.
    */

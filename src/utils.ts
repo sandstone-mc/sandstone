@@ -27,7 +27,7 @@ export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) =
  */
 export type LiteralUnion<T extends string> = T | (`${any}${string}` & Record<never, never>)
 
-export type NamespacedLiteralUnion<T extends string> = T | `${string}:${string}`
+export type NamespacedLiteralUnion<T extends string> = T | (`${string}:${string}` & Record<never, never>)
 
 export type AtLeastOne<T> = [T, ...T[]]
 
@@ -422,7 +422,12 @@ export function formatDebugString(
 
 export type AllKeys<T> = T extends T ? keyof T : never
 
+type GetConstructorArgs<T> = T extends new (...args: infer U) => any ? U : never
 export class Set<T> extends global.Set<T> {
+  /** oxlint-disable-next-line  */
+  constructor(...args: GetConstructorArgs<typeof global.Set<T>>) {
+    super(...args)
+  }
 
   has(value: unknown) {
     return super.has(value as any)
