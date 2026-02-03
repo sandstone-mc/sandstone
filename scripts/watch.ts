@@ -54,14 +54,30 @@ async function main() {
       return
     }
 
-    const relevantEvents = events.filter(e =>
-      e.path.endsWith('.ts') && !e.path.includes('node_modules')
-    )
+    const changedFiles: string[] = []
 
-    if (relevantEvents.length > 0) {
-      console.log(`\nChanged: ${relevantEvents.map(e => e.path.replace(srcDir, '')).join(', ')}`)
+    for (const { path } of events) {
+      const workPath = path.replace(srcDir, '')
+
+      if (
+        workPath.startsWith('/src') 
+        || workPath.endsWith('.js')
+        || workPath.endsWith('.json')
+        || workPath.endsWith('.ts')
+        || workPath.endsWith('.lock')
+      ) {
+        if (!workPath.endsWith('scripts/watch.ts') && !workPath.endsWith('scripts/build.ts')) {
+          changedFiles.push(workPath)
+        }
+      }
+    }
+
+    if (changedFiles.length > 0) {
+      console.log(`\nChanged: ${changedFiles.join(', ')}`)
       await build()
     }
+  }, {
+    ignore: [ 'node_modules/**/*', '.git/**/*' ]
   })
 
   console.log('Press Ctrl+C to stop watching\n')

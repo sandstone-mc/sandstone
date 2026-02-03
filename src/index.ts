@@ -87,13 +87,14 @@ export function createSandstonePack(context: SandstoneContext): SandstonePack {
 }
 
 /**
- * Reset the global pack instance. Used by CLI between builds.
+ * Reset the global pack state. Used by CLI between builds.
+ * This clears all resources but keeps the same instance so user code
+ * registering through the proxy uses the same pack as the CLI.
  */
 export function resetSandstonePack(): void {
   if (_sandstonePack) {
     _sandstonePack.reset()
   }
-  _sandstonePack = undefined
 }
 
 export { LiteralUnion, NamespacedLiteralUnion, Set, SetType }
