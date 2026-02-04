@@ -831,6 +831,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:gold_block': McdocBlockStateKeysGoldBlock,
   'gold_ore': McdocBlockStateKeysGoldOre,
   'minecraft:gold_ore': McdocBlockStateKeysGoldOre,
+  'golden_dandelion': McdocBlockStateKeysGoldenDandelion,
+  'minecraft:golden_dandelion': McdocBlockStateKeysGoldenDandelion,
   'granite': McdocBlockStateKeysGranite,
   'minecraft:granite': McdocBlockStateKeysGranite,
   'granite_slab': McdocBlockStateKeysGraniteSlab,
@@ -1567,6 +1569,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:potted_fern': McdocBlockStateKeysPottedFern,
   'potted_flowering_azalea_bush': McdocBlockStateKeysPottedFloweringAzaleaBush,
   'minecraft:potted_flowering_azalea_bush': McdocBlockStateKeysPottedFloweringAzaleaBush,
+  'potted_golden_dandelion': McdocBlockStateKeysPottedGoldenDandelion,
+  'minecraft:potted_golden_dandelion': McdocBlockStateKeysPottedGoldenDandelion,
   'potted_jungle_sapling': McdocBlockStateKeysPottedJungleSapling,
   'minecraft:potted_jungle_sapling': McdocBlockStateKeysPottedJungleSapling,
   'potted_lily_of_the_valley': McdocBlockStateKeysPottedLilyOfTheValley,
@@ -2750,6 +2754,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysGlowstone
   | McdocBlockStateKeysGoldBlock
   | McdocBlockStateKeysGoldOre
+  | McdocBlockStateKeysGoldenDandelion
   | McdocBlockStateKeysGranite
   | McdocBlockStateKeysGraniteSlab
   | McdocBlockStateKeysGraniteStairs
@@ -3118,6 +3123,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPottedDeadBush
   | McdocBlockStateKeysPottedFern
   | McdocBlockStateKeysPottedFloweringAzaleaBush
+  | McdocBlockStateKeysPottedGoldenDandelion
   | McdocBlockStateKeysPottedJungleSapling
   | McdocBlockStateKeysPottedLilyOfTheValley
   | McdocBlockStateKeysPottedMangrovePropagule
@@ -3926,6 +3932,7 @@ type McdocBlockStateKeysGlowLichen = ('down' | 'east' | 'north' | 'south' | 'up'
 type McdocBlockStateKeysGlowstone = never
 type McdocBlockStateKeysGoldBlock = never
 type McdocBlockStateKeysGoldOre = never
+type McdocBlockStateKeysGoldenDandelion = never
 type McdocBlockStateKeysGranite = never
 type McdocBlockStateKeysGraniteSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysGraniteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
@@ -4294,6 +4301,7 @@ type McdocBlockStateKeysPottedDarkOakSapling = never
 type McdocBlockStateKeysPottedDeadBush = never
 type McdocBlockStateKeysPottedFern = never
 type McdocBlockStateKeysPottedFloweringAzaleaBush = never
+type McdocBlockStateKeysPottedGoldenDandelion = never
 type McdocBlockStateKeysPottedJungleSapling = never
 type McdocBlockStateKeysPottedLilyOfTheValley = never
 type McdocBlockStateKeysPottedMangrovePropagule = never

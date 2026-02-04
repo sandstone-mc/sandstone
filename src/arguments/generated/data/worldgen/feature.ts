@@ -12,6 +12,11 @@ import type { FluidState } from 'sandstone/arguments/generated/util/fluid_state.
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
+export type BlockBlobConfig = {
+  state: BlockState,
+  can_place_on: BlockPredicate,
+}
+
 export type BlockColumnConfig = {
   /**
    * Value:
@@ -441,6 +446,7 @@ export type HugeMushroomConfig = {
   cap_provider: BlockStateProvider,
   stem_provider: BlockStateProvider,
   foliage_radius: NBTInt,
+  can_place_on: BlockPredicate,
 }
 
 export type IcebergConfig = {
@@ -787,13 +793,14 @@ export type RootSystemConfig = {
   feature: FeatureRef,
 }
 
-export type RuleBasedBlockStateProvider = {
-  fallback: BlockStateProvider,
+export type RuleBasedBlockStateProvider = ({
+  fallback?: BlockStateProvider,
+} & {
   rules: Array<{
     if_true: BlockPredicate,
     then: BlockStateProvider,
   }>,
-}
+})
 
 export type SculkPatchConfig = {
   /**
@@ -903,6 +910,12 @@ export type SmallDripstoneConfig = {
     min: 0,
     max: 1,
   }>,
+}
+
+export type SpikeConfig = {
+  state: BlockState,
+  can_place_on: BlockPredicate,
+  can_replace: BlockPredicate,
 }
 
 export type SpringConfig = {
@@ -1051,6 +1064,8 @@ type FeatureConfigDispatcherMap = {
   'minecraft:bamboo': FeatureConfigBamboo,
   'basalt_columns': FeatureConfigBasaltColumns,
   'minecraft:basalt_columns': FeatureConfigBasaltColumns,
+  'block_blob': FeatureConfigBlockBlob,
+  'minecraft:block_blob': FeatureConfigBlockBlob,
   'block_column': FeatureConfigBlockColumn,
   'minecraft:block_column': FeatureConfigBlockColumn,
   'block_pile': FeatureConfigBlockPile,
@@ -1137,6 +1152,8 @@ type FeatureConfigDispatcherMap = {
   'minecraft:simple_random_selector': FeatureConfigSimpleRandomSelector,
   'small_dripstone': FeatureConfigSmallDripstone,
   'minecraft:small_dripstone': FeatureConfigSmallDripstone,
+  'spike': FeatureConfigSpike,
+  'minecraft:spike': FeatureConfigSpike,
   'spring_feature': FeatureConfigSpringFeature,
   'minecraft:spring_feature': FeatureConfigSpringFeature,
   'tree': FeatureConfigTree,
@@ -1154,6 +1171,7 @@ type FeatureConfigKeys = keyof FeatureConfigDispatcherMap
 type FeatureConfigFallback = (
   | FeatureConfigBamboo
   | FeatureConfigBasaltColumns
+  | FeatureConfigBlockBlob
   | FeatureConfigBlockColumn
   | FeatureConfigBlockPile
   | FeatureConfigDecorated
@@ -1197,6 +1215,7 @@ type FeatureConfigFallback = (
   | FeatureConfigSimpleBlock
   | FeatureConfigSimpleRandomSelector
   | FeatureConfigSmallDripstone
+  | FeatureConfigSpike
   | FeatureConfigSpringFeature
   | FeatureConfigTree
   | FeatureConfigTwistingVines
@@ -1205,6 +1224,7 @@ type FeatureConfigFallback = (
   | FeatureConfigWaterloggedVegetationPatch)
 type FeatureConfigBamboo = ProbabilityConfig
 type FeatureConfigBasaltColumns = ColumnsConfig
+type FeatureConfigBlockBlob = BlockBlobConfig
 type FeatureConfigBlockColumn = BlockColumnConfig
 type FeatureConfigBlockPile = BlockPileConfig
 type FeatureConfigDecorated = DecoratedConfig
@@ -1248,6 +1268,7 @@ type FeatureConfigSeagrass = ProbabilityConfig
 type FeatureConfigSimpleBlock = SimpleBlockConfig
 type FeatureConfigSimpleRandomSelector = SimpleRandomSelectorConfig
 type FeatureConfigSmallDripstone = SmallDripstoneConfig
+type FeatureConfigSpike = SpikeConfig
 type FeatureConfigSpringFeature = SpringConfig
 type FeatureConfigTree = TreeConfig
 type FeatureConfigTwistingVines = TwistingVinesConfig

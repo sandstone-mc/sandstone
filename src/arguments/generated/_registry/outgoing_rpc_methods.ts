@@ -1,11 +1,11 @@
 import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
-export type OUTGOING_RPC_METHODSES = (
-  | NamespacedLiteralUnion<SetType<typeof OUTGOING_RPC_METHODSES_SET>>
-  | `minecraft:${SetType<typeof OUTGOING_RPC_METHODSES_SET>}`)
+export type OUTGOING_RPC_METHODS = (
+  | NamespacedLiteralUnion<SetType<typeof OUTGOING_RPC_METHODS_SET>>
+  | `minecraft:${SetType<typeof OUTGOING_RPC_METHODS_SET>}`)
 
-export const OUTGOING_RPC_METHODSES_SET = new Set([
+export const OUTGOING_RPC_METHODS_SET = new Set([
   'notification/allowlist/added',
   'notification/allowlist/removed',
   'notification/bans/added',

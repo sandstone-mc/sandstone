@@ -19,6 +19,7 @@ export type AgeableMob = {
    * Incremented when a baby mob is fed.
    */
   ForcedAge?: NBTInt,
+  AgeLocked?: boolean,
 }
 
 export type Attribute = {

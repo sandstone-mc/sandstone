@@ -93,6 +93,8 @@ type BlockDispatcherMap = {
   'minecraft:copper_chest': BlockCopperChest,
   'copper_golem_statue': BlockCopperGolemStatue,
   'minecraft:copper_golem_statue': BlockCopperGolemStatue,
+  'crafter': BlockCrafter,
+  'minecraft:crafter': BlockCrafter,
   'creeper_head': BlockCreeperHead,
   'minecraft:creeper_head': BlockCreeperHead,
   'creeper_wall_head': BlockCreeperWallHead,
@@ -403,6 +405,7 @@ type BlockFallback = (
   | BlockConduit
   | BlockCopperChest
   | BlockCopperGolemStatue
+  | BlockCrafter
   | BlockCreeperHead
   | BlockCreeperWallHead
   | BlockCrimsonHangingSign
@@ -579,6 +582,7 @@ type BlockComparator = SymbolBlockEntity['comparator']
 type BlockConduit = SymbolBlockEntity['conduit']
 type BlockCopperChest = SymbolBlockEntity['chest']
 type BlockCopperGolemStatue = BlockEntity
+type BlockCrafter = SymbolBlockEntity['crafter']
 type BlockCreeperHead = Skull
 type BlockCreeperWallHead = Skull
 type BlockCrimsonHangingSign = SymbolBlockEntity['sign']

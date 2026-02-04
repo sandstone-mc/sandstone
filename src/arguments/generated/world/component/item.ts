@@ -1056,6 +1056,8 @@ type DataComponentDispatcherMap = {
   'minecraft:death_protection': DataComponentDeathProtection,
   'debug_stick_state': DataComponentDebugStickState,
   'minecraft:debug_stick_state': DataComponentDebugStickState,
+  'dye': DataComponentDye,
+  'minecraft:dye': DataComponentDye,
   'dyed_color': DataComponentDyedColor,
   'minecraft:dyed_color': DataComponentDyedColor,
   'enchantable': DataComponentEnchantable,
@@ -1238,6 +1240,7 @@ type DataComponentFallback = (
   | DataComponentDamageType
   | DataComponentDeathProtection
   | DataComponentDebugStickState
+  | DataComponentDye
   | DataComponentDyedColor
   | DataComponentEnchantable
   | DataComponentEnchantmentGlintOverride
@@ -1347,6 +1350,7 @@ type DataComponentDamageResistant = DamageResistant
 type DataComponentDamageType = (Registry['minecraft:damage_type'] | DamageType)
 type DataComponentDeathProtection = DeathProtection
 type DataComponentDebugStickState = DebugStickState
+type DataComponentDye = DyeColor
 type DataComponentDyedColor = RGB
 type DataComponentEnchantable = Enchantable
 type DataComponentEnchantmentGlintOverride = boolean

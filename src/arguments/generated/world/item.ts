@@ -174,6 +174,8 @@ export type ItemStackOfComponent<T extends NBTObject> = (SingleItemOfComponent<T
   }>,
 })
 
+export type ItemStackTemplate = (ItemStack | Registry['minecraft:item'])
+
 export type SingleItem = SingleItemOfComponent<DataComponentPatch>
 
 export type SingleItemOfComponent<T extends NBTObject> = {

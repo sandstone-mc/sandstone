@@ -45,6 +45,7 @@ export const EQUIPMENTS_SET = new Set([
   'red_harness',
   'saddle',
   'trader_llama',
+  'trader_llama_baby',
   'turtle_scute',
   'white_carpet',
   'white_harness',

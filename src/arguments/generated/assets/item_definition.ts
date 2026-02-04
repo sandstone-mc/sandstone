@@ -105,16 +105,18 @@ export type ComponentFlags = NonNullable<({
   }
 }[Registry['minecraft:data_component_predicate_type']])>
 
-export type ComponentStrings = NonNullable<({
-  [S in Extract<Registry['minecraft:data_component_type'], string>]?: ({
+export type ComponentStrings = (NonNullable<(({
+  [S in Extract<keyof SymbolDataComponent, string>]?: ({
     /**
      * The component type to check the values of.
      * If the selected value comes from a registry that the client doesn't have access to,
      * the entry will be silently ignored.
      */
     component: S,
-  } & SelectCases<(S extends keyof SymbolDataComponent ? SymbolDataComponent[S] : RootNBT)>)
-}[Registry['minecraft:data_component_type']])>
+  } & SelectCases<SymbolDataComponent[S]>)
+})[keyof SymbolDataComponent])> | (RootNBT & {
+  component: `${string}:${string}`,
+}))
 
 export type Composite = {
   models: Array<ItemModel>,

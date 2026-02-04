@@ -25,6 +25,7 @@ export type DimensionType = {
    * Affects the weather, map items and respawning rules.
    */
   has_ceiling: boolean,
+  has_ender_dragon_fight: boolean,
   /**
    * Value:
    * Range: 0.00001..30000000

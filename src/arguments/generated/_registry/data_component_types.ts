@@ -38,6 +38,7 @@ export const DATA_COMPONENT_TYPES_SET = new Set([
   'damage_type',
   'death_protection',
   'debug_stick_state',
+  'dye',
   'dyed_color',
   'enchantable',
   'enchantment_glint_override',

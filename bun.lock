@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "sandstone",
@@ -20,7 +21,7 @@
       },
       "devDependencies": {
         "@parcel/watcher": "^2.5.6",
-        "@sandstone-mc/mcdoc-ts-generator": "^0.1.18",
+        "@sandstone-mc/mcdoc-ts-generator": "^0.1.20",
         "@stylistic/eslint-plugin": "^5.7.1",
         "@types/adm-zip": "^0.5.2",
         "@types/fs-extra": "^11.0.2",
@@ -103,7 +104,7 @@
 
     "@parcel/watcher-win32-x64": ["@parcel/watcher-win32-x64@2.5.6", "", { "os": "win32", "cpu": "x64" }, "sha512-hbQlYcCq5dlAX9Qx+kFb0FHue6vbjlf0FrNzSKdYK2APUf7tGfGxQCk2ihEREmbR6ZMc0MVAD5RIX/41gpUzTw=="],
 
-    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.1.18", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.10", "@spyglassmc/core": "^0.4.39", "@spyglassmc/java-edition": "^0.3.51", "@spyglassmc/mcdoc": "^0.3.43", "@stylistic/eslint-plugin": "^5.6.1", "@typescript-eslint/parser": "^8.49.0", "eslint": "^9.39.2", "ts-pattern": "^5.9.0" }, "peerDependencies": { "typescript": "^5.0.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-6RTyDCdxminW3WzNjwkL2bShkb6z6Y+8UXnPtLgXXoVYh+IwubH9vbKNHRbeYpH6e8u8JlL2uIyWnKbdPstZUw=="],
+    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.1.20", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.10", "@spyglassmc/core": "^0.4.39", "@spyglassmc/java-edition": "^0.3.51", "@spyglassmc/mcdoc": "^0.3.43", "@stylistic/eslint-plugin": "^5.6.1", "@typescript-eslint/parser": "^8.49.0", "eslint": "^9.39.2", "ts-pattern": "^5.9.0" }, "peerDependencies": { "typescript": "^5.0.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-LQM/ulraeH7F74e/yJ3GfnaFuQNsEdg8Nn7fuM4QECnCHffmgTrZNt0q2tqKn7V0+OMwKCHeXZyYM42ahNXKnQ=="],
 
     "@seahax/eslint-plugin-wrap": ["@seahax/eslint-plugin-wrap@0.6.10", "", { "dependencies": { "@types/eslint": "^9.6.1", "@typescript-eslint/utils": "^8.48.0" }, "peerDependencies": { "@typescript-eslint/parser": "^8.48.0", "eslint": "^9.39.1", "typescript": "^5.9.3" } }, "sha512-HrlkEvngHD+V8eCX3CPD4mTjenmQPXVSXu7609EvoUlsm+PEe+oPCONGjjVSzFYz6OJ9pikD8d4x7ctB+t5ozw=="],
 

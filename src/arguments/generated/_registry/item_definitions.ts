@@ -568,6 +568,7 @@ export const ITEM_DEFINITIONS_SET = new Set([
   'golden_boots',
   'golden_carrot',
   'golden_chestplate',
+  'golden_dandelion',
   'golden_helmet',
   'golden_hoe',
   'golden_horse_armor',

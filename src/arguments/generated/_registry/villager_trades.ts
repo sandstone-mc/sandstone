@@ -321,6 +321,7 @@ export const VILLAGER_TRADES_SET = new Set([
   'wandering_trader/emerald_firefly_bush',
   'wandering_trader/emerald_fish_bucket',
   'wandering_trader/emerald_glowstone',
+  'wandering_trader/emerald_golden_dandelion',
   'wandering_trader/emerald_gray_dye',
   'wandering_trader/emerald_green_dye',
   'wandering_trader/emerald_gunpowder',

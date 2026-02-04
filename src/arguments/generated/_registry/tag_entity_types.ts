@@ -23,6 +23,7 @@ export const TAG_ENTITY_TYPES_SET = new Set([
   'can_wear_horse_armor',
   'can_wear_nautilus_armor',
   'candidate_for_iron_golem_gift',
+  'cannot_be_age_locked',
   'cannot_be_pushed_onto_boats',
   'deflects_projectiles',
   'dismounts_underwater',

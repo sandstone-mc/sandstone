@@ -60,7 +60,7 @@ import type { FROG_VARIANTS } from 'sandstone/arguments/generated/_registry/frog
 import type { GAME_EVENTS } from 'sandstone/arguments/generated/_registry/game_events.ts'
 import type { GAME_RULES } from 'sandstone/arguments/generated/_registry/game_rules.ts'
 import type { HEIGHT_PROVIDER_TYPES } from 'sandstone/arguments/generated/_registry/height_provider_types.ts'
-import type { INCOMING_RPC_METHODSES } from 'sandstone/arguments/generated/_registry/incoming_rpc_methodses.ts'
+import type { INCOMING_RPC_METHODS } from 'sandstone/arguments/generated/_registry/incoming_rpc_methods.ts'
 import type { INPUT_CONTROL_TYPES } from 'sandstone/arguments/generated/_registry/input_control_types.ts'
 import type { INSTRUMENTS } from 'sandstone/arguments/generated/_registry/instruments.ts'
 import type { INT_PROVIDER_TYPES } from 'sandstone/arguments/generated/_registry/int_provider_types.ts'
@@ -81,7 +81,7 @@ import type { MENUS } from 'sandstone/arguments/generated/_registry/menus.ts'
 import type { MOB_EFFECTS } from 'sandstone/arguments/generated/_registry/mob_effects.ts'
 import type { MODELS } from 'sandstone/arguments/generated/_registry/models.ts'
 import type { NUMBER_FORMAT_TYPES } from 'sandstone/arguments/generated/_registry/number_format_types.ts'
-import type { OUTGOING_RPC_METHODSES } from 'sandstone/arguments/generated/_registry/outgoing_rpc_methodses.ts'
+import type { OUTGOING_RPC_METHODS } from 'sandstone/arguments/generated/_registry/outgoing_rpc_methods.ts'
 import type { PAINTING_VARIANTS } from 'sandstone/arguments/generated/_registry/painting_variants.ts'
 import type { PARTICLE_TYPES } from 'sandstone/arguments/generated/_registry/particle_types.ts'
 import type { PERMISSION_CHECK_TYPES } from 'sandstone/arguments/generated/_registry/permission_check_types.ts'
@@ -93,7 +93,7 @@ import type { POSITION_SOURCE_TYPES } from 'sandstone/arguments/generated/_regis
 import type { POST_EFFECTS } from 'sandstone/arguments/generated/_registry/post_effects.ts'
 import type { POTIONS } from 'sandstone/arguments/generated/_registry/potions.ts'
 import type { RECIPE_BOOK_CATEGORIES } from 'sandstone/arguments/generated/_registry/recipe_book_categories.ts'
-import type { RECIPE_DISPLAIES } from 'sandstone/arguments/generated/_registry/recipe_displaies.ts'
+import type { RECIPE_DISPLAYS } from 'sandstone/arguments/generated/_registry/recipe_displays.ts'
 import type { RECIPE_SERIALIZERS } from 'sandstone/arguments/generated/_registry/recipe_serializers.ts'
 import type { RECIPE_TYPES } from 'sandstone/arguments/generated/_registry/recipe_types.ts'
 import type { RECIPES } from 'sandstone/arguments/generated/_registry/recipes.ts'
@@ -102,7 +102,7 @@ import type {
 } from 'sandstone/arguments/generated/_registry/rule_block_entity_modifiers.ts'
 import type { RULE_TESTS } from 'sandstone/arguments/generated/_registry/rule_tests.ts'
 import type { SENSOR_TYPES } from 'sandstone/arguments/generated/_registry/sensor_types.ts'
-import type { SLOT_DISPLAIES } from 'sandstone/arguments/generated/_registry/slot_displaies.ts'
+import type { SLOT_DISPLAYS } from 'sandstone/arguments/generated/_registry/slot_displays.ts'
 import type { SLOT_SOURCE_TYPES } from 'sandstone/arguments/generated/_registry/slot_source_types.ts'
 import type { SOUND_EVENTS } from 'sandstone/arguments/generated/_registry/sound_events.ts'
 import type { SOUNDS } from 'sandstone/arguments/generated/_registry/sounds.ts'
@@ -187,7 +187,7 @@ import type { WORLDGEN_MATERIAL_RULES } from 'sandstone/arguments/generated/_reg
 import type {
   WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS,
 } from 'sandstone/arguments/generated/_registry/worldgen_multi_noise_biome_source_parameter_lists.ts'
-import type { WORLDGEN_NOISE_SETTINGSES } from 'sandstone/arguments/generated/_registry/worldgen_noise_settingses.ts'
+import type { WORLDGEN_NOISE_SETTINGS } from 'sandstone/arguments/generated/_registry/worldgen_noise_settings.ts'
 import type { WORLDGEN_NOISES } from 'sandstone/arguments/generated/_registry/worldgen_noises.ts'
 import type { WORLDGEN_PLACED_FEATURES } from 'sandstone/arguments/generated/_registry/worldgen_placed_features.ts'
 import type {
@@ -281,7 +281,7 @@ export type Registry = {
   'minecraft:worldgen/flat_level_generator_preset': WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
   'minecraft:worldgen/multi_noise_biome_source_parameter_list': WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS,
   'minecraft:worldgen/noise': WORLDGEN_NOISES,
-  'minecraft:worldgen/noise_settings': WORLDGEN_NOISE_SETTINGSES,
+  'minecraft:worldgen/noise_settings': WORLDGEN_NOISE_SETTINGS,
   'minecraft:worldgen/placed_feature': WORLDGEN_PLACED_FEATURES,
   'minecraft:worldgen/processor_list': WORLDGEN_PROCESSOR_LISTS,
   'minecraft:worldgen/structure': WORLDGEN_STRUCTURES,
@@ -332,7 +332,7 @@ export type Registry = {
   'minecraft:game_event': GAME_EVENTS,
   'minecraft:game_rule': GAME_RULES,
   'minecraft:height_provider_type': HEIGHT_PROVIDER_TYPES,
-  'minecraft:incoming_rpc_methods': INCOMING_RPC_METHODSES,
+  'minecraft:incoming_rpc_methods': INCOMING_RPC_METHODS,
   'minecraft:input_control_type': INPUT_CONTROL_TYPES,
   'minecraft:int_provider_type': INT_PROVIDER_TYPES,
   'minecraft:item': ITEMS,
@@ -347,7 +347,7 @@ export type Registry = {
   'minecraft:menu': MENUS,
   'minecraft:mob_effect': MOB_EFFECTS,
   'minecraft:number_format_type': NUMBER_FORMAT_TYPES,
-  'minecraft:outgoing_rpc_methods': OUTGOING_RPC_METHODSES,
+  'minecraft:outgoing_rpc_methods': OUTGOING_RPC_METHODS,
   'minecraft:particle_type': PARTICLE_TYPES,
   'minecraft:permission_check_type': PERMISSION_CHECK_TYPES,
   'minecraft:permission_type': PERMISSION_TYPES,
@@ -356,13 +356,13 @@ export type Registry = {
   'minecraft:position_source_type': POSITION_SOURCE_TYPES,
   'minecraft:potion': POTIONS,
   'minecraft:recipe_book_category': RECIPE_BOOK_CATEGORIES,
-  'minecraft:recipe_display': RECIPE_DISPLAIES,
+  'minecraft:recipe_display': RECIPE_DISPLAYS,
   'minecraft:recipe_serializer': RECIPE_SERIALIZERS,
   'minecraft:recipe_type': RECIPE_TYPES,
   'minecraft:rule_block_entity_modifier': RULE_BLOCK_ENTITY_MODIFIERS,
   'minecraft:rule_test': RULE_TESTS,
   'minecraft:sensor_type': SENSOR_TYPES,
-  'minecraft:slot_display': SLOT_DISPLAIES,
+  'minecraft:slot_display': SLOT_DISPLAYS,
   'minecraft:slot_source_type': SLOT_SOURCE_TYPES,
   'minecraft:sound_event': SOUND_EVENTS,
   'minecraft:spawn_condition_type': SPAWN_CONDITION_TYPES,

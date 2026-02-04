@@ -831,6 +831,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:gold_block': McdocBlockStatesGoldBlock,
   'gold_ore': McdocBlockStatesGoldOre,
   'minecraft:gold_ore': McdocBlockStatesGoldOre,
+  'golden_dandelion': McdocBlockStatesGoldenDandelion,
+  'minecraft:golden_dandelion': McdocBlockStatesGoldenDandelion,
   'granite': McdocBlockStatesGranite,
   'minecraft:granite': McdocBlockStatesGranite,
   'granite_slab': McdocBlockStatesGraniteSlab,
@@ -1567,6 +1569,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:potted_fern': McdocBlockStatesPottedFern,
   'potted_flowering_azalea_bush': McdocBlockStatesPottedFloweringAzaleaBush,
   'minecraft:potted_flowering_azalea_bush': McdocBlockStatesPottedFloweringAzaleaBush,
+  'potted_golden_dandelion': McdocBlockStatesPottedGoldenDandelion,
+  'minecraft:potted_golden_dandelion': McdocBlockStatesPottedGoldenDandelion,
   'potted_jungle_sapling': McdocBlockStatesPottedJungleSapling,
   'minecraft:potted_jungle_sapling': McdocBlockStatesPottedJungleSapling,
   'potted_lily_of_the_valley': McdocBlockStatesPottedLilyOfTheValley,
@@ -2750,6 +2754,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesGlowstone
   | McdocBlockStatesGoldBlock
   | McdocBlockStatesGoldOre
+  | McdocBlockStatesGoldenDandelion
   | McdocBlockStatesGranite
   | McdocBlockStatesGraniteSlab
   | McdocBlockStatesGraniteStairs
@@ -3118,6 +3123,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesPottedDeadBush
   | McdocBlockStatesPottedFern
   | McdocBlockStatesPottedFloweringAzaleaBush
+  | McdocBlockStatesPottedGoldenDandelion
   | McdocBlockStatesPottedJungleSapling
   | McdocBlockStatesPottedLilyOfTheValley
   | McdocBlockStatesPottedMangrovePropagule
@@ -4963,6 +4969,7 @@ type McdocBlockStatesGlowLichen = {
 type McdocBlockStatesGlowstone = Record<string, never>
 type McdocBlockStatesGoldBlock = Record<string, never>
 type McdocBlockStatesGoldOre = Record<string, never>
+type McdocBlockStatesGoldenDandelion = Record<string, never>
 type McdocBlockStatesGranite = Record<string, never>
 type McdocBlockStatesGraniteSlab = {
   type?: ('top' | 'bottom' | 'double'),
@@ -6269,6 +6276,7 @@ type McdocBlockStatesPottedDarkOakSapling = Record<string, never>
 type McdocBlockStatesPottedDeadBush = Record<string, never>
 type McdocBlockStatesPottedFern = Record<string, never>
 type McdocBlockStatesPottedFloweringAzaleaBush = Record<string, never>
+type McdocBlockStatesPottedGoldenDandelion = Record<string, never>
 type McdocBlockStatesPottedJungleSapling = Record<string, never>
 type McdocBlockStatesPottedLilyOfTheValley = Record<string, never>
 type McdocBlockStatesPottedMangrovePropagule = Record<string, never>

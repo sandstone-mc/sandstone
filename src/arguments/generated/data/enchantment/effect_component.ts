@@ -335,10 +335,10 @@ type EffectComponentDispatcherMap = {
   'minecraft:attributes': EffectComponentAttributes,
   'block_experience': EffectComponentBlockExperience,
   'minecraft:block_experience': EffectComponentBlockExperience,
-  'crossbow_charge_sounds': EffectComponentCrossbowChargeSounds,
-  'minecraft:crossbow_charge_sounds': EffectComponentCrossbowChargeSounds,
   'crossbow_charge_time': EffectComponentCrossbowChargeTime,
   'minecraft:crossbow_charge_time': EffectComponentCrossbowChargeTime,
+  'crossbow_charging_sounds': EffectComponentCrossbowChargingSounds,
+  'minecraft:crossbow_charging_sounds': EffectComponentCrossbowChargingSounds,
   'damage': EffectComponentDamage,
   'minecraft:damage': EffectComponentDamage,
   'damage_immunity': EffectComponentDamageImmunity,
@@ -396,8 +396,8 @@ type EffectComponentFallback = (
   | EffectComponentArmorEffectiveness
   | EffectComponentAttributes
   | EffectComponentBlockExperience
-  | EffectComponentCrossbowChargeSounds
   | EffectComponentCrossbowChargeTime
+  | EffectComponentCrossbowChargingSounds
   | EffectComponentDamage
   | EffectComponentDamageImmunity
   | EffectComponentDamageProtection
@@ -427,8 +427,8 @@ type EffectComponentAmmoUse = Array<AmmoUseEnchantmentEffect>
 type EffectComponentArmorEffectiveness = Array<DamageEnchantmentEffect>
 type EffectComponentAttributes = Array<AttributeEffect>
 type EffectComponentBlockExperience = Array<BlockExperienceEnchantmentEffect>
-type EffectComponentCrossbowChargeSounds = Array<CrossbowChargeSoundsEnchantmentEffect>
 type EffectComponentCrossbowChargeTime = ValueEffect
+type EffectComponentCrossbowChargingSounds = Array<CrossbowChargeSoundsEnchantmentEffect>
 type EffectComponentDamage = Array<DamageEnchantmentEffect>
 type EffectComponentDamageImmunity = Array<DamageImmunityEnchantmentEffect>
 type EffectComponentDamageProtection = Array<DamageProtectionEnchantmentEffect>
