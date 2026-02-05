@@ -3,7 +3,7 @@ import { ContainerNode } from '../../nodes'
 
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import type { AllKeys } from 'sandstone/utils'
 
 export type BlockStateJSON = NonNullable<SymbolResource['block_definition']>
@@ -22,7 +22,7 @@ export class BlockStateNode<JSON extends BlockStateJSON>
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.blockStateJSON)
+  getValue = () => jsonStringify(this.resource.blockStateJSON)
 }
 
 export type BlockStateArguments<JSON extends BlockStateJSON> = {

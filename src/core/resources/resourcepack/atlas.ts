@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import type { SpriteSource } from 'sandstone/arguments/generated/assets/atlas'
 
 /**
@@ -16,7 +16,7 @@ export class AtlasNode extends ContainerNode implements ResourceNode<AtlasClass>
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.atlasJSON)
+  getValue = () => jsonStringify(this.resource.atlasJSON)
 }
 
 export type AtlasClassArguments = {

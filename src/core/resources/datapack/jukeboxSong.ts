@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft jukebox song (music disc).
@@ -15,7 +15,7 @@ export class JukeboxSongNode extends ContainerNode implements ResourceNode<Jukeb
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.jukeboxSongJSON)
+  getValue = () => jsonStringify(this.resource.jukeboxSongJSON)
 }
 
 export type JukeboxSongClassArguments = {

@@ -3,7 +3,7 @@ import type { SymbolResource, SOUND_TYPES } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 const sounds: Map<string, SoundsClass> = new Map()
 
@@ -97,7 +97,7 @@ export class SoundsNode extends ContainerNode implements ResourceNode<SoundsClas
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.soundsJSON)
+  getValue = () => jsonStringify(this.resource.soundsJSON)
 }
 
 type SoundsJSON = NonNullable<SymbolResource['sounds']>

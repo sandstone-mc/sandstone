@@ -13,7 +13,7 @@ import { NBT } from 'sandstone/variables/nbt'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import type { SandstonePack } from 'sandstone/pack'
 
@@ -289,7 +289,7 @@ export class ItemModelDefinitionNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.itemDefinitionJSON)
+  getValue = () => jsonStringify(this.resource.itemDefinitionJSON)
 }
 
 export type ItemModelDefinitionInput =

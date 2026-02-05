@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 // ============================================================================
 // Test Environment
@@ -19,7 +19,7 @@ export class TestEnvironmentNode extends ContainerNode implements ResourceNode<T
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.testEnvironmentJSON)
+  getValue = () => jsonStringify(this.resource.testEnvironmentJSON)
 }
 
 export type TestEnvironmentClassArguments = {
@@ -62,7 +62,7 @@ export class TestInstanceNode extends ContainerNode implements ResourceNode<Test
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.testInstanceJSON)
+  getValue = () => jsonStringify(this.resource.testInstanceJSON)
 }
 
 export type TestInstanceClassArguments = {

@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import { toMinecraftResourceName } from 'sandstone/utils'
 
 // ============================================================================
@@ -20,7 +20,7 @@ export class TimelineNode extends ContainerNode implements ResourceNode<Timeline
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.timelineJSON)
+  getValue = () => jsonStringify(this.resource.timelineJSON)
 }
 
 export type TimelineClassArguments = {
@@ -63,7 +63,7 @@ export class WorldClockNode extends ContainerNode implements ResourceNode<WorldC
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.worldClockJSON)
+  getValue = () => jsonStringify(this.resource.worldClockJSON)
 }
 
 export type WorldClockClassArguments = {

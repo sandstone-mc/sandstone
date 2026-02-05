@@ -9,7 +9,7 @@ import { targetParser } from 'sandstone/variables/parsers'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft item modifier.
@@ -22,7 +22,7 @@ export class ItemModifierNode extends ContainerNode implements ResourceNode<Item
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.itemModifierJSON)
+  getValue = () => jsonStringify(this.resource.itemModifierJSON)
 }
 
 type ItemModifierJSON = SymbolResource['item_modifier']

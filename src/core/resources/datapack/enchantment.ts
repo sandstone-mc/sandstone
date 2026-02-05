@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 // ============================================================================
 // Enchantment
@@ -19,7 +19,7 @@ export class EnchantmentNode extends ContainerNode implements ResourceNode<Encha
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.enchantmentJSON)
+  getValue = () => jsonStringify(this.resource.enchantmentJSON)
 }
 
 export type EnchantmentClassArguments = {
@@ -62,7 +62,7 @@ export class EnchantmentProviderNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.enchantmentProviderJSON)
+  getValue = () => jsonStringify(this.resource.enchantmentProviderJSON)
 }
 
 export type EnchantmentProviderClassArguments = {

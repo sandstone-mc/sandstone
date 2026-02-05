@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-types */
 
-import type { GAMEMODES, JSONTextComponent, NBTSerializable, Range, RootNBT } from 'sandstone/arguments'
+import type { GAMEMODES, JSONTextComponent, NBTSerializable, Range, RootNBT, SymbolEntity } from 'sandstone/arguments'
 import type { PredicateClass, SandstoneCore, TagClass } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
@@ -12,7 +12,6 @@ import { formatDebugString, type LiteralUnion } from '../utils'
 import type { ConditionClass, ConditionTextComponentClass, SelectorPickClass } from './abstractClasses'
 import type { LabelClass } from './Label'
 import type { NotNBT } from './nbt/NBTs'
-import type { Registry } from 'sandstone/arguments/generated/registry'
 
 type ScoreArgument<MACRO extends boolean = false> = Record<string, Range<MACRO>>
 
@@ -20,171 +19,251 @@ type AdvancementsArgumentValue = boolean | [string, boolean] | [string, boolean]
 
 type AdvancementsArgument = Record<string, AdvancementsArgumentValue | Record<string, AdvancementsArgumentValue>>
 
-type TypeOrArray<T> = T | T[]
+// Basic Keys
+type EntityKey = keyof SymbolEntity
+type NegatedEntityKey = `!${EntityKey}`
 
-type NegatableTagOrEntryOrList<T extends string> = T | `#${T}` | `!${T}` | `!#${T}` | (T | `#${T}` | `!${T}` | `!#${T}`)[]
+// Tag Strings (e.g., "#skeleton" or "!#skeleton")
+type TagString = `#${string}`
+type NegatedTagString = `!#${string}`
+
+type NonEmptyList<T> = (readonly T[] & { readonly 0: T })
+
+// The List Type: Can ONLY contain negated keys or negated tags
+type NegatedList = NonEmptyList<NegatedEntityKey | NegatedTagString>
+
+// The Master Selector Type
+export type SelectorEntityType = 
+  | EntityKey
+  | NegatedEntityKey
+  | TagString
+  | NegatedTagString
+  | TagClass<'entity_type'>
+  | NegatedList
+
+/**
+ * Helper: Detects if T involves a Tag in any way.
+ * This triggers if T is a Tag string, a TagClass, or a List containing a Tag string.
+ */
+type IsTagInvolved<T> = 
+  T extends TagString | NegatedTagString | TagClass<any> 
+    ? true 
+    : T extends readonly any[] 
+      ? Extract<T[number], TagString | NegatedTagString> extends never 
+        ? false 
+        : true
+      : false
+
+/**
+ * Helper: Unwrap a Negation String to get the Key.
+ * "!arrow" -> "arrow"
+ */
+type UnwrapNegation<T> = T extends `!${infer K}` ? K : never
+
+/**
+ * The Main Resolver:
+ * 1. If a Tag is involved -> Return SymbolEntity<'%fallback'>
+ * 2. If it's a List -> Exclude all keys found in the list from the total Map.
+ * 3. If it's a Negated Key -> Exclude that key.
+ * 4. If it's a Positive Key -> Return that specific type.
+ */
+export type ResolveEntityValues<T extends SelectorEntityType> = 
+  IsTagInvolved<T> extends true 
+    ? SymbolEntity<'%fallback'> 
+    : T extends NegatedList
+      // It is a list of Negated Keys (we know no tags are here because of IsTagInvolved check)
+      // We exclude the unwrapped keys from the full set.
+      ? SymbolEntity[Exclude<EntityKey, UnwrapNegation<T[number]>>]
+    : T extends NegatedEntityKey
+      // Single Negation
+      ? SymbolEntity[Exclude<EntityKey, UnwrapNegation<T>>]
+    : T extends EntityKey
+      // Single Positive Key
+      ? SymbolEntity[T]
+    : never
+
+type TypeOrArray<T> = T | T[]
 
 /**
  * If MustBeSingle is false, then anything is allowed.
  * If it is true, then you must provide limit=1 or limit=0.
+ * 
+ * If MustBePlayer is false, any entity is allowed.
+ * If it is true, then you must provide `type` of `minecraft:player`.
  */
 export type SelectorProperties<
   MustBeSingle extends boolean,
   MustBePlayer extends boolean,
+  EntityType extends SelectorEntityType = '#fallback',
   MACRO extends boolean = false,
-> = {
-  /**
-   * Filter target selection based on their Euclidean distances from some point,
-   * searching for the target's feet (a point at the bottom of the center of their hitbox).
-   *
-   * If the positional arguments `x`, `y` and `z` are left undefined,
-   * radius is calculated relative to the position of the command's execution.
-   *
-   * Only unsigned values are allowed.
-   */
-  distance?: Macroable<Range<MACRO>, MACRO>
+> = (
+  {
+    /**
+     * Filter target selection based on their Euclidean distances from some point,
+     * searching for the target's feet (a point at the bottom of the center of their hitbox).
+     *
+     * If the positional arguments `x`, `y` and `z` are left undefined,
+     * radius is calculated relative to the position of the command's execution.
+     *
+     * Only unsigned values are allowed.
+     */
+    distance?: Macroable<Range<MACRO>, MACRO>
 
-  /** Filter target selection based on their scores in the specified objectives. */
-  scores?: Macroable<ScoreArgument<MACRO>, MACRO>
+    /** Filter target selection based on their scores in the specified objectives. */
+    scores?: Macroable<ScoreArgument<MACRO>, MACRO>
 
-  /**
-   * Filter target selection to those who are on a given team.
-   *
-   * Allowed values are:
-   * - `teamName`, to filter those who are in the given team.
-   * - `!teamName`, to filter those who are not in the given team.
-   * - `false`, to filter those who are teamless (in no team).
-   * - `true`, ot filter those who have at least one team.
-   */
-  team?: Macroable<string | boolean, MACRO>
+    /**
+     * Filter target selection to those who are on a given team.
+     *
+     * Allowed values are:
+     * - `teamName`, to filter those who are in the given team.
+     * - `!teamName`, to filter those who are not in the given team.
+     * - `false`, to filter those who are teamless (in no team).
+     * - `true`, ot filter those who have at least one team.
+     */
+    team?: Macroable<string | boolean, MACRO>
 
-  /**
-   * Filter target selection to those that have the given tag(s).
-   *
-   * Multiple values are allowed, when passed as an array.
-   *
-   * @example
-   *
-   * Selector(`@e`, { tag: 'alive' }) => `@e[tag=alive]`
-   *
-   * Selector(`@e`, { tag: ['alive', 'winner'] }) => `@e[tag=alive, tag=winner]`
-   *
-   */
-  tag?: Macroable<TypeOrArray<string | LabelClass>, MACRO>
+    /**
+     * Filter target selection to those that have the given tag(s).
+     *
+     * Multiple values are allowed, when passed as an array.
+     *
+     * @example
+     *
+     * Selector(`@e`, { tag: 'alive' }) => `@e[tag=alive]`
+     *
+     * Selector(`@e`, { tag: ['alive', 'winner'] }) => `@e[tag=alive, tag=winner]`
+     *
+     */
+    tag?: Macroable<TypeOrArray<string | LabelClass>, MACRO>
 
-  /** Filter target selection to all those with a given name. This cannot be a JSON text compound. */
-  name?: Macroable<string, MACRO>
+    /** Filter target selection to all those with a given name. This cannot be a JSON text compound. */
+    name?: Macroable<string, MACRO>
 
-  /**
-   * Specify the targets selection priority.
-   *
-   * - `nearest`: Sort by increasing distance. (Default for `@p`)
-   * - `furthest`: Sort by decreasing distance.
-   * - `random`: Sort randomly. (Default for `@r`)
-   * - `arbitrary`: Do not sort. (Default for `@e`, `@a`)
-   */
-  sort?: 'nearest' | 'furthest' | 'random' | 'arbitrary'
+    /**
+     * Specify the targets selection priority.
+     *
+     * - `nearest`: Sort by increasing distance. (Default for `@p`)
+     * - `furthest`: Sort by decreasing distance.
+     * - `random`: Sort randomly. (Default for `@r`)
+     * - `arbitrary`: Do not sort. (Default for `@e`, `@a`)
+     */
+    sort?: 'nearest' | 'furthest' | 'random' | 'arbitrary'
 
-  /** Filter target selection based on their experience levels. This naturally filters out all non-player targets. */
-  level?: Macroable<Range<MACRO>, MACRO>
+    /** Filter target selection based on their experience levels. This naturally filters out all non-player targets. */
+    level?: Macroable<Range<MACRO>, MACRO>
 
-  /** Filter target selection to those who are in the specified game mode. */
-  gamemode?: Macroable<LiteralUnion<GAMEMODES | `!${GAMEMODES}`> | `!${GAMEMODES}`[], MACRO>
+    /** Filter target selection to those who are in the specified game mode. */
+    gamemode?: Macroable<LiteralUnion<GAMEMODES | `!${GAMEMODES}`> | `!${GAMEMODES}`[], MACRO>
 
-  /**
-   * Filter target selection based on their vertical rotation, measured in degrees.
-   *
-   * Values range from `-90` (straight up) to `0` (at the horizon) to `+90` (straight down).
-   */
-  x_rotation?: Macroable<Range<MACRO>, MACRO>
+    /**
+     * Filter target selection based on their vertical rotation, measured in degrees.
+     *
+     * Values range from `-90` (straight up) to `0` (at the horizon) to `+90` (straight down).
+     */
+    x_rotation?: Macroable<Range<MACRO>, MACRO>
 
-  /**
-   * Filter target selection based on their rotation in the horizontal XZ-plane,
-   * measured clockwise in degrees from due south (or the positive Z direction).
-   *
-   * Values vary:
-   * - from `-180` (facing due north, the -Z direction)
-   * - to `-90` (facing due east, the +X direction)
-   * - to `0` (facing due south, the +Z direction)
-   * - to `+90` (facing due west, the -X direction)
-   * - to `+180` (facing due north again).
-   */
-  y_rotation?: Macroable<Range<MACRO>, MACRO>
+    /**
+     * Filter target selection based on their rotation in the horizontal XZ-plane,
+     * measured clockwise in degrees from due south (or the positive Z direction).
+     *
+     * Values vary:
+     * - from `-180` (facing due north, the -Z direction)
+     * - to `-90` (facing due east, the +X direction)
+     * - to `0` (facing due south, the +Z direction)
+     * - to `+90` (facing due west, the -X direction)
+     * - to `+180` (facing due north again).
+     */
+    y_rotation?: Macroable<Range<MACRO>, MACRO>
 
-  /** Select all targets that match the specified advancement and value. */
-  advancements?: Macroable<AdvancementsArgument, MACRO>
+    /** Select all targets that match the specified advancement and value. */
+    advancements?: Macroable<AdvancementsArgument, MACRO>
 
-  /** Select all targets that match the specified predicate. */
-  predicate?: Macroable<string | PredicateClass | (PredicateClass | string)[], MACRO>
+    /** Select all targets that match the specified predicate. */
+    predicate?: Macroable<string | PredicateClass | (PredicateClass | string)[], MACRO>
 
-  /** Select all targets that have the specified NBT. */
-  nbt?: Macroable<RootNBT | NotNBT | (RootNBT | NotNBT)[], MACRO>
+    /** Select all targets that have the specified NBT. */
+    nbt?: Macroable<TypeOrArray<
+      NotNBT | (
+        MustBePlayer extends true ? (
+          SymbolEntity['player']
+        ) : (
+          ResolveEntityValues<EntityType>
+        )
+      )
+    >, MACRO>
 
-  /**
-   * Define a position on the X-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
-   */
-  x?: Macroable<number, MACRO>
+    /**
+     * Define a position on the X-axis in the world the selector starts at,
+     * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+     */
+    x?: Macroable<number, MACRO>
 
-  /**
-   * Define a position on the Y-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
-   */
-  y?: Macroable<number, MACRO>
+    /**
+     * Define a position on the Y-axis in the world the selector starts at,
+     * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+     */
+    y?: Macroable<number, MACRO>
 
-  /**
-   * Define a position on the Z-axis in the world the selector starts at,
-   * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
-   */
-  z?: Macroable<number, MACRO>
+    /**
+     * Define a position on the Z-axis in the world the selector starts at,
+     * for use with the `distance` argument or the volume arguments, `dx`, `dy` and `dz`.
+     */
+    z?: Macroable<number, MACRO>
 
-  /**
-   * Filter target selection based on their x-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes
-   */
-  dx?: Macroable<number, MACRO>
+    /**
+     * Filter target selection based on their x-difference, from some point,
+     * as measured from the closest corner of the entities' hitboxes
+     */
+    dx?: Macroable<number, MACRO>
 
-  /**
-   * Filter target selection based on their y-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes
-   */
-  dy?: Macroable<number, MACRO>
+    /**
+     * Filter target selection based on their y-difference, from some point,
+     * as measured from the closest corner of the entities' hitboxes
+     */
+    dy?: Macroable<number, MACRO>
 
-  /**
-   * Filter target selection based on their z-difference, from some point,
-   * as measured from the closest corner of the entities' hitboxes
-   */
-  dz?: Macroable<number, MACRO>
-} & (MustBeSingle extends true ? { limit: Macroable<0 | 1, MACRO> } : { limit?: Macroable<number, MACRO> }) &
-  (MustBePlayer extends true
-    ? {
-        /**
-         * Filter target selection to those of a specific entity type.
-         *
-         * Multiple values are allowed, when passed as an array.
-         *
-         * @example
-         *
-         * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
-         *
-         * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
-         */
-        type: 'minecraft:player' | 'player'
-      }
-    : {
-        /**
-         * Filter target selection to those of a specific entity type.
-         *
-         * Multiple values are allowed, when passed as an array.
-         *
-         * @example
-         *
-         * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
-         *
-         * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
-         */
-        type?: Macroable<NegatableTagOrEntryOrList<Registry['minecraft:entity_type']> | TagClass<'entity_type'>, MACRO>
-      })
+    /**
+     * Filter target selection based on their z-difference, from some point,
+     * as measured from the closest corner of the entities' hitboxes
+     */
+    dz?: Macroable<number, MACRO>
+  } & (
+    MustBeSingle extends true ? {
+      limit: Macroable<0 | 1, MACRO> 
+    } : { 
+      limit?: Macroable<number, MACRO> 
+    }
+  ) & (
+    MustBePlayer extends true ? {
+      /**
+       * Filter target selection to those of a specific entity type.
+       *
+       * Multiple values are allowed, when passed as an array.
+       *
+       * @example
+       *
+       * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=!minecraft:cow]`
+       *
+       * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
+       */
+      type: 'minecraft:player' | 'player'
+    } : {
+      /**
+       * Filter target selection to those of a specific entity type.
+       *
+       * Multiple values are allowed, when passed as an array.
+       *
+       * @example
+       *
+       * Selector(`@e`, { type: 'minecraft:cow' }) => `@e[type=minecraft:cow]`
+       *
+       * Selector(`@e`, { type: ['!minecraft:cow', '!minecraft:skeleton'] }) => `@e[type=!minecraft:cow, type=!minecraft:skeleton]`
+       */
+      type?: EntityType
+    }
+  )
+)
 
 // Returns the string representation of a score argument. `{ myScore: [0, null] } => {myScore=0..}`, `{ myScore: [-Infinity, 5] } => {myScore='..5'}`, 8 => '8'
 function parseScore(core: SandstoneCore, scores: ScoreArgument<boolean>): string {
@@ -232,14 +311,14 @@ export class SelectorClass<
    */
   declare readonly __selectorPickBrand: { single: IsSingle; player: IsPlayer }
 
-  arguments: SelectorProperties<IsSingle, IsPlayer, MACRO>
+  arguments: SelectorProperties<IsSingle, IsPlayer, SelectorEntityType, MACRO>
 
   constructor(
     protected sandstonePack: SandstonePack,
     public target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r',
-    selectorArguments?: SelectorProperties<IsSingle, IsPlayer, MACRO>,
+    selectorArguments?: SelectorProperties<IsSingle, IsPlayer, SelectorEntityType, MACRO>,
   ) {
-    this.arguments = selectorArguments ?? ({} as SelectorProperties<IsSingle, IsPlayer, MACRO>)
+    this.arguments = selectorArguments ?? ({} as SelectorProperties<IsSingle, IsPlayer, SelectorEntityType, MACRO>)
   }
 
   // Custom actions //

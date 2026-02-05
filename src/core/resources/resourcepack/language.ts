@@ -3,7 +3,7 @@ import { ContainerNode } from '../../nodes'
 
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import type { TRANSLATION_KEYS_SET } from 'sandstone/arguments/generated/_registry/translation_keys'
 
 /**
@@ -17,7 +17,7 @@ export class LanguageNode extends ContainerNode implements ResourceNode<Language
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.languageJSON)
+  getValue = () => jsonStringify(this.resource.languageJSON)
 }
 
 export type LanguageArguments = {

@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft post effect (post-processing shader).
@@ -15,7 +15,7 @@ export class PostEffectNode extends ContainerNode implements ResourceNode<PostEf
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.postEffectJSON)
+  getValue = () => jsonStringify(this.resource.postEffectJSON)
 }
 
 export type PostEffectClassArguments = {

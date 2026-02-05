@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft trade set.
@@ -15,7 +15,7 @@ export class TradeSetNode extends ContainerNode implements ResourceNode<TradeSet
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.tradeSetJSON)
+  getValue = () => jsonStringify(this.resource.tradeSetJSON)
 }
 
 export type TradeSetClassArguments = {

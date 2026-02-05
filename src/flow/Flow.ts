@@ -1,12 +1,21 @@
 import type {
   Registry,
+  ContainerSlotSelector,
   Coordinates,
+  EntitySlotSelector,
   JSONTextComponent,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
   NBTObject,
   MultiplePlayersArgumentOf,
+  SymbolBlock,
+  SymbolMcdocBlockStates,
 } from 'sandstone/arguments'
+import type {
+  BlockEntity,
+  BlockStatic,
+  ParseBlockState,
+} from 'sandstone/commands/implementations/block/setblock'
 import type {
   ConditionClass,
   DataArray,
@@ -20,7 +29,8 @@ import type {
 import { parseJSONText, Score } from 'sandstone/variables'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
 import type { LiteralUnion } from '../utils'
-import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions } from './conditions'
+import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode } from './conditions'
+import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops'
@@ -333,12 +343,64 @@ export class Flow {
   }
 
   /**
-   * Compares the block at a given position to a given block ID.
+   * Compares the block at a given position to a given block.
+   *
    * @param position Position of a target block to test.
-   * @param block Block(s) to test for (can be a tag).
+   * @param block Block to test for (can be a tag).
+   * @param state Optional block state properties to match.
+   *
+   * @example
+   * ```ts
+   * // Simple block check
+   * _.if(_.block([0, 64, 0], 'minecraft:stone'), () => { ... })
+   *
+   * // Check block with specific state
+   * _.if(_.block([0, 64, 0], 'minecraft:oak_log', { axis: 'y' }), () => { ... })
+   * ```
    */
-  block = (position: Coordinates, block: Registry['minecraft:block']) => {
-    return new SandstoneConditions.Block(this.sandstoneCore, position, block)
+  block<BLOCK extends BlockStatic>(
+    position: Coordinates,
+    block: BLOCK,
+    state?: BLOCK extends keyof SymbolMcdocBlockStates
+      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>>
+      : Record<string, string | boolean | number>,
+  ): BlockConditionNode
+
+  /**
+   * Compares the block at a given position to a given block with NBT data.
+   *
+   * @param position Position of a target block to test.
+   * @param block Block to test for (must be a block entity).
+   * @param state Optional block state properties to match.
+   * @param nbt NBT data to match against the block entity.
+   *
+   * @example
+   * ```ts
+   * // Check chest with specific NBT
+   * _.if(_.block([0, 64, 0], 'minecraft:chest', { facing: 'north' }, { Items: [] }), () => { ... })
+   *
+   * // Check command block
+   * _.if(_.block(['~', '~', '~1'], 'minecraft:command_block', {}, { Command: 'say Hello' }), () => { ... })
+   * ```
+   */
+  block<BLOCK extends BlockEntity>(
+    position: Coordinates,
+    block: BLOCK,
+    state: BLOCK extends keyof SymbolMcdocBlockStates
+      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>>
+      : Record<string, string | boolean | number> | undefined,
+    nbt: BLOCK extends keyof SymbolBlock
+      ? NonNullable<SymbolBlock[BLOCK]>
+      : SymbolBlock<'%fallback'>,
+  ): BlockConditionNode
+
+  block(
+    position: Coordinates,
+    block: Registry['minecraft:block'],
+    state?: Record<string, string | boolean | number>,
+    nbt?: NBTObject,
+  ) {
+    return new SandstoneConditions.Block(this.sandstoneCore, position, block, state, nbt)
   }
 
   /**
@@ -411,6 +473,49 @@ export class Flow {
    */
   entity = (targets: MultipleEntitiesArgument) => {
     return new SandstoneConditions.Selector(this.sandstoneCore, targets.toString())
+  }
+
+  /**
+   * Tests for items in block entity or entity inventory slots.
+   *
+   * @example
+   * ```ts
+   * // Check if chest has any diamonds
+   * _.if(_.items.block([0, 64, 0], 'container.*', 'minecraft:diamond'), () => { ... })
+   *
+   * // Check if player has any diamonds
+   * _.if(_.items.entity('@p', 'inventory.*', 'minecraft:diamond'), () => { ... })
+   *
+   * // Check for enchanted sword with builder
+   * _.if(_.items.entity('@p', 'weapon.mainhand',
+   *   ItemPredicate('minecraft:diamond_sword').has('minecraft:enchantments')
+   * ), () => { ... })
+   * ```
+   */
+  get items(): {
+    /**
+     * Test for items in a block entity's inventory slots.
+     *
+     * @param sourcePos Position of the block entity to test.
+     * @param slots Slots to test (e.g., `'container.*'`, `'container.0'`).
+     * @param itemPredicate Item predicate to match against.
+     */
+    block: (sourcePos: Coordinates, slots: ContainerSlotSelector, itemPredicate: ItemPredicate) => ItemsBlockConditionNode
+    /**
+     * Test for items in an entity's inventory slots.
+     *
+     * @param source Entity to test.
+     * @param slots Slots to test (e.g., `'inventory.*'`, `'hotbar.0'`, `'armor.chest'`).
+     * @param itemPredicate Item predicate to match against.
+     */
+    entity: (source: MultipleEntitiesArgument, slots: EntitySlotSelector, itemPredicate: ItemPredicate) => ItemsEntityConditionNode
+  } {
+    return {
+      block: (sourcePos: Coordinates, slots: ContainerSlotSelector, itemPredicate: ItemPredicate) =>
+        new SandstoneConditions.ItemsBlock(this.sandstoneCore, sourcePos, slots, itemPredicate),
+      entity: (source: MultipleEntitiesArgument, slots: EntitySlotSelector, itemPredicate: ItemPredicate) =>
+        new SandstoneConditions.ItemsEntity(this.sandstoneCore, source, slots, itemPredicate),
+    }
   }
 
   /**

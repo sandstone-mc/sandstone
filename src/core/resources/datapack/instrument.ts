@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft instrument (goat horn).
@@ -15,7 +15,7 @@ export class InstrumentNode extends ContainerNode implements ResourceNode<Instru
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.instrumentJSON)
+  getValue = () => jsonStringify(this.resource.instrumentJSON)
 }
 
 export type InstrumentClassArguments = {

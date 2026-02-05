@@ -1,7 +1,7 @@
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import type { SymbolResource } from 'sandstone/arguments'
 
 export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
@@ -12,7 +12,7 @@ export class ModelNode extends ContainerNode implements ResourceNode<ModelClass>
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.modelJSON)
+  getValue = () => jsonStringify(this.resource.modelJSON)
 }
 
 type ModelData = SymbolResource['model']

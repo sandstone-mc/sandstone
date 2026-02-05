@@ -3,7 +3,7 @@ import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft advancement.
@@ -16,7 +16,7 @@ export class AdvancementNode extends ContainerNode implements ResourceNode<Advan
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.advancementJSON)
+  getValue = () => jsonStringify(this.resource.advancementJSON)
 }
 
 export type AdvancementClassArguments<AdvancementJSON extends SymbolResource['advancement'] | undefined = undefined> = {

@@ -5,7 +5,7 @@ import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import type { MCFunctionClass } from './mcfunction'
 import type { DamageTypeClass } from './damageType'
 
@@ -100,7 +100,7 @@ export class TagNode extends ContainerNode implements ResourceNode<TagClass<Lite
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.tagJSON)
+  getValue = () => jsonStringify(this.resource.tagJSON)
 }
 
 export type TagClassArguments<REGISTRY extends LiteralUnion<REGISTRIES>> = {

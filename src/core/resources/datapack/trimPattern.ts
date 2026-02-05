@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft trim pattern.
@@ -15,7 +15,7 @@ export class TrimPatternNode extends ContainerNode implements ResourceNode<TrimP
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.trimPatternJSON)
+  getValue = () => jsonStringify(this.resource.trimPatternJSON)
 }
 
 // TODO: Investigate potential abstractions

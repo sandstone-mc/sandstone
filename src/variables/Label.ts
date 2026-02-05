@@ -4,7 +4,7 @@ import type { MakeInstanceCallable } from 'sandstone/utils'
 import { makeClassCallable } from 'sandstone/utils'
 import type { SandstonePack } from '../pack'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses'
-import type { SelectorProperties } from './Selector'
+import type { SelectorEntityType, SelectorProperties } from './Selector'
 import { SelectorClass } from './Selector'
 
 type SingleEntity = SelectorClass<false, true, boolean> | SelectorPickClass<true, boolean>
@@ -108,7 +108,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
           selector.arguments.tag = [...selector.arguments.tag, label.fullName]
         }
       } else selector.arguments.tag = [label.fullName]
-    } else selector.arguments = { tag: [label.fullName] } as SelectorProperties<true, false, false>
+    } else selector.arguments = { tag: [label.fullName] } as SelectorProperties<true, false, SelectorEntityType, false>
 
     this.selector = selector
   }

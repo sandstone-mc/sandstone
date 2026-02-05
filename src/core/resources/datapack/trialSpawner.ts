@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft trial spawner configuration.
@@ -15,7 +15,7 @@ export class TrialSpawnerNode extends ContainerNode implements ResourceNode<Tria
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.trialSpawnerJSON)
+  getValue = () => jsonStringify(this.resource.trialSpawnerJSON)
 }
 
 export type TrialSpawnerClassArguments = {

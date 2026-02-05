@@ -7,6 +7,7 @@ import type { ResourcePath, SandstonePack } from 'sandstone/pack'
 import type { PackType } from 'sandstone/pack/packType'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
+import { NBTPrimitive, NBTTypedArray } from 'sandstone/variables/nbt/NBTs'
 
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**
@@ -259,4 +260,20 @@ export class ResourceNodesMap<T extends ResourceNode = ResourceNode> {
   get(node: T): T | undefined {
     return this.nodes.get(this.getKey(node))
   }
+}
+
+export function jsonStringify(json: any) {
+  return JSON.stringify(
+    json,
+    (_key, value) => {
+      if (value instanceof NBTPrimitive) {
+        return value.value
+      }
+      if (value instanceof NBTTypedArray) {
+        return value.values
+      }
+      return value
+    },
+    2
+  )
 }

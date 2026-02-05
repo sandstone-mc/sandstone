@@ -3,7 +3,7 @@ import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft predicate.
@@ -16,7 +16,7 @@ export class PredicateNode extends ContainerNode implements ResourceNode<Predica
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.predicateJSON)
+  getValue = () => jsonStringify(this.resource.predicateJSON)
 }
 
 type PredicateJSON = NonNullable<SymbolResource['predicate']>

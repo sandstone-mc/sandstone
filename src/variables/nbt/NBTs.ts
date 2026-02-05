@@ -107,10 +107,10 @@ export class NBTIntArray<Range extends NBTRange = {}> extends NBTTypedArray {
 // TODO
 export type NBTList<Type extends NBTObject, Range extends NBTRange = {}> = Range['min'] extends 1 ? Range['leftExclusive'] extends false ? (Type[] & { 0: Type }) : Type[] : Type[]
 
-export class NotNBT extends NBTClass {
+export class NotNBT<VALUE extends RootNBT = RootNBT> extends NBTClass {
   nbt
 
-  constructor(nbt: RootNBT) {
+  constructor(nbt: VALUE) {
     super()
     this.nbt = nbt
   }
@@ -156,6 +156,30 @@ function dynamicNBT(template: TemplateStringsArray, ...args: unknown[]): NBTObje
 
 interface NBTInterface {
   /**
+   * Transform a number into a Minecraft NBT int number. This may seem redundant, but it is necessary for strict typing.
+   *
+   * @param intNumber The number to transform.
+   *
+   * @example
+   * summon(..., { Age: -5 }) // => { Age: -5 }
+   *
+   * summon(..., { Age: NBT.int(-5) }) // => { Age: -5i }
+   */
+  int(intNumber: number): NBTInt
+
+  /**
+   * Transform several numbers into a an array of Minecraft NBT int numbers. This may seem redundant, but it is necessary for strict typing.
+   *
+   * @param intNumbers The numbers to transform.
+   *
+   * @example
+   * summon(..., { Test: [0, 1, 2] }) // => { Test: [0, 1, 2] }
+   *
+   * summon(..., { Test: NBT.int([0, 1, 2]) }) // => { Test: [0i, 1i, 2i] }
+   */
+  int(intNumbers: number[]): NBTInt[]
+
+  /**
    * Transform a number into a Minecraft NBT float number.
    *
    * @param floatNumber The number to transform.
@@ -180,7 +204,7 @@ interface NBTInterface {
   float(floatNumbers: number[]): NBTFloat[]
 
   /**
-   * Transform a number into a Minecraft NBT double number.
+   * Transform a number into a Minecraft NBT double number. Using this is optional.
    *
    * @param doubleNumber The number to transform.
    *
@@ -192,7 +216,7 @@ interface NBTInterface {
   double(doubleNumber: number): NBTDouble
 
   /**
-   * Transform several numbers into a an array of Minecraft NBT double numbers.
+   * Transform several numbers into a an array of Minecraft NBT double numbers. Using this is optional.
    *
    * @param doubleNumbers The numbers to transform.
    *
@@ -381,9 +405,10 @@ interface NBTInterface {
   (nbts: TemplateStringsArray, ...args: unknown[]): NBTObject
 }
 
-// TODO: Look into the weird typing on this
 export const NBT: NBTInterface = makeCallable(
   {
+    int: (num: number | number[]): any => customNumber(num, NBTInt),
+
     float: (num: number | number[]): any => customNumber(num, NBTFloat),
 
     double: (num: number | number[]): any => customNumber(num, NBTDouble),
@@ -409,13 +434,15 @@ export const NBT: NBTInterface = makeCallable(
   dynamicNBT,
 )
 
+NBT.int
+
 export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
   if (nbt === null || nbt === undefined) {
     throw new Error('Nullish nbt values are not allowed')
   }
   if (typeof nbt === 'number') {
-    // We have a number
-    return nbt.toString()
+    // We have a double, integers are now required to be defined with NBT.int
+    return `${nbt}d`
   }
 
   if (typeof nbt === 'boolean') {
@@ -452,7 +479,7 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
 
   // We have an object
   if (nbt instanceof NBTClass) {
-    // It's actually a "Minecraft Primitive", like 1b, and not an object
+    // It's actually a "Minecraft Primitive", like 3b, and not an object
     return nbt[util.inspect.custom]()
   }
 

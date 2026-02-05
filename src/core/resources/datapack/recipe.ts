@@ -2,7 +2,7 @@ import type { SymbolResource, MultiplePlayersArgumentOf } from 'sandstone/argume
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft recipe.
@@ -15,7 +15,7 @@ export class RecipeNode extends ContainerNode implements ResourceNode<RecipeClas
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.recipeJSON)
+  getValue = () => jsonStringify(this.resource.recipeJSON)
 }
 
 export type RecipeClassArguments = {

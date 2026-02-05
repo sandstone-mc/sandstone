@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft particle definition.
@@ -15,7 +15,7 @@ export class ParticleNode extends ContainerNode implements ResourceNode<Particle
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.particleJSON)
+  getValue = () => jsonStringify(this.resource.particleJSON)
 }
 
 export type ParticleClassArguments = {

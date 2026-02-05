@@ -7,7 +7,7 @@ import type { ComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 import type { TagClass } from './tag'
 import type { TAG_DAMAGE_TYPES_SET } from 'sandstone/arguments/generated/_registry/tag_damage_types'
 
@@ -24,7 +24,7 @@ export class DamageTypeNode extends ContainerNode implements ResourceNode<Damage
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.damageTypeJSON)
+  getValue = () => jsonStringify(this.resource.damageTypeJSON)
 }
 
 export type DamageTypeClassArguments = {

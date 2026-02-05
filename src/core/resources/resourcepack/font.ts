@@ -2,7 +2,7 @@ import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft font definition.
@@ -15,7 +15,7 @@ export class FontNode extends ContainerNode implements ResourceNode<FontClass> {
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.fontJSON)
+  getValue = () => jsonStringify(this.resource.fontJSON)
 }
 
 export type FontArguments = {

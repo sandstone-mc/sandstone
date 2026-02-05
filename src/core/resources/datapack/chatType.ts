@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft chat type.
@@ -15,7 +15,7 @@ export class ChatTypeNode extends ContainerNode implements ResourceNode<ChatType
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.chatTypeJSON)
+  getValue = () => jsonStringify(this.resource.chatTypeJSON)
 }
 
 export type ChatTypeClassArguments = {

@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft shader program.
@@ -15,7 +15,7 @@ export class ShaderNode extends ContainerNode implements ResourceNode<ShaderClas
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.shaderJSON)
+  getValue = () => jsonStringify(this.resource.shaderJSON)
 }
 
 export type ShaderClassArguments = {

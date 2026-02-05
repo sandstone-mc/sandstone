@@ -7,11 +7,20 @@ import type {
   Coordinates,
   EntitySlotSelector,
   MultipleEntitiesArgument,
+  NBTObject,
   ObjectiveArgument,
   Range,
   Rotation,
   SingleEntityArgumentOf,
+  SymbolBlock,
+  SymbolMcdocBlockStates,
 } from 'sandstone/arguments'
+import type {
+  BlockEntity,
+  BlockStatic,
+  ParseBlockState,
+} from '../block/setblock'
+import { blockStateStringifier } from '../block/setblock'
 import type { SandstoneCommands } from 'sandstone/commands'
 import {
   isMacroArgument,
@@ -29,6 +38,7 @@ import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import { coordinatesParser, rangeParser, rotationParser, targetParser } from 'sandstone/variables/parsers'
+import { nbtStringifier } from 'sandstone/variables'
 import type { Score } from 'sandstone/variables/Score'
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
 import { FunctionCommandNode } from '../server/function'
@@ -400,11 +410,66 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * Compares the block at a given position to a given block.
    *
    * @param pos Position of a target block to test.
+   * @param block Block to test for (can be a tag).
+   * @param state Optional block state properties to match.
    *
-   * @param block A block to test against.
+   * @example
+   * ```ts
+   * // Simple block check
+   * execute.if.block([0, 64, 0], 'minecraft:stone')
+   *
+   * // Check block with specific state
+   * execute.if.block([0, 64, 0], 'minecraft:oak_log', { axis: 'y' })
+   * ```
    */
-  block = (pos: Macroable<Coordinates<MACRO>, MACRO>, block: Macroable<Registry['minecraft:block'], MACRO>) =>
-    this.nestedExecute(['block', coordinatesParser(pos), block], true)
+  block<BLOCK extends Macroable<BlockStatic, MACRO>>(
+    pos: Macroable<Coordinates<MACRO>, MACRO>,
+    block: BLOCK,
+    state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates
+      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>>
+      : Record<string, string | boolean | number>, MACRO>,
+  ): ExecuteCommand<MACRO>
+
+  /**
+   * Compares the block at a given position to a given block with NBT data.
+   *
+   * @param pos Position of a target block to test.
+   * @param block Block to test for (must be a block entity).
+   * @param state Optional block state properties to match.
+   * @param nbt NBT data to match against the block entity.
+   *
+   * @example
+   * ```ts
+   * // Check chest with specific NBT
+   * execute.if.block([0, 64, 0], 'minecraft:chest', { facing: 'north' }, { Items: [] })
+   *
+   * // Check command block
+   * execute.if.block(['~', '~', '~1'], 'minecraft:command_block', {}, { Command: 'say Hello' })
+   * ```
+   */
+  block<BLOCK extends Macroable<BlockEntity, MACRO>>(
+    pos: Macroable<Coordinates<MACRO>, MACRO>,
+    block: BLOCK,
+    state: Macroable<BLOCK extends keyof SymbolMcdocBlockStates
+      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>>
+      : Record<string, string | boolean | number> | undefined, MACRO>,
+    nbt: Macroable<BLOCK extends keyof SymbolBlock
+      ? NonNullable<SymbolBlock[BLOCK]>
+      : SymbolBlock<'%fallback'>, MACRO>,
+  ): ExecuteCommand<MACRO>
+
+  block(
+    pos: Macroable<Coordinates<MACRO>, MACRO>,
+    block: Macroable<Registry['minecraft:block'], MACRO>,
+    state?: Macroable<Record<string, string | boolean | number>, MACRO>,
+    nbt?: Macroable<NBTObject, MACRO>,
+  ) {
+    const stateStr = state && typeof state === 'object' && Object.keys(state).length > 0
+      ? blockStateStringifier(state as Record<string, string | number | boolean>)
+      : ''
+    const nbtStr = nbt ? nbtStringifier(nbt as NBTObject) : ''
+    return this.nestedExecute(['block', coordinatesParser(pos), `${block}${stateStr}${nbtStr}`], true)
+  }
 
   /**
    * Compares the blocks in two equally sized volumes.

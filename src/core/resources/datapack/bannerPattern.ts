@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft banner pattern.
@@ -15,7 +15,7 @@ export class BannerPatternNode extends ContainerNode implements ResourceNode<Ban
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.bannerPatternJSON)
+  getValue = () => jsonStringify(this.resource.bannerPatternJSON)
 }
 
 export type BannerPatternClassArguments = {

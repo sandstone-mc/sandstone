@@ -2,7 +2,7 @@ import type { SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft equipment definition.
@@ -15,7 +15,7 @@ export class EquipmentNode extends ContainerNode implements ResourceNode<Equipme
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.equipmentJSON)
+  getValue = () => jsonStringify(this.resource.equipmentJSON)
 }
 
 export type EquipmentClassArguments = {

@@ -18,6 +18,8 @@ export const SandstoneConditions = {
   Blocks: variables.BlocksConditionNode,
   Dimension: variables.DimensionConditionNode,
   Function: variables.FunctionConditionNode,
+  ItemsBlock: variables.ItemsBlockConditionNode,
+  ItemsEntity: variables.ItemsEntityConditionNode,
   Loaded: variables.LoadedConditionNode,
   DataPointExists: variables.DataPointExistsConditionNode,
   DataPointEquals: variables.DataPointEqualsConditionNode,

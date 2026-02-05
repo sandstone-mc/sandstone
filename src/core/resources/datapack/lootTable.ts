@@ -11,7 +11,7 @@ import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft loot table.
@@ -24,7 +24,7 @@ export class LootTableNode extends ContainerNode implements ResourceNode<LootTab
     super(sandstoneCore)
   }
 
-  getValue = () => JSON.stringify(this.resource.lootTableJSON)
+  getValue = () => jsonStringify(this.resource.lootTableJSON)
 }
 
 export type LootTableClassArguments = {
