@@ -23,23 +23,6 @@ const subEntries = [
   'src/variables/index.ts',
 ]
 
-// External dependencies (from package.json)
-const externals = [
-  '@sinclair/typebox',
-  '@smithed-mc/data-types',
-  '@types/nearley',
-  '@typescript/analyze-trace',
-  '@typescript/native-preview',
-  'adm-zip',
-  'fs-extra',
-  'lodash',
-  'nanoid',
-  'nearley',
-  'node-fetch',
-  'prismarine-nbt',
-  'semver',
-]
-
 async function main() {
   const startTime = performance.now()
 
@@ -65,7 +48,7 @@ async function main() {
       target: 'node',
       format: 'esm',
       splitting: false,
-      external: externals,
+      packages: 'external',
       naming: 'index.js',
     })
 
@@ -86,7 +69,7 @@ async function main() {
     target: 'node',
     format: 'esm',
     splitting: false,
-    external: externals,
+    packages: 'external',
     naming: 'index.js',
   })
 
