@@ -45,6 +45,9 @@ export function NBTpathToString(pack: SandstonePack, paths: DATA_PATH[]) {
         } else {
           parsedMacros.push(path as MacroArgument)
         }
+      } else if (Array.isArray(path) && path.length === 1 && typeof path[0] === 'number' && Number.isInteger(path[0])) {
+        // Special case: array index like [0] - don't add 'd' suffix
+        parsedPaths.push(`[${path[0]}]`)
       } else {
         parsedPaths.push(nbtStringifier(path))
       }

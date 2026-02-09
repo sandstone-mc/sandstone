@@ -28,7 +28,7 @@ export class SandstoneCore {
 
   _smithed: SmithedDependencyCache | undefined
 
-  dependencies: Promise<SmithedDependencyClass[] | true>[] = []
+  dependencies: Promise<SmithedDependencyClass[] | true | false>[] = []
 
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new ResourceNodesMap()
@@ -180,6 +180,11 @@ export class SandstoneCore {
 
         if (!smithed.has(dependency)) {
           const _depend = await smithed.get(dependency, version)
+
+          // If dependency couldn't be fetched (not on Smithed yet), skip it
+          if (!_depend) {
+            return false
+          }
 
           if (!this.pack.packTypes.has('datapack-dependencies')) {
             this.pack.packTypes.set('datapack-dependencies', new DataPackDependencies())

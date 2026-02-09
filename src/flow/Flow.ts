@@ -352,10 +352,10 @@ export class Flow {
    * @example
    * ```ts
    * // Simple block check
-   * _.if(_.block([0, 64, 0], 'minecraft:stone'), () => { ... })
+   * _.if(_.block(abs(0, 64, 0), 'minecraft:stone'), () => { ... })
    *
    * // Check block with specific state
-   * _.if(_.block([0, 64, 0], 'minecraft:oak_log', { axis: 'y' }), () => { ... })
+   * _.if(_.block(abs(0, 64, 0), 'minecraft:oak_log', { axis: 'y' }), () => { ... })
    * ```
    */
   block<BLOCK extends BlockStatic>(
@@ -377,7 +377,7 @@ export class Flow {
    * @example
    * ```ts
    * // Check chest with specific NBT
-   * _.if(_.block([0, 64, 0], 'minecraft:chest', { facing: 'north' }, { Items: [] }), () => { ... })
+   * _.if(_.block(abs(0, 64, 0), 'minecraft:chest', { facing: 'north' }, { Items: [] }), () => { ... })
    *
    * // Check command block
    * _.if(_.block(['~', '~', '~1'], 'minecraft:command_block', {}, { Command: 'say Hello' }), () => { ... })
@@ -481,7 +481,7 @@ export class Flow {
    * @example
    * ```ts
    * // Check if chest has any diamonds
-   * _.if(_.items.block([0, 64, 0], 'container.*', 'minecraft:diamond'), () => { ... })
+   * _.if(_.items.block(abs(0, 64, 0), 'container.*', 'minecraft:diamond'), () => { ... })
    *
    * // Check if player has any diamonds
    * _.if(_.items.entity('@p', 'inventory.*', 'minecraft:diamond'), () => { ... })

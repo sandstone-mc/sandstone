@@ -135,7 +135,6 @@ type INVENTORY_SLOTS =
   | 'inventory.26'
 
 type HORSE_SLOTS =
-  | 'horse.saddle'
   | 'horse.chest'
   | 'horse.0'
   | 'horse.1'

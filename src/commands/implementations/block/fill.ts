@@ -27,10 +27,10 @@ export class FillCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * // Basic solid fill
-   * fill([0, 64, 0], [10, 74, 10], 'minecraft:cobblestone')
+   * fill(abs(0, 64, 0), abs(10, 74, 10), 'minecraft:cobblestone')
    *
    * // With block state
-   * fill([0, 64, 0], [10, 74, 10], 'minecraft:oak_log', { axis: 'x' })
+   * fill(abs(0, 64, 0), abs(10, 74, 10), 'minecraft:oak_log', { axis: 'x' })
    *
    * // With fill mode options
    * fill(corner1, corner2, 'minecraft:stone').hollow()
@@ -56,12 +56,12 @@ export class FillCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * // Fill with chests containing items
-   * fill([0, 64, 0], [2, 64, 2], 'minecraft:chest', { facing: 'north' }, {
+   * fill(abs(0, 64, 0), abs(2, 64, 2), 'minecraft:chest', { facing: 'north' }, {
    *   Items: [{ Slot: 0, id: 'minecraft:diamond', Count: 64 }]
    * })
    *
    * // Fill with command blocks
-   * fill([0, 64, 0], [5, 64, 0], 'minecraft:command_block', { facing: 'up' }, {
+   * fill(abs(0, 64, 0), abs(5, 64, 0), 'minecraft:command_block', { facing: 'up' }, {
    *   Command: 'say Hello'
    * })
    * ```
@@ -111,7 +111,7 @@ export class FillArgumentsCommand<MACRO extends boolean> extends CommandArgument
    *
    * @example
    * ```ts
-   * fill([0, 64, 0], [10, 74, 10], 'minecraft:stone').hollow()
+   * fill(abs(0, 64, 0), abs(10, 74, 10), 'minecraft:stone').hollow()
    * ```
    */
   hollow = () => this.finalCommand(['hollow'])
@@ -145,7 +145,7 @@ export class FillArgumentsCommand<MACRO extends boolean> extends CommandArgument
    *
    * @example
    * ```ts
-   * fill([0, 64, 0], [10, 74, 10], 'minecraft:redstone_block').strict()
+   * fill(abs(0, 64, 0), abs(10, 74, 10), 'minecraft:redstone_block').strict()
    * ```
    */
   strict = () => this.finalCommand(['strict'])
@@ -155,7 +155,7 @@ export class FillArgumentsCommand<MACRO extends boolean> extends CommandArgument
    *
    * @example
    * ```ts
-   * fill([0, 64, 0], [10, 74, 10], 'minecraft:stone').replace()
+   * fill(abs(0, 64, 0), abs(10, 74, 10), 'minecraft:stone').replace()
    * ```
    */
   replace(): FinalCommandOutput

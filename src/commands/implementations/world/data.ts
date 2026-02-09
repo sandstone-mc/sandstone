@@ -18,7 +18,7 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * data.get.block([100, 70, 200], 'Items[0]', 1)      // Get block NBT
+   * data.get.block(abs(100, 70, 200), 'Items[0]', 1)      // Get block NBT
    * data.get.entity('@p', 'Health')                    // Get player health
    * data.get.storage('minecraft:temp', 'value')        // Get storage data
    * ```
@@ -32,7 +32,7 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * data.merge.block([100, 70, 200], {Items: []})      // Merge block NBT
+   * data.merge.block(abs(100, 70, 200), {Items: []})      // Merge block NBT
    * data.merge.entity('@p', {Health: 20})              // Merge entity NBT
    * data.merge.storage('minecraft:temp', {flag: true}) // Merge storage data
    * ```
@@ -47,7 +47,7 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * data.modify.entity('@p', 'Health').set.value(20)                    // Set health
-   * data.modify.block([100, 70, 200], 'Items').append.value({id: 'stone'}) // Add item
+   * data.modify.block(abs(100, 70, 200), 'Items').append.value({id: 'stone'}) // Add item
    * data.modify.storage('minecraft:temp', 'list').prepend.from.entity('@p', 'Inventory[0]')
    * ```
    */
@@ -60,7 +60,7 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * data.remove.block([100, 70, 200], 'Items[0]')      // Remove block NBT
+   * data.remove.block(abs(100, 70, 200), 'Items[0]')      // Remove block NBT
    * data.remove.entity('@e[type=item]', 'Motion')      // Remove entity motion
    * data.remove.storage('minecraft:temp', 'old_data')  // Remove storage data
    * ```

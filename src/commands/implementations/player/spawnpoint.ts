@@ -20,7 +20,7 @@ export class SpawnPointCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param pos Optional coordinates for the new spawn point.
    *           Defaults to current executor position if not specified.
-   *           Examples: [100, 64, 200], abs(0, 70, 0), rel(5, 0, -10)
+   *           Examples: abs(100, 64, 200), abs(0, 70, 0), rel(5, 0, -10)
    *
    * @param angle Optional yaw angle to face when spawning.
    *             Defaults to current executor facing direction.
@@ -30,7 +30,7 @@ export class SpawnPointCommand<MACRO extends boolean> extends CommandArguments {
    * ```ts
    * spawnpoint()                                    // Set your spawn at current location
    * spawnpoint('@a')                               // Set all players' spawn at current location
-   * spawnpoint('@p', [100, 64, 200])              // Set spawn at specific coordinates
+   * spawnpoint('@p', abs(100, 64, 200))              // Set spawn at specific coordinates
    * spawnpoint('@a', abs(0, 70, 0), [90, 0])      // Set spawn with specific facing direction
    * ```
    */

@@ -109,6 +109,107 @@ AST transformation visitors for:
 - Inlining function calls
 - Simplifying execute commands
 
+### MCFunction Context System
+
+Understanding how commands are routed to the correct MCFunction is critical for implementing features like execute chains, macros, and async operations.
+
+#### The MCFunction Stack (`sandstoneCore.mcfunctionStack`)
+SandstoneCore maintains a stack of active MCFunctions:
+```typescript
+// Enter a function context - commands will go here
+core.enterMCFunction(mcfunctionClass)
+
+// Get current function (throws if outside any MCFunction)
+const current = core.getCurrentMCFunctionOrThrow()
+
+// Exit when done
+core.exitMCFunction()
+```
+
+#### Node Context Stack (`MCFunctionNode.contextStack`)
+Each MCFunction has its own context stack for nested structures (execute, if/else, loops):
+```typescript
+// Commands go to the TOP of the context stack
+mcfunctionNode.enterContext(executeNode, exitOnBodyPop)
+// ... commands added here go into executeNode.body ...
+mcfunctionNode.exitContext()
+```
+
+**Key insight**: When you call a command like `say('hello')`, it:
+1. Gets `core.getCurrentMCFunctionOrThrow()` to find the active MCFunction
+2. Gets the top of that function's `contextStack`
+3. Pushes the command node into that context's `body`
+
+#### Execute Command as Container
+`ExecuteCommandNode` extends `ContainerCommandNode` - it can contain child commands:
+```typescript
+// Single command: execute.as('@a').run.say('hi')
+// - Creates ExecuteCommandNode with isSingleExecute=true
+// - The say command goes into the execute's body
+
+// Multiple commands: execute.as('@a').run(() => { say('a'); say('b') })
+// - Creates ExecuteCommandNode with isSingleExecute=false
+// - Both commands go into execute's body
+// - Visitor later extracts to child MCFunction if needed
+```
+
+#### Deferred Execution with autoCommit
+Commands normally commit immediately when created. Use `autoCommit=false` to defer:
+```typescript
+// Normal: command is added to current context immediately
+const exec = new ExecuteCommandClass(pack)  // commits on creation
+
+// Deferred: build up the chain without committing
+const deferred = new ExecuteCommandClass(pack, undefined, false)
+// ... add subcommands ...
+// Later: manually add to context or create child function
+```
+
+This is essential for `createDeferredMacroExecute` which builds execute chains that will be wrapped in macro-enabled child functions.
+
+### Macro System
+
+#### MacroArgument Base Class (`src/core/Macro.ts`)
+All macro-capable values extend `MacroArgument`:
+```typescript
+class MacroArgument {
+  local: Map<string, string>  // Maps MCFunction name -> macro variable name
+  toMacro(): string           // Returns "$(varName)" for use in commands
+}
+```
+
+#### How Scores/Data Become Macros
+When passed to an MCFunction as env or param:
+1. `ResolveNBTPart(score)` converts Score to NBT storage
+2. `score.local.set(functionName, 'env_0')` registers the macro name
+3. Inside the function, `score.toMacro()` returns `"$(env_0)"`
+4. Function is called with `function <name> with storage <resolved>`
+
+#### MCFunction Parameters vs Environment Variables
+```typescript
+// Environment variables: captured from outer scope, array as 2nd arg
+const envVar = Data('storage', 'test', 'value')
+MCFunction('test', [envVar], (_loop, param: Score) => {
+  // envVar -> $(env_0)
+  // param -> $(param_0)
+})
+
+// When called: test(newEnvValue, paramValue)
+// - newEnvValue overrides envVar
+// - paramValue is the param
+```
+
+#### Creating Macro-Enabled Child Functions
+Use `createDeferredMacroExecute` for commands that need macro storage:
+```typescript
+const deferred = new ExecuteCommandClass(pack, undefined, false)
+return createDeferredMacroExecute(pack, deferred, {
+  childFunctionName: '__my_macro',
+  prependArgs: (envNames) => [['as', `$(${envNames[0]})`]],
+  env: [someMacroVariable],  // OR use macroStorage for explicit storage
+})
+```
+
 ### Key Design Patterns
 
 - **Visitor Pattern**: AST transformations in `src/pack/visitors/`

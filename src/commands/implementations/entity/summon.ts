@@ -41,11 +41,11 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
    * ```ts
    * // Basic entity summoning
    * summon('minecraft:cow')                    // At current location
-   * summon('minecraft:zombie', [100, 64, 200]) // At specific coordinates
+   * summon('minecraft:zombie', abs(100, 64, 200)) // At specific coordinates
    * summon('minecraft:villager', ['~5', '~', '~']) // Relative position
    * 
    * // Custom boss mob
-   * summon('minecraft:zombie', [0, 64, 0], {
+   * summon('minecraft:zombie', abs(0, 64, 0), {
    *   CustomName: '{"text":"Guardian","color":"gold"}',
    *   Health: 50,
    *   Attributes: [

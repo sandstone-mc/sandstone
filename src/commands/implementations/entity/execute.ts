@@ -16,7 +16,6 @@ import type {
   SymbolMcdocBlockStates,
 } from 'sandstone/arguments'
 import type {
-  BlockEntity,
   BlockStatic,
   ParseBlockState,
 } from '../block/setblock'
@@ -33,7 +32,7 @@ import type { Node } from 'sandstone/core/nodes'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
-import { makeCallable, toMinecraftResourceName } from 'sandstone/utils'
+import { makeCallable, NamespacedLiteralUnion, toMinecraftResourceName } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
@@ -45,6 +44,10 @@ import { FunctionCommandNode } from '../server/function'
 
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]
+
+type BlockEntityName = keyof SymbolBlock
+
+type BlockEntity = NamespacedLiteralUnion<BlockEntityName>
 
 // Yes these suck
 
@@ -87,6 +90,13 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
    */
   givenCallbackName: string | undefined
 
+  /**
+   * If set, the child function created by createMCFunction will be called with
+   * `function <name> with storage <macroStorage>`. This enables macro variables
+   * from the storage to be used in the execute command.
+   */
+  macroStorage: string | undefined
+
   constructor(
     sandstonePack: SandstonePack,
     args: SubCommand[] = [],
@@ -95,6 +105,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       isSingleExecute = true,
       givenCallbackName = undefined as string | undefined,
       body = [] as Node[],
+      macroStorage = undefined as string | undefined,
     } = {},
   ) {
     super(sandstonePack, ...args)
@@ -102,6 +113,10 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     this.givenCallbackName = givenCallbackName
     this.isSingleExecute = isSingleExecute
     this.isFake = isFake
+    this.macroStorage = macroStorage
+    if (macroStorage) {
+      this.isMacro = true
+    }
     this.append(...body)
   }
 
@@ -181,6 +196,12 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     // Return an execute calling this MCFunction.
     const mcFunctionCall = new FunctionCommandNode(this.sandstonePack, mcFunction)
+
+    // If macroStorage is set, call the function with `with storage <macroStorage>`
+    if (this.macroStorage) {
+      mcFunctionCall.args.push('with', 'storage', this.macroStorage, '')
+    }
+
     this.body = [mcFunctionCall]
 
     return { node: this as ExecuteCommandNode, mcFunction: mcFunctionNode }
@@ -353,13 +374,13 @@ export class ExecuteItemsCommand<MACRO extends boolean> extends ExecuteCommandPa
    * @example
    * ```ts
    * // Check if chest has any diamonds
-   * execute.if.items.block([0, 64, 0], 'container.*', 'minecraft:diamond')
+   * execute.if.items.block(abs(0, 64, 0), 'container.*', 'minecraft:diamond')
    *
    * // Check for specific slot
-   * execute.if.items.block([0, 64, 0], 'container.0', '#minecraft:logs')
+   * execute.if.items.block(abs(0, 64, 0), 'container.0', '#minecraft:logs')
    *
    * // Using builder for complex predicates
-   * execute.if.items.block([0, 64, 0], 'container.*',
+   * execute.if.items.block(abs(0, 64, 0), 'container.*',
    *   ItemPredicate('minecraft:diamond_sword').match('minecraft:enchantments', [...])
    * )
    * ```
@@ -416,10 +437,10 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * @example
    * ```ts
    * // Simple block check
-   * execute.if.block([0, 64, 0], 'minecraft:stone')
+   * execute.if.block(abs(0, 64, 0), 'minecraft:stone')
    *
    * // Check block with specific state
-   * execute.if.block([0, 64, 0], 'minecraft:oak_log', { axis: 'y' })
+   * execute.if.block(abs(0, 64, 0), 'minecraft:oak_log', { axis: 'y' })
    * ```
    */
   block<BLOCK extends Macroable<BlockStatic, MACRO>>(
@@ -441,7 +462,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * @example
    * ```ts
    * // Check chest with specific NBT
-   * execute.if.block([0, 64, 0], 'minecraft:chest', { facing: 'north' }, { Items: [] })
+   * execute.if.block(abs(0, 64, 0), 'minecraft:chest', { facing: 'north' }, { Items: [] })
    *
    * // Check command block
    * execute.if.block(['~', '~', '~1'], 'minecraft:command_block', {}, { Command: 'say Hello' })
@@ -816,4 +837,193 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
       true,
     )
   }
+}
+
+/**
+ * Options for creating a deferred execute with macro storage.
+ */
+export type DeferredMacroExecuteOptions = {
+  /** Name suffix for the child function (e.g., '__gibbs_execute') */
+  childFunctionName: string
+  /**
+   * A function that receives the environment variable macro names and returns
+   * the subcommands to prepend to the execute chain.
+   * The envNames array contains the macro variable names in order (e.g., ['env_0', 'env_1']).
+   */
+  prependArgs: (envNames: string[]) => SubCommand[]
+} & (
+  | {
+    /** Environment variables to pass to the child function (scores, data points, etc.) */
+    env: MacroArgument[]
+    macroStorage?: never
+  }
+  | {
+    /** Explicit storage to use for the macro function call (e.g., '__sandstone:temp') */
+    macroStorage: string
+    env?: never
+  }
+)
+
+/**
+ * Creates a deferred execute proxy that wraps commands in a macro-enabled child function.
+ *
+ * This utility allows building an execute chain without requiring MCFunction context,
+ * then when `.run` is accessed, creates a child function called with environment variables
+ * that are automatically converted to macro storage.
+ *
+ * @param pack The sandstone pack
+ * @param executeChain An ExecuteCommand chain with autoCommit=false
+ * @param options Configuration for the macro execute
+ * @returns A proxy that intercepts .run and creates the macro structure
+ *
+ * @example
+ * ```ts
+ * const score = Variable()
+ * const deferredExecute = new ExecuteCommand(pack, undefined, false)
+ * return createDeferredMacroExecute(pack, deferredExecute, {
+ *   childFunctionName: '__my_macro',
+ *   prependArgs: (envNames) => [['as', `$(${envNames[0]})`]],
+ *   env: [score],
+ * })
+ * ```
+ */
+export function createDeferredMacroExecute(
+  pack: SandstonePack,
+  executeChain: ExecuteCommand<false>,
+  options: DeferredMacroExecuteOptions,
+): ExecuteCommand<true> {
+  const { childFunctionName, prependArgs } = options
+
+  const createProxy = (chain: ExecuteCommand<false>): any => {
+    const handler: ProxyHandler<object> = {
+      get(_target, prop) {
+        if (prop === 'run') {
+          // Get the accumulated args from the deferred chain
+          const node = (chain as any).previousNode ?? (chain as any).getNode?.()
+          const accumulatedArgs: SubCommand[] = node?.args ?? []
+
+          const currentFunction = pack.core.getCurrentMCFunctionOrThrow()
+
+          // Determine env names based on mode
+          const envNames = 'env' in options && options.env
+            ? options.env.map((_, i) => `env_${i}`)
+            : []
+
+          // Create the execute node with prepended args (macro-enabled)
+          const macroNode = new ExecuteCommandNode(pack, [...prependArgs(envNames), ...accumulatedArgs], {
+            isSingleExecute: true,
+          })
+          macroNode.isMacro = true
+
+          // Create and call the child function based on mode
+          let childFunctionNode: MCFunctionNode
+
+          if ('env' in options && options.env) {
+            // Mode 1: Use environment variables (auto-managed storage)
+            const childFunction = pack.MCFunction(
+              `${currentFunction.resource.name}/${childFunctionName}`,
+              options.env,
+              () => { /* Body will be added manually */ },
+              { creator: 'sandstone', onConflict: 'rename' },
+            )
+
+            // Call the child function (MCFunction with env handles the `with storage` automatically)
+            // This also registers the env variables in the local map for macro resolution
+            childFunction()
+            childFunctionNode = childFunction.node
+          } else {
+            // Mode 2: Use explicit macro storage
+            const childFunction = pack.MCFunction(
+              `${currentFunction.resource.name}/${childFunctionName}`,
+              () => { /* Body will be added manually */ },
+              { creator: 'sandstone', onConflict: 'rename' },
+            )
+
+            // Call the function with explicit storage
+            pack.commands.functionCmd(childFunction.name, 'with', 'storage', options.macroStorage)
+            childFunctionNode = childFunction.node
+          }
+
+          // Add the execute node directly to the function body
+          childFunctionNode.body.push(macroNode as any)
+
+          // Switch to child function context so commands go there
+          pack.core.enterMCFunction(childFunctionNode.resource)
+
+          // Enter the execute node's context so the user's command goes into its body
+          childFunctionNode.enterContext(macroNode, false)
+
+          // Track whether we've exited contexts (only do it once)
+          let hasExited = false
+          const exitContexts = () => {
+            if (hasExited) return
+            hasExited = true
+            // Only exit if we're still in the child function context
+            if (pack.core.currentMCFunction === childFunctionNode) {
+              if (childFunctionNode.contextStack.length > 1) {
+                childFunctionNode.exitContext()
+              }
+              pack.core.exitMCFunction()
+            }
+          }
+
+          // Recursively wrap commands to handle multi-stage commands
+          const wrapCommands = (target: any): any => {
+            return new Proxy(target, {
+              get(t, cmdProp) {
+                const value = t[cmdProp]
+                if (typeof value === 'function') {
+                  return (...args: any[]) => {
+                    const result = value.apply(t, args)
+                    // If result is an object with methods (command chain continues), wrap it
+                    if (result && typeof result === 'object' && typeof result.then !== 'function') {
+                      const proto = Object.getPrototypeOf(result)
+                      if (proto && proto.constructor?.name !== 'FinalCommandOutput') {
+                        return wrapCommands(result)
+                      }
+                    }
+                    // Final command reached, exit contexts
+                    exitContexts()
+                    return result
+                  }
+                }
+                // For getter properties that return objects, wrap them
+                if (value && typeof value === 'object') {
+                  return wrapCommands(value)
+                }
+                return value
+              },
+            })
+          }
+
+          return wrapCommands(pack.commands)
+        }
+
+        // For all other properties, delegate to the underlying execute chain
+        const result = (chain as any)[prop]
+
+        if (typeof result === 'function') {
+          return (...args: any[]) => {
+            const nextChain = result.apply(chain, args)
+            // If it returns an execute-like object, wrap it in a new proxy
+            if (nextChain && typeof nextChain === 'object') {
+              return createProxy(nextChain)
+            }
+            return nextChain
+          }
+        }
+
+        // For getter properties (like .if, .store, .unless), wrap the result
+        if (result && typeof result === 'object') {
+          return createProxy(result)
+        }
+
+        return result
+      },
+    }
+
+    return new Proxy({}, handler)
+  }
+
+  return createProxy(executeChain)
 }

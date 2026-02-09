@@ -6,8 +6,6 @@ import { parseNBT } from './parser'
 
 export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string
-
-  toString = this[util.inspect.custom]
 }
 
 export class NBTPrimitive extends NBTClass {

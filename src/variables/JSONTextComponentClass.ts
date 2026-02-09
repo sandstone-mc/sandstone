@@ -5,7 +5,8 @@ import * as util from 'util'
 import { formatDebugString } from '../utils'
 
 function toComponent(c: any): JSONTextComponent {
-  return c._toSelector?.() ?? c._toChatComponent?.() ?? c.toJSON?.() ?? c
+  // Prefer _toChatComponent for JSON serialization - _toSelector may return objects with circular references
+  return c._toChatComponent?.() ?? c.toJSON?.() ?? c
 }
 
 export function parseJSONText(

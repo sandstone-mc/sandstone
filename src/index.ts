@@ -106,9 +106,34 @@ type SandstoneCommands = SandstonePack['commands']
 // Exclude setblock since it needs explicit type annotation due to complex generics
 type CommandKeys = Exclude<keyof SandstoneCommands, 'setblock' | 'fill'>
 
+// Creates a proxy that handles both callable commands and object-based commands.
+// This avoids hardcoding which commands are object-based by detecting at runtime.
 const commandsProxy = new Proxy({} as Pick<SandstoneCommands, CommandKeys>, {
   get<K extends CommandKeys>(_: unknown, prop: K): SandstoneCommands[K] {
-    return ((...args: unknown[]) => (sandstonePack.commands[prop] as CallableFunction)(...args)) as SandstoneCommands[K]
+    // Create a function that delegates to the actual command when called
+    const fn = (...args: unknown[]) => {
+      const cmd = sandstonePack.commands[prop]
+      if (typeof cmd === 'function') {
+        return (cmd as CallableFunction)(...args)
+      }
+      throw new Error(`Command '${prop}' is not callable`)
+    }
+
+    // Return a proxy that intercepts both function calls and property access
+    return new Proxy(fn, {
+      get(_target: unknown, subProp: string | symbol) {
+        // Access the actual command and get the property from it
+        const cmd = sandstonePack.commands[prop]
+        return (cmd as unknown as Record<string | symbol, unknown>)[subProp]
+      },
+      apply(_target: unknown, _thisArg: unknown, args: unknown[]) {
+        const cmd = sandstonePack.commands[prop]
+        if (typeof cmd === 'function') {
+          return (cmd as CallableFunction)(...args)
+        }
+        throw new Error(`Command '${prop}' is not callable`)
+      },
+    }) as SandstoneCommands[K]
   },
 })
 
@@ -205,12 +230,37 @@ type PackNonMethodKeys =
   | 'conditions' | 'objectives' | 'anonymousScoreId' | 'anonymousDataId' | 'constants' | 'tickedLoops'
   | 'loadTags' | '__rootObjective' | 'defaultNamespace' | 'packUid'
   | 'reset' | 'appendNode' | 'initMCFunction' | 'save' | 'resourceToPath' | 'rootObjective'
-  | 'setupLantern' | 'dataPack' | 'resourcePack' | 'registerTickedCommands' | 'ItemModelDefinition'
+  | 'setupLantern' | 'dataPack' | 'resourcePack' | 'registerTickedCommands'
 type PackMethodKeys = Exclude<keyof SandstonePack, PackNonMethodKeys>
 
+// Creates a proxy that handles both callable methods and object-based properties.
+// This avoids hardcoding which properties are objects by detecting at runtime.
 const packMethodsProxy = new Proxy({} as Pick<SandstonePack, PackMethodKeys>, {
   get<K extends PackMethodKeys>(_: unknown, prop: K): SandstonePack[K] {
-    return ((...args: unknown[]) => (sandstonePack[prop] as CallableFunction)(...args)) as SandstonePack[K]
+    // Create a function that delegates to the actual method when called
+    const fn = (...args: unknown[]) => {
+      const method = sandstonePack[prop]
+      if (typeof method === 'function') {
+        return (method as CallableFunction)(...args)
+      }
+      throw new Error(`Pack method '${prop}' is not callable`)
+    }
+
+    // Return a proxy that intercepts both function calls and property access
+    return new Proxy(fn, {
+      get(_target: unknown, subProp: string | symbol) {
+        // Access the actual method/property and get the sub-property from it
+        const method = sandstonePack[prop]
+        return (method as unknown as Record<string | symbol, unknown>)[subProp]
+      },
+      apply(_target: unknown, _thisArg: unknown, args: unknown[]) {
+        const method = sandstonePack[prop]
+        if (typeof method === 'function') {
+          return (method as CallableFunction)(...args)
+        }
+        throw new Error(`Pack method '${prop}' is not callable`)
+      },
+    }) as SandstonePack[K]
   },
 })
 
@@ -248,6 +298,7 @@ export const {
   BlockState,
   Equipment,
   Font,
+  ItemModelDefinition,
   Language,
   Model,
   Particle: ParticleResource,
@@ -274,6 +325,7 @@ export const {
   DataArray,
   Selector,
   UUID,
+  ItemPredicate,
   makeCustomResource,
   sleep,
 } = packMethodsProxy

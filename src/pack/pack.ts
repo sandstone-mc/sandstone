@@ -827,10 +827,10 @@ export class SandstonePack {
   Selector<ENTITY_TYPE extends SelectorEntityType, PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES):
     SelectorClass<false, true, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
 
-  Selector<ENTITY_TYPE extends SelectorEntityType, PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES):
+  Selector<ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES):
     SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, true>
 
-  Selector<ENTITY_TYPE extends SelectorEntityType, PROPERTIES extends SelectorProperties<false, false, ENTITY_TYPE, false>>(target: '@e', selectorArguments: PROPERTIES):
+  Selector<ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends SelectorProperties<false, false, ENTITY_TYPE, false>>(target: '@e', selectorArguments: PROPERTIES):
     SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
 
   Selector<ENTITY_TYPE extends SelectorEntityType>(target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r', selectorArguments?: SelectorProperties<boolean, boolean, ENTITY_TYPE, boolean>):

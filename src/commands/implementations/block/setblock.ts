@@ -41,7 +41,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    * This is the basic form for simple block placement without NBT data.
    *
    * @param pos The coordinates where to place the block. Supports:
-   *           - Absolute: `[100, 64, 200]` - exact world coordinates
+   *           - Absolute: `abs(100, 64, 200)` - exact world coordinates
    *           - Relative: `['~5', '~1', '~-3']` - relative to command position
    *           - Local: `['^2', '^', '^-1']` - relative to facing direction
    *           - Mixed: `[100, '~5', '^2']` - combination of systems
@@ -63,10 +63,10 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * // Simple block placement
-   * setblock([0, 100, 0], 'minecraft:diamond_block')
+   * setblock(abs(0, 100, 0), 'minecraft:diamond_block')
    *
    * // Log with specific orientation using block state
-   * setblock([0, 64, 0], 'minecraft:oak_log', { axis: 'x' })
+   * setblock(abs(0, 64, 0), 'minecraft:oak_log', { axis: 'x' })
    *
    * // Powered redstone wire
    * setblock(['~', '~-1', '~'], 'minecraft:redstone_wire', { power: 15 })
@@ -120,7 +120,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * // Place chest with items
-   * setblock([0, 64, 0], 'minecraft:chest', { facing: 'north' }, {
+   * setblock(abs(0, 64, 0), 'minecraft:chest', { facing: 'north' }, {
    *   Items: [
    *     { Slot: 0, id: 'minecraft:diamond', Count: 64 },
    *     { Slot: 1, id: 'minecraft:gold_ingot', Count: 32 }
@@ -134,7 +134,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    * })
    *
    * // Place sign with rotation and text
-   * setblock([100, 65, 200], 'minecraft:oak_sign', { rotation: 8 }, {
+   * setblock(abs(100, 65, 200), 'minecraft:oak_sign', { rotation: 8 }, {
    *   front_text: { messages: ['{"text":"Welcome!","color":"gold"}'] }
    * })
    * ```

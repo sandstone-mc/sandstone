@@ -82,7 +82,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * item.modify.block([100, 70, 200], 'container.0', 'mypack:enchant_modifier')
+   * item.modify.block(abs(100, 70, 200), 'container.0', 'mypack:enchant_modifier')
    * item.modify.entity('@p', 'weapon.mainhand', 'minecraft:enchant_with_levels')
    * ```
    */
@@ -115,8 +115,8 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * item.replace.block([100, 70, 200], 'container.0').with('minecraft:diamond', 5)
-   * item.replace.entity('@p', 'weapon.mainhand').from.block([0, 70, 0], 'container.1')
+   * item.replace.block(abs(100, 70, 200), 'container.0').with('minecraft:diamond', 5)
+   * item.replace.entity('@p', 'weapon.mainhand').from.block(abs(0, 70, 0), 'container.1')
    * ```
    */
   replace = {

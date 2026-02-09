@@ -8,10 +8,27 @@
 
 import { join } from 'path'
 import { rm, mkdir, readdir, readFile, writeFile, stat } from 'fs/promises'
+import { createHasInstancePlugin } from './plugins/hasinstance-plugin'
+import { fixDuplicateExports } from './plugins/fix-exports'
+import { fixDtsImports } from './plugins/fix-dts-imports'
 
 const rootDir = join(import.meta.dir, '..')
 const srcDir = join(rootDir, 'src')
 const distDir = join(rootDir, 'dist')
+
+// Check for silent flag
+const silent = process.argv.includes('--silent') || process.argv.includes('-s')
+const log = (...args: unknown[]) => { if (!silent) console.log(...args) }
+
+/**
+ * Get external packages from package.json dependencies.
+ * These are npm dependencies that should NOT be bundled.
+ * Note: sandstone/* path aliases should be bundled, not treated as external.
+ */
+async function getExternalPackages(): Promise<string[]> {
+  const packageJson = JSON.parse(await readFile(join(rootDir, 'package.json'), 'utf8'))
+  return Object.keys(packageJson.dependencies || {})
+}
 
 // Subpath entry points (each built separately)
 const subEntries = [
@@ -26,21 +43,28 @@ const subEntries = [
 async function main() {
   const startTime = performance.now()
 
-  console.log('Building sandstone...\n')
+  log('Building sandstone...\n')
 
   // Clean dist directory
   await rm(distDir, { recursive: true, force: true })
   await mkdir(distDir, { recursive: true })
 
+  // Create the hasinstance plugin to inject Symbol.hasInstance patterns
+  log('Analyzing instanceof usage...')
+  const hasInstancePlugin = await createHasInstancePlugin(srcDir, silent)
+
+  // Get external packages from package.json
+  const externalPackages = await getExternalPackages()
+
   // Build each subpath entry point separately
   // Building separately avoids Bun crashes and ensures each bundle is self-contained
-  console.log('Building JavaScript bundles...')
+  log('Building JavaScript bundles...')
 
   for (const entry of subEntries) {
     const entryPath = join(rootDir, entry)
     const entryName = entry.replace('src/', '').replace('/index.ts', '')
 
-    console.log(`  Building ${entryName}...`)
+    log(`  Building ${entryName}...`)
 
     const result = await Bun.build({
       entrypoints: [entryPath],
@@ -48,8 +72,9 @@ async function main() {
       target: 'node',
       format: 'esm',
       splitting: false,
-      packages: 'external',
+      external: externalPackages,
       naming: 'index.js',
+      plugins: [hasInstancePlugin],
     })
 
     if (!result.success) {
@@ -62,15 +87,16 @@ async function main() {
   }
 
   // Build main index
-  console.log('  Building main index...')
+  log('  Building main index...')
   const mainResult = await Bun.build({
     entrypoints: [join(srcDir, 'index.ts')],
     outdir: distDir,
     target: 'node',
     format: 'esm',
     splitting: false,
-    packages: 'external',
+    external: externalPackages,
     naming: 'index.js',
+    plugins: [hasInstancePlugin],
   })
 
   if (!mainResult.success) {
@@ -81,14 +107,14 @@ async function main() {
     process.exit(1)
   }
 
-  console.log('  Done building JS bundles')
+  log('  Done building JS bundles')
 
   // Fix duplicate exports bug in bun's output
-  console.log('Fixing duplicate exports...')
-  await fixDuplicateExports(distDir)
+  log('Fixing duplicate exports...')
+  await fixDuplicateExportsInDir(distDir)
 
   // Generate declarations with tsc
-  console.log('Generating type declarations...')
+  log('Generating type declarations...')
   const tsc = Bun.spawn(['bun', 'tsc', '-p', 'tsconfig.build.json'], {
     cwd: rootDir,
     stdout: 'inherit',
@@ -97,65 +123,30 @@ async function main() {
   await tsc.exited
 
   // Fix .d.ts imports (convert path aliases and add .js extensions)
-  console.log('Fixing declaration imports...')
-  await fixDtsImports(distDir)
+  log('Fixing declaration imports...')
+  await fixDtsImportsInDir(distDir)
 
   const elapsed = ((performance.now() - startTime) / 1000).toFixed(2)
-  console.log(`\nBuild completed in ${elapsed}s`)
+  log(`\nBuild completed in ${elapsed}s`)
 }
 
 /**
- * Fix duplicate exports bug in bun's output
+ * Fix duplicate exports in all .js files in the dist directory.
  */
-async function fixDuplicateExports(distDir: string): Promise<void> {
+async function fixDuplicateExportsInDir(distDir: string): Promise<void> {
   let fixedCount = 0
 
   for await (const filePath of walkDir(distDir, '.js')) {
-    let content = await readFile(filePath, 'utf8')
+    const content = await readFile(filePath, 'utf8')
+    const result = fixDuplicateExports(content)
 
-    // Find all export statements and track exported names
-    const exportedNames = new Set<string>()
-    const lines = content.split('\n')
-    const newLines: string[] = []
-    let modified = false
-
-    for (const line of lines) {
-      // Match export { Name1, Name2, ... };
-      const exportMatch = line.match(/^export\s*\{([^}]+)\}\s*;?\s*$/)
-      if (exportMatch) {
-        const names = exportMatch[1].split(',').map(n => n.trim()).filter(Boolean)
-        const newNames = names.filter(name => {
-          // Handle "Name as Alias" syntax
-          const actualName = name.includes(' as ') ? name.split(' as ')[1].trim() : name
-          if (exportedNames.has(actualName)) {
-            modified = true
-            return false // Skip duplicate
-          }
-          exportedNames.add(actualName)
-          return true
-        })
-
-        if (newNames.length === 0) {
-          modified = true
-          continue // Skip entire empty export statement
-        }
-
-        if (newNames.length !== names.length) {
-          newLines.push(`export { ${newNames.join(', ')} };`)
-          continue
-        }
-      }
-
-      newLines.push(line)
-    }
-
-    if (modified) {
-      await writeFile(filePath, newLines.join('\n'))
+    if (result.modified) {
+      await writeFile(filePath, result.content)
       fixedCount++
     }
   }
 
-  console.log(`  Fixed duplicates in ${fixedCount} files`)
+  log(`  Fixed duplicates in ${fixedCount} files`)
 }
 
 async function* walkDir(dir: string, ext: string = '.d.ts'): AsyncGenerator<string> {
@@ -214,119 +205,22 @@ async function getIndexDirs(): Promise<Set<string>> {
   return indexDirsCache
 }
 
-async function fixDtsImports(distDir: string): Promise<void> {
+async function fixDtsImportsInDir(distDir: string): Promise<void> {
   let fixedCount = 0
   const indexDirs = await getIndexDirs()
 
-  /**
-   * Resolve a relative import path to its absolute path from distDir,
-   * then check if it's a directory with an index file
-   */
-  function isIndexDir(importPath: string, fromFileDir: string): boolean {
-    // Resolve the full path relative to the current file
-    const fromRelative = fromFileDir.replace(distDir, '').replace(/\\/g, '/').replace(/^\//, '')
-    const fromParts = fromRelative.split('/').filter(Boolean)
-
-    // Handle ./ and ../ in import path
-    const importParts = importPath.split('/')
-    const currentParts = [...fromParts]
-
-    for (const part of importParts) {
-      if (part === '..') {
-        currentParts.pop()
-      } else if (part !== '.') {
-        currentParts.push(part)
-      }
-    }
-
-    const resolvedPath = currentParts.join('/')
-    return indexDirs.has(resolvedPath)
-  }
-
   for await (const filePath of walkDir(distDir, '.d.ts')) {
-    let content = await readFile(filePath, 'utf8')
-    let changed = false
-
-    // Convert sandstone/* path aliases to relative paths
+    const content = await readFile(filePath, 'utf8')
     const fileDir = join(filePath, '..')
-    const relativeToSrc = join(fileDir).replace(distDir, '').replace(/\\/g, '/')
+    const result = fixDtsImports(content, fileDir, distDir, indexDirs)
 
-    // Calculate relative path prefix based on file depth
-    const depth = relativeToSrc.split('/').filter(Boolean).length
-    const relPrefix = depth > 0 ? '../'.repeat(depth) : './'
-
-    // Replace sandstone/* imports with relative paths
-    content = content.replace(
-      /(from\s+['"])sandstone\/([^'"]+)(\.ts)?(['"])/g,
-      (_, prefix, path, _ext, suffix) => {
-        changed = true
-        const cleanPath = path.replace(/\.ts$/, '')
-        // Check if this is a directory import (e.g., sandstone/variables -> ./variables/index.js)
-        if (indexDirs.has(cleanPath)) {
-          return `${prefix}${relPrefix}${cleanPath}/index.js${suffix}`
-        }
-        return `${prefix}${relPrefix}${cleanPath}.js${suffix}`
-      }
-    )
-
-    // Replace sandstone (root) imports
-    content = content.replace(
-      /(from\s+['"])sandstone(['"])/g,
-      (_, prefix, suffix) => {
-        changed = true
-        return `${prefix}${relPrefix}index.js${suffix}`
-      }
-    )
-
-    // Convert .ts extensions to .js in relative imports
-    content = content.replace(
-      /(from\s+['"])(\.\.?\/[^'"]+)(\.ts)(['"])/g,
-      (_, prefix, path, _ext, suffix) => {
-        changed = true
-        return `${prefix}${path}.js${suffix}`
-      }
-    )
-
-    // Add .js extension to relative imports that don't have one
-    // Also fix directory imports that need /index.js
-    content = content.replace(
-      /(from\s+['"])(\.\.?\/[^'"]+)(['"])/g,
-      (match, prefix, importPath, suffix) => {
-        if (importPath.endsWith('.js') || importPath.endsWith('.json')) {
-          return match
-        }
-        changed = true
-        // Check if this resolves to a directory with an index file
-        if (isIndexDir(importPath, fileDir)) {
-          return `${prefix}${importPath}/index.js${suffix}`
-        }
-        return `${prefix}${importPath}.js${suffix}`
-      }
-    )
-
-    // Fix import("...") type import syntax (e.g., import("./commands").DataCommand)
-    // These need .js extension and /index.js for directories
-    content = content.replace(
-      /import\((['"])(\.\.?\/[^'"]+)(['"])\)/g,
-      (match, q1, importPath, q2) => {
-        if (importPath.endsWith('.js') || importPath.endsWith('.json')) {
-          return match
-        }
-        changed = true
-        if (isIndexDir(importPath, fileDir)) {
-          return `import(${q1}${importPath}/index.js${q2})`
-        }
-        return `import(${q1}${importPath}.js${q2})`
-      }
-    )
-
-    if (changed) {
-      await writeFile(filePath, content)
+    if (result.modified) {
+      await writeFile(filePath, result.content)
       fixedCount++
     }
   }
 
-  console.log(`  Fixed imports in ${fixedCount} declaration files`)
+  log(`  Fixed imports in ${fixedCount} declaration files`)
 }
 
 main().catch((err) => {

@@ -1,6 +1,6 @@
 import type { HumanoidArm, PlayerModelPart, Profile } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
+import type { EntityEquipment, LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
 
 export type Mannequin = (LivingEntity & {
   profile?: Profile,
@@ -40,6 +40,10 @@ export type Mannequin = (LivingEntity & {
    * Defaults to `false`.
    */
   hide_description?: boolean,
+  /**
+   * The equipment items of the mannequin.
+   */
+  equipment?: EntityEquipment,
 })
 
 export type MannequinPose = ('standing' | 'crouching' | 'swimming' | 'fall_flying' | 'sleeping')

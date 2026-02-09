@@ -16,7 +16,7 @@ export class SetWorldSpawnCommand<MACRO extends boolean> extends CommandArgument
    *
    * @param pos Optional coordinates for world spawn.
    *           Defaults to current command execution position.
-   *           Examples: [0, 70, 0], abs(100, 64, 200), rel(0, 5, 0)
+   *           Examples: abs(0, 70, 0), abs(100, 64, 200), rel(0, 5, 0)
    *
    * @param angle Optional yaw angle for spawn direction.
    *             Defaults to current executor facing direction.
@@ -25,7 +25,7 @@ export class SetWorldSpawnCommand<MACRO extends boolean> extends CommandArgument
    * @example
    * ```ts
    * setworldspawn()                      // Set spawn at current location
-   * setworldspawn([0, 70, 0])           // Set spawn at coordinates
+   * setworldspawn(abs(0, 70, 0))           // Set spawn at coordinates
    * setworldspawn(abs(100, 64, 200), [90, 0])  // With specific direction
    * ```
    */

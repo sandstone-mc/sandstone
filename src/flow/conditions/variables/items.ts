@@ -13,7 +13,7 @@ export type ItemPredicate = Registry['minecraft:item'] | ItemPredicateClass
  * @example
  * ```ts
  * // Check if chest has any diamonds
- * _.if(_.items.block([0, 64, 0], 'container.*', 'minecraft:diamond'), () => { ... })
+ * _.if(_.items.block(abs(0, 64, 0), 'container.*', 'minecraft:diamond'), () => { ... })
  * ```
  */
 export class ItemsBlockConditionNode extends SingleConditionNode {

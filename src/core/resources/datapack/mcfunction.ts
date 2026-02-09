@@ -222,8 +222,6 @@ export type MCFunctionClassArguments = {
 
   /**
    * Optional. Whether to retain the execution context through async calls. Defaults to false.
-   *
-   * @warn **Waiting on Smithed Dimensions for root chunk to be functional.**
    */
   asyncContext?: boolean
 } & ResourceClassArguments<'function'>

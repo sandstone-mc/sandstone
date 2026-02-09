@@ -47,7 +47,7 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
     _: 'with',
     type: DATA_TYPES,
     target: string,
-    path: string,
+    path?: string,
   ): FinalCommandOutput
 
   function(
@@ -69,7 +69,7 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
       if (params === 'with' && pointOrType) {
         args.push('with')
         if (typeof pointOrType === 'string') {
-          args.push(pointOrType, target, path)
+          args.push(pointOrType, target, path ?? '{}')
         } else {
           const point = (
             Object.hasOwn(pointOrType, '_toDataPoint') ? (pointOrType as DataPointPickClass)._toDataPoint : pointOrType

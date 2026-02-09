@@ -82,7 +82,7 @@ export class SmithedDependencyCache {
     }
   }
 
-  async get(dependency: string, version: string) {
+  async get(dependency: string, version: string): Promise<Dependency | undefined> {
     if (!this.loaded) {
       await this.load()
     }
@@ -95,7 +95,7 @@ export class SmithedDependencyCache {
       return existing
     }
 
-    let result: Dependency
+    let result: Dependency | undefined
 
     const lockFile = await (async () => {
       try {
@@ -136,7 +136,23 @@ export class SmithedDependencyCache {
 
       let hasResourcePack = false
 
-      const pack = JSON.parse(await (await fetch(`${this.baseURL}packs/${dependency}`)).text()) as PackData
+      let pack: PackData | null = null
+      try {
+        const response = await fetch(`${this.baseURL}packs/${dependency}`)
+        if (!response.ok) {
+          console.warn(`[Sandstone] Smithed dependency "${dependency}" not found (HTTP ${response.status}). The pack may not be published yet.`)
+          return undefined
+        }
+        pack = JSON.parse(await response.text()) as PackData
+      } catch (error) {
+        console.warn(`[Sandstone] Failed to fetch Smithed dependency "${dependency}": ${error instanceof Error ? error.message : error}`)
+        return undefined
+      }
+
+      if (!pack || !pack.versions || pack.versions.length === 0) {
+        console.warn(`[Sandstone] Smithed dependency "${dependency}" has no versions available.`)
+        return undefined
+      }
 
       if (version === 'latest') {
         const { versions } = pack
@@ -147,7 +163,12 @@ export class SmithedDependencyCache {
           hasResourcePack = true
         }
       } else {
-        const ver = pack.versions.find((_ver) => _ver.name === version) as PackData['versions'][0]
+        const ver = pack.versions.find((_ver) => _ver.name === version)
+
+        if (!ver) {
+          console.warn(`[Sandstone] Smithed dependency "${dependency}" version "${version}" not found.`)
+          return undefined
+        }
 
         if (ver.downloads.resourcepack) {
           hasResourcePack = true
@@ -187,7 +208,7 @@ export class SmithedDependencyCache {
       await this.save()
     }
 
-    return result!
+    return result
   }
 
   has(dependency: string) {

@@ -24,7 +24,7 @@ export class CloneCommand<MACRO extends boolean> extends CommandArguments {
    *   (minimum X, Y, Z values) of the source region
    * 
    * **Coordinate Systems:**
-   * - Absolute: `[100, 64, 200]` - exact world coordinates
+   * - Absolute: `abs(100, 64, 200)` - exact world coordinates
    * - Relative: `['~5', '~1', '~-3']` - relative to command execution point
    * - Local: `['^2', '^', '^-1']` - relative to facing direction
    *
@@ -43,7 +43,7 @@ export class CloneCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * // Copy a house from one location to another
-   * clone([100, 64, 100], [120, 80, 120], [200, 64, 200])
+   * clone(abs(100, 64, 100), abs(120, 80, 120), abs(200, 64, 200))
    * 
    * // Copy relative to current position
    * clone(['~-10', '~', '~-10'], ['~10', '~20', '~10'], ['~50', '~', '~'])
@@ -90,7 +90,7 @@ export class CloneFromDimensionCommand<MACRO extends boolean> extends CommandArg
    *   (minimum X, Y, Z values) of the source region
    * 
    * **Coordinate Systems:**
-   * - Absolute: `[100, 64, 200]` - exact world coordinates
+   * - Absolute: `abs(100, 64, 200)` - exact world coordinates
    * - Relative: `['~5', '~1', '~-3']` - relative to command execution point
    * - Local: `['^2', '^', '^-1']` - relative to facing direction
    * 
@@ -111,7 +111,7 @@ export class CloneFromDimensionCommand<MACRO extends boolean> extends CommandArg
    * @example
    * ```ts
    * // Copy a house from one location to another
-   * clone().from('overworld', [100, 64, 100], [120, 80, 120], [200, 64, 200])
+   * clone().from('overworld', abs(100, 64, 100), abs(120, 80, 120), abs(200, 64, 200))
    * 
    * // Copy relative to current position
    * clone().from('the_nether', ['~-10', '~', '~-10'], ['~10', '~20', '~10'], ['~50', '~', '~'])
@@ -141,7 +141,7 @@ export class CloneFromDimensionCommand<MACRO extends boolean> extends CommandArg
    *   (minimum X, Y, Z values) of the source region
    * 
    * **Coordinate Systems:**
-   * - Absolute: `[100, 64, 200]` - exact world coordinates
+   * - Absolute: `abs(100, 64, 200)` - exact world coordinates
    * - Relative: `['~5', '~1', '~-3']` - relative to command execution point
    * - Local: `['^2', '^', '^-1']` - relative to facing direction
    * 
@@ -197,7 +197,7 @@ export class CloneToDimensionCommand<MACRO extends boolean> extends CommandArgum
    * @example
    * ```ts
    * // Copy a house from one location to another
-   * clone().from('overworld', [100, 64, 100], [120, 80, 120]).to('the_nether', [200, 64, 200])
+   * clone().from('overworld', abs(100, 64, 100), abs(120, 80, 120)).to('the_nether', abs(200, 64, 200))
    * 
    * // Copy relative to current position
    * clone().from('the_nether', ['~-10', '~', '~-10'], ['~10', '~20', '~10']).to('overworld', ['~50', '~', '~'])
@@ -230,7 +230,7 @@ export class CloneOptionsCommand<MACRO extends boolean> extends CommandArguments
    * clone(source, source_end, dest).replace()
    *
    * // Move a structure to new location
-   * clone([100, 64, 100], [110, 74, 110], [200, 64, 200]).replace().move()
+   * clone(abs(100, 64, 100), abs(110, 74, 110), abs(200, 64, 200)).replace().move()
    *
    * // Force copy overlapping regions
    * clone(['~-5', '~', '~-5'], ['~5', '~10', '~5'], ['~3', '~', '~3']).replace().force()
@@ -378,7 +378,7 @@ export class CloneModeCommand extends CommandArguments {
    *
    * @example
    * ```ts
-   * clone([100, 64, 100], [110, 74, 110], [200, 64, 200]).replace().move()
+   * clone(abs(100, 64, 100), abs(110, 74, 110), abs(200, 64, 200)).replace().move()
    * ```
    */
   move = () => this.finalCommand(['move'])

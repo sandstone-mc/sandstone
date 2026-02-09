@@ -70,11 +70,11 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    * Drop loot items in the world.
    *
    * @param targetPos Coordinates where items will be dropped.
-   *                 Examples: [100, 70, 200], abs(0, 64, 0), rel(0, 1, 0)
+   *                 Examples: abs(100, 70, 200), abs(0, 64, 0), rel(0, 1, 0)
    *
    * @example
    * ```ts
-   * loot.spawn([100, 70, 200]).loot('minecraft:chests/simple_dungeon')
+   * loot.spawn(abs(100, 70, 200)).loot('minecraft:chests/simple_dungeon')
    * loot.spawn(rel(0, 1, 0)).kill('@e[type=zombie,limit=1]')
    * loot.spawn(abs(0, 64, 0)).mine(rel(0, -1, 0), 'minecraft:diamond_pickaxe')
    * ```
@@ -96,8 +96,6 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
      * - `container.<slot_number>`: for players, item frames (slot 0), and minecarts only.
      *
      * - `enderchest.slot_number`, `hotbar.slot_number`, `inventory.slot_number`: for players only.
-     *
-     * - `horse.saddle`: horses, donkeys, and mules only; *item* must be a saddle.
      *
      * - `horse.chest`: donkeys, and mules only; *item* must be a chest.
      *
@@ -166,11 +164,11 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    * Insert loot items into container block.
    *
    * @param targetPos Container block coordinates.
-   *                 Examples: [100, 70, 200], abs(0, 64, 0)
+   *                 Examples: abs(100, 70, 200), abs(0, 64, 0)
    *
    * @example
    * ```ts
-   * loot.insert([100, 70, 200]).loot('minecraft:chests/village_blacksmith')
+   * loot.insert(abs(100, 70, 200)).loot('minecraft:chests/village_blacksmith')
    * loot.insert(abs(0, 64, 0)).mine(rel(0, -1, 0))
    * ```
    */
