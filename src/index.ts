@@ -305,7 +305,7 @@ export const {
   PostEffect,
   Shader,
   SoundEvent,
-  PlainText, // TODO: text type is any when in a workspace, w h y
+  PlainText,
   Texture,
   WaypointStyle,
 
@@ -376,12 +376,16 @@ export type DatapackConfig = {
    *
    * @see [https://minecraft.wiki/w/Data_Pack#pack.mcmeta](https://minecraft.wiki/w/Data_Pack#pack.mcmeta)
    */
-  packFormat: number
+  packFormat?: number
+
+  minVersion?: number | [number] | [number, number]
+
+  maxVersion?: number | [number] | [number, number]
 
   /** List of experimental game features to enable. */
   features?: string[]
 
-  supported_formats:
+  supported_formats?:
     | number
     | number[]
     | {
@@ -419,7 +423,7 @@ export type ResourcePackConfig = {
    */
   packFormat: number
 
-  supported_formats:
+  supported_formats?:
     | number
     | number[]
     | {

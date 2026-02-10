@@ -417,6 +417,7 @@ export class SelectorClass<
    */
   _toChatComponent(): JSONTextComponent {
     return {
+      type: 'selector',
       selector: this.toString(),
     }
   }

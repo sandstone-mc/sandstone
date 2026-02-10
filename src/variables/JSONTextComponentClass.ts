@@ -33,7 +33,8 @@ export class JSONTextComponentClass {
     // We want a compact output
     return JSON.stringify(
       toComponent(this.jsonTextComponent),
-      (key: string, value: any) => {
+      // Must be a regular function (not arrow) so `this` refers to the container being serialized
+      function (key: string, value: any) {
         /*
          * If we are in an array, our component could be a custom object (like a Selector) that is directly used as a chat component.
          * Therefore, we must try to transform it into a chat component, or a json object.

@@ -193,8 +193,10 @@ export class DataPack extends PackType {
   constructor(
     archiveOutput: boolean,
     options: {
-      packFormat: number
       description: JSONTextComponent
+      packFormat?: number
+      minVersion?: number | [number] | [number, number]
+      maxVersion?: number | [number] | [number, number]
       features?: string[]
       filter?: { namespace?: string; path?: string }[]
     },
@@ -212,7 +214,8 @@ export class DataPack extends PackType {
 
     this.packMcmeta = {
       pack: {
-        pack_format: options.packFormat,
+        min_version: options.minVersion ?? options.packFormat,
+        max_version: options.maxVersion ?? options.packFormat,
         description: options.description,
       },
     }
@@ -241,8 +244,10 @@ export class ResourcePack extends PackType {
   readonly packMcmeta: any
 
   constructor(options: {
-    packFormat: number
     description: JSONTextComponent
+    packFormat?: number
+    minVersion?: number | [number] | [number, number]
+    maxVersion?: number | [number] | [number, number]
     features?: string[]
     filter?: { namespace?: string; path?: string }[]
   }) {
@@ -259,7 +264,8 @@ export class ResourcePack extends PackType {
 
     this.packMcmeta = {
       pack: {
-        pack_format: options.packFormat,
+        min_version: options.minVersion ?? options.packFormat,
+        max_version: options.maxVersion ?? options.packFormat,
         description: options.description,
       },
     }

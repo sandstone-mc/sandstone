@@ -37,7 +37,7 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
     return value.toJSON()
   }
   if (isResource(value)) {
-    return toMinecraftResourceName(value.path) // TODO
+    return toMinecraftResourceName(value.path) // TODO !
   }
   if (typeof value === 'object') {
     if (isMCFunctionClass(value.id)) {
@@ -63,7 +63,7 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
       }
     }
     if (isResource(value.id)) {
-      return toMinecraftResourceName(value.id.path) // TODO
+      return toMinecraftResourceName(value.id.path) // TODO !
     }
   }
   return value as string | TagSingleValue<string>

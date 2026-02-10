@@ -17,7 +17,7 @@ export class UUIDConditionNode extends SingleConditionNode {
         execute.as(this.UUID).if.entity('@s'),
       ).getCondition()
     }
-    // TODO: Implement stack indexing when we get there
+    // TODO: Implement data & scores
     return ['entity', `${this.UUID._toSelector()}`]
   }
 }

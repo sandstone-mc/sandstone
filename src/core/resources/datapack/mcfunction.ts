@@ -164,7 +164,7 @@ export type MCFunctionClassArguments = {
   callback?: (...params: [loop: MCFunctionClass<any, any>, ...params: MacroArgument[]]) => void
 
   /**
-   * If true, then the function will only be created if it is called from another function. TODO: implement this
+   * If true, then the function will only be created if it is called from another function.
    */
   lazy?: boolean
 
@@ -324,7 +324,7 @@ export class _RawMCFunctionClass<
        * Else, this might generate the nodes twice with fast refresh
        */
       // return
-      // TODO: Fix above
+      // TODO: Look into doing more optimized HMR with the new watcher eventually, for now this doesn't matter anymore
     }
 
     this.push(this.callback.bind(undefined, makeCallable(this, this.__call__)))
