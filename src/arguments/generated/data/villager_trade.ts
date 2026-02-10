@@ -3,7 +3,7 @@ import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemStack, TradeCost } from 'sandstone/arguments/generated/world/item.ts'
-import type { TagClass } from 'sandstone'
+import type { EnchantmentClass, TagClass } from 'sandstone'
 
 export type VillagerTrade = {
   /**
@@ -51,6 +51,9 @@ export type VillagerTrade = {
    * If the offered enchanted book has the specified enchantments, the price will be affected by doubling the `additional_trade_cost` transient component.
    */
   double_trade_price_enchantments?: ((
-      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-      | Array<Registry['minecraft:enchantment']>),
+        | Registry['minecraft:enchantment']
+        | `#${Registry['minecraft:tag/enchantment']}`
+        | TagClass<'enchantment'>
+        | EnchantmentClass)
+      | Array<(Registry['minecraft:enchantment'] | EnchantmentClass)>),
 }

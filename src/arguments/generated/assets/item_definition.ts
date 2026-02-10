@@ -10,7 +10,7 @@ import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { Keybind } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList, TrimMaterialClass } from 'sandstone'
 
 export type Banner = {
   /**
@@ -826,7 +826,7 @@ export type TintSourceType = (
   | 'potion'
   | 'team')
 
-export type TrimMaterial = SelectCases<Registry['minecraft:trim_material']>
+export type TrimMaterial = SelectCases<(Registry['minecraft:trim_material'] | TrimMaterialClass)>
 
 export type UseCycle = {
   /**

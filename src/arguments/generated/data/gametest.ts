@@ -1,7 +1,7 @@
 import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTInt } from 'sandstone'
+import type { NBTInt, StructureClass, TestEnvironmentClass } from 'sandstone'
 
 export type BlockBasedTestInstance = TestData
 
@@ -18,11 +18,11 @@ export type TestData = {
   /**
    * The test environment to run this test as part of.
    */
-  environment: (Registry['minecraft:test_environment'] | TestEnvironment),
+  environment: ((Registry['minecraft:test_environment'] | TestEnvironmentClass) | TestEnvironment),
   /**
    * Structure NBT file to use for the test.
    */
-  structure: Registry['minecraft:structure'],
+  structure: (Registry['minecraft:structure'] | StructureClass),
   /**
    * Maximum number of ticks allowed to pass before the test is considered timed out.
    *

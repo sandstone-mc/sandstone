@@ -3,10 +3,10 @@ import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { LootTableClass, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type AppendLoot = {
-  loot_table: Registry['minecraft:loot_table'],
+  loot_table: (Registry['minecraft:loot_table'] | LootTableClass),
 }
 
 export type AppendStatic<S = undefined> = {

@@ -6,6 +6,7 @@ import type { Node, SandstoneCore } from 'sandstone/core'
 import type { ResourcePath, SandstonePack } from 'sandstone/pack'
 import type { PackType } from 'sandstone/pack/packType'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
+import type { NBTSerializable } from 'sandstone/arguments/nbt'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
 import { NBTPrimitive, NBTTypedArray } from 'sandstone/variables/nbt/NBTs'
 
@@ -47,7 +48,7 @@ export type ResourceNode<T = ResourceClass<any>> = Node & {
 
 export type ResourceNodeConstructor<N extends Node> = new (sandstoneCore: SandstoneCore, resource: any) => N
 
-export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> {
+export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> implements NBTSerializable {
   node: N
 
   packType
@@ -184,6 +185,10 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
   generate = () => {}
 
   toString(): string {
+    return this.name
+  }
+
+  toNBT(): string {
     return this.name
   }
 }

@@ -1,6 +1,6 @@
 import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { TagClass } from 'sandstone'
+import type { TagClass, VillagerTradeClass } from 'sandstone'
 
 export type TradeSet = {
   /**
@@ -9,8 +9,9 @@ export type TradeSet = {
   trades: ((
         | Registry['minecraft:villager_trade']
         | `#${Registry['minecraft:tag/villager_trade']}`
-        | TagClass<'villager_trade'>)
-      | Array<Registry['minecraft:villager_trade']>),
+        | TagClass<'villager_trade'>
+        | VillagerTradeClass)
+      | Array<(Registry['minecraft:villager_trade'] | VillagerTradeClass)>),
   /**
    * Amount of trades to be generated. \
    * Clamps to an integer of at least `1`.

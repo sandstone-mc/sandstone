@@ -3,7 +3,7 @@ import type { SymbolLootCondition, SymbolLootFunction } from 'sandstone/argument
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { SlotSource } from 'sandstone/arguments/generated/util/slot.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTInt } from 'sandstone'
+import type { LootTableClass, NBTInt } from 'sandstone'
 
 export type BlockEntityTarget = 'block_entity'
 
@@ -190,7 +190,7 @@ export type LootTable = {
 }
 
 export type LootTablePoolEntry = ({
-  value: (Registry['minecraft:loot_table'] | LootTable),
+  value: ((Registry['minecraft:loot_table'] | LootTableClass) | LootTable),
 } & SingletonPoolEntry)
 
 export type SingletonPoolEntry = ({

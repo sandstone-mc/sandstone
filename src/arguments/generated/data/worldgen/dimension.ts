@@ -2,7 +2,7 @@ import type { GlobalEnvironmentAttributeMap } from 'sandstone/arguments/generate
 import type { ChunkGenerator } from 'sandstone/arguments/generated/data/worldgen/dimension/chunk_generator.ts'
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { NBTDouble, NBTFloat, NBTInt, TagClass, TimelineClass } from 'sandstone'
 
 export type CardinalLightType = ('default' | 'nether')
 
@@ -15,8 +15,11 @@ export type DimensionType = {
   attributes?: GlobalEnvironmentAttributeMap,
   default_clock?: `${string}:${string}`,
   timelines?: ((
-      | Registry['minecraft:timeline'] | `#${Registry['minecraft:tag/timeline']}` | TagClass<'timeline'>)
-      | Array<Registry['minecraft:timeline']>),
+        | Registry['minecraft:timeline']
+        | `#${Registry['minecraft:tag/timeline']}`
+        | TagClass<'timeline'>
+        | TimelineClass)
+      | Array<(Registry['minecraft:timeline'] | TimelineClass)>),
   /**
    * Affects the weather, lighting engine and respawning rules.
    */

@@ -1,7 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { WeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { SpawnPotential } from 'sandstone/arguments/generated/world/block/spawner.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { LootTableClass, NBTFloat, NBTInt } from 'sandstone'
 
 export type TrialSpawnerConfig = {
   /**
@@ -40,9 +40,9 @@ export type TrialSpawnerConfig = {
   /**
    * Loot tables to use when ejecting loot. Chooses one loot table based on weight and then uses it as often as there are players nearby.
    */
-  loot_tables_to_eject?: WeightedList<Registry['minecraft:loot_table']>,
+  loot_tables_to_eject?: WeightedList<(Registry['minecraft:loot_table'] | LootTableClass)>,
   /**
    * Loot table to use when summoning ominous item spawners. One roll seeded based on rough location to determine all items used during the battle.
    */
-  items_to_drop_when_ominous?: Registry['minecraft:loot_table'],
+  items_to_drop_when_ominous?: (Registry['minecraft:loot_table'] | LootTableClass),
 }

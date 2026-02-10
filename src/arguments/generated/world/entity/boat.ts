@@ -103,7 +103,7 @@ import type { LlamaSpit } from 'sandstone/arguments/generated/world/entity/proje
 import type { ShulkerBullet } from 'sandstone/arguments/generated/world/entity/projectile/shulker_bullet.ts'
 import type { Potion, ThrowableItem } from 'sandstone/arguments/generated/world/entity/projectile/throwable.ts'
 import type { Tnt } from 'sandstone/arguments/generated/world/entity/tnt.ts'
-import type { NBTByte, NBTList, NBTLong } from 'sandstone'
+import type { LootTableClass, NBTByte, NBTList, NBTLong } from 'sandstone'
 
 export type Boat = EntityBase
 
@@ -122,7 +122,7 @@ export type ChestBoat = (Boat & {
   /**
    * Loot table that will populate this chest boat.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | ''),
+  LootTable?: (Registry['minecraft:loot_table'] | '' | LootTableClass),
   /**
    * Seed of the loot table.
    */

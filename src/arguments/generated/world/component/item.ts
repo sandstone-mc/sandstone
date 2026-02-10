@@ -34,7 +34,26 @@ import type {
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTByte, NBTClass, NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
+import type {
+  DamageTypeClass,
+  EquipmentClass,
+  InstrumentClass,
+  ItemModelDefinitionClass,
+  JukeboxSongClass,
+  NBTByte,
+  NBTClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTList,
+  NBTLong,
+  RecipeClass,
+  TagClass,
+  TextureClass,
+  TrimMaterialClass,
+  TrimPatternClass,
+  VariantClass,
+} from 'sandstone'
 
 export type AdventureModePredicate = (Array<BlockPredicate> | BlockPredicate)
 
@@ -331,8 +350,11 @@ export type DamageReduction = {
    * If not specified, any damage type is accepted for this reduction.
    */
   type?: ((
-      | Registry['minecraft:damage_type'] | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>)
-      | Array<Registry['minecraft:damage_type']>),
+        | Registry['minecraft:damage_type']
+        | `#${Registry['minecraft:tag/damage_type']}`
+        | TagClass<'damage_type'>
+        | DamageTypeClass)
+      | Array<(Registry['minecraft:damage_type'] | DamageTypeClass)>),
   /**
    * Constant amount of damage to be blocked.
    */
@@ -424,11 +446,11 @@ export type Equippable = {
    * If not specified, the default armor equip sound will be played.
    */
   equip_sound?: SoundEventRef,
-  asset_id?: Registry['minecraft:equipment'],
+  asset_id?: (Registry['minecraft:equipment'] | EquipmentClass),
   /**
    * The overlay texture that should render in first person when equipped.
    */
-  camera_overlay?: Registry['minecraft:texture'],
+  camera_overlay?: (Registry['minecraft:texture'] | TextureClass),
   /**
    * Limits which entities can equip this item.
    */
@@ -584,7 +606,7 @@ export type ItemUseAnimation = (
   | 'bundle')
 
 export type JukeboxPlayable = {
-  song: Registry['minecraft:jukebox_song'],
+  song: (Registry['minecraft:jukebox_song'] | JukeboxSongClass),
   show_in_tooltip?: boolean,
 }
 
@@ -836,11 +858,11 @@ export type Trim = {
   /**
    * The trim material of this item..
    */
-  material: (Registry['minecraft:trim_material'] | TrimMaterial),
+  material: ((Registry['minecraft:trim_material'] | TrimMaterialClass) | TrimMaterial),
   /**
    * The trim pattern of this item.
    */
-  pattern: (Registry['minecraft:trim_pattern'] | TrimPattern),
+  pattern: ((Registry['minecraft:trim_pattern'] | TrimPatternClass) | TrimPattern),
 }
 
 export type Unbreakable = Record<string, never>
@@ -1331,15 +1353,15 @@ type DataComponentBundleContents = Array<ItemStack>
 type DataComponentCanBreak = AdventureModePredicate
 type DataComponentCanPlaceOn = AdventureModePredicate
 type DataComponentCatCollar = DyeColor
-type DataComponentCatVariant = Registry['minecraft:cat_variant']
+type DataComponentCatVariant = (Registry['minecraft:cat_variant'] | VariantClass<'cat'>)
 type DataComponentChargedProjectiles = Array<ItemStack>
-type DataComponentChickenVariant = Registry['minecraft:chicken_variant']
+type DataComponentChickenVariant = (Registry['minecraft:chicken_variant'] | VariantClass<'chicken'>)
 type DataComponentConsumable = Consumable
 type DataComponentContainer = NBTList<ContainerSlot, {
   rightExclusive: false,
 }>
 type DataComponentContainerLoot = ContainerLoot
-type DataComponentCowVariant = Registry['minecraft:cow_variant']
+type DataComponentCowVariant = (Registry['minecraft:cow_variant'] | VariantClass<'cow'>)
 type DataComponentCustomData = CustomData
 type DataComponentCustomModelData = CustomModelData
 type DataComponentCustomName = Text
@@ -1347,7 +1369,7 @@ type DataComponentDamage = NBTInt<{
   min: 0,
 }>
 type DataComponentDamageResistant = DamageResistant
-type DataComponentDamageType = (Registry['minecraft:damage_type'] | DamageType)
+type DataComponentDamageType = ((Registry['minecraft:damage_type'] | DamageTypeClass) | DamageType)
 type DataComponentDeathProtection = DeathProtection
 type DataComponentDebugStickState = DebugStickState
 type DataComponentDye = DyeColor
@@ -1362,16 +1384,16 @@ type DataComponentFireworkExplosion = Explosion
 type DataComponentFireworks = Fireworks
 type DataComponentFood = Food
 type DataComponentFoxVariant = FoxType
-type DataComponentFrogVariant = Registry['minecraft:frog_variant']
+type DataComponentFrogVariant = (Registry['minecraft:frog_variant'] | VariantClass<'frog'>)
 type DataComponentGlider = Record<string, never>
 type DataComponentHideAdditionalTooltip = Record<string, never>
 type DataComponentHideTooltip = Record<string, never>
 type DataComponentHorseVariant = HorseVariant
-type DataComponentInstrument = (Registry['minecraft:instrument'] | Instrument)
+type DataComponentInstrument = ((Registry['minecraft:instrument'] | InstrumentClass) | Instrument)
 type DataComponentIntangibleProjectile = Record<string, never>
-type DataComponentItemModel = Registry['minecraft:item_definition']
+type DataComponentItemModel = (Registry['minecraft:item_definition'] | ItemModelDefinitionClass)
 type DataComponentItemName = Text
-type DataComponentJukeboxPlayable = Registry['minecraft:jukebox_song']
+type DataComponentJukeboxPlayable = (Registry['minecraft:jukebox_song'] | JukeboxSongClass)
 type DataComponentKineticWeapon = KineticWeapon
 type DataComponentLlamaVariant = LlamaVariant
 type DataComponentLock = ItemPredicate
@@ -1399,10 +1421,10 @@ type DataComponentOminousBottleAmplifier = NBTInt<{
   min: 0,
   max: 4,
 }>
-type DataComponentPaintingVariant = Registry['minecraft:painting_variant']
+type DataComponentPaintingVariant = (Registry['minecraft:painting_variant'] | VariantClass<'painting'>)
 type DataComponentParrotVariant = ParrotVariant
 type DataComponentPiercingWeapon = PiercingWeapon
-type DataComponentPigVariant = Registry['minecraft:pig_variant']
+type DataComponentPigVariant = (Registry['minecraft:pig_variant'] | VariantClass<'pig'>)
 type DataComponentPotDecorations = NBTList<(Sherd | `minecraft:${Sherd}`), {
   rightExclusive: false,
 }>
@@ -1415,10 +1437,10 @@ type DataComponentProfile = Profile
 type DataComponentProvidesBannerPatterns = (
   | `#${Registry['minecraft:tag/banner_pattern']}`
   | TagClass<'banner_pattern'>)
-type DataComponentProvidesTrimMaterial = Registry['minecraft:trim_material']
+type DataComponentProvidesTrimMaterial = (Registry['minecraft:trim_material'] | TrimMaterialClass)
 type DataComponentRabbitVariant = RabbitVariant
 type DataComponentRarity = Rarity
-type DataComponentRecipes = Array<Registry['minecraft:recipe']>
+type DataComponentRecipes = Array<(Registry['minecraft:recipe'] | RecipeClass)>
 type DataComponentRepairCost = NBTInt<{
   min: 0,
 }>
@@ -1443,8 +1465,8 @@ type DataComponentUseRemainder = ItemStack
 type DataComponentVillagerVariant = Registry['minecraft:villager_type']
 type DataComponentWeapon = Weapon
 type DataComponentWolfCollar = DyeColor
-type DataComponentWolfSoundVariant = Registry['minecraft:wolf_sound_variant']
-type DataComponentWolfVariant = Registry['minecraft:wolf_variant']
+type DataComponentWolfSoundVariant = (Registry['minecraft:wolf_sound_variant'] | VariantClass<'wolf_sound'>)
+type DataComponentWolfVariant = (Registry['minecraft:wolf_variant'] | VariantClass<'wolf'>)
 type DataComponentWritableBookContent = WritableBookContent
 type DataComponentWrittenBookContent = WrittenBookContent
 export type SymbolDataComponent<CASE extends

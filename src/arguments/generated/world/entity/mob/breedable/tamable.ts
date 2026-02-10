@@ -3,7 +3,7 @@ import type { DyeColorByte } from 'sandstone/arguments/generated/util/color.ts'
 import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
 import type { NeutralMob } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTIntArray } from 'sandstone'
+import type { NBTIntArray, VariantClass } from 'sandstone'
 
 export type Cat = (Tamable & {
   /**
@@ -29,7 +29,7 @@ export type Cat = (Tamable & {
    *  - Black(`15`)
    */
   CollarColor?: DyeColorByte,
-  variant?: Registry['minecraft:cat_variant'],
+  variant?: (Registry['minecraft:cat_variant'] | VariantClass<'cat'>),
 })
 
 export type CatType = (-1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10)
@@ -91,6 +91,6 @@ export type Wolf = (Tamable & NeutralMob & {
    */
   CollarColor?: DyeColorByte,
   body_armor_item?: ItemStack,
-  variant?: Registry['minecraft:wolf_variant'],
-  sound_variant?: Registry['minecraft:wolf_sound_variant'],
+  variant?: (Registry['minecraft:wolf_variant'] | VariantClass<'wolf'>),
+  sound_variant?: (Registry['minecraft:wolf_sound_variant'] | VariantClass<'wolf_sound'>),
 })

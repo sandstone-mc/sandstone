@@ -348,8 +348,40 @@ export {
 } from './core'
 
 export {
+  // Datapack resources
   AdvancementClass,
+  BannerPatternClass,
+  ChatTypeClass,
+  DamageTypeClass,
+  DialogClass,
+  EnchantmentClass,
+  EnchantmentProviderClass,
+  InstrumentClass,
+  ItemModifierClass,
+  JukeboxSongClass,
+  LootTableClass,
+  PredicateClass,
+  RecipeClass,
+  StructureClass,
   TagClass,
+  TestEnvironmentClass,
+  TestInstanceClass,
+  TimelineClass,
+  TrialSpawnerClass,
+  TrimMaterialClass,
+  TrimPatternClass,
+  VariantClass,
+  VillagerTradeClass,
+
+  // Resourcepack resources
+  AtlasClass,
+  BlockStateClass,
+  EquipmentClass,
+  FontClass,
+  ItemModelDefinitionClass,
+  LanguageClass,
+  ModelClass,
+  PostEffectClass,
   TextureClass,
 } from './core/resources'
 

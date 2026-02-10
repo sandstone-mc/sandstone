@@ -12,7 +12,7 @@ import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { LootTableClass, NBTFloat, NBTInt, NBTList, RecipeClass } from 'sandstone'
 
 export type AllayDropItemOnBlock = (TriggerBase & {
   location?: Array<LootCondition>,
@@ -235,7 +235,7 @@ export type PlacedBlock = (TriggerBase & {
 })
 
 export type PlayerGeneratesContainerLoot = (TriggerBase & {
-  loot_table: Registry['minecraft:loot_table'],
+  loot_table: (Registry['minecraft:loot_table'] | LootTableClass),
 })
 
 export type PlayerHurtEntity = (TriggerBase & {
@@ -254,7 +254,7 @@ export type PlayerKilledEntity = (TriggerBase & {
 })
 
 export type RecipeCrafted = (TriggerBase & {
-  recipe_id: Registry['minecraft:recipe'],
+  recipe_id: (Registry['minecraft:recipe'] | RecipeClass),
   /**
    * Value:
    * List length range: 1..9
@@ -268,7 +268,7 @@ export type RecipeCrafted = (TriggerBase & {
 })
 
 export type RecipeUnlocked = (TriggerBase & {
-  recipe: Registry['minecraft:recipe'],
+  recipe: (Registry['minecraft:recipe'] | RecipeClass),
 })
 
 export type RequiredConditions<C extends NBTObject> = {

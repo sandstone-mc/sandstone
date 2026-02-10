@@ -2,13 +2,16 @@ import type { EnchantmentEffectComponentMap } from 'sandstone/arguments/generate
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { NBTInt, TagClass } from 'sandstone'
+import type { EnchantmentClass, NBTInt, TagClass } from 'sandstone'
 
 export type Enchantment = {
   description: Text,
   exclusive_set?: ((
-      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-      | Array<Registry['minecraft:enchantment']>),
+        | Registry['minecraft:enchantment']
+        | `#${Registry['minecraft:tag/enchantment']}`
+        | TagClass<'enchantment'>
+        | EnchantmentClass)
+      | Array<(Registry['minecraft:enchantment'] | EnchantmentClass)>),
   supported_items: ((
       | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
       | Array<Registry['minecraft:item']>),

@@ -1,5 +1,6 @@
 import type { SpawnPrioritySelectors } from 'sandstone/arguments/generated/data/variants.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { TextureClass } from 'sandstone'
 
 export type ZombieNautilusModelType = ('normal' | 'warm')
 
@@ -14,5 +15,5 @@ export type ZombieNautilusVariant = ({
   /**
    * The zombie nautilus texture to use for this variant.
    */
-  asset_id: Registry['minecraft:texture'],
+  asset_id: (Registry['minecraft:texture'] | TextureClass),
 } & SpawnPrioritySelectors)

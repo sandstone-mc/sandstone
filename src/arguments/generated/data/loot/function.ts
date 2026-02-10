@@ -18,11 +18,22 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, NBTClass, NBTFloat, NBTInt, NBTLong, TagClass } from 'sandstone'
+import type {
+  BannerPatternClass,
+  DataPointClass,
+  EnchantmentClass,
+  ItemModifierClass,
+  LootTableClass,
+  NBTClass,
+  NBTFloat,
+  NBTInt,
+  NBTLong,
+  TagClass,
+} from 'sandstone'
 
 export type ApplyBonus = NonNullable<({
   [S in Extract<ApplyBonusFormula, string>]?: ({
-    enchantment: Registry['minecraft:enchantment'],
+    enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
     /**
      * Value:
      *
@@ -120,7 +131,7 @@ export type BannerPattern = (
   | 'piglin')
 
 export type BannerPatternLayer = {
-  pattern: Registry['minecraft:banner_pattern'],
+  pattern: (Registry['minecraft:banner_pattern'] | BannerPatternClass),
   /**
    * Value:
    *
@@ -258,7 +269,7 @@ export type EnchantedCountIncrease = (EnchantedCountBase & {
   /**
    * Enchantment that increases yields.
    */
-  enchantment: Registry['minecraft:enchantment'],
+  enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
 } & Conditions)
 
 export type EnchantRandomly = ({
@@ -266,8 +277,11 @@ export type EnchantRandomly = ({
    * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
    */
   options?: ((
-      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-      | Array<Registry['minecraft:enchantment']>),
+        | Registry['minecraft:enchantment']
+        | `#${Registry['minecraft:tag/enchantment']}`
+        | TagClass<'enchantment'>
+        | EnchantmentClass)
+      | Array<(Registry['minecraft:enchantment'] | EnchantmentClass)>),
   /**
    * Whether to only enchant with item-compatible enchantments. Defaults to `true`.
    *
@@ -291,8 +305,11 @@ export type EnchantWithLevels = ({
    * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
    */
   options?: ((
-      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-      | Array<Registry['minecraft:enchantment']>),
+        | Registry['minecraft:enchantment']
+        | `#${Registry['minecraft:tag/enchantment']}`
+        | TagClass<'enchantment'>
+        | EnchantmentClass)
+      | Array<(Registry['minecraft:enchantment'] | EnchantmentClass)>),
   /**
    * Whether to add `additional_trade_cost` component to the enchanted item.
    * Additional cost value is equal to the level cost determined by `levels`.
@@ -451,7 +468,7 @@ export type Reference = ({
   /**
    * Item modifier to reference.
    */
-  name: `${string}:${string}`,
+  name: (`${string}:${string}` | ItemModifierClass),
 } & Conditions)
 
 export type ReplaceSectionListOperation = {
@@ -663,7 +680,7 @@ export type SetLootTable = ({
   /**
    * The loot table to set to the container block item.
    */
-  name: Registry['minecraft:loot_table'],
+  name: (Registry['minecraft:loot_table'] | LootTableClass),
   /**
    * The container seed to use. Defaults to a random seed.
    */

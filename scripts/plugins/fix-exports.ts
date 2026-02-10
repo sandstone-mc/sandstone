@@ -5,6 +5,8 @@
 
 import ts from 'typescript'
 
+// TODO: this is reporting "Fixed duplicates in 0 files", we need to sort this out. claude --resume 61a160b4-1b53-43cb-b658-a85191e6fabe
+
 /**
  * Removes duplicate export specifiers from JavaScript source code.
  * Uses TypeScript's AST to reliably parse and transform the exports.

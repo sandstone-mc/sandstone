@@ -4,7 +4,7 @@ import type { InclusiveRange, WeightedEntry } from 'sandstone/arguments/generate
 import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
-import type { NBTFloat, NBTInt, NBTList, NBTLong, NBTShort } from 'sandstone'
+import type { LootTableClass, NBTFloat, NBTInt, NBTList, NBTLong, NBTShort, TrialSpawnerClass } from 'sandstone'
 
 export type CustomSpawnRules = {
   /**
@@ -27,7 +27,7 @@ export type SpawnEquipment = {
   /**
    * Generates the equipment.
    */
-  loot_table: Registry['minecraft:loot_table'],
+  loot_table: (Registry['minecraft:loot_table'] | LootTableClass),
   /**
    * Chance the mob will drop the equipment on death.
    *
@@ -110,11 +110,11 @@ export type TrialSpawner = {
   /**
    * Spawning behavior when the player does not have the Bad Omen effect.
    */
-  normal_config?: (TrialSpawnerConfig | Registry['minecraft:trial_spawner']),
+  normal_config?: (TrialSpawnerConfig | (Registry['minecraft:trial_spawner'] | TrialSpawnerClass)),
   /**
    * Spawning behavior when the player has the Bad Omen effect.
    */
-  ominous_config?: (TrialSpawnerConfig | Registry['minecraft:trial_spawner']),
+  ominous_config?: (TrialSpawnerConfig | (Registry['minecraft:trial_spawner'] | TrialSpawnerClass)),
   /**
    * Maximum distance for players to activate the trial spawner, or join a battle
    *
@@ -162,5 +162,5 @@ export type TrialSpawner = {
   /**
    * The loot table selected to be used to determine the reward
    */
-  ejecting_loot_table?: Registry['minecraft:loot_table'],
+  ejecting_loot_table?: (Registry['minecraft:loot_table'] | LootTableClass),
 }

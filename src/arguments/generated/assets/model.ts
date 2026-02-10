@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
-import type { NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
+import type { ModelClass, NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
 
 export type Axis = ('x' | 'y' | 'z')
 
@@ -28,7 +28,7 @@ export type ItemDisplayContext = (
   | 'on_shelf')
 
 export type Model = {
-  parent?: Registry['minecraft:model'],
+  parent?: (Registry['minecraft:model'] | ModelClass),
   ambientocclusion?: boolean,
   gui_light?: ('front' | 'side'),
   textures?: ({
@@ -199,7 +199,7 @@ export type ModelOverride = {
   model: ModelRef,
 }
 
-export type ModelRef = Registry['minecraft:model']
+export type ModelRef = (Registry['minecraft:model'] | ModelClass)
 
 export type Predicates = (
   | 'angle'

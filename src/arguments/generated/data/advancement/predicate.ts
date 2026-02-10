@@ -24,7 +24,16 @@ import type {
 import type { BoatType } from 'sandstone/arguments/generated/world/entity/boat.ts'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LiteralUnion, NBTClass, NBTDouble, NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type {
+  EnchantmentClass,
+  LiteralUnion,
+  NBTClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  TagClass,
+  VariantClass,
+} from 'sandstone'
 
 export type AxolotlPredicate = {
   /**
@@ -76,8 +85,8 @@ export type BoatPredicate = {
 
 export type CatPredicate = {
   variant: ((
-      | Registry['minecraft:cat_variant'] | `#${string}:${string}` | TagClass<'cat_variant'>)
-      | Array<Registry['minecraft:cat_variant']>),
+      | Registry['minecraft:cat_variant'] | `#${string}:${string}` | TagClass<'cat_variant'> | VariantClass<'cat'>)
+      | Array<(Registry['minecraft:cat_variant'] | VariantClass<'cat'>)>),
 }
 
 export type DamagePredicate = {
@@ -143,8 +152,11 @@ export type DistancePredicate = {
 
 export type EnchantmentPredicate = {
   enchantments?: ((
-      | Registry['minecraft:enchantment'] | `#${Registry['minecraft:tag/enchantment']}` | TagClass<'enchantment'>)
-      | Array<Registry['minecraft:enchantment']>),
+        | Registry['minecraft:enchantment']
+        | `#${Registry['minecraft:tag/enchantment']}`
+        | TagClass<'enchantment'>
+        | EnchantmentClass)
+      | Array<(Registry['minecraft:enchantment'] | EnchantmentClass)>),
   levels?: MinMaxBounds<NBTInt>,
 }
 
@@ -241,8 +253,8 @@ export type FoxPredicate = {
 
 export type FrogPredicate = {
   variant: ((
-      | Registry['minecraft:frog_variant'] | `#${string}:${string}` | TagClass<'frog_variant'>)
-      | Array<Registry['minecraft:frog_variant']>),
+      | Registry['minecraft:frog_variant'] | `#${string}:${string}` | TagClass<'frog_variant'> | VariantClass<'frog'>)
+      | Array<(Registry['minecraft:frog_variant'] | VariantClass<'frog'>)>),
 }
 
 export type GameMode = ('survival' | 'creative' | 'adventure' | 'spectator')
@@ -357,8 +369,9 @@ export type PaintingPredicate = {
   variant: ((
         | Registry['minecraft:painting_variant']
         | `#${Registry['minecraft:tag/painting_variant']}`
-        | TagClass<'painting_variant'>)
-      | Array<Registry['minecraft:painting_variant']>),
+        | TagClass<'painting_variant'>
+        | VariantClass<'painting'>)
+      | Array<(Registry['minecraft:painting_variant'] | VariantClass<'painting'>)>),
 }
 
 export type ParrotPredicate = {
@@ -505,8 +518,8 @@ export type VillagerPredicate = {
 
 export type WolfPredicate = {
   variant: ((
-      | Registry['minecraft:wolf_variant'] | `#${string}:${string}` | TagClass<'wolf_variant'>)
-      | Array<Registry['minecraft:wolf_variant']>),
+      | Registry['minecraft:wolf_variant'] | `#${string}:${string}` | TagClass<'wolf_variant'> | VariantClass<'wolf'>)
+      | Array<(Registry['minecraft:wolf_variant'] | VariantClass<'wolf'>)>),
 }
 type EntitySubPredicateDispatcherMap = {
   'axolotl': EntitySubPredicateAxolotl,

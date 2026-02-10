@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Build**: `bun run build` - Builds the project using tsup and runs setup
 - **Watch**: `bun run watch` - Builds with watch mode
-- **Type checking**: `bun run build-types` - Generates TypeScript declaration files
+- **Type checking**: `bun run build:types` - Generates TypeScript declaration files
 - **Setup**: `bun run setup` - Builds types and sets up package (required after build)
 - **Lint**: `bun run lint` or `bun oxlint src` - Lints TypeScript files using OxLint
 - **Format/Fix**: `bun run format` or `bun oxlint src --fix` - Lints and auto-fixes issues

@@ -467,7 +467,7 @@ export class SandstonePack {
     this.initMCFunction.push(() => loadStatus(this.defaultNamespace).set(loadVersion))
   }
 
-  resourceToPath = (name: string, resourceFolders?: string[]): ResourcePath => {
+  resourceToPath = (name: string, resourceFolders?: readonly string[]): ResourcePath => {
     let namespace = this.defaultNamespace
     let fullName = name
 

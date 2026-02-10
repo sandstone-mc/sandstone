@@ -2,13 +2,13 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { DirectionInt } from 'sandstone/arguments/generated/util/direction.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTLong } from 'sandstone'
+import type { LootTableClass, NBTLong } from 'sandstone'
 
 export type BrushableBlock = (BlockEntity & {
   /**
    * Loot table that will decide the brushed loot.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | ''),
+  LootTable?: (Registry['minecraft:loot_table'] | '' | LootTableClass),
   /**
    * Seed of the loot table.
    */

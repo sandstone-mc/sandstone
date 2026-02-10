@@ -10,7 +10,7 @@ import type { BlockState } from 'sandstone/arguments/generated/util/block_state.
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { FluidState } from 'sandstone/arguments/generated/util/fluid_state.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList, StructureClass, TagClass } from 'sandstone'
 
 export type BlockBlobConfig = {
   state: BlockState,
@@ -255,8 +255,8 @@ export type FossilConfig = {
     min: 0,
     max: 7,
   }>,
-  fossil_structures: Array<Registry['minecraft:structure']>,
-  overlay_structures: Array<Registry['minecraft:structure']>,
+  fossil_structures: Array<(Registry['minecraft:structure'] | StructureClass)>,
+  overlay_structures: Array<(Registry['minecraft:structure'] | StructureClass)>,
   fossil_processors: ProcessorListRef,
   overlay_processors: ProcessorListRef,
 }

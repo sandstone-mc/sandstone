@@ -1,7 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block.ts'
-import type { NBTByte, NBTInt, NBTList, NBTLong } from 'sandstone'
+import type { LootTableClass, NBTByte, NBTInt, NBTList, NBTLong } from 'sandstone'
 
 export type Container27 = (ContainerBase & {
   /**
@@ -43,7 +43,7 @@ export type ContainerBase = (BlockEntity & Nameable & Lockable & {
   /**
    * Loot table that will populate this container.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | ''),
+  LootTable?: (Registry['minecraft:loot_table'] | '' | LootTableClass),
   /**
    * Seed of the loot table.
    */

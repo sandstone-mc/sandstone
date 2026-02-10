@@ -142,6 +142,7 @@ import type { TEST_INSTANCES } from 'sandstone/arguments/generated/_registry/tes
 import type { TEXTURES } from 'sandstone/arguments/generated/_registry/textures.ts'
 import type { TICKET_TYPES } from 'sandstone/arguments/generated/_registry/ticket_types.ts'
 import type { TIMELINES } from 'sandstone/arguments/generated/_registry/timelines.ts'
+import type { TRADE_SETS } from 'sandstone/arguments/generated/_registry/trade_sets.ts'
 import type { TRANSLATION_KEYS } from 'sandstone/arguments/generated/_registry/translation_keys.ts'
 import type { TRIAL_SPAWNERS } from 'sandstone/arguments/generated/_registry/trial_spawners.ts'
 import type { TRIGGER_TYPES } from 'sandstone/arguments/generated/_registry/trigger_types.ts'
@@ -246,9 +247,11 @@ export type Registry = {
   'minecraft:test_environment': TEST_ENVIRONMENTS,
   'minecraft:test_instance': TEST_INSTANCES,
   'minecraft:timeline': TIMELINES,
+  'minecraft:trade_set': TRADE_SETS,
   'minecraft:trial_spawner': TRIAL_SPAWNERS,
   'minecraft:trim_material': TRIM_MATERIALS,
   'minecraft:trim_pattern': TRIM_PATTERNS,
+  'minecraft:villager_trade': VILLAGER_TRADES,
   'minecraft:wolf_sound_variant': WOLF_SOUND_VARIANTS,
   'minecraft:wolf_variant': WOLF_VARIANTS,
   'minecraft:zombie_nautilus_variant': ZOMBIE_NAUTILUS_VARIANTS,
@@ -259,6 +262,7 @@ export type Registry = {
   'minecraft:tag/instrument': TAG_INSTRUMENTS,
   'minecraft:tag/painting_variant': TAG_PAINTING_VARIANTS,
   'minecraft:tag/timeline': TAG_TIMELINES,
+  'minecraft:tag/villager_trade': TAG_VILLAGER_TRADES,
   'minecraft:tag/block': TAG_BLOCKS,
   'minecraft:tag/entity_type': TAG_ENTITY_TYPES,
   'minecraft:tag/fluid': TAG_FLUIDS,
@@ -390,8 +394,6 @@ export type Registry = {
   'minecraft:worldgen/structure_type': WORLDGEN_STRUCTURE_TYPES,
   'minecraft:worldgen/tree_decorator_type': WORLDGEN_TREE_DECORATOR_TYPES,
   'minecraft:worldgen/trunk_placer_type': WORLDGEN_TRUNK_PLACER_TYPES,
-  'minecraft:villager_trade': VILLAGER_TRADES,
-  'minecraft:tag/villager_trade': TAG_VILLAGER_TRADES,
 }
 
 export const REGISTRIES_SET = new Set([
@@ -421,11 +423,14 @@ export const REGISTRIES_SET = new Set([
   'test_environment',
   'test_instance',
   'timeline',
+  'trade_set',
   'trial_spawner',
   'trim_material',
   'trim_pattern',
+  'villager_trade',
   'wolf_sound_variant',
   'wolf_variant',
+  'world_clock',
   'zombie_nautilus_variant',
   'activity',
   'armor_material',

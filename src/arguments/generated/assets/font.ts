@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { FontClass, NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type BitmapProvider = {
   file: string,
@@ -49,7 +49,7 @@ export type LegacyUnicodeProvider = {
 }
 
 export type ReferenceProvider = {
-  id: Registry['minecraft:font'],
+  id: (Registry['minecraft:font'] | FontClass),
 }
 
 export type SpaceProvider = {

@@ -3,7 +3,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { ItemStack, ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
-import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList, TagClass, TrimPatternClass } from 'sandstone'
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
 
@@ -380,7 +380,7 @@ export type SmithingTrim = (NotificationInfo & {
   /**
    * The trim pattern to apply to the result item.
    */
-  pattern: Registry['minecraft:trim_pattern'],
+  pattern: (Registry['minecraft:trim_pattern'] | TrimPatternClass),
 })
 
 export type Stonecutting = (NotificationInfo & {

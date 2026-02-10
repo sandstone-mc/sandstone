@@ -14,12 +14,13 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import { ModelClass } from './model'
 import { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import type { SandstonePack } from 'sandstone/pack'
 
-// Helper to normalize model input (string -> { type: 'model', model: ModelRef })
+// Helper to normalize model input (string/ModelClass -> { type: 'model', model: ModelRef })
 function normalizeModel(input: ItemModel | ModelRef): ItemModel {
-  if (typeof input === 'string') {
+  if (typeof input === 'string' || input instanceof ModelClass) {
     return { type: 'model', model: input as ModelRef }
   }
   return input

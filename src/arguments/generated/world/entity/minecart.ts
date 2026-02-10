@@ -4,7 +4,7 @@ import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { BaseCommandBlock } from 'sandstone/arguments/generated/world/block/command_block.ts'
 import type { SpawnerEntry, SpawnPotential } from 'sandstone/arguments/generated/world/block/spawner.ts'
 import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
-import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, NBTShort } from 'sandstone'
+import type { LootTableClass, NBTByte, NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, NBTShort } from 'sandstone'
 
 export type ChestMinecart = (Minecart & ContainerMinecart & {
   /**
@@ -30,7 +30,7 @@ export type ContainerMinecart = {
   /**
    * Loot table that will populate this minecart.
    */
-  LootTable?: (Registry['minecraft:loot_table'] | ''),
+  LootTable?: (Registry['minecraft:loot_table'] | '' | LootTableClass),
   /**
    * Seed of the loot table.
    */

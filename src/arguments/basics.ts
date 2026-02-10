@@ -1,4 +1,4 @@
-import type { MultipleEntitiesArgument, NBTSerializable, Registry } from 'sandstone/arguments'
+import { RESOURCE_CLASS_TYPES, type MultipleEntitiesArgument, type NBTSerializable, type Registry } from 'sandstone/arguments'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
@@ -14,7 +14,7 @@ export type AXES = SINGLE_AXES | DEDUP<DOUBLE_AXES> | DEDUP<TRIPLE_AXES>
 
 export type ANCHORS = 'eyes' | 'feet'
 
-export type BASIC_COLORS =
+export type BASIC_COLORS = (
   | 'black'
   | 'dark_blue'
   | 'dark_green'
@@ -33,6 +33,7 @@ export type BASIC_COLORS =
   | 'yellow'
   | 'white'
   | 'reset'
+)
 
 export type GAMEMODES = 'survival' | 'creative' | 'adventure' | 'spectator'
 
@@ -44,7 +45,7 @@ export type COMPARISON_OPERATORS = '<' | '<=' | '=' | '>=' | '>'
 
 export type CRAFTING_INGREDIENT = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'X' | 'Y' | 'Z'
 
-export type SOUND_SOURCES =
+export type SOUND_SOURCES = (
   | 'master'
   | 'music'
   | 'record'
@@ -55,6 +56,7 @@ export type SOUND_SOURCES =
   | 'player'
   | 'ambient'
   | 'voice'
+)
 
 // When used as `type XX = YY | _ShowAlias`, forces Typescript to show the alias type (XX) and not the real one (YY).
 export class _ShowAlias implements NBTSerializable {
@@ -76,7 +78,7 @@ export type MessageOrSelector = (string | MultipleEntitiesArgument<boolean> | nu
 
 export type TimeArgument = number | `${number}` | `${number}${'t' | 's' | 'd'}`
 
-export type MAP_ICONS =
+export type MAP_ICONS = (
   | 'player'
   | 'frame'
   | 'red_marker'
@@ -104,8 +106,9 @@ export type MAP_ICONS =
   | 'minecraft:red'
   | 'minecraft:black'
   | 'red_x'
+)
 
-export type SOUND_TYPES =
+export type SOUND_TYPES = (
   | 'ambient'
   | 'block'
   | 'hostile'
@@ -116,8 +119,9 @@ export type SOUND_TYPES =
   | 'record'
   | 'voice'
   | 'weather'
+)
 
-export type TEXTURE_TYPES =
+export type TEXTURE_TYPES = (
   | 'block'
   | 'colormap'
   | 'effect'
@@ -133,3 +137,19 @@ export type TEXTURE_TYPES =
   | 'painting'
   | 'particle'
   | 'trims'
+)
+
+export type ResourceClassType = typeof RESOURCE_CLASS_TYPES[number]
+
+export type ResourceTypeFor<C extends ResourceClassType[0]> =
+    typeof RESOURCE_CLASS_TYPES[number] extends infer E
+      ? E extends readonly [C, infer R] ? R : never
+      : never
+
+export function getResourceType<C extends ResourceClassType[0]>(cls: C): ResourceTypeFor<C> {
+  const entry = RESOURCE_CLASS_TYPES.find(([c]) => c === cls)
+  if (!entry) {
+    throw new Error(`Unknown resource class: ${cls.name}`)
+  }
+  return entry[1] as ResourceTypeFor<C>
+}

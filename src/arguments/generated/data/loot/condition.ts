@@ -9,7 +9,7 @@ import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/
 import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt, NBTLong, ObjectiveClass } from 'sandstone'
+import type { EnchantmentClass, NBTFloat, NBTInt, NBTLong, ObjectiveClass, PredicateClass } from 'sandstone'
 
 export type AllOf = {
   /**
@@ -118,7 +118,7 @@ export type RandomChanceWithEnchantedBonus = {
     max: 1,
   }>,
   enchanted_chance: LevelBasedValue,
-  enchantment: Registry['minecraft:enchantment'],
+  enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
 }
 
 export type RandomChanceWithLooting = {
@@ -142,11 +142,11 @@ export type Reference = {
   /**
    * A cyclic reference causes a parsing failure.
    */
-  name: `${string}:${string}`,
+  name: (`${string}:${string}` | PredicateClass),
 }
 
 export type TableBonus = {
-  enchantment: Registry['minecraft:enchantment'],
+  enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
   /**
    * Probabilities for each enchantment level
    */

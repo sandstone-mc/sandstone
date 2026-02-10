@@ -1,5 +1,5 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTIntArray, NBTList } from 'sandstone'
+import type { NBTIntArray, NBTList, TextureClass } from 'sandstone'
 
 export type HumanoidArm = ('left' | 'right')
 
@@ -54,17 +54,17 @@ export type Profile = ({
   /**
    * Skin texture override.
    */
-  texture?: Registry['minecraft:texture'],
+  texture?: (Registry['minecraft:texture'] | TextureClass),
   /**
    * Cape texture override.
    */
-  cape?: Registry['minecraft:texture'],
+  cape?: (Registry['minecraft:texture'] | TextureClass),
   /**
    * Elytra texture override.
    * If this texture is not present either as override or in player profile, the cape texture is used.
    * If the cape texture is also not present, the default elytra texture is used.
    */
-  elytra?: Registry['minecraft:texture'],
+  elytra?: (Registry['minecraft:texture'] | TextureClass),
   /**
    * Model type override.
    *

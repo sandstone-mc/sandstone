@@ -7,7 +7,7 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
-import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
+import type { JukeboxSongClass, NBTDouble, NBTInt, TagClass, TrimMaterialClass, TrimPatternClass } from 'sandstone'
 
 export type AttributeModifiersPredicate = {
   modifiers?: CollectionPredicate<AttributeModifiersPredicateEntry>,
@@ -105,17 +105,17 @@ export type ItemDamagePredicate = {
 
 export type JukeboxPlayablePredicate = {
   song?: ((
-      | Registry['minecraft:jukebox_song'] | `#${string}:${string}` | TagClass<'jukebox_song'>)
-      | Array<Registry['minecraft:jukebox_song']>),
+      | Registry['minecraft:jukebox_song'] | `#${string}:${string}` | TagClass<'jukebox_song'> | JukeboxSongClass)
+      | Array<(Registry['minecraft:jukebox_song'] | JukeboxSongClass)>),
 }
 
 export type TrimPredicate = {
   material?: ((
-      | Registry['minecraft:trim_material'] | `#${string}:${string}` | TagClass<'trim_material'>)
-      | Array<Registry['minecraft:trim_material']>),
+      | Registry['minecraft:trim_material'] | `#${string}:${string}` | TagClass<'trim_material'> | TrimMaterialClass)
+      | Array<(Registry['minecraft:trim_material'] | TrimMaterialClass)>),
   pattern?: ((
-      | Registry['minecraft:trim_pattern'] | `#${string}:${string}` | TagClass<'trim_pattern'>)
-      | Array<Registry['minecraft:trim_pattern']>),
+      | Registry['minecraft:trim_pattern'] | `#${string}:${string}` | TagClass<'trim_pattern'> | TrimPatternClass)
+      | Array<(Registry['minecraft:trim_pattern'] | TrimPatternClass)>),
 }
 
 export type WritableBookPredicate = {

@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgumentOf, SymbolResource } from 'sandstone/arguments'
+import { getResourceType, RESOURCE_PATHS, type MultiplePlayersArgumentOf, type SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -36,7 +36,7 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       AdvancementNode,
-      sandstoneCore.pack.resourceToPath(name, ['advancement']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[getResourceType(AdvancementClass)].path), // TODO: Ideally we could just put `this`, not `AdvancementClass`
       args,
     )
 

@@ -7,7 +7,7 @@ import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.
 import type { DataComponentExactPredicate, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { Trim } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
-import type { NBTDouble, NBTInt, NBTIntArray, NBTShort } from 'sandstone'
+import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTShort } from 'sandstone'
 
 export type AttributeModifier = {
   AttributeName?: Registry['minecraft:attribute'],
@@ -90,7 +90,7 @@ export type Enchantment = {
   /**
    * Which enchantment is being described.
    */
-  id?: Registry['minecraft:enchantment'],
+  id?: (Registry['minecraft:enchantment'] | EnchantmentClass),
   /**
    * Which level the enchantment is.
    *

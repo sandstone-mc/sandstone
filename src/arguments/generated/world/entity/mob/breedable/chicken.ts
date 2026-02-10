@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
-import type { NBTInt } from 'sandstone'
+import type { NBTInt, VariantClass } from 'sandstone'
 
 export type Chicken = (Breedable & {
   /**
@@ -12,5 +12,5 @@ export type Chicken = (Breedable & {
    * Time until it lays another egg.
    */
   EggLayTime?: NBTInt,
-  variant?: Registry['minecraft:chicken_variant'],
+  variant?: (Registry['minecraft:chicken_variant'] | VariantClass<'chicken'>),
 })

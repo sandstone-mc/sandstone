@@ -8,7 +8,16 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.ts'
 import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LiteralUnion, MCFunctionClass, NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type {
+  DamageTypeClass,
+  LiteralUnion,
+  MCFunctionClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTList,
+  TagClass,
+} from 'sandstone'
 
 export type AddEffectValue = {
   value: LevelBasedValue,
@@ -139,7 +148,7 @@ export type ChangeItemDamageEffect = {
 }
 
 export type DamageEntityEffect = {
-  damage_type: Registry['minecraft:damage_type'],
+  damage_type: (Registry['minecraft:damage_type'] | DamageTypeClass),
   /**
    * Amount of damage is randomized within the given min/max span.
    */
@@ -169,7 +178,7 @@ export type ExplodeEntityEffect = {
   /**
    * If omitted, no damage is dealt by the explosion.
    */
-  damage_type?: Registry['minecraft:damage_type'],
+  damage_type?: (Registry['minecraft:damage_type'] | DamageTypeClass),
   /**
    * List of Blocks or hash-prefixed Block Tag specifying which blocks fully block the explosion.
    */

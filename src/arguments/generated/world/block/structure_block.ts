@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
-import type { NBTFloat, NBTInt, NBTLong } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTLong, StructureClass } from 'sandstone'
 
 export type Mirror = ('NONE' | 'LEFT_RIGHT' | 'FRONT_BACK')
 
@@ -9,7 +9,7 @@ export type Mode = ('SAVE' | 'LOAD' | 'DATA' | 'CORNER')
 export type Rotation = ('NONE' | 'CLOCKWISE_90' | 'CLOCKWISE_180' | 'COUNTERCLOCKWISE_90')
 
 export type StructureBlock = (BlockEntity & {
-  name?: (Registry['minecraft:structure'] | ''),
+  name?: (Registry['minecraft:structure'] | '' | StructureClass),
   /**
    * Author of the structure.
    */

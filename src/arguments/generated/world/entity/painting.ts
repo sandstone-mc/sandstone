@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/entity.ts'
+import type { VariantClass } from 'sandstone'
 
 export type Facing = (0 | 1 | 2 | 3)
 
@@ -18,5 +19,5 @@ export type Painting = (BlockAttachedEntity & {
   /**
    * Type of painting.
    */
-  variant?: Registry['minecraft:painting_variant'],
+  variant?: (Registry['minecraft:painting_variant'] | VariantClass<'painting'>),
 })

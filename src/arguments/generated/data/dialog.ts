@@ -4,7 +4,7 @@ import type { InputControl } from 'sandstone/arguments/generated/data/dialog/inp
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTInt, NBTList, TagClass } from 'sandstone'
+import type { DialogClass, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type AfterAction = ('close' | 'none' | 'wait_for_response')
 
@@ -131,8 +131,8 @@ export type NoticeDialog = (DialogBase & {
 
 export type RedirectDialog = (ButtonListDialogBase & {
   dialogs: (
-      | Array<(Registry['minecraft:dialog'] | Dialog)> | (
-      Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'>)
+      | Array<((Registry['minecraft:dialog'] | DialogClass) | Dialog)> | (
+      Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'> | DialogClass)
       | Dialog),
 })
 

@@ -2,7 +2,16 @@ import type { SymbolTrigger } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { AdvancementClass, MCFunctionClass, NBTClass, NBTInt, NBTList } from 'sandstone'
+import type {
+  AdvancementClass,
+  LootTableClass,
+  MCFunctionClass,
+  NBTClass,
+  NBTInt,
+  NBTList,
+  RecipeClass,
+  TextureClass,
+} from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type Advancement = {
@@ -64,7 +73,7 @@ export type AdvancementDisplay = {
   /**
    * Used for the advancement tab (root advancement only).
    */
-  background?: Registry['minecraft:texture'],
+  background?: (Registry['minecraft:texture'] | TextureClass),
   /**
    * Controls the advancement tile frame. Defaults to `task`.
    *
@@ -107,11 +116,11 @@ export type AdvancementRewards = {
   /**
    * Loot tables to give.
    */
-  loot?: Array<Registry['minecraft:loot_table']>,
+  loot?: Array<(Registry['minecraft:loot_table'] | LootTableClass)>,
   /**
    * Recipes to unlock.
    */
-  recipes?: Array<Registry['minecraft:recipe']>,
+  recipes?: Array<(Registry['minecraft:recipe'] | RecipeClass)>,
   /**
    * XP to add.
    */

@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTDouble } from 'sandstone'
+import type { NBTDouble, TextureClass } from 'sandstone'
 
 export type Atlas = {
   /**
@@ -33,10 +33,10 @@ export type FilterPattern = {
 }
 
 export type PalettedPermutations = {
-  textures: Array<Registry['minecraft:texture']>,
-  palette_key: Registry['minecraft:texture'],
+  textures: Array<(Registry['minecraft:texture'] | TextureClass)>,
+  palette_key: (Registry['minecraft:texture'] | TextureClass),
   permutations: ({
-    [Key in `${any}${string}`]?: Registry['minecraft:texture']
+    [Key in `${any}${string}`]?: (Registry['minecraft:texture'] | TextureClass)
   }),
   /**
    * Value to use when joining the texture and permutation names to produce the sprite name.
@@ -49,7 +49,7 @@ export type Single = {
   /**
    * A single texture location of the source.
    */
-  resource: Registry['minecraft:texture'],
+  resource: (Registry['minecraft:texture'] | TextureClass),
   /**
    * The identifier of the sprite that can referenced.
    * If not specified, matches `resource`.
@@ -79,7 +79,7 @@ export type SpriteSource = NonNullable<({
 export type SpriteSourceType = ('single' | 'directory' | 'filter' | 'unstitch' | 'paletted_permutations')
 
 export type Unstitch = {
-  resource: Registry['minecraft:texture'],
+  resource: (Registry['minecraft:texture'] | TextureClass),
   /**
    * If set to the resource width, regions will use pixel coordinates.
    */

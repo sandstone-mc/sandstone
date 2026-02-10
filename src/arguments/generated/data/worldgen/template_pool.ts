@@ -3,7 +3,7 @@ import type { ProcessorListRef } from 'sandstone/arguments/generated/data/worldg
 import type { LiquidSettings } from 'sandstone/arguments/generated/data/worldgen/structure.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTInt } from 'sandstone'
+import type { NBTInt, StructureClass } from 'sandstone'
 
 export type Element = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/structure_pool_element'], string>]?: ({
@@ -32,7 +32,7 @@ export type ListElement = (ElementBase & {
 export type Projection = ('rigid' | 'terrain_matching')
 
 export type SingleElement = (ElementBase & {
-  location: Registry['minecraft:structure'],
+  location: (Registry['minecraft:structure'] | StructureClass),
   processors: ProcessorListRef,
   /**
    * Value:

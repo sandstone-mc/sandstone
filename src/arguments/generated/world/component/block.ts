@@ -1,10 +1,10 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTInt, NBTLong } from 'sandstone'
+import type { LootTableClass, NBTInt, NBTLong } from 'sandstone'
 
 export type ContainerLoot = {
-  loot_table: Registry['minecraft:loot_table'],
+  loot_table: (Registry['minecraft:loot_table'] | LootTableClass),
   seed?: NBTLong,
 }
 

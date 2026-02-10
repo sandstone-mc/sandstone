@@ -6,7 +6,17 @@ import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, NBTInt, NBTList, ObjectiveClass, Score } from 'sandstone'
+import type {
+  AtlasClass,
+  DataPointClass,
+  DialogClass,
+  FontClass,
+  NBTInt,
+  NBTList,
+  ObjectiveClass,
+  Score,
+  TextureClass,
+} from 'sandstone'
 
 export type ChangePage = {
   /**
@@ -151,7 +161,7 @@ export type RunCommand = {
 }
 
 export type ShowDialog = {
-  dialog: (Registry['minecraft:dialog'] | Dialog),
+  dialog: ((Registry['minecraft:dialog'] | DialogClass) | Dialog),
 }
 
 export type ShowEntity = ({
@@ -355,8 +365,8 @@ export type TextObject = (({
   /**
    * Defaults to `minecraft:blocks`.
    */
-  atlas?: Registry['minecraft:atlas'],
-  sprite: Registry['minecraft:texture'],
+  atlas?: (Registry['minecraft:atlas'] | AtlasClass),
+  sprite: (Registry['minecraft:texture'] | TextureClass),
   object?: 'atlas',
   type?: 'object',
 } & TextBase) | ({
@@ -386,7 +396,7 @@ export type TextStyle = {
    * If specified as 0, the shadow will never be displayed.
    */
   shadow_color?: RGBA,
-  font?: Registry['minecraft:font'],
+  font?: (Registry['minecraft:font'] | FontClass),
   bold?: boolean,
   italic?: boolean,
   underlined?: boolean,

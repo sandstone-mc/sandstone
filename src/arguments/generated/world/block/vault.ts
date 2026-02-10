@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTDouble, NBTInt, NBTIntArray, NBTLong } from 'sandstone'
+import type { LootTableClass, NBTDouble, NBTInt, NBTIntArray, NBTLong } from 'sandstone'
 
 export type Vault = {
   server_data?: {
@@ -34,12 +34,12 @@ export type Vault = {
     /**
      * Defaults to "minecraft:chests/trial_chambers/reward".
      */
-    loot_table?: Registry['minecraft:loot_table'],
+    loot_table?: (Registry['minecraft:loot_table'] | LootTableClass),
     /**
      * The loot table to display items in the vault.
      * Defaults to use the value in `loot_table` field.
      */
-    override_loot_table_to_display: Registry['minecraft:loot_table'],
+    override_loot_table_to_display: (Registry['minecraft:loot_table'] | LootTableClass),
     /**
      * The range when the vault should activate.
      */

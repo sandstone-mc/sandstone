@@ -1,7 +1,7 @@
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTInt, NBTList, TagClass } from 'sandstone'
+import type { EnchantmentClass, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type ByCostEnchantmentProvider = {
   enchantments: EnchantmentsType,
@@ -51,13 +51,14 @@ export type EnchantmentProvider = NonNullable<({
 export type EnchantmentsType = ((
   | Registry['minecraft:enchantment']
   | `#${Registry['minecraft:tag/enchantment']}`
-  | TagClass<'enchantment'>) | NBTList<Registry['minecraft:enchantment'], {
+  | TagClass<'enchantment'>
+  | EnchantmentClass) | NBTList<(Registry['minecraft:enchantment'] | EnchantmentClass), {
     leftExclusive: false,
     min: 1,
   }>)
 
 export type SingleProvider = {
-  enchantment: Registry['minecraft:enchantment'],
+  enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
   level: IntProvider<NBTInt>,
 }
 type EnchantmentProviderDispatcherMap = {

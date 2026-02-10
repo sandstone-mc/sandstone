@@ -4,7 +4,7 @@ import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
+import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort, RecipeClass } from 'sandstone'
 
 export type Abilities = {
   /**
@@ -247,11 +247,11 @@ export type RecipeBook = {
   /**
    * Recipes the player has acquired.
    */
-  recipes?: Array<Registry['minecraft:recipe']>,
+  recipes?: Array<(Registry['minecraft:recipe'] | RecipeClass)>,
   /**
    * Recipes that should pulse in the crafting book.
    */
-  toBeDisplayed?: Array<Registry['minecraft:recipe']>,
+  toBeDisplayed?: Array<(Registry['minecraft:recipe'] | RecipeClass)>,
   /**
    * Whether the player has filtered crafting on in the crafting table.
    */
