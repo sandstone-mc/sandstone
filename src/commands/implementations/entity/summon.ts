@@ -60,10 +60,13 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
     nbt?: Macroable<ENTITY extends keyof SymbolEntity ? NonNullable<SymbolEntity[ENTITY]> : RootNBT, MACRO>,
   ) {
-    return this.finalCommand([
-      entity,
-      coordinatesParser(pos),
-      nbtStringifier(nbt as RootNBT),
-    ])
+    const args: unknown[] = [entity]
+    if (pos !== undefined) {
+      args.push(coordinatesParser(pos))
+    }
+    if (nbt !== undefined) {
+      args.push(nbtStringifier(nbt as RootNBT))
+    }
+    return this.finalCommand(args)
   }
 }

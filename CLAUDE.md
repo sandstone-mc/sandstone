@@ -109,6 +109,54 @@ AST transformation visitors for:
 - Inlining function calls
 - Simplifying execute commands
 
+**Visitor files** follow the naming convention `<transformationName>.ts` (e.g., `containerCommandsToMCFunction.ts`, `ifElseTransformationVisitor.ts`).
+
+#### Node Serialization (`getValue()`)
+
+Every node has a `getValue()` method that serializes it to mcfunction output:
+
+```typescript
+// CommandNode.getValue() returns the command string
+sayNode.getValue()  // => "say hello"
+
+// ExecuteCommandNode.getValue() requires exactly 1 child in body
+executeNode.getValue()  // => "execute as @a run say hello"
+// Throws if body.length > 1: "Execute nodes can only have one child node when toString is called."
+```
+
+The `getValue()` method is called during `core.save()` AFTER all visitors have transformed the AST. If a visitor fails to run, nodes may be in an invalid state for serialization.
+
+#### Container Command Transformation Flow
+
+`ContainerCommandNode` subclasses (like `ExecuteCommandNode`) have a `createMCFunction()` method that extracts multi-command bodies into child MCFunctions:
+
+```typescript
+// In ExecuteCommandNode
+createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
+  if (this.isSingleExecute || !currentMCFunction) {
+    return { node: this }  // No transformation needed
+  }
+
+  // Create child MCFunction with the execute's body
+  const mcFunction = this.sandstonePack.MCFunction(`${currentMCFunction.resource.name}/${this.callbackName}`, ...)
+  mcFunction.node.body = this.body
+
+  // Replace body with single function call
+  this.body = [new FunctionCommandNode(this.sandstonePack, mcFunction)]
+
+  return { node: this, mcFunction: mcFunction.node }
+}
+```
+
+**The transformation flow:**
+1. User writes: `execute.as('@a').run(() => { say('a'); say('b') })`
+2. Creates `ExecuteCommandNode` with `isSingleExecute=false` and 2 commands in body
+3. During `save()`, `ContainerCommandsToMCFunctionVisitor` visits this node
+4. Visitor calls `node.createMCFunction(currentMCFunction)`
+5. Method creates child MCFunction containing the 2 commands
+6. Execute's body is replaced with single `function` call
+7. Now `getValue()` succeeds (body has exactly 1 child)
+
 ### MCFunction Context System
 
 Understanding how commands are routed to the correct MCFunction is critical for implementing features like execute chains, macros, and async operations.
