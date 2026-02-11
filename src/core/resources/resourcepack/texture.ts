@@ -1,4 +1,4 @@
-import type { SymbolResource, TEXTURE_TYPES } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource, type TEXTURE_TYPES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -43,6 +43,8 @@ export type TextureArguments<Type extends TextureType> = {
 } & ResourceClassArguments<'default'>
 
 export class TextureClass<Type extends TextureType = 'block'> extends ResourceClass<TextureNode<Type>> {
+  static readonly resourceType = 'texture'
+
   type: Type
 
   isSprite: boolean
@@ -58,7 +60,7 @@ export class TextureClass<Type extends TextureType = 'block'> extends ResourceCl
       core,
       { packType: core.pack.resourcePack(), extension: 'png', encoding: false },
       TextureNode,
-      core.pack.resourceToPath(name, ['textures', type]),
+      core.pack.resourceToPath(name, [...RESOURCE_PATHS[TextureClass.resourceType].path, type]),
       args,
     )
 

@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -27,22 +27,24 @@ export type TimelineClassArguments = {
   /**
    * The timeline's JSON.
    */
-  timeline: SymbolResource['timeline']
+  json: SymbolResource[(typeof TimelineClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TimelineClass extends ResourceClass<TimelineNode> {
-  public timelineJSON: NonNullable<TimelineClassArguments['timeline']>
+  static readonly resourceType = 'timeline' as const
+
+  public timelineJSON: NonNullable<TimelineClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TimelineClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TimelineNode,
-      sandstoneCore.pack.resourceToPath(name, ['timeline']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TimelineClass.resourceType].path),
       args,
     )
 
-    this.timelineJSON = args.timeline
+    this.timelineJSON = args.json
 
     this.handleConflicts()
   }
@@ -70,22 +72,24 @@ export type WorldClockClassArguments = {
   /**
    * The world clock's JSON.
    */
-  worldClock: SymbolResource['world_clock']
+  json: SymbolResource[(typeof WorldClockClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class WorldClockClass extends ResourceClass<WorldClockNode> {
-  public worldClockJSON: NonNullable<WorldClockClassArguments['worldClock']>
+  static readonly resourceType = 'world_clock' as const
+
+  public worldClockJSON: NonNullable<WorldClockClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: WorldClockClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       WorldClockNode,
-      sandstoneCore.pack.resourceToPath(name, ['world_clock']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[WorldClockClass.resourceType].path),
       args,
     )
 
-    this.worldClockJSON = args.worldClock
+    this.worldClockJSON = args.json
 
     this.handleConflicts()
   }

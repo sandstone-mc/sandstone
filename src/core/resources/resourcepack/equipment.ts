@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type EquipmentClassArguments = {
   /**
    * The equipment's JSON.
    */
-  equipment: SymbolResource['equipment']
+  json: SymbolResource[(typeof EquipmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class EquipmentClass extends ResourceClass<EquipmentNode> {
-  public equipmentJSON: NonNullable<EquipmentClassArguments['equipment']>
+  static readonly resourceType = 'equipment'
+
+  public equipmentJSON: NonNullable<EquipmentClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: EquipmentClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       EquipmentNode,
-      sandstoneCore.pack.resourceToPath(name, ['equipment']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[EquipmentClass.resourceType].path),
       args,
     )
 
-    this.equipmentJSON = args.equipment
+    this.equipmentJSON = args.json
 
     this.handleConflicts()
   }

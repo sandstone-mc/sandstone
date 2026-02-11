@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type ParticleClassArguments = {
   /**
    * The particle's JSON.
    */
-  particle: SymbolResource['particle']
+  json: SymbolResource[(typeof ParticleClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class ParticleClass extends ResourceClass<ParticleNode> {
-  public particleJSON: NonNullable<ParticleClassArguments['particle']>
+  static readonly resourceType = 'particle'
+
+  public particleJSON: NonNullable<ParticleClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ParticleClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       ParticleNode,
-      sandstoneCore.pack.resourceToPath(name, ['particles']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ParticleClass.resourceType].path),
       args,
     )
 
-    this.particleJSON = args.particle
+    this.particleJSON = args.json
 
     this.handleConflicts()
   }

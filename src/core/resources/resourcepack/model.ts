@@ -2,7 +2,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 
 export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
   constructor(
@@ -15,20 +15,20 @@ export class ModelNode extends ContainerNode implements ResourceNode<ModelClass>
   getValue = () => jsonStringify(this.resource.modelJSON)
 }
 
-type ModelData = SymbolResource['model']
-
 export type ModelClassArguments = {
   /**
    * The model's JSON.
    */
-  model: ModelData
+  json: SymbolResource[(typeof ModelClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 /**
  * Helper class for modifying Minecraft model data
  */
 export class ModelClass extends ResourceClass<ModelNode> {
-  modelJSON: ModelData
+  static readonly resourceType = 'model'
+
+  modelJSON: NonNullable<ModelClassArguments['json']>
 
   constructor(
     core: SandstoneCore,
@@ -40,11 +40,11 @@ export class ModelClass extends ResourceClass<ModelNode> {
       core,
       { packType: core.pack.resourcePack() },
       ModelNode,
-      core.pack.resourceToPath(name, ['models', type]),
+      core.pack.resourceToPath(name, [...RESOURCE_PATHS[ModelClass.resourceType].path, type]),
       args,
     )
 
-    this.modelJSON = args.model
+    this.modelJSON = args.json
 
     this.handleConflicts()
   }

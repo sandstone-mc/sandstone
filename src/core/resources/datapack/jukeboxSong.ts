@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type JukeboxSongClassArguments = {
   /**
    * The jukebox song's JSON.
    */
-  jukeboxSong: SymbolResource['jukebox_song']
+  json: SymbolResource[(typeof JukeboxSongClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class JukeboxSongClass extends ResourceClass<JukeboxSongNode> {
-  public jukeboxSongJSON: NonNullable<JukeboxSongClassArguments['jukeboxSong']>
+  static readonly resourceType = 'jukebox_song' as const
+
+  public jukeboxSongJSON: NonNullable<JukeboxSongClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: JukeboxSongClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       JukeboxSongNode,
-      sandstoneCore.pack.resourceToPath(name, ['jukebox_song']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[JukeboxSongClass.resourceType].path),
       args,
     )
 
-    this.jukeboxSongJSON = args.jukeboxSong
+    this.jukeboxSongJSON = args.json
 
     this.handleConflicts()
   }

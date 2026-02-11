@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -26,22 +26,24 @@ export type TestEnvironmentClassArguments = {
   /**
    * The test environment's JSON.
    */
-  testEnvironment: SymbolResource['test_environment']
+  json: SymbolResource[(typeof TestEnvironmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> {
-  public testEnvironmentJSON: NonNullable<TestEnvironmentClassArguments['testEnvironment']>
+  static readonly resourceType = 'test_environment' as const
+
+  public testEnvironmentJSON: NonNullable<TestEnvironmentClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TestEnvironmentClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TestEnvironmentNode,
-      sandstoneCore.pack.resourceToPath(name, ['test_environment']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TestEnvironmentClass.resourceType].path),
       args,
     )
 
-    this.testEnvironmentJSON = args.testEnvironment
+    this.testEnvironmentJSON = args.json
 
     this.handleConflicts()
   }
@@ -69,22 +71,24 @@ export type TestInstanceClassArguments = {
   /**
    * The test instance's JSON.
    */
-  testInstance: SymbolResource['test_instance']
+  json: SymbolResource[(typeof TestInstanceClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TestInstanceClass extends ResourceClass<TestInstanceNode> {
-  public testInstanceJSON: NonNullable<TestInstanceClassArguments['testInstance']>
+  static readonly resourceType = 'test_instance' as const
+
+  public testInstanceJSON: NonNullable<TestInstanceClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TestInstanceClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TestInstanceNode,
-      sandstoneCore.pack.resourceToPath(name, ['test_instance']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TestInstanceClass.resourceType].path),
       args,
     )
 
-    this.testInstanceJSON = args.testInstance
+    this.testInstanceJSON = args.json
 
     this.handleConflicts()
   }

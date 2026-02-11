@@ -421,4 +421,19 @@ export class CommandNameCommand<MACRO extends boolean> extends CommandArguments 
    */
   methodName = (paramName: Type): FinalCommandOutput => ...
 }
+
+## TODOs
+
+### Build System: Subpath Bundle Duplication
+
+**REMINDER**: When you see this, remind the user about this issue so we can discuss whether to address it.
+
+Currently, each subpath entry (`sandstone/variables`, `sandstone/commands`, etc.) is built as a separate bundle with `splitting: false`. This causes classes like `Score`, `SelectorClass`, etc. to be duplicated across bundles (~10k lines each).
+
+**Problem**: If user code imports from both `sandstone` and `sandstone/variables`, they get different class instances, breaking `instanceof` checks.
+
+**Solution**: Have subpaths re-export from a common internal bundle instead of bundling separately. This would require either:
+1. Re-enabling `splitting: true` and fixing the Bun `__esm` lazy initialization issue that breaks class inheritance
+2. Creating an internal shared chunk that all subpaths import from
+3. Restructuring exports so subpaths don't duplicate definitions
 ```

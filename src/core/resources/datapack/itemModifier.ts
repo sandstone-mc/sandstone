@@ -1,9 +1,10 @@
-import type {
-  CONTAINER_SLOTS,
-  Coordinates,
-  ENTITY_SLOTS,
-  MultipleEntitiesArgument,
-  SymbolResource,
+import {
+  RESOURCE_PATHS,
+  type CONTAINER_SLOTS,
+  type Coordinates,
+  type ENTITY_SLOTS,
+  type MultipleEntitiesArgument,
+  type SymbolResource,
 } from 'sandstone/arguments'
 import { targetParser } from 'sandstone/variables/parsers'
 import { ContainerNode } from '../../nodes'
@@ -31,24 +32,26 @@ export type ItemModifierClassArguments = {
   /**
    * The item modifier's JSON.
    */
-  itemModifier: ItemModifierJSON
+  json: SymbolResource[(typeof ItemModifierClass)['resourceType']]
 } & ResourceClassArguments<'list'>
 
 type Modifier = ItemModifierJSON | ItemModifierClass
 
 export class ItemModifierClass extends ResourceClass<ItemModifierNode> implements ListResource {
-  public itemModifierJSON: ItemModifierClassArguments['itemModifier']
+  static readonly resourceType = 'item_modifier' as const
+
+  public itemModifierJSON: ItemModifierClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ItemModifierClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       ItemModifierNode,
-      sandstoneCore.pack.resourceToPath(name, ['item_modifier']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ItemModifierClass.resourceType].path),
       args,
     )
 
-    this.itemModifierJSON = args.itemModifier
+    this.itemModifierJSON = args.json
 
     this.handleConflicts()
   }

@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type TrialSpawnerClassArguments = {
   /**
    * The trial spawner configuration's JSON.
    */
-  trialSpawner: SymbolResource['trial_spawner']
+  json: SymbolResource[(typeof TrialSpawnerClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TrialSpawnerClass extends ResourceClass<TrialSpawnerNode> {
-  public trialSpawnerJSON: NonNullable<TrialSpawnerClassArguments['trialSpawner']>
+  static readonly resourceType = 'trial_spawner' as const
+
+  public trialSpawnerJSON: NonNullable<TrialSpawnerClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrialSpawnerClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TrialSpawnerNode,
-      sandstoneCore.pack.resourceToPath(name, ['trial_spawner']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TrialSpawnerClass.resourceType].path),
       args,
     )
 
-    this.trialSpawnerJSON = args.trialSpawner
+    this.trialSpawnerJSON = args.json
 
     this.handleConflicts()
   }

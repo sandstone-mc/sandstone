@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type InstrumentClassArguments = {
   /**
    * The instrument's JSON.
    */
-  instrument: SymbolResource['instrument']
+  json: SymbolResource[(typeof InstrumentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class InstrumentClass extends ResourceClass<InstrumentNode> {
-  public instrumentJSON: NonNullable<InstrumentClassArguments['instrument']>
+  static readonly resourceType = 'instrument' as const
+
+  public instrumentJSON: NonNullable<InstrumentClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: InstrumentClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       InstrumentNode,
-      sandstoneCore.pack.resourceToPath(name, ['instrument']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[InstrumentClass.resourceType].path),
       args,
     )
 
-    this.instrumentJSON = args.instrument
+    this.instrumentJSON = args.json
 
     this.handleConflicts()
   }

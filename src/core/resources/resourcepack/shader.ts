@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type ShaderClassArguments = {
   /**
    * The shader's JSON.
    */
-  shader: SymbolResource['shader']
+  json: SymbolResource[(typeof ShaderClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class ShaderClass extends ResourceClass<ShaderNode> {
-  public shaderJSON: NonNullable<ShaderClassArguments['shader']>
+  static readonly resourceType = 'shader'
+
+  public shaderJSON: NonNullable<ShaderClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ShaderClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       ShaderNode,
-      sandstoneCore.pack.resourceToPath(name, ['shaders']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ShaderClass.resourceType].path),
       args,
     )
 
-    this.shaderJSON = args.shader
+    this.shaderJSON = args.json
 
     this.handleConflicts()
   }

@@ -23,24 +23,26 @@ export type AdvancementClassArguments<AdvancementJSON extends SymbolResource['ad
   /**
    * The advancement's JSON.
    */
-  advancement: AdvancementJSON
+  json: AdvancementJSON
 } & ResourceClassArguments<'default'>
 
 export class AdvancementClass<AdvancementJSON extends SymbolResource['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
   implements ConditionClass {
-  public advancementJSON: AdvancementClassArguments<AdvancementJSON>['advancement']
+  static readonly resourceType = 'advancement'
+
+  public advancementJSON: AdvancementClassArguments<AdvancementJSON>['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<AdvancementJSON>) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       AdvancementNode,
-      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[getResourceType(AdvancementClass)].path), // TODO: Ideally we could just put `this`, not `AdvancementClass`
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[AdvancementClass.resourceType].path),
       args,
     )
 
-    this.advancementJSON = args.advancement
+    this.advancementJSON = args.json
 
     this.handleConflicts()
   }

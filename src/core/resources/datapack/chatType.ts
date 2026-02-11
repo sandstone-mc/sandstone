@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type ChatTypeClassArguments = {
   /**
    * The chat type's JSON.
    */
-  chatType: SymbolResource['chat_type']
+  json: SymbolResource[(typeof ChatTypeClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class ChatTypeClass extends ResourceClass<ChatTypeNode> {
-  public chatTypeJSON: NonNullable<ChatTypeClassArguments['chatType']>
+  static readonly resourceType = 'chat_type' as const
+
+  public chatTypeJSON: NonNullable<ChatTypeClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ChatTypeClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       ChatTypeNode,
-      sandstoneCore.pack.resourceToPath(name, ['chat_type']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ChatTypeClass.resourceType].path),
       args,
     )
 
-    this.chatTypeJSON = args.chatType
+    this.chatTypeJSON = args.json
 
     this.handleConflicts()
   }

@@ -1,11 +1,12 @@
-import type {
-  CONTAINER_SLOTS,
-  Coordinates,
-  ENTITY_SLOTS,
-  MultipleEntitiesArgument,
-  MultiplePlayersArgument,
-  MultiplePlayersArgumentOf,
-  SymbolResource,
+import {
+  RESOURCE_PATHS,
+  type CONTAINER_SLOTS,
+  type Coordinates,
+  type ENTITY_SLOTS,
+  type MultipleEntitiesArgument,
+  type MultiplePlayersArgument,
+  type MultiplePlayersArgumentOf,
+  type SymbolResource,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
@@ -31,22 +32,24 @@ export type LootTableClassArguments = {
   /**
    * The loot table's JSON.
    */
-  lootTable: SymbolResource['loot_table']
+  json: SymbolResource[(typeof LootTableClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class LootTableClass extends ResourceClass<LootTableNode> {
-  public lootTableJSON: LootTableClassArguments['lootTable']
+  static readonly resourceType = 'loot_table' as const
+
+  public lootTableJSON: LootTableClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: LootTableClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       LootTableNode,
-      sandstoneCore.pack.resourceToPath(name, ['loot_table']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[LootTableClass.resourceType].path),
       args,
     )
 
-    this.lootTableJSON = args.lootTable
+    this.lootTableJSON = args.json
 
     this.handleConflicts()
   }

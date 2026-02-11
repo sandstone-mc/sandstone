@@ -1,3 +1,4 @@
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type { LiteralUnion, SetType } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 
@@ -28,10 +29,12 @@ export type LanguageArguments = {
 } & ResourceClassArguments<'list'>
 
 export class LanguageClass extends ResourceClass<LanguageNode> implements ListResource {
+  static readonly resourceType = 'lang'
+
   languageJSON: NonNullable<LanguageArguments['language']>
 
   constructor(core: SandstoneCore, name: string, args: LanguageArguments) {
-    super(core, { packType: core.pack.resourcePack() }, LanguageNode, core.pack.resourceToPath(name, ['lang']), args)
+    super(core, { packType: core.pack.resourcePack() }, LanguageNode, core.pack.resourceToPath(name, RESOURCE_PATHS[LanguageClass.resourceType].path), args)
 
     this.languageJSON = args.language ?? {}
 

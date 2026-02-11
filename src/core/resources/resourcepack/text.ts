@@ -29,6 +29,8 @@ export type PlainTextArguments = {
 } & ResourceClassArguments<'list'>
 
 export class PlainTextClass extends ResourceClass<PlainTextNode> implements ListResource {
+  static readonly resourceType = 'text'
+
   texts: NonNullable<PlainTextArguments['text']> = ''
 
   constructor(core: SandstoneCore, name: string, args: PlainTextArguments) {

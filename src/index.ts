@@ -367,11 +367,13 @@ export {
   TestEnvironmentClass,
   TestInstanceClass,
   TimelineClass,
+  TradeSetClass,
   TrialSpawnerClass,
   TrimMaterialClass,
   TrimPatternClass,
   VariantClass,
   VillagerTradeClass,
+  WorldClockClass,
 
   // Resourcepack resources
   AtlasClass,
@@ -381,6 +383,7 @@ export {
   ItemModelDefinitionClass,
   LanguageClass,
   ModelClass,
+  ParticleClass,
   PostEffectClass,
   TextureClass,
 } from './core/resources'

@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
@@ -23,16 +23,18 @@ export type AtlasClassArguments = {
   /**
    * The atlas JSON.
    */
-  atlas?: SymbolResource['atlas']
+  json?: SymbolResource[(typeof AtlasClass)['resourceType']]
 } & ResourceClassArguments<'list'>
 
 export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {
-  atlasJSON: NonNullable<AtlasClassArguments['atlas']>
+  static readonly resourceType = 'atlas'
+
+  atlasJSON: NonNullable<AtlasClassArguments['json']>
 
   constructor(core: SandstoneCore, name: string, args: AtlasClassArguments) {
-    super(core, { packType: core.pack.resourcePack() }, AtlasNode, core.pack.resourceToPath(name, ['atlases']), args)
+    super(core, { packType: core.pack.resourcePack() }, AtlasNode, core.pack.resourceToPath(name, RESOURCE_PATHS[AtlasClass.resourceType].path), args)
 
-    this.atlasJSON = args.atlas || { sources: [] }
+    this.atlasJSON = args.json || { sources: [] }
 
     this.handleConflicts()
   }

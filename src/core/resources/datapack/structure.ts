@@ -2,12 +2,13 @@
 /* eslint-disable max-len */
 import lodash from 'lodash'
 import prismarine, { type NBT } from 'prismarine-nbt'
-import type {
-  SymbolEntity,
-  Registry,
-  Coordinates,
-  NBTObject,
-  RootNBT,
+import {
+  RESOURCE_PATHS,
+  type SymbolEntity,
+  type Registry,
+  type Coordinates,
+  type NBTObject,
+  type RootNBT,
 } from 'sandstone/arguments'
 import type { ResourceClassArguments, ResourceNode, SandstoneCore } from 'sandstone/core'
 import { add } from 'sandstone/utils'
@@ -78,6 +79,8 @@ type VariableInsertion = Score | DataPointClass<'storage'>
 // TODO: This should probably be rewritten
 
 export class StructureClass extends ResourceClass<StructureNode> {
+  static readonly resourceType = 'structure' as const
+
   structureBuffer?: Promise<Buffer>
 
   structureNBT?: StructureNBT
@@ -87,7 +90,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'nbt', encoding: false },
       StructureNode,
-      sandstoneCore.pack.resourceToPath(name, ['structure']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[StructureClass.resourceType].path),
       args,
     )
 

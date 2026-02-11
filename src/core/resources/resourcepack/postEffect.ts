@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type PostEffectClassArguments = {
   /**
    * The post effect's JSON.
    */
-  postEffect: SymbolResource['post_effect']
+  json: SymbolResource[(typeof PostEffectClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class PostEffectClass extends ResourceClass<PostEffectNode> {
-  public postEffectJSON: NonNullable<PostEffectClassArguments['postEffect']>
+  static readonly resourceType = 'post_effect'
+
+  public postEffectJSON: NonNullable<PostEffectClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: PostEffectClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       PostEffectNode,
-      sandstoneCore.pack.resourceToPath(name, ['post_effect']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[PostEffectClass.resourceType].path),
       args,
     )
 
-    this.postEffectJSON = args.postEffect
+    this.postEffectJSON = args.json
 
     this.handleConflicts()
   }

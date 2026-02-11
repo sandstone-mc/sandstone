@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -29,12 +29,14 @@ export type BlockStateArguments<JSON extends BlockStateJSON> = {
   /**
    * The block state's JSON.
    */
-  blockState: JSON
+  json: JSON
 } & ResourceClassArguments<'list'>
 
 export class BlockStateClass<JSON extends BlockStateJSON, Type = Extract<AllKeys<JSON>, BlockStateType>>
   extends ResourceClass<BlockStateNode<JSON>>
   implements ListResource {
+  static readonly resourceType = 'block_definition'
+
   blockStateJSON: JSON
 
   type: Type
@@ -48,11 +50,11 @@ export class BlockStateClass<JSON extends BlockStateJSON, Type = Extract<AllKeys
       core,
       { packType: core.pack.resourcePack() },
       BlockStateNode,
-      core.pack.resourceToPath(name, ['blockstates']),
+      core.pack.resourceToPath(name, RESOURCE_PATHS[BlockStateClass.resourceType].path),
       args,
     )
 
-    this.blockStateJSON = args.blockState
+    this.blockStateJSON = args.json
 
     this.type = Object.keys(this.blockStateJSON)[0] as Type
 

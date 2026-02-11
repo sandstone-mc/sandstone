@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type { SymbolResource, SOUND_TYPES } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource, type SOUND_TYPES } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
@@ -36,6 +36,8 @@ export type SoundEventArguments = {
 } & ResourceClassArguments<'default'>
 
 export class SoundEventClass<Type extends SOUND_TYPES> extends ResourceClass<SoundEventNode<Type>> {
+  static readonly resourceType = 'sound'
+
   buffer?: Promise<Buffer> | Buffer
 
   constructor(
@@ -48,7 +50,7 @@ export class SoundEventClass<Type extends SOUND_TYPES> extends ResourceClass<Sou
       core,
       { packType: core.pack.resourcePack(), extension: 'ogg', encoding: false },
       SoundEventNode<Type>,
-      core.pack.resourceToPath(name, ['sounds', type]),
+      core.pack.resourceToPath(name, [...RESOURCE_PATHS[SoundEventClass.resourceType].path, type]),
       args,
     )
 
@@ -110,6 +112,8 @@ export type SoundsArguments = {
 } & ResourceClassArguments<'default'>
 
 export class SoundsClass extends ResourceClass<SoundsNode> implements ListResource {
+  static readonly resourceType = 'sounds'
+
   soundsJSON: SoundsJSON | Promise<SoundsJSON>
 
   constructor(core: SandstoneCore, namespace: string, args: SoundsArguments) {
@@ -117,7 +121,7 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
       core,
       { packType: core.pack.resourcePack() },
       SoundsNode,
-      core.pack.resourceToPath(`${namespace}:sounds`, []),
+      core.pack.resourceToPath(`${namespace}:sounds`, RESOURCE_PATHS[SoundsClass.resourceType].path),
       args,
     )
 

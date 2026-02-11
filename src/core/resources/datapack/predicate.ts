@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -25,24 +25,26 @@ export type PredicateClassArguments = {
   /**
    * The predicate's JSON.
    */
-  predicate: PredicateJSON
+  json: SymbolResource[(typeof PredicateClass)['resourceType']]
 } & ResourceClassArguments<'list'>
 
 type Predicate = PredicateJSON | PredicateClass
 
 export class PredicateClass extends ResourceClass<PredicateNode> implements ListResource, ConditionClass {
-  public predicateJSON: NonNullable<PredicateClassArguments['predicate']>
+  static readonly resourceType = 'predicate' as const
+
+  public predicateJSON: NonNullable<PredicateClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: PredicateClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       PredicateNode,
-      sandstoneCore.pack.resourceToPath(name, ['predicate']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[PredicateClass.resourceType].path),
       args,
     )
 
-    this.predicateJSON = args.predicate
+    this.predicateJSON = args.json
 
     this.handleConflicts()
   }

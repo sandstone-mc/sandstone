@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -26,22 +26,24 @@ export type EnchantmentClassArguments = {
   /**
    * The enchantment's JSON.
    */
-  enchantment: SymbolResource['enchantment']
+  json: SymbolResource[(typeof EnchantmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class EnchantmentClass extends ResourceClass<EnchantmentNode> {
-  public enchantmentJSON: NonNullable<EnchantmentClassArguments['enchantment']>
+  static readonly resourceType = 'enchantment' as const
+
+  public enchantmentJSON: NonNullable<EnchantmentClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: EnchantmentClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       EnchantmentNode,
-      sandstoneCore.pack.resourceToPath(name, ['enchantment']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[EnchantmentClass.resourceType].path),
       args,
     )
 
-    this.enchantmentJSON = args.enchantment
+    this.enchantmentJSON = args.json
 
     this.handleConflicts()
   }
@@ -69,22 +71,24 @@ export type EnchantmentProviderClassArguments = {
   /**
    * The enchantment provider's JSON.
    */
-  enchantmentProvider: SymbolResource['enchantment_provider']
+  json: SymbolResource[(typeof EnchantmentProviderClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class EnchantmentProviderClass extends ResourceClass<EnchantmentProviderNode> {
-  public enchantmentProviderJSON: NonNullable<EnchantmentProviderClassArguments['enchantmentProvider']>
+  static readonly resourceType = 'enchantment_provider' as const
+
+  public enchantmentProviderJSON: NonNullable<EnchantmentProviderClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: EnchantmentProviderClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       EnchantmentProviderNode,
-      sandstoneCore.pack.resourceToPath(name, ['enchantment_provider']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[EnchantmentProviderClass.resourceType].path),
       args,
     )
 
-    this.enchantmentProviderJSON = args.enchantmentProvider
+    this.enchantmentProviderJSON = args.json
 
     this.handleConflicts()
   }

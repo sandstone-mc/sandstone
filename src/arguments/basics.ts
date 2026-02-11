@@ -153,3 +153,12 @@ export function getResourceType<C extends ResourceClassType[0]>(cls: C): Resourc
   }
   return entry[1] as ResourceTypeFor<C>
 }
+
+export function getResourceTypeFromInstance(instance: object): ResourceClassType[1] {
+  // Use instanceof to handle cases where class references differ due to bundling
+  const entry = RESOURCE_CLASS_TYPES.find(([c]) => instance instanceof c)
+  if (!entry) {
+    throw new Error(`Unknown resource class: ${instance.constructor.name}`)
+  }
+  return entry[1]
+}

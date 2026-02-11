@@ -1,3 +1,4 @@
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -26,10 +27,12 @@ export type FontArguments = {
 } & ResourceClassArguments<'list'>
 
 export class FontClass extends ResourceClass<FontNode> implements ListResource {
+  static readonly resourceType = 'font'
+
   fontJSON: { providers: FontArguments['providers'] }
 
   constructor(core: SandstoneCore, name: string, args: FontArguments) {
-    super(core, { packType: core.pack.resourcePack() }, FontNode, core.pack.resourceToPath(name, ['font']), args)
+    super(core, { packType: core.pack.resourcePack() }, FontNode, core.pack.resourceToPath(name, RESOURCE_PATHS[FontClass.resourceType].path), args)
 
     this.fontJSON = { providers: args.providers }
 

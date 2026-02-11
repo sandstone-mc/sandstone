@@ -1042,11 +1042,11 @@ export class SandstonePack {
 
   Advancement<AdvancementJSON extends NonNullable<SymbolResource['advancement']>>(
     name: string,
-    advancement: AdvancementJSON,
+    json: AdvancementJSON,
     options?: Omit<Partial<AdvancementClassArguments>, 'advancement'>,
   ) {
     return new AdvancementClass(this.core, name, {
-      advancement,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('advancement') as AdvancementClassArguments['onConflict'],
@@ -1056,16 +1056,16 @@ export class SandstonePack {
 
   DamageType = (name: string, damageType: NonNullable<SymbolResource['damage_type']>, options?: Partial<DamageTypeClassArguments>) =>
     new DamageTypeClass(this.core, name, {
-      damageType,
+      json: damageType,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('damage_type') as DamageTypeClassArguments['onConflict'],
       ...options,
     })
 
-  ItemModifier = (name: string, itemModifier: NonNullable<SymbolResource['item_modifier']>, options?: Partial<Omit<ItemModifierClassArguments, 'itemModifier'>>) =>
+  ItemModifier = (name: string, itemModifier: NonNullable<SymbolResource['item_modifier']>, options?: Partial<Omit<ItemModifierClassArguments, 'json'>>) =>
     new ItemModifierClass(this.core, name, {
-      itemModifier,
+      json: itemModifier,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('item_modifier') as ItemModifierClassArguments['onConflict'],
@@ -1074,7 +1074,7 @@ export class SandstonePack {
 
   LootTable = (name: string, lootTable: NonNullable<SymbolResource['loot_table']>, options?: Partial<LootTableClassArguments>) =>
     new LootTableClass(this.core, name, {
-      lootTable,
+      json: lootTable,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('loot_table') as LootTableClassArguments['onConflict'],
@@ -1083,7 +1083,7 @@ export class SandstonePack {
 
   Predicate = (name: string, predicate: NonNullable<SymbolResource['predicate']>, options?: Partial<PredicateClassArguments>) =>
     new PredicateClass(this.core, name, {
-      predicate,
+      json: predicate,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('predicate') as PredicateClassArguments['onConflict'],
@@ -1092,7 +1092,7 @@ export class SandstonePack {
 
   Recipe = (name: string, recipe: NonNullable<SymbolResource['recipe']>, options?: Partial<RecipeClassArguments>) =>
     new RecipeClass(this.core, name, {
-      recipe,
+      json: recipe,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],
@@ -1116,7 +1116,7 @@ export class SandstonePack {
 
   TrimMaterial = (name: string, trimMaterial: NonNullable<SymbolResource['trim_material']>, options?: Partial<TrimMaterialClassArguments>) =>
     new TrimMaterialClass(this.core, name, {
-      trimMaterial,
+      json: trimMaterial,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('trim_material') as TrimMaterialClassArguments['onConflict'],
@@ -1125,7 +1125,7 @@ export class SandstonePack {
 
   TrimPattern = (name: string, trimPattern: NonNullable<SymbolResource['trim_pattern']>, options?: Partial<TrimPatternClassArguments>) =>
     new TrimPatternClass(this.core, name, {
-      trimPattern,
+      json: trimPattern,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('trim_pattern') as TrimPatternClassArguments['onConflict'],
@@ -1134,7 +1134,7 @@ export class SandstonePack {
 
   BannerPattern = (name: string, bannerPattern: NonNullable<SymbolResource['banner_pattern']>, options?: Partial<BannerPatternClassArguments>) =>
     new BannerPatternClass(this.core, name, {
-      bannerPattern,
+      json: bannerPattern,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('banner_pattern') as BannerPatternClassArguments['onConflict'],
@@ -1143,7 +1143,7 @@ export class SandstonePack {
 
   ChatType = (name: string, chatType: NonNullable<SymbolResource['chat_type']>, options?: Partial<ChatTypeClassArguments>) =>
     new ChatTypeClass(this.core, name, {
-      chatType,
+      json: chatType,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('chat_type') as ChatTypeClassArguments['onConflict'],
@@ -1152,7 +1152,7 @@ export class SandstonePack {
 
   Dialog = (name: string, dialog: NonNullable<SymbolResource['dialog']>, options?: Partial<DialogClassArguments>) =>
     new DialogClass(this.core, name, {
-      dialog,
+      json: dialog,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('dialog') as DialogClassArguments['onConflict'],
@@ -1161,7 +1161,7 @@ export class SandstonePack {
 
   Enchantment = (name: string, enchantment: NonNullable<SymbolResource['enchantment']>, options?: Partial<EnchantmentClassArguments>) =>
     new EnchantmentClass(this.core, name, {
-      enchantment,
+      json: enchantment,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('enchantment') as EnchantmentClassArguments['onConflict'],
@@ -1170,7 +1170,7 @@ export class SandstonePack {
 
   EnchantmentProvider = (name: string, enchantmentProvider: NonNullable<SymbolResource['enchantment_provider']>, options?: Partial<EnchantmentProviderClassArguments>) =>
     new EnchantmentProviderClass(this.core, name, {
-      enchantmentProvider,
+      json: enchantmentProvider,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('enchantment_provider') as EnchantmentProviderClassArguments['onConflict'],
@@ -1179,7 +1179,7 @@ export class SandstonePack {
 
   Instrument = (name: string, instrument: NonNullable<SymbolResource['instrument']>, options?: Partial<InstrumentClassArguments>) =>
     new InstrumentClass(this.core, name, {
-      instrument,
+      json: instrument,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('instrument') as InstrumentClassArguments['onConflict'],
@@ -1188,7 +1188,7 @@ export class SandstonePack {
 
   JukeboxSong = (name: string, jukeboxSong: NonNullable<SymbolResource['jukebox_song']>, options?: Partial<JukeboxSongClassArguments>) =>
     new JukeboxSongClass(this.core, name, {
-      jukeboxSong,
+      json: jukeboxSong,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('jukebox_song') as JukeboxSongClassArguments['onConflict'],
@@ -1197,7 +1197,7 @@ export class SandstonePack {
 
   TestEnvironment = (name: string, testEnvironment: NonNullable<SymbolResource['test_environment']>, options?: Partial<TestEnvironmentClassArguments>) =>
     new TestEnvironmentClass(this.core, name, {
-      testEnvironment,
+      json: testEnvironment,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('test_environment') as TestEnvironmentClassArguments['onConflict'],
@@ -1206,7 +1206,7 @@ export class SandstonePack {
 
   TestInstance = (name: string, testInstance: NonNullable<SymbolResource['test_instance']>, options?: Partial<TestInstanceClassArguments>) =>
     new TestInstanceClass(this.core, name, {
-      testInstance,
+      json: testInstance,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('test_instance') as TestInstanceClassArguments['onConflict'],
@@ -1215,7 +1215,7 @@ export class SandstonePack {
 
   Timeline = (name: string, timeline: NonNullable<SymbolResource['timeline']>, options?: Partial<TimelineClassArguments>) =>
     new TimelineClass(this.core, name, {
-      timeline,
+      json: timeline,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('timeline') as TimelineClassArguments['onConflict'],
@@ -1224,7 +1224,7 @@ export class SandstonePack {
 
   WorldClock = (name: string, worldClock: NonNullable<SymbolResource['world_clock']>, options?: Partial<WorldClockClassArguments>) =>
     new WorldClockClass(this.core, name, {
-      worldClock,
+      json: worldClock,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('world_clock') as WorldClockClassArguments['onConflict'],
@@ -1233,7 +1233,7 @@ export class SandstonePack {
 
   TradeSet = (name: string, tradeSet: NonNullable<SymbolResource['trade_set']>, options?: Partial<TradeSetClassArguments>) =>
     new TradeSetClass(this.core, name, {
-      tradeSet,
+      json: tradeSet,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('trade_set') as TradeSetClassArguments['onConflict'],
@@ -1242,7 +1242,7 @@ export class SandstonePack {
 
   TrialSpawner = (name: string, trialSpawner: NonNullable<SymbolResource['trial_spawner']>, options?: Partial<TrialSpawnerClassArguments>) =>
     new TrialSpawnerClass(this.core, name, {
-      trialSpawner,
+      json: trialSpawner,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('trial_spawner') as TrialSpawnerClassArguments['onConflict'],
@@ -1251,7 +1251,7 @@ export class SandstonePack {
 
   VillagerTrade = (name: string, villagerTrade: NonNullable<SymbolResource['villager_trade']>, options?: Partial<VillagerTradeClassArguments>) =>
     new VillagerTradeClass(this.core, name, {
-      villagerTrade,
+      json: villagerTrade,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('villager_trade') as VillagerTradeClassArguments['onConflict'],
@@ -1267,9 +1267,9 @@ export class SandstonePack {
       ...options,
     })
 
-  Atlas = (name: string, atlas: NonNullable<SymbolResource['atlas']>, options?: Partial<AtlasClassArguments>) =>
+  Atlas = (name: string, json: NonNullable<SymbolResource['atlas']>, options?: Partial<AtlasClassArguments>) =>
     new AtlasClass(this.core, name, {
-      atlas,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('atlas') as AtlasClassArguments['onConflict'],
@@ -1278,11 +1278,11 @@ export class SandstonePack {
 
   BlockState<JSON extends BlockStateJSON>(
     name: string,
-    blockState: JSON,
+    json: JSON,
     options?: Partial<BlockStateArguments<JSON>>,
   ) {
     return new BlockStateClass(this.core, name, {
-      blockState,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('blockstate') as BlockStateArguments<JSON>['onConflict'],
@@ -1311,11 +1311,11 @@ export class SandstonePack {
   Model = (
     type: 'block' | 'item',
     name: string,
-    model: ModelClassArguments['model'],
+    json: ModelClassArguments['json'],
     options?: Partial<ModelClassArguments>,
   ) =>
     new ModelClass(this.core, type, name, {
-      model,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('model') as ModelClassArguments['onConflict'],
@@ -1411,45 +1411,45 @@ export class SandstonePack {
     })
   }
 
-  Equipment = (name: string, equipment: NonNullable<SymbolResource['equipment']>, options?: Partial<EquipmentClassArguments>) =>
+  Equipment = (name: string, json: NonNullable<SymbolResource['equipment']>, options?: Partial<EquipmentClassArguments>) =>
     new EquipmentClass(this.core, name, {
-      equipment,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('equipment') as EquipmentClassArguments['onConflict'],
       ...options,
     })
 
-  Particle = (name: string, particle: NonNullable<SymbolResource['particle']>, options?: Partial<ParticleClassArguments>) =>
+  Particle = (name: string, json: NonNullable<SymbolResource['particle']>, options?: Partial<ParticleClassArguments>) =>
     new ParticleClass(this.core, name, {
-      particle,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('particle') as ParticleClassArguments['onConflict'],
       ...options,
     })
 
-  PostEffect = (name: string, postEffect: NonNullable<SymbolResource['post_effect']>, options?: Partial<PostEffectClassArguments>) =>
+  PostEffect = (name: string, json: NonNullable<SymbolResource['post_effect']>, options?: Partial<PostEffectClassArguments>) =>
     new PostEffectClass(this.core, name, {
-      postEffect,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('post_effect') as PostEffectClassArguments['onConflict'],
       ...options,
     })
 
-  Shader = (name: string, shader: NonNullable<SymbolResource['shader']>, options?: Partial<ShaderClassArguments>) =>
+  Shader = (name: string, json: NonNullable<SymbolResource['shader']>, options?: Partial<ShaderClassArguments>) =>
     new ShaderClass(this.core, name, {
-      shader,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('shader') as ShaderClassArguments['onConflict'],
       ...options,
     })
 
-  WaypointStyle = (name: string, waypointStyle: NonNullable<SymbolResource['waypoint_style']>, options?: Partial<WaypointStyleClassArguments>) =>
+  WaypointStyle = (name: string, json: NonNullable<SymbolResource['waypoint_style']>, options?: Partial<WaypointStyleClassArguments>) =>
     new WaypointStyleClass(this.core, name, {
-      waypointStyle,
+      json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('waypoint_style') as WaypointStyleClassArguments['onConflict'],

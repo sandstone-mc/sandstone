@@ -1,3 +1,4 @@
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type {
   ItemDefinition,
   ItemModel,
@@ -308,6 +309,8 @@ export type ItemModelDefinitionClassArguments = {
  * Controls how items are rendered based on their components and state.
  */
 export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionNode> {
+  static readonly resourceType = 'item_definition'
+
   itemDefinitionJSON: ItemDefinition
 
   constructor(
@@ -319,7 +322,7 @@ export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionN
       core,
       { packType: core.pack.resourcePack() },
       ItemModelDefinitionNode,
-      core.pack.resourceToPath(name, ['items']),
+      core.pack.resourceToPath(name, RESOURCE_PATHS[ItemModelDefinitionClass.resourceType].path),
       args,
     )
 

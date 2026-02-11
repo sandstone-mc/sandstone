@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type BannerPatternClassArguments = {
   /**
    * The banner pattern's JSON.
    */
-  bannerPattern: SymbolResource['banner_pattern']
+  json: SymbolResource[(typeof BannerPatternClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class BannerPatternClass extends ResourceClass<BannerPatternNode> {
-  public bannerPatternJSON: NonNullable<BannerPatternClassArguments['bannerPattern']>
+  static readonly resourceType = 'banner_pattern' as const
+
+  public bannerPatternJSON: NonNullable<BannerPatternClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: BannerPatternClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       BannerPatternNode,
-      sandstoneCore.pack.resourceToPath(name, ['banner_pattern']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[BannerPatternClass.resourceType].path),
       args,
     )
 
-    this.bannerPatternJSON = args.bannerPattern
+    this.bannerPatternJSON = args.json
 
     this.handleConflicts()
   }

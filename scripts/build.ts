@@ -9,7 +9,6 @@
 import { join } from 'path'
 import { rm, mkdir, readdir, readFile, writeFile, stat } from 'fs/promises'
 import { createHasInstancePlugin } from './plugins/hasinstance-plugin'
-import { fixDuplicateExports } from './plugins/fix-exports'
 import { fixDtsImports } from './plugins/fix-dts-imports'
 
 const rootDir = join(import.meta.dir, '..')
@@ -109,10 +108,6 @@ async function main() {
 
   log('  Done building JS bundles')
 
-  // Fix duplicate exports bug in bun's output
-  log('Fixing duplicate exports...')
-  await fixDuplicateExportsInDir(distDir)
-
   // Generate declarations with tsc
   log('Generating type declarations...')
   const tsc = Bun.spawn(['bun', 'tsc', '-p', 'tsconfig.build.json'], {
@@ -130,26 +125,7 @@ async function main() {
   log(`\nBuild completed in ${elapsed}s`)
 }
 
-/**
- * Fix duplicate exports in all .js files in the dist directory.
- */
-async function fixDuplicateExportsInDir(distDir: string): Promise<void> {
-  let fixedCount = 0
-
-  for await (const filePath of walkDir(distDir, '.js')) {
-    const content = await readFile(filePath, 'utf8')
-    const result = fixDuplicateExports(content)
-
-    if (result.modified) {
-      await writeFile(filePath, result.content)
-      fixedCount++
-    }
-  }
-
-  log(`  Fixed duplicates in ${fixedCount} files`)
-}
-
-async function* walkDir(dir: string, ext: string = '.d.ts'): AsyncGenerator<string> {
+async function* walkDir(dir: string, ext: string): AsyncGenerator<string> {
   const entries = await readdir(dir, { withFileTypes: true })
   for (const entry of entries) {
     const path = join(dir, entry.name)

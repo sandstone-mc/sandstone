@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -23,22 +23,24 @@ export type TrimPatternClassArguments = {
   /**
    * The trim pattern's JSON.
    */
-  trimPattern: NonNullable<SymbolResource['trim_pattern']>
+  json: SymbolResource[(typeof TrimPatternClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
-  public trimPatternJSON: NonNullable<TrimPatternClassArguments['trimPattern']>
+  static readonly resourceType = 'trim_pattern' as const
+
+  public trimPatternJSON: NonNullable<TrimPatternClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimPatternClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TrimPatternNode,
-      sandstoneCore.pack.resourceToPath(name, ['trim_pattern']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TrimPatternClass.resourceType].path),
       args,
     )
 
-    this.trimPatternJSON = args.trimPattern
+    this.trimPatternJSON = args.json
 
     this.handleConflicts()
   }

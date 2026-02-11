@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import type { Coordinates, SingleEntityArgument, SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type SymbolResource } from 'sandstone/arguments'
 import type { SetType } from 'sandstone/utils'
 import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables'
@@ -31,7 +31,7 @@ export type DamageTypeClassArguments = {
   /**
    * The damage type's JSON.
    */
-  damageType: SymbolResource['damage_type']
+  json: SymbolResource[(typeof DamageTypeClass)['resourceType']]
 } & ResourceClassArguments<'default'> & {
     /**
      * Optional. Automatically adds damage type to minecraft damage type group tag flags.
@@ -40,18 +40,20 @@ export type DamageTypeClassArguments = {
   }
 
 export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements ComponentClass {
-  public damageTypeJSON: DamageTypeClassArguments['damageType']
+  static readonly resourceType = 'damage_type' as const
+
+  public damageTypeJSON: DamageTypeClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DamageTypeClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       DamageTypeNode,
-      sandstoneCore.pack.resourceToPath(name, ['damage_type']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[DamageTypeClass.resourceType].path),
       args,
     )
 
-    this.damageTypeJSON = args.damageType
+    this.damageTypeJSON = args.json
 
     if (args.flags) {
       for (const flag of args.flags) {

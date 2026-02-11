@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,22 +22,24 @@ export type WaypointStyleClassArguments = {
   /**
    * The waypoint style's JSON.
    */
-  waypointStyle: SymbolResource['waypoint_style']
+  json: SymbolResource[(typeof WaypointStyleClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class WaypointStyleClass extends ResourceClass<WaypointStyleNode> {
-  public waypointStyleJSON: NonNullable<WaypointStyleClassArguments['waypointStyle']>
+  static readonly resourceType = 'waypoint_style'
+
+  public waypointStyleJSON: NonNullable<WaypointStyleClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: WaypointStyleClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       WaypointStyleNode,
-      sandstoneCore.pack.resourceToPath(name, ['waypoint_style']),
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[WaypointStyleClass.resourceType].path),
       args,
     )
 
-    this.waypointStyleJSON = args.waypointStyle
+    this.waypointStyleJSON = args.json
 
     this.handleConflicts()
   }
