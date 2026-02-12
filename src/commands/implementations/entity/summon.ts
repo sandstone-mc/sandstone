@@ -46,7 +46,7 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
    * 
    * // Custom boss mob
    * summon('minecraft:zombie', abs(0, 64, 0), {
-   *   CustomName: '{"text":"Guardian","color":"gold"}',
+   *   CustomName: '{"text": "Guardian", "color": "gold"}',
    *   Health: 50,
    *   Attributes: [
    *     {Name: 'generic.max_health', Base: 50},

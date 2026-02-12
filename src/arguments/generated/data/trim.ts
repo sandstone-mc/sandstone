@@ -26,7 +26,7 @@ export type TrimPattern = {
    *
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/trims/models/armor/`
+   * Value: A texture ID within a path root of `(namespace)/textures/trims/models/armor/`
    */
   asset_id: `${string}:${string}`,
   /**

@@ -135,7 +135,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    *
    * // Place sign with rotation and text
    * setblock(abs(100, 65, 200), 'minecraft:oak_sign', { rotation: 8 }, {
-   *   front_text: { messages: ['{"text":"Welcome!","color":"gold"}'] }
+   *   front_text: { messages: ['{"text": "Welcome!", "color": "gold"}'] }
    * })
    * ```
    */

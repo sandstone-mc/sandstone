@@ -4,7 +4,7 @@ export type BannerPattern = {
    *
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/banner/`
+   * Value: A texture ID within a path root of `(namespace)/textures/entity/banner/`
    */
   asset_id: `${string}:${string}`,
   /**

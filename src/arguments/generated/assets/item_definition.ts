@@ -40,7 +40,7 @@ export type Bed = {
   /**
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/bed/`
+   * Value: A texture ID within a path root of `(namespace)/textures/entity/bed/`
    */
   texture: `${string}:${string}`,
 }
@@ -55,7 +55,7 @@ export type Chest = {
   /**
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/chest/`
+   * Value: A texture ID within a path root of `(namespace)/textures/entity/chest/`
    */
   texture: `${string}:${string}`,
   /**
@@ -350,7 +350,7 @@ export type HangingSign = {
   /**
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/signs/hanging/`
+   * Value: A texture ID within a path root of `(namespace)/textures/entity/signs/hanging/`
    */
   texture: `${string}:${string}`,
 }
@@ -386,7 +386,7 @@ export type Head = ({
    *
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/`
+   * Value: A texture ID within a path root of `(namespace)/textures/entity/`
    */
   texture?: `${string}:${string}`,
 })
@@ -668,7 +668,7 @@ export type ShulkerBox = {
   /**
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/shulker/`
+   * Value: A texture ID within a path root of `(namespace)/textures/entity/shulker/`
    */
   texture: `${string}:${string}`,
   /**
@@ -787,7 +787,7 @@ export type StandingSign = {
   /**
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/entity/signs/`
+   * Value: A texture ID within a path root of `(namespace)/textures/entity/signs/`
    */
   texture: `${string}:${string}`,
 }

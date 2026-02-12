@@ -35,7 +35,7 @@ export type SoundEventArguments = {
   addToSounds?: boolean
 } & ResourceClassArguments<'default'>
 
-export class SoundEventClass<Type extends SOUND_TYPES> extends ResourceClass<SoundEventNode<Type>> {
+export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends ResourceClass<SoundEventNode<Type>> {
   static readonly resourceType = 'sound'
 
   buffer?: Promise<Buffer> | Buffer

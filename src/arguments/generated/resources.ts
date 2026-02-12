@@ -32,7 +32,9 @@ import {
   ModelClass,
   ParticleClass,
   PostEffectClass,
+  SoundEventClass,
   TextureClass,
+  WaypointStyleClass,
   TagClass,
 } from 'sandstone'
 
@@ -72,24 +74,6 @@ export const RESOURCE_PATHS = {
   'zombie_nautilus_variant': { path: ['zombie_nautilus_variant'], pack: 'data', ext: '.json' },
   'dimension': { path: ['dimension'], pack: 'data', ext: '.json' },
   'dimension_type': { path: ['dimension_type'], pack: 'data', ext: '.json' },
-  'worldgen/biome': { path: ['worldgen', 'biome'], pack: 'data', ext: '.json' },
-  'worldgen/configured_carver': { path: ['worldgen', 'configured_carver'], pack: 'data', ext: '.json' },
-  'worldgen/configured_feature': { path: ['worldgen', 'configured_feature'], pack: 'data', ext: '.json' },
-  'worldgen/density_function': { path: ['worldgen', 'density_function'], pack: 'data', ext: '.json' },
-  'worldgen/flat_level_generator_preset': { 
-    path: ['worldgen', 'flat_level_generator_preset'], pack: 'data', ext: '.json' 
-  },
-  'worldgen/multi_noise_biome_source_parameter_list': { 
-    path: ['worldgen', 'multi_noise_biome_source_parameter_list'], pack: 'data', ext: '.json'
-  },
-  'worldgen/noise': { path: ['worldgen', 'noise'], pack: 'data', ext: '.json' },
-  'worldgen/noise_settings': { path: ['worldgen', 'noise_settings'], pack: 'data', ext: '.json' },
-  'worldgen/placed_feature': { path: ['worldgen', 'placed_feature'], pack: 'data', ext: '.json' },
-  'worldgen/processor_list': { path: ['worldgen', 'processor_list'], pack: 'data', ext: '.json' },
-  'worldgen/structure': { path: ['worldgen', 'structure'], pack: 'data', ext: '.json' },
-  'worldgen/structure_set': { path: ['worldgen', 'structure_set'], pack: 'data', ext: '.json' },
-  'worldgen/template_pool': { path: ['worldgen', 'template_pool'], pack: 'data', ext: '.json' },
-  'worldgen/world_preset': { path: ['worldgen', 'world_preset'], pack: 'data', ext: '.json' },
   'atlas': { path: ['atlases'], pack: 'assets', ext: '.json' },
   'block_definition': { path: ['blockstates'], pack: 'assets', ext: '.json' },
   'equipment': { path: ['equipment'], pack: 'assets', ext: '.json' },
@@ -110,9 +94,9 @@ export const RESOURCE_PATHS = {
   'texture': { path: ['textures'], pack: 'assets', ext: '.png' },
   'texture_meta': { path: ['textures'], pack: 'assets', ext: '.png.mcmeta' },
   'waypoint_style': { path: ['waypoint_style'], pack: 'assets', ext: '.json' },
-  'sounds': { path: [''], pack: 'assets', ext: '.json' },
-  'regional_compliancies': { path: [''], pack: 'assets', ext: '.json' },
-  'gpu_warnlist': { path: [''], pack: 'assets', ext: '.json' },
+  'sounds': { path: [], pack: 'assets', ext: '.json' },
+  'regional_compliancies': { path: [], pack: 'assets', ext: '.json' },
+  'gpu_warnlist': { path: [], pack: 'assets', ext: '.json' },
   'tag': { path: ['tags', true], pack: 'data', ext: '.json' },
 } as const
 
@@ -150,8 +134,8 @@ export const RESOURCE_CLASS_TYPES = [
   [ModelClass, 'model'],
   [ParticleClass, 'particle'],
   [PostEffectClass, 'post_effect'],
+  [SoundEventClass, 'sound'],
   [TextureClass, 'texture'],
-  [TagClass, 'tag']
+  [WaypointStyleClass, 'waypoint_style'],
+  [TagClass, 'tag'],
 ] as const
-
-// TODO: I made manual edits to this, the generator needs to be adjusted

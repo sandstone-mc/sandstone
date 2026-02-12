@@ -1,6 +1,6 @@
 import type { SymbolEnvironmentAttribute } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTFloat, NBTInt, WorldClockClass } from 'sandstone'
 
 export type AttributeTrackBase = {
   /**
@@ -114,7 +114,7 @@ export type Timeline = {
   /**
    * The world clock this timeline is tied to.
    */
-  clock: `${string}:${string}`,
+  clock: (Registry['minecraft:world_clock'] | WorldClockClass),
   time_markers?: TimeMarkerMap,
   tracks?: EnvironmentAttributeTrackMap,
 }

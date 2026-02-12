@@ -13,4 +13,5 @@ export type Chicken = (Breedable & {
    */
   EggLayTime?: NBTInt,
   variant?: (Registry['minecraft:chicken_variant'] | VariantClass<'chicken'>),
+  sound_variant?: (`${string}:${string}` | VariantClass<'chicken_sound'>),
 })

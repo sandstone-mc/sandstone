@@ -17,25 +17,29 @@ export type Equipment = {
   layers: Layers,
 }
 
-export type Layer<T extends NBTObject> = {
+export type Layer<T extends NBTObject> = ({
   /**
    * Texture location for this layer, inside `entity/equipment/<layer>/`.
    */
   texture: T,
+} & {
   /**
-   * Configures how this layer behaves when dyed (in the `#dyeable` item tag, and has the `dyed_color` component).
+   * Configures how this layer behaves when dyed (has the `dyed_color` component).
    */
   dyeable?: Dyeable,
-}
+})
 
 export type Layers = {
   humanoid?: Array<Layer<`${string}:${string}`>>,
   humanoid_leggings?: Array<Layer<`${string}:${string}`>>,
+  humanoid_baby?: Array<Layer<`${string}:${string}`>>,
   wings?: Array<WingsLayer<`${string}:${string}`>>,
   wolf_body?: Array<Layer<`${string}:${string}`>>,
   horse_body?: Array<Layer<`${string}:${string}`>>,
   llama_body?: Array<Layer<`${string}:${string}`>>,
   happy_ghast_body?: Array<Layer<`${string}:${string}`>>,
+  nautilus_saddle?: Array<Layer<`${string}:${string}`>>,
+  nautilus_body?: Array<Layer<`${string}:${string}`>>,
   pig_saddle?: Array<Layer<`${string}:${string}`>>,
   strider_saddle?: Array<Layer<`${string}:${string}`>>,
   camel_husk_saddle?: Array<Layer<`${string}:${string}`>>,

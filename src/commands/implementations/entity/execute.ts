@@ -725,7 +725,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    * @example
    * ```ts
    * execute.at('@p').run.summon('minecraft:lightning_bolt')
-   * execute.as('@a').at('@e[type=villager,limit=1]').run.teleport('@s', rel(0, 5, 0))
+   * execute.as('@a').at('@e[type=villager, limit=1]').run.teleport('@s', rel(0, 5, 0))
    * ```
    */
   at = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['at', targetParser(targets)])

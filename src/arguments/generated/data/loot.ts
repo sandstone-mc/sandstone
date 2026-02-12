@@ -184,7 +184,7 @@ export type LootTable = {
   /**
    * Value:
    *
-   * Value: Defines a `minecraft:random_sequence` id.
+   * Value: Defines a `random_sequence` id.
    */
   random_sequence?: `${string}:${string}`,
 }

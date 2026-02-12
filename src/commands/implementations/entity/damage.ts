@@ -40,7 +40,7 @@ export class DamageCommand<MACRO extends boolean> extends CommandArguments {
    * can be attributed to specific sources for proper death messages.
    *
    * @param target The entity to damage. Must be a single entity selector.
-   *              Examples: '@p', '@e[type=zombie,limit=1]', 'PlayerName'
+   *              Examples: '@p', '@e[type=zombie, limit=1]', 'PlayerName'
    *
    * @param amount Damage amount to deal (0-1,000,000).
    *              Float values are allowed. 0 damage still triggers hit effects.
@@ -54,7 +54,7 @@ export class DamageCommand<MACRO extends boolean> extends CommandArguments {
    * ```ts
    * // Basic damage application
    * damage('@p', 10)                           // 10 generic damage
-   * damage('@e[type=cow,limit=1]', 20, 'minecraft:player_attack')
+   * damage('@e[type=cow, limit=1]', 20, 'minecraft:player_attack')
    *
    * // Environmental damage
    * damage('@a[y=..10]', 5, 'minecraft:lava')  // Lava damage to underground players
@@ -62,11 +62,11 @@ export class DamageCommand<MACRO extends boolean> extends CommandArguments {
    *
    * // Combat simulation
    * damage('@e[type=zombie]', 15, 'minecraft:arrow').by('@p') // Arrow shot by player
-   * damage('@p', 8, 'minecraft:mob_attack').by('@e[type=skeleton,limit=1]')
+   * damage('@p', 8, 'minecraft:mob_attack').by('@e[type=skeleton, limit=1]')
    *
    * // Complex attribution
    * damage('@e[type=creeper]', 50, 'minecraft:explosion')
-   *   .by('@e[type=tnt,limit=1]')
+   *   .by('@e[type=tnt, limit=1]')
    *   .from('@p') // Player lit TNT that exploded creeper
    *
    * // Custom mechanics

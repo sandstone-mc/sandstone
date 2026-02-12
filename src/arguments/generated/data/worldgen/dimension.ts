@@ -2,7 +2,7 @@ import type { GlobalEnvironmentAttributeMap } from 'sandstone/arguments/generate
 import type { ChunkGenerator } from 'sandstone/arguments/generated/data/worldgen/dimension/chunk_generator.ts'
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTDouble, NBTFloat, NBTInt, TagClass, TimelineClass } from 'sandstone'
+import type { NBTDouble, NBTFloat, NBTInt, TagClass, TimelineClass, WorldClockClass } from 'sandstone'
 
 export type CardinalLightType = ('default' | 'nether')
 
@@ -13,7 +13,7 @@ export type Dimension = {
 
 export type DimensionType = {
   attributes?: GlobalEnvironmentAttributeMap,
-  default_clock?: `${string}:${string}`,
+  default_clock?: (Registry['minecraft:world_clock'] | WorldClockClass),
   timelines?: ((
         | Registry['minecraft:timeline']
         | `#${Registry['minecraft:tag/timeline']}`

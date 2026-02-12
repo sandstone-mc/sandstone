@@ -2,7 +2,7 @@ import type { DiscreteAttribute } from 'sandstone/arguments/generated/data/world
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color.ts'
-import type { SingleItem } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
 
@@ -65,7 +65,7 @@ export type FlashParticle = {
 }
 
 export type ItemParticle = {
-  item: (Registry['minecraft:item'] | SingleItem),
+  item: ItemStackTemplate,
 }
 
 /**

@@ -1,7 +1,7 @@
 import type { SymbolTrigger } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type {
   AdvancementClass,
   LootTableClass,
@@ -67,7 +67,7 @@ export type AdvancementCriterion = NonNullable<({
 }[Registry['minecraft:trigger_type']])>
 
 export type AdvancementDisplay = {
-  icon: (ItemStack | Registry['minecraft:item']),
+  icon: ItemStackTemplate,
   title: Text,
   description: Text,
   /**

@@ -56,7 +56,7 @@ export type Single = {
    *
    * Value:
    *
-   * Value: Defines a `minecraft:texture` id.
+   * Value: Defines a `texture` id.
    */
   sprite?: `${string}:${string}`,
 }
@@ -95,7 +95,7 @@ export type UnstitchRegion = {
   /**
    * Value:
    *
-   * Value: Defines a `minecraft:texture` id.
+   * Value: Defines a `texture` id.
    */
   sprite: `${string}:${string}`,
   x: (NBTDouble | number),

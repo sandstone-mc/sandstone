@@ -17,7 +17,6 @@ import type { EquipmentSlot, EquipmentSlotGroup } from 'sandstone/arguments/gene
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { BannerPatternLayer } from 'sandstone/arguments/generated/world/block/banner.ts'
 import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.ts'
-import type { Sherd } from 'sandstone/arguments/generated/world/block/decorated_pot.ts'
 import type { ContainerLoot, ContainerSlot, Occupant } from 'sandstone/arguments/generated/world/component/block.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type {
@@ -32,7 +31,7 @@ import type {
   TropicalFishPattern,
 } from 'sandstone/arguments/generated/world/component/entity.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
   DamageTypeClass,
@@ -885,7 +884,7 @@ export type UseCooldown = {
    *
    * Value:
    *
-   * Value: Defines a `minecraft:cooldown_group` id.
+   * Value: Defines a `cooldown_group` id.
    */
   cooldown_group?: `${string}:${string}`,
 }
@@ -1048,10 +1047,14 @@ type DataComponentDispatcherMap = {
   'minecraft:can_place_on': DataComponentCanPlaceOn,
   'cat/collar': DataComponentCatCollar,
   'minecraft:cat/collar': DataComponentCatCollar,
+  'cat/sound_variant': DataComponentCatSoundVariant,
+  'minecraft:cat/sound_variant': DataComponentCatSoundVariant,
   'cat/variant': DataComponentCatVariant,
   'minecraft:cat/variant': DataComponentCatVariant,
   'charged_projectiles': DataComponentChargedProjectiles,
   'minecraft:charged_projectiles': DataComponentChargedProjectiles,
+  'chicken/sound_variant': DataComponentChickenSoundVariant,
+  'minecraft:chicken/sound_variant': DataComponentChickenSoundVariant,
   'chicken/variant': DataComponentChickenVariant,
   'minecraft:chicken/variant': DataComponentChickenVariant,
   'consumable': DataComponentConsumable,
@@ -1060,6 +1063,8 @@ type DataComponentDispatcherMap = {
   'minecraft:container': DataComponentContainer,
   'container_loot': DataComponentContainerLoot,
   'minecraft:container_loot': DataComponentContainerLoot,
+  'cow/sound_variant': DataComponentCowSoundVariant,
+  'minecraft:cow/sound_variant': DataComponentCowSoundVariant,
   'cow/variant': DataComponentCowVariant,
   'minecraft:cow/variant': DataComponentCowVariant,
   'custom_data': DataComponentCustomData,
@@ -1156,6 +1161,8 @@ type DataComponentDispatcherMap = {
   'minecraft:parrot/variant': DataComponentParrotVariant,
   'piercing_weapon': DataComponentPiercingWeapon,
   'minecraft:piercing_weapon': DataComponentPiercingWeapon,
+  'pig/sound_variant': DataComponentPigSoundVariant,
+  'minecraft:pig/sound_variant': DataComponentPigSoundVariant,
   'pig/variant': DataComponentPigVariant,
   'minecraft:pig/variant': DataComponentPigVariant,
   'pot_decorations': DataComponentPotDecorations,
@@ -1247,12 +1254,15 @@ type DataComponentFallback = (
   | DataComponentCanBreak
   | DataComponentCanPlaceOn
   | DataComponentCatCollar
+  | DataComponentCatSoundVariant
   | DataComponentCatVariant
   | DataComponentChargedProjectiles
+  | DataComponentChickenSoundVariant
   | DataComponentChickenVariant
   | DataComponentConsumable
   | DataComponentContainer
   | DataComponentContainerLoot
+  | DataComponentCowSoundVariant
   | DataComponentCowVariant
   | DataComponentCustomData
   | DataComponentCustomModelData
@@ -1301,6 +1311,7 @@ type DataComponentFallback = (
   | DataComponentPaintingVariant
   | DataComponentParrotVariant
   | DataComponentPiercingWeapon
+  | DataComponentPigSoundVariant
   | DataComponentPigVariant
   | DataComponentPotDecorations
   | DataComponentPotionContents
@@ -1349,18 +1360,21 @@ type DataComponentBlockState = SymbolMcdocBlockItemStates<'%fallback'>
 type DataComponentBlocksAttacks = blocks_attacks
 type DataComponentBreakSound = SoundEventRef
 type DataComponentBucketEntityData = (BucketEntityData | (`${any}${string}` | NBTClass))
-type DataComponentBundleContents = Array<ItemStack>
+type DataComponentBundleContents = Array<ItemStackTemplate>
 type DataComponentCanBreak = AdventureModePredicate
 type DataComponentCanPlaceOn = AdventureModePredicate
 type DataComponentCatCollar = DyeColor
+type DataComponentCatSoundVariant = (`${string}:${string}` | VariantClass<'cat_sound'>)
 type DataComponentCatVariant = (Registry['minecraft:cat_variant'] | VariantClass<'cat'>)
-type DataComponentChargedProjectiles = Array<ItemStack>
+type DataComponentChargedProjectiles = Array<ItemStackTemplate>
+type DataComponentChickenSoundVariant = (`${string}:${string}` | VariantClass<'chicken_sound'>)
 type DataComponentChickenVariant = (Registry['minecraft:chicken_variant'] | VariantClass<'chicken'>)
 type DataComponentConsumable = Consumable
 type DataComponentContainer = NBTList<ContainerSlot, {
   rightExclusive: false,
 }>
 type DataComponentContainerLoot = ContainerLoot
+type DataComponentCowSoundVariant = (`${string}:${string}` | VariantClass<'cow_sound'>)
 type DataComponentCowVariant = (Registry['minecraft:cow_variant'] | VariantClass<'cow'>)
 type DataComponentCustomData = CustomData
 type DataComponentCustomModelData = CustomModelData
@@ -1424,8 +1438,9 @@ type DataComponentOminousBottleAmplifier = NBTInt<{
 type DataComponentPaintingVariant = (Registry['minecraft:painting_variant'] | VariantClass<'painting'>)
 type DataComponentParrotVariant = ParrotVariant
 type DataComponentPiercingWeapon = PiercingWeapon
+type DataComponentPigSoundVariant = (`${string}:${string}` | VariantClass<'pig_sound'>)
 type DataComponentPigVariant = (Registry['minecraft:pig_variant'] | VariantClass<'pig'>)
-type DataComponentPotDecorations = NBTList<(Sherd | `minecraft:${Sherd}`), {
+type DataComponentPotDecorations = NBTList<Registry['minecraft:item'], {
   rightExclusive: false,
 }>
 type DataComponentPotionContents = (PotionContents | Registry['minecraft:potion'])
@@ -1461,7 +1476,7 @@ type DataComponentTropicalFishPatternColor = DyeColor
 type DataComponentUnbreakable = Unbreakable
 type DataComponentUseCooldown = UseCooldown
 type DataComponentUseEffects = UseEffects
-type DataComponentUseRemainder = ItemStack
+type DataComponentUseRemainder = ItemStackTemplate
 type DataComponentVillagerVariant = Registry['minecraft:villager_type']
 type DataComponentWeapon = Weapon
 type DataComponentWolfCollar = DyeColor

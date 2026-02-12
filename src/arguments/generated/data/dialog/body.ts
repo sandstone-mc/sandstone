@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt } from 'sandstone'
 
@@ -11,7 +11,7 @@ export type DialogBody = NonNullable<({
 }[Registry['minecraft:dialog_body_type']])>
 
 export type ItemBody = {
-  item: ItemStack,
+  item: ItemStackTemplate,
   /**
    * The description text rendered to the right of item.
    */

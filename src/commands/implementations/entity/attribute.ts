@@ -18,7 +18,7 @@ export class AttributeCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param target Entity whose attributes to modify.
    *              Must be a single living entity.
-   *              Examples: '@p', '@e[type=zombie,limit=1]', 'PlayerName'
+   *              Examples: '@p', '@e[type=zombie, limit=1]', 'PlayerName'
    *
    * @param attribute Attribute identifier to modify.
    *                 Examples: 'minecraft:generic.max_health', 'minecraft:generic.movement_speed',

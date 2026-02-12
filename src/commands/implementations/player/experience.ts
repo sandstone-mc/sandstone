@@ -20,7 +20,7 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    *               Examples: '@p', '@a', 'PlayerName'
    *
    * @param amount Experience amount to add. Negative values remove experience.
-   *              Range: -2,147,483,648 to 2,147,483,647
+   *              Range: -2, 147, 483, 648 to 2, 147, 483, 647
    *
    * @param type Optional experience type: 'levels' or 'points'.
    *            Defaults to 'points' if not specified.
@@ -45,7 +45,7 @@ export class ExperienceCommand<MACRO extends boolean> extends CommandArguments {
    * Set player experience to specific amount.
    *
    * @param targets Player selector to set experience for.
-   * @param amount Experience amount to set. Range: 0 to 2,147,483,647
+   * @param amount Experience amount to set. Range: 0 to 2, 147, 483, 647
    * @param type Optional experience type: 'levels' or 'points'. Defaults to 'points'.
    *
    * @example

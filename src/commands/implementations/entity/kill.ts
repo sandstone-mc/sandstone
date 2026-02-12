@@ -38,7 +38,7 @@ export class KillCommand<MACRO extends boolean> extends CommandArguments {
    *               - `'@p'` - nearest player
    *               - `'@a'` - all players
    *               - `'@e[type=zombie]'` - all zombies
-   *               - `'@e[type=item,distance=..10]'` - nearby items
+   *               - `'@e[type=item, distance=..10]'` - nearby items
    *               - `'PlayerName'` - specific player
    *               - `'@e[tag=cleanup]'` - entities with specific tag
    * 
@@ -51,7 +51,7 @@ export class KillCommand<MACRO extends boolean> extends CommandArguments {
    * kill('@p')
    * 
    * // Clear all items in a radius
-   * kill('@e[type=item,distance=..50]')
+   * kill('@e[type=item, distance=..50]')
    * 
    * // Remove all hostile mobs
    * kill('@e[type=#minecraft:hostile]')
@@ -61,7 +61,7 @@ export class KillCommand<MACRO extends boolean> extends CommandArguments {
    * 
    * // Clear lag-causing entities
    * kill('@e[type=arrow]')
-   * kill('@e[type=item,nbt={Age:5400s}]') // Old items
+   * kill('@e[type=item, nbt={Age:5400s}]') // Old items
    * 
    * // Remove all boats and minecarts
    * kill('@e[type=#minecraft:vehicles]')

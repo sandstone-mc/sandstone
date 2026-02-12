@@ -31,7 +31,7 @@ export type NoiseGeneratorSettingsRef = (Registry['minecraft:worldgen/noise_sett
   /**
    * Value:
    *
-   * Value: Defines a `minecraft:worldgen/noise_settings` id.
+   * Value: Defines a `worldgen/noise_settings` id.
    */
   name: `${string}:${string}`,
 } & NoiseGeneratorSettings))

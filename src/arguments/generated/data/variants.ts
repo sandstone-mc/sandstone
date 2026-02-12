@@ -1,6 +1,6 @@
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTInt, TagClass } from 'sandstone'
 
 export type BiomeCheck = {
@@ -19,6 +19,11 @@ export type MoonBrightnessCheck = {
    * Checks if the current moon brightness is within a certain range.
    */
   range: MinMaxBounds<(NBTDouble | number)>,
+}
+
+export type SoundVariant<T extends NBTObject> = {
+  adult_sounds: T,
+  baby_sounds: T,
 }
 
 export type SpawnCondition = NonNullable<({

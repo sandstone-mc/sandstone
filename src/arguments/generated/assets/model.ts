@@ -32,7 +32,7 @@ export type Model = {
   ambientocclusion?: boolean,
   gui_light?: ('front' | 'side'),
   textures?: ({
-    [Key in `${any}${string}`]?: `${any}${string}` | `#${string}` | TextureClass
+    [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass) | TextureMaterial)
   }),
   elements?: Array<ModelElement>,
   display?: ({
@@ -221,3 +221,13 @@ export type Predicates = (
   | 'time'
   | 'tooting'
   | 'trim_type')
+
+export type TextureMaterial = {
+  sprite: (Registry['minecraft:texture'] | TextureClass),
+  /**
+   * Whether the texture should be forced into the translucent render pass. \
+   * Textures without any translucent pixels are not assigned to the translucent pass by default. \
+   * Defaults to `false`.
+   */
+  force_translucent?: boolean,
+}

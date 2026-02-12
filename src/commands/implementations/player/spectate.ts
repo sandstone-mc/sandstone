@@ -15,16 +15,16 @@ export class SpectateCommand<MACRO extends boolean> extends CommandArguments {
    * Make a spectator player follow an entity.
    *
    * @param target Entity to spectate.
-   *              Examples: '@p', '@e[type=zombie,limit=1]', 'PlayerName'
+   *              Examples: '@p', '@e[type=zombie, limit=1]', 'PlayerName'
    *
    * @param player Optional spectator player. Defaults to command executor.
    *              Examples: '@p', 'SpectatorName'
    *
    * @example
    * ```ts
-   * spectate('@e[type=zombie,limit=1]')        // You spectate nearest zombie
+   * spectate('@e[type=zombie, limit=1]')        // You spectate nearest zombie
    * spectate('@p', 'SpectatorPlayer')          // SpectatorPlayer spectates nearest player
-   * spectate('@e[type=villager,limit=1]', '@p') // Nearest player spectates villager
+   * spectate('@e[type=villager, limit=1]', '@p') // Nearest player spectates villager
    * ```
    */
   spectate = <T extends string, P extends string>(

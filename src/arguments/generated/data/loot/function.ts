@@ -755,10 +755,9 @@ export type SetPotion = ({
 
 export type SetRandomDyes = ({
   /**
-   * Applies specified number of random dyes to the item.
-   * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye.
+   * Applies specified number of random dyes to the item. \
+   * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye. \
    * The same dye color can be selected multiple times.
-   * Only has effect on `#dyeable` items.
    */
   number_of_dyes: NumberProvider,
 } & Conditions)

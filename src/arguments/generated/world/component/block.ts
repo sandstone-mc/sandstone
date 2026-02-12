@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
-import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { LootTableClass, NBTInt, NBTLong } from 'sandstone'
 
 export type ContainerLoot = {
@@ -21,7 +21,7 @@ export type ContainerSlot = {
   /**
    * The item stack in this container slot.
    */
-  item: ItemStack,
+  item: ItemStackTemplate,
 }
 
 export type Occupant = {

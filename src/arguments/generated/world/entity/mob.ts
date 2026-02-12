@@ -6,7 +6,17 @@ import type { Memories } from 'sandstone/arguments/generated/util/memory.ts'
 import type { EquipmentSlot } from 'sandstone/arguments/generated/util/slot.ts'
 import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { LootTableClass, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTLong, NBTShort } from 'sandstone'
+import type {
+  LootTableClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTIntArray,
+  NBTList,
+  NBTLong,
+  NBTShort,
+  WaypointStyleClass,
+} from 'sandstone'
 
 export type AgeableMob = {
   /**
@@ -298,6 +308,6 @@ export type UUIDLeash = {
 }
 
 export type WaypointIcon = {
-  style: `${string}:${string}`,
+  style: (`${string}:${string}` | WaypointStyleClass),
   color?: RGB,
 }

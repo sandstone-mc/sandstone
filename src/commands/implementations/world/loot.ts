@@ -75,7 +75,7 @@ export class LootCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * loot.spawn(abs(100, 70, 200)).loot('minecraft:chests/simple_dungeon')
-   * loot.spawn(rel(0, 1, 0)).kill('@e[type=zombie,limit=1]')
+   * loot.spawn(rel(0, 1, 0)).kill('@e[type=zombie, limit=1]')
    * loot.spawn(abs(0, 64, 0)).mine(rel(0, -1, 0), 'minecraft:diamond_pickaxe')
    * ```
    */

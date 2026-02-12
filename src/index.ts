@@ -385,7 +385,9 @@ export {
   ModelClass,
   ParticleClass,
   PostEffectClass,
+  SoundEventClass,
   TextureClass,
+  WaypointStyleClass,
 } from './core/resources'
 
 // Utils

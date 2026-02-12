@@ -12,11 +12,6 @@ export type WolfSounds = {
   whine_sound: SoundEventRef,
 }
 
-export type WolfSoundVariant = {
-  adult_sounds: WolfSounds,
-  baby_sounds: WolfSounds,
-}
-
 export type WolfVariant = ({
   /**
    * The texture set to use for this wolf variant.

@@ -4,19 +4,24 @@ import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 
-/**
- * All supported variant types.
- */
-export type VariantType =
+export type AudibleVariantType = (
   | 'cat'
   | 'chicken'
   | 'cow'
+  | 'pig'
+  | 'wolf'
+)
+
+/**
+ * All supported variant types.
+ */
+export type VariantType = (
   | 'frog'
   | 'painting'
-  | 'pig'
-  | 'wolf_sound'
-  | 'wolf'
   | 'zombie_nautilus'
+  | AudibleVariantType
+  | `${AudibleVariantType}_sound`
+)
 
 /**
  * Maps variant types to their SymbolResource keys.

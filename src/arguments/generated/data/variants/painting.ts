@@ -5,7 +5,7 @@ export type PaintingVariant = {
   /**
    * Value:
    *
-   * Value: A minecraft:texture ID within a path root of `(namespace)/textures/painting/`
+   * Value: A texture ID within a path root of `(namespace)/textures/painting/`
    */
   asset_id: `${string}:${string}`,
   /**

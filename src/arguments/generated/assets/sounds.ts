@@ -1,7 +1,7 @@
 import type { SymbolSoundType } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTFloat, NBTInt, SoundEventClass } from 'sandstone'
 
 export type Sound = NonNullable<({
   [S in Extract<SoundType, string>]?: {
@@ -68,7 +68,7 @@ export type SoundEventRegistration = {
   /**
    * The sound files this sound event uses. One sound is randomly selected to play when the event is triggered. Defaults to assumed path.
    */
-  sounds?: Array<(Registry['minecraft:sound'] | Sound)>,
+  sounds?: Array<((Registry['minecraft:sound'] | SoundEventClass) | Sound)>,
   /**
    * If true the sounds listed should replace the ones listed in the minecraft sounds.json for this sound event.
    * False if the sounds listed should be added. If undefined. Defaults to false.

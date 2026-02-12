@@ -9,7 +9,15 @@ import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/
 import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { EnchantmentClass, NBTFloat, NBTInt, NBTLong, ObjectiveClass, PredicateClass } from 'sandstone'
+import type {
+  EnchantmentClass,
+  NBTFloat,
+  NBTInt,
+  NBTLong,
+  ObjectiveClass,
+  PredicateClass,
+  WorldClockClass,
+} from 'sandstone'
 
 export type AllOf = {
   /**
@@ -162,7 +170,7 @@ export type TimeCheck = {
   /**
    * The world clock to check.
    */
-  clock: `${string}:${string}`,
+  clock: (Registry['minecraft:world_clock'] | WorldClockClass),
   /**
    * Check the current game tick.
    */

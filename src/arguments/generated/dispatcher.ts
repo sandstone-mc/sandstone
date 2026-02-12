@@ -1,6 +1,6 @@
-export { type SymbolMcdocBlockStateKeys, type McdocBlockStateKeysFallbackType } from './_builtin/block_state_keys.ts'
-
 export { type SymbolMcdocBlockStates, type McdocBlockStatesFallbackType } from './_builtin/block_states.ts'
+
+export { type SymbolMcdocBlockStateKeys, type McdocBlockStateKeysFallbackType } from './_builtin/block_state_keys.ts'
 
 export { type SymbolMcdocFluidStates, type McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
 

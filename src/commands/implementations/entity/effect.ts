@@ -75,7 +75,7 @@ export class EffectCommand<MACRO extends boolean> extends CommandArguments {
    * 
    * // Area effects
    * effect.give('@a[distance=..20]', 'minecraft:absorption', 600, 3) // Area buff
-   * effect.give('@e[type=#minecraft:hostile,distance=..15]', 'minecraft:glowing', 120) // Mark enemies
+   * effect.give('@e[type=#minecraft:hostile, distance=..15]', 'minecraft:glowing', 120) // Mark enemies
    * ```
    */
   give = (

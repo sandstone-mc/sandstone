@@ -31,15 +31,16 @@ import type { TradeSet } from 'sandstone/arguments/generated/data/trade_set.ts'
 import type { TrialSpawnerConfig } from 'sandstone/arguments/generated/data/trial_spawner.ts'
 import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim.ts'
 import type { BannerPattern } from 'sandstone/arguments/generated/data/variants/banner_pattern.ts'
-import type { CatVariant } from 'sandstone/arguments/generated/data/variants/cat.ts'
-import type { ChickenVariant } from 'sandstone/arguments/generated/data/variants/chicken.ts'
-import type { CowVariant } from 'sandstone/arguments/generated/data/variants/cow.ts'
+import type { CatSounds, CatVariant } from 'sandstone/arguments/generated/data/variants/cat.ts'
+import type { ChickenSounds, ChickenVariant } from 'sandstone/arguments/generated/data/variants/chicken.ts'
+import type { CowSounds, CowVariant } from 'sandstone/arguments/generated/data/variants/cow.ts'
 import type { FrogVariant } from 'sandstone/arguments/generated/data/variants/frog.ts'
 import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument.ts'
 import type { JukeboxSong } from 'sandstone/arguments/generated/data/variants/jukebox_song.ts'
 import type { PaintingVariant } from 'sandstone/arguments/generated/data/variants/painting.ts'
-import type { PigVariant } from 'sandstone/arguments/generated/data/variants/pig.ts'
-import type { WolfSoundVariant, WolfVariant } from 'sandstone/arguments/generated/data/variants/wolf.ts'
+import type { PigSounds, PigVariant } from 'sandstone/arguments/generated/data/variants/pig.ts'
+import type { SoundVariant } from 'sandstone/arguments/generated/data/variants.ts'
+import type { WolfSounds, WolfVariant } from 'sandstone/arguments/generated/data/variants/wolf.ts'
 import type { ZombieNautilusVariant } from 'sandstone/arguments/generated/data/variants/zombie_nautilus.ts'
 import type { VillagerTrade } from 'sandstone/arguments/generated/data/villager_trade.ts'
 import type { Biome } from 'sandstone/arguments/generated/data/worldgen/biome.ts'
@@ -69,12 +70,18 @@ type ResourceDispatcherMap = {
   'minecraft:banner_pattern': ResourceBannerPattern,
   'block_definition': ResourceBlockDefinition,
   'minecraft:block_definition': ResourceBlockDefinition,
+  'cat_sound_variant': ResourceCatSoundVariant,
+  'minecraft:cat_sound_variant': ResourceCatSoundVariant,
   'cat_variant': ResourceCatVariant,
   'minecraft:cat_variant': ResourceCatVariant,
   'chat_type': ResourceChatType,
   'minecraft:chat_type': ResourceChatType,
+  'chicken_sound_variant': ResourceChickenSoundVariant,
+  'minecraft:chicken_sound_variant': ResourceChickenSoundVariant,
   'chicken_variant': ResourceChickenVariant,
   'minecraft:chicken_variant': ResourceChickenVariant,
+  'cow_sound_variant': ResourceCowSoundVariant,
+  'minecraft:cow_sound_variant': ResourceCowSoundVariant,
   'cow_variant': ResourceCowVariant,
   'minecraft:cow_variant': ResourceCowVariant,
   'credits': ResourceCredits,
@@ -119,6 +126,8 @@ type ResourceDispatcherMap = {
   'minecraft:painting_variant': ResourcePaintingVariant,
   'particle': ResourceParticle,
   'minecraft:particle': ResourceParticle,
+  'pig_sound_variant': ResourcePigSoundVariant,
+  'minecraft:pig_sound_variant': ResourcePigSoundVariant,
   'pig_variant': ResourcePigVariant,
   'minecraft:pig_variant': ResourcePigVariant,
   'post_effect': ResourcePostEffect,
@@ -200,9 +209,12 @@ type ResourceFallback = (
   | ResourceAtlas
   | ResourceBannerPattern
   | ResourceBlockDefinition
+  | ResourceCatSoundVariant
   | ResourceCatVariant
   | ResourceChatType
+  | ResourceChickenSoundVariant
   | ResourceChickenVariant
+  | ResourceCowSoundVariant
   | ResourceCowVariant
   | ResourceCredits
   | ResourceDamageType
@@ -225,6 +237,7 @@ type ResourceFallback = (
   | ResourceModel
   | ResourcePaintingVariant
   | ResourceParticle
+  | ResourcePigSoundVariant
   | ResourcePigVariant
   | ResourcePostEffect
   | ResourcePredicate
@@ -266,9 +279,12 @@ type ResourceAdvancement = Advancement
 type ResourceAtlas = Atlas
 type ResourceBannerPattern = BannerPattern
 type ResourceBlockDefinition = BlockStateDefinition
+type ResourceCatSoundVariant = SoundVariant<CatSounds>
 type ResourceCatVariant = CatVariant
 type ResourceChatType = ChatType
+type ResourceChickenSoundVariant = SoundVariant<ChickenSounds>
 type ResourceChickenVariant = ChickenVariant
+type ResourceCowSoundVariant = CowSounds
 type ResourceCowVariant = CowVariant
 type ResourceCredits = Credits
 type ResourceDamageType = DamageType
@@ -291,6 +307,7 @@ type ResourceLootTable = LootTable
 type ResourceModel = Model
 type ResourcePaintingVariant = PaintingVariant
 type ResourceParticle = Particle
+type ResourcePigSoundVariant = SoundVariant<PigSounds>
 type ResourcePigVariant = PigVariant
 type ResourcePostEffect = PostEffect
 type ResourcePredicate = Predicate
@@ -308,7 +325,7 @@ type ResourceTrimMaterial = TrimMaterial
 type ResourceTrimPattern = TrimPattern
 type ResourceVillagerTrade = VillagerTrade
 type ResourceWaypointStyle = WaypointStyle
-type ResourceWolfSoundVariant = WolfSoundVariant
+type ResourceWolfSoundVariant = SoundVariant<WolfSounds>
 type ResourceWolfVariant = WolfVariant
 type ResourceWorldClock = Record<string, never>
 type ResourceWorldgenBiome = Biome

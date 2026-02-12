@@ -99,7 +99,7 @@ export type CraftingShaped = (NotificationInfo & CraftingBookInfo & {
   key: ({
     [Key in Extract<CRAFTING_INGREDIENT, string>]?: Ingredient
   }),
-  result: (ItemStack | Registry['minecraft:item']),
+  result: ItemStackTemplate,
 })
 
 export type CraftingShapeless = (NotificationInfo & CraftingBookInfo & {
@@ -113,7 +113,7 @@ export type CraftingShapeless = (NotificationInfo & CraftingBookInfo & {
     min: 1,
     max: 9,
   }>,
-  result: (ItemStack | Registry['minecraft:item']),
+  result: ItemStackTemplate,
 })
 
 export type CraftingSpecialBannerDuplicate = {
@@ -333,7 +333,7 @@ export type Recipe = NonNullable<({
 
 export type Smelting = (NotificationInfo & CookingBookInfo & {
   ingredient: Ingredient,
-  result: (ItemStack | Registry['minecraft:item']),
+  result: ItemStackTemplate,
   experience?: NBTFloat,
   cookingtime?: NBTInt,
 })
@@ -352,7 +352,7 @@ export type SmithingTransform = (NotificationInfo & {
   /**
    * Resulting transformed item.
    */
-  result: (ItemStack | Registry['minecraft:item']),
+  result: ItemStackTemplate,
 } & {
   /**
    * Material that will be used.
@@ -385,7 +385,7 @@ export type SmithingTrim = (NotificationInfo & {
 
 export type Stonecutting = (NotificationInfo & {
   ingredient: Ingredient,
-  result: (ItemStack | Registry['minecraft:item']),
+  result: ItemStackTemplate,
 })
 type RecipeSerializerDispatcherMap = {
   'blasting': RecipeSerializerBlasting,

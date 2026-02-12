@@ -109,7 +109,7 @@ export class TagCommand<MACRO extends boolean> extends CommandArguments {
    * ```ts
    * // Tag management examples
    * tag('@p').add('quest_giver')                    // Mark player as quest giver
-   * tag('@e[type=villager,distance=..5]').add('nearby') // Tag nearby villagers
+   * tag('@e[type=villager, distance=..5]').add('nearby') // Tag nearby villagers
    * tag('@a[gamemode=creative]').add('builder')     // Tag creative players
    * 
    * // State tracking
@@ -118,7 +118,7 @@ export class TagCommand<MACRO extends boolean> extends CommandArguments {
    * 
    * // Administrative uses
    * tag('@a[name=AdminPlayer]').add('admin').add('moderator')
-   * tag('@e[type=item,tag=temporary]').remove('temporary') // Clean up
+   * tag('@e[type=item, tag=temporary]').remove('temporary') // Clean up
    * 
    * // Debug and inspection
    * tag('@e[distance=..10]').list()                // Show nearby entity tags

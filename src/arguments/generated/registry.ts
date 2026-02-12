@@ -153,6 +153,7 @@ import type { VILLAGER_TRADES } from 'sandstone/arguments/generated/_registry/vi
 import type { VILLAGER_TYPES } from 'sandstone/arguments/generated/_registry/villager_types.ts'
 import type { WOLF_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/wolf_sound_variants.ts'
 import type { WOLF_VARIANTS } from 'sandstone/arguments/generated/_registry/wolf_variants.ts'
+import type { WORLD_CLOCKS } from 'sandstone/arguments/generated/_registry/world_clocks.ts'
 import type { WORLDGEN_BIOME_SOURCES } from 'sandstone/arguments/generated/_registry/worldgen_biome_sources.ts'
 import type { WORLDGEN_BIOMES } from 'sandstone/arguments/generated/_registry/worldgen_biomes.ts'
 import type {
@@ -254,6 +255,7 @@ export type Registry = {
   'minecraft:villager_trade': VILLAGER_TRADES,
   'minecraft:wolf_sound_variant': WOLF_SOUND_VARIANTS,
   'minecraft:wolf_variant': WOLF_VARIANTS,
+  'minecraft:world_clock': WORLD_CLOCKS,
   'minecraft:zombie_nautilus_variant': ZOMBIE_NAUTILUS_VARIANTS,
   'minecraft:tag/banner_pattern': TAG_BANNER_PATTERNS,
   'minecraft:tag/damage_type': TAG_DAMAGE_TYPES,

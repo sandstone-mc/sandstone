@@ -1,7 +1,7 @@
 import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { MCFunctionClass, NBTInt } from 'sandstone'
+import type { MCFunctionClass, NBTInt, WorldClockClass } from 'sandstone'
 
 export type AllOffTestEnvironment = {
   definitions: Array<TestEnvironment>,
@@ -13,7 +13,7 @@ export type BoolGameRule = {
 }
 
 export type ClockTimeTestEnvironment = {
-  clock: `${string}:${string}`,
+  clock: (Registry['minecraft:world_clock'] | WorldClockClass),
   /**
    * Value:
    * Range: 0..
