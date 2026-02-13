@@ -151,7 +151,7 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TagNode,
-      sandstoneCore.pack.resourceToPath(name, ['tags', type]),
+      sandstoneCore.pack.resourceToPath(name, [RESOURCE_PATHS[TagClass.resourceType].path[0], type]),
       args,
     )
 

@@ -4,7 +4,6 @@ import {
   type Coordinates,
   type ENTITY_SLOTS,
   type MultipleEntitiesArgument,
-  type MultiplePlayersArgument,
   type MultiplePlayersArgumentOf,
   type SymbolResource,
 } from 'sandstone/arguments'

@@ -432,8 +432,6 @@ export const NBT: NBTInterface = makeCallable(
   dynamicNBT,
 )
 
-NBT.int
-
 export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
   if (nbt === null || nbt === undefined) {
     throw new Error('Nullish nbt values are not allowed')

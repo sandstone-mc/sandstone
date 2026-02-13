@@ -36,7 +36,6 @@ const UUID_CACHE = {
   STORAGE: '__sandstone:uuid_cache',
 } as const
 
-
 export type UUIDinNumber = [number, number, number, number]
 export type UUIDinScore = [Score, Score, Score, Score]
 

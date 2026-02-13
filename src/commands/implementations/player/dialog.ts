@@ -6,7 +6,7 @@ import { CommandNode } from 'sandstone/core/nodes'
 import { ResourceClass } from 'sandstone/core/resources/resource'
 import { nbtStringifier } from 'sandstone/variables'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
 export class DialogCommandNode extends CommandNode {
   command = 'dialog' as const

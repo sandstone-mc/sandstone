@@ -1,4 +1,4 @@
-import { getResourceType, RESOURCE_PATHS, type MultiplePlayersArgumentOf, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MultiplePlayersArgumentOf, type SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -109,7 +109,7 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
    *
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revokeFromThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>){
+  revokeFromThis<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>) {
     this.pack.commands.advancement.revoke(players).from(this.name)
   }
 

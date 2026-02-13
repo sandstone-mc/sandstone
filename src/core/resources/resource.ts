@@ -279,6 +279,6 @@ export function jsonStringify(json: any) {
       }
       return value
     },
-    2
+    2,
   )
 }

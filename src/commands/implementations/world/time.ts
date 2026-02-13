@@ -2,7 +2,7 @@ import type { TimeArgument } from 'sandstone/arguments'
 import type { Macroable, WorldClockClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { CommandArguments } from '../../helpers'
-import { LiteralUnion, NamespacedLiteralUnion } from 'sandstone'
+import type { LiteralUnion, NamespacedLiteralUnion } from 'sandstone'
 
 type WORLD_CLOCKS = (
   | 'overworld'

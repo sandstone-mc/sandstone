@@ -141,19 +141,6 @@ export type TEXTURE_TYPES = (
 
 export type ResourceClassType = typeof RESOURCE_CLASS_TYPES[number]
 
-export type ResourceTypeFor<C extends ResourceClassType[0]> =
-    typeof RESOURCE_CLASS_TYPES[number] extends infer E
-      ? E extends readonly [C, infer R] ? R : never
-      : never
-
-export function getResourceType<C extends ResourceClassType[0]>(cls: C): ResourceTypeFor<C> {
-  const entry = RESOURCE_CLASS_TYPES.find(([c]) => c === cls)
-  if (!entry) {
-    throw new Error(`Unknown resource class: ${cls.name}`)
-  }
-  return entry[1] as ResourceTypeFor<C>
-}
-
 export function getResourceTypeFromInstance(instance: object): ResourceClassType[1] {
   // Use instanceof to handle cases where class references differ due to bundling
   const entry = RESOURCE_CLASS_TYPES.find(([c]) => instance instanceof c)

@@ -2,8 +2,8 @@ import type { BASIC_COLORS, SingleEntityArgumentOf } from 'sandstone/arguments'
 import type { Macroable, WaypointStyleClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
-import { NamespacedLiteralUnion } from 'sandstone'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
+import type { NamespacedLiteralUnion } from 'sandstone'
 
 export class WaypointCommandNode extends CommandNode {
   command = 'waypoint' as const

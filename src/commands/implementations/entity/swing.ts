@@ -16,6 +16,6 @@ export class SwingCommand<MACRO extends boolean> extends CommandArguments {
    * 
    * Defaults to `@s` and `mainhand`.
    */
-  swing = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO> = '@s', hand: 'mainhand' | 'offhand' = 'mainhand') => 
+  swing = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO> = '@s', hand: 'mainhand' | 'offhand' = 'mainhand') =>
     this.finalCommand([targetParser(targets), hand])
 }

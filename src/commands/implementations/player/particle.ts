@@ -1,7 +1,7 @@
 import type { Coordinates, MultiplePlayersArgumentOf, RootNBT, SymbolParticle, Registry, AbsoluteCoordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { arrayToArgsParser, coordinatesParser, nbtStringifier, VectorClass } from 'sandstone/variables'
+import { coordinatesParser, nbtStringifier, VectorClass } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 

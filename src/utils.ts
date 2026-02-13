@@ -424,7 +424,7 @@ export type AllKeys<T> = T extends T ? keyof T : never
 
 type GetConstructorArgs<T> = T extends new (...args: infer U) => any ? U : never
 export class Set<T> extends global.Set<T> {
-  /** oxlint-disable-next-line  */
+  // oxlint-disable-next-line
   constructor(...args: GetConstructorArgs<typeof global.Set<T>>) {
     super(...args)
   }

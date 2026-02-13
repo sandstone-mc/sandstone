@@ -1,9 +1,9 @@
 
 import type { Macroable, TestInstanceClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
-import { LiteralUnion, SetType } from 'sandstone'
-import { TEST_INSTANCES, TEST_INSTANCES_SET } from 'sandstone/arguments/generated/_registry/test_instances'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
+import type { LiteralUnion, SetType } from 'sandstone'
+import type { TEST_INSTANCES, TEST_INSTANCES_SET } from 'sandstone/arguments/generated/_registry/test_instances'
 
 export type TEST_INSTANCE_SELECTOR = (
   | LiteralUnion<SetType<typeof TEST_INSTANCES_SET>>
@@ -57,7 +57,6 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
    */
   verify = (testSelector: Macroable<TestInstanceClass | TEST_INSTANCE_SELECTOR, MACRO>) =>
     this.finalCommand(['verify', testSelector])
-
 
   /**
    * Run one or more tests.
@@ -238,7 +237,7 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
     if (typeof radiusOrTarget === 'string') {
       return this.finalCommand([`clear${radiusOrTarget}`])
     }
-    if (typeof radiusOrTarget === undefined) {
+    if (radiusOrTarget === undefined) {
       return this.finalCommand(['clearall'])
     }
     return this.finalCommand(['clearall', radiusOrTarget])

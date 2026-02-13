@@ -2,7 +2,7 @@ import type { Coordinates, Rotation, SingleEntityArgumentOf } from 'sandstone/ar
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
 export class RotateCommandNode extends CommandNode {
   command = 'rotate' as const

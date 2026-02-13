@@ -2,7 +2,7 @@ import type { Coordinates, Registry } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser } from 'sandstone/variables/parsers'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { CommandArguments } from '../../helpers'
 
 export class CloneCommandNode extends CommandNode {
   command = 'clone' as const
@@ -165,7 +165,7 @@ export class CloneFromDimensionCommand<MACRO extends boolean> extends CommandArg
     dimension: Macroable<Registry['minecraft:dimension_type'], MACRO>,
     begin: Macroable<Coordinates<MACRO>, MACRO>,
     end: Macroable<Coordinates<MACRO>, MACRO>,
-    destination?: Macroable<Coordinates<MACRO>, MACRO>
+    destination?: Macroable<Coordinates<MACRO>, MACRO>,
   ) {
     if (destination === undefined) {
       return this.subCommand(['from', dimension, coordinatesParser(begin), coordinatesParser(end)], CloneToDimensionCommand<MACRO>, false)
@@ -356,7 +356,6 @@ export class CloneStrictOptionsCommand<MACRO extends boolean> extends CommandArg
   filtered = (filter: Macroable<Registry['minecraft:block'], MACRO>) =>
     this.subCommand(['filtered', filter], CloneModeCommand, true)
 }
-
 
 /**
  * Provides clone mode options: force, move, or normal.

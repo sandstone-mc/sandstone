@@ -35,7 +35,7 @@ export class GameRuleCommand<MACRO extends boolean> extends CommandArguments {
    */
   gamerule<RULE extends Macroable<keyof SymbolGameRule | `${string}:${string}`, MACRO>>(
     gamerule: RULE,
-    value?: Macroable<RULE extends keyof SymbolGameRule ? SymbolGameRule[RULE] : number | boolean, MACRO>
+    value?: Macroable<RULE extends keyof SymbolGameRule ? SymbolGameRule[RULE] : number | boolean, MACRO>,
   ) {
     return this.finalCommand([gamerule, value])
   }

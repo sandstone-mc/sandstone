@@ -1,6 +1,6 @@
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
 export class StopwatchCommandNode extends CommandNode {
   command = 'stopwatch' as const

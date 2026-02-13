@@ -140,7 +140,7 @@ import {
   ObjectiveClass,
   Score,
   SelectorClass,
-  SelectorPickClass,
+  type SelectorPickClass,
   SleepClass,
   TargetlessDataClass,
   TargetlessDataPointClass,

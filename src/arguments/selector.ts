@@ -13,9 +13,6 @@ type SinglePlayerSelectorLiteral = '@s' | '@p' | '@r'
 /** All base selector literals */
 type AllSelectorLiterals = '@s' | '@p' | '@a' | '@e' | '@n' | '@r'
 
-/** Selector literals that can target multiple entities */
-type MultipleEntitySelectorLiteral = AllSelectorLiterals
-
 /** Selector literals that can target multiple players (excludes @e, @n) */
 type MultiplePlayerSelectorLiteral = '@a' | '@p' | '@r' | '@s'
 

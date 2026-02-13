@@ -3,15 +3,6 @@ import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import { isMacroArgument, type MacroArgument } from '../core/Macro'
 import { VectorClass } from './Coordinates'
 // PARSERS
-export function arrayToArgsParser(
-  args: unknown,
-): typeof args extends string[] ? VectorClass<readonly unknown[]> : typeof args {
-  if (Array.isArray(args) && args.length === 3) {
-    return new VectorClass(args.map((arg) => arg.toString()))
-  }
-
-  return args
-}
 
 function isRawCoordinates(arg: unknown): arg is [string, string, string] | [string, string] {
   return Array.isArray(arg) && (arg.length === 3 || arg.length === 2) && arg.every((c) => typeof c === 'string')

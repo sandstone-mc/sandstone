@@ -81,7 +81,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
     mirror?: Macroable<StructureMirror, MACRO>,
     integrity = 1,
     seed = 0,
-    mode?: 'strict'
+    mode?: 'strict',
   ) => {
     this.finalCommand([
       'template',

@@ -15,7 +15,7 @@ import { add } from 'sandstone/utils'
 import type { DataPointClass, NBTAllNumberClasses, NBTRange, Score, StructureMirror, StructureRotation } from 'sandstone/variables'
 import { ConditionClass, NBTPrimitive, ResolveNBTPart, relative } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
-import { ResourceClass, jsonStringify } from '../resource'
+import { ResourceClass } from '../resource'
 import type { StructureNBT } from 'sandstone/arguments/generated/data/structure'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 

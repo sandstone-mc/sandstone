@@ -33,26 +33,28 @@ type NonEmptyList<T> = (readonly T[] & { readonly 0: T })
 type NegatedList = NonEmptyList<NegatedEntityKey | NegatedTagString>
 
 // The Master Selector Type
-export type SelectorEntityType = 
+export type SelectorEntityType = (
   | EntityKey
   | NegatedEntityKey
   | TagString
   | NegatedTagString
   | TagClass<'entity_type'>
   | NegatedList
+)
 
 /**
  * Helper: Detects if T involves a Tag in any way.
  * This triggers if T is a Tag string, a TagClass, or a List containing a Tag string.
  */
-type IsTagInvolved<T> = 
-  T extends TagString | NegatedTagString | TagClass<any> 
-    ? true 
-    : T extends readonly any[] 
-      ? Extract<T[number], TagString | NegatedTagString> extends never 
-        ? false 
-        : true
-      : false
+type IsTagInvolved<T> = T extends TagString | NegatedTagString | TagClass<any>
+  ? true
+  : (
+    T extends readonly any[]
+    ? Extract<T[number], TagString | NegatedTagString> extends never
+      ? false
+      : true
+    : false
+  )
 
 /**
  * Helper: Unwrap a Negation String to get the Key.
@@ -67,20 +69,21 @@ type UnwrapNegation<T> = T extends `!${infer K}` ? K : never
  * 3. If it's a Negated Key -> Exclude that key.
  * 4. If it's a Positive Key -> Return that specific type.
  */
-export type ResolveEntityValues<T extends SelectorEntityType> = 
-  IsTagInvolved<T> extends true 
-    ? SymbolEntity<'%fallback'> 
-    : T extends NegatedList
+export type ResolveEntityValues<T extends SelectorEntityType> = IsTagInvolved<T> extends true
+  ? SymbolEntity<'%fallback'>
+  : (
+    T extends NegatedList
       // It is a list of Negated Keys (we know no tags are here because of IsTagInvolved check)
       // We exclude the unwrapped keys from the full set.
       ? SymbolEntity[Exclude<EntityKey, UnwrapNegation<T[number]>>]
-    : T extends NegatedEntityKey
-      // Single Negation
-      ? SymbolEntity[Exclude<EntityKey, UnwrapNegation<T>>]
-    : T extends EntityKey
-      // Single Positive Key
-      ? SymbolEntity[T]
-    : never
+      : T extends NegatedEntityKey
+          // Single Negation
+          ? SymbolEntity[Exclude<EntityKey, UnwrapNegation<T>>]
+          : T extends EntityKey
+            // Single Positive Key
+            ? SymbolEntity[T]
+            : never
+  )
 
 type TypeOrArray<T> = T | T[]
 
@@ -230,9 +233,9 @@ export type SelectorProperties<
     dz?: Macroable<number, MACRO>
   } & (
     MustBeSingle extends true ? {
-      limit: Macroable<0 | 1, MACRO> 
-    } : { 
-      limit?: Macroable<number, MACRO> 
+      limit: Macroable<0 | 1, MACRO>
+    } : {
+      limit?: Macroable<number, MACRO>
     }
   ) & (
     MustBePlayer extends true ? {

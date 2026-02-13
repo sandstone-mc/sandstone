@@ -3,7 +3,7 @@ import type { WORLDGEN_BIOMES } from 'sandstone/arguments/generated/_registry/wo
 import type { Macroable, TagClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser } from 'sandstone/variables'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
 export class FillBiomeCommandNode extends CommandNode {
   command = 'fillbiome' as const

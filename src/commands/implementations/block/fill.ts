@@ -2,7 +2,7 @@ import type { Coordinates, NBTObject, SymbolBlock, SymbolMcdocBlockStates } from
 import type { Macroable, TagClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
-import { CommandArguments, FinalCommandOutput } from '../../helpers'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import { blockStateStringifier, type BlockEntity, type BlockStatic, type ParseBlockState } from './setblock'
 
