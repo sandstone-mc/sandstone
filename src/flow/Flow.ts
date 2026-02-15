@@ -317,7 +317,7 @@ export class Flow {
 
       Macro.data.modify
         .storage(index.currentTarget, 'Index')
-        .set.from.storage(values.currentTarget, Macro`Values[{Value:${value}}}].Index`)
+        .set.from.storage(values.currentTarget, Macro`Values[{Value:${value}}].Index`)
 
       const _if = flow.if(index, () => {
         MCFunction(`__sandstone:switch_${id}_inner`, [index], () => {
