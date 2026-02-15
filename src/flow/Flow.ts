@@ -299,10 +299,12 @@ export class Flow {
 
     const values = Data('storage', `__sandstone:switch_${id}`, 'Values')
 
+    const casetype: string[] = []
     initMCFunction.push(() =>
       values.set(
         cases.map(([_, v, callback], i) => {
           MCFunction(`__sandstone:switch_${id}_case_${i}`, [], () => callback())
+          casetype.push(typeof v) 
 
           return { Value: v, Index: i }
         }),
@@ -314,10 +316,20 @@ export class Flow {
 
     MCFunction(`__sandstone:switch_${id}`, [value], () => {
       const index = Data('storage', `__sandstone:switch_${id}`, 'Index')
+      let tmp = Macro`Values[{Value:${value}}].Index`
+      if (casetype[0] == "string") {
+        if (casetype.every(val => val == casetype[0])) {
+          tmp = Macro`Values[{Value:'${value}'}].Index`
+        }
+        else {
+          throw new Error("Switch requires that values are of the same type (e.g., string or number). Otherwise, some cases may not be accessible, which can lead to undefined behavior.")
+        }
+
+      }
 
       Macro.data.modify
         .storage(index.currentTarget, 'Index')
-        .set.from.storage(values.currentTarget, Macro`Values[{Value:${value}}].Index`)
+        .set.from.storage(values.currentTarget,tmp )
 
       const _if = flow.if(index, () => {
         MCFunction(`__sandstone:switch_${id}_inner`, [index], () => {
