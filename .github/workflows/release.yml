@@ -22,5 +22,3 @@ jobs:
       - run: bun i
       - run: bun dev:build
       - run: npm publish --tag beta --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
