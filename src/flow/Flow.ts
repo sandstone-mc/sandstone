@@ -325,6 +325,7 @@ export class Flow {
         })()
       })
       if (_default) _if.else(() => _default?.[1]())
+      index.remove()
     })()
   }
 
