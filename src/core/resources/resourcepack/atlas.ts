@@ -32,7 +32,14 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
   atlasJSON: NonNullable<AtlasClassArguments['json']>
 
   constructor(core: SandstoneCore, name: string, args: AtlasClassArguments) {
-    super(core, { packType: core.pack.resourcePack() }, AtlasNode, core.pack.resourceToPath(name, RESOURCE_PATHS[AtlasClass.resourceType].path), args)
+    super(
+      core,
+      { packType: core.pack.resourcePack() },
+      AtlasNode,
+      AtlasClass.resourceType,
+      core.pack.resourceToPath(name, RESOURCE_PATHS[AtlasClass.resourceType].path),
+      args,
+    )
 
     this.atlasJSON = args.json || { sources: [] }
 

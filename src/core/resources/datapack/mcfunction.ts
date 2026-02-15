@@ -10,7 +10,7 @@ import type {
   ResourceNode,
   SandstoneCore,
 } from 'sandstone/core'
-import { formatDebugString, makeCallable, makeClassCallable, toMinecraftResourceName } from 'sandstone/utils'
+import { formatDebugString, makeCallable, makeClassCallable } from 'sandstone/utils'
 import * as util from 'util'
 import type { MakeInstanceCallable } from '../../../utils'
 import { ResolveNBTPart } from '../../../variables/ResolveNBT'
@@ -230,6 +230,8 @@ export class _RawMCFunctionClass<
   PARAMS extends readonly MacroArgument[] | undefined,
   ENV extends readonly MacroArgument[] | undefined,
 > extends CallableResourceClass<MCFunctionNode> implements NBTSerializable {
+  static readonly resourceType = 'function'
+
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
   public nested = 0
@@ -260,6 +262,7 @@ export class _RawMCFunctionClass<
       core,
       { packType: core.pack.dataPack(), extension: 'mcfunction' },
       MCFunctionNode,
+      _RawMCFunctionClass.resourceType,
       core.pack.resourceToPath(name, ['function']),
       {
         ...args,
@@ -295,7 +298,7 @@ export class _RawMCFunctionClass<
           }),
         )
       } else {
-        core.pack.loadTags.load.push(toMinecraftResourceName(this.path))
+        core.pack.loadTags.load.push(this.name)
       }
     } else if (args.runEveryTick) {
       /* @ts-ignore */
@@ -333,7 +336,7 @@ export class _RawMCFunctionClass<
   protected addToTag = (tag: string) => {
     let func: MCFunctionClass<undefined, undefined>
     if (this.env !== undefined) {
-      func = this.core.pack.MCFunction(toMinecraftResourceName([...this.path, 'tag_call']), {
+      func = this.core.pack.MCFunction(`${this.name}/tag_call`, {
         addToSandstoneCore: true,
         creator: 'sandstone',
         onConflict: 'rename',
@@ -461,7 +464,7 @@ export class _RawMCFunctionClass<
    * @internal
    */
   toNBT() {
-    return toMinecraftResourceName(this.path)
+    return this.name
   }
 }
 

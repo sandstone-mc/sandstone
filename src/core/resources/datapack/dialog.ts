@@ -35,6 +35,7 @@ export class DialogClass extends ResourceClass<DialogNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       DialogNode,
+      DialogClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[DialogClass.resourceType].path),
       args,
     )

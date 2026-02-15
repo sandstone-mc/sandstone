@@ -55,6 +55,8 @@ export type VariantClassArguments<T extends VariantType> = {
 } & ResourceClassArguments<'default'>
 
 export class VariantClass<T extends VariantType> extends ResourceClass<VariantNode<T>> {
+  static readonly resourceType = 'variant'
+
   public variantJSON: NonNullable<VariantJSON<T>>
 
   constructor(
@@ -67,7 +69,8 @@ export class VariantClass<T extends VariantType> extends ResourceClass<VariantNo
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       VariantNode<T>,
-      sandstoneCore.pack.resourceToPath(name, [`${variantType}_variant`]),
+      `${variantType}_${VariantClass.resourceType}`,
+      sandstoneCore.pack.resourceToPath(name, [`${variantType}_${VariantClass.resourceType}`]),
       args,
     )
 

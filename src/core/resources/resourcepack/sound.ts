@@ -50,6 +50,7 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
       core,
       { packType: core.pack.resourcePack(), extension: 'ogg', encoding: false },
       SoundEventNode<Type>,
+      SoundEventClass.resourceType,
       core.pack.resourceToPath(name, [...RESOURCE_PATHS[SoundEventClass.resourceType].path, type]),
       args,
     )
@@ -121,6 +122,7 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
       core,
       { packType: core.pack.resourcePack() },
       SoundsNode,
+      SoundsClass.resourceType,
       core.pack.resourceToPath(`${namespace}:sounds`, RESOURCE_PATHS[SoundsClass.resourceType].path),
       args,
     )

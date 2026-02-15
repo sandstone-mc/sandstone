@@ -35,6 +35,7 @@ export class VillagerTradeClass extends ResourceClass<VillagerTradeNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       VillagerTradeNode,
+      VillagerTradeClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[VillagerTradeClass.resourceType].path),
       args,
     )
@@ -76,6 +77,7 @@ export class TradeSetClass extends ResourceClass<TradeSetNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TradeSetNode,
+      TradeSetClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TradeSetClass.resourceType].path),
       args,
     )

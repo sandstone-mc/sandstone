@@ -35,6 +35,7 @@ export class TrialSpawnerClass extends ResourceClass<TrialSpawnerNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TrialSpawnerNode,
+      TrialSpawnerClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TrialSpawnerClass.resourceType].path),
       args,
     )

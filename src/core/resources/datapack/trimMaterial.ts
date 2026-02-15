@@ -36,6 +36,7 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TrimMaterialNode,
+      TrimMaterialClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TrimMaterialClass.resourceType].path),
       args,
     )

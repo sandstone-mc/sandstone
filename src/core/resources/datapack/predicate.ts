@@ -40,6 +40,7 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       PredicateNode,
+      PredicateClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[PredicateClass.resourceType].path),
       args,
     )

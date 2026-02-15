@@ -60,6 +60,7 @@ export class TextureClass<Type extends TextureType = 'block'> extends ResourceCl
       core,
       { packType: core.pack.resourcePack(), extension: 'png', encoding: false },
       TextureNode,
+      TextureClass.resourceType,
       core.pack.resourceToPath(name, [...RESOURCE_PATHS[TextureClass.resourceType].path, type]),
       args,
     )

@@ -11,7 +11,7 @@ export class MCMetaCache {
   readonly base = '/misode/mcmeta/'
 
   get path() {
-    return path.join(getSandstoneContext().workingDir, '..', 'resources', 'cache', 'mcmeta')
+    return path.join(getSandstoneContext().workingDir, 'resources', 'cache', 'mcmeta')
   }
 
   get manifest() {

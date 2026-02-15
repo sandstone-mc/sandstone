@@ -47,6 +47,7 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       ItemModifierNode,
+      ItemModifierClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ItemModifierClass.resourceType].path),
       args,
     )

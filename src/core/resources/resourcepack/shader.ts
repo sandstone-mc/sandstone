@@ -35,6 +35,7 @@ export class ShaderClass extends ResourceClass<ShaderNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       ShaderNode,
+      ShaderClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ShaderClass.resourceType].path),
       args,
     )

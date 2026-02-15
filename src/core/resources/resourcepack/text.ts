@@ -38,6 +38,7 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
       core,
       { packType: core.pack.resourcePack(), extension: 'txt' },
       PlainTextNode,
+      PlainTextClass.resourceType,
       core.pack.resourceToPath(name, ['texts']),
       args,
     )

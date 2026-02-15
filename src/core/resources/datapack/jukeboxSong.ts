@@ -35,6 +35,7 @@ export class JukeboxSongClass extends ResourceClass<JukeboxSongNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       JukeboxSongNode,
+      JukeboxSongClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[JukeboxSongClass.resourceType].path),
       args,
     )

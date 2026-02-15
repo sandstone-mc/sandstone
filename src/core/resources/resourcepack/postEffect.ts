@@ -35,6 +35,7 @@ export class PostEffectClass extends ResourceClass<PostEffectNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       PostEffectNode,
+      PostEffectClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[PostEffectClass.resourceType].path),
       args,
     )

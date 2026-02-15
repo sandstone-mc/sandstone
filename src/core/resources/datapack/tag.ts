@@ -1,6 +1,5 @@
 import { RESOURCE_PATHS, type NBTSerializable, type REGISTRIES, type Registry } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
-import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -26,33 +25,33 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
 ): TagSingleValue<string> {
   if (isMCFunctionClass(value)) {
     if ((value.node.resource as MCFunctionClass<[], []>).env) {
-      return toMinecraftResourceName(value.node.sandstoneCore.pack.MCFunction(`${value.name}/_env`, () => value(), {
+      return value.node.sandstoneCore.pack.MCFunction(`${value.name}/_env`, () => value(), {
         creator: 'sandstone',
         onConflict: 'rename',
-      }).path)
+      }).name
     }
-    return toMinecraftResourceName(value.path)
+    return value.name
   }
   if (isTagClass(value)) {
     return value.toJSON()
   }
   if (isResource(value)) {
-    return toMinecraftResourceName(value.path) // TODO !
+    return value.name
   }
   if (typeof value === 'object') {
     if (isMCFunctionClass(value.id)) {
       if ((value.id.node.resource as MCFunctionClass<[], []>).env) {
         return {
-          id: toMinecraftResourceName(value.id.node.sandstoneCore.pack.MCFunction(
+          id: value.id.node.sandstoneCore.pack.MCFunction(
             `${value.id.name}/_env`,
             () => (value.id as MCFunctionClass<[], []>)(),
             { creator: 'sandstone', onConflict: 'rename' },
-          ).path),
+          ).name,
           required: value.required,
         }
       }
       return {
-        id: toMinecraftResourceName(value.id.path),
+        id: value.id.name,
         required: value.required,
       }
     }
@@ -63,7 +62,7 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
       }
     }
     if (isResource(value.id)) {
-      return toMinecraftResourceName(value.id.path) // TODO !
+      return value.id.name
     }
   }
   return value as string | TagSingleValue<string>
@@ -151,6 +150,7 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TagNode,
+      TagClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, [RESOURCE_PATHS[TagClass.resourceType].path[0], type]),
       args,
     )
@@ -168,10 +168,6 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
     ) as unknown as TagValuesJSON<REGISTRY>
 
     this.handleConflicts()
-  }
-
-  get name(): `#${string}:${string}` {
-    return `#${toMinecraftResourceName(this.path, 2)}`
   }
 
   public push(...resources: Resource<REGISTRY>[]) {
@@ -215,7 +211,7 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
    */
   _toMinecraftCondition = () => {
     if (this.type === 'block' || this.type === 'entity_type') {
-      return new this.pack.conditions.Tag(this.core, this.type as 'block' | 'entity_type', toMinecraftResourceName(this.path, 2))
+      return new this.pack.conditions.Tag(this.core, this.type as 'block' | 'entity_type', this.name)
     }
     throw new Error(`Cannot use a ${this.type} group tag as a condition. Only supports 'blocks' or 'entity_types'.`)
   }

@@ -35,6 +35,7 @@ export class ParticleClass extends ResourceClass<ParticleNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       ParticleNode,
+      ParticleClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ParticleClass.resourceType].path),
       args,
     )

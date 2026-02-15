@@ -3,7 +3,6 @@ import { ContainerCommandNode } from 'sandstone/core/nodes'
 import { CommandArguments } from '../../helpers'
 import { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { Macroable, MCFunctionClass, MCFunctionNode, Node } from 'sandstone/core'
-import { toMinecraftResourceName } from 'sandstone/utils'
 
 type DebugFunction = string | TagClass<'function'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
 
@@ -26,7 +25,7 @@ export class DebugCommandNode extends ContainerCommandNode {
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
     const mcFunction = this.sandstonePack.MCFunction(
-      `${toMinecraftResourceName(currentMCFunction.resource.path)}/${func ?? 'debug'}`,
+      `${currentMCFunction.resource.name}/${func ?? 'debug'}`,
       {
         addToSandstoneCore: false,
         creator: 'sandstone',

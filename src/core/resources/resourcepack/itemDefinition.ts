@@ -322,6 +322,7 @@ export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionN
       core,
       { packType: core.pack.resourcePack() },
       ItemModelDefinitionNode,
+      ItemModelDefinitionClass.resourceType,
       core.pack.resourceToPath(name, RESOURCE_PATHS[ItemModelDefinitionClass.resourceType].path),
       args,
     )

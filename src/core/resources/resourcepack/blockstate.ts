@@ -50,6 +50,7 @@ export class BlockStateClass<JSON extends BlockStateJSON, Type = Extract<AllKeys
       core,
       { packType: core.pack.resourcePack() },
       BlockStateNode,
+      BlockStateClass.resourceType,
       core.pack.resourceToPath(name, RESOURCE_PATHS[BlockStateClass.resourceType].path),
       args,
     )

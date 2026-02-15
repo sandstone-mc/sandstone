@@ -24,11 +24,11 @@ export class SandstoneCore {
 
   currentNode = ''
 
-  _mcMetaCache: MCMetaCache | undefined
+  _mcMetaCache: MCMetaCache | undefined | false = false
 
-  _smithed: SmithedDependencyCache | undefined
+  _smithed: SmithedDependencyCache | undefined | false = false
 
-  dependencies: Promise<SmithedDependencyClass[] | true | false>[] = []
+  dependencies: ((() => Promise<true | false>) | true | false)[] = []
 
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new ResourceNodesMap()
@@ -98,9 +98,14 @@ export class SandstoneCore {
    */
   exitMCFunction = () => this.mcfunctionStack.pop()
 
-  getMcMetaCache = () => {
+  get mcMetaCache() {
+    if (this._mcMetaCache === false) {
+      this._mcMetaCache = undefined
+
+      return undefined as unknown as MCMetaCache
+    }
     this._mcMetaCache ??= new MCMetaCache()
-    return this._mcMetaCache
+    return this._mcMetaCache as MCMetaCache
   }
 
   async getExistingResource(relativePath: string): Promise<string>
@@ -127,7 +132,7 @@ export class SandstoneCore {
     if (_path[0] === 'minecraft') {
       const type = pathOrResource.packType.resourceSubFolder as MCMetaBranches
 
-      return this.getMcMetaCache().get(
+      return this.mcMetaCache.get(
         type,
         `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
         (encoding === 'utf-8') as true,
@@ -156,55 +161,40 @@ export class SandstoneCore {
     text = true,
     type: 'client' | 'server' = 'server',
   ): Promise<string | Buffer> {
-    return this.getMcMetaCache().get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
+    return this.mcMetaCache.get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
   }
 
-  getSmithed = () => {
+  get smithed() {
     this._smithed ??= new SmithedDependencyCache(this)
-    return this._smithed
+    return this._smithed as SmithedDependencyCache
   }
 
   /**
    * Add a dependency for a Smithed Library
+   * 
+   * @returns Index of the async dependency request in SandstoneCore#dependencies
    */
   depend(dependency: string, version = 'latest') {
-    const adding = this.dependencies.length === 0 ? false : Promise.allSettled(this.dependencies)
+    const i = this.dependencies.length
 
     this.dependencies.push(
-      (async () => {
-        const smithed = this.getSmithed()
-        if (!smithed.loaded) {
-          await smithed.load()
-        }
-        if (adding) await adding
-
-        if (!smithed.has(dependency)) {
-          const _depend = await smithed.get(dependency, version)
+      async () => {
+        if (!this.smithed.has(dependency)) {
+          const depend = await this.smithed.get(dependency, version)
 
           // If dependency couldn't be fetched (not on Smithed yet), skip it
-          if (!_depend) {
+          if (depend === undefined) {
+            this.dependencies[i] = false
+            this.pack.dependencies.set(dependency, false)
             return false
           }
-
-          if (!this.pack.packTypes.has('datapack-dependencies')) {
-            this.pack.packTypes.set('datapack-dependencies', new DataPackDependencies())
-          }
-
-          const dependencies = [new SmithedDependencyClass(this, dependency, _depend, 'server')]
-
-          if (_depend.resourcepack) {
-            if (!this.pack.packTypes.has('resourcepack-dependencies')) {
-              this.pack.packTypes.set('resourcepack-dependencies', new ResourcePackDependencies())
-            }
-
-            dependencies.push(new SmithedDependencyClass(this, dependency, _depend, 'client'))
-          }
-
-          return dependencies
         }
+        this.pack.dependencies.set(dependency, true)
+        this.dependencies[i] = true
         return true
-      })(),
+      },
     )
+    return i
   }
 
   generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
@@ -237,15 +227,29 @@ export class SandstoneCore {
     cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>; dry: boolean; verbose: boolean },
     opts: { visitors: GenericCoreVisitor[] },
   ) => {
-    if (this._smithed && !this._smithed.loaded) {
-      await this._smithed.load()
+    await this.smithed.load()
+
+    let dependenciesFailed = 0
+    for (const depend of this.dependencies) {
+      const success = typeof depend === 'boolean' ? depend : await depend()
+
+      if (!success) {
+        dependenciesFailed++
+      }
+    }
+    if (dependenciesFailed !== 0) {
+      console.log(`[SandstoneCore#save] Failed to load ${dependenciesFailed} dependencies, continuing with compilation.`)
     }
 
-    await Promise.allSettled(this.dependencies)
+    if (this.dependencies.length !== 0) {
+      await this.smithed.save()
+    }
 
-    if (this._mcMetaCache && !this._mcMetaCache.loaded) {
-      await this._mcMetaCache.load()
-      await this._mcMetaCache.save()
+    if (this._mcMetaCache) {
+      if (!this.mcMetaCache.loaded) {
+        await this.mcMetaCache.load()
+      }
+      await this.mcMetaCache.save()
     }
 
     const resources = this.generateResources(opts)
@@ -259,7 +263,7 @@ export class SandstoneCore {
       }
       const resourcePath = path.join(..._path)
 
-      const value = node.getValue()
+      const value = await node.getValue()
 
       if (cliOptions.verbose) {
         console.log(`Path: ${resourcePath}.${fileExtension}\n\n` + `${typeof value === 'string' ? value : '<Buffer>'}`)

@@ -39,6 +39,7 @@ export class EnchantmentClass extends ResourceClass<EnchantmentNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       EnchantmentNode,
+      EnchantmentClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[EnchantmentClass.resourceType].path),
       args,
     )
@@ -84,6 +85,7 @@ export class EnchantmentProviderClass extends ResourceClass<EnchantmentProviderN
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       EnchantmentProviderNode,
+      EnchantmentProviderClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[EnchantmentProviderClass.resourceType].path),
       args,
     )

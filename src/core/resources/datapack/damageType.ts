@@ -2,7 +2,6 @@
 
 import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type SymbolResource } from 'sandstone/arguments'
 import type { SetType } from 'sandstone/utils'
-import { toMinecraftResourceName } from 'sandstone/utils'
 import type { ComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -49,6 +48,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       DamageTypeNode,
+      DamageTypeClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[DamageTypeClass.resourceType].path),
       args,
     )
@@ -134,5 +134,5 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
   /** @internal */
   _toChatComponent = () => ({ translate: this.translationKey })
 
-  toString = () => toMinecraftResourceName(this.path)
+  toString = () => this.name
 }

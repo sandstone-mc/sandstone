@@ -38,6 +38,7 @@ export class SmithedDependencyClass extends ResourceClass<DependencyNode> {
         encoding: false,
       },
       DependencyNode,
+      'dependency',
       [name],
       {
         addToSandstoneCore: true,
@@ -50,11 +51,11 @@ export class SmithedDependencyClass extends ResourceClass<DependencyNode> {
     this.handleConflicts()
   }
 
-  getValue(): Buffer {
-    if (this.side === 'client') {
-      return this.dependency.resourcepack as Buffer
+  async getValue() {
+    if (this.side === 'client' && this.dependency.resourcepack) {
+      return await this.dependency.resourcepack()
     }
 
-    return this.dependency.datapack
+    return await this.dependency.datapack()
   }
 }

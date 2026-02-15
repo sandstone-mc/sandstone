@@ -7,15 +7,16 @@ import { getSandstoneContext } from 'sandstone/context'
 import type { PackData } from 'sandstone/utils'
 import { fetch, safeWrite } from 'sandstone/utils'
 import type { SandstoneCore } from './sandstoneCore'
+import { DataPackDependencies, ResourcePackDependencies } from 'sandstone/pack'
+import { SmithedDependencyClass } from './resources/dependency'
 
 type Manifest = Record<string, string>
 
 export type Dependency = {
   version: string
   date: number
-  added: boolean
-  datapack: Buffer
-  resourcepack?: Buffer | false
+  datapack: () => Promise<Buffer>
+  resourcepack?: (() => Promise<Buffer>) | false
 }
 
 type LockFile = Record<string, { version: string; date: number; resourcepack: boolean }>
@@ -30,7 +31,7 @@ export class SmithedDependencyCache {
   readonly baseURL = 'https://api.smithed.dev/v2/'
 
   get path() {
-    return path.join(getSandstoneContext().workingDir, '../', 'resources', 'cache', 'smithed')
+    return path.join(getSandstoneContext().workingDir, 'resources', 'cache', 'smithed')
   }
 
   get manifest() {
@@ -60,6 +61,29 @@ export class SmithedDependencyCache {
   }
 
   async save() {
+    this.core.pack.packTypes.set(
+      'datapack-dependencies',
+      new DataPackDependencies()
+    )
+    let resourcePackDependencies = false
+
+    for (const [id, dependency] of this.dependencies) {
+      new SmithedDependencyClass(this.core, id, dependency, 'server')
+
+      if (dependency.resourcepack !== false) {
+        if (!resourcePackDependencies) {
+          this.core.pack.packTypes.set(
+            'resourcepack-dependencies',
+            new ResourcePackDependencies()
+          )
+        }
+
+        new SmithedDependencyClass(this.core, id, dependency, 'client')
+      }
+    }
+  }
+
+  async lock() {
     if (this.dependencies.size !== 0) {
       const dependencies: Record<string, string> = {}
 
@@ -83,15 +107,9 @@ export class SmithedDependencyCache {
   }
 
   async get(dependency: string, version: string): Promise<Dependency | undefined> {
-    if (!this.loaded) {
-      await this.load()
-    }
-
     const existing = this.dependencies.get(dependency)
 
-    if (existing && existing.version === version) {
-      existing.added = true
-
+    if (existing) {
       return existing
     }
 
@@ -121,11 +139,10 @@ export class SmithedDependencyCache {
           .set(dependency, {
             version,
             date: lockFile[dependency].date,
-            datapack: await fs.readFile(path.join(this.path, dependency, 'datapack.zip')),
+            datapack: async () => await fs.readFile(path.join(this.path, dependency, 'datapack.zip')),
             resourcepack: lockFile[dependency].resourcepack
-              ? await fs.readFile(path.join(this.path, dependency, 'resourcepack.zip'))
+              ? async () => await fs.readFile(path.join(this.path, dependency, 'resourcepack.zip'))
               : false,
-            added: false,
           })
           .get(dependency)!
       }
@@ -140,17 +157,17 @@ export class SmithedDependencyCache {
       try {
         const response = await fetch(`${this.baseURL}packs/${dependency}`)
         if (!response.ok) {
-          console.warn(`[Sandstone] Smithed dependency "${dependency}" not found (HTTP ${response.status}). The pack may not be published yet.`)
+          console.warn(`[SmithedDependencyCache#get] ${((await response.json()) as any).message} (HTTP ${response.status}). The pack may not be published yet.`)
           return undefined
         }
         pack = JSON.parse(await response.text()) as PackData
       } catch (error) {
-        console.warn(`[Sandstone] Failed to fetch Smithed dependency "${dependency}": ${error instanceof Error ? error.message : error}`)
+        console.warn(`[SmithedDependencyCache#get] Failed to fetch metadata for "${dependency}":`, error)
         return undefined
       }
 
       if (!pack || !pack.versions || pack.versions.length === 0) {
-        console.warn(`[Sandstone] Smithed dependency "${dependency}" has no versions available.`)
+        console.warn(`[SmithedDependencyCache#get] "${dependency}" has no versions available.`)
         return undefined
       }
 
@@ -166,7 +183,7 @@ export class SmithedDependencyCache {
         const ver = pack.versions.find((_ver) => _ver.name === version)
 
         if (!ver) {
-          console.warn(`[Sandstone] Smithed dependency "${dependency}" version "${version}" not found.`)
+          console.warn(`[SmithedDependencyCache#get] "${dependency}" version "${version}" not found.`)
           return undefined
         }
 
@@ -177,35 +194,35 @@ export class SmithedDependencyCache {
         url += `@${version}`
       }
 
-      const files = new AdmZip(Buffer.from(await (await fetch(url)).arrayBuffer())).getEntries()
+      let zip: AdmZip | undefined = new AdmZip(Buffer.from(await (await fetch(url)).arrayBuffer()))
 
-      const datapack: Buffer = await new Promise((res) => {
-        files[0].getDataAsync((data) => res(data as Buffer))
-      })
+      let files: AdmZip.IZipEntry[] | undefined = zip.getEntries()
 
-      await safeWrite(path.join(this.path, dependency, 'datapack.zip'), datapack as any)
-
-      let resourcepack: Buffer | false = false
+      await safeWrite(path.join(this.path, dependency, 'datapack.zip'), await new Promise((res) => {
+        files![0].getDataAsync((data) => res(data as Buffer))
+      }))
 
       if (hasResourcePack) {
-        resourcepack = await new Promise((res) => {
-          files[1].getDataAsync((data) => res(data as Buffer))
-        })
-
-        await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), resourcepack as any)
+        await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), await new Promise((res) => {
+          files![1].getDataAsync((data) => res(data as Buffer))
+        }))
       }
+
+      zip = undefined
+      files = undefined
 
       result = this.dependencies
         .set(dependency, {
           version,
           date: version === 'latest' ? Date.now() : 0,
-          datapack,
-          resourcepack,
-          added: true,
+          datapack: async () => await fs.readFile(path.join(this.path, dependency, 'datapack.zip')),
+          resourcepack: hasResourcePack
+            ? async () => await fs.readFile(path.join(this.path, dependency, 'resourcepack.zip'))
+            : false,
         })
         .get(dependency)!
 
-      await this.save()
+      await this.lock()
     }
 
     return result
@@ -213,6 +230,6 @@ export class SmithedDependencyCache {
 
   has(dependency: string) {
     const depend = this.dependencies.get(dependency)
-    return depend && depend.added
+    return depend !== undefined
   }
 }

@@ -35,6 +35,7 @@ export class EquipmentClass extends ResourceClass<EquipmentNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       EquipmentNode,
+      EquipmentClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[EquipmentClass.resourceType].path),
       args,
     )

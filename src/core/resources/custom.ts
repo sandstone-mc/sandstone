@@ -2,7 +2,6 @@
 
 import type fs from 'fs-extra'
 import type { PackType } from 'sandstone/pack/packType'
-import { toMinecraftResourceName } from 'sandstone/utils'
 import { ContainerNode } from '../nodes'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
@@ -55,6 +54,7 @@ export abstract class CustomResourceClass extends ResourceClass<CustomResourceNo
         encoding: args.encoding,
       },
       CustomResourceNode,
+      args.type,
       // eslint-disable-next-line no-nested-ternary
       args.folder
         ? name.includes('/')
@@ -71,9 +71,15 @@ export abstract class CustomResourceClass extends ResourceClass<CustomResourceNo
     this.handleConflicts()
   }
 
+  get name(): `${string}:${string}` {
+    return `${this.path[0]}:${this.path.slice(
+      this.folder === undefined ? 2 : this.folder.length + 1
+    ).join('/')}`
+  }
+
   getValue(): string | Buffer | Promise<Buffer> {
     throw new Error(`Custom Resource '${this.type}' getValue function is not defined!`)
   }
 
-  toString = () => (this.folder ? toMinecraftResourceName(this.path, this.folder.length) : this.name)
+  toString = () => this.name
 }

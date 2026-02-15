@@ -15,12 +15,12 @@ import type { Score } from './Score'
 import { SelectorClass } from './Selector'
 
 /**
- * gibbs_uuid library constants.
+ * guuid library constants.
  * This library converts UUID int arrays to string format at runtime.
- * @see https://smithed.dev/packs/gibbs_uuid (when published)
+ * @see https://smithed.dev/packs/sgu
  */
 const GU = {
-  /** Storage namespace for gibbs_uuid */
+  /** Storage namespace for guuid */
   STORAGE: 'gu:main',
   /** Input path - set UUID int array here before conversion */
   INPUT: 'in',
@@ -315,7 +315,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
   }
 
   /**
-   * Converts the UUID to a string at runtime using gibbs_uuid and caches it in storage.
+   * Converts the UUID to a string at runtime using guuid and caches it in storage.
    *
    * The converted string UUID is stored in `__sandstone:uuid_cache` indexed by a unique key:
    * - For scores source: indexed by the first score value (most significant part of UUID)
@@ -338,8 +338,8 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
       return this
     }
 
-    // Add gibbs_uuid as a Smithed dependency
-    this.core.depend('gibbs_uuid')
+    // Add guuid as a Smithed dependency
+    this.core.depend('sgu')
 
     const pack = this.core.pack
     const { Data, MCFunction, getTempStorage, commands } = pack
@@ -361,7 +361,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
     const tempUUID = getTempStorage('uuid')
     tempUUID.set(sourceData)
 
-    // Copy to gibbs_uuid input storage
+    // Copy to guuid input storage
     const guInput = Data('storage', GU.STORAGE, GU.INPUT)
     guInput.set(tempUUID)
 
@@ -402,7 +402,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
    * - UUID was created from data/scores (requires `convertForMacro()` to be called first)
    *
    * For data/scores-based UUIDs, you must call `convertForMacro()` before using this
-   * property. This converts the UUID to string format using gibbs_uuid and caches it.
+   * property. This converts the UUID to string format using guuid and caches it.
    *
    * @example
    * ```ts

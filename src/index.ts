@@ -397,7 +397,10 @@ export const abs = absolute
 export const rel = relative
 export const loc = local
 
-export const { getVanillaResource, getExistingResource, getMcMetaCache, depend } = sandstonePack.core
+export const { getVanillaResource, getExistingResource, depend } = sandstonePack.core
+export const mcMetaCache = new Proxy({} as typeof sandstonePack['core']['mcMetaCache'], {
+  get: () => sandstonePack.core.mcMetaCache
+})
 
 export type DatapackConfig = {
   /**

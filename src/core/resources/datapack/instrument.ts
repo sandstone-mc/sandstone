@@ -35,6 +35,7 @@ export class InstrumentClass extends ResourceClass<InstrumentNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       InstrumentNode,
+      InstrumentClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[InstrumentClass.resourceType].path),
       args,
     )

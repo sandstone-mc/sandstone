@@ -182,14 +182,6 @@ export type PartialFunction<
   TO extends number | undefined = undefined,
 > = (...args: SlicedArguments<T, FROM, TO>) => ReturnType<T>
 
-export function toMinecraftResourceName(path: readonly string[], typeNested: number = 1): `${string}:${string}` {
-  const [namespace, ...folders] = path
-
-  folders.splice(0, typeNested)
-
-  return `${namespace}:${folders.join('/')}`
-}
-
 /* Ported from https://github.com/AjaxGb/mc-uuid-converter/blob/master/convert.js */
 const uuidBytes = new Uint8Array(16)
 const uuid = new DataView(uuidBytes.buffer)

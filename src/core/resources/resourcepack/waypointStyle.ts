@@ -35,6 +35,7 @@ export class WaypointStyleClass extends ResourceClass<WaypointStyleNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.resourcePack(), extension: 'json' },
       WaypointStyleNode,
+      WaypointStyleClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[WaypointStyleClass.resourceType].path),
       args,
     )

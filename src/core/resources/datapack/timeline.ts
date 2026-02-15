@@ -3,7 +3,6 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
-import { toMinecraftResourceName } from 'sandstone/utils'
 
 // ============================================================================
 // Timeline
@@ -40,6 +39,7 @@ export class TimelineClass extends ResourceClass<TimelineNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TimelineNode,
+      TimelineClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TimelineClass.resourceType].path),
       args,
     )
@@ -85,6 +85,7 @@ export class WorldClockClass extends ResourceClass<WorldClockNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       WorldClockNode,
+      WorldClockClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[WorldClockClass.resourceType].path),
       args,
     )
@@ -92,10 +93,6 @@ export class WorldClockClass extends ResourceClass<WorldClockNode> {
     this.worldClockJSON = args.json
 
     this.handleConflicts()
-  }
-
-  get name(): `${string}:${string}` {
-    return toMinecraftResourceName(this.path)
   }
 
   toString() {

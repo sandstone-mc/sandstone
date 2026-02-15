@@ -35,6 +35,7 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       RecipeNode,
+      RecipeClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[RecipeClass.resourceType].path),
       args,
     )

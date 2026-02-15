@@ -44,6 +44,7 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       LootTableNode,
+      LootTableClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[LootTableClass.resourceType].path),
       args,
     )

@@ -9,6 +9,7 @@ import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } fr
 import type { NBTSerializable } from 'sandstone/arguments/nbt'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
 import { NBTPrimitive, NBTTypedArray } from 'sandstone/variables/nbt/NBTs'
+import { RESOURCE_PATHS } from 'sandstone/arguments';
 
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**
@@ -76,6 +77,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
     protected core: SandstoneCore,
     file: { packType: PackType; extension?: string; encoding?: fs.EncodingOption | false },
     NodeType: ResourceNodeConstructor<N>,
+    protected _resourceType: string,
     path: ResourcePath,
     args: ResourceClassArguments<any>,
   ) {
@@ -174,8 +176,10 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   protected getNode = () => this.node
 
-  get name(): string {
-    return `${this.path[0]}:${this.path.slice(2).join('/')}`
+  get name(): `${string}:${string}` {
+    return `${this.path[0]}:${this.path.slice(
+      this._resourceType in RESOURCE_PATHS ? RESOURCE_PATHS[this._resourceType as keyof typeof RESOURCE_PATHS].path.length + 1 : 2
+    ).join('/')}`
   }
 
   get namespace(): string {

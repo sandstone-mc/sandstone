@@ -39,6 +39,7 @@ export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TestEnvironmentNode,
+      TestEnvironmentClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TestEnvironmentClass.resourceType].path),
       args,
     )
@@ -84,6 +85,7 @@ export class TestInstanceClass extends ResourceClass<TestInstanceNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       TestInstanceNode,
+      TestInstanceClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[TestInstanceClass.resourceType].path),
       args,
     )

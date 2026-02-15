@@ -40,6 +40,7 @@ export class ModelClass extends ResourceClass<ModelNode> {
       core,
       { packType: core.pack.resourcePack() },
       ModelNode,
+      ModelClass.resourceType,
       core.pack.resourceToPath(name, [...RESOURCE_PATHS[ModelClass.resourceType].path, type]),
       args,
     )

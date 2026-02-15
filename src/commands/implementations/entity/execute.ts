@@ -32,7 +32,7 @@ import type { Node } from 'sandstone/core/nodes'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
-import { makeCallable, type NamespacedLiteralUnion, toMinecraftResourceName } from 'sandstone/utils'
+import { makeCallable, type NamespacedLiteralUnion } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
@@ -531,7 +531,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
       return this.nestedExecute(['predicate', predicate], true)
     }
     /* @ts-ignore */
-    return this.nestedExecute(['predicate', toMinecraftResourceName(predicate.path)], true)
+    return this.nestedExecute(['predicate', predicate.name], true)
   }
 
   /**
@@ -610,7 +610,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
 
   function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {
     if (typeof func === 'object' && Object.hasOwn(func, 'addToTag')) {
-      return this.nestedExecute(['function', toMinecraftResourceName((func as _RawMCFunctionClass<[], []>).path)])
+      return this.nestedExecute(['function', (func as _RawMCFunctionClass<[], []>).name])
     }
     /* @ts-ignore */
     if (typeof func === 'string' || Object.hasOwn(func, 'toMacro')) {
@@ -843,7 +843,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
  * Options for creating a deferred execute with macro storage.
  */
 export type DeferredMacroExecuteOptions = {
-  /** Name suffix for the child function (e.g., '__gibbs_execute') */
+  /** Name suffix for the child function (e.g., '__guuid_execute') */
   childFunctionName: string
   /**
    * A function that receives the environment variable macro names and returns

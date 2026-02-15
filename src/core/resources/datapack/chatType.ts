@@ -35,6 +35,7 @@ export class ChatTypeClass extends ResourceClass<ChatTypeNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       ChatTypeNode,
+      ChatTypeClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[ChatTypeClass.resourceType].path),
       args,
     )

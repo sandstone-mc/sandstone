@@ -35,6 +35,7 @@ export class BannerPatternClass extends ResourceClass<BannerPatternNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       BannerPatternNode,
+      BannerPatternClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[BannerPatternClass.resourceType].path),
       args,
     )

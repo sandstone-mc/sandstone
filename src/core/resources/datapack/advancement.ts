@@ -38,6 +38,7 @@ export class AdvancementClass<AdvancementJSON extends SymbolResource['advancemen
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
       AdvancementNode,
+      AdvancementClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[AdvancementClass.resourceType].path),
       args,
     )

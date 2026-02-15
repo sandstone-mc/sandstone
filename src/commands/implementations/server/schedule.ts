@@ -3,7 +3,6 @@ import type { Macroable, Node } from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { MCFunctionClass, MCFunctionNode } from 'sandstone/core/resources/datapack'
 import { TagClass } from 'sandstone/core/resources/datapack/tag'
-import { toMinecraftResourceName } from 'sandstone/utils'
 import { CommandArguments } from '../../helpers'
 
 type ScheduledFunction = string | TagClass<'function'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
@@ -27,7 +26,7 @@ export class ScheduleCommandNode extends ContainerCommandNode {
 
     // Create a new MCFunctionNode with the body of the ExecuteNode.
     const mcFunction = this.sandstonePack.MCFunction(
-      `${toMinecraftResourceName(currentMCFunction.resource.path)}/${func ?? 'schedule'}`,
+      `${currentMCFunction.resource.name}/${func ?? 'schedule'}`,
       {
         addToSandstoneCore: false,
         creator: 'sandstone',

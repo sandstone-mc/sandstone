@@ -90,6 +90,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'nbt', encoding: false },
       StructureNode,
+      StructureClass.resourceType,
       sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[StructureClass.resourceType].path),
       args,
     )
