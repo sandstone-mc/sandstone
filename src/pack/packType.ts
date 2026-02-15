@@ -27,12 +27,12 @@ export abstract class PackType {
     | ((type: 'output' | 'client' | 'server', readFile: handlerReadFile, writeFile: handlerWriteFile) => Promise<void>)
 
   /**
-   * @param type eg. datapack or resource_pack
+   * @param type eg. datapack or resourcepack
    * @param clientPath from active client directory (eg. .minecraft), can use variables $worldName$ & $packName$; eg. 'saves/$worldName$/datapacks/$packName$' or 'saves/$worldName$/resources'
    * @param serverPath from active server directory, can use variable $packName$; eg. 'world/datapacks/$packName$'
    * @param rootPath from active client directory (eg. .minecraft), can use variable $packName$; eg. 'datapacks/$packName$' or 'resource_packs/$packName$'
    * @param networkSides which sides of the network the pack needs to be exported to; if both the client & server are defined which side this pack needs to be exported to
-   * @param archiveOutput whether to archive the directory on output
+   * @param archiveOutput whether to archive the directory before exporting when `exportZips` is set to `true` in `SandstoneConfig.saveOptions`
    * @param resourceSubFolder Optional. Defines sub folder for resources to go; eg. data or assets (use handleOutput if you want to bypass this)
    */
   // eslint-disable-next-line max-len

@@ -166,6 +166,7 @@ import {
   UnifyChainedExecutesVisitor,
 } from './visitors'
 import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
+import type { RecipeJSON } from 'sandstone/arguments/shapedCrafting'
 import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 
 export type ResourcePath = string[]
@@ -1090,9 +1091,13 @@ export class SandstonePack {
       ...options,
     })
 
-  Recipe = (name: string, recipe: NonNullable<SymbolResource['recipe']>, options?: Partial<RecipeClassArguments>) =>
+  Recipe = <P1 extends string = string, P2 extends string = string, P3 extends string = string>(
+    name: string,
+    recipe: RecipeJSON<P1, P2, P3>,
+    options?: Partial<RecipeClassArguments>,
+  ) =>
     new RecipeClass(this.core, name, {
-      json: recipe,
+      json: recipe as NonNullable<SymbolResource['recipe']>,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],

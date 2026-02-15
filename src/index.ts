@@ -524,6 +524,7 @@ export interface SandstoneConfig {
      */
     customFileHandler?: (relativePath: string, content: any, contentSummary: string) => void
 
+    // TODO: Implement this
     /**
      * The indentation to use for all JSON & MCMeta files. This argument is the same than `JSON.stringify` 3d argument.
      */
@@ -555,9 +556,11 @@ export interface SandstoneConfig {
     serverPath?: string
 
     /**
-     * Whether to force enable/disable symlinks. Defaults to false. Useful if you want to enable symlinks on Windows.
+     * Whether to (during development) export packs that have archiving enabled (like resource packs) as zip archives.
+     * 
+     * Defaults to false.
      */
-    enableSymlinks?: boolean
+    exportZips?: boolean
   }
 
   /** Some scripts that can run at defined moments. */

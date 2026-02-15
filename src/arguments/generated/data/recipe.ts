@@ -2,7 +2,7 @@ import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { ItemStack, ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
-import type { CRAFTING_INGREDIENT } from 'sandstone/arguments'
+import type { PatternKeys, StringSmallerThan4 } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass, TrimPatternClass } from 'sandstone'
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
@@ -85,20 +85,17 @@ export type CraftingImbue = (NotificationInfo & CraftingBookInfo & {
   result: ItemStackTemplate,
 })
 
-export type CraftingShaped = (NotificationInfo & CraftingBookInfo & {
-  /**
-   * Value:
-   * List length range: 1..3
-   */
-  pattern: NBTList<`${any}${string}`, {
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 1,
-    max: 3,
-  }>,
-  key: ({
-    [Key in Extract<CRAFTING_INGREDIENT, string>]?: Ingredient
-  }),
+export type CraftingShaped<P1 extends string = string, P2 extends string = string, P3 extends string = string> = (NotificationInfo & CraftingBookInfo & {
+  pattern: [
+    StringSmallerThan4<P1>,
+        StringSmallerThan4<P2>?,
+        StringSmallerThan4<P3>?,
+  ],
+  key: PatternKeys<[
+    P1,
+    P2,
+    P3,
+  ], Ingredient>,
   result: ItemStackTemplate,
 })
 

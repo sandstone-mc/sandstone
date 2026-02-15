@@ -43,8 +43,6 @@ export type OPERATORS = '=' | '+=' | '-=' | '/=' | '*=' | '%=' | '<' | '>' | '><
 
 export type COMPARISON_OPERATORS = '<' | '<=' | '=' | '>=' | '>'
 
-export type CRAFTING_INGREDIENT = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'X' | 'Y' | 'Z'
-
 export type SOUND_SOURCES = (
   | 'master'
   | 'music'

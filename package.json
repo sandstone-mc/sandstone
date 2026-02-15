@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@parcel/watcher": "^2.5.6",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.1.23",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.1.25",
     "@stylistic/eslint-plugin": "^5.7.1",
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",
@@ -68,9 +68,9 @@
     "url": "git+https://github.com/sandstone-mc/sandstone.git"
   },
   "scripts": {
-    "build": "bun run scripts/build.ts",
-    "build:types": "bun tsc -p tsconfig.build.json",
-    "watch": "bun run scripts/watch.ts",
+    "dev:build": "bun run scripts/build.ts",
+    "dev:build:types": "bun tsc -p tsconfig.build.json",
+    "dev:watch": "bun run scripts/watch.ts",
     "publishToNpm": "bun run build && bun publish",
     "format": "bun oxlint src --fix",
     "lint": "bun oxlint src",
