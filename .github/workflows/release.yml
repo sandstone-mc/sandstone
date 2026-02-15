@@ -10,16 +10,14 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 16
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - run: pnpm install -f --production
-      - run: pnpm install @types/node
-      - run: pnpm run build
+          node-version: 24
+      - run: bun i
+      - run: bun dev:build
       - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
         env:
           NPM_TOKEN: ${{secrets.npm_token}}
