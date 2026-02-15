@@ -20,6 +20,7 @@
     "@sinclair/typebox": "^0.31.21",
     "@smithed-mc/data-types": "^0.1.2",
     "@types/nearley": "^2.11.5",
+    "@types/node": "24",
     "@typescript/analyze-trace": "^0.4.0",
     "adm-zip": "^0.5.10",
     "fs-extra": "^11.1.1",
@@ -37,7 +38,6 @@
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",
     "@types/lodash": "^4.14.199",
-    "@types/node": "^22.13.17",
     "@types/semver": "^7.5.3",
     "@typescript/native-preview": "^7.0.0-dev.20260212.1",
     "oxlint": "^1.42.0",
@@ -45,9 +45,6 @@
   },
   "directories": {
     "lib": "src"
-  },
-  "engines": {
-    "node": ">=22.13.17"
   },
   "homepage": "https://sandstone.dev",
   "keywords": [

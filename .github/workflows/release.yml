@@ -1,5 +1,8 @@
 name: Node.js Publish Release
 
+permissions:
+  id-token: write
+
 on:
   release:
     types: [released]
