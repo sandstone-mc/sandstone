@@ -13,14 +13,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v6
         with:
-          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
       - run: bun i
       - run: bun dev:build
-      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
+      - run: npm publish --tag beta --provenance
         env:
-          NPM_TOKEN: ${{secrets.npm_token}}
-      - run: npm publish --tag beta
-        env:
-          NPM_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
