@@ -418,9 +418,9 @@ export type DatapackConfig = {
    */
   packFormat?: number
 
-  minVersion?: number | [number] | [number, number]
+  minFormat?: number | [number] | [number, number]
 
-  maxVersion?: number | [number] | [number, number]
+  maxFormat?: number | [number] | [number, number]
 
   /** List of experimental game features to enable. */
   features?: string[]
