@@ -425,7 +425,7 @@ export class SandstonePack {
     let pack = this.packTypes.get('datapack') as DataPack
 
     if (!pack) {
-      const options = this.packOptions.datapack ?? { packFormat: 31, description: 'A Sandstone datapack' }
+      const options = this.packOptions.datapack ?? { packFormat: 98, description: 'A Sandstone datapack' }
       pack = this.packTypes.set('datapack', new DataPack(false, options)).get('datapack') as DataPack
     }
 
@@ -436,7 +436,7 @@ export class SandstonePack {
     let pack = this.packTypes.get('resourcepack') as ResourcePack
 
     if (!pack) {
-      const options = this.packOptions.resourcepack ?? { packFormat: 31, description: 'A Sandstone resource pack' }
+      const options = this.packOptions.resourcepack ?? { packFormat: 79, description: 'A Sandstone resource pack' }
       pack = this.packTypes
         .set('resourcepack', new ResourcePack(options))
         .get('resourcepack') as ResourcePack
