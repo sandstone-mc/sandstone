@@ -4,12 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 
-- **Build**: `bun run build` - Builds the project using tsup and runs setup
-- **Watch**: `bun run watch` - Builds with watch mode
-- **Type checking**: `bun run build:types` - Generates TypeScript declaration files
-- **Setup**: `bun run setup` - Builds types and sets up package (required after build)
-- **Lint**: `bun run lint` or `bun oxlint src` - Lints TypeScript files using OxLint
-- **Format/Fix**: `bun run format` or `bun oxlint src --fix` - Lints and auto-fixes issues
+- **Build**: `bun dev:build` - Builds the project using a custom Bun Build based script
+- **Watch**: `bun dev:watch` - Builds with watch mode
+- **Type checking**: `bun build:types` - Generates TypeScript declaration files
+- **Lint**: `bun lint` - Lints TypeScript files using OxLint
+- **Format/Fix**: `bun format` - Lints and auto-fixes issues
 
 ## Todo Directory
 

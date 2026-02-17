@@ -25,7 +25,7 @@ async function build() {
 
   try {
     $.cwd(rootDir)
-    await $`bun run build`.quiet()
+    await $`bun dev:build`.quiet()
     const elapsed = ((performance.now() - start) / 1000).toFixed(2)
     console.log(`Build completed in ${elapsed}s`)
   } catch (err) {

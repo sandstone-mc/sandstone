@@ -68,7 +68,7 @@
     "dev:build": "bun run scripts/build.ts",
     "dev:build:types": "bun tsc -p tsconfig.build.json",
     "dev:watch": "bun run scripts/watch.ts",
-    "publishToNpm": "bun run build && bun publish",
+    "publishToNpm": "bun dev:build && bun publish",
     "format": "bun oxlint src --fix",
     "lint": "bun oxlint src",
     "update-from-mcdoc": "mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig"
