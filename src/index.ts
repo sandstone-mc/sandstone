@@ -228,7 +228,7 @@ export const fill: FillCommand<false>['fill'] = ((...args: unknown[]) =>
 type PackNonMethodKeys =
   | 'core' | 'packTypes' | 'packOptions' | '__initMCFunction' | 'dependencies' | 'flow' | 'commands'
   | 'conditions' | 'objectives' | 'anonymousScoreId' | 'anonymousDataId' | 'constants' | 'tickedLoops'
-  | 'loadTags' | '__rootObjective' | 'defaultNamespace' | 'packUid'
+  | '__rootObjective' | 'packUid'
   | 'reset' | 'appendNode' | 'initMCFunction' | 'save' | 'resourceToPath' | 'rootObjective'
   | 'setupLantern' | 'dataPack' | 'resourcePack' | 'registerTickedCommands'
 type PackMethodKeys = Exclude<keyof SandstonePack, PackNonMethodKeys>
@@ -328,6 +328,8 @@ export const {
   ItemPredicate,
   makeCustomResource,
   sleep,
+  loadTags,
+  defaultNamespace,
 } = packMethodsProxy
 
 export * from './variables/nbt/NBTs'

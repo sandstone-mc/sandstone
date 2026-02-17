@@ -170,24 +170,46 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
     this.handleConflicts()
   }
 
+  get name(): `#${string}:${string}` {
+    return `#${super.name}`
+  }
+
   public push(...resources: Resource<REGISTRY>[]) {
     for (const resource of resources) {
-      this.tagJSON.values.push(objectToString(resource) as HintedTagStringType<REGISTRY>)
+      const resourceName = objectToString(resource) as HintedTagStringType<REGISTRY>
+      if (resourceName === this.name) {
+        if (resource instanceof TagClass) {
+          this.tagJSON.values.push(...resource.tagJSON.values)
+        } else {
+          throw new Error('[TagClass#push] Tags cannot self-reference')
+        }
+      } else {
+        this.tagJSON.values.push(resourceName)
+      }
     }
   }
 
-  public unshift(..._resources: Resource<REGISTRY>[]) {
+  public unshift(...resources: Resource<REGISTRY>[]) {
     // Done this way so the resources you're adding to the beginning of the tag stay in order.
-    const resources: (string | TagSingleValue<string>)[] = []
-    for (const resource of _resources) {
-      resources.push(objectToString(resource))
+    const _resources: typeof this.tagJSON.values = []
+    for (const resource of resources) {
+      const resourceName = objectToString(resource) as HintedTagStringType<REGISTRY>
+      if (resourceName === this.name) {
+        if (resource instanceof TagClass) {
+          _resources.push(...resource.tagJSON.values)
+        } else {
+          throw new Error('[TagClass#push] Tags cannot self-reference')
+        }
+      } else {
+        _resources.push(resourceName)
+      }
     }
-    this.tagJSON.values.push(...(resources as HintedTagStringType<REGISTRY>[]))
+    this.tagJSON.values.unshift(..._resources)
   }
 
   /** Checks whether a given resource is in this tag. */
   has(resource: Resource<REGISTRY>) {
-    this.tagJSON.values.some(
+    return this.tagJSON.values.some(
       (tagValue) =>
         (typeof tagValue !== 'string' ? (tagValue as { id: string }).id : tagValue) ===
         objectToString(resource),
