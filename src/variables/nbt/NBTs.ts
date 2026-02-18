@@ -3,6 +3,7 @@ import type { MacroArgument } from 'sandstone/core'
 import { makeCallable } from 'sandstone/utils'
 import * as util from 'util'
 import { parseNBT } from './parser'
+import { _RawLabelClass } from '../Label'
 
 export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string
@@ -479,13 +480,35 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
     return nbt[util.inspect.custom]()
   }
 
-  if (typeof nbt === 'object') {
+  if (typeof nbt === 'object' || typeof nbt === 'function') {
+    let failedMacro = false
+    if ('toMacro' in nbt) {
+      // @ts-ignore
+      const macro = nbt.toMacro()
+
+      if (macro === '$()') {
+        failedMacro = true
+      } else {
+        return macro
+      }
+    }
     if ('toNBT' in nbt) {
       // @ts-ignore
       return nbt.toNBT()
-    } else if ('toMacro' in nbt) {
-      // @ts-ignore
-      return nbt.toMacro()
+    } else if (failedMacro) {
+      throw new Error('[nbtStringifier] A macro variable NBT insertion was attempted in an mcfunction without macros defined.')
+    }
+    if (typeof nbt === 'function') {
+      /* @ts-ignore */
+      throw new Error(`[nbtStringifier] This should never happen. A function or callable instance (${nbt.constructor?.name}) without toNBT was passed in as an NBT value.`)
+    }
+    if (nbt.constructor.name !== 'Object') {
+      if ('toString' in nbt) {
+        return `${toString}`
+      } else {
+        /* @ts-ignore */
+        throw new Error(`[nbtStringifier] A ${nbt.constructor?.name} was passed in as an NBT value. Hint: define toNBT or toString if this was intentional`)
+      }
     }
   }
 

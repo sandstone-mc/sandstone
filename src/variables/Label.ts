@@ -6,36 +6,37 @@ import type { SandstonePack } from '../pack'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses'
 import type { SelectorEntityType, SelectorProperties } from './Selector'
 import { SelectorClass } from './Selector'
+import { NBTSerializable } from 'sandstone/arguments';
 
 type SingleEntity = SelectorClass<false, true, boolean> | SelectorPickClass<true, boolean>
 
 /**
  * Label tag (/tag) handler
  */
-export class _RawLabelClass {
+export class _RawLabelClass implements NBTSerializable {
   /**
    * Label name
    */
-  public name: string
+  public name: `${any}${string}`
 
   /**
    * Label Tag name with namespace
    */
-  public fullName: string
+  public fullName: `${string}.${string}`
 
   /**
    * Label Description (optional)
    */
-  public description?: string
+  public description?: `${any}${string}`
 
   constructor(
     private pack: SandstonePack,
-    name: string,
-    description?: string,
+    name: `${any}${string}` | `${string}:${string}`,
+    description?: `${any}${string}`,
   ) {
-    if (name.includes('.')) {
-      this.name = name.split('.').slice(1).join('.')
-      this.fullName = name
+    if (name.includes(':')) {
+      this.name = name.split(':')[1] as `${any}${string}`
+      this.fullName = name.replace(':', '.') as `${string}.${string}`
     } else {
       this.name = name
       this.fullName = `${pack.defaultNamespace}.${name}`
@@ -52,7 +53,12 @@ export class _RawLabelClass {
   /**
    * Contains the name and description of the Label (eg. 'wasd:is_walking; Whether the player is not mounted')
    */
-  public toString = () => `${this.fullName}${this.description ? `; ${this.description}` : ''}`
+  toString = () => `${this.fullName}${this.description ? `; ${this.description}` : ''}`
+
+  /**
+   * @internal
+   */
+  toNBT = () => `'${this.fullName}'`
 
   /**
    * @internal

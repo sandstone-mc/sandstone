@@ -319,16 +319,14 @@ export class _RawMCFunctionClass<
     this.handleConflicts()
   }
 
+  private generated = false
+
   /** @internal */
   generate = () => {
-    if (this.node.body.length > 0) {
-      /*
-       * Don't generate resource if the node already has commands.
-       * Else, this might generate the nodes twice with fast refresh
-       */
-      // return
-      // TODO: Look into doing more optimized HMR with the new watcher eventually, for now this doesn't matter anymore
+    if (this.generated) {
+      return
     }
+    this.generated = true
 
     this.push(this.callback.bind(undefined, makeCallable(this, this.__call__)))
   }
@@ -407,8 +405,12 @@ export class _RawMCFunctionClass<
   }
 
   push(...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) {
+    this.generate()
+
     if (contents[0] instanceof _RawMCFunctionClass) {
       for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
+        mcfunction.generate()
+
         this.node.body.push(...mcfunction.node.body)
       }
     } else {
@@ -419,6 +421,8 @@ export class _RawMCFunctionClass<
   }
 
   unshift(...contents: _RawMCFunctionClass<PARAMS, ENV>[] | [() => any]) {
+    this.generate()
+
     const fake = new MCFunctionClass(this.core, 'fake', {
       addToSandstoneCore: false,
       creator: 'sandstone',

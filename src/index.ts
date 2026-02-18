@@ -524,7 +524,7 @@ export interface SandstoneConfig {
     /**
      * A custom handler for saving files. If specified, files won't be saved anymore, you will have to handle that yourself.
      */
-    customFileHandler?: (relativePath: string, content: any, contentSummary: string) => void
+    customFileHandler?: (relativePath: string, content: any, contentSummary: string) => Promise<void>
 
     // TODO: Implement this
     /**

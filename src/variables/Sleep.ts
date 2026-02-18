@@ -65,9 +65,9 @@ export class SleepClass extends AwaitNode {
 
       const { execute } = commands
 
-      const name = `__sandstone.asyncTimer.${currentFunction.resource.name.replace(/[:/]/g, '.')}`
+      const name = `__sandstone:asyncTimer.${currentFunction.resource.name.replace(/[:/]/g, '.')}` as `${string}:${string}`
 
-      const timer = new ObjectiveClass(core.pack, name, 'dummy', undefined, { creator: 'sandstone' })
+      const timer = new ObjectiveClass(core.pack, name.replace(':', '.'), 'dummy', undefined, { creator: 'sandstone' })
 
       execute.store.result.score(timer('@s')).run.time.query('gametime')
 

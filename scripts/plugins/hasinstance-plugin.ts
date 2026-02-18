@@ -133,7 +133,7 @@ function createBrandProperty(brandName: string): ts.PropertyDeclaration {
  * e.g.,
  * static [Symbol.hasInstance](instance: unknown): instance is ClassName {
  *   return (
- *     typeof instance === 'object' &&
+ *     (typeof instance === 'object' || typeof instance === 'function') &&
  *     instance !== null &&
  *     (instance as Record<symbol, unknown>)[BRAND_NAME] === true
  *   )
@@ -141,10 +141,26 @@ function createBrandProperty(brandName: string): ts.PropertyDeclaration {
  */
 function createHasInstanceMethod(className: string, brandName: string): ts.MethodDeclaration {
   // typeof instance === 'object'
-  const typeofCheck = ts.factory.createBinaryExpression(
+  const typeofObjectCheck = ts.factory.createBinaryExpression(
     ts.factory.createTypeOfExpression(ts.factory.createIdentifier('instance')),
     ts.SyntaxKind.EqualsEqualsEqualsToken,
     ts.factory.createStringLiteral('object'),
+  )
+
+  // typeof instance === 'function' (for callable proxies like MCFunctionClass)
+  const typeofFunctionCheck = ts.factory.createBinaryExpression(
+    ts.factory.createTypeOfExpression(ts.factory.createIdentifier('instance')),
+    ts.SyntaxKind.EqualsEqualsEqualsToken,
+    ts.factory.createStringLiteral('function'),
+  )
+
+  // (typeof instance === 'object' || typeof instance === 'function')
+  const typeofCheck = ts.factory.createParenthesizedExpression(
+    ts.factory.createBinaryExpression(
+      typeofObjectCheck,
+      ts.SyntaxKind.BarBarToken,
+      typeofFunctionCheck,
+    ),
   )
 
   // instance !== null

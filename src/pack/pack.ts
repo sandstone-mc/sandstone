@@ -446,7 +446,7 @@ export class SandstonePack {
   }
 
   setupLantern = () => {
-    const loadStatus = this.Objective.create('load.status')
+    const loadStatus = this.Objective.create('load.status', 'dummy', undefined, { useDefaultNamespace: false })
 
     const privateInit = this.Tag('function', 'load:_private/init', [
       this.MCFunction('load:_private/init', () => {
@@ -525,10 +525,6 @@ export class SandstonePack {
     ): ObjectiveClass => {
       let { alreadyExists = false, useDefaultNamespace = true } = options
 
-      if (name.includes('.') || name.includes('__')) {
-        useDefaultNamespace = false
-      }
-
       if (useDefaultNamespace) {
         name = `${this.defaultNamespace}.${name}`
       }
@@ -555,7 +551,7 @@ export class SandstonePack {
     this.__rootObjective = this.Objective.create('__sandstone', 'dummy', [
       { text: 'Sandstone', color: 'gold' },
       ' internals',
-    ])
+    ], { useDefaultNamespace: false })
     return this.__rootObjective
   }
 
@@ -627,7 +623,7 @@ export class SandstonePack {
    * @param label Label/tag name
    * @param description Label description (optional)
    */
-  Label = (label: string, description?: string) => new LabelClass(this, label, description)
+  Label = (label: `${any}${string}` | `${string}:${string}`, description?: `${any}${string}`) => new LabelClass(this, label, description)
 
   /**
    * Creates an item predicate for use in commands like `clear` and `execute if items`.
@@ -919,7 +915,7 @@ export class SandstonePack {
         callback: (typeof args[1] === 'function' ? args[1] : args[2]) as () => void,
         creator: 'user',
         addToSandstoneCore: true,
-        onConflict: conflictDefaults('mcfunction') as MCFunctionClassArguments['onConflict'],
+        onConflict: conflictDefaults('function') as MCFunctionClassArguments['onConflict'],
         ...(Array.isArray(args[1]) ? args[3] : args[2] || args[1]),
       },
       Array.isArray(args[1]) ? args[1] : undefined,

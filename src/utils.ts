@@ -113,6 +113,15 @@ export function makeCallableProxy(func: any, object: any) {
       return value
     },
     getPrototypeOf: (_t) => Object.getPrototypeOf(object),
+    ownKeys: (_t) => {
+      return Reflect.ownKeys(object);
+    },
+    getOwnPropertyDescriptor: (_t, prop) => {
+      return Reflect.getOwnPropertyDescriptor(object, prop);
+    },
+    has: (_t, prop) => {
+      return Reflect.has(object, prop);
+    }
   }) as any
 }
 

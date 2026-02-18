@@ -104,7 +104,7 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
   }
 
   getValue() {
-    const filteredArgs: unknown[] = []
+    const filteredArgs: unknown[] = this.command === '' ? [] : [this.command]
 
     for (const arg of this.args) {
       if (arg !== undefined && arg !== null) {
@@ -125,7 +125,7 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
       }
     }
 
-    return `${this.isMacro ? '$' : ''}${this.command} ${filteredArgs.join(' ')}`
+    return `${this.isMacro ? '$' : ''}${filteredArgs.join(' ')}`
   }
 
   /**

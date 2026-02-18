@@ -82,7 +82,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     }
   }
 
-  toString() {
+  toString(): `${string} ${string}` {
     return `${this.target} ${this.objective}`
   }
 

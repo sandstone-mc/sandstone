@@ -97,21 +97,15 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
     this.creator = args.creator ?? 'sandstone'
 
-    const strategy_path = this.node.resource.path[1] === undefined ? '' : this.node.resource.path[1].endsWith('ses') ? this.node.resource.path[1].slice(0,-2) : this.node.resource.path[1].slice(0, -1)
-
     // Get conflict strategies from context if available, otherwise use defaults
     const conflictStrategies = hasContext() ? getSandstoneContext().conflictStrategies : undefined
-    const scopedStrategy = this.node.resource.path[1] && conflictStrategies
-      ? conflictStrategies[strategy_path] as LiteralUnion<BASIC_CONFLICT_STRATEGIES>
-      : undefined
+    const scopedStrategy = conflictStrategies?.[_resourceType] as LiteralUnion<BASIC_CONFLICT_STRATEGIES> | undefined
     const defaultStrategy = conflictStrategies?.default as LiteralUnion<BASIC_CONFLICT_STRATEGIES> | undefined
 
     this.onConflict = args.onConflict ?? scopedStrategy ?? defaultStrategy ?? 'throw'
   }
 
   protected handleConflicts() {
-    const resourceType = this.node.resource.path[1] || 'resources'
-
     const conflict = this.core.resourceNodes.get(this.node)
 
     let add = false
@@ -123,7 +117,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
       switch (this.onConflict) {
         case 'throw': {
           throw new Error(
-            `Created a ${resourceType.substring(0, resourceType.length - 1)} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`,
+            `Created a ${this._resourceType} with the duplicate name ${newResource.name}, and onConflict was set to "throw".`,
           )
         }
         case 'replace':
@@ -137,7 +131,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
             console.warn(
               [
                 'Warning:',
-                `Tried to create a ${resourceType.substring(0, resourceType.length - 1)} named "${newResource.name}", but found an already existing one.`,
+                `Tried to create a ${this._resourceType} named "${newResource.name}", but found an already existing one.`,
                 'The new one has replaced the old one. To remove this warning, please change the options of the resource to { onConflict: \'/* other option */\' }.',
               ].join('\n'),
             )

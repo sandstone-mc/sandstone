@@ -25,11 +25,11 @@ export class CommentCommand extends CommandArguments<typeof CommentCommandNode> 
    *
    * @example
    * ```ts
-   * comment('This is a helpful comment')         // # This is a helpful comment
-   * comment('Setup phase', 'for minigame')      // # Setup phase for minigame
+   * comment('This is a helpful comment')       // # This is a helpful comment
+   * comment('Setup phase', 'for minigame')     // # Setup phase for minigame
    * comment('Multi\nline\ncomment')            // # Multi
-   *                                              // # line
-   *                                              // # comment
+   *                                            // # line
+   *                                            // # comment
    * ```
    */
   comment = (...comments: unknown[]) => this.finalCommand([comments])
