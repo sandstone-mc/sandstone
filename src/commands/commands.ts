@@ -159,7 +159,7 @@ export class SandstoneCommands<MACRO extends boolean = false> {
     return new ExperienceCommand<MACRO>(this.sandstonePack)
   }
 
-  get fill() {
+  get fill(): FillCommand<MACRO>['fill'] {
     return bind(this.sandstonePack, FillCommand, 'fill') as FillCommand<MACRO>['fill']
   }
 
@@ -279,7 +279,7 @@ export class SandstoneCommands<MACRO extends boolean = false> {
     return bind(this.sandstonePack, SeedCommand, 'seed') as SeedCommand['seed']
   }
 
-  get setblock() {
+  get setblock(): SetBlockCommand<MACRO>['setblock'] {
     return bind(this.sandstonePack, SetBlockCommand, 'setblock') as SetBlockCommand<MACRO>['setblock']
   }
 
