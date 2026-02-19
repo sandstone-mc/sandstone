@@ -1,9 +1,32 @@
 /* eslint-disable dot-notation */
 import { ExecuteCommandNode, FunctionCommandNode } from 'sandstone/commands'
 import { CommandNode } from 'sandstone/core/nodes'
+import { ElseNode } from 'sandstone/flow'
 import { LoopArgument } from 'sandstone/variables'
 
 import { GenericSandstoneVisitor } from './visitor'
+
+/**
+ * Gets the effective single command from a function body, filtering out nodes that produce no output.
+ * Returns the command if there's exactly one effective command, or null otherwise.
+ */
+function getEffectiveSingleCommand(body: any[]): any | null {
+  // Filter out nodes that don't produce output (like ElseNode)
+  const effectiveBody = body.filter((n) => !(n instanceof ElseNode))
+
+  if (effectiveBody.length !== 1) {
+    return null
+  }
+
+  let command = effectiveBody[0]
+
+  // If it's a fake execute (used as wrapper), unwrap it
+  if (command instanceof ExecuteCommandNode && command.isFake && command.body.length === 1) {
+    command = command.body[0]
+  }
+
+  return command
+}
 
 /**
  * Simplifies an execute calling a 1-command function to a single execute, with some exceptions.
@@ -15,6 +38,7 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
     }
 
     const functionNode = node.body[0]
+
     if (!(functionNode instanceof FunctionCommandNode)) {
       return this.genericVisit(node)
     }
@@ -27,12 +51,17 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
 
     const mcFunctionNode = mcFunction.node
 
-    if (mcFunctionNode.body.length > 1) {
-      return this.genericVisit(node)
-    }
+    // Try to get effective single command, accounting for filtered nodes and fake executes
+    let command = getEffectiveSingleCommand(mcFunctionNode.body)
 
-    // We know the function is a single-node function.
-    let command = mcFunctionNode.body[0]
+    // Fall back to original logic if no effective single command
+    if (!command) {
+      if (mcFunctionNode.body.length === 1) {
+        command = mcFunctionNode.body[0]
+      } else {
+        return this.genericVisit(node)
+      }
+    }
 
     if (!(command instanceof CommandNode)) {
       return this.genericVisit(node)
@@ -42,7 +71,7 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
       return new FunctionCommandNode(this.pack, mcFunctionNode.resource.name)
     }
 
-    // Yes this should be recursive, but I'm lazy. This cleans up Flow's mess.
+    // If the effective command is a function call, we can potentially eliminate the intermediate function
     if (command instanceof FunctionCommandNode) {
       const innerMCFunction = command.args[0]
 
@@ -50,17 +79,15 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
         return this.genericVisit(node)
       }
 
-      const innerMCFunctionNode = innerMCFunction.node
+      // Replace the outer execute's body with the inner function call
+      // This eliminates the intermediate function layer
+      node.body = [command]
 
-      if (innerMCFunctionNode.body.length > 1) {
-        return this.genericVisit(node)
+      if (mcFunction.creator === 'sandstone') {
+        this.core.resourceNodes.delete(mcFunctionNode)
       }
 
-      command = innerMCFunctionNode.body[0]
-
-      if (innerMCFunction.creator === 'sandstone') {
-        this.core.resourceNodes.delete(innerMCFunctionNode)
-      }
+      return this.genericVisit(node)
     }
 
     /*

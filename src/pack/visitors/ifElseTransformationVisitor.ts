@@ -68,20 +68,6 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
 
     // 2. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {
-      // If the body of the if node is just another if node 
-      if (
-        node_.body[0] instanceof IfNode
-        && !node_.body.slice(1).some((node) => (!(node instanceof ElseNode) && (!(node instanceof IfNode) || node._isElseIf === false)))
-      ) {
-        const nodes = Array.from(flattenIfNode(node_.body[0]))
-
-        return this.visit(new ExecuteCommandNode(this.pack, [[node_.condition.getValue()]], {
-          isSingleExecute: false,
-          givenCallbackName: 'if',
-          body: handleMultipleNodes(this, nodes),
-        }))
-      }
-
       return this.visit(new ExecuteCommandNode(this.pack, [[node_.condition.getValue()]], {
         isSingleExecute: false,
         givenCallbackName: 'if',
