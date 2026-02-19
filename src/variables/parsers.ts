@@ -4,22 +4,52 @@ import { isMacroArgument, type MacroArgument } from '../core/Macro'
 import { VectorClass } from './Coordinates'
 // PARSERS
 
-function isRawCoordinates(arg: unknown): arg is [string, string, string] | [string, string] {
-  return Array.isArray(arg) && (arg.length === 3 || arg.length === 2) && arg.every((c) => typeof c === 'string')
-}
-
-function isRawRotation(arg: unknown): arg is [string, string] {
-  return Array.isArray(arg) && arg.length === 2 && arg.every((c) => typeof c === 'string')
-}
-
 export function coordinatesParser<T>(
   coordinates: T,
 ): T extends Coordinates<boolean> ? VectorClass<[string, string, string]> : T {
-  return isRawCoordinates(coordinates) ? (new VectorClass(coordinates) as any) : (coordinates as any)
+  if (Array.isArray(coordinates)) {
+    if (coordinates.length === 3 || coordinates.length === 2) {
+      return new VectorClass(coordinates.map((coord) => {
+        if (typeof coord === 'string') {
+          return coord
+        }
+        if (typeof coord === 'number') {
+          return `${coord}`
+        }
+        if ('toMacro' in coord) {
+          /* @ts-ignore */
+          return coord.toMacro()
+        }
+        throw new Error(`[coordinatesParser] Unsupported vector component ${coord}`)
+      })) as any
+    }
+    throw new Error(`[coordinatesParser] Unsupported vector size ${coordinates.length}`)
+  } else {
+    return coordinates as any
+  }
 }
 
 export function rotationParser<T>(rotation: T): T extends Rotation<boolean> ? VectorClass<[string, string]> : T {
-  return isRawRotation(rotation) ? (new VectorClass(rotation) as any) : (rotation as any)
+  if (Array.isArray(rotation)) {
+    if (rotation.length === 2) {
+      return new VectorClass(rotation.map((coord) => {
+        if (typeof coord === 'string') {
+          return coord
+        }
+        if (typeof coord === 'number') {
+          return `${coord}`
+        }
+        if ('toMacro' in coord) {
+          /* @ts-ignore */
+          return coord.toMacro()
+        }
+        throw new Error(`[rotationParser] Unsupported vector component ${coord}`)
+      })) as any
+    }
+    throw new Error(`[rotationParser] Unsupported vector size ${rotation.length}`)
+  } else {
+    return rotation as any
+  }
 }
 
 // Sanitize score values. null => '', Infinity => '', any number => itself

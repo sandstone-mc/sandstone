@@ -1,4 +1,4 @@
-import type { MacroString } from 'sandstone/core'
+import type { Macroable, MacroString } from 'sandstone/core'
 import type { VectorClass } from 'sandstone/variables'
 
 type AbsoluteFloat<MACRO extends boolean = false> = MacroString<`${number}`, MACRO>
@@ -17,24 +17,28 @@ type AbsoluteOrRelativeVec2<MACRO extends boolean = false> =
   `${AbsoluteOrRelativeFloat<MACRO>} ${AbsoluteOrRelativeFloat<MACRO>}`
 type LocalVec2<MACRO extends boolean = false> = `${LocalFloat<MACRO>} ${LocalFloat<MACRO>}`
 
+type AbsoluteVectorArrayComponent<MACRO extends boolean = false> = Macroable<AbsoluteFloat<MACRO> | number, MACRO>
+
+type VectorArrayComponent<MACRO extends boolean = false> = Macroable<AbsoluteOrRelativeFloat<MACRO> | LocalFloat<MACRO> | number, MACRO>
+
 export type AbsoluteCoordinates<MACRO extends boolean = false> =
-  | [x: string, y: string, z: string]
+  | [x: AbsoluteVectorArrayComponent<MACRO>, y: AbsoluteVectorArrayComponent<MACRO>, z: AbsoluteVectorArrayComponent<MACRO>]
   | VectorClass<[string, string, string]>
   | AbsoluteVec3<MACRO>
 
 export type Coordinates<MACRO extends boolean = false> =
-  | [x: string, y: string, z: string]
+  | [x: VectorArrayComponent<MACRO>, y: VectorArrayComponent<MACRO>, z: VectorArrayComponent<MACRO>]
   | VectorClass<[string, string, string]>
   | AbsoluteOrRelativeVec3<MACRO>
   | LocalVec3<MACRO>
 export type Rotation<MACRO extends boolean = false> =
   | [
-      horizontal: AbsoluteOrRelativeFloat<MACRO> | VectorClass<[string]>,
-      vertical: AbsoluteOrRelativeFloat<MACRO> | VectorClass<[string]>,
+      horizontal: Macroable<AbsoluteOrRelativeFloat<MACRO> | number, MACRO>,
+      vertical: Macroable<AbsoluteOrRelativeFloat<MACRO> | number, MACRO>,
     ]
   | VectorClass<[string, string]>
 export type ColumnCoordinates<MACRO extends boolean = false> =
-  | [x: string, z: string]
+  | [x: VectorArrayComponent<MACRO>, z: VectorArrayComponent<MACRO>]
   | VectorClass<[string, string]>
   | AbsoluteOrRelativeVec2<MACRO>
   | LocalVec2<MACRO>
