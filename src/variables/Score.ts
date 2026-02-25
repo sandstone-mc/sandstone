@@ -11,18 +11,19 @@ import type {
   OPERATORS,
   Range,
 } from 'sandstone/arguments'
-import type { SandstoneCommands } from 'sandstone/commands'
+import type { ExecuteCommand, SandstoneCommands } from 'sandstone/commands'
 import type { NotNode } from 'sandstone/flow'
 import { nbtStringifier, type ConditionClass } from 'sandstone/variables'
 import * as util from 'util'
 import { MacroArgument } from '../core/Macro'
 import type { SandstonePack } from '../pack'
-import { formatDebugString } from '../utils'
+import { add, formatDebugString } from '../utils'
 import type { ComponentClass } from './abstractClasses'
 import { SelectorPickClass } from './abstractClasses'
 import type { DATA_TYPES, DataPointClass } from './Data'
 import type { ObjectiveClass } from './Objective'
 import { rangeParser } from './parsers'
+import type { MCFunctionClass } from 'sandstone/core'
 
 type PlayersTarget = number | MultipleEntitiesArgument<false>
 
@@ -60,6 +61,16 @@ export type ScoreDisplay = {
 
   numberformat?: 'blank' | ['styled', FormattingTags] | ['fixed', JSONTextComponent]
 }
+
+type BitFieldSize = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31
+
+type Tuple<T, N extends number, A extends T[] = []> = (
+  A['length'] extends N
+    ? A
+  : Tuple<T, N, [...A, T]>
+)
+
+const MAX_INT = 2147483648
 
 export class Score extends MacroArgument implements ConditionClass, ComponentClass, NBTSerializable {
   commands: SandstoneCommands<false>
@@ -137,7 +148,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     let objective = args[1] ?? this.objective
     if (typeof args[0] === 'number') {
       this.sandstonePack.registerNewConstant(args[0])
-      objective = 'sandstone_const'
+      objective = '__sandstone'
     }
 
     this.commands.scoreboard.players.operation(this, operator, args[0], objective)
@@ -199,9 +210,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     if (typeof args[0] === 'object' && !(args[0] instanceof SelectorPickClass) && !(args[0] instanceof Score)) {
       const [data, scale] = args as [DataPointClass<DATA_TYPES>, number?]
 
-      this.commands.execute.store.result
-        .score(this)
-        .run.data.get[data.type](data.currentTarget as any, data.path, scale)
+      /* @ts-ignore */
+      this.commands.execute.store.result.score(this).run.data.get[data.type](data.currentTarget, data.path, scale)
 
       return this
     }
@@ -676,9 +686,192 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     return MCFunction(`__sandstone:score_match/${matcher}`, [score], () =>
       Macro.returnCmd.run.functionCmd(Macro`__sandstone:score_match/${matcher}/${score}`),
     )
-  };
+  }
 
-  [util.inspect.custom](depth: number, options: any) {
+  getDecomposer<Components extends 31, ComponentScores = Tuple<Score, Components>>(): {
+    components: ComponentScores,
+    decompose: () => ({
+      components: ComponentScores,
+      sign: Score,
+    }),
+    sign: Score,
+  }
+
+  getDecomposer<Components extends 31, ComponentScores = Tuple<Score, Components>>(
+    size: 'bit',
+    splits?: Set<number>,
+  ): {
+    components: ComponentScores,
+    decompose: () => ({
+      components: ComponentScores,
+      sign: Score,
+    }),
+    sign: Score,
+  }
+
+  getDecomposer<Components extends BitFieldSize, ComponentScores = Tuple<Score, Components>>(
+    size: 'bit',
+    splits: Set<number>,
+    componentCount: Components,
+  ): {
+    components: ComponentScores,
+    decompose: () => ({
+      components: ComponentScores,
+      sign: Score,
+    }),
+    sign: Score,
+  }
+
+  getDecomposer<Components extends BitFieldSize, ComponentScores = Tuple<Score, Components>>(
+    size: 'bit',
+    splits: Set<number>,
+    componentCount: Components,
+    includeSign: false,
+  ): {
+    components: ComponentScores,
+    decompose: () => ({
+      components: ComponentScores,
+    }),
+  }
+
+  getDecomposer<Components extends 4, ComponentScores = Tuple<Score, Components>>(size: 'byte'): {
+    components: ComponentScores,
+    decompose: () => ComponentScores,
+  }
+
+  getDecomposer<Components extends (2 | 3 | 4), ComponentScores = Tuple<Score, Components>>(
+    size: 'byte',
+    componentCount: Components,
+  ): {
+    components: ComponentScores,
+    decompose: () => ComponentScores,
+  }
+
+  getDecomposer(size?: 'bit' | 'byte', splitsOrCount?: Set<number> | 2 | 3 | 4, componentCount: BitFieldSize = 31, includeSign = true) {
+    if (typeof this.target !== 'string' || this.target.search(/-|@/) !== -1) {
+      throw new Error('[Score#getDecomposer] Must use a fake-player Score for decomposition.')
+    }
+    const { MCFunction, _, commands } = this.sandstonePack
+    const { execute, returnCmd } = commands
+
+    const newScore = this.objective.ScoreHolder
+
+    const components: Score[] = []
+
+    const sign = includeSign ? newScore(`${this.target}._32`) : undefined
+
+    let decompose: MCFunctionClass
+
+    if (size === 'bit' || size === undefined) {
+      for (let i = 1; i <= componentCount; i++) {
+        components.push(newScore(`${this.target}._${i}`))
+      }
+      decompose = MCFunction(`__sandstone:score/decompose_bits/${
+        componentCount
+      }_${
+        splitsOrCount === undefined
+          ? 0
+        : (splitsOrCount as Set<number>).size
+      }/${
+        this.target.replaceAll('.', '/').toLowerCase()
+      }`, () => {
+        const resetBits = execute.store.result(components[0])
+
+        for (const component of components.slice(1, -1)) {
+          resetBits.store.result(component)
+          resetBits.nestedExecute(['\\\n '], false)
+        }
+        if (includeSign) {
+          resetBits.store.result(components.at(-1)!)
+          resetBits.nestedExecute(['\\\n '], false)
+          resetBits.run(() => sign!['='](0))
+        } else {
+          resetBits.run(() => components.at(-1)!['='](0))
+        }
+
+        _.if(this['=='](0), () => {
+          returnCmd(1)
+        })
+
+        const input = newScore(`${this.target}._bf_iterator`)
+
+        input['='](this)
+
+        if (includeSign) {
+          // This results in all other bits being reversed which is useful when reassembling the integer
+          execute.store.success(sign!).if.score(this, 'matches', [null, -1])
+            .run(() => input['+='](MAX_INT - 1))
+        }
+
+        input.decomposeBits(
+          (splitsOrCount as Set<number> | undefined) ?? new Set(),
+          componentCount,
+          (bit) => execute.store.success(components[bit - 1]),
+        )
+      }, {
+        creator: 'sandstone',
+        onConflict: 'rename',
+        addToSandstoneCore: true,
+      })
+    } else {
+      const count = (splitsOrCount as number | undefined) ?? 4
+
+      for (let i = 1; i <= count; i++) {
+        components.push(newScore(`${this.target}._${i}`))
+      }
+      decompose = MCFunction(`__sandstone:score/decompose_bytes/${
+        count
+      }/${
+        this.target.replaceAll('.', '/').toLowerCase()
+      }`, () => {
+
+      }, {
+        creator: 'sandstone',
+        onConflict: 'rename',
+        addToSandstoneCore: true,
+      })
+    }
+
+    const result = {
+      components,
+      ...add({ sign }),
+    }
+
+    return {
+      ...result,
+      decompose: () => {
+        decompose()
+        return result
+      },
+    }
+  }
+
+  decomposeBits<Components extends BitFieldSize>(
+    splits: Set<number>,
+    componentCount: Components,
+    bitExecute: (bit: Components, halvedAgain: number) => ExecuteCommand<false>,
+    extra?: (bit: Components, halvedAgain: number) => any,
+  ) {
+    const { commands } = this.sandstonePack
+    const { execute } = commands
+
+    let halvedAgain = MAX_INT
+
+    for (let bit = componentCount; bit > 0; bit--) {
+      halvedAgain /= 2
+
+      bitExecute(bit, halvedAgain).if.score(
+        this,
+        'matches',
+        [halvedAgain, null]
+      ).run(() => {
+        this['-='](halvedAgain)
+        extra?.(bit, halvedAgain)
+      })
+    }
+  }
+
+  [util.inspect.custom](_depth: number, options: any) {
     return formatDebugString(
       this.constructor.name,
       {
