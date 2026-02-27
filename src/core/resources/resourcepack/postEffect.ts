@@ -15,7 +15,7 @@ export class PostEffectNode extends ContainerNode implements ResourceNode<PostEf
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.postEffectJSON)
+  getValue = () => jsonStringify(this.resource.postEffectJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type PostEffectClassArguments = {

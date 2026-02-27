@@ -69,7 +69,7 @@ export class SleepClass extends AwaitNode {
 
       const timer = new ObjectiveClass(core.pack, name.replace(':', '.'), 'dummy', undefined, { creator: 'sandstone' })
 
-      execute.store.result.score(timer('@s')).run.time.query('gametime')
+      execute.store.result(timer('@s')).run.time.query('gametime')
 
       timer('@s').add(Duration)
 
@@ -82,7 +82,7 @@ export class SleepClass extends AwaitNode {
       schedule = MCFunction(
         `${this.mcfunction.name}/_context`,
         () => {
-          execute.store.result.score(timer('#current')).run.time.query('gametime')
+          execute.store.result(timer('#current')).run.time.query('gametime')
 
           execute
             .as(Selector('@e', { tag: label.fullName }))

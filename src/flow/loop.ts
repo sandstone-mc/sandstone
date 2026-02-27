@@ -1,20 +1,24 @@
-import type { SubCommand } from 'sandstone/commands'
-import type { SandstoneCore } from '../core'
+import type { MCFunctionNode, SandstoneCore } from '../core'
 import { ContainerNode } from '../core'
+import type { ConditionNode } from './conditions'
 
 export class LoopNode extends ContainerNode {
+  parentMCFunction: MCFunctionNode
+
   constructor(
     sandstoneCore: SandstoneCore,
-    public executeArgs: SubCommand[],
+    public condition: ConditionNode,
     public callback: () => void,
     public loopback: () => void,
   ) {
     super(sandstoneCore)
 
-    if (callback.toString() !== '() => {}') {
-      const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
+    const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
 
-      // Generate the body of the If node.
+    this.parentMCFunction = currentNode
+
+    if (callback.toString() !== '() => {}') {
+      // Generate the body of the loop node.
       currentNode.enterContext(this)
       this.callback()
       this.loopback()

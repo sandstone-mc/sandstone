@@ -20,7 +20,7 @@ export class CommandConditionNode extends SingleConditionNode {
     const store = sandstoneCore.pack.commands.execute.store[type]
     this.variable = sandstoneCore.pack.Variable(undefined, 'condition')
 
-    command(store.score(this.variable))
+    command(store(this.variable))
   }
 
   getCondition(): unknown[] {

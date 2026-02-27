@@ -15,7 +15,7 @@ export class TrimPatternNode extends ContainerNode implements ResourceNode<TrimP
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.trimPatternJSON)
+  getValue = () => jsonStringify(this.resource.trimPatternJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 // TODO: Investigate potential abstractions

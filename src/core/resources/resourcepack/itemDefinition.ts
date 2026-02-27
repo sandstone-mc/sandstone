@@ -291,7 +291,7 @@ export class ItemModelDefinitionNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.itemDefinitionJSON)
+  getValue = () => jsonStringify(this.resource.itemDefinitionJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ItemModelDefinitionInput =

@@ -22,7 +22,7 @@ export class BlockStateNode<JSON extends BlockStateJSON>
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.blockStateJSON)
+  getValue = () => jsonStringify(this.resource.blockStateJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type BlockStateArguments<JSON extends BlockStateJSON> = {

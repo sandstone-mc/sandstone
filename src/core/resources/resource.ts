@@ -2,14 +2,13 @@
 /* eslint-disable multiline-comment-style */
 import type fs from 'fs-extra'
 import type { SandstoneCommands } from 'sandstone/commands/commands'
-import type { Node, SandstoneCore } from 'sandstone/core'
+import { type Node, type SandstoneCore } from 'sandstone/core'
 import type { ResourcePath, SandstonePack } from 'sandstone/pack'
 import type { PackType } from 'sandstone/pack/packType'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type { NBTSerializable } from 'sandstone/arguments/nbt'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
-import { NBTPrimitive, NBTTypedArray } from 'sandstone/variables/nbt/NBTs'
-import { RESOURCE_PATHS } from 'sandstone/arguments';
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**
@@ -77,7 +76,7 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
     protected core: SandstoneCore,
     file: { packType: PackType; extension?: string; encoding?: fs.EncodingOption | false },
     NodeType: ResourceNodeConstructor<N>,
-    protected _resourceType: string,
+    readonly _resourceType: string,
     path: ResourcePath,
     args: ResourceClassArguments<any>,
   ) {
@@ -186,7 +185,17 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
     return this.name
   }
 
+  /**
+   * @internal
+   */
   toNBT(): string {
+    return this.name
+  }
+
+  /**
+   * @internal
+   */
+  toJSON(): any {
     return this.name
   }
 }
@@ -265,15 +274,17 @@ export class ResourceNodesMap<T extends ResourceNode = ResourceNode> {
   }
 }
 
-export function jsonStringify(json: any) {
+export function jsonStringify(json: any, resourceType: keyof typeof RESOURCE_PATHS) {
   return JSON.stringify(
     json,
-    (_key, value) => {
-      if (value instanceof NBTPrimitive) {
-        return value.value
-      }
-      if (value instanceof NBTTypedArray) {
-        return value.values
+    function (this, key, value) {
+      // Currently unused, I might need to replace this with something more robust
+      if (
+        (typeof value === 'object' || typeof value === 'function')
+        && value.constructor.name !== 'Object'
+        && 'toResourceJSON' in value
+      ) {
+        return value.toResourceJSON(key, this, resourceType, json)
       }
       return value
     },

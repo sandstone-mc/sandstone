@@ -23,7 +23,7 @@ export class DamageTypeNode extends ContainerNode implements ResourceNode<Damage
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.damageTypeJSON)
+  getValue = () => jsonStringify(this.resource.damageTypeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type DamageTypeClassArguments = {

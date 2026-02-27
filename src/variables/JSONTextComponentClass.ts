@@ -30,9 +30,14 @@ export class JSONTextComponentClass {
   }
 
   toString() {
+    const component = toComponent(this.jsonTextComponent)
+
+    if (typeof component === 'string') {
+      return `"${component}"`
+    }
     // We want a compact output
     return JSON.stringify(
-      toComponent(this.jsonTextComponent),
+      component,
       // Must be a regular function (not arrow) so `this` refers to the container being serialized
       function (key: string, value: any) {
         /*

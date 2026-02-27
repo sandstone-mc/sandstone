@@ -21,7 +21,7 @@ export class DamageSourceCommand<MACRO extends boolean> extends CommandArguments
    * @param entity Entity inflicting the damage.
    */
   by = <T extends string>(entity: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>) =>
-    this.subCommand(['by', targetParser(entity)], DamageCauseCommand)
+    this.subCommand(['by', targetParser(entity)], DamageCauseCommand, true)
 
   /**
    * Where the damage originated at (when no entity caused the damage).
@@ -80,6 +80,6 @@ export class DamageCommand<MACRO extends boolean> extends CommandArguments {
     damageType?: Macroable<Registry['minecraft:damage_type'] | DamageTypeClass, MACRO>,
   ) => {
     validateIntegerRange(amount, 'amount', 0, 1_000_000)
-    return this.subCommand([targetParser(target), amount, damageType], DamageSourceCommand)
+    return this.subCommand([targetParser(target), amount, damageType], DamageSourceCommand, true)
   }
 }

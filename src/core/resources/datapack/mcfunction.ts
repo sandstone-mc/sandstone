@@ -17,6 +17,7 @@ import { ResolveNBTPart } from '../../../variables/ResolveNBT'
 import { ContainerNode } from '../../nodes'
 import { CallableResourceClass } from '../resource'
 import { TagClass } from './tag'
+import type { DataPointClass } from 'sandstone/variables'
 
 const tags: Record<string, TagClass<'function'>> = {}
 
@@ -143,7 +144,7 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
       .join('\n')
   };
 
-  [util.inspect.custom](depth: number, options: any) {
+  [util.inspect.custom](_depth: number, options: any) {
     return formatDebugString(
       this.constructor.name,
       {
@@ -245,7 +246,12 @@ export class _RawMCFunctionClass<
   lazy: boolean
 
   /** @internal */
-  env?: ENV
+  readonly env?: ENV
+
+  /**
+   * @internal
+   */
+  readonly macroPoint: ENV extends undefined ? PARAMS extends undefined ? undefined : DataPointClass<'storage'> : DataPointClass<'storage'>
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments, env?: ENV) {
     if (name.startsWith('./')) {
@@ -285,12 +291,17 @@ export class _RawMCFunctionClass<
     this.addToSandstoneCore = !!args.addToSandstoneCore
     this.tags = args.tags
 
-    if (env) {
+    if (env && env.length !== 0) {
       this.env = env
+    }
+    if (this.env || this.callback.length > 1) {
+      this.macroPoint = core.pack.DataVariable() as any
+    } else {
+      this.macroPoint = undefined as any
     }
 
     if (args.runOnLoad) {
-      if (env) {
+      if (this.env) {
         core.pack.loadTags.load.push(
           core.pack.MCFunction(`load_${this.name.split(':')[1]}`, () => {
             /* @ts-ignore */
@@ -360,10 +371,17 @@ export class _RawMCFunctionClass<
     if (this.env || _params.length !== 0) {
       const args: NBTObject = {}
 
+      // Set up env locals FIRST, so they're available when callback runs
+      if (this.env) {
+        for (const [i, env] of this.env.entries()) {
+          args[`env_${i}`] = ResolveNBTPart(env)
+
+          env.local.set(this.name, `env_${i}`)
+        }
+      }
+
       if (_params.length !== 0) {
         for (const [i, param] of _params.entries()) {
-          // Haha funny TypeScript
-          /* @ts-ignore */
           args[`param_${i}`] = ResolveNBTPart(param)
 
           param.local.set(this.name, `param_${i}`)
@@ -371,7 +389,8 @@ export class _RawMCFunctionClass<
         // Yeah this is cursed, but there's not really a better way to do this
         this.node.body = []
 
-        /* @ts-ignore */
+        // Push this MCFunction onto the stack so toMacro() can resolve the correct function name
+        this.core.enterMCFunction(this)
         this.core.insideContext(
           this.node,
           () =>
@@ -381,17 +400,11 @@ export class _RawMCFunctionClass<
             ),
           false,
         )
+        this.core.exitMCFunction()
+      } else if (this.callback.length > 1) {
+        throw new Error(`[MCFunctionClass] Function ${this.name} expects ${this.callback.length - 1} params at the call-site`)
       }
-      if (this.env) {
-        for (const [i, env] of this.env.entries()) {
-          // Haha funny TypeScript
-          /* @ts-ignore */
-          args[`env_${i}`] = ResolveNBTPart(env)
-
-          env.local.set(this.name, `env_${i}`)
-        }
-      }
-      return this.commands.functionCmd(this.name, 'with', this.pack.ResolveNBT(args).dataPoint)
+      return this.commands.functionCmd(this.name, 'with', this.pack.ResolveNBT(args, this.macroPoint!).dataPoint)
     }
 
     return this.commands.functionCmd(this.name)
@@ -431,12 +444,15 @@ export class _RawMCFunctionClass<
 
     if (contents[0] instanceof _RawMCFunctionClass) {
       for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
+        mcfunction.generate()
+
         this.node.body.unshift(...mcfunction.node.body)
       }
     } else {
       this.core.enterMCFunction(fake)
       this.core.insideContext(fake.node, contents[0], false)
       this.core.exitMCFunction()
+      fake.generate()
       this.node.body.unshift(...fake.node.body)
     }
   }
@@ -452,12 +468,15 @@ export class _RawMCFunctionClass<
 
     if (contents[0] instanceof _RawMCFunctionClass) {
       for (const mcfunction of contents as _RawMCFunctionClass<PARAMS, ENV>[]) {
+        mcfunction.generate()
+
         fullBody.push(...mcfunction.node.body)
       }
     } else {
       this.core.enterMCFunction(fake)
       this.core.insideContext(fake.node, contents[0], false)
       this.core.exitMCFunction()
+      fake.generate()
       fullBody.push(...fake.node.body)
     }
 

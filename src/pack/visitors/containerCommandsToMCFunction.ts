@@ -1,12 +1,9 @@
 /* eslint-disable dot-notation */
 
+import { FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import type { MCFunctionNode } from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core'
 import { GenericSandstoneVisitor } from './visitor'
-
-// let bippity = 0
-
-// let boppity = 0
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.
@@ -28,7 +25,6 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
   }
 
   visitMCFunctionNode = (node: MCFunctionNode) => {
-    // console.log('boppity', boppity++)
     const prev = this.currentMCFunction
 
     this.currentMCFunction = node
@@ -37,6 +33,17 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
 
     // Visit the children of this node
     const result = this.genericVisit(node)
+
+    // If the last node is a FunctionCommandNode and this is a sandstone-created function,
+    // wrap it in return run to propagate return values
+    if (node.resource.creator === 'sandstone' && node.body.length > 0) {
+      const lastNode = node.body.at(-1)!
+      if (lastNode instanceof FunctionCommandNode) {
+        const returnRunNode = new ReturnRunCommandNode(this.pack, ['run'])
+        returnRunNode.body = [lastNode]
+        node.body[node.body.length - 1] = returnRunNode
+      }
+    }
 
     this.core.currentNode = prev?.resource.name ?? ''
 

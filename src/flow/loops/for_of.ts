@@ -3,7 +3,6 @@ import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import type { DataPointClass, IterableDataClass, Score, StringDataPointClass } from 'sandstone/variables'
 import { LoopArgument } from 'sandstone/variables'
 import { IfStatement } from '../if_else'
-import type { ConditionNode } from '..'
 import { LoopNode } from '../loop'
 
 export type ForOfIterator = 'entry' | ['i', 'entry'] | ['key', 'value']
@@ -17,54 +16,61 @@ export type ForOfIterate<ITERATOR extends ForOfIterator> = ITERATOR extends 'ent
       : [key: StringDataPointClass, value: DataPointClass]
     : [never]
 
+function isMultipleVariable(iteratorType: ForOfIterator): iteratorType is Exclude<ForOfIterator, 'entry'> {
+  if (Array.isArray(iteratorType)) {
+    return true
+  }
+  return false
+}
+
+function isMapIterator(iteratorType: ForOfIterator, iterable: IterableDataClass<'list' | 'map'>): iterable is IterableDataClass<'map'> {
+  if (isMultipleVariable(iteratorType) && iteratorType[0] === 'key') {
+    if (iterable.iteratorType === 'map') {
+      return true
+    }
+    throw new Error(
+      'Attempt to use "for key value" loop with a List iterable; this is not supported. (Hint: use "for entry" or "for i entry" instead)',
+    )
+  }
+  return false
+}
+
 export class ForOfNode<ITERATOR extends ForOfIterator, ITERATE extends ForOfIterate<ForOfIterator>> extends LoopNode {
   constructor(
     sandstoneCore: SandstoneCore,
     iteratorType: ITERATOR,
-    iterable: IterableDataClass,
+    direction: 'normal' | 'reverse',
+    iterable: IterableDataClass<ITERATOR extends string[] ? ITERATOR[0] extends 'key' ? 'map' : ('list' | 'map') : ('list' | 'map')>,
     callback: (...args: ITERATE) => any,
   ) {
-    const _iterable = iterable._toDataPoint()
-
-    let startCondition: SubCommand
-
     let iterate: () => void
 
-    let continueCondition: ConditionNode
-
-    if (Array.isArray(iteratorType)) {
-      if (iteratorType[0] === 'key') {
-        startCondition = ['if', 'data', _iterable.type, `${_iterable.path}{}`]
-
+    if (isMultipleVariable(iteratorType)) {
+      if (isMapIterator(iteratorType, iterable)) {
         iterate = iterable.iterator((dataPoints) => {
-          if (dataPoints.length === 1) {
-            throw new Error(
-              'Error: Attempt to use "for key value" loop with an Array dataset; this is not supported. (Hint: use "for entry" or "for i entry" instead)',
-            )
-          }
-          callback(...([dataPoints[0], dataPoints[1]] as unknown as ITERATE))
-        })
+          callback(...([dataPoints[0], dataPoints[1]] as ITERATE))
+        }, direction)
       } else {
-        startCondition = ['if', 'data', _iterable.type, `${_iterable.path}{}`]
+        const _iterator = sandstoneCore.pack.Variable(direction === 'normal' ? -1 : undefined)
 
-        const _iterator = sandstoneCore.pack.Variable()
-
-        _iterator.set(iterable.size()) // Store the size of the array to the iterator
-
-        continueCondition = _iterator['!='](-1)
+        if (direction === 'reverse') {
+          _iterator.set(iterable.size()) // Store the size of the array to the iterator
+        }
 
         iterate = iterable.iterator((dataPoints) => {
-          _iterator.decrease()
+          if (direction === 'normal') {
+            _iterator.increase()
+          } else {
+            _iterator.decrease()
+          }
 
           if (dataPoints.length === 1) {
-            return callback(...([_iterator, dataPoints[0]] as unknown as ITERATE))
+            return callback(...([_iterator, dataPoints[0]] as ITERATE))
           }
-          return callback(...([_iterator, dataPoints[1]] as unknown as ITERATE))
-        })
+          return callback(...([_iterator, dataPoints[1]] as ITERATE))
+        }, direction)
       }
     } else {
-      startCondition = ['if', 'data', _iterable.type, `${_iterable.path}{}`]
-
       iterate = iterable.iterator((dataPoints) => {
         if (dataPoints.length === 1) {
           return callback(...([dataPoints[0]] as unknown as ITERATE))
@@ -73,16 +79,16 @@ export class ForOfNode<ITERATOR extends ForOfIterator, ITERATE extends ForOfIter
       })
     }
 
-    iterate()
+    const continueCondition = iterable.continue(direction)
 
     super(
       sandstoneCore,
-      [startCondition],
+      continueCondition,
       () => iterate,
       () =>
         new IfStatement(
           sandstoneCore,
-          continueCondition || iterable.continue,
+          continueCondition,
           () => new LoopArgument(sandstoneCore.pack),
         ),
     )
@@ -95,10 +101,11 @@ export class ForOfStatement<ITERATOR extends ForOfIterator, ITERATE extends ForO
   constructor(
     protected sandstoneCore: SandstoneCore,
     protected iteratorType: ITERATOR,
-    protected iterable: IterableDataClass,
+    protected direction: 'normal' | 'reverse',
+    protected iterable: IterableDataClass<ITERATOR extends string[] ? ITERATOR[0] extends 'key' ? 'map' : ('list' | 'map') : ('list' | 'map')>,
     protected callback: (...args: ITERATE) => any,
   ) {
-    this.node = new ForOfNode(sandstoneCore, iteratorType, iterable, callback)
+    this.node = new ForOfNode(sandstoneCore, iteratorType, direction, iterable, callback)
   }
 
   protected getNode = () => this.node

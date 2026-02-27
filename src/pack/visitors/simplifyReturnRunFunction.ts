@@ -1,8 +1,10 @@
-import { ExecuteCommandNode, FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
+import { ExecuteCommandNode, FunctionCommandNode, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
+import type { Node } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { ElseNode } from 'sandstone/flow'
 
 import { GenericSandstoneVisitor } from './visitor'
+import { isMacroArgument } from 'sandstone/core/Macro'
 
 /**
  * Gets the effective single command from a function body, filtering out nodes that produce no output.
@@ -30,19 +32,27 @@ function getEffectiveSingleCommand(body: any[]): any | null {
  * Simplifies a return run calling a 1-command function to a single execute, with some exceptions.
  */
 export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
-  visitReturnRunCommandNode = (node: ReturnRunCommandNode) => {
+  visitReturnRunCommandNode = (node: ReturnRunCommandNode): Node | Node[] => {
+
     if (node.body.length === 0 || node.body.length > 1) {
       return this.genericVisit(node)
     }
 
-    const functionNode = node.body[0]
-    if (!(functionNode instanceof FunctionCommandNode)) {
+    const childNode = node.body[0]
+
+    if (!(childNode instanceof FunctionCommandNode)) {
+      if (childNode instanceof ReturnRunCommandNode) {
+        return this.visitReturnRunCommandNode(childNode)
+      }
+      if (childNode instanceof ReturnCommandNode) {
+        return this.genericVisit(childNode)
+      }
       return this.genericVisit(node)
     }
 
-    const mcFunction = functionNode.args[0]
+    const mcFunction = childNode.args[0]
 
-    if (typeof mcFunction === 'string') {
+    if (typeof mcFunction === 'string' || isMacroArgument(this.core, mcFunction)) {
       return this.genericVisit(node)
     }
 
@@ -66,12 +76,6 @@ export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
 
     // If the effective command is a function call, we can eliminate the intermediate function
     if (command instanceof FunctionCommandNode) {
-      const innerMCFunction = command.args[0]
-
-      if (typeof innerMCFunction === 'string') {
-        return this.genericVisit(node)
-      }
-
       // Replace the return run's body with the inner function call
       node.body = [command]
 
@@ -82,12 +86,31 @@ export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
       return this.genericVisit(node)
     }
 
-    /*
-     * And it's a command! Now, we can simplify the execute, except if the other command is a /execute too.
-     */
+    // If the effective command is a return run, flatten it:
+    // "return run function X" where X = "return run Y" becomes "return run Y"
     if (command instanceof ReturnRunCommandNode) {
-      // In that case, if the initial /execute does not imply multiple executions, we could still simplify it.
-      return this.genericVisit(node)
+      // Take the inner return run's body (Y) and use it as our body
+      node.body = command.body
+      // Propagate flow control flag - if inner was flow control, outer should be too
+      node.isFlowControl = node.isFlowControl || command.isFlowControl
+
+      if (mcFunction.creator === 'sandstone') {
+        this.core.resourceNodes.delete(mcFunctionNode)
+      }
+
+      // Recursively re-process in case further flattening is possible
+      // (e.g., return run function X where X = return run function Y where Y = return run tellraw)
+      return this.visitReturnRunCommandNode(node)
+    }
+
+    // If the effective command is a return, unwrap it:
+    // "return run function X" where X = "return Y" becomes "return Y"
+    if (command instanceof ReturnCommandNode) {
+      if (mcFunction.creator === 'sandstone') {
+        this.core.resourceNodes.delete(mcFunctionNode)
+      }
+
+      return this.genericVisit(command)
     }
 
     // We can safely simplify the execute. If the called command is not a user-created MCFunction, we can safely delete it.

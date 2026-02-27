@@ -5,27 +5,23 @@ import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { BLOCKS_SET } from 'sandstone/arguments/generated/_registry/blocks'
-import type { NamespacedLiteralUnion, SetType } from 'sandstone/utils'
+import type { NamespacedLiteralUnion } from 'sandstone/utils'
 
 /** Converts stringified boolean/numeric literals to actual booleans/numbers */
-export type ParseLiteral<T> =
+export type ParseLiteral<T> = (
   T extends 'true' | 'false' ? boolean :
   T extends `${infer N extends number}` ? N :
   T
+)
 
 /** Converts block state types from stringified literals to proper primitives */
 export type ParseBlockState<T> = {
   [K in keyof T]: ParseLiteral<T[K]>
 }
 
-export type BlockEntityName = keyof SymbolBlock
+export type BlockEntity = NamespacedLiteralUnion<keyof SymbolBlock>
 
-export type BlockEntity = NamespacedLiteralUnion<BlockEntityName>
-
-export type BlockStaticName = keyof Omit<Record<SetType<typeof BLOCKS_SET>, false>, BlockEntityName>
-
-export type BlockStatic = (NamespacedLiteralUnion<BlockStaticName> | `minecraft:${BlockStaticName}`)
+export type BlockStatic = NamespacedLiteralUnion<Exclude<keyof SymbolMcdocBlockStates, keyof SymbolBlock>>
 
 export class SetBlockCommandNode extends CommandNode {
   command = 'setblock' as const
@@ -85,7 +81,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
   setblock<BLOCK extends Macroable<BlockStatic, MACRO>>(
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
-    state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>> : Record<string, string | boolean | number>, MACRO>,
+    state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[Extract<BLOCK, keyof SymbolMcdocBlockStates>]>> : Record<string, string | boolean | number>, MACRO>,
     type?: 'destroy' | 'keep' | 'replace' | 'strict',
   ): FinalCommandOutput
 
@@ -142,8 +138,8 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
   setblock<BLOCK extends Macroable<BlockEntity, MACRO>>(
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
-    state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>> : Record<string, string | boolean | number>, MACRO>,
-    nbt?: Macroable<BLOCK extends keyof SymbolBlock ? NonNullable<SymbolBlock[BLOCK]> : SymbolBlock<'%fallback'>, MACRO>,
+    state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[Extract<BLOCK, keyof SymbolMcdocBlockStates>]>> : Record<string, string | boolean | number>, MACRO>,
+    nbt?: Macroable<BLOCK extends keyof SymbolBlock ? NonNullable<SymbolBlock[Extract<BLOCK, keyof SymbolBlock>]> : SymbolBlock<'%fallback'>, MACRO>,
     type?: 'destroy' | 'keep' | 'replace' | 'strict',
   ): FinalCommandOutput
 

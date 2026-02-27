@@ -15,7 +15,7 @@ export class ParticleNode extends ContainerNode implements ResourceNode<Particle
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.particleJSON)
+  getValue = () => jsonStringify(this.resource.particleJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ParticleClassArguments = {

@@ -15,7 +15,7 @@ export class VillagerTradeNode extends ContainerNode implements ResourceNode<Vil
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.villagerTradeJSON)
+  getValue = () => jsonStringify(this.resource.villagerTradeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type VillagerTradeClassArguments = {
@@ -57,7 +57,7 @@ export class TradeSetNode extends ContainerNode implements ResourceNode<TradeSet
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.tradeSetJSON)
+  getValue = () => jsonStringify(this.resource.tradeSetJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TradeSetClassArguments = {

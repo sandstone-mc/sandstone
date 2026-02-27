@@ -24,7 +24,7 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
   value: Resource<REGISTRY>,
 ): TagSingleValue<string> {
   if (isMCFunctionClass(value)) {
-    if ((value.node.resource as MCFunctionClass<[], []>).env) {
+    if (value.env && value.callback.length < 2) {
       return value.node.sandstoneCore.pack.MCFunction(`${value.name}/_env`, () => value(), {
         creator: 'sandstone',
         onConflict: 'rename',
@@ -40,11 +40,11 @@ function objectToString<REGISTRY extends LiteralUnion<REGISTRIES>>(
   }
   if (typeof value === 'object') {
     if (isMCFunctionClass(value.id)) {
-      if ((value.id.node.resource as MCFunctionClass<[], []>).env) {
+      if (value.id.env && value.id.callback.length < 2) {
         return {
           id: value.id.node.sandstoneCore.pack.MCFunction(
             `${value.id.name}/_env`,
-            () => (value.id as MCFunctionClass<[], []>)(),
+            () => (value.id as MCFunctionClass<undefined, any>)(),
             { creator: 'sandstone', onConflict: 'rename' },
           ).name,
           required: value.required,
@@ -99,7 +99,7 @@ export class TagNode extends ContainerNode implements ResourceNode<TagClass<Lite
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.tagJSON)
+  getValue = () => jsonStringify(this.resource.tagJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TagClassArguments<REGISTRY extends LiteralUnion<REGISTRIES>> = {

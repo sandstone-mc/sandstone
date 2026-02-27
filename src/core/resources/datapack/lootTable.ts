@@ -24,7 +24,7 @@ export class LootTableNode extends ContainerNode implements ResourceNode<LootTab
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.lootTableJSON)
+  getValue = () => jsonStringify(this.resource.lootTableJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type LootTableClassArguments = {

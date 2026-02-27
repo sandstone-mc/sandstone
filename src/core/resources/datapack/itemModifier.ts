@@ -23,7 +23,7 @@ export class ItemModifierNode extends ContainerNode implements ResourceNode<Item
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.itemModifierJSON)
+  getValue = () => jsonStringify(this.resource.itemModifierJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 type ItemModifierJSON = SymbolResource['item_modifier']

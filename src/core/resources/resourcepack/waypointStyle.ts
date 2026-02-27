@@ -15,7 +15,7 @@ export class WaypointStyleNode extends ContainerNode implements ResourceNode<Way
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.waypointStyleJSON)
+  getValue = () => jsonStringify(this.resource.waypointStyleJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type WaypointStyleClassArguments = {

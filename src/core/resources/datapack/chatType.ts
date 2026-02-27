@@ -15,7 +15,7 @@ export class ChatTypeNode extends ContainerNode implements ResourceNode<ChatType
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.chatTypeJSON)
+  getValue = () => jsonStringify(this.resource.chatTypeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ChatTypeClassArguments = {

@@ -12,7 +12,7 @@ export class ModelNode extends ContainerNode implements ResourceNode<ModelClass>
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.modelJSON)
+  getValue = () => jsonStringify(this.resource.modelJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ModelClassArguments = {

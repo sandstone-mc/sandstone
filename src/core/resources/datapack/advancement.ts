@@ -16,7 +16,7 @@ export class AdvancementNode extends ContainerNode implements ResourceNode<Advan
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.advancementJSON)
+  getValue = () => jsonStringify(this.resource.advancementJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type AdvancementClassArguments<AdvancementJSON extends SymbolResource['advancement'] | undefined = undefined> = {

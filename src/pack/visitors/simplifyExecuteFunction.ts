@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
-import { ExecuteCommandNode, FunctionCommandNode } from 'sandstone/commands'
-import { CommandNode } from 'sandstone/core/nodes'
+import { ExecuteCommandNode, FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
+import { CommandNode,Node } from 'sandstone/core/nodes'
 import { ElseNode } from 'sandstone/flow'
 import { LoopArgument } from 'sandstone/variables'
 
@@ -32,7 +32,7 @@ function getEffectiveSingleCommand(body: any[]): any | null {
  * Simplifies an execute calling a 1-command function to a single execute, with some exceptions.
  */
 export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
-  visitExecuteCommandNode = (node: ExecuteCommandNode) => {
+  visitExecuteCommandNode = (node: ExecuteCommandNode): Node | Node[] => {
     if (node.body.length === 0 || node.body.length > 1) {
       return this.genericVisit(node)
     }
@@ -45,7 +45,8 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
 
     const mcFunction = functionNode.args[0]
 
-    if (typeof mcFunction === 'string') {
+    // Skip if function name is a string or doesn't have a .node property (e.g., MacroLiteral)
+    if (typeof mcFunction === 'string' || !mcFunction?.node) {
       return this.genericVisit(node)
     }
 
@@ -63,12 +64,48 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
       }
     }
 
+    // Check for LoopArgument first since it extends Node, not CommandNode
+    if (command instanceof LoopArgument) {
+      // Get the loop function that LoopArgument references (through IfNode -> ExecuteCommandNode)
+      const loopExecute = command.loopIfNode?.resultingExecuteNode
+      const loopFunctionName = loopExecute?.createdMCFunction?.name
+      if (loopFunctionName) {
+        // Replace the execute's body with a direct call to the loop function
+        node.body = [new FunctionCommandNode(this.pack, loopFunctionName)]
+
+        // Delete the intermediate function
+        if (mcFunction.creator === 'sandstone') {
+          this.core.resourceNodes.delete(mcFunctionNode)
+        }
+
+        return this.genericVisit(node)
+      }
+      // Can't simplify without the loop reference
+      return this.genericVisit(node)
+    }
+
     if (!(command instanceof CommandNode)) {
       return this.genericVisit(node)
     }
 
-    if (command instanceof LoopArgument) {
-      return new FunctionCommandNode(this.pack, mcFunctionNode.resource.name)
+    // If the effective command is a return run, check if it's needed for flow control
+    if (command instanceof ReturnRunCommandNode) {
+      if (mcFunction.creator === 'sandstone') {
+        this.core.resourceNodes.delete(mcFunctionNode)
+      }
+
+      if (command.isFlowControl) {
+        // Preserve return run for if/elseIf early exit semantics
+        node.body = [this.genericVisit(command)]
+      } else {
+        const returnCmd = this.visit(command) as ReturnRunCommandNode
+        // Unwrap - the return run was only for function boundary semantics
+        node.body = returnCmd.body
+
+        return this.visitExecuteCommandNode(node)
+      }
+
+      return this.genericVisit(node)
     }
 
     // If the effective command is a function call, we can potentially eliminate the intermediate function

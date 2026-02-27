@@ -191,6 +191,15 @@ export type PartialFunction<
   TO extends number | undefined = undefined,
 > = (...args: SlicedArguments<T, FROM, TO>) => ReturnType<T>
 
+export type DropFirstArg<T> =
+  T extends {
+    (first: any, ...args: infer A1): infer R1
+    (first: any, ...args: infer A2): infer R2
+  } ? {
+    (...args: A1): R1
+    (...args: A2): R2
+  } : never
+
 /* Ported from https://github.com/AjaxGb/mc-uuid-converter/blob/master/convert.js */
 const uuidBytes = new Uint8Array(16)
 const uuid = new DataView(uuidBytes.buffer)
@@ -216,23 +225,52 @@ export function randomUUID() {
 
 export const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
-type InputObject<ValueType extends any | NonNullable<any>, Input extends Record<string, ValueType>> = Input
+export type UnionToIntersection<U> = (
+  (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
+)
 
-/** Returns a modified object with only entries that are not undefined. If the input is undefined, {} is returned instead. */
-export function add<Value extends any | NonNullable<any>, Input extends InputObject<Value, Record<string, Value>>>(
-  object: Input | undefined,
-): InputObject<NonNullable<any>, Input> {
-  if (object === undefined) {
-    return {} as InputObject<NonNullable<any>, Input>
-  }
-  const output: any = {}
-  for (const [key, value] of (object as { [key: string]: any }).entries()) {
+export type LastOf<T> = (
+  UnionToIntersection<T extends any ? () => T : never> extends () => (infer R) ? R : never
+)
+
+export type Push<T extends any[], V> = [...T, V]
+
+export type UnionToTuple<T, L = LastOf<T>, N = [T] extends [never] ? true : false> = (
+  true extends N ? [] : Push<UnionToTuple<Exclude<T, L>>, L>
+)
+
+export type PowerSet<T, Keys extends any[] = UnionToTuple<keyof T>> = (
+  Keys extends [infer Head, ...infer Rest]
+  ? PowerSet<T, Rest> | (
+    Head extends keyof T
+    ? { [K in Head]: NonNullable<T[K]> } & PowerSet<T, Rest>
+    : never
+  )
+  : Record<string, never>
+)
+
+export type Prettify<T> = ({
+  [K in keyof T]: T[K]
+} & {})
+
+/**
+ * Helper to add key-value pairs to an object if the values are not undefined.
+ *
+ * @returns An object with the key-value pairs if the values are not undefined, otherwise an empty object.
+ */
+export function add<O extends Record<string, any>>(obj: O): Prettify<PowerSet<O>> {
+  const filtered = {}
+
+  for (const key of Object.keys(obj)) {
+    const value = obj[key]
     if (value !== undefined) {
-      output[key] = value
+      // @ts-ignore
+      filtered[key] = value
     }
   }
 
-  return output
+  // @ts-ignore
+  return filtered
 }
 
 export type RemoveArrayRepeats<T extends readonly any[]> = {
@@ -378,6 +416,9 @@ export function formatDebugString(
     argsString = args
   } else if (Array.isArray(args)) {
     argsString = args.map((arg) => util.inspect(arg, options)).join(', ')
+    if (argsString.includes('\n')) {
+      argsString = `\n${nextIndent}${args.map((arg) => util.inspect(arg, options).replaceAll('\n', `\n${nextIndent}`)).join(`,\n${nextIndent}`)}`
+    }
   } else if (args && typeof args === 'object') {
     argsString = Object.entries(args)
       .map(([key, value]) => `${key}: ${util.inspect(value, options)}`)

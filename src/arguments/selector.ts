@@ -133,6 +133,7 @@ export type SingleEntityArgument<MACRO extends boolean = false> =
   | SingleEntityStringArgument
   | SelectorClass<MACRO, true, true>
   | SelectorClass<MACRO, true, false>
+  | SelectorClass<MACRO, true, boolean>
   | SelectorPickClass<true, true>
   | SelectorPickClass<true, false>
   | SelectorPickClass<true, boolean>
@@ -150,6 +151,7 @@ export type MultiplePlayersArgument<MACRO extends boolean = false> =
   | MultiplePlayerStringArgument
   | SelectorClass<MACRO, true, true>
   | SelectorClass<MACRO, false, true>
+  | SelectorClass<MACRO, boolean, true>
   | SelectorPickClass<true, true>
   | SelectorPickClass<true, false>
   | SelectorPickClass<true, boolean>
@@ -170,8 +172,13 @@ export type MultipleEntitiesArgument<MACRO extends boolean = false> =
   | MultipleEntityStringArgument
   | SelectorClass<MACRO, true, true>
   | SelectorClass<MACRO, true, false>
+  | SelectorClass<MACRO, true, boolean>
   | SelectorClass<MACRO, false, true>
   | SelectorClass<MACRO, false, false>
+  | SelectorClass<MACRO, false, boolean>
+  | SelectorClass<MACRO, boolean, true>
+  | SelectorClass<MACRO, boolean, false>
+  | SelectorClass<MACRO, boolean, boolean>
   | SelectorPickClass<true, true>
   | SelectorPickClass<true, false>
   | SelectorPickClass<true, boolean>
@@ -205,6 +212,7 @@ type PureSelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> =
  */
 export type SinglePlayerArgumentOf<MACRO extends boolean, T extends string> =
   | ValidateSinglePlayerString<T>
+  | SinglePlayerSelectorLiteral
   | SelectorClass<MACRO, true, true>
   // Pure SelectorPickClass (not SelectorClass) - player not enforced
   | PureSelectorPickClass<true, true>
@@ -224,8 +232,10 @@ export type SinglePlayerArgumentOf<MACRO extends boolean, T extends string> =
  */
 export type SingleEntityArgumentOf<MACRO extends boolean, T extends string> =
   | ValidateSingleEntityString<T>
+  | SingleEntitySelectorLiteral
   | SelectorClass<MACRO, true, true>
   | SelectorClass<MACRO, true, false>
+  | SelectorClass<MACRO, true, boolean>
   // Pure SelectorPickClass (not SelectorClass) - player not enforced
   | PureSelectorPickClass<true, true>
   | PureSelectorPickClass<true, false>
@@ -238,8 +248,10 @@ export type SingleEntityArgumentOf<MACRO extends boolean, T extends string> =
  */
 export type MultiplePlayersArgumentOf<MACRO extends boolean, T extends string> =
   | ValidateMultiplePlayersString<T>
+  | MultiplePlayerSelectorLiteral
   | SelectorClass<MACRO, true, true>
   | SelectorClass<MACRO, false, true>
+  | SelectorClass<MACRO, boolean, true>
   // Pure SelectorPickClass (not SelectorClass) - player not enforced
   | PureSelectorPickClass<true, true>
   | PureSelectorPickClass<true, false>

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import * as util from 'util'
 import type { NBTObject } from '../arguments/nbt'
-import { DataPointPickClass } from '../core/Macro'
+import { DataPointPickClass, type MacroArgument } from '../core/Macro'
 import type { SandstonePack } from '../pack'
 import { capitalize } from '../utils'
 import type { DataPointClass } from './Data'
@@ -176,7 +176,7 @@ export class ResolveNBTPartClass<
   scale?: number
 
   constructor(
-    value: StringDataPointClass | DataPointClass | Score | Score[],
+    value: StringDataPointClass | MacroArgument | DataPointClass | Score | Score[],
     type: ValueType,
     primitive: Primitive,
     scale?: number,
@@ -199,6 +199,8 @@ export class ResolveNBTPartClass<
 
 export function ResolveNBTPart(data: StringDataPointClass): ResolveNBTPartClass<'data', typeof NBTString>
 
+export function ResolveNBTPart(data: MacroArgument): ResolveNBTPartClass<'data', NBTAllValues>
+
 export function ResolveNBTPart(data: DataPointClass<any>, type: NBTAllValues): ResolveNBTPartClass<'data', NBTAllValues>
 
 export function ResolveNBTPart(
@@ -214,7 +216,7 @@ export function ResolveNBTPart(
 ): ResolveNBTPartClass<'scores', typeof NBTIntArray | NBTAllArrays>
 
 export function ResolveNBTPart<ValueType extends 'data' | 'score' | 'scores', Primitive extends NBTAllValues>(
-  value: StringDataPointClass | DataPointClass<any> | Score | Score[],
+  value: StringDataPointClass | MacroArgument | DataPointClass<any> | Score | Score[],
   option1?: number | Primitive,
   option2?: Primitive,
 ) {

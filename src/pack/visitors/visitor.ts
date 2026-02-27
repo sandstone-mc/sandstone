@@ -10,7 +10,7 @@ import type {
 } from 'sandstone/commands'
 import type { GenericNodeVisitor } from 'sandstone/core/visitors'
 import { GenericCoreVisitor } from 'sandstone/core/visitors'
-import type { ElseNode, IfNode, LoopNode } from 'sandstone/flow'
+import type { ConditionCaseNode, DefaultCaseNode, ElseNode, IfNode, LoopNode, StaticCaseNode, SwitchNode } from 'sandstone/flow'
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
 
@@ -25,6 +25,14 @@ export class GenericSandstoneVisitor extends GenericCoreVisitor {
   visitElseNode?: GenericNodeVisitor<ElseNode>
 
   visitLoopNode?: GenericNodeVisitor<LoopNode>
+
+  visitSwitchNode?: GenericNodeVisitor<SwitchNode>
+
+  visitStaticCaseNode?: GenericNodeVisitor<StaticCaseNode>
+
+  visitConditionCaseNode?: GenericNodeVisitor<ConditionCaseNode>
+
+  visitDefaultCaseNode?: GenericNodeVisitor<DefaultCaseNode>
 
   // Variables
 

@@ -16,7 +16,7 @@ export class FontNode extends ContainerNode implements ResourceNode<FontClass> {
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.fontJSON)
+  getValue = () => jsonStringify(this.resource.fontJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type FontArguments = {

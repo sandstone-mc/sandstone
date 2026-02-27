@@ -18,7 +18,7 @@ export class LanguageNode extends ContainerNode implements ResourceNode<Language
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.languageJSON)
+  getValue = () => jsonStringify(this.resource.languageJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type LanguageArguments = {

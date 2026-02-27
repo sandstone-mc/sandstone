@@ -15,7 +15,7 @@ export class TrialSpawnerNode extends ContainerNode implements ResourceNode<Tria
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.trialSpawnerJSON)
+  getValue = () => jsonStringify(this.resource.trialSpawnerJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TrialSpawnerClassArguments = {

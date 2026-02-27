@@ -15,7 +15,7 @@ export class TrimMaterialNode extends ContainerNode implements ResourceNode<Trim
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.trimMaterialJSON)
+  getValue = () => jsonStringify(this.resource.trimMaterialJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 // TODO: Investigate potential abstractions

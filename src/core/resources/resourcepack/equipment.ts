@@ -15,7 +15,7 @@ export class EquipmentNode extends ContainerNode implements ResourceNode<Equipme
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.equipmentJSON)
+  getValue = () => jsonStringify(this.resource.equipmentJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type EquipmentClassArguments = {

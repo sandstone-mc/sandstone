@@ -15,7 +15,7 @@ export class JukeboxSongNode extends ContainerNode implements ResourceNode<Jukeb
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.jukeboxSongJSON)
+  getValue = () => jsonStringify(this.resource.jukeboxSongJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type JukeboxSongClassArguments = {

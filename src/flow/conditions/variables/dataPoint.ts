@@ -33,13 +33,13 @@ export class DataPointEqualsConditionNode extends SingleConditionNode {
 
     this.conditional = Variable()
 
-    execute.store.result.score(this.conditional).run(() => anon.set(this.value as unknown as DataPointClass))
+    execute.store.result(this.conditional).run(() => anon.set(this.value as unknown as DataPointClass))
   }
 
   getValue = (negated?: boolean) =>
     (negated ? ['if', ...this.getCondition()] : ['unless', ...this.getCondition()]).join(' ')
 
   getCondition(): unknown[] {
-    return ['score', 'matches', '0..']
+    return ['score', this.conditional, 'matches', '0..']
   }
 }

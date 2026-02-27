@@ -15,7 +15,7 @@ export class InstrumentNode extends ContainerNode implements ResourceNode<Instru
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.instrumentJSON)
+  getValue = () => jsonStringify(this.resource.instrumentJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type InstrumentClassArguments = {

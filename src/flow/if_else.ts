@@ -1,22 +1,33 @@
 import * as util from 'util'
 
-import type { SandstoneCore } from '../core'
+import type { MCFunctionNode, SandstoneCore } from '../core'
 import { ContainerNode } from '../core'
 import { formatDebugString } from '../utils'
 import type { ConditionNode } from './conditions'
-import type { Condition } from './Flow'
+import { conditionToNode, type Condition } from './Flow'
 
 export class IfNode extends ContainerNode {
   nextFlowNode?: IfNode | ElseNode
 
   _isElseIf = false
 
+  parentMCFunction: MCFunctionNode
+
+  /** Optional callback name override (e.g., 'loop' for loop transformations) */
+  givenCallbackName?: string
+
+  /** Set by IfElseTransformationVisitor to the resulting ExecuteCommandNode */
+  resultingExecuteNode?: import('sandstone/commands').ExecuteCommandNode
+
   constructor(
     sandstoneCore: SandstoneCore,
     public condition: ConditionNode,
     public callback?: () => void,
+    parentMCFunction?: MCFunctionNode,
   ) {
     super(sandstoneCore)
+
+    this.parentMCFunction = parentMCFunction ?? sandstoneCore.getCurrentMCFunctionOrThrow()
 
     if (callback && callback.toString() !== '() => {}') {
       // Generate the body of the If node.
@@ -65,7 +76,7 @@ export class IfStatement {
   elseIf = (condition: Condition, callback: () => void) => {
     const statement = new IfStatement(
       this.sandstoneCore,
-      this.sandstoneCore.pack.flow.conditionToNode(condition),
+      conditionToNode(condition),
       callback,
     )
     this.node.nextFlowNode = statement.getNode()

@@ -279,7 +279,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
                   : [layer[0], row[0], entry[0]],
                 blockPos: [layer[0], row[0], entry[0]],
                 nbt: {                  id: entity.id,
-                  ...add(entity.nbt),
+                  ...add({...entity.nbt}),
                 },
               })
             }

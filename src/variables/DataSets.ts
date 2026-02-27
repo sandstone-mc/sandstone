@@ -12,8 +12,15 @@ import type { StringDataPointClass } from './Data'
 import { DataPointClass } from './Data'
 import { Score } from './Score'
 
-export abstract class IterableDataClass extends ConditionalDataPointPickClass {
-  iterator(_callback: (dataPoints: [DataPointClass] | [StringDataPointClass, DataPointClass]) => void): () => void {
+export abstract class IterableDataClass<TYPE extends 'list' | 'map'> extends ConditionalDataPointPickClass {
+  constructor(sandstoneCore: SandstonePack['core'], public iteratorType: TYPE) {
+    super(sandstoneCore)
+  }
+
+  iterator(
+    _callback: (dataPoints: TYPE extends 'list' ? [DataPointClass] : [StringDataPointClass, DataPointClass]) => void,
+    _direction: 'normal' | 'reverse' = 'normal'
+  ): () => void {
     throw new Error('Not implemented')
   }
 
@@ -25,7 +32,7 @@ export abstract class IterableDataClass extends ConditionalDataPointPickClass {
     throw new Error('Not implemented')
   }
 
-  get continue(): ConditionNode {
+  continue(direction: 'normal' | 'reverse' = 'normal'): ConditionNode {
     throw new Error('Not implemented')
   }
 }
@@ -40,18 +47,17 @@ type GetKeys<T> = T extends unknown[]
 
 export type DataIndexMapInitial = RootNBT | Record<string, DataPointClass | DataPointPickClass>
 
-export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends IterableDataClass {
+export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends IterableDataClass<'map'> {
   entries: Record<string, number> = {}
 
   dataPoint: NonNullable<DataPointClass<'storage'>>
 
   constructor(
     private pack: SandstonePack,
-    // biome-ignore lint/correctness/noUnusedPrivateClassMembers: not sure why it's here... anyway
-    private initialize: INITIAL,
+    initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    super(pack.core)
+    super(pack.core, 'map')
 
     if (dataPoint) {
       this.dataPoint = dataPoint
@@ -59,6 +65,17 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
       this.dataPoint = this.pack.DataVariable(undefined, 'IndexMap')
     }
 
+    // We currently are in a MCFunction => that's where the initialization should take place
+    if (pack.core.currentMCFunction) {
+      this.init(initialize)
+    } else {
+      const init = this.init
+      // Else, we should run it in the init MCFunction
+      pack.initMCFunction.push(() => init(initialize))
+    }
+  }
+
+  private init(initialize: INITIAL) {
     for (const [i, [key, value]] of Object.entries(initialize).entries()) {
       this.dataPoint.select('Index').select(key).set(i)
 
@@ -76,26 +93,31 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
 
   __entryIterator?: DataPointClass<'storage'>
 
-  get entryIterator() {
+  entryIterator(direction: 'normal' | 'reverse') {
     if (!this.__entryIterator) {
-      this.__entryIterator = this.pack.DataVariable(this.dataPoint.select('Entries')).select('[-1]')
+      this.__entryIterator = this.pack.DataVariable(this.dataPoint.select('Entries')).select(`[${direction === 'normal' ? 0 : -1}]`)
     }
 
     return this.__entryIterator
   }
 
-  iterator(callback: (data: [key: StringDataPointClass, value: DataPointClass]) => void) {
+  iterator(
+    callback: (data: [key: StringDataPointClass, value: DataPointClass]) => void,
+    direction: 'normal' | 'reverse' = 'normal'
+  ) {
     this.__entryIterator = undefined
 
-    return () => {
-      callback([this.entryIterator.select('[0]').slice(0), this.entryIterator.select('[1]')])
+    const entryIterator = this.entryIterator(direction)
 
-      this.entryIterator.remove()
+    return () => {
+      callback([entryIterator.select('[0]').slice(0), entryIterator.select('[1]')])
+
+      entryIterator.remove()
     }
   }
 
-  get continue() {
-    return this.entryIterator._toMinecraftCondition()
+  continue(direction: 'normal' | 'reverse' = 'normal') {
+    return this.entryIterator(direction)._toMinecraftCondition()
   }
 
   /**
@@ -289,7 +311,7 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
 
 export type DataArrayInitial = readonly NBTObject[] | readonly [string, DataPointClass | DataPointPickClass]
 
-export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDataClass {
+export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDataClass<'list'> {
   dataPoint: NonNullable<DataPointClass<'storage'>>
 
   constructor(
@@ -297,7 +319,7 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
     initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    super(pack.core)
+    super(pack.core, 'list')
 
     if (dataPoint) {
       this.dataPoint = dataPoint
@@ -305,6 +327,17 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
       this.dataPoint = this.pack.DataVariable([], 'Array')
     }
 
+    // We currently are in a MCFunction => that's where the initialization should take place
+    if (pack.core.currentMCFunction) {
+      this.init(initialize)
+    } else {
+      const init = this.init
+      // Else, we should run it in the init MCFunction
+      pack.initMCFunction.push(() => init(initialize))
+    }
+  }
+
+  private init(initialize: INITIAL) {
     for (const entry of initialize) {
       this.dataPoint.append(entry)
     }
@@ -312,26 +345,27 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
 
   __entryIterator?: DataPointClass<'storage'>
 
-  get entryIterator() {
+  entryIterator(direction: 'normal' | 'reverse') {
     if (!this.__entryIterator) {
-      this.__entryIterator = this.pack.DataVariable(this.dataPoint).select('[-1]')
+      this.__entryIterator = this.pack.DataVariable(this.dataPoint).select(`[${direction === 'normal' ? 0 : -1}]`)
     }
 
     return this.__entryIterator
   }
 
-  iterator(callback: (data: [entry: DataPointClass]) => void) {
+  iterator(callback: (data: [entry: DataPointClass]) => void, direction: 'normal' | 'reverse' = 'normal') {
     this.__entryIterator = undefined
+    const entryIterator = this.entryIterator(direction)
 
     return () => {
-      callback([this.entryIterator])
+      callback([entryIterator])
 
-      this.entryIterator.remove()
+      entryIterator.remove()
     }
   }
 
-  get continue() {
-    return this.entryIterator._toMinecraftCondition()
+  continue(direction: 'normal' | 'reverse' = 'normal') {
+    return this.entryIterator(direction)._toMinecraftCondition()
   }
 
   /**

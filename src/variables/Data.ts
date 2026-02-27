@@ -1,4 +1,5 @@
-import type { Coordinates, JSONTextComponent, NBTObject, NBTSerializable, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, JSONTextComponent, NBTObject, NBTSerializable, SingleEntityArgument, SingleEntityArgumentOf } from 'sandstone/arguments'
+import type { FinalCommandOutput } from 'sandstone/commands'
 import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from 'sandstone/commands/implementations'
 import type { SandstonePack } from 'sandstone/pack'
 import { DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral } from '../core/Macro'
@@ -71,13 +72,21 @@ export function NBTpathToString(pack: SandstonePack, paths: DATA_PATH[]) {
   return parsedPaths.join('')
 }
 
+export type TargetFor<TYPE extends DATA_TYPES, T extends string = string> =
+  TYPE extends 'entity' ? SingleEntityArgumentOf<false, T>
+  : TYPE extends 'block' ? Coordinates<false>
+  : TYPE extends 'storage' ? string
+  : never
+
 export class TargetlessDataClass<TYPE extends DATA_TYPES = DATA_TYPES> {
   constructor(
     protected sandstonePack: SandstonePack,
     public type: TYPE,
   ) {}
 
-  target = (target: DATA_TARGET[TYPE]) => new DataClass(this.sandstonePack, this.type, target)
+  target = <T extends string>(target: TargetFor<TYPE, T>): DataClass<TYPE> => {
+    return new DataClass(this.sandstonePack, this.type, target as DATA_TARGET[TYPE])
+  }
 
   select = (...path: DATA_PATH[]) => new TargetlessDataPointClass(this.sandstonePack, this.type, path)
 }
@@ -93,7 +102,9 @@ export class TargetlessDataPointClass<TYPE extends DATA_TYPES = DATA_TYPES> {
     this.path = NBTpathToString(sandstonePack, path)
   }
 
-  target = (target: DATA_TARGET[TYPE]) => new DataPointClass(this.sandstonePack, this.type, target, [this.path])
+  target = <T extends string>(target: TargetFor<TYPE, T>): DataPointClass<TYPE> => {
+    return new DataPointClass(this.sandstonePack, this.type, target as DATA_TARGET[TYPE], [this.path])
+  }
 
   select = (...path: DATA_PATH[]) => new TargetlessDataPointClass(this.sandstonePack, this.type, [this.path, ...path])
 }
@@ -156,6 +167,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
     cb: (data: DataModifyTypeCommand<false>) => DataModifyValuesCommand<false>,
     value: NBTObject | DataPointClass | DataPointPickClass,
   ) => {
+    /* @ts-ignore */
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     // The value is another Data Point
@@ -180,6 +192,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
     start: number,
     end?: number,
   ) => {
+    /* @ts-ignore */
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     if (!end) data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start)
@@ -261,7 +274,10 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
   /**
    * Remove the current NBT value.
    */
-  remove = () => this.sandstonePack.commands.data.remove[this.type](this.currentTarget as any, this.path)
+  remove = () => {
+    /* @ts-ignore */
+    return this.sandstonePack.commands.data.remove[this.type](this.currentTarget as any, this.path) as FinalCommandOutput
+  }
 
   /**
    * Extracts a section of a string available for setting to another path, without modifying the original path.

@@ -16,7 +16,7 @@ export class AtlasNode extends ContainerNode implements ResourceNode<AtlasClass>
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.atlasJSON)
+  getValue = () => jsonStringify(this.resource.atlasJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type AtlasClassArguments = {

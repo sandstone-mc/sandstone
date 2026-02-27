@@ -438,7 +438,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
     // For data/scores-only UUIDs, use the cached converted value from convertForMacro()
     if (this.data || this.scores) {
       const pack = this.core.pack
-      const { MCFunction, getTempStorage, commands } = pack
+      const { MCFunction, getTempStorage, commands, Macro, Data } = pack
       const { data } = commands
 
       // Get or create the data source
@@ -465,16 +465,18 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
       // STEP 1: Create and call a lookup function that copies from cache to temp.uuid_string
       // This function receives the cache key as env_0 and copies uuid_cache."$(env_0)" to temp
       const currentFunction = this.core.getCurrentMCFunctionOrThrow()
-      const lookupFunction = MCFunction(
+
+      const uuidLookup = Data('storage', '__sandstone:temp', 'uuid_lookup')
+
+      MCFunction(
         `${currentFunction.resource.name}/__uuid_lookup`,
         [cacheKeyVar],
         () => {
           // $data modify storage __sandstone:temp uuid_string set from storage __sandstone:uuid_cache "$(env_0)"
-          data.modify.storage('__sandstone:temp', 'uuid_string').set.from.storage(UUID_CACHE.STORAGE, '"$(env_0)"')
+          Macro.data.modify(uuidLookup.select('uuid_string')).set.from.storage(UUID_CACHE.STORAGE, Macro`"${cacheKeyVar}"`)
         },
         { creator: 'sandstone', onConflict: 'rename' },
-      )
-      lookupFunction()
+      )()
 
       // STEP 2: Create a deferred execute that uses __sandstone:temp storage with $(uuid_string)
       const deferredExecute = new ExecuteCommandClass(pack, undefined, false)
@@ -484,7 +486,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
       return createDeferredMacroExecute(pack, deferredExecute, {
         childFunctionName: '__uuid_execute',
         prependArgs: () => [['as', '$(uuid_string)']],
-        macroStorage: '__sandstone:temp',
+        macroStorage: uuidLookup,
       })
     }
 

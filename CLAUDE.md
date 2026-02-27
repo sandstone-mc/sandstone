@@ -101,12 +101,146 @@ Central engine managing:
 - **ResourcePack resources**: Texture, BlockState, Model, Font, SoundEvent, Atlas
 
 #### Visitor Pattern (`src/pack/visitors/`)
-AST transformation visitors for:
-- Converting container commands to MCFunctions
-- Transforming if/else and loop constructs
-- Initializing constants and objectives
-- Inlining function calls
-- Simplifying execute commands
+
+Visitors transform the AST before serialization. They run in sequence during `core.save()`.
+
+**Visitor Base Class:**
+```typescript
+class GenericSandstoneVisitor {
+  // Override to transform specific node types
+  visitExecuteCommandNode(node: ExecuteCommandNode) {
+    // Transform node, return replacement (or same node)
+    return this.genericVisit(node)  // Recursively visit children
+  }
+}
+```
+
+**Execute-Related Visitors:**
+
+| Visitor | Purpose |
+|---------|---------|
+| `UnifyChainedExecutesVisitor` | Merges `execute run execute run...` into single execute; unwraps empty executes (`execute run say hi` → `say hi`) |
+| `SimplifyExecuteFunctionVisitor` | Inlines single-command MCFunctions called from execute |
+| `ContainerCommandsToMCFunctionVisitor` | Extracts multi-command execute bodies into child MCFunctions |
+
+**UnifyChainedExecutesVisitor Details:**
+```typescript
+visitExecuteCommandNode = (node) => {
+  // Merge nested execute: execute.run.execute.run.say → execute.run.say
+  if (node.body[0] instanceof ExecuteCommandNode) {
+    node.body = chainedExecute.body
+    node.args.push(...chainedExecute.args)
+  }
+
+  // Unwrap empty execute: execute run say hi → say hi
+  const flattenedArgs = node.args.flat(1).filter(a => a != null)
+  if (flattenedArgs.length === 0 && node.body.length === 1) {
+    return this.genericVisit(node.body[0])  // Return child directly
+  }
+}
+```
+
+**Other Key Visitors:**
+
+| Visitor | Purpose |
+|---------|---------|
+| `IfElseTransformationVisitor` | Transforms `_.if()` flow control into execute if/unless chains |
+| `LoopTransformationVisitor` | Transforms `_.while()`, `_.forScore()` into recursive function calls; sets `loopExecute` on `LoopArgument` nodes |
+| `SwitchTransformationVisitor` | Transforms `_.switch()` into MCFunctions with O(1) dispatch via macros |
+| `InitConstantsVisitor` | Generates scoreboard objective creation commands |
+| `InlineFunctionCallVisitor` | Inlines tiny MCFunctions to reduce function call overhead |
+
+**Visitor Execution Order:**
+Visitors run in a specific order defined in `pack.ts`. Order matters because:
+- Flow transformations must run before container extraction
+- Simplification visitors run after structural transformations
+- Constant initialization runs early to set up scoreboards
+- **SwitchTransformationVisitor runs before IfElseTransformationVisitor** since it creates IfNodes that need to be processed
+
+#### Switch Transformation Flow
+
+The `SwitchTransformationVisitor` transforms `_.switch()` into efficient MCFunction dispatch:
+
+**Score-based switches** (switching on a `Score`):
+- Case functions are named by their value: `case_0`, `case_5`, `case_100`
+- Score is copied to NBT storage, then used as macro: `function case_$(value)`
+- Uses `execute store success` to detect if the macro function exists
+- Falls through to condition cases / default if no match
+- Can be inlined when switch is last node in parent MCFunction
+
+**Data-based switches** (switching on NBT data):
+- Uses O(1) NBT storage lookup to map values to sequential indices
+- Case functions are named by index: `case_0`, `case_1`, `case_2`
+- Lookup table initialized in `initMCFunction`
+- Falls through to condition cases / default if no match
+
+**Key implementation details:**
+
+1. **enterContext with addNode=false**: When populating the IfNode body for data switches, pass `false` to `enterContext` to avoid auto-adding the node:
+```typescript
+// Pass false - we manually push ifNode to body later
+switchMCFunction.node.enterContext(ifNode, false)
+functionCmd(innerMCFunction.name, 'with', switchMCFunction.macroPoint!)
+switchMCFunction.node.exitContext()
+```
+
+2. **Push IfNode before buildFallback**: The IfNode must be added to the body BEFORE calling `buildFallback`, because `buildFallback` may create an `ElseNode` whose constructor auto-adds it to the body. This ensures correct order `[IfNode, ElseNode]` for `IfElseTransformationVisitor`.
+
+3. **Score switch inlining**: For Score-based switches, the macro call is isolated in a child function (`try_case`), so the main switch function body doesn't contain macros and can be inlined.
+
+#### Loop Transformation Flow
+
+Loops (`_.while()`, `_.for()`, etc.) undergo a multi-stage transformation:
+
+**1. User Code Creates LoopNode:**
+```typescript
+_.while(foo.matches([0,10]), () => {
+  say("foo")
+  foo['+='](1)
+})
+```
+Creates a `WhileNode` (extends `LoopNode`) with:
+- `executeArgs`: The condition as execute subcommands
+- `callback`: User's loop body
+- `loopback`: Creates `IfStatement` containing `LoopArgument` for recursion
+
+**2. LoopTransformationVisitor:**
+- Transforms `LoopNode` → `ExecuteCommandNode` with `callbackName: 'loop'`
+- Tracks `currentLoopExecute` while visiting children
+- Sets `loopArgument.loopExecute = currentLoopExecute` on any `LoopArgument` found
+- This reference is critical for later resolving the recursive call target
+
+**3. IfElseTransformationVisitor:**
+- Transforms the loopback's `IfNode` → `ExecuteCommandNode` with `callbackName: 'if'`
+- Creates nested execute structure for the condition check
+
+**4. ContainerCommandsToMCFunctionVisitor:**
+- Extracts multi-command execute bodies into child MCFunctions
+- For the loop execute: creates `parent/loop` MCFunction
+- For the if execute: creates `parent/loop/if` (or `if2` on conflict) MCFunction
+- **Critical**: Sets `executeNode.createdMCFunction` when creating the child function
+- This allows `LoopArgument` to later resolve the correct function name
+
+**5. SimplifyExecuteFunctionVisitor:**
+- Finds execute nodes whose body is a single function call
+- If that function contains only a `LoopArgument`:
+  - Gets `loopArgument.loopExecute.createdMCFunction.name` (the loop function)
+  - Replaces execute body with direct call to loop function
+  - Deletes the intermediate if function
+- **Important**: Must check `instanceof LoopArgument` BEFORE `instanceof CommandNode` since `LoopArgument` extends `Node`, not `CommandNode`
+
+**Final Output:**
+```mcfunction
+# parent/loop.mcfunction
+say foo
+scoreboard players add counter __sandstone 1
+execute if score counter __sandstone matches 0..10 run function namespace:parent/loop
+```
+
+**Key Fields for Loop Resolution:**
+- `ExecuteCommandNode.createdMCFunction`: Set by `createMCFunction()`, stores the MCFunction created from this execute
+- `LoopArgument.loopExecute`: Set by `LoopTransformationVisitor`, references the loop's execute node
+- These together allow `LoopArgument` to produce `function <correct-loop-name>` at serialization or simplification time
 
 **Visitor files** follow the naming convention `<transformationName>.ts` (e.g., `containerCommandsToMCFunction.ts`, `ifElseTransformationVisitor.ts`).
 
@@ -187,18 +321,155 @@ mcfunctionNode.exitContext()
 2. Gets the top of that function's `contextStack`
 3. Pushes the command node into that context's `body`
 
-#### Execute Command as Container
-`ExecuteCommandNode` extends `ContainerCommandNode` - it can contain child commands:
-```typescript
-// Single command: execute.as('@a').run.say('hi')
-// - Creates ExecuteCommandNode with isSingleExecute=true
-// - The say command goes into the execute's body
+#### enterContext Pitfalls
 
-// Multiple commands: execute.as('@a').run(() => { say('a'); say('b') })
-// - Creates ExecuteCommandNode with isSingleExecute=false
-// - Both commands go into execute's body
-// - Visitor later extracts to child MCFunction if needed
+The `enterContext` method has an `addNode` parameter that defaults to `true`:
+
+```typescript
+enterContext = (node: ContainerNode | ContainerCommandNode, addNode: boolean = true) => {
+  if (addNode) {
+    this.currentContext.append(node)  // Auto-adds to current context's body!
+  }
+  this.contextStack.push(node)
+}
 ```
+
+**Pitfall 1: Duplicate nodes when manually pushing**
+
+If you call `enterContext(node)` and later manually push the same node to the body, you'll get duplicates:
+
+```typescript
+// WRONG - node gets added twice!
+mcfunction.enterContext(ifNode)  // Auto-adds ifNode to body
+// ... populate ifNode.body ...
+mcfunction.exitContext()
+mcfunction.body.push(ifNode)  // Duplicate!
+
+// CORRECT - pass false to prevent auto-add
+mcfunction.enterContext(ifNode, false)  // Does NOT add to body
+// ... populate ifNode.body ...
+mcfunction.exitContext()
+mcfunction.body.push(ifNode)  // Only addition
+```
+
+**Pitfall 2: Node constructors that call enterContext**
+
+Some node constructors (like `ElseNode`) automatically call `enterContext(this)`:
+
+```typescript
+export class ElseNode extends ContainerNode {
+  constructor(sandstoneCore: SandstoneCore, callback: () => void) {
+    super(sandstoneCore)
+    // This auto-adds the ElseNode to the current MCFunction's body!
+    this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(this)
+    callback()
+    this.sandstoneCore.currentMCFunction?.exitContext()
+  }
+}
+```
+
+When creating such nodes in visitors, be aware they'll be auto-added to the body. If you only want to link them (e.g., via `nextFlowNode`), you may need to account for their position in the body.
+
+**Pitfall 3: Order matters for if/else chains**
+
+For `IfElseTransformationVisitor` to work correctly, nodes must be in the body in the correct order:
+
+```typescript
+// WRONG order - ElseNode added before IfNode
+this.buildFallback(ifNode, ...)  // Creates ElseNode, auto-adds to body
+mcfunction.body.push(ifNode)     // IfNode comes after ElseNode
+
+// CORRECT order - IfNode first, then ElseNode
+mcfunction.body.push(ifNode)     // IfNode added first
+this.buildFallback(ifNode, ...)  // ElseNode auto-added after
+// Result: [IfNode, ElseNode] - correct order for visitor
+```
+
+#### Execute Command Internals
+
+`ExecuteCommandNode` extends `ContainerCommandNode` and has special context management for the fluent `.run` API.
+
+**Key Properties:**
+- `isSingleExecute`: `true` for `.run.command`, `false` for `.run(() => {...})` callbacks
+- `pendingCommit`: Set when `.run` is accessed on an uncommitted execute; triggers commit after body receives command
+- `args`: Array of subcommands like `[['as', '@a'], ['at', '@s'], ['positioned', '0 0 0']]`
+- `body`: Child command(s) that run after the execute modifiers
+- `createdMCFunction`: Set by `createMCFunction()` when body is extracted to a child MCFunction; used by `LoopArgument` to resolve recursive call targets
+- `macroStorage`: If set, the child function is called with `function <name> with storage <macroStorage> {}`
+
+**The `.run` Getter Flow:**
+
+```typescript
+// execute.positioned(...).run.say('hello')
+
+get run() {
+  const node = this.getNode()  // Get or create ExecuteCommandNode
+
+  return new Proxy(commands, {
+    get: (_, prop) => {
+      // Mark for deferred commit if not already committed
+      if (!node.commited) {
+        node.pendingCommit = true
+      }
+      // Enter execute's context (commands go to execute.body)
+      mcfunction.enterContext(node, false)  // false = don't add node yet
+      return commands[prop]
+    }
+  })
+}
+```
+
+**Context and Commit Lifecycle:**
+
+1. **Subcommand commits execute**: `.positioned(...)` calls `subCommand([...], ExecuteCommand, executable=true)` which commits the execute to MCFunction
+2. **`.run` enters context**: Pushes execute onto `contextStack`, subsequent commands go to `execute.body`
+3. **Child command commits**: `say('hello')` creates node, commits to current context (the execute)
+4. **`append()` handles cleanup**: Exits context AND commits execute if `pendingCommit` was set
+
+```typescript
+// In ExecuteCommandNode
+append = (...nodes: Node[]) => {
+  for (const node of nodes) {
+    this.body.push(node)
+    if (this.isSingleExecute) {
+      // Exit context first (parent becomes current)
+      mcfunction.exitContext()
+      // Then commit this execute to parent if pending
+      if (this.pendingCommit && !this.commited) {
+        this.commit()  // Adds execute to parent context
+      }
+    }
+  }
+}
+```
+
+**Nested Execute Chains:**
+
+For `execute.positioned(...).run.execute.run.say('hi')`:
+1. Outer execute committed via `.positioned`
+2. `.run.execute` enters outer's context, returns NEW ExecuteCommand (inner)
+3. `.run.say` on inner enters inner's context
+4. `say('hi')` commits to inner's body
+5. Inner's `append()` exits inner context, commits inner to outer's body (current context)
+6. Outer's `append()` exits outer context (outer already committed)
+
+Result: `execute positioned 0 0 0 run execute run say hi` (visitor simplifies later)
+
+**Single vs Multiple Command Mode:**
+
+```typescript
+// Single command: isSingleExecute=true (default)
+execute.as('@a').run.say('hi')
+// - One command in body, stays as single execute node
+
+// Callback mode: isSingleExecute=false
+execute.as('@a').run(() => { say('a'); say('b') })
+// - Multiple commands in body
+// - ContainerCommandsToMCFunctionVisitor extracts to child MCFunction
+```
+
+**IMPORTANT - isSingleExecute in Visitors:**
+When creating `ExecuteCommandNode` during visitor transformation, always use `isSingleExecute: false` even for single-command bodies. The `append()` method has special behavior when `isSingleExecute: true` that calls `getCurrentMCFunctionOrThrow().exitContext()`, which fails during visitor passes (no active MCFunction context). Simplification of single-command executes should happen in later visitors like `SimplifyExecuteFunctionVisitor`, not by setting `isSingleExecute: true`.
 
 #### Deferred Execution with autoCommit
 Commands normally commit immediately when created. Use `autoCommit=false` to defer:
@@ -256,6 +527,34 @@ return createDeferredMacroExecute(pack, deferred, {
   env: [someMacroVariable],  // OR use macroStorage for explicit storage
 })
 ```
+
+### Debugging Context Issues
+
+Context bugs manifest as commands appearing in wrong functions or being orphaned. Common symptoms:
+- Commands from later in the code appear inside earlier execute blocks
+- Commands disappear entirely (orphaned nodes)
+- "Execute nodes can only have one child" errors during save
+
+**Debugging Steps:**
+
+1. **Check context stack**: Add logging in `enterContext`/`exitContext` to trace stack state
+2. **Verify commit timing**: Ensure execute nodes are committed before their context is needed
+3. **Check `pendingCommit`**: For `.run.command` patterns, execute must commit after body receives command
+4. **Trace nested executes**: Each `.run` access enters context; ensure matching exits
+
+**Common Pitfalls:**
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| Commands go to wrong execute | Context not exited after previous execute | Ensure `append()` calls `exitContext()` |
+| Execute is orphaned | Never committed to parent | Use `pendingCommit` or ensure subcommand commits |
+| Nested execute loses inner | Inner execute not added to outer's body | Inner must commit while outer's context is current |
+| Double commands | Node committed multiple times | Check `commited` flag before `commit()` |
+
+**Key Invariants:**
+- `contextStack[0]` is always the MCFunction itself
+- After a single execute completes, `contextStack.length` should return to previous value
+- Every `enterContext` needs a matching `exitContext`
 
 ### Key Design Patterns
 

@@ -19,7 +19,7 @@ export class TestEnvironmentNode extends ContainerNode implements ResourceNode<T
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.testEnvironmentJSON)
+  getValue = () => jsonStringify(this.resource.testEnvironmentJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TestEnvironmentClassArguments = {
@@ -65,7 +65,7 @@ export class TestInstanceNode extends ContainerNode implements ResourceNode<Test
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.testInstanceJSON)
+  getValue = () => jsonStringify(this.resource.testInstanceJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TestInstanceClassArguments = {

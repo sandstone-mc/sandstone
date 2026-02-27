@@ -60,9 +60,6 @@ export class _RawLabelClass implements NBTSerializable {
    */
   toNBT = () => `'${this.fullName}'`
 
-  /**
-   * @internal
-   */
   __call__ = (entity: SingleEntity | '@s' | '@p' | '@r') => this.LabelHolder(entity)
 }
 

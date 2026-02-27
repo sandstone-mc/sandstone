@@ -263,7 +263,15 @@ export class SandstoneCore {
       }
       const resourcePath = path.join(..._path)
 
-      const value = await node.getValue()
+      let value: NonNullable<any>
+
+      try {
+        value = await node.getValue()
+      } catch (e) {
+        console.log('\n\n\n\n')
+        console.log(node)
+        throw e
+      }
 
       if (cliOptions.verbose) {
         console.log(`Path: ${resourcePath}.${fileExtension}\n\n` + `${typeof value === 'string' ? value : '<Buffer>'}`)

@@ -15,7 +15,7 @@ export class ShaderNode extends ContainerNode implements ResourceNode<ShaderClas
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.shaderJSON)
+  getValue = () => jsonStringify(this.resource.shaderJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ShaderClassArguments = {

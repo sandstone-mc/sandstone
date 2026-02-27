@@ -15,7 +15,7 @@ export class BannerPatternNode extends ContainerNode implements ResourceNode<Ban
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.bannerPatternJSON)
+  getValue = () => jsonStringify(this.resource.bannerPatternJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type BannerPatternClassArguments = {

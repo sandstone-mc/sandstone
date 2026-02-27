@@ -15,7 +15,7 @@ export class RecipeNode extends ContainerNode implements ResourceNode<RecipeClas
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.recipeJSON)
+  getValue = () => jsonStringify(this.resource.recipeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type RecipeClassArguments = {

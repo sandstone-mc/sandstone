@@ -1,3 +1,4 @@
+import { ScoreboardCommandNode } from 'sandstone/commands'
 import { GenericSandstoneVisitor } from './visitor'
 
 /**
@@ -6,18 +7,19 @@ import { GenericSandstoneVisitor } from './visitor'
 export class InitConstantsVisitor extends GenericSandstoneVisitor {
   onStart = () => {
     const { pack } = this
-    const { scoreboard } = pack.commands
 
-    // Remove duplicates
-    let constants = [...pack.constants.values()]
-    constants = constants.filter((item: number, index) => constants.indexOf(item) === index)
-
-    if (constants.length !== 0) {
-      pack.initMCFunction.unshift(() => {
-        for (const constant of constants) {
-          scoreboard.players.set(constant, pack.rootObjective, constant)
-        }
-      })
+    if (pack.constants.size !== 0) {
+      for (const constant of pack.constants) {
+        pack.initMCFunction.node.body.push(
+          new ScoreboardCommandNode(pack,
+            'players',
+            'set',
+            constant,
+            pack.rootObjective,
+            constant,
+          ),
+        )
+      }
     }
   }
 }

@@ -251,7 +251,12 @@ const packMethodsProxy = new Proxy({} as Pick<SandstonePack, PackMethodKeys>, {
       get(_target: unknown, subProp: string | symbol) {
         // Access the actual method/property and get the sub-property from it
         const method = sandstonePack[prop]
-        return (method as unknown as Record<string | symbol, unknown>)[subProp]
+        const value = (method as unknown as Record<string | symbol, unknown>)[subProp]
+        // Bind methods to their parent object to preserve `this` context
+        if (typeof value === 'function') {
+          return (value as CallableFunction).bind(method)
+        }
+        return value
       },
       apply(_target: unknown, _thisArg: unknown, args: unknown[]) {
         const method = sandstonePack[prop]

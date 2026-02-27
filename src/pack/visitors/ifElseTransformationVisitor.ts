@@ -1,8 +1,9 @@
 /* eslint-disable no-spaced-func */
 /* eslint-disable func-call-spacing */
-import { ExecuteCommandNode, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
+import { ExecuteCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import { IfNode, ElseNode } from 'sandstone/flow'
 import { GenericSandstoneVisitor } from './visitor'
+import type { DataPointClass } from 'sandstone/variables'
 
 function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   yield node
@@ -16,7 +17,7 @@ function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
   }
 }
 
-function handleMultipleNodes(visitor: GenericSandstoneVisitor, nodes: (ElseNode | IfNode)[]) {
+function handleMultipleNodes(visitor: GenericSandstoneVisitor, nodes: (ElseNode | IfNode)[], macroStorage: DataPointClass | undefined) {
   return nodes.flatMap((node, i) => {
     const { body } = node
 
@@ -32,27 +33,34 @@ function handleMultipleNodes(visitor: GenericSandstoneVisitor, nodes: (ElseNode 
         if (Array.isArray(child)) {
           actualBody = child
         } else {
-          return new ExecuteCommandNode(visitor.pack, [[node.condition.getValue()]], {
+          return visitor.visit(new ExecuteCommandNode(visitor.pack, [[node.condition.getValue()]], {
             isSingleExecute: false,
             givenCallbackName: callbackName,
-            body: [i === (nodes.length - 1) ? child : new ReturnCommandNode(visitor.pack, [`run ${child.getValue()}`])],
-          })
+            body: [i === (nodes.length - 1) ? child : new ReturnRunCommandNode(visitor.pack, ['run'], {
+              isSingleExecute: false,
+              isFlowControl: true,
+              body: [child],
+            })],
+            macroStorage,
+          }))
         }
       }
 
-      return new ExecuteCommandNode(visitor.pack, [[node.condition.getValue()]], {
+      return visitor.visit(new ExecuteCommandNode(visitor.pack, [[node.condition.getValue()]], {
         isSingleExecute: false,
         givenCallbackName: `${i}_${callbackName}`,
         body: [
           new ReturnRunCommandNode(visitor.pack, ['run'], {
             isSingleExecute: false,
+            isFlowControl: true,
             body: actualBody,
           }),
         ],
-      })
+        macroStorage,
+      }))
     }
-    // Else node, just add the body
-    return body
+    // Else node, visit and add the body
+    return body.flatMap((n) => visitor.visit(n))
   })
 }
 
@@ -66,23 +74,43 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
     // Start by flattening all nodes
     const nodes = Array.from(flattenIfNode(node_))
 
+    const { parentMCFunction, condition, givenCallbackName, body } = node_
+
+    // Use givenCallbackName if set (e.g., 'loop'), otherwise default to 'if'
+    const callbackName = givenCallbackName ?? 'if'
+
+    const macroStorage = parentMCFunction.resource.macroPoint
+
     // 2. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {
-      return this.visit(new ExecuteCommandNode(this.pack, [[node_.condition.getValue()]], {
+      const executeNode = new ExecuteCommandNode(this.pack, [[condition.getValue()]], {
         isSingleExecute: false,
-        givenCallbackName: 'if',
-        body: node_.body,
-      }))
+        givenCallbackName: callbackName,
+        body,
+        macroStorage,
+      })
+      // Store reference for LoopArgument resolution
+      node_.resultingExecuteNode = executeNode
+      return this.visit(executeNode)
     }
 
-    // 3. We have multiple nodes, entering a new function to allow for `return`
+    // 3. We have multiple nodes, if there isn't any tail nodes in the parent, we can use `return` safely without entering a new function
+
+    if (nodes.at(-1) === parentMCFunction.body.at(-1)) {
+      return handleMultipleNodes(this, nodes, macroStorage)
+    }
+
+    // 4. We have multiple nodes & there's tail nodes in the parent, entering a new function to allow for `return`
 
     const wrapper = new ExecuteCommandNode(this.pack, [], {
       isFake: true, // trolley
       isSingleExecute: false,
-      givenCallbackName: 'if',
-      body: handleMultipleNodes(this, nodes)
+      givenCallbackName: callbackName,
+      body: handleMultipleNodes(this, nodes, macroStorage),
+      macroStorage: macroStorage,
     })
+    // Store reference for LoopArgument resolution
+    node_.resultingExecuteNode = wrapper
     return this.visit(wrapper)
   }
 }

@@ -19,7 +19,7 @@ export class EnchantmentNode extends ContainerNode implements ResourceNode<Encha
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.enchantmentJSON)
+  getValue = () => jsonStringify(this.resource.enchantmentJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type EnchantmentClassArguments = {
@@ -65,7 +65,7 @@ export class EnchantmentProviderNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.enchantmentProviderJSON)
+  getValue = () => jsonStringify(this.resource.enchantmentProviderJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type EnchantmentProviderClassArguments = {

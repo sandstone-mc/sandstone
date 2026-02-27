@@ -70,8 +70,6 @@ type Tuple<T, N extends number, A extends T[] = []> = (
   : Tuple<T, N, [...A, T]>
 )
 
-const MAX_INT = 2147483648
-
 export class Score extends MacroArgument implements ConditionClass, ComponentClass, NBTSerializable {
   commands: SandstoneCommands<false>
 
@@ -129,6 +127,10 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
   private unaryOperation(operation: 'add' | 'remove' | 'set', operator: OPERATORS, ...args: OperationArguments): this {
     if (typeof args[0] === 'number') {
+      // scoreboard players add/remove don't support negative numbers, use score operations instead
+      if (args[0] < 0 && operation !== 'set') {
+        return this.binaryOperation(operator, args[0])
+      }
       this.commands.scoreboard.players[operation](this, args[0])
     } else if (args[0] instanceof Score) {
       this.commands.scoreboard.players.operation(this, operator, args[0].target, args[0].objective)
@@ -775,8 +777,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
       }/${
         this.target.replaceAll('.', '/').toLowerCase()
       }`, () => {
+        // Reset all bits to 0
         const resetBits = execute.store.result(components[0])
-
         for (const component of components.slice(1, -1)) {
           resetBits.store.result(component)
           resetBits.nestedExecute(['\\\n '], false)
@@ -789,47 +791,49 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
           resetBits.run(() => components.at(-1)!['='](0))
         }
 
+        const input = newScore(`${this.target}._bf_iterator`)
+        const splits = (splitsOrCount as Set<number> | undefined) ?? new Set()
+        const bitExecute = (bit: number) => execute.store.success(components[bit - 1])
+
+        input['='](this)
+
+        // Zero check - early return
         _.if(this['=='](0), () => {
           returnCmd(1)
         })
 
-        const input = newScore(`${this.target}._bf_iterator`)
-
-        input['='](this)
-
+        // If negative: set sign = 1, convert to absolute value
         if (includeSign) {
-          // This results in all other bits being reversed which is useful when reassembling the integer
-          execute.store.success(sign!).if.score(this, 'matches', [null, -1])
-            .run(() => input['+='](MAX_INT - 1))
+          execute.store.success(sign!).if.score(input, 'matches', [null, -1]).run(() => {
+            input['*='](-1)
+          })
         }
 
-        input.decomposeBits(
-          (splitsOrCount as Set<number> | undefined) ?? new Set(),
-          componentCount,
-          (bit) => execute.store.success(components[bit - 1]),
-        )
+        // Decompose absolute value
+        input.decomposeBits(splits, componentCount, bitExecute)
       }, {
         creator: 'sandstone',
         onConflict: 'rename',
         addToSandstoneCore: true,
       })
     } else {
-      const count = (splitsOrCount as number | undefined) ?? 4
+      throw new Error('[Score#getDecomposer(byte)] Byte decomposition is not yet supported')
 
-      for (let i = 1; i <= count; i++) {
-        components.push(newScore(`${this.target}._${i}`))
-      }
-      decompose = MCFunction(`__sandstone:score/decompose_bytes/${
-        count
-      }/${
-        this.target.replaceAll('.', '/').toLowerCase()
-      }`, () => {
+      // const count = (splitsOrCount as number | undefined) ?? 4
 
-      }, {
-        creator: 'sandstone',
-        onConflict: 'rename',
-        addToSandstoneCore: true,
-      })
+      // for (let i = 1; i <= count; i++) {
+      //   components.push(newScore(`${this.target}._${i}`))
+      // }
+      // decompose = MCFunction(`__sandstone:score/decompose_bytes/${
+      //   count
+      // }/${
+      //   this.target.replaceAll('.', '/').toLowerCase()
+      // }`, () => {
+      // }, {
+      //   creator: 'sandstone',
+      //   onConflict: 'rename',
+      //   addToSandstoneCore: true,
+      // })
     }
 
     const result = {
@@ -852,22 +856,55 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     bitExecute: (bit: Components, halvedAgain: number) => ExecuteCommand<false>,
     extra?: (bit: Components, halvedAgain: number) => any,
   ) {
-    const { commands } = this.sandstonePack
-    const { execute } = commands
+    const { _ } = this.sandstonePack
 
-    let halvedAgain = MAX_INT
+    const sortedSplits = [...splits]
+      .filter(s => s > 0 && s < componentCount)
+      .sort((a, b) => b - a)
 
-    for (let bit = componentCount; bit > 0; bit--) {
-      halvedAgain /= 2
+    // boundaries: [31, 22, 17, 0] for splits={22, 17}, componentCount=31
+    const boundaries = [componentCount, ...sortedSplits, 0]
 
-      bitExecute(bit, halvedAgain).if.score(
-        this,
-        'matches',
-        [halvedAgain, null]
-      ).run(() => {
-        this['-='](halvedAgain)
-        extra?.(bit, halvedAgain)
-      })
+    const processRange = (high: number, low: number) => {
+      let halvedAgain = 2 ** high
+      for (let bit = high; bit >= low; bit--) {
+        halvedAgain /= 2
+        bitExecute(bit as Components, halvedAgain).if.score(
+          this,
+          'matches',
+          [halvedAgain, null],
+        ).run(() => {
+          this['-='](halvedAgain)
+          extra?.(bit as Components, halvedAgain)
+        })
+      }
+    }
+
+    // Build nested structure from inside out (highest threshold first, then lower)
+    // For boundaries [31, 22, 17, 0]: check 1.., inside check 131072.., inside check 4194304..
+    const buildNested = (rangeIndex: number) => {
+      const high = boundaries[rangeIndex]
+      const low = boundaries[rangeIndex + 1] + 1
+
+      // If there's a higher range, check for it first
+      if (rangeIndex > 0) {
+        const higherMinValue = 2 ** boundaries[rangeIndex]
+        _.if(this.matches([higherMinValue, null]), () => {
+          buildNested(rangeIndex - 1)
+        })
+      }
+
+      // Process this range's bits
+      processRange(high, low)
+    }
+
+    if (splits.size === 0) {
+      // No splits - just process all bits
+      processRange(componentCount, 1)
+    } else {
+      // Start from the lowest range - no need to check >= 1 since we already handled zero
+      const lowestRangeIndex = boundaries.length - 2
+      buildNested(lowestRangeIndex)
     }
   }
 

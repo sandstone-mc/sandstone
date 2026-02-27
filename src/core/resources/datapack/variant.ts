@@ -1,4 +1,4 @@
-import type { SymbolResource } from 'sandstone/arguments'
+import { type RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -44,7 +44,7 @@ export class VariantNode<T extends VariantType> extends ContainerNode implements
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.variantJSON)
+  getValue = () => jsonStringify(this.resource.variantJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type VariantClassArguments<T extends VariantType> = {

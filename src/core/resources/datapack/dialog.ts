@@ -15,7 +15,7 @@ export class DialogNode extends ContainerNode implements ResourceNode<DialogClas
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.dialogJSON)
+  getValue = () => jsonStringify(this.resource.dialogJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type DialogClassArguments = {

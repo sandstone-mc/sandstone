@@ -19,7 +19,7 @@ export class TimelineNode extends ContainerNode implements ResourceNode<Timeline
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.timelineJSON)
+  getValue = () => jsonStringify(this.resource.timelineJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TimelineClassArguments = {
@@ -65,7 +65,7 @@ export class WorldClockNode extends ContainerNode implements ResourceNode<WorldC
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.worldClockJSON)
+  getValue = () => jsonStringify(this.resource.worldClockJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type WorldClockClassArguments = {

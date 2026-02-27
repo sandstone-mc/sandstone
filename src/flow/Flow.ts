@@ -18,12 +18,9 @@ import type {
 } from 'sandstone/commands/implementations/block/setblock'
 import type {
   ConditionClass,
-  DataArray,
-  DataArrayInitial,
-  DataIndexMap,
-  DataIndexMapInitial,
   DataPointClass,
   IterableDataClass,
+  JSONTextComponentClass,
   StringDataPointClass,
 } from 'sandstone/variables'
 import { parseJSONText, Score } from 'sandstone/variables'
@@ -34,38 +31,37 @@ import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops'
-import type { DefaultType } from './switch_case'
-import { CaseStatement } from './switch_case'
-
-let switches = 0
+import type { ConditionCallback, DefaultType, SwitchCase } from './switch_case'
+import { CaseStatement, executeSwitch } from './switch_case'
 
 export type Condition = ConditionNode | ConditionClass
+
+export function conditionToNode(condition: Condition) {
+  if (!(condition instanceof ConditionNode)) {
+    return condition._toMinecraftCondition()
+  }
+  return condition
+}
+
 export class Flow {
   constructor(public sandstoneCore: SandstoneCore) {}
 
-  conditionToNode(condition: Condition) {
-    if (!(condition instanceof ConditionNode)) {
-      return condition._toMinecraftCondition()
-    }
-    return condition
-  }
-
   if = (condition: Condition, callback: () => void) =>
-    new IfStatement(this.sandstoneCore, this.conditionToNode(condition), callback)
+    new IfStatement(this.sandstoneCore, conditionToNode(condition), callback)
 
   and = (...conditions: Condition[]) =>
     new AndNode(
       this.sandstoneCore,
-      conditions.map((condition) => this.conditionToNode(condition)),
+      conditions.map((condition) => conditionToNode(condition)),
     )
 
   or = (...conditions: Condition[]) =>
     new OrNode(
       this.sandstoneCore,
-      conditions.map((condition) => this.conditionToNode(condition)),
+      conditions.map((condition) => conditionToNode(condition)),
     )
 
-  not = (condition: Condition) => new NotNode(this.sandstoneCore, this.conditionToNode(condition))
+  not = (condition: Condition) => new NotNode(this.sandstoneCore, conditionToNode(condition))
 
   get return() {
     return this.sandstoneCore.pack.commands.returnCmd
@@ -88,13 +84,13 @@ export class Flow {
    * @param broadcast Whether to scope the broadcast of the error (from `@a`) or disable it.
    * @param dataPoint Disable storing to data point.
    *
-   * @returns The full error text component string.
+   * @returns The full error text component.
    */
   throw(
     error: JSONTextComponent | undefined,
     broadcast: MultiplePlayersArgument<false> | false | undefined,
     dataPoint: false,
-  ): string
+  ): JSONTextComponentClass
 
   /**
    * Logs an error in data storage and chat by default and `return fail`'s from the context.
@@ -134,14 +130,14 @@ export class Flow {
       tellraw(broadcast || '@a' as MultiplePlayersArgumentOf<false, T>, fullError)
     }
 
-    const errorString = parseJSONText(this.sandstoneCore, fullError) as unknown as string
+    const errorSerializable = parseJSONText(this.sandstoneCore, fullError)! as JSONTextComponentClass
 
     if (dataPoint !== false) {
       let point
       if (dataPoint === undefined) {
-        point = DataVariable(parseJSONText(this.sandstoneCore, fullError) as unknown as string)
+        point = DataVariable(errorSerializable.toJSON() as NBTObject)
       } else {
-        point = dataPoint.set(errorString)
+        point = dataPoint.set(errorSerializable.toJSON() as NBTObject)
       }
       returnCmd.fail()
 
@@ -150,16 +146,16 @@ export class Flow {
 
     returnCmd.fail()
 
-    return errorString
+    return errorSerializable
   }
 
   while(condition: Condition, callback: () => void) {
-    return new WhileStatement(this.sandstoneCore, this.conditionToNode(condition), callback)
+    return new WhileStatement(this.sandstoneCore, conditionToNode(condition), callback)
   }
 
   doWhile(condition: Condition, callback: () => void) {
     callback()
-    return new WhileStatement(this.sandstoneCore, this.conditionToNode(condition), callback)
+    return new WhileStatement(this.sandstoneCore, conditionToNode(condition), callback)
   }
 
   for(
@@ -176,38 +172,32 @@ export class Flow {
   ): ForIStatement
 
   for(
-    range: [start: number | Score, end: number | Score, maximum?: number],
-    type: 'binary',
-    callback: (num: number) => any,
-  ): void
-
-  for(
     type: 'entry',
-    _: 'of',
-    iterable: IterableDataClass,
+    _: 'of' | 'of-reverse',
+    iterable: IterableDataClass<'list' | 'map'>,
     callback: (entry: DataPointClass) => any,
   ): ForOfStatement<'entry', [entry: DataPointClass]>
 
   for(
     type: ['key', 'value'],
-    _: 'of',
-    iterable: DataIndexMap<DataIndexMapInitial>,
+    _: 'of' | 'of-reverse',
+    iterable: IterableDataClass<'map'>,
     callback: (key: StringDataPointClass, value: DataPointClass) => any,
   ): ForOfStatement<['key', 'value'], [key: StringDataPointClass, value: DataPointClass]>
 
   for(
     type: ['i', 'entry'],
-    _: 'of',
-    iterable: DataArray<DataArrayInitial>,
+    _: 'of' | 'of-reverse',
+    iterable: IterableDataClass<'list' | 'map'>,
     callback: (i: Score, entry: DataPointClass) => any,
   ): ForOfStatement<['i', 'entry'], [i: Score, entry: DataPointClass]>
 
   for(
-    arg1: (number | Score) | ForOfIterator | [start: number | Score, end: number | Score, maximum?: number],
-    arg2: ((iterator: Score) => Condition) | 'of' | 'iterate' | 'binary',
+    arg1: (number | Score) | ForOfIterator | [start: number | Score, end: number | Score],
+    arg2: ((iterator: Score) => Condition) | 'of' | 'of-reverse' | 'iterate',
     arg3:
       | ((iterator: Score) => Score)
-      | IterableDataClass
+      | IterableDataClass<'list' | 'map'>
       | ((num: number) => any)
       | ((iterator: Score, _continue: () => void) => any),
     // eslint-disable-next-line max-len
@@ -231,7 +221,8 @@ export class Flow {
       return new ForOfStatement(
         this.sandstoneCore,
         arg1,
-        arg3 as IterableDataClass,
+        arg2 === 'of-reverse' ? 'reverse' : 'normal',
+        arg3 as IterableDataClass<'map' | 'list'>,
         arg4 as (entry: DataPointClass) => any,
       )
     }
@@ -239,7 +230,8 @@ export class Flow {
       return new ForOfStatement(
         this.sandstoneCore,
         arg1,
-        arg3 as IterableDataClass,
+        arg2 === 'of-reverse' ? 'reverse' : 'normal',
+        arg3 as IterableDataClass<'map'>,
         arg4 as (key: StringDataPointClass, value: DataPointClass) => any,
       )
     }
@@ -253,13 +245,13 @@ export class Flow {
           arg3 as (iterator: unknown) => any,
         )
       }
-      return binaryFor(this, arg1[0], arg1[1] as Score | number, arg3 as (num: number) => any, arg1[2])
     }
 
     return new ForOfStatement(
       this.sandstoneCore,
       arg1 as ForOfIterator,
-      arg3 as IterableDataClass,
+      arg2 === 'of-reverse' ? 'reverse' : 'normal',
+      arg3 as IterableDataClass<'list' | 'map'>,
       arg4 as (i: Score, value: DataPointClass) => any,
     )
   }
@@ -267,69 +259,41 @@ export class Flow {
   switch<
     ValueType extends DataPointClass | DataPointPickClass | Score,
     CheckType extends ValueType extends Score ? number : NBTObject,
-  >(value: ValueType, cases: CaseStatement<CheckType> | DefaultType<CheckType>): void
+  >(value: ValueType, cases: CaseStatement<CheckType, ValueType> | DefaultType<CheckType, ValueType>): void
 
   switch<
     ValueType extends DataPointClass | DataPointPickClass | Score,
     CheckType extends ValueType extends Score ? number : NBTObject,
-  >(value: ValueType, cases: ['case', CheckType, () => any][], _default?: ['default', () => any]): void
+  >(value: ValueType, cases: SwitchCase<ValueType, CheckType>[] | [...SwitchCase<ValueType, CheckType>[], ['default', () => any]]): void
 
   switch<
     ValueType extends DataPointClass | DataPointPickClass | Score,
     CheckType extends ValueType extends Score ? number : NBTObject,
   >(
     value: ValueType,
-    _cases: ['case', CheckType, () => any][] | CaseStatement<CheckType> | DefaultType<CheckType>,
-    _default?: ['default', () => any],
+    cases: SwitchCase<ValueType, CheckType>[] | [...SwitchCase<ValueType, CheckType>[], ['default', () => any]] | CaseStatement<CheckType, ValueType> | DefaultType<CheckType, ValueType>,
   ) {
-    let cases: (readonly ['case', CheckType, () => any])[]
-
-    if (_cases instanceof CaseStatement) {
-      cases = _cases.getCases().map((c) => c.getValue())
-    } else if (Array.isArray(_cases)) {
-      cases = _cases
-    } else {
-      cases = _cases.cases.map((c) => c.getValue())
-      _default = ['default', _cases.default]
-    }
-    const { Data, initMCFunction, MCFunction, Macro } = this.sandstoneCore.pack
-
-    // eslint-disable-next-line no-plusplus
-    const id = switches++
-
-    const values = Data('storage', `__sandstone:switch_${id}`, 'Values')
-
-    initMCFunction.push(() =>
-      values.set(
-        cases.map(([_, v, callback], i) => {
-          MCFunction(`__sandstone:switch_${id}_case_${i}`, [], () => callback())
-
-          return { Value: v, Index: i }
-        }),
-      ),
-    )
-
-    // oxlint-disable-next-line no-this-alias
-    const flow = this
-
-    MCFunction(`__sandstone:switch_${id}`, [value], () => {
-      const index = Data('storage', `__sandstone:switch_${id}`, 'Index')
-
-      Macro.data.modify
-        .storage(index.currentTarget, 'Index')
-        .set.from.storage(values.currentTarget, Macro`Values[{Value:${value}}}].Index`)
-
-      const _if = flow.if(index, () => {
-        MCFunction(`__sandstone:switch_${id}_inner`, [index], () => {
-          Macro.functionCmd(Macro`__sandstone:switch_${id}_case_${index}`)
-        })()
-      })
-      if (_default) _if.else(() => _default?.[1]())
-    })()
+    executeSwitch(this.sandstoneCore, value, cases)
   }
 
-  case<ValueType extends number | NBTObject>(value: ValueType, callback: () => any) {
-    return new CaseStatement(value, callback)
+  /** Create a static value case for switch statements */
+  case(value: number, callback: () => any): CaseStatement<number>
+
+  /** Create a static value case for switch statements */
+  case(value: NBTObject, callback: () => any): CaseStatement<NBTObject>
+
+  /** Create a condition case for switch statements - checked after static cases fail */
+  case<SwitchValueType>(condition: ConditionCallback<SwitchValueType>, callback: () => any): CaseStatement<never, SwitchValueType>
+
+  case<SwitchValueType>(value: number | NBTObject | ConditionCallback<SwitchValueType>, callback: () => any) {
+    if (typeof value === 'function') {
+      return new CaseStatement<never, SwitchValueType>([
+        { type: 'condition', condition: value, callback },
+      ])
+    }
+    return new CaseStatement([
+      { type: 'static', value, callback },
+    ])
   }
 
   // Conditions

@@ -16,13 +16,21 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
    */
   isSingleExecute: boolean
 
+  /**
+   * When true, this return run is needed for flow control (e.g., if/elseIf early exit).
+   * When false, the return run was added for function boundary semantics and can be
+   * unwrapped when the function is inlined.
+   */
+  isFlowControl: boolean
+
   constructor(
     sandstonePack: SandstonePack,
     args: [...args: unknown[]] = [],
-    { isSingleExecute = true, body = [] as Node[] } = {},
+    { isSingleExecute = true, body = [] as Node[], isFlowControl = false } = {},
   ) {
     super(sandstonePack, ...args)
     this.isSingleExecute = isSingleExecute
+    this.isFlowControl = isFlowControl
     this.append(...body)
   }
 
@@ -95,7 +103,7 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
    * - With a callback function: return.run(() => { commands })
    * 
    * @example
-   * return.run.execute.if.score('@p', 'health').matches([1, 10]).run.return(1)
+   * return.run.execute.if.score('@p', 'health').matches([1, 10]).run.returnCmd(1)
    */
   get run() {
     const node = this.getNode()
@@ -146,8 +154,8 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
    * return.return()
    * 
    * // Return based on conditions
-   * execute.if.entity('@p[tag=vip]').run.return(100)  // VIP bonus
-   * execute.unless.entity('@p[tag=vip]').run.return(50) // Regular bonus
+   * execute.if.entity('@p[tag=vip]').run.returnCmd(100)  // VIP bonus
+   * execute.unless.entity('@p[tag=vip]').run.returnCmd(50) // Regular bonus
    * ```
    */
   get return() {
@@ -175,13 +183,13 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * // Early exit on invalid conditions
-   * execute.unless.entity('@p').run.return.fail() // No player found
+   * execute.unless.entity('@p').run.returnCmd.fail() // No player found
    * 
    * // Validation check
-   * execute.if.score('@p', 'level').matches([..0]).run.return.fail() // Invalid level
+   * execute.if.score('@p', 'level').matches([..0]).run.returnCmd.fail() // Invalid level
    * 
    * // Error handling
-   * execute.unless.block('~ ~ ~', 'minecraft:chest').run.return.fail() // Expected chest not found
+   * execute.unless.block('~ ~ ~', 'minecraft:chest').run.returnCmd.fail() // Expected chest not found
    * ```
    */
   fail = () => this.finalCommand(['fail'])

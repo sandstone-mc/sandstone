@@ -16,7 +16,7 @@ export class PredicateNode extends ContainerNode implements ResourceNode<Predica
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.predicateJSON)
+  getValue = () => jsonStringify(this.resource.predicateJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 type PredicateJSON = NonNullable<SymbolResource['predicate']>

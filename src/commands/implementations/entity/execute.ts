@@ -15,10 +15,6 @@ import type {
   SymbolBlock,
   SymbolMcdocBlockStates,
 } from 'sandstone/arguments'
-import type {
-  BlockStatic,
-  ParseBlockState,
-} from '../block/setblock'
 import { blockStateStringifier } from '../block/setblock'
 import type { SandstoneCommands } from 'sandstone/commands'
 import {
@@ -45,9 +41,19 @@ import { FunctionCommandNode } from '../server/function'
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]
 
-type BlockEntityName = keyof SymbolBlock
+type ParseLiteral<T> = (
+  T extends 'true' | 'false' ? boolean :
+  T extends `${infer N extends number}` ? N :
+  T
+)
 
-type BlockEntity = NamespacedLiteralUnion<BlockEntityName>
+type ParseBlockState<T> = {
+  [K in keyof T]: ParseLiteral<T[K]>
+}
+
+type BlockEntity = NamespacedLiteralUnion<keyof SymbolBlock>
+
+type BlockStatic = NamespacedLiteralUnion<Exclude<keyof SymbolMcdocBlockStates, keyof SymbolBlock>>
 
 // Yes these suck
 
@@ -56,7 +62,10 @@ const isObjective = (arg: any): arg is ObjectiveClass => typeof arg === 'object'
 const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'setDisplay')
 
 export class ExecuteCommandPart<MACRO extends boolean> extends CommandArguments<typeof ExecuteCommandNode> {
-  protected nestedExecute = (args: SubCommand, executable = true) =>
+  /**
+   * @internal
+   */
+  nestedExecute = (args: SubCommand, executable = true) =>
     this.subCommand([args], ExecuteCommand<MACRO>, executable)
 }
 
@@ -95,7 +104,19 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
    * `function <name> with storage <macroStorage>`. This enables macro variables
    * from the storage to be used in the execute command.
    */
-  macroStorage: string | undefined
+  macroStorage: DataPointClass | undefined
+
+  /**
+   * If true, this execute node should be committed to its parent context after its body receives a command.
+   * This is set when .run is accessed and the execute hasn't been committed yet.
+   */
+  pendingCommit: boolean
+
+  /**
+   * The MCFunction created by createMCFunction, if any.
+   * Used by LoopArgument to reference the loop function.
+   */
+  createdMCFunction: _RawMCFunctionClass<any, any> | null = null
 
   constructor(
     sandstonePack: SandstonePack,
@@ -105,7 +126,8 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       isSingleExecute = true,
       givenCallbackName = undefined as string | undefined,
       body = [] as Node[],
-      macroStorage = undefined as string | undefined,
+      macroStorage = undefined as DataPointClass | undefined,
+      pendingCommit = false,
     } = {},
   ) {
     super(sandstonePack, ...args)
@@ -114,9 +136,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     this.isSingleExecute = isSingleExecute
     this.isFake = isFake
     this.macroStorage = macroStorage
-    if (macroStorage) {
-      this.isMacro = true
-    }
+    this.pendingCommit = pendingCommit
     this.append(...body)
   }
 
@@ -129,7 +149,13 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       this.body.push(node)
 
       if (this.isSingleExecute) {
+        // Exit context first so the parent context becomes current
         this.sandstoneCore.getCurrentMCFunctionOrThrow().exitContext()
+
+        // If this execute was pending commit (from .run access), commit it now to the parent context
+        if (this.pendingCommit && !this.commited) {
+          this.commit()
+        }
       }
     }
     return (nodes.length === 1 ? nodes[0] : nodes) as any
@@ -194,12 +220,15 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     const mcFunctionNode = mcFunction.node
     mcFunctionNode.body = this.body
 
+    // Store reference to the created MCFunction (used by LoopArgument)
+    this.createdMCFunction = mcFunction
+
     // Return an execute calling this MCFunction.
     const mcFunctionCall = new FunctionCommandNode(this.sandstonePack, mcFunction)
 
     // If macroStorage is set, call the function with `with storage <macroStorage>`
     if (this.macroStorage) {
-      mcFunctionCall.args.push('with', 'storage', this.macroStorage, '')
+      mcFunctionCall.args.push('with', 'storage', this.macroStorage.currentTarget, this.macroStorage.path)
     }
 
     this.body = [mcFunctionCall]
@@ -262,24 +291,16 @@ export class ExecuteStoreArgsCommand<MACRO extends boolean> extends ExecuteComma
   ) => this.nestedExecute(['entity', targetParser(target), path, type, scale])
 
   /**
-   * Overrides the given score with the final command's return value.
+   * Overrides the given scores with the final command's return value.
    *
    * @param targets Specifies score holder(s) whose score is to be overridden.
    *
    * @param objective A scoreboard objective.
-   *
-   * @param playerScore The player's score to override.
    */
-  score(
-    ...args:
-      | [targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, objective: Macroable<ObjectiveArgument, MACRO>]
-      | [playerScore: Macroable<Score, MACRO>]
-  ) {
-    if (isScore(args[0])) {
-      return this.nestedExecute(['score', args[0]])
-    }
-    return this.nestedExecute(['score', targetParser(args[0]), args[1]])
-  }
+  score = (
+    targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, 
+    objective: Macroable<ObjectiveArgument, MACRO>
+  ) => this.nestedExecute(['score', targetParser(targets), objective])
 
   /**
    * Uses the `path` within storage `target` to store the return value in.
@@ -304,15 +325,57 @@ export class ExecuteStoreArgsCommand<MACRO extends boolean> extends ExecuteComma
   ) => this.nestedExecute(['storage', target, path, type, scale])
 }
 
+type DropFirstArg<T> = (
+  T extends {
+    (first: any, ...args: infer A1): infer R1
+    (first: any, ...args: infer A2): infer R2
+  } ? {
+    (...args: A1): R1
+    (...args: A2): R2
+  } : never
+)
+
 export class ExecuteStoreCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
+  _storeCallable(cmd: ExecuteStoreArgsCommand<MACRO>, score: Score): ExecuteCommand<MACRO>
+  _storeCallable(cmd: ExecuteStoreArgsCommand<MACRO>, dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'>, type?: Macroable<StoreType, MACRO>, scale?: Macroable<number, MACRO>): ExecuteCommand<MACRO>
+  _storeCallable(
+    cmd: ExecuteStoreArgsCommand<MACRO>,
+    target: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'> | Score,
+    type?: Macroable<StoreType, MACRO>,
+    scale?: Macroable<number, MACRO>,
+  ): ExecuteCommand<MACRO> {
+    if (isScore(target)) {
+      return cmd.score(target.target, target.objective)
+    }
+    const resolvedType = type ?? 'int'
+    if (target.type === 'block') {
+      return cmd.block(coordinatesParser(target.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, target.path, resolvedType, scale)
+    }
+    if (target.type === 'entity') {
+      /* @ts-ignore */
+      return cmd.entity(target.currentTarget as Macroable<string, MACRO>, target.path, resolvedType, scale) as unknown as ExecuteCommand<MACRO>
+    }
+    return cmd.storage(target.currentTarget as Macroable<string, MACRO>, target.path, resolvedType, scale)
+  }
+
   /** Store the final command's result value. */
   get result() {
-    return this.subCommand([['result']], ExecuteStoreArgsCommand<MACRO>, false)
+    const cmd = this.subCommand([['result']], ExecuteStoreArgsCommand<MACRO>, false)
+    return makeCallable(cmd, (
+      target: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'> | Score,
+      type?: Macroable<StoreType, MACRO>,
+      scale?: Macroable<number, MACRO>,
+    ) => this._storeCallable(cmd, target as any, type, scale), true) as ExecuteStoreArgsCommand<MACRO> & DropFirstArg<ExecuteStoreCommand<MACRO>['_storeCallable']>
   }
 
   /** Store the final command's success value. */
   get success() {
-    return this.subCommand([['success']], ExecuteStoreArgsCommand<MACRO>, false)
+    const cmd = this.subCommand([['success']], ExecuteStoreArgsCommand<MACRO>, false)
+    return makeCallable(cmd, (
+      target: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'> | Score,
+      type?: Macroable<StoreType, MACRO>,
+      scale?: Macroable<number, MACRO>,
+    ) => this._storeCallable(cmd, target as any, type, scale), true) as ExecuteStoreArgsCommand<MACRO> & DropFirstArg<ExecuteStoreCommand<MACRO>['_storeCallable']>
   }
 }
 
@@ -447,7 +510,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
     state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates
-      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>>
+      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[Extract<BLOCK, keyof SymbolMcdocBlockStates>]>>
       : Record<string, string | boolean | number>, MACRO>,
   ): ExecuteCommand<MACRO>
 
@@ -472,10 +535,10 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
     state: Macroable<BLOCK extends keyof SymbolMcdocBlockStates
-      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>>
+      ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[Extract<BLOCK, keyof SymbolMcdocBlockStates>]>>
       : Record<string, string | boolean | number> | undefined, MACRO>,
     nbt: Macroable<BLOCK extends keyof SymbolBlock
-      ? NonNullable<SymbolBlock[BLOCK]>
+      ? NonNullable<SymbolBlock[Extract<BLOCK, keyof SymbolBlock>]>
       : SymbolBlock<'%fallback'>, MACRO>,
   ): ExecuteCommand<MACRO>
 
@@ -815,6 +878,11 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
 
     const commands = new Proxy(this.sandstonePack.commands as SandstoneCommands<MACRO>, {
       get: (_t, p, _r) => {
+        // Mark as pending commit if not already committed
+        // The node will be committed to its parent context when append() is called
+        if (!node.commited) {
+          node.pendingCommit = true
+        }
         // The context will automatically be exited by the node itself
         this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(node, false)
         return (this.sandstonePack.commands as any)[p]
@@ -831,7 +899,8 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
         }
 
         node.isSingleExecute = false
-        this.sandstoneCore.insideContext(node, callback, false)
+        // Add node to parent context if not already committed
+        this.sandstoneCore.insideContext(node, callback, !node.commited)
         return new FinalCommandOutput(node)
       },
       true,
@@ -859,7 +928,7 @@ export type DeferredMacroExecuteOptions = {
   }
   | {
     /** Explicit storage to use for the macro function call (e.g., '__sandstone:temp') */
-    macroStorage: string
+    macroStorage: DataPointClass
     env?: never
   }
 )
@@ -940,7 +1009,7 @@ export function createDeferredMacroExecute(
             )
 
             // Call the function with explicit storage
-            pack.commands.functionCmd(childFunction.name, 'with', 'storage', options.macroStorage)
+            pack.commands.functionCmd(childFunction.name, 'with', 'storage', options.macroStorage.currentTarget, options.macroStorage.path)
             childFunctionNode = childFunction.node
           }
 

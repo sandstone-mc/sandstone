@@ -44,7 +44,6 @@ export class _RawObjectiveClass implements NBTSerializable {
       {
         name: this.name,
         criteria: this.criteria,
-        display: this.display,
         creator: this.creator,
       },
       undefined,

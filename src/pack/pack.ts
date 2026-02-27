@@ -122,6 +122,7 @@ import type {
   SelectorEntityType,
   ItemPredicateItem,
   SelectorProperties,
+  TargetFor,
   TriggerHandler,
   UUIDinNumber,
   UUIDinScore,
@@ -163,6 +164,7 @@ import {
   OrTransformationVisitor,
   SimplifyExecuteFunctionVisitor,
   SimplifyReturnRunFunctionVisitor,
+  SwitchTransformationVisitor,
   UnifyChainedExecutesVisitor,
 } from './visitors'
 import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
@@ -235,7 +237,7 @@ export class DataPack extends PackType {
     writeFile: handlerWriteFile,
   ) => {
     if (type === 'output') {
-      await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta))
+      await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta, null, 2))
     }
   }
 }
@@ -282,7 +284,7 @@ export class ResourcePack extends PackType {
     writeFile: handlerWriteFile,
   ) => {
     if (type === 'output') {
-      await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta))
+      await writeFile('pack.mcmeta', JSON.stringify(this.packMcmeta, null, 2))
     }
     /*
      * TODO: language
@@ -400,6 +402,8 @@ export class SandstonePack {
     this.__rootObjective = undefined
     this.__initMCFunction = undefined
     this.objectives.clear()
+    this.anonymousDataId = 0
+    this.anonymousScoreId = 0
     this.constants.clear()
     this.tickedLoops = {}
     this.dependencies.clear()
@@ -487,7 +491,7 @@ export class SandstonePack {
 
   /** UTILS */
   get _() {
-    return new Flow(this.core)
+    return this.flow
   }
 
   registerNewObjective = (objective: ObjectiveClass) => {
@@ -561,7 +565,7 @@ export class SandstonePack {
    * @param initialValue The initial value of the variable. If left unspecified,
    * or if `undefined`, then the score will not be initialized.
    *
-   * @param name A name that can be useful for debugging.
+   * @param name A name that can be useful for debugging & consistent fake player naming.
    */
   Variable(initialValue?: number | Score | undefined, name?: string): Score
 
@@ -572,7 +576,7 @@ export class SandstonePack {
    *
    * @param scale The scale to multiply the value by. Defaults to 1.
    *
-   * @param name A name that can be useful for debugging.
+   * @param name A name that can be useful for debugging & consistent fake player naming.
    */
   Variable(nbt: DataPointClass, scale?: number, name?: string): Score
 
@@ -593,7 +597,7 @@ export class SandstonePack {
     const [initialValue, name] = args
 
     // Get the specific anonymous score
-    const anonymousScore = score(`${name ?? 'anon'}_${this.packUid}_${this.anonymousScoreId++}`)
+    const anonymousScore = score(`${name ?? 'anon'}_${this.packUid}${name === undefined ? `_${this.anonymousScoreId++}` : ''}`)
 
     // No initial value => we can directly return the score
     if (initialValue === undefined) {
@@ -658,11 +662,11 @@ export class SandstonePack {
    */
   Data<T extends DATA_TYPES>(type: T): TargetlessDataClass<T>
 
-  Data<T extends 'entity'>(type: T, target: SingleEntityArgument<false>): DataClass<T>
+  Data<T extends 'entity', S extends string>(type: T, target: TargetFor<T, S>): DataClass<T>
 
-  Data<T extends 'storage'>(type: T, target: MacroArgument | string): DataClass<T>
+  Data<T extends 'storage'>(type: T, target: MacroArgument | TargetFor<T>): DataClass<T>
 
-  Data<T extends 'block'>(type: T, target: Coordinates<false>): DataClass<T>
+  Data<T extends 'block'>(type: T, target: TargetFor<T>): DataClass<T>
 
   Data<T extends DATA_TYPES>(
     type: T,
@@ -670,27 +674,27 @@ export class SandstonePack {
     path: MacroArgument | DATA_PATH | DATA_PATH[],
   ): TargetlessDataPointClass<T>
 
-  Data<T extends 'entity'>(
+  Data<T extends 'entity', S extends string>(
     type: T,
-    target: SingleEntityArgument<false>,
+    target: TargetFor<T, S>,
     path: MacroArgument | DATA_PATH | DATA_PATH[],
   ): DataPointClass<T>
 
   Data<T extends 'storage'>(
     type: T,
-    target: MacroArgument | string,
+    target: MacroArgument | TargetFor<T>,
     path: MacroArgument | DATA_PATH | DATA_PATH[],
   ): DataPointClass<T>
 
   Data<T extends 'block'>(
     type: T,
-    target: Coordinates<false>,
+    target: TargetFor<T>,
     path: MacroArgument | DATA_PATH | DATA_PATH[],
   ): DataPointClass<T>
 
-  Data<T extends DATA_TYPES>(
+  Data<T extends DATA_TYPES, S extends string>(
     type: T,
-    target?: SingleEntityArgument<false> | string | Coordinates<false> | MacroArgument,
+    target?: TargetFor<T, S> | MacroArgument,
     path?: MacroArgument | DATA_PATH | DATA_PATH[],
   ) {
     const dataPath = (path ?? typeof path === 'string') ? [path] : path
@@ -738,7 +742,7 @@ export class SandstonePack {
    * @param initialValue Optional. The initial value of the variable. If left unspecified,
    * or if `undefined`, then the Data Point will not be initialized.
    *
-   * @param name Optional. A name that can be useful for debugging.
+   * @param name Optional. A name that can be useful for debugging & consistent pathing.
    */
   DataVariable(initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string): DataPointClass<'storage'>
 
@@ -751,7 +755,7 @@ export class SandstonePack {
    *
    * @param scale Optional. The scale to multiply the value by. Defaults to 1.
    *
-   * @param name Optional. A name that can be useful for debugging.
+   * @param name Optional. A name that can be useful for debugging & consistent pathing.
    */
   DataVariable(score: Score, storeType?: StoreType, scale?: number, name?: string): DataPointClass<'storage'>
 
@@ -772,7 +776,7 @@ export class SandstonePack {
     const [initialValue, name] = args
 
     // Get the specific anonymous data point
-    const anonymousData = data.select(`${name ?? 'anon'}_${this.packUid}_${this.anonymousDataId++}`)
+    const anonymousData = data.select(`${name ?? 'anon'}_${this.packUid}${name === undefined ? `_${this.anonymousDataId++}` : ''}`)
 
     // No initial value => we can directly return the data point
     if (initialValue === undefined) {
@@ -919,7 +923,7 @@ export class SandstonePack {
         ...(Array.isArray(args[1]) ? args[3] : args[2] || args[1]),
       },
       Array.isArray(args[1]) ? args[1] : undefined,
-    ) as MCFunctionClass<PARAMS, ENV>
+    ) as unknown as MCFunctionClass<PARAMS, ENV>
   }
 
   appendNode = (node: Node) => this.core.getCurrentMCFunctionOrThrow().appendNode(node)
@@ -1471,6 +1475,7 @@ export class SandstonePack {
 
         // Transformation visitors
         new LoopTransformationVisitor(this),
+        new SwitchTransformationVisitor(this),
         new OrTransformationVisitor(this),
         new IfElseTransformationVisitor(this),
         new ContainerCommandsToMCFunctionVisitor(this),

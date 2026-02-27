@@ -20,6 +20,13 @@ export class NBTPrimitive extends NBTClass {
     this.unit = unit
   }
 
+  /**
+   * @internal
+   */
+  toJSON() {
+    return this.value
+  }
+
   [util.inspect.custom] = () => `${this.value}${this.unit}`
 }
 
@@ -72,6 +79,13 @@ export class NBTTypedArray extends NBTClass {
     super()
     this.values = values
     this.unit = unit
+  }
+
+  /**
+   * @internal
+   */
+  toJSON() {
+    return this.values
   }
 
   [util.inspect.custom] = () => `[${this.unit};${this.values.length === 0 ? '' : this.values.join(',')}]`

@@ -1,10 +1,11 @@
 import type { Coordinates, NBTObject, SingleEntityArgumentOf } from 'sandstone/arguments'
-import { isMacroArgument, type MacroArgument, type Macroable } from 'sandstone/core'
+import { type MacroArgument, type Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { DataPointClass, VectorClass } from 'sandstone/variables'
+import { makeCallable } from 'sandstone/utils'
+import { DataPointClass, type VectorClass } from 'sandstone/variables'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const
@@ -18,13 +19,23 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * data.get.block(abs(100, 70, 200), 'Items[0]', 1)      // Get block NBT
-   * data.get.entity('@p', 'Health')                    // Get player health
-   * data.get.storage('minecraft:temp', 'value')        // Get storage data
+   * data.get(dataPoint, 1)                               // Get data point NBT with scale
+   * data.get.block(abs(100, 70, 200), 'Items[0]', 1)     // Get block NBT
+   * data.get.entity('@p', 'Health')                      // Get player health
+   * data.get.storage('minecraft:temp', 'value')          // Get storage data
    * ```
    */
   get get() {
-    return this.subCommand(['get'], DataGetCommand<MACRO>, false)
+    const cmd = this.subCommand(['get'], DataGetCommand<MACRO>, false)
+    return makeCallable(cmd, (dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'>, scale?: Macroable<number, MACRO>): FinalCommandOutput => {
+      if (dataPoint.type === 'block') {
+        return cmd.block(coordinatesParser(dataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, dataPoint.path, scale)
+      }
+      if (dataPoint.type === 'entity') {
+        return cmd.entity(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path, scale)
+      }
+      return cmd.storage(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path, scale)
+    })
   }
 
   /**
@@ -46,13 +57,23 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * data.modify.entity('@p', 'Health').set.value(20)                    // Set health
+   * data.modify(dataPoint).set.value(20)                                 // Modify data point
+   * data.modify.entity('@p', 'Health').set.value(20)                     // Set health
    * data.modify.block(abs(100, 70, 200), 'Items').append.value({id: 'stone'}) // Add item
    * data.modify.storage('minecraft:temp', 'list').prepend.from.entity('@p', 'Inventory[0]')
    * ```
    */
   get modify() {
-    return this.subCommand(['modify'], DataModifyCommand<MACRO>, false)
+    const cmd = this.subCommand(['modify'], DataModifyCommand<MACRO>, false)
+    return makeCallable(cmd, (dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'>): DataModifyTypeCommand<MACRO> => {
+      if (dataPoint.type === 'block') {
+        return cmd.block(coordinatesParser(dataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, dataPoint.path)
+      }
+      if (dataPoint.type === 'entity') {
+        return cmd.entity(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+      }
+      return cmd.storage(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+    })
   }
 
   /**
@@ -60,13 +81,23 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * data.remove.block(abs(100, 70, 200), 'Items[0]')      // Remove block NBT
-   * data.remove.entity('@e[type=item]', 'Motion')      // Remove entity motion
-   * data.remove.storage('minecraft:temp', 'old_data')  // Remove storage data
+   * data.remove(dataPoint)                               // Remove data point NBT
+   * data.remove.block(abs(100, 70, 200), 'Items[0]')     // Remove block NBT
+   * data.remove.entity('@e[type=item]', 'Motion')        // Remove entity motion
+   * data.remove.storage('minecraft:temp', 'old_data')    // Remove storage data
    * ```
    */
   get remove() {
-    return this.subCommand(['remove'], DataRemoveCommand<MACRO>, false)
+    const cmd = this.subCommand(['remove'], DataRemoveCommand<MACRO>, false)
+    return makeCallable(cmd, (dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'>): FinalCommandOutput => {
+      if (dataPoint.type === 'block') {
+        return cmd.block(coordinatesParser(dataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, dataPoint.path)
+      }
+      if (dataPoint.type === 'entity') {
+        return cmd.entity(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+      }
+      return cmd.storage(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+    })
   }
 }
 
@@ -82,7 +113,9 @@ export class DataGetCommand<MACRO extends boolean> extends CommandArguments {
     targetPos: Macroable<Coordinates<MACRO>, MACRO>,
     path?: Macroable<string, MACRO>,
     scale?: Macroable<number, MACRO>,
-  ) => this.finalCommand(['block', coordinatesParser(targetPos), path, scale])
+  ): FinalCommandOutput => {
+    return this.finalCommand(['block', coordinatesParser(targetPos), path, scale])
+  }
 
   /**
    * Get the NBT of a given entity.
@@ -95,7 +128,9 @@ export class DataGetCommand<MACRO extends boolean> extends CommandArguments {
     target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
     path?: Macroable<string, MACRO>,
     scale?: Macroable<number, MACRO>,
-  ) => this.finalCommand(['entity', targetParser(target), path, scale])
+  ): FinalCommandOutput => {
+    return this.finalCommand(['entity', targetParser(target), path, scale])
+  }
 
   /**
    * Get the NBT from a given storage path.
@@ -104,8 +139,13 @@ export class DataGetCommand<MACRO extends boolean> extends CommandArguments {
    * @param path The path of the NBT to get.
    * @param scale The scale to multiply the NBT value by.
    */
-  storage = (target: Macroable<string, MACRO>, path?: Macroable<string, MACRO>, scale?: Macroable<number, MACRO>) =>
-    this.finalCommand(['storage', target, path, scale])
+  storage = (
+    target: Macroable<string, MACRO>,
+    path?: Macroable<string, MACRO>,
+    scale?: Macroable<number, MACRO>,
+  ): FinalCommandOutput => {
+    return this.finalCommand(['storage', target, path, scale])
+  }
 }
 
 export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
@@ -157,35 +197,28 @@ export class DataModifyFromCommand<MACRO extends boolean> extends CommandArgumen
     this.finalCommand(['entity', targetParser(source), sourcePath])
 
   /**
-   * Modify with the NBT of a given storage data point.
-   *
-   * @param source The storage data point to modify the NBT with.
-   */
-  storage(source: DataPointClass<'storage'>): void
-
-  /**
    * Modify with the NBT of a given storage path.
    *
    * @param source The storage target to modify the NBT with.
    * @param sourcePath The path of the NBT to modify with.
    */
-  storage(source: Macroable<string, MACRO>, sourcePath: Macroable<string, MACRO>): void
-
-  storage(source: DataPointClass<'storage'> | Macroable<string, MACRO>, sourcePath?: Macroable<string, MACRO>) {
-    let storageArg: string | MacroArgument
-    if (isMacroArgument(this.sandstoneCore, source) || typeof source === 'string') {
-      storageArg = source
-    } else {
-      const dataPoint = source as DataPointClass<'storage'>
-      storageArg = `${dataPoint.currentTarget} ${dataPoint.path}`
-    }
-    return this.finalCommand(['storage', storageArg, sourcePath])
+  storage = (source: Macroable<string, MACRO>, sourcePath: Macroable<string, MACRO>): FinalCommandOutput => {
+    return this.finalCommand(['storage', source, sourcePath])
   }
 }
 
 export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArguments {
   get from() {
-    return this.subCommand(['from'], DataModifyFromCommand<MACRO>, false)
+    const cmd = this.subCommand(['from'], DataModifyFromCommand<MACRO>, false)
+    return makeCallable(cmd, (dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'>): FinalCommandOutput => {
+      if (dataPoint.type === 'block') {
+        return cmd.block(coordinatesParser(dataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, dataPoint.path)
+      }
+      if (dataPoint.type === 'entity') {
+        return cmd.entity(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+      }
+      return cmd.storage(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+    })
   }
 
   string = {
@@ -309,8 +342,9 @@ export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
    * @param targetPos The coordinates of the block to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) =>
-    this.subCommand(['block', coordinatesParser(targetPos), targetPath], DataModifyTypeCommand<MACRO>, false)
+  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>): DataModifyTypeCommand<MACRO> => {
+    return this.subCommand(['block', coordinatesParser(targetPos), targetPath], DataModifyTypeCommand<MACRO>, false)
+  }
 
   /**
    * Modify the NBT of a given entity.
@@ -318,8 +352,9 @@ export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The entity to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, targetPath: Macroable<string, MACRO>) =>
-    this.subCommand(['entity', targetParser(target), targetPath], DataModifyTypeCommand<MACRO>, false)
+  entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, targetPath: Macroable<string, MACRO>): DataModifyTypeCommand<MACRO> => {
+    return this.subCommand(['entity', targetParser(target), targetPath], DataModifyTypeCommand<MACRO>, false)
+  }
 
   /**
    * Modify the NBT from a given storage path.
@@ -327,8 +362,9 @@ export class DataModifyCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The storage to modify the NBT from.
    * @param path The path of the NBT to modify.
    */
-  storage = (target: Macroable<string, MACRO>, targetPath: Macroable<string, MACRO>) =>
-    this.subCommand(['storage', target, targetPath], DataModifyTypeCommand<MACRO>, false)
+  storage = (target: Macroable<string, MACRO>, targetPath: Macroable<string, MACRO>): DataModifyTypeCommand<MACRO> => {
+    return this.subCommand(['storage', target, targetPath], DataModifyTypeCommand<MACRO>, false)
+  }
 }
 
 export class DataRemoveCommand<MACRO extends boolean> extends CommandArguments {
@@ -338,8 +374,12 @@ export class DataRemoveCommand<MACRO extends boolean> extends CommandArguments {
    * @param targetPos The coordinates of the block to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, targetPath: Macroable<string, MACRO>) =>
-    this.finalCommand(['block', coordinatesParser(targetPos), targetPath])
+  block = (
+    targetPos: Macroable<Coordinates<MACRO>, MACRO>,
+    targetPath: Macroable<string, MACRO>,
+  ): FinalCommandOutput => {
+    return this.finalCommand(['block', coordinatesParser(targetPos), targetPath])
+  }
 
   /**
    * Remove the NBT of a given entity.
@@ -347,8 +387,12 @@ export class DataRemoveCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The entity to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, targetPath: Macroable<string, MACRO>) =>
-    this.finalCommand(['entity', targetParser(target), targetPath])
+  entity = <T extends string>(
+    target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
+    targetPath: Macroable<string, MACRO>,
+  ): FinalCommandOutput => {
+    return this.finalCommand(['entity', targetParser(target), targetPath])
+  }
 
   /**
    * Remove the NBT from a given storage path.
@@ -356,6 +400,10 @@ export class DataRemoveCommand<MACRO extends boolean> extends CommandArguments {
    * @param target The storage to remove the NBT from.
    * @param path The path of the NBT to remove.
    */
-  storage = (target: Macroable<string, MACRO>, targetPath: Macroable<string, MACRO>) =>
-    this.finalCommand(['storage', target, targetPath])
+  storage = (
+    target: Macroable<string, MACRO>,
+    targetPath: Macroable<string, MACRO>,
+  ): FinalCommandOutput => {
+    return this.finalCommand(['storage', target, targetPath])
+  }
 }

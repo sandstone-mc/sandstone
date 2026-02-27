@@ -18,7 +18,21 @@ export class MacroArgument {
         // eslint-disable-next-line no-empty
       } catch {}
 
-      return `$(${this.local.get(this.sandstoneCore.currentNode) || this.local.get(currentMCFunctionName)})`
+      // Try direct lookup first
+      let result = this.local.get(this.sandstoneCore.currentNode) || this.local.get(currentMCFunctionName)
+
+      // If not found, walk up the function path hierarchy
+      // Child functions are named <parent>/<child>, so stripping path segments gives parent names
+      if (!result) {
+        let path = this.sandstoneCore.currentNode
+        while (path.includes('/')) {
+          path = path.substring(0, path.lastIndexOf('/'))
+          result = this.local.get(path)
+          if (result) break
+        }
+      }
+
+      return `$(${result})`
     }
   }
 }
@@ -66,6 +80,9 @@ export class MacroLiteral extends MacroArgument {
             result += `${macro}`
           } else {
             result += macro.toMacro()
+            if (result.endsWith('}')) {
+              console.warn('what', macro)
+            }
           }
         }
       }

@@ -1,9 +1,10 @@
-import { ExecuteCommandNode, type SubCommand } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import type { Score } from 'sandstone/variables'
 import { LoopArgument } from 'sandstone/variables'
-import type { Condition } from '..'
+import { conditionToNode, type Condition } from '..'
+import { IfStatement } from '../if_else'
 import { LoopNode } from '../loop'
+import { analyzeCondition, warnStaticallyFalseCondition } from './staticAnalysis'
 
 export class ForINode extends LoopNode {
   // eslint-disable-next-line max-len
@@ -16,33 +17,36 @@ export class ForINode extends LoopNode {
   ) {
     const iterator = sandstoneCore.pack.Variable(initialValue, 'loop_iterator')
 
-    const condition = sandstoneCore.pack._.conditionToNode(endCondition(iterator))
-
-    const value = condition.getValue().split(' ')
-
-    const conditionValue: SubCommand = [value[0], value.slice(1).join(' ')]
+    const condition = conditionToNode(endCondition(iterator))
 
     const _continue = () =>
       sandstoneCore.pack.commands.returnCmd.run(
-        () =>
-          new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], {
-            body: [new LoopArgument(sandstoneCore.pack)],
-          }),
+        () => new IfStatement(sandstoneCore, condition, () => new LoopArgument(sandstoneCore.pack)),
       )
 
-    callback(iterator, _continue)
+    // Check if we can inline the first iteration via static analysis
+    const analysisResult = typeof initialValue === 'number'
+      ? analyzeCondition(condition, iterator, initialValue)
+      : { canAnalyze: false as const }
 
-    iterate(iterator)
+    if (analysisResult.canAnalyze) {
+      if (analysisResult.result) {
+        // Condition is statically true - inline the first iteration
+        callback(iterator, _continue)
+        iterate(iterator)
+      } else {
+        // Condition is statically false - loop will never execute
+        warnStaticallyFalseCondition('for', `initial value ${initialValue} does not satisfy condition`)
+      }
+    }
 
     super(
       sandstoneCore,
-      [conditionValue],
+      condition,
       () => callback(iterator, _continue),
       () => {
         iterate(iterator)
-        return new ExecuteCommandNode(sandstoneCore.pack, [conditionValue], {
-          body: [new LoopArgument(sandstoneCore.pack)],
-        })
+        new IfStatement(sandstoneCore, condition, () => new LoopArgument(sandstoneCore.pack))
       },
     )
   }

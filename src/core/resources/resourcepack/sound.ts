@@ -100,7 +100,7 @@ export class SoundsNode extends ContainerNode implements ResourceNode<SoundsClas
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.soundsJSON)
+  getValue = () => jsonStringify(this.resource.soundsJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 type SoundsJSON = NonNullable<SymbolResource['sounds']>
