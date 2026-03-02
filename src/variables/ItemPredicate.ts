@@ -6,9 +6,13 @@ import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import * as util from 'util'
 import { formatDebugString } from '../utils'
 import type { MacroArgument } from 'sandstone/core/Macro'
-import { TagClass } from 'sandstone/core/resources/datapack/tag'
-import type { NBTObject } from 'sandstone/arguments'
+import type { TagClass } from 'sandstone/core/resources/datapack/tag'
+import { createBrandChecker } from '../utils'
+import type { NBTObject,REGISTRIES } from 'sandstone/arguments'
 import type { ItemModelBuilder } from 'sandstone/core/resources/resourcepack/itemDefinition'
+
+// Use brand checker to avoid importing TagClass (which would cause circular deps)
+const isTagClass = createBrandChecker<TagClass<REGISTRIES>>('TagClass')
 
 /** Item type: specific item, tag, or wildcard */
 export type ItemPredicateItem = Registry['minecraft:item'] | `#${string}` | TagClass<'item'> | '*'
@@ -206,7 +210,7 @@ export class ItemPredicateClass {
 
   toString(): string {
     if (this.testGroups.length === 0) {
-      if (this.itemType instanceof TagClass) {
+      if (isTagClass(this.itemType)) {
         return this.itemType.name
       }
       return this.itemType

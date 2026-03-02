@@ -10,6 +10,7 @@ import { join } from 'path'
 import { rm, mkdir, readdir, readFile, writeFile, stat } from 'fs/promises'
 import { createHasInstancePlugin } from './plugins/hasinstance-plugin'
 import { fixDtsImports } from './plugins/fix-dts-imports'
+import { fixEsmInitOrderInFile } from './plugins/fix-esm-init-order'
 
 const rootDir = join(import.meta.dir, '..')
 const srcDir = join(rootDir, 'src')
@@ -82,6 +83,13 @@ async function main() {
         console.error(log)
       }
       process.exit(1)
+    }
+
+    // Fix __esm init order for subpath bundles
+    const bundlePath = join(distDir, entryName, 'index.js')
+    const fixed = await fixEsmInitOrderInFile(bundlePath)
+    if (fixed) {
+      log(`    Fixed __esm init order in ${entryName}`)
     }
   }
 

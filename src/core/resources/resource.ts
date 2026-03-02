@@ -8,7 +8,7 @@ import type { PackType } from 'sandstone/pack/packType'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
 import type { NBTSerializable } from 'sandstone/arguments/nbt'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
-import { RESOURCE_PATHS } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments/generated/resource-paths'
 
 export type ResourceClassArguments<ConflictType extends 'default' | 'list' | 'function'> = {
   /**

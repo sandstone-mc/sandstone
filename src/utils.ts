@@ -94,6 +94,24 @@ export function isPromise(promise: any): promise is Promise<unknown> {
   return promise && typeof promise.then === 'function' && promise[Symbol.toStringTag] === 'Promise'
 }
 
+/**
+ * Create a brand checker for a class without importing it (avoiding circular deps).
+ * Returns a type guard function that checks for the brand symbol.
+ *
+ * @example
+ * import type { TagClass } from 'sandstone/core/resources/datapack/tag'
+ * const isTagClass = createBrandChecker<TagClass<string>>('TagClass')
+ * if (isTagClass(value)) {
+ *   // value is a TagClass instance
+ * }
+ */
+export function createBrandChecker<T>(className: string): (value: unknown) => value is T {
+  const brand = Symbol.for(`sandstone.${className}`)
+  return (value: unknown): value is T => {
+    return typeof value === 'object' && value !== null && brand in value
+  }
+}
+
 export type Either<A extends Record<string, any>, B extends Record<string, any>> = (
   | {
       [K in keyof A | keyof B]?: K extends keyof A ? A[K] : never
