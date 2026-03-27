@@ -1,25 +1,130 @@
-name: Node.js Publish Release
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 permissions:
   id-token: write
-  contents: read
-
-on:
-  release:
-    types: [released]
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  contents: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-      - uses: actions/setup-node@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
-      - run: bun i
-      - run: bun dev:build
-      - run: npm publish --tag beta --provenance
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build
+        run: bun dev:build
+
+      - name: Determine npm tag
+        id: npm-tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [[ "$VERSION" == *"-"* ]]; then
+            echo "tag=${VERSION#*-}" | sed 's/\.[0-9]*$//' >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to npm
+        run: npm publish --provenance --tag ${{ steps.npm-tag.outputs.tag }}
+
+      - name: Prepare release metadata
+        id: release
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+
+          # Check if prerelease
+          if [[ "$VERSION" == *"-"* ]]; then
+            echo "prerelease=true" >> $GITHUB_OUTPUT
+            # Find previous tag (any tag)
+            PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${TAG}$" | head -n1)
+          else
+            echo "prerelease=false" >> $GITHUB_OUTPUT
+            # Find previous stable release tag (no prerelease identifier)
+            PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${TAG}$" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+          fi
+          echo "prev_tag=${PREV_TAG}" >> $GITHUB_OUTPUT
+
+          # Get commit message
+          COMMIT_MSG=$(git log -1 --format=%B)
+          COMMIT_TITLE=$(echo "$COMMIT_MSG" | head -n1)
+          COMMIT_BODY=$(echo "$COMMIT_MSG" | tail -n +3)
+
+          # Remove emoji prefix from title (e.g., "🐛 " or ":bug: ")
+          CLEAN_TITLE=$(echo "$COMMIT_TITLE" | sed -E 's/^[^ ]+ //')
+
+          # Release title: "<tag> - <clean title>"
+          RELEASE_TITLE="${TAG} - ${CLEAN_TITLE}"
+          echo "title=${RELEASE_TITLE}" >> $GITHUB_OUTPUT
+
+          # Build release body
+          {
+            # Commit message body if present
+            if [[ -n "$COMMIT_BODY" ]]; then
+              echo "$COMMIT_BODY"
+              echo ""
+            fi
+
+            # Commits since previous tag in spoiler
+            if [[ -n "$PREV_TAG" ]]; then
+              echo "<details>"
+              echo "<summary>Commits since ${PREV_TAG}</summary>"
+              echo ""
+              for COMMIT in $(git log --format="%H" "${PREV_TAG}..${TAG}"); do
+                SUBJECT=$(git log -1 --format="%s" "$COMMIT")
+                AUTHOR=$(git log -1 --format="%an" "$COMMIT")
+                # Extract co-author names from trailers
+                COAUTHORS=$(git log -1 --format="%(trailers:key=Co-authored-by,valueonly)" "$COMMIT" | sed -n 's/\(.*\) <.*/\1/p' | sed 's/^/, @/')
+                echo "- $COMMIT $SUBJECT (@${AUTHOR}${COAUTHORS})"
+              done
+              echo ""
+              echo "</details>"
+
+
+
+
+
+
+
+
+
+
+
+              
+              echo ""
+              echo "**Full Changelog**: [${PREV_TAG}...${TAG}](compare/${PREV_TAG}...${TAG})"
+            fi
+          } > release_body.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PRERELEASE_FLAG=""
+          if [[ "${{ steps.release.outputs.prerelease }}" == "true" ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ steps.release.outputs.title }}" \
+            --notes-file release_body.md \
+            $PRERELEASE_FLAG
