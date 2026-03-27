@@ -69,9 +69,8 @@ export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends Iter
     if (pack.core.currentMCFunction) {
       this.init(initialize)
     } else {
-      const init = this.init
       // Else, we should run it in the init MCFunction
-      pack.initMCFunction.push(() => init(initialize))
+      pack.initMCFunction.push(() => this.init(initialize))
     }
   }
 
@@ -331,9 +330,8 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
     if (pack.core.currentMCFunction) {
       this.init(initialize)
     } else {
-      const init = this.init
       // Else, we should run it in the init MCFunction
-      pack.initMCFunction.push(() => init(initialize))
+      pack.initMCFunction.push(() => this.init(initialize))
     }
   }
 

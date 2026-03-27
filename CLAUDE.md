@@ -586,6 +586,35 @@ type EntityType = Registry['minecraft:entity_type']
 type Block = Registry['minecraft:block']
 ```
 
+#### TypeScript Complexity Limits (TS2859)
+
+The generated types include very large union types (e.g., `McdocBlockStatesDispatcherMap` has ~1200 entries). These can trigger TypeScript error TS2859: "Excessive complexity comparing types".
+
+**How it happens:** TypeScript has built-in complexity limits to prevent the compiler from hanging. When a file imports types from another module that uses complex generics with large unions, TypeScript must evaluate all those types during type-checking. If multiple modules in the import chain use these types, the complexity compounds.
+
+**Prevention strategies:**
+
+1. **Avoid cross-module type imports for complex generics** - If a type like `ParseBlockState<T>` is only used locally, define it in that file rather than importing from another module (e.g., commands).
+
+2. **Inline simple utility types** - Types like `ParseLiteral` or `ParseBlockState` are simple and can be duplicated where needed rather than imported through a chain that triggers full module evaluation.
+
+3. **Break import chains** - If `flow/Flow.ts` imports from `commands/setblock.ts`, and `pack/pack.ts` imports from both, TypeScript evaluates all complex types in both modules. Moving shared types to a common location or inlining them breaks this chain.
+
+**Example fix:** Instead of:
+```typescript
+// Flow.ts
+import type { BlockStatic, ParseBlockState } from 'sandstone/commands/implementations/block/setblock'
+```
+
+Inline the types directly:
+```typescript
+// Flow.ts
+type ParseBlockState<T> = { [K in keyof T]: ParseLiteral<T[K]> }
+type BlockStatic = NamespacedLiteralUnion<Exclude<keyof SymbolMcdocBlockStates, keyof SymbolBlock>>
+```
+
+This prevents TypeScript from evaluating the entire setblock module (with its complex block state generics) when type-checking Flow.ts.
+
 ### Command Implementation
 
 Commands are implemented in `src/commands/implementations/` organized by category (block, entity, player, server, world).

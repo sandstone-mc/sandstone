@@ -487,7 +487,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
         childFunctionName: '__uuid_execute',
         prependArgs: () => [['as', '$(uuid_string)']],
         macroStorage: uuidLookup,
-      })
+      }) as ExecuteCommand<true>
     }
 
     throw new Error(

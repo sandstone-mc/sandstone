@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": {
       "sandstone": [
-        "./src/index.ts"
+        "./src/sandstone.ts"
       ],
       "sandstone/*": [
         "./src/*"

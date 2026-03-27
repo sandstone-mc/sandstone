@@ -12,11 +12,6 @@ import type {
   SymbolMcdocBlockStates,
 } from 'sandstone/arguments'
 import type {
-  BlockEntity,
-  BlockStatic,
-  ParseBlockState,
-} from 'sandstone/commands/implementations/block/setblock'
-import type {
   ConditionClass,
   DataPointClass,
   IterableDataClass,
@@ -25,7 +20,7 @@ import type {
 } from 'sandstone/variables'
 import { parseJSONText, Score } from 'sandstone/variables'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
-import type { LiteralUnion } from '../utils'
+import type { LiteralUnion, NamespacedLiteralUnion } from '../utils'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
@@ -35,6 +30,20 @@ import type { ConditionCallback, DefaultType, SwitchCase } from './switch_case'
 import { CaseStatement, executeSwitch } from './switch_case'
 
 export type Condition = ConditionNode | ConditionClass
+
+type ParseLiteral<T> = (
+  T extends 'true' | 'false' ? boolean :
+  T extends `${infer N extends number}` ? N :
+  T
+)
+
+type ParseBlockState<T> = {
+  [K in keyof T]: ParseLiteral<T[K]>
+}
+
+type BlockEntity = NamespacedLiteralUnion<keyof SymbolBlock>
+
+type BlockStatic = NamespacedLiteralUnion<Exclude<keyof SymbolMcdocBlockStates, keyof SymbolBlock>>
 
 export function conditionToNode(condition: Condition) {
   if (!(condition instanceof ConditionNode)) {

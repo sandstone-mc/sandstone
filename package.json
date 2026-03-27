@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@parcel/watcher": "^2.5.6",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.1.25",
+    "@sandstone-mc/mcdoc-ts-generator": "link:@sandstone-mc/mcdoc-ts-generator",
     "@stylistic/eslint-plugin": "^5.7.1",
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",
@@ -74,44 +74,48 @@
     "update-from-mcdoc": "mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig"
   },
   "type": "module",
-  "main": "index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/exports/index.js",
+  "module": "dist/exports/index.js",
+  "types": "dist/exports/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/exports/index.d.ts",
+      "import": "./dist/exports/index.js",
+      "default": "./dist/exports/index.js"
     },
     "./arguments": {
-      "types": "./dist/arguments/index.d.ts",
-      "import": "./dist/arguments/index.js",
-      "default": "./dist/arguments/index.js"
+      "types": "./dist/exports/arguments/index.d.ts",
+      "import": "./dist/exports/arguments/index.js",
+      "default": "./dist/exports/arguments/index.js"
     },
     "./commands": {
-      "types": "./dist/commands/index.d.ts",
-      "import": "./dist/commands/index.js",
-      "default": "./dist/commands/index.js"
+      "types": "./dist/exports/commands/index.d.ts",
+      "import": "./dist/exports/commands/index.js",
+      "default": "./dist/exports/commands/index.js"
     },
     "./core": {
-      "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js",
-      "default": "./dist/core/index.js"
+      "types": "./dist/exports/core/index.d.ts",
+      "import": "./dist/exports/core/index.js",
+      "default": "./dist/exports/core/index.js"
     },
     "./flow": {
-      "types": "./dist/flow/index.d.ts",
-      "import": "./dist/flow/index.js",
-      "default": "./dist/flow/index.js"
+      "types": "./dist/exports/flow/index.d.ts",
+      "import": "./dist/exports/flow/index.js",
+      "default": "./dist/exports/flow/index.js"
     },
     "./pack": {
-      "types": "./dist/pack/index.d.ts",
-      "import": "./dist/pack/index.js",
-      "default": "./dist/pack/index.js"
+      "types": "./dist/exports/pack/index.d.ts",
+      "import": "./dist/exports/pack/index.js",
+      "default": "./dist/exports/pack/index.js"
     },
     "./variables": {
-      "types": "./dist/variables/index.d.ts",
-      "import": "./dist/variables/index.js",
-      "default": "./dist/variables/index.js"
+      "types": "./dist/exports/variables/index.d.ts",
+      "import": "./dist/exports/variables/index.js",
+      "default": "./dist/exports/variables/index.js"
     }
   },
   "trustedDependencies": [

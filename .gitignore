@@ -1,6 +1,12 @@
 ### Dist folder ###
 dist
 
+### Types folder (built declarations for internal use) ###
+types/
+
+### Generated synthetic entry point ###
+src/index.ts
+
 tsconfig.tsbuildinfo
 
 ### VisualStudioCode Patch ###

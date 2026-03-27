@@ -43,6 +43,7 @@ import type {
   WorldClockClassArguments,
 } from './core'
 import { SandstonePack } from './pack'
+import type { Flow } from './flow'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, SetType } from './utils'
 import { Set } from './utils'
 import * as coordinates from './variables/Coordinates'
@@ -253,7 +254,8 @@ const packMethodsProxy = new Proxy({} as Pick<SandstonePack, PackMethodKeys>, {
         const method = sandstonePack[prop]
         const value = (method as unknown as Record<string | symbol, unknown>)[subProp]
         // Bind methods to their parent object to preserve `this` context
-        if (typeof value === 'function') {
+        // Some values (like callable proxies from makeCallable) don't have .bind
+        if (typeof value === 'function' && typeof (value as CallableFunction).bind === 'function') {
           return (value as CallableFunction).bind(method)
         }
         return value
@@ -266,6 +268,14 @@ const packMethodsProxy = new Proxy({} as Pick<SandstonePack, PackMethodKeys>, {
         throw new Error(`Pack method '${prop}' is not callable`)
       },
     }) as SandstonePack[K]
+  },
+})
+
+// Dedicated proxy for Flow (_) that preserves type information
+// The packMethodsProxy loses nested property types, so we handle _ separately
+export const _: Flow = new Proxy({} as Flow, {
+  get<K extends keyof Flow>(_target: unknown, prop: K): Flow[K] {
+    return sandstonePack._[prop]
   },
 })
 
@@ -317,7 +327,7 @@ export const {
   // Variables
   Objective,
   Macro,
-  _,
+  // _ is exported separately above to preserve Flow type information
   Variable,
   flowVariable,
   Trigger,
@@ -339,7 +349,6 @@ export const {
 
 export * from './variables/nbt/NBTs'
 
-export * from './arguments'
 export type { Condition } from './flow'
 export {
   ObjectiveClass,

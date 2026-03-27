@@ -84,7 +84,7 @@ export class ForOfNode<ITERATOR extends ForOfIterator, ITERATE extends ForOfIter
     super(
       sandstoneCore,
       continueCondition,
-      () => iterate,
+      iterate,
       () =>
         new IfStatement(
           sandstoneCore,

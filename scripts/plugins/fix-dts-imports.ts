@@ -6,7 +6,8 @@
  */
 
 import ts from 'typescript'
-import { join } from 'path'
+import { join, relative, dirname } from 'path'
+import { posix } from 'path'
 
 /**
  * Fixes import paths in a .d.ts file.
@@ -26,27 +27,43 @@ export function fixDtsImports(
 
   let modified = false
 
-  // Calculate the relative path prefix based on file depth
-  const relativeToSrc = fileDir.replace(distDir, '').replace(/\\/g, '/')
-  const depth = relativeToSrc.split('/').filter(Boolean).length
-  const relPrefix = depth > 0 ? '../'.repeat(depth) : './'
+  // Normalize paths to use forward slashes
+  const normalizedFileDir = fileDir.replace(/\\/g, '/')
+  const normalizedDistDir = distDir.replace(/\\/g, '/')
 
   /**
    * Resolves an import path, converting sandstone/* to relative and adding extensions.
    */
   function resolveModulePath(importPath: string): string | undefined {
     // Handle sandstone/* path aliases
+    // These resolve to bundleDir/types/subpath (since .d.ts files are in types/ subdir)
     if (importPath.startsWith('sandstone/')) {
       const subPath = importPath.slice('sandstone/'.length).replace(/\.ts$/, '')
-      if (indexDirs.has(subPath)) {
-        return `${relPrefix}${subPath}/index.js`
+
+      // Target is in the types/ subdirectory of bundleDir
+      const targetPath = posix.join(normalizedDistDir, 'types', subPath)
+
+      // Calculate the relative path from the current file's directory to the target
+      let relPath = posix.relative(normalizedFileDir, targetPath)
+
+      // Ensure it starts with ./ or ../
+      if (!relPath.startsWith('.')) {
+        relPath = './' + relPath
       }
-      return `${relPrefix}${subPath}.js`
+
+      if (indexDirs.has(subPath)) {
+        return `${relPath}/index.js`
+      }
+      return `${relPath}.js`
     }
 
-    // Handle sandstone root import
+    // Handle sandstone root import - resolves to bundleDir/index.js
     if (importPath === 'sandstone') {
-      return `${relPrefix}index.js`
+      let relPath = posix.relative(normalizedFileDir, normalizedDistDir)
+      if (!relPath.startsWith('.')) {
+        relPath = './' + relPath
+      }
+      return `${relPath}/index.js`
     }
 
     // Handle relative imports
@@ -181,5 +198,7 @@ function isIndexDir(
   }
 
   const resolvedPath = currentParts.join('/')
-  return indexDirs.has(resolvedPath)
+  // Strip 'types/' prefix since indexDirs is relative to src/, not dist/_internal/types/
+  const normalizedPath = resolvedPath.replace(/^types\//, '')
+  return indexDirs.has(normalizedPath)
 }

@@ -4,9 +4,11 @@
     "emitDeclarationOnly": true,
     "declaration": true,
     "noEmit": false,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "outDir": "./types",
+    "rootDir": "./src",
+    "incremental": true,
+    "tsBuildInfoFile": "./types/.tsbuildinfo"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "scripts"]
+  "exclude": ["node_modules", "dist", "types", "scripts"]
 }

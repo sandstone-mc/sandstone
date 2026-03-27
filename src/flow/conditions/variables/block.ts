@@ -1,4 +1,4 @@
-import type { Coordinates, NBTObject } from 'sandstone'
+import type { Coordinates, NBTObject } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
 import { SingleConditionNode } from '../condition'

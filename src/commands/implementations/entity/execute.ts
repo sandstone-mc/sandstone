@@ -956,11 +956,12 @@ export type DeferredMacroExecuteOptions = {
  * })
  * ```
  */
+// Return type uses 'any' to avoid TS2859 complexity limit at call sites
 export function createDeferredMacroExecute(
   pack: SandstonePack,
   executeChain: ExecuteCommand<false>,
   options: DeferredMacroExecuteOptions,
-): ExecuteCommand<true> {
+): any {
   const { childFunctionName, prependArgs } = options
 
   const createProxy = (chain: ExecuteCommand<false>): any => {

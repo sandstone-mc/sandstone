@@ -105,20 +105,21 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
    * @example
    * return.run.execute.if.score('@p', 'health').matches([1, 10]).run.returnCmd(1)
    */
-  get run() {
+  get run(): SandstoneCommands<MACRO> & ((callback: () => void) => FinalCommandOutput) {
     const node = this.getNode()
 
-    const commands = new Proxy(this.sandstonePack.commands as SandstoneCommands<MACRO>, {
+    // Use 'any' to avoid TS2859 complexity limit with SandstoneCommands generic
+    const commands = new Proxy(this.sandstonePack.commands as any, {
       get: (_t, p, _r) => {
         // The context will automatically be exited by the node itself
         this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(node)
         return (this.sandstonePack.commands as any)[p]
       },
-    })
+    }) as SandstoneCommands<MACRO>
 
     return makeCallable(
       commands,
-      (callback: () => any) => {
+      (callback: () => void) => {
         node.isSingleExecute = false
         this.sandstoneCore.insideContext(node, callback, true)
         return new FinalCommandOutput(node)

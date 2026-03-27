@@ -1,4 +1,4 @@
-import type { Coordinates } from 'sandstone'
+import type { Coordinates } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import { coordinatesParser } from 'sandstone/variables'
 import { SingleConditionNode } from '../condition'
