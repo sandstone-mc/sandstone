@@ -128,6 +128,9 @@ import type { TAG_TIMELINES } from 'sandstone/arguments/generated/_registry/tag_
 import type { TAG_VILLAGER_TRADES } from 'sandstone/arguments/generated/_registry/tag_villager_trades.ts'
 import type { TAG_WORLDGEN_BIOMES } from 'sandstone/arguments/generated/_registry/tag_worldgen_biomes.ts'
 import type {
+  TAG_WORLDGEN_CONFIGURED_FEATURES,
+} from 'sandstone/arguments/generated/_registry/tag_worldgen_configured_features.ts'
+import type {
   TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
 } from 'sandstone/arguments/generated/_registry/tag_worldgen_flat_level_generator_presets.ts'
 import type { TAG_WORLDGEN_STRUCTURES } from 'sandstone/arguments/generated/_registry/tag_worldgen_structures.ts'
@@ -273,6 +276,7 @@ export type Registry = {
   'minecraft:tag/point_of_interest_type': TAG_POINT_OF_INTEREST_TYPES,
   'minecraft:tag/potion': TAG_POTIONS,
   'minecraft:tag/worldgen/biome': TAG_WORLDGEN_BIOMES,
+  'minecraft:tag/worldgen/configured_feature': TAG_WORLDGEN_CONFIGURED_FEATURES,
   'minecraft:tag/worldgen/flat_level_generator_preset': TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
   'minecraft:tag/worldgen/structure': TAG_WORLDGEN_STRUCTURES,
   'minecraft:tag/worldgen/world_preset': TAG_WORLDGEN_WORLD_PRESETS,

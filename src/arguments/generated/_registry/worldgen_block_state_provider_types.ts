@@ -11,6 +11,7 @@ export const WORLDGEN_BLOCK_STATE_PROVIDER_TYPES_SET = new Set([
   'noise_threshold_provider',
   'randomized_int_state_provider',
   'rotated_block_provider',
+  'rule_based_state_provider',
   'simple_state_provider',
   'weighted_state_provider',
 ] as const)

@@ -34,6 +34,7 @@ import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
+  BannerPatternClass,
   DamageTypeClass,
   EquipmentClass,
   InstrumentClass,
@@ -269,21 +270,43 @@ export type blocks_attacks = {
   /**
    * Damage types in this tag are bypassing the blocking
    */
-  bypassed_by?: (`#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>),
+  bypassed_by?: ((
+        | Registry['minecraft:damage_type']
+        | `#${Registry['minecraft:tag/damage_type']}`
+        | TagClass<'damage_type'>
+        | DamageTypeClass)
+      | Array<(Registry['minecraft:damage_type'] | DamageTypeClass)>),
 }
 
 export type BookGeneration = (0 | 1 | 2 | 3)
 
-export type BucketEntityData = (AnyEntity & {
+export type BucketEntityData = {
+  /**
+   * Whether it should have an AI.
+   */
+  NoAI?: boolean,
+  /**
+   * Whether the entity should make any sound.
+   */
+  Silent?: boolean,
+  /**
+   * Whether the entity should be effected by gravity.
+   */
+  NoGravity?: boolean,
+  /**
+   * Whether the entity should glow.
+   */
+  Glowing?: boolean,
+  /**
+   * Whether the entity should take damage.
+   */
+  Invulnerable?: boolean,
+  Health?: NBTFloat,
   /**
    * Turns into the expiry time of the memory module `has_hunting_cooldown` for axolotls.
    */
-  HuntingCooldown: NBTLong,
-  /**
-   * Turns into the `Variant` entity tag for tropical fish.
-   */
-  BucketVariantTag: NBTInt,
-})
+  HuntingCooldown?: NBTLong,
+}
 
 export type Consumable = {
   /**
@@ -380,7 +403,12 @@ export type DamageResistant = {
    * The damage types which the item is resistant to when in entity form.
    * Additionally, this also affects whether the equipped item will be damaged when the wearer is hurt by a specified damage type.
    */
-  types: (`#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>),
+  types: ((
+        | Registry['minecraft:damage_type']
+        | `#${Registry['minecraft:tag/damage_type']}`
+        | TagClass<'damage_type'>
+        | DamageTypeClass)
+      | Array<(Registry['minecraft:damage_type'] | DamageTypeClass)>),
 }
 
 export type DeathProtection = {
@@ -1449,9 +1477,12 @@ type DataComponentPotionDurationScale = NBTFloat<{
   min: 0,
 }>
 type DataComponentProfile = Profile
-type DataComponentProvidesBannerPatterns = (
-  | `#${Registry['minecraft:tag/banner_pattern']}`
-  | TagClass<'banner_pattern'>)
+type DataComponentProvidesBannerPatterns = ((
+    | Registry['minecraft:banner_pattern']
+    | `#${Registry['minecraft:tag/banner_pattern']}`
+    | TagClass<'banner_pattern'>
+    | BannerPatternClass)
+  | Array<(Registry['minecraft:banner_pattern'] | BannerPatternClass)>)
 type DataComponentProvidesTrimMaterial = (Registry['minecraft:trim_material'] | TrimMaterialClass)
 type DataComponentRabbitVariant = RabbitVariant
 type DataComponentRarity = Rarity

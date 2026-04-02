@@ -364,6 +364,8 @@ type TriggerDispatcherMap = {
   'minecraft:allay_drop_item_on_block': TriggerAllayDropItemOnBlock,
   'any_block_use': TriggerAnyBlockUse,
   'minecraft:any_block_use': TriggerAnyBlockUse,
+  'avoid_vibration': TriggerAvoidVibration,
+  'minecraft:avoid_vibration': TriggerAvoidVibration,
   'bee_nest_destroyed': TriggerBeeNestDestroyed,
   'minecraft:bee_nest_destroyed': TriggerBeeNestDestroyed,
   'bred_animals': TriggerBredAnimals,
@@ -483,6 +485,7 @@ type TriggerKeys = keyof TriggerDispatcherMap
 type TriggerFallback = (
   | TriggerAllayDropItemOnBlock
   | TriggerAnyBlockUse
+  | TriggerAvoidVibration
   | TriggerBeeNestDestroyed
   | TriggerBredAnimals
   | TriggerBrewedPotion
@@ -542,6 +545,7 @@ type TriggerFallback = (
   | TriggerVoluntaryExile)
 type TriggerAllayDropItemOnBlock = Conditions<AllayDropItemOnBlock>
 type TriggerAnyBlockUse = Conditions<AnyBlockUse>
+type TriggerAvoidVibration = Conditions<Location>
 type TriggerBeeNestDestroyed = Conditions<BeeNestDestroyed>
 type TriggerBredAnimals = Conditions<BredAnimals>
 type TriggerBrewedPotion = Conditions<BrewedPotion>

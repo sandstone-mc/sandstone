@@ -10,6 +10,7 @@ export const INT_PROVIDER_TYPES_SET = new Set([
   'clamped',
   'clamped_normal',
   'constant',
+  'trapezoid',
   'uniform',
   'weighted_list',
 ] as const)

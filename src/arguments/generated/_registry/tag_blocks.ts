@@ -159,6 +159,7 @@ export const TAG_BLOCKS_SET = new Set([
   'portals',
   'pressure_plates',
   'prevent_mob_spawning_inside',
+  'prevents_nearby_leaf_decay',
   'rabbits_spawnable_on',
   'rails',
   'redstone_ores',

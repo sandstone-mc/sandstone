@@ -1,5 +1,5 @@
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTIntArray } from 'sandstone'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type GuiSpriteScaling = NonNullable<({
   [S in Extract<GuiSpriteScalingType, string>]?: ({
@@ -162,9 +162,6 @@ export type TextureMeta = {
      */
     hat?: ('full' | 'partial'),
   },
-  /**
-   * Only available for colormaps.
-   */
   texture?: {
     /**
      * Causes the texture to blur when viewed from close up. Defaults to false.
@@ -175,35 +172,31 @@ export type TextureMeta = {
      */
     clamp?: boolean,
     /**
-     * Custom mipmap values for the texture.
+     * Defaults to `auto`.
+     *
+     * Value:
+     *
+     *  - Auto(`auto`)
+     *  - Mean(`mean`)
+     *  - Cutout(`cutout`)
+     *  - StrictCutout(`strict_cutout`)
+     *  - DarkCutout(`dark_cutout`)
      */
-    mipmaps?: NBTIntArray,
+    mipmap_strategy?: MipmapStrategy,
+    /**
+     * The alpha bias for cutout textures.
+     * Positive values make the texture more opaque at distance.
+     * Negative values make the texture more transparent at distance.
+     * Defaults to 0.0
+     *
+     * Value:
+     * Range: -1..1
+     */
+    alpha_cutoff_bias?: NBTFloat<{
+      leftExclusive: false,
+      rightExclusive: false,
+    }>,
   },
-  /**
-   * Defaults to `auto`.
-   *
-   * Value:
-   *
-   *  - Auto(`auto`)
-   *  - Mean(`mean`)
-   *  - Cutout(`cutout`)
-   *  - StrictCutout(`strict_cutout`)
-   *  - DarkCutout(`dark_cutout`)
-   */
-  mipmap_strategy?: MipmapStrategy,
-  /**
-   * The alpha bias for cutout textures.
-   * Positive values make the texture more opaque at distance.
-   * Negative values make the texture more transparent at distance.
-   * Defaults to 0.0
-   *
-   * Value:
-   * Range: -1..1
-   */
-  alpha_cutoff_bias?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-  }>,
 }
 
 export type TileScaling = {

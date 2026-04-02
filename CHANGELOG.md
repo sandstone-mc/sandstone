@@ -2,6 +2,18 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.0-beta.3](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.0-beta.1) - 2026-02-27
+
+### Several bug fixes and a few small features
+
+- Fixed several Flow & misc. bugs, special thanks to @plagiatus for all the reports
+- Improved Switch and added new functionality (check out the docs :tiny_potato:)
+- Added `Score#getDecomposer` for decomposing bitfields
+
+**Full Changelog**: [v1.0.0-beta.2...v1.0.0-beta.3](https://github.com/sandstone-mc/sandstone/compare/v1.0.0-beta.2...v1.0.0-beta.3)
+
+
+
 ## [v1.0.0-beta.1](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.0-beta.1) - 2026-02-15
 
 ### First official 1.0.0 beta!

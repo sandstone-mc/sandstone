@@ -1,5 +1,4 @@
 import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
-import type { RuleBasedBlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
 import type { IntProvider, UniformIntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
@@ -21,7 +20,7 @@ export type AboveRootPlacement = {
 }
 
 export type AlterGroundTreeDecorator = {
-  provider: RuleBasedBlockStateProvider,
+  provider: BlockStateProvider,
 }
 
 export type AttachedToLeavesTreeDecorator = {
@@ -470,7 +469,7 @@ export type ThreeLayersFeatureSize = {
 export type TreeConfig = {
   ignore_vines?: boolean,
   minimum_size: FeatureSize,
-  below_trunk_provider: RuleBasedBlockStateProvider,
+  below_trunk_provider?: BlockStateProvider,
   trunk_provider: BlockStateProvider,
   foliage_provider: BlockStateProvider,
   root_placer?: RootPlacer,

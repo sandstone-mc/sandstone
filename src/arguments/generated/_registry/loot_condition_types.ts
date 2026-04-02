@@ -13,6 +13,7 @@ export const LOOT_CONDITION_TYPES_SET = new Set([
   'enchantment_active_check',
   'entity_properties',
   'entity_scores',
+  'environment_attribute_check',
   'inverted',
   'killed_by_player',
   'location_check',

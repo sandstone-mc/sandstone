@@ -196,6 +196,8 @@ type IntProviderDispatcherMap<T extends NBTObject> = {
   'minecraft:clamped_normal': IntProviderClampedNormal<T>,
   'constant': IntProviderConstant<T>,
   'minecraft:constant': IntProviderConstant<T>,
+  'trapezoid': IntProviderTrapezoid<T>,
+  'minecraft:trapezoid': IntProviderTrapezoid<T>,
   'uniform': IntProviderUniform<T>,
   'minecraft:uniform': IntProviderUniform<T>,
   'weighted_list': IntProviderWeightedList<T>,
@@ -207,6 +209,7 @@ type IntProviderFallback<T extends NBTObject> = (
   | IntProviderClamped<T>
   | IntProviderClampedNormal<T>
   | IntProviderConstant<T>
+  | IntProviderTrapezoid<T>
   | IntProviderUniform<T>
   | IntProviderWeightedList<T>)
 export type IntProviderBiasedToBottom<T extends NBTObject> = UniformIntProvider<T>
@@ -216,6 +219,12 @@ export type IntProviderClamped<T extends NBTObject> = ClampedIntProvider<T>
 export type IntProviderClampedNormal<T extends NBTObject> = ClampedNormalIntProvider<T>
 
 export type IntProviderConstant<T extends NBTObject> = ConstantIntProvider<T>
+
+export type IntProviderTrapezoid<T extends NBTObject> = {
+  min: T,
+  max: T,
+  plateau: NBTInt,
+}
 
 export type IntProviderUniform<T extends NBTObject> = UniformIntProvider<T>
 

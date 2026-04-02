@@ -213,6 +213,25 @@ export type FloatAttribute<T extends NBTObject> = {
 
 export type GlobalEnvironmentAttributeMap = EnvironmentAttributeMap<Registry['minecraft:environment_attribute']>
 
+export type NumericalEnvironmentAttribute = (
+  | 'visual/cloud_height'
+  | 'visual/fog_start_distance'
+  | 'visual/moon_angle'
+  | 'visual/star_angle'
+  | 'visual/sun_angle'
+  | 'visual/water_fog_start_distance'
+  | 'visual/cloud_fog_end_distance'
+  | 'visual/fog_end_distance'
+  | 'visual/sky_fog_end_distance'
+  | 'visual/water_fog_end_distance'
+  | 'visual/sky_light_factor'
+  | 'visual/star_brightness'
+  | 'audio/music_volume'
+  | 'gameplay/cat_waking_up_gift_chance'
+  | 'gameplay/surface_slime_spawn_chance'
+  | 'gameplay/turtle_egg_hatch_chance'
+  | 'gameplay/sky_light_level')
+
 export type PositionalEnvironmentAttribute = Registry['minecraft:environment_attribute']
 
 export type PositionalEnvironmentAttributeMap = EnvironmentAttributeMap<PositionalEnvironmentAttribute>

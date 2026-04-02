@@ -15,6 +15,7 @@ export const ATTRIBUTE_TYPES_SET = new Set([
   'bed_rule',
   'boolean',
   'float',
+  'integer',
   'moon_phase',
   'particle',
   'rgb_color',

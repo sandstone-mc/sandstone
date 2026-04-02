@@ -94,6 +94,8 @@ export { TAG_POTIONS_SET } from './_registry/tag_potions.ts'
 
 export { TAG_WORLDGEN_BIOMES_SET } from './_registry/tag_worldgen_biomes.ts'
 
+export { TAG_WORLDGEN_CONFIGURED_FEATURES_SET } from './_registry/tag_worldgen_configured_features.ts'
+
 export {
   TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS_SET,
 } from './_registry/tag_worldgen_flat_level_generator_presets.ts'

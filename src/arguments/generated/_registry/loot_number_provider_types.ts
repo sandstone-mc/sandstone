@@ -9,6 +9,7 @@ export const LOOT_NUMBER_PROVIDER_TYPES_SET = new Set([
   'binomial',
   'constant',
   'enchantment_level',
+  'environment_attribute',
   'score',
   'storage',
   'sum',

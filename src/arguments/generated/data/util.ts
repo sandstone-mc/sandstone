@@ -1,5 +1,6 @@
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot.ts'
+import type { NumericalEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, Score } from 'sandstone'
@@ -60,6 +61,31 @@ export type ContextScoreProvider = {
 
 export type EnchantmentLevelProvider = {
   amount: LevelBasedValue,
+}
+
+export type EnvironmentAttributeNumberProvider = {
+  /**
+   * Value:
+   *
+   *  - CloudHeight(`visual/cloud_height`)
+   *  - FogStartDistance(`visual/fog_start_distance`)
+   *  - MoonAngle(`visual/moon_angle`)
+   *  - StarAngle(`visual/star_angle`)
+   *  - SunAngle(`visual/sun_angle`)
+   *  - WaterFogStartDistance(`visual/water_fog_start_distance`)
+   *  - CloudFogEndDistance(`visual/cloud_fog_end_distance`)
+   *  - FogEndDistance(`visual/fog_end_distance`)
+   *  - SkyFogEndDistance(`visual/sky_fog_end_distance`)
+   *  - WaterFogEndDistance(`visual/water_fog_end_distance`)
+   *  - SkyLightFactor(`visual/sky_light_factor`)
+   *  - StarBrightness(`visual/star_brightness`)
+   *  - MusicVolume(`audio/music_volume`)
+   *  - CatWakingUpGiftChance(`gameplay/cat_waking_up_gift_chance`)
+   *  - SurfaceSlimeSpawnChance(`gameplay/surface_slime_spawn_chance`)
+   *  - TurtleEggHatchChance(`gameplay/turtle_egg_hatch_chance`)
+   *  - SkyLightLevel(`gameplay/sky_light_level`)
+   */
+  attribute: NumericalEnvironmentAttribute,
 }
 
 export type FixedScoreProvider = {
@@ -230,6 +256,8 @@ type NumberProviderDispatcherMap = {
   'minecraft:constant': NumberProviderConstant,
   'enchantment_level': NumberProviderEnchantmentLevel,
   'minecraft:enchantment_level': NumberProviderEnchantmentLevel,
+  'environment_attribute': NumberProviderEnvironmentAttribute,
+  'minecraft:environment_attribute': NumberProviderEnvironmentAttribute,
   'score': NumberProviderScore,
   'minecraft:score': NumberProviderScore,
   'storage': NumberProviderStorage,
@@ -244,6 +272,7 @@ type NumberProviderFallback = (
   | NumberProviderBinomial
   | NumberProviderConstant
   | NumberProviderEnchantmentLevel
+  | NumberProviderEnvironmentAttribute
   | NumberProviderScore
   | NumberProviderStorage
   | NumberProviderSum
@@ -252,6 +281,7 @@ type NumberProviderNoneType = UniformNumberProvider
 type NumberProviderBinomial = BinomialNumberProvider
 type NumberProviderConstant = ConstantNumberProvider
 type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
+type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider
 type NumberProviderScore = ScoreNumberProvider
 type NumberProviderStorage = StorageNumberProvider
 type NumberProviderSum = SumNumberProvider

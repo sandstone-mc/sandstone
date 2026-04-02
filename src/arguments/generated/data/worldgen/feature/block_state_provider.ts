@@ -1,4 +1,5 @@
 import type { NoiseParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
+import type { RuleBasedBlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
@@ -94,6 +95,8 @@ type BlockStateProviderDispatcherMap = {
   'minecraft:randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider,
   'rotated_block_provider': BlockStateProviderRotatedBlockProvider,
   'minecraft:rotated_block_provider': BlockStateProviderRotatedBlockProvider,
+  'rule_based_state_provider': BlockStateProviderRuleBasedStateProvider,
+  'minecraft:rule_based_state_provider': BlockStateProviderRuleBasedStateProvider,
   'simple_state_provider': BlockStateProviderSimpleStateProvider,
   'minecraft:simple_state_provider': BlockStateProviderSimpleStateProvider,
   'weighted_state_provider': BlockStateProviderWeightedStateProvider,
@@ -106,6 +109,7 @@ type BlockStateProviderFallback = (
   | BlockStateProviderNoiseThresholdProvider
   | BlockStateProviderRandomizedIntStateProvider
   | BlockStateProviderRotatedBlockProvider
+  | BlockStateProviderRuleBasedStateProvider
   | BlockStateProviderSimpleStateProvider
   | BlockStateProviderWeightedStateProvider)
 type BlockStateProviderDualNoiseProvider = DualNoiseProvider
@@ -113,6 +117,7 @@ type BlockStateProviderNoiseProvider = NoiseProvider
 type BlockStateProviderNoiseThresholdProvider = NoiseThresholdProvider
 type BlockStateProviderRandomizedIntStateProvider = RandomizedIntStateProvider
 type BlockStateProviderRotatedBlockProvider = SimpleStateProvider
+type BlockStateProviderRuleBasedStateProvider = RuleBasedBlockStateProvider
 type BlockStateProviderSimpleStateProvider = SimpleStateProvider
 type BlockStateProviderWeightedStateProvider = WeightedBlockStateProvider
 export type SymbolBlockStateProvider<CASE extends

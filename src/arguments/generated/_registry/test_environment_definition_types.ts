@@ -10,5 +10,6 @@ export const TEST_ENVIRONMENT_DEFINITION_TYPES_SET = new Set([
   'clock_time',
   'function',
   'game_rules',
+  'timeline_attributes',
   'weather',
 ] as const)

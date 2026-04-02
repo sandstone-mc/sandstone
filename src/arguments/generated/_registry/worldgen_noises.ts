@@ -29,6 +29,8 @@ export const WORLDGEN_NOISES_SET = new Set([
   'iceberg_pillar_roof',
   'iceberg_surface',
   'jagged',
+  'nether/temperature',
+  'nether/vegetation',
   'nether_state_selector',
   'nether_wart',
   'netherrack',

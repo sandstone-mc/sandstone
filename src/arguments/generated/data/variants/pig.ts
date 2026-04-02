@@ -10,6 +10,7 @@ export type PigSounds = {
   hurt_sound: SoundEventRef,
   death_sound: SoundEventRef,
   step_sound: SoundEventRef,
+  eat_sound: SoundEventRef,
 }
 
 export type PigVariant = ({

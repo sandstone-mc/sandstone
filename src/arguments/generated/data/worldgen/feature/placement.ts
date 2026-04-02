@@ -30,6 +30,12 @@ export type CountModifier = {
   }>>,
 }
 
+export type CountOnEveryLayerModifier = {
+  count: IntProvider<NBTInt<{
+    min: 0,
+  }>>,
+}
+
 export type EnvironmentScanModifier = {
   /**
    * Value:
@@ -196,7 +202,7 @@ type PlacementModifierFallback = (
 type PlacementModifierBlockPredicateFilter = BlockPredicateFilter
 type PlacementModifierCarvingMask = CarvingMaskModifier
 type PlacementModifierCount = CountModifier
-type PlacementModifierCountOnEveryLayer = CountModifier
+type PlacementModifierCountOnEveryLayer = CountOnEveryLayerModifier
 type PlacementModifierEnvironmentScan = EnvironmentScanModifier
 type PlacementModifierFixedPlacement = FixedPlacementModifier
 type PlacementModifierHeightRange = HeightRangeModifier

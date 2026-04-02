@@ -22,6 +22,7 @@ import type {
   BannerPatternClass,
   DataPointClass,
   EnchantmentClass,
+  InstrumentClass,
   ItemModifierClass,
   LootTableClass,
   NBTClass,
@@ -665,7 +666,12 @@ export type SetInstrument = ({
   /**
    * Sets the instrument tag for a goat horn.
    */
-  options: (`#${Registry['minecraft:tag/instrument']}` | TagClass<'instrument'>),
+  options: ((
+        | Registry['minecraft:instrument']
+        | `#${Registry['minecraft:tag/instrument']}`
+        | TagClass<'instrument'>
+        | InstrumentClass)
+      | Array<(Registry['minecraft:instrument'] | InstrumentClass)>),
 } & Conditions)
 
 export type SetItem = ({

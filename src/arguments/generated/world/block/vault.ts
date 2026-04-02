@@ -39,7 +39,7 @@ export type Vault = {
      * The loot table to display items in the vault.
      * Defaults to use the value in `loot_table` field.
      */
-    override_loot_table_to_display: (Registry['minecraft:loot_table'] | LootTableClass),
+    override_loot_table_to_display?: (Registry['minecraft:loot_table'] | LootTableClass),
     /**
      * The range when the vault should activate.
      */

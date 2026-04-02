@@ -96,7 +96,7 @@ export type DeltaConfig = {
 }
 
 export type DiskConfig = {
-  state_provider: RuleBasedBlockStateProvider,
+  state_provider: BlockStateProvider,
   radius: IntProvider<NBTInt<{
     min: 0,
     max: 8,

@@ -28,11 +28,11 @@ export type LevelBasedValueMap = NonNullable<({
 
 export type LinearLevelValue = {
   /**
-   * Base cost at level 1.
+   * Base value at level 1.
    */
   base: NBTFloat,
   /**
-   * Cost increase per level above 1.
+   * Value increase per level above 1.
    */
   per_level_above_first: NBTFloat,
 }
@@ -56,7 +56,7 @@ export type LookupLevelValue = {
 
 export type SquaredLevelValue = {
   /**
-   * Added to the exponent; `0.0` for squared, `1.0` for cubed, `.5` for square root, `-4` for negpow(2), etc.
+   * Added to the result so that the result becomes `square(level) + added`.
    */
   added: NBTFloat,
 }

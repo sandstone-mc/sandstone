@@ -7,7 +7,7 @@ import type {
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
 import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
 import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
-import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { SymbolEnvironmentAttribute, SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type {
   EnchantmentClass,
@@ -87,6 +87,15 @@ export type EntityScores = {
     [Key in Extract<string | ObjectiveClass, string>]?: IntRange
   }),
 }
+
+export type EnvironmentAttributeCheck = NonNullable<({
+  [S in Extract<Registry['minecraft:environment_attribute'], string>]?: {
+    attribute: S,
+    value: (S extends keyof SymbolEnvironmentAttribute
+      ? SymbolEnvironmentAttribute[S]
+      : SymbolEnvironmentAttribute<'%unknown'>),
+  }
+}[Registry['minecraft:environment_attribute']])>
 
 export type Inverted = {
   term: LootCondition,
@@ -214,6 +223,8 @@ type LootConditionDispatcherMap = {
   'minecraft:entity_properties': LootConditionEntityProperties,
   'entity_scores': LootConditionEntityScores,
   'minecraft:entity_scores': LootConditionEntityScores,
+  'environment_attribute_check': LootConditionEnvironmentAttributeCheck,
+  'minecraft:environment_attribute_check': LootConditionEnvironmentAttributeCheck,
   'inverted': LootConditionInverted,
   'minecraft:inverted': LootConditionInverted,
   'killed_by_player': LootConditionKilledByPlayer,
@@ -249,6 +260,7 @@ type LootConditionFallback = (
   | LootConditionEnchantmentActiveCheck
   | LootConditionEntityProperties
   | LootConditionEntityScores
+  | LootConditionEnvironmentAttributeCheck
   | LootConditionInverted
   | LootConditionKilledByPlayer
   | LootConditionLocationCheck
@@ -269,6 +281,7 @@ type LootConditionDamageSourceProperties = DamageSourceProperties
 type LootConditionEnchantmentActiveCheck = EnchantmentActiveCheck
 type LootConditionEntityProperties = EntityProperties
 type LootConditionEntityScores = EntityScores
+type LootConditionEnvironmentAttributeCheck = EnvironmentAttributeCheck
 type LootConditionInverted = Inverted
 type LootConditionKilledByPlayer = KilledByPlayer
 type LootConditionLocationCheck = LocationCheck

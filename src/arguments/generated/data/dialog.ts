@@ -1,10 +1,11 @@
 import type { ClickAction } from 'sandstone/arguments/generated/data/dialog/action.ts'
 import type { DialogBody } from 'sandstone/arguments/generated/data/dialog/body.ts'
 import type { InputControl } from 'sandstone/arguments/generated/data/dialog/input.ts'
+import type { SymbolMcdocDialogAfterAction } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DialogClass, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { DialogClass, NamespacedLiteralUnion, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type AfterAction = ('close' | 'none' | 'wait_for_response')
 
@@ -49,48 +50,48 @@ export type ConfirmationDialog = (DialogBase & {
 })
 
 export type Dialog = NonNullable<({
-  [S in Extract<Registry['minecraft:dialog_type'], string>]?: ({
+  [S in NamespacedLiteralUnion<keyof SymbolDialog>]?: ({
     type: S,
   } & (S extends keyof SymbolDialog ? SymbolDialog[S] : RootNBT))
-}[Registry['minecraft:dialog_type']])>
+}[NamespacedLiteralUnion<keyof SymbolDialog>])>
 
-export type DialogBase = {
-  title: Text,
-  /**
-   * Name to be used for a button leading to this dialog.
-   * If not present, `title` will be used instead.
-   */
-  external_title?: Text,
-  body?: (DialogBody | Array<DialogBody>),
-  inputs?: Array<InputControl>,
-  /**
-   * Whether the dialog can be closed with ESC key.
-   * Defaults to `true`.
-   */
-  can_close_with_escape?: boolean,
-  /**
-   * Whether the dialog should pause the game in single-player mode.
-   * Defaults to `true`.
-   */
-  pause?: boolean,
-  /**
-   * An additional operation performed on dialog after click or submit actions.
-   * Defaults to `close`.
-   *
-   * Value:
-   *
-   *  - Close(`close`):
-   *    Closes the dialog.
-   *    Returns to the previous non-dialog screen, if any.
-   *  - None(`none`):
-   *    Does nothing.
-   *    Only available if `pause` is set to `false`.
-   *  - WaitForResponse(`wait_for_response`):
-   *    Replaces the dialog with a "Waiting for Response" screen.
-   *    The waiting screen unpauses the game in single-player mode.
-   */
-  after_action?: AfterAction,
-}
+export type DialogBase = NonNullable<({
+  [S in NamespacedLiteralUnion<keyof SymbolMcdocDialogAfterAction>]?: ({
+    title: Text,
+    /**
+     * Name to be used for a button leading to this dialog.
+     * If not present, `title` will be used instead.
+     */
+    external_title?: Text,
+    body?: (DialogBody | Array<DialogBody>),
+    inputs?: Array<InputControl>,
+    /**
+     * Whether the dialog can be closed with ESC key.
+     * Defaults to `true`.
+     */
+    can_close_with_escape?: boolean,
+    /**
+     * An additional operation performed on dialog after click or submit actions.
+     * Defaults to `close`. \
+     * Value `none` requires `pause` set to `false`.
+     *
+     * Value:
+     *
+     *  - Close(`close`):
+     *    Closes the dialog.
+     *    Returns to the previous non-dialog screen, if any.
+     *  - None(`none`):
+     *    Does nothing.
+     *    Only available if `pause` is set to `false`.
+     *  - WaitForResponse(`wait_for_response`):
+     *    Replaces the dialog with a "Waiting for Response" screen.
+     *    The waiting screen unpauses the game in single-player mode.
+     */
+    after_action?: S,
+  } & (S extends undefined
+    ? SymbolMcdocDialogAfterAction<'%none'> :
+    (S extends keyof SymbolMcdocDialogAfterAction ? SymbolMcdocDialogAfterAction[S] : RootNBT)))
+}[NamespacedLiteralUnion<keyof SymbolMcdocDialogAfterAction>])>
 
 export type ListDialogBase = (DialogBase & {
   /**

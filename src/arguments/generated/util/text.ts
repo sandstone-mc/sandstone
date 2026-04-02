@@ -152,6 +152,13 @@ export type Keybind = (
   | 'key.toggleSpectatorShaderEffects'
   | 'key.use')
 
+export type ObjectTextConfig = {
+  /**
+   * Used in places where object component cannot be displayed (for example, server log or narration).
+   */
+  fallback?: Text,
+}
+
 export type OpenUrl = {
   url: `${any}${string}` | URL,
 }
@@ -252,6 +259,12 @@ export type TextColor = (
 
 export type TextNbtBase = ({
   interpret?: boolean,
+  /**
+   * Whether to remove colors from pretty-printed NBT structure when `interpret` is `false`.
+   * Defaults to `false`. \
+   * Cannot be `true` when `interpret` is `true`.
+   */
+  plain?: boolean,
   separator?: Text,
 } & TextBase)
 
@@ -369,7 +382,7 @@ export type TextObject = (({
   sprite: (Registry['minecraft:texture'] | TextureClass),
   object?: 'atlas',
   type?: 'object',
-} & TextBase) | ({
+} & ObjectTextConfig & TextBase) | ({
   player: Profile,
   /**
    * Whether the head layer is rendered. Defaults to `true`.
@@ -377,7 +390,7 @@ export type TextObject = (({
   hat?: boolean,
   object?: 'player',
   type?: 'object',
-} & TextBase))
+} & ObjectTextConfig & TextBase))
 
 export type TextStyle = {
   /**

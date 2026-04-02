@@ -1,7 +1,7 @@
 import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { MCFunctionClass, NBTInt, WorldClockClass } from 'sandstone'
+import type { MCFunctionClass, NBTInt, TimelineClass, WorldClockClass } from 'sandstone'
 
 export type AllOffTestEnvironment = {
   definitions: Array<TestEnvironment>,
@@ -47,6 +47,10 @@ export type TestEnvironment = NonNullable<({
   } & (S extends keyof SymbolTestEnvironmentDefinition ? SymbolTestEnvironmentDefinition[S] : RootNBT))
 }[Registry['minecraft:test_environment_definition_type']])>
 
+export type TimelineAttributesTestEnvironment = {
+  timelines: Array<(Registry['minecraft:timeline'] | TimelineClass)>,
+}
+
 export type TimeOfDayTestEnvironment = {
   /**
    * Value:
@@ -80,6 +84,8 @@ type TestEnvironmentDefinitionDispatcherMap = {
   'minecraft:game_rules': TestEnvironmentDefinitionGameRules,
   'time_of_day': TestEnvironmentDefinitionTimeOfDay,
   'minecraft:time_of_day': TestEnvironmentDefinitionTimeOfDay,
+  'timeline_attributes': TestEnvironmentDefinitionTimelineAttributes,
+  'minecraft:timeline_attributes': TestEnvironmentDefinitionTimelineAttributes,
   'weather': TestEnvironmentDefinitionWeather,
   'minecraft:weather': TestEnvironmentDefinitionWeather,
 }
@@ -90,12 +96,14 @@ type TestEnvironmentDefinitionFallback = (
   | TestEnvironmentDefinitionFunction
   | TestEnvironmentDefinitionGameRules
   | TestEnvironmentDefinitionTimeOfDay
+  | TestEnvironmentDefinitionTimelineAttributes
   | TestEnvironmentDefinitionWeather)
 type TestEnvironmentDefinitionAllOf = AllOffTestEnvironment
 type TestEnvironmentDefinitionClockTime = ClockTimeTestEnvironment
 type TestEnvironmentDefinitionFunction = FunctionTestEnvironment
 type TestEnvironmentDefinitionGameRules = GameRulesTestEnvironment
 type TestEnvironmentDefinitionTimeOfDay = TimeOfDayTestEnvironment
+type TestEnvironmentDefinitionTimelineAttributes = TimelineAttributesTestEnvironment
 type TestEnvironmentDefinitionWeather = WeatherTestEnvironment
 export type SymbolTestEnvironmentDefinition<CASE extends
   | 'map'

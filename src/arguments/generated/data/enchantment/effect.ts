@@ -65,7 +65,7 @@ export type ApplyExhaustionEntityEffect = {
 
 export type ApplyImpulseEntityEffect = {
   /**
-   * Impulse direction in local coordinates (the same used by `tp @s ^ ^ ^`).
+   * Impulse direction in local coordinates (the same used by `tp @s ^ ^ ^`). \
    * `[left, upward, forward]`
    *
    * Value:
@@ -78,7 +78,7 @@ export type ApplyImpulseEntityEffect = {
     max: 3,
   }>,
   /**
-   * The multipler to apply to the computed impulse direction.
+   * The multipler to apply to the computed impulse direction. \
    * `[x, y, z]`
    *
    * Value:
@@ -137,7 +137,7 @@ export type AttributeEffect = {
   operation: AttributeOperation,
 }
 
-export type BlockInteraction = ('none' | 'block' | 'mob' | 'tnt' | 'trigger')
+export type BlockInteraction = ('none' | 'block' | 'block' | 'mob' | 'mob' | 'tnt' | 'tnt' | 'trigger')
 
 export type ChangeItemDamageEffect = {
   /**
@@ -186,7 +186,7 @@ export type ExplodeEntityEffect = {
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
   /**
-   * If omitted, the default explosion knockback is applied.
+   * If omitted, constant value `1` is applied.
    */
   knockback_multiplier?: LevelBasedValue,
   /**
@@ -212,9 +212,12 @@ export type ExplodeEntityEffect = {
    * Value:
    *
    *  - None(`none`): No item drops or special behavior.
-   *  - Block(`block`): Drops items as if a block caused the explosion; `blockExplosionDropDecay` game rule applies.
-   *  - Mob(`mob`): Drops items as if a mob caused the explosion; `mobExplosionDropDecay` game rule applies.
-   *  - TNT(`tnt`): Drops items as if TNT caused the explosion; `tntExplosionDropDecay` game rule applies.
+   *  - BlockOldDoc(`block`): Drops items as if a block caused the explosion; `blockExplosionDropDecay` game rule applies.
+   *  - Block(`block`): Drops items as if a block caused the explosion; `block_explosion_drop_decay` game rule applies.
+   *  - MobOldDoc(`mob`): Drops items as if a mob caused the explosion; `mobExplosionDropDecay` game rule applies.
+   *  - Mob(`mob`): Drops items as if a mob caused the explosion; `mob_explosion_drop_decay` game rule applies.
+   *  - TNTOldDoc(`tnt`): Drops items as if TNT caused the explosion; `tntExplosionDropDecay` game rule applies.
+   *  - TNT(`tnt`): Drops items as if TNT caused the explosion; `tnt_explosion_drop_decay` game rule applies.
    *  - Trigger(`trigger`): Triggers redstone-activated blocks.
    */
   block_interaction: BlockInteraction,
@@ -300,9 +303,10 @@ export type PlaySoundEntityEffect = {
    *
    * *or*
    *
-   * List length range: ..255
+   * List length range: 1..255
    */
   sound: (SoundEventRef | NBTList<SoundEventRef, {
+    leftExclusive: false,
     rightExclusive: false,
   }>),
   volume: FloatProvider<NBTFloat<{

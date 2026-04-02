@@ -79,8 +79,10 @@ export type BiomeEffects = {
    * Value:
    *
    *  - None(`none`)
-   *  - DarkForest(`dark_forest`)
-   *  - Swamp(`swamp`)
+   *  - DarkForest(`dark_forest`): Grass color will be average of the base color and `#28340a`.
+   *  - Swamp(`swamp`):
+   *    Grass color will be either `#4c763c` or `#6a7039`, depending on block position. \
+   *    The base color is ignored.
    */
   grass_color_modifier?: GrassColorModifier,
 }

@@ -7,8 +7,8 @@ import type {
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
-import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { Keybind } from 'sandstone/arguments/generated/util/text.ts'
+import type { Transformation } from 'sandstone/arguments/generated/world/entity/display.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, TrimMaterialClass } from 'sandstone'
 
@@ -34,7 +34,18 @@ export type Banner = {
    *  - Black(`black`)
    */
   color: DyeColor,
+  /**
+   * Defaults to `ground`.
+   *
+   * Value:
+   *
+   *  - Wall(`wall`)
+   *  - Ground(`ground`)
+   */
+  attachment?: BannerAttachment,
 }
+
+export type BannerAttachment = ('wall' | 'ground')
 
 export type Bed = {
   /**
@@ -43,11 +54,38 @@ export type Bed = {
    * Value: A texture ID within a path root of `(namespace)/textures/entity/bed/`
    */
   texture: `${string}:${string}`,
+  /**
+   * Value:
+   *
+   *  - Head(`head`)
+   *  - Foot(`foot`)
+   */
+  part: BedPart,
 }
+
+export type BedPart = ('head' | 'foot')
 
 export type BlockState = ({
   block_state_property: SymbolMcdocBlockStateKeys<'%fallback'>,
 } & SelectCases<string>)
+
+export type Book = {
+  /**
+   * Angle in degrees between book cover and book centerline. \
+   * `0.0` for closed, `90.0` for open flat.
+   */
+  open_angle: NBTFloat,
+  /**
+   * The position of the first page inside the book. \
+   * `0.0` for leftmost, `1.0` for rightmost.
+   */
+  page1: NBTFloat,
+  /**
+   * The position of the second page inside the book. \
+   * `0.0` for leftmost, `1.0` for rightmost.
+   */
+  page2: NBTFloat,
+}
 
 export type ChargeType = SelectCases<CrossbowChargeType>
 
@@ -70,7 +108,19 @@ export type Chest = {
     min: 0,
     max: 1,
   }>,
+  /**
+   * Defaults to `single`.
+   *
+   * Value:
+   *
+   *  - Single(`single`)
+   *  - Left(`left`)
+   *  - Right(`right`)
+   */
+  chest_type?: ChestType,
 }
+
+export type ChestType = ('single' | 'left' | 'right')
 
 export type Compass = {
   /**
@@ -120,6 +170,7 @@ export type ComponentStrings = (NonNullable<(({
 
 export type Composite = {
   models: Array<ItemModel>,
+  transformation?: Transformation,
 }
 
 export type Condition = NonNullable<({
@@ -144,6 +195,7 @@ export type Condition = NonNullable<({
     property: (S | `minecraft:${S}`),
     on_true: ItemModel,
     on_false: ItemModel,
+    transformation?: Transformation,
   } & (S extends keyof SymbolConditionalItemProperty
     ? SymbolConditionalItemProperty[S]
     : SymbolConditionalItemProperty<'%unknown'>))
@@ -285,6 +337,18 @@ export type DyeTint = {
   }>),
 }
 
+export type EndCube = {
+  /**
+   * Value:
+   *
+   *  - Portal(`portal`)
+   *  - Gateway(`gateway`)
+   */
+  effect: EndCubeEffectType,
+}
+
+export type EndCubeEffectType = ('portal' | 'gateway')
+
 export type FireworkTint = {
   /**
    * Tint to apply when the `firework_explosion` component is not present.
@@ -352,8 +416,20 @@ export type HangingSign = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/signs/hanging/`
    */
-  texture: `${string}:${string}`,
+  texture?: `${string}:${string}`,
+  /**
+   * Defaults to `ceiling_middle`.
+   *
+   * Value:
+   *
+   *  - Wall(`wall`)
+   *  - Ceiling(`ceiling`)
+   *  - CeilingMiddle(`ceiling_middle`)
+   */
+  attachment?: HangingSignAttachment,
 }
+
+export type HangingSignAttachment = ('wall' | 'ceiling' | 'ceiling_middle')
 
 export type HasComponent = {
   component: Registry['minecraft:data_component_type'],
@@ -540,6 +616,7 @@ export type MapColorTint = {
 export type Model = {
   model: ModelRef,
   tints?: Array<ModelTint>,
+  transformation?: Transformation,
 }
 
 export type ModelTint = NonNullable<({
@@ -612,6 +689,7 @@ export type RangeDispatch = NonNullable<({
      * Item model to render if no entries were less or equal to the value.
      */
     fallback?: ItemModel,
+    transformation?: Transformation,
   } & (S extends keyof SymbolNumericItemProperty
     ? SymbolNumericItemProperty[S]
     : SymbolNumericItemProperty<'%unknown'>))
@@ -638,6 +716,7 @@ export type Select = NonNullable<({
      * Item model to render if none of the cases matched the value.
      */
     fallback?: ItemModel,
+    transformation?: Transformation,
   } & (S extends keyof SymbolSelectItemProperty
     ? SymbolSelectItemProperty[S]
     : SymbolSelectItemProperty<'%unknown'>))
@@ -681,19 +760,6 @@ export type ShulkerBox = {
     min: 0,
     max: 1,
   }>,
-  /**
-   * Defaults to `up`.
-   *
-   * Value:
-   *
-   *  - Down(`down`)
-   *  - Up(`up`)
-   *  - North(`north`)
-   *  - East(`east`)
-   *  - South(`south`)
-   *  - West(`west`)
-   */
-  orientation?: Direction,
 }
 
 export type Special = {
@@ -707,10 +773,13 @@ export type Special = {
        *
        *  - Banner(`banner`)
        *  - Bed(`bed`)
+       *  - Bell(`bell`)
+       *  - Book(`book`)
        *  - Conduit(`conduit`)
        *  - Chest(`chest`)
        *  - CopperGolemStatue(`copper_golem_statue`)
        *  - DecoratedPot(`decorated_pot`)
+       *  - EndCube(`end_cube`)
        *  - HangingSign(`hanging_sign`)
        *  - Head(`head`)
        *  - PlayerHead(`player_head`)
@@ -726,6 +795,7 @@ export type Special = {
    * Base model, providing transformations, particle texture and GUI light.
    */
   base: ModelRef,
+  transformation?: Transformation,
 }
 
 export type SpecialModel = NonNullable<({
@@ -735,10 +805,13 @@ export type SpecialModel = NonNullable<({
      *
      *  - Banner(`banner`)
      *  - Bed(`bed`)
+     *  - Bell(`bell`)
+     *  - Book(`book`)
      *  - Conduit(`conduit`)
      *  - Chest(`chest`)
      *  - CopperGolemStatue(`copper_golem_statue`)
      *  - DecoratedPot(`decorated_pot`)
+     *  - EndCube(`end_cube`)
      *  - HangingSign(`hanging_sign`)
      *  - Head(`head`)
      *  - PlayerHead(`player_head`)
@@ -754,10 +827,13 @@ export type SpecialModel = NonNullable<({
 export type SpecialModelType = (
   | 'banner'
   | 'bed'
+  | 'bell'
+  | 'book'
   | 'conduit'
   | 'chest'
   | 'copper_golem_statue'
   | 'decorated_pot'
+  | 'end_cube'
   | 'hanging_sign'
   | 'head'
   | 'player_head'
@@ -789,8 +865,19 @@ export type StandingSign = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/signs/`
    */
-  texture: `${string}:${string}`,
+  texture?: `${string}:${string}`,
+  /**
+   * Defaults to `ground`.
+   *
+   * Value:
+   *
+   *  - Wall(`wall`)
+   *  - Ground(`ground`)
+   */
+  attachment?: StandingSignAttachment,
 }
+
+export type StandingSignAttachment = ('wall' | 'ground')
 
 export type TeamTint = {
   /**
@@ -1047,10 +1134,14 @@ type SpecialItemModelDispatcherMap = {
   'minecraft:banner': SpecialItemModelBanner,
   'bed': SpecialItemModelBed,
   'minecraft:bed': SpecialItemModelBed,
+  'book': SpecialItemModelBook,
+  'minecraft:book': SpecialItemModelBook,
   'chest': SpecialItemModelChest,
   'minecraft:chest': SpecialItemModelChest,
   'copper_golem_statue': SpecialItemModelCopperGolemStatue,
   'minecraft:copper_golem_statue': SpecialItemModelCopperGolemStatue,
+  'end_cube': SpecialItemModelEndCube,
+  'minecraft:end_cube': SpecialItemModelEndCube,
   'hanging_sign': SpecialItemModelHangingSign,
   'minecraft:hanging_sign': SpecialItemModelHangingSign,
   'head': SpecialItemModelHead,
@@ -1064,8 +1155,10 @@ type SpecialItemModelKeys = keyof SpecialItemModelDispatcherMap
 type SpecialItemModelFallback = (
   | SpecialItemModelBanner
   | SpecialItemModelBed
+  | SpecialItemModelBook
   | SpecialItemModelChest
   | SpecialItemModelCopperGolemStatue
+  | SpecialItemModelEndCube
   | SpecialItemModelHangingSign
   | SpecialItemModelHead
   | SpecialItemModelShulkerBox
@@ -1074,8 +1167,10 @@ type SpecialItemModelFallback = (
 export type SpecialItemModelFallbackType = Record<string, never>
 type SpecialItemModelBanner = Banner
 type SpecialItemModelBed = Bed
+type SpecialItemModelBook = Book
 type SpecialItemModelChest = Chest
 type SpecialItemModelCopperGolemStatue = CopperGolemStatue
+type SpecialItemModelEndCube = EndCube
 type SpecialItemModelHangingSign = HangingSign
 type SpecialItemModelHead = Head
 type SpecialItemModelShulkerBox = ShulkerBox

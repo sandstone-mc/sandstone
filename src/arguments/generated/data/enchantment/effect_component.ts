@@ -15,7 +15,19 @@ export type AmmoUseEnchantmentEffect = {
    */
   requirements?: (LootCondition | Array<LootCondition>),
   /**
-   * Amount of ammunition being used up.
+   * Amount of ammunition being used up. \
+   * `0` has a side effect of applying `intangible_projectile` component to the projectile item.
+   */
+  effect: ValueEffect,
+}
+
+export type ArmorEffectivenessEnchantmentEffect = {
+  /**
+   * Predicate context: Damage Parameters.
+   */
+  requirements?: (LootCondition | Array<LootCondition>),
+  /**
+   * Determines armor effectiveness; `0.0` for no effect, `1.0` for full effect.
    */
   effect: ValueEffect,
 }
@@ -54,7 +66,7 @@ export type DamageEnchantmentEffect = {
    */
   requirements?: (LootCondition | Array<LootCondition>),
   /**
-   * Determines armor effectiveness; `0.0` for no effect, `1.0` for full effect.
+   * Damage dealt by the weapon.
    */
   effect: ValueEffect,
 }
@@ -76,7 +88,8 @@ export type DamageProtectionEnchantmentEffect = {
    */
   requirements?: (LootCondition | Array<LootCondition>),
   /**
-   * Amount of damage being absorbed; as "fake armor".
+   * Damage reduction factor. \
+   * Provides `factor * 4%` of damage reduction, capped at 80%.
    */
   effect: ValueEffect,
 }
@@ -93,7 +106,8 @@ export type EquipmentDropsEnchantmentEffect = {
    */
   requirements?: (LootCondition | Array<LootCondition>),
   /**
-   * Chance between `0.0` and `1.0` of an equipped piece dropping.
+   * Chance between `0.0` and `1.0` of an equipped piece dropping. \
+   * If the drop chance on mob is 0, the chance will not be affected by this effect.
    */
   effect: ValueEffect,
   /**
@@ -194,11 +208,13 @@ export type PostAttackEnchantmentEffect = {
   requirements?: (LootCondition | Array<LootCondition>),
   /**
    * Examples:
-   * - A Fire Aspect Enchant would specify that when the attacker is enchanted, the ignite effect is applied, and the affected party is the victim.
-   * - Thorns would specify that when the victim is enchanted, the damage_entity effect is applied, and the affected party is the attacker.
+   * - A Fire Aspect Enchant would specify that when the attacker is enchanted, the `ignite` effect is applied, and the affected party is the victim.
+   * - Thorns would specify that when the victim is enchanted, the `damage_entity` effect is applied, and the affected party is the attacker.
    */
   effect: EntityEffect,
   /**
+   * When set to `attacker`, this effect only works on enchanted weapon, regardless of the `slots` field.
+   *
    * Value:
    *
    *  - Attacker(`attacker`)
@@ -235,7 +251,8 @@ export type ProjectileCountEnchantmentEffect = {
    */
   requirements?: (LootCondition | Array<LootCondition>),
   /**
-   * Amount of projectiles being loaded/drawn.
+   * Amount of projectiles being loaded/drawn. \
+   * All projectile items except the first one will have `intangible_projectile` component applied.
    */
   effect: ValueEffect,
 }
@@ -424,7 +441,7 @@ type EffectComponentFallback = (
   | EffectComponentTridentSound
   | EffectComponentTridentSpinAttackStrength)
 type EffectComponentAmmoUse = Array<AmmoUseEnchantmentEffect>
-type EffectComponentArmorEffectiveness = Array<DamageEnchantmentEffect>
+type EffectComponentArmorEffectiveness = Array<ArmorEffectivenessEnchantmentEffect>
 type EffectComponentAttributes = Array<AttributeEffect>
 type EffectComponentBlockExperience = Array<BlockExperienceEnchantmentEffect>
 type EffectComponentCrossbowChargeTime = ValueEffect
