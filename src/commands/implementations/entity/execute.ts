@@ -701,7 +701,7 @@ export class ExecuteFacingEntityCommand<MACRO extends boolean> extends ExecuteCo
    * @param anchor Whether to point at the target's eyes or feet.
    */
   entity = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, anchor: Macroable<ANCHORS, MACRO> = 'feet') =>
-    this.nestedExecute(['entity', targetParser(targets), anchor])
+    this.nestedExecute(['facing', 'entity', targetParser(targets), anchor])
 }
 
 export class ExecutePositionedCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -710,7 +710,7 @@ export class ExecutePositionedCommand<MACRO extends boolean> extends ExecuteComm
    *
    * @param targets Target entity/entities to match position with.
    */
-  as = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['as', targetParser(targets)])
+  as = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['positioned', 'as', targetParser(targets)])
 
   /**
    * Sets the command position matching the height map (highest position in a column of blocks according to criteria) for the current position.
@@ -722,7 +722,7 @@ export class ExecutePositionedCommand<MACRO extends boolean> extends ExecuteComm
    */
   over = (
     heightMap: Macroable<'world_surface' | 'motion_blocking' | 'motion_blocking_no_leaves' | 'ocean_floor', MACRO>,
-  ) => this.nestedExecute(['over', heightMap])
+  ) => this.nestedExecute(['positioned', 'over', heightMap])
 }
 
 export class ExecuteRotatedAsCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -731,7 +731,7 @@ export class ExecuteRotatedAsCommand<MACRO extends boolean> extends ExecuteComma
    *
    * @param targets Target entity/entities to match rotation with.
    */
-  as = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['as', targetParser(targets)])
+  as = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.nestedExecute(['rotated', 'as', targetParser(targets)])
 }
 
 export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -798,13 +798,11 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    *
    * @param pos Coordinate to rotate towards.
    */
-  facing(pos: Macroable<Coordinates<MACRO>, MACRO>): ExecuteCommand<MACRO>
-
-  facing(pos?: Macroable<Coordinates<MACRO>, MACRO>) {
-    if (pos) {
-      return this.nestedExecute(['facing', coordinatesParser(pos)])
-    }
-    return this.subCommand([['facing']], ExecuteFacingEntityCommand<MACRO>, false)
+  get facing(): ExecuteFacingEntityCommand<MACRO> & ((pos: Macroable<Coordinates<MACRO>, MACRO>) => ExecuteCommand<MACRO>) {
+    return makeCallable(
+      new ExecuteFacingEntityCommand<MACRO>(this.sandstonePack, this.previousNode),
+      (pos: Macroable<Coordinates<MACRO>, MACRO>) => this.nestedExecute(['facing', coordinatesParser(pos)]),
+    )
   }
 
   /**
@@ -825,13 +823,11 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    *
    * @param pos The new position.
    */
-  positioned(pos: Macroable<Coordinates<MACRO>, MACRO>): ExecuteCommand<MACRO>
-
-  positioned(pos?: Macroable<Coordinates<MACRO>, MACRO>) {
-    if (pos) {
-      return this.nestedExecute(['positioned', coordinatesParser(pos)])
-    }
-    return this.subCommand([['positioned']], ExecutePositionedCommand<MACRO>, false)
+  get positioned(): ExecutePositionedCommand<MACRO> & ((pos: Macroable<Coordinates<MACRO>, MACRO>) => ExecuteCommand<MACRO>) {
+    return makeCallable(
+      new ExecutePositionedCommand<MACRO>(this.sandstonePack, this.previousNode),
+      (pos: Macroable<Coordinates<MACRO>, MACRO>) => this.nestedExecute(['positioned', coordinatesParser(pos)]),
+    )
   }
 
   /**
@@ -844,13 +840,11 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    *
    * Relative values can be used to specify a rotation relative to the current execution rotation.
    */
-  rotated(rotation: Macroable<Rotation<MACRO>, MACRO>): ExecuteCommand<MACRO>
-
-  rotated(rotation?: Macroable<Rotation<MACRO>, MACRO>) {
-    if (rotation) {
-      return this.nestedExecute(['rotated', rotationParser(rotation)])
-    }
-    return this.subCommand([['rotated']], ExecuteRotatedAsCommand, false)
+  get rotated(): ExecuteRotatedAsCommand<MACRO> & ((rotation: Macroable<Rotation<MACRO>, MACRO>) => ExecuteCommand<MACRO>) {
+    return makeCallable(
+      new ExecuteRotatedAsCommand<MACRO>(this.sandstonePack, this.previousNode),
+      (rotation: Macroable<Rotation<MACRO>, MACRO>) => this.nestedExecute(['rotated', rotationParser(rotation)]),
+    )
   }
 
   /**

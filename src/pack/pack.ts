@@ -181,8 +181,6 @@ const conflictDefaults = (resourceType: string) => {
 
 let tempStorage: DataClass<'storage'>
 
-let startTickedLoops: MCFunctionClass<undefined, undefined>
-
 type MCFunctionArgs = Exclude<Partial<MCFunctionClassArguments>, MCFunctionClassArguments['callback']>
 
 const _foo: MCFunctionArgs = {
@@ -335,13 +333,19 @@ export class SandstonePack {
 
   objectives: Set<ObjectiveClass>
 
+  namedVariableIds: Record<string, number>
+
   anonymousScoreId = 0
 
   anonymousDataId = 0
 
   constants: Set<number>
 
-  tickedLoops: Record<string, MakeInstanceCallable<_RawMCFunctionClass<undefined, undefined>>>
+  ticked: Record<string, TagClass<'function'>>
+
+  startAllTicked: MCFunctionClass<undefined, undefined> | undefined
+
+  tickedCommands: Record<string, MCFunctionClass<undefined, undefined>>
 
   loadTags: { preLoad: TagClass<'function'>; load: TagClass<'function'>; postLoad: TagClass<'function'> }
 
@@ -365,9 +369,11 @@ export class SandstonePack {
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()
-
+    this.namedVariableIds = {}
     this.constants = new Set()
-    this.tickedLoops = {}
+
+    this.ticked = {}
+    this.tickedCommands = {}
 
     // Override namespace from context if available
     if (hasContext()) {
@@ -405,7 +411,9 @@ export class SandstonePack {
     this.anonymousDataId = 0
     this.anonymousScoreId = 0
     this.constants.clear()
-    this.tickedLoops = {}
+    this.ticked = {}
+    this.startAllTicked = undefined
+    this.tickedCommands = {}
     this.dependencies.clear()
     this.loadTags = {
       preLoad: this.Tag('function', 'load:pre_load', []),
@@ -559,6 +567,16 @@ export class SandstonePack {
     return this.__rootObjective
   }
 
+  private variableName(name?: string) {
+    if (name === undefined) {
+      return `anon_${this.packUid}_${this.anonymousScoreId++}`
+    } else {
+      this.namedVariableIds[name] ??= 0
+
+      return `${name}_${this.namedVariableIds[name]}_${this.packUid}`
+    }
+  }
+
   /**
    * Creates a dynamic numeric variable, represented by an anonymous & unique score.
    *
@@ -597,7 +615,7 @@ export class SandstonePack {
     const [initialValue, name] = args
 
     // Get the specific anonymous score
-    const anonymousScore = score(`${name ?? 'anon'}_${this.packUid}${name === undefined ? `_${this.anonymousScoreId++}` : ''}`)
+    const anonymousScore = score(this.variableName(name as string | undefined))
 
     // No initial value => we can directly return the score
     if (initialValue === undefined) {
@@ -942,28 +960,53 @@ export class SandstonePack {
   }
 
   /**
+   * Register mcfunction that will be ticked at the rate you specify
+   */
+  registerTicked(runEvery: TimeArgument, func: MCFunctionClass) {
+    if (typeof runEvery === 'number') {
+      runEvery = `${runEvery}t` // Normalize map key
+    }
+    const tag = this.ticked[runEvery] ?? (() => {
+      const name = `__sandstone:ticked/${runEvery}`
+
+      this.ticked[runEvery] = this.Tag('function', name, [])
+
+      this.MCFunction(name, (self) => {
+        this.commands.functionCmd(this.ticked[runEvery])
+
+        self.schedule.function(runEvery, 'replace')
+      })
+
+      if (this.startAllTicked === undefined) {
+        this.startAllTicked = this.MCFunction(`__sandstone:ticked/start/${this.packUid.toLowerCase()}`)
+        this.loadTags.load.push(this.startAllTicked)
+      }
+      this.startAllTicked.push(() => this.commands.schedule.function(this.ticked[runEvery], runEvery, 'replace'))
+
+      return this.ticked[runEvery]
+    })()
+
+    if (func.env === undefined) {
+      tag.push(func)
+    } else {
+      this.registerTickedCommands(runEvery, () => func())
+    }
+  }
+
+  /**
    * Register commands that will be ticked at the rate you specify
    */
   registerTickedCommands(runEvery: TimeArgument, callback: () => void) {
     if (typeof runEvery === 'number') {
       runEvery = `${runEvery}t` // Normalize map key
     }
-    if (this.tickedLoops[runEvery]) {
-      this.tickedLoops[runEvery].push(callback)
-    } else {
-      this.tickedLoops[runEvery] = this.MCFunction(`__sandstone:ticked/times/${runEvery}`, () => {
-        this.tickedLoops[runEvery].schedule.function(runEvery, 'replace')
-        callback()
-      })
-      if (!startTickedLoops) {
-        startTickedLoops = this.MCFunction('__sandstone:ticked/start', () =>
-          this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'),
-        )
-        this.loadTags.load.push(startTickedLoops)
-      } else {
-        startTickedLoops.push(() => this.tickedLoops[runEvery].schedule.function(runEvery, 'replace'))
-      }
+    if (this.tickedCommands[runEvery] === undefined) {
+      this.tickedCommands[runEvery] = this.MCFunction(`__sandstone:ticked/${runEvery}/${this.packUid.toLowerCase()}_commands`)
+
+      this.registerTicked(runEvery, this.tickedCommands[runEvery])
     }
+
+    this.tickedCommands[runEvery].push(callback)
   }
 
   sleep = (delay: TimeArgument): PromiseLike<SleepClass> => new SleepClass(this.core, delay).promise()

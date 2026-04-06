@@ -66,7 +66,7 @@
   },
   "scripts": {
     "dev:build": "bun run scripts/build.ts",
-    "dev:build:types": "bun tsc -p tsconfig.build.json",
+    "dev:build:types": "bun run scripts/build-types.ts",
     "dev:watch": "bun run scripts/watch.ts",
     "publishToNpm": "bun dev:build && bun publish",
     "format": "bun oxlint src --fix",

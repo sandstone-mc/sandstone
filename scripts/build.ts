@@ -90,17 +90,39 @@ async function removeSyntheticIndex(): Promise<void> {
 /**
  * Run TypeScript compiler to generate declarations in types/.
  * This runs on the actual source files, NOT the synthetic index.
+ *
+ * If an "Excessive complexity" error is detected (stale types issue),
+ * deletes the types directory and retries once.
  */
-async function runTsc(): Promise<void> {
+async function runTsc(isRetry = false): Promise<void> {
   const tsc = Bun.spawn(['bun', 'tsc', '-p', 'tsconfig.build.json'], {
     cwd: rootDir,
     stdout: 'inherit',
-    stderr: 'inherit',
+    stderr: 'pipe',
   })
 
+  // Collect stderr to check for excessive complexity error
+  const stderrText = await new Response(tsc.stderr).text()
   const exitCode = await tsc.exited
+
   if (exitCode !== 0) {
+    // Check for excessive complexity error (TS2859)
+    if (!isRetry && stderrText.includes('Excessive complexity')) {
+      log('  Detected stale types (Excessive complexity error), cleaning and retrying...')
+      await rm(typesDir, { recursive: true, force: true })
+      return runTsc(true)
+    }
+
+    // Print stderr for other errors or if retry also failed
+    if (stderrText) {
+      console.error(stderrText)
+    }
     throw new Error(`TypeScript compilation failed with exit code ${exitCode}`)
+  }
+
+  // Print any warnings even on success
+  if (stderrText) {
+    console.error(stderrText)
   }
 }
 

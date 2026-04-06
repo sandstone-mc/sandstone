@@ -2,7 +2,7 @@ import type { TimeArgument } from 'sandstone/arguments'
 import type { Macroable, Node } from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { MCFunctionClass, MCFunctionNode } from 'sandstone/core/resources/datapack'
-import { TagClass } from 'sandstone/core/resources/datapack/tag'
+import type { TagClass } from 'sandstone/core/resources/datapack/tag'
 import { CommandArguments } from '../../helpers'
 
 type ScheduledFunction = string | TagClass<'function'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
@@ -61,7 +61,7 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
    * ```
    */
   clear = (func: Macroable<MCFunctionClass<any, any> | string | TagClass<'function'>, MACRO>) => {
-    const result = this.finalCommand(['clear', func instanceof TagClass ? func.name : func])
+    const result = this.finalCommand(['clear', `${func}`])
     return result
   }
 
@@ -101,10 +101,6 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
       return this.finalCommand(['function', undefined, delay, type], node)
     }
 
-    if (func instanceof TagClass) {
-      return this.finalCommand(['function', func.name, delay, type], node)
-    }
-
-    return this.finalCommand(['function', func, delay, type], node)
+    return this.finalCommand(['function', `${func}`, delay, type], node)
   }
 }

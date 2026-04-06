@@ -301,30 +301,16 @@ export class _RawMCFunctionClass<
     }
 
     if (args.runOnLoad) {
-      if (this.env) {
-        core.pack.loadTags.load.push(
-          core.pack.MCFunction(`load_${this.name.split(':')[1]}`, () => {
-            /* @ts-ignore */
-            this.__call__()
-          }),
-        )
-      } else {
-        core.pack.loadTags.load.push(this.name)
-      }
-    } else if (args.runEveryTick) {
-      /* @ts-ignore */
-      core.pack.registerTickedCommands('1t', () => this.__call__())
+      this.addToTag(core.pack.loadTags.load)
+    } else if (args.runEveryTick || args.runEvery) {
+      const runEvery = args.runEvery ?? 1
+      core.pack.registerTicked(runEvery, this as unknown as MCFunctionClass)
     }
 
     if (args.tags) {
       for (const tag of args.tags) {
-        this.addToTag(`${tag}`)
+        this.addToTag(tag)
       }
-    }
-
-    if (!args.runEveryTick && args.runEvery) {
-      /* @ts-ignore */
-      core.pack.registerTickedCommands(args.runEvery, () => this.__call__())
     }
 
     this.handleConflicts()
@@ -342,7 +328,7 @@ export class _RawMCFunctionClass<
     this.push(this.callback.bind(undefined, makeCallable(this, this.__call__)))
   }
 
-  protected addToTag = (tag: string) => {
+  addToTag = (tag: string | TagClass<'function'>) => {
     let func: MCFunctionClass<undefined, undefined>
     if (this.env !== undefined) {
       func = this.core.pack.MCFunction(`${this.name}/tag_call`, {
@@ -355,15 +341,19 @@ export class _RawMCFunctionClass<
     } else {
       func = this as unknown as MCFunctionClass<undefined, undefined>
     }
-    if (tags[tag]) {
-      tags[tag].push(func)
+    if (typeof tag === 'string') {
+      if (tags[tag]) {
+        tags[tag].push(func)
+      } else {
+        tags[tag] = new TagClass(this.core, 'function', tag, {
+          values: [func],
+          addToSandstoneCore: true,
+          creator: 'sandstone',
+          onConflict: 'append',
+        })
+      }
     } else {
-      tags[tag] = new TagClass(this.core, 'function', tag, {
-        values: [func],
-        addToSandstoneCore: true,
-        creator: 'sandstone',
-        onConflict: 'append',
-      })
+      tag.push(func)
     }
   }
 

@@ -4,11 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 
-- **Build**: `bun dev:build` - Builds the project using a custom Bun Build based script
+- **Build**: `bun dev:build --silent` - Builds the project using a custom Bun Build based script
+  - `--silent` or `-s` suppresses progress output (this is what you should default to for context preservation)
 - **Watch**: `bun dev:watch` - Builds with watch mode
-- **Type checking**: `bun build:types` - Generates TypeScript declaration files
+- **Type checking**: `bun dev:build:types` - Generates TypeScript declaration files only
 - **Lint**: `bun lint` - Lints TypeScript files using OxLint
 - **Format/Fix**: `bun format` - Lints and auto-fixes issues
+
+**Note**: The build scripts auto-retry on "Excessive complexity" TypeScript errors caused by stale types. If you see this error followed by "cleaning and retrying..." and the build succeeds, ignore it.
 
 ## Todo Directory
 

@@ -1,7 +1,7 @@
 import type { RootNBT } from 'sandstone/arguments/nbt'
 import type { DataPointPickClass, Macroable, MCFunctionClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { TagClass } from 'sandstone/core/resources/datapack/tag'
+import type { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { DATA_TYPES, DataPointClass } from 'sandstone/variables'
 import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
 import type { FinalCommandOutput } from '../../helpers'
@@ -82,6 +82,6 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
       }
     }
 
-    return this.finalCommand([mcFunction instanceof TagClass ? `#${mcFunction}` : mcFunction, ...args])
+    return this.finalCommand([`${mcFunction}`, ...args])
   }
 }
