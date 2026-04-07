@@ -17,7 +17,6 @@
     "url": "https://github.com/sandstone-mc/sandstone/issues"
   },
   "dependencies": {
-    "@sandstone-mc/mcdoc-ts-generator": "^0.2.0",
     "@sinclair/typebox": "^0.31.21",
     "@smithed-mc/data-types": "^0.1.2",
     "@types/nearley": "^2.11.5",
@@ -34,6 +33,7 @@
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.2.0",
     "@parcel/watcher": "^2.5.6",
     "@stylistic/eslint-plugin": "^5.7.1",
     "@types/adm-zip": "^0.5.2",
