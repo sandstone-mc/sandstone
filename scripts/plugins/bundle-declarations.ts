@@ -91,10 +91,20 @@ async function generateMainIndexDts(
   const fixed = fixDtsImports(sandstoneDts, distDir, distDir, indexDirs)
 
   // Rewrite relative imports to point to ./types/ subdirectory
+  // EXCEPT for ./sandstone which should point to ./index (since sandstone.d.ts
+  // is merged into index.d.ts, not copied to types/)
+  // Note: fixDtsImports may have already added .js extension, so handle both cases
+  //
+  // Strategy: First add ./types/ prefix to all relative imports, then fix
+  // ./types/sandstone -> ./index after
   const withTypesPrefix = fixed.content
     .replace(/from '\.\/([^']+)'/g, "from './types/$1'")
     .replace(/from "\.\/([^"]+)"/g, 'from "./types/$1"')
     .replace(/import\("\.\/([^"]+)"\)/g, 'import("./types/$1")')
+    // Now fix ./types/sandstone -> ./index (sandstone.d.ts is merged into index.d.ts)
+    .replace(/from '\.\/types\/sandstone(\.js)?'/g, "from './index.js'")
+    .replace(/from "\.\/types\/sandstone(\.js)?"/g, 'from "./index.js"')
+    .replace(/import\("\.\/types\/sandstone(\.js)?"\)/g, 'import("./index.js")')
 
   // Append export * for subpaths (pointing to internal types)
   return `${withTypesPrefix}

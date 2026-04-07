@@ -9,23 +9,62 @@
  * 1. Hoist class definitions and Symbol.for brands outside of __esm wrappers
  * 2. Topologically sort hoisted classes so base classes come before derived
  * 3. Keep side-effect code (init calls, other statements) inside __esm
+ *
+ * This version maintains accurate source maps by:
+ * 1. Reading the original source map
+ * 2. Tracking where hoisted code came from (original line numbers)
+ * 3. Creating a new source map that maps hoisted lines to their original sources
  */
 
 import { readFile, writeFile } from 'fs/promises'
 import ts from 'typescript'
+import { SourceMapConsumer, SourceMapGenerator, type RawSourceMap } from 'source-map-js'
 
 interface HoistedItem {
   code: string
+  /** Line number in the ORIGINAL bundle (1-indexed) */
+  originalStartLine: number
+  /** Number of lines in this item */
+  lineCount: number
   className?: string
   superClassName?: string | null
   isBrand?: boolean
-  originalPosition: number
+}
+
+interface ModificationBlock {
+  blockStart: number
+  blockEnd: number
+  statementsToRemove: Array<{ start: number; end: number }>
+}
+
+/** Count newlines before a position to get the 1-indexed line number */
+function getLineNumber(code: string, pos: number): number {
+  let line = 1
+  for (let i = 0; i < pos && i < code.length; i++) {
+    if (code[i] === '\n') line++
+  }
+  return line
+}
+
+/** Count lines in a string */
+function countLines(str: string): number {
+  let count = 1
+  for (const ch of str) {
+    if (ch === '\n') count++
+  }
+  return count
 }
 
 /**
  * Fix __esm initialization order by hoisting and sorting class definitions.
+ * Returns the modified code and metadata needed for source map updates.
  */
-export function fixEsmInitOrder(code: string): string {
+export function fixEsmInitOrder(code: string): {
+  code: string
+  hoistedItems: HoistedItem[]
+  insertLine: number
+  removedRanges: Array<{ startLine: number; endLine: number }>
+} | null {
   const sourceFile = ts.createSourceFile(
     'bundle.js',
     code,
@@ -34,15 +73,9 @@ export function fixEsmInitOrder(code: string): string {
     ts.ScriptKind.JS
   )
 
-  const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed })
-
   // Collect all hoistable items from __esm blocks
   const allHoisted: HoistedItem[] = []
-  const modifications: Array<{
-    blockStart: number
-    blockEnd: number
-    newStatements: ts.Statement[]
-  }> = []
+  const modifications: ModificationBlock[] = []
 
   // Find all __esm wrapper calls
   ts.forEachChild(sourceFile, (node) => {
@@ -61,63 +94,92 @@ export function fixEsmInitOrder(code: string): string {
       if (!ts.isBlock(body)) continue
 
       // Analyze statements in this __esm block
-      const hoistable: ts.Statement[] = []
-      const remaining: ts.Statement[] = []
+      const statementsToRemove: Array<{ start: number; end: number }> = []
 
       for (const stmt of body.statements) {
-        const hoistInfo = analyzeStatement(stmt, code, sourceFile)
+        const hoistInfo = analyzeStatement(stmt)
         if (hoistInfo) {
-          hoistable.push(stmt)
+          const start = stmt.getStart(sourceFile)
+          const end = stmt.getEnd()
+          const stmtCode = code.slice(start, end)
+          statementsToRemove.push({ start, end })
           allHoisted.push({
-            code: code.slice(stmt.getStart(sourceFile), stmt.getEnd()),
+            code: stmtCode,
+            originalStartLine: getLineNumber(code, start),
+            lineCount: countLines(stmtCode),
             className: hoistInfo.className,
             superClassName: hoistInfo.superClassName,
             isBrand: hoistInfo.isBrand,
-            originalPosition: stmt.getStart(sourceFile),
           })
-        } else {
-          remaining.push(stmt)
         }
       }
 
-      if (hoistable.length > 0) {
+      if (statementsToRemove.length > 0) {
         modifications.push({
           blockStart: body.getStart(sourceFile),
           blockEnd: body.getEnd(),
-          newStatements: remaining,
+          statementsToRemove,
         })
       }
     }
   })
 
-  if (allHoisted.length === 0) return code
+  if (allHoisted.length === 0) return null
 
   // Topologically sort hoisted items
   const sorted = topologicalSort(allHoisted)
 
   // Build the hoisted code block
   const hoistedCode = sorted.map(item => item.code).join('\n')
+  const hoistedHeader = '\n// Hoisted class definitions\n'
 
-  // Apply modifications in reverse order
+  // Find insert position
+  const insertPosition = findHoistInsertPosition(code)
+  const insertLine = getLineNumber(code, insertPosition)
+
+  // Track removed ranges for source map adjustment
+  const removedRanges: Array<{ startLine: number; endLine: number }> = []
+
+  // Apply modifications - work on the string directly
   let result = code
-  modifications.sort((a, b) => b.blockStart - a.blockStart)
 
+  // Collect all removals with their line info before modifying
+  const removals: Array<{ start: number; end: number; startLine: number; endLine: number }> = []
   for (const mod of modifications) {
-    // Build new block content
-    const newBlockContent = mod.newStatements.length > 0
-      ? '{\n' + mod.newStatements.map(s =>
-          '  ' + printer.printNode(ts.EmitHint.Unspecified, s, sourceFile)
-        ).join('\n') + '\n}'
-      : '{}'
-
-    result = result.slice(0, mod.blockStart) + newBlockContent + result.slice(mod.blockEnd)
+    for (const stmt of mod.statementsToRemove) {
+      // Extend to include trailing newline
+      let endPos = stmt.end
+      while (endPos < code.length && (code[endPos] === '\n' || code[endPos] === ' ')) {
+        endPos++
+        if (code[endPos - 1] === '\n') break
+      }
+      removals.push({
+        start: stmt.start,
+        end: endPos,
+        startLine: getLineNumber(code, stmt.start),
+        endLine: getLineNumber(code, endPos),
+      })
+    }
   }
 
-  // Insert all hoisted code at the beginning, after imports and __esm definition
-  const insertPosition = findHoistInsertPosition(result)
-  result = result.slice(0, insertPosition) + '\n// Hoisted class definitions\n' + hoistedCode + '\n\n' + result.slice(insertPosition)
+  // Sort removals by position descending (to process from end to start)
+  removals.sort((a, b) => b.start - a.start)
 
-  return result
+  // Apply removals
+  for (const removal of removals) {
+    result = result.slice(0, removal.start) + result.slice(removal.end)
+    removedRanges.push({ startLine: removal.startLine, endLine: removal.endLine })
+  }
+
+  // Insert hoisted code at the beginning
+  result = result.slice(0, insertPosition) + hoistedHeader + hoistedCode + '\n\n' + result.slice(insertPosition)
+
+  return {
+    code: result,
+    hoistedItems: sorted,
+    insertLine,
+    removedRanges,
+  }
 }
 
 /**
@@ -154,7 +216,7 @@ interface StatementAnalysis {
 /**
  * Analyze a statement to determine if it should be hoisted.
  */
-function analyzeStatement(stmt: ts.Statement, code: string, sourceFile: ts.SourceFile): StatementAnalysis | null {
+function analyzeStatement(stmt: ts.Statement): StatementAnalysis | null {
   if (!ts.isExpressionStatement(stmt)) return null
 
   const expr = stmt.expression
@@ -260,7 +322,163 @@ function topologicalSort(items: HoistedItem[]): HoistedItem[] {
 }
 
 /**
+ * Update the source map to account for hoisting transformations.
+ *
+ * Strategy:
+ * 1. For hoisted code: Look up original source positions from the original map
+ *    using the original line numbers, then map new lines to those sources
+ * 2. For non-hoisted code: Adjust line numbers based on insertions/deletions
+ */
+async function updateSourceMap(
+  mapPath: string,
+  hoistedItems: HoistedItem[],
+  insertLine: number,
+  removedRanges: Array<{ startLine: number; endLine: number }>,
+  newCode: string,
+): Promise<void> {
+  const mapContent = await readFile(mapPath, 'utf8')
+  const originalMap: RawSourceMap = JSON.parse(mapContent)
+  const consumer = new SourceMapConsumer(originalMap)
+
+  const generator = new SourceMapGenerator({
+    file: originalMap.file,
+  })
+
+  // Copy sources and sourcesContent
+  if (originalMap.sources) {
+    for (let i = 0; i < originalMap.sources.length; i++) {
+      if (originalMap.sourcesContent?.[i]) {
+        generator.setSourceContent(originalMap.sources[i], originalMap.sourcesContent[i])
+      }
+    }
+  }
+
+  // Build a map of new line -> original line for hoisted code
+  // The hoisted code starts at insertLine + 2 (after "\n// Hoisted class definitions\n")
+  const hoistedLineMap = new Map<number, number>()
+  let newLine = insertLine + 2 // Skip the header comment
+  for (const item of hoistedItems) {
+    for (let i = 0; i < item.lineCount; i++) {
+      hoistedLineMap.set(newLine + i, item.originalStartLine + i)
+    }
+    newLine += item.lineCount
+  }
+
+  // Calculate the total lines inserted (header + hoisted code + blank line)
+  const totalHoistedLines = 2 + hoistedItems.reduce((sum, item) => sum + item.lineCount, 0) + 1
+
+  // Sort removed ranges by start line for calculating offsets
+  const sortedRemovals = [...removedRanges].sort((a, b) => a.startLine - b.startLine)
+
+  // Function to calculate how many lines were removed before a given original line
+  function getRemovedLinesBefore(origLine: number): number {
+    let removed = 0
+    for (const range of sortedRemovals) {
+      if (range.endLine <= origLine) {
+        removed += range.endLine - range.startLine
+      } else if (range.startLine < origLine) {
+        // Partial overlap
+        removed += origLine - range.startLine
+      }
+    }
+    return removed
+  }
+
+  // Function to check if an original line was removed
+  function wasLineRemoved(origLine: number): boolean {
+    for (const range of sortedRemovals) {
+      if (origLine >= range.startLine && origLine < range.endLine) {
+        return true
+      }
+    }
+    return false
+  }
+
+  // Process each line in the new code
+  const newLines = newCode.split('\n')
+
+  for (let newLineNum = 1; newLineNum <= newLines.length; newLineNum++) {
+    const lineContent = newLines[newLineNum - 1]
+
+    // Check if this line is hoisted code
+    const originalLineFromHoist = hoistedLineMap.get(newLineNum)
+    if (originalLineFromHoist !== undefined) {
+      // This line came from hoisted code - look up its original source
+      for (let col = 0; col < lineContent.length; col++) {
+        const origPos = consumer.originalPositionFor({
+          line: originalLineFromHoist,
+          column: col,
+        })
+        if (origPos.source && origPos.line !== null) {
+          generator.addMapping({
+            generated: { line: newLineNum, column: col },
+            original: { line: origPos.line, column: origPos.column ?? 0 },
+            source: origPos.source,
+            name: origPos.name ?? undefined,
+          })
+        }
+      }
+      continue
+    }
+
+    // For non-hoisted lines, calculate what the original line was
+    let originalLine: number
+    if (newLineNum < insertLine) {
+      // Before the insertion point - unchanged
+      originalLine = newLineNum
+    } else if (newLineNum < insertLine + totalHoistedLines) {
+      // Inside the hoisted section but not a hoisted line (comment/blank)
+      // Skip - no mapping needed for these lines
+      continue
+    } else {
+      // After the hoisted section
+      // Reverse the transformation: originalLine = newLine - insertedLines + removedLines
+      const adjustedLine = newLineNum - totalHoistedLines + 1
+      // Add back removed lines
+      // This is tricky because removals happened at different points
+      // We need to find what original line this maps to
+
+      // Start with the adjusted line and add back removed lines
+      let candidateOriginal = adjustedLine
+      let prevRemoved = 0
+      for (let iter = 0; iter < 10; iter++) { // Iterate to converge
+        const removed = getRemovedLinesBefore(candidateOriginal)
+        if (removed === prevRemoved) break
+        candidateOriginal = adjustedLine + removed
+        prevRemoved = removed
+      }
+      originalLine = candidateOriginal
+    }
+
+    // Skip if this original line was removed (shouldn't happen for non-hoisted code)
+    if (wasLineRemoved(originalLine)) {
+      continue
+    }
+
+    // Map each column using the original source map
+    for (let col = 0; col < lineContent.length; col++) {
+      const origPos = consumer.originalPositionFor({
+        line: originalLine,
+        column: col,
+      })
+      if (origPos.source && origPos.line !== null) {
+        generator.addMapping({
+          generated: { line: newLineNum, column: col },
+          original: { line: origPos.line, column: origPos.column ?? 0 },
+          source: origPos.source,
+          name: origPos.name ?? undefined,
+        })
+      }
+    }
+  }
+
+  const newMap = generator.toJSON()
+  await writeFile(mapPath, JSON.stringify(newMap))
+}
+
+/**
  * Post-process a bundle file to fix __esm init order.
+ * Also updates the accompanying source map if present.
  */
 export async function fixEsmInitOrderInFile(filePath: string): Promise<boolean> {
   const content = await readFile(filePath, 'utf8')
@@ -270,12 +488,28 @@ export async function fixEsmInitOrderInFile(filePath: string): Promise<boolean> 
     return false
   }
 
-  const fixed = fixEsmInitOrder(content)
+  const result = fixEsmInitOrder(content)
 
-  if (fixed !== content) {
-    await writeFile(filePath, fixed)
-    return true
+  if (!result) {
+    return false
   }
 
-  return false
+  // Write the modified code
+  await writeFile(filePath, result.code)
+
+  // Update the source map if it exists
+  const mapPath = filePath + '.map'
+  try {
+    await updateSourceMap(
+      mapPath,
+      result.hoistedItems,
+      result.insertLine,
+      result.removedRanges,
+      result.code,
+    )
+  } catch {
+    // Source map might not exist, that's fine
+  }
+
+  return true
 }
