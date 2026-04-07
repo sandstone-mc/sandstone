@@ -1504,11 +1504,11 @@ export class SandstonePack {
       ...options,
     })
 
-  save = async (cliOptions: {
+  async save(cliOptions: {
     fileHandler: (relativePath: string, content: any) => Promise<void>
     dry: boolean
     verbose: boolean
-  }) => {
+  }) {
     await this.core.save(cliOptions, {
       visitors: [
         // Initialization visitors

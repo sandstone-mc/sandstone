@@ -197,7 +197,7 @@ export class SandstoneCore {
     return i
   }
 
-  generateResources = (opts: { visitors: GenericCoreVisitor[] }) => {
+  generateResources(opts: { visitors: GenericCoreVisitor[] }) {
     const originalResources = new ResourceNodesMap(this.resourceNodes)
 
     // First, generate all the resources.
@@ -223,10 +223,10 @@ export class SandstoneCore {
     return finalResources
   }
 
-  save = async (
+  async save(
     cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>; dry: boolean; verbose: boolean },
     opts: { visitors: GenericCoreVisitor[] },
-  ) => {
+  ) {
     await this.smithed.load()
 
     let dependenciesFailed = 0

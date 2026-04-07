@@ -10,61 +10,29 @@
  * 2. Topologically sort hoisted classes so base classes come before derived
  * 3. Keep side-effect code (init calls, other statements) inside __esm
  *
- * This version maintains accurate source maps by:
- * 1. Reading the original source map
- * 2. Tracking where hoisted code came from (original line numbers)
- * 3. Creating a new source map that maps hoisted lines to their original sources
+ * Uses MagicString's move() for source-map-aware transformations and
+ * @ampproject/remapping to chain the transformation map with the original source map.
  */
 
 import { readFile, writeFile } from 'fs/promises'
 import ts from 'typescript'
-import { SourceMapConsumer, SourceMapGenerator, type RawSourceMap } from 'source-map-js'
+import MagicString from 'magic-string'
+import remapping from '@ampproject/remapping'
 
 interface HoistedItem {
-  code: string
-  /** Line number in the ORIGINAL bundle (1-indexed) */
-  originalStartLine: number
-  /** Number of lines in this item */
-  lineCount: number
+  start: number
+  end: number
   className?: string
   superClassName?: string | null
   isBrand?: boolean
 }
 
-interface ModificationBlock {
-  blockStart: number
-  blockEnd: number
-  statementsToRemove: Array<{ start: number; end: number }>
-}
-
-/** Count newlines before a position to get the 1-indexed line number */
-function getLineNumber(code: string, pos: number): number {
-  let line = 1
-  for (let i = 0; i < pos && i < code.length; i++) {
-    if (code[i] === '\n') line++
-  }
-  return line
-}
-
-/** Count lines in a string */
-function countLines(str: string): number {
-  let count = 1
-  for (const ch of str) {
-    if (ch === '\n') count++
-  }
-  return count
-}
-
 /**
  * Fix __esm initialization order by hoisting and sorting class definitions.
- * Returns the modified code and metadata needed for source map updates.
+ * Uses MagicString's move() to preserve source mappings.
+ * Returns the MagicString instance for source map generation.
  */
-export function fixEsmInitOrder(code: string): {
-  code: string
-  hoistedItems: HoistedItem[]
-  insertLine: number
-  removedRanges: Array<{ startLine: number; endLine: number }>
-} | null {
+export function fixEsmInitOrder(code: string): MagicString | null {
   const sourceFile = ts.createSourceFile(
     'bundle.js',
     code,
@@ -75,7 +43,6 @@ export function fixEsmInitOrder(code: string): {
 
   // Collect all hoistable items from __esm blocks
   const allHoisted: HoistedItem[] = []
-  const modifications: ModificationBlock[] = []
 
   // Find all __esm wrapper calls
   ts.forEachChild(sourceFile, (node) => {
@@ -94,32 +61,24 @@ export function fixEsmInitOrder(code: string): {
       if (!ts.isBlock(body)) continue
 
       // Analyze statements in this __esm block
-      const statementsToRemove: Array<{ start: number; end: number }> = []
-
       for (const stmt of body.statements) {
         const hoistInfo = analyzeStatement(stmt)
         if (hoistInfo) {
           const start = stmt.getStart(sourceFile)
-          const end = stmt.getEnd()
-          const stmtCode = code.slice(start, end)
-          statementsToRemove.push({ start, end })
+          let end = stmt.getEnd()
+          // Include trailing newline if present
+          while (end < code.length && (code[end] === ' ' || code[end] === '\n')) {
+            end++
+            if (code[end - 1] === '\n') break
+          }
           allHoisted.push({
-            code: stmtCode,
-            originalStartLine: getLineNumber(code, start),
-            lineCount: countLines(stmtCode),
+            start,
+            end,
             className: hoistInfo.className,
             superClassName: hoistInfo.superClassName,
             isBrand: hoistInfo.isBrand,
           })
         }
-      }
-
-      if (statementsToRemove.length > 0) {
-        modifications.push({
-          blockStart: body.getStart(sourceFile),
-          blockEnd: body.getEnd(),
-          statementsToRemove,
-        })
       }
     }
   })
@@ -129,57 +88,27 @@ export function fixEsmInitOrder(code: string): {
   // Topologically sort hoisted items
   const sorted = topologicalSort(allHoisted)
 
-  // Build the hoisted code block
-  const hoistedCode = sorted.map(item => item.code).join('\n')
-  const hoistedHeader = '\n// Hoisted class definitions\n'
+  // Create MagicString for source-map-aware modifications
+  const s = new MagicString(code)
 
-  // Find insert position
+  // Find insert position (after imports and __esm definition)
   const insertPosition = findHoistInsertPosition(code)
-  const insertLine = getLineNumber(code, insertPosition)
 
-  // Track removed ranges for source map adjustment
-  const removedRanges: Array<{ startLine: number; endLine: number }> = []
+  // Insert header comment at the insertion point
+  s.appendLeft(insertPosition, '\n// Hoisted class definitions\n')
 
-  // Apply modifications - work on the string directly
-  let result = code
-
-  // Collect all removals with their line info before modifying
-  const removals: Array<{ start: number; end: number; startLine: number; endLine: number }> = []
-  for (const mod of modifications) {
-    for (const stmt of mod.statementsToRemove) {
-      // Extend to include trailing newline
-      let endPos = stmt.end
-      while (endPos < code.length && (code[endPos] === '\n' || code[endPos] === ' ')) {
-        endPos++
-        if (code[endPos - 1] === '\n') break
-      }
-      removals.push({
-        start: stmt.start,
-        end: endPos,
-        startLine: getLineNumber(code, stmt.start),
-        endLine: getLineNumber(code, endPos),
-      })
-    }
+  // Move each hoisted item to the insertion point, in forward order
+  // MagicString's move() appends items moved to the same position in the order they're moved
+  // Since sorted array has base classes first, forward iteration gives correct order
+  for (const item of sorted) {
+    s.move(item.start, item.end, insertPosition)
   }
 
-  // Sort removals by position descending (to process from end to start)
-  removals.sort((a, b) => b.start - a.start)
+  // Add a blank line after the hoisted block
+  // Find where the last hoisted item now ends (at insertPosition since we moved everything there)
+  s.appendLeft(insertPosition, '\n')
 
-  // Apply removals
-  for (const removal of removals) {
-    result = result.slice(0, removal.start) + result.slice(removal.end)
-    removedRanges.push({ startLine: removal.startLine, endLine: removal.endLine })
-  }
-
-  // Insert hoisted code at the beginning
-  result = result.slice(0, insertPosition) + hoistedHeader + hoistedCode + '\n\n' + result.slice(insertPosition)
-
-  return {
-    code: result,
-    hoistedItems: sorted,
-    insertLine,
-    removedRanges,
-  }
+  return s
 }
 
 /**
@@ -322,163 +251,8 @@ function topologicalSort(items: HoistedItem[]): HoistedItem[] {
 }
 
 /**
- * Update the source map to account for hoisting transformations.
- *
- * Strategy:
- * 1. For hoisted code: Look up original source positions from the original map
- *    using the original line numbers, then map new lines to those sources
- * 2. For non-hoisted code: Adjust line numbers based on insertions/deletions
- */
-async function updateSourceMap(
-  mapPath: string,
-  hoistedItems: HoistedItem[],
-  insertLine: number,
-  removedRanges: Array<{ startLine: number; endLine: number }>,
-  newCode: string,
-): Promise<void> {
-  const mapContent = await readFile(mapPath, 'utf8')
-  const originalMap: RawSourceMap = JSON.parse(mapContent)
-  const consumer = new SourceMapConsumer(originalMap)
-
-  const generator = new SourceMapGenerator({
-    file: originalMap.file,
-  })
-
-  // Copy sources and sourcesContent
-  if (originalMap.sources) {
-    for (let i = 0; i < originalMap.sources.length; i++) {
-      if (originalMap.sourcesContent?.[i]) {
-        generator.setSourceContent(originalMap.sources[i], originalMap.sourcesContent[i])
-      }
-    }
-  }
-
-  // Build a map of new line -> original line for hoisted code
-  // The hoisted code starts at insertLine + 2 (after "\n// Hoisted class definitions\n")
-  const hoistedLineMap = new Map<number, number>()
-  let newLine = insertLine + 2 // Skip the header comment
-  for (const item of hoistedItems) {
-    for (let i = 0; i < item.lineCount; i++) {
-      hoistedLineMap.set(newLine + i, item.originalStartLine + i)
-    }
-    newLine += item.lineCount
-  }
-
-  // Calculate the total lines inserted (header + hoisted code + blank line)
-  const totalHoistedLines = 2 + hoistedItems.reduce((sum, item) => sum + item.lineCount, 0) + 1
-
-  // Sort removed ranges by start line for calculating offsets
-  const sortedRemovals = [...removedRanges].sort((a, b) => a.startLine - b.startLine)
-
-  // Function to calculate how many lines were removed before a given original line
-  function getRemovedLinesBefore(origLine: number): number {
-    let removed = 0
-    for (const range of sortedRemovals) {
-      if (range.endLine <= origLine) {
-        removed += range.endLine - range.startLine
-      } else if (range.startLine < origLine) {
-        // Partial overlap
-        removed += origLine - range.startLine
-      }
-    }
-    return removed
-  }
-
-  // Function to check if an original line was removed
-  function wasLineRemoved(origLine: number): boolean {
-    for (const range of sortedRemovals) {
-      if (origLine >= range.startLine && origLine < range.endLine) {
-        return true
-      }
-    }
-    return false
-  }
-
-  // Process each line in the new code
-  const newLines = newCode.split('\n')
-
-  for (let newLineNum = 1; newLineNum <= newLines.length; newLineNum++) {
-    const lineContent = newLines[newLineNum - 1]
-
-    // Check if this line is hoisted code
-    const originalLineFromHoist = hoistedLineMap.get(newLineNum)
-    if (originalLineFromHoist !== undefined) {
-      // This line came from hoisted code - look up its original source
-      for (let col = 0; col < lineContent.length; col++) {
-        const origPos = consumer.originalPositionFor({
-          line: originalLineFromHoist,
-          column: col,
-        })
-        if (origPos.source && origPos.line !== null) {
-          generator.addMapping({
-            generated: { line: newLineNum, column: col },
-            original: { line: origPos.line, column: origPos.column ?? 0 },
-            source: origPos.source,
-            name: origPos.name ?? undefined,
-          })
-        }
-      }
-      continue
-    }
-
-    // For non-hoisted lines, calculate what the original line was
-    let originalLine: number
-    if (newLineNum < insertLine) {
-      // Before the insertion point - unchanged
-      originalLine = newLineNum
-    } else if (newLineNum < insertLine + totalHoistedLines) {
-      // Inside the hoisted section but not a hoisted line (comment/blank)
-      // Skip - no mapping needed for these lines
-      continue
-    } else {
-      // After the hoisted section
-      // Reverse the transformation: originalLine = newLine - insertedLines + removedLines
-      const adjustedLine = newLineNum - totalHoistedLines + 1
-      // Add back removed lines
-      // This is tricky because removals happened at different points
-      // We need to find what original line this maps to
-
-      // Start with the adjusted line and add back removed lines
-      let candidateOriginal = adjustedLine
-      let prevRemoved = 0
-      for (let iter = 0; iter < 10; iter++) { // Iterate to converge
-        const removed = getRemovedLinesBefore(candidateOriginal)
-        if (removed === prevRemoved) break
-        candidateOriginal = adjustedLine + removed
-        prevRemoved = removed
-      }
-      originalLine = candidateOriginal
-    }
-
-    // Skip if this original line was removed (shouldn't happen for non-hoisted code)
-    if (wasLineRemoved(originalLine)) {
-      continue
-    }
-
-    // Map each column using the original source map
-    for (let col = 0; col < lineContent.length; col++) {
-      const origPos = consumer.originalPositionFor({
-        line: originalLine,
-        column: col,
-      })
-      if (origPos.source && origPos.line !== null) {
-        generator.addMapping({
-          generated: { line: newLineNum, column: col },
-          original: { line: origPos.line, column: origPos.column ?? 0 },
-          source: origPos.source,
-          name: origPos.name ?? undefined,
-        })
-      }
-    }
-  }
-
-  const newMap = generator.toJSON()
-  await writeFile(mapPath, JSON.stringify(newMap))
-}
-
-/**
  * Post-process a bundle file to fix __esm init order.
- * Also updates the accompanying source map if present.
+ * Also updates the accompanying source map using remapping.
  */
 export async function fixEsmInitOrderInFile(filePath: string): Promise<boolean> {
   const content = await readFile(filePath, 'utf8')
@@ -488,25 +262,39 @@ export async function fixEsmInitOrderInFile(filePath: string): Promise<boolean> 
     return false
   }
 
-  const result = fixEsmInitOrder(content)
+  const magicString = fixEsmInitOrder(content)
 
-  if (!result) {
+  if (!magicString) {
     return false
   }
 
   // Write the modified code
-  await writeFile(filePath, result.code)
+  const newCode = magicString.toString()
+  await writeFile(filePath, newCode)
 
   // Update the source map if it exists
   const mapPath = filePath + '.map'
   try {
-    await updateSourceMap(
-      mapPath,
-      result.hoistedItems,
-      result.insertLine,
-      result.removedRanges,
-      result.code,
+    const originalMapContent = await readFile(mapPath, 'utf8')
+    const originalMap = JSON.parse(originalMapContent)
+
+    // Generate the transformation source map from MagicString
+    // This maps: new code positions -> original bundle positions
+    const transformMap = magicString.generateMap({
+      source: 'index.js',
+      file: 'index.js',
+      includeContent: false,
+      hires: true,
+    })
+
+    // Use remapping to chain: new code -> bundle -> original sources
+    // remapping takes maps in reverse order (output first, then inputs)
+    const remapped = remapping(
+      [transformMap as any, originalMap],
+      () => null // No additional source loading needed
     )
+
+    await writeFile(mapPath, JSON.stringify(remapped))
   } catch {
     // Source map might not exist, that's fine
   }
