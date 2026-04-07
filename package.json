@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.2.0",
     "@parcel/watcher": "^2.5.6",
+    "@sandstone-mc/mcdoc-ts-generator": "link:@sandstone-mc/mcdoc-ts-generator",
     "@stylistic/eslint-plugin": "^5.7.1",
     "@types/adm-zip": "^0.5.2",
     "@types/fs-extra": "^11.0.2",
