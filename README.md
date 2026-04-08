@@ -2,9 +2,7 @@
 
 # Sandstone
 
-![GitHub](https://img.shields.io/github/license/sandstone-mc/sandstone?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/sandstone-mc/sandstone?color=blue&style=flat-square)
-![Version](https://img.shields.io/badge/version-alpha-success?style=flat-square)
 [![NPM Version](https://img.shields.io/npm/v/sandstone/beta?style=flat-square&logo=npm&color=cc3534)](https://www.npmjs.com/package/@sandstone-mc/sandstone?activeTab=versions)[![Provenance Signed](https://img.shields.io/badge/-%E2%9C%94-b02c2c?style=flat-square)](https://www.npmjs.com/package/@sandstone-mc/sandstone#provenance)
 ![Discord](https://img.shields.io/discord/800035701243772969?color=%237289DA&label=discord&style=flat-square)
 
