@@ -24,6 +24,7 @@ interface HoistedItem {
   end: number
   className?: string
   superClassName?: string | null
+  rawClassName?: string  // For makeClassCallable(_RawFoo) - tracks the raw class reference
   isBrand?: boolean
 }
 
@@ -44,8 +45,38 @@ export function fixEsmInitOrder(code: string): MagicString | null {
   // Collect all hoistable items from __esm blocks
   const allHoisted: HoistedItem[] = []
 
-  // Find all __esm wrapper calls
+  // Collect top-level class declarations (may need hoisting if used as base classes)
+  const topLevelClasses = new Map<string, HoistedItem>()
+
+  // Find all __esm wrapper calls and top-level class declarations
   ts.forEachChild(sourceFile, (node) => {
+    // Handle top-level class declarations: class Foo { ... }
+    if (ts.isClassDeclaration(node) && node.name) {
+      const className = node.name.text
+      let superClassName: string | null = null
+
+      if (node.heritageClauses) {
+        for (const clause of node.heritageClauses) {
+          if (clause.token === ts.SyntaxKind.ExtendsKeyword && clause.types[0]) {
+            const superType = clause.types[0]
+            if (ts.isIdentifier(superType.expression)) {
+              superClassName = superType.expression.text
+            }
+          }
+        }
+      }
+
+      const start = node.getStart(sourceFile)
+      let end = node.getEnd()
+      while (end < code.length && (code[end] === ' ' || code[end] === '\n')) {
+        end++
+        if (code[end - 1] === '\n') break
+      }
+
+      topLevelClasses.set(className, { start, end, className, superClassName })
+      return
+    }
+
     if (!ts.isVariableStatement(node)) return
 
     for (const decl of node.declarationList.declarations) {
@@ -76,6 +107,7 @@ export function fixEsmInitOrder(code: string): MagicString | null {
             end,
             className: hoistInfo.className,
             superClassName: hoistInfo.superClassName,
+            rawClassName: hoistInfo.rawClassName,
             isBrand: hoistInfo.isBrand,
           })
         }
@@ -84,6 +116,30 @@ export function fixEsmInitOrder(code: string): MagicString | null {
   })
 
   if (allHoisted.length === 0) return null
+
+  // Find top-level class declarations that are referenced by hoisted items
+  // (either as base classes via extends, or as arguments to makeClassCallable)
+  const neededTopLevelClasses = new Set<string>()
+
+  function addTopLevelClass(className: string | null | undefined) {
+    if (!className || neededTopLevelClasses.has(className)) return
+    const topLevelClass = topLevelClasses.get(className)
+    if (topLevelClass) {
+      neededTopLevelClasses.add(className)
+      // Recursively add its base class too
+      addTopLevelClass(topLevelClass.superClassName)
+    }
+  }
+
+  for (const item of allHoisted) {
+    addTopLevelClass(item.superClassName)
+    addTopLevelClass(item.rawClassName)
+  }
+
+  // Add needed top-level classes to hoisted list
+  for (const className of neededTopLevelClasses) {
+    allHoisted.push(topLevelClasses.get(className)!)
+  }
 
   // Topologically sort hoisted items
   const sorted = topologicalSort(allHoisted)
@@ -139,6 +195,7 @@ function findHoistInsertPosition(code: string): number {
 interface StatementAnalysis {
   className?: string
   superClassName?: string | null
+  rawClassName?: string
   isBrand?: boolean
 }
 
@@ -192,7 +249,12 @@ function analyzeStatement(stmt: ts.Statement): StatementAnalysis | null {
 
     // makeClassCallable call: SomeClass = makeClassCallable(_RawSomeClass)
     if (ts.isIdentifier(callee) && callee.text === 'makeClassCallable') {
-      return { className: expr.left.text }
+      // Track the raw class being wrapped
+      let rawClassName: string | undefined
+      if (right.arguments[0] && ts.isIdentifier(right.arguments[0])) {
+        rawClassName = right.arguments[0].text
+      }
+      return { className: expr.left.text, rawClassName }
     }
   }
 
@@ -232,6 +294,11 @@ function topologicalSort(items: HoistedItem[]): HoistedItem[] {
     // Visit superclass first
     if (item.superClassName && classMap.has(item.superClassName)) {
       if (!visit(item.superClassName)) return false
+    }
+
+    // Visit rawClassName dependency (for makeClassCallable)
+    if (item.rawClassName && classMap.has(item.rawClassName)) {
+      if (!visit(item.rawClassName)) return false
     }
 
     visiting.delete(className)

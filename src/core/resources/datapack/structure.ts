@@ -1,5 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
+// TODO: prismarine-nbt uses Node.js zlib, needs browser-compatible alternative for playground
 import lodash from 'lodash'
 import prismarine, { type NBT } from 'prismarine-nbt'
 import {

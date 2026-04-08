@@ -25,12 +25,18 @@ import {
 } from './plugins/extract-exports'
 import { migrateDtsImports } from './plugins/migrate-dts-imports'
 import { fixEsmInitOrderInFile } from './plugins/fix-esm-init-order'
+import {
+  browserShimPlugin,
+  browserExternals,
+  generateBrowserBanner,
+} from './plugins/browser-shims'
 import { runTsc } from './build-types'
 
 const rootDir = join(import.meta.dir, '..')
 const srcDir = join(rootDir, 'src')
 const distDir = join(rootDir, 'dist')
 const internalDir = join(distDir, '_internal')
+const browserDir = join(distDir, 'browser')
 const typesDir = join(rootDir, 'types')
 
 // Check for silent flag
@@ -121,6 +127,51 @@ async function buildMainBundle(): Promise<void> {
     join(internalDir, 'package.json'),
     JSON.stringify({ private: true }, null, 2),
   )
+}
+
+/**
+ * Build the browser-compatible bundle.
+ * This bundles all code with browser shims and a runtime banner.
+ * Output goes to dist/browser/ for use in browser environments like the playground.
+ */
+async function buildBrowserBundle(): Promise<void> {
+  await mkdir(browserDir, { recursive: true })
+
+  const result = await Bun.build({
+    entrypoints: [join(srcDir, 'index.ts')],
+    outdir: browserDir,
+    target: 'node', // Use node target to get __esm blocks that fix-esm can process
+    format: 'esm',
+    splitting: false,
+    external: browserExternals,
+    naming: 'sandstone.esm.js',
+    sourcemap: 'linked',
+    plugins: [browserShimPlugin],
+  })
+
+  if (!result.success) {
+    console.error('Browser bundle build failed:')
+    for (const log of result.logs) {
+      console.error(log)
+    }
+    throw new Error('Browser bundle build failed')
+  }
+
+  // Mark browser dir as private to hide from IDE auto-import
+  await writeFile(
+    join(browserDir, 'package.json'),
+    JSON.stringify({ private: true }, null, 2),
+  )
+}
+
+/**
+ * Prepend the browser runtime banner to the browser bundle.
+ */
+async function prependBrowserBanner(): Promise<void> {
+  const bundlePath = join(browserDir, 'sandstone.esm.js')
+  const content = await readFile(bundlePath, 'utf8')
+  const banner = generateBrowserBanner()
+  await writeFile(bundlePath, banner + content)
 }
 
 /**
@@ -254,26 +305,38 @@ async function main() {
   )
   if (!fixed) log('  (no changes needed)')
 
-  // 6. Remove synthetic index (not needed after bundling)
+  // 6. Build browser bundle (with shims for Node.js modules)
+  await step('Building browser bundle', buildBrowserBundle)
+
+  // 7. Fix ESM initialization order in browser bundle
+  const browserFixed = await step('Fixing browser bundle ESM order', () =>
+    fixEsmInitOrderInFile(join(browserDir, 'sandstone.esm.js'))
+  )
+  if (!browserFixed) log('  (no changes needed)')
+
+  // 8. Prepend browser runtime banner
+  await step('Adding browser runtime banner', prependBrowserBanner)
+
+  // 9. Remove synthetic index (not needed after bundling)
   await removeSyntheticIndex()
 
-  // 7. Copy declarations from types/ to dist/
+  // 10. Copy declarations from types/ to dist/
   await step('Copying declarations', copyDeclarations)
 
-  // 8. Extract main exports (needed for migration and re-exports)
+  // 11. Extract main exports (needed for migration and re-exports)
   const mainDtsExports = await step('Extracting main exports', async () => {
     const exports = await extractSubpathExportsFromDts(typesDir, '')
     log(`  Found ${exports.size} exports in public API`)
     return exports
   })
 
-  // 9. Migrate .d.ts imports to use correct entry points
+  // 12. Migrate .d.ts imports to use correct entry points
   await step('Migrating declaration imports', async () => {
     const count = await migrateDtsImports(internalDir, mainDtsExports, subpaths)
     log(`  Migrated ${count} files`)
   })
 
-  // 10. Generate re-export files
+  // 13. Generate re-export files
   await step('Generating re-export files', () =>
     generateReExportsWithMainExports(mainDtsExports)
   )

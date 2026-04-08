@@ -44,7 +44,7 @@
     "magic-string": "^0.30.21",
     "oxlint": "^1.42.0",
     "source-map-js": "^1.2.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "directories": {
     "lib": "src"
@@ -89,6 +89,11 @@
       "types": "./dist/exports/index.d.ts",
       "import": "./dist/exports/index.js",
       "default": "./dist/exports/index.js"
+    },
+    "./browser": {
+      "types": "./dist/exports/index.d.ts",
+      "import": "./dist/browser/sandstone.esm.js",
+      "default": "./dist/browser/sandstone.esm.js"
     },
     "./arguments": {
       "types": "./dist/exports/arguments/index.d.ts",

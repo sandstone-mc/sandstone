@@ -45,7 +45,7 @@ import type {
 import { SandstonePack } from './pack'
 import type { Flow } from './flow'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, SetType } from './utils'
-import { Set } from './utils'
+import { randomUUID, Set } from './utils'
 import * as coordinates from './variables/Coordinates'
 import { ResolveNBTPart } from './variables/ResolveNBT'
 import { setSandstoneContext, hasContext, getSandstoneContext } from './context'
@@ -98,7 +98,7 @@ export function resetSandstonePack(): void {
   }
 }
 
-export { LiteralUnion, NamespacedLiteralUnion, Set, SetType }
+export { LiteralUnion, NamespacedLiteralUnion, randomUUID, Set, SetType }
 
 export { ResolveNBTPart }
 
