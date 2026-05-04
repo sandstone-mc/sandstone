@@ -573,7 +573,7 @@ export class SandstonePack {
     } else {
       this.namedVariableIds[name] ??= 0
 
-      return `${name}_${this.namedVariableIds[name]}_${this.packUid}`
+      return `${name}_${this.namedVariableIds[name]++}_${this.packUid}`
     }
   }
 
