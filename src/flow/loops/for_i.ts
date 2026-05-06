@@ -4,7 +4,6 @@ import { LoopArgument } from 'sandstone/variables'
 import { conditionToNode, type Condition } from '..'
 import { IfStatement } from '../if_else'
 import { LoopNode } from '../loop'
-import { analyzeCondition, warnStaticallyFalseCondition } from './staticAnalysis'
 
 export class ForINode extends LoopNode {
   // eslint-disable-next-line max-len
@@ -24,21 +23,24 @@ export class ForINode extends LoopNode {
         () => new IfStatement(sandstoneCore, condition, () => new LoopArgument(sandstoneCore.pack)),
       )
 
-    // Check if we can inline the first iteration via static analysis
-    const analysisResult = typeof initialValue === 'number'
-      ? analyzeCondition(condition, iterator, initialValue)
-      : { canAnalyze: false as const }
+    // TODO: Move this to a visitor, it is too unsafe to have this because of `_continue`, `returnCmd` and nested loops
+    // // Check if we can inline the first iteration via static analysis
+    // const analysisResult = typeof initialValue === 'number'
+    //   ? analyzeCondition(condition, iterator, initialValue)
+    //   : { canAnalyze: false as const }
 
-    if (analysisResult.canAnalyze) {
-      if (analysisResult.result) {
-        // Condition is statically true - inline the first iteration
-        callback(iterator, _continue)
-        iterate(iterator)
-      } else {
-        // Condition is statically false - loop will never execute
-        warnStaticallyFalseCondition('for', `initial value ${initialValue} does not satisfy condition`)
-      }
-    }
+    // if (analysisResult.canAnalyze) {
+    //   if (analysisResult.result) {
+    //     // Condition is statically true - inline the first iteration
+    //     console.log('#### Statically inlining first ForINode iteration')
+    //     console.log(`##### ${sandstoneCore.getCurrentMCFunctionOrThrow().resource.name}`)
+    //     callback(iterator, _continue)
+    //     iterate(iterator)
+    //   } else {
+    //     // Condition is statically false - loop will never execute
+    //     warnStaticallyFalseCondition('for', `initial value ${initialValue} does not satisfy condition`)
+    //   }
+    // }
 
     super(
       sandstoneCore,

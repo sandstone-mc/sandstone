@@ -208,6 +208,10 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
   }
 
   createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
+    if (this.createdMCFunction) {
+      // This is sus, but was needed. Ideally createMCFunction wouldn't be called multiple times at all.
+      return { node: this as ExecuteCommandNode, mcFunction: this.createdMCFunction.node }
+    }
     if (this.isSingleExecute || !currentMCFunction) {
       return { node: this as ExecuteCommandNode }
     }
