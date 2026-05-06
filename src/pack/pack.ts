@@ -971,7 +971,7 @@ export class SandstonePack {
 
       this.ticked[runEvery] = this.Tag('function', name, [])
 
-      this.MCFunction(name, (self) => {
+      const looped = this.MCFunction(name, (self) => {
         this.commands.functionCmd(this.ticked[runEvery])
 
         self.schedule.function(runEvery, 'replace')
@@ -981,7 +981,7 @@ export class SandstonePack {
         this.startAllTicked = this.MCFunction(`__sandstone:ticked/start/${this.packUid.toLowerCase()}`)
         this.loadTags.load.push(this.startAllTicked)
       }
-      this.startAllTicked.push(() => this.commands.schedule.function(this.ticked[runEvery], runEvery, 'replace'))
+      this.startAllTicked.push(() => looped())
 
       return this.ticked[runEvery]
     })()
