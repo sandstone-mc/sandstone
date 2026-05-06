@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.0-beta.5](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.0-beta.5) - 2026-05-06
+
+### Various fixes and a web bundle
+
+**Full Changelog**: [v1.0.0-beta.4...v1.0.0-beta.5](https://github.com/sandstone-mc/sandstone/compare/v1.0.0-beta.4...v1.0.0-beta.5)
+
+
 ## [v1.0.0-beta.4](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.0-beta.4) - 2026-04-08
 
 ### Refactor library builds, add source maps, & fix several bugs
