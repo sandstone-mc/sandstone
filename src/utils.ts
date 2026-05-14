@@ -573,3 +573,162 @@ type McdocNegatableIDMapBase<Dispatcher, UnknownValue> = MemberModifiers<Dispatc
 export type McdocNegatableIDMap<Dispatcher, UnknownValue> = Partial<McdocNegatableIDMapBase<Dispatcher, UnknownValue>> & {
   [K in keyof MemberModifiers<Dispatcher>]-?: Record<K, McdocNegatableIDMapBase<Dispatcher, UnknownValue>[K]>
 }[keyof MemberModifiers<Dispatcher>]
+
+export type Enumerate<
+  N extends number,
+  Acc extends number[] = [],
+> = ( number extends N
+  ? number // Guard against wide 'number'
+  : Acc["length"] extends N
+    ? Acc[number]
+    : Enumerate<N, [...Acc, Acc["length"]]>
+)
+
+export type BuildTuple<N extends number, T extends never[] = []> = (
+  number extends N
+    ? never[] // Guard against wide 'number'
+    : T['length'] extends N
+      ? T
+      : BuildTuple<N, [...T, never]>
+)
+
+export type Increment<N extends number> = (
+  number extends N
+    ? number // Guard against wide 'number'
+    : [...BuildTuple<N>, never]['length'] & number
+)
+
+/**
+ * `0..`
+ *
+ * Can be made exclusive of zero via `Exclude<PositiveNumber<N>, 0>`
+ */
+export type PositiveNumber<T extends number> = (
+  number extends T
+    ? never
+    : `${T}` extends `-${string}`
+        ? never
+        : T
+)
+
+/**
+ * `..<0`; Cannot be zero nor above zero.
+ *
+ * Can be made inclusive via `NegativeNumber<N> | 0`
+ */
+export type NegativeNumber<T extends number> = (
+  number extends T
+    ? never
+    : `${T}` extends `-${string}`
+      ? T
+      : never
+)
+
+/** 
+ * No decimal allowed.
+ */
+export type WholeNumber<T extends number> = (
+  number extends T
+    ? never
+    : `${T}` extends `${string}.${string}`
+      ? never
+      : T
+)
+
+/**
+ * `0..` & no decimal allowed.
+ * 
+ * Can be made exclusive of zero via `Exclude<PositiveWholeNumber<N>, 0>`
+ */
+export type PositiveWholeNumber<N extends number> = (
+  PositiveNumber<N> extends never
+    ? never
+    : WholeNumber<N> extends never
+      ? never
+      : N
+)
+
+/**
+ * `..-1` & no decimal allowed.
+ * 
+ * Can include zero via `NegativeWholeNumber<N> | 0`
+ */
+export type NegativeWholeNumber<T extends number> = (
+  number extends T
+    ? never
+    : `${T}` extends `${string}.${string}`
+      ? never
+      : `${T}` extends `-${string}`
+        ? T
+        : never
+)
+
+/**
+ * `0<..<1`; Cannot be zero nor one, below zero, nor above one. 
+ *
+ * Can be made inclusive by adding unioned `0`/`1` literals. (eg. `PositiveFraction<N> | 0 | 1`)
+ */
+export type PositiveFraction<T extends number> = (
+  number extends T
+    ? never
+    : `${T}` extends `0.${string}`
+        ? T
+        : never
+)
+
+/**
+ * `-1<..<0`; Cannot be negative one nor zero, below negative one, nor above zero. 
+ *
+ * Can be made inclusive by adding unioned `-1`/`0` literals. (eg. `NegativeFraction<N> | -1 | 0`)
+ */
+export type NegativeFraction<T extends number> = (
+  number extends T
+    ? never
+    : `${T}` extends `-0.${string}`
+        ? T
+        : never
+)
+
+/**
+ * Converts a positive numeric literal to its negative counterpart.
+ * Example: ToNegative<5> -> -5
+ */
+export type ToNegative<T extends number> = (
+  T extends 0
+    ? 0
+    : `-${T}` extends `${infer N extends number}`
+      ? N
+      : never
+)
+
+/**
+ * Checks if a number literal is negative by checking its string representation.
+ */
+export type IsNegative<N extends number> = `${N}` extends `-${string}` ? true : false
+
+/**
+ * Gets the absolute value of a number.
+ */
+export type Abs<N extends number> = `${N}` extends `-${infer U extends number}` ? U : N
+
+/**
+ * Creates a union of numbers from 0 to N-1.
+ */
+export type RangeTo<N extends number> = Enumerate<N>
+
+/**
+ * Generates a union of numbers between two positive integers (inclusive).
+ */
+export type PositiveRange<Start extends number, End extends number> = Exclude<Enumerate<Increment<End>>, Enumerate<Start>>
+
+/**
+ * The core logic for NBTInt<{ min: -5, max: 2 }>
+ */
+export type SmartRange<Min extends number, Max extends number> = (
+  IsNegative<Min> extends true
+    ? IsNegative<Max> extends true
+      ? ToNegative<PositiveRange<Abs<Max>, Abs<Min>>>
+      : ToNegative<PositiveRange<1, Abs<Min>>> | 0 | PositiveRange<1, Max>
+    :
+      PositiveRange<Min, Max>
+)
