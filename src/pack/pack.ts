@@ -528,8 +528,7 @@ export class SandstonePack {
      * @param options.alreadyExists If true, the objective will not be registered as a new one. Defaults to false.
      * @param options.useDefaultNamespace If true (the default), the objective will be created in the default namespace. \
      *                            For example, if the default namespace is `sandstone`, then the objective will be created as `sandstone.objective_name`. \
-     *                            If false, the objective will be created without a namespace. \
-     *                            This argument is ignored if the `name` already contains a namespace (determined by the presence of a dot `"."` or a double underscore `"__"`).
+     *                            If false, the objective will be created without a namespace.
      */
     create: (
       name: string,
