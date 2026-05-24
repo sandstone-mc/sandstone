@@ -503,6 +503,11 @@ export class SandstonePack {
   }
 
   registerNewObjective = (objective: ObjectiveClass) => {
+    for (const obj of this.objectives) {
+      if (obj.name === objective.name) {
+        return
+      }
+    }
     this.objectives.add(objective)
   }
 
@@ -1009,7 +1014,7 @@ export class SandstonePack {
     this.tickedCommands[runEvery].push(callback)
   }
 
-  sleep = (delay: TimeArgument): PromiseLike<SleepClass> => new SleepClass(this.core, delay).promise()
+  sleep = (delay: TimeArgument) => new SleepClass(this.core, delay)
 
   Loop = () => new LoopArgument(this)
 

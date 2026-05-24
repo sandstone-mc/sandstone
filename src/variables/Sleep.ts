@@ -69,6 +69,8 @@ export class SleepClass extends AwaitNode {
 
       const timer = new ObjectiveClass(core.pack, name.replace(':', '.'), 'dummy', undefined, { creator: 'sandstone' })
 
+      core.pack.registerNewObjective(timer)
+
       execute.store.result(timer('@s')).run.time.query('gametime')
 
       timer('@s').add(Duration)
@@ -101,15 +103,5 @@ export class SleepClass extends AwaitNode {
     currentFunction.enterContext(this)
 
     core.awaitNodes.add(this)
-  }
-
-  promise() {
-    return {
-      // oxlint-disable-next-line no-thenable
-      then: (async (onfullfilled?: () => void | Promise<void>) => {
-        await onfullfilled?.()
-        return this
-      }) as any,
-    }
   }
 }
