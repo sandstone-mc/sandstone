@@ -481,6 +481,9 @@ export class SandstonePack {
   }
 
   resourceToPath = (name: string, resourceFolders?: readonly string[]): ResourcePath => {
+    if (name === '') {
+      throw new Error('A resource name must not be empty!')
+    }
     let namespace = this.defaultNamespace
     let fullName = name
 
