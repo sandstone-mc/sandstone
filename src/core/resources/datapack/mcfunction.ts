@@ -19,8 +19,6 @@ import { CallableResourceClass } from '../resource'
 import { TagClass } from './tag'
 import type { DataPointClass } from 'sandstone/variables'
 
-const tags: Record<string, TagClass<'function'>> = {}
-
 // interface AttributeWrapper {
 //  attributes: string[]
 // }
@@ -342,15 +340,20 @@ export class _RawMCFunctionClass<
       func = this as unknown as MCFunctionClass<undefined, undefined>
     }
     if (typeof tag === 'string') {
-      if (tags[tag]) {
-        tags[tag].push(func)
+      // Cache lives on SandstoneCore so its lifetime matches the core (cleared on reset).
+      // This prevents stale TagClass references from a previous pack surviving across
+      // watch-mode rebuilds and silently dropping the tag from the new build's output.
+      const existing = this.core.functionTags.get(tag)
+      if (existing) {
+        existing.push(func)
       } else {
-        tags[tag] = new TagClass(this.core, 'function', tag, {
+        const newTag = new TagClass(this.core, 'function', tag, {
           values: [func],
           addToSandstoneCore: true,
           creator: 'sandstone',
           onConflict: 'append',
         })
+        this.core.functionTags.set(tag, newTag)
       }
     } else {
       tag.push(func)

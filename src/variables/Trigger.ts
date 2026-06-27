@@ -3,8 +3,6 @@ import { _RawMCFunctionClass, type MCFunctionClass } from 'sandstone/core/resour
 import { ObjectiveClass } from './Objective'
 import type { Score } from './Score'
 
-const checkTriggers: Record<number, MCFunctionClass<undefined, undefined>> = {}
-
 export type TriggerHandler =
   | (() => any)
   | MCFunctionClass<undefined, undefined>
@@ -26,14 +24,14 @@ export class TriggerClass<HANDLE extends TriggerHandler> {
 
     registerNewObjective(this.objective)
 
-    if (!checkTriggers[pollingEvery]) {
-      checkTriggers[pollingEvery] = MCFunction(`triggers/check/${pollingEvery}`, {
+    if (!sandstoneCore.checkTriggers[pollingEvery]) {
+      sandstoneCore.checkTriggers[pollingEvery] = MCFunction(`triggers/check/${pollingEvery}`, {
         creator: 'sandstone',
         runEvery: pollingEvery,
       })
     }
 
-    checkTriggers[pollingEvery].push(() => {
+    sandstoneCore.checkTriggers[pollingEvery].push(() => {
       commands.execute.as(`@a[scores={${name}=1..}]`).run(() => {
         const score = this.objective('@s')
 

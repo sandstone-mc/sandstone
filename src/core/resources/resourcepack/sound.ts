@@ -5,8 +5,6 @@ import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 
-const sounds: Map<string, SoundsClass> = new Map()
-
 /**
  * A node representing a Minecraft sound.
  */
@@ -63,10 +61,10 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
       }
 
       if (args.addToSounds) {
-        let def = sounds.get(this.path[0])
+        let def = this.core.sounds.get(this.path[0])
 
         if (!def) {
-          def = sounds
+          def = this.core.sounds
             .set(
               this.path[0],
               new SoundsClass(this.core, this.path[0], {

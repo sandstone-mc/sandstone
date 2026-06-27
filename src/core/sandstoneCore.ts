@@ -9,7 +9,9 @@ import type { MCMetaBranches } from './mcmeta'
 import { MCMetaCache } from './mcmeta'
 import type { AwaitNode } from './nodes'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
+import type { TagClass } from './resources/datapack/tag'
 import { SmithedDependencyClass } from './resources/dependency'
+import type { SoundsClass } from './resources/resourcepack/sound'
 import { type ResourceClass, ResourceNodesMap } from './resources/resource'
 import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
@@ -30,10 +32,22 @@ export class SandstoneCore {
 
   dependencies: ((() => Promise<true | false>) | true | false)[] = []
 
+  /** Cache of auto-generated function tags, keyed by tag name. Cleared on reset. */
+  functionTags: Map<string, TagClass<'function'>> = new Map()
+
+  /** Cache of auto-generated sounds.json definitions, keyed by namespace. Cleared on reset. */
+  sounds: Map<string, SoundsClass> = new Map()
+
+  /** Cache of auto-generated polling trigger check functions, keyed by polling interval. Cleared on reset. */
+  checkTriggers: Record<number, MCFunctionClass<undefined, undefined>> = {}
+
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new ResourceNodesMap()
     this.mcfunctionStack = []
     this.awaitNodes = new Set()
+    this.functionTags = new Map()
+    this.sounds = new Map()
+    this.checkTriggers = {}
 
     // ESM is funny
 
@@ -54,6 +68,9 @@ export class SandstoneCore {
     this._mcMetaCache = undefined
     this._smithed = undefined
     this.dependencies = []
+    this.functionTags.clear()
+    this.sounds.clear()
+    this.checkTriggers = {}
   }
 
   /**
