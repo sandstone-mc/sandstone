@@ -1,28 +1,25 @@
-import type { Macroable, MacroString } from 'sandstone/core'
+import type { Macroable } from 'sandstone/core'
 import type { VectorClass } from 'sandstone/variables'
 
-type AbsoluteFloat<MACRO extends boolean = false> = MacroString<`${number}`, MACRO>
-type RelativeFloat<MACRO extends boolean = false> = `~${MacroString<number | '', MACRO>}`
-type LocalFloat<MACRO extends boolean = false> = `^${MacroString<number | '', MACRO>}`
-type AbsoluteOrRelativeFloat<MACRO extends boolean = false> = AbsoluteFloat<MACRO> | RelativeFloat<MACRO>
+type AbsoluteFloat<MACRO extends boolean = false> = Macroable<`${number}` | number, MACRO>
+type RelativeFloat<MACRO extends boolean = false> = Macroable<`~${number | ''}`, MACRO>
+type LocalFloat<MACRO extends boolean = false> = Macroable<`^${number | ''}`, MACRO>
+type AbsoluteOrRelativeFloat<MACRO extends boolean = false> = AbsoluteFloat<MACRO> | RelativeFloat
 
-type AbsoluteVec3<MACRO extends boolean = false> =
-  `${AbsoluteFloat<MACRO>} ${AbsoluteFloat<MACRO>} ${AbsoluteFloat<MACRO>}`
+type AbsoluteVec3<MACRO extends boolean = false> = Macroable<`${number} ${number} ${number}`, MACRO>
 
 type AbsoluteOrRelativeVec3<MACRO extends boolean = false> =
-  `${AbsoluteOrRelativeFloat<MACRO>} ${AbsoluteOrRelativeFloat<MACRO>} ${AbsoluteOrRelativeFloat<MACRO>}`
-type LocalVec3<MACRO extends boolean = false> = `${LocalFloat<MACRO>} ${LocalFloat<MACRO>} ${LocalFloat<MACRO>}`
+  Macroable<`${number | RelativeFloat} ${number | RelativeFloat} ${number | RelativeFloat}`, MACRO>
+type LocalVec3<MACRO extends boolean = false> = Macroable<`${LocalFloat} ${LocalFloat} ${LocalFloat}`, MACRO>
 
 type AbsoluteOrRelativeVec2<MACRO extends boolean = false> =
-  `${AbsoluteOrRelativeFloat<MACRO>} ${AbsoluteOrRelativeFloat<MACRO>}`
-type LocalVec2<MACRO extends boolean = false> = `${LocalFloat<MACRO>} ${LocalFloat<MACRO>}`
-
-type AbsoluteVectorArrayComponent<MACRO extends boolean = false> = Macroable<AbsoluteFloat<MACRO> | number, MACRO>
+  Macroable<`${AbsoluteOrRelativeFloat} ${AbsoluteOrRelativeFloat}`, MACRO>
+type LocalVec2<MACRO extends boolean = false> = Macroable<`${LocalFloat} ${LocalFloat}`, MACRO>
 
 type VectorArrayComponent<MACRO extends boolean = false> = Macroable<AbsoluteOrRelativeFloat<MACRO> | LocalFloat<MACRO> | number, MACRO>
 
 export type AbsoluteCoordinates<MACRO extends boolean = false> =
-  | [x: AbsoluteVectorArrayComponent<MACRO>, y: AbsoluteVectorArrayComponent<MACRO>, z: AbsoluteVectorArrayComponent<MACRO>]
+  | [x: AbsoluteFloat<MACRO>, y: AbsoluteFloat<MACRO>, z: AbsoluteFloat<MACRO>]
   | VectorClass<[string, string, string]>
   | AbsoluteVec3<MACRO>
 

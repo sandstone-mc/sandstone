@@ -39,8 +39,6 @@ export class MacroArgument {
 
 export type Macroable<T, MACRO extends boolean> = MACRO extends true ? T | MacroArgument : T
 
-export type MacroString<T, MACRO extends boolean> = MACRO extends true ? T | string : T
-
 export function isMacroArgument(core: SandstoneCore, arg: any) {
   if (typeof arg === 'object' && Object.hasOwn(arg, 'toMacro')) {
     // eslint-disable-next-line prefer-destructuring

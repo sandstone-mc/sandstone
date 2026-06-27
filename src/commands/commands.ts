@@ -1,6 +1,4 @@
 import type { SandstonePack } from 'sandstone/pack'
-import { PlaceCommand } from './implementations/block/place'
-import { DamageCommand } from './implementations/entity/damage'
 import {
   AdvancementCommand,
   AttributeCommand,
@@ -8,6 +6,7 @@ import {
   ClearCommand,
   CloneCommand,
   CommentCommand,
+  DamageCommand,
   DataCommand,
   DataPackCommand,
   DebugCommand,
@@ -35,7 +34,9 @@ import {
   MeCommand,
   ParticleCommand,
   PerfCommand,
+  PlaceCommand,
   PlaySoundCommand,
+  RandomCommand,
   RawCommand,
   RecipeCommand,
   ReloadCommand,
@@ -72,7 +73,6 @@ import {
   WeatherCommand,
   WorldBorderCommand,
 } from './implementations'
-import { RandomCommand } from './implementations/server/random'
 
 function bind<CLASS, METHOD extends string>(pack: SandstonePack, _class: CLASS, method: METHOD) {
   /* @ts-ignore */

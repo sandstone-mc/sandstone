@@ -16,14 +16,14 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
    * Generate random number for command results.
    *
    * @param range Number range for random generation.
-   *             Examples: {min: 1, max: 10}, [5, 15], 20
+   *             Examples: [null, 10], [5, 15], 20
    *
    * @param sequence Random sequence identifier for reproducible results.
    *                Examples: 'my_sequence', 'mypack:dice', 'combat_rng'
    *
    * @example
    * ```ts
-   * random.value({min: 1, max: 6}, 'dice')        // D6 roll
+   * random.value([1, 6], 'dice')                  // D6 roll
    * random.value([10, 20], 'damage_roll')         // 10-20 damage
    * ```
    */
@@ -43,7 +43,7 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @example
    * ```ts
-   * random.roll({min: 1, max: 100})              // 1-100 roll
+   * random.roll([null, 100])              // roll for a number under 100
    * random.roll([1, 20], 'public_dice')          // D20 with sequence
    * ```
    */
