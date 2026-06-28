@@ -353,6 +353,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     return this.binaryOperation('%=', ...args)
   }
 
+  mod = this.modulo
+
   '%=' = this.modulo
 
   /**
@@ -443,6 +445,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     return createVariable(this.sandstonePack, this).binaryOperation('*=', ...args)
   }
 
+  times = this.multipliedBy
+
   '*' = this.multipliedBy
 
   /**
@@ -486,6 +490,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   moduloBy(...args: OperationArguments): Score {
     return createVariable(this.sandstonePack, this).binaryOperation('%=', ...args)
   }
+
+  modBy = this.moduloBy
 
   '%' = this.moduloBy
 
@@ -548,20 +554,20 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  greaterOrEqualThan(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
+  greaterThanOrEqualTo(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is greater or equal than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score compare the current score against.
    */
-  greaterOrEqualThan(amountOrTargetScore: number | Score): ConditionClass
+  greaterThanOrEqualTo(amountOrTargetScore: number | Score): ConditionClass
 
-  greaterOrEqualThan(...args: OperationArguments) {
+  greaterThanOrEqualTo(...args: OperationArguments) {
     return this.comparison('>=', `${args[0]}..`, args)
   }
 
-  '>=' = this.greaterOrEqualThan
+  '>=' = this.greaterThanOrEqualTo
 
   /**
    * Check if the current score is strictly lower than the given score.
@@ -592,20 +598,20 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    *
    * @param objective The related objective. If not specified, default to the same objective as the current target.
    */
-  lessOrEqualThan(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
+  lessThanOrEqualTo(targets: MultipleEntitiesArgument<false>, objective?: ObjectiveArgument): ConditionClass
 
   /**
    * Check if the current score is lower or equal than the given amount or score.
    *
    * @param amountOrTargetScore The amount or score target to compare the current score against.
    */
-  lessOrEqualThan(amountOrTargetScore: number | Score): ConditionClass
+  lessThanOrEqualTo(amountOrTargetScore: number | Score): ConditionClass
 
-  lessOrEqualThan(...args: OperationArguments) {
+  lessThanOrEqualTo(...args: OperationArguments) {
     return this.comparison('<=', `..${args[0]}`, args)
   }
 
-  '<=' = this.lessOrEqualThan
+  '<=' = this.lessThanOrEqualTo
 
   /**
    * Check if the current score is equal to than the given score.
@@ -626,6 +632,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   equalTo(...args: OperationArguments) {
     return this.comparison('=', args[0].toString(), args)
   }
+
+  equals = this.equalTo
 
   '==' = this.equalTo
 
