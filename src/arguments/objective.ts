@@ -21,7 +21,7 @@ export type OBJECTIVE_CRITERIA = (
   'trigger' |
   'xp' |
   `killedByTeam.${DyeColor}` |
-  `teamKill.${DyeColor}` |
+  `teamkill.${DyeColor}` |
   `minecraft.${'broken' | 'crafted' | 'dropped' | 'picked_up' | 'used'}:minecraft.${SetType<typeof ITEMS_SET>}` |
   `minecraft.custom:minecraft.${SetType<typeof CUSTOM_STATS_SET>}` |
   `minecraft.${'killed' | 'killed_by'}:minecraft.${SetType<typeof ENTITY_TYPES_SET>}` |
