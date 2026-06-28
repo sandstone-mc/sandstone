@@ -1,4 +1,4 @@
-import type { TimeArgument } from 'sandstone/arguments'
+import type { Registry, TimeArgument } from 'sandstone/arguments'
 import type { Macroable, WorldClockClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { CommandArguments } from '../../helpers'
@@ -32,11 +32,11 @@ export class TimeArguments<MACRO extends boolean> extends CommandArguments {
    * Queries current time.
    *
    * @param type Specifies the time to query. Can be one of the following:
-   * - `daytime`: the number of game ticks since dawn. (the in-game daytime modulo 24000)
    * - `gametime`: the age of the world in game ticks. (the game time modulo 2147483647)
-   * - `day`: the number of in-game days passed. (the in-game daytime divided by 24000, then modulo 2147483647)
+   * - `time`: an alias for the `minecraft:overworld` timeline
+   * - Any data-driven timeline (eg. `minecraft:villager_schedule`)
    */
-  query = (type: Macroable<LiteralUnion<'daytime' | 'gametime' | 'day'>, MACRO>) => this.finalCommand(['query', type])
+  query = (type: Macroable<'gametime' | 'time' | Registry['minecraft:timeline'], MACRO>) => this.finalCommand(['query', type])
 
   /**
    * Sets the in-game daytime.
@@ -46,7 +46,7 @@ export class TimeArguments<MACRO extends boolean> extends CommandArguments {
    * - `s`: a second, 20 gameticks;
    * - `t` (default and omitable): a single gametick; the default unit.
    */
-  set = (time: Macroable<TimeArgument | LiteralUnion<'day' | 'night' | 'noon' | 'midnight'>, MACRO>) =>
+  set = (time: Macroable<TimeArgument | NamespacedLiteralUnion<'day' | 'night' | 'noon' | 'midnight'>, MACRO>) =>
     this.finalCommand(['set', time])
 }
 
