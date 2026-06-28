@@ -301,10 +301,27 @@ export class ExecuteStoreArgsCommand<MACRO extends boolean> extends ExecuteComma
    *
    * @param objective A scoreboard objective.
    */
-  score = (
-    targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>, 
-    objective: Macroable<ObjectiveArgument, MACRO>
-  ) => this.nestedExecute(['score', targetParser(targets), objective])
+  score(
+    targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+    objective: Macroable<ObjectiveArgument, MACRO>,
+  ): ExecuteCommand<MACRO>
+
+  /**
+   * Overrides the given score with the final command's return value.
+   *
+   * @param score The score to override.
+   */
+  score(score: Score): ExecuteCommand<MACRO>
+
+  score(...args: any[]) {
+    const finalArgs: SubCommand = ['score']
+    if (isScore(args[0])) {
+      finalArgs.push(args[0].target, args[0].objective.name)
+    } else {
+      finalArgs.push(targetParser(args[0]), args[1])
+    }
+    return this.nestedExecute(finalArgs)
+  }
 
   /**
    * Uses the `path` within storage `target` to store the return value in.
