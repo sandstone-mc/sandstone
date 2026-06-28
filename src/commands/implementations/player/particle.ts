@@ -1,7 +1,7 @@
 import type { Coordinates, MultiplePlayersArgumentOf, RootNBT, SymbolParticle, Registry, AbsoluteCoordinates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, nbtStringifier, VectorClass } from 'sandstone/variables'
+import { coordinatesParser, nbtResolver, VectorClass } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 
@@ -132,7 +132,7 @@ export class ParticleCommand<MACRO extends boolean> extends CommandArguments {
 
     // Destructure args based on whether options are present
     const [particleName, pos, delta, speed, count, mode, viewers] = hasOptions
-      ? [`${name}${nbtStringifier(arg2 as RootNBT)}`, arg3, arg4, arg5, arg6, arg7, arg8]
+      ? [`${name}${nbtResolver(arg2 as RootNBT)}`, arg3, arg4, arg5, arg6, arg7, arg8]
       : [name, arg2, arg3, arg4, arg5, arg6, arg7]
 
     return this.finalCommand([

@@ -4,7 +4,7 @@ import type { DIALOGS } from 'sandstone/arguments/generated/_registry/dialogs'
 import type { DialogClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { ResourceClass } from 'sandstone/core/resources/resource'
-import { nbtStringifier } from 'sandstone/variables'
+import { nbtResolver } from 'sandstone/variables'
 import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
@@ -31,7 +31,7 @@ export class DialogCommand<MACRO extends boolean> extends CommandArguments {
   ): FinalCommandOutput {
     const dialogArg = typeof dialog === 'string' || dialog instanceof ResourceClass
       ? dialog
-      : nbtStringifier(dialog as Dialog)
+      : nbtResolver(dialog as Dialog)
     return this.finalCommand(['show', targetParser(targets), dialogArg])
   }
 

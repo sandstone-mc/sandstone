@@ -4,7 +4,7 @@ import type { DataModifyTypeCommand, DataModifyValuesCommand, StoreType } from '
 import type { SandstonePack } from 'sandstone/pack'
 import { DataPointPickClass, isMacroArgument, MacroArgument, MacroLiteral } from '../core/Macro'
 import type { ConditionTextComponentClass } from './abstractClasses'
-import { nbtStringifier } from './nbt/NBTs'
+import { nbtResolver } from './nbt/NBTs'
 import { Score } from './Score'
 
 export type DATA_TYPES = 'entity' | 'block' | 'storage'
@@ -50,7 +50,7 @@ export function NBTpathToString(pack: SandstonePack, paths: DATA_PATH[]) {
         // Special case: array index like [0] - don't add 'd' suffix
         parsedPaths.push(`[${path[0]}]`)
       } else {
-        parsedPaths.push(nbtStringifier(path))
+        parsedPaths.push(nbtResolver(path).toString())
       }
     } else if (path !== '') {
       parsedPaths.push(`${path}${i === paths.length - 1 ? '' : '.'}`)
@@ -307,7 +307,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
   /**
    * @internal
    */
-  toNBT = () => nbtStringifier(this._toChatComponent() as NBTObject)
+  toNBT = () => nbtResolver(this._toChatComponent() as NBTObject).toString()
 }
 
 export class StringDataPointClass<TYPE extends DATA_TYPES = any> extends DataPointClass {

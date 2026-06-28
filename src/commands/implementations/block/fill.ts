@@ -1,7 +1,7 @@
 import type { Coordinates, NBTObject, SymbolBlock, SymbolMcdocBlockStates } from 'sandstone/arguments'
 import type { Macroable, TagClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, nbtResolver } from 'sandstone/variables'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import { blockStateStringifier, type BlockEntity, type BlockStatic, type ParseBlockState } from './setblock'
@@ -82,7 +82,7 @@ export class FillCommand<MACRO extends boolean> extends CommandArguments {
     nbt?: NBTObject,
   ): FillArgumentsCommand<MACRO> {
     const stateStr = state && Object.keys(state).length > 0 ? blockStateStringifier(state) : ''
-    const nbtStr = nbt ? nbtStringifier(nbt) : ''
+    const nbtStr = nbt ? nbtResolver(nbt).toString() : ''
     const blockArg = `${block}${stateStr}${nbtStr}`
 
     return this.subCommand([coordinatesParser(from), coordinatesParser(to), blockArg], FillArgumentsCommand<MACRO>, true)
@@ -236,7 +236,7 @@ export class FillArgumentsCommand<MACRO extends boolean> extends CommandArgument
       return this.finalCommand(['replace'])
     }
     const stateStr = filterState && Object.keys(filterState).length > 0 ? blockStateStringifier(filterState) : ''
-    const nbtStr = filterNbt ? nbtStringifier(filterNbt) : ''
+    const nbtStr = filterNbt ? nbtResolver(filterNbt).toString() : ''
     return this.subCommand(['replace', `${filter}${stateStr}${nbtStr}`], FillReplaceFilterCommand, true)
   }
 }

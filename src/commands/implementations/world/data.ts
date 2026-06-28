@@ -3,7 +3,7 @@ import { type MacroArgument, type Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { makeCallable } from 'sandstone/utils'
 import { DataPointClass, type VectorClass } from 'sandstone/variables'
-import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
+import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
@@ -156,7 +156,7 @@ export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
    * @param nbt The NBT to merge with.
    */
   block = (targetPos: Macroable<Coordinates<MACRO>, MACRO>, nbt: Macroable<NBTObject, MACRO>) =>
-    this.finalCommand(['block', coordinatesParser(targetPos), nbtStringifier(nbt)])
+    this.finalCommand(['block', coordinatesParser(targetPos), nbtResolver(nbt)])
 
   /**
    * Merge the NBT of the given entity, with the given NBT.
@@ -165,7 +165,7 @@ export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
    * @param nbt The NBT to merge with.
    */
   entity = <T extends string>(target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>, nbt: Macroable<NBTObject, MACRO>) =>
-    this.finalCommand(['entity', targetParser(target), nbtStringifier(nbt)])
+    this.finalCommand(['entity', targetParser(target), nbtResolver(nbt)])
 
   /**
    * Merge the NBT of the given storage path, with the given NBT.
@@ -174,7 +174,7 @@ export class DataMergeCommand<MACRO extends boolean> extends CommandArguments {
    * @param nbt The NBT to merge with.
    */
   storage = (target: Macroable<string, MACRO>, nbt: Macroable<NBTObject, MACRO>) =>
-    this.finalCommand(['storage', target, nbtStringifier(nbt)])
+    this.finalCommand(['storage', target, nbtResolver(nbt)])
 }
 
 export class DataModifyFromCommand<MACRO extends boolean> extends CommandArguments {
@@ -302,7 +302,7 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
   /**
    * Modify the NBT with the given value.
    */
-  value = (value: Macroable<NBTObject, MACRO>) => this.finalCommand(['value', nbtStringifier(value)])
+  value = (value: Macroable<NBTObject, MACRO>) => this.finalCommand(['value', nbtResolver(value)])
 }
 
 export class DataModifyTypeCommand<MACRO extends boolean> extends CommandArguments {

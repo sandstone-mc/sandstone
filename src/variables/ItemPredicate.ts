@@ -2,7 +2,7 @@ import type { SymbolDataComponent, SymbolDataComponentPredicate } from 'sandston
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util'
 import type { SandstonePack } from 'sandstone/pack'
-import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
+import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import * as util from 'util'
 import { formatDebugString } from '../utils'
 import type { MacroArgument } from 'sandstone/core/Macro'
@@ -196,7 +196,7 @@ export class ItemPredicateClass {
       return `${prefix}${test.component}`
     }
 
-    const valueStr = nbtStringifier(test.value)
+    const valueStr = nbtResolver(test.value).toString()
     return `${prefix}${test.component}${test.operator}${valueStr}`
   }
 

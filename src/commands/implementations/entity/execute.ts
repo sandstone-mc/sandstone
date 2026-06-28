@@ -33,7 +33,7 @@ import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import { coordinatesParser, rangeParser, rotationParser, targetParser } from 'sandstone/variables/parsers'
-import { nbtStringifier } from 'sandstone/variables'
+import { nbtResolver } from 'sandstone/variables'
 import type { Score } from 'sandstone/variables/Score'
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
 import { FunctionCommandNode } from '../server/function'
@@ -555,7 +555,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
     const stateStr = state && typeof state === 'object' && Object.keys(state).length > 0
       ? blockStateStringifier(state as Record<string, string | number | boolean>)
       : ''
-    const nbtStr = nbt ? nbtStringifier(nbt as NBTObject) : ''
+    const nbtStr = nbt ? nbtResolver(nbt as NBTObject).toString() : ''
     return this.nestedExecute(['block', coordinatesParser(pos), `${block}${stateStr}${nbtStr}`], true)
   }
 

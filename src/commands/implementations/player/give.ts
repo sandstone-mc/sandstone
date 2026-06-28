@@ -1,7 +1,7 @@
 import type { MultiplePlayersArgumentOf, RootNBT, SymbolDataComponent } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core'
-import { nbtStringifier, targetParser } from 'sandstone/variables'
+import { nbtResolver, targetParser } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
@@ -131,7 +131,7 @@ export function componentPatchStringifier(components: Record<string, RootNBT | R
         throw new Error(`Attempted to insert a negation component patch of ${key} with a value, use {} instead.`)
       }
     } else {
-      resultPairs.push(`${key}=${nbtStringifier(value)}`)
+      resultPairs.push(`${key}=${nbtResolver(value).toString()}`)
     }
   }
 

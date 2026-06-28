@@ -1,7 +1,7 @@
 import type { Coordinates, NBTObject, SymbolBlock, SymbolMcdocBlockStates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, nbtResolver } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
@@ -158,7 +158,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
       : blockStateStringifier(arg3 as any as Record<string, string | number | boolean>)
     const nbt = typeof arg4 === 'string' || arg4 === undefined ?
       ''
-      : nbtStringifier(arg4 as any as NBTObject)
+      : nbtResolver(arg4 as any as NBTObject).toString()
     const setblockType = typeof arg4 === 'string' ? arg4 : arg5
 
     return this.finalCommand([coordinatesParser(pos), `${block}${state}${nbt}`, setblockType])

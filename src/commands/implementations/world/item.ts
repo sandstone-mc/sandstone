@@ -9,7 +9,7 @@ import type {
 import type { ItemModifierClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
-import { nbtStringifier } from 'sandstone/variables'
+import { nbtResolver } from 'sandstone/variables'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
@@ -44,7 +44,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
     count?: Macroable<number, MACRO>,
   ) {
     if (typeof countOrNBT === 'object') {
-      return this.finalCommand(['with', `${item}${nbtStringifier(countOrNBT)}`, count])
+      return this.finalCommand(['with', `${item}${nbtResolver(countOrNBT)}`, count])
     }
     return this.finalCommand(['with', item, countOrNBT])
   }

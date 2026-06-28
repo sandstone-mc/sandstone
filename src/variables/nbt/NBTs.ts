@@ -128,7 +128,7 @@ export class NotNBT<VALUE extends RootNBT = RootNBT> extends NBTClass {
     this.nbt = nbt
   }
 
-  [util.inspect.custom] = () => `!${nbtStringifier(this.nbt)}`
+  [util.inspect.custom] = () => `!${nbtResolver(this.nbt)}`
 }
 
 export type NBTAllNumberClasses<Range extends NBTRange = {}> = NBTLong<Range> | NBTShort<Range> | NBTByte<Range> | NBTFloat<Range> | NBTDouble<Range> | NBTInt<Range>
@@ -161,7 +161,7 @@ function customNumber<T extends number | number[], C extends NBTSimpleClasses>(
 function dynamicNBT(template: TemplateStringsArray, ...args: unknown[]): NBTObject {
   const mixedArgs = template.flatMap((s, i) => [s, args[i]]).slice(0, -1) // Remove the last argument, which will always be undefined
   const result = mixedArgs
-    .map((element: any) => (element instanceof NBTClass ? nbtStringifier(element) : element.toString()))
+    .map((element: any) => (element instanceof NBTClass ? nbtResolver(element).toString() : element.toString()))
     .join('')
 
   return parseNBT(NBT, result)
@@ -440,25 +440,45 @@ export const NBT: NBTInterface = makeCallable(
 
     not: (nbt: RootNBT) => new NotNBT(nbt),
 
-    stringify: (nbt: NBTObject) => nbtStringifier(nbt),
+    stringify: (nbt: NBTObject) => nbtResolver(nbt).toString(),
 
     parse: (nbt: string) => parseNBT(NBT, nbt),
   },
   dynamicNBT,
 )
 
-export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
+/**
+ * The resolved result of converting a Sandstone NBT value (which may contain
+ * live `MacroArgument` references) into the final Minecraft SNBT string.
+ *
+ * Carries macro information up to `CommandNode.getValue()` so commands with
+ * `$(...)` substitutions can be flagged as macro commands (prefixed with `$`)
+ * even when the macro originated from inside a nested value rather than as
+ * a top-level arg object.
+ */
+export class ResolvedNBT {
+  constructor(
+    public readonly value: string,
+    public readonly containsMacro: boolean,
+  ) {}
+
+  toString(): string {
+    return this.value
+  }
+}
+
+const resolve = (nbt: NBTObject | MacroArgument): ResolvedNBT => {
   if (nbt === null || nbt === undefined) {
     throw new Error('Nullish nbt values are not allowed')
   }
   if (typeof nbt === 'number') {
     // We have a double, integers are now required to be defined with NBT.int
-    return `${nbt}d`
+    return new ResolvedNBT(`${nbt}d`, false)
   }
 
   if (typeof nbt === 'boolean') {
     // We have a boolean
-    return nbt.toString()
+    return new ResolvedNBT(nbt.toString(), false)
   }
 
   if (typeof nbt === 'string') {
@@ -476,22 +496,29 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
     })
 
     if (inspectedStr[0] === '`') {
-      return JSON.stringify(nbt)
+      return new ResolvedNBT(JSON.stringify(nbt), false)
     }
 
-    return inspectedStr
+    return new ResolvedNBT(inspectedStr, false)
   }
 
   if (Array.isArray(nbt)) {
     // We have an array
-    const itemsStr = nbt.map(nbtStringifier).join(',')
-    return `[${itemsStr}]`
+    let containsMacro = false
+    const itemsStr = nbt
+      .map((item) => {
+        const resolved = resolve(item)
+        if (resolved.containsMacro) containsMacro = true
+        return resolved.value
+      })
+      .join(',')
+    return new ResolvedNBT(`[${itemsStr}]`, containsMacro)
   }
 
   // We have an object
   if (nbt instanceof NBTClass) {
     // It's actually a "Minecraft Primitive", like 3b, and not an object
-    return nbt[util.inspect.custom]()
+    return new ResolvedNBT(nbt[util.inspect.custom](), false)
   }
 
   if (typeof nbt === 'object' || typeof nbt === 'function') {
@@ -503,32 +530,56 @@ export const nbtStringifier = (nbt: NBTObject | MacroArgument): string => {
       if (macro === '$()') {
         failedMacro = true
       } else {
-        return macro
+        return new ResolvedNBT(macro, true)
       }
     }
     if ('toNBT' in nbt) {
+      // toNBT itself may recurse through nbtResolver, so reuse its result.
       // @ts-ignore
-      return nbt.toNBT()
+      const toNbtResult = nbt.toNBT()
+      if (toNbtResult instanceof ResolvedNBT) {
+        return toNbtResult
+      }
+      return new ResolvedNBT(String(toNbtResult), false)
     } else if (failedMacro) {
-      throw new Error('[nbtStringifier] A macro variable NBT insertion was attempted in an mcfunction without macros defined.')
+      throw new Error('[nbtResolver] A macro variable NBT insertion was attempted in an mcfunction without macros defined.')
     }
     if (typeof nbt === 'function') {
       /* @ts-ignore */
-      throw new Error(`[nbtStringifier] This should never happen. A function or callable instance (${nbt.constructor?.name}) without toNBT was passed in as an NBT value.`)
+      throw new Error(`[nbtResolver] This should never happen. A function or callable instance (${nbt.constructor?.name}) without toNBT was passed in as an NBT value.`)
     }
     if (nbt.constructor.name !== 'Object') {
       if ('toString' in nbt) {
-        return `${toString}`
+        return new ResolvedNBT(`${toString}`, false)
       } else {
         /* @ts-ignore */
-        throw new Error(`[nbtStringifier] A ${nbt.constructor?.name} was passed in as an NBT value. Hint: define toNBT or toString if this was intentional`)
+        throw new Error(`[nbtResolver] A ${nbt.constructor?.name} was passed in as an NBT value. Hint: define toNBT or toString if this was intentional`)
       }
     }
   }
 
   // It's a real object.
+  let containsMacro = false
   const objectStr = Object.entries(nbt)
-    .map(([key, value]) => `${key}:${nbtStringifier(value as NBTObject)}`)
+    .map(([key, value]) => {
+      const resolved = resolve(value as NBTObject)
+      if (resolved.containsMacro) containsMacro = true
+      return `${key}:${resolved.value}`
+    })
     .join(',')
-  return `{${objectStr}}`
+  return new ResolvedNBT(`{${objectStr}}`, containsMacro)
 }
+
+/**
+ * Resolves a Sandstone NBT value into its Minecraft SNBT string form.
+ *
+ * Unlike the previous `nbtStringifier`, the result is a `ResolvedNBT` object
+ * that preserves whether the value contained `$(...)` macro substitutions.
+ * `CommandNode.getValue()` uses `containsMacro` to decide whether to emit the
+ * command as a macro command (prefixed with `$`).
+ *
+ * Callers that need a plain string (template literals, string concatenation)
+ * can rely on `ResolvedNBT`'s `toString()`, which is called automatically by
+ * JS coercion. To be explicit, call `.toString()` on the result.
+ */
+export const nbtResolver = (nbt: NBTObject | MacroArgument): ResolvedNBT => resolve(nbt)

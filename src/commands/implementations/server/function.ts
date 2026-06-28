@@ -4,7 +4,7 @@ import { isMacroArgument } from 'sandstone/core/Macro'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { DATA_TYPES, DataPointClass } from 'sandstone/variables'
-import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
+import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 
@@ -79,7 +79,7 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
           args.push(point.type, point.currentTarget, point.path)
         }
       } else {
-        args.push(typeof params === 'object' && params.toMacro ? params : nbtStringifier(params))
+        args.push(typeof params === 'object' && params.toMacro ? params : nbtResolver(params))
       }
     }
 

@@ -13,7 +13,7 @@ import type {
 } from 'sandstone/arguments'
 import type { ExecuteCommand, SandstoneCommands } from 'sandstone/commands'
 import type { NotNode } from 'sandstone/flow'
-import { nbtStringifier, type ConditionClass } from 'sandstone/variables'
+import { nbtResolver, type ConditionClass } from 'sandstone/variables'
 import * as util from 'util'
 import { MacroArgument } from '../core/Macro'
 import type { SandstonePack } from '../pack'
@@ -96,7 +96,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   }
 
   toNBT() {
-    return nbtStringifier(this._toChatComponent() as NBTObject)
+    return nbtResolver(this._toChatComponent() as NBTObject).toString()
   }
 
   toJSON() {

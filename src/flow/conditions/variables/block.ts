@@ -1,6 +1,6 @@
 import type { Coordinates, NBTObject } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
-import { coordinatesParser, nbtStringifier } from 'sandstone/variables'
+import { coordinatesParser, nbtResolver } from 'sandstone/variables'
 import { SingleConditionNode } from '../condition'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import { blockStateStringifier } from 'sandstone/commands/implementations/block/setblock'
@@ -20,7 +20,7 @@ export class BlockConditionNode extends SingleConditionNode {
     const stateStr = this.state && Object.keys(this.state).length > 0
       ? blockStateStringifier(this.state)
       : ''
-    const nbtStr = this.nbt ? nbtStringifier(this.nbt) : ''
+    const nbtStr = this.nbt ? nbtResolver(this.nbt).toString() : ''
     return ['block', coordinatesParser(this.position), `${this.block}${stateStr}${nbtStr}`]
   }
 }

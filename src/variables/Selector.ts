@@ -4,7 +4,7 @@
 import type { GAMEMODES, JSONTextComponent, NBTSerializable, Range, RootNBT, SymbolEntity } from 'sandstone/arguments'
 import type { PredicateClass, SandstoneCore, TagClass } from 'sandstone/core'
 import type { SandstonePack } from 'sandstone/pack'
-import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
+import { nbtResolver, ResolvedNBT } from 'sandstone/variables/nbt/NBTs'
 import { rangeParser } from 'sandstone/variables/parsers'
 import * as util from 'util'
 import type { Macroable } from '../core/Macro'
@@ -316,6 +316,17 @@ export class SelectorClass<
 
   arguments: SelectorProperties<IsSingle, IsPlayer, SelectorEntityType, MACRO>
 
+  /**
+   * Whether the most recent `toString()` produced a selector string containing
+   * any `$(...)` macro substitution. `CommandNode.getValue()` reads this so it
+   * can flag the surrounding command as a macro command (prefixed with `$`),
+   * even though `toString()` itself returns a plain string (the `$(...)` is
+   * baked in via template literal coercion).
+   *
+   * @internal
+   */
+  _hasMacro = false
+
   constructor(
     protected sandstonePack: SandstonePack,
     public target: '@s' | '@p' | '@a' | '@e' | '@n' | '@r',
@@ -335,10 +346,11 @@ export class SelectorClass<
 
   toString() {
     if (!this.arguments || !Object.keys(this.arguments).length) {
+      this._hasMacro = false
       return this.target
     }
 
-    const result: (readonly [string, string])[] = []
+    const result: (readonly [string, string | ResolvedNBT])[] = []
 
     const args = { ...this.arguments }
 
@@ -349,7 +361,13 @@ export class SelectorClass<
       // Parse potentially multiple nbt
       nbt: (nbt: RootNBT | RootNBT[]) => {
         const nbts = Array.isArray(nbt) ? nbt : [nbt]
-        result.push(...nbts.map((nbt_) => ['nbt', nbtStringifier(nbt_)] as const))
+        for (const nbt_ of nbts) {
+          const resolved = nbtResolver(nbt_)
+          if (resolved.containsMacro) {
+            this._hasMacro = true
+          }
+          result.push(['nbt', resolved] as const)
+        }
       },
 
       // Parse advancements

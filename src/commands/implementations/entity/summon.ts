@@ -1,7 +1,7 @@
 import type { Coordinates, RootNBT, SymbolEntity } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { nbtStringifier } from 'sandstone/variables/nbt/NBTs'
+import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
@@ -65,7 +65,7 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
       args.push(coordinatesParser(pos))
     }
     if (nbt !== undefined) {
-      args.push(nbtStringifier(nbt as RootNBT))
+      args.push(nbtResolver(nbt as RootNBT))
     }
     return this.finalCommand(args)
   }

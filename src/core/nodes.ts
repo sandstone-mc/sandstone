@@ -1,5 +1,6 @@
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
+import { ResolvedNBT } from 'sandstone/variables/nbt/NBTs'
 import * as util from 'util'
 import { formatDebugString } from '../utils'
 import { isMacroArgument, type MacroArgument } from './Macro'
@@ -110,10 +111,25 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
       if (arg !== undefined && arg !== null) {
         // Yes these are cursed, unfortunately, there's not really a better way to do this as visitors only visit the root nodes.
         if (typeof arg === 'object') {
-          if (isMacroArgument(this.sandstoneCore, arg)) {
+          if (arg instanceof ResolvedNBT) {
+            // ResolvedNBT carries macro info forward from nbtResolver recursion,
+            // so we can detect $(...) substitutions that originated inside nested
+            // NBT values rather than from a top-level MacroArgument object.
+            if (arg.containsMacro) {
+              this.isMacro = true
+            }
+            filteredArgs.push(arg)
+          } else if (isMacroArgument(this.sandstoneCore, arg)) {
             this.isMacro = true
 
             filteredArgs.push((arg as MacroArgument).toMacro())
+          } else if (Object.hasOwn(arg, '_hasMacro') && (arg as { _hasMacro: boolean })._hasMacro) {
+            // Selector (and any similar complex arg that stringifies `$(...)`
+            // via its own toString) exposes macro info via _hasMacro so the
+            // command can still be flagged as a macro command.
+            this.isMacro = true
+
+            filteredArgs.push(arg)
           } else if (Object.hasOwn(arg, 'toLoop')) {
             filteredArgs.push((arg as LoopArgument).toLoop())
           } else {
