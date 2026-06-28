@@ -394,6 +394,10 @@ export class _RawMCFunctionClass<
           false,
         )
         this.core.exitMCFunction()
+        // Mark as generated so the later generateResources iteration doesn't re-run
+        // the callback (which would re-execute with undefined params and append a
+        // second broken command to the body).
+        this.generated = true
       } else if (this.callback.length > 1) {
         throw new Error(`[MCFunctionClass] Function ${this.name} expects ${this.callback.length - 1} params at the call-site`)
       }
