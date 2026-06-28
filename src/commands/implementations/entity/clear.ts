@@ -1,5 +1,6 @@
 import type { MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { Macroable, TagClass } from 'sandstone/core'
+import { isMacroArgument } from 'sandstone/core/Macro'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -97,6 +98,9 @@ export class ClearCommand<MACRO extends boolean> extends CommandArguments {
     itemOrPredicate?: Macroable<Registry['minecraft:item'] | TagClass<'item'>, MACRO> | ItemPredicateClass,
     maxCount?: Macroable<number, MACRO>,
   ) {
-    return this.finalCommand([targetParser(targets), `${itemOrPredicate}`, maxCount])
+    const itemArg = isMacroArgument(this.sandstoneCore, itemOrPredicate)
+      ? itemOrPredicate
+      : `${itemOrPredicate}`
+    return this.finalCommand([targetParser(targets), itemArg, maxCount])
   }
 }

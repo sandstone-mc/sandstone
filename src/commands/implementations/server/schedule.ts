@@ -1,5 +1,6 @@
 import type { TimeArgument } from 'sandstone/arguments'
 import type { Macroable, Node } from 'sandstone/core'
+import { isMacroArgument } from 'sandstone/core/Macro'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { MCFunctionClass, MCFunctionNode } from 'sandstone/core/resources/datapack'
 import type { TagClass } from 'sandstone/core/resources/datapack/tag'
@@ -61,7 +62,10 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
    * ```
    */
   clear = (func: Macroable<MCFunctionClass<any, any> | string | TagClass<'function'>, MACRO>) => {
-    const result = this.finalCommand(['clear', `${func}`])
+    const funcArg = isMacroArgument(this.sandstoneCore, func)
+      ? func
+      : `${func}`
+    const result = this.finalCommand(['clear', funcArg])
     return result
   }
 
@@ -101,6 +105,10 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
       return this.finalCommand(['function', undefined, delay, type], node)
     }
 
-    return this.finalCommand(['function', `${func}`, delay, type], node)
+    const funcArg = isMacroArgument(this.sandstoneCore, func)
+      ? func
+      : `${func}`
+
+    return this.finalCommand(['function', funcArg, delay, type], node)
   }
 }

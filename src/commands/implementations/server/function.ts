@@ -1,5 +1,6 @@
 import type { RootNBT } from 'sandstone/arguments/nbt'
 import type { DataPointPickClass, Macroable, MCFunctionClass } from 'sandstone/core'
+import { isMacroArgument } from 'sandstone/core/Macro'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { DATA_TYPES, DataPointClass } from 'sandstone/variables'
@@ -82,6 +83,10 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
       }
     }
 
-    return this.finalCommand([`${mcFunction}`, ...args])
+    const mcFunctionArg = isMacroArgument(this.sandstoneCore, mcFunction)
+      ? mcFunction
+      : `${mcFunction}`
+
+    return this.finalCommand([mcFunctionArg, ...args])
   }
 }

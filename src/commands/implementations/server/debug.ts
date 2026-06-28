@@ -3,6 +3,7 @@ import { ContainerCommandNode } from 'sandstone/core/nodes'
 import { CommandArguments } from '../../helpers'
 import type { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { Macroable, MCFunctionClass, MCFunctionNode, Node } from 'sandstone/core'
+import { isMacroArgument } from 'sandstone/core/Macro'
 
 type DebugFunction = string | TagClass<'function'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
 
@@ -90,6 +91,10 @@ export class DebugCommand<MACRO extends boolean> extends CommandArguments<typeof
       return this.finalCommand(['function', undefined], node)
     }
 
-    return this.finalCommand(['function', `${func}`], node)
+    const funcArg = isMacroArgument(this.sandstoneCore, func)
+      ? func
+      : `${func}`
+
+    return this.finalCommand(['function', funcArg], node)
   }
 }
