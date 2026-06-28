@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
   "description": "Sandstone, a Typescript library for Minecraft datapacks & resource packs.",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0",
   "contributors": [
     {
       "name": "TheMrZZ - Florian ERNST",
@@ -17,34 +17,33 @@
     "url": "https://github.com/sandstone-mc/sandstone/issues"
   },
   "dependencies": {
-    "@sinclair/typebox": "^0.31.21",
+    "@sinclair/typebox": "^0.31.28",
     "@smithed-mc/data-types": "^0.1.2",
     "@types/nearley": "^2.11.5",
-    "@types/node": "24",
-    "@typescript/analyze-trace": "^0.4.0",
-    "adm-zip": "^0.5.10",
-    "fs-extra": "^11.1.1",
-    "lodash": "^4.17.21",
-    "nanoid": "^3.3.6",
+    "@types/node": "^24.13.2",
+    "adm-zip": "^0.5.17",
+    "fs-extra": "^11.3.5",
+    "lodash": "^4.18.1",
     "nearley": "^2.20.1",
     "node-fetch": "^3.3.2",
-    "prismarine-nbt": "^2.2.1",
-    "semver": "^7.5.4"
+    "prismarine-nbt": "^2.8.0",
+    "semver": "^7.8.5"
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.5.6",
     "@sandstone-mc/mcdoc-ts-generator": "^0.2.0",
-    "@stylistic/eslint-plugin": "^5.7.1",
-    "@types/adm-zip": "^0.5.2",
-    "@types/fs-extra": "^11.0.2",
-    "@types/lodash": "^4.14.199",
-    "@types/semver": "^7.5.3",
-    "@typescript/native-preview": "^7.0.0-dev.20260212.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/adm-zip": "^0.5.8",
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash": "^4.17.24",
+    "@types/semver": "^7.7.1",
+    "@typescript/analyze-trace": "^0.11.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260628.1",
     "magic-string": "^0.30.21",
-    "oxlint": "^1.42.0",
+    "oxlint": "^1.71.0",
     "source-map-js": "^1.2.1",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "directories": {
     "lib": "src"

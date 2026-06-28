@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.0](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.0) - 2026-06-28
+
+### First stable release, supporting Minecraft 26.1
+
+**Full Changelog**: [v1.0.0-beta.5...v1.0.0](https://github.com/sandstone-mc/sandstone/compare/v1.0.0-beta.5...v1.0.0)
+
+
 ## [v1.0.0-beta.5](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.0-beta.5) - 2026-05-06
 
 ### Various fixes and a web bundle
