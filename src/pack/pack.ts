@@ -28,6 +28,7 @@ import type {
   ChatTypeClassArguments,
   DamageTypeClassArguments,
   DataPointPickClass,
+  DecoratedPotPatternClassArguments,
   DialogClassArguments,
   EnchantmentClassArguments,
   EnchantmentProviderClassArguments,
@@ -50,7 +51,9 @@ import type {
   PredicateClassArguments,
   RecipeClassArguments,
   ShaderClassArguments,
+  SlotSourceClassArguments,
   SoundEventArguments,
+  SulfurCubeArchetypeClassArguments,
   TagClassArguments,
   TagValuesJSON,
   TestEnvironmentClassArguments,
@@ -74,6 +77,7 @@ import {
   BlockStateClass,
   ChatTypeClass,
   DamageTypeClass,
+  DecoratedPotPatternClass,
   DialogClass,
   EnchantmentClass,
   EnchantmentProviderClass,
@@ -96,7 +100,9 @@ import {
   RecipeClass,
   SandstoneCore,
   ShaderClass,
+  SlotSourceClass,
   SoundEventClass,
+  SulfurCubeArchetypeClass,
   TagClass,
   TestEnvironmentClass,
   TestInstanceClass,
@@ -1114,6 +1120,15 @@ export class SandstonePack {
       ...options,
     })
 
+  DecoratedPotPattern = (name: string, decoratedPotPattern: NonNullable<SymbolResource['decorated_pot_pattern']>, options?: Partial<DecoratedPotPatternClassArguments>) =>
+    new DecoratedPotPatternClass(this.core, name, {
+      json: decoratedPotPattern,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('decorated_pot_pattern') as DecoratedPotPatternClassArguments['onConflict'],
+      ...options,
+    })
+
   ItemModifier = (name: string, itemModifier: NonNullable<SymbolResource['item_modifier']>, options?: Partial<Omit<ItemModifierClassArguments, 'json'>>) =>
     new ItemModifierClass(this.core, name, {
       json: itemModifier,
@@ -1151,6 +1166,24 @@ export class SandstonePack {
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],
+      ...options,
+    })
+
+  SlotSource = (name: string, slotSource: NonNullable<SymbolResource['slot_source']>, options?: Partial<SlotSourceClassArguments>) =>
+    new SlotSourceClass(this.core, name, {
+      json: slotSource,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('slot_source') as SlotSourceClassArguments['onConflict'],
+      ...options,
+    })
+
+  SulfurCubeArchetype = (name: string, sulfurCubeArchetype: NonNullable<SymbolResource['sulfur_cube_archetype']>, options?: Partial<SulfurCubeArchetypeClassArguments>) =>
+    new SulfurCubeArchetypeClass(this.core, name, {
+      json: sulfurCubeArchetype,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('sulfur_cube_archetype') as SulfurCubeArchetypeClassArguments['onConflict'],
       ...options,
     })
 

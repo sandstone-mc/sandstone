@@ -32,7 +32,7 @@
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.5.6",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.2.0",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/adm-zip": "^0.5.8",
     "@types/fs-extra": "^11.0.4",

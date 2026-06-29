@@ -104,7 +104,7 @@ export type SlotSourceGroup<S extends NBTObject> = GroupSlotSource<S>
 export type SlotSourceLimitSlots<S extends NBTObject> = LimitCountSlotSource<S>
 
 export type SlotSourceReference<S extends NBTObject> = {
-  name: (`${string}:${string}` | SlotSource),
+  name: (`${string}:${string}` | SlotSourceClass),
 }
 
 export type SlotSourceSlotRange<S extends NBTObject> = RangeSlotSource
