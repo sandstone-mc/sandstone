@@ -114,11 +114,17 @@ export type MobEffectInstance = {
    * Level I having value 0. Defaults to 0.
    *
    * Value:
-   * Range: 0..
+   * *either*
+   *
+   * *item 0*
+   *
+   * *or*
+   *
+   * Range: 0..255
    */
-  amplifier?: NBTByte<{
+  amplifier?: (NBTByte | NBTInt<{
     min: 0,
-  }>,
+  }>),
   /**
    * Duration of the effect in ticks. Infinite is represented by `-1`.
    *
@@ -150,4 +156,102 @@ export type MobEffectInstance = {
    * A lower amplifier effect of the same type.
    */
   hidden_effect?: MobEffectInstance,
+}
+
+export type ModernMobEffect = {
+  id: Registry['minecraft:mob_effect'],
+  /**
+   * Level I having value 0. Defaults to 0.
+   *
+   * Value:
+   * *either*
+   *
+   * *item 0*
+   *
+   * *or*
+   *
+   * Range: 0..255
+   */
+  amplifier?: (NBTByte | NBTInt<{
+    min: 0,
+  }>),
+  /**
+   * Duration of the effect in ticks. Infinite is represented by `-1`.
+   *
+   * Value:
+   * *either*
+   *
+   * *item 0*
+   *
+   * *or*
+   *
+   * Range: 1..
+   */
+  duration?: (-1 | NBTInt<{
+    min: 1,
+  }>),
+  /**
+   * Whether the effect appears as a HUD icon in addition to in the inventory GUI (same behavior as beacons when `true`). Defaults to `false`.
+   */
+  ambient?: boolean,
+  /**
+   * Defaults to `true`.
+   */
+  show_particles?: boolean,
+  /**
+   * Whether the effect appears in the inventory GUI. Defaults to `true`
+   */
+  show_icon?: boolean,
+  /**
+   * A lower amplifier effect of the same type.
+   */
+  hidden_effect?: MobEffectInstance,
+}
+
+export type OldMobEffect = {
+  Id?: EffectId,
+  /**
+   * Value:
+   * *either*
+   *
+   * *item 0*
+   *
+   * *or*
+   *
+   * Range: 0..255
+   */
+  Amplifier?: (NBTByte | NBTInt<{
+    min: 0,
+  }>),
+  /**
+   * Duration of the effect in ticks. Infinite is represented by `-1`.
+   *
+   * Value:
+   * *either*
+   *
+   * Range: 1..
+   *
+   * *or*
+   *
+   * *item 1*
+   */
+  Duration?: (NBTInt<{
+    min: 1,
+  }> | -1),
+  /**
+   * Whether particles are semi-transparent. (like with a Beacon)
+   */
+  Ambient?: boolean,
+  /**
+   * Whether particles should be shown.
+   */
+  ShowParticles?: boolean,
+  /**
+   * Whether the effect icon should be shown.
+   */
+  ShowIcon?: boolean,
+  /**
+   * A lower amplifier effect of the same type.
+   */
+  HiddenEffect?: MobEffectInstance,
 }

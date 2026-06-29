@@ -95,6 +95,7 @@ export const DATA_COMPONENT_TYPES_SET = new Set([
   'sheep/color',
   'shulker/color',
   'stored_enchantments',
+  'sulfur_cube_content',
   'suspicious_stew_effects',
   'swing_animation',
   'tool',

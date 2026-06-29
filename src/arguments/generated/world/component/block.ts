@@ -29,3 +29,10 @@ export type Occupant = {
   min_ticks_in_hive: NBTInt,
   ticks_in_hive: NBTInt,
 }
+
+export type PotDecorations = {
+  back?: ItemStackTemplate,
+  left?: ItemStackTemplate,
+  right?: ItemStackTemplate,
+  front?: ItemStackTemplate,
+}

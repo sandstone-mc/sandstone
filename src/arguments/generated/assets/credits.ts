@@ -24,3 +24,59 @@ export type Credits = Array<{
     }>,
   }>,
 }>
+
+export type CreditsCompanySegment = {
+  /**
+   * Company segment.
+   */
+  section: string,
+  disciplines: Array<{
+    /**
+     * Value:
+     * *either*
+     *
+     * String length range: 1..
+     *
+     * *or*
+     *
+     * String length range: 0
+     */
+    discipline: (`${any}${string}` | `${any}${string}`),
+    titles: Array<{
+      title: string,
+      /**
+       * Employees with the title.
+       */
+      names: Array<string>,
+    }>,
+  }>,
+}
+
+export type CreditsDiscipline = {
+  /**
+   * Value:
+   * *either*
+   *
+   * String length range: 1..
+   *
+   * *or*
+   *
+   * String length range: 0
+   */
+  discipline: (`${any}${string}` | `${any}${string}`),
+  titles: Array<{
+    title: string,
+    /**
+     * Employees with the title.
+     */
+    names: Array<string>,
+  }>,
+}
+
+export type CreditsJobTitle = {
+  title: string,
+  /**
+   * Employees with the title.
+   */
+  names: Array<string>,
+}

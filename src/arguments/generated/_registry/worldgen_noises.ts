@@ -61,6 +61,7 @@ export const WORLDGEN_NOISES_SET = new Set([
   'spaghetti_3d_thickness',
   'spaghetti_roughness',
   'spaghetti_roughness_modulator',
+  'sulfur_cave_gradient',
   'surface',
   'surface_secondary',
   'surface_swamp',

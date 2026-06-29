@@ -64,6 +64,34 @@ export type FlashParticle = {
   color: TranslucentParticle,
 }
 
+export type GeyserBaseParticle = {
+  /**
+   * Scales the particle size and its burst impulse.
+   *
+   * Value:
+   * Range: 1..
+   */
+  water_blocks: NBTInt<{
+    min: 1,
+  }>,
+  /**
+   * Scales the initial burst impulse
+   */
+  burst_impulse_base: NBTFloat,
+}
+
+export type GeyserParticle = {
+  /**
+   * Scales the particle size and its burst impulse.
+   *
+   * Value:
+   * Range: 1..
+   */
+  water_blocks: NBTInt<{
+    min: 1,
+  }>,
+}
+
 export type ItemParticle = {
   item: ItemStackTemplate,
 }
@@ -87,6 +115,42 @@ export type LegacyTranslucentParticle = NBTList<NBTFloat, {
   min: 4,
   max: 4,
 }>
+
+export type OldDustParticle = {
+  r: NBTFloat,
+  g: NBTFloat,
+  b: NBTFloat,
+  /**
+   * Value:
+   * Range: 0.01..4
+   */
+  scale: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
+}
+
+export type OldDustTransition = {
+  fromColor: DustColor,
+  toColor: DustColor,
+  /**
+   * Value:
+   * Range: 0.01..4
+   */
+  scale: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
+}
+
+export type OldEntityEffect = {
+  r: NBTFloat,
+  g: NBTFloat,
+  b: NBTFloat,
+  a: NBTFloat,
+}
 
 export type Particle = NonNullable<({
   [S in Extract<Registry['minecraft:particle_type'], string>]?: ({
@@ -188,6 +252,14 @@ type ParticleDispatcherMap = {
   'minecraft:falling_dust': ParticleFallingDust,
   'flash': ParticleFlash,
   'minecraft:flash': ParticleFlash,
+  'geyser': ParticleGeyser,
+  'minecraft:geyser': ParticleGeyser,
+  'geyser_base': ParticleGeyserBase,
+  'minecraft:geyser_base': ParticleGeyserBase,
+  'geyser_plume': ParticleGeyserPlume,
+  'minecraft:geyser_plume': ParticleGeyserPlume,
+  'geyser_poof': ParticleGeyserPoof,
+  'minecraft:geyser_poof': ParticleGeyserPoof,
   'instant_effect': ParticleInstantEffect,
   'minecraft:instant_effect': ParticleInstantEffect,
   'item': ParticleItem,
@@ -216,6 +288,10 @@ type ParticleFallback = (
   | ParticleEntityEffect
   | ParticleFallingDust
   | ParticleFlash
+  | ParticleGeyser
+  | ParticleGeyserBase
+  | ParticleGeyserPlume
+  | ParticleGeyserPoof
   | ParticleInstantEffect
   | ParticleItem
   | ParticleSculkCharge
@@ -237,6 +313,10 @@ type ParticleEffect = EffectParticle
 type ParticleEntityEffect = EntityEffectParticle
 type ParticleFallingDust = BlockParticle
 type ParticleFlash = FlashParticle
+type ParticleGeyser = GeyserParticle
+type ParticleGeyserBase = GeyserBaseParticle
+type ParticleGeyserPlume = GeyserParticle
+type ParticleGeyserPoof = GeyserBaseParticle
 type ParticleInstantEffect = EffectParticle
 type ParticleItem = ItemParticle
 type ParticleSculkCharge = SculkChargeParticle

@@ -24,6 +24,27 @@ export type CanyonShape = {
   vertical_radius_center_factor: NBTFloat,
 }
 
+export type CarverConfigBase<S = undefined> = ({
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  probability: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  replaceable?: (
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
+} & {
+  y: HeightProvider,
+  yScale: FloatProvider<NBTFloat>,
+  lava_level: VerticalAnchor,
+  debug_settings?: CarverDebugSettings,
+} & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT))
+
 export type CarverDebugSettings = {
   debug_mode?: boolean,
   air_state: BlockState,
@@ -68,6 +89,13 @@ export type ConfiguredCarver = NonNullable<({
     } & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT)),
   }
 }[Registry['minecraft:worldgen/carver']])>
+
+export type ModernCarverConfig = {
+  y: HeightProvider,
+  yScale: FloatProvider<NBTFloat>,
+  lava_level: VerticalAnchor,
+  debug_settings?: CarverDebugSettings,
+}
 type CarverConfigDispatcherMap = {
   'canyon': CarverConfigCanyon,
   'minecraft:canyon': CarverConfigCanyon,

@@ -27,6 +27,45 @@ export type ItemDisplayContext = (
   | 'fixed'
   | 'on_shelf')
 
+export type ItemTransform = {
+  /**
+   * Value:
+   * List length range: 3
+   */
+  rotation?: NBTList<NBTFloat, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Value:
+   * List length range: 3
+   */
+  translation?: NBTList<NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Value:
+   * List length range: 3
+   */
+  scale?: NBTList<NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+}
+
 export type Model = {
   parent?: (Registry['minecraft:model'] | ModelClass),
   ambientocclusion?: boolean,
@@ -76,6 +115,47 @@ export type Model = {
     }
   }),
 }
+
+export type ModelDisplay = ({
+  [Key in Extract<CustomizableItemDisplayContext, string>]?: {
+    /**
+     * Value:
+     * List length range: 3
+     */
+    rotation?: NBTList<NBTFloat, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 3,
+      max: 3,
+    }>,
+    /**
+     * Value:
+     * List length range: 3
+     */
+    translation?: NBTList<NBTFloat<{
+      leftExclusive: false,
+      rightExclusive: false,
+    }>, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 3,
+      max: 3,
+    }>,
+    /**
+     * Value:
+     * List length range: 3
+     */
+    scale?: NBTList<NBTFloat<{
+      leftExclusive: false,
+      rightExclusive: false,
+    }>, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 3,
+      max: 3,
+    }>,
+  }
+})
 
 export type ModelElement = {
   /**
@@ -171,6 +251,35 @@ export type ModelElementFace = {
   tintindex?: NBTInt,
 }
 
+export type ModelElementFaceMap = ({
+  [Key in Extract<Direction, string>]?: {
+    texture: `#${string}`,
+    /**
+     * Value:
+     * List length range: 4
+     */
+    uv?: NBTList<NBTFloat, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 4,
+      max: 4,
+    }>,
+    /**
+     * Value:
+     *
+     *  - Down(`down`)
+     *  - Up(`up`)
+     *  - North(`north`)
+     *  - East(`east`)
+     *  - South(`south`)
+     *  - West(`west`)
+     */
+    cullface?: Direction,
+    rotation?: (0 | 90 | 180 | 270),
+    tintindex?: NBTInt,
+  }
+})
+
 export type ModelElementRotation = (ModelElementRotationBase & ({
   [Key in Extract<Axis, string>]?: NBTFloat
 }))
@@ -199,7 +308,19 @@ export type ModelOverride = {
   model: ModelRef,
 }
 
+export type ModelOverridePredicates = ({
+  [Key in Extract<Predicates, string>]?: NBTFloat
+})
+
 export type ModelRef = (Registry['minecraft:model'] | ModelClass)
+
+export type ModelTextures = ({
+  [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass) | TextureMaterial)
+})
+
+export type MultipleAxesModelElementRotation = (ModelElementRotationBase & ({
+  [Key in Extract<Axis, string>]?: NBTFloat
+}))
 
 export type Predicates = (
   | 'angle'
@@ -221,6 +342,18 @@ export type Predicates = (
   | 'time'
   | 'tooting'
   | 'trim_type')
+
+export type SingleAxisModelElementRotation = (ModelElementRotationBase & {
+  /**
+   * Value:
+   *
+   *  - X(`x`)
+   *  - Y(`y`)
+   *  - Z(`z`)
+   */
+  axis: Axis,
+  angle: NBTFloat,
+})
 
 export type TextureMaterial = {
   sprite: (Registry['minecraft:texture'] | TextureClass),

@@ -198,6 +198,16 @@ export type Player = (LivingEntity & {
     max: 3,
   }>,
   /**
+   * Value:
+   * Array length range: 3
+   */
+  raid_omen_position?: NBTIntArray<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
    * Entity that the player is riding.
    */
   RootVehicle?: RootVehicle,
@@ -225,6 +235,17 @@ export type Player = (LivingEntity & {
    * Ender pearls thrown by this player.
    */
   ender_pearls?: Array<EnderPearl>,
+  /**
+   * Value:
+   * List length range: 3
+   */
+  last_explosion_impact_pos?: NBTList<(NBTDouble | number), {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  spawn_extra_particles_on_fall?: boolean,
   CustomName?: never,
   CustomNameVisible?: never,
 })

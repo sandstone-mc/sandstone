@@ -39,9 +39,17 @@ export type Attribute = {
 }
 
 export type AttributeModifier = {
-  id?: `${string}:${string}`,
-  amount?: (NBTDouble | number),
   /**
+   * The unique identifier of this attribute modifier.
+   */
+  id: `${string}:${string}`,
+  /**
+   * Change in the attribute.
+   */
+  amount: (NBTDouble | number),
+  /**
+   * The operation used for this modifier.
+   *
    * Value:
    *
    *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
@@ -52,7 +60,7 @@ export type AttributeModifier = {
    *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
    *    where `x` is the amount of the particular modifier.
    */
-  operation?: AttributeOperation,
+  operation: AttributeOperation,
 }
 
 export type BlockLeash = {
@@ -68,6 +76,10 @@ export type BlockLeash = {
    * Z coordiante of leash knot.
    */
   Z?: NBTInt,
+}
+
+export type Brain = {
+  memories?: Memories,
 }
 
 export type DropChances = ({
@@ -106,6 +118,19 @@ export type FallDamageLogicData = ({
   }>,
 })
 
+export type LeashOwner = {
+  /**
+   * Value:
+   * Array length range: 4
+   */
+  UUID?: NBTIntArray<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }>,
+}
+
 export type LivingEntity = (EntityBase & {
   Health?: NBTFloat,
   /**
@@ -116,10 +141,6 @@ export type LivingEntity = (EntityBase & {
    * Timer since it has been damaged. Counts down to zero.
    */
   HurtTime?: NBTShort,
-  /**
-   * Ticks since it was last damaged, from its creation.
-   */
-  HurtByTimestamp?: NBTInt,
   /**
    * Timer since it was marked as dead. Counts down to zero.
    */
@@ -276,6 +297,31 @@ export type MobBase = (LivingEntity & {
     max: 3,
   }>,
 })
+
+export type ModernAttributeModifier = {
+  /**
+   * The unique identifier of this attribute modifier.
+   */
+  id: `${string}:${string}`,
+  /**
+   * Change in the attribute.
+   */
+  amount: (NBTDouble | number),
+  /**
+   * The operation used for this modifier.
+   *
+   * Value:
+   *
+   *  - AddValue(`add_value`): Adds all of the modifiers' amounts to the current value of the attribute.
+   *  - AddMultipliedBase(`add_multiplied_base`):
+   *    Multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the sum of the modifiers' amounts.
+   *  - AddMultipliedTotal(`add_multiplied_total`):
+   *    For every modifier, multiplies the current value of the attribute by `(1 + x)`,
+   *    where `x` is the amount of the particular modifier.
+   */
+  operation: AttributeOperation,
+}
 
 export type NeutralMob = {
   /**

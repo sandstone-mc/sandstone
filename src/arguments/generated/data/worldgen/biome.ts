@@ -1,9 +1,11 @@
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { PositionalEnvironmentAttributeMap } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { CarverRef } from 'sandstone/arguments/generated/data/worldgen/carver.ts'
+import type { CarveStep } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { StringRGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type Biome = {
@@ -110,6 +112,20 @@ export type BiomeMusic = ({
   replace_current_music?: boolean,
 })
 
+export type BiomeParticle = {
+  options: Particle,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  probability: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+}
+
 export type BiomeSoundAdditions = {
   sound: SoundEventRef,
   /**
@@ -123,6 +139,14 @@ export type BiomeSoundAdditions = {
     max: 1,
   }>,
 }
+
+export type CarversPerStep = ({
+  [Key in Extract<CarveStep, string>]?: (
+      | Array<CarverRef> | (
+        | Registry['minecraft:worldgen/configured_carver']
+        | `#${string}:${string}`
+        | TagClass<'worldgen/configured_carver'>))
+})
 
 export type GrassColorModifier = ('none' | 'dark_forest' | 'swamp')
 

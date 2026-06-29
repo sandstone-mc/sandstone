@@ -9,12 +9,15 @@ import type { BLOCK_ENTITY_TYPES } from 'sandstone/arguments/generated/_registry
 import type { BLOCK_PREDICATE_TYPES } from 'sandstone/arguments/generated/_registry/block_predicate_types.ts'
 import type { BLOCK_TYPES } from 'sandstone/arguments/generated/_registry/block_types.ts'
 import type { BLOCKS } from 'sandstone/arguments/generated/_registry/blocks.ts'
+import type { CAT_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/cat_sound_variants.ts'
 import type { CAT_VARIANTS } from 'sandstone/arguments/generated/_registry/cat_variants.ts'
 import type { CHAT_TYPES } from 'sandstone/arguments/generated/_registry/chat_types.ts'
+import type { CHICKEN_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/chicken_sound_variants.ts'
 import type { CHICKEN_VARIANTS } from 'sandstone/arguments/generated/_registry/chicken_variants.ts'
 import type { CHUNK_STATUSES } from 'sandstone/arguments/generated/_registry/chunk_statuses.ts'
 import type { COMMAND_ARGUMENT_TYPES } from 'sandstone/arguments/generated/_registry/command_argument_types.ts'
 import type { CONSUME_EFFECT_TYPES } from 'sandstone/arguments/generated/_registry/consume_effect_types.ts'
+import type { COW_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/cow_sound_variants.ts'
 import type { COW_VARIANTS } from 'sandstone/arguments/generated/_registry/cow_variants.ts'
 import type { CREATIVE_MODE_TABS } from 'sandstone/arguments/generated/_registry/creative_mode_tabs.ts'
 import type { CUSTOM_STATS } from 'sandstone/arguments/generated/_registry/custom_stats.ts'
@@ -86,6 +89,7 @@ import type { PAINTING_VARIANTS } from 'sandstone/arguments/generated/_registry/
 import type { PARTICLE_TYPES } from 'sandstone/arguments/generated/_registry/particle_types.ts'
 import type { PERMISSION_CHECK_TYPES } from 'sandstone/arguments/generated/_registry/permission_check_types.ts'
 import type { PERMISSION_TYPES } from 'sandstone/arguments/generated/_registry/permission_types.ts'
+import type { PIG_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/pig_sound_variants.ts'
 import type { PIG_VARIANTS } from 'sandstone/arguments/generated/_registry/pig_variants.ts'
 import type { POINT_OF_INTEREST_TYPES } from 'sandstone/arguments/generated/_registry/point_of_interest_types.ts'
 import type { POS_RULE_TESTS } from 'sandstone/arguments/generated/_registry/pos_rule_tests.ts'
@@ -109,6 +113,7 @@ import type { SOUNDS } from 'sandstone/arguments/generated/_registry/sounds.ts'
 import type { SPAWN_CONDITION_TYPES } from 'sandstone/arguments/generated/_registry/spawn_condition_types.ts'
 import type { STAT_TYPES } from 'sandstone/arguments/generated/_registry/stat_types.ts'
 import type { STRUCTURES } from 'sandstone/arguments/generated/_registry/structures.ts'
+import type { SULFUR_CUBE_ARCHETYPES } from 'sandstone/arguments/generated/_registry/sulfur_cube_archetypes.ts'
 import type { TAG_BANNER_PATTERNS } from 'sandstone/arguments/generated/_registry/tag_banner_patterns.ts'
 import type { TAG_BLOCKS } from 'sandstone/arguments/generated/_registry/tag_blocks.ts'
 import type { TAG_DAMAGE_TYPES } from 'sandstone/arguments/generated/_registry/tag_damage_types.ts'
@@ -230,11 +235,15 @@ import type { SetType } from 'sandstone'
 export type Registry = {
   'minecraft:advancement': ADVANCEMENTS,
   'minecraft:banner_pattern': BANNER_PATTERNS,
+  'minecraft:cat_sound_variant': CAT_SOUND_VARIANTS,
   'minecraft:cat_variant': CAT_VARIANTS,
   'minecraft:chat_type': CHAT_TYPES,
+  'minecraft:chicken_sound_variant': CHICKEN_SOUND_VARIANTS,
   'minecraft:chicken_variant': CHICKEN_VARIANTS,
+  'minecraft:cow_sound_variant': COW_SOUND_VARIANTS,
   'minecraft:cow_variant': COW_VARIANTS,
   'minecraft:damage_type': DAMAGE_TYPES,
+  'minecraft:decorated_pot_pattern': DECORATED_POT_PATTERNS,
   'minecraft:dialog': DIALOGS,
   'minecraft:dimension': DIMENSIONS,
   'minecraft:dimension_type': DIMENSION_TYPES,
@@ -245,9 +254,11 @@ export type Registry = {
   'minecraft:jukebox_song': JUKEBOX_SONGS,
   'minecraft:loot_table': LOOT_TABLES,
   'minecraft:painting_variant': PAINTING_VARIANTS,
+  'minecraft:pig_sound_variant': PIG_SOUND_VARIANTS,
   'minecraft:pig_variant': PIG_VARIANTS,
   'minecraft:recipe': RECIPES,
   'minecraft:structure': STRUCTURES,
+  'minecraft:sulfur_cube_archetype': SULFUR_CUBE_ARCHETYPES,
   'minecraft:test_environment': TEST_ENVIRONMENTS,
   'minecraft:test_instance': TEST_INSTANCES,
   'minecraft:timeline': TIMELINES,
@@ -284,7 +295,10 @@ export type Registry = {
   'minecraft:worldgen/configured_carver': WORLDGEN_CONFIGURED_CARVERS,
   'minecraft:worldgen/configured_feature': WORLDGEN_CONFIGURED_FEATURES,
   'minecraft:worldgen/density_function': WORLDGEN_DENSITY_FUNCTIONS,
+  'minecraft:worldgen/feature': WORLDGEN_FEATURES,
   'minecraft:worldgen/flat_level_generator_preset': WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
+  'minecraft:worldgen/material_condition': WORLDGEN_MATERIAL_CONDITIONS,
+  'minecraft:worldgen/material_rule': WORLDGEN_MATERIAL_RULES,
   'minecraft:worldgen/multi_noise_biome_source_parameter_list': WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS,
   'minecraft:worldgen/noise': WORLDGEN_NOISES,
   'minecraft:worldgen/noise_settings': WORLDGEN_NOISE_SETTINGS,
@@ -320,7 +334,6 @@ export type Registry = {
   'minecraft:data_component_predicate_type': DATA_COMPONENT_PREDICATE_TYPES,
   'minecraft:data_component_type': DATA_COMPONENT_TYPES,
   'minecraft:debug_subscription': DEBUG_SUBSCRIPTIONS,
-  'minecraft:decorated_pot_pattern': DECORATED_POT_PATTERNS,
   'minecraft:dialog_action_type': DIALOG_ACTION_TYPES,
   'minecraft:dialog_body_type': DIALOG_BODY_TYPES,
   'minecraft:dialog_type': DIALOG_TYPES,
@@ -385,11 +398,8 @@ export type Registry = {
   'minecraft:worldgen/carver': WORLDGEN_CARVERS,
   'minecraft:worldgen/chunk_generator': WORLDGEN_CHUNK_GENERATORS,
   'minecraft:worldgen/density_function_type': WORLDGEN_DENSITY_FUNCTION_TYPES,
-  'minecraft:worldgen/feature': WORLDGEN_FEATURES,
   'minecraft:worldgen/feature_size_type': WORLDGEN_FEATURE_SIZE_TYPES,
   'minecraft:worldgen/foliage_placer_type': WORLDGEN_FOLIAGE_PLACER_TYPES,
-  'minecraft:worldgen/material_condition': WORLDGEN_MATERIAL_CONDITIONS,
-  'minecraft:worldgen/material_rule': WORLDGEN_MATERIAL_RULES,
   'minecraft:worldgen/placement_modifier_type': WORLDGEN_PLACEMENT_MODIFIER_TYPES,
   'minecraft:worldgen/pool_alias_binding': WORLDGEN_POOL_ALIAS_BINDINGS,
   'minecraft:worldgen/root_placer_type': WORLDGEN_ROOT_PLACER_TYPES,
@@ -405,11 +415,15 @@ export type Registry = {
 export const REGISTRIES_SET = new Set([
   'advancement',
   'banner_pattern',
+  'cat_sound_variant',
   'cat_variant',
   'chat_type',
+  'chicken_sound_variant',
   'chicken_variant',
+  'cow_sound_variant',
   'cow_variant',
   'damage_type',
+  'decorated_pot_pattern',
   'dialog',
   'dimension',
   'dimension_type',
@@ -422,10 +436,13 @@ export const REGISTRIES_SET = new Set([
   'jukebox_song',
   'loot_table',
   'painting_variant',
+  'pig_sound_variant',
   'pig_variant',
   'predicate',
   'recipe',
+  'slot_source',
   'structure',
+  'sulfur_cube_archetype',
   'test_environment',
   'test_instance',
   'timeline',
@@ -528,9 +545,12 @@ export const REGISTRIES_SET = new Set([
   'worldgen/density_function_type',
   'worldgen/feature',
   'worldgen/feature_size_type',
+  'worldgen/feature_type',
   'worldgen/foliage_placer_type',
   'worldgen/material_condition',
+  'worldgen/material_condition_type',
   'worldgen/material_rule',
+  'worldgen/material_rule_type',
   'worldgen/placement_modifier_type',
   'worldgen/pool_alias_binding',
   'worldgen/root_placer_type',
@@ -549,7 +569,10 @@ export const REGISTRIES_SET = new Set([
   'worldgen/configured_structure_feature',
   'worldgen/configured_surface_builder',
   'worldgen/density_function',
+  'worldgen/feature',
   'worldgen/flat_level_generator_preset',
+  'worldgen/material_condition',
+  'worldgen/material_rule',
   'worldgen/multi_noise_biome_source_parameter_list',
   'worldgen/noise',
   'worldgen/noise_settings',

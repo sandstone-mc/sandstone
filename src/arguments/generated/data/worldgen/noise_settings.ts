@@ -1,13 +1,18 @@
 import type { CubicSpline, DensityFunctionRef } from 'sandstone/arguments/generated/data/worldgen/density_function.ts'
 import type { ClimateParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
+import type { MaterialRuleRef } from 'sandstone/arguments/generated/data/worldgen/material_rule.ts'
 import type {
   ConcentricRingsPlacement,
   RandomSpreadPlacement,
 } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
-import type { SurfaceRule } from 'sandstone/arguments/generated/data/worldgen/surface_rule.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { NBTDouble, NBTFloat, NBTInt } from 'sandstone'
+
+export type ModernNoiseGeneratorSettings = {
+  aquifers_enabled: boolean,
+  ore_veins_enabled: boolean,
+}
 
 export type NoiseGeneratorSettings = ({
   default_block: BlockState,
@@ -21,7 +26,7 @@ export type NoiseGeneratorSettings = ({
   noise: NoiseSettings,
   noise_router: NoiseRouter,
   spawn_target: Array<ClimateParameters>,
-  surface_rule: SurfaceRule,
+  surface_rule: MaterialRuleRef,
 } & {
   aquifers_enabled: boolean,
   ore_veins_enabled: boolean,

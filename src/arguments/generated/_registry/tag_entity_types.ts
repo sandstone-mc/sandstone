@@ -42,6 +42,7 @@ export const TAG_ENTITY_TYPES_SET = new Set([
   'nautilus_hostiles',
   'no_anger_from_wind_charge',
   'non_controlling_rider',
+  'not_affected_by_geysers',
   'not_scary_for_pufferfish',
   'powder_snow_walkable_mobs',
   'raiders',

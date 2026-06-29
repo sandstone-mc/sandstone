@@ -29,7 +29,7 @@ export type Cat = (Tamable & {
    */
   CollarColor?: DyeColorByte,
   variant?: (Registry['minecraft:cat_variant'] | VariantClass<'cat'>),
-  sound_variant?: (`${string}:${string}` | VariantClass<'cat_sound'>),
+  sound_variant?: (Registry['minecraft:cat_sound_variant'] | VariantClass<'cat_sound'>),
 })
 
 export type CatType = (-1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10)

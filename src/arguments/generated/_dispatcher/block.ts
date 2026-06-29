@@ -73,10 +73,14 @@ type BlockDispatcherMap = {
   'minecraft:campfire': BlockCampfire,
   'chain_command_block': BlockChainCommandBlock,
   'minecraft:chain_command_block': BlockChainCommandBlock,
+  'cherry_hanging_sign': BlockCherryHangingSign,
+  'minecraft:cherry_hanging_sign': BlockCherryHangingSign,
   'cherry_shelf': BlockCherryShelf,
   'minecraft:cherry_shelf': BlockCherryShelf,
   'cherry_sign': BlockCherrySign,
   'minecraft:cherry_sign': BlockCherrySign,
+  'cherry_wall_hanging_sign': BlockCherryWallHangingSign,
+  'minecraft:cherry_wall_hanging_sign': BlockCherryWallHangingSign,
   'cherry_wall_sign': BlockCherryWallSign,
   'minecraft:cherry_wall_sign': BlockCherryWallSign,
   'chest': BlockChest,
@@ -237,8 +241,16 @@ type BlockDispatcherMap = {
   'minecraft:oxidized_copper_chest': BlockOxidizedCopperChest,
   'oxidized_copper_golem_statue': BlockOxidizedCopperGolemStatue,
   'minecraft:oxidized_copper_golem_statue': BlockOxidizedCopperGolemStatue,
+  'pale_oak_hanging_sign': BlockPaleOakHangingSign,
+  'minecraft:pale_oak_hanging_sign': BlockPaleOakHangingSign,
   'pale_oak_shelf': BlockPaleOakShelf,
   'minecraft:pale_oak_shelf': BlockPaleOakShelf,
+  'pale_oak_sign': BlockPaleOakSign,
+  'minecraft:pale_oak_sign': BlockPaleOakSign,
+  'pale_oak_wall_hanging_sign': BlockPaleOakWallHangingSign,
+  'minecraft:pale_oak_wall_hanging_sign': BlockPaleOakWallHangingSign,
+  'pale_oak_wall_sign': BlockPaleOakWallSign,
+  'minecraft:pale_oak_wall_sign': BlockPaleOakWallSign,
   'pink_banner': BlockPinkBanner,
   'minecraft:pink_banner': BlockPinkBanner,
   'pink_shulker_box': BlockPinkShulkerBox,
@@ -249,6 +261,18 @@ type BlockDispatcherMap = {
   'minecraft:player_head': BlockPlayerHead,
   'player_wall_head': BlockPlayerWallHead,
   'minecraft:player_wall_head': BlockPlayerWallHead,
+  'poplar_hanging_sign': BlockPoplarHangingSign,
+  'minecraft:poplar_hanging_sign': BlockPoplarHangingSign,
+  'poplar_shelf': BlockPoplarShelf,
+  'minecraft:poplar_shelf': BlockPoplarShelf,
+  'poplar_sign': BlockPoplarSign,
+  'minecraft:poplar_sign': BlockPoplarSign,
+  'poplar_wall_hanging_sign': BlockPoplarWallHangingSign,
+  'minecraft:poplar_wall_hanging_sign': BlockPoplarWallHangingSign,
+  'poplar_wall_sign': BlockPoplarWallSign,
+  'minecraft:poplar_wall_sign': BlockPoplarWallSign,
+  'potent_sulfur': BlockPotentSulfur,
+  'minecraft:potent_sulfur': BlockPotentSulfur,
   'purple_banner': BlockPurpleBanner,
   'minecraft:purple_banner': BlockPurpleBanner,
   'purple_shulker_box': BlockPurpleShulkerBox,
@@ -395,8 +419,10 @@ type BlockFallback = (
   | BlockCalibratedSculkSensor
   | BlockCampfire
   | BlockChainCommandBlock
+  | BlockCherryHangingSign
   | BlockCherryShelf
   | BlockCherrySign
+  | BlockCherryWallHangingSign
   | BlockCherryWallSign
   | BlockChest
   | BlockChiseledBookshelf
@@ -477,12 +503,22 @@ type BlockFallback = (
   | BlockOrangeWallBanner
   | BlockOxidizedCopperChest
   | BlockOxidizedCopperGolemStatue
+  | BlockPaleOakHangingSign
   | BlockPaleOakShelf
+  | BlockPaleOakSign
+  | BlockPaleOakWallHangingSign
+  | BlockPaleOakWallSign
   | BlockPinkBanner
   | BlockPinkShulkerBox
   | BlockPinkWallBanner
   | BlockPlayerHead
   | BlockPlayerWallHead
+  | BlockPoplarHangingSign
+  | BlockPoplarShelf
+  | BlockPoplarSign
+  | BlockPoplarWallHangingSign
+  | BlockPoplarWallSign
+  | BlockPotentSulfur
   | BlockPurpleBanner
   | BlockPurpleShulkerBox
   | BlockPurpleWallBanner
@@ -537,15 +573,15 @@ type BlockFallback = (
   | BlockYellowWallBanner
   | BlockZombieHead
   | BlockZombieWallHead)
-type BlockAcaciaHangingSign = SymbolBlockEntity['sign']
+type BlockAcaciaHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockAcaciaShelf = SymbolBlockEntity['shelf']
 type BlockAcaciaSign = SymbolBlockEntity['sign']
-type BlockAcaciaWallHangingSign = SymbolBlockEntity['sign']
+type BlockAcaciaWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockAcaciaWallSign = SymbolBlockEntity['sign']
-type BlockBambooHangingSign = SymbolBlockEntity['sign']
+type BlockBambooHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockBambooShelf = SymbolBlockEntity['shelf']
 type BlockBambooSign = SymbolBlockEntity['sign']
-type BlockBambooWallHangingSign = SymbolBlockEntity['sign']
+type BlockBambooWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockBambooWallSign = SymbolBlockEntity['sign']
 type BlockBarrel = SymbolBlockEntity['barrel']
 type BlockBeacon = SymbolBlockEntity['beacon']
@@ -553,10 +589,10 @@ type BlockBed = BlockEntity
 type BlockBeeNest = SymbolBlockEntity['beehive']
 type BlockBeehive = SymbolBlockEntity['beehive']
 type BlockBell = BlockEntity
-type BlockBirchHangingSign = SymbolBlockEntity['sign']
+type BlockBirchHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockBirchShelf = SymbolBlockEntity['shelf']
 type BlockBirchSign = SymbolBlockEntity['sign']
-type BlockBirchWallHangingSign = SymbolBlockEntity['sign']
+type BlockBirchWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockBirchWallSign = SymbolBlockEntity['sign']
 type BlockBlackBanner = SymbolBlockEntity['banner']
 type BlockBlackShulkerBox = SymbolBlockEntity['shulker_box']
@@ -572,8 +608,10 @@ type BlockBrownWallBanner = SymbolBlockEntity['banner']
 type BlockCalibratedSculkSensor = SymbolBlockEntity['sculk_sensor']
 type BlockCampfire = SymbolBlockEntity['campfire']
 type BlockChainCommandBlock = SymbolBlockEntity['command_block']
+type BlockCherryHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockCherryShelf = SymbolBlockEntity['shelf']
 type BlockCherrySign = SymbolBlockEntity['sign']
+type BlockCherryWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockCherryWallSign = SymbolBlockEntity['sign']
 type BlockChest = SymbolBlockEntity['chest']
 type BlockChiseledBookshelf = SymbolBlockEntity['chiseled_bookshelf']
@@ -585,18 +623,18 @@ type BlockCopperGolemStatue = BlockEntity
 type BlockCrafter = SymbolBlockEntity['crafter']
 type BlockCreeperHead = Skull
 type BlockCreeperWallHead = Skull
-type BlockCrimsonHangingSign = SymbolBlockEntity['sign']
+type BlockCrimsonHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockCrimsonShelf = SymbolBlockEntity['shelf']
 type BlockCrimsonSign = SymbolBlockEntity['sign']
-type BlockCrimsonWallHangingSign = SymbolBlockEntity['sign']
+type BlockCrimsonWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockCrimsonWallSign = SymbolBlockEntity['sign']
 type BlockCyanBanner = SymbolBlockEntity['banner']
 type BlockCyanShulkerBox = SymbolBlockEntity['shulker_box']
 type BlockCyanWallBanner = SymbolBlockEntity['banner']
-type BlockDarkOakHangingSign = SymbolBlockEntity['sign']
+type BlockDarkOakHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockDarkOakShelf = SymbolBlockEntity['shelf']
 type BlockDarkOakSign = SymbolBlockEntity['sign']
-type BlockDarkOakWallHangingSign = SymbolBlockEntity['sign']
+type BlockDarkOakWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockDarkOakWallSign = SymbolBlockEntity['sign']
 type BlockDaylightDetector = BlockEntity
 type BlockDecoratedPot = SymbolBlockEntity['decorated_pot']
@@ -620,10 +658,10 @@ type BlockGreenWallBanner = SymbolBlockEntity['banner']
 type BlockHopper = SymbolBlockEntity['hopper']
 type BlockJigsaw = SymbolBlockEntity['jigsaw']
 type BlockJukebox = SymbolBlockEntity['jukebox']
-type BlockJungleHangingSign = SymbolBlockEntity['sign']
+type BlockJungleHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockJungleShelf = SymbolBlockEntity['shelf']
 type BlockJungleSign = SymbolBlockEntity['sign']
-type BlockJungleWallHangingSign = SymbolBlockEntity['sign']
+type BlockJungleWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockJungleWallSign = SymbolBlockEntity['sign']
 type BlockLectern = SymbolBlockEntity['lectern']
 type BlockLightBlueBanner = SymbolBlockEntity['banner']
@@ -638,28 +676,38 @@ type BlockLimeWallBanner = SymbolBlockEntity['banner']
 type BlockMagentaBanner = SymbolBlockEntity['banner']
 type BlockMagentaShulkerBox = SymbolBlockEntity['shulker_box']
 type BlockMagentaWallBanner = SymbolBlockEntity['banner']
-type BlockMangroveHangingSign = SymbolBlockEntity['sign']
+type BlockMangroveHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockMangroveShelf = SymbolBlockEntity['shelf']
 type BlockMangroveSign = SymbolBlockEntity['sign']
-type BlockMangroveWallHangingSign = SymbolBlockEntity['sign']
+type BlockMangroveWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockMangroveWallSign = SymbolBlockEntity['sign']
 type BlockMovingPiston = SymbolBlockEntity['moving_piston']
-type BlockOakHangingSign = SymbolBlockEntity['sign']
+type BlockOakHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockOakShelf = SymbolBlockEntity['shelf']
 type BlockOakSign = SymbolBlockEntity['sign']
-type BlockOakWallHangingSign = SymbolBlockEntity['sign']
+type BlockOakWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockOakWallSign = SymbolBlockEntity['sign']
 type BlockOrangeBanner = SymbolBlockEntity['banner']
 type BlockOrangeShulkerBox = SymbolBlockEntity['shulker_box']
 type BlockOrangeWallBanner = SymbolBlockEntity['banner']
 type BlockOxidizedCopperChest = SymbolBlockEntity['chest']
 type BlockOxidizedCopperGolemStatue = BlockEntity
+type BlockPaleOakHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockPaleOakShelf = SymbolBlockEntity['shelf']
+type BlockPaleOakSign = SymbolBlockEntity['sign']
+type BlockPaleOakWallHangingSign = SymbolBlockEntity['hanging_sign']
+type BlockPaleOakWallSign = SymbolBlockEntity['sign']
 type BlockPinkBanner = SymbolBlockEntity['banner']
 type BlockPinkShulkerBox = SymbolBlockEntity['shulker_box']
 type BlockPinkWallBanner = SymbolBlockEntity['banner']
 type BlockPlayerHead = SymbolBlockEntity['skull']
 type BlockPlayerWallHead = SymbolBlockEntity['skull']
+type BlockPoplarHangingSign = SymbolBlockEntity['hanging_sign']
+type BlockPoplarShelf = SymbolBlockEntity['shelf']
+type BlockPoplarSign = SymbolBlockEntity['sign']
+type BlockPoplarWallHangingSign = SymbolBlockEntity['hanging_sign']
+type BlockPoplarWallSign = SymbolBlockEntity['sign']
+type BlockPotentSulfur = SymbolBlockEntity['potent_sulfur']
 type BlockPurpleBanner = SymbolBlockEntity['banner']
 type BlockPurpleShulkerBox = SymbolBlockEntity['shulker_box']
 type BlockPurpleWallBanner = SymbolBlockEntity['banner']
@@ -676,10 +724,10 @@ type BlockSkeletonWallSkull = Skull
 type BlockSmoker = SymbolBlockEntity['furnace']
 type BlockSoulCampfire = SymbolBlockEntity['campfire']
 type BlockSpawner = SymbolBlockEntity['mob_spawner']
-type BlockSpruceHangingSign = SymbolBlockEntity['sign']
+type BlockSpruceHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockSpruceShelf = SymbolBlockEntity['shelf']
 type BlockSpruceSign = SymbolBlockEntity['sign']
-type BlockSpruceWallHangingSign = SymbolBlockEntity['sign']
+type BlockSpruceWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockSpruceWallSign = SymbolBlockEntity['sign']
 type BlockStructureBlock = SymbolBlockEntity['structure_block']
 type BlockSuspiciousGravel = SymbolBlockEntity['brushable_block']
@@ -689,10 +737,10 @@ type BlockTestInstanceBlock = SymbolBlockEntity['test_instance_block']
 type BlockTrappedChest = SymbolBlockEntity['trapped_chest']
 type BlockTrialSpawner = SymbolBlockEntity['trial_spawner']
 type BlockVault = SymbolBlockEntity['vault']
-type BlockWarpedHangingSign = SymbolBlockEntity['sign']
+type BlockWarpedHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockWarpedShelf = SymbolBlockEntity['shelf']
 type BlockWarpedSign = SymbolBlockEntity['sign']
-type BlockWarpedWallHangingSign = SymbolBlockEntity['sign']
+type BlockWarpedWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockWarpedWallSign = SymbolBlockEntity['sign']
 type BlockWaxedCopperChest = SymbolBlockEntity['chest']
 type BlockWaxedCopperGolemStatue = BlockEntity

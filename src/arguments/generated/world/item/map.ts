@@ -1,6 +1,13 @@
 import type { Display, ItemBase } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTDouble, NBTFloat, NBTInt } from 'sandstone'
 
+export type ColorDisplay = (Display & {
+  /**
+   * Calculated as `RED << 16 | GREEN << 8 | BLUE`. Each of these fields must be between 0 and 255, inclusive.
+   */
+  MapColor?: NBTInt,
+})
+
 export type Decoration = {
   /**
    * Decoration type.
@@ -116,3 +123,10 @@ export type IconByteId = (
   | 24
   | 25
   | 26)
+
+export type IdentifiedDecoration = (Decoration & {
+  /**
+   * An arbitrary unique string identifying the decoration.
+   */
+  id: string,
+})

@@ -30,6 +30,10 @@ export type HasSturdyFacePredicate = (PredicateOffset & {
 
 export type InsideWorldBoundsPredicate = PredicateOffset
 
+export type MatchingBiomesPredicate = {
+  biomes: (`${string}:${string}` | Array<`${string}:${string}`>),
+}
+
 export type MatchingBlocksPredicate = (PredicateOffset & {
   blocks: (
       | Array<Registry['minecraft:block']> | (
@@ -93,6 +97,8 @@ type BlockPredicateDispatcherMap = {
   'minecraft:has_sturdy_face': BlockPredicateHasSturdyFace,
   'inside_world_bounds': BlockPredicateInsideWorldBounds,
   'minecraft:inside_world_bounds': BlockPredicateInsideWorldBounds,
+  'matching_biomes': BlockPredicateMatchingBiomes,
+  'minecraft:matching_biomes': BlockPredicateMatchingBiomes,
   'matching_block_tag': BlockPredicateMatchingBlockTag,
   'minecraft:matching_block_tag': BlockPredicateMatchingBlockTag,
   'matching_blocks': BlockPredicateMatchingBlocks,
@@ -112,6 +118,7 @@ type BlockPredicateFallback = (
   | BlockPredicateAnyOf
   | BlockPredicateHasSturdyFace
   | BlockPredicateInsideWorldBounds
+  | BlockPredicateMatchingBiomes
   | BlockPredicateMatchingBlockTag
   | BlockPredicateMatchingBlocks
   | BlockPredicateMatchingFluids
@@ -122,6 +129,7 @@ type BlockPredicateAllOf = CombiningPredicate
 type BlockPredicateAnyOf = CombiningPredicate
 type BlockPredicateHasSturdyFace = HasSturdyFacePredicate
 type BlockPredicateInsideWorldBounds = InsideWorldBoundsPredicate
+type BlockPredicateMatchingBiomes = MatchingBiomesPredicate
 type BlockPredicateMatchingBlockTag = MatchingBlockTagPredicate
 type BlockPredicateMatchingBlocks = MatchingBlocksPredicate
 type BlockPredicateMatchingFluids = MatchingFluidsPredicate

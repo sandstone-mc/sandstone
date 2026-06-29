@@ -15,6 +15,7 @@ export const GAME_EVENTS_SET = new Set([
   'block_detach',
   'block_open',
   'block_place',
+  'bounce',
   'container_close',
   'container_open',
   'drink',

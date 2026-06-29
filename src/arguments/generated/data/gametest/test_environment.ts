@@ -23,10 +23,30 @@ export type ClockTimeTestEnvironment = {
   }>,
 }
 
+export type Difficulty = ('peaceful' | 'easy' | 'normal' | 'hard')
+
+export type DifficultyTestEnvironment = {
+  /**
+   * Value:
+   *
+   *  - Peaceful(`peaceful`)
+   *  - Easy(`easy`)
+   *  - Normal(`normal`)
+   *  - Hard(`hard`)
+   */
+  difficulty: Difficulty,
+}
+
 export type FunctionTestEnvironment = {
   setup?: (`${string}:${string}` | MCFunctionClass),
   teardown?: (`${string}:${string}` | MCFunctionClass),
 }
+
+export type GameRuleMap = ({
+  [Key in Extract<Registry['minecraft:game_rule'], string>]?: (Key extends keyof SymbolGameRule
+    ? SymbolGameRule[Key]
+    : RootNBT)
+})
 
 export type GameRulesTestEnvironment = {
   rules: ({
@@ -78,6 +98,8 @@ type TestEnvironmentDefinitionDispatcherMap = {
   'minecraft:all_of': TestEnvironmentDefinitionAllOf,
   'clock_time': TestEnvironmentDefinitionClockTime,
   'minecraft:clock_time': TestEnvironmentDefinitionClockTime,
+  'difficulty': TestEnvironmentDefinitionDifficulty,
+  'minecraft:difficulty': TestEnvironmentDefinitionDifficulty,
   'function': TestEnvironmentDefinitionFunction,
   'minecraft:function': TestEnvironmentDefinitionFunction,
   'game_rules': TestEnvironmentDefinitionGameRules,
@@ -93,6 +115,7 @@ type TestEnvironmentDefinitionKeys = keyof TestEnvironmentDefinitionDispatcherMa
 type TestEnvironmentDefinitionFallback = (
   | TestEnvironmentDefinitionAllOf
   | TestEnvironmentDefinitionClockTime
+  | TestEnvironmentDefinitionDifficulty
   | TestEnvironmentDefinitionFunction
   | TestEnvironmentDefinitionGameRules
   | TestEnvironmentDefinitionTimeOfDay
@@ -100,6 +123,7 @@ type TestEnvironmentDefinitionFallback = (
   | TestEnvironmentDefinitionWeather)
 type TestEnvironmentDefinitionAllOf = AllOffTestEnvironment
 type TestEnvironmentDefinitionClockTime = ClockTimeTestEnvironment
+type TestEnvironmentDefinitionDifficulty = DifficultyTestEnvironment
 type TestEnvironmentDefinitionFunction = FunctionTestEnvironment
 type TestEnvironmentDefinitionGameRules = GameRulesTestEnvironment
 type TestEnvironmentDefinitionTimeOfDay = TimeOfDayTestEnvironment

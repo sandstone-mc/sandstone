@@ -64,6 +64,7 @@ import type { Endermite } from 'sandstone/arguments/generated/world/entity/mob/e
 import type { Fish, Pufferfish, Salmon, TropicalFish } from 'sandstone/arguments/generated/world/entity/mob/fish.ts'
 import type { Ghast } from 'sandstone/arguments/generated/world/entity/mob/ghast.ts'
 import type { GlowSquid } from 'sandstone/arguments/generated/world/entity/mob/glow_squid.ts'
+import type { HappyGhast } from 'sandstone/arguments/generated/world/entity/mob/happy_ghast.ts'
 import type { IronGolem } from 'sandstone/arguments/generated/world/entity/mob/iron_golem.ts'
 import type { Mannequin } from 'sandstone/arguments/generated/world/entity/mob/mannequin.ts'
 import type { MobBase, Squid } from 'sandstone/arguments/generated/world/entity/mob.ts'
@@ -79,7 +80,7 @@ import type {
 } from 'sandstone/arguments/generated/world/entity/mob/raider.ts'
 import type { Shulker } from 'sandstone/arguments/generated/world/entity/mob/shulker.ts'
 import type { Skeleton } from 'sandstone/arguments/generated/world/entity/mob/skeleton.ts'
-import type { Slime } from 'sandstone/arguments/generated/world/entity/mob/slime.ts'
+import type { Slime, SulfurCube } from 'sandstone/arguments/generated/world/entity/mob/slime.ts'
 import type { SnowGolem } from 'sandstone/arguments/generated/world/entity/mob/snow_golem.ts'
 import type { Tadpole } from 'sandstone/arguments/generated/world/entity/mob/tadpole.ts'
 import type { Vex } from 'sandstone/arguments/generated/world/entity/mob/vex.ts'
@@ -276,6 +277,8 @@ type EntityDispatcherMap = {
   'minecraft:goat': EntityGoat,
   'guardian': EntityGuardian,
   'minecraft:guardian': EntityGuardian,
+  'happy_ghast': EntityHappyGhast,
+  'minecraft:happy_ghast': EntityHappyGhast,
   'hoglin': EntityHoglin,
   'minecraft:hoglin': EntityHoglin,
   'hopper_minecart': EntityHopperMinecart,
@@ -360,6 +363,10 @@ type EntityDispatcherMap = {
   'minecraft:player': EntityPlayer,
   'polar_bear': EntityPolarBear,
   'minecraft:polar_bear': EntityPolarBear,
+  'poplar_boat': EntityPoplarBoat,
+  'minecraft:poplar_boat': EntityPoplarBoat,
+  'popolar_chest_boat': EntityPopolarChestBoat,
+  'minecraft:popolar_chest_boat': EntityPopolarChestBoat,
   'potion': EntityPotion,
   'minecraft:potion': EntityPotion,
   'pufferfish': EntityPufferfish,
@@ -410,6 +417,8 @@ type EntityDispatcherMap = {
   'minecraft:stray': EntityStray,
   'strider': EntityStrider,
   'minecraft:strider': EntityStrider,
+  'sulfur_cube': EntitySulfurCube,
+  'minecraft:sulfur_cube': EntitySulfurCube,
   'tadpole': EntityTadpole,
   'minecraft:tadpole': EntityTadpole,
   'text_display': EntityTextDisplay,
@@ -529,6 +538,7 @@ type EntityFallback = (
   | EntityGlowSquid
   | EntityGoat
   | EntityGuardian
+  | EntityHappyGhast
   | EntityHoglin
   | EntityHopperMinecart
   | EntityHorse
@@ -571,6 +581,8 @@ type EntityFallback = (
   | EntityPillager
   | EntityPlayer
   | EntityPolarBear
+  | EntityPoplarBoat
+  | EntityPopolarChestBoat
   | EntityPotion
   | EntityPufferfish
   | EntityRabbit
@@ -596,6 +608,7 @@ type EntityFallback = (
   | EntitySquid
   | EntityStray
   | EntityStrider
+  | EntitySulfurCube
   | EntityTadpole
   | EntityTextDisplay
   | EntityTnt
@@ -687,6 +700,7 @@ type EntityGlowItemFrame = ItemFrame
 type EntityGlowSquid = GlowSquid
 type EntityGoat = Goat
 type EntityGuardian = MobBase
+type EntityHappyGhast = HappyGhast
 type EntityHoglin = Hoglin
 type EntityHopperMinecart = HopperMinecart
 type EntityHorse = Horse
@@ -729,6 +743,8 @@ type EntityPiglinBrute = PiglinBase
 type EntityPillager = Pillager
 type EntityPlayer = Player
 type EntityPolarBear = PolarBear
+type EntityPoplarBoat = Boat
+type EntityPopolarChestBoat = ChestBoat
 type EntityPotion = Potion
 type EntityPufferfish = Pufferfish
 type EntityRabbit = Rabbit
@@ -754,6 +770,7 @@ type EntitySpruceChestBoat = ChestBoat
 type EntitySquid = Squid
 type EntityStray = MobBase
 type EntityStrider = Saddled
+type EntitySulfurCube = SulfurCube
 type EntityTadpole = Tadpole
 type EntityTextDisplay = TextDisplay
 type EntityTnt = Tnt

@@ -9,6 +9,7 @@ import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/
 import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolEnvironmentAttribute, SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
   EnchantmentClass,
   NBTFloat,
@@ -18,24 +19,6 @@ import type {
   PredicateClass,
   WorldClockClass,
 } from 'sandstone'
-
-export type AllOf = {
-  /**
-   * Passes when all of these conditions pass.
-   */
-  terms: Array<LootCondition>,
-}
-
-export type Alternative = {
-  terms: Array<LootCondition>,
-}
-
-export type AnyOf = {
-  /**
-   * Passes when any of these conditions pass.
-   */
-  terms: Array<LootCondition>,
-}
 
 export type BlockStateProperty = {
   block: Registry['minecraft:block'],
@@ -97,10 +80,6 @@ export type EnvironmentAttributeCheck = NonNullable<({
   }
 }[Registry['minecraft:environment_attribute']])>
 
-export type Inverted = {
-  term: LootCondition,
-}
-
 export type KilledByPlayer = {
   inverse?: boolean,
 }
@@ -111,6 +90,9 @@ export type LocationCheck = {
   offsetZ?: NBTInt,
   predicate: LocationPredicate,
 }
+
+// TODO: Make this actually work properly
+export type LootConditionOf<C extends NBTObject> = Array<LootCondition>
 
 export type MatchTool = {
   predicate: ItemPredicate,
@@ -206,99 +188,134 @@ export type WeatherCheck = {
   raining?: boolean,
   thundering?: boolean,
 }
-type LootConditionDispatcherMap = {
-  'all_of': LootConditionAllOf,
-  'minecraft:all_of': LootConditionAllOf,
-  'alternative': LootConditionAlternative,
-  'minecraft:alternative': LootConditionAlternative,
-  'any_of': LootConditionAnyOf,
-  'minecraft:any_of': LootConditionAnyOf,
-  'block_state_property': LootConditionBlockStateProperty,
-  'minecraft:block_state_property': LootConditionBlockStateProperty,
-  'damage_source_properties': LootConditionDamageSourceProperties,
-  'minecraft:damage_source_properties': LootConditionDamageSourceProperties,
-  'enchantment_active_check': LootConditionEnchantmentActiveCheck,
-  'minecraft:enchantment_active_check': LootConditionEnchantmentActiveCheck,
-  'entity_properties': LootConditionEntityProperties,
-  'minecraft:entity_properties': LootConditionEntityProperties,
-  'entity_scores': LootConditionEntityScores,
-  'minecraft:entity_scores': LootConditionEntityScores,
-  'environment_attribute_check': LootConditionEnvironmentAttributeCheck,
-  'minecraft:environment_attribute_check': LootConditionEnvironmentAttributeCheck,
-  'inverted': LootConditionInverted,
-  'minecraft:inverted': LootConditionInverted,
-  'killed_by_player': LootConditionKilledByPlayer,
-  'minecraft:killed_by_player': LootConditionKilledByPlayer,
-  'location_check': LootConditionLocationCheck,
-  'minecraft:location_check': LootConditionLocationCheck,
-  'match_tool': LootConditionMatchTool,
-  'minecraft:match_tool': LootConditionMatchTool,
-  'random_chance': LootConditionRandomChance,
-  'minecraft:random_chance': LootConditionRandomChance,
-  'random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus,
-  'minecraft:random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus,
-  'random_chance_with_looting': LootConditionRandomChanceWithLooting,
-  'minecraft:random_chance_with_looting': LootConditionRandomChanceWithLooting,
-  'reference': LootConditionReference,
-  'minecraft:reference': LootConditionReference,
-  'table_bonus': LootConditionTableBonus,
-  'minecraft:table_bonus': LootConditionTableBonus,
-  'time_check': LootConditionTimeCheck,
-  'minecraft:time_check': LootConditionTimeCheck,
-  'value_check': LootConditionValueCheck,
-  'minecraft:value_check': LootConditionValueCheck,
-  'weather_check': LootConditionWeatherCheck,
-  'minecraft:weather_check': LootConditionWeatherCheck,
+type LootConditionDispatcherMap<C extends NBTObject> = {
+  'all_of': LootConditionAllOf<C>,
+  'minecraft:all_of': LootConditionAllOf<C>,
+  'alternative': LootConditionAlternative<C>,
+  'minecraft:alternative': LootConditionAlternative<C>,
+  'any_of': LootConditionAnyOf<C>,
+  'minecraft:any_of': LootConditionAnyOf<C>,
+  'block_state_property': LootConditionBlockStateProperty<C>,
+  'minecraft:block_state_property': LootConditionBlockStateProperty<C>,
+  'damage_source_properties': LootConditionDamageSourceProperties<C>,
+  'minecraft:damage_source_properties': LootConditionDamageSourceProperties<C>,
+  'enchantment_active_check': LootConditionEnchantmentActiveCheck<C>,
+  'minecraft:enchantment_active_check': LootConditionEnchantmentActiveCheck<C>,
+  'entity_properties': LootConditionEntityProperties<C>,
+  'minecraft:entity_properties': LootConditionEntityProperties<C>,
+  'entity_scores': LootConditionEntityScores<C>,
+  'minecraft:entity_scores': LootConditionEntityScores<C>,
+  'environment_attribute_check': LootConditionEnvironmentAttributeCheck<C>,
+  'minecraft:environment_attribute_check': LootConditionEnvironmentAttributeCheck<C>,
+  'inverted': LootConditionInverted<C>,
+  'minecraft:inverted': LootConditionInverted<C>,
+  'killed_by_player': LootConditionKilledByPlayer<C>,
+  'minecraft:killed_by_player': LootConditionKilledByPlayer<C>,
+  'location_check': LootConditionLocationCheck<C>,
+  'minecraft:location_check': LootConditionLocationCheck<C>,
+  'match_tool': LootConditionMatchTool<C>,
+  'minecraft:match_tool': LootConditionMatchTool<C>,
+  'random_chance': LootConditionRandomChance<C>,
+  'minecraft:random_chance': LootConditionRandomChance<C>,
+  'random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus<C>,
+  'minecraft:random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus<C>,
+  'random_chance_with_looting': LootConditionRandomChanceWithLooting<C>,
+  'minecraft:random_chance_with_looting': LootConditionRandomChanceWithLooting<C>,
+  'reference': LootConditionReference<C>,
+  'minecraft:reference': LootConditionReference<C>,
+  'table_bonus': LootConditionTableBonus<C>,
+  'minecraft:table_bonus': LootConditionTableBonus<C>,
+  'time_check': LootConditionTimeCheck<C>,
+  'minecraft:time_check': LootConditionTimeCheck<C>,
+  'value_check': LootConditionValueCheck<C>,
+  'minecraft:value_check': LootConditionValueCheck<C>,
+  'weather_check': LootConditionWeatherCheck<C>,
+  'minecraft:weather_check': LootConditionWeatherCheck<C>,
 }
-type LootConditionKeys = keyof LootConditionDispatcherMap
-type LootConditionFallback = (
-  | LootConditionAllOf
-  | LootConditionAlternative
-  | LootConditionAnyOf
-  | LootConditionBlockStateProperty
-  | LootConditionDamageSourceProperties
-  | LootConditionEnchantmentActiveCheck
-  | LootConditionEntityProperties
-  | LootConditionEntityScores
-  | LootConditionEnvironmentAttributeCheck
-  | LootConditionInverted
-  | LootConditionKilledByPlayer
-  | LootConditionLocationCheck
-  | LootConditionMatchTool
-  | LootConditionRandomChance
-  | LootConditionRandomChanceWithEnchantedBonus
-  | LootConditionRandomChanceWithLooting
-  | LootConditionReference
-  | LootConditionTableBonus
-  | LootConditionTimeCheck
-  | LootConditionValueCheck
-  | LootConditionWeatherCheck)
-type LootConditionAllOf = AllOf
-type LootConditionAlternative = Alternative
-type LootConditionAnyOf = AnyOf
-type LootConditionBlockStateProperty = BlockStateProperty
-type LootConditionDamageSourceProperties = DamageSourceProperties
-type LootConditionEnchantmentActiveCheck = EnchantmentActiveCheck
-type LootConditionEntityProperties = EntityProperties
-type LootConditionEntityScores = EntityScores
-type LootConditionEnvironmentAttributeCheck = EnvironmentAttributeCheck
-type LootConditionInverted = Inverted
-type LootConditionKilledByPlayer = KilledByPlayer
-type LootConditionLocationCheck = LocationCheck
-type LootConditionMatchTool = MatchTool
-type LootConditionRandomChance = RandomChance
-type LootConditionRandomChanceWithEnchantedBonus = RandomChanceWithEnchantedBonus
-type LootConditionRandomChanceWithLooting = RandomChanceWithLooting
-type LootConditionReference = Reference
-type LootConditionTableBonus = TableBonus
-type LootConditionTimeCheck = TimeCheck
-type LootConditionValueCheck = ValueCheck
-type LootConditionWeatherCheck = WeatherCheck
-export type SymbolLootCondition<CASE extends
+type LootConditionKeys = keyof LootConditionDispatcherMap<NBTObject>
+type LootConditionFallback<C extends NBTObject> = (
+  | LootConditionAllOf<C>
+  | LootConditionAlternative<C>
+  | LootConditionAnyOf<C>
+  | LootConditionBlockStateProperty<C>
+  | LootConditionDamageSourceProperties<C>
+  | LootConditionEnchantmentActiveCheck<C>
+  | LootConditionEntityProperties<C>
+  | LootConditionEntityScores<C>
+  | LootConditionEnvironmentAttributeCheck<C>
+  | LootConditionInverted<C>
+  | LootConditionKilledByPlayer<C>
+  | LootConditionLocationCheck<C>
+  | LootConditionMatchTool<C>
+  | LootConditionRandomChance<C>
+  | LootConditionRandomChanceWithEnchantedBonus<C>
+  | LootConditionRandomChanceWithLooting<C>
+  | LootConditionReference<C>
+  | LootConditionTableBonus<C>
+  | LootConditionTimeCheck<C>
+  | LootConditionValueCheck<C>
+  | LootConditionWeatherCheck<C>)
+export type LootConditionAllOf<C extends NBTObject> = {
+  /**
+   * Passes when all of these conditions pass.
+   */
+  terms: Array<LootConditionOf<C>>,
+}
+
+export type LootConditionAlternative<C extends NBTObject> = {
+  terms: Array<LootConditionOf<C>>,
+}
+
+export type LootConditionAnyOf<C extends NBTObject> = {
+  /**
+   * Passes when any of these conditions pass.
+   */
+  terms: Array<LootConditionOf<C>>,
+}
+
+export type LootConditionBlockStateProperty<C extends NBTObject> = BlockStateProperty
+
+export type LootConditionDamageSourceProperties<C extends NBTObject> = DamageSourceProperties
+
+export type LootConditionEnchantmentActiveCheck<C extends NBTObject> = EnchantmentActiveCheck
+
+export type LootConditionEntityProperties<C extends NBTObject> = EntityProperties
+
+export type LootConditionEntityScores<C extends NBTObject> = EntityScores
+
+export type LootConditionEnvironmentAttributeCheck<C extends NBTObject> = EnvironmentAttributeCheck
+
+export type LootConditionInverted<C extends NBTObject> = {
+  term: LootConditionOf<C>,
+}
+
+export type LootConditionKilledByPlayer<C extends NBTObject> = KilledByPlayer
+
+export type LootConditionLocationCheck<C extends NBTObject> = LocationCheck
+
+export type LootConditionMatchTool<C extends NBTObject> = MatchTool
+
+export type LootConditionRandomChance<C extends NBTObject> = RandomChance
+
+export type LootConditionRandomChanceWithEnchantedBonus<C extends NBTObject> = RandomChanceWithEnchantedBonus
+
+export type LootConditionRandomChanceWithLooting<C extends NBTObject> = RandomChanceWithLooting
+
+export type LootConditionReference<C extends NBTObject> = Reference
+
+export type LootConditionTableBonus<C extends NBTObject> = TableBonus
+
+export type LootConditionTimeCheck<C extends NBTObject> = TimeCheck
+
+export type LootConditionValueCheck<C extends NBTObject> = ValueCheck
+
+export type LootConditionWeatherCheck<C extends NBTObject> = WeatherCheck
+
+export type SymbolLootCondition<C extends NBTObject, CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
-  ? LootConditionDispatcherMap
-  : CASE extends 'keys' ? LootConditionKeys : CASE extends '%fallback' ? LootConditionFallback : never
+  ? LootConditionDispatcherMap<C>
+  : CASE extends 'keys' ? LootConditionKeys : CASE extends '%fallback' ? LootConditionFallback<C> : never

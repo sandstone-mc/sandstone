@@ -10,8 +10,8 @@ export type ChatDecoration = ({
 export type ChatDecorationParameter = ('sender' | 'content' | 'team_name' | 'target')
 
 export type ChatType = {
-  chat?: ChatDecoration,
-  narration?: ChatDecoration,
+  chat: ChatDecoration,
+  narration: ChatDecoration,
 }
 
 export type Narration = {
@@ -26,6 +26,12 @@ export type Narration = {
 }
 
 export type NarrationPriority = ('chat' | 'system')
+
+export type OldChatType = {
+  chat?: TextDisplay,
+  overlay?: TextDisplay,
+  narration?: Narration,
+}
 
 export type TextDisplay = {
   decoration?: ChatDecoration,

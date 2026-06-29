@@ -5,6 +5,10 @@ import type { BlockState } from 'sandstone/arguments/generated/util/block_state.
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { LootTableClass, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
+export type AllOfMatch = {
+  rules: Array<RuleTest>,
+}
+
 export type AppendLoot = {
   loot_table: (Registry['minecraft:loot_table'] | LootTableClass),
 }
@@ -86,6 +90,11 @@ export type Gravity = {
   offset: NBTInt,
 }
 
+export type HeightMatch = {
+  min_inclusive: NBTInt,
+  max_inclusive: NBTInt,
+}
+
 export type LinearPos = {
   /**
    * Value:
@@ -139,6 +148,10 @@ export type ProcessorList = (Array<Processor> | {
   processors: Array<Processor>,
 })
 
+export type ProcessorListObject = {
+  processors: Array<Processor>,
+}
+
 export type ProcessorListRef = (Registry['minecraft:worldgen/processor_list'] | ProcessorList)
 
 export type ProcessorRule = {
@@ -150,7 +163,9 @@ export type ProcessorRule = {
 }
 
 export type ProtectedBlocks = {
-  value: (`#${Registry['minecraft:tag/block']}` | TagClass<'block'>),
+  value: ((
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>),
 }
 
 export type RandomBlockMatch = {
@@ -243,10 +258,14 @@ export type SymbolRuleBlockEntityModifier<CASE extends
     ? RuleBlockEntityModifierKeys
     : CASE extends '%fallback' ? RuleBlockEntityModifierFallback : never
 type RuleTestDispatcherMap = {
+  'all_of': RuleTestAllOf,
+  'minecraft:all_of': RuleTestAllOf,
   'block_match': RuleTestBlockMatch,
   'minecraft:block_match': RuleTestBlockMatch,
   'blockstate_match': RuleTestBlockstateMatch,
   'minecraft:blockstate_match': RuleTestBlockstateMatch,
+  'height_match': RuleTestHeightMatch,
+  'minecraft:height_match': RuleTestHeightMatch,
   'random_block_match': RuleTestRandomBlockMatch,
   'minecraft:random_block_match': RuleTestRandomBlockMatch,
   'random_blockstate_match': RuleTestRandomBlockstateMatch,
@@ -256,13 +275,17 @@ type RuleTestDispatcherMap = {
 }
 type RuleTestKeys = keyof RuleTestDispatcherMap
 type RuleTestFallback = (
+  | RuleTestAllOf
   | RuleTestBlockMatch
   | RuleTestBlockstateMatch
+  | RuleTestHeightMatch
   | RuleTestRandomBlockMatch
   | RuleTestRandomBlockstateMatch
   | RuleTestTagMatch)
+type RuleTestAllOf = AllOfMatch
 type RuleTestBlockMatch = BlockMatch
 type RuleTestBlockstateMatch = BlockStateMatch
+type RuleTestHeightMatch = HeightMatch
 type RuleTestRandomBlockMatch = RandomBlockMatch
 type RuleTestRandomBlockstateMatch = RandomBlockStateMatch
 type RuleTestTagMatch = TagMatch

@@ -377,6 +377,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:chipped_anvil': McdocBlockStatesChippedAnvil,
   'chiseled_bookshelf': McdocBlockStatesChiseledBookshelf,
   'minecraft:chiseled_bookshelf': McdocBlockStatesChiseledBookshelf,
+  'chiseled_cinnabar': McdocBlockStatesChiseledCinnabar,
+  'minecraft:chiseled_cinnabar': McdocBlockStatesChiseledCinnabar,
   'chiseled_copper': McdocBlockStatesChiseledCopper,
   'minecraft:chiseled_copper': McdocBlockStatesChiseledCopper,
   'chiseled_deepslate': McdocBlockStatesChiseledDeepslate,
@@ -395,6 +397,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:chiseled_sandstone': McdocBlockStatesChiseledSandstone,
   'chiseled_stone_bricks': McdocBlockStatesChiseledStoneBricks,
   'minecraft:chiseled_stone_bricks': McdocBlockStatesChiseledStoneBricks,
+  'chiseled_sulfur': McdocBlockStatesChiseledSulfur,
+  'minecraft:chiseled_sulfur': McdocBlockStatesChiseledSulfur,
   'chiseled_tuff': McdocBlockStatesChiseledTuff,
   'minecraft:chiseled_tuff': McdocBlockStatesChiseledTuff,
   'chiseled_tuff_bricks': McdocBlockStatesChiseledTuffBricks,
@@ -403,6 +407,22 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:chorus_flower': McdocBlockStatesChorusFlower,
   'chorus_plant': McdocBlockStatesChorusPlant,
   'minecraft:chorus_plant': McdocBlockStatesChorusPlant,
+  'cinnabar': McdocBlockStatesCinnabar,
+  'minecraft:cinnabar': McdocBlockStatesCinnabar,
+  'cinnabar_brick_slab': McdocBlockStatesCinnabarBrickSlab,
+  'minecraft:cinnabar_brick_slab': McdocBlockStatesCinnabarBrickSlab,
+  'cinnabar_brick_stairs': McdocBlockStatesCinnabarBrickStairs,
+  'minecraft:cinnabar_brick_stairs': McdocBlockStatesCinnabarBrickStairs,
+  'cinnabar_brick_wall': McdocBlockStatesCinnabarBrickWall,
+  'minecraft:cinnabar_brick_wall': McdocBlockStatesCinnabarBrickWall,
+  'cinnabar_bricks': McdocBlockStatesCinnabarBricks,
+  'minecraft:cinnabar_bricks': McdocBlockStatesCinnabarBricks,
+  'cinnabar_slab': McdocBlockStatesCinnabarSlab,
+  'minecraft:cinnabar_slab': McdocBlockStatesCinnabarSlab,
+  'cinnabar_stairs': McdocBlockStatesCinnabarStairs,
+  'minecraft:cinnabar_stairs': McdocBlockStatesCinnabarStairs,
+  'cinnabar_wall': McdocBlockStatesCinnabarWall,
+  'minecraft:cinnabar_wall': McdocBlockStatesCinnabarWall,
   'clay': McdocBlockStatesClay,
   'minecraft:clay': McdocBlockStatesClay,
   'closed_eyeblossom': McdocBlockStatesClosedEyeblossom,
@@ -1499,6 +1519,14 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:polished_blackstone_stairs': McdocBlockStatesPolishedBlackstoneStairs,
   'polished_blackstone_wall': McdocBlockStatesPolishedBlackstoneWall,
   'minecraft:polished_blackstone_wall': McdocBlockStatesPolishedBlackstoneWall,
+  'polished_cinnabar': McdocBlockStatesPolishedCinnabar,
+  'minecraft:polished_cinnabar': McdocBlockStatesPolishedCinnabar,
+  'polished_cinnabar_slab': McdocBlockStatesPolishedCinnabarSlab,
+  'minecraft:polished_cinnabar_slab': McdocBlockStatesPolishedCinnabarSlab,
+  'polished_cinnabar_stairs': McdocBlockStatesPolishedCinnabarStairs,
+  'minecraft:polished_cinnabar_stairs': McdocBlockStatesPolishedCinnabarStairs,
+  'polished_cinnabar_wall': McdocBlockStatesPolishedCinnabarWall,
+  'minecraft:polished_cinnabar_wall': McdocBlockStatesPolishedCinnabarWall,
   'polished_deepslate': McdocBlockStatesPolishedDeepslate,
   'minecraft:polished_deepslate': McdocBlockStatesPolishedDeepslate,
   'polished_deepslate_slab': McdocBlockStatesPolishedDeepslateSlab,
@@ -1519,6 +1547,14 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:polished_granite_slab': McdocBlockStatesPolishedGraniteSlab,
   'polished_granite_stairs': McdocBlockStatesPolishedGraniteStairs,
   'minecraft:polished_granite_stairs': McdocBlockStatesPolishedGraniteStairs,
+  'polished_sulfur': McdocBlockStatesPolishedSulfur,
+  'minecraft:polished_sulfur': McdocBlockStatesPolishedSulfur,
+  'polished_sulfur_slab': McdocBlockStatesPolishedSulfurSlab,
+  'minecraft:polished_sulfur_slab': McdocBlockStatesPolishedSulfurSlab,
+  'polished_sulfur_stairs': McdocBlockStatesPolishedSulfurStairs,
+  'minecraft:polished_sulfur_stairs': McdocBlockStatesPolishedSulfurStairs,
+  'polished_sulfur_wall': McdocBlockStatesPolishedSulfurWall,
+  'minecraft:polished_sulfur_wall': McdocBlockStatesPolishedSulfurWall,
   'polished_tuff': McdocBlockStatesPolishedTuff,
   'minecraft:polished_tuff': McdocBlockStatesPolishedTuff,
   'polished_tuff_slab': McdocBlockStatesPolishedTuffSlab,
@@ -1531,6 +1567,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:poppy': McdocBlockStatesPoppy,
   'potatoes': McdocBlockStatesPotatoes,
   'minecraft:potatoes': McdocBlockStatesPotatoes,
+  'potent_sulfur': McdocBlockStatesPotentSulfur,
+  'minecraft:potent_sulfur': McdocBlockStatesPotentSulfur,
   'potted_acacia_sapling': McdocBlockStatesPottedAcaciaSapling,
   'minecraft:potted_acacia_sapling': McdocBlockStatesPottedAcaciaSapling,
   'potted_allium': McdocBlockStatesPottedAllium,
@@ -1983,6 +2021,24 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:structure_void': McdocBlockStatesStructureVoid,
   'sugar_cane': McdocBlockStatesSugarCane,
   'minecraft:sugar_cane': McdocBlockStatesSugarCane,
+  'sulfur': McdocBlockStatesSulfur,
+  'minecraft:sulfur': McdocBlockStatesSulfur,
+  'sulfur_brick_slab': McdocBlockStatesSulfurBrickSlab,
+  'minecraft:sulfur_brick_slab': McdocBlockStatesSulfurBrickSlab,
+  'sulfur_brick_stairs': McdocBlockStatesSulfurBrickStairs,
+  'minecraft:sulfur_brick_stairs': McdocBlockStatesSulfurBrickStairs,
+  'sulfur_brick_wall': McdocBlockStatesSulfurBrickWall,
+  'minecraft:sulfur_brick_wall': McdocBlockStatesSulfurBrickWall,
+  'sulfur_bricks': McdocBlockStatesSulfurBricks,
+  'minecraft:sulfur_bricks': McdocBlockStatesSulfurBricks,
+  'sulfur_slab': McdocBlockStatesSulfurSlab,
+  'minecraft:sulfur_slab': McdocBlockStatesSulfurSlab,
+  'sulfur_spike': McdocBlockStatesSulfurSpike,
+  'minecraft:sulfur_spike': McdocBlockStatesSulfurSpike,
+  'sulfur_stairs': McdocBlockStatesSulfurStairs,
+  'minecraft:sulfur_stairs': McdocBlockStatesSulfurStairs,
+  'sulfur_wall': McdocBlockStatesSulfurWall,
+  'minecraft:sulfur_wall': McdocBlockStatesSulfurWall,
   'sunflower': McdocBlockStatesSunflower,
   'minecraft:sunflower': McdocBlockStatesSunflower,
   'suspicious_gravel': McdocBlockStatesSuspiciousGravel,
@@ -2527,6 +2583,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesChest
   | McdocBlockStatesChippedAnvil
   | McdocBlockStatesChiseledBookshelf
+  | McdocBlockStatesChiseledCinnabar
   | McdocBlockStatesChiseledCopper
   | McdocBlockStatesChiseledDeepslate
   | McdocBlockStatesChiseledNetherBricks
@@ -2536,10 +2593,19 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesChiseledResinBricks
   | McdocBlockStatesChiseledSandstone
   | McdocBlockStatesChiseledStoneBricks
+  | McdocBlockStatesChiseledSulfur
   | McdocBlockStatesChiseledTuff
   | McdocBlockStatesChiseledTuffBricks
   | McdocBlockStatesChorusFlower
   | McdocBlockStatesChorusPlant
+  | McdocBlockStatesCinnabar
+  | McdocBlockStatesCinnabarBrickSlab
+  | McdocBlockStatesCinnabarBrickStairs
+  | McdocBlockStatesCinnabarBrickWall
+  | McdocBlockStatesCinnabarBricks
+  | McdocBlockStatesCinnabarSlab
+  | McdocBlockStatesCinnabarStairs
+  | McdocBlockStatesCinnabarWall
   | McdocBlockStatesClay
   | McdocBlockStatesClosedEyeblossom
   | McdocBlockStatesCoalBlock
@@ -3088,6 +3154,10 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesPolishedBlackstoneSlab
   | McdocBlockStatesPolishedBlackstoneStairs
   | McdocBlockStatesPolishedBlackstoneWall
+  | McdocBlockStatesPolishedCinnabar
+  | McdocBlockStatesPolishedCinnabarSlab
+  | McdocBlockStatesPolishedCinnabarStairs
+  | McdocBlockStatesPolishedCinnabarWall
   | McdocBlockStatesPolishedDeepslate
   | McdocBlockStatesPolishedDeepslateSlab
   | McdocBlockStatesPolishedDeepslateStairs
@@ -3098,12 +3168,17 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesPolishedGranite
   | McdocBlockStatesPolishedGraniteSlab
   | McdocBlockStatesPolishedGraniteStairs
+  | McdocBlockStatesPolishedSulfur
+  | McdocBlockStatesPolishedSulfurSlab
+  | McdocBlockStatesPolishedSulfurStairs
+  | McdocBlockStatesPolishedSulfurWall
   | McdocBlockStatesPolishedTuff
   | McdocBlockStatesPolishedTuffSlab
   | McdocBlockStatesPolishedTuffStairs
   | McdocBlockStatesPolishedTuffWall
   | McdocBlockStatesPoppy
   | McdocBlockStatesPotatoes
+  | McdocBlockStatesPotentSulfur
   | McdocBlockStatesPottedAcaciaSapling
   | McdocBlockStatesPottedAllium
   | McdocBlockStatesPottedAzaleaBush
@@ -3330,6 +3405,15 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesStructureBlock
   | McdocBlockStatesStructureVoid
   | McdocBlockStatesSugarCane
+  | McdocBlockStatesSulfur
+  | McdocBlockStatesSulfurBrickSlab
+  | McdocBlockStatesSulfurBrickStairs
+  | McdocBlockStatesSulfurBrickWall
+  | McdocBlockStatesSulfurBricks
+  | McdocBlockStatesSulfurSlab
+  | McdocBlockStatesSulfurSpike
+  | McdocBlockStatesSulfurStairs
+  | McdocBlockStatesSulfurWall
   | McdocBlockStatesSunflower
   | McdocBlockStatesSuspiciousGravel
   | McdocBlockStatesSuspiciousSand
@@ -4230,6 +4314,7 @@ type McdocBlockStatesChiseledBookshelf = {
   slot_4_occupied?: ('true' | 'false'),
   slot_5_occupied?: ('true' | 'false'),
 }
+type McdocBlockStatesChiseledCinnabar = Record<string, never>
 type McdocBlockStatesChiseledCopper = Record<string, never>
 type McdocBlockStatesChiseledDeepslate = Record<string, never>
 type McdocBlockStatesChiseledNetherBricks = Record<string, never>
@@ -4239,6 +4324,7 @@ type McdocBlockStatesChiseledRedSandstone = Record<string, never>
 type McdocBlockStatesChiseledResinBricks = Record<string, never>
 type McdocBlockStatesChiseledSandstone = Record<string, never>
 type McdocBlockStatesChiseledStoneBricks = Record<string, never>
+type McdocBlockStatesChiseledSulfur = Record<string, never>
 type McdocBlockStatesChiseledTuff = Record<string, never>
 type McdocBlockStatesChiseledTuffBricks = Record<string, never>
 type McdocBlockStatesChorusFlower = {
@@ -4251,6 +4337,44 @@ type McdocBlockStatesChorusPlant = {
   south?: ('true' | 'false'),
   up?: ('true' | 'false'),
   west?: ('true' | 'false'),
+}
+type McdocBlockStatesCinnabar = Record<string, never>
+type McdocBlockStatesCinnabarBrickSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesCinnabarBrickStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesCinnabarBrickWall = {
+  east?: ('none' | 'low' | 'tall'),
+  north?: ('none' | 'low' | 'tall'),
+  south?: ('none' | 'low' | 'tall'),
+  up?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+  west?: ('none' | 'low' | 'tall'),
+}
+type McdocBlockStatesCinnabarBricks = Record<string, never>
+type McdocBlockStatesCinnabarSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesCinnabarStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesCinnabarWall = {
+  east?: ('none' | 'low' | 'tall'),
+  north?: ('none' | 'low' | 'tall'),
+  south?: ('none' | 'low' | 'tall'),
+  up?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+  west?: ('none' | 'low' | 'tall'),
 }
 type McdocBlockStatesClay = Record<string, never>
 type McdocBlockStatesClosedEyeblossom = Record<string, never>
@@ -6197,6 +6321,25 @@ type McdocBlockStatesPolishedBlackstoneWall = {
   waterlogged?: ('true' | 'false'),
   west?: ('none' | 'low' | 'tall'),
 }
+type McdocBlockStatesPolishedCinnabar = Record<string, never>
+type McdocBlockStatesPolishedCinnabarSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPolishedCinnabarStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPolishedCinnabarWall = {
+  east?: ('none' | 'low' | 'tall'),
+  north?: ('none' | 'low' | 'tall'),
+  south?: ('none' | 'low' | 'tall'),
+  up?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+  west?: ('none' | 'low' | 'tall'),
+}
 type McdocBlockStatesPolishedDeepslate = Record<string, never>
 type McdocBlockStatesPolishedDeepslateSlab = {
   type?: ('top' | 'bottom' | 'double'),
@@ -6238,6 +6381,25 @@ type McdocBlockStatesPolishedGraniteStairs = {
   shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
   waterlogged?: ('true' | 'false'),
 }
+type McdocBlockStatesPolishedSulfur = Record<string, never>
+type McdocBlockStatesPolishedSulfurSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPolishedSulfurStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPolishedSulfurWall = {
+  east?: ('none' | 'low' | 'tall'),
+  north?: ('none' | 'low' | 'tall'),
+  south?: ('none' | 'low' | 'tall'),
+  up?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+  west?: ('none' | 'low' | 'tall'),
+}
 type McdocBlockStatesPolishedTuff = Record<string, never>
 type McdocBlockStatesPolishedTuffSlab = {
   type?: ('top' | 'bottom' | 'double'),
@@ -6260,6 +6422,9 @@ type McdocBlockStatesPolishedTuffWall = {
 type McdocBlockStatesPoppy = Record<string, never>
 type McdocBlockStatesPotatoes = {
   age?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7'),
+}
+type McdocBlockStatesPotentSulfur = {
+  potent_sulfur_state?: ('dry' | 'wet' | 'dormant' | 'erupting' | 'continuous'),
 }
 type McdocBlockStatesPottedAcaciaSapling = Record<string, never>
 type McdocBlockStatesPottedAllium = Record<string, never>
@@ -6933,6 +7098,49 @@ type McdocBlockStatesStructureBlock = {
 type McdocBlockStatesStructureVoid = Record<string, never>
 type McdocBlockStatesSugarCane = {
   age?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | '13' | '14' | '15'),
+}
+type McdocBlockStatesSulfur = Record<string, never>
+type McdocBlockStatesSulfurBrickSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesSulfurBrickStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesSulfurBrickWall = {
+  east?: ('none' | 'low' | 'tall'),
+  north?: ('none' | 'low' | 'tall'),
+  south?: ('none' | 'low' | 'tall'),
+  up?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+  west?: ('none' | 'low' | 'tall'),
+}
+type McdocBlockStatesSulfurBricks = Record<string, never>
+type McdocBlockStatesSulfurSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesSulfurSpike = {
+  thickness?: ('tip_merge' | 'tip' | 'frustum' | 'middle' | 'base'),
+  vertical_direction?: ('up' | 'down'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesSulfurStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesSulfurWall = {
+  east?: ('none' | 'low' | 'tall'),
+  north?: ('none' | 'low' | 'tall'),
+  south?: ('none' | 'low' | 'tall'),
+  up?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+  west?: ('none' | 'low' | 'tall'),
 }
 type McdocBlockStatesSunflower = {
   half?: ('upper' | 'lower'),

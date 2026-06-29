@@ -44,6 +44,8 @@ export type NonEmptyWeightedList<T extends NBTObject> = NBTList<WeightedEntry<T>
   min: 1,
 }>
 
+export type Rotation = ('none' | 'clockwise_90' | '180' | 'counterclockwise_90')
+
 export type WeightedEntry<T extends NBTObject> = {
   /**
    * Value:

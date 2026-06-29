@@ -28,6 +28,6 @@ export type PaintingVariant = {
     min: 1,
     max: 16,
   }>,
-  title: Text,
-  author: Text,
+  title?: Text,
+  author?: Text,
 }

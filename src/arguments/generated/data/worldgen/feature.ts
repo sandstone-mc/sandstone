@@ -9,6 +9,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { FluidState } from 'sandstone/arguments/generated/util/fluid_state.ts'
+import type { Rotation, WeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, StructureClass, TagClass } from 'sandstone'
 
@@ -50,6 +51,11 @@ export type BlockPlacer = NonNullable<({
     type: S,
   } & (S extends keyof SymbolBlockPlacer ? SymbolBlockPlacer[S] : RootNBT))
 }[`${string}:${string}`])>
+
+export type BlockStateRuleProviderEntry = {
+  if_true: BlockPredicate,
+  then: BlockStateProvider,
+}
 
 export type ColumnPlacer = {
   size: IntProvider<NBTInt<{
@@ -112,79 +118,6 @@ export type DiskConfig = {
   target: BlockPredicate,
 }
 
-export type DripstoneClusterConfig = {
-  /**
-   * Value:
-   * Range: 1..512
-   */
-  floor_to_ceiling_search_range: NBTInt<{
-    min: 1,
-  }>,
-  height: IntProvider<NBTInt<{
-    min: 0,
-  }>>,
-  radius: IntProvider<NBTInt<{
-    min: 0,
-  }>>,
-  /**
-   * Max height difference between the stalagmite and stalactite.
-   *
-   * Value:
-   * Range: 0..64
-   */
-  max_stalagmite_stalactite_height_diff: NBTInt<{
-    min: 0,
-    max: 64,
-  }>,
-  /**
-   * Value:
-   * Range: 1..64
-   */
-  height_deviation: NBTInt<{
-    min: 1,
-    max: 64,
-  }>,
-  dripstone_block_layer_thickness: IntProvider<NBTInt<{
-    min: 0,
-  }>>,
-  density: FloatProvider<NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-  }>>,
-  wetness: FloatProvider<NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-  }>>,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  chance_of_dripstone_column_at_max_distance_from_center: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-  /**
-   * Value:
-   * Range: 1..64
-   */
-  max_distance_from_edge_affecting_chance_of_dripstone_column: NBTInt<{
-    min: 1,
-    max: 64,
-  }>,
-  /**
-   * Value:
-   * Range: 1..64
-   */
-  max_distance_from_center_affecting_height_bias: NBTInt<{
-    min: 1,
-    max: 64,
-  }>,
-}
-
 export type EmeraldOreConfig = {
   state: BlockState,
   target: BlockState,
@@ -202,6 +135,13 @@ export type EndGatewayConfig = {
     min: 3,
     max: 3,
   }>,
+}
+
+export type EndPodiumConfig = {
+  /**
+   * Defaults to `false`.
+   */
+  active?: boolean,
 }
 
 export type EndSpike = {
@@ -278,15 +218,15 @@ export type GeodeBlockSettings = {
   /**
    * Blocks that will not be replaced by the geode.
    */
-  cannot_replace: (
-      | Array<Registry['minecraft:block']> | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
+  cannot_replace: ((
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>),
   /**
    * When encountering an invalid block, feature placement is cancelled.
    */
-  invalid_blocks: (
-      | Array<Registry['minecraft:block']> | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
+  invalid_blocks: ((
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>),
 }
 
 export type GeodeConfig = {
@@ -456,9 +396,15 @@ export type IcebergConfig = {
 export type LakeConfig = {
   fluid: BlockStateProvider,
   barrier: BlockStateProvider,
+  can_place_feature: BlockPredicate,
+  can_replace_with_air_or_fluid: BlockPredicate,
+  can_replace_with_barrier: BlockPredicate,
 }
 
 export type LargeDripstoneConfig = {
+  replaceable_blocks: (
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
   /**
    * Value:
    * Range: 1..512
@@ -468,7 +414,7 @@ export type LargeDripstoneConfig = {
   }>,
   column_radius: IntProvider<NBTInt<{
     min: 0,
-    max: 60,
+    max: 16,
   }>>,
   height_scale: FloatProvider<NBTFloat<{
     leftExclusive: false,
@@ -520,16 +466,56 @@ export type LargeDripstoneConfig = {
   }>,
 }
 
+export type ModernNetherVegetationConfig = {
+  /**
+   * Value:
+   * Range: 1..
+   */
+  spread_width: NBTInt<{
+    min: 1,
+  }>,
+  /**
+   * Value:
+   * Range: 1..
+   */
+  spread_height: NBTInt<{
+    min: 1,
+  }>,
+}
+
+export type ModernPatchConfig = {
+  /**
+   * Defaults to 7.
+   *
+   * Value:
+   * Range: 0..
+   */
+  xz_spread?: NBTInt<{
+    min: 0,
+  }>,
+  /**
+   * Defaults to 3.
+   *
+   * Value:
+   * Range: 0..
+   */
+  y_spread?: NBTInt<{
+    min: 0,
+  }>,
+  feature: FeatureRef,
+}
+
 export type MultifaceBlock = ('glow_lichen' | 'sculk_vein')
 
-export type MultifaceGrowthConfig = {
+export type MultifaceGrowthConfig = ({
   /**
    * Value:
    *
    *  - GlowLichen(`glow_lichen`)
    *  - SculkVein(`sculk_vein`)
    */
-  block?: (MultifaceBlock | `minecraft:${MultifaceBlock}`),
+  block: (MultifaceBlock | `minecraft:${MultifaceBlock}`),
+} & {
   /**
    * Value:
    * Range: 1..64
@@ -554,7 +540,7 @@ export type MultifaceGrowthConfig = {
   can_be_placed_on?: (
       | Array<Registry['minecraft:block']> | (
       Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
-}
+})
 
 export type NetherForestVegetationConfig = ({
   state_provider: BlockStateProvider,
@@ -584,6 +570,49 @@ export type NetherrackReplaceBlobsConfig = {
   }>>,
 }
 
+export type OldPatchConfig = {
+  can_replace?: boolean,
+  project?: boolean,
+  need_water?: boolean,
+  /**
+   * Value:
+   * Range: 0..
+   */
+  xspread?: NBTInt<{
+    min: 0,
+  }>,
+  /**
+   * Value:
+   * Range: 0..
+   */
+  yspread?: NBTInt<{
+    min: 0,
+  }>,
+  /**
+   * Value:
+   * Range: 0..
+   */
+  zspread?: NBTInt<{
+    min: 0,
+  }>,
+  state_provider: BlockStateProvider,
+  block_placer: BlockPlacer,
+  whitelist: Array<BlockState>,
+  blacklist: Array<BlockState>,
+}
+
+export type OldSimpleBlockConfig = {
+  place_on: Array<BlockState>,
+  place_in: Array<BlockState>,
+  place_under: Array<BlockState>,
+}
+
+export type OptionalSimpleBlockConfig = {
+  place_on?: Array<BlockState>,
+  place_in?: Array<BlockState>,
+  place_under?: Array<BlockState>,
+}
+
 export type OreConfig = {
   targets: Array<TargetBlock>,
   /**
@@ -608,49 +637,6 @@ export type OreConfig = {
   }>,
 }
 
-export type PointedDripstoneConfig = {
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  chance_of_taller_dripstone?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  chance_of_directional_spread?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  chance_of_spread_radius2?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  chance_of_spread_radius3?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-}
-
 export type ProbabilityConfig = {
   /**
    * Value:
@@ -667,6 +653,20 @@ export type ProbabilityConfig = {
 export type RandomBooleanSelector = {
   feature_false: FeatureRef,
   feature_true: FeatureRef,
+}
+
+export type RandomFeatureEntry = {
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  chance: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  feature: FeatureRef,
 }
 
 export type RandomPatchConfig = ({
@@ -733,6 +733,22 @@ export type RootSystemConfig = {
   }>,
   /**
    * Value:
+   * Range: 0..16
+   */
+  level_test_distance: NBTInt<{
+    min: 0,
+    max: 16,
+  }>,
+  /**
+   * Value:
+   * Range: 0..64
+   */
+  max_level_deviation: NBTInt<{
+    min: 0,
+    max: 64,
+  }>,
+  /**
+   * Value:
    * Range: 1..64
    */
   root_radius: NBTInt<{
@@ -784,9 +800,9 @@ export type RootSystemConfig = {
     min: 1,
     max: 64,
   }>,
-  root_replaceable: (
-      | Array<Registry['minecraft:block']> | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
+  root_replaceable: ((
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>),
   root_state_provider: BlockStateProvider,
   hanging_root_state_provider: BlockStateProvider,
   allowed_tree_position: BlockPredicate,
@@ -861,6 +877,14 @@ export type SeaPickleConfig = {
   }>>,
 }
 
+export type SequenceConfig = {
+  /**
+   * The features to generate, in order.
+   * If any feature in the list is not placed, the following features will also be skipped.
+   */
+  features: (Array<PlacedFeatureRef> | (`#${string}:${string}` | TagClass<'worldgen/placed_feature'>)),
+}
+
 export type SimpleBlockConfig = {
   to_place: BlockStateProvider,
   /**
@@ -912,6 +936,132 @@ export type SmallDripstoneConfig = {
   }>,
 }
 
+export type SpeleothemClusterConfig = {
+  base_block: BlockState,
+  pointed_block: BlockState,
+  replaceable_blocks: (
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
+  /**
+   * Value:
+   * Range: 1..512
+   */
+  floor_to_ceiling_search_range: NBTInt<{
+    min: 1,
+  }>,
+  height: IntProvider<NBTInt<{
+    min: 0,
+  }>>,
+  radius: IntProvider<NBTInt<{
+    min: 0,
+  }>>,
+  /**
+   * Max height difference between the stalagmite and stalactite.
+   *
+   * Value:
+   * Range: 0..64
+   */
+  max_stalagmite_stalactite_height_diff: NBTInt<{
+    min: 0,
+    max: 64,
+  }>,
+  /**
+   * Value:
+   * Range: 1..64
+   */
+  height_deviation: NBTInt<{
+    min: 1,
+    max: 64,
+  }>,
+  speleothem_block_layer_thickness: IntProvider<NBTInt<{
+    min: 0,
+  }>>,
+  density: FloatProvider<NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>>,
+  wetness: FloatProvider<NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>>,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  chance_of_speleothem_at_max_distance_from_center: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  /**
+   * Value:
+   * Range: 1..64
+   */
+  max_distance_from_edge_affecting_chance_of_speleothem: NBTInt<{
+    min: 1,
+    max: 64,
+  }>,
+  /**
+   * Value:
+   * Range: 1..64
+   */
+  max_distance_from_center_affecting_height_bias: NBTInt<{
+    min: 1,
+    max: 64,
+  }>,
+}
+
+export type SpeleothemConfig = {
+  base_block: BlockState,
+  pointed_block: BlockState,
+  replaceable_blocks: (
+      | Array<Registry['minecraft:block']> | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  chance_of_taller_generation?: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  chance_of_directional_spread?: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  chance_of_spread_radius2?: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  chance_of_spread_radius3?: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+}
+
 export type SpikeConfig = {
   state: BlockState,
   can_place_on: BlockPredicate,
@@ -931,6 +1081,22 @@ export type SpringConfig = {
 export type TargetBlock = {
   target: RuleTest,
   state: BlockState,
+}
+
+export type TemplateConfig = {
+  templates: WeightedList<TemplateEntry>,
+}
+
+export type TemplateEntry = {
+  /**
+   * The structure template to place.
+   */
+  id: (Registry['minecraft:structure'] | StructureClass),
+  /**
+   * Rotations to choose from and apply to this template, centered around the origin.
+   * If not specified, defaults to all allowed rotations.
+   */
+  rotations?: Array<Rotation>,
 }
 
 export type TwistingVinesConfig = {
@@ -1034,9 +1200,15 @@ export type VegetationPatchConfig = {
     max: 1,
   }>,
   xz_radius: IntProvider<NBTInt>,
-  replaceable: (`#${Registry['minecraft:tag/block']}` | TagClass<'block'>),
+  replaceable: ((
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>),
   ground_state: BlockStateProvider,
   vegetation_feature: FeatureRef,
+}
+
+export type WeightedRandomFeatureConfig = {
+  features: WeightedList<Registry['minecraft:worldgen/placed_feature']>,
 }
 type BlockPlacerDispatcherMap = {
   'column_placer': BlockPlacerColumnPlacer,
@@ -1082,6 +1254,8 @@ type FeatureConfigDispatcherMap = {
   'minecraft:emerald_ore': FeatureConfigEmeraldOre,
   'end_gateway': FeatureConfigEndGateway,
   'minecraft:end_gateway': FeatureConfigEndGateway,
+  'end_podium': FeatureConfigEndPodium,
+  'minecraft:end_podium': FeatureConfigEndPodium,
   'end_spike': FeatureConfigEndSpike,
   'minecraft:end_spike': FeatureConfigEndSpike,
   'fallen_tree': FeatureConfigFallenTree,
@@ -1146,16 +1320,24 @@ type FeatureConfigDispatcherMap = {
   'minecraft:sea_pickle': FeatureConfigSeaPickle,
   'seagrass': FeatureConfigSeagrass,
   'minecraft:seagrass': FeatureConfigSeagrass,
+  'sequence': FeatureConfigSequence,
+  'minecraft:sequence': FeatureConfigSequence,
   'simple_block': FeatureConfigSimpleBlock,
   'minecraft:simple_block': FeatureConfigSimpleBlock,
   'simple_random_selector': FeatureConfigSimpleRandomSelector,
   'minecraft:simple_random_selector': FeatureConfigSimpleRandomSelector,
   'small_dripstone': FeatureConfigSmallDripstone,
   'minecraft:small_dripstone': FeatureConfigSmallDripstone,
+  'speleothem': FeatureConfigSpeleothem,
+  'minecraft:speleothem': FeatureConfigSpeleothem,
+  'speleothem_cluster': FeatureConfigSpeleothemCluster,
+  'minecraft:speleothem_cluster': FeatureConfigSpeleothemCluster,
   'spike': FeatureConfigSpike,
   'minecraft:spike': FeatureConfigSpike,
   'spring_feature': FeatureConfigSpringFeature,
   'minecraft:spring_feature': FeatureConfigSpringFeature,
+  'template': FeatureConfigTemplate,
+  'minecraft:template': FeatureConfigTemplate,
   'tree': FeatureConfigTree,
   'minecraft:tree': FeatureConfigTree,
   'twisting_vines': FeatureConfigTwistingVines,
@@ -1166,6 +1348,8 @@ type FeatureConfigDispatcherMap = {
   'minecraft:vegetation_patch': FeatureConfigVegetationPatch,
   'waterlogged_vegetation_patch': FeatureConfigWaterloggedVegetationPatch,
   'minecraft:waterlogged_vegetation_patch': FeatureConfigWaterloggedVegetationPatch,
+  'weighted_random_selector': FeatureConfigWeightedRandomSelector,
+  'minecraft:weighted_random_selector': FeatureConfigWeightedRandomSelector,
 }
 type FeatureConfigKeys = keyof FeatureConfigDispatcherMap
 type FeatureConfigFallback = (
@@ -1180,6 +1364,7 @@ type FeatureConfigFallback = (
   | FeatureConfigDripstoneCluster
   | FeatureConfigEmeraldOre
   | FeatureConfigEndGateway
+  | FeatureConfigEndPodium
   | FeatureConfigEndSpike
   | FeatureConfigFallenTree
   | FeatureConfigFillLayer
@@ -1212,16 +1397,21 @@ type FeatureConfigFallback = (
   | FeatureConfigSculkPatch
   | FeatureConfigSeaPickle
   | FeatureConfigSeagrass
+  | FeatureConfigSequence
   | FeatureConfigSimpleBlock
   | FeatureConfigSimpleRandomSelector
   | FeatureConfigSmallDripstone
+  | FeatureConfigSpeleothem
+  | FeatureConfigSpeleothemCluster
   | FeatureConfigSpike
   | FeatureConfigSpringFeature
+  | FeatureConfigTemplate
   | FeatureConfigTree
   | FeatureConfigTwistingVines
   | FeatureConfigUnderwaterMagma
   | FeatureConfigVegetationPatch
-  | FeatureConfigWaterloggedVegetationPatch)
+  | FeatureConfigWaterloggedVegetationPatch
+  | FeatureConfigWeightedRandomSelector)
 type FeatureConfigBamboo = ProbabilityConfig
 type FeatureConfigBasaltColumns = ColumnsConfig
 type FeatureConfigBlockBlob = BlockBlobConfig
@@ -1230,9 +1420,10 @@ type FeatureConfigBlockPile = BlockPileConfig
 type FeatureConfigDecorated = DecoratedConfig
 type FeatureConfigDeltaFeature = DeltaConfig
 type FeatureConfigDisk = DiskConfig
-type FeatureConfigDripstoneCluster = DripstoneClusterConfig
+type FeatureConfigDripstoneCluster = SpeleothemClusterConfig
 type FeatureConfigEmeraldOre = EmeraldOreConfig
 type FeatureConfigEndGateway = EndGatewayConfig
+type FeatureConfigEndPodium = EndPodiumConfig
 type FeatureConfigEndSpike = EndSpikeConfig
 type FeatureConfigFallenTree = FallenTreeConfig
 type FeatureConfigFillLayer = FillLayerConfig
@@ -1255,7 +1446,7 @@ type FeatureConfigNetherrackReplaceBlobs = NetherrackReplaceBlobsConfig
 type FeatureConfigNoBonemealFlower = RandomPatchConfig
 type FeatureConfigNoSurfaceOre = OreConfig
 type FeatureConfigOre = OreConfig
-type FeatureConfigPointedDripstone = PointedDripstoneConfig
+type FeatureConfigPointedDripstone = SpeleothemConfig
 type FeatureConfigRandomBooleanSelector = RandomBooleanSelector
 type FeatureConfigRandomPatch = RandomPatchConfig
 type FeatureConfigRandomSelector = RandomSelector
@@ -1265,16 +1456,21 @@ type FeatureConfigScatteredOre = OreConfig
 type FeatureConfigSculkPatch = SculkPatchConfig
 type FeatureConfigSeaPickle = SeaPickleConfig
 type FeatureConfigSeagrass = ProbabilityConfig
+type FeatureConfigSequence = SequenceConfig
 type FeatureConfigSimpleBlock = SimpleBlockConfig
 type FeatureConfigSimpleRandomSelector = SimpleRandomSelectorConfig
 type FeatureConfigSmallDripstone = SmallDripstoneConfig
+type FeatureConfigSpeleothem = SpeleothemConfig
+type FeatureConfigSpeleothemCluster = SpeleothemClusterConfig
 type FeatureConfigSpike = SpikeConfig
 type FeatureConfigSpringFeature = SpringConfig
+type FeatureConfigTemplate = TemplateConfig
 type FeatureConfigTree = TreeConfig
 type FeatureConfigTwistingVines = TwistingVinesConfig
 type FeatureConfigUnderwaterMagma = UnderwaterMagmaConfig
 type FeatureConfigVegetationPatch = VegetationPatchConfig
 type FeatureConfigWaterloggedVegetationPatch = VegetationPatchConfig
+type FeatureConfigWeightedRandomSelector = WeightedRandomFeatureConfig
 export type SymbolFeatureConfig<CASE extends
   | 'map'
   | 'keys'

@@ -2,15 +2,23 @@ export { ADVANCEMENTS_SET } from './_registry/advancements.ts'
 
 export { BANNER_PATTERNS_SET } from './_registry/banner_patterns.ts'
 
+export { CAT_SOUND_VARIANTS_SET } from './_registry/cat_sound_variants.ts'
+
 export { CAT_VARIANTS_SET } from './_registry/cat_variants.ts'
 
 export { CHAT_TYPES_SET } from './_registry/chat_types.ts'
 
+export { CHICKEN_SOUND_VARIANTS_SET } from './_registry/chicken_sound_variants.ts'
+
 export { CHICKEN_VARIANTS_SET } from './_registry/chicken_variants.ts'
+
+export { COW_SOUND_VARIANTS_SET } from './_registry/cow_sound_variants.ts'
 
 export { COW_VARIANTS_SET } from './_registry/cow_variants.ts'
 
 export { DAMAGE_TYPES_SET } from './_registry/damage_types.ts'
+
+export { DECORATED_POT_PATTERNS_SET } from './_registry/decorated_pot_patterns.ts'
 
 export { DIALOGS_SET } from './_registry/dialogs.ts'
 
@@ -32,11 +40,15 @@ export { LOOT_TABLES_SET } from './_registry/loot_tables.ts'
 
 export { PAINTING_VARIANTS_SET } from './_registry/painting_variants.ts'
 
+export { PIG_SOUND_VARIANTS_SET } from './_registry/pig_sound_variants.ts'
+
 export { PIG_VARIANTS_SET } from './_registry/pig_variants.ts'
 
 export { RECIPES_SET } from './_registry/recipes.ts'
 
 export { STRUCTURES_SET } from './_registry/structures.ts'
+
+export { SULFUR_CUBE_ARCHETYPES_SET } from './_registry/sulfur_cube_archetypes.ts'
 
 export { TEST_ENVIRONMENTS_SET } from './_registry/test_environments.ts'
 
@@ -112,7 +124,13 @@ export { WORLDGEN_CONFIGURED_FEATURES_SET } from './_registry/worldgen_configure
 
 export { WORLDGEN_DENSITY_FUNCTIONS_SET } from './_registry/worldgen_density_functions.ts'
 
+export { WORLDGEN_FEATURES_SET } from './_registry/worldgen_features.ts'
+
 export { WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS_SET } from './_registry/worldgen_flat_level_generator_presets.ts'
+
+export { WORLDGEN_MATERIAL_CONDITIONS_SET } from './_registry/worldgen_material_conditions.ts'
+
+export { WORLDGEN_MATERIAL_RULES_SET } from './_registry/worldgen_material_rules.ts'
 
 export {
   WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS_SET,
@@ -185,8 +203,6 @@ export { DATA_COMPONENT_PREDICATE_TYPES_SET } from './_registry/data_component_p
 export { DATA_COMPONENT_TYPES_SET } from './_registry/data_component_types.ts'
 
 export { DEBUG_SUBSCRIPTIONS_SET } from './_registry/debug_subscriptions.ts'
-
-export { DECORATED_POT_PATTERNS_SET } from './_registry/decorated_pot_patterns.ts'
 
 export { DIALOG_ACTION_TYPES_SET } from './_registry/dialog_action_types.ts'
 
@@ -316,15 +332,9 @@ export { WORLDGEN_CHUNK_GENERATORS_SET } from './_registry/worldgen_chunk_genera
 
 export { WORLDGEN_DENSITY_FUNCTION_TYPES_SET } from './_registry/worldgen_density_function_types.ts'
 
-export { WORLDGEN_FEATURES_SET } from './_registry/worldgen_features.ts'
-
 export { WORLDGEN_FEATURE_SIZE_TYPES_SET } from './_registry/worldgen_feature_size_types.ts'
 
 export { WORLDGEN_FOLIAGE_PLACER_TYPES_SET } from './_registry/worldgen_foliage_placer_types.ts'
-
-export { WORLDGEN_MATERIAL_CONDITIONS_SET } from './_registry/worldgen_material_conditions.ts'
-
-export { WORLDGEN_MATERIAL_RULES_SET } from './_registry/worldgen_material_rules.ts'
 
 export { WORLDGEN_PLACEMENT_MODIFIER_TYPES_SET } from './_registry/worldgen_placement_modifier_types.ts'
 

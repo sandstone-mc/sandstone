@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type Clamp = {
   input: DensityFunction,
@@ -38,6 +38,30 @@ export type FindTopSurface = {
    * Range: 1..
    */
   cell_height: NBTInt<{
+    min: 1,
+  }>,
+}
+
+export type InvervalSelect = {
+  input: DensityFunctionRef,
+  /**
+   * Must have exactly one fewer element than `functions`.
+   *
+   * Value:
+   * List length range: 1..
+   */
+  thresholds: NBTList<NoiseRange, {
+    leftExclusive: false,
+    min: 1,
+  }>,
+  /**
+   * Must have exactly one more element than `thresholds`.
+   *
+   * Value:
+   * List length range: 2..
+   */
+  functions: NBTList<DensityFunctionRef, {
+    leftExclusive: false,
     min: 1,
   }>,
 }
@@ -184,6 +208,8 @@ type DensityFunctionDispatcherMap = {
   'minecraft:half_negative': DensityFunctionHalfNegative,
   'interpolated': DensityFunctionInterpolated,
   'minecraft:interpolated': DensityFunctionInterpolated,
+  'interval_select': DensityFunctionIntervalSelect,
+  'minecraft:interval_select': DensityFunctionIntervalSelect,
   'invert': DensityFunctionInvert,
   'minecraft:invert': DensityFunctionInvert,
   'max': DensityFunctionMax,
@@ -238,6 +264,7 @@ type DensityFunctionFallback = (
   | DensityFunctionFlatCache
   | DensityFunctionHalfNegative
   | DensityFunctionInterpolated
+  | DensityFunctionIntervalSelect
   | DensityFunctionInvert
   | DensityFunctionMax
   | DensityFunctionMin
@@ -270,6 +297,7 @@ type DensityFunctionFindTopSurface = FindTopSurface
 type DensityFunctionFlatCache = OneArgument
 type DensityFunctionHalfNegative = OneArgument
 type DensityFunctionInterpolated = OneArgument
+type DensityFunctionIntervalSelect = InvervalSelect
 type DensityFunctionInvert = OneArgument
 type DensityFunctionMax = TwoArguments
 type DensityFunctionMin = TwoArguments

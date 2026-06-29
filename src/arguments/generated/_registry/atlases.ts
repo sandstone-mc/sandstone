@@ -8,7 +8,6 @@ export type ATLASES = (
 export const ATLASES_SET = new Set([
   'armor_trims',
   'banner_patterns',
-  'beds',
   'blocks',
   'celestials',
   'chests',
@@ -20,5 +19,4 @@ export const ATLASES_SET = new Set([
   'particles',
   'shield_patterns',
   'shulker_boxes',
-  'signs',
 ] as const)

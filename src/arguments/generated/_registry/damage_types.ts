@@ -48,6 +48,7 @@ export const DAMAGE_TYPES_SET = new Set([
   'stalagmite',
   'starve',
   'sting',
+  'sulfur_cube_hot',
   'sweet_berry_bush',
   'thorns',
   'thrown',

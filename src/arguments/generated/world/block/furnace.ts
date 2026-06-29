@@ -46,3 +46,7 @@ export type Furnace = (BlockEntity & Nameable & Lockable & {
    */
   lit_total_time?: NBTShort,
 })
+
+export type RecipesUsed = ({
+  [Key in Extract<Registry['minecraft:recipe'], string>]?: NBTInt
+})

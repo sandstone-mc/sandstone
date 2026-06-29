@@ -375,6 +375,7 @@ export const VILLAGER_TRADES_SET = new Set([
   'wandering_trader/emerald_spruce_log',
   'wandering_trader/emerald_spruce_sapling',
   'wandering_trader/emerald_sugar_cane',
+  'wandering_trader/emerald_sulfur_spike',
   'wandering_trader/emerald_tube_coral_block',
   'wandering_trader/emerald_vine',
   'wandering_trader/emerald_wheat_seeds',

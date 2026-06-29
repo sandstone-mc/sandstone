@@ -23,6 +23,7 @@ export const WORLDGEN_DENSITY_FUNCTION_TYPES_SET = new Set([
   'flat_cache',
   'half_negative',
   'interpolated',
+  'interval_select',
   'invert',
   'max',
   'min',
@@ -38,6 +39,5 @@ export const WORLDGEN_DENSITY_FUNCTION_TYPES_SET = new Set([
   'spline',
   'square',
   'squeeze',
-  'weird_scaled_sampler',
   'y_clamped_gradient',
 ] as const)

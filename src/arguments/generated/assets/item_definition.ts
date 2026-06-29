@@ -12,6 +12,27 @@ import type { Transformation } from 'sandstone/arguments/generated/world/entity/
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, TrimMaterialClass } from 'sandstone'
 
+/**
+ * *either*
+ *
+ * *item 0*
+ *
+ * *or*
+ *
+ * List length range: 3
+ */
+export type ActuallyTranslucentRGB = (NBTInt | NBTList<NBTFloat<{
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 0,
+  max: 1,
+}>, {
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 3,
+  max: 3,
+}>)
+
 export type Banner = {
   /**
    * Value:
@@ -319,22 +340,8 @@ export type DisplayContext = SelectCases<ItemDisplayContext>
 export type DyeTint = {
   /**
    * Tint to apply when the `dyed_color` component is not present.
-   *
-   * Value:
-   * *either*
-   *
-   * *item 0*
-   *
-   * *or*
-   *
-   * List length range: 3
    */
-  default: (NBTInt | NBTList<NBTFloat, {
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 3,
-    max: 3,
-  }>),
+  default: ActuallyTranslucentRGB,
 }
 
 export type EndCube = {
@@ -352,22 +359,8 @@ export type EndCubeEffectType = ('portal' | 'gateway')
 export type FireworkTint = {
   /**
    * Tint to apply when the `firework_explosion` component is not present.
-   *
-   * Value:
-   * *either*
-   *
-   * *item 0*
-   *
-   * *or*
-   *
-   * List length range: 3
    */
-  default: (NBTInt | NBTList<NBTFloat, {
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 3,
-    max: 3,
-  }>),
+  default: ActuallyTranslucentRGB,
 }
 
 export type GrassTint = {
@@ -552,6 +545,7 @@ export type KeybindDown = {
    *  - DebugSwitchGameMode(`key.debug.switchGameMode`)
    *  - Drop(`key.drop`)
    *  - Forward(`key.forward`)
+   *  - Friends(`key.friends`)
    *  - Fullscreen(`key.fullscreen`)
    *  - Hotbar1(`key.hotbar.1`)
    *  - Hotbar2(`key.hotbar.2`)
@@ -694,6 +688,11 @@ export type RangeDispatch = NonNullable<({
     ? SymbolNumericItemProperty[S]
     : SymbolNumericItemProperty<'%unknown'>))
 }[NumericPropertyType])>
+
+export type RangeDispatchEntry = {
+  threshold: NBTFloat,
+  model: ItemModel,
+}
 
 export type Select = NonNullable<({
   [S in Extract<SelectPropertyType, string>]?: ({
@@ -867,6 +866,7 @@ export type StandingSign = {
    */
   texture?: `${string}:${string}`,
   /**
+   * There is an extra "e" in the field name. See MC-307498. \
    * Defaults to `ground`.
    *
    * Value:
@@ -874,7 +874,7 @@ export type StandingSign = {
    *  - Wall(`wall`)
    *  - Ground(`ground`)
    */
-  attachment?: StandingSignAttachment,
+  attachement?: StandingSignAttachment,
 }
 
 export type StandingSignAttachment = ('wall' | 'ground')

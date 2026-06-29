@@ -25,11 +25,23 @@ export type BlockStateDefinitionMultipart = {
   }>,
 }
 
+export type BlockStateDefinitionMultipartEntry = {
+  /**
+   * One condition or an array where at least one condition must apply.
+   */
+  when?: MultiPartCondition,
+  apply: ModelVariant,
+}
+
 export type BlockStateDefinitionVariant = {
   variants: ({
     [Key in `${any}${string}`]?: ModelVariant
   }),
 }
+
+export type BlockStateDefinitionVariantMap = ({
+  [Key in `${any}${string}`]?: ModelVariant
+})
 
 export type ModelVariant = (ModelVariantBase | Array<(ModelVariantBase & {
   /**
@@ -52,8 +64,26 @@ export type ModelVariantBase = {
   uvlock?: boolean,
 }
 
+export type MultiPartAlternatives = {
+  OR: Array<MultiPartCondition>,
+}
+
+export type MultiPartAnd = ({
+  [Key in `${any}${string}`]?: string
+})
+
 export type MultiPartCondition = ({
   OR: Array<MultiPartCondition>,
 } | ({
   [Key in `${any}${string}`]?: string
 }))
+
+export type WeightedModelVariant = (ModelVariantBase & {
+  /**
+   * Value:
+   * Range: 1..
+   */
+  weight?: NBTInt<{
+    min: 1,
+  }>,
+})

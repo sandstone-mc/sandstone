@@ -55,6 +55,11 @@ export { type SymbolHoverEvent } from './util/text.ts'
 export { type SymbolTintSource } from './assets/item_definition.ts'
 
 export {
+  type SymbolDataComponentExistencePredicate,
+  type DataComponentExistencePredicateFallbackType,
+} from './_dispatcher/data_component_existence_predicate.ts'
+
+export {
   type SymbolDataComponentPredicate,
   type DataComponentPredicateFallbackType,
 } from './world/component/predicate.ts'
@@ -115,6 +120,10 @@ export { type SymbolLootCondition } from './data/loot/condition.ts'
 
 export { type SymbolLootPoolEntry } from './data/loot.ts'
 
+export { type SymbolMaterialCondition } from './data/worldgen/material_condition.ts'
+
+export { type SymbolMaterialRule, type MaterialRuleFallbackType } from './data/worldgen/material_rule.ts'
+
 export { type SymbolMemoryModule, type MemoryModuleFallbackType } from './util/memory.ts'
 
 export { type SymbolScoreProvider } from './data/util.ts'
@@ -133,7 +142,7 @@ export { type SymbolReputationPartValue } from './_dispatcher/reputation_part_va
 
 export { type SymbolResource } from './_dispatcher/resource.ts'
 
-export { type SymbolSlotSource } from './util/slot.ts'
+export { type SymbolSlotSource } from './data/slot_source.ts'
 
 export { type SymbolSoundType } from './_dispatcher/sound_type.ts'
 
@@ -145,9 +154,7 @@ export { type SymbolStatisticType, type StatisticTypeFallbackType } from './_dis
 
 export { type SymbolStorage, type StorageFallbackType } from './data/storage.ts'
 
-export { type SymbolStructurePlacement } from './data/worldgen/structure_set.ts'
-
-export { type SymbolSurfaceRule } from './data/worldgen/surface_rule.ts'
+export { type SymbolStructurePlacement, type StructurePlacementFallbackType } from './data/worldgen/structure_set.ts'
 
 export { type SymbolTemplatePoolElement } from './data/worldgen/template_pool.ts'
 

@@ -10,6 +10,7 @@ export const JUKEBOX_SONGS_SET = new Set([
   '13',
   '5',
   'blocks',
+  'bounce',
   'cat',
   'chirp',
   'creator',

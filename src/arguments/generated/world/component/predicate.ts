@@ -160,6 +160,8 @@ type DataComponentPredicateDispatcherMap = {
   'minecraft:stored_enchantments': DataComponentPredicateStoredEnchantments,
   'trim': DataComponentPredicateTrim,
   'minecraft:trim': DataComponentPredicateTrim,
+  'villager/variant': DataComponentPredicateVillagerVariant,
+  'minecraft:villager/variant': DataComponentPredicateVillagerVariant,
   'writable_book_content': DataComponentPredicateWritableBookContent,
   'minecraft:writable_book_content': DataComponentPredicateWritableBookContent,
   'written_book_content': DataComponentPredicateWrittenBookContent,
@@ -179,6 +181,7 @@ type DataComponentPredicateFallback = (
   | DataComponentPredicatePotionContents
   | DataComponentPredicateStoredEnchantments
   | DataComponentPredicateTrim
+  | DataComponentPredicateVillagerVariant
   | DataComponentPredicateWritableBookContent
   | DataComponentPredicateWrittenBookContent
   | DataComponentPredicateFallbackType)
@@ -197,6 +200,9 @@ type DataComponentPredicatePotionContents = ((
   | Array<Registry['minecraft:potion']>)
 type DataComponentPredicateStoredEnchantments = Array<EnchantmentPredicate>
 type DataComponentPredicateTrim = TrimPredicate
+type DataComponentPredicateVillagerVariant = ((
+  | Registry['minecraft:villager_type'] | `#${string}:${string}` | TagClass<'villager_type'>)
+  | Array<Registry['minecraft:villager_type']>)
 type DataComponentPredicateWritableBookContent = WritableBookPredicate
 type DataComponentPredicateWrittenBookContent = WrittenBookPredicate
 export type SymbolDataComponentPredicate<CASE extends

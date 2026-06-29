@@ -34,9 +34,9 @@ export type FilterPattern = {
 
 export type PalettedPermutations = {
   textures: Array<(Registry['minecraft:texture'] | TextureClass)>,
-  palette_key: (Registry['minecraft:texture'] | TextureClass),
+  palette_key: PaletteTexture,
   permutations: ({
-    [Key in `${any}${string}`]?: (Registry['minecraft:texture'] | TextureClass)
+    [Key in `${any}${string}`]?: PaletteTexture
   }),
   /**
    * Value to use when joining the texture and permutation names to produce the sprite name.
@@ -44,6 +44,18 @@ export type PalettedPermutations = {
    */
   separator?: string,
 }
+
+/**
+ *
+ * Value: A texture ID within a path root of `(namespace)/textures/palettes/`
+ */
+export type PaletteRef = `${string}:${string}`
+
+export type PaletteTexture = (Registry['minecraft:texture'] | TextureClass)
+
+export type PermutationsMap = ({
+  [Key in `${any}${string}`]?: PaletteTexture
+})
 
 export type Single = {
   /**

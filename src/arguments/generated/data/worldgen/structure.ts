@@ -11,6 +11,23 @@ export type BoundingBox = ('piece' | 'full')
 
 export type BuriedTreasure = Record<string, never>
 
+export type DimensionPaddingConfig = {
+  /**
+   * Value:
+   * Range: 0..
+   */
+  bottom?: NBTInt<{
+    min: 0,
+  }>,
+  /**
+   * Value:
+   * Range: 0..
+   */
+  top?: NBTInt<{
+    min: 0,
+  }>,
+}
+
 export type DirectPoolAlias = {
   alias: `${string}:${string}`,
   target: Registry['minecraft:worldgen/template_pool'],
@@ -88,10 +105,10 @@ export type Jigsaw<S = undefined> = ({
 export type JigsawDistanceLimits<T extends NBTObject> = {
   horizontal: T,
   /**
-   * Defaults to 4096
+   * Defaults to 4064
    *
    * Value:
-   * Range: 1..4096
+   * Range: 1..4064
    */
   vertical?: NBTInt<{
     min: 1,
@@ -281,6 +298,66 @@ export type Structure = NonNullable<({
 export type StructureRef = (Registry['minecraft:worldgen/structure'] | Structure)
 
 export type TerrainAdaptation = ('none' | 'beard_thin' | 'beard_box' | 'bury' | 'encapsulate')
+
+export type TrickyTrialsStructureConfig = {
+  /**
+   * Value:
+   * *either*
+   *
+   * Range: 0..
+   *
+   * *or*
+   *
+   * *item 1*
+   */
+  dimension_padding?: (NBTInt<{
+    min: 0,
+  }> | {
+    /**
+     * Value:
+     * Range: 0..
+     */
+    bottom?: NBTInt<{
+      min: 0,
+    }>,
+    /**
+     * Value:
+     * Range: 0..
+     */
+    top?: NBTInt<{
+      min: 0,
+    }>,
+  }),
+  /**
+   * Value:
+   *
+   *  - ApplyWaterlogging(`apply_waterlogging`)
+   *  - IgnoreWaterlogging(`ignore_waterlogging`)
+   */
+  liquid_settings?: LiquidSettings,
+}
+
+export type WildUpdateStructureConfig<S = undefined> = {
+  start_height: HeightProvider,
+  start_jigsaw_name?: `${string}:${string}`,
+  /**
+   * Value:
+   *
+   *  - MotionBlocking(`MOTION_BLOCKING`)
+   *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
+   *  - OceanFloor(`OCEAN_FLOOR`)
+   *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
+   *  - WorldSurface(`WORLD_SURFACE`)
+   *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
+   */
+  project_start_to_heightmap?: HeightmapType,
+  max_distance_from_center: (S extends undefined
+    ? SymbolJigsawMaxDistanceFromCenter<'%none'> :
+    (S extends keyof SymbolJigsawMaxDistanceFromCenter
+      ? SymbolJigsawMaxDistanceFromCenter[S]
+      : SymbolJigsawMaxDistanceFromCenter<'%unknown'>)),
+  use_expansion_hack: boolean,
+}
 type JigsawMaxDistanceFromCenterDispatcherMap = {
   'beard_box': JigsawMaxDistanceFromCenterBeardBox,
   'minecraft:beard_box': JigsawMaxDistanceFromCenterBeardBox,

@@ -6,13 +6,16 @@ export type ATTRIBUTES = (
   | `minecraft:${SetType<typeof ATTRIBUTES_SET>}`)
 
 export const ATTRIBUTES_SET = new Set([
+  'air_drag_modifier',
   'armor',
   'armor_toughness',
   'attack_damage',
   'attack_knockback',
   'attack_speed',
+  'below_name_distance',
   'block_break_speed',
   'block_interaction_range',
+  'bounciness',
   'burning_time',
   'camera_distance',
   'entity_interaction_range',
@@ -20,6 +23,7 @@ export const ATTRIBUTES_SET = new Set([
   'fall_damage_multiplier',
   'flying_speed',
   'follow_range',
+  'friction_modifier',
   'gravity',
   'jump_strength',
   'knockback_resistance',
@@ -29,6 +33,7 @@ export const ATTRIBUTES_SET = new Set([
   'mining_efficiency',
   'movement_efficiency',
   'movement_speed',
+  'name_tag_distance',
   'oxygen_bonus',
   'safe_fall_distance',
   'scale',

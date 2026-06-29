@@ -58,6 +58,41 @@ export type Brightness = {
   }>,
 }
 
+export type DecomposedTransformation = {
+  /**
+   * Translation in [x, y, z].
+   *
+   * Value:
+   * List length range: 3
+   */
+  translation: NBTList<NBTFloat, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Using this rotation is enough for most transformations.
+   */
+  left_rotation: Rotation,
+  /**
+   * For more complex transformations. Applied **before** scaling.
+   */
+  right_rotation: Rotation,
+  /**
+   * Scale in [x, y, z].
+   *
+   * Value:
+   * List length range: 3
+   */
+  scale: NBTList<NBTFloat, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+}
+
 export type DisplayBase = (EntityBase & {
   /**
    * Transformation applied to model (after normal entity orientation). Defaults to identity. Interpolated.

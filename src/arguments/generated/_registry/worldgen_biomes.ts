@@ -59,6 +59,7 @@ export const WORLDGEN_BIOMES_SET = new Set([
   'sparse_jungle',
   'stony_peaks',
   'stony_shore',
+  'sulfur_caves',
   'sunflower_plains',
   'swamp',
   'taiga',

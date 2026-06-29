@@ -2,7 +2,7 @@ import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { ItemStack, ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
-import type { PatternKeys, StringSmallerThan4 } from 'sandstone/arguments'
+import type { CRAFTING_INGREDIENT, PatternKeys, StringSmallerThan4 } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, TagClass, TrimPatternClass } from 'sandstone'
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
@@ -83,6 +83,10 @@ export type CraftingImbue = (NotificationInfo & CraftingBookInfo & {
    */
   material: Ingredient,
   result: ItemStackTemplate,
+})
+
+export type CraftingIngredients = ({
+  [Key in Extract<CRAFTING_INGREDIENT, string>]?: Ingredient
 })
 
 export type CraftingShaped<P1 extends string = string, P2 extends string = string, P3 extends string = string> = (NotificationInfo & CraftingBookInfo & {
@@ -289,6 +293,10 @@ export type CraftingTransmute = (NotificationInfo & CraftingBookInfo & {
   result: (ItemStack | Registry['minecraft:item']),
 })
 
+export type FireworkShapeIngredients = ({
+  [Key in Extract<FireworkShape, string>]?: Ingredient
+})
+
 /**
  * *either*
  *
@@ -302,6 +310,14 @@ export type Ingredient = (NBTList<Registry['minecraft:item'], {
   leftExclusive: false,
   min: 1,
 }> | (Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>))
+
+export type IngredientItem = {
+  item: Registry['minecraft:item'],
+}
+
+export type IngredientTag = {
+  tag: (Registry['minecraft:tag/item']),
+}
 
 export type IngredientValue = ({
   item: Registry['minecraft:item'],
@@ -322,11 +338,41 @@ export type NotificationInfo = {
   show_notification?: boolean,
 }
 
+export type OptionalSmithingIngredients = {
+  /**
+   * Ingredient specifying an item to be trimmed. (eg. `"#minecraft:trimmable_armor"`)
+   */
+  base?: Ingredient,
+  /**
+   * Material that will be used. (eg. `"#minecraft:trim_materials"`)
+   */
+  addition?: Ingredient,
+  /**
+   * Template item that will be used for the pattern.
+   */
+  template?: Ingredient,
+}
+
 export type Recipe = NonNullable<({
   [S in Extract<Registry['minecraft:recipe_serializer'], string>]?: ({
     type: S,
   } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : SymbolRecipeSerializer<'%unknown'>))
 }[Registry['minecraft:recipe_serializer']])>
+
+export type RequiredSmithingIngredients = {
+  /**
+   * Ingredient specifying an item to be trimmed. (eg. `{ "tag": "minecraft:trimmable_armor" }`)
+   */
+  base: Ingredient,
+  /**
+   * Material that will be used. (eg. `{ "tag": "minecraft:trim_materials" }`)
+   */
+  addition: Ingredient,
+  /**
+   * Template item that will be used for the pattern.
+   */
+  template: Ingredient,
+}
 
 export type Smelting = (NotificationInfo & CookingBookInfo & {
   ingredient: Ingredient,
@@ -339,6 +385,21 @@ export type Smithing = {
   base: IngredientValue,
   addition: IngredientValue,
   result: ItemResult,
+}
+
+export type SmithingIngredients = {
+  /**
+   * Ingredient specifying an item to be trimmed. (eg. `"#minecraft:trimmable_armor"`)
+   */
+  base?: Ingredient,
+  /**
+   * Material that will be used. (eg. `"#minecraft:trim_materials"`)
+   */
+  addition?: Ingredient,
+  /**
+   * Template item that will be used for the pattern.
+   */
+  template?: Ingredient,
 }
 
 export type SmithingTransform = (NotificationInfo & {
@@ -360,6 +421,10 @@ export type SmithingTransform = (NotificationInfo & {
    */
   template?: Ingredient,
 })
+
+export type SmithingTransformResult = {
+  item: Registry['minecraft:item'],
+}
 
 export type SmithingTrim = (NotificationInfo & {
   /**

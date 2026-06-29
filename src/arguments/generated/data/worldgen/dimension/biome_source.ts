@@ -2,6 +2,11 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList, NBTLong, TagClass } from 'sandstone'
 
+export type BiomeNoiseEntry = {
+  biome: Registry['minecraft:worldgen/biome'],
+  parameters: ClimateParameters,
+}
+
 export type BiomeSource = NonNullable<({
   [S in Extract<Registry['minecraft:worldgen/biome_source'], string>]?: ({
     type: S,

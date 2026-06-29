@@ -142,6 +142,11 @@ export type FishingRodHooked = (TriggerBase & {
   rod?: ItemPredicate,
 })
 
+export type HoneyHarvestedBlock = {
+  block?: Registry['minecraft:block'],
+  tag?: (Registry['minecraft:tag/block']),
+}
+
 export type InventoryChanged = (TriggerBase & {
   slots?: {
     /**
@@ -159,6 +164,21 @@ export type InventoryChanged = (TriggerBase & {
   },
   items?: Array<ItemPredicate>,
 })
+
+export type InventoryChangedSlots = {
+  /**
+   * Amount of empty slots.
+   */
+  empty?: MinMaxBounds<NBTInt>,
+  /**
+   * Amount of occupied slots.
+   */
+  occupied?: MinMaxBounds<NBTInt>,
+  /**
+   * Amount of slots that are a full stack.
+   */
+  full?: MinMaxBounds<NBTInt>,
+}
 
 export type ItemDurabilityChanged = (TriggerBase & {
   /**

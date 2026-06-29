@@ -8,6 +8,7 @@ export type TEST_ENVIRONMENT_DEFINITION_TYPES = (
 export const TEST_ENVIRONMENT_DEFINITION_TYPES_SET = new Set([
   'all_of',
   'clock_time',
+  'difficulty',
   'function',
   'game_rules',
   'timeline_attributes',

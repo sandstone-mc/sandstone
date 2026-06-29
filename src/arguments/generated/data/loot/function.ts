@@ -3,10 +3,10 @@ import type {
   BlockEntityTarget,
   EntityTarget,
   ItemStackTarget,
-  LootCondition,
   LootFunction,
   LootPoolEntry,
 } from 'sandstone/arguments/generated/data/loot.ts'
+import type { LootConditionOf } from 'sandstone/arguments/generated/data/loot/condition.ts'
 import type { IntRange, NbtProvider, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolDataComponent, SymbolMcdocBlockStateKeys } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
@@ -17,7 +17,7 @@ import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
   BannerPatternClass,
   DataPointClass,
@@ -32,7 +32,7 @@ import type {
   TagClass,
 } from 'sandstone'
 
-export type ApplyBonus = NonNullable<({
+export type ApplyBonus<F extends NBTObject, C extends NBTObject> = NonNullable<({
   [S in Extract<ApplyBonusFormula, string>]?: ({
     enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
     /**
@@ -43,7 +43,7 @@ export type ApplyBonus = NonNullable<({
      *  - BinomialWithBonusCount(`binomial_with_bonus_count`)
      */
     formula: (S | `minecraft:${S}`),
-  } & (S extends keyof SymbolApplyBonusFormula ? SymbolApplyBonusFormula[S] : RootNBT) & Conditions)
+  } & (S extends keyof SymbolApplyBonusFormula ? SymbolApplyBonusFormula[S] : RootNBT) & Conditions<C>)
 }[ApplyBonusFormula])>
 
 export type ApplyBonusFormula = ('ore_drops' | 'uniform_bonus_count' | 'binomial_with_bonus_count')
@@ -172,13 +172,13 @@ export type BinomialWithBonusCountFormula = {
   },
 }
 
-export type Conditions = {
-  conditions?: Array<LootCondition>,
+export type Conditions<C extends NBTObject> = {
+  conditions?: Array<LootConditionOf<C>>,
 }
 
 export type ContainerComponents = ('container' | 'bundle_contents' | 'charged_projectiles')
 
-export type CopyComponents = ({
+export type CopyComponents<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Value:
    * *either*
@@ -202,9 +202,9 @@ export type CopyComponents = ({
    * Defaults to none.
    */
   exclude?: Array<Registry['minecraft:data_component_type']>,
-} & Conditions)
+} & Conditions<C>)
 
-export type CopyName = ({
+export type CopyName<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Value:
    * *either*
@@ -216,7 +216,7 @@ export type CopyName = ({
    * *item 1*
    */
   source: (EntityTarget | BlockEntityTarget),
-} & Conditions)
+} & Conditions<C>)
 
 export type CopyNameSource = (
   | 'this'
@@ -226,7 +226,7 @@ export type CopyNameSource = (
   | 'last_damage_player'
   | 'block_entity')
 
-export type CopyNbt = ({
+export type CopyNbt<C extends NBTObject> = ({
   source: NbtProvider,
   ops: Array<{
     source: `${any}${string}` | DataPointClass,
@@ -240,11 +240,24 @@ export type CopyNbt = ({
      */
     op: CopyNbtStrategy,
   }>,
-} & Conditions)
+} & Conditions<C>)
+
+export type CopyNbtOperation = {
+  source: `${any}${string}` | DataPointClass,
+  target: `${any}${string}` | DataPointClass,
+  /**
+   * Value:
+   *
+   *  - Replace(`replace`): Replace any existing contents of the target.
+   *  - Append(`append`): Append to a list.
+   *  - Merge(`merge`): Merge into a compound tag.
+   */
+  op: CopyNbtStrategy,
+}
 
 export type CopyNbtStrategy = ('replace' | 'append' | 'merge')
 
-export type CopyState = NonNullable<({
+export type CopyState<F extends NBTObject, C extends NBTObject> = NonNullable<({
   [S in Extract<Registry['minecraft:block'], string>]?: ({
     block: S,
     properties: Array<(S extends undefined
@@ -252,8 +265,24 @@ export type CopyState = NonNullable<({
       (S extends keyof SymbolMcdocBlockStateKeys
         ? SymbolMcdocBlockStateKeys[S]
         : SymbolMcdocBlockStateKeys<'%unknown'>))>,
-  } & Conditions)
+  } & Conditions<C>)
 }[Registry['minecraft:block']])>
+
+export type CustomModelDataColors = ({
+  values: Array<(NumberProvider | RGB)>,
+} & ListOperation)
+
+export type CustomModelDataFlags = ({
+  values: Array<boolean>,
+} & ListOperation)
+
+export type CustomModelDataFloats = ({
+  values: Array<NumberProvider>,
+} & ListOperation)
+
+export type CustomModelDataStrings = ({
+  values: Array<string>,
+} & ListOperation)
 
 export type EnchantedCountBase = {
   /**
@@ -266,14 +295,14 @@ export type EnchantedCountBase = {
   limit?: NBTInt,
 }
 
-export type EnchantedCountIncrease = (EnchantedCountBase & {
+export type EnchantedCountIncrease<F extends NBTObject, C extends NBTObject> = (EnchantedCountBase & {
   /**
    * Enchantment that increases yields.
    */
   enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
-} & Conditions)
+} & Conditions<C>)
 
-export type EnchantRandomly = ({
+export type EnchantRandomly<F extends NBTObject, C extends NBTObject> = ({
   /**
    * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
    */
@@ -295,9 +324,9 @@ export type EnchantRandomly = ({
    * Defaults to `false`.
    */
   include_additional_cost_component?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type EnchantWithLevels = ({
+export type EnchantWithLevels<F extends NBTObject, C extends NBTObject> = ({
   /**
    * The levels to enchant this item with.
    */
@@ -317,9 +346,9 @@ export type EnchantWithLevels = ({
    * Defaults to `false`.
    */
   include_additional_cost_component?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type ExplorationMap = ({
+export type ExplorationMap<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Generated structure to locate. Accepts any of the structure types used by the `/locate` command. Defaults to buried treasure.
    */
@@ -344,9 +373,9 @@ export type ExplorationMap = ({
    * Whether to not search in chunks that have already been generated. Defaults to `true`.
    */
   skip_existing_chunks?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type FillPlayerHead = ({
+export type FillPlayerHead<F extends NBTObject, C extends NBTObject> = ({
   /**
    * `this` to use the entity that died or the player that gained the advancement, opened the container, or broke the block.
    *
@@ -363,9 +392,9 @@ export type FillPlayerHead = ({
    *  - InteractingEntity(`interacting_entity`)
    */
   entity: EntityTarget,
-} & Conditions)
+} & Conditions<C>)
 
-export type Filtered = ({
+export type Filtered<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Item predicate to select items to modify.
    */
@@ -373,12 +402,16 @@ export type Filtered = ({
   /**
    * Loot function to apply to the item when `item_filter` passes.
    */
-  on_pass?: (LootFunction | Array<LootFunction>),
+  on_pass?: (LootFunctionOf<F, C> | Array<LootFunctionOf<F, C>>),
   /**
    * Loot function to apply to the item when `item_filter` fails.
    */
-  on_fail?: (LootFunction | Array<LootFunction>),
-} & Conditions)
+  on_fail?: (LootFunctionOf<F, C> | Array<LootFunctionOf<F, C>>),
+} & Conditions<C>)
+
+export type FireworkExplosions = ({
+  values: Array<SymbolDataComponent['firework_explosion']>,
+} & ListOperation)
 
 export type InsertListOperation = {
   /**
@@ -392,12 +425,12 @@ export type InsertListOperation = {
   }>,
 }
 
-export type LimitCount = ({
+export type LimitCount<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Limits the count of the item to a range.
    */
   limit: IntRange,
-} & Conditions)
+} & Conditions<C>)
 
 export type ListOperation = NonNullable<({
   [S in Extract<ListOperationMode, string>]?: ({
@@ -417,7 +450,10 @@ export type ListOperation = NonNullable<({
 
 export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_section')
 
-export type LootingEnchant = (EnchantedCountBase & Conditions)
+// TODO: Make this actually work properly
+export type LootFunctionOf<F extends NBTObject, C extends NBTObject> = LootFunction[]
+
+export type LootingEnchant<F extends NBTObject, C extends NBTObject> = (EnchantedCountBase & Conditions<C>)
 
 export type MapDecoration = (
   | 'mansion'
@@ -448,7 +484,7 @@ export type MapDecoration = (
   | 'banner_red'
   | 'banner_black')
 
-export type ModifyContents = ({
+export type ModifyContents<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Describes target component's items to modify.
    *
@@ -462,15 +498,15 @@ export type ModifyContents = ({
   /**
    * Applied to every item inside container.
    */
-  modifier: (LootFunction | Array<LootFunction>),
-} & Conditions)
+  modifier: (LootFunctionOf<F, C> | Array<LootFunctionOf<F, C>>),
+} & Conditions<C>)
 
-export type Reference = ({
+export type Reference<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Item modifier to reference.
    */
   name: (`${string}:${string}` | ItemModifierClass),
-} & Conditions)
+} & Conditions<C>)
 
 export type ReplaceSectionListOperation = {
   /**
@@ -493,14 +529,14 @@ export type ReplaceSectionListOperation = {
   }>,
 }
 
-export type Sequence = {
+export type Sequence<F extends NBTObject, C extends NBTObject> = {
   /**
    * List of functions to apply to this item.
    */
-  functions: Array<LootFunction>,
+  functions: Array<LootFunctionOf<F, C>>,
 }
 
-export type SetAttributes = ({
+export type SetAttributes<F extends NBTObject, C extends NBTObject> = ({
   /**
    * List of attribute modifiers to apply to this item.
    */
@@ -509,9 +545,9 @@ export type SetAttributes = ({
    * Whether to replace existing attributes (otherwise append to existing). Defaults to `true`.
    */
   replace?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetBannerPattern = ({
+export type SetBannerPattern<F extends NBTObject, C extends NBTObject> = ({
   /**
    * List of banner pattern layers.
    */
@@ -520,9 +556,9 @@ export type SetBannerPattern = ({
    * Whether to add to the banner pattern list.
    */
   append: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetBookCover = ({
+export type SetBookCover<F extends NBTObject, C extends NBTObject> = ({
   /**
    * If omitted, the original title is kept (or an empty string is used if there was no component)
    */
@@ -541,13 +577,13 @@ export type SetBookCover = ({
     min: 0,
     max: 3,
   }>,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetComponents = ({
+export type SetComponents<F extends NBTObject, C extends NBTObject> = ({
   components: DataComponentPatch,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetContents = ({
+export type SetContents<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Describes target component to be filled with items.
    *
@@ -559,21 +595,21 @@ export type SetContents = ({
    */
   component: (ContainerComponents | `minecraft:${ContainerComponents}`),
   entries: Array<LootPoolEntry>,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetCount = ({
+export type SetCount<F extends NBTObject, C extends NBTObject> = ({
   count: NumberProvider,
   /**
    * Whether to add to the existing count. Defaults to `false`.
    */
   add?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetCustomData = ({
+export type SetCustomData<F extends NBTObject, C extends NBTObject> = ({
   tag: CustomData,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetCustomModelData = ({
+export type SetCustomModelData<F extends NBTObject, C extends NBTObject> = ({
   floats?: ({
     values: Array<NumberProvider>,
   } & ListOperation),
@@ -586,9 +622,9 @@ export type SetCustomModelData = ({
   colors?: ({
     values: Array<(NumberProvider | RGB)>,
   } & ListOperation),
-} & Conditions)
+} & Conditions<C>)
 
-export type SetDamage = ({
+export type SetDamage<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Decimal percentage. Can be negative when used in combination with `add`. \
    * Clamps to a float between `-1` & `1` (inclusive).
@@ -598,9 +634,9 @@ export type SetDamage = ({
    * Whether to add to the existing damage of the item. Defaults to `false`.
    */
   add?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetEnchantments = ({
+export type SetEnchantments<F extends NBTObject, C extends NBTObject> = ({
   /**
    * A map of enchantments to levels. Setting an enchantment to `0` removes it from the item. \
    * Each level is clamped to a positive integer.
@@ -612,9 +648,9 @@ export type SetEnchantments = ({
    * Whether to add to the level of each enchantment. Defaults to `false`.
    */
   add?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetFireworkExplosion = ({
+export type SetFireworkExplosion<F extends NBTObject, C extends NBTObject> = ({
   /**
    * If omitted, the original shape is kept (or `small_ball` is used if there was no component).
    *
@@ -645,9 +681,9 @@ export type SetFireworkExplosion = ({
    * If omitted, the original `has_twinkle` value is kept (or `false` is used if there was no component).
    */
   twinkle?: boolean,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetFireworks = ({
+export type SetFireworks<F extends NBTObject, C extends NBTObject> = ({
   /**
    * If omitted, the flight duration of the item is left untouched - or set to 0 if the component did not exist before.
    *
@@ -660,9 +696,9 @@ export type SetFireworks = ({
   explosions?: ({
     values: Array<SymbolDataComponent['firework_explosion']>,
   } & ListOperation),
-} & Conditions)
+} & Conditions<C>)
 
-export type SetInstrument = ({
+export type SetInstrument<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Sets the instrument tag for a goat horn.
    */
@@ -672,13 +708,13 @@ export type SetInstrument = ({
         | TagClass<'instrument'>
         | InstrumentClass)
       | Array<(Registry['minecraft:instrument'] | InstrumentClass)>),
-} & Conditions)
+} & Conditions<C>)
 
-export type SetItem = ({
+export type SetItem<F extends NBTObject, C extends NBTObject> = ({
   item: Registry['minecraft:item'],
-} & Conditions)
+} & Conditions<C>)
 
-export type SetLootTable = ({
+export type SetLootTable<F extends NBTObject, C extends NBTObject> = ({
   /**
    * The block entity type of the container.
    */
@@ -691,9 +727,9 @@ export type SetLootTable = ({
    * The container seed to use. Defaults to a random seed.
    */
   seed?: NBTLong,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetLore = ({
+export type SetLore<F extends NBTObject, C extends NBTObject> = ({
   /**
    * The entity used to resolve the text components.
    *
@@ -711,9 +747,9 @@ export type SetLore = ({
    */
   entity?: EntityTarget,
   lore: Array<Text>,
-} & ListOperation & Conditions)
+} & ListOperation & Conditions<C>)
 
-export type SetName = ({
+export type SetName<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Specifies the entity to act as the target `@s` in the JSON text component.
    *
@@ -740,35 +776,35 @@ export type SetName = ({
    *  - CustomName(`custom_name`)
    */
   target?: SetNameTarget,
-} & Conditions)
+} & Conditions<C>)
 
 export type SetNameTarget = ('item_name' | 'custom_name')
 
-export type SetNbt = ({
+export type SetNbt<F extends NBTObject, C extends NBTObject> = ({
   tag: `${any}${string}` | NBTClass,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetOminousBottleAmplifier = ({
+export type SetOminousBottleAmplifier<F extends NBTObject, C extends NBTObject> = ({
   amplifier: NumberProvider,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetPotion = ({
+export type SetPotion<F extends NBTObject, C extends NBTObject> = ({
   /**
    * The potion identifier.
    */
   id: Registry['minecraft:potion'],
-} & Conditions)
+} & Conditions<C>)
 
-export type SetRandomDyes = ({
+export type SetRandomDyes<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Applies specified number of random dyes to the item. \
    * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye. \
    * The same dye color can be selected multiple times.
    */
   number_of_dyes: NumberProvider,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetRandomPotion = ({
+export type SetRandomPotion<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Possible potions to select from.
    * Defaults to all potions.
@@ -776,28 +812,28 @@ export type SetRandomPotion = ({
   options?: ((
       | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
       | Registry['minecraft:potion']),
-} & Conditions)
+} & Conditions<C>)
 
-export type SetStewEffect = ({
+export type SetStewEffect<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Sets the status effects for suspicious stew.
    */
   effects?: Array<StewEffect>,
-} & Conditions)
+} & Conditions<C>)
 
-export type SetWriteableBookPages = ({
+export type SetWriteableBookPages<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Sets the pages of a book and quill.
    */
   pages: Array<Filterable<string>>,
-} & ListOperation & Conditions)
+} & ListOperation & Conditions<C>)
 
-export type SetWrittenBookPages = ({
+export type SetWrittenBookPages<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Sets the pages of a written book.
    */
   pages: Array<Filterable<Text>>,
-} & ListOperation & Conditions)
+} & ListOperation & Conditions<C>)
 
 export type StewEffect = {
   /**
@@ -821,14 +857,14 @@ export type ToggleableDataComponent = (
   | 'trim'
   | 'unbreakable')
 
-export type ToggleTooltips = ({
+export type ToggleTooltips<F extends NBTObject, C extends NBTObject> = ({
   /**
    * Toggles which tooltips are shown.
    */
   toggles: ({
     [Key in Extract<Registry['minecraft:data_component_type'], string>]?: boolean
   }),
-} & Conditions)
+} & Conditions<C>)
 
 export type UniformBonusFormula = {
   parameters: {
@@ -887,199 +923,245 @@ export type SymbolListOperation<CASE extends
   | '%unknown' = 'map'> = CASE extends 'map'
   ? ListOperationDispatcherMap
   : CASE extends 'keys' ? ListOperationKeys : CASE extends '%fallback' ? ListOperationFallback : never
-type LootFunctionDispatcherMap = {
-  'apply_bonus': LootFunctionApplyBonus,
-  'minecraft:apply_bonus': LootFunctionApplyBonus,
-  'copy_components': LootFunctionCopyComponents,
-  'minecraft:copy_components': LootFunctionCopyComponents,
-  'copy_custom_data': LootFunctionCopyCustomData,
-  'minecraft:copy_custom_data': LootFunctionCopyCustomData,
-  'copy_name': LootFunctionCopyName,
-  'minecraft:copy_name': LootFunctionCopyName,
-  'copy_nbt': LootFunctionCopyNbt,
-  'minecraft:copy_nbt': LootFunctionCopyNbt,
-  'copy_state': LootFunctionCopyState,
-  'minecraft:copy_state': LootFunctionCopyState,
-  'discard': LootFunctionDiscard,
-  'minecraft:discard': LootFunctionDiscard,
-  'enchant_randomly': LootFunctionEnchantRandomly,
-  'minecraft:enchant_randomly': LootFunctionEnchantRandomly,
-  'enchant_with_levels': LootFunctionEnchantWithLevels,
-  'minecraft:enchant_with_levels': LootFunctionEnchantWithLevels,
-  'enchanted_count_increase': LootFunctionEnchantedCountIncrease,
-  'minecraft:enchanted_count_increase': LootFunctionEnchantedCountIncrease,
-  'exploration_map': LootFunctionExplorationMap,
-  'minecraft:exploration_map': LootFunctionExplorationMap,
-  'explosion_decay': LootFunctionExplosionDecay,
-  'minecraft:explosion_decay': LootFunctionExplosionDecay,
-  'fill_player_head': LootFunctionFillPlayerHead,
-  'minecraft:fill_player_head': LootFunctionFillPlayerHead,
-  'filtered': LootFunctionFiltered,
-  'minecraft:filtered': LootFunctionFiltered,
-  'furnace_smelt': LootFunctionFurnaceSmelt,
-  'minecraft:furnace_smelt': LootFunctionFurnaceSmelt,
-  'limit_count': LootFunctionLimitCount,
-  'minecraft:limit_count': LootFunctionLimitCount,
-  'looting_enchant': LootFunctionLootingEnchant,
-  'minecraft:looting_enchant': LootFunctionLootingEnchant,
-  'modify_contents': LootFunctionModifyContents,
-  'minecraft:modify_contents': LootFunctionModifyContents,
-  'reference': LootFunctionReference,
-  'minecraft:reference': LootFunctionReference,
-  'sequence': LootFunctionSequence,
-  'minecraft:sequence': LootFunctionSequence,
-  'set_attributes': LootFunctionSetAttributes,
-  'minecraft:set_attributes': LootFunctionSetAttributes,
-  'set_banner_pattern': LootFunctionSetBannerPattern,
-  'minecraft:set_banner_pattern': LootFunctionSetBannerPattern,
-  'set_book_cover': LootFunctionSetBookCover,
-  'minecraft:set_book_cover': LootFunctionSetBookCover,
-  'set_components': LootFunctionSetComponents,
-  'minecraft:set_components': LootFunctionSetComponents,
-  'set_contents': LootFunctionSetContents,
-  'minecraft:set_contents': LootFunctionSetContents,
-  'set_count': LootFunctionSetCount,
-  'minecraft:set_count': LootFunctionSetCount,
-  'set_custom_data': LootFunctionSetCustomData,
-  'minecraft:set_custom_data': LootFunctionSetCustomData,
-  'set_custom_model_data': LootFunctionSetCustomModelData,
-  'minecraft:set_custom_model_data': LootFunctionSetCustomModelData,
-  'set_damage': LootFunctionSetDamage,
-  'minecraft:set_damage': LootFunctionSetDamage,
-  'set_enchantments': LootFunctionSetEnchantments,
-  'minecraft:set_enchantments': LootFunctionSetEnchantments,
-  'set_firework_explosion': LootFunctionSetFireworkExplosion,
-  'minecraft:set_firework_explosion': LootFunctionSetFireworkExplosion,
-  'set_fireworks': LootFunctionSetFireworks,
-  'minecraft:set_fireworks': LootFunctionSetFireworks,
-  'set_instrument': LootFunctionSetInstrument,
-  'minecraft:set_instrument': LootFunctionSetInstrument,
-  'set_item': LootFunctionSetItem,
-  'minecraft:set_item': LootFunctionSetItem,
-  'set_loot_table': LootFunctionSetLootTable,
-  'minecraft:set_loot_table': LootFunctionSetLootTable,
-  'set_lore': LootFunctionSetLore,
-  'minecraft:set_lore': LootFunctionSetLore,
-  'set_name': LootFunctionSetName,
-  'minecraft:set_name': LootFunctionSetName,
-  'set_nbt': LootFunctionSetNbt,
-  'minecraft:set_nbt': LootFunctionSetNbt,
-  'set_ominous_bottle_amplifier': LootFunctionSetOminousBottleAmplifier,
-  'minecraft:set_ominous_bottle_amplifier': LootFunctionSetOminousBottleAmplifier,
-  'set_potion': LootFunctionSetPotion,
-  'minecraft:set_potion': LootFunctionSetPotion,
-  'set_random_dyes': LootFunctionSetRandomDyes,
-  'minecraft:set_random_dyes': LootFunctionSetRandomDyes,
-  'set_random_potion': LootFunctionSetRandomPotion,
-  'minecraft:set_random_potion': LootFunctionSetRandomPotion,
-  'set_stew_effect': LootFunctionSetStewEffect,
-  'minecraft:set_stew_effect': LootFunctionSetStewEffect,
-  'set_writable_book_pages': LootFunctionSetWritableBookPages,
-  'minecraft:set_writable_book_pages': LootFunctionSetWritableBookPages,
-  'set_written_book_pages': LootFunctionSetWrittenBookPages,
-  'minecraft:set_written_book_pages': LootFunctionSetWrittenBookPages,
-  'toggle_tooltips': LootFunctionToggleTooltips,
-  'minecraft:toggle_tooltips': LootFunctionToggleTooltips,
+type LootFunctionDispatcherMap<F extends NBTObject, C extends NBTObject> = {
+  'apply_bonus': LootFunctionApplyBonus<F, C>,
+  'minecraft:apply_bonus': LootFunctionApplyBonus<F, C>,
+  'copy_components': LootFunctionCopyComponents<F, C>,
+  'minecraft:copy_components': LootFunctionCopyComponents<F, C>,
+  'copy_custom_data': LootFunctionCopyCustomData<F, C>,
+  'minecraft:copy_custom_data': LootFunctionCopyCustomData<F, C>,
+  'copy_name': LootFunctionCopyName<F, C>,
+  'minecraft:copy_name': LootFunctionCopyName<F, C>,
+  'copy_nbt': LootFunctionCopyNbt<F, C>,
+  'minecraft:copy_nbt': LootFunctionCopyNbt<F, C>,
+  'copy_state': LootFunctionCopyState<F, C>,
+  'minecraft:copy_state': LootFunctionCopyState<F, C>,
+  'discard': LootFunctionDiscard<F, C>,
+  'minecraft:discard': LootFunctionDiscard<F, C>,
+  'enchant_randomly': LootFunctionEnchantRandomly<F, C>,
+  'minecraft:enchant_randomly': LootFunctionEnchantRandomly<F, C>,
+  'enchant_with_levels': LootFunctionEnchantWithLevels<F, C>,
+  'minecraft:enchant_with_levels': LootFunctionEnchantWithLevels<F, C>,
+  'enchanted_count_increase': LootFunctionEnchantedCountIncrease<F, C>,
+  'minecraft:enchanted_count_increase': LootFunctionEnchantedCountIncrease<F, C>,
+  'exploration_map': LootFunctionExplorationMap<F, C>,
+  'minecraft:exploration_map': LootFunctionExplorationMap<F, C>,
+  'explosion_decay': LootFunctionExplosionDecay<F, C>,
+  'minecraft:explosion_decay': LootFunctionExplosionDecay<F, C>,
+  'fill_player_head': LootFunctionFillPlayerHead<F, C>,
+  'minecraft:fill_player_head': LootFunctionFillPlayerHead<F, C>,
+  'filtered': LootFunctionFiltered<F, C>,
+  'minecraft:filtered': LootFunctionFiltered<F, C>,
+  'furnace_smelt': LootFunctionFurnaceSmelt<F, C>,
+  'minecraft:furnace_smelt': LootFunctionFurnaceSmelt<F, C>,
+  'limit_count': LootFunctionLimitCount<F, C>,
+  'minecraft:limit_count': LootFunctionLimitCount<F, C>,
+  'looting_enchant': LootFunctionLootingEnchant<F, C>,
+  'minecraft:looting_enchant': LootFunctionLootingEnchant<F, C>,
+  'modify_contents': LootFunctionModifyContents<F, C>,
+  'minecraft:modify_contents': LootFunctionModifyContents<F, C>,
+  'reference': LootFunctionReference<F, C>,
+  'minecraft:reference': LootFunctionReference<F, C>,
+  'sequence': LootFunctionSequence<F, C>,
+  'minecraft:sequence': LootFunctionSequence<F, C>,
+  'set_attributes': LootFunctionSetAttributes<F, C>,
+  'minecraft:set_attributes': LootFunctionSetAttributes<F, C>,
+  'set_banner_pattern': LootFunctionSetBannerPattern<F, C>,
+  'minecraft:set_banner_pattern': LootFunctionSetBannerPattern<F, C>,
+  'set_book_cover': LootFunctionSetBookCover<F, C>,
+  'minecraft:set_book_cover': LootFunctionSetBookCover<F, C>,
+  'set_components': LootFunctionSetComponents<F, C>,
+  'minecraft:set_components': LootFunctionSetComponents<F, C>,
+  'set_contents': LootFunctionSetContents<F, C>,
+  'minecraft:set_contents': LootFunctionSetContents<F, C>,
+  'set_count': LootFunctionSetCount<F, C>,
+  'minecraft:set_count': LootFunctionSetCount<F, C>,
+  'set_custom_data': LootFunctionSetCustomData<F, C>,
+  'minecraft:set_custom_data': LootFunctionSetCustomData<F, C>,
+  'set_custom_model_data': LootFunctionSetCustomModelData<F, C>,
+  'minecraft:set_custom_model_data': LootFunctionSetCustomModelData<F, C>,
+  'set_damage': LootFunctionSetDamage<F, C>,
+  'minecraft:set_damage': LootFunctionSetDamage<F, C>,
+  'set_enchantments': LootFunctionSetEnchantments<F, C>,
+  'minecraft:set_enchantments': LootFunctionSetEnchantments<F, C>,
+  'set_firework_explosion': LootFunctionSetFireworkExplosion<F, C>,
+  'minecraft:set_firework_explosion': LootFunctionSetFireworkExplosion<F, C>,
+  'set_fireworks': LootFunctionSetFireworks<F, C>,
+  'minecraft:set_fireworks': LootFunctionSetFireworks<F, C>,
+  'set_instrument': LootFunctionSetInstrument<F, C>,
+  'minecraft:set_instrument': LootFunctionSetInstrument<F, C>,
+  'set_item': LootFunctionSetItem<F, C>,
+  'minecraft:set_item': LootFunctionSetItem<F, C>,
+  'set_loot_table': LootFunctionSetLootTable<F, C>,
+  'minecraft:set_loot_table': LootFunctionSetLootTable<F, C>,
+  'set_lore': LootFunctionSetLore<F, C>,
+  'minecraft:set_lore': LootFunctionSetLore<F, C>,
+  'set_name': LootFunctionSetName<F, C>,
+  'minecraft:set_name': LootFunctionSetName<F, C>,
+  'set_nbt': LootFunctionSetNbt<F, C>,
+  'minecraft:set_nbt': LootFunctionSetNbt<F, C>,
+  'set_ominous_bottle_amplifier': LootFunctionSetOminousBottleAmplifier<F, C>,
+  'minecraft:set_ominous_bottle_amplifier': LootFunctionSetOminousBottleAmplifier<F, C>,
+  'set_potion': LootFunctionSetPotion<F, C>,
+  'minecraft:set_potion': LootFunctionSetPotion<F, C>,
+  'set_random_dyes': LootFunctionSetRandomDyes<F, C>,
+  'minecraft:set_random_dyes': LootFunctionSetRandomDyes<F, C>,
+  'set_random_potion': LootFunctionSetRandomPotion<F, C>,
+  'minecraft:set_random_potion': LootFunctionSetRandomPotion<F, C>,
+  'set_stew_effect': LootFunctionSetStewEffect<F, C>,
+  'minecraft:set_stew_effect': LootFunctionSetStewEffect<F, C>,
+  'set_writable_book_pages': LootFunctionSetWritableBookPages<F, C>,
+  'minecraft:set_writable_book_pages': LootFunctionSetWritableBookPages<F, C>,
+  'set_written_book_pages': LootFunctionSetWrittenBookPages<F, C>,
+  'minecraft:set_written_book_pages': LootFunctionSetWrittenBookPages<F, C>,
+  'toggle_tooltips': LootFunctionToggleTooltips<F, C>,
+  'minecraft:toggle_tooltips': LootFunctionToggleTooltips<F, C>,
 }
-type LootFunctionKeys = keyof LootFunctionDispatcherMap
-type LootFunctionFallback = (
-  | LootFunctionApplyBonus
-  | LootFunctionCopyComponents
-  | LootFunctionCopyCustomData
-  | LootFunctionCopyName
-  | LootFunctionCopyNbt
-  | LootFunctionCopyState
-  | LootFunctionDiscard
-  | LootFunctionEnchantRandomly
-  | LootFunctionEnchantWithLevels
-  | LootFunctionEnchantedCountIncrease
-  | LootFunctionExplorationMap
-  | LootFunctionExplosionDecay
-  | LootFunctionFillPlayerHead
-  | LootFunctionFiltered
-  | LootFunctionFurnaceSmelt
-  | LootFunctionLimitCount
-  | LootFunctionLootingEnchant
-  | LootFunctionModifyContents
-  | LootFunctionReference
-  | LootFunctionSequence
-  | LootFunctionSetAttributes
-  | LootFunctionSetBannerPattern
-  | LootFunctionSetBookCover
-  | LootFunctionSetComponents
-  | LootFunctionSetContents
-  | LootFunctionSetCount
-  | LootFunctionSetCustomData
-  | LootFunctionSetCustomModelData
-  | LootFunctionSetDamage
-  | LootFunctionSetEnchantments
-  | LootFunctionSetFireworkExplosion
-  | LootFunctionSetFireworks
-  | LootFunctionSetInstrument
-  | LootFunctionSetItem
-  | LootFunctionSetLootTable
-  | LootFunctionSetLore
-  | LootFunctionSetName
-  | LootFunctionSetNbt
-  | LootFunctionSetOminousBottleAmplifier
-  | LootFunctionSetPotion
-  | LootFunctionSetRandomDyes
-  | LootFunctionSetRandomPotion
-  | LootFunctionSetStewEffect
-  | LootFunctionSetWritableBookPages
-  | LootFunctionSetWrittenBookPages
-  | LootFunctionToggleTooltips)
-type LootFunctionApplyBonus = ApplyBonus
-type LootFunctionCopyComponents = CopyComponents
-type LootFunctionCopyCustomData = CopyNbt
-type LootFunctionCopyName = CopyName
-type LootFunctionCopyNbt = CopyNbt
-type LootFunctionCopyState = CopyState
-type LootFunctionDiscard = Conditions
-type LootFunctionEnchantRandomly = EnchantRandomly
-type LootFunctionEnchantWithLevels = EnchantWithLevels
-type LootFunctionEnchantedCountIncrease = EnchantedCountIncrease
-type LootFunctionExplorationMap = ExplorationMap
-type LootFunctionExplosionDecay = Conditions
-type LootFunctionFillPlayerHead = FillPlayerHead
-type LootFunctionFiltered = Filtered
-type LootFunctionFurnaceSmelt = Conditions
-type LootFunctionLimitCount = LimitCount
-type LootFunctionLootingEnchant = LootingEnchant
-type LootFunctionModifyContents = ModifyContents
-type LootFunctionReference = Reference
-type LootFunctionSequence = Sequence
-type LootFunctionSetAttributes = SetAttributes
-type LootFunctionSetBannerPattern = SetBannerPattern
-type LootFunctionSetBookCover = SetBookCover
-type LootFunctionSetComponents = SetComponents
-type LootFunctionSetContents = SetContents
-type LootFunctionSetCount = SetCount
-type LootFunctionSetCustomData = SetCustomData
-type LootFunctionSetCustomModelData = SetCustomModelData
-type LootFunctionSetDamage = SetDamage
-type LootFunctionSetEnchantments = SetEnchantments
-type LootFunctionSetFireworkExplosion = SetFireworkExplosion
-type LootFunctionSetFireworks = SetFireworks
-type LootFunctionSetInstrument = SetInstrument
-type LootFunctionSetItem = SetItem
-type LootFunctionSetLootTable = SetLootTable
-type LootFunctionSetLore = SetLore
-type LootFunctionSetName = SetName
-type LootFunctionSetNbt = SetNbt
-type LootFunctionSetOminousBottleAmplifier = SetOminousBottleAmplifier
-type LootFunctionSetPotion = SetPotion
-type LootFunctionSetRandomDyes = SetRandomDyes
-type LootFunctionSetRandomPotion = SetRandomPotion
-type LootFunctionSetStewEffect = SetStewEffect
-type LootFunctionSetWritableBookPages = SetWriteableBookPages
-type LootFunctionSetWrittenBookPages = SetWrittenBookPages
-type LootFunctionToggleTooltips = ToggleTooltips
-export type SymbolLootFunction<CASE extends
+type LootFunctionKeys = keyof LootFunctionDispatcherMap<NBTObject, NBTObject>
+type LootFunctionFallback<F extends NBTObject, C extends NBTObject> = (
+  | LootFunctionApplyBonus<F, C>
+  | LootFunctionCopyComponents<F, C>
+  | LootFunctionCopyCustomData<F, C>
+  | LootFunctionCopyName<F, C>
+  | LootFunctionCopyNbt<F, C>
+  | LootFunctionCopyState<F, C>
+  | LootFunctionDiscard<F, C>
+  | LootFunctionEnchantRandomly<F, C>
+  | LootFunctionEnchantWithLevels<F, C>
+  | LootFunctionEnchantedCountIncrease<F, C>
+  | LootFunctionExplorationMap<F, C>
+  | LootFunctionExplosionDecay<F, C>
+  | LootFunctionFillPlayerHead<F, C>
+  | LootFunctionFiltered<F, C>
+  | LootFunctionFurnaceSmelt<F, C>
+  | LootFunctionLimitCount<F, C>
+  | LootFunctionLootingEnchant<F, C>
+  | LootFunctionModifyContents<F, C>
+  | LootFunctionReference<F, C>
+  | LootFunctionSequence<F, C>
+  | LootFunctionSetAttributes<F, C>
+  | LootFunctionSetBannerPattern<F, C>
+  | LootFunctionSetBookCover<F, C>
+  | LootFunctionSetComponents<F, C>
+  | LootFunctionSetContents<F, C>
+  | LootFunctionSetCount<F, C>
+  | LootFunctionSetCustomData<F, C>
+  | LootFunctionSetCustomModelData<F, C>
+  | LootFunctionSetDamage<F, C>
+  | LootFunctionSetEnchantments<F, C>
+  | LootFunctionSetFireworkExplosion<F, C>
+  | LootFunctionSetFireworks<F, C>
+  | LootFunctionSetInstrument<F, C>
+  | LootFunctionSetItem<F, C>
+  | LootFunctionSetLootTable<F, C>
+  | LootFunctionSetLore<F, C>
+  | LootFunctionSetName<F, C>
+  | LootFunctionSetNbt<F, C>
+  | LootFunctionSetOminousBottleAmplifier<F, C>
+  | LootFunctionSetPotion<F, C>
+  | LootFunctionSetRandomDyes<F, C>
+  | LootFunctionSetRandomPotion<F, C>
+  | LootFunctionSetStewEffect<F, C>
+  | LootFunctionSetWritableBookPages<F, C>
+  | LootFunctionSetWrittenBookPages<F, C>
+  | LootFunctionToggleTooltips<F, C>)
+export type LootFunctionApplyBonus<F extends NBTObject, C extends NBTObject> = ApplyBonus<F, C>
+
+export type LootFunctionCopyComponents<F extends NBTObject, C extends NBTObject> = CopyComponents<F, C>
+
+export type LootFunctionCopyCustomData<F extends NBTObject, C extends NBTObject> = CopyNbt<C>
+
+export type LootFunctionCopyName<F extends NBTObject, C extends NBTObject> = CopyName<F, C>
+
+export type LootFunctionCopyNbt<F extends NBTObject, C extends NBTObject> = CopyNbt<C>
+
+export type LootFunctionCopyState<F extends NBTObject, C extends NBTObject> = CopyState<F, C>
+
+export type LootFunctionDiscard<F extends NBTObject, C extends NBTObject> = Conditions<C>
+
+export type LootFunctionEnchantRandomly<F extends NBTObject, C extends NBTObject> = EnchantRandomly<F, C>
+
+export type LootFunctionEnchantWithLevels<F extends NBTObject, C extends NBTObject> = EnchantWithLevels<F, C>
+
+export type LootFunctionEnchantedCountIncrease<F extends NBTObject, C extends NBTObject> = EnchantedCountIncrease<F, C>
+
+export type LootFunctionExplorationMap<F extends NBTObject, C extends NBTObject> = ExplorationMap<F, C>
+
+export type LootFunctionExplosionDecay<F extends NBTObject, C extends NBTObject> = Conditions<C>
+
+export type LootFunctionFillPlayerHead<F extends NBTObject, C extends NBTObject> = FillPlayerHead<F, C>
+
+export type LootFunctionFiltered<F extends NBTObject, C extends NBTObject> = Filtered<F, C>
+
+export type LootFunctionFurnaceSmelt<F extends NBTObject, C extends NBTObject> = Conditions<C>
+
+export type LootFunctionLimitCount<F extends NBTObject, C extends NBTObject> = LimitCount<F, C>
+
+export type LootFunctionLootingEnchant<F extends NBTObject, C extends NBTObject> = LootingEnchant<F, C>
+
+export type LootFunctionModifyContents<F extends NBTObject, C extends NBTObject> = ModifyContents<F, C>
+
+export type LootFunctionReference<F extends NBTObject, C extends NBTObject> = Reference<F, C>
+
+export type LootFunctionSequence<F extends NBTObject, C extends NBTObject> = Sequence<F, C>
+
+export type LootFunctionSetAttributes<F extends NBTObject, C extends NBTObject> = SetAttributes<F, C>
+
+export type LootFunctionSetBannerPattern<F extends NBTObject, C extends NBTObject> = SetBannerPattern<F, C>
+
+export type LootFunctionSetBookCover<F extends NBTObject, C extends NBTObject> = SetBookCover<F, C>
+
+export type LootFunctionSetComponents<F extends NBTObject, C extends NBTObject> = SetComponents<F, C>
+
+export type LootFunctionSetContents<F extends NBTObject, C extends NBTObject> = SetContents<F, C>
+
+export type LootFunctionSetCount<F extends NBTObject, C extends NBTObject> = SetCount<F, C>
+
+export type LootFunctionSetCustomData<F extends NBTObject, C extends NBTObject> = SetCustomData<F, C>
+
+export type LootFunctionSetCustomModelData<F extends NBTObject, C extends NBTObject> = SetCustomModelData<F, C>
+
+export type LootFunctionSetDamage<F extends NBTObject, C extends NBTObject> = SetDamage<F, C>
+
+export type LootFunctionSetEnchantments<F extends NBTObject, C extends NBTObject> = SetEnchantments<F, C>
+
+export type LootFunctionSetFireworkExplosion<F extends NBTObject, C extends NBTObject> = SetFireworkExplosion<F, C>
+
+export type LootFunctionSetFireworks<F extends NBTObject, C extends NBTObject> = SetFireworks<F, C>
+
+export type LootFunctionSetInstrument<F extends NBTObject, C extends NBTObject> = SetInstrument<F, C>
+
+export type LootFunctionSetItem<F extends NBTObject, C extends NBTObject> = SetItem<F, C>
+
+export type LootFunctionSetLootTable<F extends NBTObject, C extends NBTObject> = SetLootTable<F, C>
+
+export type LootFunctionSetLore<F extends NBTObject, C extends NBTObject> = SetLore<F, C>
+
+export type LootFunctionSetName<F extends NBTObject, C extends NBTObject> = SetName<F, C>
+
+export type LootFunctionSetNbt<F extends NBTObject, C extends NBTObject> = SetNbt<F, C>
+
+export type LootFunctionSetOminousBottleAmplifier<F extends NBTObject, C extends NBTObject> = SetOminousBottleAmplifier<F, C>
+
+export type LootFunctionSetPotion<F extends NBTObject, C extends NBTObject> = SetPotion<F, C>
+
+export type LootFunctionSetRandomDyes<F extends NBTObject, C extends NBTObject> = SetRandomDyes<F, C>
+
+export type LootFunctionSetRandomPotion<F extends NBTObject, C extends NBTObject> = SetRandomPotion<F, C>
+
+export type LootFunctionSetStewEffect<F extends NBTObject, C extends NBTObject> = SetStewEffect<F, C>
+
+export type LootFunctionSetWritableBookPages<F extends NBTObject, C extends NBTObject> = SetWriteableBookPages<F, C>
+
+export type LootFunctionSetWrittenBookPages<F extends NBTObject, C extends NBTObject> = SetWrittenBookPages<F, C>
+
+export type LootFunctionToggleTooltips<F extends NBTObject, C extends NBTObject> = ToggleTooltips<F, C>
+
+export type SymbolLootFunction<F extends NBTObject, C extends NBTObject, CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
-  ? LootFunctionDispatcherMap
-  : CASE extends 'keys' ? LootFunctionKeys : CASE extends '%fallback' ? LootFunctionFallback : never
+  ? LootFunctionDispatcherMap<F, C>
+  : CASE extends 'keys' ? LootFunctionKeys : CASE extends '%fallback' ? LootFunctionFallback<F, C> : never

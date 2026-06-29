@@ -9,6 +9,7 @@ export const WORLDGEN_WORLD_PRESETS_SET = new Set([
   'amplified',
   'debug_all_block_states',
   'flat',
+  'flat_all_dimensions',
   'large_biomes',
   'normal',
   'single_biome_surface',

@@ -377,6 +377,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:chipped_anvil': McdocBlockStateKeysChippedAnvil,
   'chiseled_bookshelf': McdocBlockStateKeysChiseledBookshelf,
   'minecraft:chiseled_bookshelf': McdocBlockStateKeysChiseledBookshelf,
+  'chiseled_cinnabar': McdocBlockStateKeysChiseledCinnabar,
+  'minecraft:chiseled_cinnabar': McdocBlockStateKeysChiseledCinnabar,
   'chiseled_copper': McdocBlockStateKeysChiseledCopper,
   'minecraft:chiseled_copper': McdocBlockStateKeysChiseledCopper,
   'chiseled_deepslate': McdocBlockStateKeysChiseledDeepslate,
@@ -395,6 +397,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:chiseled_sandstone': McdocBlockStateKeysChiseledSandstone,
   'chiseled_stone_bricks': McdocBlockStateKeysChiseledStoneBricks,
   'minecraft:chiseled_stone_bricks': McdocBlockStateKeysChiseledStoneBricks,
+  'chiseled_sulfur': McdocBlockStateKeysChiseledSulfur,
+  'minecraft:chiseled_sulfur': McdocBlockStateKeysChiseledSulfur,
   'chiseled_tuff': McdocBlockStateKeysChiseledTuff,
   'minecraft:chiseled_tuff': McdocBlockStateKeysChiseledTuff,
   'chiseled_tuff_bricks': McdocBlockStateKeysChiseledTuffBricks,
@@ -403,6 +407,22 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:chorus_flower': McdocBlockStateKeysChorusFlower,
   'chorus_plant': McdocBlockStateKeysChorusPlant,
   'minecraft:chorus_plant': McdocBlockStateKeysChorusPlant,
+  'cinnabar': McdocBlockStateKeysCinnabar,
+  'minecraft:cinnabar': McdocBlockStateKeysCinnabar,
+  'cinnabar_brick_slab': McdocBlockStateKeysCinnabarBrickSlab,
+  'minecraft:cinnabar_brick_slab': McdocBlockStateKeysCinnabarBrickSlab,
+  'cinnabar_brick_stairs': McdocBlockStateKeysCinnabarBrickStairs,
+  'minecraft:cinnabar_brick_stairs': McdocBlockStateKeysCinnabarBrickStairs,
+  'cinnabar_brick_wall': McdocBlockStateKeysCinnabarBrickWall,
+  'minecraft:cinnabar_brick_wall': McdocBlockStateKeysCinnabarBrickWall,
+  'cinnabar_bricks': McdocBlockStateKeysCinnabarBricks,
+  'minecraft:cinnabar_bricks': McdocBlockStateKeysCinnabarBricks,
+  'cinnabar_slab': McdocBlockStateKeysCinnabarSlab,
+  'minecraft:cinnabar_slab': McdocBlockStateKeysCinnabarSlab,
+  'cinnabar_stairs': McdocBlockStateKeysCinnabarStairs,
+  'minecraft:cinnabar_stairs': McdocBlockStateKeysCinnabarStairs,
+  'cinnabar_wall': McdocBlockStateKeysCinnabarWall,
+  'minecraft:cinnabar_wall': McdocBlockStateKeysCinnabarWall,
   'clay': McdocBlockStateKeysClay,
   'minecraft:clay': McdocBlockStateKeysClay,
   'closed_eyeblossom': McdocBlockStateKeysClosedEyeblossom,
@@ -1499,6 +1519,14 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:polished_blackstone_stairs': McdocBlockStateKeysPolishedBlackstoneStairs,
   'polished_blackstone_wall': McdocBlockStateKeysPolishedBlackstoneWall,
   'minecraft:polished_blackstone_wall': McdocBlockStateKeysPolishedBlackstoneWall,
+  'polished_cinnabar': McdocBlockStateKeysPolishedCinnabar,
+  'minecraft:polished_cinnabar': McdocBlockStateKeysPolishedCinnabar,
+  'polished_cinnabar_slab': McdocBlockStateKeysPolishedCinnabarSlab,
+  'minecraft:polished_cinnabar_slab': McdocBlockStateKeysPolishedCinnabarSlab,
+  'polished_cinnabar_stairs': McdocBlockStateKeysPolishedCinnabarStairs,
+  'minecraft:polished_cinnabar_stairs': McdocBlockStateKeysPolishedCinnabarStairs,
+  'polished_cinnabar_wall': McdocBlockStateKeysPolishedCinnabarWall,
+  'minecraft:polished_cinnabar_wall': McdocBlockStateKeysPolishedCinnabarWall,
   'polished_deepslate': McdocBlockStateKeysPolishedDeepslate,
   'minecraft:polished_deepslate': McdocBlockStateKeysPolishedDeepslate,
   'polished_deepslate_slab': McdocBlockStateKeysPolishedDeepslateSlab,
@@ -1519,6 +1547,14 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:polished_granite_slab': McdocBlockStateKeysPolishedGraniteSlab,
   'polished_granite_stairs': McdocBlockStateKeysPolishedGraniteStairs,
   'minecraft:polished_granite_stairs': McdocBlockStateKeysPolishedGraniteStairs,
+  'polished_sulfur': McdocBlockStateKeysPolishedSulfur,
+  'minecraft:polished_sulfur': McdocBlockStateKeysPolishedSulfur,
+  'polished_sulfur_slab': McdocBlockStateKeysPolishedSulfurSlab,
+  'minecraft:polished_sulfur_slab': McdocBlockStateKeysPolishedSulfurSlab,
+  'polished_sulfur_stairs': McdocBlockStateKeysPolishedSulfurStairs,
+  'minecraft:polished_sulfur_stairs': McdocBlockStateKeysPolishedSulfurStairs,
+  'polished_sulfur_wall': McdocBlockStateKeysPolishedSulfurWall,
+  'minecraft:polished_sulfur_wall': McdocBlockStateKeysPolishedSulfurWall,
   'polished_tuff': McdocBlockStateKeysPolishedTuff,
   'minecraft:polished_tuff': McdocBlockStateKeysPolishedTuff,
   'polished_tuff_slab': McdocBlockStateKeysPolishedTuffSlab,
@@ -1531,6 +1567,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:poppy': McdocBlockStateKeysPoppy,
   'potatoes': McdocBlockStateKeysPotatoes,
   'minecraft:potatoes': McdocBlockStateKeysPotatoes,
+  'potent_sulfur': McdocBlockStateKeysPotentSulfur,
+  'minecraft:potent_sulfur': McdocBlockStateKeysPotentSulfur,
   'potted_acacia_sapling': McdocBlockStateKeysPottedAcaciaSapling,
   'minecraft:potted_acacia_sapling': McdocBlockStateKeysPottedAcaciaSapling,
   'potted_allium': McdocBlockStateKeysPottedAllium,
@@ -1983,6 +2021,24 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:structure_void': McdocBlockStateKeysStructureVoid,
   'sugar_cane': McdocBlockStateKeysSugarCane,
   'minecraft:sugar_cane': McdocBlockStateKeysSugarCane,
+  'sulfur': McdocBlockStateKeysSulfur,
+  'minecraft:sulfur': McdocBlockStateKeysSulfur,
+  'sulfur_brick_slab': McdocBlockStateKeysSulfurBrickSlab,
+  'minecraft:sulfur_brick_slab': McdocBlockStateKeysSulfurBrickSlab,
+  'sulfur_brick_stairs': McdocBlockStateKeysSulfurBrickStairs,
+  'minecraft:sulfur_brick_stairs': McdocBlockStateKeysSulfurBrickStairs,
+  'sulfur_brick_wall': McdocBlockStateKeysSulfurBrickWall,
+  'minecraft:sulfur_brick_wall': McdocBlockStateKeysSulfurBrickWall,
+  'sulfur_bricks': McdocBlockStateKeysSulfurBricks,
+  'minecraft:sulfur_bricks': McdocBlockStateKeysSulfurBricks,
+  'sulfur_slab': McdocBlockStateKeysSulfurSlab,
+  'minecraft:sulfur_slab': McdocBlockStateKeysSulfurSlab,
+  'sulfur_spike': McdocBlockStateKeysSulfurSpike,
+  'minecraft:sulfur_spike': McdocBlockStateKeysSulfurSpike,
+  'sulfur_stairs': McdocBlockStateKeysSulfurStairs,
+  'minecraft:sulfur_stairs': McdocBlockStateKeysSulfurStairs,
+  'sulfur_wall': McdocBlockStateKeysSulfurWall,
+  'minecraft:sulfur_wall': McdocBlockStateKeysSulfurWall,
   'sunflower': McdocBlockStateKeysSunflower,
   'minecraft:sunflower': McdocBlockStateKeysSunflower,
   'suspicious_gravel': McdocBlockStateKeysSuspiciousGravel,
@@ -2527,6 +2583,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysChest
   | McdocBlockStateKeysChippedAnvil
   | McdocBlockStateKeysChiseledBookshelf
+  | McdocBlockStateKeysChiseledCinnabar
   | McdocBlockStateKeysChiseledCopper
   | McdocBlockStateKeysChiseledDeepslate
   | McdocBlockStateKeysChiseledNetherBricks
@@ -2536,10 +2593,19 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysChiseledResinBricks
   | McdocBlockStateKeysChiseledSandstone
   | McdocBlockStateKeysChiseledStoneBricks
+  | McdocBlockStateKeysChiseledSulfur
   | McdocBlockStateKeysChiseledTuff
   | McdocBlockStateKeysChiseledTuffBricks
   | McdocBlockStateKeysChorusFlower
   | McdocBlockStateKeysChorusPlant
+  | McdocBlockStateKeysCinnabar
+  | McdocBlockStateKeysCinnabarBrickSlab
+  | McdocBlockStateKeysCinnabarBrickStairs
+  | McdocBlockStateKeysCinnabarBrickWall
+  | McdocBlockStateKeysCinnabarBricks
+  | McdocBlockStateKeysCinnabarSlab
+  | McdocBlockStateKeysCinnabarStairs
+  | McdocBlockStateKeysCinnabarWall
   | McdocBlockStateKeysClay
   | McdocBlockStateKeysClosedEyeblossom
   | McdocBlockStateKeysCoalBlock
@@ -3088,6 +3154,10 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPolishedBlackstoneSlab
   | McdocBlockStateKeysPolishedBlackstoneStairs
   | McdocBlockStateKeysPolishedBlackstoneWall
+  | McdocBlockStateKeysPolishedCinnabar
+  | McdocBlockStateKeysPolishedCinnabarSlab
+  | McdocBlockStateKeysPolishedCinnabarStairs
+  | McdocBlockStateKeysPolishedCinnabarWall
   | McdocBlockStateKeysPolishedDeepslate
   | McdocBlockStateKeysPolishedDeepslateSlab
   | McdocBlockStateKeysPolishedDeepslateStairs
@@ -3098,12 +3168,17 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPolishedGranite
   | McdocBlockStateKeysPolishedGraniteSlab
   | McdocBlockStateKeysPolishedGraniteStairs
+  | McdocBlockStateKeysPolishedSulfur
+  | McdocBlockStateKeysPolishedSulfurSlab
+  | McdocBlockStateKeysPolishedSulfurStairs
+  | McdocBlockStateKeysPolishedSulfurWall
   | McdocBlockStateKeysPolishedTuff
   | McdocBlockStateKeysPolishedTuffSlab
   | McdocBlockStateKeysPolishedTuffStairs
   | McdocBlockStateKeysPolishedTuffWall
   | McdocBlockStateKeysPoppy
   | McdocBlockStateKeysPotatoes
+  | McdocBlockStateKeysPotentSulfur
   | McdocBlockStateKeysPottedAcaciaSapling
   | McdocBlockStateKeysPottedAllium
   | McdocBlockStateKeysPottedAzaleaBush
@@ -3330,6 +3405,15 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysStructureBlock
   | McdocBlockStateKeysStructureVoid
   | McdocBlockStateKeysSugarCane
+  | McdocBlockStateKeysSulfur
+  | McdocBlockStateKeysSulfurBrickSlab
+  | McdocBlockStateKeysSulfurBrickStairs
+  | McdocBlockStateKeysSulfurBrickWall
+  | McdocBlockStateKeysSulfurBricks
+  | McdocBlockStateKeysSulfurSlab
+  | McdocBlockStateKeysSulfurSpike
+  | McdocBlockStateKeysSulfurStairs
+  | McdocBlockStateKeysSulfurWall
   | McdocBlockStateKeysSunflower
   | McdocBlockStateKeysSuspiciousGravel
   | McdocBlockStateKeysSuspiciousSand
@@ -3705,6 +3789,7 @@ type McdocBlockStateKeysChiseledBookshelf = (
   | 'slot_3_occupied'
   | 'slot_4_occupied'
   | 'slot_5_occupied')
+type McdocBlockStateKeysChiseledCinnabar = never
 type McdocBlockStateKeysChiseledCopper = never
 type McdocBlockStateKeysChiseledDeepslate = never
 type McdocBlockStateKeysChiseledNetherBricks = never
@@ -3714,10 +3799,19 @@ type McdocBlockStateKeysChiseledRedSandstone = never
 type McdocBlockStateKeysChiseledResinBricks = never
 type McdocBlockStateKeysChiseledSandstone = never
 type McdocBlockStateKeysChiseledStoneBricks = never
+type McdocBlockStateKeysChiseledSulfur = never
 type McdocBlockStateKeysChiseledTuff = never
 type McdocBlockStateKeysChiseledTuffBricks = never
 type McdocBlockStateKeysChorusFlower = 'age'
 type McdocBlockStateKeysChorusPlant = ('down' | 'east' | 'north' | 'south' | 'up' | 'west')
+type McdocBlockStateKeysCinnabar = never
+type McdocBlockStateKeysCinnabarBrickSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysCinnabarBrickStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysCinnabarBrickWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
+type McdocBlockStateKeysCinnabarBricks = never
+type McdocBlockStateKeysCinnabarSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysCinnabarStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysCinnabarWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
 type McdocBlockStateKeysClay = never
 type McdocBlockStateKeysClosedEyeblossom = never
 type McdocBlockStateKeysCoalBlock = never
@@ -4266,6 +4360,10 @@ type McdocBlockStateKeysPolishedBlackstonePressurePlate = 'powered'
 type McdocBlockStateKeysPolishedBlackstoneSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysPolishedBlackstoneStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysPolishedBlackstoneWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
+type McdocBlockStateKeysPolishedCinnabar = never
+type McdocBlockStateKeysPolishedCinnabarSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysPolishedCinnabarStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysPolishedCinnabarWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
 type McdocBlockStateKeysPolishedDeepslate = never
 type McdocBlockStateKeysPolishedDeepslateSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysPolishedDeepslateStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
@@ -4276,12 +4374,17 @@ type McdocBlockStateKeysPolishedDioriteStairs = ('facing' | 'half' | 'shape' | '
 type McdocBlockStateKeysPolishedGranite = never
 type McdocBlockStateKeysPolishedGraniteSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysPolishedGraniteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysPolishedSulfur = never
+type McdocBlockStateKeysPolishedSulfurSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysPolishedSulfurStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysPolishedSulfurWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
 type McdocBlockStateKeysPolishedTuff = never
 type McdocBlockStateKeysPolishedTuffSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysPolishedTuffStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysPolishedTuffWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
 type McdocBlockStateKeysPoppy = never
 type McdocBlockStateKeysPotatoes = 'age'
+type McdocBlockStateKeysPotentSulfur = 'potent_sulfur_state'
 type McdocBlockStateKeysPottedAcaciaSapling = never
 type McdocBlockStateKeysPottedAllium = never
 type McdocBlockStateKeysPottedAzaleaBush = never
@@ -4508,6 +4611,15 @@ type McdocBlockStateKeysStrippedWarpedStem = 'axis'
 type McdocBlockStateKeysStructureBlock = 'mode'
 type McdocBlockStateKeysStructureVoid = never
 type McdocBlockStateKeysSugarCane = 'age'
+type McdocBlockStateKeysSulfur = never
+type McdocBlockStateKeysSulfurBrickSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysSulfurBrickStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysSulfurBrickWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
+type McdocBlockStateKeysSulfurBricks = never
+type McdocBlockStateKeysSulfurSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysSulfurSpike = ('thickness' | 'vertical_direction' | 'waterlogged')
+type McdocBlockStateKeysSulfurStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysSulfurWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
 type McdocBlockStateKeysSunflower = 'half'
 type McdocBlockStateKeysSuspiciousGravel = 'dusted'
 type McdocBlockStateKeysSuspiciousSand = 'dusted'

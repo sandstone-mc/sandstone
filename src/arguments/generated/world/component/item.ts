@@ -36,6 +36,7 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
   BannerPatternClass,
   DamageTypeClass,
+  DecoratedPotPatternClass,
   EquipmentClass,
   InstrumentClass,
   ItemModelDefinitionClass,
@@ -1095,6 +1096,8 @@ type DataComponentDispatcherMap = {
   'minecraft:cow/sound_variant': DataComponentCowSoundVariant,
   'cow/variant': DataComponentCowVariant,
   'minecraft:cow/variant': DataComponentCowVariant,
+  'creative_slot_lock': DataComponentCreativeSlotLock,
+  'minecraft:creative_slot_lock': DataComponentCreativeSlotLock,
   'custom_data': DataComponentCustomData,
   'minecraft:custom_data': DataComponentCustomData,
   'custom_model_data': DataComponentCustomModelData,
@@ -1171,6 +1174,8 @@ type DataComponentDispatcherMap = {
   'minecraft:map_decorations': DataComponentMapDecorations,
   'map_id': DataComponentMapId,
   'minecraft:map_id': DataComponentMapId,
+  'map_post_processing': DataComponentMapPostProcessing,
+  'minecraft:map_post_processing': DataComponentMapPostProcessing,
   'max_damage': DataComponentMaxDamage,
   'minecraft:max_damage': DataComponentMaxDamage,
   'max_stack_size': DataComponentMaxStackSize,
@@ -1203,6 +1208,8 @@ type DataComponentDispatcherMap = {
   'minecraft:profile': DataComponentProfile,
   'provides_banner_patterns': DataComponentProvidesBannerPatterns,
   'minecraft:provides_banner_patterns': DataComponentProvidesBannerPatterns,
+  'provides_pottery_pattern': DataComponentProvidesPotteryPattern,
+  'minecraft:provides_pottery_pattern': DataComponentProvidesPotteryPattern,
   'provides_trim_material': DataComponentProvidesTrimMaterial,
   'minecraft:provides_trim_material': DataComponentProvidesTrimMaterial,
   'rabbit/variant': DataComponentRabbitVariant,
@@ -1223,6 +1230,8 @@ type DataComponentDispatcherMap = {
   'minecraft:shulker/color': DataComponentShulkerColor,
   'stored_enchantments': DataComponentStoredEnchantments,
   'minecraft:stored_enchantments': DataComponentStoredEnchantments,
+  'sulfur_cube_content': DataComponentSulfurCubeContent,
+  'minecraft:sulfur_cube_content': DataComponentSulfurCubeContent,
   'suspicious_stew_effects': DataComponentSuspiciousStewEffects,
   'minecraft:suspicious_stew_effects': DataComponentSuspiciousStewEffects,
   'swing_animation': DataComponentSwingAnimation,
@@ -1263,6 +1272,8 @@ type DataComponentDispatcherMap = {
   'minecraft:writable_book_content': DataComponentWritableBookContent,
   'written_book_content': DataComponentWrittenBookContent,
   'minecraft:written_book_content': DataComponentWrittenBookContent,
+  'zombie_nautilus/variant': DataComponentZombieNautilusVariant,
+  'minecraft:zombie_nautilus/variant': DataComponentZombieNautilusVariant,
 }
 type DataComponentKeys = keyof DataComponentDispatcherMap
 type DataComponentFallback = (
@@ -1292,6 +1303,7 @@ type DataComponentFallback = (
   | DataComponentContainerLoot
   | DataComponentCowSoundVariant
   | DataComponentCowVariant
+  | DataComponentCreativeSlotLock
   | DataComponentCustomData
   | DataComponentCustomModelData
   | DataComponentCustomName
@@ -1330,6 +1342,7 @@ type DataComponentFallback = (
   | DataComponentMapColor
   | DataComponentMapDecorations
   | DataComponentMapId
+  | DataComponentMapPostProcessing
   | DataComponentMaxDamage
   | DataComponentMaxStackSize
   | DataComponentMinimumAttackCharge
@@ -1346,6 +1359,7 @@ type DataComponentFallback = (
   | DataComponentPotionDurationScale
   | DataComponentProfile
   | DataComponentProvidesBannerPatterns
+  | DataComponentProvidesPotteryPattern
   | DataComponentProvidesTrimMaterial
   | DataComponentRabbitVariant
   | DataComponentRarity
@@ -1356,6 +1370,7 @@ type DataComponentFallback = (
   | DataComponentSheepColor
   | DataComponentShulkerColor
   | DataComponentStoredEnchantments
+  | DataComponentSulfurCubeContent
   | DataComponentSuspiciousStewEffects
   | DataComponentSwingAnimation
   | DataComponentTool
@@ -1375,7 +1390,8 @@ type DataComponentFallback = (
   | DataComponentWolfSoundVariant
   | DataComponentWolfVariant
   | DataComponentWritableBookContent
-  | DataComponentWrittenBookContent)
+  | DataComponentWrittenBookContent
+  | DataComponentZombieNautilusVariant)
 type DataComponentAdditionalTradeCost = NBTInt
 type DataComponentAttackRange = AttackRange
 type DataComponentAttributeModifiers = Array<AttributeModifier>
@@ -1392,18 +1408,19 @@ type DataComponentBundleContents = Array<ItemStackTemplate>
 type DataComponentCanBreak = AdventureModePredicate
 type DataComponentCanPlaceOn = AdventureModePredicate
 type DataComponentCatCollar = DyeColor
-type DataComponentCatSoundVariant = (`${string}:${string}` | VariantClass<'cat_sound'>)
+type DataComponentCatSoundVariant = (Registry['minecraft:cat_sound_variant'] | VariantClass<'cat_sound'>)
 type DataComponentCatVariant = (Registry['minecraft:cat_variant'] | VariantClass<'cat'>)
 type DataComponentChargedProjectiles = Array<ItemStackTemplate>
-type DataComponentChickenSoundVariant = (`${string}:${string}` | VariantClass<'chicken_sound'>)
+type DataComponentChickenSoundVariant = (Registry['minecraft:chicken_sound_variant'] | VariantClass<'chicken_sound'>)
 type DataComponentChickenVariant = (Registry['minecraft:chicken_variant'] | VariantClass<'chicken'>)
 type DataComponentConsumable = Consumable
 type DataComponentContainer = NBTList<ContainerSlot, {
   rightExclusive: false,
 }>
 type DataComponentContainerLoot = ContainerLoot
-type DataComponentCowSoundVariant = (`${string}:${string}` | VariantClass<'cow_sound'>)
+type DataComponentCowSoundVariant = (Registry['minecraft:cow_sound_variant'] | VariantClass<'cow_sound'>)
 type DataComponentCowVariant = (Registry['minecraft:cow_variant'] | VariantClass<'cow'>)
+type DataComponentCreativeSlotLock = Record<string, never>
 type DataComponentCustomData = CustomData
 type DataComponentCustomModelData = CustomModelData
 type DataComponentCustomName = Text
@@ -1444,6 +1461,7 @@ type DataComponentLore = Array<Text>
 type DataComponentMapColor = NBTInt
 type DataComponentMapDecorations = MapDecorations
 type DataComponentMapId = NBTInt
+type DataComponentMapPostProcessing = Record<string, never>
 type DataComponentMaxDamage = NBTInt<{
   min: 1,
 }>
@@ -1466,7 +1484,7 @@ type DataComponentOminousBottleAmplifier = NBTInt<{
 type DataComponentPaintingVariant = (Registry['minecraft:painting_variant'] | VariantClass<'painting'>)
 type DataComponentParrotVariant = ParrotVariant
 type DataComponentPiercingWeapon = PiercingWeapon
-type DataComponentPigSoundVariant = (`${string}:${string}` | VariantClass<'pig_sound'>)
+type DataComponentPigSoundVariant = (Registry['minecraft:pig_sound_variant'] | VariantClass<'pig_sound'>)
 type DataComponentPigVariant = (Registry['minecraft:pig_variant'] | VariantClass<'pig'>)
 type DataComponentPotDecorations = NBTList<Registry['minecraft:item'], {
   rightExclusive: false,
@@ -1483,6 +1501,7 @@ type DataComponentProvidesBannerPatterns = ((
     | TagClass<'banner_pattern'>
     | BannerPatternClass)
   | Array<(Registry['minecraft:banner_pattern'] | BannerPatternClass)>)
+type DataComponentProvidesPotteryPattern = (Registry['minecraft:decorated_pot_pattern'] | DecoratedPotPatternClass)
 type DataComponentProvidesTrimMaterial = (Registry['minecraft:trim_material'] | TrimMaterialClass)
 type DataComponentRabbitVariant = RabbitVariant
 type DataComponentRarity = Rarity
@@ -1495,6 +1514,7 @@ type DataComponentSalmonSize = SalmonType
 type DataComponentSheepColor = DyeColor
 type DataComponentShulkerColor = DyeColor
 type DataComponentStoredEnchantments = EnchantmentLevels
+type DataComponentSulfurCubeContent = ItemStackTemplate
 type DataComponentSuspiciousStewEffects = Array<SuspiciousStewEffect>
 type DataComponentSwingAnimation = SwingAnimation
 type DataComponentTool = Tool
@@ -1515,6 +1535,9 @@ type DataComponentWolfSoundVariant = (Registry['minecraft:wolf_sound_variant'] |
 type DataComponentWolfVariant = (Registry['minecraft:wolf_variant'] | VariantClass<'wolf'>)
 type DataComponentWritableBookContent = WritableBookContent
 type DataComponentWrittenBookContent = WrittenBookContent
+type DataComponentZombieNautilusVariant = (
+  | Registry['minecraft:zombie_nautilus_variant']
+  | VariantClass<'zombie_nautilus'>)
 export type SymbolDataComponent<CASE extends
   | 'map'
   | 'keys'

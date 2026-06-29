@@ -1,7 +1,8 @@
+import type { LootConditionOf } from 'sandstone/arguments/generated/data/loot/condition.ts'
+import type { LootFunctionOf } from 'sandstone/arguments/generated/data/loot/function.ts'
+import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
 import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
-import type { SymbolLootCondition, SymbolLootFunction } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { SlotSource } from 'sandstone/arguments/generated/util/slot.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { LootTableClass, NBTInt } from 'sandstone'
 
@@ -40,11 +41,7 @@ export type ItemPoolEntry = ({
 
 export type ItemStackTarget = 'tool'
 
-export type LootCondition = NonNullable<({
-  [S in Extract<Registry['minecraft:loot_condition_type'], string>]?: ({
-    condition: S,
-  } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT))
-}[Registry['minecraft:loot_condition_type']])>
+export type LootCondition = LootConditionOf<Registry['minecraft:loot_condition_type']>
 
 export type LootConditionType = (
   | 'alternative'
@@ -89,7 +86,9 @@ export type LootContextType = (
   | 'enchanted_entity'
   | 'hit_block'
   | 'block_interact'
-  | 'entity_interact')
+  | 'entity_interact'
+  | 'villager_trade'
+  | 'command_slot_source')
 
 export type LootEntryType = (
   | 'alternatives'
@@ -101,11 +100,7 @@ export type LootEntryType = (
   | 'sequence'
   | 'tag')
 
-export type LootFunction = NonNullable<({
-  [S in Extract<Registry['minecraft:loot_function_type'], string>]?: ({
-    function: S,
-  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
-}[Registry['minecraft:loot_function_type']])>
+export type LootFunction = LootFunctionOf<Registry['minecraft:loot_function_type'], Registry['minecraft:loot_condition_type']>
 
 export type LootFunctionType = (
   | 'apply_bonus'
@@ -177,6 +172,8 @@ export type LootTable = {
    *  - HitBlock(`hit_block`)
    *  - BlockInteract(`block_interact`)
    *  - EntityInteract(`entity_interact`)
+   *  - VillagerTrade(`villager_trade`)
+   *  - CommandSlotSource(`command_slot_source`)
    */
   type?: (LootContextType | `minecraft:${LootContextType}`),
   pools?: Array<LootPool>,
@@ -192,6 +189,10 @@ export type LootTable = {
 export type LootTablePoolEntry = ({
   value: ((Registry['minecraft:loot_table'] | LootTableClass) | LootTable),
 } & SingletonPoolEntry)
+
+export type NonReferenceLootCondition = LootConditionOf<Registry['minecraft:loot_condition_type']>
+
+export type NonReferenceLootFunction = LootFunctionOf<Registry['minecraft:loot_function_type'], Registry['minecraft:loot_condition_type']>
 
 export type SingletonPoolEntry = ({
   /**

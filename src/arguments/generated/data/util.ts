@@ -231,6 +231,14 @@ export type UniformNumberProvider = {
   min?: NumberProvider,
   max?: NumberProvider,
 }
+
+export type WeightedSoundEvent = {
+  sound_id: (`${string}:${string}` | ''),
+  /**
+   * Range in blocks. If the player is further than this range from the source of the sound, the sound will be inaudible. If omitted, the sound will have a variable range.
+   */
+  range?: NBTFloat,
+}
 type NbtProviderDispatcherMap = {
   'context': NbtProviderContext,
   'minecraft:context': NbtProviderContext,

@@ -138,6 +138,7 @@ export const ENTITY_TYPES_SET = new Set([
   'squid',
   'stray',
   'strider',
+  'sulfur_cube',
   'tadpole',
   'text_display',
   'tnt',

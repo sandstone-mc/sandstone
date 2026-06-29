@@ -57,6 +57,10 @@ export type Advancement = {
   sends_telemetry_event?: boolean,
 }
 
+export type AdvancementCriteriaMap = ({
+  [Key in `${any}${string}`]?: AdvancementCriterion
+})
+
 export type AdvancementCriterion = NonNullable<({
   [S in Extract<Registry['minecraft:trigger_type'], string>]?: ({
     /**
@@ -110,9 +114,9 @@ export type AdvancementIcon = {
 
 export type AdvancementRewards = {
   /**
-   * Function to run as the player (not at). Function group tags are not allowed.
+   * XP to add.
    */
-  function?: (`${string}:${string}` | MCFunctionClass),
+  experience?: NBTInt,
   /**
    * Loot tables to give.
    */
@@ -122,9 +126,9 @@ export type AdvancementRewards = {
    */
   recipes?: Array<(Registry['minecraft:recipe'] | RecipeClass)>,
   /**
-   * XP to add.
+   * Function to run as and at the player. Function tags are not allowed.
    */
-  experience?: NBTInt,
+  function?: (`${string}:${string}` | MCFunctionClass),
 }
 
 export type Trigger = (

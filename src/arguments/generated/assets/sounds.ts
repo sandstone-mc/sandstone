@@ -6,7 +6,7 @@ import type { NBTFloat, NBTInt, SoundEventClass } from 'sandstone'
 export type Sound = NonNullable<({
   [S in Extract<SoundType, string>]?: {
     /**
-     * Changes how `name` is interpreted. Defaults to `sound`.
+     * Changes how `name` is interpreted. Defaults to `file`.
      *
      * Value:
      *
