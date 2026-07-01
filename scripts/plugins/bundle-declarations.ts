@@ -11,7 +11,23 @@
 
 import { join, relative, dirname } from 'path'
 import { readdir, readFile, writeFile, mkdir, stat } from 'fs/promises'
+import { SourceMapGenerator } from 'source-map-js'
+import * as ts from 'typescript'
 import { fixDtsImports } from './fix-dts-imports'
+
+/**
+ * Rewrite the `sources` paths in a declaration map so they remain valid
+ * after copyDtsFiles moves the file from `types/` to `dist/_internal/types/`.
+ * The new location is 2 directories deeper, so each relative source path
+ * gets `../../` prepended.
+ */
+function rewriteSourcePathsInMap(content: string): string {
+  const map = JSON.parse(content)
+  if (Array.isArray(map.sources)) {
+    map.sources = map.sources.map((s: string) => (s.startsWith('../') ? '../../' + s : s))
+  }
+  return JSON.stringify(map)
+}
 
 /**
  * Recursively copy .d.ts files from src to dest, fixing imports along the way.
@@ -41,6 +57,14 @@ async function copyDtsFiles(
       const content = await readFile(srcPath, 'utf8')
       const fixed = fixDtsImports(content, dirname(destPath), rootDestDir, indexDirs)
       await writeFile(destPath, fixed.content)
+    } else if (entry.name.endsWith('.d.ts.map')) {
+      // Skip sandstone.d.ts.map - corresponding .d.ts is not copied
+      if (entry.name === 'sandstone.d.ts.map' && srcDir === rootSrcDir) {
+        continue
+      }
+      const content = await readFile(srcPath, 'utf8')
+      const rewritten = rewriteSourcePathsInMap(content)
+      await writeFile(destPath, rewritten)
     }
   }
 }
@@ -78,6 +102,10 @@ async function findIndexDirs(dir: string, relativeTo: string = dir): Promise<Set
 /**
  * Generate the main index.d.ts by combining sandstone.d.ts with subpath exports.
  * This mirrors what the synthetic index.ts does for the JS bundle.
+ *
+ * Strips tsc's sourceMappingURL comment (it references sandstone.d.ts.map, which
+ * doesn't exist next to the bundled output) — bundleDeclarations writes a fresh
+ * index.d.ts.map and adds a corrected sourceMappingURL at the end.
  */
 async function generateMainIndexDts(
   typesDir: string,
@@ -98,6 +126,8 @@ async function generateMainIndexDts(
   // Strategy: First add ./types/ prefix to all relative imports, then fix
   // ./types/sandstone -> ./index after
   const withTypesPrefix = fixed.content
+    // Strip tsc's sourceMappingURL comment — we'll add our own at the end
+    .replace(/\n?\/\/# sourceMappingURL=sandstone\.d\.ts\.map\n?$/, '\n')
     .replace(/from '\.\/([^']+)'/g, "from './types/$1'")
     .replace(/from "\.\/([^"]+)"/g, 'from "./types/$1"')
     .replace(/import\("\.\/([^"]+)"\)/g, 'import("./types/$1")')
@@ -107,6 +137,9 @@ async function generateMainIndexDts(
     .replace(/import\("\.\/types\/sandstone(\.js)?"\)/g, 'import("./index.js")')
 
   // Append export * for subpaths (pointing to internal types)
+  // End with a sourceMappingURL pointing to our generated index.d.ts.map so
+  // the IDE can follow declarations back to src/ via the map chain
+  // (index.d.ts.map → types/sandstone.d.ts.map → src/sandstone.ts).
   return `${withTypesPrefix}
 
 // Additional exports from subpaths (not in public API)
@@ -116,7 +149,91 @@ export * from './types/commands/index.js'
 export * from './types/flow/index.js'
 export * from './types/pack/index.js'
 export * from './types/arguments/index.js'
+
+//# sourceMappingURL=index.d.ts.map
 `
+}
+
+/**
+ * Walk a .ts/.d.ts file and collect every exported variable declaration's
+ * identifier position. Handles both `export const x: T` and
+ * `export const { x, y } = obj` (binding pattern). Returns name + line + 0-indexed col.
+ */
+async function collectExportedSymbols(file: string): Promise<{ name: string; line: number; col: number }[]> {
+  const src = await readFile(file, 'utf8')
+  const sf = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
+  const out: { name: string; line: number; col: number }[] = []
+
+  function visit(node: ts.Node) {
+    if (ts.isVariableStatement(node)) {
+      const isExported = (node.modifiers ?? []).some(m => m.kind === ts.SyntaxKind.ExportKeyword)
+      if (!isExported) { ts.forEachChild(node, visit); return }
+      const declList = node.declarationList
+      for (const decl of declList.declarations) {
+        const name = decl.name
+        if (ts.isIdentifier(name)) {
+          const pos = sf.getLineAndCharacterOfPosition(name.getStart(sf))
+          out.push({ name: name.text, line: pos.line + 1, col: pos.character })
+        } else if (ts.isObjectBindingPattern(name) || ts.isArrayBindingPattern(name)) {
+          for (const el of name.elements) {
+            // ArrayBindingPattern.elements is ArrayBindingElement, a union with OmittedExpression
+            // (the `[,]` skip-element), which has no `.name`.
+            if (ts.isBindingElement(el) && ts.isIdentifier(el.name)) {
+              const pos = sf.getLineAndCharacterOfPosition(el.name.getStart(sf))
+              out.push({ name: el.name.text, line: pos.line + 1, col: pos.character })
+            }
+          }
+        }
+      }
+    }
+    ts.forEachChild(node, visit)
+  }
+
+  visit(sf)
+  return out
+}
+
+/**
+ * Generate a declaration source map for the bundled index.d.ts.
+ *
+ * Walks both the bundled .d.ts and src/sandstone.ts with TypeScript's compiler
+ * API, matches exported symbols by name, and emits a mapping per symbol. This
+ * gives the IDE precise ctrl+click navigation for every exported binding —
+ * crucially including the commands/resources destructured from `commandsProxy`
+ * and `packMethodsProxy` in src/sandstone.ts, which tsc collapses into a single
+ * combined declaration in types/sandstone.d.ts and therefore can't be resolved
+ * through the default chain (bundled → types/sandstone.d.ts → src/sandstone.ts).
+ *
+ * Symbols in the bundled .d.ts that don't appear in src/sandstone.ts (e.g.
+ * types, helpers re-exported from other modules) are skipped — the IDE will
+ * fall back to types/sandstone.d.ts.map for those, which preserves any
+ * existing useful mappings.
+ */
+async function generateMainIndexMap(
+  bundledDtsPath: string,
+  sandstoneTsPath: string,
+  sourceFile: string,
+): Promise<string> {
+  const [bundled, src] = await Promise.all([
+    collectExportedSymbols(bundledDtsPath),
+    collectExportedSymbols(sandstoneTsPath),
+  ])
+
+  const bundledByName = new Map<string, { line: number; col: number }>()
+  for (const s of bundled) bundledByName.set(s.name, s)
+
+  const generator = new SourceMapGenerator({ file: 'index.d.ts' })
+  for (const s of src) {
+    const b = bundledByName.get(s.name)
+    if (!b) continue
+    generator.addMapping({
+      generated: { line: b.line, column: b.col },
+      source: sourceFile,
+      original: { line: s.line, column: s.col },
+    })
+  }
+
+  return generator.toString()
 }
 
 /**
@@ -148,4 +265,18 @@ export async function bundleDeclarations(
   // Generate the main index.d.ts in _internal/ (sandstone.d.ts content + subpath exports)
   const mainIndexContent = await generateMainIndexDts(typesDir, bundleDir, indexDirs)
   await writeFile(join(bundleDir, 'index.d.ts'), mainIndexContent)
+
+  // Generate a declaration source map so the IDE can follow bundled declarations
+  // back to src/sandstone.ts (or src/variables/nbt/NBTs.ts for re-exports).
+  // Maps each exported symbol in the bundled .d.ts to its real declaration site
+  // in the source — TypeScript's compiler API finds both ends, even when names
+  // are destructured (which tsc would otherwise collapse into one combined
+  // `export declare const` declaration that loses per-name source maps).
+  // Source path is relative to the .d.ts.map file at dist/_internal/index.d.ts.map.
+  const map = await generateMainIndexMap(
+    join(bundleDir, 'index.d.ts'),
+    join(srcDir, 'sandstone.ts'),
+    '../../src/sandstone.ts',
+  )
+  await writeFile(join(bundleDir, 'index.d.ts.map'), map)
 }

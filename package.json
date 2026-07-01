@@ -81,7 +81,8 @@
   "types": "dist/exports/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "tsconfig.json"
   ],
   "exports": {
     ".": {
