@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.1.1](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.1) - 2026-07-01
+
+### Generate functional source maps and fix several types
+
+**Full Changelog**: [v1.1.0...v1.1.1](https://github.com/sandstone-mc/sandstone/compare/v1.1.0...v1.1.1)
+
+
 ## [v1.1.0](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.0) - 2026-06-30
 
 ### Minecraft 26.2
