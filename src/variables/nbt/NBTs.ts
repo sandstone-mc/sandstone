@@ -368,8 +368,8 @@ interface NBTInterface {
    *
    * @example
    *
-   * >>> NBT.stringify({ Invisible: NBT.byte(1) })
-   * '{ Invisible: 1b }'
+   * >>> NBT.stringify({ Invisible: true })
+   * '{ Invisible: true }'
    *
    * >>> NBT.stringify({ Rotation: NBT.float([ 90, 0 ]) })
    * '{ Rotation: [90f, 0f] }'
@@ -386,8 +386,8 @@ interface NBTInterface {
    *
    * @example
    *
-   * >>> NBT.parse(`{ Invisible: NBT.byte(1) }`)
-   * { Invisible: 1b }
+   * >>> NBT.parse(`{ Invisible: true }`)
+   * { Invisible: true }
    *
    * >>> const inv = NBT.parse(`[{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]`)
    * [{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]
@@ -404,8 +404,8 @@ interface NBTInterface {
    *   *
    * @example
    *
-   * >>> NBT`{ Invisible: NBT.byte(1) }`
-   * { Invisible: 1b }
+   * >>> NBT`{ Invisible: true }`
+   * { Invisible: true }
    *
    * >>> const inv = NBT`[{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]`
    * [{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]

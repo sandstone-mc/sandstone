@@ -285,23 +285,19 @@ export class Flow {
     executeSwitch(this.sandstoneCore, value, cases)
   }
 
-  /** Create a static value case for switch statements */
-  case(value: number, callback: () => any): CaseStatement<number>
-
-  /** Create a static value case for switch statements */
-  case(value: NBTObject, callback: () => any): CaseStatement<NBTObject>
-
-  /** Create a condition case for switch statements - checked after static cases fail */
-  case<SwitchValueType>(condition: ConditionCallback<SwitchValueType>, callback: () => any): CaseStatement<never, SwitchValueType>
-
-  case<SwitchValueType>(value: number | NBTObject | ConditionCallback<SwitchValueType>, callback: () => any) {
+  case<SwitchValueType extends DataPointClass | DataPointPickClass | Score>(value: (SwitchValueType extends Score ? number : NBTObject) | ConditionCallback<SwitchValueType>, callback: () => any) {
     if (typeof value === 'function') {
-      return new CaseStatement<never, SwitchValueType>([
+      return new CaseStatement<SwitchValueType extends Score ? number : NBTObject, SwitchValueType>([
         { type: 'condition', condition: value, callback },
       ])
     }
-    return new CaseStatement([
-      { type: 'static', value, callback },
+    return new CaseStatement<SwitchValueType extends Score ? number : NBTObject, SwitchValueType>([
+      {
+        type: 'static',
+        /* @ts-ignore */
+        value,
+        callback
+      },
     ])
   }
 
