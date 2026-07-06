@@ -18,7 +18,7 @@ export class TriggerClass<HANDLE extends TriggerHandler> {
     protected readonly callback: HANDLE,
     public readonly pollingEvery: number,
   ) {
-    this.objective = new ObjectiveClass(sandstoneCore.pack, name, 'dummy', undefined, { creator: 'sandstone' })
+    this.objective = new ObjectiveClass(sandstoneCore.pack, name, 'trigger', undefined, { creator: 'sandstone' })
 
     const { registerNewObjective, MCFunction, commands } = sandstoneCore.pack
 
@@ -32,13 +32,13 @@ export class TriggerClass<HANDLE extends TriggerHandler> {
     }
 
     sandstoneCore.checkTriggers[pollingEvery].push(() => {
-      commands.execute.as(`@a[scores={${name}=1..}]`).run(() => {
+      commands.execute.as(`@a[scores={${name}=1..}]`).at('@s').run(() => {
         const score = this.objective('@s')
 
         if (callback instanceof _RawMCFunctionClass || typeof callback === 'function') {
           callback()
         } else if (callback[0] === 'num') {
-          score.match(1, callback[1], callback[2])
+          score.match(1, callback[1], callback[2])()
         } else {
           callback[1](score)
         }

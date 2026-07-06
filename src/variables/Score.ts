@@ -675,7 +675,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   })
 
   match = (minimum: number, maximum: number, callback: (num: number) => any) => {
-    const { MCFunction, Macro } = this.sandstonePack
+    const { MCFunction, Macro, core } = this.sandstonePack
+    const { getCurrentMCFunctionOrThrow } = core
 
     if (maximum > 1000) {
       console.warn(
@@ -689,12 +690,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     // oxlint-disable-next-line no-this-alias
     const score = this
 
-    for (let i = minimum; i < maximum; i++) {
-      MCFunction(`__sandstone:score_match/${matcher}/${i}`, () => callback(i))
+    const parent = getCurrentMCFunctionOrThrow()
+
+    for (let i = minimum; i <= maximum; i++) {
+      MCFunction(`./score_match/${matcher}/${i}`, () => callback(i))
     }
 
-    return MCFunction(`__sandstone:score_match/${matcher}`, [score], () =>
-      Macro.returnCmd.run.functionCmd(Macro`__sandstone:score_match/${matcher}/${score}`),
+    return MCFunction(`./score_match/${matcher}`, [score], () =>
+      Macro.returnCmd.run.functionCmd(Macro`${parent.resource.name}/score_match/${matcher}/${score}`),
     )
   }
 
