@@ -42,7 +42,7 @@
     "magic-string": "^1.0.0",
     "oxlint": "^1.75.0",
     "source-map-js": "^1.2.1",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "directories": {
     "lib": "src"
