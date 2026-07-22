@@ -16,7 +16,7 @@
 
 import { readFile, writeFile } from 'fs/promises'
 import ts from 'typescript'
-import MagicString from 'magic-string'
+import { MagicString } from 'magic-string'
 import remapping from '@ampproject/remapping'
 
 interface HoistedItem {
