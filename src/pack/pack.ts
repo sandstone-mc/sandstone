@@ -1041,15 +1041,15 @@ export class SandstonePack {
   }
 
   /** Creates a resource in the datapack, path must include file extension. */
-  RawResource(path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
+  RawResource(path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>): CustomResourceClass
 
   /** Creates a resource in the given pack, path must include file extension. */
-  RawResource(pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
+  RawResource(pack: PackType, path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>): CustomResourceClass
 
   RawResource(
     ...args:
-      | [path: string, contents: string | Buffer | Promise<Buffer>]
-      | [pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>]
+      | [path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>]
+      | [pack: PackType, path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>]
   ) {
     const [core, CustomResource] = this.makeCustomResource
 
@@ -1071,7 +1071,7 @@ export class SandstonePack {
           })
         }
 
-        getValue = () => args[2] as string | Buffer | Promise<Buffer>
+        getValue = () => args[2] as string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>
       }
 
       return new RawResource()

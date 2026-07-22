@@ -1,5 +1,5 @@
 /** relativePath can have variables $worldName$ & $packName$ */
-export type handlerReadFile = ((relativePath: string) => Promise<string>) | ((relativePath: string, encoding: BufferEncoding) => Promise<Buffer | string>)
+export type handlerReadFile = ((relativePath: string) => Promise<string>) | ((relativePath: string, encoding: BufferEncoding) => Promise<ArrayBuffer | Buffer | string>)
 
 /** relativePath & contents can have variables $worldName$ & $packName$ */
 export type handlerWriteFile = (relativePath: string, contents: string) => Promise<void>

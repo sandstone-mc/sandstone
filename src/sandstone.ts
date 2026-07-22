@@ -516,6 +516,8 @@ type PackConfigs<PackType extends LiteralUnion<'datapack' | 'resourcepack'>> = R
   PackType extends 'datapack' ? DatapackConfig : PackType extends 'resourcepack' ? ResourcePackConfig : unknown
 >
 
+export type HandlerFile = string | ArrayBuffer | Buffer
+
 export interface SandstoneConfig {
   /**
    * The default namespace for the packs.
@@ -616,7 +618,7 @@ export interface SandstoneConfig {
     handle?: {
       path: RegExp
 
-      callback: (contents: string | Buffer | Promise<Buffer>) => Promise<Buffer>
+      callback: (contents: HandlerFile | Promise<HandlerFile>) => HandlerFile | Promise<HandlerFile>
     }[]
   }
 }

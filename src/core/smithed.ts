@@ -5,7 +5,7 @@ import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import { getSandstoneContext } from 'sandstone/context'
 import type { PackData } from 'sandstone/utils'
-import { fetch, safeWrite } from 'sandstone/utils'
+import { safeWrite } from 'sandstone/utils'
 import type { SandstoneCore } from './sandstoneCore'
 import { DataPackDependencies, ResourcePackDependencies } from 'sandstone/pack'
 import { SmithedDependencyClass } from './resources/dependency'
@@ -15,8 +15,8 @@ type Manifest = Record<string, string>
 export type Dependency = {
   version: string
   date: number
-  datapack: () => Promise<Buffer>
-  resourcepack?: (() => Promise<Buffer>) | false
+  datapack: () => Promise<ArrayBuffer | Buffer>
+  resourcepack?: (() => Promise<ArrayBuffer | Buffer>) | false
 }
 
 type LockFile = Record<string, { version: string; date: number; resourcepack: boolean }>
@@ -199,12 +199,12 @@ export class SmithedDependencyCache {
       let files: AdmZip.IZipEntry[] | undefined = zip.getEntries()
 
       await safeWrite(path.join(this.path, dependency, 'datapack.zip'), await new Promise((res) => {
-        files![0].getDataAsync((data) => res(data as Buffer))
+        files![0].getDataAsync((data) => res(data))
       }))
 
       if (hasResourcePack) {
         await safeWrite(path.join(this.path, dependency, 'resourcepack.zip'), await new Promise((res) => {
-          files![1].getDataAsync((data) => res(data as Buffer))
+          files![1].getDataAsync((data) => res(data))
         }))
       }
 

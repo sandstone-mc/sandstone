@@ -25,7 +25,7 @@ export type SoundEventArguments = {
   /**
    * The sound's buffer. Path string in `./resources` will be used. Defaults to `/resources/resourcepack/assets/(namespace)/sounds/(type)/(name)`.
    */
-  sound?: string | Promise<Buffer> | Buffer
+  sound?: string | ArrayBuffer | Buffer | Promise<ArrayBuffer | Buffer>
 
   /**
    * Whether to automatically add this to a sounds.json file. Defaults to false.
@@ -36,7 +36,7 @@ export type SoundEventArguments = {
 export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends ResourceClass<SoundEventNode<Type>> {
   static readonly resourceType = 'sound'
 
-  buffer?: Promise<Buffer> | Buffer
+  buffer?: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer
 
   constructor(
     core: SandstoneCore,

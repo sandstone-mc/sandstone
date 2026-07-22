@@ -4,22 +4,11 @@
 import type { Static } from '@sinclair/typebox'
 import { FormatRegistry, Type } from '@sinclair/typebox'
 import fs from 'fs-extra'
-import type FetchType from 'node-fetch'
-import type { Response } from 'node-fetch'
 import { coerce } from 'semver'
 import * as util from 'util'
 import type { MultipleEntitiesArgument } from './arguments/selector'
 import type { Node } from './core/nodes'
 import type { UUIDinNumber } from './variables/UUID'
-
-/* @ts-ignore */
-export const fetch: (input: URL | RequestInfo, init?: RequestInit | undefined) => Promise<Response> = Object.hasOwn(
-  globalThis,
-  'fetch',
-)
-  ? globalThis.fetch
-  : async (...args: Parameters<typeof FetchType>) =>
-    (await import('node-fetch')).default(...args) as unknown as Promise<Response>
 
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.

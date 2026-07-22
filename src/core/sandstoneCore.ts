@@ -127,18 +127,18 @@ export class SandstoneCore {
 
   async getExistingResource(relativePath: string): Promise<string>
 
-  async getExistingResource(relativePath: string, encoding: false): Promise<Buffer>
+  async getExistingResource(relativePath: string, encoding: false): Promise<ArrayBuffer | Buffer>
 
   async getExistingResource(relativePath: string, encoding: fs.EncodingOption): Promise<Buffer | string>
 
   async getExistingResource(resource: ResourceClass, encoding?: 'utf-8'): Promise<string>
 
-  async getExistingResource(resource: ResourceClass, encoding: false | fs.EncodingOption): Promise<Buffer>
+  async getExistingResource(resource: ResourceClass, encoding: false | fs.EncodingOption): Promise<ArrayBuffer | Buffer>
 
   async getExistingResource(
     pathOrResource: string | ResourceClass,
     encoding: false | fs.EncodingOption = 'utf-8',
-  ): Promise<Buffer | string> {
+  ): Promise<ArrayBuffer | Buffer | string> {
     if (typeof pathOrResource === 'string') {
       if (encoding === false) {
         return fs.readFile(pathOrResource)
@@ -171,13 +171,13 @@ export class SandstoneCore {
 
   async getVanillaResource(relativePath: string, text: true, type: 'client' | 'server'): Promise<string>
 
-  async getVanillaResource(relativePath: string, text: false, type: 'client' | 'server'): Promise<Buffer>
+  async getVanillaResource(relativePath: string, text: false, type: 'client' | 'server'): Promise<ArrayBuffer | Buffer>
 
   async getVanillaResource(
     relativePath: string,
     text = true,
     type: 'client' | 'server' = 'server',
-  ): Promise<string | Buffer> {
+  ): Promise<string | ArrayBuffer | Buffer> {
     return this.mcMetaCache.get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
   }
 

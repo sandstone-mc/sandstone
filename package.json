@@ -25,7 +25,6 @@
     "fs-extra": "^11.3.6",
     "lodash": "^4.18.1",
     "nearley": "^2.20.1",
-    "node-fetch": "^3.3.2",
     "prismarine-nbt": "^2.8.0",
     "semver": "^7.8.5"
   },

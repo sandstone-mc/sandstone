@@ -35,7 +35,7 @@ export type TextureArguments<Type extends TextureType> = {
   /**
    * The texture's buffer.
    */
-  texture?: Promise<Buffer> | Buffer
+  texture?: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer
 
   sprite?: boolean | string
 
