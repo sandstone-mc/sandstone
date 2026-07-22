@@ -261,16 +261,6 @@ type BlockDispatcherMap = {
   'minecraft:player_head': BlockPlayerHead,
   'player_wall_head': BlockPlayerWallHead,
   'minecraft:player_wall_head': BlockPlayerWallHead,
-  'poplar_hanging_sign': BlockPoplarHangingSign,
-  'minecraft:poplar_hanging_sign': BlockPoplarHangingSign,
-  'poplar_shelf': BlockPoplarShelf,
-  'minecraft:poplar_shelf': BlockPoplarShelf,
-  'poplar_sign': BlockPoplarSign,
-  'minecraft:poplar_sign': BlockPoplarSign,
-  'poplar_wall_hanging_sign': BlockPoplarWallHangingSign,
-  'minecraft:poplar_wall_hanging_sign': BlockPoplarWallHangingSign,
-  'poplar_wall_sign': BlockPoplarWallSign,
-  'minecraft:poplar_wall_sign': BlockPoplarWallSign,
   'potent_sulfur': BlockPotentSulfur,
   'minecraft:potent_sulfur': BlockPotentSulfur,
   'purple_banner': BlockPurpleBanner,
@@ -513,11 +503,6 @@ type BlockFallback = (
   | BlockPinkWallBanner
   | BlockPlayerHead
   | BlockPlayerWallHead
-  | BlockPoplarHangingSign
-  | BlockPoplarShelf
-  | BlockPoplarSign
-  | BlockPoplarWallHangingSign
-  | BlockPoplarWallSign
   | BlockPotentSulfur
   | BlockPurpleBanner
   | BlockPurpleShulkerBox
@@ -702,11 +687,6 @@ type BlockPinkShulkerBox = SymbolBlockEntity['shulker_box']
 type BlockPinkWallBanner = SymbolBlockEntity['banner']
 type BlockPlayerHead = SymbolBlockEntity['skull']
 type BlockPlayerWallHead = SymbolBlockEntity['skull']
-type BlockPoplarHangingSign = SymbolBlockEntity['hanging_sign']
-type BlockPoplarShelf = SymbolBlockEntity['shelf']
-type BlockPoplarSign = SymbolBlockEntity['sign']
-type BlockPoplarWallHangingSign = SymbolBlockEntity['hanging_sign']
-type BlockPoplarWallSign = SymbolBlockEntity['sign']
 type BlockPotentSulfur = SymbolBlockEntity['potent_sulfur']
 type BlockPurpleBanner = SymbolBlockEntity['banner']
 type BlockPurpleShulkerBox = SymbolBlockEntity['shulker_box']

@@ -1,15 +1,22 @@
-import type { LootConditionOf } from 'sandstone/arguments/generated/data/loot/condition.ts'
-import type { LootFunctionOf } from 'sandstone/arguments/generated/data/loot/function.ts'
+import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
+import type { LootFunction } from 'sandstone/arguments/generated/data/loot/function.ts'
+import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LootTableClass, NBTInt } from 'sandstone'
+import type { LootTableClass, NBTInt, NBTList } from 'sandstone'
 
 export type BlockEntityTarget = 'block_entity'
 
 export type CompositePoolEntry = ({
-  children: Array<LootPoolEntry>,
+  /**
+   * Value:
+   * List length range: 1..
+   */
+  children: NBTList<LootPoolEntry, {
+    leftExclusive: false,
+    min: 1,
+  }>,
 } & LootPoolEntryBase)
 
 export type DynamicDrops = ('contents' | 'sherds')
@@ -41,8 +48,6 @@ export type ItemPoolEntry = ({
 
 export type ItemStackTarget = 'tool'
 
-export type LootCondition = LootConditionOf<Registry['minecraft:loot_condition_type']>
-
 export type LootConditionType = (
   | 'alternative'
   | 'block_state_property'
@@ -61,7 +66,7 @@ export type LootConditionType = (
   | 'time_check'
   | 'weather_check')
 
-export type LootContextType = (
+export type LootContextParamSets = (
   | 'empty'
   | 'chest'
   | 'command'
@@ -88,7 +93,8 @@ export type LootContextType = (
   | 'block_interact'
   | 'entity_interact'
   | 'villager_trade'
-  | 'command_slot_source')
+  | 'command_slot_source'
+  | 'container_process')
 
 export type LootEntryType = (
   | 'alternatives'
@@ -99,8 +105,6 @@ export type LootEntryType = (
   | 'loot_table'
   | 'sequence'
   | 'tag')
-
-export type LootFunction = LootFunctionOf<Registry['minecraft:loot_function_type'], Registry['minecraft:loot_condition_type']>
 
 export type LootFunctionType = (
   | 'apply_bonus'
@@ -125,19 +129,20 @@ export type LootFunctionType = (
   | 'set_nbt'
   | 'set_stew_effect')
 
-export type LootPool = {
-  rolls: NumberProvider,
-  bonus_rolls?: NumberProvider,
+export type LootPool = ({
+  rolls: NumberProviderRef,
+  bonus_rolls?: NumberProviderRef,
   entries: Array<LootPoolEntry>,
+} & {
   functions?: Array<LootFunction>,
   conditions?: Array<LootCondition>,
-}
+})
 
 export type LootPoolEntry = NonNullable<({
-  [S in Extract<Registry['minecraft:loot_pool_entry_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:loot_pool_entry_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolLootPoolEntry ? SymbolLootPoolEntry[S] : RootNBT))
-}[Registry['minecraft:loot_pool_entry_type']])>
+}[Extract<Registry['minecraft:loot_pool_entry_type'], string>])>
 
 export type LootPoolEntryBase = {
   conditions?: Array<LootCondition>,
@@ -174,8 +179,9 @@ export type LootTable = {
    *  - EntityInteract(`entity_interact`)
    *  - VillagerTrade(`villager_trade`)
    *  - CommandSlotSource(`command_slot_source`)
+   *  - ContainerProcess(`container_process`)
    */
-  type?: (LootContextType | `minecraft:${LootContextType}`),
+  type?: (LootContextParamSets | `minecraft:${LootContextParamSets}`),
   pools?: Array<LootPool>,
   functions?: Array<LootFunction>,
   /**
@@ -186,13 +192,13 @@ export type LootTable = {
   random_sequence?: `${string}:${string}`,
 }
 
+export type LootTableListRef = Array<LootTable>
+
 export type LootTablePoolEntry = ({
   value: ((Registry['minecraft:loot_table'] | LootTableClass) | LootTable),
 } & SingletonPoolEntry)
 
-export type NonReferenceLootCondition = LootConditionOf<Registry['minecraft:loot_condition_type']>
-
-export type NonReferenceLootFunction = LootFunctionOf<Registry['minecraft:loot_function_type'], Registry['minecraft:loot_condition_type']>
+export type LootTableRef = LootTable
 
 export type SingletonPoolEntry = ({
   /**
@@ -212,8 +218,10 @@ export type SlotsPoolEntry = ({
 
 export type TagPoolEntry = ({
   name: (Registry['minecraft:tag/item']),
+} & {
   /**
-   * If `true`, drops a random item from the tag. If `false`, drops all items in the tag.
+   * If `true`, drops a random item from the tag. \
+   * If `false`, drops all items in the tag.
    */
   expand: boolean,
 } & SingletonPoolEntry)

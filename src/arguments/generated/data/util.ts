@@ -1,9 +1,8 @@
-import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot.ts'
-import type { NumericalEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
+import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, NBTFloat, NBTInt, ObjectiveClass, Score } from 'sandstone'
+import type { NBTFloat, NBTInt, Score } from 'sandstone'
 
 export type BinomialIntGenerator = {
   /**
@@ -25,17 +24,8 @@ export type BinomialIntGenerator = {
   }>,
 }
 
-export type BinomialNumberProvider = {
-  n: NumberProvider,
-  p: NumberProvider,
-}
-
 export type ConstantIntGenerator = {
   value: NBTInt,
-}
-
-export type ConstantNumberProvider = {
-  value: NBTFloat,
 }
 
 export type ContextNbtProvider = {
@@ -59,35 +49,6 @@ export type ContextScoreProvider = {
   target: EntityTarget,
 }
 
-export type EnchantmentLevelProvider = {
-  amount: LevelBasedValue,
-}
-
-export type EnvironmentAttributeNumberProvider = {
-  /**
-   * Value:
-   *
-   *  - CloudHeight(`visual/cloud_height`)
-   *  - FogStartDistance(`visual/fog_start_distance`)
-   *  - MoonAngle(`visual/moon_angle`)
-   *  - StarAngle(`visual/star_angle`)
-   *  - SunAngle(`visual/sun_angle`)
-   *  - WaterFogStartDistance(`visual/water_fog_start_distance`)
-   *  - CloudFogEndDistance(`visual/cloud_fog_end_distance`)
-   *  - FogEndDistance(`visual/fog_end_distance`)
-   *  - SkyFogEndDistance(`visual/sky_fog_end_distance`)
-   *  - WaterFogEndDistance(`visual/water_fog_end_distance`)
-   *  - SkyLightFactor(`visual/sky_light_factor`)
-   *  - StarBrightness(`visual/star_brightness`)
-   *  - MusicVolume(`audio/music_volume`)
-   *  - CatWakingUpGiftChance(`gameplay/cat_waking_up_gift_chance`)
-   *  - SurfaceSlimeSpawnChance(`gameplay/surface_slime_spawn_chance`)
-   *  - TurtleEggHatchChance(`gameplay/turtle_egg_hatch_chance`)
-   *  - SkyLightLevel(`gameplay/sky_light_level`)
-   */
-  attribute: NumericalEnvironmentAttribute,
-}
-
 export type FixedScoreProvider = {
   name: `${any}${string}` | Score,
 }
@@ -101,11 +62,11 @@ export type IntRange = (NBTInt | {
   /**
    * Clamps to an integer.
    */
-  min?: NumberProvider,
+  min?: NumberProviderRef,
   /**
    * Clamps to an integer.
    */
-  max?: NumberProvider,
+  max?: NumberProviderRef,
 })
 
 export type MinMaxBounds<T extends NBTObject> = (T | {
@@ -135,10 +96,10 @@ export type MoonPhase = (
 export type NbtContextTarget = (EntityTarget | BlockEntityTarget)
 
 export type NbtProvider = (NbtContextTarget | ({
-  [S in Extract<Registry['minecraft:loot_nbt_provider_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:loot_nbt_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolNbtProvider ? SymbolNbtProvider[S] : RootNBT))
-}[Registry['minecraft:loot_nbt_provider_type']]))
+}[Extract<Registry['minecraft:loot_nbt_provider_type'], string>]))
 
 export type NbtProviderSource = (
   | 'this'
@@ -150,16 +111,8 @@ export type NbtProviderSource = (
   | 'attacking_player'
   | 'block_entity')
 
-export type NumberProvider = (NBTFloat | ({
-  [S in Extract<Registry['minecraft:loot_number_provider_type'], string>]?: ({
-    type?: S,
-  } & (S extends undefined
-    ? SymbolNumberProvider<'%none'> :
-    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)))
-}[Registry['minecraft:loot_number_provider_type']]))
-
 export type RandomIntGenerator = (NBTInt | ({
-  [S in Extract<RandomIntGeneratorType, string>]?: ({
+  [S in Extract<Extract<RandomIntGeneratorType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -171,7 +124,7 @@ export type RandomIntGenerator = (NBTInt | ({
   } & (S extends undefined
     ? SymbolRandomIntGenerator<'%none'> :
     (S extends keyof SymbolRandomIntGenerator ? SymbolRandomIntGenerator[S] : RootNBT)))
-}[RandomIntGeneratorType]))
+}[Extract<RandomIntGeneratorType, string>]))
 
 export type RandomIntGeneratorType = ('uniform' | 'binomial' | 'constant')
 
@@ -179,12 +132,6 @@ export type RandomValueBounds = (NBTFloat | {
   min: NBTFloat,
   max: NBTFloat,
 })
-
-export type ScoreNumberProvider = {
-  target: ScoreProvider,
-  score: `${any}${string}` | ObjectiveClass,
-  scale?: NBTFloat,
-}
 
 /**
  * *either*
@@ -196,10 +143,10 @@ export type ScoreNumberProvider = {
  * *item 1*
  */
 export type ScoreProvider = (EntityTarget | ({
-  [S in Extract<Registry['minecraft:loot_score_provider_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:loot_score_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolScoreProvider ? SymbolScoreProvider[S] : RootNBT))
-}[Registry['minecraft:loot_score_provider_type']]))
+}[Extract<Registry['minecraft:loot_score_provider_type'], string>]))
 
 export type SoundEventRef = (Registry['minecraft:sound_event'] | {
   sound_id: (`${string}:${string}` | ''),
@@ -213,23 +160,9 @@ export type StorageNbtProvider = {
   source: `${string}:${string}`,
 }
 
-export type StorageNumberProvider = {
-  storage: `${string}:${string}`,
-  path: `${any}${string}` | DataPointClass,
-}
-
-export type SumNumberProvider = {
-  summands: Array<NumberProvider>,
-}
-
 export type UniformIntGenerator = {
   min?: NBTInt,
   max?: NBTInt,
-}
-
-export type UniformNumberProvider = {
-  min?: NumberProvider,
-  max?: NumberProvider,
 }
 
 export type WeightedSoundEvent = {
@@ -257,53 +190,6 @@ export type SymbolNbtProvider<CASE extends
   | '%unknown' = 'map'> = CASE extends 'map'
   ? NbtProviderDispatcherMap
   : CASE extends 'keys' ? NbtProviderKeys : CASE extends '%fallback' ? NbtProviderFallback : never
-type NumberProviderDispatcherMap = {
-  'binomial': NumberProviderBinomial,
-  'minecraft:binomial': NumberProviderBinomial,
-  'constant': NumberProviderConstant,
-  'minecraft:constant': NumberProviderConstant,
-  'enchantment_level': NumberProviderEnchantmentLevel,
-  'minecraft:enchantment_level': NumberProviderEnchantmentLevel,
-  'environment_attribute': NumberProviderEnvironmentAttribute,
-  'minecraft:environment_attribute': NumberProviderEnvironmentAttribute,
-  'score': NumberProviderScore,
-  'minecraft:score': NumberProviderScore,
-  'storage': NumberProviderStorage,
-  'minecraft:storage': NumberProviderStorage,
-  'sum': NumberProviderSum,
-  'minecraft:sum': NumberProviderSum,
-  'uniform': NumberProviderUniform,
-  'minecraft:uniform': NumberProviderUniform,
-}
-type NumberProviderKeys = keyof NumberProviderDispatcherMap
-type NumberProviderFallback = (
-  | NumberProviderBinomial
-  | NumberProviderConstant
-  | NumberProviderEnchantmentLevel
-  | NumberProviderEnvironmentAttribute
-  | NumberProviderScore
-  | NumberProviderStorage
-  | NumberProviderSum
-  | NumberProviderUniform)
-type NumberProviderNoneType = UniformNumberProvider
-type NumberProviderBinomial = BinomialNumberProvider
-type NumberProviderConstant = ConstantNumberProvider
-type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
-type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider
-type NumberProviderScore = ScoreNumberProvider
-type NumberProviderStorage = StorageNumberProvider
-type NumberProviderSum = SumNumberProvider
-type NumberProviderUniform = UniformNumberProvider
-export type SymbolNumberProvider<CASE extends
-  | 'map'
-  | 'keys'
-  | '%fallback'
-  | '%none'
-  | '%unknown' = 'map'> = CASE extends 'map'
-  ? NumberProviderDispatcherMap
-  : CASE extends 'keys'
-    ? NumberProviderKeys
-    : CASE extends '%fallback' ? NumberProviderFallback : CASE extends '%none' ? NumberProviderNoneType : never
 type RandomIntGeneratorDispatcherMap = {
   'binomial': RandomIntGeneratorBinomial,
   'minecraft:binomial': RandomIntGeneratorBinomial,

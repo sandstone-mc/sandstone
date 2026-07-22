@@ -1,4 +1,4 @@
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { TagClass, VillagerTradeClass } from 'sandstone'
 

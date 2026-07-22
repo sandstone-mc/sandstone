@@ -1,6 +1,6 @@
-import type { NonReferenceItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
-import type { NonReferencePredicate } from 'sandstone/arguments/generated/data/predicate.ts'
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemStackTemplate, TradeCost } from 'sandstone/arguments/generated/world/item.ts'
 import type { EnchantmentClass, TagClass } from 'sandstone'
@@ -26,7 +26,7 @@ export type VillagerTrade = {
    * Some modifiers can affect the price through the `additional_trade_cost` transient component. \
    * The `additional_trade_cost` component is not saved on the offered item.
    */
-  given_item_modifiers?: Array<NonReferenceItemModifier>,
+  given_item_modifiers?: Array<ItemModifier>,
   /**
    * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`. \
    * Clamps to a positive integer.
@@ -46,7 +46,7 @@ export type VillagerTrade = {
    * Check whether the trade should be offered by the merchant. \
    * Does **not** support the `reference` predicate.
    */
-  merchant_predicate?: NonReferencePredicate,
+  merchant_predicate?: Predicate,
   /**
    * If the offered enchanted book has the specified enchantments, the price will be affected by doubling the `additional_trade_cost` transient component.
    */

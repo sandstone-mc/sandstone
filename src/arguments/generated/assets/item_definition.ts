@@ -162,7 +162,7 @@ export type Compass = {
 export type CompassTarget = ('none' | 'spawn' | 'lodestone' | 'recovery')
 
 export type ComponentFlags = NonNullable<({
-  [S in Extract<Registry['minecraft:data_component_predicate_type'], string>]?: {
+  [S in Extract<Extract<Registry['minecraft:data_component_predicate_type'], string>, string>]?: {
     /**
      * The component predicate to check.
      */
@@ -174,7 +174,7 @@ export type ComponentFlags = NonNullable<({
       ? SymbolDataComponentPredicate[S]
       : SymbolDataComponentPredicate<'%unknown'>),
   }
-}[Registry['minecraft:data_component_predicate_type']])>
+}[Extract<Registry['minecraft:data_component_predicate_type'], string>])>
 
 export type ComponentStrings = (NonNullable<(({
   [S in Extract<keyof SymbolDataComponent, string>]?: ({
@@ -195,7 +195,7 @@ export type Composite = {
 }
 
 export type Condition = NonNullable<({
-  [S in Extract<ConditionalPropertyType, string>]?: ({
+  [S in Extract<Extract<ConditionalPropertyType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -220,7 +220,7 @@ export type Condition = NonNullable<({
   } & (S extends keyof SymbolConditionalItemProperty
     ? SymbolConditionalItemProperty[S]
     : SymbolConditionalItemProperty<'%unknown'>))
-}[ConditionalPropertyType])>
+}[Extract<ConditionalPropertyType, string>])>
 
 export type ConditionalPropertyType = (
   | 'broken'
@@ -483,7 +483,7 @@ export type ItemDefinition = {
 }
 
 export type ItemModel = NonNullable<({
-  [S in Extract<ItemModeltype, string>]?: ({
+  [S in Extract<Extract<ItemModeltype, string>, string>]?: ({
     /**
      * Value:
      *
@@ -498,7 +498,7 @@ export type ItemModel = NonNullable<({
      */
     type: (S | `minecraft:${S}`),
   } & (S extends keyof SymbolItemModel ? SymbolItemModel[S] : RootNBT))
-}[ItemModeltype])>
+}[Extract<ItemModeltype, string>])>
 
 export type ItemModeltype = (
   | 'bundle/selected_item'
@@ -530,6 +530,7 @@ export type KeybindDown = {
    *  - DebugDumpVersion(`key.debug.dumpVersion`)
    *  - DebugFocusPause(`key.debug.focusPause`)
    *  - DebugFpsCharts(`key.debug.fpsCharts`)
+   *  - DebugImprovedTransparency(`key.debug.improvedTransparency`)
    *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
    *  - DebugModifier(`key.debug.modifier`)
    *  - DebugNetworkCharts(`key.debug.networkCharts`)
@@ -614,7 +615,7 @@ export type Model = {
 }
 
 export type ModelTint = NonNullable<({
-  [S in Extract<TintSourceType, string>]?: ({
+  [S in Extract<Extract<TintSourceType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -629,7 +630,7 @@ export type ModelTint = NonNullable<({
      */
     type: (S | `minecraft:${S}`),
   } & (S extends keyof SymbolTintSource ? SymbolTintSource[S] : RootNBT))
-}[TintSourceType])>
+}[Extract<TintSourceType, string>])>
 
 export type NumericPropertyType = (
   | 'bundle/fullness'
@@ -651,7 +652,7 @@ export type PotionTint = {
 }
 
 export type RangeDispatch = NonNullable<({
-  [S in Extract<NumericPropertyType, string>]?: ({
+  [S in Extract<Extract<NumericPropertyType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -687,7 +688,7 @@ export type RangeDispatch = NonNullable<({
   } & (S extends keyof SymbolNumericItemProperty
     ? SymbolNumericItemProperty[S]
     : SymbolNumericItemProperty<'%unknown'>))
-}[NumericPropertyType])>
+}[Extract<NumericPropertyType, string>])>
 
 export type RangeDispatchEntry = {
   threshold: NBTFloat,
@@ -695,7 +696,7 @@ export type RangeDispatchEntry = {
 }
 
 export type Select = NonNullable<({
-  [S in Extract<SelectPropertyType, string>]?: ({
+  [S in Extract<Extract<SelectPropertyType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -719,7 +720,7 @@ export type Select = NonNullable<({
   } & (S extends keyof SymbolSelectItemProperty
     ? SymbolSelectItemProperty[S]
     : SymbolSelectItemProperty<'%unknown'>))
-}[SelectPropertyType])>
+}[Extract<SelectPropertyType, string>])>
 
 export type SelectCase<T extends NBTObject> = {
   when: (T | Array<T>),
@@ -766,7 +767,7 @@ export type Special = {
    * Renders a special hardcoded model.
    */
   model: ({
-    [S in Extract<SpecialModelType, string>]?: ({
+    [S in Extract<Extract<SpecialModelType, string>, string>]?: ({
       /**
        * Value:
        *
@@ -789,7 +790,7 @@ export type Special = {
        */
       type: (S | `minecraft:${S}`),
     } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : SymbolSpecialItemModel<'%unknown'>))
-  }[SpecialModelType]),
+  }[Extract<SpecialModelType, string>]),
   /**
    * Base model, providing transformations, particle texture and GUI light.
    */
@@ -798,7 +799,7 @@ export type Special = {
 }
 
 export type SpecialModel = NonNullable<({
-  [S in Extract<SpecialModelType, string>]?: ({
+  [S in Extract<Extract<SpecialModelType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -821,7 +822,7 @@ export type SpecialModel = NonNullable<({
      */
     type: (S | `minecraft:${S}`),
   } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : SymbolSpecialItemModel<'%unknown'>))
-}[SpecialModelType])>
+}[Extract<SpecialModelType, string>])>
 
 export type SpecialModelType = (
   | 'banner'

@@ -153,12 +153,12 @@ export type OldEntityEffect = {
 }
 
 export type Particle = NonNullable<({
-  [S in Extract<Registry['minecraft:particle_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:particle_type'], string>, string>]?: ({
     type: S,
   } & (S extends undefined
     ? SymbolParticle<'%none'> :
     (S extends keyof SymbolParticle ? SymbolParticle[S] : SymbolParticle<'%unknown'>)))
-}[Registry['minecraft:particle_type']])>
+}[Extract<Registry['minecraft:particle_type'], string>])>
 
 export type SafePositionSource = {
   type: 'block',

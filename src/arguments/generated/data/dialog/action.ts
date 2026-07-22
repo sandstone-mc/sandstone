@@ -6,13 +6,13 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type ClickAction = NonNullable<({
-  [S in Extract<Registry['minecraft:dialog_action_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:dialog_action_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolDialogAction ? SymbolDialogAction[S] : RootNBT))
-}[Registry['minecraft:dialog_action_type']])>
+}[Extract<Registry['minecraft:dialog_action_type'], string>])>
 
 export type DynamicCustomAction = NonNullable<({
-  [S in Extract<`${string}:${string}`, string>]?: {
+  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: {
     /**
      * ID of a custom action.
      * Has no functionality on vanilla servers.
@@ -25,7 +25,7 @@ export type DynamicCustomAction = NonNullable<({
       ? SymbolMcdocCustomDynamicEventAdditions[S]
       : SymbolMcdocCustomDynamicEventAdditions<'%unknown'>),
   }
-}[`${string}:${string}`])>
+}[Extract<`${string}:${string}`, string>])>
 
 export type DynamicRunCommand = {
   /**

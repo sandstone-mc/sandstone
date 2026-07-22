@@ -177,8 +177,6 @@ type EntityDispatcherMap = {
   'minecraft:blaze': EntityBlaze,
   'block_display': EntityBlockDisplay,
   'minecraft:block_display': EntityBlockDisplay,
-  'boat': EntityBoat,
-  'minecraft:boat': EntityBoat,
   'bogged': EntityBogged,
   'minecraft:bogged': EntityBogged,
   'breeze': EntityBreeze,
@@ -197,8 +195,6 @@ type EntityDispatcherMap = {
   'minecraft:cherry_boat': EntityCherryBoat,
   'cherry_chest_boat': EntityCherryChestBoat,
   'minecraft:cherry_chest_boat': EntityCherryChestBoat,
-  'chest_boat': EntityChestBoat,
-  'minecraft:chest_boat': EntityChestBoat,
   'chest_minecart': EntityChestMinecart,
   'minecraft:chest_minecart': EntityChestMinecart,
   'chicken': EntityChicken,
@@ -213,8 +209,6 @@ type EntityDispatcherMap = {
   'minecraft:cow': EntityCow,
   'creaking': EntityCreaking,
   'minecraft:creaking': EntityCreaking,
-  'creaking_transient': EntityCreakingTransient,
-  'minecraft:creaking_transient': EntityCreakingTransient,
   'creeper': EntityCreeper,
   'minecraft:creeper': EntityCreeper,
   'dark_oak_boat': EntityDarkOakBoat,
@@ -363,10 +357,6 @@ type EntityDispatcherMap = {
   'minecraft:player': EntityPlayer,
   'polar_bear': EntityPolarBear,
   'minecraft:polar_bear': EntityPolarBear,
-  'poplar_boat': EntityPoplarBoat,
-  'minecraft:poplar_boat': EntityPoplarBoat,
-  'popolar_chest_boat': EntityPopolarChestBoat,
-  'minecraft:popolar_chest_boat': EntityPopolarChestBoat,
   'potion': EntityPotion,
   'minecraft:potion': EntityPotion,
   'pufferfish': EntityPufferfish,
@@ -463,8 +453,6 @@ type EntityDispatcherMap = {
   'minecraft:zombie_horse': EntityZombieHorse,
   'zombie_nautilus': EntityZombieNautilus,
   'minecraft:zombie_nautilus': EntityZombieNautilus,
-  'zombie_pigman': EntityZombiePigman,
-  'minecraft:zombie_pigman': EntityZombiePigman,
   'zombie_villager': EntityZombieVillager,
   'minecraft:zombie_villager': EntityZombieVillager,
   'zombified_piglin': EntityZombifiedPiglin,
@@ -488,7 +476,6 @@ type EntityFallback = (
   | EntityBirchChestBoat
   | EntityBlaze
   | EntityBlockDisplay
-  | EntityBoat
   | EntityBogged
   | EntityBreeze
   | EntityBreezeWindCharge
@@ -498,7 +485,6 @@ type EntityFallback = (
   | EntityCaveSpider
   | EntityCherryBoat
   | EntityCherryChestBoat
-  | EntityChestBoat
   | EntityChestMinecart
   | EntityChicken
   | EntityCod
@@ -506,7 +492,6 @@ type EntityFallback = (
   | EntityCopperGolem
   | EntityCow
   | EntityCreaking
-  | EntityCreakingTransient
   | EntityCreeper
   | EntityDarkOakBoat
   | EntityDarkOakChestBoat
@@ -581,8 +566,6 @@ type EntityFallback = (
   | EntityPillager
   | EntityPlayer
   | EntityPolarBear
-  | EntityPoplarBoat
-  | EntityPopolarChestBoat
   | EntityPotion
   | EntityPufferfish
   | EntityRabbit
@@ -631,7 +614,6 @@ type EntityFallback = (
   | EntityZombie
   | EntityZombieHorse
   | EntityZombieNautilus
-  | EntityZombiePigman
   | EntityZombieVillager
   | EntityZombifiedPiglin)
 type EntityAcaciaBoat = Boat
@@ -650,7 +632,6 @@ type EntityBirchBoat = Boat
 type EntityBirchChestBoat = ChestBoat
 type EntityBlaze = MobBase
 type EntityBlockDisplay = BlockDisplay
-type EntityBoat = Boat
 type EntityBogged = Bogged
 type EntityBreeze = MobBase
 type EntityBreezeWindCharge = AcceleratingProjectileBase
@@ -660,7 +641,6 @@ type EntityCat = Cat
 type EntityCaveSpider = MobBase
 type EntityCherryBoat = Boat
 type EntityCherryChestBoat = ChestBoat
-type EntityChestBoat = ChestBoat
 type EntityChestMinecart = ChestMinecart
 type EntityChicken = Chicken
 type EntityCod = Fish
@@ -668,7 +648,6 @@ type EntityCommandBlockMinecart = CommandBlockMinecart
 type EntityCopperGolem = CopperGolem
 type EntityCow = Cow
 type EntityCreaking = Creaking
-type EntityCreakingTransient = Creaking
 type EntityCreeper = Creeper
 type EntityDarkOakBoat = Boat
 type EntityDarkOakChestBoat = ChestBoat
@@ -743,8 +722,6 @@ type EntityPiglinBrute = PiglinBase
 type EntityPillager = Pillager
 type EntityPlayer = Player
 type EntityPolarBear = PolarBear
-type EntityPoplarBoat = Boat
-type EntityPopolarChestBoat = ChestBoat
 type EntityPotion = Potion
 type EntityPufferfish = Pufferfish
 type EntityRabbit = Rabbit
@@ -793,7 +770,6 @@ type EntityZoglin = Zoglin
 type EntityZombie = Zombie
 type EntityZombieHorse = HorseBase
 type EntityZombieNautilus = Tamable
-type EntityZombiePigman = ZombiePigman
 type EntityZombieVillager = ZombieVillager
 type EntityZombifiedPiglin = ZombiePigman
 export type SymbolEntity<CASE extends

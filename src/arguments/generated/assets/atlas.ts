@@ -74,7 +74,7 @@ export type Single = {
 }
 
 export type SpriteSource = NonNullable<({
-  [S in Extract<SpriteSourceType, string>]?: ({
+  [S in Extract<Extract<SpriteSourceType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -86,7 +86,7 @@ export type SpriteSource = NonNullable<({
      */
     type: S,
   } & (S extends keyof SymbolSpriteSource ? SymbolSpriteSource[S] : RootNBT))
-}[SpriteSourceType])>
+}[Extract<SpriteSourceType, string>])>
 
 export type SpriteSourceType = ('single' | 'directory' | 'filter' | 'unstitch' | 'paletted_permutations')
 

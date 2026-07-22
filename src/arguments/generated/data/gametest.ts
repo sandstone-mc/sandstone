@@ -94,10 +94,10 @@ export type TestData = {
 }
 
 export type TestInstance = NonNullable<({
-  [S in Extract<Registry['minecraft:test_instance_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:test_instance_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolTestInstance ? SymbolTestInstance[S] : RootNBT))
-}[Registry['minecraft:test_instance_type']])>
+}[Extract<Registry['minecraft:test_instance_type'], string>])>
 type TestInstanceDispatcherMap = {
   'block_based': TestInstanceBlockBased,
   'minecraft:block_based': TestInstanceBlockBased,

@@ -75,7 +75,7 @@ export type RandomSpreadPlacement = {
 export type SpreadType = ('linear' | 'triangular')
 
 export type StructurePlacement = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/structure_placement'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/structure_placement'], string>, string>]?: ({
     type: S,
     /**
      * Value:
@@ -120,7 +120,7 @@ export type StructurePlacement = NonNullable<({
   } & (S extends keyof SymbolStructurePlacement
     ? SymbolStructurePlacement[S]
     : SymbolStructurePlacement<'%unknown'>))
-}[Registry['minecraft:worldgen/structure_placement']])>
+}[Extract<Registry['minecraft:worldgen/structure_placement'], string>])>
 
 export type StructureSet = {
   structures: Array<StructureSetElement>,

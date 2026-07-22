@@ -1,5 +1,4 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type Clamp = {
@@ -18,10 +17,10 @@ export type CubicSpline = (NBTFloat | {
 })
 
 export type DensityFunction = (NoiseRange | ({
-  [S in Extract<Registry['minecraft:worldgen/density_function_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/density_function_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof SymbolDensityFunction ? SymbolDensityFunction[S] : RootNBT))
-}[Registry['minecraft:worldgen/density_function_type']]))
+  } & (S extends keyof SymbolDensityFunction ? SymbolDensityFunction[S] : SymbolDensityFunction<'%unknown'>))
+}[Extract<Registry['minecraft:worldgen/density_function_type'], string>]))
 
 export type DensityFunctionRef = (Registry['minecraft:worldgen/density_function'] | DensityFunction)
 
@@ -64,6 +63,12 @@ export type InvervalSelect = {
     leftExclusive: false,
     min: 1,
   }>,
+}
+
+export type Lerp = {
+  alpha: DensityFunctionRef,
+  first: DensityFunctionRef,
+  second: DensityFunctionRef,
 }
 
 export type Noise = {
@@ -109,6 +114,14 @@ export type RangeChoice = {
 }
 
 export type RarityType = ('type_1' | 'type_2')
+
+export type Round = {
+  input: DensityFunctionRef,
+  /**
+   * Defaults to constant 1.
+   */
+  multiple?: DensityFunctionRef,
+}
 
 export type Shift = {
   argument: Registry['minecraft:worldgen/noise'],
@@ -242,8 +255,6 @@ type DensityFunctionDispatcherMap = {
   'minecraft:square': DensityFunctionSquare,
   'squeeze': DensityFunctionSqueeze,
   'minecraft:squeeze': DensityFunctionSqueeze,
-  'terrain_shaper_spline': DensityFunctionTerrainShaperSpline,
-  'minecraft:terrain_shaper_spline': DensityFunctionTerrainShaperSpline,
   'weird_scaled_sampler': DensityFunctionWeirdScaledSampler,
   'minecraft:weird_scaled_sampler': DensityFunctionWeirdScaledSampler,
   'y_clamped_gradient': DensityFunctionYClampedGradient,
@@ -281,9 +292,10 @@ type DensityFunctionFallback = (
   | DensityFunctionSpline
   | DensityFunctionSquare
   | DensityFunctionSqueeze
-  | DensityFunctionTerrainShaperSpline
   | DensityFunctionWeirdScaledSampler
-  | DensityFunctionYClampedGradient)
+  | DensityFunctionYClampedGradient
+  | DensityFunctionFallbackType)
+export type DensityFunctionFallbackType = Record<string, never>
 type DensityFunctionAbs = OneArgument
 type DensityFunctionAdd = TwoArguments
 type DensityFunctionBlendDensity = OneArgument
@@ -314,7 +326,6 @@ type DensityFunctionSlide = OneArgument
 type DensityFunctionSpline = Spline
 type DensityFunctionSquare = OneArgument
 type DensityFunctionSqueeze = OneArgument
-type DensityFunctionTerrainShaperSpline = TerrainShaperSpline
 type DensityFunctionWeirdScaledSampler = WeirdScaledSampler
 type DensityFunctionYClampedGradient = YClampedGradient
 export type SymbolDensityFunction<CASE extends
@@ -324,4 +335,8 @@ export type SymbolDensityFunction<CASE extends
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
   ? DensityFunctionDispatcherMap
-  : CASE extends 'keys' ? DensityFunctionKeys : CASE extends '%fallback' ? DensityFunctionFallback : never
+  : CASE extends 'keys'
+    ? DensityFunctionKeys
+    : CASE extends '%fallback'
+      ? DensityFunctionFallback
+      : CASE extends '%unknown' ? DensityFunctionFallbackType : never

@@ -23,7 +23,7 @@ export type Font = {
 export type FontOption = ('uniform' | 'jp')
 
 export type GlyphProvider = NonNullable<({
-  [S in Extract<GlyphProviderType, string>]?: ({
+  [S in Extract<Extract<GlyphProviderType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -39,7 +39,7 @@ export type GlyphProvider = NonNullable<({
       [Key in Extract<FontOption, string>]?: boolean
     }),
   } & (S extends keyof SymbolGlyphProvider ? SymbolGlyphProvider[S] : RootNBT))
-}[GlyphProviderType])>
+}[Extract<GlyphProviderType, string>])>
 
 export type GlyphProviderType = ('bitmap' | 'ttf' | 'space' | 'legacy_unicode' | 'unihex' | 'reference')
 
@@ -118,8 +118,6 @@ export type UnihexProvider = ({
 type GlyphProviderDispatcherMap = {
   'bitmap': GlyphProviderBitmap,
   'minecraft:bitmap': GlyphProviderBitmap,
-  'legacy_unicode': GlyphProviderLegacyUnicode,
-  'minecraft:legacy_unicode': GlyphProviderLegacyUnicode,
   'reference': GlyphProviderReference,
   'minecraft:reference': GlyphProviderReference,
   'space': GlyphProviderSpace,
@@ -132,13 +130,11 @@ type GlyphProviderDispatcherMap = {
 type GlyphProviderKeys = keyof GlyphProviderDispatcherMap
 type GlyphProviderFallback = (
   | GlyphProviderBitmap
-  | GlyphProviderLegacyUnicode
   | GlyphProviderReference
   | GlyphProviderSpace
   | GlyphProviderTtf
   | GlyphProviderUnihex)
 type GlyphProviderBitmap = BitmapProvider
-type GlyphProviderLegacyUnicode = LegacyUnicodeProvider
 type GlyphProviderReference = ReferenceProvider
 type GlyphProviderSpace = SpaceProvider
 type GlyphProviderTtf = TtfProvider

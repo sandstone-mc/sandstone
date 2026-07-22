@@ -34,10 +34,10 @@ export type ByCostWithDifficultyEnchantmentProvider = {
 }
 
 export type EnchantmentProvider = NonNullable<({
-  [S in Extract<Registry['minecraft:enchantment_provider_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:enchantment_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolEnchantmentProvider ? SymbolEnchantmentProvider[S] : RootNBT))
-}[Registry['minecraft:enchantment_provider_type']])>
+}[Extract<Registry['minecraft:enchantment_provider_type'], string>])>
 
 /**
  * *either*

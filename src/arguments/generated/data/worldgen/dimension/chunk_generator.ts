@@ -5,10 +5,10 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt, TagClass } from 'sandstone'
 
 export type ChunkGenerator = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/chunk_generator'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/chunk_generator'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolChunkGenerator ? SymbolChunkGenerator[S] : RootNBT))
-}[Registry['minecraft:worldgen/chunk_generator']])>
+}[Extract<Registry['minecraft:worldgen/chunk_generator'], string>])>
 
 export type Flat = {
   settings: FlatGeneratorSettings,

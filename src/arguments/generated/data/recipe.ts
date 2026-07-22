@@ -1,9 +1,22 @@
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
+import type { PotionsPredicate } from 'sandstone/arguments/generated/world/component/predicate.ts'
 import type { ItemStack, ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { CRAFTING_INGREDIENT, PatternKeys, StringSmallerThan4 } from 'sandstone/arguments'
-import type { NBTFloat, NBTInt, NBTList, TagClass, TrimPatternClass } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList, RecipeClass, TagClass, TrimPatternClass } from 'sandstone'
+
+export type Brewing = {
+  /**
+   * The original potion.
+   */
+  input: PotionIngredient,
+  /**
+   * The ingredient.
+   */
+  reagent: PotionIngredient,
+  output: ItemStackTemplate,
+}
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
 
@@ -353,11 +366,20 @@ export type OptionalSmithingIngredients = {
   template?: Ingredient,
 }
 
+export type PotionIngredient = {
+  item: Ingredient,
+  potion_contents?: PotionsPredicate,
+}
+
 export type Recipe = NonNullable<({
-  [S in Extract<Registry['minecraft:recipe_serializer'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:recipe_serializer'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : SymbolRecipeSerializer<'%unknown'>))
-}[Registry['minecraft:recipe_serializer']])>
+}[Extract<Registry['minecraft:recipe_serializer'], string>])>
+
+export type RecipeListRef = ((
+  | Registry['minecraft:recipe'] | `#${string}:${string}` | TagClass<'recipe'> | RecipeClass)
+  | Array<(Registry['minecraft:recipe'] | RecipeClass)>)
 
 export type RequiredSmithingIngredients = {
   /**
@@ -482,8 +504,6 @@ type RecipeSerializerDispatcherMap = {
   'minecraft:crafting_transmute': RecipeSerializerCraftingTransmute,
   'smelting': RecipeSerializerSmelting,
   'minecraft:smelting': RecipeSerializerSmelting,
-  'smithing': RecipeSerializerSmithing,
-  'minecraft:smithing': RecipeSerializerSmithing,
   'smithing_transform': RecipeSerializerSmithingTransform,
   'minecraft:smithing_transform': RecipeSerializerSmithingTransform,
   'smithing_trim': RecipeSerializerSmithingTrim,
@@ -511,7 +531,6 @@ type RecipeSerializerFallback = (
   | RecipeSerializerCraftingSpecialShielddecoration
   | RecipeSerializerCraftingTransmute
   | RecipeSerializerSmelting
-  | RecipeSerializerSmithing
   | RecipeSerializerSmithingTransform
   | RecipeSerializerSmithingTrim
   | RecipeSerializerSmoking
@@ -534,7 +553,6 @@ type RecipeSerializerCraftingSpecialMapextending = CraftingSpecialMapExtending
 type RecipeSerializerCraftingSpecialShielddecoration = CraftingSpecialShieldDecoration
 type RecipeSerializerCraftingTransmute = CraftingTransmute
 type RecipeSerializerSmelting = Smelting
-type RecipeSerializerSmithing = Smithing
 type RecipeSerializerSmithingTransform = SmithingTransform
 type RecipeSerializerSmithingTrim = SmithingTrim
 type RecipeSerializerSmoking = Smelting

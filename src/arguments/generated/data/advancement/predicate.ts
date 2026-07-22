@@ -186,17 +186,17 @@ export type EntityFlagsPredicate = {
   is_fall_flying?: boolean,
 }
 
-export type EntityPredicate = EntitySubPredicateMap
+export type EntityPredicate = (OldEntityPredicate | EntitySubPredicateMap)
 
 export type EntitySlotsPredicate = ({
   [Key in Extract<LiteralUnion<ENTITY_SLOTS>, string>]?: ItemPredicate
 })
 
 export type EntitySubPredicate = NonNullable<({
-  [S in Extract<Registry['minecraft:entity_sub_predicate_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:entity_sub_predicate_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolEntitySubPredicate ? SymbolEntitySubPredicate[S] : RootNBT))
-}[Registry['minecraft:entity_sub_predicate_type']])>
+}[Extract<Registry['minecraft:entity_sub_predicate_type'], string>])>
 
 export type EntitySubPredicateMap = ({
   [Key in Extract<Registry['minecraft:entity_sub_predicate_type'], string>]?: (Key extends keyof SymbolEntitySubPredicate
@@ -392,6 +392,50 @@ export type MovementPredicate = {
   fall_distance?: MinMaxBounds<NBTFloat>,
 }
 
+export type OldEntityPredicate = NonNullable<({
+  [S in Extract<Extract<EntityTypePredicate, string>, string>]?: {
+    type?: S,
+    type_specific?: EntitySubPredicate,
+    team?: `${any}${string}`,
+    nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT)),
+    location?: LocationPredicate,
+    distance?: DistancePredicate,
+    flags?: EntityFlagsPredicate,
+    equipment?: EntityEquipmentPredicate,
+    vehicle?: EntityPredicate,
+    passenger?: EntityPredicate,
+    stepping_on?: LocationPredicate,
+    /**
+     * Entity that a mob's AI/aggro is targeting.
+     */
+    targeted_entity?: EntityPredicate,
+    effects?: EntityEffectsPredicate,
+    slots?: EntitySlotsPredicate,
+    movement?: MovementPredicate,
+    /**
+     * True every `n` ticks of an entity's lifetime.
+     *
+     * Value:
+     * Range: 1..
+     */
+    periodic_tick?: NBTInt<{
+      min: 1,
+    }>,
+    /**
+     * Whether the block at most 0.5 blocks below the entity is present which can affect its movement.
+     */
+    movement_affected_by?: LocationPredicate,
+    /**
+     * Match exact data component values on the entity.
+     */
+    components?: DataComponentExactPredicate,
+    /**
+     * Test data component values on the entity.
+     */
+    predicates?: DataComponentPredicate,
+  }
+}[Extract<EntityTypePredicate, string>])>
+
 export type PaintingPredicate = {
   variant: ((
         | Registry['minecraft:painting_variant']
@@ -543,12 +587,12 @@ export type SpecificType = (
   | 'villager')
 
 export type StatisticPredicate = NonNullable<({
-  [S in Extract<Registry['minecraft:stat_type'], string>]?: {
+  [S in Extract<Extract<Registry['minecraft:stat_type'], string>, string>]?: {
     type: S,
     stat: (S extends keyof SymbolStatisticType ? SymbolStatisticType[S] : SymbolStatisticType<'%unknown'>),
     value: MinMaxBounds<NBTInt>,
   }
-}[Registry['minecraft:stat_type']])>
+}[Extract<Registry['minecraft:stat_type'], string>])>
 
 export type TropicalFishPredicate = {
   /**
@@ -580,12 +624,6 @@ export type WolfPredicate = {
       | Array<(Registry['minecraft:wolf_variant'] | VariantClass<'wolf'>)>),
 }
 type EntitySubPredicateDispatcherMap = {
-  'axolotl': EntitySubPredicateAxolotl,
-  'minecraft:axolotl': EntitySubPredicateAxolotl,
-  'boat': EntitySubPredicateBoat,
-  'minecraft:boat': EntitySubPredicateBoat,
-  'cat': EntitySubPredicateCat,
-  'minecraft:cat': EntitySubPredicateCat,
   'components': EntitySubPredicateComponents,
   'minecraft:components': EntitySubPredicateComponents,
   'distance': EntitySubPredicateDistance,
@@ -602,30 +640,16 @@ type EntitySubPredicateDispatcherMap = {
   'minecraft:fishing_hook': EntitySubPredicateFishingHook,
   'flags': EntitySubPredicateFlags,
   'minecraft:flags': EntitySubPredicateFlags,
-  'fox': EntitySubPredicateFox,
-  'minecraft:fox': EntitySubPredicateFox,
-  'frog': EntitySubPredicateFrog,
-  'minecraft:frog': EntitySubPredicateFrog,
-  'horse': EntitySubPredicateHorse,
-  'minecraft:horse': EntitySubPredicateHorse,
   'lightning': EntitySubPredicateLightning,
   'minecraft:lightning': EntitySubPredicateLightning,
-  'llama': EntitySubPredicateLlama,
-  'minecraft:llama': EntitySubPredicateLlama,
   'location': EntitySubPredicateLocation,
   'minecraft:location': EntitySubPredicateLocation,
-  'mooshroom': EntitySubPredicateMooshroom,
-  'minecraft:mooshroom': EntitySubPredicateMooshroom,
   'movement': EntitySubPredicateMovement,
   'minecraft:movement': EntitySubPredicateMovement,
   'movement_affected_by': EntitySubPredicateMovementAffectedBy,
   'minecraft:movement_affected_by': EntitySubPredicateMovementAffectedBy,
   'nbt': EntitySubPredicateNbt,
   'minecraft:nbt': EntitySubPredicateNbt,
-  'painting': EntitySubPredicatePainting,
-  'minecraft:painting': EntitySubPredicatePainting,
-  'parrot': EntitySubPredicateParrot,
-  'minecraft:parrot': EntitySubPredicateParrot,
   'passenger': EntitySubPredicatePassenger,
   'minecraft:passenger': EntitySubPredicatePassenger,
   'periodic_tick': EntitySubPredicatePeriodicTick,
@@ -634,12 +658,8 @@ type EntitySubPredicateDispatcherMap = {
   'minecraft:player': EntitySubPredicatePlayer,
   'predicates': EntitySubPredicatePredicates,
   'minecraft:predicates': EntitySubPredicatePredicates,
-  'rabbit': EntitySubPredicateRabbit,
-  'minecraft:rabbit': EntitySubPredicateRabbit,
   'raider': EntitySubPredicateRaider,
   'minecraft:raider': EntitySubPredicateRaider,
-  'salmon': EntitySubPredicateSalmon,
-  'minecraft:salmon': EntitySubPredicateSalmon,
   'sheep': EntitySubPredicateSheep,
   'minecraft:sheep': EntitySubPredicateSheep,
   'slime': EntitySubPredicateSlime,
@@ -652,8 +672,6 @@ type EntitySubPredicateDispatcherMap = {
   'minecraft:targeted_entity': EntitySubPredicateTargetedEntity,
   'team': EntitySubPredicateTeam,
   'minecraft:team': EntitySubPredicateTeam,
-  'tropical_fish': EntitySubPredicateTropicalFish,
-  'minecraft:tropical_fish': EntitySubPredicateTropicalFish,
   'type_specific/cube_mob': EntitySubPredicateTypeSpecificCubeMob,
   'minecraft:type_specific/cube_mob': EntitySubPredicateTypeSpecificCubeMob,
   'type_specific/fishing_hook': EntitySubPredicateTypeSpecificFishingHook,
@@ -668,16 +686,9 @@ type EntitySubPredicateDispatcherMap = {
   'minecraft:type_specific/sheep': EntitySubPredicateTypeSpecificSheep,
   'vehicle': EntitySubPredicateVehicle,
   'minecraft:vehicle': EntitySubPredicateVehicle,
-  'villager': EntitySubPredicateVillager,
-  'minecraft:villager': EntitySubPredicateVillager,
-  'wolf': EntitySubPredicateWolf,
-  'minecraft:wolf': EntitySubPredicateWolf,
 }
 type EntitySubPredicateKeys = keyof EntitySubPredicateDispatcherMap
 type EntitySubPredicateFallback = (
-  | EntitySubPredicateAxolotl
-  | EntitySubPredicateBoat
-  | EntitySubPredicateCat
   | EntitySubPredicateComponents
   | EntitySubPredicateDistance
   | EntitySubPredicateEffects
@@ -686,44 +697,29 @@ type EntitySubPredicateFallback = (
   | EntitySubPredicateEquipment
   | EntitySubPredicateFishingHook
   | EntitySubPredicateFlags
-  | EntitySubPredicateFox
-  | EntitySubPredicateFrog
-  | EntitySubPredicateHorse
   | EntitySubPredicateLightning
-  | EntitySubPredicateLlama
   | EntitySubPredicateLocation
-  | EntitySubPredicateMooshroom
   | EntitySubPredicateMovement
   | EntitySubPredicateMovementAffectedBy
   | EntitySubPredicateNbt
-  | EntitySubPredicatePainting
-  | EntitySubPredicateParrot
   | EntitySubPredicatePassenger
   | EntitySubPredicatePeriodicTick
   | EntitySubPredicatePlayer
   | EntitySubPredicatePredicates
-  | EntitySubPredicateRabbit
   | EntitySubPredicateRaider
-  | EntitySubPredicateSalmon
   | EntitySubPredicateSheep
   | EntitySubPredicateSlime
   | EntitySubPredicateSlots
   | EntitySubPredicateSteppingOn
   | EntitySubPredicateTargetedEntity
   | EntitySubPredicateTeam
-  | EntitySubPredicateTropicalFish
   | EntitySubPredicateTypeSpecificCubeMob
   | EntitySubPredicateTypeSpecificFishingHook
   | EntitySubPredicateTypeSpecificLightning
   | EntitySubPredicateTypeSpecificPlayer
   | EntitySubPredicateTypeSpecificRaider
   | EntitySubPredicateTypeSpecificSheep
-  | EntitySubPredicateVehicle
-  | EntitySubPredicateVillager
-  | EntitySubPredicateWolf)
-type EntitySubPredicateAxolotl = AxolotlPredicate
-type EntitySubPredicateBoat = BoatPredicate
-type EntitySubPredicateCat = CatPredicate
+  | EntitySubPredicateVehicle)
 type EntitySubPredicateComponents = DataComponentExactPredicate
 type EntitySubPredicateDistance = DistancePredicate
 type EntitySubPredicateEffects = EntityEffectsPredicate
@@ -732,34 +728,24 @@ type EntitySubPredicateEntityType = EntityTypePredicate
 type EntitySubPredicateEquipment = EntityEquipmentPredicate
 type EntitySubPredicateFishingHook = FishingHookPredicate
 type EntitySubPredicateFlags = EntityFlagsPredicate
-type EntitySubPredicateFox = FoxPredicate
-type EntitySubPredicateFrog = FrogPredicate
-type EntitySubPredicateHorse = HorsePredicate
 type EntitySubPredicateLightning = LightningBoltPredicate
-type EntitySubPredicateLlama = LlamaPredicate
 type EntitySubPredicateLocation = LocationPredicate
-type EntitySubPredicateMooshroom = MooshroomPredicate
 type EntitySubPredicateMovement = MovementPredicate
 type EntitySubPredicateMovementAffectedBy = LocationPredicate
 type EntitySubPredicateNbt = ((`${any}${string}` | NBTClass) | SymbolEntity<'%fallback'>)
-type EntitySubPredicatePainting = PaintingPredicate
-type EntitySubPredicateParrot = ParrotPredicate
 type EntitySubPredicatePassenger = EntityPredicate
 type EntitySubPredicatePeriodicTick = NBTInt<{
   min: 1,
 }>
 type EntitySubPredicatePlayer = PlayerPredicate
 type EntitySubPredicatePredicates = DataComponentPredicate
-type EntitySubPredicateRabbit = RabbitPredicate
 type EntitySubPredicateRaider = RaiderPredicate
-type EntitySubPredicateSalmon = SalmonPredicate
 type EntitySubPredicateSheep = SheepPredicate
 type EntitySubPredicateSlime = SlimePredicate
 type EntitySubPredicateSlots = EntitySlotsPredicate
 type EntitySubPredicateSteppingOn = LocationPredicate
 type EntitySubPredicateTargetedEntity = EntityPredicate
 type EntitySubPredicateTeam = `${any}${string}`
-type EntitySubPredicateTropicalFish = TropicalFishPredicate
 type EntitySubPredicateTypeSpecificCubeMob = SlimePredicate
 type EntitySubPredicateTypeSpecificFishingHook = FishingHookPredicate
 type EntitySubPredicateTypeSpecificLightning = LightningBoltPredicate
@@ -767,8 +753,6 @@ type EntitySubPredicateTypeSpecificPlayer = PlayerPredicate
 type EntitySubPredicateTypeSpecificRaider = RaiderPredicate
 type EntitySubPredicateTypeSpecificSheep = SheepPredicate
 type EntitySubPredicateVehicle = EntityPredicate
-type EntitySubPredicateVillager = VillagerPredicate
-type EntitySubPredicateWolf = WolfPredicate
 export type SymbolEntitySubPredicate<CASE extends
   | 'map'
   | 'keys'

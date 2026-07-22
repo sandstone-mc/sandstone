@@ -85,7 +85,8 @@ export type DimensionType = {
    * Defining what blocks keep fire infinitely burning.
    */
   infiniburn: ((
-      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
   /**
    * The minimum height in which blocks can exist.

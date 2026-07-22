@@ -2,24 +2,26 @@ import type {
   DamagePredicate,
   DamageSourcePredicate,
   DistancePredicate,
+  EntityEffectsPredicate,
   EntityPredicate,
   ItemPredicate,
   LocationPredicate,
-  MobEffectPredicate,
 } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
-import type { LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
+import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { LootTableClass, NBTFloat, NBTInt, NBTList, RecipeClass } from 'sandstone'
 
+export type AdvancementPredicateRef = Array<LootCondition>
+
 export type AllayDropItemOnBlock = (TriggerBase & {
-  location?: Array<LootCondition>,
+  location?: AdvancementPredicateRef,
 })
 
 export type AnyBlockUse = (TriggerBase & {
-  location?: Array<LootCondition>,
+  location?: AdvancementPredicateRef,
 })
 
 export type BeeNestDestroyed = (TriggerBase & {
@@ -53,7 +55,7 @@ export type ChanneledLightning = (TriggerBase & {
   victims?: Array<CompositeEntity>,
 })
 
-export type CompositeEntity = (EntityPredicate | Array<LootCondition>)
+export type CompositeEntity = (EntityPredicate | AdvancementPredicateRef)
 
 export type Conditions<C extends NBTObject> = {
   conditions?: C,
@@ -79,13 +81,11 @@ export type DefaultBlockUse = (TriggerBase & {
   /**
    * The location of the block.
    */
-  location?: Array<LootCondition>,
+  location?: AdvancementPredicateRef,
 })
 
 export type EffectsChanged = (TriggerBase & {
-  effects?: ({
-    [Key in Extract<Registry['minecraft:mob_effect'], string>]?: MobEffectPredicate
-  }),
+  effects?: EntityEffectsPredicate,
   source?: CompositeEntity,
 })
 
@@ -95,13 +95,13 @@ export type EnchantedItem = (TriggerBase & {
 })
 
 export type EnterBlock = NonNullable<({
-  [S in Extract<Registry['minecraft:block'], string>]?: (TriggerBase & {
+  [S in Extract<Extract<Registry['minecraft:block'], string>, string>]?: (TriggerBase & {
     block?: S,
     state?: (S extends undefined
       ? SymbolMcdocBlockStates<'%none'> :
       (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>)),
   })
-}[Registry['minecraft:block']])>
+}[Extract<Registry['minecraft:block'], string>])>
 
 export type EntityHurtPlayer = (TriggerBase & {
   damage?: DamagePredicate,
@@ -196,7 +196,7 @@ export type ItemDurabilityChanged = (TriggerBase & {
 })
 
 export type ItemUsedOnBlock = (TriggerBase & {
-  location?: Array<LootCondition>,
+  location?: AdvancementPredicateRef,
 })
 
 export type KilledByArrow = (TriggerBase & {
@@ -234,8 +234,6 @@ export type LightningStrike = (TriggerBase & {
   bystander?: CompositeEntity,
 })
 
-export type Location = TriggerBase
-
 export type NetherTravel = (TriggerBase & {
   /**
    * Where in the Overworld the player was when they travelled to the Nether.
@@ -251,7 +249,7 @@ export type PlacedBlock = (TriggerBase & {
   /**
    * Where the block was placed.
    */
-  location?: Array<LootCondition>,
+  location?: AdvancementPredicateRef,
 })
 
 export type PlayerGeneratesContainerLoot = (TriggerBase & {
@@ -272,6 +270,8 @@ export type PlayerKilledEntity = (TriggerBase & {
   entity?: CompositeEntity,
   killing_blow?: DamageSourcePredicate,
 })
+
+export type PlayerTrigger = TriggerBase
 
 export type RecipeCrafted = (TriggerBase & {
   recipe_id: (Registry['minecraft:recipe'] | RecipeClass),
@@ -438,8 +438,6 @@ type TriggerDispatcherMap = {
   'minecraft:kill_mob_near_sculk_catalyst': TriggerKillMobNearSculkCatalyst,
   'killed_by_arrow': TriggerKilledByArrow,
   'minecraft:killed_by_arrow': TriggerKilledByArrow,
-  'killed_by_crossbow': TriggerKilledByCrossbow,
-  'minecraft:killed_by_crossbow': TriggerKilledByCrossbow,
   'levitation': TriggerLevitation,
   'minecraft:levitation': TriggerLevitation,
   'lightning_strike': TriggerLightningStrike,
@@ -466,8 +464,6 @@ type TriggerDispatcherMap = {
   'minecraft:recipe_unlocked': TriggerRecipeUnlocked,
   'ride_entity_in_lava': TriggerRideEntityInLava,
   'minecraft:ride_entity_in_lava': TriggerRideEntityInLava,
-  'safely_harvest_honey': TriggerSafelyHarvestHoney,
-  'minecraft:safely_harvest_honey': TriggerSafelyHarvestHoney,
   'shot_crossbow': TriggerShotCrossbow,
   'minecraft:shot_crossbow': TriggerShotCrossbow,
   'slept_in_bed': TriggerSleptInBed,
@@ -532,7 +528,6 @@ type TriggerFallback = (
   | TriggerItemUsedOnBlock
   | TriggerKillMobNearSculkCatalyst
   | TriggerKilledByArrow
-  | TriggerKilledByCrossbow
   | TriggerLevitation
   | TriggerLightningStrike
   | TriggerLocation
@@ -546,7 +541,6 @@ type TriggerFallback = (
   | TriggerRecipeCrafted
   | TriggerRecipeUnlocked
   | TriggerRideEntityInLava
-  | TriggerSafelyHarvestHoney
   | TriggerShotCrossbow
   | TriggerSleptInBed
   | TriggerSlideDownBlock
@@ -565,7 +559,7 @@ type TriggerFallback = (
   | TriggerVoluntaryExile)
 type TriggerAllayDropItemOnBlock = Conditions<AllayDropItemOnBlock>
 type TriggerAnyBlockUse = Conditions<AnyBlockUse>
-type TriggerAvoidVibration = Conditions<Location>
+type TriggerAvoidVibration = Conditions<PlayerTrigger>
 type TriggerBeeNestDestroyed = Conditions<BeeNestDestroyed>
 type TriggerBredAnimals = Conditions<BredAnimals>
 type TriggerBrewedPotion = Conditions<BrewedPotion>
@@ -585,17 +579,16 @@ type TriggerFallAfterExplosion = Conditions<FallAfterExplosion>
 type TriggerFallFromHeight = Conditions<FallFromHeight>
 type TriggerFilledBucket = Conditions<FilledBucket>
 type TriggerFishingRodHooked = Conditions<FishingRodHooked>
-type TriggerHeroOfTheVillage = Conditions<Location>
+type TriggerHeroOfTheVillage = Conditions<PlayerTrigger>
 type TriggerImpossible = Conditions<TriggerBase>
 type TriggerInventoryChanged = Conditions<InventoryChanged>
 type TriggerItemDurabilityChanged = Conditions<ItemDurabilityChanged>
 type TriggerItemUsedOnBlock = Conditions<ItemUsedOnBlock>
 type TriggerKillMobNearSculkCatalyst = Conditions<KillMobNearSculkCatalyst>
 type TriggerKilledByArrow = Conditions<KilledByArrow>
-type TriggerKilledByCrossbow = Conditions<KilledByCrossbow>
 type TriggerLevitation = Conditions<Levitation>
 type TriggerLightningStrike = Conditions<LightningStrike>
-type TriggerLocation = Conditions<Location>
+type TriggerLocation = Conditions<PlayerTrigger>
 type TriggerNetherTravel = Conditions<NetherTravel>
 type TriggerPlacedBlock = Conditions<PlacedBlock>
 type TriggerPlayerGeneratesContainerLoot = RequiredConditions<PlayerGeneratesContainerLoot>
@@ -606,9 +599,8 @@ type TriggerPlayerShearedEquipment = Conditions<PlayerInteract>
 type TriggerRecipeCrafted = RequiredConditions<RecipeCrafted>
 type TriggerRecipeUnlocked = RequiredConditions<RecipeUnlocked>
 type TriggerRideEntityInLava = Conditions<RideEntityInLava>
-type TriggerSafelyHarvestHoney = Conditions<SafelyHarvestHoney>
 type TriggerShotCrossbow = Conditions<ShotCrossbow>
-type TriggerSleptInBed = Conditions<Location>
+type TriggerSleptInBed = Conditions<PlayerTrigger>
 type TriggerSlideDownBlock = Conditions<SlideDownBlock>
 type TriggerSpearMobs = Conditions<SpearMobs>
 type TriggerStartedRiding = Conditions<TriggerBase>
@@ -622,7 +614,7 @@ type TriggerUsedEnderEye = Conditions<UsedEnderEye>
 type TriggerUsedTotem = Conditions<UsedTotem>
 type TriggerUsingItem = Conditions<UsingItem>
 type TriggerVillagerTrade = Conditions<VillagerTrade>
-type TriggerVoluntaryExile = Conditions<Location>
+type TriggerVoluntaryExile = Conditions<PlayerTrigger>
 export type SymbolTrigger<CASE extends
   | 'map'
   | 'keys'

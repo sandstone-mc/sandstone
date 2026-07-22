@@ -27,10 +27,10 @@ export type SoundVariant<T extends NBTObject> = {
 }
 
 export type SpawnCondition = NonNullable<({
-  [S in Extract<Registry['minecraft:spawn_condition_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:spawn_condition_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolSpawnCondition ? SymbolSpawnCondition[S] : RootNBT))
-}[Registry['minecraft:spawn_condition_type']])>
+}[Extract<Registry['minecraft:spawn_condition_type'], string>])>
 
 export type SpawnPrioritySelector = {
   /**

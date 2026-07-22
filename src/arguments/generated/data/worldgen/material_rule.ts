@@ -12,10 +12,10 @@ export type ConditionRule = {
 }
 
 export type MaterialRule = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/material_rule'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/material_rule'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolMaterialRule ? SymbolMaterialRule[S] : SymbolMaterialRule<'%unknown'>))
-}[Registry['minecraft:worldgen/material_rule']])>
+}[Extract<Registry['minecraft:worldgen/material_rule'], string>])>
 
 export type MaterialRuleRef = MaterialRule
 

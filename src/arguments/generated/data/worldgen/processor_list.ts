@@ -5,10 +5,6 @@ import type { BlockState } from 'sandstone/arguments/generated/util/block_state.
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { LootTableClass, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
-export type AllOfMatch = {
-  rules: Array<RuleTest>,
-}
-
 export type AppendLoot = {
   loot_table: (Registry['minecraft:loot_table'] | LootTableClass),
 }
@@ -35,10 +31,10 @@ export type BlockAge = {
 }
 
 export type BlockEntityModifier = NonNullable<({
-  [S in Extract<Registry['minecraft:rule_block_entity_modifier'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:rule_block_entity_modifier'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : RootNBT))
-}[Registry['minecraft:rule_block_entity_modifier']])>
+}[Extract<Registry['minecraft:rule_block_entity_modifier'], string>])>
 
 export type BlockIgnore = {
   blocks: Array<BlockState>,
@@ -75,6 +71,10 @@ export type Capped = {
   }>>,
 }
 
+export type CompositeMatch = {
+  rules: Array<RuleTest>,
+}
+
 export type Gravity = {
   /**
    * Value:
@@ -93,6 +93,10 @@ export type Gravity = {
 export type HeightMatch = {
   min_inclusive: NBTInt,
   max_inclusive: NBTInt,
+}
+
+export type InvertedMatch = {
+  rule: RuleTest,
 }
 
 export type LinearPos = {
@@ -133,16 +137,16 @@ export type LinearPos = {
 }
 
 export type PosRuleTest = NonNullable<({
-  [S in Extract<Registry['minecraft:pos_rule_test'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:pos_rule_test'], string>, string>]?: ({
     predicate_type: S,
   } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : RootNBT))
-}[Registry['minecraft:pos_rule_test']])>
+}[Extract<Registry['minecraft:pos_rule_test'], string>])>
 
 export type Processor = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/structure_processor'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/structure_processor'], string>, string>]?: ({
     processor_type: S,
   } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : RootNBT))
-}[Registry['minecraft:worldgen/structure_processor']])>
+}[Extract<Registry['minecraft:worldgen/structure_processor'], string>])>
 
 export type ProcessorList = (Array<Processor> | {
   processors: Array<Processor>,
@@ -164,7 +168,8 @@ export type ProcessorRule = {
 
 export type ProtectedBlocks = {
   value: ((
-      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
+      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
 }
 
@@ -201,10 +206,10 @@ export type Rule = {
 }
 
 export type RuleTest = NonNullable<({
-  [S in Extract<Registry['minecraft:rule_test'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:rule_test'], string>, string>]?: ({
     predicate_type: S,
   } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : RootNBT))
-}[Registry['minecraft:rule_test']])>
+}[Extract<Registry['minecraft:rule_test'], string>])>
 
 export type TagMatch = {
   tag: (Registry['minecraft:tag/block']),
@@ -258,14 +263,10 @@ export type SymbolRuleBlockEntityModifier<CASE extends
     ? RuleBlockEntityModifierKeys
     : CASE extends '%fallback' ? RuleBlockEntityModifierFallback : never
 type RuleTestDispatcherMap = {
-  'all_of': RuleTestAllOf,
-  'minecraft:all_of': RuleTestAllOf,
   'block_match': RuleTestBlockMatch,
   'minecraft:block_match': RuleTestBlockMatch,
   'blockstate_match': RuleTestBlockstateMatch,
   'minecraft:blockstate_match': RuleTestBlockstateMatch,
-  'height_match': RuleTestHeightMatch,
-  'minecraft:height_match': RuleTestHeightMatch,
   'random_block_match': RuleTestRandomBlockMatch,
   'minecraft:random_block_match': RuleTestRandomBlockMatch,
   'random_blockstate_match': RuleTestRandomBlockstateMatch,
@@ -275,17 +276,13 @@ type RuleTestDispatcherMap = {
 }
 type RuleTestKeys = keyof RuleTestDispatcherMap
 type RuleTestFallback = (
-  | RuleTestAllOf
   | RuleTestBlockMatch
   | RuleTestBlockstateMatch
-  | RuleTestHeightMatch
   | RuleTestRandomBlockMatch
   | RuleTestRandomBlockstateMatch
   | RuleTestTagMatch)
-type RuleTestAllOf = AllOfMatch
 type RuleTestBlockMatch = BlockMatch
 type RuleTestBlockstateMatch = BlockStateMatch
-type RuleTestHeightMatch = HeightMatch
 type RuleTestRandomBlockMatch = RandomBlockMatch
 type RuleTestRandomBlockstateMatch = RandomBlockStateMatch
 type RuleTestTagMatch = TagMatch

@@ -3,14 +3,14 @@ import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/genera
 import type { ContainerComponents } from 'sandstone/arguments/generated/data/loot/function.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
-import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LiteralUnion, NBTInt, SlotSourceClass } from 'sandstone'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { LiteralUnion, NBTInt } from 'sandstone'
 
-export type ContentsSlotSource<S extends NBTObject> = {
+export type ContentsSlotSource = {
   /**
    * The slots to search.
    */
-  slot_source: SlotSourceOf<S>,
+  slot_source: SlotSource,
   /**
    * If an item targeted by `slot_source` has this container component, selects all items inside.
    *
@@ -23,17 +23,17 @@ export type ContentsSlotSource<S extends NBTObject> = {
   component: (ContainerComponents | `minecraft:${ContainerComponents}`),
 }
 
-export type FilterSlotSource<S extends NBTObject> = {
-  slot_source: SlotSourceOf<S>,
+export type FilterSlotSource = {
+  slot_source: SlotSource,
   item_filter: ItemPredicate,
 }
 
-export type GroupSlotSource<S extends NBTObject> = {
-  terms: Array<SlotSourceOf<S>>,
+export type GroupSlotSource = {
+  terms: SlotSource,
 }
 
-export type LimitCountSlotSource<S extends NBTObject> = {
-  slot_source: SlotSourceOf<S>,
+export type LimitCountSlotSource = {
+  slot_source: SlotSource,
   /**
    * Value:
    * Range: 1..
@@ -59,61 +59,46 @@ export type RangeSlotSource = ({
   slots: LiteralUnion<ENTITY_SLOTS>,
 })
 
-export type SlotSource = SlotSourceOf<Registry['minecraft:slot_source_type']>
+export type SlotSource = (TypedSlotSource | Array<SlotSource>)
 
-export type SlotSourceOf<S extends NBTObject> = (TypedSlotSourceOf<S> | Array<TypedSlotSourceOf<S>>)
-
-export type TypedSlotSourceOf<S extends NBTObject> = ({
-  [S in keyof SlotSourceDispatcherMap<S>]?: ({
+export type TypedSlotSource = NonNullable<({
+  [S in Extract<Extract<Registry['minecraft:slot_source_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof SlotSourceDispatcherMap<S> ? SlotSourceDispatcherMap<S>[S] : RootNBT))
-}[keyof SlotSourceDispatcherMap<S>])
-type SlotSourceDispatcherMap<S extends NBTObject> = {
-  'contents': SlotSourceContents<S>,
-  'minecraft:contents': SlotSourceContents<S>,
-  'empty': SlotSourceEmpty<S>,
-  'minecraft:empty': SlotSourceEmpty<S>,
-  'filtered': SlotSourceFiltered<S>,
-  'minecraft:filtered': SlotSourceFiltered<S>,
-  'group': SlotSourceGroup<S>,
-  'minecraft:group': SlotSourceGroup<S>,
-  'limit_slots': SlotSourceLimitSlots<S>,
-  'minecraft:limit_slots': SlotSourceLimitSlots<S>,
-  'reference': SlotSourceReference<S>,
-  'minecraft:reference': SlotSourceReference<S>,
-  'slot_range': SlotSourceSlotRange<S>,
-  'minecraft:slot_range': SlotSourceSlotRange<S>,
+  } & (S extends keyof SymbolSlotSource ? SymbolSlotSource[S] : RootNBT))
+}[Extract<Registry['minecraft:slot_source_type'], string>])>
+type SlotSourceDispatcherMap = {
+  'contents': SlotSourceContents,
+  'minecraft:contents': SlotSourceContents,
+  'empty': SlotSourceEmpty,
+  'minecraft:empty': SlotSourceEmpty,
+  'filtered': SlotSourceFiltered,
+  'minecraft:filtered': SlotSourceFiltered,
+  'group': SlotSourceGroup,
+  'minecraft:group': SlotSourceGroup,
+  'limit_slots': SlotSourceLimitSlots,
+  'minecraft:limit_slots': SlotSourceLimitSlots,
+  'slot_range': SlotSourceSlotRange,
+  'minecraft:slot_range': SlotSourceSlotRange,
 }
-type SlotSourceKeys = keyof SlotSourceDispatcherMap<NBTObject>
-type SlotSourceFallback<S extends NBTObject> = (
-  | SlotSourceContents<S>
-  | SlotSourceEmpty<S>
-  | SlotSourceFiltered<S>
-  | SlotSourceGroup<S>
-  | SlotSourceLimitSlots<S>
-  | SlotSourceReference<S>
-  | SlotSourceSlotRange<S>)
-export type SlotSourceContents<S extends NBTObject> = ContentsSlotSource<S>
-
-export type SlotSourceEmpty<S extends NBTObject> = Record<string, never>
-
-export type SlotSourceFiltered<S extends NBTObject> = FilterSlotSource<S>
-
-export type SlotSourceGroup<S extends NBTObject> = GroupSlotSource<S>
-
-export type SlotSourceLimitSlots<S extends NBTObject> = LimitCountSlotSource<S>
-
-export type SlotSourceReference<S extends NBTObject> = {
-  name: (`${string}:${string}` | SlotSourceClass),
-}
-
-export type SlotSourceSlotRange<S extends NBTObject> = RangeSlotSource
-
-export type SymbolSlotSource<S extends NBTObject, CASE extends
+type SlotSourceKeys = keyof SlotSourceDispatcherMap
+type SlotSourceFallback = (
+  | SlotSourceContents
+  | SlotSourceEmpty
+  | SlotSourceFiltered
+  | SlotSourceGroup
+  | SlotSourceLimitSlots
+  | SlotSourceSlotRange)
+type SlotSourceContents = ContentsSlotSource
+type SlotSourceEmpty = Record<string, never>
+type SlotSourceFiltered = FilterSlotSource
+type SlotSourceGroup = GroupSlotSource
+type SlotSourceLimitSlots = LimitCountSlotSource
+type SlotSourceSlotRange = RangeSlotSource
+export type SymbolSlotSource<CASE extends
   | 'map'
   | 'keys'
   | '%fallback'
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
-  ? SlotSourceDispatcherMap<S>
-  : CASE extends 'keys' ? SlotSourceKeys : CASE extends '%fallback' ? SlotSourceFallback<S> : never
+  ? SlotSourceDispatcherMap
+  : CASE extends 'keys' ? SlotSourceKeys : CASE extends '%fallback' ? SlotSourceFallback : never

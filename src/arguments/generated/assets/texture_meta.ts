@@ -46,7 +46,7 @@ export type GuiMeta = {
 }
 
 export type GuiSpriteScaling = NonNullable<({
-  [S in Extract<GuiSpriteScalingType, string>]?: ({
+  [S in Extract<Extract<GuiSpriteScalingType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -56,7 +56,7 @@ export type GuiSpriteScaling = NonNullable<({
      */
     type: S,
   } & (S extends keyof SymbolGuiSpriteScaling ? SymbolGuiSpriteScaling[S] : RootNBT))
-}[GuiSpriteScalingType])>
+}[Extract<GuiSpriteScalingType, string>])>
 
 export type GuiSpriteScalingType = ('stretch' | 'tile' | 'nine_slice')
 

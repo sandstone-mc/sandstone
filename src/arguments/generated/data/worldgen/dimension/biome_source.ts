@@ -8,10 +8,10 @@ export type BiomeNoiseEntry = {
 }
 
 export type BiomeSource = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/biome_source'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/biome_source'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolBiomeSource ? SymbolBiomeSource[S] : RootNBT))
-}[Registry['minecraft:worldgen/biome_source']])>
+}[Extract<Registry['minecraft:worldgen/biome_source'], string>])>
 
 export type Checkerboard = {
   /**
@@ -82,14 +82,14 @@ export type Fixed = {
 }
 
 export type MultiNoise = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list'], string>]?: (MultiNoiseBase & {
+  [S in Extract<Extract<Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list'], string>, string>]?: (MultiNoiseBase & {
     preset?: S,
   } & (S extends undefined
     ? SymbolMultiNoiseBiomeSource<'%none'> :
     (S extends keyof SymbolMultiNoiseBiomeSource
       ? SymbolMultiNoiseBiomeSource[S]
       : SymbolMultiNoiseBiomeSource<'%unknown'>)))
-}[Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list']])>
+}[Extract<Registry['minecraft:worldgen/multi_noise_biome_source_parameter_list'], string>])>
 
 export type MultiNoiseBase = Record<string, never>
 
@@ -126,21 +126,13 @@ type BiomeSourceDispatcherMap = {
   'minecraft:multi_noise': BiomeSourceMultiNoise,
   'the_end': BiomeSourceTheEnd,
   'minecraft:the_end': BiomeSourceTheEnd,
-  'vanilla_layered': BiomeSourceVanillaLayered,
-  'minecraft:vanilla_layered': BiomeSourceVanillaLayered,
 }
 type BiomeSourceKeys = keyof BiomeSourceDispatcherMap
-type BiomeSourceFallback = (
-  | BiomeSourceCheckerboard
-  | BiomeSourceFixed
-  | BiomeSourceMultiNoise
-  | BiomeSourceTheEnd
-  | BiomeSourceVanillaLayered)
+type BiomeSourceFallback = (BiomeSourceCheckerboard | BiomeSourceFixed | BiomeSourceMultiNoise | BiomeSourceTheEnd)
 type BiomeSourceCheckerboard = Checkerboard
 type BiomeSourceFixed = Fixed
 type BiomeSourceMultiNoise = MultiNoise
 type BiomeSourceTheEnd = TheEnd
-type BiomeSourceVanillaLayered = VanillaLayered
 export type SymbolBiomeSource<CASE extends
   | 'map'
   | 'keys'

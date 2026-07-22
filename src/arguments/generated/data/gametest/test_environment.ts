@@ -62,10 +62,10 @@ export type IntGameRule = {
 }
 
 export type TestEnvironment = NonNullable<({
-  [S in Extract<Registry['minecraft:test_environment_definition_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:test_environment_definition_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolTestEnvironmentDefinition ? SymbolTestEnvironmentDefinition[S] : RootNBT))
-}[Registry['minecraft:test_environment_definition_type']])>
+}[Extract<Registry['minecraft:test_environment_definition_type'], string>])>
 
 export type TimelineAttributesTestEnvironment = {
   timelines: Array<(Registry['minecraft:timeline'] | TimelineClass)>,
@@ -104,8 +104,6 @@ type TestEnvironmentDefinitionDispatcherMap = {
   'minecraft:function': TestEnvironmentDefinitionFunction,
   'game_rules': TestEnvironmentDefinitionGameRules,
   'minecraft:game_rules': TestEnvironmentDefinitionGameRules,
-  'time_of_day': TestEnvironmentDefinitionTimeOfDay,
-  'minecraft:time_of_day': TestEnvironmentDefinitionTimeOfDay,
   'timeline_attributes': TestEnvironmentDefinitionTimelineAttributes,
   'minecraft:timeline_attributes': TestEnvironmentDefinitionTimelineAttributes,
   'weather': TestEnvironmentDefinitionWeather,
@@ -118,7 +116,6 @@ type TestEnvironmentDefinitionFallback = (
   | TestEnvironmentDefinitionDifficulty
   | TestEnvironmentDefinitionFunction
   | TestEnvironmentDefinitionGameRules
-  | TestEnvironmentDefinitionTimeOfDay
   | TestEnvironmentDefinitionTimelineAttributes
   | TestEnvironmentDefinitionWeather)
 type TestEnvironmentDefinitionAllOf = AllOffTestEnvironment
@@ -126,7 +123,6 @@ type TestEnvironmentDefinitionClockTime = ClockTimeTestEnvironment
 type TestEnvironmentDefinitionDifficulty = DifficultyTestEnvironment
 type TestEnvironmentDefinitionFunction = FunctionTestEnvironment
 type TestEnvironmentDefinitionGameRules = GameRulesTestEnvironment
-type TestEnvironmentDefinitionTimeOfDay = TimeOfDayTestEnvironment
 type TestEnvironmentDefinitionTimelineAttributes = TimelineAttributesTestEnvironment
 type TestEnvironmentDefinitionWeather = WeatherTestEnvironment
 export type SymbolTestEnvironmentDefinition<CASE extends

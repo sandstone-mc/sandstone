@@ -12,10 +12,10 @@ export type BiomeCondition = {
 }
 
 export type MaterialCondition = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/material_condition'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/material_condition'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolMaterialCondition ? SymbolMaterialCondition[S] : RootNBT))
-}[Registry['minecraft:worldgen/material_condition']])>
+}[Extract<Registry['minecraft:worldgen/material_condition'], string>])>
 
 export type MaterialConditionRef = MaterialCondition
 

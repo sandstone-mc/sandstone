@@ -50,10 +50,10 @@ export type DecorationStep = (
   | 'top_layer_modification')
 
 export type FloatProvider<T extends NBTObject> = (T | ({
-  [S in Extract<Registry['minecraft:float_provider_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:float_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolFloatProvider<T> ? SymbolFloatProvider<T>[S] : RootNBT))
-}[Registry['minecraft:float_provider_type']]))
+}[Extract<Registry['minecraft:float_provider_type'], string>]))
 
 export type HeightmapType = (
   | 'MOTION_BLOCKING'
@@ -64,16 +64,16 @@ export type HeightmapType = (
   | 'WORLD_SURFACE_WG')
 
 export type HeightProvider = (({
-  [S in Extract<Registry['minecraft:height_provider_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:height_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolHeightProvider ? SymbolHeightProvider[S] : RootNBT))
-}[Registry['minecraft:height_provider_type']]) | VerticalAnchor)
+}[Extract<Registry['minecraft:height_provider_type'], string>]) | VerticalAnchor)
 
 export type IntProvider<T extends NBTObject> = (T | ({
-  [S in Extract<Registry['minecraft:int_provider_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:int_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolIntProvider<T> ? SymbolIntProvider<T>[S] : RootNBT))
-}[Registry['minecraft:int_provider_type']]))
+}[Extract<Registry['minecraft:int_provider_type'], string>]))
 
 export type TrapezoidHeightProvider = (UniformHeightProvider & {
   plateau?: NBTInt,

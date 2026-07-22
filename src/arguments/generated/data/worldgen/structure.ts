@@ -1,7 +1,7 @@
 import type { MobCategory, SpawnerData } from 'sandstone/arguments/generated/data/worldgen/biome.ts'
 import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
+import type { FlatWeightedList, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 
@@ -164,10 +164,10 @@ export type OceanRuin = {
 }
 
 export type PoolAlias = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolWorldgenPoolAliasBinding ? SymbolWorldgenPoolAliasBinding[S] : RootNBT))
-}[Registry['minecraft:worldgen/pool_alias_binding']])>
+}[Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>])>
 
 export type RandomGroupPoolAlias = {
   groups: NonEmptyWeightedList<Array<PoolAlias>>,
@@ -250,11 +250,11 @@ export type SpawnOverride = {
    *  - Full(`full`)
    */
   bounding_box: BoundingBox,
-  spawns: Array<SpawnerData>,
+  spawns: FlatWeightedList<SpawnerData>,
 }
 
 export type Structure = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/structure_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/structure_type'], string>, string>]?: ({
     type: S,
     biomes: (
           | Array<Registry['minecraft:worldgen/biome']> | (
@@ -293,7 +293,7 @@ export type Structure = NonNullable<({
       [Key in Extract<MobCategory, string>]?: SpawnOverride
     }),
   } & (S extends keyof SymbolStructureConfig ? SymbolStructureConfig[S] : RootNBT))
-}[Registry['minecraft:worldgen/structure_type']])>
+}[Extract<Registry['minecraft:worldgen/structure_type'], string>])>
 
 export type StructureRef = (Registry['minecraft:worldgen/structure'] | Structure)
 

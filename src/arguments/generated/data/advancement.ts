@@ -62,13 +62,13 @@ export type AdvancementCriteriaMap = ({
 })
 
 export type AdvancementCriterion = NonNullable<({
-  [S in Extract<Registry['minecraft:trigger_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:trigger_type'], string>, string>]?: ({
     /**
      * Many triggers can occur multiple times, however, the reward will only be provided multiple times if the advancement is first revoked, which is often done within the function reward.
      */
     trigger: S,
   } & (S extends keyof SymbolTrigger ? SymbolTrigger[S] : RootNBT))
-}[Registry['minecraft:trigger_type']])>
+}[Extract<Registry['minecraft:trigger_type'], string>])>
 
 export type AdvancementDisplay = {
   icon: ItemStackTemplate,

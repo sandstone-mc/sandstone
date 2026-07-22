@@ -6,13 +6,13 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { LabelClass, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
 
 export type AnyEntity = NonNullable<({
-  [S in Extract<Registry['minecraft:entity_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:entity_type'], string>, string>]?: ({
     /**
      * The ID of this entity. Not present on player entities.
      */
     id: S,
   } & (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT))
-}[Registry['minecraft:entity_type']])>
+}[Extract<Registry['minecraft:entity_type'], string>])>
 
 export type BlockAttachedEntity = (EntityBase & {
   /**

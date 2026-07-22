@@ -34,11 +34,11 @@ export type ChanceConfig = {
 }
 
 export type ConfiguredDecorator = NonNullable<({
-  [S in Extract<`${string}:${string}`, string>]?: {
+  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: {
     type: S,
     config: (S extends keyof SymbolDecoratorConfig ? SymbolDecoratorConfig[S] : RootNBT),
   }
-}[`${string}:${string}`])>
+}[Extract<`${string}:${string}`, string>])>
 
 export type CountConfig = {
   count: IntProvider<NBTInt<{
@@ -143,8 +143,6 @@ type DecoratorConfigDispatcherMap = {
   'minecraft:dark_oak_tree': DecoratorConfigDarkOakTree,
   'decorated': DecoratorConfigDecorated,
   'minecraft:decorated': DecoratorConfigDecorated,
-  'depth_average': DecoratorConfigDepthAverage,
-  'minecraft:depth_average': DecoratorConfigDepthAverage,
   'end_gateway': DecoratorConfigEndGateway,
   'minecraft:end_gateway': DecoratorConfigEndGateway,
   'fire': DecoratorConfigFire,
@@ -163,18 +161,12 @@ type DecoratorConfigDispatcherMap = {
   'minecraft:nope': DecoratorConfigNope,
   'range': DecoratorConfigRange,
   'minecraft:range': DecoratorConfigRange,
-  'range_biased': DecoratorConfigRangeBiased,
-  'minecraft:range_biased': DecoratorConfigRangeBiased,
-  'range_very_biased': DecoratorConfigRangeVeryBiased,
-  'minecraft:range_very_biased': DecoratorConfigRangeVeryBiased,
   'spread_32_above': DecoratorConfigSpread32Above,
   'minecraft:spread_32_above': DecoratorConfigSpread32Above,
   'square': DecoratorConfigSquare,
   'minecraft:square': DecoratorConfigSquare,
   'water_depth_threshold': DecoratorConfigWaterDepthThreshold,
   'minecraft:water_depth_threshold': DecoratorConfigWaterDepthThreshold,
-  'water_lake': DecoratorConfigWaterLake,
-  'minecraft:water_lake': DecoratorConfigWaterLake,
 }
 type DecoratorConfigKeys = keyof DecoratorConfigDispatcherMap
 type DecoratorConfigFallback = (
@@ -188,7 +180,6 @@ type DecoratorConfigFallback = (
   | DecoratorConfigCountNoiseBiased
   | DecoratorConfigDarkOakTree
   | DecoratorConfigDecorated
-  | DecoratorConfigDepthAverage
   | DecoratorConfigEndGateway
   | DecoratorConfigFire
   | DecoratorConfigGlowstone
@@ -198,12 +189,9 @@ type DecoratorConfigFallback = (
   | DecoratorConfigLavaLake
   | DecoratorConfigNope
   | DecoratorConfigRange
-  | DecoratorConfigRangeBiased
-  | DecoratorConfigRangeVeryBiased
   | DecoratorConfigSpread32Above
   | DecoratorConfigSquare
-  | DecoratorConfigWaterDepthThreshold
-  | DecoratorConfigWaterLake)
+  | DecoratorConfigWaterDepthThreshold)
 type DecoratorConfigCarvingMask = CarvingMaskConfig
 type DecoratorConfigCaveSurface = CaveSurface
 type DecoratorConfigChance = ChanceConfig
@@ -214,7 +202,6 @@ type DecoratorConfigCountNoise = CountNoiseConfig
 type DecoratorConfigCountNoiseBiased = CountNoiseBiasedConfig
 type DecoratorConfigDarkOakTree = Record<string, never>
 type DecoratorConfigDecorated = DecoratedConfig
-type DecoratorConfigDepthAverage = DepthAverageConfig
 type DecoratorConfigEndGateway = Record<string, never>
 type DecoratorConfigFire = CountConfig
 type DecoratorConfigGlowstone = CountConfig
@@ -224,12 +211,9 @@ type DecoratorConfigIceberg = Record<string, never>
 type DecoratorConfigLavaLake = ChanceConfig
 type DecoratorConfigNope = Record<string, never>
 type DecoratorConfigRange = RangeConfig
-type DecoratorConfigRangeBiased = OldRangeConfig
-type DecoratorConfigRangeVeryBiased = OldRangeConfig
 type DecoratorConfigSpread32Above = Record<string, never>
 type DecoratorConfigSquare = Record<string, never>
 type DecoratorConfigWaterDepthThreshold = WaterDepthThresholdConfig
-type DecoratorConfigWaterLake = ChanceConfig
 export type SymbolDecoratorConfig<CASE extends
   | 'map'
   | 'keys'

@@ -1,11 +1,15 @@
+export { type SymbolMcdocBlockStateKeys, type McdocBlockStateKeysFallbackType } from './_builtin/block_state_keys.ts'
+
+export { type SymbolMcdocBlockStates, type McdocBlockStatesFallbackType } from './_builtin/block_states.ts'
+
+export { type SymbolMcdocFluidStates, type McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
+
+export { type SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'
+
 export {
   type SymbolMcdocBlockItemStates,
   type McdocBlockItemStatesFallbackType,
 } from './_builtin/block_item_states.ts'
-
-export { type SymbolMcdocBlockStateKeys, type McdocBlockStateKeysFallbackType } from './_builtin/block_state_keys.ts'
-
-export { type SymbolMcdocBlockStates, type McdocBlockStatesFallbackType } from './_builtin/block_states.ts'
 
 export { type SymbolMcdocCustomData, type McdocCustomDataFallbackType } from './_builtin/custom_data.ts'
 
@@ -22,8 +26,6 @@ export {
 export { type SymbolMcdocCustomEvent, type McdocCustomEventFallbackType } from './_builtin/custom_event.ts'
 
 export { type SymbolMcdocDialogAfterAction } from './_builtin/dialog_after_action.ts'
-
-export { type SymbolMcdocFluidStates, type McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
 
 export { type SymbolMcdocMarkerData, type McdocMarkerDataFallbackType } from './_builtin/marker_data.ts'
 
@@ -66,7 +68,7 @@ export {
 
 export { type SymbolDecoratorConfig } from './data/worldgen/feature/decorator.ts'
 
-export { type SymbolDensityFunction } from './data/worldgen/density_function.ts'
+export { type SymbolDensityFunction, type DensityFunctionFallbackType } from './data/worldgen/density_function.ts'
 
 export { type SymbolDialog } from './data/dialog.ts'
 
@@ -128,6 +130,8 @@ export { type SymbolMemoryModule, type MemoryModuleFallbackType } from './util/m
 
 export { type SymbolScoreProvider } from './data/util.ts'
 
+export { type SymbolNumberProvider } from './data/number_provider.ts'
+
 export { type SymbolParticle, type ParticleFallbackType } from './util/particle.ts'
 
 export { type SymbolPlacementModifier } from './data/worldgen/feature/placement.ts'
@@ -165,5 +169,3 @@ export { type SymbolTestInstance } from './data/gametest.ts'
 export { type SymbolTrigger } from './data/advancement/trigger.ts'
 
 export { type SymbolUniformValue } from './_dispatcher/uniform_value.ts'
-
-export { type SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'

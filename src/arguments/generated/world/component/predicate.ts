@@ -1,4 +1,8 @@
-import type { EnchantmentPredicate, ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
+import type {
+  EnchantmentPredicate,
+  EntityEffectsPredicate,
+  ItemPredicate,
+} from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.ts'
@@ -109,6 +113,15 @@ export type JukeboxPlayablePredicate = {
       | Array<(Registry['minecraft:jukebox_song'] | JukeboxSongClass)>),
 }
 
+export type PotionsPredicate = {
+  potions?: PotionTypeMatch,
+  effects?: CollectionPredicate<EntityEffectsPredicate>,
+}
+
+export type PotionTypeMatch = ((
+  | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
+  | Array<Registry['minecraft:potion']>)
+
 export type TrimPredicate = {
   material?: ((
       | Registry['minecraft:trim_material'] | `#${string}:${string}` | TagClass<'trim_material'> | TrimMaterialClass)
@@ -195,9 +208,7 @@ type DataComponentPredicateEnchantments = Array<EnchantmentPredicate>
 type DataComponentPredicateFireworkExplosion = FireworkExplosionPredicate
 type DataComponentPredicateFireworks = FireworksPredicate
 type DataComponentPredicateJukeboxPlayable = JukeboxPlayablePredicate
-type DataComponentPredicatePotionContents = ((
-  | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
-  | Array<Registry['minecraft:potion']>)
+type DataComponentPredicatePotionContents = PotionTypeMatch
 type DataComponentPredicateStoredEnchantments = Array<EnchantmentPredicate>
 type DataComponentPredicateTrim = TrimPredicate
 type DataComponentPredicateVillagerVariant = ((

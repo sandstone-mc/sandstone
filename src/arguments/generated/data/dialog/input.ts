@@ -27,7 +27,7 @@ export type BooleanInput = {
 }
 
 export type InputControl = NonNullable<({
-  [S in Extract<Registry['minecraft:input_control_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:input_control_type'], string>, string>]?: ({
     type: S,
     /**
      * The input key, which is used to build macro command and generate custom action payload.
@@ -43,7 +43,7 @@ export type InputControl = NonNullable<({
      */
     key: (`${any}${string}` | SymbolMcdocCustomDynamicEventKeys<'%fallback'>),
   } & (S extends keyof SymbolInputControl ? SymbolInputControl[S] : RootNBT))
-}[Registry['minecraft:input_control_type']])>
+}[Extract<Registry['minecraft:input_control_type'], string>])>
 
 export type MultiLine = {
   /**

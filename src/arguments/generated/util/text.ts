@@ -39,7 +39,7 @@ export type ChangePage = {
 }
 
 export type ClickEvent = NonNullable<({
-  [S in Extract<ClickEventAction, string>]?: ({
+  [S in Extract<Extract<ClickEventAction, string>, string>]?: ({
     /**
      * Value:
      *
@@ -53,7 +53,7 @@ export type ClickEvent = NonNullable<({
      */
     action: S,
   } & (S extends keyof SymbolClickEvent ? SymbolClickEvent[S] : RootNBT))
-}[ClickEventAction])>
+}[Extract<ClickEventAction, string>])>
 
 export type ClickEventAction = (
   | 'open_url'
@@ -72,7 +72,7 @@ export type CopyToClipboard = {
 }
 
 export type CustomAction = NonNullable<({
-  [S in Extract<`${string}:${string}`, string>]?: {
+  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: {
     /**
      * ID of a custom action.
      * Has no functionality on vanilla servers.
@@ -82,7 +82,7 @@ export type CustomAction = NonNullable<({
       ? SymbolMcdocCustomEvent[S]
       : SymbolMcdocCustomEvent<'%unknown'>),
   }
-}[`${string}:${string}`])>
+}[Extract<`${string}:${string}`, string>])>
 
 export type EntityHoverContent = {
   type: Registry['minecraft:entity_type'],
@@ -140,7 +140,7 @@ export type EntityTooltipInfo = {
 }
 
 export type HoverEvent = NonNullable<({
-  [S in Extract<HoverEventAction, string>]?: ({
+  [S in Extract<Extract<HoverEventAction, string>, string>]?: ({
     /**
      * Value:
      *
@@ -150,7 +150,7 @@ export type HoverEvent = NonNullable<({
      */
     action: S,
   } & (S extends keyof SymbolHoverEvent ? SymbolHoverEvent[S] : RootNBT))
-}[HoverEventAction])>
+}[Extract<HoverEventAction, string>])>
 
 export type HoverEventAction = ('show_text' | 'show_item' | 'show_entity')
 
@@ -175,6 +175,7 @@ export type Keybind = (
   | 'key.debug.dumpVersion'
   | 'key.debug.focusPause'
   | 'key.debug.fpsCharts'
+  | 'key.debug.improvedTransparency'
   | 'key.debug.lightmapTexture'
   | 'key.debug.modifier'
   | 'key.debug.networkCharts'
@@ -240,6 +241,7 @@ export type KeybindText = ({
    *  - DebugDumpVersion(`key.debug.dumpVersion`)
    *  - DebugFocusPause(`key.debug.focusPause`)
    *  - DebugFpsCharts(`key.debug.fpsCharts`)
+   *  - DebugImprovedTransparency(`key.debug.improvedTransparency`)
    *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
    *  - DebugModifier(`key.debug.modifier`)
    *  - DebugNetworkCharts(`key.debug.networkCharts`)
@@ -344,28 +346,7 @@ export type ShowDialog = {
   dialog: ((Registry['minecraft:dialog'] | DialogClass) | Dialog),
 }
 
-export type ShowEntity = ({
-  contents?: {
-    type: Registry['minecraft:entity_type'],
-    /**
-     * Value:
-     * *either*
-     *
-     * List length range: 4
-     *
-     * *or*
-     *
-     * *item 1*
-     */
-    id: (NBTList<NBTInt, {
-      leftExclusive: false,
-      rightExclusive: false,
-      min: 4,
-      max: 4,
-    }> | string),
-    name?: Text,
-  },
-} & {
+export type ShowEntity = {
   id: Registry['minecraft:entity_type'],
   /**
    * Value:
@@ -384,7 +365,7 @@ export type ShowEntity = ({
     max: 4,
   }> | string),
   name?: Text,
-})
+}
 
 export type ShowItem = ItemStack
 
@@ -503,6 +484,7 @@ export type TextObject = (({
    *  - DebugDumpVersion(`key.debug.dumpVersion`)
    *  - DebugFocusPause(`key.debug.focusPause`)
    *  - DebugFpsCharts(`key.debug.fpsCharts`)
+   *  - DebugImprovedTransparency(`key.debug.improvedTransparency`)
    *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
    *  - DebugModifier(`key.debug.modifier`)
    *  - DebugNetworkCharts(`key.debug.networkCharts`)

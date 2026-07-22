@@ -221,13 +221,13 @@ export type FallenTreeConfig = {
 }
 
 export type FeatureSize = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/feature_size_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/feature_size_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolFeatureSize ? SymbolFeatureSize[S] : RootNBT))
-}[Registry['minecraft:worldgen/feature_size_type']])>
+}[Extract<Registry['minecraft:worldgen/feature_size_type'], string>])>
 
 export type FoliagePlacer = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/foliage_placer_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/foliage_placer_type'], string>, string>]?: ({
     type: S,
     radius: IntProvider<NBTInt<{
       min: 0,
@@ -238,7 +238,7 @@ export type FoliagePlacer = NonNullable<({
       max: 16,
     }>>,
   } & (S extends keyof SymbolFoliagePlacer ? SymbolFoliagePlacer[S] : RootNBT))
-}[Registry['minecraft:worldgen/foliage_placer_type']])>
+}[Extract<Registry['minecraft:worldgen/foliage_placer_type'], string>])>
 
 export type HeightFoliagePlacer = {
   /**
@@ -427,13 +427,13 @@ export type RandomSpreadFoliagePlacer = {
 }
 
 export type RootPlacer = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/root_placer_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/root_placer_type'], string>, string>]?: ({
     type: S,
     root_provider: BlockStateProvider,
     trunk_offset_y: IntProvider<NBTInt>,
     above_root_placement?: AboveRootPlacement,
   } & (S extends keyof SymbolRootPlacer ? SymbolRootPlacer[S] : RootNBT))
-}[Registry['minecraft:worldgen/root_placer_type']])>
+}[Extract<Registry['minecraft:worldgen/root_placer_type'], string>])>
 
 export type ShelfMushroomTreeDecorator = {
   /**
@@ -517,17 +517,19 @@ export type TreeConfig = ({
   foliage_placer: FoliagePlacer,
   decorators: Array<TreeDecorator>,
 } & {
+  below_trunk_provider?: BlockStateProvider,
+} & {
   below_trunk_provider: BlockStateProvider,
 })
 
 export type TreeDecorator = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolTreeDecorator ? SymbolTreeDecorator[S] : RootNBT))
-}[Registry['minecraft:worldgen/tree_decorator_type']])>
+}[Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>])>
 
 export type TrunkPlacer = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/trunk_placer_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/trunk_placer_type'], string>, string>]?: ({
     type: S,
     /**
      * Value:
@@ -554,7 +556,7 @@ export type TrunkPlacer = NonNullable<({
       max: 24,
     }>,
   } & (S extends keyof SymbolTrunkPlacer ? SymbolTrunkPlacer[S] : RootNBT))
-}[Registry['minecraft:worldgen/trunk_placer_type']])>
+}[Extract<Registry['minecraft:worldgen/trunk_placer_type'], string>])>
 
 export type TwoLayersFeatureSize = {
   /**
@@ -646,8 +648,6 @@ type FoliagePlacerDispatcherMap = {
   'minecraft:mega_pine_foliage_placer': FoliagePlacerMegaPineFoliagePlacer,
   'pine_foliage_placer': FoliagePlacerPineFoliagePlacer,
   'minecraft:pine_foliage_placer': FoliagePlacerPineFoliagePlacer,
-  'poplar_foliage_placer': FoliagePlacerPoplarFoliagePlacer,
-  'minecraft:poplar_foliage_placer': FoliagePlacerPoplarFoliagePlacer,
   'random_spread_foliage_placer': FoliagePlacerRandomSpreadFoliagePlacer,
   'minecraft:random_spread_foliage_placer': FoliagePlacerRandomSpreadFoliagePlacer,
   'spruce_foliage_placer': FoliagePlacerSpruceFoliagePlacer,
@@ -662,7 +662,6 @@ type FoliagePlacerFallback = (
   | FoliagePlacerJungleFoliagePlacer
   | FoliagePlacerMegaPineFoliagePlacer
   | FoliagePlacerPineFoliagePlacer
-  | FoliagePlacerPoplarFoliagePlacer
   | FoliagePlacerRandomSpreadFoliagePlacer
   | FoliagePlacerSpruceFoliagePlacer)
 type FoliagePlacerBlobFoliagePlacer = HeightFoliagePlacer
@@ -672,7 +671,6 @@ type FoliagePlacerFancyFoliagePlacer = HeightFoliagePlacer
 type FoliagePlacerJungleFoliagePlacer = HeightFoliagePlacer
 type FoliagePlacerMegaPineFoliagePlacer = MegaPineFoliagePlacer
 type FoliagePlacerPineFoliagePlacer = PineFoliagePlacer
-type FoliagePlacerPoplarFoliagePlacer = PoplarFoliagePlacer
 type FoliagePlacerRandomSpreadFoliagePlacer = RandomSpreadFoliagePlacer
 type FoliagePlacerSpruceFoliagePlacer = SprucePineFoliagePlacer
 export type SymbolFoliagePlacer<CASE extends
@@ -717,8 +715,6 @@ type TreeDecoratorDispatcherMap = {
   'minecraft:pale_moss': TreeDecoratorPaleMoss,
   'place_on_ground': TreeDecoratorPlaceOnGround,
   'minecraft:place_on_ground': TreeDecoratorPlaceOnGround,
-  'shelf_mushroom': TreeDecoratorShelfMushroom,
-  'minecraft:shelf_mushroom': TreeDecoratorShelfMushroom,
 }
 type TreeDecoratorKeys = keyof TreeDecoratorDispatcherMap
 type TreeDecoratorFallback = (
@@ -730,8 +726,7 @@ type TreeDecoratorFallback = (
   | TreeDecoratorCreakingHeart
   | TreeDecoratorLeaveVine
   | TreeDecoratorPaleMoss
-  | TreeDecoratorPlaceOnGround
-  | TreeDecoratorShelfMushroom)
+  | TreeDecoratorPlaceOnGround)
 type TreeDecoratorAlterGround = AlterGroundTreeDecorator
 type TreeDecoratorAttachedToLeaves = AttachedToLeavesTreeDecorator
 type TreeDecoratorAttachedToLogs = AttachedToLogsTreeDecorator
@@ -741,7 +736,6 @@ type TreeDecoratorCreakingHeart = CreakingHeartTreeDecorator
 type TreeDecoratorLeaveVine = LeaveVineTreeDecorator
 type TreeDecoratorPaleMoss = PaleMossTreeDecorator
 type TreeDecoratorPlaceOnGround = PlaceOnGroundTreeDecorator
-type TreeDecoratorShelfMushroom = ShelfMushroomTreeDecorator
 export type SymbolTreeDecorator<CASE extends
   | 'map'
   | 'keys'
@@ -765,8 +759,6 @@ type TrunkPlacerDispatcherMap = {
   'minecraft:giant_trunk_placer': TrunkPlacerGiantTrunkPlacer,
   'mega_jungle_trunk_placer': TrunkPlacerMegaJungleTrunkPlacer,
   'minecraft:mega_jungle_trunk_placer': TrunkPlacerMegaJungleTrunkPlacer,
-  'poplar_trunk_placer': TrunkPlacerPoplarTrunkPlacer,
-  'minecraft:poplar_trunk_placer': TrunkPlacerPoplarTrunkPlacer,
   'straight_trunk_placer': TrunkPlacerStraightTrunkPlacer,
   'minecraft:straight_trunk_placer': TrunkPlacerStraightTrunkPlacer,
   'upwards_branching_trunk_placer': TrunkPlacerUpwardsBranchingTrunkPlacer,
@@ -781,7 +773,6 @@ type TrunkPlacerFallback = (
   | TrunkPlacerForkingTrunkPlacer
   | TrunkPlacerGiantTrunkPlacer
   | TrunkPlacerMegaJungleTrunkPlacer
-  | TrunkPlacerPoplarTrunkPlacer
   | TrunkPlacerStraightTrunkPlacer
   | TrunkPlacerUpwardsBranchingTrunkPlacer)
 type TrunkPlacerBendingTrunkPlacer = BendingTrunkPlacer
@@ -791,7 +782,6 @@ type TrunkPlacerFancyTrunkPlacer = Record<string, never>
 type TrunkPlacerForkingTrunkPlacer = Record<string, never>
 type TrunkPlacerGiantTrunkPlacer = Record<string, never>
 type TrunkPlacerMegaJungleTrunkPlacer = Record<string, never>
-type TrunkPlacerPoplarTrunkPlacer = PoplarTrunkPlacer
 type TrunkPlacerStraightTrunkPlacer = Record<string, never>
 type TrunkPlacerUpwardsBranchingTrunkPlacer = UpwardsBranchingTrunkPlacer
 export type SymbolTrunkPlacer<CASE extends

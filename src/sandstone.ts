@@ -8,7 +8,7 @@ import type {
   BlockStateArguments,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
-  DecoratedPotPatternClassArguments,
+//  DecoratedPotPatternClassArguments,
   DialogClassArguments,
   EnchantmentClassArguments,
   EnchantmentProviderClassArguments,
@@ -28,7 +28,7 @@ import type {
   PredicateClassArguments,
   RecipeClassArguments,
   ShaderClassArguments,
-  SlotSourceClassArguments,
+//  SlotSourceClassArguments,
   SoundEventArguments,
   SulfurCubeArchetypeClassArguments,
   TagClassArguments,
@@ -291,7 +291,7 @@ export const {
   BannerPattern,
   ChatType,
   DamageType,
-  DecoratedPotPattern,
+//  DecoratedPotPattern,
   Dialog,
   Enchantment,
   EnchantmentProvider,
@@ -301,7 +301,7 @@ export const {
   LootTable,
   Predicate,
   Recipe,
-  SlotSource,
+//  SlotSource,
   SulfurCubeArchetype,
   Tag,
   TestEnvironment,
@@ -375,7 +375,7 @@ export {
   BannerPatternClass,
   ChatTypeClass,
   DamageTypeClass,
-  DecoratedPotPatternClass,
+//  DecoratedPotPatternClass,
   DialogClass,
   EnchantmentClass,
   EnchantmentProviderClass,
@@ -385,7 +385,7 @@ export {
   LootTableClass,
   PredicateClass,
   RecipeClass,
-  SlotSourceClass,
+//  SlotSourceClass,
   StructureClass,
   SulfurCubeArchetypeClass,
   TagClass,
@@ -669,7 +669,7 @@ type ContentStrategy =
    * The conflict strategy to use for Slot sources.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'slot_source', NonNullable<SlotSourceClassArguments['onConflict']>>
+  // | ContentStrategyKind<'slot_source', NonNullable<SlotSourceClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Sulfur cube archetypes.
    * Will override the defined `default` strategy.
@@ -709,7 +709,7 @@ type ContentStrategy =
    * The conflict strategy to use for Decorated pot patterns.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'decorated_pot_pattern', NonNullable<DecoratedPotPatternClassArguments['onConflict']>>
+  // | ContentStrategyKind<'decorated_pot_pattern', NonNullable<DecoratedPotPatternClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Dialogs.
    * Will override the defined `default` strategy.

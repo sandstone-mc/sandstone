@@ -1,4 +1,4 @@
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { SymbolMcdocBlockItemStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { LegacyOperation } from 'sandstone/arguments/generated/util/attribute.ts'

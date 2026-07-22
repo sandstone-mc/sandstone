@@ -7,6 +7,10 @@ import type {
   ColorModifierType,
   FloatAttributeModifier,
   FloatModifierType,
+  ListModifier,
+  ListModifierType,
+  MergeableModifier,
+  MergeableModifierType,
   OverrideModifier,
   TranslucentColorAttributeModifier,
 } from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.ts'
@@ -21,7 +25,7 @@ import type { StringARGB, StringRGB } from 'sandstone/arguments/generated/util/c
 import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type AmbientParticle = {
   particle: Particle,
@@ -47,7 +51,7 @@ export type ARGBColorAttribute = {
   value: StringARGB,
   modifier: TranslucentColorAttributeModifier,
   attribute_track: ({
-    [S in Extract<ColorModifierType, string>]?: (AttributeTrackBase & {
+    [S in Extract<Extract<ColorModifierType, string>, string>]?: (AttributeTrackBase & {
       /**
        * Value:
        *
@@ -59,7 +63,11 @@ export type ARGBColorAttribute = {
        *  - BlendToGray(`blend_to_gray`)
        */
       modifier?: S,
-      keyframes: Array<{
+      /**
+       * Value:
+       * List length range: 1..
+       */
+      keyframes: NBTList<{
         /**
          * Value:
          * Range: 0..
@@ -72,9 +80,12 @@ export type ARGBColorAttribute = {
           (S extends keyof SymbolEnvironmentAttributeArgbColorModifier
             ? SymbolEnvironmentAttributeArgbColorModifier[S]
             : RootNBT)),
+      }, {
+        leftExclusive: false,
+        min: 1,
       }>,
     })
-  }[ColorModifierType]),
+  }[Extract<ColorModifierType, string>]),
 }
 
 export type BackgroundMusic = {
@@ -131,7 +142,11 @@ export type BooleanAttribute = {
      *  - Xnor(`xnor`)
      */
     modifier?: BooleanModifierType,
-    keyframes: Array<{
+    /**
+     * Value:
+     * List length range: 1..
+     */
+    keyframes: NBTList<{
       /**
        * Value:
        * Range: 0..
@@ -140,6 +155,9 @@ export type BooleanAttribute = {
         min: 0,
       }>,
       value: boolean,
+    }, {
+      leftExclusive: false,
+      min: 1,
     }>,
   }),
 }
@@ -149,7 +167,11 @@ export type DiscreteAttribute<T extends NBTObject> = {
   modifier: OverrideModifier<T>,
   attribute_track: (AttributeTrackBase & {
     modifier?: 'override',
-    keyframes: Array<{
+    /**
+     * Value:
+     * List length range: 1..
+     */
+    keyframes: NBTList<{
       /**
        * Value:
        * Range: 0..
@@ -158,6 +180,9 @@ export type DiscreteAttribute<T extends NBTObject> = {
         min: 0,
       }>,
       value: T,
+    }, {
+      leftExclusive: false,
+      min: 1,
     }>,
   }),
 }
@@ -180,7 +205,7 @@ export type FloatAttribute<T extends NBTObject> = {
   value: T,
   modifier: FloatAttributeModifier<T>,
   attribute_track: ({
-    [S in Extract<FloatModifierType, string>]?: (AttributeTrackBase & {
+    [S in Extract<Extract<FloatModifierType, string>, string>]?: (AttributeTrackBase & {
       /**
        * Value:
        *
@@ -193,7 +218,11 @@ export type FloatAttribute<T extends NBTObject> = {
        *  - AlphaBlend(`alpha_blend`)
        */
       modifier?: S,
-      keyframes: Array<{
+      /**
+       * Value:
+       * List length range: 1..
+       */
+      keyframes: NBTList<{
         /**
          * Value:
          * Range: 0..
@@ -206,12 +235,77 @@ export type FloatAttribute<T extends NBTObject> = {
           (S extends keyof SymbolEnvironmentAttributeFloatModifier<T>
             ? SymbolEnvironmentAttributeFloatModifier<T>[S]
             : SymbolEnvironmentAttributeFloatModifier<T, '%unknown'>)),
+      }, {
+        leftExclusive: false,
+        min: 1,
       }>,
     })
-  }[FloatModifierType]),
+  }[Extract<FloatModifierType, string>]),
 }
 
 export type GlobalEnvironmentAttributeMap = EnvironmentAttributeMap<Registry['minecraft:environment_attribute']>
+
+export type ListAttribute<E extends NBTObject> = {
+  value: Array<E>,
+  modifier: ListModifier<E>,
+  attribute_track: (AttributeTrackBase & {
+    /**
+     * Value:
+     *
+     *  - Override(`override`)
+     *  - Append(`append`)
+     */
+    modifier?: ListModifierType,
+    /**
+     * Value:
+     * List length range: 1..
+     */
+    keyframes: NBTList<{
+      /**
+       * Value:
+       * Range: 0..
+       */
+      ticks: NBTInt<{
+        min: 0,
+      }>,
+      value: Array<E>,
+    }, {
+      leftExclusive: false,
+      min: 1,
+    }>,
+  }),
+}
+
+export type MergeableAttribute<T extends NBTObject> = {
+  value: T,
+  modifier: MergeableModifier<T>,
+  attribute_track: (AttributeTrackBase & {
+    /**
+     * Value:
+     *
+     *  - Override(`override`)
+     *  - Overlay(`overlay`)
+     */
+    modifier?: MergeableModifierType,
+    /**
+     * Value:
+     * List length range: 1..
+     */
+    keyframes: NBTList<{
+      /**
+       * Value:
+       * Range: 0..
+       */
+      ticks: NBTInt<{
+        min: 0,
+      }>,
+      value: T,
+    }, {
+      leftExclusive: false,
+      min: 1,
+    }>,
+  }),
+}
 
 export type NumericalEnvironmentAttribute = (
   | 'visual/cloud_height'
@@ -228,6 +322,7 @@ export type NumericalEnvironmentAttribute = (
   | 'visual/star_brightness'
   | 'audio/music_volume'
   | 'gameplay/cat_waking_up_gift_chance'
+  | 'gameplay/creature_world_gen_spawn_probability'
   | 'gameplay/surface_slime_spawn_chance'
   | 'gameplay/turtle_egg_hatch_chance'
   | 'gameplay/sky_light_level')
@@ -240,7 +335,7 @@ export type RGBColorAttribute = {
   value: StringRGB,
   modifier: ColorAttributeModifier,
   attribute_track: ({
-    [S in Extract<ColorModifierType, string>]?: (AttributeTrackBase & {
+    [S in Extract<Extract<ColorModifierType, string>, string>]?: (AttributeTrackBase & {
       /**
        * Value:
        *
@@ -252,7 +347,11 @@ export type RGBColorAttribute = {
        *  - BlendToGray(`blend_to_gray`)
        */
       modifier?: S,
-      keyframes: Array<{
+      /**
+       * Value:
+       * List length range: 1..
+       */
+      keyframes: NBTList<{
         /**
          * Value:
          * Range: 0..
@@ -265,9 +364,12 @@ export type RGBColorAttribute = {
           (S extends keyof SymbolEnvironmentAttributeColorModifier
             ? SymbolEnvironmentAttributeColorModifier[S]
             : SymbolEnvironmentAttributeColorModifier<'%unknown'>)),
+      }, {
+        leftExclusive: false,
+        min: 1,
       }>,
     })
-  }[ColorModifierType]),
+  }[Extract<ColorModifierType, string>]),
 }
 
 export type TriState = (boolean | 'default')
@@ -470,7 +572,7 @@ type EnvironmentAttributeGameplayTurtleEggHatchChance = FloatAttribute<NBTFloat<
 type EnvironmentAttributeGameplayVillagerActivity = DiscreteAttribute<Registry['minecraft:activity']>
 type EnvironmentAttributeGameplayWaterEvaporates = BooleanAttribute
 type EnvironmentAttributeVisualAmbientLightColor = RGBColorAttribute
-type EnvironmentAttributeVisualAmbientParticles = DiscreteAttribute<Array<AmbientParticle>>
+type EnvironmentAttributeVisualAmbientParticles = ListAttribute<AmbientParticle>
 type EnvironmentAttributeVisualBlockLightTint = RGBColorAttribute
 type EnvironmentAttributeVisualCloudColor = ARGBColorAttribute
 type EnvironmentAttributeVisualCloudFogEndDistance = FloatAttribute<NBTFloat<{
