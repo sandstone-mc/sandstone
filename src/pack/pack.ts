@@ -168,6 +168,7 @@ import {
   InlineFunctionCallVisitor,
   LoopTransformationVisitor,
   OrTransformationVisitor,
+  OptimizeMacroTemporariesVisitor,
   SimplifyExecuteFunctionVisitor,
   SimplifyReturnRunFunctionVisitor,
   SwitchTransformationVisitor,
@@ -1567,6 +1568,7 @@ export class SandstonePack {
         new AwaitBodyVisitor(this),
 
         // Optimization
+        new OptimizeMacroTemporariesVisitor(this),
         new InlineFunctionCallVisitor(this),
         new UnifyChainedExecutesVisitor(this),
         new SimplifyExecuteFunctionVisitor(this),
