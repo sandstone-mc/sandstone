@@ -1,6 +1,6 @@
 /* eslint-disable no-lone-blocks */
 
-import type { ContentTag, JSONTextComponent } from 'sandstone/arguments'
+import type { JSONTextComponent } from 'sandstone/arguments'
 import { JSONTextComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -71,60 +71,62 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
         converted += this.componentToPlainText(_text)
       }
     } else {
-      const currentText = text as ContentTag<'text'>
+      const currentText = text
 
-      if (!currentText.text) {
-        throw new Error('Dynamic JSON content is not supported in plaintext')
-      }
-
-      if (currentText.color) {
-        const { color } = currentText
-        if (color.startsWith('#')) {
-          throw new Error('Hex codes are not supported in plaintext')
+      if (typeof currentText !== 'string') {
+        if (!('text' in currentText)) {
+          throw new Error('Dynamic JSON content is not supported in plaintext')
         }
-        // eslint-disable-next-line max-len
-        const colors = [
-          'black',
-          'dark_blue',
-          'dark_green',
-          'dark_aqua',
-          'dark_red',
-          'dark_purple',
-          'gold',
-          'gray',
-          'dark_gray',
-          'blue',
-          'green',
-          'aqua',
-          'red',
-          'light_purple',
-          'yellow',
-          'white',
-        ] as const
 
-        converted = `§${colors.indexOf(color as 'black').toString(16)}`
-      }
+        if (currentText.color) {
+          const { color } = currentText
+          if (color.startsWith('#')) {
+            throw new Error('Hex codes are not supported in plaintext')
+          }
+          // eslint-disable-next-line max-len
+          const colors = [
+            'black',
+            'dark_blue',
+            'dark_green',
+            'dark_aqua',
+            'dark_red',
+            'dark_purple',
+            'gold',
+            'gray',
+            'dark_gray',
+            'blue',
+            'green',
+            'aqua',
+            'red',
+            'light_purple',
+            'yellow',
+            'white',
+          ] as const
 
-      if (currentText.obfuscated) {
-        converted += '§k'
-      }
-      if (currentText.bold) {
-        converted += '§l'
-      }
-      if (currentText.strikethrough) {
-        converted += '§m'
-      }
-      if (currentText.underlined) {
-        converted += '§n'
-      }
-      if (currentText.italic) {
-        converted += '§o'
-      }
+          converted = `§${colors.indexOf(color as 'black').toString(16)}`
+        }
 
-      converted += `${currentText.text}`
+        if (currentText.obfuscated) {
+          converted += '§k'
+        }
+        if (currentText.bold) {
+          converted += '§l'
+        }
+        if (currentText.strikethrough) {
+          converted += '§m'
+        }
+        if (currentText.underlined) {
+          converted += '§n'
+        }
+        if (currentText.italic) {
+          converted += '§o'
+        }
 
-      if (currentText.extra) {
-        converted += this.componentToPlainText(currentText.extra)
+        converted += `${currentText.text}`
+
+        if (currentText.extra) {
+          converted += this.componentToPlainText(currentText.extra as JSONTextComponent)
+        }
       }
     }
 

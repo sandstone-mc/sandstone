@@ -132,7 +132,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
   }
 
   /** @internal */
-  _toChatComponent = () => ({ translate: this.translationKey })
+  _toChatComponent = () => ({ translate: this.translationKey as `${string}:${string}` })
 
   toString = () => this.name
 }

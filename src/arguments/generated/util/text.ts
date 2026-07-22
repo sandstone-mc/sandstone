@@ -7,21 +7,12 @@ import type { DataComponentPatch } from 'sandstone/arguments/generated/world/com
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type {
-  AtlasClass,
-  DataPointClass,
-  DialogClass,
-  FontClass,
-  NBTInt,
-  NBTList,
-  ObjectiveClass,
-  Score,
-  TextureClass,
-} from 'sandstone'
+import type { AtlasClass, DialogClass, FontClass, NBTInt, NBTList, ObjectiveClass, TextureClass } from 'sandstone'
+import type { ComponentClass } from 'sandstone/variables'
 
 export type BlockNbtText = ({
   block: Coordinates,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'block',
   type?: 'nbt',
 } & TextNbtBase)
@@ -113,7 +104,7 @@ export type EntityHoverValue = {
 
 export type EntityNbtText = ({
   entity: MultipleEntitiesArgument,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'entity',
   type?: 'nbt',
 } & TextNbtBase)
@@ -325,13 +316,13 @@ export type RunCommand = {
 
 export type ScoreHolder = {
   objective: `${any}${string}` | ObjectiveClass,
-  name: `${any}${string}` | Score,
+  name: `${any}${string}`,
 }
 
 export type ScoreText = ({
   score: {
     objective: `${any}${string}` | ObjectiveClass,
-    name: `${any}${string}` | Score,
+    name: `${any}${string}`,
   },
   type?: 'score',
 } & TextBase)
@@ -385,7 +376,7 @@ export type SpriteText = ({
 
 export type StorageNbtText = ({
   storage: `${string}:${string}`,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'storage',
   type?: 'nbt',
 } & TextNbtBase)
@@ -394,10 +385,7 @@ export type SuggestCommand = {
   command: `${any}${string}`,
 }
 
-export type Text = (string | TextObject | NBTList<(string | TextObject), {
-  leftExclusive: false,
-  min: 1,
-}>)
+export type Text = (string | TextObject | ComponentClass | Text[])
 
 export type TextBase = ({
   /**
@@ -459,7 +447,7 @@ export type TextObject = (({
 } & TextBase) | ({
   score: {
     objective: `${any}${string}` | ObjectiveClass,
-    name: `${any}${string}` | Score,
+    name: `${any}${string}`,
   },
   type?: 'score',
 } & TextBase) | ({
@@ -536,17 +524,17 @@ export type TextObject = (({
   type?: 'keybind',
 } & TextBase) | ({
   block: Coordinates,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'block',
   type?: 'nbt',
 } & TextNbtBase) | ({
   entity: MultipleEntitiesArgument,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'entity',
   type?: 'nbt',
 } & TextNbtBase) | ({
   storage: `${string}:${string}`,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'storage',
   type?: 'nbt',
 } & TextNbtBase) | ({

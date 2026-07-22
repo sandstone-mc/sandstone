@@ -129,10 +129,10 @@ export class Flow {
 
     const fullError: JSONTextComponent = [
       { text: '\nSandstone Pack Error:\n', color: 'yellow' },
-      error || '[Function Threw]',
-      '\n\n',
+      typeof error === 'string' ? { text: error } : error ?? { text: '[Function Threw]' },
+      { text: '\n\n'},
 
-      `@ Function ${node.resource.name}. Node ${node.body.length - 1}.\n`,
+      { text: `@ Function ${node.resource.name}. Node ${node.body.length - 1}.\n` },
     ]
 
     if (broadcast !== false) {

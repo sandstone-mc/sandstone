@@ -108,7 +108,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    */
   _toChatComponent(): JSONTextComponent {
     return {
-      score: { name: this.target, objective: this.objective.name },
+      score: { name: `${this.target}` as `${any}${string}`, objective: this.objective },
     }
   }
 
