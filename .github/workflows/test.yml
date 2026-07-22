@@ -17,14 +17,11 @@ jobs:
     - name: Setup Bun
       uses: oven-sh/setup-bun@v2
 
-    - name: Install tsc
-      run: bun i -g typescript@5
+    - name: Install dependencies
+      run: bun i
 
     - name: Build Library
       run: bun dev:build
-
-    - name: Install dependencies
-      run: bun i
 
     - name: Run tests
       run: bun test
