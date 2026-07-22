@@ -174,7 +174,7 @@ export class ItemPredicateClass {
    * ```
    */
   model(): ItemModelBuilder {
-    // Dynamic import to avoid circular dependency
+    // Dynamic import to avoid circular dependency // TODO: Fix
     const { ItemModelBuilder } = require('sandstone/core/resources/resourcepack/itemDefinition')
     const builder = new ItemModelBuilder(this.pack)
     // Copy test groups to the new builder
