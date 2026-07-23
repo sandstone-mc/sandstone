@@ -81,7 +81,7 @@ export class TextureClass<Type extends TextureType = 'block'> extends ResourceCl
   }
 
   toString() {
-    return `${this.path[0]}:${this.path.slice(2)}`
+    return `${this.path[0]}:${this.path.slice(2).join('/')}`
   }
 
   // TODO

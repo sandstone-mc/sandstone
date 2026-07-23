@@ -22,8 +22,26 @@ const DEFAULT_SUBPATHS = [
   'variables',
 ] as const
 
-const isAnyKeyword = (parts: { text: string; kind: string }[]): boolean =>
-  parts.some((p) => p.kind === 'keyword' && p.text.trim() === 'any')
+const isAnyKeyword = (parts: { text: string; kind: string }[]): boolean => {
+  // The `${any}${string}` template-literal pattern is intentional in
+  // LiteralUnion / Label / NBTAllNumbers — `any` here lets TS accept any
+  // string prefix while `${string}` constrains the rest. Don't flag it.
+  let anyIndex = -1
+  for (let i = 0; i < parts.length; i++) {
+    const p = parts[i]
+    if (p.kind === 'keyword' && p.text.trim() === 'any') {
+      anyIndex = i
+      // Look ahead for the `${string}` companion within a short window
+      // (template literal span).
+      for (let j = i + 1; j < Math.min(i + 6, parts.length); j++) {
+        const q = parts[j]
+        if (q.kind === 'punctuation' && q.text === '}') break
+        if (q.kind === 'keyword' && q.text.trim() === 'string') return false
+      }
+    }
+  }
+  return anyIndex !== -1
+}
 
 const importPathFor = (sub: string): string =>
   sub === '.' ? 'sandstone' : `sandstone/${sub}`

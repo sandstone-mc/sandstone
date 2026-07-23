@@ -140,6 +140,21 @@ function getSubpathFromSpecifier(
     return null
   }
 
+  // Skip the rewrite for files inside the bundled internal module graph.
+  // `migrateDtsImports` is called with distDir = `dist/_internal/`, so any
+  // file in here is part of the bundle. Redirecting their imports to the
+  // main entry would create cycles (Flow.d.ts ↔ index.d.ts) that TS bails
+  // on with `any`. Consumer-facing entry points (dist/exports/**) still get
+  // the rewrite so they pull from a single canonical re-export.
+  const normalizedFileDir = fileDir.replace(/\\/g, '/')
+  const normalizedDistDir = distDir.replace(/\\/g, '/')
+  if (
+    normalizedFileDir === normalizedDistDir ||
+    normalizedFileDir.startsWith(`${normalizedDistDir}/`)
+  ) {
+    return null
+  }
+
   // Resolve to absolute path
   const resolvedPath = join(fileDir, specifier).replace(/\\/g, '/')
 

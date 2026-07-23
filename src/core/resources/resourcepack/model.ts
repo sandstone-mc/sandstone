@@ -54,5 +54,5 @@ export class ModelClass extends ResourceClass<ModelNode> {
 
   // TODO: Consider building a separate Variable class for model manipulation
 
-  toString = () => `${this.path[0]}:${this.path.slice(2)}`
+  toString = () => `${this.path[0]}:${this.path.slice(2).join('/')}`
 }

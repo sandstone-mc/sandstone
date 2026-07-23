@@ -40,31 +40,23 @@ export function fixDtsImports(
     if (importPath.startsWith('sandstone/')) {
       const subPath = importPath.slice('sandstone/'.length).replace(/\.ts$/, '')
 
-      // Split into directory part and file basename so the basename
-      // isn't lost when the relative path collapses to './' (sibling imports).
-      const lastSlash = subPath.lastIndexOf('/')
-      const basename = lastSlash === -1 ? subPath : subPath.slice(lastSlash + 1)
-      const dirSubPath = lastSlash === -1 ? '' : subPath.slice(0, lastSlash)
-
-      // Relative path from the current file's directory to the parent directory of the target file.
-      const targetDir = dirSubPath
-        ? posix.join(normalizedDistDir, 'types', dirSubPath)
-        : posix.join(normalizedDistDir, 'types')
-      let relPath = posix.relative(normalizedFileDir, targetDir)
-
-      // Ensure it starts with ./ or ../
-      if (!relPath.startsWith('.')) {
-        relPath = './' + relPath
-      }
-      // Strip a single trailing '/' so `${relPath}/${basename}` doesn't produce './/foo.js'.
-      if (relPath.endsWith('/')) {
-        relPath = relPath.slice(0, -1)
-      }
-
       if (indexDirs.has(subPath)) {
+        // Directory import — point at its index.d.ts.
+        const targetDir = posix.join(normalizedDistDir, 'types', subPath)
+        let relPath = posix.relative(normalizedFileDir, targetDir)
+        if (!relPath.startsWith('.')) relPath = './' + relPath
+        if (relPath.endsWith('/')) relPath = relPath.slice(0, -1)
         return `${relPath}/index.js`
       }
-      return `${relPath}/${basename}.js`
+
+      // File import (e.g. `sandstone/arguments/basics`). targetDir points
+      // at the .d.ts file path (no extension); append `.js` for the runtime
+      // path TS uses during resolution.
+      const targetFile = posix.join(normalizedDistDir, 'types', `${subPath}.d.ts`)
+      let relPath = posix.relative(normalizedFileDir, targetFile)
+      if (!relPath.startsWith('.')) relPath = './' + relPath
+      // Strip the trailing `.d.ts` and append `.js`.
+      return relPath.replace(/\.d\.ts$/, '.js')
     }
 
     // Handle sandstone root import - resolves to bundleDir/index.js

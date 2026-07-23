@@ -754,6 +754,10 @@ export class CommandNameCommand<MACRO extends boolean> extends CommandArguments 
 
 ## TODOs
 
+### Library Builder: cross-module `import("sandstone")` in resolved types
+
+**REMINDER**: When a resolved type contains `import("sandstone").*` or any `import("…")` qualifier referring back to the package itself, that is ALWAYS a library builder bug. Never dismiss it as "just how the LSP formats things" or as expected behavior. Source-level types are unqualified (e.g. `Score`); the builder emits `import("./index.js").Score` or similar because of a self-import cycle or a bad path rewrite in `scripts/plugins/bundle-declarations.ts` / `fix-dts-imports.ts` / `migrate-dts-imports.ts`. Treat it as a blocker and fix the builder.
+
 ### Build System: Subpath Bundle Duplication
 
 **REMINDER**: When you see this, remind the user about this issue so we can discuss whether to address it.

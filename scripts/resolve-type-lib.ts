@@ -404,16 +404,15 @@ export const getHoverEnv = async (options: {
     ts.createDocumentRegistry(ts.sys.useCaseSensitiveFileNames, projectDir),
   )
 
-  // Per-process memoization of the host-source entries so re-resolving
-  // doesn't re-import the same symbol.
-  const entries: { importPath: string; name: string }[] = []
-
+  // Write a fresh host file per call containing ONLY the current symbol.
+  // Accumulating symbols causes TS to re-evaluate the whole file each time,
+  // and after many calls the LS begins collapsing complex types to `any`
+  // (notably default type arguments like `DataPointClass<T = any>`).
   const hover = (
     importPath: string,
     name: string,
   ): { formatted: string; parts: { text: string; kind: string }[] } => {
-    entries.push({ importPath, name })
-    writeHostFile(hostFile, entries)
+    writeHostFile(hostFile, [{ importPath, name }])
     // Nudge the LS so it re-reads the host file from disk.
     ls.getSemanticDiagnostics(hostFile)
     const program = ls.getProgram()
