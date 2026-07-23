@@ -5,6 +5,14 @@ import type { NBTSerializable } from 'sandstone/arguments'
 
 export class ComponentClass {
   /**
+   * Phantom brand property for TypeScript to identify instances of `ComponentClass`
+   * (and subclasses). Does not exist at runtime. Preserved when `@internal` members
+   * are stripped, so structural type checks (e.g. `Exclude<T, ComponentClass>`)
+   * behave correctly.
+   */
+  declare readonly __componentClassBrand: true
+
+  /**
    * @internal
    */
   _toChatComponent(): JSONTextComponent {
@@ -12,6 +20,13 @@ export class ComponentClass {
   }
 }
 export class ConditionClass {
+  /**
+   * Phantom brand property for TypeScript to identify instances of `ConditionClass`
+   * (and subclasses). Does not exist at runtime. Preserved when `@internal` members
+   * are stripped.
+   */
+  declare readonly __conditionClassBrand: true
+
   /**
    * @internal
    */
@@ -42,6 +57,18 @@ export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolea
 }
 
 export class ConditionTextComponentClass extends ComponentClass implements ConditionClass {
+  /**
+   * Phantom brand property for TypeScript to identify instances of `ComponentClass`
+   * (and subclasses). Does not exist at runtime.
+   */
+  declare readonly __componentClassBrand: true
+
+  /**
+   * Phantom brand property for TypeScript to identify instances of `ConditionClass`
+   * (and subclasses). Does not exist at runtime.
+   */
+  declare readonly __conditionClassBrand: true
+
   /**
    * @internal
    */

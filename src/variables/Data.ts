@@ -139,6 +139,9 @@ export class DataClass<TYPE extends DATA_TYPES = any> {
 export class DataPointClass<TYPE extends DATA_TYPES = any>
   extends MacroArgument
   implements ConditionTextComponentClass, NBTSerializable {
+  declare readonly __componentClassBrand: true
+  declare readonly __conditionClassBrand: true
+
   path
 
   currentTarget: DATA_TARGET[TYPE]

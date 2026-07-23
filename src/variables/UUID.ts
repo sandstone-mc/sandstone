@@ -75,6 +75,9 @@ export type UUIDOptions = {
 
 export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
 implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSerializable {
+  declare readonly __componentClassBrand: true
+  declare readonly __conditionClassBrand: true
+
   /**
    * Phantom brand property for TypeScript type discrimination.
    * Uses `boolean` for player since a UUID can reference any entity type.

@@ -139,6 +139,8 @@ type Resource<T extends LiteralUnion<REGISTRIES>> = Add<
 export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   extends ResourceClass
   implements ListResource, ConditionClass, NBTSerializable {
+  declare readonly __conditionClassBrand: true
+
   static readonly resourceType = 'tag' as const
 
   readonly type: REGISTRY

@@ -39,6 +39,8 @@ export type DamageTypeClassArguments = {
   }
 
 export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements ComponentClass {
+  declare readonly __componentClassBrand: true
+
   static readonly resourceType = 'damage_type' as const
 
   public damageTypeJSON: DamageTypeClassArguments['json']

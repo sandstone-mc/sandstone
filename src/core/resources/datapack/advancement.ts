@@ -29,6 +29,8 @@ export type AdvancementClassArguments<AdvancementJSON extends SymbolResource['ad
 export class AdvancementClass<AdvancementJSON extends SymbolResource['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
   implements ConditionClass {
+  declare readonly __conditionClassBrand: true
+
   static readonly resourceType = 'advancement'
 
   public advancementJSON: AdvancementClassArguments<AdvancementJSON>['json']

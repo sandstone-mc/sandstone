@@ -302,6 +302,9 @@ export class SelectorClass<
   IsSingle extends boolean = false,
   IsPlayer extends boolean = false,
 > implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable {
+  declare readonly __componentClassBrand: true
+  declare readonly __conditionClassBrand: true
+
   /**
    * Phantom brand property for TypeScript to distinguish between different
    * SelectorClass type parameter combinations. Does not exist at runtime.

@@ -71,6 +71,9 @@ type Tuple<T, N extends number, A extends T[] = []> = (
 )
 
 export class Score extends MacroArgument implements ConditionClass, ComponentClass, NBTSerializable {
+  declare readonly __componentClassBrand: true
+  declare readonly __conditionClassBrand: true
+
   commands: SandstoneCommands<false>
 
   constructor(
@@ -502,6 +505,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
     if (typeof args[0] === 'number') {
       return {
+        __conditionClassBrand: true as const,
         _toMinecraftCondition: () =>
           new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
             `${playerScore.target}`,
@@ -514,6 +518,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
     const endArgs = args[1] ? args : [args[0]]
     return {
+      __conditionClassBrand: true as const,
       // eslint-disable-next-line max-len
       _toMinecraftCondition: () =>
         new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
@@ -665,6 +670,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    * @param range The range to compare the current score against.
    */
   matches = (range: Range<false>) => ({
+    __conditionClassBrand: true as const,
     _toMinecraftCondition: () =>
       new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
         `${this.target}`,

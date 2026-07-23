@@ -31,6 +31,8 @@ export type PredicateClassArguments = {
 type Predicate = PredicateJSON | PredicateClass
 
 export class PredicateClass extends ResourceClass<PredicateNode> implements ListResource, ConditionClass {
+  declare readonly __conditionClassBrand: true
+
   static readonly resourceType = 'predicate' as const
 
   public predicateJSON: NonNullable<PredicateClassArguments['json']>
