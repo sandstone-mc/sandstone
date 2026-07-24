@@ -6,7 +6,6 @@
  */
 import { readFile } from 'fs/promises'
 import { SourceMapGenerator } from 'source-map-js'
-import * as ts from 'typescript'
 import { collectExportedSymbols } from './symbols'
 
 /**
@@ -21,6 +20,38 @@ export function rewriteSourcePathsInMap(content: string): string {
     )
   }
   return JSON.stringify(map)
+}
+
+/**
+ * Shift every generated-line mapping in a `.d.ts.map` by `lineDelta` lines.
+ * Used after `copyDtsFiles` prepends N lines of consolidated imports — the
+ * map's mappings string was produced by `tsc` against the original file,
+ * so without this shift IDE ctrl-click would land N lines below the real
+ * declaration (e.g. `Score` ctrl-click landing on `unaryOperation`).
+ *
+ * The shift is implemented by prepending `lineDelta` empty `;`-separated
+ * segments to `mappings`, which adds `lineDelta` empty generated lines
+ * at the top. All existing mappings retain their relative order; their
+ * absolute generated line numbers increase by `lineDelta`.
+ */
+export function shiftMappingsByLines(content: string, lineDelta: number): string {
+  if (lineDelta === 0) return content
+  if (lineDelta < 0) {
+    throw new Error(`shiftMappingsByLines: negative lineDelta (${lineDelta}) not supported`)
+  }
+  const map = JSON.parse(content)
+  if (typeof map.mappings !== 'string') return content
+  map.mappings = ';'.repeat(lineDelta) + map.mappings
+  return JSON.stringify(map)
+}
+
+/**
+ * Count the number of generated lines added to a file by a text
+ * transformation. If `before` has `B` lines and `after` has `A` lines,
+ * the delta is `A - B` (positive when lines were added).
+ */
+export function lineDelta(before: string, after: string): number {
+  return after.split('\n').length - before.split('\n').length
 }
 
 /**

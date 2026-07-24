@@ -6,11 +6,19 @@
  * allowed in the bundled index — every type must be in scope via a
  * top-level import.
  *
+ * The replacement preserves the original column position of `X` by
+ * swapping the `import("...")` prefix for a same-width comment
+ * (`/* "..." *\/`). This keeps every downstream column in the file
+ * stable, so the per-file `.d.ts.map` produced by `tsc` (which encodes
+ * generated columns against the un-rewritten text) still resolves
+ * ctrl-click navigation to the right line/column in `src/`.
+ *
  * Exports both a top-level `rewriteInlineImports(source, collected)` for
  * sibling-file rewrites and `makeInlineImportVisitor(collected, context)`
  * for in-place use inside the main transformer's visitor walk.
  */
 import * as ts from 'typescript'
+import { MagicString } from 'magic-string'
 
 export interface CollectedImport {
   name: string
@@ -19,19 +27,66 @@ export interface CollectedImport {
 
 /**
  * Top-level rewrite: parses `source`, replaces every inline
- * `import("...").X` with bare `X`, accumulates collected imports.
+ * `import("...")` prefix with a same-width comment (so `.X` stays at its
+ * original column), accumulates collected imports.
  */
 export function rewriteInlineImports(
   source: string,
   collected: Set<CollectedImport>,
 ): string {
   const sf = ts.createSourceFile('_.ts', source, ts.ScriptTarget.Latest, true)
-  const result = ts.transform(sf, [
-    (context) => (sf) => ts.visitEachChild(sf, makeInlineImportVisitor(collected, context), context),
-  ])
-  const out = ts.createPrinter().printFile(result.transformed[0])
-  result.dispose()
-  return out
+
+  // First pass: collect (module, name) pairs at every `import("...")` site
+  // and the source span of the `import("...")` prefix that we'll pad.
+  const edits: Array<{ start: number; end: number; padding: string }> = []
+  const visit: ts.Visitor = (node) => {
+    if (ts.isImportTypeNode(node)) {
+      const arg = node.argument
+      if (ts.isLiteralTypeNode(arg) && ts.isStringLiteral(arg.literal)) {
+        const module = arg.literal.text
+        const name = readImportName(node.qualifier)
+        if (name !== null && !isSelfReferenceModule(module)) {
+          collected.add({ name, module })
+          // Span from the `import` keyword through the `.` that
+          // precedes the qualifier (or through the closing `)` when no
+          // qualifier is present). Replacing this whole prefix with a
+          // same-width comment keeps the qualifier (`X` or `X.Y`) at
+          // its original column.
+          const start = node.getStart(sf)
+          const end = node.qualifier
+            ? node.qualifier.getStart(sf)
+            : node.getEnd()
+          edits.push({ start, end, padding: paddedComment(end - start) })
+        }
+      }
+    }
+    return ts.visitEachChild(
+      node,
+      visit,
+      undefined as unknown as ts.TransformationContext,
+    )
+  }
+  ts.visitNode(sf, visit)
+
+  if (edits.length === 0) return source
+
+  // Second pass: apply column-preserving edits via MagicString.
+  const ms = new MagicString(source)
+  for (const { start, end, padding } of edits) {
+    ms.overwrite(start, end, padding)
+  }
+  return ms.toString()
+}
+
+/**
+ * Build a block comment of exactly `length` characters. Comment is the
+ * minimum-viable token (`/* ... *\/` with spaces inside), so it parses
+ * as whitespace wherever the original `import("...")` sat.
+ */
+function paddedComment(length: number): string {
+  if (length <= 0) return ''
+  if (length < 5) return '/'.repeat(length)
+  return `/*${' '.repeat(length - 4)}*/`
 }
 
 /**
@@ -39,6 +94,9 @@ export function rewriteInlineImports(
  * the fly (no separate source-text round-trip). Reusable inside another
  * transformer so inline-import discoveries share the same `collected`
  * Set as sibling import-export discoveries.
+ *
+ * Note: this in-place visitor does NOT preserve column counts. Use
+ * `rewriteInlineImports` (top-level) when column preservation matters.
  */
 export function makeInlineImportVisitor(
   collected: Set<CollectedImport>,
@@ -91,8 +149,8 @@ export function makeInlineImportVisitor(
 export function readImportName(qualifier: ts.EntityName | undefined): string | null {
   if (!qualifier) return null
   if (ts.isIdentifier(qualifier)) return qualifier.text
-  const pae = qualifier as unknown as ts.PropertyAccessExpression | undefined
-  if (pae && ts.isIdentifier(pae.expression)) return pae.expression.text
+  const qn = qualifier as unknown as ts.QualifiedName
+  if (qn && ts.isIdentifier(qn.left)) return qn.left.text
   return null
 }
 

@@ -4,85 +4,49 @@
  * resolution at runtime — the explicit `/index.js` path always resolves.
  *
  * Applies to both `import` and `export` declarations.
+ *
+ * String-level via MagicString so line layout is preserved (no TS-printer
+ * reformatting downstream).
  */
 import { statSync } from 'fs'
 import path from 'path'
-import * as ts from 'typescript'
+import { MagicString } from 'magic-string'
 
 /**
- * Rewrite a sibling `.d.ts` file's module specifiers in place. Returns the
- * new source text (or the input unchanged if nothing was rewritten).
+ * Rewrite a sibling `.d.ts` file's module specifiers in place. Returns
+ * the new source text (or the input unchanged if nothing was rewritten).
  */
 export function rewriteSiblingSpecifiers(
   source: string,
   sourceFile: string,
 ): string {
-  const sf = ts.createSourceFile('_.ts', source, ts.ScriptTarget.Latest, true)
   const fileDir = path.dirname(sourceFile)
 
-  const newStmts = sf.statements.map((stmt) =>
-    rewriteStatementSpecifier(stmt, fileDir),
-  )
-  if (newStmts.every((s, i) => s === sf.statements[i])) return source
-  return ts.createPrinter().printFile(ts.factory.updateSourceFile(sf, newStmts))
+  // Match `from "./X.js"` and `import("./X.js")` style specifiers.
+  // We only rewrite the path inside the quotes.
+  const edits: Array<{ start: number; end: number; replacement: string }> = []
+  const re = /(?<=(?:from\s+|import\s*\(\s*))(["'])((?:\.{1,2}\/[^"']*?\.js))\1/g
+  for (const match of source.matchAll(re)) {
+    const quote = match[1]
+    const specifier = match[2]
+    const newSpecifier = rewritePath(specifier, fileDir)
+    if (newSpecifier && newSpecifier !== specifier) {
+      const start = match.index! + (match[0].indexOf(quote))
+      const end = start + 1 + specifier.length + 1
+      edits.push({ start, end, replacement: `${quote}${newSpecifier}${quote}` })
+    }
+  }
+
+  if (edits.length === 0) return source
+
+  const ms = new MagicString(source)
+  for (const edit of edits) {
+    ms.overwrite(edit.start, edit.end, edit.replacement)
+  }
+  return ms.toString()
 }
 
-function rewriteStatementSpecifier(
-  stmt: ts.Statement,
-  fileDir: string,
-): ts.Statement {
-  if (
-    ts.isImportDeclaration(stmt) &&
-    stmt.moduleSpecifier &&
-    ts.isStringLiteral(stmt.moduleSpecifier)
-  ) {
-    const updated = rewriteImportLikeSpecifier(
-      stmt.moduleSpecifier.text,
-      fileDir,
-      (newModule) =>
-        ts.factory.updateImportDeclaration(
-          stmt,
-          stmt.modifiers,
-          stmt.importClause,
-          ts.factory.createStringLiteral(newModule),
-          stmt.attributes,
-        ),
-    )
-    if (updated) return updated
-  }
-  if (
-    ts.isExportDeclaration(stmt) &&
-    stmt.moduleSpecifier &&
-    ts.isStringLiteral(stmt.moduleSpecifier)
-  ) {
-    const updated = rewriteImportLikeSpecifier(
-      stmt.moduleSpecifier.text,
-      fileDir,
-      (newModule) =>
-        ts.factory.updateExportDeclaration(
-          stmt,
-          stmt.modifiers,
-          stmt.isTypeOnly,
-          stmt.exportClause,
-          ts.factory.createStringLiteral(newModule),
-          undefined,
-        ),
-    )
-    if (updated) return updated
-  }
-  return stmt
-}
-
-/**
- * If `specifier` is `./X.js` and `./X/` is a directory in `fileDir`,
- * return a new node with the specifier rewritten to `./X/index.js`.
- * Returns null if no rewrite is applicable.
- */
-function rewriteImportLikeSpecifier<T extends ts.Statement>(
-  specifier: string,
-  fileDir: string,
-  buildReplacement: (newModule: string) => T,
-): T | null {
+function rewritePath(specifier: string, fileDir: string): string | null {
   if (!specifier.startsWith('./') || !specifier.endsWith('.js')) return null
   const dir = specifier.slice(2, -3)
   if (!dir || dir.includes('..')) return null
@@ -92,5 +56,5 @@ function rewriteImportLikeSpecifier<T extends ts.Statement>(
   } catch {
     return null
   }
-  return buildReplacement(`./${dir}/index.js`)
+  return `./${dir}/index.js`
 }

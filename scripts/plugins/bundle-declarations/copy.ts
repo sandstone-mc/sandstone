@@ -11,7 +11,7 @@ import { fixDtsImports } from '../fix-dts-imports'
 import { rewriteSiblingSpecifiers } from './sibling-specifiers'
 import { rewriteInlineImports } from './inline-imports'
 import { groupImportsForSibling, printImportDeclarations } from './import-grouping'
-import { rewriteSourcePathsInMap } from './source-maps'
+import { rewriteSourcePathsInMap, shiftMappingsByLines } from './source-maps'
 
 const { join, dirname } = path
 
@@ -47,10 +47,17 @@ export async function copyDtsFiles(
     )
     const withImports = importStmts + rewritten
 
-    // Copy the source map with rewritten paths.
+    // Copy the source map, shifting mappings by however many lines we
+    // added/removed relative to the original `.d.ts`. The original map
+    // was produced by `tsc` against the un-transformed file, so without
+    // this shift every declaration would resolve `lineDelta` lines below
+    // its real position in the source.
+    const lineShift = withImports.split('\n').length - content.split('\n').length
     try {
       const mapContent = await readFile(srcPath + '.map', 'utf8')
-      await writeFile(destPath + '.map', rewriteSourcePathsInMap(mapContent))
+      const pathShifted = rewriteSourcePathsInMap(mapContent)
+      const lineShifted = shiftMappingsByLines(pathShifted, lineShift)
+      await writeFile(destPath + '.map', lineShifted)
     } catch {
       // No source map
     }
