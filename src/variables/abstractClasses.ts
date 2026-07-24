@@ -3,12 +3,12 @@ import type { ConditionNode } from '../flow'
 import type { SelectorClass } from './Selector'
 import type { NBTSerializable } from 'sandstone/arguments'
 
-export class ComponentClass {
+export class DataComponentClass {
   /**
    * Phantom brand property for TypeScript to identify instances of `ComponentClass`
    * (and subclasses). Does not exist at runtime.
    */
-  declare readonly __componentClassBrand: true
+  declare readonly __dataComponentClassBrand: true
 
   /**
    * @internal
@@ -32,12 +32,18 @@ export class ConditionClass {
   }
 }
 
-export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> implements NBTSerializable {
+export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> implements NBTSerializable, DataComponentClass {
   /**
    * Phantom brand property for TypeScript to distinguish between different
    * SelectorPickClass type parameter combinations. Does not exist at runtime.
    */
   declare readonly __selectorPickBrand: { single: IsSingle; player: IsPlayer }
+
+  /**
+   * Phantom brand property for TypeScript to identify instances of `ComponentClass`
+   * (and subclasses). Does not exist at runtime.
+   */
+  declare readonly __dataComponentClassBrand: true
 
   /**
    * @internal
@@ -51,14 +57,20 @@ export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolea
   toNBT(): string {
     throw new Error('Not implemented')
   }
+  /**
+   * @internal
+   */
+  _toChatComponent(): JSONTextComponent {
+    throw new Error('Not implemented')
+  }
 }
 
-export class ConditionTextComponentClass extends ComponentClass implements ConditionClass {
+export class ConditionTextComponentClass extends DataComponentClass implements ConditionClass {
   /**
    * Phantom brand property for TypeScript to identify instances of `ComponentClass`
    * (and subclasses). Does not exist at runtime.
    */
-  declare readonly __componentClassBrand: true
+  declare readonly __dataComponentClassBrand: true
 
   /**
    * Phantom brand property for TypeScript to identify instances of `ConditionClass`

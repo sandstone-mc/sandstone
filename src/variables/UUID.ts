@@ -2,11 +2,11 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 
-import type { JSONTextComponent, NBTSerializable } from 'sandstone/arguments'
+import type { JSONTextComponent } from 'sandstone/arguments'
 import type { ExecuteCommand } from 'sandstone/commands'
 import { createDeferredMacroExecute, ExecuteCommand as ExecuteCommandClass } from 'sandstone/commands/implementations/entity/execute'
 import type { SandstoneCore } from 'sandstone/core'
-import type { ConditionTextComponentClass } from './abstractClasses'
+import type { ConditionClass } from './abstractClasses'
 import { SelectorPickClass } from './abstractClasses'
 import type { DataPointClass } from './Data'
 import { NBTIntArray } from './nbt'
@@ -74,8 +74,8 @@ export type UUIDOptions = {
 }
 
 export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
-implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSerializable {
-  declare readonly __componentClassBrand: true
+implements ConditionClass, SelectorPickClass<true, boolean> {
+  declare readonly __dataComponentClassBrand: true
   declare readonly __conditionClassBrand: true
 
   /**

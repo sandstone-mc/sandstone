@@ -1,14 +1,16 @@
 /**
- * Rewrite `./X.js` module specifiers to `./X/index.js` when `./X/` is a
- * directory in the staged bundle. Eliminates reliance on bundler
- * resolution at runtime — the explicit `/index.js` path always resolves.
+ * Rewrite `./X.js` module specifiers to `./X/index.js` when `./X/index.d.ts`
+ * exists in the staged bundle. The directory-existence check is
+ * intentionally avoided: a directory like `./component/` can exist with
+ * sibling files (`block.d.ts`, `entity.d.ts`, ...) but no `index.d.ts`,
+ * in which case `./component/index.js` would not resolve at runtime.
  *
  * Applies to both `import` and `export` declarations.
  *
  * String-level via MagicString so line layout is preserved (no TS-printer
  * reformatting downstream).
  */
-import { statSync } from 'fs'
+import { existsSync } from 'fs'
 import path from 'path'
 import { MagicString } from 'magic-string'
 
@@ -50,11 +52,7 @@ function rewritePath(specifier: string, fileDir: string): string | null {
   if (!specifier.startsWith('./') || !specifier.endsWith('.js')) return null
   const dir = specifier.slice(2, -3)
   if (!dir || dir.includes('..')) return null
-  const dirPath = path.join(fileDir, dir)
-  try {
-    if (!statSync(dirPath).isDirectory()) return null
-  } catch {
-    return null
-  }
+  const indexPath = path.join(fileDir, dir, 'index.d.ts')
+  if (!existsSync(indexPath)) return null
   return `./${dir}/index.js`
 }

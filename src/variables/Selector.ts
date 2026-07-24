@@ -302,7 +302,7 @@ export class SelectorClass<
   IsSingle extends boolean = false,
   IsPlayer extends boolean = false,
 > implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable {
-  declare readonly __componentClassBrand: true
+  declare readonly __dataComponentClassBrand: true
   declare readonly __conditionClassBrand: true
 
   /**

@@ -16,6 +16,9 @@ export type AXES = SINGLE_AXES | DEDUP<DOUBLE_AXES> | DEDUP<TRIPLE_AXES>
 
 export type ANCHORS = 'eyes' | 'feet'
 
+/**
+ * @deprecated Use `TextColor | 'reset'`
+ */
 export type BASIC_COLORS = (
   | 'black'
   | 'dark_blue'
@@ -36,6 +39,8 @@ export type BASIC_COLORS = (
   | 'white'
   | 'reset'
 )
+
+export { TextColor } from './generated/util/text'
 
 export type GAMEMODES = 'survival' | 'creative' | 'adventure' | 'spectator'
 

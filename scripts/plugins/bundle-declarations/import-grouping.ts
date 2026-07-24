@@ -5,9 +5,9 @@
  *   - `groupImportsForMain` prepends `./types/` to relative paths so the
  *     bundled main resolves to the staged `dist/_internal/types/` tree.
  *   - `groupImportsForSibling` rewrites `./X.js` to `./X/index.js` when
- *     `./X/` is a directory in `siblingDir`.
+ *     `./X/index.d.ts` exists in `siblingDir`.
  */
-import { statSync } from 'fs'
+import { existsSync } from 'fs'
 import path from 'path'
 import * as ts from 'typescript'
 
@@ -90,16 +90,12 @@ function fixModulePath(module: string, mode: Mode, siblingDir?: string): string 
     }
     return module
   }
-  // Sibling file: `./X.js` → `./X/index.js` if `./X/` is a directory.
+  // Sibling file: `./X.js` → `./X/index.js` if `./X/index.d.ts` exists.
   if (siblingDir && module.startsWith('./') && module.endsWith('.js')) {
     const dir = module.slice(2, -3)
     if (dir && !dir.includes('..')) {
-      try {
-        if (statSync(path.join(siblingDir, dir)).isDirectory()) {
-          return `./${dir}/index.js`
-        }
-      } catch {
-        // not a directory; leave alone
+      if (existsSync(path.join(siblingDir, dir, 'index.d.ts'))) {
+        return `./${dir}/index.js`
       }
     }
   }

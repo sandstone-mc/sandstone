@@ -1,4 +1,4 @@
-import { ComponentClass } from 'sandstone/variables'
+import { DataComponentClass } from 'sandstone/variables'
 import type {
   NBTByte,
   NBTByteArray,
@@ -16,7 +16,7 @@ export interface NBTSerializable {
   toNBT(): string
 }
 
-export type NBTObject = string | number | boolean | URL | undefined | NBTSerializable | ComponentClass | { [key: string]: NBTObject | undefined } | NBTObject[] | NBTClass
+export type NBTObject = string | number | boolean | URL | undefined | NBTSerializable | DataComponentClass | { [key: string]: NBTObject | undefined } | NBTObject[] | NBTClass
 
 export type RootNBT = Record<string, NBTObject | undefined>
 
@@ -27,7 +27,7 @@ export type MCDocToJSON<T> =
   T extends NBTInt | NBTFloat | NBTDouble | NBTByte | NBTShort | NBTLong ? (number | T) :
   T extends NBTIntArray | NBTLongArray | NBTByteArray ? (number | T)[] :
   T extends (...args: any[]) => any ? T :
-  T extends NBTSerializable | ComponentClass ? T :
+  T extends NBTSerializable | DataComponentClass ? T :
   T extends ReadonlyArray<infer U> ? Array<MCDocToJSON<U>> :
   T extends object ? { [K in keyof T]: MCDocToJSON<T[K]> } :
   T
