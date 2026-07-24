@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { RESOURCE_PATHS, type SymbolResource, type SOUND_TYPES } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource, type SOUND_TYPES } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
@@ -101,7 +101,7 @@ export class SoundsNode extends ContainerNode implements ResourceNode<SoundsClas
   getValue = () => jsonStringify(this.resource.soundsJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-type SoundsJSON = NonNullable<SymbolResource['sounds']>
+type SoundsJSON = NonNullable<MCDocToJSON<SymbolResource['sounds']>>
 
 export type SoundsArguments = {
   /**

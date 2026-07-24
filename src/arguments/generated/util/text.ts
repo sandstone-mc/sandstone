@@ -5,7 +5,7 @@ import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
 import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { Coordinates, MultipleEntitiesArgument, SingleEntityArgument } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { AtlasClass, DialogClass, FontClass, NBTInt, NBTList, ObjectiveClass, TextureClass } from 'sandstone'
 import type { ComponentClass } from 'sandstone/variables'
@@ -316,13 +316,13 @@ export type RunCommand = {
 
 export type ScoreHolder = {
   objective: `${any}${string}` | ObjectiveClass,
-  name: `${any}${string}`,
+  name: `${any}${string}` | SingleEntityArgument,
 }
 
 export type ScoreText = ({
   score: {
     objective: `${any}${string}` | ObjectiveClass,
-    name: `${any}${string}`,
+    name: `${any}${string}` | SingleEntityArgument,
   },
   type?: 'score',
 } & TextBase)
@@ -447,7 +447,7 @@ export type TextObject = (({
 } & TextBase) | ({
   score: {
     objective: `${any}${string}` | ObjectiveClass,
-    name: `${any}${string}`,
+    name: `${any}${string}` | SingleEntityArgument,
   },
   type?: 'score',
 } & TextBase) | ({

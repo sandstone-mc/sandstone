@@ -65,7 +65,12 @@ export type Targets = ({
 })
 
 export type TextureInput = {
-  location: string,
+  /**
+   * Value:
+   *
+   * Value: A texture ID within a path root of `(namespace)/textures/effect/`
+   */
+  location: `${string}:${string}`,
   sampler_name: string,
   /**
    * Value:

@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource, type MultiplePlayersArgumentOf } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource, type MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,7 +22,7 @@ export type RecipeClassArguments = {
   /**
    * The recipe's JSON.
    */
-  json: SymbolResource[(typeof RecipeClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof RecipeClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class RecipeClass extends ResourceClass<RecipeNode> {

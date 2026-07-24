@@ -6,5 +6,5 @@ export type BlockListRef = ((
   | Array<Registry['minecraft:block']>)
 
 export type ItemListRef = ((
-  | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+  | Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>)
   | Array<Registry['minecraft:item']>)

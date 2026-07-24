@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -26,7 +26,7 @@ export type TimelineClassArguments = {
   /**
    * The timeline's JSON.
    */
-  json: SymbolResource[(typeof TimelineClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof TimelineClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class TimelineClass extends ResourceClass<TimelineNode> {
@@ -72,7 +72,7 @@ export type WorldClockClassArguments = {
   /**
    * The world clock's JSON.
    */
-  json: SymbolResource[(typeof WorldClockClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof WorldClockClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class WorldClockClass extends ResourceClass<WorldClockNode> {

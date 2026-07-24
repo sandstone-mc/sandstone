@@ -2,7 +2,8 @@ import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/genera
 import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, Score } from 'sandstone'
+import type { SingleEntityArgument } from 'sandstone/arguments'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type BinomialIntGenerator = {
   /**
@@ -50,7 +51,7 @@ export type ContextScoreProvider = {
 }
 
 export type FixedScoreProvider = {
-  name: `${any}${string}` | Score,
+  name: `${any}${string}` | SingleEntityArgument,
 }
 
 export type IntLimiter = {

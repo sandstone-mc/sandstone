@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,7 +22,7 @@ export type TrialSpawnerClassArguments = {
   /**
    * The trial spawner configuration's JSON.
    */
-  json: SymbolResource[(typeof TrialSpawnerClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof TrialSpawnerClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class TrialSpawnerClass extends ResourceClass<TrialSpawnerNode> {

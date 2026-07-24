@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,7 +22,7 @@ export type ParticleClassArguments = {
   /**
    * The particle's JSON.
    */
-  json: SymbolResource[(typeof ParticleClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof ParticleClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class ParticleClass extends ResourceClass<ParticleNode> {

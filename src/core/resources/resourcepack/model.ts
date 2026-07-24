@@ -3,7 +3,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 
 export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
   constructor(
@@ -20,7 +20,7 @@ export type ModelClassArguments = {
   /**
    * The model's JSON.
    */
-  json: SymbolResource[(typeof ModelClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof ModelClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 /**
