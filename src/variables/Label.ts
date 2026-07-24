@@ -1,14 +1,12 @@
 /* eslint-disable max-len */
 
+import type { NBTSerializable } from 'sandstone/arguments'
 import type { MakeInstanceCallable } from 'sandstone/utils'
 import { makeClassCallable } from 'sandstone/utils'
 import type { SandstonePack } from '../pack'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses'
 import type { SelectorEntityType, SelectorProperties } from './Selector'
 import { SelectorClass } from './Selector'
-import { NBTSerializable } from 'sandstone/arguments';
-
-type SingleEntity = SelectorClass<false, true, boolean> | SelectorPickClass<true, boolean>
 
 /**
  * Label tag (/tag) handler
@@ -45,8 +43,29 @@ export class _RawLabelClass implements NBTSerializable {
     if (description) this.description = description
   }
 
-  public LabelHolder = (entity: SingleEntity | '@s' | '@p' | '@r') => {
-    if (typeof entity === 'string') return new EntityLabel(this.pack, new SelectorClass(this.pack, entity), this)
+  public LabelHolder<IS_SINGLE extends boolean, IS_PLAYER extends boolean>(entity: SelectorClass<false, IS_SINGLE, IS_PLAYER> | SelectorPickClass<IS_SINGLE, IS_PLAYER>): EntityLabel<IS_SINGLE, IS_PLAYER>
+
+  public LabelHolder(target: '@e'): EntityLabel<false, false>
+
+  public LabelHolder(target: '@a'): EntityLabel<false, true>
+
+  public LabelHolder(target: '@s' | '@n'): EntityLabel<true, false>
+
+  public LabelHolder<ENTITY_TYPE extends SelectorEntityType>(target: '@p' | '@r', selectorArguments?: Omit<Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>, 'limit'>): EntityLabel<true, true>
+
+  public LabelHolder<ENTITY_TYPE extends SelectorEntityType, PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES):
+    EntityLabel<true, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
+
+  public LabelHolder<ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES):
+    EntityLabel<PROPERTIES['limit'] extends 1 ? true : false, true>
+
+  public LabelHolder<ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends SelectorProperties<false, false, ENTITY_TYPE, false>>(target: '@e', selectorArguments: PROPERTIES):
+    EntityLabel<PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
+
+  public LabelHolder(entity: '@s' | '@p' | '@a' | '@e' | '@n' | '@r' | SelectorPickClass<boolean, boolean>, selectorArguments?: SelectorProperties<boolean, boolean, SelectorEntityType, false>): EntityLabel<boolean, boolean> {
+    if (typeof entity === 'string') {
+      return new EntityLabel(this.pack, new SelectorClass(this.pack, entity, selectorArguments), this)
+    }
     return new EntityLabel(this.pack, entity, this)
   }
 
@@ -60,19 +79,43 @@ export class _RawLabelClass implements NBTSerializable {
    */
   toNBT = () => `'${this.fullName}'`
 
-  __call__ = (entity: SingleEntity | '@s' | '@p' | '@r') => this.LabelHolder(entity)
+  __call__<IS_SINGLE extends boolean, IS_PLAYER extends boolean>(entity: SelectorClass<false, IS_SINGLE, IS_PLAYER> | SelectorPickClass<IS_SINGLE, IS_PLAYER>): EntityLabel<IS_SINGLE, IS_PLAYER>
+
+  __call__(target: '@e'): EntityLabel<false, false>
+
+  __call__(target: '@a'): EntityLabel<false, true>
+
+  __call__(target: '@s' | '@n'): EntityLabel<true, false>
+
+  __call__<ENTITY_TYPE extends SelectorEntityType>(target: '@p' | '@r', selectorArguments?: Omit<Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>, 'limit'>): EntityLabel<true, true>
+
+  __call__<ENTITY_TYPE extends SelectorEntityType, PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES):
+    EntityLabel<true, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
+
+  __call__<ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES):
+    EntityLabel<PROPERTIES['limit'] extends 1 ? true : false, true>
+
+  __call__<ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends SelectorProperties<false, false, ENTITY_TYPE, false>>(target: '@e', selectorArguments: PROPERTIES):
+    EntityLabel<PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>
+
+  __call__(entity: '@s' | '@p' | '@a' | '@e' | '@n' | '@r' | SelectorPickClass<boolean, boolean>, selectorArguments?: SelectorProperties<boolean, boolean, SelectorEntityType, false>): EntityLabel<boolean, boolean> {
+    if (typeof entity === 'string') {
+      return new EntityLabel(this.pack, new SelectorClass(this.pack, entity, selectorArguments), this)
+    }
+    return new EntityLabel(this.pack, entity, this)
+  }
 }
 
 export const LabelClass = makeClassCallable(_RawLabelClass)
 export type LabelClass = MakeInstanceCallable<_RawLabelClass>
 
-export class EntityLabel implements ConditionClass, SelectorPickClass<true, false> {
+export class EntityLabel<IS_SINGLE extends boolean = boolean, IS_PLAYER extends boolean = boolean> implements ConditionClass, SelectorPickClass<IS_SINGLE, IS_PLAYER> {
   declare readonly __conditionClassBrand: true
 
   /**
    * Phantom brand property for TypeScript type discrimination.
    */
-  declare readonly __selectorPickBrand: { single: true; player: false }
+  declare readonly __selectorPickBrand: { single: IS_SINGLE; player: IS_PLAYER }
 
   /** Label */
   public label
@@ -80,19 +123,19 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
   /**
    * Selects entity with the label
    */
-  public selector: SelectorClass<false, true, false>
+  public selector: SelectorClass<false, IS_SINGLE, IS_PLAYER>
 
   /**
    * Selects entity
    */
-  public originalSelector: string | SelectorClass<false, true, true> | SelectorClass<false, true, false> | SelectorClass<false, true, boolean>
+  public originalSelector: string | SelectorClass<false, IS_SINGLE, IS_PLAYER>
 
   /** Test for label on entity */
   public test = this as ConditionClass
 
   constructor(
     private pack: SandstonePack,
-    entity: SingleEntity,
+    entity: SelectorClass<false, IS_SINGLE, IS_PLAYER> | SelectorPickClass<IS_SINGLE, IS_PLAYER>,
     label: _RawLabelClass,
   ) {
     this.originalSelector = entity._toSelector()
@@ -103,7 +146,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
       typeof this.originalSelector === 'string'
         ? new SelectorClass(this.pack, '@s')
         : new SelectorClass(this.pack, this.originalSelector.target, { ...this.originalSelector.arguments })
-    ) as SelectorClass<false, true, false>
+    ) as SelectorClass<false, IS_SINGLE, IS_PLAYER>
 
     if (selector.arguments) {
       if (selector.arguments.tag) {
@@ -113,7 +156,7 @@ export class EntityLabel implements ConditionClass, SelectorPickClass<true, fals
           selector.arguments.tag = [...selector.arguments.tag, label.fullName]
         }
       } else selector.arguments.tag = [label.fullName]
-    } else selector.arguments = { tag: [label.fullName] } as SelectorProperties<true, false, SelectorEntityType, false>
+    } else selector.arguments = { tag: [label.fullName] } as SelectorProperties<IS_SINGLE, IS_PLAYER, SelectorEntityType, false>
 
     this.selector = selector
   }
