@@ -1,3 +1,4 @@
+import { LiteralUnion } from 'sandstone'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -32,7 +33,7 @@ export class ModelClass extends ResourceClass<ModelNode> {
 
   constructor(
     core: SandstoneCore,
-    public type: 'block' | 'item',
+    public type: LiteralUnion<'block' | 'item'>,
     name: string,
     args: ModelClassArguments,
   ) {

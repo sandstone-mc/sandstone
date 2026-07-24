@@ -1,4 +1,6 @@
-import { RESOURCE_CLASS_TYPES, type MultipleEntitiesArgument, type NBTSerializable, type Registry } from 'sandstone/arguments'
+import { SetType } from 'sandstone'
+import { RESOURCE_CLASS_TYPES, type MultipleEntitiesArgument, type NBTSerializable } from 'sandstone/arguments'
+import { ENTITY_TYPES_SET } from './generated/registry-sets'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
@@ -123,7 +125,7 @@ export type TEXTURE_TYPES = (
   | 'block'
   | 'colormap'
   | 'effect'
-  | `entity/${Registry['minecraft:entity_type']}`
+  | `entity/${SetType<typeof ENTITY_TYPES_SET>}`
   | 'environment'
   | 'font'
   | 'gui'

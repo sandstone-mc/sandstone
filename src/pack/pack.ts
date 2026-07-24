@@ -1398,7 +1398,7 @@ export class SandstonePack {
     })
 
   Model = (
-    type: 'block' | 'item',
+    type: LiteralUnion<'block' | 'item'>,
     name: string,
     json: ModelClassArguments['json'],
     options?: Partial<ModelClassArguments>,
@@ -1485,7 +1485,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Texture<Type extends TEXTURE_TYPES>(
+  Texture<Type extends LiteralUnion<TEXTURE_TYPES>>(
     type: Type,
     name: string,
     texture: TextureArguments<Type>['texture'],
