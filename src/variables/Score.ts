@@ -99,7 +99,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   }
 
   toNBT() {
-    return nbtResolver(this._toChatComponent() as NBTObject).toString()
+    return nbtResolver(this._toChatComponent()).toString()
   }
 
   toJSON() {

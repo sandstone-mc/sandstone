@@ -22,7 +22,7 @@ export class VectorClass<T extends readonly unknown[]> implements NBTSerializabl
   }
 
   toNBT() {
-    return this.toString()
+    return `'${this.toString()}'`
   }
 
   [Symbol.iterator](): Iterator<T[0]> {

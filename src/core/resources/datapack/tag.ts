@@ -226,10 +226,6 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
     return this.name
   }
 
-  toNBT() {
-    return this.name
-  }
-
   /**
    * @internal
    */

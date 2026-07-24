@@ -53,7 +53,7 @@ export class _RawObjectiveClass implements NBTSerializable {
 
   toJSON = this.toString
 
-  toNBT = this.toString
+  toNBT = () => `'${this.toString}'`
 
   __call__ = this.ScoreHolder
 }

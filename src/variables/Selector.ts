@@ -461,7 +461,7 @@ export class SelectorClass<
   }
 
   toNBT() {
-    return this.toString()
+    return `'${this.toString()}'`
   }
 
   [util.inspect.custom]() {

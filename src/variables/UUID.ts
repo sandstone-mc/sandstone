@@ -545,7 +545,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
     const selector = this._toSelector()
 
     if (typeof selector === 'string') {
-      return selector
+      return `'${selector}'`
     }
     return selector.toNBT()
   }
