@@ -6,9 +6,7 @@ import type { NBTSerializable } from 'sandstone/arguments'
 export class ComponentClass {
   /**
    * Phantom brand property for TypeScript to identify instances of `ComponentClass`
-   * (and subclasses). Does not exist at runtime. Preserved when `@internal` members
-   * are stripped, so structural type checks (e.g. `Exclude<T, ComponentClass>`)
-   * behave correctly.
+   * (and subclasses). Does not exist at runtime.
    */
   declare readonly __componentClassBrand: true
 
@@ -22,8 +20,7 @@ export class ComponentClass {
 export class ConditionClass {
   /**
    * Phantom brand property for TypeScript to identify instances of `ConditionClass`
-   * (and subclasses). Does not exist at runtime. Preserved when `@internal` members
-   * are stripped.
+   * (and subclasses). Does not exist at runtime.
    */
   declare readonly __conditionClassBrand: true
 
