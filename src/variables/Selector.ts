@@ -417,8 +417,7 @@ export class SelectorClass<
       if (key in modifiers) {
         const modifierName = key as keyof typeof modifiers
         modifiers[modifierName](value as any)
-      }
-      if (value !== undefined) {
+      } else if (value !== undefined) {
         result.push([key, `${value}`])
       }
     })
