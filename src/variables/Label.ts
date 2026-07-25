@@ -3,10 +3,10 @@
 import type { NBTSerializable } from 'sandstone/arguments'
 import type { MakeInstanceCallable } from 'sandstone/utils'
 import { makeClassCallable } from 'sandstone/utils'
-import type { SandstonePack } from '../pack'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses'
 import type { SelectorEntityType, SelectorProperties } from './Selector'
 import { SelectorClass } from './Selector'
+import type { SandstonePack } from 'sandstone'
 
 /**
  * Label tag (/tag) handler

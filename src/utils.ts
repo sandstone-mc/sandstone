@@ -114,6 +114,7 @@ export type WithMCNamespace<T extends string> = `minecraft:${T}` | T
 
 export function makeCallableProxy(func: any, object: any) {
   return new Proxy(func, {
+    apply: (_t, _thisArg, args) => Reflect.apply(func, object, args),
     get: (_t, p, _r) => object[p],
     set: (_t, p, value, _r) => {
       object[p] = value
