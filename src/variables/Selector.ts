@@ -429,6 +429,12 @@ export class SelectorClass<
       result.unshift(...result.splice(entityType, 1))
     }
 
+    const predicate = result.findIndex(([key]) => key === 'predicate')
+
+    if (predicate !== -1) {
+      result.push(...result.splice(predicate, 1))
+    }
+
     return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }
 
