@@ -5,10 +5,10 @@ import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 
-export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
+export class ModelNode<Type extends LiteralUnion<'block' | 'item'>> extends ContainerNode implements ResourceNode<ModelClass<Type>> {
   constructor(
     sandstoneCore: SandstoneCore,
-    public resource: ModelClass,
+    public resource: ModelClass<Type>,
   ) {
     super(sandstoneCore)
   }
@@ -23,17 +23,19 @@ export type ModelClassArguments = {
   json: MCDocToJSON<SymbolResource[(typeof ModelClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
+
+// TODO: Remove `= 'block'` from this and update mcdoc-ts-generator
 /**
  * Helper class for modifying Minecraft model data
  */
-export class ModelClass extends ResourceClass<ModelNode> {
+export class ModelClass<Type extends LiteralUnion<'block' | 'item'> = 'block'> extends ResourceClass<ModelNode<Type>> {
   static readonly resourceType = 'model'
 
   modelJSON: NonNullable<ModelClassArguments['json']>
 
   constructor(
     core: SandstoneCore,
-    public type: LiteralUnion<'block' | 'item'>,
+    public type: Type,
     name: string,
     args: ModelClassArguments,
   ) {

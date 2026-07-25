@@ -1396,19 +1396,20 @@ export class SandstonePack {
       ...options,
     })
 
-  Model = (
-    type: LiteralUnion<'block' | 'item'>,
+  Model<Type extends LiteralUnion<'block' | 'item'>>(
+    type: Type,
     name: string,
     json: ModelClassArguments['json'],
     options?: Omit<Partial<ModelClassArguments>, 'json'>,
-  ) =>
-    new ModelClass(this.core, type, name, {
+  ) {
+    return new ModelClass<Type>(this.core, type, name, {
       json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('model') as ModelClassArguments['onConflict'],
       ...options,
     })
+  }
 
   /**
    * Creates an item definition resource for controlling how items are rendered.

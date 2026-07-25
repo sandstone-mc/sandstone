@@ -1,4 +1,4 @@
-import type { MultiplePlayersArgument } from 'sandstone/arguments'
+import type { MCDocToJSON, MultiplePlayersArgument } from 'sandstone/arguments'
 import type { Dialog } from 'sandstone/arguments/generated/data/dialog'
 import type { DIALOGS } from 'sandstone/arguments/generated/_registry/dialogs'
 import type { DialogClass, Macroable } from 'sandstone/core'
@@ -27,11 +27,11 @@ export class DialogCommand<MACRO extends boolean> extends CommandArguments {
    */
   show(
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    dialog: Macroable<DIALOGS | DialogClass | Dialog, MACRO>,
+    dialog: Macroable<DIALOGS | DialogClass | MCDocToJSON<Dialog>, MACRO>,
   ): FinalCommandOutput {
     const dialogArg = typeof dialog === 'string' || dialog instanceof ResourceClass
       ? dialog
-      : nbtResolver(dialog as Dialog)
+      : nbtResolver(dialog as any)
     return this.finalCommand(['show', targetParser(targets), dialogArg])
   }
 
