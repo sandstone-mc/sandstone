@@ -3,12 +3,12 @@ import type { ConditionNode } from '../flow'
 import type { SelectorClass } from './Selector'
 import type { NBTSerializable } from 'sandstone/arguments'
 
-export class DataComponentClass {
+export class TextComponentClass {
   /**
-   * Phantom brand property for TypeScript to identify instances of `ComponentClass`
+   * Phantom brand property for TypeScript to identify instances of `TextComponentClass`
    * (and subclasses). Does not exist at runtime.
    */
-  declare readonly __dataComponentClassBrand: true
+  declare readonly __textComponentClassBrand: true
 
   /**
    * @internal
@@ -32,7 +32,7 @@ export class ConditionClass {
   }
 }
 
-export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> implements NBTSerializable, DataComponentClass {
+export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolean> implements NBTSerializable, TextComponentClass {
   /**
    * Phantom brand property for TypeScript to distinguish between different
    * SelectorPickClass type parameter combinations. Does not exist at runtime.
@@ -40,10 +40,10 @@ export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolea
   declare readonly __selectorPickBrand: { single: IsSingle; player: IsPlayer }
 
   /**
-   * Phantom brand property for TypeScript to identify instances of `ComponentClass`
+   * Phantom brand property for TypeScript to identify instances of `TextComponentClass`
    * (and subclasses). Does not exist at runtime.
    */
-  declare readonly __dataComponentClassBrand: true
+  declare readonly __textComponentClassBrand: true
 
   /**
    * @internal
@@ -65,12 +65,12 @@ export class SelectorPickClass<IsSingle extends boolean, IsPlayer extends boolea
   }
 }
 
-export class ConditionTextComponentClass extends DataComponentClass implements ConditionClass {
+export class ConditionTextComponentClass extends TextComponentClass implements ConditionClass {
   /**
-   * Phantom brand property for TypeScript to identify instances of `ComponentClass`
+   * Phantom brand property for TypeScript to identify instances of `TextComponentClass`
    * (and subclasses). Does not exist at runtime.
    */
-  declare readonly __dataComponentClassBrand: true
+  declare readonly __textComponentClassBrand: true
 
   /**
    * Phantom brand property for TypeScript to identify instances of `ConditionClass`

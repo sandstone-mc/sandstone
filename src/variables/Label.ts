@@ -110,7 +110,7 @@ export const LabelClass = makeClassCallable(_RawLabelClass)
 export type LabelClass = MakeInstanceCallable<_RawLabelClass>
 
 export class EntityLabel<IS_SINGLE extends boolean = boolean, IS_PLAYER extends boolean = boolean> implements ConditionClass, SelectorPickClass<IS_SINGLE, IS_PLAYER> {
-  declare readonly __dataComponentClassBrand: true
+  declare readonly __textComponentClassBrand: true
   declare readonly __conditionClassBrand: true
 
   /**

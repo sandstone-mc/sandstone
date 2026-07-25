@@ -2,7 +2,7 @@
 
 import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import type { SetType } from 'sandstone/utils'
-import type { DataComponentClass } from 'sandstone/variables'
+import type { TextComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -38,8 +38,8 @@ export type DamageTypeClassArguments = {
     flags?: (SetType<typeof TAG_DAMAGE_TYPES_SET> | 'bypasses_cooldown')[] // Haha funny bypasses_cooldown doesn't show up in the server reports
   }
 
-export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements DataComponentClass {
-  declare readonly __dataComponentClassBrand: true
+export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements TextComponentClass {
+  declare readonly __textComponentClassBrand: true
 
   static readonly resourceType = 'damage_type' as const
 

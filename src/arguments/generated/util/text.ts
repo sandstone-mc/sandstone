@@ -8,7 +8,7 @@ import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { Coordinates, MultipleEntitiesArgument, SingleEntityArgument } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { AtlasClass, DialogClass, FontClass, NBTInt, NBTList, ObjectiveClass, TextureClass } from 'sandstone'
-import type { DataComponentClass } from 'sandstone/variables'
+import type { TextComponentClass } from 'sandstone/variables'
 
 export type BlockNbtText = ({
   block: Coordinates,
@@ -385,7 +385,7 @@ export type SuggestCommand = {
   command: `${any}${string}`,
 }
 
-export type Text = (string | TextObject | DataComponentClass | Text[])
+export type Text = (string | TextObject | TextComponentClass | Text[])
 
 export type TextBase = ({
   /**

@@ -185,9 +185,6 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
     return this.name
   }
 
-  /**
-   * @internal
-   */
   toNBT(): string {
     return `'${this.name}'`
   }

@@ -18,7 +18,7 @@ import * as util from 'util'
 import { MacroArgument } from '../core/Macro'
 import type { SandstonePack } from '../pack'
 import { add, formatDebugString } from '../utils'
-import type { DataComponentClass } from './abstractClasses'
+import type { TextComponentClass } from './abstractClasses'
 import { SelectorPickClass } from './abstractClasses'
 import type { DATA_TYPES, DataPointClass } from './Data'
 import type { ObjectiveClass } from './Objective'
@@ -70,8 +70,8 @@ type Tuple<T, N extends number, A extends T[] = []> = (
   : Tuple<T, N, [...A, T]>
 )
 
-export class Score extends MacroArgument implements ConditionClass, DataComponentClass, NBTSerializable {
-  declare readonly __dataComponentClassBrand: true
+export class Score extends MacroArgument implements ConditionClass, TextComponentClass, NBTSerializable {
+  declare readonly __textComponentClassBrand: true
   declare readonly __conditionClassBrand: true
 
   commands: SandstoneCommands<false>

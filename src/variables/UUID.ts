@@ -75,7 +75,7 @@ export type UUIDOptions = {
 
 export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
 implements ConditionClass, SelectorPickClass<true, boolean> {
-  declare readonly __dataComponentClassBrand: true
+  declare readonly __textComponentClassBrand: true
   declare readonly __conditionClassBrand: true
 
   /**
