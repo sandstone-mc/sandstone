@@ -42,8 +42,7 @@ export type TextureArguments<Type extends TextureType> = {
   meta?: TextureMeta<Type>
 } & ResourceClassArguments<'default'>
 
-// TODO: Remove `= 'block'` from this and update mcdoc-ts-generator
-export class TextureClass<Type extends TextureType = 'block'> extends ResourceClass<TextureNode<Type>> {
+export class TextureClass<Type extends TextureType> extends ResourceClass<TextureNode<Type>> {
   static readonly resourceType = 'texture'
 
   type: Type

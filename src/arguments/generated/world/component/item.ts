@@ -35,6 +35,7 @@ import type {
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { TextureType } from 'sandstone/arguments'
 import type {
   BannerPatternClass,
   DamageTypeClass,
@@ -604,7 +605,7 @@ export type Equippable = {
   /**
    * The overlay texture that should render in first person when equipped.
    */
-  camera_overlay?: (Registry['minecraft:texture'] | TextureClass),
+  camera_overlay?: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * Limits which entities can equip this item.
    */

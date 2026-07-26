@@ -24,11 +24,10 @@ export type ModelClassArguments = {
 } & ResourceClassArguments<'default'>
 
 
-// TODO: Remove `= 'block'` from this and update mcdoc-ts-generator
 /**
  * Helper class for modifying Minecraft model data
  */
-export class ModelClass<Type extends LiteralUnion<'block' | 'item'> = 'block'> extends ResourceClass<ModelNode<Type>> {
+export class ModelClass<Type extends LiteralUnion<'block' | 'item'>> extends ResourceClass<ModelNode<Type>> {
   static readonly resourceType = 'model'
 
   modelJSON: NonNullable<ModelClassArguments['json']>

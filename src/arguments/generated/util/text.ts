@@ -5,7 +5,7 @@ import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
 import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { Coordinates, MultipleEntitiesArgument, SingleEntityArgument } from 'sandstone/arguments'
+import type { Coordinates, MultipleEntitiesArgument, SingleEntityArgument, TextureType } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { AtlasClass, DialogClass, FontClass, NBTInt, NBTList, ObjectiveClass, TextureClass } from 'sandstone'
 import type { TextComponentClass } from 'sandstone/variables'
@@ -369,7 +369,7 @@ export type SpriteText = ({
    * Defaults to `minecraft:blocks`.
    */
   atlas?: (Registry['minecraft:atlas'] | AtlasClass),
-  sprite: (Registry['minecraft:texture'] | TextureClass),
+  sprite: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   object?: 'atlas',
   type?: 'object',
 } & ObjectTextConfig & TextBase)
@@ -542,7 +542,7 @@ export type TextObject = (({
    * Defaults to `minecraft:blocks`.
    */
   atlas?: (Registry['minecraft:atlas'] | AtlasClass),
-  sprite: (Registry['minecraft:texture'] | TextureClass),
+  sprite: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   object?: 'atlas',
   type?: 'object',
 } & ObjectTextConfig & TextBase) | ({

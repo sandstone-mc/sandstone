@@ -13,6 +13,7 @@ import type {
   TextureClass,
 } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { TextureType } from 'sandstone/arguments'
 
 export type Advancement = {
   /**
@@ -77,7 +78,7 @@ export type AdvancementDisplay = {
   /**
    * Used for the advancement tab (root advancement only).
    */
-  background?: (Registry['minecraft:texture'] | TextureClass),
+  background?: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * Controls the advancement tile frame. Defaults to `task`.
    *

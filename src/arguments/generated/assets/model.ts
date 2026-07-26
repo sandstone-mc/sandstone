@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
+import type { ModelType, TextureType } from 'sandstone/arguments'
 import type { ModelClass, NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
 
 export type Axis = ('x' | 'y' | 'z')
@@ -67,11 +68,11 @@ export type ItemTransform = {
 }
 
 export type Model = {
-  parent?: (Registry['minecraft:model'] | ModelClass),
+  parent?: (Registry['minecraft:model'] | ModelClass<ModelType>),
   ambientocclusion?: boolean,
   gui_light?: ('front' | 'side'),
   textures?: ({
-    [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass) | TextureMaterial)
+    [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
   }),
   elements?: Array<ModelElement>,
   display?: ({
@@ -312,10 +313,10 @@ export type ModelOverridePredicates = ({
   [Key in Extract<Predicates, string>]?: NBTFloat
 })
 
-export type ModelRef = (Registry['minecraft:model'] | ModelClass)
+export type ModelRef = (Registry['minecraft:model'] | ModelClass<ModelType>)
 
 export type ModelTextures = ({
-  [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass) | TextureMaterial)
+  [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
 })
 
 export type MultipleAxesModelElementRotation = (ModelElementRotationBase & ({
@@ -356,7 +357,7 @@ export type SingleAxisModelElementRotation = (ModelElementRotationBase & {
 })
 
 export type TextureMaterial = {
-  sprite: (Registry['minecraft:texture'] | TextureClass),
+  sprite: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * Whether the texture should be forced into the translucent render pass. \
    * Textures without any translucent pixels are not assigned to the translucent pass by default. \

@@ -1,6 +1,7 @@
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { SpawnPrioritySelectors } from 'sandstone/arguments/generated/data/variants.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { TextureType } from 'sandstone/arguments'
 import type { TextureClass } from 'sandstone'
 
 export type WolfSounds = {
@@ -24,7 +25,7 @@ export type WolfVariant = ({
 } & SpawnPrioritySelectors)
 
 export type WolfVariantAssetInfo = {
-  wild: (Registry['minecraft:texture'] | TextureClass),
-  tame: (Registry['minecraft:texture'] | TextureClass),
-  angry: (Registry['minecraft:texture'] | TextureClass),
+  wild: (Registry['minecraft:texture'] | TextureClass<TextureType>),
+  tame: (Registry['minecraft:texture'] | TextureClass<TextureType>),
+  angry: (Registry['minecraft:texture'] | TextureClass<TextureType>),
 }

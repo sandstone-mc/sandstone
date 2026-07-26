@@ -1,4 +1,4 @@
-import { SetType } from 'sandstone'
+import { SetType, LiteralUnion } from 'sandstone'
 import { RESOURCE_CLASS_TYPES, type MultipleEntitiesArgument, type NBTSerializable } from 'sandstone/arguments'
 import { ENTITY_TYPES_SET } from './generated/registry-sets'
 
@@ -143,6 +143,10 @@ export type TEXTURE_TYPES = (
   | 'particle'
   | 'trims'
 )
+
+export type TextureType = LiteralUnion<TEXTURE_TYPES>
+
+export type ModelType = LiteralUnion<'item' | 'block'>
 
 export type ResourceClassType = typeof RESOURCE_CLASS_TYPES[number]
 
