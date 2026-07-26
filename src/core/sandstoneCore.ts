@@ -11,7 +11,7 @@ import type { AwaitNode } from './nodes'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
 import type { TagClass } from './resources/datapack/tag'
 import { SmithedDependencyClass } from './resources/dependency'
-import type { SoundsClass } from './resources/resourcepack/sound'
+import type { SoundsIndexClass } from './resources/resourcepack/sound'
 import { type ResourceClass, ResourceNodesMap } from './resources/resource'
 import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
@@ -36,7 +36,7 @@ export class SandstoneCore {
   functionTags: Map<string, TagClass<'function'>> = new Map()
 
   /** Cache of auto-generated sounds.json definitions, keyed by namespace. Cleared on reset. */
-  sounds: Map<string, SoundsClass> = new Map()
+  sounds: Map<string, SoundsIndexClass> = new Map()
 
   /** Cache of auto-generated polling trigger check functions, keyed by polling interval. Cleared on reset. */
   checkTriggers: Record<number, MCFunctionClass<undefined, undefined>> = {}

@@ -54,6 +54,7 @@ import type {
   ShaderClassArguments,
 //  SlotSourceClassArguments,
   SoundEventArguments,
+  SoundsIndexArguments,
   SulfurCubeArchetypeClassArguments,
   TagClassArguments,
   TagValuesJSON,
@@ -103,6 +104,7 @@ import {
   ShaderClass,
 //  SlotSourceClass,
   SoundEventClass,
+  SoundsIndexClass,
   SulfurCubeArchetypeClass,
   TagClass,
   TestEnvironmentClass,
@@ -1465,7 +1467,7 @@ export class SandstonePack {
     type: Type,
     name: string,
     sound: SoundEventArguments['sound'],
-    options?: Partial<SoundEventArguments>,
+    options?: Omit<Partial<SoundEventArguments>, 'sound'>,
   ) {
     return new SoundEventClass(this.core, type, name, {
       sound,
@@ -1475,6 +1477,15 @@ export class SandstonePack {
       ...options,
     })
   }
+
+  SoundsIndex = (definitions: SoundsIndexArguments['definitions'], namespace?: string, options?: Omit<Partial<SoundsIndexArguments>, 'definitions'>) =>
+    new SoundsIndexClass(this.core, namespace ?? this.defaultNamespace, {
+      definitions,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('sounds') as SoundsIndexArguments['onConflict'],
+      ...options,
+    })
 
   PlainText = (name: string, text: PlainTextArguments['text'], options?: Partial<PlainTextArguments>) =>
     new PlainTextClass(this.core, name, {

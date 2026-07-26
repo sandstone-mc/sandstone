@@ -67,7 +67,7 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
           def = this.core.sounds
             .set(
               this.path[0],
-              new SoundsClass(this.core, this.path[0], {
+              new SoundsIndexClass(this.core, this.path[0], {
                 addToSandstoneCore: true,
                 creator: 'sandstone',
               }),
@@ -88,12 +88,12 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
 }
 
 /**
- * A node representing a Minecraft sound.
+ * A node representing a Minecraft sounds index.
  */
-export class SoundsNode extends ContainerNode implements ResourceNode<SoundsClass> {
+export class SoundsIndexNode extends ContainerNode implements ResourceNode<SoundsIndexClass> {
   constructor(
     sandstoneCore: SandstoneCore,
-    public resource: SoundsClass,
+    public resource: SoundsIndexClass,
   ) {
     super(sandstoneCore)
   }
@@ -103,25 +103,25 @@ export class SoundsNode extends ContainerNode implements ResourceNode<SoundsClas
 
 type SoundsJSON = NonNullable<MCDocToJSON<SymbolResource['sounds']>>
 
-export type SoundsArguments = {
+export type SoundsIndexArguments = {
   /**
    * The sounds definition map.
    */
   definitions?: SoundsJSON
 } & ResourceClassArguments<'default'>
 
-export class SoundsClass extends ResourceClass<SoundsNode> implements ListResource {
+export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements ListResource {
   static readonly resourceType = 'sounds'
 
   soundsJSON: SoundsJSON | Promise<SoundsJSON>
 
-  constructor(core: SandstoneCore, namespace: string, args: SoundsArguments) {
+  constructor(core: SandstoneCore, namespace: string, args: SoundsIndexArguments) {
     super(
       core,
       { packType: core.pack.resourcePack() },
-      SoundsNode,
-      SoundsClass.resourceType,
-      core.pack.resourceToPath(`${namespace}:sounds`, RESOURCE_PATHS[SoundsClass.resourceType].path),
+      SoundsIndexNode,
+      SoundsIndexClass.resourceType,
+      core.pack.resourceToPath(`${namespace}:sounds`, RESOURCE_PATHS[SoundsIndexClass.resourceType].path),
       args,
     )
 
@@ -132,10 +132,10 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
     }
   }
 
-  async push(...soundEvents: SoundsClass[] | SoundEventClass<SOUND_TYPES>[]) {
-    if (soundEvents[0] instanceof SoundsClass) {
+  async push(...soundEvents: SoundsIndexClass[] | SoundEventClass<SOUND_TYPES>[]) {
+    if (soundEvents[0] instanceof SoundsIndexClass) {
       for await (const _sounds of soundEvents) {
-        const def = await (_sounds as SoundsClass).soundsJSON
+        const def = await (_sounds as SoundsIndexClass).soundsJSON
         const s = await this.soundsJSON
 
         // TODO: Implement sound event merging
@@ -154,10 +154,10 @@ export class SoundsClass extends ResourceClass<SoundsNode> implements ListResour
     }
   }
 
-  async unshift(...soundEvents: SoundsClass[] | SoundEventClass<SOUND_TYPES>[]) {
-    if (soundEvents[0] instanceof SoundsClass) {
+  async unshift(...soundEvents: SoundsIndexClass[] | SoundEventClass<SOUND_TYPES>[]) {
+    if (soundEvents[0] instanceof SoundsIndexClass) {
       for await (const _sounds of soundEvents) {
-        const def = await (_sounds as SoundsClass).soundsJSON
+        const def = await (_sounds as SoundsIndexClass).soundsJSON
         const s = await this.soundsJSON
 
         // TODO: Implement sound event merging

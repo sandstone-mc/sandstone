@@ -148,6 +148,12 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
 
   constructor(sandstoneCore: SandstoneCore, type: REGISTRY, name: string, args: TagClassArguments<REGISTRY>) {
+    if (type === ('entity' as REGISTRY)) {
+      console.warn(
+        `[TagClass] Tag type 'entity' is not a valid Minecraft tag registry. Did you mean 'entity_type'?`
+      )
+    }
+
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },

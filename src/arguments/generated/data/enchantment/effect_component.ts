@@ -6,8 +6,6 @@ import type {
 } from 'sandstone/arguments/generated/data/enchantment/effect.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
-import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type AmmoUseEnchantmentEffect = {
   /**
@@ -95,9 +93,7 @@ export type DamageProtectionEnchantmentEffect = {
 }
 
 export type EnchantmentEffectComponentMap = ({
-  [Key in Extract<Registry['minecraft:enchantment_effect_component_type'], string>]?: (Key extends keyof SymbolEffectComponent
-    ? SymbolEffectComponent[Key]
-    : RootNBT)
+  [Key in Extract<keyof SymbolEffectComponent, string>]?: SymbolEffectComponent[Key]
 })
 
 export type EquipmentDropsEnchantmentEffect = {

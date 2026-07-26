@@ -19,7 +19,7 @@ export interface NBTSerializable {
 
 export type NBTObject = string | number | boolean | URL | undefined | NBTSerializable | TextComponentClass | TextObject | { [key: string]: NBTObject | undefined } | NBTObject[] | NBTClass
 
-export type RootNBT = Record<string, NBTObject | undefined>
+export type RootNBT = Record<`${any}${string}`, NBTObject | undefined>
 
 /**
  * Recursively walks a type, unioning Sandstone NBT primitive classes with their plain JSON equivalents

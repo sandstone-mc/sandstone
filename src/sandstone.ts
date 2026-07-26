@@ -30,6 +30,7 @@ import type {
   ShaderClassArguments,
 //  SlotSourceClassArguments,
   SoundEventArguments,
+  SoundsIndexArguments,
   SulfurCubeArchetypeClassArguments,
   TagClassArguments,
   TestEnvironmentClassArguments,
@@ -329,6 +330,7 @@ export const {
   PostEffect,
   Shader,
   SoundEvent,
+  SoundsIndex,
   PlainText,
   Texture,
   WaypointStyle,
@@ -414,6 +416,7 @@ export {
   ParticleClass,
   PostEffectClass,
   SoundEventClass,
+  SoundsIndexClass,
   TextureClass,
   WaypointStyleClass,
 } from './core/resources'
