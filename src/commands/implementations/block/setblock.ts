@@ -1,11 +1,11 @@
-import type { Coordinates, NBTObject, SymbolBlock, SymbolMcdocBlockStates } from 'sandstone/arguments'
+import type { Coordinates, RootNBT, SymbolBlock, SymbolMcdocBlockStates } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, nbtResolver } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
-import type { NamespacedLiteralUnion } from 'sandstone/utils'
+import type { AllowConst, NamespacedLiteralUnion } from 'sandstone/utils'
 
 /** Converts stringified boolean/numeric literals to actual booleans/numbers */
 export type ParseLiteral<T> = (
@@ -21,7 +21,7 @@ export type ParseBlockState<T> = {
 
 export type BlockEntity = NamespacedLiteralUnion<keyof SymbolBlock>
 
-export type BlockStatic = NamespacedLiteralUnion<Exclude<keyof SymbolMcdocBlockStates, keyof SymbolBlock>>
+export type BlockStatic = NamespacedLiteralUnion<Exclude<keyof SymbolMcdocBlockStates, keyof SymbolBlock>> | 'air' | 'minecraft:air'
 
 export class SetBlockCommandNode extends CommandNode {
   command = 'setblock' as const
@@ -37,24 +37,24 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    * This is the basic form for simple block placement without NBT data.
    *
    * @param pos The coordinates where to place the block. Supports:
-   *           - Absolute: `abs(100, 64, 200)` - exact world coordinates
-   *           - Relative: `['~5', '~1', '~-3']` - relative to command position
-   *           - Local: `['^2', '^', '^-1']` - relative to facing direction
-   *           - Mixed: `[100, '~5', '^2']` - combination of systems
+   *             - Absolute: `abs(100, 64, 200)` - exact world coordinates
+   *             - Relative: `['~5', '~1', '~-3']` - relative to command position
+   *             - Local: `['^2', '^', '^-1']` - relative to facing direction
+   *             - Mixed: `[100, '~5', '^2']` - combination of systems
    *
    * @param block The block type to place (e.g., `'minecraft:stone'`, `'oak_log'`).
    *
    * @param state Optional block state properties as an object. The available
-   *             properties are type-checked based on the block type:
-   *             - Oak log: `{ axis: 'x' | 'y' | 'z' }`
-   *             - Redstone wire: `{ power: 0-15, north: 'none' | 'side' | 'up', ... }`
-   *             - Stairs: `{ facing: 'north' | 'south' | 'east' | 'west', half: 'top' | 'bottom', ... }`
+   *              properties are type-checked based on the block type:
+   *               - Oak log: `{ axis: 'x' | 'y' | 'z' }`
+   *               - Redstone wire: `{ power: 0-15, north: 'none' | 'side' | 'up', ... }`
+   *               - Stairs: `{ facing: 'north' | 'south' | 'east' | 'west', half: 'top' | 'bottom', ... }`
    *
-   * @param type How to handle the placement. Options:
-   *            - `'replace'` (default): Silently replace any existing block
-   *            - `'destroy'`: Break existing block, dropping items and playing sound
-   *            - `'keep'`: Only place if the target location is air
-   *            - `'strict'`: Replace without issuing block updates
+   * @param flag How to handle the placement. Options:
+   *              - `'replace'` (default): Silently replace any existing block
+   *              - `'destroy'`: Break existing block, dropping items and playing sound
+   *              - `'keep'`: Only place if the target location is air
+   *              - `'strict'`: Replace without issuing block updates
    *
    * @example
    * ```ts
@@ -82,7 +82,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
     state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[Extract<BLOCK, keyof SymbolMcdocBlockStates>]>> : Record<string, string | boolean | number>, MACRO>,
-    type?: 'destroy' | 'keep' | 'replace' | 'strict',
+    flag?: 'destroy' | 'keep' | 'replace' | 'strict',
   ): FinalCommandOutput
 
   /**
@@ -95,23 +95,27 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
    * @param pos The coordinates where to place the block. Same format as basic variant.
    *
    * @param block The block type to place. Must be a block that supports NBT data:
-   *             - `'minecraft:chest'` - for containers
-   *             - `'minecraft:command_block'` - for command storage
-   *             - `'minecraft:sign'` - for text display
-   *             - `'minecraft:spawner'` - for mob spawning
+   *               - `'minecraft:chest'` - for containers
+   *               - `'minecraft:command_block'` - for command storage
+   *               - `'minecraft:sign'` - for text display
+   *               - `'minecraft:spawner'` - for mob spawning
    *
    * @param state Optional block state properties as an object. Type-checked based on block:
-   *             - Chest: `{ facing: 'north' | 'south' | 'east' | 'west', type: 'single' | 'left' | 'right', ... }`
-   *             - Command block: `{ facing: 'north' | 'south' | 'east' | 'west' | 'up' | 'down', conditional: true | false }`
-   *             - Sign: `{ rotation: 0-15 }` or `{ facing: ... }` for wall signs
+   *               - Chest: `{ facing: 'north' | 'south' | 'east' | 'west', type: 'single' | 'left' | 'right', ... }`
+   *               - Command block: `{ facing: 'north' | 'south' | 'east' | 'west' | 'up' | 'down', conditional: true | false }`
+   *               - Sign: `{ rotation: 0-15 }` or `{ facing: ... }` for wall signs
    *
    * @param nbt The NBT data object defining the block's properties:
-   *           - For chests: `{ Items: [{ Slot: 0, id: 'diamond', Count: 1 }] }`
-   *           - For signs: `{ front_text: { messages: [...] } }`
-   *           - For command blocks: `{ Command: 'say Hello' }`
-   *           - For spawners: `{ SpawnData: { id: 'minecraft:zombie' } }`
+   *             - For chests: `{ Items: [{ Slot: 0, id: 'diamond', Count: 1 }] }`
+   *             - For signs: `{ front_text: { messages: [...] } }`
+   *             - For command blocks: `{ Command: 'say Hello' }`
+   *             - For spawners: `{ SpawnData: { id: 'minecraft:zombie' } }`
    *
-   * @param type Placement behavior, same as basic variant.
+   * @param flag How to handle the placement. Options:
+   *              - `'replace'` (default): Silently replace any existing block
+   *              - `'destroy'`: Break existing block, dropping items and playing sound
+   *              - `'keep'`: Only place if the target location is air
+   *              - `'strict'`: Replace without issuing block updates
    *
    * @example
    * ```ts
@@ -139,8 +143,11 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
     state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[Extract<BLOCK, keyof SymbolMcdocBlockStates>]>> : Record<string, string | boolean | number>, MACRO>,
-    nbt?: Macroable<BLOCK extends keyof SymbolBlock ? NonNullable<SymbolBlock[Extract<BLOCK, keyof SymbolBlock>]> : SymbolBlock<'%fallback'>, MACRO>,
-    type?: 'destroy' | 'keep' | 'replace' | 'strict',
+    nbt?: Macroable<BLOCK extends keyof SymbolBlock
+      ? NonNullable<AllowConst<SymbolBlock[Extract<BLOCK, keyof SymbolBlock>]>>
+      : AllowConst<RootNBT>,
+    MACRO>,
+    flag?: 'destroy' | 'keep' | 'replace' | 'strict',
   ): FinalCommandOutput
 
   setblock(
@@ -158,7 +165,7 @@ export class SetBlockCommand<MACRO extends boolean> extends CommandArguments {
       : blockStateStringifier(arg3 as any as Record<string, string | number | boolean>)
     const nbt = typeof arg4 === 'string' || arg4 === undefined ?
       ''
-      : nbtResolver(arg4 as any as NBTObject).toString()
+      : nbtResolver(arg4 as any as RootNBT).toString()
     const setblockType = typeof arg4 === 'string' ? arg4 : arg5
 
     return this.finalCommand([coordinatesParser(pos), `${block}${state}${nbt}`, setblockType])

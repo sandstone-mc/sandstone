@@ -5,6 +5,7 @@ import { NBT, nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
+import { AllowConst } from 'sandstone/utils'
 
 export class SummonCommandNode extends CommandNode {
   command = 'summon' as const
@@ -50,7 +51,7 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
   summon<ENTITY extends Macroable<Registry['minecraft:entity_type'], MACRO>>(
     entity: ENTITY,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
-    nbt?: Macroable<ENTITY extends keyof SymbolEntity ? NonNullable<SymbolEntity[ENTITY]> : RootNBT, MACRO>,
+    nbt?: Macroable<AllowConst<ENTITY extends keyof SymbolEntity ? NonNullable<SymbolEntity[ENTITY]> : RootNBT>, MACRO>,
   ) {
     const args: unknown[] = [entity]
     if (pos !== undefined) {
