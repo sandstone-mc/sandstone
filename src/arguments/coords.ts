@@ -20,11 +20,13 @@ type VectorArrayComponent<MACRO extends boolean = false> = Macroable<AbsoluteOrR
 
 export type AbsoluteCoordinates<MACRO extends boolean = false> =
   | [x: AbsoluteFloat<MACRO>, y: AbsoluteFloat<MACRO>, z: AbsoluteFloat<MACRO>]
+  | readonly [x: AbsoluteFloat<MACRO>, y: AbsoluteFloat<MACRO>, z: AbsoluteFloat<MACRO>]
   | VectorClass<[string, string, string]>
   | AbsoluteVec3<MACRO>
 
 export type Coordinates<MACRO extends boolean = false> =
   | [x: VectorArrayComponent<MACRO>, y: VectorArrayComponent<MACRO>, z: VectorArrayComponent<MACRO>]
+  | readonly [x: VectorArrayComponent<MACRO>, y: VectorArrayComponent<MACRO>, z: VectorArrayComponent<MACRO>]
   | VectorClass<[string, string, string]>
   | AbsoluteOrRelativeVec3<MACRO>
   | LocalVec3<MACRO>
@@ -33,9 +35,15 @@ export type Rotation<MACRO extends boolean = false> =
       horizontal: Macroable<AbsoluteOrRelativeFloat<MACRO> | number, MACRO>,
       vertical: Macroable<AbsoluteOrRelativeFloat<MACRO> | number, MACRO>,
     ]
+  | readonly [
+      horizontal: Macroable<AbsoluteOrRelativeFloat<MACRO> | number, MACRO>,
+      vertical: Macroable<AbsoluteOrRelativeFloat<MACRO> | number, MACRO>,
+    ]
   | VectorClass<[string, string]>
+  | AbsoluteOrRelativeVec2<MACRO>
 export type ColumnCoordinates<MACRO extends boolean = false> =
   | [x: VectorArrayComponent<MACRO>, z: VectorArrayComponent<MACRO>]
+  | readonly [x: VectorArrayComponent<MACRO>, z: VectorArrayComponent<MACRO>]
   | VectorClass<[string, string]>
   | AbsoluteOrRelativeVec2<MACRO>
   | LocalVec2<MACRO>
