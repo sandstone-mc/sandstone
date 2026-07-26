@@ -19,7 +19,7 @@
       "devDependencies": {
         "@ampproject/remapping": "^2.3.0",
         "@parcel/watcher": "^2.6.0",
-        "@sandstone-mc/mcdoc-ts-generator": "^0.3.4",
+        "@sandstone-mc/mcdoc-ts-generator": "^0.3.6",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/fs-extra": "^11.0.4",
         "@types/lodash": "^4.17.24",
@@ -135,7 +135,7 @@
 
     "@parcel/watcher-win32-x64": ["@parcel/watcher-win32-x64@2.6.0", "", { "os": "win32", "cpu": "x64" }, "sha512-cA+/pXV2YkfxlIcXOQ5fSWqAzzPyD78/x5qbK/I0vUkrlYHA8TIz+MXjAbGouguKVSI4bOmkTSJ1/poVSsgt+A=="],
 
-    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.3.4", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.11", "@spyglassmc/core": "^0.4.49", "@spyglassmc/java-edition": "^0.3.62", "@spyglassmc/mcdoc": "^0.3.53", "@stylistic/eslint-plugin": "^5.10.0", "@typescript-eslint/eslint-plugin": "^8.62.0", "@typescript-eslint/parser": "^8.62.0", "eslint": "^10.6.0", "ts-pattern": "^5.9.0", "typescript": "^5.9.3", "typescript-eslint": "^8.62.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-gpBRUOTpuXBBoFW0pXfaHvkRPDm8hT8+xwOKgSrn0lDwomPEd/pTv7TOjQDLPaxX/3qxq0abDSO+wCffak1ZZQ=="],
+    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.3.6", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.11", "@spyglassmc/core": "^0.4.49", "@spyglassmc/java-edition": "^0.3.62", "@spyglassmc/mcdoc": "^0.3.53", "@stylistic/eslint-plugin": "^5.10.0", "@typescript-eslint/eslint-plugin": "^8.62.0", "@typescript-eslint/parser": "^8.62.0", "eslint": "^10.6.0", "ts-pattern": "^5.9.0", "typescript": "^5.9.3", "typescript-eslint": "^8.62.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-ygBwCuMm++8TmD7SIvJnGAwXJb+GqhFfUv9MDDD7OxU+4RLvsythSkfAR2BHm2c6OBxnfEz5ujkGwmBBhcEVyg=="],
 
     "@seahax/eslint-plugin-wrap": ["@seahax/eslint-plugin-wrap@0.6.11", "", { "dependencies": { "@types/eslint": "^9.6.1", "@typescript-eslint/utils": "^8.48.0" }, "peerDependencies": { "@typescript-eslint/parser": ">=8.48.0", "eslint": ">=9.39.1", "typescript": ">=5.9.3" } }, "sha512-C+KZBbBoYLyU4jf2YOgl0ZKP0TbZ6JwInjfcvLwZq6eTpO7BRuLhAgKDgxVWM5vnvieszPflw8DVxdkgudOk+g=="],
 
