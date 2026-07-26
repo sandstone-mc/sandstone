@@ -1,10 +1,11 @@
-import type { Coordinates, NBTObject, SymbolBlock, SymbolMcdocBlockStates } from 'sandstone/arguments'
+import type { Coordinates, RootNBT, SymbolBlock, SymbolMcdocBlockStates } from 'sandstone/arguments'
 import type { Macroable, TagClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, nbtResolver } from 'sandstone/variables'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
 import { blockStateStringifier, type BlockEntity, type BlockStatic, type ParseBlockState } from './setblock'
+import type { AllowConst } from 'sandstone/utils'
 
 export class FillCommandNode extends CommandNode {
   command = 'fill' as const
@@ -71,7 +72,10 @@ export class FillCommand<MACRO extends boolean> extends CommandArguments {
     to: Macroable<Coordinates<MACRO>, MACRO>,
     block: BLOCK,
     state?: Macroable<BLOCK extends keyof SymbolMcdocBlockStates ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[BLOCK]>> : Record<string, string | boolean | number>, MACRO>,
-    nbt?: Macroable<BLOCK extends keyof SymbolBlock ? NonNullable<SymbolBlock[BLOCK]> : SymbolBlock<'%fallback'>, MACRO>,
+    nbt?: Macroable<BLOCK extends keyof SymbolBlock
+      ? NonNullable<AllowConst<SymbolBlock[Extract<BLOCK, keyof SymbolBlock>]>>
+      : AllowConst<RootNBT>,
+    MACRO>,
   ): FillArgumentsCommand<MACRO>
 
   fill(
@@ -79,7 +83,7 @@ export class FillCommand<MACRO extends boolean> extends CommandArguments {
     to: Macroable<Coordinates<MACRO>, MACRO>,
     block: Macroable<Registry['minecraft:block'], MACRO>,
     state?: Record<string, string | boolean | number>,
-    nbt?: NBTObject,
+    nbt?: AllowConst<RootNBT>,
   ): FillArgumentsCommand<MACRO> {
     const stateStr = state && Object.keys(state).length > 0 ? blockStateStringifier(state) : ''
     const nbtStr = nbt ? nbtResolver(nbt).toString() : ''
