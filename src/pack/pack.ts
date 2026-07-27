@@ -1123,7 +1123,7 @@ export class SandstonePack {
       ...options,
     })
 
-  DecoratedPotPattern = (name: string, decoratedPotPattern: NonNullable<SymbolResource['decorated_pot_pattern']>, options?: Partial<DecoratedPotPatternClassArguments>) =>
+  DecoratedPotPattern = (name: string, decoratedPotPattern: DecoratedPotPatternClassArguments['json'], options?: Omit<Partial<DecoratedPotPatternClassArguments>, 'json'>) =>
     new DecoratedPotPatternClass(this.core, name, {
       json: decoratedPotPattern,
       creator: 'user',
@@ -1172,7 +1172,7 @@ export class SandstonePack {
       ...options,
     })
 
-  SlotSource = (name: string, slotSource: NonNullable<SymbolResource['slot_source']>, options?: Partial<SlotSourceClassArguments>) =>
+  SlotSource = (name: string, slotSource: SlotSourceClassArguments['json'], options?: Omit<Partial<SlotSourceClassArguments>, 'json'>) =>
     new SlotSourceClass(this.core, name, {
       json: slotSource,
       creator: 'user',

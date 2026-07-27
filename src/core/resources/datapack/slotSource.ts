@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,13 +22,13 @@ export type SlotSourceClassArguments = {
   /**
    * The slot source's JSON.
    */
-  json: NonNullable<SymbolResource[(typeof SlotSourceClass)['resourceType']]>
+  json: MCDocToJSON<SymbolResource[(typeof SlotSourceClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class SlotSourceClass extends ResourceClass<SlotSourceNode> {
   static readonly resourceType = 'slot_source' as const
 
-  public slotSourceJSON: NonNullable<SlotSourceClassArguments['json']>
+  public slotSourceJSON: SlotSourceClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: SlotSourceClassArguments) {
     super(
