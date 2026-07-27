@@ -24,8 +24,8 @@ import type {
   AdvancementClassArguments,
   AtlasClassArguments,
   BannerPatternClassArguments,
-  BlockStateArguments,
-  BlockStateJSON,
+  BlockStateDefinitionArguments,
+  BlockStateDefinitionJSON,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
   DataPointPickClass,
@@ -73,7 +73,7 @@ import {
   AdvancementClass,
   AtlasClass,
   BannerPatternClass,
-  BlockStateClass,
+  BlockStateDefinitionClass,
   ChatTypeClass,
   DamageTypeClass,
   DialogClass,
@@ -1336,13 +1336,13 @@ export class SandstonePack {
   BlockState<JSON extends BlockStateJSON>(
     name: string,
     json: JSON,
-    options?: Omit<Partial<BlockStateArguments<JSON>>, 'json'>,
+    options?: Omit<Partial<BlockStateDefinitionArguments<JSON>>, 'json'>,
   ) {
-    return new BlockStateClass(this.core, name, {
+    return new BlockStateDefinitionClass(this.core, name, {
       json,
       creator: 'user',
       addToSandstoneCore: true,
-      onConflict: conflictDefaults('blockstate') as BlockStateArguments<JSON>['onConflict'],
+      onConflict: conflictDefaults('blockstate') as BlockStateDefinitionArguments<JSON>['onConflict'],
       ...options,
     })
   }
