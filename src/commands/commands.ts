@@ -36,6 +36,7 @@ import {
   PerfCommand,
   PlaceCommand,
   PlaySoundCommand,
+  PostEffectCommand,
   RandomCommand,
   RawCommand,
   RecipeCommand,
@@ -233,6 +234,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
 
   get playsound() {
     return bind(this.sandstonePack, PlaySoundCommand, 'playsound') as PlaySoundCommand<MACRO>['playsound']
+  }
+
+  get posteffect() {
+    return new PostEffectCommand<MACRO>(this.sandstonePack)
   }
 
   get random() {

@@ -1,8 +1,6 @@
 import type {
   Registry,
-  ContainerSlotSelector,
   Coordinates,
-  EntitySlotSelector,
   JSONTextComponent,
   MultipleEntitiesArgument,
   MultiplePlayersArgument,
@@ -11,6 +9,7 @@ import type {
   SymbolBlock,
   SymbolMcdocBlockStates,
 } from 'sandstone/arguments'
+import type { ItemSlotSource } from '../commands/implementations/world/item'
 import type {
   ConditionClass,
   DataPointClass,
@@ -21,7 +20,7 @@ import type {
 import { parseJSONText, Score } from 'sandstone/variables'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
 import type { LiteralUnion, NamespacedLiteralUnion } from '../utils'
-import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode } from './conditions'
+import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
@@ -58,17 +57,37 @@ export class Flow {
   if = (condition: Condition, callback: () => void) =>
     new IfStatement(this.sandstoneCore, conditionToNode(condition), callback)
 
-  and = (...conditions: Condition[]) =>
-    new AndNode(
+  /**
+   * Combine conditions with AND.
+   *
+   * Accepts either variadic conditions (`_.and(a, b, c)`) or a single array
+   * (`_.and([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  and(...conditions: Condition[]): AndNode
+  and(conditions: Condition[]): AndNode
+  and(...args: any[]): AndNode {
+    const conditions = (args[0] instanceof Array ? args[0] : args) as Condition[]
+    return new AndNode(
       this.sandstoneCore,
       conditions.map((condition) => conditionToNode(condition)),
     )
+  }
 
-  or = (...conditions: Condition[]) =>
-    new OrNode(
+  /**
+   * Combine conditions with OR.
+   *
+   * Accepts either variadic conditions (`_.or(a, b, c)`) or a single array
+   * (`_.or([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  or(...conditions: Condition[]): OrNode
+  or(conditions: Condition[]): OrNode
+  or(...args: any[]): OrNode {
+    const conditions = (args[0] instanceof Array ? args[0] : args) as Condition[]
+    return new OrNode(
       this.sandstoneCore,
       conditions.map((condition) => conditionToNode(condition)),
     )
+  }
 
   not = (condition: Condition) => new NotNode(this.sandstoneCore, conditionToNode(condition))
 
@@ -466,24 +485,57 @@ export class Flow {
      * Test for items in a block entity's inventory slots.
      *
      * @param sourcePos Position of the block entity to test.
-     * @param slots Slots to test (e.g., `'container.*'`, `'container.0'`).
+     * @param slotSource Slot source to test (e.g., `'container.*'`, inline slot source, or a slot source reference).
      * @param itemPredicate Item predicate to match against.
      */
-    block: (sourcePos: Coordinates, slots: ContainerSlotSelector, itemPredicate: ItemPredicate) => ItemsBlockConditionNode
+    block: (sourcePos: Coordinates, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) => ItemsBlockConditionNode
     /**
      * Test for items in an entity's inventory slots.
      *
      * @param source Entity to test.
-     * @param slots Slots to test (e.g., `'inventory.*'`, `'hotbar.0'`, `'armor.chest'`).
+     * @param slotSource Slot source to test (e.g., `'inventory.*'`, inline slot source, or a slot source reference).
      * @param itemPredicate Item predicate to match against.
      */
-    entity: (source: MultipleEntitiesArgument, slots: EntitySlotSelector, itemPredicate: ItemPredicate) => ItemsEntityConditionNode
+    entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) => ItemsEntityConditionNode
   } {
     return {
-      block: (sourcePos: Coordinates, slots: ContainerSlotSelector, itemPredicate: ItemPredicate) =>
-        new SandstoneConditions.ItemsBlock(this.sandstoneCore, sourcePos, slots, itemPredicate),
-      entity: (source: MultipleEntitiesArgument, slots: EntitySlotSelector, itemPredicate: ItemPredicate) =>
-        new SandstoneConditions.ItemsEntity(this.sandstoneCore, source, slots, itemPredicate),
+      block: (sourcePos: Coordinates, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) =>
+        new SandstoneConditions.ItemsBlock(this.sandstoneCore, sourcePos, slotSource, itemPredicate),
+      entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) =>
+        new SandstoneConditions.ItemsEntity(this.sandstoneCore, source, slotSource, itemPredicate),
+    }
+  }
+
+  /**
+   * Counts slots from a slot source that are present in a block entity or entity.
+   *
+   * @example
+   * ```ts
+   * _.if(_.slots.entity('@p', 'inventory.*'), () => { ... })
+   * _.if(_.slots.block(abs(0, 64, 0), { type: 'minecraft:slot_range', slots: 'armor.chest' }), () => { ... })
+   * ```
+   */
+  get slots(): {
+    /**
+     * Count slots from a slot source that are present in a block entity.
+     *
+     * @param sourcePos Position of the block entity to test.
+     * @param slotSource Slot source (e.g., `'container.*'`, inline slot source, or a slot source reference).
+     */
+    block: (sourcePos: Coordinates, slotSource: ItemSlotSource) => SlotsBlockConditionNode
+    /**
+     * Count slots from a slot source that are present in an entity.
+     *
+     * @param source Entity to test.
+     * @param slotSource Slot source (e.g., `'inventory.*'`, inline slot source, or a slot source reference).
+     */
+    entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource) => SlotsEntityConditionNode
+  } {
+    return {
+      block: (sourcePos: Coordinates, slotSource: ItemSlotSource) =>
+        new SandstoneConditions.SlotsBlock(this.sandstoneCore, sourcePos, slotSource),
+      entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource) =>
+        new SandstoneConditions.SlotsEntity(this.sandstoneCore, source, slotSource),
     }
   }
 

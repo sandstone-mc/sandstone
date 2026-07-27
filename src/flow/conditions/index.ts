@@ -11,6 +11,7 @@ import * as variables from './variables'
 export const SandstoneConditions = {
   Advancement: resources.AdvancementConditionNode,
   Predicate: resources.PredicateConditionNode,
+  SlotSource: resources.SlotSourceConditionNode,
   Tag: resources.TagConditionNode,
 
   Biome: variables.BiomeConditionNode,
@@ -20,6 +21,8 @@ export const SandstoneConditions = {
   Function: variables.FunctionConditionNode,
   ItemsBlock: variables.ItemsBlockConditionNode,
   ItemsEntity: variables.ItemsEntityConditionNode,
+  SlotsBlock: variables.SlotsBlockConditionNode,
+  SlotsEntity: variables.SlotsEntityConditionNode,
   Loaded: variables.LoadedConditionNode,
   DataPointExists: variables.DataPointExistsConditionNode,
   DataPointEquals: variables.DataPointEqualsConditionNode,

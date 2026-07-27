@@ -3,9 +3,7 @@ import type {
   AXES,
   Registry,
   COMPARISON_OPERATORS,
-  ContainerSlotSelector,
   Coordinates,
-  EntitySlotSelector,
   MultipleEntitiesArgument,
   NBTObject,
   ObjectiveArgument,
@@ -16,6 +14,7 @@ import type {
   SymbolMcdocBlockStates,
   RootNBT,
 } from 'sandstone/arguments'
+import type { ItemSlotSource } from '../world/item'
 import { blockStateStringifier } from '../block/setblock'
 import type { SandstoneCommands } from 'sandstone/commands'
 import {
@@ -454,7 +453,7 @@ export class ExecuteItemsCommand<MACRO extends boolean> extends ExecuteCommandPa
    *
    * @param sourcePos Position of the block entity to test.
    *
-   * @param slots Slots to test (e.g., `'container.*'`, `'container.0'`).
+   * @param slotSource Slot source (e.g., `'container.*'`, `'container.0'`, inline slot source, or a slot source reference).
    *
    * @param itemPredicate Item predicate to match against.
    *
@@ -474,16 +473,16 @@ export class ExecuteItemsCommand<MACRO extends boolean> extends ExecuteCommandPa
    */
   block = (
     sourcePos: Macroable<Coordinates<MACRO>, MACRO>,
-    slots: Macroable<ContainerSlotSelector, MACRO>,
+    slotSource: Macroable<ItemSlotSource, MACRO>,
     itemPredicate: Macroable<ItemPredicate, MACRO>,
-  ) => this.nestedExecute(['items', 'block', coordinatesParser(sourcePos), slots, `${itemPredicate}`], true)
+  ) => this.nestedExecute(['items', 'block', coordinatesParser(sourcePos), slotSource, `${itemPredicate}`], true)
 
   /**
    * Test for items in an entity's inventory slots.
    *
    * @param source Entity to test.
    *
-   * @param slots Slots to test (e.g., `'inventory.*'`, `'hotbar.0'`, `'armor.chest'`).
+   * @param slotSource Slot source (e.g., `'inventory.*'`, `'hotbar.0'`, inline slot source, or a slot source reference).
    *
    * @param itemPredicate Item predicate to match against.
    *
@@ -508,9 +507,55 @@ export class ExecuteItemsCommand<MACRO extends boolean> extends ExecuteCommandPa
    */
   entity = (
     source: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-    slots: Macroable<EntitySlotSelector, MACRO>,
+    slotSource: Macroable<ItemSlotSource, MACRO>,
     itemPredicate: Macroable<ItemPredicate, MACRO>,
-  ) => this.nestedExecute(['items', 'entity', targetParser(source), slots, `${itemPredicate}`], true)
+  ) => this.nestedExecute(['items', 'entity', targetParser(source), slotSource, `${itemPredicate}`], true)
+}
+
+/**
+ * Command for the `execute if|unless slots` condition sub-command.
+ *
+ * Counts the number of slots from the slot source that are present on the targeted block or entity.
+ * Slot sources are evaluated with the `minecraft:command_slot_source` loot type.
+ */
+export class ExecuteSlotsCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
+  /**
+   * Count slots from a slot source that are present in a block entity.
+   *
+   * @param sourcePos Position of the block entity to test.
+   *
+   * @param slotSource Slot source (e.g., `'container.*'`, inline slot source, or a slot source reference).
+   *
+   * @example
+   * ```ts
+   * // Count slots in a chest matching a slot source
+   * execute.if.slots.block(abs(0, 64, 0), 'container.*')
+   * execute.if.slots.block(abs(0, 64, 0), { type: 'minecraft:slot_range', slots: 'armor.chest' })
+   * ```
+   */
+  block = (
+    sourcePos: Macroable<Coordinates<MACRO>, MACRO>,
+    slotSource: Macroable<ItemSlotSource, MACRO>,
+  ) => this.nestedExecute(['slots', 'block', coordinatesParser(sourcePos), slotSource], true)
+
+  /**
+   * Count slots from a slot source that are present in an entity.
+   *
+   * @param source Entity to test.
+   *
+   * @param slotSource Slot source (e.g., `'inventory.*'`, inline slot source, or a slot source reference).
+   *
+   * @example
+   * ```ts
+   * // Count slots on a player matching a slot source
+   * execute.if.slots.entity('@p', 'inventory.*')
+   * execute.if.slots.entity('@p', { type: 'minecraft:slot_range', slots: 'weapon.mainhand' })
+   * ```
+   */
+  entity = (
+    source: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+    slotSource: Macroable<ItemSlotSource, MACRO>,
+  ) => this.nestedExecute(['slots', 'entity', targetParser(source), slotSource], true)
 }
 
 export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteCommandPart<MACRO> {
@@ -694,6 +739,18 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
   /** Tests for items in block entity or entity inventory slots. */
   get items() {
     return new ExecuteItemsCommand<MACRO>(this.sandstonePack, this.previousNode)
+  }
+
+  /**
+   * Counts slots from a slot source that are present in a block entity or entity.
+   *
+   * @example
+   * ```ts
+   * execute.if.slots.entity('@p', 'inventory.*')
+   * ```
+   */
+  get slots() {
+    return new ExecuteSlotsCommand<MACRO>(this.sandstonePack, this.previousNode)
   }
 
   function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {

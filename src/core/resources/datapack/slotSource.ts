@@ -1,4 +1,5 @@
 import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -25,7 +26,9 @@ export type SlotSourceClassArguments = {
   json: MCDocToJSON<SymbolResource[(typeof SlotSourceClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
-export class SlotSourceClass extends ResourceClass<SlotSourceNode> {
+export class SlotSourceClass extends ResourceClass<SlotSourceNode> implements ConditionClass {
+  declare readonly __conditionClassBrand: true
+
   static readonly resourceType = 'slot_source' as const
 
   public slotSourceJSON: SlotSourceClassArguments['json']
@@ -43,5 +46,13 @@ export class SlotSourceClass extends ResourceClass<SlotSourceNode> {
     this.slotSourceJSON = args.json
 
     this.handleConflicts()
+  }
+
+  /** @internal */
+  _toMinecraftCondition = () => new this.pack.conditions.SlotSource(this.core, this.name)
+
+  /** @internal */
+  toJSON() {
+    return this.slotSourceJSON
   }
 }

@@ -2,25 +2,40 @@ import type {
   Coordinates,
   Registry,
   MultipleEntitiesArgument,
-  RootNBT,
-  EntitySlotSelector,
   ContainerSlotSelector,
+  EntitySlotSelector,
   MCDocToJSON,
   SymbolDataComponent,
-  NBTObject,
 } from 'sandstone/arguments'
-import type { ItemModifierClass, Macroable } from 'sandstone/core'
+import type { ItemModifierClass, Macroable, SlotSourceClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion, MemberModifiers } from 'sandstone/utils'
-import { nbtResolver } from 'sandstone/variables'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
-import { componentPatchStringifier } from '../player/give';
+import { componentPatchStringifier } from '../player/give'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
 }
+
+/**
+ * A slot source for the `/item` and `/execute if items/slots` commands.
+ *
+ * Accepts:
+ * - String shorthand slot ranges (e.g. `armor.chest`, `container.*`).
+ * - A reference to a registered slot source resource (`namespace:path`).
+ * - A `SlotSourceClass` instance.
+ * - A `#namespace:path` slot source tag reference.
+ *
+ * Inline slot source JSON is not supported — use a `SlotSourceClass` instead.
+ */
+export type ItemSlotSource =
+  | ContainerSlotSelector
+  | EntitySlotSelector
+  | `${string}:${string}`
+  | SlotSourceClass
+  | `#${string}:${string}`
 
 export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
   /**
@@ -56,25 +71,25 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
   from = {
     /**
      * @param pos The coordinates of the container to copy items from.
-     * @param slot The slot to copy the items from.
+     * @param slotSource The slot source to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>,
+      slotSource: Macroable<ItemSlotSource, MACRO>,
       modifier?: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
-    ) => this.finalCommand(['from', 'block', pos, slot, modifier]),
+    ) => this.finalCommand(['from', 'block', pos, slotSource, modifier]),
 
     /**
-     * @param targets The entity to copy items from.
-     * @param slot The slot to copy the items from.
+     * @param targets The entity/entities to copy items from. May target multiple entities; their slots are concatenated.
+     * @param slotSource The slot source to copy the items from.
      * @param [modifier] An optional modifier to apply.
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
+      slotSource: Macroable<ItemSlotSource, MACRO>,
       modifier?: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
-    ) => this.finalCommand(['from', 'entity', targetParser(targets), slot, modifier]),
+    ) => this.finalCommand(['from', 'entity', targetParser(targets), slotSource, modifier]),
   }
 }
 
@@ -117,6 +132,10 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Replace items in inventory slots.
    *
+   * Slot contents are replaced one-by-one in the order provided by the slot source:
+   * when there are more destination slots than source items, remaining slots are ignored;
+   * when there are fewer destination slots than source items, remaining items are ignored.
+   *
    * @example
    * ```ts
    * item.replace.block(abs(100, 70, 200), 'container.0').with('minecraft:diamond', 5)
@@ -126,18 +145,76 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
   replace = {
     /**
      * @param pos Container block coordinates.
-     * @param slot Container slot to replace.
+     * @param slotSource Slot source whose slots to replace.
      */
-    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>) =>
-      this.subCommand(['replace', 'block', pos, slot], ItemSourceCommand<MACRO>, false),
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slotSource: Macroable<ItemSlotSource, MACRO>) =>
+      this.subCommand(['replace', 'block', pos, slotSource], ItemSourceCommand<MACRO>, false),
 
     /**
      * @param targets Entity selector for targets.
-     * @param slot Entity slot to replace.
+     * @param slotSource Slot source whose slots to replace.
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
-    ) => this.subCommand(['replace', 'entity', targetParser(targets), slot], ItemSourceCommand<MACRO>, false),
+      slotSource: Macroable<ItemSlotSource, MACRO>,
+    ) => this.subCommand(['replace', 'entity', targetParser(targets), slotSource], ItemSourceCommand<MACRO>, false),
+  }
+
+  /**
+   * Fill items in inventory slots.
+   *
+   * Each destination slot is filled with a source item. When there are more destination slots
+   * than source items, items repeat cyclically until every slot is filled.
+   *
+   * @example
+   * ```ts
+   * item.fill.block(abs(100, 70, 200), 'container.*').with('minecraft:diamond')
+   * ```
+   */
+  fill = {
+    /**
+     * @param pos Container block coordinates.
+     * @param slotSource Slot source whose slots to fill.
+     */
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slotSource: Macroable<ItemSlotSource, MACRO>) =>
+      this.subCommand(['fill', 'block', pos, slotSource], ItemSourceCommand<MACRO>, false),
+
+    /**
+     * @param targets Entity selector for targets.
+     * @param slotSource Slot source whose slots to fill.
+     */
+    entity: (
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+      slotSource: Macroable<ItemSlotSource, MACRO>,
+    ) => this.subCommand(['fill', 'entity', targetParser(targets), slotSource], ItemSourceCommand<MACRO>, false),
+  }
+
+  /**
+   * Override items in inventory slots.
+   *
+   * Each destination slot is overridden with the corresponding source item. When there are more
+   * destination slots than source items, remaining slots are cleared.
+   *
+   * @example
+   * ```ts
+   * item.override.entity('@p', 'inventory.*').with('minecraft:dirt')
+   * ```
+   */
+  override = {
+    /**
+     * @param pos Container block coordinates.
+     * @param slotSource Slot source whose slots to override.
+     */
+    block: (pos: Macroable<Coordinates<MACRO>, MACRO>, slotSource: Macroable<ItemSlotSource, MACRO>) =>
+      this.subCommand(['override', 'block', pos, slotSource], ItemSourceCommand<MACRO>, false),
+
+    /**
+     * @param targets Entity selector for targets.
+     * @param slotSource Slot source whose slots to override.
+     */
+    entity: (
+      targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
+      slotSource: Macroable<ItemSlotSource, MACRO>,
+    ) => this.subCommand(['override', 'entity', targetParser(targets), slotSource], ItemSourceCommand<MACRO>, false),
   }
 }
