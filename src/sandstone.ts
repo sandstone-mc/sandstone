@@ -5,10 +5,9 @@ import type {
   AdvancementClassArguments,
   AtlasClassArguments,
   BannerPatternClassArguments,
-  BlockStateArguments,
+  BlockStateDefinitionArguments,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
-//  DecoratedPotPatternClassArguments,
   DialogClassArguments,
   EnchantmentClassArguments,
   EnchantmentProviderClassArguments,
@@ -295,7 +294,6 @@ export const {
   BannerPattern,
   ChatType,
   DamageType,
-//  DecoratedPotPattern,
   Dialog,
   Enchantment,
   EnchantmentProvider,
@@ -320,7 +318,7 @@ export const {
   WorldClock,
 
   Atlas,
-  BlockState,
+  BlockStateDefinition,
   Equipment,
   Font,
   ItemModelDefinition,
@@ -380,7 +378,6 @@ export {
   BannerPatternClass,
   ChatTypeClass,
   DamageTypeClass,
-  DecoratedPotPatternClass,
   DialogClass,
   EnchantmentClass,
   EnchantmentProviderClass,
@@ -390,7 +387,6 @@ export {
   LootTableClass,
   PredicateClass,
   RecipeClass,
-  SlotSourceClass,
   StructureClass,
   SulfurCubeArchetypeClass,
   TagClass,
@@ -407,7 +403,7 @@ export {
 
   // Resourcepack resources
   AtlasClass,
-  BlockStateClass,
+  BlockStateDefinitionClass,
   EquipmentClass,
   FontClass,
   ItemModelDefinitionClass,
@@ -793,7 +789,7 @@ type ContentStrategy =
    * The conflict strategy to use for Block states.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'block_state', NonNullable<BlockStateArguments<any>['onConflict']>>
+  | ContentStrategyKind<'block_definition', NonNullable<BlockStateDefinitionArguments<any>['onConflict']>>
   /**
    * The conflict strategy to use for Fonts.
    * Will override the defined `default` strategy.

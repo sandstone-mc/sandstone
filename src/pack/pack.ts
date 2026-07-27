@@ -24,12 +24,11 @@ import type {
   AdvancementClassArguments,
   AtlasClassArguments,
   BannerPatternClassArguments,
-  BlockStateArguments,
-  BlockStateJSON,
+  BlockStateDefinitionArguments,
+  BlockStateDefinitionJSON,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
   DataPointPickClass,
-//  DecoratedPotPatternClassArguments,
   DialogClassArguments,
   EnchantmentClassArguments,
   EnchantmentProviderClassArguments,
@@ -52,7 +51,6 @@ import type {
   PredicateClassArguments,
   RecipeClassArguments,
   ShaderClassArguments,
-//  SlotSourceClassArguments,
   SoundEventArguments,
   SoundsIndexArguments,
   SulfurCubeArchetypeClassArguments,
@@ -76,10 +74,9 @@ import {
   AdvancementClass,
   AtlasClass,
   BannerPatternClass,
-  BlockStateClass,
+  BlockStateDefinitionClass,
   ChatTypeClass,
   DamageTypeClass,
-//  DecoratedPotPatternClass,
   DialogClass,
   EnchantmentClass,
   EnchantmentProviderClass,
@@ -102,7 +99,6 @@ import {
   RecipeClass,
   SandstoneCore,
   ShaderClass,
-//  SlotSourceClass,
   SoundEventClass,
   SoundsIndexClass,
   SulfurCubeArchetypeClass,
@@ -140,9 +136,11 @@ import type {
 } from 'sandstone/variables'
 import {
   coordinatesParser,
-  DataArray,
+  DataArrayType,
+  DataArrayInternal,
   DataClass,
-  DataIndexMap,
+  DataIndexMapType,
+  DataIndexMapInternal,
   DataPointClass,
   ItemPredicateClass,
   LabelClass,
@@ -832,14 +830,14 @@ export class SandstonePack {
     initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    return DataIndexMap(this, initialize, dataPoint) as DataIndexMap<INITIAL>
+    return DataIndexMapInternal(this, initialize, dataPoint) as DataIndexMapType<INITIAL>
   }
 
   DataArray<INITIAL extends readonly NBTObject[] | readonly [string, DataPointClass | DataPointPickClass]>(
     initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    return DataArray(this, initialize, dataPoint) as DataArray<INITIAL>
+    return DataArrayInternal(this, initialize, dataPoint) as DataArrayType<INITIAL>
   }
 
   getTempStorage = (name: string) => {
@@ -1123,15 +1121,6 @@ export class SandstonePack {
       ...options,
     })
 
-  // DecoratedPotPattern = (name: string, decoratedPotPattern: NonNullable<SymbolResource['decorated_pot_pattern']>, options?: Partial<DecoratedPotPatternClassArguments>) =>
-  //   new DecoratedPotPatternClass(this.core, name, {
-  //     json: decoratedPotPattern,
-  //     creator: 'user',
-  //     addToSandstoneCore: true,
-  //     onConflict: conflictDefaults('decorated_pot_pattern') as DecoratedPotPatternClassArguments['onConflict'],
-  //     ...options,
-  //   })
-
   ItemModifier = (name: string, itemModifier: ItemModifierClassArguments['json'], options?: Omit<Partial<ItemModifierClassArguments>, 'json'>) =>
     new ItemModifierClass(this.core, name, {
       json: itemModifier,
@@ -1171,15 +1160,6 @@ export class SandstonePack {
       onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],
       ...options,
     })
-
-  // SlotSource = (name: string, slotSource: NonNullable<SymbolResource['slot_source']>, options?: Partial<SlotSourceClassArguments>) =>
-  //   new SlotSourceClass(this.core, name, {
-  //     json: slotSource,
-  //     creator: 'user',
-  //     addToSandstoneCore: true,
-  //     onConflict: conflictDefaults('slot_source') as SlotSourceClassArguments['onConflict'],
-  //     ...options,
-  //   })
 
   SulfurCubeArchetype = (name: string, sulfurCubeArchetype: SulfurCubeArchetypeClassArguments['json'], options?: Omit<Partial<SulfurCubeArchetypeClassArguments>, 'json'>) =>
     new SulfurCubeArchetypeClass(this.core, name, {
@@ -1366,16 +1346,16 @@ export class SandstonePack {
       ...options,
     })
 
-  BlockState<JSON extends BlockStateJSON>(
+  BlockStateDefinition<JSON extends BlockStateDefinitionJSON>(
     name: string,
     json: JSON,
-    options?: Omit<Partial<BlockStateArguments<JSON>>, 'json'>,
+    options?: Omit<Partial<BlockStateDefinitionArguments<JSON>>, 'json'>,
   ) {
-    return new BlockStateClass(this.core, name, {
+    return new BlockStateDefinitionClass(this.core, name, {
       json,
       creator: 'user',
       addToSandstoneCore: true,
-      onConflict: conflictDefaults('blockstate') as BlockStateArguments<JSON>['onConflict'],
+      onConflict: conflictDefaults('block_definition') as BlockStateDefinitionArguments<JSON>['onConflict'],
       ...options,
     })
   }
