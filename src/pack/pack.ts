@@ -24,8 +24,8 @@ import type {
   AdvancementClassArguments,
   AtlasClassArguments,
   BannerPatternClassArguments,
-  BlockStateArguments,
-  BlockStateJSON,
+  BlockStateDefinitionArguments,
+  BlockStateDefinitionJSON,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
   DataPointPickClass,
@@ -76,7 +76,7 @@ import {
   AdvancementClass,
   AtlasClass,
   BannerPatternClass,
-  BlockStateClass,
+  BlockStateDefinitionClass,
   ChatTypeClass,
   DamageTypeClass,
   DecoratedPotPatternClass,
@@ -140,9 +140,11 @@ import type {
 } from 'sandstone/variables'
 import {
   coordinatesParser,
-  DataArray,
+  DataArrayType,
+  DataArrayInternal,
   DataClass,
-  DataIndexMap,
+  DataIndexMapType,
+  DataIndexMapInternal,
   DataPointClass,
   ItemPredicateClass,
   LabelClass,
@@ -316,11 +318,11 @@ export class SandstonePack {
     }
     return {
       datapack: {
-        packFormat: 111,
+        packFormat: 112,
         description: 'A Sandstone datapack',
       },
       resourcepack: {
-        packFormat: 92,
+        packFormat: 93,
         description: 'A Sandstone resource pack',
       },
     }
@@ -446,7 +448,7 @@ export class SandstonePack {
     let pack = this.packTypes.get('datapack') as DataPack
 
     if (!pack) {
-      const options = this.packOptions.datapack ?? { packFormat: 111, description: 'A Sandstone datapack' }
+      const options = this.packOptions.datapack ?? { packFormat: 112, description: 'A Sandstone datapack' }
       pack = this.packTypes.set('datapack', new DataPack(false, options)).get('datapack') as DataPack
     }
 
@@ -457,7 +459,7 @@ export class SandstonePack {
     let pack = this.packTypes.get('resourcepack') as ResourcePack
 
     if (!pack) {
-      const options = this.packOptions.resourcepack ?? { packFormat: 92, description: 'A Sandstone resource pack' }
+      const options = this.packOptions.resourcepack ?? { packFormat: 93, description: 'A Sandstone resource pack' }
       pack = this.packTypes
         .set('resourcepack', new ResourcePack(options))
         .get('resourcepack') as ResourcePack
@@ -832,14 +834,14 @@ export class SandstonePack {
     initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    return DataIndexMap(this, initialize, dataPoint) as DataIndexMap<INITIAL>
+    return DataIndexMapInternal(this, initialize, dataPoint) as DataIndexMapType<INITIAL>
   }
 
   DataArray<INITIAL extends readonly NBTObject[] | readonly [string, DataPointClass | DataPointPickClass]>(
     initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    return DataArray(this, initialize, dataPoint) as DataArray<INITIAL>
+    return DataArrayInternal(this, initialize, dataPoint) as DataArrayType<INITIAL>
   }
 
   getTempStorage = (name: string) => {
@@ -1366,16 +1368,16 @@ export class SandstonePack {
       ...options,
     })
 
-  BlockState<JSON extends BlockStateJSON>(
+  BlockStateDefinition<JSON extends BlockStateDefinitionJSON>(
     name: string,
     json: JSON,
-    options?: Omit<Partial<BlockStateArguments<JSON>>, 'json'>,
+    options?: Omit<Partial<BlockStateDefinitionArguments<JSON>>, 'json'>,
   ) {
-    return new BlockStateClass(this.core, name, {
+    return new BlockStateDefinitionClass(this.core, name, {
       json,
       creator: 'user',
       addToSandstoneCore: true,
-      onConflict: conflictDefaults('blockstate') as BlockStateArguments<JSON>['onConflict'],
+      onConflict: conflictDefaults('blockstate') as BlockStateDefinitionArguments<JSON>['onConflict'],
       ...options,
     })
   }

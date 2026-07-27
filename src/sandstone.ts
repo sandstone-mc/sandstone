@@ -5,7 +5,7 @@ import type {
   AdvancementClassArguments,
   AtlasClassArguments,
   BannerPatternClassArguments,
-  BlockStateArguments,
+  BlockStateDefinitionArguments,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
   DecoratedPotPatternClassArguments,
@@ -319,7 +319,7 @@ export const {
   WorldClock,
 
   Atlas,
-  BlockState,
+  BlockStateDefinition,
   Equipment,
   Font,
   ItemModelDefinition,
@@ -361,7 +361,36 @@ export const {
 export const Variant: typeof sandstonePack.Variant = ((...args: unknown[]) =>
   (sandstonePack.Variant as CallableFunction)(...args)) as typeof sandstonePack.Variant
 
-export * from './variables/nbt/NBTs'
+// Explicit re-export (not `export *`) so the library builder can hoist
+// these as top-level imports in the bundled main. Wildcard re-exports
+// make it impossible for the bundler to know which names need to be
+// imported into the bundled main's scope.
+export {
+  NBTAnyValue,
+  NBTByte,
+  NBTByteArray,
+  NBTClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTIntArray,
+  NBTList,
+  NBTLong,
+  NBTLongArray,
+  NBTPrimitive,
+  NBTRange,
+  NBTShort,
+  NBTString,
+  NBTTypedArray,
+  NotNBT,
+  ResolvedNBT,
+  type NBTAllArrays,
+  type NBTAllNumberClasses,
+  type NBTAllNumbers,
+  type NBTAllPrimitives,
+  type NBTAllValues,
+  type NBTSimpleClasses,
+} from './variables/nbt/NBTs'
 
 export type { Condition } from './flow'
 export {
@@ -410,7 +439,7 @@ export {
 
   // Resourcepack resources
   AtlasClass,
-  BlockStateClass,
+  BlockStateDefinitionClass,
   EquipmentClass,
   FontClass,
   ItemModelDefinitionClass,
@@ -796,7 +825,7 @@ type ContentStrategy =
    * The conflict strategy to use for Block states.
    * Will override the defined `default` strategy.
    */
-  | ContentStrategyKind<'block_state', NonNullable<BlockStateArguments<any>['onConflict']>>
+  | ContentStrategyKind<'block_definition', NonNullable<BlockStateDefinitionArguments<any>['onConflict']>>
   /**
    * The conflict strategy to use for Fonts.
    * Will override the defined `default` strategy.

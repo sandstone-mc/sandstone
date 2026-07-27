@@ -25,6 +25,11 @@ export function hoistTrailingTypeReExports(
     string,
     { names: Set<string>; decl: ts.ImportDeclaration }
   >()
+  // Track names that have been added to ANY module's import, so the same
+  // identifier is never imported twice (which would be a TS "Duplicate
+  // identifier" error in the bundled output). When the same name appears
+  // in a second module, drop it.
+  const seenNames = new Set<string>()
   const otherStmts: ts.Statement[] = []
 
   for (const stmt of sf.statements) {
@@ -42,6 +47,7 @@ export function hoistTrailingTypeReExports(
         stmt.importClause.namedBindings.elements,
         importsByModule,
         stmt,
+        seenNames,
       )
       continue
     }
@@ -57,6 +63,8 @@ export function hoistTrailingTypeReExports(
         stmt.moduleSpecifier.text,
         stmt.exportClause.elements,
         importsByModule,
+        seenNames,
+        !!stmt.isTypeOnly,
       )
       // Drop the original re-export.
       continue
@@ -76,13 +84,18 @@ function addExportSpecifiers(
   module: string,
   elements: ts.NamedExports['elements'],
   importsByModule: Map<string, { names: Set<string>; decl: ts.ImportDeclaration }>,
+  seenNames: Set<string>,
+  isTypeOnly: boolean,
 ): void {
   const existing = importsByModule.get(module)
   if (!existing) {
     const names = new Set<string>()
     const specifiers: ts.ImportSpecifier[] = []
     for (const el of elements) {
-      names.add(el.name?.text ?? '')
+      const name = el.name?.text ?? ''
+      if (seenNames.has(name)) continue
+      seenNames.add(name)
+      names.add(name)
       if (el.propertyName) continue
       if (ts.isIdentifier(el.name)) {
         specifiers.push(
@@ -90,12 +103,13 @@ function addExportSpecifiers(
         )
       }
     }
+    if (specifiers.length === 0) return
     importsByModule.set(module, {
       names,
       decl: ts.factory.createImportDeclaration(
         undefined,
         ts.factory.createImportClause(
-          true, // typeOnly
+          isTypeOnly, // typeOnly — preserve from the original export
           undefined,
           ts.factory.createNamedImports(specifiers),
         ),
@@ -109,7 +123,8 @@ function addExportSpecifiers(
     if (el.propertyName) continue
     if (!ts.isIdentifier(el.name)) continue
     const name = el.name.text
-    if (!name || existing.names.has(name)) continue
+    if (!name || existing.names.has(name) || seenNames.has(name)) continue
+    seenNames.add(name)
     existing.names.add(name)
     const named = existing.decl.importClause!.namedBindings as ts.NamedImports
     existing.decl = ts.factory.updateImportDeclaration(
@@ -140,12 +155,14 @@ function addNamedSpecifiers(
   elements: ts.NamedImports['elements'],
   importsByModule: Map<string, { names: Set<string>; decl: ts.ImportDeclaration }>,
   decl: ts.ImportDeclaration,
+  seenNames: Set<string>,
 ): void {
   const existing = importsByModule.get(module)
   if (existing) {
     for (const el of elements) {
       const name = el.name?.text
-      if (!name || existing.names.has(name)) continue
+      if (!name || existing.names.has(name) || seenNames.has(name)) continue
+      seenNames.add(name)
       existing.names.add(name)
       const named = existing.decl.importClause!.namedBindings as ts.NamedImports
       existing.decl = ts.factory.updateImportDeclaration(
@@ -166,5 +183,15 @@ function addNamedSpecifiers(
     }
     return
   }
-  importsByModule.set(module, { names: new Set(elements.map((el) => el.name?.text ?? '')), decl })
+  const newNames = new Set<string>()
+  const filteredElements: ts.NamedImports['elements'] = []
+  for (const el of elements) {
+    const name = el.name?.text ?? ''
+    if (!name || seenNames.has(name)) continue
+    seenNames.add(name)
+    newNames.add(name)
+    filteredElements.push(el)
+  }
+  if (filteredElements.length === 0) return
+  importsByModule.set(module, { names: newNames, decl })
 }

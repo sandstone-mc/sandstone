@@ -32,8 +32,14 @@ function groupImports(
   siblingDir?: string,
 ): ts.ImportDeclaration[] {
   const byModule = new Map<string, string[]>()
+  // Dedupe by name: keep the first occurrence's module so the same identifier
+  // is never imported from two different modules (which would be a TS
+  // "Duplicate identifier" error in the bundled output).
+  const seenNames = new Set<string>()
   for (const { name, module } of collected) {
     if (isSelfReference(module)) continue
+    if (seenNames.has(name)) continue
+    seenNames.add(name)
     const fixedModule = fixModulePath(module, mode, siblingDir)
     const arr = byModule.get(fixedModule) ?? []
     if (!arr.includes(name)) arr.push(name)

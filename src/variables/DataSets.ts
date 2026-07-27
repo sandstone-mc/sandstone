@@ -456,7 +456,7 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
   }
 }
 
-export function DataIndexMap<INITIAL extends DataIndexMapInitial>(
+export function DataIndexMapInternal<INITIAL extends DataIndexMapInitial>(
   pack: SandstonePack,
   initialize: INITIAL,
   dataPoint?: DataPointClass<'storage'>,
@@ -486,11 +486,11 @@ export function DataIndexMap<INITIAL extends DataIndexMapInitial>(
   }
 }
 
-export type DataIndexMap<INITIAL extends DataIndexMapInitial> = DataIndexMapClass<INITIAL> & {
+export type DataIndexMapType<INITIAL extends DataIndexMapInitial> = DataIndexMapClass<INITIAL> & {
   [K in keyof INITIAL]: DataIndexMapInitial[`${any}${string}`]
 } & { [K in string]: DataIndexMapInitial[`${any}${string}`] }
 
-export function DataArray<INITIAL extends DataArrayInitial>(
+export function DataArrayInternal<INITIAL extends DataArrayInitial>(
   pack: SandstonePack,
   initialize: INITIAL,
   dataPoint?: DataPointClass<'storage'>,
@@ -520,6 +520,6 @@ export function DataArray<INITIAL extends DataArrayInitial>(
   }
 }
 
-export type DataArray<INITIAL extends DataArrayInitial> = DataArrayClass<INITIAL> & {
+export type DataArrayType<INITIAL extends DataArrayInitial> = DataArrayClass<INITIAL> & {
   [K in keyof INITIAL]: DataArrayInitial[number]
 } & { [K in number]: DataArrayInitial[number] }
