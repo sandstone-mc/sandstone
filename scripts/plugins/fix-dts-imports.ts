@@ -1,13 +1,20 @@
 /**
- * Fixes import paths in TypeScript declaration files using AST manipulation.
+ * Fixes import paths in TypeScript declaration files using MagicString
+ * string-level edits, so line/column layout is preserved.
+ *
  * - Converts path aliases (sandstone/*) to relative paths
  * - Adds .js extensions to relative imports
  * - Handles directory imports with /index.js
+ *
+ * Why string-level: the previous AST + TS-printer approach reformatted
+ * nodes it didn't touch (multi-line type literals got split back to one
+ * line per branch), which shifted every downstream line in the file and
+ * broke the per-file `.d.ts.map` produced by `tsc`. MagicString edits
+ * preserve every original byte that we don't change.
  */
 
-import ts from 'typescript'
-import { join, relative, dirname } from 'path'
 import { posix } from 'path'
+import { MagicString } from 'magic-string'
 
 /**
  * Fixes import paths in a .d.ts file.
@@ -23,10 +30,6 @@ export function fixDtsImports(
   distDir: string,
   indexDirs: Set<string>,
 ): { content: string; modified: boolean } {
-  const sourceFile = ts.createSourceFile('file.d.ts', source, ts.ScriptTarget.Latest, true)
-
-  let modified = false
-
   // Normalize paths to use forward slashes
   const normalizedFileDir = fileDir.replace(/\\/g, '/')
   const normalizedDistDir = distDir.replace(/\\/g, '/')
@@ -36,47 +39,36 @@ export function fixDtsImports(
    */
   function resolveModulePath(importPath: string): string | undefined {
     // Handle sandstone/* path aliases
-    // These resolve to bundleDir/types/subpath (since .d.ts files are in types/ subdir)
     if (importPath.startsWith('sandstone/')) {
       const subPath = importPath.slice('sandstone/'.length).replace(/\.ts$/, '')
 
-      // Target is in the types/ subdirectory of bundleDir
-      const targetPath = posix.join(normalizedDistDir, 'types', subPath)
-
-      // Calculate the relative path from the current file's directory to the target
-      let relPath = posix.relative(normalizedFileDir, targetPath)
-
-      // Ensure it starts with ./ or ../
-      if (!relPath.startsWith('.')) {
-        relPath = './' + relPath
-      }
-
       if (indexDirs.has(subPath)) {
+        const targetDir = posix.join(normalizedDistDir, 'types', subPath)
+        let relPath = posix.relative(normalizedFileDir, targetDir)
+        if (!relPath.startsWith('.')) relPath = './' + relPath
+        if (relPath.endsWith('/')) relPath = relPath.slice(0, -1)
         return `${relPath}/index.js`
       }
-      return `${relPath}.js`
+
+      const targetFile = posix.join(normalizedDistDir, 'types', `${subPath}.d.ts`)
+      let relPath = posix.relative(normalizedFileDir, targetFile)
+      if (!relPath.startsWith('.')) relPath = './' + relPath
+      return relPath.replace(/\.d\.ts$/, '.js')
     }
 
-    // Handle sandstone root import - resolves to bundleDir/index.js
     if (importPath === 'sandstone') {
       let relPath = posix.relative(normalizedFileDir, normalizedDistDir)
-      if (!relPath.startsWith('.')) {
-        relPath = './' + relPath
-      }
+      if (!relPath.startsWith('.')) relPath = './' + relPath
       return `${relPath}/index.js`
     }
 
-    // Handle relative imports
     if (importPath.startsWith('./') || importPath.startsWith('../')) {
-      // Skip if already has extension
       if (importPath.endsWith('.js') || importPath.endsWith('.json')) {
         return undefined
       }
 
-      // Remove .ts extension if present
       const cleanPath = importPath.replace(/\.ts$/, '')
 
-      // Check if this resolves to a directory with an index file
       if (isIndexDir(cleanPath, fileDir, distDir, indexDirs)) {
         return `${cleanPath}/index.js`
       }
@@ -87,89 +79,33 @@ export function fixDtsImports(
     return undefined
   }
 
-  /**
-   * Updates a module specifier string literal if needed.
-   */
-  function maybeUpdateModuleSpecifier(specifier: ts.StringLiteral): ts.StringLiteral | undefined {
-    const newPath = resolveModulePath(specifier.text)
-    if (newPath && newPath !== specifier.text) {
-      modified = true
-      return ts.factory.createStringLiteral(newPath)
-    }
-    return undefined
-  }
-
-  const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
-    return (root) => {
-      const visit: ts.Visitor = (node): ts.Node => {
-        // Handle: import { X } from 'path'
-        if (ts.isImportDeclaration(node) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
-          const newSpecifier = maybeUpdateModuleSpecifier(node.moduleSpecifier)
-          if (newSpecifier) {
-            return ts.factory.updateImportDeclaration(
-              node,
-              node.modifiers,
-              node.importClause,
-              newSpecifier,
-              node.attributes,
-            )
-          }
-        }
-
-        // Handle: export { X } from 'path'
-        if (ts.isExportDeclaration(node) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
-          const newSpecifier = maybeUpdateModuleSpecifier(node.moduleSpecifier)
-          if (newSpecifier) {
-            return ts.factory.updateExportDeclaration(
-              node,
-              node.modifiers,
-              node.isTypeOnly,
-              node.exportClause,
-              newSpecifier,
-              node.attributes,
-            )
-          }
-        }
-
-        // Handle: import("path") type imports
-        if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument)) {
-          const literal = node.argument.literal
-          if (ts.isStringLiteral(literal)) {
-            const newPath = resolveModulePath(literal.text)
-            if (newPath && newPath !== literal.text) {
-              modified = true
-              return ts.factory.updateImportTypeNode(
-                node,
-                ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(newPath)),
-                node.attributes,
-                node.qualifier,
-                node.typeArguments,
-                node.isTypeOf,
-              )
-            }
-          }
-        }
-
-        return ts.visitEachChild(node, visit, context)
-      }
-
-      return ts.visitNode(root, visit) as ts.SourceFile
+  // Scan source for import/export/import() specifiers using regex. We only
+  // touch the quoted string inside the specifier position; surrounding text
+  // is left intact so column counts and line layout are preserved.
+  const edits: Array<{ start: number; end: number; replacement: string }> = []
+  const specifierRegex = /(?<=(?:from\s+|import\s*\(\s*))(["'])((?:\\.|(?!\1).)*)\1/g
+  for (const match of source.matchAll(specifierRegex)) {
+    const quote = match[1]
+    const path = match[2]
+    const newPath = resolveModulePath(path)
+    if (newPath && newPath !== path) {
+      // Replace the entire quoted segment (quote + path + quote).
+      const start = match.index! + (match[0].indexOf(quote))
+      const end = start + 1 + path.length + 1
+      edits.push({ start, end, replacement: `${quote}${newPath}${quote}` })
     }
   }
 
-  const result = ts.transform(sourceFile, [transformer])
-  const transformedFile = result.transformed[0]
-
-  if (!modified) {
-    result.dispose()
+  if (edits.length === 0) {
     return { content: source, modified: false }
   }
 
-  const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed })
-  const output = printer.printFile(transformedFile)
-
-  result.dispose()
-  return { content: output, modified: true }
+  const ms = new MagicString(source)
+  // Apply edits in reverse order so earlier offsets remain valid.
+  for (const edit of edits) {
+    ms.overwrite(edit.start, edit.end, edit.replacement)
+  }
+  return { content: ms.toString(), modified: true }
 }
 
 /**
@@ -181,11 +117,9 @@ function isIndexDir(
   distDir: string,
   indexDirs: Set<string>,
 ): boolean {
-  // Get the relative path of the file's directory from distDir
   const fromRelative = fromFileDir.replace(distDir, '').replace(/\\/g, '/').replace(/^\//, '')
   const fromParts = fromRelative.split('/').filter(Boolean)
 
-  // Parse the import path and resolve it relative to the file
   const importParts = importPath.split('/')
   const currentParts = [...fromParts]
 
@@ -198,7 +132,6 @@ function isIndexDir(
   }
 
   const resolvedPath = currentParts.join('/')
-  // Strip 'types/' prefix since indexDirs is relative to src/, not dist/_internal/types/
   const normalizedPath = resolvedPath.replace(/^types\//, '')
   return indexDirs.has(normalizedPath)
 }

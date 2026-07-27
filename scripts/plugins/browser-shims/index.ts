@@ -41,7 +41,6 @@ export const browserShimPlugin: import('bun').BunPlugin = {
  * These are Node.js built-ins that can't be shimmed.
  */
 export const browserExternals = [
-  'node-fetch',
   'crypto',
   'zlib',
 ]

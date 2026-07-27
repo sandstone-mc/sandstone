@@ -13,6 +13,62 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Note**: The build scripts auto-retry on "Excessive complexity" TypeScript errors caused by stale types. If you see this error followed by "cleaning and retrying..." and the build succeeds, ignore it.
 
+## Build Pipeline
+
+The build (`scripts/build.ts`) is a 13-step pipeline that produces two
+bundles (node + browser) and a stitched `.d.ts` tree under
+`dist/_internal/`. The steps that touch code outside `src/`:
+
+| Step | What | Lives in |
+|------|------|----------|
+| 4 | Bun bundle → `dist/_internal/index.js` (+ `index.js.map`) | `scripts/build.ts` |
+| 5 | Hoist classes out of Bun's `__esm` wrappers | `scripts/plugins/fix-esm-init-order.ts` |
+| 6–8 | Browser bundle + `__esm` hoist + banner | `scripts/plugins/browser-shims/`, same hoist plugin |
+| 10 | Copy `types/*.d.ts` → `dist/_internal/types/` with rewrites | `scripts/plugins/bundle-declarations/copy.ts` |
+| 10 | Generate main `dist/_internal/index.d.ts` + `.d.ts.map` | `scripts/plugins/bundle-declarations/{generate-main,source-maps}.ts` |
+| 11–12 | Migrate `.d.ts` cross-references, emit re-export files | `scripts/plugins/migrate-dts-imports.ts`, `scripts/plugins/bundle-declarations/{extract-exports,import-grouping,sibling-specifiers,inline-imports}.ts` (also imported by `copy.ts`) |
+
+### Bundle-declarations plugin
+
+`scripts/plugins/bundle-declarations/` rewrites the per-file `.d.ts` so the
+whole `dist/_internal/types/` tree compiles standalone (no self-imports,
+every relative path explicit) and every per-file `.d.ts.map` produced by
+`tsc` still resolves ctrl-click back into `src/`. Each per-file transform
+runs in `copy.ts`:
+
+1. **`fixDtsImports`** — `sandstone/foo` → relative paths with `.js`
+   extensions. String-level via `MagicString`; do NOT switch to a
+   TS-transform+printer approach (the printer re-formats multi-line type
+   literals like `Tuple<...>` and `numberformat` unions, shifting every
+   downstream line).
+2. **`rewriteSiblingSpecifiers`** — `./X.js` → `./X/index.js` when
+   `./X/` exists. Same string-level rule.
+3. **`rewriteInlineImports`** — replaces `import("...").X` with
+   `/*…*/X` where the comment is padded to the exact same length as the
+   prefix, so the qualifier keeps its column. Collected imports become
+   prepended `import type` statements.
+4. **`printImportDeclarations`** — prepends the consolidated imports.
+
+### Source map rewriting
+
+After copy.ts finishes the body transforms it computes:
+
+```ts
+const lineShift = withImports.split('\n').length - content.split('\n').length
+```
+
+…then `shiftMappingsByLines(map, lineShift)` prepends `lineShift` empty
+`;`-separated segments to the mappings string. That's a uniform line
+shift of every gen-line mapping by `+lineShift`, which is correct because
+the body transforms above do not change line/column layout (MagicString
+only).
+
+`scripts/check-dts-sourcemaps.ts` walks all `dist/_internal/types/**/*.d.ts.map`
+and verifies token-to-source resolution for the first top-level
+declaration in each file. Pass it `path:token1,token2` to narrow the
+sweep. Exit code 0 on success, 1 on any mismatch — suitable for pre-commit
+or CI.
+
 ## Todo Directory
 
 The `todo/` directory contains planning and tracking documents for ongoing development. Currently empty.
@@ -753,6 +809,10 @@ export class CommandNameCommand<MACRO extends boolean> extends CommandArguments 
 }
 
 ## TODOs
+
+### Library Builder: cross-module `import("sandstone")` in resolved types
+
+**REMINDER**: When a resolved type contains `import("sandstone").*` or any `import("…")` qualifier referring back to the package itself, that is ALWAYS a library builder bug. Never dismiss it as "just how the LSP formats things" or as expected behavior. Source-level types are unqualified (e.g. `Score`); the builder emits `import("./index.js").Score` or similar because of a self-import cycle or a bad path rewrite in `scripts/plugins/bundle-declarations.ts` / `fix-dts-imports.ts` / `migrate-dts-imports.ts`. Treat it as a blocker and fix the builder.
 
 ### Build System: Subpath Bundle Duplication
 
