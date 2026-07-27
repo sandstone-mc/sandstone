@@ -1,6 +1,6 @@
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
 import type { SandstoneContext } from './context'
-import type { FillCommand, SetBlockCommand } from './commands'
+import type { FillCommand, GiveCommand, SetBlockCommand } from './commands'
 import type {
   AdvancementClassArguments,
   AtlasClassArguments,
@@ -28,6 +28,7 @@ import type {
   RecipeClassArguments,
   ShaderClassArguments,
   SoundEventArguments,
+  SoundsIndexArguments,
   TagClassArguments,
   TestEnvironmentClassArguments,
   TestInstanceClassArguments,
@@ -104,8 +105,8 @@ export { ResolveNBTPart }
 
 // Commands must go through sandstonePack.commands at call time for the same reason as pack methods.
 type SandstoneCommands = SandstonePack['commands']
-// Exclude setblock since it needs explicit type annotation due to complex generics
-type CommandKeys = Exclude<keyof SandstoneCommands, 'setblock' | 'fill'>
+// Exclude a few commands that need explicit type annotation due to complex generics
+type CommandKeys = Exclude<keyof SandstoneCommands, 'give' | 'setblock' | 'fill'>
 
 // Creates a proxy that handles both callable commands and object-based commands.
 // This avoids hardcoding which commands are object-based by detecting at runtime.
@@ -161,7 +162,6 @@ export const {
   forceload,
   gamemode,
   gamerule,
-  give,
   help,
   kill,
   list,
@@ -215,6 +215,10 @@ export const {
   xp,
   tell,
 } = commandsProxy
+
+// give needs explicit type annotation due to complex generics
+export const give: GiveCommand<false>['give'] = ((...args: unknown[]) =>
+  (sandstonePack.commands.give as CallableFunction)(...args)) as GiveCommand<false>['give']
 
 // setblock needs explicit type annotation due to complex generics
 export const setblock: SetBlockCommand<false>['setblock'] = ((...args: unknown[]) =>
@@ -320,6 +324,7 @@ export const {
   PostEffect,
   Shader,
   SoundEvent,
+  SoundsIndex,
   PlainText,
   Texture,
   WaypointStyle,
@@ -402,6 +407,7 @@ export {
   ParticleClass,
   PostEffectClass,
   SoundEventClass,
+  SoundsIndexClass,
   TextureClass,
   WaypointStyleClass,
 } from './core/resources'
@@ -507,6 +513,8 @@ type PackConfigs<PackType extends LiteralUnion<'datapack' | 'resourcepack'>> = R
   PackType extends 'datapack' ? DatapackConfig : PackType extends 'resourcepack' ? ResourcePackConfig : unknown
 >
 
+export type HandlerFile = string | ArrayBuffer | Buffer
+
 export interface SandstoneConfig {
   /**
    * The default namespace for the packs.
@@ -607,7 +615,7 @@ export interface SandstoneConfig {
     handle?: {
       path: RegExp
 
-      callback: (contents: string | Buffer | Promise<Buffer>) => Promise<Buffer>
+      callback: (contents: HandlerFile | Promise<HandlerFile>) => HandlerFile | Promise<HandlerFile>
     }[]
   }
 }

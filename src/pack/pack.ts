@@ -13,6 +13,7 @@ import type {
   TEXTURE_TYPES,
   TimeArgument,
   OBJECTIVE_CRITERIA,
+  MCDocToJSON,
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
 import { SandstoneCommands } from 'sandstone/commands'
@@ -51,6 +52,7 @@ import type {
   RecipeClassArguments,
   ShaderClassArguments,
   SoundEventArguments,
+  SoundsIndexArguments,
   TagClassArguments,
   TagValuesJSON,
   TestEnvironmentClassArguments,
@@ -97,6 +99,7 @@ import {
   SandstoneCore,
   ShaderClass,
   SoundEventClass,
+  SoundsIndexClass,
   TagClass,
   TestEnvironmentClass,
   TestInstanceClass,
@@ -162,6 +165,7 @@ import {
   InlineFunctionCallVisitor,
   LoopTransformationVisitor,
   OrTransformationVisitor,
+  OptimizeMacroTemporariesVisitor,
   SimplifyExecuteFunctionVisitor,
   SimplifyReturnRunFunctionVisitor,
   SwitchTransformationVisitor,
@@ -169,7 +173,6 @@ import {
 } from './visitors'
 import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
 import type { RecipeJSON } from 'sandstone/arguments/shapedCrafting'
-import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 
 export type ResourcePath = string[]
 
@@ -1034,15 +1037,15 @@ export class SandstonePack {
   }
 
   /** Creates a resource in the datapack, path must include file extension. */
-  RawResource(path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
+  RawResource(path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>): CustomResourceClass
 
   /** Creates a resource in the given pack, path must include file extension. */
-  RawResource(pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>): CustomResourceClass
+  RawResource(pack: PackType, path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>): CustomResourceClass
 
   RawResource(
     ...args:
-      | [path: string, contents: string | Buffer | Promise<Buffer>]
-      | [pack: PackType, path: string, contents: string | Buffer | Promise<Buffer>]
+      | [path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>]
+      | [pack: PackType, path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>]
   ) {
     const [core, CustomResource] = this.makeCustomResource
 
@@ -1064,7 +1067,7 @@ export class SandstonePack {
           })
         }
 
-        getValue = () => args[2] as string | Buffer | Promise<Buffer>
+        getValue = () => args[2] as string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>
       }
 
       return new RawResource()
@@ -1091,10 +1094,10 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement<AdvancementJSON extends NonNullable<SymbolResource['advancement']>>(
+  Advancement<AdvancementJSON extends MCDocToJSON<SymbolResource['advancement']>>(
     name: string,
     json: AdvancementJSON,
-    options?: Omit<Partial<AdvancementClassArguments>, 'advancement'>,
+    options?: Omit<Partial<AdvancementClassArguments>, 'json'>,
   ) {
     return new AdvancementClass(this.core, name, {
       json,
@@ -1105,7 +1108,7 @@ export class SandstonePack {
     })
   }
 
-  DamageType = (name: string, damageType: NonNullable<SymbolResource['damage_type']>, options?: Partial<DamageTypeClassArguments>) =>
+  DamageType = (name: string, damageType: DamageTypeClassArguments['json'], options?: Omit<Partial<DamageTypeClassArguments>, 'json'>) =>
     new DamageTypeClass(this.core, name, {
       json: damageType,
       creator: 'user',
@@ -1114,7 +1117,7 @@ export class SandstonePack {
       ...options,
     })
 
-  ItemModifier = (name: string, itemModifier: NonNullable<SymbolResource['item_modifier']>, options?: Partial<Omit<ItemModifierClassArguments, 'json'>>) =>
+  ItemModifier = (name: string, itemModifier: ItemModifierClassArguments['json'], options?: Omit<Partial<ItemModifierClassArguments>, 'json'>) =>
     new ItemModifierClass(this.core, name, {
       json: itemModifier,
       creator: 'user',
@@ -1123,7 +1126,7 @@ export class SandstonePack {
       ...options,
     })
 
-  LootTable = (name: string, lootTable: NonNullable<SymbolResource['loot_table']>, options?: Partial<LootTableClassArguments>) =>
+  LootTable = (name: string, lootTable: LootTableClassArguments['json'], options?: Omit<Partial<LootTableClassArguments>, 'json'>) =>
     new LootTableClass(this.core, name, {
       json: lootTable,
       creator: 'user',
@@ -1132,7 +1135,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Predicate = (name: string, predicate: NonNullable<SymbolResource['predicate']>, options?: Partial<PredicateClassArguments>) =>
+  Predicate = (name: string, predicate: PredicateClassArguments['json'], options?: Omit<Partial<PredicateClassArguments>, 'json'>) =>
     new PredicateClass(this.core, name, {
       json: predicate,
       creator: 'user',
@@ -1143,18 +1146,17 @@ export class SandstonePack {
 
   Recipe = <P1 extends string = string, P2 extends string = string, P3 extends string = string>(
     name: string,
-    recipe: RecipeJSON<P1, P2, P3>,
-    options?: Partial<RecipeClassArguments>,
+    recipe: MCDocToJSON<RecipeJSON<P1, P2, P3>>,
+    options?: Omit<Partial<RecipeClassArguments>, 'json'>,
   ) =>
     new RecipeClass(this.core, name, {
-      json: recipe as NonNullable<SymbolResource['recipe']>,
+      json: recipe as RecipeClassArguments['json'],
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('recipe') as RecipeClassArguments['onConflict'],
       ...options,
     })
 
-  /** @ts-ignore */
   Tag = <T extends LiteralUnion<REGISTRIES>>(
     type: T,
     name: string,
@@ -1169,7 +1171,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TrimMaterial = (name: string, trimMaterial: NonNullable<SymbolResource['trim_material']>, options?: Partial<TrimMaterialClassArguments>) =>
+  TrimMaterial = (name: string, trimMaterial: TrimMaterialClassArguments['json'], options?: Omit<Partial<TrimMaterialClassArguments>, 'json'>) =>
     new TrimMaterialClass(this.core, name, {
       json: trimMaterial,
       creator: 'user',
@@ -1178,7 +1180,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TrimPattern = (name: string, trimPattern: NonNullable<SymbolResource['trim_pattern']>, options?: Partial<TrimPatternClassArguments>) =>
+  TrimPattern = (name: string, trimPattern: TrimPatternClassArguments['json'], options?: Omit<Partial<TrimPatternClassArguments>, 'json'>) =>
     new TrimPatternClass(this.core, name, {
       json: trimPattern,
       creator: 'user',
@@ -1187,7 +1189,7 @@ export class SandstonePack {
       ...options,
     })
 
-  BannerPattern = (name: string, bannerPattern: NonNullable<SymbolResource['banner_pattern']>, options?: Partial<BannerPatternClassArguments>) =>
+  BannerPattern = (name: string, bannerPattern: BannerPatternClassArguments['json'], options?: Omit<Partial<BannerPatternClassArguments>, 'json'>) =>
     new BannerPatternClass(this.core, name, {
       json: bannerPattern,
       creator: 'user',
@@ -1196,7 +1198,7 @@ export class SandstonePack {
       ...options,
     })
 
-  ChatType = (name: string, chatType: NonNullable<SymbolResource['chat_type']>, options?: Partial<ChatTypeClassArguments>) =>
+  ChatType = (name: string, chatType: ChatTypeClassArguments['json'], options?: Omit<Partial<ChatTypeClassArguments>, 'json'>) =>
     new ChatTypeClass(this.core, name, {
       json: chatType,
       creator: 'user',
@@ -1205,7 +1207,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Dialog = (name: string, dialog: NonNullable<SymbolResource['dialog']>, options?: Partial<DialogClassArguments>) =>
+  Dialog = (name: string, dialog: DialogClassArguments['json'], options?: Omit<Partial<DialogClassArguments>, 'json'>) =>
     new DialogClass(this.core, name, {
       json: dialog,
       creator: 'user',
@@ -1214,7 +1216,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Enchantment = (name: string, enchantment: NonNullable<SymbolResource['enchantment']>, options?: Partial<EnchantmentClassArguments>) =>
+  Enchantment = (name: string, enchantment: EnchantmentClassArguments['json'], options?: Omit<Partial<EnchantmentClassArguments>, 'json'>) =>
     new EnchantmentClass(this.core, name, {
       json: enchantment,
       creator: 'user',
@@ -1223,7 +1225,7 @@ export class SandstonePack {
       ...options,
     })
 
-  EnchantmentProvider = (name: string, enchantmentProvider: NonNullable<SymbolResource['enchantment_provider']>, options?: Partial<EnchantmentProviderClassArguments>) =>
+  EnchantmentProvider = (name: string, enchantmentProvider: EnchantmentProviderClassArguments['json'], options?: Omit<Partial<EnchantmentProviderClassArguments>, 'json'>) =>
     new EnchantmentProviderClass(this.core, name, {
       json: enchantmentProvider,
       creator: 'user',
@@ -1232,7 +1234,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Instrument = (name: string, instrument: NonNullable<SymbolResource['instrument']>, options?: Partial<InstrumentClassArguments>) =>
+  Instrument = (name: string, instrument: InstrumentClassArguments['json'], options?: Omit<Partial<InstrumentClassArguments>, 'json'>) =>
     new InstrumentClass(this.core, name, {
       json: instrument,
       creator: 'user',
@@ -1241,7 +1243,7 @@ export class SandstonePack {
       ...options,
     })
 
-  JukeboxSong = (name: string, jukeboxSong: NonNullable<SymbolResource['jukebox_song']>, options?: Partial<JukeboxSongClassArguments>) =>
+  JukeboxSong = (name: string, jukeboxSong: JukeboxSongClassArguments['json'], options?: Omit<Partial<JukeboxSongClassArguments>, 'json'>) =>
     new JukeboxSongClass(this.core, name, {
       json: jukeboxSong,
       creator: 'user',
@@ -1250,7 +1252,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TestEnvironment = (name: string, testEnvironment: NonNullable<SymbolResource['test_environment']>, options?: Partial<TestEnvironmentClassArguments>) =>
+  TestEnvironment = (name: string, testEnvironment: TestEnvironmentClassArguments['json'], options?: Omit<Partial<TestEnvironmentClassArguments>, 'json'>) =>
     new TestEnvironmentClass(this.core, name, {
       json: testEnvironment,
       creator: 'user',
@@ -1259,7 +1261,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TestInstance = (name: string, testInstance: NonNullable<SymbolResource['test_instance']>, options?: Partial<TestInstanceClassArguments>) =>
+  TestInstance = (name: string, testInstance: TestInstanceClassArguments['json'], options?: Omit<Partial<TestInstanceClassArguments>, 'json'>) =>
     new TestInstanceClass(this.core, name, {
       json: testInstance,
       creator: 'user',
@@ -1268,7 +1270,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Timeline = (name: string, timeline: NonNullable<SymbolResource['timeline']>, options?: Partial<TimelineClassArguments>) =>
+  Timeline = (name: string, timeline: TimelineClassArguments['json'], options?: Omit<Partial<TimelineClassArguments>, 'json'>) =>
     new TimelineClass(this.core, name, {
       json: timeline,
       creator: 'user',
@@ -1277,7 +1279,7 @@ export class SandstonePack {
       ...options,
     })
 
-  WorldClock = (name: string, worldClock: NonNullable<SymbolResource['world_clock']>, options?: Partial<WorldClockClassArguments>) =>
+  WorldClock = (name: string, worldClock: WorldClockClassArguments['json'], options?: Omit<Partial<WorldClockClassArguments>, 'json'>) =>
     new WorldClockClass(this.core, name, {
       json: worldClock,
       creator: 'user',
@@ -1286,7 +1288,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TradeSet = (name: string, tradeSet: NonNullable<SymbolResource['trade_set']>, options?: Partial<TradeSetClassArguments>) =>
+  TradeSet = (name: string, tradeSet: TradeSetClassArguments['json'], options?: Omit<Partial<TradeSetClassArguments>, 'json'>) =>
     new TradeSetClass(this.core, name, {
       json: tradeSet,
       creator: 'user',
@@ -1295,7 +1297,7 @@ export class SandstonePack {
       ...options,
     })
 
-  TrialSpawner = (name: string, trialSpawner: NonNullable<SymbolResource['trial_spawner']>, options?: Partial<TrialSpawnerClassArguments>) =>
+  TrialSpawner = (name: string, trialSpawner: TrialSpawnerClassArguments['json'], options?: Omit<Partial<TrialSpawnerClassArguments>, 'json'>) =>
     new TrialSpawnerClass(this.core, name, {
       json: trialSpawner,
       creator: 'user',
@@ -1304,7 +1306,7 @@ export class SandstonePack {
       ...options,
     })
 
-  VillagerTrade = (name: string, villagerTrade: NonNullable<SymbolResource['villager_trade']>, options?: Partial<VillagerTradeClassArguments>) =>
+  VillagerTrade = (name: string, villagerTrade: VillagerTradeClassArguments['json'], options?: Omit<Partial<VillagerTradeClassArguments>, 'json'>) =>
     new VillagerTradeClass(this.core, name, {
       json: villagerTrade,
       creator: 'user',
@@ -1313,7 +1315,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Variant = <T extends VariantType>(type: T, name: string, variant: NonNullable<SymbolResource[`${T}_variant`]>, options?: Partial<VariantClassArguments<T>>) =>
+  Variant = <T extends VariantType>(type: T, name: string, variant: VariantClassArguments<T>['variant'], options?: Omit<Partial<VariantClassArguments<T>>, 'variant'>) =>
     new VariantClass(this.core, type, name, {
       variant,
       creator: 'user',
@@ -1322,7 +1324,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Atlas = (name: string, json: NonNullable<SymbolResource['atlas']>, options?: Partial<AtlasClassArguments>) =>
+  Atlas = (name: string, json: AtlasClassArguments['json'], options?: Omit<Partial<AtlasClassArguments>, 'json'>) =>
     new AtlasClass(this.core, name, {
       json,
       creator: 'user',
@@ -1334,7 +1336,7 @@ export class SandstonePack {
   BlockState<JSON extends BlockStateJSON>(
     name: string,
     json: JSON,
-    options?: Partial<BlockStateArguments<JSON>>,
+    options?: Omit<Partial<BlockStateArguments<JSON>>, 'json'>,
   ) {
     return new BlockStateClass(this.core, name, {
       json,
@@ -1345,7 +1347,7 @@ export class SandstonePack {
     })
   }
 
-  Font = (name: string, providers: GlyphProvider[], options?: Partial<FontArguments>) =>
+  Font = (name: string, providers: FontArguments['providers'], options?: Omit<Partial<FontArguments>, 'providers'>) =>
     new FontClass(this.core, name, {
       providers,
       creator: 'user',
@@ -1354,7 +1356,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Language = (name: string, language: LanguageArguments['language'], options?: Partial<LanguageArguments>) =>
+  Language = (name: string, language: LanguageArguments['language'], options?: Omit<Partial<LanguageArguments>, 'language'>) =>
     new LanguageClass(this.core, name, {
       language,
       creator: 'user',
@@ -1363,19 +1365,20 @@ export class SandstonePack {
       ...options,
     })
 
-  Model = (
-    type: 'block' | 'item',
+  Model<Type extends LiteralUnion<'block' | 'item'>>(
+    type: Type,
     name: string,
     json: ModelClassArguments['json'],
-    options?: Partial<ModelClassArguments>,
-  ) =>
-    new ModelClass(this.core, type, name, {
+    options?: Omit<Partial<ModelClassArguments>, 'json'>,
+  ) {
+    return new ModelClass<Type>(this.core, type, name, {
       json,
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('model') as ModelClassArguments['onConflict'],
       ...options,
     })
+  }
 
   /**
    * Creates an item definition resource for controlling how items are rendered.
@@ -1417,7 +1420,7 @@ export class SandstonePack {
   ItemModelDefinition = (
     name: string,
     definition: ItemModelDefinitionInput,
-    options?: Partial<Omit<ItemModelDefinitionClassArguments, 'definition'>>,
+    options?: Omit<Partial<ItemModelDefinitionClassArguments>, 'definition'>,
   ) =>
     new ItemModelDefinitionClass(this.core, name, {
       definition,
@@ -1431,7 +1434,7 @@ export class SandstonePack {
     type: Type,
     name: string,
     sound: SoundEventArguments['sound'],
-    options?: Partial<SoundEventArguments>,
+    options?: Omit<Partial<SoundEventArguments>, 'sound'>,
   ) {
     return new SoundEventClass(this.core, type, name, {
       sound,
@@ -1442,6 +1445,15 @@ export class SandstonePack {
     })
   }
 
+  SoundsIndex = (definitions: SoundsIndexArguments['definitions'], namespace?: string, options?: Omit<Partial<SoundsIndexArguments>, 'definitions'>) =>
+    new SoundsIndexClass(this.core, namespace ?? this.defaultNamespace, {
+      definitions,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('sounds') as SoundsIndexArguments['onConflict'],
+      ...options,
+    })
+
   PlainText = (name: string, text: PlainTextArguments['text'], options?: Partial<PlainTextArguments>) =>
     new PlainTextClass(this.core, name, {
       text,
@@ -1451,7 +1463,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Texture<Type extends TEXTURE_TYPES>(
+  Texture<Type extends LiteralUnion<TEXTURE_TYPES>>(
     type: Type,
     name: string,
     texture: TextureArguments<Type>['texture'],
@@ -1466,7 +1478,7 @@ export class SandstonePack {
     })
   }
 
-  Equipment = (name: string, json: NonNullable<SymbolResource['equipment']>, options?: Partial<EquipmentClassArguments>) =>
+  Equipment = (name: string, json: EquipmentClassArguments['json'], options?: Omit<Partial<EquipmentClassArguments>, 'json'>) =>
     new EquipmentClass(this.core, name, {
       json,
       creator: 'user',
@@ -1475,7 +1487,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Particle = (name: string, json: NonNullable<SymbolResource['particle']>, options?: Partial<ParticleClassArguments>) =>
+  Particle = (name: string, json: ParticleClassArguments['json'], options?: Omit<Partial<ParticleClassArguments>, 'json'>) =>
     new ParticleClass(this.core, name, {
       json,
       creator: 'user',
@@ -1484,7 +1496,7 @@ export class SandstonePack {
       ...options,
     })
 
-  PostEffect = (name: string, json: NonNullable<SymbolResource['post_effect']>, options?: Partial<PostEffectClassArguments>) =>
+  PostEffect = (name: string, json: PostEffectClassArguments['json'], options?: Omit<Partial<PostEffectClassArguments>, 'json'>) =>
     new PostEffectClass(this.core, name, {
       json,
       creator: 'user',
@@ -1493,7 +1505,7 @@ export class SandstonePack {
       ...options,
     })
 
-  Shader = (name: string, json: NonNullable<SymbolResource['shader']>, options?: Partial<ShaderClassArguments>) =>
+  Shader = (name: string, json: ShaderClassArguments['json'], options?: Omit<Partial<ShaderClassArguments>, 'json'>) =>
     new ShaderClass(this.core, name, {
       json,
       creator: 'user',
@@ -1502,7 +1514,7 @@ export class SandstonePack {
       ...options,
     })
 
-  WaypointStyle = (name: string, json: NonNullable<SymbolResource['waypoint_style']>, options?: Partial<WaypointStyleClassArguments>) =>
+  WaypointStyle = (name: string, json: WaypointStyleClassArguments['json'], options?: Omit<Partial<WaypointStyleClassArguments>, 'json'>) =>
     new WaypointStyleClass(this.core, name, {
       json,
       creator: 'user',
@@ -1534,6 +1546,7 @@ export class SandstonePack {
         new AwaitBodyVisitor(this),
 
         // Optimization
+        new OptimizeMacroTemporariesVisitor(this),
         new InlineFunctionCallVisitor(this),
         new UnifyChainedExecutesVisitor(this),
         new SimplifyExecuteFunctionVisitor(this),
