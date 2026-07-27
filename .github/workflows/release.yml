@@ -42,9 +42,17 @@ jobs:
         id: npm-tag
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          if [[ "$VERSION" == *"-"* ]]; then
-            echo "tag=${VERSION#*-}" | sed 's/\.[0-9]*$//' >> $GITHUB_OUTPUT
+          # Find which (if any) release branch this tag lives on.
+          # Workflow triggers on tag push — branch info isn't in GITHUB_REF.
+          RELEASE_BRANCH=$(git branch -r --contains "$GITHUB_REF_NAME" | grep -E 'origin/v[0-9]+\.x$' | head -n1 | sed 's|origin/||' || true)
+
+          if [ -n "$RELEASE_BRANCH" ]; then
+            # Tag is on an archived v*.x branch — publish to a per-minor
+            # dist-tag (e.g. v1.0) so `latest` stays pristine.
+            MINOR="${VERSION%.*}"
+            echo "tag=v${MINOR}" >> $GITHUB_OUTPUT
           else
+            # Tag is on master → latest
             echo "tag=latest" >> $GITHUB_OUTPUT
           fi
 
@@ -57,16 +65,14 @@ jobs:
           TAG="${GITHUB_REF_NAME}"
           VERSION="${TAG#v}"
 
-          # Check if prerelease
-          if [[ "$VERSION" == *"-"* ]]; then
-            echo "prerelease=true" >> $GITHUB_OUTPUT
-            # Find previous tag (any tag)
-            PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${TAG}$" | head -n1)
-          else
-            echo "prerelease=false" >> $GITHUB_OUTPUT
-            # Find previous stable release tag (no prerelease identifier)
-            PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${TAG}$" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
-          fi
+          # No prereleases are published (alpha/beta/rc dropped after major 1).
+          echo "prerelease=false" >> $GITHUB_OUTPUT
+
+          # Pick the most recent stable tag reachable from HEAD.
+          # `--merged` is branch-aware: on v1.0.x this returns the last v1.0.x
+          # tag (NOT v1.1.2 from master), so the release body / changelog
+          # compare link only includes commits within the v1.0.x branch.
+          PREV_TAG=$(git tag --sort=-v:refname --merged | grep -v "^${TAG}$" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 || true)
           echo "prev_tag=${PREV_TAG}" >> $GITHUB_OUTPUT
 
           # Get commit message
@@ -112,12 +118,24 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          PRERELEASE_FLAG=""
-          if [[ "${{ steps.release.outputs.prerelease }}" == "true" ]]; then
-            PRERELEASE_FLAG="--prerelease"
+          # Releases are always stable — no `--prerelease` flag (alpha/beta/rc
+          # were dropped after major 1).
+          #
+          # Only the master tag is the GitHub "Latest" release. Patches on
+          # archived v*.x branches release quietly so the master release
+          # retains the prominent Latest marker on the GH Releases page.
+          IS_RELEASE_BRANCH=$(git branch -r --contains "${{ github.ref_name }}" \
+            | grep -E 'origin/v[0-9]+\.x$' | head -n1 || true)
+          if [ -n "$IS_RELEASE_BRANCH" ]; then
+            # Patches on archived v*.x branches release quietly — don't
+            # steal the Latest badge from the master release.
+            LATEST_FLAG="--latest=false"
+          else
+            # Master release is the headliner.
+            LATEST_FLAG="--latest"
           fi
 
           gh release create "${{ github.ref_name }}" \
             --title "${{ steps.release.outputs.title }}" \
             --notes-file release_body.md \
-            $PRERELEASE_FLAG
+            "$LATEST_FLAG"
