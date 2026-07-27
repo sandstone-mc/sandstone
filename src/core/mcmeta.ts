@@ -3,7 +3,7 @@ import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import lodash from 'lodash'
 import { getSandstoneContext } from 'sandstone/context'
-import { fetch, safeWrite } from 'sandstone/utils'
+import { safeWrite } from 'sandstone/utils'
 
 export type MCMetaBranches = 'assets' | 'atlas' | 'data' | 'registries' | 'summary'
 
@@ -46,7 +46,7 @@ export class MCMetaCache {
     this.version = manifest.version
 
     const getZip = async (branch: string) =>
-      new AdmZip(await (await fetch(`https://github.com${this.base}archive/refs/heads/${branch}.zip`)).buffer())
+      new AdmZip(Buffer.from(await (await fetch(`https://github.com${this.base}archive/refs/heads/${branch}.zip`)).arrayBuffer()))
 
     if (!(await fs.pathExists(this.lockFile))) {
       if (manifest.files.length > 10) {
@@ -58,12 +58,18 @@ export class MCMetaCache {
         for await (const [file, text] of Object.entries(manifest.files)) {
           const _path = file.split('/')
 
-          let contents: Buffer | string = await new Promise((res) => {
-            archives[_path[0]].readFileAsync(_path.slice(1).join('/'), (data) => res(data as Buffer))
+          let contents: Buffer<ArrayBufferLike> | string = await new Promise((res, rej) => {
+            archives[_path[0]].readFileAsync(_path.slice(1).join('/'), (data) => {
+              if (data === null) {
+                rej('[mcmeta] adm-zip got null')
+              } else {
+                res(data)
+              }
+            })
           })
 
           if (text) {
-            contents = contents.toString('utf-8')
+            contents = contents.toString()
           }
 
           await safeWrite(path.join(this.path, file), contents as any)
@@ -103,12 +109,18 @@ export class MCMetaCache {
           for await (const [file, text] of Object.entries(manifest.files)) {
             const _path = file.split('/')
 
-            let contents: Buffer | string = await new Promise((res) => {
-              archives[_path[0]].readFileAsync(_path.slice(1).join('/'), (data) => res(data as Buffer))
+            let contents: Buffer<ArrayBufferLike> | string = await new Promise((res, rej) => {
+              archives[_path[0]].readFileAsync(_path.slice(1).join('/'), (data) => {
+                if (data === null) {
+                  rej('[mcmeta] adm-zip got null')
+                } else {
+                  res(data)
+                }
+              })
             })
 
             if (text) {
-              contents = contents.toString('utf-8')
+              contents = contents.toString()
             }
 
             await safeWrite(path.join(this.path, file), contents as any)
@@ -139,12 +151,18 @@ export class MCMetaCache {
                 archives[branch] = await getZip(branch)
               }
 
-              let contents: Buffer | string = await new Promise((res) => {
-                archives[branch].readFileAsync(_path.slice(1).join('/'), (data) => res(data as Buffer))
+              let contents: Buffer<ArrayBufferLike> | string = await new Promise((res, rej) => {
+                archives[branch].readFileAsync(_path.slice(1).join('/'), (data) => {
+                  if (data === null) {
+                    rej('[mcmeta] adm-zip got null')
+                  } else {
+                    res(data)
+                  }
+                })
               })
 
               if (text) {
-                contents = contents.toString('utf-8')
+                contents = contents.toString()
               }
 
               await safeWrite(path.join(this.path, file), contents as any)
@@ -233,7 +251,7 @@ export class MCMetaCache {
 
     const req = await fetch(`https://raw.githubusercontent.com${this.base}${branch}/${relativePath}`)
 
-    const file = await (text ? req.text() : req.buffer())
+    const file = text ? await req.text() : Buffer.from(await req.arrayBuffer())
 
     const finalPath = path.join(this.path, fullPath)
 

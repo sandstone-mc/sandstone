@@ -2,7 +2,7 @@
 dist
 
 ### Types folder (built declarations for internal use) ###
-types/
+/types/
 
 ### Generated synthetic entry point ###
 src/index.ts
@@ -61,3 +61,6 @@ commands.json
 cachehttp
 dummy
 cache
+
+# Local scratch / agent temp files
+.temp/
