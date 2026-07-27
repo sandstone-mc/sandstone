@@ -2,11 +2,11 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 
-import type { JSONTextComponent, NBTSerializable } from 'sandstone/arguments'
+import type { JSONTextComponent } from 'sandstone/arguments'
 import type { ExecuteCommand } from 'sandstone/commands'
 import { createDeferredMacroExecute, ExecuteCommand as ExecuteCommandClass } from 'sandstone/commands/implementations/entity/execute'
 import type { SandstoneCore } from 'sandstone/core'
-import type { ConditionTextComponentClass } from './abstractClasses'
+import type { ConditionClass } from './abstractClasses'
 import { SelectorPickClass } from './abstractClasses'
 import type { DataPointClass } from './Data'
 import { NBTIntArray } from './nbt'
@@ -74,7 +74,10 @@ export type UUIDOptions = {
 }
 
 export class UUIDClass<PrimarySource extends 'known' | 'scores' | 'selector' | 'data'>
-implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSerializable {
+implements ConditionClass, SelectorPickClass<true, boolean> {
+  declare readonly __textComponentClassBrand: true
+  declare readonly __conditionClassBrand: true
+
   /**
    * Phantom brand property for TypeScript type discrimination.
    * Uses `boolean` for player since a UUID can reference any entity type.
@@ -542,7 +545,7 @@ implements ConditionTextComponentClass, SelectorPickClass<true, boolean>, NBTSer
     const selector = this._toSelector()
 
     if (typeof selector === 'string') {
-      return selector
+      return `'${selector}'`
     }
     return selector.toNBT()
   }

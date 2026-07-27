@@ -45,7 +45,7 @@ type GetKeys<T> = T extends unknown[]
       : number // other array
   : keyof T // not an array
 
-export type DataIndexMapInitial = RootNBT | Record<string, DataPointClass | DataPointPickClass>
+export type DataIndexMapInitial = RootNBT | Record<`${any}${string}`, DataPointClass | DataPointPickClass>
 
 export class DataIndexMapClass<INITIAL extends DataIndexMapInitial> extends IterableDataClass<'map'> {
   entries: Record<string, number> = {}
@@ -481,14 +481,14 @@ export function DataIndexMap<INITIAL extends DataIndexMapInitial>(
 
       return true
     },
-  }) as DataIndexMapClass<INITIAL> & { [K in keyof INITIAL]: DataIndexMapInitial[string] } & {
-    [K in string]: DataIndexMapInitial[string]
+  }) as DataIndexMapClass<INITIAL> & { [K in keyof INITIAL]: DataIndexMapInitial[`${any}${string}`] } & {
+    [K in string]: DataIndexMapInitial[`${any}${string}`]
   }
 }
 
 export type DataIndexMap<INITIAL extends DataIndexMapInitial> = DataIndexMapClass<INITIAL> & {
-  [K in keyof INITIAL]: DataIndexMapInitial[string]
-} & { [K in string]: DataIndexMapInitial[string] }
+  [K in keyof INITIAL]: DataIndexMapInitial[`${any}${string}`]
+} & { [K in string]: DataIndexMapInitial[`${any}${string}`] }
 
 export function DataArray<INITIAL extends DataArrayInitial>(
   pack: SandstonePack,

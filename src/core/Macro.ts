@@ -100,6 +100,8 @@ export class DataPointPickClass extends MacroArgument {
 }
 
 export class ConditionalDataPointPickClass extends DataPointPickClass implements ConditionClass {
+  declare readonly __conditionClassBrand: true
+
   /**
    * @internal
    */

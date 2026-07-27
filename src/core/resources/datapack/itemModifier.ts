@@ -4,7 +4,7 @@ import {
   type Coordinates,
   type ENTITY_SLOTS,
   type MultipleEntitiesArgument,
-  type SymbolResource,
+  type MCDocToJSON, type SymbolResource,
 } from 'sandstone/arguments'
 import { targetParser } from 'sandstone/variables/parsers'
 import { ContainerNode } from '../../nodes'
@@ -26,13 +26,13 @@ export class ItemModifierNode extends ContainerNode implements ResourceNode<Item
   getValue = () => jsonStringify(this.resource.itemModifierJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-type ItemModifierJSON = SymbolResource['item_modifier']
+type ItemModifierJSON = MCDocToJSON<SymbolResource['item_modifier']>
 
 export type ItemModifierClassArguments = {
   /**
    * The item modifier's JSON.
    */
-  json: SymbolResource[(typeof ItemModifierClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof ItemModifierClass)['resourceType']]>
 } & ResourceClassArguments<'list'>
 
 type Modifier = ItemModifierJSON | ItemModifierClass

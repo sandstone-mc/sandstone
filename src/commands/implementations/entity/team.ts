@@ -1,4 +1,4 @@
-import type { BASIC_COLORS, JSONTextComponent, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { JSONTextComponent, MultipleEntitiesArgument, TextColor } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
@@ -7,7 +7,7 @@ import { CommandArguments } from '../../helpers'
 
 interface TeamOptions {
   collisionRule: 'always' | 'never' | 'pushOtherTeams' | 'pushOwnTeam'
-  color: BASIC_COLORS
+  color: TextColor
   deathMessageVisibility: 'never' | 'hideForOtherTeams' | 'hideForOwnTeam' | 'always'
   friendlyFire: boolean
   nametagVisibility: 'never' | 'hideForOtherTeams' | 'hideForOwnTeam' | 'always'

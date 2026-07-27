@@ -1,10 +1,11 @@
 import type { Coordinates, RootNBT, SymbolEntity } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
+import { NBT, nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers'
 import type { Registry } from 'sandstone/arguments/generated/registry'
+import { AllowConst } from 'sandstone/utils'
 
 export class SummonCommandNode extends CommandNode {
   command = 'summon' as const
@@ -18,14 +19,6 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
    * 
    * Creates a new entity in the world with optional positioning and NBT data.
    * The entity will be created with default properties unless overridden by NBT.
-   * 
-   * **Entity Categories:**
-   * - **Mobs:** 'minecraft:zombie', 'minecraft:villager', 'minecraft:cow'
-   * - **Items:** 'minecraft:item' (requires Item NBT)
-   * - **Projectiles:** 'minecraft:arrow', 'minecraft:fireball'
-   * - **Vehicles:** 'minecraft:boat', 'minecraft:minecart'
-   * - **Utility:** 'minecraft:armor_stand', 'minecraft:item_frame'
-   * - **Effects:** 'minecraft:area_effect_cloud', 'minecraft:marker'
    *
    * @param entity The entity type to summon. Must be a valid entity ID.
    *              Examples: 'minecraft:zombie', 'minecraft:cow', 'minecraft:armor_stand'
@@ -58,7 +51,7 @@ export class SummonCommand<MACRO extends boolean> extends CommandArguments {
   summon<ENTITY extends Macroable<Registry['minecraft:entity_type'], MACRO>>(
     entity: ENTITY,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
-    nbt?: Macroable<ENTITY extends keyof SymbolEntity ? NonNullable<SymbolEntity[ENTITY]> : RootNBT, MACRO>,
+    nbt?: Macroable<AllowConst<ENTITY extends keyof SymbolEntity ? NonNullable<SymbolEntity[ENTITY]> : RootNBT>, MACRO>,
   ) {
     const args: unknown[] = [entity]
     if (pos !== undefined) {

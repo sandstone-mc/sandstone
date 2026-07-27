@@ -139,6 +139,8 @@ type Resource<T extends LiteralUnion<REGISTRIES>> = Add<
 export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   extends ResourceClass
   implements ListResource, ConditionClass, NBTSerializable {
+  declare readonly __conditionClassBrand: true
+
   static readonly resourceType = 'tag' as const
 
   readonly type: REGISTRY
@@ -146,6 +148,12 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
 
   constructor(sandstoneCore: SandstoneCore, type: REGISTRY, name: string, args: TagClassArguments<REGISTRY>) {
+    if (type === ('entity' as REGISTRY)) {
+      console.warn(
+        `[TagClass] Tag type 'entity' is not a valid Minecraft tag registry. Did you mean 'entity_type'?`
+      )
+    }
+
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
@@ -221,10 +229,6 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   }
 
   toJSON() {
-    return this.name
-  }
-
-  toNBT() {
     return this.name
   }
 

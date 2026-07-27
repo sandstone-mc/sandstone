@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource, type TEXTURE_TYPES } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource, type TEXTURE_TYPES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -7,7 +7,7 @@ import { ResourceClass } from '../resource'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
 
-type TextureMetaAll = SymbolResource['texture_meta']
+type TextureMetaAll = MCDocToJSON<SymbolResource['texture_meta']>
 
 // TODO: Find which texture types actually support animations.
 type TextureMeta<Type extends TextureType> = (
@@ -35,14 +35,14 @@ export type TextureArguments<Type extends TextureType> = {
   /**
    * The texture's buffer.
    */
-  texture?: Promise<Buffer> | Buffer
+  texture?: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer
 
   sprite?: boolean | string
 
   meta?: TextureMeta<Type>
 } & ResourceClassArguments<'default'>
 
-export class TextureClass<Type extends TextureType = 'block'> extends ResourceClass<TextureNode<Type>> {
+export class TextureClass<Type extends TextureType> extends ResourceClass<TextureNode<Type>> {
   static readonly resourceType = 'texture'
 
   type: Type
@@ -81,7 +81,7 @@ export class TextureClass<Type extends TextureType = 'block'> extends ResourceCl
   }
 
   toString() {
-    return `${this.path[0]}:${this.path.slice(2)}`
+    return `${this.path[0]}:${this.path.slice(2).join('/')}`
   }
 
   // TODO

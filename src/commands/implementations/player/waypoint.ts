@@ -1,4 +1,4 @@
-import type { BASIC_COLORS, SingleEntityArgumentOf } from 'sandstone/arguments'
+import type { SingleEntityArgumentOf, TextColor } from 'sandstone/arguments'
 import type { Macroable, WaypointStyleClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
@@ -39,7 +39,7 @@ export class WaypointModifyArguments<MACRO extends boolean> extends CommandArgum
    *
    * @param name One of the 16 standard Minecraft color names.
    */
-  color(name: Macroable<Exclude<BASIC_COLORS, 'reset'>, MACRO>): FinalCommandOutput
+  color(name: Macroable<Exclude<TextColor, 'reset'>, MACRO>): FinalCommandOutput
 
   /**
    * Resets the waypoint color to its default (randomly chosen by the game, or the entity's team color).
@@ -67,7 +67,7 @@ export class WaypointModifyArguments<MACRO extends boolean> extends CommandArgum
    */
   color(type: 'rgb%', color: [number, number, number]): FinalCommandOutput
 
-  color(type: Macroable<BASIC_COLORS | 'hex' | 'rgb' | 'rgb%', MACRO>, color?: Macroable<number | string | [number, number, number], MACRO>) {
+  color(type: Macroable<TextColor | 'reset' | 'hex' | 'rgb' | 'rgb%', MACRO>, color?: Macroable<number | string | [number, number, number], MACRO>) {
     if (type === 'hex') {
       if (typeof color !== 'number') {
         return this.finalCommand(['color', 'hex', color])

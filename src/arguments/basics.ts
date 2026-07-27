@@ -1,4 +1,6 @@
-import { RESOURCE_CLASS_TYPES, type MultipleEntitiesArgument, type NBTSerializable, type Registry } from 'sandstone/arguments'
+import { SetType, LiteralUnion } from 'sandstone'
+import { RESOURCE_CLASS_TYPES, type MultipleEntitiesArgument, type NBTSerializable } from 'sandstone/arguments'
+import { ENTITY_TYPES_SET } from './generated/registry-sets'
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`
@@ -14,6 +16,9 @@ export type AXES = SINGLE_AXES | DEDUP<DOUBLE_AXES> | DEDUP<TRIPLE_AXES>
 
 export type ANCHORS = 'eyes' | 'feet'
 
+/**
+ * @deprecated Use `TextColor | 'reset'`
+ */
 export type BASIC_COLORS = (
   | 'black'
   | 'dark_blue'
@@ -34,6 +39,8 @@ export type BASIC_COLORS = (
   | 'white'
   | 'reset'
 )
+
+export { TextColor } from './generated/util/text'
 
 export type GAMEMODES = 'survival' | 'creative' | 'adventure' | 'spectator'
 
@@ -123,7 +130,7 @@ export type TEXTURE_TYPES = (
   | 'block'
   | 'colormap'
   | 'effect'
-  | `entity/${Registry['minecraft:entity_type']}`
+  | `entity/${SetType<typeof ENTITY_TYPES_SET>}`
   | 'environment'
   | 'font'
   | 'gui'
@@ -136,6 +143,10 @@ export type TEXTURE_TYPES = (
   | 'particle'
   | 'trims'
 )
+
+export type TextureType = LiteralUnion<TEXTURE_TYPES>
+
+export type ModelType = LiteralUnion<'item' | 'block'>
 
 export type ResourceClassType = typeof RESOURCE_CLASS_TYPES[number]
 

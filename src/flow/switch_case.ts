@@ -29,12 +29,12 @@ export type ConditionCase<ValueType> = readonly ['case', ConditionCallback<Value
 /** Either a static or condition case */
 export type SwitchCase<ValueType, CheckType> = StaticCase<CheckType> | ConditionCase<ValueType>
 
-export type DefaultType<ValueType extends number | NBTObject, SwitchValueType = unknown> = {
+export type DefaultType<ValueType extends number | NBTObject, SwitchValueType extends DataPointClass | DataPointPickClass | Score> = {
   entries: CaseEntry<SwitchValueType, ValueType>[]
   default: () => any
 }
 
-export class CaseStatement<ValueType extends number | NBTObject, SwitchValueType = unknown> {
+export class CaseStatement<ValueType extends number | NBTObject, SwitchValueType extends DataPointClass | DataPointPickClass | Score> {
   constructor(
     readonly entries: CaseEntry<SwitchValueType, ValueType>[] = [],
   ) {}
@@ -53,15 +53,15 @@ export class CaseStatement<ValueType extends number | NBTObject, SwitchValueType
   case(value: ValueType, callback: () => any): CaseStatement<ValueType, SwitchValueType>
 
   /** Add a condition case - checked after static cases fail. Use generic to specify switch value type on first condition: `.case<Score>(v => ...)` */
-  case<T = SwitchValueType>(condition: ConditionCallback<T>, callback: () => any): CaseStatement<ValueType, T>
+  case(condition: ConditionCallback<SwitchValueType>, callback: () => any): CaseStatement<ValueType, SwitchValueType>
 
-  case<T = SwitchValueType>(
-    valueOrCondition: ValueType | ConditionCallback<T>,
+  case(
+    valueOrCondition: ValueType | ConditionCallback<SwitchValueType>,
     callback: () => any,
   ) {
     if (typeof valueOrCondition === 'function') {
-      return new CaseStatement<ValueType, T>([
-        ...this.entries as CaseEntry<T, ValueType>[],
+      return new CaseStatement<ValueType, SwitchValueType>([
+        ...this.entries as CaseEntry<SwitchValueType, ValueType>[],
         { type: 'condition', condition: valueOrCondition, callback },
       ])
     }

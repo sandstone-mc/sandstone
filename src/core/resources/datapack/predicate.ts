@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -19,18 +19,20 @@ export class PredicateNode extends ContainerNode implements ResourceNode<Predica
   getValue = () => jsonStringify(this.resource.predicateJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-type PredicateJSON = NonNullable<SymbolResource['predicate']>
+type PredicateJSON = NonNullable<MCDocToJSON<SymbolResource['predicate']>>
 
 export type PredicateClassArguments = {
   /**
    * The predicate's JSON.
    */
-  json: SymbolResource[(typeof PredicateClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof PredicateClass)['resourceType']]>
 } & ResourceClassArguments<'list'>
 
 type Predicate = PredicateJSON | PredicateClass
 
 export class PredicateClass extends ResourceClass<PredicateNode> implements ListResource, ConditionClass {
+  declare readonly __conditionClassBrand: true
+
   static readonly resourceType = 'predicate' as const
 
   public predicateJSON: NonNullable<PredicateClassArguments['json']>

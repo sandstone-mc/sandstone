@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -26,7 +26,7 @@ export type EnchantmentClassArguments = {
   /**
    * The enchantment's JSON.
    */
-  json: SymbolResource[(typeof EnchantmentClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof EnchantmentClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class EnchantmentClass extends ResourceClass<EnchantmentNode> {
@@ -72,7 +72,7 @@ export type EnchantmentProviderClassArguments = {
   /**
    * The enchantment provider's JSON.
    */
-  json: SymbolResource[(typeof EnchantmentProviderClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof EnchantmentProviderClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class EnchantmentProviderClass extends ResourceClass<EnchantmentProviderNode> {

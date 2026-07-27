@@ -77,7 +77,7 @@ export abstract class CustomResourceClass extends ResourceClass<CustomResourceNo
     ).join('/')}`
   }
 
-  getValue(): string | Buffer | Promise<Buffer> {
+  getValue(): string | ArrayBuffer | Buffer | Promise<ArrayBuffer | Buffer | string> {
     throw new Error(`Custom Resource '${this.type}' getValue function is not defined!`)
   }
 

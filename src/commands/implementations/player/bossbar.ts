@@ -1,4 +1,4 @@
-import type { BASIC_COLORS, JSONTextComponent, MultiplePlayersArgumentOf } from 'sandstone/arguments'
+import type { JSONTextComponent, MultiplePlayersArgumentOf, TextColor } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import type { LiteralUnion } from 'sandstone/utils'
@@ -91,7 +91,7 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param color The new color.
    */
-  color = (color: Macroable<LiteralUnion<BASIC_COLORS>, MACRO>) => this.finalCommand(['color', color])
+  color = (color: Macroable<LiteralUnion<TextColor>, MACRO>) => this.finalCommand(['color', color])
 
   /**
    * Set the boss bar's maximum value.

@@ -1,13 +1,14 @@
+import { LiteralUnion } from 'sandstone'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 
-export class ModelNode extends ContainerNode implements ResourceNode<ModelClass> {
+export class ModelNode<Type extends LiteralUnion<'block' | 'item'>> extends ContainerNode implements ResourceNode<ModelClass<Type>> {
   constructor(
     sandstoneCore: SandstoneCore,
-    public resource: ModelClass,
+    public resource: ModelClass<Type>,
   ) {
     super(sandstoneCore)
   }
@@ -19,20 +20,21 @@ export type ModelClassArguments = {
   /**
    * The model's JSON.
    */
-  json: SymbolResource[(typeof ModelClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof ModelClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
+
 
 /**
  * Helper class for modifying Minecraft model data
  */
-export class ModelClass extends ResourceClass<ModelNode> {
+export class ModelClass<Type extends LiteralUnion<'block' | 'item'>> extends ResourceClass<ModelNode<Type>> {
   static readonly resourceType = 'model'
 
   modelJSON: NonNullable<ModelClassArguments['json']>
 
   constructor(
     core: SandstoneCore,
-    public type: 'block' | 'item',
+    public type: Type,
     name: string,
     args: ModelClassArguments,
   ) {
@@ -54,5 +56,5 @@ export class ModelClass extends ResourceClass<ModelNode> {
 
   // TODO: Consider building a separate Variable class for model manipulation
 
-  toString = () => `${this.path[0]}:${this.path.slice(2)}`
+  toString = () => `${this.path[0]}:${this.path.slice(2).join('/')}`
 }

@@ -18,7 +18,7 @@ import * as util from 'util'
 import { MacroArgument } from '../core/Macro'
 import type { SandstonePack } from '../pack'
 import { add, formatDebugString } from '../utils'
-import type { ComponentClass } from './abstractClasses'
+import type { TextComponentClass } from './abstractClasses'
 import { SelectorPickClass } from './abstractClasses'
 import type { DATA_TYPES, DataPointClass } from './Data'
 import type { ObjectiveClass } from './Objective'
@@ -70,7 +70,10 @@ type Tuple<T, N extends number, A extends T[] = []> = (
   : Tuple<T, N, [...A, T]>
 )
 
-export class Score extends MacroArgument implements ConditionClass, ComponentClass, NBTSerializable {
+export class Score extends MacroArgument implements ConditionClass, TextComponentClass, NBTSerializable {
+  declare readonly __textComponentClassBrand: true
+  declare readonly __conditionClassBrand: true
+
   commands: SandstoneCommands<false>
 
   constructor(
@@ -96,7 +99,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   }
 
   toNBT() {
-    return nbtResolver(this._toChatComponent() as NBTObject).toString()
+    return nbtResolver(this._toChatComponent()).toString()
   }
 
   toJSON() {
@@ -108,7 +111,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    */
   _toChatComponent(): JSONTextComponent {
     return {
-      score: { name: this.target, objective: this.objective.name },
+      score: { name: `${this.target}` as `${any}${string}`, objective: this.objective },
     }
   }
 
@@ -502,6 +505,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
     if (typeof args[0] === 'number') {
       return {
+        __conditionClassBrand: true as const,
         _toMinecraftCondition: () =>
           new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
             `${playerScore.target}`,
@@ -514,6 +518,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
 
     const endArgs = args[1] ? args : [args[0]]
     return {
+      __conditionClassBrand: true as const,
       // eslint-disable-next-line max-len
       _toMinecraftCondition: () =>
         new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
@@ -665,6 +670,7 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
    * @param range The range to compare the current score against.
    */
   matches = (range: Range<false>) => ({
+    __conditionClassBrand: true as const,
     _toMinecraftCondition: () =>
       new this.sandstonePack.conditions.Score(this.sandstonePack.core, [
         `${this.target}`,
@@ -675,7 +681,8 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
   })
 
   match = (minimum: number, maximum: number, callback: (num: number) => any) => {
-    const { MCFunction, Macro } = this.sandstonePack
+    const { MCFunction, Macro, core } = this.sandstonePack
+    const { getCurrentMCFunctionOrThrow } = core
 
     if (maximum > 1000) {
       console.warn(
@@ -689,12 +696,14 @@ export class Score extends MacroArgument implements ConditionClass, ComponentCla
     // oxlint-disable-next-line no-this-alias
     const score = this
 
-    for (let i = minimum; i < maximum; i++) {
-      MCFunction(`__sandstone:score_match/${matcher}/${i}`, () => callback(i))
+    const parent = getCurrentMCFunctionOrThrow()
+
+    for (let i = minimum; i <= maximum; i++) {
+      MCFunction(`./score_match/${matcher}/${i}`, () => callback(i))
     }
 
-    return MCFunction(`__sandstone:score_match/${matcher}`, [score], () =>
-      Macro.returnCmd.run.functionCmd(Macro`__sandstone:score_match/${matcher}/${score}`),
+    return MCFunction(`./score_match/${matcher}`, [score], () =>
+      Macro.returnCmd.run.functionCmd(Macro`${parent.resource.name}/score_match/${matcher}/${score}`),
     )
   }
 

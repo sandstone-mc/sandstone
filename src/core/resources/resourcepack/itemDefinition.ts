@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS } from 'sandstone/arguments'
+import { type MCDocToJSON, RESOURCE_PATHS } from 'sandstone/arguments'
 import type {
   ItemDefinition,
   ItemModel,
@@ -9,8 +9,6 @@ import type {
   SpecialModel,
 } from 'sandstone/arguments/generated/assets/item_definition'
 import type { ModelRef } from 'sandstone/arguments/generated/assets/model'
-import type { NBTFloat } from 'sandstone'
-import { NBT } from 'sandstone/variables/nbt'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -19,8 +17,14 @@ import { ModelClass } from './model'
 import { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import type { SandstonePack } from 'sandstone/pack'
 
+type JSONItemDefinition = MCDocToJSON<ItemDefinition>
+type JSONItemModel = MCDocToJSON<ItemModel>
+type JSONRangeDispatch = MCDocToJSON<RangeDispatch>
+type JSONSelect = MCDocToJSON<Select>
+type JSONSpecialModel = MCDocToJSON<SpecialModel>
+
 // Helper to normalize model input (string/ModelClass -> { type: 'model', model: ModelRef })
-function normalizeModel(input: ItemModel | ModelRef): ItemModel {
+function normalizeModel(input: JSONItemModel | ModelRef): JSONItemModel {
   if (typeof input === 'string' || input instanceof ModelClass) {
     return { type: 'model', model: input as ModelRef }
   }
@@ -33,9 +37,9 @@ function normalizeModel(input: ItemModel | ModelRef): ItemModel {
  * and adds model-specific methods for building ItemModel JSON.
  */
 export class ItemModelBuilder extends ItemPredicateClass {
-  private onTrueModel?: ItemModel
-  private onFalseModel?: ItemModel
-  private explicitModel?: ItemModel
+  private onTrueModel?: JSONItemModel
+  private onFalseModel?: JSONItemModel
+  private explicitModel?: JSONItemModel
 
   // ItemModelDefinition-level options
   private _handAnimationOnSwap?: boolean
@@ -50,7 +54,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * Specify the model to use when all conditions match.
    * @param model The ItemModel or model reference string
    */
-  onTrue(model: ItemModel | ModelRef): this {
+  onTrue(model: JSONItemModel | ModelRef): this {
     this.onTrueModel = normalizeModel(model)
     return this
   }
@@ -59,7 +63,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * Specify the model to use when any condition fails.
    * @param model The ItemModel or model reference string
    */
-  onFalse(model: ItemModel | ModelRef): this {
+  onFalse(model: JSONItemModel | ModelRef): this {
     this.onFalseModel = normalizeModel(model)
     return this
   }
@@ -68,7 +72,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * Create a composite model that renders multiple models layered together.
    * @param models The models to compose
    */
-  composite(...models: Array<ItemModel | ModelRef>): this {
+  composite(...models: Array<JSONItemModel | ModelRef>): this {
     this.explicitModel = {
       type: 'composite',
       models: models.map(normalizeModel),
@@ -83,13 +87,13 @@ export class ItemModelBuilder extends ItemPredicateClass {
    */
   select<P extends SelectPropertyType>(
     property: P,
-    config: Omit<Extract<Select, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
+    config: Omit<Extract<JSONSelect, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
   ): this {
     this.explicitModel = {
       type: 'select',
       property,
       ...config,
-    } as ItemModel
+    } as JSONItemModel
     return this
   }
 
@@ -100,13 +104,13 @@ export class ItemModelBuilder extends ItemPredicateClass {
    */
   rangeDispatch<P extends NumericPropertyType>(
     property: P,
-    config: Omit<Extract<RangeDispatch, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
+    config: Omit<Extract<JSONRangeDispatch, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
   ): this {
     this.explicitModel = {
       type: 'range_dispatch',
       property,
       ...config,
-    } as ItemModel
+    } as JSONItemModel
     return this
   }
 
@@ -115,7 +119,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * @param model The special model configuration
    * @param base The base model reference providing transformations
    */
-  special(model: SpecialModel, base: ModelRef): this {
+  special(model: JSONSpecialModel, base: ModelRef): this {
     this.explicitModel = {
       type: 'special',
       model,
@@ -162,7 +166,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
   /**
    * Build the ItemModel JSON from the builder configuration.
    */
-  toItemModel(): ItemModel {
+  toItemModel(): JSONItemModel {
     if (this.explicitModel) {
       return this.explicitModel
     }
@@ -172,16 +176,16 @@ export class ItemModelBuilder extends ItemPredicateClass {
   /**
    * Build the complete ItemModelDefinition JSON including model and options.
    */
-  toItemModelDefinition(): ItemDefinition {
+  toItemModelDefinition(): JSONItemDefinition {
     return {
       model: this.toItemModel(),
       ...(this._handAnimationOnSwap !== undefined && { hand_animation_on_swap: this._handAnimationOnSwap }),
       ...(this._oversizedInGui !== undefined && { oversized_in_gui: this._oversizedInGui }),
-      ...(this._swapAnimationScale !== undefined && { swap_animation_scale: NBT.float(this._swapAnimationScale) }),
+      ...(this._swapAnimationScale !== undefined && { swap_animation_scale: this._swapAnimationScale }),
     }
   }
 
-  private buildFromPredicates(): ItemModel {
+  private buildFromPredicates(): JSONItemModel {
     // Check for OR groups which are not supported
     for (const group of this.testGroups) {
       if (group.length > 1) {
@@ -211,13 +215,13 @@ export class ItemModelBuilder extends ItemPredicateClass {
       const value = countTest.value as { min?: number; max?: number } | number | undefined
 
       // Build entries from count range
-      const entries: Array<{ threshold: NBTFloat; model: ItemModel }> = []
+      const entries: Array<{ threshold: number; model: JSONItemModel }> = []
 
       if (typeof value === 'number') {
-        entries.push({ threshold: NBT.float(value), model: this.onTrueModel || { type: 'empty' } })
+        entries.push({ threshold: value, model: this.onTrueModel || { type: 'empty' } })
       } else if (value && typeof value === 'object') {
         if (value.min !== undefined) {
-          entries.push({ threshold: NBT.float(value.min), model: this.onTrueModel || { type: 'empty' } })
+          entries.push({ threshold: value.min, model: this.onTrueModel || { type: 'empty' } })
         }
       }
 
@@ -226,17 +230,17 @@ export class ItemModelBuilder extends ItemPredicateClass {
         property: 'count',
         entries,
         fallback: this.onFalseModel || { type: 'empty' },
-      } as ItemModel
+      } as JSONItemModel
     }
 
     // Build nested conditions from predicates
-    const onTrue = this.onTrueModel || { type: 'empty' } as ItemModel
-    const onFalse = this.onFalseModel || { type: 'empty' } as ItemModel
+    const onTrue = this.onTrueModel || { type: 'empty' } as JSONItemModel
+    const onFalse = this.onFalseModel || { type: 'empty' } as JSONItemModel
 
     return this.buildNestedConditions(0, onTrue, onFalse)
   }
 
-  private buildNestedConditions(index: number, onTrue: ItemModel, onFalse: ItemModel): ItemModel {
+  private buildNestedConditions(index: number, onTrue: JSONItemModel, onFalse: JSONItemModel): JSONItemModel {
     if (index >= this.testGroups.length) {
       return onTrue
     }
@@ -249,9 +253,9 @@ export class ItemModelBuilder extends ItemPredicateClass {
 
   private testToCondition(
     test: { negated: boolean; component: string; operator: string; value?: unknown },
-    onTrue: ItemModel,
-    onFalse: ItemModel,
-  ): ItemModel {
+    onTrue: JSONItemModel,
+    onFalse: JSONItemModel,
+  ): JSONItemModel {
     // Handle negation by swapping branches
     const [trueModel, falseModel] = test.negated ? [onFalse, onTrue] : [onTrue, onFalse]
 
@@ -263,7 +267,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
           component: test.component,
           on_true: trueModel,
           on_false: falseModel,
-        } as ItemModel
+        } as JSONItemModel
 
       case '=':
       case '~':
@@ -275,7 +279,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
           value: test.value,
           on_true: trueModel,
           on_false: falseModel,
-        } as ItemModel
+        } as JSONItemModel
 
       default:
         throw new Error(`Unknown predicate operator: ${test.operator}`)
@@ -295,8 +299,8 @@ export class ItemModelDefinitionNode extends ContainerNode implements ResourceNo
 }
 
 export type ItemModelDefinitionInput =
-  | ItemDefinition
-  | ItemModel
+  | JSONItemDefinition
+  | JSONItemModel
   | ItemModelBuilder
   | ((builder: ItemModelBuilder) => ItemModelBuilder)
 
@@ -311,7 +315,7 @@ export type ItemModelDefinitionClassArguments = {
 export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionNode> {
   static readonly resourceType = 'item_definition'
 
-  itemDefinitionJSON: ItemDefinition
+  itemDefinitionJSON: JSONItemDefinition
 
   constructor(
     core: SandstoneCore,
@@ -331,7 +335,7 @@ export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionN
     this.handleConflicts()
   }
 
-  private resolveDefinitionInput(input: ItemModelDefinitionInput): ItemDefinition {
+  private resolveDefinitionInput(input: ItemModelDefinitionInput): JSONItemDefinition {
     // Callback
     if (typeof input === 'function') {
       const builder = new ItemModelBuilder(this.core.pack)
@@ -343,10 +347,10 @@ export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionN
     }
     // Full ItemModelDefinition JSON (has 'model' property that is an object with 'type')
     if (input && 'model' in input && input.model && typeof input.model === 'object' && 'type' in input.model) {
-      return input as ItemDefinition
+      return input as JSONItemDefinition
     }
     // Raw ItemModel JSON (wrap in definition)
-    return { model: input as ItemModel }
+    return { model: input as JSONItemModel }
   }
 
   toString = () => `${this.path[0]}:${this.path.slice(2).join('/')}`

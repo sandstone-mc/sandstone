@@ -14,6 +14,7 @@ import type {
   SingleEntityArgumentOf,
   SymbolBlock,
   SymbolMcdocBlockStates,
+  RootNBT,
 } from 'sandstone/arguments'
 import { blockStateStringifier } from '../block/setblock'
 import type { SandstoneCommands } from 'sandstone/commands'
@@ -28,7 +29,7 @@ import type { Node } from 'sandstone/core/nodes'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
-import { makeCallable, type NamespacedLiteralUnion } from 'sandstone/utils'
+import { type AllowConst, makeCallable, type NamespacedLiteralUnion } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
@@ -62,6 +63,8 @@ const isObjective = (arg: any): arg is ObjectiveClass => typeof arg === 'object'
 const isScore = (arg: any): arg is Score => typeof arg === 'object' && Object.hasOwn(arg, 'setDisplay')
 
 export class ExecuteCommandPart<MACRO extends boolean> extends CommandArguments<typeof ExecuteCommandNode> {
+  protected NodeType = ExecuteCommandNode
+
   /**
    * @internal
    */
@@ -559,15 +562,16 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
       ? ParseBlockState<NonNullable<SymbolMcdocBlockStates[Extract<BLOCK, keyof SymbolMcdocBlockStates>]>>
       : Record<string, string | boolean | number> | undefined, MACRO>,
     nbt: Macroable<BLOCK extends keyof SymbolBlock
-      ? NonNullable<SymbolBlock[Extract<BLOCK, keyof SymbolBlock>]>
-      : SymbolBlock<'%fallback'>, MACRO>,
+      ? NonNullable<AllowConst<SymbolBlock[Extract<BLOCK, keyof SymbolBlock>]>>
+      : AllowConst<RootNBT>,
+    MACRO>,
   ): ExecuteCommand<MACRO>
 
   block(
     pos: Macroable<Coordinates<MACRO>, MACRO>,
     block: Macroable<Registry['minecraft:block'], MACRO>,
     state?: Macroable<Record<string, string | boolean | number>, MACRO>,
-    nbt?: Macroable<NBTObject, MACRO>,
+    nbt?: Macroable<AllowConst<RootNBT>, MACRO>,
   ) {
     const stateStr = state && typeof state === 'object' && Object.keys(state).length > 0
       ? blockStateStringifier(state as Record<string, string | number | boolean>)

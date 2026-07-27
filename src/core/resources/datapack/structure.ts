@@ -82,7 +82,7 @@ type VariableInsertion = Score | DataPointClass<'storage'>
 export class StructureClass extends ResourceClass<StructureNode> {
   static readonly resourceType = 'structure' as const
 
-  structureBuffer?: Promise<Buffer>
+  structureBuffer?: Promise<ArrayBuffer | Buffer>
 
   structureNBT?: StructureNBT
 
@@ -106,7 +106,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       } else if (args.structure.structureBuffer) {
         this.structureBuffer = args.structure.structureBuffer
       } else {
-        this.structureBuffer = args.structure.structure() as Promise<Buffer>
+        this.structureBuffer = args.structure.structure() as Promise<ArrayBuffer | Buffer>
       }
     } else if (Array.isArray(args.structure)) {
       this.structureNBT = this.arrayToNBT(args.structure)
@@ -117,7 +117,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
     this.handleConflicts()
   }
 
-  structure(): StructureNBT | Promise<Buffer> {
+  structure(): StructureNBT | Promise<ArrayBuffer | Buffer> {
     if (this.structureNBT) {
       return this.structureNBT
     }
@@ -130,7 +130,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
   }
 
   async readBuffer() {
-    this.structureNBT = await decodeStructure(await (this.structureBuffer as Promise<Buffer>))
+    this.structureNBT = await decodeStructure(await (this.structureBuffer as Promise<ArrayBuffer | Buffer>))
   }
 
   async array(): Promise<[[[StructureEntry]]]> {
@@ -457,7 +457,7 @@ function encodeStructure(nbt: StructureNBT) {
   )
 }
 
-async function decodeStructure(buffer: Buffer) {
+async function decodeStructure(buffer: ArrayBuffer | Buffer) {
   const nbt = await prismarine.parse(buffer)
 
   return prismarine.simplify(nbt.parsed) as StructureNBT

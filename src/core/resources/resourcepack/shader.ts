@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,7 +22,7 @@ export type ShaderClassArguments = {
   /**
    * The shader's JSON.
    */
-  json: SymbolResource[(typeof ShaderClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof ShaderClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class ShaderClass extends ResourceClass<ShaderNode> {

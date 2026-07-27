@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 
-import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import type { SetType } from 'sandstone/utils'
-import type { ComponentClass } from 'sandstone/variables'
+import type { TextComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -30,7 +30,7 @@ export type DamageTypeClassArguments = {
   /**
    * The damage type's JSON.
    */
-  json: SymbolResource[(typeof DamageTypeClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof DamageTypeClass)['resourceType']]>
 } & ResourceClassArguments<'default'> & {
     /**
      * Optional. Automatically adds damage type to minecraft damage type group tag flags.
@@ -38,7 +38,9 @@ export type DamageTypeClassArguments = {
     flags?: (SetType<typeof TAG_DAMAGE_TYPES_SET> | 'bypasses_cooldown')[] // Haha funny bypasses_cooldown doesn't show up in the server reports
   }
 
-export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements ComponentClass {
+export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements TextComponentClass {
+  declare readonly __textComponentClassBrand: true
+
   static readonly resourceType = 'damage_type' as const
 
   public damageTypeJSON: DamageTypeClassArguments['json']
@@ -132,7 +134,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Co
   }
 
   /** @internal */
-  _toChatComponent = () => ({ translate: this.translationKey })
+  _toChatComponent = () => ({ translate: this.translationKey as `${string}:${string}` })
 
   toString = () => this.name
 }

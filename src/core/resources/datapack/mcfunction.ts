@@ -479,13 +479,6 @@ export class _RawMCFunctionClass<
 
     this.node.body.splice(start, removeItems === 'auto' ? fullBody.length : removeItems, ...fullBody)
   }
-
-  /**
-   * @internal
-   */
-  toNBT() {
-    return this.name
-  }
 }
 
 export const MCFunctionClass = makeClassCallable(_RawMCFunctionClass)

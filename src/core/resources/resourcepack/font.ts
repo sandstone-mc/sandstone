@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS } from 'sandstone/arguments'
+import { type MCDocToJSON, RESOURCE_PATHS } from 'sandstone/arguments'
 import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -23,7 +23,7 @@ export type FontArguments = {
   /**
    * The font's JSON.
    */
-  providers: GlyphProvider[] | []
+  providers: MCDocToJSON<GlyphProvider>[] | []
 } & ResourceClassArguments<'list'>
 
 export class FontClass extends ResourceClass<FontNode> implements ListResource {
@@ -46,7 +46,7 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     this.handleConflicts()
   }
 
-  push(...providers: GlyphProvider[] | FontClass[]) {
+  push(...providers: MCDocToJSON<GlyphProvider>[] | FontClass[]) {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */
@@ -58,7 +58,7 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     }
   }
 
-  unshift(...providers: GlyphProvider[] | FontClass[]) {
+  unshift(...providers: MCDocToJSON<GlyphProvider>[] | FontClass[]) {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */

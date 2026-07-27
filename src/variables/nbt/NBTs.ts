@@ -368,8 +368,8 @@ interface NBTInterface {
    *
    * @example
    *
-   * >>> NBT.stringify({ Invisible: NBT.byte(1) })
-   * '{ Invisible: 1b }'
+   * >>> NBT.stringify({ Invisible: true })
+   * '{ Invisible: true }'
    *
    * >>> NBT.stringify({ Rotation: NBT.float([ 90, 0 ]) })
    * '{ Rotation: [90f, 0f] }'
@@ -386,8 +386,8 @@ interface NBTInterface {
    *
    * @example
    *
-   * >>> NBT.parse(`{ Invisible: NBT.byte(1) }`)
-   * { Invisible: 1b }
+   * >>> NBT.parse(`{ Invisible: true }`)
+   * { Invisible: true }
    *
    * >>> const inv = NBT.parse(`[{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]`)
    * [{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]
@@ -404,8 +404,8 @@ interface NBTInterface {
    *   *
    * @example
    *
-   * >>> NBT`{ Invisible: NBT.byte(1) }`
-   * { Invisible: 1b }
+   * >>> NBT`{ Invisible: true }`
+   * { Invisible: true }
    *
    * >>> const inv = NBT`[{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]`
    * [{ Slot: 1b, Count: 1, id: 'minecraft:dirt' }]
@@ -550,7 +550,7 @@ const resolve = (nbt: NBTObject | MacroArgument): ResolvedNBT => {
     }
     if (nbt.constructor.name !== 'Object') {
       if ('toString' in nbt) {
-        return new ResolvedNBT(`${toString}`, false)
+        return new ResolvedNBT(`'${nbt}'`, false)
       } else {
         /* @ts-ignore */
         throw new Error(`[nbtResolver] A ${nbt.constructor?.name} was passed in as an NBT value. Hint: define toNBT or toString if this was intentional`)
@@ -564,10 +564,34 @@ const resolve = (nbt: NBTObject | MacroArgument): ResolvedNBT => {
     .map(([key, value]) => {
       const resolved = resolve(value as NBTObject)
       if (resolved.containsMacro) containsMacro = true
-      return `${key}:${resolved.value}`
+      return `${formatKey(key)}:${resolved.value}`
     })
     .join(',')
   return new ResolvedNBT(`{${objectStr}}`, containsMacro)
+}
+
+// SNBT unquoted keys allow many chars, but `,`, `:`, `;`, `.`, `[`, `]`, `{`, `}` collide with the syntax. Quote any key containing those.
+const SNBT_KEY_REQUIRED_QUOTE_CHARS = /[:,;.\[\]{}'"]/
+
+const formatKey = (key: string): string => {
+  // If the user already wrapped the key in matching quotes, trust them and leave it alone.
+  if (
+    (key.startsWith('"') && key.endsWith('"'))
+    || (key.startsWith("'") && key.endsWith("'"))
+  ) {
+    return key
+  }
+  if (!SNBT_KEY_REQUIRED_QUOTE_CHARS.test(key)) {
+    return key
+  }
+  // Prefer single quotes. Switch to double if key only contains a `'`; if both, escape the `'` inside single.
+  if (key.includes("'")) {
+    if (key.includes('"')) {
+      return `'${key.replace(/'/g, "\\'")}'`
+    }
+    return `"${key}"`
+  }
+  return `'${key}'`
 }
 
 /**

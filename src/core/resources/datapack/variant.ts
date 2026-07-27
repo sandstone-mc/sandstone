@@ -1,4 +1,4 @@
-import { type RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { type RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -31,7 +31,7 @@ type VariantSymbolKey<T extends VariantType> = `${T}_variant`
 /**
  * Gets the JSON type for a variant from SymbolResource.
  */
-type VariantJSON<T extends VariantType> = SymbolResource[VariantSymbolKey<T>]
+type VariantJSON<T extends VariantType> = MCDocToJSON<SymbolResource[VariantSymbolKey<T>]>
 
 /**
  * A node representing a Minecraft entity variant.
