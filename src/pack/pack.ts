@@ -134,9 +134,11 @@ import type {
 } from 'sandstone/variables'
 import {
   coordinatesParser,
-  DataArray,
+  DataArrayType,
+  DataArrayInternal,
   DataClass,
-  DataIndexMap,
+  DataIndexMapType,
+  DataIndexMapInternal,
   DataPointClass,
   ItemPredicateClass,
   LabelClass,
@@ -826,14 +828,14 @@ export class SandstonePack {
     initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    return DataIndexMap(this, initialize, dataPoint) as DataIndexMap<INITIAL>
+    return DataIndexMapInternal(this, initialize, dataPoint) as DataIndexMapType<INITIAL>
   }
 
   DataArray<INITIAL extends readonly NBTObject[] | readonly [string, DataPointClass | DataPointPickClass]>(
     initialize: INITIAL,
     dataPoint?: DataPointClass<'storage'>,
   ) {
-    return DataArray(this, initialize, dataPoint) as DataArray<INITIAL>
+    return DataArrayInternal(this, initialize, dataPoint) as DataArrayType<INITIAL>
   }
 
   getTempStorage = (name: string) => {
@@ -1333,7 +1335,7 @@ export class SandstonePack {
       ...options,
     })
 
-  BlockState<JSON extends BlockStateJSON>(
+  BlockStateDefinition<JSON extends BlockStateDefinitionJSON>(
     name: string,
     json: JSON,
     options?: Omit<Partial<BlockStateDefinitionArguments<JSON>>, 'json'>,
@@ -1342,7 +1344,7 @@ export class SandstonePack {
       json,
       creator: 'user',
       addToSandstoneCore: true,
-      onConflict: conflictDefaults('blockstate') as BlockStateDefinitionArguments<JSON>['onConflict'],
+      onConflict: conflictDefaults('block_definition') as BlockStateDefinitionArguments<JSON>['onConflict'],
       ...options,
     })
   }
