@@ -302,6 +302,9 @@ export class SelectorClass<
   IsSingle extends boolean = false,
   IsPlayer extends boolean = false,
 > implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable {
+  declare readonly __textComponentClassBrand: true
+  declare readonly __conditionClassBrand: true
+
   /**
    * Phantom brand property for TypeScript to distinguish between different
    * SelectorClass type parameter combinations. Does not exist at runtime.
@@ -409,21 +412,28 @@ export class SelectorClass<
       distance: (range_: Range<MACRO>) => result.push(['distance', rangeParser(this.sandstonePack.core, range_)]),
     } as const
 
-    for (const [baseName, modifier] of Object.entries(modifiers)) {
-      const name = baseName as keyof typeof args
-      const value = args[name]
-
-      if (value !== undefined) {
-        modifier(value as any)
-        delete args[name]
-      }
-    }
-
-    Object.entries(args).forEach(([key, value]) => {
-      if (value !== undefined) {
+    Object.entries(args).forEach(([key_, value]) => {
+      const key = key_ as Extract<keyof typeof args, string>
+      if (key in modifiers) {
+        const modifierName = key as keyof typeof modifiers
+        modifiers[modifierName](value as any)
+      } else if (value !== undefined) {
         result.push([key, `${value}`])
       }
     })
+
+    // TODO: This probably should do more than drag the type to the front
+    const entityType = result.findIndex(([key]) => key === 'type')
+
+    if (entityType !== -1) {
+      result.unshift(...result.splice(entityType, 1))
+    }
+
+    const predicate = result.findIndex(([key]) => key === 'predicate')
+
+    if (predicate !== -1) {
+      result.push(...result.splice(predicate, 1))
+    }
 
     return `${this.target}[${result.map(([key, value]) => `${key}=${value}`).join(', ')}]`
   }
@@ -457,7 +467,7 @@ export class SelectorClass<
   }
 
   toNBT() {
-    return this.toString()
+    return `'${this.toString()}'`
   }
 
   [util.inspect.custom]() {
