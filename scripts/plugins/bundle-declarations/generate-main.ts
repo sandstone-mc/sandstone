@@ -14,10 +14,11 @@ import * as ts from 'typescript'
 import { fixDtsImports } from '../fix-dts-imports'
 
 import { hoistTrailingTypeReExports } from './hoisting'
-import { rewriteImportsTransformer, CollectedImport } from './transformer'
+import { rewriteImportsTransformer } from './transformer'
 import { groupImportsForMain } from './import-grouping'
 import { mergeImportDecls } from './merge'
 import { walkDtsFiles } from './walk'
+import type { CollectedImport } from './inline-imports'
 import {
   collectNamesFromStatement,
   hasExportModifier,
