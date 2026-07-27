@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.0](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.0) - 2026-07-27
+
+### Minecraft 26.3
+
+**Full Changelog**: [v1.1.3...v1.2.0](https://github.com/sandstone-mc/sandstone/compare/v1.1.3...v1.2.0)
+
+
 ## [v1.1.3](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.3) - 2026-07-27
 
 ### Maintenance and small types fix
