@@ -58,17 +58,37 @@ export class Flow {
   if = (condition: Condition, callback: () => void) =>
     new IfStatement(this.sandstoneCore, conditionToNode(condition), callback)
 
-  and = (...conditions: Condition[]) =>
-    new AndNode(
+  /**
+   * Combine conditions with AND.
+   *
+   * Accepts either variadic conditions (`_.and(a, b, c)`) or a single array
+   * (`_.and([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  and(...conditions: Condition[]): AndNode
+  and(conditions: Condition[]): AndNode
+  and(...args: any[]): AndNode {
+    const conditions = (args[0] instanceof Array ? args[0] : args) as Condition[]
+    return new AndNode(
       this.sandstoneCore,
       conditions.map((condition) => conditionToNode(condition)),
     )
+  }
 
-  or = (...conditions: Condition[]) =>
-    new OrNode(
+  /**
+   * Combine conditions with OR.
+   *
+   * Accepts either variadic conditions (`_.or(a, b, c)`) or a single array
+   * (`_.or([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  or(...conditions: Condition[]): OrNode
+  or(conditions: Condition[]): OrNode
+  or(...args: any[]): OrNode {
+    const conditions = (args[0] instanceof Array ? args[0] : args) as Condition[]
+    return new OrNode(
       this.sandstoneCore,
       conditions.map((condition) => conditionToNode(condition)),
     )
+  }
 
   not = (condition: Condition) => new NotNode(this.sandstoneCore, conditionToNode(condition))
 
