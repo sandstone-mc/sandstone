@@ -1,4 +1,5 @@
 import type { JSONTextComponent } from 'sandstone/arguments/jsonTextComponent'
+import type { Node } from 'sandstone/core'
 import type { ConditionNode } from '../flow'
 import type { SelectorClass } from './Selector'
 import type { NBTSerializable } from 'sandstone/arguments'
@@ -23,6 +24,15 @@ export class ConditionClass {
    * (and subclasses). Does not exist at runtime.
    */
   declare readonly __conditionClassBrand: true
+
+  /**
+   * Optional commands that must run before this condition's predicate is evaluated.
+   * Conditions that emit side-effect commands at construction (e.g. `data.equals`
+   * building `execute store result ...`) capture them here so the visitor pass can
+   * re-emit them at the right location — inline before the IfNode, or inside the
+   * child MCFunction when AND/OR extracts. Optional; pure predicates leave it unset.
+   */
+  preNodes?: Node[]
 
   /**
    * @internal

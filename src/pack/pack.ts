@@ -465,11 +465,12 @@ export class SandstonePack {
   }
 
   setupLantern = () => {
-    const loadStatus = this.Objective.create('load.status', 'dummy', undefined, { useDefaultNamespace: false })
+    const loadStatus = this.Objective.create('load.status', 'dummy', undefined, { useDefaultNamespace: false, alreadyExists: true })
 
     const privateInit = this.Tag('function', 'load:_private/init', [
       this.MCFunction('load:_private/init', () => {
         this.commands.comment('Reset scoreboards so packs can set values accurate for current load.')
+        this.commands.scoreboard.objectives.add(loadStatus.name, 'dummy')
         loadStatus.reset()
       }),
     ])
