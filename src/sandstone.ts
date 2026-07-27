@@ -27,7 +27,6 @@ import type {
   PredicateClassArguments,
   RecipeClassArguments,
   ShaderClassArguments,
-//  SlotSourceClassArguments,
   SoundEventArguments,
   SoundsIndexArguments,
   SulfurCubeArchetypeClassArguments,
@@ -303,7 +302,6 @@ export const {
   LootTable,
   Predicate,
   Recipe,
-//  SlotSource,
   SulfurCubeArchetype,
   Tag,
   TestEnvironment,
@@ -670,11 +668,6 @@ type ContentStrategy =
    */
   | ContentStrategyKind<'recipe', NonNullable<RecipeClassArguments['onConflict']>>
   /**
-   * The conflict strategy to use for Slot sources.
-   * Will override the defined `default` strategy.
-   */
-  // | ContentStrategyKind<'slot_source', NonNullable<SlotSourceClassArguments['onConflict']>>
-  /**
    * The conflict strategy to use for Sulfur cube archetypes.
    * Will override the defined `default` strategy.
    */
@@ -709,11 +702,6 @@ type ContentStrategy =
    * Will override the defined `default` strategy.
    */
   | ContentStrategyKind<'chat_type', NonNullable<ChatTypeClassArguments['onConflict']>>
-  /**
-   * The conflict strategy to use for Decorated pot patterns.
-   * Will override the defined `default` strategy.
-   */
-  // | ContentStrategyKind<'decorated_pot_pattern', NonNullable<DecoratedPotPatternClassArguments['onConflict']>>
   /**
    * The conflict strategy to use for Dialogs.
    * Will override the defined `default` strategy.
