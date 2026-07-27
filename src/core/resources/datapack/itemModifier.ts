@@ -63,7 +63,7 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
     }
 
     for (const modifier of modifiers) {
-      let modifierJSON: ItemModifierJSON
+      let modifierJSON: any
       if (modifier instanceof ItemModifierClass) {
         modifierJSON = modifier.itemModifierJSON
       } else {
@@ -83,7 +83,7 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
     }
 
     for (const modifier of modifiers) {
-      let modifierJSON: ItemModifierJSON
+      let modifierJSON: any
       if (modifier instanceof ItemModifierClass) {
         modifierJSON = modifier.itemModifierJSON
       } else {
