@@ -1,7 +1,6 @@
 import type { DyeColor } from 'sandstone/arguments/generated/util/color.ts'
-import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
-import type { NBTList } from 'sandstone'
+import type { SignText } from 'sandstone/arguments/generated/world/component/block.ts'
 
 export type OldSign = (BlockEntity & {
   /**
@@ -54,43 +53,3 @@ export type Sign = (BlockEntity & {
    */
   is_waxed?: boolean,
 })
-
-/**
- * List length range: 4
- */
-export type SignLines = NBTList<Text, {
-  leftExclusive: false,
-  rightExclusive: false,
-  min: 4,
-  max: 4,
-}>
-
-export type SignText = {
-  messages: SignLines,
-  /**
-   * Shown to players with the profanity filter enabled on Realms.
-   */
-  filtered_messages?: SignLines,
-  /**
-   * Value:
-   *
-   *  - White(`white`)
-   *  - Orange(`orange`)
-   *  - Magenta(`magenta`)
-   *  - LightBlue(`light_blue`)
-   *  - Yellow(`yellow`)
-   *  - Lime(`lime`)
-   *  - Pink(`pink`)
-   *  - Gray(`gray`)
-   *  - LightGray(`light_gray`)
-   *  - Cyan(`cyan`)
-   *  - Purple(`purple`)
-   *  - Blue(`blue`)
-   *  - Brown(`brown`)
-   *  - Green(`green`)
-   *  - Red(`red`)
-   *  - Black(`black`)
-   */
-  color?: DyeColor,
-  has_glowing_text?: boolean,
-}

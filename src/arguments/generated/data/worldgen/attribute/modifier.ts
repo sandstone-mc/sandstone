@@ -51,7 +51,7 @@ export type BooleanAttributeModifier = {
 export type BooleanModifierType = ('override' | 'and' | 'nand' | 'or' | 'nor' | 'xor' | 'xnor')
 
 export type ColorAttributeModifier = NonNullable<({
-  [S in Extract<ColorModifierType, string>]?: {
+  [S in Extract<Extract<ColorModifierType, string>, string>]?: {
     /**
      * Value:
      *
@@ -69,12 +69,12 @@ export type ColorAttributeModifier = NonNullable<({
         ? SymbolEnvironmentAttributeColorModifier[S]
         : SymbolEnvironmentAttributeColorModifier<'%unknown'>)),
   }
-}[ColorModifierType])>
+}[Extract<ColorModifierType, string>])>
 
 export type ColorModifierType = ('override' | 'add' | 'subtract' | 'multiply' | 'alpha_blend' | 'blend_to_gray')
 
 export type FloatAttributeModifier<T extends NBTObject> = ({
-  [S in Extract<FloatModifierType, string>]?: {
+  [S in Extract<Extract<FloatModifierType, string>, string>]?: {
     /**
      * Value:
      *
@@ -93,7 +93,7 @@ export type FloatAttributeModifier<T extends NBTObject> = ({
         ? SymbolEnvironmentAttributeFloatModifier<T>[S]
         : SymbolEnvironmentAttributeFloatModifier<T, '%unknown'>)),
   }
-}[FloatModifierType])
+}[Extract<FloatModifierType, string>])
 
 export type FloatModifierType = ('override' | 'add' | 'subtract' | 'multiply' | 'minimum' | 'maximum' | 'alpha_blend')
 
@@ -113,13 +113,39 @@ export type FloatWithAlpha = {
   }>,
 }
 
+export type ListModifier<E extends NBTObject> = {
+  /**
+   * Value:
+   *
+   *  - Override(`override`)
+   *  - Append(`append`)
+   */
+  modifier: ListModifierType,
+  argument: Array<E>,
+}
+
+export type ListModifierType = ('override' | 'append')
+
+export type MergeableModifier<T extends NBTObject> = {
+  /**
+   * Value:
+   *
+   *  - Override(`override`)
+   *  - Overlay(`overlay`)
+   */
+  modifier: MergeableModifierType,
+  argument: T,
+}
+
+export type MergeableModifierType = ('override' | 'overlay')
+
 export type OverrideModifier<T extends NBTObject> = {
   modifier: 'override',
   argument: T,
 }
 
 export type TranslucentColorAttributeModifier = NonNullable<({
-  [S in Extract<ColorModifierType, string>]?: {
+  [S in Extract<Extract<ColorModifierType, string>, string>]?: {
     /**
      * Value:
      *
@@ -137,7 +163,7 @@ export type TranslucentColorAttributeModifier = NonNullable<({
         ? SymbolEnvironmentAttributeArgbColorModifier[S]
         : RootNBT)),
   }
-}[ColorModifierType])>
+}[Extract<ColorModifierType, string>])>
 type EnvironmentAttributeFloatModifierDispatcherMap<T extends NBTObject> = {
   'alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>,
   'minecraft:alpha_blend': EnvironmentAttributeFloatModifierAlphaBlend<T>,

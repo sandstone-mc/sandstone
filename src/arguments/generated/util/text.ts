@@ -3,20 +3,19 @@ import type { SymbolMcdocCustomEvent } from 'sandstone/arguments/generated/dispa
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
+import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
+import type { Coordinates, MultipleEntitiesArgument, SingleEntityArgument, TextureType } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type {
-  AtlasClass,
-  DataPointClass,
-  DialogClass,
-  FontClass,
-  NBTInt,
-  NBTList,
-  ObjectiveClass,
-  Score,
-  TextureClass,
-} from 'sandstone'
+import type { AtlasClass, DialogClass, FontClass, NBTInt, NBTList, ObjectiveClass, TextureClass } from 'sandstone'
+import type { TextComponentClass } from 'sandstone/variables'
+
+export type BlockNbtText = ({
+  block: Coordinates,
+  nbt: `${any}${string}`,
+  source?: 'block',
+  type?: 'nbt',
+} & TextNbtBase)
 
 export type ChangePage = {
   /**
@@ -31,7 +30,7 @@ export type ChangePage = {
 }
 
 export type ClickEvent = NonNullable<({
-  [S in Extract<ClickEventAction, string>]?: ({
+  [S in Extract<Extract<ClickEventAction, string>, string>]?: ({
     /**
      * Value:
      *
@@ -45,7 +44,7 @@ export type ClickEvent = NonNullable<({
      */
     action: S,
   } & (S extends keyof SymbolClickEvent ? SymbolClickEvent[S] : RootNBT))
-}[ClickEventAction])>
+}[Extract<ClickEventAction, string>])>
 
 export type ClickEventAction = (
   | 'open_url'
@@ -64,7 +63,7 @@ export type CopyToClipboard = {
 }
 
 export type CustomAction = NonNullable<({
-  [S in Extract<`${string}:${string}`, string>]?: {
+  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: {
     /**
      * ID of a custom action.
      * Has no functionality on vanilla servers.
@@ -74,10 +73,65 @@ export type CustomAction = NonNullable<({
       ? SymbolMcdocCustomEvent[S]
       : SymbolMcdocCustomEvent<'%unknown'>),
   }
-}[`${string}:${string}`])>
+}[Extract<`${string}:${string}`, string>])>
+
+export type EntityHoverContent = {
+  type: Registry['minecraft:entity_type'],
+  /**
+   * Value:
+   * *either*
+   *
+   * List length range: 4
+   *
+   * *or*
+   *
+   * *item 1*
+   */
+  id: (NBTList<NBTInt, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }> | string),
+  name?: Text,
+}
+
+export type EntityHoverValue = {
+  name?: string,
+  type?: string,
+  id?: string,
+}
+
+export type EntityNbtText = ({
+  entity: MultipleEntitiesArgument,
+  nbt: `${any}${string}`,
+  source?: 'entity',
+  type?: 'nbt',
+} & TextNbtBase)
+
+export type EntityTooltipInfo = {
+  id: Registry['minecraft:entity_type'],
+  /**
+   * Value:
+   * *either*
+   *
+   * List length range: 4
+   *
+   * *or*
+   *
+   * *item 1*
+   */
+  uuid: (NBTList<NBTInt, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 4,
+    max: 4,
+  }> | string),
+  name?: Text,
+}
 
 export type HoverEvent = NonNullable<({
-  [S in Extract<HoverEventAction, string>]?: ({
+  [S in Extract<Extract<HoverEventAction, string>, string>]?: ({
     /**
      * Value:
      *
@@ -87,9 +141,15 @@ export type HoverEvent = NonNullable<({
      */
     action: S,
   } & (S extends keyof SymbolHoverEvent ? SymbolHoverEvent[S] : RootNBT))
-}[HoverEventAction])>
+}[Extract<HoverEventAction, string>])>
 
 export type HoverEventAction = ('show_text' | 'show_item' | 'show_entity')
+
+export type ItemHoverContent = {
+  id: Registry['minecraft:item'],
+  count?: NBTInt,
+  components?: DataComponentPatch,
+}
 
 export type Keybind = (
   | 'key.advancements'
@@ -106,6 +166,7 @@ export type Keybind = (
   | 'key.debug.dumpVersion'
   | 'key.debug.focusPause'
   | 'key.debug.fpsCharts'
+  | 'key.debug.improvedTransparency'
   | 'key.debug.lightmapTexture'
   | 'key.debug.modifier'
   | 'key.debug.networkCharts'
@@ -121,6 +182,7 @@ export type Keybind = (
   | 'key.debug.switchGameMode'
   | 'key.drop'
   | 'key.forward'
+  | 'key.friends'
   | 'key.fullscreen'
   | 'key.hotbar.1'
   | 'key.hotbar.2'
@@ -152,6 +214,81 @@ export type Keybind = (
   | 'key.toggleSpectatorShaderEffects'
   | 'key.use')
 
+export type KeybindText = ({
+  /**
+   * Value:
+   *
+   *  - Advancements(`key.advancements`)
+   *  - Attack(`key.attack`)
+   *  - Back(`key.back`)
+   *  - Chat(`key.chat`)
+   *  - Command(`key.command`)
+   *  - DebugClearChat(`key.debug.clearChat`)
+   *  - DebugCopyLocation(`key.debug.copyLocation`)
+   *  - DebugCopyRecreateCommand(`key.debug.copyRecreateCommand`)
+   *  - DebugCrash(`key.debug.crash`)
+   *  - DebugOptionsMenu(`key.debug.debugOptions`)
+   *  - DebugDumpDynamicTextures(`key.debug.dumpDynamicTextures`)
+   *  - DebugDumpVersion(`key.debug.dumpVersion`)
+   *  - DebugFocusPause(`key.debug.focusPause`)
+   *  - DebugFpsCharts(`key.debug.fpsCharts`)
+   *  - DebugImprovedTransparency(`key.debug.improvedTransparency`)
+   *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
+   *  - DebugModifier(`key.debug.modifier`)
+   *  - DebugNetworkCharts(`key.debug.networkCharts`)
+   *  - DebugOverlay(`key.debug.overlay`)
+   *  - DebugProfiling(`key.debug.profiling`)
+   *  - DebugProfilingChart(`key.debug.profilingChart`)
+   *  - DebugReloadChunk(`key.debug.reloadChunk`)
+   *  - DebugReloadResourcePacks(`key.debug.reloadResourcePacks`)
+   *  - DebugShowAdvancedTooltips(`key.debug.showAdvancedTooltips`)
+   *  - DebugShowChunkBorders(`key.debug.showChunkBorders`)
+   *  - DebugShowHitboxes(`key.debug.showHitboxes`)
+   *  - DebugSpectate(`key.debug.spectate`)
+   *  - DebugSwitchGameMode(`key.debug.switchGameMode`)
+   *  - Drop(`key.drop`)
+   *  - Forward(`key.forward`)
+   *  - Friends(`key.friends`)
+   *  - Fullscreen(`key.fullscreen`)
+   *  - Hotbar1(`key.hotbar.1`)
+   *  - Hotbar2(`key.hotbar.2`)
+   *  - Hotbar3(`key.hotbar.3`)
+   *  - Hotbar4(`key.hotbar.4`)
+   *  - Hotbar5(`key.hotbar.5`)
+   *  - Hotbar6(`key.hotbar.6`)
+   *  - Hotbar7(`key.hotbar.7`)
+   *  - Hotbar8(`key.hotbar.8`)
+   *  - Hotbar9(`key.hotbar.9`)
+   *  - Inventory(`key.inventory`)
+   *  - Jump(`key.jump`)
+   *  - Left(`key.left`)
+   *  - LoadToolbarActivator(`key.loadToolbarActivator`)
+   *  - PickItem(`key.pickItem`)
+   *  - Playerlist(`key.playerlist`)
+   *  - QuickActions(`key.quickActions`)
+   *  - Right(`key.right`)
+   *  - SaveToolbarActivator(`key.saveToolbarActivator`)
+   *  - Screenshot(`key.screenshot`)
+   *  - SmoothCamera(`key.smoothCamera`)
+   *  - Sneak(`key.sneak`)
+   *  - SpectatorHotbar(`key.spectatorHotbar`)
+   *  - SpectatorOutlines(`key.spectatorOutlines`)
+   *  - Sprint(`key.sprint`)
+   *  - SwapOffhand(`key.swapOffhand`)
+   *  - ToggleGui(`key.toggleGui`)
+   *  - TogglePerspective(`key.togglePerspective`)
+   *  - ToggleSpectatorShaderEffects(`key.toggleSpectatorShaderEffects`)
+   *  - Use(`key.use`)
+   */
+  keybind: Keybind,
+  type?: 'keybind',
+} & TextBase)
+
+export type NormalText = ({
+  text: string,
+  type?: 'text',
+} & TextBase)
+
 export type ObjectTextConfig = {
   /**
    * Used in places where object component cannot be displayed (for example, server log or narration).
@@ -163,36 +300,44 @@ export type OpenUrl = {
   url: `${any}${string}` | URL,
 }
 
+export type PlayerHeadText = ({
+  player: Profile,
+  /**
+   * Whether the head layer is rendered. Defaults to `true`.
+   */
+  hat?: boolean,
+  object?: 'player',
+  type?: 'object',
+} & ObjectTextConfig & TextBase)
+
 export type RunCommand = {
   command: `${any}${string}`,
 }
+
+export type ScoreHolder = {
+  objective: `${any}${string}` | ObjectiveClass,
+  name: `${any}${string}` | SingleEntityArgument,
+}
+
+export type ScoreText = ({
+  score: {
+    objective: `${any}${string}` | ObjectiveClass,
+    name: `${any}${string}` | SingleEntityArgument,
+  },
+  type?: 'score',
+} & TextBase)
+
+export type SelectorText = ({
+  selector: MultipleEntitiesArgument,
+  separator?: Text,
+  type?: 'selector',
+} & TextBase)
 
 export type ShowDialog = {
   dialog: ((Registry['minecraft:dialog'] | DialogClass) | Dialog),
 }
 
-export type ShowEntity = ({
-  contents?: {
-    type: Registry['minecraft:entity_type'],
-    /**
-     * Value:
-     * *either*
-     *
-     * List length range: 4
-     *
-     * *or*
-     *
-     * *item 1*
-     */
-    id: (NBTList<NBTInt, {
-      leftExclusive: false,
-      rightExclusive: false,
-      min: 4,
-      max: 4,
-    }> | string),
-    name?: Text,
-  },
-} & {
+export type ShowEntity = {
   id: Registry['minecraft:entity_type'],
   /**
    * Value:
@@ -211,7 +356,7 @@ export type ShowEntity = ({
     max: 4,
   }> | string),
   name?: Text,
-})
+}
 
 export type ShowItem = ItemStack
 
@@ -219,14 +364,28 @@ export type ShowText = {
   value: Text,
 }
 
+export type SpriteText = ({
+  /**
+   * Defaults to `minecraft:blocks`.
+   */
+  atlas?: (Registry['minecraft:atlas'] | AtlasClass),
+  sprite: (Registry['minecraft:texture'] | TextureClass<TextureType>),
+  object?: 'atlas',
+  type?: 'object',
+} & ObjectTextConfig & TextBase)
+
+export type StorageNbtText = ({
+  storage: `${string}:${string}`,
+  nbt: `${any}${string}`,
+  source?: 'storage',
+  type?: 'nbt',
+} & TextNbtBase)
+
 export type SuggestCommand = {
   command: `${any}${string}`,
 }
 
-export type Text = (string | TextObject | NBTList<(string | TextObject), {
-  leftExclusive: false,
-  min: 1,
-}>)
+export type Text = (string | TextObject | TextComponentClass | Text[])
 
 export type TextBase = ({
   /**
@@ -257,6 +416,8 @@ export type TextColor = (
   | 'yellow'
   | 'white')
 
+export type TextFormat = ('obfuscated' | 'bold' | 'strikethrough' | 'underline' | 'italic' | 'reset')
+
 export type TextNbtBase = ({
   interpret?: boolean,
   /**
@@ -286,7 +447,7 @@ export type TextObject = (({
 } & TextBase) | ({
   score: {
     objective: `${any}${string}` | ObjectiveClass,
-    name: `${any}${string}` | Score,
+    name: `${any}${string}` | SingleEntityArgument,
   },
   type?: 'score',
 } & TextBase) | ({
@@ -311,6 +472,7 @@ export type TextObject = (({
    *  - DebugDumpVersion(`key.debug.dumpVersion`)
    *  - DebugFocusPause(`key.debug.focusPause`)
    *  - DebugFpsCharts(`key.debug.fpsCharts`)
+   *  - DebugImprovedTransparency(`key.debug.improvedTransparency`)
    *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
    *  - DebugModifier(`key.debug.modifier`)
    *  - DebugNetworkCharts(`key.debug.networkCharts`)
@@ -326,6 +488,7 @@ export type TextObject = (({
    *  - DebugSwitchGameMode(`key.debug.switchGameMode`)
    *  - Drop(`key.drop`)
    *  - Forward(`key.forward`)
+   *  - Friends(`key.friends`)
    *  - Fullscreen(`key.fullscreen`)
    *  - Hotbar1(`key.hotbar.1`)
    *  - Hotbar2(`key.hotbar.2`)
@@ -361,17 +524,17 @@ export type TextObject = (({
   type?: 'keybind',
 } & TextBase) | ({
   block: Coordinates,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'block',
   type?: 'nbt',
 } & TextNbtBase) | ({
   entity: MultipleEntitiesArgument,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'entity',
   type?: 'nbt',
 } & TextNbtBase) | ({
   storage: `${string}:${string}`,
-  nbt: `${any}${string}` | DataPointClass,
+  nbt: `${any}${string}`,
   source?: 'storage',
   type?: 'nbt',
 } & TextNbtBase) | ({
@@ -379,7 +542,7 @@ export type TextObject = (({
    * Defaults to `minecraft:blocks`.
    */
   atlas?: (Registry['minecraft:atlas'] | AtlasClass),
-  sprite: (Registry['minecraft:texture'] | TextureClass),
+  sprite: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   object?: 'atlas',
   type?: 'object',
 } & ObjectTextConfig & TextBase) | ({
@@ -419,6 +582,20 @@ export type TextStyle = {
   click_event?: ClickEvent,
   hover_event?: HoverEvent,
 }
+
+export type TranslatedText = ({
+  translate: Registry['minecraft:translation_key'],
+  fallback?: string,
+  /**
+   * Value:
+   * List length range: 1..
+   */
+  with?: NBTList<Text, {
+    leftExclusive: false,
+    min: 1,
+  }>,
+  type?: 'translatable',
+} & TextBase)
 type ClickEventDispatcherMap = {
   'change_page': ClickEventChangePage,
   'minecraft:change_page': ClickEventChangePage,

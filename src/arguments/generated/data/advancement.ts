@@ -13,6 +13,7 @@ import type {
   TextureClass,
 } from 'sandstone'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { TextureType } from 'sandstone/arguments'
 
 export type Advancement = {
   /**
@@ -57,14 +58,18 @@ export type Advancement = {
   sends_telemetry_event?: boolean,
 }
 
+export type AdvancementCriteriaMap = ({
+  [Key in `${any}${string}`]?: AdvancementCriterion
+})
+
 export type AdvancementCriterion = NonNullable<({
-  [S in Extract<Registry['minecraft:trigger_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:trigger_type'], string>, string>]?: ({
     /**
      * Many triggers can occur multiple times, however, the reward will only be provided multiple times if the advancement is first revoked, which is often done within the function reward.
      */
     trigger: S,
   } & (S extends keyof SymbolTrigger ? SymbolTrigger[S] : RootNBT))
-}[Registry['minecraft:trigger_type']])>
+}[Extract<Registry['minecraft:trigger_type'], string>])>
 
 export type AdvancementDisplay = {
   icon: ItemStackTemplate,
@@ -73,7 +78,7 @@ export type AdvancementDisplay = {
   /**
    * Used for the advancement tab (root advancement only).
    */
-  background?: (Registry['minecraft:texture'] | TextureClass),
+  background?: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * Controls the advancement tile frame. Defaults to `task`.
    *
@@ -110,9 +115,9 @@ export type AdvancementIcon = {
 
 export type AdvancementRewards = {
   /**
-   * Function to run as the player (not at). Function group tags are not allowed.
+   * XP to add.
    */
-  function?: (`${string}:${string}` | MCFunctionClass),
+  experience?: NBTInt,
   /**
    * Loot tables to give.
    */
@@ -122,9 +127,9 @@ export type AdvancementRewards = {
    */
   recipes?: Array<(Registry['minecraft:recipe'] | RecipeClass)>,
   /**
-   * XP to add.
+   * Function to run as and at the player. Function tags are not allowed.
    */
-  experience?: NBTInt,
+  function?: (`${string}:${string}` | MCFunctionClass),
 }
 
 export type Trigger = (

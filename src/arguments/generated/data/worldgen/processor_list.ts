@@ -31,10 +31,10 @@ export type BlockAge = {
 }
 
 export type BlockEntityModifier = NonNullable<({
-  [S in Extract<Registry['minecraft:rule_block_entity_modifier'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:rule_block_entity_modifier'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolRuleBlockEntityModifier ? SymbolRuleBlockEntityModifier[S] : RootNBT))
-}[Registry['minecraft:rule_block_entity_modifier']])>
+}[Extract<Registry['minecraft:rule_block_entity_modifier'], string>])>
 
 export type BlockIgnore = {
   blocks: Array<BlockState>,
@@ -71,6 +71,10 @@ export type Capped = {
   }>>,
 }
 
+export type CompositeMatch = {
+  rules: Array<RuleTest>,
+}
+
 export type Gravity = {
   /**
    * Value:
@@ -84,6 +88,15 @@ export type Gravity = {
    */
   heightmap: HeightmapType,
   offset: NBTInt,
+}
+
+export type HeightMatch = {
+  min_inclusive: NBTInt,
+  max_inclusive: NBTInt,
+}
+
+export type InvertedMatch = {
+  rule: RuleTest,
 }
 
 export type LinearPos = {
@@ -124,20 +137,24 @@ export type LinearPos = {
 }
 
 export type PosRuleTest = NonNullable<({
-  [S in Extract<Registry['minecraft:pos_rule_test'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:pos_rule_test'], string>, string>]?: ({
     predicate_type: S,
   } & (S extends keyof SymbolPosRuleTest ? SymbolPosRuleTest[S] : RootNBT))
-}[Registry['minecraft:pos_rule_test']])>
+}[Extract<Registry['minecraft:pos_rule_test'], string>])>
 
 export type Processor = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/structure_processor'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/structure_processor'], string>, string>]?: ({
     processor_type: S,
   } & (S extends keyof SymbolTemplateProcessor ? SymbolTemplateProcessor[S] : RootNBT))
-}[Registry['minecraft:worldgen/structure_processor']])>
+}[Extract<Registry['minecraft:worldgen/structure_processor'], string>])>
 
 export type ProcessorList = (Array<Processor> | {
   processors: Array<Processor>,
 })
+
+export type ProcessorListObject = {
+  processors: Array<Processor>,
+}
 
 export type ProcessorListRef = (Registry['minecraft:worldgen/processor_list'] | ProcessorList)
 
@@ -186,10 +203,10 @@ export type Rule = {
 }
 
 export type RuleTest = NonNullable<({
-  [S in Extract<Registry['minecraft:rule_test'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:rule_test'], string>, string>]?: ({
     predicate_type: S,
   } & (S extends keyof SymbolRuleTest ? SymbolRuleTest[S] : RootNBT))
-}[Registry['minecraft:rule_test']])>
+}[Extract<Registry['minecraft:rule_test'], string>])>
 
 export type TagMatch = {
   tag: (Registry['minecraft:tag/block']),

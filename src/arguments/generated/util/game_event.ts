@@ -35,10 +35,10 @@ export type EntityPositionSource = {
 }
 
 export type PositionSource = NonNullable<({
-  [S in Extract<Registry['minecraft:position_source_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:position_source_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolPositionSource ? SymbolPositionSource[S] : RootNBT))
-}[Registry['minecraft:position_source_type']])>
+}[Extract<Registry['minecraft:position_source_type'], string>])>
 
 export type ReceivingEvent = {
   game_event: Registry['minecraft:game_event'],

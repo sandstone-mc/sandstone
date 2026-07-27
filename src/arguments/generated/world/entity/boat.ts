@@ -64,6 +64,7 @@ import type { Endermite } from 'sandstone/arguments/generated/world/entity/mob/e
 import type { Fish, Pufferfish, Salmon, TropicalFish } from 'sandstone/arguments/generated/world/entity/mob/fish.ts'
 import type { Ghast } from 'sandstone/arguments/generated/world/entity/mob/ghast.ts'
 import type { GlowSquid } from 'sandstone/arguments/generated/world/entity/mob/glow_squid.ts'
+import type { HappyGhast } from 'sandstone/arguments/generated/world/entity/mob/happy_ghast.ts'
 import type { IronGolem } from 'sandstone/arguments/generated/world/entity/mob/iron_golem.ts'
 import type { Mannequin } from 'sandstone/arguments/generated/world/entity/mob/mannequin.ts'
 import type { MobBase, Squid } from 'sandstone/arguments/generated/world/entity/mob.ts'
@@ -79,7 +80,7 @@ import type {
 } from 'sandstone/arguments/generated/world/entity/mob/raider.ts'
 import type { Shulker } from 'sandstone/arguments/generated/world/entity/mob/shulker.ts'
 import type { Skeleton } from 'sandstone/arguments/generated/world/entity/mob/skeleton.ts'
-import type { Slime } from 'sandstone/arguments/generated/world/entity/mob/slime.ts'
+import type { Slime, SulfurCube } from 'sandstone/arguments/generated/world/entity/mob/slime.ts'
 import type { SnowGolem } from 'sandstone/arguments/generated/world/entity/mob/snow_golem.ts'
 import type { Tadpole } from 'sandstone/arguments/generated/world/entity/mob/tadpole.ts'
 import type { Vex } from 'sandstone/arguments/generated/world/entity/mob/vex.ts'
@@ -176,8 +177,6 @@ type EntityDispatcherMap = {
   'minecraft:blaze': EntityBlaze,
   'block_display': EntityBlockDisplay,
   'minecraft:block_display': EntityBlockDisplay,
-  'boat': EntityBoat,
-  'minecraft:boat': EntityBoat,
   'bogged': EntityBogged,
   'minecraft:bogged': EntityBogged,
   'breeze': EntityBreeze,
@@ -196,8 +195,6 @@ type EntityDispatcherMap = {
   'minecraft:cherry_boat': EntityCherryBoat,
   'cherry_chest_boat': EntityCherryChestBoat,
   'minecraft:cherry_chest_boat': EntityCherryChestBoat,
-  'chest_boat': EntityChestBoat,
-  'minecraft:chest_boat': EntityChestBoat,
   'chest_minecart': EntityChestMinecart,
   'minecraft:chest_minecart': EntityChestMinecart,
   'chicken': EntityChicken,
@@ -212,8 +209,6 @@ type EntityDispatcherMap = {
   'minecraft:cow': EntityCow,
   'creaking': EntityCreaking,
   'minecraft:creaking': EntityCreaking,
-  'creaking_transient': EntityCreakingTransient,
-  'minecraft:creaking_transient': EntityCreakingTransient,
   'creeper': EntityCreeper,
   'minecraft:creeper': EntityCreeper,
   'dark_oak_boat': EntityDarkOakBoat,
@@ -276,6 +271,8 @@ type EntityDispatcherMap = {
   'minecraft:goat': EntityGoat,
   'guardian': EntityGuardian,
   'minecraft:guardian': EntityGuardian,
+  'happy_ghast': EntityHappyGhast,
+  'minecraft:happy_ghast': EntityHappyGhast,
   'hoglin': EntityHoglin,
   'minecraft:hoglin': EntityHoglin,
   'hopper_minecart': EntityHopperMinecart,
@@ -410,6 +407,8 @@ type EntityDispatcherMap = {
   'minecraft:stray': EntityStray,
   'strider': EntityStrider,
   'minecraft:strider': EntityStrider,
+  'sulfur_cube': EntitySulfurCube,
+  'minecraft:sulfur_cube': EntitySulfurCube,
   'tadpole': EntityTadpole,
   'minecraft:tadpole': EntityTadpole,
   'text_display': EntityTextDisplay,
@@ -454,8 +453,6 @@ type EntityDispatcherMap = {
   'minecraft:zombie_horse': EntityZombieHorse,
   'zombie_nautilus': EntityZombieNautilus,
   'minecraft:zombie_nautilus': EntityZombieNautilus,
-  'zombie_pigman': EntityZombiePigman,
-  'minecraft:zombie_pigman': EntityZombiePigman,
   'zombie_villager': EntityZombieVillager,
   'minecraft:zombie_villager': EntityZombieVillager,
   'zombified_piglin': EntityZombifiedPiglin,
@@ -479,7 +476,6 @@ type EntityFallback = (
   | EntityBirchChestBoat
   | EntityBlaze
   | EntityBlockDisplay
-  | EntityBoat
   | EntityBogged
   | EntityBreeze
   | EntityBreezeWindCharge
@@ -489,7 +485,6 @@ type EntityFallback = (
   | EntityCaveSpider
   | EntityCherryBoat
   | EntityCherryChestBoat
-  | EntityChestBoat
   | EntityChestMinecart
   | EntityChicken
   | EntityCod
@@ -497,7 +492,6 @@ type EntityFallback = (
   | EntityCopperGolem
   | EntityCow
   | EntityCreaking
-  | EntityCreakingTransient
   | EntityCreeper
   | EntityDarkOakBoat
   | EntityDarkOakChestBoat
@@ -529,6 +523,7 @@ type EntityFallback = (
   | EntityGlowSquid
   | EntityGoat
   | EntityGuardian
+  | EntityHappyGhast
   | EntityHoglin
   | EntityHopperMinecart
   | EntityHorse
@@ -596,6 +591,7 @@ type EntityFallback = (
   | EntitySquid
   | EntityStray
   | EntityStrider
+  | EntitySulfurCube
   | EntityTadpole
   | EntityTextDisplay
   | EntityTnt
@@ -618,7 +614,6 @@ type EntityFallback = (
   | EntityZombie
   | EntityZombieHorse
   | EntityZombieNautilus
-  | EntityZombiePigman
   | EntityZombieVillager
   | EntityZombifiedPiglin)
 type EntityAcaciaBoat = Boat
@@ -637,7 +632,6 @@ type EntityBirchBoat = Boat
 type EntityBirchChestBoat = ChestBoat
 type EntityBlaze = MobBase
 type EntityBlockDisplay = BlockDisplay
-type EntityBoat = Boat
 type EntityBogged = Bogged
 type EntityBreeze = MobBase
 type EntityBreezeWindCharge = AcceleratingProjectileBase
@@ -647,7 +641,6 @@ type EntityCat = Cat
 type EntityCaveSpider = MobBase
 type EntityCherryBoat = Boat
 type EntityCherryChestBoat = ChestBoat
-type EntityChestBoat = ChestBoat
 type EntityChestMinecart = ChestMinecart
 type EntityChicken = Chicken
 type EntityCod = Fish
@@ -655,7 +648,6 @@ type EntityCommandBlockMinecart = CommandBlockMinecart
 type EntityCopperGolem = CopperGolem
 type EntityCow = Cow
 type EntityCreaking = Creaking
-type EntityCreakingTransient = Creaking
 type EntityCreeper = Creeper
 type EntityDarkOakBoat = Boat
 type EntityDarkOakChestBoat = ChestBoat
@@ -687,6 +679,7 @@ type EntityGlowItemFrame = ItemFrame
 type EntityGlowSquid = GlowSquid
 type EntityGoat = Goat
 type EntityGuardian = MobBase
+type EntityHappyGhast = HappyGhast
 type EntityHoglin = Hoglin
 type EntityHopperMinecart = HopperMinecart
 type EntityHorse = Horse
@@ -754,6 +747,7 @@ type EntitySpruceChestBoat = ChestBoat
 type EntitySquid = Squid
 type EntityStray = MobBase
 type EntityStrider = Saddled
+type EntitySulfurCube = SulfurCube
 type EntityTadpole = Tadpole
 type EntityTextDisplay = TextDisplay
 type EntityTnt = Tnt
@@ -776,7 +770,6 @@ type EntityZoglin = Zoglin
 type EntityZombie = Zombie
 type EntityZombieHorse = HorseBase
 type EntityZombieNautilus = Tamable
-type EntityZombiePigman = ZombiePigman
 type EntityZombieVillager = ZombieVillager
 type EntityZombifiedPiglin = ZombiePigman
 export type SymbolEntity<CASE extends

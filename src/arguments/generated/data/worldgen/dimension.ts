@@ -82,7 +82,7 @@ export type DimensionType = {
    */
   cardinal_light?: CardinalLightType,
   /**
-   * Block tag defining what blocks keep fire infinitely burning.
+   * Defining what blocks keep fire infinitely burning.
    */
   infiniburn: (`#${Registry['minecraft:tag/block']}` | TagClass<'block'>),
   /**

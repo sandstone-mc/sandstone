@@ -30,6 +30,14 @@ export type Pack = {
   overlays?: PackOverlays,
 }
 
+export type PackBase = {
+  description: Text,
+  pack_format?: NBTInt,
+  supported_formats?: InclusiveRange<NBTInt>,
+  min_format?: PackFormat,
+  max_format?: PackFormat,
+}
+
 export type PackFeatures = {
   enabled: Array<(FeatureFlag | `minecraft:${FeatureFlag}`)>,
 }

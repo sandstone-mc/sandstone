@@ -27,7 +27,7 @@ export type BooleanInput = {
 }
 
 export type InputControl = NonNullable<({
-  [S in Extract<Registry['minecraft:input_control_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:input_control_type'], string>, string>]?: ({
     type: S,
     /**
      * The input key, which is used to build macro command and generate custom action payload.
@@ -43,7 +43,29 @@ export type InputControl = NonNullable<({
      */
     key: (`${any}${string}` | SymbolMcdocCustomDynamicEventKeys<'%fallback'>),
   } & (S extends keyof SymbolInputControl ? SymbolInputControl[S] : RootNBT))
-}[Registry['minecraft:input_control_type']])>
+}[Extract<Registry['minecraft:input_control_type'], string>])>
+
+export type MultiLine = {
+  /**
+   * Value:
+   * Range: 1..
+   */
+  max_lines?: NBTInt<{
+    min: 1,
+  }>,
+  /**
+   * Height of the input.
+   * If this field is not present:
+   * - If `max_lines` is present, the height will be chosen to fit the maximum number of lines. The chosen height is capped at 512.
+   * - If `max_lines` is also not present, the height will be chosen to fit 4 lines.
+   *
+   * Value:
+   * Range: 1..512
+   */
+  height?: NBTInt<{
+    min: 1,
+  }>,
+}
 
 export type NumberRangeInput = {
   /**

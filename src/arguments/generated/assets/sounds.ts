@@ -4,9 +4,9 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, SoundEventClass } from 'sandstone'
 
 export type Sound = NonNullable<({
-  [S in Extract<SoundType, string>]?: {
+  [S in Extract<Extract<SoundType, string>, string>]?: {
     /**
-     * Changes how `name` is interpreted. Defaults to `sound`.
+     * Changes how `name` is interpreted. Defaults to `file`.
      *
      * Value:
      *
@@ -62,7 +62,7 @@ export type Sound = NonNullable<({
      */
     attenuation_distance?: NBTInt,
   }
-}[SoundType])>
+}[Extract<SoundType, string>])>
 
 export type SoundEventRegistration = {
   /**

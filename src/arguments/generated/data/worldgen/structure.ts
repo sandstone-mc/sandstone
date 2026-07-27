@@ -1,7 +1,7 @@
 import type { MobCategory, SpawnerData } from 'sandstone/arguments/generated/data/worldgen/biome.ts'
 import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
+import type { FlatWeightedList, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 
@@ -10,6 +10,23 @@ export type BiomeTemperature = ('cold' | 'warm')
 export type BoundingBox = ('piece' | 'full')
 
 export type BuriedTreasure = Record<string, never>
+
+export type DimensionPaddingConfig = {
+  /**
+   * Value:
+   * Range: 0..
+   */
+  bottom?: NBTInt<{
+    min: 0,
+  }>,
+  /**
+   * Value:
+   * Range: 0..
+   */
+  top?: NBTInt<{
+    min: 0,
+  }>,
+}
 
 export type DirectPoolAlias = {
   alias: `${string}:${string}`,
@@ -88,10 +105,10 @@ export type Jigsaw<S = undefined> = ({
 export type JigsawDistanceLimits<T extends NBTObject> = {
   horizontal: T,
   /**
-   * Defaults to 4096
+   * Defaults to 4064
    *
    * Value:
-   * Range: 1..4096
+   * Range: 1..4064
    */
   vertical?: NBTInt<{
     min: 1,
@@ -147,10 +164,10 @@ export type OceanRuin = {
 }
 
 export type PoolAlias = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolWorldgenPoolAliasBinding ? SymbolWorldgenPoolAliasBinding[S] : RootNBT))
-}[Registry['minecraft:worldgen/pool_alias_binding']])>
+}[Extract<Registry['minecraft:worldgen/pool_alias_binding'], string>])>
 
 export type RandomGroupPoolAlias = {
   groups: NonEmptyWeightedList<Array<PoolAlias>>,
@@ -233,11 +250,11 @@ export type SpawnOverride = {
    *  - Full(`full`)
    */
   bounding_box: BoundingBox,
-  spawns: Array<SpawnerData>,
+  spawns: FlatWeightedList<SpawnerData>,
 }
 
 export type Structure = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/structure_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/structure_type'], string>, string>]?: ({
     type: S,
     biomes: (
           | Array<Registry['minecraft:worldgen/biome']> | (
@@ -276,11 +293,71 @@ export type Structure = NonNullable<({
       [Key in Extract<MobCategory, string>]?: SpawnOverride
     }),
   } & (S extends keyof SymbolStructureConfig ? SymbolStructureConfig[S] : RootNBT))
-}[Registry['minecraft:worldgen/structure_type']])>
+}[Extract<Registry['minecraft:worldgen/structure_type'], string>])>
 
 export type StructureRef = (Registry['minecraft:worldgen/structure'] | Structure)
 
 export type TerrainAdaptation = ('none' | 'beard_thin' | 'beard_box' | 'bury' | 'encapsulate')
+
+export type TrickyTrialsStructureConfig = {
+  /**
+   * Value:
+   * *either*
+   *
+   * Range: 0..
+   *
+   * *or*
+   *
+   * *item 1*
+   */
+  dimension_padding?: (NBTInt<{
+    min: 0,
+  }> | {
+    /**
+     * Value:
+     * Range: 0..
+     */
+    bottom?: NBTInt<{
+      min: 0,
+    }>,
+    /**
+     * Value:
+     * Range: 0..
+     */
+    top?: NBTInt<{
+      min: 0,
+    }>,
+  }),
+  /**
+   * Value:
+   *
+   *  - ApplyWaterlogging(`apply_waterlogging`)
+   *  - IgnoreWaterlogging(`ignore_waterlogging`)
+   */
+  liquid_settings?: LiquidSettings,
+}
+
+export type WildUpdateStructureConfig<S = undefined> = {
+  start_height: HeightProvider,
+  start_jigsaw_name?: `${string}:${string}`,
+  /**
+   * Value:
+   *
+   *  - MotionBlocking(`MOTION_BLOCKING`)
+   *  - MotionBlockingNoLeaves(`MOTION_BLOCKING_NO_LEAVES`)
+   *  - OceanFloor(`OCEAN_FLOOR`)
+   *  - OceanFloorWorldgen(`OCEAN_FLOOR_WG`)
+   *  - WorldSurface(`WORLD_SURFACE`)
+   *  - WorldSurfaceWorldgen(`WORLD_SURFACE_WG`)
+   */
+  project_start_to_heightmap?: HeightmapType,
+  max_distance_from_center: (S extends undefined
+    ? SymbolJigsawMaxDistanceFromCenter<'%none'> :
+    (S extends keyof SymbolJigsawMaxDistanceFromCenter
+      ? SymbolJigsawMaxDistanceFromCenter[S]
+      : SymbolJigsawMaxDistanceFromCenter<'%unknown'>)),
+  use_expansion_hack: boolean,
+}
 type JigsawMaxDistanceFromCenterDispatcherMap = {
   'beard_box': JigsawMaxDistanceFromCenterBeardBox,
   'minecraft:beard_box': JigsawMaxDistanceFromCenterBeardBox,

@@ -3,6 +3,7 @@ import type { DamageType } from 'sandstone/arguments/generated/data/damage_type.
 import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument.ts'
+import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
 import type {
   SymbolMcdocBlockItemStates,
   SymbolMcdocBlockStateKeys,
@@ -11,6 +12,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.ts'
 import type { Profile } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { MobEffectInstance } from 'sandstone/arguments/generated/util/effect.ts'
 import type { Filterable, GlobalPos } from 'sandstone/arguments/generated/util.ts'
 import type { EquipmentSlot, EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot.ts'
@@ -33,6 +35,7 @@ import type {
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { TextureType } from 'sandstone/arguments'
 import type {
   BannerPatternClass,
   DamageTypeClass,
@@ -40,6 +43,7 @@ import type {
   InstrumentClass,
   ItemModelDefinitionClass,
   JukeboxSongClass,
+  LootTableClass,
   NBTByte,
   NBTClass,
   NBTDouble,
@@ -55,7 +59,19 @@ import type {
   VariantClass,
 } from 'sandstone'
 
-export type AdventureModePredicate = (Array<BlockPredicate> | BlockPredicate)
+/**
+ * *either*
+ *
+ * List length range: 1..
+ *
+ * *or*
+ *
+ * *item 1*
+ */
+export type AdventureModePredicate = (NBTList<BlockPredicate, {
+  leftExclusive: false,
+  min: 1,
+}> | BlockPredicate)
 
 export type ApplyEffectsConsumeEffect = {
   effects: Array<MobEffectInstance>,
@@ -149,7 +165,7 @@ export type AttackRange = {
 }
 
 export type AttributeDisplay = NonNullable<({
-  [S in Extract<AttributeDisplayType, string>]?: ({
+  [S in Extract<Extract<AttributeDisplayType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -159,7 +175,7 @@ export type AttributeDisplay = NonNullable<({
      */
     type: S,
   } & (S extends keyof SymbolAttributeDisplay ? SymbolAttributeDisplay[S] : RootNBT))
-}[AttributeDisplayType])>
+}[Extract<AttributeDisplayType, string>])>
 
 export type AttributeDisplayTextOverride = {
   /**
@@ -271,6 +287,7 @@ export type blocks_attacks = {
    * Damage types in this tag are bypassing the blocking
    */
   bypassed_by?: ((
+      | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>) | (
         | Registry['minecraft:damage_type']
         | `#${Registry['minecraft:tag/damage_type']}`
         | TagClass<'damage_type'>
@@ -278,7 +295,90 @@ export type blocks_attacks = {
       | Array<(Registry['minecraft:damage_type'] | DamageTypeClass)>),
 }
 
+export type BlockTransformDropStrategy = ('clicked_face' | 'from_middle')
+
+export type BlockTransformer = {
+  /**
+   * If the provider returns no result, the next transformer will be attempted.
+   */
+  block_state_provider: BlockStateProvider,
+  /**
+   * Defaults to not playing sound.
+   */
+  sound?: SoundEventRef,
+  /**
+   * Defaults to `none`.
+   *
+   * Value:
+   *
+   *  - None(`none`)
+   *  - Scrape(`scrape`)
+   *  - WaxOn(`wax_on`)
+   *  - WaxOff(`wax_off`)
+   */
+  particle?: BlockTransformParticle,
+  /**
+   * If a disallowed face is interacted with, the next transformer will be attempted. \
+   * Defaults to empty (allowing all faces).
+   */
+  disallowed_faces?: Array<Direction>,
+  /**
+   * The loot to drop on a successful transformation. \
+   * Defaults to drop nothing.
+   */
+  loot?: (Registry['minecraft:loot_table'] | LootTableClass),
+  /**
+   * Where the `loot` should drop. \
+   * Defaults to `from_middle`.
+   *
+   * Value:
+   *
+   *  - ClickedFace(`clicked_face`)
+   *  - FromMiddle(`from_middle`)
+   */
+  drop_strategy?: BlockTransformDropStrategy,
+  /**
+   * How nearby blocks are affected by the transformation. \
+   * Defaults to `single_block`.
+   *
+   * Value:
+   *
+   *  - SingleBlock(`single_block`)
+   *  - CopperChest(`copper_chest`): If the original block and the transformed block are both copper chests of any kind, the transform applies to the other half of the double chest.
+   */
+  transform_type?: BlockTransformType,
+  /**
+   * Whether the transformed block should update based on neighboring blocks. \
+   * Defaults to `true`.
+   */
+  update_from_neighbors?: boolean,
+  /**
+   * Only has effect on stackable items. \
+   * Defaults to `true`.
+   */
+  consume_on_use?: boolean,
+  /**
+   * Only has effect on unstackable items. \
+   * Defauls to 1.
+   *
+   * Value:
+   * Range: 0..
+   */
+  item_damage_per_use?: NBTInt<{
+    min: 0,
+  }>,
+}
+
+export type BlockTransformParticle = ('none' | 'scrape' | 'wax_on' | 'wax_off')
+
+export type BlockTransformType = ('single_block' | 'copper_chest')
+
 export type BookGeneration = (0 | 1 | 2 | 3)
+
+export type BrewingFuel = {
+  uses: `${string}:${string}`,
+  speed_multiplier: `${string}:${string}`,
+}
 
 export type BucketEntityData = {
   /**
@@ -306,6 +406,18 @@ export type BucketEntityData = {
    * Turns into the expiry time of the memory module `has_hunting_cooldown` for axolotls.
    */
   HuntingCooldown?: NBTLong,
+  /**
+   * The age for axolotl and tadpole.
+   */
+  Age?: NBTInt,
+  /**
+   * The age locked state for axolotl and tadpole.
+   */
+  AgeLocked?: boolean,
+}
+
+export type Compostable = {
+  layers: `${string}:${string}`,
 }
 
 export type Consumable = {
@@ -354,10 +466,15 @@ export type Consumable = {
 }
 
 export type ConsumeEffect = NonNullable<({
-  [S in Extract<Registry['minecraft:consume_effect_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:consume_effect_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolConsumeEffect ? SymbolConsumeEffect[S] : RootNBT))
-}[Registry['minecraft:consume_effect_type']])>
+}[Extract<Registry['minecraft:consume_effect_type'], string>])>
+
+export type CookingFuel = {
+  burn_time: `${string}:${string}`,
+  speed_multiplier: `${string}:${string}`,
+}
 
 export type CustomModelData = {
   floats?: Array<NBTFloat>,
@@ -404,6 +521,7 @@ export type DamageResistant = {
    * Additionally, this also affects whether the equipped item will be damaged when the wearer is hurt by a specified damage type.
    */
   types: ((
+      | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>) | (
         | Registry['minecraft:damage_type']
         | `#${Registry['minecraft:tag/damage_type']}`
         | TagClass<'damage_type'>
@@ -477,7 +595,7 @@ export type Equippable = {
   /**
    * The overlay texture that should render in first person when equipped.
    */
-  camera_overlay?: (Registry['minecraft:texture'] | TextureClass),
+  camera_overlay?: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * Limits which entities can equip this item.
    */
@@ -733,6 +851,27 @@ export type MapDecorations = ({
   [Key in `${any}${string}`]?: MapDecoration
 })
 
+export type MobVisibility = {
+  /**
+   * Entities to match.
+   */
+  targeting_entity_types: ((
+      | Registry['minecraft:entity_type'] | `#${Registry['minecraft:tag/entity_type']}` | TagClass<'entity_type'>)
+      | Array<Registry['minecraft:entity_type']>),
+  /**
+   * Visibility factor, with `0.0` reducing the range at which mobs detects the entity to `2`, while `10.0` increases the detection range tenfold.
+   * While multiple items with this component stack, the maximum vision will still never exceed `10.0`.
+   *
+   * Value:
+   * Range: 0..10
+   */
+  visibility: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
+}
+
 export type PiercingWeapon = {
   /**
    * Whether the attack deals knockback.
@@ -943,6 +1082,18 @@ export type UseEffects = {
   interact_vibrations?: boolean,
 }
 
+export type VillagerFood = {
+  /**
+   * How much hunger the item satiates in the Villager once eaten.
+   *
+   * Value:
+   * Range: 1..
+   */
+  nutrition: NBTInt<{
+    min: 1,
+  }>,
+}
+
 export type Weapon = {
   /**
    * The amount to damage to the weapon item for each attack performed. Defaults to `1`.
@@ -1095,6 +1246,8 @@ type DataComponentDispatcherMap = {
   'minecraft:cow/sound_variant': DataComponentCowSoundVariant,
   'cow/variant': DataComponentCowVariant,
   'minecraft:cow/variant': DataComponentCowVariant,
+  'creative_slot_lock': DataComponentCreativeSlotLock,
+  'minecraft:creative_slot_lock': DataComponentCreativeSlotLock,
   'custom_data': DataComponentCustomData,
   'minecraft:custom_data': DataComponentCustomData,
   'custom_model_data': DataComponentCustomModelData,
@@ -1125,8 +1278,6 @@ type DataComponentDispatcherMap = {
   'minecraft:entity_data': DataComponentEntityData,
   'equippable': DataComponentEquippable,
   'minecraft:equippable': DataComponentEquippable,
-  'fire_resistant': DataComponentFireResistant,
-  'minecraft:fire_resistant': DataComponentFireResistant,
   'firework_explosion': DataComponentFireworkExplosion,
   'minecraft:firework_explosion': DataComponentFireworkExplosion,
   'fireworks': DataComponentFireworks,
@@ -1139,10 +1290,6 @@ type DataComponentDispatcherMap = {
   'minecraft:frog/variant': DataComponentFrogVariant,
   'glider': DataComponentGlider,
   'minecraft:glider': DataComponentGlider,
-  'hide_additional_tooltip': DataComponentHideAdditionalTooltip,
-  'minecraft:hide_additional_tooltip': DataComponentHideAdditionalTooltip,
-  'hide_tooltip': DataComponentHideTooltip,
-  'minecraft:hide_tooltip': DataComponentHideTooltip,
   'horse/variant': DataComponentHorseVariant,
   'minecraft:horse/variant': DataComponentHorseVariant,
   'instrument': DataComponentInstrument,
@@ -1171,6 +1318,8 @@ type DataComponentDispatcherMap = {
   'minecraft:map_decorations': DataComponentMapDecorations,
   'map_id': DataComponentMapId,
   'minecraft:map_id': DataComponentMapId,
+  'map_post_processing': DataComponentMapPostProcessing,
+  'minecraft:map_post_processing': DataComponentMapPostProcessing,
   'max_damage': DataComponentMaxDamage,
   'minecraft:max_damage': DataComponentMaxDamage,
   'max_stack_size': DataComponentMaxStackSize,
@@ -1249,6 +1398,8 @@ type DataComponentDispatcherMap = {
   'minecraft:use_effects': DataComponentUseEffects,
   'use_remainder': DataComponentUseRemainder,
   'minecraft:use_remainder': DataComponentUseRemainder,
+  'villager_food': DataComponentVillagerFood,
+  'minecraft:villager_food': DataComponentVillagerFood,
   'villager/variant': DataComponentVillagerVariant,
   'minecraft:villager/variant': DataComponentVillagerVariant,
   'weapon': DataComponentWeapon,
@@ -1263,6 +1414,8 @@ type DataComponentDispatcherMap = {
   'minecraft:writable_book_content': DataComponentWritableBookContent,
   'written_book_content': DataComponentWrittenBookContent,
   'minecraft:written_book_content': DataComponentWrittenBookContent,
+  'zombie_nautilus/variant': DataComponentZombieNautilusVariant,
+  'minecraft:zombie_nautilus/variant': DataComponentZombieNautilusVariant,
 }
 type DataComponentKeys = keyof DataComponentDispatcherMap
 type DataComponentFallback = (
@@ -1292,6 +1445,7 @@ type DataComponentFallback = (
   | DataComponentContainerLoot
   | DataComponentCowSoundVariant
   | DataComponentCowVariant
+  | DataComponentCreativeSlotLock
   | DataComponentCustomData
   | DataComponentCustomModelData
   | DataComponentCustomName
@@ -1307,15 +1461,12 @@ type DataComponentFallback = (
   | DataComponentEnchantments
   | DataComponentEntityData
   | DataComponentEquippable
-  | DataComponentFireResistant
   | DataComponentFireworkExplosion
   | DataComponentFireworks
   | DataComponentFood
   | DataComponentFoxVariant
   | DataComponentFrogVariant
   | DataComponentGlider
-  | DataComponentHideAdditionalTooltip
-  | DataComponentHideTooltip
   | DataComponentHorseVariant
   | DataComponentInstrument
   | DataComponentIntangibleProjectile
@@ -1330,6 +1481,7 @@ type DataComponentFallback = (
   | DataComponentMapColor
   | DataComponentMapDecorations
   | DataComponentMapId
+  | DataComponentMapPostProcessing
   | DataComponentMaxDamage
   | DataComponentMaxStackSize
   | DataComponentMinimumAttackCharge
@@ -1369,13 +1521,15 @@ type DataComponentFallback = (
   | DataComponentUseCooldown
   | DataComponentUseEffects
   | DataComponentUseRemainder
+  | DataComponentVillagerFood
   | DataComponentVillagerVariant
   | DataComponentWeapon
   | DataComponentWolfCollar
   | DataComponentWolfSoundVariant
   | DataComponentWolfVariant
   | DataComponentWritableBookContent
-  | DataComponentWrittenBookContent)
+  | DataComponentWrittenBookContent
+  | DataComponentZombieNautilusVariant)
 type DataComponentAdditionalTradeCost = NBTInt
 type DataComponentAttackRange = AttackRange
 type DataComponentAttributeModifiers = Array<AttributeModifier>
@@ -1392,18 +1546,19 @@ type DataComponentBundleContents = Array<ItemStackTemplate>
 type DataComponentCanBreak = AdventureModePredicate
 type DataComponentCanPlaceOn = AdventureModePredicate
 type DataComponentCatCollar = DyeColor
-type DataComponentCatSoundVariant = (`${string}:${string}` | VariantClass<'cat_sound'>)
+type DataComponentCatSoundVariant = (Registry['minecraft:cat_sound_variant'] | VariantClass<'cat_sound'>)
 type DataComponentCatVariant = (Registry['minecraft:cat_variant'] | VariantClass<'cat'>)
 type DataComponentChargedProjectiles = Array<ItemStackTemplate>
-type DataComponentChickenSoundVariant = (`${string}:${string}` | VariantClass<'chicken_sound'>)
+type DataComponentChickenSoundVariant = (Registry['minecraft:chicken_sound_variant'] | VariantClass<'chicken_sound'>)
 type DataComponentChickenVariant = (Registry['minecraft:chicken_variant'] | VariantClass<'chicken'>)
 type DataComponentConsumable = Consumable
 type DataComponentContainer = NBTList<ContainerSlot, {
   rightExclusive: false,
 }>
 type DataComponentContainerLoot = ContainerLoot
-type DataComponentCowSoundVariant = (`${string}:${string}` | VariantClass<'cow_sound'>)
+type DataComponentCowSoundVariant = (Registry['minecraft:cow_sound_variant'] | VariantClass<'cow_sound'>)
 type DataComponentCowVariant = (Registry['minecraft:cow_variant'] | VariantClass<'cow'>)
+type DataComponentCreativeSlotLock = Record<string, never>
 type DataComponentCustomData = CustomData
 type DataComponentCustomModelData = CustomModelData
 type DataComponentCustomName = Text
@@ -1421,15 +1576,12 @@ type DataComponentEnchantmentGlintOverride = boolean
 type DataComponentEnchantments = EnchantmentLevels
 type DataComponentEntityData = (AnyEntity | (`${any}${string}` | NBTClass))
 type DataComponentEquippable = Equippable
-type DataComponentFireResistant = Record<string, never>
 type DataComponentFireworkExplosion = Explosion
 type DataComponentFireworks = Fireworks
 type DataComponentFood = Food
 type DataComponentFoxVariant = FoxType
 type DataComponentFrogVariant = (Registry['minecraft:frog_variant'] | VariantClass<'frog'>)
 type DataComponentGlider = Record<string, never>
-type DataComponentHideAdditionalTooltip = Record<string, never>
-type DataComponentHideTooltip = Record<string, never>
 type DataComponentHorseVariant = HorseVariant
 type DataComponentInstrument = ((Registry['minecraft:instrument'] | InstrumentClass) | Instrument)
 type DataComponentIntangibleProjectile = Record<string, never>
@@ -1444,6 +1596,7 @@ type DataComponentLore = Array<Text>
 type DataComponentMapColor = NBTInt
 type DataComponentMapDecorations = MapDecorations
 type DataComponentMapId = NBTInt
+type DataComponentMapPostProcessing = Record<string, never>
 type DataComponentMaxDamage = NBTInt<{
   min: 1,
 }>
@@ -1466,7 +1619,7 @@ type DataComponentOminousBottleAmplifier = NBTInt<{
 type DataComponentPaintingVariant = (Registry['minecraft:painting_variant'] | VariantClass<'painting'>)
 type DataComponentParrotVariant = ParrotVariant
 type DataComponentPiercingWeapon = PiercingWeapon
-type DataComponentPigSoundVariant = (`${string}:${string}` | VariantClass<'pig_sound'>)
+type DataComponentPigSoundVariant = (Registry['minecraft:pig_sound_variant'] | VariantClass<'pig_sound'>)
 type DataComponentPigVariant = (Registry['minecraft:pig_variant'] | VariantClass<'pig'>)
 type DataComponentPotDecorations = NBTList<Registry['minecraft:item'], {
   rightExclusive: false,
@@ -1478,6 +1631,7 @@ type DataComponentPotionDurationScale = NBTFloat<{
 }>
 type DataComponentProfile = Profile
 type DataComponentProvidesBannerPatterns = ((
+  | `#${Registry['minecraft:tag/banner_pattern']}` | TagClass<'banner_pattern'>) | (
     | Registry['minecraft:banner_pattern']
     | `#${Registry['minecraft:tag/banner_pattern']}`
     | TagClass<'banner_pattern'>
@@ -1508,6 +1662,7 @@ type DataComponentUnbreakable = Unbreakable
 type DataComponentUseCooldown = UseCooldown
 type DataComponentUseEffects = UseEffects
 type DataComponentUseRemainder = ItemStackTemplate
+type DataComponentVillagerFood = VillagerFood
 type DataComponentVillagerVariant = Registry['minecraft:villager_type']
 type DataComponentWeapon = Weapon
 type DataComponentWolfCollar = DyeColor
@@ -1515,6 +1670,9 @@ type DataComponentWolfSoundVariant = (Registry['minecraft:wolf_sound_variant'] |
 type DataComponentWolfVariant = (Registry['minecraft:wolf_variant'] | VariantClass<'wolf'>)
 type DataComponentWritableBookContent = WritableBookContent
 type DataComponentWrittenBookContent = WrittenBookContent
+type DataComponentZombieNautilusVariant = (
+  | Registry['minecraft:zombie_nautilus_variant']
+  | VariantClass<'zombie_nautilus'>)
 export type SymbolDataComponent<CASE extends
   | 'map'
   | 'keys'

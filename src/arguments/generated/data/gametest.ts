@@ -1,5 +1,6 @@
 import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Rotation } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt, StructureClass, TestEnvironmentClass } from 'sandstone'
 
@@ -11,8 +12,6 @@ export type FunctionTestInstance = (TestData & {
    */
   function: Registry['minecraft:test_function'],
 })
-
-export type Rotation = ('none' | 'clockwise_90' | '180' | 'counterclockwise_90')
 
 export type TestData = {
   /**
@@ -95,10 +94,10 @@ export type TestData = {
 }
 
 export type TestInstance = NonNullable<({
-  [S in Extract<Registry['minecraft:test_instance_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:test_instance_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolTestInstance ? SymbolTestInstance[S] : RootNBT))
-}[Registry['minecraft:test_instance_type']])>
+}[Extract<Registry['minecraft:test_instance_type'], string>])>
 type TestInstanceDispatcherMap = {
   'block_based': TestInstanceBlockBased,
   'minecraft:block_based': TestInstanceBlockBased,

@@ -1,13 +1,30 @@
 import type { CubicSpline, DensityFunctionRef } from 'sandstone/arguments/generated/data/worldgen/density_function.ts'
-import type { ClimateParameters } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
+import type {
+  ClimateParameter,
+  ClimateParameters,
+} from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
+import type { MaterialRuleRef } from 'sandstone/arguments/generated/data/worldgen/material_rule.ts'
 import type {
   ConcentricRingsPlacement,
   RandomSpreadPlacement,
 } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
-import type { SurfaceRule } from 'sandstone/arguments/generated/data/worldgen/surface_rule.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { NBTDouble, NBTFloat, NBTInt } from 'sandstone'
+
+export type Aquifer = {
+  barrier: DensityFunctionRef,
+  fluid_level_floodedness: DensityFunctionRef,
+  fluid_level_spread: DensityFunctionRef,
+  lava: DensityFunctionRef,
+  exclusion: DensityFunctionRef,
+  surface_level: DensityFunctionRef,
+}
+
+export type NoiseGeneratorFlags = {
+  aquifers_enabled: boolean,
+  ore_veins_enabled: boolean,
+}
 
 export type NoiseGeneratorSettings = ({
   default_block: BlockState,
@@ -21,7 +38,7 @@ export type NoiseGeneratorSettings = ({
   noise: NoiseSettings,
   noise_router: NoiseRouter,
   spawn_target: Array<ClimateParameters>,
-  surface_rule: SurfaceRule,
+  surface_rule: MaterialRuleRef,
 } & {
   aquifers_enabled: boolean,
   ore_veins_enabled: boolean,
@@ -147,6 +164,29 @@ export type NoiseSlideSettings = {
    */
   offset: NBTInt,
 }
+
+export type OreVeinifier = {
+  ore_block: BlockState,
+  raw_ore_block: BlockState,
+  filler_block: BlockState,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  raw_ore_chance: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  density: DensityFunctionRef,
+  richness: DensityFunctionRef,
+  filler_gap: DensityFunctionRef,
+}
+
+export type SpawnTargetPoint = ({
+  [Key in Extract<Registry['minecraft:worldgen/density_function'], string>]?: ClimateParameter
+})
 
 export type StructureSettings = {
   stronghold?: ConcentricRingsPlacement,

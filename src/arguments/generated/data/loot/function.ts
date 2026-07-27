@@ -1,13 +1,14 @@
 import type { ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
+import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
 import type {
   BlockEntityTarget,
   EntityTarget,
   ItemStackTarget,
-  LootCondition,
-  LootFunction,
   LootPoolEntry,
 } from 'sandstone/arguments/generated/data/loot.ts'
-import type { IntRange, NbtProvider, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
+import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { IntRange, NbtProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolDataComponent, SymbolMcdocBlockStateKeys } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.ts'
@@ -33,7 +34,7 @@ import type {
 } from 'sandstone'
 
 export type ApplyBonus = NonNullable<({
-  [S in Extract<ApplyBonusFormula, string>]?: ({
+  [S in Extract<Extract<ApplyBonusFormula, string>, string>]?: ({
     enchantment: (Registry['minecraft:enchantment'] | EnchantmentClass),
     /**
      * Value:
@@ -44,7 +45,7 @@ export type ApplyBonus = NonNullable<({
      */
     formula: (S | `minecraft:${S}`),
   } & (S extends keyof SymbolApplyBonusFormula ? SymbolApplyBonusFormula[S] : RootNBT) & Conditions)
-}[ApplyBonusFormula])>
+}[Extract<ApplyBonusFormula, string>])>
 
 export type ApplyBonusFormula = ('ore_drops' | 'uniform_bonus_count' | 'binomial_with_bonus_count')
 
@@ -53,7 +54,7 @@ export type AttributeModifier = ({
    * Attribute type to modify.
    */
   attribute: Registry['minecraft:attribute'],
-  amount: NumberProvider,
+  amount: NumberProviderRef,
   /**
    * The operation used for this modifier.
    *
@@ -242,10 +243,23 @@ export type CopyNbt = ({
   }>,
 } & Conditions)
 
+export type CopyNbtOperation = {
+  source: `${any}${string}` | DataPointClass,
+  target: `${any}${string}` | DataPointClass,
+  /**
+   * Value:
+   *
+   *  - Replace(`replace`): Replace any existing contents of the target.
+   *  - Append(`append`): Append to a list.
+   *  - Merge(`merge`): Merge into a compound tag.
+   */
+  op: CopyNbtStrategy,
+}
+
 export type CopyNbtStrategy = ('replace' | 'append' | 'merge')
 
 export type CopyState = NonNullable<({
-  [S in Extract<Registry['minecraft:block'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:block'], string>, string>]?: ({
     block: S,
     properties: Array<(S extends undefined
       ? SymbolMcdocBlockStateKeys<'%none'> :
@@ -253,13 +267,29 @@ export type CopyState = NonNullable<({
         ? SymbolMcdocBlockStateKeys[S]
         : SymbolMcdocBlockStateKeys<'%unknown'>))>,
   } & Conditions)
-}[Registry['minecraft:block']])>
+}[Extract<Registry['minecraft:block'], string>])>
+
+export type CustomModelDataColors = ({
+  values: Array<(NumberProviderRef | RGB)>,
+} & ListOperation)
+
+export type CustomModelDataFlags = ({
+  values: Array<boolean>,
+} & ListOperation)
+
+export type CustomModelDataFloats = ({
+  values: Array<NumberProviderRef>,
+} & ListOperation)
+
+export type CustomModelDataStrings = ({
+  values: Array<string>,
+} & ListOperation)
 
 export type EnchantedCountBase = {
   /**
    * If the number is fractional the result is rounded *after* the number was multiplied by the looting level.
    */
-  count: NumberProvider,
+  count: NumberProviderRef,
   /**
    * Limits the count of the item to a range.
    */
@@ -301,7 +331,7 @@ export type EnchantWithLevels = ({
   /**
    * The levels to enchant this item with.
    */
-  levels: NumberProvider,
+  levels: NumberProviderRef,
   /**
    * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
    */
@@ -324,6 +354,7 @@ export type ExplorationMap = ({
    * Generated structure to locate. Accepts any of the structure types used by the `/locate` command. Defaults to buried treasure.
    */
   destination?: (Registry['minecraft:tag/worldgen/structure']),
+} & {
   /**
    * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
    * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
@@ -373,12 +404,16 @@ export type Filtered = ({
   /**
    * Loot function to apply to the item when `item_filter` passes.
    */
-  on_pass?: (LootFunction | Array<LootFunction>),
+  on_pass?: ItemModifier,
   /**
    * Loot function to apply to the item when `item_filter` fails.
    */
-  on_fail?: (LootFunction | Array<LootFunction>),
+  on_fail?: ItemModifier,
 } & Conditions)
+
+export type FireworkExplosions = ({
+  values: Array<SymbolDataComponent['firework_explosion']>,
+} & ListOperation)
 
 export type InsertListOperation = {
   /**
@@ -392,6 +427,26 @@ export type InsertListOperation = {
   }>,
 }
 
+export type LegacyExplorationMapDestination = (
+  | 'pillager_outpost'
+  | 'mineshaft'
+  | 'manshion'
+  | 'jungle_pyramid'
+  | 'desert_pyramid'
+  | 'igloo'
+  | 'ruined_portal'
+  | 'shipwreck'
+  | 'swamp_hut'
+  | 'stronghold'
+  | 'monument'
+  | 'ocean_ruin'
+  | 'fortress'
+  | 'endcity'
+  | 'buried_treasure'
+  | 'village'
+  | 'nether_fossil'
+  | 'bastion_remnent')
+
 export type LimitCount = ({
   /**
    * Limits the count of the item to a range.
@@ -400,7 +455,7 @@ export type LimitCount = ({
 } & Conditions)
 
 export type ListOperation = NonNullable<({
-  [S in Extract<ListOperationMode, string>]?: ({
+  [S in Extract<Extract<ListOperationMode, string>, string>]?: ({
     /**
      * Determines how the existing list should be modified.
      *
@@ -413,9 +468,15 @@ export type ListOperation = NonNullable<({
      */
     mode: S,
   } & (S extends keyof SymbolListOperation ? SymbolListOperation[S] : RootNBT))
-}[ListOperationMode])>
+}[Extract<ListOperationMode, string>])>
 
 export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_section')
+
+export type LootFunction = NonNullable<({
+  [S in Extract<Extract<Registry['minecraft:loot_function_type'], string>, string>]?: ({
+    function: S,
+  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
+}[Extract<Registry['minecraft:loot_function_type'], string>])>
 
 export type LootingEnchant = (EnchantedCountBase & Conditions)
 
@@ -462,7 +523,7 @@ export type ModifyContents = ({
   /**
    * Applied to every item inside container.
    */
-  modifier: (LootFunction | Array<LootFunction>),
+  modifier: ItemModifier,
 } & Conditions)
 
 export type Reference = ({
@@ -562,7 +623,7 @@ export type SetContents = ({
 } & Conditions)
 
 export type SetCount = ({
-  count: NumberProvider,
+  count: NumberProviderRef,
   /**
    * Whether to add to the existing count. Defaults to `false`.
    */
@@ -575,7 +636,7 @@ export type SetCustomData = ({
 
 export type SetCustomModelData = ({
   floats?: ({
-    values: Array<NumberProvider>,
+    values: Array<NumberProviderRef>,
   } & ListOperation),
   flags?: ({
     values: Array<boolean>,
@@ -584,7 +645,7 @@ export type SetCustomModelData = ({
     values: Array<string>,
   } & ListOperation),
   colors?: ({
-    values: Array<(NumberProvider | RGB)>,
+    values: Array<(NumberProviderRef | RGB)>,
   } & ListOperation),
 } & Conditions)
 
@@ -593,7 +654,7 @@ export type SetDamage = ({
    * Decimal percentage. Can be negative when used in combination with `add`. \
    * Clamps to a float between `-1` & `1` (inclusive).
    */
-  damage: NumberProvider,
+  damage: NumberProviderRef,
   /**
    * Whether to add to the existing damage of the item. Defaults to `false`.
    */
@@ -606,7 +667,7 @@ export type SetEnchantments = ({
    * Each level is clamped to a positive integer.
    */
   enchantments: ({
-    [Key in Extract<Registry['minecraft:enchantment'], string>]?: NumberProvider
+    [Key in Extract<Registry['minecraft:enchantment'], string>]?: NumberProviderRef
   }),
   /**
    * Whether to add to the level of each enchantment. Defaults to `false`.
@@ -667,6 +728,7 @@ export type SetInstrument = ({
    * Sets the instrument tag for a goat horn.
    */
   options: ((
+      | `#${Registry['minecraft:tag/instrument']}` | TagClass<'instrument'>) | (
         | Registry['minecraft:instrument']
         | `#${Registry['minecraft:tag/instrument']}`
         | TagClass<'instrument'>
@@ -749,7 +811,7 @@ export type SetNbt = ({
 } & Conditions)
 
 export type SetOminousBottleAmplifier = ({
-  amplifier: NumberProvider,
+  amplifier: NumberProviderRef,
 } & Conditions)
 
 export type SetPotion = ({
@@ -765,7 +827,7 @@ export type SetRandomDyes = ({
    * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye. \
    * The same dye color can be selected multiple times.
    */
-  number_of_dyes: NumberProvider,
+  number_of_dyes: NumberProviderRef,
 } & Conditions)
 
 export type SetRandomPotion = ({
@@ -807,7 +869,7 @@ export type StewEffect = {
   /**
    * The duration of this stew effect, in seconds.
    */
-  duration: NumberProvider,
+  duration: NumberProviderRef,
 }
 
 export type ToggleableDataComponent = (
@@ -896,8 +958,6 @@ type LootFunctionDispatcherMap = {
   'minecraft:copy_custom_data': LootFunctionCopyCustomData,
   'copy_name': LootFunctionCopyName,
   'minecraft:copy_name': LootFunctionCopyName,
-  'copy_nbt': LootFunctionCopyNbt,
-  'minecraft:copy_nbt': LootFunctionCopyNbt,
   'copy_state': LootFunctionCopyState,
   'minecraft:copy_state': LootFunctionCopyState,
   'discard': LootFunctionDiscard,
@@ -920,8 +980,6 @@ type LootFunctionDispatcherMap = {
   'minecraft:furnace_smelt': LootFunctionFurnaceSmelt,
   'limit_count': LootFunctionLimitCount,
   'minecraft:limit_count': LootFunctionLimitCount,
-  'looting_enchant': LootFunctionLootingEnchant,
-  'minecraft:looting_enchant': LootFunctionLootingEnchant,
   'modify_contents': LootFunctionModifyContents,
   'minecraft:modify_contents': LootFunctionModifyContents,
   'reference': LootFunctionReference,
@@ -962,8 +1020,6 @@ type LootFunctionDispatcherMap = {
   'minecraft:set_lore': LootFunctionSetLore,
   'set_name': LootFunctionSetName,
   'minecraft:set_name': LootFunctionSetName,
-  'set_nbt': LootFunctionSetNbt,
-  'minecraft:set_nbt': LootFunctionSetNbt,
   'set_ominous_bottle_amplifier': LootFunctionSetOminousBottleAmplifier,
   'minecraft:set_ominous_bottle_amplifier': LootFunctionSetOminousBottleAmplifier,
   'set_potion': LootFunctionSetPotion,
@@ -987,7 +1043,6 @@ type LootFunctionFallback = (
   | LootFunctionCopyComponents
   | LootFunctionCopyCustomData
   | LootFunctionCopyName
-  | LootFunctionCopyNbt
   | LootFunctionCopyState
   | LootFunctionDiscard
   | LootFunctionEnchantRandomly
@@ -999,7 +1054,6 @@ type LootFunctionFallback = (
   | LootFunctionFiltered
   | LootFunctionFurnaceSmelt
   | LootFunctionLimitCount
-  | LootFunctionLootingEnchant
   | LootFunctionModifyContents
   | LootFunctionReference
   | LootFunctionSequence
@@ -1020,7 +1074,6 @@ type LootFunctionFallback = (
   | LootFunctionSetLootTable
   | LootFunctionSetLore
   | LootFunctionSetName
-  | LootFunctionSetNbt
   | LootFunctionSetOminousBottleAmplifier
   | LootFunctionSetPotion
   | LootFunctionSetRandomDyes
@@ -1033,7 +1086,6 @@ type LootFunctionApplyBonus = ApplyBonus
 type LootFunctionCopyComponents = CopyComponents
 type LootFunctionCopyCustomData = CopyNbt
 type LootFunctionCopyName = CopyName
-type LootFunctionCopyNbt = CopyNbt
 type LootFunctionCopyState = CopyState
 type LootFunctionDiscard = Conditions
 type LootFunctionEnchantRandomly = EnchantRandomly
@@ -1045,7 +1097,6 @@ type LootFunctionFillPlayerHead = FillPlayerHead
 type LootFunctionFiltered = Filtered
 type LootFunctionFurnaceSmelt = Conditions
 type LootFunctionLimitCount = LimitCount
-type LootFunctionLootingEnchant = LootingEnchant
 type LootFunctionModifyContents = ModifyContents
 type LootFunctionReference = Reference
 type LootFunctionSequence = Sequence
@@ -1066,7 +1117,6 @@ type LootFunctionSetItem = SetItem
 type LootFunctionSetLootTable = SetLootTable
 type LootFunctionSetLore = SetLore
 type LootFunctionSetName = SetName
-type LootFunctionSetNbt = SetNbt
 type LootFunctionSetOminousBottleAmplifier = SetOminousBottleAmplifier
 type LootFunctionSetPotion = SetPotion
 type LootFunctionSetRandomDyes = SetRandomDyes

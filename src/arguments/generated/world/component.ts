@@ -1,5 +1,6 @@
 import type {
   SymbolDataComponent,
+  SymbolDataComponentExistencePredicate,
   SymbolDataComponentPredicate,
   SymbolMcdocCustomData,
 } from 'sandstone/arguments/generated/dispatcher.ts'
@@ -16,7 +17,7 @@ export type CustomDataMap = ({
 })
 
 export type DataComponentExactPredicate = ({
-  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: (Key extends keyof SymbolDataComponent
+  [Key in Extract<PersistentDataComponent, string>]?: (Key extends keyof SymbolDataComponent
     ? SymbolDataComponent[Key]
     : RootNBT)
 })
@@ -28,3 +29,5 @@ export type DataComponentPatch = (({
 }))
 
 export type DataComponentPredicate = Record<string, never>
+
+export type PersistentDataComponent = Registry['minecraft:data_component_type']

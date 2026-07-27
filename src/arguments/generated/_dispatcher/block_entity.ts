@@ -20,6 +20,7 @@ import type { Jigsaw } from 'sandstone/arguments/generated/world/block/jigsaw.ts
 import type { Jukebox } from 'sandstone/arguments/generated/world/block/jukebox.ts'
 import type { Lectern } from 'sandstone/arguments/generated/world/block/lectern.ts'
 import type { MovingPiston } from 'sandstone/arguments/generated/world/block/moving_piston.ts'
+import type { PotentSulfur } from 'sandstone/arguments/generated/world/block/potent_sulfur.ts'
 import type { SculkCatalyst } from 'sandstone/arguments/generated/world/block/sculk_catalyst.ts'
 import type { SculkSensor } from 'sandstone/arguments/generated/world/block/sculk_sensor.ts'
 import type { SculkShrieker } from 'sandstone/arguments/generated/world/block/sculk_shrieker.ts'
@@ -89,6 +90,8 @@ type BlockEntityDispatcherMap = {
   'minecraft:mob_spawner': BlockEntityMobSpawner,
   'moving_piston': BlockEntityMovingPiston,
   'minecraft:moving_piston': BlockEntityMovingPiston,
+  'potent_sulfur': BlockEntityPotentSulfur,
+  'minecraft:potent_sulfur': BlockEntityPotentSulfur,
   'sculk_catalyst': BlockEntitySculkCatalyst,
   'minecraft:sculk_catalyst': BlockEntitySculkCatalyst,
   'sculk_sensor': BlockEntitySculkSensor,
@@ -149,6 +152,7 @@ type BlockEntityFallback = (
   | BlockEntityLectern
   | BlockEntityMobSpawner
   | BlockEntityMovingPiston
+  | BlockEntityPotentSulfur
   | BlockEntitySculkCatalyst
   | BlockEntitySculkSensor
   | BlockEntitySculkShrieker
@@ -192,6 +196,7 @@ type BlockEntityJukebox = Jukebox
 type BlockEntityLectern = Lectern
 type BlockEntityMobSpawner = Spawner
 type BlockEntityMovingPiston = MovingPiston
+type BlockEntityPotentSulfur = PotentSulfur
 type BlockEntitySculkCatalyst = SculkCatalyst
 type BlockEntitySculkSensor = SculkSensor
 type BlockEntitySculkShrieker = SculkShrieker

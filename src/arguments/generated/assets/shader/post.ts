@@ -65,7 +65,12 @@ export type Targets = ({
 })
 
 export type TextureInput = {
-  location: string,
+  /**
+   * Value:
+   *
+   * Value: A texture ID within a path root of `(namespace)/textures/effect/`
+   */
+  location: `${string}:${string}`,
   sampler_name: string,
   /**
    * Value:
@@ -89,7 +94,7 @@ export type UniformBlocks = ({
 })
 
 export type UniformValue = NonNullable<({
-  [S in Extract<UniformValueType, string>]?: ({
+  [S in Extract<Extract<UniformValueType, string>, string>]?: ({
     /**
      * Unused by the game, but good to set in practice.
      */
@@ -109,6 +114,6 @@ export type UniformValue = NonNullable<({
     type: S,
     value: (S extends keyof SymbolUniformValue ? SymbolUniformValue[S] : RootNBT),
   })
-}[UniformValueType])>
+}[Extract<UniformValueType, string>])>
 
 export type UniformValueType = ('int' | 'ivec3' | 'float' | 'vec2' | 'vec3' | 'vec4' | 'matrix4x4')

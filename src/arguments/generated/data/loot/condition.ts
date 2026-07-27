@@ -5,10 +5,13 @@ import type {
   LocationPredicate,
 } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
-import type { EntityTarget, LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
-import type { IntRange, NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { EntityTarget } from 'sandstone/arguments/generated/data/loot.ts'
+import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { PredicateListRef, PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
+import type { IntRange } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolEnvironmentAttribute, SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
   EnchantmentClass,
   NBTFloat,
@@ -23,7 +26,7 @@ export type AllOf = {
   /**
    * Passes when all of these conditions pass.
    */
-  terms: Array<LootCondition>,
+  terms: PredicateListRef,
 }
 
 export type Alternative = {
@@ -34,7 +37,7 @@ export type AnyOf = {
   /**
    * Passes when any of these conditions pass.
    */
-  terms: Array<LootCondition>,
+  terms: PredicateListRef,
 }
 
 export type BlockStateProperty = {
@@ -89,16 +92,16 @@ export type EntityScores = {
 }
 
 export type EnvironmentAttributeCheck = NonNullable<({
-  [S in Extract<Registry['minecraft:environment_attribute'], string>]?: {
+  [S in Extract<Extract<Registry['minecraft:environment_attribute'], string>, string>]?: {
     attribute: S,
     value: (S extends keyof SymbolEnvironmentAttribute
       ? SymbolEnvironmentAttribute[S]
       : SymbolEnvironmentAttribute<'%unknown'>),
   }
-}[Registry['minecraft:environment_attribute']])>
+}[Extract<Registry['minecraft:environment_attribute'], string>])>
 
 export type Inverted = {
-  term: LootCondition,
+  term: PredicateRef,
 }
 
 export type KilledByPlayer = {
@@ -112,6 +115,12 @@ export type LocationCheck = {
   predicate: LocationPredicate,
 }
 
+export type LootCondition = NonNullable<({
+  [S in Extract<Extract<Registry['minecraft:loot_condition_type'], string>, string>]?: ({
+    condition: S,
+  } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT))
+}[Extract<Registry['minecraft:loot_condition_type'], string>])>
+
 export type MatchTool = {
   predicate: ItemPredicate,
 }
@@ -120,7 +129,7 @@ export type RandomChance = {
   /**
    * Clamps to a float between `0` & `1` (inclusive).
    */
-  chance: NumberProvider,
+  chance: NumberProviderRef,
 }
 
 export type RandomChanceWithEnchantedBonus = {
@@ -195,7 +204,7 @@ export type ValueCheck = {
   /**
    * Clamps to an integer.
    */
-  value: NumberProvider,
+  value: NumberProviderRef,
   /**
    * Passes when `value` is within this range.
    */
@@ -209,8 +218,6 @@ export type WeatherCheck = {
 type LootConditionDispatcherMap = {
   'all_of': LootConditionAllOf,
   'minecraft:all_of': LootConditionAllOf,
-  'alternative': LootConditionAlternative,
-  'minecraft:alternative': LootConditionAlternative,
   'any_of': LootConditionAnyOf,
   'minecraft:any_of': LootConditionAnyOf,
   'block_state_property': LootConditionBlockStateProperty,
@@ -237,8 +244,6 @@ type LootConditionDispatcherMap = {
   'minecraft:random_chance': LootConditionRandomChance,
   'random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus,
   'minecraft:random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus,
-  'random_chance_with_looting': LootConditionRandomChanceWithLooting,
-  'minecraft:random_chance_with_looting': LootConditionRandomChanceWithLooting,
   'reference': LootConditionReference,
   'minecraft:reference': LootConditionReference,
   'table_bonus': LootConditionTableBonus,
@@ -253,7 +258,6 @@ type LootConditionDispatcherMap = {
 type LootConditionKeys = keyof LootConditionDispatcherMap
 type LootConditionFallback = (
   | LootConditionAllOf
-  | LootConditionAlternative
   | LootConditionAnyOf
   | LootConditionBlockStateProperty
   | LootConditionDamageSourceProperties
@@ -267,14 +271,12 @@ type LootConditionFallback = (
   | LootConditionMatchTool
   | LootConditionRandomChance
   | LootConditionRandomChanceWithEnchantedBonus
-  | LootConditionRandomChanceWithLooting
   | LootConditionReference
   | LootConditionTableBonus
   | LootConditionTimeCheck
   | LootConditionValueCheck
   | LootConditionWeatherCheck)
 type LootConditionAllOf = AllOf
-type LootConditionAlternative = Alternative
 type LootConditionAnyOf = AnyOf
 type LootConditionBlockStateProperty = BlockStateProperty
 type LootConditionDamageSourceProperties = DamageSourceProperties
@@ -288,7 +290,6 @@ type LootConditionLocationCheck = LocationCheck
 type LootConditionMatchTool = MatchTool
 type LootConditionRandomChance = RandomChance
 type LootConditionRandomChanceWithEnchantedBonus = RandomChanceWithEnchantedBonus
-type LootConditionRandomChanceWithLooting = RandomChanceWithLooting
 type LootConditionReference = Reference
 type LootConditionTableBonus = TableBonus
 type LootConditionTimeCheck = TimeCheck

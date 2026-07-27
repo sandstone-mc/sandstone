@@ -1,8 +1,22 @@
-import type { Rotation } from 'sandstone/arguments/generated/data/gametest.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { Rotation } from 'sandstone/arguments/generated/util.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { NBTIntArray, TestInstanceClass } from 'sandstone'
+
+export type ErrorMarker = {
+  /**
+   * Value:
+   * Array length range: 3
+   */
+  pos: NBTIntArray<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  text: Text,
+}
 
 export type TestInstanceBlock = (BlockEntity & {
   data?: {
@@ -51,5 +65,38 @@ export type TestInstanceBlock = (BlockEntity & {
     text: Text,
   }>,
 })
+
+export type TestInstanceBlockData = {
+  test?: (Registry['minecraft:test_instance'] | TestInstanceClass),
+  /**
+   * Value:
+   * Array length range: 3
+   */
+  size: NBTIntArray<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Value:
+   *
+   *  - None(`none`)
+   *  - Clockwise90(`clockwise_90`)
+   *  - Clockwise180(`180`)
+   *  - CounterClockwise90(`counterclockwise_90`)
+   */
+  rotation: Rotation,
+  ignore_entities: boolean,
+  /**
+   * Value:
+   *
+   *  - Cleared(`cleared`)
+   *  - Running(`running`)
+   *  - Finished(`finished`)
+   */
+  status: TestInstanceBlockStatus,
+  error_message?: Text,
+}
 
 export type TestInstanceBlockStatus = ('cleared' | 'running' | 'finished')

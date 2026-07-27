@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
+import type { ModelType, TextureType } from 'sandstone/arguments'
 import type { ModelClass, NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
 
 export type Axis = ('x' | 'y' | 'z')
@@ -27,12 +28,51 @@ export type ItemDisplayContext = (
   | 'fixed'
   | 'on_shelf')
 
+export type ItemTransform = {
+  /**
+   * Value:
+   * List length range: 3
+   */
+  rotation?: NBTList<NBTFloat, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Value:
+   * List length range: 3
+   */
+  translation?: NBTList<NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Value:
+   * List length range: 3
+   */
+  scale?: NBTList<NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+}
+
 export type Model = {
-  parent?: (Registry['minecraft:model'] | ModelClass),
+  parent?: (Registry['minecraft:model'] | ModelClass<ModelType>),
   ambientocclusion?: boolean,
   gui_light?: ('front' | 'side'),
   textures?: ({
-    [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass) | TextureMaterial)
+    [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
   }),
   elements?: Array<ModelElement>,
   display?: ({
@@ -76,6 +116,47 @@ export type Model = {
     }
   }),
 }
+
+export type ModelDisplay = ({
+  [Key in Extract<CustomizableItemDisplayContext, string>]?: {
+    /**
+     * Value:
+     * List length range: 3
+     */
+    rotation?: NBTList<NBTFloat, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 3,
+      max: 3,
+    }>,
+    /**
+     * Value:
+     * List length range: 3
+     */
+    translation?: NBTList<NBTFloat<{
+      leftExclusive: false,
+      rightExclusive: false,
+    }>, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 3,
+      max: 3,
+    }>,
+    /**
+     * Value:
+     * List length range: 3
+     */
+    scale?: NBTList<NBTFloat<{
+      leftExclusive: false,
+      rightExclusive: false,
+    }>, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 3,
+      max: 3,
+    }>,
+  }
+})
 
 export type ModelElement = {
   /**
@@ -171,6 +252,35 @@ export type ModelElementFace = {
   tintindex?: NBTInt,
 }
 
+export type ModelElementFaceMap = ({
+  [Key in Extract<Direction, string>]?: {
+    texture: `#${string}`,
+    /**
+     * Value:
+     * List length range: 4
+     */
+    uv?: NBTList<NBTFloat, {
+      leftExclusive: false,
+      rightExclusive: false,
+      min: 4,
+      max: 4,
+    }>,
+    /**
+     * Value:
+     *
+     *  - Down(`down`)
+     *  - Up(`up`)
+     *  - North(`north`)
+     *  - East(`east`)
+     *  - South(`south`)
+     *  - West(`west`)
+     */
+    cullface?: Direction,
+    rotation?: (0 | 90 | 180 | 270),
+    tintindex?: NBTInt,
+  }
+})
+
 export type ModelElementRotation = (ModelElementRotationBase & ({
   [Key in Extract<Axis, string>]?: NBTFloat
 }))
@@ -199,7 +309,19 @@ export type ModelOverride = {
   model: ModelRef,
 }
 
-export type ModelRef = (Registry['minecraft:model'] | ModelClass)
+export type ModelOverridePredicates = ({
+  [Key in Extract<Predicates, string>]?: NBTFloat
+})
+
+export type ModelRef = (Registry['minecraft:model'] | ModelClass<ModelType>)
+
+export type ModelTextures = ({
+  [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
+})
+
+export type MultipleAxesModelElementRotation = (ModelElementRotationBase & ({
+  [Key in Extract<Axis, string>]?: NBTFloat
+}))
 
 export type Predicates = (
   | 'angle'
@@ -222,8 +344,20 @@ export type Predicates = (
   | 'tooting'
   | 'trim_type')
 
+export type SingleAxisModelElementRotation = (ModelElementRotationBase & {
+  /**
+   * Value:
+   *
+   *  - X(`x`)
+   *  - Y(`y`)
+   *  - Z(`z`)
+   */
+  axis: Axis,
+  angle: NBTFloat,
+})
+
 export type TextureMaterial = {
-  sprite: (Registry['minecraft:texture'] | TextureClass),
+  sprite: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * Whether the texture should be forced into the translucent render pass. \
    * Textures without any translucent pixels are not assigned to the translucent pass by default. \

@@ -20,10 +20,10 @@ export type BlockEntity = {
 }
 
 export type BlockEntityData = NonNullable<({
-  [S in Extract<Registry['minecraft:block_entity_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:block_entity_type'], string>, string>]?: ({
     id: S,
   } & (S extends keyof SymbolBlockEntity ? SymbolBlockEntity[S] : RootNBT))
-}[Registry['minecraft:block_entity_type']])>
+}[Extract<Registry['minecraft:block_entity_type'], string>])>
 
 export type Lockable = {
   /**

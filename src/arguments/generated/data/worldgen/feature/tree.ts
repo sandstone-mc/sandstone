@@ -221,13 +221,13 @@ export type FallenTreeConfig = {
 }
 
 export type FeatureSize = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/feature_size_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/feature_size_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolFeatureSize ? SymbolFeatureSize[S] : RootNBT))
-}[Registry['minecraft:worldgen/feature_size_type']])>
+}[Extract<Registry['minecraft:worldgen/feature_size_type'], string>])>
 
 export type FoliagePlacer = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/foliage_placer_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/foliage_placer_type'], string>, string>]?: ({
     type: S,
     radius: IntProvider<NBTInt<{
       min: 0,
@@ -238,7 +238,7 @@ export type FoliagePlacer = NonNullable<({
       max: 16,
     }>>,
   } & (S extends keyof SymbolFoliagePlacer ? SymbolFoliagePlacer[S] : RootNBT))
-}[Registry['minecraft:worldgen/foliage_placer_type']])>
+}[Extract<Registry['minecraft:worldgen/foliage_placer_type'], string>])>
 
 export type HeightFoliagePlacer = {
   /**
@@ -385,6 +385,34 @@ export type PlaceOnGroundTreeDecorator = {
   block_state_provider: BlockStateProvider,
 }
 
+export type PoplarFoliagePlacer = {
+  height: IntProvider<NBTInt<{
+    min: 5,
+    max: 16,
+  }>>,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  side_hole_chance: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+}
+
+export type PoplarTrunkPlacer = {
+  trunk_height_above_branches: IntProvider<NBTInt<{
+    min: 0,
+    max: 8,
+  }>>,
+  branch_amount: IntProvider<NBTInt<{
+    min: 1,
+    max: 4,
+  }>>,
+}
+
 export type RandomSpreadFoliagePlacer = {
   foliage_height: IntProvider<NBTInt<{
     min: 1,
@@ -399,13 +427,26 @@ export type RandomSpreadFoliagePlacer = {
 }
 
 export type RootPlacer = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/root_placer_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/root_placer_type'], string>, string>]?: ({
     type: S,
     root_provider: BlockStateProvider,
     trunk_offset_y: IntProvider<NBTInt>,
     above_root_placement?: AboveRootPlacement,
   } & (S extends keyof SymbolRootPlacer ? SymbolRootPlacer[S] : RootNBT))
-}[Registry['minecraft:worldgen/root_placer_type']])>
+}[Extract<Registry['minecraft:worldgen/root_placer_type'], string>])>
+
+export type ShelfMushroomTreeDecorator = {
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  probability: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+}
 
 export type SprucePineFoliagePlacer = {
   trunk_height: IntProvider<NBTInt<{
@@ -466,26 +507,29 @@ export type ThreeLayersFeatureSize = {
   }>,
 }
 
-export type TreeConfig = {
+export type TreeConfig = ({
   ignore_vines?: boolean,
   minimum_size: FeatureSize,
-  below_trunk_provider?: BlockStateProvider,
+  force_dirt?: boolean,
+  dirt_provider: BlockStateProvider,
   trunk_provider: BlockStateProvider,
   foliage_provider: BlockStateProvider,
   root_placer?: RootPlacer,
   trunk_placer: TrunkPlacer,
   foliage_placer: FoliagePlacer,
   decorators: Array<TreeDecorator>,
-}
+} & {
+  below_trunk_provider?: BlockStateProvider,
+})
 
 export type TreeDecorator = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolTreeDecorator ? SymbolTreeDecorator[S] : RootNBT))
-}[Registry['minecraft:worldgen/tree_decorator_type']])>
+}[Extract<Registry['minecraft:worldgen/tree_decorator_type'], string>])>
 
 export type TrunkPlacer = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/trunk_placer_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/trunk_placer_type'], string>, string>]?: ({
     type: S,
     /**
      * Value:
@@ -512,7 +556,7 @@ export type TrunkPlacer = NonNullable<({
       max: 24,
     }>,
   } & (S extends keyof SymbolTrunkPlacer ? SymbolTrunkPlacer[S] : RootNBT))
-}[Registry['minecraft:worldgen/trunk_placer_type']])>
+}[Extract<Registry['minecraft:worldgen/trunk_placer_type'], string>])>
 
 export type TwoLayersFeatureSize = {
   /**

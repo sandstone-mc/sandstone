@@ -1,9 +1,22 @@
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
-import type { ItemStack, ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
-import type { PatternKeys, StringSmallerThan4 } from 'sandstone/arguments'
-import type { NBTFloat, NBTInt, NBTList, TagClass, TrimPatternClass } from 'sandstone'
+import type { PotionsPredicate } from 'sandstone/arguments/generated/world/component/predicate.ts'
+import type { ItemStack, ItemStackTemplate, SingleItem } from 'sandstone/arguments/generated/world/item.ts'
+import type { CRAFTING_INGREDIENT, PatternKeys, StringSmallerThan4 } from 'sandstone/arguments'
+import type { NBTFloat, NBTInt, NBTList, RecipeClass, TagClass, TrimPatternClass } from 'sandstone'
+
+export type Brewing = {
+  /**
+   * The original potion.
+   */
+  input: PotionIngredient,
+  /**
+   * The ingredient.
+   */
+  reagent: PotionIngredient,
+  output: ItemStackTemplate,
+}
 
 export type CookingBookCategory = ('food' | 'blocks' | 'misc')
 
@@ -83,6 +96,10 @@ export type CraftingImbue = (NotificationInfo & CraftingBookInfo & {
    */
   material: Ingredient,
   result: ItemStackTemplate,
+})
+
+export type CraftingIngredients = ({
+  [Key in Extract<CRAFTING_INGREDIENT, string>]?: Ingredient
 })
 
 export type CraftingShaped<P1 extends string = string, P2 extends string = string, P3 extends string = string> = (NotificationInfo & CraftingBookInfo & {
@@ -286,7 +303,11 @@ export type CraftingTransmute = (NotificationInfo & CraftingBookInfo & {
   /**
    * The result item that will be merged with the input ingredient.
    */
-  result: (ItemStack | Registry['minecraft:item']),
+  result: (Registry['minecraft:item'] | ItemStack | Registry['minecraft:item']),
+})
+
+export type FireworkShapeIngredients = ({
+  [Key in Extract<FireworkShape, string>]?: Ingredient
 })
 
 /**
@@ -302,6 +323,14 @@ export type Ingredient = (NBTList<Registry['minecraft:item'], {
   leftExclusive: false,
   min: 1,
 }> | (Registry['minecraft:item'] | `#${Registry['minecraft:tag/item']}` | TagClass<'item'>))
+
+export type IngredientItem = {
+  item: Registry['minecraft:item'],
+}
+
+export type IngredientTag = {
+  tag: (Registry['minecraft:tag/item']),
+}
 
 export type IngredientValue = ({
   item: Registry['minecraft:item'],
@@ -322,15 +351,54 @@ export type NotificationInfo = {
   show_notification?: boolean,
 }
 
+export type OptionalSmithingIngredients = {
+  /**
+   * Ingredient specifying an item to be trimmed. (eg. `"#minecraft:trimmable_armor"`)
+   */
+  base?: Ingredient,
+  /**
+   * Material that will be used. (eg. `"#minecraft:trim_materials"`)
+   */
+  addition?: Ingredient,
+  /**
+   * Template item that will be used for the pattern.
+   */
+  template?: Ingredient,
+}
+
+export type PotionIngredient = {
+  item: Ingredient,
+  potion_contents?: PotionsPredicate,
+}
+
 export type Recipe = NonNullable<({
-  [S in Extract<Registry['minecraft:recipe_serializer'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:recipe_serializer'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolRecipeSerializer ? SymbolRecipeSerializer[S] : SymbolRecipeSerializer<'%unknown'>))
-}[Registry['minecraft:recipe_serializer']])>
+}[Extract<Registry['minecraft:recipe_serializer'], string>])>
+
+export type RecipeListRef = ((
+  | Registry['minecraft:recipe'] | `#${string}:${string}` | TagClass<'recipe'> | RecipeClass)
+  | Array<(Registry['minecraft:recipe'] | RecipeClass)>)
+
+export type RequiredSmithingIngredients = {
+  /**
+   * Ingredient specifying an item to be trimmed. (eg. `{ "tag": "minecraft:trimmable_armor" }`)
+   */
+  base: Ingredient,
+  /**
+   * Material that will be used. (eg. `{ "tag": "minecraft:trim_materials" }`)
+   */
+  addition: Ingredient,
+  /**
+   * Template item that will be used for the pattern.
+   */
+  template: Ingredient,
+}
 
 export type Smelting = (NotificationInfo & CookingBookInfo & {
   ingredient: Ingredient,
-  result: ItemStackTemplate,
+  result: (SingleItem | ItemStackTemplate),
   experience?: NBTFloat,
   cookingtime?: NBTInt,
 })
@@ -339,6 +407,21 @@ export type Smithing = {
   base: IngredientValue,
   addition: IngredientValue,
   result: ItemResult,
+}
+
+export type SmithingIngredients = {
+  /**
+   * Ingredient specifying an item to be trimmed. (eg. `"#minecraft:trimmable_armor"`)
+   */
+  base?: Ingredient,
+  /**
+   * Material that will be used. (eg. `"#minecraft:trim_materials"`)
+   */
+  addition?: Ingredient,
+  /**
+   * Template item that will be used for the pattern.
+   */
+  template?: Ingredient,
 }
 
 export type SmithingTransform = (NotificationInfo & {
@@ -360,6 +443,10 @@ export type SmithingTransform = (NotificationInfo & {
    */
   template?: Ingredient,
 })
+
+export type SmithingTransformResult = {
+  item: Registry['minecraft:item'],
+}
 
 export type SmithingTrim = (NotificationInfo & {
   /**
@@ -417,8 +504,6 @@ type RecipeSerializerDispatcherMap = {
   'minecraft:crafting_transmute': RecipeSerializerCraftingTransmute,
   'smelting': RecipeSerializerSmelting,
   'minecraft:smelting': RecipeSerializerSmelting,
-  'smithing': RecipeSerializerSmithing,
-  'minecraft:smithing': RecipeSerializerSmithing,
   'smithing_transform': RecipeSerializerSmithingTransform,
   'minecraft:smithing_transform': RecipeSerializerSmithingTransform,
   'smithing_trim': RecipeSerializerSmithingTrim,
@@ -446,7 +531,6 @@ type RecipeSerializerFallback = (
   | RecipeSerializerCraftingSpecialShielddecoration
   | RecipeSerializerCraftingTransmute
   | RecipeSerializerSmelting
-  | RecipeSerializerSmithing
   | RecipeSerializerSmithingTransform
   | RecipeSerializerSmithingTrim
   | RecipeSerializerSmoking
@@ -455,21 +539,20 @@ type RecipeSerializerFallback = (
 export type RecipeSerializerFallbackType = Record<string, never>
 type RecipeSerializerBlasting = Smelting
 type RecipeSerializerCampfireCooking = Smelting
-type RecipeSerializerCraftingDecoratedPot = CraftingDecoratedPot
+type RecipeSerializerCraftingDecoratedPot = (Record<string, never> | CraftingDecoratedPot)
 type RecipeSerializerCraftingDye = CraftingDye
 type RecipeSerializerCraftingImbue = CraftingImbue
 type RecipeSerializerCraftingShaped = CraftingShaped
 type RecipeSerializerCraftingShapeless = CraftingShapeless
-type RecipeSerializerCraftingSpecialBannerduplicate = CraftingSpecialBannerDuplicate
-type RecipeSerializerCraftingSpecialBookcloning = CraftingSpecialBookCloning
-type RecipeSerializerCraftingSpecialFireworkRocket = CraftingSpecialFireworkRocket
-type RecipeSerializerCraftingSpecialFireworkStar = CraftingSpecialFireworkStar
-type RecipeSerializerCraftingSpecialFireworkStarFade = CraftingSpecialFireworkStarFade
-type RecipeSerializerCraftingSpecialMapextending = CraftingSpecialMapExtending
-type RecipeSerializerCraftingSpecialShielddecoration = CraftingSpecialShieldDecoration
+type RecipeSerializerCraftingSpecialBannerduplicate = (Record<string, never> | CraftingSpecialBannerDuplicate)
+type RecipeSerializerCraftingSpecialBookcloning = (Record<string, never> | CraftingSpecialBookCloning)
+type RecipeSerializerCraftingSpecialFireworkRocket = (Record<string, never> | CraftingSpecialFireworkRocket)
+type RecipeSerializerCraftingSpecialFireworkStar = (Record<string, never> | CraftingSpecialFireworkStar)
+type RecipeSerializerCraftingSpecialFireworkStarFade = (Record<string, never> | CraftingSpecialFireworkStarFade)
+type RecipeSerializerCraftingSpecialMapextending = (Record<string, never> | CraftingSpecialMapExtending)
+type RecipeSerializerCraftingSpecialShielddecoration = (Record<string, never> | CraftingSpecialShieldDecoration)
 type RecipeSerializerCraftingTransmute = CraftingTransmute
 type RecipeSerializerSmelting = Smelting
-type RecipeSerializerSmithing = Smithing
 type RecipeSerializerSmithingTransform = SmithingTransform
 type RecipeSerializerSmithingTrim = SmithingTrim
 type RecipeSerializerSmoking = Smelting

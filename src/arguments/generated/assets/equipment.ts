@@ -3,9 +3,8 @@ import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
 export type Dyeable = {
   /**
-   * If specified, this layer will be tinted by the color contained in the `dyed_color` component.
-   * If the item is not dyeable or not dyed, it will be tinted by this color.
-   * If not specified and the item is not dyed, the layer will be hidden.
+   * If the item is not dyed, this color is used instead. \
+   * If not specified and the item is not dyed, this layer will be hidden.
    */
   color_when_undyed?: RGB,
 }
@@ -24,7 +23,7 @@ export type Layer<T extends NBTObject> = ({
   texture: T,
 } & {
   /**
-   * Configures how this layer behaves when dyed (has the `dyed_color` component).
+   * If specified, this layer will be tinted by the color contained in the `dyed_color` component.
    */
   dyeable?: Dyeable,
 })
@@ -53,7 +52,7 @@ export type Layers = {
 
 export type WingsLayer<T extends NBTObject> = (Layer<T> & {
   /**
-   * Whether this layer texture should be overridden by the player's custom elytra texture.
+   * Whether this layer texture should be overridden by the player's custom elytra texture. \
    * Defaults to `false`.
    */
   use_player_texture?: boolean,

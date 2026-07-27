@@ -2,7 +2,7 @@ import type { DiscreteAttribute } from 'sandstone/arguments/generated/data/world
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color.ts'
-import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStackTemplate, SingleItem } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
 
@@ -64,8 +64,36 @@ export type FlashParticle = {
   color: TranslucentParticle,
 }
 
+export type GeyserBaseParticle = {
+  /**
+   * Scales the particle size and its burst impulse.
+   *
+   * Value:
+   * Range: 1..
+   */
+  water_blocks: NBTInt<{
+    min: 1,
+  }>,
+  /**
+   * Scales the initial burst impulse
+   */
+  burst_impulse_base: NBTFloat,
+}
+
+export type GeyserParticle = {
+  /**
+   * Scales the particle size and its burst impulse.
+   *
+   * Value:
+   * Range: 1..
+   */
+  water_blocks: NBTInt<{
+    min: 1,
+  }>,
+}
+
 export type ItemParticle = {
-  item: ItemStackTemplate,
+  item: (Registry['minecraft:item'] | SingleItem | ItemStackTemplate),
 }
 
 /**
@@ -88,13 +116,49 @@ export type LegacyTranslucentParticle = NBTList<NBTFloat, {
   max: 4,
 }>
 
+export type OldDustParticle = {
+  r: NBTFloat,
+  g: NBTFloat,
+  b: NBTFloat,
+  /**
+   * Value:
+   * Range: 0.01..4
+   */
+  scale: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
+}
+
+export type OldDustTransition = {
+  fromColor: DustColor,
+  toColor: DustColor,
+  /**
+   * Value:
+   * Range: 0.01..4
+   */
+  scale: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
+}
+
+export type OldEntityEffect = {
+  r: NBTFloat,
+  g: NBTFloat,
+  b: NBTFloat,
+  a: NBTFloat,
+}
+
 export type Particle = NonNullable<({
-  [S in Extract<Registry['minecraft:particle_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:particle_type'], string>, string>]?: ({
     type: S,
   } & (S extends undefined
     ? SymbolParticle<'%none'> :
     (S extends keyof SymbolParticle ? SymbolParticle[S] : SymbolParticle<'%unknown'>)))
-}[Registry['minecraft:particle_type']])>
+}[Extract<Registry['minecraft:particle_type'], string>])>
 
 export type SafePositionSource = {
   type: 'block',

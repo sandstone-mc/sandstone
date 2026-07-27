@@ -5,7 +5,7 @@ import type { SymbolMcdocDialogAfterAction } from 'sandstone/arguments/generated
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DialogClass, NamespacedLiteralUnion, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { DialogClass, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type AfterAction = ('close' | 'none' | 'wait_for_response')
 
@@ -50,13 +50,13 @@ export type ConfirmationDialog = (DialogBase & {
 })
 
 export type Dialog = NonNullable<({
-  [S in NamespacedLiteralUnion<keyof SymbolDialog>]?: ({
+  [S in Extract<Extract<Registry['minecraft:dialog_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolDialog ? SymbolDialog[S] : RootNBT))
-}[NamespacedLiteralUnion<keyof SymbolDialog>])>
+}[Extract<Registry['minecraft:dialog_type'], string>])>
 
 export type DialogBase = NonNullable<({
-  [S in NamespacedLiteralUnion<keyof SymbolMcdocDialogAfterAction>]?: ({
+  [S in Extract<Extract<AfterAction, string>, string>]?: ({
     title: Text,
     /**
      * Name to be used for a button leading to this dialog.
@@ -91,7 +91,13 @@ export type DialogBase = NonNullable<({
   } & (S extends undefined
     ? SymbolMcdocDialogAfterAction<'%none'> :
     (S extends keyof SymbolMcdocDialogAfterAction ? SymbolMcdocDialogAfterAction[S] : RootNBT)))
-}[NamespacedLiteralUnion<keyof SymbolMcdocDialogAfterAction>])>
+}[Extract<AfterAction, string>])>
+
+export type DialogListRef = (
+  | Dialog
+  | Array<Dialog> | (
+  Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'> | DialogClass)
+  | Array<(Registry['minecraft:dialog'] | DialogClass)>)
 
 export type ListDialogBase = (DialogBase & {
   /**
@@ -131,10 +137,7 @@ export type NoticeDialog = (DialogBase & {
 })
 
 export type RedirectDialog = (ButtonListDialogBase & {
-  dialogs: (
-      | Array<((Registry['minecraft:dialog'] | DialogClass) | Dialog)> | (
-      Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'> | DialogClass)
-      | Dialog),
+  dialogs: DialogListRef,
 })
 
 export type ServerLinksDialog = ButtonListDialogBase

@@ -30,19 +30,23 @@ export type Furnace = (BlockEntity & Nameable & Lockable & {
   }),
 } & {
   /**
-   * Total ticks the item will take to be smelted.
+   * The total amount of time the current cooking process will take. Defaults to `0`.
    */
   cooking_total_time?: NBTShort,
   /**
-   * Ticks the item has been smelting for.
+   * The amount of time that the current cooking process has taken so far. Defaults to `0`.
    */
   cooking_time_spent?: NBTShort,
   /**
-   * Ticks until the current fuel runs out.
+   * The amount of burn time remaining. Defaults to `0`.
    */
   lit_time_remaining?: NBTShort,
   /**
-   * Total ticks the current fuel will burn.
+   * The total amount of burn time that was added in the last refuel. Defaults to `0`.
    */
   lit_total_time?: NBTShort,
+})
+
+export type RecipesUsed = ({
+  [Key in Extract<Registry['minecraft:recipe'], string>]?: NBTInt
 })

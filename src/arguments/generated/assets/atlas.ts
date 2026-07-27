@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { TextureType } from 'sandstone/arguments'
 import type { NBTDouble, TextureClass } from 'sandstone'
 
 export type Atlas = {
@@ -33,10 +34,10 @@ export type FilterPattern = {
 }
 
 export type PalettedPermutations = {
-  textures: Array<(Registry['minecraft:texture'] | TextureClass)>,
-  palette_key: (Registry['minecraft:texture'] | TextureClass),
+  textures: Array<(Registry['minecraft:texture'] | TextureClass<TextureType>)>,
+  palette_key: PaletteTexture,
   permutations: ({
-    [Key in `${any}${string}`]?: (Registry['minecraft:texture'] | TextureClass)
+    [Key in `${any}${string}`]?: PaletteTexture
   }),
   /**
    * Value to use when joining the texture and permutation names to produce the sprite name.
@@ -45,11 +46,23 @@ export type PalettedPermutations = {
   separator?: string,
 }
 
+/**
+ *
+ * Value: A texture ID within a path root of `(namespace)/textures/palettes/`
+ */
+export type PaletteRef = `${string}:${string}`
+
+export type PaletteTexture = (Registry['minecraft:texture'] | TextureClass<TextureType>)
+
+export type PermutationsMap = ({
+  [Key in `${any}${string}`]?: PaletteTexture
+})
+
 export type Single = {
   /**
    * A single texture location of the source.
    */
-  resource: (Registry['minecraft:texture'] | TextureClass),
+  resource: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * The identifier of the sprite that can referenced.
    * If not specified, matches `resource`.
@@ -62,7 +75,7 @@ export type Single = {
 }
 
 export type SpriteSource = NonNullable<({
-  [S in Extract<SpriteSourceType, string>]?: ({
+  [S in Extract<Extract<SpriteSourceType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -74,12 +87,12 @@ export type SpriteSource = NonNullable<({
      */
     type: S,
   } & (S extends keyof SymbolSpriteSource ? SymbolSpriteSource[S] : RootNBT))
-}[SpriteSourceType])>
+}[Extract<SpriteSourceType, string>])>
 
 export type SpriteSourceType = ('single' | 'directory' | 'filter' | 'unstitch' | 'paletted_permutations')
 
 export type Unstitch = {
-  resource: (Registry['minecraft:texture'] | TextureClass),
+  resource: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * If set to the resource width, regions will use pixel coordinates.
    */

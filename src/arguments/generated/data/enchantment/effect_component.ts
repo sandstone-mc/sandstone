@@ -4,16 +4,14 @@ import type {
   LocationBasedEffect,
   ValueEffect,
 } from 'sandstone/arguments/generated/data/enchantment/effect.ts'
-import type { LootCondition } from 'sandstone/arguments/generated/data/loot.ts'
+import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
-import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 
 export type AmmoUseEnchantmentEffect = {
   /**
    * Predicate context: Item Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of ammunition being used up. \
    * `0` has a side effect of applying `intangible_projectile` component to the projectile item.
@@ -25,7 +23,7 @@ export type ArmorEffectivenessEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Determines armor effectiveness; `0.0` for no effect, `1.0` for full effect.
    */
@@ -38,7 +36,7 @@ export type BlockExperienceEnchantmentEffect = {
   /**
    * Predicate context: Item Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of experience awarded.
    */
@@ -64,7 +62,7 @@ export type DamageEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Damage dealt by the weapon.
    */
@@ -75,7 +73,7 @@ export type DamageImmunityEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Dummy value; this is a boolean effect.
    */
@@ -86,7 +84,7 @@ export type DamageProtectionEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Damage reduction factor. \
    * Provides `factor * 4%` of damage reduction, capped at 80%.
@@ -95,16 +93,14 @@ export type DamageProtectionEnchantmentEffect = {
 }
 
 export type EnchantmentEffectComponentMap = ({
-  [Key in Extract<Registry['minecraft:enchantment_effect_component_type'], string>]?: (Key extends keyof SymbolEffectComponent
-    ? SymbolEffectComponent[Key]
-    : RootNBT)
+  [Key in Extract<keyof SymbolEffectComponent, string>]?: SymbolEffectComponent[Key]
 })
 
 export type EquipmentDropsEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Chance between `0.0` and `1.0` of an equipped piece dropping. \
    * If the drop chance on mob is 0, the chance will not be affected by this effect.
@@ -122,7 +118,7 @@ export type FishingLuckBonusEnchantmentEffect = {
    *
    * `this` is the player fishing.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of luck being added.
    */
@@ -135,7 +131,7 @@ export type FishingTimeReductionEnchantmentEffect = {
    *
    * `this` is the player fishing.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Time reduction in seconds (higher values mean less time until a fish bites).
    */
@@ -148,7 +144,7 @@ export type HitBlockEnchantmentEffect = {
    *
    * `this` is the entity hitting the Block, unless during a projectile attack, then, `this` is the projectile.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * On the entity hitting the Block
    */
@@ -159,7 +155,7 @@ export type ItemDamageEnchantmentEffect = {
   /**
    * Predicate context: Item Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of damage being dealt to the item.
    */
@@ -170,7 +166,7 @@ export type KnockbackEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of knockback being applied.
    */
@@ -181,7 +177,7 @@ export type LocationChangedEnchantmentEffect = {
   /**
    * Predicate context: Location Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * On the entity changing location.
    */
@@ -194,7 +190,7 @@ export type MobExperienceEnchantmentEffect = {
    *
    * `this` is the killed mob.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of experience awarded.
    */
@@ -205,7 +201,7 @@ export type PostAttackEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Examples:
    * - A Fire Aspect Enchant would specify that when the attacker is enchanted, the `ignite` effect is applied, and the affected party is the victim.
@@ -236,7 +232,7 @@ export type PostPiercingAttackEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * The effect to apply on attacker.
    */
@@ -249,7 +245,7 @@ export type ProjectileCountEnchantmentEffect = {
    *
    * `this` is the entity drawing the weapon.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of projectiles being loaded/drawn. \
    * All projectile items except the first one will have `intangible_projectile` component applied.
@@ -263,7 +259,7 @@ export type ProjectilePiercingEnchantmentEffect = {
    *
    * Tool is the ammunition item.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of entities the projectile will pierce through before despawning.
    */
@@ -276,7 +272,7 @@ export type ProjectileSpawnedEnchantmentEffect = {
    *
    * `this` is the newly spawned projectile.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * On the newly spawned projectile.
    */
@@ -289,7 +285,7 @@ export type ProjectileSpreadEnchantmentEffect = {
    *
    * `this` is the entity shooting the projectile.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Maximum spread of projectiles measured in degrees from the aim line.
    */
@@ -300,7 +296,7 @@ export type RepairWithXpEnchantmentEffect = {
   /**
    * Predicate context: Item Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of durability increase per experience point, `mending` uses 2x.
    */
@@ -311,7 +307,7 @@ export type SmashDamagePerBlockFallenEnchantmentEffect = {
   /**
    * Predicate context: Damage Parameters.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of damage dealt per block fallen.
    */
@@ -324,7 +320,7 @@ export type TickEnchantmentEffect = {
    *
    * `this` is the entity with the Enchanted Item.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * On every tick. Performance recommendation: don't use with `run_function` unless necessary.
    */
@@ -337,7 +333,7 @@ export type TridentReturnAccelerationEnchantmentEffect = {
    *
    * `this` is the trident entity.
    */
-  requirements?: (LootCondition | Array<LootCondition>),
+  requirements?: Predicate,
   /**
    * Amount of acceleration applied to the returning trident.
    */

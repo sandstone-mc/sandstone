@@ -6,10 +6,10 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt, StructureClass } from 'sandstone'
 
 export type Element = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/structure_pool_element'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/structure_pool_element'], string>, string>]?: ({
     element_type: S,
   } & (S extends keyof SymbolTemplatePoolElement ? SymbolTemplatePoolElement[S] : RootNBT))
-}[Registry['minecraft:worldgen/structure_pool_element']])>
+}[Extract<Registry['minecraft:worldgen/structure_pool_element'], string>])>
 
 export type ElementBase = {
   /**

@@ -259,10 +259,10 @@ export type IgniteEntityEffect = {
 }
 
 export type LocationBasedEffect = NonNullable<({
-  [S in Extract<Registry['minecraft:enchantment_location_based_effect_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:enchantment_location_based_effect_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolLocationBasedEffect ? SymbolLocationBasedEffect[S] : RootNBT))
-}[Registry['minecraft:enchantment_location_based_effect_type']])>
+}[Extract<Registry['minecraft:enchantment_location_based_effect_type'], string>])>
 
 export type MultiplyEffectValue = {
   /**
@@ -422,10 +422,10 @@ export type SummonEntityEffect = {
 }
 
 export type ValueEffect = NonNullable<({
-  [S in Extract<Registry['minecraft:enchantment_value_effect_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:enchantment_value_effect_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolValueEffect ? SymbolValueEffect[S] : RootNBT))
-}[Registry['minecraft:enchantment_value_effect_type']])>
+}[Extract<Registry['minecraft:enchantment_value_effect_type'], string>])>
 type EntityEffectDispatcherMap = {
   'all_of': EntityEffectAllOf,
   'minecraft:all_of': EntityEffectAllOf,
@@ -439,8 +439,6 @@ type EntityEffectDispatcherMap = {
   'minecraft:change_item_damage': EntityEffectChangeItemDamage,
   'damage_entity': EntityEffectDamageEntity,
   'minecraft:damage_entity': EntityEffectDamageEntity,
-  'damage_item': EntityEffectDamageItem,
-  'minecraft:damage_item': EntityEffectDamageItem,
   'explode': EntityEffectExplode,
   'minecraft:explode': EntityEffectExplode,
   'ignite': EntityEffectIgnite,
@@ -468,7 +466,6 @@ type EntityEffectFallback = (
   | EntityEffectApplyMobEffect
   | EntityEffectChangeItemDamage
   | EntityEffectDamageEntity
-  | EntityEffectDamageItem
   | EntityEffectExplode
   | EntityEffectIgnite
   | EntityEffectPlaySound
@@ -484,7 +481,6 @@ type EntityEffectApplyImpulse = ApplyImpulseEntityEffect
 type EntityEffectApplyMobEffect = ApplyMobEffectEntityEffect
 type EntityEffectChangeItemDamage = ChangeItemDamageEffect
 type EntityEffectDamageEntity = DamageEntityEffect
-type EntityEffectDamageItem = DamageItemEffect
 type EntityEffectExplode = ExplodeEntityEffect
 type EntityEffectIgnite = IgniteEntityEffect
 type EntityEffectPlaySound = PlaySoundEntityEffect
@@ -517,8 +513,6 @@ type LocationBasedEffectDispatcherMap = {
   'minecraft:change_item_damage': LocationBasedEffectChangeItemDamage,
   'damage_entity': LocationBasedEffectDamageEntity,
   'minecraft:damage_entity': LocationBasedEffectDamageEntity,
-  'damage_item': LocationBasedEffectDamageItem,
-  'minecraft:damage_item': LocationBasedEffectDamageItem,
   'explode': LocationBasedEffectExplode,
   'minecraft:explode': LocationBasedEffectExplode,
   'ignite': LocationBasedEffectIgnite,
@@ -547,7 +541,6 @@ type LocationBasedEffectFallback = (
   | LocationBasedEffectAttribute
   | LocationBasedEffectChangeItemDamage
   | LocationBasedEffectDamageEntity
-  | LocationBasedEffectDamageItem
   | LocationBasedEffectExplode
   | LocationBasedEffectIgnite
   | LocationBasedEffectPlaySound
@@ -564,7 +557,6 @@ type LocationBasedEffectApplyMobEffect = ApplyMobEffectEntityEffect
 type LocationBasedEffectAttribute = AttributeEffect
 type LocationBasedEffectChangeItemDamage = ChangeItemDamageEffect
 type LocationBasedEffectDamageEntity = DamageEntityEffect
-type LocationBasedEffectDamageItem = DamageItemEffect
 type LocationBasedEffectExplode = ExplodeEntityEffect
 type LocationBasedEffectIgnite = IgniteEntityEffect
 type LocationBasedEffectPlaySound = PlaySoundEntityEffect

@@ -21,10 +21,10 @@ export type FractionLevelValue = {
 export type LevelBasedValue = (NBTFloat | LevelBasedValueMap)
 
 export type LevelBasedValueMap = NonNullable<({
-  [S in Extract<Registry['minecraft:enchantment_level_based_value_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:enchantment_level_based_value_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolLevelBasedValue ? SymbolLevelBasedValue[S] : RootNBT))
-}[Registry['minecraft:enchantment_level_based_value_type']])>
+}[Extract<Registry['minecraft:enchantment_level_based_value_type'], string>])>
 
 export type LinearLevelValue = {
   /**

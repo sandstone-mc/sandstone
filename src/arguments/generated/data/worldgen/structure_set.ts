@@ -1,5 +1,4 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type ConcentricRingsPlacement = {
@@ -76,7 +75,7 @@ export type RandomSpreadPlacement = {
 export type SpreadType = ('linear' | 'triangular')
 
 export type StructurePlacement = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/structure_placement'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/structure_placement'], string>, string>]?: ({
     type: S,
     /**
      * Value:
@@ -118,8 +117,10 @@ export type StructurePlacement = NonNullable<({
       min: 3,
       max: 3,
     }>,
-  } & (S extends keyof SymbolStructurePlacement ? SymbolStructurePlacement[S] : RootNBT))
-}[Registry['minecraft:worldgen/structure_placement']])>
+  } & (S extends keyof SymbolStructurePlacement
+    ? SymbolStructurePlacement[S]
+    : SymbolStructurePlacement<'%unknown'>))
+}[Extract<Registry['minecraft:worldgen/structure_placement'], string>])>
 
 export type StructureSet = {
   structures: Array<StructureSetElement>,
@@ -145,7 +146,11 @@ type StructurePlacementDispatcherMap = {
   'minecraft:random_spread': StructurePlacementRandomSpread,
 }
 type StructurePlacementKeys = keyof StructurePlacementDispatcherMap
-type StructurePlacementFallback = (StructurePlacementConcentricRings | StructurePlacementRandomSpread)
+type StructurePlacementFallback = (
+  | StructurePlacementConcentricRings
+  | StructurePlacementRandomSpread
+  | StructurePlacementFallbackType)
+export type StructurePlacementFallbackType = Record<string, never>
 type StructurePlacementConcentricRings = ConcentricRingsPlacement
 type StructurePlacementRandomSpread = RandomSpreadPlacement
 export type SymbolStructurePlacement<CASE extends
@@ -155,4 +160,8 @@ export type SymbolStructurePlacement<CASE extends
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
   ? StructurePlacementDispatcherMap
-  : CASE extends 'keys' ? StructurePlacementKeys : CASE extends '%fallback' ? StructurePlacementFallback : never
+  : CASE extends 'keys'
+    ? StructurePlacementKeys
+    : CASE extends '%fallback'
+      ? StructurePlacementFallback
+      : CASE extends '%unknown' ? StructurePlacementFallbackType : never

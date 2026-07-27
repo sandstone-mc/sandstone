@@ -10,6 +10,18 @@ export type Filterable<T extends NBTObject> = ({
   filtered?: T,
 } | T)
 
+export type FlatWeightedEntry<T extends NBTObject> = ({
+  /**
+   * Value:
+   * Range: 0..
+   */
+  weight: NBTInt<{
+    min: 0,
+  }>,
+} & T)
+
+export type FlatWeightedList<T extends NBTObject> = Array<FlatWeightedEntry<T>>
+
 export type GlobalPos = {
   /**
    * Coordinates of the location in [x, y, z]
@@ -39,10 +51,17 @@ export type InclusiveRange<T extends NBTObject> = (T | NBTList<T, {
   max_inclusive: T,
 })
 
+export type NonEmptyFlatWeightedList<T extends NBTObject> = NBTList<FlatWeightedEntry<T>, {
+  leftExclusive: false,
+  min: 1,
+}>
+
 export type NonEmptyWeightedList<T extends NBTObject> = NBTList<WeightedEntry<T>, {
   leftExclusive: false,
   min: 1,
 }>
+
+export type Rotation = ('none' | 'clockwise_90' | '180' | 'counterclockwise_90')
 
 export type WeightedEntry<T extends NBTObject> = {
   /**

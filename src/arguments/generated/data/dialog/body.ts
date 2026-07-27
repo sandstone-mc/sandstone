@@ -5,10 +5,10 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt } from 'sandstone'
 
 export type DialogBody = NonNullable<({
-  [S in Extract<Registry['minecraft:dialog_body_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:dialog_body_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolDialogBody ? SymbolDialogBody[S] : RootNBT))
-}[Registry['minecraft:dialog_body_type']])>
+}[Extract<Registry['minecraft:dialog_body_type'], string>])>
 
 export type ItemBody = {
   item: ItemStackTemplate,

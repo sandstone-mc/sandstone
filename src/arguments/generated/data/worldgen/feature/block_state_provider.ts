@@ -5,7 +5,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type BaseNoiseProvider = {
   seed: NBTInt,
@@ -21,10 +21,14 @@ export type BaseNoiseProvider = {
 }
 
 export type BlockStateProvider = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT))
-}[Registry['minecraft:worldgen/block_state_provider_type']])>
+}[Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>])>
+
+export type CopyPropertiesProvider = {
+  source: BlockStateProvider,
+}
 
 export type DualNoiseProvider = (BaseNoiseProvider & {
   variety: InclusiveRange<NBTInt<{
@@ -71,10 +75,20 @@ export type NoiseThresholdProvider = (BaseNoiseProvider & {
   high_states: Array<BlockState>,
 })
 
+export type RandomBlockStateProvider = {
+  blocks: ((
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Array<Registry['minecraft:block']>),
+}
+
 export type RandomizedIntStateProvider = {
   property: string,
   values: IntProvider<NBTInt>,
   source: BlockStateProvider,
+}
+
+export type RotatedStateProvider = {
+  state: BlockState,
 }
 
 export type SimpleStateProvider = {
@@ -116,7 +130,7 @@ type BlockStateProviderDualNoiseProvider = DualNoiseProvider
 type BlockStateProviderNoiseProvider = NoiseProvider
 type BlockStateProviderNoiseThresholdProvider = NoiseThresholdProvider
 type BlockStateProviderRandomizedIntStateProvider = RandomizedIntStateProvider
-type BlockStateProviderRotatedBlockProvider = SimpleStateProvider
+type BlockStateProviderRotatedBlockProvider = RotatedStateProvider
 type BlockStateProviderRuleBasedStateProvider = RuleBasedBlockStateProvider
 type BlockStateProviderSimpleStateProvider = SimpleStateProvider
 type BlockStateProviderWeightedStateProvider = WeightedBlockStateProvider

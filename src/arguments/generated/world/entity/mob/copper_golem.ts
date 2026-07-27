@@ -3,9 +3,9 @@ import type { NBTLong } from 'sandstone'
 
 export type CopperGolem = (MobBase & {
   /**
-   * Gametime in ticks when the copper golem oxidizes
-   * -2 represents "waxed"
-   * -1 will be replaced with a random time between 504000 and 552000 ticks later
+   * Gametime in ticks when the copper golem oxidizes. \
+   * `-2` represents "waxed" \
+   * `-1` will be replaced with a random time between 504000 and 552000 ticks later
    *
    * Value:
    * Range: -2..

@@ -7,10 +7,32 @@ import type {
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { Keybind } from 'sandstone/arguments/generated/util/text.ts'
 import type { Transformation } from 'sandstone/arguments/generated/world/entity/display.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, TrimMaterialClass } from 'sandstone'
+
+/**
+ * *either*
+ *
+ * *item 0*
+ *
+ * *or*
+ *
+ * List length range: 3
+ */
+export type ActuallyTranslucentRGB = (NBTInt | NBTList<NBTFloat<{
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 0,
+  max: 1,
+}>, {
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 3,
+  max: 3,
+}>)
 
 export type Banner = {
   /**
@@ -141,7 +163,7 @@ export type Compass = {
 export type CompassTarget = ('none' | 'spawn' | 'lodestone' | 'recovery')
 
 export type ComponentFlags = NonNullable<({
-  [S in Extract<Registry['minecraft:data_component_predicate_type'], string>]?: {
+  [S in Extract<Extract<Registry['minecraft:data_component_predicate_type'], string>, string>]?: {
     /**
      * The component predicate to check.
      */
@@ -153,7 +175,7 @@ export type ComponentFlags = NonNullable<({
       ? SymbolDataComponentPredicate[S]
       : SymbolDataComponentPredicate<'%unknown'>),
   }
-}[Registry['minecraft:data_component_predicate_type']])>
+}[Extract<Registry['minecraft:data_component_predicate_type'], string>])>
 
 export type ComponentStrings = (NonNullable<(({
   [S in Extract<keyof SymbolDataComponent, string>]?: ({
@@ -174,7 +196,7 @@ export type Composite = {
 }
 
 export type Condition = NonNullable<({
-  [S in Extract<ConditionalPropertyType, string>]?: ({
+  [S in Extract<Extract<ConditionalPropertyType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -199,7 +221,7 @@ export type Condition = NonNullable<({
   } & (S extends keyof SymbolConditionalItemProperty
     ? SymbolConditionalItemProperty[S]
     : SymbolConditionalItemProperty<'%unknown'>))
-}[ConditionalPropertyType])>
+}[Extract<ConditionalPropertyType, string>])>
 
 export type ConditionalPropertyType = (
   | 'broken'
@@ -319,22 +341,8 @@ export type DisplayContext = SelectCases<ItemDisplayContext>
 export type DyeTint = {
   /**
    * Tint to apply when the `dyed_color` component is not present.
-   *
-   * Value:
-   * *either*
-   *
-   * *item 0*
-   *
-   * *or*
-   *
-   * List length range: 3
    */
-  default: (NBTInt | NBTList<NBTFloat, {
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 3,
-    max: 3,
-  }>),
+  default: ActuallyTranslucentRGB,
 }
 
 export type EndCube = {
@@ -352,22 +360,8 @@ export type EndCubeEffectType = ('portal' | 'gateway')
 export type FireworkTint = {
   /**
    * Tint to apply when the `firework_explosion` component is not present.
-   *
-   * Value:
-   * *either*
-   *
-   * *item 0*
-   *
-   * *or*
-   *
-   * List length range: 3
    */
-  default: (NBTInt | NBTList<NBTFloat, {
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 3,
-    max: 3,
-  }>),
+  default: ActuallyTranslucentRGB,
 }
 
 export type GrassTint = {
@@ -490,7 +484,7 @@ export type ItemDefinition = {
 }
 
 export type ItemModel = NonNullable<({
-  [S in Extract<ItemModeltype, string>]?: ({
+  [S in Extract<Extract<ItemModeltype, string>, string>]?: ({
     /**
      * Value:
      *
@@ -505,7 +499,7 @@ export type ItemModel = NonNullable<({
      */
     type: (S | `minecraft:${S}`),
   } & (S extends keyof SymbolItemModel ? SymbolItemModel[S] : RootNBT))
-}[ItemModeltype])>
+}[Extract<ItemModeltype, string>])>
 
 export type ItemModeltype = (
   | 'bundle/selected_item'
@@ -537,6 +531,7 @@ export type KeybindDown = {
    *  - DebugDumpVersion(`key.debug.dumpVersion`)
    *  - DebugFocusPause(`key.debug.focusPause`)
    *  - DebugFpsCharts(`key.debug.fpsCharts`)
+   *  - DebugImprovedTransparency(`key.debug.improvedTransparency`)
    *  - DebugLightmapTexture(`key.debug.lightmapTexture`)
    *  - DebugModifier(`key.debug.modifier`)
    *  - DebugNetworkCharts(`key.debug.networkCharts`)
@@ -552,6 +547,7 @@ export type KeybindDown = {
    *  - DebugSwitchGameMode(`key.debug.switchGameMode`)
    *  - Drop(`key.drop`)
    *  - Forward(`key.forward`)
+   *  - Friends(`key.friends`)
    *  - Fullscreen(`key.fullscreen`)
    *  - Hotbar1(`key.hotbar.1`)
    *  - Hotbar2(`key.hotbar.2`)
@@ -620,7 +616,7 @@ export type Model = {
 }
 
 export type ModelTint = NonNullable<({
-  [S in Extract<TintSourceType, string>]?: ({
+  [S in Extract<Extract<TintSourceType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -635,7 +631,7 @@ export type ModelTint = NonNullable<({
      */
     type: (S | `minecraft:${S}`),
   } & (S extends keyof SymbolTintSource ? SymbolTintSource[S] : RootNBT))
-}[TintSourceType])>
+}[Extract<TintSourceType, string>])>
 
 export type NumericPropertyType = (
   | 'bundle/fullness'
@@ -657,7 +653,7 @@ export type PotionTint = {
 }
 
 export type RangeDispatch = NonNullable<({
-  [S in Extract<NumericPropertyType, string>]?: ({
+  [S in Extract<Extract<NumericPropertyType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -693,10 +689,15 @@ export type RangeDispatch = NonNullable<({
   } & (S extends keyof SymbolNumericItemProperty
     ? SymbolNumericItemProperty[S]
     : SymbolNumericItemProperty<'%unknown'>))
-}[NumericPropertyType])>
+}[Extract<NumericPropertyType, string>])>
+
+export type RangeDispatchEntry = {
+  threshold: NBTFloat,
+  model: ItemModel,
+}
 
 export type Select = NonNullable<({
-  [S in Extract<SelectPropertyType, string>]?: ({
+  [S in Extract<Extract<SelectPropertyType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -720,7 +721,7 @@ export type Select = NonNullable<({
   } & (S extends keyof SymbolSelectItemProperty
     ? SymbolSelectItemProperty[S]
     : SymbolSelectItemProperty<'%unknown'>))
-}[SelectPropertyType])>
+}[Extract<SelectPropertyType, string>])>
 
 export type SelectCase<T extends NBTObject> = {
   when: (T | Array<T>),
@@ -760,6 +761,19 @@ export type ShulkerBox = {
     min: 0,
     max: 1,
   }>,
+  /**
+   * Defaults to `up`.
+   *
+   * Value:
+   *
+   *  - Down(`down`)
+   *  - Up(`up`)
+   *  - North(`north`)
+   *  - East(`east`)
+   *  - South(`south`)
+   *  - West(`west`)
+   */
+  orientation?: Direction,
 }
 
 export type Special = {
@@ -767,7 +781,7 @@ export type Special = {
    * Renders a special hardcoded model.
    */
   model: ({
-    [S in Extract<SpecialModelType, string>]?: ({
+    [S in Extract<Extract<SpecialModelType, string>, string>]?: ({
       /**
        * Value:
        *
@@ -790,7 +804,7 @@ export type Special = {
        */
       type: (S | `minecraft:${S}`),
     } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : SymbolSpecialItemModel<'%unknown'>))
-  }[SpecialModelType]),
+  }[Extract<SpecialModelType, string>]),
   /**
    * Base model, providing transformations, particle texture and GUI light.
    */
@@ -799,7 +813,7 @@ export type Special = {
 }
 
 export type SpecialModel = NonNullable<({
-  [S in Extract<SpecialModelType, string>]?: ({
+  [S in Extract<Extract<SpecialModelType, string>, string>]?: ({
     /**
      * Value:
      *
@@ -822,7 +836,7 @@ export type SpecialModel = NonNullable<({
      */
     type: (S | `minecraft:${S}`),
   } & (S extends keyof SymbolSpecialItemModel ? SymbolSpecialItemModel[S] : SymbolSpecialItemModel<'%unknown'>))
-}[SpecialModelType])>
+}[Extract<SpecialModelType, string>])>
 
 export type SpecialModelType = (
   | 'banner'
@@ -867,6 +881,7 @@ export type StandingSign = {
    */
   texture?: `${string}:${string}`,
   /**
+   * There is an extra "e" in the field name. See MC-307498. \
    * Defaults to `ground`.
    *
    * Value:
@@ -874,7 +889,7 @@ export type StandingSign = {
    *  - Wall(`wall`)
    *  - Ground(`ground`)
    */
-  attachment?: StandingSignAttachment,
+  attachement?: StandingSignAttachment,
 }
 
 export type StandingSignAttachment = ('wall' | 'ground')

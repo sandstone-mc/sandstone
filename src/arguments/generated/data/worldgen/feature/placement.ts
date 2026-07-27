@@ -7,8 +7,9 @@ import type {
 import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.ts'
 import type { ConfiguredFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { VerticalDirection } from 'sandstone/arguments/generated/util/direction.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type BlockPredicateFilter = {
   predicate: BlockPredicate,
@@ -25,9 +26,11 @@ export type CarvingMaskModifier = {
 }
 
 export type CountModifier = {
-  count: IntProvider<NBTInt<{
+  count: (IntProvider<NBTInt<{
     min: 0,
-  }>>,
+  }>> | IntProvider<NBTInt<{
+    min: 0,
+  }>>),
 }
 
 export type CountOnEveryLayerModifier = {
@@ -36,14 +39,33 @@ export type CountOnEveryLayerModifier = {
   }>>,
 }
 
+export type CuboidModifier = {
+  xz_size: IntProvider<NBTInt<{
+    min: 1,
+    max: 16,
+  }>>,
+  y_size: IntProvider<NBTInt<{
+    min: 1,
+    max: 16,
+  }>>,
+  /**
+   * Defaults to `true`.
+   */
+  include_interior?: boolean,
+  /**
+   * Defaults to `true`.
+   */
+  include_edges?: boolean,
+}
+
 export type EnvironmentScanModifier = {
   /**
    * Value:
    *
-   *  - Up(`up`)
    *  - Down(`down`)
+   *  - Up(`up`)
    */
-  direction_of_search: SearchDirection,
+  direction_of_search: VerticalDirection,
   /**
    * Value:
    * Range: 1..32
@@ -98,18 +120,74 @@ export type NoiseThresholdCountModifier = {
   above_noise: NBTInt,
 }
 
+export type OffsetModifier = {
+  x: IntProvider<NBTInt<{
+    min: -16,
+    max: 16,
+  }>>,
+  y: IntProvider<NBTInt<{
+    min: -16,
+    max: 16,
+  }>>,
+  z: IntProvider<NBTInt<{
+    min: -16,
+    max: 16,
+  }>>,
+}
+
 export type PlacedFeature = {
   feature: ConfiguredFeatureRef,
   placement: Array<PlacementModifier>,
 }
 
-export type PlacedFeatureRef = (Registry['minecraft:worldgen/placed_feature'] | PlacedFeature)
+/**
+ * *either*
+ *
+ * *item 0*
+ *
+ * *or*
+ *
+ * List length range: 1..
+ *
+ * *or*
+ *
+ * *item 2*
+ *
+ * *or*
+ *
+ * List length range: 1..
+ */
+export type PlacedFeatureListRef = (PlacedFeature | NBTList<PlacedFeature, {
+  leftExclusive: false,
+  min: 1,
+}> | (
+  | Registry['minecraft:worldgen/placed_feature']
+  | `#${string}:${string}`
+  | TagClass<'worldgen/placed_feature'>) | NBTList<Registry['minecraft:worldgen/placed_feature'], {
+    leftExclusive: false,
+    min: 1,
+  }>)
+
+export type PlacedFeatureRef = (PlacedFeature | Registry['minecraft:worldgen/placed_feature'])
 
 export type PlacementModifier = NonNullable<({
-  [S in Extract<Registry['minecraft:worldgen/placement_modifier_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/placement_modifier_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolPlacementModifier ? SymbolPlacementModifier[S] : RootNBT))
-}[Registry['minecraft:worldgen/placement_modifier_type']])>
+}[Extract<Registry['minecraft:worldgen/placement_modifier_type'], string>])>
+
+export type RandomChanceModifier = {
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  chance: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+}
 
 export type RandomOffsetModifier = {
   xz_spread: IntProvider<NBTInt<{
@@ -131,8 +209,6 @@ export type RarityFilter = {
     min: 0,
   }>,
 }
-
-export type SearchDirection = ('up' | 'down')
 
 export type SurfaceRelativeThresholdFilter = {
   /**
@@ -156,8 +232,6 @@ export type SurfaceWaterDepthFilter = {
 type PlacementModifierDispatcherMap = {
   'block_predicate_filter': PlacementModifierBlockPredicateFilter,
   'minecraft:block_predicate_filter': PlacementModifierBlockPredicateFilter,
-  'carving_mask': PlacementModifierCarvingMask,
-  'minecraft:carving_mask': PlacementModifierCarvingMask,
   'count': PlacementModifierCount,
   'minecraft:count': PlacementModifierCount,
   'count_on_every_layer': PlacementModifierCountOnEveryLayer,
@@ -186,7 +260,6 @@ type PlacementModifierDispatcherMap = {
 type PlacementModifierKeys = keyof PlacementModifierDispatcherMap
 type PlacementModifierFallback = (
   | PlacementModifierBlockPredicateFilter
-  | PlacementModifierCarvingMask
   | PlacementModifierCount
   | PlacementModifierCountOnEveryLayer
   | PlacementModifierEnvironmentScan
@@ -200,7 +273,6 @@ type PlacementModifierFallback = (
   | PlacementModifierSurfaceRelativeThresholdFilter
   | PlacementModifierSurfaceWaterDepthFilter)
 type PlacementModifierBlockPredicateFilter = BlockPredicateFilter
-type PlacementModifierCarvingMask = CarvingMaskModifier
 type PlacementModifierCount = CountModifier
 type PlacementModifierCountOnEveryLayer = CountOnEveryLayerModifier
 type PlacementModifierEnvironmentScan = EnvironmentScanModifier

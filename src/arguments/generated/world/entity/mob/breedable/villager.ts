@@ -14,7 +14,7 @@ export type Offers = {
 }
 
 export type PlayerReputationPart = NonNullable<({
-  [S in Extract<ReputationPart, string>]?: {
+  [S in Extract<Extract<ReputationPart, string>, string>]?: {
     /**
      * Value:
      *
@@ -64,7 +64,7 @@ export type PlayerReputationPart = NonNullable<({
       max: 4,
     }>,
   }
-}[ReputationPart])>
+}[Extract<ReputationPart, string>])>
 
 export type Recipe = {
   /**

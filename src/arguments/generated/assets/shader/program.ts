@@ -112,6 +112,10 @@ export type Defines = {
   flags?: Array<string>,
 }
 
+export type DefinesValues = ({
+  [Key in `${any}${string}`]?: string
+})
+
 export type Sampler = {
   name: string,
 }

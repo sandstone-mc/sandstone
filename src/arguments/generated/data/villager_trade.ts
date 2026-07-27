@@ -1,6 +1,6 @@
 import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
-import type { NumberProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemStackTemplate, TradeCost } from 'sandstone/arguments/generated/world/item.ts'
 import type { EnchantmentClass, TagClass } from 'sandstone'

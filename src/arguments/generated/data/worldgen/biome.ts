@@ -1,12 +1,15 @@
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { PositionalEnvironmentAttributeMap } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
-import type { CarverRef } from 'sandstone/arguments/generated/data/worldgen/carver.ts'
+import type { CarverListRef } from 'sandstone/arguments/generated/data/worldgen/carver.ts'
+import type { CarveStep } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { StringRGB } from 'sandstone/arguments/generated/util/color.ts'
+import type { FlatWeightedList } from 'sandstone/arguments/generated/util.ts'
+import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
-export type Biome = {
+export type Biome = ({
   attributes?: PositionalEnvironmentAttributeMap,
   temperature: NBTFloat,
   downfall: NBTFloat,
@@ -18,28 +21,8 @@ export type Biome = {
    *  - Frozen(`frozen`)
    */
   temperature_modifier?: TemperatureModifier,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  creature_spawn_probability?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
   effects: BiomeEffects,
-  spawners: ({
-    [Key in Extract<MobCategory, string>]?: Array<SpawnerData>
-  }),
-  spawn_costs: ({
-    [Key in Extract<Registry['minecraft:entity_type'], string>]?: MobSpawnCost
-  }),
-  carvers: (
-      | Array<CarverRef> | (
-        | Registry['minecraft:worldgen/configured_carver']
-        | `#${string}:${string}`
-        | TagClass<'worldgen/configured_carver'>)),
+  carvers: CarverListRef,
   /**
    * Value:
    * List length range: ..11
@@ -47,7 +30,7 @@ export type Biome = {
   features: NBTList<(Array<PlacedFeatureRef> | (`#${string}:${string}` | TagClass<'worldgen/placed_feature'>)), {
     rightExclusive: false,
   }>,
-}
+} & NaturalMobSpawns)
 
 export type BiomeCategory = (
   | 'beach'
@@ -110,6 +93,20 @@ export type BiomeMusic = ({
   replace_current_music?: boolean,
 })
 
+export type BiomeParticle = {
+  options: Particle,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  probability: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+}
+
 export type BiomeSoundAdditions = {
   sound: SoundEventRef,
   /**
@@ -123,6 +120,10 @@ export type BiomeSoundAdditions = {
     max: 1,
   }>,
 }
+
+export type CarversPerStep = ({
+  [Key in Extract<CarveStep, string>]?: CarverListRef
+})
 
 export type GrassColorModifier = ('none' | 'dark_forest' | 'swamp')
 
@@ -148,13 +149,32 @@ export type MoodSound = {
   offset: NBTFloat,
 }
 
+export type NaturalMobSpawns = {
+  /**
+   * Value:
+   * Range: 0..0.9999999
+   */
+  creature_spawn_probability?: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }>,
+  spawners: SpawnerDataMap,
+  spawn_costs: ({
+    [Key in Extract<`${string}:${string}`, string>]?: MobSpawnCost
+  }),
+}
+
 export type Precipitation = ('none' | 'rain' | 'snow')
 
 export type SpawnerData = {
   type: Registry['minecraft:entity_type'],
-  weight: NBTInt,
   minCount: NBTInt,
   maxCount: NBTInt,
 }
+
+export type SpawnerDataMap = ({
+  [Key in Extract<MobCategory, string>]?: FlatWeightedList<SpawnerData>
+})
 
 export type TemperatureModifier = ('none' | 'frozen')

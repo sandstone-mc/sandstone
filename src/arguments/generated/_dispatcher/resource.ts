@@ -26,6 +26,7 @@ import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modif
 import type { LootTable } from 'sandstone/arguments/generated/data/loot.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Recipe } from 'sandstone/arguments/generated/data/recipe.ts'
+import type { SulfurCubeArchetype } from 'sandstone/arguments/generated/data/sulfur_cube_archetype.ts'
 import type { Timeline } from 'sandstone/arguments/generated/data/timeline.ts'
 import type { TradeSet } from 'sandstone/arguments/generated/data/trade_set.ts'
 import type { TrialSpawnerConfig } from 'sandstone/arguments/generated/data/trial_spawner.ts'
@@ -57,7 +58,6 @@ import type { NoiseGeneratorSettings } from 'sandstone/arguments/generated/data/
 import type { ProcessorList } from 'sandstone/arguments/generated/data/worldgen/processor_list.ts'
 import type { StructureSet } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { Structure } from 'sandstone/arguments/generated/data/worldgen/structure.ts'
-import type { ConfiguredSurfaceBuilder } from 'sandstone/arguments/generated/data/worldgen/surface_builder.ts'
 import type { TemplatePool } from 'sandstone/arguments/generated/data/worldgen/template_pool.ts'
 import type { FlatGeneratorPreset, WorldPreset } from 'sandstone/arguments/generated/data/worldgen/world_preset.ts'
 
@@ -142,6 +142,8 @@ type ResourceDispatcherMap = {
   'minecraft:shader': ResourceShader,
   'sounds': ResourceSounds,
   'minecraft:sounds': ResourceSounds,
+  'sulfur_cube_archetype': ResourceSulfurCubeArchetype,
+  'minecraft:sulfur_cube_archetype': ResourceSulfurCubeArchetype,
   'test_environment': ResourceTestEnvironment,
   'minecraft:test_environment': ResourceTestEnvironment,
   'test_instance': ResourceTestInstance,
@@ -174,10 +176,6 @@ type ResourceDispatcherMap = {
   'minecraft:worldgen/configured_carver': ResourceWorldgenConfiguredCarver,
   'worldgen/configured_feature': ResourceWorldgenConfiguredFeature,
   'minecraft:worldgen/configured_feature': ResourceWorldgenConfiguredFeature,
-  'worldgen/configured_structure_feature': ResourceWorldgenConfiguredStructureFeature,
-  'minecraft:worldgen/configured_structure_feature': ResourceWorldgenConfiguredStructureFeature,
-  'worldgen/configured_surface_builder': ResourceWorldgenConfiguredSurfaceBuilder,
-  'minecraft:worldgen/configured_surface_builder': ResourceWorldgenConfiguredSurfaceBuilder,
   'worldgen/density_function': ResourceWorldgenDensityFunction,
   'minecraft:worldgen/density_function': ResourceWorldgenDensityFunction,
   'worldgen/flat_level_generator_preset': ResourceWorldgenFlatLevelGeneratorPreset,
@@ -245,6 +243,7 @@ type ResourceFallback = (
   | ResourceRegionalCompliancies
   | ResourceShader
   | ResourceSounds
+  | ResourceSulfurCubeArchetype
   | ResourceTestEnvironment
   | ResourceTestInstance
   | ResourceTextureMeta
@@ -261,8 +260,6 @@ type ResourceFallback = (
   | ResourceWorldgenBiome
   | ResourceWorldgenConfiguredCarver
   | ResourceWorldgenConfiguredFeature
-  | ResourceWorldgenConfiguredStructureFeature
-  | ResourceWorldgenConfiguredSurfaceBuilder
   | ResourceWorldgenDensityFunction
   | ResourceWorldgenFlatLevelGeneratorPreset
   | ResourceWorldgenMultiNoiseBiomeSourceParameterList
@@ -315,6 +312,7 @@ type ResourceRecipe = Recipe
 type ResourceRegionalCompliancies = RegionalCompliancies
 type ResourceShader = ShaderProgram
 type ResourceSounds = Sounds
+type ResourceSulfurCubeArchetype = SulfurCubeArchetype
 type ResourceTestEnvironment = TestEnvironment
 type ResourceTestInstance = TestInstance
 type ResourceTextureMeta = TextureMeta
@@ -325,14 +323,12 @@ type ResourceTrimMaterial = TrimMaterial
 type ResourceTrimPattern = TrimPattern
 type ResourceVillagerTrade = VillagerTrade
 type ResourceWaypointStyle = WaypointStyle
-type ResourceWolfSoundVariant = SoundVariant<WolfSounds>
+type ResourceWolfSoundVariant = (WolfSounds | SoundVariant<WolfSounds>)
 type ResourceWolfVariant = WolfVariant
 type ResourceWorldClock = Record<string, never>
 type ResourceWorldgenBiome = Biome
 type ResourceWorldgenConfiguredCarver = ConfiguredCarver
 type ResourceWorldgenConfiguredFeature = ConfiguredFeature
-type ResourceWorldgenConfiguredStructureFeature = Structure
-type ResourceWorldgenConfiguredSurfaceBuilder = ConfiguredSurfaceBuilder
 type ResourceWorldgenDensityFunction = DensityFunction
 type ResourceWorldgenFlatLevelGeneratorPreset = FlatGeneratorPreset
 type ResourceWorldgenMultiNoiseBiomeSourceParameterList = MultiNoiseBiomeSourceParameterList

@@ -3,9 +3,13 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 
 export type ArmorMaterial = ('leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'netherite' | 'turtle')
 
+export type OldTrimMaterialOverrides = ({
+  [Key in Extract<(ArmorMaterial | `minecraft:${ArmorMaterial}`), string>]?: string
+})
+
 export type TrimMaterial = {
   /**
-   * ID which will be used in the resource pack.
+   * Permutation key which will be used in the resource pack.
    */
   asset_name: string,
   /**
@@ -19,6 +23,10 @@ export type TrimMaterial = {
     [Key in Extract<Registry['minecraft:equipment'], string>]?: string
   }),
 }
+
+export type TrimMaterialOverrides = ({
+  [Key in Extract<Registry['minecraft:equipment'], string>]?: string
+})
 
 export type TrimPattern = {
   /**

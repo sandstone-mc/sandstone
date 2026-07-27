@@ -1,3 +1,4 @@
+import type { VerticalAnchor } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
@@ -5,10 +6,10 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type BlockPredicate = NonNullable<({
-  [S in Extract<Registry['minecraft:block_predicate_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:block_predicate_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolBlockPredicate ? SymbolBlockPredicate[S] : RootNBT))
-}[Registry['minecraft:block_predicate_type']])>
+}[Extract<Registry['minecraft:block_predicate_type'], string>])>
 
 export type CombiningPredicate = {
   predicates: Array<BlockPredicate>,
@@ -28,7 +29,16 @@ export type HasSturdyFacePredicate = (PredicateOffset & {
   direction: Direction,
 })
 
+export type HeightRangePredicate = {
+  min_inclusive: VerticalAnchor,
+  max_inclusive: VerticalAnchor,
+}
+
 export type InsideWorldBoundsPredicate = PredicateOffset
+
+export type MatchingBiomesPredicate = {
+  biomes: (`${string}:${string}` | Array<`${string}:${string}`>),
+}
 
 export type MatchingBlocksPredicate = (PredicateOffset & {
   blocks: (
@@ -91,6 +101,8 @@ type BlockPredicateDispatcherMap = {
   'minecraft:any_of': BlockPredicateAnyOf,
   'has_sturdy_face': BlockPredicateHasSturdyFace,
   'minecraft:has_sturdy_face': BlockPredicateHasSturdyFace,
+  'height_range': BlockPredicateHeightRange,
+  'minecraft:height_range': BlockPredicateHeightRange,
   'inside_world_bounds': BlockPredicateInsideWorldBounds,
   'minecraft:inside_world_bounds': BlockPredicateInsideWorldBounds,
   'matching_block_tag': BlockPredicateMatchingBlockTag,
@@ -111,6 +123,7 @@ type BlockPredicateFallback = (
   | BlockPredicateAllOf
   | BlockPredicateAnyOf
   | BlockPredicateHasSturdyFace
+  | BlockPredicateHeightRange
   | BlockPredicateInsideWorldBounds
   | BlockPredicateMatchingBlockTag
   | BlockPredicateMatchingBlocks
@@ -121,6 +134,7 @@ type BlockPredicateFallback = (
 type BlockPredicateAllOf = CombiningPredicate
 type BlockPredicateAnyOf = CombiningPredicate
 type BlockPredicateHasSturdyFace = HasSturdyFacePredicate
+type BlockPredicateHeightRange = HeightRangePredicate
 type BlockPredicateInsideWorldBounds = InsideWorldBoundsPredicate
 type BlockPredicateMatchingBlockTag = MatchingBlockTagPredicate
 type BlockPredicateMatchingBlocks = MatchingBlocksPredicate

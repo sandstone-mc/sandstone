@@ -1,4 +1,4 @@
-import type { DyeColorInt } from 'sandstone/arguments/generated/util/color.ts'
+import type { DyeColorByte } from 'sandstone/arguments/generated/util/color.ts'
 import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.ts'
 
 export type AttachFace = (0 | 1 | 2 | 3 | 4 | 5)
@@ -31,7 +31,7 @@ export type Shulker = (MobBase & {
    *
    *
    */
-  Color?: (DyeColorInt | ShulkerColor),
+  Color?: (DyeColorByte | ShulkerColor),
 })
 
 export type ShulkerColor = (16)

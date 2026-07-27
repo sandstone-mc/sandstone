@@ -23,10 +23,30 @@ export type ClockTimeTestEnvironment = {
   }>,
 }
 
+export type Difficulty = ('peaceful' | 'easy' | 'normal' | 'hard')
+
+export type DifficultyTestEnvironment = {
+  /**
+   * Value:
+   *
+   *  - Peaceful(`peaceful`)
+   *  - Easy(`easy`)
+   *  - Normal(`normal`)
+   *  - Hard(`hard`)
+   */
+  difficulty: Difficulty,
+}
+
 export type FunctionTestEnvironment = {
   setup?: (`${string}:${string}` | MCFunctionClass),
   teardown?: (`${string}:${string}` | MCFunctionClass),
 }
+
+export type GameRuleMap = ({
+  [Key in Extract<Registry['minecraft:game_rule'], string>]?: (Key extends keyof SymbolGameRule
+    ? SymbolGameRule[Key]
+    : RootNBT)
+})
 
 export type GameRulesTestEnvironment = {
   rules: ({
@@ -42,10 +62,10 @@ export type IntGameRule = {
 }
 
 export type TestEnvironment = NonNullable<({
-  [S in Extract<Registry['minecraft:test_environment_definition_type'], string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:test_environment_definition_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolTestEnvironmentDefinition ? SymbolTestEnvironmentDefinition[S] : RootNBT))
-}[Registry['minecraft:test_environment_definition_type']])>
+}[Extract<Registry['minecraft:test_environment_definition_type'], string>])>
 
 export type TimelineAttributesTestEnvironment = {
   timelines: Array<(Registry['minecraft:timeline'] | TimelineClass)>,
