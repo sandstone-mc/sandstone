@@ -48,9 +48,12 @@ jobs:
 
           if [ -n "$RELEASE_BRANCH" ]; then
             # Tag is on an archived v*.x branch — publish to a per-minor
-            # dist-tag (e.g. v1.0) so `latest` stays pristine.
-            MINOR="${VERSION%.*}"
-            echo "tag=v${MINOR}" >> $GITHUB_OUTPUT
+            # dist-tag (e.g. sandstone-1-0) so `latest` stays pristine.
+            # The shape is `<pkg-name>-<major>-<minor>` rather than the
+            # more obvious `v<M>.<m>` because npm rejects any tag name
+            # that parses as a SemVer range (see scripts/link.ts).
+            MINOR_NUM="${VERSION#*.}"; MINOR_NUM="${MINOR_NUM%%.*}"
+            echo "tag=sandstone-${VERSION%%.*}-${MINOR_NUM}" >> $GITHUB_OUTPUT
           else
             # Tag is on master → latest
             echo "tag=latest" >> $GITHUB_OUTPUT
