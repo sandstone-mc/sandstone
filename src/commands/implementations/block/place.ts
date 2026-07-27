@@ -26,7 +26,7 @@ export class PlaceCommand<MACRO extends boolean> extends CommandArguments {
    * @param pos Optional. Where the placement should be tried.
    */
   feature = (
-    feature: Macroable<Registry['minecraft:worldgen/configured_feature'], MACRO>,
+    feature: Macroable<Registry['minecraft:worldgen/feature'], MACRO>,
     pos: Macroable<Coordinates<MACRO>, MACRO> = '~ ~ ~' as Coordinates<MACRO>,
   ) => this.finalCommand(['feature', feature, coordinatesParser(pos)])
 

@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,13 +22,13 @@ export type DecoratedPotPatternClassArguments = {
   /**
    * The decorated pot pattern's JSON.
    */
-  json: SymbolResource[(typeof DecoratedPotPatternClass)['resourceType']]
+  json: MCDocToJSON<SymbolResource[(typeof DecoratedPotPatternClass)['resourceType']]>
 } & ResourceClassArguments<'default'>
 
 export class DecoratedPotPatternClass extends ResourceClass<DecoratedPotPatternNode> {
   static readonly resourceType = 'decorated_pot_pattern' as const
 
-  public decoratedPotPatternJSON: NonNullable<DecoratedPotPatternClassArguments['json']>
+  public decoratedPotPatternJSON: DecoratedPotPatternClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DecoratedPotPatternClassArguments) {
     super(
