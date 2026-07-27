@@ -71,7 +71,7 @@
     "publishToNpm": "bun dev:build && bun publish",
     "format": "bun oxlint src --fix",
     "lint": "bun oxlint src",
-    "update-from-mcdoc": "mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig"
+    "update-from-mcdoc": "MCDOC_TARGET_VERSION=26.2 mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig"
   },
   "type": "module",
   "main": "dist/exports/index.js",
