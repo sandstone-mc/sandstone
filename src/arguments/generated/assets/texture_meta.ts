@@ -327,6 +327,12 @@ export type TextureMeta = {
       rightExclusive: false,
     }>,
   },
+  /**
+   * Required for armor trim textures.
+   */
+  palette?: {
+    base_palette: PaletteRef,
+  },
 }
 
 export type TileScaling = {

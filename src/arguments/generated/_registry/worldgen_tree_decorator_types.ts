@@ -15,5 +15,6 @@ export const WORLDGEN_TREE_DECORATOR_TYPES_SET = new Set([
   'leave_vine',
   'pale_moss',
   'place_on_ground',
+  'shelf_mushroom',
   'trunk_vine',
 ] as const)

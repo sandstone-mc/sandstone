@@ -1,7 +1,7 @@
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { PositionalEnvironmentAttributeMap } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { CarverListRef } from 'sandstone/arguments/generated/data/worldgen/carver.ts'
-import type { CarveStep } from 'sandstone/arguments/generated/data/worldgen.ts'
+import type { CarveStep, IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { PlacedFeatureRef } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { StringRGB } from 'sandstone/arguments/generated/util/color.ts'
@@ -160,6 +160,7 @@ export type NaturalMobSpawns = {
     min: 0,
   }>,
   spawners: SpawnerDataMap,
+  spawns_by_category: SpawnerDataMap,
   spawn_costs: ({
     [Key in Extract<`${string}:${string}`, string>]?: MobSpawnCost
   }),
@@ -171,6 +172,7 @@ export type SpawnerData = {
   type: Registry['minecraft:entity_type'],
   minCount: NBTInt,
   maxCount: NBTInt,
+  count: IntProvider<NBTInt>,
 }
 
 export type SpawnerDataMap = ({

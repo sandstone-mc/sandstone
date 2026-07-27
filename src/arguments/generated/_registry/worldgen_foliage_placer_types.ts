@@ -15,6 +15,7 @@ export const WORLDGEN_FOLIAGE_PLACER_TYPES_SET = new Set([
   'jungle_foliage_placer',
   'mega_pine_foliage_placer',
   'pine_foliage_placer',
+  'poplar_foliage_placer',
   'random_spread_foliage_placer',
   'spruce_foliage_placer',
 ] as const)

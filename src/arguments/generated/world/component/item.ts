@@ -19,7 +19,13 @@ import type { EquipmentSlot, EquipmentSlotGroup } from 'sandstone/arguments/gene
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { BannerPatternLayer } from 'sandstone/arguments/generated/world/block/banner.ts'
 import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.ts'
-import type { ContainerLoot, ContainerSlot, Occupant } from 'sandstone/arguments/generated/world/component/block.ts'
+import type {
+  ContainerLoot,
+  ContainerSlot,
+  Occupant,
+  PotDecorations,
+  SignText,
+} from 'sandstone/arguments/generated/world/component/block.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type {
   AxolotlVariant,
@@ -39,6 +45,7 @@ import type { TextureType } from 'sandstone/arguments'
 import type {
   BannerPatternClass,
   DamageTypeClass,
+  DecoratedPotPatternClass,
   EquipmentClass,
   InstrumentClass,
   ItemModelDefinitionClass,
@@ -375,8 +382,8 @@ export type BlockTransformType = ('single_block' | 'copper_chest')
 export type BookGeneration = (0 | 1 | 2 | 3)
 
 export type BrewingFuel = {
-  uses: `${string}:${string}`,
-  speed_multiplier: `${string}:${string}`,
+  uses: Registry['minecraft:number_provider'],
+  speed_multiplier: Registry['minecraft:number_provider'],
 }
 
 export type BucketEntityData = {
@@ -428,7 +435,7 @@ export type BucketEntityData = {
 }
 
 export type Compostable = {
-  layers: `${string}:${string}`,
+  layers: Registry['minecraft:number_provider'],
 }
 
 export type Consumable = {
@@ -483,8 +490,8 @@ export type ConsumeEffect = NonNullable<({
 }[Extract<Registry['minecraft:consume_effect_type'], string>])>
 
 export type CookingFuel = {
-  burn_time: `${string}:${string}`,
-  speed_multiplier: `${string}:${string}`,
+  burn_time: Registry['minecraft:number_provider'],
+  speed_multiplier: Registry['minecraft:number_provider'],
 }
 
 export type CustomModelData = {
@@ -1222,10 +1229,14 @@ type DataComponentDispatcherMap = {
   'minecraft:block_entity_data': DataComponentBlockEntityData,
   'block_state': DataComponentBlockState,
   'minecraft:block_state': DataComponentBlockState,
+  'block_transformer': DataComponentBlockTransformer,
+  'minecraft:block_transformer': DataComponentBlockTransformer,
   'blocks_attacks': DataComponentBlocksAttacks,
   'minecraft:blocks_attacks': DataComponentBlocksAttacks,
   'break_sound': DataComponentBreakSound,
   'minecraft:break_sound': DataComponentBreakSound,
+  'brewing_fuel': DataComponentBrewingFuel,
+  'minecraft:brewing_fuel': DataComponentBrewingFuel,
   'bucket_entity_data': DataComponentBucketEntityData,
   'minecraft:bucket_entity_data': DataComponentBucketEntityData,
   'bundle_contents': DataComponentBundleContents,
@@ -1246,18 +1257,24 @@ type DataComponentDispatcherMap = {
   'minecraft:chicken/sound_variant': DataComponentChickenSoundVariant,
   'chicken/variant': DataComponentChickenVariant,
   'minecraft:chicken/variant': DataComponentChickenVariant,
+  'compostable': DataComponentCompostable,
+  'minecraft:compostable': DataComponentCompostable,
   'consumable': DataComponentConsumable,
   'minecraft:consumable': DataComponentConsumable,
   'container': DataComponentContainer,
   'minecraft:container': DataComponentContainer,
   'container_loot': DataComponentContainerLoot,
   'minecraft:container_loot': DataComponentContainerLoot,
+  'cooking_fuel': DataComponentCookingFuel,
+  'minecraft:cooking_fuel': DataComponentCookingFuel,
   'cow/sound_variant': DataComponentCowSoundVariant,
   'minecraft:cow/sound_variant': DataComponentCowSoundVariant,
   'cow/variant': DataComponentCowVariant,
   'minecraft:cow/variant': DataComponentCowVariant,
   'creative_slot_lock': DataComponentCreativeSlotLock,
   'minecraft:creative_slot_lock': DataComponentCreativeSlotLock,
+  'cushion/color': DataComponentCushionColor,
+  'minecraft:cushion/color': DataComponentCushionColor,
   'custom_data': DataComponentCustomData,
   'minecraft:custom_data': DataComponentCustomData,
   'custom_model_data': DataComponentCustomModelData,
@@ -1336,6 +1353,8 @@ type DataComponentDispatcherMap = {
   'minecraft:max_stack_size': DataComponentMaxStackSize,
   'minimum_attack_charge': DataComponentMinimumAttackCharge,
   'minecraft:minimum_attack_charge': DataComponentMinimumAttackCharge,
+  'mob_visibility': DataComponentMobVisibility,
+  'minecraft:mob_visibility': DataComponentMobVisibility,
   'mooshroom/variant': DataComponentMooshroomVariant,
   'minecraft:mooshroom/variant': DataComponentMooshroomVariant,
   'note_block_sound': DataComponentNoteBlockSound,
@@ -1362,6 +1381,8 @@ type DataComponentDispatcherMap = {
   'minecraft:profile': DataComponentProfile,
   'provides_banner_patterns': DataComponentProvidesBannerPatterns,
   'minecraft:provides_banner_patterns': DataComponentProvidesBannerPatterns,
+  'provides_pottery_pattern': DataComponentProvidesPotteryPattern,
+  'minecraft:provides_pottery_pattern': DataComponentProvidesPotteryPattern,
   'provides_trim_material': DataComponentProvidesTrimMaterial,
   'minecraft:provides_trim_material': DataComponentProvidesTrimMaterial,
   'rabbit/variant': DataComponentRabbitVariant,
@@ -1380,6 +1401,10 @@ type DataComponentDispatcherMap = {
   'minecraft:sheep/color': DataComponentSheepColor,
   'shulker/color': DataComponentShulkerColor,
   'minecraft:shulker/color': DataComponentShulkerColor,
+  'sign_text_back': DataComponentSignTextBack,
+  'minecraft:sign_text_back': DataComponentSignTextBack,
+  'sign_text_front': DataComponentSignTextFront,
+  'minecraft:sign_text_front': DataComponentSignTextFront,
   'stored_enchantments': DataComponentStoredEnchantments,
   'minecraft:stored_enchantments': DataComponentStoredEnchantments,
   'sulfur_cube_content': DataComponentSulfurCubeContent,
@@ -1414,6 +1439,8 @@ type DataComponentDispatcherMap = {
   'minecraft:villager_food': DataComponentVillagerFood,
   'villager/variant': DataComponentVillagerVariant,
   'minecraft:villager/variant': DataComponentVillagerVariant,
+  'waxed': DataComponentWaxed,
+  'minecraft:waxed': DataComponentWaxed,
   'weapon': DataComponentWeapon,
   'minecraft:weapon': DataComponentWeapon,
   'wolf/collar': DataComponentWolfCollar,
@@ -1440,8 +1467,10 @@ type DataComponentFallback = (
   | DataComponentBees
   | DataComponentBlockEntityData
   | DataComponentBlockState
+  | DataComponentBlockTransformer
   | DataComponentBlocksAttacks
   | DataComponentBreakSound
+  | DataComponentBrewingFuel
   | DataComponentBucketEntityData
   | DataComponentBundleContents
   | DataComponentCanBreak
@@ -1452,12 +1481,15 @@ type DataComponentFallback = (
   | DataComponentChargedProjectiles
   | DataComponentChickenSoundVariant
   | DataComponentChickenVariant
+  | DataComponentCompostable
   | DataComponentConsumable
   | DataComponentContainer
   | DataComponentContainerLoot
+  | DataComponentCookingFuel
   | DataComponentCowSoundVariant
   | DataComponentCowVariant
   | DataComponentCreativeSlotLock
+  | DataComponentCushionColor
   | DataComponentCustomData
   | DataComponentCustomModelData
   | DataComponentCustomName
@@ -1497,6 +1529,7 @@ type DataComponentFallback = (
   | DataComponentMaxDamage
   | DataComponentMaxStackSize
   | DataComponentMinimumAttackCharge
+  | DataComponentMobVisibility
   | DataComponentMooshroomVariant
   | DataComponentNoteBlockSound
   | DataComponentOminousBottleAmplifier
@@ -1510,6 +1543,7 @@ type DataComponentFallback = (
   | DataComponentPotionDurationScale
   | DataComponentProfile
   | DataComponentProvidesBannerPatterns
+  | DataComponentProvidesPotteryPattern
   | DataComponentProvidesTrimMaterial
   | DataComponentRabbitVariant
   | DataComponentRarity
@@ -1519,6 +1553,8 @@ type DataComponentFallback = (
   | DataComponentSalmonSize
   | DataComponentSheepColor
   | DataComponentShulkerColor
+  | DataComponentSignTextBack
+  | DataComponentSignTextFront
   | DataComponentStoredEnchantments
   | DataComponentSulfurCubeContent
   | DataComponentSuspiciousStewEffects
@@ -1536,6 +1572,7 @@ type DataComponentFallback = (
   | DataComponentUseRemainder
   | DataComponentVillagerFood
   | DataComponentVillagerVariant
+  | DataComponentWaxed
   | DataComponentWeapon
   | DataComponentWolfCollar
   | DataComponentWolfSoundVariant
@@ -1552,8 +1589,13 @@ type DataComponentBaseColor = DyeColor
 type DataComponentBees = Array<Occupant>
 type DataComponentBlockEntityData = (BlockEntityData | (`${any}${string}` | NBTClass))
 type DataComponentBlockState = SymbolMcdocBlockItemStates<'%fallback'>
+type DataComponentBlockTransformer = NBTList<BlockTransformer, {
+  leftExclusive: false,
+  rightExclusive: false,
+}>
 type DataComponentBlocksAttacks = blocks_attacks
 type DataComponentBreakSound = SoundEventRef
+type DataComponentBrewingFuel = BrewingFuel
 type DataComponentBucketEntityData = (BucketEntityData | (`${any}${string}` | NBTClass))
 type DataComponentBundleContents = Array<ItemStackTemplate>
 type DataComponentCanBreak = AdventureModePredicate
@@ -1564,14 +1606,17 @@ type DataComponentCatVariant = (Registry['minecraft:cat_variant'] | VariantClass
 type DataComponentChargedProjectiles = Array<ItemStackTemplate>
 type DataComponentChickenSoundVariant = (Registry['minecraft:chicken_sound_variant'] | VariantClass<'chicken_sound'>)
 type DataComponentChickenVariant = (Registry['minecraft:chicken_variant'] | VariantClass<'chicken'>)
+type DataComponentCompostable = Compostable
 type DataComponentConsumable = Consumable
 type DataComponentContainer = NBTList<ContainerSlot, {
   rightExclusive: false,
 }>
 type DataComponentContainerLoot = ContainerLoot
+type DataComponentCookingFuel = CookingFuel
 type DataComponentCowSoundVariant = (Registry['minecraft:cow_sound_variant'] | VariantClass<'cow_sound'>)
 type DataComponentCowVariant = (Registry['minecraft:cow_variant'] | VariantClass<'cow'>)
 type DataComponentCreativeSlotLock = Record<string, never>
+type DataComponentCushionColor = DyeColor
 type DataComponentCustomData = CustomData
 type DataComponentCustomModelData = CustomModelData
 type DataComponentCustomName = Text
@@ -1623,6 +1668,7 @@ type DataComponentMinimumAttackCharge = NBTFloat<{
   min: 0,
   max: 1,
 }>
+type DataComponentMobVisibility = MobVisibility
 type DataComponentMooshroomVariant = MooshroomType
 type DataComponentNoteBlockSound = `${string}:${string}`
 type DataComponentOminousBottleAmplifier = NBTInt<{
@@ -1634,9 +1680,9 @@ type DataComponentParrotVariant = ParrotVariant
 type DataComponentPiercingWeapon = PiercingWeapon
 type DataComponentPigSoundVariant = (Registry['minecraft:pig_sound_variant'] | VariantClass<'pig_sound'>)
 type DataComponentPigVariant = (Registry['minecraft:pig_variant'] | VariantClass<'pig'>)
-type DataComponentPotDecorations = NBTList<Registry['minecraft:item'], {
+type DataComponentPotDecorations = (NBTList<Registry['minecraft:item'], {
   rightExclusive: false,
-}>
+}> | PotDecorations)
 type DataComponentPotionContents = (PotionContents | Registry['minecraft:potion'])
 type DataComponentPotionDurationScale = NBTFloat<{
   leftExclusive: false,
@@ -1649,6 +1695,7 @@ type DataComponentProvidesBannerPatterns = ((
     | TagClass<'banner_pattern'>
     | BannerPatternClass)
   | Array<(Registry['minecraft:banner_pattern'] | BannerPatternClass)>)
+type DataComponentProvidesPotteryPattern = (Registry['minecraft:decorated_pot_pattern'] | DecoratedPotPatternClass)
 type DataComponentProvidesTrimMaterial = (Registry['minecraft:trim_material'] | TrimMaterialClass)
 type DataComponentRabbitVariant = RabbitVariant
 type DataComponentRarity = Rarity
@@ -1660,6 +1707,8 @@ type DataComponentRepairable = Repairable
 type DataComponentSalmonSize = SalmonType
 type DataComponentSheepColor = DyeColor
 type DataComponentShulkerColor = DyeColor
+type DataComponentSignTextBack = SignText
+type DataComponentSignTextFront = SignText
 type DataComponentStoredEnchantments = EnchantmentLevels
 type DataComponentSulfurCubeContent = ItemStackTemplate
 type DataComponentSuspiciousStewEffects = Array<SuspiciousStewEffect>
@@ -1677,6 +1726,7 @@ type DataComponentUseEffects = UseEffects
 type DataComponentUseRemainder = ItemStackTemplate
 type DataComponentVillagerFood = VillagerFood
 type DataComponentVillagerVariant = Registry['minecraft:villager_type']
+type DataComponentWaxed = Record<string, never>
 type DataComponentWeapon = Weapon
 type DataComponentWolfCollar = DyeColor
 type DataComponentWolfSoundVariant = (Registry['minecraft:wolf_sound_variant'] | VariantClass<'wolf_sound'>)

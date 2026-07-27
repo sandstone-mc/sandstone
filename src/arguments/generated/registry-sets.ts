@@ -38,11 +38,15 @@ export { JUKEBOX_SONGS_SET } from './_registry/jukebox_songs.ts'
 
 export { LOOT_TABLES_SET } from './_registry/loot_tables.ts'
 
+export { NUMBER_PROVIDERS_SET } from './_registry/number_providers.ts'
+
 export { PAINTING_VARIANTS_SET } from './_registry/painting_variants.ts'
 
 export { PIG_SOUND_VARIANTS_SET } from './_registry/pig_sound_variants.ts'
 
 export { PIG_VARIANTS_SET } from './_registry/pig_variants.ts'
+
+export { PREDICATES_SET } from './_registry/predicates.ts'
 
 export { RECIPES_SET } from './_registry/recipes.ts'
 
@@ -104,9 +108,9 @@ export { TAG_POINT_OF_INTEREST_TYPES_SET } from './_registry/tag_point_of_intere
 
 export { TAG_POTIONS_SET } from './_registry/tag_potions.ts'
 
-export { TAG_WORLDGEN_BIOMES_SET } from './_registry/tag_worldgen_biomes.ts'
+export { TAG_WORLDGEN_FEATURES_SET } from './_registry/tag_worldgen_features.ts'
 
-export { TAG_WORLDGEN_CONFIGURED_FEATURES_SET } from './_registry/tag_worldgen_configured_features.ts'
+export { TAG_WORLDGEN_BIOMES_SET } from './_registry/tag_worldgen_biomes.ts'
 
 export {
   TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS_SET,
@@ -118,9 +122,7 @@ export { TAG_WORLDGEN_WORLD_PRESETS_SET } from './_registry/tag_worldgen_world_p
 
 export { WORLDGEN_BIOMES_SET } from './_registry/worldgen_biomes.ts'
 
-export { WORLDGEN_CONFIGURED_CARVERS_SET } from './_registry/worldgen_configured_carvers.ts'
-
-export { WORLDGEN_CONFIGURED_FEATURES_SET } from './_registry/worldgen_configured_features.ts'
+export { WORLDGEN_CARVERS_SET } from './_registry/worldgen_carvers.ts'
 
 export { WORLDGEN_DENSITY_FUNCTIONS_SET } from './_registry/worldgen_density_functions.ts'
 
@@ -185,8 +187,6 @@ export { BLOCKS_SET } from './_registry/blocks.ts'
 export { BLOCK_ENTITY_TYPES_SET } from './_registry/block_entity_types.ts'
 
 export { BLOCK_PREDICATE_TYPES_SET } from './_registry/block_predicate_types.ts'
-
-export { BLOCK_TYPES_SET } from './_registry/block_types.ts'
 
 export { CHUNK_STATUSES_SET } from './_registry/chunk_statuses.ts'
 
@@ -326,7 +326,7 @@ export { WORLDGEN_BIOME_SOURCES_SET } from './_registry/worldgen_biome_sources.t
 
 export { WORLDGEN_BLOCK_STATE_PROVIDER_TYPES_SET } from './_registry/worldgen_block_state_provider_types.ts'
 
-export { WORLDGEN_CARVERS_SET } from './_registry/worldgen_carvers.ts'
+export { WORLDGEN_CARVER_TYPES_SET } from './_registry/worldgen_carver_types.ts'
 
 export { WORLDGEN_CHUNK_GENERATORS_SET } from './_registry/worldgen_chunk_generators.ts'
 
@@ -334,7 +334,13 @@ export { WORLDGEN_DENSITY_FUNCTION_TYPES_SET } from './_registry/worldgen_densit
 
 export { WORLDGEN_FEATURE_SIZE_TYPES_SET } from './_registry/worldgen_feature_size_types.ts'
 
+export { WORLDGEN_FEATURE_TYPES_SET } from './_registry/worldgen_feature_types.ts'
+
 export { WORLDGEN_FOLIAGE_PLACER_TYPES_SET } from './_registry/worldgen_foliage_placer_types.ts'
+
+export { WORLDGEN_MATERIAL_CONDITION_TYPES_SET } from './_registry/worldgen_material_condition_types.ts'
+
+export { WORLDGEN_MATERIAL_RULE_TYPES_SET } from './_registry/worldgen_material_rule_types.ts'
 
 export { WORLDGEN_PLACEMENT_MODIFIER_TYPES_SET } from './_registry/worldgen_placement_modifier_types.ts'
 

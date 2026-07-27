@@ -17,6 +17,7 @@ import type { WaypointStyle } from 'sandstone/arguments/generated/assets/waypoin
 import type { Advancement } from 'sandstone/arguments/generated/data/advancement.ts'
 import type { ChatType } from 'sandstone/arguments/generated/data/chat_type.ts'
 import type { DamageType } from 'sandstone/arguments/generated/data/damage_type.ts'
+import type { DecoratedPotPattern } from 'sandstone/arguments/generated/data/decorated_pot_pattern.ts'
 import type { Dialog } from 'sandstone/arguments/generated/data/dialog.ts'
 import type { Enchantment } from 'sandstone/arguments/generated/data/enchantment.ts'
 import type { EnchantmentProvider } from 'sandstone/arguments/generated/data/enchantment/provider.ts'
@@ -24,8 +25,10 @@ import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametes
 import type { TestInstance } from 'sandstone/arguments/generated/data/gametest.ts'
 import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
 import type { LootTable } from 'sandstone/arguments/generated/data/loot.ts'
+import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Recipe } from 'sandstone/arguments/generated/data/recipe.ts'
+import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
 import type { SulfurCubeArchetype } from 'sandstone/arguments/generated/data/sulfur_cube_archetype.ts'
 import type { Timeline } from 'sandstone/arguments/generated/data/timeline.ts'
 import type { TradeSet } from 'sandstone/arguments/generated/data/trade_set.ts'
@@ -54,6 +57,8 @@ import type {
 import type { Dimension, DimensionType } from 'sandstone/arguments/generated/data/worldgen/dimension.ts'
 import type { ConfiguredFeature } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
 import type { PlacedFeature } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
+import type { MaterialCondition } from 'sandstone/arguments/generated/data/worldgen/material_condition.ts'
+import type { MaterialRule } from 'sandstone/arguments/generated/data/worldgen/material_rule.ts'
 import type { NoiseGeneratorSettings } from 'sandstone/arguments/generated/data/worldgen/noise_settings.ts'
 import type { ProcessorList } from 'sandstone/arguments/generated/data/worldgen/processor_list.ts'
 import type { StructureSet } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
@@ -88,6 +93,8 @@ type ResourceDispatcherMap = {
   'minecraft:credits': ResourceCredits,
   'damage_type': ResourceDamageType,
   'minecraft:damage_type': ResourceDamageType,
+  'decorated_pot_pattern': ResourceDecoratedPotPattern,
+  'minecraft:decorated_pot_pattern': ResourceDecoratedPotPattern,
   'dialog': ResourceDialog,
   'minecraft:dialog': ResourceDialog,
   'dimension': ResourceDimension,
@@ -122,6 +129,8 @@ type ResourceDispatcherMap = {
   'minecraft:loot_table': ResourceLootTable,
   'model': ResourceModel,
   'minecraft:model': ResourceModel,
+  'number_provider': ResourceNumberProvider,
+  'minecraft:number_provider': ResourceNumberProvider,
   'painting_variant': ResourcePaintingVariant,
   'minecraft:painting_variant': ResourcePaintingVariant,
   'particle': ResourceParticle,
@@ -140,6 +149,8 @@ type ResourceDispatcherMap = {
   'minecraft:regional_compliancies': ResourceRegionalCompliancies,
   'shader': ResourceShader,
   'minecraft:shader': ResourceShader,
+  'slot_source': ResourceSlotSource,
+  'minecraft:slot_source': ResourceSlotSource,
   'sounds': ResourceSounds,
   'minecraft:sounds': ResourceSounds,
   'sulfur_cube_archetype': ResourceSulfurCubeArchetype,
@@ -172,14 +183,22 @@ type ResourceDispatcherMap = {
   'minecraft:world_clock': ResourceWorldClock,
   'worldgen/biome': ResourceWorldgenBiome,
   'minecraft:worldgen/biome': ResourceWorldgenBiome,
+  'worldgen/carver': ResourceWorldgenCarver,
+  'minecraft:worldgen/carver': ResourceWorldgenCarver,
   'worldgen/configured_carver': ResourceWorldgenConfiguredCarver,
   'minecraft:worldgen/configured_carver': ResourceWorldgenConfiguredCarver,
   'worldgen/configured_feature': ResourceWorldgenConfiguredFeature,
   'minecraft:worldgen/configured_feature': ResourceWorldgenConfiguredFeature,
   'worldgen/density_function': ResourceWorldgenDensityFunction,
   'minecraft:worldgen/density_function': ResourceWorldgenDensityFunction,
+  'worldgen/feature': ResourceWorldgenFeature,
+  'minecraft:worldgen/feature': ResourceWorldgenFeature,
   'worldgen/flat_level_generator_preset': ResourceWorldgenFlatLevelGeneratorPreset,
   'minecraft:worldgen/flat_level_generator_preset': ResourceWorldgenFlatLevelGeneratorPreset,
+  'worldgen/material_condition': ResourceWorldgenMaterialCondition,
+  'minecraft:worldgen/material_condition': ResourceWorldgenMaterialCondition,
+  'worldgen/material_rule': ResourceWorldgenMaterialRule,
+  'minecraft:worldgen/material_rule': ResourceWorldgenMaterialRule,
   'worldgen/multi_noise_biome_source_parameter_list': ResourceWorldgenMultiNoiseBiomeSourceParameterList,
   'minecraft:worldgen/multi_noise_biome_source_parameter_list': ResourceWorldgenMultiNoiseBiomeSourceParameterList,
   'worldgen/noise': ResourceWorldgenNoise,
@@ -216,6 +235,7 @@ type ResourceFallback = (
   | ResourceCowVariant
   | ResourceCredits
   | ResourceDamageType
+  | ResourceDecoratedPotPattern
   | ResourceDialog
   | ResourceDimension
   | ResourceDimensionType
@@ -233,6 +253,7 @@ type ResourceFallback = (
   | ResourceLangDeprecated
   | ResourceLootTable
   | ResourceModel
+  | ResourceNumberProvider
   | ResourcePaintingVariant
   | ResourceParticle
   | ResourcePigSoundVariant
@@ -242,6 +263,7 @@ type ResourceFallback = (
   | ResourceRecipe
   | ResourceRegionalCompliancies
   | ResourceShader
+  | ResourceSlotSource
   | ResourceSounds
   | ResourceSulfurCubeArchetype
   | ResourceTestEnvironment
@@ -258,10 +280,14 @@ type ResourceFallback = (
   | ResourceWolfVariant
   | ResourceWorldClock
   | ResourceWorldgenBiome
+  | ResourceWorldgenCarver
   | ResourceWorldgenConfiguredCarver
   | ResourceWorldgenConfiguredFeature
   | ResourceWorldgenDensityFunction
+  | ResourceWorldgenFeature
   | ResourceWorldgenFlatLevelGeneratorPreset
+  | ResourceWorldgenMaterialCondition
+  | ResourceWorldgenMaterialRule
   | ResourceWorldgenMultiNoiseBiomeSourceParameterList
   | ResourceWorldgenNoise
   | ResourceWorldgenNoiseSettings
@@ -285,6 +311,7 @@ type ResourceCowSoundVariant = CowSounds
 type ResourceCowVariant = CowVariant
 type ResourceCredits = Credits
 type ResourceDamageType = DamageType
+type ResourceDecoratedPotPattern = DecoratedPotPattern
 type ResourceDialog = Dialog
 type ResourceDimension = Dimension
 type ResourceDimensionType = DimensionType
@@ -302,6 +329,7 @@ type ResourceLang = Lang
 type ResourceLangDeprecated = LangDeprecated
 type ResourceLootTable = LootTable
 type ResourceModel = Model
+type ResourceNumberProvider = NumberProvider
 type ResourcePaintingVariant = PaintingVariant
 type ResourceParticle = Particle
 type ResourcePigSoundVariant = SoundVariant<PigSounds>
@@ -311,6 +339,7 @@ type ResourcePredicate = Predicate
 type ResourceRecipe = Recipe
 type ResourceRegionalCompliancies = RegionalCompliancies
 type ResourceShader = ShaderProgram
+type ResourceSlotSource = SlotSource
 type ResourceSounds = Sounds
 type ResourceSulfurCubeArchetype = SulfurCubeArchetype
 type ResourceTestEnvironment = TestEnvironment
@@ -327,10 +356,14 @@ type ResourceWolfSoundVariant = SoundVariant<WolfSounds>
 type ResourceWolfVariant = WolfVariant
 type ResourceWorldClock = Record<string, never>
 type ResourceWorldgenBiome = Biome
+type ResourceWorldgenCarver = ConfiguredCarver
 type ResourceWorldgenConfiguredCarver = ConfiguredCarver
 type ResourceWorldgenConfiguredFeature = ConfiguredFeature
 type ResourceWorldgenDensityFunction = DensityFunction
+type ResourceWorldgenFeature = ConfiguredFeature
 type ResourceWorldgenFlatLevelGeneratorPreset = FlatGeneratorPreset
+type ResourceWorldgenMaterialCondition = MaterialCondition
+type ResourceWorldgenMaterialRule = MaterialRule
 type ResourceWorldgenMultiNoiseBiomeSourceParameterList = MultiNoiseBiomeSourceParameterList
 type ResourceWorldgenNoise = NoiseParameters
 type ResourceWorldgenNoiseSettings = NoiseGeneratorSettings

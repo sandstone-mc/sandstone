@@ -9,6 +9,7 @@ export type Clamp = {
 
 export type Constant = {
   argument: NoiseRange,
+  value: NoiseRange,
 }
 
 export type CubicSpline = (NBTFloat | {
@@ -103,6 +104,7 @@ export type OldBlendedNoise = {
 
 export type OneArgument = {
   argument: DensityFunctionRef,
+  input: DensityFunctionRef,
 }
 
 export type RangeChoice = {
@@ -125,6 +127,7 @@ export type Round = {
 
 export type Shift = {
   argument: Registry['minecraft:worldgen/noise'],
+  noise: Registry['minecraft:worldgen/noise'],
 }
 
 export type ShiftedNoise = (Noise & {
@@ -166,6 +169,8 @@ export type TerrainShaperSpline = {
 export type TwoArguments = {
   argument1: DensityFunctionRef,
   argument2: DensityFunctionRef,
+  left: DensityFunctionRef,
+  right: DensityFunctionRef,
 }
 
 export type WeirdScaledSampler = {
@@ -207,16 +212,22 @@ type DensityFunctionDispatcherMap = {
   'minecraft:cache_all_in_cell': DensityFunctionCacheAllInCell,
   'cache_once': DensityFunctionCacheOnce,
   'minecraft:cache_once': DensityFunctionCacheOnce,
+  'ceil': DensityFunctionCeil,
+  'minecraft:ceil': DensityFunctionCeil,
   'clamp': DensityFunctionClamp,
   'minecraft:clamp': DensityFunctionClamp,
   'constant': DensityFunctionConstant,
   'minecraft:constant': DensityFunctionConstant,
   'cube': DensityFunctionCube,
   'minecraft:cube': DensityFunctionCube,
+  'div': DensityFunctionDiv,
+  'minecraft:div': DensityFunctionDiv,
   'find_top_surface': DensityFunctionFindTopSurface,
   'minecraft:find_top_surface': DensityFunctionFindTopSurface,
   'flat_cache': DensityFunctionFlatCache,
   'minecraft:flat_cache': DensityFunctionFlatCache,
+  'floor': DensityFunctionFloor,
+  'minecraft:floor': DensityFunctionFloor,
   'half_negative': DensityFunctionHalfNegative,
   'minecraft:half_negative': DensityFunctionHalfNegative,
   'interpolated': DensityFunctionInterpolated,
@@ -225,12 +236,16 @@ type DensityFunctionDispatcherMap = {
   'minecraft:interval_select': DensityFunctionIntervalSelect,
   'invert': DensityFunctionInvert,
   'minecraft:invert': DensityFunctionInvert,
+  'lerp': DensityFunctionLerp,
+  'minecraft:lerp': DensityFunctionLerp,
   'max': DensityFunctionMax,
   'minecraft:max': DensityFunctionMax,
   'min': DensityFunctionMin,
   'minecraft:min': DensityFunctionMin,
   'mul': DensityFunctionMul,
   'minecraft:mul': DensityFunctionMul,
+  'negate': DensityFunctionNegate,
+  'minecraft:negate': DensityFunctionNegate,
   'noise': DensityFunctionNoise,
   'minecraft:noise': DensityFunctionNoise,
   'old_blended_noise': DensityFunctionOldBlendedNoise,
@@ -239,6 +254,10 @@ type DensityFunctionDispatcherMap = {
   'minecraft:quarter_negative': DensityFunctionQuarterNegative,
   'range_choice': DensityFunctionRangeChoice,
   'minecraft:range_choice': DensityFunctionRangeChoice,
+  'reciprocal': DensityFunctionReciprocal,
+  'minecraft:reciprocal': DensityFunctionReciprocal,
+  'round': DensityFunctionRound,
+  'minecraft:round': DensityFunctionRound,
   'shift': DensityFunctionShift,
   'minecraft:shift': DensityFunctionShift,
   'shift_a': DensityFunctionShiftA,
@@ -255,8 +274,10 @@ type DensityFunctionDispatcherMap = {
   'minecraft:square': DensityFunctionSquare,
   'squeeze': DensityFunctionSqueeze,
   'minecraft:squeeze': DensityFunctionSqueeze,
-  'weird_scaled_sampler': DensityFunctionWeirdScaledSampler,
-  'minecraft:weird_scaled_sampler': DensityFunctionWeirdScaledSampler,
+  'sub': DensityFunctionSub,
+  'minecraft:sub': DensityFunctionSub,
+  'truncate': DensityFunctionTruncate,
+  'minecraft:truncate': DensityFunctionTruncate,
   'y_clamped_gradient': DensityFunctionYClampedGradient,
   'minecraft:y_clamped_gradient': DensityFunctionYClampedGradient,
 }
@@ -268,22 +289,29 @@ type DensityFunctionFallback = (
   | DensityFunctionCache2d
   | DensityFunctionCacheAllInCell
   | DensityFunctionCacheOnce
+  | DensityFunctionCeil
   | DensityFunctionClamp
   | DensityFunctionConstant
   | DensityFunctionCube
+  | DensityFunctionDiv
   | DensityFunctionFindTopSurface
   | DensityFunctionFlatCache
+  | DensityFunctionFloor
   | DensityFunctionHalfNegative
   | DensityFunctionInterpolated
   | DensityFunctionIntervalSelect
   | DensityFunctionInvert
+  | DensityFunctionLerp
   | DensityFunctionMax
   | DensityFunctionMin
   | DensityFunctionMul
+  | DensityFunctionNegate
   | DensityFunctionNoise
   | DensityFunctionOldBlendedNoise
   | DensityFunctionQuarterNegative
   | DensityFunctionRangeChoice
+  | DensityFunctionReciprocal
+  | DensityFunctionRound
   | DensityFunctionShift
   | DensityFunctionShiftA
   | DensityFunctionShiftB
@@ -292,7 +320,8 @@ type DensityFunctionFallback = (
   | DensityFunctionSpline
   | DensityFunctionSquare
   | DensityFunctionSqueeze
-  | DensityFunctionWeirdScaledSampler
+  | DensityFunctionSub
+  | DensityFunctionTruncate
   | DensityFunctionYClampedGradient
   | DensityFunctionFallbackType)
 export type DensityFunctionFallbackType = Record<string, never>
@@ -302,22 +331,29 @@ type DensityFunctionBlendDensity = OneArgument
 type DensityFunctionCache2d = OneArgument
 type DensityFunctionCacheAllInCell = OneArgument
 type DensityFunctionCacheOnce = OneArgument
+type DensityFunctionCeil = Round
 type DensityFunctionClamp = Clamp
 type DensityFunctionConstant = Constant
 type DensityFunctionCube = OneArgument
+type DensityFunctionDiv = TwoArguments
 type DensityFunctionFindTopSurface = FindTopSurface
 type DensityFunctionFlatCache = OneArgument
+type DensityFunctionFloor = Round
 type DensityFunctionHalfNegative = OneArgument
 type DensityFunctionInterpolated = OneArgument
 type DensityFunctionIntervalSelect = InvervalSelect
 type DensityFunctionInvert = OneArgument
+type DensityFunctionLerp = Lerp
 type DensityFunctionMax = TwoArguments
 type DensityFunctionMin = TwoArguments
 type DensityFunctionMul = TwoArguments
+type DensityFunctionNegate = OneArgument
 type DensityFunctionNoise = Noise
 type DensityFunctionOldBlendedNoise = OldBlendedNoise
 type DensityFunctionQuarterNegative = OneArgument
 type DensityFunctionRangeChoice = RangeChoice
+type DensityFunctionReciprocal = OneArgument
+type DensityFunctionRound = Round
 type DensityFunctionShift = Shift
 type DensityFunctionShiftA = Shift
 type DensityFunctionShiftB = Shift
@@ -326,7 +362,8 @@ type DensityFunctionSlide = OneArgument
 type DensityFunctionSpline = Spline
 type DensityFunctionSquare = OneArgument
 type DensityFunctionSqueeze = OneArgument
-type DensityFunctionWeirdScaledSampler = WeirdScaledSampler
+type DensityFunctionSub = TwoArguments
+type DensityFunctionTruncate = Round
 type DensityFunctionYClampedGradient = YClampedGradient
 export type SymbolDensityFunction<CASE extends
   | 'map'

@@ -50,6 +50,7 @@ export const WORLDGEN_NOISES_SET = new Set([
   'pillar_thickness',
   'powder_snow',
   'ridge',
+  'small_patch',
   'soul_sand_layer',
   'spaghetti_2d',
   'spaghetti_2d_elevation',

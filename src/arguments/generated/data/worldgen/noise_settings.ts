@@ -34,11 +34,14 @@ export type NoiseGeneratorSettings = ({
    * If true, mobs will not spawn during generation.
    */
   disable_mob_generation: boolean,
+  aquifers?: Aquifer,
+  ore_veins?: Array<OreVeinifier>,
   legacy_random_source: boolean,
   noise: NoiseSettings,
   noise_router: NoiseRouter,
-  spawn_target: Array<ClimateParameters>,
+  spawn_target: (Array<ClimateParameters> | Array<SpawnTargetPoint>),
   surface_rule: MaterialRuleRef,
+  material_rule: MaterialRuleRef,
 } & {
   aquifers_enabled: boolean,
   ore_veins_enabled: boolean,

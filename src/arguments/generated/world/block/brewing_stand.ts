@@ -1,6 +1,6 @@
 import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block.ts'
-import type { NBTByte, NBTList, NBTShort } from 'sandstone'
+import type { NBTByte, NBTFloat, NBTInt, NBTList, NBTShort } from 'sandstone'
 
 export type BrewingStand = (BlockEntity & Nameable & Lockable & {
   /**
@@ -25,9 +25,21 @@ export type BrewingStand = (BlockEntity & Nameable & Lockable & {
   /**
    * Number of ticks until the brewing is complete.
    */
-  BrewTime?: NBTShort,
+  BrewTime?: (NBTShort | NBTInt),
   /**
    * Amount of fuel the brewing stand has left.
    */
-  Fuel?: NBTByte,
+  Fuel?: (NBTByte | NBTInt),
+  /**
+   * The total amount of time the current brewing process will take. Defaults to `400`.
+   */
+  total_brew_time?: NBTInt,
+  /**
+   * The amount of fuel that was added in the last refuel. Defaults to `20`.
+   */
+  total_fuel?: NBTInt,
+  /**
+   * Used to speed up or slow down the next brewing process. Defaults to `1`.
+   */
+  speed_multiplier?: NBTFloat,
 })

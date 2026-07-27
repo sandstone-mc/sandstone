@@ -10,7 +10,6 @@ export const DECORATED_POT_PATTERNS_SET = new Set([
   'archer',
   'arms_up',
   'blade',
-  'blank',
   'brewer',
   'burn',
   'danger',

@@ -7,7 +7,6 @@ import type { BANNER_PATTERNS } from 'sandstone/arguments/generated/_registry/ba
 import type { BLOCK_DEFINITIONS } from 'sandstone/arguments/generated/_registry/block_definitions.ts'
 import type { BLOCK_ENTITY_TYPES } from 'sandstone/arguments/generated/_registry/block_entity_types.ts'
 import type { BLOCK_PREDICATE_TYPES } from 'sandstone/arguments/generated/_registry/block_predicate_types.ts'
-import type { BLOCK_TYPES } from 'sandstone/arguments/generated/_registry/block_types.ts'
 import type { BLOCKS } from 'sandstone/arguments/generated/_registry/blocks.ts'
 import type { CAT_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/cat_sound_variants.ts'
 import type { CAT_VARIANTS } from 'sandstone/arguments/generated/_registry/cat_variants.ts'
@@ -84,6 +83,7 @@ import type { MENUS } from 'sandstone/arguments/generated/_registry/menus.ts'
 import type { MOB_EFFECTS } from 'sandstone/arguments/generated/_registry/mob_effects.ts'
 import type { MODELS } from 'sandstone/arguments/generated/_registry/models.ts'
 import type { NUMBER_FORMAT_TYPES } from 'sandstone/arguments/generated/_registry/number_format_types.ts'
+import type { NUMBER_PROVIDERS } from 'sandstone/arguments/generated/_registry/number_providers.ts'
 import type { OUTGOING_RPC_METHODS } from 'sandstone/arguments/generated/_registry/outgoing_rpc_methods.ts'
 import type { PAINTING_VARIANTS } from 'sandstone/arguments/generated/_registry/painting_variants.ts'
 import type { PARTICLE_TYPES } from 'sandstone/arguments/generated/_registry/particle_types.ts'
@@ -96,6 +96,7 @@ import type { POS_RULE_TESTS } from 'sandstone/arguments/generated/_registry/pos
 import type { POSITION_SOURCE_TYPES } from 'sandstone/arguments/generated/_registry/position_source_types.ts'
 import type { POST_EFFECTS } from 'sandstone/arguments/generated/_registry/post_effects.ts'
 import type { POTIONS } from 'sandstone/arguments/generated/_registry/potions.ts'
+import type { PREDICATES } from 'sandstone/arguments/generated/_registry/predicates.ts'
 import type { RECIPE_BOOK_CATEGORIES } from 'sandstone/arguments/generated/_registry/recipe_book_categories.ts'
 import type { RECIPE_DISPLAYS } from 'sandstone/arguments/generated/_registry/recipe_displays.ts'
 import type { RECIPE_SERIALIZERS } from 'sandstone/arguments/generated/_registry/recipe_serializers.ts'
@@ -132,9 +133,7 @@ import type { TAG_POTIONS } from 'sandstone/arguments/generated/_registry/tag_po
 import type { TAG_TIMELINES } from 'sandstone/arguments/generated/_registry/tag_timelines.ts'
 import type { TAG_VILLAGER_TRADES } from 'sandstone/arguments/generated/_registry/tag_villager_trades.ts'
 import type { TAG_WORLDGEN_BIOMES } from 'sandstone/arguments/generated/_registry/tag_worldgen_biomes.ts'
-import type {
-  TAG_WORLDGEN_CONFIGURED_FEATURES,
-} from 'sandstone/arguments/generated/_registry/tag_worldgen_configured_features.ts'
+import type { TAG_WORLDGEN_FEATURES } from 'sandstone/arguments/generated/_registry/tag_worldgen_features.ts'
 import type {
   TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
 } from 'sandstone/arguments/generated/_registry/tag_worldgen_flat_level_generator_presets.ts'
@@ -167,14 +166,9 @@ import type { WORLDGEN_BIOMES } from 'sandstone/arguments/generated/_registry/wo
 import type {
   WORLDGEN_BLOCK_STATE_PROVIDER_TYPES,
 } from 'sandstone/arguments/generated/_registry/worldgen_block_state_provider_types.ts'
+import type { WORLDGEN_CARVER_TYPES } from 'sandstone/arguments/generated/_registry/worldgen_carver_types.ts'
 import type { WORLDGEN_CARVERS } from 'sandstone/arguments/generated/_registry/worldgen_carvers.ts'
 import type { WORLDGEN_CHUNK_GENERATORS } from 'sandstone/arguments/generated/_registry/worldgen_chunk_generators.ts'
-import type {
-  WORLDGEN_CONFIGURED_CARVERS,
-} from 'sandstone/arguments/generated/_registry/worldgen_configured_carvers.ts'
-import type {
-  WORLDGEN_CONFIGURED_FEATURES,
-} from 'sandstone/arguments/generated/_registry/worldgen_configured_features.ts'
 import type {
   WORLDGEN_DENSITY_FUNCTION_TYPES,
 } from 'sandstone/arguments/generated/_registry/worldgen_density_function_types.ts'
@@ -182,6 +176,7 @@ import type { WORLDGEN_DENSITY_FUNCTIONS } from 'sandstone/arguments/generated/_
 import type {
   WORLDGEN_FEATURE_SIZE_TYPES,
 } from 'sandstone/arguments/generated/_registry/worldgen_feature_size_types.ts'
+import type { WORLDGEN_FEATURE_TYPES } from 'sandstone/arguments/generated/_registry/worldgen_feature_types.ts'
 import type { WORLDGEN_FEATURES } from 'sandstone/arguments/generated/_registry/worldgen_features.ts'
 import type {
   WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
@@ -190,8 +185,14 @@ import type {
   WORLDGEN_FOLIAGE_PLACER_TYPES,
 } from 'sandstone/arguments/generated/_registry/worldgen_foliage_placer_types.ts'
 import type {
+  WORLDGEN_MATERIAL_CONDITION_TYPES,
+} from 'sandstone/arguments/generated/_registry/worldgen_material_condition_types.ts'
+import type {
   WORLDGEN_MATERIAL_CONDITIONS,
 } from 'sandstone/arguments/generated/_registry/worldgen_material_conditions.ts'
+import type {
+  WORLDGEN_MATERIAL_RULE_TYPES,
+} from 'sandstone/arguments/generated/_registry/worldgen_material_rule_types.ts'
 import type { WORLDGEN_MATERIAL_RULES } from 'sandstone/arguments/generated/_registry/worldgen_material_rules.ts'
 import type {
   WORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS,
@@ -253,9 +254,11 @@ export type Registry = {
   'minecraft:instrument': INSTRUMENTS,
   'minecraft:jukebox_song': JUKEBOX_SONGS,
   'minecraft:loot_table': LOOT_TABLES,
+  'minecraft:number_provider': NUMBER_PROVIDERS,
   'minecraft:painting_variant': PAINTING_VARIANTS,
   'minecraft:pig_sound_variant': PIG_SOUND_VARIANTS,
   'minecraft:pig_variant': PIG_VARIANTS,
+  'minecraft:predicate': PREDICATES,
   'minecraft:recipe': RECIPES,
   'minecraft:structure': STRUCTURES,
   'minecraft:sulfur_cube_archetype': SULFUR_CUBE_ARCHETYPES,
@@ -286,14 +289,13 @@ export type Registry = {
   'minecraft:tag/item': TAG_ITEMS,
   'minecraft:tag/point_of_interest_type': TAG_POINT_OF_INTEREST_TYPES,
   'minecraft:tag/potion': TAG_POTIONS,
+  'minecraft:tag/worldgen/feature': TAG_WORLDGEN_FEATURES,
   'minecraft:tag/worldgen/biome': TAG_WORLDGEN_BIOMES,
-  'minecraft:tag/worldgen/configured_feature': TAG_WORLDGEN_CONFIGURED_FEATURES,
   'minecraft:tag/worldgen/flat_level_generator_preset': TAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
   'minecraft:tag/worldgen/structure': TAG_WORLDGEN_STRUCTURES,
   'minecraft:tag/worldgen/world_preset': TAG_WORLDGEN_WORLD_PRESETS,
   'minecraft:worldgen/biome': WORLDGEN_BIOMES,
-  'minecraft:worldgen/configured_carver': WORLDGEN_CONFIGURED_CARVERS,
-  'minecraft:worldgen/configured_feature': WORLDGEN_CONFIGURED_FEATURES,
+  'minecraft:worldgen/carver': WORLDGEN_CARVERS,
   'minecraft:worldgen/density_function': WORLDGEN_DENSITY_FUNCTIONS,
   'minecraft:worldgen/feature': WORLDGEN_FEATURES,
   'minecraft:worldgen/flat_level_generator_preset': WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS,
@@ -325,7 +327,6 @@ export type Registry = {
   'minecraft:block': BLOCKS,
   'minecraft:block_entity_type': BLOCK_ENTITY_TYPES,
   'minecraft:block_predicate_type': BLOCK_PREDICATE_TYPES,
-  'minecraft:block_type': BLOCK_TYPES,
   'minecraft:chunk_status': CHUNK_STATUSES,
   'minecraft:command_argument_type': COMMAND_ARGUMENT_TYPES,
   'minecraft:consume_effect_type': CONSUME_EFFECT_TYPES,
@@ -395,11 +396,14 @@ export type Registry = {
   'minecraft:villager_type': VILLAGER_TYPES,
   'minecraft:worldgen/biome_source': WORLDGEN_BIOME_SOURCES,
   'minecraft:worldgen/block_state_provider_type': WORLDGEN_BLOCK_STATE_PROVIDER_TYPES,
-  'minecraft:worldgen/carver': WORLDGEN_CARVERS,
+  'minecraft:worldgen/carver_type': WORLDGEN_CARVER_TYPES,
   'minecraft:worldgen/chunk_generator': WORLDGEN_CHUNK_GENERATORS,
   'minecraft:worldgen/density_function_type': WORLDGEN_DENSITY_FUNCTION_TYPES,
   'minecraft:worldgen/feature_size_type': WORLDGEN_FEATURE_SIZE_TYPES,
+  'minecraft:worldgen/feature_type': WORLDGEN_FEATURE_TYPES,
   'minecraft:worldgen/foliage_placer_type': WORLDGEN_FOLIAGE_PLACER_TYPES,
+  'minecraft:worldgen/material_condition_type': WORLDGEN_MATERIAL_CONDITION_TYPES,
+  'minecraft:worldgen/material_rule_type': WORLDGEN_MATERIAL_RULE_TYPES,
   'minecraft:worldgen/placement_modifier_type': WORLDGEN_PLACEMENT_MODIFIER_TYPES,
   'minecraft:worldgen/pool_alias_binding': WORLDGEN_POOL_ALIAS_BINDINGS,
   'minecraft:worldgen/root_placer_type': WORLDGEN_ROOT_PLACER_TYPES,
@@ -435,6 +439,7 @@ export const REGISTRIES_SET = new Set([
   'item_modifier',
   'jukebox_song',
   'loot_table',
+  'number_provider',
   'painting_variant',
   'pig_sound_variant',
   'pig_variant',
@@ -540,6 +545,7 @@ export const REGISTRIES_SET = new Set([
   'worldgen/block_placer_type',
   'worldgen/block_state_provider_type',
   'worldgen/carver',
+  'worldgen/carver_type',
   'worldgen/chunk_generator',
   'worldgen/decorator',
   'worldgen/density_function_type',
@@ -564,6 +570,7 @@ export const REGISTRIES_SET = new Set([
   'worldgen/tree_decorator_type',
   'worldgen/trunk_placer_type',
   'worldgen/biome',
+  'worldgen/carver',
   'worldgen/configured_carver',
   'worldgen/configured_feature',
   'worldgen/configured_structure_feature',

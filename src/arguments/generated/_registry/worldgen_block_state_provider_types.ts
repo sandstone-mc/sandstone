@@ -6,9 +6,11 @@ export type WORLDGEN_BLOCK_STATE_PROVIDER_TYPES = (
   | `minecraft:${SetType<typeof WORLDGEN_BLOCK_STATE_PROVIDER_TYPES_SET>}`)
 
 export const WORLDGEN_BLOCK_STATE_PROVIDER_TYPES_SET = new Set([
+  'copy_properties_provider',
   'dual_noise_provider',
   'noise_provider',
   'noise_threshold_provider',
+  'random_block_provider',
   'randomized_int_state_provider',
   'rotated_block_provider',
   'rule_based_state_provider',

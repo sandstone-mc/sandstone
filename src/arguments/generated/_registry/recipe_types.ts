@@ -7,6 +7,7 @@ export type RECIPE_TYPES = (
 
 export const RECIPE_TYPES_SET = new Set([
   'blasting',
+  'brewing',
   'campfire_cooking',
   'crafting',
   'smelting',

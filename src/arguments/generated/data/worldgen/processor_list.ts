@@ -168,8 +168,7 @@ export type ProcessorRule = {
 
 export type ProtectedBlocks = {
   value: ((
-      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
 }
 
@@ -263,10 +262,18 @@ export type SymbolRuleBlockEntityModifier<CASE extends
     ? RuleBlockEntityModifierKeys
     : CASE extends '%fallback' ? RuleBlockEntityModifierFallback : never
 type RuleTestDispatcherMap = {
+  'all_of': RuleTestAllOf,
+  'minecraft:all_of': RuleTestAllOf,
+  'any_of': RuleTestAnyOf,
+  'minecraft:any_of': RuleTestAnyOf,
   'block_match': RuleTestBlockMatch,
   'minecraft:block_match': RuleTestBlockMatch,
   'blockstate_match': RuleTestBlockstateMatch,
   'minecraft:blockstate_match': RuleTestBlockstateMatch,
+  'height_match': RuleTestHeightMatch,
+  'minecraft:height_match': RuleTestHeightMatch,
+  'not': RuleTestNot,
+  'minecraft:not': RuleTestNot,
   'random_block_match': RuleTestRandomBlockMatch,
   'minecraft:random_block_match': RuleTestRandomBlockMatch,
   'random_blockstate_match': RuleTestRandomBlockstateMatch,
@@ -276,13 +283,21 @@ type RuleTestDispatcherMap = {
 }
 type RuleTestKeys = keyof RuleTestDispatcherMap
 type RuleTestFallback = (
+  | RuleTestAllOf
+  | RuleTestAnyOf
   | RuleTestBlockMatch
   | RuleTestBlockstateMatch
+  | RuleTestHeightMatch
+  | RuleTestNot
   | RuleTestRandomBlockMatch
   | RuleTestRandomBlockstateMatch
   | RuleTestTagMatch)
+type RuleTestAllOf = CompositeMatch
+type RuleTestAnyOf = CompositeMatch
 type RuleTestBlockMatch = BlockMatch
 type RuleTestBlockstateMatch = BlockStateMatch
+type RuleTestHeightMatch = HeightMatch
+type RuleTestNot = InvertedMatch
 type RuleTestRandomBlockMatch = RandomBlockMatch
 type RuleTestRandomBlockstateMatch = RandomBlockStateMatch
 type RuleTestTagMatch = TagMatch

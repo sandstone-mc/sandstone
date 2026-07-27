@@ -124,6 +124,10 @@ export type EntityBase = {
    */
   Tags?: Array<`${any}${string}` | LabelClass>,
   /**
+   * Team to join when it is spawned.
+   */
+  Team?: `${any}${string}`,
+  /**
    * Any stored data
    */
   data?: CustomData,

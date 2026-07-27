@@ -13,6 +13,7 @@ export const WORLDGEN_TRUNK_PLACER_TYPES_SET = new Set([
   'forking_trunk_placer',
   'giant_trunk_placer',
   'mega_jungle_trunk_placer',
+  'poplar_trunk_placer',
   'straight_trunk_placer',
   'upwards_branching_trunk_placer',
 ] as const)

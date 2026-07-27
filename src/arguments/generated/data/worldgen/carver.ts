@@ -1,4 +1,9 @@
-import type { FloatProvider, HeightProvider, VerticalAnchor } from 'sandstone/arguments/generated/data/worldgen.ts'
+import type {
+  FloatProvider,
+  HeightProvider,
+  IntProvider,
+  VerticalAnchor,
+} from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -22,6 +27,7 @@ export type CanyonShape = {
   horizontal_radius_factor: FloatProvider<NBTFloat>,
   vertical_radius_default_factor: NBTFloat,
   vertical_radius_center_factor: NBTFloat,
+  y_scale: FloatProvider<NBTFloat>,
 }
 
 export type CarverConfigBase = ({
@@ -38,6 +44,7 @@ export type CarverConfigBase = ({
   replaceable?: (
       | Array<Registry['minecraft:block']> | (
       Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
+  y: HeightProvider,
 } & {
   y: HeightProvider,
   yScale: FloatProvider<NBTFloat>,
@@ -56,14 +63,32 @@ export type CarverDebugSettings = {
 export type CarverListRef = (
   | ConfiguredCarver
   | Array<ConfiguredCarver> | (
-  Registry['minecraft:worldgen/configured_carver'] | `#${string}:${string}` | TagClass<'worldgen/configured_carver'>)
-  | Array<Registry['minecraft:worldgen/configured_carver']>)
+  `${string}:${string}` | `#${string}:${string}` | TagClass<'worldgen/configured_carver'>)
+  | Array<`${string}:${string}`> | (
+  Registry['minecraft:worldgen/carver'] | `#${string}:${string}` | TagClass<'worldgen/carver'>)
+  | Array<(Registry['minecraft:worldgen/carver'] | ConfiguredCarver)>)
 
-export type CarverRef = (ConfiguredCarver | Registry['minecraft:worldgen/configured_carver'])
+export type CarverRef = (ConfiguredCarver | `${string}:${string}` | Registry['minecraft:worldgen/carver'])
 
 export type CaveConfig = (CarverConfigBase & {
+  count: IntProvider<NBTInt<{
+    min: 0,
+  }>>,
+  thickness: FloatProvider<NBTFloat<{
+    leftExclusive: false,
+    min: 0,
+  }>>,
+  /**
+   * Defaults to `false`.
+   */
+  weird_thickness_bias?: boolean,
+  room_vertical_radius_multiplier: FloatProvider<NBTFloat>,
   horizontal_radius_multiplier: FloatProvider<NBTFloat>,
   vertical_radius_multiplier: FloatProvider<NBTFloat>,
+  /**
+   * Defaults to constant 1.0
+   */
+  start_vertical_radiues_multiplier?: FloatProvider<NBTFloat>,
   floor_level: FloatProvider<NBTFloat<{
     leftExclusive: false,
     rightExclusive: false,
@@ -71,11 +96,13 @@ export type CaveConfig = (CarverConfigBase & {
 })
 
 export type ConfiguredCarver = NonNullable<({
-  [S in Extract<Extract<Registry['minecraft:worldgen/carver'], string>, string>]?: {
+  [S in Extract<Extract<(
+      | Registry['minecraft:worldgen/carver']
+      | Registry['minecraft:worldgen/carver_type']), string>, string>]?: ({
     type: S,
     config: (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT),
-  }
-}[Extract<Registry['minecraft:worldgen/carver'], string>])>
+  } & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT))
+}[Extract<(Registry['minecraft:worldgen/carver'] | Registry['minecraft:worldgen/carver_type']), string>])>
 type CarverConfigDispatcherMap = {
   'canyon': CarverConfigCanyon,
   'minecraft:canyon': CarverConfigCanyon,

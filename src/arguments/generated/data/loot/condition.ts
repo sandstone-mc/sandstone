@@ -1,4 +1,5 @@
 import type {
+  BlockPredicate,
   DamageSourcePredicate,
   EntityPredicate,
   ItemPredicate,
@@ -118,7 +119,10 @@ export type LocationCheck = {
 export type LootCondition = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:loot_condition_type'], string>, string>]?: ({
     condition: S,
-  } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT))
+    type: S,
+  } & (S extends keyof SymbolLootCondition
+    ? SymbolLootCondition[S]
+    : RootNBT) & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT))
 }[Extract<Registry['minecraft:loot_condition_type'], string>])>
 
 export type MatchTool = {
@@ -168,7 +172,7 @@ export type Reference = {
   /**
    * A cyclic reference causes a parsing failure.
    */
-  name: (`${string}:${string}` | PredicateClass),
+  name: (Registry['minecraft:predicate'] | PredicateClass),
 }
 
 export type TableBonus = {
@@ -238,6 +242,8 @@ type LootConditionDispatcherMap = {
   'minecraft:killed_by_player': LootConditionKilledByPlayer,
   'location_check': LootConditionLocationCheck,
   'minecraft:location_check': LootConditionLocationCheck,
+  'match_block': LootConditionMatchBlock,
+  'minecraft:match_block': LootConditionMatchBlock,
   'match_tool': LootConditionMatchTool,
   'minecraft:match_tool': LootConditionMatchTool,
   'random_chance': LootConditionRandomChance,
@@ -268,6 +274,7 @@ type LootConditionFallback = (
   | LootConditionInverted
   | LootConditionKilledByPlayer
   | LootConditionLocationCheck
+  | LootConditionMatchBlock
   | LootConditionMatchTool
   | LootConditionRandomChance
   | LootConditionRandomChanceWithEnchantedBonus
@@ -287,6 +294,7 @@ type LootConditionEnvironmentAttributeCheck = EnvironmentAttributeCheck
 type LootConditionInverted = Inverted
 type LootConditionKilledByPlayer = KilledByPlayer
 type LootConditionLocationCheck = LocationCheck
+type LootConditionMatchBlock = BlockPredicate
 type LootConditionMatchTool = MatchTool
 type LootConditionRandomChance = RandomChance
 type LootConditionRandomChanceWithEnchantedBonus = RandomChanceWithEnchantedBonus

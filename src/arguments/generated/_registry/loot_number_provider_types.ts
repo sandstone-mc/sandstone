@@ -7,11 +7,14 @@ export type LOOT_NUMBER_PROVIDER_TYPES = (
 
 export const LOOT_NUMBER_PROVIDER_TYPES_SET = new Set([
   'binomial',
+  'conditional',
   'constant',
   'enchantment_level',
   'environment_attribute',
+  'number_dispatcher',
   'score',
   'storage',
   'sum',
   'uniform',
+  'weighted_list',
 ] as const)

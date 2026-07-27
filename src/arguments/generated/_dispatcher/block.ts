@@ -27,8 +27,6 @@ type BlockDispatcherMap = {
   'minecraft:barrel': BlockBarrel,
   'beacon': BlockBeacon,
   'minecraft:beacon': BlockBeacon,
-  'bed': BlockBed,
-  'minecraft:bed': BlockBed,
   'bee_nest': BlockBeeNest,
   'minecraft:bee_nest': BlockBeeNest,
   'beehive': BlockBeehive,
@@ -261,6 +259,16 @@ type BlockDispatcherMap = {
   'minecraft:player_head': BlockPlayerHead,
   'player_wall_head': BlockPlayerWallHead,
   'minecraft:player_wall_head': BlockPlayerWallHead,
+  'poplar_hanging_sign': BlockPoplarHangingSign,
+  'minecraft:poplar_hanging_sign': BlockPoplarHangingSign,
+  'poplar_shelf': BlockPoplarShelf,
+  'minecraft:poplar_shelf': BlockPoplarShelf,
+  'poplar_sign': BlockPoplarSign,
+  'minecraft:poplar_sign': BlockPoplarSign,
+  'poplar_wall_hanging_sign': BlockPoplarWallHangingSign,
+  'minecraft:poplar_wall_hanging_sign': BlockPoplarWallHangingSign,
+  'poplar_wall_sign': BlockPoplarWallSign,
+  'minecraft:poplar_wall_sign': BlockPoplarWallSign,
   'potent_sulfur': BlockPotentSulfur,
   'minecraft:potent_sulfur': BlockPotentSulfur,
   'purple_banner': BlockPurpleBanner,
@@ -386,7 +394,6 @@ type BlockFallback = (
   | BlockBambooWallSign
   | BlockBarrel
   | BlockBeacon
-  | BlockBed
   | BlockBeeNest
   | BlockBeehive
   | BlockBell
@@ -503,6 +510,11 @@ type BlockFallback = (
   | BlockPinkWallBanner
   | BlockPlayerHead
   | BlockPlayerWallHead
+  | BlockPoplarHangingSign
+  | BlockPoplarShelf
+  | BlockPoplarSign
+  | BlockPoplarWallHangingSign
+  | BlockPoplarWallSign
   | BlockPotentSulfur
   | BlockPurpleBanner
   | BlockPurpleShulkerBox
@@ -570,7 +582,6 @@ type BlockBambooWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockBambooWallSign = SymbolBlockEntity['sign']
 type BlockBarrel = SymbolBlockEntity['barrel']
 type BlockBeacon = SymbolBlockEntity['beacon']
-type BlockBed = BlockEntity
 type BlockBeeNest = SymbolBlockEntity['beehive']
 type BlockBeehive = SymbolBlockEntity['beehive']
 type BlockBell = BlockEntity
@@ -687,6 +698,11 @@ type BlockPinkShulkerBox = SymbolBlockEntity['shulker_box']
 type BlockPinkWallBanner = SymbolBlockEntity['banner']
 type BlockPlayerHead = SymbolBlockEntity['skull']
 type BlockPlayerWallHead = SymbolBlockEntity['skull']
+type BlockPoplarHangingSign = SymbolBlockEntity['hanging_sign']
+type BlockPoplarShelf = SymbolBlockEntity['shelf']
+type BlockPoplarSign = SymbolBlockEntity['sign']
+type BlockPoplarWallHangingSign = SymbolBlockEntity['hanging_sign']
+type BlockPoplarWallSign = SymbolBlockEntity['sign']
 type BlockPotentSulfur = SymbolBlockEntity['potent_sulfur']
 type BlockPurpleBanner = SymbolBlockEntity['banner']
 type BlockPurpleShulkerBox = SymbolBlockEntity['shulker_box']

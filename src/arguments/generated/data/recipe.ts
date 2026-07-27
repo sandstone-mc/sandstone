@@ -474,6 +474,8 @@ export type Stonecutting = (NotificationInfo & {
 type RecipeSerializerDispatcherMap = {
   'blasting': RecipeSerializerBlasting,
   'minecraft:blasting': RecipeSerializerBlasting,
+  'brewing': RecipeSerializerBrewing,
+  'minecraft:brewing': RecipeSerializerBrewing,
   'campfire_cooking': RecipeSerializerCampfireCooking,
   'minecraft:campfire_cooking': RecipeSerializerCampfireCooking,
   'crafting_decorated_pot': RecipeSerializerCraftingDecoratedPot,
@@ -516,6 +518,7 @@ type RecipeSerializerDispatcherMap = {
 type RecipeSerializerKeys = keyof RecipeSerializerDispatcherMap
 type RecipeSerializerFallback = (
   | RecipeSerializerBlasting
+  | RecipeSerializerBrewing
   | RecipeSerializerCampfireCooking
   | RecipeSerializerCraftingDecoratedPot
   | RecipeSerializerCraftingDye
@@ -538,6 +541,7 @@ type RecipeSerializerFallback = (
   | RecipeSerializerFallbackType)
 export type RecipeSerializerFallbackType = Record<string, never>
 type RecipeSerializerBlasting = Smelting
+type RecipeSerializerBrewing = Brewing
 type RecipeSerializerCampfireCooking = Smelting
 type RecipeSerializerCraftingDecoratedPot = CraftingDecoratedPot
 type RecipeSerializerCraftingDye = CraftingDye

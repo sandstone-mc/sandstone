@@ -6,15 +6,12 @@ export type WORLDGEN_MATERIAL_CONDITIONS = (
   | `minecraft:${SetType<typeof WORLDGEN_MATERIAL_CONDITIONS_SET>}`)
 
 export const WORLDGEN_MATERIAL_CONDITIONS_SET = new Set([
-  'above_preliminary_surface',
-  'biome',
-  'hole',
-  'noise_threshold',
-  'not',
-  'steep',
-  'stone_depth',
-  'temperature',
-  'vertical_gradient',
-  'water',
-  'y_above',
+  'deep_under_floor',
+  'not_under_deep_water',
+  'not_underwater',
+  'on_ceiling',
+  'on_floor',
+  'under_ceiling',
+  'under_floor',
+  'very_deep_under_floor',
 ] as const)

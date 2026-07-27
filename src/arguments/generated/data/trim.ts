@@ -1,3 +1,4 @@
+import type { PaletteRef } from 'sandstone/arguments/generated/assets/atlas.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 
@@ -12,6 +13,10 @@ export type TrimMaterial = {
    * Permutation key which will be used in the resource pack.
    */
   asset_name: string,
+  /**
+   * Palette ID which will be used in the resource pack.
+   */
+  palette: PaletteRef,
   /**
    * Text displayed in the item tooltip.
    */

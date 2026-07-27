@@ -23,4 +23,8 @@ export const OUTGOING_RPC_METHODS_SET = new Set([
   'notification/server/started',
   'notification/server/status',
   'notification/server/stopping',
+  'notification/world/upgrade_failed',
+  'notification/world/upgrade_finished',
+  'notification/world/upgrade_progress',
+  'notification/world/upgrade_started',
 ] as const)

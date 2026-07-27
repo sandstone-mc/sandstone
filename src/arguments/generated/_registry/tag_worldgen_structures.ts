@@ -6,6 +6,7 @@ export type TAG_WORLDGEN_STRUCTURES = (
   | `minecraft:${SetType<typeof TAG_WORLDGEN_STRUCTURES_SET>}`)
 
 export const TAG_WORLDGEN_STRUCTURES_SET = new Set([
+  'abandoned_camp',
   'cats_spawn_as_black',
   'cats_spawn_in',
   'dolphin_located',

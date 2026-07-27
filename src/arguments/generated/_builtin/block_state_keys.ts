@@ -193,6 +193,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:black_wall_banner': McdocBlockStateKeysBlackWallBanner,
   'black_wool': McdocBlockStateKeysBlackWool,
   'minecraft:black_wool': McdocBlockStateKeysBlackWool,
+  'black_wool_slab': McdocBlockStateKeysBlackWoolSlab,
+  'minecraft:black_wool_slab': McdocBlockStateKeysBlackWoolSlab,
+  'black_wool_stairs': McdocBlockStateKeysBlackWoolStairs,
+  'minecraft:black_wool_stairs': McdocBlockStateKeysBlackWoolStairs,
   'blackstone': McdocBlockStateKeysBlackstone,
   'minecraft:blackstone': McdocBlockStateKeysBlackstone,
   'blackstone_slab': McdocBlockStateKeysBlackstoneSlab,
@@ -235,6 +239,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:blue_wall_banner': McdocBlockStateKeysBlueWallBanner,
   'blue_wool': McdocBlockStateKeysBlueWool,
   'minecraft:blue_wool': McdocBlockStateKeysBlueWool,
+  'blue_wool_slab': McdocBlockStateKeysBlueWoolSlab,
+  'minecraft:blue_wool_slab': McdocBlockStateKeysBlueWoolSlab,
+  'blue_wool_stairs': McdocBlockStateKeysBlueWoolStairs,
+  'minecraft:blue_wool_stairs': McdocBlockStateKeysBlueWoolStairs,
   'bone_block': McdocBlockStateKeysBoneBlock,
   'minecraft:bone_block': McdocBlockStateKeysBoneBlock,
   'bookshelf': McdocBlockStateKeysBookshelf,
@@ -289,6 +297,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:brown_wall_banner': McdocBlockStateKeysBrownWallBanner,
   'brown_wool': McdocBlockStateKeysBrownWool,
   'minecraft:brown_wool': McdocBlockStateKeysBrownWool,
+  'brown_wool_slab': McdocBlockStateKeysBrownWoolSlab,
+  'minecraft:brown_wool_slab': McdocBlockStateKeysBrownWoolSlab,
+  'brown_wool_stairs': McdocBlockStateKeysBrownWoolStairs,
+  'minecraft:brown_wool_stairs': McdocBlockStateKeysBrownWoolStairs,
   'bubble_column': McdocBlockStateKeysBubbleColumn,
   'minecraft:bubble_column': McdocBlockStateKeysBubbleColumn,
   'bubble_coral': McdocBlockStateKeysBubbleCoral,
@@ -591,6 +603,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:cyan_wall_banner': McdocBlockStateKeysCyanWallBanner,
   'cyan_wool': McdocBlockStateKeysCyanWool,
   'minecraft:cyan_wool': McdocBlockStateKeysCyanWool,
+  'cyan_wool_slab': McdocBlockStateKeysCyanWoolSlab,
+  'minecraft:cyan_wool_slab': McdocBlockStateKeysCyanWoolSlab,
+  'cyan_wool_stairs': McdocBlockStateKeysCyanWoolStairs,
+  'minecraft:cyan_wool_stairs': McdocBlockStateKeysCyanWoolStairs,
   'damaged_anvil': McdocBlockStateKeysDamagedAnvil,
   'minecraft:damaged_anvil': McdocBlockStateKeysDamagedAnvil,
   'dandelion': McdocBlockStateKeysDandelion,
@@ -893,6 +909,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:gray_wall_banner': McdocBlockStateKeysGrayWallBanner,
   'gray_wool': McdocBlockStateKeysGrayWool,
   'minecraft:gray_wool': McdocBlockStateKeysGrayWool,
+  'gray_wool_slab': McdocBlockStateKeysGrayWoolSlab,
+  'minecraft:gray_wool_slab': McdocBlockStateKeysGrayWoolSlab,
+  'gray_wool_stairs': McdocBlockStateKeysGrayWoolStairs,
+  'minecraft:gray_wool_stairs': McdocBlockStateKeysGrayWoolStairs,
   'green_banner': McdocBlockStateKeysGreenBanner,
   'minecraft:green_banner': McdocBlockStateKeysGreenBanner,
   'green_bed': McdocBlockStateKeysGreenBed,
@@ -921,6 +941,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:green_wall_banner': McdocBlockStateKeysGreenWallBanner,
   'green_wool': McdocBlockStateKeysGreenWool,
   'minecraft:green_wool': McdocBlockStateKeysGreenWool,
+  'green_wool_slab': McdocBlockStateKeysGreenWoolSlab,
+  'minecraft:green_wool_slab': McdocBlockStateKeysGreenWoolSlab,
+  'green_wool_stairs': McdocBlockStateKeysGreenWoolStairs,
+  'minecraft:green_wool_stairs': McdocBlockStateKeysGreenWoolStairs,
   'grindstone': McdocBlockStateKeysGrindstone,
   'minecraft:grindstone': McdocBlockStateKeysGrindstone,
   'hanging_roots': McdocBlockStateKeysHangingRoots,
@@ -1071,6 +1095,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:light_blue_wall_banner': McdocBlockStateKeysLightBlueWallBanner,
   'light_blue_wool': McdocBlockStateKeysLightBlueWool,
   'minecraft:light_blue_wool': McdocBlockStateKeysLightBlueWool,
+  'light_blue_wool_slab': McdocBlockStateKeysLightBlueWoolSlab,
+  'minecraft:light_blue_wool_slab': McdocBlockStateKeysLightBlueWoolSlab,
+  'light_blue_wool_stairs': McdocBlockStateKeysLightBlueWoolStairs,
+  'minecraft:light_blue_wool_stairs': McdocBlockStateKeysLightBlueWoolStairs,
   'light_gray_banner': McdocBlockStateKeysLightGrayBanner,
   'minecraft:light_gray_banner': McdocBlockStateKeysLightGrayBanner,
   'light_gray_bed': McdocBlockStateKeysLightGrayBed,
@@ -1099,6 +1127,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:light_gray_wall_banner': McdocBlockStateKeysLightGrayWallBanner,
   'light_gray_wool': McdocBlockStateKeysLightGrayWool,
   'minecraft:light_gray_wool': McdocBlockStateKeysLightGrayWool,
+  'light_gray_wool_slab': McdocBlockStateKeysLightGrayWoolSlab,
+  'minecraft:light_gray_wool_slab': McdocBlockStateKeysLightGrayWoolSlab,
+  'light_gray_wool_stairs': McdocBlockStateKeysLightGrayWoolStairs,
+  'minecraft:light_gray_wool_stairs': McdocBlockStateKeysLightGrayWoolStairs,
   'light_weighted_pressure_plate': McdocBlockStateKeysLightWeightedPressurePlate,
   'minecraft:light_weighted_pressure_plate': McdocBlockStateKeysLightWeightedPressurePlate,
   'lightning_rod': McdocBlockStateKeysLightningRod,
@@ -1137,6 +1169,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:lime_wall_banner': McdocBlockStateKeysLimeWallBanner,
   'lime_wool': McdocBlockStateKeysLimeWool,
   'minecraft:lime_wool': McdocBlockStateKeysLimeWool,
+  'lime_wool_slab': McdocBlockStateKeysLimeWoolSlab,
+  'minecraft:lime_wool_slab': McdocBlockStateKeysLimeWoolSlab,
+  'lime_wool_stairs': McdocBlockStateKeysLimeWoolStairs,
+  'minecraft:lime_wool_stairs': McdocBlockStateKeysLimeWoolStairs,
   'lodestone': McdocBlockStateKeysLodestone,
   'minecraft:lodestone': McdocBlockStateKeysLodestone,
   'loom': McdocBlockStateKeysLoom,
@@ -1169,6 +1205,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:magenta_wall_banner': McdocBlockStateKeysMagentaWallBanner,
   'magenta_wool': McdocBlockStateKeysMagentaWool,
   'minecraft:magenta_wool': McdocBlockStateKeysMagentaWool,
+  'magenta_wool_slab': McdocBlockStateKeysMagentaWoolSlab,
+  'minecraft:magenta_wool_slab': McdocBlockStateKeysMagentaWoolSlab,
+  'magenta_wool_stairs': McdocBlockStateKeysMagentaWoolStairs,
+  'minecraft:magenta_wool_stairs': McdocBlockStateKeysMagentaWoolStairs,
   'magma_block': McdocBlockStateKeysMagmaBlock,
   'minecraft:magma_block': McdocBlockStateKeysMagmaBlock,
   'mangrove_button': McdocBlockStateKeysMangroveButton,
@@ -1341,6 +1381,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:orange_concrete_powder': McdocBlockStateKeysOrangeConcretePowder,
   'orange_glazed_terracotta': McdocBlockStateKeysOrangeGlazedTerracotta,
   'minecraft:orange_glazed_terracotta': McdocBlockStateKeysOrangeGlazedTerracotta,
+  'orange_poplar_leaves': McdocBlockStateKeysOrangePoplarLeaves,
+  'minecraft:orange_poplar_leaves': McdocBlockStateKeysOrangePoplarLeaves,
   'orange_shulker_box': McdocBlockStateKeysOrangeShulkerBox,
   'minecraft:orange_shulker_box': McdocBlockStateKeysOrangeShulkerBox,
   'orange_stained_glass': McdocBlockStateKeysOrangeStainedGlass,
@@ -1355,6 +1397,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:orange_wall_banner': McdocBlockStateKeysOrangeWallBanner,
   'orange_wool': McdocBlockStateKeysOrangeWool,
   'minecraft:orange_wool': McdocBlockStateKeysOrangeWool,
+  'orange_wool_slab': McdocBlockStateKeysOrangeWoolSlab,
+  'minecraft:orange_wool_slab': McdocBlockStateKeysOrangeWoolSlab,
+  'orange_wool_stairs': McdocBlockStateKeysOrangeWoolStairs,
+  'minecraft:orange_wool_stairs': McdocBlockStateKeysOrangeWoolStairs,
   'oxeye_daisy': McdocBlockStateKeysOxeyeDaisy,
   'minecraft:oxeye_daisy': McdocBlockStateKeysOxeyeDaisy,
   'oxidized_chiseled_copper': McdocBlockStateKeysOxidizedChiseledCopper,
@@ -1475,6 +1521,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:pink_wall_banner': McdocBlockStateKeysPinkWallBanner,
   'pink_wool': McdocBlockStateKeysPinkWool,
   'minecraft:pink_wool': McdocBlockStateKeysPinkWool,
+  'pink_wool_slab': McdocBlockStateKeysPinkWoolSlab,
+  'minecraft:pink_wool_slab': McdocBlockStateKeysPinkWoolSlab,
+  'pink_wool_stairs': McdocBlockStateKeysPinkWoolStairs,
+  'minecraft:pink_wool_stairs': McdocBlockStateKeysPinkWoolStairs,
   'piston': McdocBlockStateKeysPiston,
   'minecraft:piston': McdocBlockStateKeysPiston,
   'piston_head': McdocBlockStateKeysPistonHead,
@@ -1563,6 +1613,40 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:polished_tuff_stairs': McdocBlockStateKeysPolishedTuffStairs,
   'polished_tuff_wall': McdocBlockStateKeysPolishedTuffWall,
   'minecraft:polished_tuff_wall': McdocBlockStateKeysPolishedTuffWall,
+  'poplar_button': McdocBlockStateKeysPoplarButton,
+  'minecraft:poplar_button': McdocBlockStateKeysPoplarButton,
+  'poplar_door': McdocBlockStateKeysPoplarDoor,
+  'minecraft:poplar_door': McdocBlockStateKeysPoplarDoor,
+  'poplar_fence': McdocBlockStateKeysPoplarFence,
+  'minecraft:poplar_fence': McdocBlockStateKeysPoplarFence,
+  'poplar_fence_gate': McdocBlockStateKeysPoplarFenceGate,
+  'minecraft:poplar_fence_gate': McdocBlockStateKeysPoplarFenceGate,
+  'poplar_hanging_sign': McdocBlockStateKeysPoplarHangingSign,
+  'minecraft:poplar_hanging_sign': McdocBlockStateKeysPoplarHangingSign,
+  'poplar_log': McdocBlockStateKeysPoplarLog,
+  'minecraft:poplar_log': McdocBlockStateKeysPoplarLog,
+  'poplar_planks': McdocBlockStateKeysPoplarPlanks,
+  'minecraft:poplar_planks': McdocBlockStateKeysPoplarPlanks,
+  'poplar_pressure_plate': McdocBlockStateKeysPoplarPressurePlate,
+  'minecraft:poplar_pressure_plate': McdocBlockStateKeysPoplarPressurePlate,
+  'poplar_sapling': McdocBlockStateKeysPoplarSapling,
+  'minecraft:poplar_sapling': McdocBlockStateKeysPoplarSapling,
+  'poplar_shelf': McdocBlockStateKeysPoplarShelf,
+  'minecraft:poplar_shelf': McdocBlockStateKeysPoplarShelf,
+  'poplar_sign': McdocBlockStateKeysPoplarSign,
+  'minecraft:poplar_sign': McdocBlockStateKeysPoplarSign,
+  'poplar_slab': McdocBlockStateKeysPoplarSlab,
+  'minecraft:poplar_slab': McdocBlockStateKeysPoplarSlab,
+  'poplar_stairs': McdocBlockStateKeysPoplarStairs,
+  'minecraft:poplar_stairs': McdocBlockStateKeysPoplarStairs,
+  'poplar_trapdoor': McdocBlockStateKeysPoplarTrapdoor,
+  'minecraft:poplar_trapdoor': McdocBlockStateKeysPoplarTrapdoor,
+  'poplar_wall_hanging_sign': McdocBlockStateKeysPoplarWallHangingSign,
+  'minecraft:poplar_wall_hanging_sign': McdocBlockStateKeysPoplarWallHangingSign,
+  'poplar_wall_sign': McdocBlockStateKeysPoplarWallSign,
+  'minecraft:poplar_wall_sign': McdocBlockStateKeysPoplarWallSign,
+  'poplar_wood': McdocBlockStateKeysPoplarWood,
+  'minecraft:poplar_wood': McdocBlockStateKeysPoplarWood,
   'poppy': McdocBlockStateKeysPoppy,
   'minecraft:poppy': McdocBlockStateKeysPoppy,
   'potatoes': McdocBlockStateKeysPotatoes,
@@ -1627,6 +1711,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:potted_pale_oak_sapling': McdocBlockStateKeysPottedPaleOakSapling,
   'potted_pink_tulip': McdocBlockStateKeysPottedPinkTulip,
   'minecraft:potted_pink_tulip': McdocBlockStateKeysPottedPinkTulip,
+  'potted_poplar_sapling': McdocBlockStateKeysPottedPoplarSapling,
+  'minecraft:potted_poplar_sapling': McdocBlockStateKeysPottedPoplarSapling,
   'potted_poppy': McdocBlockStateKeysPottedPoppy,
   'minecraft:potted_poppy': McdocBlockStateKeysPottedPoppy,
   'potted_red_mushroom': McdocBlockStateKeysPottedRedMushroom,
@@ -1697,6 +1783,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:purple_wall_banner': McdocBlockStateKeysPurpleWallBanner,
   'purple_wool': McdocBlockStateKeysPurpleWool,
   'minecraft:purple_wool': McdocBlockStateKeysPurpleWool,
+  'purple_wool_slab': McdocBlockStateKeysPurpleWoolSlab,
+  'minecraft:purple_wool_slab': McdocBlockStateKeysPurpleWoolSlab,
+  'purple_wool_stairs': McdocBlockStateKeysPurpleWoolStairs,
+  'minecraft:purple_wool_stairs': McdocBlockStateKeysPurpleWoolStairs,
   'purpur_block': McdocBlockStateKeysPurpurBlock,
   'minecraft:purpur_block': McdocBlockStateKeysPurpurBlock,
   'purpur_pillar': McdocBlockStateKeysPurpurPillar,
@@ -1751,6 +1841,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:red_nether_brick_wall': McdocBlockStateKeysRedNetherBrickWall,
   'red_nether_bricks': McdocBlockStateKeysRedNetherBricks,
   'minecraft:red_nether_bricks': McdocBlockStateKeysRedNetherBricks,
+  'red_poplar_leaves': McdocBlockStateKeysRedPoplarLeaves,
+  'minecraft:red_poplar_leaves': McdocBlockStateKeysRedPoplarLeaves,
   'red_sand': McdocBlockStateKeysRedSand,
   'minecraft:red_sand': McdocBlockStateKeysRedSand,
   'red_sandstone': McdocBlockStateKeysRedSandstone,
@@ -1761,6 +1853,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:red_sandstone_stairs': McdocBlockStateKeysRedSandstoneStairs,
   'red_sandstone_wall': McdocBlockStateKeysRedSandstoneWall,
   'minecraft:red_sandstone_wall': McdocBlockStateKeysRedSandstoneWall,
+  'red_shrub': McdocBlockStateKeysRedShrub,
+  'minecraft:red_shrub': McdocBlockStateKeysRedShrub,
   'red_shulker_box': McdocBlockStateKeysRedShulkerBox,
   'minecraft:red_shulker_box': McdocBlockStateKeysRedShulkerBox,
   'red_stained_glass': McdocBlockStateKeysRedStainedGlass,
@@ -1775,6 +1869,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:red_wall_banner': McdocBlockStateKeysRedWallBanner,
   'red_wool': McdocBlockStateKeysRedWool,
   'minecraft:red_wool': McdocBlockStateKeysRedWool,
+  'red_wool_slab': McdocBlockStateKeysRedWoolSlab,
+  'minecraft:red_wool_slab': McdocBlockStateKeysRedWoolSlab,
+  'red_wool_stairs': McdocBlockStateKeysRedWoolStairs,
+  'minecraft:red_wool_stairs': McdocBlockStateKeysRedWoolStairs,
   'redstone_block': McdocBlockStateKeysRedstoneBlock,
   'minecraft:redstone_block': McdocBlockStateKeysRedstoneBlock,
   'redstone_lamp': McdocBlockStateKeysRedstoneLamp,
@@ -1839,6 +1937,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:sea_pickle': McdocBlockStateKeysSeaPickle,
   'seagrass': McdocBlockStateKeysSeagrass,
   'minecraft:seagrass': McdocBlockStateKeysSeagrass,
+  'shelf_mushroom': McdocBlockStateKeysShelfMushroom,
+  'minecraft:shelf_mushroom': McdocBlockStateKeysShelfMushroom,
   'short_dry_grass': McdocBlockStateKeysShortDryGrass,
   'minecraft:short_dry_grass': McdocBlockStateKeysShortDryGrass,
   'short_grass': McdocBlockStateKeysShortGrass,
@@ -1969,6 +2069,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:stone_stairs': McdocBlockStateKeysStoneStairs,
   'stonecutter': McdocBlockStateKeysStonecutter,
   'minecraft:stonecutter': McdocBlockStateKeysStonecutter,
+  'straw_bed': McdocBlockStateKeysStrawBed,
+  'minecraft:straw_bed': McdocBlockStateKeysStrawBed,
   'stripped_acacia_log': McdocBlockStateKeysStrippedAcaciaLog,
   'minecraft:stripped_acacia_log': McdocBlockStateKeysStrippedAcaciaLog,
   'stripped_acacia_wood': McdocBlockStateKeysStrippedAcaciaWood,
@@ -2007,6 +2109,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:stripped_pale_oak_log': McdocBlockStateKeysStrippedPaleOakLog,
   'stripped_pale_oak_wood': McdocBlockStateKeysStrippedPaleOakWood,
   'minecraft:stripped_pale_oak_wood': McdocBlockStateKeysStrippedPaleOakWood,
+  'stripped_poplar_log': McdocBlockStateKeysStrippedPoplarLog,
+  'minecraft:stripped_poplar_log': McdocBlockStateKeysStrippedPoplarLog,
+  'stripped_poplar_wood': McdocBlockStateKeysStrippedPoplarWood,
+  'minecraft:stripped_poplar_wood': McdocBlockStateKeysStrippedPoplarWood,
   'stripped_spruce_log': McdocBlockStateKeysStrippedSpruceLog,
   'minecraft:stripped_spruce_log': McdocBlockStateKeysStrippedSpruceLog,
   'stripped_spruce_wood': McdocBlockStateKeysStrippedSpruceWood,
@@ -2351,6 +2457,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:white_wall_banner': McdocBlockStateKeysWhiteWallBanner,
   'white_wool': McdocBlockStateKeysWhiteWool,
   'minecraft:white_wool': McdocBlockStateKeysWhiteWool,
+  'white_wool_slab': McdocBlockStateKeysWhiteWoolSlab,
+  'minecraft:white_wool_slab': McdocBlockStateKeysWhiteWoolSlab,
+  'white_wool_stairs': McdocBlockStateKeysWhiteWoolStairs,
+  'minecraft:white_wool_stairs': McdocBlockStateKeysWhiteWoolStairs,
   'wildflowers': McdocBlockStateKeysWildflowers,
   'minecraft:wildflowers': McdocBlockStateKeysWildflowers,
   'wither_rose': McdocBlockStateKeysWitherRose,
@@ -2375,6 +2485,8 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:yellow_concrete_powder': McdocBlockStateKeysYellowConcretePowder,
   'yellow_glazed_terracotta': McdocBlockStateKeysYellowGlazedTerracotta,
   'minecraft:yellow_glazed_terracotta': McdocBlockStateKeysYellowGlazedTerracotta,
+  'yellow_poplar_leaves': McdocBlockStateKeysYellowPoplarLeaves,
+  'minecraft:yellow_poplar_leaves': McdocBlockStateKeysYellowPoplarLeaves,
   'yellow_shulker_box': McdocBlockStateKeysYellowShulkerBox,
   'minecraft:yellow_shulker_box': McdocBlockStateKeysYellowShulkerBox,
   'yellow_stained_glass': McdocBlockStateKeysYellowStainedGlass,
@@ -2387,6 +2499,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:yellow_wall_banner': McdocBlockStateKeysYellowWallBanner,
   'yellow_wool': McdocBlockStateKeysYellowWool,
   'minecraft:yellow_wool': McdocBlockStateKeysYellowWool,
+  'yellow_wool_slab': McdocBlockStateKeysYellowWoolSlab,
+  'minecraft:yellow_wool_slab': McdocBlockStateKeysYellowWoolSlab,
+  'yellow_wool_stairs': McdocBlockStateKeysYellowWoolStairs,
+  'minecraft:yellow_wool_stairs': McdocBlockStateKeysYellowWoolStairs,
   'zombie_head': McdocBlockStateKeysZombieHead,
   'minecraft:zombie_head': McdocBlockStateKeysZombieHead,
   'zombie_wall_head': McdocBlockStateKeysZombieWallHead,
@@ -2491,6 +2607,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysBlackTerracotta
   | McdocBlockStateKeysBlackWallBanner
   | McdocBlockStateKeysBlackWool
+  | McdocBlockStateKeysBlackWoolSlab
+  | McdocBlockStateKeysBlackWoolStairs
   | McdocBlockStateKeysBlackstone
   | McdocBlockStateKeysBlackstoneSlab
   | McdocBlockStateKeysBlackstoneStairs
@@ -2512,6 +2630,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysBlueTerracotta
   | McdocBlockStateKeysBlueWallBanner
   | McdocBlockStateKeysBlueWool
+  | McdocBlockStateKeysBlueWoolSlab
+  | McdocBlockStateKeysBlueWoolStairs
   | McdocBlockStateKeysBoneBlock
   | McdocBlockStateKeysBookshelf
   | McdocBlockStateKeysBrainCoral
@@ -2539,6 +2659,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysBrownTerracotta
   | McdocBlockStateKeysBrownWallBanner
   | McdocBlockStateKeysBrownWool
+  | McdocBlockStateKeysBrownWoolSlab
+  | McdocBlockStateKeysBrownWoolStairs
   | McdocBlockStateKeysBubbleColumn
   | McdocBlockStateKeysBubbleCoral
   | McdocBlockStateKeysBubbleCoralBlock
@@ -2690,6 +2812,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysCyanTerracotta
   | McdocBlockStateKeysCyanWallBanner
   | McdocBlockStateKeysCyanWool
+  | McdocBlockStateKeysCyanWoolSlab
+  | McdocBlockStateKeysCyanWoolStairs
   | McdocBlockStateKeysDamagedAnvil
   | McdocBlockStateKeysDandelion
   | McdocBlockStateKeysDarkOakButton
@@ -2841,6 +2965,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysGrayTerracotta
   | McdocBlockStateKeysGrayWallBanner
   | McdocBlockStateKeysGrayWool
+  | McdocBlockStateKeysGrayWoolSlab
+  | McdocBlockStateKeysGrayWoolStairs
   | McdocBlockStateKeysGreenBanner
   | McdocBlockStateKeysGreenBed
   | McdocBlockStateKeysGreenCandle
@@ -2855,6 +2981,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysGreenTerracotta
   | McdocBlockStateKeysGreenWallBanner
   | McdocBlockStateKeysGreenWool
+  | McdocBlockStateKeysGreenWoolSlab
+  | McdocBlockStateKeysGreenWoolStairs
   | McdocBlockStateKeysGrindstone
   | McdocBlockStateKeysHangingRoots
   | McdocBlockStateKeysHayBlock
@@ -2930,6 +3058,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysLightBlueTerracotta
   | McdocBlockStateKeysLightBlueWallBanner
   | McdocBlockStateKeysLightBlueWool
+  | McdocBlockStateKeysLightBlueWoolSlab
+  | McdocBlockStateKeysLightBlueWoolStairs
   | McdocBlockStateKeysLightGrayBanner
   | McdocBlockStateKeysLightGrayBed
   | McdocBlockStateKeysLightGrayCandle
@@ -2944,6 +3074,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysLightGrayTerracotta
   | McdocBlockStateKeysLightGrayWallBanner
   | McdocBlockStateKeysLightGrayWool
+  | McdocBlockStateKeysLightGrayWoolSlab
+  | McdocBlockStateKeysLightGrayWoolStairs
   | McdocBlockStateKeysLightWeightedPressurePlate
   | McdocBlockStateKeysLightningRod
   | McdocBlockStateKeysLilac
@@ -2963,6 +3095,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysLimeTerracotta
   | McdocBlockStateKeysLimeWallBanner
   | McdocBlockStateKeysLimeWool
+  | McdocBlockStateKeysLimeWoolSlab
+  | McdocBlockStateKeysLimeWoolStairs
   | McdocBlockStateKeysLodestone
   | McdocBlockStateKeysLoom
   | McdocBlockStateKeysMagentaBanner
@@ -2979,6 +3113,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysMagentaTerracotta
   | McdocBlockStateKeysMagentaWallBanner
   | McdocBlockStateKeysMagentaWool
+  | McdocBlockStateKeysMagentaWoolSlab
+  | McdocBlockStateKeysMagentaWoolStairs
   | McdocBlockStateKeysMagmaBlock
   | McdocBlockStateKeysMangroveButton
   | McdocBlockStateKeysMangroveDoor
@@ -3065,6 +3201,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysOrangeConcrete
   | McdocBlockStateKeysOrangeConcretePowder
   | McdocBlockStateKeysOrangeGlazedTerracotta
+  | McdocBlockStateKeysOrangePoplarLeaves
   | McdocBlockStateKeysOrangeShulkerBox
   | McdocBlockStateKeysOrangeStainedGlass
   | McdocBlockStateKeysOrangeStainedGlassPane
@@ -3072,6 +3209,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysOrangeTulip
   | McdocBlockStateKeysOrangeWallBanner
   | McdocBlockStateKeysOrangeWool
+  | McdocBlockStateKeysOrangeWoolSlab
+  | McdocBlockStateKeysOrangeWoolStairs
   | McdocBlockStateKeysOxeyeDaisy
   | McdocBlockStateKeysOxidizedChiseledCopper
   | McdocBlockStateKeysOxidizedCopper
@@ -3132,6 +3271,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPinkTulip
   | McdocBlockStateKeysPinkWallBanner
   | McdocBlockStateKeysPinkWool
+  | McdocBlockStateKeysPinkWoolSlab
+  | McdocBlockStateKeysPinkWoolStairs
   | McdocBlockStateKeysPiston
   | McdocBlockStateKeysPistonHead
   | McdocBlockStateKeysPitcherCrop
@@ -3176,6 +3317,23 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPolishedTuffSlab
   | McdocBlockStateKeysPolishedTuffStairs
   | McdocBlockStateKeysPolishedTuffWall
+  | McdocBlockStateKeysPoplarButton
+  | McdocBlockStateKeysPoplarDoor
+  | McdocBlockStateKeysPoplarFence
+  | McdocBlockStateKeysPoplarFenceGate
+  | McdocBlockStateKeysPoplarHangingSign
+  | McdocBlockStateKeysPoplarLog
+  | McdocBlockStateKeysPoplarPlanks
+  | McdocBlockStateKeysPoplarPressurePlate
+  | McdocBlockStateKeysPoplarSapling
+  | McdocBlockStateKeysPoplarShelf
+  | McdocBlockStateKeysPoplarSign
+  | McdocBlockStateKeysPoplarSlab
+  | McdocBlockStateKeysPoplarStairs
+  | McdocBlockStateKeysPoplarTrapdoor
+  | McdocBlockStateKeysPoplarWallHangingSign
+  | McdocBlockStateKeysPoplarWallSign
+  | McdocBlockStateKeysPoplarWood
   | McdocBlockStateKeysPoppy
   | McdocBlockStateKeysPotatoes
   | McdocBlockStateKeysPotentSulfur
@@ -3208,6 +3366,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPottedOxeyeDaisy
   | McdocBlockStateKeysPottedPaleOakSapling
   | McdocBlockStateKeysPottedPinkTulip
+  | McdocBlockStateKeysPottedPoplarSapling
   | McdocBlockStateKeysPottedPoppy
   | McdocBlockStateKeysPottedRedMushroom
   | McdocBlockStateKeysPottedRedTulip
@@ -3243,6 +3402,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPurpleTerracotta
   | McdocBlockStateKeysPurpleWallBanner
   | McdocBlockStateKeysPurpleWool
+  | McdocBlockStateKeysPurpleWoolSlab
+  | McdocBlockStateKeysPurpleWoolStairs
   | McdocBlockStateKeysPurpurBlock
   | McdocBlockStateKeysPurpurPillar
   | McdocBlockStateKeysPurpurSlab
@@ -3270,11 +3431,13 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysRedNetherBrickStairs
   | McdocBlockStateKeysRedNetherBrickWall
   | McdocBlockStateKeysRedNetherBricks
+  | McdocBlockStateKeysRedPoplarLeaves
   | McdocBlockStateKeysRedSand
   | McdocBlockStateKeysRedSandstone
   | McdocBlockStateKeysRedSandstoneSlab
   | McdocBlockStateKeysRedSandstoneStairs
   | McdocBlockStateKeysRedSandstoneWall
+  | McdocBlockStateKeysRedShrub
   | McdocBlockStateKeysRedShulkerBox
   | McdocBlockStateKeysRedStainedGlass
   | McdocBlockStateKeysRedStainedGlassPane
@@ -3282,6 +3445,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysRedTulip
   | McdocBlockStateKeysRedWallBanner
   | McdocBlockStateKeysRedWool
+  | McdocBlockStateKeysRedWoolSlab
+  | McdocBlockStateKeysRedWoolStairs
   | McdocBlockStateKeysRedstoneBlock
   | McdocBlockStateKeysRedstoneLamp
   | McdocBlockStateKeysRedstoneOre
@@ -3314,6 +3479,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysSeaLantern
   | McdocBlockStateKeysSeaPickle
   | McdocBlockStateKeysSeagrass
+  | McdocBlockStateKeysShelfMushroom
   | McdocBlockStateKeysShortDryGrass
   | McdocBlockStateKeysShortGrass
   | McdocBlockStateKeysShroomlight
@@ -3379,6 +3545,7 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysStoneSlab
   | McdocBlockStateKeysStoneStairs
   | McdocBlockStateKeysStonecutter
+  | McdocBlockStateKeysStrawBed
   | McdocBlockStateKeysStrippedAcaciaLog
   | McdocBlockStateKeysStrippedAcaciaWood
   | McdocBlockStateKeysStrippedBambooBlock
@@ -3398,6 +3565,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysStrippedOakWood
   | McdocBlockStateKeysStrippedPaleOakLog
   | McdocBlockStateKeysStrippedPaleOakWood
+  | McdocBlockStateKeysStrippedPoplarLog
+  | McdocBlockStateKeysStrippedPoplarWood
   | McdocBlockStateKeysStrippedSpruceLog
   | McdocBlockStateKeysStrippedSpruceWood
   | McdocBlockStateKeysStrippedWarpedHyphae
@@ -3570,6 +3739,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysWhiteTulip
   | McdocBlockStateKeysWhiteWallBanner
   | McdocBlockStateKeysWhiteWool
+  | McdocBlockStateKeysWhiteWoolSlab
+  | McdocBlockStateKeysWhiteWoolStairs
   | McdocBlockStateKeysWildflowers
   | McdocBlockStateKeysWitherRose
   | McdocBlockStateKeysWitherSkeletonSkull
@@ -3582,12 +3753,15 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysYellowConcrete
   | McdocBlockStateKeysYellowConcretePowder
   | McdocBlockStateKeysYellowGlazedTerracotta
+  | McdocBlockStateKeysYellowPoplarLeaves
   | McdocBlockStateKeysYellowShulkerBox
   | McdocBlockStateKeysYellowStainedGlass
   | McdocBlockStateKeysYellowStainedGlassPane
   | McdocBlockStateKeysYellowTerracotta
   | McdocBlockStateKeysYellowWallBanner
   | McdocBlockStateKeysYellowWool
+  | McdocBlockStateKeysYellowWoolSlab
+  | McdocBlockStateKeysYellowWoolStairs
   | McdocBlockStateKeysZombieHead
   | McdocBlockStateKeysZombieWallHead
   | McdocBlockStateKeysFallbackType)
@@ -3690,6 +3864,8 @@ type McdocBlockStateKeysBlackStainedGlassPane = ('east' | 'north' | 'south' | 'w
 type McdocBlockStateKeysBlackTerracotta = never
 type McdocBlockStateKeysBlackWallBanner = 'facing'
 type McdocBlockStateKeysBlackWool = never
+type McdocBlockStateKeysBlackWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysBlackWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysBlackstone = never
 type McdocBlockStateKeysBlackstoneSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysBlackstoneStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
@@ -3711,6 +3887,8 @@ type McdocBlockStateKeysBlueStainedGlassPane = ('east' | 'north' | 'south' | 'wa
 type McdocBlockStateKeysBlueTerracotta = never
 type McdocBlockStateKeysBlueWallBanner = 'facing'
 type McdocBlockStateKeysBlueWool = never
+type McdocBlockStateKeysBlueWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysBlueWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysBoneBlock = 'axis'
 type McdocBlockStateKeysBookshelf = never
 type McdocBlockStateKeysBrainCoral = 'waterlogged'
@@ -3738,6 +3916,8 @@ type McdocBlockStateKeysBrownStainedGlassPane = ('east' | 'north' | 'south' | 'w
 type McdocBlockStateKeysBrownTerracotta = never
 type McdocBlockStateKeysBrownWallBanner = 'facing'
 type McdocBlockStateKeysBrownWool = never
+type McdocBlockStateKeysBrownWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysBrownWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysBubbleColumn = 'drag'
 type McdocBlockStateKeysBubbleCoral = 'waterlogged'
 type McdocBlockStateKeysBubbleCoralBlock = never
@@ -3896,6 +4076,8 @@ type McdocBlockStateKeysCyanStainedGlassPane = ('east' | 'north' | 'south' | 'wa
 type McdocBlockStateKeysCyanTerracotta = never
 type McdocBlockStateKeysCyanWallBanner = 'facing'
 type McdocBlockStateKeysCyanWool = never
+type McdocBlockStateKeysCyanWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysCyanWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysDamagedAnvil = 'facing'
 type McdocBlockStateKeysDandelion = never
 type McdocBlockStateKeysDarkOakButton = ('face' | 'facing' | 'powered')
@@ -4047,6 +4229,8 @@ type McdocBlockStateKeysGrayStainedGlassPane = ('east' | 'north' | 'south' | 'wa
 type McdocBlockStateKeysGrayTerracotta = never
 type McdocBlockStateKeysGrayWallBanner = 'facing'
 type McdocBlockStateKeysGrayWool = never
+type McdocBlockStateKeysGrayWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysGrayWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysGreenBanner = 'rotation'
 type McdocBlockStateKeysGreenBed = ('facing' | 'occupied' | 'part')
 type McdocBlockStateKeysGreenCandle = ('candles' | 'lit' | 'waterlogged')
@@ -4061,6 +4245,8 @@ type McdocBlockStateKeysGreenStainedGlassPane = ('east' | 'north' | 'south' | 'w
 type McdocBlockStateKeysGreenTerracotta = never
 type McdocBlockStateKeysGreenWallBanner = 'facing'
 type McdocBlockStateKeysGreenWool = never
+type McdocBlockStateKeysGreenWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysGreenWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysGrindstone = ('face' | 'facing')
 type McdocBlockStateKeysHangingRoots = 'waterlogged'
 type McdocBlockStateKeysHayBlock = 'axis'
@@ -4136,6 +4322,8 @@ type McdocBlockStateKeysLightBlueStainedGlassPane = ('east' | 'north' | 'south' 
 type McdocBlockStateKeysLightBlueTerracotta = never
 type McdocBlockStateKeysLightBlueWallBanner = 'facing'
 type McdocBlockStateKeysLightBlueWool = never
+type McdocBlockStateKeysLightBlueWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysLightBlueWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysLightGrayBanner = 'rotation'
 type McdocBlockStateKeysLightGrayBed = ('facing' | 'occupied' | 'part')
 type McdocBlockStateKeysLightGrayCandle = ('candles' | 'lit' | 'waterlogged')
@@ -4150,6 +4338,8 @@ type McdocBlockStateKeysLightGrayStainedGlassPane = ('east' | 'north' | 'south' 
 type McdocBlockStateKeysLightGrayTerracotta = never
 type McdocBlockStateKeysLightGrayWallBanner = 'facing'
 type McdocBlockStateKeysLightGrayWool = never
+type McdocBlockStateKeysLightGrayWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysLightGrayWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysLightWeightedPressurePlate = 'power'
 type McdocBlockStateKeysLightningRod = ('facing' | 'powered' | 'waterlogged')
 type McdocBlockStateKeysLilac = 'half'
@@ -4169,6 +4359,8 @@ type McdocBlockStateKeysLimeStainedGlassPane = ('east' | 'north' | 'south' | 'wa
 type McdocBlockStateKeysLimeTerracotta = never
 type McdocBlockStateKeysLimeWallBanner = 'facing'
 type McdocBlockStateKeysLimeWool = never
+type McdocBlockStateKeysLimeWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysLimeWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysLodestone = never
 type McdocBlockStateKeysLoom = 'facing'
 type McdocBlockStateKeysMagentaBanner = 'rotation'
@@ -4185,6 +4377,8 @@ type McdocBlockStateKeysMagentaStainedGlassPane = ('east' | 'north' | 'south' | 
 type McdocBlockStateKeysMagentaTerracotta = never
 type McdocBlockStateKeysMagentaWallBanner = 'facing'
 type McdocBlockStateKeysMagentaWool = never
+type McdocBlockStateKeysMagentaWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysMagentaWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysMagmaBlock = never
 type McdocBlockStateKeysMangroveButton = ('face' | 'facing' | 'powered')
 type McdocBlockStateKeysMangroveDoor = ('facing' | 'half' | 'hinge' | 'open' | 'powered')
@@ -4271,6 +4465,7 @@ type McdocBlockStateKeysOrangeCarpet = never
 type McdocBlockStateKeysOrangeConcrete = never
 type McdocBlockStateKeysOrangeConcretePowder = never
 type McdocBlockStateKeysOrangeGlazedTerracotta = 'facing'
+type McdocBlockStateKeysOrangePoplarLeaves = ('distance' | 'persistent' | 'waterlogged')
 type McdocBlockStateKeysOrangeShulkerBox = 'facing'
 type McdocBlockStateKeysOrangeStainedGlass = never
 type McdocBlockStateKeysOrangeStainedGlassPane = ('east' | 'north' | 'south' | 'waterlogged' | 'west')
@@ -4278,6 +4473,8 @@ type McdocBlockStateKeysOrangeTerracotta = never
 type McdocBlockStateKeysOrangeTulip = never
 type McdocBlockStateKeysOrangeWallBanner = 'facing'
 type McdocBlockStateKeysOrangeWool = never
+type McdocBlockStateKeysOrangeWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysOrangeWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysOxeyeDaisy = never
 type McdocBlockStateKeysOxidizedChiseledCopper = never
 type McdocBlockStateKeysOxidizedCopper = never
@@ -4338,6 +4535,8 @@ type McdocBlockStateKeysPinkTerracotta = never
 type McdocBlockStateKeysPinkTulip = never
 type McdocBlockStateKeysPinkWallBanner = 'facing'
 type McdocBlockStateKeysPinkWool = never
+type McdocBlockStateKeysPinkWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysPinkWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysPiston = ('extended' | 'facing')
 type McdocBlockStateKeysPistonHead = ('type' | 'facing' | 'short')
 type McdocBlockStateKeysPitcherCrop = ('age' | 'half')
@@ -4382,6 +4581,23 @@ type McdocBlockStateKeysPolishedTuff = never
 type McdocBlockStateKeysPolishedTuffSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysPolishedTuffStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysPolishedTuffWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
+type McdocBlockStateKeysPoplarButton = ('face' | 'facing' | 'powered')
+type McdocBlockStateKeysPoplarDoor = ('facing' | 'half' | 'hinge' | 'open' | 'powered')
+type McdocBlockStateKeysPoplarFence = ('east' | 'north' | 'south' | 'waterlogged' | 'west')
+type McdocBlockStateKeysPoplarFenceGate = ('facing' | 'in_wall' | 'open' | 'powered')
+type McdocBlockStateKeysPoplarHangingSign = ('attached' | 'rotation' | 'waterlogged')
+type McdocBlockStateKeysPoplarLog = 'axis'
+type McdocBlockStateKeysPoplarPlanks = never
+type McdocBlockStateKeysPoplarPressurePlate = 'powered'
+type McdocBlockStateKeysPoplarSapling = 'stage'
+type McdocBlockStateKeysPoplarShelf = ('facing' | 'powered' | 'side_chain' | 'waterlogged')
+type McdocBlockStateKeysPoplarSign = ('rotation' | 'waterlogged')
+type McdocBlockStateKeysPoplarSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysPoplarStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
+type McdocBlockStateKeysPoplarTrapdoor = ('facing' | 'half' | 'open' | 'powered' | 'waterlogged')
+type McdocBlockStateKeysPoplarWallHangingSign = ('facing' | 'waterlogged')
+type McdocBlockStateKeysPoplarWallSign = ('facing' | 'waterlogged')
+type McdocBlockStateKeysPoplarWood = 'axis'
 type McdocBlockStateKeysPoppy = never
 type McdocBlockStateKeysPotatoes = 'age'
 type McdocBlockStateKeysPotentSulfur = 'potent_sulfur_state'
@@ -4414,6 +4630,7 @@ type McdocBlockStateKeysPottedOrangeTulip = never
 type McdocBlockStateKeysPottedOxeyeDaisy = never
 type McdocBlockStateKeysPottedPaleOakSapling = never
 type McdocBlockStateKeysPottedPinkTulip = never
+type McdocBlockStateKeysPottedPoplarSapling = never
 type McdocBlockStateKeysPottedPoppy = never
 type McdocBlockStateKeysPottedRedMushroom = never
 type McdocBlockStateKeysPottedRedTulip = never
@@ -4449,6 +4666,8 @@ type McdocBlockStateKeysPurpleStainedGlassPane = ('east' | 'north' | 'south' | '
 type McdocBlockStateKeysPurpleTerracotta = never
 type McdocBlockStateKeysPurpleWallBanner = 'facing'
 type McdocBlockStateKeysPurpleWool = never
+type McdocBlockStateKeysPurpleWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysPurpleWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysPurpurBlock = never
 type McdocBlockStateKeysPurpurPillar = 'axis'
 type McdocBlockStateKeysPurpurSlab = ('type' | 'waterlogged')
@@ -4476,11 +4695,13 @@ type McdocBlockStateKeysRedNetherBrickSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysRedNetherBrickStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysRedNetherBrickWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
 type McdocBlockStateKeysRedNetherBricks = never
+type McdocBlockStateKeysRedPoplarLeaves = ('distance' | 'persistent' | 'waterlogged')
 type McdocBlockStateKeysRedSand = never
 type McdocBlockStateKeysRedSandstone = never
 type McdocBlockStateKeysRedSandstoneSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysRedSandstoneStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysRedSandstoneWall = ('east' | 'north' | 'south' | 'up' | 'waterlogged' | 'west')
+type McdocBlockStateKeysRedShrub = never
 type McdocBlockStateKeysRedShulkerBox = 'facing'
 type McdocBlockStateKeysRedStainedGlass = never
 type McdocBlockStateKeysRedStainedGlassPane = ('east' | 'north' | 'south' | 'waterlogged' | 'west')
@@ -4488,6 +4709,8 @@ type McdocBlockStateKeysRedTerracotta = never
 type McdocBlockStateKeysRedTulip = never
 type McdocBlockStateKeysRedWallBanner = 'facing'
 type McdocBlockStateKeysRedWool = never
+type McdocBlockStateKeysRedWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysRedWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysRedstoneBlock = never
 type McdocBlockStateKeysRedstoneLamp = 'lit'
 type McdocBlockStateKeysRedstoneOre = 'lit'
@@ -4520,6 +4743,7 @@ type McdocBlockStateKeysSculkVein = ('down' | 'east' | 'north' | 'south' | 'up' 
 type McdocBlockStateKeysSeaLantern = never
 type McdocBlockStateKeysSeaPickle = ('pickles' | 'waterlogged')
 type McdocBlockStateKeysSeagrass = never
+type McdocBlockStateKeysShelfMushroom = ('age' | 'facing')
 type McdocBlockStateKeysShortDryGrass = never
 type McdocBlockStateKeysShortGrass = never
 type McdocBlockStateKeysShroomlight = never
@@ -4585,6 +4809,7 @@ type McdocBlockStateKeysStonePressurePlate = 'powered'
 type McdocBlockStateKeysStoneSlab = ('type' | 'waterlogged')
 type McdocBlockStateKeysStoneStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysStonecutter = 'facing'
+type McdocBlockStateKeysStrawBed = ('facing' | 'occupied' | 'part')
 type McdocBlockStateKeysStrippedAcaciaLog = 'axis'
 type McdocBlockStateKeysStrippedAcaciaWood = 'axis'
 type McdocBlockStateKeysStrippedBambooBlock = 'axis'
@@ -4604,6 +4829,8 @@ type McdocBlockStateKeysStrippedOakLog = 'axis'
 type McdocBlockStateKeysStrippedOakWood = 'axis'
 type McdocBlockStateKeysStrippedPaleOakLog = 'axis'
 type McdocBlockStateKeysStrippedPaleOakWood = 'axis'
+type McdocBlockStateKeysStrippedPoplarLog = 'axis'
+type McdocBlockStateKeysStrippedPoplarWood = 'axis'
 type McdocBlockStateKeysStrippedSpruceLog = 'axis'
 type McdocBlockStateKeysStrippedSpruceWood = 'axis'
 type McdocBlockStateKeysStrippedWarpedHyphae = 'axis'
@@ -4776,6 +5003,8 @@ type McdocBlockStateKeysWhiteTerracotta = never
 type McdocBlockStateKeysWhiteTulip = never
 type McdocBlockStateKeysWhiteWallBanner = 'facing'
 type McdocBlockStateKeysWhiteWool = never
+type McdocBlockStateKeysWhiteWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysWhiteWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysWildflowers = ('facing' | 'flower_amount')
 type McdocBlockStateKeysWitherRose = never
 type McdocBlockStateKeysWitherSkeletonSkull = ('powered' | 'rotation')
@@ -4788,12 +5017,15 @@ type McdocBlockStateKeysYellowCarpet = never
 type McdocBlockStateKeysYellowConcrete = never
 type McdocBlockStateKeysYellowConcretePowder = never
 type McdocBlockStateKeysYellowGlazedTerracotta = 'facing'
+type McdocBlockStateKeysYellowPoplarLeaves = ('distance' | 'persistent' | 'waterlogged')
 type McdocBlockStateKeysYellowShulkerBox = 'facing'
 type McdocBlockStateKeysYellowStainedGlass = never
 type McdocBlockStateKeysYellowStainedGlassPane = ('east' | 'north' | 'south' | 'waterlogged' | 'west')
 type McdocBlockStateKeysYellowTerracotta = never
 type McdocBlockStateKeysYellowWallBanner = 'facing'
 type McdocBlockStateKeysYellowWool = never
+type McdocBlockStateKeysYellowWoolSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysYellowWoolStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysZombieHead = ('powered' | 'rotation')
 type McdocBlockStateKeysZombieWallHead = ('facing' | 'powered')
 export type SymbolMcdocBlockStateKeys<CASE extends

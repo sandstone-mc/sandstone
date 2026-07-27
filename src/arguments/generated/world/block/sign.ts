@@ -52,4 +52,12 @@ export type Sign = (BlockEntity & {
    * Whether the sign has been made uneditable by applying wax.
    */
   is_waxed?: boolean,
+  /**
+   * Whether the sign allows following features:
+   * 1. Resolving text components
+   * 2. Executing click events
+   *
+   * Defaults to `false`.
+   */
+  allow_op_features?: boolean,
 })

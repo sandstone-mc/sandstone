@@ -11,5 +11,4 @@ export const POST_EFFECTS_SET = new Set([
   'entity_outline',
   'invert',
   'spider',
-  'transparency',
 ] as const)

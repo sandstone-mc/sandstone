@@ -8,13 +8,18 @@ import type {
   LocationPredicate,
 } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
+import type { LootTableListRef } from 'sandstone/arguments/generated/data/loot.ts'
+import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
+import type { RecipeListRef } from 'sandstone/arguments/generated/data/recipe.ts'
 import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { BlockListRef } from 'sandstone/arguments/generated/util/registry_ref.ts'
+import type { PotionsPredicate } from 'sandstone/arguments/generated/world/component/predicate.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { LootTableClass, NBTFloat, NBTInt, NBTList, RecipeClass } from 'sandstone'
 
-export type AdvancementPredicateRef = Array<LootCondition>
+export type AdvancementPredicateRef = (Array<LootCondition> | PredicateRef)
 
 export type AllayDropItemOnBlock = (TriggerBase & {
   location?: AdvancementPredicateRef,
@@ -24,17 +29,23 @@ export type AnyBlockUse = (TriggerBase & {
   location?: AdvancementPredicateRef,
 })
 
-export type BeeNestDestroyed = (TriggerBase & {
-  block?: Registry['minecraft:block'],
-  /**
-   * Number of bees that were inside the bee nest/beehive before it was broken.
-   */
-  num_bees_inside?: NBTInt,
-  /**
-   * Item used to break the block.
-   */
-  item?: ItemPredicate,
-})
+export type BeeNestDestroyed = NonNullable<({
+  [S in Extract<Extract<BlockListRef, string>, string>]?: (TriggerBase & {
+    block?: Registry['minecraft:block'],
+    blocks?: S,
+    state?: (S extends undefined
+      ? SymbolMcdocBlockStates<'%none'> :
+      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>)),
+    /**
+     * Number of bees that were inside the bee nest/beehive before it was broken.
+     */
+    num_bees_inside?: NBTInt,
+    /**
+     * Item used to break the block.
+     */
+    item?: ItemPredicate,
+  })
+}[Extract<BlockListRef, string>])>
 
 export type BredAnimals = (TriggerBase & {
   parent?: CompositeEntity,
@@ -43,7 +54,7 @@ export type BredAnimals = (TriggerBase & {
 })
 
 export type BrewedPotion = (TriggerBase & {
-  potion?: Registry['minecraft:potion'],
+  potion?: (Registry['minecraft:potion'] | PotionsPredicate),
 })
 
 export type ChangedDimension = (TriggerBase & {
@@ -97,6 +108,7 @@ export type EnchantedItem = (TriggerBase & {
 export type EnterBlock = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:block'], string>, string>]?: (TriggerBase & {
     block?: S,
+    blocks?: BlockListRef,
     state?: (S extends undefined
       ? SymbolMcdocBlockStates<'%none'> :
       (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>)),
@@ -254,6 +266,7 @@ export type PlacedBlock = (TriggerBase & {
 
 export type PlayerGeneratesContainerLoot = (TriggerBase & {
   loot_table: (Registry['minecraft:loot_table'] | LootTableClass),
+  loot_tables: LootTableListRef,
 })
 
 export type PlayerHurtEntity = (TriggerBase & {
@@ -275,6 +288,7 @@ export type PlayerTrigger = TriggerBase
 
 export type RecipeCrafted = (TriggerBase & {
   recipe_id: (Registry['minecraft:recipe'] | RecipeClass),
+  recipes: RecipeListRef,
   /**
    * Value:
    * List length range: 1..9
@@ -289,6 +303,7 @@ export type RecipeCrafted = (TriggerBase & {
 
 export type RecipeUnlocked = (TriggerBase & {
   recipe: (Registry['minecraft:recipe'] | RecipeClass),
+  recipes: RecipeListRef,
 })
 
 export type RequiredConditions<C extends NBTObject> = {
@@ -317,6 +332,7 @@ export type ShotCrossbow = (TriggerBase & {
 
 export type SlideDownBlock = (TriggerBase & {
   block?: Registry['minecraft:block'],
+  blocks?: BlockListRef,
 })
 
 export type SpearMobs = (TriggerBase & {

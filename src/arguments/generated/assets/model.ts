@@ -217,6 +217,17 @@ export type ModelElement = {
   shade?: boolean,
   /**
    * Value:
+   *
+   *  - Down(`down`)
+   *  - Up(`up`)
+   *  - North(`north`)
+   *  - East(`east`)
+   *  - South(`south`)
+   *  - West(`west`)
+   */
+  shade_direction_override?: Direction,
+  /**
+   * Value:
    * Range: 0..15
    */
   light_emission?: NBTInt<{

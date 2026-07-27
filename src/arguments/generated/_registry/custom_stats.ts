@@ -67,6 +67,7 @@ export const CUSTOM_STATS_SET = new Set([
   'raid_trigger',
   'raid_win',
   'sleep_in_bed',
+  'sleep_in_straw_bed',
   'sneak_time',
   'sprint_one_cm',
   'strider_one_cm',

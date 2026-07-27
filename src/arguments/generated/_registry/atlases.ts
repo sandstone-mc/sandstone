@@ -6,7 +6,6 @@ export type ATLASES = (
   | `minecraft:${SetType<typeof ATLASES_SET>}`)
 
 export const ATLASES_SET = new Set([
-  'armor_trims',
   'banner_patterns',
   'blocks',
   'celestials',

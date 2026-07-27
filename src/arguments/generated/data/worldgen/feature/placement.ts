@@ -161,7 +161,7 @@ export type PlacedFeatureListRef = (PlacedFeature | NBTList<PlacedFeature, {
 }> | (
   | Registry['minecraft:worldgen/placed_feature']
   | `#${string}:${string}`
-  | TagClass<'worldgen/placed_feature'>) | NBTList<Registry['minecraft:worldgen/placed_feature'], {
+  | TagClass<'worldgen/placed_feature'>) | NBTList<(Registry['minecraft:worldgen/placed_feature'] | PlacedFeature), {
     leftExclusive: false,
     min: 1,
   }>)
@@ -234,6 +234,8 @@ type PlacementModifierDispatcherMap = {
   'minecraft:count': PlacementModifierCount,
   'count_on_every_layer': PlacementModifierCountOnEveryLayer,
   'minecraft:count_on_every_layer': PlacementModifierCountOnEveryLayer,
+  'cuboid': PlacementModifierCuboid,
+  'minecraft:cuboid': PlacementModifierCuboid,
   'environment_scan': PlacementModifierEnvironmentScan,
   'minecraft:environment_scan': PlacementModifierEnvironmentScan,
   'fixed_placement': PlacementModifierFixedPlacement,
@@ -246,6 +248,10 @@ type PlacementModifierDispatcherMap = {
   'minecraft:noise_based_count': PlacementModifierNoiseBasedCount,
   'noise_threshold_count': PlacementModifierNoiseThresholdCount,
   'minecraft:noise_threshold_count': PlacementModifierNoiseThresholdCount,
+  'offset': PlacementModifierOffset,
+  'minecraft:offset': PlacementModifierOffset,
+  'random_chance': PlacementModifierRandomChance,
+  'minecraft:random_chance': PlacementModifierRandomChance,
   'random_offset': PlacementModifierRandomOffset,
   'minecraft:random_offset': PlacementModifierRandomOffset,
   'rarity_filter': PlacementModifierRarityFilter,
@@ -260,12 +266,15 @@ type PlacementModifierFallback = (
   | PlacementModifierBlockPredicateFilter
   | PlacementModifierCount
   | PlacementModifierCountOnEveryLayer
+  | PlacementModifierCuboid
   | PlacementModifierEnvironmentScan
   | PlacementModifierFixedPlacement
   | PlacementModifierHeightRange
   | PlacementModifierHeightmap
   | PlacementModifierNoiseBasedCount
   | PlacementModifierNoiseThresholdCount
+  | PlacementModifierOffset
+  | PlacementModifierRandomChance
   | PlacementModifierRandomOffset
   | PlacementModifierRarityFilter
   | PlacementModifierSurfaceRelativeThresholdFilter
@@ -273,12 +282,15 @@ type PlacementModifierFallback = (
 type PlacementModifierBlockPredicateFilter = BlockPredicateFilter
 type PlacementModifierCount = CountModifier
 type PlacementModifierCountOnEveryLayer = CountOnEveryLayerModifier
+type PlacementModifierCuboid = CuboidModifier
 type PlacementModifierEnvironmentScan = EnvironmentScanModifier
 type PlacementModifierFixedPlacement = FixedPlacementModifier
 type PlacementModifierHeightRange = HeightRangeModifier
 type PlacementModifierHeightmap = HeightmapModifier
 type PlacementModifierNoiseBasedCount = NoiseBasedCountModifier
 type PlacementModifierNoiseThresholdCount = NoiseThresholdCountModifier
+type PlacementModifierOffset = OffsetModifier
+type PlacementModifierRandomChance = RandomChanceModifier
 type PlacementModifierRandomOffset = RandomOffsetModifier
 type PlacementModifierRarityFilter = RarityFilter
 type PlacementModifierSurfaceRelativeThresholdFilter = SurfaceRelativeThresholdFilter

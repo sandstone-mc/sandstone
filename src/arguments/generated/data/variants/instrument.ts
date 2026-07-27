@@ -1,6 +1,6 @@
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { NBTFloat } from 'sandstone'
+import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type Instrument = {
   sound_event: SoundEventRef,
@@ -19,12 +19,27 @@ export type Instrument = {
    * Duration of use in seconds, used as item cooldown
    *
    * Value:
+   * *either*
+   *
    * Range: 0<..
-   * Minimum is exclusive; must be higher than 0
+   *
+   * *or*
+   *
+   * Range: 0..
    */
-  use_duration: NBTFloat<{
+  use_duration: (NBTFloat<{
     leftExclusive: true,
     min: 1,
+  }> | NBTFloat<{
+    leftExclusive: false,
+    min: 0,
+  }>),
+  /**
+   * Value:
+   * Range: 0..
+   */
+  durability_damage?: NBTInt<{
+    min: 0,
   }>,
   description: Text,
 }

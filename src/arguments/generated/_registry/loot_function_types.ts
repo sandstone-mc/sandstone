@@ -22,7 +22,6 @@ export const LOOT_FUNCTION_TYPES_SET = new Set([
   'furnace_smelt',
   'limit_count',
   'modify_contents',
-  'reference',
   'sequence',
   'set_attributes',
   'set_banner_pattern',

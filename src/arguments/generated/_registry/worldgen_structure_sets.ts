@@ -6,6 +6,7 @@ export type WORLDGEN_STRUCTURE_SETS = (
   | `minecraft:${SetType<typeof WORLDGEN_STRUCTURE_SETS_SET>}`)
 
 export const WORLDGEN_STRUCTURE_SETS_SET = new Set([
+  'abandoned_camp',
   'ancient_cities',
   'buried_treasures',
   'desert_pyramids',

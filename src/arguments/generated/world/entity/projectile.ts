@@ -1,3 +1,4 @@
+import type { AdventureModePredicate } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { NBTIntArray, NBTLong } from 'sandstone'
 
@@ -35,4 +36,5 @@ export type ProjectileBase = (EntityBase & {
    * Whether it has left its owner.
    */
   LeftOwner?: boolean,
+  can_break?: AdventureModePredicate,
 })

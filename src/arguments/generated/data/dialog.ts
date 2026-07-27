@@ -97,7 +97,7 @@ export type DialogListRef = (
   | Dialog
   | Array<Dialog> | (
   Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'> | DialogClass)
-  | Array<(Registry['minecraft:dialog'] | DialogClass)>)
+  | Array<((Registry['minecraft:dialog'] | DialogClass) | Dialog)>)
 
 export type ListDialogBase = (DialogBase & {
   /**

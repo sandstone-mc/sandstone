@@ -1,3 +1,4 @@
+import type { LootTableListRef } from 'sandstone/arguments/generated/data/loot.ts'
 import type { SymbolTrigger } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
@@ -121,7 +122,7 @@ export type AdvancementRewards = {
   /**
    * Loot tables to give.
    */
-  loot?: Array<(Registry['minecraft:loot_table'] | LootTableClass)>,
+  loot?: (Array<(Registry['minecraft:loot_table'] | LootTableClass)> | LootTableListRef),
   /**
    * Recipes to unlock.
    */

@@ -59,6 +59,7 @@ export const LANGS_SET = new Set([
   'gd_gb',
   'gl_es',
   'go_fr',
+  'got_de',
   'hal_ua',
   'haw_us',
   'he_il',

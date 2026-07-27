@@ -100,6 +100,8 @@ export type VerticalAnchor = ({
   above_bottom: NBTInt,
 } | {
   below_top: NBTInt,
+} | {
+  relative_to_sea_level: NBTInt,
 })
 
 export type WeightListHeightProvider = {
@@ -200,6 +202,8 @@ type IntProviderDispatcherMap<T extends NBTObject> = {
   'minecraft:trapezoid': IntProviderTrapezoid<T>,
   'uniform': IntProviderUniform<T>,
   'minecraft:uniform': IntProviderUniform<T>,
+  'very_biased_to_bottom': IntProviderVeryBiasedToBottom<T>,
+  'minecraft:very_biased_to_bottom': IntProviderVeryBiasedToBottom<T>,
   'weighted_list': IntProviderWeightedList<T>,
   'minecraft:weighted_list': IntProviderWeightedList<T>,
 }
@@ -211,6 +215,7 @@ type IntProviderFallback<T extends NBTObject> = (
   | IntProviderConstant<T>
   | IntProviderTrapezoid<T>
   | IntProviderUniform<T>
+  | IntProviderVeryBiasedToBottom<T>
   | IntProviderWeightedList<T>)
 export type IntProviderBiasedToBottom<T extends NBTObject> = UniformIntProvider<T>
 
@@ -227,6 +232,8 @@ export type IntProviderTrapezoid<T extends NBTObject> = {
 }
 
 export type IntProviderUniform<T extends NBTObject> = UniformIntProvider<T>
+
+export type IntProviderVeryBiasedToBottom<T extends NBTObject> = UniformIntProvider<T>
 
 export type IntProviderWeightedList<T extends NBTObject> = {
   distribution: NonEmptyWeightedList<IntProvider<T>>,

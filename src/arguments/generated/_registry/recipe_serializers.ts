@@ -7,6 +7,7 @@ export type RECIPE_SERIALIZERS = (
 
 export const RECIPE_SERIALIZERS_SET = new Set([
   'blasting',
+  'brewing',
   'campfire_cooking',
   'crafting_decorated_pot',
   'crafting_dye',

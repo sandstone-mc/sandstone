@@ -4,7 +4,7 @@ import type { ContainerComponents } from 'sandstone/arguments/generated/data/loo
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ENTITY_SLOTS } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LiteralUnion, NBTInt } from 'sandstone'
+import type { LiteralUnion, NBTInt, SlotSourceClass, TagClass } from 'sandstone'
 
 export type ContentsSlotSource = {
   /**
@@ -56,10 +56,31 @@ export type RangeSlotSource = ({
    */
   source: (EntityTarget | BlockEntityTarget),
 } & {
+  /**
+   * Defaults to `container`.
+   *
+   * Value:
+   * *either*
+   *
+   *
+   *
+   * *or*
+   *
+   * *item 1*
+   *
+   * *or*
+   *
+   * *item 2*
+   */
+  source?: (EntityTarget | BlockEntityTarget | 'container'),
+} & {
   slots: LiteralUnion<ENTITY_SLOTS>,
 })
 
-export type SlotSource = (TypedSlotSource | Array<SlotSource>)
+export type SlotSource = (
+  | TypedSlotSource
+  | Array<SlotSource> | (
+  `${string}:${string}` | `#${string}:${string}` | TagClass<'slot_source'> | SlotSourceClass))
 
 export type TypedSlotSource = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:slot_source_type'], string>, string>]?: ({

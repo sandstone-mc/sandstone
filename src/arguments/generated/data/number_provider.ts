@@ -5,7 +5,7 @@ import type { NumericalEnvironmentAttribute } from 'sandstone/arguments/generate
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, NBTFloat, ObjectiveClass } from 'sandstone'
+import type { DataPointClass, NBTFloat, ObjectiveClass, TagClass } from 'sandstone'
 
 export type BinomialNumberProvider = {
   n: NumberProviderRef,
@@ -75,11 +75,21 @@ export type NumberProvider = (NBTFloat | ({
   } & (S extends undefined
     ? SymbolNumberProvider<'%none'> :
     (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)))
+}[Extract<Registry['minecraft:loot_number_provider_type'], string>]) | ({
+  [S in Extract<Extract<Registry['minecraft:loot_number_provider_type'], string>, string>]?: ({
+    type: S,
+  } & (S extends undefined
+    ? SymbolNumberProvider<'%none'> :
+    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)))
 }[Extract<Registry['minecraft:loot_number_provider_type'], string>]))
 
-export type NumberProviderListRef = Array<NumberProvider>
+export type NumberProviderListRef = (
+  | Array<NumberProvider>
+  | NumberProvider | (
+  Registry['minecraft:number_provider'] | `#${string}:${string}` | TagClass<'number_provider'>)
+  | Array<(Registry['minecraft:number_provider'] | NumberProvider)>)
 
-export type NumberProviderRef = NumberProvider
+export type NumberProviderRef = (NumberProvider | Registry['minecraft:number_provider'])
 
 export type ScoreNumberProvider = {
   target: ScoreProvider,
@@ -107,12 +117,16 @@ export type WeightedNumberProvider = {
 type NumberProviderDispatcherMap = {
   'binomial': NumberProviderBinomial,
   'minecraft:binomial': NumberProviderBinomial,
+  'conditional_value': NumberProviderConditionalValue,
+  'minecraft:conditional_value': NumberProviderConditionalValue,
   'constant': NumberProviderConstant,
   'minecraft:constant': NumberProviderConstant,
   'enchantment_level': NumberProviderEnchantmentLevel,
   'minecraft:enchantment_level': NumberProviderEnchantmentLevel,
   'environment_attribute': NumberProviderEnvironmentAttribute,
   'minecraft:environment_attribute': NumberProviderEnvironmentAttribute,
+  'number_dispatcher': NumberProviderNumberDispatcher,
+  'minecraft:number_dispatcher': NumberProviderNumberDispatcher,
   'score': NumberProviderScore,
   'minecraft:score': NumberProviderScore,
   'storage': NumberProviderStorage,
@@ -121,26 +135,34 @@ type NumberProviderDispatcherMap = {
   'minecraft:sum': NumberProviderSum,
   'uniform': NumberProviderUniform,
   'minecraft:uniform': NumberProviderUniform,
+  'weighted_list': NumberProviderWeightedList,
+  'minecraft:weighted_list': NumberProviderWeightedList,
 }
 type NumberProviderKeys = keyof NumberProviderDispatcherMap
 type NumberProviderFallback = (
   | NumberProviderBinomial
+  | NumberProviderConditionalValue
   | NumberProviderConstant
   | NumberProviderEnchantmentLevel
   | NumberProviderEnvironmentAttribute
+  | NumberProviderNumberDispatcher
   | NumberProviderScore
   | NumberProviderStorage
   | NumberProviderSum
-  | NumberProviderUniform)
+  | NumberProviderUniform
+  | NumberProviderWeightedList)
 type NumberProviderNoneType = UniformNumberProvider
 type NumberProviderBinomial = BinomialNumberProvider
+type NumberProviderConditionalValue = ConditionalValueNumberProvider
 type NumberProviderConstant = ConstantNumberProvider
 type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
 type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider
+type NumberProviderNumberDispatcher = NumberDispatcher
 type NumberProviderScore = ScoreNumberProvider
 type NumberProviderStorage = StorageNumberProvider
 type NumberProviderSum = SumNumberProvider
 type NumberProviderUniform = UniformNumberProvider
+type NumberProviderWeightedList = WeightedNumberProvider
 export type SymbolNumberProvider<CASE extends
   | 'map'
   | 'keys'

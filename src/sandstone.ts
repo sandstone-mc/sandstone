@@ -8,7 +8,7 @@ import type {
   BlockStateArguments,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
-//  DecoratedPotPatternClassArguments,
+  DecoratedPotPatternClassArguments,
   DialogClassArguments,
   EnchantmentClassArguments,
   EnchantmentProviderClassArguments,
@@ -28,7 +28,7 @@ import type {
   PredicateClassArguments,
   RecipeClassArguments,
   ShaderClassArguments,
-//  SlotSourceClassArguments,
+  SlotSourceClassArguments,
   SoundEventArguments,
   SoundsIndexArguments,
   SulfurCubeArchetypeClassArguments,
@@ -238,7 +238,7 @@ type PackNonMethodKeys =
   | 'conditions' | 'objectives' | 'anonymousScoreId' | 'anonymousDataId' | 'constants' | 'tickedLoops'
   | '__rootObjective' | 'packUid'
   | 'reset' | 'appendNode' | 'initMCFunction' | 'save' | 'resourceToPath' | 'rootObjective'
-  | 'setupLantern' | 'dataPack' | 'resourcePack' | 'registerTickedCommands'
+  | 'setupLantern' | 'dataPack' | 'resourcePack' | 'registerTickedCommands' | 'Variant'
 type PackMethodKeys = Exclude<keyof SandstonePack, PackNonMethodKeys>
 
 // Creates a proxy that handles both callable methods and object-based properties.
@@ -295,7 +295,7 @@ export const {
   BannerPattern,
   ChatType,
   DamageType,
-//  DecoratedPotPattern,
+  DecoratedPotPattern,
   Dialog,
   Enchantment,
   EnchantmentProvider,
@@ -305,7 +305,7 @@ export const {
   LootTable,
   Predicate,
   Recipe,
-//  SlotSource,
+  SlotSource,
   SulfurCubeArchetype,
   Tag,
   TestEnvironment,
@@ -315,7 +315,6 @@ export const {
   TrialSpawner,
   TrimMaterial,
   TrimPattern,
-  Variant,
   VillagerTrade,
   WorldClock,
 
@@ -357,6 +356,10 @@ export const {
   loadTags,
   defaultNamespace,
 } = packMethodsProxy
+
+// Variant needs explicit type annotation due to complex generics
+export const Variant: typeof sandstonePack.Variant = ((...args: unknown[]) =>
+  (sandstonePack.Variant as CallableFunction)(...args)) as typeof sandstonePack.Variant
 
 export * from './variables/nbt/NBTs'
 

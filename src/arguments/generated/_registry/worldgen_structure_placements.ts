@@ -7,5 +7,6 @@ export type WORLDGEN_STRUCTURE_PLACEMENTS = (
 
 export const WORLDGEN_STRUCTURE_PLACEMENTS_SET = new Set([
   'concentric_rings',
+  'dimension_origin',
   'random_spread',
 ] as const)

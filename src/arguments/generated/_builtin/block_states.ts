@@ -193,6 +193,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:black_wall_banner': McdocBlockStatesBlackWallBanner,
   'black_wool': McdocBlockStatesBlackWool,
   'minecraft:black_wool': McdocBlockStatesBlackWool,
+  'black_wool_slab': McdocBlockStatesBlackWoolSlab,
+  'minecraft:black_wool_slab': McdocBlockStatesBlackWoolSlab,
+  'black_wool_stairs': McdocBlockStatesBlackWoolStairs,
+  'minecraft:black_wool_stairs': McdocBlockStatesBlackWoolStairs,
   'blackstone': McdocBlockStatesBlackstone,
   'minecraft:blackstone': McdocBlockStatesBlackstone,
   'blackstone_slab': McdocBlockStatesBlackstoneSlab,
@@ -235,6 +239,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:blue_wall_banner': McdocBlockStatesBlueWallBanner,
   'blue_wool': McdocBlockStatesBlueWool,
   'minecraft:blue_wool': McdocBlockStatesBlueWool,
+  'blue_wool_slab': McdocBlockStatesBlueWoolSlab,
+  'minecraft:blue_wool_slab': McdocBlockStatesBlueWoolSlab,
+  'blue_wool_stairs': McdocBlockStatesBlueWoolStairs,
+  'minecraft:blue_wool_stairs': McdocBlockStatesBlueWoolStairs,
   'bone_block': McdocBlockStatesBoneBlock,
   'minecraft:bone_block': McdocBlockStatesBoneBlock,
   'bookshelf': McdocBlockStatesBookshelf,
@@ -289,6 +297,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:brown_wall_banner': McdocBlockStatesBrownWallBanner,
   'brown_wool': McdocBlockStatesBrownWool,
   'minecraft:brown_wool': McdocBlockStatesBrownWool,
+  'brown_wool_slab': McdocBlockStatesBrownWoolSlab,
+  'minecraft:brown_wool_slab': McdocBlockStatesBrownWoolSlab,
+  'brown_wool_stairs': McdocBlockStatesBrownWoolStairs,
+  'minecraft:brown_wool_stairs': McdocBlockStatesBrownWoolStairs,
   'bubble_column': McdocBlockStatesBubbleColumn,
   'minecraft:bubble_column': McdocBlockStatesBubbleColumn,
   'bubble_coral': McdocBlockStatesBubbleCoral,
@@ -591,6 +603,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:cyan_wall_banner': McdocBlockStatesCyanWallBanner,
   'cyan_wool': McdocBlockStatesCyanWool,
   'minecraft:cyan_wool': McdocBlockStatesCyanWool,
+  'cyan_wool_slab': McdocBlockStatesCyanWoolSlab,
+  'minecraft:cyan_wool_slab': McdocBlockStatesCyanWoolSlab,
+  'cyan_wool_stairs': McdocBlockStatesCyanWoolStairs,
+  'minecraft:cyan_wool_stairs': McdocBlockStatesCyanWoolStairs,
   'damaged_anvil': McdocBlockStatesDamagedAnvil,
   'minecraft:damaged_anvil': McdocBlockStatesDamagedAnvil,
   'dandelion': McdocBlockStatesDandelion,
@@ -893,6 +909,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:gray_wall_banner': McdocBlockStatesGrayWallBanner,
   'gray_wool': McdocBlockStatesGrayWool,
   'minecraft:gray_wool': McdocBlockStatesGrayWool,
+  'gray_wool_slab': McdocBlockStatesGrayWoolSlab,
+  'minecraft:gray_wool_slab': McdocBlockStatesGrayWoolSlab,
+  'gray_wool_stairs': McdocBlockStatesGrayWoolStairs,
+  'minecraft:gray_wool_stairs': McdocBlockStatesGrayWoolStairs,
   'green_banner': McdocBlockStatesGreenBanner,
   'minecraft:green_banner': McdocBlockStatesGreenBanner,
   'green_bed': McdocBlockStatesGreenBed,
@@ -921,6 +941,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:green_wall_banner': McdocBlockStatesGreenWallBanner,
   'green_wool': McdocBlockStatesGreenWool,
   'minecraft:green_wool': McdocBlockStatesGreenWool,
+  'green_wool_slab': McdocBlockStatesGreenWoolSlab,
+  'minecraft:green_wool_slab': McdocBlockStatesGreenWoolSlab,
+  'green_wool_stairs': McdocBlockStatesGreenWoolStairs,
+  'minecraft:green_wool_stairs': McdocBlockStatesGreenWoolStairs,
   'grindstone': McdocBlockStatesGrindstone,
   'minecraft:grindstone': McdocBlockStatesGrindstone,
   'hanging_roots': McdocBlockStatesHangingRoots,
@@ -1071,6 +1095,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:light_blue_wall_banner': McdocBlockStatesLightBlueWallBanner,
   'light_blue_wool': McdocBlockStatesLightBlueWool,
   'minecraft:light_blue_wool': McdocBlockStatesLightBlueWool,
+  'light_blue_wool_slab': McdocBlockStatesLightBlueWoolSlab,
+  'minecraft:light_blue_wool_slab': McdocBlockStatesLightBlueWoolSlab,
+  'light_blue_wool_stairs': McdocBlockStatesLightBlueWoolStairs,
+  'minecraft:light_blue_wool_stairs': McdocBlockStatesLightBlueWoolStairs,
   'light_gray_banner': McdocBlockStatesLightGrayBanner,
   'minecraft:light_gray_banner': McdocBlockStatesLightGrayBanner,
   'light_gray_bed': McdocBlockStatesLightGrayBed,
@@ -1099,6 +1127,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:light_gray_wall_banner': McdocBlockStatesLightGrayWallBanner,
   'light_gray_wool': McdocBlockStatesLightGrayWool,
   'minecraft:light_gray_wool': McdocBlockStatesLightGrayWool,
+  'light_gray_wool_slab': McdocBlockStatesLightGrayWoolSlab,
+  'minecraft:light_gray_wool_slab': McdocBlockStatesLightGrayWoolSlab,
+  'light_gray_wool_stairs': McdocBlockStatesLightGrayWoolStairs,
+  'minecraft:light_gray_wool_stairs': McdocBlockStatesLightGrayWoolStairs,
   'light_weighted_pressure_plate': McdocBlockStatesLightWeightedPressurePlate,
   'minecraft:light_weighted_pressure_plate': McdocBlockStatesLightWeightedPressurePlate,
   'lightning_rod': McdocBlockStatesLightningRod,
@@ -1137,6 +1169,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:lime_wall_banner': McdocBlockStatesLimeWallBanner,
   'lime_wool': McdocBlockStatesLimeWool,
   'minecraft:lime_wool': McdocBlockStatesLimeWool,
+  'lime_wool_slab': McdocBlockStatesLimeWoolSlab,
+  'minecraft:lime_wool_slab': McdocBlockStatesLimeWoolSlab,
+  'lime_wool_stairs': McdocBlockStatesLimeWoolStairs,
+  'minecraft:lime_wool_stairs': McdocBlockStatesLimeWoolStairs,
   'lodestone': McdocBlockStatesLodestone,
   'minecraft:lodestone': McdocBlockStatesLodestone,
   'loom': McdocBlockStatesLoom,
@@ -1169,6 +1205,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:magenta_wall_banner': McdocBlockStatesMagentaWallBanner,
   'magenta_wool': McdocBlockStatesMagentaWool,
   'minecraft:magenta_wool': McdocBlockStatesMagentaWool,
+  'magenta_wool_slab': McdocBlockStatesMagentaWoolSlab,
+  'minecraft:magenta_wool_slab': McdocBlockStatesMagentaWoolSlab,
+  'magenta_wool_stairs': McdocBlockStatesMagentaWoolStairs,
+  'minecraft:magenta_wool_stairs': McdocBlockStatesMagentaWoolStairs,
   'magma_block': McdocBlockStatesMagmaBlock,
   'minecraft:magma_block': McdocBlockStatesMagmaBlock,
   'mangrove_button': McdocBlockStatesMangroveButton,
@@ -1341,6 +1381,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:orange_concrete_powder': McdocBlockStatesOrangeConcretePowder,
   'orange_glazed_terracotta': McdocBlockStatesOrangeGlazedTerracotta,
   'minecraft:orange_glazed_terracotta': McdocBlockStatesOrangeGlazedTerracotta,
+  'orange_poplar_leaves': McdocBlockStatesOrangePoplarLeaves,
+  'minecraft:orange_poplar_leaves': McdocBlockStatesOrangePoplarLeaves,
   'orange_shulker_box': McdocBlockStatesOrangeShulkerBox,
   'minecraft:orange_shulker_box': McdocBlockStatesOrangeShulkerBox,
   'orange_stained_glass': McdocBlockStatesOrangeStainedGlass,
@@ -1355,6 +1397,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:orange_wall_banner': McdocBlockStatesOrangeWallBanner,
   'orange_wool': McdocBlockStatesOrangeWool,
   'minecraft:orange_wool': McdocBlockStatesOrangeWool,
+  'orange_wool_slab': McdocBlockStatesOrangeWoolSlab,
+  'minecraft:orange_wool_slab': McdocBlockStatesOrangeWoolSlab,
+  'orange_wool_stairs': McdocBlockStatesOrangeWoolStairs,
+  'minecraft:orange_wool_stairs': McdocBlockStatesOrangeWoolStairs,
   'oxeye_daisy': McdocBlockStatesOxeyeDaisy,
   'minecraft:oxeye_daisy': McdocBlockStatesOxeyeDaisy,
   'oxidized_chiseled_copper': McdocBlockStatesOxidizedChiseledCopper,
@@ -1475,6 +1521,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:pink_wall_banner': McdocBlockStatesPinkWallBanner,
   'pink_wool': McdocBlockStatesPinkWool,
   'minecraft:pink_wool': McdocBlockStatesPinkWool,
+  'pink_wool_slab': McdocBlockStatesPinkWoolSlab,
+  'minecraft:pink_wool_slab': McdocBlockStatesPinkWoolSlab,
+  'pink_wool_stairs': McdocBlockStatesPinkWoolStairs,
+  'minecraft:pink_wool_stairs': McdocBlockStatesPinkWoolStairs,
   'piston': McdocBlockStatesPiston,
   'minecraft:piston': McdocBlockStatesPiston,
   'piston_head': McdocBlockStatesPistonHead,
@@ -1563,6 +1613,40 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:polished_tuff_stairs': McdocBlockStatesPolishedTuffStairs,
   'polished_tuff_wall': McdocBlockStatesPolishedTuffWall,
   'minecraft:polished_tuff_wall': McdocBlockStatesPolishedTuffWall,
+  'poplar_button': McdocBlockStatesPoplarButton,
+  'minecraft:poplar_button': McdocBlockStatesPoplarButton,
+  'poplar_door': McdocBlockStatesPoplarDoor,
+  'minecraft:poplar_door': McdocBlockStatesPoplarDoor,
+  'poplar_fence': McdocBlockStatesPoplarFence,
+  'minecraft:poplar_fence': McdocBlockStatesPoplarFence,
+  'poplar_fence_gate': McdocBlockStatesPoplarFenceGate,
+  'minecraft:poplar_fence_gate': McdocBlockStatesPoplarFenceGate,
+  'poplar_hanging_sign': McdocBlockStatesPoplarHangingSign,
+  'minecraft:poplar_hanging_sign': McdocBlockStatesPoplarHangingSign,
+  'poplar_log': McdocBlockStatesPoplarLog,
+  'minecraft:poplar_log': McdocBlockStatesPoplarLog,
+  'poplar_planks': McdocBlockStatesPoplarPlanks,
+  'minecraft:poplar_planks': McdocBlockStatesPoplarPlanks,
+  'poplar_pressure_plate': McdocBlockStatesPoplarPressurePlate,
+  'minecraft:poplar_pressure_plate': McdocBlockStatesPoplarPressurePlate,
+  'poplar_sapling': McdocBlockStatesPoplarSapling,
+  'minecraft:poplar_sapling': McdocBlockStatesPoplarSapling,
+  'poplar_shelf': McdocBlockStatesPoplarShelf,
+  'minecraft:poplar_shelf': McdocBlockStatesPoplarShelf,
+  'poplar_sign': McdocBlockStatesPoplarSign,
+  'minecraft:poplar_sign': McdocBlockStatesPoplarSign,
+  'poplar_slab': McdocBlockStatesPoplarSlab,
+  'minecraft:poplar_slab': McdocBlockStatesPoplarSlab,
+  'poplar_stairs': McdocBlockStatesPoplarStairs,
+  'minecraft:poplar_stairs': McdocBlockStatesPoplarStairs,
+  'poplar_trapdoor': McdocBlockStatesPoplarTrapdoor,
+  'minecraft:poplar_trapdoor': McdocBlockStatesPoplarTrapdoor,
+  'poplar_wall_hanging_sign': McdocBlockStatesPoplarWallHangingSign,
+  'minecraft:poplar_wall_hanging_sign': McdocBlockStatesPoplarWallHangingSign,
+  'poplar_wall_sign': McdocBlockStatesPoplarWallSign,
+  'minecraft:poplar_wall_sign': McdocBlockStatesPoplarWallSign,
+  'poplar_wood': McdocBlockStatesPoplarWood,
+  'minecraft:poplar_wood': McdocBlockStatesPoplarWood,
   'poppy': McdocBlockStatesPoppy,
   'minecraft:poppy': McdocBlockStatesPoppy,
   'potatoes': McdocBlockStatesPotatoes,
@@ -1627,6 +1711,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:potted_pale_oak_sapling': McdocBlockStatesPottedPaleOakSapling,
   'potted_pink_tulip': McdocBlockStatesPottedPinkTulip,
   'minecraft:potted_pink_tulip': McdocBlockStatesPottedPinkTulip,
+  'potted_poplar_sapling': McdocBlockStatesPottedPoplarSapling,
+  'minecraft:potted_poplar_sapling': McdocBlockStatesPottedPoplarSapling,
   'potted_poppy': McdocBlockStatesPottedPoppy,
   'minecraft:potted_poppy': McdocBlockStatesPottedPoppy,
   'potted_red_mushroom': McdocBlockStatesPottedRedMushroom,
@@ -1697,6 +1783,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:purple_wall_banner': McdocBlockStatesPurpleWallBanner,
   'purple_wool': McdocBlockStatesPurpleWool,
   'minecraft:purple_wool': McdocBlockStatesPurpleWool,
+  'purple_wool_slab': McdocBlockStatesPurpleWoolSlab,
+  'minecraft:purple_wool_slab': McdocBlockStatesPurpleWoolSlab,
+  'purple_wool_stairs': McdocBlockStatesPurpleWoolStairs,
+  'minecraft:purple_wool_stairs': McdocBlockStatesPurpleWoolStairs,
   'purpur_block': McdocBlockStatesPurpurBlock,
   'minecraft:purpur_block': McdocBlockStatesPurpurBlock,
   'purpur_pillar': McdocBlockStatesPurpurPillar,
@@ -1751,6 +1841,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:red_nether_brick_wall': McdocBlockStatesRedNetherBrickWall,
   'red_nether_bricks': McdocBlockStatesRedNetherBricks,
   'minecraft:red_nether_bricks': McdocBlockStatesRedNetherBricks,
+  'red_poplar_leaves': McdocBlockStatesRedPoplarLeaves,
+  'minecraft:red_poplar_leaves': McdocBlockStatesRedPoplarLeaves,
   'red_sand': McdocBlockStatesRedSand,
   'minecraft:red_sand': McdocBlockStatesRedSand,
   'red_sandstone': McdocBlockStatesRedSandstone,
@@ -1761,6 +1853,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:red_sandstone_stairs': McdocBlockStatesRedSandstoneStairs,
   'red_sandstone_wall': McdocBlockStatesRedSandstoneWall,
   'minecraft:red_sandstone_wall': McdocBlockStatesRedSandstoneWall,
+  'red_shrub': McdocBlockStatesRedShrub,
+  'minecraft:red_shrub': McdocBlockStatesRedShrub,
   'red_shulker_box': McdocBlockStatesRedShulkerBox,
   'minecraft:red_shulker_box': McdocBlockStatesRedShulkerBox,
   'red_stained_glass': McdocBlockStatesRedStainedGlass,
@@ -1775,6 +1869,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:red_wall_banner': McdocBlockStatesRedWallBanner,
   'red_wool': McdocBlockStatesRedWool,
   'minecraft:red_wool': McdocBlockStatesRedWool,
+  'red_wool_slab': McdocBlockStatesRedWoolSlab,
+  'minecraft:red_wool_slab': McdocBlockStatesRedWoolSlab,
+  'red_wool_stairs': McdocBlockStatesRedWoolStairs,
+  'minecraft:red_wool_stairs': McdocBlockStatesRedWoolStairs,
   'redstone_block': McdocBlockStatesRedstoneBlock,
   'minecraft:redstone_block': McdocBlockStatesRedstoneBlock,
   'redstone_lamp': McdocBlockStatesRedstoneLamp,
@@ -1839,6 +1937,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:sea_pickle': McdocBlockStatesSeaPickle,
   'seagrass': McdocBlockStatesSeagrass,
   'minecraft:seagrass': McdocBlockStatesSeagrass,
+  'shelf_mushroom': McdocBlockStatesShelfMushroom,
+  'minecraft:shelf_mushroom': McdocBlockStatesShelfMushroom,
   'short_dry_grass': McdocBlockStatesShortDryGrass,
   'minecraft:short_dry_grass': McdocBlockStatesShortDryGrass,
   'short_grass': McdocBlockStatesShortGrass,
@@ -1969,6 +2069,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:stone_stairs': McdocBlockStatesStoneStairs,
   'stonecutter': McdocBlockStatesStonecutter,
   'minecraft:stonecutter': McdocBlockStatesStonecutter,
+  'straw_bed': McdocBlockStatesStrawBed,
+  'minecraft:straw_bed': McdocBlockStatesStrawBed,
   'stripped_acacia_log': McdocBlockStatesStrippedAcaciaLog,
   'minecraft:stripped_acacia_log': McdocBlockStatesStrippedAcaciaLog,
   'stripped_acacia_wood': McdocBlockStatesStrippedAcaciaWood,
@@ -2007,6 +2109,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:stripped_pale_oak_log': McdocBlockStatesStrippedPaleOakLog,
   'stripped_pale_oak_wood': McdocBlockStatesStrippedPaleOakWood,
   'minecraft:stripped_pale_oak_wood': McdocBlockStatesStrippedPaleOakWood,
+  'stripped_poplar_log': McdocBlockStatesStrippedPoplarLog,
+  'minecraft:stripped_poplar_log': McdocBlockStatesStrippedPoplarLog,
+  'stripped_poplar_wood': McdocBlockStatesStrippedPoplarWood,
+  'minecraft:stripped_poplar_wood': McdocBlockStatesStrippedPoplarWood,
   'stripped_spruce_log': McdocBlockStatesStrippedSpruceLog,
   'minecraft:stripped_spruce_log': McdocBlockStatesStrippedSpruceLog,
   'stripped_spruce_wood': McdocBlockStatesStrippedSpruceWood,
@@ -2351,6 +2457,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:white_wall_banner': McdocBlockStatesWhiteWallBanner,
   'white_wool': McdocBlockStatesWhiteWool,
   'minecraft:white_wool': McdocBlockStatesWhiteWool,
+  'white_wool_slab': McdocBlockStatesWhiteWoolSlab,
+  'minecraft:white_wool_slab': McdocBlockStatesWhiteWoolSlab,
+  'white_wool_stairs': McdocBlockStatesWhiteWoolStairs,
+  'minecraft:white_wool_stairs': McdocBlockStatesWhiteWoolStairs,
   'wildflowers': McdocBlockStatesWildflowers,
   'minecraft:wildflowers': McdocBlockStatesWildflowers,
   'wither_rose': McdocBlockStatesWitherRose,
@@ -2375,6 +2485,8 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:yellow_concrete_powder': McdocBlockStatesYellowConcretePowder,
   'yellow_glazed_terracotta': McdocBlockStatesYellowGlazedTerracotta,
   'minecraft:yellow_glazed_terracotta': McdocBlockStatesYellowGlazedTerracotta,
+  'yellow_poplar_leaves': McdocBlockStatesYellowPoplarLeaves,
+  'minecraft:yellow_poplar_leaves': McdocBlockStatesYellowPoplarLeaves,
   'yellow_shulker_box': McdocBlockStatesYellowShulkerBox,
   'minecraft:yellow_shulker_box': McdocBlockStatesYellowShulkerBox,
   'yellow_stained_glass': McdocBlockStatesYellowStainedGlass,
@@ -2387,6 +2499,10 @@ type McdocBlockStatesDispatcherMap = {
   'minecraft:yellow_wall_banner': McdocBlockStatesYellowWallBanner,
   'yellow_wool': McdocBlockStatesYellowWool,
   'minecraft:yellow_wool': McdocBlockStatesYellowWool,
+  'yellow_wool_slab': McdocBlockStatesYellowWoolSlab,
+  'minecraft:yellow_wool_slab': McdocBlockStatesYellowWoolSlab,
+  'yellow_wool_stairs': McdocBlockStatesYellowWoolStairs,
+  'minecraft:yellow_wool_stairs': McdocBlockStatesYellowWoolStairs,
   'zombie_head': McdocBlockStatesZombieHead,
   'minecraft:zombie_head': McdocBlockStatesZombieHead,
   'zombie_wall_head': McdocBlockStatesZombieWallHead,
@@ -2491,6 +2607,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesBlackTerracotta
   | McdocBlockStatesBlackWallBanner
   | McdocBlockStatesBlackWool
+  | McdocBlockStatesBlackWoolSlab
+  | McdocBlockStatesBlackWoolStairs
   | McdocBlockStatesBlackstone
   | McdocBlockStatesBlackstoneSlab
   | McdocBlockStatesBlackstoneStairs
@@ -2512,6 +2630,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesBlueTerracotta
   | McdocBlockStatesBlueWallBanner
   | McdocBlockStatesBlueWool
+  | McdocBlockStatesBlueWoolSlab
+  | McdocBlockStatesBlueWoolStairs
   | McdocBlockStatesBoneBlock
   | McdocBlockStatesBookshelf
   | McdocBlockStatesBrainCoral
@@ -2539,6 +2659,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesBrownTerracotta
   | McdocBlockStatesBrownWallBanner
   | McdocBlockStatesBrownWool
+  | McdocBlockStatesBrownWoolSlab
+  | McdocBlockStatesBrownWoolStairs
   | McdocBlockStatesBubbleColumn
   | McdocBlockStatesBubbleCoral
   | McdocBlockStatesBubbleCoralBlock
@@ -2690,6 +2812,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesCyanTerracotta
   | McdocBlockStatesCyanWallBanner
   | McdocBlockStatesCyanWool
+  | McdocBlockStatesCyanWoolSlab
+  | McdocBlockStatesCyanWoolStairs
   | McdocBlockStatesDamagedAnvil
   | McdocBlockStatesDandelion
   | McdocBlockStatesDarkOakButton
@@ -2841,6 +2965,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesGrayTerracotta
   | McdocBlockStatesGrayWallBanner
   | McdocBlockStatesGrayWool
+  | McdocBlockStatesGrayWoolSlab
+  | McdocBlockStatesGrayWoolStairs
   | McdocBlockStatesGreenBanner
   | McdocBlockStatesGreenBed
   | McdocBlockStatesGreenCandle
@@ -2855,6 +2981,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesGreenTerracotta
   | McdocBlockStatesGreenWallBanner
   | McdocBlockStatesGreenWool
+  | McdocBlockStatesGreenWoolSlab
+  | McdocBlockStatesGreenWoolStairs
   | McdocBlockStatesGrindstone
   | McdocBlockStatesHangingRoots
   | McdocBlockStatesHayBlock
@@ -2930,6 +3058,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesLightBlueTerracotta
   | McdocBlockStatesLightBlueWallBanner
   | McdocBlockStatesLightBlueWool
+  | McdocBlockStatesLightBlueWoolSlab
+  | McdocBlockStatesLightBlueWoolStairs
   | McdocBlockStatesLightGrayBanner
   | McdocBlockStatesLightGrayBed
   | McdocBlockStatesLightGrayCandle
@@ -2944,6 +3074,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesLightGrayTerracotta
   | McdocBlockStatesLightGrayWallBanner
   | McdocBlockStatesLightGrayWool
+  | McdocBlockStatesLightGrayWoolSlab
+  | McdocBlockStatesLightGrayWoolStairs
   | McdocBlockStatesLightWeightedPressurePlate
   | McdocBlockStatesLightningRod
   | McdocBlockStatesLilac
@@ -2963,6 +3095,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesLimeTerracotta
   | McdocBlockStatesLimeWallBanner
   | McdocBlockStatesLimeWool
+  | McdocBlockStatesLimeWoolSlab
+  | McdocBlockStatesLimeWoolStairs
   | McdocBlockStatesLodestone
   | McdocBlockStatesLoom
   | McdocBlockStatesMagentaBanner
@@ -2979,6 +3113,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesMagentaTerracotta
   | McdocBlockStatesMagentaWallBanner
   | McdocBlockStatesMagentaWool
+  | McdocBlockStatesMagentaWoolSlab
+  | McdocBlockStatesMagentaWoolStairs
   | McdocBlockStatesMagmaBlock
   | McdocBlockStatesMangroveButton
   | McdocBlockStatesMangroveDoor
@@ -3065,6 +3201,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesOrangeConcrete
   | McdocBlockStatesOrangeConcretePowder
   | McdocBlockStatesOrangeGlazedTerracotta
+  | McdocBlockStatesOrangePoplarLeaves
   | McdocBlockStatesOrangeShulkerBox
   | McdocBlockStatesOrangeStainedGlass
   | McdocBlockStatesOrangeStainedGlassPane
@@ -3072,6 +3209,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesOrangeTulip
   | McdocBlockStatesOrangeWallBanner
   | McdocBlockStatesOrangeWool
+  | McdocBlockStatesOrangeWoolSlab
+  | McdocBlockStatesOrangeWoolStairs
   | McdocBlockStatesOxeyeDaisy
   | McdocBlockStatesOxidizedChiseledCopper
   | McdocBlockStatesOxidizedCopper
@@ -3132,6 +3271,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesPinkTulip
   | McdocBlockStatesPinkWallBanner
   | McdocBlockStatesPinkWool
+  | McdocBlockStatesPinkWoolSlab
+  | McdocBlockStatesPinkWoolStairs
   | McdocBlockStatesPiston
   | McdocBlockStatesPistonHead
   | McdocBlockStatesPitcherCrop
@@ -3176,6 +3317,23 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesPolishedTuffSlab
   | McdocBlockStatesPolishedTuffStairs
   | McdocBlockStatesPolishedTuffWall
+  | McdocBlockStatesPoplarButton
+  | McdocBlockStatesPoplarDoor
+  | McdocBlockStatesPoplarFence
+  | McdocBlockStatesPoplarFenceGate
+  | McdocBlockStatesPoplarHangingSign
+  | McdocBlockStatesPoplarLog
+  | McdocBlockStatesPoplarPlanks
+  | McdocBlockStatesPoplarPressurePlate
+  | McdocBlockStatesPoplarSapling
+  | McdocBlockStatesPoplarShelf
+  | McdocBlockStatesPoplarSign
+  | McdocBlockStatesPoplarSlab
+  | McdocBlockStatesPoplarStairs
+  | McdocBlockStatesPoplarTrapdoor
+  | McdocBlockStatesPoplarWallHangingSign
+  | McdocBlockStatesPoplarWallSign
+  | McdocBlockStatesPoplarWood
   | McdocBlockStatesPoppy
   | McdocBlockStatesPotatoes
   | McdocBlockStatesPotentSulfur
@@ -3208,6 +3366,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesPottedOxeyeDaisy
   | McdocBlockStatesPottedPaleOakSapling
   | McdocBlockStatesPottedPinkTulip
+  | McdocBlockStatesPottedPoplarSapling
   | McdocBlockStatesPottedPoppy
   | McdocBlockStatesPottedRedMushroom
   | McdocBlockStatesPottedRedTulip
@@ -3243,6 +3402,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesPurpleTerracotta
   | McdocBlockStatesPurpleWallBanner
   | McdocBlockStatesPurpleWool
+  | McdocBlockStatesPurpleWoolSlab
+  | McdocBlockStatesPurpleWoolStairs
   | McdocBlockStatesPurpurBlock
   | McdocBlockStatesPurpurPillar
   | McdocBlockStatesPurpurSlab
@@ -3270,11 +3431,13 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesRedNetherBrickStairs
   | McdocBlockStatesRedNetherBrickWall
   | McdocBlockStatesRedNetherBricks
+  | McdocBlockStatesRedPoplarLeaves
   | McdocBlockStatesRedSand
   | McdocBlockStatesRedSandstone
   | McdocBlockStatesRedSandstoneSlab
   | McdocBlockStatesRedSandstoneStairs
   | McdocBlockStatesRedSandstoneWall
+  | McdocBlockStatesRedShrub
   | McdocBlockStatesRedShulkerBox
   | McdocBlockStatesRedStainedGlass
   | McdocBlockStatesRedStainedGlassPane
@@ -3282,6 +3445,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesRedTulip
   | McdocBlockStatesRedWallBanner
   | McdocBlockStatesRedWool
+  | McdocBlockStatesRedWoolSlab
+  | McdocBlockStatesRedWoolStairs
   | McdocBlockStatesRedstoneBlock
   | McdocBlockStatesRedstoneLamp
   | McdocBlockStatesRedstoneOre
@@ -3314,6 +3479,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesSeaLantern
   | McdocBlockStatesSeaPickle
   | McdocBlockStatesSeagrass
+  | McdocBlockStatesShelfMushroom
   | McdocBlockStatesShortDryGrass
   | McdocBlockStatesShortGrass
   | McdocBlockStatesShroomlight
@@ -3379,6 +3545,7 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesStoneSlab
   | McdocBlockStatesStoneStairs
   | McdocBlockStatesStonecutter
+  | McdocBlockStatesStrawBed
   | McdocBlockStatesStrippedAcaciaLog
   | McdocBlockStatesStrippedAcaciaWood
   | McdocBlockStatesStrippedBambooBlock
@@ -3398,6 +3565,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesStrippedOakWood
   | McdocBlockStatesStrippedPaleOakLog
   | McdocBlockStatesStrippedPaleOakWood
+  | McdocBlockStatesStrippedPoplarLog
+  | McdocBlockStatesStrippedPoplarWood
   | McdocBlockStatesStrippedSpruceLog
   | McdocBlockStatesStrippedSpruceWood
   | McdocBlockStatesStrippedWarpedHyphae
@@ -3570,6 +3739,8 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesWhiteTulip
   | McdocBlockStatesWhiteWallBanner
   | McdocBlockStatesWhiteWool
+  | McdocBlockStatesWhiteWoolSlab
+  | McdocBlockStatesWhiteWoolStairs
   | McdocBlockStatesWildflowers
   | McdocBlockStatesWitherRose
   | McdocBlockStatesWitherSkeletonSkull
@@ -3582,12 +3753,15 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesYellowConcrete
   | McdocBlockStatesYellowConcretePowder
   | McdocBlockStatesYellowGlazedTerracotta
+  | McdocBlockStatesYellowPoplarLeaves
   | McdocBlockStatesYellowShulkerBox
   | McdocBlockStatesYellowStainedGlass
   | McdocBlockStatesYellowStainedGlassPane
   | McdocBlockStatesYellowTerracotta
   | McdocBlockStatesYellowWallBanner
   | McdocBlockStatesYellowWool
+  | McdocBlockStatesYellowWoolSlab
+  | McdocBlockStatesYellowWoolStairs
   | McdocBlockStatesZombieHead
   | McdocBlockStatesZombieWallHead
   | McdocBlockStatesFallbackType)
@@ -3975,6 +4149,16 @@ type McdocBlockStatesBlackWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesBlackWool = Record<string, never>
+type McdocBlockStatesBlackWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesBlackWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesBlackstone = Record<string, never>
 type McdocBlockStatesBlackstoneSlab = {
   type?: ('top' | 'bottom' | 'double'),
@@ -4038,6 +4222,16 @@ type McdocBlockStatesBlueWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesBlueWool = Record<string, never>
+type McdocBlockStatesBlueWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesBlueWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesBoneBlock = {
   axis?: ('x' | 'y' | 'z'),
 }
@@ -4124,6 +4318,16 @@ type McdocBlockStatesBrownWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesBrownWool = Record<string, never>
+type McdocBlockStatesBrownWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesBrownWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesBubbleColumn = {
   drag?: ('true' | 'false'),
 }
@@ -4666,6 +4870,16 @@ type McdocBlockStatesCyanWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesCyanWool = Record<string, never>
+type McdocBlockStatesCyanWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesCyanWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesDamagedAnvil = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
@@ -5155,6 +5369,16 @@ type McdocBlockStatesGrayWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesGrayWool = Record<string, never>
+type McdocBlockStatesGrayWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesGrayWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesGreenBanner = {
   rotation?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | '13' | '14' | '15'),
 }
@@ -5193,6 +5417,16 @@ type McdocBlockStatesGreenWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesGreenWool = Record<string, never>
+type McdocBlockStatesGreenWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesGreenWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesGrindstone = {
   face?: ('floor' | 'wall' | 'ceiling'),
   facing?: ('north' | 'south' | 'west' | 'east'),
@@ -5474,6 +5708,16 @@ type McdocBlockStatesLightBlueWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesLightBlueWool = Record<string, never>
+type McdocBlockStatesLightBlueWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesLightBlueWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesLightGrayBanner = {
   rotation?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | '13' | '14' | '15'),
 }
@@ -5512,6 +5756,16 @@ type McdocBlockStatesLightGrayWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesLightGrayWool = Record<string, never>
+type McdocBlockStatesLightGrayWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesLightGrayWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesLightWeightedPressurePlate = {
   power?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | '13' | '14' | '15'),
 }
@@ -5563,6 +5817,16 @@ type McdocBlockStatesLimeWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesLimeWool = Record<string, never>
+type McdocBlockStatesLimeWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesLimeWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesLodestone = Record<string, never>
 type McdocBlockStatesLoom = {
   facing?: ('north' | 'south' | 'west' | 'east'),
@@ -5605,6 +5869,16 @@ type McdocBlockStatesMagentaWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesMagentaWool = Record<string, never>
+type McdocBlockStatesMagentaWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesMagentaWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesMagmaBlock = Record<string, never>
 type McdocBlockStatesMangroveButton = {
   face?: ('floor' | 'wall' | 'ceiling'),
@@ -5990,6 +6264,11 @@ type McdocBlockStatesOrangeConcretePowder = Record<string, never>
 type McdocBlockStatesOrangeGlazedTerracotta = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
+type McdocBlockStatesOrangePoplarLeaves = {
+  distance?: ('1' | '2' | '3' | '4' | '5' | '6' | '7'),
+  persistent?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesOrangeShulkerBox = {
   facing?: ('north' | 'east' | 'south' | 'west' | 'up' | 'down'),
 }
@@ -6007,6 +6286,16 @@ type McdocBlockStatesOrangeWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesOrangeWool = Record<string, never>
+type McdocBlockStatesOrangeWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesOrangeWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesOxeyeDaisy = Record<string, never>
 type McdocBlockStatesOxidizedChiseledCopper = Record<string, never>
 type McdocBlockStatesOxidizedCopper = Record<string, never>
@@ -6229,6 +6518,16 @@ type McdocBlockStatesPinkWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesPinkWool = Record<string, never>
+type McdocBlockStatesPinkWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPinkWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesPiston = {
   extended?: ('true' | 'false'),
   facing?: ('north' | 'east' | 'south' | 'west' | 'up' | 'down'),
@@ -6419,6 +6718,84 @@ type McdocBlockStatesPolishedTuffWall = {
   waterlogged?: ('true' | 'false'),
   west?: ('none' | 'low' | 'tall'),
 }
+type McdocBlockStatesPoplarButton = {
+  face?: ('floor' | 'wall' | 'ceiling'),
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  powered?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarDoor = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('upper' | 'lower'),
+  hinge?: ('left' | 'right'),
+  open?: ('true' | 'false'),
+  powered?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarFence = {
+  east?: ('true' | 'false'),
+  north?: ('true' | 'false'),
+  south?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+  west?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarFenceGate = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  in_wall?: ('true' | 'false'),
+  open?: ('true' | 'false'),
+  powered?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarHangingSign = {
+  attached?: ('true' | 'false'),
+  rotation?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | '13' | '14' | '15'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarLog = {
+  axis?: ('x' | 'y' | 'z'),
+}
+type McdocBlockStatesPoplarPlanks = Record<string, never>
+type McdocBlockStatesPoplarPressurePlate = {
+  powered?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarSapling = {
+  stage?: ('0' | '1'),
+}
+type McdocBlockStatesPoplarShelf = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  powered?: ('true' | 'false'),
+  side_chain?: ('unconnected' | 'right' | 'center' | 'left'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarSign = {
+  rotation?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | '13' | '14' | '15'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarTrapdoor = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  open?: ('true' | 'false'),
+  powered?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarWallHangingSign = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarWallSign = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPoplarWood = {
+  axis?: ('x' | 'y' | 'z'),
+}
 type McdocBlockStatesPoppy = Record<string, never>
 type McdocBlockStatesPotatoes = {
   age?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7'),
@@ -6455,6 +6832,7 @@ type McdocBlockStatesPottedOrangeTulip = Record<string, never>
 type McdocBlockStatesPottedOxeyeDaisy = Record<string, never>
 type McdocBlockStatesPottedPaleOakSapling = Record<string, never>
 type McdocBlockStatesPottedPinkTulip = Record<string, never>
+type McdocBlockStatesPottedPoplarSapling = Record<string, never>
 type McdocBlockStatesPottedPoppy = Record<string, never>
 type McdocBlockStatesPottedRedMushroom = Record<string, never>
 type McdocBlockStatesPottedRedTulip = Record<string, never>
@@ -6545,6 +6923,16 @@ type McdocBlockStatesPurpleWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesPurpleWool = Record<string, never>
+type McdocBlockStatesPurpleWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesPurpleWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesPurpurBlock = Record<string, never>
 type McdocBlockStatesPurpurPillar = {
   axis?: ('x' | 'y' | 'z'),
@@ -6641,6 +7029,11 @@ type McdocBlockStatesRedNetherBrickWall = {
   west?: ('none' | 'low' | 'tall'),
 }
 type McdocBlockStatesRedNetherBricks = Record<string, never>
+type McdocBlockStatesRedPoplarLeaves = {
+  distance?: ('1' | '2' | '3' | '4' | '5' | '6' | '7'),
+  persistent?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesRedSand = Record<string, never>
 type McdocBlockStatesRedSandstone = Record<string, never>
 type McdocBlockStatesRedSandstoneSlab = {
@@ -6661,6 +7054,7 @@ type McdocBlockStatesRedSandstoneWall = {
   waterlogged?: ('true' | 'false'),
   west?: ('none' | 'low' | 'tall'),
 }
+type McdocBlockStatesRedShrub = Record<string, never>
 type McdocBlockStatesRedShulkerBox = {
   facing?: ('north' | 'east' | 'south' | 'west' | 'up' | 'down'),
 }
@@ -6678,6 +7072,16 @@ type McdocBlockStatesRedWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesRedWool = Record<string, never>
+type McdocBlockStatesRedWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesRedWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesRedstoneBlock = Record<string, never>
 type McdocBlockStatesRedstoneLamp = {
   lit?: ('true' | 'false'),
@@ -6800,6 +7204,10 @@ type McdocBlockStatesSeaPickle = {
   waterlogged?: ('true' | 'false'),
 }
 type McdocBlockStatesSeagrass = Record<string, never>
+type McdocBlockStatesShelfMushroom = {
+  age?: ('0' | '1'),
+  facing?: ('north' | 'south' | 'west' | 'east'),
+}
 type McdocBlockStatesShortDryGrass = Record<string, never>
 type McdocBlockStatesShortGrass = Record<string, never>
 type McdocBlockStatesShroomlight = Record<string, never>
@@ -7023,6 +7431,11 @@ type McdocBlockStatesStoneStairs = {
 type McdocBlockStatesStonecutter = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
+type McdocBlockStatesStrawBed = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  occupied?: ('true' | 'false'),
+  part?: ('head' | 'foot'),
+}
 type McdocBlockStatesStrippedAcaciaLog = {
   axis?: ('x' | 'y' | 'z'),
 }
@@ -7078,6 +7491,12 @@ type McdocBlockStatesStrippedPaleOakLog = {
   axis?: ('x' | 'y' | 'z'),
 }
 type McdocBlockStatesStrippedPaleOakWood = {
+  axis?: ('x' | 'y' | 'z'),
+}
+type McdocBlockStatesStrippedPoplarLog = {
+  axis?: ('x' | 'y' | 'z'),
+}
+type McdocBlockStatesStrippedPoplarWood = {
   axis?: ('x' | 'y' | 'z'),
 }
 type McdocBlockStatesStrippedSpruceLog = {
@@ -7787,6 +8206,16 @@ type McdocBlockStatesWhiteWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesWhiteWool = Record<string, never>
+type McdocBlockStatesWhiteWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesWhiteWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesWildflowers = {
   facing?: ('north' | 'south' | 'west' | 'east'),
   flower_amount?: ('1' | '2' | '3' | '4'),
@@ -7822,6 +8251,11 @@ type McdocBlockStatesYellowConcretePowder = Record<string, never>
 type McdocBlockStatesYellowGlazedTerracotta = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
+type McdocBlockStatesYellowPoplarLeaves = {
+  distance?: ('1' | '2' | '3' | '4' | '5' | '6' | '7'),
+  persistent?: ('true' | 'false'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesYellowShulkerBox = {
   facing?: ('north' | 'east' | 'south' | 'west' | 'up' | 'down'),
 }
@@ -7838,6 +8272,16 @@ type McdocBlockStatesYellowWallBanner = {
   facing?: ('north' | 'south' | 'west' | 'east'),
 }
 type McdocBlockStatesYellowWool = Record<string, never>
+type McdocBlockStatesYellowWoolSlab = {
+  type?: ('top' | 'bottom' | 'double'),
+  waterlogged?: ('true' | 'false'),
+}
+type McdocBlockStatesYellowWoolStairs = {
+  facing?: ('north' | 'south' | 'west' | 'east'),
+  half?: ('top' | 'bottom'),
+  shape?: ('straight' | 'inner_left' | 'inner_right' | 'outer_left' | 'outer_right'),
+  waterlogged?: ('true' | 'false'),
+}
 type McdocBlockStatesZombieHead = {
   powered?: ('true' | 'false'),
   rotation?: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | '13' | '14' | '15'),

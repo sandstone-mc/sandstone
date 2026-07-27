@@ -8,6 +8,7 @@ import type {
 } from 'sandstone/arguments/generated/data/loot.ts'
 import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
 import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { IntRange, NbtProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolDataComponent, SymbolMcdocBlockStateKeys } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
@@ -175,6 +176,7 @@ export type BinomialWithBonusCountFormula = {
 
 export type Conditions = {
   conditions?: Array<LootCondition>,
+  condition?: PredicateRef,
 }
 
 export type ContainerComponents = ('container' | 'bundle_contents' | 'charged_projectiles')
@@ -356,6 +358,15 @@ export type ExplorationMap = ({
   destination?: (Registry['minecraft:tag/worldgen/structure']),
 } & {
   /**
+   * Generated structure to locate. Accepts any of the structure types used by the `/locate` command.
+   */
+  destination: ((
+        | Registry['minecraft:worldgen/structure']
+        | `#${Registry['minecraft:tag/worldgen/structure']}`
+        | TagClass<'worldgen/structure'>)
+      | Array<Registry['minecraft:worldgen/structure']>),
+} & {
+  /**
    * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
    * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
    */
@@ -475,7 +486,10 @@ export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_
 export type LootFunction = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:loot_function_type'], string>, string>]?: ({
     function: S,
-  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
+    type: S,
+  } & (S extends keyof SymbolLootFunction
+    ? SymbolLootFunction[S]
+    : RootNBT) & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
 }[Extract<Registry['minecraft:loot_function_type'], string>])>
 
 export type LootingEnchant = (EnchantedCountBase & Conditions)
@@ -554,12 +568,12 @@ export type ReplaceSectionListOperation = {
   }>,
 }
 
-export type Sequence = {
+export type Sequence = ({
   /**
    * List of functions to apply to this item.
    */
-  functions: Array<LootFunction>,
-}
+  functions: (Array<LootFunction> | ItemModifier),
+} & Conditions)
 
 export type SetAttributes = ({
   /**
@@ -748,6 +762,10 @@ export type SetLootTable = ({
    * The loot table to set to the container block item.
    */
   name: (Registry['minecraft:loot_table'] | LootTableClass),
+  /**
+   * The loot table to set to the container block item.
+   */
+  tag: (Registry['minecraft:loot_table'] | LootTableClass),
   /**
    * The container seed to use. Defaults to a random seed.
    */

@@ -14,7 +14,12 @@ import type {
   OverrideModifier,
   TranslucentColorAttributeModifier,
 } from 'sandstone/arguments/generated/data/worldgen/attribute/modifier.ts'
-import type { BiomeMusic, BiomeSoundAdditions, MoodSound } from 'sandstone/arguments/generated/data/worldgen/biome.ts'
+import type {
+  BiomeMusic,
+  BiomeSoundAdditions,
+  MoodSound,
+  NaturalMobSpawns,
+} from 'sandstone/arguments/generated/data/worldgen/biome.ts'
 import type {
   SymbolEnvironmentAttributeArgbColorModifier,
   SymbolEnvironmentAttributeColorModifier,
@@ -121,6 +126,8 @@ export type BedRule = {
    */
   can_set_spawn: BedRuleType,
   explodes?: boolean,
+  destroy_on_use?: boolean,
+  destroy_on_leave?: boolean,
   error_message?: Text,
 }
 
@@ -396,6 +403,8 @@ type EnvironmentAttributeDispatcherMap = {
   'minecraft:gameplay/cat_waking_up_gift_chance': EnvironmentAttributeGameplayCatWakingUpGiftChance,
   'gameplay/creaking_active': EnvironmentAttributeGameplayCreakingActive,
   'minecraft:gameplay/creaking_active': EnvironmentAttributeGameplayCreakingActive,
+  'gameplay/creature_world_gen_spawn_probability': EnvironmentAttributeGameplayCreatureWorldGenSpawnProbability,
+  'minecraft:gameplay/creature_world_gen_spawn_probability': EnvironmentAttributeGameplayCreatureWorldGenSpawnProbability,
   'gameplay/eyeblossom_open': EnvironmentAttributeGameplayEyeblossomOpen,
   'minecraft:gameplay/eyeblossom_open': EnvironmentAttributeGameplayEyeblossomOpen,
   'gameplay/fast_lava': EnvironmentAttributeGameplayFastLava,
@@ -404,6 +413,8 @@ type EnvironmentAttributeDispatcherMap = {
   'minecraft:gameplay/increased_fire_burnout': EnvironmentAttributeGameplayIncreasedFireBurnout,
   'gameplay/monsters_burn': EnvironmentAttributeGameplayMonstersBurn,
   'minecraft:gameplay/monsters_burn': EnvironmentAttributeGameplayMonstersBurn,
+  'gameplay/natural_mob_spawns': EnvironmentAttributeGameplayNaturalMobSpawns,
+  'minecraft:gameplay/natural_mob_spawns': EnvironmentAttributeGameplayNaturalMobSpawns,
   'gameplay/nether_portal_spawns_piglin': EnvironmentAttributeGameplayNetherPortalSpawnsPiglin,
   'minecraft:gameplay/nether_portal_spawns_piglin': EnvironmentAttributeGameplayNetherPortalSpawnsPiglin,
   'gameplay/piglins_zombify': EnvironmentAttributeGameplayPiglinsZombify,
@@ -414,6 +425,8 @@ type EnvironmentAttributeDispatcherMap = {
   'minecraft:gameplay/sky_light_level': EnvironmentAttributeGameplaySkyLightLevel,
   'gameplay/snow_golem_melts': EnvironmentAttributeGameplaySnowGolemMelts,
   'minecraft:gameplay/snow_golem_melts': EnvironmentAttributeGameplaySnowGolemMelts,
+  'gameplay/straw_bed_rule': EnvironmentAttributeGameplayStrawBedRule,
+  'minecraft:gameplay/straw_bed_rule': EnvironmentAttributeGameplayStrawBedRule,
   'gameplay/surface_slime_spawn_chance': EnvironmentAttributeGameplaySurfaceSlimeSpawnChance,
   'minecraft:gameplay/surface_slime_spawn_chance': EnvironmentAttributeGameplaySurfaceSlimeSpawnChance,
   'gameplay/turtle_egg_hatch_chance': EnvironmentAttributeGameplayTurtleEggHatchChance,
@@ -484,15 +497,18 @@ type EnvironmentAttributeFallback = (
   | EnvironmentAttributeGameplayCanStartRaid
   | EnvironmentAttributeGameplayCatWakingUpGiftChance
   | EnvironmentAttributeGameplayCreakingActive
+  | EnvironmentAttributeGameplayCreatureWorldGenSpawnProbability
   | EnvironmentAttributeGameplayEyeblossomOpen
   | EnvironmentAttributeGameplayFastLava
   | EnvironmentAttributeGameplayIncreasedFireBurnout
   | EnvironmentAttributeGameplayMonstersBurn
+  | EnvironmentAttributeGameplayNaturalMobSpawns
   | EnvironmentAttributeGameplayNetherPortalSpawnsPiglin
   | EnvironmentAttributeGameplayPiglinsZombify
   | EnvironmentAttributeGameplayRespawnAnchorWorks
   | EnvironmentAttributeGameplaySkyLightLevel
   | EnvironmentAttributeGameplaySnowGolemMelts
+  | EnvironmentAttributeGameplayStrawBedRule
   | EnvironmentAttributeGameplaySurfaceSlimeSpawnChance
   | EnvironmentAttributeGameplayTurtleEggHatchChance
   | EnvironmentAttributeGameplayVillagerActivity
@@ -544,10 +560,16 @@ type EnvironmentAttributeGameplayCatWakingUpGiftChance = FloatAttribute<NBTFloat
   max: 1,
 }>>
 type EnvironmentAttributeGameplayCreakingActive = BooleanAttribute
+type EnvironmentAttributeGameplayCreatureWorldGenSpawnProbability = FloatAttribute<NBTFloat<{
+  leftExclusive: false,
+  rightExclusive: false,
+  min: 0,
+}>>
 type EnvironmentAttributeGameplayEyeblossomOpen = DiscreteAttribute<TriState>
 type EnvironmentAttributeGameplayFastLava = BooleanAttribute
 type EnvironmentAttributeGameplayIncreasedFireBurnout = BooleanAttribute
 type EnvironmentAttributeGameplayMonstersBurn = BooleanAttribute
+type EnvironmentAttributeGameplayNaturalMobSpawns = MergeableAttribute<NaturalMobSpawns>
 type EnvironmentAttributeGameplayNetherPortalSpawnsPiglin = BooleanAttribute
 type EnvironmentAttributeGameplayPiglinsZombify = BooleanAttribute
 type EnvironmentAttributeGameplayRespawnAnchorWorks = BooleanAttribute
@@ -557,6 +579,7 @@ type EnvironmentAttributeGameplaySkyLightLevel = FloatAttribute<NBTFloat<{
   min: 0,
 }>>
 type EnvironmentAttributeGameplaySnowGolemMelts = BooleanAttribute
+type EnvironmentAttributeGameplayStrawBedRule = DiscreteAttribute<BedRule>
 type EnvironmentAttributeGameplaySurfaceSlimeSpawnChance = FloatAttribute<NBTFloat<{
   leftExclusive: false,
   rightExclusive: false,

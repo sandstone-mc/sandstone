@@ -35,6 +35,7 @@ export const TAG_DAMAGE_TYPES_SET = new Set([
   'no_anger',
   'no_impact',
   'no_knockback',
+  'no_wolf_retaliation',
   'panic_causes',
   'panic_environmental_causes',
   'sulfur_cube_with_block_immune_to',

@@ -2,6 +2,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { AreaEffectCloud } from 'sandstone/arguments/generated/world/entity/area_effect_cloud.ts'
 import type { BlockAttachedEntity, EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
+import type { Cushion } from 'sandstone/arguments/generated/world/entity/cushion.ts'
 import type { BlockDisplay, ItemDisplay, TextDisplay } from 'sandstone/arguments/generated/world/entity/display.ts'
 import type { EndCrystal } from 'sandstone/arguments/generated/world/entity/end_crystal.ts'
 import type { EvokerFangs } from 'sandstone/arguments/generated/world/entity/evoker_fangs.ts'
@@ -211,6 +212,8 @@ type EntityDispatcherMap = {
   'minecraft:creaking': EntityCreaking,
   'creeper': EntityCreeper,
   'minecraft:creeper': EntityCreeper,
+  'cushion': EntityCushion,
+  'minecraft:cushion': EntityCushion,
   'dark_oak_boat': EntityDarkOakBoat,
   'minecraft:dark_oak_boat': EntityDarkOakBoat,
   'dark_oak_chest_boat': EntityDarkOakChestBoat,
@@ -357,6 +360,10 @@ type EntityDispatcherMap = {
   'minecraft:player': EntityPlayer,
   'polar_bear': EntityPolarBear,
   'minecraft:polar_bear': EntityPolarBear,
+  'poplar_boat': EntityPoplarBoat,
+  'minecraft:poplar_boat': EntityPoplarBoat,
+  'popolar_chest_boat': EntityPopolarChestBoat,
+  'minecraft:popolar_chest_boat': EntityPopolarChestBoat,
   'potion': EntityPotion,
   'minecraft:potion': EntityPotion,
   'pufferfish': EntityPufferfish,
@@ -493,6 +500,7 @@ type EntityFallback = (
   | EntityCow
   | EntityCreaking
   | EntityCreeper
+  | EntityCushion
   | EntityDarkOakBoat
   | EntityDarkOakChestBoat
   | EntityDolphin
@@ -566,6 +574,8 @@ type EntityFallback = (
   | EntityPillager
   | EntityPlayer
   | EntityPolarBear
+  | EntityPoplarBoat
+  | EntityPopolarChestBoat
   | EntityPotion
   | EntityPufferfish
   | EntityRabbit
@@ -649,6 +659,7 @@ type EntityCopperGolem = CopperGolem
 type EntityCow = Cow
 type EntityCreaking = Creaking
 type EntityCreeper = Creeper
+type EntityCushion = Cushion
 type EntityDarkOakBoat = Boat
 type EntityDarkOakChestBoat = ChestBoat
 type EntityDolphin = Dolphin
@@ -722,6 +733,8 @@ type EntityPiglinBrute = PiglinBase
 type EntityPillager = Pillager
 type EntityPlayer = Player
 type EntityPolarBear = PolarBear
+type EntityPoplarBoat = Boat
+type EntityPopolarChestBoat = ChestBoat
 type EntityPotion = Potion
 type EntityPufferfish = Pufferfish
 type EntityRabbit = Rabbit

@@ -16,6 +16,7 @@ export const ATTRIBUTE_TYPES_SET = new Set([
   'boolean',
   'float',
   'integer',
+  'mob_spawn_settings',
   'moon_phase',
   'particle',
   'rgb_color',

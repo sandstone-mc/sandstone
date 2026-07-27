@@ -4,7 +4,17 @@ import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
-import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort, RecipeClass } from 'sandstone'
+import type {
+  NBTByte,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTIntArray,
+  NBTList,
+  NBTShort,
+  PostEffectClass,
+  RecipeClass,
+} from 'sandstone'
 
 export type Abilities = {
   /**
@@ -235,6 +245,7 @@ export type Player = (LivingEntity & {
    * Ender pearls thrown by this player.
    */
   ender_pearls?: Array<EnderPearl>,
+  post_effects?: Array<(Registry['minecraft:post_effect'] | PostEffectClass)>,
   /**
    * Value:
    * List length range: 3

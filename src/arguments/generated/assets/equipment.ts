@@ -1,3 +1,4 @@
+import type { PaletteRef } from 'sandstone/arguments/generated/assets/atlas.ts'
 import type { RGB } from 'sandstone/arguments/generated/util/color.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 
@@ -14,6 +15,12 @@ export type Equipment = {
    * List of layers for each model layer type.
    */
   layers: Layers,
+  /**
+   * Replaces palette textures provided by trim materials.
+   */
+  trim_palette_replacements?: ({
+    [Key in Extract<PaletteRef, string>]?: PaletteRef
+  }),
 }
 
 export type Layer<T extends NBTObject> = ({

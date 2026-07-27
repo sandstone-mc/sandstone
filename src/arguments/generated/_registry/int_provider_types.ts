@@ -12,5 +12,6 @@ export const INT_PROVIDER_TYPES_SET = new Set([
   'constant',
   'trapezoid',
   'uniform',
+  'very_biased_to_bottom',
   'weighted_list',
 ] as const)

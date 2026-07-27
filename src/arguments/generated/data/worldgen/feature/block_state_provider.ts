@@ -3,6 +3,7 @@ import type { RuleBasedBlockStateProvider } from 'sandstone/arguments/generated/
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
@@ -88,7 +89,18 @@ export type RandomizedIntStateProvider = {
 }
 
 export type RotatedStateProvider = {
-  state: BlockState,
+  state: (BlockState | BlockStateProvider),
+  /**
+   * Value:
+   *
+   *  - Down(`down`)
+   *  - Up(`up`)
+   *  - North(`north`)
+   *  - East(`east`)
+   *  - South(`south`)
+   *  - West(`west`)
+   */
+  direction?: Direction,
 }
 
 export type SimpleStateProvider = {
@@ -99,12 +111,16 @@ export type WeightedBlockStateProvider = {
   entries: NonEmptyWeightedList<BlockState>,
 }
 type BlockStateProviderDispatcherMap = {
+  'copy_properties_provider': BlockStateProviderCopyPropertiesProvider,
+  'minecraft:copy_properties_provider': BlockStateProviderCopyPropertiesProvider,
   'dual_noise_provider': BlockStateProviderDualNoiseProvider,
   'minecraft:dual_noise_provider': BlockStateProviderDualNoiseProvider,
   'noise_provider': BlockStateProviderNoiseProvider,
   'minecraft:noise_provider': BlockStateProviderNoiseProvider,
   'noise_threshold_provider': BlockStateProviderNoiseThresholdProvider,
   'minecraft:noise_threshold_provider': BlockStateProviderNoiseThresholdProvider,
+  'random_block_provider': BlockStateProviderRandomBlockProvider,
+  'minecraft:random_block_provider': BlockStateProviderRandomBlockProvider,
   'randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider,
   'minecraft:randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider,
   'rotated_block_provider': BlockStateProviderRotatedBlockProvider,
@@ -118,17 +134,21 @@ type BlockStateProviderDispatcherMap = {
 }
 type BlockStateProviderKeys = keyof BlockStateProviderDispatcherMap
 type BlockStateProviderFallback = (
+  | BlockStateProviderCopyPropertiesProvider
   | BlockStateProviderDualNoiseProvider
   | BlockStateProviderNoiseProvider
   | BlockStateProviderNoiseThresholdProvider
+  | BlockStateProviderRandomBlockProvider
   | BlockStateProviderRandomizedIntStateProvider
   | BlockStateProviderRotatedBlockProvider
   | BlockStateProviderRuleBasedStateProvider
   | BlockStateProviderSimpleStateProvider
   | BlockStateProviderWeightedStateProvider)
+type BlockStateProviderCopyPropertiesProvider = CopyPropertiesProvider
 type BlockStateProviderDualNoiseProvider = DualNoiseProvider
 type BlockStateProviderNoiseProvider = NoiseProvider
 type BlockStateProviderNoiseThresholdProvider = NoiseThresholdProvider
+type BlockStateProviderRandomBlockProvider = RandomBlockStateProvider
 type BlockStateProviderRandomizedIntStateProvider = RandomizedIntStateProvider
 type BlockStateProviderRotatedBlockProvider = RotatedStateProvider
 type BlockStateProviderRuleBasedStateProvider = RuleBasedBlockStateProvider

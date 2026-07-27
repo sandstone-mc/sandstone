@@ -14,6 +14,7 @@ export const WORLDGEN_BIOMES_SET = new Set([
   'cherry_grove',
   'cold_ocean',
   'crimson_forest',
+  'dappled_forest',
   'dark_forest',
   'deep_cold_ocean',
   'deep_dark',

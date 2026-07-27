@@ -8,5 +8,6 @@ export type WORLDGEN_CARVERS = (
 export const WORLDGEN_CARVERS_SET = new Set([
   'canyon',
   'cave',
+  'cave_extra_underground',
   'nether_cave',
 ] as const)
