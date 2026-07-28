@@ -3,7 +3,7 @@ import { FunctionCommandNode } from 'sandstone/commands'
 import type { SandstoneCore } from 'sandstone/core'
 import { AwaitNode } from 'sandstone/core/nodes'
 import type { Condition } from 'sandstone/flow'
-import { SleepClass } from './Sleep'
+import { SleepClass } from './sleep'
 
 const UNTIL_CHILD_NAME = '__until'
 

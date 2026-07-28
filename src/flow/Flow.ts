@@ -18,12 +18,13 @@ import type {
   JSONTextComponentClass,
   StringDataPointClass,
 } from 'sandstone/variables'
-import { parseJSONText, Score, SleepClass, UntilClass } from 'sandstone/variables'
+import { parseJSONText, Score} from 'sandstone/variables'
 import { ThrowNode } from './throw'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
 import type { LiteralUnion, NamespacedLiteralUnion, RemoveFirst } from '../utils'
 import { makeCallable } from 'sandstone/utils'
 import type { AwaitNode } from 'sandstone/core/nodes'
+import { SleepClass, UntilClass } from './async'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'

@@ -3,12 +3,10 @@
 
 import type {
   // eslint-disable-next-line max-len
-  Coordinates,
   JSONTextComponent,
   NBTObject,
   REGISTRIES,
   RootNBT,
-  SingleEntityArgument,
   SOUND_TYPES,
   TEXTURE_TYPES,
   TimeArgument,
@@ -153,7 +151,6 @@ import {
   Score,
   SelectorClass,
   type SelectorPickClass,
-  SleepClass,
   TargetlessDataClass,
   TargetlessDataPointClass,
   TriggerClass,
@@ -1029,8 +1026,6 @@ export class SandstonePack {
 
     this.tickedCommands[runEvery].push(callback)
   }
-
-  sleep = (delay: TimeArgument) => new SleepClass(this.core, delay)
 
   Loop = () => new LoopArgument(this)
 
