@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.1.7](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.7) - 2026-07-28
+
+### Export NBTs types explicitly to avoid errors in the built types
+
+**Full Changelog**: [v1.1.6...v1.1.7](https://github.com/sandstone-mc/sandstone/compare/v1.1.6...v1.1.7)
+
+
 ## [v1.1.6](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.6) - 2026-07-28
 
 ### Make AllowConst type actually work

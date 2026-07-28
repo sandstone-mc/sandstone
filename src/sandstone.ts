@@ -354,7 +354,34 @@ export const {
   defaultNamespace,
 } = packMethodsProxy
 
-export * from './variables/nbt/NBTs'
+export {
+  NBT,
+  NBTAnyValue,
+  NBTByte,
+  NBTByteArray,
+  NBTClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTIntArray,
+  NBTList,
+  NBTLong,
+  NBTLongArray,
+  NBTPrimitive,
+  NBTRange,
+  NBTShort,
+  NBTString,
+  NBTTypedArray,
+  NotNBT,
+  ResolvedNBT,
+  nbtResolver,
+  type NBTAllArrays,
+  type NBTAllNumberClasses,
+  type NBTAllNumbers,
+  type NBTAllPrimitives,
+  type NBTAllValues,
+  type NBTSimpleClasses,
+} from './variables/nbt/NBTs'
 
 export type { Condition } from './flow'
 export {
