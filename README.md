@@ -1,10 +1,13 @@
-<div align="center"><img src=https://vignette.wikia.nocookie.net/minecraft/images/d/d6/Sandstone.png/></div>
+<div align="center"><img src=https://avatars.githubusercontent.com/u/117723663?s=400&u=8a8d4ec7b7c85587e8190d1446d8201cc70789f4/></div>
+
+<div align="center">
 
 # Sandstone
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/sandstone-mc/sandstone?color=blue&style=flat-square)
 [![NPM Version](https://img.shields.io/npm/v/sandstone?style=flat-square&logo=npm&color=cc3534)](https://www.npmjs.com/package/sandstone/v/latest?activeTab=versions)[![Provenance Signed](https://img.shields.io/badge/-%E2%9C%94-b02c2c?style=flat-square)](https://www.npmjs.com/package/sandstone/v/latest#provenance)
 ![Discord](https://img.shields.io/discord/800035701243772969?color=%237289DA&label=discord&style=flat-square)
+</div>
 
 Sandstone is a Typescript library for Minecraft Datapacks, Resource Packs, etc. It allows easy creation, debug and sharing of Minecraft functions, loot tables, predicates etc...
 
