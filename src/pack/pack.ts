@@ -177,6 +177,8 @@ import {
   SimplifyExecuteFunctionVisitor,
   SimplifyReturnRunFunctionVisitor,
   SwitchTransformationVisitor,
+  ThrowInlineVisitor,
+  ThrowPropagationVisitor,
   UnifyChainedExecutesVisitor,
 } from './visitors'
 import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
@@ -1576,10 +1578,12 @@ export class SandstonePack {
         new SwitchTransformationVisitor(this),
         new OrTransformationVisitor(this),
         new IfElseTransformationVisitor(this),
+        new ThrowInlineVisitor(this),
         new ContainerCommandsToMCFunctionVisitor(this),
 
         // Special visitors
         new AwaitBodyVisitor(this),
+        new ThrowPropagationVisitor(this),
 
         // Optimization
         new OptimizeMacroTemporariesVisitor(this),
