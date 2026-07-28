@@ -723,4 +723,4 @@ export type SmartRange<Min extends number, Max extends number> = (
       PositiveRange<Min, Max>
 )
 
-export type AllowConst<T> = T | (readonly [T])[0]
+export type AllowConst<T> = T | Readonly<T>
