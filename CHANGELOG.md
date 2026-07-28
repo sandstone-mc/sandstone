@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.4](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.4) - 2026-07-28
+
+### Optimize and fix Flow#or/and
+
+**Full Changelog**: [v1.0.3...v1.0.4](https://github.com/sandstone-mc/sandstone/compare/v1.0.3...v1.0.4)
+
+
 ## [v1.0.3](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.3) - 2026-07-28
 
 ### Fix `AllowConst`
