@@ -352,7 +352,6 @@ export const {
   UUID,
   ItemPredicate,
   makeCustomResource,
-  sleep,
   loadTags,
   defaultNamespace,
 } = packMethodsProxy

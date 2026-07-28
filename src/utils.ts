@@ -724,3 +724,5 @@ export type SmartRange<Min extends number, Max extends number> = (
 )
 
 export type AllowConst<T> = T | Readonly<T>
+
+export type RemoveFirst<T extends any[]> = T extends [any, ...infer Rest] ? Rest : []

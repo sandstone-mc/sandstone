@@ -8,6 +8,7 @@ import type {
   MultiplePlayersArgumentOf,
   SymbolBlock,
   SymbolMcdocBlockStates,
+  TimeArgument,
 } from 'sandstone/arguments'
 import type { ItemSlotSource } from '../commands/implementations/world/item'
 import type {
@@ -17,10 +18,12 @@ import type {
   JSONTextComponentClass,
   StringDataPointClass,
 } from 'sandstone/variables'
-import { parseJSONText, Score } from 'sandstone/variables'
+import { parseJSONText, Score, SleepClass, UntilClass } from 'sandstone/variables'
 import { ThrowNode } from './throw'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
-import type { LiteralUnion, NamespacedLiteralUnion } from '../utils'
+import type { LiteralUnion, NamespacedLiteralUnion, RemoveFirst } from '../utils'
+import { makeCallable } from 'sandstone/utils'
+import type { AwaitNode } from 'sandstone/core/nodes'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
@@ -94,6 +97,35 @@ export class Flow {
 
   get return() {
     return this.sandstoneCore.pack.commands.returnCmd
+  }
+
+  /**
+   * Async-control primitives.
+   *
+   * Two ways to use it:
+   *
+   *   1. Shortcuts — `_.await.sleep(delay)` and
+   *      `_.await.until(condition, pollRate)`.
+   *
+   *   2. Generic constructor — `_.await(YourAwaitClass)(...args)` threads
+   *      `SandstoneCore` through for you, then forwards the remaining args
+   *      to the class constructor. `YourAwaitClass` must extend `AwaitNode`
+   *      and accept `(core, ...args)` as its constructor signature.
+   *
+   * Both require the enclosing MCFunction to be declared with
+   * `{ asyncContext: true }`.
+   */
+  get await() {
+    const core = this.sandstoneCore
+    const shortcuts = {
+      sleep: (delay: TimeArgument) => new SleepClass(core, delay),
+      until: (condition: Condition, pollRate: TimeArgument) =>
+        new UntilClass(core, condition, pollRate),
+    }
+    type AwaitClass = new (core: SandstoneCore, ...args: any[]) => AwaitNode
+    const generic = <C extends AwaitClass>(Ctor: C, ...args: RemoveFirst<ConstructorParameters<C>>) =>
+      new Ctor(core, ...args)
+    return makeCallable<typeof shortcuts, typeof generic>(shortcuts, generic, true)
   }
 
   /**
