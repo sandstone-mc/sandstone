@@ -87,8 +87,10 @@ jobs:
           CLEAN_TITLE=$(echo "$COMMIT_TITLE" | sed -E 's/^[^ ]+ //')
 
           # Release title: "<tag> - <clean title>"
-          RELEASE_TITLE="${TAG} - ${CLEAN_TITLE}"
-          echo "title=${RELEASE_TITLE}" >> $GITHUB_OUTPUT
+          # Written to a file (not $GITHUB_OUTPUT) so backticks in the user's
+          # title aren't lost when the title round-trips through GitHub
+          # Actions' output interpolation into the next step's `--title`.
+          echo "${TAG} - ${CLEAN_TITLE}" > release_title.txt
 
           # Build release body
           {
@@ -139,6 +141,6 @@ jobs:
           fi
 
           gh release create "${{ github.ref_name }}" \
-            --title "${{ steps.release.outputs.title }}" \
+            --title "$(cat release_title.txt)" \
             --notes-file release_body.md \
             "$LATEST_FLAG"
