@@ -19,6 +19,7 @@ import type {
   StringDataPointClass,
 } from 'sandstone/variables'
 import { parseJSONText, Score } from 'sandstone/variables'
+import { ThrowNode } from './throw'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
 import type { LiteralUnion, NamespacedLiteralUnion } from '../utils'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode } from './conditions'
@@ -142,8 +143,7 @@ export class Flow {
     dataPoint?: DataPointClass | false,
   ) {
     const { pack, getCurrentMCFunctionOrThrow } = this.sandstoneCore
-    const { DataVariable, commands } = pack
-    const { tellraw, returnCmd } = commands
+    const { DataVariable } = pack
 
     const node = getCurrentMCFunctionOrThrow()
 
@@ -155,26 +155,19 @@ export class Flow {
       { text: `@ Function ${node.resource.name}. Node ${node.body.length - 1}.\n` },
     ]
 
-    if (broadcast !== false) {
-      tellraw(broadcast || '@a' as MultiplePlayersArgumentOf<false, T>, fullError)
-    }
-
     const errorSerializable = parseJSONText(this.sandstoneCore, fullError)! as JSONTextComponentClass
 
+    // Defer all command emission to ThrowTransformationVisitor. We just stash
+    // the throw site's args on a marker node so the visitor can materialize
+    // tellraw / data modify / return 1 in the right place and wrap enclosing
+    // executes with `if function <throw_fn> run return fail` for propagation.
     if (dataPoint !== false) {
-      let point
-      if (dataPoint === undefined) {
-        point = DataVariable(errorSerializable.toJSON() as NBTObject)
-      } else {
-        point = dataPoint.set(errorSerializable.toJSON() as NBTObject)
-      }
-      returnCmd.fail()
-
+      const point = dataPoint ?? DataVariable()
+      new ThrowNode(this.sandstoneCore, fullError, broadcast, point)
       return point
     }
 
-    returnCmd.fail()
-
+    new ThrowNode(this.sandstoneCore, fullError, broadcast, false)
     return errorSerializable
   }
 
