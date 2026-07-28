@@ -20,7 +20,14 @@ export class CommandConditionNode extends SingleConditionNode {
     const store = sandstoneCore.pack.commands.execute.store[type]
     this.variable = sandstoneCore.pack.Variable(undefined, 'condition')
 
+    // Snapshot before/after so commands the callback commits land in `preNodes` instead of
+    // staying on the user MCFunction body, where they'd be stranded when visitor extraction
+    // moves the surrounding condition chain elsewhere.
+    const mcFunction = sandstoneCore.getCurrentMCFunctionOrThrow()
+    const before = mcFunction.body.length
     command(store(this.variable))
+    const after = mcFunction.body.length
+    this.preNodes = mcFunction.body.splice(before, after - before)
   }
 
   getCondition(): unknown[] {

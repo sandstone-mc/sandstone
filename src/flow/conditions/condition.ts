@@ -18,6 +18,15 @@ export type GenericConditionType = {
 }
 
 export abstract class ConditionNode extends Node {
+  /**
+   * Optional commands that must run before this condition's predicate is evaluated.
+   * Conditions that emit side-effect commands at construction time (e.g. `data.equals`
+   * building an `execute store result ...`) capture them here so the visitor pass can
+   * re-emit them at the correct location — inline before the IfNode, or inside the
+   * child MCFunction when AND/OR extracts. Pure predicates leave it unset.
+   */
+  preNodes?: Node[]
+
   abstract getValue: (negated?: boolean) => string
 }
 
