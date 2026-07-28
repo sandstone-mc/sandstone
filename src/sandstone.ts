@@ -366,6 +366,7 @@ export const Variant: typeof sandstonePack.Variant = ((...args: unknown[]) =>
 // make it impossible for the bundler to know which names need to be
 // imported into the bundled main's scope.
 export {
+  NBT,
   NBTAnyValue,
   NBTByte,
   NBTByteArray,
@@ -384,6 +385,7 @@ export {
   NBTTypedArray,
   NotNBT,
   ResolvedNBT,
+  nbtResolver,
   type NBTAllArrays,
   type NBTAllNumberClasses,
   type NBTAllNumbers,
