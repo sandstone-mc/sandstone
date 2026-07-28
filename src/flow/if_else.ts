@@ -30,8 +30,18 @@ export class IfNode extends ContainerNode {
     this.parentMCFunction = parentMCFunction ?? sandstoneCore.getCurrentMCFunctionOrThrow()
 
     if (callback && callback.toString() !== '() => {}') {
-      // Generate the body of the If node.
-      this.sandstoneCore.insideContext(this, callback, true)
+      // Generate the body of the If node. Sleep nodes (and other awaits)
+      // inside the callback enter their own context without balancing it,
+      // so a single `exitContext()` would leave them on the stack and
+      // swallow any post-`_.if(...)` commands into the await node. Pop
+      // until we're back at the parent depth.
+      const currentNode = this.parentMCFunction
+      const parentDepth = currentNode.contextStack.length
+      currentNode.enterContext(this)
+      callback()
+      while (currentNode.contextStack.length > parentDepth) {
+        currentNode.exitContext()
+      }
     }
   }
 
@@ -99,10 +109,15 @@ export class ElseNode extends ContainerNode {
   constructor(sandstoneCore: SandstoneCore, callback: () => void) {
     super(sandstoneCore)
 
-    // Generate the body of the If node.
-    this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(this)
+    // Generate the body of the If node. Pop the stack fully (not just one
+    // level) so awaits inside the callback don't leak into the parent.
+    const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
+    const parentDepth = currentNode.contextStack.length
+    currentNode.enterContext(this)
     callback()
-    this.sandstoneCore.currentMCFunction?.exitContext()
+    while (currentNode.contextStack.length > parentDepth) {
+      currentNode.exitContext()
+    }
   }
 
   /** @internal */
