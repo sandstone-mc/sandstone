@@ -24,6 +24,7 @@ import { ThrowNode } from './throw'
 import type { AwaitNode, AwaitNodeClass, DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
 import type { LiteralUnion, NamespacedLiteralUnion, RemoveFirst } from 'sandstone/utils'
 import { makeCallable } from 'sandstone/utils'
+import { AttachClass } from './async/attach'
 import { SleepClass, UntilClass } from './async'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
@@ -134,10 +135,16 @@ export class Flow {
         awaitNodeIdx: number,
         entity?: SingleEntityArgument,
       ) => {
-        // TODO: Return a custom AwaitNode (AttachClass) with its own visitor
+        // TODO: Add an AttachVisitor
         // TODO: At compile time if the entrypoint is `'start'` and the AttachClass instance's execute method is being used it should:
         // TODO: at run time, if the executor is an entity that allows passengers, summon a no-op area effect cloud with its NBT set to despawn it after the tick is over and its owner set to the UUID of the target context.
         // TODO: With that `execute on passengers if entity @s[tag=<todo>] ...` can be used as the start of the ExecuteCommand
+
+        return new AttachClass(
+          this.sandstoneCore,
+          { entrypoint, func, branch, awaitNodeIdx, entity },
+          false,
+        )
       },
       /**
        * Cancels active `AwaitNode`'s at run time (kinda like `clearTimeout` in JS)
