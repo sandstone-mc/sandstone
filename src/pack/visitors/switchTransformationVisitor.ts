@@ -325,7 +325,7 @@ export class SwitchTransformationVisitor extends GenericSandstoneVisitor {
       ]
 
       const funcNode = new FunctionCommandNode(this.pack, switchMCFunction.name)
-      funcNode.args.push('with', macroPoint.type, macroPoint.currentTarget, macroPoint.path)
+      funcNode.args.push('with', macroPoint.type, macroPoint.currentTarget as `${any}${string}`, macroPoint.path as `${any}${string}`)
 
       if (isLastNode) {
         const callNode = new ReturnRunCommandNode(this.pack, ['run'])

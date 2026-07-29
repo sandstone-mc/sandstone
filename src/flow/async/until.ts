@@ -36,12 +36,25 @@ export class UntilClass extends AwaitNode {
 
   public poller
 
+  /** @internal */
+  logPath: boolean
+
+  /** @internal */
+  stackTrace?: string
+
   constructor(
     core: SandstoneCore,
     public condition: Condition,
     public pollRate: TimeArgument,
+    logPath: boolean,
   ) {
     super(core.pack)
+
+    this.logPath = logPath
+
+    if (this.logPath) {
+      this.stackTrace = Error().stack
+    }
 
     const currentFunction = core.getCurrentMCFunctionOrThrow()
 
@@ -78,7 +91,7 @@ export class UntilClass extends AwaitNode {
             // Reuse SleepClass — its mcfunction (`<poller>/__sleep`) is
             // what runs after the poll delay. Inject a re-poll into its
             // body so the loop keeps going until the condition is met.
-            const sleep = new SleepClass(core, this.pollRate)
+            const sleep = new SleepClass(core, this.pollRate, false)
             sleep.mcfunction.node.body.push(
               new FunctionCommandNode(core.pack, this.poller.name),
             )

@@ -228,3 +228,5 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]>
 export abstract class AwaitNode extends ContainerCommandNode {
   mcfunction: MCFunctionClass<any, any> = undefined as unknown as MCFunctionClass<any, any>
 }
+
+export type AwaitNodeClass = new (core: SandstoneCore, ...args: any[]) => AwaitNode

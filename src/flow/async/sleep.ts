@@ -12,11 +12,24 @@ export class SleepClass extends AwaitNode {
 
   protected inSleepFunction: boolean
 
+  /** @internal */
+  logPath: boolean
+  
+  /** @internal */
+  stackTrace?: string
+
   constructor(
     core: SandstoneCore,
     public delay: TimeArgument,
+    logPath: boolean,
   ) {
     super(core.pack)
+
+    this.logPath = logPath
+
+    if (this.logPath) {
+      this.stackTrace = Error().stack
+    }
 
     const currentFunction = core.getCurrentMCFunctionOrThrow()
 

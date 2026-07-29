@@ -36,13 +36,13 @@ export class LoopArgument extends Node {
           'with',
           'storage',
           loopExecute.macroStorage.currentTarget,
-          loopExecute.macroStorage.path
+          loopExecute.macroStorage.path as `${any}${string}`
         )
       }
 
       return funcNode.getValue()
     }
     // Fallback to current node (may be incorrect if inside nested function)
-    return new FunctionCommandNode(this.pack, this.pack.core.currentNode)
+    return new FunctionCommandNode(this.pack, this.pack.core.currentNode as `${any}${string}`)
   }
 }

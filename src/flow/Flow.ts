@@ -9,6 +9,7 @@ import type {
   SymbolBlock,
   SymbolMcdocBlockStates,
   TimeArgument,
+  SingleEntityArgument,
 } from 'sandstone/arguments'
 import type { ItemSlotSource } from '../commands/implementations/world/item'
 import type {
@@ -20,10 +21,9 @@ import type {
 } from 'sandstone/variables'
 import { parseJSONText, Score} from 'sandstone/variables'
 import { ThrowNode } from './throw'
-import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
-import type { LiteralUnion, NamespacedLiteralUnion, RemoveFirst } from '../utils'
+import type { AwaitNode, AwaitNodeClass, DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
+import type { LiteralUnion, NamespacedLiteralUnion, RemoveFirst } from 'sandstone/utils'
 import { makeCallable } from 'sandstone/utils'
-import type { AwaitNode } from 'sandstone/core/nodes'
 import { SleepClass, UntilClass } from './async'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
@@ -101,32 +101,75 @@ export class Flow {
   }
 
   /**
-   * Async-control primitives.
+   * Async-control
    *
-   * Two ways to use it:
+   *   1. Methods - `_.await.sleep`, `_.await.until`, `_.await.attach`, `_.await.interrupt` 
    *
-   *   1. Shortcuts — `_.await.sleep(delay)` and
-   *      `_.await.until(condition, pollRate)`.
-   *
-   *   2. Generic constructor — `_.await(YourAwaitClass)(...args)` threads
-   *      `SandstoneCore` through for you, then forwards the remaining args
-   *      to the class constructor. `YourAwaitClass` must extend `AwaitNode`
-   *      and accept `(core, ...args)` as its constructor signature.
-   *
-   * Both require the enclosing MCFunction to be declared with
-   * `{ asyncContext: true }`.
+   *   2. Custom - `_.await(YourAwaitNodeClass, ...args)` threads `SandstoneCore` 
+   *      through for you, then forwards the remaining args to your class constructor.
    */
   get await() {
-    const core = this.sandstoneCore
-    const shortcuts = {
-      sleep: (delay: TimeArgument) => new SleepClass(core, delay),
-      until: (condition: Condition, pollRate: TimeArgument) =>
-        new UntilClass(core, condition, pollRate),
+    // TODO: implement logPath: AwaitBodyVisitor should log the AwaitNode class name, root MCFunction name, branch, awaitNodeIdx, and stackTrace of the AwaitNode creation.
+
+    const methods = {
+      sleep: (delay: TimeArgument, logPath = false) => new SleepClass(this.sandstoneCore, delay, logPath),
+      until: (condition: Condition, pollRate: TimeArgument, logPath = false) =>
+        new UntilClass(this.sandstoneCore, condition, pollRate, logPath),
+      /**
+       * Start awaiting another `MCFunction`'s active `AwaitNode` at run time
+       * 
+       * @param entrypoint   How to continue after the await resolves.
+       *                      - `'start'` - `MCFunction` continuance begins before the target would continue (will not delay the target). \
+       *                        If your executor (asyncContext) supports `Passengers` you can use `AttachClass#execute` to run commands `as` the target.
+       *                      - `'end'` - `MCFunction` continues as-is the tick after the target continues.
+       * @param func         Root `MCFunction` of the target AwaitNode.
+       * @param branch       Planned `MCFunction` pre-optimizer-visitors path relative to the root, empty if the `AwaitNode` was added at the root.
+       * @param awaitNodeIdx `N` of the `AwaitNode` within the above branch.
+       * @param entity       `await.attach` will error if this is left unspecified when attaching to an `AwaitNode` that is a child of an `asyncContext` `MCFunction`.
+       */
+      attach: <Entrypoint extends 'start' | 'end'>(
+        entrypoint: Entrypoint,
+        func: MCFunctionClass<any, any> | `${any}${string}`,
+        branch: string[],
+        awaitNodeIdx: number,
+        entity?: SingleEntityArgument,
+      ) => {
+        // TODO: Return a custom AwaitNode (AttachClass) with its own visitor
+        // TODO: At compile time if the entrypoint is `'start'` and the AttachClass instance's execute method is being used it should:
+        // TODO: at run time, if the executor is an entity that allows passengers, summon a no-op area effect cloud with its NBT set to despawn it after the tick is over and its owner set to the UUID of the target context.
+        // TODO: With that `execute on passengers if entity @s[tag=<todo>] ...` can be used as the start of the ExecuteCommand
+      },
+      /**
+       * Cancels active `AwaitNode`'s at run time (kinda like `clearTimeout` in JS)
+       * 
+       * Note: Only use if you need to interrupt externally, `_.return` / `returnCmd` can be used internally.
+       * 
+       * When interrupting an `asyncContext` mcfunction:
+       * - Current executor is an entity being tracked by the `asyncContext`? -> Interrupts only for that entity.
+       * - Executor is missing or is not being tracked by the `asyncContext`? -> Interrupts all `AwaitNode`'s in the `MCFunction` for all entities being tracked.
+       */
+      interrupt: (
+        func: MCFunctionClass<any, any> | `${any}${string}`,
+        /**
+         * Adds command(s) to run within the target context before interrupting.
+         * 
+         * Callback is called multiple times -> Once for each `AwaitNode` that is a direct or nested child of the root.
+         * 
+         * Return `false` at compile time to cancel the interrupt for a given `branch`+`awaitNodeIdx` `AwaitNode` path.
+         * 
+         * @param root         Resolved `func`.
+         * @param branch       Planned `MCFunction` pre-optimizer-visitors path relative to the root `MCFunction`, empty if the `AwaitNode` was added at the root.
+         * @param awaitNodeIdx `N` of the `AwaitNode` within the above branch.
+         * @param node         The `AwaitNode` being interrupted.
+         */
+        handle?: (root: MCFunctionClass<any, any>, branch: string[], awaitNodeIdx: number, node: AwaitNode) => any,
+      ) => {
+        // TODO: Return a custom node with its own visitor
+      },
     }
-    type AwaitClass = new (core: SandstoneCore, ...args: any[]) => AwaitNode
-    const generic = <C extends AwaitClass>(Ctor: C, ...args: RemoveFirst<ConstructorParameters<C>>) =>
-      new Ctor(core, ...args)
-    return makeCallable<typeof shortcuts, typeof generic>(shortcuts, generic, true)
+    const custom = <C extends AwaitNodeClass>(Ctor: C, ...args: RemoveFirst<ConstructorParameters<C>>) =>
+      new Ctor(this.sandstoneCore, ...args)
+    return makeCallable<typeof methods, typeof custom>(methods, custom, true)
   }
 
   /**

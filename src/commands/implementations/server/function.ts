@@ -10,11 +10,11 @@ import { CommandArguments } from '../../helpers'
 
 // Function command
 
-export class FunctionCommandNode extends CommandNode<[string | MCFunctionClass<any, any>]> {
+export class FunctionCommandNode extends CommandNode<[`${any}${string}` | MCFunctionClass<any, any>]> {
   command = 'function' as const
 }
 
-type Func = MCFunctionClass<undefined, undefined> | string | TagClass<'function'>
+type Func = MCFunctionClass<undefined, undefined> | `${any}${string}` | TagClass<'function'>
 
 export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = FunctionCommandNode
@@ -58,7 +58,7 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   ): FinalCommandOutput
 
   function(
-    mcFunction: Macroable<string | MCFunctionClass<any, any> | TagClass<'function'>, MACRO>,
+    mcFunction: Macroable<`${any}${string}` | MCFunctionClass<undefined, undefined> | TagClass<'function'>, MACRO>,
     params?: 'with' | Macroable<RootNBT, MACRO>,
     pointOrType?: DATA_TYPES | DataPointClass | DataPointPickClass,
     target?: string,

@@ -234,7 +234,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     // If macroStorage is set, call the function with `with storage <macroStorage>`
     if (this.macroStorage) {
-      mcFunctionCall.args.push('with', 'storage', this.macroStorage.currentTarget, this.macroStorage.path)
+      mcFunctionCall.args.push('with', 'storage', this.macroStorage.currentTarget, this.macroStorage.path as `${any}${string}`)
     }
 
     this.body = [mcFunctionCall]
