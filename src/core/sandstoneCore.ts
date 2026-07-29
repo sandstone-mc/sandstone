@@ -2,6 +2,9 @@
 
 import path from 'node:path'
 import fs from 'fs-extra'
+import crypto from 'crypto'
+import { isBinaryFileSync } from 'isbinaryfile'
+import binaryExtensions from 'binary-extensions'
 import { getSandstoneContext } from 'sandstone/context'
 import type { SandstonePack } from 'sandstone/pack'
 import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies'
@@ -271,6 +274,9 @@ export class SandstoneCore {
 
     const resources = this.generateResources(opts)
 
+    const binaryExt = new Set(binaryExtensions)
+    const encoder = new TextDecoder()
+
     for await (const node of resources) {
       const { packType, fileExtension } = node.resource
       const _path = [packType.type, ...node.resource.path]
@@ -291,7 +297,16 @@ export class SandstoneCore {
       }
 
       if (cliOptions.verbose) {
-        console.log(`Path: ${resourcePath}.${fileExtension}\n\n` + `${typeof value === 'string' ? value : '<Buffer>'}`)
+        console.log(`Path: ${resourcePath}.${fileExtension}\n\n` + `${(() => {
+          if (typeof value === 'string') {
+            return value
+          }
+          if (!binaryExt.has(fileExtension) && !isBinaryFileSync(value)) {
+            return encoder.decode(value)
+          }
+
+          return `<Buffer: ${crypto.createHash('sha256').update(value).digest('hex')}>`
+        })()}`)
       }
 
       if (!cliOptions.dry) {
