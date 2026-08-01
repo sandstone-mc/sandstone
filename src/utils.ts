@@ -574,18 +574,18 @@ export type Enumerate<
     : Enumerate<N, [...Acc, Acc["length"]]>
 )
 
-export type BuildTuple<N extends number, T extends never[] = []> = (
+export type BuildNeverTuple<N extends number, T extends never[] = []> = (
   number extends N
     ? never[] // Guard against wide 'number'
     : T['length'] extends N
       ? T
-      : BuildTuple<N, [...T, never]>
+      : BuildNeverTuple<N, [...T, never]>
 )
 
 export type Increment<N extends number> = (
   number extends N
     ? number // Guard against wide 'number'
-    : [...BuildTuple<N>, never]['length'] & number
+    : [...BuildNeverTuple<N>, never]['length'] & number
 )
 
 /**
@@ -726,3 +726,8 @@ export type SmartRange<Min extends number, Max extends number> = (
 export type AllowConst<T> = T | Readonly<T>
 
 export type RemoveFirst<T extends any[]> = T extends [any, ...infer Rest] ? Rest : []
+
+export type BuildTuple<T, Length extends number, Accumulator extends any[] = []> = 
+  Accumulator['length'] extends Length
+    ? Accumulator
+    : BuildTuple<T, Length, [...Accumulator, T]>;
