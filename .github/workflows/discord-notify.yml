@@ -9,7 +9,7 @@ on:
       tag:
         description: "Release tag to fetch (only used for workflow_dispatch)"
         required: false
-        default: "v2.5.10"
+        default: "v1.0.0"
 
 jobs:
   notify:
