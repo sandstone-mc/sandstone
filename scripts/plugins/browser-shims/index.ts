@@ -18,6 +18,8 @@ export const shimMap: Record<string, string> = {
   'adm-zip': join(shimsDir, 'adm-zip.ts'),
   'prismarine-nbt': join(shimsDir, 'prismarine-nbt.ts'),
   path: join(shimsDir, 'path.ts'),
+  crypto: join(shimsDir, 'crypto.ts'),
+  isbinaryfile: join(shimsDir, 'isbinaryfile.ts'),
 }
 
 /**
@@ -41,7 +43,6 @@ export const browserShimPlugin: import('bun').BunPlugin = {
  * These are Node.js built-ins that can't be shimmed.
  */
 export const browserExternals = [
-  'crypto',
   'zlib',
 ]
 
