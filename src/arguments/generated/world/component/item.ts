@@ -288,7 +288,6 @@ export type blocks_attacks = {
    * Damage types in this tag are bypassing the blocking
    */
   bypassed_by?: ((
-      | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>) | (
         | Registry['minecraft:damage_type']
         | `#${Registry['minecraft:tag/damage_type']}`
         | TagClass<'damage_type'>
@@ -522,7 +521,6 @@ export type DamageResistant = {
    * Additionally, this also affects whether the equipped item will be damaged when the wearer is hurt by a specified damage type.
    */
   types: ((
-      | `#${Registry['minecraft:tag/damage_type']}` | TagClass<'damage_type'>) | (
         | Registry['minecraft:damage_type']
         | `#${Registry['minecraft:tag/damage_type']}`
         | TagClass<'damage_type'>
@@ -1632,7 +1630,6 @@ type DataComponentPotionDurationScale = NBTFloat<{
 }>
 type DataComponentProfile = Profile
 type DataComponentProvidesBannerPatterns = ((
-  | `#${Registry['minecraft:tag/banner_pattern']}` | TagClass<'banner_pattern'>) | (
     | Registry['minecraft:banner_pattern']
     | `#${Registry['minecraft:tag/banner_pattern']}`
     | TagClass<'banner_pattern'>

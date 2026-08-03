@@ -102,8 +102,6 @@ type TestEnvironmentDefinitionDispatcherMap = {
   'minecraft:function': TestEnvironmentDefinitionFunction,
   'game_rules': TestEnvironmentDefinitionGameRules,
   'minecraft:game_rules': TestEnvironmentDefinitionGameRules,
-  'time_of_day': TestEnvironmentDefinitionTimeOfDay,
-  'minecraft:time_of_day': TestEnvironmentDefinitionTimeOfDay,
   'timeline_attributes': TestEnvironmentDefinitionTimelineAttributes,
   'minecraft:timeline_attributes': TestEnvironmentDefinitionTimelineAttributes,
   'weather': TestEnvironmentDefinitionWeather,
@@ -115,14 +113,12 @@ type TestEnvironmentDefinitionFallback = (
   | TestEnvironmentDefinitionClockTime
   | TestEnvironmentDefinitionFunction
   | TestEnvironmentDefinitionGameRules
-  | TestEnvironmentDefinitionTimeOfDay
   | TestEnvironmentDefinitionTimelineAttributes
   | TestEnvironmentDefinitionWeather)
 type TestEnvironmentDefinitionAllOf = AllOffTestEnvironment
 type TestEnvironmentDefinitionClockTime = ClockTimeTestEnvironment
 type TestEnvironmentDefinitionFunction = FunctionTestEnvironment
 type TestEnvironmentDefinitionGameRules = GameRulesTestEnvironment
-type TestEnvironmentDefinitionTimeOfDay = TimeOfDayTestEnvironment
 type TestEnvironmentDefinitionTimelineAttributes = TimelineAttributesTestEnvironment
 type TestEnvironmentDefinitionWeather = WeatherTestEnvironment
 export type SymbolTestEnvironmentDefinition<CASE extends

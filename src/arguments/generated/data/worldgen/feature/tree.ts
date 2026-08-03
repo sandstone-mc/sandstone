@@ -510,8 +510,6 @@ export type ThreeLayersFeatureSize = {
 export type TreeConfig = ({
   ignore_vines?: boolean,
   minimum_size: FeatureSize,
-  force_dirt?: boolean,
-  dirt_provider: BlockStateProvider,
   trunk_provider: BlockStateProvider,
   foliage_provider: BlockStateProvider,
   root_placer?: RootPlacer,

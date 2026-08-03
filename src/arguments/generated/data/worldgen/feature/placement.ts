@@ -26,11 +26,9 @@ export type CarvingMaskModifier = {
 }
 
 export type CountModifier = {
-  count: (IntProvider<NBTInt<{
+  count: IntProvider<NBTInt<{
     min: 0,
-  }>> | IntProvider<NBTInt<{
-    min: 0,
-  }>>),
+  }>>,
 }
 
 export type CountOnEveryLayerModifier = {

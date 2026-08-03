@@ -2,7 +2,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { GlobalPos } from 'sandstone/arguments/generated/util.ts'
 import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { AnyEntity } from 'sandstone/arguments/generated/world/entity.ts'
-import type { FallDamageLogicData, LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
+import type { LivingEntity } from 'sandstone/arguments/generated/world/entity/mob.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTByte, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort, RecipeClass } from 'sandstone'
 
@@ -238,12 +238,7 @@ export type Player = (LivingEntity & {
   spawn_extra_particles_on_fall?: boolean,
   CustomName?: never,
   CustomNameVisible?: never,
-} & {
-  /**
-   * Used by the game for wind charges.
-   */
-  ignore_fall_damage_from_current_explosion?: boolean,
-} & FallDamageLogicData)
+})
 
 export type PlayerEquipment = ({
   [Key in Extract<PlayerEquipmentSlot, string>]?: ItemStack

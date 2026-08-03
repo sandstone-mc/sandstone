@@ -7,7 +7,6 @@ import type {
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { HumanoidArm } from 'sandstone/arguments/generated/util/avatar.ts'
 import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
-import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { Keybind } from 'sandstone/arguments/generated/util/text.ts'
 import type { Transformation } from 'sandstone/arguments/generated/world/entity/display.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -761,19 +760,6 @@ export type ShulkerBox = {
     min: 0,
     max: 1,
   }>,
-  /**
-   * Defaults to `up`.
-   *
-   * Value:
-   *
-   *  - Down(`down`)
-   *  - Up(`up`)
-   *  - North(`north`)
-   *  - East(`east`)
-   *  - South(`south`)
-   *  - West(`west`)
-   */
-  orientation?: Direction,
 }
 
 export type Special = {

@@ -728,7 +728,6 @@ export type SetInstrument = ({
    * Sets the instrument tag for a goat horn.
    */
   options: ((
-      | `#${Registry['minecraft:tag/instrument']}` | TagClass<'instrument'>) | (
         | Registry['minecraft:instrument']
         | `#${Registry['minecraft:tag/instrument']}`
         | TagClass<'instrument'>

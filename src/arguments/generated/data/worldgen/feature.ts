@@ -107,7 +107,7 @@ export type DeltaConfig = {
 }
 
 export type DiskConfig = {
-  state_provider: (RuleBasedBlockStateProvider | BlockStateProvider),
+  state_provider: BlockStateProvider,
   radius: IntProvider<NBTInt<{
     min: 0,
     max: 8,
@@ -830,8 +830,6 @@ export type RootSystemConfig = {
 }
 
 export type RuleBasedBlockStateProvider = ({
-  fallback: BlockStateProvider,
-} & {
   fallback?: BlockStateProvider,
 } & {
   rules: Array<{
@@ -1300,8 +1298,6 @@ type FeatureConfigDispatcherMap = {
   'minecraft:fill_layer': FeatureConfigFillLayer,
   'flower': FeatureConfigFlower,
   'minecraft:flower': FeatureConfigFlower,
-  'forest_rock': FeatureConfigForestRock,
-  'minecraft:forest_rock': FeatureConfigForestRock,
   'fossil': FeatureConfigFossil,
   'minecraft:fossil': FeatureConfigFossil,
   'geode': FeatureConfigGeode,
@@ -1391,7 +1387,6 @@ type FeatureConfigFallback = (
   | FeatureConfigFallenTree
   | FeatureConfigFillLayer
   | FeatureConfigFlower
-  | FeatureConfigForestRock
   | FeatureConfigFossil
   | FeatureConfigGeode
   | FeatureConfigGlowLichen
@@ -1443,7 +1438,6 @@ type FeatureConfigEndSpike = EndSpikeConfig
 type FeatureConfigFallenTree = FallenTreeConfig
 type FeatureConfigFillLayer = FillLayerConfig
 type FeatureConfigFlower = RandomPatchConfig
-type FeatureConfigForestRock = ForestRockConfig
 type FeatureConfigFossil = FossilConfig
 type FeatureConfigGeode = GeodeConfig
 type FeatureConfigGlowLichen = MultifaceGrowthConfig

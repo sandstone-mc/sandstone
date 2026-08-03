@@ -2,7 +2,7 @@ import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { PotionsPredicate } from 'sandstone/arguments/generated/world/component/predicate.ts'
-import type { ItemStack, ItemStackTemplate, SingleItem } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStack, ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type { CRAFTING_INGREDIENT, PatternKeys, StringSmallerThan4 } from 'sandstone/arguments'
 import type { NBTFloat, NBTInt, NBTList, RecipeClass, TagClass, TrimPatternClass } from 'sandstone'
 
@@ -303,7 +303,7 @@ export type CraftingTransmute = (NotificationInfo & CraftingBookInfo & {
   /**
    * The result item that will be merged with the input ingredient.
    */
-  result: (Registry['minecraft:item'] | ItemStack | Registry['minecraft:item']),
+  result: (ItemStack | Registry['minecraft:item']),
 })
 
 export type FireworkShapeIngredients = ({
@@ -398,7 +398,7 @@ export type RequiredSmithingIngredients = {
 
 export type Smelting = (NotificationInfo & CookingBookInfo & {
   ingredient: Ingredient,
-  result: (SingleItem | ItemStackTemplate),
+  result: ItemStackTemplate,
   experience?: NBTFloat,
   cookingtime?: NBTInt,
 })
@@ -539,18 +539,18 @@ type RecipeSerializerFallback = (
 export type RecipeSerializerFallbackType = Record<string, never>
 type RecipeSerializerBlasting = Smelting
 type RecipeSerializerCampfireCooking = Smelting
-type RecipeSerializerCraftingDecoratedPot = (Record<string, never> | CraftingDecoratedPot)
+type RecipeSerializerCraftingDecoratedPot = CraftingDecoratedPot
 type RecipeSerializerCraftingDye = CraftingDye
 type RecipeSerializerCraftingImbue = CraftingImbue
 type RecipeSerializerCraftingShaped = CraftingShaped
 type RecipeSerializerCraftingShapeless = CraftingShapeless
-type RecipeSerializerCraftingSpecialBannerduplicate = (Record<string, never> | CraftingSpecialBannerDuplicate)
-type RecipeSerializerCraftingSpecialBookcloning = (Record<string, never> | CraftingSpecialBookCloning)
-type RecipeSerializerCraftingSpecialFireworkRocket = (Record<string, never> | CraftingSpecialFireworkRocket)
-type RecipeSerializerCraftingSpecialFireworkStar = (Record<string, never> | CraftingSpecialFireworkStar)
-type RecipeSerializerCraftingSpecialFireworkStarFade = (Record<string, never> | CraftingSpecialFireworkStarFade)
-type RecipeSerializerCraftingSpecialMapextending = (Record<string, never> | CraftingSpecialMapExtending)
-type RecipeSerializerCraftingSpecialShielddecoration = (Record<string, never> | CraftingSpecialShieldDecoration)
+type RecipeSerializerCraftingSpecialBannerduplicate = CraftingSpecialBannerDuplicate
+type RecipeSerializerCraftingSpecialBookcloning = CraftingSpecialBookCloning
+type RecipeSerializerCraftingSpecialFireworkRocket = CraftingSpecialFireworkRocket
+type RecipeSerializerCraftingSpecialFireworkStar = CraftingSpecialFireworkStar
+type RecipeSerializerCraftingSpecialFireworkStarFade = CraftingSpecialFireworkStarFade
+type RecipeSerializerCraftingSpecialMapextending = CraftingSpecialMapExtending
+type RecipeSerializerCraftingSpecialShielddecoration = CraftingSpecialShieldDecoration
 type RecipeSerializerCraftingTransmute = CraftingTransmute
 type RecipeSerializerSmelting = Smelting
 type RecipeSerializerSmithingTransform = SmithingTransform
