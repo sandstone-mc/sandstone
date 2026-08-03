@@ -4,13 +4,37 @@ import path from 'node:path'
 import AdmZip from 'adm-zip'
 import fs from 'fs-extra'
 import { getSandstoneContext } from 'sandstone/context'
-import type { PackData } from 'sandstone/utils'
 import { safeWrite } from 'sandstone/utils'
 import type { SandstoneCore } from './sandstoneCore'
 import { DataPackDependencies, ResourcePackDependencies } from 'sandstone/pack'
 import { SmithedDependencyClass } from './resources/dependency'
 
 type Manifest = Record<string, string>
+
+/** Shape of a pack entry returned by the Smithed API (`GET /packs/:id`). */
+export type PackData = {
+  id: string
+  display: {
+    name: string
+    description: string
+    icon: string
+    hidden: boolean
+    webPage?: string
+  }
+  versions: {
+    name: string
+    downloads: {
+      datapack: string
+      resourcepack: string
+    }
+    supports: string[]
+    dependencies: {
+      id: string
+      version: string
+    }[]
+  }[]
+  categories: string[]
+}
 
 export type Dependency = {
   version: string
