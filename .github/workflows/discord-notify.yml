@@ -27,7 +27,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release view "${{ inputs.tag }}" \
-            --repo sandstone-mc/sandstone-cli \
+            --repo sandstone-mc/sandstone \
             --json name,body,url > release.json
 
           {
@@ -48,7 +48,7 @@ jobs:
           webhook_url: ${{ secrets.WEBHOOK_URL }}
           # Sandstone tan — `0xC2A878` = 12757112. Tweak to taste.
           color: 12757112
-          username: "Sandstone CLI"
+          username: "Sandstone"
           footer_title: Changelog
           reduce_headings: true
           footer_timestamp: true
