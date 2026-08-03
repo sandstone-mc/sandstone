@@ -10,6 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Type checking**: `bun dev:build:types` - Generates TypeScript declaration files only
 - **Lint**: `bun lint` - Lints TypeScript files using OxLint
 - **Format/Fix**: `bun format` - Lints and auto-fixes issues
+- **Basic command syntax**: Do not add or run dedicated command-output tests for direct syntax additions; use build/type checks unless behavior beyond serialization changes.
 
 **Note**: The build scripts auto-retry on "Excessive complexity" TypeScript errors caused by stale types. If you see this error followed by "cleaning and retrying..." and the build succeeds, ignore it.
 
