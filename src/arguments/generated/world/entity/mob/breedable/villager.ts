@@ -134,6 +134,7 @@ export type ReputationPart = ('major_negative' | 'minor_negative' | 'major_posit
 
 export type Villager = (Breedable & VillagerBase & {
   VillagerData?: VillagerData,
+  VillagerDataFinalized?: boolean,
   /**
    * Determines whether the villager will be available to reproduce.
    *

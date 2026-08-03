@@ -28,15 +28,13 @@ export type TrimMaterialOverrides = ({
   [Key in Extract<Registry['minecraft:equipment'], string>]?: string
 })
 
-export type TrimPattern = {
+export type TrimPattern = ({
   /**
-   * ID of the pattern that will be used in the resource pack as an overlay on the armor.
-   *
-   * Value:
-   *
-   * Value: A texture ID within a path root of `(namespace)/textures/trims/models/armor/`
+   * ID of the pattern that will be used in the resource pack as an overlay on the armor. \
+   * The texture is located under `trims/entity/<layer>/`.
    */
   asset_id: `${string}:${string}`,
+} & {
   /**
    * Text displayed in the item tooltip.
    */
@@ -45,4 +43,4 @@ export type TrimPattern = {
    * Whether the pattern texture will be masked based on the underlying armor. Defaults to `false`.
    */
   decal?: boolean,
-}
+})

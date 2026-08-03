@@ -2,6 +2,7 @@ import type { HeightmapType, IntProvider } from 'sandstone/arguments/generated/d
 import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { Axis } from 'sandstone/arguments/generated/util/direction.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { LootTableClass, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
@@ -12,8 +13,6 @@ export type AppendLoot = {
 export type AppendStatic<S = undefined> = {
   data: (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT),
 }
-
-export type Axis = ('x' | 'y' | 'z')
 
 export type AxisAlignedLinearPos = ({
   /**
