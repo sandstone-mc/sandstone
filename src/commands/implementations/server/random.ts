@@ -27,7 +27,7 @@ export class RandomCommand<MACRO extends boolean> extends CommandArguments {
    * random.value([10, 20], 'damage_roll')         // 10-20 damage
    * ```
    */
-  value = (range: Macroable<Range<MACRO>, MACRO>, sequence: Macroable<string, MACRO>) => {
+  value = (range: Macroable<Range<MACRO>, MACRO>, sequence?: Macroable<string, MACRO>) => {
     let seq = sequence
     if (typeof sequence === 'string' && !sequence.includes(':')) {
       seq = `${this.sandstonePack.defaultNamespace}:${seq}`

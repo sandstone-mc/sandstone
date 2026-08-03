@@ -15,7 +15,7 @@ import type { LiteralUnion } from 'sandstone/utils'
 import type { Score } from 'sandstone/variables'
 import { parseJSONText } from 'sandstone/variables/JSONTextComponentClass'
 import { targetParser } from 'sandstone/variables/parsers'
-import { CommandArguments } from '../../helpers'
+import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 
 // Yes this sucks
 
@@ -42,6 +42,14 @@ export class ScoreboardCommandNode extends CommandNode {
 
 export class ScoreboardObjectivesModifyCommand<MACRO extends boolean> extends CommandArguments {
   /**
+   * Enable or disable automatic display updates when scores change.
+   *
+   * @param value Whether the objective display should update automatically.
+   */
+  displayautoupdate = (value: Macroable<boolean, MACRO>) =>
+    this.finalCommand(['displayautoupdate', value])
+
+  /**
    * Change the display name of the scoreboard in display slots.
    *
    * Modifies how the objective appears in display slots like sidebar, belowName, or playerlist.
@@ -57,6 +65,23 @@ export class ScoreboardObjectivesModifyCommand<MACRO extends boolean> extends Co
     this.finalCommand(['displayname', parseJSONText(this.sandstoneCore, displayName)])
 
   /**
+   * Reset or change the default number format for scores in this objective.
+   */
+  numberformat(): FinalCommandOutput
+  numberformat(format: 'blank'): FinalCommandOutput
+  numberformat(format: 'styled', style: Macroable<FormattingTags, MACRO>): FinalCommandOutput
+  numberformat(format: 'fixed', component: Macroable<JSONTextComponent, MACRO>): FinalCommandOutput
+  numberformat(
+    format?: 'blank' | 'styled' | 'fixed',
+    component?: Macroable<FormattingTags | JSONTextComponent, MACRO>,
+  ) {
+    if (format === 'styled' || format === 'fixed') {
+      component = parseJSONText(this.sandstoneCore, component as JSONTextComponent) as any
+    }
+    return this.finalCommand(['numberformat', format, component])
+  }
+
+  /**
    * Change the display format of scores in this objective.
    *
    * Controls whether scores are displayed as hearts (❤) or as plain integers.
@@ -70,6 +95,68 @@ export class ScoreboardObjectivesModifyCommand<MACRO extends boolean> extends Co
    * ```
    */
   rendertype = (display: Macroable<'hearts' | 'integer', MACRO>) => this.finalCommand(['rendertype', display])
+}
+
+export class ScoreboardPlayersDisplayCommand<MACRO extends boolean> extends CommandArguments {
+  protected NodeType = ScoreboardCommandNode
+
+  /**
+   * Reset or change the display name of score entries.
+   *
+   * Omitting `name` restores the default score-holder name.
+   */
+  name(
+    target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>,
+    objective: Macroable<ObjectiveArgument, MACRO>,
+    name?: Macroable<JSONTextComponent, MACRO>,
+  ): FinalCommandOutput
+  name(
+    target: Macroable<Score, MACRO>,
+    name?: Macroable<JSONTextComponent, MACRO>,
+  ): FinalCommandOutput
+  name(...args: any[]) {
+    const nameIndex = isScore(args[0]) ? 1 : 2
+    if (args[nameIndex] !== undefined) {
+      args[nameIndex] = parseJSONText(this.sandstoneCore, args[nameIndex] as JSONTextComponent) as any
+    }
+    return this.finalCommand(['players', 'display', 'name', ...scoresParser(args)])
+  }
+
+  /**
+   * Reset or change the number format of score entries.
+   */
+  numberformat(
+    target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>,
+    objective: Macroable<ObjectiveArgument, MACRO>,
+  ): FinalCommandOutput
+  numberformat(
+    target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>,
+    objective: Macroable<ObjectiveArgument, MACRO>,
+    format: 'blank',
+  ): FinalCommandOutput
+  numberformat(
+    target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>,
+    objective: Macroable<ObjectiveArgument, MACRO>,
+    format: 'styled',
+    style: Macroable<FormattingTags, MACRO>,
+  ): FinalCommandOutput
+  numberformat(
+    target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>,
+    objective: Macroable<ObjectiveArgument, MACRO>,
+    format: 'fixed',
+    component: Macroable<JSONTextComponent, MACRO>,
+  ): FinalCommandOutput
+  numberformat(score: Macroable<Score, MACRO>): FinalCommandOutput
+  numberformat(score: Macroable<Score, MACRO>, format: 'blank'): FinalCommandOutput
+  numberformat(score: Macroable<Score, MACRO>, format: 'styled', style: Macroable<FormattingTags, MACRO>): FinalCommandOutput
+  numberformat(score: Macroable<Score, MACRO>, format: 'fixed', component: Macroable<JSONTextComponent, MACRO>): FinalCommandOutput
+  numberformat(...args: any[]) {
+    const formatIndex = isScore(args[0]) ? 1 : 2
+    if (args[formatIndex] === 'styled' || args[formatIndex] === 'fixed') {
+      args[formatIndex + 1] = parseJSONText(this.sandstoneCore, args[formatIndex + 1] as JSONTextComponent) as any
+    }
+    return this.finalCommand(['players', 'display', 'numberformat', ...scoresParser(args)])
+  }
 }
 
 export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
@@ -442,106 +529,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
       ]
     ) => this.finalCommand(['players', 'operation', ...scoresParser(...args)]),
 
-    /**
-     * Commands for customizing how individual player scores are displayed.
-     *
-     * These affect how scores appear in various display contexts like sidebars,
-     * player lists, and below-name displays.
-     */
-    display: {
-      /**
-       * Set a custom display name for a specific entity's score entry.
-       *
-       * Changes how the entity's name appears in scoreboards without affecting
-       * the actual entity name. Useful for creating custom labels or formatted displays.
-       *
-       * @param target The entity whose display name to change, or a Score object.
-       * @param targetObjective The objective for the display name (not needed if using Score object).
-       * @param name The custom display name as a JSON text component. Supports formatting and colors.
-       *
-       * @example
-       * ```ts
-       * // Custom name in sidebar
-       * scoreboard.players.display.name('@p', 'money', {text: 'Your Coins', color: 'gold'})
-       *
-       * // Using Score object
-       * const playerScore = Score.of('Steve', 'level')
-       * scoreboard.players.display.name(playerScore, {text: 'Steve [ADMIN]', color: 'red'})
-       * ```
-       */
-      name: (
-        ...args: [
-          ...target:
-            | [
-                target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>,
-                targetObjective: Macroable<ObjectiveArgument, MACRO>,
-              ]
-            | [targetScore: Macroable<Score, MACRO>],
-          name: Macroable<JSONTextComponent, MACRO>,
-        ]
-      ) => {
-        if (isScore(args[1])) {
-          args[1] = parseJSONText(this.sandstoneCore, args[1] as JSONTextComponent) as any
-        } else {
-          args[2] = parseJSONText(this.sandstoneCore, args[2] as JSONTextComponent) as any
-        }
-        return this.finalCommand(['players', 'display', 'name', ...scoresParser(...args)])
-      },
-
-      /**
-       * Set a custom number format for how a specific entity's score is displayed.
-       *
-       * Controls the visual representation of the score number itself:
-       * - 'blank': Score is hidden (shows only the name)
-       * - 'styled': Apply text formatting to the number
-       * - 'fixed': Replace the number with custom text
-       *
-       * @param target The entity whose number format to change, or a Score object.
-       * @param targetObjective The objective for the number format (not needed if using Score object).
-       * @param format The format type: 'blank', 'styled', or 'fixed'.
-       * @param style For 'styled' format: formatting tags to apply to the number.
-       * @param rightColumn For 'fixed' format: custom text to show instead of the number.
-       *
-       * @example
-       * ```ts
-       * // Hide the number, show only name
-       * scoreboard.players.display.numberformat('@p', 'status', 'blank')
-       *
-       * // Style the number with color
-       * scoreboard.players.display.numberformat('@p', 'money', 'styled', {color: 'green'})
-       *
-       * // Replace number with custom text
-       * scoreboard.players.display.numberformat('@p', 'health', 'fixed', {text: '❤❤❤', color: 'red'})
-       * ```
-       */
-      numberformat: (
-        ...args: [
-          ...target:
-            | [
-                target: Macroable<MultipleEntitiesArgument<MACRO> | number, MACRO>,
-                targetObjective: Macroable<ObjectiveArgument, MACRO>,
-              ]
-            | [targetScore: Macroable<Score, MACRO>],
-          ...format:
-            | [format: 'blank']
-            | [format: 'styled', style: Macroable<FormattingTags, MACRO>]
-            | [format: 'fixed', rightColumn: Macroable<JSONTextComponent, MACRO>],
-        ]
-      ) => {
-        if (args[1] === 'styled') {
-          args[2] = parseJSONText(this.sandstoneCore, args[2] as JSONTextComponent) as any
-        }
-        if (args[2] === 'styled') {
-          args[3] = parseJSONText(this.sandstoneCore, args[3] as JSONTextComponent) as any
-        }
-        if (args[1] === 'fixed') {
-          args[2] = parseJSONText(this.sandstoneCore, args[2] as JSONTextComponent) as any
-        }
-        if (args[2] === 'fixed') {
-          args[3] = parseJSONText(this.sandstoneCore, args[3] as JSONTextComponent) as any
-        }
-        return this.finalCommand(['players', 'display', 'numberformat', ...scoresParser(...args)])
-      },
-    } as const,
+    /** Commands for customizing how individual player scores are displayed. */
+    display: new ScoreboardPlayersDisplayCommand<MACRO>(this.sandstonePack),
   } as const
 }
