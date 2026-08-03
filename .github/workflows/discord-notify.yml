@@ -1,0 +1,59 @@
+name: Notify Discord on Release
+
+on:
+  release:
+    types: [published]
+  # Manual trigger for previewing the Discord embed without publishing a real release.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to fetch (only used for workflow_dispatch)"
+        required: false
+        default: "v2.5.10"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      # For workflow_dispatch runs, fetch the release payload from the GitHub
+      # API so the action sees the same raw body / name / url that a real
+      # `release: published` event would carry. The action does its own
+      # formatting downstream (whitespace, head reduction, mention links),
+      # so feeding it the identical raw input guarantees identical output.
+      - name: Fetch release for manual test
+        if: github.event_name == 'workflow_dispatch'
+        id: manual
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "${{ inputs.tag }}" \
+            --repo sandstone-mc/sandstone-cli \
+            --json name,body,url > release.json
+
+          {
+            echo "name<<EOF_NAME"
+            jq -r .name release.json
+            echo "EOF_NAME"
+            echo "body<<EOF_BODY"
+            jq -r .body release.json
+            echo "EOF_BODY"
+            echo "url<<EOF_URL"
+            jq -r .url release.json
+            echo "EOF_URL"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: GitHub Releases to Discord
+        uses: SethCohen/github-releases-to-discord@v1
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          # Sandstone tan — `0xC2A878` = 12757112. Tweak to taste.
+          color: 12757112
+          username: "Sandstone CLI"
+          footer_title: Changelog
+          reduce_headings: true
+          footer_timestamp: true
+          # Real release: read from `github.event.release`. Manual run: read
+          # from the step outputs above. Identical formatting either way.
+          release_name: ${{ github.event.release.name || steps.manual.outputs.name }}
+          release_body: ${{ github.event.release.body || steps.manual.outputs.body }}
+          release_html_url: ${{ github.event.release.html_url || steps.manual.outputs.url }}
