@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.1.8](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.8) - 2026-08-03
+
+### Update `scoreboard`, make `random.value` sequence ID optional
+
+**Full Changelog**: [v1.1.7...v1.1.8](https://github.com/sandstone-mc/sandstone/compare/v1.1.7...v1.1.8)
+
+
 ## [v1.1.7](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.7) - 2026-07-28
 
 ### Export NBTs types explicitly to avoid errors in the built types
