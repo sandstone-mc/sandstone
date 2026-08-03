@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.9](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.9) - 2026-08-03
+
+### Fixed mcdoc-ts-generator `until` handling, updated Predicate and TrimMaterial
+
+**Full Changelog**: [v1.2.8...v1.2.9](https://github.com/sandstone-mc/sandstone/compare/v1.2.8...v1.2.9)
+
+
 ## [v1.2.8](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.8) - 2026-08-03
 
 ### Fix predicate type in 26.3
