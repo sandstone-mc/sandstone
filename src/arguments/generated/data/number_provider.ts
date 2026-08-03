@@ -12,7 +12,7 @@ export type BinomialNumberProvider = {
   p: NumberProviderRef,
 }
 
-export type ConditionalValueNumberProvider = {
+export type ConditionalNumberProvider = {
   condition: PredicateRef,
   on_true: NumberProviderRef,
   /**
@@ -80,6 +80,8 @@ export type NumberProvider = (NBTFloat | ({
 export type NumberProviderListRef = Array<NumberProvider>
 
 export type NumberProviderRef = NumberProvider
+
+export type ResolvableNumber = (NBTFloat | `${string}:${string}`)
 
 export type ScoreNumberProvider = {
   target: ScoreProvider,

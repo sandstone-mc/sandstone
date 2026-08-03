@@ -1,9 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
+import type { Axis, Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { ModelType, TextureType } from 'sandstone/arguments'
 import type { ModelClass, NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
-
-export type Axis = ('x' | 'y' | 'z')
 
 export type CustomizableItemDisplayContext = (
   | 'firstperson_righthand'

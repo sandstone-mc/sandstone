@@ -1,5 +1,6 @@
 import type { BlockPredicate, ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { DamageType } from 'sandstone/arguments/generated/data/damage_type.ts'
+import type { ResolvableNumber } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument.ts'
@@ -375,8 +376,8 @@ export type BlockTransformType = ('single_block' | 'copper_chest')
 export type BookGeneration = (0 | 1 | 2 | 3)
 
 export type BrewingFuel = {
-  uses: `${string}:${string}`,
-  speed_multiplier: `${string}:${string}`,
+  uses: ResolvableNumber,
+  speed_multiplier: ResolvableNumber,
 }
 
 export type BucketEntityData = {
@@ -428,7 +429,7 @@ export type BucketEntityData = {
 }
 
 export type Compostable = {
-  layers: `${string}:${string}`,
+  layers: ResolvableNumber,
 }
 
 export type Consumable = {
@@ -483,8 +484,8 @@ export type ConsumeEffect = NonNullable<({
 }[Extract<Registry['minecraft:consume_effect_type'], string>])>
 
 export type CookingFuel = {
-  burn_time: `${string}:${string}`,
-  speed_multiplier: `${string}:${string}`,
+  burn_time: ResolvableNumber,
+  speed_multiplier: ResolvableNumber,
 }
 
 export type CustomModelData = {

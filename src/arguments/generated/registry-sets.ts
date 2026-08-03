@@ -118,6 +118,8 @@ export { TAG_WORLDGEN_WORLD_PRESETS_SET } from './_registry/tag_worldgen_world_p
 
 export { WORLDGEN_BIOMES_SET } from './_registry/worldgen_biomes.ts'
 
+export { WORLDGEN_CARVERS_SET } from './_registry/worldgen_carvers.ts'
+
 export { WORLDGEN_CONFIGURED_CARVERS_SET } from './_registry/worldgen_configured_carvers.ts'
 
 export { WORLDGEN_CONFIGURED_FEATURES_SET } from './_registry/worldgen_configured_features.ts'
@@ -325,8 +327,6 @@ export { VILLAGER_TYPES_SET } from './_registry/villager_types.ts'
 export { WORLDGEN_BIOME_SOURCES_SET } from './_registry/worldgen_biome_sources.ts'
 
 export { WORLDGEN_BLOCK_STATE_PROVIDER_TYPES_SET } from './_registry/worldgen_block_state_provider_types.ts'
-
-export { WORLDGEN_CARVERS_SET } from './_registry/worldgen_carvers.ts'
 
 export { WORLDGEN_CHUNK_GENERATORS_SET } from './_registry/worldgen_chunk_generators.ts'
 

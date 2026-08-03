@@ -85,7 +85,7 @@ export type EntityBase = {
    */
   NoGravity?: boolean,
   /**
-   * Whether the entity should take damage.
+   * Whether the entity is immune to damage.
    */
   Invulnerable?: boolean,
   /**
