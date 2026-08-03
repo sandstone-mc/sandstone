@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.5](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.5) - 2026-08-03
+
+### Vector math in VectorClass, update `scoreboard`, fix `random.value`
+
+**Full Changelog**: [v1.2.4...v1.2.5](https://github.com/sandstone-mc/sandstone/compare/v1.2.4...v1.2.5)
+
+
 ## [v1.2.4](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.4) - 2026-07-29
 
 ### Add `_.await.until`, fully implement `_.throw`, fix async bugs
