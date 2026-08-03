@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.9](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.9) - 2026-08-03
+
+### Fixed mcdoc-ts-generator `until` handling
+
+**Full Changelog**: [v1.0.8...v1.0.9](https://github.com/sandstone-mc/sandstone/compare/v1.0.8...v1.0.9)
+
+
 ## [v1.0.8](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.8) - 2026-08-03
 
 ### Incremental updates from vanilla-mcdoc
