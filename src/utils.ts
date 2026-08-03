@@ -1,10 +1,7 @@
 /* eslint-disable operator-linebreak */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import type { Static } from '@sinclair/typebox'
-import { FormatRegistry, Type } from '@sinclair/typebox'
 import fs from 'fs-extra'
-import { coerce } from 'semver'
 import * as util from 'util'
 import type { MultipleEntitiesArgument } from './arguments/selector'
 import type { Node } from './core/nodes'
@@ -299,75 +296,6 @@ export interface PackEntry {
   updated: number
   owner: string
 }
-
-FormatRegistry.Set('semver', (v) => coerce(v) != null)
-
-export const supportedMinecraftVersions = ['1.18', '1.18.1', '1.18.2', '1.19']
-export const latestMinecraftVersion = '1.19'
-
-export const MinecraftVersionSchema = Type.Union(supportedMinecraftVersions.map((v) => Type.Literal(v)))
-
-export const packCategories = [
-  'Extensive',
-  'Lightweight',
-  'QoL',
-  'Vanilla+',
-  'Tech',
-  'Magic',
-  'Library',
-  'Exploration',
-  'World Overhaul',
-  'No Resource Pack',
-]
-
-const PackDependencySchema = Type.Object({
-  id: Type.String(),
-  version: Type.String(),
-})
-
-export const PackVersionSchema = Type.Object({
-  name: Type.String({ minLength: 1 }),
-  downloads: Type.Object({
-    datapack: Type.String({ minLength: 1 }),
-    resourcepack: Type.String(),
-  }),
-  supports: Type.Array(MinecraftVersionSchema, { minItems: 1 }),
-  dependencies: Type.Array(PackDependencySchema),
-})
-
-export const PackDataSchema = Type.Object({
-  id: Type.String({ minLength: 3 }),
-  display: Type.Object({
-    name: Type.String({ minLength: 3 }),
-    description: Type.String({ minLength: 3 }),
-    icon: Type.String({ default: '' }),
-    hidden: Type.Boolean({ default: false }),
-    webPage: Type.Optional(Type.String()),
-  }),
-  versions: Type.Array(PackVersionSchema, { minItems: 1 }),
-  categories: Type.Array(Type.Union(packCategories.map((c) => Type.Literal(c)))),
-})
-
-export const MetaDataSchema = Type.Object({
-  docId: Type.String(),
-  rawId: Type.String(),
-  stats: Type.Object({
-    updated: Type.Optional(Type.Number()),
-    added: Type.Number(),
-    downloads: Type.Object({
-      total: Type.Number(),
-      today: Type.Number(),
-    }),
-  }),
-  owner: Type.String(),
-  contributors: Type.Array(Type.String(), { default: [] }),
-})
-
-export type PackMetaData = Static<typeof MetaDataSchema>
-export type MinecraftVersion = Static<typeof MinecraftVersionSchema>
-export type PackDependency = Static<typeof PackDependencySchema>
-export type PackVersion = Static<typeof PackVersionSchema>
-export type PackData = Static<typeof PackDataSchema>
 
 export interface UserData {
   displayName: string

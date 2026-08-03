@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.7](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.7) - 2026-08-03
+
+### Remove misbehaving unneeded packages
+
+**Full Changelog**: [v1.2.6...v1.2.7](https://github.com/sandstone-mc/sandstone/compare/v1.2.6...v1.2.7)
+
+
 ## [v1.2.6](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.6) - 2026-08-03
 
 ### Fix browser bundle
