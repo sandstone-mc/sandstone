@@ -12,7 +12,7 @@ export type BinomialNumberProvider = {
   p: NumberProviderRef,
 }
 
-export type ConditionalValueNumberProvider = {
+export type ConditionalNumberProvider = {
   condition: PredicateRef,
   on_true: NumberProviderRef,
   /**
@@ -91,6 +91,8 @@ export type NumberProviderListRef = (
 
 export type NumberProviderRef = (NumberProvider | Registry['minecraft:number_provider'])
 
+export type ResolvableNumber = (NBTFloat | Registry['minecraft:number_provider'])
+
 export type ScoreNumberProvider = {
   target: ScoreProvider,
   score: `${any}${string}` | ObjectiveClass,
@@ -117,8 +119,8 @@ export type WeightedNumberProvider = {
 type NumberProviderDispatcherMap = {
   'binomial': NumberProviderBinomial,
   'minecraft:binomial': NumberProviderBinomial,
-  'conditional_value': NumberProviderConditionalValue,
-  'minecraft:conditional_value': NumberProviderConditionalValue,
+  'conditional': NumberProviderConditional,
+  'minecraft:conditional': NumberProviderConditional,
   'constant': NumberProviderConstant,
   'minecraft:constant': NumberProviderConstant,
   'enchantment_level': NumberProviderEnchantmentLevel,
@@ -141,7 +143,7 @@ type NumberProviderDispatcherMap = {
 type NumberProviderKeys = keyof NumberProviderDispatcherMap
 type NumberProviderFallback = (
   | NumberProviderBinomial
-  | NumberProviderConditionalValue
+  | NumberProviderConditional
   | NumberProviderConstant
   | NumberProviderEnchantmentLevel
   | NumberProviderEnvironmentAttribute
@@ -153,7 +155,7 @@ type NumberProviderFallback = (
   | NumberProviderWeightedList)
 type NumberProviderNoneType = UniformNumberProvider
 type NumberProviderBinomial = BinomialNumberProvider
-type NumberProviderConditionalValue = ConditionalValueNumberProvider
+type NumberProviderConditional = ConditionalNumberProvider
 type NumberProviderConstant = ConstantNumberProvider
 type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
 type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider

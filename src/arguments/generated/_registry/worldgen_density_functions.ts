@@ -7,6 +7,7 @@ export type WORLDGEN_DENSITY_FUNCTIONS = (
 
 export const WORLDGEN_DENSITY_FUNCTIONS_SET = new Set([
   'end/base_3d_noise',
+  'end/islands',
   'end/sloped_cheese',
   'nether/base_3d_noise',
   'overworld/base_3d_noise',

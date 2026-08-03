@@ -85,9 +85,19 @@ export type EntityBase = {
    */
   NoGravity?: boolean,
   /**
-   * Whether the entity should take damage.
+   * Whether the entity is immune to damage.
    */
   Invulnerable?: boolean,
+  /**
+   * Temporary immunity duration of the entity, in ticks. \
+   * The entity is immune to damage if `invulnerable_time` > 0 **or** `Invulnerable` is `true`.
+   *
+   * Value:
+   * Range: 0..
+   */
+  invulnerable_time?: NBTInt<{
+    min: 0,
+  }>,
   /**
    * How long until the entity can go through a nether portal.
    */

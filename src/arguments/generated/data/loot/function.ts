@@ -485,7 +485,6 @@ export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_
 
 export type LootFunction = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:loot_function_type'], string>, string>]?: ({
-    function: S,
     type: S,
   } & (S extends keyof SymbolLootFunction
     ? SymbolLootFunction[S]

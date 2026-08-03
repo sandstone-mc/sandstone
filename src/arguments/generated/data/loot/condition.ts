@@ -118,7 +118,6 @@ export type LocationCheck = {
 
 export type LootCondition = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:loot_condition_type'], string>, string>]?: ({
-    condition: S,
     type: S,
   } & (S extends keyof SymbolLootCondition
     ? SymbolLootCondition[S]
