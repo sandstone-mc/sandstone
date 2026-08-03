@@ -167,8 +167,7 @@ export type ProcessorRule = {
 
 export type ProtectedBlocks = {
   value: ((
-      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
 }
 

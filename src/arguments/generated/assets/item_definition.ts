@@ -1133,8 +1133,6 @@ export type SymbolSelectItemProperty<CASE extends
 type SpecialItemModelDispatcherMap = {
   'banner': SpecialItemModelBanner,
   'minecraft:banner': SpecialItemModelBanner,
-  'bed': SpecialItemModelBed,
-  'minecraft:bed': SpecialItemModelBed,
   'book': SpecialItemModelBook,
   'minecraft:book': SpecialItemModelBook,
   'chest': SpecialItemModelChest,
@@ -1143,39 +1141,29 @@ type SpecialItemModelDispatcherMap = {
   'minecraft:copper_golem_statue': SpecialItemModelCopperGolemStatue,
   'end_cube': SpecialItemModelEndCube,
   'minecraft:end_cube': SpecialItemModelEndCube,
-  'hanging_sign': SpecialItemModelHangingSign,
-  'minecraft:hanging_sign': SpecialItemModelHangingSign,
   'head': SpecialItemModelHead,
   'minecraft:head': SpecialItemModelHead,
   'shulker_box': SpecialItemModelShulkerBox,
   'minecraft:shulker_box': SpecialItemModelShulkerBox,
-  'standing_sign': SpecialItemModelStandingSign,
-  'minecraft:standing_sign': SpecialItemModelStandingSign,
 }
 type SpecialItemModelKeys = keyof SpecialItemModelDispatcherMap
 type SpecialItemModelFallback = (
   | SpecialItemModelBanner
-  | SpecialItemModelBed
   | SpecialItemModelBook
   | SpecialItemModelChest
   | SpecialItemModelCopperGolemStatue
   | SpecialItemModelEndCube
-  | SpecialItemModelHangingSign
   | SpecialItemModelHead
   | SpecialItemModelShulkerBox
-  | SpecialItemModelStandingSign
   | SpecialItemModelFallbackType)
 export type SpecialItemModelFallbackType = Record<string, never>
 type SpecialItemModelBanner = Banner
-type SpecialItemModelBed = Bed
 type SpecialItemModelBook = Book
 type SpecialItemModelChest = Chest
 type SpecialItemModelCopperGolemStatue = CopperGolemStatue
 type SpecialItemModelEndCube = EndCube
-type SpecialItemModelHangingSign = HangingSign
 type SpecialItemModelHead = Head
 type SpecialItemModelShulkerBox = ShulkerBox
-type SpecialItemModelStandingSign = StandingSign
 export type SymbolSpecialItemModel<CASE extends
   | 'map'
   | 'keys'

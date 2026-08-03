@@ -186,7 +186,7 @@ export type EntityFlagsPredicate = {
   is_fall_flying?: boolean,
 }
 
-export type EntityPredicate = (OldEntityPredicate | EntitySubPredicateMap)
+export type EntityPredicate = EntitySubPredicateMap
 
 export type EntitySlotsPredicate = ({
   [Key in Extract<LiteralUnion<ENTITY_SLOTS>, string>]?: ItemPredicate
@@ -636,12 +636,8 @@ type EntitySubPredicateDispatcherMap = {
   'minecraft:entity_type': EntitySubPredicateEntityType,
   'equipment': EntitySubPredicateEquipment,
   'minecraft:equipment': EntitySubPredicateEquipment,
-  'fishing_hook': EntitySubPredicateFishingHook,
-  'minecraft:fishing_hook': EntitySubPredicateFishingHook,
   'flags': EntitySubPredicateFlags,
   'minecraft:flags': EntitySubPredicateFlags,
-  'lightning': EntitySubPredicateLightning,
-  'minecraft:lightning': EntitySubPredicateLightning,
   'location': EntitySubPredicateLocation,
   'minecraft:location': EntitySubPredicateLocation,
   'movement': EntitySubPredicateMovement,
@@ -654,16 +650,8 @@ type EntitySubPredicateDispatcherMap = {
   'minecraft:passenger': EntitySubPredicatePassenger,
   'periodic_tick': EntitySubPredicatePeriodicTick,
   'minecraft:periodic_tick': EntitySubPredicatePeriodicTick,
-  'player': EntitySubPredicatePlayer,
-  'minecraft:player': EntitySubPredicatePlayer,
   'predicates': EntitySubPredicatePredicates,
   'minecraft:predicates': EntitySubPredicatePredicates,
-  'raider': EntitySubPredicateRaider,
-  'minecraft:raider': EntitySubPredicateRaider,
-  'sheep': EntitySubPredicateSheep,
-  'minecraft:sheep': EntitySubPredicateSheep,
-  'slime': EntitySubPredicateSlime,
-  'minecraft:slime': EntitySubPredicateSlime,
   'slots': EntitySubPredicateSlots,
   'minecraft:slots': EntitySubPredicateSlots,
   'stepping_on': EntitySubPredicateSteppingOn,
@@ -695,20 +683,14 @@ type EntitySubPredicateFallback = (
   | EntitySubPredicateEntityTags
   | EntitySubPredicateEntityType
   | EntitySubPredicateEquipment
-  | EntitySubPredicateFishingHook
   | EntitySubPredicateFlags
-  | EntitySubPredicateLightning
   | EntitySubPredicateLocation
   | EntitySubPredicateMovement
   | EntitySubPredicateMovementAffectedBy
   | EntitySubPredicateNbt
   | EntitySubPredicatePassenger
   | EntitySubPredicatePeriodicTick
-  | EntitySubPredicatePlayer
   | EntitySubPredicatePredicates
-  | EntitySubPredicateRaider
-  | EntitySubPredicateSheep
-  | EntitySubPredicateSlime
   | EntitySubPredicateSlots
   | EntitySubPredicateSteppingOn
   | EntitySubPredicateTargetedEntity
@@ -726,9 +708,7 @@ type EntitySubPredicateEffects = EntityEffectsPredicate
 type EntitySubPredicateEntityTags = EntityTagPredicate
 type EntitySubPredicateEntityType = EntityTypePredicate
 type EntitySubPredicateEquipment = EntityEquipmentPredicate
-type EntitySubPredicateFishingHook = FishingHookPredicate
 type EntitySubPredicateFlags = EntityFlagsPredicate
-type EntitySubPredicateLightning = LightningBoltPredicate
 type EntitySubPredicateLocation = LocationPredicate
 type EntitySubPredicateMovement = MovementPredicate
 type EntitySubPredicateMovementAffectedBy = LocationPredicate
@@ -737,11 +717,7 @@ type EntitySubPredicatePassenger = EntityPredicate
 type EntitySubPredicatePeriodicTick = NBTInt<{
   min: 1,
 }>
-type EntitySubPredicatePlayer = PlayerPredicate
 type EntitySubPredicatePredicates = DataComponentPredicate
-type EntitySubPredicateRaider = RaiderPredicate
-type EntitySubPredicateSheep = SheepPredicate
-type EntitySubPredicateSlime = SlimePredicate
 type EntitySubPredicateSlots = EntitySlotsPredicate
 type EntitySubPredicateSteppingOn = LocationPredicate
 type EntitySubPredicateTargetedEntity = EntityPredicate

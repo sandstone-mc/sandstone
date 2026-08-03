@@ -224,15 +224,13 @@ export type GeodeBlockSettings = {
    * Blocks that will not be replaced by the geode.
    */
   cannot_replace: ((
-      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
   /**
    * When encountering an invalid block, feature placement is cancelled.
    */
   invalid_blocks: ((
-      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
 }
 
@@ -419,13 +417,10 @@ export type LargeDripstoneConfig = {
   floor_to_ceiling_search_range?: NBTInt<{
     min: 1,
   }>,
-  column_radius: (IntProvider<NBTInt<{
-    min: 0,
-    max: 60,
-  }>> | IntProvider<NBTInt<{
+  column_radius: IntProvider<NBTInt<{
     min: 0,
     max: 16,
-  }>>),
+  }>>,
   height_scale: FloatProvider<NBTFloat<{
     leftExclusive: false,
     rightExclusive: false,
@@ -518,14 +513,6 @@ export type ModernPatchConfig = {
 export type MultifaceBlock = ('glow_lichen' | 'sculk_vein')
 
 export type MultifaceGrowthConfig = ({
-  /**
-   * Value:
-   *
-   *  - GlowLichen(`glow_lichen`)
-   *  - SculkVein(`sculk_vein`)
-   */
-  block?: (MultifaceBlock | `minecraft:${MultifaceBlock}`),
-} & {
   /**
    * Value:
    *
@@ -862,8 +849,7 @@ export type RootSystemConfig = {
     max: 64,
   }>,
   root_replaceable: ((
-      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
   root_state_provider: BlockStateProvider,
   hanging_root_state_provider: BlockStateProvider,
@@ -1061,9 +1047,6 @@ export type SpeleothemClusterConfig = {
     min: 1,
     max: 64,
   }>,
-  dripstone_block_layer_thickness: IntProvider<NBTInt<{
-    min: 0,
-  }>>,
   speleothem_block_layer_thickness: IntProvider<NBTInt<{
     min: 0,
   }>>,
@@ -1081,29 +1064,11 @@ export type SpeleothemClusterConfig = {
    * Value:
    * Range: 0..1
    */
-  chance_of_dripstone_column_at_max_distance_from_center: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-  /**
-   * Value:
-   * Range: 0..1
-   */
   chance_of_speleothem_at_max_distance_from_center: NBTFloat<{
     leftExclusive: false,
     rightExclusive: false,
     min: 0,
     max: 1,
-  }>,
-  /**
-   * Value:
-   * Range: 1..64
-   */
-  max_distance_from_edge_affecting_chance_of_dripstone_column: NBTInt<{
-    min: 1,
-    max: 64,
   }>,
   /**
    * Value:
@@ -1129,16 +1094,6 @@ export type SpeleothemConfig = {
   replaceable_blocks: (
       | Array<Registry['minecraft:block']> | (
       Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  chance_of_taller_dripstone?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
   /**
    * Value:
    * Range: 0..1
@@ -1320,8 +1275,7 @@ export type VegetationPatchConfig = {
   }>,
   xz_radius: IntProvider<NBTInt>,
   replaceable: ((
-      | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>) | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
+      | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
   ground_state: BlockStateProvider,
   vegetation_feature: FeatureRef,
@@ -1370,8 +1324,6 @@ type FeatureConfigDispatcherMap = {
   'minecraft:delta_feature': FeatureConfigDeltaFeature,
   'disk': FeatureConfigDisk,
   'minecraft:disk': FeatureConfigDisk,
-  'dripstone_cluster': FeatureConfigDripstoneCluster,
-  'minecraft:dripstone_cluster': FeatureConfigDripstoneCluster,
   'emerald_ore': FeatureConfigEmeraldOre,
   'minecraft:emerald_ore': FeatureConfigEmeraldOre,
   'end_gateway': FeatureConfigEndGateway,
@@ -1416,8 +1368,6 @@ type FeatureConfigDispatcherMap = {
   'minecraft:no_surface_ore': FeatureConfigNoSurfaceOre,
   'ore': FeatureConfigOre,
   'minecraft:ore': FeatureConfigOre,
-  'pointed_dripstone': FeatureConfigPointedDripstone,
-  'minecraft:pointed_dripstone': FeatureConfigPointedDripstone,
   'random_boolean_selector': FeatureConfigRandomBooleanSelector,
   'minecraft:random_boolean_selector': FeatureConfigRandomBooleanSelector,
   'random_patch': FeatureConfigRandomPatch,
@@ -1476,7 +1426,6 @@ type FeatureConfigFallback = (
   | FeatureConfigCoralTree
   | FeatureConfigDeltaFeature
   | FeatureConfigDisk
-  | FeatureConfigDripstoneCluster
   | FeatureConfigEmeraldOre
   | FeatureConfigEndGateway
   | FeatureConfigEndSpike
@@ -1499,7 +1448,6 @@ type FeatureConfigFallback = (
   | FeatureConfigNoBonemealFlower
   | FeatureConfigNoSurfaceOre
   | FeatureConfigOre
-  | FeatureConfigPointedDripstone
   | FeatureConfigRandomBooleanSelector
   | FeatureConfigRandomPatch
   | FeatureConfigRandomSelector
@@ -1532,7 +1480,6 @@ type FeatureConfigCoralClaw = CoralConfig
 type FeatureConfigCoralTree = CoralConfig
 type FeatureConfigDeltaFeature = DeltaConfig
 type FeatureConfigDisk = DiskConfig
-type FeatureConfigDripstoneCluster = SpeleothemClusterConfig
 type FeatureConfigEmeraldOre = EmeraldOreConfig
 type FeatureConfigEndGateway = EndGatewayConfig
 type FeatureConfigEndSpike = EndSpikeConfig
@@ -1555,7 +1502,6 @@ type FeatureConfigNetherrackReplaceBlobs = NetherrackReplaceBlobsConfig
 type FeatureConfigNoBonemealFlower = RandomPatchConfig
 type FeatureConfigNoSurfaceOre = OreConfig
 type FeatureConfigOre = OreConfig
-type FeatureConfigPointedDripstone = SpeleothemConfig
 type FeatureConfigRandomBooleanSelector = RandomBooleanSelector
 type FeatureConfigRandomPatch = RandomPatchConfig
 type FeatureConfigRandomSelector = RandomSelector

@@ -4,7 +4,7 @@ import type { Axis } from 'sandstone/arguments/generated/util/direction.ts'
 import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type Clamp = {
-  input: (DensityFunction | DensityFunctionRef),
+  input: DensityFunctionRef,
   min: NoiseRange,
   max: NoiseRange,
 }
@@ -328,8 +328,6 @@ type DensityFunctionDispatcherMap = {
   'minecraft:square': DensityFunctionSquare,
   'squeeze': DensityFunctionSqueeze,
   'minecraft:squeeze': DensityFunctionSqueeze,
-  'weird_scaled_sampler': DensityFunctionWeirdScaledSampler,
-  'minecraft:weird_scaled_sampler': DensityFunctionWeirdScaledSampler,
   'y_clamped_gradient': DensityFunctionYClampedGradient,
   'minecraft:y_clamped_gradient': DensityFunctionYClampedGradient,
 }
@@ -365,7 +363,6 @@ type DensityFunctionFallback = (
   | DensityFunctionSpline
   | DensityFunctionSquare
   | DensityFunctionSqueeze
-  | DensityFunctionWeirdScaledSampler
   | DensityFunctionYClampedGradient
   | DensityFunctionFallbackType)
 export type DensityFunctionFallbackType = Record<string, never>
@@ -399,7 +396,6 @@ type DensityFunctionSlide = OneArgument
 type DensityFunctionSpline = Spline
 type DensityFunctionSquare = OneArgument
 type DensityFunctionSqueeze = OneArgument
-type DensityFunctionWeirdScaledSampler = WeirdScaledSampler
 type DensityFunctionYClampedGradient = YClampedGradient
 export type SymbolDensityFunction<CASE extends
   | 'map'

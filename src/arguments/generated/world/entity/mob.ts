@@ -142,10 +142,6 @@ export type LivingEntity = (EntityBase & {
    */
   HurtTime?: NBTShort,
   /**
-   * Ticks since it was last damaged, from its creation.
-   */
-  HurtByTimestamp?: NBTInt,
-  /**
    * Timer since it was marked as dead. Counts down to zero.
    */
   DeathTime?: NBTShort,

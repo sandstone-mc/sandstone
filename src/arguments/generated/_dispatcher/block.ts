@@ -27,8 +27,6 @@ type BlockDispatcherMap = {
   'minecraft:barrel': BlockBarrel,
   'beacon': BlockBeacon,
   'minecraft:beacon': BlockBeacon,
-  'bed': BlockBed,
-  'minecraft:bed': BlockBed,
   'bee_nest': BlockBeeNest,
   'minecraft:bee_nest': BlockBeeNest,
   'beehive': BlockBeehive,
@@ -386,7 +384,6 @@ type BlockFallback = (
   | BlockBambooWallSign
   | BlockBarrel
   | BlockBeacon
-  | BlockBed
   | BlockBeeNest
   | BlockBeehive
   | BlockBell
@@ -570,7 +567,6 @@ type BlockBambooWallHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockBambooWallSign = SymbolBlockEntity['sign']
 type BlockBarrel = SymbolBlockEntity['barrel']
 type BlockBeacon = SymbolBlockEntity['beacon']
-type BlockBed = BlockEntity
 type BlockBeeNest = SymbolBlockEntity['beehive']
 type BlockBeehive = SymbolBlockEntity['beehive']
 type BlockBell = BlockEntity

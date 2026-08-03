@@ -517,8 +517,6 @@ export type TreeConfig = ({
   foliage_placer: FoliagePlacer,
   decorators: Array<TreeDecorator>,
 } & {
-  below_trunk_provider?: BlockStateProvider,
-} & {
   below_trunk_provider: BlockStateProvider,
 })
 
