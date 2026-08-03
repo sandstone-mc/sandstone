@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.7](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.7) - 2026-08-03
+
+### Fully implement `Flow#throw`, fix async flow visitor problems
+
+**Full Changelog**: [v1.0.6...v1.0.7](https://github.com/sandstone-mc/sandstone/compare/v1.0.6...v1.0.7)
+
+
 ## [v1.0.6](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.6) - 2026-08-03
 
 ### Update `scoreboard`, make `random.value` sequence ID optional
