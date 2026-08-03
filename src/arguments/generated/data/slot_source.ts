@@ -45,18 +45,6 @@ export type LimitCountSlotSource = {
 
 export type RangeSlotSource = ({
   /**
-   * Value:
-   * *either*
-   *
-   *
-   *
-   * *or*
-   *
-   * *item 1*
-   */
-  source: (EntityTarget | BlockEntityTarget),
-} & {
-  /**
    * Defaults to `container`.
    *
    * Value:

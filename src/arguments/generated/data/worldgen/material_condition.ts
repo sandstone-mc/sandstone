@@ -12,14 +12,10 @@ export type BiomeCondition = {
 }
 
 export type MaterialCondition = NonNullable<({
-  [S in Extract<Extract<(
-      | Registry['minecraft:worldgen/material_condition']
-      | Registry['minecraft:worldgen/material_condition_type']), string>, string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/material_condition_type'], string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolMaterialCondition ? SymbolMaterialCondition[S] : RootNBT))
-}[Extract<(
-  | Registry['minecraft:worldgen/material_condition']
-  | Registry['minecraft:worldgen/material_condition_type']), string>])>
+}[Extract<Registry['minecraft:worldgen/material_condition_type'], string>])>
 
 export type MaterialConditionRef = (`${string}:${string}` | MaterialCondition)
 

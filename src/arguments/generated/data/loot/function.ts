@@ -6,7 +6,6 @@ import type {
   ItemStackTarget,
   LootPoolEntry,
 } from 'sandstone/arguments/generated/data/loot.ts'
-import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
 import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { IntRange, NbtProvider } from 'sandstone/arguments/generated/data/util.ts'
@@ -175,7 +174,6 @@ export type BinomialWithBonusCountFormula = {
 }
 
 export type Conditions = {
-  conditions?: Array<LootCondition>,
   condition?: PredicateRef,
 }
 
@@ -353,11 +351,6 @@ export type EnchantWithLevels = ({
 
 export type ExplorationMap = ({
   /**
-   * Generated structure to locate. Accepts any of the structure types used by the `/locate` command. Defaults to buried treasure.
-   */
-  destination?: (Registry['minecraft:tag/worldgen/structure']),
-} & {
-  /**
    * Generated structure to locate. Accepts any of the structure types used by the `/locate` command.
    */
   destination: ((
@@ -486,9 +479,7 @@ export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_
 export type LootFunction = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:loot_function_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof SymbolLootFunction
-    ? SymbolLootFunction[S]
-    : RootNBT) & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
+  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
 }[Extract<Registry['minecraft:loot_function_type'], string>])>
 
 export type LootingEnchant = (EnchantedCountBase & Conditions)
@@ -571,7 +562,7 @@ export type Sequence = ({
   /**
    * List of functions to apply to this item.
    */
-  functions: (Array<LootFunction> | ItemModifier),
+  functions: ItemModifier,
 } & Conditions)
 
 export type SetAttributes = ({
@@ -757,10 +748,6 @@ export type SetLootTable = ({
    * The block entity type of the container.
    */
   type: Registry['minecraft:block_entity_type'],
-  /**
-   * The loot table to set to the container block item.
-   */
-  name: (Registry['minecraft:loot_table'] | LootTableClass),
   /**
    * The loot table to set to the container block item.
    */
@@ -998,8 +985,6 @@ type LootFunctionDispatcherMap = {
   'minecraft:limit_count': LootFunctionLimitCount,
   'modify_contents': LootFunctionModifyContents,
   'minecraft:modify_contents': LootFunctionModifyContents,
-  'reference': LootFunctionReference,
-  'minecraft:reference': LootFunctionReference,
   'sequence': LootFunctionSequence,
   'minecraft:sequence': LootFunctionSequence,
   'set_attributes': LootFunctionSetAttributes,
@@ -1071,7 +1056,6 @@ type LootFunctionFallback = (
   | LootFunctionFurnaceSmelt
   | LootFunctionLimitCount
   | LootFunctionModifyContents
-  | LootFunctionReference
   | LootFunctionSequence
   | LootFunctionSetAttributes
   | LootFunctionSetBannerPattern
@@ -1114,7 +1098,6 @@ type LootFunctionFiltered = Filtered
 type LootFunctionFurnaceSmelt = Conditions
 type LootFunctionLimitCount = LimitCount
 type LootFunctionModifyContents = ModifyContents
-type LootFunctionReference = Reference
 type LootFunctionSequence = Sequence
 type LootFunctionSetAttributes = SetAttributes
 type LootFunctionSetBannerPattern = SetBannerPattern

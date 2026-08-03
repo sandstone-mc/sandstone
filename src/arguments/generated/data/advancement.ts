@@ -5,7 +5,6 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type {
   AdvancementClass,
-  LootTableClass,
   MCFunctionClass,
   NBTClass,
   NBTInt,
@@ -122,7 +121,7 @@ export type AdvancementRewards = {
   /**
    * Loot tables to give.
    */
-  loot?: (Array<(Registry['minecraft:loot_table'] | LootTableClass)> | LootTableListRef),
+  loot?: LootTableListRef,
   /**
    * Recipes to unlock.
    */

@@ -2,10 +2,9 @@ import type { LootCondition } from 'sandstone/arguments/generated/data/loot/cond
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { PredicateClass, TagClass } from 'sandstone'
 
-export type Predicate = (LootCondition | Array<LootCondition>)
+export type Predicate = LootCondition
 
 export type PredicateListRef = (
-  | Array<LootCondition>
   | LootCondition | (
   Registry['minecraft:predicate'] | `#${string}:${string}` | TagClass<'predicate'> | PredicateClass)
   | Array<((Registry['minecraft:predicate'] | PredicateClass) | LootCondition)>)

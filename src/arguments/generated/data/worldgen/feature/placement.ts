@@ -145,20 +145,13 @@ export type PlacedFeature = {
  *
  * *or*
  *
- * List length range: 1..
- *
- * *or*
- *
- * *item 2*
+ * *item 1*
  *
  * *or*
  *
  * List length range: 1..
  */
-export type PlacedFeatureListRef = (PlacedFeature | NBTList<PlacedFeature, {
-  leftExclusive: false,
-  min: 1,
-}> | (
+export type PlacedFeatureListRef = (PlacedFeature | (
   | Registry['minecraft:worldgen/placed_feature']
   | `#${string}:${string}`
   | TagClass<'worldgen/placed_feature'>) | NBTList<(Registry['minecraft:worldgen/placed_feature'] | PlacedFeature), {
@@ -252,8 +245,6 @@ type PlacementModifierDispatcherMap = {
   'minecraft:offset': PlacementModifierOffset,
   'random_chance': PlacementModifierRandomChance,
   'minecraft:random_chance': PlacementModifierRandomChance,
-  'random_offset': PlacementModifierRandomOffset,
-  'minecraft:random_offset': PlacementModifierRandomOffset,
   'rarity_filter': PlacementModifierRarityFilter,
   'minecraft:rarity_filter': PlacementModifierRarityFilter,
   'surface_relative_threshold_filter': PlacementModifierSurfaceRelativeThresholdFilter,
@@ -275,7 +266,6 @@ type PlacementModifierFallback = (
   | PlacementModifierNoiseThresholdCount
   | PlacementModifierOffset
   | PlacementModifierRandomChance
-  | PlacementModifierRandomOffset
   | PlacementModifierRarityFilter
   | PlacementModifierSurfaceRelativeThresholdFilter
   | PlacementModifierSurfaceWaterDepthFilter)
@@ -291,7 +281,6 @@ type PlacementModifierNoiseBasedCount = NoiseBasedCountModifier
 type PlacementModifierNoiseThresholdCount = NoiseThresholdCountModifier
 type PlacementModifierOffset = OffsetModifier
 type PlacementModifierRandomChance = RandomChanceModifier
-type PlacementModifierRandomOffset = RandomOffsetModifier
 type PlacementModifierRarityFilter = RarityFilter
 type PlacementModifierSurfaceRelativeThresholdFilter = SurfaceRelativeThresholdFilter
 type PlacementModifierSurfaceWaterDepthFilter = SurfaceWaterDepthFilter

@@ -105,10 +105,7 @@ export type MultiNoiseBiomeSourceParameterList = {
 
 export type MultiNoisePreset = ('nether' | 'overworld')
 
-export type NoiseParameters = ({
-  firstOctave: NBTInt,
-  amplitudes: Array<(NBTDouble | number)>,
-} & {
+export type NoiseParameters = {
   /**
    * Value:
    * Range: -32..32
@@ -156,7 +153,7 @@ export type NoiseParameters = ({
   }> | number), {
     rightExclusive: false,
   }>,
-})
+}
 
 export type TheEnd = Record<string, never>
 

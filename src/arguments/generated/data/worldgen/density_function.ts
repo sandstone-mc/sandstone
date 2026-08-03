@@ -10,7 +10,6 @@ export type Clamp = {
 }
 
 export type Constant = {
-  argument: NoiseRange,
   value: NoiseRange,
 }
 
@@ -156,7 +155,6 @@ export type OldBlendedNoise = {
 }
 
 export type OneArgument = {
-  argument: DensityFunctionRef,
   input: DensityFunctionRef,
 }
 
@@ -184,7 +182,6 @@ export type Round = {
 }
 
 export type Shift = {
-  argument: NoiseParametersRef,
   noise: NoiseParametersRef,
 }
 
@@ -240,8 +237,6 @@ export type TerrainShaperSpline = {
 export type TilingMode = ('clamp_to_edge' | 'repeat' | 'mirrored_repeat')
 
 export type TwoArguments = {
-  argument1: DensityFunctionRef,
-  argument2: DensityFunctionRef,
   left: DensityFunctionRef,
   right: DensityFunctionRef,
 }
@@ -311,8 +306,6 @@ type DensityFunctionDispatcherMap = {
   'minecraft:interpolated': DensityFunctionInterpolated,
   'interval_select': DensityFunctionIntervalSelect,
   'minecraft:interval_select': DensityFunctionIntervalSelect,
-  'invert': DensityFunctionInvert,
-  'minecraft:invert': DensityFunctionInvert,
   'lerp': DensityFunctionLerp,
   'minecraft:lerp': DensityFunctionLerp,
   'log': DensityFunctionLog,
@@ -365,8 +358,6 @@ type DensityFunctionDispatcherMap = {
   'minecraft:sub': DensityFunctionSub,
   'truncate': DensityFunctionTruncate,
   'minecraft:truncate': DensityFunctionTruncate,
-  'y_clamped_gradient': DensityFunctionYClampedGradient,
-  'minecraft:y_clamped_gradient': DensityFunctionYClampedGradient,
 }
 type DensityFunctionKeys = keyof DensityFunctionDispatcherMap
 type DensityFunctionFallback = (
@@ -389,7 +380,6 @@ type DensityFunctionFallback = (
   | DensityFunctionHalfNegative
   | DensityFunctionInterpolated
   | DensityFunctionIntervalSelect
-  | DensityFunctionInvert
   | DensityFunctionLerp
   | DensityFunctionLog
   | DensityFunctionMax
@@ -416,7 +406,6 @@ type DensityFunctionFallback = (
   | DensityFunctionSqueeze
   | DensityFunctionSub
   | DensityFunctionTruncate
-  | DensityFunctionYClampedGradient
   | DensityFunctionFallbackType)
 export type DensityFunctionFallbackType = Record<string, never>
 type DensityFunctionAbs = OneArgument
@@ -438,7 +427,6 @@ type DensityFunctionGradient = Gradient
 type DensityFunctionHalfNegative = OneArgument
 type DensityFunctionInterpolated = OneArgument
 type DensityFunctionIntervalSelect = InvervalSelect
-type DensityFunctionInvert = OneArgument
 type DensityFunctionLerp = Lerp
 type DensityFunctionLog = OneArgument
 type DensityFunctionMax = TwoArguments
@@ -465,7 +453,6 @@ type DensityFunctionSquare = OneArgument
 type DensityFunctionSqueeze = OneArgument
 type DensityFunctionSub = TwoArguments
 type DensityFunctionTruncate = Round
-type DensityFunctionYClampedGradient = YClampedGradient
 export type SymbolDensityFunction<CASE extends
   | 'map'
   | 'keys'

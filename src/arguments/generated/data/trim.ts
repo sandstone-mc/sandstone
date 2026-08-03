@@ -10,10 +10,6 @@ export type OldTrimMaterialOverrides = ({
 
 export type TrimMaterial = {
   /**
-   * Permutation key which will be used in the resource pack.
-   */
-  asset_name: string,
-  /**
    * Palette ID which will be used in the resource pack.
    */
   palette: PaletteRef,
@@ -21,12 +17,6 @@ export type TrimMaterial = {
    * Text displayed in the item tooltip.
    */
   description: Text,
-  /**
-   * Armor materials that should have a different color palette.
-   */
-  override_armor_assets?: ({
-    [Key in Extract<Registry['minecraft:equipment'], string>]?: string
-  }),
 }
 
 export type TrimMaterialOverrides = ({

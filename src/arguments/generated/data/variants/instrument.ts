@@ -19,21 +19,12 @@ export type Instrument = {
    * Duration of use in seconds, used as item cooldown
    *
    * Value:
-   * *either*
-   *
-   * Range: 0<..
-   *
-   * *or*
-   *
    * Range: 0..
    */
-  use_duration: (NBTFloat<{
-    leftExclusive: true,
-    min: 1,
-  }> | NBTFloat<{
+  use_duration: NBTFloat<{
     leftExclusive: false,
     min: 0,
-  }>),
+  }>,
   /**
    * Value:
    * Range: 0..

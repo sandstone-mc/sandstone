@@ -212,7 +212,6 @@ export type ModelElement = {
     }
   }),
   rotation?: ModelElementRotation,
-  shade?: boolean,
   /**
    * Value:
    *

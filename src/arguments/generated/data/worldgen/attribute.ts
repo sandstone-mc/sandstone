@@ -125,7 +125,6 @@ export type BedRule = {
    *  - Never(`never`)
    */
   can_set_spawn: BedRuleType,
-  explodes?: boolean,
   destroy_on_use?: boolean,
   destroy_on_leave?: boolean,
   error_message?: Text,

@@ -119,9 +119,7 @@ export type LocationCheck = {
 export type LootCondition = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:loot_condition_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof SymbolLootCondition
-    ? SymbolLootCondition[S]
-    : RootNBT) & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT))
+  } & (S extends keyof SymbolLootCondition ? SymbolLootCondition[S] : RootNBT))
 }[Extract<Registry['minecraft:loot_condition_type'], string>])>
 
 export type MatchTool = {
@@ -223,8 +221,6 @@ type LootConditionDispatcherMap = {
   'minecraft:all_of': LootConditionAllOf,
   'any_of': LootConditionAnyOf,
   'minecraft:any_of': LootConditionAnyOf,
-  'block_state_property': LootConditionBlockStateProperty,
-  'minecraft:block_state_property': LootConditionBlockStateProperty,
   'damage_source_properties': LootConditionDamageSourceProperties,
   'minecraft:damage_source_properties': LootConditionDamageSourceProperties,
   'enchantment_active_check': LootConditionEnchantmentActiveCheck,
@@ -249,8 +245,6 @@ type LootConditionDispatcherMap = {
   'minecraft:random_chance': LootConditionRandomChance,
   'random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus,
   'minecraft:random_chance_with_enchanted_bonus': LootConditionRandomChanceWithEnchantedBonus,
-  'reference': LootConditionReference,
-  'minecraft:reference': LootConditionReference,
   'table_bonus': LootConditionTableBonus,
   'minecraft:table_bonus': LootConditionTableBonus,
   'time_check': LootConditionTimeCheck,
@@ -264,7 +258,6 @@ type LootConditionKeys = keyof LootConditionDispatcherMap
 type LootConditionFallback = (
   | LootConditionAllOf
   | LootConditionAnyOf
-  | LootConditionBlockStateProperty
   | LootConditionDamageSourceProperties
   | LootConditionEnchantmentActiveCheck
   | LootConditionEntityProperties
@@ -277,14 +270,12 @@ type LootConditionFallback = (
   | LootConditionMatchTool
   | LootConditionRandomChance
   | LootConditionRandomChanceWithEnchantedBonus
-  | LootConditionReference
   | LootConditionTableBonus
   | LootConditionTimeCheck
   | LootConditionValueCheck
   | LootConditionWeatherCheck)
 type LootConditionAllOf = AllOf
 type LootConditionAnyOf = AnyOf
-type LootConditionBlockStateProperty = BlockStateProperty
 type LootConditionDamageSourceProperties = DamageSourceProperties
 type LootConditionEnchantmentActiveCheck = EnchantmentActiveCheck
 type LootConditionEntityProperties = EntityProperties
@@ -297,7 +288,6 @@ type LootConditionMatchBlock = BlockPredicate
 type LootConditionMatchTool = MatchTool
 type LootConditionRandomChance = RandomChance
 type LootConditionRandomChanceWithEnchantedBonus = RandomChanceWithEnchantedBonus
-type LootConditionReference = Reference
 type LootConditionTableBonus = TableBonus
 type LootConditionTimeCheck = TimeCheck
 type LootConditionValueCheck = ValueCheck

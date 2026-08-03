@@ -94,8 +94,7 @@ export type DialogBase = NonNullable<({
 }[Extract<AfterAction, string>])>
 
 export type DialogListRef = (
-  | Dialog
-  | Array<Dialog> | (
+  | Dialog | (
   Registry['minecraft:dialog'] | `#${Registry['minecraft:tag/dialog']}` | TagClass<'dialog'> | DialogClass)
   | Array<((Registry['minecraft:dialog'] | DialogClass) | Dialog)>)
 

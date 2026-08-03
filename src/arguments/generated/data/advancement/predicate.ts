@@ -143,7 +143,6 @@ export type DamageSourcePredicate = {
 
 export type DamageTagPredicate = {
   id: ((
-      | Registry['minecraft:tag/damage_type']) | (
         | Registry['minecraft:damage_type']
         | `#${Registry['minecraft:tag/damage_type']}`
         | TagClass<'damage_type'>

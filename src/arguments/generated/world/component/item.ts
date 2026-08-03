@@ -1681,9 +1681,7 @@ type DataComponentParrotVariant = ParrotVariant
 type DataComponentPiercingWeapon = PiercingWeapon
 type DataComponentPigSoundVariant = (Registry['minecraft:pig_sound_variant'] | VariantClass<'pig_sound'>)
 type DataComponentPigVariant = (Registry['minecraft:pig_variant'] | VariantClass<'pig'>)
-type DataComponentPotDecorations = (NBTList<Registry['minecraft:item'], {
-  rightExclusive: false,
-}> | PotDecorations)
+type DataComponentPotDecorations = PotDecorations
 type DataComponentPotionContents = (PotionContents | Registry['minecraft:potion'])
 type DataComponentPotionDurationScale = NBTFloat<{
   leftExclusive: false,

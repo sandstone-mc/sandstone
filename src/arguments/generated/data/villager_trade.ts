@@ -25,13 +25,6 @@ export type VillagerTrade = {
    * Does **not** support `reference` item modifier. \
    * Some modifiers can affect the price through the `additional_trade_cost` transient component. \
    * The `additional_trade_cost` component is not saved on the offered item.
-   */
-  given_item_modifiers?: Array<ItemModifier>,
-  /**
-   * Modifiers applied to the `gives` item. \
-   * Does **not** support `reference` item modifier. \
-   * Some modifiers can affect the price through the `additional_trade_cost` transient component. \
-   * The `additional_trade_cost` component is not saved on the offered item.
    *
    * ID reference is not allowed here.
    */

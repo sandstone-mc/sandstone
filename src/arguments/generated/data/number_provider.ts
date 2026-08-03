@@ -68,15 +68,6 @@ export type NumberDispatcher = {
 
 export type NumberProvider = (NBTFloat | ({
   [S in Extract<Extract<Registry['minecraft:loot_number_provider_type'], string>, string>]?: ({
-    /**
-     * Defaults to `minecraft:uniform`.
-     */
-    type?: S,
-  } & (S extends undefined
-    ? SymbolNumberProvider<'%none'> :
-    (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)))
-}[Extract<Registry['minecraft:loot_number_provider_type'], string>]) | ({
-  [S in Extract<Extract<Registry['minecraft:loot_number_provider_type'], string>, string>]?: ({
     type: S,
   } & (S extends undefined
     ? SymbolNumberProvider<'%none'> :
@@ -84,7 +75,6 @@ export type NumberProvider = (NBTFloat | ({
 }[Extract<Registry['minecraft:loot_number_provider_type'], string>]))
 
 export type NumberProviderListRef = (
-  | Array<NumberProvider>
   | NumberProvider | (
   Registry['minecraft:number_provider'] | `#${string}:${string}` | TagClass<'number_provider'>)
   | Array<(Registry['minecraft:number_provider'] | NumberProvider)>)

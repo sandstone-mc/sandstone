@@ -165,10 +165,6 @@ export type LivingEntity = (EntityBase & {
   attributes?: Array<Attribute>,
   active_effects?: Array<MobEffectInstance>,
   /**
-   * Team to join when it is spawned.
-   */
-  Team?: `${any}${string}`,
-  /**
    * The UUID of the player that last hurt this entity. Stored for 100 ticks.
    *
    * Value:

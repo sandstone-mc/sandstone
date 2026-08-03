@@ -185,10 +185,6 @@ type ResourceDispatcherMap = {
   'minecraft:worldgen/biome': ResourceWorldgenBiome,
   'worldgen/carver': ResourceWorldgenCarver,
   'minecraft:worldgen/carver': ResourceWorldgenCarver,
-  'worldgen/configured_carver': ResourceWorldgenConfiguredCarver,
-  'minecraft:worldgen/configured_carver': ResourceWorldgenConfiguredCarver,
-  'worldgen/configured_feature': ResourceWorldgenConfiguredFeature,
-  'minecraft:worldgen/configured_feature': ResourceWorldgenConfiguredFeature,
   'worldgen/density_function': ResourceWorldgenDensityFunction,
   'minecraft:worldgen/density_function': ResourceWorldgenDensityFunction,
   'worldgen/feature': ResourceWorldgenFeature,
@@ -281,8 +277,6 @@ type ResourceFallback = (
   | ResourceWorldClock
   | ResourceWorldgenBiome
   | ResourceWorldgenCarver
-  | ResourceWorldgenConfiguredCarver
-  | ResourceWorldgenConfiguredFeature
   | ResourceWorldgenDensityFunction
   | ResourceWorldgenFeature
   | ResourceWorldgenFlatLevelGeneratorPreset
@@ -357,8 +351,6 @@ type ResourceWolfVariant = WolfVariant
 type ResourceWorldClock = Record<string, never>
 type ResourceWorldgenBiome = Biome
 type ResourceWorldgenCarver = ConfiguredCarver
-type ResourceWorldgenConfiguredCarver = ConfiguredCarver
-type ResourceWorldgenConfiguredFeature = ConfiguredFeature
 type ResourceWorldgenDensityFunction = DensityFunction
 type ResourceWorldgenFeature = ConfiguredFeature
 type ResourceWorldgenFlatLevelGeneratorPreset = FlatGeneratorPreset

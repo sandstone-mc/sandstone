@@ -52,7 +52,7 @@ export type PalettedPermutations = {
  */
 export type PaletteRef = `${string}:${string}`
 
-export type PaletteTexture = ((Registry['minecraft:texture'] | TextureClass<TextureType>) | PaletteRef)
+export type PaletteTexture = PaletteRef
 
 export type PermutationsMap = ({
   [Key in `${any}${string}`]?: PaletteTexture

@@ -9,7 +9,7 @@ import type { FlatWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
 import type { NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
-export type Biome = ({
+export type Biome = {
   attributes?: PositionalEnvironmentAttributeMap,
   temperature: NBTFloat,
   downfall: NBTFloat,
@@ -30,7 +30,7 @@ export type Biome = ({
   features: NBTList<(Array<PlacedFeatureRef> | (`#${string}:${string}` | TagClass<'worldgen/placed_feature'>)), {
     rightExclusive: false,
   }>,
-} & NaturalMobSpawns)
+}
 
 export type BiomeCategory = (
   | 'beach'
@@ -150,16 +150,6 @@ export type MoodSound = {
 }
 
 export type NaturalMobSpawns = {
-  /**
-   * Value:
-   * Range: 0..0.9999999
-   */
-  creature_spawn_probability?: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-  }>,
-  spawners: SpawnerDataMap,
   spawns_by_category: SpawnerDataMap,
   spawn_costs: ({
     [Key in Extract<`${string}:${string}`, string>]?: MobSpawnCost
@@ -170,8 +160,6 @@ export type Precipitation = ('none' | 'rain' | 'snow')
 
 export type SpawnerData = {
   type: Registry['minecraft:entity_type'],
-  minCount: NBTInt,
-  maxCount: NBTInt,
   count: IntProvider<NBTInt>,
 }
 
