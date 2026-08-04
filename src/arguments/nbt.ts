@@ -12,6 +12,7 @@ import type {
   NBTLongArray,
   NBTShort,
 } from 'sandstone/variables/nbt/NBTs'
+import { NonEmptyString } from 'sandstone/utils'
 
 export interface NBTSerializable {
   toNBT(): string
@@ -19,7 +20,7 @@ export interface NBTSerializable {
 
 export type NBTObject = string | number | boolean | URL | undefined | NBTSerializable | TextComponentClass | TextObject | { [key: string]: NBTObject | undefined } | NBTObject[] | NBTClass
 
-export type RootNBT = Record<`${any}${string}`, NBTObject | undefined>
+export type RootNBT = Record<NonEmptyString, NBTObject | undefined>
 
 /**
  * Recursively walks a type, unioning Sandstone NBT primitive classes with their plain JSON equivalents

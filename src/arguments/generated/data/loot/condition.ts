@@ -14,6 +14,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
   EnchantmentClass,
+  NamespacedString,
   NBTFloat,
   NBTInt,
   NBTLong,
@@ -168,7 +169,7 @@ export type Reference = {
   /**
    * A cyclic reference causes a parsing failure.
    */
-  name: (`${string}:${string}` | PredicateClass),
+  name: (NamespacedString | PredicateClass),
 }
 
 export type TableBonus = {

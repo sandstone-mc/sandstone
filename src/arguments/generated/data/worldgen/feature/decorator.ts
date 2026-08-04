@@ -6,7 +6,7 @@ import type {
 } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt } from 'sandstone'
 
 export type CarvingMaskConfig = {
   /**
@@ -34,11 +34,11 @@ export type ChanceConfig = {
 }
 
 export type ConfiguredDecorator = NonNullable<({
-  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: {
+  [S in Extract<Extract<NamespacedString, string>, string>]?: {
     type: S,
     config: (S extends keyof SymbolDecoratorConfig ? SymbolDecoratorConfig[S] : RootNBT),
   }
-}[Extract<`${string}:${string}`, string>])>
+}[Extract<NamespacedString, string>])>
 
 export type CountConfig = {
   count: IntProvider<NBTInt<{

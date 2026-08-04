@@ -21,7 +21,7 @@ import type {
 import { parseJSONText, Score } from 'sandstone/variables'
 import { ThrowNode } from './throw'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
-import type { LiteralUnion, NamespacedLiteralUnion } from '../utils'
+import type { LiteralUnion, NamespacedLiteralUnion, NamespacedString } from '../utils'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
@@ -429,13 +429,13 @@ export class Flow {
 
   /**
    * Checks a function or function tag and matches the return value(s). If a tag is given, all functions run regardless of the results of prior functions.
-   * @param function_ Function to check for.
+   * @param mcfunction Function to check for.
    */
-  function_ = (function_: `${string}:${string}` | MCFunctionClass<undefined, undefined>) => {
-    if (typeof function_ === 'string') {
-      return new SandstoneConditions.Function(this.sandstoneCore, function_)
+  mcfunction = (mcfunction: NamespacedString | MCFunctionClass<undefined, undefined>) => {
+    if (typeof mcfunction === 'string') {
+      return new SandstoneConditions.Function(this.sandstoneCore, mcfunction)
     }
-    return new SandstoneConditions.Function(this.sandstoneCore, function_.name)
+    return new SandstoneConditions.Function(this.sandstoneCore, mcfunction.name)
   }
 
   /**

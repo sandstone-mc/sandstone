@@ -4,7 +4,7 @@ import type { NumberProviderRef } from 'sandstone/arguments/generated/data/numbe
 import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LootTableClass, NBTInt, NBTList } from 'sandstone'
+import type { LootTableClass, NamespacedString, NBTInt, NBTList } from 'sandstone'
 
 export type BlockEntityTarget = 'block_entity'
 
@@ -189,7 +189,7 @@ export type LootTable = {
    *
    * Value: Defines a `random_sequence` id.
    */
-  random_sequence?: `${string}:${string}`,
+  random_sequence?: NamespacedString,
 }
 
 export type LootTableListRef = Array<LootTable>

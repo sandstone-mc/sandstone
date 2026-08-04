@@ -11,7 +11,7 @@ import type {
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion, MemberModifiers } from 'sandstone/utils'
+import type { LiteralUnion, MemberModifiers, NonEmptyString } from 'sandstone/utils'
 import { nbtResolver } from 'sandstone/variables'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
@@ -62,7 +62,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
       slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>,
-      modifier?: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier?: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['from', 'block', pos, slot, modifier]),
 
     /**
@@ -73,7 +73,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
       slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
-      modifier?: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier?: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['from', 'entity', targetParser(targets), slot, modifier]),
   }
 }
@@ -99,7 +99,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
       slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>,
-      modifier: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
 
     /**
@@ -110,7 +110,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
       slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
-      modifier: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
   }
 

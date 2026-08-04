@@ -1,14 +1,13 @@
 import type { SymbolBlock } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
-import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt } from 'sandstone'
 
 export type FallingBlock<S = undefined> = (EntityBase & {
   /**
    * NBT data for the placed block.
    */
-  TileEntityData?: (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT),
+  TileEntityData?: (S extends keyof SymbolBlock ? SymbolBlock[S] : SymbolBlock<'%unknown'>),
   /**
    * Block state for the placed block. Defaults to sand.
    */

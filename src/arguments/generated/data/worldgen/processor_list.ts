@@ -11,7 +11,7 @@ export type AppendLoot = {
 }
 
 export type AppendStatic<S = undefined> = {
-  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT),
+  data: (S extends keyof SymbolBlock ? SymbolBlock[S] : SymbolBlock<'%unknown'>),
 }
 
 export type AxisAlignedLinearPos = ({

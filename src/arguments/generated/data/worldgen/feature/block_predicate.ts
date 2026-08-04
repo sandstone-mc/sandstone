@@ -3,7 +3,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTInt, NBTList, TagClass } from 'sandstone'
+import type { NamespacedString, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type BlockPredicate = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:block_predicate_type'], string>, string>]?: ({
@@ -37,7 +37,7 @@ export type HeightRangePredicate = {
 export type InsideWorldBoundsPredicate = PredicateOffset
 
 export type MatchingBiomesPredicate = {
-  biomes: (`${string}:${string}` | Array<`${string}:${string}`>),
+  biomes: (NamespacedString | Array<NamespacedString>),
 }
 
 export type MatchingBlocksPredicate = (PredicateOffset & {

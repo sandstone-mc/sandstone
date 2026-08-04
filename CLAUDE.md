@@ -701,6 +701,7 @@ Each command file contains:
 ```typescript
 // Example: src/commands/implementations/server/stopwatch.ts
 import type { Macroable } from 'sandstone/core'
+import type { NamespacedString } from 'sandstone/utils'
 import { CommandNode } from 'sandstone/core/nodes'
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
 
@@ -711,10 +712,10 @@ export class StopwatchCommandNode extends CommandNode {
 export class StopwatchCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = StopwatchCommandNode
 
-  create = (id: Macroable<`${string}:${string}`, MACRO>): FinalCommandOutput =>
+  create = (id: Macroable<NamespacedString, MACRO>): FinalCommandOutput =>
     this.finalCommand(['create', id])
 
-  query = (id: Macroable<`${string}:${string}`, MACRO>, scale: Macroable<number, MACRO>): FinalCommandOutput =>
+  query = (id: Macroable<NamespacedString, MACRO>, scale: Macroable<number, MACRO>): FinalCommandOutput =>
     this.finalCommand(['query', id, scale])
 }
 ```

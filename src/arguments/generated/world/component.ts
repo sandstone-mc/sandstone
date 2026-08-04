@@ -6,12 +6,12 @@ import type {
 } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTClass } from 'sandstone'
+import type { NBTClass, NBTList, NonEmptyString } from 'sandstone'
 
-export type CustomData = (CustomDataMap | (`${any}${string}` | NBTClass))
+export type CustomData = (CustomDataMap | (NonEmptyString | NBTClass))
 
 export type CustomDataMap = ({
-  [Key in `${any}${string}`]?: (Key extends keyof SymbolMcdocCustomData
+  [Key in NonEmptyString]?: (Key extends keyof SymbolMcdocCustomData
     ? SymbolMcdocCustomData[Key]
     : SymbolMcdocCustomData<'%unknown'>)
 })

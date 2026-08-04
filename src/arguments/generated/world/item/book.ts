@@ -1,6 +1,7 @@
 import type { Filterable } from 'sandstone/arguments/generated/util.ts'
 import type { BookGeneration } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { ItemBase } from 'sandstone/arguments/generated/world/item.ts'
+import type { NBTList, NonEmptyString } from 'sandstone'
 
 export type WritableBook = (ItemBase & {
   pages?: Array<string>,
@@ -14,7 +15,7 @@ export type WrittenBook = (ItemBase & {
   /**
    * Pages of the book as JSON text components.
    */
-  pages?: Array<Filterable<`${any}${string}`>>,
+  pages?: Array<Filterable<NonEmptyString>>,
   /**
    * Generation of the book. 0 = original, 1 = copy of original, 2 = copy of copy, 3 = tattered.
    *
