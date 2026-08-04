@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.1.12](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.12) - 2026-08-04
+
+### Fix visitor bug with `returnCmd.run`
+
+**Full Changelog**: [v1.1.11...v1.1.12](https://github.com/sandstone-mc/sandstone/compare/v1.1.11...v1.1.12)
+
+
 ## [v1.1.11](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.11) - 2026-08-03
 
 ### Fixed mcdoc-ts-generator `until` handling
