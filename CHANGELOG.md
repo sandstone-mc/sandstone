@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.11](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.11) - 2026-08-04
+
+### Update Sandstone
+
+**Full Changelog**: [v1.2.10...v1.2.11](https://github.com/sandstone-mc/sandstone/compare/v1.2.10...v1.2.11)
+
+
 ## [v1.2.10](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.10) - 2026-08-04
 
 ### Fix visitor bug with `returnCmd.run`
