@@ -1,7 +1,8 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { NonEmptyString } from 'sandstone'
 
 export type Lang = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 
 export type LangDeprecated = {
@@ -13,6 +14,6 @@ export type LangDeprecated = {
    * Mapping renamed translation keys from old to new keys.
    */
   renamed: ({
-    [Key in `${any}${string}`]?: Registry['minecraft:translation_key']
+    [Key in NonEmptyString]?: Registry['minecraft:translation_key']
   }),
 }

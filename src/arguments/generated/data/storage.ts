@@ -1,8 +1,8 @@
-import type { DiscreteAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
+import type { NonEmptyString } from 'sandstone'
 
 export type UnknownStorage = ({
-  [Key in `${any}${string}`]?: NBTObject
+  [Key in NonEmptyString]?: NBTObject
 })
 type StorageDispatcherMap = {}
 type StorageKeys = keyof StorageDispatcherMap

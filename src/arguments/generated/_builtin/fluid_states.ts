@@ -1,3 +1,5 @@
+import type { NonEmptyString } from 'sandstone'
+
 type McdocFluidStatesDispatcherMap = {
   'flowing_lava': McdocFluidStatesFlowingLava,
   'minecraft:flowing_lava': McdocFluidStatesFlowingLava,
@@ -16,10 +18,10 @@ type McdocFluidStatesFallback = (
   | McdocFluidStatesWater
   | McdocFluidStatesFallbackType)
 export type McdocFluidStatesFallbackType = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 type McdocFluidStatesNoneType = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 type McdocFluidStatesFlowingLava = {
   falling?: ('false' | 'true'),

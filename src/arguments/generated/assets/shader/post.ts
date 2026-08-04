@@ -2,7 +2,7 @@ import type { SymbolUniformValue } from 'sandstone/arguments/generated/dispatche
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RGBA } from 'sandstone/arguments/generated/util/color.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTInt } from 'sandstone'
+import type { NamespacedString, NBTInt, NonEmptyString } from 'sandstone'
 
 export type AuxTarget = {
   name: string,
@@ -40,11 +40,11 @@ export type OldTarget = {
 }
 
 export type Pass = ({
-  vertex_shader: `${string}:${string}`,
-  fragment_shader: `${string}:${string}`,
+  vertex_shader: NamespacedString,
+  fragment_shader: NamespacedString,
 } & {
   inputs?: Array<(TargetInput | TextureInput)>,
-  output: `${string}:${string}`,
+  output: NamespacedString,
   uniforms?: UniformBlocks,
 })
 
@@ -54,14 +54,14 @@ export type PostEffect = {
 }
 
 export type TargetInput = {
-  target: `${string}:${string}`,
+  target: NamespacedString,
   sampler_name: string,
   use_depth_buffer?: boolean,
   bilinear?: boolean,
 }
 
 export type Targets = ({
-  [Key in Extract<`${string}:${string}`, string>]?: InternalTarget
+  [Key in Extract<NamespacedString, string>]?: InternalTarget
 })
 
 export type TextureInput = {
@@ -70,7 +70,7 @@ export type TextureInput = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/effect/`
    */
-  location: `${string}:${string}`,
+  location: NamespacedString,
   sampler_name: string,
   /**
    * Value:
@@ -90,7 +90,7 @@ export type TextureInput = {
 }
 
 export type UniformBlocks = ({
-  [Key in `${any}${string}`]?: Array<UniformValue>
+  [Key in NonEmptyString]?: Array<UniformValue>
 })
 
 export type UniformValue = NonNullable<({

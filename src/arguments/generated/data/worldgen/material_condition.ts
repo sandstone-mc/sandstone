@@ -1,7 +1,7 @@
 import type { CaveSurface, VerticalAnchor } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type BiomeCondition = {
   biome_is: (
@@ -17,7 +17,7 @@ export type MaterialCondition = NonNullable<({
   } & (S extends keyof SymbolMaterialCondition ? SymbolMaterialCondition[S] : RootNBT))
 }[Extract<Registry['minecraft:worldgen/material_condition_type'], string>])>
 
-export type MaterialConditionRef = (`${string}:${string}` | MaterialCondition)
+export type MaterialConditionRef = (NamespacedString | MaterialCondition)
 
 export type NoiseThresholdCondition = {
   noise: Registry['minecraft:worldgen/noise'],

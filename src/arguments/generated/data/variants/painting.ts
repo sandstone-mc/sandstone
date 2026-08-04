@@ -1,5 +1,5 @@
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { NBTInt } from 'sandstone'
+import type { NamespacedString, NBTInt, NBTList } from 'sandstone'
 
 export type PaintingVariant = {
   /**
@@ -7,7 +7,7 @@ export type PaintingVariant = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/painting/`
    */
-  asset_id: `${string}:${string}`,
+  asset_id: NamespacedString,
   /**
    * Dimension in blocks.
    *

@@ -8,6 +8,7 @@ import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type {
   LootTableClass,
+  NamespacedString,
   NBTDouble,
   NBTFloat,
   NBTInt,
@@ -42,7 +43,7 @@ export type AttributeModifier = {
   /**
    * The unique identifier of this attribute modifier.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
   /**
    * Change in the attribute.
    */
@@ -298,7 +299,7 @@ export type ModernAttributeModifier = {
   /**
    * The unique identifier of this attribute modifier.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
   /**
    * Change in the attribute.
    */
@@ -350,6 +351,6 @@ export type UUIDLeash = {
 }
 
 export type WaypointIcon = {
-  style: (`${string}:${string}` | WaypointStyleClass),
+  style: (NamespacedString | WaypointStyleClass),
   color?: RGB,
 }

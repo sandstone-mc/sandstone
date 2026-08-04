@@ -1,7 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Axis, Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { ModelType, TextureType } from 'sandstone/arguments'
-import type { ModelClass, NBTFloat, NBTInt, NBTList, TextureClass } from 'sandstone'
+import type { ModelClass, NBTFloat, NBTInt, NBTList, NonEmptyString, TextureClass } from 'sandstone'
 
 export type CustomizableItemDisplayContext = (
   | 'firstperson_righthand'
@@ -70,7 +70,7 @@ export type Model = {
   ambientocclusion?: boolean,
   gui_light?: ('front' | 'side'),
   textures?: ({
-    [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
+    [Key in NonEmptyString]?: ((NonEmptyString | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
   }),
   elements?: Array<ModelElement>,
   display?: ({
@@ -324,7 +324,7 @@ export type ModelOverridePredicates = ({
 export type ModelRef = (Registry['minecraft:model'] | ModelClass<ModelType>)
 
 export type ModelTextures = ({
-  [Key in `${any}${string}`]?: ((`${any}${string}` | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
+  [Key in NonEmptyString]?: ((NonEmptyString | `#${string}` | TextureClass<TextureType>) | TextureMaterial)
 })
 
 export type MultipleAxesModelElementRotation = (ModelElementRotationBase & ({

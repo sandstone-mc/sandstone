@@ -1,6 +1,7 @@
 import type { PaletteRef } from 'sandstone/arguments/generated/assets/atlas.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { NamespacedString, NBTList } from 'sandstone'
 
 export type ArmorMaterial = ('leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'netherite' | 'turtle')
 
@@ -28,7 +29,7 @@ export type TrimPattern = ({
    * ID of the pattern that will be used in the resource pack as an overlay on the armor. \
    * The texture is located under `trims/entity/<layer>/`.
    */
-  asset_id: `${string}:${string}`,
+  asset_id: NamespacedString,
 } & {
   /**
    * Text displayed in the item tooltip.

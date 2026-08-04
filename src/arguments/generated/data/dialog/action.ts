@@ -4,6 +4,7 @@ import type {
 } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
+import type { NamespacedString, NBTList, NonEmptyString } from 'sandstone'
 
 export type ClickAction = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:dialog_action_type'], string>, string>]?: ({
@@ -12,7 +13,7 @@ export type ClickAction = NonNullable<({
 }[Extract<Registry['minecraft:dialog_action_type'], string>])>
 
 export type DynamicCustomAction = NonNullable<({
-  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: {
+  [S in Extract<Extract<NamespacedString, string>, string>]?: {
     /**
      * ID of a custom action.
      * Has no functionality on vanilla servers.
@@ -25,12 +26,12 @@ export type DynamicCustomAction = NonNullable<({
       ? SymbolMcdocCustomDynamicEventAdditions[S]
       : SymbolMcdocCustomDynamicEventAdditions<'%unknown'>),
   }
-}[Extract<`${string}:${string}`, string>])>
+}[Extract<NamespacedString, string>])>
 
 export type DynamicRunCommand = {
   /**
    * A macro template to be interpred as a command.
    * Special characters (including both `'` and `"`) from text input will be escaped to fit in SNBT literal.
    */
-  template: `${any}${string}`,
+  template: NonEmptyString,
 }

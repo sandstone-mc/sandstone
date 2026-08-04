@@ -14,7 +14,7 @@ import type { Direction, VerticalDirection } from 'sandstone/arguments/generated
 import type { FluidState } from 'sandstone/arguments/generated/util/fluid_state.ts'
 import type { Rotation, WeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList, StructureClass, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NBTList, StructureClass, TagClass } from 'sandstone'
 
 export type BlockBlobConfig = {
   state: BlockState,
@@ -50,10 +50,10 @@ export type BlockPileConfig = {
 }
 
 export type BlockPlacer = NonNullable<({
-  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: ({
+  [S in Extract<Extract<NamespacedString, string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolBlockPlacer ? SymbolBlockPlacer[S] : RootNBT))
-}[Extract<`${string}:${string}`, string>])>
+}[Extract<NamespacedString, string>])>
 
 export type BlockStateRuleProviderEntry = {
   if_true: BlockPredicate,

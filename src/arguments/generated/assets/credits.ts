@@ -1,3 +1,5 @@
+import type { NonEmptyString } from 'sandstone'
+
 export type Credits = Array<{
   /**
    * Company segment.
@@ -14,7 +16,7 @@ export type Credits = Array<{
      *
      * String length range: 0
      */
-    discipline: (`${any}${string}` | `${any}${string}`),
+    discipline: (NonEmptyString | NonEmptyString),
     titles: Array<{
       title: string,
       /**
@@ -41,7 +43,7 @@ export type CreditsCompanySegment = {
      *
      * String length range: 0
      */
-    discipline: (`${any}${string}` | `${any}${string}`),
+    discipline: (NonEmptyString | NonEmptyString),
     titles: Array<{
       title: string,
       /**
@@ -63,7 +65,7 @@ export type CreditsDiscipline = {
    *
    * String length range: 0
    */
-  discipline: (`${any}${string}` | `${any}${string}`),
+  discipline: (NonEmptyString | NonEmptyString),
   titles: Array<{
     title: string,
     /**

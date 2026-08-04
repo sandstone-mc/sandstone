@@ -7,12 +7,22 @@ import type { DataComponentPatch } from 'sandstone/arguments/generated/world/com
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { Coordinates, MultipleEntitiesArgument, SingleEntityArgument, TextureType } from 'sandstone/arguments'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { AtlasClass, DialogClass, FontClass, NBTInt, NBTList, ObjectiveClass, TextureClass } from 'sandstone'
+import type {
+  AtlasClass,
+  DialogClass,
+  FontClass,
+  NamespacedString,
+  NBTInt,
+  NBTList,
+  NonEmptyString,
+  ObjectiveClass,
+  TextureClass,
+} from 'sandstone'
 import type { TextComponentClass } from 'sandstone/variables'
 
 export type BlockNbtText = ({
   block: Coordinates,
-  nbt: `${any}${string}`,
+  nbt: NonEmptyString,
   source?: 'block',
   type?: 'nbt',
 } & TextNbtBase)
@@ -63,7 +73,7 @@ export type CopyToClipboard = {
 }
 
 export type CustomAction = NonNullable<({
-  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: {
+  [S in Extract<Extract<NamespacedString, string>, string>]?: {
     /**
      * ID of a custom action.
      * Has no functionality on vanilla servers.
@@ -73,7 +83,7 @@ export type CustomAction = NonNullable<({
       ? SymbolMcdocCustomEvent[S]
       : SymbolMcdocCustomEvent<'%unknown'>),
   }
-}[Extract<`${string}:${string}`, string>])>
+}[Extract<NamespacedString, string>])>
 
 export type EntityHoverContent = {
   type: Registry['minecraft:entity_type'],
@@ -104,7 +114,7 @@ export type EntityHoverValue = {
 
 export type EntityNbtText = ({
   entity: MultipleEntitiesArgument,
-  nbt: `${any}${string}`,
+  nbt: NonEmptyString,
   source?: 'entity',
   type?: 'nbt',
 } & TextNbtBase)
@@ -297,7 +307,7 @@ export type ObjectTextConfig = {
 }
 
 export type OpenUrl = {
-  url: `${any}${string}` | URL,
+  url: NonEmptyString | URL,
 }
 
 export type PlayerHeadText = ({
@@ -311,18 +321,18 @@ export type PlayerHeadText = ({
 } & ObjectTextConfig & TextBase)
 
 export type RunCommand = {
-  command: `${any}${string}`,
+  command: NonEmptyString,
 }
 
 export type ScoreHolder = {
-  objective: `${any}${string}` | ObjectiveClass,
-  name: `${any}${string}` | SingleEntityArgument,
+  objective: NonEmptyString | ObjectiveClass,
+  name: NonEmptyString | SingleEntityArgument,
 }
 
 export type ScoreText = ({
   score: {
-    objective: `${any}${string}` | ObjectiveClass,
-    name: `${any}${string}` | SingleEntityArgument,
+    objective: NonEmptyString | ObjectiveClass,
+    name: NonEmptyString | SingleEntityArgument,
   },
   type?: 'score',
 } & TextBase)
@@ -375,14 +385,14 @@ export type SpriteText = ({
 } & ObjectTextConfig & TextBase)
 
 export type StorageNbtText = ({
-  storage: `${string}:${string}`,
-  nbt: `${any}${string}`,
+  storage: NamespacedString,
+  nbt: NonEmptyString,
   source?: 'storage',
   type?: 'nbt',
 } & TextNbtBase)
 
 export type SuggestCommand = {
-  command: `${any}${string}`,
+  command: NonEmptyString,
 }
 
 export type Text = (string | TextObject | TextComponentClass | Text[])
@@ -446,8 +456,8 @@ export type TextObject = (({
   type?: 'translatable',
 } & TextBase) | ({
   score: {
-    objective: `${any}${string}` | ObjectiveClass,
-    name: `${any}${string}` | SingleEntityArgument,
+    objective: NonEmptyString | ObjectiveClass,
+    name: NonEmptyString | SingleEntityArgument,
   },
   type?: 'score',
 } & TextBase) | ({
@@ -524,17 +534,17 @@ export type TextObject = (({
   type?: 'keybind',
 } & TextBase) | ({
   block: Coordinates,
-  nbt: `${any}${string}`,
+  nbt: NonEmptyString,
   source?: 'block',
   type?: 'nbt',
 } & TextNbtBase) | ({
   entity: MultipleEntitiesArgument,
-  nbt: `${any}${string}`,
+  nbt: NonEmptyString,
   source?: 'entity',
   type?: 'nbt',
 } & TextNbtBase) | ({
-  storage: `${string}:${string}`,
-  nbt: `${any}${string}`,
+  storage: NamespacedString,
+  nbt: NonEmptyString,
   source?: 'storage',
   type?: 'nbt',
 } & TextNbtBase) | ({

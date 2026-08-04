@@ -52,6 +52,7 @@ import type {
   ItemModelDefinitionClass,
   JukeboxSongClass,
   LootTableClass,
+  NamespacedString,
   NBTByte,
   NBTClass,
   NBTDouble,
@@ -59,6 +60,7 @@ import type {
   NBTInt,
   NBTList,
   NBTLong,
+  NonEmptyString,
   RecipeClass,
   TagClass,
   TextureClass,
@@ -199,7 +201,7 @@ export type AttributeModifier = {
   /**
    * Used when equipping and unequipping the item to identify which modifier to add or remove from the entity.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
   /**
    * Change in the attribute.
    */
@@ -866,7 +868,7 @@ export type MapDecoration = {
 }
 
 export type MapDecorations = ({
-  [Key in `${any}${string}`]?: MapDecoration
+  [Key in NonEmptyString]?: MapDecoration
 })
 
 export type MobVisibility = {
@@ -1071,7 +1073,7 @@ export type UseCooldown = {
    *
    * Value: Defines a `cooldown_group` id.
    */
-  cooldown_group?: `${string}:${string}`,
+  cooldown_group?: NamespacedString,
 }
 
 export type UseEffects = {
@@ -1140,7 +1142,7 @@ export type WritableBookContent = {
 
 export type WrittenBookContent = {
   pages?: Array<Filterable<Text>>,
-  title: Filterable<`${any}${string}`>,
+  title: Filterable<NonEmptyString>,
   author: string,
   /**
    * Number of times this written book has been copied. Defaults to 0. If the value is greater than 1, the book cannot be copied.
@@ -1589,7 +1591,7 @@ type DataComponentAxolotlVariant = AxolotlVariant
 type DataComponentBannerPatterns = Array<BannerPatternLayer>
 type DataComponentBaseColor = DyeColor
 type DataComponentBees = Array<Occupant>
-type DataComponentBlockEntityData = (BlockEntityData | (`${any}${string}` | NBTClass))
+type DataComponentBlockEntityData = (BlockEntityData | (NonEmptyString | NBTClass))
 type DataComponentBlockState = SymbolMcdocBlockItemStates<'%fallback'>
 type DataComponentBlockTransformer = NBTList<BlockTransformer, {
   leftExclusive: false,
@@ -1598,7 +1600,7 @@ type DataComponentBlockTransformer = NBTList<BlockTransformer, {
 type DataComponentBlocksAttacks = blocks_attacks
 type DataComponentBreakSound = SoundEventRef
 type DataComponentBrewingFuel = BrewingFuel
-type DataComponentBucketEntityData = (BucketEntityData | (`${any}${string}` | NBTClass))
+type DataComponentBucketEntityData = (BucketEntityData | (NonEmptyString | NBTClass))
 type DataComponentBundleContents = Array<ItemStackTemplate>
 type DataComponentCanBreak = AdventureModePredicate
 type DataComponentCanPlaceOn = AdventureModePredicate
@@ -1634,7 +1636,7 @@ type DataComponentDyedColor = RGB
 type DataComponentEnchantable = Enchantable
 type DataComponentEnchantmentGlintOverride = boolean
 type DataComponentEnchantments = EnchantmentLevels
-type DataComponentEntityData = (AnyEntity | (`${any}${string}` | NBTClass))
+type DataComponentEntityData = (AnyEntity | (NonEmptyString | NBTClass))
 type DataComponentEquippable = Equippable
 type DataComponentFireworkExplosion = Explosion
 type DataComponentFireworks = Fireworks
@@ -1672,7 +1674,7 @@ type DataComponentMinimumAttackCharge = NBTFloat<{
 }>
 type DataComponentMobVisibility = MobVisibility
 type DataComponentMooshroomVariant = MooshroomType
-type DataComponentNoteBlockSound = `${string}:${string}`
+type DataComponentNoteBlockSound = NamespacedString
 type DataComponentOminousBottleAmplifier = NBTInt<{
   min: 0,
   max: 4,
@@ -1714,7 +1716,7 @@ type DataComponentSulfurCubeContent = ItemStackTemplate
 type DataComponentSuspiciousStewEffects = Array<SuspiciousStewEffect>
 type DataComponentTool = Tool
 type DataComponentTooltipDisplay = TooltipDisplay
-type DataComponentTooltipStyle = `${string}:${string}`
+type DataComponentTooltipStyle = NamespacedString
 type DataComponentTrim = Trim
 type DataComponentTropicalFishBaseColor = DyeColor
 type DataComponentTropicalFishPattern = TropicalFishPattern

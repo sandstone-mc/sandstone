@@ -1,7 +1,7 @@
 import type { SymbolSoundType } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, SoundEventClass } from 'sandstone'
+import type { NBTFloat, NBTInt, NonEmptyString, SoundEventClass } from 'sandstone'
 
 export type Sound = NonNullable<({
   [S in Extract<Extract<SoundType, string>, string>]?: {
@@ -81,7 +81,7 @@ export type SoundEventRegistration = {
 }
 
 export type Sounds = ({
-  [Key in `${any}${string}`]?: SoundEventRegistration
+  [Key in NonEmptyString]?: SoundEventRegistration
 })
 
 export type SoundType = ('file' | 'event')

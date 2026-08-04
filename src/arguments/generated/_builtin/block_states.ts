@@ -1,3 +1,5 @@
+import type { NonEmptyString } from 'sandstone'
+
 type McdocBlockStatesDispatcherMap = {
   'acacia_button': McdocBlockStatesAcaciaButton,
   'minecraft:acacia_button': McdocBlockStatesAcaciaButton,
@@ -3862,10 +3864,10 @@ type McdocBlockStatesFallback = (
   | McdocBlockStatesZombieWallHead
   | McdocBlockStatesFallbackType)
 export type McdocBlockStatesFallbackType = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 type McdocBlockStatesNoneType = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 type McdocBlockStatesAcaciaButton = {
   face?: ('floor' | 'wall' | 'ceiling'),

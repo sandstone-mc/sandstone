@@ -26,10 +26,13 @@ import type {
   InstrumentClass,
   ItemModifierClass,
   LootTableClass,
+  NamespacedString,
   NBTClass,
   NBTFloat,
   NBTInt,
+  NBTList,
   NBTLong,
+  NonEmptyString,
   TagClass,
 } from 'sandstone'
 
@@ -86,7 +89,7 @@ export type AttributeModifier = ({
   /**
    * The unique identifier of this attribute modifier.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
 })
 
 export type BannerPattern = (
@@ -230,8 +233,8 @@ export type CopyNameSource = (
 export type CopyNbt = ({
   source: NbtProvider,
   ops: Array<{
-    source: `${any}${string}` | DataPointClass,
-    target: `${any}${string}` | DataPointClass,
+    source: NonEmptyString | DataPointClass,
+    target: NonEmptyString | DataPointClass,
     /**
      * Value:
      *
@@ -244,8 +247,8 @@ export type CopyNbt = ({
 } & Conditions)
 
 export type CopyNbtOperation = {
-  source: `${any}${string}` | DataPointClass,
-  target: `${any}${string}` | DataPointClass,
+  source: NonEmptyString | DataPointClass,
+  target: NonEmptyString | DataPointClass,
   /**
    * Value:
    *
@@ -534,7 +537,7 @@ export type Reference = ({
   /**
    * Item modifier to reference.
    */
-  name: (`${string}:${string}` | ItemModifierClass),
+  name: (NamespacedString | ItemModifierClass),
 } & Conditions)
 
 export type ReplaceSectionListOperation = {
@@ -591,7 +594,7 @@ export type SetBookCover = ({
   /**
    * If omitted, the original title is kept (or an empty string is used if there was no component)
    */
-  title?: Filterable<`${any}${string}`>,
+  title?: Filterable<NonEmptyString>,
   /**
    * If omitted, the original author is kept (or an empty string is used if there was no component)
    */
@@ -810,7 +813,7 @@ export type SetName = ({
 export type SetNameTarget = ('item_name' | 'custom_name')
 
 export type SetNbt = ({
-  tag: `${any}${string}` | NBTClass,
+  tag: NonEmptyString | NBTClass,
 } & Conditions)
 
 export type SetOminousBottleAmplifier = ({

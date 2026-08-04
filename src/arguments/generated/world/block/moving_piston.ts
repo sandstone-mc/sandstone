@@ -1,8 +1,7 @@
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { DirectionByte } from 'sandstone/arguments/generated/util/direction.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { NBTFloat } from 'sandstone'
-
-export type Facing = (0 | 1 | 2 | 3 | 4 | 5)
 
 export type MovingPiston = (BlockEntity & {
   /**
@@ -21,7 +20,7 @@ export type MovingPiston = (BlockEntity & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  facing?: Facing,
+  facing?: DirectionByte,
   /**
    * How far it has moved.
    */

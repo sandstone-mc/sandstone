@@ -4,6 +4,8 @@ export { type SymbolMcdocBlockStates, type McdocBlockStatesFallbackType } from '
 
 export { type SymbolMcdocFluidStates, type McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
 
+export { type SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'
+
 export {
   type SymbolMcdocBlockItemStates,
   type McdocBlockItemStatesFallbackType,
@@ -167,5 +169,3 @@ export { type SymbolTestInstance } from './data/gametest.ts'
 export { type SymbolTrigger } from './data/advancement/trigger.ts'
 
 export { type SymbolUniformValue } from './_dispatcher/uniform_value.ts'
-
-export { type SymbolMcdocFluidStateKeys } from './_builtin/fluid_state_keys.ts'

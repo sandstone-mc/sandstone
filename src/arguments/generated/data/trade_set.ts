@@ -1,6 +1,6 @@
 import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { TagClass, VillagerTradeClass } from 'sandstone'
+import type { NamespacedString, NBTList, TagClass, VillagerTradeClass } from 'sandstone'
 
 export type TradeSet = {
   /**
@@ -27,5 +27,5 @@ export type TradeSet = {
    *
    * Value: Defines a `random_sequence` id.
    */
-  random_sequence?: `${string}:${string}`,
+  random_sequence?: NamespacedString,
 }

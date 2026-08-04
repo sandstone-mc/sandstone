@@ -5,7 +5,15 @@ import type { NumericalEnvironmentAttribute } from 'sandstone/arguments/generate
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, NBTFloat, ObjectiveClass, TagClass } from 'sandstone'
+import type {
+  DataPointClass,
+  NamespacedString,
+  NBTFloat,
+  NBTList,
+  NonEmptyString,
+  ObjectiveClass,
+  TagClass,
+} from 'sandstone'
 
 export type BinomialNumberProvider = {
   n: NumberProviderRef,
@@ -85,13 +93,13 @@ export type ResolvableNumber = (NBTFloat | Registry['minecraft:number_provider']
 
 export type ScoreNumberProvider = {
   target: ScoreProvider,
-  score: `${any}${string}` | ObjectiveClass,
+  score: NonEmptyString | ObjectiveClass,
   scale?: NBTFloat,
 }
 
 export type StorageNumberProvider = {
-  storage: `${string}:${string}`,
-  path: `${any}${string}` | DataPointClass,
+  storage: NamespacedString,
+  path: NonEmptyString | DataPointClass,
 }
 
 export type SumNumberProvider = {

@@ -5,7 +5,7 @@ import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemListRef } from 'sandstone/arguments/generated/util/registry_ref.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LootTableClass, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { LootTableClass, NamespacedString, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type BlockEntityTarget = 'block_entity'
 
@@ -191,7 +191,7 @@ export type LootTable = {
    *
    * Value: Defines a `random_sequence` id.
    */
-  random_sequence?: `${string}:${string}`,
+  random_sequence?: NamespacedString,
 }
 
 export type LootTableListRef = (

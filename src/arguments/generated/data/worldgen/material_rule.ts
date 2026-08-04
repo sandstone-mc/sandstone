@@ -1,6 +1,7 @@
 import type { MaterialConditionRef } from 'sandstone/arguments/generated/data/worldgen/material_condition.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { NamespacedString } from 'sandstone'
 
 export type BlockRule = {
   result_state: BlockState,
@@ -17,7 +18,7 @@ export type MaterialRule = NonNullable<({
   } & (S extends keyof SymbolMaterialRule ? SymbolMaterialRule[S] : SymbolMaterialRule<'%unknown'>))
 }[Extract<Registry['minecraft:worldgen/material_rule_type'], string>])>
 
-export type MaterialRuleRef = (`${string}:${string}` | MaterialRule)
+export type MaterialRuleRef = (NamespacedString | MaterialRule)
 
 export type SequenceRule = {
   sequence: Array<MaterialRuleRef>,

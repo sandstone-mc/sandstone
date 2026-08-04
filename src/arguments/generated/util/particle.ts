@@ -1,4 +1,3 @@
-import type { DiscreteAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { RGB, RGBA } from 'sandstone/arguments/generated/util/color.ts'
