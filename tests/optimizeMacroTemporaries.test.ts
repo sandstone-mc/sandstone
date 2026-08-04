@@ -1,74 +1,94 @@
 import { describe, expect, test } from 'bun:test'
-import {
-  createSandstonePack,
-  type DataPointClass,
-} from '../dist/exports/index.js'
-import { OptimizeMacroTemporariesVisitor } from '../dist/_internal/index.js'
-
-const compile = async (reuseTemporary = false) => {
-  const pack = createSandstonePack({
-    workingDir: process.cwd(),
-    namespace: 'test',
-    packUid: 'macro_optimization',
-    packOptions: {
-      datapack: {
-        packFormat: 80,
-        description: 'test',
-      },
-    },
-  })
-
-  const target = pack.MCFunction(
-    'target',
-    (_self: unknown, x: DataPointClass, z: DataPointClass) => {
-      pack.Macro.say(pack.Macro`${x}:${z}`)
-    },
-  )
-
-  const find = pack.MCFunction('find', () => {
-    const x = pack.DataVariable()
-    pack.commands.execute.store.result(x).run.random.value([1, 2])
-    const z = pack.DataVariable()
-    pack.commands.execute.store.result(z).run.random.value([3, 4])
-
-    target(x, z)
-
-    if (reuseTemporary) {
-      pack.commands.data.get(x)
-    }
-  })
-
-  find.generate()
-  target.generate()
-  new OptimizeMacroTemporariesVisitor(pack).visit(find.node)
-
-  return find.node.getValue()
-}
+import type { DataPointClass } from '../dist/exports/index.js'
+import { compile, mcfunctionBody, snapshotAll } from './utils/index.js'
 
 describe('OptimizeMacroTemporariesVisitor', () => {
-  test('stores one-use temporaries directly in macro parameters', async () => {
-    const output = await compile()
+  // Distinct 8-char packUid (matching CLI nanoid(8) format) so auto-generated
+  // macro storage paths stay stable across test runs.
+  const opts = { packUid: 'qR8pL2nX', description: 'test' }
 
-    expect(output).toContain(
-      'execute store result storage __sandstone:variable anon_macro_optimization_0.param_0 int 1 run random value 1..2',
+  test('stores one-use temporaries directly in macro parameters', () => {
+    const out = compile('find_one_use', (pack) => {
+      const target = pack.MCFunction(
+        'target',
+        (_self: unknown, x: DataPointClass, z: DataPointClass) => {
+          pack.Macro.say(pack.Macro`${x}:${z}`)
+        },
+      )
+
+      pack.MCFunction('find', () => {
+        const x = pack.DataVariable()
+        pack.commands.execute.store.result(x).run.random.value([1, 2])
+        const z = pack.DataVariable()
+        pack.commands.execute.store.result(z).run.random.value([3, 4])
+
+        target(x, z)
+      })
+    }, opts)
+
+    snapshotAll(out)
+
+    // Spot-check the inlined body for the optimization we're locking down.
+    const body = mcfunctionBody(out, 'find')
+    expect(body).toContain(
+      'execute store result storage __sandstone:variable anon_qR8pL2nX_0.param_0 int 1 run random value 1..2',
     )
-    expect(output).toContain(
-      'execute store result storage __sandstone:variable anon_macro_optimization_0.param_1 int 1 run random value 3..4',
+    expect(body).toContain(
+      'execute store result storage __sandstone:variable anon_qR8pL2nX_0.param_1 int 1 run random value 3..4',
     )
-    expect(output).not.toContain('data modify storage __sandstone:variable anon_macro_optimization_0')
-    expect(output).not.toContain('anon_macro_optimization_1')
-    expect(output).not.toContain('anon_macro_optimization_2')
+    expect(body).not.toContain('data modify storage __sandstone:variable anon_qR8pL2nX_0')
   })
 
-  test('preserves temporaries that are reused after the macro call', async () => {
-    const output = await compile(true)
+  test('preserves temporaries that are reused after the macro call', () => {
+    const out = compile('find_reused', (pack) => {
+      const target = pack.MCFunction(
+        'target',
+        (_self: unknown, x: DataPointClass, z: DataPointClass) => {
+          pack.Macro.say(pack.Macro`${x}:${z}`)
+        },
+      )
 
-    expect(output).toContain(
-      'execute store result storage __sandstone:variable anon_macro_optimization_1 int 1 run random value 1..2',
-    )
-    expect(output).toContain(
-      'data modify storage __sandstone:variable anon_macro_optimization_0.param_0 set from storage __sandstone:variable anon_macro_optimization_1',
-    )
-    expect(output).toContain('data get storage __sandstone:variable anon_macro_optimization_1')
+      pack.MCFunction('find', () => {
+        const x = pack.DataVariable()
+        pack.commands.execute.store.result(x).run.random.value([1, 2])
+        const z = pack.DataVariable()
+        pack.commands.execute.store.result(z).run.random.value([3, 4])
+
+        target(x, z)
+
+        // Reuse `x` after the macro call — must NOT be folded into a parameter.
+        pack.commands.data.get(x)
+      })
+    }, opts)
+
+    snapshotAll(out)
+
+    const body = mcfunctionBody(out, 'find')
+    expect(body).toContain('data get storage __sandstone:variable anon_qR8pL2nX_1')
+  })
+
+  test('macro function call snapshot — full output', () => {
+    // Same setup as the one-use test, but verified purely via snapshot so any
+    // visitor-driven changes to the surrounding init/tag/objective JSON files
+    // are also locked down.
+    const out = compile('find_full', (pack) => {
+      const target = pack.MCFunction(
+        'target',
+        (_self: unknown, x: DataPointClass, z: DataPointClass) => {
+          pack.Macro.say(pack.Macro`${x}:${z}`)
+        },
+      )
+
+      pack.MCFunction('find', () => {
+        const x = pack.DataVariable()
+        pack.commands.execute.store.result(x).run.random.value([1, 2])
+        const z = pack.DataVariable()
+        pack.commands.execute.store.result(z).run.random.value([3, 4])
+
+        target(x, z)
+      })
+    }, opts)
+
+    snapshotAll(out)
   })
 })

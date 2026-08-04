@@ -91,8 +91,9 @@ export class SimplifyReturnRunFunctionVisitor extends GenericSandstoneVisitor {
     if (command instanceof ReturnRunCommandNode) {
       // Take the inner return run's body (Y) and use it as our body
       node.body = command.body
-      // Propagate flow control flag - if inner was flow control, outer should be too
+      // Propagate flags - if inner was flow control / function boundary, outer should be too
       node.isFlowControl = node.isFlowControl || command.isFlowControl
+      node.isFunctionBoundary = node.isFunctionBoundary || command.isFunctionBoundary
 
       if (mcFunction.creator === 'sandstone') {
         this.core.resourceNodes.delete(mcFunctionNode)
