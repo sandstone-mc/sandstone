@@ -2,6 +2,15 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.14](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.14) - 2026-08-04
+
+### Complete the switch to `NonEmptyString` & `NamespacedString`
+
+mcdoc-ts-generator still needed some more work
+
+**Full Changelog**: [v1.2.13...v1.2.14](https://github.com/sandstone-mc/sandstone/compare/v1.2.13...v1.2.14)
+
+
 ## [v1.2.13](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.13) - 2026-08-04
 
 ### Add exports for and switch to branded types for `NonEmptyString` and `NamespacedString`
