@@ -1,0 +1,7115 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Flow snapshots _.if / _.elseIf / _.else single execute.if with single-command body 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_single.mcfunction",
+    
+"say before execute.if.run.say
+execute if entity @s run say inside
+say after execute.if.run.say"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else single execute.if with multi-command body 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_multi.mcfunction",
+    
+"say before execute.if
+execute if entity @s run function test:if_multi/execute_if
+say after execute.if"
+,
+  ],
+  [
+    "datapack/data/test/function/if_multi/execute_if.mcfunction",
+    
+"say a
+say b"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if with entity condition 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_entity.mcfunction",
+    
+"say before _.if
+execute if entity @a run say entity exists
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if with score range condition 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.counter dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_score.mcfunction",
+    
+"say before _.if
+execute if score @s test.counter matches 6.. run say big
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if / _.elseIf / _.else 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.mode dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_elseif_else.mcfunction",
+    
+"say before if/elseif/else
+function test:flow_if_elseif_else/if
+say after if/elseif/else"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_elseif_else/if.mcfunction",
+    
+"execute if score @s test.mode matches 0 run return run say zero
+execute if score @s test.mode matches 1 run return run say one
+say other"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else nested Flow _.if 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_nested_if.mcfunction",
+    
+"say before outer _.if
+execute if entity @a run function test:flow_nested_if/if
+say after outer _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_nested_if/if.mcfunction",
+    
+"say before inner _.if
+execute if entity @s run say inside inner _.if
+say after inner _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if body in middle of function (not tail) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_mid.mcfunction",
+    
+"say before if
+execute if entity @s run say inside if
+say after if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if with empty body 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_empty.mcfunction",
+    "",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.while / _.doWhile while loop with score range condition 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.i dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while.mcfunction",
+    
+"say before _.while
+execute if score @s test.i matches 0..5 run function test:flow_while/loop
+say after _.while"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while/loop.mcfunction",
+    
+"say looping
+scoreboard players add @s test.i 1
+execute if score @s test.i matches 0..5 run function test:flow_while/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.while / _.doWhile doWhile loop 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.i dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_dowhile.mcfunction",
+    
+"say before _.doWhile
+say once at least
+scoreboard players add @s test.i 1
+execute if score @s test.i matches 0..3 run function test:flow_dowhile/loop
+say after _.doWhile"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_dowhile/loop.mcfunction",
+    
+"say once at least
+scoreboard players add @s test.i 1
+execute if score @s test.i matches 0..3 run function test:flow_dowhile/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.while / _.doWhile nested while loop 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.i dummy
+scoreboard objectives add test.j dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while_nested.mcfunction",
+    
+"say before outer _.while
+execute if score @s test.i matches 0..2 run function test:flow_while_nested/loop
+say after outer _.while"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while_nested/loop.mcfunction",
+    
+"say before inner _.while
+execute if score @s test.j matches 0..2 run function test:flow_while_nested/loop/loop
+say after inner _.while
+scoreboard players set @s test.j 0
+scoreboard players add @s test.i 1
+execute if score @s test.i matches 0..2 run function test:flow_while_nested/loop"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while_nested/loop/loop.mcfunction",
+    
+"say inner
+scoreboard players add @s test.j 1
+execute if score @s test.j matches 0..2 run function test:flow_while_nested/loop/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.while / _.doWhile while loop with break via _.throw 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.i dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while_break.mcfunction",
+    
+"scoreboard players reset #throw_0 __sandstone
+say before _.while
+execute if score @s test.i matches 0..10 run function test:flow_while_break/loop
+execute if score #throw_0 __sandstone matches 1 run return fail
+say after _.while"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while_break/loop.mcfunction",
+    
+"say before inner _.if
+execute if score @s test.i matches 3 if function test:flow_while_break/loop/if run return fail
+say after inner _.if
+scoreboard players add @s test.i 1
+execute if score @s test.i matches 0..10 run function test:flow_while_break/loop"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_while_break/loop/if.mcfunction",
+    
+"tellraw @a [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"exiting"},{"text":"\\n\\n"},{"text":"@ Function test:flow_while_break. Node 1.\\n"}]
+data modify storage __sandstone:variable anon_kZZpDK67_0 set value [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"exiting"},{"text":"\\n\\n"},{"text":"@ Function test:flow_while_break. Node 1.\\n"}]
+return 1"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.for for range (i from 0 to 5) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_range.mcfunction",
+    
+"say before _.for
+scoreboard players set loop_iterator_0_kZZpDK67 __sandstone 0
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..5 run function test:flow_for_range/loop
+say after _.for"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_range/loop.mcfunction",
+    
+"say step loop_iterator_0_kZZpDK67 __sandstone
+scoreboard players add loop_iterator_0_kZZpDK67 __sandstone 1
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..5 run function test:flow_for_range/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.for for (init; cond; step) form 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_i.mcfunction",
+    
+"say before _.for
+scoreboard players set loop_iterator_0_kZZpDK67 __sandstone 0
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..2 run function test:flow_for_i/loop
+say after _.for"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_i/loop.mcfunction",
+    
+"say num loop_iterator_0_kZZpDK67 __sandstone
+scoreboard players add loop_iterator_0_kZZpDK67 __sandstone 1
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..2 run function test:flow_for_i/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.for for-of over a Data array 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_of.mcfunction",
+    
+"say before _.for
+data modify storage __sandstone:variable Array_kZZpDK67 set value []
+data modify storage __sandstone:variable Array_kZZpDK67 append value 1d
+data modify storage __sandstone:variable Array_kZZpDK67 append value 2d
+data modify storage __sandstone:variable Array_kZZpDK67 append value 3d
+data modify storage __sandstone:variable anon_kZZpDK67_0 set from storage __sandstone:variable Array_kZZpDK67
+execute if data storage __sandstone:variable anon_kZZpDK67_0.[0] run function test:flow_for_of/loop
+say after _.for"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_of/loop.mcfunction",
+    
+"say got [object Object]
+data remove storage __sandstone:variable anon_kZZpDK67_0.[0]
+execute if data storage __sandstone:variable anon_kZZpDK67_0.[0] run function test:flow_for_of/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.for for-of with [i, entry] 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_of_indexed.mcfunction",
+    
+"say before _.for
+data modify storage __sandstone:variable Array_kZZpDK67 set value []
+data modify storage __sandstone:variable Array_kZZpDK67 append value 'a'
+data modify storage __sandstone:variable Array_kZZpDK67 append value 'b'
+scoreboard players set anon_kZZpDK67_0 __sandstone -1
+data modify storage __sandstone:variable anon_kZZpDK67_0 set from storage __sandstone:variable Array_kZZpDK67
+execute if data storage __sandstone:variable anon_kZZpDK67_0.[0] run function test:flow_for_of_indexed/loop
+say after _.for"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_of_indexed/loop.mcfunction",
+    
+"scoreboard players add anon_kZZpDK67_0 __sandstone 1
+say entry [object Object]
+data remove storage __sandstone:variable anon_kZZpDK67_0.[0]
+execute if data storage __sandstone:variable anon_kZZpDK67_0.[0] run function test:flow_for_of_indexed/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.for nested for loops 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_nested.mcfunction",
+    
+"say before outer _.for
+scoreboard players set loop_iterator_0_kZZpDK67 __sandstone 0
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..2 run function test:flow_for_nested/loop
+say after outer _.for"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_nested/loop.mcfunction",
+    
+"say before inner _.for
+scoreboard players set loop_iterator_1_kZZpDK67 __sandstone 0
+execute if score loop_iterator_1_kZZpDK67 __sandstone matches ..2 run function test:flow_for_nested/loop/loop
+say after inner _.for
+scoreboard players add loop_iterator_0_kZZpDK67 __sandstone 1
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..2 run function test:flow_for_nested/loop"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_for_nested/loop/loop.mcfunction",
+    
+"say loop_iterator_0_kZZpDK67 __sandstone,loop_iterator_1_kZZpDK67 __sandstone
+scoreboard players add loop_iterator_1_kZZpDK67 __sandstone 1
+execute if score loop_iterator_1_kZZpDK67 __sandstone matches ..2 run function test:flow_for_nested/loop/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.switch switch on score with static cases 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.mode dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score.mcfunction",
+    
+"say before switch
+function test:flow_switch_score/switch
+say after switch"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score/switch.mcfunction",
+    
+"execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get @s test.mode
+return run function test:flow_switch_score/switch/dispatch with storage __sandstone:variable anon_kZZpDK67_0"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score/switch/case_0.mcfunction",
+    "say zero",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score/switch/case_1.mcfunction",
+    "say one",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score/switch/case_2.mcfunction",
+    "say two",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score/switch/dispatch.mcfunction",
+    "$return run function test:flow_switch_score/switch/case_$(env_0)",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.switch switch on score with default 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.mode dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score_default.mcfunction",
+    
+"say before switch
+function test:flow_switch_score_default/switch
+say after switch"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score_default/switch.mcfunction",
+    
+"execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get @s test.mode
+execute store success score $switch_success __sandstone store result score $switch_result __sandstone run function test:flow_switch_score_default/switch/try_case with storage __sandstone:variable anon_kZZpDK67_0
+execute if score $switch_success __sandstone matches 1 run return run scoreboard players get $switch_result __sandstone
+say fallback"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score_default/switch/case_0.mcfunction",
+    "say zero",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score_default/switch/case_1.mcfunction",
+    "say one",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_score_default/switch/try_case.mcfunction",
+    "$return run function test:flow_switch_score_default/switch/case_$(env_0)",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.switch switch on NBT data 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1
+data modify storage __sandstone:test_flow_switch_nbt_switch Values set value [{Value:{id:'a'},Index:0i},{Value:{id:'b'},Index:1i}]"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_nbt.mcfunction",
+    
+"say before switch
+data modify storage __sandstone:variable item_kZZpDK67 set value {id:'a'}
+data modify storage __sandstone:variable anon_kZZpDK67_0.env_0 set from storage __sandstone:variable item_kZZpDK67
+function test:flow_switch_nbt/switch with storage __sandstone:variable anon_kZZpDK67_0
+say after switch"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_nbt/switch.mcfunction",
+    
+"data remove storage __sandstone:variable anon_kZZpDK67_0.Index
+$data modify storage __sandstone:variable anon_kZZpDK67_0.Index set from storage __sandstone:test_flow_switch_nbt_switch Values[{Value:$(env_0)}].Index
+execute if data storage __sandstone:variable anon_kZZpDK67_0.Index run return run function test:flow_switch_nbt/switch/inner with storage __sandstone:variable anon_kZZpDK67_0"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_nbt/switch/case_0.mcfunction",
+    "say matched a",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_nbt/switch/case_1.mcfunction",
+    "say matched b",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_nbt/switch/inner.mcfunction",
+    "$return run function test:flow_switch_nbt/switch/case_$(Index)",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.switch switch with condition cases 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.s dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_conditions.mcfunction",
+    
+"say before switch
+function test:flow_switch_conditions/switch
+say after switch"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_conditions/switch.mcfunction",
+    
+"execute if score @s test.s matches 11.. run return run say big
+execute if score @s test.s matches 0 run return run say zero
+say other"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.switch switch as last node in function 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.mode dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_tail.mcfunction",
+    
+"say before switch
+function test:flow_switch_tail/switch
+say after switch"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_tail/switch.mcfunction",
+    
+"execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get @s test.mode
+execute store success score $switch_success __sandstone store result score $switch_result __sandstone run function test:flow_switch_tail/switch/try_case with storage __sandstone:variable anon_kZZpDK67_0
+execute if score $switch_success __sandstone matches 1 run return run scoreboard players get $switch_result __sandstone
+say other"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_switch_tail/switch/case_0.mcfunction",
+    "say zero",
+  ],
+  [
+    "datapack/data/test/function/flow_switch_tail/switch/try_case.mcfunction",
+    "$return run function test:flow_switch_tail/switch/case_$(env_0)",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.and of two entity conditions 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_with_and_entities.mcfunction",
+    
+"say before _.if
+execute if entity @a if entity @s run say inside _.if with _.and
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.or of two entity conditions 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_with_or_entities.mcfunction",
+    
+"say before _.if
+execute if function test:if_with_or_entities/or_check run say inside _.if with _.or
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/if_with_or_entities/or_check.mcfunction",
+    
+"execute if entity @a run return 1
+execute if entity @s run return 1
+return 0"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.and of two score conditions 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.a dummy
+scoreboard objectives add test.b dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_with_and_scores.mcfunction",
+    
+"say before _.if
+execute if score @s test.a matches 1.. if score @s test.b matches ..9 run say inside _.if with score _.and
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.or of two score conditions 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.a dummy
+scoreboard objectives add test.b dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_with_or_scores.mcfunction",
+    
+"say before _.if
+execute if function test:if_with_or_scores/or_check run say inside _.if with score _.or
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/if_with_or_scores/or_check.mcfunction",
+    
+"execute if score @s test.a matches 0 run return 1
+execute if score @s test.b matches 1 run return 1
+return 0"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with DataPointExists condition 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_data_exists.mcfunction",
+    
+"data modify storage __sandstone:variable storage_kZZpDK67 set value {foo:1d}
+say before _.if
+execute if data storage __sandstone:variable storage_kZZpDK67 run say storage exists
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.and including a DataPointExists 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_and_data_exists.mcfunction",
+    
+"data modify storage __sandstone:variable storage_kZZpDK67 set value {foo:1d}
+say before _.if
+execute if entity @s if data storage __sandstone:variable storage_kZZpDK67 run say storage and entity exist
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.or including a DataPointExists 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_or_data_exists.mcfunction",
+    
+"data modify storage __sandstone:variable storage_kZZpDK67 set value {foo:1d}
+say before _.if
+execute if function test:if_or_data_exists/or_check run say storage or entity exists
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/if_or_data_exists/or_check.mcfunction",
+    
+"execute if entity @s run return 1
+execute if data storage __sandstone:variable storage_kZZpDK67 run return 1
+return 0"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.and mixing score + DataPoint + entity 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.counter dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_and_mixed.mcfunction",
+    
+"say before _.if
+data modify storage __sandstone:variable storage_kZZpDK67 set value {foo:1d}
+execute if entity @s if score @s test.counter matches 1.. if data storage __sandstone:variable storage_kZZpDK67 run say all three true
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.or mixing score + DataPoint + entity 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.counter dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_or_mixed.mcfunction",
+    
+"say before _.if
+data modify storage __sandstone:variable storage_kZZpDK67 set value {foo:1d}
+execute if function test:if_or_mixed/or_check run say any of three
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/if_or_mixed/or_check.mcfunction",
+    
+"execute if entity @s run return 1
+execute if score @s test.counter matches 0 run return 1
+execute if data storage __sandstone:variable storage_kZZpDK67 run return 1
+return 0"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.and via Array form 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.a dummy
+scoreboard objectives add test.b dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_and_array_form.mcfunction",
+    
+"say before _.if
+execute if score @s test.a matches 1.. if score @s test.b matches ..9 run say and from array
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if with _.or via Array form 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.a dummy
+scoreboard objectives add test.b dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_or_array_form.mcfunction",
+    
+"say before _.if
+execute if function test:if_or_array_form/or_check run say or from array
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/if_or_array_form/or_check.mcfunction",
+    
+"execute if score @s test.a matches 0 run return 1
+execute if score @s test.b matches 1 run return 1
+return 0"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.await.until with _.and condition (in asyncContext) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.ready dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_and_fn.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
+execute if score @s test.ready matches 1 if data storage __sandstone:variable flag_kZZpDK67 run return run say after _.await.until (and)
+execute store result score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
+schedule function test:async_until_and_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_and_fn/__until/_poller.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
+execute if score @s test.ready matches 1 if data storage __sandstone:variable flag_kZZpDK67 run return run say after _.await.until (and)
+execute store result score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
+schedule function test:async_until_and_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_and_fn/__until/_poller/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_until_and_fn.__until._poller run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_and_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_and_fn.__until._poller at @s run function test:async_until_and_fn/__until/_poller"
+,
+  ],
+  [
+    "datapack/data/test/function/await_until_and.mcfunction",
+    
+"say before MCFunction(async_until_and_fn)
+data modify storage __sandstone:variable flag_kZZpDK67 set value {ok:true}
+say after MCFunction(async_until_and_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.await.until with _.or condition (in asyncContext) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.ready dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_or_fn.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
+execute if function test:async_until_or_fn/__until/_poller/or_check run return run say after _.await.until (or)
+execute store result score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
+schedule function test:async_until_or_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_or_fn/__until/_poller.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
+execute if function test:async_until_or_fn/__until/_poller/or_check run return run say after _.await.until (or)
+execute store result score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
+schedule function test:async_until_or_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_or_fn/__until/_poller/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_until_or_fn.__until._poller run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_or_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_or_fn.__until._poller at @s run function test:async_until_or_fn/__until/_poller"
+,
+  ],
+  [
+    "datapack/data/test/function/await_until_or.mcfunction",
+    
+"say before MCFunction(async_until_or_fn)
+data modify storage __sandstone:variable flag_kZZpDK67 set value {ok:true}
+say after MCFunction(async_until_or_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.await.until with DataPointExists condition (in asyncContext) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_data_fn.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
+execute if data storage __sandstone:variable ready_kZZpDK67 run return run say after _.await.until (data exists)
+execute store result score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
+schedule function test:async_until_data_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_data_fn/__until/_poller.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
+execute if data storage __sandstone:variable ready_kZZpDK67 run return run say after _.await.until (data exists)
+execute store result score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
+schedule function test:async_until_data_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_data_fn/__until/_poller/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_until_data_fn.__until._poller run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_data_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_data_fn.__until._poller at @s run function test:async_until_data_fn/__until/_poller"
+,
+  ],
+  [
+    "datapack/data/test/function/await_until_data.mcfunction",
+    
+"say before MCFunction(async_until_data_fn)
+data modify storage __sandstone:variable ready_kZZpDK67 set value {go:true}
+say after MCFunction(async_until_data_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.and with variadic (Array) form 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.a dummy
+scoreboard objectives add test.b dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/and_variadic_array.mcfunction",
+    "",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.or with variadic (Array) form 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.a dummy
+scoreboard objectives add test.b dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/or_variadic_array.mcfunction",
+    "",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.throw throw with string error in _.if 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_basic.mcfunction",
+    
+"say before _.if
+execute if entity @s if function test:throw_basic/if run return fail
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_basic/if.mcfunction",
+    
+"tellraw @a [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"something broke"},{"text":"\\n\\n"},{"text":"@ Function test:throw_basic. Node 1.\\n"}]
+data modify storage __sandstone:variable anon_kZZpDK67_0 set value [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"something broke"},{"text":"\\n\\n"},{"text":"@ Function test:throw_basic. Node 1.\\n"}]
+return 1"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.throw throw with broadcast=false 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_no_broadcast.mcfunction",
+    
+"say before _.if
+execute if entity @s if function test:throw_no_broadcast/if run return fail
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_no_broadcast/if.mcfunction",
+    
+"data modify storage __sandstone:variable anon_kZZpDK67_0 set value [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"quiet error"},{"text":"\\n\\n"},{"text":"@ Function test:throw_no_broadcast. Node 1.\\n"}]
+return 1"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.throw throw with JSON component 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_component.mcfunction",
+    
+"say before _.if
+execute if entity @s if function test:throw_component/if run return fail
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_component/if.mcfunction",
+    
+"tellraw @a [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"oops","color":"red"},{"text":"\\n\\n"},{"text":"@ Function test:throw_component. Node 1.\\n"}]
+data modify storage __sandstone:variable anon_kZZpDK67_0 set value [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"oops","color":"red"},{"text":"\\n\\n"},{"text":"@ Function test:throw_component. Node 1.\\n"}]
+return 1"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow sleep in asyncContext MCFunction 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_fn dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_fn.mcfunction",
+    
+"say before _.await.sleep
+execute store result score @s __sandstone.asyncTimer.test.async_sleep_fn run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_fn 20
+tag @s add __sandstone.asyncTimer.test.async_sleep_fn
+schedule function test:async_sleep_fn/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_fn/__sleep.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_sleep_fn
+say after _.await.sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_fn/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_sleep_fn run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_fn] if score @s __sandstone.asyncTimer.test.async_sleep_fn = #current __sandstone.asyncTimer.test.async_sleep_fn at @s run function test:async_sleep_fn/__sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep.mcfunction",
+    
+"say before MCFunction(async_sleep_fn)
+say after MCFunction(async_sleep_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow sleep with logPath 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_logpath_fn dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_logpath_fn.mcfunction",
+    
+"execute store result score @s __sandstone.asyncTimer.test.async_sleep_logpath_fn run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_logpath_fn 20
+tag @s add __sandstone.asyncTimer.test.async_sleep_logpath_fn
+schedule function test:async_sleep_logpath_fn/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_logpath_fn/__sleep.mcfunction",
+    "tag @s remove __sandstone.asyncTimer.test.async_sleep_logpath_fn",
+  ],
+  [
+    "datapack/data/test/function/async_sleep_logpath_fn/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_sleep_logpath_fn run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_logpath_fn] if score @s __sandstone.asyncTimer.test.async_sleep_logpath_fn = #current __sandstone.asyncTimer.test.async_sleep_logpath_fn at @s run function test:async_sleep_logpath_fn/__sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_logpath.mcfunction",
+    
+"say before MCFunction(async_sleep_logpath_fn)
+say after MCFunction(async_sleep_logpath_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow sleep inside execute.run 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add __sandstone.asyncTimer.test.async_in_execute dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_execute.mcfunction",
+    
+"say before execute.run
+execute as @a at @s run function test:async_in_execute/execute_as"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_execute/__sleep.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_in_execute
+say after _.await.sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_execute/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_in_execute run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_in_execute] if score @s __sandstone.asyncTimer.test.async_in_execute = #current __sandstone.asyncTimer.test.async_in_execute at @s run function test:async_in_execute/__sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_execute/execute_as.mcfunction",
+    
+"say before _.await.sleep
+execute store result score @s __sandstone.asyncTimer.test.async_in_execute run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_in_execute 20
+tag @s add __sandstone.asyncTimer.test.async_in_execute
+schedule function test:async_in_execute/__sleep/_context 1s replace
+say after execute.run"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_in_execute.mcfunction",
+    
+"say before MCFunction(async_in_execute)
+say after MCFunction(async_in_execute)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow sleep inside execute.run with asyncContext 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add __sandstone.asyncTimer.test.async_asynccontext dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_asynccontext.mcfunction",
+    
+"say before execute.run
+execute as @a at @s run function test:async_asynccontext/execute_as"
+,
+  ],
+  [
+    "datapack/data/test/function/async_asynccontext/__sleep.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_asynccontext
+say after _.await.sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_asynccontext/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_asynccontext run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_asynccontext] if score @s __sandstone.asyncTimer.test.async_asynccontext = #current __sandstone.asyncTimer.test.async_asynccontext at @s run function test:async_asynccontext/__sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_asynccontext/execute_as.mcfunction",
+    
+"say before _.await.sleep
+execute store result score @s __sandstone.asyncTimer.test.async_asynccontext run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_asynccontext 20
+tag @s add __sandstone.asyncTimer.test.async_asynccontext
+schedule function test:async_asynccontext/__sleep/_context 1s replace
+say after execute.run"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_asynccontext.mcfunction",
+    
+"say before MCFunction(async_asynccontext)
+say after MCFunction(async_asynccontext)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow until with a score condition 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.ready dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_fn.__until._poller dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_fn.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_fn.__until._poller
+execute if score @s test.ready matches 1 run return run say after _.await.until
+execute store result score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_fn.__until._poller
+schedule function test:async_until_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_fn/__until/_poller.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_until_fn.__until._poller
+execute if score @s test.ready matches 1 run return run say after _.await.until
+execute store result score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_fn.__until._poller 20
+tag @s add __sandstone.asyncTimer.test.async_until_fn.__until._poller
+schedule function test:async_until_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_fn/__until/_poller/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_until_fn.__until._poller run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_fn.__until._poller at @s run function test:async_until_fn/__until/_poller"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until.mcfunction",
+    
+"say before MCFunction(async_until_fn)
+say after MCFunction(async_until_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow multiple sequential sleeps 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add __sandstone.asyncTimer.test.async_multi dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_multi_sleep.mcfunction",
+    
+"say before MCFunction(async_multi)
+say after MCFunction(async_multi)"
+,
+  ],
+  [
+    "datapack/data/test/function/async_multi.mcfunction",
+    
+"say before first _.await.sleep
+execute store result score @s __sandstone.asyncTimer.test.async_multi run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_multi 20
+tag @s add __sandstone.asyncTimer.test.async_multi
+schedule function test:async_multi/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_multi/__sleep.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_multi
+say before second _.await.sleep
+execute store result score @s __sandstone.asyncTimer.test.async_multi run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_multi 40
+tag @s add __sandstone.asyncTimer.test.async_multi
+schedule function test:async_multi/__sleep2/_context 2s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_multi/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_multi run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_multi] if score @s __sandstone.asyncTimer.test.async_multi = #current __sandstone.asyncTimer.test.async_multi at @s run function test:async_multi/__sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_multi/__sleep2.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_multi
+say after second _.await.sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_multi/__sleep2/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_multi run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_multi] if score @s __sandstone.asyncTimer.test.async_multi = #current __sandstone.asyncTimer.test.async_multi at @s run function test:async_multi/__sleep2"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow sleep inside a _.while 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.i dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_in_while_fn dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_while_fn.mcfunction",
+    
+"say before _.while
+execute if score @s test.i matches 0..3 run function test:async_in_while_fn/loop
+say after _.while"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_while_fn/__sleep.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_in_while_fn
+say after _.await.sleep
+scoreboard players add @s test.i 1
+execute if score @s test.i matches 0..3 run function test:async_in_while_fn/loop"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_while_fn/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_in_while_fn run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_in_while_fn] if score @s __sandstone.asyncTimer.test.async_in_while_fn = #current __sandstone.asyncTimer.test.async_in_while_fn at @s run function test:async_in_while_fn/__sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_in_while_fn/loop.mcfunction",
+    
+"say before _.await.sleep
+execute store result score @s __sandstone.asyncTimer.test.async_in_while_fn run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_in_while_fn 20
+tag @s add __sandstone.asyncTimer.test.async_in_while_fn
+schedule function test:async_in_while_fn/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_in_while.mcfunction",
+    
+"say before MCFunction(async_in_while_fn)
+say after MCFunction(async_in_while_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow sleep inside a _.if 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_in_if_fn dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_in_if_fn.mcfunction",
+    
+"say before _.if
+execute if entity @s run function test:async_sleep_in_if_fn/if
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_in_if_fn/__sleep.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_sleep_in_if_fn
+say after _.await.sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_in_if_fn/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_sleep_in_if_fn run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_in_if_fn] if score @s __sandstone.asyncTimer.test.async_sleep_in_if_fn = #current __sandstone.asyncTimer.test.async_sleep_in_if_fn at @s run function test:async_sleep_in_if_fn/__sleep"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_in_if_fn/if.mcfunction",
+    
+"say before _.await.sleep
+execute store result score @s __sandstone.asyncTimer.test.async_sleep_in_if_fn run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_in_if_fn 20
+tag @s add __sandstone.asyncTimer.test.async_sleep_in_if_fn
+schedule function test:async_sleep_in_if_fn/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_sleep_in_if.mcfunction",
+    
+"say before MCFunction(async_sleep_in_if_fn)
+say after MCFunction(async_sleep_in_if_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested for loop with if inside 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/nested_for_if.mcfunction",
+    
+"say before _.for
+scoreboard players set loop_iterator_0_kZZpDK67 __sandstone 0
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..3 run function test:nested_for_if/loop
+say after _.for"
+,
+  ],
+  [
+    "datapack/data/test/function/nested_for_if/loop.mcfunction",
+    
+"say before _.if
+execute if entity @s run say step loop_iterator_0_kZZpDK67 __sandstone
+say after _.if
+scoreboard players add loop_iterator_0_kZZpDK67 __sandstone 1
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..3 run function test:nested_for_if/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested switch with non-return cases 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.mode dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/switch_no_return.mcfunction",
+    
+"say before _.switch
+function test:switch_no_return/switch
+say after _.switch"
+,
+  ],
+  [
+    "datapack/data/test/function/switch_no_return/switch.mcfunction",
+    
+"execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get @s test.mode
+return run function test:switch_no_return/switch/dispatch with storage __sandstone:variable anon_kZZpDK67_0"
+,
+  ],
+  [
+    "datapack/data/test/function/switch_no_return/switch/case_0.mcfunction",
+    "say case 0",
+  ],
+  [
+    "datapack/data/test/function/switch_no_return/switch/case_1.mcfunction",
+    "say case 1",
+  ],
+  [
+    "datapack/data/test/function/switch_no_return/switch/dispatch.mcfunction",
+    "$return run function test:switch_no_return/switch/case_$(env_0)",
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested Flow if/elseIf/else without return 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.mode dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/if_elseif_no_return.mcfunction",
+    
+"execute if score @s test.mode matches 0 run return run say zero
+execute if score @s test.mode matches 1 run return run say one
+say other"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested execute.if with a callback body that uses Flow _.if 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/execute_if_with_flow_if.mcfunction",
+    "execute if entity @a run function test:execute_if_with_flow_if/execute_if",
+  ],
+  [
+    "datapack/data/test/function/execute_if_with_flow_if/execute_if.mcfunction",
+    
+"say before inner if
+execute if entity @s run say inside inner if
+say after inner if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested throw inside a loop 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_in_loop.mcfunction",
+    
+"scoreboard players set loop_iterator_0_kZZpDK67 __sandstone 0
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..3 if function test:throw_in_loop/loop run return fail"
+,
+  ],
+  [
+    "datapack/data/test/function/throw_in_loop/loop.mcfunction",
+    
+"tellraw @a [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"loop broke"},{"text":"\\n\\n"},{"text":"@ Function test:throw_in_loop. Node 1.\\n"}]
+data modify storage __sandstone:variable anon_kZZpDK67_0 set value [{"text":"\\nSandstone Pack Error:\\n","color":"yellow"},{"text":"loop broke"},{"text":"\\n\\n"},{"text":"@ Function test:throw_in_loop. Node 1.\\n"}]
+return 1
+scoreboard players add loop_iterator_0_kZZpDK67 __sandstone 1
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..3 run function test:throw_in_loop/loop"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested multi-command execute body with mixed Flow + commands 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/mixed_body.mcfunction",
+    
+"say before execute.if
+execute if entity @s run function test:mixed_body/execute_if
+say after execute.if"
+,
+  ],
+  [
+    "datapack/data/test/function/mixed_body/execute_if.mcfunction",
+    
+"say first
+say before inner _.if
+execute if entity @a run say inside inner _.if
+say after inner _.if
+say last"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested function call followed by Flow control 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/call_then_flow.mcfunction",
+    
+"say before helper()
+function test:helper
+say before _.if
+execute if entity @s run say after call
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/helper.mcfunction",
+    "say helper",
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested Flow _.if followed by function call 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_then_call.mcfunction",
+    
+"say before _.if
+execute if entity @s run say inside
+say before helper()
+function test:helper_b
+say after helper()"
+,
+  ],
+  [
+    "datapack/data/test/function/helper_b.mcfunction",
+    "say helper b",
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested _.switch inside _.if 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.mode dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/switch_in_if.mcfunction",
+    
+"say before _.if
+execute if entity @s run function test:switch_in_if/if
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/switch_in_if/if.mcfunction",
+    
+"say before _.switch
+function test:switch_in_if/switch
+say after _.switch"
+,
+  ],
+  [
+    "datapack/data/test/function/switch_in_if/switch.mcfunction",
+    
+"execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get @s test.mode
+execute store success score $switch_success __sandstone store result score $switch_result __sandstone run function test:switch_in_if/switch/try_case with storage __sandstone:variable anon_kZZpDK67_0
+execute if score $switch_success __sandstone matches 1 run return run scoreboard players get $switch_result __sandstone
+say other"
+,
+  ],
+  [
+    "datapack/data/test/function/switch_in_if/switch/case_0.mcfunction",
+    "say zero",
+  ],
+  [
+    "datapack/data/test/function/switch_in_if/switch/try_case.mcfunction",
+    "$return run function test:switch_in_if/switch/case_$(env_0)",
+  ],
+]
+`;
+
+exports[`Flow snapshots combined / nested execute.if.run.then chained (no return) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/execute_if_then.mcfunction",
+    
+"say before execute.if.run
+execute if entity @s run say inside execute
+say after execute.if.run"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors execute with chained subcommands and a Flow body 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/execute_chained_flow.mcfunction",
+    
+"say before execute.as
+execute as @a at @s run function test:execute_chained_flow/execute_as
+say after execute.as"
+,
+  ],
+  [
+    "datapack/data/test/function/execute_chained_flow/execute_as.mcfunction",
+    
+"say before _.if
+execute if entity @s run say chained
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors macro-style variable with Flow control 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/macro_flow.mcfunction",
+    
+"say before _.if
+execute if entity @s run tellraw @a "[object Object]"
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/macro_with_flow.mcfunction",
+    
+"say before MCFunction(macro_flow)
+data modify storage __sandstone:variable anon_kZZpDK67_0 set value 'x'
+say after MCFunction(macro_flow)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors deeply nested if / while / for 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.i dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/deep_nested.mcfunction",
+    
+"say before outer _.for
+scoreboard players set loop_iterator_0_kZZpDK67 __sandstone 0
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..2 run function test:deep_nested/loop
+say after outer _.for"
+,
+  ],
+  [
+    "datapack/data/test/function/deep_nested/loop.mcfunction",
+    
+"say before inner _.while
+execute if score @s test.i matches 0..1 run function test:deep_nested/loop/loop
+say after inner _.while
+scoreboard players set @s test.i 0
+scoreboard players add loop_iterator_0_kZZpDK67 __sandstone 1
+execute if score loop_iterator_0_kZZpDK67 __sandstone matches ..2 run function test:deep_nested/loop"
+,
+  ],
+  [
+    "datapack/data/test/function/deep_nested/loop/loop.mcfunction",
+    
+"say before inner _.if
+execute if entity @s run say step loop_iterator_0_kZZpDK67 __sandstone
+say after inner _.if
+scoreboard players add @s test.i 1
+execute if score @s test.i matches 0..1 run function test:deep_nested/loop/loop"
+,
+  ],
+]
+`;

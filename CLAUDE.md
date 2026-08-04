@@ -217,6 +217,19 @@ Visitors run in a specific order defined in `pack.ts`. Order matters because:
 - Constant initialization runs early to set up scoreboards
 - **SwitchTransformationVisitor runs before IfElseTransformationVisitor** since it creates IfNodes that need to be processed
 
+#### "Async" Flow is Fake Async
+
+Despite the `async` keyword in some user-facing docs, Sandstone does **not** use JS-level `async () => {...}` callbacks. `MCFunction` bodies, `_.await.sleep(...)`, `_.await.until(...)`, and all Flow control run **synchronously at compile time**. The "async" semantics happen at **Minecraft runtime** via the `schedule` command (and a tag/gametime poller when `asyncContext: true`).
+
+This matters when writing tests, building tooling, or fixing visitor bugs:
+
+- **Always use sync callbacks** in `MCFunction`, `execute.run`, `_.if`, `_.while`, `_.for`, etc.
+- **Do NOT** write `async () => { await _.await.sleep(...) }` — the JS `await` has no effect on Sandstone, and the continuation will run outside any MCFunction context, producing broken output.
+- The `_.await.sleep(...)` / `_.await.until(...)` calls are nodes added to the current MCFunction body. The post-sleep code lives in a separate continuation MCFunction (`<parent>/__sleep` or `<parent>/__until/_continuation`).
+- `AwaitBodyVisitor` (the post-await visitor) splices the continuation body into the sleep/until mcfunction so the post-await code actually runs at runtime. It runs after `ContainerCommandsToMCFunctionVisitor`.
+
+If you're adding new flow features, remember: compile-time sync, runtime-scheduled.
+
 #### Switch Transformation Flow
 
 The `SwitchTransformationVisitor` transforms `_.switch()` into efficient MCFunction dispatch:

@@ -1562,33 +1562,92 @@ export class SandstonePack {
     verbose: boolean
   }) {
     await this.core.save(cliOptions, {
-      visitors: [
-        // Initialization visitors
-        new InitObjectivesVisitor(this),
-        new InitConstantsVisitor(this),
-        new GenerateLazyMCFunction(this),
-
-        // Transformation visitors
-        new LoopTransformationVisitor(this),
-        new SwitchTransformationVisitor(this),
-        new OrTransformationVisitor(this),
-        new IfElseTransformationVisitor(this),
-        new ThrowInlineVisitor(this),
-        new ContainerCommandsToMCFunctionVisitor(this),
-
-        // Special visitors
-        new AwaitBodyVisitor(this),
-        new ThrowPropagationVisitor(this),
-
-        // Optimization
-        new OptimizeMacroTemporariesVisitor(this),
-        new InlineFunctionCallVisitor(this),
-        new UnifyChainedExecutesVisitor(this),
-        new SimplifyExecuteFunctionVisitor(this),
-        new SimplifyReturnRunFunctionVisitor(this),
-      ],
+      visitors: defaultVisitors(this),
     })
 
     return this.packTypes
   }
+
+  /**
+   * Create an MCFunction from a body callback and run the full default
+   * visitor pipeline, returning every compiled resource as a
+   * `Map<relativePath, string>`.
+   *
+   * Acts exactly like `MCFunction(name, callback)` for context purposes
+   * — the callback runs inside the new MCFunction's context, with
+   * `currentMCFunction` set and command emissions going to its body.
+   *
+   * Unlike `save()`, this does NOT touch the filesystem and does NOT
+   * load Smithed dependencies. It runs the visitor pipeline
+   * synchronously. Intended for tests, REPL tooling, and downstream
+   * inspection of Sandstone's output — including the auto-created
+   * child MCFunctions that visitors spawn (e.g. `__if`, `__loop`,
+   * `__switch`, `__sleep`, etc.).
+   *
+   * Binary resources and non-string outputs are skipped — for full
+   * output capture use `save({ dry: true, fileHandler })` instead.
+   *
+   * @example
+   * ```ts
+   * const out = pack.compile('foo', () => say('hi'))
+   * out.get('datapack/data/test/function/foo.mcfunction') // 'say hi'
+   * ```
+   */
+  compile(name: string, callback: () => void): Map<string, string> {
+    this.MCFunction(name, callback)
+
+    const visitors = defaultVisitors(this)
+    const resources = this.core.generateResources({ visitors })
+
+    const out = new Map<string, string>()
+    for (const node of resources) {
+      const { packType, fileExtension } = node.resource
+      const _path = [packType.type, ...node.resource.path]
+      if (packType.resourceSubFolder) {
+        _path.splice(1, 0, packType.resourceSubFolder)
+      }
+      const resourcePath = `${_path.join('/')}.${fileExtension}`
+
+      const value = node.getValue()
+      if (typeof value === 'string') {
+        out.set(resourcePath, value)
+      }
+    }
+    return out
+  }
+}
+
+/**
+ * The full default visitor pipeline Sandstone runs on every pack during
+ * `save()`. Exposed so tests, tooling, and downstream pack implementations
+ * can run the same compilation steps without re-deriving the order.
+ *
+ * Order matters — see `pack.ts#save` for the rationale of each group.
+ */
+export function defaultVisitors(pack: SandstonePack) {
+  return [
+    // Initialization visitors
+    new InitObjectivesVisitor(pack),
+    new InitConstantsVisitor(pack),
+    new GenerateLazyMCFunction(pack),
+
+    // Transformation visitors
+    new LoopTransformationVisitor(pack),
+    new SwitchTransformationVisitor(pack),
+    new OrTransformationVisitor(pack),
+    new IfElseTransformationVisitor(pack),
+    new ThrowInlineVisitor(pack),
+    new ContainerCommandsToMCFunctionVisitor(pack),
+
+    // Special visitors
+    new AwaitBodyVisitor(pack),
+    new ThrowPropagationVisitor(pack),
+
+    // Optimization
+    new OptimizeMacroTemporariesVisitor(pack),
+    new InlineFunctionCallVisitor(pack),
+    new UnifyChainedExecutesVisitor(pack),
+    new SimplifyExecuteFunctionVisitor(pack),
+    new SimplifyReturnRunFunctionVisitor(pack),
+  ]
 }
