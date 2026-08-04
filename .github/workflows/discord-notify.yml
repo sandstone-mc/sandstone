@@ -2,7 +2,8 @@ name: Notify Discord on Release
 
 on:
   release:
-    types: [published]
+    types:
+      - published
   # Manual trigger for previewing the Discord embed without publishing a real release.
   workflow_dispatch:
     inputs:
