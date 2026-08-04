@@ -54,9 +54,6 @@ import * as coordinates from './variables/Coordinates'
 import { ResolveNBTPart } from './variables/ResolveNBT'
 import { setSandstoneContext, hasContext, getSandstoneContext } from './context'
 
-// TODO: Remove this, this is so there's an actual diff somewhere while I test discord-notify
-export const foo = {baz: 5} as const
-
 // Singleton pack instance - lazily initialized
 let _sandstonePack: SandstonePack | undefined
 

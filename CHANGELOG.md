@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.12](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.12) - 2026-08-04
+
+### Remove erroneous export pray CI works now
+
+**Full Changelog**: [v1.2.11...v1.2.12](https://github.com/sandstone-mc/sandstone/compare/v1.2.11...v1.2.12)
+
+
 ## [v1.2.11](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.11) - 2026-08-04
 
 ### Update Sandstone
