@@ -2,6 +2,16 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.13](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.13) - 2026-08-04
+
+### Add exports for and switch to branded types for `NonEmptyString` and `NamespacedString`
+
+- Any place where you are currently using `${any}${string}` or `${string}:${string}` should be switched to using `NonEmptyString` and `NamespacedString` from `'sandstone'`
+- Renamed `_.function_` to `_.mcfunction`
+
+**Full Changelog**: [v1.2.12...v1.2.13](https://github.com/sandstone-mc/sandstone/compare/v1.2.12...v1.2.13)
+
+
 ## [v1.2.12](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.12) - 2026-08-04
 
 ### Remove erroneous export pray CI works now

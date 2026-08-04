@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
   "description": "Sandstone, a Typescript library for Minecraft datapacks & resource packs.",
-  "version": "1.2.12",
+  "version": "1.2.13",
   "contributors": [
     {
       "name": "TheMrZZ - Florian ERNST",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.6.0",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.3.10",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.3.11",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
