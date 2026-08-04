@@ -94,12 +94,17 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
         this.core.resourceNodes.delete(mcFunctionNode)
       }
 
-      if (command.isFlowControl) {
-        // Preserve return run for if/elseIf early exit semantics
+      if (command.isFlowControl || !command.isFunctionBoundary) {
+        // Preserve the return run. Either:
+        //  - isFlowControl: wrapping an if/elseIf early-exit body
+        //  - !isFunctionBoundary: user-written `returnCmd.run(...)` whose
+        //    `return` keyword must be kept
         node.body = [this.genericVisit(command)]
       } else {
+        // Auto-inserted function boundary wrapper around a function call.
+        // The function it wrapped is being inlined here, so the wrapper
+        // has no remaining purpose and can be safely unwrapped.
         const returnCmd = this.visit(command) as ReturnRunCommandNode
-        // Unwrap - the return run was only for function boundary semantics
         node.body = returnCmd.body
 
         return this.visitExecuteCommandNode(node)
