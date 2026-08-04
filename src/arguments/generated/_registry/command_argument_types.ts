@@ -56,6 +56,7 @@ export const COMMAND_ARGUMENT_TYPES_SET = new Set([
   'scoreboard_slot',
   'slot_source',
   'style',
+  'swing_animation',
   'swizzle',
   'team',
   'team_color',

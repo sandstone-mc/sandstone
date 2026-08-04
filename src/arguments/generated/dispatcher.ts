@@ -1,11 +1,13 @@
+export { type SymbolMcdocBlockStateKeys, type McdocBlockStateKeysFallbackType } from './_builtin/block_state_keys.ts'
+
+export { type SymbolMcdocBlockStates, type McdocBlockStatesFallbackType } from './_builtin/block_states.ts'
+
+export { type SymbolMcdocFluidStates, type McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
+
 export {
   type SymbolMcdocBlockItemStates,
   type McdocBlockItemStatesFallbackType,
 } from './_builtin/block_item_states.ts'
-
-export { type SymbolMcdocBlockStateKeys, type McdocBlockStateKeysFallbackType } from './_builtin/block_state_keys.ts'
-
-export { type SymbolMcdocBlockStates, type McdocBlockStatesFallbackType } from './_builtin/block_states.ts'
 
 export { type SymbolMcdocCustomData, type McdocCustomDataFallbackType } from './_builtin/custom_data.ts'
 
@@ -23,8 +25,6 @@ export { type SymbolMcdocCustomEvent, type McdocCustomEventFallbackType } from '
 
 export { type SymbolMcdocDialogAfterAction } from './_builtin/dialog_after_action.ts'
 
-export { type SymbolMcdocFluidStates, type McdocFluidStatesFallbackType } from './_builtin/fluid_states.ts'
-
 export { type SymbolMcdocMarkerData, type McdocMarkerDataFallbackType } from './_builtin/marker_data.ts'
 
 export { type SymbolLootFunction } from './data/loot/function.ts'
@@ -36,7 +36,7 @@ export {
   type MultiNoiseBiomeSourceFallbackType,
 } from './data/worldgen/dimension/biome_source.ts'
 
-export { type SymbolBlock } from './_dispatcher/block.ts'
+export { type SymbolBlock, type BlockFallbackType } from './_dispatcher/block.ts'
 
 export { type SymbolBlockEntity } from './_dispatcher/block_entity.ts'
 

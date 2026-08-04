@@ -360,10 +360,10 @@ export type ExplorationMap = ({
       | Array<Registry['minecraft:worldgen/structure']>),
 } & {
   /**
-   * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
-   * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
+   * The icon used to mark the destination on the map.
    */
   decoration?: Registry['minecraft:map_decoration_type'],
+} & {
   /**
    * Defaults to 2.
    */

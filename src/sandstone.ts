@@ -1,6 +1,6 @@
 import type { JSONTextComponent } from './arguments/jsonTextComponent'
 import type { SandstoneContext } from './context'
-import type { FillCommand, GiveCommand, SetBlockCommand } from './commands'
+import type { FillCommand, GiveCommand, SetBlockCommand, SummonCommand } from './commands'
 import type {
   AdvancementClassArguments,
   AtlasClassArguments,
@@ -111,7 +111,7 @@ export { ResolveNBTPart }
 // Commands must go through sandstonePack.commands at call time for the same reason as pack methods.
 type SandstoneCommands = SandstonePack['commands']
 // Exclude a few commands that need explicit type annotation due to complex generics
-type CommandKeys = Exclude<keyof SandstoneCommands, 'give' | 'setblock' | 'fill'>
+type CommandKeys = Exclude<keyof SandstoneCommands, 'give' | 'setblock' | 'fill' | 'summon'>
 
 // Creates a proxy that handles both callable commands and object-based commands.
 // This avoids hardcoding which commands are object-based by detecting at runtime.
@@ -198,7 +198,6 @@ export const {
   spreadplayers,
   stopsound,
   stopwatch,
-  summon,
   swing,
   tag,
   team,
@@ -232,6 +231,10 @@ export const setblock: SetBlockCommand<false>['setblock'] = ((...args: unknown[]
 // fill needs explicit type annotation due to complex generics
 export const fill: FillCommand<false>['fill'] = ((...args: unknown[]) =>
   (sandstonePack.commands.fill as CallableFunction)(...args)) as FillCommand<false>['fill']
+
+// summon needs explicit type annotation due to complex generics
+export const summon: SummonCommand<false>['summon'] = ((...args: unknown[]) =>
+  (sandstonePack.commands.summon as CallableFunction)(...args)) as SummonCommand<false>['summon']
 
 // Pack method exports must go through sandstonePack at call time, not capture at module load time.
 // This proxy ensures each method call uses the current pack instance set by createSandstonePack().

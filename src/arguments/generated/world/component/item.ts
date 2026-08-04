@@ -1214,6 +1214,8 @@ export type SymbolConsumeEffect<CASE extends
 type DataComponentDispatcherMap = {
   'additional_trade_cost': DataComponentAdditionalTradeCost,
   'minecraft:additional_trade_cost': DataComponentAdditionalTradeCost,
+  'attack_animation': DataComponentAttackAnimation,
+  'minecraft:attack_animation': DataComponentAttackAnimation,
   'attack_range': DataComponentAttackRange,
   'minecraft:attack_range': DataComponentAttackRange,
   'attribute_modifiers': DataComponentAttributeModifiers,
@@ -1324,6 +1326,8 @@ type DataComponentDispatcherMap = {
   'minecraft:instrument': DataComponentInstrument,
   'intangible_projectile': DataComponentIntangibleProjectile,
   'minecraft:intangible_projectile': DataComponentIntangibleProjectile,
+  'interact_animation': DataComponentInteractAnimation,
+  'minecraft:interact_animation': DataComponentInteractAnimation,
   'item_model': DataComponentItemModel,
   'minecraft:item_model': DataComponentItemModel,
   'item_name': DataComponentItemName,
@@ -1340,8 +1344,6 @@ type DataComponentDispatcherMap = {
   'minecraft:lodestone_tracker': DataComponentLodestoneTracker,
   'lore': DataComponentLore,
   'minecraft:lore': DataComponentLore,
-  'map_color': DataComponentMapColor,
-  'minecraft:map_color': DataComponentMapColor,
   'map_decorations': DataComponentMapDecorations,
   'minecraft:map_decorations': DataComponentMapDecorations,
   'map_id': DataComponentMapId,
@@ -1412,8 +1414,6 @@ type DataComponentDispatcherMap = {
   'minecraft:sulfur_cube_content': DataComponentSulfurCubeContent,
   'suspicious_stew_effects': DataComponentSuspiciousStewEffects,
   'minecraft:suspicious_stew_effects': DataComponentSuspiciousStewEffects,
-  'swing_animation': DataComponentSwingAnimation,
-  'minecraft:swing_animation': DataComponentSwingAnimation,
   'tool': DataComponentTool,
   'minecraft:tool': DataComponentTool,
   'tooltip_display': DataComponentTooltipDisplay,
@@ -1460,6 +1460,7 @@ type DataComponentDispatcherMap = {
 type DataComponentKeys = keyof DataComponentDispatcherMap
 type DataComponentFallback = (
   | DataComponentAdditionalTradeCost
+  | DataComponentAttackAnimation
   | DataComponentAttackRange
   | DataComponentAttributeModifiers
   | DataComponentAxolotlVariant
@@ -1515,6 +1516,7 @@ type DataComponentFallback = (
   | DataComponentHorseVariant
   | DataComponentInstrument
   | DataComponentIntangibleProjectile
+  | DataComponentInteractAnimation
   | DataComponentItemModel
   | DataComponentItemName
   | DataComponentJukeboxPlayable
@@ -1523,7 +1525,6 @@ type DataComponentFallback = (
   | DataComponentLock
   | DataComponentLodestoneTracker
   | DataComponentLore
-  | DataComponentMapColor
   | DataComponentMapDecorations
   | DataComponentMapId
   | DataComponentMapPostProcessing
@@ -1559,7 +1560,6 @@ type DataComponentFallback = (
   | DataComponentStoredEnchantments
   | DataComponentSulfurCubeContent
   | DataComponentSuspiciousStewEffects
-  | DataComponentSwingAnimation
   | DataComponentTool
   | DataComponentTooltipDisplay
   | DataComponentTooltipStyle
@@ -1582,6 +1582,7 @@ type DataComponentFallback = (
   | DataComponentWrittenBookContent
   | DataComponentZombieNautilusVariant)
 type DataComponentAdditionalTradeCost = NBTInt
+type DataComponentAttackAnimation = SwingAnimation
 type DataComponentAttackRange = AttackRange
 type DataComponentAttributeModifiers = Array<AttributeModifier>
 type DataComponentAxolotlVariant = AxolotlVariant
@@ -1644,6 +1645,7 @@ type DataComponentGlider = Record<string, never>
 type DataComponentHorseVariant = HorseVariant
 type DataComponentInstrument = ((Registry['minecraft:instrument'] | InstrumentClass) | Instrument)
 type DataComponentIntangibleProjectile = Record<string, never>
+type DataComponentInteractAnimation = SwingAnimation
 type DataComponentItemModel = (Registry['minecraft:item_definition'] | ItemModelDefinitionClass)
 type DataComponentItemName = Text
 type DataComponentJukeboxPlayable = (Registry['minecraft:jukebox_song'] | JukeboxSongClass)
@@ -1652,7 +1654,6 @@ type DataComponentLlamaVariant = LlamaVariant
 type DataComponentLock = ItemPredicate
 type DataComponentLodestoneTracker = LodestoneTracker
 type DataComponentLore = Array<Text>
-type DataComponentMapColor = NBTInt
 type DataComponentMapDecorations = MapDecorations
 type DataComponentMapId = NBTInt
 type DataComponentMapPostProcessing = Record<string, never>
@@ -1711,7 +1712,6 @@ type DataComponentSignTextFront = SignText
 type DataComponentStoredEnchantments = EnchantmentLevels
 type DataComponentSulfurCubeContent = ItemStackTemplate
 type DataComponentSuspiciousStewEffects = Array<SuspiciousStewEffect>
-type DataComponentSwingAnimation = SwingAnimation
 type DataComponentTool = Tool
 type DataComponentTooltipDisplay = TooltipDisplay
 type DataComponentTooltipStyle = `${string}:${string}`

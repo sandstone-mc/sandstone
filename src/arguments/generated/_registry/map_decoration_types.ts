@@ -6,6 +6,8 @@ export type MAP_DECORATION_TYPES = (
   | `minecraft:${SetType<typeof MAP_DECORATION_TYPES_SET>}`)
 
 export const MAP_DECORATION_TYPES_SET = new Set([
+  'abandoned_camp',
+  'ancient_city',
   'banner_black',
   'banner_blue',
   'banner_brown',
@@ -23,10 +25,13 @@ export const MAP_DECORATION_TYPES_SET = new Set([
   'banner_white',
   'banner_yellow',
   'blue_marker',
+  'desert_pyramid',
   'frame',
   'jungle_temple',
   'mansion',
+  'mineshaft',
   'monument',
+  'ocean_ruin_warm',
   'player',
   'player_off_limits',
   'player_off_map',

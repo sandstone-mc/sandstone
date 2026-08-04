@@ -55,7 +55,7 @@ export type BlockPredicate<S = undefined> = {
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
   state?: BlockPredicateState,
-  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT)),
+  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : SymbolBlock<'%unknown'>)),
   /**
    * Match exact data component values on the block entity.
    */

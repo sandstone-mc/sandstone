@@ -48,7 +48,6 @@ export const MEMORY_MODULE_TYPES_SET = new Set([
   'is_panicking',
   'is_pregnant',
   'is_sniffing',
-  'is_tempted',
   'item_pickup_cooldown_ticks',
   'job_site',
   'last_slept',
