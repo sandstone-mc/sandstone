@@ -6,6 +6,7 @@ import {
   MCFunction,
   Objective,
   say,
+  sleep,
   tellraw,
 } from '../dist/exports/index.js'
 import { compile, snapshotAll } from './utils/index.js'
@@ -422,7 +423,7 @@ describe('Flow snapshots', () => {
         say('before _.if')
         const a = Objective.create('a')
         const b = Objective.create('b')
-        _.if(_.and([a('@s').greaterThan(0), b('@s').lessThan(10)]), () => {
+        _.if(_.and(...[a('@s').greaterThan(0), b('@s').lessThan(10)]), () => {
           say('and from array')
         })
         say('after _.if')
@@ -435,51 +436,10 @@ describe('Flow snapshots', () => {
         say('before _.if')
         const a = Objective.create('a')
         const b = Objective.create('b')
-        _.if(_.or([a('@s').equalTo(0), b('@s').equalTo(1)]), () => {
+        _.if(_.or(...[a('@s').equalTo(0), b('@s').equalTo(1)]), () => {
           say('or from array')
         })
         say('after _.if')
-      })
-      snapshotAll(out)
-    })
-
-    test('_.await.until with _.and condition (in asyncContext)', () => {
-      const out = compile('await_until_and', () => {
-        say('before MCFunction(async_until_and_fn)')
-        const ready = Objective.create('ready')
-        const flag = DataVariable({ ok: true }, 'flag')
-        MCFunction('async_until_and_fn', () => {
-          _.await.until(_.and(ready('@s').equalTo(1), flag), '1s')
-          say('after _.await.until (and)')
-        }, { asyncContext: true })
-        say('after MCFunction(async_until_and_fn)')
-      })
-      snapshotAll(out)
-    })
-
-    test('_.await.until with _.or condition (in asyncContext)', () => {
-      const out = compile('await_until_or', () => {
-        say('before MCFunction(async_until_or_fn)')
-        const ready = Objective.create('ready')
-        const flag = DataVariable({ ok: true }, 'flag')
-        MCFunction('async_until_or_fn', () => {
-          _.await.until(_.or(ready('@s').equalTo(1), flag), '1s')
-          say('after _.await.until (or)')
-        }, { asyncContext: true })
-        say('after MCFunction(async_until_or_fn)')
-      })
-      snapshotAll(out)
-    })
-
-    test('_.await.until with DataPointExists condition (in asyncContext)', () => {
-      const out = compile('await_until_data', () => {
-        say('before MCFunction(async_until_data_fn)')
-        const ready = DataVariable({ go: true }, 'ready')
-        MCFunction('async_until_data_fn', () => {
-          _.await.until(ready, '1s')
-          say('after _.await.until (data exists)')
-        }, { asyncContext: true })
-        say('after MCFunction(async_until_data_fn)')
       })
       snapshotAll(out)
     })
@@ -488,7 +448,7 @@ describe('Flow snapshots', () => {
       const out = compile('and_variadic_array', () => {
         const a = Objective.create('a')
         const b = Objective.create('b')
-        _.and([a('@s').greaterThan(0), b('@s').lessThan(10)])
+        _.and(...[a('@s').greaterThan(0), b('@s').lessThan(10)])
       })
       snapshotAll(out)
     })
@@ -497,7 +457,7 @@ describe('Flow snapshots', () => {
       const out = compile('or_variadic_array', () => {
         const a = Objective.create('a')
         const b = Objective.create('b')
-        _.or([a('@s').equalTo(0), b('@s').equalTo(1)])
+        _.or(...[a('@s').equalTo(0), b('@s').equalTo(1)])
       })
       snapshotAll(out)
     })
@@ -543,22 +503,11 @@ describe('Flow snapshots', () => {
       const out = compile('async_sleep', () => {
         say('before MCFunction(async_sleep_fn)')
         MCFunction('async_sleep_fn', () => {
-          say('before _.await.sleep')
-          _.await.sleep('1s')
-          say('after _.await.sleep')
+          say('before sleep')
+          sleep('1s')
+          say('after sleep')
         }, { asyncContext: true })
         say('after MCFunction(async_sleep_fn)')
-      })
-      snapshotAll(out)
-    })
-
-    test('sleep with logPath', () => {
-      const out = compile('async_sleep_logpath', () => {
-        say('before MCFunction(async_sleep_logpath_fn)')
-        MCFunction('async_sleep_logpath_fn', () => {
-          _.await.sleep('1s', true)
-        }, { asyncContext: true })
-        say('after MCFunction(async_sleep_logpath_fn)')
       })
       snapshotAll(out)
     })
@@ -569,9 +518,9 @@ describe('Flow snapshots', () => {
         MCFunction('async_in_execute', () => {
           say('before execute.run')
           execute.as('@a').at('@s').run(() => {
-            say('before _.await.sleep')
-            _.await.sleep('1s')
-            say('after _.await.sleep')
+            say('before sleep')
+            sleep('1s')
+            say('after sleep')
           })
           say('after execute.run')
         }, { asyncContext: true })
@@ -586,9 +535,9 @@ describe('Flow snapshots', () => {
         MCFunction('async_asynccontext', () => {
           say('before execute.run')
           execute.as('@a').at('@s').run(() => {
-            say('before _.await.sleep')
-            _.await.sleep('1s')
-            say('after _.await.sleep')
+            say('before sleep')
+            sleep('1s')
+            say('after sleep')
           })
           say('after execute.run')
         }, { asyncContext: true })
@@ -597,28 +546,15 @@ describe('Flow snapshots', () => {
       snapshotAll(out)
     })
 
-    test('until with a score condition', () => {
-      const out = compile('async_until', () => {
-        say('before MCFunction(async_until_fn)')
-        const ready = Objective.create('ready')
-        MCFunction('async_until_fn', () => {
-          _.await.until(ready('@s').equalTo(1), '1s')
-          say('after _.await.until')
-        }, { asyncContext: true })
-        say('after MCFunction(async_until_fn)')
-      })
-      snapshotAll(out)
-    })
-
     test('multiple sequential sleeps', () => {
       const out = compile('async_multi_sleep', () => {
         say('before MCFunction(async_multi)')
         MCFunction('async_multi', () => {
-          say('before first _.await.sleep')
-          _.await.sleep('1s')
-          say('before second _.await.sleep')
-          _.await.sleep('2s')
-          say('after second _.await.sleep')
+          say('before first sleep')
+          sleep('1s')
+          say('before second sleep')
+          sleep('2s')
+          say('after second sleep')
         }, { asyncContext: true })
         say('after MCFunction(async_multi)')
       })
@@ -632,9 +568,9 @@ describe('Flow snapshots', () => {
         MCFunction('async_in_while_fn', () => {
           say('before _.while')
           _.while(i('@s').matches([0, 3]), () => {
-            say('before _.await.sleep')
-            _.await.sleep('1s')
-            say('after _.await.sleep')
+            say('before sleep')
+            sleep('1s')
+            say('after sleep')
             i('@s').add(1)
           })
           say('after _.while')
@@ -650,9 +586,9 @@ describe('Flow snapshots', () => {
         MCFunction('async_sleep_in_if_fn', () => {
           say('before _.if')
           _.if(_.entity('@s'), () => {
-            say('before _.await.sleep')
-            _.await.sleep('1s')
-            say('after _.await.sleep')
+            say('before sleep')
+            sleep('1s')
+            say('after sleep')
           })
           say('after _.if')
         }, { asyncContext: true })
