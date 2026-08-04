@@ -48,11 +48,13 @@ import type {
 } from './core'
 import { SandstonePack } from './pack'
 import type { Flow } from './flow'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, SetType, NonEmptyString } from './utils'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, NamespacedLiteralUnion, SetType } from './utils'
 import { randomUUID, Set } from './utils'
 import * as coordinates from './variables/Coordinates'
 import { ResolveNBTPart } from './variables/ResolveNBT'
 import { setSandstoneContext, hasContext, getSandstoneContext } from './context'
+
+export type { NonEmptyString, NamespacedString } from './utils'
 
 // Singleton pack instance - lazily initialized
 let _sandstonePack: SandstonePack | undefined
