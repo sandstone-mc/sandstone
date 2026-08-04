@@ -21,7 +21,7 @@ import type {
 import { parseJSONText, Score } from 'sandstone/variables'
 import { ThrowNode } from './throw'
 import type { DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
-import type { LiteralUnion, NamespacedLiteralUnion } from '../utils'
+import type { LiteralUnion, NamespacedLiteralUnion, NamespacedString } from '../utils'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
@@ -59,17 +59,37 @@ export class Flow {
   if = (condition: Condition, callback: () => void) =>
     new IfStatement(this.sandstoneCore, conditionToNode(condition), callback)
 
-  and = (...conditions: Condition[]) =>
-    new AndNode(
+  /**
+   * Combine conditions with AND.
+   *
+   * Accepts either variadic conditions (`_.and(a, b, c)`) or a single array
+   * (`_.and([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  and(...conditions: Condition[]): AndNode
+  and(conditions: Condition[]): AndNode
+  and(...args: any[]): AndNode {
+    const conditions = (args[0] instanceof Array ? args[0] : args) as Condition[]
+    return new AndNode(
       this.sandstoneCore,
       conditions.map((condition) => conditionToNode(condition)),
     )
+  }
 
-  or = (...conditions: Condition[]) =>
-    new OrNode(
+  /**
+   * Combine conditions with OR.
+   *
+   * Accepts either variadic conditions (`_.or(a, b, c)`) or a single array
+   * (`_.or([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  or(...conditions: Condition[]): OrNode
+  or(conditions: Condition[]): OrNode
+  or(...args: any[]): OrNode {
+    const conditions = (args[0] instanceof Array ? args[0] : args) as Condition[]
+    return new OrNode(
       this.sandstoneCore,
       conditions.map((condition) => conditionToNode(condition)),
     )
+  }
 
   not = (condition: Condition) => new NotNode(this.sandstoneCore, conditionToNode(condition))
 
@@ -409,13 +429,13 @@ export class Flow {
 
   /**
    * Checks a function or function tag and matches the return value(s). If a tag is given, all functions run regardless of the results of prior functions.
-   * @param function_ Function to check for.
+   * @param mcfunction Function to check for.
    */
-  function_ = (function_: `${string}:${string}` | MCFunctionClass<undefined, undefined>) => {
-    if (typeof function_ === 'string') {
-      return new SandstoneConditions.Function(this.sandstoneCore, function_)
+  mcfunction = (mcfunction: NamespacedString | MCFunctionClass<undefined, undefined>) => {
+    if (typeof mcfunction === 'string') {
+      return new SandstoneConditions.Function(this.sandstoneCore, mcfunction)
     }
-    return new SandstoneConditions.Function(this.sandstoneCore, function_.name)
+    return new SandstoneConditions.Function(this.sandstoneCore, mcfunction.name)
   }
 
   /**

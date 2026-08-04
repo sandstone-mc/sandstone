@@ -1,14 +1,22 @@
 import type { SymbolGameRule } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { MCFunctionClass, NBTInt, TimelineClass, WorldClockClass } from 'sandstone'
+import type {
+  MCFunctionClass,
+  NamespacedString,
+  NBTInt,
+  NBTList,
+  NonEmptyString,
+  TimelineClass,
+  WorldClockClass,
+} from 'sandstone'
 
 export type AllOffTestEnvironment = {
   definitions: Array<TestEnvironment>,
 }
 
 export type BoolGameRule = {
-  rule: `${any}${string}`,
+  rule: NonEmptyString,
   value: boolean,
 }
 
@@ -38,8 +46,8 @@ export type DifficultyTestEnvironment = {
 }
 
 export type FunctionTestEnvironment = {
-  setup?: (`${string}:${string}` | MCFunctionClass),
-  teardown?: (`${string}:${string}` | MCFunctionClass),
+  setup?: (NamespacedString | MCFunctionClass),
+  teardown?: (NamespacedString | MCFunctionClass),
 }
 
 export type GameRuleMap = ({
@@ -57,7 +65,7 @@ export type GameRulesTestEnvironment = {
 }
 
 export type IntGameRule = {
-  rule: `${any}${string}`,
+  rule: NonEmptyString,
   value: NBTInt,
 }
 

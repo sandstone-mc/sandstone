@@ -2,6 +2,7 @@ import type { Coordinates, MultiplePlayersArgumentOf, RootNBT, SymbolParticle, R
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { coordinatesParser, nbtResolver, VectorClass } from 'sandstone/variables'
+import type { NamespacedString } from 'sandstone/utils'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 
@@ -103,7 +104,7 @@ export class ParticleCommand<MACRO extends boolean> extends CommandArguments {
    * })
    * ```
    */
-  particle<PARTICLE extends Macroable<keyof SymbolParticle | `${string}:${string}`, MACRO>>(
+  particle<PARTICLE extends Macroable<keyof SymbolParticle | NamespacedString, MACRO>>(
     name: PARTICLE,
     options: Macroable<
       PARTICLE extends keyof SymbolParticle ? SymbolParticle[PARTICLE] : RootNBT,
@@ -118,7 +119,7 @@ export class ParticleCommand<MACRO extends boolean> extends CommandArguments {
   ): FinalCommandOutput
 
   particle(
-    name: Macroable<Registry['minecraft:particle_type'] | `${string}:${string}`, MACRO>,
+    name: Macroable<Registry['minecraft:particle_type'] | NamespacedString, MACRO>,
     arg2?: any,
     arg3?: any,
     arg4?: any,

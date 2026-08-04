@@ -1,5 +1,5 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { DirectionInt } from 'sandstone/arguments/generated/util/direction.ts'
+import type { DirectionByte } from 'sandstone/arguments/generated/util/direction.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { LootTableClass, NBTLong } from 'sandstone'
@@ -30,5 +30,5 @@ export type BrushableBlock = (BlockEntity & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  hit_direction?: DirectionInt,
+  hit_direction?: DirectionByte,
 })

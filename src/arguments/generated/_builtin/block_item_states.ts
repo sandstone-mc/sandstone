@@ -1,11 +1,13 @@
+import type { NonEmptyString } from 'sandstone'
+
 type McdocBlockItemStatesDispatcherMap = {}
 type McdocBlockItemStatesKeys = keyof McdocBlockItemStatesDispatcherMap
 type McdocBlockItemStatesFallback = (McdocBlockItemStatesFallbackType)
 export type McdocBlockItemStatesFallbackType = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 type McdocBlockItemStatesNoneType = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 export type SymbolMcdocBlockItemStates<CASE extends
   | 'map'

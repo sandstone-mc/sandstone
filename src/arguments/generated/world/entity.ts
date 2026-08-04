@@ -3,7 +3,16 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LabelClass, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
+import type {
+  LabelClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTIntArray,
+  NBTList,
+  NBTShort,
+  NonEmptyString,
+} from 'sandstone'
 
 export type AnyEntity = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:entity_type'], string>, string>]?: ({
@@ -122,7 +131,7 @@ export type EntityBase = {
   /**
    * Labelling tags on the entity.
    */
-  Tags?: Array<`${any}${string}` | LabelClass>,
+  Tags?: Array<NonEmptyString | LabelClass>,
   /**
    * Any stored data
    */

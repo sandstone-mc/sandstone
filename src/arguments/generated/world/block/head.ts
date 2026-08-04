@@ -38,7 +38,7 @@ export type SkullOwner = {
     max: 4,
   }>,
   /**
-   * If missing appears as a steve head.
+   * Name of the owner, if missing appears as a steve head.
    */
   Name?: string,
   Properties?: Properties,

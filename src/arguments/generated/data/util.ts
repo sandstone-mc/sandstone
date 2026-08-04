@@ -3,7 +3,7 @@ import type { NumberProviderRef } from 'sandstone/arguments/generated/data/numbe
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { SingleEntityArgument } from 'sandstone/arguments'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NBTList, NonEmptyString } from 'sandstone'
 
 export type BinomialIntGenerator = {
   /**
@@ -51,7 +51,7 @@ export type ContextScoreProvider = {
 }
 
 export type FixedScoreProvider = {
-  name: `${any}${string}` | SingleEntityArgument,
+  name: NonEmptyString | SingleEntityArgument,
 }
 
 export type IntLimiter = {
@@ -150,7 +150,7 @@ export type ScoreProvider = (EntityTarget | ({
 }[Extract<Registry['minecraft:loot_score_provider_type'], string>]))
 
 export type SoundEventRef = (Registry['minecraft:sound_event'] | {
-  sound_id: (`${string}:${string}` | ''),
+  sound_id: (NamespacedString | ''),
   /**
    * Range in blocks. If the player is further than this range from the source of the sound, the sound will be inaudible. If omitted, the sound will have a variable range.
    */
@@ -158,7 +158,7 @@ export type SoundEventRef = (Registry['minecraft:sound_event'] | {
 })
 
 export type StorageNbtProvider = {
-  source: `${string}:${string}`,
+  source: NamespacedString,
 }
 
 export type UniformIntGenerator = {
@@ -167,7 +167,7 @@ export type UniformIntGenerator = {
 }
 
 export type WeightedSoundEvent = {
-  sound_id: (`${string}:${string}` | ''),
+  sound_id: (NamespacedString | ''),
   /**
    * Range in blocks. If the player is further than this range from the source of the sound, the sound will be inaudible. If omitted, the sound will have a variable range.
    */

@@ -1,5 +1,7 @@
+import type { NBTList, NonEmptyString } from 'sandstone'
+
 export type GpuWarnlist = {
-  renderer?: Array<`${any}${string}` | RegExp>,
-  version?: Array<`${any}${string}` | RegExp>,
-  vendor?: Array<`${any}${string}` | RegExp>,
+  renderer?: Array<NonEmptyString | RegExp>,
+  version?: Array<NonEmptyString | RegExp>,
+  vendor?: Array<NonEmptyString | RegExp>,
 }

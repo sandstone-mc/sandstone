@@ -10,7 +10,7 @@ import type { DyeColor, RGB } from 'sandstone/arguments/generated/util/color.ts'
 import type { Keybind } from 'sandstone/arguments/generated/util/text.ts'
 import type { Transformation } from 'sandstone/arguments/generated/world/entity/display.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList, TrimMaterialClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NBTList, TrimMaterialClass } from 'sandstone'
 
 /**
  * *either*
@@ -74,7 +74,7 @@ export type Bed = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/bed/`
    */
-  texture: `${string}:${string}`,
+  texture: NamespacedString,
   /**
    * Value:
    *
@@ -116,7 +116,7 @@ export type Chest = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/chest/`
    */
-  texture: `${string}:${string}`,
+  texture: NamespacedString,
   /**
    * Defaults to `0`.
    *
@@ -409,7 +409,7 @@ export type HangingSign = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/signs/hanging/`
    */
-  texture?: `${string}:${string}`,
+  texture?: NamespacedString,
   /**
    * Defaults to `ceiling_middle`.
    *
@@ -457,7 +457,7 @@ export type Head = ({
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/`
    */
-  texture?: `${string}:${string}`,
+  texture?: NamespacedString,
 })
 
 export type HeadType = ('creeper' | 'dragon' | 'piglin' | 'player' | 'skeleton' | 'wither_skeleton' | 'zombie')
@@ -749,7 +749,7 @@ export type ShulkerBox = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/shulker/`
    */
-  texture: `${string}:${string}`,
+  texture: NamespacedString,
   /**
    * Value:
    * Range: 0..1
@@ -865,7 +865,7 @@ export type StandingSign = {
    *
    * Value: A texture ID within a path root of `(namespace)/textures/entity/signs/`
    */
-  texture?: `${string}:${string}`,
+  texture?: NamespacedString,
   /**
    * There is an extra "e" in the field name. See MC-307498. \
    * Defaults to `ground`.

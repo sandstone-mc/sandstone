@@ -51,6 +51,8 @@ import * as coordinates from './variables/Coordinates'
 import { ResolveNBTPart } from './variables/ResolveNBT'
 import { setSandstoneContext, hasContext, getSandstoneContext } from './context'
 
+export type { NonEmptyString, NamespacedString } from './utils'
+
 // Singleton pack instance - lazily initialized
 let _sandstonePack: SandstonePack | undefined
 

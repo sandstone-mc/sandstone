@@ -1,9 +1,9 @@
 import type { ModelRef } from 'sandstone/arguments/generated/assets/model.ts'
-import type { NBTInt } from 'sandstone'
+import type { NBTInt, NonEmptyString } from 'sandstone'
 
 export type BlockStateDefinition = ({
   variants: ({
-    [Key in `${any}${string}`]?: ModelVariant
+    [Key in NonEmptyString]?: ModelVariant
   }),
 } | {
   multipart: Array<{
@@ -35,12 +35,12 @@ export type BlockStateDefinitionMultipartEntry = {
 
 export type BlockStateDefinitionVariant = {
   variants: ({
-    [Key in `${any}${string}`]?: ModelVariant
+    [Key in NonEmptyString]?: ModelVariant
   }),
 }
 
 export type BlockStateDefinitionVariantMap = ({
-  [Key in `${any}${string}`]?: ModelVariant
+  [Key in NonEmptyString]?: ModelVariant
 })
 
 export type ModelVariant = (ModelVariantBase | Array<(ModelVariantBase & {
@@ -69,13 +69,13 @@ export type MultiPartAlternatives = {
 }
 
 export type MultiPartAnd = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 
 export type MultiPartCondition = ({
   OR: Array<MultiPartCondition>,
 } | ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 }))
 
 export type WeightedModelVariant = (ModelVariantBase & {

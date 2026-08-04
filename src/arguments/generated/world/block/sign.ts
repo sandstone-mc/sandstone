@@ -1,6 +1,7 @@
 import type { DyeColor } from 'sandstone/arguments/generated/util/color.ts'
 import type { BlockEntity } from 'sandstone/arguments/generated/world/block.ts'
 import type { SignText } from 'sandstone/arguments/generated/world/component/block.ts'
+import type { NBTList, NonEmptyString } from 'sandstone'
 
 export type OldSign = (BlockEntity & {
   /**
@@ -30,19 +31,19 @@ export type OldSign = (BlockEntity & {
   /**
    * First line of text.
    */
-  Text1?: `${any}${string}`,
+  Text1?: NonEmptyString,
   /**
    * Second line of text.
    */
-  Text2?: `${any}${string}`,
+  Text2?: NonEmptyString,
   /**
    * Third line of text.
    */
-  Text3?: `${any}${string}`,
+  Text3?: NonEmptyString,
   /**
    * Fourth line of text.
    */
-  Text4?: `${any}${string}`,
+  Text4?: NonEmptyString,
 })
 
 export type Sign = (BlockEntity & {

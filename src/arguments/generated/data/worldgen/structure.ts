@@ -3,7 +3,7 @@ import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/ar
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FlatWeightedList, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type BiomeTemperature = ('cold' | 'warm')
 
@@ -29,7 +29,7 @@ export type DimensionPaddingConfig = {
 }
 
 export type DirectPoolAlias = {
-  alias: `${string}:${string}`,
+  alias: NamespacedString,
   target: Registry['minecraft:worldgen/template_pool'],
 }
 
@@ -46,7 +46,7 @@ export type Jigsaw<S = undefined> = ({
   pool_aliases?: Array<PoolAlias>,
 } & {
   start_height: HeightProvider,
-  start_jigsaw_name?: `${string}:${string}`,
+  start_jigsaw_name?: NamespacedString,
   /**
    * Value:
    *
@@ -174,7 +174,7 @@ export type RandomGroupPoolAlias = {
 }
 
 export type RandomPoolAlias = {
-  alias: `${string}:${string}`,
+  alias: NamespacedString,
   targets: NonEmptyWeightedList<Registry['minecraft:worldgen/template_pool']>,
 }
 
@@ -339,7 +339,7 @@ export type TrickyTrialsStructureConfig = {
 
 export type WildUpdateStructureConfig<S = undefined> = {
   start_height: HeightProvider,
-  start_jigsaw_name?: `${string}:${string}`,
+  start_jigsaw_name?: NamespacedString,
   /**
    * Value:
    *

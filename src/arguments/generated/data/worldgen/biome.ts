@@ -7,7 +7,7 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { StringRGB } from 'sandstone/arguments/generated/util/color.ts'
 import type { FlatWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
-import type { NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { NamespacedString, NBTDouble, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type Biome = ({
   attributes?: PositionalEnvironmentAttributeMap,
@@ -161,7 +161,7 @@ export type NaturalMobSpawns = {
   }>,
   spawners: SpawnerDataMap,
   spawn_costs: ({
-    [Key in Extract<`${string}:${string}`, string>]?: MobSpawnCost
+    [Key in Extract<NamespacedString, string>]?: MobSpawnCost
   }),
 }
 

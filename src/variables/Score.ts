@@ -24,6 +24,7 @@ import type { DATA_TYPES, DataPointClass } from './Data'
 import type { ObjectiveClass } from './Objective'
 import { rangeParser } from './parsers'
 import type { MCFunctionClass } from 'sandstone/core'
+import type { NonEmptyString } from 'sandstone/utils'
 
 type PlayersTarget = number | MultipleEntitiesArgument<false>
 
@@ -111,7 +112,7 @@ export class Score extends MacroArgument implements ConditionClass, TextComponen
    */
   _toChatComponent(): JSONTextComponent {
     return {
-      score: { name: `${this.target}` as `${any}${string}`, objective: this.objective },
+      score: { name: `${this.target}` as NonEmptyString, objective: this.objective },
     }
   }
 

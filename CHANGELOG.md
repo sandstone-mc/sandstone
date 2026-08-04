@@ -2,6 +2,17 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.11](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.11) - 2026-08-04
+
+### Add exports for and switch to branded types for `NonEmptyString` and `NamespacedString`
+
+- Any place where you are currently using `${any}${string}` or `${string}:${string}` should be switched to using `NonEmptyString` and `NamespacedString` from `'sandstone'`
+- Renamed `_.function_` to `_.mcfunction`
+- Made `_.or` & `_.and` accept `Condition[]` in addition to `...Condition[]`
+
+**Full Changelog**: [v1.0.10...v1.0.11](https://github.com/sandstone-mc/sandstone/compare/v1.0.10...v1.0.11)
+
+
 ## [v1.0.10](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.10) - 2026-08-04
 
 ### Fix visitor bug with `returnCmd.run`

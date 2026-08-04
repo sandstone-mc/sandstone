@@ -1,6 +1,6 @@
 import type { SymbolEnvironmentAttribute } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt, WorldClockClass } from 'sandstone'
+import type { NBTFloat, NBTInt, NonEmptyString, WorldClockClass } from 'sandstone'
 
 export type AttributeTrackBase = {
   /**
@@ -136,7 +136,7 @@ export type TimeMarker = {
 }
 
 export type TimeMarkerMap = ({
-  [Key in Extract<`${any}${string}`, string>]?: (NBTInt<{
+  [Key in Extract<NonEmptyString, string>]?: (NBTInt<{
     min: 0,
   }> | TimeMarker)
 })

@@ -1,4 +1,5 @@
 import type { MobBase, NeutralMob } from 'sandstone/arguments/generated/world/entity/mob.ts'
+import type { NBTList, NonEmptyString } from 'sandstone'
 
 export type ZombiePigman = (MobBase & NeutralMob & {
   /**
@@ -8,5 +9,5 @@ export type ZombiePigman = (MobBase & NeutralMob & {
   /**
    * Last player to hit a zombie pigman in this zombie pigman's detection range.
    */
-  HurtBy?: `${any}${string}`,
+  HurtBy?: NonEmptyString,
 })

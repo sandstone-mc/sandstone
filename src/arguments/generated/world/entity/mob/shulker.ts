@@ -1,7 +1,6 @@
 import type { DyeColorByte } from 'sandstone/arguments/generated/util/color.ts'
+import type { DirectionByte } from 'sandstone/arguments/generated/util/direction.ts'
 import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.ts'
-
-export type AttachFace = (0 | 1 | 2 | 3 | 4 | 5)
 
 export type Shulker = (MobBase & {
   /**
@@ -20,7 +19,7 @@ export type Shulker = (MobBase & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  AttachFace?: AttachFace,
+  AttachFace?: DirectionByte,
   /**
    * Value:
    * *either*
