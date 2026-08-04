@@ -120,7 +120,7 @@ import {
 } from 'sandstone/core'
 import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
-import type { LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
+import type { LiteralUnion, NamespacedString, NonEmptyString } from 'sandstone/utils'
 import { makeCallable, randomUUID } from 'sandstone/utils'
 import type {
   DATA_PATH,
@@ -663,7 +663,7 @@ export class SandstonePack {
    * @param label Label/tag name
    * @param description Label description (optional)
    */
-  Label = (label: `${any}${string}` | `${string}:${string}`, description?: `${any}${string}`) => new LabelClass(this, label, description)
+  Label = (label: NonEmptyString | NamespacedString, description?: NonEmptyString) => new LabelClass(this, label, description)
 
   /**
    * Creates an item predicate for use in commands like `clear` and `execute if items`.

@@ -7,13 +7,17 @@ import type { MultipleEntitiesArgument } from './arguments/selector'
 import type { Node } from './core/nodes'
 import type { UUIDinNumber } from './variables/UUID'
 
+export type NonEmptyString = (`${any}${string}` & { __brand?: never })
+
+export type NamespacedString = (`${string}:${string}` & { __brand?: never })
+
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.
  * @see https://github.com/microsoft/TypeScript/issues/29729#issuecomment-700527227
  */
-export type LiteralUnion<T extends string> = T | (`${any}${string}` & Record<never, never>)
+export type LiteralUnion<T extends string> = T | (NonEmptyString & Record<never, never>)
 
-export type NamespacedLiteralUnion<T extends string> = T | (`${string}:${string}` & Record<never, never>)
+export type NamespacedLiteralUnion<T extends string> = T | (NamespacedString & Record<never, never>)
 
 export type AtLeastOne<T> = [T, ...T[]]
 
@@ -425,13 +429,13 @@ type NegatedMembers<T> = {
 export type MemberModifiers<T> = Partial<T> & NegatedMembers<T>
 
 type UnknownKey<UnknownValue> = {
-  [K in `${string}:${string}`]?: UnknownValue
+  [K in NamespacedString]?: UnknownValue
 }
 
 type UnknownNegatableKey<UnknownValue> = ({
   [K in `!${string}:${string}`]?: Record<string, never>
 } & {
-  [K in `${string}:${string}`]?: UnknownValue | Record<string, never>
+  [K in NamespacedString]?: UnknownValue | Record<string, never>
 })
 
 type McdocIDMapBase<Dispatcher, UnknownValue> = Dispatcher & UnknownKey<UnknownValue>
@@ -655,7 +659,8 @@ export type AllowConst<T> = T | Readonly<T>
 
 export type RemoveFirst<T extends any[]> = T extends [any, ...infer Rest] ? Rest : []
 
-export type BuildTuple<T, Length extends number, Accumulator extends any[] = []> = 
+export type BuildTuple<T, Length extends number, Accumulator extends any[] = []> = (
   Accumulator['length'] extends Length
     ? Accumulator
-    : BuildTuple<T, Length, [...Accumulator, T]>;
+    : BuildTuple<T, Length, [...Accumulator, T]>
+)

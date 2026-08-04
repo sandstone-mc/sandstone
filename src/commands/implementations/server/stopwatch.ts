@@ -1,6 +1,7 @@
 import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
+import type { NamespacedString } from 'sandstone/utils'
 
 export class StopwatchCommandNode extends CommandNode {
   command = 'stopwatch' as const
@@ -22,7 +23,7 @@ export class StopwatchCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param id The identifier for the stopwatch.
    */
-  create = (id: Macroable<`${string}:${string}`, MACRO>): FinalCommandOutput =>
+  create = (id: Macroable<NamespacedString, MACRO>): FinalCommandOutput =>
     this.finalCommand(['create', id])
 
   /**
@@ -31,7 +32,7 @@ export class StopwatchCommand<MACRO extends boolean> extends CommandArguments {
    * @param id The identifier of the stopwatch to query.
    * @param scale Multiplier applied to the returned value. Does not affect chat display.
    */
-  query = (id: Macroable<`${string}:${string}`, MACRO>, scale: Macroable<number, MACRO>): FinalCommandOutput =>
+  query = (id: Macroable<NamespacedString, MACRO>, scale: Macroable<number, MACRO>): FinalCommandOutput =>
     this.finalCommand(['query', id, scale])
 
   /**
@@ -39,7 +40,7 @@ export class StopwatchCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param id The identifier of the stopwatch to restart.
    */
-  restart = (id: Macroable<`${string}:${string}`, MACRO>): FinalCommandOutput =>
+  restart = (id: Macroable<NamespacedString, MACRO>): FinalCommandOutput =>
     this.finalCommand(['restart', id])
 
   /**
@@ -47,6 +48,6 @@ export class StopwatchCommand<MACRO extends boolean> extends CommandArguments {
    *
    * @param id The identifier of the stopwatch to remove.
    */
-  remove = (id: Macroable<`${string}:${string}`, MACRO>): FinalCommandOutput =>
+  remove = (id: Macroable<NamespacedString, MACRO>): FinalCommandOutput =>
     this.finalCommand(['remove', id])
 }

@@ -7,14 +7,15 @@ import type { DATA_TYPES, DataPointClass } from 'sandstone/variables'
 import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
+import type { NonEmptyString } from 'sandstone/utils'
 
 // Function command
 
-export class FunctionCommandNode extends CommandNode<[`${any}${string}` | MCFunctionClass<any, any>]> {
+export class FunctionCommandNode extends CommandNode<[NonEmptyString | MCFunctionClass<any, any>]> {
   command = 'function' as const
 }
 
-type Func = MCFunctionClass<undefined, undefined> | `${any}${string}` | TagClass<'function'>
+type Func = MCFunctionClass<undefined, undefined> | NonEmptyString | TagClass<'function'>
 
 export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = FunctionCommandNode
@@ -58,7 +59,7 @@ export class FunctionCommand<MACRO extends boolean> extends CommandArguments {
   ): FinalCommandOutput
 
   function(
-    mcFunction: Macroable<`${any}${string}` | MCFunctionClass<undefined, undefined> | TagClass<'function'>, MACRO>,
+    mcFunction: Macroable<NonEmptyString | MCFunctionClass<undefined, undefined> | TagClass<'function'>, MACRO>,
     params?: 'with' | Macroable<RootNBT, MACRO>,
     pointOrType?: DATA_TYPES | DataPointClass | DataPointPickClass,
     target?: string,

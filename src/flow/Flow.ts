@@ -22,7 +22,7 @@ import type {
 import { parseJSONText, Score} from 'sandstone/variables'
 import { ThrowNode } from './throw'
 import type { AwaitNode, AwaitNodeClass, DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
-import type { LiteralUnion, NamespacedLiteralUnion, RemoveFirst } from 'sandstone/utils'
+import type { LiteralUnion, NamespacedLiteralUnion, NamespacedString, NonEmptyString, RemoveFirst } from 'sandstone/utils'
 import { makeCallable } from 'sandstone/utils'
 import { AttachClass } from './async/attach'
 import { SleepClass, UntilClass } from './async'
@@ -130,7 +130,7 @@ export class Flow {
        */
       attach: <Entrypoint extends 'start' | 'end'>(
         entrypoint: Entrypoint,
-        func: MCFunctionClass<any, any> | `${any}${string}`,
+        func: MCFunctionClass<any, any> | NonEmptyString,
         branch: string[],
         awaitNodeIdx: number,
         entity?: SingleEntityArgument,
@@ -156,7 +156,7 @@ export class Flow {
        * - Executor is missing or is not being tracked by the `asyncContext`? -> Interrupts all `AwaitNode`'s in the `MCFunction` for all entities being tracked.
        */
       interrupt: (
-        func: MCFunctionClass<any, any> | `${any}${string}`,
+        func: MCFunctionClass<any, any> | NonEmptyString,
         /**
          * Adds command(s) to run within the target context before interrupting.
          * 
@@ -511,13 +511,13 @@ export class Flow {
 
   /**
    * Checks a function or function tag and matches the return value(s). If a tag is given, all functions run regardless of the results of prior functions.
-   * @param function_ Function to check for.
+   * @param mcfunction Function to check for.
    */
-  function_ = (function_: `${string}:${string}` | MCFunctionClass<undefined, undefined>) => {
-    if (typeof function_ === 'string') {
-      return new SandstoneConditions.Function(this.sandstoneCore, function_)
+  mcfunction = (mcfunction: NamespacedString | MCFunctionClass<undefined, undefined>) => {
+    if (typeof mcfunction === 'string') {
+      return new SandstoneConditions.Function(this.sandstoneCore, mcfunction)
     }
-    return new SandstoneConditions.Function(this.sandstoneCore, function_.name)
+    return new SandstoneConditions.Function(this.sandstoneCore, mcfunction.name)
   }
 
   /**

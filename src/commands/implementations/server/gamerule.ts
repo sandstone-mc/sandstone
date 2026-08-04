@@ -3,7 +3,7 @@
 import type { SymbolGameRule } from 'sandstone/arguments'
 import type { Macroable } from 'sandstone/core'
 import type { NBTInt } from 'sandstone/variables/nbt/NBTs'
-import type { PositiveWholeNumber, NegativeWholeNumber, SmartRange, IsNegative, ToNegative, PositiveRange, Abs, Enumerate, WholeNumber } from 'sandstone/utils'
+import type { PositiveWholeNumber, NegativeWholeNumber, SmartRange, IsNegative, ToNegative, PositiveRange, Abs, Enumerate, WholeNumber, NamespacedString } from 'sandstone/utils'
 import { CommandNode } from 'sandstone/core/nodes'
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
 
@@ -88,12 +88,12 @@ export class GameRuleCommand<MACRO extends boolean> extends CommandArguments {
    * gamerule('doDaylightCycle', false)     // Stop day/night cycle
    * ```
    */
-  gamerule<RULE extends Macroable<keyof SymbolGameRule | `${string}:${string}`, MACRO>>(
+  gamerule<RULE extends Macroable<keyof SymbolGameRule | NamespacedString, MACRO>>(
     gamerule: RULE,
   ): FinalCommandOutput
 
   gamerule<
-    RULE extends Macroable<keyof SymbolGameRule | (`${string}:${string}` & {}), MACRO>,
+    RULE extends Macroable<keyof SymbolGameRule | (NamespacedString & {}), MACRO>,
     // 1. Keep V as a broad number to avoid early constraint errors
     V extends (RULE extends keyof SymbolGameRule ? number | boolean : number | boolean)
   >(

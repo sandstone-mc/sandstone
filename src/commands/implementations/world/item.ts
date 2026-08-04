@@ -9,7 +9,7 @@ import type {
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable, SlotSourceClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion, MemberModifiers } from 'sandstone/utils'
+import type { LiteralUnion, MemberModifiers, NamespacedString, NonEmptyString } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
@@ -33,7 +33,7 @@ export class ItemCommandNode extends CommandNode {
 export type ItemSlotSource =
   | ContainerSlotSelector
   | EntitySlotSelector
-  | `${string}:${string}`
+  | NamespacedString
   | SlotSourceClass
   | `#${string}:${string}`
 
@@ -77,7 +77,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
       slotSource: Macroable<ItemSlotSource, MACRO>,
-      modifier?: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier?: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['from', 'block', pos, slotSource, modifier]),
 
     /**
@@ -88,7 +88,7 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
       slotSource: Macroable<ItemSlotSource, MACRO>,
-      modifier?: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier?: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['from', 'entity', targetParser(targets), slotSource, modifier]),
   }
 }
@@ -114,7 +114,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
       slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>,
-      modifier: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
 
     /**
@@ -125,7 +125,7 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
       slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
-      modifier: Macroable<`${any}${string}` | ItemModifierClass, MACRO>,
+      modifier: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
     ) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
   }
 

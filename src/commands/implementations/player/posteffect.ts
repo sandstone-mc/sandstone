@@ -4,6 +4,7 @@ import type { Macroable } from 'sandstone/core'
 import { targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
+import type { NamespacedString } from 'sandstone/utils'
 
 /**
  * A node representing the `posteffect` command.
@@ -28,7 +29,7 @@ export class PostEffectCommand<MACRO extends boolean> extends CommandArguments {
    */
   add = (
     player: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    postEffect: Macroable<`${string}:${string}`, MACRO>,
+    postEffect: Macroable<NamespacedString, MACRO>,
   ): FinalCommandOutput => this.finalCommand(['add', targetParser(player), postEffect])
 
   /**
@@ -70,6 +71,6 @@ export class PostEffectCommand<MACRO extends boolean> extends CommandArguments {
    */
   remove = (
     player: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    postEffect: Macroable<`${string}:${string}`, MACRO>,
+    postEffect: Macroable<NamespacedString, MACRO>,
   ): FinalCommandOutput => this.finalCommand(['remove', targetParser(player), postEffect])
 }

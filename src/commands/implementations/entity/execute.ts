@@ -28,7 +28,7 @@ import type { Node } from 'sandstone/core/nodes'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
-import { type AllowConst, makeCallable, type NamespacedLiteralUnion } from 'sandstone/utils'
+import { type AllowConst, makeCallable, type NamespacedLiteralUnion, type NonEmptyString } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
@@ -234,7 +234,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     // If macroStorage is set, call the function with `with storage <macroStorage>`
     if (this.macroStorage) {
-      mcFunctionCall.args.push('with', 'storage', this.macroStorage.currentTarget, this.macroStorage.path as `${any}${string}`)
+      mcFunctionCall.args.push('with', 'storage', this.macroStorage.currentTarget, this.macroStorage.path as NonEmptyString)
     }
 
     this.body = [mcFunctionCall]

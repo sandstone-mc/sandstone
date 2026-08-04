@@ -5,7 +5,7 @@ import type { SandstoneCommands } from 'sandstone/commands/commands'
 import { type Node, type SandstoneCore } from 'sandstone/core'
 import type { ResourcePath, SandstonePack } from 'sandstone/pack'
 import type { PackType } from 'sandstone/pack/packType'
-import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable } from 'sandstone/utils'
+import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion, MakeInstanceCallable, NamespacedString } from 'sandstone/utils'
 import type { NBTSerializable } from 'sandstone/arguments/nbt'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
 import { RESOURCE_PATHS } from 'sandstone/arguments/generated/resource-paths'
@@ -169,10 +169,10 @@ export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> 
 
   protected getNode = () => this.node
 
-  get name(): `${string}:${string}` {
+  get name(): NamespacedString | `${string}:${string}` {
     return `${this.path[0]}:${this.path.slice(
       this._resourceType in RESOURCE_PATHS ? RESOURCE_PATHS[this._resourceType as keyof typeof RESOURCE_PATHS].path.length + 1 : 2
-    ).join('/')}`
+    ).join('/')}` as NamespacedString
   }
 
   get namespace(): string {

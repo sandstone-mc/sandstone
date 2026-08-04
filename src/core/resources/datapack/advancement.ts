@@ -4,6 +4,7 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { NonEmptyString } from 'sandstone/utils'
 
 /**
  * A node representing a Minecraft advancement.
@@ -57,7 +58,7 @@ export class AdvancementClass<AdvancementJSON extends MCDocToJSON<SymbolResource
    * Grant this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  grant<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>, criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
+  grant<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>, criterion?: AdvancementJSON extends undefined ? NonEmptyString : keyof NonNullable<AdvancementJSON>['criteria']) {
     this.pack.commands.advancement.grant(players as any).only(this.name, criterion)
   }
 
@@ -65,7 +66,7 @@ export class AdvancementClass<AdvancementJSON extends MCDocToJSON<SymbolResource
    * Revoke this advancement.
    * @param players Optional. Specifies the player(s). Defaults to `@s`.
    */
-  revoke<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>, criterion?: AdvancementJSON extends undefined ? `${any}${string}` : keyof NonNullable<AdvancementJSON>['criteria']) {
+  revoke<T extends string = '@s'>(players: MultiplePlayersArgumentOf<false, T> = '@s' as MultiplePlayersArgumentOf<false, T>, criterion?: AdvancementJSON extends undefined ? NonEmptyString : keyof NonNullable<AdvancementJSON>['criteria']) {
     this.pack.commands.advancement.revoke(players as any).only(this.name, criterion)
   }
 

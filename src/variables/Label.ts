@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import type { NBTSerializable } from 'sandstone/arguments'
-import type { MakeInstanceCallable } from 'sandstone/utils'
+import type { MakeInstanceCallable, NamespacedString, NonEmptyString } from 'sandstone/utils'
 import { makeClassCallable } from 'sandstone/utils'
 import type { ConditionClass, SelectorPickClass } from './abstractClasses'
 import type { SelectorEntityType, SelectorProperties } from './Selector'
@@ -15,7 +15,7 @@ export class _RawLabelClass implements NBTSerializable {
   /**
    * Label name
    */
-  public name: `${any}${string}`
+  public name: NonEmptyString
 
   /**
    * Label Tag name with namespace
@@ -25,15 +25,15 @@ export class _RawLabelClass implements NBTSerializable {
   /**
    * Label Description (optional)
    */
-  public description?: `${any}${string}`
+  public description?: NonEmptyString
 
   constructor(
     private pack: SandstonePack,
-    name: `${any}${string}` | `${string}:${string}`,
-    description?: `${any}${string}`,
+    name: NonEmptyString | NamespacedString,
+    description?: NonEmptyString,
   ) {
     if (name.includes(':')) {
-      this.name = name.split(':')[1] as `${any}${string}`
+      this.name = name.split(':')[1] as NonEmptyString
       this.fullName = name.replace(':', '.') as `${string}.${string}`
     } else {
       this.name = name

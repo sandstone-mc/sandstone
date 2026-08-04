@@ -1,3 +1,4 @@
+import type { NonEmptyString } from 'sandstone/utils'
 import type { TextObject } from './generated/util/text'
 import { TextComponentClass } from 'sandstone/variables'
 import type {
@@ -19,7 +20,7 @@ export interface NBTSerializable {
 
 export type NBTObject = string | number | boolean | URL | undefined | NBTSerializable | TextComponentClass | TextObject | { [key: string]: NBTObject | undefined } | NBTObject[] | NBTClass
 
-export type RootNBT = Record<`${any}${string}`, NBTObject | undefined>
+export type RootNBT = Record<NonEmptyString, NBTObject | undefined>
 
 /**
  * Recursively walks a type, unioning Sandstone NBT primitive classes with their plain JSON equivalents

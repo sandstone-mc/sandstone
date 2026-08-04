@@ -3,6 +3,7 @@ import type { Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments } from '../../helpers'
+import type { NamespacedString } from 'sandstone/utils'
 
 // Attribute command
 
@@ -76,15 +77,15 @@ export class AttributeOperationCommand<MACRO extends boolean> extends CommandArg
    * @category attribute
    */
   add = (
-    id: Macroable<`${string}:${string}`, MACRO>,
+    id: Macroable<NamespacedString, MACRO>,
     value: Macroable<number, MACRO>,
     modifier: Macroable<'add_value' | 'add_multiplied_base' | 'add_multiplied_total', MACRO>,
   ) => this.finalCommand(['modifier', 'add', id, value, modifier])
 
   /** Removes the attribute modifier with the specified ID. */
-  remove = (id: Macroable<`${string}:${string}`, MACRO>) => this.finalCommand(['modifier', 'remove', id])
+  remove = (id: Macroable<NamespacedString, MACRO>) => this.finalCommand(['modifier', 'remove', id])
 
   /** Returns the value of the modifier with the specified ID. */
-  getModifierValue = (id: Macroable<`${string}:${string}`, MACRO>, scale?: Macroable<number, MACRO>) =>
+  getModifierValue = (id: Macroable<NamespacedString, MACRO>, scale?: Macroable<number, MACRO>) =>
     this.finalCommand(['modifier', 'value', 'get', id, scale])
 }
