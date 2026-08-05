@@ -101,6 +101,6 @@ export class ClearCommand<MACRO extends boolean> extends CommandArguments {
     const itemArg = isMacroArgument(this.sandstoneCore, itemOrPredicate)
       ? itemOrPredicate
       : `${itemOrPredicate}`
-    return this.finalCommand([targetParser(targets), itemArg, maxCount])
+    return this.finalCommand([targets === undefined ? undefined : targetParser(targets), itemArg, maxCount])
   }
 }

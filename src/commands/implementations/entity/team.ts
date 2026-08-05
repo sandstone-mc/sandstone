@@ -71,7 +71,7 @@ export class TeamCommand<MACRO extends boolean> extends CommandArguments {
    * ```
    */
   join = (team: Macroable<string, MACRO>, members?: Macroable<MultipleEntitiesArgument<MACRO> | '*', MACRO>) =>
-    this.finalCommand(['join', team, targetParser(members)])
+    this.finalCommand(['join', team, members === undefined ? undefined : targetParser(members)])
 
   /**
    * Remove entities from their teams.
