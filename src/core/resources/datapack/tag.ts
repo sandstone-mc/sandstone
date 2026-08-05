@@ -9,7 +9,7 @@ import type { MCFunctionClass } from './mcfunction'
 import type { DamageTypeClass } from './damageType'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass<any, any> {
-  return typeof v === 'function'
+  return typeof v === 'function' && Object.hasOwn(v, 'addToTag')
 }
 
 function isResource(v: unknown): v is ResourceClass<ResourceNode> {

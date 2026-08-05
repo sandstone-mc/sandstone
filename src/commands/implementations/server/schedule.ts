@@ -96,11 +96,12 @@ export class ScheduleCommand<MACRO extends boolean> extends CommandArguments<typ
   ) => {
     const node = this.getNode()
 
-    if (typeof func === 'object' && Object.hasOwn(func, 'addToTag')) {
+    if (typeof func === 'function' && Object.hasOwn(func, 'addToTag')) {
       return this.finalCommand(['function', (func as unknown as MCFunctionClass<any, any>).name, delay, type], node)
     }
     // A callback has been given
     if (typeof func === 'function') {
+      console.log('hello!')
       this.sandstoneCore.insideContext(node, func as () => void | Promise<void>, false)
       return this.finalCommand(['function', undefined, delay, type], node)
     }
