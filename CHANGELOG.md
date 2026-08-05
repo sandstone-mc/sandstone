@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.1.15](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.15) - 2026-08-05
+
+### Fix `schedule`, `debug`, and `Tag` interpretation of `MCFunctionClass`
+
+**Full Changelog**: [v1.1.14...v1.1.15](https://github.com/sandstone-mc/sandstone/compare/v1.1.14...v1.1.15)
+
+
 ## [v1.1.14](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.14) - 2026-08-05
 
 ### Fix broken optional argument handling in some commands
