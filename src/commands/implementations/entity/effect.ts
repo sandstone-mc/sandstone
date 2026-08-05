@@ -136,5 +136,6 @@ export class EffectCommand<MACRO extends boolean> extends CommandArguments {
   clear = (
     targets?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
     effect?: Macroable<Registry['minecraft:mob_effect'], MACRO>,
-  ) => this.finalCommand(['clear', targetParser(targets), effect])
+  ) =>
+    this.finalCommand(['clear', targets === undefined ? undefined : targetParser(targets), effect])
 }

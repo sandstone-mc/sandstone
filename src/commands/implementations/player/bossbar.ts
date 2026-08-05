@@ -115,7 +115,7 @@ export class BossBarSetCommand<MACRO extends boolean> extends CommandArguments {
    * @param players The new players that will see the bossbar. If not specified, hide the bossbar to all players.
    */
   players = <T extends string>(players?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>) =>
-    this.finalCommand(['players', targetParser(players)])
+    this.finalCommand(['players', players === undefined ? undefined : targetParser(players)])
 
   /**
    * Set the boss bar's visual amount of segments: continuous, 6 segments, 10 segments, 12 segments, or 20 segments.
