@@ -290,7 +290,7 @@ export class ScoreboardCommand<MACRO extends boolean> extends CommandArguments {
      * ```
      */
     list: (target?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) =>
-      this.finalCommand(['players', 'list', targetParser(target)]),
+      this.finalCommand(['players', 'list', target === undefined ? undefined : targetParser(target)]),
 
     /**
      * Get the score value for a specific entity and objective.

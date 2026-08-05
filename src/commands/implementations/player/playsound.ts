@@ -51,7 +51,7 @@ export class PlaySoundCommand<MACRO extends boolean> extends CommandArguments {
     this.finalCommand([
       sound,
       source,
-      targetParser(targets),
+      targets === undefined ? undefined : targetParser(targets),
       coordinatesParser(sourcePosition),
       volume,
       pitch,

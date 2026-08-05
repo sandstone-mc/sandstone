@@ -38,5 +38,10 @@ export class SpawnPointCommand<MACRO extends boolean> extends CommandArguments {
     targets?: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     pos?: Macroable<Coordinates<MACRO>, MACRO>,
     angle?: Macroable<Rotation<MACRO>, MACRO>,
-  ) => this.finalCommand([targetParser(targets), coordinatesParser(pos), coordinatesParser(angle)])
+  ) =>
+    this.finalCommand([
+      targets === undefined ? undefined : targetParser(targets),
+      coordinatesParser(pos),
+      coordinatesParser(angle),
+    ])
 }
