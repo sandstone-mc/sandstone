@@ -82,7 +82,7 @@ export class DebugCommand<MACRO extends boolean> extends CommandArguments<typeof
   function(func: Macroable<DebugFunction, MACRO>) {
     const node = this.getNode()
 
-    if (typeof func === 'object' && Object.hasOwn(func, 'addToTag')) {
+    if (typeof func === 'function' && Object.hasOwn(func, 'addToTag')) {
       return this.finalCommand(['function', (func as unknown as MCFunctionClass<any, any>).name], node)
     }
     // A callback has been given
