@@ -1,5 +1,8 @@
 name: Publish to npm
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 on:
   push:
     tags:
