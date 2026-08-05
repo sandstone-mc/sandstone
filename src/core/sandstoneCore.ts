@@ -140,10 +140,13 @@ export class SandstoneCore {
     encoding: false | fs.EncodingOption = 'utf-8',
   ): Promise<ArrayBuffer | Buffer | string> {
     if (typeof pathOrResource === 'string') {
+      const fullPath = path.isAbsolute(pathOrResource)
+        ? pathOrResource
+        : path.join(getSandstoneContext().workingDir, 'resources', pathOrResource)
       if (encoding === false) {
-        return fs.readFile(pathOrResource)
+        return fs.readFile(fullPath)
       }
-      return fs.readFile(pathOrResource, encoding)
+      return fs.readFile(fullPath, encoding)
     }
     const _path = pathOrResource.path
     if (_path[0] === 'minecraft') {
@@ -156,9 +159,14 @@ export class SandstoneCore {
       )
     }
     // eslint-disable-next-line max-len
+    const pathParts = [pathOrResource.packType.type]
+    if (pathOrResource.packType.resourceSubFolder) {
+      pathParts.push(pathOrResource.packType.resourceSubFolder)
+    }
+    pathParts.push(..._path)
     const fullPath = path.join(
       getSandstoneContext().workingDir,
-      `resources/${path.join(pathOrResource.packType.type, ..._path)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
+      `resources/${path.join(...pathParts)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
     )
 
     if (pathOrResource.fileEncoding === false) {
