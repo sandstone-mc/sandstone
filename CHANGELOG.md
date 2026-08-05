@@ -2,6 +2,18 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.17](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.17) - 2026-08-05
+
+### Fix `SandstoneCore#getExistingResource` and related resources
+
+- Fixed `SoundEventClass.constructor` logic errors
+- Fixed `StructureClass` failing to include the file extension if not provided by the user
+- Added missing `this.handleConflicts()` call to `SoundsIndexClass` that was preventing it from being saved
+- Pulled my hair out for a couple hours again over ESM
+
+**Full Changelog**: [v1.2.16...v1.2.17](https://github.com/sandstone-mc/sandstone/compare/v1.2.16...v1.2.17)
+
+
 ## [v1.2.16](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.16) - 2026-08-05
 
 ### Fix `schedule`, `debug`, and `Tag` interpretation of `MCFunctionClass`
