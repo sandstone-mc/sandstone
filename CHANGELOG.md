@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.15](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.15) - 2026-08-05
+
+### Fix broken optional argument handling in some commands
+
+**Full Changelog**: [v1.2.14...v1.2.15](https://github.com/sandstone-mc/sandstone/compare/v1.2.14...v1.2.15)
+
+
 ## [v1.2.14](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.14) - 2026-08-04
 
 ### Complete the switch to `NonEmptyString` & `NamespacedString`
