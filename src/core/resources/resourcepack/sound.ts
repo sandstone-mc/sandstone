@@ -53,11 +53,15 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
       args,
     )
 
-    if (args.addToSandstoneCore && args.sound !== undefined) {
-      if (typeof args.sound === 'string') {
-        this.buffer = core.getExistingResource(path.join('resourcepack', 'assets', ...this.path), false)
+    if (args.addToSandstoneCore) {
+      if (args.sound === undefined) {
+        this.buffer = core.getExistingResource(this, false)
       } else {
-        this.buffer = args.sound
+        if (typeof args.sound === 'string') {
+          this.buffer = core.getExistingResource(`${args.sound}${args.sound.endsWith('.ogg') ? '' : '.ogg'}`, false)
+        } else {
+          this.buffer = args.sound
+        }
       }
 
       if (args.addToSounds) {
@@ -70,12 +74,17 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
               new SoundsIndexClass(this.core, this.path[0], {
                 addToSandstoneCore: true,
                 creator: 'sandstone',
+                definitions: {
+                  [`${this.type}.${name}`]: {
+                    sounds: [`${this.type}.${name}`],
+                  }
+                }
               }),
             )
             .get(this.path[0])
+        } else {
+          def!.push(this)
         }
-
-        def!.push(this)
       }
     }
 
@@ -130,6 +139,8 @@ export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements 
     } else {
       this.soundsJSON = (async () => JSON.parse(await (core.getExistingResource(this) as Promise<string>)))()
     }
+
+    this.handleConflicts()
   }
 
   async push(...soundEvents: SoundsIndexClass[] | SoundEventClass<SOUND_TYPES>[]) {

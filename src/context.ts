@@ -1,6 +1,10 @@
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils'
 
 /**
+ * Yes this sucks, but ESM won't let me have my way.
+ */
+
+/**
  * Configuration context passed to SandstonePack.
  * This replaces the old process.env-based configuration.
  */
