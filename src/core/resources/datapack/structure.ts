@@ -99,7 +99,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
     if (args.structure === undefined) {
       this.structureBuffer = sandstoneCore.getExistingResource(this, false)
     } else if (typeof args.structure === 'string') {
-      this.structureBuffer = sandstoneCore.getExistingResource(args.structure, false)
+      this.structureBuffer = sandstoneCore.getExistingResource(`${args.structure}${args.structure.endsWith('.nbt') ? '' : '.nbt'}`, false)
     } else if (args.structure instanceof StructureClass) {
       if (args.structure.structureNBT) {
         this.structureNBT = args.structure.structureNBT
@@ -125,7 +125,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       return this.structureBuffer
     }
 
-    this.structureBuffer = this.node.sandstoneCore.getExistingResource(this.name, false)
+    this.structureBuffer = this.node.sandstoneCore.getExistingResource(this, false)
     return this.structureBuffer
   }
 
