@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.12](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.12) - 2026-08-05
+
+### Fix broken optional argument handling in some commands
+
+**Full Changelog**: [v1.0.11...v1.0.12](https://github.com/sandstone-mc/sandstone/compare/v1.0.11...v1.0.12)
+
+
 ## [v1.0.11](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.11) - 2026-08-04
 
 ### Add exports for and switch to branded types for `NonEmptyString` and `NamespacedString`
