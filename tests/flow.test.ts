@@ -1,15 +1,17 @@
-import { describe, test } from 'bun:test'
+import { describe, expect, test } from 'bun:test'
 import {
   _,
   DataVariable,
   execute,
+  Macro as $,
   MCFunction,
   Objective,
   say,
   sleep,
   tellraw,
 } from '../dist/exports/index.js'
-import { compile, snapshotAll } from './utils/index.js'
+import { compile, mcfunctionBody, snapshotAll } from './utils/index.js'
+
 
 describe('Flow snapshots', () => {
   describe('_.if / _.elseIf / _.else', () => {
@@ -754,11 +756,11 @@ describe('Flow snapshots', () => {
     test('macro-style variable with Flow control', () => {
       const out = compile('macro_with_flow', () => {
         say('before MCFunction(macro_flow)')
-        const x = DataVariable('x')
+        const x = DataVariable(5)
         MCFunction('macro_flow', [x], () => {
           say('before _.if')
           _.if(_.entity('@s'), () => {
-            tellraw('@a', `${x}`)
+            $.give('@s', 'diamond', {}, x)
           })
           say('after _.if')
         })
