@@ -39,7 +39,7 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
     if (node.resource.creator === 'sandstone' && node.body.length > 0) {
       const lastNode = node.body.at(-1)!
       if (lastNode instanceof FunctionCommandNode) {
-        const returnRunNode = new ReturnRunCommandNode(this.pack, ['run'], {
+        const returnRunNode = new ReturnRunCommandNode(this.pack, false, ['run'], {
           isFunctionBoundary: true,
         })
         returnRunNode.body = [lastNode]

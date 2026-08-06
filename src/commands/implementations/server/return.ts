@@ -43,6 +43,7 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
 
   constructor(
     sandstonePack: SandstonePack,
+    isMacro: boolean = false,
     args: [...args: unknown[]] = [],
     { isSingleExecute = true, body = [] as Node[], isFlowControl = false, isFunctionBoundary = false } = {},
   ) {
@@ -127,12 +128,16 @@ export class ReturnArgumentsCommand<MACRO extends boolean> extends CommandArgume
   get run(): SandstoneCommands<MACRO> & ((callback: () => void) => FinalCommandOutput) {
     const node = this.getNode()
 
+    // Macro propagate: route through macroCommands when this return is part
+    // of a macro chain. See execute.ts for the rationale.
+    const commandsSource = (this.sandstonePack as any)[this.isMacro ? 'macroCommands' : 'commands'] as any
+
     // Use 'any' to avoid TS2859 complexity limit with SandstoneCommands generic
-    const commands = new Proxy(this.sandstonePack.commands as any, {
+    const commands = new Proxy(commandsSource, {
       get: (_t, p, _r) => {
         // The context will automatically be exited by the node itself
         this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(node)
-        return (this.sandstonePack.commands as any)[p]
+        return commandsSource[p]
       },
     }) as SandstoneCommands<MACRO>
 
@@ -179,7 +184,12 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
    * ```
    */
   get return() {
-    const run = new ReturnArgumentsCommand<MACRO>(this.sandstonePack)
+    // Pass `this.isMacro` through so `Macro.returnCmd.run.<x>` chains land
+    // in the macro command graph. Without this, the inner ReturnArgumentsCommand
+    // is constructed with isMacro=false and its `.run` proxy forwards to
+    // `this.sandstonePack.commands` (always <false>), silently stripping the
+    // macro flag — even though the outer ReturnCommand was created via Macro.
+    const run = new ReturnArgumentsCommand<MACRO>(this.sandstonePack, this.isMacro)
 
     return makeCallable(
       {

@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Build**: `bun dev:build --silent` - Builds the project using a custom Bun Build based script
   - `--silent` or `-s` suppresses progress output (this is what you should default to for context preservation)
+  - **`--silent` produces zero output on success.** No "Build completed" line, no summary, nothing. An empty result is the success signal. If you only see `$ bun run scripts/build.ts --silent` and a prompt, the build passed. Run without `--silent` to see the full pipeline log.
 - **Watch**: `bun dev:watch` - Builds with watch mode
 - **Type checking**: `bun dev:build:types` - Generates TypeScript declaration files only
 - **Lint**: `bun lint` - Lints TypeScript files using OxLint
@@ -560,34 +561,48 @@ This is essential for `createDeferredMacroExecute` which builds execute chains t
 
 ### Macro System
 
-#### MacroArgument Base Class (`src/core/Macro.ts`)
-All macro-capable values extend `MacroArgument`:
-```typescript
-class MacroArgument {
-  local: Map<string, string>  // Maps MCFunction name -> macro variable name
-  toMacro(): string           // Returns "$(varName)" for use in commands
-}
+**Mental model:** Sandstone macros are NOT JS `async`. `$(env_0)` is substituted by Minecraft at runtime when the mcfunction is invoked via `function <name> with storage <envPath>`. Sandstone's job: emit the right mcfunction body, register env variable names, generate the temp storage + dispatch command at the call site.
+
+```
+Caller (mcfunction)              Target mcfunction (macro body)
+==================              ===============================
+$data modify storage foo.env_0
+    set from storage bar         $playsound ... $(env_0)
+function target with storage foo
 ```
 
-#### How Scores/Data Become Macros
-When passed to an MCFunction as env or param:
-1. `ResolveNBTPart(score)` converts Score to NBT storage
-2. `score.local.set(functionName, 'env_0')` registers the macro name
-3. Inside the function, `score.toMacro()` returns `"$(env_0)"`
-4. Function is called with `function <name> with storage <resolved>`
+MC does the substitution at invocation time; the static mcfunction file stays the same across calls.
+
+#### Three layers
+
+1. **MacroArgument** (`src/core/Macro.ts`): base class for any value that can be a macro. Holds a `local: Map<fnName, varName>` (which variable name to use inside a given mcfunction) and a `toMacro()` method that returns `$(varName)`.
+
+2. **`isMacro` propagation** (`src/commands/helpers.ts`): every `CommandArguments` carries an `isMacro: boolean` flag. `getNode()` writes `node.isMacro = node.isMacro || this.isMacro` so nodes inside a macro MCFunction inherit the flag from their enclosing context. Crucial because visitors need the flag at *visit time*, before `getValue()` would set it lazily from a `$`-prefix. Without propagation, `WithNodeVisitor`'s optimization 2 (hoist extracted-execute prefix) and similar visitors can't decide whether to inject `$(...)` references.
+
+3. **MCFunction param shapes**: see next section.
 
 #### MCFunction Parameters vs Environment Variables
 ```typescript
 // Environment variables: captured from outer scope, array as 2nd arg
 const envVar = Data('storage', 'test', 'value')
 MCFunction('test', [envVar], (_loop, param: Score) => {
-  // envVar -> $(env_0)
-  // param -> $(param_0)
+  // envVar -> $(env_0)    (auto-bound at construction, can't be overridden at call)
+  // param  -> $(param_0)  (passed as argument at call time)
 })
 
 // When called: test(newEnvValue, paramValue)
 // - newEnvValue overrides envVar
 // - paramValue is the param
+```
+
+The 2nd-arg array form (`[envVar]`) means "capture from outer scope"; at runtime you can still override by passing a new value, but the original name stays `env_0`. Parameters declared in the callback signature are passed positionally each call.
+
+**Returning the callback is NOT automatic.** Sandstone processes the body during construction. To force a body to actually emit, call the thunk: `MCFunction('macro_flow', [x], () => { /* body */ })()`. Without the trailing `()`, the function is defined but the body never runs and visitors see nothing.
+
+#### Template literals with DataPoints
+Inside a `say(\`got ${entry}\`)` template, `${entry}` is just `String(entry)` — DataPoints don't auto-coerce to SNBT in template strings, so it serializes as `[object Object]`. Use tellraw with an array instead:
+```typescript
+tellraw('@a', ['got', entry])   // element-wise serialization, real SNBT
 ```
 
 #### Creating Macro-Enabled Child Functions
@@ -600,6 +615,17 @@ return createDeferredMacroExecute(pack, deferred, {
   env: [someMacroVariable],  // OR use macroStorage for explicit storage
 })
 ```
+
+#### `_.with()` macro pattern (`src/flow/macro/with.ts`)
+`_.with([foo, bar], cb)` lifts `cb`'s body into a child macro mcfunction (`<parent>/__with_macro`). Each env var is registered as `env_N`. The call site emits the temp storage with the current values + `function <__with_macro> with storage <temp>`. Two `_.with()` patterns produce equivalent output regardless of which way the execute is nested:
+```typescript
+// Both → __with_macro.mcfunction with $playsound ..., then either:
+_.with([volume], () => execute.as('@a').at('@s').run(() => $.playsound(...)))
+execute.as('@a').at('@s').run(() => _.with([volume], () => $.playsound(...)))
+```
+
+The `WithNodeVisitor` (`src/pack/visitors/withTransformationVisitor.ts`) has two optimizations: hoist a single non-macro `execute` prefix onto the parent body (drop the wrapper), and hoist an extracted-execute's prefix off the wrapping mcfunction (move prep + WithClass into the grandparent).
+
 
 ### Debugging Context Issues
 

@@ -228,7 +228,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
       // doesn't fire on a stale tracker.
       targetMCFunction.body.push(new ScoreboardCommandNode(this.pack, 'players', 'set', tracker, 1))
     } else {
-      const executeNode = new ExecuteCommandNode(this.pack, args, {
+      const executeNode = new ExecuteCommandNode(this.pack, false, args, {
         isSingleExecute: true,
         body: [],
       })
@@ -240,6 +240,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
 
     const failCheckNode = new ExecuteCommandNode(
       this.pack,
+      false,
       [['unless', `score ${tracker} matches 1`]],
       {
         isSingleExecute: true,
@@ -287,7 +288,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     // Construct ExecuteCommandNode for `execute <keyword> <condBody> run <bodyNode>`.
     // The constructor's append() calls exitContext, so we first push an empty executeNode
     // into the MCFunction context stack (addNode=false) so the exit succeeds.
-    const executeNode = new ExecuteCommandNode(this.pack, [[keyword, condBody]], {
+    const executeNode = new ExecuteCommandNode(this.pack, false, [[keyword, condBody]], {
       isSingleExecute: true,
       body: [],
     })
@@ -325,7 +326,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     const flippedKeyword = match[1] === 'if' ? 'unless' : 'if'
     const condBody = match[2]
 
-    const executeNode = new ExecuteCommandNode(this.pack, [[flippedKeyword, condBody]], {
+    const executeNode = new ExecuteCommandNode(this.pack, false, [[flippedKeyword, condBody]], {
       isSingleExecute: true,
       body: [],
     })

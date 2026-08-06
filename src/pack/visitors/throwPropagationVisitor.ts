@@ -397,7 +397,7 @@ export class ThrowPropagationVisitor extends GenericSandstoneVisitor {
 
     // Empty body initially — append's exitContext requires an active
     // MCFunction, which we don't have during visitor time.
-    const node = new ExecuteCommandNode(this.pack, clonedArgs, {
+    const node = new ExecuteCommandNode(this.pack, false, clonedArgs, {
       isSingleExecute: true,
       body: [],
     })

@@ -329,7 +329,7 @@ export class SwitchTransformationVisitor extends GenericSandstoneVisitor {
       funcNode.args.push('with', macroPoint.type, macroPoint.currentTarget as NonEmptyString, macroPoint.path as NonEmptyString)
 
       if (isLastNode) {
-        const callNode = new ReturnRunCommandNode(this.pack, ['run'])
+        const callNode = new ReturnRunCommandNode(this.pack, false, ['run'])
         callNode.body = [funcNode]
         return [copyNode, callNode].flatMap((n) => this.visit(n))
       }
@@ -339,7 +339,7 @@ export class SwitchTransformationVisitor extends GenericSandstoneVisitor {
     // Score-based switches handle the copy internally, no `with storage` needed
     const funcNode = new FunctionCommandNode(this.pack, switchMCFunction.name)
     if (isLastNode) {
-      const callNode = new ReturnRunCommandNode(this.pack, ['run'])
+      const callNode = new ReturnRunCommandNode(this.pack, false, ['run'])
       callNode.body = [funcNode]
       return this.visit(callNode)
     }

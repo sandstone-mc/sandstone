@@ -177,6 +177,7 @@ import {
   ThrowInlineVisitor,
   ThrowPropagationVisitor,
   UnifyChainedExecutesVisitor,
+  WithNodeVisitor,
 } from './visitors'
 import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
 import type { RecipeJSON } from 'sandstone/arguments/shapedCrafting'
@@ -336,6 +337,17 @@ export class SandstonePack {
 
   readonly commands: SandstoneCommands<false>
 
+  /**
+   * Macro-enabled SandstoneCommands instance, WITHOUT the callable template
+   * wrapper that `Macro` adds. Used by `ExecuteCommand.run` (and any other
+   * proxy) so that commands chained inside a macro execute node (e.g.
+   * `Macro.returnCmd.run.functionCmd(...)`) propagate `isMacro: true` through
+   * to the resulting CommandNode. Without this, `.run` falls back to
+   * `this.sandstonePack.commands` which is always `SandstoneCommands<false>`,
+   * silently stripping the macro flag at the proxy boundary.
+   */
+  readonly macroCommands: SandstoneCommands<true>
+
   readonly Macro: SandstoneCommands<true> &
     ((strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => MacroLiteral)
 
@@ -369,9 +381,10 @@ export class SandstonePack {
 
     this.commands = new SandstoneCommands(this)
 
-    // SandstonePack.Macro is only a type hack
+    this.macroCommands = new SandstoneCommands<true>(this, true as const)
+
     this.Macro = makeCallable(
-      this.commands,
+      this.macroCommands,
       (strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) =>
         new MacroLiteral(this.core, strings, macros),
       true,
@@ -1642,6 +1655,7 @@ export function defaultVisitors(pack: SandstonePack) {
     // Special visitors
     new AwaitBodyVisitor(pack),
     new ThrowPropagationVisitor(pack),
+    new WithNodeVisitor(pack),
 
     // Optimization
     new OptimizeMacroTemporariesVisitor(pack),

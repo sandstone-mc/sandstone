@@ -36,6 +36,7 @@ export abstract class CommandArguments<
 
   constructor(
     protected sandstonePack: SandstonePack,
+    protected readonly isMacro: boolean = false,
     protected previousNode?: CommandNode,
     protected autoCommit = true,
   ) {
@@ -53,7 +54,12 @@ export abstract class CommandArguments<
     if (this.NodeType) {
       /* Typescript does not manage to remove undefined for some reasons */
       /* @ts-ignore */
-      return new this.NodeType(this.sandstonePack) as any
+      const node = new this.NodeType(this.sandstonePack) as CommandNode
+      // Propagate the macro context flag from the wrapping command class so
+      // visitors (e.g. WithNodeVisitor) can inspect it before serialization
+      // runs `getValue()` to set it lazily.
+      node.isMacro = node.isMacro || this.isMacro
+      return node as any
     }
 
     throw new Error('No node type specified & no previous node for a non-root-level command')
@@ -99,6 +105,6 @@ export abstract class CommandArguments<
       node.commit()
     }
 
-    return new NextArgumentType(this.sandstonePack, node, this.autoCommit, ...additionalNextArgs) as any
+    return new NextArgumentType(this.sandstonePack, this.isMacro, node, this.autoCommit, ...additionalNextArgs) as any
   }
 }

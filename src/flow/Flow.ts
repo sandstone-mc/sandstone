@@ -21,16 +21,16 @@ import type {
 } from 'sandstone/variables'
 import { parseJSONText, Score} from 'sandstone/variables'
 import { ThrowNode } from './throw'
-import type { AwaitNode, AwaitNodeClass, DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
+import type { AwaitNode, AwaitNodeClass, DataPointPickClass, MacroArgument, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
 import type { LiteralUnion, NamespacedLiteralUnion, NamespacedString, NonEmptyString, RemoveFirst } from 'sandstone/utils'
 import { makeCallable } from 'sandstone/utils'
-import { AttachClass } from './async/attach'
-import { SleepClass, UntilClass } from './async'
+import { AttachClass, SleepClass, UntilClass } from './async'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops'
+import { WithClass } from './macro'
 import type { ConditionCallback, DefaultType, SwitchCase } from './switch_case'
 import { CaseStatement, executeSwitch } from './switch_case'
 
@@ -634,4 +634,6 @@ export class Flow {
     }
     return new SandstoneConditions.Predicate(this.sandstoneCore, predicate.name)
   }
+
+  with = (env: MacroArgument[], callback: (() => any)) => new WithClass(this.sandstoneCore, env, callback)
 }

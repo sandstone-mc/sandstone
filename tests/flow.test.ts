@@ -7,6 +7,7 @@ import {
   MCFunction,
   Objective,
   say,
+  tellraw,
 } from '../dist/exports/index.js'
 import { compile, mcfunctionBody, snapshotAll } from './utils/index.js'
 
@@ -202,7 +203,7 @@ describe('Flow snapshots', () => {
         say('before _.for')
         const list = pack.DataArray([1, 2, 3])
         _.for('entry', 'of', list, (entry) => {
-          say(`got ${entry}`)
+          tellraw('@a', ['got', entry])
         })
         say('after _.for')
       })
@@ -213,8 +214,8 @@ describe('Flow snapshots', () => {
       const out = compile('flow_for_of_indexed', (pack) => {
         say('before _.for')
         const list = pack.DataArray(['a', 'b'])
-        _.for(['i', 'entry'], 'of', list, (_i, entry) => {
-          say(`entry ${entry}`)
+        _.for(['i', 'entry'], 'of', list, (i, entry) => {
+          tellraw('@a', ['i', i, 'entry', entry])
         })
         say('after _.for')
       })
@@ -826,7 +827,7 @@ describe('Flow snapshots', () => {
             $.give('@s', 'diamond', {}, x)
           })
           say('after _.if')
-        })
+        })()
         say('after MCFunction(macro_flow)')
       })
       snapshotAll(out)
@@ -850,6 +851,66 @@ describe('Flow snapshots', () => {
           i('@s').set(0)
         })
         say('after outer _.for')
+      })
+      snapshotAll(out)
+    })
+
+    test('_.with wraps Macro commands in a child macro mcfunction', () => {
+      const out = compile('with_macro', () => {
+        say('before _.with')
+        const foo = DataVariable(20)
+        _.with([foo], () => {
+          $.give('@s', 'minecraft:diamond', {}, foo)
+        })
+        say('after _.with')
+      })
+      snapshotAll(out)
+    })
+
+    test('_.with with multiple env vars', () => {
+      const out = compile('with_multi_env', () => {
+        const foo = DataVariable(20)
+        const bar = DataVariable('hello')
+        _.with([foo, bar], () => {
+          $.give('@s', 'minecraft:diamond', {}, foo)
+          $.say(bar)
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.with with two sequential calls share the parent mcfunction context', () => {
+      const out = compile('with_sequential', () => {
+        const foo = DataVariable(20)
+        _.with([foo], () => {
+          $.give('@s', 'minecraft:diamond', {}, foo)
+        })
+        say('between _.with calls')
+        _.with([foo], () => {
+          $.give('@s', 'minecraft:emerald', {}, foo)
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.with hoists single execute prefix onto the function call', () => {
+      const out = compile('with_hoist_execute', () => {
+        const volume = DataVariable(20)
+        _.with([volume], () => execute.as('@a').at('@s').run(() =>
+          $.playsound('block.ancient_debris.break', 'block', '@s', '~ ~ ~', volume),
+        ))
+      })
+      snapshotAll(out)
+    })
+
+    test('_.with body without execute wrapper keeps nested $-prefixed commands', () => {
+      const out = compile('with_no_hoist', () => {
+        const foo = DataVariable(20)
+        _.with([foo], () => {
+          say('hi')
+          $.give('@s', 'minecraft:diamond', {}, foo)
+          $.give('@s', 'minecraft:emerald', {}, foo)
+        })
       })
       snapshotAll(out)
     })
