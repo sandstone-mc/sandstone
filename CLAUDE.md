@@ -545,6 +545,67 @@ execute.as('@a').run(() => { say('a'); say('b') })
 **IMPORTANT - isSingleExecute in Visitors:**
 When creating `ExecuteCommandNode` during visitor transformation, always use `isSingleExecute: false` even for single-command bodies. The `append()` method has special behavior when `isSingleExecute: true` that calls `getCurrentMCFunctionOrThrow().exitContext()`, which fails during visitor passes (no active MCFunction context). Simplification of single-command executes should happen in later visitors like `SimplifyExecuteFunctionVisitor`, not by setting `isSingleExecute: true`.
 
+#### Building a `SandstoneCommands` proxy (`.run`-style APIs)
+
+Several APIs expose a command body by proxying `SandstoneCommands`: `_.if(cond).run.<cmd>`, `.else.run.<cmd>`, `_.return.run.<cmd>`, `_.with(env).<cmd>`. They all follow the same contract, and getting it wrong produces a bug that is invisible in the common case.
+
+**The rule: the `get` trap must return the raw property. Never a wrapper function.**
+
+```typescript
+// ✅ CORRECT — hand back the real value
+const commands = new Proxy(commandsSource, {
+  get: (target, p, receiver) => {
+    // Skip incidental probes (util.inspect, `then` on await, ...) so they
+    // don't open a context that never closes.
+    if (typeof p === 'symbol' || !(p in target)) {
+      return Reflect.get(target, p, receiver)
+    }
+    node.enterSingleCommand(parentMCFunction)  // node closes it in append()
+    return (target as any)[p]
+  },
+}) as SandstoneCommands<false>
+
+// ❌ WRONG — returns a function, so property chains die
+get: (_t, p, _r) => {
+  parentMCFunction.enterContext(clauseNode)
+  return (...args: unknown[]) => {              // `.execute` is now a function
+    const result = (commandsSource as any)[p](...args)
+    while (parentMCFunction.contextStack.length > parentDepth) {
+      parentMCFunction.exitContext()
+    }
+    return result
+  }
+}
+```
+
+**Why the wrong version looks fine.** Commands come in two shapes. Directly-callable ones (`say`, `give`, `tellraw` — registered via `bind(...)`) work through a wrapper, because `wrapper('hi')` just forwards. Commands whose API continues through *property access* (`execute`, `data`, `scoreboard`, `effect`, and every class with subcommands) do not: `.execute` returns the wrapper function itself, so `.execute.as` is `undefined`. A proxy tested only with `.run.say(...)` will pass while `.run.execute.as('@a').run.say('hi')` throws `X.as is not a function`.
+
+**Consequence: the proxy cannot own the context exit.** Popping the context after the command finishes requires intercepting the call, which requires returning a function — the exact thing that breaks chaining. So the *node* has to close its own context, via an `append()` override that fires when the command commits:
+
+```typescript
+append = (...nodes: Node[]) => {
+  for (const node of nodes) {
+    this.body.push(node)
+    if (this.isSingleCommand) {
+      // Pop the whole way back, not one level: a sleep (or other await)
+      // inside the command enters a context without balancing it.
+      while (parentMCFunction.contextStack.length > this.depth) {
+        parentMCFunction.exitContext()
+      }
+    }
+  }
+  return (nodes.length === 1 ? nodes[0] : nodes) as any
+}
+```
+
+Reference implementations: `ReturnRunCommandNode.append` (`server/return.ts`), `FlowClauseNode` (`flow/if_else.ts`, shared by `IfNode`/`ElseNode`), `WithClass` (`flow/macro/with.ts`).
+
+**Also watch for:**
+
+- **Nodes not yet in a parent body.** `_.if(cond)` without a callback never commits its `IfNode` — the `IfNode` constructor skips body-gen for an empty callback. The first `enterContext(this, addNode=true)` is what adds it, so re-entry must pass `false`. `FlowClauseNode.addedToBody` tracks this. `ElseNode` and `ReturnRunCommandNode` are already committed by their constructors; don't double-add them.
+- **Macro routing.** Route through `pack.macroCommands` (not `pack.commands`) when the body runs in a macro context, so `isMacro` propagates — see the `isMacro` note in the Macro System section. `_.with(env)` does this, which means *every* command reached through it must consume an env var: `getValue()` throws symmetrically, both for macro args on a non-macro node and for a macro-declared node with no macro args.
+- **The chain ends at the command.** `.run.<cmd>` returns the command's `FinalCommandOutput`, not the statement — so `.else` / `.elseIf` must hang off the callback form (`_.if(cond, cb).else.run.<cmd>`) or a separately held statement, never off `.run.<cmd>`.
+
 #### Deferred Execution with autoCommit
 Commands normally commit immediately when created. Use `autoCommit=false` to defer:
 ```typescript

@@ -32,6 +32,23 @@ export class MacroArgument {
         }
       }
 
+      if (result === undefined) {
+        // Emitting `$(undefined)` here produces an mcfunction that silently
+        // substitutes nothing at runtime, so fail at compile time instead.
+        const location = this.sandstoneCore.currentNode || currentMCFunctionName
+        const registered = [...this.local.keys()]
+
+        throw new Error(
+          `[MacroArgument#toMacro] No macro variable is registered for this argument in \`${location || '<no MCFunction context>'}\`. `
+            + (registered.length > 0
+              ? `It is only registered in: ${registered.map((name) => `\`${name}\``).join(', ')}.`
+              : 'It is not registered in any MCFunction.')
+            + ' A macro argument has to be declared by the MCFunction that uses it —'
+            + ' pass it in the env array (`MCFunction(name, [arg], ...)`, `_.with([arg], ...)`)'
+            + ' or declare it as a callback parameter.',
+        )
+      }
+
       return `$(${result})`
     }
   }

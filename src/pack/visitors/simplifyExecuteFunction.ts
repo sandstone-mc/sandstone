@@ -142,10 +142,41 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
     }
 
     /*
-     * And it's a command! Now, we can simplify the execute, except if the other command is a /execute too.
+     * The called function is a single `execute`. `execute A run function F`,
+     * where F is exactly `execute B run C`, is equivalent to `execute A B run C`
+     * — the function boundary carries no semantics of its own.
+     *
+     * UnifyChainedExecutesVisitor performs this merge for directly-nested
+     * executes, but it runs before us, while the inner execute is still behind
+     * a `function` call. So the merge has to happen here.
      */
     if (command instanceof ExecuteCommandNode) {
-      // In that case, if the initial /execute does not imply multiple executions, we could still simplify it.
+      if (
+        // A fake execute serializes as its body alone, so its args would be
+        // dropped — there is nothing to merge onto.
+        node.isFake
+        // `function F with storage ...` feeds the callee's macro slots; once
+        // inlined there is no call left to attach them to.
+        || functionNode.args.length > 1
+        // A loop's execute is the recursion target that LoopArgument resolves
+        // through `createdMCFunction` — its function has to survive.
+        || command.givenCallbackName === 'loop'
+        // Only fold away functions Sandstone generated. A user's function may
+        // be called from elsewhere, so it can't be deleted, and inlining
+        // without deleting would alias its body into two places.
+        || mcFunction.creator !== 'sandstone'
+      ) {
+        return this.genericVisit(node)
+      }
+
+      node.args.push(...command.args)
+      node.body = command.body
+      node.isMacro = node.isMacro || command.isMacro
+
+      this.core.resourceNodes.delete(mcFunctionNode)
+      // The function this pointed at no longer exists.
+      node.createdMCFunction = null
+
       return this.genericVisit(node)
     }
 

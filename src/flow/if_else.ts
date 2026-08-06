@@ -2,6 +2,7 @@ import * as util from 'util'
 
 import type { MCFunctionNode, SandstoneCore } from '../core'
 import { ContainerNode } from '../core'
+import type { Node } from '../core/nodes'
 import type { SandstoneCommands, ExecuteCommandNode } from 'sandstone/commands'
 import { FinalCommandOutput } from 'sandstone/commands'
 import { makeCallable } from 'sandstone/utils'
@@ -9,7 +10,77 @@ import { formatDebugString } from '../utils'
 import type { ConditionNode } from './conditions'
 import { conditionToNode, type Condition } from './Flow'
 
-export class IfNode extends ContainerNode {
+/**
+ * Shared base for `IfNode` / `ElseNode`.
+ *
+ * A clause body can be given either as a callback (`_.if(cond, () => {...})`,
+ * `.elseIf(cond, cb)`, `.else(cb)`) or as a single command reached through
+ * `.run` — spelled `.run.<command>` on an `if` / `elseIf`, and
+ * `.else.run.<command>` on an `else`. The statement chain ends at that
+ * command: `.run.<command>` returns the command's `FinalCommandOutput`, not
+ * the `IfStatement`, so `.else` / `.elseIf` have to hang off the callback form
+ * or off a separately held statement.
+ *
+ * `.run` hands back the raw `SandstoneCommands` object so that a command's own
+ * chain (`.run.execute.as('@a').at('@s').run.say(...)`) resolves normally.
+ * That means the proxy can't tell when the chain is done, so the clause node
+ * closes the context itself: the first node committed into its body pops back
+ * to the depth recorded by `enterSingleCommand`.
+ *
+ * Mirrors `ExecuteCommandNode`'s single-execute handling.
+ */
+export abstract class FlowClauseNode extends ContainerNode {
+  /** MCFunction whose context stack `enterSingleCommand` pushed onto. */
+  private singleCommandFunction: MCFunctionNode | null = null
+
+  /** Context depth to pop back to once a command lands in the body. */
+  private singleCommandDepth = 0
+
+  /**
+   * Whether this node already sits in a parent body. `IfNode` built without a
+   * callback is not committed by its constructor, so the first
+   * `enterSingleCommand` has to add it; re-entering must not add it twice.
+   */
+  protected addedToBody = false
+
+  /**
+   * Push this node onto `parentMCFunction`'s context stack so the next
+   * committed command lands in `this.body`. `append` pops it back off.
+   *
+   * @internal
+   */
+  enterSingleCommand = (parentMCFunction: MCFunctionNode) => {
+    if (this.singleCommandFunction) {
+      // Context is already open from a previous property access.
+      return
+    }
+
+    this.singleCommandFunction = parentMCFunction
+    this.singleCommandDepth = parentMCFunction.contextStack.length
+    parentMCFunction.enterContext(this, !this.addedToBody)
+    this.addedToBody = true
+  }
+
+  append = (...nodes: Node[]) => {
+    this.body.push(...nodes)
+
+    const parentMCFunction = this.singleCommandFunction
+    if (parentMCFunction) {
+      this.singleCommandFunction = null
+
+      // Pop the whole way back rather than a single level: a sleep (or any
+      // other await) inside the command enters its own context without
+      // balancing it, which would otherwise leave `this` on the stack.
+      while (parentMCFunction.contextStack.length > this.singleCommandDepth) {
+        parentMCFunction.exitContext()
+      }
+    }
+
+    return (nodes.length === 1 ? nodes[0] : nodes) as any
+  }
+}
+
+export class IfNode extends FlowClauseNode {
   nextFlowNode?: IfNode | ElseNode
 
   _isElseIf = false
@@ -43,6 +114,7 @@ export class IfNode extends ContainerNode {
       const currentNode = this.parentMCFunction
       const parentDepth = currentNode.contextStack.length
       currentNode.enterContext(this)
+      this.addedToBody = true
       callback()
       while (currentNode.contextStack.length > parentDepth) {
         currentNode.exitContext()
@@ -119,22 +191,25 @@ export class IfStatement<R extends boolean = true> {
   }
 
   private _buildRun(
-    clauseNode: ContainerNode,
+    clauseNode: FlowClauseNode,
     parentMCFunction: MCFunctionNode,
   ): RunProxy {
     const commandsSource = this.sandstoneCore.pack.commands as SandstoneCommands<false>
 
     const commands = new Proxy(commandsSource, {
-      get: (_t, p, _r) => {
-        const parentDepth = parentMCFunction.contextStack.length
-        parentMCFunction.enterContext(clauseNode)
-        return (...args: unknown[]) => {
-          const result = (commandsSource as any)[p](...args)
-          while (parentMCFunction.contextStack.length > parentDepth) {
-            parentMCFunction.exitContext()
-          }
-          return result
+      get: (target, p, receiver) => {
+        // Don't open a context for incidental probes (util.inspect, `then`
+        // on await, ...) — only for real command accesses.
+        if (typeof p === 'symbol' || !(p in target)) {
+          return Reflect.get(target, p, receiver)
         }
+
+        clauseNode.enterSingleCommand(parentMCFunction)
+
+        // Hand back the raw command object so the command's own chain
+        // resolves (`.run.execute.as('@a').at('@s').run.say(...)`).
+        // `clauseNode.append` closes the context once the command commits.
+        return (target as any)[p]
       },
     }) as SandstoneCommands<false>
 
@@ -149,17 +224,19 @@ export class IfStatement<R extends boolean = true> {
     const commandsSource = this.sandstoneCore.pack.commands as SandstoneCommands<false>
 
     const commands = new Proxy(commandsSource, {
-      get: (_t, p, _r) => {
+      get: (target, p, receiver) => {
+        // `ElseProxy` exposes the body as `.else.run.<command>`, so `run` is a
+        // self-reference: it yields this same proxy, and the command accessed
+        // off it is what opens the clause context below.
         if (p === 'run') return commands
-        const parentDepth = parentMCFunction.contextStack.length
-        parentMCFunction.enterContext(elseNode)
-        return (...args: unknown[]) => {
-          const result = (commandsSource as any)[p](...args)
-          while (parentMCFunction.contextStack.length > parentDepth) {
-            parentMCFunction.exitContext()
-          }
-          return result
+
+        if (typeof p === 'symbol' || !(p in target)) {
+          return Reflect.get(target, p, receiver)
         }
+
+        elseNode.enterSingleCommand(parentMCFunction)
+
+        return (target as any)[p]
       },
     }) as SandstoneCommands<false>
 
@@ -181,7 +258,7 @@ export class IfStatement<R extends boolean = true> {
   protected getNode = () => this.node
 }
 
-export class ElseNode extends ContainerNode {
+export class ElseNode extends FlowClauseNode {
   constructor(sandstoneCore: SandstoneCore, callback: () => void) {
     super(sandstoneCore)
 
@@ -190,6 +267,7 @@ export class ElseNode extends ContainerNode {
     const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
     const parentDepth = currentNode.contextStack.length
     currentNode.enterContext(this)
+    this.addedToBody = true
     callback()
     while (currentNode.contextStack.length > parentDepth) {
       currentNode.exitContext()
