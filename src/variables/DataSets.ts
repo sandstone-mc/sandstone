@@ -8,8 +8,7 @@ import type { LiteralUnion, NonEmptyString } from 'sandstone/utils'
 import type { Macroable } from '../core/Macro'
 import { ConditionalDataPointPickClass } from '../core/Macro'
 import type { SandstonePack } from '../pack'
-import type { StringDataPointClass } from './Data'
-import { DataPointClass } from './Data'
+import { DataPointClass, StringDataPointClass } from './Data'
 import { Score } from './Score'
 
 export abstract class IterableDataClass<TYPE extends 'list' | 'map'> extends ConditionalDataPointPickClass {
@@ -387,7 +386,12 @@ export class DataArrayClass<INITIAL extends DataArrayInitial> extends IterableDa
     const { Macro, MCFunction } = this.pack
 
     MCFunction('__sandstone:variable/array/set', [index], () => {
-      if (value instanceof DataPointClass) {
+      if (value instanceof StringDataPointClass) {
+        const [start, end] = value.sliceBounds
+        Macro.data.modify
+          .storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`)
+          .set.string.storage(value.currentTarget, value.path, start, end)
+      } else if (value instanceof DataPointClass) {
         Macro.data.modify
           .storage(this.dataPoint.currentTarget, Macro`${this.dataPoint.path}[${index}]`)
           .set.from.storage(value.currentTarget, value.path)

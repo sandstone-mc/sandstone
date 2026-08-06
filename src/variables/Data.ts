@@ -173,6 +173,14 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
     /* @ts-ignore */
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
+    // The value is a StringDataPoint (slice result) — preserve bounds
+    if (value instanceof StringDataPointClass) {
+
+      if (!value.sliceBounds[1]) data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, value.sliceBounds[0])
+      else data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, value.sliceBounds[0], value.sliceBounds[1])
+      return this
+    }
+
     // The value is another Data Point
     if (value instanceof DataPointClass) {
       data.from[value.type as DATA_TYPES](value.currentTarget as any, value.path)
@@ -235,11 +243,6 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
     storeType?: StoreType,
     scale: number = 1,
   ) {
-    if (value instanceof StringDataPointClass) {
-      if (value.sliceBounds[1]) this.string((data) => data.set, value, value.sliceBounds[0], value.sliceBounds[1])
-      else this.string((data) => data.set, value, value.sliceBounds[0])
-      return this
-    }
     if (value instanceof Score) {
       this.executeStore(storeType || 'int', scale).run.scoreboard.players.get(value.target, value.objective)
       return this
