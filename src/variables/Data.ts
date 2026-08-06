@@ -199,11 +199,7 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
     const data = cb(this.sandstonePack.commands.data.modify[this.type](this.currentTarget as any, this.path))
 
     if (!end) data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start)
-    else if (start === 0) {
-      data.from[value.type as DATA_TYPES](value.currentTarget as any, value.path)
-    } else {
-      data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start, end)
-    }
+    else data.string[value.type as DATA_TYPES](value.currentTarget as any, value.path, start, end)
   }
 
   protected executeStore = (storeType: StoreType, scale: number) =>
