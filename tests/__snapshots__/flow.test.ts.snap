@@ -6322,7 +6322,7 @@ scoreboard players set test load.status 1"
     "datapack/data/test/function/macro_flow.mcfunction",
     
 "say before _.if
-execute if entity @s run tellraw @a "[object Object]"
+execute if entity @s run give @s diamond [object Object]
 say after _.if"
 ,
   ],
@@ -6330,7 +6330,7 @@ say after _.if"
     "datapack/data/test/function/macro_with_flow.mcfunction",
     
 "say before MCFunction(macro_flow)
-data modify storage __sandstone:variable anon_kZZpDK67_0 set value 'x'
+data modify storage __sandstone:variable anon_kZZpDK67_0 set value 5d
 say after MCFunction(macro_flow)"
 ,
   ],
