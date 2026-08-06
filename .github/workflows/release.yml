@@ -5,8 +5,8 @@ env:
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - master
   workflow_dispatch:
 
 permissions:
