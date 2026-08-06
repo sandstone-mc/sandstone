@@ -1,6 +1,8 @@
 import { FunctionCommandNode } from 'sandstone/commands'
-import type { MCFunctionClass, MacroArgument, SandstoneCore } from 'sandstone/core'
+import type { SandstoneCommands } from 'sandstone/commands'
+import type { MCFunctionClass, MCFunctionNode, MacroArgument, SandstoneCore } from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core'
+import type { Node } from 'sandstone/core/nodes'
 import { ExecuteCommandNode } from 'sandstone/commands/implementations/entity/execute'
 
 const WITH_CHILD_NAME = '__with_macro'
@@ -8,6 +10,8 @@ const WITH_CHILD_NAME = '__with_macro'
 /**
  * `_.with(env, callback)` — runs the callback in a context where the given
  * `MacroArgument`s become macro parameters inside a child MCFunction.
+ *
+ * `_.with(env)` is the callback-less form: see `withCommands` below.
  *
  * The WithClass transforms itself into a `function <name> with storage ...`
  * command. Its `body` is moved into the child MCFunction, and the env vars
@@ -35,14 +39,28 @@ export class WithClass extends ContainerCommandNode {
    */
   enclosingExecute: ExecuteCommandNode | null = null
 
+  /**
+   * True when the body is supplied by the callback-less `_.with(env).<command>`
+   * form. In that mode the first node appended to the body closes the context
+   * and finalizes the call, mirroring `ExecuteCommandNode`'s single-execute
+   * handling.
+   */
+  isSingleCommand = false
+
+  /** MCFunction that hosts this `_.with` call. */
+  private hostFunction: MCFunctionNode
+
+  private finalized = false
+
   constructor(
     core: SandstoneCore,
     public env: MacroArgument[],
-    callback: () => void,
+    callback?: () => void,
   ) {
     super(core.pack)
 
     const currentFunction = core.getCurrentMCFunctionOrThrow()
+    this.hostFunction = currentFunction
     currentFunction.resource.nested += 1
 
     // Capture the enclosing execute (if any) so the visitor can hoist its
@@ -73,9 +91,49 @@ export class WithClass extends ContainerCommandNode {
     )
 
     // Capture user commands inside the callback into this.body.
-    currentFunction.enterContext(this)
-    callback()
-    currentFunction.exitContext()
+    if (callback) {
+      currentFunction.enterContext(this)
+      callback()
+      currentFunction.exitContext()
+      this.finalize()
+    }
+  }
+
+  /**
+   * Enter this node's context so that the next command committed to the
+   * current MCFunction lands in `this.body` instead of the parent body.
+   * Used by the callback-less `_.with(env).<command>` form; `append()`
+   * closes the context again once that command arrives.
+   *
+   * @internal
+   */
+  enterSingleCommand = () => {
+    this.isSingleCommand = true
+    this.hostFunction.enterContext(this)
+  }
+
+  append = (...nodes: Node[]) => {
+    for (const node of nodes) {
+      this.body.push(node)
+
+      if (this.isSingleCommand && !this.finalized) {
+        this.hostFunction.exitContext()
+        this.finalize()
+      }
+    }
+
+    return (nodes.length === 1 ? nodes[0] : nodes) as any
+  }
+
+  /**
+   * Emit the macro call. Splits out of the constructor so the callback-less
+   * form can defer it until its command has been committed to `this.body`.
+   */
+  private finalize = () => {
+    if (this.finalized) {
+      return
+    }
+    this.finalized = true
 
     // Let `mcfunction()` do its job: it sets up env.local, emits the
     // `data.modify` prep via ResolveNBT, creates a FunctionCommandNode,
@@ -97,7 +155,7 @@ export class WithClass extends ContainerCommandNode {
     // Use the current context (top of contextStack), not the parent
     // MCFunction body, because `_.with` may be nested inside an execute
     // / if / loop body that later gets extracted into its own MCFunction.
-    const parentBody = currentFunction.currentContext.body
+    const parentBody = this.hostFunction.currentContext.body
     const myIndex = parentBody.indexOf(this)
     if (myIndex !== -1) {
       let fnCmdIdx = -1
@@ -120,4 +178,35 @@ export class WithClass extends ContainerCommandNode {
       }
     }
   }
+}
+
+/**
+ * Callback-less `_.with(env)` — returns a `SandstoneCommands<true>` proxy
+ * whose first accessed command becomes the body of the child macro
+ * MCFunction. Equivalent to passing that single command as the callback:
+ *
+ * ```ts
+ * _.with([world]).say($`Hello ${world}!`)
+ * // same as
+ * _.with([world], () => { $.say($`Hello ${world}!`) })
+ * ```
+ */
+export function withCommands(core: SandstoneCore, env: MacroArgument[]): SandstoneCommands<true> {
+  // Route through `macroCommands` so the commands inside the child function
+  // carry `isMacro: true` — the body always runs in a macro context.
+  const commandsSource = core.pack.macroCommands as any
+
+  return new Proxy(commandsSource, {
+    get: (target, p, receiver) => {
+      // Don't create a WithClass for incidental probes (util.inspect,
+      // `then` on await, etc.) — only for real command accesses.
+      if (typeof p === 'symbol' || !(p in target)) {
+        return Reflect.get(target, p, receiver)
+      }
+
+      new WithClass(core, env).enterSingleCommand()
+
+      return target[p]
+    },
+  }) as SandstoneCommands<true>
 }

@@ -12,6 +12,7 @@ import type {
   SingleEntityArgument,
 } from 'sandstone/arguments'
 import type { ItemSlotSource } from '../commands/implementations/world/item'
+import type { SandstoneCommands } from 'sandstone/commands'
 import type {
   ConditionClass,
   DataPointClass,
@@ -30,7 +31,7 @@ import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops'
-import { WithClass } from './macro'
+import { WithClass, withCommands } from './macro'
 import type { ConditionCallback, DefaultType, SwitchCase } from './switch_case'
 import { CaseStatement, executeSwitch } from './switch_case'
 
@@ -646,5 +647,31 @@ export class Flow {
     return new SandstoneConditions.Predicate(this.sandstoneCore, predicate.name)
   }
 
-  with = (env: MacroArgument[], callback: (() => any)) => new WithClass(this.sandstoneCore, env, callback)
+  /**
+   * Runs the callback inside a child macro MCFunction, with each given
+   * `MacroArgument` bound as a macro parameter (`$(env_0)`, `$(env_1)`, ...).
+   *
+   * @param env Macro arguments to expose inside the macro function.
+   * @param callback Body of the macro function.
+   */
+  with(env: MacroArgument[], callback: () => any): WithClass
+  /**
+   * Runs a single command inside a child macro MCFunction, with each given
+   * `MacroArgument` bound as a macro parameter (`$(env_0)`, `$(env_1)`, ...).
+   *
+   * @param env Macro arguments to expose inside the macro function.
+   *
+   * @example
+   * ```ts
+   * _.with([world]).say($`Hello ${world}!`)
+   * ```
+   */
+  with(env: MacroArgument[]): SandstoneCommands<true>
+
+  with(env: MacroArgument[], callback?: (() => any)) {
+    if (callback) {
+      return new WithClass(this.sandstoneCore, env, callback)
+    }
+    return withCommands(this.sandstoneCore, env)
+  }
 }
