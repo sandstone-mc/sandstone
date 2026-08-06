@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.18](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.18) - 2026-08-06
+
+### Add `Flow#with` for running macro commands, `.run.` & `else.run.` after `_.if` & `.elseIf`, fix bugs
+
+**Full Changelog**: [v1.2.17...v1.2.18](https://github.com/sandstone-mc/sandstone/compare/v1.2.17...v1.2.18)
+
+
 ## [v1.2.17](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.17) - 2026-08-05
 
 ### Fix `SandstoneCore#getExistingResource` and related resources
