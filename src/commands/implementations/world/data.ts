@@ -242,9 +242,10 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
         coordinatesParser(sourcePosition),
         sourcePath,
       ]
-      if (start) {
+      if (start !== undefined && end !== undefined) {
+        command.push(start, end)
+      } else if (start !== undefined && start !== 0) {
         command.push(start)
-        if (end) command.push(end)
       }
       this.finalCommand(command)
     },
@@ -269,9 +270,10 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
         targetParser(source),
         sourcePath,
       ]
-      if (start) {
+      if (start !== undefined && end !== undefined) {
+        command.push(start, end)
+      } else if (start !== undefined && start !== 0) {
         command.push(start)
-        if (end) command.push(end)
       }
       this.finalCommand(command)
     },
@@ -291,9 +293,10 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
       end?: Macroable<number, MACRO>,
     ) => {
       const command: (string | number | MacroArgument)[] = ['string', 'storage', source, sourcePath]
-      if (start) {
+      if (start !== undefined && end !== undefined) {
+        command.push(start, end)
+      } else if (start !== undefined && start !== 0) {
         command.push(start)
-        if (end) command.push(end)
       }
       this.finalCommand(command)
     },
