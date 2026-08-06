@@ -2,6 +2,9 @@ import * as util from 'util'
 
 import type { MCFunctionNode, SandstoneCore } from '../core'
 import { ContainerNode } from '../core'
+import type { SandstoneCommands, ExecuteCommandNode } from 'sandstone/commands'
+import { FinalCommandOutput } from 'sandstone/commands'
+import { makeCallable } from 'sandstone/utils'
 import { formatDebugString } from '../utils'
 import type { ConditionNode } from './conditions'
 import { conditionToNode, type Condition } from './Flow'
@@ -17,7 +20,7 @@ export class IfNode extends ContainerNode {
   givenCallbackName?: string
 
   /** Set by IfElseTransformationVisitor to the resulting ExecuteCommandNode */
-  resultingExecuteNode?: import('sandstone/commands').ExecuteCommandNode
+  resultingExecuteNode?: ExecuteCommandNode
 
   constructor(
     sandstoneCore: SandstoneCore,
@@ -32,9 +35,11 @@ export class IfNode extends ContainerNode {
     if (callback && callback.toString() !== '() => {}') {
       // Generate the body of the If node. Sleep nodes (and other awaits)
       // inside the callback enter their own context without balancing it,
-      // so a single `exitContext()` would leave them on the stack and
-      // swallow any post-`_.if(...)` commands into the await node. Pop
-      // until we're back at the parent depth.
+      // so a single `exitContext()` after `loopback()` would only pop the
+      // topmost context (the await's) — leaving `this` (LoopNode) on the
+      // stack, which causes post-loop commands to be appended to the
+      // loop's body instead of the parent MCFunction. Pop until we're back
+      // at the parent's depth.
       const currentNode = this.parentMCFunction
       const parentDepth = currentNode.contextStack.length
       currentNode.enterContext(this)
@@ -71,7 +76,10 @@ export class IfNode extends ContainerNode {
   }
 }
 
-export class IfStatement {
+type RunProxy = SandstoneCommands<false>
+type ElseProxy = { readonly run: SandstoneCommands<false> } & ((callback: () => void) => FinalCommandOutput)
+
+export class IfStatement<R extends boolean = true> {
   protected node: IfNode
 
   constructor(
@@ -79,27 +87,95 @@ export class IfStatement {
     protected condition: ConditionNode,
     protected callback: () => void,
   ) {
-    // Generate the body of the If node.
     this.node = new IfNode(sandstoneCore, condition, callback)
   }
 
-  elseIf = (condition: Condition, callback: () => void) => {
-    const statement = new IfStatement(
-      this.sandstoneCore,
-      conditionToNode(condition),
-      callback,
-    )
-    this.node.nextFlowNode = statement.getNode()
-
-    statement.node._isElseIf = true
-
-    return statement
+  get run(): R extends true ? RunProxy : never {
+    return this._buildRun(this.node, this.node.parentMCFunction) as R extends true ? RunProxy : never
   }
 
-  else = (callback: () => void) => {
-    const statement = new ElseStatement(this.sandstoneCore, callback)
+  get else(): ElseProxy {
+    return this._buildElse() as unknown as ElseProxy
+  }
+
+  /** Callback provided — clause body is set; `.run` is unavailable. */
+  elseIf(condition: Condition, callback: () => void): IfStatement<false>
+  /** No callback — clause body is supplied via `.run`. */
+  elseIf(condition: Condition): IfStatement<true>
+  elseIf(
+    condition: Condition,
+    callback?: () => void,
+  ): IfStatement<boolean> {
+    const cb = callback ?? (() => {})
+    const statement = new IfStatement<boolean>(
+      this.sandstoneCore,
+      conditionToNode(condition),
+      cb,
+    )
     this.node.nextFlowNode = statement.getNode()
-    return statement
+    statement.node._isElseIf = true
+
+    return statement as IfStatement<boolean>
+  }
+
+  private _buildRun(
+    clauseNode: ContainerNode,
+    parentMCFunction: MCFunctionNode,
+  ): RunProxy {
+    const commandsSource = this.sandstoneCore.pack.commands as SandstoneCommands<false>
+
+    const commands = new Proxy(commandsSource, {
+      get: (_t, p, _r) => {
+        const parentDepth = parentMCFunction.contextStack.length
+        parentMCFunction.enterContext(clauseNode)
+        return (...args: unknown[]) => {
+          const result = (commandsSource as any)[p](...args)
+          while (parentMCFunction.contextStack.length > parentDepth) {
+            parentMCFunction.exitContext()
+          }
+          return result
+        }
+      },
+    }) as SandstoneCommands<false>
+
+    return commands as RunProxy
+  }
+
+  private _buildElse(): ElseProxy {
+    const elseNode = new ElseNode(this.sandstoneCore, () => {})
+    this.node.nextFlowNode = elseNode
+    const parentMCFunction = this.node.parentMCFunction
+
+    const commandsSource = this.sandstoneCore.pack.commands as SandstoneCommands<false>
+
+    const commands = new Proxy(commandsSource, {
+      get: (_t, p, _r) => {
+        if (p === 'run') return commands
+        const parentDepth = parentMCFunction.contextStack.length
+        parentMCFunction.enterContext(elseNode)
+        return (...args: unknown[]) => {
+          const result = (commandsSource as any)[p](...args)
+          while (parentMCFunction.contextStack.length > parentDepth) {
+            parentMCFunction.exitContext()
+          }
+          return result
+        }
+      },
+    }) as SandstoneCommands<false>
+
+    return makeCallable(
+      commands,
+      (callback: () => void): FinalCommandOutput => {
+        const parentDepth = parentMCFunction.contextStack.length
+        parentMCFunction.enterContext(elseNode)
+        callback()
+        while (parentMCFunction.contextStack.length > parentDepth) {
+          parentMCFunction.exitContext()
+        }
+        return new FinalCommandOutput(elseNode as any)
+      },
+      true,
+    ) as unknown as ElseProxy
   }
 
   protected getNode = () => this.node

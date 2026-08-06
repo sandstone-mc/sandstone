@@ -837,6 +837,218 @@ scoreboard players set test load.status 1"
 ]
 `;
 
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if with .run.<command> body 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_run_only.mcfunction",
+    
+"say before if
+execute if entity @s[tag=test.test] run say inside via run
+say after if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if(cb).elseIf(...).run.<command> chain (chain ends at elseIf.run) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.counter dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_elseIf_run.mcfunction",
+    
+"say before chain
+function test:flow_if_elseIf_run/if
+say after chain"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_elseIf_run/if.mcfunction",
+    
+"execute if score @s test.counter matches 0..0 run return run say zero via cb
+execute if score @s test.counter matches 1..1 run say one via run"
+,
+  ],
+]
+`;
+
 exports[`Flow snapshots _.while / _.doWhile while loop with score range condition 1`] = `
 [
   [
@@ -7666,6 +7878,117 @@ function test:with_no_hoist/__with_macro with storage __sandstone:variable anon_
 "say hi
 $give @s minecraft:diamond $(env_0)
 $give @s minecraft:emerald $(env_0)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.if / _.elseIf / _.else Flow _.if(cb).elseIf(cb).else.run.<command> chain (chain ends at else.run) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.counter dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_else_else_run.mcfunction",
+    
+"say before chain
+function test:flow_if_else_else_run/if
+say after chain"
+,
+  ],
+  [
+    "datapack/data/test/function/flow_if_else_else_run/if.mcfunction",
+    
+"execute if score @s test.counter matches 0..0 run return run say zero via cb
+execute if score @s test.counter matches 1..1 run return run say one via cb
+say fallback via run"
 ,
   ],
 ]

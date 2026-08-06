@@ -3,6 +3,7 @@ import {
   _,
   DataVariable,
   execute,
+  Label,
   Macro as $,
   MCFunction,
   Objective,
@@ -105,6 +106,46 @@ describe('Flow snapshots', () => {
         _.if(_.entity('@s'), () => {
           // intentionally empty
         })
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if with .run.<command> body', () => {
+      const out = compile('flow_if_run_only', () => {
+        say('before if')
+        _.if(Label('test')('@s')).run.say('inside via run')
+        say('after if')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(cb).elseIf(...).run.<command> chain (chain ends at elseIf.run)', () => {
+      const out = compile('flow_if_elseIf_run', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0]), () => {
+          say('zero via cb')
+        })
+          .elseIf(counter('@s').matches([1, 1])).run
+          .say('one via run')
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(cb).elseIf(cb).else.run.<command> chain (chain ends at else.run)', () => {
+      const out = compile('flow_if_else_else_run', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0]), () => {
+          say('zero via cb')
+        })
+          .elseIf(counter('@s').matches([1, 1]), () => {
+            say('one via cb')
+          })
+          .else
+          .run.say('fallback via run')
+        say('after chain')
       })
       snapshotAll(out)
     })

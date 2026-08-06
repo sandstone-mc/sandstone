@@ -60,8 +60,19 @@ export function conditionToNode(condition: Condition) {
 export class Flow {
   constructor(public sandstoneCore: SandstoneCore) {}
 
-  if = (condition: Condition, callback: () => void) =>
-    new IfStatement(this.sandstoneCore, conditionToNode(condition), callback)
+  if(condition: Condition, callback: () => void): IfStatement<false>
+  if(condition: Condition): IfStatement<true>
+  if(
+    condition: Condition,
+    callback?: () => void,
+  ): IfStatement<boolean> {
+    const cb = callback ?? (() => {})
+    return new IfStatement<boolean>(
+      this.sandstoneCore,
+      conditionToNode(condition),
+      cb,
+    ) as IfStatement<boolean>
+  }
 
   /**
    * Combine conditions with AND.
