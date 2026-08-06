@@ -1,6 +1,6 @@
 import type { MCDocToJSON, MultiplePlayersArgumentOf, RootNBT, SymbolDataComponent } from 'sandstone/arguments'
-import type { Macroable } from 'sandstone/core'
-import { CommandNode } from 'sandstone/core'
+import type { Macroable, MacroArgument } from 'sandstone/core'
+import { CommandNode, isMacroArgument } from 'sandstone/core'
 import { nbtResolver, targetParser } from 'sandstone/variables'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
@@ -109,10 +109,25 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
     countOrComponents?: Macroable<any, MACRO>,
     count?: Macroable<number, MACRO>,
   ) {
-    if (typeof countOrComponents === 'object') {
-      return this.finalCommand([targetParser(targets), `${item}${componentPatchStringifier(countOrComponents as any)}`, count])
+    const select = isMacroArgument(this.sandstoneCore, targets) ? targets : targetParser(targets)
+
+    if (typeof countOrComponents === 'object' || typeof countOrComponents === 'function') {
+      const components = countOrComponents!
+
+      const componentsIsMacro = isMacroArgument(this.sandstoneCore, components)
+      if (isMacroArgument(this.sandstoneCore, item) || componentsIsMacro) {
+        return this.finalCommand([
+          select,
+          this.sandstonePack.Macro`${item}${componentsIsMacro ? components as MacroArgument : componentPatchStringifier(components as any)}`,
+          count,
+        ])
+      }
+      if (components.constructor.name === 'Object' && Object.keys(components).length === 0) {
+        return this.finalCommand([select, item, count])
+      }
+      return this.finalCommand([select, item, componentPatchStringifier(components as any), count])
     }
-    return this.finalCommand([targetParser(targets), item, countOrComponents])
+    return this.finalCommand([select, item, countOrComponents])
   }
 }
 
