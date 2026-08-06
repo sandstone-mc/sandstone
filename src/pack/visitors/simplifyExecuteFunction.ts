@@ -33,6 +33,15 @@ function getEffectiveSingleCommand(body: any[]): any | null {
  */
 export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
   visitExecuteCommandNode = (node: ExecuteCommandNode): Node | Node[] => {
+    // Don't inline a loop's wrapping execute: it's the recursion target for
+    // LoopArgument anywhere else in the loop body (e.g. inside `_.await.sleep`
+    // continuations). Inlining it back into a one-shot `execute if cond run X`
+    // strand means the LoopArgument inside the sleep's continuation calls a
+    // nonexistent function. The wrapping mcfunction must survive.
+    if (node.givenCallbackName === 'loop') {
+      return this.genericVisit(node)
+    }
+
     if (node.body.length === 0 || node.body.length > 1) {
       return this.genericVisit(node)
     }
