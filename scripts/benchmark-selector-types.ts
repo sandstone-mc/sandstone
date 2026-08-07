@@ -31,6 +31,7 @@ type Round = {
 const ROOT = path.resolve(import.meta.dir, '..')
 const BENCHMARK_DIR = path.join(ROOT, '.temp', 'selector-type-benchmark')
 const DECLARATION_ENTRY = path.join(ROOT, 'dist', 'exports', 'index.d.ts')
+const DECLARATION_ROOT = path.join(ROOT, 'dist')
 const NODE = Bun.which('node')
 
 const packageVersion = (packageName: string): string => {
@@ -68,21 +69,10 @@ MCFunction('test', () => {
   tellraw('@a', 'Hello, world!')
 })
 `,
-  selector: `import { MCFunction, Selector, tellraw } from 'sandstone'
-
-MCFunction('test', () => {
-  tellraw(
-    Selector('@a', {
-      advancements: {
-        'story/obtain_armor': {
-          iron_helmet: true,
-        },
-      },
-    }),
-    'Hello, world!',
-  )
-})
-`,
+  selector: fs.readFileSync(
+    path.join(ROOT, 'tests', 'types', 'selectorPerformance.fixture.ts'),
+    'utf8',
+  ),
 }
 
 const usage = `Usage: bun scripts/benchmark-selector-types.ts [options]
@@ -143,8 +133,18 @@ const parseOptions = (args: string[]): Options => {
   return options
 }
 
+const declarationFiles = (directory: string): string[] => fs
+  .readdirSync(directory, { withFileTypes: true })
+  .flatMap((entry) => {
+    const entryPath = path.join(directory, entry.name)
+    if (entry.isDirectory()) {
+      return declarationFiles(entryPath)
+    }
+    return entry.name.endsWith('.d.ts') ? [entryPath] : []
+  })
+
 const prepareFixtures = (): string => {
-  if (!fs.existsSync(DECLARATION_ENTRY)) {
+  if (!fs.existsSync(DECLARATION_ENTRY) || !fs.existsSync(DECLARATION_ROOT)) {
     throw new Error('Built declarations are missing. Run `bun dev:build --silent` first.')
   }
 
@@ -172,7 +172,24 @@ const prepareFixtures = (): string => {
     )
   }
 
-  return createHash('sha256').update(fs.readFileSync(DECLARATION_ENTRY)).digest('hex')
+  const digest = createHash('sha256')
+  const files = declarationFiles(DECLARATION_ROOT)
+    .map((file) => ({
+      file,
+      relativePath: path.relative(ROOT, file).split(path.sep).join('/'),
+    }))
+    .sort((left, right) => (
+      left.relativePath < right.relativePath
+        ? -1
+        : Number(left.relativePath > right.relativePath)
+    ))
+  digest.update(`v1:${files.length}:`)
+  for (const { file, relativePath } of files) {
+    const content = fs.readFileSync(file)
+    digest.update(`${Buffer.byteLength(relativePath, 'utf8')}:`).update(relativePath)
+    digest.update(`${content.byteLength}:`).update(content)
+  }
+  return digest.digest('hex')
 }
 
 const metric = (output: string, label: string, unit = ''): number => {
@@ -355,6 +372,7 @@ const main = async () => {
       + `${summary.controlInstantiationsMedian}/${summary.selectorInstantiationsMedian}`,
   )
   console.log(`Timing note: ${summary.timingNote}`)
+  console.log(`Declarations SHA-256: ${summary.environment.declarationSha256}`)
   console.log(
     `Memory KiB (control/selector): `
       + `${summary.controlMemoryMedianKiB}/${summary.selectorMemoryMedianKiB}`,
