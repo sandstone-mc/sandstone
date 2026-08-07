@@ -3,7 +3,7 @@
  * and locates where those classes are defined.
  */
 
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 import { Glob } from 'bun'
 
 export interface InstanceofInfo {

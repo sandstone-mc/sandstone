@@ -1,5 +1,6 @@
 import type { BlockPredicate, ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { DamageType } from 'sandstone/arguments/generated/data/damage_type.ts'
+import type { ResolvableNumber } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument.ts'
@@ -51,6 +52,7 @@ import type {
   ItemModelDefinitionClass,
   JukeboxSongClass,
   LootTableClass,
+  NamespacedString,
   NBTByte,
   NBTClass,
   NBTDouble,
@@ -58,6 +60,7 @@ import type {
   NBTInt,
   NBTList,
   NBTLong,
+  NonEmptyString,
   RecipeClass,
   TagClass,
   TextureClass,
@@ -198,7 +201,7 @@ export type AttributeModifier = {
   /**
    * Used when equipping and unequipping the item to identify which modifier to add or remove from the entity.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
   /**
    * Change in the attribute.
    */
@@ -382,8 +385,8 @@ export type BlockTransformType = ('single_block' | 'copper_chest')
 export type BookGeneration = (0 | 1 | 2 | 3)
 
 export type BrewingFuel = {
-  uses: Registry['minecraft:number_provider'],
-  speed_multiplier: Registry['minecraft:number_provider'],
+  uses: ResolvableNumber,
+  speed_multiplier: ResolvableNumber,
 }
 
 export type BucketEntityData = {
@@ -435,7 +438,7 @@ export type BucketEntityData = {
 }
 
 export type Compostable = {
-  layers: Registry['minecraft:number_provider'],
+  layers: ResolvableNumber,
 }
 
 export type Consumable = {
@@ -490,8 +493,8 @@ export type ConsumeEffect = NonNullable<({
 }[Extract<Registry['minecraft:consume_effect_type'], string>])>
 
 export type CookingFuel = {
-  burn_time: Registry['minecraft:number_provider'],
-  speed_multiplier: Registry['minecraft:number_provider'],
+  burn_time: ResolvableNumber,
+  speed_multiplier: ResolvableNumber,
 }
 
 export type CustomModelData = {
@@ -865,7 +868,7 @@ export type MapDecoration = {
 }
 
 export type MapDecorations = ({
-  [Key in `${any}${string}`]?: MapDecoration
+  [Key in NonEmptyString]?: MapDecoration
 })
 
 export type MobVisibility = {
@@ -1070,7 +1073,7 @@ export type UseCooldown = {
    *
    * Value: Defines a `cooldown_group` id.
    */
-  cooldown_group?: `${string}:${string}`,
+  cooldown_group?: NamespacedString,
 }
 
 export type UseEffects = {
@@ -1139,7 +1142,7 @@ export type WritableBookContent = {
 
 export type WrittenBookContent = {
   pages?: Array<Filterable<Text>>,
-  title: Filterable<`${any}${string}`>,
+  title: Filterable<NonEmptyString>,
   author: string,
   /**
    * Number of times this written book has been copied. Defaults to 0. If the value is greater than 1, the book cannot be copied.
@@ -1213,6 +1216,8 @@ export type SymbolConsumeEffect<CASE extends
 type DataComponentDispatcherMap = {
   'additional_trade_cost': DataComponentAdditionalTradeCost,
   'minecraft:additional_trade_cost': DataComponentAdditionalTradeCost,
+  'attack_animation': DataComponentAttackAnimation,
+  'minecraft:attack_animation': DataComponentAttackAnimation,
   'attack_range': DataComponentAttackRange,
   'minecraft:attack_range': DataComponentAttackRange,
   'attribute_modifiers': DataComponentAttributeModifiers,
@@ -1323,6 +1328,8 @@ type DataComponentDispatcherMap = {
   'minecraft:instrument': DataComponentInstrument,
   'intangible_projectile': DataComponentIntangibleProjectile,
   'minecraft:intangible_projectile': DataComponentIntangibleProjectile,
+  'interact_animation': DataComponentInteractAnimation,
+  'minecraft:interact_animation': DataComponentInteractAnimation,
   'item_model': DataComponentItemModel,
   'minecraft:item_model': DataComponentItemModel,
   'item_name': DataComponentItemName,
@@ -1339,8 +1346,6 @@ type DataComponentDispatcherMap = {
   'minecraft:lodestone_tracker': DataComponentLodestoneTracker,
   'lore': DataComponentLore,
   'minecraft:lore': DataComponentLore,
-  'map_color': DataComponentMapColor,
-  'minecraft:map_color': DataComponentMapColor,
   'map_decorations': DataComponentMapDecorations,
   'minecraft:map_decorations': DataComponentMapDecorations,
   'map_id': DataComponentMapId,
@@ -1411,8 +1416,6 @@ type DataComponentDispatcherMap = {
   'minecraft:sulfur_cube_content': DataComponentSulfurCubeContent,
   'suspicious_stew_effects': DataComponentSuspiciousStewEffects,
   'minecraft:suspicious_stew_effects': DataComponentSuspiciousStewEffects,
-  'swing_animation': DataComponentSwingAnimation,
-  'minecraft:swing_animation': DataComponentSwingAnimation,
   'tool': DataComponentTool,
   'minecraft:tool': DataComponentTool,
   'tooltip_display': DataComponentTooltipDisplay,
@@ -1459,6 +1462,7 @@ type DataComponentDispatcherMap = {
 type DataComponentKeys = keyof DataComponentDispatcherMap
 type DataComponentFallback = (
   | DataComponentAdditionalTradeCost
+  | DataComponentAttackAnimation
   | DataComponentAttackRange
   | DataComponentAttributeModifiers
   | DataComponentAxolotlVariant
@@ -1514,6 +1518,7 @@ type DataComponentFallback = (
   | DataComponentHorseVariant
   | DataComponentInstrument
   | DataComponentIntangibleProjectile
+  | DataComponentInteractAnimation
   | DataComponentItemModel
   | DataComponentItemName
   | DataComponentJukeboxPlayable
@@ -1522,7 +1527,6 @@ type DataComponentFallback = (
   | DataComponentLock
   | DataComponentLodestoneTracker
   | DataComponentLore
-  | DataComponentMapColor
   | DataComponentMapDecorations
   | DataComponentMapId
   | DataComponentMapPostProcessing
@@ -1558,7 +1562,6 @@ type DataComponentFallback = (
   | DataComponentStoredEnchantments
   | DataComponentSulfurCubeContent
   | DataComponentSuspiciousStewEffects
-  | DataComponentSwingAnimation
   | DataComponentTool
   | DataComponentTooltipDisplay
   | DataComponentTooltipStyle
@@ -1581,13 +1584,14 @@ type DataComponentFallback = (
   | DataComponentWrittenBookContent
   | DataComponentZombieNautilusVariant)
 type DataComponentAdditionalTradeCost = NBTInt
+type DataComponentAttackAnimation = SwingAnimation
 type DataComponentAttackRange = AttackRange
 type DataComponentAttributeModifiers = Array<AttributeModifier>
 type DataComponentAxolotlVariant = AxolotlVariant
 type DataComponentBannerPatterns = Array<BannerPatternLayer>
 type DataComponentBaseColor = DyeColor
 type DataComponentBees = Array<Occupant>
-type DataComponentBlockEntityData = (BlockEntityData | (`${any}${string}` | NBTClass))
+type DataComponentBlockEntityData = (BlockEntityData | (NonEmptyString | NBTClass))
 type DataComponentBlockState = SymbolMcdocBlockItemStates<'%fallback'>
 type DataComponentBlockTransformer = NBTList<BlockTransformer, {
   leftExclusive: false,
@@ -1596,7 +1600,7 @@ type DataComponentBlockTransformer = NBTList<BlockTransformer, {
 type DataComponentBlocksAttacks = blocks_attacks
 type DataComponentBreakSound = SoundEventRef
 type DataComponentBrewingFuel = BrewingFuel
-type DataComponentBucketEntityData = (BucketEntityData | (`${any}${string}` | NBTClass))
+type DataComponentBucketEntityData = (BucketEntityData | (NonEmptyString | NBTClass))
 type DataComponentBundleContents = Array<ItemStackTemplate>
 type DataComponentCanBreak = AdventureModePredicate
 type DataComponentCanPlaceOn = AdventureModePredicate
@@ -1632,7 +1636,7 @@ type DataComponentDyedColor = RGB
 type DataComponentEnchantable = Enchantable
 type DataComponentEnchantmentGlintOverride = boolean
 type DataComponentEnchantments = EnchantmentLevels
-type DataComponentEntityData = (AnyEntity | (`${any}${string}` | NBTClass))
+type DataComponentEntityData = (AnyEntity | (NonEmptyString | NBTClass))
 type DataComponentEquippable = Equippable
 type DataComponentFireworkExplosion = Explosion
 type DataComponentFireworks = Fireworks
@@ -1643,6 +1647,7 @@ type DataComponentGlider = Record<string, never>
 type DataComponentHorseVariant = HorseVariant
 type DataComponentInstrument = ((Registry['minecraft:instrument'] | InstrumentClass) | Instrument)
 type DataComponentIntangibleProjectile = Record<string, never>
+type DataComponentInteractAnimation = SwingAnimation
 type DataComponentItemModel = (Registry['minecraft:item_definition'] | ItemModelDefinitionClass)
 type DataComponentItemName = Text
 type DataComponentJukeboxPlayable = (Registry['minecraft:jukebox_song'] | JukeboxSongClass)
@@ -1651,7 +1656,6 @@ type DataComponentLlamaVariant = LlamaVariant
 type DataComponentLock = ItemPredicate
 type DataComponentLodestoneTracker = LodestoneTracker
 type DataComponentLore = Array<Text>
-type DataComponentMapColor = NBTInt
 type DataComponentMapDecorations = MapDecorations
 type DataComponentMapId = NBTInt
 type DataComponentMapPostProcessing = Record<string, never>
@@ -1670,7 +1674,7 @@ type DataComponentMinimumAttackCharge = NBTFloat<{
 }>
 type DataComponentMobVisibility = MobVisibility
 type DataComponentMooshroomVariant = MooshroomType
-type DataComponentNoteBlockSound = `${string}:${string}`
+type DataComponentNoteBlockSound = NamespacedString
 type DataComponentOminousBottleAmplifier = NBTInt<{
   min: 0,
   max: 4,
@@ -1680,9 +1684,7 @@ type DataComponentParrotVariant = ParrotVariant
 type DataComponentPiercingWeapon = PiercingWeapon
 type DataComponentPigSoundVariant = (Registry['minecraft:pig_sound_variant'] | VariantClass<'pig_sound'>)
 type DataComponentPigVariant = (Registry['minecraft:pig_variant'] | VariantClass<'pig'>)
-type DataComponentPotDecorations = (NBTList<Registry['minecraft:item'], {
-  rightExclusive: false,
-}> | PotDecorations)
+type DataComponentPotDecorations = PotDecorations
 type DataComponentPotionContents = (PotionContents | Registry['minecraft:potion'])
 type DataComponentPotionDurationScale = NBTFloat<{
   leftExclusive: false,
@@ -1712,10 +1714,9 @@ type DataComponentSignTextFront = SignText
 type DataComponentStoredEnchantments = EnchantmentLevels
 type DataComponentSulfurCubeContent = ItemStackTemplate
 type DataComponentSuspiciousStewEffects = Array<SuspiciousStewEffect>
-type DataComponentSwingAnimation = SwingAnimation
 type DataComponentTool = Tool
 type DataComponentTooltipDisplay = TooltipDisplay
-type DataComponentTooltipStyle = `${string}:${string}`
+type DataComponentTooltipStyle = NamespacedString
 type DataComponentTrim = Trim
 type DataComponentTropicalFishBaseColor = DyeColor
 type DataComponentTropicalFishPattern = TropicalFishPattern

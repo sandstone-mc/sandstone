@@ -1,6 +1,7 @@
 import type { SingleEntityArgument } from 'sandstone/arguments'
 import type { MCFunctionClass, SandstoneCore } from 'sandstone/core'
 import { AwaitNode } from 'sandstone/core/nodes'
+import type { NonEmptyString } from 'sandstone/utils'
 
 const ATTACH_CHILD_NAME = '__attach'
 
@@ -25,7 +26,7 @@ const ATTACH_CHILD_NAME = '__attach'
  */
 export interface AttachOptions {
   entrypoint: 'start' | 'end'
-  func: MCFunctionClass<any, any> | `${any}${string}`
+  func: MCFunctionClass<any, any> | NonEmptyString
   branch: string[]
   awaitNodeIdx: number
   entity?: SingleEntityArgument
@@ -54,7 +55,7 @@ export class AttachClass extends AwaitNode {
 
   public mcfunction
 
-  public readonly targetFunc: MCFunctionClass<any, any> | `${any}${string}`
+  public readonly targetFunc: MCFunctionClass<any, any> | NonEmptyString
   public readonly targetBranch: string[]
   public readonly targetAwaitNodeIdx: number
   public readonly entrypoint: 'start' | 'end'

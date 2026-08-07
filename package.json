@@ -1,7 +1,7 @@
 {
   "name": "sandstone",
   "description": "Sandstone, a Typescript library for Minecraft datapacks & resource packs.",
-  "version": "1.2.4",
+  "version": "1.2.20",
   "contributors": [
     {
       "name": "TheMrZZ - Florian ERNST",
@@ -17,8 +17,6 @@
     "url": "https://github.com/sandstone-mc/sandstone/issues"
   },
   "dependencies": {
-    "@sinclair/typebox": "^0.34.52",
-    "@smithed-mc/data-types": "^0.3.1",
     "@types/bun": "^1.3.14",
     "@types/nearley": "^2.11.5",
     "adm-zip": "^0.6.0",
@@ -27,23 +25,21 @@
     "isbinaryfile": "^6.0.0",
     "lodash": "^4.18.1",
     "nearley": "^2.20.1",
-    "prismarine-nbt": "^2.8.0",
-    "semver": "^7.8.5"
+    "prismarine-nbt": "^2.8.0"
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.6.0",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.3.9",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.3.12",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
-    "@types/semver": "^7.7.1",
     "@typescript/analyze-trace": "^0.11.1",
-    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "@typescript/typescript6": "^6.0.2",
     "magic-string": "^1.0.0",
     "oxlint": "^1.75.0",
     "source-map-js": "^1.2.1",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "directories": {
     "lib": "src"
@@ -68,6 +64,7 @@
   },
   "scripts": {
     "benchmark:selector-types": "bun dev:build --silent && bun run scripts/benchmark-selector-types.ts",
+    "tsc": "./node_modules/typescript/bin/tsc",
     "dev:build": "bun run scripts/build.ts",
     "dev:build:types": "bun run scripts/build-types.ts",
     "dev:watch": "bun run scripts/watch.ts",

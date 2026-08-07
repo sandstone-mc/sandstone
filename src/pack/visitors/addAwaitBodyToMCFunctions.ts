@@ -21,8 +21,6 @@ import { GenericSandstoneVisitor } from './visitor'
  *     sleep mcfunction) from the resource graph so they don't get serialized.
  */
 export class AwaitBodyVisitor extends GenericSandstoneVisitor {
-  visitMCFunctionNode = (node: MCFunctionNode) => this.genericVisit(node)
-
   onEnd = () => {
     const { core } = this.pack
 

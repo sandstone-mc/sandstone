@@ -1,5 +1,5 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NBTFloat, NBTInt } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NonEmptyString } from 'sandstone'
 
 export type BlendFactor = (
   | '0'
@@ -104,7 +104,7 @@ export type Defines = {
    * Values that will be injected as `#define <key> <value>` at the top of the file.
    */
   values?: ({
-    [Key in `${any}${string}`]?: string
+    [Key in NonEmptyString]?: string
   }),
   /**
    * Flags that will be injected as `#define <key>` at the top of the file.
@@ -113,7 +113,7 @@ export type Defines = {
 }
 
 export type DefinesValues = ({
-  [Key in `${any}${string}`]?: string
+  [Key in NonEmptyString]?: string
 })
 
 export type Sampler = {
@@ -121,8 +121,8 @@ export type Sampler = {
 }
 
 export type ShaderProgram = {
-  vertex: `${string}:${string}`,
-  fragment: `${string}:${string}`,
+  vertex: NamespacedString,
+  fragment: NamespacedString,
   samplers?: Array<Sampler>,
   uniforms: Array<Uniform>,
   /**

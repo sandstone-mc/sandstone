@@ -569,7 +569,9 @@ type BlockFallback = (
   | BlockYellowShulkerBox
   | BlockYellowWallBanner
   | BlockZombieHead
-  | BlockZombieWallHead)
+  | BlockZombieWallHead
+  | BlockFallbackType)
+export type BlockFallbackType = Record<string, never>
 type BlockAcaciaHangingSign = SymbolBlockEntity['hanging_sign']
 type BlockAcaciaShelf = SymbolBlockEntity['shelf']
 type BlockAcaciaSign = SymbolBlockEntity['sign']
@@ -765,4 +767,6 @@ export type SymbolBlock<CASE extends
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
   ? BlockDispatcherMap
-  : CASE extends 'keys' ? BlockKeys : CASE extends '%fallback' ? BlockFallback : never
+  : CASE extends 'keys'
+    ? BlockKeys
+    : CASE extends '%fallback' ? BlockFallback : CASE extends '%unknown' ? BlockFallbackType : never

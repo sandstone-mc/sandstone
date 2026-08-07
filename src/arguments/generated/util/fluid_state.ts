@@ -1,11 +1,11 @@
 import type { SymbolMcdocFluidStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 
-export type FluidState = NonNullable<({
+export type FluidState = (Registry['minecraft:fluid'] | ({
   [S in Extract<Extract<Registry['minecraft:fluid'], string>, string>]?: {
-    Name: S,
-    Properties?: (S extends undefined
+    id: S,
+    properties?: (S extends undefined
       ? SymbolMcdocFluidStates<'%none'> :
       (S extends keyof SymbolMcdocFluidStates ? SymbolMcdocFluidStates[S] : SymbolMcdocFluidStates<'%unknown'>)),
   }
-}[Extract<Registry['minecraft:fluid'], string>])>
+}[Extract<Registry['minecraft:fluid'], string>]))

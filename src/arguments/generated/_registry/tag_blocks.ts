@@ -68,6 +68,8 @@ export const TAG_BLOCKS_SET = new Set([
   'completes_find_tree_tutorial',
   'concrete',
   'concrete_powders',
+  'concrete_slabs',
+  'concrete_stairs',
   'convertible_to_mud',
   'copper',
   'copper_chests',

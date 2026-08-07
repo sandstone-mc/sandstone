@@ -1,3 +1,4 @@
+import type { NonEmptyString } from 'sandstone/utils'
 import { FunctionCommandNode } from '../commands/implementations/server/function'
 import { Node } from '../core/nodes'
 import type { IfNode } from '../flow/if_else'
@@ -36,13 +37,13 @@ export class LoopArgument extends Node {
           'with',
           'storage',
           loopExecute.macroStorage.currentTarget,
-          loopExecute.macroStorage.path as `${any}${string}`
+          loopExecute.macroStorage.path as NonEmptyString
         )
       }
 
       return funcNode.getValue()
     }
     // Fallback to current node (may be incorrect if inside nested function)
-    return new FunctionCommandNode(this.pack, this.pack.core.currentNode as `${any}${string}`)
+    return new FunctionCommandNode(this.pack, this.pack.core.currentNode as NonEmptyString)
   }
 }

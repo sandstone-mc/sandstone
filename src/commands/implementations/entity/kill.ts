@@ -67,5 +67,6 @@ export class KillCommand<MACRO extends boolean> extends CommandArguments {
    * kill('@e[type=#minecraft:vehicles]')
    * ```
    */
-  kill = (targets?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) => this.finalCommand([targetParser(targets)])
+  kill = (targets?: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>) =>
+    this.finalCommand([targets === undefined ? undefined : targetParser(targets)])
 }

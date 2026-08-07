@@ -1,5 +1,5 @@
 import { RESOURCE_PATHS, type NBTSerializable, type REGISTRIES, type Registry } from 'sandstone/arguments'
-import type { LiteralUnion } from 'sandstone/utils'
+import type { LiteralUnion, NamespacedString } from 'sandstone/utils'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -9,7 +9,7 @@ import type { MCFunctionClass } from './mcfunction'
 import type { DamageTypeClass } from './damageType'
 
 function isMCFunctionClass(v: unknown): v is MCFunctionClass<any, any> {
-  return typeof v === 'function'
+  return typeof v === 'function' && Object.hasOwn(v, 'addToTag')
 }
 
 function isResource(v: unknown): v is ResourceClass<ResourceNode> {
@@ -77,7 +77,7 @@ type TagJSON<REGISTRY extends LiteralUnion<REGISTRIES>> = {
 
 /** biome-ignore format: excessive formatting */
 export type HintedTagStringType<T extends LiteralUnion<REGISTRIES>> = (
-  T extends 'function' ? (MCFunctionClass<undefined, undefined> | `${string}:${string}`) :
+  T extends 'function' ? (MCFunctionClass<undefined, undefined> | NamespacedString) :
   `minecraft:${T}` extends keyof Registry ? Registry[`minecraft:${T}`] :
   string
 )
@@ -178,8 +178,8 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
     this.handleConflicts()
   }
 
-  get name(): `#${string}:${string}` {
-    return `#${super.name}`
+  get name() {
+    return `#${super.name}` as `#${string}:${string}`
   }
 
   public push(...resources: Resource<REGISTRY>[]) {

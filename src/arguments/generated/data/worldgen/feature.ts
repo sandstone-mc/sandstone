@@ -14,7 +14,7 @@ import type { Direction, VerticalDirection } from 'sandstone/arguments/generated
 import type { FluidState } from 'sandstone/arguments/generated/util/fluid_state.ts'
 import type { Rotation, WeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList, StructureClass, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NBTList, StructureClass, TagClass } from 'sandstone'
 
 export type BlockBlobConfig = {
   state: BlockState,
@@ -50,10 +50,10 @@ export type BlockPileConfig = {
 }
 
 export type BlockPlacer = NonNullable<({
-  [S in Extract<Extract<`${string}:${string}`, string>, string>]?: ({
+  [S in Extract<Extract<NamespacedString, string>, string>]?: ({
     type: S,
   } & (S extends keyof SymbolBlockPlacer ? SymbolBlockPlacer[S] : RootNBT))
-}[Extract<`${string}:${string}`, string>])>
+}[Extract<NamespacedString, string>])>
 
 export type BlockStateRuleProviderEntry = {
   if_true: BlockPredicate,
@@ -73,10 +73,6 @@ export type ColumnsConfig = {
   cannot_place_on: ((
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
-  reach: IntProvider<NBTInt<{
-    min: 0,
-    max: 3,
-  }>>,
   column_reach: IntProvider<NBTInt<{
     min: 0,
     max: 3,
@@ -98,15 +94,12 @@ export type ColumnsConfig = {
 }
 
 export type ConfiguredFeature = NonNullable<({
-  [S in Extract<Extract<(
-      | Registry['minecraft:worldgen/feature']
-      | Registry['minecraft:worldgen/feature_type']), string>, string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/feature_type'], string>, string>]?: ({
     type: S,
-    config: (S extends keyof SymbolFeatureConfig ? SymbolFeatureConfig[S] : RootNBT),
   } & (S extends keyof SymbolFeatureConfig ? SymbolFeatureConfig[S] : RootNBT))
-}[Extract<(Registry['minecraft:worldgen/feature'] | Registry['minecraft:worldgen/feature_type']), string>])>
+}[Extract<Registry['minecraft:worldgen/feature_type'], string>])>
 
-export type ConfiguredFeatureRef = (`${string}:${string}` | Registry['minecraft:worldgen/feature'] | ConfiguredFeature)
+export type ConfiguredFeatureRef = (Registry['minecraft:worldgen/feature'] | ConfiguredFeature)
 
 export type CoralConfig = {
   feature: PlacedFeatureRef,
@@ -930,17 +923,6 @@ export type SculkPatchConfig = {
     min: 0,
     max: 8,
   }>,
-  extra_rare_growths: IntProvider<NBTInt>,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  catalyst_chance: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
 }
 
 export type SeaPickleConfig = {
@@ -1332,8 +1314,6 @@ export type SymbolBlockPlacer<CASE extends
 type FeatureConfigDispatcherMap = {
   'bamboo': FeatureConfigBamboo,
   'minecraft:bamboo': FeatureConfigBamboo,
-  'basalt_columns': FeatureConfigBasaltColumns,
-  'minecraft:basalt_columns': FeatureConfigBasaltColumns,
   'block_blob': FeatureConfigBlockBlob,
   'minecraft:block_blob': FeatureConfigBlockBlob,
   'block_column': FeatureConfigBlockColumn,
@@ -1384,8 +1364,6 @@ type FeatureConfigDispatcherMap = {
   'minecraft:large_dripstone': FeatureConfigLargeDripstone,
   'multiface_growth': FeatureConfigMultifaceGrowth,
   'minecraft:multiface_growth': FeatureConfigMultifaceGrowth,
-  'nether_forest_vegetation': FeatureConfigNetherForestVegetation,
-  'minecraft:nether_forest_vegetation': FeatureConfigNetherForestVegetation,
   'netherrack_replace_blobs': FeatureConfigNetherrackReplaceBlobs,
   'minecraft:netherrack_replace_blobs': FeatureConfigNetherrackReplaceBlobs,
   'no_bonemeal_flower': FeatureConfigNoBonemealFlower,
@@ -1414,10 +1392,6 @@ type FeatureConfigDispatcherMap = {
   'minecraft:scattered_ore': FeatureConfigScatteredOre,
   'sculk_patch': FeatureConfigSculkPatch,
   'minecraft:sculk_patch': FeatureConfigSculkPatch,
-  'sea_pickle': FeatureConfigSeaPickle,
-  'minecraft:sea_pickle': FeatureConfigSeaPickle,
-  'seagrass': FeatureConfigSeagrass,
-  'minecraft:seagrass': FeatureConfigSeagrass,
   'sequence': FeatureConfigSequence,
   'minecraft:sequence': FeatureConfigSequence,
   'simple_block': FeatureConfigSimpleBlock,
@@ -1440,8 +1414,6 @@ type FeatureConfigDispatcherMap = {
   'minecraft:template': FeatureConfigTemplate,
   'tree': FeatureConfigTree,
   'minecraft:tree': FeatureConfigTree,
-  'twisting_vines': FeatureConfigTwistingVines,
-  'minecraft:twisting_vines': FeatureConfigTwistingVines,
   'underwater_magma': FeatureConfigUnderwaterMagma,
   'minecraft:underwater_magma': FeatureConfigUnderwaterMagma,
   'vegetation_patch': FeatureConfigVegetationPatch,
@@ -1454,7 +1426,6 @@ type FeatureConfigDispatcherMap = {
 type FeatureConfigKeys = keyof FeatureConfigDispatcherMap
 type FeatureConfigFallback = (
   | FeatureConfigBamboo
-  | FeatureConfigBasaltColumns
   | FeatureConfigBlockBlob
   | FeatureConfigBlockColumn
   | FeatureConfigBlockPile
@@ -1480,7 +1451,6 @@ type FeatureConfigFallback = (
   | FeatureConfigLake
   | FeatureConfigLargeDripstone
   | FeatureConfigMultifaceGrowth
-  | FeatureConfigNetherForestVegetation
   | FeatureConfigNetherrackReplaceBlobs
   | FeatureConfigNoBonemealFlower
   | FeatureConfigNoSurfaceOre
@@ -1495,8 +1465,6 @@ type FeatureConfigFallback = (
   | FeatureConfigRootSystem
   | FeatureConfigScatteredOre
   | FeatureConfigSculkPatch
-  | FeatureConfigSeaPickle
-  | FeatureConfigSeagrass
   | FeatureConfigSequence
   | FeatureConfigSimpleBlock
   | FeatureConfigSimpleRandomSelector
@@ -1508,13 +1476,11 @@ type FeatureConfigFallback = (
   | FeatureConfigSteppedColumnCluster
   | FeatureConfigTemplate
   | FeatureConfigTree
-  | FeatureConfigTwistingVines
   | FeatureConfigUnderwaterMagma
   | FeatureConfigVegetationPatch
   | FeatureConfigWaterloggedVegetationPatch
   | FeatureConfigWeightedRandomSelector)
 type FeatureConfigBamboo = ProbabilityConfig
-type FeatureConfigBasaltColumns = ColumnsConfig
 type FeatureConfigBlockBlob = BlockBlobConfig
 type FeatureConfigBlockColumn = BlockColumnConfig
 type FeatureConfigBlockPile = BlockPileConfig
@@ -1540,7 +1506,6 @@ type FeatureConfigIceberg = IcebergConfig
 type FeatureConfigLake = LakeConfig
 type FeatureConfigLargeDripstone = LargeDripstoneConfig
 type FeatureConfigMultifaceGrowth = MultifaceGrowthConfig
-type FeatureConfigNetherForestVegetation = NetherForestVegetationConfig
 type FeatureConfigNetherrackReplaceBlobs = NetherrackReplaceBlobsConfig
 type FeatureConfigNoBonemealFlower = RandomPatchConfig
 type FeatureConfigNoSurfaceOre = OreConfig
@@ -1555,8 +1520,6 @@ type FeatureConfigReplaceSingleBlock = ReplaceSingleBlockConfig
 type FeatureConfigRootSystem = RootSystemConfig
 type FeatureConfigScatteredOre = OreConfig
 type FeatureConfigSculkPatch = SculkPatchConfig
-type FeatureConfigSeaPickle = SeaPickleConfig
-type FeatureConfigSeagrass = ProbabilityConfig
 type FeatureConfigSequence = SequenceConfig
 type FeatureConfigSimpleBlock = SimpleBlockConfig
 type FeatureConfigSimpleRandomSelector = SimpleRandomSelectorConfig
@@ -1568,7 +1531,6 @@ type FeatureConfigSpringFeature = SpringConfig
 type FeatureConfigSteppedColumnCluster = ColumnsConfig
 type FeatureConfigTemplate = TemplateConfig
 type FeatureConfigTree = TreeConfig
-type FeatureConfigTwistingVines = TwistingVinesConfig
 type FeatureConfigUnderwaterMagma = UnderwaterMagmaConfig
 type FeatureConfigVegetationPatch = VegetationPatchConfig
 type FeatureConfigWaterloggedVegetationPatch = VegetationPatchConfig

@@ -1,6 +1,7 @@
 import { DataCommandNode, ExecuteCommandNode, FunctionCommandNode, type SubCommand } from 'sandstone/commands'
 import type { MCFunctionNode, Node } from 'sandstone/core'
 import { CommandNode, ContainerCommandNode, ContainerNode } from 'sandstone/core'
+import { ResolveNBTNode } from 'sandstone/variables/ResolveNBT'
 import { GenericSandstoneVisitor } from './visitor'
 
 type StoragePoint = {
@@ -122,9 +123,7 @@ export class OptimizeMacroTemporariesVisitor extends GenericSandstoneVisitor {
 
     for (let callIndex = 0; callIndex < functionNode.body.length; callIndex++) {
       const call = functionNode.body[callIndex]
-      if (!(call instanceof FunctionCommandNode)) {
-        continue
-      }
+      if (!(call instanceof FunctionCommandNode)) continue
 
       const callArgs = call.args as unknown[]
       if (
@@ -137,29 +136,39 @@ export class OptimizeMacroTemporariesVisitor extends GenericSandstoneVisitor {
       }
 
       const macroPoint = { target: callArgs[3], path: callArgs[4] }
-      const copies: MacroCopy[] = []
-      let setupStart = callIndex
 
+      // The macro storage prep block (one `set value {}` + one `set from`
+      // per arg) is now emitted as a single `ResolveNBTNode` that sits
+      // immediately before the `function ... with storage` call. Read its
+      // body for the reset + copies; produce search happens in the parent
+      // body before the wrapper.
+      const prep = callIndex > 0 ? functionNode.body[callIndex - 1] : undefined
+      if (!(prep instanceof ResolveNBTNode)) continue
+
+      const copies: MacroCopy[] = []
+      let setupStart = prep._body.length
       while (setupStart > 0) {
-        const copy = getMacroCopy(functionNode.body[setupStart - 1], macroPoint)
-        if (!copy) {
-          break
-        }
+        const copy = getMacroCopy(prep._body[setupStart - 1], macroPoint)
+        if (!copy) break
         copies.unshift(copy)
         setupStart--
       }
 
-      if (copies.length === 0 || setupStart === 0 || !isMacroReset(functionNode.body[setupStart - 1], macroPoint)) {
-        continue
-      }
+      // When skipReset is in effect, the prep block is just the copies —
+      // there's no leading `set value {}` to anchor the pattern. Skip the
+      // reset check in that case.
+      const resetIndex = setupStart > 0 && isMacroReset(prep._body[setupStart - 1], macroPoint)
+        ? setupStart - 1
+        : -1
 
-      const resetIndex = setupStart - 1
+      if (copies.length === 0) continue
+
       const producers: Producer[] = []
       let canOptimize = true
 
       for (const copy of copies) {
         const matches: { index: number; store: SubCommand }[] = []
-        for (const [index, node] of functionNode.body.slice(0, resetIndex).entries()) {
+        for (const [index, node] of functionNode.body.slice(0, callIndex - 1).entries()) {
           const store = getExecuteStore(node, copy.source)
           if (store) {
             matches.push({ index, store })
@@ -177,22 +186,25 @@ export class OptimizeMacroTemporariesVisitor extends GenericSandstoneVisitor {
         producers.push({ ...matches[0], destination: copy.destination })
       }
 
-      if (!canOptimize) {
-        continue
-      }
+      if (!canOptimize) continue
 
       const producerIndexes = new Set(producers.map((producer) => producer.index))
-      if (producerIndexes.size !== producers.length) {
-        continue
-      }
+      if (producerIndexes.size !== producers.length) continue
 
       for (const producer of producers) {
         producer.store[1] = producer.destination.target
         producer.store[2] = producer.destination.path
       }
 
-      functionNode.body.splice(resetIndex, copies.length + 1)
-      callIndex = resetIndex
+      // Splice the reset (if any) + copies out of the prep block; if that
+      // empties the block, remove it from the parent body entirely.
+      const spliceStart = resetIndex === -1 ? 0 : resetIndex
+      const spliceCount = resetIndex === -1 ? copies.length : copies.length + 1
+      prep._body.splice(spliceStart, spliceCount)
+      if (prep._body.length === 0) {
+        functionNode.body.splice(callIndex - 1, 1)
+        callIndex -= 1
+      }
     }
 
     return functionNode

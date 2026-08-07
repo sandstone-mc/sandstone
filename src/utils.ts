@@ -1,22 +1,23 @@
 /* eslint-disable operator-linebreak */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import type { Static } from '@sinclair/typebox'
-import { FormatRegistry, Type } from '@sinclair/typebox'
 import fs from 'fs-extra'
-import { coerce } from 'semver'
 import * as util from 'util'
 import type { MultipleEntitiesArgument } from './arguments/selector'
 import type { Node } from './core/nodes'
 import type { UUIDinNumber } from './variables/UUID'
 
+export type NonEmptyString = (`${any}${string}` & { __brand?: never })
+
+export type NamespacedString = (`${string}:${string}` & { __brand?: never })
+
 /**
  * Allows to get autocompletion on string unions, while still allowing generic strings.
  * @see https://github.com/microsoft/TypeScript/issues/29729#issuecomment-700527227
  */
-export type LiteralUnion<T extends string> = T | (`${any}${string}` & Record<never, never>)
+export type LiteralUnion<T extends string> = T | (NonEmptyString & Record<never, never>)
 
-export type NamespacedLiteralUnion<T extends string> = T | (`${string}:${string}` & Record<never, never>)
+export type NamespacedLiteralUnion<T extends string> = T | (NamespacedString & Record<never, never>)
 
 export type AtLeastOne<T> = [T, ...T[]]
 
@@ -300,75 +301,6 @@ export interface PackEntry {
   owner: string
 }
 
-FormatRegistry.Set('semver', (v) => coerce(v) != null)
-
-export const supportedMinecraftVersions = ['1.18', '1.18.1', '1.18.2', '1.19']
-export const latestMinecraftVersion = '1.19'
-
-export const MinecraftVersionSchema = Type.Union(supportedMinecraftVersions.map((v) => Type.Literal(v)))
-
-export const packCategories = [
-  'Extensive',
-  'Lightweight',
-  'QoL',
-  'Vanilla+',
-  'Tech',
-  'Magic',
-  'Library',
-  'Exploration',
-  'World Overhaul',
-  'No Resource Pack',
-]
-
-const PackDependencySchema = Type.Object({
-  id: Type.String(),
-  version: Type.String(),
-})
-
-export const PackVersionSchema = Type.Object({
-  name: Type.String({ minLength: 1 }),
-  downloads: Type.Object({
-    datapack: Type.String({ minLength: 1 }),
-    resourcepack: Type.String(),
-  }),
-  supports: Type.Array(MinecraftVersionSchema, { minItems: 1 }),
-  dependencies: Type.Array(PackDependencySchema),
-})
-
-export const PackDataSchema = Type.Object({
-  id: Type.String({ minLength: 3 }),
-  display: Type.Object({
-    name: Type.String({ minLength: 3 }),
-    description: Type.String({ minLength: 3 }),
-    icon: Type.String({ default: '' }),
-    hidden: Type.Boolean({ default: false }),
-    webPage: Type.Optional(Type.String()),
-  }),
-  versions: Type.Array(PackVersionSchema, { minItems: 1 }),
-  categories: Type.Array(Type.Union(packCategories.map((c) => Type.Literal(c)))),
-})
-
-export const MetaDataSchema = Type.Object({
-  docId: Type.String(),
-  rawId: Type.String(),
-  stats: Type.Object({
-    updated: Type.Optional(Type.Number()),
-    added: Type.Number(),
-    downloads: Type.Object({
-      total: Type.Number(),
-      today: Type.Number(),
-    }),
-  }),
-  owner: Type.String(),
-  contributors: Type.Array(Type.String(), { default: [] }),
-})
-
-export type PackMetaData = Static<typeof MetaDataSchema>
-export type MinecraftVersion = Static<typeof MinecraftVersionSchema>
-export type PackDependency = Static<typeof PackDependencySchema>
-export type PackVersion = Static<typeof PackVersionSchema>
-export type PackData = Static<typeof PackDataSchema>
-
 export interface UserData {
   displayName: string
 }
@@ -497,13 +429,13 @@ type NegatedMembers<T> = {
 export type MemberModifiers<T> = Partial<T> & NegatedMembers<T>
 
 type UnknownKey<UnknownValue> = {
-  [K in `${string}:${string}`]?: UnknownValue
+  [K in NamespacedString]?: UnknownValue
 }
 
 type UnknownNegatableKey<UnknownValue> = ({
   [K in `!${string}:${string}`]?: Record<string, never>
 } & {
-  [K in `${string}:${string}`]?: UnknownValue | Record<string, never>
+  [K in NamespacedString]?: UnknownValue | Record<string, never>
 })
 
 type McdocIDMapBase<Dispatcher, UnknownValue> = Dispatcher & UnknownKey<UnknownValue>
@@ -574,18 +506,18 @@ export type Enumerate<
     : Enumerate<N, [...Acc, Acc["length"]]>
 )
 
-export type BuildTuple<N extends number, T extends never[] = []> = (
+export type BuildNeverTuple<N extends number, T extends never[] = []> = (
   number extends N
     ? never[] // Guard against wide 'number'
     : T['length'] extends N
       ? T
-      : BuildTuple<N, [...T, never]>
+      : BuildNeverTuple<N, [...T, never]>
 )
 
 export type Increment<N extends number> = (
   number extends N
     ? number // Guard against wide 'number'
-    : [...BuildTuple<N>, never]['length'] & number
+    : [...BuildNeverTuple<N>, never]['length'] & number
 )
 
 /**
@@ -726,3 +658,9 @@ export type SmartRange<Min extends number, Max extends number> = (
 export type AllowConst<T> = T | Readonly<T>
 
 export type RemoveFirst<T extends any[]> = T extends [any, ...infer Rest] ? Rest : []
+
+export type BuildTuple<T, Length extends number, Accumulator extends any[] = []> = (
+  Accumulator['length'] extends Length
+    ? Accumulator
+    : BuildTuple<T, Length, [...Accumulator, T]>
+)

@@ -12,6 +12,7 @@ import type {
   DamageTypeClass,
   LiteralUnion,
   MCFunctionClass,
+  NamespacedString,
   NBTDouble,
   NBTFloat,
   NBTInt,
@@ -116,7 +117,7 @@ export type AttributeEffect = {
    *
    * Postfixed with the slot name when the enchanted item is equipped.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
   /**
    * Change in the attribute.
    */
@@ -372,7 +373,7 @@ export type ReplaceDiskEntityEffect = (ReplaceBlockEntityEffect & {
 })
 
 export type RunFunctionEntityEffect = {
-  function: (`${string}:${string}` | MCFunctionClass),
+  function: (NamespacedString | MCFunctionClass),
 }
 
 export type SetBlockPropertiesEntityEffect = {

@@ -1,10 +1,10 @@
 import type { InclusiveRange } from 'sandstone/arguments/generated/util.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { NBTInt, NBTList } from 'sandstone'
+import type { NBTInt, NBTList, NonEmptyString } from 'sandstone'
 
 export type BlockPattern = {
-  namespace?: `${any}${string}` | RegExp,
-  path?: `${any}${string}` | RegExp,
+  namespace?: NonEmptyString | RegExp,
+  path?: NonEmptyString | RegExp,
 }
 
 export type FeatureFlag = (
@@ -76,7 +76,7 @@ export type PackOverlay = {
    * Value:
    * String length range: 1..
    */
-  directory: `${any}${string}`,
+  directory: NonEmptyString,
   formats?: InclusiveRange<NBTInt>,
   min_format?: PackFormat,
   max_format?: PackFormat,

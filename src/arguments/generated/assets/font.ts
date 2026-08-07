@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { FontClass, NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { FontClass, NBTFloat, NBTInt, NBTList, NonEmptyString } from 'sandstone'
 
 export type BitmapProvider = {
   file: string,
@@ -10,7 +10,7 @@ export type BitmapProvider = {
    * Value:
    * List length range: 1..
    */
-  chars: NBTList<`${any}${string}`, {
+  chars: NBTList<NonEmptyString, {
     leftExclusive: false,
     min: 1,
   }>,
@@ -54,7 +54,7 @@ export type ReferenceProvider = {
 
 export type SpaceProvider = {
   advances: ({
-    [Key in Extract<`${any}${string}`, string>]?: NBTFloat
+    [Key in NonEmptyString]?: NBTFloat
   }),
 }
 

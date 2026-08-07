@@ -7,7 +7,7 @@ import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.
 import type { DataComponentExactPredicate, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { Trim } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
-import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTShort } from 'sandstone'
+import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTList, NBTShort, NonEmptyString } from 'sandstone'
 
 export type AttributeModifier = {
   AttributeName?: Registry['minecraft:attribute'],
@@ -79,11 +79,11 @@ export type Display = {
   /**
    * A JSON text component.
    */
-  Name?: `${any}${string}`,
+  Name?: NonEmptyString,
   /**
    * A list of JSON text components, each element being a lore line.
    */
-  Lore?: Array<`${any}${string}`>,
+  Lore?: Array<NonEmptyString>,
 }
 
 export type Enchantment = {
@@ -105,7 +105,7 @@ export type Enchantment = {
 export type HideFlags = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)
 
 export type ItemBase = (({
-  [Key in `${any}${string}`]?: NBTObject
+  [Key in NonEmptyString]?: NBTObject
 }) & {
   /**
    * Damage that an item has. Only used for tools, armor, etc.
@@ -119,11 +119,11 @@ export type ItemBase = (({
   /**
    * List of the block states that can be destroyed by this item when holding it in adventure mode.
    */
-  CanDestroy?: Array<`${any}${string}`>,
+  CanDestroy?: Array<NonEmptyString>,
   /**
    * List of blockstates that this block item can be placed on.
    */
-  CanPlaceOn?: Array<`${any}${string}`>,
+  CanPlaceOn?: Array<NonEmptyString>,
   /**
    * Tag that describes the custom model an item will take.
    * Used by the `custom_model_data` model overrides predicate.

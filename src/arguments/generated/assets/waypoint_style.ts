@@ -1,4 +1,4 @@
-import type { NBTInt, NBTList } from 'sandstone'
+import type { NamespacedString, NBTInt, NBTList } from 'sandstone'
 
 export type WaypointStyle = {
   /**
@@ -23,7 +23,7 @@ export type WaypointStyle = {
    * Value:
    * List length range: 1..
    */
-  sprites: NBTList<`${string}:${string}`, {
+  sprites: NBTList<NamespacedString, {
     leftExclusive: false,
     min: 1,
   }>,

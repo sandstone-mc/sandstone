@@ -54,7 +54,7 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
 
   public push(...predicates: Predicate[]) {
     if (!Array.isArray(this.predicateJSON)) {
-      this.predicateJSON = [this.predicateJSON]
+      this.predicateJSON = { type: 'all_of', terms: [this.predicateJSON] }
     }
 
     for (const predicate of predicates) {
@@ -65,16 +65,16 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
         predicateJSON = predicate
       }
       if (Array.isArray(predicateJSON)) {
-        this.predicateJSON.push(...predicateJSON)
+        ;(this.predicateJSON as any).terms.push(...predicateJSON)
       } else {
-        this.predicateJSON.push(predicateJSON)
+        ;(this.predicateJSON as any).terms.push(predicateJSON)
       }
     }
   }
 
   public unshift(...predicates: Predicate[]) {
     if (!Array.isArray(this.predicateJSON)) {
-      this.predicateJSON = [this.predicateJSON]
+      this.predicateJSON = { type: 'all_of', terms: [this.predicateJSON] }
     }
 
     for (const predicate of predicates) {
@@ -85,9 +85,9 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
         predicateJSON = predicate
       }
       if (Array.isArray(predicateJSON)) {
-        this.predicateJSON.unshift(...predicateJSON)
+        ;(this.predicateJSON as any).terms.unshift(...predicateJSON)
       } else {
-        this.predicateJSON.unshift(predicateJSON)
+        ;(this.predicateJSON as any).terms.unshift(predicateJSON)
       }
     }
   }

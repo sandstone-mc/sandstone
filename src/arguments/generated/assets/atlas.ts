@@ -1,7 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { TextureType } from 'sandstone/arguments'
-import type { NBTDouble, TextureClass } from 'sandstone'
+import type { NamespacedString, NBTDouble, NonEmptyString, TextureClass } from 'sandstone'
 
 export type Atlas = {
   /**
@@ -29,15 +29,15 @@ export type Filter = {
 }
 
 export type FilterPattern = {
-  namespace?: `${any}${string}` | RegExp,
-  path?: `${any}${string}` | RegExp,
+  namespace?: NonEmptyString | RegExp,
+  path?: NonEmptyString | RegExp,
 }
 
 export type PalettedPermutations = {
   textures: Array<(Registry['minecraft:texture'] | TextureClass<TextureType>)>,
   palette_key: PaletteTexture,
   permutations: ({
-    [Key in `${any}${string}`]?: PaletteTexture
+    [Key in NonEmptyString]?: PaletteTexture
   }),
   /**
    * Value to use when joining the texture and permutation names to produce the sprite name.
@@ -50,12 +50,12 @@ export type PalettedPermutations = {
  *
  * Value: A texture ID within a path root of `(namespace)/textures/palettes/`
  */
-export type PaletteRef = `${string}:${string}`
+export type PaletteRef = NamespacedString
 
-export type PaletteTexture = ((Registry['minecraft:texture'] | TextureClass<TextureType>) | PaletteRef)
+export type PaletteTexture = PaletteRef
 
 export type PermutationsMap = ({
-  [Key in `${any}${string}`]?: PaletteTexture
+  [Key in NonEmptyString]?: PaletteTexture
 })
 
 export type Single = {
@@ -71,7 +71,7 @@ export type Single = {
    *
    * Value: Defines a `texture` id.
    */
-  sprite?: `${string}:${string}`,
+  sprite?: NamespacedString,
 }
 
 export type SpriteSource = NonNullable<({
@@ -110,7 +110,7 @@ export type UnstitchRegion = {
    *
    * Value: Defines a `texture` id.
    */
-  sprite: `${string}:${string}`,
+  sprite: NamespacedString,
   x: (NBTDouble | number),
   y: (NBTDouble | number),
   width: (NBTDouble | number),

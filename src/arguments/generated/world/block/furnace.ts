@@ -1,7 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { SlottedItem } from 'sandstone/arguments/generated/util/slot.ts'
 import type { BlockEntity, Lockable, Nameable } from 'sandstone/arguments/generated/world/block.ts'
-import type { NBTByte, NBTFloat, NBTInt, NBTList, NBTShort } from 'sandstone'
+import type { NBTByte, NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type Furnace = (BlockEntity & Nameable & Lockable & {
   /**
@@ -32,19 +32,19 @@ export type Furnace = (BlockEntity & Nameable & Lockable & {
   /**
    * The total amount of time the current cooking process will take. Defaults to `0`.
    */
-  cooking_total_time?: (NBTShort | NBTInt),
+  cooking_total_time?: NBTInt,
   /**
    * The amount of time that the current cooking process has taken so far. Defaults to `0`.
    */
-  cooking_time_spent?: (NBTShort | NBTInt),
+  cooking_time_spent?: NBTInt,
   /**
    * The amount of burn time remaining. Defaults to `0`.
    */
-  lit_time_remaining?: (NBTShort | NBTInt),
+  lit_time_remaining?: NBTInt,
   /**
    * The total amount of burn time that was added in the last refuel. Defaults to `0`.
    */
-  lit_total_time?: (NBTShort | NBTInt),
+  lit_total_time?: NBTInt,
   /**
    * Used to speed up or slow down the next cooking process. Defaults to `1`.
    */

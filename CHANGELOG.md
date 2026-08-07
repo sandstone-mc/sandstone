@@ -2,6 +2,128 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.20](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.20) - 2026-08-07
+
+### Fix multi-chained `.run.` from `_.if`, fix `playsound` handling of undefined arguments
+
+**Full Changelog**: [master...v1.2.20](https://github.com/sandstone-mc/sandstone/compare/master...v1.2.20)
+
+
+## [v1.2.19](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.19) - 2026-08-06
+
+### Add support for `Flow#with: SandstoneCommands`, fixed bugs
+
+**Full Changelog**: [v1.2.18...v1.2.19](https://github.com/sandstone-mc/sandstone/compare/v1.2.18...v1.2.19)
+
+
+## [v1.2.18](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.18) - 2026-08-06
+
+### Add `Flow#with` for running macro commands, `.run.` & `else.run.` after `_.if` & `.elseIf`, fix bugs
+
+**Full Changelog**: [v1.2.17...v1.2.18](https://github.com/sandstone-mc/sandstone/compare/v1.2.17...v1.2.18)
+
+
+## [v1.2.17](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.17) - 2026-08-05
+
+### Fix `SandstoneCore#getExistingResource` and related resources
+
+- Fixed `SoundEventClass.constructor` logic errors
+- Fixed `StructureClass` failing to include the file extension if not provided by the user
+- Added missing `this.handleConflicts()` call to `SoundsIndexClass` that was preventing it from being saved
+- Pulled my hair out for a couple hours again over ESM
+
+**Full Changelog**: [v1.2.16...v1.2.17](https://github.com/sandstone-mc/sandstone/compare/v1.2.16...v1.2.17)
+
+
+## [v1.2.16](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.16) - 2026-08-05
+
+### Fix `schedule`, `debug`, and `Tag` interpretation of `MCFunctionClass`
+
+**Full Changelog**: [v1.2.15...v1.2.16](https://github.com/sandstone-mc/sandstone/compare/v1.2.15...v1.2.16)
+
+
+## [v1.2.15](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.15) - 2026-08-05
+
+### Fix broken optional argument handling in some commands
+
+**Full Changelog**: [v1.2.14...v1.2.15](https://github.com/sandstone-mc/sandstone/compare/v1.2.14...v1.2.15)
+
+
+## [v1.2.14](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.14) - 2026-08-04
+
+### Complete the switch to `NonEmptyString` & `NamespacedString`
+
+mcdoc-ts-generator still needed some more work
+
+**Full Changelog**: [v1.2.13...v1.2.14](https://github.com/sandstone-mc/sandstone/compare/v1.2.13...v1.2.14)
+
+
+## [v1.2.13](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.13) - 2026-08-04
+
+### Add exports for and switch to branded types for `NonEmptyString` and `NamespacedString`
+
+- Any place where you are currently using `${any}${string}` or `${string}:${string}` should be switched to using `NonEmptyString` and `NamespacedString` from `'sandstone'`
+- Renamed `_.function_` to `_.mcfunction`
+
+**Full Changelog**: [v1.2.12...v1.2.13](https://github.com/sandstone-mc/sandstone/compare/v1.2.12...v1.2.13)
+
+
+## [v1.2.12](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.12) - 2026-08-04
+
+### Remove erroneous export pray CI works now
+
+**Full Changelog**: [v1.2.11...v1.2.12](https://github.com/sandstone-mc/sandstone/compare/v1.2.11...v1.2.12)
+
+
+## [v1.2.11](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.11) - 2026-08-04
+
+### Update Sandstone
+
+**Full Changelog**: [v1.2.10...v1.2.11](https://github.com/sandstone-mc/sandstone/compare/v1.2.10...v1.2.11)
+
+
+## [v1.2.10](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.10) - 2026-08-04
+
+### Fix visitor bug with `returnCmd.run`
+
+**Full Changelog**: [v1.2.9...v1.2.10](https://github.com/sandstone-mc/sandstone/compare/v1.2.9...v1.2.10)
+
+
+## [v1.2.9](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.9) - 2026-08-03
+
+### Fixed mcdoc-ts-generator `until` handling, updated Predicate and TrimMaterial
+
+**Full Changelog**: [v1.2.8...v1.2.9](https://github.com/sandstone-mc/sandstone/compare/v1.2.8...v1.2.9)
+
+
+## [v1.2.8](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.8) - 2026-08-03
+
+### Fix predicate type in 26.3
+
+**Full Changelog**: [v1.2.7...v1.2.8](https://github.com/sandstone-mc/sandstone/compare/v1.2.7...v1.2.8)
+
+
+## [v1.2.7](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.7) - 2026-08-03
+
+### Remove misbehaving unneeded packages
+
+**Full Changelog**: [v1.2.6...v1.2.7](https://github.com/sandstone-mc/sandstone/compare/v1.2.6...v1.2.7)
+
+
+## [v1.2.6](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.6) - 2026-08-03
+
+### Fix browser bundle
+
+**Full Changelog**: [v1.2.5...v1.2.6](https://github.com/sandstone-mc/sandstone/compare/v1.2.5...v1.2.6)
+
+
+## [v1.2.5](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.5) - 2026-08-03
+
+### Vector math in VectorClass, update `scoreboard`, fix `random.value`
+
+**Full Changelog**: [v1.2.4...v1.2.5](https://github.com/sandstone-mc/sandstone/compare/v1.2.4...v1.2.5)
+
+
 ## [v1.2.4](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.4) - 2026-07-29
 
 ### Add `_.await.until`, fully implement `_.throw`, fix async bugs

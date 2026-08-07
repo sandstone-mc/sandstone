@@ -99,7 +99,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
     if (args.structure === undefined) {
       this.structureBuffer = sandstoneCore.getExistingResource(this, false)
     } else if (typeof args.structure === 'string') {
-      this.structureBuffer = sandstoneCore.getExistingResource(args.structure, false)
+      this.structureBuffer = sandstoneCore.getExistingResource(`${args.structure}${args.structure.endsWith('.nbt') ? '' : '.nbt'}`, false)
     } else if (args.structure instanceof StructureClass) {
       if (args.structure.structureNBT) {
         this.structureNBT = args.structure.structureNBT
@@ -125,7 +125,7 @@ export class StructureClass extends ResourceClass<StructureNode> {
       return this.structureBuffer
     }
 
-    this.structureBuffer = this.node.sandstoneCore.getExistingResource(this.name, false)
+    this.structureBuffer = this.node.sandstoneCore.getExistingResource(this, false)
     return this.structureBuffer
   }
 
@@ -154,8 +154,8 @@ export class StructureClass extends ResourceClass<StructureNode> {
 
     for (const block of _NBT.blocks) {
       const convert = (_block: NonNullable<BlockState>) => ({
-        id: _block.Name,
-        state: _block.Properties,
+        id: typeof _block === 'string' ? _block : _block.id,
+        state: typeof _block === 'string' ? {} : _block.properties,
         ...add({ nbt: block.nbt }),
       })
 
@@ -433,8 +433,8 @@ function encodeStructure(nbt: StructureNBT) {
           palette: list(
             comp(
               nbt.palette.map((block) => ({
-                Name: string(block!.Name),
-                Properties: list(comp(objectMap(block!.Properties, (v: string, k: string) => [string(k), string(v)]))),
+                Name: string(typeof block === 'string' ? block! : block!.id),
+                Properties: list(comp(objectMap(typeof block === 'string' ? {} : block!.properties, (v: string, k: string) => [string(k), string(v)]))),
               })),
             ),
           ),
@@ -444,9 +444,9 @@ function encodeStructure(nbt: StructureNBT) {
             comp(
               nbt.palettes.map((palette) =>
                 palette.map((block) => ({
-                  Name: string(block!.Name),
+                  Name: string(typeof block === 'string' ? block : block!.id),
                   Properties: list(
-                    comp(objectMap(block!.Properties, (v: string, k: string) => [string(k), string(v)])),
+                    comp(objectMap(typeof block === 'string' ? {} : block!.properties, (v: string, k: string) => [string(k), string(v)])),
                   ),
                 })),
               ),

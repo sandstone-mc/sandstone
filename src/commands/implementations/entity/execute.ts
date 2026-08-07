@@ -28,7 +28,7 @@ import type { Node } from 'sandstone/core/nodes'
 import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { _RawMCFunctionClass } from 'sandstone/core/resources/datapack/mcfunction'
 import type { SandstonePack } from 'sandstone/pack'
-import { type AllowConst, makeCallable, type NamespacedLiteralUnion } from 'sandstone/utils'
+import { type AllowConst, makeCallable, type NamespacedLiteralUnion, type NonEmptyString } from 'sandstone/utils'
 import type { DataPointClass } from 'sandstone/variables/Data'
 import type { ObjectiveClass } from 'sandstone/variables/Objective'
 import type { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
@@ -122,6 +122,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
   constructor(
     sandstonePack: SandstonePack,
+    isMacro: boolean = false,
     args: SubCommand[] = [],
     {
       isFake = false,
@@ -139,6 +140,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     this.isFake = isFake
     this.macroStorage = macroStorage
     this.pendingCommit = pendingCommit
+    this.isMacro = isMacro
     this.append(...body)
   }
 
@@ -226,6 +228,15 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     const mcFunctionNode = mcFunction.node
     mcFunctionNode.body = this.body
 
+    // Update each WithClass' containing MCFunction — the original caller
+    // captured at construction time is stale now that the nodes live in
+    // the new wrapper.
+    for (const node of this.body) {
+      if (node && typeof node === 'object' && 'containingMCFunction' in node) {
+        ;(node as { containingMCFunction: MCFunctionNode | null }).containingMCFunction = mcFunctionNode
+      }
+    }
+
     // Store reference to the created MCFunction (used by LoopArgument)
     this.createdMCFunction = mcFunction
 
@@ -234,7 +245,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     // If macroStorage is set, call the function with `with storage <macroStorage>`
     if (this.macroStorage) {
-      mcFunctionCall.args.push('with', 'storage', this.macroStorage.currentTarget, this.macroStorage.path as `${any}${string}`)
+      mcFunctionCall.args.push('with', 'storage', this.macroStorage.currentTarget, this.macroStorage.path as NonEmptyString)
     }
 
     this.body = [mcFunctionCall]
@@ -731,14 +742,14 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
   /** Checks whether the data point exists or the targeted block, entity or storage has any data for a given tag. */
   get data(): ExecuteDataArgsCommand<MACRO> & ((data: DataPointClass) => ExecuteCommand<MACRO>) {
     return makeCallable(
-      new ExecuteDataArgsCommand<MACRO>(this.sandstonePack, this.previousNode),
+      new ExecuteDataArgsCommand<MACRO>(this.sandstonePack, this.isMacro, this.previousNode),
       (dataPoint: DataPointClass) => this.nestedExecute(dataPoint._toMinecraftCondition().getCondition() as ['']),
     )
   }
 
   /** Tests for items in block entity or entity inventory slots. */
   get items() {
-    return new ExecuteItemsCommand<MACRO>(this.sandstonePack, this.previousNode)
+    return new ExecuteItemsCommand<MACRO>(this.sandstonePack, this.isMacro, this.previousNode)
   }
 
   /**
@@ -750,7 +761,7 @@ export class ExecuteIfUnlessCommand<MACRO extends boolean> extends ExecuteComman
    * ```
    */
   get slots() {
-    return new ExecuteSlotsCommand<MACRO>(this.sandstonePack, this.previousNode)
+    return new ExecuteSlotsCommand<MACRO>(this.sandstonePack, this.isMacro, this.previousNode)
   }
 
   function(func: Macroable<_RawMCFunctionClass<[], []> | (() => any) | string, MACRO>) {
@@ -882,7 +893,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    */
   get facing(): ExecuteFacingEntityCommand<MACRO> & ((pos: Macroable<Coordinates<MACRO>, MACRO>) => ExecuteCommand<MACRO>) {
     return makeCallable(
-      new ExecuteFacingEntityCommand<MACRO>(this.sandstonePack, this.previousNode),
+      new ExecuteFacingEntityCommand<MACRO>(this.sandstonePack, this.isMacro, this.previousNode),
       (pos: Macroable<Coordinates<MACRO>, MACRO>) => this.nestedExecute(['facing', coordinatesParser(pos)]),
     )
   }
@@ -907,7 +918,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    */
   get positioned(): ExecutePositionedCommand<MACRO> & ((pos: Macroable<Coordinates<MACRO>, MACRO>) => ExecuteCommand<MACRO>) {
     return makeCallable(
-      new ExecutePositionedCommand<MACRO>(this.sandstonePack, this.previousNode),
+      new ExecutePositionedCommand<MACRO>(this.sandstonePack, this.isMacro, this.previousNode),
       (pos: Macroable<Coordinates<MACRO>, MACRO>) => this.nestedExecute(['positioned', coordinatesParser(pos)]),
     )
   }
@@ -924,7 +935,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
    */
   get rotated(): ExecuteRotatedAsCommand<MACRO> & ((rotation: Macroable<Rotation<MACRO>, MACRO>) => ExecuteCommand<MACRO>) {
     return makeCallable(
-      new ExecuteRotatedAsCommand<MACRO>(this.sandstonePack, this.previousNode),
+      new ExecuteRotatedAsCommand<MACRO>(this.sandstonePack, this.isMacro, this.previousNode),
       (rotation: Macroable<Rotation<MACRO>, MACRO>) => this.nestedExecute(['rotated', rotationParser(rotation)]),
     )
   }
@@ -952,7 +963,16 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
   get run() {
     const node = this.getNode()
 
-    const commands = new Proxy(this.sandstonePack.commands as SandstoneCommands<MACRO>, {
+    // Macro propagate: route command access through macroCommands when
+    // this execute is part of a macro chain so that commands chained inside
+    // (e.g. `Macro.returnCmd.run.functionCmd(...)`) keep `isMacro: true`.
+    // Falling back to `this.sandstonePack.commands` (always <false>) silently
+    // strips the macro flag at the proxy boundary.
+    const commandsSource: SandstoneCommands<MACRO> = ((this.sandstonePack as any)[
+      this.isMacro ? 'macroCommands' : 'commands'
+    ]) as SandstoneCommands<MACRO>
+
+    const commands = new Proxy(commandsSource, {
       get: (_t, p, _r) => {
         // Mark as pending commit if not already committed
         // The node will be committed to its parent context when append() is called
@@ -961,7 +981,7 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
         }
         // The context will automatically be exited by the node itself
         this.sandstoneCore.getCurrentMCFunctionOrThrow().enterContext(node, false)
-        return (this.sandstonePack.commands as any)[p]
+        return (commandsSource as any)[p]
       },
     })
 
@@ -1056,7 +1076,7 @@ export function createDeferredMacroExecute(
             : []
 
           // Create the execute node with prepended args (macro-enabled)
-          const macroNode = new ExecuteCommandNode(pack, [...prependArgs(envNames), ...accumulatedArgs], {
+          const macroNode = new ExecuteCommandNode(pack, true, [...prependArgs(envNames), ...accumulatedArgs], {
             isSingleExecute: true,
           })
           macroNode.isMacro = true

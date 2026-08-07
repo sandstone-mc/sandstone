@@ -33,6 +33,15 @@ function getEffectiveSingleCommand(body: any[]): any | null {
  */
 export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
   visitExecuteCommandNode = (node: ExecuteCommandNode): Node | Node[] => {
+    // Don't inline a loop's wrapping execute: it's the recursion target for
+    // LoopArgument anywhere else in the loop body (e.g. inside `_.await.sleep`
+    // continuations). Inlining it back into a one-shot `execute if cond run X`
+    // strand means the LoopArgument inside the sleep's continuation calls a
+    // nonexistent function. The wrapping mcfunction must survive.
+    if (node.givenCallbackName === 'loop') {
+      return this.genericVisit(node)
+    }
+
     if (node.body.length === 0 || node.body.length > 1) {
       return this.genericVisit(node)
     }
@@ -94,12 +103,17 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
         this.core.resourceNodes.delete(mcFunctionNode)
       }
 
-      if (command.isFlowControl) {
-        // Preserve return run for if/elseIf early exit semantics
+      if (command.isFlowControl || !command.isFunctionBoundary) {
+        // Preserve the return run. Either:
+        //  - isFlowControl: wrapping an if/elseIf early-exit body
+        //  - !isFunctionBoundary: user-written `returnCmd.run(...)` whose
+        //    `return` keyword must be kept
         node.body = [this.genericVisit(command)]
       } else {
+        // Auto-inserted function boundary wrapper around a function call.
+        // The function it wrapped is being inlined here, so the wrapper
+        // has no remaining purpose and can be safely unwrapped.
         const returnCmd = this.visit(command) as ReturnRunCommandNode
-        // Unwrap - the return run was only for function boundary semantics
         node.body = returnCmd.body
 
         return this.visitExecuteCommandNode(node)
@@ -128,10 +142,41 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
     }
 
     /*
-     * And it's a command! Now, we can simplify the execute, except if the other command is a /execute too.
+     * The called function is a single `execute`. `execute A run function F`,
+     * where F is exactly `execute B run C`, is equivalent to `execute A B run C`
+     * — the function boundary carries no semantics of its own.
+     *
+     * UnifyChainedExecutesVisitor performs this merge for directly-nested
+     * executes, but it runs before us, while the inner execute is still behind
+     * a `function` call. So the merge has to happen here.
      */
     if (command instanceof ExecuteCommandNode) {
-      // In that case, if the initial /execute does not imply multiple executions, we could still simplify it.
+      if (
+        // A fake execute serializes as its body alone, so its args would be
+        // dropped — there is nothing to merge onto.
+        node.isFake
+        // `function F with storage ...` feeds the callee's macro slots; once
+        // inlined there is no call left to attach them to.
+        || functionNode.args.length > 1
+        // A loop's execute is the recursion target that LoopArgument resolves
+        // through `createdMCFunction` — its function has to survive.
+        || command.givenCallbackName === 'loop'
+        // Only fold away functions Sandstone generated. A user's function may
+        // be called from elsewhere, so it can't be deleted, and inlining
+        // without deleting would alias its body into two places.
+        || mcFunction.creator !== 'sandstone'
+      ) {
+        return this.genericVisit(node)
+      }
+
+      node.args.push(...command.args)
+      node.body = command.body
+      node.isMacro = node.isMacro || command.isMacro
+
+      this.core.resourceNodes.delete(mcFunctionNode)
+      // The function this pointed at no longer exists.
+      node.createdMCFunction = null
+
       return this.genericVisit(node)
     }
 

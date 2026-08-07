@@ -1,6 +1,8 @@
 import type { PaletteRef } from 'sandstone/arguments/generated/assets/atlas.ts'
+import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RGB } from 'sandstone/arguments/generated/util/color.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
+import type { NamespacedString, TrimMaterialClass, TrimPatternClass } from 'sandstone'
 
 export type Dyeable = {
   /**
@@ -16,11 +18,10 @@ export type Equipment = {
    */
   layers: Layers,
   /**
-   * Replaces palette textures provided by trim materials.
+   * Replaces trim texture based on armor trim. \
+   * Only the first entry that matches is applied.
    */
-  trim_palette_replacements?: ({
-    [Key in Extract<PaletteRef, string>]?: PaletteRef
-  }),
+  trim_overrides?: Array<TrimOverride>,
 }
 
 export type Layer<T extends NBTObject> = ({
@@ -36,25 +37,46 @@ export type Layer<T extends NBTObject> = ({
 })
 
 export type Layers = {
-  humanoid?: Array<Layer<`${string}:${string}`>>,
-  humanoid_leggings?: Array<Layer<`${string}:${string}`>>,
-  humanoid_baby?: Array<Layer<`${string}:${string}`>>,
-  wings?: Array<WingsLayer<`${string}:${string}`>>,
-  wolf_body?: Array<Layer<`${string}:${string}`>>,
-  horse_body?: Array<Layer<`${string}:${string}`>>,
-  llama_body?: Array<Layer<`${string}:${string}`>>,
-  happy_ghast_body?: Array<Layer<`${string}:${string}`>>,
-  nautilus_saddle?: Array<Layer<`${string}:${string}`>>,
-  nautilus_body?: Array<Layer<`${string}:${string}`>>,
-  pig_saddle?: Array<Layer<`${string}:${string}`>>,
-  strider_saddle?: Array<Layer<`${string}:${string}`>>,
-  camel_husk_saddle?: Array<Layer<`${string}:${string}`>>,
-  camel_saddle?: Array<Layer<`${string}:${string}`>>,
-  horse_saddle?: Array<Layer<`${string}:${string}`>>,
-  donkey_saddle?: Array<Layer<`${string}:${string}`>>,
-  mule_saddle?: Array<Layer<`${string}:${string}`>>,
-  zombie_horse_saddle?: Array<Layer<`${string}:${string}`>>,
-  skeleton_horse_saddle?: Array<Layer<`${string}:${string}`>>,
+  humanoid?: Array<Layer<NamespacedString>>,
+  humanoid_leggings?: Array<Layer<NamespacedString>>,
+  humanoid_baby?: Array<Layer<NamespacedString>>,
+  wings?: Array<WingsLayer<NamespacedString>>,
+  wolf_body?: Array<Layer<NamespacedString>>,
+  horse_body?: Array<Layer<NamespacedString>>,
+  llama_body?: Array<Layer<NamespacedString>>,
+  happy_ghast_body?: Array<Layer<NamespacedString>>,
+  nautilus_saddle?: Array<Layer<NamespacedString>>,
+  nautilus_body?: Array<Layer<NamespacedString>>,
+  pig_saddle?: Array<Layer<NamespacedString>>,
+  strider_saddle?: Array<Layer<NamespacedString>>,
+  camel_husk_saddle?: Array<Layer<NamespacedString>>,
+  camel_saddle?: Array<Layer<NamespacedString>>,
+  horse_saddle?: Array<Layer<NamespacedString>>,
+  donkey_saddle?: Array<Layer<NamespacedString>>,
+  mule_saddle?: Array<Layer<NamespacedString>>,
+  zombie_horse_saddle?: Array<Layer<NamespacedString>>,
+  skeleton_horse_saddle?: Array<Layer<NamespacedString>>,
+}
+
+export type TrimOverride = {
+  when: {
+    pattern?: (Registry['minecraft:trim_pattern'] | TrimPatternClass),
+    material?: (Registry['minecraft:trim_material'] | TrimMaterialClass),
+  },
+  /**
+   * When present, overrides the base texture provided by trim pattern. \
+   * The texture is located under `trims/entity/<layer>/`.
+   */
+  texture?: NamespacedString,
+  /**
+   * When present, overrides the palette texture provided by trim material.
+   */
+  palette?: PaletteRef,
+}
+
+export type TrimPredicate = {
+  pattern?: (Registry['minecraft:trim_pattern'] | TrimPatternClass),
+  material?: (Registry['minecraft:trim_material'] | TrimMaterialClass),
 }
 
 export type WingsLayer<T extends NBTObject> = (Layer<T> & {

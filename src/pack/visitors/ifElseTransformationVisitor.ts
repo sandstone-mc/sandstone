@@ -33,10 +33,10 @@ function handleMultipleNodes(visitor: GenericSandstoneVisitor, nodes: (ElseNode 
         if (Array.isArray(child)) {
           actualBody = child
         } else {
-          return visitor.visit(new ExecuteCommandNode(visitor.pack, [[node.condition.getValue()]], {
+          return visitor.visit(new ExecuteCommandNode(visitor.pack, false, [[node.condition.getValue()]], {
             isSingleExecute: false,
             givenCallbackName: callbackName,
-            body: [i === (nodes.length - 1) ? child : new ReturnRunCommandNode(visitor.pack, ['run'], {
+            body: [i === (nodes.length - 1) ? child : new ReturnRunCommandNode(visitor.pack, false, ['run'], {
               isSingleExecute: false,
               isFlowControl: true,
               body: [child],
@@ -46,11 +46,11 @@ function handleMultipleNodes(visitor: GenericSandstoneVisitor, nodes: (ElseNode 
         }
       }
 
-      return visitor.visit(new ExecuteCommandNode(visitor.pack, [[node.condition.getValue()]], {
+      return visitor.visit(new ExecuteCommandNode(visitor.pack, false, [[node.condition.getValue()]], {
         isSingleExecute: false,
         givenCallbackName: `${i}_${callbackName}`,
         body: [
-          new ReturnRunCommandNode(visitor.pack, ['run'], {
+          new ReturnRunCommandNode(visitor.pack, false, ['run'], {
             isSingleExecute: false,
             isFlowControl: true,
             body: actualBody,
@@ -83,7 +83,7 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
 
     // 2. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {
-      const executeNode = new ExecuteCommandNode(this.pack, [[condition.getValue()]], {
+      const executeNode = new ExecuteCommandNode(this.pack, false, [[condition.getValue()]], {
         isSingleExecute: false,
         givenCallbackName: callbackName,
         body,
@@ -102,7 +102,7 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
 
     // 4. We have multiple nodes & there's tail nodes in the parent, entering a new function to allow for `return`
 
-    const wrapper = new ExecuteCommandNode(this.pack, [], {
+    const wrapper = new ExecuteCommandNode(this.pack, false, [], {
       isFake: true, // trolley
       isSingleExecute: false,
       givenCallbackName: callbackName,

@@ -6,6 +6,7 @@ import { ContainerNode } from '../nodes'
 import type { SandstoneCore } from '../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from './resource'
 import { ResourceClass } from './resource'
+import type { NamespacedString } from 'sandstone/utils'
 
 /**
  * A node representing a custom resource.
@@ -71,10 +72,10 @@ export abstract class CustomResourceClass extends ResourceClass<CustomResourceNo
     this.handleConflicts()
   }
 
-  get name(): `${string}:${string}` {
+  get name() {
     return `${this.path[0]}:${this.path.slice(
       this.folder === undefined ? 2 : this.folder.length + 1
-    ).join('/')}`
+    ).join('/')}` as NamespacedString
   }
 
   getValue(): string | ArrayBuffer | Buffer | Promise<ArrayBuffer | Buffer | string> {

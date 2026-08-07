@@ -1,13 +1,11 @@
 import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
-import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
-import type { LootFunction } from 'sandstone/arguments/generated/data/loot/function.ts'
 import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemListRef } from 'sandstone/arguments/generated/util/registry_ref.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LootTableClass, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { LootTableClass, NamespacedString, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type BlockEntityTarget = 'block_entity'
 
@@ -137,9 +135,6 @@ export type LootPool = ({
   bonus_rolls?: NumberProviderRef,
   entries: Array<LootPoolEntry>,
 } & {
-  functions?: Array<LootFunction>,
-  conditions?: Array<LootCondition>,
-} & {
   modifier?: ItemModifier,
   condition?: PredicateRef,
 })
@@ -150,12 +145,10 @@ export type LootPoolEntry = NonNullable<({
   } & (S extends keyof SymbolLootPoolEntry ? SymbolLootPoolEntry[S] : RootNBT))
 }[Extract<Registry['minecraft:loot_pool_entry_type'], string>])>
 
-export type LootPoolEntryBase = ({
-  conditions?: Array<LootCondition>,
-} & {
+export type LootPoolEntryBase = {
   modifier?: ItemModifier,
   condition?: PredicateRef,
-})
+}
 
 export type LootTable = {
   /**
@@ -192,24 +185,22 @@ export type LootTable = {
    */
   type?: (LootContextParamSets | `minecraft:${LootContextParamSets}`),
   pools?: Array<LootPool>,
-  functions?: Array<LootFunction>,
   modifier?: ItemModifier,
   /**
    * Value:
    *
    * Value: Defines a `random_sequence` id.
    */
-  random_sequence?: `${string}:${string}`,
+  random_sequence?: NamespacedString,
 }
 
 export type LootTableListRef = (
-  | Array<LootTable>
   | LootTable | (
   Registry['minecraft:loot_table'] | `#${string}:${string}` | TagClass<'loot_table'> | LootTableClass)
   | Array<((Registry['minecraft:loot_table'] | LootTableClass) | LootTable)>)
 
 export type LootTablePoolEntry = ({
-  value: ((Registry['minecraft:loot_table'] | LootTableClass) | LootTable | LootTableListRef),
+  value: LootTableListRef,
   /**
    * If `true`, randomly selects a loot table to drop. \
    * If `false`, drops all loot tables. \
@@ -229,7 +220,6 @@ export type SingletonPoolEntry = ({
     min: 1,
   }>,
   quality?: NBTInt,
-  functions?: Array<LootFunction>,
 } & LootPoolEntryBase)
 
 export type SlotsPoolEntry = ({
@@ -237,14 +227,7 @@ export type SlotsPoolEntry = ({
 } & SingletonPoolEntry)
 
 export type TagPoolEntry = ({
-  name: (Registry['minecraft:tag/item']),
   items: ItemListRef,
-} & {
-  /**
-   * If `true`, drops a random item from the tag. \
-   * If `false`, drops all items in the tag.
-   */
-  expand: boolean,
 } & {
   /**
    * If `true`, randomly selects an item to drop. \

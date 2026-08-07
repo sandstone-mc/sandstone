@@ -28,8 +28,8 @@ export class TransferCommand<MACRO extends boolean> extends CommandArguments {
         args.push(targetParser(targets))
       }
     } else {
-      args.push(25565, targetParser(targets))
+      args.push(25565, targets === undefined ? undefined : targetParser(targets))
     }
-    return this.finalCommand([hostname, port, targetParser(targets)])
+    return this.finalCommand(args)
   }
 }

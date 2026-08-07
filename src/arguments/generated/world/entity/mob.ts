@@ -8,6 +8,7 @@ import type { EntityBase } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type {
   LootTableClass,
+  NamespacedString,
   NBTDouble,
   NBTFloat,
   NBTInt,
@@ -42,7 +43,7 @@ export type AttributeModifier = {
   /**
    * The unique identifier of this attribute modifier.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
   /**
    * Change in the attribute.
    */
@@ -164,10 +165,6 @@ export type LivingEntity = (EntityBase & {
   },
   attributes?: Array<Attribute>,
   active_effects?: Array<MobEffectInstance>,
-  /**
-   * Team to join when it is spawned.
-   */
-  Team?: `${any}${string}`,
   /**
    * The UUID of the player that last hurt this entity. Stored for 100 ticks.
    *
@@ -302,7 +299,7 @@ export type ModernAttributeModifier = {
   /**
    * The unique identifier of this attribute modifier.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
   /**
    * Change in the attribute.
    */
@@ -354,6 +351,6 @@ export type UUIDLeash = {
 }
 
 export type WaypointIcon = {
-  style: (`${string}:${string}` | WaypointStyleClass),
+  style: (NamespacedString | WaypointStyleClass),
   color?: RGB,
 }

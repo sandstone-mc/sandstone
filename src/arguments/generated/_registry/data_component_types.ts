@@ -7,6 +7,7 @@ export type DATA_COMPONENT_TYPES = (
 
 export const DATA_COMPONENT_TYPES_SET = new Set([
   'additional_trade_cost',
+  'attack_animation',
   'attack_range',
   'attribute_modifiers',
   'axolotl/variant',
@@ -62,6 +63,7 @@ export const DATA_COMPONENT_TYPES_SET = new Set([
   'horse/variant',
   'instrument',
   'intangible_projectile',
+  'interact_animation',
   'item_model',
   'item_name',
   'jukebox_playable',
@@ -70,7 +72,6 @@ export const DATA_COMPONENT_TYPES_SET = new Set([
   'lock',
   'lodestone_tracker',
   'lore',
-  'map_color',
   'map_decorations',
   'map_id',
   'map_post_processing',
@@ -106,7 +107,6 @@ export const DATA_COMPONENT_TYPES_SET = new Set([
   'stored_enchantments',
   'sulfur_cube_content',
   'suspicious_stew_effects',
-  'swing_animation',
   'tool',
   'tooltip_display',
   'tooltip_style',

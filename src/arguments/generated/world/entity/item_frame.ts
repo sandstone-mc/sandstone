@@ -1,8 +1,7 @@
+import type { DirectionByte } from 'sandstone/arguments/generated/util/direction.ts'
 import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { ItemStack } from 'sandstone/arguments/generated/world/item.ts'
 import type { NBTByte, NBTFloat } from 'sandstone'
-
-export type Facing = (0 | 1 | 2 | 3 | 4 | 5)
 
 export type ItemFrame = (BlockAttachedEntity & {
   /**
@@ -17,7 +16,7 @@ export type ItemFrame = (BlockAttachedEntity & {
    *  - West(`4`)
    *  - East(`5`)
    */
-  Facing?: Facing,
+  Facing?: DirectionByte,
   Item?: ItemStack,
   /**
    * Chance the item has to drop.

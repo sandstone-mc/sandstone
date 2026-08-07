@@ -17,7 +17,7 @@
  * sibling-file rewrites and `makeInlineImportVisitor(collected, context)`
  * for in-place use inside the main transformer's visitor walk.
  */
-import * as ts from 'typescript'
+import * as ts from '@typescript/typescript6'
 import { MagicString } from 'magic-string'
 
 export interface CollectedImport {

@@ -6,7 +6,6 @@ import type {
   ItemStackTarget,
   LootPoolEntry,
 } from 'sandstone/arguments/generated/data/loot.ts'
-import type { LootCondition } from 'sandstone/arguments/generated/data/loot/condition.ts'
 import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { IntRange, NbtProvider } from 'sandstone/arguments/generated/data/util.ts'
@@ -27,10 +26,13 @@ import type {
   InstrumentClass,
   ItemModifierClass,
   LootTableClass,
+  NamespacedString,
   NBTClass,
   NBTFloat,
   NBTInt,
+  NBTList,
   NBTLong,
+  NonEmptyString,
   TagClass,
 } from 'sandstone'
 
@@ -87,7 +89,7 @@ export type AttributeModifier = ({
   /**
    * The unique identifier of this attribute modifier.
    */
-  id: `${string}:${string}`,
+  id: NamespacedString,
 })
 
 export type BannerPattern = (
@@ -175,7 +177,6 @@ export type BinomialWithBonusCountFormula = {
 }
 
 export type Conditions = {
-  conditions?: Array<LootCondition>,
   condition?: PredicateRef,
 }
 
@@ -232,8 +233,8 @@ export type CopyNameSource = (
 export type CopyNbt = ({
   source: NbtProvider,
   ops: Array<{
-    source: `${any}${string}` | DataPointClass,
-    target: `${any}${string}` | DataPointClass,
+    source: NonEmptyString | DataPointClass,
+    target: NonEmptyString | DataPointClass,
     /**
      * Value:
      *
@@ -246,8 +247,8 @@ export type CopyNbt = ({
 } & Conditions)
 
 export type CopyNbtOperation = {
-  source: `${any}${string}` | DataPointClass,
-  target: `${any}${string}` | DataPointClass,
+  source: NonEmptyString | DataPointClass,
+  target: NonEmptyString | DataPointClass,
   /**
    * Value:
    *
@@ -353,11 +354,6 @@ export type EnchantWithLevels = ({
 
 export type ExplorationMap = ({
   /**
-   * Generated structure to locate. Accepts any of the structure types used by the `/locate` command. Defaults to buried treasure.
-   */
-  destination?: (Registry['minecraft:tag/worldgen/structure']),
-} & {
-  /**
    * Generated structure to locate. Accepts any of the structure types used by the `/locate` command.
    */
   destination: ((
@@ -367,10 +363,10 @@ export type ExplorationMap = ({
       | Array<Registry['minecraft:worldgen/structure']>),
 } & {
   /**
-   * The icon used to mark the destination on the map. Accepts any of the map icon text IDs (case insensitive).
-   * If `mansion` or `monument` is used, the color of the lines on the item texture changes to match the corresponding explorer map.
+   * The icon used to mark the destination on the map.
    */
   decoration?: Registry['minecraft:map_decoration_type'],
+} & {
   /**
    * Defaults to 2.
    */
@@ -485,11 +481,8 @@ export type ListOperationMode = ('append' | 'insert' | 'replace_all' | 'replace_
 
 export type LootFunction = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:loot_function_type'], string>, string>]?: ({
-    function: S,
     type: S,
-  } & (S extends keyof SymbolLootFunction
-    ? SymbolLootFunction[S]
-    : RootNBT) & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
+  } & (S extends keyof SymbolLootFunction ? SymbolLootFunction[S] : RootNBT))
 }[Extract<Registry['minecraft:loot_function_type'], string>])>
 
 export type LootingEnchant = (EnchantedCountBase & Conditions)
@@ -544,7 +537,7 @@ export type Reference = ({
   /**
    * Item modifier to reference.
    */
-  name: (`${string}:${string}` | ItemModifierClass),
+  name: (NamespacedString | ItemModifierClass),
 } & Conditions)
 
 export type ReplaceSectionListOperation = {
@@ -572,7 +565,7 @@ export type Sequence = ({
   /**
    * List of functions to apply to this item.
    */
-  functions: (Array<LootFunction> | ItemModifier),
+  functions: ItemModifier,
 } & Conditions)
 
 export type SetAttributes = ({
@@ -601,7 +594,7 @@ export type SetBookCover = ({
   /**
    * If omitted, the original title is kept (or an empty string is used if there was no component)
    */
-  title?: Filterable<`${any}${string}`>,
+  title?: Filterable<NonEmptyString>,
   /**
    * If omitted, the original author is kept (or an empty string is used if there was no component)
    */
@@ -761,10 +754,6 @@ export type SetLootTable = ({
   /**
    * The loot table to set to the container block item.
    */
-  name: (Registry['minecraft:loot_table'] | LootTableClass),
-  /**
-   * The loot table to set to the container block item.
-   */
   tag: (Registry['minecraft:loot_table'] | LootTableClass),
   /**
    * The container seed to use. Defaults to a random seed.
@@ -824,7 +813,7 @@ export type SetName = ({
 export type SetNameTarget = ('item_name' | 'custom_name')
 
 export type SetNbt = ({
-  tag: `${any}${string}` | NBTClass,
+  tag: NonEmptyString | NBTClass,
 } & Conditions)
 
 export type SetOminousBottleAmplifier = ({
@@ -999,8 +988,6 @@ type LootFunctionDispatcherMap = {
   'minecraft:limit_count': LootFunctionLimitCount,
   'modify_contents': LootFunctionModifyContents,
   'minecraft:modify_contents': LootFunctionModifyContents,
-  'reference': LootFunctionReference,
-  'minecraft:reference': LootFunctionReference,
   'sequence': LootFunctionSequence,
   'minecraft:sequence': LootFunctionSequence,
   'set_attributes': LootFunctionSetAttributes,
@@ -1072,7 +1059,6 @@ type LootFunctionFallback = (
   | LootFunctionFurnaceSmelt
   | LootFunctionLimitCount
   | LootFunctionModifyContents
-  | LootFunctionReference
   | LootFunctionSequence
   | LootFunctionSetAttributes
   | LootFunctionSetBannerPattern
@@ -1115,7 +1101,6 @@ type LootFunctionFiltered = Filtered
 type LootFunctionFurnaceSmelt = Conditions
 type LootFunctionLimitCount = LimitCount
 type LootFunctionModifyContents = ModifyContents
-type LootFunctionReference = Reference
 type LootFunctionSequence = Sequence
 type LootFunctionSetAttributes = SetAttributes
 type LootFunctionSetBannerPattern = SetBannerPattern

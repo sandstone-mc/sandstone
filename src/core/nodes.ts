@@ -107,6 +107,21 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
   getValue() {
     const filteredArgs: unknown[] = this.command === '' ? [] : [this.command]
 
+    // `this.isMacro` is the sole signal that decides the `$` prefix. It must
+    // be set at construction by `Macro as $`, helpers.ts propagation, or the
+    // node's own constructor when the syntax is intrinsically macro (e.g.
+    // `function <name-with-$(...)>`).
+    //
+    // We track `hasMacroArgs` purely as a sanity check: an arg that IS a
+    // macro argument landing on a non-macro-declared node means the caller
+    // forgot to declare macro → throw.
+    //
+    // Note: `function <name> with storage <path>` is NOT a macro command.
+    // The `with` clause routes env-var resolution at runtime, but the
+    // function name has no `$(...)`, so the serialized args are plain
+    // strings — `hasMacroArgs` stays false.
+    let hasMacroArgs = false
+
     for (const arg of this.args) {
       if (arg !== undefined && arg !== null) {
         // Yes these are cursed, unfortunately, there's not really a better way to do this as visitors only visit the root nodes.
@@ -116,18 +131,18 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
             // so we can detect $(...) substitutions that originated inside nested
             // NBT values rather than from a top-level MacroArgument object.
             if (arg.containsMacro) {
-              this.isMacro = true
+              hasMacroArgs = true
             }
             filteredArgs.push(arg)
           } else if (isMacroArgument(this.sandstoneCore, arg)) {
-            this.isMacro = true
+            hasMacroArgs = true
 
             filteredArgs.push((arg as MacroArgument).toMacro())
           } else if (Object.hasOwn(arg, '_hasMacro') && (arg as { _hasMacro: boolean })._hasMacro) {
             // Selector (and any similar complex arg that stringifies `$(...)`
             // via its own toString) exposes macro info via _hasMacro so the
             // command can still be flagged as a macro command.
-            this.isMacro = true
+            hasMacroArgs = true
 
             filteredArgs.push(arg)
           } else if (Object.hasOwn(arg, 'toLoop')) {
@@ -139,6 +154,13 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
           filteredArgs.push(arg)
         }
       }
+    }
+
+    if (hasMacroArgs && !this.isMacro) {
+      throw new Error(`[${this.constructor.name}#getValue] Received macro argument(s) but was not declared as a macro command.`)
+    }
+    if (!hasMacroArgs && this.isMacro) {
+      throw new Error(`[${this.constructor.name}#getValue] Command was declared as a macro command but received no macro argument(s).`)
     }
 
     return `${this.isMacro ? '$' : ''}${filteredArgs.join(' ')}`

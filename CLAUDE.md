@@ -6,10 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Build**: `bun dev:build --silent` - Builds the project using a custom Bun Build based script
   - `--silent` or `-s` suppresses progress output (this is what you should default to for context preservation)
+  - **`--silent` produces zero output on success.** No "Build completed" line, no summary, nothing. An empty result is the success signal. If you only see `$ bun run scripts/build.ts --silent` and a prompt, the build passed. Run without `--silent` to see the full pipeline log.
 - **Watch**: `bun dev:watch` - Builds with watch mode
 - **Type checking**: `bun dev:build:types` - Generates TypeScript declaration files only
 - **Lint**: `bun lint` - Lints TypeScript files using OxLint
 - **Format/Fix**: `bun format` - Lints and auto-fixes issues
+- **Basic command syntax**: Do not add or run dedicated command-output tests for direct syntax additions; use build/type checks unless behavior beyond serialization changes.
 
 **Note**: The build scripts auto-retry on "Excessive complexity" TypeScript errors caused by stale types. If you see this error followed by "cleaning and retrying..." and the build succeeds, ignore it.
 
@@ -215,6 +217,19 @@ Visitors run in a specific order defined in `pack.ts`. Order matters because:
 - Simplification visitors run after structural transformations
 - Constant initialization runs early to set up scoreboards
 - **SwitchTransformationVisitor runs before IfElseTransformationVisitor** since it creates IfNodes that need to be processed
+
+#### "Async" Flow is Fake Async
+
+Despite the `async` keyword in some user-facing docs, Sandstone does **not** use JS-level `async () => {...}` callbacks. `MCFunction` bodies, `_.await.sleep(...)`, `_.await.until(...)`, and all Flow control run **synchronously at compile time**. The "async" semantics happen at **Minecraft runtime** via the `schedule` command (and a tag/gametime poller when `asyncContext: true`).
+
+This matters when writing tests, building tooling, or fixing visitor bugs:
+
+- **Always use sync callbacks** in `MCFunction`, `execute.run`, `_.if`, `_.while`, `_.for`, etc.
+- **Do NOT** write `async () => { await _.await.sleep(...) }` — the JS `await` has no effect on Sandstone, and the continuation will run outside any MCFunction context, producing broken output.
+- The `_.await.sleep(...)` / `_.await.until(...)` calls are nodes added to the current MCFunction body. The post-sleep code lives in a separate continuation MCFunction (`<parent>/__sleep` or `<parent>/__until/_continuation`).
+- `AwaitBodyVisitor` (the post-await visitor) splices the continuation body into the sleep/until mcfunction so the post-await code actually runs at runtime. It runs after `ContainerCommandsToMCFunctionVisitor`.
+
+If you're adding new flow features, remember: compile-time sync, runtime-scheduled.
 
 #### Switch Transformation Flow
 
@@ -530,6 +545,67 @@ execute.as('@a').run(() => { say('a'); say('b') })
 **IMPORTANT - isSingleExecute in Visitors:**
 When creating `ExecuteCommandNode` during visitor transformation, always use `isSingleExecute: false` even for single-command bodies. The `append()` method has special behavior when `isSingleExecute: true` that calls `getCurrentMCFunctionOrThrow().exitContext()`, which fails during visitor passes (no active MCFunction context). Simplification of single-command executes should happen in later visitors like `SimplifyExecuteFunctionVisitor`, not by setting `isSingleExecute: true`.
 
+#### Building a `SandstoneCommands` proxy (`.run`-style APIs)
+
+Several APIs expose a command body by proxying `SandstoneCommands`: `_.if(cond).run.<cmd>`, `.else.run.<cmd>`, `_.return.run.<cmd>`, `_.with(env).<cmd>`. They all follow the same contract, and getting it wrong produces a bug that is invisible in the common case.
+
+**The rule: the `get` trap must return the raw property. Never a wrapper function.**
+
+```typescript
+// ✅ CORRECT — hand back the real value
+const commands = new Proxy(commandsSource, {
+  get: (target, p, receiver) => {
+    // Skip incidental probes (util.inspect, `then` on await, ...) so they
+    // don't open a context that never closes.
+    if (typeof p === 'symbol' || !(p in target)) {
+      return Reflect.get(target, p, receiver)
+    }
+    node.enterSingleCommand(parentMCFunction)  // node closes it in append()
+    return (target as any)[p]
+  },
+}) as SandstoneCommands<false>
+
+// ❌ WRONG — returns a function, so property chains die
+get: (_t, p, _r) => {
+  parentMCFunction.enterContext(clauseNode)
+  return (...args: unknown[]) => {              // `.execute` is now a function
+    const result = (commandsSource as any)[p](...args)
+    while (parentMCFunction.contextStack.length > parentDepth) {
+      parentMCFunction.exitContext()
+    }
+    return result
+  }
+}
+```
+
+**Why the wrong version looks fine.** Commands come in two shapes. Directly-callable ones (`say`, `give`, `tellraw` — registered via `bind(...)`) work through a wrapper, because `wrapper('hi')` just forwards. Commands whose API continues through *property access* (`execute`, `data`, `scoreboard`, `effect`, and every class with subcommands) do not: `.execute` returns the wrapper function itself, so `.execute.as` is `undefined`. A proxy tested only with `.run.say(...)` will pass while `.run.execute.as('@a').run.say('hi')` throws `X.as is not a function`.
+
+**Consequence: the proxy cannot own the context exit.** Popping the context after the command finishes requires intercepting the call, which requires returning a function — the exact thing that breaks chaining. So the *node* has to close its own context, via an `append()` override that fires when the command commits:
+
+```typescript
+append = (...nodes: Node[]) => {
+  for (const node of nodes) {
+    this.body.push(node)
+    if (this.isSingleCommand) {
+      // Pop the whole way back, not one level: a sleep (or other await)
+      // inside the command enters a context without balancing it.
+      while (parentMCFunction.contextStack.length > this.depth) {
+        parentMCFunction.exitContext()
+      }
+    }
+  }
+  return (nodes.length === 1 ? nodes[0] : nodes) as any
+}
+```
+
+Reference implementations: `ReturnRunCommandNode.append` (`server/return.ts`), `FlowClauseNode` (`flow/if_else.ts`, shared by `IfNode`/`ElseNode`), `WithClass` (`flow/macro/with.ts`).
+
+**Also watch for:**
+
+- **Nodes not yet in a parent body.** `_.if(cond)` without a callback never commits its `IfNode` — the `IfNode` constructor skips body-gen for an empty callback. The first `enterContext(this, addNode=true)` is what adds it, so re-entry must pass `false`. `FlowClauseNode.addedToBody` tracks this. `ElseNode` and `ReturnRunCommandNode` are already committed by their constructors; don't double-add them.
+- **Macro routing.** Route through `pack.macroCommands` (not `pack.commands`) when the body runs in a macro context, so `isMacro` propagates — see the `isMacro` note in the Macro System section. `_.with(env)` does this, which means *every* command reached through it must consume an env var: `getValue()` throws symmetrically, both for macro args on a non-macro node and for a macro-declared node with no macro args.
+- **The chain ends at the command.** `.run.<cmd>` returns the command's `FinalCommandOutput`, not the statement — so `.else` / `.elseIf` must hang off the callback form (`_.if(cond, cb).else.run.<cmd>`) or a separately held statement, never off `.run.<cmd>`.
+
 #### Deferred Execution with autoCommit
 Commands normally commit immediately when created. Use `autoCommit=false` to defer:
 ```typescript
@@ -546,34 +622,48 @@ This is essential for `createDeferredMacroExecute` which builds execute chains t
 
 ### Macro System
 
-#### MacroArgument Base Class (`src/core/Macro.ts`)
-All macro-capable values extend `MacroArgument`:
-```typescript
-class MacroArgument {
-  local: Map<string, string>  // Maps MCFunction name -> macro variable name
-  toMacro(): string           // Returns "$(varName)" for use in commands
-}
+**Mental model:** Sandstone macros are NOT JS `async`. `$(env_0)` is substituted by Minecraft at runtime when the mcfunction is invoked via `function <name> with storage <envPath>`. Sandstone's job: emit the right mcfunction body, register env variable names, generate the temp storage + dispatch command at the call site.
+
+```
+Caller (mcfunction)              Target mcfunction (macro body)
+==================              ===============================
+$data modify storage foo.env_0
+    set from storage bar         $playsound ... $(env_0)
+function target with storage foo
 ```
 
-#### How Scores/Data Become Macros
-When passed to an MCFunction as env or param:
-1. `ResolveNBTPart(score)` converts Score to NBT storage
-2. `score.local.set(functionName, 'env_0')` registers the macro name
-3. Inside the function, `score.toMacro()` returns `"$(env_0)"`
-4. Function is called with `function <name> with storage <resolved>`
+MC does the substitution at invocation time; the static mcfunction file stays the same across calls.
+
+#### Three layers
+
+1. **MacroArgument** (`src/core/Macro.ts`): base class for any value that can be a macro. Holds a `local: Map<fnName, varName>` (which variable name to use inside a given mcfunction) and a `toMacro()` method that returns `$(varName)`.
+
+2. **`isMacro` propagation** (`src/commands/helpers.ts`): every `CommandArguments` carries an `isMacro: boolean` flag. `getNode()` writes `node.isMacro = node.isMacro || this.isMacro` so nodes inside a macro MCFunction inherit the flag from their enclosing context. Crucial because visitors need the flag at *visit time*, before `getValue()` would set it lazily from a `$`-prefix. Without propagation, `WithNodeVisitor`'s optimization 2 (hoist extracted-execute prefix) and similar visitors can't decide whether to inject `$(...)` references.
+
+3. **MCFunction param shapes**: see next section.
 
 #### MCFunction Parameters vs Environment Variables
 ```typescript
 // Environment variables: captured from outer scope, array as 2nd arg
 const envVar = Data('storage', 'test', 'value')
 MCFunction('test', [envVar], (_loop, param: Score) => {
-  // envVar -> $(env_0)
-  // param -> $(param_0)
+  // envVar -> $(env_0)    (auto-bound at construction, can't be overridden at call)
+  // param  -> $(param_0)  (passed as argument at call time)
 })
 
 // When called: test(newEnvValue, paramValue)
 // - newEnvValue overrides envVar
 // - paramValue is the param
+```
+
+The 2nd-arg array form (`[envVar]`) means "capture from outer scope"; at runtime you can still override by passing a new value, but the original name stays `env_0`. Parameters declared in the callback signature are passed positionally each call.
+
+**Returning the callback is NOT automatic.** Sandstone processes the body during construction. To force a body to actually emit, call the thunk: `MCFunction('macro_flow', [x], () => { /* body */ })()`. Without the trailing `()`, the function is defined but the body never runs and visitors see nothing.
+
+#### Template literals with DataPoints
+Inside a `say(\`got ${entry}\`)` template, `${entry}` is just `String(entry)` — DataPoints don't auto-coerce to SNBT in template strings, so it serializes as `[object Object]`. Use tellraw with an array instead:
+```typescript
+tellraw('@a', ['got', entry])   // element-wise serialization, real SNBT
 ```
 
 #### Creating Macro-Enabled Child Functions
@@ -586,6 +676,17 @@ return createDeferredMacroExecute(pack, deferred, {
   env: [someMacroVariable],  // OR use macroStorage for explicit storage
 })
 ```
+
+#### `_.with()` macro pattern (`src/flow/macro/with.ts`)
+`_.with([foo, bar], cb)` lifts `cb`'s body into a child macro mcfunction (`<parent>/__with_macro`). Each env var is registered as `env_N`. The call site emits the temp storage with the current values + `function <__with_macro> with storage <temp>`. Two `_.with()` patterns produce equivalent output regardless of which way the execute is nested:
+```typescript
+// Both → __with_macro.mcfunction with $playsound ..., then either:
+_.with([volume], () => execute.as('@a').at('@s').run(() => $.playsound(...)))
+execute.as('@a').at('@s').run(() => _.with([volume], () => $.playsound(...)))
+```
+
+The `WithNodeVisitor` (`src/pack/visitors/withTransformationVisitor.ts`) has two optimizations: hoist a single non-macro `execute` prefix onto the parent body (drop the wrapper), and hoist an extracted-execute's prefix off the wrapping mcfunction (move prep + WithClass into the grandparent).
+
 
 ### Debugging Context Issues
 
@@ -698,10 +799,10 @@ export class StopwatchCommandNode extends CommandNode {
 export class StopwatchCommand<MACRO extends boolean> extends CommandArguments {
   protected NodeType = StopwatchCommandNode
 
-  create = (id: Macroable<`${string}:${string}`, MACRO>): FinalCommandOutput =>
+  create = (id: Macroable<NamespacedString, MACRO>): FinalCommandOutput =>
     this.finalCommand(['create', id])
 
-  query = (id: Macroable<`${string}:${string}`, MACRO>, scale: Macroable<number, MACRO>): FinalCommandOutput =>
+  query = (id: Macroable<NamespacedString, MACRO>, scale: Macroable<number, MACRO>): FinalCommandOutput =>
     this.finalCommand(['query', id, scale])
 }
 ```

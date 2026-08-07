@@ -5,11 +5,12 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
 import type {
   AdvancementClass,
-  LootTableClass,
   MCFunctionClass,
+  NamespacedString,
   NBTClass,
   NBTInt,
   NBTList,
+  NonEmptyString,
   RecipeClass,
   TextureClass,
 } from 'sandstone'
@@ -30,7 +31,7 @@ export type Advancement = {
    * If `requirements` is not defined, all defined criteria will be required.
    */
   criteria: ({
-    [Key in `${any}${string}`]?: AdvancementCriterion
+    [Key in NonEmptyString]?: AdvancementCriterion
   }),
   /**
    * If all criteria are required at once, this may be omitted.
@@ -42,7 +43,7 @@ export type Advancement = {
    * Value:
    * List length range: 1..
    */
-  requirements?: NBTList<NBTList<`${any}${string}`, {
+  requirements?: NBTList<NBTList<NonEmptyString, {
     leftExclusive: false,
     min: 1,
   }>, {
@@ -60,7 +61,7 @@ export type Advancement = {
 }
 
 export type AdvancementCriteriaMap = ({
-  [Key in `${any}${string}`]?: AdvancementCriterion
+  [Key in NonEmptyString]?: AdvancementCriterion
 })
 
 export type AdvancementCriterion = NonNullable<({
@@ -111,7 +112,7 @@ export type AdvancementFrame = ('task' | 'challenge' | 'goal')
 
 export type AdvancementIcon = {
   item: Registry['minecraft:item'],
-  nbt?: `${any}${string}` | NBTClass,
+  nbt?: NonEmptyString | NBTClass,
 }
 
 export type AdvancementRewards = {
@@ -122,7 +123,7 @@ export type AdvancementRewards = {
   /**
    * Loot tables to give.
    */
-  loot?: (Array<(Registry['minecraft:loot_table'] | LootTableClass)> | LootTableListRef),
+  loot?: LootTableListRef,
   /**
    * Recipes to unlock.
    */
@@ -130,7 +131,7 @@ export type AdvancementRewards = {
   /**
    * Function to run as and at the player. Function tags are not allowed.
    */
-  function?: (`${string}:${string}` | MCFunctionClass),
+  function?: (NamespacedString | MCFunctionClass),
 }
 
 export type Trigger = (

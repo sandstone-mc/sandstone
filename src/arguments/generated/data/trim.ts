@@ -1,6 +1,7 @@
 import type { PaletteRef } from 'sandstone/arguments/generated/assets/atlas.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
+import type { NamespacedString, NBTList } from 'sandstone'
 
 export type ArmorMaterial = ('leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'netherite' | 'turtle')
 
@@ -10,10 +11,6 @@ export type OldTrimMaterialOverrides = ({
 
 export type TrimMaterial = {
   /**
-   * Permutation key which will be used in the resource pack.
-   */
-  asset_name: string,
-  /**
    * Palette ID which will be used in the resource pack.
    */
   palette: PaletteRef,
@@ -21,27 +18,19 @@ export type TrimMaterial = {
    * Text displayed in the item tooltip.
    */
   description: Text,
-  /**
-   * Armor materials that should have a different color palette.
-   */
-  override_armor_assets?: ({
-    [Key in Extract<Registry['minecraft:equipment'], string>]?: string
-  }),
 }
 
 export type TrimMaterialOverrides = ({
   [Key in Extract<Registry['minecraft:equipment'], string>]?: string
 })
 
-export type TrimPattern = {
+export type TrimPattern = ({
   /**
-   * ID of the pattern that will be used in the resource pack as an overlay on the armor.
-   *
-   * Value:
-   *
-   * Value: A texture ID within a path root of `(namespace)/textures/trims/models/armor/`
+   * ID of the pattern that will be used in the resource pack as an overlay on the armor. \
+   * The texture is located under `trims/entity/<layer>/`.
    */
-  asset_id: `${string}:${string}`,
+  asset_id: NamespacedString,
+} & {
   /**
    * Text displayed in the item tooltip.
    */
@@ -50,4 +39,4 @@ export type TrimPattern = {
    * Whether the pattern texture will be masked based on the underlying armor. Defaults to `false`.
    */
   decal?: boolean,
-}
+})

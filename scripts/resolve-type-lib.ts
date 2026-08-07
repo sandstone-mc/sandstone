@@ -9,7 +9,7 @@
  * different uncommitted change sets.
  */
 
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 import path from 'node:path'
 import fs from 'node:fs'
 import crypto from 'node:crypto'

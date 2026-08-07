@@ -106,8 +106,53 @@ export type MultiNoiseBiomeSourceParameterList = {
 export type MultiNoisePreset = ('nether' | 'overworld')
 
 export type NoiseParameters = {
-  firstOctave: NBTInt,
-  amplitudes: Array<(NBTDouble | number)>,
+  /**
+   * Value:
+   * Range: -32..32
+   */
+  base_octave: NBTInt<{
+    min: -32,
+    max: 32,
+  }>,
+  /**
+   * Defaults to 1.0.
+   *
+   * Value:
+   * Range: 0..1000000
+   */
+  base_amplitude?: (NBTDouble<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }> | number),
+  /**
+   * Defaults to 1.
+   *
+   * Value:
+   * Range: 1..32
+   */
+  octave_count?: NBTInt<{
+    min: 1,
+    max: 32,
+  }>,
+  /**
+   * Defaults to `true`.
+   */
+  normalize?: boolean,
+  /**
+   * When empty or not present, defaults to all 1.0. \
+   * Otherwise, the size must match `octave_count`.
+   *
+   * Value:
+   * List length range: ..32
+   */
+  amplitude_modifiers?: NBTList<(NBTDouble<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+  }> | number), {
+    rightExclusive: false,
+  }>,
 }
 
 export type TheEnd = Record<string, never>

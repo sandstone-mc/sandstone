@@ -9,12 +9,12 @@ export abstract class NBTClass {
   abstract [util.inspect.custom]: () => string
 }
 
-export class NBTPrimitive extends NBTClass {
+export class NBTPrimitive<Unit extends string> extends NBTClass {
   value: number
 
-  unit: string
+  unit: Unit
 
-  constructor(value: number, unit: string) {
+  constructor(value: number, unit: Unit) {
     super()
     this.value = value
     this.unit = unit
@@ -34,37 +34,37 @@ export type NBTRange = { min?: number, max?: number, leftExclusive?: boolean, ri
 
 /* oxlint-disable no-unused-vars */
 
-export class NBTLong<Range extends NBTRange = {}> extends NBTPrimitive {
+export class NBTLong<Range extends NBTRange = {}> extends NBTPrimitive<'l'> {
   constructor(value: number) {
     super(value, 'l')
   }
 }
 
-export class NBTByte<Range extends NBTRange = {}> extends NBTPrimitive {
+export class NBTByte<Range extends NBTRange = {}> extends NBTPrimitive<'b'> {
   constructor(value: number) {
     super(value, 'b')
   }
 }
 
-export class NBTShort<Range extends NBTRange = {}> extends NBTPrimitive {
+export class NBTShort<Range extends NBTRange = {}> extends NBTPrimitive<'s'> {
   constructor(value: number) {
     super(value, 's')
   }
 }
 
-export class NBTFloat<Range extends NBTRange = {}> extends NBTPrimitive {
+export class NBTFloat<Range extends NBTRange = {}> extends NBTPrimitive<'f'> {
   constructor(value: number) {
     super(value, 'f')
   }
 }
 
-export class NBTInt<Range extends NBTRange = {}> extends NBTPrimitive {
+export class NBTInt<Range extends NBTRange = {}> extends NBTPrimitive<'i'> {
   constructor(value: number) {
     super(value, 'i')
   }
 }
 
-export class NBTDouble<Range extends NBTRange = {}> extends NBTPrimitive {
+export class NBTDouble<Range extends NBTRange = {}> extends NBTPrimitive<'d'> {
   constructor(value: number) {
     super(value, 'd')
   }
@@ -139,15 +139,16 @@ export type NBTAllNumbers<Range extends NBTRange = {}> = NBTSimpleClasses<Range>
 
 export type NBTAllArrays = typeof NBTTypedArray | typeof NBTLongArray | typeof NBTByteArray | typeof NBTIntArray
 
-export class NBTString extends NBTPrimitive {}
+export class NBTString extends NBTPrimitive<'"'> {}
 
 export type NBTAllPrimitives = NBTAllNumbers | NBTAllArrays | typeof NBTString
 
 // Type Hack, not actually a primitive
-export class NBTAnyValue extends NBTPrimitive {}
+export class NBTAnyValue extends NBTPrimitive<'any'> {}
 
 export type NBTAllValues = NBTAllPrimitives | NBTAnyValue
 
+// TODO: Implement length generics and a wrapper class like Vector class with `subtracted`, `added`, `multiplied`, and `divided`
 function customNumber<T extends number | number[], C extends NBTSimpleClasses>(
   num: T,
   _class: C,

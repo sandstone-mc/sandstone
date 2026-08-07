@@ -1,5 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { NamespacedString } from 'sandstone'
 
 export type Config = {
   top_material: BlockState,
@@ -8,7 +9,7 @@ export type Config = {
 }
 
 export type ConfiguredSurfaceBuilder = {
-  type: `${string}:${string}`,
+  type: NamespacedString,
   config: {
     top_material: BlockState,
     under_material: BlockState,
@@ -16,4 +17,4 @@ export type ConfiguredSurfaceBuilder = {
   },
 }
 
-export type ConfiguredSurfaceBuilderRef = (`${string}:${string}` | ConfiguredSurfaceBuilder)
+export type ConfiguredSurfaceBuilderRef = (NamespacedString | ConfiguredSurfaceBuilder)

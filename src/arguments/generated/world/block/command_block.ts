@@ -1,12 +1,12 @@
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { BlockEntity, Nameable } from 'sandstone/arguments/generated/world/block.ts'
-import type { NBTInt, NBTLong } from 'sandstone'
+import type { NBTInt, NBTList, NBTLong, NonEmptyString } from 'sandstone'
 
 export type BaseCommandBlock = {
   /**
    * The command to run.
    */
-  Command?: `${any}${string}`,
+  Command?: NonEmptyString,
   /**
    * Success count of the last command.
    */

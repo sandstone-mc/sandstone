@@ -294,6 +294,7 @@ implements ConditionClass, SelectorPickClass<true, boolean> {
             ResolveNBT(
               (this.scores as UUIDinScore).map((score) => ResolveNBTPart(score)),
               this.data,
+              true,
             )
           }
           break
@@ -482,11 +483,11 @@ implements ConditionClass, SelectorPickClass<true, boolean> {
       )()
 
       // STEP 2: Create a deferred execute that uses __sandstone:temp storage with $(uuid_string)
-      const deferredExecute = new ExecuteCommandClass(pack, undefined, false)
+      const deferredExecute = new ExecuteCommandClass(pack, false, undefined, false)
 
       // Return a deferred macro execute that uses the temp storage
       // The looked-up UUID string is now at __sandstone:temp.uuid_string
-      return createDeferredMacroExecute(pack, deferredExecute, {
+      return createDeferredMacroExecute(pack, deferredExecute as any, {
         childFunctionName: '__uuid_execute',
         prependArgs: () => [['as', '$(uuid_string)']],
         macroStorage: uuidLookup,

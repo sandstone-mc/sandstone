@@ -5,7 +5,7 @@
  * a single main bundle is generated and thin re-export files point back to it.
  */
 
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 import { readFile, access } from 'fs/promises'
 import { join, dirname } from 'path'
 

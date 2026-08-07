@@ -2,6 +2,7 @@
 import * as util from 'util'
 import type { NBTObject } from '../arguments/nbt'
 import { DataPointPickClass, type MacroArgument } from '../core/Macro'
+import { ContainerCommandNode } from '../core/nodes'
 import type { SandstonePack } from '../pack'
 import { capitalize } from '../utils'
 import type { DataPointClass } from './Data'
@@ -10,27 +11,110 @@ import type { NBTAllArrays, NBTAllNumbers, NBTAllValues, NBTString } from './nbt
 import { NBTAnyValue, NBTClass, NBTInt, NBTIntArray, NBTPrimitive } from './nbt'
 import { Score } from './Score'
 
+/**
+ * Single AST node that wraps every command produced by `ResolveNBT`.
+ *
+ * While `_resolveNBT` runs we push this node onto the current MCFunction's
+ * `contextStack` (via `enterContext(this, addNode=true)`), so the
+ * `data modify` / `execute store` commands it emits commit into our body
+ * instead of escaping into the caller's MCFunction body. After the resolve
+ * we `exitContext()` and the node — already added to the parent context's
+ * body — serializes as one block of lines when `getValue()` runs.
+ *
+ * Modelled on `ExecuteCommandNode` / `FlowClauseNode`: a `ContainerCommandNode`
+ * whose `command` field reflects the first command in its body.
+ */
+export class ResolveNBTNode extends ContainerCommandNode {
+  dataPoint: DataPointClass<'storage'>
+
+  /**
+   * The NBT object the resolve was called with. Visitors that need to
+   * correlate a `ResolveNBTNode` against an outer scope (e.g. matching
+   * the resolved env vars against a `_.with(env, ...)`'s env list) read
+   * this rather than descending into the command body.
+   */
+  nbt: NBTObject
+
+  constructor(sandstonePack: SandstonePack, dataPoint: DataPointClass<'storage'>, nbt: NBTObject) {
+    super(sandstonePack)
+    this.dataPoint = dataPoint
+    this.nbt = nbt
+  }
+
+  /**
+   * `command` is whatever the first command in the body serializes to.
+   * Lets visitors / loggers inspect the leading command without walking
+   * the body.
+   */
+  get command(): string {
+    const first = this._body[0]
+    if (!first) return ''
+    const value = first.getValue()
+    return typeof value === 'string' ? value : ''
+  }
+
+  getValue = () => {
+    this.sandstoneCore.currentNode = 'ResolveNBTNode'
+
+    const serialized = this._body
+      .map((n) => n.getValue())
+      .filter((v) => v !== null && v !== undefined && v !== '')
+
+    return serialized.length === 0 ? '' : serialized.join('\n')
+  }
+
+  [util.inspect.custom](_depth: number, _options: any) {
+    return `${this.constructor.name}(dataPoint=${this.dataPoint.currentTarget} ${this.dataPoint.path})`
+  }
+}
+
 export class ResolveNBTClass extends DataPointPickClass {
   dataPoint: NonNullable<DataPointClass<'storage'>>
+
+  /**
+   * Skip emitting the leading `data modify ... set value {}` / `set value []`
+   * reset. Always true when ResolveNBT created its own internal dataPoint
+   * (the temp storage is known empty). Callers passing an existing dataPoint
+   * may opt in by passing `true` to suppress the reset.
+   */
+  skipReset: boolean
 
   constructor(
     private pack: SandstonePack,
     nbt: NBTObject,
     dataPoint?: DataPointClass<'storage'>,
+    skipReset?: boolean,
   ) {
     super(pack.core)
     if (dataPoint) {
       this.dataPoint = dataPoint
+      this.skipReset = skipReset ?? false
     } else {
-      this.dataPoint = this.pack.Data('storage', '__sandstone:temp', 'Resolve')
+      this.dataPoint = this.pack.DataVariable()
+      // Auto-skip when ResolveNBT owns the temp storage (known empty).
+      // Explicit `skipReset: false` forces the reset even with our own dataPoint.
+      this.skipReset = skipReset ?? true
     }
 
-    const out = this._resolveNBT(nbt)
+    // Single AST node collecting every command the resolve would emit.
+    const node = new ResolveNBTNode(pack, this.dataPoint, nbt)
 
-    if (out !== undefined && Object.keys(out).length !== 0) {
-      pack.commands.data.modify
-        .storage(this.dataPoint.currentTarget, this.dataPoint.path)
-        .merge.value(this._resolveNBT(nbt))
+    // Make our node the active context of the current MCFunction so command
+    // commits during the resolve land in `node.body`. `enterContext(..., true)`
+    // also appends the node to the previous current context's body, which
+    // is where we ultimately want it to live.
+    const realMCFunction = pack.core.getCurrentMCFunctionOrThrow()
+    realMCFunction.enterContext(node, true)
+    try {
+      const out = this._resolveNBT(nbt)
+
+      if (out !== undefined && Object.keys(out).length !== 0) {
+        pack.commands.data.modify
+          .storage(this.dataPoint.currentTarget, this.dataPoint.path)
+          .merge.value(this._resolveNBT(nbt))
+      }
+    } finally {
+      realMCFunction.exitContext()
     }
   }
 
@@ -46,7 +130,7 @@ export class ResolveNBTClass extends DataPointPickClass {
     if (Array.isArray(nbt)) {
       resolvedNBT = []
 
-      this.dataPoint.set([])
+      if (!this.skipReset) this.dataPoint.set([])
 
       if (resolvedNBT.length !== 0) {
         for (const [i, value] of nbt.entries()) {
@@ -67,7 +151,7 @@ export class ResolveNBTClass extends DataPointPickClass {
     if (nbt instanceof NBTPrimitive) {
       return resolvedNBT
     }
-    this.dataPoint.set({})
+    if (!this.skipReset) this.dataPoint.set({})
 
     for (const [key, value] of Object.entries(nbt)) {
       const resolved = this._resolveNBT(value, `${path === undefined ? '' : `${path}.`}${key}`)

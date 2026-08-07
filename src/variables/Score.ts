@@ -17,7 +17,7 @@ import { nbtResolver, type ConditionClass } from 'sandstone/variables'
 import * as util from 'util'
 import { MacroArgument } from '../core/Macro'
 import type { SandstonePack } from '../pack'
-import { add, formatDebugString } from '../utils'
+import { add, formatDebugString, type NonEmptyString } from '../utils'
 import type { TextComponentClass } from './abstractClasses'
 import { SelectorPickClass } from './abstractClasses'
 import type { DATA_TYPES, DataPointClass } from './Data'
@@ -111,7 +111,7 @@ export class Score extends MacroArgument implements ConditionClass, TextComponen
    */
   _toChatComponent(): JSONTextComponent {
     return {
-      score: { name: `${this.target}` as `${any}${string}`, objective: this.objective },
+      score: { name: `${this.target}` as NonEmptyString, objective: this.objective },
     }
   }
 

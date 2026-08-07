@@ -12,6 +12,7 @@ import {
 } from 'sandstone/flow'
 import { DataPointClass, NBT, Score } from 'sandstone/variables'
 import { GenericSandstoneVisitor } from './visitor'
+import type { NonEmptyString } from 'sandstone/utils'
 
 /**
  * Transforms SwitchNode AST into MCFunctions.
@@ -325,10 +326,10 @@ export class SwitchTransformationVisitor extends GenericSandstoneVisitor {
       ]
 
       const funcNode = new FunctionCommandNode(this.pack, switchMCFunction.name)
-      funcNode.args.push('with', macroPoint.type, macroPoint.currentTarget as `${any}${string}`, macroPoint.path as `${any}${string}`)
+      funcNode.args.push('with', macroPoint.type, macroPoint.currentTarget as NonEmptyString, macroPoint.path as NonEmptyString)
 
       if (isLastNode) {
-        const callNode = new ReturnRunCommandNode(this.pack, ['run'])
+        const callNode = new ReturnRunCommandNode(this.pack, false, ['run'])
         callNode.body = [funcNode]
         return [copyNode, callNode].flatMap((n) => this.visit(n))
       }
@@ -338,7 +339,7 @@ export class SwitchTransformationVisitor extends GenericSandstoneVisitor {
     // Score-based switches handle the copy internally, no `with storage` needed
     const funcNode = new FunctionCommandNode(this.pack, switchMCFunction.name)
     if (isLastNode) {
-      const callNode = new ReturnRunCommandNode(this.pack, ['run'])
+      const callNode = new ReturnRunCommandNode(this.pack, false, ['run'])
       callNode.body = [funcNode]
       return this.visit(callNode)
     }

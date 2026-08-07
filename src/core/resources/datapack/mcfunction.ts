@@ -401,7 +401,7 @@ export class _RawMCFunctionClass<
       } else if (this.callback.length > 1) {
         throw new Error(`[MCFunctionClass] Function ${this.name} expects ${this.callback.length - 1} params at the call-site`)
       }
-      return this.commands.functionCmd(this.name, 'with', this.pack.ResolveNBT(args, this.macroPoint!).dataPoint)
+      return this.commands.functionCmd(this.name, 'with', this.pack.ResolveNBT(args, this.macroPoint!, true).dataPoint)
     }
 
     return this.commands.functionCmd(this.name)

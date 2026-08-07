@@ -3,7 +3,16 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { LabelClass, NBTDouble, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTShort } from 'sandstone'
+import type {
+  LabelClass,
+  NBTDouble,
+  NBTFloat,
+  NBTInt,
+  NBTIntArray,
+  NBTList,
+  NBTShort,
+  NonEmptyString,
+} from 'sandstone'
 
 export type AnyEntity = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:entity_type'], string>, string>]?: ({
@@ -85,9 +94,19 @@ export type EntityBase = {
    */
   NoGravity?: boolean,
   /**
-   * Whether the entity should take damage.
+   * Whether the entity is immune to damage.
    */
   Invulnerable?: boolean,
+  /**
+   * Temporary immunity duration of the entity, in ticks. \
+   * The entity is immune to damage if `invulnerable_time` > 0 **or** `Invulnerable` is `true`.
+   *
+   * Value:
+   * Range: 0..
+   */
+  invulnerable_time?: NBTInt<{
+    min: 0,
+  }>,
   /**
    * How long until the entity can go through a nether portal.
    */
@@ -122,11 +141,11 @@ export type EntityBase = {
   /**
    * Labelling tags on the entity.
    */
-  Tags?: Array<`${any}${string}` | LabelClass>,
+  Tags?: Array<NonEmptyString | LabelClass>,
   /**
    * Team to join when it is spawned.
    */
-  Team?: `${any}${string}`,
+  Team?: NonEmptyString,
   /**
    * Any stored data
    */

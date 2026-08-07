@@ -33,6 +33,8 @@ import type {
   NBTDouble,
   NBTFloat,
   NBTInt,
+  NBTList,
+  NonEmptyString,
   TagClass,
   VariantClass,
 } from 'sandstone'
@@ -55,7 +57,7 @@ export type BlockPredicate<S = undefined> = {
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
   state?: BlockPredicateState,
-  nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : RootNBT)),
+  nbt?: ((NonEmptyString | NBTClass) | (S extends keyof SymbolBlock ? SymbolBlock[S] : SymbolBlock<'%unknown'>)),
   /**
    * Match exact data component values on the block entity.
    */
@@ -143,7 +145,6 @@ export type DamageSourcePredicate = {
 
 export type DamageTagPredicate = {
   id: ((
-      | Registry['minecraft:tag/damage_type']) | (
         | Registry['minecraft:damage_type']
         | `#${Registry['minecraft:tag/damage_type']}`
         | TagClass<'damage_type'>
@@ -215,15 +216,15 @@ export type EntityTagPredicate = {
   /**
    * Must have at least one of the listed tags.
    */
-  any_of?: Array<`${any}${string}` | LabelClass>,
+  any_of?: Array<NonEmptyString | LabelClass>,
   /**
    * Must have all the listed tags.
    */
-  all_of?: Array<`${any}${string}` | LabelClass>,
+  all_of?: Array<NonEmptyString | LabelClass>,
   /**
    * Must have none of the listed tags.
    */
-  none_of?: Array<`${any}${string}` | LabelClass>,
+  none_of?: Array<NonEmptyString | LabelClass>,
 }
 
 export type EntityTypePredicate = ((
@@ -239,12 +240,12 @@ export type FluidPredicate = {
       | Registry['minecraft:fluid'] | `#${Registry['minecraft:tag/fluid']}` | TagClass<'fluid'>)
       | Array<Registry['minecraft:fluid']>),
   state?: ({
-    [Key in `${any}${string}`]?: (MinMaxBounds<NBTInt> | boolean | string)
+    [Key in NonEmptyString]?: (MinMaxBounds<NBTInt> | boolean | string)
   }),
 }
 
 export type FluidPredicateState = ({
-  [Key in `${any}${string}`]?: (MinMaxBounds<NBTInt> | boolean | string)
+  [Key in NonEmptyString]?: (MinMaxBounds<NBTInt> | boolean | string)
 })
 
 export type FoodPredicate = {
@@ -403,8 +404,8 @@ export type OldEntityPredicate = NonNullable<({
   [S in Extract<Extract<EntityTypePredicate, string>, string>]?: {
     type?: S,
     type_specific?: EntitySubPredicate,
-    team?: `${any}${string}`,
-    nbt?: ((`${any}${string}` | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT)),
+    team?: NonEmptyString,
+    nbt?: ((NonEmptyString | NBTClass) | (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT)),
     location?: LocationPredicate,
     distance?: DistancePredicate,
     flags?: EntityFlagsPredicate,
@@ -466,19 +467,19 @@ export type ParrotPredicate = {
 }
 
 export type PlayerAdvancementCriteria = ({
-  [Key in `${any}${string}`]?: boolean
+  [Key in NonEmptyString]?: boolean
 })
 
 export type PlayerAdvancements = ({
   [Key in Extract<Registry['minecraft:advancement'], string>]?: (boolean | ({
-    [Key in `${any}${string}`]?: boolean
+    [Key in NonEmptyString]?: boolean
   }))
 })
 
 export type PlayerPredicate = {
   advancements?: ({
     [Key in Extract<Registry['minecraft:advancement'], string>]?: (boolean | ({
-      [Key in `${any}${string}`]?: boolean
+      [Key in NonEmptyString]?: boolean
     }))
   }),
   gamemode?: Array<GameMode>,
@@ -529,7 +530,7 @@ export type PreComponentsItemPredicate = {
   potion?: Registry['minecraft:potion'],
   enchantments?: Array<EnchantmentPredicate>,
   stored_enchantments?: Array<EnchantmentPredicate>,
-  nbt?: `${any}${string}` | NBTClass,
+  nbt?: NonEmptyString | NBTClass,
 }
 
 export type RabbitPredicate = {
@@ -719,7 +720,7 @@ type EntitySubPredicateFlags = EntityFlagsPredicate
 type EntitySubPredicateLocation = LocationPredicate
 type EntitySubPredicateMovement = MovementPredicate
 type EntitySubPredicateMovementAffectedBy = LocationPredicate
-type EntitySubPredicateNbt = ((`${any}${string}` | NBTClass) | SymbolEntity<'%fallback'>)
+type EntitySubPredicateNbt = ((NonEmptyString | NBTClass) | SymbolEntity<'%fallback'>)
 type EntitySubPredicatePassenger = EntityPredicate
 type EntitySubPredicatePeriodicTick = NBTInt<{
   min: 1,
@@ -728,7 +729,7 @@ type EntitySubPredicatePredicates = DataComponentPredicate
 type EntitySubPredicateSlots = EntitySlotsPredicate
 type EntitySubPredicateSteppingOn = LocationPredicate
 type EntitySubPredicateTargetedEntity = EntityPredicate
-type EntitySubPredicateTeam = `${any}${string}`
+type EntitySubPredicateTeam = NonEmptyString
 type EntitySubPredicateTypeSpecificCubeMob = SlimePredicate
 type EntitySubPredicateTypeSpecificFishingHook = FishingHookPredicate
 type EntitySubPredicateTypeSpecificLightning = LightningBoltPredicate

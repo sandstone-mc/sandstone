@@ -1,9 +1,4 @@
-import type {
-  FloatProvider,
-  HeightProvider,
-  IntProvider,
-  VerticalAnchor,
-} from 'sandstone/arguments/generated/data/worldgen.ts'
+import type { FloatProvider, HeightProvider, IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -30,7 +25,7 @@ export type CanyonShape = {
   y_scale: FloatProvider<NBTFloat>,
 }
 
-export type CarverConfigBase = ({
+export type CarverConfigBase = {
   /**
    * Value:
    * Range: 0..1
@@ -41,16 +36,8 @@ export type CarverConfigBase = ({
     min: 0,
     max: 1,
   }>,
-  replaceable?: (
-      | Array<Registry['minecraft:block']> | (
-      Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
   y: HeightProvider,
-} & {
-  y: HeightProvider,
-  yScale: FloatProvider<NBTFloat>,
-  lava_level: VerticalAnchor,
-  debug_settings?: CarverDebugSettings,
-})
+}
 
 export type CarverDebugSettings = {
   debug_mode?: boolean,
@@ -61,14 +48,11 @@ export type CarverDebugSettings = {
 }
 
 export type CarverListRef = (
-  | ConfiguredCarver
-  | Array<ConfiguredCarver> | (
-  `${string}:${string}` | `#${string}:${string}` | TagClass<'worldgen/configured_carver'>)
-  | Array<`${string}:${string}`> | (
+  | ConfiguredCarver | (
   Registry['minecraft:worldgen/carver'] | `#${string}:${string}` | TagClass<'worldgen/carver'>)
   | Array<(Registry['minecraft:worldgen/carver'] | ConfiguredCarver)>)
 
-export type CarverRef = (ConfiguredCarver | `${string}:${string}` | Registry['minecraft:worldgen/carver'])
+export type CarverRef = (ConfiguredCarver | Registry['minecraft:worldgen/carver'])
 
 export type CaveConfig = (CarverConfigBase & {
   count: IntProvider<NBTInt<{
@@ -96,26 +80,20 @@ export type CaveConfig = (CarverConfigBase & {
 })
 
 export type ConfiguredCarver = NonNullable<({
-  [S in Extract<Extract<(
-      | Registry['minecraft:worldgen/carver']
-      | Registry['minecraft:worldgen/carver_type']), string>, string>]?: ({
+  [S in Extract<Extract<Registry['minecraft:worldgen/carver_type'], string>, string>]?: ({
     type: S,
-    config: (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT),
   } & (S extends keyof SymbolCarverConfig ? SymbolCarverConfig[S] : RootNBT))
-}[Extract<(Registry['minecraft:worldgen/carver'] | Registry['minecraft:worldgen/carver_type']), string>])>
+}[Extract<Registry['minecraft:worldgen/carver_type'], string>])>
 type CarverConfigDispatcherMap = {
   'canyon': CarverConfigCanyon,
   'minecraft:canyon': CarverConfigCanyon,
   'cave': CarverConfigCave,
   'minecraft:cave': CarverConfigCave,
-  'nether_cave': CarverConfigNetherCave,
-  'minecraft:nether_cave': CarverConfigNetherCave,
 }
 type CarverConfigKeys = keyof CarverConfigDispatcherMap
-type CarverConfigFallback = (CarverConfigCanyon | CarverConfigCave | CarverConfigNetherCave)
+type CarverConfigFallback = (CarverConfigCanyon | CarverConfigCave)
 type CarverConfigCanyon = CanyonConfig
 type CarverConfigCave = CaveConfig
-type CarverConfigNetherCave = CaveConfig
 export type SymbolCarverConfig<CASE extends
   | 'map'
   | 'keys'

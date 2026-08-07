@@ -1,8 +1,7 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { HorizontalDirectionByte } from 'sandstone/arguments/generated/util/direction.ts'
 import type { BlockAttachedEntity } from 'sandstone/arguments/generated/world/entity.ts'
 import type { VariantClass } from 'sandstone'
-
-export type Facing = (0 | 1 | 2 | 3)
 
 export type Painting = (BlockAttachedEntity & {
   /**
@@ -15,7 +14,7 @@ export type Painting = (BlockAttachedEntity & {
    *  - North(`2`)
    *  - East(`3`)
    */
-  facing?: Facing,
+  facing?: HorizontalDirectionByte,
   /**
    * Type of painting.
    */

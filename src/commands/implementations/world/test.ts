@@ -4,6 +4,7 @@ import { CommandNode } from 'sandstone/core/nodes'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
 import type { LiteralUnion, SetType } from 'sandstone'
 import type { TEST_INSTANCES, TEST_INSTANCES_SET } from 'sandstone/arguments/generated/_registry/test_instances'
+import { NonEmptyString } from 'sandstone/utils';
 
 export type TEST_INSTANCE_SELECTOR = (
   | LiteralUnion<SetType<typeof TEST_INSTANCES_SET>>
@@ -203,7 +204,7 @@ export class TestCommand<MACRO extends boolean> extends CommandArguments {
    * final BlockPos variableName = new BlockPos(x, y, z);
    * ```
    */
-  pos = (variableName: Macroable<`${any}${string}`, MACRO>) =>
+  pos = (variableName: Macroable<NonEmptyString, MACRO>) =>
     this.finalCommand(['pos', variableName])
 
   /**

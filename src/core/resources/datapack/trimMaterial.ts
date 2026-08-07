@@ -46,8 +46,8 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
     this.handleConflicts()
   }
 
-  /** String which will be used in the resource pack. */
-  get assetName() {
-    return this.trimMaterialJSON.asset_name
+  /** Palette ID which will be used in the resource pack */
+  get palette() {
+    return this.trimMaterialJSON.palette
   }
 }

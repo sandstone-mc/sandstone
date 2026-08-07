@@ -89,12 +89,15 @@ export class ItemModelBuilder extends ItemPredicateClass {
     property: P,
     config: Omit<Extract<JSONSelect, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
   ): this {
-    this.explicitModel = {
-      type: 'select',
-      property,
-      ...config,
-    } as JSONItemModel
-    return this
+    if ('cases' in config && config.cases !== undefined && config.cases !== null) {
+      this.explicitModel = {
+        type: 'select',
+        property,
+        ...config,
+      } as JSONItemModel
+      return this
+    }
+    throw new Error(`[ItemModelBuilder#select] \`cases\` must be defined for \`${property}\``)
   }
 
   /**

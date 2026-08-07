@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
-import type { SetType } from 'sandstone/utils'
+import type { SetType, NamespacedString } from 'sandstone/utils'
 import type { TextComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -134,7 +134,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Te
   }
 
   /** @internal */
-  _toChatComponent = () => ({ translate: this.translationKey as `${string}:${string}` })
+  _toChatComponent = () => ({ translate: this.translationKey as NamespacedString })
 
   toString = () => this.name
 }

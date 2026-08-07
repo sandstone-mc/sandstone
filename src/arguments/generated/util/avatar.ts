@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { TextureType } from 'sandstone/arguments'
-import type { NBTIntArray, NBTList, TextureClass } from 'sandstone'
+import type { NBTIntArray, NBTList, NonEmptyString, TextureClass } from 'sandstone'
 
 export type HumanoidArm = ('left' | 'right')
 
@@ -93,5 +93,5 @@ export type ProfileProperty = {
 }
 
 export type ProfilePropertyMap = ({
-  [Key in `${any}${string}`]?: Array<string>
+  [Key in NonEmptyString]?: Array<string>
 })

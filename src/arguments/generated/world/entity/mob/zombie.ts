@@ -30,6 +30,7 @@ export type ZombieVillager = (Zombie & {
    * Villager's skin data
    */
   VillagerData?: VillagerData,
+  VillagerDataFinalized?: boolean,
   /**
    * Villager's gossips
    */

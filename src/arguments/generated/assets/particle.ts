@@ -1,3 +1,5 @@
+import type { NamespacedString } from 'sandstone'
+
 export type Particle = {
-  textures: Array<`${string}:${string}`>,
+  textures: Array<NamespacedString>,
 }

@@ -15,7 +15,7 @@
  */
 
 import { readFile, writeFile } from 'fs/promises'
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 import { MagicString } from 'magic-string'
 import remapping from '@ampproject/remapping'
 

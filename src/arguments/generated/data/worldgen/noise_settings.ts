@@ -1,8 +1,5 @@
 import type { CubicSpline, DensityFunctionRef } from 'sandstone/arguments/generated/data/worldgen/density_function.ts'
-import type {
-  ClimateParameter,
-  ClimateParameters,
-} from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
+import type { ClimateParameter } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
 import type { MaterialRuleRef } from 'sandstone/arguments/generated/data/worldgen/material_rule.ts'
 import type {
   ConcentricRingsPlacement,
@@ -10,7 +7,7 @@ import type {
 } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
-import type { NBTDouble, NBTFloat, NBTInt } from 'sandstone'
+import type { NamespacedString, NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
 
 export type Aquifer = {
   barrier: DensityFunctionRef,
@@ -26,7 +23,7 @@ export type NoiseGeneratorFlags = {
   ore_veins_enabled: boolean,
 }
 
-export type NoiseGeneratorSettings = ({
+export type NoiseGeneratorSettings = {
   default_block: BlockState,
   default_fluid: BlockState,
   sea_level: NBTInt,
@@ -39,13 +36,9 @@ export type NoiseGeneratorSettings = ({
   legacy_random_source: boolean,
   noise: NoiseSettings,
   noise_router: NoiseRouter,
-  spawn_target: (Array<ClimateParameters> | Array<SpawnTargetPoint>),
-  surface_rule: MaterialRuleRef,
+  spawn_target: Array<SpawnTargetPoint>,
   material_rule: MaterialRuleRef,
-} & {
-  aquifers_enabled: boolean,
-  ore_veins_enabled: boolean,
-})
+}
 
 export type NoiseGeneratorSettingsRef = (Registry['minecraft:worldgen/noise_settings'] | ({
   /**
@@ -53,17 +46,10 @@ export type NoiseGeneratorSettingsRef = (Registry['minecraft:worldgen/noise_sett
    *
    * Value: Defines a `worldgen/noise_settings` id.
    */
-  name: `${string}:${string}`,
+  name: NamespacedString,
 } & NoiseGeneratorSettings))
 
 export type NoiseRouter = {
-  barrier: DensityFunctionRef,
-  fluid_level_floodedness: DensityFunctionRef,
-  fluid_level_spread: DensityFunctionRef,
-  lava: DensityFunctionRef,
-  vein_toggle: DensityFunctionRef,
-  vein_ridged: DensityFunctionRef,
-  vein_gap: DensityFunctionRef,
   temperature: DensityFunctionRef,
   vegetation: DensityFunctionRef,
   continents: DensityFunctionRef,
@@ -194,7 +180,7 @@ export type SpawnTargetPoint = ({
 export type StructureSettings = {
   stronghold?: ConcentricRingsPlacement,
   structures: ({
-    [Key in Extract<`${string}:${string}`, string>]?: RandomSpreadPlacement
+    [Key in Extract<NamespacedString, string>]?: RandomSpreadPlacement
   }),
 }
 

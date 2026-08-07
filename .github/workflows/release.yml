@@ -1,5 +1,8 @@
 name: Publish to npm
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 on:
   push:
     tags:
@@ -107,10 +110,24 @@ jobs:
               echo ""
               for COMMIT in $(git log --format="%H" "${PREV_TAG}..${TAG}"); do
                 SUBJECT=$(git log -1 --format="%s" "$COMMIT")
-                AUTHOR=$(git log -1 --format="%an" "$COMMIT")
+                # Use %%aE (literal %aE) is wrong; embed AE via format.
+                # Resolve GitHub login via API so @mention links correctly
+                # even when the commit's author name differs from the login
+                # (e.g. commits made via the github.com web editor use the
+                # user's display name, not their handle).
+                LOGIN=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${COMMIT}" --jq '.author.login // empty')
+                if [[ -z "$LOGIN" ]]; then
+                  EMAIL=$(git log -1 --format="%ae" "$COMMIT")
+                  LOGIN=$(gh api "search/users?q=${EMAIL}+in:email" --jq '.items[0].login // empty' 2>/dev/null || true)
+                fi
+                if [[ -n "$LOGIN" ]]; then
+                  AUTHOR="@${LOGIN}"
+                else
+                  AUTHOR="@$(git log -1 --format="%an" "$COMMIT")"
+                fi
                 # Extract co-author names from trailers
                 COAUTHORS=$(git log -1 --format="%(trailers:key=Co-authored-by,valueonly)" "$COMMIT" | sed -n 's/\(.*\) <.*/\1/p' | sed 's/^/, @/')
-                echo "- $COMMIT $SUBJECT (@${AUTHOR}${COAUTHORS})"
+                echo "- $COMMIT $SUBJECT (${AUTHOR}${COAUTHORS})"
               done
               echo ""
               echo "</details>"
@@ -144,3 +161,45 @@ jobs:
             --title "$(cat release_title.txt)" \
             --notes-file release_body.md \
             "$LATEST_FLAG"
+
+      # Fetch the release payload via the GitHub API so the Discord action
+      # receives the same raw name / body / url that a `release: published`
+      # event would carry. The action handles its own formatting downstream
+      # (whitespace, head reduction, mention links), so feeding it identical
+      # raw input guarantees identical output regardless of how this workflow
+      # was triggered (push tag, manual dispatch, or release event).
+      - name: Fetch release payload
+        id: release_payload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "${{ github.ref_name }}" \
+            --repo sandstone-mc/sandstone \
+            --json name,body,url > release.json
+
+          {
+            echo "name<<EOF_NAME"
+            jq -r .name release.json
+            echo "EOF_NAME"
+            echo "body<<EOF_BODY"
+            jq -r .body release.json
+            echo "EOF_BODY"
+            echo "url<<EOF_URL"
+            jq -r .url release.json
+            echo "EOF_URL"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Notify Discord
+        if: success()
+        uses: SethCohen/github-releases-to-discord@v1
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          # Sandstone tan — `0xC2A878` = 12757112. Tweak to taste.
+          color: 12757112
+          username: "Sandstone"
+          footer_title: Changelog
+          reduce_headings: true
+          footer_timestamp: true
+          release_name: ${{ steps.release_payload.outputs.name }}
+          release_body: ${{ steps.release_payload.outputs.body }}
+          release_html_url: ${{ steps.release_payload.outputs.url }}

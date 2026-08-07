@@ -179,6 +179,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:black_concrete': McdocBlockStateKeysBlackConcrete,
   'black_concrete_powder': McdocBlockStateKeysBlackConcretePowder,
   'minecraft:black_concrete_powder': McdocBlockStateKeysBlackConcretePowder,
+  'black_concrete_slab': McdocBlockStateKeysBlackConcreteSlab,
+  'minecraft:black_concrete_slab': McdocBlockStateKeysBlackConcreteSlab,
+  'black_concrete_stairs': McdocBlockStateKeysBlackConcreteStairs,
+  'minecraft:black_concrete_stairs': McdocBlockStateKeysBlackConcreteStairs,
   'black_glazed_terracotta': McdocBlockStateKeysBlackGlazedTerracotta,
   'minecraft:black_glazed_terracotta': McdocBlockStateKeysBlackGlazedTerracotta,
   'black_shulker_box': McdocBlockStateKeysBlackShulkerBox,
@@ -221,6 +225,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:blue_concrete': McdocBlockStateKeysBlueConcrete,
   'blue_concrete_powder': McdocBlockStateKeysBlueConcretePowder,
   'minecraft:blue_concrete_powder': McdocBlockStateKeysBlueConcretePowder,
+  'blue_concrete_slab': McdocBlockStateKeysBlueConcreteSlab,
+  'minecraft:blue_concrete_slab': McdocBlockStateKeysBlueConcreteSlab,
+  'blue_concrete_stairs': McdocBlockStateKeysBlueConcreteStairs,
+  'minecraft:blue_concrete_stairs': McdocBlockStateKeysBlueConcreteStairs,
   'blue_glazed_terracotta': McdocBlockStateKeysBlueGlazedTerracotta,
   'minecraft:blue_glazed_terracotta': McdocBlockStateKeysBlueGlazedTerracotta,
   'blue_ice': McdocBlockStateKeysBlueIce,
@@ -279,6 +287,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:brown_concrete': McdocBlockStateKeysBrownConcrete,
   'brown_concrete_powder': McdocBlockStateKeysBrownConcretePowder,
   'minecraft:brown_concrete_powder': McdocBlockStateKeysBrownConcretePowder,
+  'brown_concrete_slab': McdocBlockStateKeysBrownConcreteSlab,
+  'minecraft:brown_concrete_slab': McdocBlockStateKeysBrownConcreteSlab,
+  'brown_concrete_stairs': McdocBlockStateKeysBrownConcreteStairs,
+  'minecraft:brown_concrete_stairs': McdocBlockStateKeysBrownConcreteStairs,
   'brown_glazed_terracotta': McdocBlockStateKeysBrownGlazedTerracotta,
   'minecraft:brown_glazed_terracotta': McdocBlockStateKeysBrownGlazedTerracotta,
   'brown_mushroom': McdocBlockStateKeysBrownMushroom,
@@ -589,6 +601,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:cyan_concrete': McdocBlockStateKeysCyanConcrete,
   'cyan_concrete_powder': McdocBlockStateKeysCyanConcretePowder,
   'minecraft:cyan_concrete_powder': McdocBlockStateKeysCyanConcretePowder,
+  'cyan_concrete_slab': McdocBlockStateKeysCyanConcreteSlab,
+  'minecraft:cyan_concrete_slab': McdocBlockStateKeysCyanConcreteSlab,
+  'cyan_concrete_stairs': McdocBlockStateKeysCyanConcreteStairs,
+  'minecraft:cyan_concrete_stairs': McdocBlockStateKeysCyanConcreteStairs,
   'cyan_glazed_terracotta': McdocBlockStateKeysCyanGlazedTerracotta,
   'minecraft:cyan_glazed_terracotta': McdocBlockStateKeysCyanGlazedTerracotta,
   'cyan_shulker_box': McdocBlockStateKeysCyanShulkerBox,
@@ -895,6 +911,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:gray_concrete': McdocBlockStateKeysGrayConcrete,
   'gray_concrete_powder': McdocBlockStateKeysGrayConcretePowder,
   'minecraft:gray_concrete_powder': McdocBlockStateKeysGrayConcretePowder,
+  'gray_concrete_slab': McdocBlockStateKeysGrayConcreteSlab,
+  'minecraft:gray_concrete_slab': McdocBlockStateKeysGrayConcreteSlab,
+  'gray_concrete_stairs': McdocBlockStateKeysGrayConcreteStairs,
+  'minecraft:gray_concrete_stairs': McdocBlockStateKeysGrayConcreteStairs,
   'gray_glazed_terracotta': McdocBlockStateKeysGrayGlazedTerracotta,
   'minecraft:gray_glazed_terracotta': McdocBlockStateKeysGrayGlazedTerracotta,
   'gray_shulker_box': McdocBlockStateKeysGrayShulkerBox,
@@ -927,6 +947,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:green_concrete': McdocBlockStateKeysGreenConcrete,
   'green_concrete_powder': McdocBlockStateKeysGreenConcretePowder,
   'minecraft:green_concrete_powder': McdocBlockStateKeysGreenConcretePowder,
+  'green_concrete_slab': McdocBlockStateKeysGreenConcreteSlab,
+  'minecraft:green_concrete_slab': McdocBlockStateKeysGreenConcreteSlab,
+  'green_concrete_stairs': McdocBlockStateKeysGreenConcreteStairs,
+  'minecraft:green_concrete_stairs': McdocBlockStateKeysGreenConcreteStairs,
   'green_glazed_terracotta': McdocBlockStateKeysGreenGlazedTerracotta,
   'minecraft:green_glazed_terracotta': McdocBlockStateKeysGreenGlazedTerracotta,
   'green_shulker_box': McdocBlockStateKeysGreenShulkerBox,
@@ -1081,6 +1105,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:light_blue_concrete': McdocBlockStateKeysLightBlueConcrete,
   'light_blue_concrete_powder': McdocBlockStateKeysLightBlueConcretePowder,
   'minecraft:light_blue_concrete_powder': McdocBlockStateKeysLightBlueConcretePowder,
+  'light_blue_concrete_slab': McdocBlockStateKeysLightBlueConcreteSlab,
+  'minecraft:light_blue_concrete_slab': McdocBlockStateKeysLightBlueConcreteSlab,
+  'light_blue_concrete_stairs': McdocBlockStateKeysLightBlueConcreteStairs,
+  'minecraft:light_blue_concrete_stairs': McdocBlockStateKeysLightBlueConcreteStairs,
   'light_blue_glazed_terracotta': McdocBlockStateKeysLightBlueGlazedTerracotta,
   'minecraft:light_blue_glazed_terracotta': McdocBlockStateKeysLightBlueGlazedTerracotta,
   'light_blue_shulker_box': McdocBlockStateKeysLightBlueShulkerBox,
@@ -1113,6 +1141,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:light_gray_concrete': McdocBlockStateKeysLightGrayConcrete,
   'light_gray_concrete_powder': McdocBlockStateKeysLightGrayConcretePowder,
   'minecraft:light_gray_concrete_powder': McdocBlockStateKeysLightGrayConcretePowder,
+  'light_gray_concrete_slab': McdocBlockStateKeysLightGrayConcreteSlab,
+  'minecraft:light_gray_concrete_slab': McdocBlockStateKeysLightGrayConcreteSlab,
+  'light_gray_concrete_stairs': McdocBlockStateKeysLightGrayConcreteStairs,
+  'minecraft:light_gray_concrete_stairs': McdocBlockStateKeysLightGrayConcreteStairs,
   'light_gray_glazed_terracotta': McdocBlockStateKeysLightGrayGlazedTerracotta,
   'minecraft:light_gray_glazed_terracotta': McdocBlockStateKeysLightGrayGlazedTerracotta,
   'light_gray_shulker_box': McdocBlockStateKeysLightGrayShulkerBox,
@@ -1155,6 +1187,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:lime_concrete': McdocBlockStateKeysLimeConcrete,
   'lime_concrete_powder': McdocBlockStateKeysLimeConcretePowder,
   'minecraft:lime_concrete_powder': McdocBlockStateKeysLimeConcretePowder,
+  'lime_concrete_slab': McdocBlockStateKeysLimeConcreteSlab,
+  'minecraft:lime_concrete_slab': McdocBlockStateKeysLimeConcreteSlab,
+  'lime_concrete_stairs': McdocBlockStateKeysLimeConcreteStairs,
+  'minecraft:lime_concrete_stairs': McdocBlockStateKeysLimeConcreteStairs,
   'lime_glazed_terracotta': McdocBlockStateKeysLimeGlazedTerracotta,
   'minecraft:lime_glazed_terracotta': McdocBlockStateKeysLimeGlazedTerracotta,
   'lime_shulker_box': McdocBlockStateKeysLimeShulkerBox,
@@ -1191,6 +1227,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:magenta_concrete': McdocBlockStateKeysMagentaConcrete,
   'magenta_concrete_powder': McdocBlockStateKeysMagentaConcretePowder,
   'minecraft:magenta_concrete_powder': McdocBlockStateKeysMagentaConcretePowder,
+  'magenta_concrete_slab': McdocBlockStateKeysMagentaConcreteSlab,
+  'minecraft:magenta_concrete_slab': McdocBlockStateKeysMagentaConcreteSlab,
+  'magenta_concrete_stairs': McdocBlockStateKeysMagentaConcreteStairs,
+  'minecraft:magenta_concrete_stairs': McdocBlockStateKeysMagentaConcreteStairs,
   'magenta_glazed_terracotta': McdocBlockStateKeysMagentaGlazedTerracotta,
   'minecraft:magenta_glazed_terracotta': McdocBlockStateKeysMagentaGlazedTerracotta,
   'magenta_shulker_box': McdocBlockStateKeysMagentaShulkerBox,
@@ -1379,6 +1419,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:orange_concrete': McdocBlockStateKeysOrangeConcrete,
   'orange_concrete_powder': McdocBlockStateKeysOrangeConcretePowder,
   'minecraft:orange_concrete_powder': McdocBlockStateKeysOrangeConcretePowder,
+  'orange_concrete_slab': McdocBlockStateKeysOrangeConcreteSlab,
+  'minecraft:orange_concrete_slab': McdocBlockStateKeysOrangeConcreteSlab,
+  'orange_concrete_stairs': McdocBlockStateKeysOrangeConcreteStairs,
+  'minecraft:orange_concrete_stairs': McdocBlockStateKeysOrangeConcreteStairs,
   'orange_glazed_terracotta': McdocBlockStateKeysOrangeGlazedTerracotta,
   'minecraft:orange_glazed_terracotta': McdocBlockStateKeysOrangeGlazedTerracotta,
   'orange_poplar_leaves': McdocBlockStateKeysOrangePoplarLeaves,
@@ -1503,6 +1547,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:pink_concrete': McdocBlockStateKeysPinkConcrete,
   'pink_concrete_powder': McdocBlockStateKeysPinkConcretePowder,
   'minecraft:pink_concrete_powder': McdocBlockStateKeysPinkConcretePowder,
+  'pink_concrete_slab': McdocBlockStateKeysPinkConcreteSlab,
+  'minecraft:pink_concrete_slab': McdocBlockStateKeysPinkConcreteSlab,
+  'pink_concrete_stairs': McdocBlockStateKeysPinkConcreteStairs,
+  'minecraft:pink_concrete_stairs': McdocBlockStateKeysPinkConcreteStairs,
   'pink_glazed_terracotta': McdocBlockStateKeysPinkGlazedTerracotta,
   'minecraft:pink_glazed_terracotta': McdocBlockStateKeysPinkGlazedTerracotta,
   'pink_petals': McdocBlockStateKeysPinkPetals,
@@ -1769,6 +1817,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:purple_concrete': McdocBlockStateKeysPurpleConcrete,
   'purple_concrete_powder': McdocBlockStateKeysPurpleConcretePowder,
   'minecraft:purple_concrete_powder': McdocBlockStateKeysPurpleConcretePowder,
+  'purple_concrete_slab': McdocBlockStateKeysPurpleConcreteSlab,
+  'minecraft:purple_concrete_slab': McdocBlockStateKeysPurpleConcreteSlab,
+  'purple_concrete_stairs': McdocBlockStateKeysPurpleConcreteStairs,
+  'minecraft:purple_concrete_stairs': McdocBlockStateKeysPurpleConcreteStairs,
   'purple_glazed_terracotta': McdocBlockStateKeysPurpleGlazedTerracotta,
   'minecraft:purple_glazed_terracotta': McdocBlockStateKeysPurpleGlazedTerracotta,
   'purple_shulker_box': McdocBlockStateKeysPurpleShulkerBox,
@@ -1827,6 +1879,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:red_concrete': McdocBlockStateKeysRedConcrete,
   'red_concrete_powder': McdocBlockStateKeysRedConcretePowder,
   'minecraft:red_concrete_powder': McdocBlockStateKeysRedConcretePowder,
+  'red_concrete_slab': McdocBlockStateKeysRedConcreteSlab,
+  'minecraft:red_concrete_slab': McdocBlockStateKeysRedConcreteSlab,
+  'red_concrete_stairs': McdocBlockStateKeysRedConcreteStairs,
+  'minecraft:red_concrete_stairs': McdocBlockStateKeysRedConcreteStairs,
   'red_glazed_terracotta': McdocBlockStateKeysRedGlazedTerracotta,
   'minecraft:red_glazed_terracotta': McdocBlockStateKeysRedGlazedTerracotta,
   'red_mushroom': McdocBlockStateKeysRedMushroom,
@@ -2441,6 +2497,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:white_concrete': McdocBlockStateKeysWhiteConcrete,
   'white_concrete_powder': McdocBlockStateKeysWhiteConcretePowder,
   'minecraft:white_concrete_powder': McdocBlockStateKeysWhiteConcretePowder,
+  'white_concrete_slab': McdocBlockStateKeysWhiteConcreteSlab,
+  'minecraft:white_concrete_slab': McdocBlockStateKeysWhiteConcreteSlab,
+  'white_concrete_stairs': McdocBlockStateKeysWhiteConcreteStairs,
+  'minecraft:white_concrete_stairs': McdocBlockStateKeysWhiteConcreteStairs,
   'white_glazed_terracotta': McdocBlockStateKeysWhiteGlazedTerracotta,
   'minecraft:white_glazed_terracotta': McdocBlockStateKeysWhiteGlazedTerracotta,
   'white_shulker_box': McdocBlockStateKeysWhiteShulkerBox,
@@ -2483,6 +2543,10 @@ type McdocBlockStateKeysDispatcherMap = {
   'minecraft:yellow_concrete': McdocBlockStateKeysYellowConcrete,
   'yellow_concrete_powder': McdocBlockStateKeysYellowConcretePowder,
   'minecraft:yellow_concrete_powder': McdocBlockStateKeysYellowConcretePowder,
+  'yellow_concrete_slab': McdocBlockStateKeysYellowConcreteSlab,
+  'minecraft:yellow_concrete_slab': McdocBlockStateKeysYellowConcreteSlab,
+  'yellow_concrete_stairs': McdocBlockStateKeysYellowConcreteStairs,
+  'minecraft:yellow_concrete_stairs': McdocBlockStateKeysYellowConcreteStairs,
   'yellow_glazed_terracotta': McdocBlockStateKeysYellowGlazedTerracotta,
   'minecraft:yellow_glazed_terracotta': McdocBlockStateKeysYellowGlazedTerracotta,
   'yellow_poplar_leaves': McdocBlockStateKeysYellowPoplarLeaves,
@@ -2600,6 +2664,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysBlackCarpet
   | McdocBlockStateKeysBlackConcrete
   | McdocBlockStateKeysBlackConcretePowder
+  | McdocBlockStateKeysBlackConcreteSlab
+  | McdocBlockStateKeysBlackConcreteStairs
   | McdocBlockStateKeysBlackGlazedTerracotta
   | McdocBlockStateKeysBlackShulkerBox
   | McdocBlockStateKeysBlackStainedGlass
@@ -2621,6 +2687,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysBlueCarpet
   | McdocBlockStateKeysBlueConcrete
   | McdocBlockStateKeysBlueConcretePowder
+  | McdocBlockStateKeysBlueConcreteSlab
+  | McdocBlockStateKeysBlueConcreteStairs
   | McdocBlockStateKeysBlueGlazedTerracotta
   | McdocBlockStateKeysBlueIce
   | McdocBlockStateKeysBlueOrchid
@@ -2650,6 +2718,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysBrownCarpet
   | McdocBlockStateKeysBrownConcrete
   | McdocBlockStateKeysBrownConcretePowder
+  | McdocBlockStateKeysBrownConcreteSlab
+  | McdocBlockStateKeysBrownConcreteStairs
   | McdocBlockStateKeysBrownGlazedTerracotta
   | McdocBlockStateKeysBrownMushroom
   | McdocBlockStateKeysBrownMushroomBlock
@@ -2805,6 +2875,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysCyanCarpet
   | McdocBlockStateKeysCyanConcrete
   | McdocBlockStateKeysCyanConcretePowder
+  | McdocBlockStateKeysCyanConcreteSlab
+  | McdocBlockStateKeysCyanConcreteStairs
   | McdocBlockStateKeysCyanGlazedTerracotta
   | McdocBlockStateKeysCyanShulkerBox
   | McdocBlockStateKeysCyanStainedGlass
@@ -2958,6 +3030,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysGrayCarpet
   | McdocBlockStateKeysGrayConcrete
   | McdocBlockStateKeysGrayConcretePowder
+  | McdocBlockStateKeysGrayConcreteSlab
+  | McdocBlockStateKeysGrayConcreteStairs
   | McdocBlockStateKeysGrayGlazedTerracotta
   | McdocBlockStateKeysGrayShulkerBox
   | McdocBlockStateKeysGrayStainedGlass
@@ -2974,6 +3048,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysGreenCarpet
   | McdocBlockStateKeysGreenConcrete
   | McdocBlockStateKeysGreenConcretePowder
+  | McdocBlockStateKeysGreenConcreteSlab
+  | McdocBlockStateKeysGreenConcreteStairs
   | McdocBlockStateKeysGreenGlazedTerracotta
   | McdocBlockStateKeysGreenShulkerBox
   | McdocBlockStateKeysGreenStainedGlass
@@ -3051,6 +3127,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysLightBlueCarpet
   | McdocBlockStateKeysLightBlueConcrete
   | McdocBlockStateKeysLightBlueConcretePowder
+  | McdocBlockStateKeysLightBlueConcreteSlab
+  | McdocBlockStateKeysLightBlueConcreteStairs
   | McdocBlockStateKeysLightBlueGlazedTerracotta
   | McdocBlockStateKeysLightBlueShulkerBox
   | McdocBlockStateKeysLightBlueStainedGlass
@@ -3067,6 +3145,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysLightGrayCarpet
   | McdocBlockStateKeysLightGrayConcrete
   | McdocBlockStateKeysLightGrayConcretePowder
+  | McdocBlockStateKeysLightGrayConcreteSlab
+  | McdocBlockStateKeysLightGrayConcreteStairs
   | McdocBlockStateKeysLightGrayGlazedTerracotta
   | McdocBlockStateKeysLightGrayShulkerBox
   | McdocBlockStateKeysLightGrayStainedGlass
@@ -3088,6 +3168,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysLimeCarpet
   | McdocBlockStateKeysLimeConcrete
   | McdocBlockStateKeysLimeConcretePowder
+  | McdocBlockStateKeysLimeConcreteSlab
+  | McdocBlockStateKeysLimeConcreteStairs
   | McdocBlockStateKeysLimeGlazedTerracotta
   | McdocBlockStateKeysLimeShulkerBox
   | McdocBlockStateKeysLimeStainedGlass
@@ -3106,6 +3188,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysMagentaCarpet
   | McdocBlockStateKeysMagentaConcrete
   | McdocBlockStateKeysMagentaConcretePowder
+  | McdocBlockStateKeysMagentaConcreteSlab
+  | McdocBlockStateKeysMagentaConcreteStairs
   | McdocBlockStateKeysMagentaGlazedTerracotta
   | McdocBlockStateKeysMagentaShulkerBox
   | McdocBlockStateKeysMagentaStainedGlass
@@ -3200,6 +3284,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysOrangeCarpet
   | McdocBlockStateKeysOrangeConcrete
   | McdocBlockStateKeysOrangeConcretePowder
+  | McdocBlockStateKeysOrangeConcreteSlab
+  | McdocBlockStateKeysOrangeConcreteStairs
   | McdocBlockStateKeysOrangeGlazedTerracotta
   | McdocBlockStateKeysOrangePoplarLeaves
   | McdocBlockStateKeysOrangeShulkerBox
@@ -3262,6 +3348,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPinkCarpet
   | McdocBlockStateKeysPinkConcrete
   | McdocBlockStateKeysPinkConcretePowder
+  | McdocBlockStateKeysPinkConcreteSlab
+  | McdocBlockStateKeysPinkConcreteStairs
   | McdocBlockStateKeysPinkGlazedTerracotta
   | McdocBlockStateKeysPinkPetals
   | McdocBlockStateKeysPinkShulkerBox
@@ -3395,6 +3483,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysPurpleCarpet
   | McdocBlockStateKeysPurpleConcrete
   | McdocBlockStateKeysPurpleConcretePowder
+  | McdocBlockStateKeysPurpleConcreteSlab
+  | McdocBlockStateKeysPurpleConcreteStairs
   | McdocBlockStateKeysPurpleGlazedTerracotta
   | McdocBlockStateKeysPurpleShulkerBox
   | McdocBlockStateKeysPurpleStainedGlass
@@ -3424,6 +3514,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysRedCarpet
   | McdocBlockStateKeysRedConcrete
   | McdocBlockStateKeysRedConcretePowder
+  | McdocBlockStateKeysRedConcreteSlab
+  | McdocBlockStateKeysRedConcreteStairs
   | McdocBlockStateKeysRedGlazedTerracotta
   | McdocBlockStateKeysRedMushroom
   | McdocBlockStateKeysRedMushroomBlock
@@ -3731,6 +3823,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysWhiteCarpet
   | McdocBlockStateKeysWhiteConcrete
   | McdocBlockStateKeysWhiteConcretePowder
+  | McdocBlockStateKeysWhiteConcreteSlab
+  | McdocBlockStateKeysWhiteConcreteStairs
   | McdocBlockStateKeysWhiteGlazedTerracotta
   | McdocBlockStateKeysWhiteShulkerBox
   | McdocBlockStateKeysWhiteStainedGlass
@@ -3752,6 +3846,8 @@ type McdocBlockStateKeysFallback = (
   | McdocBlockStateKeysYellowCarpet
   | McdocBlockStateKeysYellowConcrete
   | McdocBlockStateKeysYellowConcretePowder
+  | McdocBlockStateKeysYellowConcreteSlab
+  | McdocBlockStateKeysYellowConcreteStairs
   | McdocBlockStateKeysYellowGlazedTerracotta
   | McdocBlockStateKeysYellowPoplarLeaves
   | McdocBlockStateKeysYellowShulkerBox
@@ -3857,6 +3953,8 @@ type McdocBlockStateKeysBlackCandleCake = 'lit'
 type McdocBlockStateKeysBlackCarpet = never
 type McdocBlockStateKeysBlackConcrete = never
 type McdocBlockStateKeysBlackConcretePowder = never
+type McdocBlockStateKeysBlackConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysBlackConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysBlackGlazedTerracotta = 'facing'
 type McdocBlockStateKeysBlackShulkerBox = 'facing'
 type McdocBlockStateKeysBlackStainedGlass = never
@@ -3878,6 +3976,8 @@ type McdocBlockStateKeysBlueCandleCake = 'lit'
 type McdocBlockStateKeysBlueCarpet = never
 type McdocBlockStateKeysBlueConcrete = never
 type McdocBlockStateKeysBlueConcretePowder = never
+type McdocBlockStateKeysBlueConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysBlueConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysBlueGlazedTerracotta = 'facing'
 type McdocBlockStateKeysBlueIce = never
 type McdocBlockStateKeysBlueOrchid = never
@@ -3907,6 +4007,8 @@ type McdocBlockStateKeysBrownCandleCake = 'lit'
 type McdocBlockStateKeysBrownCarpet = never
 type McdocBlockStateKeysBrownConcrete = never
 type McdocBlockStateKeysBrownConcretePowder = never
+type McdocBlockStateKeysBrownConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysBrownConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysBrownGlazedTerracotta = 'facing'
 type McdocBlockStateKeysBrownMushroom = never
 type McdocBlockStateKeysBrownMushroomBlock = ('down' | 'east' | 'north' | 'south' | 'up' | 'west')
@@ -4069,6 +4171,8 @@ type McdocBlockStateKeysCyanCandleCake = 'lit'
 type McdocBlockStateKeysCyanCarpet = never
 type McdocBlockStateKeysCyanConcrete = never
 type McdocBlockStateKeysCyanConcretePowder = never
+type McdocBlockStateKeysCyanConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysCyanConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysCyanGlazedTerracotta = 'facing'
 type McdocBlockStateKeysCyanShulkerBox = 'facing'
 type McdocBlockStateKeysCyanStainedGlass = never
@@ -4222,6 +4326,8 @@ type McdocBlockStateKeysGrayCandleCake = 'lit'
 type McdocBlockStateKeysGrayCarpet = never
 type McdocBlockStateKeysGrayConcrete = never
 type McdocBlockStateKeysGrayConcretePowder = never
+type McdocBlockStateKeysGrayConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysGrayConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysGrayGlazedTerracotta = 'facing'
 type McdocBlockStateKeysGrayShulkerBox = 'facing'
 type McdocBlockStateKeysGrayStainedGlass = never
@@ -4238,6 +4344,8 @@ type McdocBlockStateKeysGreenCandleCake = 'lit'
 type McdocBlockStateKeysGreenCarpet = never
 type McdocBlockStateKeysGreenConcrete = never
 type McdocBlockStateKeysGreenConcretePowder = never
+type McdocBlockStateKeysGreenConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysGreenConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysGreenGlazedTerracotta = 'facing'
 type McdocBlockStateKeysGreenShulkerBox = 'facing'
 type McdocBlockStateKeysGreenStainedGlass = never
@@ -4315,6 +4423,8 @@ type McdocBlockStateKeysLightBlueCandleCake = 'lit'
 type McdocBlockStateKeysLightBlueCarpet = never
 type McdocBlockStateKeysLightBlueConcrete = never
 type McdocBlockStateKeysLightBlueConcretePowder = never
+type McdocBlockStateKeysLightBlueConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysLightBlueConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysLightBlueGlazedTerracotta = 'facing'
 type McdocBlockStateKeysLightBlueShulkerBox = 'facing'
 type McdocBlockStateKeysLightBlueStainedGlass = never
@@ -4331,6 +4441,8 @@ type McdocBlockStateKeysLightGrayCandleCake = 'lit'
 type McdocBlockStateKeysLightGrayCarpet = never
 type McdocBlockStateKeysLightGrayConcrete = never
 type McdocBlockStateKeysLightGrayConcretePowder = never
+type McdocBlockStateKeysLightGrayConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysLightGrayConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysLightGrayGlazedTerracotta = 'facing'
 type McdocBlockStateKeysLightGrayShulkerBox = 'facing'
 type McdocBlockStateKeysLightGrayStainedGlass = never
@@ -4352,6 +4464,8 @@ type McdocBlockStateKeysLimeCandleCake = 'lit'
 type McdocBlockStateKeysLimeCarpet = never
 type McdocBlockStateKeysLimeConcrete = never
 type McdocBlockStateKeysLimeConcretePowder = never
+type McdocBlockStateKeysLimeConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysLimeConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysLimeGlazedTerracotta = 'facing'
 type McdocBlockStateKeysLimeShulkerBox = 'facing'
 type McdocBlockStateKeysLimeStainedGlass = never
@@ -4370,6 +4484,8 @@ type McdocBlockStateKeysMagentaCandleCake = 'lit'
 type McdocBlockStateKeysMagentaCarpet = never
 type McdocBlockStateKeysMagentaConcrete = never
 type McdocBlockStateKeysMagentaConcretePowder = never
+type McdocBlockStateKeysMagentaConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysMagentaConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysMagentaGlazedTerracotta = 'facing'
 type McdocBlockStateKeysMagentaShulkerBox = 'facing'
 type McdocBlockStateKeysMagentaStainedGlass = never
@@ -4464,6 +4580,8 @@ type McdocBlockStateKeysOrangeCandleCake = 'lit'
 type McdocBlockStateKeysOrangeCarpet = never
 type McdocBlockStateKeysOrangeConcrete = never
 type McdocBlockStateKeysOrangeConcretePowder = never
+type McdocBlockStateKeysOrangeConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysOrangeConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysOrangeGlazedTerracotta = 'facing'
 type McdocBlockStateKeysOrangePoplarLeaves = ('distance' | 'persistent' | 'waterlogged')
 type McdocBlockStateKeysOrangeShulkerBox = 'facing'
@@ -4526,6 +4644,8 @@ type McdocBlockStateKeysPinkCandleCake = 'lit'
 type McdocBlockStateKeysPinkCarpet = never
 type McdocBlockStateKeysPinkConcrete = never
 type McdocBlockStateKeysPinkConcretePowder = never
+type McdocBlockStateKeysPinkConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysPinkConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysPinkGlazedTerracotta = 'facing'
 type McdocBlockStateKeysPinkPetals = ('facing' | 'flower_amount')
 type McdocBlockStateKeysPinkShulkerBox = 'facing'
@@ -4659,6 +4779,8 @@ type McdocBlockStateKeysPurpleCandleCake = 'lit'
 type McdocBlockStateKeysPurpleCarpet = never
 type McdocBlockStateKeysPurpleConcrete = never
 type McdocBlockStateKeysPurpleConcretePowder = never
+type McdocBlockStateKeysPurpleConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysPurpleConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysPurpleGlazedTerracotta = 'facing'
 type McdocBlockStateKeysPurpleShulkerBox = 'facing'
 type McdocBlockStateKeysPurpleStainedGlass = never
@@ -4688,6 +4810,8 @@ type McdocBlockStateKeysRedCandleCake = 'lit'
 type McdocBlockStateKeysRedCarpet = never
 type McdocBlockStateKeysRedConcrete = never
 type McdocBlockStateKeysRedConcretePowder = never
+type McdocBlockStateKeysRedConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysRedConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysRedGlazedTerracotta = 'facing'
 type McdocBlockStateKeysRedMushroom = never
 type McdocBlockStateKeysRedMushroomBlock = ('down' | 'east' | 'north' | 'south' | 'up' | 'west')
@@ -4995,6 +5119,8 @@ type McdocBlockStateKeysWhiteCandleCake = 'lit'
 type McdocBlockStateKeysWhiteCarpet = never
 type McdocBlockStateKeysWhiteConcrete = never
 type McdocBlockStateKeysWhiteConcretePowder = never
+type McdocBlockStateKeysWhiteConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysWhiteConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysWhiteGlazedTerracotta = 'facing'
 type McdocBlockStateKeysWhiteShulkerBox = 'facing'
 type McdocBlockStateKeysWhiteStainedGlass = never
@@ -5016,6 +5142,8 @@ type McdocBlockStateKeysYellowCandleCake = 'lit'
 type McdocBlockStateKeysYellowCarpet = never
 type McdocBlockStateKeysYellowConcrete = never
 type McdocBlockStateKeysYellowConcretePowder = never
+type McdocBlockStateKeysYellowConcreteSlab = ('type' | 'waterlogged')
+type McdocBlockStateKeysYellowConcreteStairs = ('facing' | 'half' | 'shape' | 'waterlogged')
 type McdocBlockStateKeysYellowGlazedTerracotta = 'facing'
 type McdocBlockStateKeysYellowPoplarLeaves = ('distance' | 'persistent' | 'waterlogged')
 type McdocBlockStateKeysYellowShulkerBox = 'facing'

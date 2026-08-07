@@ -2,6 +2,7 @@ import type { TimeArgument } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core'
 import { AwaitNode } from 'sandstone/core/nodes'
 import { ObjectiveClass } from 'sandstone/variables'
+import type { NamespacedString } from 'sandstone/utils'
 
 const SLEEP_CHILD_NAME = '__sleep'
 
@@ -78,7 +79,7 @@ export class SleepClass extends AwaitNode {
 
       const { execute } = commands
 
-      const name = `__sandstone:asyncTimer.${currentFunction.resource.name.replace(/[:/]/g, '.')}` as `${string}:${string}`
+      const name = `__sandstone:asyncTimer.${currentFunction.resource.name.replace(/[:/]/g, '.')}` as NamespacedString
 
       const timer = new ObjectiveClass(core.pack, name.replace(':', '.'), 'dummy', undefined, { creator: 'sandstone' })
 

@@ -89,7 +89,7 @@ export type RandomizedIntStateProvider = {
 }
 
 export type RotatedStateProvider = {
-  state: (BlockState | BlockStateProvider),
+  state: BlockStateProvider,
   /**
    * Value:
    *

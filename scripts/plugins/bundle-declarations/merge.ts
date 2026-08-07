@@ -5,7 +5,7 @@
  * imported twice (e.g. once as type-only, once as inline-collected)
  * doesn't produce a "Duplicate identifier" error in the bundled .d.ts.
  */
-import * as ts from 'typescript'
+import * as ts from '@typescript/typescript6'
 
 export function mergeImportDecls(
   a: readonly ts.ImportDeclaration[],

@@ -11,7 +11,15 @@ import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type { FireworkShape } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
-import type { JukeboxSongClass, NBTDouble, NBTInt, TagClass, TrimMaterialClass, TrimPatternClass } from 'sandstone'
+import type {
+  JukeboxSongClass,
+  NamespacedString,
+  NBTDouble,
+  NBTInt,
+  TagClass,
+  TrimMaterialClass,
+  TrimPatternClass,
+} from 'sandstone'
 
 export type AttributeModifiersPredicate = {
   modifiers?: CollectionPredicate<AttributeModifiersPredicateEntry>,
@@ -21,7 +29,7 @@ export type AttributeModifiersPredicateEntry = {
   attribute?: ((
       | Registry['minecraft:attribute'] | `#${string}:${string}` | TagClass<'attribute'>)
       | Array<Registry['minecraft:attribute']>),
-  id?: `${string}:${string}`,
+  id?: NamespacedString,
   amount?: MinMaxBounds<(NBTDouble | number)>,
   /**
    * Value:
@@ -208,7 +216,7 @@ type DataComponentPredicateEnchantments = Array<EnchantmentPredicate>
 type DataComponentPredicateFireworkExplosion = FireworkExplosionPredicate
 type DataComponentPredicateFireworks = FireworksPredicate
 type DataComponentPredicateJukeboxPlayable = JukeboxPlayablePredicate
-type DataComponentPredicatePotionContents = (PotionTypeMatch | PotionsPredicate)
+type DataComponentPredicatePotionContents = PotionsPredicate
 type DataComponentPredicateStoredEnchantments = Array<EnchantmentPredicate>
 type DataComponentPredicateTrim = TrimPredicate
 type DataComponentPredicateVillagerVariant = ((

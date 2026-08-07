@@ -12,6 +12,7 @@ import type {
   SingleEntityArgument,
 } from 'sandstone/arguments'
 import type { ItemSlotSource } from '../commands/implementations/world/item'
+import type { SandstoneCommands } from 'sandstone/commands'
 import type {
   ConditionClass,
   DataPointClass,
@@ -21,16 +22,16 @@ import type {
 } from 'sandstone/variables'
 import { parseJSONText, Score} from 'sandstone/variables'
 import { ThrowNode } from './throw'
-import type { AwaitNode, AwaitNodeClass, DataPointPickClass, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
-import type { LiteralUnion, NamespacedLiteralUnion, RemoveFirst } from 'sandstone/utils'
+import type { AwaitNode, AwaitNodeClass, DataPointPickClass, MacroArgument, MCFunctionClass, PredicateClass, SandstoneCore } from '../core'
+import type { LiteralUnion, NamespacedLiteralUnion, NamespacedString, NonEmptyString, RemoveFirst } from 'sandstone/utils'
 import { makeCallable } from 'sandstone/utils'
-import { AttachClass } from './async/attach'
-import { SleepClass, UntilClass } from './async'
+import { AttachClass, SleepClass, UntilClass } from './async'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
 import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
 import { binaryFor, ForIStatement, ForOfStatement, WhileStatement } from './loops'
+import { WithClass, withCommands } from './macro'
 import type { ConditionCallback, DefaultType, SwitchCase } from './switch_case'
 import { CaseStatement, executeSwitch } from './switch_case'
 
@@ -60,8 +61,19 @@ export function conditionToNode(condition: Condition) {
 export class Flow {
   constructor(public sandstoneCore: SandstoneCore) {}
 
-  if = (condition: Condition, callback: () => void) =>
-    new IfStatement(this.sandstoneCore, conditionToNode(condition), callback)
+  if(condition: Condition, callback: () => void): IfStatement<false>
+  if(condition: Condition): IfStatement<true>
+  if(
+    condition: Condition,
+    callback?: () => void,
+  ): IfStatement<boolean> {
+    const cb = callback ?? (() => {})
+    return new IfStatement<boolean>(
+      this.sandstoneCore,
+      conditionToNode(condition),
+      cb,
+    ) as IfStatement<boolean>
+  }
 
   /**
    * Combine conditions with AND.
@@ -130,7 +142,7 @@ export class Flow {
        */
       attach: <Entrypoint extends 'start' | 'end'>(
         entrypoint: Entrypoint,
-        func: MCFunctionClass<any, any> | `${any}${string}`,
+        func: MCFunctionClass<any, any> | NonEmptyString,
         branch: string[],
         awaitNodeIdx: number,
         entity?: SingleEntityArgument,
@@ -156,7 +168,7 @@ export class Flow {
        * - Executor is missing or is not being tracked by the `asyncContext`? -> Interrupts all `AwaitNode`'s in the `MCFunction` for all entities being tracked.
        */
       interrupt: (
-        func: MCFunctionClass<any, any> | `${any}${string}`,
+        func: MCFunctionClass<any, any> | NonEmptyString,
         /**
          * Adds command(s) to run within the target context before interrupting.
          * 
@@ -511,13 +523,13 @@ export class Flow {
 
   /**
    * Checks a function or function tag and matches the return value(s). If a tag is given, all functions run regardless of the results of prior functions.
-   * @param function_ Function to check for.
+   * @param mcfunction Function to check for.
    */
-  function_ = (function_: `${string}:${string}` | MCFunctionClass<undefined, undefined>) => {
-    if (typeof function_ === 'string') {
-      return new SandstoneConditions.Function(this.sandstoneCore, function_)
+  mcfunction = (mcfunction: NamespacedString | MCFunctionClass<undefined, undefined>) => {
+    if (typeof mcfunction === 'string') {
+      return new SandstoneConditions.Function(this.sandstoneCore, mcfunction)
     }
-    return new SandstoneConditions.Function(this.sandstoneCore, function_.name)
+    return new SandstoneConditions.Function(this.sandstoneCore, mcfunction.name)
   }
 
   /**
@@ -633,5 +645,33 @@ export class Flow {
       return new SandstoneConditions.Predicate(this.sandstoneCore, predicate)
     }
     return new SandstoneConditions.Predicate(this.sandstoneCore, predicate.name)
+  }
+
+  /**
+   * Runs the callback inside a child macro MCFunction, with each given
+   * `MacroArgument` bound as a macro parameter (`$(env_0)`, `$(env_1)`, ...).
+   *
+   * @param env Macro arguments to expose inside the macro function.
+   * @param callback Body of the macro function.
+   */
+  with(env: MacroArgument[], callback: () => any): WithClass
+  /**
+   * Runs a single command inside a child macro MCFunction, with each given
+   * `MacroArgument` bound as a macro parameter (`$(env_0)`, `$(env_1)`, ...).
+   *
+   * @param env Macro arguments to expose inside the macro function.
+   *
+   * @example
+   * ```ts
+   * _.with([world]).say($`Hello ${world}!`)
+   * ```
+   */
+  with(env: MacroArgument[]): SandstoneCommands<true>
+
+  with(env: MacroArgument[], callback?: (() => any)) {
+    if (callback) {
+      return new WithClass(this.sandstoneCore, env, callback)
+    }
+    return withCommands(this.sandstoneCore, env)
   }
 }
