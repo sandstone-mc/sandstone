@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.20](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.20) - 2026-08-07
+
+### Fix multi-chained `.run.` from `_.if`, fix `playsound` handling of undefined arguments
+
+**Full Changelog**: [master...v1.2.20](https://github.com/sandstone-mc/sandstone/compare/master...v1.2.20)
+
+
 ## [v1.2.19](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.19) - 2026-08-06
 
 ### Add support for `Flow#with: SandstoneCommands`, fixed bugs
