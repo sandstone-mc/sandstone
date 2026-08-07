@@ -7,7 +7,7 @@
  */
 
 import type { BunPlugin } from 'bun'
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 import { buildFileToClassesMap } from './find-instanceof-classes'
 
 /**

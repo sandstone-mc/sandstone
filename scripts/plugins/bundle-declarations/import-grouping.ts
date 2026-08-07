@@ -9,7 +9,7 @@
  */
 import { existsSync } from 'fs'
 import path from 'path'
-import * as ts from 'typescript'
+import * as ts from '@typescript/typescript6'
 
 export function groupImportsForMain(
   collected: Set<{ name: string; module: string }>,

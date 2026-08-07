@@ -6,7 +6,7 @@
  * processor rewrites the import to use the main entry instead.
  */
 
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 import { readFile, writeFile, readdir, stat } from 'fs/promises'
 import { join, dirname, relative, posix } from 'path'
 

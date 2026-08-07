@@ -33,11 +33,11 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
     "@typescript/analyze-trace": "^0.11.1",
-    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "@typescript/typescript6": "^6.0.2",
     "magic-string": "^1.0.0",
     "oxlint": "^1.75.0",
     "source-map-js": "^1.2.1",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "directories": {
     "lib": "src"
@@ -61,6 +61,7 @@
     "url": "git+https://github.com/sandstone-mc/sandstone.git"
   },
   "scripts": {
+    "tsc": "./node_modules/typescript/bin/tsc",
     "dev:build": "bun run scripts/build.ts",
     "dev:build:types": "bun run scripts/build-types.ts",
     "dev:watch": "bun run scripts/watch.ts",

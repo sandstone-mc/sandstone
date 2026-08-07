@@ -9,7 +9,7 @@
  * hoisted import handles the consumer-facing `import { X } from
  * 'sandstone'` path through `dist/exports/index.d.ts`.
  */
-import * as ts from 'typescript'
+import * as ts from '@typescript/typescript6'
 
 export interface HoistedImports {
   /** The hoisted import declarations (merge with other collected imports). */

@@ -9,7 +9,7 @@
  */
 import { readFile } from 'fs/promises'
 import { join, relative } from 'path'
-import * as ts from 'typescript'
+import * as ts from '@typescript/typescript6'
 
 import { fixDtsImports } from '../fix-dts-imports'
 
