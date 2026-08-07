@@ -3,7 +3,7 @@
  * `*.d.ts` source via the TS compiler API (no regex).
  */
 import { readFile } from 'fs/promises'
-import * as ts from 'typescript'
+import * as ts from '@typescript/typescript6'
 
 /** True if `node` has the `export` modifier. */
 export function hasExportModifier(node: ts.Node): boolean {
