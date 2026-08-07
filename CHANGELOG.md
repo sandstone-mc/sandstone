@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.0.16](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.16) - 2026-08-07
+
+### Fix `StringDataPointClass` serialization & `playsound` handling of undefined arguments
+
+**Full Changelog**: [v1.0.15...v1.0.16](https://github.com/sandstone-mc/sandstone/compare/v1.0.15...v1.0.16)
+
+
 ## [v1.0.15](https://github.com/sandstone-mc/sandstone/releases/tag/v1.0.15) - 2026-08-06
 
 ### Fix async loops sometimes breaking, fix macros in `give`
