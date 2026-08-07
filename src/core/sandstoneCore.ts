@@ -11,6 +11,7 @@ import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependen
 import type { MCMetaBranches } from './mcmeta'
 import { MCMetaCache } from './mcmeta'
 import type { AwaitNode } from './nodes'
+import type { WithClass } from '../flow/macro'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
 import type { TagClass } from './resources/datapack/tag'
 import { SmithedDependencyClass } from './resources/dependency'
@@ -26,6 +27,10 @@ export class SandstoneCore {
   mcfunctionStack: MCFunctionNode[]
 
   awaitNodes: Set<AwaitNode>
+
+  /** All `_.with(env, ...)` instances. Lets visitors iterate WithClasses
+   * directly instead of scanning every MCFunction body. */
+  withNodes: Set<WithClass>
 
   currentNode = ''
 
@@ -48,6 +53,7 @@ export class SandstoneCore {
     this.resourceNodes = new ResourceNodesMap()
     this.mcfunctionStack = []
     this.awaitNodes = new Set()
+    this.withNodes = new Set()
     this.functionTags = new Map()
     this.sounds = new Map()
     this.checkTriggers = {}
@@ -67,6 +73,7 @@ export class SandstoneCore {
     this.resourceNodes.clear()
     this.mcfunctionStack = []
     this.awaitNodes.clear()
+    this.withNodes.clear()
     this.currentNode = ''
     this._mcMetaCache = undefined
     this._smithed = undefined

@@ -210,7 +210,6 @@ scoreboard players set test load.status 1"
     
 "execute store result storage __sandstone:variable anon_qR8pL2nX_1 int 1 run random value 1..2
 execute store result storage __sandstone:variable anon_qR8pL2nX_2 int 1 run random value 3..4
-data modify storage __sandstone:variable anon_qR8pL2nX_0 set value {}
 data modify storage __sandstone:variable anon_qR8pL2nX_0.param_0 set from storage __sandstone:variable anon_qR8pL2nX_1
 data modify storage __sandstone:variable anon_qR8pL2nX_0.param_1 set from storage __sandstone:variable anon_qR8pL2nX_2
 function test:target with storage __sandstone:variable anon_qR8pL2nX_0

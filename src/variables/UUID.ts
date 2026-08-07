@@ -294,6 +294,7 @@ implements ConditionClass, SelectorPickClass<true, boolean> {
             ResolveNBT(
               (this.scores as UUIDinScore).map((score) => ResolveNBTPart(score)),
               this.data,
+              true,
             )
           }
           break

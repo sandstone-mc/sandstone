@@ -3,6 +3,7 @@
 import { FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import type { MCFunctionNode } from 'sandstone/core'
 import { ContainerCommandNode } from 'sandstone/core'
+import { WithClass } from 'sandstone/flow/macro'
 import { GenericSandstoneVisitor } from './visitor'
 
 /**
@@ -15,6 +16,16 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
     const { node, mcFunction } = node_.createMCFunction(this.currentMCFunction)
 
     if (mcFunction) {
+      // The execute's body just got moved into a brand-new wrapper MCFunction.
+      // Every WithClass inside it now lives here, not in its original caller —
+      // update the containing reference so visitors like WithNodeVisitor can
+      // look it up in O(1).
+      for (const node of mcFunction.body) {
+        if (node instanceof WithClass) {
+          node.containingMCFunction = mcFunction
+        }
+      }
+
       const visitedMCFunction = this.visitMCFunctionNode(mcFunction)
       this.core.resourceNodes.add(visitedMCFunction)
     } else if (node instanceof ContainerCommandNode && node.body) {

@@ -228,6 +228,15 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     const mcFunctionNode = mcFunction.node
     mcFunctionNode.body = this.body
 
+    // Update each WithClass' containing MCFunction — the original caller
+    // captured at construction time is stale now that the nodes live in
+    // the new wrapper.
+    for (const node of this.body) {
+      if (node && typeof node === 'object' && 'containingMCFunction' in node) {
+        ;(node as { containingMCFunction: MCFunctionNode | null }).containingMCFunction = mcFunctionNode
+      }
+    }
+
     // Store reference to the created MCFunction (used by LoopArgument)
     this.createdMCFunction = mcFunction
 

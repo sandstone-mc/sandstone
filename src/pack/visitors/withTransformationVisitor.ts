@@ -1,7 +1,7 @@
 import { ExecuteCommandNode } from 'sandstone/commands'
 import { MCFunctionNode } from 'sandstone/core'
-import type { Node } from 'sandstone/core/nodes'
 import { WithClass } from 'sandstone/flow/macro'
+import { ResolveNBTNode, ResolveNBTPartClass } from 'sandstone/variables/ResolveNBT'
 import { GenericSandstoneVisitor } from './visitor'
 
 /**
@@ -38,39 +38,48 @@ export class WithNodeVisitor extends GenericSandstoneVisitor {
   visitMCFunctionNode = (node: MCFunctionNode) => this.genericVisit(node)
 
   onEnd = () => {
-    for (const fn of this.pack.core.resourceNodes) {
-      if (!(fn instanceof MCFunctionNode)) continue
+    for (const withClass of this.pack.core.withNodes) {
+      // The MCFunction that currently contains this WithClass. Updated
+      // by `MCFunctionNode.body`'s setter when `ContainerCommandsToMCFunctionVisitor`
+      // extracts an enclosing execute body into a new wrapper — without
+      // the update, `withClass.hostFunction` (captured at construction)
+      // would still point at the original caller.
+      const fn = withClass.containingMCFunction
+      if (!fn) throw new Error(`[WithNodeVisitor] WithClass has no containingMCFunction — body assignment must have been skipped.`)
+      const node: WithClass = withClass
 
-      for (const node of fn.body) {
-        if (!(node instanceof WithClass)) continue
+      // Move the user's callback body into the child macro MCFunction.
+      node.mcfunction.node.body.push(...node.body)
 
-        // Move the user's callback body into the child macro MCFunction.
-        node.mcfunction.node.body.push(...node.body)
+      // Optimization 1: hoist a single-execute prefix onto the function call.
+      if (
+        node.mcfunction.node.body.length === 1
+        && node.mcfunction.node.body[0] instanceof ExecuteCommandNode
+        && !(node.mcfunction.node.body[0] as ExecuteCommandNode).isMacro
+      ) {
+        this.hoistSingleExecutePrefix(node, fn)
+        continue
+      }
 
-        // Optimization 1: hoist a single-execute prefix onto the function call.
-        if (
-          node.mcfunction.node.body.length === 1
-          && node.mcfunction.node.body[0] instanceof ExecuteCommandNode
-          && !(node.mcfunction.node.body[0] as ExecuteCommandNode).isMacro
-        ) {
-          this.hoistSingleExecutePrefix(node, fn)
-          continue
-        }
-
-        // Optimization 2: the WithClass sits inside an MCFunction that was
-        // extracted from an execute. Hoist the wrapping execute's prefix
-        // onto the function call, and merge the WithClass body into the
-        // child macro MCFunction. The wrapperFn body is allowed to
-        // contain leading `data.modify` prep commands — those travel with
-        // the function call so the storage is still set up correctly.
-        if (
-          node.enclosingExecute
-          && node.enclosingExecute.createdMCFunction?.node === fn
-          && !node.enclosingExecute.isMacro
-          && this.isOnlyDataModifiesAndWithClass(fn.body, node)
-        ) {
-          this.hoistExtractedExecutePrefix(node, node.enclosingExecute, fn)
-        }
+      // Optimization 2: the WithClass sits inside an MCFunction that was
+      // extracted from an execute. Hoist the wrapping execute's prefix
+      // onto the function call, and merge the WithClass body into the
+      // child macro MCFunction. The wrapperFn body is allowed to
+      // contain a single leading ResolveNBTNode carrying the macro
+      // storage prep (one `set from` per env var — the leading
+      // `set value {}` reset is skipped when the wrapper dataPoint is
+      // dedicated to this resolve). That prep travels with the function
+      // call so the storage is still set up correctly.
+      const myIndex = fn.body.indexOf(node)
+      const prep = myIndex > 0 ? fn.body[myIndex - 1] : undefined
+      if (
+        node.enclosingExecute
+        && node.enclosingExecute.createdMCFunction?.node === fn
+        && !node.enclosingExecute.isMacro
+        && prep instanceof ResolveNBTNode
+        && this.resolveNBTMatchesEnv(prep, node)
+      ) {
+        this.hoistExtractedExecutePrefix(node, node.enclosingExecute, fn)
       }
     }
   }
@@ -163,10 +172,10 @@ export class WithNodeVisitor extends GenericSandstoneVisitor {
     ;(wrapped as any).body = [wrappedFnCall]
     ;(wrapped as any).isMacro = (wrappedFnCall as any).isMacro ?? false
 
-    // Find the wrapper execute in its parent body and splice in the
-    // prep commands + the new wrapped execute.
-    const grandParentBody = this.findGrandparentBody(outerExecute)
-    if (!grandParentBody) return
+    // The grandparent MCFunction is the one that hosted this `_.with`
+    // before ContainerCommandsToMCFunctionVisitor extracted the enclosing
+    // execute. WithClass tracks it directly via `hostFunction`.
+    const grandParentBody = node.hostFunction.body
     const idx = grandParentBody.indexOf(outerExecute)
     if (idx !== -1) {
       // Replace outerExecute with [...prep..., wrapped].
@@ -181,34 +190,23 @@ export class WithNodeVisitor extends GenericSandstoneVisitor {
   }
 
   /**
-   * Walk every MCFunction in the pack looking for the one whose body
-   * contains `execute`. That's the parent MCFunction whose body needs
-   * to be mutated.
+   * The prep block for `_.with(env)` is wrapped in a `ResolveNBTNode`.
+   * Validate by matching the node's input NBT against the WithClass' env
+   * list: the NBT must be a plain object with one `ResolveNBTPart` entry
+   * per env var, each pointing at the matching env DataPoint.
    */
-  private findGrandparentBody(execute: ExecuteCommandNode): Node[] | null {
-    for (const fn of this.pack.core.resourceNodes) {
-      if (!(fn instanceof MCFunctionNode)) continue
-      if (fn.body.includes(execute)) return fn.body
-    }
-    return null
-  }
+  private resolveNBTMatchesEnv(node: ResolveNBTNode, withClass: WithClass): boolean {
+    const { nbt } = node
+    if (!nbt || (nbt as { constructor?: { name: string } }).constructor?.name !== 'Object') return false
 
-  /**
-   * The wrapperFn body may only contain `data.modify` commands (the macro
-   * storage prep emitted by `mcfunction()` — exactly one `set value {}`
-   * to init the args object plus one `set from` per env var) followed by
-   * the WithClass itself. Anything else means the wrapper has user content
-   * and we can't hoist its execute prefix.
-   */
-  private isOnlyDataModifiesAndWithClass(body: Node[], withClass: WithClass): boolean {
-    let dataModifies = 0
-    for (const n of body) {
-      if (n === withClass) continue
-      const cmd = (n as any).command
-      if (cmd !== 'data') return false
-      dataModifies += 1
+    const entries = Object.entries(nbt)
+    if (entries.length !== withClass.env.size) return false
+
+    for (const [, value] of entries) {
+      if (!(value instanceof ResolveNBTPartClass)) return false
+      if (!withClass.env.has(value.value as never)) return false
     }
-    return dataModifies === withClass.env.length + 1
+    return true
   }
 
   /**

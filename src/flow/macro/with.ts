@@ -48,19 +48,40 @@ export class WithClass extends ContainerCommandNode {
   isSingleCommand = false
 
   /** MCFunction that hosts this `_.with` call. */
-  private hostFunction: MCFunctionNode
+  public hostFunction: MCFunctionNode
 
   private finalized = false
 
+  /** Env vars captured for this `_.with` scope, as a Set for O(1) membership. */
+  public env: Set<MacroArgument>
+
+  /**
+   * The MCFunction currently containing this WithClass. Updated by
+   * `MCFunctionNode.claimNodes()` after `ContainerCommandsToMCFunctionVisitor`
+   * extracts an enclosing execute's body into a new wrapper — without
+   * the update, `withClass.hostFunction` (captured at construction) would
+   * still point at the original caller MCFunction.
+   */
+  public containingMCFunction: MCFunctionNode | null = null
+
   constructor(
     core: SandstoneCore,
-    public env: MacroArgument[],
+    env: MacroArgument[] | Set<MacroArgument>,
     callback?: () => void,
   ) {
     super(core.pack)
 
+    // Store env as a Set so visitors can do O(1) membership checks when
+    // correlating this WithClass with adjacent `ResolveNBTNode` prep blocks.
+    const envArray = env instanceof Set ? Array.from(env) : env
+    this.env = new Set(envArray)
+
+    // Register so visitors can iterate WithClass instances directly.
+    core.withNodes.add(this)
+
     const currentFunction = core.getCurrentMCFunctionOrThrow()
     this.hostFunction = currentFunction
+    this.containingMCFunction = currentFunction
     currentFunction.resource.nested += 1
 
     // Capture the enclosing execute (if any) so the visitor can hoist its
@@ -77,7 +98,7 @@ export class WithClass extends ContainerCommandNode {
 
     this.mcfunction = core.pack.MCFunction(
       baseName,
-      env,
+      envArray,
       () => {
         // Body is populated below.
       },

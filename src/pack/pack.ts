@@ -869,8 +869,13 @@ export class SandstonePack {
    * Resolve NBT containing Data Points & Score's.
    * @param nbt NBT with Data Points & Scores initialized with ResolveNBTPart.
    * @param dataPoint Optional. Data Point to resolve to.
+   * @param skipReset Optional. Skip the leading `data modify ... set value {}`
+   *   reset. Auto-skipped when ResolveNBT creates its own internal dataPoint
+   *   (the temp storage is known empty); pass `true` here for an external
+   *   dataPoint that's known to be empty (e.g. dedicated macro storage).
    */
-  ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>) => new ResolveNBTClass(this, nbt, dataPoint)
+  ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>, skipReset?: boolean) =>
+    new ResolveNBTClass(this, nbt, dataPoint, skipReset)
 
   Selector(target: '@e'): SelectorClass<false, false, false>
 

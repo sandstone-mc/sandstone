@@ -9,6 +9,7 @@ import {
   Objective,
   say,
   tellraw,
+  Variable,
 } from '../dist/exports/index.js'
 import { compile, mcfunctionBody, snapshotAll } from './utils/index.js'
 
@@ -940,6 +941,23 @@ describe('Flow snapshots', () => {
         _.with([volume], () => execute.as('@a').at('@s').run(() =>
           $.playsound('block.ancient_debris.break', 'block', '@s', '~ ~ ~', volume),
         ))
+      })
+      snapshotAll(out)
+    })
+
+    test('_.with hoists execute prefix after ContainerCommandsToMCFunctionVisitor extracts it', () => {
+      // Optimization 2 path: an execute wrapping a `_.with` causes
+      // ContainerCommandsToMCFunctionVisitor to extract the body into a
+      // wrapper MCFunction (ResolveNBTNode + WithClass). The wrapper
+      // becomes a one-line `execute as @a run function <wrapper>`, and
+      // Optimization 2 must hoist `execute as @a` onto the macro call,
+      // deleting the wrapper. The ResolveNBTNode's `set from` prep
+      // travels with the new execute so the storage is still populated.
+      const out = compile('with_extracted_execute_hoist', () => {
+        const score = Variable(11)
+        execute.as('@a').run(() => _.with([score], () => {
+          $.say($`Hello ${score}!`)
+        }))
       })
       snapshotAll(out)
     })
