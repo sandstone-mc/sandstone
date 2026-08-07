@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { createHash } from 'node:crypto'
 
 type CaseName = 'control' | 'selector'
 
@@ -29,6 +30,7 @@ type Round = {
 
 const ROOT = path.resolve(import.meta.dir, '..')
 const BENCHMARK_DIR = path.join(ROOT, '.temp', 'selector-type-benchmark')
+const DECLARATION_ENTRY = path.join(ROOT, 'dist', 'exports', 'index.d.ts')
 const NODE = Bun.which('node')
 
 const packageVersion = (packageName: string): string => {
@@ -51,11 +53,11 @@ const COMPILERS = {
       'bin',
       'tsc6',
     ),
-    version: packageVersion('@typescript/typescript6'),
+    packageName: '@typescript/typescript6',
   },
   ts7: {
     entry: path.join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc'),
-    version: packageVersion('typescript'),
+    packageName: 'typescript',
   },
 } as const
 
@@ -134,12 +136,15 @@ const parseOptions = (args: string[]): Options => {
     }
   }
 
+  if (options.rounds % 2 !== 0) {
+    throw new Error('--rounds expects an even integer so AB/BA ordering stays balanced')
+  }
+
   return options
 }
 
-const prepareFixtures = () => {
-  const declarationEntry = path.join(ROOT, 'dist', 'exports', 'index.d.ts')
-  if (!fs.existsSync(declarationEntry)) {
+const prepareFixtures = (): string => {
+  if (!fs.existsSync(DECLARATION_ENTRY)) {
     throw new Error('Built declarations are missing. Run `bun dev:build --silent` first.')
   }
 
@@ -157,6 +162,7 @@ const prepareFixtures = () => {
             strict: true,
             noEmit: true,
             skipLibCheck: true,
+            types: [],
           },
           files: [`${name}.ts`],
         },
@@ -165,6 +171,8 @@ const prepareFixtures = () => {
       ),
     )
   }
+
+  return createHash('sha256').update(fs.readFileSync(DECLARATION_ENTRY)).digest('hex')
 }
 
 const metric = (output: string, label: string, unit = ''): number => {
@@ -254,7 +262,7 @@ const runPair = async (
 
 const main = async () => {
   const options = parseOptions(Bun.argv.slice(2))
-  prepareFixtures()
+  const declarationSha256 = prepareFixtures()
 
   for (let warmup = 1; warmup <= options.warmups; warmup += 1) {
     await runPair(warmup, options.compiler)
@@ -271,7 +279,8 @@ const main = async () => {
     environment: {
       bun: Bun.version,
       compiler: options.compiler,
-      compilerVersion: COMPILERS[options.compiler].version,
+      compilerVersion: packageVersion(COMPILERS[options.compiler].packageName),
+      declarationSha256,
       platform: `${process.platform}-${process.arch}`,
     },
     rounds: options.rounds,
@@ -298,6 +307,7 @@ const main = async () => {
     selectorInstantiationsMedian: median(
       rounds.map(({ selector }) => selector.instantiations),
     ),
+    timingNote: 'Compiler totals are rounded to 10 ms; wall time includes process startup.',
   }
 
   if (options.json) {
@@ -344,6 +354,7 @@ const main = async () => {
     `Instantiations (control/selector): `
       + `${summary.controlInstantiationsMedian}/${summary.selectorInstantiationsMedian}`,
   )
+  console.log(`Timing note: ${summary.timingNote}`)
   console.log(
     `Memory KiB (control/selector): `
       + `${summary.controlMemoryMedianKiB}/${summary.selectorMemoryMedianKiB}`,

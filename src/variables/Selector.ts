@@ -297,7 +297,10 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
     .join(', ')}}`
 }
 
-/** Explicit covariance avoids walking SelectorProperties' generated entity/NBT graph. */
+/**
+ * The readonly phantom brands make these parameters covariant. Declaring that
+ * explicitly avoids walking SelectorProperties' generated entity/NBT graph.
+ */
 export class SelectorClass<
   out MACRO extends boolean = false,
   out IsSingle extends boolean = false,
