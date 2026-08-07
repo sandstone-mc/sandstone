@@ -1,12 +1,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { version as tsgoVersion } from '@typescript/native-preview'
-import ts from 'typescript'
 
 type CaseName = 'control' | 'selector'
 
 type Options = {
-  compiler: 'tsc' | 'tsgo'
+  compiler: 'ts6' | 'ts7'
   rounds: number
   warmups: number
   json: boolean
@@ -31,15 +29,35 @@ type Round = {
 
 const ROOT = path.resolve(import.meta.dir, '..')
 const BENCHMARK_DIR = path.join(ROOT, '.temp', 'selector-type-benchmark')
-const TSC = path.join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc')
-const TSGO = path.join(
-  ROOT,
-  'node_modules',
-  '@typescript',
-  'native-preview',
-  'bin',
-  'tsgo',
-)
+const NODE = Bun.which('node')
+
+const packageVersion = (packageName: string): string => {
+  const packageJson = path.join(
+    ROOT,
+    'node_modules',
+    ...packageName.split('/'),
+    'package.json',
+  )
+  return JSON.parse(fs.readFileSync(packageJson, 'utf8')).version
+}
+
+const COMPILERS = {
+  ts6: {
+    entry: path.join(
+      ROOT,
+      'node_modules',
+      '@typescript',
+      'typescript6',
+      'bin',
+      'tsc6',
+    ),
+    version: packageVersion('@typescript/typescript6'),
+  },
+  ts7: {
+    entry: path.join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc'),
+    version: packageVersion('typescript'),
+  },
+} as const
 
 const FIXTURES: Record<CaseName, string> = {
   control: `import { MCFunction, tellraw } from 'sandstone'
@@ -68,7 +86,7 @@ MCFunction('test', () => {
 const usage = `Usage: bun scripts/benchmark-selector-types.ts [options]
 
 Options:
-  --compiler C  Compiler to measure: tsc or tsgo (default: tsc)
+  --compiler C  Compiler to measure: ts6 or ts7 (default: ts7)
   --rounds N    Measured AB/BA pairs (default: 10)
   --warmups N   Discarded AB/BA pairs (default: 2)
   --json        Emit machine-readable JSON
@@ -85,7 +103,7 @@ const readCount = (flag: string, raw: string | undefined, allowZero = false): nu
 
 const parseOptions = (args: string[]): Options => {
   const options: Options = {
-    compiler: 'tsc',
+    compiler: 'ts7',
     rounds: 10,
     warmups: 2,
     json: false,
@@ -95,8 +113,8 @@ const parseOptions = (args: string[]): Options => {
     const argument = args[index]
     if (argument === '--compiler') {
       const compiler = args[index + 1]
-      if (compiler !== 'tsc' && compiler !== 'tsgo') {
-        throw new Error('--compiler expects "tsc" or "tsgo"')
+      if (compiler !== 'ts6' && compiler !== 'ts7') {
+        throw new Error('--compiler expects "ts6" or "ts7"')
       }
       options.compiler = compiler
       index += 1
@@ -161,11 +179,14 @@ const runCase = async (
   name: CaseName,
   compiler: Options['compiler'],
 ): Promise<Sample> => {
+  if (!NODE) {
+    throw new Error('Node.js is required to run the installed TypeScript compiler.')
+  }
   const started = performance.now()
-  const compilerEntry = compiler === 'tsc' ? TSC : TSGO
+  const compilerEntry = COMPILERS[compiler].entry
   const child = Bun.spawn(
     [
-      Bun.which('bun') ?? process.execPath,
+      NODE,
       compilerEntry,
       '-p',
       path.join(BENCHMARK_DIR, `tsconfig.${name}.json`),
@@ -250,7 +271,7 @@ const main = async () => {
     environment: {
       bun: Bun.version,
       compiler: options.compiler,
-      compilerVersion: options.compiler === 'tsc' ? ts.version : tsgoVersion,
+      compilerVersion: COMPILERS[options.compiler].version,
       platform: `${process.platform}-${process.arch}`,
     },
     rounds: options.rounds,

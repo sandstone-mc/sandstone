@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
 import path from 'node:path'
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 
 test('Selector overloads preserve their public type shapes', () => {
   const fixture = path.join(import.meta.dir, 'selectorTypes.fixture.ts')
