@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.21](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.21) - 2026-08-08
+
+### Improve type performance of Selectors, fix bugs in `give` and `DataSets`
+
+**Full Changelog**: [v1.2.20...v1.2.21](https://github.com/sandstone-mc/sandstone/compare/v1.2.20...v1.2.21)
+
+
 ## [v1.2.20](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.20) - 2026-08-07
 
 ### Fix multi-chained `.run.` from `_.if`, fix `playsound` handling of undefined arguments
