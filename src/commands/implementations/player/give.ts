@@ -125,7 +125,7 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
       if (components.constructor.name === 'Object' && Object.keys(components).length === 0) {
         return this.finalCommand([select, item, count])
       }
-      return this.finalCommand([select, item, componentPatchStringifier(components as any), count])
+      return this.finalCommand([select, `${item}${componentPatchStringifier(components as any)}`, count])
     }
     return this.finalCommand([select, item, countOrComponents])
   }
