@@ -297,10 +297,14 @@ function parseAdvancements(advancements: AdvancementsArgument): string {
     .join(', ')}}`
 }
 
+/**
+ * The readonly phantom brands make these parameters covariant. Declaring that
+ * explicitly avoids walking SelectorProperties' generated entity/NBT graph.
+ */
 export class SelectorClass<
-  MACRO extends boolean = false,
-  IsSingle extends boolean = false,
-  IsPlayer extends boolean = false,
+  out MACRO extends boolean = false,
+  out IsSingle extends boolean = false,
+  out IsPlayer extends boolean = false,
 > implements ConditionTextComponentClass, SelectorPickClass<IsSingle, IsPlayer>, ConditionClass, NBTSerializable {
   declare readonly __textComponentClassBrand: true
   declare readonly __conditionClassBrand: true
