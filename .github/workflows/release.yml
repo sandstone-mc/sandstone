@@ -8,6 +8,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to publish (e.g. v1.2.22). Required when re-running manually.'
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -21,6 +26,29 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      # workflow_dispatch defaults $GITHUB_REF_NAME to the default branch
+      # (master), which would otherwise make downstream steps create a
+      # `master` tag/release. Resolve the real tag from dispatch input and
+      # check it out so the build + publish + changelog all operate on the
+      # actual released commit (matters when the tag lives on an archived
+      # v*.x branch rather than master).
+      - name: Resolve release tag
+        id: resolve-tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            INPUT_TAG="${{ inputs.tag }}"
+            if ! git rev-parse "$INPUT_TAG" >/dev/null 2>&1; then
+              echo "::error::Tag '$INPUT_TAG' does not exist on the remote. Push the tag first, then re-dispatch."
+              exit 1
+            fi
+            TAG="$INPUT_TAG"
+            git checkout "$TAG"
+          else
+            # Tag push — actions/checkout already placed us on the tag.
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -44,10 +72,11 @@ jobs:
       - name: Determine npm tag
         id: npm-tag
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          TAG="${{ steps.resolve-tag.outputs.tag }}"
+          VERSION="${TAG#v}"
           # Find which (if any) release branch this tag lives on.
           # Workflow triggers on tag push — branch info isn't in GITHUB_REF.
-          RELEASE_BRANCH=$(git branch -r --contains "$GITHUB_REF_NAME" | grep -E 'origin/v[0-9]+\.[0-9]+\.x$' | head -n1 | sed 's|origin/||' || true)
+          RELEASE_BRANCH=$(git branch -r --contains "$TAG" | grep -E 'origin/v[0-9]+\.[0-9]+\.x$' | head -n1 | sed 's|origin/||' || true)
 
           if [ -n "$RELEASE_BRANCH" ]; then
             # Tag is on an archived v*.x branch — publish to a per-minor
@@ -68,7 +97,7 @@ jobs:
       - name: Prepare release metadata
         id: release
         run: |
-          TAG="${GITHUB_REF_NAME}"
+          TAG="${{ steps.resolve-tag.outputs.tag }}"
           VERSION="${TAG#v}"
 
           # No prereleases are published (alpha/beta/rc dropped after major 1).
@@ -146,7 +175,7 @@ jobs:
           # Only the master tag is the GitHub "Latest" release. Patches on
           # archived v*.x branches release quietly so the master release
           # retains the prominent Latest marker on the GH Releases page.
-          IS_RELEASE_BRANCH=$(git branch -r --contains "${{ github.ref_name }}" \
+          IS_RELEASE_BRANCH=$(git branch -r --contains "${{ steps.resolve-tag.outputs.tag }}" \
             | grep -E 'origin/v[0-9]+\.[0-9]+\.x$' | head -n1 || true)
           if [ -n "$IS_RELEASE_BRANCH" ]; then
             # Patches on archived v*.x branches release quietly — don't
@@ -157,7 +186,7 @@ jobs:
             LATEST_FLAG="--latest"
           fi
 
-          gh release create "${{ github.ref_name }}" \
+          gh release create "${{ steps.resolve-tag.outputs.tag }}" \
             --title "$(cat release_title.txt)" \
             --notes-file release_body.md \
             "$LATEST_FLAG"
@@ -173,7 +202,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view "${{ github.ref_name }}" \
+          gh release view "${{ steps.resolve-tag.outputs.tag }}" \
             --repo sandstone-mc/sandstone \
             --json name,body,url > release.json
 
