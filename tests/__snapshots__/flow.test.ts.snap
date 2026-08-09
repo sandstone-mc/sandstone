@@ -6461,3 +6461,721 @@ execute if score @s test.i matches 0..1 run function test:deep_nested/loop/loop"
   ],
 ]
 `;
+
+exports[`Flow snapshots misc commands touched by Flow visitors _.with wraps Macro commands in a child macro mcfunction 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_macro.mcfunction",
+    
+"say before _.with
+data modify storage __sandstone:variable anon_kZZpDK67_0 set value 20d
+data modify storage __sandstone:variable anon_kZZpDK67_1.env_0 set from storage __sandstone:variable anon_kZZpDK67_0
+function test:with_macro/__with_macro with storage __sandstone:variable anon_kZZpDK67_1
+say after _.with"
+,
+  ],
+  [
+    "datapack/data/test/function/with_macro/__with_macro.mcfunction",
+    "$give @s minecraft:diamond $(env_0)",
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors _.with with multiple env vars 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_multi_env.mcfunction",
+    
+"data modify storage __sandstone:variable anon_kZZpDK67_0 set value 20d
+data modify storage __sandstone:variable anon_kZZpDK67_1 set value 'hello'
+data modify storage __sandstone:variable anon_kZZpDK67_2.env_0 set from storage __sandstone:variable anon_kZZpDK67_0
+data modify storage __sandstone:variable anon_kZZpDK67_2.env_1 set from storage __sandstone:variable anon_kZZpDK67_1
+function test:with_multi_env/__with_macro with storage __sandstone:variable anon_kZZpDK67_2"
+,
+  ],
+  [
+    "datapack/data/test/function/with_multi_env/__with_macro.mcfunction",
+    
+"$give @s minecraft:diamond $(env_0)
+$say $(env_1)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors _.with with two sequential calls share the parent mcfunction context 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_sequential.mcfunction",
+    
+"data modify storage __sandstone:variable anon_kZZpDK67_0 set value 20d
+data modify storage __sandstone:variable anon_kZZpDK67_1.env_0 set from storage __sandstone:variable anon_kZZpDK67_0
+function test:with_sequential/__with_macro with storage __sandstone:variable anon_kZZpDK67_1
+say between _.with calls
+data modify storage __sandstone:variable anon_kZZpDK67_2.env_0 set from storage __sandstone:variable anon_kZZpDK67_0
+function test:with_sequential/__with_macro2 with storage __sandstone:variable anon_kZZpDK67_2"
+,
+  ],
+  [
+    "datapack/data/test/function/with_sequential/__with_macro.mcfunction",
+    "$give @s minecraft:diamond $(env_0)",
+  ],
+  [
+    "datapack/data/test/function/with_sequential/__with_macro2.mcfunction",
+    "$give @s minecraft:emerald $(env_0)",
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors _.with hoists single execute prefix onto the function call 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_hoist_execute.mcfunction",
+    
+"data modify storage __sandstone:variable anon_kZZpDK67_0 set value 20d
+data modify storage __sandstone:variable anon_kZZpDK67_1.env_0 set from storage __sandstone:variable anon_kZZpDK67_0
+execute as @a at @s run function test:with_hoist_execute/__with_macro with storage __sandstone:variable anon_kZZpDK67_1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_hoist_execute/__with_macro.mcfunction",
+    "$playsound block.ancient_debris.break block @s ~ ~ ~ $(env_0) 1",
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors _.with body without execute wrapper keeps nested $-prefixed commands 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_no_hoist.mcfunction",
+    
+"data modify storage __sandstone:variable anon_kZZpDK67_0 set value 20d
+data modify storage __sandstone:variable anon_kZZpDK67_1.env_0 set from storage __sandstone:variable anon_kZZpDK67_0
+function test:with_no_hoist/__with_macro with storage __sandstone:variable anon_kZZpDK67_1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_no_hoist/__with_macro.mcfunction",
+    
+"say hi
+$give @s minecraft:diamond $(env_0)
+$give @s minecraft:emerald $(env_0)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots misc commands touched by Flow visitors _.with hoists execute prefix after ContainerCommandsToMCFunctionVisitor extracts it 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_extracted_execute_hoist.mcfunction",
+    
+"scoreboard players set anon_kZZpDK67_0 __sandstone 11
+execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get anon_kZZpDK67_0 __sandstone
+execute as @a run function test:with_extracted_execute_hoist/__with_macro with storage __sandstone:variable anon_kZZpDK67_0"
+,
+  ],
+  [
+    "datapack/data/test/function/with_extracted_execute_hoist/__with_macro.mcfunction",
+    "$say Hello $(env_0)!",
+  ],
+]
+`;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) _.if nested inside execute.as() inlines fully — no helper function emitted 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=SayCommandNode",
+  "[SimplifyExec:    < exit (inlined single command, deleted test:inline_if_in_execute/execute_as/if)",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) chained execute→function(F1)→execute→function(F2)→cmd inlines to one execute chain 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...,...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=SayCommandNode",
+  "[SimplifyExec:    < exit (inlined single command, deleted test:inline_chain/execute_as/execute_if)",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) three+ nested executes all inline to a single execute chain 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...,...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=ExecuteCommandNode",
+  "[SimplifyExec:      merged inner execute (args=[...])",
+  "[SimplifyExec:      > enter callbackName=- args=[...,...,...,...] bodyLen=1",
+  "[SimplifyExec:        effective command class=SayCommandNode",
+  "[SimplifyExec:      < exit (inlined single command, deleted test:inline_deep/execute_as/execute_if/if)",
+  "[SimplifyExec:    < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) execute → _.if → execute → _.if → execute inlines to a single chain 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=ExecuteCommandNode",
+  "[SimplifyExec:      merged inner execute (args=[...,...])",
+  "[SimplifyExec:      > enter callbackName=- args=[...,...,...,...] bodyLen=1",
+  "[SimplifyExec:        effective command class=ExecuteCommandNode",
+  "[SimplifyExec:        merged inner execute (args=[...])",
+  "[SimplifyExec:        > enter callbackName=- args=[...,...,...,...,...] bodyLen=1",
+  "[SimplifyExec:          effective command class=ExecuteCommandNode",
+  "[SimplifyExec:          merged inner execute (args=[...,...])",
+  "[SimplifyExec:          > enter callbackName=- args=[...,...,...,...,...,...,...] bodyLen=1",
+  "[SimplifyExec:            effective command class=SayCommandNode",
+  "[SimplifyExec:          < exit (inlined single command, deleted test:inline_deeper/execute_as/if/execute_if/if/execute_if)",
+  "[SimplifyExec:        < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:      < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:    < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;
