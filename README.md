@@ -38,7 +38,9 @@ Sandstone includes common and heavily optimized abstractions:
 - Control statements, with `if`, `else if` and `else`
 - Boolean logic, with `or`, `and` and `not`
 - Loops, with `while` and `for`
-- Sleep statement, which waits a certain time before running the next commands
+- Switch statements letting you efficiently handle each predicated value of a score or data storage value differently through a macro
+- Sleep statement, which waits a certain time before running the next commands, with support for maintaining entity context across ticks
+- Much much more
 
 These statements are most of the time more optimized than hand-written code, since they switch between different implementations to get the fastest one. They have been studied and designed for performance.
 
