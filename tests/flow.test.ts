@@ -11,7 +11,7 @@ import {
   tellraw,
   Variable,
 } from '../dist/exports/index.js'
-import { compile, mcfunctionBody, snapshotAll } from './utils/index.js'
+import { compile, mcfunctionBody, snapshotAll, withDebugLogs } from './utils/index.js'
 
 
 describe('Flow snapshots', () => {
@@ -973,5 +973,125 @@ describe('Flow snapshots', () => {
       })
       snapshotAll(out)
     })
+  })
+})
+
+describe('execute→function inlining (SimplifyExecuteFunctionVisitor)', () => {
+  // Regression: SimplifyExecuteFunctionVisitor merged `execute A run function F1`
+  // where F1 contained `execute B run function F2` (F2 = `say X`) into
+  // `execute A B run function F2` — but then returned genericVisit, so F2 was
+  // never inlined and a stray `<name>/execute_as/if.mcfunction` was emitted.
+  // Fix: re-enter visitExecuteCommandNode so the merged body's new
+  // FunctionCommandNode gets processed in turn.
+
+  test('_.if nested inside execute.as() inlines fully — no helper function emitted', () => {
+    const { result, logs } = withDebugLogs({
+      envVar: 'SANDSTONE_DEBUG_SIMPLIFY_EXEC',
+      prefix: '[SimplifyExec:',
+      fn: () =>
+        compile('inline_if_in_execute', () => {
+          execute.as('@e').run(() => {
+            _.if(_.entity('@s[type=item_display]'), () => {
+              say('test complete')
+            })
+          })
+        }),
+    })
+
+    expect(mcfunctionBody(result, 'inline_if_in_execute')).toBe(
+      'execute as @e if entity @s[type=item_display] run say test complete',
+    )
+
+    // No helper functions should have been created.
+    const helpers = [...result.keys()].filter((p) => p.includes('inline_if_in_execute/'))
+    expect(helpers).toEqual([])
+
+    expect(logs).toMatchSnapshot()
+  })
+
+  test('chained execute→function(F1)→execute→function(F2)→cmd inlines to one execute chain', () => {
+    const { result, logs } = withDebugLogs({
+      envVar: 'SANDSTONE_DEBUG_SIMPLIFY_EXEC',
+      prefix: '[SimplifyExec:',
+      fn: () =>
+        compile('inline_chain', () => {
+          execute.as('@a').run(() => {
+            execute.if.entity('@s').run(() => {
+              say('chained complete')
+            })
+          })
+        }),
+    })
+
+    expect(mcfunctionBody(result, 'inline_chain')).toBe(
+      'execute as @a if entity @s run say chained complete',
+    )
+
+    const helpers = [...result.keys()].filter((p) => p.includes('inline_chain/'))
+    expect(helpers).toEqual([])
+
+    expect(logs).toMatchSnapshot()
+  })
+
+  test('three+ nested executes all inline to a single execute chain', () => {
+    const { result, logs } = withDebugLogs({
+      envVar: 'SANDSTONE_DEBUG_SIMPLIFY_EXEC',
+      prefix: '[SimplifyExec:',
+      fn: () =>
+        compile('inline_deep', () => {
+          const counter = Objective.create('counter')
+          execute.as('@a').run(() => {
+            execute.if.entity('@s').run(() => {
+              _.if(counter('@s').equalTo(0), () => {
+                say('deep complete')
+              })
+            })
+          })
+        }),
+    })
+
+    expect(mcfunctionBody(result, 'inline_deep')).toBe(
+      'execute as @a if entity @s if score @s test.counter matches 0 run say deep complete',
+    )
+
+    const helpers = [...result.keys()].filter((p) => p.includes('inline_deep/'))
+    expect(helpers).toEqual([])
+
+    expect(logs).toMatchSnapshot()
+  })
+
+  test('execute → _.if → execute → _.if → execute inlines to a single chain', () => {
+    // Five nested levels alternating execute.run() and _.if() callbacks.
+    // Each callback becomes an inner ExecuteCommandNode with isSingleExecute=false,
+    // so ContainerCommandsToMCFunctionVisitor extracts each layer. The
+    // recursive visitExecuteCommandNode fix must unwind every layer.
+    const { result, logs } = withDebugLogs({
+      envVar: 'SANDSTONE_DEBUG_SIMPLIFY_EXEC',
+      prefix: '[SimplifyExec:',
+      fn: () =>
+        compile('inline_deeper', () => {
+          const counter = Objective.create('counter')
+          execute.as('@a').run(() => {
+            _.if(counter('@s').equalTo(0), () => {
+              execute.if.entity('@s').run(() => {
+                _.if(counter('@s').matches([1, 5]), () => {
+                  execute.if.entity('@p').run(() => {
+                    say('very deep')
+                  })
+                })
+              })
+            })
+          })
+        }),
+    })
+
+    expect(mcfunctionBody(result, 'inline_deeper')).toBe(
+      'execute as @a if score @s test.counter matches 0 if entity @s if score @s test.counter matches 1..5 if entity @p run say very deep',
+    )
+
+    const helpers = [...result.keys()].filter((p) => p.includes('inline_deeper/'))
+    expect(helpers).toEqual([])
+
+    expect(logs).toMatchSnapshot()
   })
 })

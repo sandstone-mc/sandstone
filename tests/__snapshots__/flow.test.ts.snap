@@ -8092,3 +8092,67 @@ execute as @a run function test:with_extracted_execute_hoist/__with_macro with s
   ],
 ]
 `;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) _.if nested inside execute.as() inlines fully — no helper function emitted 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=SayCommandNode",
+  "[SimplifyExec:    < exit (inlined single command, deleted test:inline_if_in_execute/execute_as/if)",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) chained execute→function(F1)→execute→function(F2)→cmd inlines to one execute chain 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...,...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=SayCommandNode",
+  "[SimplifyExec:    < exit (inlined single command, deleted test:inline_chain/execute_as/execute_if)",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) three+ nested executes all inline to a single execute chain 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...,...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=ExecuteCommandNode",
+  "[SimplifyExec:      merged inner execute (args=[...])",
+  "[SimplifyExec:      > enter callbackName=- args=[...,...,...,...] bodyLen=1",
+  "[SimplifyExec:        effective command class=SayCommandNode",
+  "[SimplifyExec:      < exit (inlined single command, deleted test:inline_deep/execute_as/execute_if/if)",
+  "[SimplifyExec:    < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;
+
+exports[`execute→function inlining (SimplifyExecuteFunctionVisitor) execute → _.if → execute → _.if → execute inlines to a single chain 1`] = `
+[
+  "[SimplifyExec:  > enter callbackName=- args=[...] bodyLen=1",
+  "[SimplifyExec:    effective command class=ExecuteCommandNode",
+  "[SimplifyExec:    merged inner execute (args=[...])",
+  "[SimplifyExec:    > enter callbackName=- args=[...,...] bodyLen=1",
+  "[SimplifyExec:      effective command class=ExecuteCommandNode",
+  "[SimplifyExec:      merged inner execute (args=[...,...])",
+  "[SimplifyExec:      > enter callbackName=- args=[...,...,...,...] bodyLen=1",
+  "[SimplifyExec:        effective command class=ExecuteCommandNode",
+  "[SimplifyExec:        merged inner execute (args=[...])",
+  "[SimplifyExec:        > enter callbackName=- args=[...,...,...,...,...] bodyLen=1",
+  "[SimplifyExec:          effective command class=ExecuteCommandNode",
+  "[SimplifyExec:          merged inner execute (args=[...,...])",
+  "[SimplifyExec:          > enter callbackName=- args=[...,...,...,...,...,...,...] bodyLen=1",
+  "[SimplifyExec:            effective command class=SayCommandNode",
+  "[SimplifyExec:          < exit (inlined single command, deleted test:inline_deeper/execute_as/if/execute_if/if/execute_if)",
+  "[SimplifyExec:        < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:      < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:    < exit (ExecuteCommandNode merge (deleted F1))",
+  "[SimplifyExec:  < exit (ExecuteCommandNode merge (deleted F1))",
+]
+`;

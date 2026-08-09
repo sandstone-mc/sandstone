@@ -7,6 +7,15 @@ import { LoopArgument } from 'sandstone/variables'
 import { GenericSandstoneVisitor } from './visitor'
 
 /**
+ * When set to `'1'`, `SimplifyExecuteFunctionVisitor` traces every recursive
+ * call into `visitExecuteCommandNode` plus the action it took. Useful for
+ * debugging why a chain didn't inline as expected. Off by default.
+ *
+ *   SANDSTONE_DEBUG_SIMPLIFY_EXEC=1 sand build
+ */
+const DEBUG_SIMPLIFY_EXEC = (): boolean => process.env.SANDSTONE_DEBUG_SIMPLIFY_EXEC === '1'
+
+/**
  * Gets the effective single command from a function body, filtering out nodes that produce no output.
  * Returns the command if there's exactly one effective command, or null otherwise.
  */
@@ -32,23 +41,52 @@ function getEffectiveSingleCommand(body: any[]): any | null {
  * Simplifies an execute calling a 1-command function to a single execute, with some exceptions.
  */
 export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
+  /** Recursion depth for debug logging. Increments on entry, decrements on exit. */
+  private depth = 0
+
+  /** Whether debug logging is currently active. Read once per call (env var can change between calls). */
+  private debugging = DEBUG_SIMPLIFY_EXEC()
+
+  private debug = (msg: string): void => {
+    if (!this.debugging) return
+    console.log(`[SimplifyExec:${'  '.repeat(this.depth)}${msg}`)
+  }
+
+  private debugEnter = (node: ExecuteCommandNode): void => {
+    if (!this.debugging) return
+    this.depth++
+    const args = node.args.map((a) => (typeof a === 'string' ? JSON.stringify(a) : '...'))
+    this.debug(`> enter callbackName=${node.givenCallbackName ?? '-'} args=[${args.join(',')}] bodyLen=${node.body.length}`)
+  }
+
+  private debugExit = (msg: string): void => {
+    if (!this.debugging) return
+    this.debug(`< exit (${msg})`)
+    this.depth--
+  }
+
   visitExecuteCommandNode = (node: ExecuteCommandNode): Node | Node[] => {
+    this.debugEnter(node)
+
     // Don't inline a loop's wrapping execute: it's the recursion target for
     // LoopArgument anywhere else in the loop body (e.g. inside `_.await.sleep`
     // continuations). Inlining it back into a one-shot `execute if cond run X`
     // strand means the LoopArgument inside the sleep's continuation calls a
     // nonexistent function. The wrapping mcfunction must survive.
     if (node.givenCallbackName === 'loop') {
+      this.debugExit('loop callback, skipped')
       return this.genericVisit(node)
     }
 
     if (node.body.length === 0 || node.body.length > 1) {
+      this.debugExit(`body.length=${node.body.length}, no inline`)
       return this.genericVisit(node)
     }
 
     const functionNode = node.body[0]
 
     if (!(functionNode instanceof FunctionCommandNode)) {
+      this.debugExit('body[0] not FunctionCommandNode')
       return this.genericVisit(node)
     }
 
@@ -56,6 +94,7 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
 
     // Skip if function name is a string or doesn't have a .node property (e.g., MacroLiteral)
     if (typeof mcFunction === 'string' || !mcFunction?.node) {
+      this.debugExit('mcFunction not an instance')
       return this.genericVisit(node)
     }
 
@@ -69,9 +108,12 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
       if (mcFunctionNode.body.length === 1) {
         command = mcFunctionNode.body[0]
       } else {
+        this.debugExit(`no effective single command in ${mcFunctionNode.resource?.name}`)
         return this.genericVisit(node)
       }
     }
+
+    this.debug(`  effective command class=${command?.constructor?.name}`)
 
     // Check for LoopArgument first since it extends Node, not CommandNode
     if (command instanceof LoopArgument) {
@@ -87,13 +129,16 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
           this.core.resourceNodes.delete(mcFunctionNode)
         }
 
+        this.debugExit(`loopArg -> call ${loopFunctionName}`)
         return this.genericVisit(node)
       }
       // Can't simplify without the loop reference
+      this.debugExit('loopArg without reference')
       return this.genericVisit(node)
     }
 
     if (!(command instanceof CommandNode)) {
+      this.debugExit('effective command not a CommandNode')
       return this.genericVisit(node)
     }
 
@@ -116,9 +161,11 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
         const returnCmd = this.visit(command) as ReturnRunCommandNode
         node.body = returnCmd.body
 
+        this.debugExit('returnRun auto-boundary, re-run')
         return this.visitExecuteCommandNode(node)
       }
 
+      this.debugExit('returnRun preserved')
       return this.genericVisit(node)
     }
 
@@ -127,6 +174,7 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
       const innerMCFunction = command.args[0]
 
       if (typeof innerMCFunction === 'string') {
+        this.debugExit('inner function call is string macro, skip')
         return this.genericVisit(node)
       }
 
@@ -138,7 +186,15 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
         this.core.resourceNodes.delete(mcFunctionNode)
       }
 
-      return this.genericVisit(node)
+      this.debug(`  collapsed ${mcFunctionNode.resource?.name} -> inner function call`)
+
+      // Re-run so the new body — now a `function F2` call — can be inlined
+      // through the same logic (e.g., `execute A run function F1` where F1
+      // contains `function F2` becomes `execute A run function F2`, and
+      // a further visit inlines F2 too).
+      const result = this.visitExecuteCommandNode(node)
+      this.debugExit('FunctionCommandNode branch (collapsed F1)')
+      return result
     }
 
     /*
@@ -166,9 +222,11 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
         // without deleting would alias its body into two places.
         || mcFunction.creator !== 'sandstone'
       ) {
+        this.debugExit('ExecuteCommandNode guard tripped')
         return this.genericVisit(node)
       }
 
+      const innerArgs = command.args.map((a) => (typeof a === 'string' ? JSON.stringify(a) : '...'))
       node.args.push(...command.args)
       node.body = command.body
       node.isMacro = node.isMacro || command.isMacro
@@ -177,7 +235,16 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
       // The function this pointed at no longer exists.
       node.createdMCFunction = null
 
-      return this.genericVisit(node)
+      this.debug(`  merged inner execute (args=[${innerArgs.join(',')}])`)
+
+      // Re-run so the merged body — often now a `function F2` call left
+      // over from the inner execute — gets inlined in turn. Without this
+      // recursive visit, `execute as @e if … run function F1` where F1
+      // contains `execute if … run function F2` would leave F2 surviving
+      // even though the only call to it is one execute chain away.
+      const result = this.visitExecuteCommandNode(node)
+      this.debugExit('ExecuteCommandNode merge (deleted F1)')
+      return result
     }
 
     // We can safely simplify the execute. If the called command is not a user-created MCFunction, we can safely delete it.]
@@ -187,6 +254,7 @@ export class SimplifyExecuteFunctionVisitor extends GenericSandstoneVisitor {
       this.core.resourceNodes.delete(mcFunctionNode)
     }
 
+    this.debugExit(`inlined single command, deleted ${mcFunctionNode.resource?.name}`)
     return this.genericVisit(node)
   }
 }
