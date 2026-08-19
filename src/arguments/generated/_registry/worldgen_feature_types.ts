@@ -16,7 +16,6 @@ export const WORLDGEN_FEATURE_TYPES_SET = new Set([
   'coral_claw',
   'coral_tree',
   'delta_feature',
-  'desert_well',
   'disk',
   'end_gateway',
   'end_island',

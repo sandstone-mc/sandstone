@@ -6,7 +6,7 @@ export type JSONITEM_DEFINITIONS = (
   | `minecraft:${SetType<typeof JSONITEM_DEFINITIONS_SET>}`)
 
 export const JSONITEM_DEFINITIONS_SET = new Set([
-  'abandoned_campsite_map',
+  'abandoned_camp_map',
   'acacia_boat',
   'acacia_button',
   'acacia_chest_boat',
@@ -32,7 +32,6 @@ export const JSONITEM_DEFINITIONS_SET = new Set([
   'amethyst_block',
   'amethyst_cluster',
   'amethyst_shard',
-  'ancient_city_map',
   'ancient_debris',
   'andesite',
   'andesite_slab',
@@ -210,6 +209,8 @@ export const JSONITEM_DEFINITIONS_SET = new Set([
   'bucket',
   'budding_amethyst',
   'bundle',
+  'buried_ancient_city_map',
+  'buried_mineshaft_map',
   'buried_treasure_map',
   'burn_pottery_sherd',
   'bush',
@@ -880,7 +881,6 @@ export const JSONITEM_DEFINITIONS_SET = new Set([
   'milk_bucket',
   'minecart',
   'miner_pottery_sherd',
-  'mineshaft_map',
   'mojang_banner_pattern',
   'mooshroom_spawn_egg',
   'moss_block',

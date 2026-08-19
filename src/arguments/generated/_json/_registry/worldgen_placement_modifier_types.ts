@@ -20,6 +20,7 @@ export const JSONWORLDGEN_PLACEMENT_MODIFIER_TYPES_SET = new Set([
   'noise_threshold_count',
   'offset',
   'random_chance',
+  'randomly_selected',
   'rarity_filter',
   'surface_relative_threshold_filter',
   'surface_water_depth_filter',

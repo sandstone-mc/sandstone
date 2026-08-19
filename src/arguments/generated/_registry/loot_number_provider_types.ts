@@ -6,12 +6,16 @@ export type LOOT_NUMBER_PROVIDER_TYPES = (
   | `minecraft:${SetType<typeof LOOT_NUMBER_PROVIDER_TYPES_SET>}`)
 
 export const LOOT_NUMBER_PROVIDER_TYPES_SET = new Set([
+  'average',
   'binomial',
   'conditional',
   'constant',
   'enchantment_level',
   'environment_attribute',
+  'maximum',
+  'minimum',
   'number_dispatcher',
+  'product',
   'score',
   'storage',
   'sum',

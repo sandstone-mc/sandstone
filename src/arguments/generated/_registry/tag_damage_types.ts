@@ -14,6 +14,7 @@ export const TAG_DAMAGE_TYPES_SET = new Set([
   'burn_from_stepping',
   'burns_armor_stands',
   'bypasses_armor',
+  'bypasses_cooldown',
   'bypasses_effects',
   'bypasses_enchantments',
   'bypasses_invulnerability',

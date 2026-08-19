@@ -20,5 +20,6 @@ export const BLOCK_PREDICATE_TYPES_SET = new Set([
   'solid',
   'true',
   'unobstructed',
+  'volume_match',
   'would_survive',
 ] as const)

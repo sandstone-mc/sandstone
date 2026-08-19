@@ -23,6 +23,7 @@ export const TAG_ITEMS_SET = new Set([
   'book_cloning_target',
   'bookshelf_books',
   'breaks_decorated_pots',
+  'brewing_potion_inputs',
   'bundles',
   'buttons',
   'camel_food',
