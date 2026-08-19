@@ -1,8 +1,9 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft dialog.
@@ -22,7 +23,7 @@ export type DialogClassArguments = {
   /**
    * The dialog's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof DialogClass)['resourceType']]
+  json: JsonSymbolResource[(typeof DialogClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class DialogClass extends ResourceClass<DialogNode> {

@@ -1,8 +1,9 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 // ============================================================================
 // Test Environment
@@ -26,7 +27,7 @@ export type TestEnvironmentClassArguments = {
   /**
    * The test environment's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof TestEnvironmentClass)['resourceType']]
+  json: JsonSymbolResource[(typeof TestEnvironmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> {
@@ -72,7 +73,7 @@ export type TestInstanceClassArguments = {
   /**
    * The test instance's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof TestInstanceClass)['resourceType']]
+  json: JsonSymbolResource[(typeof TestInstanceClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TestInstanceClass extends ResourceClass<TestInstanceNode> {

@@ -3,7 +3,8 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 export class ModelNode<Type extends LiteralUnion<'block' | 'item'>> extends ContainerNode implements ResourceNode<ModelClass<Type>> {
   constructor(
@@ -20,7 +21,7 @@ export type ModelClassArguments = {
   /**
    * The model's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof ModelClass)['resourceType']]
+  json: JsonSymbolResource[(typeof ModelClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 

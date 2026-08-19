@@ -1,13 +1,14 @@
-import { RESOURCE_PATHS, type SymbolResource, type TEXTURE_TYPES } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type TEXTURE_TYPES } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass } from '../resource'
+import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
 
-type TextureMetaAll = /*Json*/SymbolResource['texture_meta']
+type TextureMetaAll = JsonSymbolResource['texture_meta']
 
 // TODO: Find which texture types actually support animations.
 type TextureMeta<Type extends TextureType> = (

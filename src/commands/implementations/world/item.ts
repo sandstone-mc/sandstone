@@ -4,7 +4,6 @@ import type {
   MultipleEntitiesArgument,
   ContainerSlotSelector,
   EntitySlotSelector,
-  SymbolDataComponent,
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable, SlotSourceClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -13,6 +12,7 @@ import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
 import { componentPatchStringifier } from '../player/give'
+import type { JsonSymbolDataComponent } from 'sandstone/arguments/generated/_json/dispatcher'
 
 export class ItemCommandNode extends CommandNode {
   command = 'item' as const
@@ -52,13 +52,13 @@ export class ItemSourceCommand<MACRO extends boolean> extends CommandArguments {
    */
   with(
     item: Macroable<Registry['minecraft:item'], MACRO>,
-    components: Macroable<MemberModifiers</*Json*/SymbolDataComponent>, MACRO>,
+    components: Macroable<MemberModifiers<JsonSymbolDataComponent>, MACRO>,
     count: Macroable<number, MACRO>,
   ): FinalCommandOutput
 
   with(
     item: Macroable<Registry['minecraft:item'], MACRO>,
-    countOrNBT?: Macroable<number | MemberModifiers</*Json*/SymbolDataComponent>, MACRO>,
+    countOrNBT?: Macroable<number | MemberModifiers<JsonSymbolDataComponent>, MACRO>,
     count?: Macroable<number, MACRO>,
   ) {
     if (typeof countOrNBT === 'object') {

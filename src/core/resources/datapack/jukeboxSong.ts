@@ -1,8 +1,9 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft jukebox song (music disc).
@@ -22,7 +23,7 @@ export type JukeboxSongClassArguments = {
   /**
    * The jukebox song's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof JukeboxSongClass)['resourceType']]
+  json: JsonSymbolResource[(typeof JukeboxSongClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class JukeboxSongClass extends ResourceClass<JukeboxSongNode> {

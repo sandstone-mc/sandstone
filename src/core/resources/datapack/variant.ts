@@ -1,8 +1,9 @@
-import { type RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { type RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 export type AudibleVariantType = (
   | 'cat'
@@ -31,7 +32,7 @@ type VariantSymbolKey<T extends VariantType> = `${T}_variant`
 /**
  * Gets the JSON type for a variant from SymbolResource.
  */
-type VariantJSON<T extends VariantType> = /*Json*/SymbolResource[VariantSymbolKey<T>]
+type VariantJSON<T extends VariantType> = JsonSymbolResource[VariantSymbolKey<T>]
 
 /**
  * A node representing a Minecraft entity variant.

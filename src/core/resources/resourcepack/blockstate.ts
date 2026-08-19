@@ -1,12 +1,12 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
-
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 import type { AllKeys } from 'sandstone/utils'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
-export type BlockStateDefinitionJSON = NonNullable</*Json*/SymbolResource['block_definition']>
+export type BlockStateDefinitionJSON = NonNullable<JsonSymbolResource['block_definition']>
 export type BlockStateDefinitionType = AllKeys<BlockStateDefinitionJSON>
 
 /**

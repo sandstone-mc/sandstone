@@ -4,13 +4,13 @@ import {
   type Coordinates,
   type ENTITY_SLOTS,
   type MultipleEntitiesArgument,
-  type SymbolResource,
 } from 'sandstone/arguments'
 import { targetParser } from 'sandstone/variables/parsers'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft item modifier.
@@ -26,7 +26,7 @@ export class ItemModifierNode extends ContainerNode implements ResourceNode<Item
   getValue = () => jsonStringify(this.resource.itemModifierJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-type ItemModifierJSON = /*Json*/SymbolResource[(typeof ItemModifierClass)['resourceType']]
+type ItemModifierJSON = JsonSymbolResource[(typeof ItemModifierClass)['resourceType']]
 
 export type ItemModifierClassArguments = {
   /**

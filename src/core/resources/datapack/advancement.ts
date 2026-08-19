@@ -1,10 +1,11 @@
-import { RESOURCE_PATHS, type MultiplePlayersArgumentOf, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MultiplePlayersArgumentOf } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 import type { NonEmptyString } from 'sandstone/utils'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft advancement.
@@ -20,7 +21,7 @@ export class AdvancementNode extends ContainerNode implements ResourceNode<Advan
   getValue = () => jsonStringify(this.resource.advancementJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-export type AdvancementClassArguments<AdvancementJSON extends /*Json*/SymbolResource['advancement'] | undefined = undefined> = {
+export type AdvancementClassArguments<AdvancementJSON extends JsonSymbolResource['advancement'] | undefined = undefined> = {
   /**
    * The advancement's JSON. NBT primitive classes (`NBTInt`, `NBTFloat`, ...)
    * are deep-replaced with plain `number` (and `NBTIntArray` etc. with
@@ -30,7 +31,7 @@ export type AdvancementClassArguments<AdvancementJSON extends /*Json*/SymbolReso
   json: AdvancementJSON
 } & ResourceClassArguments<'default'>
 
-export class AdvancementClass<AdvancementJSON extends /*Json*/SymbolResource['advancement'] | undefined = undefined>
+export class AdvancementClass<AdvancementJSON extends JsonSymbolResource['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
   implements ConditionClass {
   declare readonly __conditionClassBrand: true

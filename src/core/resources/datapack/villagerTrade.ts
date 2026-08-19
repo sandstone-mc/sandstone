@@ -1,8 +1,9 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft villager trade.
@@ -22,7 +23,7 @@ export type VillagerTradeClassArguments = {
   /**
    * The villager trade's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof VillagerTradeClass)['resourceType']]
+  json: JsonSymbolResource[(typeof VillagerTradeClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class VillagerTradeClass extends ResourceClass<VillagerTradeNode> {
@@ -64,7 +65,7 @@ export type TradeSetClassArguments = {
   /**
    * The trade set's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof TradeSetClass)['resourceType']]
+  json: JsonSymbolResource[(typeof TradeSetClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TradeSetClass extends ResourceClass<TradeSetNode> {

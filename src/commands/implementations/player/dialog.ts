@@ -1,5 +1,5 @@
 import type { MultiplePlayersArgument } from 'sandstone/arguments'
-import type { Dialog } from 'sandstone/arguments/generated/data/dialog'
+import type { JsonDialog } from 'sandstone/arguments/generated/_json/data/dialog'
 import type { DIALOGS } from 'sandstone/arguments/generated/_registry/dialogs'
 import type { DialogClass, Macroable } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -27,7 +27,7 @@ export class DialogCommand<MACRO extends boolean> extends CommandArguments {
    */
   show(
     targets: Macroable<MultiplePlayersArgument<MACRO>, MACRO>,
-    dialog: Macroable<DIALOGS | DialogClass | /*Json*/Dialog, MACRO>,
+    dialog: Macroable<DIALOGS | DialogClass | JsonDialog, MACRO>,
   ): FinalCommandOutput {
     const dialogArg = typeof dialog === 'string' || dialog instanceof ResourceClass
       ? dialog

@@ -1,9 +1,11 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 import type { SpriteSource } from 'sandstone/arguments/generated/assets/atlas'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
+import type { JsonSpriteSource } from 'sandstone/arguments/generated/_json/assets/atlas'
 
 /**
  * A node representing a Minecraft atlas.
@@ -23,7 +25,7 @@ export type AtlasClassArguments = {
   /**
    * The atlas JSON.
    */
-  json?: /*Json*/SymbolResource[(typeof AtlasClass)['resourceType']]
+  json?: JsonSymbolResource[(typeof AtlasClass)['resourceType']]
 } & ResourceClassArguments<'list'>
 
 export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {
@@ -46,7 +48,7 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     this.handleConflicts()
   }
 
-  push(...sources: /*Json*/SpriteSource[] | AtlasClass[]) {
+  push(...sources: JsonSpriteSource[] | AtlasClass[]) {
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */
@@ -58,7 +60,7 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     }
   }
 
-  unshift(...sources: /*Json*/SpriteSource[] | AtlasClass[]) {
+  unshift(...sources: JsonSpriteSource[] | AtlasClass[]) {
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */

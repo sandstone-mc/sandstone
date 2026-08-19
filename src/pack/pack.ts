@@ -178,8 +178,8 @@ import {
   UnifyChainedExecutesVisitor,
   WithNodeVisitor,
 } from './visitors'
-import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher'
 import type { RecipeJSON } from 'sandstone/arguments/shapedCrafting'
+import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 export type ResourcePath = string[]
 
@@ -1117,7 +1117,7 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement<AdvancementJSON extends /*Json*/SymbolResource['advancement']>(
+  Advancement<AdvancementJSON extends JsonSymbolResource['advancement']>(
     name: string,
     json: AdvancementJSON,
     options?: Omit<Partial<AdvancementClassArguments>, 'json'>,
@@ -1178,7 +1178,7 @@ export class SandstonePack {
 
   Recipe = <P1 extends string = string, P2 extends string = string, P3 extends string = string>(
     name: string,
-    recipe: /*Json*/RecipeJSON<P1, P2, P3>,
+    recipe: RecipeJSON<P1, P2, P3>,
     options?: Omit<Partial<RecipeClassArguments>, 'json'>,
   ) =>
     new RecipeClass(this.core, name, {

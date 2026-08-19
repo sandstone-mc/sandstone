@@ -4,6 +4,8 @@ import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
+import type { JsonGlyphProvider } from 'sandstone/arguments/generated/_json/assets/font'
 
 /**
  * A node representing a Minecraft font definition.
@@ -23,7 +25,7 @@ export type FontArguments = {
   /**
    * The font's JSON.
    */
-  providers: /*Json*/GlyphProvider[] | []
+  providers: JsonGlyphProvider[] | []
 } & ResourceClassArguments<'list'>
 
 export class FontClass extends ResourceClass<FontNode> implements ListResource {
@@ -46,7 +48,7 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     this.handleConflicts()
   }
 
-  push(...providers: /*Json*/GlyphProvider[] | FontClass[]) {
+  push(...providers: JsonGlyphProvider[] | FontClass[]) {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */
@@ -58,7 +60,7 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     }
   }
 
-  unshift(...providers: /*Json*/GlyphProvider[] | FontClass[]) {
+  unshift(...providers: JsonGlyphProvider[] | FontClass[]) {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */

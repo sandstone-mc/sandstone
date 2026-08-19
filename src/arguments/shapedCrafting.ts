@@ -28,7 +28,7 @@ export type PatternKeys<PATTERN extends readonly (string | undefined)[], VALUE> 
 }
 
 // Re-export CraftingShaped and Recipe for the generic helper
-import type { CraftingShaped, Recipe } from 'sandstone/arguments/generated/data/recipe'
+import type { JsonCraftingShaped, JsonRecipe } from 'sandstone/arguments/generated/_json/data/recipe'
 
 /**
  * Recipe type with generic support for shaped crafting pattern inference.
@@ -39,6 +39,6 @@ export type RecipeJSON<
   P2 extends string = string,
   P3 extends string = string,
 > =
-  | ({ type: 'crafting_shaped' | 'minecraft:crafting_shaped' } & CraftingShaped<P1, P2, P3>)
-  | Exclude<Recipe, { type: 'crafting_shaped' | 'minecraft:crafting_shaped' }>
+  | ({ type: 'crafting_shaped' | 'minecraft:crafting_shaped' } & JsonCraftingShaped<P1, P2, P3>)
+  | Exclude<JsonRecipe, { type: 'crafting_shaped' | 'minecraft:crafting_shaped' }>
 

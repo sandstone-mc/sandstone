@@ -1,13 +1,13 @@
 import { RESOURCE_PATHS } from 'sandstone/arguments'
-import type {
-  ItemDefinition,
-  ItemModel,
-  NumericPropertyType,
-  RangeDispatch,
-  Select,
-  SelectPropertyType,
-  SpecialModel,
-} from 'sandstone/arguments/generated/assets/item_definition'
+import {
+  JsonItemDefinition,
+  JsonItemModel,
+  JsonRangeDispatch,
+  JsonSelect,
+  JsonSpecialModel,
+  JsonNumericPropertyType,
+  JsonSelectPropertyType
+} from 'sandstone/arguments/generated/_json/assets/item_definition'
 import type { ModelRef } from 'sandstone/arguments/generated/assets/model'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -16,16 +16,10 @@ import { ResourceClass, jsonStringify } from '../resource'
 import { ModelClass } from './model'
 import { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import type { SandstonePack } from 'sandstone/pack'
-import { NBT, NBTFloat } from 'sandstone';
-
-type JSONItemDefinition = /*Json*/ItemDefinition
-type JSONItemModel = /*Json*/ItemModel
-type JSONRangeDispatch = /*Json*/RangeDispatch
-type JSONSelect = /*Json*/Select
-type JSONSpecialModel = /*Json*/SpecialModel
+import { NBT, NBTFloat } from 'sandstone'
 
 // Helper to normalize model input (string/ModelClass -> { type: 'model', model: ModelRef })
-function normalizeModel(input: JSONItemModel | ModelRef): JSONItemModel {
+function normalizeModel(input: JsonItemModel | ModelRef): JsonItemModel {
   if (typeof input === 'string' || input instanceof ModelClass) {
     return { type: 'model', model: input as ModelRef }
   }
@@ -38,9 +32,9 @@ function normalizeModel(input: JSONItemModel | ModelRef): JSONItemModel {
  * and adds model-specific methods for building ItemModel JSON.
  */
 export class ItemModelBuilder extends ItemPredicateClass {
-  private onTrueModel?: JSONItemModel
-  private onFalseModel?: JSONItemModel
-  private explicitModel?: JSONItemModel
+  private onTrueModel?: JsonItemModel
+  private onFalseModel?: JsonItemModel
+  private explicitModel?: JsonItemModel
 
   // ItemModelDefinition-level options
   private _handAnimationOnSwap?: boolean
@@ -55,7 +49,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * Specify the model to use when all conditions match.
    * @param model The ItemModel or model reference string
    */
-  onTrue(model: JSONItemModel | ModelRef): this {
+  onTrue(model: JsonItemModel | ModelRef): this {
     this.onTrueModel = normalizeModel(model)
     return this
   }
@@ -64,7 +58,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * Specify the model to use when any condition fails.
    * @param model The ItemModel or model reference string
    */
-  onFalse(model: JSONItemModel | ModelRef): this {
+  onFalse(model: JsonItemModel | ModelRef): this {
     this.onFalseModel = normalizeModel(model)
     return this
   }
@@ -73,7 +67,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * Create a composite model that renders multiple models layered together.
    * @param models The models to compose
    */
-  composite(...models: Array<JSONItemModel | ModelRef>): this {
+  composite(...models: Array<JsonItemModel | ModelRef>): this {
     this.explicitModel = {
       type: 'composite',
       models: models.map(normalizeModel),
@@ -86,16 +80,16 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * @param property The select property type
    * @param config Configuration including cases and optional fallback
    */
-  select<P extends SelectPropertyType>(
+  select<P extends JsonSelectPropertyType>(
     property: P,
-    config: Omit<Extract<JSONSelect, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
+    config: Omit<Extract<JsonSelect, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
   ): this {
     if ('cases' in config && config.cases !== undefined && config.cases !== null) {
       this.explicitModel = {
         type: 'select',
         property,
         ...config,
-      } as JSONItemModel
+      } as JsonItemModel
       return this
     }
     throw new Error(`[ItemModelBuilder#select] \`cases\` must be defined for \`${property}\``)
@@ -106,15 +100,15 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * @param property The numeric property type
    * @param config Configuration including entries and optional fallback
    */
-  rangeDispatch<P extends NumericPropertyType>(
+  rangeDispatch<P extends JsonNumericPropertyType>(
     property: P,
-    config: Omit<Extract<JSONRangeDispatch, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
+    config: Omit<Extract<JsonRangeDispatch, { property: P | `minecraft:${P}` }>, 'type' | 'property'>,
   ): this {
     this.explicitModel = {
       type: 'range_dispatch',
       property,
       ...config,
-    } as JSONItemModel
+    } as JsonItemModel
     return this
   }
 
@@ -123,7 +117,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
    * @param model The special model configuration
    * @param base The base model reference providing transformations
    */
-  special(model: JSONSpecialModel, base: ModelRef): this {
+  special(model: JsonSpecialModel, base: ModelRef): this {
     this.explicitModel = {
       type: 'special',
       model,
@@ -170,7 +164,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
   /**
    * Build the ItemModel JSON from the builder configuration.
    */
-  toItemModel(): JSONItemModel {
+  toItemModel(): JsonItemModel {
     if (this.explicitModel) {
       return this.explicitModel
     }
@@ -180,7 +174,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
   /**
    * Build the complete ItemModelDefinition JSON including model and options.
    */
-  toItemModelDefinition(): JSONItemDefinition {
+  toItemModelDefinition(): JsonItemDefinition {
     return {
       model: this.toItemModel(),
       ...(this._handAnimationOnSwap !== undefined && { hand_animation_on_swap: this._handAnimationOnSwap }),
@@ -189,7 +183,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
     }
   }
 
-  private buildFromPredicates(): JSONItemModel {
+  private buildFromPredicates(): JsonItemModel {
     // Check for OR groups which are not supported
     for (const group of this.testGroups) {
       if (group.length > 1) {
@@ -219,7 +213,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
       const value = countTest.value as { min?: number; max?: number } | number | undefined
 
       // Build entries from count range
-      const entries: Array<{ threshold: NBTFloat; model: JSONItemModel }> = []
+      const entries: Array<{ threshold: NBTFloat; model: JsonItemModel }> = []
 
       if (typeof value === 'number') {
         entries.push({ threshold: NBT.float(value), model: this.onTrueModel || { type: 'empty' } })
@@ -234,17 +228,17 @@ export class ItemModelBuilder extends ItemPredicateClass {
         property: 'count',
         entries,
         fallback: this.onFalseModel || { type: 'empty' },
-      } as JSONItemModel
+      } as JsonItemModel
     }
 
     // Build nested conditions from predicates
-    const onTrue = this.onTrueModel || { type: 'empty' } as JSONItemModel
-    const onFalse = this.onFalseModel || { type: 'empty' } as JSONItemModel
+    const onTrue = this.onTrueModel || { type: 'empty' } as JsonItemModel
+    const onFalse = this.onFalseModel || { type: 'empty' } as JsonItemModel
 
     return this.buildNestedConditions(0, onTrue, onFalse)
   }
 
-  private buildNestedConditions(index: number, onTrue: JSONItemModel, onFalse: JSONItemModel): JSONItemModel {
+  private buildNestedConditions(index: number, onTrue: JsonItemModel, onFalse: JsonItemModel): JsonItemModel {
     if (index >= this.testGroups.length) {
       return onTrue
     }
@@ -257,9 +251,9 @@ export class ItemModelBuilder extends ItemPredicateClass {
 
   private testToCondition(
     test: { negated: boolean; component: string; operator: string; value?: unknown },
-    onTrue: JSONItemModel,
-    onFalse: JSONItemModel,
-  ): JSONItemModel {
+    onTrue: JsonItemModel,
+    onFalse: JsonItemModel,
+  ): JsonItemModel {
     // Handle negation by swapping branches
     const [trueModel, falseModel] = test.negated ? [onFalse, onTrue] : [onTrue, onFalse]
 
@@ -271,7 +265,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
           component: test.component,
           on_true: trueModel,
           on_false: falseModel,
-        } as JSONItemModel
+        } as JsonItemModel
 
       case '=':
       case '~':
@@ -283,7 +277,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
           value: test.value,
           on_true: trueModel,
           on_false: falseModel,
-        } as JSONItemModel
+        } as JsonItemModel
 
       default:
         throw new Error(`Unknown predicate operator: ${test.operator}`)
@@ -303,8 +297,8 @@ export class ItemModelDefinitionNode extends ContainerNode implements ResourceNo
 }
 
 export type ItemModelDefinitionInput =
-  | JSONItemDefinition
-  | JSONItemModel
+  | JsonItemDefinition
+  | JsonItemModel
   | ItemModelBuilder
   | ((builder: ItemModelBuilder) => ItemModelBuilder)
 
@@ -319,7 +313,7 @@ export type ItemModelDefinitionClassArguments = {
 export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionNode> {
   static readonly resourceType = 'item_definition'
 
-  itemDefinitionJSON: JSONItemDefinition
+  itemDefinitionJSON: JsonItemDefinition
 
   constructor(
     core: SandstoneCore,
@@ -339,7 +333,7 @@ export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionN
     this.handleConflicts()
   }
 
-  private resolveDefinitionInput(input: ItemModelDefinitionInput): JSONItemDefinition {
+  private resolveDefinitionInput(input: ItemModelDefinitionInput): JsonItemDefinition {
     // Callback
     if (typeof input === 'function') {
       const builder = new ItemModelBuilder(this.core.pack)
@@ -351,10 +345,10 @@ export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionN
     }
     // Full ItemModelDefinition JSON (has 'model' property that is an object with 'type')
     if (input && 'model' in input && input.model && typeof input.model === 'object' && 'type' in input.model) {
-      return input as JSONItemDefinition
+      return input as JsonItemDefinition
     }
     // Raw ItemModel JSON (wrap in definition)
-    return { model: input as JSONItemModel }
+    return { model: input as JsonItemModel }
   }
 
   toString = () => `${this.path[0]}:${this.path.slice(2).join('/')}`

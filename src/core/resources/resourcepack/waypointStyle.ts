@@ -1,8 +1,9 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft waypoint style.
@@ -22,7 +23,7 @@ export type WaypointStyleClassArguments = {
   /**
    * The waypoint style's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof WaypointStyleClass)['resourceType']]
+  json: JsonSymbolResource[(typeof WaypointStyleClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class WaypointStyleClass extends ResourceClass<WaypointStyleNode> {

@@ -1,8 +1,9 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 // ============================================================================
 // Timeline
@@ -26,7 +27,7 @@ export type TimelineClassArguments = {
   /**
    * The timeline's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof TimelineClass)['resourceType']]
+  json: JsonSymbolResource[(typeof TimelineClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TimelineClass extends ResourceClass<TimelineNode> {
@@ -72,7 +73,7 @@ export type WorldClockClassArguments = {
   /**
    * The world clock's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof WorldClockClass)['resourceType']]
+  json: JsonSymbolResource[(typeof WorldClockClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class WorldClockClass extends ResourceClass<WorldClockNode> {

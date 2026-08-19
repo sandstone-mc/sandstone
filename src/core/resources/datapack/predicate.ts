@@ -1,9 +1,10 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft predicate.
@@ -19,13 +20,13 @@ export class PredicateNode extends ContainerNode implements ResourceNode<Predica
   getValue = () => jsonStringify(this.resource.predicateJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-type PredicateJSON = NonNullable</*Json*/SymbolResource['predicate']>
+type PredicateJSON = NonNullable<JsonSymbolResource['predicate']>
 
 export type PredicateClassArguments = {
   /**
    * The predicate's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof PredicateClass)['resourceType']]
+  json: JsonSymbolResource[(typeof PredicateClass)['resourceType']]
 } & ResourceClassArguments<'list'>
 
 type Predicate = PredicateJSON | PredicateClass

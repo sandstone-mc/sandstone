@@ -1,9 +1,10 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft slot source.
@@ -23,7 +24,7 @@ export type SlotSourceClassArguments = {
   /**
    * The slot source's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof SlotSourceClass)['resourceType']]
+  json: JsonSymbolResource[(typeof SlotSourceClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class SlotSourceClass extends ResourceClass<SlotSourceNode> implements ConditionClass {

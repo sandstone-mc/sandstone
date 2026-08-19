@@ -1,8 +1,9 @@
-import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
  * A node representing a Minecraft trim pattern.
@@ -23,7 +24,7 @@ export type TrimPatternClassArguments = {
   /**
    * The trim pattern's JSON.
    */
-  json: /*Json*/SymbolResource[(typeof TrimPatternClass)['resourceType']]
+  json: JsonSymbolResource[(typeof TrimPatternClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TrimPatternClass extends ResourceClass<TrimPatternNode> {

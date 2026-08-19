@@ -30,7 +30,7 @@
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.6.0",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.3.12",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.3.13",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
@@ -71,7 +71,9 @@
     "publishToNpm": "bun dev:build && bun publish",
     "format": "bun oxlint src --fix",
     "lint": "bun oxlint src",
-    "update-from-mcdoc": "MCDOC_TARGET_VERSION=26.3 mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig"
+    "update-from-mcdoc": "bun run update-from-mcdoc:types && bun run update-from-mcdoc:json",
+    "update-from-mcdoc:types": "MCDOC_TARGET_VERSION=26.3 mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig",
+    "update-from-mcdoc:json": "MCDOC_TARGET_VERSION=26.3 MCDOC_TYPE_PREFIX=Json MCDOC_ALLOW_JS_NUMBER=1 MCDOC_IMPORT_ROOT=sandstone/arguments/generated/_json mcdoc-ts-generator --out-dir \"src/arguments/generated/_json/\" --no-tsconfig"
   },
   "type": "module",
   "main": "dist/exports/index.js",
