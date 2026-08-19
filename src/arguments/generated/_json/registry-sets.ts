@@ -1,0 +1,365 @@
+export { JSONADVANCEMENTS_SET } from './_registry/advancements.ts'
+
+export { JSONBANNER_PATTERNS_SET } from './_registry/banner_patterns.ts'
+
+export { JSONCAT_SOUND_VARIANTS_SET } from './_registry/cat_sound_variants.ts'
+
+export { JSONCAT_VARIANTS_SET } from './_registry/cat_variants.ts'
+
+export { JSONCHAT_TYPES_SET } from './_registry/chat_types.ts'
+
+export { JSONCHICKEN_SOUND_VARIANTS_SET } from './_registry/chicken_sound_variants.ts'
+
+export { JSONCHICKEN_VARIANTS_SET } from './_registry/chicken_variants.ts'
+
+export { JSONCOW_SOUND_VARIANTS_SET } from './_registry/cow_sound_variants.ts'
+
+export { JSONCOW_VARIANTS_SET } from './_registry/cow_variants.ts'
+
+export { JSONDAMAGE_TYPES_SET } from './_registry/damage_types.ts'
+
+export { JSONDECORATED_POT_PATTERNS_SET } from './_registry/decorated_pot_patterns.ts'
+
+export { JSONDIALOGS_SET } from './_registry/dialogs.ts'
+
+export { JSONDIMENSIONS_SET } from './_registry/dimensions.ts'
+
+export { JSONDIMENSION_TYPES_SET } from './_registry/dimension_types.ts'
+
+export { JSONENCHANTMENTS_SET } from './_registry/enchantments.ts'
+
+export { JSONENCHANTMENT_PROVIDERS_SET } from './_registry/enchantment_providers.ts'
+
+export { JSONFROG_VARIANTS_SET } from './_registry/frog_variants.ts'
+
+export { JSONINSTRUMENTS_SET } from './_registry/instruments.ts'
+
+export { JSONJUKEBOX_SONGS_SET } from './_registry/jukebox_songs.ts'
+
+export { JSONLOOT_TABLES_SET } from './_registry/loot_tables.ts'
+
+export { JSONNUMBER_PROVIDERS_SET } from './_registry/number_providers.ts'
+
+export { JSONPAINTING_VARIANTS_SET } from './_registry/painting_variants.ts'
+
+export { JSONPIG_SOUND_VARIANTS_SET } from './_registry/pig_sound_variants.ts'
+
+export { JSONPIG_VARIANTS_SET } from './_registry/pig_variants.ts'
+
+export { JSONPREDICATES_SET } from './_registry/predicates.ts'
+
+export { JSONRECIPES_SET } from './_registry/recipes.ts'
+
+export { JSONSTRUCTURES_SET } from './_registry/structures.ts'
+
+export { JSONSULFUR_CUBE_ARCHETYPES_SET } from './_registry/sulfur_cube_archetypes.ts'
+
+export { JSONTEST_ENVIRONMENTS_SET } from './_registry/test_environments.ts'
+
+export { JSONTEST_INSTANCES_SET } from './_registry/test_instances.ts'
+
+export { JSONTIMELINES_SET } from './_registry/timelines.ts'
+
+export { JSONTRADE_SETS_SET } from './_registry/trade_sets.ts'
+
+export { JSONTRIAL_SPAWNERS_SET } from './_registry/trial_spawners.ts'
+
+export { JSONTRIM_MATERIALS_SET } from './_registry/trim_materials.ts'
+
+export { JSONTRIM_PATTERNS_SET } from './_registry/trim_patterns.ts'
+
+export { JSONVILLAGER_TRADES_SET } from './_registry/villager_trades.ts'
+
+export { JSONWOLF_SOUND_VARIANTS_SET } from './_registry/wolf_sound_variants.ts'
+
+export { JSONWOLF_VARIANTS_SET } from './_registry/wolf_variants.ts'
+
+export { JSONWORLD_CLOCKS_SET } from './_registry/world_clocks.ts'
+
+export { JSONZOMBIE_NAUTILUS_VARIANTS_SET } from './_registry/zombie_nautilus_variants.ts'
+
+export { JSONTAG_BANNER_PATTERNS_SET } from './_registry/tag_banner_patterns.ts'
+
+export { JSONTAG_DAMAGE_TYPES_SET } from './_registry/tag_damage_types.ts'
+
+export { JSONTAG_DIALOGS_SET } from './_registry/tag_dialogs.ts'
+
+export { JSONTAG_ENCHANTMENTS_SET } from './_registry/tag_enchantments.ts'
+
+export { JSONTAG_INSTRUMENTS_SET } from './_registry/tag_instruments.ts'
+
+export { JSONTAG_PAINTING_VARIANTS_SET } from './_registry/tag_painting_variants.ts'
+
+export { JSONTAG_TIMELINES_SET } from './_registry/tag_timelines.ts'
+
+export { JSONTAG_VILLAGER_TRADES_SET } from './_registry/tag_villager_trades.ts'
+
+export { JSONTAG_BLOCKS_SET } from './_registry/tag_blocks.ts'
+
+export { JSONTAG_ENTITY_TYPES_SET } from './_registry/tag_entity_types.ts'
+
+export { JSONTAG_FLUIDS_SET } from './_registry/tag_fluids.ts'
+
+export { JSONTAG_GAME_EVENTS_SET } from './_registry/tag_game_events.ts'
+
+export { JSONTAG_ITEMS_SET } from './_registry/tag_items.ts'
+
+export { JSONTAG_POINT_OF_INTEREST_TYPES_SET } from './_registry/tag_point_of_interest_types.ts'
+
+export { JSONTAG_POTIONS_SET } from './_registry/tag_potions.ts'
+
+export { JSONTAG_WORLDGEN_FEATURES_SET } from './_registry/tag_worldgen_features.ts'
+
+export { JSONTAG_WORLDGEN_BIOMES_SET } from './_registry/tag_worldgen_biomes.ts'
+
+export {
+  JSONTAG_WORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS_SET,
+} from './_registry/tag_worldgen_flat_level_generator_presets.ts'
+
+export { JSONTAG_WORLDGEN_STRUCTURES_SET } from './_registry/tag_worldgen_structures.ts'
+
+export { JSONTAG_WORLDGEN_WORLD_PRESETS_SET } from './_registry/tag_worldgen_world_presets.ts'
+
+export { JSONWORLDGEN_BIOMES_SET } from './_registry/worldgen_biomes.ts'
+
+export { JSONWORLDGEN_CARVERS_SET } from './_registry/worldgen_carvers.ts'
+
+export { JSONWORLDGEN_DENSITY_FUNCTIONS_SET } from './_registry/worldgen_density_functions.ts'
+
+export { JSONWORLDGEN_FEATURES_SET } from './_registry/worldgen_features.ts'
+
+export { JSONWORLDGEN_FLAT_LEVEL_GENERATOR_PRESETS_SET } from './_registry/worldgen_flat_level_generator_presets.ts'
+
+export { JSONWORLDGEN_MATERIAL_CONDITIONS_SET } from './_registry/worldgen_material_conditions.ts'
+
+export { JSONWORLDGEN_MATERIAL_RULES_SET } from './_registry/worldgen_material_rules.ts'
+
+export {
+  JSONWORLDGEN_MULTI_NOISE_BIOME_SOURCE_PARAMETER_LISTS_SET,
+} from './_registry/worldgen_multi_noise_biome_source_parameter_lists.ts'
+
+export { JSONWORLDGEN_NOISES_SET } from './_registry/worldgen_noises.ts'
+
+export { JSONWORLDGEN_NOISE_SETTINGS_SET } from './_registry/worldgen_noise_settings.ts'
+
+export { JSONWORLDGEN_PLACED_FEATURES_SET } from './_registry/worldgen_placed_features.ts'
+
+export { JSONWORLDGEN_PROCESSOR_LISTS_SET } from './_registry/worldgen_processor_lists.ts'
+
+export { JSONWORLDGEN_STRUCTURES_SET } from './_registry/worldgen_structures.ts'
+
+export { JSONWORLDGEN_STRUCTURE_SETS_SET } from './_registry/worldgen_structure_sets.ts'
+
+export { JSONWORLDGEN_TEMPLATE_POOLS_SET } from './_registry/worldgen_template_pools.ts'
+
+export { JSONWORLDGEN_WORLD_PRESETS_SET } from './_registry/worldgen_world_presets.ts'
+
+export { JSONTRANSLATION_KEYS_SET } from './_registry/translation_keys.ts'
+
+export { JSONATLASES_SET } from './_registry/atlases.ts'
+
+export { JSONBLOCK_DEFINITIONS_SET } from './_registry/block_definitions.ts'
+
+export { JSONEQUIPMENTS_SET } from './_registry/equipments.ts'
+
+export { JSONFONTS_SET } from './_registry/fonts.ts'
+
+export { JSONITEM_DEFINITIONS_SET } from './_registry/item_definitions.ts'
+
+export { JSONLANGS_SET } from './_registry/langs.ts'
+
+export { JSONMODELS_SET } from './_registry/models.ts'
+
+export { JSONPOST_EFFECTS_SET } from './_registry/post_effects.ts'
+
+export { JSONSOUNDS_SET } from './_registry/sounds.ts'
+
+export { JSONTEXTURES_SET } from './_registry/textures.ts'
+
+export { JSONACTIVITIES_SET } from './_registry/activities.ts'
+
+export { JSONATTRIBUTES_SET } from './_registry/attributes.ts'
+
+export { JSONATTRIBUTE_TYPES_SET } from './_registry/attribute_types.ts'
+
+export { JSONBLOCKS_SET } from './_registry/blocks.ts'
+
+export { JSONBLOCK_ENTITY_TYPES_SET } from './_registry/block_entity_types.ts'
+
+export { JSONBLOCK_PREDICATE_TYPES_SET } from './_registry/block_predicate_types.ts'
+
+export { JSONCHUNK_STATUSES_SET } from './_registry/chunk_statuses.ts'
+
+export { JSONCOMMAND_ARGUMENT_TYPES_SET } from './_registry/command_argument_types.ts'
+
+export { JSONCONSUME_EFFECT_TYPES_SET } from './_registry/consume_effect_types.ts'
+
+export { JSONCREATIVE_MODE_TABS_SET } from './_registry/creative_mode_tabs.ts'
+
+export { JSONCUSTOM_STATS_SET } from './_registry/custom_stats.ts'
+
+export { JSONDATA_COMPONENT_PREDICATE_TYPES_SET } from './_registry/data_component_predicate_types.ts'
+
+export { JSONDATA_COMPONENT_TYPES_SET } from './_registry/data_component_types.ts'
+
+export { JSONDEBUG_SUBSCRIPTIONS_SET } from './_registry/debug_subscriptions.ts'
+
+export { JSONDIALOG_ACTION_TYPES_SET } from './_registry/dialog_action_types.ts'
+
+export { JSONDIALOG_BODY_TYPES_SET } from './_registry/dialog_body_types.ts'
+
+export { JSONDIALOG_TYPES_SET } from './_registry/dialog_types.ts'
+
+export { JSONENCHANTMENT_EFFECT_COMPONENT_TYPES_SET } from './_registry/enchantment_effect_component_types.ts'
+
+export { JSONENCHANTMENT_ENTITY_EFFECT_TYPES_SET } from './_registry/enchantment_entity_effect_types.ts'
+
+export { JSONENCHANTMENT_LEVEL_BASED_VALUE_TYPES_SET } from './_registry/enchantment_level_based_value_types.ts'
+
+export {
+  JSONENCHANTMENT_LOCATION_BASED_EFFECT_TYPES_SET,
+} from './_registry/enchantment_location_based_effect_types.ts'
+
+export { JSONENCHANTMENT_PROVIDER_TYPES_SET } from './_registry/enchantment_provider_types.ts'
+
+export { JSONENCHANTMENT_VALUE_EFFECT_TYPES_SET } from './_registry/enchantment_value_effect_types.ts'
+
+export { JSONENTITY_SUB_PREDICATE_TYPES_SET } from './_registry/entity_sub_predicate_types.ts'
+
+export { JSONENTITY_TYPES_SET } from './_registry/entity_types.ts'
+
+export { JSONENVIRONMENT_ATTRIBUTES_SET } from './_registry/environment_attributes.ts'
+
+export { JSONFLOAT_PROVIDER_TYPES_SET } from './_registry/float_provider_types.ts'
+
+export { JSONFLUIDS_SET } from './_registry/fluids.ts'
+
+export { JSONGAME_EVENTS_SET } from './_registry/game_events.ts'
+
+export { JSONGAME_RULES_SET } from './_registry/game_rules.ts'
+
+export { JSONHEIGHT_PROVIDER_TYPES_SET } from './_registry/height_provider_types.ts'
+
+export { JSONINCOMING_RPC_METHODS_SET } from './_registry/incoming_rpc_methods.ts'
+
+export { JSONINPUT_CONTROL_TYPES_SET } from './_registry/input_control_types.ts'
+
+export { JSONINT_PROVIDER_TYPES_SET } from './_registry/int_provider_types.ts'
+
+export { JSONITEMS_SET } from './_registry/items.ts'
+
+export { JSONLOOT_CONDITION_TYPES_SET } from './_registry/loot_condition_types.ts'
+
+export { JSONLOOT_FUNCTION_TYPES_SET } from './_registry/loot_function_types.ts'
+
+export { JSONLOOT_NBT_PROVIDER_TYPES_SET } from './_registry/loot_nbt_provider_types.ts'
+
+export { JSONLOOT_NUMBER_PROVIDER_TYPES_SET } from './_registry/loot_number_provider_types.ts'
+
+export { JSONLOOT_POOL_ENTRY_TYPES_SET } from './_registry/loot_pool_entry_types.ts'
+
+export { JSONLOOT_SCORE_PROVIDER_TYPES_SET } from './_registry/loot_score_provider_types.ts'
+
+export { JSONMAP_DECORATION_TYPES_SET } from './_registry/map_decoration_types.ts'
+
+export { JSONMEMORY_MODULE_TYPES_SET } from './_registry/memory_module_types.ts'
+
+export { JSONMENUS_SET } from './_registry/menus.ts'
+
+export { JSONMOB_EFFECTS_SET } from './_registry/mob_effects.ts'
+
+export { JSONNUMBER_FORMAT_TYPES_SET } from './_registry/number_format_types.ts'
+
+export { JSONOUTGOING_RPC_METHODS_SET } from './_registry/outgoing_rpc_methods.ts'
+
+export { JSONPARTICLE_TYPES_SET } from './_registry/particle_types.ts'
+
+export { JSONPERMISSION_CHECK_TYPES_SET } from './_registry/permission_check_types.ts'
+
+export { JSONPERMISSION_TYPES_SET } from './_registry/permission_types.ts'
+
+export { JSONPOINT_OF_INTEREST_TYPES_SET } from './_registry/point_of_interest_types.ts'
+
+export { JSONPOS_RULE_TESTS_SET } from './_registry/pos_rule_tests.ts'
+
+export { JSONPOSITION_SOURCE_TYPES_SET } from './_registry/position_source_types.ts'
+
+export { JSONPOTIONS_SET } from './_registry/potions.ts'
+
+export { JSONRECIPE_BOOK_CATEGORIES_SET } from './_registry/recipe_book_categories.ts'
+
+export { JSONRECIPE_DISPLAYS_SET } from './_registry/recipe_displays.ts'
+
+export { JSONRECIPE_SERIALIZERS_SET } from './_registry/recipe_serializers.ts'
+
+export { JSONRECIPE_TYPES_SET } from './_registry/recipe_types.ts'
+
+export { JSONRULE_BLOCK_ENTITY_MODIFIERS_SET } from './_registry/rule_block_entity_modifiers.ts'
+
+export { JSONRULE_TESTS_SET } from './_registry/rule_tests.ts'
+
+export { JSONSENSOR_TYPES_SET } from './_registry/sensor_types.ts'
+
+export { JSONSLOT_DISPLAYS_SET } from './_registry/slot_displays.ts'
+
+export { JSONSLOT_SOURCE_TYPES_SET } from './_registry/slot_source_types.ts'
+
+export { JSONSOUND_EVENTS_SET } from './_registry/sound_events.ts'
+
+export { JSONSPAWN_CONDITION_TYPES_SET } from './_registry/spawn_condition_types.ts'
+
+export { JSONSTAT_TYPES_SET } from './_registry/stat_types.ts'
+
+export { JSONTEST_ENVIRONMENT_DEFINITION_TYPES_SET } from './_registry/test_environment_definition_types.ts'
+
+export { JSONTEST_FUNCTIONS_SET } from './_registry/test_functions.ts'
+
+export { JSONTEST_INSTANCE_TYPES_SET } from './_registry/test_instance_types.ts'
+
+export { JSONTRIGGER_TYPES_SET } from './_registry/trigger_types.ts'
+
+export { JSONTICKET_TYPES_SET } from './_registry/ticket_types.ts'
+
+export { JSONVILLAGER_PROFESSIONS_SET } from './_registry/villager_professions.ts'
+
+export { JSONVILLAGER_TYPES_SET } from './_registry/villager_types.ts'
+
+export { JSONWORLDGEN_BIOME_SOURCES_SET } from './_registry/worldgen_biome_sources.ts'
+
+export { JSONWORLDGEN_BLOCK_STATE_PROVIDER_TYPES_SET } from './_registry/worldgen_block_state_provider_types.ts'
+
+export { JSONWORLDGEN_CARVER_TYPES_SET } from './_registry/worldgen_carver_types.ts'
+
+export { JSONWORLDGEN_CHUNK_GENERATORS_SET } from './_registry/worldgen_chunk_generators.ts'
+
+export { JSONWORLDGEN_DENSITY_FUNCTION_TYPES_SET } from './_registry/worldgen_density_function_types.ts'
+
+export { JSONWORLDGEN_FEATURE_SIZE_TYPES_SET } from './_registry/worldgen_feature_size_types.ts'
+
+export { JSONWORLDGEN_FEATURE_TYPES_SET } from './_registry/worldgen_feature_types.ts'
+
+export { JSONWORLDGEN_FOLIAGE_PLACER_TYPES_SET } from './_registry/worldgen_foliage_placer_types.ts'
+
+export { JSONWORLDGEN_MATERIAL_CONDITION_TYPES_SET } from './_registry/worldgen_material_condition_types.ts'
+
+export { JSONWORLDGEN_MATERIAL_RULE_TYPES_SET } from './_registry/worldgen_material_rule_types.ts'
+
+export { JSONWORLDGEN_PLACEMENT_MODIFIER_TYPES_SET } from './_registry/worldgen_placement_modifier_types.ts'
+
+export { JSONWORLDGEN_POOL_ALIAS_BINDINGS_SET } from './_registry/worldgen_pool_alias_bindings.ts'
+
+export { JSONWORLDGEN_ROOT_PLACER_TYPES_SET } from './_registry/worldgen_root_placer_types.ts'
+
+export { JSONWORLDGEN_STRUCTURE_PIECES_SET } from './_registry/worldgen_structure_pieces.ts'
+
+export { JSONWORLDGEN_STRUCTURE_PLACEMENTS_SET } from './_registry/worldgen_structure_placements.ts'
+
+export { JSONWORLDGEN_STRUCTURE_POOL_ELEMENTS_SET } from './_registry/worldgen_structure_pool_elements.ts'
+
+export { JSONWORLDGEN_STRUCTURE_PROCESSORS_SET } from './_registry/worldgen_structure_processors.ts'
+
+export { JSONWORLDGEN_STRUCTURE_TYPES_SET } from './_registry/worldgen_structure_types.ts'
+
+export { JSONWORLDGEN_TREE_DECORATOR_TYPES_SET } from './_registry/worldgen_tree_decorator_types.ts'
+
+export { JSONWORLDGEN_TRUNK_PLACER_TYPES_SET } from './_registry/worldgen_trunk_placer_types.ts'

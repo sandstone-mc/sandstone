@@ -1,4 +1,4 @@
-import type { NBTObject, RootNBT } from 'sandstone/arguments'
+import type { JsonNBTObject, NBTObject, RootNBT } from 'sandstone/arguments'
 import type { MacroArgument } from 'sandstone/core'
 import { makeCallable } from 'sandstone/utils'
 import * as util from 'util'
@@ -109,16 +109,16 @@ export class NBTIntArray<Range extends NBTRange = {}> extends NBTTypedArray {
   }
 }
 
-// type NonEmptyList<Type extends NBTObject> = (
-//   Type[]
-//   & {
-//     0: Type,
-
-//   }
-// )
-
 // TODO
 export type NBTList<Type extends NBTObject, Range extends NBTRange = {}> = Range['min'] extends 1 ? Range['leftExclusive'] extends false ? (Type[] & { 0: Type }) : Type[] : Type[]
+
+/**
+ * `NBTList` for the generated JSON surface (`arguments/generated/_json`).
+ *
+ * Identical to `NBTList`, but constrained to `JsonNBTObject` so the element
+ * type stays within that surface.
+ */
+export type JsonNBTList<Type extends JsonNBTObject, Range extends NBTRange = {}> = Range['min'] extends 1 ? Range['leftExclusive'] extends false ? (Type[] & { 0: Type }) : Type[] : Type[]
 
 export class NotNBT<VALUE extends RootNBT = RootNBT> extends NBTClass {
   nbt

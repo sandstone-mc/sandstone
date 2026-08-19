@@ -1,0 +1,12 @@
+import { Set } from 'sandstone'
+import type { NamespacedLiteralUnion, SetType } from 'sandstone'
+
+export type JSONWORLDGEN_STRUCTURE_PLACEMENTS = (
+  | NamespacedLiteralUnion<SetType<typeof JSONWORLDGEN_STRUCTURE_PLACEMENTS_SET>>
+  | `minecraft:${SetType<typeof JSONWORLDGEN_STRUCTURE_PLACEMENTS_SET>}`)
+
+export const JSONWORLDGEN_STRUCTURE_PLACEMENTS_SET = new Set([
+  'concentric_rings',
+  'dimension_origin',
+  'random_spread',
+] as const)

@@ -1,0 +1,16 @@
+import { Set } from 'sandstone'
+import type { NamespacedLiteralUnion, SetType } from 'sandstone'
+
+export type JSONTEST_ENVIRONMENT_DEFINITION_TYPES = (
+  | NamespacedLiteralUnion<SetType<typeof JSONTEST_ENVIRONMENT_DEFINITION_TYPES_SET>>
+  | `minecraft:${SetType<typeof JSONTEST_ENVIRONMENT_DEFINITION_TYPES_SET>}`)
+
+export const JSONTEST_ENVIRONMENT_DEFINITION_TYPES_SET = new Set([
+  'all_of',
+  'clock_time',
+  'difficulty',
+  'function',
+  'game_rules',
+  'timeline_attributes',
+  'weather',
+] as const)
