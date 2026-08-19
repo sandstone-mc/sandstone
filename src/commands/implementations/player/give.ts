@@ -1,4 +1,4 @@
-import type { MCDocToJSON, MultiplePlayersArgumentOf, RootNBT, SymbolDataComponent } from 'sandstone/arguments'
+import type { MultiplePlayersArgumentOf, RootNBT, SymbolDataComponent } from 'sandstone/arguments'
 import type { Macroable, MacroArgument } from 'sandstone/core'
 import { CommandNode, isMacroArgument } from 'sandstone/core'
 import { nbtResolver, targetParser } from 'sandstone/variables'
@@ -99,7 +99,7 @@ export class GiveCommand<MACRO extends boolean> extends CommandArguments {
   give<T extends string>(
     targets: Macroable<MultiplePlayersArgumentOf<MACRO, T>, MACRO>,
     item: Macroable<Registry['minecraft:item'], MACRO>,
-    components: Macroable<MemberModifiers<MCDocToJSON<SymbolDataComponent>>, MACRO>,
+    components: Macroable<MemberModifiers</*Json*/SymbolDataComponent>, MACRO>,
     count?: Macroable<number, MACRO>,
   ): FinalCommandOutput
 

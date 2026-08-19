@@ -329,7 +329,7 @@ export type Respawn = ({
   forced?: boolean,
 } & {
   /**
-   * Dimension of the player's respawn point. Defaults to overworl.
+   * Dimension of the player's respawn point.
    */
   dimension: Registry['minecraft:dimension'],
 })

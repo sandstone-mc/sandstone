@@ -1,9 +1,9 @@
-import path from 'node:path'
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource, type SOUND_TYPES } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource, type SOUND_TYPES } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
+import { SOUNDS } from 'sandstone/arguments/generated/_registry/sounds'
 
 /**
  * A node representing a Minecraft sound.
@@ -75,8 +75,8 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
                 addToSandstoneCore: true,
                 creator: 'sandstone',
                 definitions: {
-                  [`${this.type}.${name}`]: {
-                    sounds: [`${this.type}.${name}`],
+                  [`${this.type}.${name}` as SOUNDS]: {
+                    sounds: [`${this.type}.${name}` as SOUNDS],
                   }
                 }
               }),
@@ -110,7 +110,7 @@ export class SoundsIndexNode extends ContainerNode implements ResourceNode<Sound
   getValue = () => jsonStringify(this.resource.soundsJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-type SoundsJSON = NonNullable<MCDocToJSON<SymbolResource['sounds']>>
+type SoundsJSON = NonNullable</*Json*/SymbolResource['sounds']>
 
 export type SoundsIndexArguments = {
   /**

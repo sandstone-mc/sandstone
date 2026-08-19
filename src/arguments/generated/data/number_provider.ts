@@ -15,6 +15,31 @@ import type {
   TagClass,
 } from 'sandstone'
 
+export type AggregateNumberProvider = {
+  operands: AggregateOperands,
+}
+
+/**
+ * *either*
+ *
+ * *item 0*
+ *
+ * *or*
+ *
+ * *item 1*
+ *
+ * *or*
+ *
+ * List length range: 1..
+ */
+export type AggregateOperands = (NumberProvider | (
+  | Registry['minecraft:number_provider']
+  | `#${string}:${string}`
+  | TagClass<'number_provider'>) | NBTList<(Registry['minecraft:number_provider'] | NumberProvider), {
+    leftExclusive: false,
+    min: 1,
+  }>)
+
 export type BinomialNumberProvider = {
   n: NumberProviderRef,
   p: NumberProviderRef,
@@ -102,10 +127,6 @@ export type StorageNumberProvider = {
   path: NonEmptyString | DataPointClass,
 }
 
-export type SumNumberProvider = {
-  summands: NumberProviderListRef,
-}
-
 export type UniformNumberProvider = {
   min?: NumberProviderRef,
   max?: NumberProviderRef,
@@ -115,6 +136,8 @@ export type WeightedNumberProvider = {
   distribution: NonEmptyWeightedList<NumberProviderRef>,
 }
 type NumberProviderDispatcherMap = {
+  'average': NumberProviderAverage,
+  'minecraft:average': NumberProviderAverage,
   'binomial': NumberProviderBinomial,
   'minecraft:binomial': NumberProviderBinomial,
   'conditional': NumberProviderConditional,
@@ -125,8 +148,14 @@ type NumberProviderDispatcherMap = {
   'minecraft:enchantment_level': NumberProviderEnchantmentLevel,
   'environment_attribute': NumberProviderEnvironmentAttribute,
   'minecraft:environment_attribute': NumberProviderEnvironmentAttribute,
+  'maximum': NumberProviderMaximum,
+  'minecraft:maximum': NumberProviderMaximum,
+  'minimum': NumberProviderMinimum,
+  'minecraft:minimum': NumberProviderMinimum,
   'number_dispatcher': NumberProviderNumberDispatcher,
   'minecraft:number_dispatcher': NumberProviderNumberDispatcher,
+  'product': NumberProviderProduct,
+  'minecraft:product': NumberProviderProduct,
   'score': NumberProviderScore,
   'minecraft:score': NumberProviderScore,
   'storage': NumberProviderStorage,
@@ -140,27 +169,35 @@ type NumberProviderDispatcherMap = {
 }
 type NumberProviderKeys = keyof NumberProviderDispatcherMap
 type NumberProviderFallback = (
+  | NumberProviderAverage
   | NumberProviderBinomial
   | NumberProviderConditional
   | NumberProviderConstant
   | NumberProviderEnchantmentLevel
   | NumberProviderEnvironmentAttribute
+  | NumberProviderMaximum
+  | NumberProviderMinimum
   | NumberProviderNumberDispatcher
+  | NumberProviderProduct
   | NumberProviderScore
   | NumberProviderStorage
   | NumberProviderSum
   | NumberProviderUniform
   | NumberProviderWeightedList)
 type NumberProviderNoneType = UniformNumberProvider
+type NumberProviderAverage = AggregateNumberProvider
 type NumberProviderBinomial = BinomialNumberProvider
 type NumberProviderConditional = ConditionalNumberProvider
 type NumberProviderConstant = ConstantNumberProvider
 type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
 type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider
+type NumberProviderMaximum = AggregateNumberProvider
+type NumberProviderMinimum = AggregateNumberProvider
 type NumberProviderNumberDispatcher = NumberDispatcher
+type NumberProviderProduct = AggregateNumberProvider
 type NumberProviderScore = ScoreNumberProvider
 type NumberProviderStorage = StorageNumberProvider
-type NumberProviderSum = SumNumberProvider
+type NumberProviderSum = AggregateNumberProvider
 type NumberProviderUniform = UniformNumberProvider
 type NumberProviderWeightedList = WeightedNumberProvider
 export type SymbolNumberProvider<CASE extends

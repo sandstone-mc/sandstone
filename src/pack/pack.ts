@@ -11,7 +11,6 @@ import type {
   TEXTURE_TYPES,
   TimeArgument,
   OBJECTIVE_CRITERIA,
-  MCDocToJSON,
 } from 'sandstone/arguments'
 import type { StoreType } from 'sandstone/commands'
 import { SandstoneCommands } from 'sandstone/commands'
@@ -1118,7 +1117,7 @@ export class SandstonePack {
     return new RawResource()
   }
 
-  Advancement<AdvancementJSON extends MCDocToJSON<SymbolResource['advancement']>>(
+  Advancement<AdvancementJSON extends /*Json*/SymbolResource['advancement']>(
     name: string,
     json: AdvancementJSON,
     options?: Omit<Partial<AdvancementClassArguments>, 'json'>,
@@ -1179,7 +1178,7 @@ export class SandstonePack {
 
   Recipe = <P1 extends string = string, P2 extends string = string, P3 extends string = string>(
     name: string,
-    recipe: MCDocToJSON<RecipeJSON<P1, P2, P3>>,
+    recipe: /*Json*/RecipeJSON<P1, P2, P3>,
     options?: Omit<Partial<RecipeClassArguments>, 'json'>,
   ) =>
     new RecipeClass(this.core, name, {

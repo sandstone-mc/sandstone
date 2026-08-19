@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,7 +22,7 @@ export type EquipmentClassArguments = {
   /**
    * The equipment's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof EquipmentClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof EquipmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class EquipmentClass extends ResourceClass<EquipmentNode> {

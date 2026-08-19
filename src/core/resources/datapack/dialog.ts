@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -22,7 +22,7 @@ export type DialogClassArguments = {
   /**
    * The dialog's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof DialogClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof DialogClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class DialogClass extends ResourceClass<DialogNode> {

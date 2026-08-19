@@ -99,31 +99,31 @@ export type NineSlice = {
 export type NineSliceBorder = {
   /**
    * Value:
-   * Range: 1..
+   * Range: 0..
    */
   left: NBTInt<{
-    min: 1,
+    min: 0,
   }>,
   /**
    * Value:
-   * Range: 1..
+   * Range: 0..
    */
   top: NBTInt<{
-    min: 1,
+    min: 0,
   }>,
   /**
    * Value:
-   * Range: 1..
+   * Range: 0..
    */
   right: NBTInt<{
-    min: 1,
+    min: 0,
   }>,
   /**
    * Value:
-   * Range: 1..
+   * Range: 0..
    */
   bottom: NBTInt<{
-    min: 1,
+    min: 0,
   }>,
 }
 

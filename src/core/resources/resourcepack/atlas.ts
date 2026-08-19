@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
@@ -23,7 +23,7 @@ export type AtlasClassArguments = {
   /**
    * The atlas JSON.
    */
-  json?: MCDocToJSON<SymbolResource[(typeof AtlasClass)['resourceType']]>
+  json?: /*Json*/SymbolResource[(typeof AtlasClass)['resourceType']]
 } & ResourceClassArguments<'list'>
 
 export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {
@@ -46,7 +46,7 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     this.handleConflicts()
   }
 
-  push(...sources: MCDocToJSON<SpriteSource>[] | AtlasClass[]) {
+  push(...sources: /*Json*/SpriteSource[] | AtlasClass[]) {
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */
@@ -58,7 +58,7 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     }
   }
 
-  unshift(...sources: MCDocToJSON<SpriteSource>[] | AtlasClass[]) {
+  unshift(...sources: /*Json*/SpriteSource[] | AtlasClass[]) {
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */

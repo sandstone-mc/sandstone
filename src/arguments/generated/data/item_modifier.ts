@@ -6,3 +6,5 @@ export type ItemModifier = (
   | LootFunction
   | Array<ItemModifier> | (
   NamespacedString | `#${string}:${string}` | TagClass<'item_modifier'> | ItemModifierClass))
+
+export type ItemModifierRoot = LootFunction

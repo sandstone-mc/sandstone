@@ -1,4 +1,4 @@
-import { type MCDocToJSON, RESOURCE_PATHS } from 'sandstone/arguments'
+import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type {
   ItemDefinition,
   ItemModel,
@@ -16,12 +16,13 @@ import { ResourceClass, jsonStringify } from '../resource'
 import { ModelClass } from './model'
 import { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import type { SandstonePack } from 'sandstone/pack'
+import { NBT, NBTFloat } from 'sandstone';
 
-type JSONItemDefinition = MCDocToJSON<ItemDefinition>
-type JSONItemModel = MCDocToJSON<ItemModel>
-type JSONRangeDispatch = MCDocToJSON<RangeDispatch>
-type JSONSelect = MCDocToJSON<Select>
-type JSONSpecialModel = MCDocToJSON<SpecialModel>
+type JSONItemDefinition = /*Json*/ItemDefinition
+type JSONItemModel = /*Json*/ItemModel
+type JSONRangeDispatch = /*Json*/RangeDispatch
+type JSONSelect = /*Json*/Select
+type JSONSpecialModel = /*Json*/SpecialModel
 
 // Helper to normalize model input (string/ModelClass -> { type: 'model', model: ModelRef })
 function normalizeModel(input: JSONItemModel | ModelRef): JSONItemModel {
@@ -184,7 +185,7 @@ export class ItemModelBuilder extends ItemPredicateClass {
       model: this.toItemModel(),
       ...(this._handAnimationOnSwap !== undefined && { hand_animation_on_swap: this._handAnimationOnSwap }),
       ...(this._oversizedInGui !== undefined && { oversized_in_gui: this._oversizedInGui }),
-      ...(this._swapAnimationScale !== undefined && { swap_animation_scale: this._swapAnimationScale }),
+      ...(this._swapAnimationScale !== undefined && { swap_animation_scale: NBT.float(this._swapAnimationScale) }),
     }
   }
 
@@ -218,13 +219,13 @@ export class ItemModelBuilder extends ItemPredicateClass {
       const value = countTest.value as { min?: number; max?: number } | number | undefined
 
       // Build entries from count range
-      const entries: Array<{ threshold: number; model: JSONItemModel }> = []
+      const entries: Array<{ threshold: NBTFloat; model: JSONItemModel }> = []
 
       if (typeof value === 'number') {
-        entries.push({ threshold: value, model: this.onTrueModel || { type: 'empty' } })
+        entries.push({ threshold: NBT.float(value), model: this.onTrueModel || { type: 'empty' } })
       } else if (value && typeof value === 'object') {
         if (value.min !== undefined) {
-          entries.push({ threshold: value.min, model: this.onTrueModel || { type: 'empty' } })
+          entries.push({ threshold: NBT.float(value.min), model: this.onTrueModel || { type: 'empty' } })
         }
       }
 

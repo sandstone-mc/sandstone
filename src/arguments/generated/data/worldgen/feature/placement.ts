@@ -180,6 +180,17 @@ export type RandomChanceModifier = {
   }>,
 }
 
+export type RandomlySelectedModifier = {
+  /**
+   * Value:
+   * List length range: 1..
+   */
+  placements: NBTList<PlacementModifier, {
+    leftExclusive: false,
+    min: 1,
+  }>,
+}
+
 export type RandomOffsetModifier = {
   xz_spread: IntProvider<NBTInt<{
     min: -16,
@@ -245,6 +256,8 @@ type PlacementModifierDispatcherMap = {
   'minecraft:offset': PlacementModifierOffset,
   'random_chance': PlacementModifierRandomChance,
   'minecraft:random_chance': PlacementModifierRandomChance,
+  'randomly_selected': PlacementModifierRandomlySelected,
+  'minecraft:randomly_selected': PlacementModifierRandomlySelected,
   'rarity_filter': PlacementModifierRarityFilter,
   'minecraft:rarity_filter': PlacementModifierRarityFilter,
   'surface_relative_threshold_filter': PlacementModifierSurfaceRelativeThresholdFilter,
@@ -266,6 +279,7 @@ type PlacementModifierFallback = (
   | PlacementModifierNoiseThresholdCount
   | PlacementModifierOffset
   | PlacementModifierRandomChance
+  | PlacementModifierRandomlySelected
   | PlacementModifierRarityFilter
   | PlacementModifierSurfaceRelativeThresholdFilter
   | PlacementModifierSurfaceWaterDepthFilter)
@@ -281,6 +295,7 @@ type PlacementModifierNoiseBasedCount = NoiseBasedCountModifier
 type PlacementModifierNoiseThresholdCount = NoiseThresholdCountModifier
 type PlacementModifierOffset = OffsetModifier
 type PlacementModifierRandomChance = RandomChanceModifier
+type PlacementModifierRandomlySelected = RandomlySelectedModifier
 type PlacementModifierRarityFilter = RarityFilter
 type PlacementModifierSurfaceRelativeThresholdFilter = SurfaceRelativeThresholdFilter
 type PlacementModifierSurfaceWaterDepthFilter = SurfaceWaterDepthFilter

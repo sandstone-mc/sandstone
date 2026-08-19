@@ -91,6 +91,36 @@ export type UnobstructedPredicate = {
   }>,
 }
 
+export type VolumeMatchPredicate = {
+  /**
+   * Value:
+   * List length range: 3
+   */
+  min: NBTList<NBTInt<{
+    min: -16,
+    max: 16,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Value:
+   * List length range: 3
+   */
+  max: NBTList<NBTInt<{
+    min: -16,
+    max: 16,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  match: BlockPredicate,
+}
+
 export type WouldSurvivePredicate = (PredicateOffset & {
   state: BlockState,
 })
@@ -117,6 +147,8 @@ type BlockPredicateDispatcherMap = {
   'minecraft:not': BlockPredicateNot,
   'unobstructed': BlockPredicateUnobstructed,
   'minecraft:unobstructed': BlockPredicateUnobstructed,
+  'volume_match': BlockPredicateVolumeMatch,
+  'minecraft:volume_match': BlockPredicateVolumeMatch,
   'would_survive': BlockPredicateWouldSurvive,
   'minecraft:would_survive': BlockPredicateWouldSurvive,
 }
@@ -133,6 +165,7 @@ type BlockPredicateFallback = (
   | BlockPredicateMatchingFluids
   | BlockPredicateNot
   | BlockPredicateUnobstructed
+  | BlockPredicateVolumeMatch
   | BlockPredicateWouldSurvive)
 type BlockPredicateAllOf = CombiningPredicate
 type BlockPredicateAnyOf = CombiningPredicate
@@ -145,6 +178,7 @@ type BlockPredicateMatchingBlocks = MatchingBlocksPredicate
 type BlockPredicateMatchingFluids = MatchingFluidsPredicate
 type BlockPredicateNot = NotPredicate
 type BlockPredicateUnobstructed = UnobstructedPredicate
+type BlockPredicateVolumeMatch = VolumeMatchPredicate
 type BlockPredicateWouldSurvive = WouldSurvivePredicate
 export type SymbolBlockPredicate<CASE extends
   | 'map'

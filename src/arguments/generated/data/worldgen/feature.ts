@@ -1165,6 +1165,7 @@ export type TargetBlock = {
 
 export type TemplateConfig = {
   templates: WeightedList<TemplateEntry>,
+  processors?: ProcessorListRef,
 }
 
 export type TemplateEntry = {

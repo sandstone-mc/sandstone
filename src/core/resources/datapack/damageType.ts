@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type Coordinates, type SingleEntityArgument, type SymbolResource } from 'sandstone/arguments'
 import type { SetType, NamespacedString } from 'sandstone/utils'
 import type { TextComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
@@ -30,7 +30,7 @@ export type DamageTypeClassArguments = {
   /**
    * The damage type's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof DamageTypeClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof DamageTypeClass)['resourceType']]
 } & ResourceClassArguments<'default'> & {
     /**
      * Optional. Automatically adds damage type to minecraft damage type group tag flags.

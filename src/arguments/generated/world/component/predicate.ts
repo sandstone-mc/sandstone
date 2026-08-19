@@ -110,6 +110,11 @@ export type FireworksPredicate = {
   flight_duration?: MinMaxBounds<NBTInt>,
 }
 
+export type ItemCountPseudoPredicate = MinMaxBounds<NBTInt<{
+  min: 1,
+  max: 99,
+}>>
+
 export type ItemDamagePredicate = {
   damage?: MinMaxBounds<NBTInt>,
   durability?: MinMaxBounds<NBTInt>,

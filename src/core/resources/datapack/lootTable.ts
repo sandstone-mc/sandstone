@@ -5,7 +5,7 @@ import {
   type ENTITY_SLOTS,
   type MultipleEntitiesArgument,
   type MultiplePlayersArgumentOf,
-  type MCDocToJSON, type SymbolResource,
+  type SymbolResource,
 } from 'sandstone/arguments'
 import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
@@ -31,7 +31,7 @@ export type LootTableClassArguments = {
   /**
    * The loot table's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof LootTableClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof LootTableClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class LootTableClass extends ResourceClass<LootTableNode> {

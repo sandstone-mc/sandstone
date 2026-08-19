@@ -466,8 +466,6 @@ type MemoryModuleDispatcherMap = {
   'minecraft:is_pregnant': MemoryModuleIsPregnant,
   'is_sniffing': MemoryModuleIsSniffing,
   'minecraft:is_sniffing': MemoryModuleIsSniffing,
-  'is_tempted': MemoryModuleIsTempted,
-  'minecraft:is_tempted': MemoryModuleIsTempted,
   'item_pickup_cooldown_ticks': MemoryModuleItemPickupCooldownTicks,
   'minecraft:item_pickup_cooldown_ticks': MemoryModuleItemPickupCooldownTicks,
   'job_site': MemoryModuleJobSite,
@@ -550,7 +548,6 @@ type MemoryModuleFallback = (
   | MemoryModuleIsPanicking
   | MemoryModuleIsPregnant
   | MemoryModuleIsSniffing
-  | MemoryModuleIsTempted
   | MemoryModuleItemPickupCooldownTicks
   | MemoryModuleJobSite
   | MemoryModuleLastSlept
@@ -605,7 +602,6 @@ type MemoryModuleIsInWater = IsInWater
 type MemoryModuleIsPanicking = IsPanicking
 type MemoryModuleIsPregnant = IsPregnant
 type MemoryModuleIsSniffing = IsSniffing
-type MemoryModuleIsTempted = IsTempted
 type MemoryModuleItemPickupCooldownTicks = ItemPickupCooldownTicks
 type MemoryModuleJobSite = JobSite
 type MemoryModuleLastSlept = LastSlept

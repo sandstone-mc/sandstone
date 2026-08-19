@@ -23,12 +23,12 @@ import type { Enchantment } from 'sandstone/arguments/generated/data/enchantment
 import type { EnchantmentProvider } from 'sandstone/arguments/generated/data/enchantment/provider.ts'
 import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment.ts'
 import type { TestInstance } from 'sandstone/arguments/generated/data/gametest.ts'
-import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
+import type { ItemModifierRoot } from 'sandstone/arguments/generated/data/item_modifier.ts'
 import type { LootTable } from 'sandstone/arguments/generated/data/loot.ts'
 import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Recipe } from 'sandstone/arguments/generated/data/recipe.ts'
-import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
+import type { SlotSourceRoot } from 'sandstone/arguments/generated/data/slot_source.ts'
 import type { SulfurCubeArchetype } from 'sandstone/arguments/generated/data/sulfur_cube_archetype.ts'
 import type { Timeline } from 'sandstone/arguments/generated/data/timeline.ts'
 import type { TradeSet } from 'sandstone/arguments/generated/data/trade_set.ts'
@@ -317,7 +317,7 @@ type ResourceFrogVariant = FrogVariant
 type ResourceGpuWarnlist = GpuWarnlist
 type ResourceInstrument = Instrument
 type ResourceItemDefinition = ItemDefinition
-type ResourceItemModifier = ItemModifier
+type ResourceItemModifier = ItemModifierRoot
 type ResourceJukeboxSong = JukeboxSong
 type ResourceLang = Lang
 type ResourceLangDeprecated = LangDeprecated
@@ -333,7 +333,7 @@ type ResourcePredicate = Predicate
 type ResourceRecipe = Recipe
 type ResourceRegionalCompliancies = RegionalCompliancies
 type ResourceShader = ShaderProgram
-type ResourceSlotSource = SlotSource
+type ResourceSlotSource = SlotSourceRoot
 type ResourceSounds = Sounds
 type ResourceSulfurCubeArchetype = SulfurCubeArchetype
 type ResourceTestEnvironment = TestEnvironment

@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -23,7 +23,7 @@ export type SlotSourceClassArguments = {
   /**
    * The slot source's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof SlotSourceClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof SlotSourceClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class SlotSourceClass extends ResourceClass<SlotSourceNode> implements ConditionClass {

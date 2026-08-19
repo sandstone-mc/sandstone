@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -26,7 +26,7 @@ export type TestEnvironmentClassArguments = {
   /**
    * The test environment's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof TestEnvironmentClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof TestEnvironmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> {
@@ -72,7 +72,7 @@ export type TestInstanceClassArguments = {
   /**
    * The test instance's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof TestInstanceClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof TestInstanceClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TestInstanceClass extends ResourceClass<TestInstanceNode> {

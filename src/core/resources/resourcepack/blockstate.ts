@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -6,7 +6,7 @@ import type { ListResource, ResourceClassArguments, ResourceNode } from '../reso
 import { ResourceClass, jsonStringify } from '../resource'
 import type { AllKeys } from 'sandstone/utils'
 
-export type BlockStateDefinitionJSON = NonNullable<MCDocToJSON<SymbolResource['block_definition']>>
+export type BlockStateDefinitionJSON = NonNullable</*Json*/SymbolResource['block_definition']>
 export type BlockStateDefinitionType = AllKeys<BlockStateDefinitionJSON>
 
 /**

@@ -1,4 +1,4 @@
-import { RESOURCE_PATHS, type MCDocToJSON, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type SymbolResource } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
@@ -23,7 +23,7 @@ export type TrimMaterialClassArguments = {
   /**
    * The trim material's JSON.
    */
-  json: MCDocToJSON<SymbolResource[(typeof TrimMaterialClass)['resourceType']]>
+  json: /*Json*/SymbolResource[(typeof TrimMaterialClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
 export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {

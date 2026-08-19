@@ -3,7 +3,6 @@ import type {
   DamageSourcePredicate,
   DistancePredicate,
   EntityEffectsPredicate,
-  EntityPredicate,
   ItemPredicate,
   LocationPredicate,
 } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
@@ -16,20 +15,25 @@ import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockListRef } from 'sandstone/arguments/generated/util/registry_ref.ts'
 import type { PotionsPredicate } from 'sandstone/arguments/generated/world/component/predicate.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { NBTDouble, NBTInt, NBTList } from 'sandstone'
 
-export type AdvancementPredicateRef = PredicateRef
+export type AdvancementEntityPredicate = PredicateRef
 
-export type AllayDropItemOnBlock = (TriggerBase & {
-  location?: AdvancementPredicateRef,
-})
+export type AdvancementLocationPredicate = PredicateRef
 
-export type AnyBlockUse = (TriggerBase & {
-  location?: AdvancementPredicateRef,
-})
+export type AllOptional<C extends NBTObject> = {
+  conditions?: C,
+}
 
-export type BeeNestDestroyed = NonNullable<({
-  [S in Extract<Extract<BlockListRef, string>, string>]?: (TriggerBase & {
+export type AnyBlockInteractionTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Location.
+   */
+  location?: AdvancementLocationPredicate,
+})>
+
+export type BeeNestDestroyedTrigger = AllOptional<NonNullable<({
+  [S in Extract<Extract<BlockListRef, string>, string>]?: (PlayerConditions & {
     blocks?: S,
     state?: (S extends undefined
       ? SymbolMcdocBlockStates<'%none'> :
@@ -43,102 +47,131 @@ export type BeeNestDestroyed = NonNullable<({
      */
     item?: ItemPredicate,
   })
+}[Extract<BlockListRef, string>])>>
+
+export type BlockStateConditions = NonNullable<({
+  [S in Extract<Extract<BlockListRef, string>, string>]?: {
+    blocks?: S,
+    state?: (S extends undefined
+      ? SymbolMcdocBlockStates<'%none'> :
+      (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>)),
+  }
 }[Extract<BlockListRef, string>])>
 
-export type BredAnimals = (TriggerBase & {
-  parent?: CompositeEntity,
-  partner?: CompositeEntity,
-  child?: CompositeEntity,
-})
+export type BredAnimalsTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  parent?: AdvancementEntityPredicate,
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  partner?: AdvancementEntityPredicate,
+  /**
+   * Predicate context: Advancement Entity. \
+   * Entity may not exist.
+   */
+  child?: AdvancementEntityPredicate,
+})>
 
-export type BrewedPotion = (TriggerBase & {
+export type BrewedPotionTrigger = AllOptional<(PlayerConditions & {
   potion?: PotionsPredicate,
-})
+})>
 
-export type ChangedDimension = (TriggerBase & {
+export type ChangeDimensionTrigger = AllOptional<(PlayerConditions & {
   from?: Registry['minecraft:dimension'],
   to?: Registry['minecraft:dimension'],
-})
+})>
 
-export type ChanneledLightning = (TriggerBase & {
-  victims?: Array<CompositeEntity>,
-})
+export type ChanneledLightningTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity. \
+   * Evaluates to true if every predicate in the list matches some victims.
+   */
+  victims?: Array<AdvancementEntityPredicate>,
+})>
 
-export type CompositeEntity = AdvancementPredicateRef
-
-export type Conditions<C extends NBTObject> = {
-  conditions?: C,
-}
-
-export type ConstructBeacon = (TriggerBase & {
+export type ConstructBeaconTrigger = AllOptional<(PlayerConditions & {
   /**
    * Tier of the updated beacon base.
    */
   level?: MinMaxBounds<NBTInt>,
-})
+})>
 
-export type ConsumeItem = (TriggerBase & {
+export type ConsumeItemTrigger = AllOptional<(PlayerConditions & {
   item?: ItemPredicate,
-})
+})>
 
-export type CuredZombieVillager = (TriggerBase & {
-  villager?: CompositeEntity,
-  zombie?: CompositeEntity,
-})
-
-export type DefaultBlockUse = (TriggerBase & {
+export type CuredZombieVillagerTrigger = AllOptional<(PlayerConditions & {
   /**
-   * The location of the block.
+   * Predicate context: Advancement Entity.
    */
-  location?: AdvancementPredicateRef,
-})
+  zombie?: AdvancementEntityPredicate,
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  villager?: AdvancementEntityPredicate,
+})>
 
-export type EffectsChanged = (TriggerBase & {
+export type DefaultBlockInteractionTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Block Use.
+   */
+  location?: AdvancementLocationPredicate,
+})>
+
+export type DistanceTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Where the player started to travel.
+   */
+  start_position?: LocationPredicate,
+  /**
+   * How far the player travels.
+   */
+  distance?: DistancePredicate,
+})>
+
+export type EffectsChangedTrigger = AllOptional<(PlayerConditions & {
   effects?: EntityEffectsPredicate,
-  source?: CompositeEntity,
-})
+  /**
+   * Predicate context: Advancement Entity. \
+   * Entity may not exist.
+   */
+  source?: AdvancementEntityPredicate,
+})>
 
-export type EnchantedItem = (TriggerBase & {
+export type EnchantedItemTrigger = AllOptional<(PlayerConditions & {
   item?: ItemPredicate,
   levels?: MinMaxBounds<NBTInt>,
-})
+})>
 
-export type EnterBlock<S = undefined> = (TriggerBase & {
-  blocks?: BlockListRef,
-  state?: (S extends undefined
-    ? SymbolMcdocBlockStates<'%none'> :
-    (S extends keyof SymbolMcdocBlockStates ? SymbolMcdocBlockStates[S] : SymbolMcdocBlockStates<'%unknown'>)),
-})
+export type EnterBlockTrigger = AllOptional<(PlayerConditions & BlockStateConditions)>
 
-export type EntityHurtPlayer = (TriggerBase & {
+export type EntityHurtPlayerTrigger = AllOptional<(PlayerConditions & {
   damage?: DamagePredicate,
-})
+})>
 
-export type EntityKilledPlayer = (TriggerBase & {
-  entity?: CompositeEntity,
-  killing_blow?: DamageSourcePredicate,
-})
-
-export type FallAfterExplosion = (TriggerBase & {
+export type FallAfterExplosionTrigger = AllOptional<(PlayerConditions & {
   start_position?: LocationPredicate,
   distance?: DistancePredicate,
-  cause?: CompositeEntity,
-})
-
-export type FallFromHeight = (TriggerBase & {
-  start_position?: LocationPredicate,
-  distance?: DistancePredicate,
-})
-
-export type FilledBucket = (TriggerBase & {
-  item?: ItemPredicate,
-})
-
-export type FishingRodHooked = (TriggerBase & {
   /**
-   * Entity that was pulled.
+   * Predicate context: Advancement Entity. \
+   * Entity may not exist.
    */
-  entity?: CompositeEntity,
+  cause?: AdvancementEntityPredicate,
+})>
+
+export type FilledBucketTrigger = AllOptional<(PlayerConditions & {
+  item?: ItemPredicate,
+})>
+
+export type FishingRodHookedTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity. \
+   * Entity that was pulled.
+   * Or the hook itself if no entity was hooked.
+   */
+  entity?: AdvancementEntityPredicate,
   /**
    * Item that was caught.
    */
@@ -147,30 +180,9 @@ export type FishingRodHooked = (TriggerBase & {
    * Fishing rod used.
    */
   rod?: ItemPredicate,
-})
+})>
 
-export type HoneyHarvestedBlock = {
-  block?: Registry['minecraft:block'],
-  tag?: (Registry['minecraft:tag/block']),
-}
-
-export type InventoryChanged = (TriggerBase & {
-  slots?: {
-    /**
-     * Amount of empty slots.
-     */
-    empty?: MinMaxBounds<NBTInt>,
-    /**
-     * Amount of occupied slots.
-     */
-    occupied?: MinMaxBounds<NBTInt>,
-    /**
-     * Amount of slots that are a full stack.
-     */
-    full?: MinMaxBounds<NBTInt>,
-  },
-  items?: Array<ItemPredicate>,
-})
+export type ImpossibleTrigger = AllOptional<Record<string, never>>
 
 export type InventoryChangedSlots = {
   /**
@@ -187,7 +199,25 @@ export type InventoryChangedSlots = {
   full?: MinMaxBounds<NBTInt>,
 }
 
-export type ItemDurabilityChanged = (TriggerBase & {
+export type InventoryChangeTrigger = AllOptional<(PlayerConditions & {
+  slots?: {
+    /**
+     * Amount of empty slots.
+     */
+    empty?: MinMaxBounds<NBTInt>,
+    /**
+     * Amount of occupied slots.
+     */
+    occupied?: MinMaxBounds<NBTInt>,
+    /**
+     * Amount of slots that are a full stack.
+     */
+    full?: MinMaxBounds<NBTInt>,
+  },
+  items?: Array<ItemPredicate>,
+})>
+
+export type ItemDurabilityTrigger = AllOptional<(PlayerConditions & {
   /**
    * Change in durability (negative numbers are used to indicate a decrease in durability).
    */
@@ -200,13 +230,18 @@ export type ItemDurabilityChanged = (TriggerBase & {
    * The item before its durability changed.
    */
   item?: ItemPredicate,
+})>
+
+export type ItemUesdOnLocationConditions = (PlayerConditions & {
+  /**
+   * Predicate context: Advancement Location.
+   */
+  location?: AdvancementLocationPredicate,
 })
 
-export type ItemUsedOnBlock = (TriggerBase & {
-  location?: AdvancementPredicateRef,
-})
+export type ItemUsedOnLocationTrigger = AllOptional<ItemUesdOnLocationConditions>
 
-export type KilledByArrow = (TriggerBase & {
+export type KilledByArrowTrigger = AllOptional<(PlayerConditions & {
   /**
    * How many different types of entities were killed.
    */
@@ -215,33 +250,45 @@ export type KilledByArrow = (TriggerBase & {
    * The weapon item that was used to fire the arrow.
    */
   fired_from_weapon?: ItemPredicate,
-  victims?: Array<CompositeEntity>,
-})
-
-export type KilledByCrossbow = (TriggerBase & {
   /**
-   * How many different types of entities were killed.
+   * Predicate context: Advancement Entity. \
+   * Evaluates to true if every predicate in the list matches some victims.
    */
-  unique_entity_types?: MinMaxBounds<NBTInt>,
-  victims?: Array<CompositeEntity>,
-})
+  victims?: Array<AdvancementEntityPredicate>,
+})>
 
-export type KillMobNearSculkCatalyst = (TriggerBase & {
-  entity?: EntityPredicate,
+export type KilledTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  entity?: AdvancementEntityPredicate,
   killing_blow?: DamageSourcePredicate,
-})
+})>
 
-export type Levitation = (TriggerBase & {
+export type LevitationTrigger = AllOptional<(PlayerConditions & {
   distance?: DistancePredicate,
   duration?: MinMaxBounds<NBTInt>,
-})
+})>
 
-export type LightningStrike = (TriggerBase & {
-  lightning?: CompositeEntity,
-  bystander?: CompositeEntity,
-})
+export type LightningStrikeTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  lightning?: AdvancementEntityPredicate,
+  /**
+   * Predicate context: Advancement Entity. \
+   * Evaluates to false if no entities are nearby.
+   */
+  bystander?: AdvancementEntityPredicate,
+})>
 
-export type NetherTravel = (TriggerBase & {
+export type LocationTrigger = AllOptional<PlayerConditions>
+
+export type LootTableTrigger = ParitalRequired<(PlayerConditions & {
+  loot_tables: LootTableListRef,
+})>
+
+export type NetherTravelTrigger = AllOptional<(PlayerConditions & {
   /**
    * Where in the Overworld the player was when they travelled to the Nether.
    */
@@ -250,37 +297,60 @@ export type NetherTravel = (TriggerBase & {
    * How far the player now is from the coordinate they started at in the Overworld before travelling.
    */
   distance?: DistancePredicate,
-})
+})>
 
-export type PlacedBlock = (TriggerBase & {
-  /**
-   * Where the block was placed.
-   */
-  location?: AdvancementPredicateRef,
-})
+export type ParitalRequired<C extends NBTObject> = {
+  conditions: C,
+}
 
-export type PlayerGeneratesContainerLoot = (TriggerBase & {
-  loot_tables: LootTableListRef,
-})
-
-export type PlayerHurtEntity = (TriggerBase & {
-  damage?: DamagePredicate,
-  entity?: CompositeEntity,
-})
-
-export type PlayerInteract = (TriggerBase & {
+export type PickedUpItemTrigger = AllOptional<(PlayerConditions & {
   item?: ItemPredicate,
-  entity?: CompositeEntity,
+  /**
+   * Predicate context: Advancement Entity. \
+   * Entity may not exist.
+   */
+  entity?: AdvancementEntityPredicate,
+})>
+
+export type PlacedBlockConditions = (PlayerConditions & BlockStateConditions & {
+  /**
+   * Item that was used to place the block before the item was consumed.
+   */
+  item?: ItemPredicate,
+  /**
+   * Predicate context: Advancement Location.
+   */
+  location?: LocationPredicate,
 })
 
-export type PlayerKilledEntity = (TriggerBase & {
-  entity?: CompositeEntity,
-  killing_blow?: DamageSourcePredicate,
-})
+export type PlacedBlockTrigger = AllOptional<ItemUesdOnLocationConditions>
 
-export type PlayerTrigger = TriggerBase
+export type PlayerConditions = {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  player?: AdvancementEntityPredicate,
+}
 
-export type RecipeCrafted = (TriggerBase & {
+export type PlayerHurtEntityTrigger = AllOptional<(PlayerConditions & {
+  damage?: DamagePredicate,
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  entity?: AdvancementEntityPredicate,
+})>
+
+export type PlayerInteractTrigger = AllOptional<(PlayerConditions & {
+  item?: ItemPredicate,
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  entity?: AdvancementEntityPredicate,
+})>
+
+export type PlayerTrigger = AllOptional<PlayerConditions>
+
+export type RecipeCraftedTrigger = ParitalRequired<(PlayerConditions & {
   recipes: RecipeListRef,
   /**
    * Value:
@@ -292,100 +362,83 @@ export type RecipeCrafted = (TriggerBase & {
     min: 1,
     max: 9,
   }>,
-})
+})>
 
-export type RecipeUnlocked = (TriggerBase & {
+export type RecipeUnlockedTrigger = ParitalRequired<(PlayerConditions & {
   recipes: RecipeListRef,
-})
+})>
 
-export type RequiredConditions<C extends NBTObject> = {
-  conditions: C,
-}
-
-export type RideEntityInLava = (TriggerBase & {
-  start_position?: LocationPredicate,
-  distance?: DistancePredicate,
-})
-
-export type SafelyHarvestHoney = (TriggerBase & {
-  block?: {
-    block?: Registry['minecraft:block'],
-    tag?: (Registry['minecraft:tag/block']),
-  },
-  item?: ItemPredicate,
-})
-
-export type ShotCrossbow = (TriggerBase & {
+export type ShotCrossbowTrigger = AllOptional<(PlayerConditions & {
   /**
    * Crossbow that was used.
    */
   item?: ItemPredicate,
-})
+})>
 
-export type SlideDownBlock = (TriggerBase & {
-  blocks?: BlockListRef,
-})
+export type SlideDownBlockTrigger = AllOptional<(PlayerConditions & BlockStateConditions)>
 
-export type SpearMobs = (TriggerBase & {
+export type SpearMobsTrigger = AllOptional<(PlayerConditions & {
   /**
+   * Minimum mob count required.
+   *
    * Value:
    * Range: 1..
    */
   count?: NBTInt<{
     min: 1,
   }>,
-})
+})>
 
-export type SummonedEntity = (TriggerBase & {
-  entity?: CompositeEntity,
-})
+export type StartRidingTrigger = AllOptional<PlayerConditions>
 
-export type TameAnimal = (TriggerBase & {
-  entity?: CompositeEntity,
-})
+export type SummonedEntityTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  entity?: AdvancementEntityPredicate,
+})>
 
-export type TargetHit = (TriggerBase & {
-  projectile?: CompositeEntity,
-  shooter?: CompositeEntity,
+export type TameAnimalTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  entity?: AdvancementEntityPredicate,
+})>
+
+export type TargetBlockTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  projectile?: AdvancementEntityPredicate,
   signal_strength?: MinMaxBounds<NBTInt>,
-})
+})>
 
-export type ThrownItemPickedUpByEntity = (TriggerBase & {
+export type TradeTrigger = AllOptional<(PlayerConditions & {
+  /**
+   * Predicate context: Advancement Entity.
+   */
+  villager?: AdvancementEntityPredicate,
+  /**
+   * Item that was purchased. \
+   * `count` tag checks the item count from one trade, not the total amount traded for.
+   */
   item?: ItemPredicate,
-  entity?: CompositeEntity,
-})
+})>
 
-export type ThrownItemPickedUpByPlayer = (TriggerBase & {
-  item?: ItemPredicate,
-  entity?: CompositeEntity,
-})
-
-export type TriggerBase = {
-  player?: CompositeEntity,
-}
-
-export type UsedEnderEye = (TriggerBase & {
+export type UsedEnderEyeTrigger = AllOptional<(PlayerConditions & {
   /**
    * Horizontal distance between the player and the stronghold.
    */
-  distance?: MinMaxBounds<NBTFloat>,
-})
+  distance?: MinMaxBounds<(NBTDouble | number)>,
+})>
 
-export type UsedTotem = (TriggerBase & {
+export type UsedTotemTrigger = AllOptional<(PlayerConditions & {
   item?: ItemPredicate,
-})
+})>
 
-export type UsingItem = (TriggerBase & {
+export type UsingItemTrigger = AllOptional<(PlayerConditions & {
   item?: ItemPredicate,
-})
-
-export type VillagerTrade = (TriggerBase & {
-  villager?: CompositeEntity,
-  /**
-   * Item that was purchased. `count` tag checks the item count from one trade, not the total amount traded for.
-   */
-  item?: ItemPredicate,
-})
+})>
 type TriggerDispatcherMap = {
   'allay_drop_item_on_block': TriggerAllayDropItemOnBlock,
   'minecraft:allay_drop_item_on_block': TriggerAllayDropItemOnBlock,
@@ -564,64 +617,64 @@ type TriggerFallback = (
   | TriggerUsingItem
   | TriggerVillagerTrade
   | TriggerVoluntaryExile)
-type TriggerAllayDropItemOnBlock = Conditions<AllayDropItemOnBlock>
-type TriggerAnyBlockUse = Conditions<AnyBlockUse>
-type TriggerAvoidVibration = Conditions<PlayerTrigger>
-type TriggerBeeNestDestroyed = Conditions<BeeNestDestroyed>
-type TriggerBredAnimals = Conditions<BredAnimals>
-type TriggerBrewedPotion = Conditions<BrewedPotion>
-type TriggerChangedDimension = Conditions<ChangedDimension>
-type TriggerChanneledLightning = Conditions<ChanneledLightning>
-type TriggerConstructBeacon = Conditions<ConstructBeacon>
-type TriggerConsumeItem = Conditions<ConsumeItem>
-type TriggerCrafterRecipeCrafted = RequiredConditions<RecipeCrafted>
-type TriggerCuredZombieVillager = Conditions<CuredZombieVillager>
-type TriggerDefaultBlockUse = Conditions<DefaultBlockUse>
-type TriggerEffectsChanged = Conditions<EffectsChanged>
-type TriggerEnchantedItem = Conditions<EnchantedItem>
-type TriggerEnterBlock = Conditions<EnterBlock>
-type TriggerEntityHurtPlayer = Conditions<EntityHurtPlayer>
-type TriggerEntityKilledPlayer = Conditions<EntityKilledPlayer>
-type TriggerFallAfterExplosion = Conditions<FallAfterExplosion>
-type TriggerFallFromHeight = Conditions<FallFromHeight>
-type TriggerFilledBucket = Conditions<FilledBucket>
-type TriggerFishingRodHooked = Conditions<FishingRodHooked>
-type TriggerHeroOfTheVillage = Conditions<PlayerTrigger>
-type TriggerImpossible = Conditions<TriggerBase>
-type TriggerInventoryChanged = Conditions<InventoryChanged>
-type TriggerItemDurabilityChanged = Conditions<ItemDurabilityChanged>
-type TriggerItemUsedOnBlock = Conditions<ItemUsedOnBlock>
-type TriggerKillMobNearSculkCatalyst = Conditions<KillMobNearSculkCatalyst>
-type TriggerKilledByArrow = Conditions<KilledByArrow>
-type TriggerLevitation = Conditions<Levitation>
-type TriggerLightningStrike = Conditions<LightningStrike>
-type TriggerLocation = Conditions<PlayerTrigger>
-type TriggerNetherTravel = Conditions<NetherTravel>
-type TriggerPlacedBlock = Conditions<PlacedBlock>
-type TriggerPlayerGeneratesContainerLoot = RequiredConditions<PlayerGeneratesContainerLoot>
-type TriggerPlayerHurtEntity = Conditions<PlayerHurtEntity>
-type TriggerPlayerInteractedWithEntity = Conditions<PlayerInteract>
-type TriggerPlayerKilledEntity = Conditions<PlayerKilledEntity>
-type TriggerPlayerShearedEquipment = Conditions<PlayerInteract>
-type TriggerRecipeCrafted = RequiredConditions<RecipeCrafted>
-type TriggerRecipeUnlocked = RequiredConditions<RecipeUnlocked>
-type TriggerRideEntityInLava = Conditions<RideEntityInLava>
-type TriggerShotCrossbow = Conditions<ShotCrossbow>
-type TriggerSleptInBed = Conditions<PlayerTrigger>
-type TriggerSlideDownBlock = Conditions<SlideDownBlock>
-type TriggerSpearMobs = Conditions<SpearMobs>
-type TriggerStartedRiding = Conditions<TriggerBase>
-type TriggerSummonedEntity = Conditions<SummonedEntity>
-type TriggerTameAnimal = Conditions<TameAnimal>
-type TriggerTargetHit = Conditions<TargetHit>
-type TriggerThrownItemPickedUpByEntity = Conditions<ThrownItemPickedUpByEntity>
-type TriggerThrownItemPickedUpByPlayer = Conditions<ThrownItemPickedUpByPlayer>
-type TriggerTick = Conditions<TriggerBase>
-type TriggerUsedEnderEye = Conditions<UsedEnderEye>
-type TriggerUsedTotem = Conditions<UsedTotem>
-type TriggerUsingItem = Conditions<UsingItem>
-type TriggerVillagerTrade = Conditions<VillagerTrade>
-type TriggerVoluntaryExile = Conditions<PlayerTrigger>
+type TriggerAllayDropItemOnBlock = ItemUsedOnLocationTrigger
+type TriggerAnyBlockUse = AnyBlockInteractionTrigger
+type TriggerAvoidVibration = LocationTrigger
+type TriggerBeeNestDestroyed = BeeNestDestroyedTrigger
+type TriggerBredAnimals = BredAnimalsTrigger
+type TriggerBrewedPotion = BrewedPotionTrigger
+type TriggerChangedDimension = ChangeDimensionTrigger
+type TriggerChanneledLightning = ChanneledLightningTrigger
+type TriggerConstructBeacon = ConstructBeaconTrigger
+type TriggerConsumeItem = ConsumeItemTrigger
+type TriggerCrafterRecipeCrafted = RecipeCraftedTrigger
+type TriggerCuredZombieVillager = CuredZombieVillagerTrigger
+type TriggerDefaultBlockUse = DefaultBlockInteractionTrigger
+type TriggerEffectsChanged = EffectsChangedTrigger
+type TriggerEnchantedItem = EnchantedItemTrigger
+type TriggerEnterBlock = EnterBlockTrigger
+type TriggerEntityHurtPlayer = EntityHurtPlayerTrigger
+type TriggerEntityKilledPlayer = KilledTrigger
+type TriggerFallAfterExplosion = FallAfterExplosionTrigger
+type TriggerFallFromHeight = DistanceTrigger
+type TriggerFilledBucket = FilledBucketTrigger
+type TriggerFishingRodHooked = FishingRodHookedTrigger
+type TriggerHeroOfTheVillage = LocationTrigger
+type TriggerImpossible = ImpossibleTrigger
+type TriggerInventoryChanged = InventoryChangeTrigger
+type TriggerItemDurabilityChanged = ItemDurabilityTrigger
+type TriggerItemUsedOnBlock = ItemUsedOnLocationTrigger
+type TriggerKillMobNearSculkCatalyst = KilledTrigger
+type TriggerKilledByArrow = KilledByArrowTrigger
+type TriggerLevitation = LevitationTrigger
+type TriggerLightningStrike = LightningStrikeTrigger
+type TriggerLocation = LocationTrigger
+type TriggerNetherTravel = NetherTravelTrigger
+type TriggerPlacedBlock = PlacedBlockTrigger
+type TriggerPlayerGeneratesContainerLoot = LootTableTrigger
+type TriggerPlayerHurtEntity = PlayerHurtEntityTrigger
+type TriggerPlayerInteractedWithEntity = PlayerInteractTrigger
+type TriggerPlayerKilledEntity = KilledTrigger
+type TriggerPlayerShearedEquipment = PlayerInteractTrigger
+type TriggerRecipeCrafted = RecipeCraftedTrigger
+type TriggerRecipeUnlocked = RecipeUnlockedTrigger
+type TriggerRideEntityInLava = DistanceTrigger
+type TriggerShotCrossbow = ShotCrossbowTrigger
+type TriggerSleptInBed = LocationTrigger
+type TriggerSlideDownBlock = SlideDownBlockTrigger
+type TriggerSpearMobs = SpearMobsTrigger
+type TriggerStartedRiding = StartRidingTrigger
+type TriggerSummonedEntity = SummonedEntityTrigger
+type TriggerTameAnimal = TameAnimalTrigger
+type TriggerTargetHit = TargetBlockTrigger
+type TriggerThrownItemPickedUpByEntity = PickedUpItemTrigger
+type TriggerThrownItemPickedUpByPlayer = PickedUpItemTrigger
+type TriggerTick = PlayerTrigger
+type TriggerUsedEnderEye = UsedEnderEyeTrigger
+type TriggerUsedTotem = UsedTotemTrigger
+type TriggerUsingItem = UsingItemTrigger
+type TriggerVillagerTrade = TradeTrigger
+type TriggerVoluntaryExile = LocationTrigger
 export type SymbolTrigger<CASE extends
   | 'map'
   | 'keys'

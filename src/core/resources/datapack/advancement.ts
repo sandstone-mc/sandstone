@@ -1,4 +1,4 @@
-import { type MCDocToJSON, RESOURCE_PATHS, type MultiplePlayersArgumentOf, type SymbolResource } from 'sandstone/arguments'
+import { RESOURCE_PATHS, type MultiplePlayersArgumentOf, type SymbolResource } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
@@ -20,7 +20,7 @@ export class AdvancementNode extends ContainerNode implements ResourceNode<Advan
   getValue = () => jsonStringify(this.resource.advancementJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-export type AdvancementClassArguments<AdvancementJSON extends MCDocToJSON<SymbolResource['advancement']> | undefined = undefined> = {
+export type AdvancementClassArguments<AdvancementJSON extends /*Json*/SymbolResource['advancement'] | undefined = undefined> = {
   /**
    * The advancement's JSON. NBT primitive classes (`NBTInt`, `NBTFloat`, ...)
    * are deep-replaced with plain `number` (and `NBTIntArray` etc. with
@@ -30,7 +30,7 @@ export type AdvancementClassArguments<AdvancementJSON extends MCDocToJSON<Symbol
   json: AdvancementJSON
 } & ResourceClassArguments<'default'>
 
-export class AdvancementClass<AdvancementJSON extends MCDocToJSON<SymbolResource['advancement']> | undefined = undefined>
+export class AdvancementClass<AdvancementJSON extends /*Json*/SymbolResource['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
   implements ConditionClass {
   declare readonly __conditionClassBrand: true
