@@ -1,6 +1,6 @@
 import type { JsonNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
-import type { JsonNBTList, NamespacedString, TagClass, VillagerTradeClass } from 'sandstone'
+import type { NamespacedString, TagClass, VillagerTradeClass } from 'sandstone'
 
 export type JsonTradeSet = {
   /**

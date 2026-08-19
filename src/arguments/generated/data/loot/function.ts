@@ -30,7 +30,6 @@ import type {
   NBTClass,
   NBTFloat,
   NBTInt,
-  NBTList,
   NBTLong,
   NonEmptyString,
   TagClass,

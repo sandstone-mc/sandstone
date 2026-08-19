@@ -1,7 +1,7 @@
 import type { JsonFilterable } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonBookGeneration } from 'sandstone/arguments/generated/_json/world/component/item.ts'
 import type { JsonItemBase } from 'sandstone/arguments/generated/_json/world/item.ts'
-import type { JsonNBTList, NonEmptyString } from 'sandstone'
+import type { NonEmptyString } from 'sandstone'
 
 export type JsonWritableBook = (JsonItemBase & {
   pages?: Array<string>,

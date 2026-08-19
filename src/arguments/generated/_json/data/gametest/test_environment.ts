@@ -2,7 +2,6 @@ import type { JsonSymbolGameRule } from 'sandstone/arguments/generated/_json/dis
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
-  JsonNBTList,
   MCFunctionClass,
   NamespacedString,
   NBTInt,

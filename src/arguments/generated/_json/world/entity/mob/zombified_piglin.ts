@@ -1,5 +1,5 @@
 import type { JsonMobBase, JsonNeutralMob } from 'sandstone/arguments/generated/_json/world/entity/mob.ts'
-import type { JsonNBTList, NonEmptyString } from 'sandstone'
+import type { NonEmptyString } from 'sandstone'
 
 export type JsonZombiePigman = (JsonMobBase & JsonNeutralMob & {
   /**

@@ -6,7 +6,7 @@ import type {
 } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTClass, NBTList, NonEmptyString } from 'sandstone'
+import type { NBTClass, NonEmptyString } from 'sandstone'
 
 export type CustomData = (CustomDataMap | (NonEmptyString | NBTClass))
 

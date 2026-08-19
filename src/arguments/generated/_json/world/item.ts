@@ -10,15 +10,7 @@ import type {
   JsonDataComponentPatch,
 } from 'sandstone/arguments/generated/_json/world/component.ts'
 import type { JsonNBTObject } from 'sandstone/arguments/nbt.ts'
-import type {
-  EnchantmentClass,
-  JsonNBTList,
-  NBTDouble,
-  NBTInt,
-  NBTIntArray,
-  NBTShort,
-  NonEmptyString,
-} from 'sandstone'
+import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTShort, NonEmptyString } from 'sandstone'
 
 export type JsonAttributeModifier = {
   AttributeName?: JsonRegistry['minecraft:attribute'],

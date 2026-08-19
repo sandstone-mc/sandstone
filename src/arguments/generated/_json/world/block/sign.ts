@@ -1,7 +1,7 @@
 import type { JsonDyeColor } from 'sandstone/arguments/generated/_json/util/color.ts'
 import type { JsonBlockEntity } from 'sandstone/arguments/generated/_json/world/block.ts'
 import type { JsonSignText } from 'sandstone/arguments/generated/_json/world/component/block.ts'
-import type { JsonNBTList, NonEmptyString } from 'sandstone'
+import type { NonEmptyString } from 'sandstone'
 
 export type JsonOldSign = (JsonBlockEntity & {
   /**

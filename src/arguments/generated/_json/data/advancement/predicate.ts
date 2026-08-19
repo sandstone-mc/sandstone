@@ -27,7 +27,6 @@ import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
   DamageTypeClass,
   EnchantmentClass,
-  JsonNBTList,
   LabelClass,
   LiteralUnion,
   NBTClass,

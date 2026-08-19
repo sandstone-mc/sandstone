@@ -1,5 +1,5 @@
 import type { JsonText } from 'sandstone/arguments/generated/_json/util/text.ts'
-import type { JsonNBTList, NamespacedString, NBTInt } from 'sandstone'
+import type { NamespacedString, NBTInt } from 'sandstone'
 
 export type JsonPaintingVariant = {
   /**

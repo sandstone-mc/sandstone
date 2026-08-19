@@ -6,7 +6,7 @@ import type {
 } from 'sandstone/arguments/generated/_json/dispatcher.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
-import type { JsonNBTList, NBTClass, NonEmptyString } from 'sandstone'
+import type { NBTClass, NonEmptyString } from 'sandstone'
 
 export type JsonCustomData = (JsonCustomDataMap | (NonEmptyString | NBTClass))
 

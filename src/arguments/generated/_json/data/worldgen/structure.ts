@@ -7,7 +7,7 @@ import type {
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonFlatWeightedList, JsonNonEmptyWeightedList } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonNBTObject, JsonRootNBT } from 'sandstone/arguments/nbt.ts'
-import type { JsonNBTList, NamespacedString, NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type JsonBiomeTemperature = ('cold' | 'warm')
 

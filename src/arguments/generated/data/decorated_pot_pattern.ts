@@ -1,4 +1,4 @@
-import type { NamespacedString, NBTList } from 'sandstone'
+import type { NamespacedString } from 'sandstone'
 
 export type DecoratedPotPattern = {
   /**

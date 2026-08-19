@@ -28,7 +28,6 @@ import type {
   EnchantmentClass,
   InstrumentClass,
   ItemModifierClass,
-  JsonNBTList,
   LootTableClass,
   NamespacedString,
   NBTClass,

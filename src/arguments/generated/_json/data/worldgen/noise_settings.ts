@@ -10,7 +10,7 @@ import type {
 } from 'sandstone/arguments/generated/_json/data/worldgen/structure_set.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonBlockState } from 'sandstone/arguments/generated/_json/util/block_state.ts'
-import type { JsonNBTList, NamespacedString, NBTDouble, NBTFloat, NBTInt } from 'sandstone'
+import type { NamespacedString, NBTDouble, NBTFloat, NBTInt } from 'sandstone'
 
 export type JsonAquifer = {
   barrier: JsonDensityFunctionRef,

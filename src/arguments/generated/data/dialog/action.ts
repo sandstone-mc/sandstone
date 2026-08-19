@@ -4,7 +4,7 @@ import type {
 } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NamespacedString, NBTList, NonEmptyString } from 'sandstone'
+import type { NamespacedString, NonEmptyString } from 'sandstone'
 
 export type ClickAction = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:dialog_action_type'], string>, string>]?: ({

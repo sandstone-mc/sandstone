@@ -7,7 +7,7 @@ import type {
 } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
-import type { NamespacedString, NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { NamespacedString, NBTDouble, NBTFloat, NBTInt } from 'sandstone'
 
 export type Aquifer = {
   barrier: DensityFunctionRef,

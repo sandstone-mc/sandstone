@@ -3,7 +3,7 @@ import type { JsonNumberProviderRef } from 'sandstone/arguments/generated/_json/
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonNBTObject, JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type { SingleEntityArgument } from 'sandstone/arguments'
-import type { JsonNBTList, NamespacedString, NBTFloat, NBTInt, NonEmptyString } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NonEmptyString } from 'sandstone'
 
 export type JsonBinomialIntGenerator = {
   /**

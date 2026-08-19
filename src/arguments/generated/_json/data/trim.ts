@@ -1,7 +1,7 @@
 import type { JsonPaletteRef } from 'sandstone/arguments/generated/_json/assets/atlas.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonText } from 'sandstone/arguments/generated/_json/util/text.ts'
-import type { JsonNBTList, NamespacedString } from 'sandstone'
+import type { NamespacedString } from 'sandstone'
 
 export type JsonArmorMaterial = ('leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'netherite' | 'turtle')
 

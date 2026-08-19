@@ -1,4 +1,4 @@
-import type { JsonNBTList, NamespacedString } from 'sandstone'
+import type { NamespacedString } from 'sandstone'
 
 export type JsonDecoratedPotPattern = {
   /**

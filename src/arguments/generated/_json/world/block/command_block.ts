@@ -1,6 +1,6 @@
 import type { JsonText } from 'sandstone/arguments/generated/_json/util/text.ts'
 import type { JsonBlockEntity, JsonNameable } from 'sandstone/arguments/generated/_json/world/block.ts'
-import type { JsonNBTList, NBTInt, NBTLong, NonEmptyString } from 'sandstone'
+import type { NBTInt, NBTLong, NonEmptyString } from 'sandstone'
 
 export type JsonBaseCommandBlock = {
   /**
