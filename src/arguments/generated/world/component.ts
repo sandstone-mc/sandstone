@@ -28,6 +28,14 @@ export type DataComponentPatch = (({
   [Key in Extract<keyof SymbolDataComponent, string> as `!${Extract<Key, string>}`]?: Record<string, never>
 }))
 
-export type DataComponentPredicate = Record<string, never>
+export type DataComponentPredicate = ({
+  [Key in Extract<Registry['minecraft:data_component_type'], string>]?: ((
+      | Key extends keyof SymbolDataComponentPredicate
+        ? SymbolDataComponentPredicate[Key]
+        : SymbolDataComponentPredicate<'%unknown'>) | (
+      Key extends keyof SymbolDataComponentExistencePredicate
+        ? SymbolDataComponentExistencePredicate[Key]
+        : SymbolDataComponentExistencePredicate<'%unknown'>))
+})
 
 export type PersistentDataComponent = Registry['minecraft:data_component_type']

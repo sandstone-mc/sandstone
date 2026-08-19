@@ -28,6 +28,14 @@ export type JsonDataComponentPatch = (({
   [Key in Extract<keyof JsonSymbolDataComponent, string> as `!${Extract<Key, string>}`]?: Record<string, never>
 }))
 
-export type JsonDataComponentPredicate = Record<string, never>
+export type JsonDataComponentPredicate = ({
+  [Key in Extract<JsonRegistry['minecraft:data_component_type'], string>]?: ((
+      | Key extends keyof JsonSymbolDataComponentPredicate
+        ? JsonSymbolDataComponentPredicate[Key]
+        : JsonSymbolDataComponentPredicate<'%unknown'>) | (
+      Key extends keyof JsonSymbolDataComponentExistencePredicate
+        ? JsonSymbolDataComponentExistencePredicate[Key]
+        : JsonSymbolDataComponentExistencePredicate<'%unknown'>))
+})
 
 export type JsonPersistentDataComponent = JsonRegistry['minecraft:data_component_type']
