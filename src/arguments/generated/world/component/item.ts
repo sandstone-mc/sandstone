@@ -1438,10 +1438,10 @@ type DataComponentDispatcherMap = {
   'minecraft:use_effects': DataComponentUseEffects,
   'use_remainder': DataComponentUseRemainder,
   'minecraft:use_remainder': DataComponentUseRemainder,
-  'villager_food': DataComponentVillagerFood,
-  'minecraft:villager_food': DataComponentVillagerFood,
   'villager/variant': DataComponentVillagerVariant,
   'minecraft:villager/variant': DataComponentVillagerVariant,
+  'villager_food': DataComponentVillagerFood,
+  'minecraft:villager_food': DataComponentVillagerFood,
   'waxed': DataComponentWaxed,
   'minecraft:waxed': DataComponentWaxed,
   'weapon': DataComponentWeapon,
@@ -1573,8 +1573,8 @@ type DataComponentFallback = (
   | DataComponentUseCooldown
   | DataComponentUseEffects
   | DataComponentUseRemainder
-  | DataComponentVillagerFood
   | DataComponentVillagerVariant
+  | DataComponentVillagerFood
   | DataComponentWaxed
   | DataComponentWeapon
   | DataComponentWolfCollar
@@ -1725,8 +1725,8 @@ type DataComponentUnbreakable = Unbreakable
 type DataComponentUseCooldown = UseCooldown
 type DataComponentUseEffects = UseEffects
 type DataComponentUseRemainder = ItemStackTemplate
-type DataComponentVillagerFood = VillagerFood
 type DataComponentVillagerVariant = Registry['minecraft:villager_type']
+type DataComponentVillagerFood = VillagerFood
 type DataComponentWaxed = Record<string, never>
 type DataComponentWeapon = Weapon
 type DataComponentWolfCollar = DyeColor

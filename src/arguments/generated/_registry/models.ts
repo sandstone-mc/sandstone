@@ -2887,6 +2887,7 @@ export const MODELS_SET = new Set([
   'block/yellow_wool_stairs',
   'block/yellow_wool_stairs_inner',
   'block/yellow_wool_stairs_outer',
+  'builtin/generated',
   'item/abandoned_campsite_map',
   'item/acacia_boat',
   'item/acacia_chest_boat',
@@ -4196,5 +4197,4 @@ export const MODELS_SET = new Set([
   'item/zombie_spawn_egg',
   'item/zombie_villager_spawn_egg',
   'item/zombified_piglin_spawn_egg',
-  'builtin/generated',
 ] as const)

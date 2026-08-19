@@ -61,8 +61,8 @@ import type { MaterialCondition } from 'sandstone/arguments/generated/data/world
 import type { MaterialRule } from 'sandstone/arguments/generated/data/worldgen/material_rule.ts'
 import type { NoiseGeneratorSettings } from 'sandstone/arguments/generated/data/worldgen/noise_settings.ts'
 import type { ProcessorList } from 'sandstone/arguments/generated/data/worldgen/processor_list.ts'
-import type { StructureSet } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { Structure } from 'sandstone/arguments/generated/data/worldgen/structure.ts'
+import type { StructureSet } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { TemplatePool } from 'sandstone/arguments/generated/data/worldgen/template_pool.ts'
 import type { FlatGeneratorPreset, WorldPreset } from 'sandstone/arguments/generated/data/worldgen/world_preset.ts'
 
