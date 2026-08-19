@@ -376,13 +376,13 @@ export type JsonWardenSpawnTracker = {
     min: 0,
   }> | number),
   /**
-   * The warden will spawn at level 3.
+   * The current warning level. The warden will spawn at level `4`.
    *
    * Value:
-   * Range: 0..3
+   * Range: 0..4
    */
   warning_level?: (NBTInt<{
     min: 0,
-    max: 3,
+    max: 4,
   }> | number),
 }
