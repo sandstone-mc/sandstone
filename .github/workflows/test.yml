@@ -44,7 +44,7 @@ jobs:
     - name: Cache generated declarations
       if: steps.cache-meta.outputs.prefix != ''
       continue-on-error: true
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: types
         key: ${{ steps.cache-meta.outputs.prefix }}${{ github.run_id }}
