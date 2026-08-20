@@ -18,7 +18,7 @@
       "devDependencies": {
         "@ampproject/remapping": "^2.3.0",
         "@parcel/watcher": "^2.6.0",
-        "@sandstone-mc/mcdoc-ts-generator": "0.3.17",
+        "@sandstone-mc/mcdoc-ts-generator": "0.3.18",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/fs-extra": "^11.0.4",
         "@types/lodash": "^4.17.24",
@@ -140,7 +140,7 @@
 
     "@parcel/watcher-win32-x64": ["@parcel/watcher-win32-x64@2.6.0", "", { "os": "win32", "cpu": "x64" }, "sha512-cA+/pXV2YkfxlIcXOQ5fSWqAzzPyD78/x5qbK/I0vUkrlYHA8TIz+MXjAbGouguKVSI4bOmkTSJ1/poVSsgt+A=="],
 
-    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.3.17", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.11", "@spyglassmc/core": "^0.4.53", "@spyglassmc/java-edition": "^0.3.66", "@spyglassmc/mcdoc": "^0.3.57", "@stylistic/eslint-plugin": "^5.10.0", "@typescript-eslint/eslint-plugin": "8.67.0", "@typescript-eslint/parser": "8.67.0", "@typescript-eslint/type-utils": "8.67.0", "@typescript-eslint/typescript-estree": "8.67.0", "@typescript-eslint/utils": "8.67.0", "eslint": "^10.8.1", "ts-api-utils": "2.5.0", "ts-pattern": "^5.9.0", "typescript": "^5.9.3", "typescript-eslint": "8.67.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-ymqfd5JJ35Ya4N5GeBroisN+9n5psK3BEe+b6umGJEyj91ymhVb+XgcViDpXxa0RaojAFa42fVtab308nlSiSA=="],
+    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.3.18", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.11", "@spyglassmc/core": "^0.4.53", "@spyglassmc/java-edition": "^0.3.66", "@spyglassmc/mcdoc": "^0.3.57", "@stylistic/eslint-plugin": "^5.10.0", "@typescript-eslint/eslint-plugin": "8.67.0", "@typescript-eslint/parser": "8.67.0", "@typescript-eslint/type-utils": "8.67.0", "@typescript-eslint/typescript-estree": "8.67.0", "@typescript-eslint/utils": "8.67.0", "eslint": "^10.8.1", "ts-api-utils": "2.5.0", "ts-pattern": "^5.9.0", "typescript": "^5.9.3", "typescript-eslint": "8.67.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-GQwtH2gTevNnmNUu1jmMpZj+mQyhysdtXH3VFN484rMPy1cElGKtycZYJ3fXg+mjO/jijJajSa8HCsxyDcYJFg=="],
 
     "@seahax/eslint-plugin-wrap": ["@seahax/eslint-plugin-wrap@0.6.11", "", { "dependencies": { "@types/eslint": "^9.6.1", "@typescript-eslint/utils": "^8.48.0" }, "peerDependencies": { "@typescript-eslint/parser": ">=8.48.0", "eslint": ">=9.39.1", "typescript": ">=5.9.3" } }, "sha512-C+KZBbBoYLyU4jf2YOgl0ZKP0TbZ6JwInjfcvLwZq6eTpO7BRuLhAgKDgxVWM5vnvieszPflw8DVxdkgudOk+g=="],
 
