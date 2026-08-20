@@ -30,7 +30,7 @@
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.6.0",
-    "@sandstone-mc/mcdoc-ts-generator": "^0.3.14",
+    "@sandstone-mc/mcdoc-ts-generator": "0.3.17",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
@@ -128,5 +128,12 @@
   },
   "trustedDependencies": [
     "@parcel/watcher"
-  ]
+  ],
+  "patchedDependencies": {
+    "@typescript-eslint/eslint-plugin@8.67.0": "patches/@typescript-eslint%2Feslint-plugin@8.67.0.patch",
+    "@typescript-eslint/parser@8.67.0": "patches/@typescript-eslint%2Fparser@8.67.0.patch",
+    "@typescript-eslint/type-utils@8.67.0": "patches/@typescript-eslint%2Ftype-utils@8.67.0.patch",
+    "@typescript-eslint/typescript-estree@8.67.0": "patches/@typescript-eslint%2Ftypescript-estree@8.67.0.patch",
+    "ts-api-utils@2.5.0": "patches/ts-api-utils@2.5.0.patch"
+  }
 }

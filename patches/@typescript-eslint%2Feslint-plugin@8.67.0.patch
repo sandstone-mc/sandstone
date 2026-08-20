@@ -1,0 +1,728 @@
+diff --git a/dist/index.js b/dist/index.js
+index de6f0f82d1d841795dba6bfcc0ab0be2aaec4134..383f7f93453c9d810ed08b0c393d4db8c9af6f24 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -36,7 +36,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ var __importDefault = (this && this.__importDefault) || function (mod) {
+     return (mod && mod.__esModule) ? mod : { "default": mod };
+ };
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const [versionMajor, _versionMinor] = ts.versionMajorMinor
+     .split('.')
+     .map(Number);
+diff --git a/dist/rules/consistent-return.js b/dist/rules/consistent-return.js
+index 73fa42494cb0614615277b45ce35081682ed0468..a3931d050ed9419cf42085ac0e53c5006d8e338f 100644
+--- a/dist/rules/consistent-return.js
++++ b/dist/rules/consistent-return.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getESLintCoreRule_1 = require("../util/getESLintCoreRule");
+ const baseRule = (0, getESLintCoreRule_1.getESLintCoreRule)('consistent-return');
+diff --git a/dist/rules/consistent-type-assertions.js b/dist/rules/consistent-type-assertions.js
+index fb941d40cfe161caeacd4018f9606e64dd3c1f3d..a9b4a80744623af41dde6fd8b3f45480a338bf7a 100644
+--- a/dist/rules/consistent-type-assertions.js
++++ b/dist/rules/consistent-type-assertions.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getWrappedCode_1 = require("../util/getWrappedCode");
+ exports.default = (0, util_1.createRule)({
+diff --git a/dist/rules/consistent-type-exports.js b/dist/rules/consistent-type-exports.js
+index 282f94775febb2a29366aa3cc74e409b04d62399..b30ceca4bdbf9d566bfecbfdb31c7139b35c3d97 100644
+--- a/dist/rules/consistent-type-exports.js
++++ b/dist/rules/consistent-type-exports.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'consistent-type-exports',
+diff --git a/dist/rules/dot-notation.js b/dist/rules/dot-notation.js
+index 6101acd5e9156c48bbb50a69fc8a6f24c70218cc..9a791b760b61c4032f0844da96636d09b83fc98c 100644
+--- a/dist/rules/dot-notation.js
++++ b/dist/rules/dot-notation.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getESLintCoreRule_1 = require("../util/getESLintCoreRule");
+ const baseRule = (0, getESLintCoreRule_1.getESLintCoreRule)('dot-notation');
+diff --git a/dist/rules/enum-utils/shared.js b/dist/rules/enum-utils/shared.js
+index c8ea8d28082eaab34f48514491289dcf0aa1d530..d6794e15fdc890280c370e55d485b532e4889fd0 100644
+--- a/dist/rules/enum-utils/shared.js
++++ b/dist/rules/enum-utils/shared.js
+@@ -37,7 +37,7 @@ exports.getEnumLiterals = getEnumLiterals;
+ exports.getEnumTypes = getEnumTypes;
+ exports.getEnumKeyForLiteral = getEnumKeyForLiteral;
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../../util");
+ /*
+  * If passed an enum member, returns the type of the parent. Otherwise,
+diff --git a/dist/rules/no-base-to-string.js b/dist/rules/no-base-to-string.js
+index c8f0e69bb90170544fce6f13f1c4e714d90cadbd..8aa276546b5c59f3d2dd365464033434bf560eff 100644
+--- a/dist/rules/no-base-to-string.js
++++ b/dist/rules/no-base-to-string.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ var Usefulness;
+ (function (Usefulness) {
+diff --git a/dist/rules/no-confusing-void-expression.js b/dist/rules/no-confusing-void-expression.js
+index 7062b7c4e045738eeaadaaee72c93fcbd680ffd0..1d8324d0bbde94b3a280d9f7dc62a5251a8c3559 100644
+--- a/dist/rules/no-confusing-void-expression.js
++++ b/dist/rules/no-confusing-void-expression.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getParentFunctionNode_1 = require("../util/getParentFunctionNode");
+ exports.default = (0, util_1.createRule)({
+diff --git a/dist/rules/no-deprecated.js b/dist/rules/no-deprecated.js
+index 0f6fc7cd77f4f901a642dfec00276a798ecc7ffe..495263698212508a5240d2b031dbae9f33cf07a5 100644
+--- a/dist/rules/no-deprecated.js
++++ b/dist/rules/no-deprecated.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-deprecated',
+diff --git a/dist/rules/no-duplicate-type-constituents.js b/dist/rules/no-duplicate-type-constituents.js
+index 31bd92d5fe3fca06c54120e0038fd881bf30d78c..b15fb34e57d65a4d906ee5a35e570a042090a0cf 100644
+--- a/dist/rules/no-duplicate-type-constituents.js
++++ b/dist/rules/no-duplicate-type-constituents.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const astIgnoreKeys = new Set(['loc', 'parent', 'range']);
+ const isSameAstNode = (actualNode, expectedNode) => {
+diff --git a/dist/rules/no-for-in-array.js b/dist/rules/no-for-in-array.js
+index 95f3e8b7bf48dd92553fa222a13b5cbb82849136..5160f63d2237166f13da2b714b95dd0c5253cb47 100644
+--- a/dist/rules/no-for-in-array.js
++++ b/dist/rules/no-for-in-array.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getForStatementHeadLoc_1 = require("../util/getForStatementHeadLoc");
+ exports.default = (0, util_1.createRule)({
+diff --git a/dist/rules/no-implied-eval.js b/dist/rules/no-implied-eval.js
+index 52c745ed26fa375ddb76f3f3c518382cbcd6ad5b..047f2e282e8b7035ed147e51107f2af739a11c33 100644
+--- a/dist/rules/no-implied-eval.js
++++ b/dist/rules/no-implied-eval.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const FUNCTION_CONSTRUCTOR = 'Function';
+ const GLOBAL_CANDIDATES = new Set(['global', 'globalThis', 'window']);
+diff --git a/dist/rules/no-meaningless-void-operator.js b/dist/rules/no-meaningless-void-operator.js
+index a0ff0c9b70c12afb4ae70242a18e403bb7af1b1b..19ed5777e3cc7fc49d9ced66717d337e07268e39 100644
+--- a/dist/rules/no-meaningless-void-operator.js
++++ b/dist/rules/no-meaningless-void-operator.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-meaningless-void-operator',
+diff --git a/dist/rules/no-misused-promises.js b/dist/rules/no-misused-promises.js
+index ad78b88f9143d1db316f7ca9e0ea7eb0ec7344a8..34e89568d192428d3075752c70fa4935ad4709e9 100644
+--- a/dist/rules/no-misused-promises.js
++++ b/dist/rules/no-misused-promises.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const promiseUtils_1 = require("../util/promiseUtils");
+ function parseChecksVoidReturn(checksVoidReturn) {
+diff --git a/dist/rules/no-misused-spread.js b/dist/rules/no-misused-spread.js
+index 638418766c60682ebf047bd017777c2358441350..8aee75142499afd6f9c498e84890fd391ad16a31 100644
+--- a/dist/rules/no-misused-spread.js
++++ b/dist/rules/no-misused-spread.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-misused-spread',
+diff --git a/dist/rules/no-mixed-enums.js b/dist/rules/no-mixed-enums.js
+index 91e064a8efeb1c8396835eaeea07d2d6ca3e8568..19508b3ebfdf2dd76b0a8be71b4ce1f2fdc4e9b1 100644
+--- a/dist/rules/no-mixed-enums.js
++++ b/dist/rules/no-mixed-enums.js
+@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ const scope_manager_1 = require("@typescript-eslint/scope-manager");
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ var AllowedType;
+ (function (AllowedType) {
+diff --git a/dist/rules/no-redundant-type-constituents.js b/dist/rules/no-redundant-type-constituents.js
+index 8e14210d7af962a09926f5ce2bb2c98c0ccc3766..6909b15d4222be4b23ad5d4fa040071fb71f496b 100644
+--- a/dist/rules/no-redundant-type-constituents.js
++++ b/dist/rules/no-redundant-type-constituents.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const literalToPrimitiveTypeFlags = {
+     [ts.TypeFlags.BigIntLiteral]: ts.TypeFlags.BigInt,
+diff --git a/dist/rules/no-unnecessary-boolean-literal-compare.js b/dist/rules/no-unnecessary-boolean-literal-compare.js
+index f2d15c20b6d17ae51b72f56c2e0a84c6ad37ad04..014029e05e94792c62312c7119a421a54d788ba7 100644
+--- a/dist/rules/no-unnecessary-boolean-literal-compare.js
++++ b/dist/rules/no-unnecessary-boolean-literal-compare.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-unnecessary-boolean-literal-compare',
+diff --git a/dist/rules/no-unnecessary-condition.js b/dist/rules/no-unnecessary-condition.js
+index 4735eb7c305e00bb6a9a59bb0c0a947c45c4aeaa..b196d0fce2fce22b96cb0af5871e05e7296347b1 100644
+--- a/dist/rules/no-unnecessary-condition.js
++++ b/dist/rules/no-unnecessary-condition.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const assertionFunctionUtils_1 = require("../util/assertionFunctionUtils");
+ // #region
+diff --git a/dist/rules/no-unnecessary-qualifier.js b/dist/rules/no-unnecessary-qualifier.js
+index bd0d2fbdf126bfd947d94b09b19487a011bdd9c2..c49950472783b0cf28ea3b59875fa0aeedd9cfdb 100644
+--- a/dist/rules/no-unnecessary-qualifier.js
++++ b/dist/rules/no-unnecessary-qualifier.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-unnecessary-qualifier',
+diff --git a/dist/rules/no-unnecessary-template-expression.js b/dist/rules/no-unnecessary-template-expression.js
+index a87ccafdea05c26f38ddfd00b8e99531e6096301..72d0cc37ed8ee1569d9687e907cbcd183819d5fd 100644
+--- a/dist/rules/no-unnecessary-template-expression.js
++++ b/dist/rules/no-unnecessary-template-expression.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const rangeToLoc_1 = require("../util/rangeToLoc");
+ const evenNumOfBackslashesRegExp = /(?<!(?:[^\\]|^)(?:\\\\)*\\)/;
+diff --git a/dist/rules/no-unnecessary-type-arguments.js b/dist/rules/no-unnecessary-type-arguments.js
+index 905220e8d4c8db493056dd6f7c2aaa6a41b5f3f4..5b6e2de3b606a4028ca9bf8c290fb823f8bc2754 100644
+--- a/dist/rules/no-unnecessary-type-arguments.js
++++ b/dist/rules/no-unnecessary-type-arguments.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-unnecessary-type-arguments',
+diff --git a/dist/rules/no-unnecessary-type-assertion.js b/dist/rules/no-unnecessary-type-assertion.js
+index 143867c9327d4fd597260a347e1c649d80f93774..fc3e40ab5a82d1fdc05556a2b6547e609beaeddb 100644
+--- a/dist/rules/no-unnecessary-type-assertion.js
++++ b/dist/rules/no-unnecessary-type-assertion.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ function isAtExpressionStatementStart(node) {
+     let current = node;
+diff --git a/dist/rules/no-unnecessary-type-constraint.js b/dist/rules/no-unnecessary-type-constraint.js
+index adb49eee74ed8818e6a29cbabfde83aa2ce0c8d6..3487c7e3b1915b26cf1659ee458bb1ad016510da 100644
+--- a/dist/rules/no-unnecessary-type-constraint.js
++++ b/dist/rules/no-unnecessary-type-constraint.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const node_path_1 = require("node:path");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-unnecessary-type-constraint',
+diff --git a/dist/rules/no-unnecessary-type-conversion.js b/dist/rules/no-unnecessary-type-conversion.js
+index b72c7c06d1802570d795981ea8bff608a706902e..5f3062896b661b5ab6a181f13f8f14d65345f73f 100644
+--- a/dist/rules/no-unnecessary-type-conversion.js
++++ b/dist/rules/no-unnecessary-type-conversion.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ function isEnumType(type) {
+     return (type.getFlags() & ts.TypeFlags.EnumLike) !== 0;
+diff --git a/dist/rules/no-unnecessary-type-parameters.js b/dist/rules/no-unnecessary-type-parameters.js
+index 84cb39af39f067455a081607ed20ec283627b48e..d15d467e4bced969cade57a803cbb4c13a1e0783 100644
+--- a/dist/rules/no-unnecessary-type-parameters.js
++++ b/dist/rules/no-unnecessary-type-parameters.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-unnecessary-type-parameters',
+diff --git a/dist/rules/no-unsafe-argument.js b/dist/rules/no-unsafe-argument.js
+index 0ac4090cf065c54fa35e20881d6747dffdc82d82..e21dd9319392148f6d225b8895b0a96e30c86aed 100644
+--- a/dist/rules/no-unsafe-argument.js
++++ b/dist/rules/no-unsafe-argument.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ var RestTypeKind;
+ (function (RestTypeKind) {
+diff --git a/dist/rules/no-unsafe-enum-comparison.js b/dist/rules/no-unsafe-enum-comparison.js
+index ff271cb42666f1a0047d0eb176666be009bb5353..a6993b3ff2ce33308c4573afb1ca7f730d1c87c1 100644
+--- a/dist/rules/no-unsafe-enum-comparison.js
++++ b/dist/rules/no-unsafe-enum-comparison.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const shared_1 = require("./enum-utils/shared");
+ /**
+diff --git a/dist/rules/no-unsafe-return.js b/dist/rules/no-unsafe-return.js
+index e5cf41ea0cc87a75180251a41802a31a5fed12ce..516f2cd889392a7d827b97af94a16f11afdc4767 100644
+--- a/dist/rules/no-unsafe-return.js
++++ b/dist/rules/no-unsafe-return.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getParentFunctionNode_1 = require("../util/getParentFunctionNode");
+ exports.default = (0, util_1.createRule)({
+diff --git a/dist/rules/no-unsafe-type-assertion.js b/dist/rules/no-unsafe-type-assertion.js
+index c20a60ea6a2efb775ee77a8d923970e3cab64b56..2698f9db4e927648917a0ace6f66da352f68e83e 100644
+--- a/dist/rules/no-unsafe-type-assertion.js
++++ b/dist/rules/no-unsafe-type-assertion.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-unsafe-type-assertion',
+diff --git a/dist/rules/no-unsafe-unary-minus.js b/dist/rules/no-unsafe-unary-minus.js
+index 749f4b01e956beb10e536346e1e941d9aa24f494..c9a4f9504137a5f814d7ae6046b545eae96a7c98 100644
+--- a/dist/rules/no-unsafe-unary-minus.js
++++ b/dist/rules/no-unsafe-unary-minus.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util = __importStar(require("../util"));
+ exports.default = util.createRule({
+     name: 'no-unsafe-unary-minus',
+diff --git a/dist/rules/no-useless-default-assignment.js b/dist/rules/no-useless-default-assignment.js
+index 797cf33662a688d4a2c1f4ad0a62c51ee79b2c20..f1683132894568dcec99c7d2c47926bfa7e3b062 100644
+--- a/dist/rules/no-useless-default-assignment.js
++++ b/dist/rules/no-useless-default-assignment.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'no-useless-default-assignment',
+diff --git a/dist/rules/non-nullable-type-assertion-style.js b/dist/rules/non-nullable-type-assertion-style.js
+index 056a2adcab627280652534fb4a0033bccbd360b4..a75c2a4a88ad9cd44db8c11c6c384fcad247f463 100644
+--- a/dist/rules/non-nullable-type-assertion-style.js
++++ b/dist/rules/non-nullable-type-assertion-style.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'non-nullable-type-assertion-style',
+diff --git a/dist/rules/only-throw-error.js b/dist/rules/only-throw-error.js
+index d2ab3535774aa849257acb320ae16ecb25a4f8c8..16bde13e0558474f998454205ce6c78e404c0aac 100644
+--- a/dist/rules/only-throw-error.js
++++ b/dist/rules/only-throw-error.js
+@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+ const ts_api_utils_1 = require("ts-api-utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const promiseUtils_1 = require("../util/promiseUtils");
+ exports.default = (0, util_1.createRule)({
+diff --git a/dist/rules/prefer-includes.js b/dist/rules/prefer-includes.js
+index acca9776c4c93f5ba5c70c358ccbc876068d83d7..7da3ba5fc647fdb38b512e35a8ff3d364f408f74 100644
+--- a/dist/rules/prefer-includes.js
++++ b/dist/rules/prefer-includes.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const regexpp_1 = require("@eslint-community/regexpp");
+ const utils_1 = require("@typescript-eslint/utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'prefer-includes',
+diff --git a/dist/rules/prefer-nullish-coalescing.js b/dist/rules/prefer-nullish-coalescing.js
+index 16dcc08b7132614725c1efefc8327f7152f92369..da5b0895e292428896b3added0744dbbf7f6bf72 100644
+--- a/dist/rules/prefer-nullish-coalescing.js
++++ b/dist/rules/prefer-nullish-coalescing.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getWrappedCode_1 = require("../util/getWrappedCode");
+ const isMemberAccessLike = (0, util_1.isNodeOfTypes)([
+diff --git a/dist/rules/prefer-optional-chain-utils/analyzeChain.js b/dist/rules/prefer-optional-chain-utils/analyzeChain.js
+index c6d79ff24af42c8afb2e0c8e8a8634df0160e942..9650a82921daeb5b6a8c9b29651a32bed00e388e 100644
+--- a/dist/rules/prefer-optional-chain-utils/analyzeChain.js
++++ b/dist/rules/prefer-optional-chain-utils/analyzeChain.js
+@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.analyzeChain = analyzeChain;
+ const utils_1 = require("@typescript-eslint/utils");
+ const ts_api_utils_1 = require("ts-api-utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../../util");
+ const checkNullishAndReport_1 = require("./checkNullishAndReport");
+ const compareNodes_1 = require("./compareNodes");
+diff --git a/dist/rules/prefer-optional-chain-utils/checkNullishAndReport.js b/dist/rules/prefer-optional-chain-utils/checkNullishAndReport.js
+index 55724e0653950ee833499d98bb38f1d1e26571e4..cd4fa9289bbfa85e264d2ef7357e877ec60a116b 100644
+--- a/dist/rules/prefer-optional-chain-utils/checkNullishAndReport.js
++++ b/dist/rules/prefer-optional-chain-utils/checkNullishAndReport.js
+@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.checkNullishAndReport = checkNullishAndReport;
+ const type_utils_1 = require("@typescript-eslint/type-utils");
+ const ts_api_utils_1 = require("ts-api-utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ function checkNullishAndReport(context, parserServices, { requireNullish }, maybeNullishNodes, descriptor) {
+     if (!requireNullish ||
+         maybeNullishNodes.some(node => (0, ts_api_utils_1.unionConstituents)(parserServices.getTypeAtLocation(node)).some(t => (0, type_utils_1.isTypeFlagSet)(t, ts.TypeFlags.Null | ts.TypeFlags.Undefined)))) {
+diff --git a/dist/rules/prefer-optional-chain-utils/gatherLogicalOperands.js b/dist/rules/prefer-optional-chain-utils/gatherLogicalOperands.js
+index b3571856ec82e8770d4d43973efaa378858c4d2f..3403d8ef078a138a43ede7b46a4e58937698af52 100644
+--- a/dist/rules/prefer-optional-chain-utils/gatherLogicalOperands.js
++++ b/dist/rules/prefer-optional-chain-utils/gatherLogicalOperands.js
+@@ -37,7 +37,7 @@ exports.ComparisonType = exports.NullishComparisonType = exports.OperandValidity
+ exports.gatherLogicalOperands = gatherLogicalOperands;
+ const utils_1 = require("@typescript-eslint/utils");
+ const ts_api_utils_1 = require("ts-api-utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../../util");
+ var Yoda;
+ (function (Yoda) {
+diff --git a/dist/rules/prefer-readonly.js b/dist/rules/prefer-readonly.js
+index 91e6263a0653bb66b0fce77ac4a7fbf393b900ba..86f9b45fc2e3b408f5f77bc5a578e41a1c4e1970 100644
+--- a/dist/rules/prefer-readonly.js
++++ b/dist/rules/prefer-readonly.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const getMemberHeadLoc_1 = require("../util/getMemberHeadLoc");
+ const functionScopeBoundaries = [
+diff --git a/dist/rules/prefer-return-this-type.js b/dist/rules/prefer-return-this-type.js
+index 4344adf2f4308b7264ea64daf64f31bd4188f53f..c9fb3636366276dc30c3fc97253b6892531c4f9a 100644
+--- a/dist/rules/prefer-return-this-type.js
++++ b/dist/rules/prefer-return-this-type.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const ts_api_utils_1 = require("ts-api-utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'prefer-return-this-type',
+diff --git a/dist/rules/promise-function-async.js b/dist/rules/promise-function-async.js
+index b7418ad358a791d1b8b87078b6fda1566b36b2e0..e1e0d140d7a5e41f48bacfdaef8963259fb908a3 100644
+--- a/dist/rules/promise-function-async.js
++++ b/dist/rules/promise-function-async.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'promise-function-async',
+diff --git a/dist/rules/restrict-plus-operands.js b/dist/rules/restrict-plus-operands.js
+index 8b05a736e091f898a2c55de010882ce0f9ec8af6..52374097aeb02197f5c8fa193b90a219466c0a7a 100644
+--- a/dist/rules/restrict-plus-operands.js
++++ b/dist/rules/restrict-plus-operands.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'restrict-plus-operands',
+diff --git a/dist/rules/restrict-template-expressions.js b/dist/rules/restrict-template-expressions.js
+index 95d3e2b804c5a138a4994ac664cd947e6e526ba9..4e14c1be775979169bae81f1bf556cd8bee542dc 100644
+--- a/dist/rules/restrict-template-expressions.js
++++ b/dist/rules/restrict-template-expressions.js
+@@ -2,7 +2,7 @@
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const type_utils_1 = require("@typescript-eslint/type-utils");
+ const utils_1 = require("@typescript-eslint/utils");
+-const typescript_1 = require("typescript");
++const typescript_1 = require("@typescript/typescript6");
+ const util_1 = require("../util");
+ const testTypeFlag = (flagsToCheck) => type => (0, util_1.isTypeFlagSet)(type, flagsToCheck);
+ const optionTesters = [
+diff --git a/dist/rules/return-await.js b/dist/rules/return-await.js
+index 954a50d028532139484ea00135c5b035ab5d2166..e9f99976c3c13ad66dda4adee7b9deb1967d981e 100644
+--- a/dist/rules/return-await.js
++++ b/dist/rules/return-await.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ exports.default = (0, util_1.createRule)({
+     name: 'return-await',
+diff --git a/dist/rules/strict-boolean-expressions.js b/dist/rules/strict-boolean-expressions.js
+index 14074655a0336a900c5c589211c89b0cae62d1d8..485c7ad266ba1050511c932748fe92b0e0d573b3 100644
+--- a/dist/rules/strict-boolean-expressions.js
++++ b/dist/rules/strict-boolean-expressions.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const assertionFunctionUtils_1 = require("../util/assertionFunctionUtils");
+ exports.default = (0, util_1.createRule)({
+diff --git a/dist/rules/strict-void-return.js b/dist/rules/strict-void-return.js
+index 8539764d17c0bb655eeef6819d9396e71656f6e3..fa63b2e8266f33e4b5f72b308f7d7e3fbeeec721 100644
+--- a/dist/rules/strict-void-return.js
++++ b/dist/rules/strict-void-return.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util = __importStar(require("../util"));
+ exports.default = util.createRule({
+     name: 'strict-void-return',
+diff --git a/dist/rules/switch-exhaustiveness-check.js b/dist/rules/switch-exhaustiveness-check.js
+index cce57df8d3748c50d47fda992141bbf787e37531..5a4ffc6532c330d3b5cf230932ae8f59d9f06b4b 100644
+--- a/dist/rules/switch-exhaustiveness-check.js
++++ b/dist/rules/switch-exhaustiveness-check.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ const DEFAULT_COMMENT_PATTERN = /^no default$/iu;
+ exports.default = (0, util_1.createRule)({
+diff --git a/dist/rules/unbound-method.js b/dist/rules/unbound-method.js
+index 88e59eca1543ba152b70eb46b4c57f11f0eb9cb9..f6b4736f54a6c1eaa369f3b96183a2bf0102cfbe 100644
+--- a/dist/rules/unbound-method.js
++++ b/dist/rules/unbound-method.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const utils_1 = require("@typescript-eslint/utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const util_1 = require("../util");
+ /**
+  * Static methods on these globals are either not `this`-aware or supported being
+diff --git a/dist/util/assertionFunctionUtils.js b/dist/util/assertionFunctionUtils.js
+index fca21d030f42c6094b31e7196e32436b717f80d0..ded477f078973ae5172a77e17149a437224b4b61 100644
+--- a/dist/util/assertionFunctionUtils.js
++++ b/dist/util/assertionFunctionUtils.js
+@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.findTruthinessAssertedArgument = findTruthinessAssertedArgument;
+ exports.findTypeGuardAssertedArgument = findTypeGuardAssertedArgument;
+ const utils_1 = require("@typescript-eslint/utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ /**
+  * Inspect a call expression to see if it's a call to an assertion function.
+  * If it is, return the node of the argument that is asserted.
+diff --git a/dist/util/astUtils.js b/dist/util/astUtils.js
+index 6104aef4982d3772c076a4a749cc12b8742845b0..a2849f2ddc47834914f7a6908db7704fbd346448 100644
+--- a/dist/util/astUtils.js
++++ b/dist/util/astUtils.js
+@@ -40,7 +40,7 @@ exports.getNameLocationInGlobalDirectiveComment = getNameLocationInGlobalDirecti
+ exports.forEachReturnStatement = forEachReturnStatement;
+ exports.forEachChildESTree = forEachChildESTree;
+ const visitor_keys_1 = require("@typescript-eslint/visitor-keys");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const escapeRegExp_1 = require("./escapeRegExp");
+ // deeply re-export, for convenience
+ __exportStar(require("@typescript-eslint/utils/ast-utils"), exports);
+diff --git a/dist/util/baseTypeUtils.js b/dist/util/baseTypeUtils.js
+index 448eeb98a376c069bb12fe7c345512cce8c56ff0..e79ec4c48a26631e6496ae888d8bb942ccee40e0 100644
+--- a/dist/util/baseTypeUtils.js
++++ b/dist/util/baseTypeUtils.js
+@@ -37,7 +37,7 @@ exports.hasBaseTypes = hasBaseTypes;
+ exports.matchesTypeOrBaseType = matchesTypeOrBaseType;
+ const ts_api_utils_1 = require("ts-api-utils");
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ function getBaseTypesForType(checker, type) {
+     if (!tsutils.isObjectType(type)) {
+         return [];
+diff --git a/dist/util/getOperatorPrecedence.js b/dist/util/getOperatorPrecedence.js
+index 53671095ceda2381e02930cd484631d5ed169e75..8cbf14026d7d8ac8699ce7ef96b472483f63527a 100644
+--- a/dist/util/getOperatorPrecedence.js
++++ b/dist/util/getOperatorPrecedence.js
+@@ -5,7 +5,7 @@ exports.getOperatorPrecedenceForNode = getOperatorPrecedenceForNode;
+ exports.getOperatorPrecedence = getOperatorPrecedence;
+ exports.getBinaryOperatorPrecedence = getBinaryOperatorPrecedence;
+ const utils_1 = require("@typescript-eslint/utils");
+-const typescript_1 = require("typescript");
++const typescript_1 = require("@typescript/typescript6");
+ var OperatorPrecedence;
+ (function (OperatorPrecedence) {
+     // Expression:
+diff --git a/dist/util/isHigherPrecedenceThanAwait.js b/dist/util/isHigherPrecedenceThanAwait.js
+index a2e7dc4088e3e3cc0b5dc73424acfaac918246a4..3248a8572fe5603dff3af9a007365613bd1fe066 100644
+--- a/dist/util/isHigherPrecedenceThanAwait.js
++++ b/dist/util/isHigherPrecedenceThanAwait.js
+@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.isHigherPrecedenceThanAwait = isHigherPrecedenceThanAwait;
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const getOperatorPrecedence_1 = require("./getOperatorPrecedence");
+ function isHigherPrecedenceThanAwait(tsNode) {
+     const operator = ts.isBinaryExpression(tsNode)
+diff --git a/dist/util/misc.js b/dist/util/misc.js
+index 3de454943d4e06cc94e4f6a04c4e51942e281db4..20e43c35ac4b38886073176ce8a6bf8f3f581ef4 100644
+--- a/dist/util/misc.js
++++ b/dist/util/misc.js
+@@ -50,7 +50,7 @@ exports.isParenlessArrowFunction = isParenlessArrowFunction;
+ exports.getStaticMemberAccessValue = getStaticMemberAccessValue;
+ const type_utils_1 = require("@typescript-eslint/type-utils");
+ const utils_1 = require("@typescript-eslint/utils");
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const astUtils_1 = require("./astUtils");
+ const DEFINITION_EXTENSIONS = [
+     ts.Extension.Dts,
+diff --git a/dist/util/truthinessUtils.js b/dist/util/truthinessUtils.js
+index 2ef0dc4088137630944d1866acad6eab30e851c4..8c3e71395524b8fb9b4e972fee7326fc99d55af3 100644
+--- a/dist/util/truthinessUtils.js
++++ b/dist/util/truthinessUtils.js
+@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.isPossiblyTruthy = exports.isPossiblyFalsy = void 0;
+ const tsutils = __importStar(require("ts-api-utils"));
+-const ts = __importStar(require("typescript"));
++const ts = __importStar(require("@typescript/typescript6"));
+ const getValueOfLiteralType_1 = require("./getValueOfLiteralType");
+ // Truthiness utilities
+ const isTruthyLiteral = (type) => tsutils.isTrueLiteralType(type) ||
