@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.23](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.23) - 2026-08-20
+
+### Update for latest MC Snapshot, fixed type bugs
+
+**Full Changelog**: [v1.2.22...v1.2.23](https://github.com/sandstone-mc/sandstone/compare/v1.2.22...v1.2.23)
+
+
 ## [v1.2.22](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.22) - 2026-08-09
 
 ### Fix regression in `SimplifyExecuteFunctionVisitor`, add tests to prevent it in the future
