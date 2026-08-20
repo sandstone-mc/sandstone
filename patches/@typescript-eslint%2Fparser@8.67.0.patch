@@ -1,0 +1,16 @@
+diff --git a/node_modules/@typescript-eslint/parser/.bun-tag-3b21235302463470 b/.bun-tag-3b21235302463470
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/index.js b/dist/index.js
+index 121861922f9d40d33a621c3f5f55d221b8a18440..4f74e5c16e566f6a4ede3c77abb397e06805eccb 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -39,7 +39,7 @@ const ts = __importStar(require("typescript"));
+ const [versionMajor, _versionMinor] = ts.versionMajorMinor
+     .split('.')
+     .map(Number);
+-if (versionMajor >= 7) {
++if (false) {
+     // eslint-disable-next-line no-console
+     console.error([
+         'typescript-eslint does not support TS 7.0.',
