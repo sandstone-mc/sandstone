@@ -9,6 +9,10 @@ jobs:
   run_test:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      actions: write
+
     steps:
     - uses: actions/checkout@v6
       with:
@@ -19,6 +23,47 @@ jobs:
 
     - name: Install dependencies
       run: bun i
+
+    # Cache master and the v1.{y}.x minor branches only, each under its own key.
+    # Default-branch caches are readable everywhere, so a shared prefix would let
+    # a v1.{y}.x run restore master's declarations for the wrong minor.
+    - name: Resolve cache prefix
+      id: cache-meta
+      if: github.event_name != 'pull_request'
+      continue-on-error: true
+      env:
+        BRANCH: ${{ github.ref_name }}
+      run: |
+        if [[ "$BRANCH" == 'master' || "$BRANCH" =~ ^v1\.[0-9]+\.x$ ]]; then
+          echo "prefix=types-${BRANCH}-" >> "$GITHUB_OUTPUT"
+        fi
+
+    # types/ holds tsc's declarations + .tsbuildinfo (incremental: true), so a
+    # restore lets tsc skip unchanged files. Key is unique per run to force a
+    # refresh; restore-keys pull in whatever the previous run left behind.
+    - name: Cache generated declarations
+      if: steps.cache-meta.outputs.prefix != ''
+      continue-on-error: true
+      uses: actions/cache@v4
+      with:
+        path: types
+        key: ${{ steps.cache-meta.outputs.prefix }}${{ github.run_id }}
+        restore-keys: |
+          ${{ steps.cache-meta.outputs.prefix }}
+
+    # Drop every prior cache for this branch; the post-job saves leaving
+    # exactly one. Must follow the restore above. A red run saves nothing and so
+    # starts cold next time - preferred over caching a half-emitted types/ tree.
+    - name: Prune superseded type caches
+      if: steps.cache-meta.outputs.prefix != ''
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+        PREFIX: ${{ steps.cache-meta.outputs.prefix }}
+      run: |
+        gh cache list --ref "$GITHUB_REF" --key "$PREFIX" --limit 100 --json id --jq '.[].id' \
+          | xargs -r -n1 gh cache delete
 
     - name: Build Library
       run: bun dev:build
