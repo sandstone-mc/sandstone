@@ -3,4 +3,5 @@ node_modules
 .eslintignore
 .eslintrc.cjs
 .editorconfig
+.oxlintrc.json
 .gitignore
