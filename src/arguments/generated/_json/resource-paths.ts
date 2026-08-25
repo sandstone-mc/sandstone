@@ -7,6 +7,7 @@ export const JSONRESOURCE_PATHS = {
   'recipe': { path: ['recipe'], pack: 'data', ext: '.json' },
   'structure': { path: ['structure'], pack: 'data', ext: '.nbt' },
   'banner_pattern': { path: ['banner_pattern'], pack: 'data', ext: '.json' },
+  'block_transformer': { path: ['block_transformer'], pack: 'data', ext: '.json' },
   'cat_sound_variant': { path: ['cat_sound_variant'], pack: 'data', ext: '.json' },
   'cat_variant': { path: ['cat_variant'], pack: 'data', ext: '.json' },
   'chat_type': { path: ['chat_type'], pack: 'data', ext: '.json' },

@@ -479,6 +479,7 @@ export type JsonRegistry = {
 export const JSONREGISTRIES_SET = new Set([
   'advancement',
   'banner_pattern',
+  'block_transformer',
   'cat_sound_variant',
   'cat_variant',
   'chat_type',
