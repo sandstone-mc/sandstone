@@ -94,6 +94,23 @@ export type JsonGradient = {
   to_value: JsonNoiseRange,
 }
 
+export type JsonInterpolated = (JsonOneArgument & {
+  /**
+   * Value:
+   * Range: 1..
+   */
+  cell_size_xz: (NBTInt<{
+    min: 1,
+  }> | number),
+  /**
+   * Value:
+   * Range: 1..
+   */
+  cell_size_y: (NBTInt<{
+    min: 1,
+  }> | number),
+})
+
 export type JsonInvervalSelect = {
   input: JsonDensityFunctionRef,
   /**
@@ -124,11 +141,24 @@ export type JsonLerp = {
   second: JsonDensityFunctionRef,
 }
 
-export type JsonNoise = {
+export type JsonNoise = ({
   noise: JsonNoiseParametersRef,
   xz_scale: (NBTFloat | number),
   y_scale: (NBTFloat | number),
-}
+} & {
+  /**
+   * Defaults to constant 0.
+   */
+  shift_x?: JsonDensityFunctionRef,
+  /**
+   * Defaults to constant 0.
+   */
+  shift_y?: JsonDensityFunctionRef,
+  /**
+   * Defaults to constant 0.
+   */
+  shift_z?: JsonDensityFunctionRef,
+})
 
 export type JsonNoiseParametersRef = (JsonRegistry['minecraft:worldgen/noise'] | JsonNoiseParameters)
 
@@ -276,12 +306,8 @@ type JsonDensityFunctionDispatcherMap = {
   'minecraft:add': JsonDensityFunctionAdd,
   'blend_density': JsonDensityFunctionBlendDensity,
   'minecraft:blend_density': JsonDensityFunctionBlendDensity,
-  'cache_2d': JsonDensityFunctionCache2d,
-  'minecraft:cache_2d': JsonDensityFunctionCache2d,
-  'cache_all_in_cell': JsonDensityFunctionCacheAllInCell,
-  'minecraft:cache_all_in_cell': JsonDensityFunctionCacheAllInCell,
-  'cache_once': JsonDensityFunctionCacheOnce,
-  'minecraft:cache_once': JsonDensityFunctionCacheOnce,
+  'cache': JsonDensityFunctionCache,
+  'minecraft:cache': JsonDensityFunctionCache,
   'ceil': JsonDensityFunctionCeil,
   'minecraft:ceil': JsonDensityFunctionCeil,
   'clamp': JsonDensityFunctionClamp,
@@ -296,8 +322,6 @@ type JsonDensityFunctionDispatcherMap = {
   'minecraft:div': JsonDensityFunctionDiv,
   'find_top_surface': JsonDensityFunctionFindTopSurface,
   'minecraft:find_top_surface': JsonDensityFunctionFindTopSurface,
-  'flat_cache': JsonDensityFunctionFlatCache,
-  'minecraft:flat_cache': JsonDensityFunctionFlatCache,
   'floor': JsonDensityFunctionFloor,
   'minecraft:floor': JsonDensityFunctionFloor,
   'gradient': JsonDensityFunctionGradient,
@@ -340,8 +364,6 @@ type JsonDensityFunctionDispatcherMap = {
   'minecraft:shift_a': JsonDensityFunctionShiftA,
   'shift_b': JsonDensityFunctionShiftB,
   'minecraft:shift_b': JsonDensityFunctionShiftB,
-  'shifted_noise': JsonDensityFunctionShiftedNoise,
-  'minecraft:shifted_noise': JsonDensityFunctionShiftedNoise,
   'sign': JsonDensityFunctionSign,
   'minecraft:sign': JsonDensityFunctionSign,
   'slice': JsonDensityFunctionSlice,
@@ -366,9 +388,7 @@ type JsonDensityFunctionFallback = (
   | JsonDensityFunctionAbs
   | JsonDensityFunctionAdd
   | JsonDensityFunctionBlendDensity
-  | JsonDensityFunctionCache2d
-  | JsonDensityFunctionCacheAllInCell
-  | JsonDensityFunctionCacheOnce
+  | JsonDensityFunctionCache
   | JsonDensityFunctionCeil
   | JsonDensityFunctionClamp
   | JsonDensityFunctionConstant
@@ -376,7 +396,6 @@ type JsonDensityFunctionFallback = (
   | JsonDensityFunctionDistanceToPoint
   | JsonDensityFunctionDiv
   | JsonDensityFunctionFindTopSurface
-  | JsonDensityFunctionFlatCache
   | JsonDensityFunctionFloor
   | JsonDensityFunctionGradient
   | JsonDensityFunctionHalfNegative
@@ -398,7 +417,6 @@ type JsonDensityFunctionFallback = (
   | JsonDensityFunctionShift
   | JsonDensityFunctionShiftA
   | JsonDensityFunctionShiftB
-  | JsonDensityFunctionShiftedNoise
   | JsonDensityFunctionSign
   | JsonDensityFunctionSlice
   | JsonDensityFunctionSlide
@@ -413,9 +431,7 @@ export type JsonDensityFunctionFallbackType = Record<string, never>
 type JsonDensityFunctionAbs = JsonOneArgument
 type JsonDensityFunctionAdd = JsonTwoArguments
 type JsonDensityFunctionBlendDensity = JsonOneArgument
-type JsonDensityFunctionCache2d = JsonOneArgument
-type JsonDensityFunctionCacheAllInCell = JsonOneArgument
-type JsonDensityFunctionCacheOnce = JsonOneArgument
+type JsonDensityFunctionCache = JsonOneArgument
 type JsonDensityFunctionCeil = JsonRound
 type JsonDensityFunctionClamp = JsonClamp
 type JsonDensityFunctionConstant = JsonConstant
@@ -423,11 +439,10 @@ type JsonDensityFunctionCube = JsonOneArgument
 type JsonDensityFunctionDistanceToPoint = JsonDistanceToPoint
 type JsonDensityFunctionDiv = JsonTwoArguments
 type JsonDensityFunctionFindTopSurface = JsonFindTopSurface
-type JsonDensityFunctionFlatCache = JsonOneArgument
 type JsonDensityFunctionFloor = JsonRound
 type JsonDensityFunctionGradient = JsonGradient
 type JsonDensityFunctionHalfNegative = JsonOneArgument
-type JsonDensityFunctionInterpolated = JsonOneArgument
+type JsonDensityFunctionInterpolated = JsonInterpolated
 type JsonDensityFunctionIntervalSelect = JsonInvervalSelect
 type JsonDensityFunctionLerp = JsonLerp
 type JsonDensityFunctionLog = JsonOneArgument
@@ -445,7 +460,6 @@ type JsonDensityFunctionRound = JsonRound
 type JsonDensityFunctionShift = JsonShift
 type JsonDensityFunctionShiftA = JsonShift
 type JsonDensityFunctionShiftB = JsonShift
-type JsonDensityFunctionShiftedNoise = JsonShiftedNoise
 type JsonDensityFunctionSign = JsonOneArgument
 type JsonDensityFunctionSlice = JsonSlice
 type JsonDensityFunctionSlide = JsonOneArgument

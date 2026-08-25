@@ -1,7 +1,8 @@
+import type { DensityFunctionRef } from 'sandstone/arguments/generated/data/worldgen/density_function.ts'
 import type { MaterialConditionRef } from 'sandstone/arguments/generated/data/worldgen/material_condition.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
-import type { NamespacedString } from 'sandstone'
+import type { NamespacedString, NBTFloat } from 'sandstone'
 
 export type BlockRule = {
   result_state: BlockState,
@@ -20,6 +21,25 @@ export type MaterialRule = NonNullable<({
 
 export type MaterialRuleRef = (NamespacedString | MaterialRule)
 
+export type OreVeinifier = {
+  ore_block: BlockState,
+  raw_ore_block: BlockState,
+  filler_block: BlockState,
+  /**
+   * Value:
+   * Range: 0..1
+   */
+  raw_ore_chance: NBTFloat<{
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 0,
+    max: 1,
+  }>,
+  density: DensityFunctionRef,
+  richness: DensityFunctionRef,
+  filler_gap: DensityFunctionRef,
+}
+
 export type SequenceRule = {
   sequence: Array<MaterialRuleRef>,
 }
@@ -28,6 +48,8 @@ type MaterialRuleDispatcherMap = {
   'minecraft:block': MaterialRuleBlock,
   'condition': MaterialRuleCondition,
   'minecraft:condition': MaterialRuleCondition,
+  'ore_vein': MaterialRuleOreVein,
+  'minecraft:ore_vein': MaterialRuleOreVein,
   'sequence': MaterialRuleSequence,
   'minecraft:sequence': MaterialRuleSequence,
 }
@@ -35,11 +57,13 @@ type MaterialRuleKeys = keyof MaterialRuleDispatcherMap
 type MaterialRuleFallback = (
   | MaterialRuleBlock
   | MaterialRuleCondition
+  | MaterialRuleOreVein
   | MaterialRuleSequence
   | MaterialRuleFallbackType)
 export type MaterialRuleFallbackType = Record<string, never>
 type MaterialRuleBlock = BlockRule
 type MaterialRuleCondition = ConditionRule
+type MaterialRuleOreVein = OreVeinifier
 type MaterialRuleSequence = SequenceRule
 export type SymbolMaterialRule<CASE extends
   | 'map'

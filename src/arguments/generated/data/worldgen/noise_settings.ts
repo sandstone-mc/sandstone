@@ -18,6 +18,11 @@ export type Aquifer = {
   surface_level: DensityFunctionRef,
 }
 
+export type DebugFunctionEntry = {
+  label: string,
+  function: DensityFunctionRef,
+}
+
 export type NoiseGeneratorFlags = {
   aquifers_enabled: boolean,
   ore_veins_enabled: boolean,
@@ -32,12 +37,12 @@ export type NoiseGeneratorSettings = {
    */
   disable_mob_generation: boolean,
   aquifers?: Aquifer,
-  ore_veins?: Array<OreVeinifier>,
   legacy_random_source: boolean,
   noise: NoiseSettings,
   noise_router: NoiseRouter,
   spawn_target: Array<SpawnTargetPoint>,
   material_rule: MaterialRuleRef,
+  debug_functions?: Array<DebugFunctionEntry>,
 }
 
 export type NoiseGeneratorSettingsRef = (Registry['minecraft:worldgen/noise_settings'] | ({
@@ -56,7 +61,7 @@ export type NoiseRouter = {
   erosion: DensityFunctionRef,
   depth: DensityFunctionRef,
   ridges: DensityFunctionRef,
-  preliminary_surface_level: DensityFunctionRef,
+  chunk_surface_level: DensityFunctionRef,
   final_density: DensityFunctionRef,
 }
 
@@ -116,22 +121,6 @@ export type NoiseSettings = {
   height: NBTInt<{
     min: 0,
   }>,
-  /**
-   * Value:
-   * Range: 1..4
-   */
-  size_horizontal: NBTInt<{
-    min: 1,
-    max: 4,
-  }>,
-  /**
-   * Value:
-   * Range: 1..4
-   */
-  size_vertical: NBTInt<{
-    min: 1,
-    max: 4,
-  }>,
 }
 
 export type NoiseSlideSettings = {
@@ -152,25 +141,6 @@ export type NoiseSlideSettings = {
    * Defines an range of 'Offset * Size vertical * 4' blocks where the density is set to the target.
    */
   offset: NBTInt,
-}
-
-export type OreVeinifier = {
-  ore_block: BlockState,
-  raw_ore_block: BlockState,
-  filler_block: BlockState,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  raw_ore_chance: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-  density: DensityFunctionRef,
-  richness: DensityFunctionRef,
-  filler_gap: DensityFunctionRef,
 }
 
 export type SpawnTargetPoint = ({

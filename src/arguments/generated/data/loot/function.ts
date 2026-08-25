@@ -747,13 +747,9 @@ export type SetItem = ({
 
 export type SetLootTable = ({
   /**
-   * The block entity type of the container.
-   */
-  type: Registry['minecraft:block_entity_type'],
-  /**
    * The loot table to set to the container block item.
    */
-  tag: (Registry['minecraft:loot_table'] | LootTableClass),
+  loot_table_id: (Registry['minecraft:loot_table'] | LootTableClass),
   /**
    * The container seed to use. Defaults to a random seed.
    */
@@ -842,7 +838,7 @@ export type SetRandomPotion = ({
    */
   options?: ((
       | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
-      | Registry['minecraft:potion']),
+      | Array<Registry['minecraft:potion']>),
 } & Conditions)
 
 export type SetStewEffect = ({

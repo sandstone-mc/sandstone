@@ -21,6 +21,11 @@ export type JsonAquifer = {
   surface_level: JsonDensityFunctionRef,
 }
 
+export type JsonDebugFunctionEntry = {
+  label: string,
+  function: JsonDensityFunctionRef,
+}
+
 export type JsonNoiseGeneratorFlags = {
   aquifers_enabled: boolean,
   ore_veins_enabled: boolean,
@@ -35,12 +40,12 @@ export type JsonNoiseGeneratorSettings = {
    */
   disable_mob_generation: boolean,
   aquifers?: JsonAquifer,
-  ore_veins?: Array<JsonOreVeinifier>,
   legacy_random_source: boolean,
   noise: JsonNoiseSettings,
   noise_router: JsonNoiseRouter,
   spawn_target: Array<JsonSpawnTargetPoint>,
   material_rule: JsonMaterialRuleRef,
+  debug_functions?: Array<JsonDebugFunctionEntry>,
 }
 
 export type JsonNoiseGeneratorSettingsRef = (JsonRegistry['minecraft:worldgen/noise_settings'] | ({
@@ -59,7 +64,7 @@ export type JsonNoiseRouter = {
   erosion: JsonDensityFunctionRef,
   depth: JsonDensityFunctionRef,
   ridges: JsonDensityFunctionRef,
-  preliminary_surface_level: JsonDensityFunctionRef,
+  chunk_surface_level: JsonDensityFunctionRef,
   final_density: JsonDensityFunctionRef,
 }
 
@@ -119,22 +124,6 @@ export type JsonNoiseSettings = {
   height: (NBTInt<{
     min: 0,
   }> | number),
-  /**
-   * Value:
-   * Range: 1..4
-   */
-  size_horizontal: (NBTInt<{
-    min: 1,
-    max: 4,
-  }> | number),
-  /**
-   * Value:
-   * Range: 1..4
-   */
-  size_vertical: (NBTInt<{
-    min: 1,
-    max: 4,
-  }> | number),
 }
 
 export type JsonNoiseSlideSettings = {
@@ -155,25 +144,6 @@ export type JsonNoiseSlideSettings = {
    * Defines an range of 'Offset * Size vertical * 4' blocks where the density is set to the target.
    */
   offset: (NBTInt | number),
-}
-
-export type JsonOreVeinifier = {
-  ore_block: JsonBlockState,
-  raw_ore_block: JsonBlockState,
-  filler_block: JsonBlockState,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  raw_ore_chance: (NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }> | number),
-  density: JsonDensityFunctionRef,
-  richness: JsonDensityFunctionRef,
-  filler_gap: JsonDensityFunctionRef,
 }
 
 export type JsonSpawnTargetPoint = ({

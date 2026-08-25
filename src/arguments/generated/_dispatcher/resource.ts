@@ -15,6 +15,7 @@ import type { Sounds } from 'sandstone/arguments/generated/assets/sounds.ts'
 import type { TextureMeta } from 'sandstone/arguments/generated/assets/texture_meta.ts'
 import type { WaypointStyle } from 'sandstone/arguments/generated/assets/waypoint_style.ts'
 import type { Advancement } from 'sandstone/arguments/generated/data/advancement.ts'
+import type { BlockTransformData } from 'sandstone/arguments/generated/data/block_transformer.ts'
 import type { ChatType } from 'sandstone/arguments/generated/data/chat_type.ts'
 import type { DamageType } from 'sandstone/arguments/generated/data/damage_type.ts'
 import type { DecoratedPotPattern } from 'sandstone/arguments/generated/data/decorated_pot_pattern.ts'
@@ -65,6 +66,7 @@ import type { Structure } from 'sandstone/arguments/generated/data/worldgen/stru
 import type { StructureSet } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { TemplatePool } from 'sandstone/arguments/generated/data/worldgen/template_pool.ts'
 import type { FlatGeneratorPreset, WorldPreset } from 'sandstone/arguments/generated/data/worldgen/world_preset.ts'
+import type { NBTList } from 'sandstone'
 
 type ResourceDispatcherMap = {
   'advancement': ResourceAdvancement,
@@ -75,6 +77,8 @@ type ResourceDispatcherMap = {
   'minecraft:banner_pattern': ResourceBannerPattern,
   'block_definition': ResourceBlockDefinition,
   'minecraft:block_definition': ResourceBlockDefinition,
+  'block_transformer': ResourceBlockTransformer,
+  'minecraft:block_transformer': ResourceBlockTransformer,
   'cat_sound_variant': ResourceCatSoundVariant,
   'minecraft:cat_sound_variant': ResourceCatSoundVariant,
   'cat_variant': ResourceCatVariant,
@@ -222,6 +226,7 @@ type ResourceFallback = (
   | ResourceAtlas
   | ResourceBannerPattern
   | ResourceBlockDefinition
+  | ResourceBlockTransformer
   | ResourceCatSoundVariant
   | ResourceCatVariant
   | ResourceChatType
@@ -296,6 +301,10 @@ type ResourceAdvancement = Advancement
 type ResourceAtlas = Atlas
 type ResourceBannerPattern = BannerPattern
 type ResourceBlockDefinition = BlockStateDefinition
+type ResourceBlockTransformer = NBTList<BlockTransformData, {
+  leftExclusive: false,
+  rightExclusive: false,
+}>
 type ResourceCatSoundVariant = SoundVariant<CatSounds>
 type ResourceCatVariant = CatVariant
 type ResourceChatType = ChatType

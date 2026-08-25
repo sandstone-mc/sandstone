@@ -8,9 +8,6 @@ import type { JsonTrimMaterial, JsonTrimPattern } from 'sandstone/arguments/gene
 import type { JsonSoundEventRef } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type { JsonInstrument } from 'sandstone/arguments/generated/_json/data/variants/instrument.ts'
 import type {
-  JsonBlockStateProvider,
-} from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_state_provider.ts'
-import type {
   JsonSymbolMcdocBlockItemStates,
   JsonSymbolMcdocBlockStateKeys,
 } from 'sandstone/arguments/generated/_json/dispatcher.ts'
@@ -18,7 +15,6 @@ import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.
 import type { JsonAttributeOperation } from 'sandstone/arguments/generated/_json/util/attribute.ts'
 import type { JsonProfile } from 'sandstone/arguments/generated/_json/util/avatar.ts'
 import type { JsonDyeColor, JSONRGB } from 'sandstone/arguments/generated/_json/util/color.ts'
-import type { JsonDirection } from 'sandstone/arguments/generated/_json/util/direction.ts'
 import type { JsonMobEffectInstance } from 'sandstone/arguments/generated/_json/util/effect.ts'
 import type { JsonFilterable, JsonGlobalPos } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonEquipmentSlot, JsonEquipmentSlotGroup } from 'sandstone/arguments/generated/_json/util/slot.ts'
@@ -57,7 +53,6 @@ import type {
   ItemModelDefinitionClass,
   JsonNBTList,
   JukeboxSongClass,
-  LootTableClass,
   NamespacedString,
   NBTByte,
   NBTClass,
@@ -308,84 +303,6 @@ export type Jsonblocks_attacks = {
         | DamageTypeClass)
       | Array<(JsonRegistry['minecraft:damage_type'] | DamageTypeClass)>),
 }
-
-export type JsonBlockTransformDropStrategy = ('clicked_face' | 'from_middle')
-
-export type JsonBlockTransformer = {
-  /**
-   * If the provider returns no result, the next transformer will be attempted.
-   */
-  block_state_provider: JsonBlockStateProvider,
-  /**
-   * Defaults to not playing sound.
-   */
-  sound?: JsonSoundEventRef,
-  /**
-   * Defaults to `none`.
-   *
-   * Value:
-   *
-   *  - None(`none`)
-   *  - Scrape(`scrape`)
-   *  - WaxOn(`wax_on`)
-   *  - WaxOff(`wax_off`)
-   */
-  particle?: JsonBlockTransformParticle,
-  /**
-   * If a disallowed face is interacted with, the next transformer will be attempted. \
-   * Defaults to empty (allowing all faces).
-   */
-  disallowed_faces?: Array<JsonDirection>,
-  /**
-   * The loot to drop on a successful transformation. \
-   * Defaults to drop nothing.
-   */
-  loot?: (JsonRegistry['minecraft:loot_table'] | LootTableClass),
-  /**
-   * Where the `loot` should drop. \
-   * Defaults to `from_middle`.
-   *
-   * Value:
-   *
-   *  - ClickedFace(`clicked_face`)
-   *  - FromMiddle(`from_middle`)
-   */
-  drop_strategy?: JsonBlockTransformDropStrategy,
-  /**
-   * How nearby blocks are affected by the transformation. \
-   * Defaults to `single_block`.
-   *
-   * Value:
-   *
-   *  - SingleBlock(`single_block`)
-   *  - CopperChest(`copper_chest`): If the original block and the transformed block are both copper chests of any kind, the transform applies to the other half of the double chest.
-   */
-  transform_type?: JsonBlockTransformType,
-  /**
-   * Whether the transformed block should update based on neighboring blocks. \
-   * Defaults to `true`.
-   */
-  update_from_neighbors?: boolean,
-  /**
-   * Only has effect on stackable items. \
-   * Defaults to `true`.
-   */
-  consume_on_use?: boolean,
-  /**
-   * Only has effect on unstackable items. \
-   * Defauls to 1.
-   *
-   * Value:
-   * Range: 0..
-   */
-  item_damage_per_use?: (NBTInt<{
-    min: 0,
-  }> | number),
-}
-
-export type JsonBlockTransformParticle = ('none' | 'scrape' | 'wax_on' | 'wax_off')
-
-export type JsonBlockTransformType = ('single_block' | 'copper_chest')
 
 export type JsonBookGeneration = (0 | 1 | 2 | 3)
 
@@ -1003,6 +920,11 @@ export type JsonTeleportRandomlyConsumeEffect = {
     leftExclusive: false,
     min: 1,
   }> | number),
+  /**
+   * Whether to show a particle trail into the direction of teleportation. \
+   * Defaults to `true`.
+   */
+  directional_particles?: boolean,
 }
 
 export type JsonTool = {
@@ -1605,10 +1527,7 @@ type JsonDataComponentBaseColor = JsonDyeColor
 type JsonDataComponentBees = Array<JsonOccupant>
 type JsonDataComponentBlockEntityData = (JsonBlockEntityData | (NonEmptyString | NBTClass))
 type JsonDataComponentBlockState = JsonSymbolMcdocBlockItemStates<'%fallback'>
-type JsonDataComponentBlockTransformer = JsonNBTList<JsonBlockTransformer, {
-  leftExclusive: false,
-  rightExclusive: false,
-}>
+type JsonDataComponentBlockTransformer = NamespacedString
 type JsonDataComponentBlocksAttacks = Jsonblocks_attacks
 type JsonDataComponentBreakSound = JsonSoundEventRef
 type JsonDataComponentBrewingFuel = JsonBrewingFuel

@@ -750,13 +750,9 @@ export type JsonSetItem = ({
 
 export type JsonSetLootTable = ({
   /**
-   * The block entity type of the container.
-   */
-  type: JsonRegistry['minecraft:block_entity_type'],
-  /**
    * The loot table to set to the container block item.
    */
-  tag: (JsonRegistry['minecraft:loot_table'] | LootTableClass),
+  loot_table_id: (JsonRegistry['minecraft:loot_table'] | LootTableClass),
   /**
    * The container seed to use. Defaults to a random seed.
    */
@@ -845,7 +841,7 @@ export type JsonSetRandomPotion = ({
    */
   options?: ((
       | JsonRegistry['minecraft:potion'] | `#${JsonRegistry['minecraft:tag/potion']}` | TagClass<'potion'>)
-      | JsonRegistry['minecraft:potion']),
+      | Array<JsonRegistry['minecraft:potion']>),
 } & JsonConditions)
 
 export type JsonSetStewEffect = ({

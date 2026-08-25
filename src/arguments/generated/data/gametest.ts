@@ -19,6 +19,10 @@ export type TestData = {
    */
   environment: ((Registry['minecraft:test_environment'] | TestEnvironmentClass) | TestEnvironment),
   /**
+   * Defaults to overworld.
+   */
+  dimension?: Registry['minecraft:dimension'],
+  /**
    * Structure NBT file to use for the test.
    */
   structure: (Registry['minecraft:structure'] | StructureClass),

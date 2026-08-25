@@ -15,6 +15,7 @@ import type { JsonSounds } from 'sandstone/arguments/generated/_json/assets/soun
 import type { JsonTextureMeta } from 'sandstone/arguments/generated/_json/assets/texture_meta.ts'
 import type { JsonWaypointStyle } from 'sandstone/arguments/generated/_json/assets/waypoint_style.ts'
 import type { JsonAdvancement } from 'sandstone/arguments/generated/_json/data/advancement.ts'
+import type { JsonBlockTransformData } from 'sandstone/arguments/generated/_json/data/block_transformer.ts'
 import type { JsonChatType } from 'sandstone/arguments/generated/_json/data/chat_type.ts'
 import type { JsonDamageType } from 'sandstone/arguments/generated/_json/data/damage_type.ts'
 import type { JsonDecoratedPotPattern } from 'sandstone/arguments/generated/_json/data/decorated_pot_pattern.ts'
@@ -71,6 +72,7 @@ import type {
   JsonFlatGeneratorPreset,
   JsonWorldPreset,
 } from 'sandstone/arguments/generated/_json/data/worldgen/world_preset.ts'
+import type { JsonNBTList } from 'sandstone'
 
 type JsonResourceDispatcherMap = {
   'advancement': JsonResourceAdvancement,
@@ -81,6 +83,8 @@ type JsonResourceDispatcherMap = {
   'minecraft:banner_pattern': JsonResourceBannerPattern,
   'block_definition': JsonResourceBlockDefinition,
   'minecraft:block_definition': JsonResourceBlockDefinition,
+  'block_transformer': JsonResourceBlockTransformer,
+  'minecraft:block_transformer': JsonResourceBlockTransformer,
   'cat_sound_variant': JsonResourceCatSoundVariant,
   'minecraft:cat_sound_variant': JsonResourceCatSoundVariant,
   'cat_variant': JsonResourceCatVariant,
@@ -228,6 +232,7 @@ type JsonResourceFallback = (
   | JsonResourceAtlas
   | JsonResourceBannerPattern
   | JsonResourceBlockDefinition
+  | JsonResourceBlockTransformer
   | JsonResourceCatSoundVariant
   | JsonResourceCatVariant
   | JsonResourceChatType
@@ -302,6 +307,10 @@ type JsonResourceAdvancement = JsonAdvancement
 type JsonResourceAtlas = JsonAtlas
 type JsonResourceBannerPattern = JsonBannerPattern
 type JsonResourceBlockDefinition = JsonBlockStateDefinition
+type JsonResourceBlockTransformer = JsonNBTList<JsonBlockTransformData, {
+  leftExclusive: false,
+  rightExclusive: false,
+}>
 type JsonResourceCatSoundVariant = JsonSoundVariant<JsonCatSounds>
 type JsonResourceCatVariant = JsonCatVariant
 type JsonResourceChatType = JsonChatType

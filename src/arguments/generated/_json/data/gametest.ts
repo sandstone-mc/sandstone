@@ -19,6 +19,10 @@ export type JsonTestData = {
    */
   environment: ((JsonRegistry['minecraft:test_environment'] | TestEnvironmentClass) | JsonTestEnvironment),
   /**
+   * Defaults to overworld.
+   */
+  dimension?: JsonRegistry['minecraft:dimension'],
+  /**
    * Structure NBT file to use for the test.
    */
   structure: (JsonRegistry['minecraft:structure'] | StructureClass),
