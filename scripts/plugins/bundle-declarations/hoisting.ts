@@ -5,16 +5,22 @@
  * const declarations) can resolve — otherwise TS gives up and reports
  * the type as `any`.
  *
- * The original re-export is dropped from the returned statement list; the
- * hoisted import handles the consumer-facing `import { X } from
- * 'sandstone'` path through `dist/exports/index.d.ts`.
+ * The original re-exports are PRESERVED in the returned statement list
+ * (appended at the end). This is what makes the consumer-facing
+ * `import { X } from 'sandstone'` actually resolve through
+ * `dist/exports/index.d.ts` → `_internal/index.d.ts` → original source
+ * module. Dropping the re-export was a regression: the type became
+ * resolvable inside `_internal/index.d.ts` (because of the hoisted
+ * import) but the `export { X } from '../_internal/index.js'` in the
+ * outer `dist/exports/index.d.ts` couldn't find `X` on the internal
+ * module, so the TS LanguageService reported the type as `any`.
  */
 import * as ts from '@typescript/typescript6'
 
 export interface HoistedImports {
   /** The hoisted import declarations (merge with other collected imports). */
   readonly importDecls: ts.ImportDeclaration[]
-  /** Remaining top-level statements with re-exports removed. */
+  /** Remaining top-level statements (with re-exports preserved at the end). */
   readonly stmts: ts.Statement[]
 }
 
@@ -30,6 +36,7 @@ export function hoistTrailingTypeReExports(
   // identifier" error in the bundled output). When the same name appears
   // in a second module, drop it.
   const seenNames = new Set<string>()
+  const reExportStmts: ts.Statement[] = []
   const otherStmts: ts.Statement[] = []
 
   for (const stmt of sf.statements) {
@@ -66,14 +73,16 @@ export function hoistTrailingTypeReExports(
         seenNames,
         !!stmt.isTypeOnly,
       )
-      // Drop the original re-export.
+      // Keep the original re-export so the type remains reachable
+      // through this module's public surface.
+      reExportStmts.push(stmt)
       continue
     }
     otherStmts.push(stmt)
   }
 
   const importDecls = [...importsByModule.values()].map((i) => i.decl)
-  return { importDecls, stmts: otherStmts }
+  return { importDecls, stmts: [...otherStmts, ...reExportStmts] }
 }
 
 /**
@@ -184,7 +193,7 @@ function addNamedSpecifiers(
     return
   }
   const newNames = new Set<string>()
-  const filteredElements: ts.NamedImports['elements'] = []
+  const filteredElements: ts.ImportSpecifier[] = []
   for (const el of elements) {
     const name = el.name?.text ?? ''
     if (!name || seenNames.has(name)) continue

@@ -1,0 +1,1025 @@
+{
+  "Advancement": {
+    "signature": "(alias) const Advancement: <AdvancementJSON extends JsonSymbolResource['advancement']>(name: string, json: AdvancementJSON, options?: Omit<Partial<AdvancementClassArguments>, 'json'>) => AdvancementClass<AdvancementJSON>",
+    "definition": "src/pack/pack.ts"
+  },
+  "AdvancementClass": {
+    "signature": "(alias) class AdvancementClass<AdvancementJSON extends JsonResourceAdvancement | undefined = undefined>",
+    "definition": "src/core/resources/datapack/advancement.ts"
+  },
+  "AfterAllLocal": {
+    "signature": "(alias) type AfterAllLocal = {\n    folder: string;\n    outputFolder: string;\n    sandstoneConfig: SandstoneConfig;\n    sandstonePack: SandstonePack;\n    saveOptions: NonNullable<SandstoneConfig['saveOptions']>;\n    resources: SandstoneConfig['resources'];\n    scripts: SandstoneConfig['scripts'];\n    cliOptions: Record<string, unknown>;\n    packageJson: {\n        module?: string;\n        [k: string]: unknown;\n    };\n    entrypoint: string;\n    worldName: string | undefined;\n    root: boolean | undefined;\n    clientPath: string | undefined;\n    serverPath: string | undefined;\n    packName: string;\n} & LocalFunctions & {\n    ...;\n} & {\n    ...;\n}",
+    "definition": "src/config.ts"
+  },
+  "Atlas": {
+    "signature": "(alias) const Atlas: (name: string, json: AtlasClassArguments['json'], options?: Omit<Partial<AtlasClassArguments>, 'json'>) => AtlasClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "AtlasClass": {
+    "signature": "(alias) class AtlasClass",
+    "definition": "src/core/resources/resourcepack/atlas.ts"
+  },
+  "BannerPattern": {
+    "signature": "(alias) const BannerPattern: (name: string, bannerPattern: BannerPatternClassArguments['json'], options?: Omit<Partial<BannerPatternClassArguments>, 'json'>) => BannerPatternClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "BannerPatternClass": {
+    "signature": "(alias) class BannerPatternClass",
+    "definition": "src/core/resources/datapack/bannerPattern.ts"
+  },
+  "BeforeAllLocal": {
+    "signature": "(alias) type BeforeAllLocal = {\n    folder: string;\n    outputFolder: string;\n    sandstoneConfig: SandstoneConfig;\n    sandstonePack: SandstonePack;\n    saveOptions: NonNullable<SandstoneConfig['saveOptions']>;\n    resources: SandstoneConfig['resources'];\n    scripts: SandstoneConfig['scripts'];\n    cliOptions: Record<string, unknown>;\n    packageJson: {\n        module?: string;\n        [k: string]: unknown;\n    };\n    entrypoint: string;\n    worldName: string | undefined;\n    root: boolean | undefined;\n    clientPath: string | undefined;\n    serverPath: string | undefined;\n    packName: string;\n} & LocalFunctions",
+    "definition": "src/config.ts"
+  },
+  "BeforeSaveLocal": {
+    "signature": "(alias) type BeforeSaveLocal = {\n    folder: string;\n    outputFolder: string;\n    sandstoneConfig: SandstoneConfig;\n    sandstonePack: SandstonePack;\n    saveOptions: NonNullable<SandstoneConfig['saveOptions']>;\n    resources: SandstoneConfig['resources'];\n    scripts: SandstoneConfig['scripts'];\n    cliOptions: Record<string, unknown>;\n    packageJson: {\n        module?: string;\n        [k: string]: unknown;\n    };\n    entrypoint: string;\n    worldName: string | undefined;\n    root: boolean | undefined;\n    clientPath: string | undefined;\n    serverPath: string | undefined;\n    packName: string;\n} & LocalFunctions & {\n    ...;\n}",
+    "definition": "src/config.ts"
+  },
+  "BlockStateDefinition": {
+    "signature": "(alias) const BlockStateDefinition: <JSON extends BlockStateDefinitionJSON>(name: string, json: JSON, options?: Omit<Partial<BlockStateDefinitionArguments<JSON>>, \"json\"> | undefined) => BlockStateDefinitionClass<JSON, Extract<AllKeys<JSON>, BlockStateDefinitionType>>",
+    "definition": "src/pack/pack.ts"
+  },
+  "BlockStateDefinitionClass": {
+    "signature": "(alias) class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Type = Extract<AllKeys<JSON>, BlockStateDefinitionType>>",
+    "definition": "src/core/resources/resourcepack/blockstate.ts"
+  },
+  "Cache": {
+    "signature": "(alias) type Cache = {\n    files: Record<string, string>;\n    archives?: string[];\n    canUseSymlinks?: boolean;\n    symlinks?: string[];\n    perChildEntries?: Record<string, string[]>;\n    packTypeExportZips?: Record<string, boolean>;\n}",
+    "definition": "src/config.ts"
+  },
+  "ChatType": {
+    "signature": "(alias) const ChatType: (name: string, chatType: ChatTypeClassArguments['json'], options?: Omit<Partial<ChatTypeClassArguments>, 'json'>) => ChatTypeClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "ChatTypeClass": {
+    "signature": "(alias) class ChatTypeClass",
+    "definition": "src/core/resources/datapack/chatType.ts"
+  },
+  "Condition": {
+    "signature": "(alias) type Condition = ConditionClass | ConditionNode",
+    "definition": "src/flow/Flow.ts"
+  },
+  "ContentStrategyKind": {
+    "signature": "(alias) type ContentStrategyKind<Resource extends string, Conflict extends string> = {\n    resource: Resource;\n    conflict: Conflict;\n}",
+    "definition": "src/config.ts"
+  },
+  "DamageType": {
+    "signature": "(alias) const DamageType: (name: string, damageType: DamageTypeClassArguments['json'], options?: Omit<Partial<DamageTypeClassArguments>, 'json'>) => DamageTypeClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "DamageTypeClass": {
+    "signature": "(alias) class DamageTypeClass",
+    "definition": "src/core/resources/datapack/damageType.ts"
+  },
+  "Data": {
+    "signature": "(alias) const Data: {\n    <T extends DATA_TYPES>(type: T): TargetlessDataClass<T>;\n    <T extends 'entity', S extends string>(type: T, target: TargetFor<T, S>): DataClass<T>;\n    <T extends 'storage'>(type: T, target: MacroArgument | TargetFor<T, string>): DataClass<T>;\n    <T extends 'block'>(type: T, target: TargetFor<T, string>): DataClass<T>;\n    <T extends DATA_TYPES>(type: T, target: undefined, path: MacroArgument | DATA_PATH | DATA_PATH[]): TargetlessDataPointClass<T>;\n    <T extends 'entity', S extends string>(type: T, target: TargetFor<T, S>, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>;\n    <T extends 'storage'>(type: T, target: MacroArgument | TargetFor<T, string>, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>;\n    <T extends 'block'>(type: T, target: TargetFor<T, string>, path: MacroArgument | DATA_PATH | DATA_PATH[]): DataPointClass<T>;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "DataArray": {
+    "signature": "(alias) const DataArray: <INITIAL extends readonly NBTObject[] | readonly [string, DataPointClass | DataPointPickClass]>(initialize: INITIAL, dataPoint?: DataPointClass<'storage'>) => DataArrayType<INITIAL>",
+    "definition": "src/pack/pack.ts"
+  },
+  "DataIndexMap": {
+    "signature": "(alias) const DataIndexMap: <INITIAL extends RootNBT | Record<string, DataPointClass | DataPointPickClass>>(initialize: INITIAL, dataPoint?: DataPointClass<'storage'>) => DataIndexMapType<INITIAL>",
+    "definition": "src/pack/pack.ts"
+  },
+  "DataPointClass": {
+    "signature": "(alias) class DataPointClass<TYPE extends DATA_TYPES = any>",
+    "definition": "src/variables/Data.ts",
+    "anyAllowed": true
+  },
+  "DataVariable": {
+    "signature": "(alias) const DataVariable: {\n    (initialValue?: NBTObject | DataPointClass<any> | DataPointPickClass, name?: string): DataPointClass<'storage'>;\n    (score: Score, storeType?: StoreType, scale?: number, name?: string): DataPointClass<'storage'>;\n}",
+    "definition": "src/pack/pack.ts",
+    "anyAllowed": true
+  },
+  "DatapackConfig": {
+    "signature": "(alias) type DatapackConfig = {\n    description: JSONTextComponent;\n    packFormat?: number;\n    minFormat?: number | [number] | [number, number];\n    maxFormat?: number | [number] | [number, number];\n    features?: string[];\n    supported_formats?: number | number[] | {\n        min_inclusive: number;\n        max_inclusive: number;\n    };\n    filter?: {\n        block: {\n            namespace?: string;\n            path?: string;\n        }[];\n    };\n}",
+    "definition": "src/config.ts"
+  },
+  "DecoratedPotPattern": {
+    "signature": "(alias) const DecoratedPotPattern: (name: string, decoratedPotPattern: DecoratedPotPatternClassArguments['json'], options?: Omit<Partial<DecoratedPotPatternClassArguments>, 'json'>) => DecoratedPotPatternClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "DecoratedPotPatternClass": {
+    "signature": "(alias) class DecoratedPotPatternClass",
+    "definition": "src/core/resources/datapack/decoratedPotPattern.ts"
+  },
+  "Dialog": {
+    "signature": "(alias) const Dialog: (name: string, dialog: DialogClassArguments['json'], options?: Omit<Partial<DialogClassArguments>, 'json'>) => DialogClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "DialogClass": {
+    "signature": "(alias) class DialogClass",
+    "definition": "src/core/resources/datapack/dialog.ts"
+  },
+  "Enchantment": {
+    "signature": "(alias) const Enchantment: (name: string, enchantment: EnchantmentClassArguments['json'], options?: Omit<Partial<EnchantmentClassArguments>, 'json'>) => EnchantmentClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "EnchantmentClass": {
+    "signature": "(alias) class EnchantmentClass",
+    "definition": "src/core/resources/datapack/enchantment.ts"
+  },
+  "EnchantmentProvider": {
+    "signature": "(alias) const EnchantmentProvider: (name: string, enchantmentProvider: EnchantmentProviderClassArguments['json'], options?: Omit<Partial<EnchantmentProviderClassArguments>, 'json'>) => EnchantmentProviderClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "EnchantmentProviderClass": {
+    "signature": "(alias) class EnchantmentProviderClass",
+    "definition": "src/core/resources/datapack/enchantment.ts"
+  },
+  "Equipment": {
+    "signature": "(alias) const Equipment: (name: string, json: EquipmentClassArguments['json'], options?: Omit<Partial<EquipmentClassArguments>, 'json'>) => EquipmentClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "EquipmentClass": {
+    "signature": "(alias) class EquipmentClass",
+    "definition": "src/core/resources/resourcepack/equipment.ts"
+  },
+  "FileExclusions": {
+    "signature": "(alias) type FileExclusions = false | {\n    generated?: RegExp[];\n    existing?: RegExp[];\n}",
+    "definition": "src/config.ts"
+  },
+  "FileHandler": {
+    "signature": "(alias) type FileHandler = {\n    path: RegExp;\n    callback: (contents: HandlerFile) => HandlerFile | Promise<HandlerFile>;\n}",
+    "definition": "src/config.ts"
+  },
+  "Font": {
+    "signature": "(alias) const Font: (name: string, providers: FontArguments['providers'], options?: Omit<Partial<FontArguments>, 'providers'>) => FontClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "FontClass": {
+    "signature": "(alias) class FontClass",
+    "definition": "src/core/resources/resourcepack/font.ts"
+  },
+  "HandlerFile": {
+    "signature": "(alias) type HandlerFile = string | ArrayBuffer | Buffer<ArrayBufferLike>",
+    "definition": "src/config.ts"
+  },
+  "Instrument": {
+    "signature": "(alias) const Instrument: (name: string, instrument: InstrumentClassArguments['json'], options?: Omit<Partial<InstrumentClassArguments>, 'json'>) => InstrumentClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "InstrumentClass": {
+    "signature": "(alias) class InstrumentClass",
+    "definition": "src/core/resources/datapack/instrument.ts"
+  },
+  "ItemModelDefinition": {
+    "signature": "(alias) const ItemModelDefinition: (name: string, definition: ItemModelDefinitionInput, options?: Omit<Partial<ItemModelDefinitionClassArguments>, 'definition'>) => ItemModelDefinitionClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "ItemModelDefinitionClass": {
+    "signature": "(alias) class ItemModelDefinitionClass",
+    "definition": "src/core/resources/resourcepack/itemDefinition.ts"
+  },
+  "ItemModifier": {
+    "signature": "(alias) const ItemModifier: (name: string, itemModifier: ItemModifierClassArguments['json'], options?: Omit<Partial<ItemModifierClassArguments>, 'json'>) => ItemModifierClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "ItemModifierClass": {
+    "signature": "(alias) class ItemModifierClass",
+    "definition": "src/core/resources/datapack/itemModifier.ts"
+  },
+  "ItemPredicate": {
+    "signature": "(alias) const ItemPredicate: (itemType: ItemPredicateItem) => ItemPredicateClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "JsonNBTList": {
+    "signature": "(alias) type JsonNBTList<Type extends JsonNBTObject, Range extends NBTRange = {}> = Range[\"min\"] extends 1 ? Range[\"leftExclusive\"] extends false ? Type[] & {\n    0: Type;\n} : Type[] : Type[]",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "JukeboxSong": {
+    "signature": "(alias) const JukeboxSong: (name: string, jukeboxSong: JukeboxSongClassArguments['json'], options?: Omit<Partial<JukeboxSongClassArguments>, 'json'>) => JukeboxSongClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "JukeboxSongClass": {
+    "signature": "(alias) class JukeboxSongClass",
+    "definition": "src/core/resources/datapack/jukeboxSong.ts"
+  },
+  "Label": {
+    "signature": "(alias) const Label: (label: NonEmptyString | NamespacedString, description?: NonEmptyString) => MakeInstanceCallable<_RawLabelClass>",
+    "definition": "src/pack/pack.ts"
+  },
+  "LabelClass": {
+    "signature": "(alias) const LabelClass: MakeClassCallable<typeof _RawLabelClass>\n(alias) type LabelClass = _RawLabelClass & {\n    <IS_SINGLE extends boolean, IS_PLAYER extends boolean>(entity: SelectorClass<false, IS_SINGLE, IS_PLAYER> | SelectorPickClass<IS_SINGLE, IS_PLAYER>): EntityLabel<IS_SINGLE, IS_PLAYER>;\n    (target: '@e'): EntityLabel<false, false>;\n    (target: '@a'): EntityLabel<false, true>;\n    (target: '@s' | '@n'): EntityLabel<true, false>;\n    <ENTITY_TYPE extends SelectorEntityType>(target: '@p' | '@r', selectorArguments?: Omit<Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>, 'limit'>): EntityLabel<true, true>;\n    <ENTITY_TYPE extends SelectorEntityType, PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES): EntityLabel<true, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>;\n    <ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES): EntityLabel<PROPERTIES['limit'] extends 1 ? true : false, true>;\n    <ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends SelectorProperties<false, false, ENTITY_TYPE, false>>(target: '@e', selectorArguments: PROPERTIES): EntityLabel<PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>;\n}",
+    "definition": "src/variables/Label.ts"
+  },
+  "Language": {
+    "signature": "(alias) const Language: (name: string, language: LanguageArguments['language'], options?: Omit<Partial<LanguageArguments>, 'language'>) => LanguageClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "LanguageClass": {
+    "signature": "(alias) class LanguageClass",
+    "definition": "src/core/resources/resourcepack/language.ts"
+  },
+  "LiteralUnion": {
+    "signature": "(alias) type LiteralUnion<T extends string> = T | (`${any}${string}` & {\n    __brand?: never;\n} & Record<never, never>)",
+    "definition": "src/utils.ts"
+  },
+  "LocalFunctions": {
+    "signature": "(alias) type LocalFunctions = {\n    hash: (input: string) => string;\n    syncLinkedLibraries: (projectPath: string) => Promise<number>;\n    getClientPath: () => Promise<string | undefined>;\n    getClientWorldPath: (worldName: string, minecraftPath?: string) => Promise<string>;\n    checkSymlinksAvailable: (local: BeforeSaveLocal) => Promise<boolean>;\n    fs: {\n        readText: (path: string) => Promise<string>;\n        writeText: (path: string, content: string) => Promise<number>;\n        writeJSON: (path: string, value: unknown, options?: {\n            pretty?: boolean;\n            trailingNewline?: boolean;\n        }) => Promise<number>;\n        writeBytes: (path: string, content: ArrayBuffer | Buffer | Uint8Array) => Promise<number>;\n        ensureDir: (path: string) => Promise<void>;\n        remove: (path: string, options?: {\n            recursive?: boolean;\n            force?: boolean;\n        }) => Promise<void>;\n        pathExists: (path: string) => Promise<boolean>;\n        fileExists: (path: string) => Promise<boolean>;\n        readDirNames: (path: string) => Promise<string[]>;\n        readBytes: (path: string) => Promise<Buffer>;\n        fileStat: (path: string) => Promise<{\n            size: number;\n            isDirectory: () => boolean;\n        }>;\n        copyFile: (src: string, dest: string) => Promise<number>;\n        copyDir: (src: string, dest: string) => Promise<void>;\n        unlinkPath: (path: string) => Promise<void>;\n    };\n}",
+    "definition": "src/config.ts"
+  },
+  "LootTable": {
+    "signature": "(alias) const LootTable: (name: string, lootTable: LootTableClassArguments['json'], options?: Omit<Partial<LootTableClassArguments>, 'json'>) => LootTableClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "LootTableClass": {
+    "signature": "(alias) class LootTableClass",
+    "definition": "src/core/resources/datapack/lootTable.ts"
+  },
+  "MCFunction": {
+    "signature": "(alias) const MCFunction: {\n    (name: string, options?: Partial<MCFunctionClassArguments>): MCFunctionClass<undefined, undefined>;\n    (name: string, callback: (loop: MCFunctionClass<undefined, undefined>) => void, options?: Partial<MCFunctionClassArguments>): MCFunctionClass<undefined, undefined>;\n    <PARAMS extends readonly MacroArgument[]>(name: string, callback: (loop: MCFunctionClass<PARAMS, undefined>, ...params: PARAMS) => void, options?: Partial<MCFunctionClassArguments>): MCFunctionClass<PARAMS, undefined>;\n    <ENV extends readonly MacroArgument[]>(name: string, environmentVariables: ENV, callback: (loop: MCFunctionClass<undefined, ENV>) => void, options?: Partial<MCFunctionClassArguments>): MCFunctionClass<undefined, ENV>;\n    <PARAMS extends readonly MacroArgument[], ENV extends readonly MacroArgument[]>(name: string, environmentVariables: ENV, callback: (loop: MCFunctionClass<PARAMS, ENV>, ...params: PARAMS) => void, options?: Partial<MCFunctionClassArguments>): MCFunctionClass<PARAMS, ENV>;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "MCFunctionClass": {
+    "signature": "(alias) const MCFunctionClass: MakeClassCallable<typeof _RawMCFunctionClass>\n(alias) type MCFunctionClass<PARAMS extends readonly MacroArgument[] | undefined = undefined, ENV extends readonly MacroArgument[] | undefined = undefined> = _RawMCFunctionClass<PARAMS, ENV> & ((..._params: PARAMS extends undefined ? [] : PARAMS) => FinalCommandOutput) & NBTSerializable",
+    "definition": "src/core/resources/datapack/mcfunction.ts"
+  },
+  "Macro": {
+    "signature": "(alias) const Macro: SandstoneCommands<true> & ((strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => MacroLiteral)",
+    "definition": "src/pack/pack.ts"
+  },
+  "Model": {
+    "signature": "(alias) const Model: <Type extends LiteralUnion<'block' | 'item'>>(type: Type, name: string, json: ModelClassArguments['json'], options?: Omit<Partial<ModelClassArguments>, 'json'>) => ModelClass<Type>",
+    "definition": "src/pack/pack.ts"
+  },
+  "ModelClass": {
+    "signature": "(alias) class ModelClass<Type extends LiteralUnion<\"block\" | \"item\">>",
+    "definition": "src/core/resources/resourcepack/model.ts"
+  },
+  "NBT": {
+    "signature": "(alias) const NBT: NBTInterface",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTAllArrays": {
+    "signature": "(alias) type NBTAllArrays = typeof NBTTypedArray | typeof NBTLongArray | typeof NBTByteArray | typeof NBTIntArray",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTAllNumberClasses": {
+    "signature": "(alias) type NBTAllNumberClasses<Range extends NBTRange = {}> = NBTByte<Range> | NBTDouble<Range> | NBTFloat<Range> | NBTInt<Range> | NBTLong<Range> | NBTShort<Range>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTAllNumbers": {
+    "signature": "(alias) type NBTAllNumbers<Range extends NBTRange = {}> = {\n    new (value: number): NBTLong<Range>;\n} | {\n    new (value: number): NBTShort<Range>;\n} | {\n    new (value: number): NBTByte<Range>;\n} | {\n    new (value: number): NBTFloat<Range>;\n} | {\n    new (value: number): NBTDouble<Range>;\n} | {\n    new (value: number): NBTInt<Range>;\n}",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTAllPrimitives": {
+    "signature": "(alias) type NBTAllPrimitives = typeof NBTString | NBTAllArrays | NBTAllNumbers<{}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTAllValues": {
+    "signature": "(alias) type NBTAllValues = NBTAnyValue | NBTAllPrimitives",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTAnyValue": {
+    "signature": "(alias) class NBTAnyValue",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTByte": {
+    "signature": "(alias) class NBTByte<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTByteArray": {
+    "signature": "(alias) class NBTByteArray<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTClass": {
+    "signature": "(alias) abstract class NBTClass",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTDouble": {
+    "signature": "(alias) class NBTDouble<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTFloat": {
+    "signature": "(alias) class NBTFloat<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTInt": {
+    "signature": "(alias) class NBTInt<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTIntArray": {
+    "signature": "(alias) class NBTIntArray<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTList": {
+    "signature": "(alias) type NBTList<Type extends NBTObject, Range extends NBTRange = {}> = Range[\"min\"] extends 1 ? Range[\"leftExclusive\"] extends false ? Type[] & {\n    0: Type;\n} : Type[] : Type[]",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTLong": {
+    "signature": "(alias) class NBTLong<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTLongArray": {
+    "signature": "(alias) class NBTLongArray<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTPrimitive": {
+    "signature": "(alias) class NBTPrimitive<Unit extends string>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTRange": {
+    "signature": "(alias) type NBTRange = {\n    min?: number;\n    max?: number;\n    leftExclusive?: boolean;\n    rightExclusive?: boolean;\n}",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTShort": {
+    "signature": "(alias) class NBTShort<Range extends NBTRange = {}>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTSimpleClasses": {
+    "signature": "(alias) type NBTSimpleClasses<Range extends NBTRange = {}> = typeof NBTLong | typeof NBTShort | typeof NBTByte | typeof NBTFloat | typeof NBTDouble | typeof NBTInt",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTString": {
+    "signature": "(alias) class NBTString",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NBTTypedArray": {
+    "signature": "(alias) class NBTTypedArray",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "NamespacedLiteralUnion": {
+    "signature": "(alias) type NamespacedLiteralUnion<T extends string> = T | (`${string}:${string}` & {\n    __brand?: never;\n} & Record<never, never>)",
+    "definition": "src/utils.ts"
+  },
+  "NamespacedString": {
+    "signature": "(alias) type NamespacedString = `${string}:${string}` & {\n    __brand?: never;\n}",
+    "definition": "src/utils.ts"
+  },
+  "NonEmptyString": {
+    "signature": "(alias) type NonEmptyString = `${any}${string}` & {\n    __brand?: never;\n}",
+    "definition": "src/utils.ts"
+  },
+  "NotNBT": {
+    "signature": "(alias) class NotNBT<VALUE extends RootNBT = RootNBT>",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "Objective": {
+    "signature": "(alias) const Objective: {\n    create: (name: string, criteria?: LiteralUnion<OBJECTIVE_CRITERIA>, display?: JSONTextComponent, options?: {\n        alreadyExists?: boolean;\n        useDefaultNamespace?: boolean;\n    }) => ObjectiveClass;\n    get: (name: string) => ObjectiveClass;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "ObjectiveClass": {
+    "signature": "(alias) const ObjectiveClass: MakeClassCallable<typeof _RawObjectiveClass>\n(alias) type ObjectiveClass = _RawObjectiveClass & ((scoreHolder: MultipleEntitiesArgument<false>, display?: ScoreDisplay) => Score) & NBTSerializable",
+    "definition": "src/variables/Objective.ts"
+  },
+  "ParticleClass": {
+    "signature": "(alias) class ParticleClass",
+    "definition": "src/core/resources/resourcepack/particle.ts"
+  },
+  "ParticleResource": {
+    "signature": "(alias) const ParticleResource: (name: string, json: ParticleClassArguments['json'], options?: Omit<Partial<ParticleClassArguments>, 'json'>) => ParticleClass",
+    "definition": "src/sandstone.ts"
+  },
+  "PlainText": {
+    "signature": "(alias) const PlainText: (name: string, text: PlainTextArguments['text'], options?: Partial<PlainTextArguments>) => PlainTextClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "PostEffect": {
+    "signature": "(alias) const PostEffect: (name: string, json: PostEffectClassArguments['json'], options?: Omit<Partial<PostEffectClassArguments>, 'json'>) => PostEffectClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "PostEffectClass": {
+    "signature": "(alias) class PostEffectClass",
+    "definition": "src/core/resources/resourcepack/postEffect.ts"
+  },
+  "Predicate": {
+    "signature": "(alias) const Predicate: (name: string, predicate: PredicateClassArguments['json'], options?: Omit<Partial<PredicateClassArguments>, 'json'>) => PredicateClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "PredicateClass": {
+    "signature": "(alias) class PredicateClass",
+    "definition": "src/core/resources/datapack/predicate.ts"
+  },
+  "RawResource": {
+    "signature": "(alias) const RawResource: {\n    (path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>): CustomResourceClass;\n    (pack: PackType, path: string, contents: string | ArrayBuffer | Buffer | Promise<string | ArrayBuffer | Buffer>): CustomResourceClass;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "Recipe": {
+    "signature": "(alias) const Recipe: <P1 extends string = string, P2 extends string = string, P3 extends string = string>(name: string, recipe: RecipeJSON<P1, P2, P3>, options?: Omit<Partial<RecipeClassArguments>, 'json'>) => RecipeClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "RecipeClass": {
+    "signature": "(alias) class RecipeClass",
+    "definition": "src/core/resources/datapack/recipe.ts"
+  },
+  "ResolveNBT": {
+    "signature": "(alias) const ResolveNBT: (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>, skipReset?: boolean) => ResolveNBTClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "ResolveNBTPart": {
+    "signature": "(alias) function ResolveNBTPart(data: StringDataPointClass): ResolveNBTPartClass<'data', typeof NBTString>\n(alias) function ResolveNBTPart(data: MacroArgument): ResolveNBTPartClass<'data', NBTAllValues>\n(alias) function ResolveNBTPart(data: DataPointClass<any>, type: NBTAllValues): ResolveNBTPartClass<'data', NBTAllValues>\n(alias) // +2 more overloads",
+    "definition": "src/variables/ResolveNBT.ts",
+    "anyAllowed": true
+  },
+  "ResolvedNBT": {
+    "signature": "(alias) class ResolvedNBT",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "ResourcePackConfig": {
+    "signature": "(alias) type ResourcePackConfig = {\n    description: JSONTextComponent;\n    packFormat?: number;\n    minFormat?: number | [number] | [number, number];\n    maxFormat?: number | [number] | [number, number];\n    features?: string[];\n    supported_formats?: number | number[] | {\n        min_inclusive: number;\n        max_inclusive: number;\n    };\n    filter?: {\n        block: {\n            namespace?: string;\n            path?: string;\n        }[];\n    };\n}",
+    "definition": "src/config.ts"
+  },
+  "SandstoneConfig": {
+    "signature": "(alias) interface SandstoneConfig",
+    "definition": "src/config.ts"
+  },
+  "SandstoneContext": {
+    "signature": "(alias) interface SandstoneContext",
+    "definition": "src/context.ts"
+  },
+  "SandstonePack": {
+    "signature": "(alias) class SandstonePack",
+    "definition": "src/pack/pack.ts"
+  },
+  "Score": {
+    "signature": "(alias) class Score",
+    "definition": "src/variables/Score.ts"
+  },
+  "Selector": {
+    "signature": "(alias) const Selector: {\n    (target: '@e'): SelectorClass<false, false, false>;\n    (target: '@a'): SelectorClass<false, false, true>;\n    (target: '@s' | '@n'): SelectorClass<false, true, false>;\n    <ENTITY_TYPE extends SelectorEntityType>(target: '@p' | '@r', selectorArguments?: Omit<Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>, 'limit'>): SelectorClass<false, true, true>;\n    <ENTITY_TYPE extends SelectorEntityType, PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'limit'>>(target: '@s' | '@n', selectorArguments: PROPERTIES): SelectorClass<false, true, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>;\n    <ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends Omit<SelectorProperties<false, false, ENTITY_TYPE, false>, 'type'>>(target: '@a', selectorArguments: PROPERTIES): SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, true>;\n    <ENTITY_TYPE extends SelectorEntityType, const PROPERTIES extends SelectorProperties<false, false, ENTITY_TYPE, false>>(target: '@e', selectorArguments: PROPERTIES): SelectorClass<false, PROPERTIES['limit'] extends 1 ? true : false, PROPERTIES['type'] extends ('player' | 'minecraft:player') ? true : false>;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "SelectorClass": {
+    "signature": "(alias) class SelectorClass<MACRO extends boolean = false, IsSingle extends boolean = false, IsPlayer extends boolean = false>",
+    "definition": "src/variables/Selector.ts"
+  },
+  "Set": {
+    "signature": "(alias) class Set<T>",
+    "definition": "src/utils.ts"
+  },
+  "SetType": {
+    "signature": "(alias) type SetType<T> = T extends Set<infer U> ? U : never",
+    "definition": "src/utils.ts"
+  },
+  "Shader": {
+    "signature": "(alias) const Shader: (name: string, json: ShaderClassArguments['json'], options?: Omit<Partial<ShaderClassArguments>, 'json'>) => ShaderClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "SlotSource": {
+    "signature": "(alias) const SlotSource: (name: string, slotSource: SlotSourceClassArguments['json'], options?: Omit<Partial<SlotSourceClassArguments>, 'json'>) => SlotSourceClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "SlotSourceClass": {
+    "signature": "(alias) class SlotSourceClass",
+    "definition": "src/core/resources/datapack/slotSource.ts"
+  },
+  "SoundEvent": {
+    "signature": "(alias) const SoundEvent: <Type extends SOUND_TYPES>(type: Type, name: string, sound: SoundEventArguments['sound'], options?: Omit<Partial<SoundEventArguments>, 'sound'>) => SoundEventClass<Type>",
+    "definition": "src/pack/pack.ts"
+  },
+  "SoundEventClass": {
+    "signature": "(alias) class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES>",
+    "definition": "src/core/resources/resourcepack/sound.ts"
+  },
+  "SoundsIndex": {
+    "signature": "(alias) const SoundsIndex: (definitions: SoundsIndexArguments['definitions'], namespace?: string, options?: Omit<Partial<SoundsIndexArguments>, 'definitions'>) => SoundsIndexClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "SoundsIndexClass": {
+    "signature": "(alias) class SoundsIndexClass",
+    "definition": "src/core/resources/resourcepack/sound.ts"
+  },
+  "StructureClass": {
+    "signature": "(alias) class StructureClass",
+    "definition": "src/core/resources/datapack/structure.ts"
+  },
+  "SulfurCubeArchetype": {
+    "signature": "(alias) const SulfurCubeArchetype: (name: string, sulfurCubeArchetype: SulfurCubeArchetypeClassArguments['json'], options?: Omit<Partial<SulfurCubeArchetypeClassArguments>, 'json'>) => SulfurCubeArchetypeClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "SulfurCubeArchetypeClass": {
+    "signature": "(alias) class SulfurCubeArchetypeClass",
+    "definition": "src/core/resources/datapack/sulfurCubeArchetype.ts"
+  },
+  "Tag": {
+    "signature": "(alias) const Tag: <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: Partial<TagClassArguments<T>> | undefined) => TagClass<T>",
+    "definition": "src/pack/pack.ts"
+  },
+  "TagClass": {
+    "signature": "(alias) class TagClass<REGISTRY extends LiteralUnion<\"activity\" | \"advancement\" | \"armor_material\" | \"attribute\" | \"attribute_type\" | \"banner_pattern\" | \"block\" | \"block_entity_type\" | \"block_predicate_type\" | \"block_type\" | \"cat_sound_variant\" | \"cat_variant\" | \"chat_type\" | \"chicken_sound_variant\" | \"chicken_variant\" | \"chunk_status\" | \"command_argument_type\" | \"consume_effect_type\" | \"cow_sound_variant\" | \"cow_variant\" | \"creative_mode_tab\" | \"custom_stat\" | \"damage_type\" | \"data_component_predicate_type\" | \"data_component_type\" | \"debug_subscription\" | \"decorated_pot_pattern\" | ... 138 more ... | \"zombie_nautilus_variant\">>",
+    "definition": "src/core/resources/datapack/tag.ts"
+  },
+  "TestEnvironment": {
+    "signature": "(alias) const TestEnvironment: (name: string, testEnvironment: TestEnvironmentClassArguments['json'], options?: Omit<Partial<TestEnvironmentClassArguments>, 'json'>) => TestEnvironmentClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "TestEnvironmentClass": {
+    "signature": "(alias) class TestEnvironmentClass",
+    "definition": "src/core/resources/datapack/gametest.ts"
+  },
+  "TestInstance": {
+    "signature": "(alias) const TestInstance: (name: string, testInstance: TestInstanceClassArguments['json'], options?: Omit<Partial<TestInstanceClassArguments>, 'json'>) => TestInstanceClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "TestInstanceClass": {
+    "signature": "(alias) class TestInstanceClass",
+    "definition": "src/core/resources/datapack/gametest.ts"
+  },
+  "Texture": {
+    "signature": "(alias) const Texture: <Type extends LiteralUnion<TEXTURE_TYPES>>(type: Type, name: string, texture: TextureArguments<Type>['texture'], options?: Partial<TextureArguments<Type>> | undefined) => TextureClass<Type>",
+    "definition": "src/pack/pack.ts"
+  },
+  "TextureClass": {
+    "signature": "(alias) class TextureClass<Type extends TextureType>",
+    "definition": "src/core/resources/resourcepack/texture.ts"
+  },
+  "Timeline": {
+    "signature": "(alias) const Timeline: (name: string, timeline: TimelineClassArguments['json'], options?: Omit<Partial<TimelineClassArguments>, 'json'>) => TimelineClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "TimelineClass": {
+    "signature": "(alias) class TimelineClass",
+    "definition": "src/core/resources/datapack/timeline.ts"
+  },
+  "TradeSet": {
+    "signature": "(alias) const TradeSet: (name: string, tradeSet: TradeSetClassArguments['json'], options?: Omit<Partial<TradeSetClassArguments>, 'json'>) => TradeSetClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "TradeSetClass": {
+    "signature": "(alias) class TradeSetClass",
+    "definition": "src/core/resources/datapack/villagerTrade.ts"
+  },
+  "TrialSpawner": {
+    "signature": "(alias) const TrialSpawner: (name: string, trialSpawner: TrialSpawnerClassArguments['json'], options?: Omit<Partial<TrialSpawnerClassArguments>, 'json'>) => TrialSpawnerClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "TrialSpawnerClass": {
+    "signature": "(alias) class TrialSpawnerClass",
+    "definition": "src/core/resources/datapack/trialSpawner.ts"
+  },
+  "Trigger": {
+    "signature": "(alias) const Trigger: (name: string, callback: TriggerHandler, pollingEvery?: number) => TriggerClass<TriggerHandler>",
+    "definition": "src/pack/pack.ts"
+  },
+  "TrimMaterial": {
+    "signature": "(alias) const TrimMaterial: (name: string, trimMaterial: TrimMaterialClassArguments['json'], options?: Omit<Partial<TrimMaterialClassArguments>, 'json'>) => TrimMaterialClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "TrimMaterialClass": {
+    "signature": "(alias) class TrimMaterialClass",
+    "definition": "src/core/resources/datapack/trimMaterial.ts"
+  },
+  "TrimPattern": {
+    "signature": "(alias) const TrimPattern: (name: string, trimPattern: TrimPatternClassArguments['json'], options?: Omit<Partial<TrimPatternClassArguments>, 'json'>) => TrimPatternClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "TrimPatternClass": {
+    "signature": "(alias) class TrimPatternClass",
+    "definition": "src/core/resources/datapack/trimPattern.ts"
+  },
+  "UUID": {
+    "signature": "(alias) const UUID: {\n    (): UUIDClass<'known'>;\n    (source: string | UUIDinNumber, options?: UUIDOptions): UUIDClass<'known'>;\n    (source: UUIDinScore, options?: UUIDOptions): UUIDClass<'scores'>;\n    (source: DataPointClass, options?: UUIDOptions): UUIDClass<'data'>;\n    (source: SelectorPickClass<true, boolean>, options?: UUIDOptions): UUIDClass<'selector'>;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "UUIDClass": {
+    "signature": "(alias) class UUIDClass<PrimarySource extends \"data\" | \"known\" | \"scores\" | \"selector\">",
+    "definition": "src/variables/UUID.ts"
+  },
+  "Variable": {
+    "signature": "(alias) const Variable: {\n    (initialValue?: number | Score | undefined, name?: string): Score;\n    (nbt: DataPointClass, scale?: number, name?: string): Score;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "Variant": {
+    "signature": "(alias) const Variant: <T extends VariantType>(type: T, name: string, variant: VariantClassArguments<T>['variant'], options?: Omit<Partial<VariantClassArguments<T>>, 'variant'>) => VariantClass<T>",
+    "definition": "src/sandstone.ts"
+  },
+  "VariantClass": {
+    "signature": "(alias) class VariantClass<T extends VariantType>",
+    "definition": "src/core/resources/datapack/variant.ts"
+  },
+  "VillagerTrade": {
+    "signature": "(alias) const VillagerTrade: (name: string, villagerTrade: VillagerTradeClassArguments['json'], options?: Omit<Partial<VillagerTradeClassArguments>, 'json'>) => VillagerTradeClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "VillagerTradeClass": {
+    "signature": "(alias) class VillagerTradeClass",
+    "definition": "src/core/resources/datapack/villagerTrade.ts"
+  },
+  "WaypointStyle": {
+    "signature": "(alias) const WaypointStyle: (name: string, json: WaypointStyleClassArguments['json'], options?: Omit<Partial<WaypointStyleClassArguments>, 'json'>) => WaypointStyleClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "WaypointStyleClass": {
+    "signature": "(alias) class WaypointStyleClass",
+    "definition": "src/core/resources/resourcepack/waypointStyle.ts"
+  },
+  "WorldClock": {
+    "signature": "(alias) const WorldClock: (name: string, worldClock: WorldClockClassArguments['json'], options?: Omit<Partial<WorldClockClassArguments>, 'json'>) => WorldClockClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "WorldClockClass": {
+    "signature": "(alias) class WorldClockClass",
+    "definition": "src/core/resources/datapack/timeline.ts"
+  },
+  "_": {
+    "signature": "(alias) const _: Flow",
+    "definition": "src/flow/Flow.ts"
+  },
+  "abs": {
+    "signature": "(alias) const abs: {\n    <T extends number>(coordinate?: T): `${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `${number}`>>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "absolute": {
+    "signature": "(alias) const absolute: {\n    <T extends number>(coordinate?: T): `${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `${number}`>>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "advancement": {
+    "signature": "(alias) const advancement: AdvancementCommand<false>",
+    "definition": "src/commands/implementations/player/advancement.ts"
+  },
+  "attribute": {
+    "signature": "(alias) const attribute: <T extends string>(target: SingleEntityArgumentOf<false, T>, attribute: string) => AttributeOperationCommand<boolean>",
+    "definition": "src/commands/implementations/entity/attribute.ts"
+  },
+  "bossbar": {
+    "signature": "(alias) const bossbar: BossBarCommand<false>",
+    "definition": "src/commands/implementations/player/bossbar.ts"
+  },
+  "clear": {
+    "signature": "(alias) const clear: {\n    <T extends string>(targets?: MultiplePlayersArgumentOf<false, T> | undefined, item?: TagClass<\"item\"> | ITEMS | undefined, maxCount?: number | undefined): FinalCommandOutput;\n    <T extends string>(targets: MultiplePlayersArgumentOf<false, T> | undefined, predicate: ItemPredicateClass, maxCount?: number | undefined): FinalCommandOutput;\n}",
+    "definition": "src/commands/implementations/player/clear.ts"
+  },
+  "clone": {
+    "signature": "(alias) const clone: {\n    (begin: Coordinates<false>, end: Coordinates<false>, destination: Coordinates<false>): CloneOptionsCommand<false>;\n    (): CloneFromDimensionCommand<false>;\n}",
+    "definition": "src/commands/implementations/block/clone.ts"
+  },
+  "comment": {
+    "signature": "(alias) const comment: (...comments: unknown[]) => FinalCommandOutput",
+    "definition": "src/commands/implementations/_fake/comment.ts"
+  },
+  "createSandstonePack": {
+    "signature": "(alias) function createSandstonePack(context: SandstoneContext): SandstonePack",
+    "definition": "src/sandstone.ts"
+  },
+  "damage": {
+    "signature": "(alias) const damage: <T extends string>(target: SingleEntityArgumentOf<false, T>, amount: number, damageType?: DamageTypeClass | DAMAGE_TYPES | undefined) => DamageSourceCommand<boolean>",
+    "definition": "src/commands/implementations/entity/damage.ts"
+  },
+  "data": {
+    "signature": "(alias) const data: DataCommand<false>",
+    "definition": "src/commands/implementations/world/data.ts"
+  },
+  "datapack": {
+    "signature": "(alias) const datapack: DataPackCommand",
+    "definition": "src/commands/implementations/server/datapack.ts"
+  },
+  "debug": {
+    "signature": "(alias) const debug: DebugCommand<false>",
+    "definition": "src/commands/implementations/server/debug.ts"
+  },
+  "defaultNamespace": {
+    "signature": "(alias) const defaultNamespace: string",
+    "definition": "src/sandstone.ts"
+  },
+  "defaultgamemode": {
+    "signature": "(alias) const defaultgamemode: (mode: GAMEMODES) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/defaultgamemode.ts"
+  },
+  "depend": {
+    "signature": "(alias) const depend: (dependency: string, version?: string) => number",
+    "definition": "src/sandstone.ts"
+  },
+  "dialog": {
+    "signature": "(alias) const dialog: DialogCommand<false>",
+    "definition": "src/commands/implementations/player/dialog.ts"
+  },
+  "difficulty": {
+    "signature": "(alias) const difficulty: (difficulty?: DIFFICULTIES) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/difficulty.ts"
+  },
+  "effect": {
+    "signature": "(alias) const effect: EffectCommand<false>",
+    "definition": "src/commands/implementations/entity/effect.ts"
+  },
+  "enchant": {
+    "signature": "(alias) const enchant: (targets: MultipleEntitiesArgument<false>, enchantment: ENCHANTMENTS, level?: number) => FinalCommandOutput",
+    "definition": "src/commands/implementations/entity/enchant.ts"
+  },
+  "execute": {
+    "signature": "(alias) const execute: ExecuteCommand<false>",
+    "definition": "src/commands/implementations/entity/execute.ts"
+  },
+  "experience": {
+    "signature": "(alias) const experience: ExperienceCommand<false>",
+    "definition": "src/commands/implementations/player/experience.ts"
+  },
+  "fill": {
+    "signature": "(alias) const fill: {\n    <BLOCK extends Macroable<BlockStatic, false>>(from: Coordinates<false>, to: Coordinates<false>, block: BLOCK, state?: (BLOCK extends keyof McdocBlockStatesDispatcherMap ? ParseBlockState<NonNullable<McdocBlockStatesDispatcherMap[BLOCK]>> : Record<string, string | number | boolean>) | undefined): FillArgumentsCommand<false>;\n    <BLOCK extends Macroable<BlockEntity, false>>(from: Coordinates<...>, to: Coordinates<...>, block: BLOCK, state?: ... | undefined, nbt?: ... | undefined): FillArgumentsCommand<...>;\n}",
+    "definition": "src/commands/implementations/block/fill.ts"
+  },
+  "fillbiome": {
+    "signature": "(alias) const fillbiome: {\n    (from: Coordinates<false>, to: Coordinates<false>, biome: WORLDGEN_BIOMES): FinalCommandOutput;\n    (from: Coordinates<false>, to: Coordinates<false>, biome: WORLDGEN_BIOMES, filter: TagClass<\"worldgen/biome\"> | WORLDGEN_BIOMES): FinalCommandOutput;\n}",
+    "definition": "src/commands/implementations/world/fillbiome.ts"
+  },
+  "flowVariable": {
+    "signature": "(alias) const flowVariable: Score",
+    "definition": "src/pack/pack.ts"
+  },
+  "forceload": {
+    "signature": "(alias) const forceload: ForceLoadCommand<false>",
+    "definition": "src/commands/implementations/world/forceload.ts"
+  },
+  "functionCmd": {
+    "signature": "(alias) const functionCmd: {\n    (mcFunction: TagClass<\"function\"> | MCFunctionClass<undefined, undefined> | NonEmptyString): FinalCommandOutput;\n    (mcFunction: TagClass<\"function\"> | MCFunctionClass<undefined, undefined> | NonEmptyString, params: RootNBT): FinalCommandOutput;\n    (mcFunction: TagClass<\"function\"> | MCFunctionClass<undefined, undefined> | NonEmptyString, _: 'with', type: DATA_TYPES, target: string, path?: string): FinalCommandOutput;\n    (mcFunction: TagClass<\"function\"> | MCFunctionClass<undefined, undefined> | NonEmptyString, _: 'with', dataPoint: DataPointClass | DataPointPickClass): FinalCommandOutput;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "gamemode": {
+    "signature": "(alias) const gamemode: <T extends string>(gamemode: GAMEMODES, targets?: MultiplePlayersArgumentOf<false, T> | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/player/gamemode.ts"
+  },
+  "gamerule": {
+    "signature": "(alias) const gamerule: {\n    <RULE extends Macroable<keyof SymbolGameRule | NamespacedString, false>>(gamerule: RULE): FinalCommandOutput;\n    <RULE extends Macroable<keyof SymbolGameRule | (NamespacedString & {}), false>, V extends (RULE extends keyof SymbolGameRule ? number | boolean : number | boolean)>(gamerule: RULE, value: RULE extends keyof {\n        advance_time: boolean;\n        'minecraft:advance_time': boolean;\n        advance_weather: boolean;\n        'minecraft:advance_weather': boolean;\n        allow_entering_nether_using_portals: boolean;\n        'minecraft:allow_entering_nether_using_portals': boolean;\n        block_drops: boolean;\n        'minecraft:block_drops': boolean;\n        block_explosion_drop_decay: boolean;\n        'minecraft:block_explosion_drop_decay': boolean;\n        command_block_output: boolean;\n        'minecraft:command_block_output': boolean;\n        command_blocks_work: boolean;\n        'minecraft:command_blocks_work': boolean;\n        drowning_damage: boolean;\n        'minecraft:drowning_damage': boolean;\n        elytra_movement_check: boolean;\n        'minecraft:elytra_movement_check': boolean;\n        ender_pearls_vanish_on_death: boolean;\n        'minecraft:ender_pearls_vanish_on_death': boolean;\n        entity_drops: boolean;\n        'minecraft:entity_drops': boolean;\n        fall_damage: boolean;\n        'minecraft:fall_damage': boolean;\n        fire_damage: boolean;\n        'minecraft:fire_damage': boolean;\n        fire_spread_radius_around_player: NBTInt<{}>;\n        'minecraft:fire_spread_radius_around_player': NBTInt<{}>;\n        forgive_dead_players: boolean;\n        'minecraft:forgive_dead_players': boolean;\n        freeze_damage: boolean;\n        'minecraft:freeze_damage': boolean;\n        global_sound_events: boolean;\n        'minecraft:global_sound_events': boolean;\n        immediate_respawn: boolean;\n        'minecraft:immediate_respawn': boolean;\n        keep_inventory: boolean;\n        'minecraft:keep_inventory': boolean;\n        lava_source_conversion: boolean;\n        'minecraft:lava_source_conversion': boolean;\n        limited_crafting: boolean;\n        'minecraft:limited_crafting': boolean;\n        locator_bar: boolean;\n        'minecraft:locator_bar': boolean;\n        log_admin_commands: boolean;\n        'minecraft:log_admin_commands': boolean;\n        max_block_modifications: NBTInt<{\n            min: 1;\n        }>;\n        'minecraft:max_block_modifications': NBTInt<{\n            min: 1;\n        }>;\n        max_command_forks: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:max_command_forks': NBTInt<{\n            min: 0;\n        }>;\n        max_command_sequence_length: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:max_command_sequence_length': NBTInt<{\n            min: 0;\n        }>;\n        max_entity_cramming: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:max_entity_cramming': NBTInt<{\n            min: 0;\n        }>;\n        max_minecart_speed: NBTInt<{\n            min: 1;\n        }>;\n        'minecraft:max_minecart_speed': NBTInt<{\n            min: 1;\n        }>;\n        max_snow_accumulation_height: NBTInt<{\n            min: 0;\n            max: 8;\n        }>;\n        'minecraft:max_snow_accumulation_height': NBTInt<{\n            min: 0;\n            max: 8;\n        }>;\n        mob_drops: boolean;\n        'minecraft:mob_drops': boolean;\n        mob_explosion_drop_decay: boolean;\n        'minecraft:mob_explosion_drop_decay': boolean;\n        mob_griefing: boolean;\n        'minecraft:mob_griefing': boolean;\n        natural_health_regeneration: boolean;\n        'minecraft:natural_health_regeneration': boolean;\n        player_movement_check: boolean;\n        'minecraft:player_movement_check': boolean;\n        players_nether_portal_creative_delay: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:players_nether_portal_creative_delay': NBTInt<{\n            min: 0;\n        }>;\n        players_nether_portal_default_delay: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:players_nether_portal_default_delay': NBTInt<{\n            min: 0;\n        }>;\n        players_sleeping_percentage: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:players_sleeping_percentage': NBTInt<{\n            min: 0;\n        }>;\n        projectiles_can_break_blocks: boolean;\n        'minecraft:projectiles_can_break_blocks': boolean;\n        pvp: boolean;\n        'minecraft:pvp': boolean;\n        raids: boolean;\n        'minecraft:raids': boolean;\n        random_tick_speed: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:random_tick_speed': NBTInt<{\n            min: 0;\n        }>;\n        reduced_debug_info: boolean;\n        'minecraft:reduced_debug_info': boolean;\n        respawn_radius: NBTInt<{\n            min: 0;\n        }>;\n        'minecraft:respawn_radius': NBTInt<{\n            min: 0;\n        }>;\n        send_command_feedback: boolean;\n        'minecraft:send_command_feedback': boolean;\n        show_death_messa...",
+    "definition": "src/commands/implementations/server/gamerule.ts"
+  },
+  "getExistingResource": {
+    "signature": "(alias) const getExistingResource: {\n    (relativePath: string): Promise<string>;\n    (relativePath: string, encoding: false): Promise<ArrayBuffer | Buffer>;\n    (relativePath: string, encoding: EncodingOption): Promise<Buffer | string>;\n    (resource: ResourceClass, encoding?: 'utf-8'): Promise<string>;\n    (resource: ResourceClass, encoding: false | EncodingOption): Promise<ArrayBuffer | Buffer>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "getSandstoneContext": {
+    "signature": "(alias) function getSandstoneContext(): SandstoneContext",
+    "definition": "src/context.ts"
+  },
+  "getTempStorage": {
+    "signature": "(alias) const getTempStorage: (name: string) => DataPointClass<\"storage\">",
+    "definition": "src/pack/pack.ts"
+  },
+  "getVanillaResource": {
+    "signature": "(alias) const getVanillaResource: {\n    (relativePath: string): Promise<string>;\n    (relativePath: string, text: true, type: 'client' | 'server'): Promise<string>;\n    (relativePath: string, text: false, type: 'client' | 'server'): Promise<ArrayBuffer | Buffer>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "give": {
+    "signature": "(alias) const give: {\n    <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, item: ITEMS, count?: number): FinalCommandOutput;\n    <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, item: ITEMS, components: MemberModifiers<JsonDataComponentDispatcherMap>, count?: number | undefined): FinalCommandOutput;\n}",
+    "definition": "src/commands/implementations/player/give.ts"
+  },
+  "hasContext": {
+    "signature": "(alias) function hasContext(): boolean",
+    "definition": "src/context.ts"
+  },
+  "help": {
+    "signature": "(alias) const help: (command?: string, ...parameters: string[]) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/help.ts"
+  },
+  "item": {
+    "signature": "(alias) const item: ItemCommand<false>",
+    "definition": "src/commands/implementations/world/item.ts"
+  },
+  "jfr": {
+    "signature": "(alias) const jfr: JFRCommand",
+    "definition": "src/sandstone.ts"
+  },
+  "kill": {
+    "signature": "(alias) const kill: (targets?: MultipleEntitiesArgument<false> | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/entity/kill.ts"
+  },
+  "list": {
+    "signature": "(alias) const list: (uuids?: boolean) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/list.ts"
+  },
+  "loadTags": {
+    "signature": "(alias) const loadTags: {\n    preLoad: TagClass<'function'>;\n    load: TagClass<'function'>;\n    postLoad: TagClass<'function'>;\n}",
+    "definition": "src/pack/pack.ts"
+  },
+  "loc": {
+    "signature": "(alias) const loc: {\n    <T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"^\">>;\n    <T extends number>(coordinate: T): `^${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"^\" | `^${number}`>>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "local": {
+    "signature": "(alias) const local: {\n    <T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"^\">>;\n    <T extends number>(coordinate: T): `^${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"^\" | `^${number}`>>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "locate": {
+    "signature": "(alias) const locate: LocateCommand<false>",
+    "definition": "src/commands/implementations/world/locate.ts"
+  },
+  "loot": {
+    "signature": "(alias) const loot: LootCommand<false>",
+    "definition": "src/commands/implementations/world/loot.ts"
+  },
+  "makeCustomResource": {
+    "signature": "(alias) const makeCustomResource: [SandstoneCore, CustomResourceClass]",
+    "definition": "src/pack/pack.ts"
+  },
+  "mcMetaCache": {
+    "signature": "(alias) const mcMetaCache: MCMetaCache",
+    "definition": "src/sandstone.ts"
+  },
+  "me": {
+    "signature": "(alias) const me: (...actions: (string | MultipleEntitiesArgument<false>)[]) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/me.ts"
+  },
+  "msg": {
+    "signature": "(alias) const msg: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "definition": "src/sandstone.ts"
+  },
+  "nbtResolver": {
+    "signature": "(alias) const nbtResolver: (nbt: NBTObject | MacroArgument) => ResolvedNBT",
+    "definition": "src/variables/nbt/NBTs.ts"
+  },
+  "particle": {
+    "signature": "(alias) const particle: {\n    (name: \"angry_villager\" | \"ash\" | \"bubble\" | \"bubble_column_up\" | \"bubble_pop\" | \"campfire_cosy_smoke\" | \"campfire_signal_smoke\" | \"cherry_leaves\" | \"cloud\" | \"composter\" | \"copper_fire_flame\" | \"crimson_spore\" | \"crit\" | \"current_down\" | \"damage_indicator\" | \"dolphin\" | \"dripping_dripstone_lava\" | \"dripping_dripstone_water\" | \"dripping_honey\" | \"dripping_lava\" | \"dripping_obsidian_tear\" | \"dripping_water\" | \"dust_plume\" | \"egg_crack\" | \"elder_guardian\" | \"electric_spark\" | \"enchant\" | \"enchanted_hit\" | \"end_rod\" | \"explosion\" | \"explosion_emitter\" | \"falling_dripstone_lava\" | \"falling_dripstone_water\" | \"falling_honey\" | \"falling_lava\" | \"falling_nectar\" | \"falling_obsidian_tear\" | \"falling_spore_blossom\" | \"falling_water\" | \"firefly\" | \"firework\" | \"fishing\" | \"flame\" | \"glow\" | \"glow_squid_ink\" | \"gust\" | \"gust_emitter_large\" | \"gust_emitter_small\" | \"happy_villager\" | \"heart\" | \"infested\" | \"item_cobweb\" | \"item_slime\" | \"item_snowball\" | \"landing_honey\" | \"landing_lava\" | \"landing_obsidian_tear\" | \"large_smoke\" | \"lava\" | \"minecraft:angry_villager\" | \"minecraft:ash\" | \"minecraft:bubble\" | \"minecraft:bubble_column_up\" | \"minecraft:bubble_pop\" | \"minecraft:campfire_cosy_smoke\" | \"minecraft:campfire_signal_smoke\" | \"minecraft:cherry_leaves\" | \"minecraft:cloud\" | \"minecraft:composter\" | \"minecraft:copper_fire_flame\" | \"minecraft:crimson_spore\" | \"minecraft:crit\" | \"minecraft:current_down\" | \"minecraft:damage_indicator\" | \"minecraft:dolphin\" | \"minecraft:dripping_dripstone_lava\" | \"minecraft:dripping_dripstone_water\" | \"minecraft:dripping_honey\" | \"minecraft:dripping_lava\" | \"minecraft:dripping_obsidian_tear\" | \"minecraft:dripping_water\" | \"minecraft:dust_plume\" | \"minecraft:egg_crack\" | \"minecraft:elder_guardian\" | \"minecraft:electric_spark\" | \"minecraft:enchant\" | \"minecraft:enchanted_hit\" | \"minecraft:end_rod\" | \"minecraft:explosion\" | \"minecraft:explosion_emitter\" | \"minecraft:falling_dripstone_lava\" | \"minecraft:falling_dripstone_water\" | \"minecraft:falling_honey\" | \"minecraft:falling_lava\" | \"minecraft:falling_nectar\" | \"minecraft:falling_obsidian_tear\" | \"minecraft:falling_spore_blossom\" | \"minecraft:falling_water\" | \"minecraft:firefly\" | \"minecraft:firework\" | \"minecraft:fishing\" | \"minecraft:flame\" | \"minecraft:glow\" | \"minecraft:glow_squid_ink\" | \"minecraft:gust\" | \"minecraft:gust_emitter_large\" | \"minecraft:gust_emitter_small\" | \"minecraft:happy_villager\" | \"minecraft:heart\" | \"minecraft:infested\" | \"minecraft:item_cobweb\" | \"minecraft:item_slime\" | \"minecraft:item_snowball\" | \"minecraft:landing_honey\" | \"minecraft:landing_lava\" | \"minecraft:landing_obsidian_tear\" | \"minecraft:large_smoke\" | \"minecraft:lava\" | \"minecraft:mycelium\" | \"minecraft:nautilus\" | \"minecraft:note\" | \"minecraft:noxious_gas\" | \"minecraft:noxious_gas_cloud\" | \"minecraft:ominous_spawning\" | \"minecraft:orange_poplar_leaves\" | \"minecraft:pale_oak_leaves\" | \"minecraft:pause_mob_growth\" | \"minecraft:poof\" | \"minecraft:portal\" | \"minecraft:raid_omen\" | \"minecraft:rain\" | \"minecraft:red_poplar_leaves\" | \"minecraft:reset_mob_growth\" | \"minecraft:reverse_portal\" | \"minecraft:scrape\" | \"minecraft:sculk_charge_pop\" | \"minecraft:sculk_soul\" | \"minecraft:small_flame\" | \"minecraft:small_gust\" | \"minecraft:smoke\" | \"minecraft:sneeze\" | \"minecraft:snowflake\" | \"minecraft:sonic_boom\" | \"minecraft:soul\" | \"minecraft:soul_fire_flame\" | \"minecraft:spit\" | \"minecraft:splash\" | \"minecraft:spore_blossom_air\" | \"minecraft:squid_ink\" | \"minecraft:sulfur_bubbles\" | \"minecraft:sulfur_cube_goo\" | \"minecraft:sweep_attack\" | \"minecraft:totem_of_undying\" | \"minecraft:trial_omen\" | \"minecraft:trial_spawner_detection\" | \"minecraft:trial_spawner_detection_ominous\" | \"minecraft:underwater\" | \"minecraft:vault_connection\" | \"minecraft:warped_spore\" | \"minecraft:wax_off\" | \"minecraft:wax_on\" | \"minecraft:white_ash\" | \"minecraft:white_smoke\" | \"minecraft:witch\" | \"minecraft:yellow_poplar_leaves\" | \"mycelium\" | \"nautilus\" | \"note\" | \"noxious_gas\" | \"noxious_gas_cloud\" | \"ominous_spawning\" | \"orange_poplar_leaves\" | \"pale_oak_leaves\" | \"pause_mob_growth\" | \"poof\" | \"portal\" | \"raid_omen\" | \"rain\" | \"red_poplar_leaves\" | \"reset_mob_growth\" | \"reverse_portal\" | \"scrape\" | \"sculk_charge_pop\" | \"sculk_soul\" | \"small_flame\" | \"small_gust\" | \"smoke\" | \"sneeze\" | \"snowflake\" | \"sonic_boom\" | \"soul\" | \"soul_fire_flame\" | \"spit\" | \"splash\" | \"spore_blossom_air\" | \"squid_ink\" | \"sulfur_bubbles\" | \"sulfur_cube_goo\" | \"sweep_attack\" | \"totem_of_undying\" | \"trial_omen\" | \"trial_spawner_detection\" | \"trial_spawner_detection_ominous\" | \"underwater\" | \"vault_connection\" | \"warped_spore\" | \"wax_off\" | \"wax_on\" | \"white_ash\" | \"white_smoke\" | \"witch\" | \"yellow_poplar_leaves\" | (`${string}:${string}` & {\n        __brand?: never;\n    } & Record<never, never>), pos?: Coordinates<false> | undefined, delta?: AbsoluteCoordinates<false> | undefined, speed?: number | undefined, count?: number | undefined, mode?: \"force\" | \"normal\" | undefined, viewers?: MultiplePlayersArgumentOf<fa...",
+    "definition": "src/commands/implementations/player/particle.ts"
+  },
+  "perf": {
+    "signature": "(alias) const perf: PerfCommand",
+    "definition": "src/sandstone.ts"
+  },
+  "place": {
+    "signature": "(alias) const place: PlaceCommand<false>",
+    "definition": "src/commands/implementations/block/place.ts"
+  },
+  "playsound": {
+    "signature": "(alias) const playsound: <T extends string>(sound: SOUND_EVENTS, source?: SOUND_SOURCES | undefined, targets?: MultiplePlayersArgumentOf<false, T> | undefined, sourcePosition?: Coordinates<false> | undefined, volume?: number | undefined, pitch?: number | undefined, minVolume?: number | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/player/playsound.ts"
+  },
+  "random": {
+    "signature": "(alias) const random: RandomCommand<false>",
+    "definition": "src/commands/implementations/server/random.ts"
+  },
+  "randomUUID": {
+    "signature": "(alias) function randomUUID(): UUIDinNumber",
+    "definition": "src/utils.ts"
+  },
+  "raw": {
+    "signature": "(alias) const raw: (...args: unknown[]) => FinalCommandOutput",
+    "definition": "src/commands/implementations/_fake/raw.ts"
+  },
+  "recipe": {
+    "signature": "(alias) const recipe: RecipeCommand<false>",
+    "definition": "src/commands/implementations/player/recipe.ts"
+  },
+  "rel": {
+    "signature": "(alias) const rel: {\n    <T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"~\">>;\n    <T extends number>(coordinate: T): `~${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"~\" | `~${number}`>>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "relative": {
+    "signature": "(alias) const relative: {\n    <T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"~\">>;\n    <T extends number>(coordinate: T): `~${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"~\" | `~${number}`>>;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "reload": {
+    "signature": "(alias) const reload: () => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/reload.ts"
+  },
+  "resetContext": {
+    "signature": "(alias) function resetContext(): void",
+    "definition": "src/context.ts"
+  },
+  "resetSandstonePack": {
+    "signature": "(alias) function resetSandstonePack(): void",
+    "definition": "src/sandstone.ts"
+  },
+  "returnCmd": {
+    "signature": "(alias) const returnCmd: {\n    run: SandstoneCommands<false> & ((callback: () => void) => FinalCommandOutput);\n    fail: () => FinalCommandOutput;\n} & ((value?: number | undefined) => FinalCommandOutput)",
+    "definition": "src/sandstone.ts"
+  },
+  "ride": {
+    "signature": "(alias) const ride: <T extends string>(target: SingleEntityArgumentOf<false, T>) => RideArgumentsCommand<boolean>",
+    "definition": "src/commands/implementations/entity/ride.ts"
+  },
+  "rotate": {
+    "signature": "(alias) const rotate: {\n    <T extends string>(target: SingleEntityArgumentOf<false, T>, rotation: Rotation<false>): FinalCommandOutput;\n    <T extends string>(target: SingleEntityArgumentOf<false, T>): RotateFacingArguments<false>;\n}",
+    "definition": "src/commands/implementations/entity/rotate.ts"
+  },
+  "sandstonePack": {
+    "signature": "(alias) const sandstonePack: SandstonePack",
+    "definition": "src/sandstone.ts"
+  },
+  "say": {
+    "signature": "(alias) const say: (message: string) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/say.ts"
+  },
+  "schedule": {
+    "signature": "(alias) const schedule: ScheduleCommand<false>",
+    "definition": "src/commands/implementations/server/schedule.ts"
+  },
+  "scoreboard": {
+    "signature": "(alias) const scoreboard: ScoreboardCommand<false>",
+    "definition": "src/commands/implementations/entity/scoreboard.ts"
+  },
+  "seed": {
+    "signature": "(alias) const seed: () => FinalCommandOutput",
+    "definition": "src/commands/implementations/world/seed.ts"
+  },
+  "setSandstoneContext": {
+    "signature": "(alias) function setSandstoneContext(ctx: SandstoneContext): void",
+    "definition": "src/context.ts"
+  },
+  "setblock": {
+    "signature": "(alias) const setblock: {\n    <BLOCK extends Macroable<BlockStatic, false>>(pos: Coordinates<false>, block: BLOCK, state?: (BLOCK extends keyof McdocBlockStatesDispatcherMap ? ParseBlockState<NonNullable<McdocBlockStatesDispatcherMap[Extract<BLOCK, keyof McdocBlockStatesDispatcherMap>]>> : Record<string, string | number | boolean>) | undefined, flag?: 'destroy' | 'keep' | 'replace' | 'strict'): FinalCommandOutput;\n    <BLOCK extends Macroable<BlockEntity, false>>(pos: Coordinates<...>, block: BLOCK, state?: ... | undefined, nbt?: ... | undefined, flag?: 'destroy' | 'keep' | 'replace' | 'strict'): FinalCommandOutput;\n}",
+    "definition": "src/commands/implementations/block/setblock.ts"
+  },
+  "setidletimeout": {
+    "signature": "(alias) const setidletimeout: (minutes: number) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/setidletimeout.ts"
+  },
+  "setworldspawn": {
+    "signature": "(alias) const setworldspawn: (pos?: Coordinates<false> | undefined, angle?: Rotation<false> | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/world/setworldspawn.ts"
+  },
+  "spawnpoint": {
+    "signature": "(alias) const spawnpoint: <T extends string>(targets?: MultiplePlayersArgumentOf<false, T> | undefined, pos?: Coordinates<false> | undefined, angle?: Rotation<false> | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/player/spawnpoint.ts"
+  },
+  "spectate": {
+    "signature": "(alias) const spectate: <T extends string, P extends string>(target: SingleEntityArgumentOf<false, T>, player?: SinglePlayerArgumentOf<false, P> | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/player/spectate.ts"
+  },
+  "spreadplayers": {
+    "signature": "(alias) const spreadplayers: {\n    (center: ColumnCoordinates<false>, spreadDistance: number, maxRange: number, respectTeams: boolean, targets: MultipleEntitiesArgument<false>): FinalCommandOutput;\n    (center: ColumnCoordinates<false>, spreadDistance: number, maxRange: number, under: 'under', height: number, respectTeams: boolean, targets: MultipleEntitiesArgument<false>): FinalCommandOutput;\n}",
+    "definition": "src/commands/implementations/entity/spreadplayers.ts"
+  },
+  "stopsound": {
+    "signature": "(alias) const stopsound: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, source?: \"*\" | SOUND_SOURCES | undefined, sound?: SOUND_EVENTS | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/player/stopsound.ts"
+  },
+  "stopwatch": {
+    "signature": "(alias) const stopwatch: StopwatchCommand<false>",
+    "definition": "src/commands/implementations/server/stopwatch.ts"
+  },
+  "summon": {
+    "signature": "(alias) const summon: <ENTITY extends Macroable<Registry['minecraft:entity_type'], false>>(entity: ENTITY, pos?: Coordinates<false> | undefined, nbt?: AllowConst<ENTITY extends keyof EntityDispatcherMap ? NonNullable<EntityDispatcherMap[ENTITY]> : RootNBT> | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/entity/summon.ts"
+  },
+  "swing": {
+    "signature": "(alias) const swing: (targets?: MultipleEntitiesArgument<false>, hand?: 'mainhand' | 'offhand') => FinalCommandOutput",
+    "definition": "src/commands/implementations/entity/swing.ts"
+  },
+  "tag": {
+    "signature": "(alias) const tag: (targets: MultipleEntitiesArgument<false>) => TagArgumentsCommand<false>",
+    "definition": "src/commands/implementations/entity/tag.ts"
+  },
+  "team": {
+    "signature": "(alias) const team: TeamCommand<false>",
+    "definition": "src/commands/implementations/entity/team.ts"
+  },
+  "teammsg": {
+    "signature": "(alias) const teammsg: (messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "definition": "src/sandstone.ts"
+  },
+  "teleport": {
+    "signature": "(alias) const teleport: {\n    <T extends string>(destinationEntity: SingleEntityArgumentOf<false, T>): void;\n    (location: Coordinates<false>): void;\n    <T extends string>(targets: MultipleEntitiesArgument<false>, destinationEntity: SingleEntityArgumentOf<false, T>): void;\n    (targets: MultipleEntitiesArgument<false>, location: Coordinates<false>): TeleportFacingCommand<false>;\n    (targets: MultipleEntitiesArgument<false>, location: Coordinates<false>, rotation: Rotation<false>): void;\n}",
+    "definition": "src/commands/implementations/entity/teleport.ts"
+  },
+  "tell": {
+    "signature": "(alias) const tell: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/tell.ts"
+  },
+  "tellraw": {
+    "signature": "(alias) const tellraw: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, message: Text) => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/tellraw.ts"
+  },
+  "test": {
+    "signature": "(alias) const test: TestCommand<false>",
+    "definition": "src/commands/implementations/world/test.ts"
+  },
+  "time": {
+    "signature": "(alias) const time: TimeCommand<false>",
+    "definition": "src/commands/implementations/world/time.ts"
+  },
+  "title": {
+    "signature": "(alias) const title: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>) => TitleArgumentsCommand<false>",
+    "definition": "src/commands/implementations/player/title.ts"
+  },
+  "tm": {
+    "signature": "(alias) const tm: (messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "definition": "src/sandstone.ts"
+  },
+  "tp": {
+    "signature": "(alias) const tp: {\n    <T extends string>(destinationEntity: SingleEntityArgumentOf<false, T>): void;\n    (location: Coordinates<false>): void;\n    <T extends string>(targets: MultipleEntitiesArgument<false>, destinationEntity: SingleEntityArgumentOf<false, T>): void;\n    (targets: MultipleEntitiesArgument<false>, location: Coordinates<false>): TeleportFacingCommand<false>;\n    (targets: MultipleEntitiesArgument<false>, location: Coordinates<false>, rotation: Rotation<false>): void;\n}",
+    "definition": "src/sandstone.ts"
+  },
+  "transfer": {
+    "signature": "(alias) const transfer: <T extends string>(hostname: string, port?: number | undefined, targets?: MultiplePlayersArgumentOf<false, T> | undefined) => FinalCommandOutput",
+    "definition": "src/commands/implementations/player/transfer.ts"
+  },
+  "trigger": {
+    "signature": "(alias) const trigger: (objective: ObjectiveArgument) => TriggerArgumentsCommand",
+    "definition": "src/commands/implementations/server/trigger.ts"
+  },
+  "version": {
+    "signature": "(alias) const version: () => FinalCommandOutput",
+    "definition": "src/commands/implementations/server/version.ts"
+  },
+  "w": {
+    "signature": "(alias) const w: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "definition": "src/sandstone.ts"
+  },
+  "waypoint": {
+    "signature": "(alias) const waypoint: WaypointCommand<false>",
+    "definition": "src/commands/implementations/player/waypoint.ts"
+  },
+  "weather": {
+    "signature": "(alias) const weather: WeatherCommand<false>",
+    "definition": "src/commands/implementations/world/weather.ts"
+  },
+  "worldborder": {
+    "signature": "(alias) const worldborder: WorldBorderCommand<false>",
+    "definition": "src/commands/implementations/world/worldborder.ts"
+  },
+  "xp": {
+    "signature": "(alias) const xp: ExperienceCommand<false>",
+    "definition": "src/sandstone.ts"
+  }
+}

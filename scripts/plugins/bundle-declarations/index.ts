@@ -40,7 +40,7 @@ export async function bundleDeclarations(
   const map = await generateMainIndexMap(
     join(bundleDir, 'index.d.ts'),
     join(srcDir, 'sandstone.ts'),
-    '../../src/sandstone.ts',
+    path.dirname(srcDir),
   )
   await writeFile(join(bundleDir, 'index.d.ts.map'), map)
 }

@@ -909,6 +909,94 @@ export class CommandNameCommand<MACRO extends boolean> extends CommandArguments 
   methodName = (paramName: Type): FinalCommandOutput => ...
 }
 
+## Tests
+
+### `tests/types/signatures.test.ts` — snapshot + no-any/unknown + missing-export detector
+
+One sub-test per export on the root `sandstone` import path. Each sub-test
+queries the native TS LSP (`tsc --lsp --stdio` via
+`scripts/resolve-type-lib.ts`) for the export's hover signature AND its
+`textDocument/definition` location, runs an optional `web-tree-sitter`
+typescript pass for token-level kind info, and writes the result into
+`tests/__snapshots__/signatures.json`.
+
+The test catches three classes of regression:
+
+- **Hover drift** — the LSP hover signature for an export changes.
+- **Definition drift** — the file the LSP reports for an export changes
+  (via the source-map redirects emitted by the library builder).
+- **`.d.ts` definition** — an export's definition points at a `.d.ts`
+  file (synthetic barrel or bundled d.ts) instead of a real `.ts` source.
+  Catches builder/source-map regressions before they ship.
+
+### `tests/__snapshots__/signatures.json` — user-editable only
+
+`tests/types/signatures.test.ts` writes this file on every run (auto-rewriting
+from observed LSP hover signatures) and uses each entry's `anyAllowed: boolean`
+flag to decide whether `any`/`unknown` in a type is OK.
+
+**Claude must never personally edit this file.** Reasons:
+
+- The test auto-writes it from observed state, so any manual edit gets
+  overwritten on the next run anyway.
+- Flipping `anyAllowed: true` is the user's call — they decide which
+  intentional `any`/`unknown` usages are acceptable; Claude doesn't.
+- When the test fails because an export contains `any`/`unknown` without
+  `anyAllowed: true`, surface the failing export to the user. Do **not**
+  flip the flag yourself, do not delete the entry, do not edit the
+  signature field.
+
+If the user asks Claude to update the snapshot (e.g. they reviewed the diff
+and accept the new signatures), they'll do it themselves or explicitly
+delegate the edit. Default behavior on test failure: report and wait.
+
+**Missing-export failures are not Claude's call to silence.** The test emits a
+`missing export: <name>` failure when a snapshot entry has no corresponding
+export in `listExports('sandstone')`. This signal means one of three things,
+and Claude must decide **none** of them:
+
+1. **Library builder bug** — the export was lost during the bundling
+   pipeline (subpath bundle dropped it, declaration emit missed it).
+   Investigate via `scripts/plugins/bundle-declarations/`; don't delete the
+   snapshot entry.
+2. **Library oversight** — the source change removed an export nobody
+   intended to remove. Fix the source; don't delete the snapshot entry.
+3. **Intentional removal** — the user decided the export should go away.
+   The user deletes the entry themselves; Claude doesn't.
+
+Claude's job on a missing-export failure: report the missing name, stop,
+wait for the user to investigate. Do **not** delete the entry from the
+snapshot, do not add a `--force` / `--ignore-missing` escape hatch to the
+test, do not "fix" the failure by removing the assertion.
+
+### Native LSP backend (`scripts/resolve-type-lib.ts`)
+
+The hover/parts/definition machinery in this script runs against the native
+TypeScript 7 Go-based LSP, NOT the legacy in-process TS LanguageService.
+
+Why: the legacy `ts.LanguageService` was ~59s for the full sandstone
+signature scan and ~3.6 GB peak RSS; the native LSP is ~7s and ~450 MB
+(8× faster, 8× less memory). `tsc --lsp --stdio` is the binary path
+(it lives at `node_modules/@typescript/typescript-linux-x64/lib/tsc` on
+Linux; the JS wrapper at `node_modules/.bin/tsc` is the wrong one — don't
+use it for the LSP).
+
+The lib is hybrid: it uses `@typescript/typescript6` for in-process AST
+walks (the host file is tiny, parsing it in-process avoids a round-trip
+and lets us find the position of the imported name without an LSP
+`textDocument/documentSymbol` call). Everything else — hover, definition,
+the project tsconfig — goes through tsgo.
+
+Two things to know when working on this lib:
+
+1. **The LSP returns 0-based lines and 0-based columns per the LSP spec.**
+   The test log adds `+1` to both when printing, so the displayed
+   `path:line:col` matches the editor's 1-based row numbering for
+   ctrl+click navigation.
+2. **`textDocument/definition` is truncated** for symbols with 7+
+   overloads (TS-server cap, not fixable from the client). The IDE shows
+   the same `// +N more overloads` line — confirmed by the user in-editor.
+
 ## TODOs
 
 ### Library Builder: cross-module `import("sandstone")` in resolved types
