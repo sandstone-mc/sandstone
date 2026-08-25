@@ -79,7 +79,7 @@ export class SleepClass extends AwaitNode {
 
       const { execute } = commands
 
-      const name = `__sandstone:asyncTimer.${currentFunction.resource.name.replace(/[:/]/g, '.')}` as NamespacedString
+      const name = `__sandstone:asyncTimer.${this.mcfunction.name.replace(/[:/]/g, '.')}` as NamespacedString
 
       const timer = new ObjectiveClass(core.pack, name.replace(':', '.'), 'dummy', undefined, { creator: 'sandstone' })
 
