@@ -28,15 +28,20 @@
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.6.0",
-    "@sandstone-mc/mcdoc-ts-generator": "0.3.17",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.3.18",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
+    "@typescript-eslint/eslint-plugin": "8.67.0",
+    "@typescript-eslint/parser": "8.67.0",
+    "@typescript-eslint/type-utils": "8.67.0",
+    "@typescript-eslint/typescript-estree": "8.67.0",
     "@typescript/analyze-trace": "^0.11.1",
     "@typescript/typescript6": "^6.0.2",
     "magic-string": "^1.0.0",
     "oxlint": "^1.75.0",
     "source-map-js": "^1.2.1",
+    "ts-api-utils": "2.5.0",
     "typescript": "^7.0.2"
   },
   "directories": {
@@ -78,6 +83,7 @@
   "files": [
     "dist",
     "src",
+    "patches",
     "tsconfig.json"
   ],
   "exports": {
