@@ -113,6 +113,91 @@ export type Either<A extends Record<string, any>, B extends Record<string, any>>
 
 export type WithMCNamespace<T extends string> = `minecraft:${T}` | T
 
+export interface CreateLazyProxyOptions<TKey extends string, TSource> {
+  /**
+   * Function to fetch the source object/method for a given key. Called
+   * lazily on each property access so the source can be swapped at
+   * runtime (e.g. when the active `SandstonePack` changes).
+   */
+  getSource: (key: TKey) => TSource
+  /** Label used in error messages, e.g. `'Command'` or `'Pack method'`. */
+  label: string
+  /**
+   * Whether to bind sub-methods to the source they were accessed from.
+   *
+   * Set `true` for sources where sub-methods are regular class methods
+   * that depend on `this` (e.g. `SandstonePack` methods). Set `false`
+   * (default) when the source is already responsible for its own
+   * binding — `SandstoneCommands` returns either arrow-function
+   * methods (which capture `this` lexically) or methods pre-bound by
+   * its own `bind()` helper, so an extra `.bind()` here would be a
+   * no-op or even allocate a new function per access.
+   */
+  bind?: boolean
+}
+
+/**
+ * Build a `Proxy` that lazily resolves each top-level key to a source
+ * value via `getSource(key)`. The resolved value can be invoked as a
+ * function (delegated to the source) and probed for sub-properties
+ * (forwarded to the source). Mirrors the two-stage `Proxy(fn, handler)`
+ * shape used by the `commandsProxy` and `packMethodsProxy` in
+ * `sandstone.ts`.
+ *
+ * @param options.getSource Returns the source for a key. The source can
+ *   be a function, a class instance, or any object with sub-properties.
+ * @param options.label Used in the "X is not callable" error message.
+ * @param options.bind When `true`, sub-methods are bound to their parent
+ *   source to preserve `this` context (needed for class methods). When
+ *   omitted/`false`, sub-methods are returned as-is (the source has
+ *   already bound them or uses arrow functions).
+ */
+export function createLazyProxy<
+  TKey extends string,
+  TSource,
+  TShape extends { [K in TKey]?: any },
+>(options: CreateLazyProxyOptions<TKey, TSource>): TShape {
+  const { getSource, label, bind: shouldBind = false } = options
+  return new Proxy({} as TShape, {
+    get<K extends TKey>(_target: object, prop: K): TShape[K] {
+      // Create a function that delegates to the actual source when called.
+      const fn = (...args: unknown[]): unknown => {
+        const source = getSource(prop)
+        if (typeof source === 'function') {
+          return (source as (...args: unknown[]) => unknown)(...args)
+        }
+        throw new Error(`${label} '${prop}' is not callable`)
+      }
+
+      // Return a proxy that intercepts both function calls and sub-property
+      // access. Sub-properties are read off the source on each access so
+      // mutations to the source (e.g. `sandstonePack.commands.foo =
+      // newCommand`) take effect immediately.
+      return new Proxy(fn, {
+        get(_target: object, subProp: string | symbol): unknown {
+          const source = getSource(prop) as unknown as Record<string | symbol, unknown>
+          const value = source[subProp]
+          if (
+            shouldBind &&
+            typeof value === 'function' &&
+            typeof (value as (...args: unknown[]) => unknown).bind === 'function'
+          ) {
+            return (value as (...args: unknown[]) => unknown).bind(source)
+          }
+          return value
+        },
+        apply(_target: object, _thisArg: unknown, args: unknown[]): unknown {
+          const source = getSource(prop)
+          if (typeof source === 'function') {
+            return (source as (...args: unknown[]) => unknown)(...args)
+          }
+          throw new Error(`${label} '${prop}' is not callable`)
+        },
+      }) as TShape[K]
+    },
+  })
+}
+
 export function makeCallableProxy(func: any, object: any) {
   return new Proxy(func, {
     apply: (_t, _thisArg, args) => Reflect.apply(func, object, args),
