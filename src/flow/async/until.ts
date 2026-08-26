@@ -30,11 +30,26 @@ export class UntilClass extends AwaitNode {
   // `schedule` prefix and no async-timer setup on the caller side.
   command = 'return'
 
+  /** @internal */
+  condition: Condition
+
+  /** @internal */
+  pollRate: TimeArgument
+
+  /** @internal */
+  continuationStillReferenced = false
+
+  /** @internal */
   public mcfunction
 
+  /** @internal */
   public continuation
 
+  /** @internal */
   public poller
+
+  /** @internal */
+  sleepClass: SleepClass | undefined
 
   /** @internal */
   logPath: boolean
@@ -44,12 +59,14 @@ export class UntilClass extends AwaitNode {
 
   constructor(
     core: SandstoneCore,
-    public condition: Condition,
-    public pollRate: TimeArgument,
+    condition: Condition,
+    pollRate: TimeArgument,
     logPath: boolean,
   ) {
     super(core.pack)
 
+    this.condition = condition
+    this.pollRate = pollRate
     this.logPath = logPath
 
     if (this.logPath) {
@@ -92,6 +109,7 @@ export class UntilClass extends AwaitNode {
             // what runs after the poll delay. Inject a re-poll into its
             // body so the loop keeps going until the condition is met.
             const sleep = new SleepClass(core, this.pollRate, false)
+            this.sleepClass = sleep
             sleep.mcfunction.node.body.push(
               new FunctionCommandNode(core.pack, this.poller.name),
             )

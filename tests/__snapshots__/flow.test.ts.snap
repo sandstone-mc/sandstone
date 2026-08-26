@@ -4078,37 +4078,36 @@ scoreboard players reset * load.status"
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
 scoreboard objectives add test.ready dummy
-scoreboard objectives add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
   [
     "datapack/data/test/function/async_until_and_fn.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
-execute if score @s test.ready matches 1 if data storage __sandstone:variable flag_kZZpDK67 run return run say after _.await.until (and)
-execute store result score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
+"execute if score @s test.ready matches 1 if data storage __sandstone:variable flag_kZZpDK67 run return run say after _.await.until (and)
+execute store result score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep
 schedule function test:async_until_and_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_and_fn/__until/_poller.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
+"tag @s remove __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep
 execute if score @s test.ready matches 1 if data storage __sandstone:variable flag_kZZpDK67 run return run say after _.await.until (and)
-execute store result score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller
+execute store result score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep
 schedule function test:async_until_and_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_and_fn/__until/_poller/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_until_and_fn.__until._poller run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_until_and_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_and_fn.__until._poller at @s run function test:async_until_and_fn/__until/_poller"
+"execute store result score #current __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep] if score @s __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep = #current __sandstone.asyncTimer.test.async_until_and_fn.__until._poller.__sleep at @s run function test:async_until_and_fn/__until/_poller"
 ,
   ],
   [
@@ -4211,37 +4210,36 @@ scoreboard players reset * load.status"
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
 scoreboard objectives add test.ready dummy
-scoreboard objectives add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
   [
     "datapack/data/test/function/async_until_or_fn.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
-execute if function test:async_until_or_fn/__until/_poller/or_check run return run say after _.await.until (or)
-execute store result score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
+"execute if function test:async_until_or_fn/__until/_poller/or_check run return run say after _.await.until (or)
+execute store result score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep
 schedule function test:async_until_or_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_or_fn/__until/_poller.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
+"tag @s remove __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep
 execute if function test:async_until_or_fn/__until/_poller/or_check run return run say after _.await.until (or)
-execute store result score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller
+execute store result score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep
 schedule function test:async_until_or_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_or_fn/__until/_poller/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_until_or_fn.__until._poller run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_until_or_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_or_fn.__until._poller at @s run function test:async_until_or_fn/__until/_poller"
+"execute store result score #current __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep] if score @s __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep = #current __sandstone.asyncTimer.test.async_until_or_fn.__until._poller.__sleep at @s run function test:async_until_or_fn/__until/_poller"
 ,
   ],
   [
@@ -4343,37 +4341,36 @@ scoreboard players reset * load.status"
     "datapack/data/test/function/__init__.mcfunction",
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard objectives add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
   [
     "datapack/data/test/function/async_until_data_fn.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
-execute if data storage __sandstone:variable ready_kZZpDK67 run return run say after _.await.until (data exists)
-execute store result score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
+"execute if data storage __sandstone:variable ready_kZZpDK67 run return run say after _.await.until (data exists)
+execute store result score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep
 schedule function test:async_until_data_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_data_fn/__until/_poller.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
+"tag @s remove __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep
 execute if data storage __sandstone:variable ready_kZZpDK67 run return run say after _.await.until (data exists)
-execute store result score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller
+execute store result score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep
 schedule function test:async_until_data_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_data_fn/__until/_poller/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_until_data_fn.__until._poller run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_until_data_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_data_fn.__until._poller at @s run function test:async_until_data_fn/__until/_poller"
+"execute store result score #current __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep] if score @s __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep = #current __sandstone.asyncTimer.test.async_until_data_fn.__until._poller.__sleep at @s run function test:async_until_data_fn/__until/_poller"
 ,
   ],
   [
@@ -5004,7 +5001,7 @@ scoreboard players reset * load.status"
     "datapack/data/test/function/__init__.mcfunction",
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_fn dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_fn.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
@@ -5012,24 +5009,24 @@ scoreboard players set test load.status 1"
     "datapack/data/test/function/async_sleep_fn.mcfunction",
     
 "say before _.await.sleep
-execute store result score @s __sandstone.asyncTimer.test.async_sleep_fn run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_fn 20
-tag @s add __sandstone.asyncTimer.test.async_sleep_fn
+execute store result score @s __sandstone.asyncTimer.test.async_sleep_fn.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_fn.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_sleep_fn.__sleep
 schedule function test:async_sleep_fn/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_sleep_fn/__sleep.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_sleep_fn
+"tag @s remove __sandstone.asyncTimer.test.async_sleep_fn.__sleep
 say after _.await.sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_sleep_fn/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_sleep_fn run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_fn] if score @s __sandstone.asyncTimer.test.async_sleep_fn = #current __sandstone.asyncTimer.test.async_sleep_fn at @s run function test:async_sleep_fn/__sleep"
+"execute store result score #current __sandstone.asyncTimer.test.async_sleep_fn.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_fn.__sleep] if score @s __sandstone.asyncTimer.test.async_sleep_fn.__sleep = #current __sandstone.asyncTimer.test.async_sleep_fn.__sleep at @s run function test:async_sleep_fn/__sleep"
 ,
   ],
   [
@@ -5130,28 +5127,28 @@ scoreboard players reset * load.status"
     "datapack/data/test/function/__init__.mcfunction",
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_logpath_fn dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
   [
     "datapack/data/test/function/async_sleep_logpath_fn.mcfunction",
     
-"execute store result score @s __sandstone.asyncTimer.test.async_sleep_logpath_fn run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_logpath_fn 20
-tag @s add __sandstone.asyncTimer.test.async_sleep_logpath_fn
+"execute store result score @s __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep
 schedule function test:async_sleep_logpath_fn/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_sleep_logpath_fn/__sleep.mcfunction",
-    "tag @s remove __sandstone.asyncTimer.test.async_sleep_logpath_fn",
+    "tag @s remove __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep",
   ],
   [
     "datapack/data/test/function/async_sleep_logpath_fn/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_sleep_logpath_fn run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_logpath_fn] if score @s __sandstone.asyncTimer.test.async_sleep_logpath_fn = #current __sandstone.asyncTimer.test.async_sleep_logpath_fn at @s run function test:async_sleep_logpath_fn/__sleep"
+"execute store result score #current __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep] if score @s __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep = #current __sandstone.asyncTimer.test.async_sleep_logpath_fn.__sleep at @s run function test:async_sleep_logpath_fn/__sleep"
 ,
   ],
   [
@@ -5252,7 +5249,7 @@ scoreboard players reset * load.status"
     "datapack/data/test/function/__init__.mcfunction",
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard objectives add __sandstone.asyncTimer.test.async_in_execute dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_in_execute.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
@@ -5260,32 +5257,32 @@ scoreboard players set test load.status 1"
     "datapack/data/test/function/async_in_execute.mcfunction",
     
 "say before execute.run
-execute as @a at @s run function test:async_in_execute/execute_as"
+execute as @a at @s run function test:async_in_execute/execute_as
+say after execute.run"
 ,
   ],
   [
     "datapack/data/test/function/async_in_execute/__sleep.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_in_execute
+"tag @s remove __sandstone.asyncTimer.test.async_in_execute.__sleep
 say after _.await.sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_in_execute/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_in_execute run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_in_execute] if score @s __sandstone.asyncTimer.test.async_in_execute = #current __sandstone.asyncTimer.test.async_in_execute at @s run function test:async_in_execute/__sleep"
+"execute store result score #current __sandstone.asyncTimer.test.async_in_execute.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_in_execute.__sleep] if score @s __sandstone.asyncTimer.test.async_in_execute.__sleep = #current __sandstone.asyncTimer.test.async_in_execute.__sleep at @s run function test:async_in_execute/__sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_in_execute/execute_as.mcfunction",
     
 "say before _.await.sleep
-execute store result score @s __sandstone.asyncTimer.test.async_in_execute run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_in_execute 20
-tag @s add __sandstone.asyncTimer.test.async_in_execute
-schedule function test:async_in_execute/__sleep/_context 1s replace
-say after execute.run"
+execute store result score @s __sandstone.asyncTimer.test.async_in_execute.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_in_execute.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_in_execute.__sleep
+schedule function test:async_in_execute/__sleep/_context 1s replace"
 ,
   ],
   [
@@ -5386,7 +5383,7 @@ scoreboard players reset * load.status"
     "datapack/data/test/function/__init__.mcfunction",
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard objectives add __sandstone.asyncTimer.test.async_asynccontext dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_asynccontext.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
@@ -5394,32 +5391,32 @@ scoreboard players set test load.status 1"
     "datapack/data/test/function/async_asynccontext.mcfunction",
     
 "say before execute.run
-execute as @a at @s run function test:async_asynccontext/execute_as"
+execute as @a at @s run function test:async_asynccontext/execute_as
+say after execute.run"
 ,
   ],
   [
     "datapack/data/test/function/async_asynccontext/__sleep.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_asynccontext
+"tag @s remove __sandstone.asyncTimer.test.async_asynccontext.__sleep
 say after _.await.sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_asynccontext/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_asynccontext run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_asynccontext] if score @s __sandstone.asyncTimer.test.async_asynccontext = #current __sandstone.asyncTimer.test.async_asynccontext at @s run function test:async_asynccontext/__sleep"
+"execute store result score #current __sandstone.asyncTimer.test.async_asynccontext.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_asynccontext.__sleep] if score @s __sandstone.asyncTimer.test.async_asynccontext.__sleep = #current __sandstone.asyncTimer.test.async_asynccontext.__sleep at @s run function test:async_asynccontext/__sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_asynccontext/execute_as.mcfunction",
     
 "say before _.await.sleep
-execute store result score @s __sandstone.asyncTimer.test.async_asynccontext run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_asynccontext 20
-tag @s add __sandstone.asyncTimer.test.async_asynccontext
-schedule function test:async_asynccontext/__sleep/_context 1s replace
-say after execute.run"
+execute store result score @s __sandstone.asyncTimer.test.async_asynccontext.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_asynccontext.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_asynccontext.__sleep
+schedule function test:async_asynccontext/__sleep/_context 1s replace"
 ,
   ],
   [
@@ -5521,37 +5518,36 @@ scoreboard players reset * load.status"
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
 scoreboard objectives add test.ready dummy
-scoreboard objectives add __sandstone.asyncTimer.test.async_until_fn.__until._poller dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
   [
     "datapack/data/test/function/async_until_fn.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_fn.__until._poller
-execute if score @s test.ready matches 1 run return run say after _.await.until
-execute store result score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_fn.__until._poller
+"execute if score @s test.ready matches 1 run return run say after _.await.until
+execute store result score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep
 schedule function test:async_until_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_fn/__until/_poller.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_until_fn.__until._poller
+"tag @s remove __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep
 execute if score @s test.ready matches 1 run return run say after _.await.until
-execute store result score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_until_fn.__until._poller 20
-tag @s add __sandstone.asyncTimer.test.async_until_fn.__until._poller
+execute store result score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep
 schedule function test:async_until_fn/__until/_poller/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_until_fn/__until/_poller/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_until_fn.__until._poller run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_until_fn.__until._poller] if score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller = #current __sandstone.asyncTimer.test.async_until_fn.__until._poller at @s run function test:async_until_fn/__until/_poller"
+"execute store result score #current __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep] if score @s __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep = #current __sandstone.asyncTimer.test.async_until_fn.__until._poller.__sleep at @s run function test:async_until_fn/__until/_poller"
 ,
   ],
   [
@@ -5559,6 +5555,168 @@ execute as @e[tag=__sandstone.asyncTimer.test.async_until_fn.__until._poller] if
     
 "say before MCFunction(async_until_fn)
 say after MCFunction(async_until_fn)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow two sequential _.await.until in same asyncContext mcfunction 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.cond1 dummy
+scoreboard objectives add test.cond2 dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_two_until_fn.mcfunction",
+    
+"execute if score @s test.cond1 matches 1 run return run function test:async_two_until_fn/__until/_continuation
+execute store result score @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep
+schedule function test:async_two_until_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_two_until_fn/__until/_continuation.mcfunction",
+    
+"say between
+execute if score @s test.cond2 matches 1 run return run say after both
+execute store result score @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep
+schedule function test:async_two_until_fn/__until/_poller2/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_two_until_fn/__until/_poller.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep
+execute if score @s test.cond1 matches 1 run return run function test:async_two_until_fn/__until/_continuation
+execute store result score @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep
+schedule function test:async_two_until_fn/__until/_poller/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_two_until_fn/__until/_poller/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep] if score @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep = #current __sandstone.asyncTimer.test.async_two_until_fn.__until._poller.__sleep at @s run function test:async_two_until_fn/__until/_poller"
+,
+  ],
+  [
+    "datapack/data/test/function/async_two_until_fn/__until/_poller2.mcfunction",
+    
+"tag @s remove __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep
+execute if score @s test.cond2 matches 1 run return run say after both
+execute store result score @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep
+schedule function test:async_two_until_fn/__until/_poller2/__sleep/_context 1s replace"
+,
+  ],
+  [
+    "datapack/data/test/function/async_two_until_fn/__until/_poller2/__sleep/_context.mcfunction",
+    
+"execute store result score #current __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep] if score @s __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep = #current __sandstone.asyncTimer.test.async_two_until_fn.__until._poller2.__sleep at @s run function test:async_two_until_fn/__until/_poller2"
+,
+  ],
+  [
+    "datapack/data/test/function/async_two_until.mcfunction",
+    
+"say before MCFunction(async_two_until_fn)
+say after MCFunction(async_two_until_fn)"
 ,
   ],
 ]
@@ -5652,7 +5810,8 @@ scoreboard players reset * load.status"
     "datapack/data/test/function/__init__.mcfunction",
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard objectives add __sandstone.asyncTimer.test.async_multi dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_multi.__sleep dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_multi.__sleep2 dummy
 scoreboard players set test load.status 1"
 ,
   ],
@@ -5667,43 +5826,303 @@ say after MCFunction(async_multi)"
     "datapack/data/test/function/async_multi.mcfunction",
     
 "say before first _.await.sleep
-execute store result score @s __sandstone.asyncTimer.test.async_multi run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_multi 20
-tag @s add __sandstone.asyncTimer.test.async_multi
+execute store result score @s __sandstone.asyncTimer.test.async_multi.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_multi.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_multi.__sleep
 schedule function test:async_multi/__sleep/_context 1s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_multi/__sleep.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_multi
+"tag @s remove __sandstone.asyncTimer.test.async_multi.__sleep
 say before second _.await.sleep
-execute store result score @s __sandstone.asyncTimer.test.async_multi run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_multi 40
-tag @s add __sandstone.asyncTimer.test.async_multi
+execute store result score @s __sandstone.asyncTimer.test.async_multi.__sleep2 run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_multi.__sleep2 40
+tag @s add __sandstone.asyncTimer.test.async_multi.__sleep2
 schedule function test:async_multi/__sleep2/_context 2s replace"
 ,
   ],
   [
     "datapack/data/test/function/async_multi/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_multi run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_multi] if score @s __sandstone.asyncTimer.test.async_multi = #current __sandstone.asyncTimer.test.async_multi at @s run function test:async_multi/__sleep"
+"execute store result score #current __sandstone.asyncTimer.test.async_multi.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_multi.__sleep] if score @s __sandstone.asyncTimer.test.async_multi.__sleep = #current __sandstone.asyncTimer.test.async_multi.__sleep at @s run function test:async_multi/__sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_multi/__sleep2.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_multi
+"tag @s remove __sandstone.asyncTimer.test.async_multi.__sleep2
 say after second _.await.sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_multi/__sleep2/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_multi run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_multi] if score @s __sandstone.asyncTimer.test.async_multi = #current __sandstone.asyncTimer.test.async_multi at @s run function test:async_multi/__sleep2"
+"execute store result score #current __sandstone.asyncTimer.test.async_multi.__sleep2 run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_multi.__sleep2] if score @s __sandstone.asyncTimer.test.async_multi.__sleep2 = #current __sandstone.asyncTimer.test.async_multi.__sleep2 at @s run function test:async_multi/__sleep2"
 ,
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow _.await.until nested in execute.run inside _.if (awaitIdx=-1 path) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__",
+    "test:async_await_nested_fn"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_await_nested_fn.mcfunction",
+    "execute if entity @s run function test:async_await_nested_fn/if",
+  ],
+  [
+    "datapack/data/test/function/async_await_nested_fn/__until/_poller.mcfunction",
+    
+"execute if entity @s run return run give @s diamond
+schedule function test:async_await_nested_fn/__until/_poller 1s append"
+,
+  ],
+  [
+    "datapack/data/test/function/async_await_nested_fn/if.mcfunction",
+    
+"execute as @a run function test:async_await_nested_fn/if/execute_as
+say after"
+,
+  ],
+  [
+    "datapack/data/test/function/async_await_nested_fn/if/execute_as.mcfunction",
+    
+"execute if entity @s run return run give @s diamond
+schedule function test:async_await_nested_fn/__until/_poller 1s append"
+,
+  ],
+  [
+    "datapack/data/test/function/async_await_nested_in_execute_if.mcfunction",
+    "",
+  ],
+]
+`;
+
+exports[`Flow snapshots async flow _.await.until schedule rewrite (non-asyncContext, runOnLoad) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__",
+    "test:async_until_schedule_fn"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_schedule_fn.mcfunction",
+    
+"say before first _.await.until
+execute if entity @s run return run function test:async_until_schedule_fn/__until/_continuation
+schedule function test:async_until_schedule_fn/__until/_poller 1t append"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_schedule_fn/__sleep.mcfunction",
+    
+"say between2
+execute if entity @s run return run say after second _.await.until
+schedule function test:async_until_schedule_fn/__until/_poller2 1t append"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_schedule_fn/__until/_continuation.mcfunction",
+    
+"say between
+schedule function test:async_until_schedule_fn/__sleep 5 append"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_schedule_fn/__until/_poller.mcfunction",
+    
+"execute if entity @s run return run function test:async_until_schedule_fn/__until/_continuation
+schedule function test:async_until_schedule_fn/__until/_poller 1t append"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_schedule_fn/__until/_poller2.mcfunction",
+    
+"execute if entity @s run return run say after second _.await.until
+schedule function test:async_until_schedule_fn/__until/_poller2 1t append"
+,
+  ],
+  [
+    "datapack/data/test/function/async_until_schedule_rewrite.mcfunction",
+    "",
   ],
 ]
 `;
@@ -5797,7 +6216,7 @@ scoreboard players reset * load.status"
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
 scoreboard objectives add test.i dummy
-scoreboard objectives add __sandstone.asyncTimer.test.async_in_while_fn dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_in_while_fn.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
@@ -5812,7 +6231,7 @@ say after _.while"
   [
     "datapack/data/test/function/async_in_while_fn/__sleep.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_in_while_fn
+"tag @s remove __sandstone.asyncTimer.test.async_in_while_fn.__sleep
 say after _.await.sleep
 scoreboard players add @s test.i 1
 execute if score @s test.i matches 0..3 run function test:async_in_while_fn/loop"
@@ -5821,17 +6240,17 @@ execute if score @s test.i matches 0..3 run function test:async_in_while_fn/loop
   [
     "datapack/data/test/function/async_in_while_fn/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_in_while_fn run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_in_while_fn] if score @s __sandstone.asyncTimer.test.async_in_while_fn = #current __sandstone.asyncTimer.test.async_in_while_fn at @s run function test:async_in_while_fn/__sleep"
+"execute store result score #current __sandstone.asyncTimer.test.async_in_while_fn.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_in_while_fn.__sleep] if score @s __sandstone.asyncTimer.test.async_in_while_fn.__sleep = #current __sandstone.asyncTimer.test.async_in_while_fn.__sleep at @s run function test:async_in_while_fn/__sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_in_while_fn/loop.mcfunction",
     
 "say before _.await.sleep
-execute store result score @s __sandstone.asyncTimer.test.async_in_while_fn run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_in_while_fn 20
-tag @s add __sandstone.asyncTimer.test.async_in_while_fn
+execute store result score @s __sandstone.asyncTimer.test.async_in_while_fn.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_in_while_fn.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_in_while_fn.__sleep
 schedule function test:async_in_while_fn/__sleep/_context 1s replace"
 ,
   ],
@@ -5933,7 +6352,7 @@ scoreboard players reset * load.status"
     "datapack/data/test/function/__init__.mcfunction",
     
 "scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_in_if_fn dummy
+scoreboard objectives add __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep dummy
 scoreboard players set test load.status 1"
 ,
   ],
@@ -5948,24 +6367,24 @@ say after _.if"
   [
     "datapack/data/test/function/async_sleep_in_if_fn/__sleep.mcfunction",
     
-"tag @s remove __sandstone.asyncTimer.test.async_sleep_in_if_fn
+"tag @s remove __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep
 say after _.await.sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_sleep_in_if_fn/__sleep/_context.mcfunction",
     
-"execute store result score #current __sandstone.asyncTimer.test.async_sleep_in_if_fn run time query gametime
-execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_in_if_fn] if score @s __sandstone.asyncTimer.test.async_sleep_in_if_fn = #current __sandstone.asyncTimer.test.async_sleep_in_if_fn at @s run function test:async_sleep_in_if_fn/__sleep"
+"execute store result score #current __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep run time query gametime
+execute as @e[tag=__sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep] if score @s __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep = #current __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep at @s run function test:async_sleep_in_if_fn/__sleep"
 ,
   ],
   [
     "datapack/data/test/function/async_sleep_in_if_fn/if.mcfunction",
     
 "say before _.await.sleep
-execute store result score @s __sandstone.asyncTimer.test.async_sleep_in_if_fn run time query gametime
-scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_in_if_fn 20
-tag @s add __sandstone.asyncTimer.test.async_sleep_in_if_fn
+execute store result score @s __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep run time query gametime
+scoreboard players add @s __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep 20
+tag @s add __sandstone.asyncTimer.test.async_sleep_in_if_fn.__sleep
 schedule function test:async_sleep_in_if_fn/__sleep/_context 1s replace"
 ,
   ],
@@ -7877,6 +8296,112 @@ execute as @a at @s run function test:with_hoist_execute/__with_macro with stora
 ]
 `;
 
+exports[`Flow snapshots misc commands touched by Flow visitors _.with hoists execute prefix after ContainerCommandsToMCFunctionVisitor extracts it 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/with_extracted_execute_hoist.mcfunction",
+    
+"scoreboard players set anon_kZZpDK67_0 __sandstone 11
+execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get anon_kZZpDK67_0 __sandstone
+execute as @a run function test:with_extracted_execute_hoist/__with_macro with storage __sandstone:variable anon_kZZpDK67_0"
+,
+  ],
+  [
+    "datapack/data/test/function/with_extracted_execute_hoist/__with_macro.mcfunction",
+    "$say Hello $(env_0)!",
+  ],
+]
+`;
+
 exports[`Flow snapshots misc commands touched by Flow visitors _.with body without execute wrapper keeps nested $-prefixed commands 1`] = `
 [
   [
@@ -7983,112 +8508,6 @@ function test:with_no_hoist/__with_macro with storage __sandstone:variable anon_
 $give @s minecraft:diamond $(env_0)
 $give @s minecraft:emerald $(env_0)"
 ,
-  ],
-]
-`;
-
-exports[`Flow snapshots misc commands touched by Flow visitors _.with hoists execute prefix after ContainerCommandsToMCFunctionVisitor extracts it 1`] = `
-[
-  [
-    "datapack/data/load/function/_private/init.mcfunction",
-    
-"# Reset scoreboards so packs can set values accurate for current load.
-scoreboard objectives add load.status dummy
-scoreboard players reset * load.status"
-,
-  ],
-  [
-    "datapack/data/load/tags/function/_private/init.json",
-    
-"{
-  "replace": false,
-  "values": [
-    "load:_private/init"
-  ]
-}"
-,
-  ],
-  [
-    "datapack/data/load/tags/function/_private/load.json",
-    
-"{
-  "replace": false,
-  "values": [
-    "#load:_private/init",
-    {
-      "id": "#load:pre_load",
-      "required": false
-    },
-    {
-      "id": "#load:load",
-      "required": false
-    },
-    {
-      "id": "#load:post_load",
-      "required": false
-    }
-  ]
-}"
-,
-  ],
-  [
-    "datapack/data/load/tags/function/load.json",
-    
-"{
-  "replace": false,
-  "values": [
-    "test:__init__"
-  ]
-}"
-,
-  ],
-  [
-    "datapack/data/load/tags/function/post_load.json",
-    
-"{
-  "replace": false,
-  "values": []
-}"
-,
-  ],
-  [
-    "datapack/data/load/tags/function/pre_load.json",
-    
-"{
-  "replace": false,
-  "values": []
-}"
-,
-  ],
-  [
-    "datapack/data/minecraft/tags/function/load.json",
-    
-"{
-  "replace": false,
-  "values": [
-    "#load:_private/load"
-  ]
-}"
-,
-  ],
-  [
-    "datapack/data/test/function/__init__.mcfunction",
-    
-"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
-scoreboard players set test load.status 1"
-,
-  ],
-  [
-    "datapack/data/test/function/with_extracted_execute_hoist.mcfunction",
-    
-"scoreboard players set anon_kZZpDK67_0 __sandstone 11
-execute store result storage __sandstone:variable anon_kZZpDK67_0.env_0 int 1 run scoreboard players get anon_kZZpDK67_0 __sandstone
-execute as @a run function test:with_extracted_execute_hoist/__with_macro with storage __sandstone:variable anon_kZZpDK67_0"
-,
-  ],
-  [
-    "datapack/data/test/function/with_extracted_execute_hoist/__with_macro.mcfunction",
-    "$say Hello $(env_0)!",
   ],
 ]
 `;

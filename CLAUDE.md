@@ -911,6 +911,15 @@ export class CommandNameCommand<MACRO extends boolean> extends CommandArguments 
 
 ## Tests
 
+### Running
+
+```bash
+bun test                                  # full suite; failing snapshots preserve the file
+bun run test:update-snapshots             # UPDATE_SIGNATURES=1 + bun's --update-snapshots; failing snapshots write through and tests pass
+```
+
+No `test` script in `package.json` — invoke `bun test` directly.
+
 ### `tests/types/signatures.test.ts` — snapshot + no-any/unknown + missing-export detector
 
 One sub-test per export on the root `sandstone` import path. Each sub-test

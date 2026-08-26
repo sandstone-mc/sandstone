@@ -71,9 +71,7 @@ export abstract class FlowClauseNode extends ContainerNode {
       // Pop the whole way back rather than a single level: a sleep (or any
       // other await) inside the command enters its own context without
       // balancing it, which would otherwise leave `this` on the stack.
-      while (parentMCFunction.contextStack.length > this.singleCommandDepth) {
-        parentMCFunction.exitContext()
-      }
+      parentMCFunction.popToDepth(this.singleCommandDepth)
     }
 
     return (nodes.length === 1 ? nodes[0] : nodes) as any
@@ -104,21 +102,11 @@ export class IfNode extends FlowClauseNode {
     this.parentMCFunction = parentMCFunction ?? sandstoneCore.getCurrentMCFunctionOrThrow()
 
     if (callback && callback.toString() !== '() => {}') {
-      // Generate the body of the If node. Sleep nodes (and other awaits)
-      // inside the callback enter their own context without balancing it,
-      // so a single `exitContext()` after `loopback()` would only pop the
-      // topmost context (the await's) — leaving `this` (LoopNode) on the
-      // stack, which causes post-loop commands to be appended to the
-      // loop's body instead of the parent MCFunction. Pop until we're back
-      // at the parent's depth.
-      const currentNode = this.parentMCFunction
-      const parentDepth = currentNode.contextStack.length
-      currentNode.enterContext(this)
+      // Generate the body of the If node. Awaits inside the callback
+      // enter their own context without balancing it — `balanceContext`
+      // pops the whole stack back to the pre-enter depth for us.
+      this.parentMCFunction.balanceContext(this, callback)
       this.addedToBody = true
-      callback()
-      while (currentNode.contextStack.length > parentDepth) {
-        currentNode.exitContext()
-      }
     }
   }
 
@@ -243,12 +231,7 @@ export class IfStatement<R extends boolean = true> {
     return makeCallable(
       commands,
       (callback: () => void): FinalCommandOutput => {
-        const parentDepth = parentMCFunction.contextStack.length
-        parentMCFunction.enterContext(elseNode)
-        callback()
-        while (parentMCFunction.contextStack.length > parentDepth) {
-          parentMCFunction.exitContext()
-        }
+        parentMCFunction.balanceContext(elseNode, callback)
         return new FinalCommandOutput(elseNode as any)
       },
       true,
@@ -262,16 +245,12 @@ export class ElseNode extends FlowClauseNode {
   constructor(sandstoneCore: SandstoneCore, callback: () => void) {
     super(sandstoneCore)
 
-    // Generate the body of the If node. Pop the stack fully (not just one
-    // level) so awaits inside the callback don't leak into the parent.
+    // Generate the body of the Else node. Awaits inside the callback
+    // enter their own context without balancing it — `balanceContext`
+    // pops the whole stack back to the pre-enter depth for us.
     const currentNode = this.sandstoneCore.getCurrentMCFunctionOrThrow()
-    const parentDepth = currentNode.contextStack.length
-    currentNode.enterContext(this)
+    currentNode.balanceContext(this, callback)
     this.addedToBody = true
-    callback()
-    while (currentNode.contextStack.length > parentDepth) {
-      currentNode.exitContext()
-    }
   }
 
   /** @internal */

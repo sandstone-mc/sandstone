@@ -3,6 +3,7 @@ import {
   _,
   DataVariable,
   execute,
+  give,
   Label,
   Macro as $,
   MCFunction,
@@ -654,6 +655,29 @@ describe('Flow snapshots', () => {
       snapshotAll(out)
     })
 
+    test('two sequential _.await.until in same asyncContext mcfunction', () => {
+      // Regression: a second `_.await.until` placed inside the first's
+      // continuation body (along with another command) created a
+      // multi-body `return run` wrapper after cleanupUntil spliced the
+      // continuation into it. Threw "Return run nodes can only have one
+      // child node" at save time. The fix keeps the wrapper calling the
+      // continuation (which now holds the multi-command body) when the
+      // body can't be inlined into the wrapper's 1-child constraint.
+      const out = compile('async_two_until', () => {
+        say('before MCFunction(async_two_until_fn)')
+        const cond1 = Objective.create('cond1')
+        const cond2 = Objective.create('cond2')
+        MCFunction('async_two_until_fn', () => {
+          _.await.until(cond1('@s').equalTo(1), '1s')
+          say('between')
+          _.await.until(cond2('@s').equalTo(1), '1s')
+          say('after both')
+        }, { asyncContext: true })
+        say('after MCFunction(async_two_until_fn)')
+      })
+      snapshotAll(out)
+    })
+
     test('multiple sequential sleeps', () => {
       const out = compile('async_multi_sleep', () => {
         say('before MCFunction(async_multi)')
@@ -665,6 +689,51 @@ describe('Flow snapshots', () => {
           say('after second _.await.sleep')
         }, { asyncContext: true })
         say('after MCFunction(async_multi)')
+      })
+      snapshotAll(out)
+    })
+
+    test('_.await.until nested in execute.run inside _.if (awaitIdx=-1 path)', () => {
+      // Probes the `parent.body.indexOf(until) === -1` branch in
+      // cleanupUntil. The await is inside `execute.as().run()` inside
+      // `_.if()`; after helpers extract, the until sits nested inside
+      // helpers rather than at `findAwaitParent`'s direct body. Without
+      // a deeper search, `indexOf` returns -1 and the splice appends at
+      // end — `until.body` ends up AFTER the surrounding `say(...)`,
+      // reversing user order, and the inline `execute if predicate …
+      // run …` in the appended poller re-checks the await condition.
+      const out = compile('async_await_nested_in_execute_if', () => {
+        MCFunction('async_await_nested_fn', () => {
+          _.if(_.entity('@s'), () => {
+            execute.as('@a').run(() => {
+              _.await.until(_.entity('@s'), '1s')
+              give('@s', 'diamond')
+            })
+            say('after')
+          })
+        }, { runOnLoad: true })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.await.until schedule rewrite (non-asyncContext, runOnLoad)', () => {
+      // Regression: without `asyncContext`, `sleep.ts` set the re-poll
+      // schedule's target to the sleep mcfunction itself (rather than
+      // `<sleep>/_context`). `cleanupUntil` deleted the sleep mcfunction
+      // but left the schedule dangling at runtime — when the predicate
+      // was false, the schedule fired and called a non-existent function,
+      // breaking the re-poll loop. The fix rewrites the schedule to
+      // call the poller directly.
+      const out = compile('async_until_schedule_rewrite', () => {
+        MCFunction('async_until_schedule_fn', () => {
+          say('before first _.await.until')
+          _.await.until(_.entity('@s'), '1t')
+          say('between')
+          _.await.sleep('5')
+          say('between2')
+          _.await.until(_.entity('@s'), '1t')
+          say('after second _.await.until')
+        }, { runOnLoad: true })
       })
       snapshotAll(out)
     })

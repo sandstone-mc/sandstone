@@ -1,31 +1,45 @@
 import type { TimeArgument } from 'sandstone/arguments'
-import type { SandstoneCore } from 'sandstone/core'
+import type { SandstoneCore, MCFunctionNode } from 'sandstone/core'
+import type { Node } from 'sandstone/core/nodes'
 import { AwaitNode } from 'sandstone/core/nodes'
 import { ObjectiveClass } from 'sandstone/variables'
+import type { TagCommandNode } from 'sandstone/commands'
 import type { NamespacedString } from 'sandstone/utils'
+import { FinalCommandOutput } from 'sandstone/commands'
 
 const SLEEP_CHILD_NAME = '__sleep'
 
 export class SleepClass extends AwaitNode {
   command = 'schedule'
 
+  /** @internal */
+  delay: TimeArgument
+
+  /** @internal */
   public mcfunction
+
+  /** @internal */
+  public contextLeaf: FinalCommandOutput | undefined
+
+  /** @internal */
+  cleanupLabel: TagCommandNode | undefined
 
   protected inSleepFunction: boolean
 
   /** @internal */
   logPath: boolean
-  
+
   /** @internal */
   stackTrace?: string
 
   constructor(
     core: SandstoneCore,
-    public delay: TimeArgument,
+    delay: TimeArgument,
     logPath: boolean,
   ) {
     super(core.pack)
 
+    this.delay = delay
     this.logPath = logPath
 
     if (this.logPath) {
@@ -33,6 +47,7 @@ export class SleepClass extends AwaitNode {
     }
 
     const currentFunction = core.getCurrentMCFunctionOrThrow()
+    this.parentMCFunction = currentFunction
 
     // If we're already in a "sleep" child, go to the parent function. It avoids childs' names becoming namespace:function/__sleep/__sleep/__sleep etc...
     const { path } = currentFunction.resource
@@ -95,19 +110,28 @@ export class SleepClass extends AwaitNode {
 
       this.mcfunction.unshift(() => label('@s').remove())
 
+      this.cleanupLabel = this.mcfunction.node.body[0] as TagCommandNode
+
       schedule = MCFunction(
         `${this.mcfunction.name}/_context`,
         () => {
           execute.store.result(timer('#current')).run.time.query('gametime')
 
-          execute
-            .as(Selector('@e', { tag: label.fullName }))
-            .if.score(timer('@s'), '=', timer('#current'))
-            .at('@s')
-            .run.functionCmd(this.mcfunction)
+          this.contextLeaf = (
+            execute
+              .as(Selector('@e', { tag: label.fullName }))
+              .if.score(timer('@s'), '=', timer('#current'))
+              .at('@s')
+              .run.functionCmd(this.mcfunction)
+          )
         },
         {
           packType: currentFunction.resource.packType,
+          // Tag as sandstone-created so visitors that iterate helpers
+          // (e.g. `AwaitBodyVisitor.collectTransientHelpers`) can find it
+          // via path matching, and so the parent/child registration in
+          // `ContainerCommandsToMCFunctionVisitor` correctly classifies it.
+          creator: 'sandstone',
         },
       ).name
     }

@@ -2,7 +2,7 @@
 
 import { FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import type { MCFunctionNode } from 'sandstone/core'
-import { ContainerCommandNode } from 'sandstone/core'
+import { AwaitNode, ContainerCommandNode } from 'sandstone/core'
 import { WithClass } from 'sandstone/flow/macro'
 import { GenericSandstoneVisitor } from './visitor'
 
@@ -16,13 +16,25 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
     const { node, mcFunction } = node_.createMCFunction(this.currentMCFunction)
 
     if (mcFunction) {
+      // Register the parent/child relationship so visitors like
+      // `AwaitBodyVisitor.collectTransientHelpers` can iterate a
+      // single MCFunction's children in O(n) instead of scanning
+      // `core.resourceNodes` (O(n²)).
+      if (this.currentMCFunction) {
+        this.currentMCFunction.transientChildMCFunctions.add(mcFunction)
+      }
+
       // The execute's body just got moved into a brand-new wrapper MCFunction.
       // Every WithClass inside it now lives here, not in its original caller —
       // update the containing reference so visitors like WithNodeVisitor can
-      // look it up in O(1).
+      // look it up in O(1). Same for any AwaitNode so
+      // `AwaitBodyVisitor.cleanupUntil` can find each await's direct
+      // parent in O(1) instead of scanning `core.resourceNodes`.
       for (const node of mcFunction.body) {
         if (node instanceof WithClass) {
           node.containingMCFunction = mcFunction
+        } else if (node instanceof AwaitNode) {
+          node.parentMCFunction = mcFunction
         }
       }
 

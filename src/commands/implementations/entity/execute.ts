@@ -995,8 +995,13 @@ export class ExecuteCommand<MACRO extends boolean> extends ExecuteCommandPart<MA
         }
 
         node.isSingleExecute = false
-        // Add node to parent context if not already committed
-        this.sandstoneCore.insideContext(node, callback, !node.commited)
+        // Add node to parent context if not already committed.
+        // Use `balanceContext`: the callback may contain
+        // `_.await.sleep/until(...)` which calls `enterContext(this)`
+        // and never pops itself. A single `exitContext()` here would
+        // leave the await's wrapper on the stack, so subsequent
+        // commands commit to the wrong body.
+        this.sandstoneCore.balanceContext(node, callback, !node.commited)
         return new FinalCommandOutput(node)
       },
       true,

@@ -66,6 +66,16 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
       },
     )
 
+    // Register the parent/child relationship so `AwaitBodyVisitor`'s
+    // `collectTransientHelpers` can iterate a single MCFunction's
+    // children in O(n) instead of scanning `core.resourceNodes` (O(n²)).
+    // `or_check` was created directly here rather than via
+    // `ContainerCommandsToMCFunctionVisitor.createMCFunction`, so it
+    // bypasses that visitor's child registration.
+    if (parentMCFunction) {
+      parentMCFunction.transientChildMCFunctions.add(orMCFunction.node)
+    }
+
     this.core.enterMCFunction(orMCFunction)
 
     try {
@@ -132,6 +142,12 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
         onConflict: 'rename',
       },
     )
+
+    // See `or_check` above — register parent/child for the
+    // `AwaitBodyVisitor`'s `collectTransientHelpers`.
+    if (parentMCFunction) {
+      parentMCFunction.transientChildMCFunctions.add(andMCFunction.node)
+    }
 
     this.core.enterMCFunction(andMCFunction)
 

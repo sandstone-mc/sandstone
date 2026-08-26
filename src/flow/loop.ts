@@ -18,21 +18,15 @@ export class LoopNode extends ContainerNode {
     this.parentMCFunction = currentNode
 
     if (callback.toString() !== '() => {}') {
-      // Generate the body of the loop node.
-      currentNode.enterContext(this)
-      // Snapshot the contextStack depth. Sleep nodes (and other awaits)
-      // enter their own context without balancing it, so a single
-      // `exitContext()` after `loopback()` would only pop the topmost
-      // context (the await's) — leaving `this` (LoopNode) on the stack,
-      // which causes post-loop commands to be appended to the loop's
-      // body instead of the parent MCFunction. Pop until we're back at
-      // the parent's depth.
-      const parentDepth = currentNode.contextStack.length - 1
-      this.callback()
-      this.loopback()
-      while (currentNode.contextStack.length > parentDepth) {
-        currentNode.exitContext()
-      }
+      // Generate the body of the loop node. Awaits inside the callback
+      // enter their own context without balancing it — `balanceContext`
+      // pops the whole stack back to the pre-enter depth for us. We
+      // include `loopback()` in the balanced block so any awaits it
+      // triggers are also popped.
+      currentNode.balanceContext(this, () => {
+        this.callback()
+        this.loopback()
+      })
     }
   }
 

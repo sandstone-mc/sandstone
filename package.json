@@ -77,6 +77,7 @@
     "publishToNpm": "bun dev:build && bun publish",
     "format": "bun oxlint src --fix",
     "lint": "bun oxlint src",
+    "test:update-snapshots": "UPDATE_SIGNATURES=1 bun test --update-snapshots",
     "update-from-mcdoc": "bun run update-from-mcdoc:types && bun run update-from-mcdoc:json",
     "update-from-mcdoc:types": "MCDOC_TARGET_VERSION=26.3 mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig",
     "update-from-mcdoc:json": "MCDOC_TARGET_VERSION=26.3 MCDOC_TYPE_PREFIX=Json MCDOC_ALLOW_JS_NUMBER=1 MCDOC_IMPORT_ROOT=sandstone/arguments/generated/_json mcdoc-ts-generator --out-dir \"src/arguments/generated/_json/\" --no-tsconfig"

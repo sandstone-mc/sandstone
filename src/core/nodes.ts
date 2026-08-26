@@ -249,6 +249,17 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]>
 
 export abstract class AwaitNode extends ContainerCommandNode {
   mcfunction: MCFunctionClass<any, any> = undefined as unknown as MCFunctionClass<any, any>
+
+  /**
+   * The MCFunction whose body currently contains this AwaitNode. Captured
+   * at construction (the MCFunction whose context the node was appended
+   * to via `enterContext`) and refreshed by
+   * `ContainerCommandsToMCFunctionVisitor` when the node's containing
+   * execute body is extracted into a new MCFunction. Lets
+   * `AwaitBodyVisitor.cleanupUntil` find the await's direct parent in
+   * O(1) instead of scanning `core.resourceNodes`.
+   */
+  parentMCFunction: MCFunctionNode | undefined
 }
 
 export type AwaitNodeClass = new (core: SandstoneCore, ...args: any[]) => AwaitNode

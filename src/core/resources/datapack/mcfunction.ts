@@ -14,7 +14,7 @@ import { formatDebugString, makeCallable, makeClassCallable } from 'sandstone/ut
 import * as util from 'util'
 import type { MakeInstanceCallable } from '../../../utils'
 import { ResolveNBTPart } from '../../../variables/ResolveNBT'
-import { ContainerNode } from '../../nodes'
+import { AwaitNode, ContainerNode } from '../../nodes'
 import { CallableResourceClass } from '../resource'
 import { TagClass } from './tag'
 import type { DataPointClass } from 'sandstone/variables'
@@ -42,10 +42,24 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
   }
 
   /**
+   * Sandstone-created child MCFunctions extracted from this MCFunction's
+   * body by `ContainerCommandsToMCFunctionVisitor`. Populated lazily as
+   * the visitor walks the tree and extracts execute bodies whose contents
+   * exceed the 1-child constraint. Lets visitors iterate transient
+   * helpers in O(n) over the children of a single MCFunction instead of
+   * O(n²) over `core.resourceNodes`.
+   * 
+   * @internal
+   */
+  transientChildMCFunctions: Set<MCFunctionNode> = new Set()
+
+  /**
    * The currently active context.
    *
    * For example, the current context is the function body if the function is not in a loop.
    * If the function is in a loop, the current context is the loop body.
+   * 
+   * @internal
    */
   get currentContext() {
     return this.contextStack[this.contextStack.length - 1]
@@ -55,6 +69,8 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
    * Sequentially add node(s) to the end of the body of the function.
    *
    * @param node The node(s) to add.
+   * 
+   * @internal
    */
   appendNode = (node: Node | Node[]) => {
     if (Array.isArray(node)) {
@@ -70,6 +86,8 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
    * Sequentially add node(s) to the beginning of the body of the function.
    *
    * @param node The node(s) to add.
+   * 
+   * @internal
    */
   prependNode = (node: Node | Node[]) => {
     if (Array.isArray(node)) {
@@ -87,10 +105,38 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
    *
    * @param node The node to switch to.
    * @param addNode Whether to add the node to the body of the current context.
+   * 
+   * @internal
    */
   enterContext = (node: ContainerNode | ContainerCommandNode, addNode: boolean = true) => {
     if (addNode) {
       this.currentContext.append(node)
+
+      // For an AwaitNode being appended, the "parent MCFunction" is
+      // whichever MCFunction directly contains the IMMEDIATE container of
+      // the await — e.g. for a second `_.await.until(...)` placed inside
+      // the first await's post-await body, the second await's parent is
+      // the first await's continuation mcfunction (not the outermost
+      // mcfunction the user wrote). Walk the contextStack from the top:
+      // if we hit an AwaitNode first, its `mcfunction` (the continuation)
+      // is the parent; otherwise the nearest MCFunctionNode wins.
+      if (node instanceof AwaitNode && node.parentMCFunction === undefined) {
+        let parent: MCFunctionNode | undefined
+        // Walk the stack EXCLUDING the node we're about to push (we want
+        // the parent's container, not ourselves).
+        for (let i = this.contextStack.length - 1; i >= 0; i--) {
+          const ctx = this.contextStack[i]
+          if (ctx instanceof AwaitNode) {
+            parent = ctx.mcfunction?.node
+            break
+          }
+          if (ctx instanceof MCFunctionNode) {
+            parent = ctx
+            break
+          }
+        }
+        node.parentMCFunction = parent
+      }
     }
 
     this.contextStack.push(node)
@@ -106,6 +152,8 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
    *
    * @return The previously active context.
    * @throws Error if there is no previous context.
+   * 
+   * @internal
    */
   insideContext = (node: ContainerNode | ContainerCommandNode, callback: () => void, addNode: boolean = true) => {
     this.enterContext(node, addNode)
@@ -114,10 +162,52 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
   }
 
   /**
+   * Enters `node`'s context, runs `callback`, then pops the entire stack
+   * back to the pre-enter depth (not just one level).
+   *
+   * Use this when the callback may contain awaits — `_.await.until(...)`
+   * inside the callback calls `enterContext(this=UntilClass)` and never
+   * pops itself, so a single `exitContext()` here would leave the await's
+   * `UntilClass` (or the wrapper `ExecuteCommandNode` it was nested
+   * inside) on the stack, causing subsequent commands to commit to the
+   * wrong body.
+   *
+   * Mirrors the `while (length > preDepth) exit()` pattern that
+   * `FlowClauseNode.append` and the various flow-node constructors
+   * already use for the same reason (see CLAUDE.md "MCFunction Context
+   * System"). Prefer calling this over open-coding the while-loop.
+   * 
+   * @internal
+   */
+  balanceContext = (node: ContainerNode | ContainerCommandNode, callback: () => void, addNode: boolean = true) => {
+    const beforeIn = this.contextStack.length
+    this.enterContext(node, addNode)
+    callback()
+    this.popToDepth(beforeIn)
+    return this.contextStack[this.contextStack.length - 1]
+  }
+
+  /**
+   * Pop the context stack until its length equals `depth`. No-op if the
+   * stack is already at or below `depth`. Used by `balanceContext` and by
+   * split enter/exit patterns (e.g. `FlowClauseNode.append`) where the
+   * "exit" happens in a different method than the "enter".
+   * 
+   * @internal
+   */
+  popToDepth = (depth: number) => {
+    while (this.contextStack.length > depth) {
+      this.exitContext()
+    }
+  }
+
+  /**
    * Leave the current context, and return to the previous one.
    *
    * @return The previously active context.
    * @throws Error if there is no previous context.
+   * 
+   * @internal
    */
   exitContext = () => {
     if (this.contextStack.length === 0) {
@@ -231,24 +321,20 @@ export class _RawMCFunctionClass<
 > extends CallableResourceClass<MCFunctionNode> implements NBTSerializable {
   static readonly resourceType = 'function'
 
+  /* @internal */
   public callback: NonNullable<MCFunctionClassArguments['callback']>
 
-  public nested = 0
+  /* @internal */
+  nested = 0
 
   public asyncContext: NonNullable<MCFunctionClassArguments['asyncContext']>
 
-  /** @internal */
   tags: MCFunctionClassArguments['tags']
 
-  /** @internal */
   lazy: boolean
 
-  /** @internal */
   readonly env?: ENV
 
-  /**
-   * @internal
-   */
   readonly macroPoint: ENV extends undefined ? PARAMS extends undefined ? undefined : DataPointClass<'storage'> : DataPointClass<'storage'>
 
   constructor(core: SandstoneCore, name: string, args: MCFunctionClassArguments, env?: ENV) {

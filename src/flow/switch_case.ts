@@ -97,29 +97,16 @@ export class SwitchNode extends ContainerNode {
     this.parentMCFunction = sandstoneCore.getCurrentMCFunctionOrThrow()
 
     // Generate case bodies within switch context. Pop the stack fully (not
-    // just one level per case) so awaits inside a case callback don't
-    // leak into the switch's parent context.
-    const parentDepth = this.parentMCFunction.contextStack.length
-    this.parentMCFunction.enterContext(this)
-    for (const caseNode of [...staticCases, ...conditionCases]) {
-      this.parentMCFunction.enterContext(caseNode)
-      const caseDepth = this.parentMCFunction.contextStack.length
-      caseNode.callback()
-      while (this.parentMCFunction.contextStack.length > caseDepth) {
-        this.parentMCFunction.exitContext()
+    // Each case uses `balanceContext` so awaits inside a case callback
+    // don't leak into the switch's (or sibling cases') context.
+    this.parentMCFunction.balanceContext(this, () => {
+      for (const caseNode of [...staticCases, ...conditionCases]) {
+        this.parentMCFunction.balanceContext(caseNode, caseNode.callback.bind(caseNode))
       }
-    }
-    if (defaultCase) {
-      this.parentMCFunction.enterContext(defaultCase)
-      const caseDepth = this.parentMCFunction.contextStack.length
-      defaultCase.callback()
-      while (this.parentMCFunction.contextStack.length > caseDepth) {
-        this.parentMCFunction.exitContext()
+      if (defaultCase) {
+        this.parentMCFunction.balanceContext(defaultCase, defaultCase.callback.bind(defaultCase))
       }
-    }
-    while (this.parentMCFunction.contextStack.length > parentDepth) {
-      this.parentMCFunction.exitContext()
-    }
+    })
   }
 
   getValue = () => {

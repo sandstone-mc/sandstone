@@ -7,7 +7,6 @@ import { isBinaryFileSync } from 'isbinaryfile'
 import binaryExtensions from 'binary-extensions'
 import { getSandstoneContext } from 'sandstone/context'
 import type { SandstonePack } from 'sandstone/pack'
-import { DataPackDependencies, ResourcePackDependencies } from '../pack/dependencies'
 import type { MCMetaBranches } from './mcmeta'
 import { MCMetaCache } from './mcmeta'
 import type { AwaitNode } from './nodes'
@@ -19,6 +18,7 @@ import type { SoundsIndexClass } from './resources/resourcepack/sound'
 import { type ResourceClass, ResourceNodesMap } from './resources/resource'
 import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
+import { SleepClass } from 'sandstone/flow/async/sleep'
 
 export class SandstoneCore {
   /** All Resources */
@@ -102,6 +102,10 @@ export class SandstoneCore {
 
   insideContext: MCFunctionNode['insideContext'] = (...args) =>
     this.getCurrentMCFunctionOrThrow().insideContext(...args)
+
+  /** See `MCFunctionNode.balanceContext`. */
+  balanceContext: MCFunctionNode['balanceContext'] = (...args) =>
+    this.getCurrentMCFunctionOrThrow().balanceContext(...args)
 
   /**
    * Create a new MCFunction with the given name, and switch the currently active MCFunction to it.
