@@ -29,7 +29,7 @@ import type { LootTable } from 'sandstone/arguments/generated/data/loot.ts'
 import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Recipe } from 'sandstone/arguments/generated/data/recipe.ts'
-import type { SlotSourceRoot } from 'sandstone/arguments/generated/data/slot_source.ts'
+import type { TypedSlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
 import type { SulfurCubeArchetype } from 'sandstone/arguments/generated/data/sulfur_cube_archetype.ts'
 import type { Timeline } from 'sandstone/arguments/generated/data/timeline.ts'
 import type { TradeSet } from 'sandstone/arguments/generated/data/trade_set.ts'
@@ -342,7 +342,7 @@ type ResourcePredicate = Predicate
 type ResourceRecipe = Recipe
 type ResourceRegionalCompliancies = RegionalCompliancies
 type ResourceShader = ShaderProgram
-type ResourceSlotSource = SlotSourceRoot
+type ResourceSlotSource = TypedSlotSource
 type ResourceSounds = Sounds
 type ResourceSulfurCubeArchetype = SulfurCubeArchetype
 type ResourceTestEnvironment = TestEnvironment

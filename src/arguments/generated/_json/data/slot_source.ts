@@ -70,8 +70,6 @@ export type JsonSlotSource = (
   | Array<JsonSlotSource> | (
   NamespacedString | `#${string}:${string}` | TagClass<'slot_source'> | SlotSourceClass))
 
-export type JsonSlotSourceRoot = JsonTypedSlotSource
-
 export type JsonTypedSlotSource = NonNullable<({
   [S in Extract<Extract<JsonRegistry['minecraft:slot_source_type'], string>, string>]?: ({
     type: S,

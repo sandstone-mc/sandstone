@@ -46,6 +46,7 @@ import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type { TextureType } from 'sandstone/arguments'
 import type {
   BannerPatternClass,
+  BlockTransformerClass,
   DamageTypeClass,
   DecoratedPotPatternClass,
   EquipmentClass,
@@ -900,10 +901,10 @@ export type JsonSwingAnimation = {
    * Defaults to 6
    *
    * Value:
-   * Range: 1..
+   * Range: 0..
    */
   duration?: (NBTInt<{
-    min: 1,
+    min: 0,
   }> | number),
 }
 
@@ -1527,7 +1528,7 @@ type JsonDataComponentBaseColor = JsonDyeColor
 type JsonDataComponentBees = Array<JsonOccupant>
 type JsonDataComponentBlockEntityData = (JsonBlockEntityData | (NonEmptyString | NBTClass))
 type JsonDataComponentBlockState = JsonSymbolMcdocBlockItemStates<'%fallback'>
-type JsonDataComponentBlockTransformer = NamespacedString
+type JsonDataComponentBlockTransformer = (NamespacedString | BlockTransformerClass)
 type JsonDataComponentBlocksAttacks = Jsonblocks_attacks
 type JsonDataComponentBreakSound = JsonSoundEventRef
 type JsonDataComponentBrewingFuel = JsonBrewingFuel

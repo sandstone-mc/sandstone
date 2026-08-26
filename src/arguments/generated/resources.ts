@@ -1,6 +1,7 @@
 import {
   AdvancementClass,
   BannerPatternClass,
+  // BlockTransformerClass,
   ChatTypeClass,
   DamageTypeClass,
   DecoratedPotPatternClass,
@@ -44,6 +45,7 @@ import {
 export const RESOURCE_CLASS_TYPES = [
   [AdvancementClass, 'advancement'],
   [BannerPatternClass, 'banner_pattern'],
+  // [BlockTransformerClass, 'block_transformer'],
   [ChatTypeClass, 'chat_type'],
   [DamageTypeClass, 'damage_type'],
   [DecoratedPotPatternClass, 'decorated_pot_pattern'],

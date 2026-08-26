@@ -29,7 +29,7 @@ import type { JsonLootTable } from 'sandstone/arguments/generated/_json/data/loo
 import type { JsonNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonPredicate } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonRecipe } from 'sandstone/arguments/generated/_json/data/recipe.ts'
-import type { JsonSlotSourceRoot } from 'sandstone/arguments/generated/_json/data/slot_source.ts'
+import type { JsonTypedSlotSource } from 'sandstone/arguments/generated/_json/data/slot_source.ts'
 import type { JsonSulfurCubeArchetype } from 'sandstone/arguments/generated/_json/data/sulfur_cube_archetype.ts'
 import type { JsonTimeline } from 'sandstone/arguments/generated/_json/data/timeline.ts'
 import type { JsonTradeSet } from 'sandstone/arguments/generated/_json/data/trade_set.ts'
@@ -348,7 +348,7 @@ type JsonResourcePredicate = JsonPredicate
 type JsonResourceRecipe = JsonRecipe
 type JsonResourceRegionalCompliancies = JsonRegionalCompliancies
 type JsonResourceShader = JsonShaderProgram
-type JsonResourceSlotSource = JsonSlotSourceRoot
+type JsonResourceSlotSource = JsonTypedSlotSource
 type JsonResourceSounds = JsonSounds
 type JsonResourceSulfurCubeArchetype = JsonSulfurCubeArchetype
 type JsonResourceTestEnvironment = JsonTestEnvironment

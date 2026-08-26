@@ -43,6 +43,7 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { TextureType } from 'sandstone/arguments'
 import type {
   BannerPatternClass,
+  BlockTransformerClass,
   DamageTypeClass,
   DecoratedPotPatternClass,
   EquipmentClass,
@@ -893,10 +894,10 @@ export type SwingAnimation = {
    * Defaults to 6
    *
    * Value:
-   * Range: 1..
+   * Range: 0..
    */
   duration?: NBTInt<{
-    min: 1,
+    min: 0,
   }>,
 }
 
@@ -1517,7 +1518,7 @@ type DataComponentBaseColor = DyeColor
 type DataComponentBees = Array<Occupant>
 type DataComponentBlockEntityData = (BlockEntityData | (NonEmptyString | NBTClass))
 type DataComponentBlockState = SymbolMcdocBlockItemStates<'%fallback'>
-type DataComponentBlockTransformer = NamespacedString
+type DataComponentBlockTransformer = (NamespacedString | BlockTransformerClass)
 type DataComponentBlocksAttacks = blocks_attacks
 type DataComponentBreakSound = SoundEventRef
 type DataComponentBrewingFuel = BrewingFuel

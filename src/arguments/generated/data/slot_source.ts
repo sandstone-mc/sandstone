@@ -70,8 +70,6 @@ export type SlotSource = (
   | Array<SlotSource> | (
   NamespacedString | `#${string}:${string}` | TagClass<'slot_source'> | SlotSourceClass))
 
-export type SlotSourceRoot = TypedSlotSource
-
 export type TypedSlotSource = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:slot_source_type'], string>, string>]?: ({
     type: S,
