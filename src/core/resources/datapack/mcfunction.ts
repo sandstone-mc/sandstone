@@ -114,6 +114,42 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
   }
 
   /**
+   * Enters `node`'s context, runs `callback`, then pops the entire stack
+   * back to the pre-enter depth (not just one level).
+   *
+   * Use this when the callback may contain awaits — `_.await.until(...)`
+   * inside the callback calls `enterContext(this=UntilClass)` and never
+   * pops itself, so a single `exitContext()` here would leave the await's
+   * `UntilClass` (or the wrapper `ExecuteCommandNode` it was nested
+   * inside) on the stack, causing subsequent commands to commit to the
+   * wrong body.
+   *
+   * Mirrors the `while (length > preDepth) exit()` pattern that
+   * `FlowClauseNode.append` and the various flow-node constructors
+   * already use for the same reason (see CLAUDE.md "MCFunction Context
+   * System"). Prefer calling this over open-coding the while-loop.
+   */
+  balanceContext = (node: ContainerNode | ContainerCommandNode, callback: () => void, addNode: boolean = true) => {
+    const beforeIn = this.contextStack.length
+    this.enterContext(node, addNode)
+    callback()
+    this.popToDepth(beforeIn)
+    return this.contextStack[this.contextStack.length - 1]
+  }
+
+  /**
+   * Pop the context stack until its length equals `depth`. No-op if the
+   * stack is already at or below `depth`. Used by `balanceContext` and by
+   * split enter/exit patterns (e.g. `FlowClauseNode.append`) where the
+   * "exit" happens in a different method than the "enter".
+   */
+  popToDepth = (depth: number) => {
+    while (this.contextStack.length > depth) {
+      this.exitContext()
+    }
+  }
+
+  /**
    * Leave the current context, and return to the previous one.
    *
    * @return The previously active context.
