@@ -92,6 +92,8 @@ export type Gradient = {
   to_value: NoiseRange,
 }
 
+export type Interpolated = OneArgument
+
 export type InvervalSelect = {
   input: DensityFunctionRef,
   /**
@@ -378,7 +380,7 @@ type DensityFunctionCube = OneArgument
 type DensityFunctionFindTopSurface = FindTopSurface
 type DensityFunctionFlatCache = OneArgument
 type DensityFunctionHalfNegative = OneArgument
-type DensityFunctionInterpolated = OneArgument
+type DensityFunctionInterpolated = Interpolated
 type DensityFunctionIntervalSelect = InvervalSelect
 type DensityFunctionInvert = OneArgument
 type DensityFunctionMax = TwoArguments

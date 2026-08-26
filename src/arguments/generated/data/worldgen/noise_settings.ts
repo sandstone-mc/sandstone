@@ -10,7 +10,7 @@ import type {
 } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
-import type { NamespacedString, NBTDouble, NBTFloat, NBTInt, NBTList } from 'sandstone'
+import type { NamespacedString, NBTDouble, NBTFloat, NBTInt } from 'sandstone'
 
 export type Aquifer = {
   barrier: DensityFunctionRef,
@@ -19,6 +19,11 @@ export type Aquifer = {
   lava: DensityFunctionRef,
   exclusion: DensityFunctionRef,
   surface_level: DensityFunctionRef,
+}
+
+export type DebugFunctionEntry = {
+  label: string,
+  function: DensityFunctionRef,
 }
 
 export type NoiseGeneratorFlags = {
@@ -53,7 +58,7 @@ export type NoiseGeneratorSettingsRef = (Registry['minecraft:worldgen/noise_sett
   name: NamespacedString,
 } & NoiseGeneratorSettings))
 
-export type NoiseRouter = {
+export type NoiseRouter = ({
   barrier: DensityFunctionRef,
   fluid_level_floodedness: DensityFunctionRef,
   fluid_level_spread: DensityFunctionRef,
@@ -61,6 +66,7 @@ export type NoiseRouter = {
   vein_toggle: DensityFunctionRef,
   vein_ridged: DensityFunctionRef,
   vein_gap: DensityFunctionRef,
+} & {
   temperature: DensityFunctionRef,
   vegetation: DensityFunctionRef,
   continents: DensityFunctionRef,
@@ -69,7 +75,7 @@ export type NoiseRouter = {
   ridges: DensityFunctionRef,
   preliminary_surface_level: DensityFunctionRef,
   final_density: DensityFunctionRef,
-}
+})
 
 export type NoiseSamplingSettings = {
   /**
@@ -163,25 +169,6 @@ export type NoiseSlideSettings = {
    * Defines an range of 'Offset * Size vertical * 4' blocks where the density is set to the target.
    */
   offset: NBTInt,
-}
-
-export type OreVeinifier = {
-  ore_block: BlockState,
-  raw_ore_block: BlockState,
-  filler_block: BlockState,
-  /**
-   * Value:
-   * Range: 0..1
-   */
-  raw_ore_chance: NBTFloat<{
-    leftExclusive: false,
-    rightExclusive: false,
-    min: 0,
-    max: 1,
-  }>,
-  density: DensityFunctionRef,
-  richness: DensityFunctionRef,
-  filler_gap: DensityFunctionRef,
 }
 
 export type SpawnTargetPoint = ({

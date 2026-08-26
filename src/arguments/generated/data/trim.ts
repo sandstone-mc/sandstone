@@ -1,6 +1,6 @@
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { NamespacedString, NBTList } from 'sandstone'
+import type { NamespacedString } from 'sandstone'
 
 export type ArmorMaterial = ('leather' | 'chainmail' | 'iron' | 'gold' | 'diamond' | 'netherite' | 'turtle')
 

@@ -1,5 +1,5 @@
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
-import type { NamespacedString, NBTInt, NBTList } from 'sandstone'
+import type { NamespacedString, NBTInt } from 'sandstone'
 
 export type PaintingVariant = {
   /**

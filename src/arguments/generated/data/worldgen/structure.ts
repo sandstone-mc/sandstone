@@ -3,7 +3,7 @@ import type { DecorationStep, HeightmapType, HeightProvider } from 'sandstone/ar
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { FlatWeightedList, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NamespacedString, NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type BiomeTemperature = ('cold' | 'warm')
 

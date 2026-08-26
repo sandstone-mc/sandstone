@@ -1,6 +1,6 @@
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { BlockEntity, Nameable } from 'sandstone/arguments/generated/world/block.ts'
-import type { NBTInt, NBTList, NBTLong, NonEmptyString } from 'sandstone'
+import type { NBTInt, NBTLong, NonEmptyString } from 'sandstone'
 
 export type BaseCommandBlock = {
   /**

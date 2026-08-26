@@ -68,12 +68,18 @@ export type MultiPartAlternatives = {
   OR: Array<MultiPartCondition>,
 }
 
-export type MultiPartAnd = ({
+export type MultiPartAnd = {
+  AND: Array<MultiPartCondition>,
+}
+
+export type MultiPartBlockStates = ({
   [Key in NonEmptyString]?: string
 })
 
 export type MultiPartCondition = ({
   OR: Array<MultiPartCondition>,
+} | {
+  AND: Array<MultiPartCondition>,
 } | ({
   [Key in NonEmptyString]?: string
 }))

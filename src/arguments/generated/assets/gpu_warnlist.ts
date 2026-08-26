@@ -1,4 +1,4 @@
-import type { NBTList, NonEmptyString } from 'sandstone'
+import type { NonEmptyString } from 'sandstone'
 
 export type GpuWarnlist = {
   renderer?: Array<NonEmptyString | RegExp>,

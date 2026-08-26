@@ -1,4 +1,4 @@
-import type { SymbolTrigger } from 'sandstone/arguments/generated/dispatcher.ts'
+import type { SymbolMcdocAdvancementDisplay, SymbolTrigger } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { ItemStackTemplate } from 'sandstone/arguments/generated/world/item.ts'
@@ -17,16 +17,20 @@ import type {
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { TextureType } from 'sandstone/arguments'
 
-export type Advancement = {
-  /**
-   * If present, advancement will be visible in the advancement tabs.
-   */
-  display?: AdvancementDisplay,
+export type Advancement<S = undefined> = {
   /**
    * If this field is absent, this advancement is a root advancement.
    * Circular references cause a loading failure.
    */
   parent?: (Registry['minecraft:advancement'] | AdvancementClass),
+  /**
+   * If present, advancement will be visible in the advancement tabs.
+   */
+  display?: (S extends undefined
+    ? SymbolMcdocAdvancementDisplay<'%none'> :
+    (S extends keyof SymbolMcdocAdvancementDisplay
+      ? SymbolMcdocAdvancementDisplay[S]
+      : SymbolMcdocAdvancementDisplay<'%unknown'>)),
   /**
    * If `requirements` is not defined, all defined criteria will be required.
    */
@@ -77,10 +81,6 @@ export type AdvancementDisplay = {
   icon: ItemStackTemplate,
   title: Text,
   description: Text,
-  /**
-   * Used for the advancement tab (root advancement only).
-   */
-  background?: (Registry['minecraft:texture'] | TextureClass<TextureType>),
   /**
    * Controls the advancement tile frame. Defaults to `task`.
    *
@@ -133,6 +133,13 @@ export type AdvancementRewards = {
    */
   function?: (NamespacedString | MCFunctionClass),
 }
+
+export type RootAdvancementDisplay = (AdvancementDisplay & {
+  /**
+   * Used for the advancement tab.
+   */
+  background: (Registry['minecraft:texture'] | TextureClass<TextureType>),
+})
 
 export type Trigger = (
   | 'allay_drop_item_on_block'

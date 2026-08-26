@@ -22,7 +22,7 @@ import type { Enchantment } from 'sandstone/arguments/generated/data/enchantment
 import type { EnchantmentProvider } from 'sandstone/arguments/generated/data/enchantment/provider.ts'
 import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametest/test_environment.ts'
 import type { TestInstance } from 'sandstone/arguments/generated/data/gametest.ts'
-import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
+import type { ItemModifierRoot } from 'sandstone/arguments/generated/data/item_modifier.ts'
 import type { LootTable } from 'sandstone/arguments/generated/data/loot.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Recipe } from 'sandstone/arguments/generated/data/recipe.ts'
@@ -56,8 +56,8 @@ import type { ConfiguredFeature } from 'sandstone/arguments/generated/data/world
 import type { PlacedFeature } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
 import type { NoiseGeneratorSettings } from 'sandstone/arguments/generated/data/worldgen/noise_settings.ts'
 import type { ProcessorList } from 'sandstone/arguments/generated/data/worldgen/processor_list.ts'
-import type { StructureSet } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { Structure } from 'sandstone/arguments/generated/data/worldgen/structure.ts'
+import type { StructureSet } from 'sandstone/arguments/generated/data/worldgen/structure_set.ts'
 import type { TemplatePool } from 'sandstone/arguments/generated/data/worldgen/template_pool.ts'
 import type { FlatGeneratorPreset, WorldPreset } from 'sandstone/arguments/generated/data/worldgen/world_preset.ts'
 
@@ -296,7 +296,7 @@ type ResourceFrogVariant = FrogVariant
 type ResourceGpuWarnlist = GpuWarnlist
 type ResourceInstrument = Instrument
 type ResourceItemDefinition = ItemDefinition
-type ResourceItemModifier = ItemModifier
+type ResourceItemModifier = ItemModifierRoot
 type ResourceJukeboxSong = JukeboxSong
 type ResourceLang = Lang
 type ResourceLangDeprecated = LangDeprecated

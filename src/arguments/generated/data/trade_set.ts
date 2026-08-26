@@ -1,6 +1,6 @@
 import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NamespacedString, NBTList, TagClass, VillagerTradeClass } from 'sandstone'
+import type { NamespacedString, TagClass, VillagerTradeClass } from 'sandstone'
 
 export type TradeSet = {
   /**

@@ -187,6 +187,17 @@ export type RandomChanceModifier = {
   }>,
 }
 
+export type RandomlySelectedModifier = {
+  /**
+   * Value:
+   * List length range: 1..
+   */
+  placements: NBTList<PlacementModifier, {
+    leftExclusive: false,
+    min: 1,
+  }>,
+}
+
 export type RandomOffsetModifier = {
   xz_spread: IntProvider<NBTInt<{
     min: -16,

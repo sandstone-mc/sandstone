@@ -94,7 +94,10 @@ export type LootContextParamSets = (
   | 'entity_interact'
   | 'villager_trade'
   | 'command_slot_source'
-  | 'container_process')
+  | 'container_process'
+  | 'command_compute_default'
+  | 'command_compute_position'
+  | 'command_compute_entity')
 
 export type LootEntryType = (
   | 'alternatives'
@@ -180,6 +183,9 @@ export type LootTable = {
    *  - VillagerTrade(`villager_trade`)
    *  - CommandSlotSource(`command_slot_source`)
    *  - ContainerProcess(`container_process`)
+   *  - CommandComputeDefault(`command_compute_default`)
+   *  - CommandComputePosition(`command_compute_position`)
+   *  - CommandComputeEntity(`command_compute_entity`)
    */
   type?: (LootContextParamSets | `minecraft:${LootContextParamSets}`),
   pools?: Array<LootPool>,
