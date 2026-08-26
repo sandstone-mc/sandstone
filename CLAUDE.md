@@ -13,6 +13,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Note**: The build scripts auto-retry on "Excessive complexity" TypeScript errors caused by stale types. If you see this error followed by "cleaning and retrying..." and the build succeeds, ignore it.
 
+## Testing
+
+**You MUST build before running tests.** The test files import from
+`../dist/exports/index.js` — the built bundle, *not* `src/`. Running
+`bun test` after editing `src/` without rebuilding silently tests the
+**previous** build, so your changes appear to have no effect (or a
+broken change appears to pass).
+
+Always chain the build:
+
+```bash
+bun dev:build --silent && bun test
+bun dev:build --silent && bun test tests/flow   # single suite
+```
+
+A green `bun test` that you did not precede with a build proves nothing.
+
 ## Build Pipeline
 
 The build (`scripts/build.ts`) is a 13-step pipeline that produces two
