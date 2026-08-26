@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.1.21](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.21) - 2026-08-26
+
+### Improve sandstone config scripts, fix bugs, update from vanilla-mcdoc
+
+**Full Changelog**: [v1.1.20...v1.1.21](https://github.com/sandstone-mc/sandstone/compare/v1.1.20...v1.1.21)
+
+
 ## [v1.1.20](https://github.com/sandstone-mc/sandstone/releases/tag/v1.1.20) - 2026-08-09
 
 ### Fix regression in `SimplifyExecuteFunctionVisitor`, add tests to prevent it in the future
