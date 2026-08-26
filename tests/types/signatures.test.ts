@@ -164,6 +164,28 @@ for (const name of names) {
     let anyAllowed = existing[name]?.anyAllowed ?? false
     let drifted = false
 
+    // On any failure path, preserve the prior snapshot entry (if any)
+    // so the snapshot represents the last *passing* state. Otherwise the
+    // test silently rewrites the file with the failing signature,
+    // masking the regression and forcing a manual restore from git. If
+    // there's no prior entry, drop it from `next` entirely — the snapshot
+    // should only contain signatures that have actually passed.
+    //
+    // Opt-out via the UPDATE_SIGNATURES env var (set by the
+    // `test:update-snapshots` package script alongside bun's
+    // `--update-snapshots` flag). When set, `preserveOld` is a no-op and
+    // the new signature is written through to the snapshot — same as the
+    // old behavior, for users who explicitly want to bulk-accept drift.
+    const updating = process.env.UPDATE_SIGNATURES === '1'
+    const preserveOld = () => {
+      if (updating) return
+      if (existing[name]) {
+        next[name] = existing[name]
+      } else {
+        delete next[name]
+      }
+    }
+
     try {
       let description: Awaited<ReturnType<typeof env.describe>> | null = null
       try {
@@ -181,8 +203,11 @@ for (const name of names) {
       }
 
       if (!ok) {
-        // No `anyAllowed` and no definition here — we never resolved.
-        next[name] = { signature, definition: null }
+        // Unresolvable — could be a builder bug or a new export that the
+        // tarball dropped. Either way, do NOT write the '(unresolvable)'
+        // placeholder into the snapshot; preserve whatever was there
+        // (or omit if first-time-seen).
+        preserveOld()
         expect(false, `${name} unresolvable; check that the tarball includes the export`).toBe(true)
         return
       }
@@ -236,7 +261,9 @@ for (const name of names) {
         definitionFile.endsWith('.d.ts') ||
         definitionFile.endsWith('.d.ts.map')
       ) {
-        next[name] = { signature, definition: definitionFile, anyAllowed }
+        // Builder regression — preserve old snapshot so the diff shows
+        // the working definition file vs the broken one.
+        preserveOld()
         printExcerpt(name, signature, undefined, description!.definition)
         expect(
           false,
@@ -249,7 +276,7 @@ for (const name of names) {
       }
 
       next[name] = offender
-        ? { signature, definition: definitionFile, anyAllowed }
+        ? { signature, definition: definitionFile, anyAllowed: updating ? true : anyAllowed }
         : { signature, definition: definitionFile }
 
       // Drift semantics (signature OR definition fields):
@@ -279,8 +306,19 @@ for (const name of names) {
 
       if (!offender || anyAllowed) {
         if (drifted) {
+          // Drift on a clean/allowed entry is a regression — preserve the
+          // old signature in the snapshot so the user sees the actual diff
+          // in git (old vs current) and can decide whether to accept the
+          // change. Do NOT auto-rewrite the failing signature into the
+          // file; that would mask the regression behind a passing test.
+          //
+          // In update mode (`UPDATE_SIGNATURES=1`), the user has opted in
+          // to bulk-accepting drift, so the new entry (already written
+          // above) stays and the test passes.
+          if (updating) return
+          preserveOld()
           printExcerpt(name, signature, existing[name]?.signature, description!.definition)
-          expect(false, `${name} signature drifted since last snapshot (snapshot updated; review the diff)`).toBe(true)
+          expect(false, `${name} signature drifted since last snapshot (snapshot preserved; review and update manually if the change is intentional)`).toBe(true)
         }
         return
       }
@@ -291,10 +329,18 @@ for (const name of names) {
       // If the signature also drifted since the last snapshot, print
       // the previous signature too so the user sees both — otherwise
       // a still-flagged entry with a changed signature would only
-      // surface the `any` warning, hiding the signature change.
+      // surface the `any` warning, hiding the signature change. Either
+      // way, preserve the prior snapshot entry so a `any`/drift combo
+      // doesn't silently bake the new offending signature into the file.
+      //
+      // In update mode (`UPDATE_SIGNATURES=1`), accept the any/unknown
+      // and pass — the entry already has anyAllowed:true written above,
+      // so subsequent non-update runs don't re-fail on this entry.
+      if (updating) return
       const driftedSuffix = drifted
         ? ` (signature also drifted — previous version printed below; review both)`
         : ''
+      preserveOld()
       printExcerpt(name, signature, drifted ? existing[name]?.signature : undefined, description!.definition)
       expect(
         false,
