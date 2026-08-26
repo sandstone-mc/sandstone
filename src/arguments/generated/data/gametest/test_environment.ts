@@ -5,7 +5,6 @@ import type {
   MCFunctionClass,
   NamespacedString,
   NBTInt,
-  NBTList,
   NonEmptyString,
   TimelineClass,
   WorldClockClass,

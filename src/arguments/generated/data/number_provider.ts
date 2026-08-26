@@ -5,7 +5,40 @@ import type { NumericalEnvironmentAttribute } from 'sandstone/arguments/generate
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, NamespacedString, NBTFloat, NBTList, NonEmptyString, ObjectiveClass } from 'sandstone'
+import type {
+  DataPointClass,
+  NamespacedString,
+  NBTFloat,
+  NBTList,
+  NonEmptyString,
+  ObjectiveClass,
+  TagClass,
+} from 'sandstone'
+
+export type AggregateNumberProvider = {
+  summands: NumberProviderListRef,
+}
+
+/**
+ * *either*
+ *
+ * *item 0*
+ *
+ * *or*
+ *
+ * *item 1*
+ *
+ * *or*
+ *
+ * List length range: 1..
+ */
+export type AggregateOperands = (NumberProvider | (
+  | NamespacedString
+  | `#${string}:${string}`
+  | TagClass<'number_provider'>) | NBTList<(NamespacedString | NumberProvider), {
+    leftExclusive: false,
+    min: 1,
+  }>)
 
 export type BinomialNumberProvider = {
   n: NumberProviderRef,
@@ -94,10 +127,6 @@ export type StorageNumberProvider = {
   path: NonEmptyString | DataPointClass,
 }
 
-export type SumNumberProvider = {
-  summands: NumberProviderListRef,
-}
-
 export type UniformNumberProvider = {
   min?: NumberProviderRef,
   max?: NumberProviderRef,
@@ -141,7 +170,7 @@ type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
 type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider
 type NumberProviderScore = ScoreNumberProvider
 type NumberProviderStorage = StorageNumberProvider
-type NumberProviderSum = SumNumberProvider
+type NumberProviderSum = AggregateNumberProvider
 type NumberProviderUniform = UniformNumberProvider
 export type SymbolNumberProvider<CASE extends
   | 'map'

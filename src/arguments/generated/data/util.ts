@@ -3,7 +3,7 @@ import type { NumberProviderRef } from 'sandstone/arguments/generated/data/numbe
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { SingleEntityArgument } from 'sandstone/arguments'
-import type { NamespacedString, NBTFloat, NBTInt, NBTList, NonEmptyString } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, NonEmptyString } from 'sandstone'
 
 export type BinomialIntGenerator = {
   /**

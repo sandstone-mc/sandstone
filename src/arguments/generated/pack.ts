@@ -20,9 +20,28 @@ export type FeatureFlag = (
 export type Pack = {
   pack: {
     description: Text,
+    /**
+     * Optional since 1.21.9. Define it if you want older versions to recognize your pack with
+     * a “made for a newer version” warning message.
+     *
+     * Because of backwards compatibility, only the main pack format can
+     * be used here. Minor formats can only be specified in min and max format.
+     */
     pack_format?: NBTInt,
+    /**
+     * Must not be specified in case min_format indicates a format version for 1.21.9 and
+     * later.
+     */
     supported_formats?: InclusiveRange<NBTInt>,
+    /**
+     * The minimun format that is supported. To specify a minor version, use a list of two
+     * integers.
+     */
     min_format?: PackFormat,
+    /**
+     * The maximum format that is supported. To specify a minor version, use a list of two
+     * integers.
+     */
     max_format?: PackFormat,
   },
   filter?: PackFilter,
@@ -32,9 +51,28 @@ export type Pack = {
 
 export type PackBase = {
   description: Text,
+  /**
+   * Optional since 1.21.9. Define it if you want older versions to recognize your pack with
+   * a “made for a newer version” warning message.
+   *
+   * Because of backwards compatibility, only the main pack format can
+   * be used here. Minor formats can only be specified in min and max format.
+   */
   pack_format?: NBTInt,
+  /**
+   * Must not be specified in case min_format indicates a format version for 1.21.9 and
+   * later.
+   */
   supported_formats?: InclusiveRange<NBTInt>,
+  /**
+   * The minimun format that is supported. To specify a minor version, use a list of two
+   * integers.
+   */
   min_format?: PackFormat,
+  /**
+   * The maximum format that is supported. To specify a minor version, use a list of two
+   * integers.
+   */
   max_format?: PackFormat,
 }
 

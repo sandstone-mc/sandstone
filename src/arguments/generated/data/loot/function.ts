@@ -30,7 +30,6 @@ import type {
   NBTClass,
   NBTFloat,
   NBTInt,
-  NBTList,
   NBTLong,
   NonEmptyString,
   TagClass,
@@ -745,9 +744,11 @@ export type SetItem = ({
 
 export type SetLootTable = ({
   /**
-   * The block entity type of the container.
+   * A block entity type. Unused by the game. \
+   * The shortest word you can use is `bed` before 26.2, or `bell` in 26.2.
    */
   type: Registry['minecraft:block_entity_type'],
+} & {
   /**
    * The loot table to set to the container block item.
    */
@@ -840,7 +841,7 @@ export type SetRandomPotion = ({
    */
   options?: ((
       | Registry['minecraft:potion'] | `#${Registry['minecraft:tag/potion']}` | TagClass<'potion'>)
-      | Registry['minecraft:potion']),
+      | Array<Registry['minecraft:potion']>),
 } & Conditions)
 
 export type SetStewEffect = ({

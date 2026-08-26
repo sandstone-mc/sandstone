@@ -308,7 +308,7 @@ export type Respawn = ({
   forced?: boolean,
 } & {
   /**
-   * Dimension of the player's respawn point. Defaults to overworl.
+   * Dimension of the player's respawn point.
    */
   dimension: Registry['minecraft:dimension'],
 })
@@ -355,13 +355,13 @@ export type WardenSpawnTracker = {
     min: 0,
   }>,
   /**
-   * The warden will spawn at level 3.
+   * The current warning level. The warden will spawn at level `4`.
    *
    * Value:
-   * Range: 0..3
+   * Range: 0..4
    */
   warning_level?: NBTInt<{
     min: 0,
-    max: 3,
+    max: 4,
   }>,
 }

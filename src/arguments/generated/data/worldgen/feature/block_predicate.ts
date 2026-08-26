@@ -91,6 +91,36 @@ export type UnobstructedPredicate = {
   }>,
 }
 
+export type VolumeMatchPredicate = {
+  /**
+   * Value:
+   * List length range: 3
+   */
+  min: NBTList<NBTInt<{
+    min: -16,
+    max: 16,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  /**
+   * Value:
+   * List length range: 3
+   */
+  max: NBTList<NBTInt<{
+    min: -16,
+    max: 16,
+  }>, {
+    leftExclusive: false,
+    rightExclusive: false,
+    min: 3,
+    max: 3,
+  }>,
+  match: BlockPredicate,
+}
+
 export type WouldSurvivePredicate = (PredicateOffset & {
   state: BlockState,
 })

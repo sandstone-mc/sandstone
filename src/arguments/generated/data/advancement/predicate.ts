@@ -32,7 +32,6 @@ import type {
   NBTDouble,
   NBTFloat,
   NBTInt,
-  NBTList,
   NonEmptyString,
   TagClass,
   VariantClass,

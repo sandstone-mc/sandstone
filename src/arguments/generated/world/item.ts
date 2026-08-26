@@ -7,7 +7,7 @@ import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.
 import type { DataComponentExactPredicate, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { Trim } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
-import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTList, NBTShort, NonEmptyString } from 'sandstone'
+import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTShort, NonEmptyString } from 'sandstone'
 
 export type AttributeModifier = {
   AttributeName?: Registry['minecraft:attribute'],

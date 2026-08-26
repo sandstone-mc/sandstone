@@ -9,8 +9,8 @@ import type { ExperienceOrb } from 'sandstone/arguments/generated/world/entity/e
 import type { EyeOfEnder } from 'sandstone/arguments/generated/world/entity/eye_of_ender.ts'
 import type { FallingBlock } from 'sandstone/arguments/generated/world/entity/falling_block.ts'
 import type { Interaction } from 'sandstone/arguments/generated/world/entity/interaction.ts'
-import type { ItemFrame } from 'sandstone/arguments/generated/world/entity/item_frame.ts'
 import type { Item } from 'sandstone/arguments/generated/world/entity/item.ts'
+import type { ItemFrame } from 'sandstone/arguments/generated/world/entity/item_frame.ts'
 import type { Marker } from 'sandstone/arguments/generated/world/entity/marker.ts'
 import type {
   ChestMinecart,
