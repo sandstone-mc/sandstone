@@ -55,3 +55,4 @@ If you want to support Sandstone, the simplest way is to star the repository! It
 # Getting started
 
 See the [Getting Started](https://sandstone.dev/docs) section on [sandstone.dev](https://sandstone.dev/) to start using Sandstone!
+
