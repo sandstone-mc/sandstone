@@ -93,6 +93,10 @@ export class SandstoneCore {
   insideContext: MCFunctionNode['insideContext'] = (...args) =>
     this.getCurrentMCFunctionOrThrow().insideContext(...args)
 
+  /** See `MCFunctionNode.balanceContext`. */
+  balanceContext: MCFunctionNode['balanceContext'] = (...args) =>
+    this.getCurrentMCFunctionOrThrow().balanceContext(...args)
+
   /**
    * Create a new MCFunction with the given name, and switch the currently active MCFunction to it.
    * @param mcfunction The MCFunction to switch to.
