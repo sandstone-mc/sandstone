@@ -1,8 +1,8 @@
 import { RESOURCE_PATHS } from 'sandstone/arguments'
-import { ContainerNode } from '../../nodes'
-import type { SandstoneCore } from '../../sandstoneCore'
-import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { ContainerNode } from '../../../nodes'
+import type { SandstoneCore } from '../../../sandstoneCore'
+import type { ResourceClassArguments, ResourceNode } from '../../resource'
+import { ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
