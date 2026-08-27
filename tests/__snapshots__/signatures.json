@@ -667,7 +667,7 @@
     "definition": "src/commands/implementations/_fake/comment.ts"
   },
   "compute": {
-    "signature": "(alias) const compute: ComputeCommand<false> & (<PROVIDER extends ComputeProvider<false>>(provider: PROVIDER, scaleOrInteger?: number | \"integer\" | undefined) => FinalCommandOutput)",
+    "signature": "(alias) const compute: ComputeCommand<false> & (<PROVIDER extends NumberProviderArgument<false>>(provider: PROVIDER, scaleOrInteger?: number | \"integer\" | undefined) => FinalCommandOutput)",
     "definition": "src/commands/implementations/server/compute.ts"
   },
   "createSandstonePack": {
@@ -963,7 +963,7 @@
     "definition": "src/commands/implementations/entity/summon.ts"
   },
   "swing": {
-    "signature": "(alias) const swing: (targets?: MultipleEntitiesArgument<false>, hand?: 'mainhand' | 'offhand') => FinalCommandOutput",
+    "signature": "(alias) const swing: (targets?: MultipleEntitiesArgument<false>, hand?: 'mainhand' | 'offhand', animation?: 'none' | 'whack' | 'stab') => FinalCommandOutput",
     "definition": "src/commands/implementations/entity/swing.ts"
   },
   "tag": {
