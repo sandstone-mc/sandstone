@@ -70,7 +70,7 @@ export class AttributeOperationCommand<MACRO extends boolean> extends CommandArg
    * Overwrites the base value of the specified attribute with the stock value.
    * @category attribute
    */
-  baseReset = (value: Macroable<number, MACRO>) => this.finalCommand(['base', 'reset', value])
+  baseReset = () => this.finalCommand(['base', 'reset'])
 
   /**
    * Adds an attribute modifier with the specified properties if no modifier with the same ID already existed.
