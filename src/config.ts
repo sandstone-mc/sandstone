@@ -8,6 +8,7 @@ import type {
   AtlasClassArguments,
   BannerPatternClassArguments,
   BlockStateDefinitionArguments,
+  BlockTransformerClassArguments,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
   DecoratedPotPatternClassArguments,
@@ -287,12 +288,13 @@ type ContentStrategy =
   | ContentStrategyKind<'predicate', NonNullable<PredicateClassArguments['onConflict']>>
   | ContentStrategyKind<'recipe', NonNullable<RecipeClassArguments['onConflict']>>
   | ContentStrategyKind<'slot_source', NonNullable<SlotSourceClassArguments['onConflict']>>
-   | ContentStrategyKind<'sulfur_cube_archetype', NonNullable<SulfurCubeArchetypeClassArguments['onConflict']>>
+  | ContentStrategyKind<'sulfur_cube_archetype', NonNullable<SulfurCubeArchetypeClassArguments['onConflict']>>
   | ContentStrategyKind<'tag', NonNullable<TagClassArguments<any>['onConflict']>>
   | ContentStrategyKind<'item_modifier', NonNullable<ItemModifierClassArguments['onConflict']>>
   | ContentStrategyKind<'trim_material', NonNullable<TrimMaterialClassArguments['onConflict']>>
   | ContentStrategyKind<'trim_pattern', NonNullable<TrimPatternClassArguments['onConflict']>>
   | ContentStrategyKind<'banner_pattern', NonNullable<BannerPatternClassArguments['onConflict']>>
+  | ContentStrategyKind<'block_transformer', NonNullable<BlockTransformerClassArguments['onConflict']>>
   | ContentStrategyKind<'chat_type', NonNullable<ChatTypeClassArguments['onConflict']>>
   | ContentStrategyKind<'decorated_pot_pattern', NonNullable<DecoratedPotPatternClassArguments['onConflict']>>
   | ContentStrategyKind<'dialog', NonNullable<DialogClassArguments['onConflict']>>

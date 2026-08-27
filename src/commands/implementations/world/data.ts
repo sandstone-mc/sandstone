@@ -1,11 +1,13 @@
 import type { Coordinates, NBTObject, SingleEntityArgumentOf } from 'sandstone/arguments'
-import { type MacroArgument, type Macroable } from 'sandstone/core'
+import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider'
+import { type MacroArgument, type Macroable, NumberProviderClass, isMacroArgument, type SandstoneCore } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { makeCallable } from 'sandstone/utils'
 import { DataPointClass, type VectorClass } from 'sandstone/variables'
 import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
+import { NumberProviderArgument, numberProviderArgument, NumberProviderScale } from '../server/compute';
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const
@@ -220,6 +222,46 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
       return cmd.storage(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
     })
   }
+
+  /**
+   * Modify with the value of a `minecraft:number_provider`. Mirrors `/compute`'s
+   * three target contexts (`default` / `block <pos>` / `entity <target>`).
+   */
+  get compute() {
+    return makeCallable(
+      {
+        default: (provider: NumberProviderArgument<MACRO>, scale?: NumberProviderScale<MACRO>) =>
+          this.finalCommand(['compute', 'default', numberProviderArgument(this.sandstoneCore, provider), scale]),
+        block: (
+          pos: Macroable<Coordinates<MACRO>, MACRO>,
+          provider: NumberProviderArgument<MACRO>,
+          scale?: NumberProviderScale<MACRO>,
+        ) =>
+          this.finalCommand([
+            'compute',
+            'block',
+            coordinatesParser(pos),
+            numberProviderArgument(this.sandstoneCore, provider),
+            scale,
+          ]),
+        entity: <T extends string>(
+          target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
+          provider: NumberProviderArgument<MACRO>,
+          scale?: NumberProviderScale<MACRO>,
+        ) =>
+          this.finalCommand([
+            'compute',
+            'entity',
+            targetParser(target),
+            numberProviderArgument(this.sandstoneCore, provider),
+            scale,
+          ]),
+      },
+      (provider: NumberProviderArgument<MACRO>, scale?: NumberProviderScale<MACRO>) => 
+        this.finalCommand(['compute', 'default', numberProviderArgument(this.sandstoneCore, provider), scale]),
+    )
+  }
+
 
   string = {
     /**

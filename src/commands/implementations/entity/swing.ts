@@ -14,8 +14,8 @@ export class SwingCommand<MACRO extends boolean> extends CommandArguments {
   /**
    * Forces the targeted bipedal entity to initiate its hand swing animation with either their mainhand or their offhand.
    * 
-   * Defaults to `@s` and `mainhand`.
+   * Defaults to `@s`, `mainhand`, and `whack`.
    */
-  swing = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO> = '@s', hand: 'mainhand' | 'offhand' = 'mainhand') =>
-    this.finalCommand([targetParser(targets), hand])
+  swing = (targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO> = '@s', hand: 'mainhand' | 'offhand' = 'mainhand', animation: 'none' | 'whack' | 'stab' = 'whack') =>
+    this.finalCommand([targetParser(targets), hand, animation])
 }

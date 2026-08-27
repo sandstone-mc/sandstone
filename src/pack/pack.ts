@@ -23,6 +23,7 @@ import type {
   BannerPatternClassArguments,
   BlockStateDefinitionArguments,
   BlockStateDefinitionJSON,
+  BlockTransformerClassArguments,
   ChatTypeClassArguments,
   DamageTypeClassArguments,
   DataPointPickClass,
@@ -43,6 +44,7 @@ import type {
   MCFunctionClassArguments,
   ModelClassArguments,
   Node,
+  NumberProviderClassArguments,
   ParticleClassArguments,
   PlainTextArguments,
   PostEffectClassArguments,
@@ -74,6 +76,7 @@ import {
   AtlasClass,
   BannerPatternClass,
   BlockStateDefinitionClass,
+  BlockTransformerClass,
   ChatTypeClass,
   DamageTypeClass,
   DecoratedPotPatternClass,
@@ -92,6 +95,7 @@ import {
   MacroLiteral,
   MCFunctionClass,
   ModelClass,
+  NumberProviderClass,
   ParticleClass,
   PlainTextClass,
   PostEffectClass,
@@ -1158,6 +1162,15 @@ export class SandstonePack {
       ...options,
     })
 
+  NumberProvider = (name: string, numberProvider: NumberProviderClassArguments['json'], options?: Omit<Partial<NumberProviderClassArguments>, 'json'>) =>
+    new NumberProviderClass(this.core, name, {
+      json: numberProvider,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('number_provider') as NumberProviderClassArguments['onConflict'],
+      ...options,
+    })
+
   LootTable = (name: string, lootTable: LootTableClassArguments['json'], options?: Omit<Partial<LootTableClassArguments>, 'json'>) =>
     new LootTableClass(this.core, name, {
       json: lootTable,
@@ -1245,6 +1258,15 @@ export class SandstonePack {
       creator: 'user',
       addToSandstoneCore: true,
       onConflict: conflictDefaults('banner_pattern') as BannerPatternClassArguments['onConflict'],
+      ...options,
+    })
+
+  BlockTransformer = (name: string, block_transformer: BlockTransformerClassArguments['json'], options?: Omit<Partial<BlockTransformerClassArguments>, 'json'>) =>
+    new BlockTransformerClass(this.core, name, {
+      json: block_transformer,
+      creator: 'user',
+      addToSandstoneCore: true,
+      onConflict: conflictDefaults('block_transformer') as BlockTransformerClassArguments['onConflict'],
       ...options,
     })
 

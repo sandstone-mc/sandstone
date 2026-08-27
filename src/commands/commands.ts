@@ -6,6 +6,7 @@ import {
   ClearCommand,
   CloneCommand,
   CommentCommand,
+  ComputeCommand,
   DamageCommand,
   DataCommand,
   DataPackCommand,
@@ -114,6 +115,10 @@ export class SandstoneCommands<MACRO extends boolean = false> {
 
   get clone() {
     return bind(this.sandstonePack, this.isMacro, CloneCommand, 'clone') as CloneCommand<MACRO>['clone']
+  }
+
+  get compute() {
+    return new ComputeCommand<MACRO>(this.sandstonePack, this.isMacro).compute
   }
 
   get comment() {

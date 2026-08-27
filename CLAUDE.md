@@ -32,6 +32,14 @@ bun dev:build --silent && bun test tests/flow   # single suite
 
 A green `bun test` that you did not precede with a build proves nothing.
 
+**When ADDING new tests, do not update snapshots.** A `bun test --update-snapshots`
+run after adding tests will silently regenerate both the per-test snapshot
+files (which is fine — that's auto-generated test output) and the
+user-editable `tests/__snapshots__/signatures.json` (which is not — see
+`### tests/__snapshots__/signatures.json` below). When adding tests, run
+`bun test` without `--update-snapshots`, surface the failing snapshot, and
+wait for explicit user permission before regenerating.
+
 ## Build Pipeline
 
 The build (`scripts/build.ts`) is a 13-step pipeline that produces two

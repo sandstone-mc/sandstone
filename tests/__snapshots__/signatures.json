@@ -25,7 +25,7 @@
   },
   "BannerPatternClass": {
     "signature": "(alias) class BannerPatternClass",
-    "definition": "src/core/resources/datapack/bannerPattern.ts"
+    "definition": "src/core/resources/datapack/datacomponent/bannerPattern.ts"
   },
   "BeforeAllLocal": {
     "signature": "(alias) type BeforeAllLocal = {\n    folder: string;\n    outputFolder: string;\n    sandstoneConfig: SandstoneConfig;\n    sandstonePack: SandstonePack;\n    saveOptions: NonNullable<SandstoneConfig['saveOptions']>;\n    resources: SandstoneConfig['resources'];\n    scripts: SandstoneConfig['scripts'];\n    cliOptions: Record<string, unknown>;\n    packageJson: {\n        module?: string;\n        [k: string]: unknown;\n    };\n    entrypoint: string;\n    worldName: string | undefined;\n    root: boolean | undefined;\n    clientPath: string | undefined;\n    serverPath: string | undefined;\n    packName: string;\n} & LocalFunctions",
@@ -42,6 +42,14 @@
   "BlockStateDefinitionClass": {
     "signature": "(alias) class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Type = Extract<AllKeys<JSON>, BlockStateDefinitionType>>",
     "definition": "src/core/resources/resourcepack/blockstate.ts"
+  },
+  "BlockTransformer": {
+    "signature": "(alias) const BlockTransformer: (name: string, block_transformer: BlockTransformerClassArguments['json'], options?: Omit<Partial<BlockTransformerClassArguments>, 'json'>) => BlockTransformerClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "BlockTransformerClass": {
+    "signature": "(alias) class BlockTransformerClass",
+    "definition": "src/core/resources/datapack/datacomponent/blockTransformer.ts"
   },
   "Cache": {
     "signature": "(alias) type Cache = {\n    files: Record<string, string>;\n    archives?: string[];\n    canUseSymlinks?: boolean;\n    symlinks?: string[];\n    perChildEntries?: Record<string, string[]>;\n    packTypeExportZips?: Record<string, boolean>;\n}",
@@ -103,7 +111,7 @@
   },
   "DecoratedPotPatternClass": {
     "signature": "(alias) class DecoratedPotPatternClass",
-    "definition": "src/core/resources/datapack/decoratedPotPattern.ts"
+    "definition": "src/core/resources/datapack/datacomponent/decoratedPotPattern.ts"
   },
   "Dialog": {
     "signature": "(alias) const Dialog: (name: string, dialog: DialogClassArguments['json'], options?: Omit<Partial<DialogClassArguments>, 'json'>) => DialogClass",
@@ -119,7 +127,7 @@
   },
   "EnchantmentClass": {
     "signature": "(alias) class EnchantmentClass",
-    "definition": "src/core/resources/datapack/enchantment.ts"
+    "definition": "src/core/resources/datapack/datacomponent/enchantment.ts"
   },
   "EnchantmentProvider": {
     "signature": "(alias) const EnchantmentProvider: (name: string, enchantmentProvider: EnchantmentProviderClassArguments['json'], options?: Omit<Partial<EnchantmentProviderClassArguments>, 'json'>) => EnchantmentProviderClass",
@@ -127,7 +135,7 @@
   },
   "EnchantmentProviderClass": {
     "signature": "(alias) class EnchantmentProviderClass",
-    "definition": "src/core/resources/datapack/enchantment.ts"
+    "definition": "src/core/resources/datapack/datacomponent/enchantment.ts"
   },
   "Equipment": {
     "signature": "(alias) const Equipment: (name: string, json: EquipmentClassArguments['json'], options?: Omit<Partial<EquipmentClassArguments>, 'json'>) => EquipmentClass",
@@ -163,7 +171,7 @@
   },
   "InstrumentClass": {
     "signature": "(alias) class InstrumentClass",
-    "definition": "src/core/resources/datapack/instrument.ts"
+    "definition": "src/core/resources/datapack/datacomponent/instrument.ts"
   },
   "ItemModelDefinition": {
     "signature": "(alias) const ItemModelDefinition: (name: string, definition: ItemModelDefinitionInput, options?: Omit<Partial<ItemModelDefinitionClassArguments>, 'definition'>) => ItemModelDefinitionClass",
@@ -195,7 +203,7 @@
   },
   "JukeboxSongClass": {
     "signature": "(alias) class JukeboxSongClass",
-    "definition": "src/core/resources/datapack/jukeboxSong.ts"
+    "definition": "src/core/resources/datapack/datacomponent/jukeboxSong.ts"
   },
   "Label": {
     "signature": "(alias) const Label: (label: NonEmptyString | NamespacedString, description?: NonEmptyString) => MakeInstanceCallable<_RawLabelClass>",
@@ -357,6 +365,14 @@
     "signature": "(alias) class NotNBT<VALUE extends RootNBT = RootNBT>",
     "definition": "src/variables/nbt/NBTs.ts"
   },
+  "NumberProvider": {
+    "signature": "(alias) const NumberProvider: (name: string, numberProvider: NumberProviderClassArguments['json'], options?: Omit<Partial<NumberProviderClassArguments>, 'json'>) => NumberProviderClass",
+    "definition": "src/pack/pack.ts"
+  },
+  "NumberProviderClass": {
+    "signature": "(alias) class NumberProviderClass",
+    "definition": "src/core/resources/datapack/numberProvider.ts"
+  },
   "Objective": {
     "signature": "(alias) const Objective: {\n    create: (name: string, criteria?: LiteralUnion<OBJECTIVE_CRITERIA>, display?: JSONTextComponent, options?: {\n        alreadyExists?: boolean;\n        useDefaultNamespace?: boolean;\n    }) => ObjectiveClass;\n    get: (name: string) => ObjectiveClass;\n}",
     "definition": "src/pack/pack.ts"
@@ -492,7 +508,7 @@
   },
   "SulfurCubeArchetypeClass": {
     "signature": "(alias) class SulfurCubeArchetypeClass",
-    "definition": "src/core/resources/datapack/sulfurCubeArchetype.ts"
+    "definition": "src/core/resources/datapack/datacomponent/sulfurCubeArchetype.ts"
   },
   "Tag": {
     "signature": "(alias) const Tag: <T extends LiteralUnion<REGISTRIES>>(type: T, name: string, values: TagValuesJSON<T>, options?: Partial<TagClassArguments<T>> | undefined) => TagClass<T>",
@@ -540,7 +556,7 @@
   },
   "TradeSetClass": {
     "signature": "(alias) class TradeSetClass",
-    "definition": "src/core/resources/datapack/villagerTrade.ts"
+    "definition": "src/core/resources/datapack/datacomponent/villagerTrade.ts"
   },
   "TrialSpawner": {
     "signature": "(alias) const TrialSpawner: (name: string, trialSpawner: TrialSpawnerClassArguments['json'], options?: Omit<Partial<TrialSpawnerClassArguments>, 'json'>) => TrialSpawnerClass",
@@ -548,7 +564,7 @@
   },
   "TrialSpawnerClass": {
     "signature": "(alias) class TrialSpawnerClass",
-    "definition": "src/core/resources/datapack/trialSpawner.ts"
+    "definition": "src/core/resources/datapack/datacomponent/trialSpawner.ts"
   },
   "Trigger": {
     "signature": "(alias) const Trigger: (name: string, callback: TriggerHandler, pollingEvery?: number) => TriggerClass<TriggerHandler>",
@@ -560,7 +576,7 @@
   },
   "TrimMaterialClass": {
     "signature": "(alias) class TrimMaterialClass",
-    "definition": "src/core/resources/datapack/trimMaterial.ts"
+    "definition": "src/core/resources/datapack/datacomponent/trimMaterial.ts"
   },
   "TrimPattern": {
     "signature": "(alias) const TrimPattern: (name: string, trimPattern: TrimPatternClassArguments['json'], options?: Omit<Partial<TrimPatternClassArguments>, 'json'>) => TrimPatternClass",
@@ -568,7 +584,7 @@
   },
   "TrimPatternClass": {
     "signature": "(alias) class TrimPatternClass",
-    "definition": "src/core/resources/datapack/trimPattern.ts"
+    "definition": "src/core/resources/datapack/datacomponent/trimPattern.ts"
   },
   "UUID": {
     "signature": "(alias) const UUID: {\n    (): UUIDClass<'known'>;\n    (source: string | UUIDinNumber, options?: UUIDOptions): UUIDClass<'known'>;\n    (source: UUIDinScore, options?: UUIDOptions): UUIDClass<'scores'>;\n    (source: DataPointClass, options?: UUIDOptions): UUIDClass<'data'>;\n    (source: SelectorPickClass<true, boolean>, options?: UUIDOptions): UUIDClass<'selector'>;\n}",
@@ -588,7 +604,7 @@
   },
   "VariantClass": {
     "signature": "(alias) class VariantClass<T extends VariantType>",
-    "definition": "src/core/resources/datapack/variant.ts"
+    "definition": "src/core/resources/datapack/datacomponent/variant.ts"
   },
   "VillagerTrade": {
     "signature": "(alias) const VillagerTrade: (name: string, villagerTrade: VillagerTradeClassArguments['json'], options?: Omit<Partial<VillagerTradeClassArguments>, 'json'>) => VillagerTradeClass",
@@ -596,7 +612,7 @@
   },
   "VillagerTradeClass": {
     "signature": "(alias) class VillagerTradeClass",
-    "definition": "src/core/resources/datapack/villagerTrade.ts"
+    "definition": "src/core/resources/datapack/datacomponent/villagerTrade.ts"
   },
   "WaypointStyle": {
     "signature": "(alias) const WaypointStyle: (name: string, json: WaypointStyleClassArguments['json'], options?: Omit<Partial<WaypointStyleClassArguments>, 'json'>) => WaypointStyleClass",
@@ -649,6 +665,10 @@
   "comment": {
     "signature": "(alias) const comment: (...comments: unknown[]) => FinalCommandOutput",
     "definition": "src/commands/implementations/_fake/comment.ts"
+  },
+  "compute": {
+    "signature": "(alias) const compute: ComputeCommand<false> & (<PROVIDER extends ComputeProvider<false>>(provider: PROVIDER, scaleOrInteger?: number | \"integer\" | undefined) => FinalCommandOutput)",
+    "definition": "src/commands/implementations/server/compute.ts"
   },
   "createSandstonePack": {
     "signature": "(alias) function createSandstonePack(context: SandstoneContext): SandstonePack",
