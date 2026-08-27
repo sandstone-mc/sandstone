@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.24](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.24) - 2026-08-27
+
+### Latest MC Snapshot Features, Fixed bugs
+
+**Full Changelog**: [v1.2.23...v1.2.24](https://github.com/sandstone-mc/sandstone/compare/v1.2.23...v1.2.24)
+
+
 ## [v1.2.23](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.23) - 2026-08-20
 
 ### Update for latest MC Snapshot, fixed type bugs
