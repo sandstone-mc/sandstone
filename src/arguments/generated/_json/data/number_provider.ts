@@ -11,6 +11,7 @@ import type {
   NamespacedString,
   NBTFloat,
   NonEmptyString,
+  NumberProviderClass,
   ObjectiveClass,
   TagClass,
 } from 'sandstone'
@@ -35,7 +36,10 @@ export type JsonAggregateNumberProvider = {
 export type JsonAggregateOperands = (JsonNumberProvider | (
   | JsonRegistry['minecraft:number_provider']
   | `#${string}:${string}`
-  | TagClass<'number_provider'>) | JsonNBTList<(JsonRegistry['minecraft:number_provider'] | JsonNumberProvider), {
+  | TagClass<'number_provider'>
+  | NumberProviderClass) | JsonNBTList<((
+    | JsonRegistry['minecraft:number_provider'] | NumberProviderClass)
+    | JsonNumberProvider), {
     leftExclusive: false,
     min: 1,
   }>)
@@ -109,12 +113,19 @@ export type JsonNumberProvider = ((NBTFloat | number) | ({
 
 export type JsonNumberProviderListRef = (
   | JsonNumberProvider | (
-  JsonRegistry['minecraft:number_provider'] | `#${string}:${string}` | TagClass<'number_provider'>)
-  | Array<(JsonRegistry['minecraft:number_provider'] | JsonNumberProvider)>)
+    | JsonRegistry['minecraft:number_provider']
+    | `#${string}:${string}`
+    | TagClass<'number_provider'>
+    | NumberProviderClass)
+  | Array<((JsonRegistry['minecraft:number_provider'] | NumberProviderClass) | JsonNumberProvider)>)
 
-export type JsonNumberProviderRef = (JsonNumberProvider | JsonRegistry['minecraft:number_provider'])
+export type JsonNumberProviderRef = (
+  | JsonNumberProvider | (
+  JsonRegistry['minecraft:number_provider'] | NumberProviderClass))
 
-export type JsonResolvableNumber = ((NBTFloat | number) | JsonRegistry['minecraft:number_provider'])
+export type JsonResolvableNumber = ((
+  | NBTFloat | number) | (
+  JsonRegistry['minecraft:number_provider'] | NumberProviderClass))
 
 export type JsonScoreNumberProvider = {
   target: JsonScoreProvider,

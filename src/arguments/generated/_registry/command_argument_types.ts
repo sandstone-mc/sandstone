@@ -41,6 +41,7 @@ export const COMMAND_ARGUMENT_TYPES_SET = new Set([
   'nbt_compound_tag',
   'nbt_path',
   'nbt_tag',
+  'number_provider',
   'objective',
   'objective_criteria',
   'operation',

@@ -9,5 +9,6 @@ export const JSONWORLDGEN_MATERIAL_RULE_TYPES_SET = new Set([
   'bandlands',
   'block',
   'condition',
+  'ore_vein',
   'sequence',
 ] as const)

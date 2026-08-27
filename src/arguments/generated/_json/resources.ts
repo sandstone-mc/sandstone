@@ -1,7 +1,7 @@
 import {
   AdvancementClass,
   BannerPatternClass,
-  // BlockTransformerClass,
+  BlockTransformerClass,
   ChatTypeClass,
   DamageTypeClass,
   DecoratedPotPatternClass,
@@ -13,6 +13,7 @@ import {
   ItemModifierClass,
   JukeboxSongClass,
   LootTableClass,
+  NumberProviderClass,
   PredicateClass,
   RecipeClass,
   SlotSourceClass,
@@ -45,7 +46,7 @@ import {
 export const JSONRESOURCE_CLASS_TYPES = [
   [AdvancementClass, 'advancement'],
   [BannerPatternClass, 'banner_pattern'],
-  // [BlockTransformerClass, 'block_transformer'],
+  [BlockTransformerClass, 'block_transformer'],
   [ChatTypeClass, 'chat_type'],
   [DamageTypeClass, 'damage_type'],
   [DecoratedPotPatternClass, 'decorated_pot_pattern'],
@@ -57,6 +58,7 @@ export const JSONRESOURCE_CLASS_TYPES = [
   [ItemModifierClass, 'item_modifier'],
   [JukeboxSongClass, 'jukebox_song'],
   [LootTableClass, 'loot_table'],
+  [NumberProviderClass, 'number_provider'],
   [PredicateClass, 'predicate'],
   [RecipeClass, 'recipe'],
   [SlotSourceClass, 'slot_source'],

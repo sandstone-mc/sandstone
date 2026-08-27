@@ -7,6 +7,7 @@ import type { BANNER_PATTERNS } from 'sandstone/arguments/generated/_registry/ba
 import type { BLOCK_DEFINITIONS } from 'sandstone/arguments/generated/_registry/block_definitions.ts'
 import type { BLOCK_ENTITY_TYPES } from 'sandstone/arguments/generated/_registry/block_entity_types.ts'
 import type { BLOCK_PREDICATE_TYPES } from 'sandstone/arguments/generated/_registry/block_predicate_types.ts'
+import type { BLOCK_TRANSFORMERS } from 'sandstone/arguments/generated/_registry/block_transformers.ts'
 import type { BLOCKS } from 'sandstone/arguments/generated/_registry/blocks.ts'
 import type { CAT_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/cat_sound_variants.ts'
 import type { CAT_VARIANTS } from 'sandstone/arguments/generated/_registry/cat_variants.ts'
@@ -236,6 +237,7 @@ import type { SetType } from 'sandstone'
 export type Registry = {
   'minecraft:advancement': ADVANCEMENTS,
   'minecraft:banner_pattern': BANNER_PATTERNS,
+  'minecraft:block_transformer': BLOCK_TRANSFORMERS,
   'minecraft:cat_sound_variant': CAT_SOUND_VARIANTS,
   'minecraft:cat_variant': CAT_VARIANTS,
   'minecraft:chat_type': CHAT_TYPES,

@@ -11,6 +11,7 @@ import type {
   NBTFloat,
   NBTList,
   NonEmptyString,
+  NumberProviderClass,
   ObjectiveClass,
   TagClass,
 } from 'sandstone'
@@ -35,7 +36,8 @@ export type AggregateNumberProvider = {
 export type AggregateOperands = (NumberProvider | (
   | Registry['minecraft:number_provider']
   | `#${string}:${string}`
-  | TagClass<'number_provider'>) | NBTList<(Registry['minecraft:number_provider'] | NumberProvider), {
+  | TagClass<'number_provider'>
+  | NumberProviderClass) | NBTList<((Registry['minecraft:number_provider'] | NumberProviderClass) | NumberProvider), {
     leftExclusive: false,
     min: 1,
   }>)
@@ -109,12 +111,12 @@ export type NumberProvider = (NBTFloat | ({
 
 export type NumberProviderListRef = (
   | NumberProvider | (
-  Registry['minecraft:number_provider'] | `#${string}:${string}` | TagClass<'number_provider'>)
-  | Array<(Registry['minecraft:number_provider'] | NumberProvider)>)
+  Registry['minecraft:number_provider'] | `#${string}:${string}` | TagClass<'number_provider'> | NumberProviderClass)
+  | Array<((Registry['minecraft:number_provider'] | NumberProviderClass) | NumberProvider)>)
 
-export type NumberProviderRef = (NumberProvider | Registry['minecraft:number_provider'])
+export type NumberProviderRef = (NumberProvider | (Registry['minecraft:number_provider'] | NumberProviderClass))
 
-export type ResolvableNumber = (NBTFloat | Registry['minecraft:number_provider'])
+export type ResolvableNumber = (NBTFloat | (Registry['minecraft:number_provider'] | NumberProviderClass))
 
 export type ScoreNumberProvider = {
   target: ScoreProvider,

@@ -7,15 +7,13 @@ export type CHUNK_STATUSES = (
 
 export const CHUNK_STATUSES_SET = new Set([
   'biomes',
-  'carvers',
   'empty',
   'features',
   'full',
   'initialize_light',
   'light',
-  'noise',
   'spawn',
   'structure_references',
   'structure_starts',
-  'surface',
+  'terrain',
 ] as const)

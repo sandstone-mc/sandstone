@@ -46,7 +46,7 @@ import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type { TextureType } from 'sandstone/arguments'
 import type {
   BannerPatternClass,
-  // BlockTransformerClass,
+  BlockTransformerClass,
   DamageTypeClass,
   DecoratedPotPatternClass,
   EquipmentClass,
@@ -1528,7 +1528,7 @@ type JsonDataComponentBaseColor = JsonDyeColor
 type JsonDataComponentBees = Array<JsonOccupant>
 type JsonDataComponentBlockEntityData = (JsonBlockEntityData | (NonEmptyString | NBTClass))
 type JsonDataComponentBlockState = JsonSymbolMcdocBlockItemStates<'%fallback'>
-type JsonDataComponentBlockTransformer = (NamespacedString /*| BlockTransformerClass */)
+type JsonDataComponentBlockTransformer = (JsonRegistry['minecraft:block_transformer'] | BlockTransformerClass)
 type JsonDataComponentBlocksAttacks = Jsonblocks_attacks
 type JsonDataComponentBreakSound = JsonSoundEventRef
 type JsonDataComponentBrewingFuel = JsonBrewingFuel

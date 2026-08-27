@@ -2,6 +2,8 @@ export { JSONADVANCEMENTS_SET } from './_registry/advancements.ts'
 
 export { JSONBANNER_PATTERNS_SET } from './_registry/banner_patterns.ts'
 
+export { JSONBLOCK_TRANSFORMERS_SET } from './_registry/block_transformers.ts'
+
 export { JSONCAT_SOUND_VARIANTS_SET } from './_registry/cat_sound_variants.ts'
 
 export { JSONCAT_VARIANTS_SET } from './_registry/cat_variants.ts'

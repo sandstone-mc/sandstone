@@ -6,7 +6,11 @@ export type JSONTAG_FLUIDS = (
   | `minecraft:${SetType<typeof JSONTAG_FLUIDS_SET>}`)
 
 export const JSONTAG_FLUIDS_SET = new Set([
+  'axolotl_tries_to_find',
   'bubble_column_can_occupy',
+  'dolphin_tries_to_find',
+  'entity_floatable',
+  'frog_tries_to_find_land_near',
   'lava',
   'supports_frogspawn',
   'supports_lily_pad',

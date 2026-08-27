@@ -7,6 +7,7 @@ import type { JSONBANNER_PATTERNS } from 'sandstone/arguments/generated/_json/_r
 import type { JSONBLOCK_DEFINITIONS } from 'sandstone/arguments/generated/_json/_registry/block_definitions.ts'
 import type { JSONBLOCK_ENTITY_TYPES } from 'sandstone/arguments/generated/_json/_registry/block_entity_types.ts'
 import type { JSONBLOCK_PREDICATE_TYPES } from 'sandstone/arguments/generated/_json/_registry/block_predicate_types.ts'
+import type { JSONBLOCK_TRANSFORMERS } from 'sandstone/arguments/generated/_json/_registry/block_transformers.ts'
 import type { JSONBLOCKS } from 'sandstone/arguments/generated/_json/_registry/blocks.ts'
 import type { JSONCAT_SOUND_VARIANTS } from 'sandstone/arguments/generated/_json/_registry/cat_sound_variants.ts'
 import type { JSONCAT_VARIANTS } from 'sandstone/arguments/generated/_json/_registry/cat_variants.ts'
@@ -296,6 +297,7 @@ import type { SetType } from 'sandstone'
 export type JsonRegistry = {
   'minecraft:advancement': JSONADVANCEMENTS,
   'minecraft:banner_pattern': JSONBANNER_PATTERNS,
+  'minecraft:block_transformer': JSONBLOCK_TRANSFORMERS,
   'minecraft:cat_sound_variant': JSONCAT_SOUND_VARIANTS,
   'minecraft:cat_variant': JSONCAT_VARIANTS,
   'minecraft:chat_type': JSONCHAT_TYPES,

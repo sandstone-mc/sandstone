@@ -2,6 +2,8 @@ export { ADVANCEMENTS_SET } from './_registry/advancements.ts'
 
 export { BANNER_PATTERNS_SET } from './_registry/banner_patterns.ts'
 
+export { BLOCK_TRANSFORMERS_SET } from './_registry/block_transformers.ts'
+
 export { CAT_SOUND_VARIANTS_SET } from './_registry/cat_sound_variants.ts'
 
 export { CAT_VARIANTS_SET } from './_registry/cat_variants.ts'
