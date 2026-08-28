@@ -10,7 +10,7 @@ import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -24,7 +24,7 @@ export class LootTableNode extends ContainerNode implements ResourceNode<LootTab
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.lootTableJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type LootTableClassArguments = {
@@ -34,10 +34,10 @@ export type LootTableClassArguments = {
   json: JsonSymbolResource[(typeof LootTableClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class LootTableClass extends ResourceClass<LootTableNode> {
+export class LootTableClass extends ResourceClass<LootTableNode> implements JsonResource {
   static readonly resourceType = 'loot_table' as const
 
-  public lootTableJSON: LootTableClassArguments['json']
+  public json: LootTableClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: LootTableClassArguments) {
     super(
@@ -49,7 +49,7 @@ export class LootTableClass extends ResourceClass<LootTableNode> {
       args,
     )
 
-    this.lootTableJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

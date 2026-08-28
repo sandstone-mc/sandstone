@@ -35,6 +35,10 @@
     "signature": "(alias) type BeforeSaveLocal = {\n    folder: string;\n    outputFolder: string;\n    sandstoneConfig: SandstoneConfig;\n    sandstonePack: SandstonePack;\n    saveOptions: NonNullable<SandstoneConfig['saveOptions']>;\n    resources: SandstoneConfig['resources'];\n    scripts: SandstoneConfig['scripts'];\n    cliOptions: Record<string, unknown>;\n    packageJson: {\n        module?: string;\n        [k: string]: unknown;\n    };\n    entrypoint: string;\n    worldName: string | undefined;\n    root: boolean | undefined;\n    clientPath: string | undefined;\n    serverPath: string | undefined;\n    packName: string;\n} & LocalFunctions & {\n    ...;\n}",
     "definition": "src/config.ts"
   },
+  "Binary": {
+    "signature": "(alias) const Binary: {\n    asArrayBuffer(input: Promise<Blob | ArrayBuffer | Buffer> | Blob | ArrayBuffer | Buffer): Promise<ArrayBuffer>;\n    asLegacyBuffer(input: Promise<Blob | ArrayBuffer | Buffer> | Blob | ArrayBuffer | Buffer): Promise<Buffer>;\n    asBlob(input: Promise<Blob | ArrayBuffer | Buffer> | Blob | ArrayBuffer | Buffer): Promise<Blob>;\n}",
+    "definition": "src/sandstone.ts"
+  },
   "BlockStateDefinition": {
     "signature": "(alias) const BlockStateDefinition: <JSON extends BlockStateDefinitionJSON>(name: string, json: JSON, options?: Omit<Partial<BlockStateDefinitionArguments<JSON>>, \"json\"> | undefined) => BlockStateDefinitionClass<JSON, Extract<AllKeys<JSON>, BlockStateDefinitionType>>",
     "definition": "src/pack/pack.ts"
@@ -755,7 +759,7 @@
     "definition": "src/commands/implementations/server/gamerule.ts"
   },
   "getExistingResource": {
-    "signature": "(alias) const getExistingResource: {\n    (relativePath: string): Promise<string>;\n    (relativePath: string, encoding: false): Promise<ArrayBuffer | Buffer>;\n    (relativePath: string, encoding: EncodingOption): Promise<Buffer | string>;\n    (resource: ResourceClass, encoding?: 'utf-8'): Promise<string>;\n    (resource: ResourceClass, encoding: false | EncodingOption): Promise<ArrayBuffer | Buffer>;\n}",
+    "signature": "(alias) const getExistingResource: {\n    (relativePath: `${string}.json`): Promise<unknown>;\n    (relativePath: string & {}, encoding?: 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'): Promise<string>;\n    (relativePath: string & {}, encoding: false | NonNullable<Exclude<EncodingOption, 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'>>): Promise<ArrayBuffer | Buffer>;\n    <Resource extends JsonResource>(resource: Resource): Promise<JsonResource['json']>;\n    (resource: TextResource): Promise<string>;\n    (resource: BinaryResource): Promise<ArrayBuffer | Buffer>;\n    (resource: ResourceClass): Promise<ArrayBuffer | Buffer | string | unknown>;\n}",
     "definition": "src/sandstone.ts"
   },
   "getSandstoneContext": {

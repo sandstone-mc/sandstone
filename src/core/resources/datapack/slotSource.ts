@@ -3,7 +3,7 @@ import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -17,7 +17,7 @@ export class SlotSourceNode extends ContainerNode implements ResourceNode<SlotSo
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.slotSourceJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type SlotSourceClassArguments = {
@@ -27,12 +27,12 @@ export type SlotSourceClassArguments = {
   json: JsonSymbolResource[(typeof SlotSourceClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class SlotSourceClass extends ResourceClass<SlotSourceNode> implements ConditionClass {
+export class SlotSourceClass extends ResourceClass<SlotSourceNode> implements ConditionClass, JsonResource {
   declare readonly __conditionClassBrand: true
 
   static readonly resourceType = 'slot_source' as const
 
-  public slotSourceJSON: SlotSourceClassArguments['json']
+  public json: SlotSourceClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: SlotSourceClassArguments) {
     super(
@@ -44,7 +44,7 @@ export class SlotSourceClass extends ResourceClass<SlotSourceNode> implements Co
       args,
     )
 
-    this.slotSourceJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
@@ -54,6 +54,6 @@ export class SlotSourceClass extends ResourceClass<SlotSourceNode> implements Co
 
   /** @internal */
   toJSON() {
-    return this.slotSourceJSON
+    return this.json
   }
 }

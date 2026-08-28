@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class VillagerTradeNode extends ContainerNode implements ResourceNode<Vil
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.villagerTradeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type VillagerTradeClassArguments = {
@@ -26,10 +26,10 @@ export type VillagerTradeClassArguments = {
   json: JsonSymbolResource[(typeof VillagerTradeClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class VillagerTradeClass extends ResourceClass<VillagerTradeNode> {
+export class VillagerTradeClass extends ResourceClass<VillagerTradeNode> implements JsonResource {
   static readonly resourceType = 'villager_trade' as const
 
-  public villagerTradeJSON: NonNullable<VillagerTradeClassArguments['json']>
+  public json: NonNullable<VillagerTradeClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: VillagerTradeClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class VillagerTradeClass extends ResourceClass<VillagerTradeNode> {
       args,
     )
 
-    this.villagerTradeJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
@@ -58,7 +58,7 @@ export class TradeSetNode extends ContainerNode implements ResourceNode<TradeSet
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.tradeSetJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TradeSetClassArguments = {
@@ -68,10 +68,10 @@ export type TradeSetClassArguments = {
   json: JsonSymbolResource[(typeof TradeSetClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class TradeSetClass extends ResourceClass<TradeSetNode> {
+export class TradeSetClass extends ResourceClass<TradeSetNode> implements JsonResource {
   static readonly resourceType = 'trade_set' as const
 
-  public tradeSetJSON: NonNullable<TradeSetClassArguments['json']>
+  public json: NonNullable<TradeSetClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TradeSetClassArguments) {
     super(
@@ -83,7 +83,7 @@ export class TradeSetClass extends ResourceClass<TradeSetNode> {
       args,
     )
 
-    this.tradeSetJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

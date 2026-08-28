@@ -49,26 +49,33 @@ export type ResourceNode<T = ResourceClass<any>> = Node & {
 export type ResourceNodeConstructor<N extends Node> = new (sandstoneCore: SandstoneCore, resource: any) => N
 
 export abstract class ResourceClass<N extends ResourceNode = ResourceNode<any>> implements NBTSerializable {
+  /* @internal */
   node: N
 
   packType
 
+  /* @internal */
   fileExtension
 
+  /* @internal */
   fileEncoding
 
+  /* @internal */
   creator: NonNullable<ResourceClassArguments<any>['creator']>
 
+  /* @internal */
   commands: SandstoneCommands<false>
 
   pack: SandstonePack
 
   path
 
+  /* @internal */
   addToSandstoneCore: boolean
 
   onConflict: LiteralUnion<BASIC_CONFLICT_STRATEGIES>
 
+  /* @internal */
   renameIndex = 2
 
   // eslint-disable-next-line max-len
@@ -211,10 +218,22 @@ export abstract class CallableResourceClass<N extends ResourceNode = ResourceNod
   abstract __call__: (...args: any) => any
 }
 
-export abstract class ListResource {
+export abstract class ListResource extends ResourceClass {
   public push(..._args: any[]) {}
 
   public unshift(..._args: any[]) {}
+}
+
+export abstract class JsonResource extends ResourceClass {
+  json: unknown = {}
+}
+
+export abstract class TextResource extends ResourceClass {
+  text: unknown = ''
+}
+
+export abstract class BinaryResource extends ResourceClass {
+  buffer: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer = {} as unknown as ArrayBuffer
 }
 
 /**

@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 // ============================================================================
@@ -20,7 +20,7 @@ export class TimelineNode extends ContainerNode implements ResourceNode<Timeline
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.timelineJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TimelineClassArguments = {
@@ -30,10 +30,10 @@ export type TimelineClassArguments = {
   json: JsonSymbolResource[(typeof TimelineClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class TimelineClass extends ResourceClass<TimelineNode> {
+export class TimelineClass extends ResourceClass<TimelineNode> implements JsonResource {
   static readonly resourceType = 'timeline' as const
 
-  public timelineJSON: NonNullable<TimelineClassArguments['json']>
+  public json: NonNullable<TimelineClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TimelineClassArguments) {
     super(
@@ -45,7 +45,7 @@ export class TimelineClass extends ResourceClass<TimelineNode> {
       args,
     )
 
-    this.timelineJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
@@ -66,7 +66,7 @@ export class WorldClockNode extends ContainerNode implements ResourceNode<WorldC
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.worldClockJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type WorldClockClassArguments = {
@@ -76,10 +76,10 @@ export type WorldClockClassArguments = {
   json: JsonSymbolResource[(typeof WorldClockClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class WorldClockClass extends ResourceClass<WorldClockNode> {
+export class WorldClockClass extends ResourceClass<WorldClockNode> implements JsonResource {
   static readonly resourceType = 'world_clock' as const
 
-  public worldClockJSON: NonNullable<WorldClockClassArguments['json']>
+  public json: NonNullable<WorldClockClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: WorldClockClassArguments) {
     super(
@@ -91,7 +91,7 @@ export class WorldClockClass extends ResourceClass<WorldClockNode> {
       args,
     )
 
-    this.worldClockJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

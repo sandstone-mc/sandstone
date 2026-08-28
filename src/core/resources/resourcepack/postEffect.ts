@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class PostEffectNode extends ContainerNode implements ResourceNode<PostEf
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.postEffectJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type PostEffectClassArguments = {
@@ -26,10 +26,10 @@ export type PostEffectClassArguments = {
   json: JsonSymbolResource[(typeof PostEffectClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class PostEffectClass extends ResourceClass<PostEffectNode> {
+export class PostEffectClass extends ResourceClass<PostEffectNode> implements JsonResource {
   static readonly resourceType = 'post_effect'
 
-  public postEffectJSON: NonNullable<PostEffectClassArguments['json']>
+  public json: NonNullable<PostEffectClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: PostEffectClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class PostEffectClass extends ResourceClass<PostEffectNode> {
       args,
     )
 
-    this.postEffectJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

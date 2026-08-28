@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class JukeboxSongNode extends ContainerNode implements ResourceNode<Jukeb
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.jukeboxSongJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type JukeboxSongClassArguments = {
@@ -26,10 +26,10 @@ export type JukeboxSongClassArguments = {
   json: JsonSymbolResource[(typeof JukeboxSongClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class JukeboxSongClass extends ResourceClass<JukeboxSongNode> {
+export class JukeboxSongClass extends ResourceClass<JukeboxSongNode> implements JsonResource {
   static readonly resourceType = 'jukebox_song' as const
 
-  public jukeboxSongJSON: NonNullable<JukeboxSongClassArguments['json']>
+  public json: NonNullable<JukeboxSongClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: JukeboxSongClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class JukeboxSongClass extends ResourceClass<JukeboxSongNode> {
       args,
     )
 
-    this.jukeboxSongJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

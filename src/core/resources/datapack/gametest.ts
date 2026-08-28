@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 // ============================================================================
@@ -20,7 +20,7 @@ export class TestEnvironmentNode extends ContainerNode implements ResourceNode<T
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.testEnvironmentJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TestEnvironmentClassArguments = {
@@ -30,10 +30,10 @@ export type TestEnvironmentClassArguments = {
   json: JsonSymbolResource[(typeof TestEnvironmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> {
+export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> implements JsonResource {
   static readonly resourceType = 'test_environment' as const
 
-  public testEnvironmentJSON: NonNullable<TestEnvironmentClassArguments['json']>
+  public json: NonNullable<TestEnvironmentClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TestEnvironmentClassArguments) {
     super(
@@ -45,7 +45,7 @@ export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> {
       args,
     )
 
-    this.testEnvironmentJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
@@ -66,7 +66,7 @@ export class TestInstanceNode extends ContainerNode implements ResourceNode<Test
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.testInstanceJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TestInstanceClassArguments = {
@@ -76,10 +76,10 @@ export type TestInstanceClassArguments = {
   json: JsonSymbolResource[(typeof TestInstanceClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class TestInstanceClass extends ResourceClass<TestInstanceNode> {
+export class TestInstanceClass extends ResourceClass<TestInstanceNode> implements JsonResource {
   static readonly resourceType = 'test_instance' as const
 
-  public testInstanceJSON: NonNullable<TestInstanceClassArguments['json']>
+  public json: NonNullable<TestInstanceClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TestInstanceClassArguments) {
     super(
@@ -91,7 +91,7 @@ export class TestInstanceClass extends ResourceClass<TestInstanceNode> {
       args,
     )
 
-    this.testInstanceJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

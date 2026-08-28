@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class TrimMaterialNode extends ContainerNode implements ResourceNode<Trim
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.trimMaterialJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 // TODO: Investigate potential abstractions
@@ -27,10 +27,10 @@ export type TrimMaterialClassArguments = {
   json: JsonSymbolResource[(typeof TrimMaterialClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
+export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> implements JsonResource {
   static readonly resourceType = 'trim_material' as const
 
-  public trimMaterialJSON: NonNullable<TrimMaterialClassArguments['json']>
+  public json: NonNullable<TrimMaterialClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimMaterialClassArguments) {
     super(
@@ -42,13 +42,13 @@ export class TrimMaterialClass extends ResourceClass<TrimMaterialNode> {
       args,
     )
 
-    this.trimMaterialJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
 
   /** Palette ID which will be used in the resource pack */
   get palette() {
-    return this.trimMaterialJSON.palette
+    return this.json.palette
   }
 }

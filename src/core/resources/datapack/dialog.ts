@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class DialogNode extends ContainerNode implements ResourceNode<DialogClas
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.dialogJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type DialogClassArguments = {
@@ -26,10 +26,10 @@ export type DialogClassArguments = {
   json: JsonSymbolResource[(typeof DialogClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class DialogClass extends ResourceClass<DialogNode> {
+export class DialogClass extends ResourceClass<DialogNode> implements JsonResource {
   static readonly resourceType = 'dialog' as const
 
-  public dialogJSON: NonNullable<DialogClassArguments['json']>
+  public json: NonNullable<DialogClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DialogClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class DialogClass extends ResourceClass<DialogNode> {
       args,
     )
 
-    this.dialogJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class BlockTransformerNode extends ContainerNode implements ResourceNode<
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.blockTransformerJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type BlockTransformerClassArguments = {
@@ -26,10 +26,10 @@ export type BlockTransformerClassArguments = {
   json: JsonSymbolResource[(typeof BlockTransformerClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class BlockTransformerClass extends ResourceClass<BlockTransformerNode> {
+export class BlockTransformerClass extends ResourceClass<BlockTransformerNode> implements JsonResource {
   static readonly resourceType = 'block_transformer' as const
 
-  public blockTransformerJSON: NonNullable<BlockTransformerClassArguments['json']>
+  public json: NonNullable<BlockTransformerClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: BlockTransformerClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class BlockTransformerClass extends ResourceClass<BlockTransformerNode> {
       args,
     )
 
-    this.blockTransformerJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class BannerPatternNode extends ContainerNode implements ResourceNode<Ban
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.bannerPatternJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type BannerPatternClassArguments = {
@@ -26,10 +26,10 @@ export type BannerPatternClassArguments = {
   json: JsonSymbolResource[(typeof BannerPatternClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class BannerPatternClass extends ResourceClass<BannerPatternNode> {
+export class BannerPatternClass extends ResourceClass<BannerPatternNode> implements JsonResource {
   static readonly resourceType = 'banner_pattern' as const
 
-  public bannerPatternJSON: NonNullable<BannerPatternClassArguments['json']>
+  public json: NonNullable<BannerPatternClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: BannerPatternClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class BannerPatternClass extends ResourceClass<BannerPatternNode> {
       args,
     )
 
-    this.bannerPatternJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

@@ -2,7 +2,7 @@ import { RESOURCE_PATHS, type MultiplePlayersArgumentOf } from 'sandstone/argume
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class RecipeNode extends ContainerNode implements ResourceNode<RecipeClas
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.recipeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type RecipeClassArguments = {
@@ -26,10 +26,10 @@ export type RecipeClassArguments = {
   json: JsonSymbolResource[(typeof RecipeClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class RecipeClass extends ResourceClass<RecipeNode> {
+export class RecipeClass extends ResourceClass<RecipeNode> implements JsonResource {
   static readonly resourceType = 'recipe' as const
 
-  public recipeJSON: NonNullable<RecipeClassArguments['json']>
+  public json: NonNullable<RecipeClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: RecipeClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class RecipeClass extends ResourceClass<RecipeNode> {
       args,
     )
 
-    this.recipeJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

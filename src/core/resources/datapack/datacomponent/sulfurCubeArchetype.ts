@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class SulfurCubeArchetypeNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.sulfurCubeArchetypeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type SulfurCubeArchetypeClassArguments = {
@@ -26,10 +26,10 @@ export type SulfurCubeArchetypeClassArguments = {
   json: JsonSymbolResource[(typeof SulfurCubeArchetypeClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class SulfurCubeArchetypeClass extends ResourceClass<SulfurCubeArchetypeNode> {
+export class SulfurCubeArchetypeClass extends ResourceClass<SulfurCubeArchetypeNode> implements JsonResource {
   static readonly resourceType = 'sulfur_cube_archetype' as const
 
-  public sulfurCubeArchetypeJSON: NonNullable<SulfurCubeArchetypeClassArguments['json']>
+  public json: NonNullable<SulfurCubeArchetypeClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: SulfurCubeArchetypeClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class SulfurCubeArchetypeClass extends ResourceClass<SulfurCubeArchetypeN
       args,
     )
 
-    this.sulfurCubeArchetypeJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

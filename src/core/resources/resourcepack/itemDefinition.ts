@@ -12,7 +12,7 @@ import type { ModelRef } from 'sandstone/arguments/generated/assets/model'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import { ModelClass } from './model'
 import { ItemPredicateClass } from 'sandstone/variables/ItemPredicate'
 import type { SandstonePack } from 'sandstone/pack'
@@ -293,7 +293,7 @@ export class ItemModelDefinitionNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.itemDefinitionJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ItemModelDefinitionInput =
@@ -310,10 +310,10 @@ export type ItemModelDefinitionClassArguments = {
  * Resource class for item definitions (items/*.json in resource packs).
  * Controls how items are rendered based on their components and state.
  */
-export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionNode> {
+export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionNode> implements JsonResource {
   static readonly resourceType = 'item_definition'
 
-  itemDefinitionJSON: JsonItemDefinition
+  json: JsonItemDefinition
 
   constructor(
     core: SandstoneCore,
@@ -329,7 +329,7 @@ export class ItemModelDefinitionClass extends ResourceClass<ItemModelDefinitionN
       args,
     )
 
-    this.itemDefinitionJSON = this.resolveDefinitionInput(args.definition)
+    this.json = this.resolveDefinitionInput(args.definition)
     this.handleConflicts()
   }
 

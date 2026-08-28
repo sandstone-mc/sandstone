@@ -4,7 +4,7 @@ import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { MCFunctionClass } from './mcfunction'
 import type { DamageTypeClass } from './damageType'
 
@@ -99,7 +99,7 @@ export class TagNode extends ContainerNode implements ResourceNode<TagClass<Lite
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.tagJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type TagClassArguments<REGISTRY extends LiteralUnion<REGISTRIES>> = {
@@ -138,14 +138,14 @@ type Resource<T extends LiteralUnion<REGISTRIES>> = Add<
 
 export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
   extends ResourceClass
-  implements ListResource, ConditionClass, NBTSerializable {
+  implements ListResource, ConditionClass, NBTSerializable, JsonResource {
   declare readonly __conditionClassBrand: true
 
   static readonly resourceType = 'tag' as const
 
   readonly type: REGISTRY
 
-  readonly tagJSON: NonNullable<TagJSON<REGISTRY>>
+  readonly json: NonNullable<TagJSON<REGISTRY>>
 
   constructor(sandstoneCore: SandstoneCore, type: REGISTRY, name: string, args: TagClassArguments<REGISTRY>) {
     if (type === ('entity' as REGISTRY)) {
@@ -165,12 +165,12 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
 
     this.type = type
 
-    this.tagJSON = {
+    this.json = {
       replace: args.replace || false,
       values: [],
     }
 
-    this.tagJSON.values = Array.from(
+    this.json.values = Array.from(
       args.values as Resource<REGISTRY>[],
       objectToString,
     ) as unknown as TagValuesJSON<REGISTRY>
@@ -187,24 +187,24 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
       const resourceName = objectToString(resource) as HintedTagStringType<REGISTRY>
       if (resourceName === this.name) {
         if (resource instanceof TagClass) {
-          this.tagJSON.values.push(...resource.tagJSON.values)
+          this.json.values.push(...resource.json.values)
         } else {
           throw new Error('[TagClass#push] Tags cannot self-reference')
         }
       } else {
-        this.tagJSON.values.push(resourceName)
+        this.json.values.push(resourceName)
       }
     }
   }
 
   public unshift(...resources: Resource<REGISTRY>[]) {
     // Done this way so the resources you're adding to the beginning of the tag stay in order.
-    const _resources: typeof this.tagJSON.values = []
+    const _resources: typeof this.json.values = []
     for (const resource of resources) {
       const resourceName = objectToString(resource) as HintedTagStringType<REGISTRY>
       if (resourceName === this.name) {
         if (resource instanceof TagClass) {
-          _resources.push(...resource.tagJSON.values)
+          _resources.push(...resource.json.values)
         } else {
           throw new Error('[TagClass#push] Tags cannot self-reference')
         }
@@ -212,12 +212,12 @@ export class TagClass<REGISTRY extends LiteralUnion<REGISTRIES>>
         _resources.push(resourceName)
       }
     }
-    this.tagJSON.values.unshift(..._resources)
+    this.json.values.unshift(..._resources)
   }
 
   /** Checks whether a given resource is in this tag. */
   has(resource: Resource<REGISTRY>) {
-    return this.tagJSON.values.some(
+    return this.json.values.some(
       (tagValue) =>
         (typeof tagValue !== 'string' ? (tagValue as { id: string }).id : tagValue) ===
         objectToString(resource),

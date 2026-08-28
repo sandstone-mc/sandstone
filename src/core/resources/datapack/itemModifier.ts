@@ -8,7 +8,7 @@ import {
 import { targetParser } from 'sandstone/variables/parsers'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
+import type { JsonResource, ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
@@ -23,7 +23,7 @@ export class ItemModifierNode extends ContainerNode implements ResourceNode<Item
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.itemModifierJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 type ItemModifierJSON = JsonSymbolResource[(typeof ItemModifierClass)['resourceType']]
@@ -37,10 +37,10 @@ export type ItemModifierClassArguments = {
 
 type Modifier = ItemModifierJSON | ItemModifierClass
 
-export class ItemModifierClass extends ResourceClass<ItemModifierNode> implements ListResource {
+export class ItemModifierClass extends ResourceClass<ItemModifierNode> implements JsonResource, ListResource {
   static readonly resourceType = 'item_modifier' as const
 
-  public itemModifierJSON: ItemModifierClassArguments['json']
+  public json: ItemModifierClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ItemModifierClassArguments) {
     super(
@@ -52,47 +52,47 @@ export class ItemModifierClass extends ResourceClass<ItemModifierNode> implement
       args,
     )
 
-    this.itemModifierJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
 
   public push(...modifiers: Modifier[]) {
-    if (!Array.isArray(this.itemModifierJSON)) {
-      this.itemModifierJSON = [this.itemModifierJSON]
+    if (!Array.isArray(this.json)) {
+      this.json = [this.json]
     }
 
     for (const modifier of modifiers) {
       let modifierJSON: any
       if (modifier instanceof ItemModifierClass) {
-        modifierJSON = modifier.itemModifierJSON
+        modifierJSON = modifier.json
       } else {
         modifierJSON = modifier
       }
       if (Array.isArray(modifierJSON)) {
-        this.itemModifierJSON.push(...modifierJSON)
+        this.json.push(...modifierJSON)
       } else {
-        this.itemModifierJSON.push(modifierJSON)
+        this.json.push(modifierJSON)
       }
     }
   }
 
   public unshift(...modifiers: Modifier[]) {
-    if (!Array.isArray(this.itemModifierJSON)) {
-      this.itemModifierJSON = [this.itemModifierJSON]
+    if (!Array.isArray(this.json)) {
+      this.json = [this.json]
     }
 
     for (const modifier of modifiers) {
       let modifierJSON: any
       if (modifier instanceof ItemModifierClass) {
-        modifierJSON = modifier.itemModifierJSON
+        modifierJSON = modifier.json
       } else {
         modifierJSON = modifier
       }
       if (Array.isArray(modifierJSON)) {
-        this.itemModifierJSON.unshift(...modifierJSON)
+        this.json.unshift(...modifierJSON)
       } else {
-        this.itemModifierJSON.unshift(modifierJSON)
+        this.json.unshift(modifierJSON)
       }
     }
   }

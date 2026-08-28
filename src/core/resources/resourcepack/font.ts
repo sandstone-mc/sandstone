@@ -3,7 +3,7 @@ import type { GlyphProvider } from 'sandstone/arguments/generated/assets/font'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 import type { JsonGlyphProvider } from 'sandstone/arguments/generated/_json/assets/font'
 
@@ -18,7 +18,7 @@ export class FontNode extends ContainerNode implements ResourceNode<FontClass> {
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.fontJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type FontArguments = {
@@ -28,10 +28,10 @@ export type FontArguments = {
   providers: JsonGlyphProvider[] | []
 } & ResourceClassArguments<'list'>
 
-export class FontClass extends ResourceClass<FontNode> implements ListResource {
+export class FontClass extends ResourceClass<FontNode> implements JsonResource, ListResource {
   static readonly resourceType = 'font'
 
-  fontJSON: { providers: FontArguments['providers'] }
+  json: { providers: FontArguments['providers'] }
 
   constructor(core: SandstoneCore, name: string, args: FontArguments) {
     super(
@@ -43,7 +43,7 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
       args
     )
 
-    this.fontJSON = { providers: args.providers }
+    this.json = { providers: args.providers }
 
     this.handleConflicts()
   }
@@ -52,11 +52,11 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */
-        this.fontJSON.providers.push(...provider.fontJSON.providers)
+        this.json.providers.push(...provider.fontJSON.providers)
       }
     } else {
       /** @ts-ignore */
-      this.fontJSON.providers.push(...providers)
+      this.json.providers.push(...providers)
     }
   }
 
@@ -64,11 +64,11 @@ export class FontClass extends ResourceClass<FontNode> implements ListResource {
     if (providers[0] instanceof FontClass) {
       for (const provider of providers) {
         /** @ts-ignore */
-        this.fontJSON.providers.unshift(...provider.fontJSON.providers)
+        this.json.providers.unshift(...provider.fontJSON.providers)
       }
     } else {
       /** @ts-ignore */
-      this.fontJSON.providers.unshift(...providers)
+      this.json.providers.unshift(...providers)
     }
   }
 }

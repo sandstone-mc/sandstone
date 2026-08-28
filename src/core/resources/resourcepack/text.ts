@@ -5,7 +5,7 @@ import { JSONTextComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { ResourceClass, TextResource } from '../resource'
 
 /**
  * A node representing a Minecraft text.
@@ -18,7 +18,7 @@ export class PlainTextNode extends ContainerNode implements ResourceNode<PlainTe
     super(sandstoneCore)
   }
 
-  getValue = () => this.resource.texts
+  getValue = () => this.resource.text
 }
 
 export type PlainTextArguments = {
@@ -28,10 +28,10 @@ export type PlainTextArguments = {
   text?: string | JSONTextComponent | string[] | JSONTextComponent[]
 } & ResourceClassArguments<'list'>
 
-export class PlainTextClass extends ResourceClass<PlainTextNode> implements ListResource {
+export class PlainTextClass extends ResourceClass<PlainTextNode> implements ListResource, TextResource {
   static readonly resourceType = 'text'
 
-  texts: NonNullable<PlainTextArguments['text']> = ''
+  text: NonNullable<PlainTextArguments['text']> = ''
 
   constructor(core: SandstoneCore, name: string, args: PlainTextArguments) {
     super(
@@ -43,7 +43,7 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
       args,
     )
 
-    this.texts = ''
+    this.text = ''
     if (args.text) {
       if (Array.isArray(args.text)) {
         this.push(...args.text)
@@ -136,11 +136,11 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
   push(...texts: string[] | JSONTextComponent[]) {
     if (typeof texts[0] === 'string') {
       for (const text of texts) {
-        this.texts += `${text}\n`
+        this.text += `${text}\n`
       }
     } else {
       for (const text of texts) {
-        this.texts += `${this.componentToPlainText(text)}\n`
+        this.text += `${this.componentToPlainText(text)}\n`
       }
     }
   }
@@ -148,11 +148,11 @@ export class PlainTextClass extends ResourceClass<PlainTextNode> implements List
   unshift(...texts: string[] | JSONTextComponent[]) {
     if (typeof texts[0] === 'string') {
       for (const text of texts) {
-        this.texts = `${text}\n${this.texts}`
+        this.text = `${text}\n${this.text}`
       }
     } else {
       for (const text of texts) {
-        this.texts = `${this.componentToPlainText(text)}\n${this.texts}`
+        this.text = `${this.componentToPlainText(text)}\n${this.text}`
       }
     }
   }

@@ -2,7 +2,7 @@ import { type RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 export type AudibleVariantType = (
@@ -45,7 +45,7 @@ export class VariantNode<T extends VariantType> extends ContainerNode implements
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.variantJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type VariantClassArguments<T extends VariantType> = {
@@ -55,10 +55,10 @@ export type VariantClassArguments<T extends VariantType> = {
   variant: VariantJSON<T>
 } & ResourceClassArguments<'default'>
 
-export class VariantClass<T extends VariantType> extends ResourceClass<VariantNode<T>> {
+export class VariantClass<T extends VariantType> extends ResourceClass<VariantNode<T>> implements JsonResource {
   static readonly resourceType = 'variant'
 
-  public variantJSON: NonNullable<VariantJSON<T>>
+  public json: NonNullable<VariantJSON<T>>
 
   constructor(
     sandstoneCore: SandstoneCore,
@@ -75,7 +75,7 @@ export class VariantClass<T extends VariantType> extends ResourceClass<VariantNo
       args,
     )
 
-    this.variantJSON = args.variant
+    this.json = args.variant
 
     this.handleConflicts()
   }

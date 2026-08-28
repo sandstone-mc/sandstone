@@ -4,7 +4,7 @@ import { ContainerNode } from '../../nodes'
 
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { TRANSLATION_KEYS_SET } from 'sandstone/arguments/generated/_registry/translation_keys'
 
 /**
@@ -18,7 +18,7 @@ export class LanguageNode extends ContainerNode implements ResourceNode<Language
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.languageJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type LanguageArguments = {
@@ -28,10 +28,10 @@ export type LanguageArguments = {
   language?: Partial<Record<LiteralUnion<SetType<typeof TRANSLATION_KEYS_SET>>, string>>
 } & ResourceClassArguments<'list'>
 
-export class LanguageClass extends ResourceClass<LanguageNode> implements ListResource {
+export class LanguageClass extends ResourceClass<LanguageNode> implements JsonResource, ListResource {
   static readonly resourceType = 'lang'
 
-  languageJSON: NonNullable<LanguageArguments['language']>
+  json: NonNullable<LanguageArguments['language']>
 
   constructor(core: SandstoneCore, name: string, args: LanguageArguments) {
     super(
@@ -41,7 +41,7 @@ export class LanguageClass extends ResourceClass<LanguageNode> implements ListRe
       LanguageClass.resourceType,
       core.pack.resourceToPath(name, RESOURCE_PATHS[LanguageClass.resourceType].path), args)
 
-    this.languageJSON = args.language ?? {}
+    this.json = args.language ?? {}
 
     this.handleConflicts()
   }
@@ -50,12 +50,12 @@ export class LanguageClass extends ResourceClass<LanguageNode> implements ListRe
     if (translations[0] instanceof LanguageClass) {
       for (const translation of translations) {
         /** @ts-ignore */
-        this.languageJSON = { ...this.languageJSON, ...translation.languageJSON }
+        this.json = { ...this.json, ...translation.json }
       }
     } else {
       for (const translation of translations) {
         /** @ts-ignore */
-        this.languageJSON = { ...this.languageJSON, ...translation }
+        this.json = { ...this.json, ...translation }
       }
     }
   }
@@ -64,12 +64,12 @@ export class LanguageClass extends ResourceClass<LanguageNode> implements ListRe
     if (translations[0] instanceof LanguageClass) {
       for (const translation of translations) {
         /** @ts-ignore */
-        this.languageJSON = { ...translation.languageJSON, ...this.languageJSON }
+        this.json = { ...translation.json, ...this.json }
       }
     } else {
       for (const translation of translations) {
         /** @ts-ignore */
-        this.languageJSON = { ...translation, ...this.languageJSON }
+        this.json = { ...translation, ...this.json }
       }
     }
   }

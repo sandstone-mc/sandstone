@@ -16,7 +16,7 @@ import { add } from 'sandstone/utils'
 import type { DataPointClass, NBTAllNumberClasses, NBTRange, Score, StructureMirror, StructureRotation } from 'sandstone/variables'
 import { ConditionClass, NBTPrimitive, ResolveNBTPart, relative } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
-import { ResourceClass } from '../resource'
+import { BinaryResource, ResourceClass } from '../resource'
 import type { StructureNBT } from 'sandstone/arguments/generated/data/structure'
 import type { BlockState } from 'sandstone/arguments/generated/util/block_state'
 
@@ -40,7 +40,7 @@ export class StructureNode extends ContainerNode implements ResourceNode<Structu
   getValue = () =>
     this.resource.structureNBT
       ? encodeStructure(this.resource.structure() as StructureNBT)
-      : this.resource.structureBuffer
+      : this.resource.buffer
 }
 
 type Block = {
@@ -79,10 +79,10 @@ type VariableInsertion = Score | DataPointClass<'storage'>
 
 // TODO: This should probably be rewritten
 
-export class StructureClass extends ResourceClass<StructureNode> {
+export class StructureClass extends ResourceClass<StructureNode> implements BinaryResource {
   static readonly resourceType = 'structure' as const
 
-  structureBuffer?: Promise<ArrayBuffer | Buffer>
+  buffer: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer = {} as unknown as ArrayBuffer
 
   structureNBT?: StructureNBT
 
@@ -97,16 +97,16 @@ export class StructureClass extends ResourceClass<StructureNode> {
     )
 
     if (args.structure === undefined) {
-      this.structureBuffer = sandstoneCore.getExistingResource(this, false)
+      this.buffer = sandstoneCore.getExistingResource(this)
     } else if (typeof args.structure === 'string') {
-      this.structureBuffer = sandstoneCore.getExistingResource(`${args.structure}${args.structure.endsWith('.nbt') ? '' : '.nbt'}`, false)
+      this.buffer = sandstoneCore.getExistingResource(`${args.structure}${args.structure.endsWith('.nbt') ? '' : '.nbt'}`, false)
     } else if (args.structure instanceof StructureClass) {
       if (args.structure.structureNBT) {
         this.structureNBT = args.structure.structureNBT
-      } else if (args.structure.structureBuffer) {
-        this.structureBuffer = args.structure.structureBuffer
+      } else if (args.structure.buffer) {
+        this.buffer = args.structure.buffer
       } else {
-        this.structureBuffer = args.structure.structure() as Promise<ArrayBuffer | Buffer>
+        this.buffer = args.structure.structure() as Promise<ArrayBuffer | Buffer>
       }
     } else if (Array.isArray(args.structure)) {
       this.structureNBT = this.arrayToNBT(args.structure)
@@ -117,20 +117,20 @@ export class StructureClass extends ResourceClass<StructureNode> {
     this.handleConflicts()
   }
 
-  structure(): StructureNBT | Promise<ArrayBuffer | Buffer> {
+  structure(): StructureNBT | Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer {
     if (this.structureNBT) {
       return this.structureNBT
     }
-    if (this.structureBuffer) {
-      return this.structureBuffer
+    if (this.buffer) {
+      return this.buffer
     }
 
-    this.structureBuffer = this.node.sandstoneCore.getExistingResource(this, false)
-    return this.structureBuffer
+    this.node.sandstoneCore.getExistingResource(this)
+    return this.buffer!
   }
 
   async readBuffer() {
-    this.structureNBT = await decodeStructure(await (this.structureBuffer as Promise<ArrayBuffer | Buffer>))
+    this.structureNBT = await decodeStructure(await (this.buffer as Promise<ArrayBuffer | Buffer>))
   }
 
   async array(): Promise<[[[StructureEntry]]]> {

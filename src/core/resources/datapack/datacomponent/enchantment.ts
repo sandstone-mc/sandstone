@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 // ============================================================================
@@ -20,7 +20,7 @@ export class EnchantmentNode extends ContainerNode implements ResourceNode<Encha
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.enchantmentJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type EnchantmentClassArguments = {
@@ -30,10 +30,10 @@ export type EnchantmentClassArguments = {
   json: JsonSymbolResource[(typeof EnchantmentClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class EnchantmentClass extends ResourceClass<EnchantmentNode> {
+export class EnchantmentClass extends ResourceClass<EnchantmentNode> implements JsonResource {
   static readonly resourceType = 'enchantment' as const
 
-  public enchantmentJSON: NonNullable<EnchantmentClassArguments['json']>
+  public json: NonNullable<EnchantmentClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: EnchantmentClassArguments) {
     super(
@@ -45,7 +45,7 @@ export class EnchantmentClass extends ResourceClass<EnchantmentNode> {
       args,
     )
 
-    this.enchantmentJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
@@ -66,7 +66,7 @@ export class EnchantmentProviderNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.enchantmentProviderJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type EnchantmentProviderClassArguments = {
@@ -76,10 +76,10 @@ export type EnchantmentProviderClassArguments = {
   json: JsonSymbolResource[(typeof EnchantmentProviderClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class EnchantmentProviderClass extends ResourceClass<EnchantmentProviderNode> {
+export class EnchantmentProviderClass extends ResourceClass<EnchantmentProviderNode> implements JsonResource {
   static readonly resourceType = 'enchantment_provider' as const
 
-  public enchantmentProviderJSON: NonNullable<EnchantmentProviderClassArguments['json']>
+  public json: NonNullable<EnchantmentProviderClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: EnchantmentProviderClassArguments) {
     super(
@@ -91,7 +91,7 @@ export class EnchantmentProviderClass extends ResourceClass<EnchantmentProviderN
       args,
     )
 
-    this.enchantmentProviderJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

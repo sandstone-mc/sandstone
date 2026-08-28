@@ -3,7 +3,7 @@ import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dis
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 
 /**
  * A node representing a Minecraft number provider.
@@ -17,7 +17,7 @@ export class NumberProviderNode extends ContainerNode implements ResourceNode<Nu
   }
 
   getValue = () =>
-    jsonStringify(this.resource.numberProviderJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+    jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 type NumberProviderJSON = JsonSymbolResource[(typeof NumberProviderClass)['resourceType']]
@@ -29,10 +29,10 @@ export type NumberProviderClassArguments = {
   json: NumberProviderJSON
 } & ResourceClassArguments<'default'>
 
-export class NumberProviderClass extends ResourceClass<NumberProviderNode> {
+export class NumberProviderClass extends ResourceClass<NumberProviderNode> implements JsonResource {
   static readonly resourceType = 'number_provider' as const
 
-  public numberProviderJSON: NumberProviderClassArguments['json']
+  public json: NumberProviderClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: NumberProviderClassArguments) {
     super(
@@ -44,7 +44,7 @@ export class NumberProviderClass extends ResourceClass<NumberProviderNode> {
       args,
     )
 
-    this.numberProviderJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

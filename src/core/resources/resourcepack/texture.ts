@@ -3,7 +3,7 @@ import type { LiteralUnion } from 'sandstone/utils'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass } from '../resource'
+import { BinaryResource, ResourceClass } from '../resource'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 type TextureType = LiteralUnion<TEXTURE_TYPES>
@@ -43,7 +43,7 @@ export type TextureArguments<Type extends TextureType> = {
   meta?: TextureMeta<Type>
 } & ResourceClassArguments<'default'>
 
-export class TextureClass<Type extends TextureType> extends ResourceClass<TextureNode<Type>> {
+export class TextureClass<Type extends TextureType> extends ResourceClass<TextureNode<Type>> implements BinaryResource {
   static readonly resourceType = 'texture'
 
   type: Type
@@ -54,7 +54,7 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
 
   meta?: TextureMeta<Type>
 
-  buffer: TextureArguments<Type>['texture']
+  buffer: NonNullable<TextureArguments<Type>['texture']>
 
   constructor(core: SandstoneCore, type: Type, name: string, args: TextureArguments<Type>) {
     super(
@@ -68,7 +68,7 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
 
     this.type = type
 
-    this.buffer = args.texture
+    this.buffer = args.texture ?? {} as unknown as ArrayBuffer
 
     this.isSprite = args.sprite === undefined ? false : args.sprite !== false
 

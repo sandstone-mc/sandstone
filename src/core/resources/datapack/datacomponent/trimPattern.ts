@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class TrimPatternNode extends ContainerNode implements ResourceNode<TrimP
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.trimPatternJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 // TODO: Investigate potential abstractions
@@ -27,10 +27,10 @@ export type TrimPatternClassArguments = {
   json: JsonSymbolResource[(typeof TrimPatternClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
+export class TrimPatternClass extends ResourceClass<TrimPatternNode> implements JsonResource {
   static readonly resourceType = 'trim_pattern' as const
 
-  public trimPatternJSON: NonNullable<TrimPatternClassArguments['json']>
+  public json: NonNullable<TrimPatternClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: TrimPatternClassArguments) {
     super(
@@ -42,7 +42,7 @@ export class TrimPatternClass extends ResourceClass<TrimPatternNode> {
       args,
     )
 
-    this.trimPatternJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

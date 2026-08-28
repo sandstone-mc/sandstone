@@ -3,7 +3,7 @@ import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { NonEmptyString } from 'sandstone/utils'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
@@ -18,7 +18,7 @@ export class AdvancementNode extends ContainerNode implements ResourceNode<Advan
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.advancementJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type AdvancementClassArguments<AdvancementJSON extends JsonSymbolResource['advancement'] | undefined = undefined> = {
@@ -33,12 +33,12 @@ export type AdvancementClassArguments<AdvancementJSON extends JsonSymbolResource
 
 export class AdvancementClass<AdvancementJSON extends JsonSymbolResource['advancement'] | undefined = undefined>
   extends ResourceClass<AdvancementNode>
-  implements ConditionClass {
+  implements ConditionClass, JsonResource {
   declare readonly __conditionClassBrand: true
 
   static readonly resourceType = 'advancement'
 
-  public advancementJSON: AdvancementClassArguments<AdvancementJSON>['json']
+  public json: AdvancementClassArguments<AdvancementJSON>['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: AdvancementClassArguments<AdvancementJSON>) {
     super(
@@ -50,7 +50,7 @@ export class AdvancementClass<AdvancementJSON extends JsonSymbolResource['advanc
       args,
     )
 
-    this.advancementJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

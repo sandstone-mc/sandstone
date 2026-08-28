@@ -2,7 +2,7 @@ import { LiteralUnion } from 'sandstone'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
@@ -14,7 +14,7 @@ export class ModelNode<Type extends LiteralUnion<'block' | 'item'>> extends Cont
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.modelJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ModelClassArguments = {
@@ -28,10 +28,10 @@ export type ModelClassArguments = {
 /**
  * Helper class for modifying Minecraft model data
  */
-export class ModelClass<Type extends LiteralUnion<'block' | 'item'>> extends ResourceClass<ModelNode<Type>> {
+export class ModelClass<Type extends LiteralUnion<'block' | 'item'>> extends ResourceClass<ModelNode<Type>> implements JsonResource {
   static readonly resourceType = 'model'
 
-  modelJSON: NonNullable<ModelClassArguments['json']>
+  json: NonNullable<ModelClassArguments['json']>
 
   constructor(
     core: SandstoneCore,
@@ -48,7 +48,7 @@ export class ModelClass<Type extends LiteralUnion<'block' | 'item'>> extends Res
       args,
     )
 
-    this.modelJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

@@ -2,7 +2,7 @@ import { RESOURCE_PATHS, type SOUND_TYPES } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { BinaryResource, JsonResource, ResourceClass, jsonStringify } from '../resource'
 import { SOUNDS } from 'sandstone/arguments/generated/_registry/sounds'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
@@ -34,10 +34,10 @@ export type SoundEventArguments = {
   addToSounds?: boolean
 } & ResourceClassArguments<'default'>
 
-export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends ResourceClass<SoundEventNode<Type>> {
+export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends ResourceClass<SoundEventNode<Type>> implements BinaryResource {
   static readonly resourceType = 'sound'
 
-  buffer?: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer
+  buffer: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer = {} as unknown as ArrayBuffer
 
   constructor(
     core: SandstoneCore,
@@ -56,7 +56,7 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
 
     if (args.addToSandstoneCore) {
       if (args.sound === undefined) {
-        this.buffer = core.getExistingResource(this, false)
+        this.buffer = core.getExistingResource(this)
       } else {
         if (typeof args.sound === 'string') {
           this.buffer = core.getExistingResource(`${args.sound}${args.sound.endsWith('.ogg') ? '' : '.ogg'}`, false)
@@ -108,7 +108,7 @@ export class SoundsIndexNode extends ContainerNode implements ResourceNode<Sound
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.soundsJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 type SoundsJSON = NonNullable<JsonSymbolResource['sounds']>
@@ -120,10 +120,10 @@ export type SoundsIndexArguments = {
   definitions?: SoundsJSON
 } & ResourceClassArguments<'default'>
 
-export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements ListResource {
+export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements JsonResource, ListResource {
   static readonly resourceType = 'sounds'
 
-  soundsJSON: SoundsJSON | Promise<SoundsJSON>
+  json: SoundsJSON | Promise<SoundsJSON>
 
   constructor(core: SandstoneCore, namespace: string, args: SoundsIndexArguments) {
     super(
@@ -136,9 +136,9 @@ export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements 
     )
 
     if (args.definitions !== undefined) {
-      this.soundsJSON = args.definitions
+      this.json = args.definitions
     } else {
-      this.soundsJSON = (async () => JSON.parse(await (core.getExistingResource(this) as Promise<string>)))()
+      this.json = (async () => JSON.parse(await (core.getExistingResource(this) as Promise<string>)))()
     }
 
     this.handleConflicts()
@@ -147,16 +147,16 @@ export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements 
   async push(...soundEvents: SoundsIndexClass[] | SoundEventClass<SOUND_TYPES>[]) {
     if (soundEvents[0] instanceof SoundsIndexClass) {
       for await (const _sounds of soundEvents) {
-        const def = await (_sounds as SoundsIndexClass).soundsJSON
-        const s = await this.soundsJSON
+        const def = await (_sounds as SoundsIndexClass).json
+        const s = await this.json
 
         // TODO: Implement sound event merging
-        this.soundsJSON = { ...s, ...def }
+        this.json = { ...s, ...def }
       }
     } else {
       for await (const _sound of soundEvents) {
         const sound = _sound as SoundEventClass<SOUND_TYPES>
-        const s = await this.soundsJSON
+        const s = await this.json
 
         // TODO: Implement sound event options
         s[`${sound.type}.${sound.name}`] = {
@@ -169,16 +169,16 @@ export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements 
   async unshift(...soundEvents: SoundsIndexClass[] | SoundEventClass<SOUND_TYPES>[]) {
     if (soundEvents[0] instanceof SoundsIndexClass) {
       for await (const _sounds of soundEvents) {
-        const def = await (_sounds as SoundsIndexClass).soundsJSON
-        const s = await this.soundsJSON
+        const def = await (_sounds as SoundsIndexClass).json
+        const s = await this.json
 
         // TODO: Implement sound event merging
-        this.soundsJSON = { ...def, ...s }
+        this.json = { ...def, ...s }
       }
     } else {
       for await (const _sound of soundEvents) {
         const sound = _sound as SoundEventClass<SOUND_TYPES>
-        const s = await this.soundsJSON
+        const s = await this.json
 
         // TODO: Implement sound event options
         s[`${sound.type}.${sound.name}`] = {

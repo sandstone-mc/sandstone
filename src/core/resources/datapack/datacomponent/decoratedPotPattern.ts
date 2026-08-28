@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../../nodes'
 import type { SandstoneCore } from '../../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../../resource'
-import { ResourceClass, jsonStringify } from '../../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class DecoratedPotPatternNode extends ContainerNode implements ResourceNo
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.decoratedPotPatternJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type DecoratedPotPatternClassArguments = {
@@ -26,10 +26,10 @@ export type DecoratedPotPatternClassArguments = {
   json: JsonSymbolResource[(typeof DecoratedPotPatternClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class DecoratedPotPatternClass extends ResourceClass<DecoratedPotPatternNode> {
+export class DecoratedPotPatternClass extends ResourceClass<DecoratedPotPatternNode> implements JsonResource {
   static readonly resourceType = 'decorated_pot_pattern' as const
 
-  public decoratedPotPatternJSON: DecoratedPotPatternClassArguments['json']
+  public json: DecoratedPotPatternClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DecoratedPotPatternClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class DecoratedPotPatternClass extends ResourceClass<DecoratedPotPatternN
       args,
     )
 
-    this.decoratedPotPatternJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

@@ -1,7 +1,8 @@
 /* eslint-disable operator-linebreak */
 
-import path from 'node:path'
-import fs from 'fs-extra'
+import path from 'path'
+import { EncodingOption } from 'fs'
+import fs from 'fs/promises'
 import crypto from 'crypto'
 import { isBinaryFileSync } from 'isbinaryfile'
 import binaryExtensions from 'binary-extensions'
@@ -15,12 +16,95 @@ import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './res
 import type { TagClass } from './resources/datapack/tag'
 import { SmithedDependencyClass } from './resources/dependency'
 import type { SoundsIndexClass } from './resources/resourcepack/sound'
-import { type ResourceClass, ResourceNodesMap } from './resources/resource'
+import { BinaryResource, JsonResource, type ResourceClass, ResourceNodesMap, TextResource } from './resources/resource'
 import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
 import { SleepClass } from 'sandstone/flow/async/sleep'
 
+/**
+ * After `getExistingResource` resolves a resource's bytes, thread them back
+ * onto the resource itself so the caller can mutate and re-save without an
+ * extra read step:
+ *
+ * - `buffer` is written as binary (works for any resource that exposes a
+ *   `buffer` field — `TextureClass`, `SoundEvent`, etc.).
+ * - `texts` is written as a raw string (works for `PlainTextClass`, whose
+ *   data lives in a `texts` field).
+ * - Otherwise the value is parsed as JSON and assigned to the resource's
+ *   `json` field, if it has one, else to the first public field ending in
+ *   `JSON` (e.g. `lootTableJSON`, `advancementJSON`, `damageTypeJSON`,
+ *   `soundsJSON`).
+ *
+ * Returns silently if the resource has no recognised sink — the caller can
+ * still use the returned value directly.
+ */
+function assignToResource(resource: ResourceClass, value: ArrayBuffer | Buffer | string): void {
+  if ('buffer' in resource) {
+    ;(resource as unknown as { buffer: unknown }).buffer = value
+    return
+  }
+  if (typeof value !== 'string') return
+
+  if ('texts' in resource) {
+    ;(resource as unknown as { texts: string }).texts = value
+    return
+  }
+
+  if ('json' in resource) {
+    ;(resource as unknown as { json: unknown }).json = JSON.parse(value)
+    return
+  }
+
+  const jsonField = Object.keys(resource).find((k) => k.endsWith('JSON') && !k.startsWith('_'))
+  if (jsonField) {
+    ;(resource as unknown as Record<string, unknown>)[jsonField] = JSON.parse(value)
+  }
+}
+
 export class SandstoneCore {
+  /**
+   * Stateless helpers that coalesce any of `Promise<Blob | ArrayBuffer | Buffer> | Blob | ArrayBuffer | Buffer`
+   * into the advertised shape. Awaited internally, so callers receive a resolved
+   * value of the named type — never a `Promise`.
+   *
+   * Mirror the `Objective.create` / `Objective.get` access pattern on the pack:
+   * `Binary.asArrayBuffer(...)`, `Binary.asLegacyBuffer(...)`, `Binary.asBlob(...)`.
+   */
+  Binary = {
+    /** Resolve any binary blob into an `ArrayBuffer`. */
+    async asArrayBuffer(
+      input: Promise<Blob | ArrayBuffer | Buffer> | Blob | ArrayBuffer | Buffer,
+    ): Promise<ArrayBuffer> {
+      const value = await input
+      if (value instanceof ArrayBuffer) return value
+      if (value instanceof Blob) return await value.arrayBuffer()
+      // Buffer — slice the underlying memory so the result respects byteOffset/byteLength.
+      return new Uint8Array(value).buffer
+    },
+
+    /** Resolve any binary blob into a Node `Buffer`. */
+    async asLegacyBuffer(
+      input: Promise<Blob | ArrayBuffer | Buffer> | Blob | ArrayBuffer | Buffer,
+    ): Promise<Buffer> {
+      const value = await input
+      if (Buffer.isBuffer(value)) return value
+      if (value instanceof ArrayBuffer) return Buffer.from(value)
+      // Blob
+      return Buffer.from(await value.arrayBuffer())
+    },
+
+    /** Resolve any binary blob into a `Blob`. */
+    async asBlob(
+      input: Promise<Blob | ArrayBuffer | Buffer> | Blob | ArrayBuffer | Buffer,
+    ): Promise<Blob> {
+      const value = await input
+      if (value instanceof Blob) return value
+      if (value instanceof ArrayBuffer) return new Blob([value])
+      // Buffer — slice the underlying ArrayBuffer so Blob sees the active range, not the wider pool.
+      return new Blob([new Uint8Array(value).buffer])
+    },
+  }
+
   /** All Resources */
   resourceNodes: ResourceNodesMap
 
@@ -139,20 +223,30 @@ export class SandstoneCore {
     return this._mcMetaCache as MCMetaCache
   }
 
-  async getExistingResource(relativePath: string): Promise<string>
+  async getExistingResource(relativePath: `${string}.json`): Promise<unknown>
 
-  async getExistingResource(relativePath: string, encoding: false): Promise<ArrayBuffer | Buffer>
+  async getExistingResource(
+    relativePath: string & {},
+    encoding?: 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'
+  ): Promise<string>
 
-  async getExistingResource(relativePath: string, encoding: fs.EncodingOption): Promise<Buffer | string>
+  async getExistingResource(
+    relativePath: string & {},
+    encoding: false | NonNullable<Exclude<EncodingOption, 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'utf-16le'>>
+  ): Promise<ArrayBuffer | Buffer>
 
-  async getExistingResource(resource: ResourceClass, encoding?: 'utf-8'): Promise<string>
+  async getExistingResource<Resource extends JsonResource>(resource: Resource): Promise<JsonResource['json']>
 
-  async getExistingResource(resource: ResourceClass, encoding: false | fs.EncodingOption): Promise<ArrayBuffer | Buffer>
+  async getExistingResource(resource: TextResource): Promise<string>
+
+  async getExistingResource(resource: BinaryResource): Promise<ArrayBuffer | Buffer>
+
+  async getExistingResource(resource: ResourceClass): Promise<ArrayBuffer | Buffer | string | unknown>
 
   async getExistingResource(
     pathOrResource: string | ResourceClass,
-    encoding: false | fs.EncodingOption = 'utf-8',
-  ): Promise<ArrayBuffer | Buffer | string> {
+    encoding: false | EncodingOption = 'utf-8',
+  ): Promise<ArrayBuffer | Buffer | string | unknown> {
     if (typeof pathOrResource === 'string') {
       const fullPath = path.isAbsolute(pathOrResource)
         ? pathOrResource
@@ -160,17 +254,20 @@ export class SandstoneCore {
       if (encoding === false) {
         return fs.readFile(fullPath)
       }
-      return fs.readFile(fullPath, encoding)
+      const text = await fs.readFile(fullPath, encoding)
+      return pathOrResource.endsWith('.json') ? JSON.parse(text as string) : text
     }
     const _path = pathOrResource.path
     if (_path[0] === 'minecraft') {
       const type = pathOrResource.packType.resourceSubFolder as MCMetaBranches
 
-      return this.mcMetaCache.get(
+      const value = await this.mcMetaCache.get(
         type,
         `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
         (encoding === 'utf-8') as true,
       )
+      assignToResource(pathOrResource, value)
+      return value
     }
     // eslint-disable-next-line max-len
     const pathParts = [pathOrResource.packType.type]
@@ -183,10 +280,11 @@ export class SandstoneCore {
       `resources/${path.join(...pathParts)}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
     )
 
-    if (pathOrResource.fileEncoding === false) {
-      return fs.readFile(fullPath)
-    }
-    return fs.readFile(fullPath, pathOrResource.fileEncoding)
+    const value = pathOrResource.fileEncoding === false
+      ? await fs.readFile(fullPath)
+      : await fs.readFile(fullPath, pathOrResource.fileEncoding)
+    assignToResource(pathOrResource, value)
+    return value
   }
 
   async getVanillaResource(relativePath: string): Promise<string>

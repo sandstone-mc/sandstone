@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { AllKeys } from 'sandstone/utils'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
@@ -22,7 +22,7 @@ export class BlockStateDefinitionNode<JSON extends BlockStateDefinitionJSON>
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.blockStateDefinitionJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type BlockStateDefinitionArguments<JSON extends BlockStateDefinitionJSON> = {
@@ -34,10 +34,10 @@ export type BlockStateDefinitionArguments<JSON extends BlockStateDefinitionJSON>
 
 export class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Type = Extract<AllKeys<JSON>, BlockStateDefinitionType>>
   extends ResourceClass<BlockStateDefinitionNode<JSON>>
-  implements ListResource {
+  implements JsonResource, ListResource {
   static readonly resourceType = 'block_definition'
 
-  blockStateDefinitionJSON: JSON
+  json: JSON
 
   type: Type
 
@@ -55,9 +55,9 @@ export class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Ty
       args,
     )
 
-    this.blockStateDefinitionJSON = args.json
+    this.json = args.json
 
-    this.type = Object.keys(this.blockStateDefinitionJSON)[0] as Type
+    this.type = Object.keys(this.json)[0] as Type
 
     this.handleConflicts()
   }
@@ -67,12 +67,12 @@ export class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Ty
       if (states[0] instanceof BlockStateDefinitionClass) {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.variants = { ...this.blockStateDefinitionJSON.variants, ...state.blockStateDefinitionJSON.variants }
+          this.json.variants = { ...this.json.variants, ...state.blockStateDefinitionJSON.variants }
         }
       } else {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.variants = { ...this.blockStateDefinitionJSON.variants, ...state.variants }
+          this.json.variants = { ...this.json.variants, ...state.variants }
         }
       }
     }
@@ -80,12 +80,12 @@ export class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Ty
       if (states[0] instanceof BlockStateDefinitionClass) {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.multipart.push(...state.blockStateDefinitionJSON.multipart)
+          this.json.multipart.push(...state.blockStateDefinitionJSON.multipart)
         }
       } else {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.multipart.push(...state.multipart)
+          this.json.multipart.push(...state.multipart)
         }
       }
     }
@@ -96,12 +96,12 @@ export class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Ty
       if (states[0] instanceof BlockStateDefinitionClass) {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.variants = { ...state.blockStateDefinitionJSON.variants, ...this.blockStateDefinitionJSON.variants }
+          this.json.variants = { ...state.blockStateDefinitionJSON.variants, ...this.json.variants }
         }
       } else {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.variants = { ...state.variants, ...this.blockStateDefinitionJSON.variants }
+          this.json.variants = { ...state.variants, ...this.json.variants }
         }
       }
     }
@@ -109,12 +109,12 @@ export class BlockStateDefinitionClass<JSON extends BlockStateDefinitionJSON, Ty
       if (states[0] instanceof BlockStateDefinitionClass) {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.multipart.unshift(...state.blockStateDefinitionJSON.multipart)
+          this.json.multipart.unshift(...state.blockStateDefinitionJSON.multipart)
         }
       } else {
         for (const state of states) {
           /** @ts-ignore */
-          this.blockStateDefinitionJSON.multipart.unshift(...state.multipart)
+          this.json.multipart.unshift(...state.multipart)
         }
       }
     }

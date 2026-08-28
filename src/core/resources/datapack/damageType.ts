@@ -6,7 +6,7 @@ import type { TextComponentClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { TagClass } from './tag'
 import type { TAG_DAMAGE_TYPES_SET } from 'sandstone/arguments/generated/_registry/tag_damage_types'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
@@ -24,7 +24,7 @@ export class DamageTypeNode extends ContainerNode implements ResourceNode<Damage
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.damageTypeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type DamageTypeClassArguments = {
@@ -39,12 +39,12 @@ export type DamageTypeClassArguments = {
     flags?: (SetType<typeof TAG_DAMAGE_TYPES_SET> | 'bypasses_cooldown')[] // Haha funny bypasses_cooldown doesn't show up in the server reports
   }
 
-export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements TextComponentClass {
+export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements TextComponentClass, JsonResource {
   declare readonly __textComponentClassBrand: true
 
   static readonly resourceType = 'damage_type' as const
 
-  public damageTypeJSON: DamageTypeClassArguments['json']
+  public json: DamageTypeClassArguments['json']
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: DamageTypeClassArguments) {
     super(
@@ -56,7 +56,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Te
       args,
     )
 
-    this.damageTypeJSON = args.json
+    this.json = args.json
 
     if (args.flags) {
       for (const flag of args.flags) {
@@ -73,7 +73,7 @@ export class DamageTypeClass extends ResourceClass<DamageTypeNode> implements Te
   }
 
   get translationKey() {
-    return `death.attack.${this.damageTypeJSON.message_id}${this.damageTypeJSON.death_message_type === 'intentional_game_design' ? '.link' : ''}`
+    return `death.attack.${this.json.message_id}${this.json.death_message_type === 'intentional_game_design' ? '.link' : ''}`
   }
 
   damage<T extends string = '@s'>(

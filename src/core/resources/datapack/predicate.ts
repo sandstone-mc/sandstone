@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import type { ConditionClass } from 'sandstone/variables'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
-import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
+import type { JsonResource, ListResource, ResourceClassArguments, ResourceNode } from '../resource'
 import { ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
@@ -17,7 +17,7 @@ export class PredicateNode extends ContainerNode implements ResourceNode<Predica
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.predicateJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 type PredicateJSON = NonNullable<JsonSymbolResource['predicate']>
@@ -31,12 +31,12 @@ export type PredicateClassArguments = {
 
 type Predicate = PredicateJSON | PredicateClass
 
-export class PredicateClass extends ResourceClass<PredicateNode> implements ListResource, ConditionClass {
+export class PredicateClass extends ResourceClass<PredicateNode> implements ListResource, ConditionClass, JsonResource {
   declare readonly __conditionClassBrand: true
 
   static readonly resourceType = 'predicate' as const
 
-  public predicateJSON: NonNullable<PredicateClassArguments['json']>
+  public json: NonNullable<PredicateClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: PredicateClassArguments) {
     super(
@@ -48,47 +48,47 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
       args,
     )
 
-    this.predicateJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
 
   public push(...predicates: Predicate[]) {
-    if (!Array.isArray(this.predicateJSON)) {
-      this.predicateJSON = { type: 'all_of', terms: [this.predicateJSON] }
+    if (!Array.isArray(this.json)) {
+      this.json = { type: 'all_of', terms: [this.json] }
     }
 
     for (const predicate of predicates) {
       let predicateJSON: PredicateJSON
       if (predicate instanceof PredicateClass) {
-        predicateJSON = predicate.predicateJSON
+        predicateJSON = predicate.json
       } else {
         predicateJSON = predicate
       }
       if (Array.isArray(predicateJSON)) {
-        ;(this.predicateJSON as any).terms.push(...predicateJSON)
+        ;(this.json as any).terms.push(...predicateJSON)
       } else {
-        ;(this.predicateJSON as any).terms.push(predicateJSON)
+        ;(this.json as any).terms.push(predicateJSON)
       }
     }
   }
 
   public unshift(...predicates: Predicate[]) {
-    if (!Array.isArray(this.predicateJSON)) {
-      this.predicateJSON = { type: 'all_of', terms: [this.predicateJSON] }
+    if (!Array.isArray(this.json)) {
+      this.json = { type: 'all_of', terms: [this.json] }
     }
 
     for (const predicate of predicates) {
       let predicateJSON: PredicateJSON
       if (predicate instanceof PredicateClass) {
-        predicateJSON = predicate.predicateJSON
+        predicateJSON = predicate.json
       } else {
         predicateJSON = predicate
       }
       if (Array.isArray(predicateJSON)) {
-        ;(this.predicateJSON as any).terms.unshift(...predicateJSON)
+        ;(this.json as any).terms.unshift(...predicateJSON)
       } else {
-        ;(this.predicateJSON as any).terms.unshift(predicateJSON)
+        ;(this.json as any).terms.unshift(predicateJSON)
       }
     }
   }
@@ -98,6 +98,6 @@ export class PredicateClass extends ResourceClass<PredicateNode> implements List
 
   /** @internal */
   toJSON() {
-    return this.predicateJSON
+    return this.json
   }
 }

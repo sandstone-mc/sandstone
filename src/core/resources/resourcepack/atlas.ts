@@ -2,8 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ListResource, ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
-import type { SpriteSource } from 'sandstone/arguments/generated/assets/atlas'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 import type { JsonSpriteSource } from 'sandstone/arguments/generated/_json/assets/atlas'
 
@@ -18,7 +17,7 @@ export class AtlasNode extends ContainerNode implements ResourceNode<AtlasClass>
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.atlasJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type AtlasClassArguments = {
@@ -28,10 +27,10 @@ export type AtlasClassArguments = {
   json?: JsonSymbolResource[(typeof AtlasClass)['resourceType']]
 } & ResourceClassArguments<'list'>
 
-export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource {
+export class AtlasClass extends ResourceClass<AtlasNode> implements JsonResource, ListResource {
   static readonly resourceType = 'atlas'
 
-  atlasJSON: NonNullable<AtlasClassArguments['json']>
+  json: NonNullable<AtlasClassArguments['json']>
 
   constructor(core: SandstoneCore, name: string, args: AtlasClassArguments) {
     super(
@@ -43,7 +42,7 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
       args,
     )
 
-    this.atlasJSON = args.json || { sources: [] }
+    this.json = args.json || { sources: [] }
 
     this.handleConflicts()
   }
@@ -52,11 +51,11 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */
-        this.atlasJSON.sources.push(...provider.atlasJSON.sources)
+        this.json.sources.push(...provider.atlasJSON.sources)
       }
     } else {
       /** @ts-ignore */
-      this.atlasJSON.sources.push(...sources)
+      this.json.sources.push(...sources)
     }
   }
 
@@ -64,11 +63,11 @@ export class AtlasClass extends ResourceClass<AtlasNode> implements ListResource
     if (sources[0] instanceof AtlasClass) {
       for (const provider of sources) {
         /** @ts-ignore */
-        this.atlasJSON.sources.unshift(...provider.atlasJSON.sources)
+        this.json.sources.unshift(...provider.atlasJSON.sources)
       }
     } else {
       /** @ts-ignore */
-      this.atlasJSON.sources.unshift(...sources)
+      this.json.sources.unshift(...sources)
     }
   }
 }

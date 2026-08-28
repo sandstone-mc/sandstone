@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class WaypointStyleNode extends ContainerNode implements ResourceNode<Way
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.waypointStyleJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type WaypointStyleClassArguments = {
@@ -26,10 +26,10 @@ export type WaypointStyleClassArguments = {
   json: JsonSymbolResource[(typeof WaypointStyleClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class WaypointStyleClass extends ResourceClass<WaypointStyleNode> {
+export class WaypointStyleClass extends ResourceClass<WaypointStyleNode> implements JsonResource {
   static readonly resourceType = 'waypoint_style'
 
-  public waypointStyleJSON: NonNullable<WaypointStyleClassArguments['json']>
+  public json: NonNullable<WaypointStyleClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: WaypointStyleClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class WaypointStyleClass extends ResourceClass<WaypointStyleNode> {
       args,
     )
 
-    this.waypointStyleJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }

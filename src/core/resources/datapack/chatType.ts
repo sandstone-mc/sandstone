@@ -2,7 +2,7 @@ import { RESOURCE_PATHS } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { ResourceClass, jsonStringify } from '../resource'
+import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 
 /**
@@ -16,7 +16,7 @@ export class ChatTypeNode extends ContainerNode implements ResourceNode<ChatType
     super(sandstoneCore)
   }
 
-  getValue = () => jsonStringify(this.resource.chatTypeJSON, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+  getValue = () => jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
 export type ChatTypeClassArguments = {
@@ -26,10 +26,10 @@ export type ChatTypeClassArguments = {
   json: JsonSymbolResource[(typeof ChatTypeClass)['resourceType']]
 } & ResourceClassArguments<'default'>
 
-export class ChatTypeClass extends ResourceClass<ChatTypeNode> {
+export class ChatTypeClass extends ResourceClass<ChatTypeNode> implements JsonResource {
   static readonly resourceType = 'chat_type' as const
 
-  public chatTypeJSON: NonNullable<ChatTypeClassArguments['json']>
+  public json: NonNullable<ChatTypeClassArguments['json']>
 
   constructor(sandstoneCore: SandstoneCore, name: string, args: ChatTypeClassArguments) {
     super(
@@ -41,7 +41,7 @@ export class ChatTypeClass extends ResourceClass<ChatTypeNode> {
       args,
     )
 
-    this.chatTypeJSON = args.json
+    this.json = args.json
 
     this.handleConflicts()
   }
