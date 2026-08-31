@@ -18,7 +18,7 @@
       "devDependencies": {
         "@ampproject/remapping": "^2.3.0",
         "@parcel/watcher": "^2.6.0",
-        "@sandstone-mc/mcdoc-ts-generator": "^0.3.21",
+        "@sandstone-mc/mcdoc-ts-generator": "^0.3.22",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/fs-extra": "^11.0.4",
         "@types/lodash": "^4.17.24",
@@ -146,7 +146,7 @@
 
     "@parcel/watcher-win32-x64": ["@parcel/watcher-win32-x64@2.6.0", "", { "os": "win32", "cpu": "x64" }, "sha512-cA+/pXV2YkfxlIcXOQ5fSWqAzzPyD78/x5qbK/I0vUkrlYHA8TIz+MXjAbGouguKVSI4bOmkTSJ1/poVSsgt+A=="],
 
-    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.3.21", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.11", "@spyglassmc/core": "^0.4.53", "@spyglassmc/java-edition": "^0.3.66", "@spyglassmc/mcdoc": "^0.3.57", "@stylistic/eslint-plugin": "^5.10.0", "@typescript-eslint/eslint-plugin": "8.67.0", "@typescript-eslint/parser": "8.67.0", "@typescript-eslint/type-utils": "8.67.0", "@typescript-eslint/typescript-estree": "8.67.0", "@typescript-eslint/utils": "8.67.0", "@typescript/typescript6": "^6.0.2", "eslint": "^10.8.1", "ts-api-utils": "2.5.0", "ts-pattern": "^5.9.0", "typescript-eslint": "8.67.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-RF9NwS+8aaVRnHYHIUvzrKP8q9Dz9/19rR+x+Q3e18YXu3fpWYYGWCPOZJB/Dlc0oLTJu2dC6ENGqXXi2yEiGA=="],
+    "@sandstone-mc/mcdoc-ts-generator": ["@sandstone-mc/mcdoc-ts-generator@0.3.22", "", { "dependencies": { "@seahax/eslint-plugin-wrap": "^0.6.11", "@spyglassmc/core": "^0.4.53", "@spyglassmc/java-edition": "^0.3.66", "@spyglassmc/mcdoc": "^0.3.57", "@stylistic/eslint-plugin": "^5.10.0", "@typescript-eslint/eslint-plugin": "8.67.0", "@typescript-eslint/parser": "8.67.0", "@typescript-eslint/type-utils": "8.67.0", "@typescript-eslint/typescript-estree": "8.67.0", "@typescript-eslint/utils": "8.67.0", "@typescript/typescript6": "^6.0.2", "eslint": "^10.8.1", "ts-api-utils": "2.5.0", "ts-pattern": "^5.9.0", "typescript-eslint": "8.67.0" }, "bin": { "mcdoc-ts-generator": "dist/cli.js" } }, "sha512-8txfJ5rTcUZKV47y1wcAAU8XQ+8s4x+mpQPU52quVxUMfkMTrELwAi4401FnpS6AipPvSMXqhkNZXhS6XtIWrA=="],
 
     "@seahax/eslint-plugin-wrap": ["@seahax/eslint-plugin-wrap@0.6.11", "", { "dependencies": { "@types/eslint": "^9.6.1", "@typescript-eslint/utils": "^8.48.0" }, "peerDependencies": { "@typescript-eslint/parser": ">=8.48.0", "eslint": ">=9.39.1", "typescript": ">=5.9.3" } }, "sha512-C+KZBbBoYLyU4jf2YOgl0ZKP0TbZ6JwInjfcvLwZq6eTpO7BRuLhAgKDgxVWM5vnvieszPflw8DVxdkgudOk+g=="],
 
@@ -252,7 +252,7 @@
 
     "@typescript/typescript6": ["@typescript/typescript6@6.0.2", "", { "dependencies": { "@typescript/old": "npm:typescript@^6" }, "bin": { "tsc6": "bin/tsc6" } }, "sha512-mbCddXd+jm7hfx7w2YU64/Av4/NqqeG3GoRZgxPcgoTxYjhrcfJRw9ULch71SS4G+Q3bOXFhRvPqjguN0Hyp5w=="],
 
-    "@zip.js/zip.js": ["@zip.js/zip.js@2.8.60", "", {}, "sha512-pULv0waMlnKAUUxrsuAOa0ADONGRuhdHORtuXVgClNlScDB5YjImCV8DZrE1SicaROyE6MwGkH8CLJ+o4Nx07g=="],
+    "@zip.js/zip.js": ["@zip.js/zip.js@2.9.0", "", {}, "sha512-AblaO/5MIVKiVExlF7GD17qn5NSsQ7qdtE+uEIMU6OiwHLqPxaI5Z5gLxMDxdEBzaiVVRCFNABcIc3sZpFcUeA=="],
 
     "abort-controller": ["abort-controller@3.0.0", "", { "dependencies": { "event-target-shim": "^5.0.0" } }, "sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg=="],
 
