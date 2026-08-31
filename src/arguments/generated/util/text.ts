@@ -12,8 +12,13 @@ import type {
   DialogClass,
   FontClass,
   NamespacedString,
+  NBTByte,
+  NBTDouble,
+  NBTFloat,
   NBTInt,
   NBTList,
+  NBTLong,
+  NBTShort,
   NonEmptyString,
   ObjectiveClass,
   TextureClass,
@@ -449,7 +454,7 @@ export type TextObject = (({
    * Value:
    * List length range: 1..
    */
-  with?: NBTList<Text, {
+  with?: NBTList<TranslationArg, {
     leftExclusive: false,
     min: 1,
   }>,
@@ -600,12 +605,14 @@ export type TranslatedText = ({
    * Value:
    * List length range: 1..
    */
-  with?: NBTList<Text, {
+  with?: NBTList<TranslationArg, {
     leftExclusive: false,
     min: 1,
   }>,
   type?: 'translatable',
 } & TextBase)
+
+export type TranslationArg = (Text | boolean | NBTByte | NBTShort | NBTInt | NBTLong | NBTFloat | (NBTDouble | number))
 type ClickEventDispatcherMap = {
   'change_page': ClickEventChangePage,
   'minecraft:change_page': ClickEventChangePage,

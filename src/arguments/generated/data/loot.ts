@@ -208,7 +208,7 @@ export type LootTableListRef = (
 export type LootTablePoolEntry = ({
   value: LootTableListRef,
   /**
-   * If `true`, randomly selects a loot table to drop. \
+   * If `true`, each of the loot tables becomes an independent entry in the pool with the same `weight` and `quality`. \
    * If `false`, drops all loot tables. \
    * Defaults to `false`.
    */
@@ -236,8 +236,8 @@ export type TagPoolEntry = ({
   items: ItemListRef,
 } & {
   /**
-   * If `true`, randomly selects an item to drop. \
-   * If `false`, drops all items. \
+   * If `true`, each of the items becomes an independent entry in the pool with the same `weight` and `quality`. \
+   * If `false`, drops all items in the tag. \
    * Defaults to `false`.
    */
   expand?: boolean,

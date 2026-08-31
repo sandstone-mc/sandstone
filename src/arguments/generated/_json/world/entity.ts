@@ -1,5 +1,4 @@
 import type { JsonSymbolEntity } from 'sandstone/arguments/generated/_json/dispatcher.ts'
-import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonText } from 'sandstone/arguments/generated/_json/util/text.ts'
 import type { JsonCustomData } from 'sandstone/arguments/generated/_json/world/component.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
@@ -14,14 +13,11 @@ import type {
   NonEmptyString,
 } from 'sandstone'
 
-export type JsonAnyEntity = NonNullable<({
-  [S in Extract<Extract<JsonRegistry['minecraft:entity_type'], string>, string>]?: ({
-    /**
-     * The ID of this entity. Not present on player entities.
-     */
+export type JsonAnyEntity = NonNullable<(({
+  [S in Extract<Extract<keyof JsonSymbolEntity, string>, string>]?: ({
     id: S,
   } & (S extends keyof JsonSymbolEntity ? JsonSymbolEntity[S] : JsonRootNBT))
-}[Extract<JsonRegistry['minecraft:entity_type'], string>])>
+})[Extract<keyof JsonSymbolEntity, string>])>
 
 export type JsonBlockAttachedEntity = (JsonEntityBase & {
   /**

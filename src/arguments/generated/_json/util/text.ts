@@ -13,7 +13,12 @@ import type {
   FontClass,
   JsonNBTList,
   NamespacedString,
+  NBTByte,
+  NBTDouble,
+  NBTFloat,
   NBTInt,
+  NBTLong,
+  NBTShort,
   NonEmptyString,
   ObjectiveClass,
   TextureClass,
@@ -449,7 +454,7 @@ export type JsonTextObject = (({
    * Value:
    * List length range: 1..
    */
-  with?: JsonNBTList<JsonText, {
+  with?: JsonNBTList<JsonTranslationArg, {
     leftExclusive: false,
     min: 1,
   }>,
@@ -600,12 +605,22 @@ export type JsonTranslatedText = ({
    * Value:
    * List length range: 1..
    */
-  with?: JsonNBTList<JsonText, {
+  with?: JsonNBTList<JsonTranslationArg, {
     leftExclusive: false,
     min: 1,
   }>,
   type?: 'translatable',
 } & JsonTextBase)
+
+export type JsonTranslationArg = (
+  | JsonText
+  | boolean | (
+  NBTByte | number) | (
+  NBTShort | number) | (
+  NBTInt | number) | (
+  NBTLong | number) | (
+  NBTFloat | number) | (
+  NBTDouble | number))
 type JsonClickEventDispatcherMap = {
   'change_page': JsonClickEventChangePage,
   'minecraft:change_page': JsonClickEventChangePage,

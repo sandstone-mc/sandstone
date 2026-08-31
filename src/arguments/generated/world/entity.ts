@@ -1,5 +1,4 @@
 import type { SymbolEntity } from 'sandstone/arguments/generated/dispatcher.ts'
-import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Text } from 'sandstone/arguments/generated/util/text.ts'
 import type { CustomData } from 'sandstone/arguments/generated/world/component.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -14,14 +13,11 @@ import type {
   NonEmptyString,
 } from 'sandstone'
 
-export type AnyEntity = NonNullable<({
-  [S in Extract<Extract<Registry['minecraft:entity_type'], string>, string>]?: ({
-    /**
-     * The ID of this entity. Not present on player entities.
-     */
+export type AnyEntity = NonNullable<(({
+  [S in Extract<Extract<keyof SymbolEntity, string>, string>]?: ({
     id: S,
   } & (S extends keyof SymbolEntity ? SymbolEntity[S] : RootNBT))
-}[Extract<Registry['minecraft:entity_type'], string>])>
+})[Extract<keyof SymbolEntity, string>])>
 
 export type BlockAttachedEntity = (EntityBase & {
   /**
