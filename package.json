@@ -35,7 +35,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
     "@typescript-eslint/eslint-plugin": "8.67.0",
-    "@typescript-eslint/parser": "8.67.0",
+    "@typescript-eslint/parser": "8.68.0",
     "@typescript-eslint/type-utils": "8.67.0",
     "@typescript-eslint/typescript-estree": "8.67.0",
     "@typescript/analyze-trace": "^0.11.1",
