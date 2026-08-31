@@ -1,13 +1,12 @@
 import type { Coordinates, NBTObject, SingleEntityArgumentOf } from 'sandstone/arguments'
-import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider'
-import { type MacroArgument, type Macroable, NumberProviderClass, isMacroArgument, type SandstoneCore } from 'sandstone/core'
+import { type MacroArgument, type Macroable, DataPointPickClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
 import { makeCallable } from 'sandstone/utils'
 import { DataPointClass, type VectorClass } from 'sandstone/variables'
 import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
-import { NumberProviderArgument, numberProviderArgument, NumberProviderScale } from '../server/compute';
+import { NumberProviderArgument, numberProviderArgument, NumberProviderScale } from '../server/compute'
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const
@@ -212,14 +211,20 @@ export class DataModifyFromCommand<MACRO extends boolean> extends CommandArgumen
 export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArguments {
   get from() {
     const cmd = this.subCommand(['from'], DataModifyFromCommand<MACRO>, false)
-    return makeCallable(cmd, (dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'>): FinalCommandOutput => {
-      if (dataPoint.type === 'block') {
-        return cmd.block(coordinatesParser(dataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, dataPoint.path)
+    return makeCallable(cmd, (dataPoint: DataPointClass<'entity' | 'block' | 'storage'> | DataPointPickClass) => {
+      let targetDataPoint: DataPointClass<'entity' | 'block' | 'storage'>
+      if (dataPoint instanceof DataPointPickClass) {
+        targetDataPoint = dataPoint._toDataPoint() as DataPointClass<'entity' | 'block' | 'storage'>
+      } else {
+        targetDataPoint = dataPoint
       }
-      if (dataPoint.type === 'entity') {
-        return cmd.entity(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+      if (targetDataPoint.type === 'block') {
+        return cmd.block(coordinatesParser(targetDataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, targetDataPoint.path)
       }
-      return cmd.storage(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path)
+      if (targetDataPoint.type === 'entity') {
+        return cmd.entity(targetDataPoint.currentTarget as Macroable<string, MACRO>, targetDataPoint.path)
+      }
+      return cmd.storage(targetDataPoint.currentTarget as Macroable<string, MACRO>, targetDataPoint.path)
     })
   }
 

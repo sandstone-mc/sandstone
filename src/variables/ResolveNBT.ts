@@ -81,7 +81,7 @@ export class ResolveNBTClass extends DataPointPickClass {
 
   constructor(
     private pack: SandstonePack,
-    nbt: NBTObject,
+    nbt: any,
     dataPoint?: DataPointClass<'storage'>,
     skipReset?: boolean,
   ) {
@@ -111,7 +111,7 @@ export class ResolveNBTClass extends DataPointPickClass {
       if (out !== undefined && Object.keys(out).length !== 0) {
         pack.commands.data.modify
           .storage(this.dataPoint.currentTarget, this.dataPoint.path)
-          .merge.value(this._resolveNBT(nbt))
+          .merge.value(out)
       }
     } finally {
       realMCFunction.exitContext()
@@ -124,17 +124,20 @@ export class ResolveNBTClass extends DataPointPickClass {
   _resolveNBT(nbt: NBTObject, path?: string, index?: number): NBTObject {
     let resolvedNBT: NBTObject = {}
 
-    if (typeof nbt !== 'object') {
-      throw new Error(`ResolveNBT expected an object or array, received ${typeof nbt}!`)
+    if (typeof nbt !== 'object' || nbt === null || typeof nbt === 'function') {
+      // Primitive values (string, number, boolean) pass through to the
+      // outer merge step which writes them as literal NBT.
+      return nbt
     }
     if (Array.isArray(nbt)) {
       resolvedNBT = []
 
       if (!this.skipReset) this.dataPoint.set([])
 
-      if (resolvedNBT.length !== 0) {
+      if (nbt.length !== 0) {
         for (const [i, value] of nbt.entries()) {
-          const resolved = this._resolveNBT(value, `${path === undefined ? '' : path}`, i)
+          const childPath = path === undefined ? `[${i}]` : `${path}[${i}]`
+          const resolved = this._resolveNBT(value, childPath, i)
 
           if (resolved !== undefined) {
             resolvedNBT.push(resolved)
@@ -149,12 +152,14 @@ export class ResolveNBTClass extends DataPointPickClass {
       return this[`_resolve${capitalize(nbt.type)}`](nbt, path, index)
     }
     if (nbt instanceof NBTPrimitive) {
-      return resolvedNBT
+      // Serialize the primitive (NBT.byte(1) → "1b") for the outer merge.
+      return nbt
     }
     if (!this.skipReset) this.dataPoint.set({})
 
     for (const [key, value] of Object.entries(nbt)) {
-      const resolved = this._resolveNBT(value, `${path === undefined ? '' : `${path}.`}${key}`)
+      const childPath = path === undefined ? key : `${path}.${key}`
+      const resolved = this._resolveNBT(value, childPath)
       if (resolved !== undefined) {
         resolvedNBT[key] = resolved
       }
@@ -278,6 +283,10 @@ export class ResolveNBTPartClass<
     }
   }
 
+  public get mock() {
+    return this as unknown as InstanceType<Exclude<Primitive, NBTAnyValue>>
+  }
+
   [util.inspect.custom] = () => 'Unresolved NBT! Make sure to run ResolveNBT on the nbt before use.'
 }
 
@@ -287,17 +296,17 @@ export function ResolveNBTPart(data: MacroArgument): ResolveNBTPartClass<'data',
 
 export function ResolveNBTPart(data: DataPointClass<any>, type: NBTAllValues): ResolveNBTPartClass<'data', NBTAllValues>
 
-export function ResolveNBTPart(
+export function ResolveNBTPart<T extends NBTAllNumbers>(
   score: Score,
   scale?: number,
-  type?: NBTAllNumbers,
-): ResolveNBTPartClass<'score', typeof NBTInt | NBTAllNumbers>
+  type?: T,
+): ResolveNBTPartClass<'score', T>
 
-export function ResolveNBTPart(
+export function ResolveNBTPart<T extends NBTAllArrays>(
   scores: Score[],
   scale?: number,
-  type?: NBTAllArrays,
-): ResolveNBTPartClass<'scores', typeof NBTIntArray | NBTAllArrays>
+  type?: T,
+): ResolveNBTPartClass<'scores', T>
 
 export function ResolveNBTPart<ValueType extends 'data' | 'score' | 'scores', Primitive extends NBTAllValues>(
   value: StringDataPointClass | MacroArgument | DataPointClass<any> | Score | Score[],

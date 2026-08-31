@@ -877,8 +877,9 @@ export class SandstonePack {
    *   (the temp storage is known empty); pass `true` here for an external
    *   dataPoint that's known to be empty (e.g. dedicated macro storage).
    */
-  ResolveNBT = (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>, skipReset?: boolean) =>
-    new ResolveNBTClass(this, nbt, dataPoint, skipReset)
+  ResolveNBT<Resolving = NBTObject>(nbt: Resolving, dataPoint?: DataPointClass<'storage'>, skipReset?: boolean) {
+    return new ResolveNBTClass(this, nbt, dataPoint, skipReset)
+  }
 
   Selector(target: '@e'): SelectorClass<false, false, false>
 

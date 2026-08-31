@@ -426,7 +426,7 @@
     "definition": "src/core/resources/datapack/recipe.ts"
   },
   "ResolveNBT": {
-    "signature": "(alias) const ResolveNBT: (nbt: NBTObject, dataPoint?: DataPointClass<'storage'>, skipReset?: boolean) => ResolveNBTClass",
+    "signature": "(alias) const ResolveNBT: <Resolving = NBTObject>(nbt: Resolving, dataPoint?: DataPointClass<'storage'>, skipReset?: boolean) => ResolveNBTClass",
     "definition": "src/pack/pack.ts"
   },
   "ResolveNBTPart": {

@@ -1,6 +1,9 @@
 import { SetType, LiteralUnion } from 'sandstone'
 import { RESOURCE_CLASS_TYPES, type MultipleEntitiesArgument, type NBTSerializable } from 'sandstone/arguments'
 import { ENTITY_TYPES_SET } from './generated/registry-sets'
+import type { ItemStack } from './generated/world/item'
+
+export type { ItemStack }
 
 type SINGLE_AXES = 'x' | 'y' | 'z'
 type DOUBLE_AXES = `${SINGLE_AXES}${SINGLE_AXES}`

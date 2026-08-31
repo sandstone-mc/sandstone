@@ -47,10 +47,6 @@ export type BASIC_CONFLICT_STRATEGIES = 'throw' | 'replace' | 'warn' | 'rename' 
 
 export type OmitFirst<T extends unknown[]> = T extends [infer _, ...infer B] ? B : []
 
-export type InstanceOfClass<X extends abstract new (...args: any[]) => any> = new (
-  ..._args: [...one: ConstructorParameters<X>, ...two: any[]]
-) => InstanceType<X>
-
 export function isAsyncFunction(
   func: ((...args: any[]) => void) | ((...args: any[]) => Promise<void>),
 ): func is (...args: any[]) => Promise<void> {
