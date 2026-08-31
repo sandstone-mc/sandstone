@@ -37,7 +37,7 @@
     "@typescript-eslint/eslint-plugin": "8.67.0",
     "@typescript-eslint/parser": "8.67.0",
     "@typescript-eslint/type-utils": "8.67.0",
-    "@typescript-eslint/typescript-estree": "8.67.0",
+    "@typescript-eslint/typescript-estree": "8.68.0",
     "@typescript/analyze-trace": "^0.11.1",
     "@typescript/typescript6": "^6.0.2",
     "magic-string": "^1.0.0",
