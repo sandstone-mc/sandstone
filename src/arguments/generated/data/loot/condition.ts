@@ -6,10 +6,13 @@ import type {
   LocationPredicate,
 } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
-import type { EntityTarget } from 'sandstone/arguments/generated/data/loot.ts'
-import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { EntityTarget, IntRange } from 'sandstone/arguments/generated/data/loot.ts'
+import type { FloatNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider/contextual_float.ts'
+import type {
+  IntegerNumberProviderRef,
+} from 'sandstone/arguments/generated/data/number_provider/contextual_integer.ts'
+import type { LegacyNumberProvider } from 'sandstone/arguments/generated/data/number_provider/legacy.ts'
 import type { PredicateListRef, PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
-import type { IntRange } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolEnvironmentAttribute, SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -101,6 +104,25 @@ export type EnvironmentAttributeCheck = NonNullable<({
   }
 }[Extract<Registry['minecraft:environment_attribute'], string>])>
 
+export type FloatValueCheck = {
+  value: FloatNumberProviderRef,
+  /**
+   * Passes when `value` is within this range.
+   */
+  range: (FloatNumberProviderRef | {
+    min?: FloatNumberProviderRef,
+    max?: FloatNumberProviderRef,
+  }),
+}
+
+export type IntegerValueCheck = {
+  value: IntegerNumberProviderRef,
+  /**
+   * Passes when `value` is within this range.
+   */
+  range: IntRange,
+}
+
 export type Inverted = {
   term: PredicateRef,
 }
@@ -128,9 +150,9 @@ export type MatchTool = {
 
 export type RandomChance = {
   /**
-   * Clamps to a float between `0` & `1` (inclusive).
+   * Accepts a value between `0` & `1` (inclusive).
    */
-  chance: NumberProviderRef,
+  chance: FloatNumberProviderRef,
 }
 
 export type RandomChanceWithEnchantedBonus = {
@@ -205,7 +227,7 @@ export type ValueCheck = {
   /**
    * Clamps to an integer.
    */
-  value: NumberProviderRef,
+  value: LegacyNumberProvider,
   /**
    * Passes when `value` is within this range.
    */
@@ -231,6 +253,10 @@ type LootConditionDispatcherMap = {
   'minecraft:entity_scores': LootConditionEntityScores,
   'environment_attribute_check': LootConditionEnvironmentAttributeCheck,
   'minecraft:environment_attribute_check': LootConditionEnvironmentAttributeCheck,
+  'float_value_check': LootConditionFloatValueCheck,
+  'minecraft:float_value_check': LootConditionFloatValueCheck,
+  'int_value_check': LootConditionIntValueCheck,
+  'minecraft:int_value_check': LootConditionIntValueCheck,
   'inverted': LootConditionInverted,
   'minecraft:inverted': LootConditionInverted,
   'killed_by_player': LootConditionKilledByPlayer,
@@ -249,8 +275,6 @@ type LootConditionDispatcherMap = {
   'minecraft:table_bonus': LootConditionTableBonus,
   'time_check': LootConditionTimeCheck,
   'minecraft:time_check': LootConditionTimeCheck,
-  'value_check': LootConditionValueCheck,
-  'minecraft:value_check': LootConditionValueCheck,
   'weather_check': LootConditionWeatherCheck,
   'minecraft:weather_check': LootConditionWeatherCheck,
 }
@@ -263,6 +287,8 @@ type LootConditionFallback = (
   | LootConditionEntityProperties
   | LootConditionEntityScores
   | LootConditionEnvironmentAttributeCheck
+  | LootConditionFloatValueCheck
+  | LootConditionIntValueCheck
   | LootConditionInverted
   | LootConditionKilledByPlayer
   | LootConditionLocationCheck
@@ -272,7 +298,6 @@ type LootConditionFallback = (
   | LootConditionRandomChanceWithEnchantedBonus
   | LootConditionTableBonus
   | LootConditionTimeCheck
-  | LootConditionValueCheck
   | LootConditionWeatherCheck)
 type LootConditionAllOf = AllOf
 type LootConditionAnyOf = AnyOf
@@ -281,6 +306,8 @@ type LootConditionEnchantmentActiveCheck = EnchantmentActiveCheck
 type LootConditionEntityProperties = EntityProperties
 type LootConditionEntityScores = EntityScores
 type LootConditionEnvironmentAttributeCheck = EnvironmentAttributeCheck
+type LootConditionFloatValueCheck = FloatValueCheck
+type LootConditionIntValueCheck = IntegerValueCheck
 type LootConditionInverted = Inverted
 type LootConditionKilledByPlayer = KilledByPlayer
 type LootConditionLocationCheck = LocationCheck
@@ -290,7 +317,6 @@ type LootConditionRandomChance = RandomChance
 type LootConditionRandomChanceWithEnchantedBonus = RandomChanceWithEnchantedBonus
 type LootConditionTableBonus = TableBonus
 type LootConditionTimeCheck = TimeCheck
-type LootConditionValueCheck = ValueCheck
 type LootConditionWeatherCheck = WeatherCheck
 export type SymbolLootCondition<CASE extends
   | 'map'

@@ -13,6 +13,8 @@ export const JSONLOOT_CONDITION_TYPES_SET = new Set([
   'entity_properties',
   'entity_scores',
   'environment_attribute_check',
+  'float_value_check',
+  'int_value_check',
   'inverted',
   'killed_by_player',
   'location_check',
@@ -23,6 +25,5 @@ export const JSONLOOT_CONDITION_TYPES_SET = new Set([
   'survives_explosion',
   'table_bonus',
   'time_check',
-  'value_check',
   'weather_check',
 ] as const)

@@ -98,7 +98,11 @@ export { type SymbolLootCondition } from './data/loot/condition.ts'
 
 export { type SymbolLootFunction } from './data/loot/function.ts'
 
-export { type SymbolNumberProvider } from './data/number_provider.ts'
+export { type SymbolNumberProviderFloat } from './data/number_provider/contextual_float.ts'
+
+export { type SymbolNumberProviderInteger } from './data/number_provider/contextual_integer.ts'
+
+export { type SymbolNumberProvider } from './data/number_provider/legacy.ts'
 
 export { type SymbolRecipeSerializer, type RecipeSerializerFallbackType } from './data/recipe.ts'
 

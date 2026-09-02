@@ -1,6 +1,5 @@
 import type { BlockPredicate, ItemPredicate } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { DamageType } from 'sandstone/arguments/generated/data/damage_type.ts'
-import type { ResolvableNumber } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { TrimMaterial, TrimPattern } from 'sandstone/arguments/generated/data/trim.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { Instrument } from 'sandstone/arguments/generated/data/variants/instrument.ts'
@@ -47,7 +46,9 @@ import type {
   DamageTypeClass,
   DecoratedPotPatternClass,
   EquipmentClass,
+  FloatNumberProviderClass,
   InstrumentClass,
+  IntegerNumberProviderClass,
   ItemModelDefinitionClass,
   JukeboxSongClass,
   NamespacedString,
@@ -305,8 +306,8 @@ export type blocks_attacks = {
 export type BookGeneration = (0 | 1 | 2 | 3)
 
 export type BrewingFuel = {
-  uses: ResolvableNumber,
-  speed_multiplier: ResolvableNumber,
+  uses: (NBTInt | (Registry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
+  speed_multiplier: (NBTFloat | (Registry['minecraft:context_float_provider'] | FloatNumberProviderClass)),
 }
 
 export type BucketEntityData = {
@@ -358,7 +359,7 @@ export type BucketEntityData = {
 }
 
 export type Compostable = {
-  layers: ResolvableNumber,
+  layers: (NBTInt | (Registry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
 }
 
 export type Consumable = {
@@ -413,8 +414,8 @@ export type ConsumeEffect = NonNullable<({
 }[Extract<Registry['minecraft:consume_effect_type'], string>])>
 
 export type CookingFuel = {
-  burn_time: ResolvableNumber,
-  speed_multiplier: ResolvableNumber,
+  burn_time: (NBTInt | (Registry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
+  speed_multiplier: (NBTFloat | (Registry['minecraft:context_float_provider'] | FloatNumberProviderClass)),
 }
 
 export type CustomModelData = {

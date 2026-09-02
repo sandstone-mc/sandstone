@@ -400,7 +400,11 @@ export type Smelting = (NotificationInfo & CookingBookInfo & {
   ingredient: Ingredient,
   result: ItemStackTemplate,
   experience?: NBTFloat,
-  cookingtime?: NBTInt,
+} & {
+  /**
+   * Hint: The "Normal" value for this is `200`.
+   */
+  cookingtime: NBTInt,
 })
 
 export type Smithing = {

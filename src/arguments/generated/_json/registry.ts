@@ -21,6 +21,16 @@ import type {
   JSONCOMMAND_ARGUMENT_TYPES,
 } from 'sandstone/arguments/generated/_json/_registry/command_argument_types.ts'
 import type { JSONCONSUME_EFFECT_TYPES } from 'sandstone/arguments/generated/_json/_registry/consume_effect_types.ts'
+import type {
+  JSONCONTEXT_FLOAT_PROVIDER_TYPES,
+} from 'sandstone/arguments/generated/_json/_registry/context_float_provider_types.ts'
+import type {
+  JSONCONTEXT_FLOAT_PROVIDERS,
+} from 'sandstone/arguments/generated/_json/_registry/context_float_providers.ts'
+import type {
+  JSONCONTEXT_INT_PROVIDER_TYPES,
+} from 'sandstone/arguments/generated/_json/_registry/context_int_provider_types.ts'
+import type { JSONCONTEXT_INT_PROVIDERS } from 'sandstone/arguments/generated/_json/_registry/context_int_providers.ts'
 import type { JSONCOW_SOUND_VARIANTS } from 'sandstone/arguments/generated/_json/_registry/cow_sound_variants.ts'
 import type { JSONCOW_VARIANTS } from 'sandstone/arguments/generated/_json/_registry/cow_variants.ts'
 import type { JSONCREATIVE_MODE_TABS } from 'sandstone/arguments/generated/_json/_registry/creative_mode_tabs.ts'
@@ -88,9 +98,6 @@ import type { JSONLOOT_FUNCTION_TYPES } from 'sandstone/arguments/generated/_jso
 import type {
   JSONLOOT_NBT_PROVIDER_TYPES,
 } from 'sandstone/arguments/generated/_json/_registry/loot_nbt_provider_types.ts'
-import type {
-  JSONLOOT_NUMBER_PROVIDER_TYPES,
-} from 'sandstone/arguments/generated/_json/_registry/loot_number_provider_types.ts'
 import type { JSONLOOT_POOL_ENTRY_TYPES } from 'sandstone/arguments/generated/_json/_registry/loot_pool_entry_types.ts'
 import type {
   JSONLOOT_SCORE_PROVIDER_TYPES,
@@ -102,7 +109,6 @@ import type { JSONMENUS } from 'sandstone/arguments/generated/_json/_registry/me
 import type { JSONMOB_EFFECTS } from 'sandstone/arguments/generated/_json/_registry/mob_effects.ts'
 import type { JSONMODELS } from 'sandstone/arguments/generated/_json/_registry/models.ts'
 import type { JSONNUMBER_FORMAT_TYPES } from 'sandstone/arguments/generated/_json/_registry/number_format_types.ts'
-import type { JSONNUMBER_PROVIDERS } from 'sandstone/arguments/generated/_json/_registry/number_providers.ts'
 import type { JSONOUTGOING_RPC_METHODS } from 'sandstone/arguments/generated/_json/_registry/outgoing_rpc_methods.ts'
 import type { JSONPAINTING_VARIANTS } from 'sandstone/arguments/generated/_json/_registry/painting_variants.ts'
 import type { JSONPARTICLE_TYPES } from 'sandstone/arguments/generated/_json/_registry/particle_types.ts'
@@ -303,6 +309,8 @@ export type JsonRegistry = {
   'minecraft:chat_type': JSONCHAT_TYPES,
   'minecraft:chicken_sound_variant': JSONCHICKEN_SOUND_VARIANTS,
   'minecraft:chicken_variant': JSONCHICKEN_VARIANTS,
+  'minecraft:context_float_provider': JSONCONTEXT_FLOAT_PROVIDERS,
+  'minecraft:context_int_provider': JSONCONTEXT_INT_PROVIDERS,
   'minecraft:cow_sound_variant': JSONCOW_SOUND_VARIANTS,
   'minecraft:cow_variant': JSONCOW_VARIANTS,
   'minecraft:damage_type': JSONDAMAGE_TYPES,
@@ -316,7 +324,6 @@ export type JsonRegistry = {
   'minecraft:instrument': JSONINSTRUMENTS,
   'minecraft:jukebox_song': JSONJUKEBOX_SONGS,
   'minecraft:loot_table': JSONLOOT_TABLES,
-  'minecraft:number_provider': JSONNUMBER_PROVIDERS,
   'minecraft:painting_variant': JSONPAINTING_VARIANTS,
   'minecraft:pig_sound_variant': JSONPIG_SOUND_VARIANTS,
   'minecraft:pig_variant': JSONPIG_VARIANTS,
@@ -392,6 +399,8 @@ export type JsonRegistry = {
   'minecraft:chunk_status': JSONCHUNK_STATUSES,
   'minecraft:command_argument_type': JSONCOMMAND_ARGUMENT_TYPES,
   'minecraft:consume_effect_type': JSONCONSUME_EFFECT_TYPES,
+  'minecraft:context_float_provider_type': JSONCONTEXT_FLOAT_PROVIDER_TYPES,
+  'minecraft:context_int_provider_type': JSONCONTEXT_INT_PROVIDER_TYPES,
   'minecraft:creative_mode_tab': JSONCREATIVE_MODE_TABS,
   'minecraft:custom_stat': JSONCUSTOM_STATS,
   'minecraft:data_component_predicate_type': JSONDATA_COMPONENT_PREDICATE_TYPES,
@@ -421,7 +430,6 @@ export type JsonRegistry = {
   'minecraft:loot_condition_type': JSONLOOT_CONDITION_TYPES,
   'minecraft:loot_function_type': JSONLOOT_FUNCTION_TYPES,
   'minecraft:loot_nbt_provider_type': JSONLOOT_NBT_PROVIDER_TYPES,
-  'minecraft:loot_number_provider_type': JSONLOOT_NUMBER_PROVIDER_TYPES,
   'minecraft:loot_pool_entry_type': JSONLOOT_POOL_ENTRY_TYPES,
   'minecraft:loot_score_provider_type': JSONLOOT_SCORE_PROVIDER_TYPES,
   'minecraft:map_decoration_type': JSONMAP_DECORATION_TYPES,
@@ -487,6 +495,8 @@ export const JSONREGISTRIES_SET = new Set([
   'chat_type',
   'chicken_sound_variant',
   'chicken_variant',
+  'context_float_provider',
+  'context_int_provider',
   'cow_sound_variant',
   'cow_variant',
   'damage_type',
@@ -502,7 +512,6 @@ export const JSONREGISTRIES_SET = new Set([
   'item_modifier',
   'jukebox_song',
   'loot_table',
-  'number_provider',
   'painting_variant',
   'pig_sound_variant',
   'pig_variant',
@@ -534,6 +543,8 @@ export const JSONREGISTRIES_SET = new Set([
   'chunk_status',
   'command_argument_type',
   'consume_effect_type',
+  'context_float_provider_type',
+  'context_int_provider_type',
   'creative_mode_tab',
   'custom_stat',
   'data_component_predicate_type',

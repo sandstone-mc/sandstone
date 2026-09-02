@@ -1,10 +1,13 @@
 import type { JsonSymbolReputationPartValue } from 'sandstone/arguments/generated/_json/dispatcher.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
+import type { JsonDataComponentExactPredicate } from 'sandstone/arguments/generated/_json/world/component.ts'
 import type { JsonBreedable } from 'sandstone/arguments/generated/_json/world/entity/mob/breedable.ts'
 import type { JsonMobBase } from 'sandstone/arguments/generated/_json/world/entity/mob.ts'
-import type { JsonItemCost, JsonItemStack } from 'sandstone/arguments/generated/_json/world/item.ts'
+import type { JsonItemStack, JsonItemStackOfComponent } from 'sandstone/arguments/generated/_json/world/item.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type { JsonNBTList, NBTByte, NBTFloat, NBTInt, NBTIntArray, NBTLong } from 'sandstone'
+
+export type JsonItemCost = JsonItemStackOfComponent<JsonDataComponentExactPredicate>
 
 export type JsonOffers = {
   /**

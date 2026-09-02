@@ -111,49 +111,49 @@ export type WeightedBlockStateProvider = {
   entries: NonEmptyWeightedList<BlockState>,
 }
 type BlockStateProviderDispatcherMap = {
-  'copy_properties_provider': BlockStateProviderCopyPropertiesProvider,
-  'minecraft:copy_properties_provider': BlockStateProviderCopyPropertiesProvider,
-  'dual_noise_provider': BlockStateProviderDualNoiseProvider,
-  'minecraft:dual_noise_provider': BlockStateProviderDualNoiseProvider,
-  'noise_provider': BlockStateProviderNoiseProvider,
-  'minecraft:noise_provider': BlockStateProviderNoiseProvider,
-  'noise_threshold_provider': BlockStateProviderNoiseThresholdProvider,
-  'minecraft:noise_threshold_provider': BlockStateProviderNoiseThresholdProvider,
-  'random_block_provider': BlockStateProviderRandomBlockProvider,
-  'minecraft:random_block_provider': BlockStateProviderRandomBlockProvider,
-  'randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider,
-  'minecraft:randomized_int_state_provider': BlockStateProviderRandomizedIntStateProvider,
-  'rotated_block_provider': BlockStateProviderRotatedBlockProvider,
-  'minecraft:rotated_block_provider': BlockStateProviderRotatedBlockProvider,
-  'rule_based_state_provider': BlockStateProviderRuleBasedStateProvider,
-  'minecraft:rule_based_state_provider': BlockStateProviderRuleBasedStateProvider,
-  'simple_state_provider': BlockStateProviderSimpleStateProvider,
-  'minecraft:simple_state_provider': BlockStateProviderSimpleStateProvider,
-  'weighted_state_provider': BlockStateProviderWeightedStateProvider,
-  'minecraft:weighted_state_provider': BlockStateProviderWeightedStateProvider,
+  'copy_properties': BlockStateProviderCopyProperties,
+  'minecraft:copy_properties': BlockStateProviderCopyProperties,
+  'dual_noise': BlockStateProviderDualNoise,
+  'minecraft:dual_noise': BlockStateProviderDualNoise,
+  'noise': BlockStateProviderNoise,
+  'minecraft:noise': BlockStateProviderNoise,
+  'noise_threshold': BlockStateProviderNoiseThreshold,
+  'minecraft:noise_threshold': BlockStateProviderNoiseThreshold,
+  'random': BlockStateProviderRandom,
+  'minecraft:random': BlockStateProviderRandom,
+  'randomized_int_state': BlockStateProviderRandomizedIntState,
+  'minecraft:randomized_int_state': BlockStateProviderRandomizedIntState,
+  'rotated': BlockStateProviderRotated,
+  'minecraft:rotated': BlockStateProviderRotated,
+  'rule_based': BlockStateProviderRuleBased,
+  'minecraft:rule_based': BlockStateProviderRuleBased,
+  'simple': BlockStateProviderSimple,
+  'minecraft:simple': BlockStateProviderSimple,
+  'weighted': BlockStateProviderWeighted,
+  'minecraft:weighted': BlockStateProviderWeighted,
 }
 type BlockStateProviderKeys = keyof BlockStateProviderDispatcherMap
 type BlockStateProviderFallback = (
-  | BlockStateProviderCopyPropertiesProvider
-  | BlockStateProviderDualNoiseProvider
-  | BlockStateProviderNoiseProvider
-  | BlockStateProviderNoiseThresholdProvider
-  | BlockStateProviderRandomBlockProvider
-  | BlockStateProviderRandomizedIntStateProvider
-  | BlockStateProviderRotatedBlockProvider
-  | BlockStateProviderRuleBasedStateProvider
-  | BlockStateProviderSimpleStateProvider
-  | BlockStateProviderWeightedStateProvider)
-type BlockStateProviderCopyPropertiesProvider = CopyPropertiesProvider
-type BlockStateProviderDualNoiseProvider = DualNoiseProvider
-type BlockStateProviderNoiseProvider = NoiseProvider
-type BlockStateProviderNoiseThresholdProvider = NoiseThresholdProvider
-type BlockStateProviderRandomBlockProvider = RandomBlockStateProvider
-type BlockStateProviderRandomizedIntStateProvider = RandomizedIntStateProvider
-type BlockStateProviderRotatedBlockProvider = RotatedStateProvider
-type BlockStateProviderRuleBasedStateProvider = RuleBasedBlockStateProvider
-type BlockStateProviderSimpleStateProvider = SimpleStateProvider
-type BlockStateProviderWeightedStateProvider = WeightedBlockStateProvider
+  | BlockStateProviderCopyProperties
+  | BlockStateProviderDualNoise
+  | BlockStateProviderNoise
+  | BlockStateProviderNoiseThreshold
+  | BlockStateProviderRandom
+  | BlockStateProviderRandomizedIntState
+  | BlockStateProviderRotated
+  | BlockStateProviderRuleBased
+  | BlockStateProviderSimple
+  | BlockStateProviderWeighted)
+type BlockStateProviderCopyProperties = CopyPropertiesProvider
+type BlockStateProviderDualNoise = DualNoiseProvider
+type BlockStateProviderNoise = NoiseProvider
+type BlockStateProviderNoiseThreshold = NoiseThresholdProvider
+type BlockStateProviderRandom = RandomBlockStateProvider
+type BlockStateProviderRandomizedIntState = RandomizedIntStateProvider
+type BlockStateProviderRotated = RotatedStateProvider
+type BlockStateProviderRuleBased = RuleBasedBlockStateProvider
+type BlockStateProviderSimple = SimpleStateProvider
+type BlockStateProviderWeighted = WeightedBlockStateProvider
 export type SymbolBlockStateProvider<CASE extends
   | 'map'
   | 'keys'

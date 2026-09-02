@@ -1,5 +1,10 @@
 import type { JsonItemModifier } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
-import type { JsonNumberProviderRef } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
+import type {
+  JsonFloatNumberProviderRef,
+} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_float.ts'
+import type {
+  JsonIntegerNumberProviderRef,
+} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_integer.ts'
 import type { JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonSlotSource } from 'sandstone/arguments/generated/_json/data/slot_source.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
@@ -42,6 +47,11 @@ export type JsonEntityTarget = (
   | 'attacking_player'
   | 'target_entity'
   | 'interacting_entity')
+
+export type JsonIntRange = ((NBTInt | number) | JsonIntegerNumberProviderRef | {
+  min?: JsonIntegerNumberProviderRef,
+  max?: JsonIntegerNumberProviderRef,
+})
 
 export type JsonItemPoolEntry = ({
   name: JsonRegistry['minecraft:item'],
@@ -134,8 +144,8 @@ export type JsonLootFunctionType = (
   | 'set_stew_effect')
 
 export type JsonLootPool = ({
-  rolls: JsonNumberProviderRef,
-  bonus_rolls?: JsonNumberProviderRef,
+  rolls: JsonIntegerNumberProviderRef,
+  bonus_rolls?: JsonFloatNumberProviderRef,
   entries: Array<JsonLootPoolEntry>,
 } & {
   modifier?: JsonItemModifier,

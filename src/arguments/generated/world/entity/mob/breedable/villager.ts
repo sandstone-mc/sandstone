@@ -1,10 +1,13 @@
 import type { SymbolReputationPartValue } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { DataComponentExactPredicate } from 'sandstone/arguments/generated/world/component.ts'
 import type { Breedable } from 'sandstone/arguments/generated/world/entity/mob/breedable.ts'
 import type { MobBase } from 'sandstone/arguments/generated/world/entity/mob.ts'
-import type { ItemCost, ItemStack } from 'sandstone/arguments/generated/world/item.ts'
+import type { ItemStack, ItemStackOfComponent } from 'sandstone/arguments/generated/world/item.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTByte, NBTFloat, NBTInt, NBTIntArray, NBTList, NBTLong } from 'sandstone'
+
+export type ItemCost = ItemStackOfComponent<DataComponentExactPredicate>
 
 export type Offers = {
   /**

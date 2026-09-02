@@ -101,7 +101,11 @@ export { type JsonSymbolLootCondition } from './data/loot/condition.ts'
 
 export { type JsonSymbolLootFunction } from './data/loot/function.ts'
 
-export { type JsonSymbolNumberProvider } from './data/number_provider.ts'
+export { type JsonSymbolNumberProviderFloat } from './data/number_provider/contextual_float.ts'
+
+export { type JsonSymbolNumberProviderInteger } from './data/number_provider/contextual_integer.ts'
+
+export { type JsonSymbolNumberProvider } from './data/number_provider/legacy.ts'
 
 export { type JsonSymbolRecipeSerializer, type JsonRecipeSerializerFallbackType } from './data/recipe.ts'
 

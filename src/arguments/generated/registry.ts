@@ -17,6 +17,12 @@ import type { CHICKEN_VARIANTS } from 'sandstone/arguments/generated/_registry/c
 import type { CHUNK_STATUSES } from 'sandstone/arguments/generated/_registry/chunk_statuses.ts'
 import type { COMMAND_ARGUMENT_TYPES } from 'sandstone/arguments/generated/_registry/command_argument_types.ts'
 import type { CONSUME_EFFECT_TYPES } from 'sandstone/arguments/generated/_registry/consume_effect_types.ts'
+import type {
+  CONTEXT_FLOAT_PROVIDER_TYPES,
+} from 'sandstone/arguments/generated/_registry/context_float_provider_types.ts'
+import type { CONTEXT_FLOAT_PROVIDERS } from 'sandstone/arguments/generated/_registry/context_float_providers.ts'
+import type { CONTEXT_INT_PROVIDER_TYPES } from 'sandstone/arguments/generated/_registry/context_int_provider_types.ts'
+import type { CONTEXT_INT_PROVIDERS } from 'sandstone/arguments/generated/_registry/context_int_providers.ts'
 import type { COW_SOUND_VARIANTS } from 'sandstone/arguments/generated/_registry/cow_sound_variants.ts'
 import type { COW_VARIANTS } from 'sandstone/arguments/generated/_registry/cow_variants.ts'
 import type { CREATIVE_MODE_TABS } from 'sandstone/arguments/generated/_registry/creative_mode_tabs.ts'
@@ -74,7 +80,6 @@ import type { LANGS } from 'sandstone/arguments/generated/_registry/langs.ts'
 import type { LOOT_CONDITION_TYPES } from 'sandstone/arguments/generated/_registry/loot_condition_types.ts'
 import type { LOOT_FUNCTION_TYPES } from 'sandstone/arguments/generated/_registry/loot_function_types.ts'
 import type { LOOT_NBT_PROVIDER_TYPES } from 'sandstone/arguments/generated/_registry/loot_nbt_provider_types.ts'
-import type { LOOT_NUMBER_PROVIDER_TYPES } from 'sandstone/arguments/generated/_registry/loot_number_provider_types.ts'
 import type { LOOT_POOL_ENTRY_TYPES } from 'sandstone/arguments/generated/_registry/loot_pool_entry_types.ts'
 import type { LOOT_SCORE_PROVIDER_TYPES } from 'sandstone/arguments/generated/_registry/loot_score_provider_types.ts'
 import type { LOOT_TABLES } from 'sandstone/arguments/generated/_registry/loot_tables.ts'
@@ -84,7 +89,6 @@ import type { MENUS } from 'sandstone/arguments/generated/_registry/menus.ts'
 import type { MOB_EFFECTS } from 'sandstone/arguments/generated/_registry/mob_effects.ts'
 import type { MODELS } from 'sandstone/arguments/generated/_registry/models.ts'
 import type { NUMBER_FORMAT_TYPES } from 'sandstone/arguments/generated/_registry/number_format_types.ts'
-import type { NUMBER_PROVIDERS } from 'sandstone/arguments/generated/_registry/number_providers.ts'
 import type { OUTGOING_RPC_METHODS } from 'sandstone/arguments/generated/_registry/outgoing_rpc_methods.ts'
 import type { PAINTING_VARIANTS } from 'sandstone/arguments/generated/_registry/painting_variants.ts'
 import type { PARTICLE_TYPES } from 'sandstone/arguments/generated/_registry/particle_types.ts'
@@ -243,6 +247,8 @@ export type Registry = {
   'minecraft:chat_type': CHAT_TYPES,
   'minecraft:chicken_sound_variant': CHICKEN_SOUND_VARIANTS,
   'minecraft:chicken_variant': CHICKEN_VARIANTS,
+  'minecraft:context_float_provider': CONTEXT_FLOAT_PROVIDERS,
+  'minecraft:context_int_provider': CONTEXT_INT_PROVIDERS,
   'minecraft:cow_sound_variant': COW_SOUND_VARIANTS,
   'minecraft:cow_variant': COW_VARIANTS,
   'minecraft:damage_type': DAMAGE_TYPES,
@@ -256,7 +262,6 @@ export type Registry = {
   'minecraft:instrument': INSTRUMENTS,
   'minecraft:jukebox_song': JUKEBOX_SONGS,
   'minecraft:loot_table': LOOT_TABLES,
-  'minecraft:number_provider': NUMBER_PROVIDERS,
   'minecraft:painting_variant': PAINTING_VARIANTS,
   'minecraft:pig_sound_variant': PIG_SOUND_VARIANTS,
   'minecraft:pig_variant': PIG_VARIANTS,
@@ -332,6 +337,8 @@ export type Registry = {
   'minecraft:chunk_status': CHUNK_STATUSES,
   'minecraft:command_argument_type': COMMAND_ARGUMENT_TYPES,
   'minecraft:consume_effect_type': CONSUME_EFFECT_TYPES,
+  'minecraft:context_float_provider_type': CONTEXT_FLOAT_PROVIDER_TYPES,
+  'minecraft:context_int_provider_type': CONTEXT_INT_PROVIDER_TYPES,
   'minecraft:creative_mode_tab': CREATIVE_MODE_TABS,
   'minecraft:custom_stat': CUSTOM_STATS,
   'minecraft:data_component_predicate_type': DATA_COMPONENT_PREDICATE_TYPES,
@@ -361,7 +368,6 @@ export type Registry = {
   'minecraft:loot_condition_type': LOOT_CONDITION_TYPES,
   'minecraft:loot_function_type': LOOT_FUNCTION_TYPES,
   'minecraft:loot_nbt_provider_type': LOOT_NBT_PROVIDER_TYPES,
-  'minecraft:loot_number_provider_type': LOOT_NUMBER_PROVIDER_TYPES,
   'minecraft:loot_pool_entry_type': LOOT_POOL_ENTRY_TYPES,
   'minecraft:loot_score_provider_type': LOOT_SCORE_PROVIDER_TYPES,
   'minecraft:map_decoration_type': MAP_DECORATION_TYPES,
@@ -427,6 +433,8 @@ export const REGISTRIES_SET = new Set([
   'chat_type',
   'chicken_sound_variant',
   'chicken_variant',
+  'context_float_provider',
+  'context_int_provider',
   'cow_sound_variant',
   'cow_variant',
   'damage_type',
@@ -442,7 +450,6 @@ export const REGISTRIES_SET = new Set([
   'item_modifier',
   'jukebox_song',
   'loot_table',
-  'number_provider',
   'painting_variant',
   'pig_sound_variant',
   'pig_variant',
@@ -474,6 +481,8 @@ export const REGISTRIES_SET = new Set([
   'chunk_status',
   'command_argument_type',
   'consume_effect_type',
+  'context_float_provider_type',
+  'context_int_provider_type',
   'creative_mode_tab',
   'custom_stat',
   'data_component_predicate_type',

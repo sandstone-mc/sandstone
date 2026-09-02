@@ -1,23 +1,19 @@
 import { Set } from 'sandstone'
 import type { NamespacedLiteralUnion, SetType } from 'sandstone'
 
-export type NUMBER_PROVIDERS = (
-  | NamespacedLiteralUnion<SetType<typeof NUMBER_PROVIDERS_SET>>
-  | `minecraft:${SetType<typeof NUMBER_PROVIDERS_SET>}`)
+export type CONTEXT_INT_PROVIDERS = (
+  | NamespacedLiteralUnion<SetType<typeof CONTEXT_INT_PROVIDERS_SET>>
+  | `minecraft:${SetType<typeof CONTEXT_INT_PROVIDERS_SET>}`)
 
-export const NUMBER_PROVIDERS_SET = new Set([
-  'brewing/speed_default',
+export const CONTEXT_INT_PROVIDERS_SET = new Set([
   'brewing/uses_default',
   'compostable/always_add_one',
   'compostable/low',
   'compostable/low_medium',
   'compostable/medium',
   'compostable/medium_high',
-  'cooking/fast_burn_time_multiplier',
-  'cooking/fast_speed_multiplier',
-  'cooking/normal_burn_time_multiplier',
-  'cooking/normal_speed_multiplier',
-  'cooking/speed_default',
+  'cooking/fast_burn_time_reduction_factor',
+  'cooking/normal_burn_time_reduction_factor',
   'cooking/time_bamboo',
   'cooking/time_blaze_rod',
   'cooking/time_boats',

@@ -6,10 +6,15 @@ import type {
   JsonLocationPredicate,
 } from 'sandstone/arguments/generated/_json/data/advancement/predicate.ts'
 import type { JsonLevelBasedValue } from 'sandstone/arguments/generated/_json/data/enchantment/level_based_value.ts'
-import type { JsonEntityTarget } from 'sandstone/arguments/generated/_json/data/loot.ts'
-import type { JsonNumberProviderRef } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
+import type { JsonEntityTarget, JsonIntRange } from 'sandstone/arguments/generated/_json/data/loot.ts'
+import type {
+  JsonFloatNumberProviderRef,
+} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_float.ts'
+import type {
+  JsonIntegerNumberProviderRef,
+} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_integer.ts'
+import type { JsonLegacyNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider/legacy.ts'
 import type { JsonPredicateListRef, JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
-import type { JsonIntRange } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type {
   JsonSymbolEnvironmentAttribute,
   JsonSymbolMcdocBlockStates,
@@ -104,6 +109,25 @@ export type JsonEnvironmentAttributeCheck = NonNullable<({
   }
 }[Extract<JsonRegistry['minecraft:environment_attribute'], string>])>
 
+export type JsonFloatValueCheck = {
+  value: JsonFloatNumberProviderRef,
+  /**
+   * Passes when `value` is within this range.
+   */
+  range: (JsonFloatNumberProviderRef | {
+    min?: JsonFloatNumberProviderRef,
+    max?: JsonFloatNumberProviderRef,
+  }),
+}
+
+export type JsonIntegerValueCheck = {
+  value: JsonIntegerNumberProviderRef,
+  /**
+   * Passes when `value` is within this range.
+   */
+  range: JsonIntRange,
+}
+
 export type JsonInverted = {
   term: JsonPredicateRef,
 }
@@ -131,9 +155,9 @@ export type JsonMatchTool = {
 
 export type JsonRandomChance = {
   /**
-   * Clamps to a float between `0` & `1` (inclusive).
+   * Accepts a value between `0` & `1` (inclusive).
    */
-  chance: JsonNumberProviderRef,
+  chance: JsonFloatNumberProviderRef,
 }
 
 export type JsonRandomChanceWithEnchantedBonus = {
@@ -208,7 +232,7 @@ export type JsonValueCheck = {
   /**
    * Clamps to an integer.
    */
-  value: JsonNumberProviderRef,
+  value: JsonLegacyNumberProvider,
   /**
    * Passes when `value` is within this range.
    */
@@ -234,6 +258,10 @@ type JsonLootConditionDispatcherMap = {
   'minecraft:entity_scores': JsonLootConditionEntityScores,
   'environment_attribute_check': JsonLootConditionEnvironmentAttributeCheck,
   'minecraft:environment_attribute_check': JsonLootConditionEnvironmentAttributeCheck,
+  'float_value_check': JsonLootConditionFloatValueCheck,
+  'minecraft:float_value_check': JsonLootConditionFloatValueCheck,
+  'int_value_check': JsonLootConditionIntValueCheck,
+  'minecraft:int_value_check': JsonLootConditionIntValueCheck,
   'inverted': JsonLootConditionInverted,
   'minecraft:inverted': JsonLootConditionInverted,
   'killed_by_player': JsonLootConditionKilledByPlayer,
@@ -252,8 +280,6 @@ type JsonLootConditionDispatcherMap = {
   'minecraft:table_bonus': JsonLootConditionTableBonus,
   'time_check': JsonLootConditionTimeCheck,
   'minecraft:time_check': JsonLootConditionTimeCheck,
-  'value_check': JsonLootConditionValueCheck,
-  'minecraft:value_check': JsonLootConditionValueCheck,
   'weather_check': JsonLootConditionWeatherCheck,
   'minecraft:weather_check': JsonLootConditionWeatherCheck,
 }
@@ -266,6 +292,8 @@ type JsonLootConditionFallback = (
   | JsonLootConditionEntityProperties
   | JsonLootConditionEntityScores
   | JsonLootConditionEnvironmentAttributeCheck
+  | JsonLootConditionFloatValueCheck
+  | JsonLootConditionIntValueCheck
   | JsonLootConditionInverted
   | JsonLootConditionKilledByPlayer
   | JsonLootConditionLocationCheck
@@ -275,7 +303,6 @@ type JsonLootConditionFallback = (
   | JsonLootConditionRandomChanceWithEnchantedBonus
   | JsonLootConditionTableBonus
   | JsonLootConditionTimeCheck
-  | JsonLootConditionValueCheck
   | JsonLootConditionWeatherCheck)
 type JsonLootConditionAllOf = JsonAllOf
 type JsonLootConditionAnyOf = JsonAnyOf
@@ -284,6 +311,8 @@ type JsonLootConditionEnchantmentActiveCheck = JsonEnchantmentActiveCheck
 type JsonLootConditionEntityProperties = JsonEntityProperties
 type JsonLootConditionEntityScores = JsonEntityScores
 type JsonLootConditionEnvironmentAttributeCheck = JsonEnvironmentAttributeCheck
+type JsonLootConditionFloatValueCheck = JsonFloatValueCheck
+type JsonLootConditionIntValueCheck = JsonIntegerValueCheck
 type JsonLootConditionInverted = JsonInverted
 type JsonLootConditionKilledByPlayer = JsonKilledByPlayer
 type JsonLootConditionLocationCheck = JsonLocationCheck
@@ -293,7 +322,6 @@ type JsonLootConditionRandomChance = JsonRandomChance
 type JsonLootConditionRandomChanceWithEnchantedBonus = JsonRandomChanceWithEnchantedBonus
 type JsonLootConditionTableBonus = JsonTableBonus
 type JsonLootConditionTimeCheck = JsonTimeCheck
-type JsonLootConditionValueCheck = JsonValueCheck
 type JsonLootConditionWeatherCheck = JsonWeatherCheck
 export type JsonSymbolLootCondition<CASE extends
   | 'map'

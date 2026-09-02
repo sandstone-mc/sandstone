@@ -1,59 +1,13 @@
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
-import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { ScoreProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { NumericalEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type {
-  DataPointClass,
-  NamespacedString,
-  NBTFloat,
-  NBTList,
-  NonEmptyString,
-  NumberProviderClass,
-  ObjectiveClass,
-  TagClass,
-} from 'sandstone'
-
-export type AggregateNumberProvider = {
-  operands: AggregateOperands,
-}
-
-/**
- * *either*
- *
- * *item 0*
- *
- * *or*
- *
- * *item 1*
- *
- * *or*
- *
- * List length range: 1..
- */
-export type AggregateOperands = (NumberProvider | (
-  | Registry['minecraft:number_provider']
-  | `#${string}:${string}`
-  | TagClass<'number_provider'>
-  | NumberProviderClass) | NBTList<((Registry['minecraft:number_provider'] | NumberProviderClass) | NumberProvider), {
-    leftExclusive: false,
-    min: 1,
-  }>)
+import type { DataPointClass, NamespacedString, NBTFloat, NonEmptyString, ObjectiveClass } from 'sandstone'
 
 export type BinomialNumberProvider = {
-  n: NumberProviderRef,
-  p: NumberProviderRef,
-}
-
-export type ConditionalNumberProvider = {
-  condition: PredicateRef,
-  on_true: NumberProviderRef,
-  /**
-   * Defaults to constant 0.
-   */
-  on_false?: NumberProviderRef,
+  n: LegacyNumberProvider,
+  p: LegacyNumberProvider,
 }
 
 export type ConstantNumberProvider = {
@@ -90,33 +44,20 @@ export type EnvironmentAttributeNumberProvider = {
   attribute: NumericalEnvironmentAttribute,
 }
 
-export type NumberDispatcher = {
-  cases: Array<{
-    condition: PredicateRef,
-    number_provider: NumberProviderRef,
-  }>,
-  /**
-   * Defaults to constant 0.
-   */
-  default?: NumberProviderRef,
-}
-
-export type NumberProvider = (NBTFloat | ({
-  [S in Extract<Extract<Registry['minecraft:loot_number_provider_type'], string>, string>]?: ({
-    type: S,
+export type LegacyNumberProvider = (NBTFloat | ({
+  [S in Extract<Extract<NamespacedString, string>, string>]?: ({
+    /**
+     * Defaults to `minecraft:uniform`.
+     */
+    type?: S,
   } & (S extends undefined
     ? SymbolNumberProvider<'%none'> :
     (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)))
-}[Extract<Registry['minecraft:loot_number_provider_type'], string>]))
+}[Extract<NamespacedString, string>]))
 
-export type NumberProviderListRef = (
-  | NumberProvider | (
-  Registry['minecraft:number_provider'] | `#${string}:${string}` | TagClass<'number_provider'> | NumberProviderClass)
-  | Array<((Registry['minecraft:number_provider'] | NumberProviderClass) | NumberProvider)>)
-
-export type NumberProviderRef = (NumberProvider | (Registry['minecraft:number_provider'] | NumberProviderClass))
-
-export type ResolvableNumber = (NBTFloat | (Registry['minecraft:number_provider'] | NumberProviderClass))
+export type LegacySumNumberProvider = {
+  summands: Array<LegacyNumberProvider>,
+}
 
 export type ScoreNumberProvider = {
   target: ScoreProvider,
@@ -130,34 +71,18 @@ export type StorageNumberProvider = {
 }
 
 export type UniformNumberProvider = {
-  min?: NumberProviderRef,
-  max?: NumberProviderRef,
-}
-
-export type WeightedNumberProvider = {
-  distribution: NonEmptyWeightedList<NumberProviderRef>,
+  min?: LegacyNumberProvider,
+  max?: LegacyNumberProvider,
 }
 type NumberProviderDispatcherMap = {
-  'average': NumberProviderAverage,
-  'minecraft:average': NumberProviderAverage,
   'binomial': NumberProviderBinomial,
   'minecraft:binomial': NumberProviderBinomial,
-  'conditional': NumberProviderConditional,
-  'minecraft:conditional': NumberProviderConditional,
   'constant': NumberProviderConstant,
   'minecraft:constant': NumberProviderConstant,
   'enchantment_level': NumberProviderEnchantmentLevel,
   'minecraft:enchantment_level': NumberProviderEnchantmentLevel,
   'environment_attribute': NumberProviderEnvironmentAttribute,
   'minecraft:environment_attribute': NumberProviderEnvironmentAttribute,
-  'maximum': NumberProviderMaximum,
-  'minecraft:maximum': NumberProviderMaximum,
-  'minimum': NumberProviderMinimum,
-  'minecraft:minimum': NumberProviderMinimum,
-  'number_dispatcher': NumberProviderNumberDispatcher,
-  'minecraft:number_dispatcher': NumberProviderNumberDispatcher,
-  'product': NumberProviderProduct,
-  'minecraft:product': NumberProviderProduct,
   'score': NumberProviderScore,
   'minecraft:score': NumberProviderScore,
   'storage': NumberProviderStorage,
@@ -166,42 +91,26 @@ type NumberProviderDispatcherMap = {
   'minecraft:sum': NumberProviderSum,
   'uniform': NumberProviderUniform,
   'minecraft:uniform': NumberProviderUniform,
-  'weighted_list': NumberProviderWeightedList,
-  'minecraft:weighted_list': NumberProviderWeightedList,
 }
 type NumberProviderKeys = keyof NumberProviderDispatcherMap
 type NumberProviderFallback = (
-  | NumberProviderAverage
   | NumberProviderBinomial
-  | NumberProviderConditional
   | NumberProviderConstant
   | NumberProviderEnchantmentLevel
   | NumberProviderEnvironmentAttribute
-  | NumberProviderMaximum
-  | NumberProviderMinimum
-  | NumberProviderNumberDispatcher
-  | NumberProviderProduct
   | NumberProviderScore
   | NumberProviderStorage
   | NumberProviderSum
-  | NumberProviderUniform
-  | NumberProviderWeightedList)
+  | NumberProviderUniform)
 type NumberProviderNoneType = UniformNumberProvider
-type NumberProviderAverage = AggregateNumberProvider
 type NumberProviderBinomial = BinomialNumberProvider
-type NumberProviderConditional = ConditionalNumberProvider
 type NumberProviderConstant = ConstantNumberProvider
 type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
 type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider
-type NumberProviderMaximum = AggregateNumberProvider
-type NumberProviderMinimum = AggregateNumberProvider
-type NumberProviderNumberDispatcher = NumberDispatcher
-type NumberProviderProduct = AggregateNumberProvider
 type NumberProviderScore = ScoreNumberProvider
 type NumberProviderStorage = StorageNumberProvider
-type NumberProviderSum = AggregateNumberProvider
+type NumberProviderSum = LegacySumNumberProvider
 type NumberProviderUniform = UniformNumberProvider
-type NumberProviderWeightedList = WeightedNumberProvider
 export type SymbolNumberProvider<CASE extends
   | 'map'
   | 'keys'

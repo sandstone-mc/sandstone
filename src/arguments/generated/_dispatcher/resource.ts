@@ -26,7 +26,8 @@ import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametes
 import type { TestInstance } from 'sandstone/arguments/generated/data/gametest.ts'
 import type { ItemModifierRoot } from 'sandstone/arguments/generated/data/item_modifier.ts'
 import type { LootTable } from 'sandstone/arguments/generated/data/loot.ts'
-import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { FloatNumberProvider } from 'sandstone/arguments/generated/data/number_provider/contextual_float.ts'
+import type { IntegerNumberProvider } from 'sandstone/arguments/generated/data/number_provider/contextual_integer.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Recipe } from 'sandstone/arguments/generated/data/recipe.ts'
 import type { TypedSlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
@@ -89,6 +90,10 @@ type ResourceDispatcherMap = {
   'minecraft:chicken_sound_variant': ResourceChickenSoundVariant,
   'chicken_variant': ResourceChickenVariant,
   'minecraft:chicken_variant': ResourceChickenVariant,
+  'context_float_provider': ResourceContextFloatProvider,
+  'minecraft:context_float_provider': ResourceContextFloatProvider,
+  'context_int_provider': ResourceContextIntProvider,
+  'minecraft:context_int_provider': ResourceContextIntProvider,
   'cow_sound_variant': ResourceCowSoundVariant,
   'minecraft:cow_sound_variant': ResourceCowSoundVariant,
   'cow_variant': ResourceCowVariant,
@@ -133,8 +138,6 @@ type ResourceDispatcherMap = {
   'minecraft:loot_table': ResourceLootTable,
   'model': ResourceModel,
   'minecraft:model': ResourceModel,
-  'number_provider': ResourceNumberProvider,
-  'minecraft:number_provider': ResourceNumberProvider,
   'painting_variant': ResourcePaintingVariant,
   'minecraft:painting_variant': ResourcePaintingVariant,
   'particle': ResourceParticle,
@@ -232,6 +235,8 @@ type ResourceFallback = (
   | ResourceChatType
   | ResourceChickenSoundVariant
   | ResourceChickenVariant
+  | ResourceContextFloatProvider
+  | ResourceContextIntProvider
   | ResourceCowSoundVariant
   | ResourceCowVariant
   | ResourceCredits
@@ -254,7 +259,6 @@ type ResourceFallback = (
   | ResourceLangDeprecated
   | ResourceLootTable
   | ResourceModel
-  | ResourceNumberProvider
   | ResourcePaintingVariant
   | ResourceParticle
   | ResourcePigSoundVariant
@@ -310,6 +314,8 @@ type ResourceCatVariant = CatVariant
 type ResourceChatType = ChatType
 type ResourceChickenSoundVariant = SoundVariant<ChickenSounds>
 type ResourceChickenVariant = ChickenVariant
+type ResourceContextFloatProvider = FloatNumberProvider
+type ResourceContextIntProvider = IntegerNumberProvider
 type ResourceCowSoundVariant = CowSounds
 type ResourceCowVariant = CowVariant
 type ResourceCredits = Credits
@@ -332,7 +338,6 @@ type ResourceLang = Lang
 type ResourceLangDeprecated = LangDeprecated
 type ResourceLootTable = LootTable
 type ResourceModel = Model
-type ResourceNumberProvider = NumberProvider
 type ResourcePaintingVariant = PaintingVariant
 type ResourceParticle = Particle
 type ResourcePigSoundVariant = SoundVariant<PigSounds>

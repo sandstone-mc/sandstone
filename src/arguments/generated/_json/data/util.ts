@@ -1,5 +1,4 @@
 import type { JsonBlockEntityTarget, JsonEntityTarget } from 'sandstone/arguments/generated/_json/data/loot.ts'
-import type { JsonNumberProviderRef } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonNBTObject, JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type { SingleEntityArgument } from 'sandstone/arguments'
@@ -58,17 +57,6 @@ export type JsonIntLimiter = {
   min?: (NBTInt | number),
   max?: (NBTInt | number),
 }
-
-export type JsonIntRange = ((NBTInt | number) | {
-  /**
-   * Clamps to an integer.
-   */
-  min?: JsonNumberProviderRef,
-  /**
-   * Clamps to an integer.
-   */
-  max?: JsonNumberProviderRef,
-})
 
 export type JsonMinMaxBounds<T extends JsonNBTObject> = (T | {
   min?: T,

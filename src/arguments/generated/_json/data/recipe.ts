@@ -402,7 +402,11 @@ export type JsonSmelting = (JsonNotificationInfo & JsonCookingBookInfo & {
   ingredient: JsonIngredient,
   result: JsonItemStackTemplate,
   experience?: (NBTFloat | number),
-  cookingtime?: (NBTInt | number),
+} & {
+  /**
+   * Hint: The "Normal" value for this is `200`.
+   */
+  cookingtime: (NBTInt | number),
 })
 
 export type JsonSmithing = {

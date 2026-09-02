@@ -1,9 +1,20 @@
 import type { JsonItemModifier } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
-import type { JsonNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonPredicate } from 'sandstone/arguments/generated/_json/data/predicate.ts'
+import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
-import type { JsonItemStackTemplate, JsonTradeCost } from 'sandstone/arguments/generated/_json/world/item.ts'
+import type { JsonDataComponentExactPredicate } from 'sandstone/arguments/generated/_json/world/component.ts'
+import type {
+  JsonItemStackTemplate,
+  JsonSingleItemOfComponent,
+} from 'sandstone/arguments/generated/_json/world/item.ts'
 import type { EnchantmentClass, TagClass } from 'sandstone'
+
+export type JsonTradeCost = (JsonSingleItemOfComponent<JsonDataComponentExactPredicate> & {
+  /**
+   * Defaults to `1`.
+   */
+  count?: JsonSymbolResource['context_int_provider'],
+})
 
 export type JsonVillagerTrade = {
   /**
@@ -30,20 +41,17 @@ export type JsonVillagerTrade = {
    */
   given_item_modifier?: JsonItemModifier,
   /**
-   * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`. \
-   * Clamps to a positive integer.
+   * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`.
    */
-  max_uses?: JsonNumberProvider,
+  max_uses?: JsonSymbolResource['context_int_provider'],
   /**
-   * How much demand & reputation each affect the price, is serialized as `priceMultiplier`. Defaults to `0.0`. \
-   * Clamps to a non-negative float.
+   * How much demand & reputation each affect the price, is serialized as `priceMultiplier`. Defaults to `0.0`.
    */
-  reputation_discount?: JsonNumberProvider,
+  reputation_discount?: JsonSymbolResource['context_float_provider'],
   /**
-   * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`. \
-   * Clamps to a non-negative integer.
+   * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`.
    */
-  xp?: JsonNumberProvider,
+  xp?: JsonSymbolResource['context_int_provider'],
   /**
    * Check whether the trade should be offered by the merchant. \
    * Does **not** support the `reference` predicate.

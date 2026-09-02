@@ -101,6 +101,7 @@ export const TAG_ITEMS_SET = new Set([
   'fox_food',
   'freeze_immune_wearables',
   'frog_food',
+  'furnace_fuel_bottom_takeable',
   'furnace_minecart_fuel',
   'gaze_disguise_equipment',
   'glazed_terracotta',

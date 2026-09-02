@@ -6,9 +6,12 @@ import type {
   ItemStackTarget,
   LootPoolEntry,
 } from 'sandstone/arguments/generated/data/loot.ts'
-import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { FloatNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider/contextual_float.ts'
+import type {
+  IntegerNumberProviderRef,
+} from 'sandstone/arguments/generated/data/number_provider/contextual_integer.ts'
 import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
-import type { IntRange, NbtProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { NbtProvider } from 'sandstone/arguments/generated/data/util.ts'
 import type { SymbolDataComponent, SymbolMcdocBlockStateKeys } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.ts'
@@ -56,7 +59,7 @@ export type AttributeModifier = ({
    * Attribute type to modify.
    */
   attribute: Registry['minecraft:attribute'],
-  amount: NumberProviderRef,
+  amount: FloatNumberProviderRef,
   /**
    * The operation used for this modifier.
    *
@@ -272,7 +275,7 @@ export type CopyState = NonNullable<({
 }[Extract<Registry['minecraft:block'], string>])>
 
 export type CustomModelDataColors = ({
-  values: Array<(NumberProviderRef | RGB)>,
+  values: Array<(RGB | IntegerNumberProviderRef)>,
 } & ListOperation)
 
 export type CustomModelDataFlags = ({
@@ -280,7 +283,7 @@ export type CustomModelDataFlags = ({
 } & ListOperation)
 
 export type CustomModelDataFloats = ({
-  values: Array<NumberProviderRef>,
+  values: Array<FloatNumberProviderRef>,
 } & ListOperation)
 
 export type CustomModelDataStrings = ({
@@ -289,9 +292,9 @@ export type CustomModelDataStrings = ({
 
 export type EnchantedCountBase = {
   /**
-   * If the number is fractional the result is rounded *after* the number was multiplied by the looting level.
+   * Rounded *after* the number was multiplied by the looting level.
    */
-  count: NumberProviderRef,
+  count: FloatNumberProviderRef,
   /**
    * Limits the count of the item to a range.
    */
@@ -333,7 +336,7 @@ export type EnchantWithLevels = ({
   /**
    * The levels to enchant this item with.
    */
-  levels: NumberProviderRef,
+  levels: IntegerNumberProviderRef,
   /**
    * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
    */
@@ -457,7 +460,10 @@ export type LimitCount = ({
   /**
    * Limits the count of the item to a range.
    */
-  limit: IntRange,
+  limit: {
+    min?: IntegerNumberProviderRef,
+    max?: IntegerNumberProviderRef,
+  },
 } & Conditions)
 
 export type ListOperation = NonNullable<({
@@ -629,7 +635,7 @@ export type SetContents = ({
 } & Conditions)
 
 export type SetCount = ({
-  count: NumberProviderRef,
+  count: IntegerNumberProviderRef,
   /**
    * Whether to add to the existing count. Defaults to `false`.
    */
@@ -642,7 +648,7 @@ export type SetCustomData = ({
 
 export type SetCustomModelData = ({
   floats?: ({
-    values: Array<NumberProviderRef>,
+    values: Array<FloatNumberProviderRef>,
   } & ListOperation),
   flags?: ({
     values: Array<boolean>,
@@ -651,16 +657,16 @@ export type SetCustomModelData = ({
     values: Array<string>,
   } & ListOperation),
   colors?: ({
-    values: Array<(NumberProviderRef | RGB)>,
+    values: Array<(RGB | IntegerNumberProviderRef)>,
   } & ListOperation),
 } & Conditions)
 
 export type SetDamage = ({
   /**
    * Decimal percentage. Can be negative when used in combination with `add`. \
-   * Clamps to a float between `-1` & `1` (inclusive).
+   * Accepts a value between `-1` & `1` (inclusive).
    */
-  damage: NumberProviderRef,
+  damage: FloatNumberProviderRef,
   /**
    * Whether to add to the existing damage of the item. Defaults to `false`.
    */
@@ -669,11 +675,10 @@ export type SetDamage = ({
 
 export type SetEnchantments = ({
   /**
-   * A map of enchantments to levels. Setting an enchantment to `0` removes it from the item. \
-   * Each level is clamped to a positive integer.
+   * A map of enchantments to levels. Setting an enchantment to `0` removes it from the item.
    */
   enchantments: ({
-    [Key in Extract<Registry['minecraft:enchantment'], string>]?: NumberProviderRef
+    [Key in Extract<Registry['minecraft:enchantment'], string>]?: IntegerNumberProviderRef
   }),
   /**
    * Whether to add to the level of each enchantment. Defaults to `false`.
@@ -812,7 +817,7 @@ export type SetNbt = ({
 } & Conditions)
 
 export type SetOminousBottleAmplifier = ({
-  amplifier: NumberProviderRef,
+  amplifier: IntegerNumberProviderRef,
 } & Conditions)
 
 export type SetPotion = ({
@@ -828,7 +833,7 @@ export type SetRandomDyes = ({
    * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye. \
    * The same dye color can be selected multiple times.
    */
-  number_of_dyes: NumberProviderRef,
+  number_of_dyes: IntegerNumberProviderRef,
 } & Conditions)
 
 export type SetRandomPotion = ({
@@ -870,7 +875,7 @@ export type StewEffect = {
   /**
    * The duration of this stew effect, in seconds.
    */
-  duration: NumberProviderRef,
+  duration: IntegerNumberProviderRef,
 }
 
 export type ToggleableDataComponent = (

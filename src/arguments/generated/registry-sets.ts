@@ -14,6 +14,10 @@ export { CHICKEN_SOUND_VARIANTS_SET } from './_registry/chicken_sound_variants.t
 
 export { CHICKEN_VARIANTS_SET } from './_registry/chicken_variants.ts'
 
+export { CONTEXT_FLOAT_PROVIDERS_SET } from './_registry/context_float_providers.ts'
+
+export { CONTEXT_INT_PROVIDERS_SET } from './_registry/context_int_providers.ts'
+
 export { COW_SOUND_VARIANTS_SET } from './_registry/cow_sound_variants.ts'
 
 export { COW_VARIANTS_SET } from './_registry/cow_variants.ts'
@@ -39,8 +43,6 @@ export { INSTRUMENTS_SET } from './_registry/instruments.ts'
 export { JUKEBOX_SONGS_SET } from './_registry/jukebox_songs.ts'
 
 export { LOOT_TABLES_SET } from './_registry/loot_tables.ts'
-
-export { NUMBER_PROVIDERS_SET } from './_registry/number_providers.ts'
 
 export { PAINTING_VARIANTS_SET } from './_registry/painting_variants.ts'
 
@@ -196,6 +198,10 @@ export { COMMAND_ARGUMENT_TYPES_SET } from './_registry/command_argument_types.t
 
 export { CONSUME_EFFECT_TYPES_SET } from './_registry/consume_effect_types.ts'
 
+export { CONTEXT_FLOAT_PROVIDER_TYPES_SET } from './_registry/context_float_provider_types.ts'
+
+export { CONTEXT_INT_PROVIDER_TYPES_SET } from './_registry/context_int_provider_types.ts'
+
 export { CREATIVE_MODE_TABS_SET } from './_registry/creative_mode_tabs.ts'
 
 export { CUSTOM_STATS_SET } from './_registry/custom_stats.ts'
@@ -253,8 +259,6 @@ export { LOOT_CONDITION_TYPES_SET } from './_registry/loot_condition_types.ts'
 export { LOOT_FUNCTION_TYPES_SET } from './_registry/loot_function_types.ts'
 
 export { LOOT_NBT_PROVIDER_TYPES_SET } from './_registry/loot_nbt_provider_types.ts'
-
-export { LOOT_NUMBER_PROVIDER_TYPES_SET } from './_registry/loot_number_provider_types.ts'
 
 export { LOOT_POOL_ENTRY_TYPES_SET } from './_registry/loot_pool_entry_types.ts'
 

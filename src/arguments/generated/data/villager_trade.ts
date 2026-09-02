@@ -1,9 +1,17 @@
 import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
-import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
+import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { ItemStackTemplate, TradeCost } from 'sandstone/arguments/generated/world/item.ts'
+import type { DataComponentExactPredicate } from 'sandstone/arguments/generated/world/component.ts'
+import type { ItemStackTemplate, SingleItemOfComponent } from 'sandstone/arguments/generated/world/item.ts'
 import type { EnchantmentClass, TagClass } from 'sandstone'
+
+export type TradeCost = (SingleItemOfComponent<DataComponentExactPredicate> & {
+  /**
+   * Defaults to `1`.
+   */
+  count?: SymbolResource['context_int_provider'],
+})
 
 export type VillagerTrade = {
   /**
@@ -30,20 +38,17 @@ export type VillagerTrade = {
    */
   given_item_modifier?: ItemModifier,
   /**
-   * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`. \
-   * Clamps to a positive integer.
+   * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`.
    */
-  max_uses?: NumberProvider,
+  max_uses?: SymbolResource['context_int_provider'],
   /**
-   * How much demand & reputation each affect the price, is serialized as `priceMultiplier`. Defaults to `0.0`. \
-   * Clamps to a non-negative float.
+   * How much demand & reputation each affect the price, is serialized as `priceMultiplier`. Defaults to `0.0`.
    */
-  reputation_discount?: NumberProvider,
+  reputation_discount?: SymbolResource['context_float_provider'],
   /**
-   * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`. \
-   * Clamps to a non-negative integer.
+   * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`.
    */
-  xp?: NumberProvider,
+  xp?: SymbolResource['context_int_provider'],
   /**
    * Check whether the trade should be offered by the merchant. \
    * Does **not** support the `reference` predicate.

@@ -111,49 +111,49 @@ export type JsonWeightedBlockStateProvider = {
   entries: JsonNonEmptyWeightedList<JsonBlockState>,
 }
 type JsonBlockStateProviderDispatcherMap = {
-  'copy_properties_provider': JsonBlockStateProviderCopyPropertiesProvider,
-  'minecraft:copy_properties_provider': JsonBlockStateProviderCopyPropertiesProvider,
-  'dual_noise_provider': JsonBlockStateProviderDualNoiseProvider,
-  'minecraft:dual_noise_provider': JsonBlockStateProviderDualNoiseProvider,
-  'noise_provider': JsonBlockStateProviderNoiseProvider,
-  'minecraft:noise_provider': JsonBlockStateProviderNoiseProvider,
-  'noise_threshold_provider': JsonBlockStateProviderNoiseThresholdProvider,
-  'minecraft:noise_threshold_provider': JsonBlockStateProviderNoiseThresholdProvider,
-  'random_block_provider': JsonBlockStateProviderRandomBlockProvider,
-  'minecraft:random_block_provider': JsonBlockStateProviderRandomBlockProvider,
-  'randomized_int_state_provider': JsonBlockStateProviderRandomizedIntStateProvider,
-  'minecraft:randomized_int_state_provider': JsonBlockStateProviderRandomizedIntStateProvider,
-  'rotated_block_provider': JsonBlockStateProviderRotatedBlockProvider,
-  'minecraft:rotated_block_provider': JsonBlockStateProviderRotatedBlockProvider,
-  'rule_based_state_provider': JsonBlockStateProviderRuleBasedStateProvider,
-  'minecraft:rule_based_state_provider': JsonBlockStateProviderRuleBasedStateProvider,
-  'simple_state_provider': JsonBlockStateProviderSimpleStateProvider,
-  'minecraft:simple_state_provider': JsonBlockStateProviderSimpleStateProvider,
-  'weighted_state_provider': JsonBlockStateProviderWeightedStateProvider,
-  'minecraft:weighted_state_provider': JsonBlockStateProviderWeightedStateProvider,
+  'copy_properties': JsonBlockStateProviderCopyProperties,
+  'minecraft:copy_properties': JsonBlockStateProviderCopyProperties,
+  'dual_noise': JsonBlockStateProviderDualNoise,
+  'minecraft:dual_noise': JsonBlockStateProviderDualNoise,
+  'noise': JsonBlockStateProviderNoise,
+  'minecraft:noise': JsonBlockStateProviderNoise,
+  'noise_threshold': JsonBlockStateProviderNoiseThreshold,
+  'minecraft:noise_threshold': JsonBlockStateProviderNoiseThreshold,
+  'random': JsonBlockStateProviderRandom,
+  'minecraft:random': JsonBlockStateProviderRandom,
+  'randomized_int_state': JsonBlockStateProviderRandomizedIntState,
+  'minecraft:randomized_int_state': JsonBlockStateProviderRandomizedIntState,
+  'rotated': JsonBlockStateProviderRotated,
+  'minecraft:rotated': JsonBlockStateProviderRotated,
+  'rule_based': JsonBlockStateProviderRuleBased,
+  'minecraft:rule_based': JsonBlockStateProviderRuleBased,
+  'simple': JsonBlockStateProviderSimple,
+  'minecraft:simple': JsonBlockStateProviderSimple,
+  'weighted': JsonBlockStateProviderWeighted,
+  'minecraft:weighted': JsonBlockStateProviderWeighted,
 }
 type JsonBlockStateProviderKeys = keyof JsonBlockStateProviderDispatcherMap
 type JsonBlockStateProviderFallback = (
-  | JsonBlockStateProviderCopyPropertiesProvider
-  | JsonBlockStateProviderDualNoiseProvider
-  | JsonBlockStateProviderNoiseProvider
-  | JsonBlockStateProviderNoiseThresholdProvider
-  | JsonBlockStateProviderRandomBlockProvider
-  | JsonBlockStateProviderRandomizedIntStateProvider
-  | JsonBlockStateProviderRotatedBlockProvider
-  | JsonBlockStateProviderRuleBasedStateProvider
-  | JsonBlockStateProviderSimpleStateProvider
-  | JsonBlockStateProviderWeightedStateProvider)
-type JsonBlockStateProviderCopyPropertiesProvider = JsonCopyPropertiesProvider
-type JsonBlockStateProviderDualNoiseProvider = JsonDualNoiseProvider
-type JsonBlockStateProviderNoiseProvider = JsonNoiseProvider
-type JsonBlockStateProviderNoiseThresholdProvider = JsonNoiseThresholdProvider
-type JsonBlockStateProviderRandomBlockProvider = JsonRandomBlockStateProvider
-type JsonBlockStateProviderRandomizedIntStateProvider = JsonRandomizedIntStateProvider
-type JsonBlockStateProviderRotatedBlockProvider = JsonRotatedStateProvider
-type JsonBlockStateProviderRuleBasedStateProvider = JsonRuleBasedBlockStateProvider
-type JsonBlockStateProviderSimpleStateProvider = JsonSimpleStateProvider
-type JsonBlockStateProviderWeightedStateProvider = JsonWeightedBlockStateProvider
+  | JsonBlockStateProviderCopyProperties
+  | JsonBlockStateProviderDualNoise
+  | JsonBlockStateProviderNoise
+  | JsonBlockStateProviderNoiseThreshold
+  | JsonBlockStateProviderRandom
+  | JsonBlockStateProviderRandomizedIntState
+  | JsonBlockStateProviderRotated
+  | JsonBlockStateProviderRuleBased
+  | JsonBlockStateProviderSimple
+  | JsonBlockStateProviderWeighted)
+type JsonBlockStateProviderCopyProperties = JsonCopyPropertiesProvider
+type JsonBlockStateProviderDualNoise = JsonDualNoiseProvider
+type JsonBlockStateProviderNoise = JsonNoiseProvider
+type JsonBlockStateProviderNoiseThreshold = JsonNoiseThresholdProvider
+type JsonBlockStateProviderRandom = JsonRandomBlockStateProvider
+type JsonBlockStateProviderRandomizedIntState = JsonRandomizedIntStateProvider
+type JsonBlockStateProviderRotated = JsonRotatedStateProvider
+type JsonBlockStateProviderRuleBased = JsonRuleBasedBlockStateProvider
+type JsonBlockStateProviderSimple = JsonSimpleStateProvider
+type JsonBlockStateProviderWeighted = JsonWeightedBlockStateProvider
 export type JsonSymbolBlockStateProvider<CASE extends
   | 'map'
   | 'keys'

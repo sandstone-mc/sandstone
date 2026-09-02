@@ -1,4 +1,4 @@
-import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NamespacedString, TagClass, VillagerTradeClass } from 'sandstone'
 
@@ -13,10 +13,9 @@ export type TradeSet = {
         | VillagerTradeClass)
       | Array<(Registry['minecraft:villager_trade'] | VillagerTradeClass)>),
   /**
-   * Amount of trades to be generated. \
-   * Clamps to an integer of at least `1`.
+   * Amount of trades to be generated.
    */
-  amount: NumberProvider,
+  amount: SymbolResource['context_int_provider'],
   /**
    * Whether the trade set can use the same generator multiple times and generate duplicate trades.
    * Defaults to `false`.

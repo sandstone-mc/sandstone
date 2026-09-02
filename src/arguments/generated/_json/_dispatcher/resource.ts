@@ -26,7 +26,12 @@ import type { JsonTestInstance } from 'sandstone/arguments/generated/_json/data/
 import type { JsonTestEnvironment } from 'sandstone/arguments/generated/_json/data/gametest/test_environment.ts'
 import type { JsonItemModifierRoot } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
 import type { JsonLootTable } from 'sandstone/arguments/generated/_json/data/loot.ts'
-import type { JsonNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
+import type {
+  JsonFloatNumberProvider,
+} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_float.ts'
+import type {
+  JsonIntegerNumberProvider,
+} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_integer.ts'
 import type { JsonPredicate } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonRecipe } from 'sandstone/arguments/generated/_json/data/recipe.ts'
 import type { JsonTypedSlotSource } from 'sandstone/arguments/generated/_json/data/slot_source.ts'
@@ -95,6 +100,10 @@ type JsonResourceDispatcherMap = {
   'minecraft:chicken_sound_variant': JsonResourceChickenSoundVariant,
   'chicken_variant': JsonResourceChickenVariant,
   'minecraft:chicken_variant': JsonResourceChickenVariant,
+  'context_float_provider': JsonResourceContextFloatProvider,
+  'minecraft:context_float_provider': JsonResourceContextFloatProvider,
+  'context_int_provider': JsonResourceContextIntProvider,
+  'minecraft:context_int_provider': JsonResourceContextIntProvider,
   'cow_sound_variant': JsonResourceCowSoundVariant,
   'minecraft:cow_sound_variant': JsonResourceCowSoundVariant,
   'cow_variant': JsonResourceCowVariant,
@@ -139,8 +148,6 @@ type JsonResourceDispatcherMap = {
   'minecraft:loot_table': JsonResourceLootTable,
   'model': JsonResourceModel,
   'minecraft:model': JsonResourceModel,
-  'number_provider': JsonResourceNumberProvider,
-  'minecraft:number_provider': JsonResourceNumberProvider,
   'painting_variant': JsonResourcePaintingVariant,
   'minecraft:painting_variant': JsonResourcePaintingVariant,
   'particle': JsonResourceParticle,
@@ -238,6 +245,8 @@ type JsonResourceFallback = (
   | JsonResourceChatType
   | JsonResourceChickenSoundVariant
   | JsonResourceChickenVariant
+  | JsonResourceContextFloatProvider
+  | JsonResourceContextIntProvider
   | JsonResourceCowSoundVariant
   | JsonResourceCowVariant
   | JsonResourceCredits
@@ -260,7 +269,6 @@ type JsonResourceFallback = (
   | JsonResourceLangDeprecated
   | JsonResourceLootTable
   | JsonResourceModel
-  | JsonResourceNumberProvider
   | JsonResourcePaintingVariant
   | JsonResourceParticle
   | JsonResourcePigSoundVariant
@@ -316,6 +324,8 @@ type JsonResourceCatVariant = JsonCatVariant
 type JsonResourceChatType = JsonChatType
 type JsonResourceChickenSoundVariant = JsonSoundVariant<JsonChickenSounds>
 type JsonResourceChickenVariant = JsonChickenVariant
+type JsonResourceContextFloatProvider = JsonFloatNumberProvider
+type JsonResourceContextIntProvider = JsonIntegerNumberProvider
 type JsonResourceCowSoundVariant = JsonCowSounds
 type JsonResourceCowVariant = JsonCowVariant
 type JsonResourceCredits = JsonCredits
@@ -338,7 +348,6 @@ type JsonResourceLang = JsonLang
 type JsonResourceLangDeprecated = JsonLangDeprecated
 type JsonResourceLootTable = JsonLootTable
 type JsonResourceModel = JsonModel
-type JsonResourceNumberProvider = JsonNumberProvider
 type JsonResourcePaintingVariant = JsonPaintingVariant
 type JsonResourceParticle = JsonParticle
 type JsonResourcePigSoundVariant = JsonSoundVariant<JsonPigSounds>

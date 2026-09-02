@@ -1,14 +1,10 @@
-import type { JsonNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonSymbolMcdocBlockItemStates } from 'sandstone/arguments/generated/_json/dispatcher.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonLegacyOperation } from 'sandstone/arguments/generated/_json/util/attribute.ts'
 import type { JsonEquipmentSlotGroup } from 'sandstone/arguments/generated/_json/util/slot.ts'
 import type { JsonBlockEntityData } from 'sandstone/arguments/generated/_json/world/block.ts'
 import type { JsonTrim } from 'sandstone/arguments/generated/_json/world/component/item.ts'
-import type {
-  JsonDataComponentExactPredicate,
-  JsonDataComponentPatch,
-} from 'sandstone/arguments/generated/_json/world/component.ts'
+import type { JsonDataComponentPatch } from 'sandstone/arguments/generated/_json/world/component.ts'
 import type { JsonNBTObject } from 'sandstone/arguments/nbt.ts'
 import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTShort, NonEmptyString } from 'sandstone'
 
@@ -159,8 +155,6 @@ export type JsonItemBase = (({
   Trim?: JsonTrim,
 })
 
-export type JsonItemCost = JsonItemStackOfComponent<JsonDataComponentExactPredicate>
-
 export type JsonItemStack = JsonItemStackOfComponent<JsonDataComponentPatch>
 
 export type JsonItemStackOfComponent<T extends JsonNBTObject> = (JsonSingleItemOfComponent<T> & {
@@ -188,11 +182,3 @@ export type JsonSingleItemOfComponent<T extends JsonNBTObject> = {
   id: JsonRegistry['minecraft:item'],
   components?: T,
 }
-
-export type JsonTradeCost = (JsonSingleItemOfComponent<JsonDataComponentExactPredicate> & {
-  /**
-   * Number of items in the stack.
-   * Defaults to `1`.
-   */
-  count?: JsonNumberProvider,
-})

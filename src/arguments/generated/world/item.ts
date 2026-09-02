@@ -1,10 +1,9 @@
-import type { NumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { SymbolMcdocBlockItemStates } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { LegacyOperation } from 'sandstone/arguments/generated/util/attribute.ts'
 import type { EquipmentSlotGroup } from 'sandstone/arguments/generated/util/slot.ts'
 import type { BlockEntityData } from 'sandstone/arguments/generated/world/block.ts'
-import type { DataComponentExactPredicate, DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
+import type { DataComponentPatch } from 'sandstone/arguments/generated/world/component.ts'
 import type { Trim } from 'sandstone/arguments/generated/world/component/item.ts'
 import type { NBTObject } from 'sandstone/arguments/nbt.ts'
 import type { EnchantmentClass, NBTDouble, NBTInt, NBTIntArray, NBTShort, NonEmptyString } from 'sandstone'
@@ -156,8 +155,6 @@ export type ItemBase = (({
   Trim?: Trim,
 })
 
-export type ItemCost = ItemStackOfComponent<DataComponentExactPredicate>
-
 export type ItemStack = ItemStackOfComponent<DataComponentPatch>
 
 export type ItemStackOfComponent<T extends NBTObject> = (SingleItemOfComponent<T> & {
@@ -185,11 +182,3 @@ export type SingleItemOfComponent<T extends NBTObject> = {
   id: Registry['minecraft:item'],
   components?: T,
 }
-
-export type TradeCost = (SingleItemOfComponent<DataComponentExactPredicate> & {
-  /**
-   * Number of items in the stack.
-   * Defaults to `1`.
-   */
-  count?: NumberProvider,
-})

@@ -3,7 +3,6 @@ import type {
   JsonItemPredicate,
 } from 'sandstone/arguments/generated/_json/data/advancement/predicate.ts'
 import type { JsonDamageType } from 'sandstone/arguments/generated/_json/data/damage_type.ts'
-import type { JsonResolvableNumber } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonTrimMaterial, JsonTrimPattern } from 'sandstone/arguments/generated/_json/data/trim.ts'
 import type { JsonSoundEventRef } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type { JsonInstrument } from 'sandstone/arguments/generated/_json/data/variants/instrument.ts'
@@ -50,7 +49,9 @@ import type {
   DamageTypeClass,
   DecoratedPotPatternClass,
   EquipmentClass,
+  FloatNumberProviderClass,
   InstrumentClass,
+  IntegerNumberProviderClass,
   ItemModelDefinitionClass,
   JsonNBTList,
   JukeboxSongClass,
@@ -308,8 +309,10 @@ export type Jsonblocks_attacks = {
 export type JsonBookGeneration = (0 | 1 | 2 | 3)
 
 export type JsonBrewingFuel = {
-  uses: JsonResolvableNumber,
-  speed_multiplier: JsonResolvableNumber,
+  uses: ((NBTInt | number) | (JsonRegistry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
+  speed_multiplier: ((
+      | NBTFloat | number) | (
+      JsonRegistry['minecraft:context_float_provider'] | FloatNumberProviderClass)),
 }
 
 export type JsonBucketEntityData = {
@@ -361,7 +364,7 @@ export type JsonBucketEntityData = {
 }
 
 export type JsonCompostable = {
-  layers: JsonResolvableNumber,
+  layers: ((NBTInt | number) | (JsonRegistry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
 }
 
 export type JsonConsumable = {
@@ -416,8 +419,10 @@ export type JsonConsumeEffect = NonNullable<({
 }[Extract<JsonRegistry['minecraft:consume_effect_type'], string>])>
 
 export type JsonCookingFuel = {
-  burn_time: JsonResolvableNumber,
-  speed_multiplier: JsonResolvableNumber,
+  burn_time: ((NBTInt | number) | (JsonRegistry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
+  speed_multiplier: ((
+      | NBTFloat | number) | (
+      JsonRegistry['minecraft:context_float_provider'] | FloatNumberProviderClass)),
 }
 
 export type JsonCustomModelData = {

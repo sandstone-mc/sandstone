@@ -1,5 +1,4 @@
 import type { BlockEntityTarget, EntityTarget } from 'sandstone/arguments/generated/data/loot.ts'
-import type { NumberProviderRef } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { NBTObject, RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { SingleEntityArgument } from 'sandstone/arguments'
@@ -58,17 +57,6 @@ export type IntLimiter = {
   min?: NBTInt,
   max?: NBTInt,
 }
-
-export type IntRange = (NBTInt | {
-  /**
-   * Clamps to an integer.
-   */
-  min?: NumberProviderRef,
-  /**
-   * Clamps to an integer.
-   */
-  max?: NumberProviderRef,
-})
 
 export type MinMaxBounds<T extends NBTObject> = (T | {
   min?: T,
