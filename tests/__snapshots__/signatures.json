@@ -157,6 +157,10 @@
     "signature": "(alias) type FileHandler = {\n    path: RegExp;\n    callback: (contents: HandlerFile) => HandlerFile | Promise<HandlerFile>;\n}",
     "definition": "src/config.ts"
   },
+  "FloatNumberProviderClass": {
+    "signature": "(alias) class FloatNumberProviderClass",
+    "definition": "src/core/resources/datapack/numberProvider.ts"
+  },
   "Font": {
     "signature": "(alias) const Font: (name: string, providers: FontArguments['providers'], options?: Omit<Partial<FontArguments>, 'providers'>) => FontClass",
     "definition": "src/pack/pack.ts"
@@ -176,6 +180,10 @@
   "InstrumentClass": {
     "signature": "(alias) class InstrumentClass",
     "definition": "src/core/resources/datapack/datacomponent/instrument.ts"
+  },
+  "IntegerNumberProviderClass": {
+    "signature": "(alias) class IntegerNumberProviderClass",
+    "definition": "src/core/resources/datapack/numberProvider.ts"
   },
   "ItemModelDefinition": {
     "signature": "(alias) const ItemModelDefinition: (name: string, definition: ItemModelDefinitionInput, options?: Omit<Partial<ItemModelDefinitionClassArguments>, 'definition'>) => ItemModelDefinitionClass",
@@ -370,12 +378,8 @@
     "definition": "src/variables/nbt/NBTs.ts"
   },
   "NumberProvider": {
-    "signature": "(alias) const NumberProvider: (name: string, numberProvider: NumberProviderClassArguments['json'], options?: Omit<Partial<NumberProviderClassArguments>, 'json'>) => NumberProviderClass",
+    "signature": "(alias) const NumberProvider: {\n    (type: 'float', name: string, numberProvider: FloatNumberProviderClassArguments['json'], options?: Omit<Partial<FloatNumberProviderClassArguments>, 'json'>): FloatNumberProviderClass;\n    (type: 'integer', name: string, numberProvider: IntegerNumberProviderClassArguments['json'], options?: Omit<Partial<IntegerNumberProviderClassArguments>, 'json'>): IntegerNumberProviderClass;\n}",
     "definition": "src/pack/pack.ts"
-  },
-  "NumberProviderClass": {
-    "signature": "(alias) class NumberProviderClass",
-    "definition": "src/core/resources/datapack/numberProvider.ts"
   },
   "Objective": {
     "signature": "(alias) const Objective: {\n    create: (name: string, criteria?: LiteralUnion<OBJECTIVE_CRITERIA>, display?: JSONTextComponent, options?: {\n        alreadyExists?: boolean;\n        useDefaultNamespace?: boolean;\n    }) => ObjectiveClass;\n    get: (name: string) => ObjectiveClass;\n}",
@@ -519,7 +523,7 @@
     "definition": "src/pack/pack.ts"
   },
   "TagClass": {
-    "signature": "(alias) class TagClass<REGISTRY extends LiteralUnion<\"activity\" | \"advancement\" | \"armor_material\" | \"attribute\" | \"attribute_type\" | \"banner_pattern\" | \"block\" | \"block_entity_type\" | \"block_predicate_type\" | \"block_transformer\" | \"block_type\" | \"cat_sound_variant\" | \"cat_variant\" | \"chat_type\" | \"chicken_sound_variant\" | \"chicken_variant\" | \"chunk_status\" | \"command_argument_type\" | \"consume_effect_type\" | \"cow_sound_variant\" | \"cow_variant\" | \"creative_mode_tab\" | \"custom_stat\" | \"damage_type\" | \"data_component_predicate_type\" | \"data_component_type\" | \"debug_subscription\" | ... 139 more ... | \"zombie_nautilus_variant\">>",
+    "signature": "(alias) class TagClass<REGISTRY extends LiteralUnion<\"activity\" | \"advancement\" | \"armor_material\" | \"attribute\" | \"attribute_type\" | \"banner_pattern\" | \"block\" | \"block_entity_type\" | \"block_predicate_type\" | \"block_transformer\" | \"block_type\" | \"cat_sound_variant\" | \"cat_variant\" | \"chat_type\" | \"chicken_sound_variant\" | \"chicken_variant\" | \"chunk_status\" | \"command_argument_type\" | \"consume_effect_type\" | \"context_float_provider\" | \"context_float_provider_type\" | \"context_int_provider\" | \"context_int_provider_type\" | \"cow_sound_variant\" | \"cow_variant\" | \"creative_mode_tab\" | ... 143 more ... | \"zombie_nautilus_variant\">>",
     "definition": "src/core/resources/datapack/tag.ts"
   },
   "TestEnvironment": {
@@ -671,7 +675,7 @@
     "definition": "src/commands/implementations/_fake/comment.ts"
   },
   "compute": {
-    "signature": "(alias) const compute: ComputeCommand<false> & (<PROVIDER extends NumberProviderArgument<false>>(provider: PROVIDER, scaleOrInteger?: number | \"integer\" | undefined) => FinalCommandOutput)",
+    "signature": "(alias) const compute: ComputeCommand<false>",
     "definition": "src/commands/implementations/server/compute.ts"
   },
   "createSandstonePack": {

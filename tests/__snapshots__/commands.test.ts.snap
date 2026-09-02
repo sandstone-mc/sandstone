@@ -1,6 +1,6 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`Commands: /compute snapshots default: inline constant provider 1`] = `
+exports[`Commands: /compute snapshots default: inline constant float provider 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -92,13 +92,13 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_default_inline.mcfunction",
-    "compute default {type:'minecraft:constant',value:42d}",
+    "datapack/data/test/function/compute_default_float_inline.mcfunction",
+    "compute default float {type:'minecraft:constant',value:42d}",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots default: registry reference provider + integer mode 1`] = `
+exports[`Commands: /compute snapshots default: registry reference int provider 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -190,13 +190,13 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_default_registry_integer.mcfunction",
-    "compute default minecraft:my_pack:dmg_mult integer",
+    "datapack/data/test/function/compute_default_int_registry.mcfunction",
+    "compute default integer minecraft:my_pack:dmg_mult",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots default: storage provider + scale 1`] = `
+exports[`Commands: /compute snapshots default: storage float provider + scale 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -288,13 +288,13 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_default_storage_scaled.mcfunction",
-    "compute default {type:'minecraft:storage',storage:'minecraft:gameplay/foo',path:'difficulty'} 100",
+    "datapack/data/test/function/compute_default_float_storage_scaled.mcfunction",
+    "compute default float {type:'minecraft:storage',storage:'minecraft:gameplay/foo',path:'difficulty'} 100",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots block: pos + inline provider 1`] = `
+exports[`Commands: /compute snapshots block: pos + inline float provider 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -386,13 +386,13 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_block_inline.mcfunction",
-    "compute block 0 64 0 {type:'minecraft:constant',value:1d}",
+    "datapack/data/test/function/compute_block_float_inline.mcfunction",
+    "compute block 0 64 0 float {type:'minecraft:constant',value:1d}",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots block: relative pos + registry provider + float scale 1`] = `
+exports[`Commands: /compute snapshots block: relative pos + registry float provider + float scale 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -484,13 +484,13 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_block_registry_scaled.mcfunction",
-    "compute block ~ ~ ~ minecraft:my_pack:redstone_strength 2.5",
+    "datapack/data/test/function/compute_block_float_registry_scaled.mcfunction",
+    "compute block ~ ~ ~ float minecraft:my_pack:redstone_strength 2.5",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots entity: inline score provider 1`] = `
+exports[`Commands: /compute snapshots entity: inline score int provider 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -582,13 +582,13 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_entity_inline.mcfunction",
-    "compute entity @p {type:'minecraft:score',target:'@s',score:'health'}",
+    "datapack/data/test/function/compute_entity_int_score.mcfunction",
+    "compute entity @p integer {type:'minecraft:score',target:'@s',score:'health'}",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots entity: registry provider, no scale 1`] = `
+exports[`Commands: /compute snapshots entity: registry float provider, no scale 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -680,13 +680,13 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_entity_registry.mcfunction",
-    "compute entity @e[type=zombie,limit=1] minecraft:my_pack:boss_damage",
+    "datapack/data/test/function/compute_entity_float_registry.mcfunction",
+    "compute entity @e[type=zombie,limit=1] float minecraft:my_pack:boss_damage",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots default: NumberProviderClass resource handle 1`] = `
+exports[`Commands: /compute snapshots default: FloatNumberProviderClass resource handle 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -771,7 +771,7 @@ scoreboard players reset * load.status"
 ,
   ],
   [
-    "datapack/data/my_pack/number_provider/dmg_mult.json",
+    "datapack/data/my_pack/context_float_provider/dmg_mult.json",
     
 "{
   "type": "minecraft:uniform",
@@ -789,12 +789,12 @@ scoreboard players set test load.status 1"
   ],
   [
     "datapack/data/test/function/compute_default_class.mcfunction",
-    "compute default my_pack:dmg_mult",
+    "compute default float my_pack:dmg_mult",
   ],
 ]
 `;
 
-exports[`Commands: /compute snapshots compute(...) calls default directly (callable alias) 1`] = `
+exports[`Commands: /compute snapshots shortcut: compute.float(provider) emits default-context float 1`] = `
 [
   [
     "datapack/data/load/function/_private/init.mcfunction",
@@ -886,11 +886,106 @@ scoreboard players set test load.status 1"
 ,
   ],
   [
-    "datapack/data/test/function/compute_callable_alias.mcfunction",
+    "datapack/data/test/function/compute_shortcut_float.mcfunction",
+    "compute default float {type:'minecraft:constant',value:1.5d} 100",
+  ],
+]
+`;
+
+exports[`Commands: /compute snapshots shortcut: compute.int(provider) emits default-context integer 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
     
-"compute default minecraft:my_pack:dmg_mult
-compute default {type:'minecraft:constant',value:42d} integer"
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
 ,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/compute_shortcut_int.mcfunction",
+    "compute default integer minecraft:my_pack:kill_count",
   ],
 ]
 `;

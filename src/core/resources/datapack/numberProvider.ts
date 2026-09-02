@@ -6,12 +6,12 @@ import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 
 /**
- * A node representing a Minecraft number provider.
+ * A node representing a Minecraft float number provider.
  */
-export class NumberProviderNode extends ContainerNode implements ResourceNode<NumberProviderClass> {
+export class FloatNumberProviderNode extends ContainerNode implements ResourceNode<FloatNumberProviderClass> {
   constructor(
     sandstoneCore: SandstoneCore,
-    public resource: NumberProviderClass,
+    public resource: FloatNumberProviderClass,
   ) {
     super(sandstoneCore)
   }
@@ -20,27 +20,27 @@ export class NumberProviderNode extends ContainerNode implements ResourceNode<Nu
     jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
 }
 
-type NumberProviderJSON = JsonSymbolResource[(typeof NumberProviderClass)['resourceType']]
+type FloatNumberProviderJSON = JsonSymbolResource[(typeof FloatNumberProviderClass)['resourceType']]
 
-export type NumberProviderClassArguments = {
+export type FloatNumberProviderClassArguments = {
   /**
    * The number provider's JSON payload.
    */
-  json: NumberProviderJSON
+  json: FloatNumberProviderJSON
 } & ResourceClassArguments<'default'>
 
-export class NumberProviderClass extends ResourceClass<NumberProviderNode> implements JsonResource {
-  static readonly resourceType = 'number_provider' as const
+export class FloatNumberProviderClass extends ResourceClass<FloatNumberProviderNode> implements JsonResource {
+  static readonly resourceType = 'context_float_provider' as const
 
-  public json: NumberProviderClassArguments['json']
+  public json: FloatNumberProviderClassArguments['json']
 
-  constructor(sandstoneCore: SandstoneCore, name: string, args: NumberProviderClassArguments) {
+  constructor(sandstoneCore: SandstoneCore, name: string, args: FloatNumberProviderClassArguments) {
     super(
       sandstoneCore,
       { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
-      NumberProviderNode,
-      NumberProviderClass.resourceType,
-      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[NumberProviderClass.resourceType].path),
+      FloatNumberProviderNode,
+      FloatNumberProviderClass.resourceType,
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[FloatNumberProviderClass.resourceType].path),
       args,
     )
 
@@ -49,3 +49,49 @@ export class NumberProviderClass extends ResourceClass<NumberProviderNode> imple
     this.handleConflicts()
   }
 }
+
+/**
+ * A node representing a Minecraft integer number provider.
+ */
+export class IntegerNumberProviderNode extends ContainerNode implements ResourceNode<IntegerNumberProviderClass> {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: IntegerNumberProviderClass,
+  ) {
+    super(sandstoneCore)
+  }
+
+  getValue = () =>
+    jsonStringify(this.resource.json, this.resource._resourceType as keyof typeof RESOURCE_PATHS)
+}
+
+type IntegerNumberProviderJSON = JsonSymbolResource[(typeof IntegerNumberProviderClass)['resourceType']]
+
+export type IntegerNumberProviderClassArguments = {
+  /**
+   * The number provider's JSON payload.
+   */
+  json: IntegerNumberProviderJSON
+} & ResourceClassArguments<'default'>
+
+export class IntegerNumberProviderClass extends ResourceClass<IntegerNumberProviderNode> implements JsonResource {
+  static readonly resourceType = 'context_int_provider' as const
+
+  public json: IntegerNumberProviderClassArguments['json']
+
+  constructor(sandstoneCore: SandstoneCore, name: string, args: IntegerNumberProviderClassArguments) {
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.dataPack(), extension: 'json' },
+      IntegerNumberProviderNode,
+      IntegerNumberProviderClass.resourceType,
+      sandstoneCore.pack.resourceToPath(name, RESOURCE_PATHS[IntegerNumberProviderClass.resourceType].path),
+      args,
+    )
+
+    this.json = args.json
+
+    this.handleConflicts()
+  }
+}
+

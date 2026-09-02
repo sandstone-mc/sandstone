@@ -44,7 +44,7 @@ import type {
   MCFunctionClassArguments,
   ModelClassArguments,
   Node,
-  NumberProviderClassArguments,
+  FloatNumberProviderClassArguments,
   ParticleClassArguments,
   PlainTextArguments,
   PostEffectClassArguments,
@@ -70,6 +70,7 @@ import type {
   VillagerTradeClassArguments,
   WaypointStyleClassArguments,
   WorldClockClassArguments,
+  IntegerNumberProviderClassArguments,
 } from 'sandstone/core'
 import {
   AdvancementClass,
@@ -95,7 +96,7 @@ import {
   MacroLiteral,
   MCFunctionClass,
   ModelClass,
-  NumberProviderClass,
+  FloatNumberProviderClass,
   ParticleClass,
   PlainTextClass,
   PostEffectClass,
@@ -120,6 +121,7 @@ import {
   VillagerTradeClass,
   WaypointStyleClass,
   WorldClockClass,
+  IntegerNumberProviderClass,
 } from 'sandstone/core'
 import { CustomResourceClass } from 'sandstone/core/resources/custom'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
@@ -1163,14 +1165,37 @@ export class SandstonePack {
       ...options,
     })
 
-  NumberProvider = (name: string, numberProvider: NumberProviderClassArguments['json'], options?: Omit<Partial<NumberProviderClassArguments>, 'json'>) =>
-    new NumberProviderClass(this.core, name, {
-      json: numberProvider,
-      creator: 'user',
-      addToSandstoneCore: true,
-      onConflict: conflictDefaults('number_provider') as NumberProviderClassArguments['onConflict'],
-      ...options,
-    })
+  NumberProvider(
+    type: 'float',
+    name: string,
+    numberProvider: FloatNumberProviderClassArguments['json'],
+    options?: Omit<Partial<FloatNumberProviderClassArguments>, 'json'>
+  ): FloatNumberProviderClass
+
+  NumberProvider(
+    type: 'integer', name: string,
+    numberProvider: IntegerNumberProviderClassArguments['json'],
+    options?: Omit<Partial<IntegerNumberProviderClassArguments>, 'json'>
+  ): IntegerNumberProviderClass
+
+  NumberProvider(type: 'float' | 'integer', name: string, numberProvider: any, options?: any) {
+    if (type === 'float') {
+      return new FloatNumberProviderClass(this.core, name, {
+        json: numberProvider,
+        creator: 'user',
+        addToSandstoneCore: true,
+        onConflict: conflictDefaults('float_number_provider') as FloatNumberProviderClassArguments['onConflict'],
+        ...options,
+      })
+    }
+    return new IntegerNumberProviderClass(this.core, name, {
+        json: numberProvider,
+        creator: 'user',
+        addToSandstoneCore: true,
+        onConflict: conflictDefaults('integer_number_provider') as IntegerNumberProviderClassArguments['onConflict'],
+        ...options,
+      })
+  }
 
   LootTable = (name: string, lootTable: LootTableClassArguments['json'], options?: Omit<Partial<LootTableClassArguments>, 'json'>) =>
     new LootTableClass(this.core, name, {

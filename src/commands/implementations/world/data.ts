@@ -1,12 +1,17 @@
 import type { Coordinates, NBTObject, SingleEntityArgumentOf } from 'sandstone/arguments'
 import { type MacroArgument, type Macroable, DataPointPickClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import { makeCallable } from 'sandstone/utils'
+import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import { DataPointClass, type VectorClass } from 'sandstone/variables'
 import { nbtResolver } from 'sandstone/variables/nbt/NBTs'
-import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
+import { makeCallable } from 'sandstone/utils'
 import { CommandArguments, type FinalCommandOutput } from '../../helpers'
-import { NumberProviderArgument, numberProviderArgument, NumberProviderScale } from '../server/compute'
+import {
+  type FloatNumberProviderArgument,
+  type IntegerNumberProviderArgument,
+  floatNumberProviderArgument,
+  integerNumberProviderArgument,
+} from '../server/compute'
 
 export class DataCommandNode extends CommandNode {
   command = 'data' as const
@@ -229,44 +234,16 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
   }
 
   /**
-   * Modify with the value of a `minecraft:number_provider`. Mirrors `/compute`'s
-   * three target contexts (`default` / `block <pos>` / `entity <target>`).
+   * Modify with the value of a `minecraft:context_int_provider` or
+   * `minecraft:context_float_provider`. Mirrors `/compute`'s three target
+   * contexts (`default` / `block <pos>` / `entity <target>`).
+   *
+   * Integer and float providers each get a separate chained entry, since the
+   * underlying MC syntax is now `compute <target> integer|float <provider>`.
    */
   get compute() {
-    return makeCallable(
-      {
-        default: (provider: NumberProviderArgument<MACRO>, scale?: NumberProviderScale<MACRO>) =>
-          this.finalCommand(['compute', 'default', numberProviderArgument(this.sandstoneCore, provider), scale]),
-        block: (
-          pos: Macroable<Coordinates<MACRO>, MACRO>,
-          provider: NumberProviderArgument<MACRO>,
-          scale?: NumberProviderScale<MACRO>,
-        ) =>
-          this.finalCommand([
-            'compute',
-            'block',
-            coordinatesParser(pos),
-            numberProviderArgument(this.sandstoneCore, provider),
-            scale,
-          ]),
-        entity: <T extends string>(
-          target: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
-          provider: NumberProviderArgument<MACRO>,
-          scale?: NumberProviderScale<MACRO>,
-        ) =>
-          this.finalCommand([
-            'compute',
-            'entity',
-            targetParser(target),
-            numberProviderArgument(this.sandstoneCore, provider),
-            scale,
-          ]),
-      },
-      (provider: NumberProviderArgument<MACRO>, scale?: NumberProviderScale<MACRO>) => 
-        this.finalCommand(['compute', 'default', numberProviderArgument(this.sandstoneCore, provider), scale]),
-    )
+    return this.subCommand(['compute'], DataModifyComputeCommand<MACRO>, false)
   }
-
 
   string = {
     /**
@@ -353,6 +330,74 @@ export class DataModifyValuesCommand<MACRO extends boolean> extends CommandArgum
    * Modify the NBT with the given value.
    */
   value = (value: Macroable<NBTObject, MACRO>) => this.finalCommand(['value', nbtResolver(value)])
+}
+
+/**
+ * `data modify <target> compute` — selects the target context (`default` /
+ * `block <pos>` / `entity <target>`), then picks integer / float on the
+ * returned chain.
+ */
+export class DataModifyComputeCommand<MACRO extends boolean> extends CommandArguments {
+  /**
+   * `compute default` — only common arguments (position, `this` entity) in scope.
+   */
+  default = (): DataModifyComputeContext<MACRO> =>
+    this.subCommand(['default'], DataModifyComputeContext<MACRO>, false)
+
+  /**
+   * `compute block <pos>` — binds the `command_compute_position` context.
+   *
+   * @param pos Block position whose context is bound to the provider.
+   */
+  block = (
+    pos: Macroable<Coordinates<MACRO>, MACRO>,
+  ): DataModifyComputeContext<MACRO> =>
+    this.subCommand(['block', coordinatesParser(pos)], DataModifyComputeContext<MACRO>, false)
+
+  /**
+   * `compute entity <target>` — binds the `command_compute_entity` context.
+   *
+   * @param entity Selector for the entity whose context is bound to the provider.
+   */
+  entity = <T extends string>(
+    entity: Macroable<SingleEntityArgumentOf<MACRO, T>, MACRO>,
+  ): DataModifyComputeContext<MACRO> =>
+    this.subCommand(['entity', targetParser(entity)], DataModifyComputeContext<MACRO>, false)
+}
+
+/**
+ * `data modify <target> compute <context>` — picks integer or float provider
+ * kind for the final command.
+ */
+export class DataModifyComputeContext<MACRO extends boolean> extends CommandArguments {
+  /**
+   * Modify with the value of an `minecraft:context_int_provider`.
+   *
+   * @example
+   * ```ts
+   * data.modify(target).compute.default.integer({ type: 'minecraft:constant', value: 1 })
+   * data.modify(entity('Health')).compute.entity('@p').integer('minecraft:my_pack:kill_count')
+   * ```
+   */
+  integer = <PROVIDER extends IntegerNumberProviderArgument<MACRO>>(
+    provider: PROVIDER,
+  ): FinalCommandOutput =>
+    this.finalCommand(['integer', integerNumberProviderArgument(this.sandstoneCore, provider)])
+
+  /**
+   * Modify with the value of an `minecraft:context_float_provider`. No scale
+   * modifier — `/data compute` is provider-only.
+   *
+   * @example
+   * ```ts
+   * data.modify(target).compute.default.float({ type: 'minecraft:uniform', min: 0, max: 1 })
+   * data.modify(storage('foo')).compute.block([0, 64, 0]).float('minecraft:my_pack:damage')
+   * ```
+   */
+  float = <PROVIDER extends FloatNumberProviderArgument<MACRO>>(
+    provider: PROVIDER,
+  ): FinalCommandOutput =>
+    this.finalCommand(['float', floatNumberProviderArgument(this.sandstoneCore, provider)])
 }
 
 export class DataModifyTypeCommand<MACRO extends boolean> extends CommandArguments {

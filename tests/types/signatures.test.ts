@@ -143,6 +143,12 @@ const env: HoverEnv = await getHoverEnv({
 })
 const existing: Snapshot = await readSnapshot()
 const names: string[] = await listExports(IMPORT_PATH)
+// Set by the `test:update-snapshots` package script (alongside bun's
+// `--update-snapshots` flag). When `1`, the per-name test accepts the
+// new signature through to the snapshot, and the missing-export
+// advisory below stays silent — both serve the same bulk-accept
+// workflow. Read once up here so both loops observe the same value.
+const updating = process.env.UPDATE_SIGNATURES === '1'
 // Shared result map. Sub-tests write to it as they run; the last test
 // to finish (counter === names.length) is responsible for writing the
 // snapshot file + disposing the LSP subprocess.
@@ -176,7 +182,6 @@ for (const name of names) {
     // `--update-snapshots` flag). When set, `preserveOld` is a no-op and
     // the new signature is written through to the snapshot — same as the
     // old behavior, for users who explicitly want to bulk-accept drift.
-    const updating = process.env.UPDATE_SIGNATURES === '1'
     const preserveOld = () => {
       if (updating) return
       if (existing[name]) {
@@ -364,13 +369,19 @@ for (const name of names) {
 // accidental removals (e.g. a refactor that drops an export without
 // updating the snapshot). Each missing export gets its own sub-test so
 // the failure is itemized alongside the per-export offenders.
+//
+// Stays silent under `test:update-snapshots` — a rename is surfaced via
+// the git diff on the snapshot file rather than as a test failure, and
+// `writeSnapshot` prunes the stale entry on the same run.
 const missing = Object.keys(existing).filter((name) => !names.includes(name))
-for (const name of missing) {
-  test(`missing export: ${name} was in the snapshot but no longer exported`, () => {
-    expect(
-      false,
-      `${name} is in ${path.basename(SNAPSHOT_PATH)} but no longer appears in ${IMPORT_PATH}'s exports. ` +
-        `Remove the entry from the snapshot (or restore the export).`,
-    ).toBe(true)
-  })
+if (!updating) {
+  for (const name of missing) {
+    test(`missing export: ${name} was in the snapshot but no longer exported`, () => {
+      expect(
+        false,
+        `${name} is in ${path.basename(SNAPSHOT_PATH)} but no longer appears in ${IMPORT_PATH}'s exports. ` +
+          `Remove the entry from the snapshot (or restore the export).`,
+      ).toBe(true)
+    })
+  }
 }

@@ -118,7 +118,7 @@ export class SandstoneCommands<MACRO extends boolean = false> {
   }
 
   get compute() {
-    return new ComputeCommand<MACRO>(this.sandstonePack, this.isMacro).compute
+    return new ComputeCommand<MACRO>(this.sandstonePack, this.isMacro)
   }
 
   get comment() {

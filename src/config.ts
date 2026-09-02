@@ -16,8 +16,10 @@ import type {
   EnchantmentClassArguments,
   EnchantmentProviderClassArguments,
   EquipmentClassArguments,
+  FloatNumberProviderClassArguments,
   FontArguments,
   InstrumentClassArguments,
+  IntegerNumberProviderClassArguments,
   ItemModelDefinitionClassArguments,
   ItemModifierClassArguments,
   JukeboxSongClassArguments,
@@ -291,6 +293,8 @@ type ContentStrategy =
   | ContentStrategyKind<'sulfur_cube_archetype', NonNullable<SulfurCubeArchetypeClassArguments['onConflict']>>
   | ContentStrategyKind<'tag', NonNullable<TagClassArguments<any>['onConflict']>>
   | ContentStrategyKind<'item_modifier', NonNullable<ItemModifierClassArguments['onConflict']>>
+  | ContentStrategyKind<'float_number_provider', NonNullable<FloatNumberProviderClassArguments['onConflict']>>
+  | ContentStrategyKind<'integer_number_provider', NonNullable<IntegerNumberProviderClassArguments['onConflict']>>
   | ContentStrategyKind<'trim_material', NonNullable<TrimMaterialClassArguments['onConflict']>>
   | ContentStrategyKind<'trim_pattern', NonNullable<TrimPatternClassArguments['onConflict']>>
   | ContentStrategyKind<'banner_pattern', NonNullable<BannerPatternClassArguments['onConflict']>>
