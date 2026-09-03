@@ -1,22 +1,14 @@
 import type { JsonLevelBasedValue } from 'sandstone/arguments/generated/_json/data/enchantment/level_based_value.ts'
 import type { JsonIntRef } from 'sandstone/arguments/generated/_json/data/number_provider/context_int.ts'
-import type {
-  JsonAggregateProvider,
-  JsonBinaryProvider,
-  JsonConditionalProvider,
-  JsonConstantValue,
-  JsonDataStorageProvider,
-  JsonDispatcherProvider,
-  JsonDistributionProvider,
-  JsonEnvironmentAttributeProvider,
-  JsonPowerProvider,
-  JsonRandomProvider,
-  JsonSingleProvider,
-} from 'sandstone/arguments/generated/_json/data/number_provider.ts'
+import type { JsonConstantValue } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
+import type { JsonNonEmptyWeightedList } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonNumericalEnvironmentAttribute } from 'sandstone/arguments/generated/_json/data/worldgen/attribute.ts'
+import type { JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
-import type { FloatNumberProviderClass, JsonNBTList, NBTFloat, TagClass } from 'sandstone'
+import type { DataPointClass, FloatNumberProviderClass, JsonNBTList, NamespacedString, NBTFloat, NonEmptyString, TagClass } from 'sandstone'
+
+// TODO: Important ! The generator is currently incapable of handling the source mcdoc for this; too much circular reference jank
 
 /**
  * *either*
@@ -40,9 +32,18 @@ export type JsonAggregateOperands = (JsonContextFloatProvider | (
     min: 1,
   }>)
 
-export type JsonAggregateProvider = JsonAggregateProvider<JsonAggregateOperands>
+export type JsonSingleProvider = {
+  input: JsonFloatRef,
+}
 
-export type JsonBinaryProvider = JsonBinaryProvider<JsonFloatRef>
+export type JsonBinaryProvider = {
+  left: JsonFloatRef,
+  right: JsonFloatRef,
+}
+
+export type JsonAggregateProvider = {
+  inputs: JsonAggregateOperands,
+}
 
 export type JsonContextFloatProvider = ((NBTFloat | number) | ({
   [S in Extract<Extract<JsonRegistry['minecraft:context_float_provider_type'], string>, string>]?: ({
@@ -57,8 +58,6 @@ export type JsonEnchantmentLevelProvider = {
 export type JsonFloatRef = ((
   | JsonRegistry['minecraft:context_float_provider'] | FloatNumberProviderClass)
   | JsonContextFloatProvider)
-
-export type JsonSingleProvider = JsonSingleProvider<JsonFloatRef>
 type JsonContextFloatProviderDispatcherMap = {
   'abs': JsonContextFloatProviderAbs,
   'minecraft:abs': JsonContextFloatProviderAbs,
@@ -151,30 +150,54 @@ type JsonContextFloatProviderAbs = JsonSingleProvider
 type JsonContextFloatProviderAdd = JsonAggregateProvider
 type JsonContextFloatProviderAvg = JsonAggregateProvider
 type JsonContextFloatProviderCeil = JsonSingleProvider
-type JsonContextFloatProviderConditional = JsonConditionalProvider<JsonFloatRef>
+type JsonContextFloatProviderConditional = {
+  condition: JsonPredicateRef,
+  on_true: JsonFloatRef,
+  on_false?: JsonFloatRef,
+}
 type JsonContextFloatProviderConstant = JsonConstantValue<(NBTFloat | number)>
 type JsonContextFloatProviderCos = JsonSingleProvider
 type JsonContextFloatProviderDiv = JsonBinaryProvider
 type JsonContextFloatProviderEnchantmentLevel = JsonEnchantmentLevelProvider
-type JsonContextFloatProviderEnvironmentAttribute = JsonEnvironmentAttributeProvider<JsonNumericalEnvironmentAttribute>
+type JsonContextFloatProviderEnvironmentAttribute = {
+  attribute: JsonNumericalEnvironmentAttribute,
+}
 type JsonContextFloatProviderFloor = JsonSingleProvider
-type JsonContextFloatProviderFromInt = JsonSingleProvider<JsonIntRef>
+type JsonContextFloatProviderFromInt = { input: JsonIntRef }
 type JsonContextFloatProviderLength = JsonAggregateProvider
 type JsonContextFloatProviderMax = JsonAggregateProvider
 type JsonContextFloatProviderMin = JsonAggregateProvider
 type JsonContextFloatProviderMod = JsonBinaryProvider
 type JsonContextFloatProviderMul = JsonAggregateProvider
 type JsonContextFloatProviderNegate = JsonSingleProvider
-type JsonContextFloatProviderNumberDispatcher = JsonDispatcherProvider<JsonFloatRef>
-type JsonContextFloatProviderPow = JsonPowerProvider<JsonFloatRef>
+type JsonContextFloatProviderNumberDispatcher = {
+  cases: Array<{
+    condition: JsonPredicateRef,
+    value: JsonFloatRef,
+  }>,
+  default?: JsonFloatRef,
+}
+type JsonContextFloatProviderPow = {
+  base: JsonFloatRef,
+  exponent: JsonFloatRef,
+}
 type JsonContextFloatProviderRound = JsonSingleProvider
 type JsonContextFloatProviderSin = JsonSingleProvider
 type JsonContextFloatProviderSqrt = JsonSingleProvider
-type JsonContextFloatProviderStorage = JsonDataStorageProvider<JsonFloatRef>
+type JsonContextFloatProviderStorage = {
+  storage: NamespacedString,
+  path: NonEmptyString | DataPointClass,
+  fallback?: JsonFloatRef,
+}
 type JsonContextFloatProviderSub = JsonBinaryProvider
 type JsonContextFloatProviderTruncate = JsonSingleProvider
-type JsonContextFloatProviderUniform = JsonRandomProvider<JsonFloatRef>
-type JsonContextFloatProviderWeightedList = JsonDistributionProvider<JsonFloatRef>
+type JsonContextFloatProviderUniform = {
+  min: JsonFloatRef,
+  max: JsonFloatRef,
+}
+type JsonContextFloatProviderWeightedList = {
+  distribution: JsonNonEmptyWeightedList<JsonFloatRef>,
+}
 export type JsonSymbolContextFloatProvider<CASE extends
   | 'map'
   | 'keys'

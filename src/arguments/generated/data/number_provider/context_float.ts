@@ -1,22 +1,14 @@
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
-import type {
-  AggregateProvider,
-  BinaryProvider,
-  ConditionalProvider,
-  ConstantValue,
-  DataStorageProvider,
-  DispatcherProvider,
-  DistributionProvider,
-  EnvironmentAttributeProvider,
-  PowerProvider,
-  RandomProvider,
-  SingleProvider,
-} from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { IntRef } from 'sandstone/arguments/generated/data/number_provider/context_int.ts'
+import type { ConstantValue } from 'sandstone/arguments/generated/data/number_provider.ts'
+import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { NumericalEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
+import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { FloatNumberProviderClass, NBTFloat, NBTList, TagClass } from 'sandstone'
+import type { DataPointClass, FloatNumberProviderClass, NamespacedString, NBTFloat, NBTList, NonEmptyString, TagClass } from 'sandstone'
+
+// TODO: Important ! The generator is currently incapable of handling the source mcdoc for this; too much circular reference jank
 
 /**
  * *either*
@@ -40,9 +32,18 @@ export type AggregateOperands = (ContextFloatProvider | (
     min: 1,
   }>)
 
-export type AggregateProvider = AggregateProvider<AggregateOperands>
+export type SingleProvider = {
+  input: FloatRef,
+}
 
-export type BinaryProvider = BinaryProvider<FloatRef>
+export type BinaryProvider = {
+  left: FloatRef,
+  right: FloatRef,
+}
+
+export type AggregateProvider = {
+  inputs: AggregateOperands,
+}
 
 export type ContextFloatProvider = (NBTFloat | ({
   [S in Extract<Extract<Registry['minecraft:context_float_provider_type'], string>, string>]?: ({
@@ -57,8 +58,6 @@ export type EnchantmentLevelProvider = {
 export type FloatRef = ((
   | Registry['minecraft:context_float_provider'] | FloatNumberProviderClass)
   | ContextFloatProvider)
-
-export type SingleProvider = SingleProvider<FloatRef>
 type ContextFloatProviderDispatcherMap = {
   'abs': ContextFloatProviderAbs,
   'minecraft:abs': ContextFloatProviderAbs,
@@ -151,30 +150,54 @@ type ContextFloatProviderAbs = SingleProvider
 type ContextFloatProviderAdd = AggregateProvider
 type ContextFloatProviderAvg = AggregateProvider
 type ContextFloatProviderCeil = SingleProvider
-type ContextFloatProviderConditional = ConditionalProvider<FloatRef>
+type ContextFloatProviderConditional = {
+  condition: PredicateRef,
+  on_true: FloatRef,
+  on_false?: FloatRef,
+}
 type ContextFloatProviderConstant = ConstantValue<NBTFloat>
 type ContextFloatProviderCos = SingleProvider
 type ContextFloatProviderDiv = BinaryProvider
 type ContextFloatProviderEnchantmentLevel = EnchantmentLevelProvider
-type ContextFloatProviderEnvironmentAttribute = EnvironmentAttributeProvider<NumericalEnvironmentAttribute>
+type ContextFloatProviderEnvironmentAttribute = {
+  attribute: NumericalEnvironmentAttribute,
+}
 type ContextFloatProviderFloor = SingleProvider
-type ContextFloatProviderFromInt = SingleProvider<IntRef>
+type ContextFloatProviderFromInt = { input: IntRef }
 type ContextFloatProviderLength = AggregateProvider
 type ContextFloatProviderMax = AggregateProvider
 type ContextFloatProviderMin = AggregateProvider
 type ContextFloatProviderMod = BinaryProvider
 type ContextFloatProviderMul = AggregateProvider
 type ContextFloatProviderNegate = SingleProvider
-type ContextFloatProviderNumberDispatcher = DispatcherProvider<FloatRef>
-type ContextFloatProviderPow = PowerProvider<FloatRef>
+type ContextFloatProviderNumberDispatcher = {
+  cases: Array<{
+    condition: PredicateRef,
+    value: FloatRef,
+  }>,
+  default?: FloatRef,
+}
+type ContextFloatProviderPow = {
+  base: FloatRef,
+  exponent: FloatRef,
+}
 type ContextFloatProviderRound = SingleProvider
 type ContextFloatProviderSin = SingleProvider
 type ContextFloatProviderSqrt = SingleProvider
-type ContextFloatProviderStorage = DataStorageProvider<FloatRef>
+type ContextFloatProviderStorage = {
+  storage: NamespacedString,
+  path: NonEmptyString | DataPointClass,
+  fallback?: FloatRef,
+}
 type ContextFloatProviderSub = BinaryProvider
 type ContextFloatProviderTruncate = SingleProvider
-type ContextFloatProviderUniform = RandomProvider<FloatRef>
-type ContextFloatProviderWeightedList = DistributionProvider<FloatRef>
+type ContextFloatProviderUniform = {
+  min: FloatRef,
+  max: FloatRef,
+}
+type ContextFloatProviderWeightedList = {
+  distribution: NonEmptyWeightedList<FloatRef>,
+}
 export type SymbolContextFloatProvider<CASE extends
   | 'map'
   | 'keys'

@@ -1,29 +1,23 @@
 import type { JsonFloatRef } from 'sandstone/arguments/generated/_json/data/number_provider/context_float.ts'
-import type {
-  JsonAggregateProvider,
-  JsonBinaryProvider,
-  JsonConditionalProvider,
-  JsonConstantValue,
-  JsonDataStorageProvider,
-  JsonDispatcherProvider,
-  JsonDistributionProvider,
-  JsonEnvironmentAttributeProvider,
-  JsonPowerProvider,
-  JsonRandomProvider,
-  JsonSingleProvider,
-} from 'sandstone/arguments/generated/_json/data/number_provider.ts'
-import type { JsonScoreProvider } from 'sandstone/arguments/generated/_json/data/util.ts'
+import type { JsonConstantValue } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
+import type { JsonNonEmptyWeightedList } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonIntegerEnvironmentAttribute } from 'sandstone/arguments/generated/_json/data/worldgen/attribute.ts'
+import type { JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
+import type { JsonScoreProvider } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
+  DataPointClass,
   IntegerNumberProviderClass,
   JsonNBTList,
+  NamespacedString,
   NBTInt,
   NonEmptyString,
   ObjectiveClass,
   TagClass,
 } from 'sandstone'
+
+// TODO: Important ! The generator is currently incapable of handling the source mcdoc for this; too much circular reference jank
 
 /**
  * *either*
@@ -47,10 +41,6 @@ export type JsonAggregateOperands = (JsonContextIntProvider | (
     min: 1,
   }>)
 
-export type JsonAggregateProvider = JsonAggregateProvider<JsonAggregateOperands>
-
-export type JsonBinaryProvider = JsonBinaryProvider<JsonIntRef>
-
 export type JsonBinomialDistributionGenerator = {
   /**
    * Number of coin flips.
@@ -60,6 +50,19 @@ export type JsonBinomialDistributionGenerator = {
    * Probability of a single coin flip succeeding.
    */
   p: JsonFloatRef,
+}
+
+export type JsonSingleProvider = {
+  input: JsonIntRef,
+}
+
+export type JsonBinaryProvider = {
+  left: JsonIntRef,
+  right: JsonIntRef,
+}
+
+export type JsonAggregateProvider = {
+  inputs: JsonAggregateOperands,
 }
 
 export type JsonContextIntProvider = ((NBTInt | number) | ({
@@ -80,8 +83,6 @@ export type JsonScoreboardValue = {
    */
   fallback?: JsonIntRef,
 }
-
-export type JsonSingleProvider = JsonSingleProvider<JsonIntRef>
 type JsonContextIntProviderDispatcherMap = {
   'abs': JsonContextIntProviderAbs,
   'minecraft:abs': JsonContextIntProviderAbs,
@@ -159,25 +160,49 @@ type JsonContextIntProviderAbs = JsonSingleProvider
 type JsonContextIntProviderAdd = JsonAggregateProvider
 type JsonContextIntProviderAvg = JsonAggregateProvider
 type JsonContextIntProviderBinomial = JsonBinomialDistributionGenerator
-type JsonContextIntProviderConditional = JsonConditionalProvider<JsonIntRef>
+type JsonContextIntProviderConditional = {
+  condition: JsonPredicateRef,
+  on_true: JsonIntRef,
+  on_false?: JsonIntRef,
+}
 type JsonContextIntProviderConstant = JsonConstantValue<(NBTInt | number)>
 type JsonContextIntProviderDiv = JsonBinaryProvider
-type JsonContextIntProviderEnvironmentAttribute = JsonEnvironmentAttributeProvider<JsonIntegerEnvironmentAttribute>
+type JsonContextIntProviderEnvironmentAttribute = {
+  attribute: JsonIntegerEnvironmentAttribute,
+}
 type JsonContextIntProviderFloorDiv = JsonBinaryProvider
 type JsonContextIntProviderFloorMod = JsonBinaryProvider
-type JsonContextIntProviderFromFloat = JsonSingleProvider<JsonFloatRef>
+type JsonContextIntProviderFromFloat = { input: JsonFloatRef }
 type JsonContextIntProviderMax = JsonAggregateProvider
 type JsonContextIntProviderMin = JsonAggregateProvider
 type JsonContextIntProviderMod = JsonBinaryProvider
 type JsonContextIntProviderMul = JsonAggregateProvider
 type JsonContextIntProviderNegate = JsonSingleProvider
-type JsonContextIntProviderNumberDispatcher = JsonDispatcherProvider<JsonIntRef>
-type JsonContextIntProviderPow = JsonPowerProvider<JsonIntRef>
+type JsonContextIntProviderNumberDispatcher = {
+  cases: Array<{
+    condition: JsonPredicateRef,
+    value: JsonIntRef,
+  }>,
+  default?: JsonIntRef,
+}
+type JsonContextIntProviderPow = {
+  base: JsonIntRef,
+  exponent: JsonIntRef,
+}
 type JsonContextIntProviderScore = JsonScoreboardValue
-type JsonContextIntProviderStorage = JsonDataStorageProvider<JsonIntRef>
+type JsonContextIntProviderStorage = {
+  storage: NamespacedString,
+  path: NonEmptyString | DataPointClass,
+  fallback?: JsonIntRef,
+}
 type JsonContextIntProviderSub = JsonBinaryProvider
-type JsonContextIntProviderUniform = JsonRandomProvider<JsonIntRef>
-type JsonContextIntProviderWeightedList = JsonDistributionProvider<JsonIntRef>
+type JsonContextIntProviderUniform = {
+  min: JsonIntRef,
+  max: JsonIntRef,
+}
+type JsonContextIntProviderWeightedList = {
+  distribution: JsonNonEmptyWeightedList<JsonIntRef>,
+}
 export type JsonSymbolContextIntProvider<CASE extends
   | 'map'
   | 'keys'
