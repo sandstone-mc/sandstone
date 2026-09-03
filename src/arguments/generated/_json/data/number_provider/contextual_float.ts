@@ -25,7 +25,7 @@ export type JsonAverageFloatProvider = JsonMultiInputFloat
 export type JsonCeilingFloatProvider = JsonSingleInputFloat
 
 export type JsonConditionalFloatProvider = {
-  conditions: JsonPredicateRef,
+  condition: JsonPredicateRef,
   on_true: JsonFloatNumberProviderRef,
   /**
    * Defaults to `0.0`.
@@ -110,9 +110,9 @@ export type JsonFloatNumberProviderRef = ((
 
 export type JsonFloorFloatProvider = JsonSingleInputFloat
 
-export type JsonMaxOfSetFloatProvider = JsonSingleInputFloat
+export type JsonMaxOfSetFloatProvider = JsonMultiInputFloat
 
-export type JsonMinOfSetFloatProvider = JsonSingleInputFloat
+export type JsonMinOfSetFloatProvider = JsonMultiInputFloat
 
 export type JsonModuloFloatProvider = JsonSidedInputsFloat
 

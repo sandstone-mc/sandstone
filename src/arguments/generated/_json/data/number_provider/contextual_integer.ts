@@ -28,7 +28,7 @@ export type JsonBinomialRandomIntegerProvider = {
 }
 
 export type JsonConditionalIntegerProvider = {
-  conditions: JsonPredicateRef,
+  condition: JsonPredicateRef,
   on_true: JsonIntegerNumberProviderRef,
   /**
    * Defaults to `0`.

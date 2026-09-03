@@ -1,6 +1,6 @@
 import type { JsonBlockPredicate } from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_predicate.ts'
 import type {
-  JsonBlockStateProvider,
+  JsonBlockStateProviderRef,
 } from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_state_provider.ts'
 import type { JsonConfiguredDecorator } from 'sandstone/arguments/generated/_json/data/worldgen/feature/decorator.ts'
 import type {
@@ -54,11 +54,11 @@ export type JsonBlockColumnLayer = {
   height: JsonIntProvider<(NBTInt<{
     min: 0,
   }> | number)>,
-  provider: JsonBlockStateProvider,
+  provider: JsonBlockStateProviderRef,
 }
 
 export type JsonBlockPileConfig = {
-  state_provider: JsonBlockStateProvider,
+  state_provider: JsonBlockStateProviderRef,
 }
 
 export type JsonBlockPlacer = NonNullable<({
@@ -69,7 +69,7 @@ export type JsonBlockPlacer = NonNullable<({
 
 export type JsonBlockStateRuleProviderEntry = {
   if_true: JsonBlockPredicate,
-  then: JsonBlockStateProvider,
+  then: JsonBlockStateProviderRef,
 }
 
 export type JsonColumnPlacer = {
@@ -79,7 +79,7 @@ export type JsonColumnPlacer = {
 }
 
 export type JsonColumnsConfig = {
-  block: JsonBlockStateProvider,
+  block: JsonBlockStateProviderRef,
   can_replace: JsonBlockPredicate,
   continue_through: JsonBlockPredicate,
   cannot_place_on: ((
@@ -136,7 +136,7 @@ export type JsonDeltaConfig = {
 }
 
 export type JsonDiskConfig = {
-  state_provider: JsonBlockStateProvider,
+  state_provider: JsonBlockStateProviderRef,
   radius: JsonIntProvider<(NBTInt<{
     min: 0,
     max: 8,
@@ -236,11 +236,11 @@ export type JsonFossilConfig = {
 }
 
 export type JsonGeodeBlockSettings = {
-  filling_provider: JsonBlockStateProvider,
-  inner_layer_provider: JsonBlockStateProvider,
-  alternate_inner_layer_provider: JsonBlockStateProvider,
-  middle_layer_provider: JsonBlockStateProvider,
-  outer_layer_provider: JsonBlockStateProvider,
+  filling_provider: JsonBlockStateProviderRef,
+  inner_layer_provider: JsonBlockStateProviderRef,
+  alternate_inner_layer_provider: JsonBlockStateProviderRef,
+  middle_layer_provider: JsonBlockStateProviderRef,
+  outer_layer_provider: JsonBlockStateProviderRef,
   /**
    * Value:
    * List length range: 1..
@@ -398,8 +398,8 @@ export type JsonGrowingPlantConfig = {
   direction: JsonDirection,
   allow_water: boolean,
   height_distribution: Array<JsonGrowingPlantHeight>,
-  body_provider: JsonBlockStateProvider,
-  head_provider: JsonBlockStateProvider,
+  body_provider: JsonBlockStateProviderRef,
+  head_provider: JsonBlockStateProviderRef,
 }
 
 export type JsonGrowingPlantHeight = {
@@ -417,8 +417,8 @@ export type JsonHugeFungusConfig = {
 }
 
 export type JsonHugeMushroomConfig = {
-  cap_provider: JsonBlockStateProvider,
-  stem_provider: JsonBlockStateProvider,
+  cap_provider: JsonBlockStateProviderRef,
+  stem_provider: JsonBlockStateProviderRef,
   foliage_radius: (NBTInt | number),
   can_place_on: JsonBlockPredicate,
 }
@@ -428,8 +428,8 @@ export type JsonIcebergConfig = {
 }
 
 export type JsonLakeConfig = {
-  fluid: JsonBlockStateProvider,
-  barrier: JsonBlockStateProvider,
+  fluid: JsonBlockStateProviderRef,
+  barrier: JsonBlockStateProviderRef,
   can_place_feature: JsonBlockPredicate,
   can_replace_with_air_or_fluid: JsonBlockPredicate,
   can_replace_with_barrier: JsonBlockPredicate,
@@ -577,7 +577,7 @@ export type JsonMultifaceGrowthConfig = ({
 })
 
 export type JsonNetherForestVegetationConfig = ({
-  state_provider: JsonBlockStateProvider,
+  state_provider: JsonBlockStateProviderRef,
 } & {
   /**
    * Value:
@@ -629,7 +629,7 @@ export type JsonOldPatchConfig = {
   zspread?: (NBTInt<{
     min: 0,
   }> | number),
-  state_provider: JsonBlockStateProvider,
+  state_provider: JsonBlockStateProviderRef,
   block_placer: JsonBlockPlacer,
   whitelist: Array<JsonBlockState>,
   blacklist: Array<JsonBlockState>,
@@ -693,7 +693,7 @@ export type JsonProbabilityConfig = {
 }
 
 export type JsonProjectedSquareConfig = {
-  block: JsonBlockStateProvider,
+  block: JsonBlockStateProviderRef,
   project_through: JsonBlockPredicate,
   size: JsonIntProvider<(NBTInt<{
     min: 1,
@@ -728,7 +728,7 @@ export type JsonRandomFeatureEntry = {
 }
 
 export type JsonRandomNeighborSpreadConfig = {
-  block: JsonBlockStateProvider,
+  block: JsonBlockStateProviderRef,
   accepted_neighbors: ((
       | JsonRegistry['minecraft:block'] | `#${JsonRegistry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<JsonRegistry['minecraft:block']>),
@@ -880,18 +880,18 @@ export type JsonRootSystemConfig = {
   root_replaceable: ((
       | JsonRegistry['minecraft:block'] | `#${JsonRegistry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<JsonRegistry['minecraft:block']>),
-  root_state_provider: JsonBlockStateProvider,
-  hanging_root_state_provider: JsonBlockStateProvider,
+  root_state_provider: JsonBlockStateProviderRef,
+  hanging_root_state_provider: JsonBlockStateProviderRef,
   allowed_tree_position: JsonBlockPredicate,
   feature: JsonFeatureRef,
 }
 
 export type JsonRuleBasedBlockStateProvider = ({
-  fallback?: JsonBlockStateProvider,
+  fallback?: JsonBlockStateProviderRef,
 } & {
   rules: Array<{
     if_true: JsonBlockPredicate,
-    then: JsonBlockStateProvider,
+    then: JsonBlockStateProviderRef,
   }>,
 })
 
@@ -952,7 +952,7 @@ export type JsonSequenceConfig = {
 }
 
 export type JsonSimpleBlockConfig = {
-  to_place: JsonBlockStateProvider,
+  to_place: JsonBlockStateProviderRef,
   /**
    * Whether to schedule a block update. Defaults to `false`.
    */
@@ -964,7 +964,7 @@ export type JsonSimpleRandomSelectorConfig = {
 }
 
 export type JsonSingleBlockPillarConfig = {
-  block: JsonBlockStateProvider,
+  block: JsonBlockStateProviderRef,
   /**
    * Defaults to "always true".
    */
@@ -1296,7 +1296,7 @@ export type JsonVegetationPatchConfig = {
   replaceable: ((
       | JsonRegistry['minecraft:block'] | `#${JsonRegistry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<JsonRegistry['minecraft:block']>),
-  ground_state: JsonBlockStateProvider,
+  ground_state: JsonBlockStateProviderRef,
   vegetation_feature: JsonFeatureRef,
 }
 

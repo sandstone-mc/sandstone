@@ -1,5 +1,5 @@
 import type {
-  JsonBlockStateProvider,
+  JsonBlockStateProviderRef,
 } from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_state_provider.ts'
 import type { JsonIntProvider, JsonUniformIntProvider } from 'sandstone/arguments/generated/_json/data/worldgen.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
@@ -8,7 +8,7 @@ import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type { JsonNBTList, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type JsonAboveRootPlacement = {
-  above_root_provider: JsonBlockStateProvider,
+  above_root_provider: JsonBlockStateProviderRef,
   /**
    * Value:
    * Range: 0..1
@@ -22,7 +22,7 @@ export type JsonAboveRootPlacement = {
 }
 
 export type JsonAlterGroundTreeDecorator = {
-  provider: JsonBlockStateProvider,
+  provider: JsonBlockStateProviderRef,
 }
 
 export type JsonAttachedToLeavesTreeDecorator = {
@@ -60,7 +60,7 @@ export type JsonAttachedToLeavesTreeDecorator = {
     min: 1,
     max: 16,
   }> | number),
-  block_provider: JsonBlockStateProvider,
+  block_provider: JsonBlockStateProviderRef,
   /**
    * Value:
    * List length range: 1..
@@ -82,7 +82,7 @@ export type JsonAttachedToLogsTreeDecorator = {
     min: 0,
     max: 1,
   }> | number),
-  block_provider: JsonBlockStateProvider,
+  block_provider: JsonBlockStateProviderRef,
   /**
    * Value:
    * List length range: 1..
@@ -213,7 +213,7 @@ export type JsonCreakingHeartTreeDecorator = {
 }
 
 export type JsonFallenTreeConfig = {
-  trunk_provider: JsonBlockStateProvider,
+  trunk_provider: JsonBlockStateProviderRef,
   log_length: JsonIntProvider<(NBTInt<{
     min: 0,
     max: 16,
@@ -299,7 +299,7 @@ export type JsonMangroveRootPlacement = {
   muddy_roots_in: (
       | Array<JsonRegistry['minecraft:block']> | (
       JsonRegistry['minecraft:block'] | `#${JsonRegistry['minecraft:tag/block']}` | TagClass<'block'>)),
-  muddy_roots_provider: JsonBlockStateProvider,
+  muddy_roots_provider: JsonBlockStateProviderRef,
 }
 
 export type JsonMangroveRootPlacer = {
@@ -384,7 +384,7 @@ export type JsonPlaceOnGroundTreeDecorator = {
   /**
    * The block to place on the ground.
    */
-  block_state_provider: JsonBlockStateProvider,
+  block_state_provider: JsonBlockStateProviderRef,
 }
 
 export type JsonPoplarFoliagePlacer = {
@@ -431,7 +431,7 @@ export type JsonRandomSpreadFoliagePlacer = {
 export type JsonRootPlacer = NonNullable<({
   [S in Extract<Extract<JsonRegistry['minecraft:worldgen/root_placer_type'], string>, string>]?: ({
     type: S,
-    root_provider: JsonBlockStateProvider,
+    root_provider: JsonBlockStateProviderRef,
     trunk_offset_y: JsonIntProvider<(NBTInt | number)>,
     above_root_placement?: JsonAboveRootPlacement,
   } & (S extends keyof JsonSymbolRootPlacer ? JsonSymbolRootPlacer[S] : JsonRootNBT))
@@ -512,14 +512,14 @@ export type JsonThreeLayersFeatureSize = {
 export type JsonTreeConfig = ({
   ignore_vines?: boolean,
   minimum_size: JsonFeatureSize,
-  trunk_provider: JsonBlockStateProvider,
-  foliage_provider: JsonBlockStateProvider,
+  trunk_provider: JsonBlockStateProviderRef,
+  foliage_provider: JsonBlockStateProviderRef,
   root_placer?: JsonRootPlacer,
   trunk_placer: JsonTrunkPlacer,
   foliage_placer: JsonFoliagePlacer,
   decorators: Array<JsonTreeDecorator>,
 } & {
-  below_trunk_provider: JsonBlockStateProvider,
+  below_trunk_provider: JsonBlockStateProviderRef,
 })
 
 export type JsonTreeDecorator = NonNullable<({

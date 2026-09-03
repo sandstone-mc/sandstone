@@ -1,6 +1,6 @@
 import type { JsonSoundEventRef } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type {
-  JsonBlockStateProvider,
+  JsonBlockStateProviderRef,
 } from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_state_provider.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonDirection } from 'sandstone/arguments/generated/_json/util/direction.ts'
@@ -10,7 +10,7 @@ export type JsonBlockTransformData = {
   /**
    * If the provider returns no result, the next transformer will be attempted.
    */
-  block_state_provider: JsonBlockStateProvider,
+  block_state_provider: JsonBlockStateProviderRef,
   /**
    * Defaults to not playing sound.
    */

@@ -1,7 +1,9 @@
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
 import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.ts'
-import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
+import type {
+  BlockStateProviderRef,
+} from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
 import type { FloatProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
@@ -332,7 +334,7 @@ export type ReduceBinomialEffectValue = {
 }
 
 export type ReplaceBlockEntityEffect = {
-  block_state: BlockStateProvider,
+  block_state: BlockStateProviderRef,
   /**
    * Relative coordinates to offset the placed block by. Defaults to `[0, 0, 0]`.
    *

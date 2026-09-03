@@ -2,11 +2,11 @@ import type { NoiseParameters } from 'sandstone/arguments/generated/data/worldge
 import type { RuleBasedBlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
 import type { IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
-import type { BlockState } from 'sandstone/arguments/generated/util/block_state.ts'
+import type { BlockState, FullBlockState } from 'sandstone/arguments/generated/util/block_state.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { InclusiveRange, NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type BaseNoiseProvider = {
   seed: NBTInt,
@@ -21,14 +21,12 @@ export type BaseNoiseProvider = {
   }>,
 }
 
-export type BlockStateProvider = NonNullable<({
-  [S in Extract<Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>, string>]?: ({
-    type: S,
-  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT))
-}[Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>])>
+export type BlockStateProvider = (TypedBlockStateProvider | FullBlockState)
+
+export type BlockStateProviderRef = (BlockStateProvider | NamespacedString)
 
 export type CopyPropertiesProvider = {
-  source: BlockStateProvider,
+  source: BlockStateProviderRef,
 }
 
 export type DualNoiseProvider = (BaseNoiseProvider & {
@@ -85,11 +83,11 @@ export type RandomBlockStateProvider = {
 export type RandomizedIntStateProvider = {
   property: string,
   values: IntProvider<NBTInt>,
-  source: BlockStateProvider,
+  source: BlockStateProviderRef,
 }
 
 export type RotatedStateProvider = {
-  state: BlockStateProvider,
+  state: BlockStateProviderRef,
   /**
    * Value:
    *
@@ -106,6 +104,12 @@ export type RotatedStateProvider = {
 export type SimpleStateProvider = {
   state: BlockState,
 }
+
+export type TypedBlockStateProvider = NonNullable<({
+  [S in Extract<Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>, string>]?: ({
+    type: S,
+  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT))
+}[Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>])>
 
 export type WeightedBlockStateProvider = {
   entries: NonEmptyWeightedList<BlockState>,

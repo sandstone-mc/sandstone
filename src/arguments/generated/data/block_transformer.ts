@@ -1,5 +1,7 @@
 import type { SoundEventRef } from 'sandstone/arguments/generated/data/util.ts'
-import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
+import type {
+  BlockStateProviderRef,
+} from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
 import type { LootTableClass, NBTInt } from 'sandstone'
@@ -8,7 +10,7 @@ export type BlockTransformData = {
   /**
    * If the provider returns no result, the next transformer will be attempted.
    */
-  block_state_provider: BlockStateProvider,
+  block_state_provider: BlockStateProviderRef,
   /**
    * Defaults to not playing sound.
    */

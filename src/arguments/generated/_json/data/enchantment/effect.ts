@@ -2,7 +2,7 @@ import type { JsonLevelBasedValue } from 'sandstone/arguments/generated/_json/da
 import type { JsonSoundEventRef } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type { JsonBlockPredicate } from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_predicate.ts'
 import type {
-  JsonBlockStateProvider,
+  JsonBlockStateProviderRef,
 } from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_state_provider.ts'
 import type { JsonFloatProvider } from 'sandstone/arguments/generated/_json/data/worldgen.ts'
 import type { JsonSymbolDataComponent } from 'sandstone/arguments/generated/_json/dispatcher.ts'
@@ -334,7 +334,7 @@ export type JsonReduceBinomialEffectValue = {
 }
 
 export type JsonReplaceBlockEntityEffect = {
-  block_state: JsonBlockStateProvider,
+  block_state: JsonBlockStateProviderRef,
   /**
    * Relative coordinates to offset the placed block by. Defaults to `[0, 0, 0]`.
    *

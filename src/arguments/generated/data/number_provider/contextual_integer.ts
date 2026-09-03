@@ -28,7 +28,7 @@ export type BinomialRandomIntegerProvider = {
 }
 
 export type ConditionalIntegerProvider = {
-  conditions: PredicateRef,
+  condition: PredicateRef,
   on_true: IntegerNumberProviderRef,
   /**
    * Defaults to `0`.

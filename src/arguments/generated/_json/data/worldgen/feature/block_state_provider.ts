@@ -2,11 +2,11 @@ import type { JsonNoiseParameters } from 'sandstone/arguments/generated/_json/da
 import type { JsonRuleBasedBlockStateProvider } from 'sandstone/arguments/generated/_json/data/worldgen/feature.ts'
 import type { JsonIntProvider } from 'sandstone/arguments/generated/_json/data/worldgen.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
-import type { JsonBlockState } from 'sandstone/arguments/generated/_json/util/block_state.ts'
+import type { JsonBlockState, JsonFullBlockState } from 'sandstone/arguments/generated/_json/util/block_state.ts'
 import type { JsonDirection } from 'sandstone/arguments/generated/_json/util/direction.ts'
 import type { JsonInclusiveRange, JsonNonEmptyWeightedList } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
-import type { NBTFloat, NBTInt, TagClass } from 'sandstone'
+import type { NamespacedString, NBTFloat, NBTInt, TagClass } from 'sandstone'
 
 export type JsonBaseNoiseProvider = {
   seed: (NBTInt | number),
@@ -21,14 +21,12 @@ export type JsonBaseNoiseProvider = {
   }> | number),
 }
 
-export type JsonBlockStateProvider = NonNullable<({
-  [S in Extract<Extract<JsonRegistry['minecraft:worldgen/block_state_provider_type'], string>, string>]?: ({
-    type: S,
-  } & (S extends keyof JsonSymbolBlockStateProvider ? JsonSymbolBlockStateProvider[S] : JsonRootNBT))
-}[Extract<JsonRegistry['minecraft:worldgen/block_state_provider_type'], string>])>
+export type JsonBlockStateProvider = (JsonTypedBlockStateProvider | JsonFullBlockState)
+
+export type JsonBlockStateProviderRef = (JsonBlockStateProvider | NamespacedString)
 
 export type JsonCopyPropertiesProvider = {
-  source: JsonBlockStateProvider,
+  source: JsonBlockStateProviderRef,
 }
 
 export type JsonDualNoiseProvider = (JsonBaseNoiseProvider & {
@@ -85,11 +83,11 @@ export type JsonRandomBlockStateProvider = {
 export type JsonRandomizedIntStateProvider = {
   property: string,
   values: JsonIntProvider<(NBTInt | number)>,
-  source: JsonBlockStateProvider,
+  source: JsonBlockStateProviderRef,
 }
 
 export type JsonRotatedStateProvider = {
-  state: JsonBlockStateProvider,
+  state: JsonBlockStateProviderRef,
   /**
    * Value:
    *
@@ -106,6 +104,12 @@ export type JsonRotatedStateProvider = {
 export type JsonSimpleStateProvider = {
   state: JsonBlockState,
 }
+
+export type JsonTypedBlockStateProvider = NonNullable<({
+  [S in Extract<Extract<JsonRegistry['minecraft:worldgen/block_state_provider_type'], string>, string>]?: ({
+    type: S,
+  } & (S extends keyof JsonSymbolBlockStateProvider ? JsonSymbolBlockStateProvider[S] : JsonRootNBT))
+}[Extract<JsonRegistry['minecraft:worldgen/block_state_provider_type'], string>])>
 
 export type JsonWeightedBlockStateProvider = {
   entries: JsonNonEmptyWeightedList<JsonBlockState>,

@@ -1,4 +1,6 @@
-import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
+import type {
+  BlockStateProviderRef,
+} from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
 import type { IntProvider, UniformIntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { Direction } from 'sandstone/arguments/generated/util/direction.ts'
@@ -6,7 +8,7 @@ import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type { NBTFloat, NBTInt, NBTList, TagClass } from 'sandstone'
 
 export type AboveRootPlacement = {
-  above_root_provider: BlockStateProvider,
+  above_root_provider: BlockStateProviderRef,
   /**
    * Value:
    * Range: 0..1
@@ -20,7 +22,7 @@ export type AboveRootPlacement = {
 }
 
 export type AlterGroundTreeDecorator = {
-  provider: BlockStateProvider,
+  provider: BlockStateProviderRef,
 }
 
 export type AttachedToLeavesTreeDecorator = {
@@ -58,7 +60,7 @@ export type AttachedToLeavesTreeDecorator = {
     min: 1,
     max: 16,
   }>,
-  block_provider: BlockStateProvider,
+  block_provider: BlockStateProviderRef,
   /**
    * Value:
    * List length range: 1..
@@ -80,7 +82,7 @@ export type AttachedToLogsTreeDecorator = {
     min: 0,
     max: 1,
   }>,
-  block_provider: BlockStateProvider,
+  block_provider: BlockStateProviderRef,
   /**
    * Value:
    * List length range: 1..
@@ -211,7 +213,7 @@ export type CreakingHeartTreeDecorator = {
 }
 
 export type FallenTreeConfig = {
-  trunk_provider: BlockStateProvider,
+  trunk_provider: BlockStateProviderRef,
   log_length: IntProvider<NBTInt<{
     min: 0,
     max: 16,
@@ -297,7 +299,7 @@ export type MangroveRootPlacement = {
   muddy_roots_in: (
       | Array<Registry['minecraft:block']> | (
       Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)),
-  muddy_roots_provider: BlockStateProvider,
+  muddy_roots_provider: BlockStateProviderRef,
 }
 
 export type MangroveRootPlacer = {
@@ -382,7 +384,7 @@ export type PlaceOnGroundTreeDecorator = {
   /**
    * The block to place on the ground.
    */
-  block_state_provider: BlockStateProvider,
+  block_state_provider: BlockStateProviderRef,
 }
 
 export type PoplarFoliagePlacer = {
@@ -429,7 +431,7 @@ export type RandomSpreadFoliagePlacer = {
 export type RootPlacer = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:worldgen/root_placer_type'], string>, string>]?: ({
     type: S,
-    root_provider: BlockStateProvider,
+    root_provider: BlockStateProviderRef,
     trunk_offset_y: IntProvider<NBTInt>,
     above_root_placement?: AboveRootPlacement,
   } & (S extends keyof SymbolRootPlacer ? SymbolRootPlacer[S] : RootNBT))
@@ -510,14 +512,14 @@ export type ThreeLayersFeatureSize = {
 export type TreeConfig = ({
   ignore_vines?: boolean,
   minimum_size: FeatureSize,
-  trunk_provider: BlockStateProvider,
-  foliage_provider: BlockStateProvider,
+  trunk_provider: BlockStateProviderRef,
+  foliage_provider: BlockStateProviderRef,
   root_placer?: RootPlacer,
   trunk_placer: TrunkPlacer,
   foliage_placer: FoliagePlacer,
   decorators: Array<TreeDecorator>,
 } & {
-  below_trunk_provider: BlockStateProvider,
+  below_trunk_provider: BlockStateProviderRef,
 })
 
 export type TreeDecorator = NonNullable<({

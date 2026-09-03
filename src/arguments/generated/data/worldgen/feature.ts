@@ -1,6 +1,8 @@
 import type { CaveSurface, FloatProvider, IntProvider } from 'sandstone/arguments/generated/data/worldgen.ts'
 import type { BlockPredicate } from 'sandstone/arguments/generated/data/worldgen/feature/block_predicate.ts'
-import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
+import type {
+  BlockStateProviderRef,
+} from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
 import type { ConfiguredDecorator } from 'sandstone/arguments/generated/data/worldgen/feature/decorator.ts'
 import type {
   PlacedFeatureListRef,
@@ -42,11 +44,11 @@ export type BlockColumnLayer = {
   height: IntProvider<NBTInt<{
     min: 0,
   }>>,
-  provider: BlockStateProvider,
+  provider: BlockStateProviderRef,
 }
 
 export type BlockPileConfig = {
-  state_provider: BlockStateProvider,
+  state_provider: BlockStateProviderRef,
 }
 
 export type BlockPlacer = NonNullable<({
@@ -57,7 +59,7 @@ export type BlockPlacer = NonNullable<({
 
 export type BlockStateRuleProviderEntry = {
   if_true: BlockPredicate,
-  then: BlockStateProvider,
+  then: BlockStateProviderRef,
 }
 
 export type ColumnPlacer = {
@@ -67,7 +69,7 @@ export type ColumnPlacer = {
 }
 
 export type ColumnsConfig = {
-  block: BlockStateProvider,
+  block: BlockStateProviderRef,
   can_replace: BlockPredicate,
   continue_through: BlockPredicate,
   cannot_place_on: ((
@@ -124,7 +126,7 @@ export type DeltaConfig = {
 }
 
 export type DiskConfig = {
-  state_provider: BlockStateProvider,
+  state_provider: BlockStateProviderRef,
   radius: IntProvider<NBTInt<{
     min: 0,
     max: 8,
@@ -224,11 +226,11 @@ export type FossilConfig = {
 }
 
 export type GeodeBlockSettings = {
-  filling_provider: BlockStateProvider,
-  inner_layer_provider: BlockStateProvider,
-  alternate_inner_layer_provider: BlockStateProvider,
-  middle_layer_provider: BlockStateProvider,
-  outer_layer_provider: BlockStateProvider,
+  filling_provider: BlockStateProviderRef,
+  inner_layer_provider: BlockStateProviderRef,
+  alternate_inner_layer_provider: BlockStateProviderRef,
+  middle_layer_provider: BlockStateProviderRef,
+  outer_layer_provider: BlockStateProviderRef,
   /**
    * Value:
    * List length range: 1..
@@ -386,8 +388,8 @@ export type GrowingPlantConfig = {
   direction: Direction,
   allow_water: boolean,
   height_distribution: Array<GrowingPlantHeight>,
-  body_provider: BlockStateProvider,
-  head_provider: BlockStateProvider,
+  body_provider: BlockStateProviderRef,
+  head_provider: BlockStateProviderRef,
 }
 
 export type GrowingPlantHeight = {
@@ -405,8 +407,8 @@ export type HugeFungusConfig = {
 }
 
 export type HugeMushroomConfig = {
-  cap_provider: BlockStateProvider,
-  stem_provider: BlockStateProvider,
+  cap_provider: BlockStateProviderRef,
+  stem_provider: BlockStateProviderRef,
   foliage_radius: NBTInt,
   can_place_on: BlockPredicate,
 }
@@ -416,8 +418,8 @@ export type IcebergConfig = {
 }
 
 export type LakeConfig = {
-  fluid: BlockStateProvider,
-  barrier: BlockStateProvider,
+  fluid: BlockStateProviderRef,
+  barrier: BlockStateProviderRef,
   can_place_feature: BlockPredicate,
   can_replace_with_air_or_fluid: BlockPredicate,
   can_replace_with_barrier: BlockPredicate,
@@ -565,7 +567,7 @@ export type MultifaceGrowthConfig = ({
 })
 
 export type NetherForestVegetationConfig = ({
-  state_provider: BlockStateProvider,
+  state_provider: BlockStateProviderRef,
 } & {
   /**
    * Value:
@@ -617,7 +619,7 @@ export type OldPatchConfig = {
   zspread?: NBTInt<{
     min: 0,
   }>,
-  state_provider: BlockStateProvider,
+  state_provider: BlockStateProviderRef,
   block_placer: BlockPlacer,
   whitelist: Array<BlockState>,
   blacklist: Array<BlockState>,
@@ -681,7 +683,7 @@ export type ProbabilityConfig = {
 }
 
 export type ProjectedSquareConfig = {
-  block: BlockStateProvider,
+  block: BlockStateProviderRef,
   project_through: BlockPredicate,
   size: IntProvider<NBTInt<{
     min: 1,
@@ -716,7 +718,7 @@ export type RandomFeatureEntry = {
 }
 
 export type RandomNeighborSpreadConfig = {
-  block: BlockStateProvider,
+  block: BlockStateProviderRef,
   accepted_neighbors: ((
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
@@ -868,18 +870,18 @@ export type RootSystemConfig = {
   root_replaceable: ((
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
-  root_state_provider: BlockStateProvider,
-  hanging_root_state_provider: BlockStateProvider,
+  root_state_provider: BlockStateProviderRef,
+  hanging_root_state_provider: BlockStateProviderRef,
   allowed_tree_position: BlockPredicate,
   feature: FeatureRef,
 }
 
 export type RuleBasedBlockStateProvider = ({
-  fallback?: BlockStateProvider,
+  fallback?: BlockStateProviderRef,
 } & {
   rules: Array<{
     if_true: BlockPredicate,
-    then: BlockStateProvider,
+    then: BlockStateProviderRef,
   }>,
 })
 
@@ -940,7 +942,7 @@ export type SequenceConfig = {
 }
 
 export type SimpleBlockConfig = {
-  to_place: BlockStateProvider,
+  to_place: BlockStateProviderRef,
   /**
    * Whether to schedule a block update. Defaults to `false`.
    */
@@ -952,7 +954,7 @@ export type SimpleRandomSelectorConfig = {
 }
 
 export type SingleBlockPillarConfig = {
-  block: BlockStateProvider,
+  block: BlockStateProviderRef,
   /**
    * Defaults to "always true".
    */
@@ -1284,7 +1286,7 @@ export type VegetationPatchConfig = {
   replaceable: ((
       | Registry['minecraft:block'] | `#${Registry['minecraft:tag/block']}` | TagClass<'block'>)
       | Array<Registry['minecraft:block']>),
-  ground_state: BlockStateProvider,
+  ground_state: BlockStateProviderRef,
   vegetation_feature: FeatureRef,
 }
 

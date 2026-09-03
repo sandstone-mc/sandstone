@@ -112,9 +112,9 @@ export type JsonEnvironmentAttributeCheck = NonNullable<({
 export type JsonFloatValueCheck = {
   value: JsonFloatNumberProviderRef,
   /**
-   * Passes when `value` is within this range.
+   * Passes when `value` is within the test range.
    */
-  range: (JsonFloatNumberProviderRef | {
+  test: (JsonFloatNumberProviderRef | {
     min?: JsonFloatNumberProviderRef,
     max?: JsonFloatNumberProviderRef,
   }),
@@ -123,9 +123,9 @@ export type JsonFloatValueCheck = {
 export type JsonIntegerValueCheck = {
   value: JsonIntegerNumberProviderRef,
   /**
-   * Passes when `value` is within this range.
+   * Passes when `value` is within the test range.
    */
-  range: JsonIntRange,
+  test: JsonIntRange,
 }
 
 export type JsonInverted = {

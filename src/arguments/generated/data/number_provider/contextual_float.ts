@@ -23,7 +23,7 @@ export type AverageFloatProvider = MultiInputFloat
 export type CeilingFloatProvider = SingleInputFloat
 
 export type ConditionalFloatProvider = {
-  conditions: PredicateRef,
+  condition: PredicateRef,
   on_true: FloatNumberProviderRef,
   /**
    * Defaults to `0.0`.
@@ -108,9 +108,9 @@ export type FloatNumberProviderRef = ((
 
 export type FloorFloatProvider = SingleInputFloat
 
-export type MaxOfSetFloatProvider = SingleInputFloat
+export type MaxOfSetFloatProvider = MultiInputFloat
 
-export type MinOfSetFloatProvider = SingleInputFloat
+export type MinOfSetFloatProvider = MultiInputFloat
 
 export type ModuloFloatProvider = SidedInputsFloat
 

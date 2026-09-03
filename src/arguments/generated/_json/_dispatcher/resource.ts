@@ -64,6 +64,9 @@ import type {
   JsonNoiseParameters,
 } from 'sandstone/arguments/generated/_json/data/worldgen/dimension/biome_source.ts'
 import type { JsonDimension, JsonDimensionType } from 'sandstone/arguments/generated/_json/data/worldgen/dimension.ts'
+import type {
+  JsonBlockStateProvider,
+} from 'sandstone/arguments/generated/_json/data/worldgen/feature/block_state_provider.ts'
 import type { JsonConfiguredFeature } from 'sandstone/arguments/generated/_json/data/worldgen/feature.ts'
 import type { JsonPlacedFeature } from 'sandstone/arguments/generated/_json/data/worldgen/feature/placement.ts'
 import type { JsonMaterialCondition } from 'sandstone/arguments/generated/_json/data/worldgen/material_condition.ts'
@@ -200,6 +203,8 @@ type JsonResourceDispatcherMap = {
   'minecraft:world_clock': JsonResourceWorldClock,
   'worldgen/biome': JsonResourceWorldgenBiome,
   'minecraft:worldgen/biome': JsonResourceWorldgenBiome,
+  'worldgen/block_state_provider': JsonResourceWorldgenBlockStateProvider,
+  'minecraft:worldgen/block_state_provider': JsonResourceWorldgenBlockStateProvider,
   'worldgen/carver': JsonResourceWorldgenCarver,
   'minecraft:worldgen/carver': JsonResourceWorldgenCarver,
   'worldgen/density_function': JsonResourceWorldgenDensityFunction,
@@ -295,6 +300,7 @@ type JsonResourceFallback = (
   | JsonResourceWolfVariant
   | JsonResourceWorldClock
   | JsonResourceWorldgenBiome
+  | JsonResourceWorldgenBlockStateProvider
   | JsonResourceWorldgenCarver
   | JsonResourceWorldgenDensityFunction
   | JsonResourceWorldgenFeature
@@ -374,6 +380,7 @@ type JsonResourceWolfSoundVariant = JsonSoundVariant<JsonWolfSounds>
 type JsonResourceWolfVariant = JsonWolfVariant
 type JsonResourceWorldClock = Record<string, never>
 type JsonResourceWorldgenBiome = JsonBiome
+type JsonResourceWorldgenBlockStateProvider = JsonBlockStateProvider
 type JsonResourceWorldgenCarver = JsonConfiguredCarver
 type JsonResourceWorldgenDensityFunction = JsonDensityFunction
 type JsonResourceWorldgenFeature = JsonConfiguredFeature

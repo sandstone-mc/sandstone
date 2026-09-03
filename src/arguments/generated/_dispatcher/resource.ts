@@ -57,6 +57,7 @@ import type {
   NoiseParameters,
 } from 'sandstone/arguments/generated/data/worldgen/dimension/biome_source.ts'
 import type { Dimension, DimensionType } from 'sandstone/arguments/generated/data/worldgen/dimension.ts'
+import type { BlockStateProvider } from 'sandstone/arguments/generated/data/worldgen/feature/block_state_provider.ts'
 import type { ConfiguredFeature } from 'sandstone/arguments/generated/data/worldgen/feature.ts'
 import type { PlacedFeature } from 'sandstone/arguments/generated/data/worldgen/feature/placement.ts'
 import type { MaterialCondition } from 'sandstone/arguments/generated/data/worldgen/material_condition.ts'
@@ -190,6 +191,8 @@ type ResourceDispatcherMap = {
   'minecraft:world_clock': ResourceWorldClock,
   'worldgen/biome': ResourceWorldgenBiome,
   'minecraft:worldgen/biome': ResourceWorldgenBiome,
+  'worldgen/block_state_provider': ResourceWorldgenBlockStateProvider,
+  'minecraft:worldgen/block_state_provider': ResourceWorldgenBlockStateProvider,
   'worldgen/carver': ResourceWorldgenCarver,
   'minecraft:worldgen/carver': ResourceWorldgenCarver,
   'worldgen/density_function': ResourceWorldgenDensityFunction,
@@ -285,6 +288,7 @@ type ResourceFallback = (
   | ResourceWolfVariant
   | ResourceWorldClock
   | ResourceWorldgenBiome
+  | ResourceWorldgenBlockStateProvider
   | ResourceWorldgenCarver
   | ResourceWorldgenDensityFunction
   | ResourceWorldgenFeature
@@ -364,6 +368,7 @@ type ResourceWolfSoundVariant = SoundVariant<WolfSounds>
 type ResourceWolfVariant = WolfVariant
 type ResourceWorldClock = Record<string, never>
 type ResourceWorldgenBiome = Biome
+type ResourceWorldgenBlockStateProvider = BlockStateProvider
 type ResourceWorldgenCarver = ConfiguredCarver
 type ResourceWorldgenDensityFunction = DensityFunction
 type ResourceWorldgenFeature = ConfiguredFeature

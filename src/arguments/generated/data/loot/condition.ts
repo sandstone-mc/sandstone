@@ -107,9 +107,9 @@ export type EnvironmentAttributeCheck = NonNullable<({
 export type FloatValueCheck = {
   value: FloatNumberProviderRef,
   /**
-   * Passes when `value` is within this range.
+   * Passes when `value` is within the test range.
    */
-  range: (FloatNumberProviderRef | {
+  test: (FloatNumberProviderRef | {
     min?: FloatNumberProviderRef,
     max?: FloatNumberProviderRef,
   }),
@@ -118,9 +118,9 @@ export type FloatValueCheck = {
 export type IntegerValueCheck = {
   value: IntegerNumberProviderRef,
   /**
-   * Passes when `value` is within this range.
+   * Passes when `value` is within the test range.
    */
-  range: IntRange,
+  test: IntRange,
 }
 
 export type Inverted = {
