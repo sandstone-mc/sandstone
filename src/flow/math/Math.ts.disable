@@ -1,0 +1,110 @@
+import { SandstoneCore } from 'sandstone/core'
+
+export class SandstoneMath {
+  constructor(public sandstoneCore: SandstoneCore) {}
+
+  // Operations // TODO
+
+  // Flow // TODO
+
+  if(condition: Condition, callback: () => void): IfStatement<false>
+  if(condition: Condition): IfStatement<true>
+  if(
+    condition: Condition,
+    callback?: () => void,
+  ): IfStatement<boolean> {
+    // TODO
+  }
+
+  /**
+   * Combine conditions with AND.
+   *
+   * Accepts either variadic conditions (`_.and(a, b, c)`) or a single array
+   * (`_.and([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  and(...conditions: Condition[]): AndNode
+  and(conditions: Condition[]): AndNode
+  and(...args: any[]): AndNode {
+    // TODO
+  }
+
+  /**
+   * Combine conditions with OR.
+   *
+   * Accepts either variadic conditions (`_.or(a, b, c)`) or a single array
+   * (`_.or([a, b, c])`, useful for `Array.prototype.map` results).
+   */
+  or(...conditions: Condition[]): OrNode
+  or(conditions: Condition[]): OrNode
+  or(...args: any[]): OrNode {
+    // TODO
+  }
+
+  not = (condition: Condition) => new NotNode(this.sandstoneCore, conditionToNode(condition))
+
+  return() {
+    // TODO
+  }
+
+  while(condition: Condition, callback: () => void) {
+    return new WhileStatement(this.sandstoneCore, conditionToNode(condition), callback)
+  }
+
+  for(
+    initial: number | Score,
+    end: (iterator: Score) => Condition,
+    iterate: (iterator: Score) => Score,
+    callback: (iterator: Score | number, _continue: () => void) => any,
+  ): ForIStatement
+
+  for(
+    range: [start: number | Score, end: number | Score],
+    type: 'iterate',
+    callback: (iterator: Score, _continue: () => void) => any,
+  ): ForIStatement
+
+  for(
+    arg1: (number | Score) | [start: number | Score, end: number | Score],
+    arg2: ((iterator: Score) => Condition) | 'iterate',
+    arg3:
+      | ((iterator: Score) => Score)
+      | ((iterator: Score, _continue: () => void) => any),
+    arg4?: ((iterator: Score, _continue: () => void) => any)
+  ) {
+    // TODO
+  }
+
+  switch<
+    ValueType extends DataPointClass | DataPointPickClass | Score,
+    CheckType extends ValueType extends Score ? number : NBTObject,
+  >(value: ValueType, cases: CaseStatement<CheckType, ValueType> | DefaultType<CheckType, ValueType>): void
+
+  switch<
+    ValueType extends DataPointClass | DataPointPickClass | Score,
+    CheckType extends ValueType extends Score ? number : NBTObject,
+  >(value: ValueType, cases: SwitchCase<ValueType, CheckType>[] | [...SwitchCase<ValueType, CheckType>[], ['default', () => any]]): void
+
+  switch<
+    ValueType extends DataPointClass | DataPointPickClass | Score,
+    CheckType extends ValueType extends Score ? number : NBTObject,
+  >(
+    value: ValueType,
+    cases: SwitchCase<ValueType, CheckType>[] | [...SwitchCase<ValueType, CheckType>[], ['default', () => any]] | CaseStatement<CheckType, ValueType> | DefaultType<CheckType, ValueType>,
+  ) {
+    // TODO
+  }
+
+  case<SwitchValueType extends DataPointClass | DataPointPickClass | Score>(value: (SwitchValueType extends Score ? number : NBTObject) | ConditionCallback<SwitchValueType>, callback: () => any) {
+    // TODO
+  }
+
+  // Conditions // TODO
+
+  mcfunction = (mcfunction: NamespacedString | MCFunctionClass<undefined, undefined>) => {
+    // TODO
+  }
+
+  predicate = (predicate: LiteralUnion<string> | PredicateClass) => {
+    // TODO
+  }
+}

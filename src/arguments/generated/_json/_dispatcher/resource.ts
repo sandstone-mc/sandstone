@@ -27,11 +27,9 @@ import type { JsonTestEnvironment } from 'sandstone/arguments/generated/_json/da
 import type { JsonItemModifierRoot } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
 import type { JsonLootTable } from 'sandstone/arguments/generated/_json/data/loot.ts'
 import type {
-  JsonFloatNumberProvider,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_float.ts'
-import type {
-  JsonIntegerNumberProvider,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_integer.ts'
+  JsonContextFloatProvider,
+} from 'sandstone/arguments/generated/_json/data/number_provider/context_float.ts'
+import type { JsonContextIntProvider } from 'sandstone/arguments/generated/_json/data/number_provider/context_int.ts'
 import type { JsonPredicate } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonRecipe } from 'sandstone/arguments/generated/_json/data/recipe.ts'
 import type { JsonTypedSlotSource } from 'sandstone/arguments/generated/_json/data/slot_source.ts'
@@ -330,8 +328,8 @@ type JsonResourceCatVariant = JsonCatVariant
 type JsonResourceChatType = JsonChatType
 type JsonResourceChickenSoundVariant = JsonSoundVariant<JsonChickenSounds>
 type JsonResourceChickenVariant = JsonChickenVariant
-type JsonResourceContextFloatProvider = JsonFloatNumberProvider
-type JsonResourceContextIntProvider = JsonIntegerNumberProvider
+type JsonResourceContextFloatProvider = JsonContextFloatProvider
+type JsonResourceContextIntProvider = JsonContextIntProvider
 type JsonResourceCowSoundVariant = JsonCowSounds
 type JsonResourceCowVariant = JsonCowVariant
 type JsonResourceCredits = JsonCredits

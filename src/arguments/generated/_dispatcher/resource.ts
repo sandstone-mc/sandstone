@@ -26,8 +26,8 @@ import type { TestEnvironment } from 'sandstone/arguments/generated/data/gametes
 import type { TestInstance } from 'sandstone/arguments/generated/data/gametest.ts'
 import type { ItemModifierRoot } from 'sandstone/arguments/generated/data/item_modifier.ts'
 import type { LootTable } from 'sandstone/arguments/generated/data/loot.ts'
-import type { FloatNumberProvider } from 'sandstone/arguments/generated/data/number_provider/contextual_float.ts'
-import type { IntegerNumberProvider } from 'sandstone/arguments/generated/data/number_provider/contextual_integer.ts'
+import type { ContextFloatProvider } from 'sandstone/arguments/generated/data/number_provider/context_float.ts'
+import type { ContextIntProvider } from 'sandstone/arguments/generated/data/number_provider/context_int.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Recipe } from 'sandstone/arguments/generated/data/recipe.ts'
 import type { TypedSlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
@@ -318,8 +318,8 @@ type ResourceCatVariant = CatVariant
 type ResourceChatType = ChatType
 type ResourceChickenSoundVariant = SoundVariant<ChickenSounds>
 type ResourceChickenVariant = ChickenVariant
-type ResourceContextFloatProvider = FloatNumberProvider
-type ResourceContextIntProvider = IntegerNumberProvider
+type ResourceContextFloatProvider = ContextFloatProvider
+type ResourceContextIntProvider = ContextIntProvider
 type ResourceCowSoundVariant = CowSounds
 type ResourceCowVariant = CowVariant
 type ResourceCredits = Credits

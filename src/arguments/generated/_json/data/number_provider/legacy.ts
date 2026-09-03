@@ -55,10 +55,6 @@ export type JsonLegacyNumberProvider = ((NBTFloat | number) | ({
     (S extends keyof JsonSymbolNumberProvider ? JsonSymbolNumberProvider[S] : JsonRootNBT)))
 }[Extract<NamespacedString, string>]))
 
-export type JsonLegacySumNumberProvider = {
-  summands: Array<JsonLegacyNumberProvider>,
-}
-
 export type JsonScoreNumberProvider = {
   target: JsonScoreProvider,
   score: NonEmptyString | ObjectiveClass,
@@ -68,6 +64,10 @@ export type JsonScoreNumberProvider = {
 export type JsonStorageNumberProvider = {
   storage: NamespacedString,
   path: NonEmptyString | DataPointClass,
+}
+
+export type JsonSumNumberProvider = {
+  summands: Array<JsonLegacyNumberProvider>,
 }
 
 export type JsonUniformNumberProvider = {
@@ -109,7 +109,7 @@ type JsonNumberProviderEnchantmentLevel = JsonEnchantmentLevelProvider
 type JsonNumberProviderEnvironmentAttribute = JsonEnvironmentAttributeNumberProvider
 type JsonNumberProviderScore = JsonScoreNumberProvider
 type JsonNumberProviderStorage = JsonStorageNumberProvider
-type JsonNumberProviderSum = JsonLegacySumNumberProvider
+type JsonNumberProviderSum = JsonSumNumberProvider
 type JsonNumberProviderUniform = JsonUniformNumberProvider
 export type JsonSymbolNumberProvider<CASE extends
   | 'map'

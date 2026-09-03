@@ -251,6 +251,8 @@ export type FloatAttribute<T extends NBTObject> = {
 
 export type GlobalEnvironmentAttributeMap = EnvironmentAttributeMap<Registry['minecraft:environment_attribute']>
 
+export type IntegerEnvironmentAttribute = never
+
 export type ListAttribute<E extends NBTObject> = {
   value: Array<E>,
   modifier: ListModifier<E>,

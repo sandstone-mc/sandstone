@@ -101,9 +101,9 @@ export { type JsonSymbolLootCondition } from './data/loot/condition.ts'
 
 export { type JsonSymbolLootFunction } from './data/loot/function.ts'
 
-export { type JsonSymbolNumberProviderFloat } from './data/number_provider/contextual_float.ts'
+export { type JsonSymbolContextFloatProvider } from './data/number_provider/context_float.ts'
 
-export { type JsonSymbolNumberProviderInteger } from './data/number_provider/contextual_integer.ts'
+export { type JsonSymbolContextIntProvider } from './data/number_provider/context_int.ts'
 
 export { type JsonSymbolNumberProvider } from './data/number_provider/legacy.ts'
 

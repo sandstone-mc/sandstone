@@ -55,10 +55,6 @@ export type LegacyNumberProvider = (NBTFloat | ({
     (S extends keyof SymbolNumberProvider ? SymbolNumberProvider[S] : RootNBT)))
 }[Extract<NamespacedString, string>]))
 
-export type LegacySumNumberProvider = {
-  summands: Array<LegacyNumberProvider>,
-}
-
 export type ScoreNumberProvider = {
   target: ScoreProvider,
   score: NonEmptyString | ObjectiveClass,
@@ -68,6 +64,10 @@ export type ScoreNumberProvider = {
 export type StorageNumberProvider = {
   storage: NamespacedString,
   path: NonEmptyString | DataPointClass,
+}
+
+export type SumNumberProvider = {
+  summands: Array<LegacyNumberProvider>,
 }
 
 export type UniformNumberProvider = {
@@ -109,7 +109,7 @@ type NumberProviderEnchantmentLevel = EnchantmentLevelProvider
 type NumberProviderEnvironmentAttribute = EnvironmentAttributeNumberProvider
 type NumberProviderScore = ScoreNumberProvider
 type NumberProviderStorage = StorageNumberProvider
-type NumberProviderSum = LegacySumNumberProvider
+type NumberProviderSum = SumNumberProvider
 type NumberProviderUniform = UniformNumberProvider
 export type SymbolNumberProvider<CASE extends
   | 'map'

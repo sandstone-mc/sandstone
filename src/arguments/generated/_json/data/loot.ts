@@ -1,12 +1,11 @@
 import type { JsonItemModifier } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
 import type {
   JsonFloatNumberProviderRef,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_float.ts'
-import type {
-  JsonIntegerNumberProviderRef,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_integer.ts'
+  JsonIntNumberProviderRef,
+} from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonSlotSource } from 'sandstone/arguments/generated/_json/data/slot_source.ts'
+import type { JsonMinMaxBounds } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonItemListRef } from 'sandstone/arguments/generated/_json/util/registry_ref.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
@@ -48,10 +47,9 @@ export type JsonEntityTarget = (
   | 'target_entity'
   | 'interacting_entity')
 
-export type JsonIntRange = ((NBTInt | number) | JsonIntegerNumberProviderRef | {
-  min?: JsonIntegerNumberProviderRef,
-  max?: JsonIntegerNumberProviderRef,
-})
+export type JsonFloatRange = JsonMinMaxBounds<JsonFloatNumberProviderRef>
+
+export type JsonIntRange = JsonMinMaxBounds<JsonIntNumberProviderRef>
 
 export type JsonItemPoolEntry = ({
   name: JsonRegistry['minecraft:item'],
@@ -144,7 +142,7 @@ export type JsonLootFunctionType = (
   | 'set_stew_effect')
 
 export type JsonLootPool = ({
-  rolls: JsonIntegerNumberProviderRef,
+  rolls: JsonIntNumberProviderRef,
   bonus_rolls?: JsonFloatNumberProviderRef,
   entries: Array<JsonLootPoolEntry>,
 } & {

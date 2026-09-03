@@ -3,7 +3,7 @@ import type { Score } from 'sandstone/variables'
 import { LoopArgument } from 'sandstone/variables'
 import { conditionToNode, type Condition } from '..'
 import { IfStatement } from '../if_else'
-import { LoopNode } from '../loop'
+import { LoopNode } from './'
 
 export class ForINode extends LoopNode {
   // eslint-disable-next-line max-len

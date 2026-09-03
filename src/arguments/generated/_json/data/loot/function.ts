@@ -8,10 +8,8 @@ import type {
 } from 'sandstone/arguments/generated/_json/data/loot.ts'
 import type {
   JsonFloatNumberProviderRef,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_float.ts'
-import type {
-  JsonIntegerNumberProviderRef,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_integer.ts'
+  JsonIntNumberProviderRef,
+} from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonNbtProvider } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type {
@@ -280,7 +278,7 @@ export type JsonCopyState = NonNullable<({
 }[Extract<JsonRegistry['minecraft:block'], string>])>
 
 export type JsonCustomModelDataColors = ({
-  values: Array<(JSONRGB | JsonIntegerNumberProviderRef)>,
+  values: Array<(JSONRGB | JsonIntNumberProviderRef)>,
 } & JsonListOperation)
 
 export type JsonCustomModelDataFlags = ({
@@ -341,7 +339,7 @@ export type JsonEnchantWithLevels = ({
   /**
    * The levels to enchant this item with.
    */
-  levels: JsonIntegerNumberProviderRef,
+  levels: JsonIntNumberProviderRef,
   /**
    * The allowed enchantments. If omitted, all enchantments applicable to the item are possible.
    */
@@ -466,8 +464,8 @@ export type JsonLimitCount = ({
    * Limits the count of the item to a range.
    */
   limit: {
-    min?: JsonIntegerNumberProviderRef,
-    max?: JsonIntegerNumberProviderRef,
+    min?: JsonIntNumberProviderRef,
+    max?: JsonIntNumberProviderRef,
   },
 } & JsonConditions)
 
@@ -640,7 +638,7 @@ export type JsonSetContents = ({
 } & JsonConditions)
 
 export type JsonSetCount = ({
-  count: JsonIntegerNumberProviderRef,
+  count: JsonIntNumberProviderRef,
   /**
    * Whether to add to the existing count. Defaults to `false`.
    */
@@ -662,7 +660,7 @@ export type JsonSetCustomModelData = ({
     values: Array<string>,
   } & JsonListOperation),
   colors?: ({
-    values: Array<(JSONRGB | JsonIntegerNumberProviderRef)>,
+    values: Array<(JSONRGB | JsonIntNumberProviderRef)>,
   } & JsonListOperation),
 } & JsonConditions)
 
@@ -683,7 +681,7 @@ export type JsonSetEnchantments = ({
    * A map of enchantments to levels. Setting an enchantment to `0` removes it from the item.
    */
   enchantments: ({
-    [Key in Extract<JsonRegistry['minecraft:enchantment'], string>]?: JsonIntegerNumberProviderRef
+    [Key in Extract<JsonRegistry['minecraft:enchantment'], string>]?: JsonIntNumberProviderRef
   }),
   /**
    * Whether to add to the level of each enchantment. Defaults to `false`.
@@ -822,7 +820,7 @@ export type JsonSetNbt = ({
 } & JsonConditions)
 
 export type JsonSetOminousBottleAmplifier = ({
-  amplifier: JsonIntegerNumberProviderRef,
+  amplifier: JsonIntNumberProviderRef,
 } & JsonConditions)
 
 export type JsonSetPotion = ({
@@ -838,7 +836,7 @@ export type JsonSetRandomDyes = ({
    * For example, one possible outcome of `"number_of_dyes": 2` is `#2C3065`, which is the combination of a blue dye and a black dye. \
    * The same dye color can be selected multiple times.
    */
-  number_of_dyes: JsonIntegerNumberProviderRef,
+  number_of_dyes: JsonIntNumberProviderRef,
 } & JsonConditions)
 
 export type JsonSetRandomPotion = ({
@@ -880,7 +878,7 @@ export type JsonStewEffect = {
   /**
    * The duration of this stew effect, in seconds.
    */
-  duration: JsonIntegerNumberProviderRef,
+  duration: JsonIntNumberProviderRef,
 }
 
 export type JsonToggleableDataComponent = (

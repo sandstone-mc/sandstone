@@ -309,7 +309,13 @@ export type Jsonblocks_attacks = {
 export type JsonBookGeneration = (0 | 1 | 2 | 3)
 
 export type JsonBrewingFuel = {
+  /**
+   * Total recipes the fuel will brew before being consumed.
+   */
   uses: ((NBTInt | number) | (JsonRegistry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
+  /**
+   * Controls the recipe brewing speed.
+   */
   speed_multiplier: ((
       | NBTFloat | number) | (
       JsonRegistry['minecraft:context_float_provider'] | FloatNumberProviderClass)),

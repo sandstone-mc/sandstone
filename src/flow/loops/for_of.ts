@@ -2,7 +2,7 @@ import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
 import type { DataPointClass, IterableDataClass, Score, StringDataPointClass } from 'sandstone/variables'
 import { LoopArgument } from 'sandstone/variables'
 import { IfStatement } from '../if_else'
-import { LoopNode } from '../loop'
+import { LoopNode } from './'
 
 export type ForOfIterator = 'entry' | ['i', 'entry'] | ['key', 'value']
 

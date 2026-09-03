@@ -1,4 +1,4 @@
-import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher.ts'
+import type { JsonIntNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { NamespacedString, TagClass, VillagerTradeClass } from 'sandstone'
 
@@ -15,7 +15,7 @@ export type JsonTradeSet = {
   /**
    * Amount of trades to be generated.
    */
-  amount: JsonSymbolResource['context_int_provider'],
+  amount: JsonIntNumberProvider,
   /**
    * Whether the trade set can use the same generator multiple times and generate duplicate trades.
    * Defaults to `false`.

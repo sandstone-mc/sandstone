@@ -1,6 +1,9 @@
 import type { JsonItemModifier } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
+import type {
+  JsonFloatNumberProvider,
+  JsonIntNumberProvider,
+} from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonPredicate } from 'sandstone/arguments/generated/_json/data/predicate.ts'
-import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonDataComponentExactPredicate } from 'sandstone/arguments/generated/_json/world/component.ts'
 import type {
@@ -13,7 +16,7 @@ export type JsonTradeCost = (JsonSingleItemOfComponent<JsonDataComponentExactPre
   /**
    * Defaults to `1`.
    */
-  count?: JsonSymbolResource['context_int_provider'],
+  count?: JsonIntNumberProvider,
 })
 
 export type JsonVillagerTrade = {
@@ -43,15 +46,15 @@ export type JsonVillagerTrade = {
   /**
    * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`.
    */
-  max_uses?: JsonSymbolResource['context_int_provider'],
+  max_uses?: JsonIntNumberProvider,
   /**
    * How much demand & reputation each affect the price, is serialized as `priceMultiplier`. Defaults to `0.0`.
    */
-  reputation_discount?: JsonSymbolResource['context_float_provider'],
+  reputation_discount?: JsonFloatNumberProvider,
   /**
    * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`.
    */
-  xp?: JsonSymbolResource['context_int_provider'],
+  xp?: JsonIntNumberProvider,
   /**
    * Check whether the trade should be offered by the merchant. \
    * Does **not** support the `reference` predicate.

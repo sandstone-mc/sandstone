@@ -1,10 +1,11 @@
 import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
-import type { FloatNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider/contextual_float.ts'
 import type {
-  IntegerNumberProviderRef,
-} from 'sandstone/arguments/generated/data/number_provider/contextual_integer.ts'
+  FloatNumberProviderRef,
+  IntNumberProviderRef,
+} from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
+import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemListRef } from 'sandstone/arguments/generated/util/registry_ref.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -46,10 +47,9 @@ export type EntityTarget = (
   | 'target_entity'
   | 'interacting_entity')
 
-export type IntRange = (NBTInt | IntegerNumberProviderRef | {
-  min?: IntegerNumberProviderRef,
-  max?: IntegerNumberProviderRef,
-})
+export type FloatRange = MinMaxBounds<FloatNumberProviderRef>
+
+export type IntRange = MinMaxBounds<IntNumberProviderRef>
 
 export type ItemPoolEntry = ({
   name: Registry['minecraft:item'],
@@ -142,7 +142,7 @@ export type LootFunctionType = (
   | 'set_stew_effect')
 
 export type LootPool = ({
-  rolls: IntegerNumberProviderRef,
+  rolls: IntNumberProviderRef,
   bonus_rolls?: FloatNumberProviderRef,
   entries: Array<LootPoolEntry>,
 } & {

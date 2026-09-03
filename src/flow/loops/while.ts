@@ -2,7 +2,7 @@ import type { SandstoneCore } from 'sandstone/core'
 import { LoopArgument } from 'sandstone/variables'
 import { IfStatement } from '../if_else'
 import { conditionToNode, type ConditionNode } from '..'
-import { LoopNode } from '../loop'
+import { LoopNode } from './'
 
 export class WhileNode extends LoopNode {
   constructor(

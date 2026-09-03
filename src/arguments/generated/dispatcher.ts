@@ -98,9 +98,9 @@ export { type SymbolLootCondition } from './data/loot/condition.ts'
 
 export { type SymbolLootFunction } from './data/loot/function.ts'
 
-export { type SymbolNumberProviderFloat } from './data/number_provider/contextual_float.ts'
+export { type SymbolContextFloatProvider } from './data/number_provider/context_float.ts'
 
-export { type SymbolNumberProviderInteger } from './data/number_provider/contextual_integer.ts'
+export { type SymbolContextIntProvider } from './data/number_provider/context_int.ts'
 
 export { type SymbolNumberProvider } from './data/number_provider/legacy.ts'
 

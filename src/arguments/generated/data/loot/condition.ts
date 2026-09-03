@@ -6,11 +6,11 @@ import type {
   LocationPredicate,
 } from 'sandstone/arguments/generated/data/advancement/predicate.ts'
 import type { LevelBasedValue } from 'sandstone/arguments/generated/data/enchantment/level_based_value.ts'
-import type { EntityTarget, IntRange } from 'sandstone/arguments/generated/data/loot.ts'
-import type { FloatNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider/contextual_float.ts'
+import type { EntityTarget, FloatRange, IntRange } from 'sandstone/arguments/generated/data/loot.ts'
 import type {
-  IntegerNumberProviderRef,
-} from 'sandstone/arguments/generated/data/number_provider/contextual_integer.ts'
+  FloatNumberProviderRef,
+  IntNumberProviderRef,
+} from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { LegacyNumberProvider } from 'sandstone/arguments/generated/data/number_provider/legacy.ts'
 import type { PredicateListRef, PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { SymbolEnvironmentAttribute, SymbolMcdocBlockStates } from 'sandstone/arguments/generated/dispatcher.ts'
@@ -109,14 +109,11 @@ export type FloatValueCheck = {
   /**
    * Passes when `value` is within the test range.
    */
-  test: (FloatNumberProviderRef | {
-    min?: FloatNumberProviderRef,
-    max?: FloatNumberProviderRef,
-  }),
+  test: FloatRange,
 }
 
 export type IntegerValueCheck = {
-  value: IntegerNumberProviderRef,
+  value: IntNumberProviderRef,
   /**
    * Passes when `value` is within the test range.
    */

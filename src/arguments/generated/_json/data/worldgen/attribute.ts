@@ -251,6 +251,8 @@ export type JsonFloatAttribute<T extends JsonNBTObject> = {
 
 export type JsonGlobalEnvironmentAttributeMap = JsonEnvironmentAttributeMap<JsonRegistry['minecraft:environment_attribute']>
 
+export type JsonIntegerEnvironmentAttribute = never
+
 export type JsonListAttribute<E extends JsonNBTObject> = {
   value: Array<E>,
   modifier: JsonListModifier<E>,

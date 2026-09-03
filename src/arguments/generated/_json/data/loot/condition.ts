@@ -6,13 +6,11 @@ import type {
   JsonLocationPredicate,
 } from 'sandstone/arguments/generated/_json/data/advancement/predicate.ts'
 import type { JsonLevelBasedValue } from 'sandstone/arguments/generated/_json/data/enchantment/level_based_value.ts'
-import type { JsonEntityTarget, JsonIntRange } from 'sandstone/arguments/generated/_json/data/loot.ts'
+import type { JsonEntityTarget, JsonFloatRange, JsonIntRange } from 'sandstone/arguments/generated/_json/data/loot.ts'
 import type {
   JsonFloatNumberProviderRef,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_float.ts'
-import type {
-  JsonIntegerNumberProviderRef,
-} from 'sandstone/arguments/generated/_json/data/number_provider/contextual_integer.ts'
+  JsonIntNumberProviderRef,
+} from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonLegacyNumberProvider } from 'sandstone/arguments/generated/_json/data/number_provider/legacy.ts'
 import type { JsonPredicateListRef, JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type {
@@ -114,14 +112,11 @@ export type JsonFloatValueCheck = {
   /**
    * Passes when `value` is within the test range.
    */
-  test: (JsonFloatNumberProviderRef | {
-    min?: JsonFloatNumberProviderRef,
-    max?: JsonFloatNumberProviderRef,
-  }),
+  test: JsonFloatRange,
 }
 
 export type JsonIntegerValueCheck = {
-  value: JsonIntegerNumberProviderRef,
+  value: JsonIntNumberProviderRef,
   /**
    * Passes when `value` is within the test range.
    */

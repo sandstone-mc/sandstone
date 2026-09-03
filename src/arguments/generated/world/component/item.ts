@@ -306,7 +306,13 @@ export type blocks_attacks = {
 export type BookGeneration = (0 | 1 | 2 | 3)
 
 export type BrewingFuel = {
+  /**
+   * Total recipes the fuel will brew before being consumed.
+   */
   uses: (NBTInt | (Registry['minecraft:context_int_provider'] | IntegerNumberProviderClass)),
+  /**
+   * Controls the recipe brewing speed.
+   */
   speed_multiplier: (NBTFloat | (Registry['minecraft:context_float_provider'] | FloatNumberProviderClass)),
 }
 

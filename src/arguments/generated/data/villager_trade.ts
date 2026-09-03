@@ -1,6 +1,6 @@
 import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
+import type { FloatNumberProvider, IntNumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
-import type { SymbolResource } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { DataComponentExactPredicate } from 'sandstone/arguments/generated/world/component.ts'
 import type { ItemStackTemplate, SingleItemOfComponent } from 'sandstone/arguments/generated/world/item.ts'
@@ -10,7 +10,7 @@ export type TradeCost = (SingleItemOfComponent<DataComponentExactPredicate> & {
   /**
    * Defaults to `1`.
    */
-  count?: SymbolResource['context_int_provider'],
+  count?: IntNumberProvider,
 })
 
 export type VillagerTrade = {
@@ -40,15 +40,15 @@ export type VillagerTrade = {
   /**
    * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`.
    */
-  max_uses?: SymbolResource['context_int_provider'],
+  max_uses?: IntNumberProvider,
   /**
    * How much demand & reputation each affect the price, is serialized as `priceMultiplier`. Defaults to `0.0`.
    */
-  reputation_discount?: SymbolResource['context_float_provider'],
+  reputation_discount?: FloatNumberProvider,
   /**
    * Amount to increase the merchant's XP score by that determines their trade tier. Defaults to `1`.
    */
-  xp?: SymbolResource['context_int_provider'],
+  xp?: IntNumberProvider,
   /**
    * Check whether the trade should be offered by the merchant. \
    * Does **not** support the `reference` predicate.
