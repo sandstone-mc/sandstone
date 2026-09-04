@@ -4584,6 +4584,1460 @@ scoreboard players set test load.status 1"
 ]
 `;
 
+exports[`Flow snapshots _.and / _.or _.not(_.and(...)) — tail of host (inline) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_tail.mcfunction",
+    
+"say before _.if
+execute if entity @a[tag=foo] if entity @a[tag=baz] run return 0
+say inside negated AND"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.not(_.and(...)) — mid-function (inlined flag-score, no child mcfunction) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_mid.mcfunction",
+    
+"say before _.if
+say also before _.if
+function test:not_and_mid/__not_and
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_mid/__not_and.mcfunction",
+    
+"execute if entity @a[tag=foo] if entity @a[tag=baz] run return 0
+say inside negated AND"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.not(_.and(...)) + elseIf (flag-score restructure, chain stays reachable) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.counter dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_with_elseif.mcfunction",
+    
+"say before _.if
+scoreboard players set not_and_flag_0_kZZpDK67 __sandstone 0
+execute if entity @a[tag=foo] if entity @a[tag=baz] run scoreboard players set not_and_flag_0_kZZpDK67 __sandstone 1
+execute if score not_and_flag_0_kZZpDK67 __sandstone matches 0 run return run say then branch
+execute if score @s test.counter matches 1 run return run say elseIf branch
+say else branch
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.not(_.and(...)) + else (swap roles, existing visitor processes inverted form) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_with_else.mcfunction",
+    
+"say before _.if
+function test:not_and_with_else/if
+say after _.if"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_with_else/if.mcfunction",
+    
+"execute if entity @a[tag=foo] if entity @a[tag=baz] run return run say else branch
+say then branch"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.not(_.and(single)) — single-child AND does NOT trigger restructure 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_single.mcfunction",
+    
+"say before _.if
+execute unless entity @a[tag=foo] run say inside (single-child AND, no restructure)
+say after _.if"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.not(_.and(...)) with three children (covers arbitrary-length AND) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_three.mcfunction",
+    
+"execute if entity @a[tag=foo] if entity @a[tag=baz] if entity @a[tag=qux] run return 0
+say inside negated AND of three"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.not(_.and(...)) with score-based AND children 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard objectives add test.a dummy
+scoreboard objectives add test.b dummy
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_scores.mcfunction",
+    
+"execute if score @s test.a matches 1.. if score @s test.b matches ..9 run return 0
+say inside score-based negated AND"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if(C) + elseIf(_.not(_.and(A, B))) + else — negate-AND in elseIf position (swap) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_in_elseif.mcfunction",
+    
+"execute if entity @s run return run say if branch
+execute if entity @a[tag=foo] if entity @a[tag=baz] run return run say else branch
+say elseIf branch (negate-AND)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if(_.not(_.and(A,B))) + elseIf(_.not(_.and(C,D))) + else — root flag-score + last elseIf swap 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_in_both.mcfunction",
+    
+"scoreboard players set not_and_flag_0_kZZpDK67 __sandstone 0
+execute if entity @a[tag=foo] if entity @a[tag=baz] run scoreboard players set not_and_flag_0_kZZpDK67 __sandstone 1
+execute if score not_and_flag_0_kZZpDK67 __sandstone matches 0 run return run say then branch
+execute if entity @a[tag=bar] if entity @a[tag=qux] run return run say else branch
+say elseIf branch (negate-AND)"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.and / _.or _.if + 2x elseIf + else, all negate-AND — two flag-scores + last elseIf swap 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_and_three_chain.mcfunction",
+    
+"scoreboard players set not_and_flag_0_kZZpDK67 __sandstone 0
+execute if entity @a[tag=foo] if entity @a[tag=baz] run scoreboard players set not_and_flag_0_kZZpDK67 __sandstone 1
+execute if score not_and_flag_0_kZZpDK67 __sandstone matches 0 run return run say then branch
+scoreboard players set not_and_flag_1_kZZpDK67 __sandstone 0
+execute if entity @a[tag=bar] if entity @a[tag=qux] run scoreboard players set not_and_flag_1_kZZpDK67 __sandstone 1
+execute if score not_and_flag_1_kZZpDK67 __sandstone matches 0 run return run say first elseIf branch
+execute if entity @a[tag=cat] if entity @a[tag=hat] run return run say else branch
+say second elseIf branch"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.not(_.or(...)) De Morgan restructure _.if(_.or(A, B), then) — baseline (uses or_check child mcfunction) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/or_basic.mcfunction",
+    "execute if function test:or_basic/or_check run say inside OR",
+  ],
+  [
+    "datapack/data/test/function/or_basic/or_check.mcfunction",
+    
+"execute if entity @a[tag=foo] run return 1
+execute if entity @a[tag=baz] run return 1
+return 0"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.not(_.or(...)) De Morgan restructure _.if(_.not(_.or(A, B)), then) — De Morgan restructure (no or_check) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_or_basic.mcfunction",
+    "execute unless entity @a[tag=foo] unless entity @a[tag=baz] run say inside negated OR",
+  ],
+]
+`;
+
+exports[`Flow snapshots _.not(_.or(...)) De Morgan restructure _.if(_.not(_.or(A, B)), then).else(elseBody) 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_or_with_else.mcfunction",
+    
+"execute unless entity @a[tag=foo] unless entity @a[tag=baz] run return run say then branch
+say else branch"
+,
+  ],
+]
+`;
+
+exports[`Flow snapshots _.not(_.or(...)) De Morgan restructure _.if(C) + elseIf(_.not(_.or(A, B))) + else — negate-OR in elseIf position 1`] = `
+[
+  [
+    "datapack/data/load/function/_private/init.mcfunction",
+    
+"# Reset scoreboards so packs can set values accurate for current load.
+scoreboard objectives add load.status dummy
+scoreboard players reset * load.status"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/init.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "load:_private/init"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/_private/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/init",
+    {
+      "id": "#load:pre_load",
+      "required": false
+    },
+    {
+      "id": "#load:load",
+      "required": false
+    },
+    {
+      "id": "#load:post_load",
+      "required": false
+    }
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "test:__init__"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/post_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/load/tags/function/pre_load.json",
+    
+"{
+  "replace": false,
+  "values": []
+}"
+,
+  ],
+  [
+    "datapack/data/minecraft/tags/function/load.json",
+    
+"{
+  "replace": false,
+  "values": [
+    "#load:_private/load"
+  ]
+}"
+,
+  ],
+  [
+    "datapack/data/test/function/__init__.mcfunction",
+    
+"scoreboard objectives add __sandstone dummy [{"text":"Sandstone","color":"gold"}," internals"]
+scoreboard players set test load.status 1"
+,
+  ],
+  [
+    "datapack/data/test/function/not_or_in_elseif.mcfunction",
+    
+"execute if entity @s run return run say if branch
+execute unless entity @a[tag=foo] unless entity @a[tag=baz] run return run say elseIf branch (negate-OR)
+say else branch"
+,
+  ],
+]
+`;
+
 exports[`Flow snapshots _.throw throw with string error in _.if 1`] = `
 [
   [

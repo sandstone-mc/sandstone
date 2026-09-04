@@ -546,6 +546,187 @@ describe('Flow snapshots', () => {
       })
       snapshotAll(out)
     })
+
+    // ---- negated-AND restructure ----
+    // MC has no OR, so `!(A && B)` (= `!A || !B`) can't be expressed as a flat
+    // execute chain. The visitor restructures `_.not(_.and(...))` to keep the
+    // semantics reachable, with three layouts depending on context:
+    //   - tail of host, no else chain → inline `execute if A if B run return 0` + then
+    //   - mid-host, no else chain     → child mcfunction with the same inline layout
+    //   - has elseIf/else chain       → flag-score + `return run <then>` so the chain stays reachable
+    //   - has plain else (no elseIf)  → swap roles and let the existing ifElse visitor process the inverted form
+
+    test('_.not(_.and(...)) — tail of host (inline)', () => {
+      const out = compile('not_and_tail', () => {
+        say('before _.if')
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('inside negated AND')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.not(_.and(...)) — mid-function (inlined flag-score, no child mcfunction)', () => {
+      const out = compile('not_and_mid', () => {
+        say('before _.if')
+        say('also before _.if')
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('inside negated AND')
+        })
+        say('after _.if')
+      })
+      snapshotAll(out)
+    })
+
+    test('_.not(_.and(...)) + elseIf (flag-score restructure, chain stays reachable)', () => {
+      const out = compile('not_and_with_elseif', () => {
+        say('before _.if')
+        const counter = Objective.create('counter')
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('then branch')
+        }).elseIf(counter('@s').equalTo(1), () => {
+          say('elseIf branch')
+        }).else(() => {
+          say('else branch')
+        })
+        say('after _.if')
+      })
+      snapshotAll(out)
+    })
+
+    test('_.not(_.and(...)) + else (swap roles, existing visitor processes inverted form)', () => {
+      const out = compile('not_and_with_else', () => {
+        say('before _.if')
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('then branch')
+        }).else(() => {
+          say('else branch')
+        })
+        say('after _.if')
+      })
+      snapshotAll(out)
+    })
+
+    test('_.not(_.and(single)) — single-child AND does NOT trigger restructure', () => {
+      const out = compile('not_and_single', () => {
+        say('before _.if')
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'))), () => {
+          say('inside (single-child AND, no restructure)')
+        })
+        say('after _.if')
+      })
+      snapshotAll(out)
+    })
+
+    test('_.not(_.and(...)) with three children (covers arbitrary-length AND)', () => {
+      const out = compile('not_and_three', () => {
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'), _.entity('@a[tag=qux]'))), () => {
+          say('inside negated AND of three')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.not(_.and(...)) with score-based AND children', () => {
+      const out = compile('not_and_scores', () => {
+        const a = Objective.create('a')
+        const b = Objective.create('b')
+        _.if(_.not(_.and(a('@s').greaterThan(0), b('@s').lessThan(10))), () => {
+          say('inside score-based negated AND')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.if(C) + elseIf(_.not(_.and(A, B))) + else — negate-AND in elseIf position (swap)', () => {
+      const out = compile('not_and_in_elseif', () => {
+        _.if(_.entity('@s'), () => {
+          say('if branch')
+        }).elseIf(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('elseIf branch (negate-AND)')
+        }).else(() => {
+          say('else branch')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.if(_.not(_.and(A,B))) + elseIf(_.not(_.and(C,D))) + else — root flag-score + last elseIf swap', () => {
+      const out = compile('not_and_in_both', () => {
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('then branch')
+        }).elseIf(_.not(_.and(_.entity('@a[tag=bar]'), _.entity('@a[tag=qux]'))), () => {
+          say('elseIf branch (negate-AND)')
+        }).else(() => {
+          say('else branch')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.if + 2x elseIf + else, all negate-AND — two flag-scores + last elseIf swap', () => {
+      const out = compile('not_and_three_chain', () => {
+        _.if(_.not(_.and(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('then branch')
+        }).elseIf(_.not(_.and(_.entity('@a[tag=bar]'), _.entity('@a[tag=qux]'))), () => {
+          say('first elseIf branch')
+        }).elseIf(_.not(_.and(_.entity('@a[tag=cat]'), _.entity('@a[tag=hat]'))), () => {
+          say('second elseIf branch')
+        }).else(() => {
+          say('else branch')
+        })
+      })
+      snapshotAll(out)
+    })
+  })
+
+  describe('_.not(_.or(...)) De Morgan restructure', () => {
+    // `_.not(_.or(A, B, ...))` is restructured via De Morgan's into
+    // `_.and(_.not(A), _.not(B), ...)`. MC's `execute unless A unless B ...`
+    // chain natively produces `!A && !B` = `!(A || B)` — no or_check child
+    // mcfunction needed.
+
+    test('_.if(_.or(A, B), then) — baseline (uses or_check child mcfunction)', () => {
+      const out = compile('or_basic', () => {
+        _.if(_.or(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]')), () => {
+          say('inside OR')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.if(_.not(_.or(A, B)), then) — De Morgan restructure (no or_check)', () => {
+      const out = compile('not_or_basic', () => {
+        _.if(_.not(_.or(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('inside negated OR')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.if(_.not(_.or(A, B)), then).else(elseBody)', () => {
+      const out = compile('not_or_with_else', () => {
+        _.if(_.not(_.or(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('then branch')
+        }).else(() => {
+          say('else branch')
+        })
+      })
+      snapshotAll(out)
+    })
+
+    test('_.if(C) + elseIf(_.not(_.or(A, B))) + else — negate-OR in elseIf position', () => {
+      const out = compile('not_or_in_elseif', () => {
+        _.if(_.entity('@s'), () => {
+          say('if branch')
+        }).elseIf(_.not(_.or(_.entity('@a[tag=foo]'), _.entity('@a[tag=baz]'))), () => {
+          say('elseIf branch (negate-OR)')
+        }).else(() => {
+          say('else branch')
+        })
+      })
+      snapshotAll(out)
+    })
   })
 
   describe('_.throw', () => {

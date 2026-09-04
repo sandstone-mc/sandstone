@@ -353,6 +353,23 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
   }
 
   parseNotNode = (node: NotNode, parentMCFunction?: MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
+    // Special case: `_.not(_.or(A, B, ...))` → De Morgan's:
+    //   `!(A || B) = !A && !B`
+    // Restructure to `_.and(_.not(A), _.not(B), ...)` so MC's flat execute
+    // chain natively emits `unless A unless B ...` (NOR). This avoids creating
+    // an unnecessary `or_check` child mcfunction (and the extra function call)
+    // — MC can express `!A && !B` directly, so the restructuring is free.
+    if (node.condition instanceof OrNode && node.condition.conditions.length >= 2) {
+      const orNode = node.condition
+      const childConditions: ConditionNode[] = orNode.conditions.map(
+        (branch: ConditionNode) => new NotNode(orNode.sandstoneCore, branch),
+      )
+      return this.parseConditionNode(
+        new AndNode(orNode.sandstoneCore, childConditions),
+        parentMCFunction,
+      )
+    }
+
     const { preNodes, conditionNode } = this.parseConditionNode(node.condition, parentMCFunction)
     return {
       preNodes,
