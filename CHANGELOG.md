@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.27](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.27) - 2026-09-04
+
+### Fix bugs in Flow
+
+**Full Changelog**: [v1.2.26...v1.2.27](https://github.com/sandstone-mc/sandstone/compare/v1.2.26...v1.2.27)
+
+
 ## [v1.2.26](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.26) - 2026-09-03
 
 ### Fixes from vanilla-mcdoc
