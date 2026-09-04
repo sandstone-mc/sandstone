@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.28](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.28) - 2026-09-04
+
+### Adapt to bundler changes in Bun 1.4.1, improve stack trace mappings
+
+**Full Changelog**: [v1.2.27...v1.2.28](https://github.com/sandstone-mc/sandstone/compare/v1.2.27...v1.2.28)
+
+
 ## [v1.2.27](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.27) - 2026-09-04
 
 ### Fix bugs in Flow
