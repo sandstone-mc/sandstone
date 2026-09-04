@@ -20,7 +20,7 @@ export const JSONTAG_WORLDGEN_STRUCTURES_SET = new Set([
   'on_abandoned_camp_flower_forest',
   'on_abandoned_camp_pale_garden',
   'on_abandoned_camp_swamp',
-  'on_abandoned_camp_windswept',
+  'on_abandoned_camp_windswept_forest',
   'on_ancient_city_maps',
   'on_buried_trial_chambers_maps',
   'on_desert_pyramid_maps',

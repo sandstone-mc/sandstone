@@ -1,14 +1,23 @@
 import type { JsonLevelBasedValue } from 'sandstone/arguments/generated/_json/data/enchantment/level_based_value.ts'
 import type { JsonIntRef } from 'sandstone/arguments/generated/_json/data/number_provider/context_int.ts'
-import type { JsonConstantValue } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
-import type { JsonNonEmptyWeightedList } from 'sandstone/arguments/generated/_json/util.ts'
-import type { JsonNumericalEnvironmentAttribute } from 'sandstone/arguments/generated/_json/data/worldgen/attribute.ts'
+import type {
+  JsonConstantValue,
+  JsonEnvironmentAttributeProvider,
+} from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
+import type { JsonNumericalEnvironmentAttribute } from 'sandstone/arguments/generated/_json/data/worldgen/attribute.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
+import type { JsonNonEmptyWeightedList } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, FloatNumberProviderClass, JsonNBTList, NamespacedString, NBTFloat, NonEmptyString, TagClass } from 'sandstone'
-
-// TODO: Important ! The generator is currently incapable of handling the source mcdoc for this; too much circular reference jank
+import type {
+  DataPointClass,
+  FloatNumberProviderClass,
+  JsonNBTList,
+  NamespacedString,
+  NBTFloat,
+  NonEmptyString,
+  TagClass,
+} from 'sandstone'
 
 /**
  * *either*
@@ -32,17 +41,13 @@ export type JsonAggregateOperands = (JsonContextFloatProvider | (
     min: 1,
   }>)
 
-export type JsonSingleProvider = {
-  input: JsonFloatRef,
+export type JsonAggregateProvider = {
+  inputs: JsonAggregateOperands,
 }
 
 export type JsonBinaryProvider = {
   left: JsonFloatRef,
   right: JsonFloatRef,
-}
-
-export type JsonAggregateProvider = {
-  inputs: JsonAggregateOperands,
 }
 
 export type JsonContextFloatProvider = ((NBTFloat | number) | ({
@@ -58,6 +63,10 @@ export type JsonEnchantmentLevelProvider = {
 export type JsonFloatRef = ((
   | JsonRegistry['minecraft:context_float_provider'] | FloatNumberProviderClass)
   | JsonContextFloatProvider)
+
+export type JsonSingleProvider = {
+  input: JsonFloatRef,
+}
 type JsonContextFloatProviderDispatcherMap = {
   'abs': JsonContextFloatProviderAbs,
   'minecraft:abs': JsonContextFloatProviderAbs,
@@ -153,17 +162,20 @@ type JsonContextFloatProviderCeil = JsonSingleProvider
 type JsonContextFloatProviderConditional = {
   condition: JsonPredicateRef,
   on_true: JsonFloatRef,
+  /**
+   * Defaults to constant 0.
+   */
   on_false?: JsonFloatRef,
 }
 type JsonContextFloatProviderConstant = JsonConstantValue<(NBTFloat | number)>
 type JsonContextFloatProviderCos = JsonSingleProvider
 type JsonContextFloatProviderDiv = JsonBinaryProvider
 type JsonContextFloatProviderEnchantmentLevel = JsonEnchantmentLevelProvider
-type JsonContextFloatProviderEnvironmentAttribute = {
-  attribute: JsonNumericalEnvironmentAttribute,
-}
+type JsonContextFloatProviderEnvironmentAttribute = JsonEnvironmentAttributeProvider<JsonNumericalEnvironmentAttribute>
 type JsonContextFloatProviderFloor = JsonSingleProvider
-type JsonContextFloatProviderFromInt = { input: JsonIntRef }
+type JsonContextFloatProviderFromInt = {
+  input: JsonIntRef,
+}
 type JsonContextFloatProviderLength = JsonAggregateProvider
 type JsonContextFloatProviderMax = JsonAggregateProvider
 type JsonContextFloatProviderMin = JsonAggregateProvider
@@ -171,10 +183,16 @@ type JsonContextFloatProviderMod = JsonBinaryProvider
 type JsonContextFloatProviderMul = JsonAggregateProvider
 type JsonContextFloatProviderNegate = JsonSingleProvider
 type JsonContextFloatProviderNumberDispatcher = {
+  /**
+   * Each condition is tested in order, the first in the list that passes is used.
+   */
   cases: Array<{
     condition: JsonPredicateRef,
     value: JsonFloatRef,
   }>,
+  /**
+   * Defaults to constant 0.
+   */
   default?: JsonFloatRef,
 }
 type JsonContextFloatProviderPow = {
@@ -187,6 +205,9 @@ type JsonContextFloatProviderSqrt = JsonSingleProvider
 type JsonContextFloatProviderStorage = {
   storage: NamespacedString,
   path: NonEmptyString | DataPointClass,
+  /**
+   * Defaults to constant 0.
+   */
   fallback?: JsonFloatRef,
 }
 type JsonContextFloatProviderSub = JsonBinaryProvider

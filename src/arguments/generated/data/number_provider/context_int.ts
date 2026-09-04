@@ -1,14 +1,24 @@
+import type {
+  ConstantValue,
+  EnvironmentAttributeProvider,
+} from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { FloatRef } from 'sandstone/arguments/generated/data/number_provider/context_float.ts'
-import type { ConstantValue } from 'sandstone/arguments/generated/data/number_provider.ts'
-import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
-import type { IntegerEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { ScoreProvider } from 'sandstone/arguments/generated/data/util.ts'
+import type { IntegerEnvironmentAttribute } from 'sandstone/arguments/generated/data/worldgen/attribute.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
+import type { NonEmptyWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
-import type { DataPointClass, IntegerNumberProviderClass, NamespacedString, NBTInt, NBTList, NonEmptyString, ObjectiveClass, TagClass } from 'sandstone'
-
-// TODO: Important ! The generator is currently incapable of handling the source mcdoc for this; too much circular reference jank
+import type {
+  DataPointClass,
+  IntegerNumberProviderClass,
+  NamespacedString,
+  NBTInt,
+  NBTList,
+  NonEmptyString,
+  ObjectiveClass,
+  TagClass,
+} from 'sandstone'
 
 /**
  * *either*
@@ -32,6 +42,15 @@ export type AggregateOperands = (ContextIntProvider | (
     min: 1,
   }>)
 
+export type AggregateProvider = {
+  inputs: AggregateOperands,
+}
+
+export type BinaryProvider = {
+  left: IntRef,
+  right: IntRef,
+}
+
 export type BinomialDistributionGenerator = {
   /**
    * Number of coin flips.
@@ -41,19 +60,6 @@ export type BinomialDistributionGenerator = {
    * Probability of a single coin flip succeeding.
    */
   p: FloatRef,
-}
-
-export type SingleProvider = {
-  input: IntRef,
-}
-
-export type BinaryProvider = {
-  left: IntRef,
-  right: IntRef,
-}
-
-export type AggregateProvider = {
-  inputs: AggregateOperands,
 }
 
 export type ContextIntProvider = (NBTInt | ({
@@ -71,6 +77,10 @@ export type ScoreboardValue = {
    * Defaults to constant 0.
    */
   fallback?: IntRef,
+}
+
+export type SingleProvider = {
+  input: IntRef,
 }
 type ContextIntProviderDispatcherMap = {
   'abs': ContextIntProviderAbs,
@@ -152,26 +162,35 @@ type ContextIntProviderBinomial = BinomialDistributionGenerator
 type ContextIntProviderConditional = {
   condition: PredicateRef,
   on_true: IntRef,
+  /**
+   * Defaults to constant 0.
+   */
   on_false?: IntRef,
 }
 type ContextIntProviderConstant = ConstantValue<NBTInt>
 type ContextIntProviderDiv = BinaryProvider
-type ContextIntProviderEnvironmentAttribute = {
-  attribute: IntegerEnvironmentAttribute,
-}
+type ContextIntProviderEnvironmentAttribute = EnvironmentAttributeProvider<IntegerEnvironmentAttribute>
 type ContextIntProviderFloorDiv = BinaryProvider
 type ContextIntProviderFloorMod = BinaryProvider
-type ContextIntProviderFromFloat = { input: FloatRef }
+type ContextIntProviderFromFloat = {
+  input: FloatRef,
+}
 type ContextIntProviderMax = AggregateProvider
 type ContextIntProviderMin = AggregateProvider
 type ContextIntProviderMod = BinaryProvider
 type ContextIntProviderMul = AggregateProvider
 type ContextIntProviderNegate = SingleProvider
 type ContextIntProviderNumberDispatcher = {
+  /**
+   * Each condition is tested in order, the first in the list that passes is used.
+   */
   cases: Array<{
     condition: PredicateRef,
     value: IntRef,
   }>,
+  /**
+   * Defaults to constant 0.
+   */
   default?: IntRef,
 }
 type ContextIntProviderPow = {
@@ -182,6 +201,9 @@ type ContextIntProviderScore = ScoreboardValue
 type ContextIntProviderStorage = {
   storage: NamespacedString,
   path: NonEmptyString | DataPointClass,
+  /**
+   * Defaults to constant 0.
+   */
   fallback?: IntRef,
 }
 type ContextIntProviderSub = BinaryProvider
