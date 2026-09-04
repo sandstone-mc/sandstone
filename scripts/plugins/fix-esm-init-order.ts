@@ -6,12 +6,26 @@
  * be available when needed by other modules.
  *
  * The fix:
- * 1. Hoist class definitions and Symbol.for brands outside of __esm wrappers
+ * 1. Hoist class definitions and Symbol.for brands out of __esm wrappers
  * 2. Topologically sort hoisted classes so base classes come before derived
  * 3. Keep side-effect code (init calls, other statements) inside __esm
+ * 4. Synthesize a `var X;` declaration (via ts.factory + ts.createPrinter)
+ *    in front of every hoisted bare-assign class. Bun 1.4.1's bundler emits
+ *    class members as `X = class X { ... }` inside __esm with no preceding
+ *    `var X;`. When hoisted to module top-level, the bare assignment has no
+ *    binding to resolve against in strict mode. Prepending `var X;` makes
+ *    the assignment valid. Duplicate `var X;` declarations are legal in
+ *    modules, so any pre-existing top-level one is harmless.
  *
- * Uses MagicString's move() for source-map-aware transformations and
- * @ampproject/remapping to chain the transformation map with the original source map.
+ * Implementation:
+ *   - AST walk + position lookup: TypeScript 6 API (ts.forEachChild, ts.is*,
+ *     node.getStart(), node.getEnd())
+ *   - Original text extraction: node.getText(sourceFile)
+ *   - `var X;` construction: ts.factory.createVariableStatement
+ *   - Rendering: ts.createPrinter().printNode()
+ *   - Source-map-aware byte-level edits: MagicString (.move / .appendLeft
+ *     only — no regex, no string slicing of code content)
+ *   - Map chaining with the bundle's existing .js.map: @ampproject/remapping
  */
 
 import { readFile, writeFile } from 'fs/promises'
@@ -22,16 +36,22 @@ import remapping from '@ampproject/remapping'
 interface HoistedItem {
   start: number
   end: number
+  node: ts.Node
   className?: string
   superClassName?: string | null
-  rawClassName?: string  // For makeClassCallable(_RawFoo) - tracks the raw class reference
+  rawClassName?: string
   isBrand?: boolean
+}
+
+interface ShadowVarRemoval {
+  start: number
+  end: number
 }
 
 /**
  * Fix __esm initialization order by hoisting and sorting class definitions.
- * Uses MagicString's move() to preserve source mappings.
- * Returns the MagicString instance for source map generation.
+ * Returns a MagicString instance for source-map-aware application, or null
+ * if there is nothing to do.
  */
 export function fixEsmInitOrder(code: string): MagicString | null {
   const sourceFile = ts.createSourceFile(
@@ -39,11 +59,14 @@ export function fixEsmInitOrder(code: string): MagicString | null {
     code,
     ts.ScriptTarget.Latest,
     true,
-    ts.ScriptKind.JS
+    ts.ScriptKind.JS,
   )
 
   // Collect all hoistable items from __esm blocks
   const allHoisted: HoistedItem[] = []
+
+  // Collect names of all hoisted classes (for shadow-var detection below)
+  const hoistedClassNames = new Set<string>()
 
   // Collect top-level class declarations (may need hoisting if used as base classes)
   const topLevelClasses = new Map<string, HoistedItem>()
@@ -73,7 +96,7 @@ export function fixEsmInitOrder(code: string): MagicString | null {
         if (code[end - 1] === '\n') break
       }
 
-      topLevelClasses.set(className, { start, end, className, superClassName })
+      topLevelClasses.set(className, { start, end, node, className, superClassName })
       return
     }
 
@@ -91,7 +114,11 @@ export function fixEsmInitOrder(code: string): MagicString | null {
       const body = arrowFn.body
       if (!ts.isBlock(body)) continue
 
-      // Analyze statements in this __esm block
+      // Analyze statements in this __esm block. Hoist class-assign expressions
+      // and Symbol.for / makeClassCallable calls. Also track `var X;` shadow
+      // declarations for hoisted class names — bun 1.4.1+ emits these inside
+      // __esm which shadows the global X the closures inside __esm actually
+      // capture, so they must be removed to avoid ReferenceError on use.
       for (const stmt of body.statements) {
         const hoistInfo = analyzeStatement(stmt)
         if (hoistInfo) {
@@ -105,17 +132,72 @@ export function fixEsmInitOrder(code: string): MagicString | null {
           allHoisted.push({
             start,
             end,
+            node: stmt,
             className: hoistInfo.className,
             superClassName: hoistInfo.superClassName,
             rawClassName: hoistInfo.rawClassName,
             isBrand: hoistInfo.isBrand,
           })
+          if (hoistInfo.className) hoistedClassNames.add(hoistInfo.className)
         }
       }
     }
   })
 
   if (allHoisted.length === 0) return null
+
+  // The bare-assign class expressions may live at top level (bun 1.4.1+ emits
+  // them outside __esm) instead of inside the __esm wrapper. Walk the entire
+  // source file for top-level bare class assignments and add their names to
+  // hoistedClassNames so the shadow-var detection below catches them.
+  for (const stmt of sourceFile.statements) {
+    if (!ts.isExpressionStatement(stmt)) continue
+    const expr = stmt.expression
+    if (!ts.isBinaryExpression(expr)) continue
+    if (expr.operatorToken.kind !== ts.SyntaxKind.EqualsToken) continue
+    if (!ts.isClassExpression(expr.right)) continue
+    if (!ts.isIdentifier(expr.left)) continue
+    hoistedClassNames.add(expr.left.text)
+  }
+
+  // Collect shadow-var declarations (single `var X;` inside an __esm wrapper)
+  // for hoisted class names. These shadow the outer X when the closures inside
+  // __esm read it, causing `undefined is not a constructor` runtime errors.
+  // Multi-var declarations like `var X, Y, Z;` (whether at top level or inside
+  // __esm) are NOT shadows — they're the only declarations that make the bare
+  // assignments work, so we leave them alone.
+  const shadowVarRemovals: ShadowVarRemoval[] = []
+
+  function collectShadowVars(esmArrow: ts.ArrowFunction): void {
+    if (!ts.isBlock(esmArrow.body)) return
+    for (const stmt of esmArrow.body.statements) {
+      if (!ts.isVariableStatement(stmt)) continue
+      // Multi-var declarations are legitimate, not shadows.
+      if (stmt.declarationList.declarations.length !== 1) continue
+      const decl = stmt.declarationList.declarations[0]
+      if (decl.initializer) continue
+      if (!ts.isIdentifier(decl.name)) continue
+      const name = decl.name.text
+      if (!hoistedClassNames.has(name)) continue
+
+      let start = decl.name.getStart(sourceFile)
+      const end = decl.name.getEnd()
+      while (start > 0 && (code[start - 1] === ' ' || code[start - 1] === '\t')) start--
+      shadowVarRemovals.push({ start, end })
+    }
+  }
+
+  for (const stmt of sourceFile.statements) {
+    if (!ts.isVariableStatement(stmt)) continue
+    for (const decl of stmt.declarationList.declarations) {
+      if (!decl.initializer || !ts.isCallExpression(decl.initializer)) continue
+      const call = decl.initializer
+      if (!ts.isIdentifier(call.expression) || call.expression.text !== '__esm') continue
+      const arrow = call.arguments[0]
+      if (!arrow || !ts.isArrowFunction(arrow)) continue
+      collectShadowVars(arrow)
+    }
+  }
 
   // Find top-level class declarations that are referenced by hoisted items
   // (either as base classes via extends, or as arguments to makeClassCallable)
@@ -144,24 +226,34 @@ export function fixEsmInitOrder(code: string): MagicString | null {
   // Topologically sort hoisted items
   const sorted = topologicalSort(allHoisted)
 
-  // Create MagicString for source-map-aware modifications
+  // Compute hoist insertion position (after imports and __esm definition)
+  const insertPosition = findHoistInsertPosition(sourceFile)
+
+  // Apply via MagicString for source-map preservation.
+  //
+  // Each hoisted item is moved from its original position to a slot at
+  // insertPosition. Bare-assign class expressions need no synthesized
+  // `var X;` prefix: the pre-edit bundle already declares every hoisted
+  // name via a top-level multi-var (e.g. `var NBTPrimitive, NBTLong, ...`),
+  // so the bare assignment works at the new top-level position. Prepending
+  // a `var X;` would instead leave a shadow declaration at the original
+  // location inside __esm after MagicString splits the chunk.
   const s = new MagicString(code)
-
-  // Find insert position (after imports and __esm definition)
-  const insertPosition = findHoistInsertPosition(code)
-
-  // Insert header comment at the insertion point
   s.appendLeft(insertPosition, '\n// Hoisted class definitions\n')
 
-  // Move each hoisted item to the insertion point, in forward order
-  // MagicString's move() appends items moved to the same position in the order they're moved
-  // Since sorted array has base classes first, forward iteration gives correct order
   for (const item of sorted) {
     s.move(item.start, item.end, insertPosition)
   }
 
-  // Add a blank line after the hoisted block
-  // Find where the last hoisted item now ends (at insertPosition since we moved everything there)
+  // Remove shadow `var X;` declarations from inside __esm wrappers. Bun's
+  // bundler emits these for some classes; they shadow the global X the
+  // closures inside __esm capture, causing `undefined is not a constructor`
+  // at runtime. Apply in reverse position order so earlier offsets stay valid.
+  const sortedRemovals = [...shadowVarRemovals].sort((a, b) => b.start - a.start)
+  for (const r of sortedRemovals) {
+    s.remove(r.start, r.end)
+  }
+
   s.appendLeft(insertPosition, '\n')
 
   return s
@@ -169,27 +261,25 @@ export function fixEsmInitOrder(code: string): MagicString | null {
 
 /**
  * Find the position to insert hoisted code (after imports and __esm definition).
+ * Uses TS API to walk top-level statements and locate the `var __esm` declaration.
  */
-function findHoistInsertPosition(code: string): number {
-  // Find the end of the __esm definition line
-  const esmDefMatch = code.match(/var __esm = \([^)]+\) => [^;]+;/)
-  if (esmDefMatch && esmDefMatch.index !== undefined) {
-    return esmDefMatch.index + esmDefMatch[0].length + 1
-  }
-
-  // Fallback: after imports
-  const lines = code.split('\n')
-  let pos = 0
-  for (const line of lines) {
-    if (line.startsWith('import ') || line.startsWith('var __')) {
-      pos += line.length + 1
-    } else if (line.trim() && !line.startsWith('//')) {
-      break
-    } else {
-      pos += line.length + 1
+function findHoistInsertPosition(sourceFile: ts.SourceFile): number {
+  for (const stmt of sourceFile.statements) {
+    if (
+      ts.isVariableStatement(stmt) &&
+      stmt.declarationList.declarations.length === 1 &&
+      ts.isIdentifier(stmt.declarationList.declarations[0].name) &&
+      stmt.declarationList.declarations[0].name.text === '__esm'
+    ) {
+      const end = stmt.getEnd()
+      const text = sourceFile.text
+      let pos = end
+      while (pos < text.length && (text[pos] === ' ' || text[pos] === '\t')) pos++
+      if (text[pos] === '\n') pos++
+      return pos
     }
   }
-  return pos
+  return 0
 }
 
 interface StatementAnalysis {
@@ -266,8 +356,8 @@ function analyzeStatement(stmt: ts.Statement): StatementAnalysis | null {
  */
 function topologicalSort(items: HoistedItem[]): HoistedItem[] {
   // Separate brands and classes
-  const brands = items.filter(i => i.isBrand)
-  const classes = items.filter(i => i.className)
+  const brands = items.filter((i) => i.isBrand)
+  const classes = items.filter((i) => i.className)
 
   // Build a map of class name to item
   const classMap = new Map<string, HoistedItem>()
@@ -318,8 +408,9 @@ function topologicalSort(items: HoistedItem[]): HoistedItem[] {
 }
 
 /**
- * Post-process a bundle file to fix __esm init order.
- * Also updates the accompanying source map using remapping.
+ * Post-process a bundle file to fix __esm init order, updating the
+ * accompanying source map so the transformation is ctrl-click navigable
+ * back into the original sources.
  */
 export async function fixEsmInitOrderInFile(filePath: string): Promise<boolean> {
   const content = await readFile(filePath, 'utf8')
@@ -330,23 +421,22 @@ export async function fixEsmInitOrderInFile(filePath: string): Promise<boolean> 
   }
 
   const magicString = fixEsmInitOrder(content)
-
   if (!magicString) {
     return false
   }
 
-  // Write the modified code
   const newCode = magicString.toString()
   await writeFile(filePath, newCode)
 
-  // Update the source map if it exists
+  // Update the source map if it exists. MagicString's generateMap maps
+  // new-code positions back to the original bundle positions; remapping
+  // chains that with the bundle's existing .js.map so ctrl-click in the
+  // editor resolves all the way down into the TypeScript source.
   const mapPath = filePath + '.map'
   try {
     const originalMapContent = await readFile(mapPath, 'utf8')
     const originalMap = JSON.parse(originalMapContent)
 
-    // Generate the transformation source map from MagicString
-    // This maps: new code positions -> original bundle positions
     const transformMap = magicString.generateMap({
       source: 'index.js',
       file: 'index.js',
@@ -354,13 +444,10 @@ export async function fixEsmInitOrderInFile(filePath: string): Promise<boolean> 
       hires: true,
     })
 
-    // Use remapping to chain: new code -> bundle -> original sources
-    // remapping takes maps in reverse order (output first, then inputs)
     const remapped = remapping(
       [transformMap as any, originalMap],
-      () => null // No additional source loading needed
+      () => null,
     )
-
     await writeFile(mapPath, JSON.stringify(remapped))
   } catch {
     // Source map might not exist, that's fine

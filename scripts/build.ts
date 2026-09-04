@@ -25,6 +25,7 @@ import {
 } from './plugins/extract-exports'
 import { migrateDtsImports } from './plugins/migrate-dts-imports'
 import { fixEsmInitOrderInFile } from './plugins/fix-esm-init-order'
+import { remapSyntheticIndexInFile } from './plugins/remap-synthetic-index'
 import {
   browserShimPlugin,
   browserExternals,
@@ -41,8 +42,22 @@ const typesDir = join(rootDir, 'types')
 
 // Check for silent flag
 const silent = process.argv.includes('--silent') || process.argv.includes('-s')
+const debug = process.argv.includes('--debug')
 const log = (...args: unknown[]) => {
   if (!silent) console.log(...args)
+}
+const debugLog = (...args: unknown[]) => {
+  if (debug) console.log('[debug]', ...args)
+}
+
+// Step isolation: --until N stops after step N (1-13). Default: run full pipeline.
+const untilArg = process.argv.find((a) => a.startsWith('--until='))
+const untilStep = untilArg ? parseInt(untilArg.slice('--until='.length), 10) : Infinity
+const stopAfter = (stepNum: number) => {
+  if (stepNum >= untilStep) {
+    log(`\nStopped after step ${stepNum} (--until=${untilStep})`)
+    process.exit(0)
+  }
 }
 
 // Subpath entry points (relative to src/)
@@ -289,39 +304,67 @@ async function main() {
     await mkdir(distDir, { recursive: true })
     await removeSyntheticIndex()
   })
+  stopAfter(1)
 
   // 2. Run tsc to generate declarations in types/
   await step('Generating type declarations', () => runTsc({ log }))
+  stopAfter(2)
 
   // 3. Generate full synthetic index for bundling
   await step('Generating synthetic entry point', generateFullSyntheticIndex)
+  stopAfter(3)
 
   // 4. Build single main bundle
   await step('Building JavaScript bundle', buildMainBundle)
+  stopAfter(4)
+
+  // 4b. Rewrite source map entries that point at the ephemeral synthetic
+  // `src/index.ts` (built by step 3, deleted after step 4) to point at the
+  // real underlying source — barrel re-exports → subpath index.ts, inlined
+  // sandstone.ts content → src/sandstone.ts. Without this, stack traces
+  // auto-mapped via the source map land on a file the user doesn't have.
+  await step('Remapping synthetic index.ts in source map', () =>
+    remapSyntheticIndexInFile(join(internalDir, 'index.js'), rootDir),
+  )
 
   // 5. Fix ESM initialization order (hoist classes out of __esm wrappers)
-  const fixed = await step('Fixing ESM initialization order', () =>
-    fixEsmInitOrderInFile(join(internalDir, 'index.js'))
-  )
+  const fixed = await step('Fixing ESM initialization order', async () => {
+    const bundlePath = join(internalDir, 'index.js')
+    const bundleContent = await (await import('fs/promises')).readFile(bundlePath, 'utf8')
+    const esmWrapperCount = (bundleContent.match(/var init_\w+ = __esm/g) || []).length
+    const varDeclCount = (bundleContent.match(/^var \w+;$/gm) || []).length
+    const classAssignCount = (bundleContent.match(/^\s*\w+\s*=\s*class\s+\w+/gm) || []).length
+    debugLog(`bundle size: ${bundleContent.length} bytes`)
+    debugLog(`__esm wrappers: ${esmWrapperCount}`)
+    debugLog(`top-level 'var X;' declarations: ${varDeclCount}`)
+    debugLog(`bare 'X = class X' assignments: ${classAssignCount}`)
+    return fixEsmInitOrderInFile(bundlePath)
+  })
   if (!fixed) log('  (no changes needed)')
+  stopAfter(5)
 
   // 6. Build browser bundle (with shims for Node.js modules)
   await step('Building browser bundle', buildBrowserBundle)
+  stopAfter(6)
 
   // 7. Fix ESM initialization order in browser bundle
   const browserFixed = await step('Fixing browser bundle ESM order', () =>
     fixEsmInitOrderInFile(join(browserDir, 'sandstone.esm.js'))
   )
   if (!browserFixed) log('  (no changes needed)')
+  stopAfter(7)
 
   // 8. Prepend browser runtime banner
   await step('Adding browser runtime banner', prependBrowserBanner)
+  stopAfter(8)
 
   // 9. Remove synthetic index (not needed after bundling)
   await removeSyntheticIndex()
+  stopAfter(9)
 
   // 10. Copy declarations from types/ to dist/
   await step('Copying declarations', copyDeclarations)
+  stopAfter(10)
 
   // 11. Extract main exports (needed for migration and re-exports)
   const mainDtsExports = await step('Extracting main exports', async () => {
@@ -329,17 +372,20 @@ async function main() {
     log(`  Found ${exports.size} exports in public API`)
     return exports
   })
+  stopAfter(11)
 
   // 12. Migrate .d.ts imports to use correct entry points
   await step('Migrating declaration imports', async () => {
     const count = await migrateDtsImports(internalDir, mainDtsExports, subpaths)
     log(`  Migrated ${count} files`)
   })
+  stopAfter(12)
 
   // 13. Generate re-export files
   await step('Generating re-export files', () =>
     generateReExportsWithMainExports(mainDtsExports)
   )
+  stopAfter(13)
 
   const elapsed = ((performance.now() - startTime) / 1000).toFixed(2)
   log(`\nBuild completed in ${elapsed}s`)

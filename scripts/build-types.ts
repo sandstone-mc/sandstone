@@ -24,6 +24,17 @@ export interface RunTscOptions {
 export async function runTsc(options: RunTscOptions = {}, isRetry = false): Promise<void> {
   const log = options.log ?? console.log
 
+  // Debug: verify which tsc is resolved by `bun tsc` before the real invocation.
+  const tscVersion = Bun.spawn(['bun', 'tsc', '--version'], {
+    cwd: rootDir,
+    stdout: 'pipe',
+    stderr: 'pipe',
+  })
+  const versionText = (await new Response(tscVersion.stdout).text()).trim()
+  const versionStderr = (await new Response(tscVersion.stderr).text()).trim()
+  log(`[debug] tsc resolved: ${versionText}${versionStderr ? ` (stderr: ${versionStderr})` : ''}`)
+  await tscVersion.exited
+
   const tsc = Bun.spawn(['bun', 'tsc', '-p', 'tsconfig.build.json'], {
     cwd: rootDir,
     stdout: 'pipe',
