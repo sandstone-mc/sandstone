@@ -361,38 +361,12 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
       return [prefix, ...visitedBody]
     }
 
-    // Mid-host + no elseIf/else chain: wrap in a child mcfunction so the
-    // gate's `return run <then>` only exits the child, not the host.
-    if (!hasChain) {
-      const childName = `${ifNode.parentMCFunction.resource.name}/__not_and`
-      const childFn = new MCFunctionClass(this.core, childName, {
-        addToSandstoneCore: true,
-        creator: 'sandstone',
-        onConflict: 'rename',
-      })
-      ifNode.parentMCFunction.transientChildMCFunctions.add(childFn.node)
-      this.core.enterMCFunction(childFn)
-      try {
-        childFn.node.body.push(
-          buildAndChainExecute(
-            this.pack,
-            andNode,
-            new ReturnCommandNode(this.pack, [0]),
-            childFn.node,
-          ),
-        )
-        for (const n of visitedBody) childFn.node.body.push(n)
-      } finally {
-        this.core.exitMCFunction()
-      }
-      return [new FunctionCommandNode(this.pack, childFn)]
-    }
-
-    // Mid-host OR has chain: flag-score restructure. The flag is set when the
-    // positive AND holds (= negate-AND false), and the gate fires `return run
-    // <then>` when the flag is 0 (= negate-AND true). The chain follows
-    // naturally — each elseIf that itself has a negate-AND gets its own
-    // flag-score inline via `handleMultipleNodes`.
+    // Mid-host (with or without chain): flag-score restructure. The flag is
+    // set when the positive AND holds (= negate-AND false), and the gate
+    // fires `return run <then>` when the flag is 0 (= negate-AND true). The
+    // gate lives in the host so `return run` propagates and exits the host.
+    // Each elseIf that itself has a negate-AND gets its own flag-score
+    // inline via `handleMultipleNodes`.
     const flag = this.core.pack.Variable(undefined, 'not_and_flag')
     const gateNodes = buildFlagScoreRestructure(this.pack, this.core, andNode, visitedBody, flag, ifNode.parentMCFunction)
 
