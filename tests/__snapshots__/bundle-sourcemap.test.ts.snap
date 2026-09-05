@@ -706,7 +706,6 @@ advancement → ../../src/commands/implementations/player/advancement.ts
 ancestors → ../../src/core/visitors.ts
 assignToResource → ../../src/core/sandstoneCore.ts
 attribute → ../../src/commands/implementations/entity/attribute.ts
-binaryFor → ../../src/flow/loops/binary_for.ts
 bind → ../../src/commands/commands.ts
 blockStateStringifier → ../../src/commands/implementations/block/setblock.ts
 bossbar → ../../src/commands/implementations/player/bossbar.ts

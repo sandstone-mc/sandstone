@@ -78,7 +78,12 @@ export function lineDelta(before: string, after: string): number {
  */
 export async function classifySandstoneExports(
   sandstoneTsPath: string,
-): Promise<{ commands: Set<string>; resources: Set<string> }> {
+): Promise<{
+  commands: Set<string>
+  resources: Set<string>
+  /** Names pulled from a `import * as ns from './module'` destructure. */
+  nsRedirects: Map<string, { fromPath: string }>
+}> {
   const src = await readFile(sandstoneTsPath, 'utf8').catch(() => '')
   const sf = ts.createSourceFile(
     sandstoneTsPath,
@@ -89,6 +94,19 @@ export async function classifySandstoneExports(
   )
   const commands = new Set<string>()
   const resources = new Set<string>()
+  const nsRedirects = new Map<string, { fromPath: string }>()
+
+  // Walk all `import * as ns from './path'` declarations first so we know
+  // which identifier is a namespace import (and what module it pulls from).
+  const nsImportPaths = new Map<string, string>()
+  for (const stmt of sf.statements) {
+    if (!ts.isImportDeclaration(stmt)) continue
+    const ns = stmt.importClause?.namedBindings
+    if (!ns || !ts.isNamespaceImport(ns)) continue
+    const moduleSpecifier = stmt.moduleSpecifier
+    if (!ts.isStringLiteral(moduleSpecifier)) continue
+    nsImportPaths.set(ns.name.text, moduleSpecifier.text)
+  }
 
   for (const stmt of sf.statements) {
     if (!ts.isVariableStatement(stmt)) continue
@@ -142,6 +160,26 @@ export async function classifySandstoneExports(
         }
       } else if (
         isExported &&
+        ts.isObjectBindingPattern(decl.name) &&
+        init &&
+        ts.isIdentifier(init) &&
+        nsImportPaths.has(init.text)
+      ) {
+        // `export const { X, Y } = coordinates` where `coordinates` is a
+        // `import * as coordinates from './module'`. Each destructure name
+        // is a re-export from that module — record the source path so
+        // `generateMainIndexMap` can redirect there.
+        const fromPath = nsImportPaths.get(init.text)!
+        for (const el of decl.name.elements) {
+          if (
+            !ts.isBindingElement(el) ||
+            !ts.isIdentifier(el.name)
+          )
+            continue
+          nsRedirects.set(el.name.text, { fromPath })
+        }
+      } else if (
+        isExported &&
         ts.isIdentifier(decl.name) &&
         decl.initializer
       ) {
@@ -157,7 +195,7 @@ export async function classifySandstoneExports(
     }
   }
 
-  return { commands, resources }
+  return { commands, resources, nsRedirects }
 }
 
 /**
@@ -289,6 +327,7 @@ export async function generateMainIndexMap(
       generated: { line: b.line, column: b.col },
       source: s.sourceFile,
       original: { line: s.line, column: s.col },
+      name: s.name,
     })
   }
 
@@ -310,11 +349,12 @@ const resolveRedirects = async (
   bundled: { name: string; line: number; col: number }[]
   src: Array<{ name: string; line: number; col: number; sourceFile: string }>
 }> => {
-  const [bundled, srcSymbols, { commands, resources }] = await Promise.all([
-    collectExportedSymbols(bundledDtsPath),
-    collectExportedSymbols(sandstoneTsPath),
-    classifySandstoneExports(sandstoneTsPath),
-  ])
+  const [bundled, srcSymbols, { commands, resources, nsRedirects }] =
+    await Promise.all([
+      collectExportedSymbols(bundledDtsPath),
+      collectExportedSymbols(sandstoneTsPath),
+      classifySandstoneExports(sandstoneTsPath),
+    ])
 
   const packSrc = path.join(repoRoot, 'src', 'pack', 'pack.ts')
   const commandRedirects = new Map<
@@ -322,6 +362,10 @@ const resolveRedirects = async (
     { line: number; col: number; file: string }
   >()
   const resourceRedirects = new Map<
+    string,
+    { line: number; col: number; file: string }
+  >()
+  const nsDestinationRedirects = new Map<
     string,
     { line: number; col: number; file: string }
   >()
@@ -364,6 +408,20 @@ const resolveRedirects = async (
       })
     }),
   )
+
+  // For `export const { X, Y } = coordinates` where `coordinates` is a
+  // `import * as coordinates from './module'`, redirect X/Y to that
+  // module's re-export site (`./module/index.ts`). Line 1:0 lands on
+  // the index.ts which `export *`s the actual definition.
+  for (const [name, { fromPath }] of nsRedirects) {
+    const target = path.join(repoRoot, 'src', fromPath, 'index.ts')
+    const targetRepoRel = path.relative(repoRoot, target).split(path.sep).join('/')
+    nsDestinationRedirects.set(name, {
+      file: toMapRel(targetRepoRel),
+      line: 1,
+      col: 0,
+    })
+  }
 
   // Default source for symbols without a redirect: `src/sandstone.ts`,
   // relative to the map file.
@@ -414,6 +472,7 @@ const resolveRedirects = async (
   const src = srcSymbols.map((s) => {
     const cmd = commandRedirects.get(s.name)
     const res = resourceRedirects.get(s.name)
+    const ns = nsDestinationRedirects.get(s.name)
     const hard = HARDCODED[s.name]
     if (hard)
       return { ...s, sourceFile: hard.file, line: hard.line, col: hard.col }
@@ -421,6 +480,8 @@ const resolveRedirects = async (
       return { ...s, sourceFile: cmd.file, line: cmd.line, col: cmd.col }
     if (res)
       return { ...s, sourceFile: res.file, line: res.line, col: res.col }
+    if (ns)
+      return { ...s, sourceFile: ns.file, line: ns.line, col: ns.col }
     return { ...s, sourceFile: bundledRel }
   })
 

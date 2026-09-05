@@ -647,8 +647,8 @@
     "definition": "src/sandstone.ts"
   },
   "absolute": {
-    "signature": "(alias) const absolute: {\n    <T extends number>(coordinate?: T): `${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `${number}`>>;\n}",
-    "definition": "src/sandstone.ts"
+    "signature": "(alias) function absolute<T extends number>(coordinate?: T): `${T}`\n(alias) function absolute<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `${number}`>>",
+    "definition": "src/variables/Coordinates.ts"
   },
   "advancement": {
     "signature": "(alias) const advancement: AdvancementCommand<false>",
@@ -815,8 +815,8 @@
     "definition": "src/sandstone.ts"
   },
   "local": {
-    "signature": "(alias) const local: {\n    <T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"^\">>;\n    <T extends number>(coordinate: T): `^${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"^\" | `^${number}`>>;\n}",
-    "definition": "src/sandstone.ts"
+    "signature": "(alias) function local<T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"^\">>\n(alias) function local<T extends number>(coordinate: T): `^${T}`\n(alias) function local<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"^\" | `^${number}`>>",
+    "definition": "src/variables/Coordinates.ts"
   },
   "locate": {
     "signature": "(alias) const locate: LocateCommand<false>",
@@ -883,8 +883,8 @@
     "definition": "src/sandstone.ts"
   },
   "relative": {
-    "signature": "(alias) const relative: {\n    <T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"~\">>;\n    <T extends number>(coordinate: T): `~${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"~\" | `~${number}`>>;\n}",
-    "definition": "src/sandstone.ts"
+    "signature": "(alias) function relative<T extends [0, 0, 0]>(): VectorClass<MappedArray<T, \"~\">>\n(alias) function relative<T extends number>(coordinate: T): `~${T}`\n(alias) function relative<T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, \"~\" | `~${number}`>>",
+    "definition": "src/variables/Coordinates.ts"
   },
   "reload": {
     "signature": "(alias) const reload: () => FinalCommandOutput",

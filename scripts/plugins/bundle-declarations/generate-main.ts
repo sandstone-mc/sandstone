@@ -68,7 +68,108 @@ export async function generateMainIndexDts(
     ;(node as unknown as { parent: ts.Node }).parent = updated
   }
 
-  const emitted = ts.createPrinter().printFile(updated)
+  // Find namespace import declarations (`import * as ns from './path'`) and
+  // use them to rewrite merged destructure-of-namespace exports
+  // (`export declare const X: typeof ns.X, Y: typeof ns.Y, Z: typeof ns.Z`)
+  // into explicit re-exports. Without this, TS compiler sees the names as
+  // declared at the export line in the bundled d.ts and LSP `definition`
+  // returns that — the IDE user lands in a bundled file with no real
+  // source. With re-exports, LSP follows to the namespace's source.
+  const nsImportPaths = new Map<string, string>()
+  for (const stmt of updated.statements) {
+    if (!ts.isImportDeclaration(stmt)) continue
+    const ns = stmt.importClause?.namedBindings
+    if (!ns || !ts.isNamespaceImport(ns)) continue
+    const ms = stmt.moduleSpecifier
+    if (!ts.isStringLiteral(ms)) continue
+    nsImportPaths.set(ns.name.text, ms.text)
+  }
+
+  const rewrittenStmts: ts.Statement[] = []
+  for (const stmt of updated.statements) {
+    if (!ts.isVariableStatement(stmt)) {
+      rewrittenStmts.push(stmt)
+      continue
+    }
+    const isExported = (stmt.modifiers ?? []).some(
+      (m) => m.kind === ts.SyntaxKind.ExportKeyword,
+    )
+    if (!isExported || stmt.declarationList.declarations.length < 2) {
+      rewrittenStmts.push(stmt)
+      continue
+    }
+
+    // Walk each decl. Partition into:
+    //   - ns decls: `X: typeof ns.X` where ns is a known namespace import.
+    //     These go into `export { ... } from './ns-path'` so the LSP follows
+    //     them to the actual source file.
+    //   - other decls: kept as-is in a regular VariableStatement.
+    const nsDecls = new Map<string, { decls: ts.VariableDeclaration[]; target: string }>()
+    const otherDecls: ts.VariableDeclaration[] = []
+    for (const d of stmt.declarationList.declarations) {
+      // TypeQuery exprName can be an Identifier (`typeof ns`) or a
+      // QualifiedName (`typeof ns.prop`). Handle both.
+      let nsName: string | null = null
+      let propName: string | null = null
+      if (d.type && ts.isTypeQueryNode(d.type)) {
+        const en = d.type.exprName
+        if (ts.isIdentifier(en)) {
+          nsName = en.text
+          propName = en.text
+        } else if (
+          ts.isQualifiedName(en) &&
+          ts.isIdentifier(en.left) &&
+          ts.isIdentifier(en.right)
+        ) {
+          nsName = en.left.text
+          propName = en.right.text
+        }
+      }
+      if (
+        ts.isIdentifier(d.name) &&
+        nsName !== null &&
+        propName === d.name.text &&
+        nsImportPaths.has(nsName)
+      ) {
+        const target = nsImportPaths.get(nsName)!
+        if (!nsDecls.has(nsName)) nsDecls.set(nsName, { decls: [], target })
+        nsDecls.get(nsName)!.decls.push(d)
+      } else {
+        otherDecls.push(d)
+      }
+    }
+
+    if (otherDecls.length > 0) {
+      // Keep a VariableStatement with the remaining decls. If the original
+      // had a type annotation on the declaration list (rare), preserve it.
+      rewrittenStmts.push(
+        ts.factory.createVariableStatement(
+          stmt.modifiers,
+          ts.factory.createVariableDeclarationList(otherDecls, stmt.declarationList.flags),
+        ),
+      )
+    }
+    for (const { decls: nsDeclList, target } of nsDecls.values()) {
+      const specifiers = nsDeclList.map((d) =>
+        ts.factory.createExportSpecifier(
+          false,
+          undefined,
+          ts.factory.createIdentifier((d.name as ts.Identifier).text),
+        ),
+      )
+      rewrittenStmts.push(
+        ts.factory.createExportDeclaration(
+          undefined,
+          false,
+          ts.factory.createNamedExports(specifiers),
+          ts.factory.createStringLiteral(target),
+        ),
+      )
+    }
+  }
+  const updated2 = ts.factory.updateSourceFile(updated, rewrittenStmts)
+
+  const emitted = ts.createPrinter().printFile(updated2)
   transformResult.dispose()
 
   return `${emitted}
