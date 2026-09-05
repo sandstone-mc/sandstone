@@ -1,6 +1,6 @@
 import type { Coordinates, SingleEntityArgumentOf } from 'sandstone/arguments'
-import type { FloatNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider/contextual_float'
-import type { IntegerNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider/contextual_integer'
+import type { FloatNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider'
+import type { IntNumberProviderRef } from 'sandstone/arguments/generated/data/number_provider'
 import type { Macroable, SandstoneCore } from 'sandstone/core'
 import { FloatNumberProviderClass, IntegerNumberProviderClass, isMacroArgument } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
@@ -15,7 +15,7 @@ import { CommandArguments, type FinalCommandOutput } from '../../helpers'
  * `toString()` → its namespaced id).
  */
 export type IntegerNumberProviderArgument<MACRO extends boolean> =
-  | Macroable<IntegerNumberProviderRef | IntegerNumberProviderClass, MACRO>
+  | Macroable<IntNumberProviderRef | IntegerNumberProviderClass, MACRO>
 
 /**
  * Anything `/compute float` accepts as a `<float_provider>`: registry id from
