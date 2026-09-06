@@ -26,7 +26,7 @@ import { readFileSync, statSync } from 'fs'
 import { resolve } from 'path'
 
 const ROOT = resolve(import.meta.dir, '../..')
-const SNAP_PATH = `${ROOT}/tests/__snapshots__/bundle-sourcemap.test.ts.snap`
+const SNAP_PATH = `${ROOT}/tests/__snapshots__/bundle-sourcemap.declarations.json`
 const SIG_PATH = `${ROOT}/tests/__snapshots__/signatures.json`
 
 interface SigEntry {
@@ -34,25 +34,13 @@ interface SigEntry {
   [key: string]: unknown
 }
 
+/**
+ * Parse `bundle-sourcemap.declarations.json`, written by bundle-sourcemap.test.ts.
+ * Format: `{ [symbol]: path }`.
+ */
 function parseSnapshot(): Map<string, string> {
-  // Snapshot block format (bun):
-  //   exports[`... 1`] = `
-  //   Name → ../../src/path/to/file.ts
-  //   ...
-  //   `
-  const text = readFileSync(SNAP_PATH, 'utf8')
-  const map = new Map<string, string>()
-  let inBlock = false
-  for (const raw of text.split('\n')) {
-    const line = raw.trim()
-    if (line.startsWith('exports[`')) inBlock = true
-    else if (inBlock && line === '"') inBlock = false
-    else if (inBlock) {
-      const m = line.match(/^(\w+)\s+→\s+(.+?)$/)
-      if (m) map.set(m[1], m[2].replace(/\\?"$/, ''))
-    }
-  }
-  return map
+  const raw = JSON.parse(readFileSync(SNAP_PATH, 'utf8')) as Record<string, string>
+  return new Map(Object.entries(raw))
 }
 
 function parseSignatures(): Map<string, string> {

@@ -58,6 +58,16 @@ export function conditionToNode(condition: Condition) {
   return condition
 }
 
+/**
+ * Unique sentinel function used by `_.if()` (and other Flow primitives) when
+ * the caller omits the callback. Comparing by reference lets downstream code
+ * distinguish "no callback supplied" from "user wrote an explicit empty
+ * callback `() => {}`" — the latter is a build error (no commands in body),
+ * the former is the normal "user will chain `.run.<cmd>` or `.return(...)`"
+ * case.
+ */
+export const NO_CALLBACK_SENTINEL = () => {}
+
 export class Flow {
   constructor(public sandstoneCore: SandstoneCore) {}
 
@@ -67,7 +77,7 @@ export class Flow {
     condition: Condition,
     callback?: () => void,
   ): IfStatement<boolean> {
-    const cb = callback ?? (() => {})
+    const cb = callback ?? NO_CALLBACK_SENTINEL
     return new IfStatement<boolean>(
       this.sandstoneCore,
       conditionToNode(condition),

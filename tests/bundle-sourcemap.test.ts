@@ -19,7 +19,7 @@
  */
 
 import { describe, expect, test } from 'bun:test'
-import { readFileSync, statSync } from 'fs'
+import { promises as fs, readFileSync, statSync } from 'fs'
 import { dirname, join, resolve } from 'path'
 import ts from '@typescript/typescript6'
 // @ts-ignore - source-map-js has no types
@@ -28,6 +28,13 @@ import { SourceMapConsumer } from 'source-map-js'
 const ROOT = resolve(import.meta.dir, '..')
 const BUNDLE = join(ROOT, 'dist/_internal/index.js')
 const MAP = `${BUNDLE}.map`
+const SNAPSHOT_PATH = join(ROOT, 'tests/__snapshots__/bundle-sourcemap.declarations.json')
+
+// Set by the `test:update-snapshots` package script (alongside bun's
+// `--update-snapshots` flag). When `1`, the test writes a fresh snapshot
+// from scratch and accepts any removals/moves without erroring — same
+// bulk-accept workflow as `signatures.test.ts`.
+const updating = process.env.UPDATE_SAND_TESTS === '1'
 
 interface DeclSample {
   name: string
@@ -92,7 +99,7 @@ describe('bundle source map fidelity', () => {
     expect(statSync(MAP, { throwIfNoEntry: false })?.isFile()).toBe(true)
   })
 
-  test('every sampled declaration resolves to a real, non-ephemeral source file (snapshot)', () => {
+  test('every sampled declaration resolves to a real, non-ephemeral source file (snapshot)', async () => {
     if (!statSync(MAP, { throwIfNoEntry: false })?.isFile()) {
       // The previous test will have reported the missing map; skip this
       // one cleanly instead of crashing on a JSON parse error.
@@ -156,7 +163,61 @@ describe('bundle source map fidelity', () => {
     // Sort + dedupe so adding new declarations in the future (with paths
     // we already snapshot) doesn't churn the file.
     const stable = [...new Set(entries)].sort()
-    expect(stable.join('\n')).toMatchSnapshot()
+
+    // Parse each `"Name → path"` line into a [name, path] tuple.
+    const nextEntries: Array<[string, string]> = stable.map((line) => {
+      const arrow = line.indexOf(' → ')
+      if (arrow < 0) throw new Error(`malformed bundle-sourcemap entry: ${line}`)
+      return [line.slice(0, arrow), line.slice(arrow + 3)]
+    })
+
+    // Use a custom JSON snapshot file rather than Bun's `toMatchSnapshot()`
+    // because the latter treats any new declaration as a failure — we want
+    // to write through additions silently (this is a routing check, not
+    // a content check). Like `signatures.json`, this file is re-written
+    // each run; entries never go out of date.
+    //
+    // Format: `{ [symbol]: path }`. Symbol keys allow tools / humans to
+    // read the file as a plain symbol→path lookup. Path CHANGES still
+    // fail (a different path for the same symbol = source-map regression),
+    // even though the symbol key itself doesn't change.
+    const previous: Record<string, string> = (() => {
+      try {
+        return JSON.parse(readFileSync(SNAPSHOT_PATH, 'utf8'))
+      } catch {
+        return {}
+      }
+    })()
+    const next: Record<string, string> = {}
+    for (const [name, path] of nextEntries) next[name] = path
+
+    // Surface any symbol that was removed (e.g. class deleted) OR whose
+    // path changed as a hard failure — those are routing regressions the
+    // user should notice. Pure additions (new symbols) are silent.
+    const removed: string[] = []
+    const moved: string[] = []
+    for (const [name, oldPath] of Object.entries(previous)) {
+      const newPath = next[name]
+      if (newPath === undefined) {
+        removed.push(name)
+      } else if (newPath !== oldPath) {
+        moved.push(`${name}: ${oldPath} → ${newPath}`)
+      }
+    }
+    if (!updating && (removed.length > 0 || moved.length > 0)) {
+      const parts: string[] = []
+      if (removed.length > 0) parts.push(`removed symbols:\n  ${removed.join('\n  ')}`)
+      if (moved.length > 0) parts.push(`moved symbols:\n  ${moved.join('\n  ')}`)
+      throw new Error(
+        `bundle-sourcemap snapshot changed:\n${parts.join('\n')}\n`
+        + `If these changes are intentional, re-run with \`bun run test:update-snapshots\` `
+        + `(which sets UPDATE_SAND_TESTS=1) to bulk-accept. Otherwise treat as a source-map regression.`,
+      )
+    }
+
+    await fs.mkdir(dirname(SNAPSHOT_PATH), { recursive: true })
+    await fs.writeFile(SNAPSHOT_PATH, JSON.stringify(next, null, 2) + '\n', 'utf8')
+
     // Optional surface: log unresolved count so missing coverage is
     // visible without failing the build. Comment out to silence.
     // eslint-disable-next-line no-console

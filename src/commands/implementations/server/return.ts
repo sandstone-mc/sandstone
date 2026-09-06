@@ -173,11 +173,11 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
    * @example
    * ```ts
    * // Return success with a specific value
-   * return.return(42)
-   * 
+   * returnCmd(42)
+   *
    * // Return default value (0)
-   * return.return()
-   * 
+   * returnCmd()
+   *
    * // Return based on conditions
    * execute.if.entity('@p[tag=vip]').run.returnCmd(100)  // VIP bonus
    * execute.unless.entity('@p[tag=vip]').run.returnCmd(50) // Regular bonus
@@ -205,7 +205,7 @@ export class ReturnCommand<MACRO extends boolean> extends CommandArguments {
    * Return from a function with a failure state.
    * 
    * Immediately exits the function and returns 0, indicating failure.
-   * This is equivalent to `return.return(0)` but more semantically clear
+   * This is equivalent to `returnCmd(0)` but more semantically clear
    * when you want to explicitly indicate failure.
    * 
    * Useful for error handling and early exits when conditions aren't met.

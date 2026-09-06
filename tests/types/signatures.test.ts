@@ -148,7 +148,7 @@ const names: string[] = await listExports(IMPORT_PATH)
 // new signature through to the snapshot, and the missing-export
 // advisory below stays silent — both serve the same bulk-accept
 // workflow. Read once up here so both loops observe the same value.
-const updating = process.env.UPDATE_SIGNATURES === '1'
+const updating = process.env.UPDATE_SAND_TESTS === '1'
 // Shared result map. Sub-tests write to it as they run; the last test
 // to finish (counter === names.length) is responsible for writing the
 // snapshot file + disposing the LSP subprocess.
@@ -177,7 +177,7 @@ for (const name of names) {
     // there's no prior entry, drop it from `next` entirely — the snapshot
     // should only contain signatures that have actually passed.
     //
-    // Opt-out via the UPDATE_SIGNATURES env var (set by the
+    // Opt-out via the UPDATE_SAND_TESTS env var (set by the
     // `test:update-snapshots` package script alongside bun's
     // `--update-snapshots` flag). When set, `preserveOld` is a no-op and
     // the new signature is written through to the snapshot — same as the
@@ -317,7 +317,7 @@ for (const name of names) {
           // change. Do NOT auto-rewrite the failing signature into the
           // file; that would mask the regression behind a passing test.
           //
-          // In update mode (`UPDATE_SIGNATURES=1`), the user has opted in
+          // In update mode (`UPDATE_SAND_TESTS=1`), the user has opted in
           // to bulk-accepting drift, so the new entry (already written
           // above) stays and the test passes.
           if (updating) return
@@ -338,7 +338,7 @@ for (const name of names) {
       // way, preserve the prior snapshot entry so a `any`/drift combo
       // doesn't silently bake the new offending signature into the file.
       //
-      // In update mode (`UPDATE_SIGNATURES=1`), accept the any/unknown
+      // In update mode (`UPDATE_SAND_TESTS=1`), accept the any/unknown
       // and pass — the entry already has anyAllowed:true written above,
       // so subsequent non-update runs don't re-fail on this entry.
       if (updating) return

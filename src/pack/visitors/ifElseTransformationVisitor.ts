@@ -46,6 +46,12 @@ function* flattenChainOnly(start: IfNode | ElseNode | undefined): IterableIterat
 
 function handleMultipleNodes(visitor: GenericSandstoneVisitor, nodes: (ElseNode | IfNode)[], macroStorage: DataPointClass | undefined) {
   return nodes.flatMap((node, i) => {
+    // Reject any empty clause body in the chain — e.g. `_.if(A, cb).else(() => {})`.
+    if (node.body.length === 0) {
+      throw new Error(
+        `Flow clause body is empty. Add at least one command to it (or remove the branch).`,
+      )
+    }
     // If we have a "If" node, add the condition
     if (node instanceof IfNode) {
       // Negate-AND inside the chain (root case is handled separately by
@@ -304,6 +310,14 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
 
     // 2. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {
+      // Reject an empty body — `_.if(cond)` with no `.run.<cmd>` or
+      // `.return(...)` follow-up leaves the IfNode with no commands.
+      // Silently emitting nothing would hide a bug.
+      if (node_.body.length === 0) {
+        throw new Error(
+          `Flow clause body is empty. Add at least one command to it (or remove the branch).`,
+        )
+      }
       const executeNode = new ExecuteCommandNode(this.pack, false, [[condition.getValue()]], {
         isSingleExecute: false,
         givenCallbackName: callbackName,
@@ -315,9 +329,20 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
       return this.visit(executeNode)
     }
 
-    // 3. We have multiple nodes, if there isn't any tail nodes in the parent, we can use `return` safely without entering a new function
+    // 3. Multi-node chain. We have two output shapes:
+    //    a) If the chain sits at the tail of the parent MCFunction (no
+    //       commands follow it), emit each arm inline as `execute if …
+    //       run <arm>` — no wrapper. Always preferred when possible.
+    //    b) Otherwise, the wrapper-extraction path (case 4) wraps the
+    //       chain in an `execute (no args) run function <child>`. But that
+    //       child MCFunction can only `return` from itself, so a bare
+    //       `return` in an arm would never reach the parent. So we
+    //       also use case (a) inline form whenever any arm is a bare
+    //       `return` — a wrapper would silently swallow the exit.
 
-    if (nodes.at(-1) === parentMCFunction.body.at(-1)) {
+    const chainHasBareReturn = nodes.some((n) => n.bareReturn === true)
+
+    if (nodes.at(-1) === parentMCFunction.body.at(-1) || chainHasBareReturn) {
       return handleMultipleNodes(this, nodes, macroStorage)
     }
 

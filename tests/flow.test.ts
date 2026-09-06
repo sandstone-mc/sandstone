@@ -8,6 +8,7 @@ import {
   Macro as $,
   MCFunction,
   Objective,
+  returnCmd,
   say,
   tellraw,
   Variable,
@@ -103,13 +104,24 @@ describe('Flow snapshots', () => {
       snapshotAll(out)
     })
 
-    test('Flow _.if with empty body', () => {
-      const out = compile('flow_if_empty', () => {
-        _.if(_.entity('@s'), () => {
-          // intentionally empty
-        })
-      })
-      snapshotAll(out)
+    test('Flow empty body: _.if(cond, () => {}) throws', () => {
+      expect(() =>
+        compile('flow_if_empty', () => {
+          _.if(_.entity('@s'), () => {
+            // intentionally empty
+          })
+        }),
+      ).toThrow(/Flow clause body is empty/)
+    })
+
+    test('Flow empty body: _.if(cond) (no callback, no .run/.return) throws', () => {
+      // `_.if(cond)` without a follow-up `.run.<cmd>` / `.return(...)` leaves
+      // the IfNode body empty — the visitor detects this and throws.
+      expect(() =>
+        compile('flow_if_no_followup', () => {
+          _.if(_.entity('@s[tag=ready]'))
+        }),
+      ).toThrow(/Flow clause body is empty/)
     })
 
     test('Flow _.if with .run.<command> body', () => {
@@ -147,6 +159,212 @@ describe('Flow snapshots', () => {
           })
           .else
           .run.say('fallback via run')
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(A).return() bare return, no chain', () => {
+      const out = compile('flow_if_return_bare', () => {
+        say('before if-return')
+        _.if(Label('test')('@s')).return()
+        say('after if-return (should not appear at runtime)')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(A).return(15) return with value', () => {
+      const out = compile('flow_if_return_value', () => {
+        say('before if-return')
+        _.if(Label('test')('@s')).return(15)
+        say('after if-return (should not appear at runtime)')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(A).return(15).else(cb) value-return + else chain', () => {
+      const out = compile('flow_if_return_value_else', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0])).return(15).else(() => {
+          say('else body')
+        })
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(A).return().else(cb) bare return + else chain', () => {
+      const out = compile('flow_if_return_else', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0])).return().else(() => {
+          say('else body')
+        })
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(A).return.run.<command> return-run chain (chain ends at .run)', () => {
+      const out = compile('flow_if_return_run', () => {
+        say('before if-return-run')
+        _.if(Label('test')('@s')).return.run.say('via return run')
+        say('after if-return-run (should not appear at runtime)')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(A).return.fail()', () => {
+      const out = compile('flow_if_return_fail', () => {
+        say('before if-return-fail')
+        _.if(Label('test')('@s')).return.fail()
+        say('after if-return-fail (should not appear at runtime)')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(A, cb).else(cb2) bodies do not return', () => {
+      const out = compile('flow_if_else_return', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0]), () => {
+          say('if body')
+        }).else(() => {
+          say('else body')
+        })
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow anti-pattern: _.if(cond, cb => _.return()) throws', () => {
+      expect(() =>
+        compile('flow_anti_pattern_if_cb_return', () => {
+          _.if(_.entity('@s[tag=ready]'), () => _.return())
+        }),
+      ).toThrow(/Flow anti-pattern detected/)
+    })
+
+    test('Flow anti-pattern: _.if(cond, cb1).else(cb2 => _.return()) throws', () => {
+      expect(() =>
+        compile('flow_anti_pattern_else_cb_return', () => {
+          _.if(_.entity('@s[tag=ready]'), () => {
+            say('if body')
+          }).else(() => _.return())
+        }),
+      ).toThrow(/Flow anti-pattern detected/)
+    })
+
+    test('Flow anti-pattern: _.if(cond, cb => returnCmd(15)) throws', () => {
+      expect(() =>
+        compile('flow_anti_pattern_if_cb_return_cmd', () => {
+          _.if(_.entity('@s[tag=ready]'), () => {
+            returnCmd(15)
+          })
+        }),
+      ).toThrow(/Flow anti-pattern detected/)
+    })
+
+    test('Flow anti-pattern: _.if(cond, cb => returnCmd.fail()) throws', () => {
+      expect(() =>
+        compile('flow_anti_pattern_if_cb_fail', () => {
+          _.if(_.entity('@s[tag=ready]'), () => {
+            returnCmd.fail()
+          })
+        }),
+      ).toThrow(/Flow anti-pattern detected/)
+    })
+
+    test('Flow anti-pattern does NOT fire for _.if(cond).run.returnCmd()', () => {
+      // No callback — uses `.run.<cmd>` proxy. Should compile fine.
+      const out = compile('flow_no_anti_pattern_run', () => {
+        _.if(_.entity('@s[tag=ready]')).run.returnCmd()
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow anti-pattern does NOT fire for _.if(cond).return() (no callback)', () => {
+      const out = compile('flow_no_anti_pattern_return_getter', () => {
+        _.if(_.entity('@s[tag=ready]')).return()
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow empty body: _.if(cond, cb1).else(() => {}) throws (chain else)', () => {
+      expect(() =>
+        compile('flow_empty_else_body', () => {
+          _.if(_.entity('@s[tag=ready]'), () => {
+            say('if body')
+          }).else(() => {})
+        }),
+      ).toThrow(/Flow clause body is empty/)
+    })
+
+    test('Flow empty body: _.if(cond, cb1).elseIf(cond2, () => {}) throws (chain elseIf)', () => {
+      expect(() =>
+        compile('flow_empty_elseif_body', () => {
+          _.if(_.entity('@s[tag=ready]'), () => {
+            say('if body')
+          }).elseIf(_.entity('@s[tag=waiting]'), () => {})
+        }),
+      ).toThrow(/Flow clause body is empty/)
+    })
+
+    test('Flow _.if(cond, cb).else.return() bare return inside else', () => {
+      const out = compile('flow_if_else_return_bare', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0]), () => {
+          say('if body')
+        })
+          .else
+          .return()
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(cond, cb).else.return(15) value return inside else', () => {
+      const out = compile('flow_if_else_return_value', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0]), () => {
+          say('if body')
+        })
+          .else
+          .return(15)
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(cond, cb).else.return.run.<cmd> return-run inside else', () => {
+      const out = compile('flow_if_else_return_run', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0]), () => {
+          say('if body')
+        })
+          .else
+          .return
+          .run
+          .say('else via return run')
+        say('after chain')
+      })
+      snapshotAll(out)
+    })
+
+    test('Flow _.if(cond, cb).elseIf(cond2).return.run.<cmd> return-run inside elseIf', () => {
+      const out = compile('flow_if_elseif_return_run', () => {
+        const counter = Objective.create('counter')
+        say('before chain')
+        _.if(counter('@s').matches([0, 0]), () => {
+          say('if body')
+        })
+          .elseIf(counter('@s').matches([1, 1]))
+          .return.run
+          .say('elseIf via return run')
         say('after chain')
       })
       snapshotAll(out)

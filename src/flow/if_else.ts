@@ -4,11 +4,11 @@ import type { MCFunctionNode, SandstoneCore } from '../core'
 import { ContainerNode } from '../core'
 import type { Node } from '../core/nodes'
 import type { SandstoneCommands, ExecuteCommandNode } from 'sandstone/commands'
-import { FinalCommandOutput } from 'sandstone/commands'
+import { FinalCommandOutput, ReturnCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import { makeCallable } from 'sandstone/utils'
 import { formatDebugString } from '../utils'
 import type { ConditionNode } from './conditions'
-import { conditionToNode, type Condition } from './Flow'
+import { conditionToNode, NO_CALLBACK_SENTINEL, type Condition } from './Flow'
 
 /**
  * Shared base for `IfNode` / `ElseNode`.
@@ -42,6 +42,17 @@ export abstract class FlowClauseNode extends ContainerNode {
    * `enterSingleCommand` has to add it; re-entering must not add it twice.
    */
   protected addedToBody = false
+
+  /**
+   * True when the user committed any form of `return` (`return` /
+   * `return N` / `return fail` / `return run …`) into this clause's body.
+   * Used by `IfElseTransformationVisitor` to keep the resulting execute
+   * inline in the parent MCFunction rather than extracting it to a child —
+   * a child MCFunction's return only escapes the child, but the user's
+   * `return` must escape the parent.
+   * @internal
+   */
+  bareReturn: boolean = false
 
   /**
    * Push this node onto `parentMCFunction`'s context stack so the next
@@ -101,12 +112,54 @@ export class IfNode extends FlowClauseNode {
 
     this.parentMCFunction = parentMCFunction ?? sandstoneCore.getCurrentMCFunctionOrThrow()
 
-    if (callback && callback.toString() !== '() => {}') {
+    if (callback === NO_CALLBACK_SENTINEL) {
+      // No callback supplied — `_.if(cond)` form, expecting the user to
+      // chain `.run.<cmd>` or `.return(...)` after. Add the IfNode to the
+      // parent MCFunction body immediately so the visitor (or any later
+      // check) can see it. If body stays empty at visit time, the
+      // empty-body check in `IfElseTransformationVisitor` throws.
+      this.parentMCFunction.appendNode(this)
+      this.addedToBody = true
+      return
+    }
+
+    if (callback) {
       // Generate the body of the If node. Awaits inside the callback
       // enter their own context without balancing it — `balanceContext`
       // pops the whole stack back to the pre-enter depth for us.
       this.parentMCFunction.balanceContext(this, callback)
       this.addedToBody = true
+
+      // Reject a callback whose entire body is a `return` / `return run …`.
+      // Such a callback only escapes the if-body, not the parent MCFunction,
+      // because there's no `execute` wrapper around it — it commits directly
+      // to the clause body. The user almost certainly meant
+      // `_.if(cond).return(...)` (or `.return.run.<cmd>`) instead, which
+      // routes through the if-transformation visitor and gets a proper
+      // `execute … run return …` form. Allowed: `_.if(cond).run.returnCmd`
+      // — no callback, commits via the run proxy.
+      if (
+        this.body.length === 1
+        && (this.body[0] instanceof ReturnCommandNode || this.body[0] instanceof ReturnRunCommandNode)
+      ) {
+        throw new Error(
+          `Flow anti-pattern detected. Did you mean \`_.if(cond).return()\`, `
+          + `\`\.return.run.<cmd>\`, or \`_.if(cond).run.returnCmd()\`? MC return inside a Flow callback `
+          + `is only allowed to interrupt flow inside of the callback's context, not the host context.`,
+        )
+      }
+
+      // Reject an empty callback body — `_.if(cond, () => {})` is a bug
+      // (user wrote an explicit empty callback). Detected here because the
+      // body is fully populated by `balanceContext` and won't change.
+      // The clause type (if / elseIf / else) is reported as "Flow clause" since
+      // the constructor doesn't distinguish them — `elseIf`/`else` paths
+      // construct this same `IfNode`.
+      if (this.body.length === 0) {
+        throw new Error(
+          `Flow clause body is empty. Add at least one command to it (or remove the branch).`,
+        )
+      }
     }
   }
 
@@ -137,7 +190,42 @@ export class IfNode extends FlowClauseNode {
 }
 
 type RunProxy = SandstoneCommands<false>
-type ElseProxy = { readonly run: SandstoneCommands<false> } & ((callback: () => void) => FinalCommandOutput)
+
+/**
+ * Returned by `ElseProxy.return` (i.e. `_.if(cond, cb).else.return`). Callable
+ * for `return [value]`, plus `.run.<cmd>` and `.fail()`. No chain-extension
+ * methods (`elseIf` / `else`) — an else branch is the chain terminus.
+ */
+type ElseReturnInterface = {
+  readonly run: SandstoneCommands<false>
+  fail: () => FinalCommandOutput
+} & ((value?: number) => ElseReturnInterface)
+
+type ElseProxy = {
+  readonly run: SandstoneCommands<false>
+  readonly return: ElseReturnInterface
+} & ((callback: () => void) => any)
+
+/**
+ * Returned by `IfStatement.return`. Combines a `ReturnCommand`-shaped surface
+ * (callable for `return [value]`, plus `.run.<cmd>` and `.fail()`) with the
+ * `.elseIf` / `.else` methods that extend the chain. Both callable forms
+ * (`if(A).return()` and `if(A).return(15)`) commit their node and hand back
+ * the chain-extending subset (`elseIf` + `else`) so `.else(cb)` can follow.
+ */
+type IfReturnInterface<R extends boolean> = R extends true
+  ? {
+      readonly run: SandstoneCommands<false>
+      fail: () => FinalCommandOutput
+      elseIf: IfStatement<R>['elseIf']
+      else: ElseProxy
+    } & ((
+      value?: number,
+    ) => {
+      elseIf: IfStatement<R>['elseIf']
+      else: ElseProxy
+    })
+  : never
 
 export class IfStatement<R extends boolean = true> {
   protected node: IfNode
@@ -154,19 +242,28 @@ export class IfStatement<R extends boolean = true> {
     return this._buildRun(this.node, this.node.parentMCFunction) as R extends true ? RunProxy : never
   }
 
-  get else(): ElseProxy {
-    return this._buildElse() as unknown as ElseProxy
+  /**
+   * Open the else branch on a callback-supplied if. Gated by `R extends false`
+   * (callback provided) — chaining `.else` onto `_.if(cond)` (no callback,
+   * no `.run`) is a type error because the if branch has no body to contrast
+   * against.
+   */
+  get else(): R extends false ? ElseProxy : never {
+    return this._buildElse() as unknown as R extends false ? ElseProxy : never
   }
 
-  /** Callback provided — clause body is set; `.run` is unavailable. */
-  elseIf(condition: Condition, callback: () => void): IfStatement<false>
-  /** No callback — clause body is supplied via `.run`. */
-  elseIf(condition: Condition): IfStatement<true>
+  /** Callback provided — open elseIf with a body. */
+  elseIf(
+    condition: Condition,
+    callback: () => void,
+  ): R extends false ? IfStatement<false> : never
+  /** Callback provided on parent — open elseIf without a body. */
+  elseIf(condition: Condition): R extends false ? IfStatement<true> : never
   elseIf(
     condition: Condition,
     callback?: () => void,
   ): IfStatement<boolean> {
-    const cb = callback ?? (() => {})
+    const cb = callback ?? NO_CALLBACK_SENTINEL
     const statement = new IfStatement<boolean>(
       this.sandstoneCore,
       conditionToNode(condition),
@@ -176,6 +273,72 @@ export class IfStatement<R extends boolean = true> {
     statement.node._isElseIf = true
 
     return statement as IfStatement<boolean>
+  }
+
+  get return(): IfReturnInterface<R> {
+    const sandstoneCore = this.sandstoneCore
+    const ifNode = this.node
+    const parentMCFunction = ifNode.parentMCFunction
+
+    const elseIf = this.elseIf.bind(this)
+    const elseProxyGetter = (): ElseProxy => this.else
+
+    const result = makeCallable(
+      {
+        run: new Proxy(sandstoneCore.pack.commands, {
+          get: (target, p, receiver) => {
+            if (typeof p === 'symbol' || !(p in target)) {
+              return Reflect.get(target, p, receiver)
+            }
+
+            ifNode.enterSingleCommand(parentMCFunction)
+
+            const returnRun = new ReturnRunCommandNode(
+              sandstoneCore.pack,
+              false,
+              ['run'],
+              { isSingleExecute: true, isFlowControl: true },
+            )
+            ifNode.append(returnRun)
+            ifNode.bareReturn = true
+            parentMCFunction.contextStack.push(returnRun)
+
+            return (target as any)[p]
+          },
+        }) as SandstoneCommands<false>,
+        fail: () => {
+          ifNode.enterSingleCommand(parentMCFunction)
+          const returnCmdNode = new ReturnCommandNode(sandstoneCore.pack, ['fail'])
+          returnCmdNode.commit()
+          ifNode.bareReturn = true
+          return new FinalCommandOutput(returnCmdNode)
+        },
+        elseIf,
+        // Don't put `else` here — `Object.assign` inside `makeCallable` would
+        // invoke a getter immediately, building the ElseNode and linking it
+        // onto the chain. Define it as a lazy getter on the result instead.
+      },
+      ((value?: number) => {
+        ifNode.enterSingleCommand(parentMCFunction)
+        const returnCmdNode = new ReturnCommandNode(sandstoneCore.pack, [value ?? 0])
+        returnCmdNode.commit()
+        ifNode.bareReturn = true
+        return {
+          elseIf,
+          get else() {
+            return elseProxyGetter()
+          },
+        }
+      }),
+    ) as IfReturnInterface<R>
+    // Attach `else` lazily so reading `.return.else` builds the ElseProxy on
+    // demand rather than eagerly.
+    Object.defineProperty(result, 'else', {
+      get: () => elseProxyGetter(),
+      enumerable: true,
+      configurable: true,
+    })
+    return result
   }
 
   private _buildRun(
@@ -205,11 +368,13 @@ export class IfStatement<R extends boolean = true> {
   }
 
   private _buildElse(): ElseProxy {
-    const elseNode = new ElseNode(this.sandstoneCore, () => {})
-    this.node.nextFlowNode = elseNode
+    const sandstoneCore = this.sandstoneCore
     const parentMCFunction = this.node.parentMCFunction
 
-    const commandsSource = this.sandstoneCore.pack.commands as SandstoneCommands<false>
+    const elseNode = new ElseNode(sandstoneCore, () => {})
+    this.node.nextFlowNode = elseNode
+
+    const commandsSource = sandstoneCore.pack.commands as SandstoneCommands<false>
 
     const commands = new Proxy(commandsSource, {
       get: (target, p, receiver) => {
@@ -228,10 +393,72 @@ export class IfStatement<R extends boolean = true> {
       },
     }) as SandstoneCommands<false>
 
+    // `.else.return` — early return scoped to the else body. Same shape as
+    // `IfStatement.return` (callable for `return [value]`, plus `.run.<cmd>`
+    // and `.fail()`), minus `.elseIf` / `.else` since the else branch is the
+    // chain terminus.
+    const returnRunProxy = new Proxy(commandsSource, {
+      get: (target, p, receiver) => {
+        if (typeof p === 'symbol' || !(p in target)) {
+          return Reflect.get(target, p, receiver)
+        }
+
+        elseNode.enterSingleCommand(parentMCFunction)
+
+        const returnRun = new ReturnRunCommandNode(
+          sandstoneCore.pack,
+          false,
+          ['run'],
+          { isSingleExecute: true, isFlowControl: true },
+        )
+        elseNode.append(returnRun)
+        elseNode.bareReturn = true
+        parentMCFunction.contextStack.push(returnRun)
+
+        return (target as any)[p]
+      },
+    }) as SandstoneCommands<false>
+
+    const failFn = (): FinalCommandOutput => {
+      elseNode.enterSingleCommand(parentMCFunction)
+      const returnCmdNode = new ReturnCommandNode(sandstoneCore.pack, ['fail'])
+      returnCmdNode.commit()
+      elseNode.bareReturn = true
+      return new FinalCommandOutput(returnCmdNode)
+    }
+
+    // Self-referencing callable: calling `return()` or `return(N)` commits
+    // the return node and hands `returnInterface` back for further chaining
+    // (e.g. `.else.return().run.<cmd>` — though the chain is terminal since
+    // there are no elseIf/else methods here).
+    const returnInterface = makeCallable(
+      { run: returnRunProxy, fail: failFn },
+      ((value?: number): any => {
+        elseNode.enterSingleCommand(parentMCFunction)
+        const returnCmdNode = new ReturnCommandNode(sandstoneCore.pack, [value ?? 0])
+        returnCmdNode.commit()
+        elseNode.bareReturn = true
+        return returnInterface
+      }),
+    ) as ElseReturnInterface
+
     return makeCallable(
-      commands,
+      { run: commands, return: returnInterface },
       (callback: () => void): FinalCommandOutput => {
         parentMCFunction.balanceContext(elseNode, callback)
+        // Reject a callback whose entire body is a `return` / `return run …`.
+        // Same rationale as the IfNode constructor check — the user almost
+        // certainly meant `_.if(cond, cb1).else.return(...)` instead.
+        if (
+          elseNode.body.length === 1
+          && (elseNode.body[0] instanceof ReturnCommandNode || elseNode.body[0] instanceof ReturnRunCommandNode)
+        ) {
+          throw new Error(
+            `Flow anti-pattern detected. Did you mean \`_.if(cond, cb1).else.return()\`, `
+            + `\`\.else.return.run.<cmd>\`, or \`_.if(cond, cb1).else.run.returnCmd()\`? MC return inside a Flow callback `
+            + `is only allowed to interrupt flow inside of the callback's context, not the host context.`,
+          )
+        }
         return new FinalCommandOutput(elseNode as any)
       },
       true,
