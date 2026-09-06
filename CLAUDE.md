@@ -23,11 +23,45 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **previous** build, so your changes appear to have no effect (or a
 broken change appears to pass).
 
+That said, **edits inside `tests/` do NOT require a rebuild** — they
+only need the existing built bundle. Only re-run `bun dev:build` when
+the library code under `src/` (or anything else that ends up in the
+bundle) changes.
+
 Always chain the build:
 
 ```bash
 bun dev:build --silent && bun test
 bun dev:build --silent && bun test tests/flow   # single suite
+```
+
+### `bun run test:update-snapshots` — DO NOT run unless explicitly told to
+
+`bun run test:update-snapshots` sets `UPDATE_SAND_TESTS=1` and re-runs the
+test suite, which bulk-accepts drift in two custom JSON snapshots:
+
+- `tests/__snapshots__/signatures.json` — accepts any signature drift
+  (rewrites all entries; clears `anyAllowed` flags that no longer apply).
+- `tests/__snapshots__/bundle-sourcemap.declarations.json` — accepts any
+  REMOVED or MOVED symbol without erroring. (Added symbols are
+  auto-accepted on every successful run, with or without the env var.)
+
+Without the env var, those tests throw on removals/moves and the
+snapshots stay intact (a deliberate regression guard).
+
+**Never run this unprompted.** If a snapshot test fails, surface the
+diff to the user and wait for explicit per-case permission before
+regenerating. Regenerating a snapshot you didn't intend to change can
+silently mask real regressions (an accidentally moved class routes
+to the wrong source file, an accidentally broadened signature slips a
+`any` into the public API). The drift guard exists on purpose — let
+the user decide what to accept.
+
+For test-only iterations:
+
+```bash
+bun test                # no rebuild needed
+bun test tests/flow      # no rebuild needed
 ```
 
 A green `bun test` that you did not precede with a build proves nothing.
@@ -342,6 +376,20 @@ execute if score counter __sandstone matches 0..10 run function namespace:parent
 - These together allow `LoopArgument` to produce `function <correct-loop-name>` at serialization or simplification time
 
 **Visitor files** follow the naming convention `<transformationName>.ts` (e.g., `containerCommandsToMCFunction.ts`, `ifElseTransformationVisitor.ts`).
+
+#### `isSingleExecute: true` at construction time won't work — but you don't need it
+
+When `IfElseTransformationVisitor` builds an `ExecuteCommandNode` for an if/elseIf/else arm, you might think you need to set `isSingleExecute: true` so `ContainerCommandsToMCFunctionVisitor.createMCFunction` doesn't extract the arm's body into a child mcfunction. **Don't do that.** Two reasons:
+
+1. **`ExecuteCommandNode`'s constructor calls `append(body)`, and `append` calls `exitContext()` on the current MCFunction when `isSingleExecute` is true.** Visitors run outside any MCFunction context, so setting `isSingleExecute: true` at construction throws `This operation is invalid when outside a MCFunction`. (You could flip the flag after construction, but see #2.)
+
+2. **Even if you flip the flag after construction, it's unnecessary — `SimplifyExecuteFunctionVisitor` already undoes the extraction for you.** It runs after `ContainerCommandsToMCFunctionVisitor`, sees the `execute (no args) run function <child>` form, checks if the child mcfunction contains a single effective command, and if so deletes the child + replaces the execute's body with that command. So `execute if A run return 0` ends up inline regardless of whether `ContainerCommandsToMCFunctionVisitor` extracted it to a child.
+
+   Verified empirically: setting `isSingleExecute = true` post-construction (or leaving it `false`) produces identical output for `_.if(A).return()` chains. The "child mcfunction" output you see in older snapshots was simply never visited by `SimplifyExecuteFunctionVisitor` because of an unrelated guard; the new return-path code avoids that guard by emitting the execute at chain-tail / single-if paths that `Simplify` does visit.
+
+If you actually want to avoid the child mcfunction in the first place — e.g. to prevent `Say after` running when the if-body returns — the right place to intervene is **upstream in `IfElseTransformationVisitor`**: detect a chain whose last arm commits a bare `return` (or any return form) and route it through `handleMultipleNodes` (the inlined path) instead of the wrapper-extraction path. `Simplify` then never has work to undo because the child was never created.
+
+**Rule of thumb:** trust `SimplifyExecuteFunctionVisitor`. If you find yourself flipping `isSingleExecute` in a visitor, you're probably fighting the wrong layer — move up to the visitor that builds the chain's execute nodes instead.
 
 #### Node Serialization (`getValue()`)
 
