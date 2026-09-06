@@ -1,9 +1,276 @@
+import { DataPointClass, MCFunctionClass, NamespacedString, PredicateClass, Score } from 'sandstone'
 import { SandstoneCore } from 'sandstone/core'
+
+class Float {
+
+  add(value: Float | Integer): this
+
+  add(values: (Float | Integer)[]): this
+
+  add(...values: (Float | Integer)[]): this
+
+  add(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
+    // TODO
+
+    return this
+  }
+
+  subtract(value: Float | Integer) {
+    // TODO
+
+    return this
+  }
+
+  multiply(value: Float | Integer): this
+
+  multiply(values: (Float | Integer)[]): this
+
+  multiply(...values: (Float | Integer)[]): this
+
+  multiply(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
+    // TODO
+
+    return this
+  }
+
+  divide(value: Float | Integer) {
+    // TODO
+
+    return this
+  }
+
+  modulo(value: Float | Integer) {
+    // TODO
+
+    return this
+  }
+}
+
+class Integer {
+
+  add(value: Float | Integer): this
+
+  add(values: (Float | Integer)[]): this
+
+  add(...values: (Float | Integer)[]): this
+
+  add(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
+    // TODO
+
+    return this
+  }
+
+  subtract(value: Float | Integer) {
+    // TODO
+
+    return this
+  }
+
+  multiply(value: Float | Integer): this
+
+  multiply(values: (Float | Integer)[]): this
+
+  multiply(...values: (Float | Integer)[]): this
+
+  multiply(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
+    // TODO
+
+    return this
+  }
+
+  divide(value: Float | Integer, floored = true) {
+    // TODO
+
+    return this
+  }
+
+  modulo(value: Float | Integer, floored = true) {
+    // TODO
+
+    return this
+  }
+}
 
 export class SandstoneMath {
   constructor(public sandstoneCore: SandstoneCore) {}
 
+  // Basics // TODO
+
+  float(init: number | Score | DataPointClass | Float | Integer = 0) {
+    // TODO
+  }
+
+  integer(init: number | Score | DataPointClass | Float | Integer = 0) {
+    // TODO
+  }
+
   // Operations // TODO
+
+  sum(values: Float[]): Float
+
+  sum(...values: Float[]): Float
+
+  sum(values: Integer[]): Integer
+
+  sum(...values: Integer[]): Integer
+
+  sum(values: (Float | Integer)[]): Float
+
+  sum(...values: (Float | Integer)[]): Float
+
+  sum(values: (Float | Integer)[], result: 'float'): Float
+
+  sum(values: (Float | Integer)[], result: 'integer'): Integer
+
+  sum(...args: ((Float | Integer)[] | Float | Integer | 'float' | 'integer')[]) {
+    // TODO
+  }
+
+  subtract(a: Float, b: Float | Integer): Float
+
+  subtract(a: Integer, b: Float | Integer): Integer
+
+  subtract(a: Float | Integer, b: Float | Integer) {
+    // TODO
+  }
+
+  product(values: Float[]): Float
+
+  product(...values: Float[]): Float
+
+  product(values: Integer[]): Integer
+
+  product(...values: Integer[]): Integer
+
+  product(values: (Float | Integer)[]): Float
+
+  product(...values: (Float | Integer)[]): Float
+
+  product(values: (Float | Integer)[], result: 'float'): Float
+
+  product(values: (Float | Integer)[], result: 'integer'): Integer
+
+  product(...args: ((Float | Integer)[] | Float | Integer | 'float' | 'integer')[]) {
+    // TODO
+  }
+
+  divide(a: Float, b: Float | Integer): Float
+
+  divide(a: Integer, b: Float | Integer, floored?: boolean): Integer
+
+  divide(a: Float | Integer, b: Float | Integer) {
+    // TODO
+  }
+
+  modulo(a: Float, b: Float | Integer): Float
+
+  modulo(a: Integer, b: Float | Integer, floored?: boolean): Integer
+
+  modulo(a: Float | Integer, b: Float | Integer) {
+    // TODO
+  }
+
+  abs(value: Float): Float
+
+  abs(value: Integer): Integer
+
+  abs(value: Float | Integer) {
+    // TODO
+  }
+
+  exponentiate(a: Float, b: Float | Integer): Float
+
+  exponentiate(a: Integer, b: Float | Integer): Integer
+
+  exponentiate(a: Float | Integer, b: Float | Integer) {
+    // TODO
+  }
+
+  sqrt(value: Float) {
+    // TODO
+  }
+
+  vectorLength(components: Float[]): Float
+
+  vectorLength(...components: Float[]): Float
+
+  vectorLength(components: (Float | Integer)[]): Float
+
+  vectorLength(...components: (Float | Integer)[]): Float
+
+  vectorLength(...args: ((Float | Integer)[] | Float | Integer)[]) {
+    // TODO
+  }
+
+  ceil(value: Float) {
+    // TODO
+  }
+
+  truncate(value: Float) {
+    // TODO
+  }
+
+  round(value: Float) {
+    // TODO
+  }
+
+  floor(value: Float) {
+    // TODO
+  }
+
+  average(values: Float[]): Float
+
+  average(...values: Float[]): Float
+
+  average(values: Integer[]): Integer
+
+  average(...values: Integer[]): Integer
+
+  average(values: (Float | Integer)[]): Float
+
+  average(...values: (Float | Integer)[]): Float
+
+  average(values: (Float | Integer)[], result: 'float'): Float
+
+  average(values: (Float | Integer)[], result: 'integer'): Integer
+
+  average(...args: ((Float | Integer)[] | Float | Integer | 'float' | 'integer')[]) {
+    // TODO
+  }
+
+  sine(angle: Float) {
+    // TODO
+  }
+
+  arcSine(ratio: Float) {
+    // TODO
+  }
+
+  cosine(angle: Float) {
+    // TODO
+  }
+
+  arcCosine(ratio: Float) {
+    // TODO
+  }
+
+  // Utilities // TODO
+
+  random(range: { min?: Float | Integer, max?: Float | Integer } = {}, result: 'float' | 'integer' = 'float') {
+    // TODO
+  }
+
+  pick(values: { value: Float, weight: number | Float }[] | { value: Integer, weight: number | Float }[]) {
+    // TODO
+  }
+
+  enchantmentLevel() {
+    // TODO
+  }
+
+  environmentAttribute() {
+    // TODO
+  }
 
   // Flow // TODO
 
@@ -74,27 +341,21 @@ export class SandstoneMath {
     // TODO
   }
 
-  switch<
-    ValueType extends DataPointClass | DataPointPickClass | Score,
-    CheckType extends ValueType extends Score ? number : NBTObject,
-  >(value: ValueType, cases: CaseStatement<CheckType, ValueType> | DefaultType<CheckType, ValueType>): void
+  switch<ValueType extends Float | Integer>(value: ValueType, cases: CaseStatement<ValueType> | DefaultType<ValueType>): void
 
-  switch<
-    ValueType extends DataPointClass | DataPointPickClass | Score,
-    CheckType extends ValueType extends Score ? number : NBTObject,
-  >(value: ValueType, cases: SwitchCase<ValueType, CheckType>[] | [...SwitchCase<ValueType, CheckType>[], ['default', () => any]]): void
-
-  switch<
-    ValueType extends DataPointClass | DataPointPickClass | Score,
-    CheckType extends ValueType extends Score ? number : NBTObject,
-  >(
+  switch<ValueType extends Float | Integer>(
     value: ValueType,
-    cases: SwitchCase<ValueType, CheckType>[] | [...SwitchCase<ValueType, CheckType>[], ['default', () => any]] | CaseStatement<CheckType, ValueType> | DefaultType<CheckType, ValueType>,
+    cases: SwitchCase<ValueType>[] | [...SwitchCase<ValueType>[], ['default', () => any]]
+  ): void
+
+  switch<ValueType extends Float | Integer>(
+    value: ValueType,
+    cases: SwitchCase<ValueType>[] | [...SwitchCase<ValueType>[], ['default', () => any]] | CaseStatement<ValueType> | DefaultType<ValueType>,
   ) {
     // TODO
   }
 
-  case<SwitchValueType extends DataPointClass | DataPointPickClass | Score>(value: (SwitchValueType extends Score ? number : NBTObject) | ConditionCallback<SwitchValueType>, callback: () => any) {
+  case<SwitchValueType extends Float | Integer>(value: Condition<SwitchValueType>, callback: () => any) {
     // TODO
   }
 
@@ -104,7 +365,7 @@ export class SandstoneMath {
     // TODO
   }
 
-  predicate = (predicate: LiteralUnion<string> | PredicateClass) => {
+  predicate = (predicate: NamespacedString | PredicateClass) => {
     // TODO
   }
 }
