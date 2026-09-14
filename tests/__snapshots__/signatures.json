@@ -655,7 +655,7 @@
     "definition": "src/commands/implementations/player/advancement.ts"
   },
   "attribute": {
-    "signature": "(alias) const attribute: <T extends string>(target: SingleEntityArgumentOf<false, T>, attribute: string) => AttributeOperationCommand<boolean>",
+    "signature": "(alias) const attribute: <T extends string>(target: SingleEntityArgumentOf<false, T>, attribute: ATTRIBUTES) => AttributeOperationCommand<boolean>",
     "definition": "src/commands/implementations/entity/attribute.ts"
   },
   "bossbar": {
