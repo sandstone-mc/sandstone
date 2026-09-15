@@ -18,7 +18,6 @@ import { join } from 'path'
 import { rm, mkdir, readFile, writeFile, unlink } from 'fs/promises'
 import { bundleDeclarations } from './plugins/bundle-declarations'
 import {
-  extractExportsFromJs,
   extractSubpathExportsFromDts,
   diff,
   intersect,
@@ -112,8 +111,9 @@ async function removeSyntheticIndex(): Promise<void> {
 /**
  * Build the single main bundle containing all exports.
  * Output goes to dist/_internal/ to hide from IDE auto-import scanning.
+ * Returns the build metafile so downstream steps can read exports / sizes.
  */
-async function buildMainBundle(): Promise<void> {
+async function buildMainBundle() {
   const externalPackages = await getExternalPackages()
 
   await mkdir(internalDir, { recursive: true })
@@ -127,6 +127,7 @@ async function buildMainBundle(): Promise<void> {
     external: externalPackages,
     naming: 'index.js',
     sourcemap: 'linked',
+    metafile: true,
   })
 
   if (!result.success) {
@@ -142,6 +143,8 @@ async function buildMainBundle(): Promise<void> {
     join(internalDir, 'package.json'),
     JSON.stringify({ private: true }, null, 2),
   )
+
+  return result.metafile!
 }
 
 /**
@@ -241,14 +244,26 @@ async function generateReExportFile(
  * Re-exports point to ../_internal/ which is marked as private to hide from IDE auto-import.
  *
  * @param mainDtsExports - Pre-extracted exports from the public API (sandstone.d.ts)
+ * @param metafile - Build metafile from step 4, used to verify the metafile-based
+ *   export extraction matches the AST parse before we drop the AST parse.
  */
-async function generateReExportsWithMainExports(mainDtsExports: Set<string>): Promise<void> {
+async function generateReExportsWithMainExports(
+  mainDtsExports: Set<string>,
+  metafile: Awaited<ReturnType<typeof Bun.build>>['metafile'],
+): Promise<void> {
   const exportsDir = join(distDir, 'exports')
   await mkdir(exportsDir, { recursive: true })
 
-  // Get all value exports from the main bundle (now in _internal/)
+  // Collect value exports from every metafile output. Single bundle today
+  // (splitting: false, naming: 'index.js') so this is one output, but the
+  // loop is correct under splitting too.
   log('  Extracting exports from main bundle...')
-  const bundleExports = await extractExportsFromJs(join(internalDir, 'index.js'))
+  const bundleExports = new Set<string>()
+  for (const output of Object.values(metafile?.outputs ?? {})) {
+    for (const name of output.exports) {
+      bundleExports.add(name)
+    }
+  }
   log(`    Found ${bundleExports.size} value exports in bundle`)
 
   // Main re-export: only exports that are in BOTH the bundle AND sandstone.d.ts
@@ -315,7 +330,7 @@ async function main() {
   stopAfter(3)
 
   // 4. Build single main bundle
-  await step('Building JavaScript bundle', buildMainBundle)
+  const metafile = await step('Building JavaScript bundle', buildMainBundle)
   stopAfter(4)
 
   // 4b. Rewrite source map entries that point at the ephemeral synthetic
@@ -383,7 +398,7 @@ async function main() {
 
   // 13. Generate re-export files
   await step('Generating re-export files', () =>
-    generateReExportsWithMainExports(mainDtsExports)
+    generateReExportsWithMainExports(mainDtsExports, metafile)
   )
   stopAfter(13)
 

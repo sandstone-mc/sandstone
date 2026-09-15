@@ -123,61 +123,6 @@ function extractExportsFromDtsAST(sourceFile: ts.SourceFile): {
 }
 
 /**
- * Extracts value exports from a JavaScript bundle file.
- * Parses the ESM export statements to find what's actually exported as values.
- *
- * @param jsPath - Absolute path to the .js bundle file
- * @returns Set of all value export names
- */
-export async function extractExportsFromJs(jsPath: string): Promise<Set<string>> {
-  const exports = new Set<string>()
-  const content = await readFile(jsPath, 'utf8')
-
-  // Parse with TypeScript (it can parse JS too)
-  const sourceFile = ts.createSourceFile(
-    'bundle.js',
-    content,
-    ts.ScriptTarget.Latest,
-    false, // setParentNodes = false for faster parsing
-    ts.ScriptKind.JS,
-  )
-
-  ts.forEachChild(sourceFile, (node) => {
-    // export { A, B, C }
-    if (ts.isExportDeclaration(node)) {
-      if (node.exportClause && ts.isNamedExports(node.exportClause)) {
-        for (const element of node.exportClause.elements) {
-          exports.add(element.name.text)
-        }
-      }
-    }
-
-    // export var/const/let
-    if (ts.isVariableStatement(node)) {
-      const hasExport = node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
-      if (hasExport) {
-        for (const decl of node.declarationList.declarations) {
-          if (ts.isIdentifier(decl.name)) {
-            exports.add(decl.name.text)
-          }
-        }
-      }
-    }
-
-    // export function / export class
-    if (
-      (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) &&
-      node.name &&
-      node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
-    ) {
-      exports.add(node.name.text)
-    }
-  })
-
-  return exports
-}
-
-/**
  * Extracts exports from a directory's index.d.ts file.
  */
 export async function extractSubpathExportsFromDts(
