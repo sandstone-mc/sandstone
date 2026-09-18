@@ -8,6 +8,7 @@ import type { FloatProvider } from 'sandstone/arguments/generated/data/worldgen.
 import type { SymbolDataComponent } from 'sandstone/arguments/generated/dispatcher.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { AttributeOperation } from 'sandstone/arguments/generated/util/attribute.ts'
+import type { FlatWeightedList } from 'sandstone/arguments/generated/util.ts'
 import type { Particle } from 'sandstone/arguments/generated/util/particle.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
@@ -226,18 +227,11 @@ export type ExplodeEntityEffect = {
   block_interaction: BlockInteraction,
   small_particle: Particle,
   large_particle: Particle,
-  block_particles?: Array<ExplosionParticleInfo>,
+  block_particles?: FlatWeightedList<ExplosionParticleInfo>,
   sound: SoundEventRef,
 }
 
 export type ExplosionParticleInfo = {
-  /**
-   * Value:
-   * Range: 1..
-   */
-  weight: NBTInt<{
-    min: 1,
-  }>,
   particle: Particle,
   /**
    * Defaults to 1.0. Scaling of the distance between the center of the explosion and the block

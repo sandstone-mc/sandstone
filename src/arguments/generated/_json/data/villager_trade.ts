@@ -1,4 +1,4 @@
-import type { JsonItemModifier } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
+import type { JsonItemModifierWithoutRootRef } from 'sandstone/arguments/generated/_json/data/item_modifier.ts'
 import type {
   JsonFloatNumberProvider,
   JsonIntNumberProvider,
@@ -42,7 +42,7 @@ export type JsonVillagerTrade = {
    *
    * ID reference is not allowed here.
    */
-  given_item_modifier?: JsonItemModifier,
+  given_item_modifier?: JsonItemModifierWithoutRootRef,
   /**
    * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`.
    */

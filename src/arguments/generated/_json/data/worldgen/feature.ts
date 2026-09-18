@@ -397,14 +397,9 @@ export type JsonGrowingPlantConfig = {
    */
   direction: JsonDirection,
   allow_water: boolean,
-  height_distribution: Array<JsonGrowingPlantHeight>,
+  height_distribution: JsonWeightedList<JsonIntProvider<(NBTInt | number)>>,
   body_provider: JsonBlockStateProviderRef,
   head_provider: JsonBlockStateProviderRef,
-}
-
-export type JsonGrowingPlantHeight = {
-  weight: (NBTInt | number),
-  data: JsonIntProvider<(NBTInt | number)>,
 }
 
 export type JsonHugeFungusConfig = {

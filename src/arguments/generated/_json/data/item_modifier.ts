@@ -8,3 +8,5 @@ export type JsonItemModifier = (
   NamespacedString | `#${string}:${string}` | TagClass<'item_modifier'> | ItemModifierClass))
 
 export type JsonItemModifierRoot = JsonLootFunction
+
+export type JsonItemModifierWithoutRootRef = (JsonLootFunction | Array<JsonItemModifierWithoutRootRef>)

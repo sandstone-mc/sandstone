@@ -71,8 +71,8 @@ export type JsonSumNumberProvider = {
 }
 
 export type JsonUniformNumberProvider = {
-  min?: JsonLegacyNumberProvider,
-  max?: JsonLegacyNumberProvider,
+  min: JsonLegacyNumberProvider,
+  max: JsonLegacyNumberProvider,
 }
 type JsonNumberProviderDispatcherMap = {
   'binomial': JsonNumberProviderBinomial,

@@ -65,7 +65,9 @@ export type JsonBinomialDistributionGenerator = {
 export type JsonContextIntProvider = ((NBTInt | number) | ({
   [S in Extract<Extract<JsonRegistry['minecraft:context_int_provider_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof JsonSymbolContextIntProvider ? JsonSymbolContextIntProvider[S] : JsonRootNBT))
+  } & (S extends undefined
+    ? JsonSymbolContextIntProvider<'%none'> :
+    (S extends keyof JsonSymbolContextIntProvider ? JsonSymbolContextIntProvider[S] : JsonRootNBT)))
 }[Extract<JsonRegistry['minecraft:context_int_provider_type'], string>]))
 
 export type JsonIntRef = ((
@@ -157,6 +159,7 @@ type JsonContextIntProviderFallback = (
   | JsonContextIntProviderSub
   | JsonContextIntProviderUniform
   | JsonContextIntProviderWeightedList)
+type JsonContextIntProviderNoneType = never
 type JsonContextIntProviderAbs = JsonSingleProvider
 type JsonContextIntProviderAdd = JsonAggregateProvider
 type JsonContextIntProviderAvg = JsonAggregateProvider
@@ -225,4 +228,6 @@ export type JsonSymbolContextIntProvider<CASE extends
   ? JsonContextIntProviderDispatcherMap
   : CASE extends 'keys'
     ? JsonContextIntProviderKeys
-    : CASE extends '%fallback' ? JsonContextIntProviderFallback : never
+    : CASE extends '%fallback'
+      ? JsonContextIntProviderFallback
+      : CASE extends '%none' ? JsonContextIntProviderNoneType : never

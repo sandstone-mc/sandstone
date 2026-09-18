@@ -65,7 +65,9 @@ export type BinomialDistributionGenerator = {
 export type ContextIntProvider = (NBTInt | ({
   [S in Extract<Extract<Registry['minecraft:context_int_provider_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof SymbolContextIntProvider ? SymbolContextIntProvider[S] : RootNBT))
+  } & (S extends undefined
+    ? SymbolContextIntProvider<'%none'> :
+    (S extends keyof SymbolContextIntProvider ? SymbolContextIntProvider[S] : RootNBT)))
 }[Extract<Registry['minecraft:context_int_provider_type'], string>]))
 
 export type IntRef = ((Registry['minecraft:context_int_provider'] | IntegerNumberProviderClass) | ContextIntProvider)
@@ -155,6 +157,7 @@ type ContextIntProviderFallback = (
   | ContextIntProviderSub
   | ContextIntProviderUniform
   | ContextIntProviderWeightedList)
+type ContextIntProviderNoneType = never
 type ContextIntProviderAbs = SingleProvider
 type ContextIntProviderAdd = AggregateProvider
 type ContextIntProviderAvg = AggregateProvider
@@ -221,4 +224,8 @@ export type SymbolContextIntProvider<CASE extends
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
   ? ContextIntProviderDispatcherMap
-  : CASE extends 'keys' ? ContextIntProviderKeys : CASE extends '%fallback' ? ContextIntProviderFallback : never
+  : CASE extends 'keys'
+    ? ContextIntProviderKeys
+    : CASE extends '%fallback'
+      ? ContextIntProviderFallback
+      : CASE extends '%none' ? ContextIntProviderNoneType : never

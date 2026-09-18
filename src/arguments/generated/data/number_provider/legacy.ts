@@ -71,8 +71,8 @@ export type SumNumberProvider = {
 }
 
 export type UniformNumberProvider = {
-  min?: LegacyNumberProvider,
-  max?: LegacyNumberProvider,
+  min: LegacyNumberProvider,
+  max: LegacyNumberProvider,
 }
 type NumberProviderDispatcherMap = {
   'binomial': NumberProviderBinomial,

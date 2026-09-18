@@ -387,14 +387,9 @@ export type GrowingPlantConfig = {
    */
   direction: Direction,
   allow_water: boolean,
-  height_distribution: Array<GrowingPlantHeight>,
+  height_distribution: WeightedList<IntProvider<NBTInt>>,
   body_provider: BlockStateProviderRef,
   head_provider: BlockStateProviderRef,
-}
-
-export type GrowingPlantHeight = {
-  weight: NBTInt,
-  data: IntProvider<NBTInt>,
 }
 
 export type HugeFungusConfig = {

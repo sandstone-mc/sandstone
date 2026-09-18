@@ -5,7 +5,6 @@ import type {
 } from 'sandstone/arguments/generated/_json/data/number_provider.ts'
 import type { JsonPredicateRef } from 'sandstone/arguments/generated/_json/data/predicate.ts'
 import type { JsonSlotSource } from 'sandstone/arguments/generated/_json/data/slot_source.ts'
-import type { JsonMinMaxBounds } from 'sandstone/arguments/generated/_json/data/util.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonItemListRef } from 'sandstone/arguments/generated/_json/util/registry_ref.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
@@ -47,9 +46,15 @@ export type JsonEntityTarget = (
   | 'target_entity'
   | 'interacting_entity')
 
-export type JsonFloatRange = JsonMinMaxBounds<JsonFloatNumberProviderRef>
+export type JsonFloatRange = (JsonFloatNumberProviderRef | {
+  min?: JsonFloatNumberProviderRef,
+  max?: JsonFloatNumberProviderRef,
+})
 
-export type JsonIntRange = JsonMinMaxBounds<JsonIntNumberProviderRef>
+export type JsonIntRange = (JsonIntNumberProviderRef | {
+  min?: JsonIntNumberProviderRef,
+  max?: JsonIntNumberProviderRef,
+})
 
 export type JsonItemPoolEntry = ({
   name: JsonRegistry['minecraft:item'],

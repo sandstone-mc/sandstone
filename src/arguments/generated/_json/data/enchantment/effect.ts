@@ -8,6 +8,7 @@ import type { JsonFloatProvider } from 'sandstone/arguments/generated/_json/data
 import type { JsonSymbolDataComponent } from 'sandstone/arguments/generated/_json/dispatcher.ts'
 import type { JsonRegistry } from 'sandstone/arguments/generated/_json/registry.ts'
 import type { JsonAttributeOperation } from 'sandstone/arguments/generated/_json/util/attribute.ts'
+import type { JsonFlatWeightedList } from 'sandstone/arguments/generated/_json/util.ts'
 import type { JsonParticle } from 'sandstone/arguments/generated/_json/util/particle.ts'
 import type { JsonRootNBT } from 'sandstone/arguments/nbt.ts'
 import type {
@@ -226,18 +227,11 @@ export type JsonExplodeEntityEffect = {
   block_interaction: JsonBlockInteraction,
   small_particle: JsonParticle,
   large_particle: JsonParticle,
-  block_particles?: Array<JsonExplosionParticleInfo>,
+  block_particles?: JsonFlatWeightedList<JsonExplosionParticleInfo>,
   sound: JsonSoundEventRef,
 }
 
 export type JsonExplosionParticleInfo = {
-  /**
-   * Value:
-   * Range: 1..
-   */
-  weight: (NBTInt<{
-    min: 1,
-  }> | number),
   particle: JsonParticle,
   /**
    * Defaults to 1.0. Scaling of the distance between the center of the explosion and the block

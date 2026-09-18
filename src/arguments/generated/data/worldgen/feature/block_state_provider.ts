@@ -108,7 +108,9 @@ export type SimpleStateProvider = {
 export type TypedBlockStateProvider = NonNullable<({
   [S in Extract<Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT))
+  } & (S extends undefined
+    ? SymbolBlockStateProvider<'%none'> :
+    (S extends keyof SymbolBlockStateProvider ? SymbolBlockStateProvider[S] : RootNBT)))
 }[Extract<Registry['minecraft:worldgen/block_state_provider_type'], string>])>
 
 export type WeightedBlockStateProvider = {
@@ -123,10 +125,10 @@ type BlockStateProviderDispatcherMap = {
   'minecraft:noise': BlockStateProviderNoise,
   'noise_threshold': BlockStateProviderNoiseThreshold,
   'minecraft:noise_threshold': BlockStateProviderNoiseThreshold,
-  'random': BlockStateProviderRandom,
-  'minecraft:random': BlockStateProviderRandom,
-  'randomized_int_state': BlockStateProviderRandomizedIntState,
-  'minecraft:randomized_int_state': BlockStateProviderRandomizedIntState,
+  'random_block': BlockStateProviderRandomBlock,
+  'minecraft:random_block': BlockStateProviderRandomBlock,
+  'randomized_int': BlockStateProviderRandomizedInt,
+  'minecraft:randomized_int': BlockStateProviderRandomizedInt,
   'rotated': BlockStateProviderRotated,
   'minecraft:rotated': BlockStateProviderRotated,
   'rule_based': BlockStateProviderRuleBased,
@@ -142,18 +144,19 @@ type BlockStateProviderFallback = (
   | BlockStateProviderDualNoise
   | BlockStateProviderNoise
   | BlockStateProviderNoiseThreshold
-  | BlockStateProviderRandom
-  | BlockStateProviderRandomizedIntState
+  | BlockStateProviderRandomBlock
+  | BlockStateProviderRandomizedInt
   | BlockStateProviderRotated
   | BlockStateProviderRuleBased
   | BlockStateProviderSimple
   | BlockStateProviderWeighted)
+type BlockStateProviderNoneType = never
 type BlockStateProviderCopyProperties = CopyPropertiesProvider
 type BlockStateProviderDualNoise = DualNoiseProvider
 type BlockStateProviderNoise = NoiseProvider
 type BlockStateProviderNoiseThreshold = NoiseThresholdProvider
-type BlockStateProviderRandom = RandomBlockStateProvider
-type BlockStateProviderRandomizedIntState = RandomizedIntStateProvider
+type BlockStateProviderRandomBlock = RandomBlockStateProvider
+type BlockStateProviderRandomizedInt = RandomizedIntStateProvider
 type BlockStateProviderRotated = RotatedStateProvider
 type BlockStateProviderRuleBased = RuleBasedBlockStateProvider
 type BlockStateProviderSimple = SimpleStateProvider
@@ -165,4 +168,8 @@ export type SymbolBlockStateProvider<CASE extends
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
   ? BlockStateProviderDispatcherMap
-  : CASE extends 'keys' ? BlockStateProviderKeys : CASE extends '%fallback' ? BlockStateProviderFallback : never
+  : CASE extends 'keys'
+    ? BlockStateProviderKeys
+    : CASE extends '%fallback'
+      ? BlockStateProviderFallback
+      : CASE extends '%none' ? BlockStateProviderNoneType : never

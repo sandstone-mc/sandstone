@@ -1,4 +1,4 @@
-import type { ItemModifier } from 'sandstone/arguments/generated/data/item_modifier.ts'
+import type { ItemModifierWithoutRootRef } from 'sandstone/arguments/generated/data/item_modifier.ts'
 import type { FloatNumberProvider, IntNumberProvider } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { Predicate } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
@@ -36,7 +36,7 @@ export type VillagerTrade = {
    *
    * ID reference is not allowed here.
    */
-  given_item_modifier?: ItemModifier,
+  given_item_modifier?: ItemModifierWithoutRootRef,
   /**
    * Maximum number of uses of this trade before the villager has to restock. Defaults to `4`.
    */

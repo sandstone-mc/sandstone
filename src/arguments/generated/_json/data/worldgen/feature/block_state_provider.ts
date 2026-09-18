@@ -108,7 +108,9 @@ export type JsonSimpleStateProvider = {
 export type JsonTypedBlockStateProvider = NonNullable<({
   [S in Extract<Extract<JsonRegistry['minecraft:worldgen/block_state_provider_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof JsonSymbolBlockStateProvider ? JsonSymbolBlockStateProvider[S] : JsonRootNBT))
+  } & (S extends undefined
+    ? JsonSymbolBlockStateProvider<'%none'> :
+    (S extends keyof JsonSymbolBlockStateProvider ? JsonSymbolBlockStateProvider[S] : JsonRootNBT)))
 }[Extract<JsonRegistry['minecraft:worldgen/block_state_provider_type'], string>])>
 
 export type JsonWeightedBlockStateProvider = {
@@ -123,10 +125,10 @@ type JsonBlockStateProviderDispatcherMap = {
   'minecraft:noise': JsonBlockStateProviderNoise,
   'noise_threshold': JsonBlockStateProviderNoiseThreshold,
   'minecraft:noise_threshold': JsonBlockStateProviderNoiseThreshold,
-  'random': JsonBlockStateProviderRandom,
-  'minecraft:random': JsonBlockStateProviderRandom,
-  'randomized_int_state': JsonBlockStateProviderRandomizedIntState,
-  'minecraft:randomized_int_state': JsonBlockStateProviderRandomizedIntState,
+  'random_block': JsonBlockStateProviderRandomBlock,
+  'minecraft:random_block': JsonBlockStateProviderRandomBlock,
+  'randomized_int': JsonBlockStateProviderRandomizedInt,
+  'minecraft:randomized_int': JsonBlockStateProviderRandomizedInt,
   'rotated': JsonBlockStateProviderRotated,
   'minecraft:rotated': JsonBlockStateProviderRotated,
   'rule_based': JsonBlockStateProviderRuleBased,
@@ -142,18 +144,19 @@ type JsonBlockStateProviderFallback = (
   | JsonBlockStateProviderDualNoise
   | JsonBlockStateProviderNoise
   | JsonBlockStateProviderNoiseThreshold
-  | JsonBlockStateProviderRandom
-  | JsonBlockStateProviderRandomizedIntState
+  | JsonBlockStateProviderRandomBlock
+  | JsonBlockStateProviderRandomizedInt
   | JsonBlockStateProviderRotated
   | JsonBlockStateProviderRuleBased
   | JsonBlockStateProviderSimple
   | JsonBlockStateProviderWeighted)
+type JsonBlockStateProviderNoneType = never
 type JsonBlockStateProviderCopyProperties = JsonCopyPropertiesProvider
 type JsonBlockStateProviderDualNoise = JsonDualNoiseProvider
 type JsonBlockStateProviderNoise = JsonNoiseProvider
 type JsonBlockStateProviderNoiseThreshold = JsonNoiseThresholdProvider
-type JsonBlockStateProviderRandom = JsonRandomBlockStateProvider
-type JsonBlockStateProviderRandomizedIntState = JsonRandomizedIntStateProvider
+type JsonBlockStateProviderRandomBlock = JsonRandomBlockStateProvider
+type JsonBlockStateProviderRandomizedInt = JsonRandomizedIntStateProvider
 type JsonBlockStateProviderRotated = JsonRotatedStateProvider
 type JsonBlockStateProviderRuleBased = JsonRuleBasedBlockStateProvider
 type JsonBlockStateProviderSimple = JsonSimpleStateProvider
@@ -167,4 +170,6 @@ export type JsonSymbolBlockStateProvider<CASE extends
   ? JsonBlockStateProviderDispatcherMap
   : CASE extends 'keys'
     ? JsonBlockStateProviderKeys
-    : CASE extends '%fallback' ? JsonBlockStateProviderFallback : never
+    : CASE extends '%fallback'
+      ? JsonBlockStateProviderFallback
+      : CASE extends '%none' ? JsonBlockStateProviderNoneType : never

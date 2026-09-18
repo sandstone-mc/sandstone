@@ -53,7 +53,9 @@ export type BinaryProvider = {
 export type ContextFloatProvider = (NBTFloat | ({
   [S in Extract<Extract<Registry['minecraft:context_float_provider_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof SymbolContextFloatProvider ? SymbolContextFloatProvider[S] : RootNBT))
+  } & (S extends undefined
+    ? SymbolContextFloatProvider<'%none'> :
+    (S extends keyof SymbolContextFloatProvider ? SymbolContextFloatProvider[S] : RootNBT)))
 }[Extract<Registry['minecraft:context_float_provider_type'], string>]))
 
 export type EnchantmentLevelProvider = {
@@ -155,6 +157,7 @@ type ContextFloatProviderFallback = (
   | ContextFloatProviderTruncate
   | ContextFloatProviderUniform
   | ContextFloatProviderWeightedList)
+type ContextFloatProviderNoneType = never
 type ContextFloatProviderAbs = SingleProvider
 type ContextFloatProviderAdd = AggregateProvider
 type ContextFloatProviderAvg = AggregateProvider
@@ -226,4 +229,8 @@ export type SymbolContextFloatProvider<CASE extends
   | '%none'
   | '%unknown' = 'map'> = CASE extends 'map'
   ? ContextFloatProviderDispatcherMap
-  : CASE extends 'keys' ? ContextFloatProviderKeys : CASE extends '%fallback' ? ContextFloatProviderFallback : never
+  : CASE extends 'keys'
+    ? ContextFloatProviderKeys
+    : CASE extends '%fallback'
+      ? ContextFloatProviderFallback
+      : CASE extends '%none' ? ContextFloatProviderNoneType : never

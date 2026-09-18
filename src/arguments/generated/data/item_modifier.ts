@@ -8,3 +8,5 @@ export type ItemModifier = (
   NamespacedString | `#${string}:${string}` | TagClass<'item_modifier'> | ItemModifierClass))
 
 export type ItemModifierRoot = LootFunction
+
+export type ItemModifierWithoutRootRef = (LootFunction | Array<ItemModifierWithoutRootRef>)

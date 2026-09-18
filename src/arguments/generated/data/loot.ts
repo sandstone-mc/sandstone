@@ -5,7 +5,6 @@ import type {
 } from 'sandstone/arguments/generated/data/number_provider.ts'
 import type { PredicateRef } from 'sandstone/arguments/generated/data/predicate.ts'
 import type { SlotSource } from 'sandstone/arguments/generated/data/slot_source.ts'
-import type { MinMaxBounds } from 'sandstone/arguments/generated/data/util.ts'
 import type { Registry } from 'sandstone/arguments/generated/registry.ts'
 import type { ItemListRef } from 'sandstone/arguments/generated/util/registry_ref.ts'
 import type { RootNBT } from 'sandstone/arguments/nbt.ts'
@@ -47,9 +46,15 @@ export type EntityTarget = (
   | 'target_entity'
   | 'interacting_entity')
 
-export type FloatRange = MinMaxBounds<FloatNumberProviderRef>
+export type FloatRange = (FloatNumberProviderRef | {
+  min?: FloatNumberProviderRef,
+  max?: FloatNumberProviderRef,
+})
 
-export type IntRange = MinMaxBounds<IntNumberProviderRef>
+export type IntRange = (IntNumberProviderRef | {
+  min?: IntNumberProviderRef,
+  max?: IntNumberProviderRef,
+})
 
 export type ItemPoolEntry = ({
   name: Registry['minecraft:item'],

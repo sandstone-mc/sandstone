@@ -53,7 +53,9 @@ export type JsonBinaryProvider = {
 export type JsonContextFloatProvider = ((NBTFloat | number) | ({
   [S in Extract<Extract<JsonRegistry['minecraft:context_float_provider_type'], string>, string>]?: ({
     type: S,
-  } & (S extends keyof JsonSymbolContextFloatProvider ? JsonSymbolContextFloatProvider[S] : JsonRootNBT))
+  } & (S extends undefined
+    ? JsonSymbolContextFloatProvider<'%none'> :
+    (S extends keyof JsonSymbolContextFloatProvider ? JsonSymbolContextFloatProvider[S] : JsonRootNBT)))
 }[Extract<JsonRegistry['minecraft:context_float_provider_type'], string>]))
 
 export type JsonEnchantmentLevelProvider = {
@@ -155,6 +157,7 @@ type JsonContextFloatProviderFallback = (
   | JsonContextFloatProviderTruncate
   | JsonContextFloatProviderUniform
   | JsonContextFloatProviderWeightedList)
+type JsonContextFloatProviderNoneType = never
 type JsonContextFloatProviderAbs = JsonSingleProvider
 type JsonContextFloatProviderAdd = JsonAggregateProvider
 type JsonContextFloatProviderAvg = JsonAggregateProvider
@@ -228,4 +231,6 @@ export type JsonSymbolContextFloatProvider<CASE extends
   ? JsonContextFloatProviderDispatcherMap
   : CASE extends 'keys'
     ? JsonContextFloatProviderKeys
-    : CASE extends '%fallback' ? JsonContextFloatProviderFallback : never
+    : CASE extends '%fallback'
+      ? JsonContextFloatProviderFallback
+      : CASE extends '%none' ? JsonContextFloatProviderNoneType : never
