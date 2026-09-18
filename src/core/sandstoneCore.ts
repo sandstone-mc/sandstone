@@ -13,13 +13,16 @@ import { MCMetaCache } from './mcmeta'
 import type { AwaitNode } from './nodes'
 import type { WithClass } from '../flow/macro'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
-import type { TagClass } from './resources/datapack/tag'
+import type { TagClass, TagValuesJSON } from './resources/datapack/tag'
 import { SmithedDependencyClass } from './resources/dependency'
 import type { SoundsIndexClass } from './resources/resourcepack/sound'
 import { BinaryResource, JsonResource, type ResourceClass, ResourceNodesMap, TextResource } from './resources/resource'
 import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
-import { SleepClass } from 'sandstone/flow/async/sleep'
+import { REGISTRIES, RESOURCE_PATHS, TextureType } from 'sandstone/arguments'
+import { Set, SetType } from '../utils'
+import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
+import { TextureMeta } from './resources';
 
 /**
  * After `getExistingResource` resolves a resource's bytes, thread them back
@@ -60,6 +63,14 @@ function assignToResource(resource: ResourceClass, value: ArrayBuffer | Buffer |
     ;(resource as unknown as Record<string, unknown>)[jsonField] = JSON.parse(value)
   }
 }
+
+export const BinaryResourceTypesSet = new Set(['font/otf', 'font/ttf', 'font/unihex', 'sound', 'structure', 'texture'] as const)
+
+export type BinaryResourceTypes = SetType<typeof BinaryResourceTypesSet>
+
+export type JsonResourceTypes = Exclude<({
+  [K in keyof typeof RESOURCE_PATHS]: typeof RESOURCE_PATHS[K]['ext'] extends '.json' ? K : never
+}[keyof typeof RESOURCE_PATHS]), 'tag'>
 
 export class SandstoneCore {
   /**
@@ -287,18 +298,40 @@ export class SandstoneCore {
     return value
   }
 
-  async getVanillaResource(relativePath: string): Promise<string>
+  getVanillaResource<Resource extends JsonResourceTypes>(resourceType: Resource, path: string): Promise<JsonSymbolResource[Resource]>
 
-  async getVanillaResource(relativePath: string, text: true, type: 'client' | 'server'): Promise<string>
+  getVanillaResource<Registry extends REGISTRIES>(resourceType: `tag/${Registry}`, path: string): Promise<TagValuesJSON<Registry>>
 
-  async getVanillaResource(relativePath: string, text: false, type: 'client' | 'server'): Promise<ArrayBuffer | Buffer>
+  getVanillaResource<Type extends TextureType>(resourceType: 'texture_meta', path: `${Type}/${string}`): Promise<TextureMeta<Type>>
 
-  async getVanillaResource(
-    relativePath: string,
-    text = true,
-    type: 'client' | 'server' = 'server',
-  ): Promise<string | ArrayBuffer | Buffer> {
-    return this.mcMetaCache.get(type === 'server' ? 'data' : 'assets', relativePath, text as true)
+  getVanillaResource(resourceType: Exclude<keyof typeof RESOURCE_PATHS, (BinaryResourceTypes | JsonResourceTypes | 'tag' | 'texture_meta')>, path: string): Promise<string>
+
+  getVanillaResource(resourceType: BinaryResourceTypes, path: string): Promise<ArrayBuffer | Buffer>
+
+  getVanillaResource(resourceType: string, path: string): Promise<unknown | string | ArrayBuffer | Buffer> {
+    if (resourceType in RESOURCE_PATHS) {
+      const data = RESOURCE_PATHS[resourceType as keyof typeof RESOURCE_PATHS]
+      const raw = this.mcMetaCache.get(
+        data.pack,
+        [data.pack, 'minecraft', ...data.path, `${path}${data.ext}`].join('/'),
+        !BinaryResourceTypesSet.has(resourceType) as true,
+      )
+      if (data.ext === '.json' || data.ext === '.png.mcmeta') {
+        return new Promise(async (res) => {
+          res(JSON.parse(await raw) as never)
+        })
+      }
+      return raw as never
+    }
+    const registry = resourceType.slice(4)
+    const raw = this.mcMetaCache.get(
+      'data',
+      ['data', 'minecraft', 'tags', registry, `${path}.json`].join('/'),
+      true,
+    )
+    return new Promise(async (res) => {
+      res(JSON.parse(await raw))
+    })
   }
 
   get smithed() {

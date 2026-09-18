@@ -39,6 +39,8 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
 
   buffer: Promise<ArrayBuffer | Buffer> | ArrayBuffer | Buffer = {} as unknown as ArrayBuffer
 
+  fullId: SOUNDS
+
   constructor(
     core: SandstoneCore,
     public type: Type,
@@ -54,6 +56,8 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
       args,
     )
 
+    this.fullId = `${this.type}.${name}` as SOUNDS
+
     if (args.addToSandstoneCore) {
       if (args.sound === undefined) {
         this.buffer = core.getExistingResource(this)
@@ -66,30 +70,34 @@ export class SoundEventClass<Type extends SOUND_TYPES = SOUND_TYPES> extends Res
       }
 
       if (args.addToSounds) {
-        let def = this.core.sounds.get(this.path[0])
-
-        if (!def) {
-          def = this.core.sounds
-            .set(
-              this.path[0],
-              new SoundsIndexClass(this.core, this.path[0], {
-                addToSandstoneCore: true,
-                creator: 'sandstone',
-                definitions: {
-                  [`${this.type}.${name}` as SOUNDS]: {
-                    sounds: [`${this.type}.${name}` as SOUNDS],
-                  }
-                }
-              }),
-            )
-            .get(this.path[0])
-        } else {
-          def!.push(this)
-        }
+        this.pushIntoSoundsIndex()
       }
     }
 
     this.handleConflicts()
+  }
+
+  protected pushIntoSoundsIndex() {
+    let def = this.core.sounds.get(this.path[0])
+
+    if (!def) {
+      def = this.core.sounds
+        .set(
+          this.path[0],
+          new SoundsIndexClass(this.core, this.path[0], {
+            addToSandstoneCore: true,
+            creator: 'sandstone',
+            definitions: {
+              [this.fullId]: {
+                sounds: [this.fullId],
+              }
+            }
+          }),
+        )
+        .get(this.path[0])
+    } else {
+      def!.push(this)
+    }
   }
 
   // TODO: Add sound event methods; play, stop, etc.
@@ -145,44 +153,29 @@ export class SoundsIndexClass extends ResourceClass<SoundsIndexNode> implements 
   }
 
   async push(...soundEvents: SoundsIndexClass[] | SoundEventClass<SOUND_TYPES>[]) {
-    if (soundEvents[0] instanceof SoundsIndexClass) {
-      for await (const _sounds of soundEvents) {
-        const def = await (_sounds as SoundsIndexClass).json
-        const s = await this.json
-
-        // TODO: Implement sound event merging
-        this.json = { ...s, ...def }
-      }
-    } else {
-      for await (const _sound of soundEvents) {
-        const sound = _sound as SoundEventClass<SOUND_TYPES>
-        const s = await this.json
-
-        // TODO: Implement sound event options
-        s[`${sound.type}.${sound.name}`] = {
-          sounds: [`${sound.type}.${sound.name}`],
-        }
-      }
-    }
+    await SoundsIndexClass.mergeSounds(this, soundEvents, /* prepend */ false)
   }
 
   async unshift(...soundEvents: SoundsIndexClass[] | SoundEventClass<SOUND_TYPES>[]) {
-    if (soundEvents[0] instanceof SoundsIndexClass) {
-      for await (const _sounds of soundEvents) {
-        const def = await (_sounds as SoundsIndexClass).json
-        const s = await this.json
+    await SoundsIndexClass.mergeSounds(this, soundEvents, /* prepend */ true)
+  }
 
+  private static async mergeSounds(
+    target: SoundsIndexClass,
+    soundEvents: (SoundsIndexClass | SoundEventClass<SOUND_TYPES>)[],
+    prepend: boolean,
+  ) {
+    for (const event of soundEvents) {
+      if (event instanceof SoundsIndexClass) {
+        const def = await event.json
+        const s = await target.json
         // TODO: Implement sound event merging
-        this.json = { ...def, ...s }
-      }
-    } else {
-      for await (const _sound of soundEvents) {
-        const sound = _sound as SoundEventClass<SOUND_TYPES>
-        const s = await this.json
-
+        target.json = prepend ? { ...def, ...s } : { ...s, ...def }
+      } else {
+        const s = await target.json
         // TODO: Implement sound event options
-        s[`${sound.type}.${sound.name}`] = {
-          sounds: [`${sound.type}.${sound.name}`],
+        s[event.fullId] = {
+          sounds: [event.fullId],
         }
       }
     }

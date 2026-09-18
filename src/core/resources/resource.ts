@@ -256,7 +256,7 @@ export class ResourceNodesMap<T extends ResourceNode = ResourceNode> {
   }
 
   private getKey(value: T): string {
-    return `${value.resource.packType.constructor.name}|${value.resource.path.join('/')}`
+    return `${value.resource.packType.constructor.name}|${value.resource.path.join('/')}|${value.resource.fileExtension}`
   }
 
   add(value: T): this {

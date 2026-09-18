@@ -1,21 +1,18 @@
-import { RESOURCE_PATHS, type TEXTURE_TYPES } from 'sandstone/arguments'
-import type { LiteralUnion } from 'sandstone/utils'
+import { RESOURCE_PATHS, TextureType } from 'sandstone/arguments'
 import { ContainerNode } from '../../nodes'
 import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
-import { BinaryResource, ResourceClass } from '../resource'
+import { BinaryResource, JsonResource, ResourceClass, jsonStringify } from '../resource'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
-
-type TextureType = LiteralUnion<TEXTURE_TYPES>
 
 type TextureMetaAll = JsonSymbolResource['texture_meta']
 
 // TODO: Find which texture types actually support animations.
-type TextureMeta<Type extends TextureType> = (
+export type TextureMeta<Type extends TextureType> = (
   Type extends 'entity/villager' ? Omit<Omit<TextureMetaAll, 'texture'>, 'gui'> :
   Type extends 'colormap' ? Omit<Omit<TextureMetaAll, 'villager'>, 'gui'> :
   Type extends 'gui' ? Omit<Omit<TextureMetaAll, 'villager'>, 'texture'> :
-  Omit<Omit<Omit<TextureMetaAll, 'villager'>, 'texture'>, 'gui'>
+  Omit<TextureMetaAll, 'villager' | 'texture' | 'gui'>
 )
 
 /**
@@ -52,7 +49,27 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
 
   spriteTarget?: string
 
-  meta?: TextureMeta<Type>
+  protected metaResource?: TextureMetaClass<Type>
+  protected metaProxy?: TextureMeta<Type>
+  protected metaName?: string
+
+  get meta() {
+    if (this.metaProxy === undefined) {
+      this.metaProxy = this.createMetaProxy()
+    }
+    return this.metaProxy
+  }
+
+  set meta(value: TextureMeta<Type> | undefined) {
+    if (value === undefined) {
+      if (this.metaResource === undefined) return
+      this.core.resourceNodes.delete(this.metaResource.node)
+      this.metaResource = undefined
+      return
+    }
+    this.ensureMetaResource()
+    this.metaResource!.json = value
+  }
 
   buffer: NonNullable<TextureArguments<Type>['texture']>
 
@@ -67,18 +84,50 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
     )
 
     this.type = type
+    this.metaName = name
 
     this.buffer = args.texture ?? {} as unknown as ArrayBuffer
 
     this.isSprite = args.sprite === undefined ? false : args.sprite !== false
 
-    this.meta = args.meta
-
     if (typeof args.sprite === 'string') {
       this.spriteTarget = args.sprite
     }
 
+    if (args.meta !== undefined) {
+      this.ensureMetaResource()
+      this.metaResource!.json = args.meta
+    }
+
     this.handleConflicts()
+  }
+
+  protected createMetaProxy() {
+    return new Proxy({} as TextureMeta<Type>, {
+      get: (_target, prop) => {
+        if (this.metaResource === undefined) {
+          return undefined
+        }
+        return Reflect.get(this.metaResource.json as object, prop)
+      },
+      set: (_target, prop, value) => {
+        this.ensureMetaResource()
+        return Reflect.set(this.metaResource!.json as object, prop, value)
+      },
+    })
+  }
+
+  protected ensureMetaResource() {
+    if (this.metaResource) return
+    this.metaResource = new TextureMetaClass<Type>(
+      this.core,
+      this.type,
+      this.metaName!,
+      {
+        creator: 'sandstone',
+        addToSandstoneCore: true,
+      },
+    )
   }
 
   toString() {
@@ -88,5 +137,44 @@ export class TextureClass<Type extends TextureType> extends ResourceClass<Textur
   // TODO
   videoToAnimation(_path: string) {
     console.log('[TextureClass#videoToAnimation] Unimplemented')
+  }
+}
+
+/**
+ * A node representing a texture's `.png.mcmeta` file.
+ * @internal — created lazily by `TextureClass.meta`; no public factory in `SandstonePack`.
+ */
+export class TextureMetaNode<Type extends TextureType> extends ContainerNode implements ResourceNode<TextureMetaClass<Type>> {
+  constructor(
+    sandstoneCore: SandstoneCore,
+    public resource: TextureMetaClass<Type>,
+  ) {
+    super(sandstoneCore)
+  }
+
+  getValue = () => jsonStringify(this.resource.json, 'texture_meta')
+}
+
+export class TextureMetaClass<Type extends TextureType> extends ResourceClass<TextureMetaNode<Type>> implements JsonResource {
+  static readonly resourceType = 'texture_meta'
+
+  json: TextureMeta<Type> = {} as TextureMeta<Type>
+
+  constructor(
+    sandstoneCore: SandstoneCore,
+    type: TextureType,
+    name: string,
+    args: ResourceClassArguments<'default'>,
+  ) {
+    super(
+      sandstoneCore,
+      { packType: sandstoneCore.pack.resourcePack(), extension: 'png.mcmeta', encoding: 'utf8' },
+      TextureMetaNode,
+      TextureMetaClass.resourceType,
+      sandstoneCore.pack.resourceToPath(name, [...RESOURCE_PATHS[TextureMetaClass.resourceType].path, type]),
+      args,
+    )
+
+    this.handleConflicts()
   }
 }
