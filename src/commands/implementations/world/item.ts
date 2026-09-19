@@ -7,7 +7,7 @@ import type {
 } from 'sandstone/arguments'
 import type { ItemModifierClass, Macroable, SlotSourceClass } from 'sandstone/core'
 import { CommandNode } from 'sandstone/core/nodes'
-import type { LiteralUnion, MemberModifiers, NamespacedString, NonEmptyString } from 'sandstone/utils'
+import type { MemberModifiers, NamespacedString, NonEmptyString } from 'sandstone/utils'
 import { coordinatesParser, targetParser } from 'sandstone/variables/parsers'
 import type { FinalCommandOutput } from '../../helpers'
 import { CommandArguments } from '../../helpers'
@@ -107,25 +107,25 @@ export class ItemCommand<MACRO extends boolean> extends CommandArguments {
   modify = {
     /**
      * @param pos Container block coordinates.
-     * @param slot Container slot identifier.
+     * @param slotSource The slot source of which items to modify.
      * @param modifier Item modifier to apply.
      */
     block: (
       pos: Macroable<Coordinates<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<ContainerSlotSelector>, MACRO>,
+      slotSource: Macroable<ItemSlotSource, MACRO>,
       modifier: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
-    ) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slot, modifier]),
+    ) => this.finalCommand(['modify', 'block', coordinatesParser(pos), slotSource, modifier]),
 
     /**
      * @param targets Entity selector for targets.
-     * @param slot Entity slot identifier.
+     * @param slotSource The slot source of which items to modify.
      * @param modifier Item modifier to apply.
      */
     entity: (
       targets: Macroable<MultipleEntitiesArgument<MACRO>, MACRO>,
-      slot: Macroable<LiteralUnion<EntitySlotSelector>, MACRO>,
+      slotSource: Macroable<ItemSlotSource, MACRO>,
       modifier: Macroable<NonEmptyString | ItemModifierClass, MACRO>,
-    ) => this.finalCommand(['modify', 'entity', targetParser(targets), slot, modifier]),
+    ) => this.finalCommand(['modify', 'entity', targetParser(targets), slotSource, modifier]),
   }
 
   /**

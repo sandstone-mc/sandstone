@@ -15,13 +15,13 @@ import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './res
 import type { TagClass, TagValuesJSON } from './resources/datapack/tag'
 import { SmithedDependencyClass } from './resources/dependency'
 import type { SoundsIndexClass } from './resources/resourcepack/sound'
+import type { TextureMeta } from './resources/resourcepack/texture'
 import { BinaryResource, JsonResource, type ResourceClass, ResourceNodesMap, TextResource } from './resources/resource'
 import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
 import { REGISTRIES, RESOURCE_PATHS, TextureType } from 'sandstone/arguments'
 import { Set, SetType } from '../utils'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
-import { TextureMeta } from './resources';
 
 /**
  * After `getExistingResource` resolves a resource's bytes, thread them back
