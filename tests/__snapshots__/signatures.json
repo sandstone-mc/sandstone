@@ -775,7 +775,7 @@
     "definition": "src/pack/pack.ts"
   },
   "getVanillaResource": {
-    "signature": "(alias) const getVanillaResource: {\n    <Resource extends JsonResourceTypes>(resourceType: Resource, path: string): Promise<JsonSymbolResource[Resource]>;\n    <Registry extends REGISTRIES>(resourceType: `tag/${Registry}`, path: string): Promise<TagValuesJSON<Registry>>;\n    <Type extends TextureType>(resourceType: 'texture_meta', path: `${Type}/${string}`): Promise<TextureMeta<Type>>;\n    (resourceType: Exclude<keyof RESOURCE_PATHS, (BinaryResourceTypes | JsonResourceTypes | 'tag' | 'texture_meta')>, path: string): Promise<string>;\n    (resourceType: BinaryResourceTypes, path: string): Promise<ArrayBuffer | Buffer>;\n}",
+    "signature": "(alias) const getVanillaResource: {\n    <Resource extends JsonResourceTypes>(resourceType: Resource, path: string): Promise<JsonSymbolResource[Resource]>;\n    <Registry extends REGISTRIES>(resourceType: `tag/${Registry}`, path: string): Promise<TagValuesJSON<Registry>>;\n    <Type extends TextureType>(resourceType: 'texture_meta', path: `${Type}/${string}`): Promise<TextureMeta<Type>>;\n    (resourceType: 'sounds'): Promise<JsonSymbolResource['sounds']>;\n    (resourceType: Exclude<keyof RESOURCE_PATHS, (BinaryResourceTypes | JsonResourceTypes | 'tag' | 'texture_meta' | 'sounds')>, path: string): Promise<string>;\n    (resourceType: BinaryResourceTypes, path: string): Promise<ArrayBuffer | Buffer>;\n}",
     "definition": "src/sandstone.ts"
   },
   "give": {

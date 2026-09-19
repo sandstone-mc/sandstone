@@ -8,7 +8,6 @@ import { isBinaryFileSync } from 'isbinaryfile'
 import binaryExtensions from 'binary-extensions'
 import { getSandstoneContext } from 'sandstone/context'
 import type { SandstonePack } from 'sandstone/pack'
-import type { MCMetaBranches } from './mcmeta'
 import { MCMetaCache } from './mcmeta'
 import type { AwaitNode } from './nodes'
 import type { WithClass } from '../flow/macro'
@@ -26,42 +25,40 @@ import { TextureMeta } from './resources';
 
 /**
  * After `getExistingResource` resolves a resource's bytes, thread them back
- * onto the resource itself so the caller can mutate and re-save without an
- * extra read step:
+ * onto the resource so the caller can mutate and re-save without an extra
+ * read step. Value shape matches the resource's sink:
  *
- * - `buffer` is written as binary (works for any resource that exposes a
- *   `buffer` field — `TextureClass`, `SoundEvent`, etc.).
- * - `texts` is written as a raw string (works for `PlainTextClass`, whose
- *   data lives in a `texts` field).
- * - Otherwise the value is parsed as JSON and assigned to the resource's
- *   `json` field, if it has one, else to the first public field ending in
- *   `JSON` (e.g. `lootTableJSON`, `advancementJSON`, `damageTypeJSON`,
- *   `soundsJSON`).
+ * - binary → `buffer` field (`TextureClass`, `SoundEvent`, `StructureClass`, …)
+ * - raw string → `texts` field (`PlainTextClass`)
+ * - parsed JSON → `json` field, or the first public `*JSON` field if `json`
+ *   isn't declared (`lootTableJSON`, `advancementJSON`, `damageTypeJSON`, …)
  *
- * Returns silently if the resource has no recognised sink — the caller can
- * still use the returned value directly.
+ * `value` may arrive pre-parsed from `getVanillaResource`; in that case the
+ * JSON parse is skipped. Returns silently if the value doesn't fit the sink
+ * — the caller can still use the returned value directly.
  */
-function assignToResource(resource: ResourceClass, value: ArrayBuffer | Buffer | string): void {
-  if ('buffer' in resource) {
-    ;(resource as unknown as { buffer: unknown }).buffer = value
-    return
-  }
-  if (typeof value !== 'string') return
+function assignToResource(resource: ResourceClass, value: ArrayBuffer | Buffer | string | object): void {
+  const target = resource as unknown as Record<string, unknown>
 
-  if ('texts' in resource) {
-    ;(resource as unknown as { texts: string }).texts = value
+  if ('buffer' in resource) {
+    if (value instanceof ArrayBuffer || Buffer.isBuffer(value)) target.buffer = value
     return
   }
+
+  if (typeof value === 'string' && 'texts' in resource) {
+    target.texts = value
+    return
+  }
+
+  const parsed = typeof value === 'string' ? JSON.parse(value) : value
 
   if ('json' in resource) {
-    ;(resource as unknown as { json: unknown }).json = JSON.parse(value)
+    target.json = parsed
     return
   }
 
   const jsonField = Object.keys(resource).find((k) => k.endsWith('JSON') && !k.startsWith('_'))
-  if (jsonField) {
-    ;(resource as unknown as Record<string, unknown>)[jsonField] = JSON.parse(value)
-  }
+  if (jsonField) target[jsonField] = parsed
 }
 
 export const BinaryResourceTypesSet = new Set(['font/otf', 'font/ttf', 'font/unihex', 'sound', 'structure', 'texture'] as const)
@@ -269,13 +266,10 @@ export class SandstoneCore {
       return pathOrResource.endsWith('.json') ? JSON.parse(text as string) : text
     }
     const _path = pathOrResource.path
-    if (_path[0] === 'minecraft') {
-      const type = pathOrResource.packType.resourceSubFolder as MCMetaBranches
-
-      const value = await this.mcMetaCache.get(
-        type,
-        `${type}/${_path.join('/')}${pathOrResource.fileExtension ? `.${pathOrResource.fileExtension}` : ''}`,
-        (encoding === 'utf-8') as true,
+    if (_path[0] === 'minecraft' && pathOrResource._resourceType in RESOURCE_PATHS) {
+      const value = await this.getVanillaResource(
+        pathOrResource._resourceType as any,
+        pathOrResource.name.slice(10),
       )
       assignToResource(pathOrResource, value)
       return value
@@ -304,11 +298,26 @@ export class SandstoneCore {
 
   getVanillaResource<Type extends TextureType>(resourceType: 'texture_meta', path: `${Type}/${string}`): Promise<TextureMeta<Type>>
 
-  getVanillaResource(resourceType: Exclude<keyof typeof RESOURCE_PATHS, (BinaryResourceTypes | JsonResourceTypes | 'tag' | 'texture_meta')>, path: string): Promise<string>
+  getVanillaResource(resourceType: 'sounds'): Promise<JsonSymbolResource['sounds']>
+
+  getVanillaResource(resourceType: Exclude<keyof typeof RESOURCE_PATHS, (BinaryResourceTypes | JsonResourceTypes | 'tag' | 'texture_meta' | 'sounds')>, path: string): Promise<string>
 
   getVanillaResource(resourceType: BinaryResourceTypes, path: string): Promise<ArrayBuffer | Buffer>
 
-  getVanillaResource(resourceType: string, path: string): Promise<unknown | string | ArrayBuffer | Buffer> {
+  getVanillaResource(resourceType: string, path?: string): Promise<unknown | string | ArrayBuffer | Buffer> {
+    if (path === undefined) {
+      if (resourceType === 'sounds') {
+        const raw = this.mcMetaCache.get(
+          'assets',
+          ['assets', 'minecraft', `sounds.json`].join('/'),
+          true,
+        )
+        return new Promise(async (res) => {
+          res(JSON.parse(await raw))
+        })
+      }
+      throw new Error('[SandstoneCore#getVanillaResource] How did you get here?')
+    }
     if (resourceType in RESOURCE_PATHS) {
       const data = RESOURCE_PATHS[resourceType as keyof typeof RESOURCE_PATHS]
       const raw = this.mcMetaCache.get(
