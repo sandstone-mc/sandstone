@@ -582,6 +582,7 @@ export const REGISTRIES_SET = new Set([
   'worldgen/tree_decorator_type',
   'worldgen/trunk_placer_type',
   'worldgen/biome',
+  'worldgen/block_state_provider',
   'worldgen/carver',
   'worldgen/configured_carver',
   'worldgen/configured_feature',

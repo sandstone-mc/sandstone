@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.30](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.30) - 2026-09-19
+
+### Improve design & usage of `getVanillaResource`, implement textura meta files, fix a bug
+
+**Full Changelog**: [v1.2.29...v1.2.30](https://github.com/sandstone-mc/sandstone/compare/v1.2.29...v1.2.30)
+
+
 ## [v1.2.29](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.29) - 2026-09-06
 
 ### Add `_.if(cond).return`, fix bugs
