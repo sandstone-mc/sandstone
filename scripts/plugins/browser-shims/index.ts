@@ -15,6 +15,7 @@ export const shimMap: Record<string, string> = {
   'node:path': join(shimsDir, 'node-path.ts'),
   util: join(shimsDir, 'util.ts'),
   'fs-extra': join(shimsDir, 'fs-extra.ts'),
+  'fs/promises': join(shimsDir, 'fs-promises.ts'),
   'adm-zip': join(shimsDir, 'adm-zip.ts'),
   'prismarine-nbt': join(shimsDir, 'prismarine-nbt.ts'),
   path: join(shimsDir, 'path.ts'),
