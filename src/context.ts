@@ -1,3 +1,4 @@
+import type { SandstoneConfig } from './config.js'
 import type { BASIC_CONFLICT_STRATEGIES, LiteralUnion } from './utils'
 
 /**
@@ -26,23 +27,12 @@ export interface SandstoneContext {
   packUid: string
 
   /**
-   * Pack format configurations for datapack and resourcepack.
+   * Pack format configurations for datapack and resourcepack. Same shape
+   * as `SandstoneConfig['packs']` so a config loaded from
+   * `sandstone.config.ts` can be threaded straight into the context
+   * without re-mapping field names.
    */
-  packOptions: {
-    datapack?: {
-      packFormat: number
-      description: any
-      features?: string[]
-      filter?: { namespace?: string; path?: string }[]
-      supported_formats?: number | number[] | { min_inclusive: number; max_inclusive: number }
-    }
-    resourcepack?: {
-      packFormat: number
-      description: any
-      filter?: { namespace?: string; path?: string }[]
-      supported_formats?: number | number[] | { min_inclusive: number; max_inclusive: number }
-    }
-  }
+  packOptions: SandstoneConfig['packs']
 
   /**
    * Conflict resolution strategies per resource type.

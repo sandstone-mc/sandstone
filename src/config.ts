@@ -272,10 +272,10 @@ export type ResourcePackConfig = {
   }
 }
 
-type PackConfigs<PackType extends LiteralUnion<'datapack' | 'resourcepack'>> = Record<
-  PackType,
-  PackType extends 'datapack' ? DatapackConfig : PackType extends 'resourcepack' ? ResourcePackConfig : unknown
->
+type PackConfigs<PackType extends LiteralUnion<'datapack' | 'resourcepack'>> = {
+  datapack?: DatapackConfig
+  resourcepack?: ResourcePackConfig
+} & Record<Exclude<PackType, 'datapack' | 'resourcepack'>, DatapackConfig | ResourcePackConfig>
 
 export type ContentStrategyKind<Resource extends string, Conflict extends string> = {
   resource: Resource
@@ -345,7 +345,7 @@ export interface SandstoneConfig {
    */
   name: string
 
-  packs: PackConfigs<LiteralUnion<'datapack'>>
+  packs: PackConfigs<LiteralUnion<'datapack' | 'resourcepack'>>
 
   /**
    * The strategy to use when 2 resources of the same type (Advancement, MCFunctions...) have the same name.

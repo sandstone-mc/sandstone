@@ -15,6 +15,7 @@ import type {
 import type { StoreType } from 'sandstone/commands'
 import { SandstoneCommands } from 'sandstone/commands'
 import { getSandstoneContext, hasContext } from 'sandstone/context'
+import type { DatapackConfig, ResourcePackConfig } from 'sandstone/config'
 import type {
   _RawMCFunctionClass,
   // eslint-disable-next-line max-len
@@ -209,14 +210,7 @@ export class DataPack extends PackType {
 
   constructor(
     archiveOutput: boolean,
-    options: {
-      description: JSONTextComponent
-      packFormat?: number
-      minFormat?: number | [number] | [number, number]
-      maxFormat?: number | [number] | [number, number]
-      features?: string[]
-      filter?: { namespace?: string; path?: string }[]
-    },
+    options: DatapackConfig,
   ) {
     super(
       'datapack',
@@ -241,7 +235,9 @@ export class DataPack extends PackType {
       this.packMcmeta.features = { enabled: options.features }
     }
     if (options.filter) {
-      this.packMcmeta.filter = { block: options.filter }
+      // Config uses `{ filter: { block: [...] } }`; mcmeta stores the
+      // block array directly under `filter`.
+      this.packMcmeta.filter = { block: options.filter.block }
     }
   }
 
@@ -260,14 +256,7 @@ export class ResourcePack extends PackType {
   // TODO: typing. low priority
   readonly packMcmeta: any
 
-  constructor(options: {
-    description: JSONTextComponent
-    packFormat?: number
-    minFormat?: number | [number] | [number, number]
-    maxFormat?: number | [number] | [number, number]
-    features?: string[]
-    filter?: { namespace?: string; path?: string }[]
-  }) {
+  constructor(options: ResourcePackConfig) {
     super(
       'resourcepack',
       'saves/$worldName$/resources',
@@ -288,7 +277,7 @@ export class ResourcePack extends PackType {
     }
 
     if (options.filter) {
-      this.packMcmeta.filter = { block: options.filter }
+      this.packMcmeta.filter = { block: options.filter.block }
     }
   }
 
