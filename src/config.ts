@@ -168,6 +168,7 @@ export type AfterAllLocal = BeforeSaveLocal & {
     destPath: string,
     packType: PackType,
     archivedOutput: boolean,
+    target: 'client' | 'server',
   ) => Promise<void>
   getExportPath: (local: AfterAllLocal, packType: PackType, target: 'client' | 'server') => string
   runExportHandler: (
