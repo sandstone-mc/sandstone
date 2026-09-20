@@ -113,9 +113,18 @@ export class WithClass extends ContainerCommandNode {
 
     // Capture user commands inside the callback into this.body.
     if (callback) {
+      for (const [i, envVar] of envArray.entries()) {
+        envVar.local.set(baseName, `env_${i}`)
+      }
+      const prevCurrentNode = core.currentNode
+      core.currentNode = baseName
+
       currentFunction.enterContext(this)
       callback()
       currentFunction.exitContext()
+
+      core.currentNode = prevCurrentNode
+
       this.finalize()
     }
   }
