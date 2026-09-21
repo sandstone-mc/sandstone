@@ -16,6 +16,7 @@ import type { SandstoneCommands } from 'sandstone/commands'
 import type {
   ConditionClass,
   DataPointClass,
+  ItemPredicateItem,
   IterableDataClass,
   JSONTextComponentClass,
   StringDataPointClass,
@@ -27,7 +28,6 @@ import type { NamespacedLiteralUnion, NamespacedString, NonEmptyString, RemoveFi
 import { makeCallable } from 'sandstone/utils'
 import { AttachClass, SleepClass, UntilClass } from './async'
 import { AndNode, ConditionNode, NotNode, OrNode, SandstoneConditions, type BlockConditionNode, type ItemsBlockConditionNode, type ItemsEntityConditionNode, type SlotsBlockConditionNode, type SlotsEntityConditionNode } from './conditions'
-import type { ItemPredicate } from './conditions/variables/items'
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
 import { ForIStatement, ForOfStatement, WhileStatement } from './loops'
@@ -586,7 +586,7 @@ export class Flow {
      * @param slotSource Slot source to test (e.g., `'container.*'`, inline slot source, or a slot source reference).
      * @param itemPredicate Item predicate to match against.
      */
-    block: (sourcePos: Coordinates, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) => ItemsBlockConditionNode
+    block: (sourcePos: Coordinates, slotSource: ItemSlotSource, itemPredicate: ItemPredicateItem) => ItemsBlockConditionNode
     /**
      * Test for items in an entity's inventory slots.
      *
@@ -594,12 +594,12 @@ export class Flow {
      * @param slotSource Slot source to test (e.g., `'inventory.*'`, inline slot source, or a slot source reference).
      * @param itemPredicate Item predicate to match against.
      */
-    entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) => ItemsEntityConditionNode
+    entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource, itemPredicate: ItemPredicateItem) => ItemsEntityConditionNode
   } {
     return {
-      block: (sourcePos: Coordinates, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) =>
+      block: (sourcePos: Coordinates, slotSource: ItemSlotSource, itemPredicate: ItemPredicateItem) =>
         new SandstoneConditions.ItemsBlock(this.sandstoneCore, sourcePos, slotSource, itemPredicate),
-      entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource, itemPredicate: ItemPredicate) =>
+      entity: (source: MultipleEntitiesArgument, slotSource: ItemSlotSource, itemPredicate: ItemPredicateItem) =>
         new SandstoneConditions.ItemsEntity(this.sandstoneCore, source, slotSource, itemPredicate),
     }
   }
