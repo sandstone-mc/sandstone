@@ -2,6 +2,13 @@
 
 All notable changes to Sandstone are documented in this file.
 
+## [v1.2.36](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.36) - 2026-09-21
+
+### Fix a few bugs
+
+**Full Changelog**: [v1.2.35...v1.2.36](https://github.com/sandstone-mc/sandstone/compare/v1.2.35...v1.2.36)
+
+
 ## [v1.2.35](https://github.com/sandstone-mc/sandstone/releases/tag/v1.2.35) - 2026-09-21
 
 ### Remove leftover debug logging
