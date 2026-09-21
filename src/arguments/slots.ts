@@ -165,6 +165,7 @@ type VILLAGER_SLOT =
 export type ENTITY_SLOTS =
   | CONTAINER_SLOTS
   | ARMOR_SLOTS
+  | 'saddle'
   | WEAPON_SLOTS
   | PLAYER_SLOTS
   | 'contents'
