@@ -15,6 +15,57 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Note**: The build scripts auto-retry on "Excessive complexity" TypeScript errors caused by stale types. If you see this error followed by "cleaning and retrying..." and the build succeeds, ignore it.
 
+## Design Principles for State, Scope, and Naming
+
+These are patterns that have come up in real bugfixes. Read these before designing new state, flags, helpers, or wrapping logic — most "this state needs save/restore" / "this needs a helper method" / "this needs a defensive check for case X" designs collapse into something simpler if you apply these.
+
+### Scope is the call stack. State rarely needs save/restore.
+
+If you're tempted to capture a value at the top of a function and restore it in `finally`, ask: **is this a chain scope or a persistence problem?**
+
+- **Chain scope** — "anyone in this nested call chain should see this value, but it shouldn't leak past the outermost call." Solution: increment a depth counter at entry, decrement at exit. The depth counter IS the scope; no save/restore needed.
+- **Persistence problem** — "this value should persist across calls until explicitly cleared." Save/restore is wrong here too — use a dedicated store with explicit `set`/`clear`.
+
+The wrong move is treating a chain scope as a persistence problem: adding `prev = X; try { ... } finally { X = prev }` everywhere. It works but it's ceremony — the depth counter already gives you the lifetime. See the `commandSerializationDepth` + `macroAlreadyUsed` pattern in [`getValue()` macro check semantics](#getvalue-macro-check-semantics-commandserializationdepth--macroalreadyused).
+
+**The signal that you've gotten it wrong:** you find yourself writing `prev = X` at the top and `X = prev` at the bottom of multiple functions in the same chain. There's probably a single depth counter that does the same job with no save/restore.
+
+### Reset belongs at the entry point, not in a central coordinator.
+
+When a piece of state needs to be "fresh" for each top-level invocation, put the reset at the entry of the thing being entered — not at a coordinator that "manages" it. Examples:
+
+- Each `getValue` resets its own chain state when `depth === 0`. No central "I'm starting a serialization" hook.
+- Each `MCFunctionClass.__call__` registers its own env vars when invoked. No "I'm starting a build, prep all the envs" pass.
+- Each `MCFunction` thunk runs its own callback when called. No "I'm starting a pack, invoke all thunks" pass.
+
+**The signal that you've gotten it wrong:** you have a setter somewhere and a separate resetter somewhere else, and they have to agree on timing. Or worse, a coordinator function that calls them in the right order. Push the reset into the entry point of the thing that owns the lifetime.
+
+### Name state after the trigger event, not the resulting condition.
+
+Compare:
+- `inheritedFromMacroContext` — describes a state ("we're inside a macro context")
+- `macroAlreadyUsed` — describes an event ("a macro was seen during this serialization chain")
+
+The event name maps directly to the question the check asks: *"was a macro used?"* The condition name describes a derived property that has to be inferred from the event. Prefer event names.
+
+**The signal that you've gotten it wrong:** the name contains "is", "current", "active", "context", "in", "inside" — words that describe a condition. Ask whether you can rename to describe what CAUSED the condition instead.
+
+### Trust the call topology. Don't defend against hypothetical cases.
+
+When designing state scope, ask: *does this case actually happen?* If not, don't write code for it. Examples:
+
+- **Nested mcfunctions don't matter for per-chain state.** `save()` iterates `core.resourceNodes` and calls each `mcfunction.getValue()` independently — they don't nest. Don't write "what if mcfunction A's getValue calls mcfunction B's getValue?" defenses.
+- **A flag isn't sticky across mcfunctions because no one reads it after `mcfunction.getValue` returns.** Don't add save/restore at the mcfunction boundary.
+- **The `function <name> with storage <path>` dispatch doesn't trigger the target mcfunction's `getValue`.** It serializes to a literal string. Don't worry about dispatch chains.
+
+**The signal that you've gotten it wrong:** you're adding defensive code "just in case" or "for correctness" without a concrete failing case. Strip it.
+
+### Inline bookkeeping over extracted helpers for one-off wrapping.
+
+If you're wrapping a single method with try/finally, increment/decrement, or save/restore, **don't extract a helper**. Inline the bookkeeping. The reader needs to see the full control flow in one place — extracting `_doTheActualWork` makes the lifetime management harder to follow.
+
+**The signal that you've gotten it wrong:** the function is split into `getValue()` and `getValueImpl()` / `_getValue()` / `inner()`, with the outer doing the bookkeeping and the inner doing the work. Collapse them.
+
 ## Testing
 
 **You MUST build before running tests.** The test files import from
@@ -129,6 +180,8 @@ and verifies token-to-source resolution for the first top-level
 declaration in each file. Pass it `path:token1,token2` to narrow the
 sweep. Exit code 0 on success, 1 on any mismatch — suitable for pre-commit
 or CI.
+
+**REMINDER**: When a resolved type contains `import("sandstone").*` or any `import("…")` qualifier referring back to the package itself, that is ALWAYS a library builder bug. Never dismiss it as "just how the LSP formats things" or as expected behavior. Source-level types are unqualified (e.g. `Score`); the builder emits `import("./index.js").Score` or similar because of a self-import cycle or a bad path rewrite in `scripts/plugins/bundle-declarations.ts` / `fix-dts-imports.ts` / `migrate-dts-imports.ts`. Treat it as a blocker and fix the builder.
 
 ## Todo Directory
 
@@ -405,6 +458,10 @@ executeNode.getValue()  // => "execute as @a run say hello"
 ```
 
 The `getValue()` method is called during `core.save()` AFTER all visitors have transformed the AST. If a visitor fails to run, nodes may be in an invalid state for serialization.
+
+#### `getValue()` macro check semantics (`commandSerializationDepth` + `macroAlreadyUsed`)
+
+The reverse sanity check at `CommandNode.getValue` (`throw if !hasMacroArgs && this.isMacro`) needs to fire only when no enclosing command owns a `$(...)` — otherwise every inner command reached via `$.execute.as(...).run.foo()` would falsely report "no macro arg". Two `SandstoneCore` fields handle this: `commandSerializationDepth` (counter, incremented at each `getValue` entry, decremented before return) and `macroAlreadyUsed` (set true when the arg loop sees a macro arg; reset to false at depth===0 on entry). Both `CommandNode.getValue` and `ExecuteCommandNode.getValue` run the same increment/reset/decrement dance — execute extends `ContainerCommandNode`, not `CommandNode`, so it needs its own copy (see `src/core/nodes.ts` + `src/commands/implementations/entity/execute.ts`). Don't add a reset to `MCFunctionNode.getValue` — that's dead code, the depth counter on the entries already handles every chain's start.
 
 #### Container Command Transformation Flow
 
@@ -760,6 +817,7 @@ execute.as('@a').at('@s').run(() => _.with([volume], () => $.playsound(...)))
 
 The `WithNodeVisitor` (`src/pack/visitors/withTransformationVisitor.ts`) has two optimizations: hoist a single non-macro `execute` prefix onto the parent body (drop the wrapper), and hoist an extracted-execute's prefix off the wrapping mcfunction (move prep + WithClass into the grandparent).
 
+**Env registration must run before the callback.** A macro callback can resolve env vars eagerly (give's component branch, `data.modify.value`'s `nbtResolver`, `isMacroArgument` checks). Anything that runs `id.toMacro()` during the callback needs `id.local` populated for that scope — the lookup key is the child MCFunction's own name, not the host, because that's what `MCFunctionClass.__call__` keys by (see `src/flow/macro/with.ts`).
 
 ### Debugging Context Issues
 
@@ -1078,23 +1136,3 @@ Two things to know when working on this lib:
 2. **`textDocument/definition` is truncated** for symbols with 7+
    overloads (TS-server cap, not fixable from the client). The IDE shows
    the same `// +N more overloads` line — confirmed by the user in-editor.
-
-## TODOs
-
-### Library Builder: cross-module `import("sandstone")` in resolved types
-
-**REMINDER**: When a resolved type contains `import("sandstone").*` or any `import("…")` qualifier referring back to the package itself, that is ALWAYS a library builder bug. Never dismiss it as "just how the LSP formats things" or as expected behavior. Source-level types are unqualified (e.g. `Score`); the builder emits `import("./index.js").Score` or similar because of a self-import cycle or a bad path rewrite in `scripts/plugins/bundle-declarations.ts` / `fix-dts-imports.ts` / `migrate-dts-imports.ts`. Treat it as a blocker and fix the builder.
-
-### Build System: Subpath Bundle Duplication
-
-**REMINDER**: When you see this, remind the user about this issue so we can discuss whether to address it.
-
-Currently, each subpath entry (`sandstone/variables`, `sandstone/commands`, etc.) is built as a separate bundle with `splitting: false`. This causes classes like `Score`, `SelectorClass`, etc. to be duplicated across bundles (~10k lines each).
-
-**Problem**: If user code imports from both `sandstone` and `sandstone/variables`, they get different class instances, breaking `instanceof` checks.
-
-**Solution**: Have subpaths re-export from a common internal bundle instead of bundling separately. This would require either:
-1. Re-enabling `splitting: true` and fixing the Bun `__esm` lazy initialization issue that breaks class inheritance
-2. Creating an internal shared chunk that all subpaths import from
-3. Restructuring exports so subpaths don't duplicate definitions
-```
