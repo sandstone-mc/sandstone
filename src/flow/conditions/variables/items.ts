@@ -1,8 +1,11 @@
 import type { Coordinates, MultipleEntitiesArgument } from 'sandstone/arguments'
 import type { SandstoneCore } from 'sandstone/core/sandstoneCore'
-import { coordinatesParser, ItemPredicateItem, targetParser } from 'sandstone/variables'
+import { coordinatesParser, ItemPredicateClass, ItemPredicateItemType, targetParser } from 'sandstone/variables'
 import type { ItemSlotSource } from '../../../commands/implementations/world/item'
 import { SingleConditionNode } from '../condition'
+
+export type ItemPredicateArgument = ItemPredicateItemType | ItemPredicateClass
+
 /**
  * Condition node for testing items in a block entity's inventory slots.
  *
@@ -20,7 +23,7 @@ export class ItemsBlockConditionNode extends SingleConditionNode {
     sandstoneCore: SandstoneCore,
     private sourcePos: Coordinates,
     private slotSource: ItemSlotSource,
-    private itemPredicate: ItemPredicateItem,
+    private itemPredicate: ItemPredicateArgument,
   ) {
     super(sandstoneCore)
   }
@@ -44,7 +47,7 @@ export class ItemsEntityConditionNode extends SingleConditionNode {
     sandstoneCore: SandstoneCore,
     private source: MultipleEntitiesArgument,
     private slotSource: ItemSlotSource,
-    private itemPredicate: ItemPredicateItem,
+    private itemPredicate: ItemPredicateArgument,
   ) {
     super(sandstoneCore)
   }

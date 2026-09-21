@@ -133,7 +133,7 @@ import type {
   DATA_TARGET,
   DATA_TYPES,
   SelectorEntityType,
-  ItemPredicateItem,
+  ItemPredicateItemType,
   SelectorProperties,
   TargetFor,
   TriggerHandler,
@@ -695,7 +695,7 @@ export class SandstonePack {
    *   .without('minecraft:damage')
    * ```
    */
-  ItemPredicate = (itemType: ItemPredicateItem) => new ItemPredicateClass(this, itemType)
+  ItemPredicate = (itemType: ItemPredicateItemType) => new ItemPredicateClass(this, itemType)
 
   /**
    * Creates a new Data Class Instance

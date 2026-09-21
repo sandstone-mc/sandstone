@@ -202,7 +202,7 @@
     "definition": "src/core/resources/datapack/itemModifier.ts"
   },
   "ItemPredicate": {
-    "signature": "(alias) const ItemPredicate: (itemType: ItemPredicateItem) => ItemPredicateClass",
+    "signature": "(alias) const ItemPredicate: (itemType: ItemPredicateItemType) => ItemPredicateClass",
     "definition": "src/pack/pack.ts"
   },
   "JsonNBTList": {

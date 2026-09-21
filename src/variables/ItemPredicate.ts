@@ -11,7 +11,7 @@ import type { NBTObject } from 'sandstone/arguments'
 import type { ItemModelBuilder } from 'sandstone/core/resources/resourcepack/itemDefinition'
 
 /** Item type: specific item, tag, or wildcard */
-export type ItemPredicateItem = Registry['minecraft:item'] | `#${string}` | TagClass<'item'> | '*'
+export type ItemPredicateItemType = Registry['minecraft:item'] | `#${string}` | TagClass<'item'> | '*'
 
 /** Keys for sub-predicate matching (~ operator) */
 type PredicateKeys = keyof SymbolDataComponentPredicate<'map'>
@@ -62,11 +62,11 @@ type OrGroup = TestEntry[]
 export class ItemPredicateClass {
   private readonly pack: SandstonePack
 
-  private readonly itemType: ItemPredicateItem
+  private readonly itemType: ItemPredicateItemType
 
   protected readonly testGroups: OrGroup[] = []
 
-  constructor(pack: SandstonePack, itemType: ItemPredicateItem) {
+  constructor(pack: SandstonePack, itemType: ItemPredicateItemType) {
     this.pack = pack
     this.itemType = itemType
   }
