@@ -169,6 +169,10 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     if (this.body.length > 1) {
       throw new Error('Execute nodes can only have one child node when toString is called.')
     }
+    if (this.sandstoneCore.commandSerializationDepth === 0) {
+      this.sandstoneCore.macroAlreadyUsed = false
+    }
+    this.sandstoneCore.commandSerializationDepth++
 
     // This will be the execute string without "run"
     const flattenedArgs = this.args.flat(1)
@@ -180,6 +184,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
         if (typeof arg === 'object') {
           if (isMacroArgument(this.sandstoneCore, arg)) {
             this.isMacro = true
+            this.sandstoneCore.macroAlreadyUsed = true
 
             args.push((arg as MacroArgument).toMacro())
           } else {
@@ -193,6 +198,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     const executeString = `${this.command} ${args.join(' ')}`
 
     if (this.body.length === 0) {
+      this.sandstoneCore.commandSerializationDepth--
       return executeString
     }
 
@@ -200,6 +206,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
 
     // Yes this is cursed
     if (this.isFake) {
+      this.sandstoneCore.commandSerializationDepth--
       return command
     }
 
@@ -208,6 +215,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
       command = command.slice(1)
     }
 
+    this.sandstoneCore.commandSerializationDepth--
     return `${this.isMacro ? '$' : ''}${executeString} run ${command}`
   }
 

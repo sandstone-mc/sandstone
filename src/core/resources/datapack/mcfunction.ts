@@ -226,6 +226,7 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
   getValue = () => {
     this.sandstoneCore.currentNode = this.resource.name
 
+    console.log('[mcfunction.getValue]', this.resource.name, 'prev=', `${this.sandstoneCore.macroAlreadyUsed}`)
     return this.body
       .filter((node) => node.getValue() !== null)
       .map((node) => node.getValue())

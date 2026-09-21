@@ -105,6 +105,10 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
   }
 
   getValue() {
+    if (this.sandstoneCore.commandSerializationDepth === 0) {
+      this.sandstoneCore.macroAlreadyUsed = false
+    }
+    this.sandstoneCore.commandSerializationDepth++
     const filteredArgs: unknown[] = this.command === '' ? [] : [this.command]
 
     // `this.isMacro` is the sole signal that decides the `$` prefix. It must
@@ -132,10 +136,12 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
             // NBT values rather than from a top-level MacroArgument object.
             if (arg.containsMacro) {
               hasMacroArgs = true
+              this.sandstoneCore.macroAlreadyUsed = true
             }
             filteredArgs.push(arg)
           } else if (isMacroArgument(this.sandstoneCore, arg)) {
             hasMacroArgs = true
+            this.sandstoneCore.macroAlreadyUsed = true
 
             filteredArgs.push((arg as MacroArgument).toMacro())
           } else if (Object.hasOwn(arg, '_hasMacro') && (arg as { _hasMacro: boolean })._hasMacro) {
@@ -143,6 +149,7 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
             // via its own toString) exposes macro info via _hasMacro so the
             // command can still be flagged as a macro command.
             hasMacroArgs = true
+            this.sandstoneCore.macroAlreadyUsed = true
 
             filteredArgs.push(arg)
           } else if (Object.hasOwn(arg, 'toLoop')) {
@@ -159,10 +166,11 @@ export abstract class CommandNode<ARGS extends unknown[] = unknown[]> extends No
     if (hasMacroArgs && !this.isMacro) {
       throw new Error(`[${this.constructor.name}#getValue] Received macro argument(s) but was not declared as a macro command.`)
     }
-    if (!hasMacroArgs && this.isMacro) {
+    if (!hasMacroArgs && this.isMacro && !this.sandstoneCore.macroAlreadyUsed) {
       throw new Error(`[${this.constructor.name}#getValue] Command was declared as a macro command but received no macro argument(s).`)
     }
 
+    this.sandstoneCore.commandSerializationDepth--
     return `${this.isMacro ? '$' : ''}${filteredArgs.join(' ')}`
   }
 

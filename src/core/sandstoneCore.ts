@@ -126,6 +126,16 @@ export class SandstoneCore {
 
   currentNode = ''
 
+  /**
+   * @internal
+   */
+  commandSerializationDepth = 0
+
+  /**
+   * @internal
+   */
+  macroAlreadyUsed = false
+
   _mcMetaCache: MCMetaCache | undefined | false = false
 
   _smithed: SmithedDependencyCache | undefined | false = false
@@ -167,6 +177,8 @@ export class SandstoneCore {
     this.awaitNodes.clear()
     this.withNodes.clear()
     this.currentNode = ''
+    this.commandSerializationDepth = 0
+    this.macroAlreadyUsed = false
     this._mcMetaCache = undefined
     this._smithed = undefined
     this.dependencies = []
