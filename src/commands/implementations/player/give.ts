@@ -141,10 +141,10 @@ export function componentPatchStringifier(components: Record<string, RootNBT | R
 
   for (const [key, value] of Object.entries(components)) {
     if (key.startsWith('!')) {
-      if (typeof value === 'object' && Object.keys(value).length === 0) {
-        resultPairs.push(`!${key}={}`)
+      if (value == null) {
+        resultPairs.push(`${key}`)
       } else {
-        throw new Error(`Attempted to insert a negation component patch of ${key} with a value, use {} instead.`)
+        throw new Error(`Attempted to insert a negation component patch of ${key} with a value, use undefined instead.`)
       }
     } else {
       resultPairs.push(`${key}=${nbtResolver(value).toString()}`)
