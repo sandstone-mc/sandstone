@@ -324,9 +324,6 @@ export class SandstonePack {
 
   __initMCFunction?: MCFunctionClass<undefined, undefined>
 
-  // Smithed Pack IDs
-  dependencies: Map<string, boolean>
-
   readonly flow: Flow
 
   readonly commands: SandstoneCommands<false>
@@ -403,7 +400,6 @@ export class SandstonePack {
       postLoad: this.Tag('function', 'load:post_load', []),
     }
     this.setupLantern()
-    this.dependencies = new Map()
 
     // ESM is funny
 
@@ -431,7 +427,6 @@ export class SandstonePack {
     this.ticked = {}
     this.startAllTicked = undefined
     this.tickedCommands = {}
-    this.dependencies.clear()
     this.loadTags = {
       preLoad: this.Tag('function', 'load:pre_load', []),
       load: this.Tag('function', 'load:load', []),
@@ -1631,12 +1626,11 @@ export class SandstonePack {
    * — the callback runs inside the new MCFunction's context, with
    * `currentMCFunction` set and command emissions going to its body.
    *
-   * Unlike `save()`, this does NOT touch the filesystem and does NOT
-   * load Smithed dependencies. It runs the visitor pipeline
-   * synchronously. Intended for tests, REPL tooling, and downstream
-   * inspection of Sandstone's output — including the auto-created
-   * child MCFunctions that visitors spawn (e.g. `__if`, `__loop`,
-   * `__switch`, `__sleep`, etc.).
+   * Unlike `save()`, this does NOT touch the filesystem. It runs the
+   * visitor pipeline synchronously. Intended for tests, REPL tooling,
+   * and downstream inspection of Sandstone's output — including the
+   * auto-created child MCFunctions that visitors spawn (e.g. `__if`,
+   * `__loop`,`__switch`, `__sleep`, etc.).
    *
    * Binary resources and non-string outputs are skipped — for full
    * output capture use `save({ dry: true, fileHandler })` instead.

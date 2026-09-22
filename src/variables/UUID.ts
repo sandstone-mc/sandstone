@@ -17,7 +17,7 @@ import { SelectorClass } from './Selector'
 /**
  * guuid library constants.
  * This library converts UUID int arrays to string format at runtime.
- * @see https://smithed.dev/packs/sgu
+ * @see https://github.com/gibbsly/gu
  */
 const GU = {
   /** Storage namespace for guuid */
