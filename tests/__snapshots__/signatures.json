@@ -706,10 +706,6 @@
     "signature": "(alias) const defaultgamemode: (mode: GAMEMODES) => FinalCommandOutput",
     "definition": "src/commands/implementations/server/defaultgamemode.ts"
   },
-  "depend": {
-    "signature": "(alias) const depend: (dependency: string, version?: string) => number",
-    "definition": "src/sandstone.ts"
-  },
   "dialog": {
     "signature": "(alias) const dialog: DialogCommand<false>",
     "definition": "src/commands/implementations/player/dialog.ts"

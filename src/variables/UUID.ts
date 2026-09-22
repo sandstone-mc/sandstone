@@ -342,8 +342,8 @@ implements ConditionClass, SelectorPickClass<true, boolean> {
       return this
     }
 
-    // Add guuid as a Smithed dependency
-    this.core.depend('sgu')
+    // TODO: Add guuid
+    // this.core.depend('sgu')
 
     const pack = this.core.pack
     const { Data, MCFunction, getTempStorage, commands } = pack

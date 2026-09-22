@@ -13,11 +13,9 @@ import type { AwaitNode } from './nodes'
 import type { WithClass } from '../flow/macro'
 import type { _RawMCFunctionClass, MCFunctionClass, MCFunctionNode } from './resources/datapack/mcfunction'
 import type { TagClass, TagValuesJSON } from './resources/datapack/tag'
-import { SmithedDependencyClass } from './resources/dependency'
 import type { SoundsIndexClass } from './resources/resourcepack/sound'
 import type { TextureMeta } from './resources/resourcepack/texture'
 import { BinaryResource, JsonResource, type ResourceClass, ResourceNodesMap, TextResource } from './resources/resource'
-import { SmithedDependencyCache } from './smithed'
 import type { GenericCoreVisitor } from './visitors'
 import { REGISTRIES, RESOURCE_PATHS, TextureType } from 'sandstone/arguments'
 import { Set, SetType } from '../utils'
@@ -138,10 +136,6 @@ export class SandstoneCore {
 
   _mcMetaCache: MCMetaCache | undefined | false = false
 
-  _smithed: SmithedDependencyCache | undefined | false = false
-
-  dependencies: ((() => Promise<true | false>) | true | false)[] = []
-
   /** Cache of auto-generated function tags, keyed by tag name. Cleared on reset. */
   functionTags: Map<string, TagClass<'function'>> = new Map()
 
@@ -180,8 +174,6 @@ export class SandstoneCore {
     this.commandSerializationDepth = 0
     this.macroAlreadyUsed = false
     this._mcMetaCache = undefined
-    this._smithed = undefined
-    this.dependencies = []
     this.functionTags.clear()
     this.sounds.clear()
     this.checkTriggers = {}
@@ -355,39 +347,6 @@ export class SandstoneCore {
     })
   }
 
-  get smithed() {
-    this._smithed ??= new SmithedDependencyCache(this)
-    return this._smithed as SmithedDependencyCache
-  }
-
-  /**
-   * Add a dependency for a Smithed Library
-   * 
-   * @returns Index of the async dependency request in SandstoneCore#dependencies
-   */
-  depend(dependency: string, version = 'latest') {
-    const i = this.dependencies.length
-
-    this.dependencies.push(
-      async () => {
-        if (!this.smithed.has(dependency)) {
-          const depend = await this.smithed.get(dependency, version)
-
-          // If dependency couldn't be fetched (not on Smithed yet), skip it
-          if (depend === undefined) {
-            this.dependencies[i] = false
-            this.pack.dependencies.set(dependency, false)
-            return false
-          }
-        }
-        this.pack.dependencies.set(dependency, true)
-        this.dependencies[i] = true
-        return true
-      },
-    )
-    return i
-  }
-
   generateResources(opts: { visitors: GenericCoreVisitor[] }) {
     const originalResources = new ResourceNodesMap(this.resourceNodes)
 
@@ -418,24 +377,6 @@ export class SandstoneCore {
     cliOptions: { fileHandler: (relativePath: string, content: any) => Promise<void>; dry: boolean; verbose: boolean },
     opts: { visitors: GenericCoreVisitor[] },
   ) {
-    await this.smithed.load()
-
-    let dependenciesFailed = 0
-    for (const depend of this.dependencies) {
-      const success = typeof depend === 'boolean' ? depend : await depend()
-
-      if (!success) {
-        dependenciesFailed++
-      }
-    }
-    if (dependenciesFailed !== 0) {
-      console.log(`[SandstoneCore#save] Failed to load ${dependenciesFailed} dependencies, continuing with compilation.`)
-    }
-
-    if (this.dependencies.length !== 0) {
-      await this.smithed.save()
-    }
-
     if (this._mcMetaCache) {
       if (!this.mcMetaCache.loaded) {
         await this.mcMetaCache.load()
