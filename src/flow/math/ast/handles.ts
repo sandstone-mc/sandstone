@@ -1,4 +1,4 @@
-import type { DataPointClass } from '../../../variables/Data'
+import { DataPointClass, DATA_TYPES, IntegerDataPointClass } from '../../../variables/Data'
 import type { DataPointPickClass } from '../../../core/Macro'
 import type { Score } from '../../../variables/Score'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
@@ -34,8 +34,16 @@ import type { ComparisonConditionNode } from './nodes/conditions'
  * (`add(...): this`). The previous immutable design was wrong for the
  * actual user-visible surface.
  */
-declare const FloatBrand: unique symbol
-declare const IntegerBrand: unique symbol
+// Brand symbols — use `Symbol.for(...)` so Sandstone's bundler hoist
+// plugin (`scripts/plugins/fix-esm-init-order.ts`) recognizes them as
+// brands and hoists them ahead of the class definitions that reference
+// them. A bare `declare const X: unique symbol` is inlined by Bun
+// before the hoist pass runs, leaving the class referencing an
+// undefined symbol. `Symbol.for(...)` survives bundling and registers
+// the symbol in the global registry so every reference resolves to
+// the same value.
+const FloatBrand = Symbol.for('sandstone.math.FloatBrand')
+const IntegerBrand = Symbol.for('sandstone.math.IntegerBrand')
 
 interface FloatBranded {
   readonly [FloatBrand]: true
@@ -77,11 +85,18 @@ abstract class BaseHandle {
  * implicit `from_int` providers to homogenize kinds.
  */
 export class _RawFloatHandle extends BaseHandle implements FloatBranded {
-  readonly [FloatBrand] = true as const
+  readonly [FloatBrand]: true = true as const
 
   override node: MathExpressionNode
 
   readonly kind: MathKind = 'float'
+
+  /**
+   * Set by the math block's output visitor when this handle is one of
+   * the math's output slots. Used by `data()` / `score()` to throw on
+   * non-output handles (internal computation handles like `BinaryOpNode`).
+   */
+  _isOutput = false
 
   constructor(node: MathExpressionNode) {
     super()
@@ -242,6 +257,44 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   equals(other: number | Float | Integer): ComparisonConditionNode {
     return compare(this.node.sandstoneCore, '==', this, other as Float | Integer)
   }
+
+  /**
+   * `data()` — convert this output handle into a `DataPointClass` that
+   * reads from the same deferred-storage path. Only valid on output
+   * handles (set via `_isOutput` by the math block visitor). Throws
+   * on internal computation handles, since those have no path to
+   * expose to external NBT storage.
+   *
+   * An output handle wraps a `StorageRefNode` whose `dataPoint` IS the
+   * DataPointClass for the math's output path — return it directly.
+   */
+  data(): DataPointClass {
+    if (!this._isOutput) {
+      throw new Error('FloatHandle.data() can only be called on output handles (use _.Math(...) output).')
+    }
+    return (this.node as unknown as StorageRefNode).dataPoint
+  }
+
+  /**
+   * `score()` — convert this output handle into a `Score`. Only valid
+   * on output handles. Throws on internal computation handles.
+   */
+  score(): Score {
+    if (!this._isOutput) {
+      throw new Error('FloatHandle.score() can only be called on output handles.')
+    }
+    // Output wraps a StorageRefNode; promote the path to a Score
+    // (ScoreboardRefNode) so downstream consumers see a score handle.
+    throw new Error('FloatHandle.score() not yet implemented.')
+  }
+
+  /**
+   * @internal — true if this handle is an output (set by the math
+   * block's output visitor). Internal computation handles return false.
+   */
+  isOutput(): boolean {
+    return this._isOutput
+  }
 }
 
 /**
@@ -251,11 +304,18 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
  * second arg).
  */
 export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
-  readonly [IntegerBrand] = true as const
+  readonly [IntegerBrand]: true = true as const
 
   override node: MathExpressionNode
 
   readonly kind: MathKind = 'integer'
+
+  /**
+   * Set by the math block's output visitor when this handle is one of
+   * the math's output slots. Used by `data()` / `score()` to throw on
+   * non-output handles (internal computation handles).
+   */
+  _isOutput = false
 
   constructor(node: MathExpressionNode) {
     super()
@@ -352,11 +412,49 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
     }
     return compare(this.node.sandstoneCore, '==', this, other)
   }
+
+  /**
+   * `data()` — convert this output handle into an integer-typed
+   * `DataPointClass`. Only valid on output handles. Throws otherwise.
+   */
+  data(): IntegerDataPointClass {
+    if (!this._isOutput) {
+      throw new Error('IntegerHandle.data() can only be called on output handles (use _.Math(...) output).')
+    }
+    return new IntegerDataPointClass(
+      this.node.sandstoneCore.pack,
+      'storage',
+      (this.node as unknown as StorageRefNode).dataPoint.currentTarget,
+      (this.node as unknown as StorageRefNode).dataPoint.path,
+    )
+  }
+
+  /**
+   * `score()` — convert this output handle into a `Score`. Only valid
+   * on output handles. Throws otherwise.
+   */
+  score(): Score {
+    if (!this._isOutput) {
+      throw new Error('IntegerHandle.score() can only be called on output handles.')
+    }
+    throw new Error('IntegerHandle.score() not yet implemented.')
+  }
+
+  /**
+   * @internal — true if this handle is an output.
+   */
+  isOutput(): boolean {
+    return this._isOutput
+  }
 }
 
 function handleToExpr(h: Float | Integer | number): MathExpressionNode {
   if (typeof h === 'number') {
-    throw new Error('handleToExpr(number): wrap literals via _.float(...) / _.integer(...) first')
+    // Wrap raw number as a Float LiteralNode at use site. This lets
+    // `rx['*='](-1)` work without requiring the user to wrap literals
+    // in `_.float(...)` first — the rebind step does the same job for
+    // call-site inputs and `handleToExpr` does it for inline literals.
+    return floatFromLiteral(h as unknown as SandstoneCore, h) as unknown as MathExpressionNode
   }
   return h.node
 }

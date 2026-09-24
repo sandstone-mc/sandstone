@@ -309,6 +309,7 @@ export {
 } from './variables/nbt/NBTs'
 
 export type { Condition } from './flow'
+export { Float, Integer } from './flow/math/Math'
 export {
   ObjectiveClass,
   Score,
@@ -398,7 +399,3 @@ export type {
   ContentStrategyKind,
   SandstoneConfig,
 } from './config'
-
-// Math DSL types — generic handle aliases + schema-constrained math helper.
-export { Float, Integer } from './flow/math/Math'
-export type { _Math } from './flow/math/Math'

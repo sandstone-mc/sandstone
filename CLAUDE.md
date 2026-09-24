@@ -183,6 +183,14 @@ or CI.
 
 **REMINDER**: When a resolved type contains `import("sandstone").*` or any `import("…")` qualifier referring back to the package itself, that is ALWAYS a library builder bug. Never dismiss it as "just how the LSP formats things" or as expected behavior. Source-level types are unqualified (e.g. `Score`); the builder emits `import("./index.js").Score` or similar because of a self-import cycle or a bad path rewrite in `scripts/plugins/bundle-declarations.ts` / `fix-dts-imports.ts` / `migrate-dts-imports.ts`. Treat it as a blocker and fix the builder.
 
+**REMINDER**: Brand symbols for type-hacks (e.g. `Float`, `Integer` handle brands) **MUST be declared via `Symbol.for(...)`**, NOT via `declare const X: unique symbol`. The bundler hoist plugin (`scripts/plugins/fix-esm-init-order.ts`) only recognizes `Symbol.for(...)` as a brand declaration and hoists it ahead of the class definitions that reference it. A bare `declare const X: unique symbol` is inlined by Bun before the hoist pass runs, leaving the class referencing an undefined symbol — runtime crashes with `<BrandName> is not defined`. If you add a new brand, use:
+
+```ts
+const MyBrand = Symbol.for('sandstone.<scope>.<BrandName>')
+```
+
+The class declares the brand via a computed key field: `readonly [MyBrand]: true = true as const`.
+
 ## Todo Directory
 
 The `todo/` directory contains planning and tracking documents for ongoing development. Currently empty.

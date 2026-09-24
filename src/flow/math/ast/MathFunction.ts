@@ -1,7 +1,10 @@
 import type { Float, Integer } from './handles'
 import { Float as _FloatClass, Integer as _IntegerClass, _RawFloatHandle, _RawIntegerHandle } from './handles'
+import { DataPointClass, IntegerDataPointClass } from '../../../variables/Data'
+import { Score } from '../../../variables/Score'
 import type { MathFunctionOutputs } from './MathFunctionNode'
 import { MathFunctionNode } from './MathFunctionNode'
+import { LiteralNode, ScoreboardRefNode } from './nodes/leaves'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { MathKind } from './MathExpressionNode'
 import { makeClassCallable } from '../../../utils'
@@ -10,12 +13,44 @@ import type { NBTSerializable } from '../../../arguments'
 import type { MathSchemaValue } from '../../math/Math'
 import { SandstoneMath } from '../../math/Math'
 import { StorageRefNode } from './nodes/leaves'
+import { DataPointPickClass } from 'sandstone/core'
+
+/**
+ * Input types accepted by `Math.__call__(...inputs: P)`. Each non-handle
+ * input (DataPointClass, DataPointPickClass, Score) gets rebound to the
+ * matching Float/Integer handle at call time — TS narrows the parameter
+ * type, runtime rebinds the value.
+ *
+ * `number` is intentionally NOT here — literal numbers must be wrapped
+ * via `_.float()` / `_.integer()` first (runtime `rebindInput` throws).
+ * Use the `MathInputs` array type at the call site for a tighter
+ * signature.
+ */
+type MathInput = number | Float | Integer | DataPointClass | DataPointPickClass | Score
 
 /**
  * Runtime shape of the input tuple `_.Math` accepts. An array of
  * `Float | Integer` handles, one per input param of the callback.
  */
 type MathInputs = readonly (Float | Integer)[]
+
+/**
+ * Expand a callback-declared input tuple `T` to also accept
+ * `DataPointClass`, `DataPointPickClass`, and `Score` at each position
+ * where `Float` / `Integer` appear. The runtime rebound converts each
+ * `DataPointClass` / `PickClass` / `Score` to the matching handle type
+ * before invoking the callback, so the cb sees branded handles.
+ *
+ * Used by `Math.__call__`'s parameter type so callers can pass NBT or
+ * score references where the cb declares plain `Float` / `Integer`.
+ */
+type ExpandInputs<T> = {
+  [K in keyof T]: T[K] extends Float
+    ? Float | number | DataPointClass | DataPointPickClass | Score
+    : T[K] extends Integer
+      ? Integer | number | IntegerDataPointClass | Score
+      : T[K]
+}
 
 /**
  * Module-level counter for unique storage-path suffixes. Each `Math`
@@ -60,7 +95,7 @@ let _instanceCounter = 0
  * an actual provider when emitting. There is no stub — the deferred
  * references are real (typed, queryable) handles.
  */
-class _RawMathFunction<P extends MathInputs, R>
+class _RawMathFunction<P extends readonly MathInput[], R>
   implements NBTSerializable
 {
   public node: MathFunctionNode | undefined
@@ -120,13 +155,72 @@ class _RawMathFunction<P extends MathInputs, R>
   /**
    * Run the math with the given inputs. Builds the AST on first call.
    *
+   * Accepts the expanded input tuple (see `ExpandInputs` below):
+   * cb-declared `Float` / `Integer` parameters accept DataPointClass /
+   * PickClass / Score at the call site via type expansion, runtime
+   * rebind converts them to matching handles.
+   *
    * @returns A deferred reference — `MathSchemaValue<R>` shaped handle(s)
    *   pointing at `math_<n>_...` storage paths. The lowerer replaces
    *   each `StorageRefNode` with an actual provider when emitting.
    */
-  __call__ = (...inputs: P): MathSchemaValue<R> => {
-    this.buildAst(inputs)
+  __call__ = <T extends P>(...inputs: ExpandInputs<T>): MathSchemaValue<R> => {
+    // Rebind non-handle inputs (DataPointClass, DataPointPickClass, Score)
+    // to their matching Float/Integer handles so the cb's `...inputs: P`
+    // sees branded handles throughout. Kind inferred from the runtime
+    // type of the input (IntegerDataPointClass → integer, Score → integer
+    // by default; everything else → float).
+    const rebound = (inputs as unknown as readonly MathInput[]).map(
+      (i): Float | Integer => this.rebindInput(i),
+    )
+    this.buildAst(rebound as unknown as P)
     return this.makeDeferredResult()
+  }
+
+  /**
+   * Rebind a single input value to its matching Float/Integer handle.
+   * Float/Integer pass through unchanged; DataPointClass/PickClass/Score
+   * are wrapped as Float/Integer pointing at the same NBT path / score.
+   *
+   * Kind is determined by the runtime class of the input:
+   *   - `IntegerDataPointClass` → Integer handle
+   *   - everything else (DataPointClass, StringDataPointClass, Score) →
+   *     Float handle
+   *
+   * `number` literals are rejected — they must be wrapped via
+   * `_.float()` / `_.integer()` first.
+   */
+  private rebindInput(input: MathInput): Float | Integer {
+    if (typeof input === 'number') {
+      // Raw number literal — wrap as a Float literal handle. Lowerer
+      // substitutes the literal's value into the provider tree.
+      const lit = new LiteralNode(this.sandstoneCore, input)
+      return new _RawFloatHandle(lit)
+    }
+    if ('node' in input && 'binding' in input) {
+      // Already a Float/Integer handle — pass through.
+      return input as Float | Integer
+    }
+    if (input instanceof IntegerDataPointClass) {
+      // Integer-typed NBT (or pick variant thereof) — wrap as Integer.
+      return new _RawIntegerHandle(
+        new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'integer'),
+      )
+    }
+    if (input instanceof DataPointClass || '_toDataPoint' in input) {
+      // Float-typed NBT (or pick variant) — wrap as Float.
+      return new _RawFloatHandle(
+        new StorageRefNode(this.sandstoneCore, input as DataPointClass, 'float'),
+      )
+    }
+    if (input instanceof Score) {
+      return new _RawIntegerHandle(new ScoreboardRefNode(this.sandstoneCore, input))
+    }
+    throw new Error(
+      `Math input: unrecognized input type ${
+        (input as { constructor?: { name?: string } }).constructor?.name ?? typeof input
+      }`,
+    )
   }
 
   /**
@@ -140,19 +234,25 @@ class _RawMathFunction<P extends MathInputs, R>
     if (this.outputs === _FloatClass) {
       const dp = this.sandstoneCore.pack.DataVariable(undefined, `${baseName}_result`)
       const ref = new StorageRefNode(this.sandstoneCore, dp, 'float')
-      return new _RawFloatHandle(ref) as unknown as MathSchemaValue<R>
+      const handle = new _RawFloatHandle(ref)
+      handle._isOutput = true
+      return handle as unknown as MathSchemaValue<R>
     }
     if (this.outputs === _IntegerClass) {
       const dp = this.sandstoneCore.pack.DataVariable(undefined, `${baseName}_result`)
       const ref = new StorageRefNode(this.sandstoneCore, dp, 'integer')
-      return new _RawIntegerHandle(ref) as unknown as MathSchemaValue<R>
+      const handle = new _RawIntegerHandle(ref)
+      handle._isOutput = true
+      return handle as unknown as MathSchemaValue<R>
     }
     const result: Record<string, _RawFloatHandle | _RawIntegerHandle> = {}
     for (const [k, v] of Object.entries(this.outputs as Record<string, typeof _RawFloatHandle | typeof _RawIntegerHandle>)) {
       const kind: MathKind = v === _RawFloatHandle ? 'float' : 'integer'
       const dp = this.sandstoneCore.pack.DataVariable(undefined, `${baseName}_${k}`)
       const ref = new StorageRefNode(this.sandstoneCore, dp, kind)
-      result[k] = kind === 'float' ? new _RawFloatHandle(ref) : new _RawIntegerHandle(ref)
+      const handle = kind === 'float' ? new _RawFloatHandle(ref) : new _RawIntegerHandle(ref)
+      handle._isOutput = true
+      result[k] = handle
     }
     return result as unknown as MathSchemaValue<R>
   }

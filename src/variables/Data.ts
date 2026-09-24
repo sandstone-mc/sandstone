@@ -292,6 +292,15 @@ export class DataPointClass<TYPE extends DATA_TYPES = any>
   slice = (start: number, end?: number) =>
     new StringDataPointClass(this.sandstonePack, this.type, this.currentTarget, this.path, start, end)
 
+  /**
+   * Mark this DataPoint as integer-typed for the math DSL. Returns a
+   * shadow `IntegerDataPointClass` pointing at the same NBT path. The
+   * math DSL's `rebindInput` checks `instanceof IntegerDataPointClass`
+   * to know the NBT kind without inspecting the path.
+   */
+  integer = (): IntegerDataPointClass =>
+    new IntegerDataPointClass(this.sandstonePack, this.type, this.currentTarget, this.path)
+
   _toMinecraftCondition = () => new this.sandstonePack.conditions.DataPointExists(this.sandstonePack.core, this)
 
   equals = (value: NBTObject | Score | DataPointClass | DataPointPickClass) =>
@@ -330,5 +339,27 @@ export class StringDataPointClass<TYPE extends DATA_TYPES = any> extends DataPoi
 
     this.sliceBounds = [start]
     if (end) this.sliceBounds.push(end)
+  }
+}
+
+/**
+ * Shadow class on top of `DataPointClass` that carries an integer-typed
+ * NBT path marker. The math DSL's `rebindInput` checks for this class
+ * first to know the NBT kind (integer vs float) without inspecting the
+ * runtime path — the user's `_.float(...)` / `_.integer(...)` choice at
+ * construction time propagates through this marker.
+ *
+ * Mirrors the `StringDataPointClass` shadow class pattern above.
+ */
+export class IntegerDataPointClass<TYPE extends DATA_TYPES = any> extends DataPointClass {
+  declare readonly __integerDataPointBrand: true
+
+  constructor(
+    public sandstonePack: SandstonePack,
+    public type: TYPE,
+    target: DATA_TARGET[TYPE],
+    path: DATA_PATH,
+  ) {
+    super(sandstonePack, type, target, [path])
   }
 }
