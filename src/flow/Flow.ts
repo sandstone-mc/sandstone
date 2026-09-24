@@ -30,7 +30,11 @@ import { AndNode, ConditionNode, ItemPredicateArgument, NotNode, OrNode, Sandsto
 import { IfStatement } from './if_else'
 import type { ForOfIterator } from './loops'
 import { ForIStatement, ForOfStatement, WhileStatement } from './loops'
+import type { MathFunctionNode } from '../flow/math/ast/MathFunctionNode'
 import { WithClass, withCommands } from './macro'
+import type { _Math } from './math/Math'
+import type { Float, Integer } from './math/ast/handles'
+import { MathFunction } from './math/ast/MathFunction'
 import type { ConditionCallback, DefaultType, SwitchCase } from './switch_case'
 import { CaseStatement, executeSwitch } from './switch_case'
 
@@ -682,5 +686,39 @@ export class Flow {
       return new WithClass(this.sandstoneCore, env, callback)
     }
     return withCommands(this.sandstoneCore, env)
+  }
+
+  /**
+   * `_.Math<R>(outputs, callback)` — entry point for the math DSL.
+   *
+   * `R` is the outputs schema. `P` (input tuple) is inferred from the
+   * callback's parameter types after `_math`.
+   *
+   * Mirrors `SandstonePack.MCFunction` overload pattern.
+   */
+  /**
+   * `_.Math(outputs, callback)` — entry point for the math DSL.
+   *
+   * No explicit `<R>`. TS infers `R` from `outputs` — the inferred
+   * schema flows into the callback's `_Math<R>` so `_.return({x, y, z})`
+   * is checked against the actual schema shape.
+   *
+   * `P` is inferred from the callback's input parameter types.
+   *
+   * For users who want to share the schema across math blocks (or name
+   * it explicitly), they can declare their own `R` via:
+   *   `type R = {x: typeof Float; y: typeof Float}`
+   * and call `_.Math<typeof R>({...}, cb)` — TS then accepts the
+   * explicit `R` since it's a known type reference.
+   */
+  Math<R, P extends readonly (Float | Integer)[]>(
+    outputs: R,
+    callback: (_math: _Math<R>, ...inputs: P) => void,
+  ): MathFunction<P, R> {
+    return new MathFunction(
+      this.sandstoneCore,
+      outputs,
+      callback as never,
+    ) as unknown as MathFunction<P, R>
   }
 }

@@ -157,6 +157,10 @@
     "signature": "(alias) type FileHandler = {\n    path: RegExp;\n    callback: (contents: HandlerFile) => HandlerFile | Promise<HandlerFile>;\n}",
     "definition": "src/config.ts"
   },
+  "Float": {
+    "signature": "(alias) const Float: typeof _RawFloatHandle\n(alias) type Float = _RawFloatHandle & FloatBranded",
+    "definition": "src/flow/math/ast/handles.ts"
+  },
   "FloatNumberProviderClass": {
     "signature": "(alias) class FloatNumberProviderClass",
     "definition": "src/core/resources/datapack/numberProvider.ts"
@@ -180,6 +184,10 @@
   "InstrumentClass": {
     "signature": "(alias) class InstrumentClass",
     "definition": "src/core/resources/datapack/datacomponent/instrument.ts"
+  },
+  "Integer": {
+    "signature": "(alias) const Integer: typeof _RawIntegerHandle\n(alias) type Integer = _RawIntegerHandle & IntegerBranded",
+    "definition": "src/flow/math/ast/handles.ts"
   },
   "IntegerNumberProviderClass": {
     "signature": "(alias) class IntegerNumberProviderClass",
@@ -641,6 +649,10 @@
   "_": {
     "signature": "(alias) const _: Flow",
     "definition": "src/flow/Flow.ts"
+  },
+  "_Math": {
+    "signature": "(alias) type _Math<R = MathOutputsSchema> = SandstoneMath<R>",
+    "definition": "src/flow/math/Math.ts"
   },
   "abs": {
     "signature": "(alias) const abs: {\n    <T extends number>(coordinate?: T): `${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `${number}`>>;\n}",
