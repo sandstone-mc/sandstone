@@ -2,6 +2,13 @@ import * as util from 'util'
 import type { SandstoneCore } from '../../../../core/sandstoneCore'
 import type { MathConditionNode } from '../MathConditionNode'
 import { MathNode } from '../MathNode'
+import {
+  formatArgValue,
+  formatMath,
+  formatMathLeaf,
+  getIndent,
+  MATH_NODE_DEFAULT_DEPTH,
+} from '../inspectHelpers'
 import type { MathExpressionNode } from '../MathExpressionNode'
 import type { Float, Integer } from '../handles'
 import type { MathFunctionNode } from '../MathFunctionNode'
@@ -54,15 +61,28 @@ export abstract class MathFlowClauseNode extends MathContainerNode {
     return nodes.length === 1 ? nodes[0] : nodes
   }
 
-  [util.inspect.custom](_depth: number, _options: any) {
-    void _depth
-    void _options
-    const childLines = this.body.map((n) => `  ${util.inspect(n)}`).join('\n')
-    const base = childLines ? `${this.constructor.name}(\n${childLines}\n)` : `${this.constructor.name}()`
-    if (this.nextFlowNode) {
-      return `${base}\n${util.inspect(this.nextFlowNode)}`
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    const repr = this.inspectClassName
+    const head = this._isElseIf ? ' (continuation)' : ''
+    const hasCondition = 'condition' in this
+    const indent = getIndent(options)
+    const children: unknown[] = []
+    if (hasCondition) {
+      const c = (this as unknown as { condition: MathConditionNode }).condition
+      // Condition goes first in the body — emits as the first child.
+      // The wrapper's args don't carry a redundant `if=…` string; the
+      // condition's own class name distinguishes it inside the body.
+      children.push(c)
     }
-    return base
+    const bodyWithNext = this.nextFlowNode ? [...this.body, this.nextFlowNode] : this.body
+    children.push(...bodyWithNext)
+    return formatMath(
+      this._isElseIf ? `${repr} (continuation)` : repr,
+      undefined,
+      children,
+      depth,
+      indent,
+    )
   }
 }
 
@@ -88,7 +108,25 @@ export class MathIfNode extends MathFlowClauseNode {
     callback: () => void,
   ) {
     super(sandstoneCore)
+    // Mark the condition as a child of this clause for AST
+    // parent-chain dedup in inspectors — without this, the condition
+    // appears at top level in `allNodes` (no parent) AND nested in
+    // the if clause's body (since MathIfNode's render walks
+    // `this.condition`).
+    this.condition.parent = this
     this.parentMathFunction.balanceContext(this, callback)
+
+    // Commit self to the enclosing container's body so the AST debug
+    // walk surfaces the if-clause. Without this, MathIfNode only ever
+    // lives on `parentMathFunction.allNodes` (via the MathNode base
+    // registration) and the inspector would render it only as an
+    // orphan expression — never as a structured flow node with its
+    // condition + body. body + allNodes display together covers both
+    // the statement and the audit trail.
+    const outer = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1]
+    if (outer && outer !== this && 'append' in outer) {
+      ;(outer as unknown as { append: (n: MathNode) => void }).append(this)
+    }
 
     if (this.body.length === 0) {
       throw new Error(
@@ -248,6 +286,40 @@ export class MathReturnNode extends MathNode {
         : this.value,
     }
   }
+
+  /**
+   * Statement node — value is a Float/Integer handle, a record of
+   * handles, or any user value. Delegates to `formatArgValue` so
+   * each handle's own `[util.inspect.custom]` fires (showing the
+   * current value-expression — i.e., what's actually being set
+   * here at return time).
+   *
+   * For record-shaped return values (`{x: rx, y: ry, z: rz}`), a
+   * single `formatArgValue` call gets the static `<Object {x,y,z}>`
+   * summary — plain object literals have no `[util.inspect.custom]`.
+   * Walk the entries ourselves so each value fires its own custom
+   * renderer (handles → current expression; literals → literal).
+   */
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    const v = this.value as unknown
+    let valueText: string
+    if (
+      v !== null &&
+      typeof v === 'object' &&
+      !Array.isArray(v) &&
+      Object.getPrototypeOf(v) === Object.prototype
+    ) {
+      // Plain record — walk entries so handle values fire their
+      // own `[util.inspect.custom]`.
+      const parts = Object.entries(v as Record<string, unknown>).map(
+        ([k, val]) => `${k}: ${formatArgValue(val as Parameters<typeof formatArgValue>[0])}`,
+      )
+      valueText = `{${parts.join(', ')}}`
+    } else {
+      valueText = formatArgValue(v as Parameters<typeof formatArgValue>[0])
+    }
+    return `${getIndent(options)}${this.inspectClassName}(value=${valueText})`
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -307,6 +379,16 @@ export class MathCaseNode extends MathContainerNode {
       body: this.body.map((n) => n.getValue()),
     }
   }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    const cv = this.caseValue
+    const caseStr = typeof cv === 'number'
+      ? JSON.stringify(cv)
+      : (cv as { node?: MathExpressionNode })?.node !== undefined
+        ? '<expr>'
+        : String(cv)
+    return formatMath(this.inspectClassName, `case=${caseStr}`, this.body, depth, getIndent(options), this)
+  }
 }
 
 /**
@@ -338,6 +420,10 @@ export class MathConditionCaseNode extends MathContainerNode {
       body: this.body.map((n) => n.getValue()),
     }
   }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, this.body, depth, getIndent(options), this)
+  }
 }
 
 /** Default case — terminal. No condition. Body may be empty. */
@@ -360,6 +446,10 @@ export class MathDefaultCaseNode extends MathContainerNode {
       type: 'MathDefaultCase',
       body: this.body.map((n) => n.getValue()),
     }
+  }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, this.body, depth, getIndent(options), this)
   }
 }
 
@@ -480,10 +570,18 @@ export class MathLoopNode extends MathContainerNode {
     super(sandstoneCore)
     this.parentMathFunction = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1] as MathFunctionNode
     this.condition = params.condition
+    this.condition.parent = this
     this.initial = params.initial
     this.iterate = params.iterate
     this.iterator = params.iterator
     this.parentMathFunction.balanceContext(this, callback)
+    // Commit self to the enclosing container's body so the AST debug
+    // walk surfaces the loop with its condition + body. See the
+    // matching note in `MathIfNode`'s constructor for rationale.
+    const outer = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1]
+    if (outer && outer !== this && 'append' in outer) {
+      ;(outer as unknown as { append: (n: MathNode) => void }).append(this)
+    }
     if (this.body.length === 0) {
       throw new Error('Math loop body is empty. Add at least one statement.')
     }
@@ -564,6 +662,17 @@ export class MathLoopNode extends MathContainerNode {
       body: this.body.map((n) => n.getValue()),
     }
   }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(
+      this.inspectClassName,
+      `for=${this.isFor()}`,
+      [this.condition, ...this.body],
+      depth,
+      getIndent(options),
+    this
+    )
+  }
 }
 
 /**
@@ -638,6 +747,21 @@ export class MathSwitchNode extends MathContainerNode {
     super(sandstoneCore)
     // Switch node itself doesn't push its own body — it just coordinates.
     // Bodies of cases are populated in their own constructors.
+    //
+    // Mark each case as a child so the inspector dedups any case that
+    // also appears in `allNodes` (without this, cases repeat at the
+    // top level even though they're rendered nested already).
+    for (const c of this.staticCases) c.parent = this
+    for (const c of this.conditionCases) c.parent = this
+    if (this.defaultCase) this.defaultCase.parent = this
+    //
+    // Commit self to the enclosing container's body so the AST debug
+    // walk surfaces the dispatch node alongside the cases. See the
+    // matching note in `MathIfNode`'s constructor for rationale.
+    const outer = sandstoneCore.mathStack[sandstoneCore.mathStack.length - 1]
+    if (outer && outer !== this && 'append' in outer) {
+      ;(outer as unknown as { append: (n: MathNode) => void }).append(this)
+    }
   }
 
   getValue() {
@@ -650,5 +774,19 @@ export class MathSwitchNode extends MathContainerNode {
       conditionCases: this.conditionCases.map((c) => c.getValue()),
       defaultCase: this.defaultCase?.getValue(),
     }
+  }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    // Switch renders as a flat list of children: dispatch expr (first),
+    // then static cases, condition cases, and (optionally) default case.
+    // Cases each have their own body block — the formatMath walker
+    // emits a brace block per child so depth + indent both apply.
+    const dispatchNode = (this.dispatchValue as unknown as { node?: MathExpressionNode }).node
+    const children: unknown[] = []
+    if (dispatchNode) children.push(dispatchNode)
+    for (const c of this.staticCases) children.push(c)
+    for (const c of this.conditionCases) children.push(c)
+    if (this.defaultCase) children.push(this.defaultCase)
+    return formatMath(this.inspectClassName, undefined, children, depth, getIndent(options), this)
   }
 }

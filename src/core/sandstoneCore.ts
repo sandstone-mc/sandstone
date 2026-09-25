@@ -21,6 +21,7 @@ import { REGISTRIES, RESOURCE_PATHS, TextureType } from 'sandstone/arguments'
 import { Set, SetType } from '../utils'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 import type { MathContainerNode } from '../flow/math/ast/MathContainerNode'
+import type { MathFunctionNode } from '../flow/math/ast/MathFunctionNode'
 
 /**
  * After `getExistingResource` resolves a resource's bytes, thread them back
@@ -120,6 +121,14 @@ export class SandstoneCore {
   /** Math DSL container stack — top is the active `MathContainerNode` (a `MathFunctionNode` for top-level). */
   mathStack: MathContainerNode[] = []
 
+  /**
+   * Math functions compiled during this save pass. Each
+   * `MathFunction.__call__` registers its `MathFunctionNode` here so a
+   * future visitor pipeline (or debug introspection) can iterate the
+   * set without scanning MCFunction bodies.
+   */
+  mathFunctions: Set<MathFunctionNode> = new Set()
+
   awaitNodes: Set<AwaitNode>
 
   /** All `_.with(env, ...)` instances. Lets visitors iterate WithClasses
@@ -173,6 +182,7 @@ export class SandstoneCore {
     this.resourceNodes.clear()
     this.mcfunctionStack = []
     this.mathStack = []
+    this.mathFunctions.clear()
     this.awaitNodes.clear()
     this.withNodes.clear()
     this.currentNode = ''

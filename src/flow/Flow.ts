@@ -35,6 +35,7 @@ import { WithClass, withCommands } from './macro'
 import type { _Math } from './math/Math'
 import type { Float, Integer } from './math/ast/handles'
 import { MathFunction } from './math/ast/MathFunction'
+import type { MathOptions } from './math/ast/MathFunction'
 import type { ConditionCallback, DefaultType, SwitchCase } from './switch_case'
 import { CaseStatement, executeSwitch } from './switch_case'
 
@@ -689,15 +690,19 @@ export class Flow {
   }
 
   /**
-   * `_.Math<R>(outputs, callback)` — entry point for the math DSL.
+   * `_.Math<R>(outputs, callback, options?)` — entry point for the math DSL.
    *
    * `R` is the outputs schema. `P` (input tuple) is inferred from the
    * callback's parameter types after `_math`.
    *
+   * `options.onInitialAST(node)` fires once, synchronously, after the AST
+   * is built (before the math stack is popped) — useful for inspecting /
+   * logging the generated node.
+   *
    * Mirrors `SandstonePack.MCFunction` overload pattern.
    */
   /**
-   * `_.Math(outputs, callback)` — entry point for the math DSL.
+   * `_.Math(outputs, callback, options?)` — entry point for the math DSL.
    *
    * No explicit `<R>`. TS infers `R` from `outputs` — the inferred
    * schema flows into the callback's `_Math<R>` so `_.return({x, y, z})`
@@ -710,15 +715,20 @@ export class Flow {
    *   `type R = {x: typeof Float; y: typeof Float}`
    * and call `_.Math<typeof R>({...}, cb)` — TS then accepts the
    * explicit `R` since it's a known type reference.
+   *
+   * `options.onInitialAST(node)` (optional) fires once after AST build;
+   * see `MathOptions`.
    */
   Math<R, P extends readonly (Float | Integer)[]>(
     outputs: R,
     callback: (_math: _Math<R>, ...inputs: P) => void,
+    options?: MathOptions,
   ): MathFunction<P, R> {
     return new MathFunction(
       this.sandstoneCore,
       outputs,
       callback as never,
+      options,
     ) as unknown as MathFunction<P, R>
   }
 }

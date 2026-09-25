@@ -650,10 +650,6 @@
     "signature": "(alias) const _: Flow",
     "definition": "src/flow/Flow.ts"
   },
-  "_Math": {
-    "signature": "(alias) type _Math<R = MathOutputsSchema> = SandstoneMath<R>",
-    "definition": "src/flow/math/Math.ts"
-  },
   "abs": {
     "signature": "(alias) const abs: {\n    <T extends number>(coordinate?: T): `${T}`;\n    <T extends Tuple<number>>(...coordinates: T): VectorClass<MappedArray<T, `${number}`>>;\n}",
     "definition": "src/sandstone.ts"

@@ -175,6 +175,7 @@ import {
   InitObjectivesVisitor,
   InlineFunctionCallVisitor,
   LoopTransformationVisitor,
+  MathInvocationInlineVisitor,
   OrTransformationVisitor,
   OptimizeMacroTemporariesVisitor,
   SimplifyExecuteFunctionVisitor,
@@ -1691,6 +1692,7 @@ export function defaultVisitors(pack: SandstonePack) {
     new AwaitBodyVisitor(pack),
     new ThrowPropagationVisitor(pack),
     new WithNodeVisitor(pack),
+    new MathInvocationInlineVisitor(pack),
 
     // Optimization
     new OptimizeMacroTemporariesVisitor(pack),

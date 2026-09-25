@@ -1,6 +1,11 @@
 import * as util from 'util'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import { MathNode } from './MathNode'
+import {
+  MATH_NODE_DEFAULT_DEPTH,
+  formatMath,
+  getIndent,
+} from './inspectHelpers'
 
 /**
  * A math node that contains a body of other math nodes.
@@ -55,6 +60,9 @@ export abstract class MathContainerNode extends MathNode {
   append<NODE extends MathNode>(node: NODE): NODE
   append<NODES extends MathNode[]>(...nodes: NODES): NODES
   append(...nodes: MathNode[]) {
+    for (const node of nodes) {
+      node.parent = this
+    }
     this.body.push(...nodes)
     return nodes.length === 1 ? nodes[0] : nodes
   }
@@ -62,14 +70,20 @@ export abstract class MathContainerNode extends MathNode {
   prepend<NODE extends MathNode>(node: NODE): NODE
   prepend<NODES extends MathNode[]>(...nodes: NODES): NODES
   prepend(...nodes: MathNode[]) {
+    for (const node of nodes) {
+      node.parent = this
+    }
     this.body.unshift(...nodes)
     return nodes.length === 1 ? nodes[0] : nodes
   }
 
-  [util.inspect.custom](_depth: number, _options: any) {
-    void _depth
-    void _options
-    const childLines = this.body.map((n) => `  ${util.inspect(n)}`).join('\n')
-    return childLines ? `${this.constructor.name}(\n${childLines}\n)` : `${this.constructor.name}()`
+  /**
+   * Children render via `util.inspect(child, options)` so Bun tracks
+   * depth + seen-set uniformly — same protocol as `formatDebugString`'s
+   * MCFunction inspector. At `depth <= 0` returns a static body-count
+   * placeholder so output stays bounded.
+   */
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, this.body, depth, getIndent(options), this)
   }
 }

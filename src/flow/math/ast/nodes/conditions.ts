@@ -1,8 +1,16 @@
 import type { SandstoneCore } from '../../../../core/sandstoneCore'
+import * as util from 'util'
 import type { Float, Integer } from '../handles'
+import {
+  formatMath,
+  formatMathLeaf,
+  getIndent,
+  MATH_NODE_DEFAULT_DEPTH,
+} from '../inspectHelpers'
 import type { MathExpressionNode } from '../MathExpressionNode'
 import { MathConditionNode } from '../MathConditionNode'
 import { MathConditionContainerNode } from '../MathConditionContainerNode'
+import { LiteralNode } from './leaves'
 
 /**
  * Operators supported by `ComparisonConditionNode`. Map 1:1 to the MC
@@ -44,6 +52,7 @@ export class ComparisonConditionNode extends MathConditionNode {
     readonly right: MathExpressionNode,
   ) {
     super(sandstoneCore)
+    // Comparison operands are independent values.
   }
 
   getValue() {
@@ -79,6 +88,17 @@ export class ComparisonConditionNode extends MathConditionNode {
       case '>=': return l >= r
       default: return undefined
     }
+  }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(
+      this.inspectClassName,
+      `op=${JSON.stringify(this.op)}`,
+      [this.left, this.right],
+      depth,
+      getIndent(options),
+    this
+    )
   }
 }
 
@@ -135,6 +155,10 @@ export class AndConditionNode extends MathConditionContainerNode {
     if (sawUnknown) return undefined
     return true // all true
   }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, this.body, depth, getIndent(options), this)
+  }
 }
 
 /**
@@ -188,6 +212,10 @@ export class OrConditionNode extends MathConditionContainerNode {
     if (sawUnknown) return undefined
     return false
   }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, this.body, depth, getIndent(options), this)
+  }
 }
 
 /**
@@ -210,6 +238,7 @@ export class NotConditionNode extends MathConditionNode {
     readonly condition: MathConditionNode,
   ) {
     super(sandstoneCore)
+    // Operand stays parent-less (independent condition).
   }
 
   getValue() {
@@ -234,6 +263,10 @@ export class NotConditionNode extends MathConditionNode {
     const v = this.condition.evaluateConstant()
     if (v === undefined) return undefined
     return !v
+  }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, [this.condition], depth, getIndent(options), this)
   }
 }
 
@@ -265,6 +298,10 @@ export class PredicateRefConditionNode extends MathConditionNode {
       type: 'PredicateRef',
       predicate: '<PredicateClass>',
     }
+  }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [['predicate', '<PredicateClass>']], getIndent(options), this)
   }
 }
 
@@ -304,6 +341,10 @@ export class McfunctionCheckConditionNode extends MathConditionNode {
       flagStoragePath: this.flagStoragePath,
     }
   }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [['flagStoragePath', this.flagStoragePath]], getIndent(options), this)
+  }
 }
 
 /**
@@ -330,6 +371,10 @@ export class ConstantConditionNode extends MathConditionNode {
       value: this.value,
     }
   }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [['value', this.value]], getIndent(options), this)
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -341,9 +386,23 @@ export function compare(
   core: SandstoneCore,
   op: ComparisonOp,
   left: Float | Integer,
-  right: Float | Integer,
+  right: Float | Integer | number,
 ): ComparisonConditionNode {
-  return new ComparisonConditionNode(core, op, left.node, right.node)
+  // Unwrap handles via `.node`; a raw number literal becomes a
+  // `LiteralNode` so the resulting condition carries a real
+  // expression at runtime (the comparison ctor's `left: MathExpressionNode`
+  // slots would otherwise receive `undefined` for `1` and crash the
+  // AST inspector).
+  //
+  // `right` literals here are `internal` — the user wrote a
+  // positional number (`scale['=='](1)`), not a standalone variable.
+  // They should not duplicate at the top of the audit trail;
+  // logging them only inside the condition is correct.
+  const leftNode = left.node
+  const rightNode: MathExpressionNode =
+    typeof right === 'number' ? new LiteralNode(core, right) : right.node
+  if (typeof right === 'number') rightNode.internal = true
+  return new ComparisonConditionNode(core, op, leftNode, rightNode)
 }
 
 export function andOf(

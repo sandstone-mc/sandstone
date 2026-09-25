@@ -1,6 +1,8 @@
 import type { SandstoneCore } from '../../../../core/sandstoneCore'
+import * as util from 'util'
 import type { DataPointClass } from '../../../../variables/Data'
 import type { Score } from '../../../../variables/Score'
+import { formatMathLeaf, getIndent } from '../inspectHelpers'
 import type { MathKind } from '../MathExpressionNode'
 import { MathExpressionNode } from '../MathExpressionNode'
 
@@ -50,6 +52,13 @@ export class LiteralNode extends MathExpressionNode {
   /** @internal */
   getStructuralKey(): string {
     return `Literal(${this.value})`
+  }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [
+      ['value', this.value],
+      ['kind', this.kind],
+    ], getIndent(options), this)
   }
 }
 
@@ -105,6 +114,13 @@ export class CopyNode extends MathExpressionNode {
   getStructuralKey(): string {
     return `Copy:${this.source.getStructuralKey()}`
   }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [
+      ['kind', this.kind],
+      ['source', this.source],
+    ], getIndent(options), this)
+  }
 }
 
 /**
@@ -147,6 +163,32 @@ export class StorageRefNode extends MathExpressionNode {
   getStructuralKey(): string {
     return `StorageRef:${this.kind}`
   }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    // Show what the storage ref is actually pointing at — the MC
+    // data target plus the NBT path under it — instead of dumping
+    // the entire `DataPointClass` (which carries ~20 helper fields
+    // the user doesn't need to read).
+    //
+    // Strings get quoted once by `formatArgValue`; non-string targets
+    // (entity selector objects, block positions) round-trip through
+    // JSON for a stable representation.
+    const dp = this.dataPoint as unknown as {
+      type?: string
+      currentTarget?: unknown
+      path?: unknown
+    }
+    const target = typeof dp.currentTarget === 'string'
+      ? dp.currentTarget
+      : JSON.stringify(dp.currentTarget)
+    const path = typeof dp.path === 'string' ? dp.path : JSON.stringify(dp.path)
+    return formatMathLeaf(this.inspectClassName, [
+      ['kind', this.kind],
+      ['type', dp.type ?? 'unknown'],
+      ['target', target],
+      ['path', path],
+    ], getIndent(options), this)
+  }
 }
 
 /**
@@ -187,6 +229,13 @@ export class ScoreboardRefNode extends MathExpressionNode {
   /** @internal */
   getStructuralKey(): string {
     return `ScoreboardRef`
+  }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [
+      ['kind', this.kind],
+      ['score', this.score],
+    ], getIndent(options), this)
   }
 }
 
@@ -232,6 +281,14 @@ export class RandomNode extends MathExpressionNode {
       min: this.min?.getValue(),
       max: this.max?.getValue(),
     }
+  }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [
+      ['kind', this.kind],
+      ['min', this.min],
+      ['max', this.max],
+    ], getIndent(options), this)
   }
 }
 
@@ -279,6 +336,13 @@ export class PickNode extends MathExpressionNode {
       })),
     }
   }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [
+      ['kind', this.kind],
+      ['entries', this.entries.length],
+    ], getIndent(options), this)
+  }
 }
 
 /**
@@ -317,6 +381,10 @@ export class EnchantmentLevelNode extends MathExpressionNode {
       kind: this.kind,
     }
   }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [['kind', this.kind]], getIndent(options), this)
+  }
 }
 
 /**
@@ -354,5 +422,9 @@ export class EnvironmentAttributeNode extends MathExpressionNode {
       type: 'EnvironmentAttribute',
       kind: this.kind,
     }
+  }
+
+  [util.inspect.custom](_depth?: number, options?: unknown): string {
+    return formatMathLeaf(this.inspectClassName, [['kind', this.kind]], getIndent(options), this)
   }
 }

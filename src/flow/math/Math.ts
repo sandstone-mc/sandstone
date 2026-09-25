@@ -107,7 +107,7 @@ export function mathFunction<R>(
     schema = { kind: 'record', fields }
   }
 
-  const fn = new MathFunctionNode(sandstoneCore, schema)
+  const fn = new MathFunctionNode(sandstoneCore, undefined, schema)
   try {
     callback()
   } finally {
@@ -396,6 +396,38 @@ export class SandstoneMath<R = MathOutputsSchema> {
   }
 
   /**
+   * Snapshot a value the user passed to `_.return(...)`: walk plain
+   * records and pluck each handle's CURRENT `node` so the inspector
+   * shows what was actually being set at the moment of the return,
+   * not the final mutated state. Scalar / array / primitive values
+   * pass through.
+   */
+  private snapshotValue(v: unknown): unknown {
+    if (v === null || v === undefined) return v
+    if (Array.isArray(v)) return v.map((x) => this.snapshotValue(x))
+    if (typeof v === 'object') {
+      const handleLike = v as { node?: unknown; [k: string]: unknown }
+      // Handle-shaped: `{ node: MathExpressionNode, … }` — store the
+      // current expression so subsequent `*=` mutations don't shift
+      // what this return shows.
+      if (
+        handleLike.node !== undefined &&
+        typeof handleLike.node === 'object' &&
+        handleLike.node !== null
+      ) {
+        return handleLike.node
+      }
+      // Plain record: snapshot each entry.
+      const result: Record<string, unknown> = {}
+      for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
+        result[k] = this.snapshotValue(val)
+      }
+      return result
+    }
+    return v
+  }
+
+  /**
    * `_.return(value)` — append a return statement to the current clause.
    *
    * Schema-constrained via `MathSchemaValue<R>`:
@@ -403,10 +435,19 @@ export class SandstoneMath<R = MathOutputsSchema> {
    *   - R = `{x: 'float', y: 'float'}` (record) → value is `{x: Float, y: Float}`
    *
    * Typos in the record keys / wrong kinds fail at compile time.
+   *
+   * Each handle in the value is SNAPSHOTTED to its current `node` so the
+   * inspector shows what was actually being set at this moment — `if`s
+   * that fire early in the block see the early values, not the
+   * final post-mutation state.
    */
   return(value: MathSchemaValue<R>): void {
     void ({} as MathSchemaValue<R>)
-    const ret = new MathReturnNode(this.sandstoneCore, value as unknown as Float | Integer | Record<string, Float | Integer>)
+    const snap = this.snapshotValue(value as unknown) as
+      | Float
+      | Integer
+      | Record<string, Float | Integer>
+    const ret = new MathReturnNode(this.sandstoneCore, snap)
     const stack = this.sandstoneCore.mathStack
     const top = stack[stack.length - 1] as { append?: (n: MathReturnNode) => void } | undefined
     if (top && typeof top.append === 'function') {

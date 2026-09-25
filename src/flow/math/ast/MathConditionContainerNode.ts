@@ -1,6 +1,7 @@
 import * as util from 'util'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import { MathConditionNode } from './MathConditionNode'
+import { MATH_NODE_DEFAULT_DEPTH, formatMath, getIndent } from './inspectHelpers'
 
 /**
  * A condition node that holds a body of sub-conditions.
@@ -33,14 +34,17 @@ export abstract class MathConditionContainerNode extends MathConditionNode {
   append<NODE extends MathConditionNode>(node: NODE): NODE
   append<NODES extends MathConditionNode[]>(...nodes: NODES): NODES
   append(...nodes: MathConditionNode[]) {
+    for (const node of nodes) {
+      node.parent = this
+    }
     this.body.push(...nodes)
     return nodes.length === 1 ? nodes[0] : nodes
   }
 
-  [util.inspect.custom](_depth: number, _options: any) {
-    void _depth
-    void _options
-    const childLines = this.body.map((n) => `  ${util.inspect(n)}`).join('\n')
-    return childLines ? `${this.constructor.name}(\n${childLines}\n)` : `${this.constructor.name}()`
+  // Recurses into each child's own [util.inspect.custom] (direct call,
+  // not via util.inspect(n) — see inspectHelpers.ts). Avoids the
+  // sandstoneCore.mathStack re-entry cycle that hangs Bun.
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, this._body, depth, getIndent(options), this)
   }
 }

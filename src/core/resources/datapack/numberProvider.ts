@@ -30,6 +30,7 @@ export type FloatNumberProviderClassArguments = {
 } & ResourceClassArguments<'default'>
 
 export class FloatNumberProviderClass extends ResourceClass<FloatNumberProviderNode> implements JsonResource {
+  toString = () => this.name
   static readonly resourceType = 'context_float_provider' as const
 
   public json: FloatNumberProviderClassArguments['json']
@@ -75,6 +76,7 @@ export type IntegerNumberProviderClassArguments = {
 } & ResourceClassArguments<'default'>
 
 export class IntegerNumberProviderClass extends ResourceClass<IntegerNumberProviderNode> implements JsonResource {
+  toString = () => this.name
   static readonly resourceType = 'context_int_provider' as const
 
   public json: IntegerNumberProviderClassArguments['json']

@@ -1,3 +1,4 @@
+import * as util from 'util'
 import { DataPointClass, DATA_TYPES, IntegerDataPointClass } from '../../../variables/Data'
 import type { DataPointPickClass } from '../../../core/Macro'
 import type { Score } from '../../../variables/Score'
@@ -56,6 +57,18 @@ abstract class BaseHandle {
   /** Mutable: operator methods replace this on each mutation. */
   abstract node: MathExpressionNode
 
+  /**
+   * Immutable: the handle's original value at construction time
+   * (`_.float(x)` → CopyNode, `_.float(5)` → LiteralNode, rebind from
+   * a data point → StorageRefNode, etc.). N-ary aggregate methods
+   * (`add`, `multiply`) reference this rather than `node` so each
+   * chained operator produces a fresh aggregate rooted at the same
+   * starting value rather than nesting into the prior aggregate.
+   * Binary operators (sub/div/mod) and unary operators still read
+   * `node` since they form a chain along the latest expression.
+   */
+  abstract startNode: MathExpressionNode
+
   abstract readonly kind: MathKind
 
   /** Back-ref to the binding scope, set by `BindingScope.define`. */
@@ -74,6 +87,17 @@ abstract class BaseHandle {
     this.node = node
     this.binding?.scope._update(this.binding.name, this as unknown as Float | Integer)
   }
+
+  /**
+   * `[util.inspect.custom]` for handles — delegates to the handle's
+   * current value-expression so a `MathReturnNode(value=record)`
+   * dump shows what the handle is actually being set to (rather
+   * than a static `<ClassName {key,…}>` summary).
+   */
+  [util.inspect.custom]() {
+    const v = this.node ?? this.startNode
+    return util.inspect(v as Parameters<typeof util.inspect>[0])
+  }
 }
 
 /**
@@ -88,6 +112,7 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   readonly [FloatBrand]: true = true as const
 
   override node: MathExpressionNode
+  override startNode: MathExpressionNode
 
   readonly kind: MathKind = 'float'
 
@@ -101,19 +126,31 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   constructor(node: MathExpressionNode) {
     super()
     this.node = node
+    // The starting expression is the handle's own value at construction
+    // time. Subsequent mutations push `node` to the latest aggregate;
+    // `startNode` continues to point at this original baseline (a
+    // CopyNode from `_.float(otherHandle)`, a LiteralNode from
+    // `_.float(5)`, a StorageRefNode from rebind, etc.).
+    this.startNode = node
   }
 
   add(value: Float | Integer): this
   add(values: (Float | Integer)[]): this
   add(...values: (Float | Integer)[]): this
   add(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
-    const inputs = args.flat().map(handleToExpr)
-    this.setNode(new AggregateNode(this.node.sandstoneCore, 'add', [this.node, ...inputs]))
+    // Construct the aggregate as a side-effect AST node (it gets
+    // picked up by the active MathFunctionNode's `allNodes` via the
+    // base `MathNode` ctor) but DO NOT mutate `this.node`. The handle
+    // is treated as a binding to its starting value — operators
+    // accumulate into separate aggregate AST nodes that reference
+    // `startNode`, never replacing the handle's identity. Returns on
+    // the handle show the original baseline, not the running aggregate.
+    new AggregateNode(this.node.sandstoneCore, 'add', [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))])
     return this
   }
 
   subtract(value: Float | Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, handleToExpr(value)]))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
     return this
   }
 
@@ -121,18 +158,28 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   multiply(values: (Float | Integer)[]): this
   multiply(...values: (Float | Integer)[]): this
   multiply(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
-    const inputs = args.flat().map(handleToExpr)
-    this.setNode(new AggregateNode(this.node.sandstoneCore, 'mul', [this.node, ...inputs]))
+    // Construct the aggregate as a side-effect AST node (it gets
+    // picked up by the active MathFunctionNode's `allNodes` via the
+    // base `MathNode` ctor) but DO NOT mutate `this.node`. The handle
+    // is treated as a binding to its starting value — operators
+    // accumulate into separate aggregate AST nodes that reference
+    // `startNode`, never replacing the handle's identity. Returns on
+    // the handle show the original baseline, not the running aggregate.
+    new AggregateNode(
+      this.node.sandstoneCore,
+      'mul',
+      [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))],
+    )
     return this
   }
 
   divide(value: Float | Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'div', [this.node, handleToExpr(value)]))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'div', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
     return this
   }
 
   modulo(value: Float | Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'mod', [this.node, handleToExpr(value)]))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'mod', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
     return this
   }
 
@@ -307,6 +354,7 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   readonly [IntegerBrand]: true = true as const
 
   override node: MathExpressionNode
+  override startNode: MathExpressionNode
 
   readonly kind: MathKind = 'integer'
 
@@ -320,19 +368,30 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   constructor(node: MathExpressionNode) {
     super()
     this.node = node
+    // The starting expression is the handle's own value at construction
+    // time. Subsequent mutations push `node` to the latest aggregate;
+    // `startNode` continues to point at this original baseline (a
+    // CopyNode from `_.float(otherHandle)`, a LiteralNode from
+    // `_.float(5)`, a StorageRefNode from rebind, etc.).
+    this.startNode = node
   }
 
   add(value: Integer): this
   add(values: Integer[]): this
   add(...values: Integer[]): this
   add(...args: [Integer | Integer[]] | Integer[]) {
-    const inputs = args.flat().map(handleToExpr)
-    this.setNode(new AggregateNode(this.node.sandstoneCore, 'add', [this.node, ...inputs]))
+    // Same model as the Float `add` — build the aggregate as a
+    // side-effect AST node, do NOT replace the handle's `node`.
+    new AggregateNode(
+      this.node.sandstoneCore,
+      'add',
+      [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))],
+    )
     return this
   }
 
   subtract(value: Integer): this {
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, handleToExpr(value)]))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, 'sub', [this.node, handleToExpr(this.node.sandstoneCore, value)]))
     return this
   }
 
@@ -340,20 +399,25 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   multiply(values: Integer[]): this
   multiply(...values: Integer[]): this
   multiply(...args: [Integer | Integer[]] | Integer[]) {
-    const inputs = args.flat().map(handleToExpr)
-    this.setNode(new AggregateNode(this.node.sandstoneCore, 'mul', [this.node, ...inputs]))
+    // Same model as the Float `multiply` — build the aggregate as a
+    // side-effect AST node, do NOT replace the handle's `node`.
+    new AggregateNode(
+      this.node.sandstoneCore,
+      'mul',
+      [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))],
+    )
     return this
   }
 
   divide(value: Integer, floored = true): this {
     const op = floored ? 'floor_div' : 'div'
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, handleToExpr(value)]))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, handleToExpr(this.node.sandstoneCore, value)]))
     return this
   }
 
   modulo(value: Integer, floored = true): this {
     const op = floored ? 'floor_mod' : 'mod'
-    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, handleToExpr(value)]))
+    this.setNode(new BinaryOpNode(this.node.sandstoneCore, op, [this.node, handleToExpr(this.node.sandstoneCore, value)]))
     return this
   }
 
@@ -448,13 +512,28 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
   }
 }
 
-function handleToExpr(h: Float | Integer | number): MathExpressionNode {
+function handleToExpr(core: SandstoneCore, h: Float | Integer | number): MathExpressionNode {
   if (typeof h === 'number') {
-    // Wrap raw number as a Float LiteralNode at use site. This lets
+    // Wrap a raw number as a `LiteralNode` at use site. This lets
     // `rx['*='](-1)` work without requiring the user to wrap literals
     // in `_.float(...)` first — the rebind step does the same job for
     // call-site inputs and `handleToExpr` does it for inline literals.
-    return floatFromLiteral(h as unknown as SandstoneCore, h) as unknown as MathExpressionNode
+    //
+    // The literal is `internal` — it exists only to satisfy this
+    // operator's positional argument. There's no user-written name
+    // for it; logging it at the top of `allNodes` would just
+    // duplicate values the user never assigned to a handle.
+    // Returns the `LiteralNode` directly (not the wrapping `Float`
+    // handle) so the result slots straight into expression-node input
+    // arrays without an extra unwrap step. The caller passes its own
+    // `SandstoneCore` here — the previous version forwarded the
+    // numeric literal itself as the core, which surfaced as a
+    // `(...).mathStack is undefined` TypeError once `MathNode`'s
+    // constructor started reading from `sandstoneCore.mathStack` to
+    // register every node with the enclosing function's audit trail.
+    const lit = new LiteralNode(core, h)
+    lit.internal = true
+    return lit
   }
   return h.node
 }

@@ -1,4 +1,6 @@
 import type { SandstoneCore } from '../../../../core/sandstoneCore'
+import * as util from 'util'
+import { formatMath, getIndent, MATH_NODE_DEFAULT_DEPTH } from '../inspectHelpers'
 import type { MathKind } from '../MathExpressionNode'
 import { MathExpressionNode } from '../MathExpressionNode'
 
@@ -66,6 +68,12 @@ export class BinaryOpNode extends MathExpressionNode {
     // Default kind = left operand's kind. The handle constructor widens
     // Float+Integer → Float explicitly, so by the time we land here the
     // operands are homogeneous; using left's kind is the safe default.
+    //
+    // Operands are NOT parent-set here. Each operand is an independent
+    // value the user has named (or that was constructed for this op's
+    // own sake and flagged `internal`) — neither form is owned by
+    // this operator. The user's mental model: operands stay root-level
+    // AND render nested inside this op.
     this.kind = kind ?? operands[0].kind
   }
 
@@ -103,6 +111,17 @@ export class BinaryOpNode extends MathExpressionNode {
   isAbsorbing(op: string): number | undefined {
     if (this.op !== op) return undefined
     return absorbingValue(op)
+  }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(
+      this.inspectClassName,
+      `op=${JSON.stringify(this.op)}, kind=${JSON.stringify(this.kind)}`,
+      this.operands,
+      depth,
+      getIndent(options),
+      this,
+    )
   }
 }
 
@@ -170,6 +189,8 @@ export class AggregateNode extends MathExpressionNode {
     kind?: MathKind,
   ) {
     super(sandstoneCore)
+    // Same as BinaryOpNode: do NOT parent-set operands — they're
+    // independent values from the user's perspective.
     this.kind = kind ?? inputs[0].kind
   }
 
@@ -202,6 +223,17 @@ export class AggregateNode extends MathExpressionNode {
       default: return undefined
     }
   }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(
+      this.inspectClassName,
+      `op=${JSON.stringify(this.op)}, count=${this.inputs.length}`,
+      this.inputs,
+      depth,
+      getIndent(options),
+      this,
+    )
+  }
 }
 
 export class UnaryOpNode extends MathExpressionNode {
@@ -216,6 +248,7 @@ export class UnaryOpNode extends MathExpressionNode {
     readonly operand: MathExpressionNode,
   ) {
     super(sandstoneCore)
+    // Operand stays parent-less (independent value).
   }
 
   get kind(): MathKind {
@@ -266,6 +299,17 @@ export class UnaryOpNode extends MathExpressionNode {
     void _op
     return undefined
   }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(
+      this.inspectClassName,
+      `op=${JSON.stringify(this.op)}`,
+      [this.operand],
+      depth,
+      getIndent(options),
+      this,
+    )
+  }
 }
 
 /** @internal */
@@ -296,6 +340,7 @@ export class ArcSineNode extends MathExpressionNode {
     readonly operand: MathExpressionNode,
   ) {
     super(sandstoneCore)
+    // Operand stays parent-less (independent value).
   }
 
   getValue(): unknown {
@@ -305,6 +350,10 @@ export class ArcSineNode extends MathExpressionNode {
   /** @internal — never inlineable; polyfill requires imperative mcfunction. */
   canEvaluateLazily(): boolean {
     return false
+  }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, [this.operand], depth, getIndent(options), this)
   }
 }
 
@@ -324,6 +373,7 @@ export class ArcCosineNode extends MathExpressionNode {
     readonly operand: MathExpressionNode,
   ) {
     super(sandstoneCore)
+    // Operand stays parent-less (independent value).
   }
 
   getValue(): unknown {
@@ -333,5 +383,9 @@ export class ArcCosineNode extends MathExpressionNode {
   /** @internal — never inlineable; polyfill requires imperative mcfunction. */
   canEvaluateLazily(): boolean {
     return false
+  }
+
+  [util.inspect.custom](depth: number = MATH_NODE_DEFAULT_DEPTH, options?: unknown): string {
+    return formatMath(this.inspectClassName, undefined, [this.operand], depth, getIndent(options), this)
   }
 }
