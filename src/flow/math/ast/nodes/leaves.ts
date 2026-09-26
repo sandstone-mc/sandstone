@@ -110,6 +110,11 @@ export class CopyNode extends MathExpressionNode {
     }
   }
 
+  /** @internal — CopyNode is transparent for constant evaluation; unwrap to source. */
+  evaluateAsConstant(): number | undefined {
+    return this.source.evaluateAsConstant()
+  }
+
   /** @internal */
   getStructuralKey(): string {
     return `Copy:${this.source.getStructuralKey()}`

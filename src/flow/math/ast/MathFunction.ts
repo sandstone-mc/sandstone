@@ -15,6 +15,7 @@ import { SandstoneMath } from '../../math/Math'
 import { StorageRefNode } from './nodes/leaves'
 import { DataPointPickClass } from 'sandstone/core'
 import { MathInvocationNode as MathInvocationBridgeNode } from '../compile/MathInvocationNode'
+import { computeInputShapeKey } from '../compile/groupBridges'
 
 /**
  * Input types accepted by `Math.__call__(...inputs: P)`. Each non-handle
@@ -112,7 +113,20 @@ export type MathOptions = {
 class _RawMathFunction<P extends readonly MathInput[], R>
   implements NBTSerializable
 {
-  public node: MathFunctionNode | undefined
+  /**
+   * Per-input-shape AST cache. Each unique input shape (see
+   * `compile/groupBridges.ts#computeInputShapeKey`) gets its own
+   * `MathFunctionNode` built once and reused by subsequent calls
+   * with matching shapes. Different shapes → different ASTs (each
+   * AST captures the actual constant / DataPoint identity at the
+   * point of construction).
+   *
+   * For the user's `funnyMath(21.5)` × 2 + `funnyMath(5)` +
+   * `funnyMath(DataVariable(11))` example, this builds 3 ASTs
+   * total (one per unique input shape), even though there are 4
+   * call sites.
+   */
+  private _nodesByShape: Map<string, MathFunctionNode> = new Map()
 
   /**
    * Invocation counter — increments per `__call__`. Used to detect
@@ -177,36 +191,40 @@ class _RawMathFunction<P extends readonly MathInput[], R>
   }
 
   /**
-   * Build the AST by running the user callback. Passes the actual
-   * input handles so the body can reference them. Called once per
-   * Math instance on first invocation; subsequent calls reuse the
-   * cached AST.
+   * Build (or fetch from cache) the AST for the given input shape.
+   * One AST per unique input shape — calls with matching shapes
+   * reuse the cached AST; different shapes build separate ASTs so
+   * the inlined `CopyNode`/`StorageRefNode`/etc. references each
+   * call's actual input value.
    *
-   * On successful first build, fires `options.onInitialAST(this.node)`
+   * On successful build, fires `options.onInitialAST(node)`
    * synchronously after the user callback returns and before the math
    * stack is popped — the body is fully populated at that point.
    */
-  private buildAst(inputs: P): void {
-    if (this.node) return
+  private buildAst(inputs: P): MathFunctionNode {
+    const shapeKey = computeInputShapeKey(this._lastReboundStarts ?? [])
+    const cached = this._nodesByShape.get(shapeKey)
+    if (cached) return cached
+
     // Pass the rebound input storage references to the inspector so
     // they show up in the dump ahead of the AST as `inputs`. Each
     // entry is the handle's `startNode` — a `StorageRefNode` pointing
     // at the user's data source — so the inspector renders meaningful
     // `StorageRefNode(kind=…, type=…, target=…, path=…)` lines via
     // their own `[util.inspect.custom]` rather than a static dump.
-    this.node = new MathFunctionNode(
+    const node = new MathFunctionNode(
       this.sandstoneCore,
-      (this._lastReboundStarts as ReadonlyArray<MathExpressionNode> | undefined) ?? [],
+      this._lastReboundStarts ?? [],
       this.computeOutputsRecord(),
     )
     // Stamp the deferred-result key onto the AST so the lowering
     // pass can derive the matching `math_<key>` provider name. Must
     // match `_resourceKey` so the DataPoint the inline command writes
     // to is the same path the caller's `.data()` handle reads.
-    this.node.resourceName = this._resourceKey
+    node.resourceName = this._resourceKey
     // Plumb user options onto the inspector so they're reported
     // alongside the AST.
-    this.node.options = this.options as unknown as Record<string, unknown> | undefined
+    node.options = this.options as unknown as Record<string, unknown> | undefined
     // `rebindInput` ran in `__call__` BEFORE the MathFunctionNode
     // existed, so the bound StorageRefNodes missed the base
     // `MathNode` ctor's audit-trail registration. Catch up here —
@@ -218,17 +236,19 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // slots when referenced from an operator).
     for (const startNode of this._lastReboundStarts ?? []) {
       const cls = startNode.constructor.name
-      const nextIndex = this.node.perClassCounters.get(cls) ?? 0
+      const nextIndex = node.perClassCounters.get(cls) ?? 0
       startNode.index = nextIndex
-      this.node.perClassCounters.set(cls, nextIndex + 1)
+      node.perClassCounters.set(cls, nextIndex + 1)
     }
     try {
       const helper = new SandstoneMath<unknown>(this.sandstoneCore)
       this.callback(helper, ...inputs)
-      this.options?.onInitialAST?.(this.node)
+      this.options?.onInitialAST?.(node)
     } finally {
-      this.node.dispose()
+      node.dispose()
     }
+    this._nodesByShape.set(shapeKey, node)
+    return node
   }
 
   /**
@@ -261,7 +281,7 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     this._lastReboundStarts = rebound.map(
       (h) => (h as unknown as { startNode: MathExpressionNode }).startNode,
     )
-    this.buildAst(rebound as unknown as P)
+    const node = this.buildAst(rebound as unknown as P)
     // Compile + emit. Passes the caller's MCFunction so the lowering
     // pass can attach the bridge `MathInvocationNode` to that body.
     // `MathInvocationInlineVisitor` later splices the bridge's
@@ -299,11 +319,15 @@ class _RawMathFunction<P extends readonly MathInput[], R>
       const startNode = (h as unknown as { startNode: MathExpressionNode }).startNode
       if (!StorageRefNode.is(startNode)) return // literal or score — skip
       const callerDp = startNode.dataPoint as DataPointClass<'storage'>
+      // Allocate the per-position shared input DataPoint via
+      // `MathFunctionNode.getSharedInputStorage` so packUid suffixing
+      // lands on it consistently. Same `DataPoint` reference is used
+      // by the bridge's per-call `set from <callerDp> → sharedDp`
+      // copy AND the AST rewrite that the multi-call compile pass
+      // performs (so the deduplicated provider JSON reads from the
+      // same storage the copy writes to).
       if (!this._sharedStorageInputs[i]) {
-        this._sharedStorageInputs[i] = this.sandstoneCore.pack.DataVariable(
-          undefined,
-          `math_${this._resourceKey}_input_${i}`,
-        )
+        this._sharedStorageInputs[i] = node.getSharedInputStorage(i)
       }
       slots.push({
         position: i,
@@ -318,11 +342,11 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // also lands per-call so concurrent reads don't collide.
     const useCallNamespace = callIdx > 0
     this._invocationCount++
-    this.node!.invocationCount = this._invocationCount
+    node.invocationCount = this._invocationCount
 
     const bridge = new MathInvocationBridgeNode(
       this.sandstoneCore,
-      this.node!,
+      node,
       parentFn,
     )
     bridge.callIdx = callIdx
@@ -332,9 +356,17 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // `set from` copy per slot and rewrites the AST's input
     // StorageRefNode at each position to point at its shared dp.
     bridge.inputs = slots
+    // ALL rebound inputs (including literals). The visitor pipeline
+    // reads this to compute the bridge's input shape key, which
+    // determines whether this bridge can share a compile with
+    // others. Literals vs DataPointClass vs ScoreboardRefNode all
+    // participate in the key.
+    bridge.reboundInputs = rebound.map(
+      (h) => (h as unknown as { node: MathExpressionNode }).node,
+    )
     parentFn.body.push(bridge)
 
-    return this.makeDeferredResult(callIdx, useCallNamespace)
+    return this.makeDeferredResult(node, callIdx, useCallNamespace)
   }
 
   /**
@@ -389,23 +421,40 @@ class _RawMathFunction<P extends readonly MathInput[], R>
    * path encodes the instance's unique key + field so the lowerer can
    * find it.
    */
-  private makeDeferredResult(callIdx: number, useCallNamespace: boolean): MathSchemaValue<R> {
-    const suffix = useCallNamespace ? `_${callIdx}` : ''
-    const baseName = `math_${this._resourceKey}`
+  private makeDeferredResult(
+    node: MathFunctionNode,
+    callIdx: number,
+    useCallNamespace: boolean,
+  ): MathSchemaValue<R> {
     if (this.outputs === _FloatClass) {
-      const dp = this.sandstoneCore.pack.DataVariable(undefined, `${baseName}_result${suffix}`)
+      // Scalar float — single result DataPoint, allocated via the
+      // MathFunctionNode helper so packUid suffixing matches the
+      // runtime write target and the caller's `.data()` handle.
+      const dp = node.getResultStorage(callIdx, useCallNamespace)
       const ref = new StorageRefNode(this.sandstoneCore, dp, 'float')
       const handle = new _RawFloatHandle(ref)
       handle._isOutput = true
       return handle as unknown as MathSchemaValue<R>
     }
     if (this.outputs === _IntegerClass) {
-      const dp = this.sandstoneCore.pack.DataVariable(undefined, `${baseName}_result${suffix}`)
+      // Scalar integer — same flow as the float branch.
+      const dp = node.getResultStorage(callIdx, useCallNamespace)
       const ref = new StorageRefNode(this.sandstoneCore, dp, 'integer')
       const handle = new _RawIntegerHandle(ref)
       handle._isOutput = true
       return handle as unknown as MathSchemaValue<R>
     }
+    // Record outputs (`{x, y, z}`) — each field has its own storage
+    // path. The plan/compiler doesn't currently drive per-field
+    // lowering; these DataPoints are allocated here so the caller's
+    // `.data().select(field)` reads work today. Per-field path
+    // construction stays inline (and uses `DataVariable` so suffixing
+    // is consistent) — when the compiler grows record-output support,
+    // funnel the per-field allocations through a single helper on
+    // `MathFunctionNode` and have the compiler reuse the resulting
+    // DataPoint references.
+    const suffix = useCallNamespace ? `_${callIdx}` : ''
+    const baseName = `math_${this._resourceKey}`
     const result: Record<string, _RawFloatHandle | _RawIntegerHandle> = {}
     for (const [k, v] of Object.entries(this.outputs as Record<string, typeof _RawFloatHandle | typeof _RawIntegerHandle>)) {
       const kind: MathKind = v === _RawFloatHandle ? 'float' : 'integer'

@@ -70,6 +70,53 @@ import {
  */
 export abstract class MathVisitor {
   /**
+   * Nodes this visitor absorbed (consumed by another node, now
+   * orphaned). Drained by the runner after all visitors complete —
+   * filtered out of `fn.allNodes` so the compiler's chronological
+   * walk doesn't re-emit imperative commands for them.
+   *
+   * The visitor itself never deletes nodes — orphan removal is the
+   * runner's responsibility. This keeps visitors composable: a
+   * downstream visitor that wants to inspect the pre-removal AST
+   * can read `fn.allNodes` directly during its own pass.
+   */
+  readonly orphans: MathNode[] = []
+
+  /**
+   * Lifecycle hook — called by the runner BEFORE `run(fn)`. Subclasses
+   * override for setup (e.g. build caches from `fn.allNodes`).
+   * Default: no-op.
+   */
+  onStart(_fn: MathFunctionNode): void {
+    void _fn
+  }
+
+  /**
+   * Lifecycle hook — called by the runner AFTER `run(fn)`. Subclasses
+   * override for cleanup. Default: no-op.
+   */
+  onEnd(_fn: MathFunctionNode): void {
+    void _fn
+  }
+
+  /**
+   * Run this visitor against a math function's audit trail. Walks
+   * `fn.allNodes` (the chronological construction order — the only
+   * place chain-state nodes actually live; the body's
+   * `MathReturnNode` only references the FINAL state) and dispatches
+   * each through `this.visit`. Override ONLY if your traversal
+   * strategy differs (e.g. group by handle first).
+   *
+   * Subclasses don't override this; they override the per-type
+   * `visitXxxNode` methods below to install their transformations.
+   */
+  run(fn: MathFunctionNode): void {
+    for (const node of fn.allNodes) {
+      this.visit(node)
+    }
+  }
+
+  /**
    * Entry point — dispatch by concrete node type. Returns the
    * replacement node (same instance for pass-through).
    */
@@ -267,5 +314,62 @@ export abstract class MathVisitor {
   visitConstantConditionNode(node: ConstantConditionNode): MathNode {
     void node
     return node
+  }
+}
+
+/**
+ * `MathAnalysisVisitor<TOutput>` — read-only analysis pass that
+ * produces a typed result instead of mutating `fn.allNodes`.
+ *
+ * Mirrors `MathVisitor`'s lifecycle shape (`onStart` / `onEnd`)
+ * but replaces the mutating `run(fn)` with a value-returning
+ * `analyze(fn)`. The pipeline runner invokes each analysis visitor
+ * AFTER the transform visitors have run (so the analysis sees the
+ * post-transform AST) and stores the result in
+ * `fn.analyses.get(this.key)`.
+ *
+ * Use cases:
+ *   - Chain reachability analysis (which nodes belong to which
+ *     handle's chain).
+ *   - Return-handle identification.
+ *   - Dead-store analysis (which handle storages are never read).
+ *   - Constant-folding opportunity detection.
+ *
+ * Use a TRANSFORM visitor (not this) when the pass mutates the
+ * AST — the pipeline runner handles `orphans` cleanup uniformly for
+ * transforms, while analysis outputs are stored verbatim and
+ * consumed by the downstream compiler.
+ */
+export abstract class MathAnalysisVisitor<TOutput> {
+  /**
+   * Where the analysis output lands in `fn.analyses`. Each
+   * analysis visitor MUST use a unique key — collisions silently
+   * overwrite earlier outputs.
+   */
+  abstract readonly key: string
+
+  /**
+   * Run the analysis against a math function. Subclasses inspect
+   * `fn.allNodes` (and `fn.analyses` for cross-analysis deps) and
+   * return their result. The pipeline runner stores it under
+   * `this.key`.
+   */
+  abstract analyze(fn: MathFunctionNode): TOutput
+
+  /**
+   * Lifecycle hook — called by the runner BEFORE `analyze(fn)`.
+   * Override for setup (e.g. build caches from `fn.allNodes`).
+   * Default: no-op.
+   */
+  onStart(_fn: MathFunctionNode): void {
+    void _fn
+  }
+
+  /**
+   * Lifecycle hook — called by the runner AFTER `analyze(fn)`.
+   * Override for cleanup. Default: no-op.
+   */
+  onEnd(_fn: MathFunctionNode): void {
+    void _fn
   }
 }

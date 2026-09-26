@@ -80,12 +80,62 @@ abstract class BaseHandle {
   }
 
   /**
+   * True once this handle has been mutated at least once. Used by
+   * the compiler to distinguish "user-bound" handles (which are
+   * chained through mutator methods like `+=` / `/=`) from
+   * throwaway handles (created inline as values via `_.modulo(...)`
+   * etc.). Only mutated handles' `startNode`s become chain roots —
+   * throwaway handles' startNodes remain in `allNodes` for future
+   * optimizations to repurpose, but aren't allocated their own
+   * handle storage.
+   *
+   * Set on first `setNode` call. Before that, the handle is just a
+   * reference to its starting expression; whether it becomes a chain
+   * root depends on whether the user subsequently mutates it.
+   */
+  _wasMutated: boolean = false
+
+  /**
    * Replace the wrapped expression node AND propagate to the binding
    * scope. Used by all mutating operator methods.
    */
   setNode(node: MathExpressionNode): void {
     this.node = node
+    this._wasMutated = true
     this.binding?.scope._update(this.binding.name, this as unknown as Float | Integer)
+  }
+
+  /**
+   * Register this handle's `startNode` with the active
+   * `MathFunctionNode` (if any). The compiler uses the resulting
+   * `startNodes` set as additional chain roots — derived handles
+   * whose `startNode.operands[0]` (or `inputs[0]`) matches another
+   * root's node become independent chains rather than being
+   * mis-classified as extensions of the source handle's chain.
+   *
+   * Every handle constructed inside an active function context
+   * registers, including throwaway inline values like
+   * `_.modulo(rx, val)`. The compiler allocates a separate handle
+   * storage for each registered startNode — for inline values, this
+   * means one extra storage write that captures the value at the
+   * time of construction (before any subsequent chain mutation
+   * invalidates it). Skipping this would break snapshot semantics:
+   * a later op that overwrites the source chain's storage would
+   * also overwrite the value the user expected at construction time.
+   *
+   * Future optimizations (constant folding, dead-store elimination,
+   * common subexpression inlining) can prune these storage slots
+   * once the AST is fully linked — the data stays in `allNodes`
+   * for that work.
+   */
+  _registerHandleWithActiveFunction(): void {
+    const stack = this.startNode.sandstoneCore.mathStack
+    const top = stack[stack.length - 1] as unknown as {
+      startNodes?: Set<MathExpressionNode>
+    } | undefined
+    if (top && top.startNodes instanceof Set) {
+      top.startNodes.add(this.startNode)
+    }
   }
 
   /**
@@ -132,20 +182,28 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
     // CopyNode from `_.float(otherHandle)`, a LiteralNode from
     // `_.float(5)`, a StorageRefNode from rebind, etc.).
     this.startNode = node
+    // Register this handle's startNode with the active MathFunctionNode
+    // (if any) as a chain-root candidate. See
+    // `BaseHandle._registerHandleWithActiveFunction`. Done AFTER
+    // `this.startNode` is assigned (the registration helper reads it).
+    this._registerHandleWithActiveFunction()
   }
 
   add(value: Float | Integer): this
   add(values: (Float | Integer)[]): this
   add(...values: (Float | Integer)[]): this
   add(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
-    // Construct the aggregate as a side-effect AST node (it gets
-    // picked up by the active MathFunctionNode's `allNodes` via the
-    // base `MathNode` ctor) but DO NOT mutate `this.node`. The handle
-    // is treated as a binding to its starting value — operators
-    // accumulate into separate aggregate AST nodes that reference
-    // `startNode`, never replacing the handle's identity. Returns on
-    // the handle show the original baseline, not the running aggregate.
-    new AggregateNode(this.node.sandstoneCore, 'add', [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))])
+    // Chain from `this.node` (current state) — matches the
+    // `this.startNode + ...` accumulator semantics users expect from
+    // `rx.add(5).add(10)` reading as `rx = ((rx + 5) + 10)`. Each
+    // call allocates a fresh `AggregateNode` rooted at the previous
+    // chain state and swaps it into `this.node`. A future visitor
+    // can flatten consecutive `+=` calls into a single n-ary
+    // `add([startNode, 5, 10])` provider.
+    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))
+    this.setNode(
+      new AggregateNode(this.node.sandstoneCore, 'add', [this.node, ...inputs], this.kind),
+    )
     return this
   }
 
@@ -158,17 +216,10 @@ export class _RawFloatHandle extends BaseHandle implements FloatBranded {
   multiply(values: (Float | Integer)[]): this
   multiply(...values: (Float | Integer)[]): this
   multiply(...args: [Float | Integer | (Float | Integer)[]] | (Float | Integer)[]) {
-    // Construct the aggregate as a side-effect AST node (it gets
-    // picked up by the active MathFunctionNode's `allNodes` via the
-    // base `MathNode` ctor) but DO NOT mutate `this.node`. The handle
-    // is treated as a binding to its starting value — operators
-    // accumulate into separate aggregate AST nodes that reference
-    // `startNode`, never replacing the handle's identity. Returns on
-    // the handle show the original baseline, not the running aggregate.
-    new AggregateNode(
-      this.node.sandstoneCore,
-      'mul',
-      [this.startNode, ...args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))],
+    // Chain from `this.node` (current state) — mirrors `add` above.
+    const inputs = args.flat().map((v) => handleToExpr(this.node.sandstoneCore, v))
+    this.setNode(
+      new AggregateNode(this.node.sandstoneCore, 'mul', [this.node, ...inputs], this.kind),
     )
     return this
   }
@@ -374,6 +425,11 @@ export class _RawIntegerHandle extends BaseHandle implements IntegerBranded {
     // CopyNode from `_.float(otherHandle)`, a LiteralNode from
     // `_.float(5)`, a StorageRefNode from rebind, etc.).
     this.startNode = node
+    // Register this handle's startNode with the active MathFunctionNode
+    // (if any) as a chain-root candidate. See
+    // `BaseHandle._registerHandleWithActiveFunction`. Done AFTER
+    // `this.startNode` is assigned (the registration helper reads it).
+    this._registerHandleWithActiveFunction()
   }
 
   add(value: Integer): this

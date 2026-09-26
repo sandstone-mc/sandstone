@@ -3,9 +3,10 @@ import type { MCFunctionNode } from 'sandstone/core/resources/datapack/mcfunctio
 import { MathInvocationNode } from '../../flow/math/compile/MathInvocationNode'
 import { GenericSandstoneVisitor } from './visitor'
 import {
-  compileMathInvocation,
+  compileMathInvocationGroup,
   registerQueuedProviders,
 } from '../../flow/math/compile/mathInvocationCompiler'
+import { groupBridgesByInputShape } from '../../flow/math/compile/groupBridges'
 
 /**
  * Inlines `MathInvocationNode` bodies into their parent MCFunction.
@@ -41,10 +42,29 @@ export class MathInvocationInlineVisitor extends GenericSandstoneVisitor {
   override visitMCFunctionNode = (node: MCFunctionNode): MCFunctionNode => {
     if (!this.processedBridges.has(node)) this.processedBridges.add(node)
     else return node
+    // Collect every bridge in this MCFunction's body, then group
+    // them by input shape. Bridges in the same group share a single
+    // compile (one set of provider JSONs); each bridge still emits
+    // its own per-call imperative commands targeting its own result
+    // storage. The visitor pattern still walks each bridge so the
+    // bridge's body gets spliced into the host MCFunction later —
+    // we just pre-compile the whole group before the bridge walk so
+    // the bridges can share their plan.
+    const bridges: MathInvocationNode[] = []
+    for (const child of node.body) {
+      if (MathInvocationNode.is(child)) bridges.push(child)
+    }
+    if (bridges.length > 0) {
+      for (const group of groupBridgesByInputShape(bridges)) {
+        compileMathInvocationGroup(this.core, group)
+      }
+    }
     const next: Node[] = []
     for (const child of node.body) {
       if (MathInvocationNode.is(child)) {
-        this.visit(child)
+        // Skip the per-bridge `compileMathInvocation` call here —
+        // it's been done by the group compilation above. Just splice
+        // the bridge's populated body into the host.
         next.push(...child.body)
       } else {
         next.push(child)
@@ -67,11 +87,20 @@ export class MathInvocationInlineVisitor extends GenericSandstoneVisitor {
    * serialization sees the math commands inline.
    */
   visitMathInvocationNode = (node: MathInvocationNode): Node[] => {
+    // Bridges are pre-compiled in groups during `visitMCFunctionNode`
+    // so that bridges with matching input shapes can share a
+    // compile. This visitor's only job is to splice the bridge's
+    // already-populated body into its host MCFunction.
     if (node.body.length > 0) return node.body
-    compileMathInvocation(this.core, node)
-    // Splice is the OUTER loop's job (`visitMCFunctionNode` builds
-    // the new `next` array). Splice + push both = duplicate commands
-    // in output. Return `node.body` and let the caller splice.
+    // Defensive: if a bridge reached this visitor without being
+    // compiled yet (shouldn't happen — every MCFunction's bridges
+    // are compiled in `visitMCFunctionNode` before this visitor
+    // recurses), fall back to a single-bridge compile so we still
+    // emit SOMETHING rather than silently dropping the invocation.
+    compileMathInvocationGroup(this.core, {
+      key: 'fallback-single',
+      bridges: [node],
+    })
     return node.body
   }
 

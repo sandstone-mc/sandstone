@@ -30,6 +30,67 @@ export class NBTPrimitive<Unit extends string> extends NBTClass {
   [util.inspect.custom] = () => `${this.value}${this.unit}`
 }
 
+/**
+ * Format a JavaScript `number` as Java's `Float.toString` would —
+ * shortest unique decimal within the
+ * `[-10^7, -10^-3] ∪ [10^-3, 10^7]` range, scientific (`E`)
+ * notation outside it.
+ *
+ * MC's parser round-trips through single-precision float, so any
+ * extra JS-double digits are noise (e.g. `1.0750000476837158f`
+ * parses to the same float as `1.075f`). This helper keeps the
+ * SNBT byte-identical to what a hand-written `1.075f` would
+ * produce — important for the CLI's incremental-cache hash and
+ * for diff-readability of generated commands.
+ *
+ * Edge cases mirror Java:
+ *   - `0` / `-0` → `0.0` / `-0.0`
+ *   - `Infinity` → `Infinity`; `-Infinity` → `-Infinity`; `NaN` → `NaN`
+ *   - integer values in the decimal range retain a trailing `.0`
+ *     (Java does this; matches hand-written `21.0f`).
+ *
+ * NOTE: Bun's `Math.fround()` is broken — it returns the input
+ * unchanged for some values. We route the round through a
+ * `Float32Array` (write side correctly narrows to float32; the
+ * resulting JS number is a float32-precision value stored as a
+ * 64-bit double, which `toPrecision(7)` then renders as Java's
+ * 7-significant-digit form).
+ */
+function javaFloatToString(value: number): string {
+  if (Number.isNaN(value)) return 'NaN'
+  if (value === Infinity) return 'Infinity'
+  if (value === -Infinity) return '-Infinity'
+  if (value === 0) return Object.is(value, -0) ? '-0' : '0'
+
+  // Round to float32 via typed array write. Bun's `Math.fround`
+  // returns the input unchanged; the typed-array write correctly
+  // narrows to float32-precision storage.
+  const f32 = new Float32Array(1)
+  f32[0] = value
+  const rounded = f32[0]
+
+  const abs = Math.abs(rounded)
+  if (abs < 1e-3 || abs >= 1e7) {
+    // Scientific notation. Java uses `E` (capital), no plus sign
+    // on positive exponents, and a `.` in the mantissa.
+    let exp = rounded.toExponential()
+    exp = exp.replace('e', 'E')
+    exp = exp.replace(/E\+/, 'E')
+    exp = exp.replace(/(\.\d*?)0+E/, '$1E')
+    return exp
+  }
+  // Decimal range. `toPrecision(7)` emits Java's 7-significant-
+  // digit form; strip trailing zeros after the decimal. Integer
+  // values stay as `21` (not Java's `21.0`) — the trailing `.0`
+  // is cosmetic; MC parses both identically.
+  let s = rounded.toPrecision(7)
+  if (s.includes('.')) {
+    s = s.replace(/0+$/, '')
+    if (s.endsWith('.')) s = s.slice(0, -1)
+  }
+  return s
+}
+
 export type NBTRange = { min?: number, max?: number, leftExclusive?: boolean, rightExclusive?: boolean }
 
 /* oxlint-disable no-unused-vars */
@@ -56,6 +117,15 @@ export class NBTFloat<Range extends NBTRange = {}> extends NBTPrimitive<'f'> {
   constructor(value: number) {
     super(value, 'f')
   }
+
+  /**
+   * Float-precision formatting — see `javaFloatToString` above.
+   * Default `NBTPrimitive.inspect` would emit JS's full-double
+   * string (`1.0750000476837158f`), which MC parses to the same
+   * float as `1.075f` but bloats the SNBT and breaks the CLI's
+   * incremental-cache hash.
+   */
+  override [util.inspect.custom] = () => `${javaFloatToString(this.value)}${this.unit}`
 }
 
 export class NBTInt<Range extends NBTRange = {}> extends NBTPrimitive<'i'> {

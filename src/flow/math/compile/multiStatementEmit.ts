@@ -1,85 +1,81 @@
 import type { SandstoneCore } from '../../../core/sandstoneCore'
 import type { DataPointClass } from '../../../variables/Data'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
-import type { MathNode } from '../ast/MathNode'
 import type { MathExpressionNode } from '../ast/MathExpressionNode'
 import type { JsonContextFloatProvider } from '../../../arguments/generated/_json/data/number_provider/context_float.ts'
 import type { NamespacedString, NonEmptyString } from '../../../utils'
-import {
-  AggregateNode,
-  BinaryOpNode,
-  UnaryOpNode,
-} from '../ast/nodes/operators'
-import { StorageRefNode } from '../ast/nodes/leaves'
+import { BinaryOpNode, AggregateNode, UnaryOpNode } from '../ast/nodes/operators'
+import { LiteralNode, StorageRefNode } from '../ast/nodes/leaves'
 import { compileMathExpressionToProvider } from './mathProviderCompiler'
+import type { ChainUpdate, MathChainAnalysis } from '../visitors/mathChainAnalysis'
+import { runDefaultMathVisitors } from '../visitors'
 
 /**
- * Multi-statement math emission.
+ * Multi-statement math emission — plan generation only.
  *
- * For math fns whose body sequences multiple updates to one or more
- * named handles (e.g. `const rx = _.float(input); rx /= 10; rx += funny;
- * _.return(rx)`), emit one `data modify ... compute ... float <provider>`
- * command per handle update and one provider per command. The final
- * `_.return(value)` emits a `data modify ... set from <storage>` command
- * copying the return handle's storage into the math result path.
+ * Takes the structural analysis from `analyzeMathChain` (which lives
+ * in its own module so the compiler doesn't have to re-derive chain
+ * topology) and turns it into the runtime-facing plan:
  *
- * Tracker classification:
- *   - **roots** — nodes that are `inputs[0]` of some `Aggregate`.
- *     Each root is a chain startNode (a handle's identity baseline).
- *   - **transients** — `operands[N>=1]` of aggregates that are NOT
- *     also `inputs[0]` of any aggregate. These are values consumed by
- *     an operation, not handle identities.
- *   - **chain states** — `BinaryOpNode`s whose `operands[0]` is the
- *     current state of some root (and the BinOp itself isn't a
- *     transient). Each extends the chain by one mutation.
- *   - **side-effect updates** — `AggregateNode`s (whose `inputs[0]`
- *     extends a root's chain) that aren't themselves transients.
+ *   - For each `ChainUpdate`, allocate a `DataPointClass` via
+ *     `MathFunctionNode.getHandleStorage` (single source of truth for
+ *     the path — `DataVariable` applies packUid/namespace suffixing
+ *     once) and compile the provider JSON (full or incremental).
+ *   - For the LAST update on the return handle's chain, point its
+ *     write target at the result `DataPoint` (allocated via
+ *     `getResultStorage`) so the runtime folds the chain's final
+ *     value directly into the deferred-result path — no trailing
+ *     `set from <handle_storage>` copy needed.
  *
- * Each root maintains a `chainState` that's the latest chain-state
- * node or side-effect node applied to it. Per-update emission
- * substitutes each root reference in the update's expression with
- * the chain state captured BEFORE the update — that's what the user
- * meant to read at that source position.
- *
- * The per-update `statesBefore` is the snapshot used during
- * substitution; walking with the running total would self-substitute
- * the last update.
+ * Future visitors (e.g. `MathFlattenAddChainVisitor` that collapses
+ * consecutive `+=` calls into a single n-ary aggregate, or a
+ * `MathDeadStoreEliminator` that prunes never-read handle storage)
+ * mutate `fn.allNodes` in place. `analyzeMathChain` reads `allNodes`
+ * fresh each call, so the compiler automatically picks up
+ * visitor-driven transformations on the next save.
  */
 
 export interface MultiStatementEmit {
   commands: Array<{
     handleName: string
-    storagePath: string
+    /**
+     * The `DataPointClass` whose storage this op writes to. When the
+     * last op is the return-handle's final update AND folding is in
+     * play, this points at the RESULT DataPoint — otherwise the
+     * handle's intermediate storage DataPoint. The runtime emitter
+     * uses this directly; the provider embed reads `dp.currentTarget`
+     * + `dp.path` from it. Single source of truth for both sides
+     * (was: bare path strings reconstructed separately, which is how
+     * the write/read suffix mismatch crept in).
+     */
+    dataPoint: DataPointClass<'storage'>
     providerName: string
+    /**
+     * True when this command writes to its bridge's per-call
+     * `resultDataPoint` (final-fold path).
+     */
+    isFinalFold?: boolean
+    /**
+     * When set, the emitter writes the literal value via
+     * `data modify ... set value Nf` and skips the provider
+     * lookup. Constant folding produces this when the math
+     * function's return is a single literal.
+     */
+    isConstant?: MathExpressionNode
   }>
   providers: Map<string, JsonContextFloatProvider>
-  resultStoragePath: string
-  returnHandleName: string | null
   /**
-   * Shared input address used across invocations of the same math
-   * function. `undefined` for single-call math (the user's
-   * per-invocation DataPoint is the input address directly).
-   *
-   * Empty string when shared input is in play but the path was a
-   * DataPoint passed through; the actual path comes from the
-   * `compileMathInvocation` rewrite of the input StorageRefNode.
+   * DataPoint for the per-call result storage. Used by
+   * `compileMathInvocation`'s trailing `set from` (only when folding
+   * isn't in play). Allocated via `fn.getResultStorage(...)` so the
+   * packUid suffix lands on it consistently.
    */
-  sharedInputPath?: string
-}
-
-interface Update {
-  handleName: string
-  expression: MathExpressionNode
-  statesBefore: Map<MathExpressionNode, MathExpressionNode>
-  /** True iff this is the first op on its target handle's chain —
-   *  no prior state to read from storage, so its provider computes
-   *  its LHS from inputs directly. Every subsequent op becomes
-   *  INCREMENTAL (LHS = `minecraft:storage` read of the handle). */
-  isFirst: boolean
+  resultDataPoint: DataPointClass<'storage'>
+  returnHandleName: string | null
 }
 
 export function planMultiStatementEmit(
-  core: SandstoneCore,
+  _core: SandstoneCore,
   fn: MathFunctionNode,
   options: {
     /**
@@ -103,9 +99,109 @@ export function planMultiStatementEmit(
      *  to find the right AST node to rewrite, instead of hard-coding
      *  the first input. */
     sharedInputs?: ReadonlyArray<import('./MathInvocationNode').SharedInputSlot>
+    /**
+     * Pre-allocated result `DataPoint`. When omitted, the function
+     * allocates one via `fn.getResultStorage(callIdx, useCallNamespace)`.
+     * Pass an explicit one when you want a per-call variation of
+     * an otherwise-shared plan (e.g., shared-provider bridges in a
+     * math invocation group — each bridge gets its own result
+     * storage but shares the providers and intermediate commands).
+     */
+    resultDataPoint?: DataPointClass<'storage'>
   },
 ): MultiStatementEmit {
   const { callIdx, useCallNamespace, sharedInputs } = options
+
+  const resultDataPoint =
+    options.resultDataPoint ?? fn.getResultStorage(callIdx, useCallNamespace)
+
+  return buildPlan(_core, fn, {
+    callIdx,
+    useCallNamespace,
+    sharedInputs,
+    resultDataPoint,
+    // The single-bridge wrapper doesn't have an input shape key
+    // (the caller is the legacy `compileMathInvocation` entry
+    // point). Pass an empty key — the resulting provider name
+    // collides with anything else the user does through the
+    // wrapper, but that's the wrapper's job to worry about. The
+    // new group-aware entry point (`buildSharedPlanContent`)
+    // takes the real key.
+    inputShapeKey: '',
+  })
+}
+
+/**
+ * Per-bridge-immutable content for a math invocation group. Holds
+ * the chain analysis + the per-update command metadata + the
+ * provider JSON map + handle storage map. Bridges in the same
+ * group share one of these; each bridge varies only in its
+ * `resultDataPoint` (the per-call destination for the math result).
+ *
+ * Stored here so `compileMathInvocationGroup` runs the
+ * analysis + provider compilation ONCE per group, then reuses the
+ * immutable content for every bridge in the group (just varying
+ * the result storage per call).
+ */
+export interface SharedPlanContent {
+  /** Per-update command metadata. The actual `dataPoint` is
+   *  computed at emit time (handle storage for non-final, the
+   *  bridge's `resultDataPoint` for the final fold). */
+  commands: Array<{
+    handleName: string
+    providerName: string
+    isFinalFold: boolean
+    /**
+     * When the chain analysis produced a synthetic update for a
+     * constant result (the math function's return value is a
+     * single literal because constant folding reduced the whole
+     * chain to one), `isConstant` carries the literal so the
+     * emitter can write it via `data modify ... set value Nf`
+     * instead of `set compute ... float <provider>`. No
+     * provider JSON is queued for these — the literal IS the
+     * value, no separate resource needed.
+     */
+    isConstant?: MathExpressionNode
+  }>
+  providers: Map<string, JsonContextFloatProvider>
+  handleStorageByHandle: Map<string, DataPointClass<'storage'>>
+  returnHandleName: string | null
+}
+
+/**
+ * Build the per-group shared plan content. Runs the visitor
+ * pipeline + chain analysis + provider compilation ONCE. The
+ * returned object is reused for every bridge in the group —
+ * per-bridge variation lives entirely in the resultDataPoint
+ * passed at emit time.
+ */
+function buildPlan(
+  _core: SandstoneCore,
+  fn: MathFunctionNode,
+  options: {
+    callIdx: number
+    useCallNamespace: boolean
+    sharedInputs?: ReadonlyArray<import('./MathInvocationNode').SharedInputSlot>
+    resultDataPoint: DataPointClass<'storage'>
+    inputShapeKey: string
+  },
+): MultiStatementEmit {
+  const { useCallNamespace, sharedInputs } = options
+  void useCallNamespace
+  void sharedInputs
+
+  // Run the full visitor pipeline (transforms + analyses) before
+  // any plan generation. This is what populates `fn.analyses` with
+  // the chain analysis AND applies any AST rewrites (e.g. the
+  // flatten visitor collapsing `add` chains into single n-ary
+  // aggregates). Calling it here keeps `planMultiStatementEmit`
+  // self-contained — every entry point that uses plan generation
+  // gets the same pipeline run. The pipeline is idempotent for
+  // the analyses (a second run produces the same result) but the
+  // transform visitors must NOT run twice on the same `fn` (they
+  // mutate in place); since this function is called once per math
+  // invocation per save, that's fine.
+  runDefaultMathVisitors(fn)
 
   // Multi-call input rewrite: when `sharedInputPath` is set, swap the
   // FIRST StorageRefNode in `fn.inputs` to point at the shared input.
@@ -114,29 +210,7 @@ export function planMultiStatementEmit(
   // The bridge's `set from <caller> → shared` copy populates the
   // shared address with the current call's value before the math
   // runs, so all reads land on the right value.
-  //
-  // The rebound input refs aren't in `fn.allNodes` (they're inputs,
-  // not part of the user-written AST), so walk `fn.inputs` to find
-  // them. For single-input math fns, `fn.inputs[0]` is the
-  // user's-input StorageRefNode. For multi-input fns, each
-  // `fn.inputs[i]` is one input — rewriting all of them to the
-  // shared address would conflate them; v1 only handles single
-  // input, so we rewrite the first.
-  //
-  // Path matching isn't viable: the user's per-call DataPoint path
-  // changes between calls (call 1: `anon_<id>_0`, call 2: `anon_<id>_1`),
-  // but the AST was built once and only references the FIRST call's
-  // path. Match structurally instead — rewrite the first StorageRefNode.
   if (sharedInputs && sharedInputs.length > 0) {
-    // Per-input rewrite: for each shared input slot, swap the
-    // matching `fn.inputs[slot.position]` reference's dataPoint to
-    // point at the slot's shared target. This makes the AST's
-    // chain-root references resolve to the shared address that the
-    // bridge's per-call `set from` copy just populated.
-    //
-    // Score-kind slots are skipped — they don't carry storage targets
-    // (and the compiler can't yet emit a score-based provider; see
-    // TODO on `SharedInputSlot.score`).
     for (const slot of sharedInputs) {
       if (slot.kind !== 'storage') continue
       const target = (fn.inputs as readonly MathExpressionNode[])[slot.position]
@@ -145,159 +219,44 @@ export function planMultiStatementEmit(
     }
   }
 
-  // ROOTS = nodes that are inputs[0] of some aggregate. These are
-  // the chain identities (each handle has one root).
-  const roots = new Set<MathExpressionNode>()
-  // TRANSIENTS = nodes used only as values by other operations
-  // (operand[N>=1] of a BinOp, input[N>=1] of an Aggregate that is
-  // not itself roots). A node that is both a root AND used as a value
-  // stays a root — root identity takes priority over value usage.
-  const transients = new Set<MathExpressionNode>()
+  // The chain analysis (root classification, transient detection,
+  // chain-state tracking, update enumeration, return-handle
+  // resolution) was produced by `MathChainAnalysisVisitor` during
+  // `runDefaultMathVisitors(fn)`. The visitor pipeline runs FIRST in
+  // the call sequence — see the JSDoc on `runDefaultMathVisitors`
+  // for ordering — and stores its result under the `'chain'` key.
+  // We pull it here so this module stays focused on PLAN GENERATION
+  // and doesn't have to re-derive chain structure. The `as` cast
+  // pins the type — `MathChainAnalysisVisitor.key` is `'chain'` and
+  // its `analyze()` always returns `MathChainAnalysis`.
+  const analysis = fn.analyses.get('chain') as MathChainAnalysis
+  // `chainReachability` — root → forward-reachable nodes map. Used
+  // by the incremental provider compiler to know which chain nodes
+  // can be substituted with a `minecraft:storage` read.
+  // `returnHandle` — handle ID of the chain that `_.return(value)`
+  // references; used to fold the last update on that chain into the
+  // result storage. Both produced by analysis visitors during the
+  // same pipeline run (above). The `as unknown as` casts pin the
+  // types since `fn.analyses` is `Map<string, unknown>`.
+  const chainReachability = fn.analyses.get('chainReachability') as
+    Map<MathExpressionNode, Set<MathExpressionNode>>
+  const returnHandle = fn.analyses.get('returnHandle') as string | null
 
-  for (const node of fn.allNodes as readonly MathNode[]) {
-    if (AggregateNode.is(node)) {
-      roots.add(node.inputs[0])
-    }
-  }
-
-  for (const node of fn.allNodes as readonly MathNode[]) {
-    // Collect transient candidates from binOp operands and aggregate
-    // inputs[N>=1].
-    if (BinaryOpNode.is(node)) {
-      for (let i = 1; i < node.operands.length; i++) {
-        transients.add(node.operands[i])
-      }
-    }
-    if (AggregateNode.is(node)) {
-      for (let i = 1; i < node.inputs.length; i++) {
-        transients.add(node.inputs[i])
-      }
-    }
-  }
-  // Drop anything that is a root — root identity wins.
-  for (const r of roots) transients.delete(r)
-
-  // Walk allNodes chronologically — for each non-transient BinOp /
-  // aggregate whose `operands[0]` / `inputs[0]` matches the current
-  // state of some chain root, treat it as an update that extends
-  // that root's chain.
-  const chainState = new Map<MathExpressionNode, MathExpressionNode>()
-  for (const r of roots) chainState.set(r, r) // each root starts as itself
-
-  function chainRootOf(node: MathExpressionNode): MathExpressionNode | undefined {
-    let current: MathExpressionNode | undefined = node
-    const seen = new Set<MathExpressionNode>()
-    while (current && !seen.has(current)) {
-      seen.add(current)
-      if (roots.has(current)) return current
-      // For chain propagation, descend into the immediate-predecessor
-      // (operands[0] of a BinOp, inputs[0] of an aggregate).
-      const ast = current as {
-        operands?: MathExpressionNode[]
-        inputs?: MathExpressionNode[]
-      }
-      const next: MathExpressionNode | undefined =
-        ast.operands?.[0] ?? ast.inputs?.[0]
-      if (next === undefined) return undefined
-      current = next
-    }
-    return undefined
-  }
-
-  // Stable handle IDs by root, in first-appearance order.
-  const rootToId = new Map<MathExpressionNode, string>()
-  let handleCounter = 0
-  for (const node of fn.allNodes as readonly MathNode[]) {
-    if (AggregateNode.is(node) && !transients.has(node) && roots.has(node.inputs[0])) {
-      const root = chainRootOf(node.inputs[0])
-      if (root && !rootToId.has(root)) {
-        rootToId.set(root, `h_${handleCounter++}`)
-      }
-    }
-  }
-
-  // Replay allNodes chronologically to (a) collect updates with
-  // pre-update state snapshots and (b) advance each root's chain
-  // state. Each BinOp's chain root is determined by walking BACK
-  // from the BinOp itself through its `operands[0]` predecessors —
-  // if the BinOp IS itself a root (e.g. constructed via
-  // `_.modulo(a, b)`), its own chain is the right one. The
-  // alternative of "look at `node.operands[0]`'s chain root" would
-  // mis-classify those constructor-wraps onto whatever chain the
-  // operand belongs to.
-  //
-  // We also track each root's "first update" — the first op on its
-  // chain. The first op has no prior state to read from storage, so
-  // its provider computes its LHS from inputs directly. Every
-  // subsequent op on the same chain becomes INCREMENTAL — its LHS
-  // is replaced with a `minecraft:storage` provider that reads the
-  // handle's storage, so the runtime command does O(1) work instead
-  // of recomputing the entire chain from the input.
-  const updates: Update[] = []
-  const firstPerRoot = new Set<MathExpressionNode>(roots)
-  for (const node of fn.allNodes as readonly MathNode[]) {
-    if (BinaryOpNode.is(node)) {
-      if (transients.has(node)) continue
-      const root = chainRootOf(node)
-      if (!root) continue
-      if (!rootToId.has(root)) {
-        rootToId.set(root, `h_${handleCounter++}`)
-      }
-      const isFirst = firstPerRoot.has(root)
-      firstPerRoot.delete(root)
-      updates.push({
-        handleName: rootToId.get(root)!,
-        expression: node,
-        statesBefore: new Map(chainState),
-        isFirst,
-      })
-      chainState.set(root, node)
-    } else if (AggregateNode.is(node)) {
-      if (transients.has(node)) continue
-      const root = chainRootOf(node.inputs[0])
-      if (!root) continue
-      if (!rootToId.has(root)) {
-        rootToId.set(root, `h_${handleCounter++}`)
-      }
-      const isFirst = firstPerRoot.has(root)
-      firstPerRoot.delete(root)
-      updates.push({
-        handleName: rootToId.get(root)!,
-        expression: node,
-        statesBefore: new Map(chainState),
-        isFirst,
-      })
-      chainState.set(root, node)
-    }
-  }
-
-  // Determine the return handle by walking the return value back to
-  // its chain root.
-  const ret = fn.body[0] as unknown as { value?: unknown } | undefined
-  const returnHandleName = findReturnHandleName(ret?.value, rootToId)
-
-  // For each root, build the set of all chain nodes (root itself +
-  // every BinOp/Aggregate whose target is reachable from the root via
-  // forward `operands[0]`/`inputs[0]` walks). Non-first ops on this
-  // chain can replace any of these nodes with a `minecraft:storage`
-  // read since each one was previously written to the handle's storage
-  // at some earlier op in the chain.
-  const ns = String(core.pack.defaultNamespace)
-  const chainNodesByRoot = collectChainNodesByRoot(fn.allNodes, roots)
-  const handleStoragePathByHandle: Map<string, string> = new Map()
-  for (const root of roots) {
-    const handleName = rootToId.get(root)
+  // Each chain's intermediate-storage DataPoint. Allocated via
+  // `fn.getHandleStorage` so packUid suffixing matches the runtime
+  // write target exactly — same `DataPoint` instance flows to the
+  // provider embed (read) AND the runtime emitter (write). Single
+  // source of truth, no path strings to drift.
+  const handleStorageByHandle = new Map<string, DataPointClass<'storage'>>()
+  for (const root of analysis.inputRoots) {
+    const handleName = analysis.rootToId.get(root)
     if (!handleName) continue
-    // Handle paths are SHARED across calls (no per-call suffix).
-    // Each math op writes to its handle's storage and the next op
-    // reads from it; calls run sequentially within a tick, so
-    // sharing is safe. Per-call separation would force each call's
-    // providers to reference a different storage, which can't be
-    // expressed in a single shared provider file.
-    handleStoragePathByHandle.set(
-      handleName,
-      buildHandleStoragePath(fn, handleName),
-    )
+    handleStorageByHandle.set(handleName, fn.getHandleStorage(handleName))
+  }
+  for (const root of analysis.chainStartRoots) {
+    const handleName = analysis.rootToId.get(root)
+    if (!handleName) continue
+    handleStorageByHandle.set(handleName, fn.getHandleStorage(handleName))
   }
 
   // Find the LAST update on the return handle's chain. The trailing
@@ -310,50 +269,69 @@ export function planMultiStatementEmit(
   // pointing its `data modify ... set ... compute default float` at
   // the result storage path drops the trailing copy entirely.
   const lastUpdateIndexByHandle = new Map<string, number>()
-  updates.forEach((u, i) => {
+  analysis.updates.forEach((u, i) => {
     lastUpdateIndexByHandle.set(u.handleName, i)
   })
-  const finalIndex = returnHandleName
-    ? lastUpdateIndexByHandle.get(returnHandleName)
+  const finalIndex = returnHandle
+    ? lastUpdateIndexByHandle.get(returnHandle)
     : undefined
   const foldResultIntoFinal = finalIndex !== undefined
+
+  // Result DataPoint — same allocation semantics as the runtime write
+  // target. Shared by both the fold-into-final branch (when this op
+  // writes there) and the trailing `set from` (when folding doesn't
+  // happen and we still need to copy handle storage → result). When
+  // Result DataPoint is computed in the wrapper (`planMultiStatementEmit`)
+  // — this inner function (`buildPlan`) is shared by both the wrapper
+  // and the per-group compiler, both of which supply it explicitly.
 
   const plan: MultiStatementEmit = {
     commands: [],
     providers: new Map(),
-    resultStoragePath: buildResultStoragePath(fn, callIdx, useCallNamespace),
-    returnHandleName,
+    resultDataPoint: options.resultDataPoint,
+    returnHandleName: returnHandle,
   }
 
-  updates.forEach((u, i) => {
+  analysis.updates.forEach((u, i) => {
     const isFinalOnReturn = i === finalIndex
-    const storagePath =
+    // Folding into result: the FINAL op on the return handle's chain
+    // writes its result DIRECTLY to the result DataPoint (no trailing
+    // copy needed). Earlier ops and ops on non-return handles write
+    // to the handle's intermediate storage.
+    const dataPoint: DataPointClass<'storage'> =
       isFinalOnReturn && foldResultIntoFinal
-        ? plan.resultStoragePath
-        : buildHandleStoragePath(fn, u.handleName)
-    const providerName = buildProviderName(fn, `op_${i}`)
+        ? options.resultDataPoint
+        : handleStorageByHandle.get(u.handleName)!
+    const providerName = buildProviderName(fn, `op_${i}`, options.inputShapeKey)
+    // Constant-result short-circuit: when the chain analysis
+    // promoted a folded-literal return into a synthetic update
+    // (see `MathChainAnalysisVisitor` and `fn.constantResult`),
+    // emit the literal via `data modify ... set value Nf` and
+    // skip the provider resource — no separate JSON file is
+    // needed, the literal IS the value.
+    if (u.handleName === 'const_result' && LiteralNode.is(u.expression)) {
+      plan.commands.push({
+        handleName: u.handleName,
+        dataPoint,
+        providerName,
+        isFinalFold: true,
+        isConstant: u.expression,
+      })
+      return
+    }
     const providerJson: JsonContextFloatProvider = u.isFirst
       ? compileMathExpressionToProvider(
-          substituteRoots(u.expression, rootToId, u.statesBefore),
+          substituteRoots(u.expression, analysis.rootToId, u.statesBefore),
         )
       : compileIncrementalProvider(
-          u.expression,
-          u.handleName,
-          ns,
-          chainNodesByRoot,
-          rootToId,
-          // When folding into the result storage, the incremental
-          // compile needs to read the chain's INTERMEDIATE storages
-          // (which still exist at this point — earlier ops wrote them).
-          // We pass the ORIGINAL handle storage path so reads resolve
-          // to the right storage; the final write itself goes to
-          // `resultStoragePath` instead.
-          handleStoragePathByHandle,
-          transients,
+          u,
+          analysis,
+          handleStorageByHandle,
+          chainReachability,
         )
     plan.commands.push({
       handleName: u.handleName,
-      storagePath,
+      dataPoint,
       providerName,
     })
     plan.providers.set(providerName, providerJson)
@@ -363,45 +341,126 @@ export function planMultiStatementEmit(
 }
 
 /**
- * For each root, gather every chain node reachable from the root via
- * forward `operands[0]`/`inputs[0]` propagation. Each handle's
- * chain nodes map lets the incremental emitter replace ANY node on
- * the chain with a `minecraft:storage` read of the handle's storage
- * — they were all written there in some prior op.
+ * Build the per-group shared plan content. Runs the visitor
+ * pipeline + chain analysis + provider compilation ONCE. Bridges
+ * in the same group share this content; each bridge varies only
+ * in its `resultDataPoint` (the per-call destination for the math
+ * result).
+ *
+ * The returned `commands` carry per-update metadata; the actual
+ * `dataPoint` (storage target for each `data modify`) is computed
+ * at emit time from `handleStorageByHandle` (shared) and the
+ * bridge's own `resultDataPoint` (per-bridge).
+ *
+ * Used by `compileMathInvocationGroup` so the chain analysis +
+ * provider compilation run once per group, not once per bridge.
  */
-function collectChainNodesByRoot(
-  allNodes: readonly MathNode[],
-  roots: Set<MathExpressionNode>,
-): Map<MathExpressionNode, Set<MathExpressionNode>> {
-  const map = new Map<MathExpressionNode, Set<MathExpressionNode>>()
-  for (const root of roots) {
-    map.set(root, new Set([root]))
-  }
-  let changed = true
-  while (changed) {
-    changed = false
-    for (const node of allNodes) {
-      if (BinaryOpNode.is(node) && node.operands[0]) {
-        for (const nodes of map.values()) {
-          if (nodes.has(node.operands[0]) && !nodes.has(node)) {
-            nodes.add(node)
-            changed = true
-            break
-          }
-        }
-      }
-      if (AggregateNode.is(node) && node.inputs[0]) {
-        for (const nodes of map.values()) {
-          if (nodes.has(node.inputs[0]) && !nodes.has(node)) {
-            nodes.add(node)
-            changed = true
-            break
-          }
-        }
-      }
+export function buildSharedPlanContent(
+  _core: SandstoneCore,
+  fn: MathFunctionNode,
+  options: {
+    callIdx: number
+    useCallNamespace: boolean
+    sharedInputs?: ReadonlyArray<import('./MathInvocationNode').SharedInputSlot>
+    /**
+     * Stable key describing the call group's input shape. Embedded
+     * into each provider's resource name so bridges with different
+     * input shapes (different constants, different DataPoint
+     * identities) get distinct provider files — see
+     * `buildProviderName`.
+     */
+    inputShapeKey: string
+  },
+): SharedPlanContent {
+  const { useCallNamespace, sharedInputs } = options
+  void useCallNamespace
+
+  // Multi-call input rewrite (same logic as in `buildPlan`).
+  if (sharedInputs && sharedInputs.length > 0) {
+    for (const slot of sharedInputs) {
+      if (slot.kind !== 'storage') continue
+      const target = (fn.inputs as readonly MathExpressionNode[])[slot.position]
+      if (!StorageRefNode.is(target)) continue
+      ;(target as unknown as { dataPoint: DataPointClass<'storage'> }).dataPoint = slot.sharedDp
     }
   }
-  return map
+
+  // Run the visitor pipeline (transforms + analyses). Subsequent
+  // // pipelines see the cached analyses in `fn.analyses` so this is
+  // cheap to re-run if the compiler is called more than once per
+  // save (it shouldn't be, but the runner's idempotent).
+  runDefaultMathVisitors(fn)
+
+  const analysis = fn.analyses.get('chain') as MathChainAnalysis
+  const chainReachability = fn.analyses.get('chainReachability') as
+    Map<MathExpressionNode, Set<MathExpressionNode>>
+  const returnHandle = fn.analyses.get('returnHandle') as string | null
+
+  const handleStorageByHandle = new Map<string, DataPointClass<'storage'>>()
+  for (const root of analysis.inputRoots) {
+    const handleName = analysis.rootToId.get(root)
+    if (!handleName) continue
+    handleStorageByHandle.set(handleName, fn.getHandleStorage(handleName))
+  }
+  for (const root of analysis.chainStartRoots) {
+    const handleName = analysis.rootToId.get(root)
+    if (!handleName) continue
+    handleStorageByHandle.set(handleName, fn.getHandleStorage(handleName))
+  }
+
+  // Determine which update is the final fold.
+  const lastUpdateIndexByHandle = new Map<string, number>()
+  analysis.updates.forEach((u, i) => {
+    lastUpdateIndexByHandle.set(u.handleName, i)
+  })
+  const finalIndex = returnHandle
+    ? lastUpdateIndexByHandle.get(returnHandle)
+    : undefined
+  const foldResultIntoFinal = finalIndex !== undefined
+
+  const content: SharedPlanContent = {
+    commands: [],
+    providers: new Map(),
+    handleStorageByHandle,
+    returnHandleName: returnHandle,
+  }
+
+  analysis.updates.forEach((u, i) => {
+    const isFinalOnReturn = i === finalIndex && foldResultIntoFinal
+    const providerName = buildProviderName(fn, `op_${i}`, options.inputShapeKey)
+    // Constant-result short-circuit: when the chain analysis
+    // promoted a folded-literal return into a synthetic update,
+    // emit it as `set value Nf` instead of `set compute ...
+    // float <provider>`. No provider JSON is queued — the
+    // literal IS the value.
+    if (u.handleName === 'const_result' && LiteralNode.is(u.expression)) {
+      content.commands.push({
+        handleName: u.handleName,
+        providerName,
+        isFinalFold: true,
+        isConstant: u.expression,
+      })
+      return
+    }
+    const providerJson: JsonContextFloatProvider = u.isFirst
+      ? compileMathExpressionToProvider(
+          substituteRoots(u.expression, analysis.rootToId, u.statesBefore),
+        )
+      : compileIncrementalProvider(
+          u,
+          analysis,
+          handleStorageByHandle,
+          chainReachability,
+        )
+    content.commands.push({
+      handleName: u.handleName,
+      providerName,
+      isFinalFold: isFinalOnReturn,
+    })
+    content.providers.set(providerName, providerJson)
+  })
+
+  return content
 }
 
 /**
@@ -424,45 +483,59 @@ function collectChainNodesByRoot(
  *     demands exactly-one-element minimum). Our `inputs.map(...)` always
  *     returns ≥2 elements (handle's LHS + at least one RHS arg), so
  *     the runtime shape is valid; TS just can't see it.
+ *
+ * Storage references in the emitted JSON read `dp.currentTarget` +
+ * `dp.path` from the SAME `DataPoint` the runtime emitter uses for
+ * its write target. PackUid/namespace/anonymousDataId suffixing is
+ * applied once inside `DataVariable` and stays consistent between
+ * the two consumers — no opportunity for write/read drift.
  */
 function compileIncrementalProvider(
-  expression: MathExpressionNode,
-  targetHandle: string,
-  ns: string,
+  update: ChainUpdate,
+  analysis: MathChainAnalysis,
+  handleStorageByHandle: Map<string, DataPointClass<'storage'>>,
   chainNodesByRoot: Map<MathExpressionNode, Set<MathExpressionNode>>,
-  rootToId: Map<MathExpressionNode, string>,
-  handleStoragePaths: Map<string, string>,
-  transients: Set<MathExpressionNode>,
 ): JsonContextFloatProvider {
-  void targetHandle
+  const expression = update.expression
   // Compute each chain node's "owning root" — the FIRST root
   // reachable by walking backward through operands[0]/inputs[0],
   // stopping at the node itself if it IS a root. This gives every
   // node an unambiguous primary chain (BinOp[0] is funny's root
   // despite using CopyNode[0] in its construction; BinOp[1] is rx's
   // chain state).
+  const rootKeys = new Set(analysis.rootToId.keys())
   const owningRoot = new Map<MathExpressionNode, MathExpressionNode>()
-  for (const root of rootToId.keys()) owningRoot.set(root, root)
+  for (const root of rootKeys) owningRoot.set(root, root)
   for (const node of chainNodesByRoot.values()) {
     for (const candidate of node) {
       if (owningRoot.has(candidate)) continue
-      const or = owningRootOf(candidate, new Set(rootToId.keys()))
+      const or = owningRootOf(candidate, rootKeys)
       if (or) owningRoot.set(candidate, or)
     }
   }
 
   const nodeToStorageRef = new Map<MathExpressionNode, JsonContextFloatProvider>()
   for (const [node, root] of owningRoot) {
-    if (transients.has(node)) continue
+    if (analysis.transients.has(node)) continue
     if (node === expression) continue
-    const handle = rootToId.get(root)
+    // Only skip `inputRoots` (the no-predecessor leaves — input
+    // sources, literals). These represent the BASELINE value of a
+    // chain, not a previous chain update — substituting them with a
+    // handle-storage read would yield the LAST chain update's value
+    // rather than the baseline. `chainStartRoots` (handle startNodes
+    // from `_.modulo(...)` etc.) ARE chain roots with their own
+    // storage and MUST be substituted — they capture a snapshot of
+    // their operands at construction time, before any subsequent
+    // mutation overwrites the source chain's storage.
+    if (analysis.inputRoots.has(node)) continue
+    const handle = analysis.rootToId.get(root)
     if (!handle) continue
-    const path = handleStoragePaths.get(handle)
-    if (!path) continue
+    const dp = handleStorageByHandle.get(handle)
+    if (!dp) continue
     nodeToStorageRef.set(node, {
       type: 'storage',
-      storage: ns as NamespacedString,
-      path: path as NonEmptyString,
+      storage: dp.currentTarget as unknown as NamespacedString,
+      path: dp.path as unknown as NonEmptyString,
     } as JsonContextFloatProvider)
   }
   return compileWithChainReads(expression, nodeToStorageRef)
@@ -471,7 +544,7 @@ function compileIncrementalProvider(
 /**
  * Walk backward from `node` via `operands[0]` / `inputs[0]` to find
  * its owning root. Returns `node` itself if it IS a root (the chain
- * it owns), otherwise the root its chain fronts. Used to disambiguate
+ * it owns), otherwise the root its chain-fronts. Used to disambiguate
  * cross-chain references — e.g. BinOp[0] (= `_.modulo(rx, _.float(10))`)
  * is funny's root even though its construction reads from CopyNode[0].
  */
@@ -568,70 +641,38 @@ function substituteRoots(
   return expression
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 /**
- * Walk the return value via operands[0]/inputs[0] reverse chain
- * until reaching a chain root. The root maps to its handle id.
+ * Provider resource names are keyed by the math function's
+ * resource name AND the input shape key of the call group. Two
+ * bridges with different input shapes (different constants, or
+ * different DataPoint identities) MUST produce provider files with
+ * different names — otherwise the dedup-by-name in
+ * `MathFunctionNode.queueProvider` would silently collapse them to
+ * one file and the constants/identities would be lost.
+ *
+ * The input shape key (see `compile/groupBridges.ts`) is a stable
+ * string derived from each input position's type + identity. It's
+ * opaque — only used to namespace the provider name.
  */
-function findReturnHandleName(
-  returnValue: unknown,
-  rootToId: Map<MathExpressionNode, string>,
-): string | null {
-  if (returnValue == null || typeof returnValue !== 'object') return null
-  let current: unknown = returnValue
-  const seen = new Set<unknown>()
-  while (current && typeof current === 'object' && !seen.has(current)) {
-    seen.add(current)
-    const ast = current as {
-      operands?: unknown[]
-      inputs?: unknown[]
-    }
-    if (Array.isArray(ast.operands) && ast.operands.length > 0) {
-      current = ast.operands[0]
-      const id = rootToId.get(current as MathExpressionNode)
-      if (id) return id
-      continue
-    }
-    if (Array.isArray(ast.inputs) && ast.inputs.length > 0) {
-      current = ast.inputs[0]
-      const id = rootToId.get(current as MathExpressionNode)
-      if (id) return id
-      continue
-    }
-    return null
+function buildProviderName(
+  fn: MathFunctionNode,
+  suffix: string,
+  inputShapeKey: string,
+): string {
+  // Short hash of the input shape key (8 chars of [a-z0-9]) —
+  // the full key can be long (one entry per input position with
+  // type/value pairs), and provider names end up as filenames via
+  // `registerQueuedProviders` → `NumberProvider`. Two bridges with
+  // semantically equivalent shapes hash to the same value, so they
+  // collapse to one provider file; different shapes hash to
+  // different values, so they get distinct files.
+  //
+  // FNV-1a 32-bit hash, base-36 encoded, zero-padded to 8 chars.
+  let hash = 0x811c9dc5
+  for (let i = 0; i < inputShapeKey.length; i++) {
+    hash ^= inputShapeKey.charCodeAt(i)
+    hash = Math.imul(hash, 0x01000193)
   }
-  return null
-}
-
-function buildHandleStoragePath(
-  fn: MathFunctionNode,
-  handleName: string,
-): string {
-  return `math_${fn.resourceName ?? '0'}_h_${handleName}`
-}
-
-function buildResultStoragePath(
-  fn: MathFunctionNode,
-  callIdx: number,
-  useCallNamespace: boolean,
-): string {
-  const suffix = useCallNamespace ? `_${callIdx}` : ''
-  return `math_${fn.resourceName ?? '0'}_result${suffix}`
-}
-
-function buildProviderName(fn: MathFunctionNode, suffix: string): string {
-  return `default:math_${fn.resourceName ?? '0'}_${suffix}`
-}
-
-export function makeDeferredResultDataPoint(
-  core: SandstoneCore,
-  fn: MathFunctionNode,
-  callIdx: number,
-  useCallNamespace: boolean,
-): DataPointClass<'storage'> {
-  return core.pack.DataVariable(
-    undefined,
-    buildResultStoragePath(fn, callIdx, useCallNamespace),
-  )
+  const safeShape = (hash >>> 0).toString(36).padStart(8, '0')
+  return `default:math_${fn.resourceName ?? '0'}_${suffix}_${safeShape}`
 }

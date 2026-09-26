@@ -74,4 +74,15 @@ export class BindingScope {
   names(): string[] {
     return [...this.bindings.keys()]
   }
+
+  /**
+   * All currently bound handles. Read-only view. Used by the compiler
+   * to discover every handle's `startNode` so derived handles
+   * (e.g. `const funny = _.modulo(rx, val)`) are recognised as
+   * distinct chain roots instead of being mis-classified as
+   * extensions of their source handle's chain.
+   */
+  handles(): IterableIterator<Float | Integer> {
+    return this.bindings.values()
+  }
 }

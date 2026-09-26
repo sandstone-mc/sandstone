@@ -61,7 +61,19 @@ export class BinaryOpNode extends MathExpressionNode {
   constructor(
     sandstoneCore: SandstoneCore,
     readonly op: BinaryOp,
-    readonly operands: [MathExpressionNode, MathExpressionNode],
+    /**
+     * `public` (not `readonly`) parameter property — pre-analysis
+     * visitors (e.g. `FlattenExpressionChain`) rewrite the
+     * `operands` tuple in place to absorb LHS-extending chains
+     * like `sub(sub(a, b), c)` → `sub(a, add(b, c))`. Returning a
+     * brand-new node would orphan the old reference in `fn.allNodes`
+     * (the visitor returns a replacement but the runner doesn't
+     * thread it back into the audit trail), so mutating the tuple
+     * keeps the original node reference intact while updating its
+     * contents. The tuple type is preserved — TypeScript will catch
+     * assignments to non-tuple values.
+     */
+    public operands: [MathExpressionNode, MathExpressionNode],
     kind?: MathKind,
   ) {
     super(sandstoneCore)
@@ -185,7 +197,23 @@ export class AggregateNode extends MathExpressionNode {
   constructor(
     sandstoneCore: SandstoneCore,
     readonly op: AggregateOp,
-    readonly inputs: MathExpressionNode[],
+    /**
+     * Mutable on purpose — pre-analysis visitors (e.g.
+     * `MathFlattenAddChainVisitor`) rewrite the inputs array in place
+     * to collapse same-op chains into a single n-ary aggregate.
+     * Returning a brand-new node would orphan the old aggregate
+     * reference in `fn.allNodes` (the visitor returns a replacement
+     * but the runner doesn't thread it back into the audit trail),
+     * so mutating the inputs array keeps the original node
+     * reference intact while updating its contents.
+     *
+     * `public` (not `readonly`) parameter property — without a
+     * modifier TS would treat this as a constructor-local parameter
+     * that doesn't become a class field, and downstream `this.inputs`
+     * accesses would fail. `public` makes it a field with default
+     * visibility; mutability is intentional (see above).
+     */
+    public inputs: MathExpressionNode[],
     kind?: MathKind,
   ) {
     super(sandstoneCore)

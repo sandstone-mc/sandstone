@@ -3,6 +3,7 @@ import type { SandstoneCore } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
 import type { MCFunctionNode } from 'sandstone/core/resources/datapack/mcfunction'
 import type { DataPointClass } from '../../../variables/Data'
+import type { MathExpressionNode } from '../ast/MathExpressionNode'
 import type { MathFunctionNode } from '../ast/MathFunctionNode'
 
 /**
@@ -109,6 +110,20 @@ export class MathInvocationNode extends ContainerCommandNode {
    * non-literal inputs.
    */
   public inputs: SharedInputSlot[] = []
+
+  /**
+   * The actual rebound inputs at every position, parallel to
+   * `fn.inputs`. Includes literals AND storage/score refs — what
+   * `inputs` (above) only captures for storage-kind slots. Used by
+   * the visitor pipeline to compute each bridge's input shape key
+   * (which determines whether two bridges can share a compile).
+   *
+   * Each entry is the rebound handle's `.node` (an AST
+   * `MathExpressionNode`). For DataPoint inputs it's a
+   * `StorageRefNode`; for Score inputs it'd be a
+   * `ScoreboardRefNode`; for literals it's a `LiteralNode`.
+   */
+  public reboundInputs: MathExpressionNode[] = []
 
   constructor(
     core: SandstoneCore,

@@ -9,6 +9,7 @@ import {
   MATH_NODE_DEFAULT_DEPTH,
   MATH_INDENT,
 } from './inspectHelpers'
+import type { DataPointClass } from '../../../variables/Data'
 import type { MathExpressionNode } from './MathExpressionNode'
 import type { MathNode } from './MathNode'
 import type { Float, Integer } from './handles'
@@ -61,7 +62,22 @@ export class MathFunctionNode extends MathContainerNode {
    * debug logging via `console.log` or the `onInitialAST` callback
    * added in `Flow.Math(outputs, callback, options)`.
    */
-  readonly allNodes: MathNode[] = []
+  allNodes: MathNode[] = []
+
+  /**
+   * Read-only analysis results produced by the math visitor pipeline.
+   * Each entry is keyed by the analysis visitor's `key` field; the
+   * compiler reads the entries it needs (e.g. `'chain'` for
+   * `MathChainAnalysis`) and ignores the rest. The map is populated
+   * by `runDefaultMathVisitors` after every transform visitor has
+   * run; AST transforms mutate `allNodes` first, then analyses read
+   * the post-transform state.
+   *
+   * `unknown` keeps the map untyped at this layer — concrete
+   * analyses cast at the read site (e.g. `fn.analyses.get('chain') as
+   * MathChainAnalysis`). Future analyses register their own key.
+   */
+  analyses: Map<string, unknown> = new Map()
 
   /**
    * Rebound inputs the user passed to `mathFunction(...)` — i.e.,
@@ -107,6 +123,23 @@ export class MathFunctionNode extends MathContainerNode {
    * `number_dispatcher` provider).
    */
   currentReturn: Float | Integer | undefined = undefined
+
+  /**
+   * Set by `ConstantFoldingVisitor` when the entire math function
+   * chain folded to a single literal value (e.g. `add([rx, rx,
+   * selfSub=0, selfDiv=1])` → `Literal(101)`). The chain analysis
+   * reads this to produce one synthetic update whose expression
+   * IS the literal — so the compiler emits a single command with
+   * a single-literal provider JSON (`101`) instead of producing
+   * no command at all.
+   *
+   * Without this handoff, the constant folder's fold would be
+   * invisible to the compiler (the chain analysis has no operator
+   * to walk). The field is a one-way signal: written by the
+   * constant folder, read once by the chain analysis, then never
+   * consulted again.
+   */
+  constantResult: MathExpressionNode | null = null
 
   /**
    * Provider JSONs deferred to a save-time pass. Each call to
@@ -210,6 +243,87 @@ export class MathFunctionNode extends MathContainerNode {
       stack.pop()
     }
   }
+
+  /**
+   * Math storage allocation. Every storage path the math layer writes
+   * to or reads from flows through one of these three methods. The
+   * caller passes only a logical sub-name (handle id, position,
+   * callIdx); the actual full path is built inside `DataVariable` so
+   * packUid/namespace/anonymousDataId suffixing stays consistent
+   * with the rest of Sandstone.
+   *
+   * Crucial invariant: callers must NOT extract `dp.path` /
+   * `dp.currentTarget` and re-build a path string elsewhere. Plumb
+   * the `DataPointClass` itself through every consumer (provider
+   * embed, runtime command emission) — that way write and read
+   * targets are structurally guaranteed to share a single source of
+   * truth and can't drift out of sync.
+   *
+   * Naming convention matches the prior string-concat forms so
+   * generated outputs are stable across the refactor; only the
+   * suffixing mechanism changes (was: bare string; now: via
+   * `DataVariable`).
+   */
+  /**
+   * Storage for a single named handle (`rx`, `ry`, etc.). Written to
+   * by each math op on the handle's chain; read back by the next op's
+   * incremental provider. Shared across all calls of this math fn
+   * (no per-call suffix).
+   */
+  getHandleStorage(handleName: string): DataPointClass<'storage'> {
+    return this.sandstoneCore.pack.DataVariable(
+      undefined,
+      `math_${this.resourceName ?? '0'}_h_${handleName}`,
+    )
+  }
+
+  /**
+   * Storage for the math fn's final return value. Per-call suffixed
+   * when `useCallNamespace` so concurrent calls don't clobber each
+   * other's result; unsuffixed for the single (or first) call.
+   * Same `DataPoint` is what the output handle's `.data()` returns.
+   */
+  getResultStorage(callIdx: number, useCallNamespace: boolean): DataPointClass<'storage'> {
+    const suffix = useCallNamespace ? `_${callIdx}` : ''
+    return this.sandstoneCore.pack.DataVariable(
+      undefined,
+      `math_${this.resourceName ?? '0'}_result${suffix}`,
+    )
+  }
+
+  /**
+   * Shared input storage for multi-call math — every call's caller
+   * value is copied here before the math runs, so the deduplicated
+   * provider JSON can reference a stable path. Allocated lazily on
+   * first call per position (see `_RawMathFunction.__call__`).
+   */
+  getSharedInputStorage(position: number): DataPointClass<'storage'> {
+    return this.sandstoneCore.pack.DataVariable(
+      undefined,
+      `math_${this.resourceName ?? '0'}_input_${position}`,
+    )
+  }
+
+  /**
+   * Set of every handle's `startNode` registered while this function
+   * was being populated. Populated by
+   * `BaseHandle._registerHandleWithActiveFunction` (called from each
+   * handle subclass constructor). Used by the compiler to discover
+   * chain roots — derived handles like
+   * `const funny = _.modulo(rx, val)` register their startNode here
+   * so the compiler can recognise funny's chain as distinct from
+   * rx's chain. Without this, the compiler sees
+   * `funny.startNode.operands[0] === rx.startNode` and mis-classifies
+   * funny's startNode as an rx chain extension (reading from rx's
+   * intermediate storage on subsequent ops).
+   *
+   * Every handle created during the user's callback registers here
+   * — including throwaway handles used inline as values. The compiler
+   * treats every registered startNode as a potential chain root;
+   * ones that aren't the startNode of a chain-extension handle just
+   * cost one extra unused storage slot, which is harmless.
+   */
+  readonly startNodes: Set<MathExpressionNode> = new Set()
 
   /**
    * Skeleton. Real serialization compiles each output to a provider
