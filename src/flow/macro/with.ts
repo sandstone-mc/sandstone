@@ -4,6 +4,7 @@ import type { MCFunctionClass, MCFunctionNode, MacroArgument, SandstoneCore } fr
 import { ContainerCommandNode } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
 import { ExecuteCommandNode } from 'sandstone/commands/implementations/entity/execute'
+import { TestMCFunctionNode } from 'sandstone/test';
 
 const WITH_CHILD_NAME = '__with_macro'
 
@@ -48,7 +49,7 @@ export class WithClass extends ContainerCommandNode {
   isSingleCommand = false
 
   /** MCFunction that hosts this `_.with` call. */
-  public hostFunction: MCFunctionNode
+  public hostFunction: TestMCFunctionNode | MCFunctionNode
 
   private finalized = false
 
@@ -62,7 +63,7 @@ export class WithClass extends ContainerCommandNode {
    * the update, `withClass.hostFunction` (captured at construction) would
    * still point at the original caller MCFunction.
    */
-  public containingMCFunction: MCFunctionNode | null = null
+  public containingMCFunction: TestMCFunctionNode | MCFunctionNode | null = null
 
   constructor(
     core: SandstoneCore,

@@ -188,6 +188,8 @@ import {
 } from './visitors'
 import type { RecipeJSON } from 'sandstone/arguments/shapedCrafting'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
+import { SandstoneTestCommands } from 'sandstone/test/commands'
+import { SandstoneTest } from 'sandstone/test'
 
 export type ResourcePath = string[]
 
@@ -343,6 +345,8 @@ export class SandstonePack {
   readonly Macro: SandstoneCommands<true> &
     ((strings: TemplateStringsArray, ...macros: (string | number | MacroArgument)[]) => MacroLiteral)
 
+  readonly Test: SandstoneTestCommands & Omit<SandstoneTest, 'core' | 'commands'>
+
   readonly conditions = SandstoneConditions
 
   objectives: Set<ObjectiveClass>
@@ -381,6 +385,15 @@ export class SandstonePack {
         new MacroLiteral(this.core, strings, macros),
       true,
     ) as unknown as this['Macro']
+
+    this.Test = new Proxy(new SandstoneTest(this.core), {
+      get(target: SandstoneTest, prop: any) {
+        if (prop in target.commands) {
+          return target.commands[prop as keyof SandstoneTestCommands]
+        }
+        return target[prop as keyof SandstoneTest]
+      },
+    }) as unknown as SandstoneTestCommands & Omit<SandstoneTest, 'core' | 'commands'>
 
     this.flow = new Flow(this.core)
     this.objectives = new Set()

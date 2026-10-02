@@ -290,7 +290,7 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // Throws if called outside any MCFunction — math runtime state
     // (the imperative `data modify ... compute ...`) must land in a
     // SandstoneFlow mcfunction, not at module top-level.
-    const parentFn = this.sandstoneCore.currentMCFunction
+    const parentFn = this.sandstoneCore.mcfunctionNodeOrThrow(this.sandstoneCore.currentMCFunction)
     if (!parentFn) {
       throw new Error(
         '_.Math(...)() must be called inside an MCFunction body — the imperative '

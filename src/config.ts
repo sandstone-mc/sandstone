@@ -51,6 +51,7 @@ import type {
   WaypointStyleClassArguments,
   WorldClockClassArguments,
 } from './core'
+import { TestMCFunctionClassArguments } from './test'
 
 export type HandlerFile = string | ArrayBuffer | Buffer
 
@@ -308,6 +309,7 @@ type ContentStrategy =
   | ContentStrategyKind<'instrument', NonNullable<InstrumentClassArguments['onConflict']>>
   | ContentStrategyKind<'jukebox_song', NonNullable<JukeboxSongClassArguments['onConflict']>>
   | ContentStrategyKind<'test_environment', NonNullable<TestEnvironmentClassArguments['onConflict']>>
+  | ContentStrategyKind<'test_function', NonNullable<TestMCFunctionClassArguments['onConflict']>>
   | ContentStrategyKind<'test_instance', NonNullable<TestInstanceClassArguments['onConflict']>>
   | ContentStrategyKind<'timeline', NonNullable<TimelineClassArguments['onConflict']>>
   | ContentStrategyKind<'trade_set', NonNullable<TradeSetClassArguments['onConflict']>>

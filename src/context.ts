@@ -43,6 +43,16 @@ export interface SandstoneContext {
    * Version number to set in load.status scoreboard.
    */
   loadVersion?: number
+
+  /**
+   * Whether to generate `TestMCFunctionClass` instances.
+   *
+   * Set by `sand build --test`. When `false` (the default), tests defined
+   * via `Test.create(...)` are skipped — their callbacks never run and no
+   * `data/<ns>/test/*.mcfunction` files are written. When `true`, tests
+   * are generated normally.
+   */
+  enableTests?: boolean
 }
 
 /**

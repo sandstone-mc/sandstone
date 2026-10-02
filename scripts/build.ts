@@ -60,7 +60,7 @@ const stopAfter = (stepNum: number) => {
 }
 
 // Subpath entry points (relative to src/)
-const subpaths = ['arguments', 'commands', 'core', 'flow', 'pack', 'variables']
+const subpaths = ['arguments', 'commands', 'core', 'flow', 'pack', 'test', 'variables']
 
 /**
  * Get external packages from package.json dependencies.
@@ -89,6 +89,7 @@ export * from './commands'
 export * from './flow'
 export * from './pack'
 export * from './arguments'
+export * from './test'
 
 // Now include sandstone.ts content (public API)
 ${sandstoneContent}

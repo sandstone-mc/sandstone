@@ -4,10 +4,7 @@ import type { SandstoneCore } from '../../sandstoneCore'
 import type { ResourceClassArguments, ResourceNode } from '../resource'
 import { JsonResource, ResourceClass, jsonStringify } from '../resource'
 import type { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
-
-// ============================================================================
-// Test Environment
-// ============================================================================
+import { _RawMCFunctionClass, MCFunctionClassArguments } from './mcfunction'
 
 /**
  * A node representing a Minecraft test environment.
@@ -50,10 +47,6 @@ export class TestEnvironmentClass extends ResourceClass<TestEnvironmentNode> imp
     this.handleConflicts()
   }
 }
-
-// ============================================================================
-// Test Instance
-// ============================================================================
 
 /**
  * A node representing a Minecraft test instance.

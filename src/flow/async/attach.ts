@@ -92,7 +92,7 @@ export class AttachClass extends AwaitNode {
         creator: 'sandstone',
         onConflict: 'rename',
         packType: currentFunction.resource.packType,
-        asyncContext: currentFunction.resource.asyncContext,
+        asyncContext: core.mcfunctionOrThrow(currentFunction.resource).asyncContext,
       },
     )
 

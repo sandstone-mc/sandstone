@@ -3,6 +3,7 @@ import { MCFunctionNode } from 'sandstone/core'
 import { WithClass } from 'sandstone/flow/macro'
 import { ResolveNBTNode, ResolveNBTPartClass } from 'sandstone/variables/ResolveNBT'
 import { GenericSandstoneVisitor } from './visitor'
+import { TestMCFunctionNode } from 'sandstone/test'
 
 /**
  * Structural-transform visitor for `_.with(env, callback)` nodes.
@@ -98,7 +99,7 @@ export class WithNodeVisitor extends GenericSandstoneVisitor {
    * wrapping `$execute` prefix) — the parent function call already
    * inherits the execute context from the hoisted prefix.
    */
-  private hoistSingleExecutePrefix(node: WithClass, parentFn: MCFunctionNode) {
+  private hoistSingleExecutePrefix(node: WithClass, parentFn: TestMCFunctionNode | MCFunctionNode) {
     const innerExecute = node.mcfunction.node.body[0] as ExecuteCommandNode
 
     // The execute's args are `[['as', '@a'], ['at', '@s']]` etc. The 'run'

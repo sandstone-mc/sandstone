@@ -1,9 +1,10 @@
+import { TestMCFunctionNode } from 'sandstone/test'
 import type { MCFunctionNode, SandstoneCore } from '../../core'
 import { ContainerNode } from '../../core'
 import type { ConditionNode } from '../conditions'
 
 export class LoopNode extends ContainerNode {
-  parentMCFunction: MCFunctionNode
+  parentMCFunction: MCFunctionNode | TestMCFunctionNode
 
   constructor(
     sandstoneCore: SandstoneCore,

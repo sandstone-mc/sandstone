@@ -1,7 +1,7 @@
 /* eslint-disable no-spaced-func */
 /* eslint-disable func-call-spacing */
 import type { Node, SandstoneCore } from 'sandstone/core'
-import { MCFunctionClass } from 'sandstone/core'
+import { MCFunctionClass, MCFunctionNode } from 'sandstone/core'
 import {
   ExecuteCommandNode,
   FunctionCommandNode,
@@ -306,7 +306,7 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
     // Use givenCallbackName if set (e.g., 'loop'), otherwise default to 'if'
     const callbackName = givenCallbackName ?? 'if'
 
-    const macroStorage = parentMCFunction.resource.macroPoint
+    const macroStorage = parentMCFunction instanceof MCFunctionNode ? parentMCFunction.resource.macroPoint : undefined
 
     // 2. If we have a single if node. No need to store its result then.
     if (nodes.length === 1) {

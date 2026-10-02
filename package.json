@@ -133,6 +133,11 @@
       "types": "./dist/exports/variables/index.d.ts",
       "import": "./dist/exports/variables/index.js",
       "default": "./dist/exports/variables/index.js"
+    },
+    "./test": {
+      "types": "./dist/exports/test/index.d.ts",
+      "import": "./dist/exports/test/index.js",
+      "default": "./dist/exports/test/index.js"
     }
   },
   "trustedDependencies": [

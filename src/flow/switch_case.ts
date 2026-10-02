@@ -4,6 +4,7 @@ import { ContainerNode } from 'sandstone/core'
 import type { DataPointClass } from 'sandstone/variables'
 import { Score } from 'sandstone/variables'
 import type { Condition } from './Flow'
+import { TestMCFunctionNode } from 'sandstone/test'
 
 /** A condition callback that receives the switch value and returns a condition */
 export type ConditionCallback<ValueType> = (value: ValueType) => Condition
@@ -84,7 +85,7 @@ export class CaseStatement<ValueType extends number | NBTObject, SwitchValueType
  * Transformed into MCFunctions by SwitchTransformationVisitor during save().
  */
 export class SwitchNode extends ContainerNode {
-  parentMCFunction: MCFunctionNode
+  parentMCFunction: TestMCFunctionNode | MCFunctionNode
 
   constructor(
     sandstoneCore: SandstoneCore,

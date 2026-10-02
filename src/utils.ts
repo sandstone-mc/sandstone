@@ -745,3 +745,11 @@ export type BuildTuple<T, Length extends number, Accumulator extends any[] = []>
     ? Accumulator
     : BuildTuple<T, Length, [...Accumulator, T]>
 )
+
+type DirectiveObjectEntries<T> = {
+  [K in keyof T]-?: { key: K, value: Exclude<T[K], undefined> }
+}[keyof T][]
+
+export function objectEntries<T extends object>(obj: T) {
+  return Object.entries(obj).map(([k, v]) => ({ key: k, value: v })) as DirectiveObjectEntries<T>
+}

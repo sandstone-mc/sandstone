@@ -18,6 +18,7 @@ import { AwaitNode, ContainerNode } from '../../nodes'
 import { CallableResourceClass } from '../resource'
 import { TagClass } from './tag'
 import type { DataPointClass } from 'sandstone/variables'
+import { TestMCFunctionNode } from 'sandstone/test';
 
 // interface AttributeWrapper {
 //  attributes: string[]
@@ -51,7 +52,7 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
    * 
    * @internal
    */
-  transientChildMCFunctions: Set<MCFunctionNode> = new Set()
+  transientChildMCFunctions: Set<TestMCFunctionNode | MCFunctionNode> = new Set()
 
   /**
    * The currently active context.
@@ -229,7 +230,7 @@ export class MCFunctionNode extends ContainerNode implements ResourceNode {
       .filter((node) => node.getValue() !== null)
       .map((node) => node.getValue())
       .join('\n')
-  };
+  }
 
   [util.inspect.custom](_depth: number, options: any) {
     return formatDebugString(

@@ -251,6 +251,7 @@ export const {
   // Variables
   Objective,
   Macro,
+  Test,
   // _ is exported separately above to preserve Flow type information
   Variable,
   flowVariable,

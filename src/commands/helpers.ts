@@ -1,5 +1,6 @@
 import type { SandstoneCore } from 'sandstone/core'
 import type { CommandNode } from 'sandstone/core/nodes'
+import { captureCommandStackTrace } from 'sandstone/core/nodes'
 import type { SandstonePack } from 'sandstone/pack'
 import type { SandstoneCommands } from './commands'
 
@@ -20,6 +21,24 @@ type InstanceTypeOr<NODE extends (new (...args: any) => CommandNode) | undefined
 
 export class FinalCommandOutput {
   constructor(protected node: CommandNode<unknown[]>) {}
+}
+
+/**
+ * Capture the current call stack and attach it to `node` as
+ * `node.stackTrace`. Used by command classes that want to surface
+ * their call site to test runners / debuggers.
+ *
+ * Skips internal Sandstone frames plus the supplied `extraSkipFrames`
+ * (typically the command class name itself) so the first remaining
+ * frame points at the user's call site.
+ *
+ * @internal
+ */
+export function attachStackTrace(
+  node: CommandNode,
+  extraSkipFrames: string[] = [],
+): void {
+  node.commandStackTrace = captureCommandStackTrace(extraSkipFrames)
 }
 
 export type CommandNodeConstructor = new (...args: any) => CommandNode
@@ -72,6 +91,7 @@ export abstract class CommandArguments<
     // No followup. We can add arguments & commit.
 
     const node = currentNode ?? this.getNode()
+    this.checkTestExclusive(node)
 
     if (args) {
       node.args.push(...args)
@@ -81,6 +101,57 @@ export abstract class CommandArguments<
       node.commit()
     }
 
+    return new FinalCommandOutput(node)
+  }
+
+  /**
+   * Enforce the `testExclusive` flag — throw if a `testExclusive` node
+   * would commit outside a `TestMCFunctionClass` context. Subclasses
+   * overriding `finalCommand` should call this on the node they're about
+   * to commit so the gate still runs.
+   *
+   * @internal
+   */
+  protected checkTestExclusive(node: CommandNode): void {
+    if (!node.testExclusive || !this.autoCommit) return
+
+    const currentMCFunction = this.sandstoneCore.currentMCFunction
+    const isTestContext = currentMCFunction !== undefined
+      && (currentMCFunction.resource as { _resourceType?: string })._resourceType === 'test_function'
+
+    if (!isTestContext) {
+      throw new Error(
+        `[${node.constructor.name}] This command may only be used inside a test mcfunction (TestMCFunctionClass). `
+        + 'PackTest commands are provided by the PackTest server mod and are not available outside test functions.',
+      )
+    }
+  }
+
+  /**
+   * Variant of `finalCommand` that, in addition to the base flow,
+   * captures the current call stack and stores it on the node as
+   * `node.stackTrace`. Command classes that want to surface their
+   * call site (e.g. the test assertion/await/fail helpers) override
+   * `finalCommand` with an arrow field delegating here.
+   *
+   * @internal
+   */
+  protected finalCommandWithStackTrace(
+    args?: NODE extends CommandNodeConstructor ? InstanceType<NODE>['args'] : any[],
+    currentNode?: InstanceTypeOr<NODE, CommandNode> | undefined,
+  ): FinalCommandOutput {
+    const node = currentNode ?? this.getNode()
+    this.checkTestExclusive(node)
+
+    if (args) {
+      node.args.push(...args)
+    }
+
+    if (this.autoCommit) {
+      node.commit()
+    }
+
+    attachStackTrace(node, [this.constructor.name])
     return new FinalCommandOutput(node)
   }
 

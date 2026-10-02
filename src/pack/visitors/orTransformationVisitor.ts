@@ -3,6 +3,7 @@ import { MCFunctionClass, type MCFunctionNode, type Node, type SandstoneCore } f
 import type { Score } from '../../variables'
 import { AndNode, ConditionNode, IfNode, NotNode, OrNode } from '../../flow'
 import { GenericSandstoneVisitor } from './visitor'
+import { TestMCFunctionNode } from 'sandstone/test';
 
 /**
  * Condition node whose `getValue()` returns `"if function <name>"`.
@@ -28,7 +29,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     return [...preNodes, this.genericVisit(node_)]
   }
 
-  parseConditionNode = (node: ConditionNode, parentMCFunction?: MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
+  parseConditionNode = (node: ConditionNode, parentMCFunction?: TestMCFunctionNode | MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
     if (node instanceof OrNode) {
       return this.parseOrNode(node, parentMCFunction)
     }
@@ -45,7 +46,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     return { preNodes: [...(node.preNodes ?? [])], conditionNode: node }
   }
 
-  parseOrNode = (node: OrNode, parentMCFunction?: MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
+  parseOrNode = (node: OrNode, parentMCFunction?: TestMCFunctionNode | MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
     // Single branch: collapse through so the IfNode behaves as if it had the inner condition.
     if (node.conditions.length === 1) {
       return this.parseConditionNode(node.conditions[0], parentMCFunction)
@@ -73,7 +74,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     // `ContainerCommandsToMCFunctionVisitor.createMCFunction`, so it
     // bypasses that visitor's child registration.
     if (parentMCFunction) {
-      parentMCFunction.transientChildMCFunctions.add(orMCFunction.node)
+      parentMCFunction.transientChildMCFunctions.add(orMCFunction.node as any)
     }
 
     this.core.enterMCFunction(orMCFunction)
@@ -95,7 +96,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     }
   }
 
-  parseAndNode = (node: AndNode, parentMCFunction?: MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
+  parseAndNode = (node: AndNode, parentMCFunction?: TestMCFunctionNode | MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
     // Single branch: collapse through so the IfNode behaves as if it had the inner condition.
     if (node.conditions.length === 1) {
       return this.parseConditionNode(node.conditions[0], parentMCFunction)
@@ -146,7 +147,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     // See `or_check` above — register parent/child for the
     // `AwaitBodyVisitor`'s `collectTransientHelpers`.
     if (parentMCFunction) {
-      parentMCFunction.transientChildMCFunctions.add(andMCFunction.node)
+      parentMCFunction.transientChildMCFunctions.add(andMCFunction.node as any)
     }
 
     this.core.enterMCFunction(andMCFunction)
@@ -352,7 +353,7 @@ export class OrTransformationVisitor extends GenericSandstoneVisitor {
     targetMCFunction.exitContext()
   }
 
-  parseNotNode = (node: NotNode, parentMCFunction?: MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
+  parseNotNode = (node: NotNode, parentMCFunction?: TestMCFunctionNode | MCFunctionNode): { preNodes: Node[]; conditionNode: ConditionNode } => {
     // Special case: `_.not(_.or(A, B, ...))` → De Morgan's:
     //   `!(A || B) = !A && !B`
     // Restructure to `_.and(_.not(A), _.not(B), ...)` so MC's flat execute

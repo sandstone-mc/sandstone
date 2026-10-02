@@ -6,7 +6,7 @@ import fs from 'fs/promises'
 import crypto from 'crypto'
 import { isBinaryFileSync } from 'isbinaryfile'
 import binaryExtensions from 'binary-extensions'
-import { getSandstoneContext } from 'sandstone/context'
+import { getSandstoneContext, hasContext } from 'sandstone/context'
 import type { SandstonePack } from 'sandstone/pack'
 import { MCMetaCache } from './mcmeta'
 import type { AwaitNode } from './nodes'
@@ -22,6 +22,8 @@ import { Set, SetType } from '../utils'
 import { JsonSymbolResource } from 'sandstone/arguments/generated/_json/dispatcher'
 import type { MathContainerNode } from '../flow/math/ast/MathContainerNode'
 import type { MathFunctionNode } from '../flow/math/ast/MathFunctionNode'
+import { _RawTestMCFunctionClass } from 'sandstone/test'
+import { TestMCFunctionClass, TestMCFunctionNode } from 'sandstone/test/mcfunction';
 
 /**
  * After `getExistingResource` resolves a resource's bytes, thread them back
@@ -116,7 +118,7 @@ export class SandstoneCore {
   /** All Resources */
   resourceNodes: ResourceNodesMap
 
-  mcfunctionStack: MCFunctionNode[]
+  mcfunctionStack: (MCFunctionNode | TestMCFunctionNode)[]
 
   /** Math DSL container stack — top is the active `MathContainerNode` (a `MathFunctionNode` for top-level). */
   mathStack: MathContainerNode[] = []
@@ -158,6 +160,20 @@ export class SandstoneCore {
   /** Cache of auto-generated polling trigger check functions, keyed by polling interval. Cleared on reset. */
   checkTriggers: Record<number, MCFunctionClass<undefined, undefined>> = {}
 
+  /**
+   * Whether `TestMCFunctionClass` instances should be added to
+   * `resourceNodes` and generated. Reads `SandstoneContext.enableTests`;
+   * defaults to `false` when no context has been set.
+   *
+   * When `false`, `Test.create(...)` calls produce no files and their
+   * callbacks never run.
+   *
+   * @see SandstoneContext.enableTests
+   */
+  get testsEnabled(): boolean {
+    return hasContext() ? (getSandstoneContext().enableTests ?? false) : false
+  }
+
   constructor(public pack: SandstonePack) {
     this.resourceNodes = new ResourceNodesMap()
     this.mcfunctionStack = []
@@ -197,7 +213,7 @@ export class SandstoneCore {
   /**
    * The current MCFunction.
    */
-  get currentMCFunction(): MCFunctionNode | undefined {
+  get currentMCFunction(): TestMCFunctionNode | MCFunctionNode | undefined {
     return this.mcfunctionStack[this.mcfunctionStack.length - 1]
   }
 
@@ -209,6 +225,40 @@ export class SandstoneCore {
     }
 
     return currentMCFunction
+  }
+
+  /**
+   * Typed accessor for the current MCFunction's resource. Throws if the
+   * resource is a test MCFunction (which doesn't carry the runtime fields
+   * like `asyncContext` that real MCFunctions do); otherwise returns the
+   * resource typed as `MCFunctionClass` so shared fields are accessible.
+   *
+   * Use this wherever `currentMCFunction.resource` is read at a site that
+   * requires real-MCFunction semantics.
+   */
+  mcfunctionOrThrow<MCF extends MCFunctionClass<any, any> | TestMCFunctionClass | undefined>(resource: MCF): MCF extends undefined ? undefined : MCFunctionClass<any, any> {
+    if (resource instanceof _RawTestMCFunctionClass) {
+      throw new Error('This operation is invalid inside a test MCFunction.')
+    }
+
+    return resource as never
+  }
+
+  /**
+   * Typed accessor for the current MCFunction's node. Throws if the node
+   * belongs to a test MCFunction (which has a different `resource` type
+   * and a subset of MCFunction semantics); otherwise returns the node
+   * typed as `MCFunctionNode`.
+   *
+   * Use this wherever `currentMCFunction` is passed to a site that
+   * requires real-MCFunction semantics.
+   */
+  mcfunctionNodeOrThrow<MCFN extends MCFunctionNode | TestMCFunctionNode | undefined>(node: MCFN): MCFN extends undefined ? undefined : MCFunctionNode {
+    if (node instanceof TestMCFunctionNode) {
+      throw new Error('This operation is invalid inside a test MCFunction.')
+    }
+
+    return node as never
   }
 
   insideContext: MCFunctionNode['insideContext'] = (...args) =>
@@ -223,7 +273,7 @@ export class SandstoneCore {
    * @param mcfunction The MCFunction to switch to.
    * @return The newly created and active MCFunction.
    */
-  enterMCFunction = (mcfunction: _RawMCFunctionClass<any, any> | MCFunctionClass<any, any>): MCFunctionNode => {
+  enterMCFunction = (mcfunction: _RawTestMCFunctionClass | TestMCFunctionClass | _RawMCFunctionClass<any, any> | MCFunctionClass<any, any>): MCFunctionNode | TestMCFunctionNode => {
     /*
      * We cannot simply call mcfunction.node, because .node is protected to avoid polluting the autocompleted API.
      * However, TypeScript gives us a backdoor using this dynamic call, in a fully type-safe way.

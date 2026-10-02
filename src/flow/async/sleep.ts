@@ -1,4 +1,5 @@
 import type { TimeArgument } from 'sandstone/arguments'
+import { timeArgumentToTicks } from 'sandstone/arguments'
 import type { SandstoneCore, MCFunctionNode } from 'sandstone/core'
 import type { Node } from 'sandstone/core/nodes'
 import { AwaitNode } from 'sandstone/core/nodes'
@@ -46,7 +47,7 @@ export class SleepClass extends AwaitNode {
       this.stackTrace = Error().stack
     }
 
-    const currentFunction = core.getCurrentMCFunctionOrThrow()
+    const currentFunction = core.mcfunctionNodeOrThrow(core.getCurrentMCFunctionOrThrow())
     this.parentMCFunction = currentFunction
 
     // If we're already in a "sleep" child, go to the parent function. It avoids childs' names becoming namespace:function/__sleep/__sleep/__sleep etc...
@@ -76,16 +77,7 @@ export class SleepClass extends AwaitNode {
         if (typeof delay === 'number') {
           return delay + 1
         }
-        const unit = delay.charAt(delay.length - 1)
-        let value = Number(delay.replace(unit, ''))
-
-        if (unit === 's') {
-          value *= 20
-        } else if (unit === 'd') {
-          value *= 24000
-        }
-
-        return value
+        return timeArgumentToTicks(delay)
       })()
 
       type = 'replace'

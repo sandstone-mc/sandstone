@@ -9,6 +9,7 @@ import { makeCallable } from 'sandstone/utils'
 import { formatDebugString } from '../utils'
 import type { ConditionNode } from './conditions'
 import { conditionToNode, NO_CALLBACK_SENTINEL, type Condition } from './Flow'
+import { TestMCFunctionNode } from 'sandstone/test'
 
 /**
  * Shared base for `IfNode` / `ElseNode`.
@@ -31,7 +32,7 @@ import { conditionToNode, NO_CALLBACK_SENTINEL, type Condition } from './Flow'
  */
 export abstract class FlowClauseNode extends ContainerNode {
   /** MCFunction whose context stack `enterSingleCommand` pushed onto. */
-  private singleCommandFunction: MCFunctionNode | null = null
+  private singleCommandFunction: TestMCFunctionNode | MCFunctionNode | null = null
 
   /** Context depth to pop back to once a command lands in the body. */
   private singleCommandDepth = 0
@@ -60,7 +61,7 @@ export abstract class FlowClauseNode extends ContainerNode {
    *
    * @internal
    */
-  enterSingleCommand = (parentMCFunction: MCFunctionNode) => {
+  enterSingleCommand = (parentMCFunction: TestMCFunctionNode | MCFunctionNode) => {
     if (this.singleCommandFunction) {
       // Context is already open from a previous property access.
       return
@@ -94,7 +95,7 @@ export class IfNode extends FlowClauseNode {
 
   _isElseIf = false
 
-  parentMCFunction: MCFunctionNode
+  parentMCFunction: MCFunctionNode | TestMCFunctionNode
 
   /** Optional callback name override (e.g., 'loop' for loop transformations) */
   givenCallbackName?: string
@@ -106,7 +107,7 @@ export class IfNode extends FlowClauseNode {
     sandstoneCore: SandstoneCore,
     public condition: ConditionNode,
     public callback?: () => void,
-    parentMCFunction?: MCFunctionNode,
+    parentMCFunction?: TestMCFunctionNode | MCFunctionNode,
   ) {
     super(sandstoneCore)
 
@@ -343,7 +344,7 @@ export class IfStatement<R extends boolean = true> {
 
   private _buildRun(
     clauseNode: FlowClauseNode,
-    parentMCFunction: MCFunctionNode,
+    parentMCFunction: TestMCFunctionNode | MCFunctionNode,
   ): RunProxy {
     const commandsSource = this.sandstoneCore.pack.commands as SandstoneCommands<false>
 

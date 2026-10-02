@@ -86,6 +86,41 @@ export type MessageOrSelector = (string | MultipleEntitiesArgument<boolean> | nu
 
 export type TimeArgument = number | `${number}` | `${number}${'t' | 's' | 'd'}`
 
+/**
+ * Converts a `TimeArgument` to integer ticks.
+ *
+ * - bare number / `${n}t` → `n` ticks
+ * - `${n}s` → `n * 20` ticks
+ * - `${n}d` → `n * 24000` ticks (one Minecraft day)
+ *
+ * @param value Time argument to convert.
+ *
+ * @throws If `value` is not a `TimeArgument` or cannot be parsed.
+ */
+export function timeArgumentToTicks(value: TimeArgument): number {
+  if (typeof value === 'number') return value
+
+  const last = value.charAt(value.length - 1)
+  if (last >= '0' && last <= '9') {
+    const ticks = Number(value)
+    if (Number.isFinite(ticks)) return ticks
+  }
+
+  const num = Number(value.slice(0, -1))
+
+  if (!Number.isFinite(num)) {
+    throw new Error(`[timeArgumentToTicks] Could not parse time value: "${value}"`)
+  }
+
+  switch (last) {
+    case 't': return num
+    case 's': return num * 20
+    case 'd': return num * 24000
+    default:
+      throw new Error(`[timeArgumentToTicks] Unsupported time unit in: "${value}"`)
+  }
+}
+
 export type MAP_ICONS = (
   | 'player'
   | 'frame'

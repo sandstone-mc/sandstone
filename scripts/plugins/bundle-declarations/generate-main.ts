@@ -181,6 +181,7 @@ export * from './types/commands/index.js'
 export * from './types/flow/index.js'
 export * from './types/pack/index.js'
 export * from './types/arguments/index.js'
+export * from './types/test/index.js'
 
 //# sourceMappingURL=index.d.ts.map
 `

@@ -291,7 +291,8 @@ export class AwaitBodyVisitor extends GenericSandstoneVisitor {
     const walk = (node: MCFunctionNode) => {
       if (visited.has(node)) return
       visited.add(node)
-      for (const child of node.transientChildMCFunctions) {
+      for (const _child of node.transientChildMCFunctions) {
+        const child = this.core.mcfunctionNodeOrThrow(_child)
         if (child === pollerNode) continue
         if (child === until.continuation.node) continue
 
