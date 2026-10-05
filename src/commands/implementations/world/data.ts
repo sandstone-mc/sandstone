@@ -33,14 +33,15 @@ export class DataCommand<MACRO extends boolean> extends CommandArguments {
    */
   get get() {
     const cmd = this.subCommand(['get'], DataGetCommand<MACRO>, false)
-    return makeCallable(cmd, (dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'>, scale?: Macroable<number, MACRO>): FinalCommandOutput => {
-      if (dataPoint.type === 'block') {
-        return cmd.block(coordinatesParser(dataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, dataPoint.path, scale)
+    return makeCallable(cmd, (dataPoint: DataPointClass<'entity'> | DataPointClass<'block'> | DataPointClass<'storage'> | DataPointPickClass, scale?: Macroable<number, MACRO>): FinalCommandOutput => {
+      const _dataPoint = dataPoint instanceof DataPointClass ? dataPoint : dataPoint._toDataPoint()
+      if (_dataPoint.type === 'block') {
+        return cmd.block(coordinatesParser(_dataPoint.currentTarget) as Macroable<Coordinates<MACRO>, MACRO>, _dataPoint.path, scale)
       }
-      if (dataPoint.type === 'entity') {
-        return cmd.entity(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path, scale)
+      if (_dataPoint.type === 'entity') {
+        return cmd.entity(_dataPoint.currentTarget as Macroable<string, MACRO>, _dataPoint.path, scale)
       }
-      return cmd.storage(dataPoint.currentTarget as Macroable<string, MACRO>, dataPoint.path, scale)
+      return cmd.storage(_dataPoint.currentTarget as Macroable<string, MACRO>, _dataPoint.path, scale)
     })
   }
 

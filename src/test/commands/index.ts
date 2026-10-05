@@ -10,6 +10,7 @@ export * from './await'
 export * from './dummy'
 export * from './fail'
 export * from './succeed'
+export * from './log'
 
 function bind<CLASS, METHOD extends string>(
   pack: SandstonePack,

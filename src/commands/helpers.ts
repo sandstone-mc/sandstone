@@ -19,8 +19,13 @@ type InstanceTypeOr<NODE extends (new (...args: any) => CommandNode) | undefined
  * This should only be used by users for advanced usage.
  */
 
-export class FinalCommandOutput {
-  constructor(protected node: CommandNode<unknown[]>) {}
+export class FinalCommandOutput<N extends CommandNode<unknown[]> = CommandNode<unknown[]>> {
+  /* @internal */
+  readonly node: N
+
+  constructor(node: N) {
+    this.node = node
+  }
 }
 
 /**
@@ -139,7 +144,7 @@ export abstract class CommandArguments<
   protected finalCommandWithStackTrace(
     args?: NODE extends CommandNodeConstructor ? InstanceType<NODE>['args'] : any[],
     currentNode?: InstanceTypeOr<NODE, CommandNode> | undefined,
-  ): FinalCommandOutput {
+  ) {
     const node = currentNode ?? this.getNode()
     this.checkTestExclusive(node)
 

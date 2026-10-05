@@ -6,6 +6,7 @@ import { CommandNode, ContainerCommandNode } from 'sandstone/core/nodes'
 import { makeCallable } from 'sandstone/utils'
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
 import { FunctionCommandNode } from './function'
+import type { TestMCFunctionNode } from 'sandstone/test'
 
 export class ReturnRunCommandNode extends ContainerCommandNode {
   command = 'return' as const
@@ -69,7 +70,7 @@ export class ReturnRunCommandNode extends ContainerCommandNode {
     return `${this.isMacro ? '$' : ''}${this.command} run ${command}`
   }
 
-  createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
+  createMCFunction = (currentMCFunction: TestMCFunctionNode | MCFunctionNode | null) => {
     if (this.isSingleExecute || !currentMCFunction) {
       return { node: this as ReturnRunCommandNode }
     }

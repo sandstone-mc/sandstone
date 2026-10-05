@@ -1,5 +1,6 @@
 import { CommandNode } from 'sandstone/core/nodes'
-import type { TestMCFunctionNode } from '../mcfunction'
+import { TestMCFunctionNode } from '../mcfunction'
+import type { SandstoneCore } from 'sandstone/core'
 
 /**
  * Base class for any `CommandNode` whose `getValue` should register a
@@ -55,20 +56,13 @@ export abstract class ThrowableCommandNode<ARGS extends unknown[] = unknown[]> e
  * @internal
  */
 export function setParentTestMCFunction(
-  out: unknown,
-  currentMC: unknown,
-): void {
-  // `currentMC` is `TestMCFunctionNode | MCFunctionNode | undefined`.
-  // The `throwableStack`/`currentIndex`/`currentOutputLine` fields
-  // live on the TestMCFunctionNode, not on the resource class — duck
-  // type the node directly.
-  const node = currentMC as { resource?: { _resourceType?: string }; throwableStack?: unknown } | undefined
-  if (
-    node
-    && node.resource?._resourceType === 'test_function'
-    && 'throwableStack' in node
-  ) {
-    ;(out as { node: { parentTestMCFunction?: TestMCFunctionNode } }).node.parentTestMCFunction
-      = node as TestMCFunctionNode
+  core: SandstoneCore,
+  node: CommandNode & { parentTestMCFunction?: TestMCFunctionNode },
+) {
+  const currentMCF = core.getCurrentMCFunctionOrThrow()
+  if (currentMCF instanceof TestMCFunctionNode) {
+    node.parentTestMCFunction = currentMCF
+    return
   }
+  throw new Error(`[${node.constructor.name}] This command can only be created in a TestMCFunction!`)
 }

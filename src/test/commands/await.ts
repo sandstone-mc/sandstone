@@ -63,9 +63,9 @@ export class AwaitCommand extends CommandArguments {
     args?: unknown[],
     currentNode?: unknown,
   ): FinalCommandOutput => {
-    const out = this.finalCommandWithStackTrace(args, currentNode as never)
-    setParentTestMCFunction(out, this.sandstoneCore.currentMCFunction)
-    return out
+    const command = this.finalCommandWithStackTrace(args, currentNode as never)
+    setParentTestMCFunction(this.sandstoneCore, command.node)
+    return command
   }
 
   /**
@@ -223,9 +223,9 @@ export class AwaitNotCommand extends CommandArguments {
     args?: unknown[],
     currentNode?: unknown,
   ): FinalCommandOutput => {
-    const out = this.finalCommandWithStackTrace(args, currentNode as never)
-    setParentTestMCFunction(out, this.sandstoneCore.currentMCFunction)
-    return out
+    const command = this.finalCommandWithStackTrace(args, currentNode as never)
+    setParentTestMCFunction(this.sandstoneCore, command.node)
+    return command
   }
 
   block<BLOCK extends BlockStatic>(

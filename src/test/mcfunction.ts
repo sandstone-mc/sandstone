@@ -176,17 +176,7 @@ export class TestMCFunctionNode extends ContainerNode implements ResourceNode {
   }
 
   /**
-   * Output line cursor — the line number (1-based, after the comment
-   * header) that the next serialized command will land on. Bumped after
-   * each non-null `getValue()` result by the number of newlines it
-   * contained, plus one for the terminating `\n` we append in this
-   * method's `body` accumulator.
-   *
-   * Renamed from `currentOutputLine` so `ThrowableCommandNode.getValue`
-   * can use a single name (`currentIndex`) for both the throwable key
-   * and the position it lands at.
-   *
-   * Reset on each `getValue` pass.
+   * Output line cursor for tracking which command landed on which line.
    */
   currentIndex: number = 0
 
@@ -246,7 +236,7 @@ export interface TestDirectives {
   /**
    * Whether and where to spawn the a dummy player at the start of the test, with `@s` set to the dummy.
    * 
-   * If set to `true` will spawn the dummy at `~0.5 ~ ~0.5`
+   * If set to `true` will spawn the dummy at `~0.5 ~ ~0.5`.
    */
   dummyPlayer?: Coordinates | boolean
 }
@@ -274,12 +264,19 @@ export class _RawTestMCFunctionClass extends CallableResourceClass<TestMCFunctio
   readonly description: string | undefined
 
   /**
-   * File where `Test.create(...)` was invoked. Captured at construction
-   * via a stack trace so the CLI's `sand test` can render an accurate
-   * "Ran M tests across N files" count — every test belongs to one
-   * source file, regardless of whether it registered any throwables.
+   * File where `Test.create(...)` was invoked.
    */
   readonly sourceFile: string | undefined
+
+  /** Line where `Test.create(...)` was invoked — used by `sand test` as a
+   *  fallback `build_trace` when a runtime failure can't be tied to a
+   *  specific source line (e.g. the failure was caused by a Java
+   *  exception thrown from inside PackTest rather than by a `fail`
+   *  command in the user's code). */
+  readonly sourceLine: number | undefined
+
+  /** Column where `Test.create(...)` was invoked. */
+  readonly sourceColumn: number | undefined
 
   readonly directives: TestDirectives | undefined
 
@@ -311,7 +308,10 @@ export class _RawTestMCFunctionClass extends CallableResourceClass<TestMCFunctio
 
     this.callback = args.callback ?? (() => {})
     this.description = args.description
-    this.sourceFile = captureCommandStackTrace()[0]?.file
+    const sourceFrame = captureCommandStackTrace()[0]
+    this.sourceFile = sourceFrame?.file
+    this.sourceLine = sourceFrame?.line
+    this.sourceColumn = sourceFrame?.column
     this.directives = args.directives
 
     if (this.nested !== 0) {

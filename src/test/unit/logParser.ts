@@ -6,9 +6,14 @@
  *   [Server thread/WARN]:  (optional) default:funny failed at 8, -60, 11. On line 3: Oh no! on tick 5
  *   [Server thread/ERROR]: default:funny failed at 8, -60, 11! On line 1: Fail command invoked on tick 0
  *   [Server thread/ERROR]: default:funny failed at 8, -60, 11! On line 3: Exceeded timeout on tick 2
+ *   [Server thread/ERROR]: default:not_funny failed at 14, -60, 11! Cannot invoke "..." because the return value of "..." is null
  *
  * The text after `On line N: ` is the failure message (e.g. what the user passed to `fail "..."`),
  * optionally followed by ` on tick T`. The message is preserved verbatim.
+ *
+ * The `On line N: ` prefix is optional — when PackTest's failure handler itself throws
+ * a Java exception, the line ends with the exception text directly after the coords
+ * separator. In that case `line` is `0` and the entire remainder is the message.
  */
 
 export type ParsedFailureLog = {
@@ -156,22 +161,33 @@ export const parseFailureLog = (line: string): ParsedFailureLog | null => {
   const z = readCoord(line, sepX2 + 2)
   if (!z) return null
 
-  // Expect `<sep> On line ` where sep is `!` or `.`. The sep abuts z —
-  // no space between digits and sep.
+  // Expect `<sep>` where sep is `!` or `.`, abutting z — no space
+  // between digits and sep.
   const sepIdx = z.end
   const sepChar = line.charCodeAt(sepIdx)
   if (sepChar !== 33 /* ! */ && sepChar !== 46 /* . */) return null
-  if (!line.startsWith(ON_LINE, sepIdx + 1)) return null
-  cursor = sepIdx + 1 + ON_LINE.length
 
-  // Line number is followed by `: ` and then the message.
-  const colonIdx = line.indexOf(': ', cursor)
-  if (colonIdx < 0) return null
-  const lineNumber = readInt(line, cursor)
-  if (!lineNumber || lineNumber.end !== colonIdx) return null
+  // Two message shapes follow:
+  //   - Normal: `<sep> On line N: <msg>[ on tick T]`
+  //   - Java exception from PackTest's failure handler:
+  //     `<sep> <exception message>` — no `On line N: ` prefix. Treat
+  //     the whole remainder as the message with `line = 0` so the
+  //     runner still registers this as a failure.
+  let lineNumber = 0
+  let rest: string
+  if (line.startsWith(ON_LINE, sepIdx + 1)) {
+    cursor = sepIdx + 1 + ON_LINE.length
+    const colonIdx = line.indexOf(': ', cursor)
+    if (colonIdx < 0) return null
+    const parsedLine = readInt(line, cursor)
+    if (!parsedLine || parsedLine.end !== colonIdx) return null
+    lineNumber = parsedLine.value
+    rest = line.substring(colonIdx + 2)
+  } else {
+    rest = line.substring(sepIdx + 1).trimStart()
+  }
 
   // Rest = message, optionally terminated by ` on tick N`.
-  const rest = line.substring(colonIdx + 2)
   let message = rest
   let tick: number | null = null
   // Use lastIndex: the text inside a `fail "..."` may itself contain the
@@ -197,7 +213,7 @@ export const parseFailureLog = (line: string): ParsedFailureLog | null => {
     x: x.value,
     y: y.value,
     z: z.value,
-    line: lineNumber.value,
+    line: lineNumber,
     message,
     tick,
   }

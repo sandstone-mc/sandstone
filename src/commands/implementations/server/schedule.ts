@@ -5,13 +5,14 @@ import { ContainerCommandNode } from 'sandstone/core/nodes'
 import type { MCFunctionClass, MCFunctionNode } from 'sandstone/core/resources/datapack'
 import type { TagClass } from 'sandstone/core/resources/datapack/tag'
 import { CommandArguments } from '../../helpers'
+import type { TestMCFunctionNode } from 'sandstone/test'
 
 type ScheduledFunction = string | TagClass<'function'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
 
 export class ScheduleCommandNode extends ContainerCommandNode {
   command = 'schedule' as const
 
-  override createMCFunction: (currentMCFunction: MCFunctionNode | null) => {
+  override createMCFunction: (currentMCFunction: TestMCFunctionNode | MCFunctionNode | null) => {
     node: Node | Node[]
     mcFunction?: MCFunctionNode | undefined
   } = (currentMCFunction) => {

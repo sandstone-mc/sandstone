@@ -20,9 +20,9 @@ export class FailCommand extends CommandArguments {
     args?: unknown[],
     currentNode?: unknown,
   ): FinalCommandOutput => {
-    const out = this.finalCommandWithStackTrace(args, currentNode as never)
-    setParentTestMCFunction(out, this.sandstoneCore.currentMCFunction as any)
-    return out
+    const command = this.finalCommandWithStackTrace(args, currentNode as never)
+    setParentTestMCFunction(this.sandstoneCore, command.node)
+    return command
   }
 
   /**

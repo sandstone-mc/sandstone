@@ -37,6 +37,7 @@ import { nbtResolver } from 'sandstone/variables'
 import type { Score } from 'sandstone/variables/Score'
 import { CommandArguments, FinalCommandOutput } from '../../helpers'
 import { FunctionCommandNode } from '../server/function'
+import type { TestMCFunctionNode } from 'sandstone/test'
 
 // Execute command
 export type SubCommand = [subcommand: string, ...args: unknown[]]
@@ -219,7 +220,7 @@ export class ExecuteCommandNode extends ContainerCommandNode<SubCommand[]> {
     return `${this.isMacro ? '$' : ''}${executeString} run ${command}`
   }
 
-  createMCFunction = (currentMCFunction: MCFunctionNode | null) => {
+  createMCFunction = (currentMCFunction: TestMCFunctionNode | MCFunctionNode | null) => {
     if (this.createdMCFunction) {
       // This is sus, but was needed. Ideally createMCFunction wouldn't be called multiple times at all.
       return { node: this as ExecuteCommandNode, mcFunction: this.createdMCFunction.node }

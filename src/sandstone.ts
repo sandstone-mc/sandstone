@@ -52,7 +52,10 @@ export function createSandstonePack(context: SandstoneContext): SandstonePack {
  * This clears all resources but keeps the same instance so user code
  * registering through the proxy uses the same pack as the CLI.
  */
-export function resetSandstonePack(): void {
+export function resetSandstonePack(ctx?: SandstoneContext): void {
+  if (ctx !== undefined) {
+    setSandstoneContext(ctx)
+  }
   if (_sandstonePack) {
     _sandstonePack.reset()
   }

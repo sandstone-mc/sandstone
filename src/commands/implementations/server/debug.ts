@@ -4,13 +4,14 @@ import { CommandArguments } from '../../helpers'
 import type { TagClass } from 'sandstone/core/resources/datapack/tag'
 import type { Macroable, MCFunctionClass, MCFunctionNode, Node } from 'sandstone/core'
 import { isMacroArgument } from 'sandstone/core/Macro'
+import type { TestMCFunctionNode } from 'sandstone/test'
 
 type DebugFunction = string | TagClass<'function'> | MCFunctionClass<any, any> | (() => any | Promise<any>)
 
 export class DebugCommandNode extends ContainerCommandNode {
   command = 'debug' as const
 
-  override createMCFunction: (currentMCFunction: MCFunctionNode | null) => {
+  override createMCFunction: (currentMCFunction: TestMCFunctionNode | MCFunctionNode | null) => {
     node: Node | Node[]
     mcFunction?: MCFunctionNode | undefined
   } = (currentMCFunction) => {

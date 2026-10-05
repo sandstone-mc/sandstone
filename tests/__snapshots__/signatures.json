@@ -683,7 +683,7 @@
     "definition": "src/commands/implementations/block/clone.ts"
   },
   "comment": {
-    "signature": "(alias) const comment: (...comments: unknown[]) => FinalCommandOutput",
+    "signature": "(alias) const comment: (...comments: unknown[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/_fake/comment.ts"
   },
   "compute": {
@@ -715,7 +715,7 @@
     "definition": "src/sandstone.ts"
   },
   "defaultgamemode": {
-    "signature": "(alias) const defaultgamemode: (mode: GAMEMODES) => FinalCommandOutput",
+    "signature": "(alias) const defaultgamemode: (mode: GAMEMODES) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/defaultgamemode.ts"
   },
   "dialog": {
@@ -723,7 +723,7 @@
     "definition": "src/commands/implementations/player/dialog.ts"
   },
   "difficulty": {
-    "signature": "(alias) const difficulty: (difficulty?: DIFFICULTIES) => FinalCommandOutput",
+    "signature": "(alias) const difficulty: (difficulty?: DIFFICULTIES) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/difficulty.ts"
   },
   "effect": {
@@ -731,7 +731,7 @@
     "definition": "src/commands/implementations/entity/effect.ts"
   },
   "enchant": {
-    "signature": "(alias) const enchant: (targets: MultipleEntitiesArgument<false>, enchantment: ENCHANTMENTS, level?: number) => FinalCommandOutput",
+    "signature": "(alias) const enchant: (targets: MultipleEntitiesArgument<false>, enchantment: ENCHANTMENTS, level?: number) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/entity/enchant.ts"
   },
   "execute": {
@@ -763,7 +763,7 @@
     "definition": "src/sandstone.ts"
   },
   "gamemode": {
-    "signature": "(alias) const gamemode: <T extends string>(gamemode: GAMEMODES, targets?: MultiplePlayersArgumentOf<false, T> | undefined) => FinalCommandOutput",
+    "signature": "(alias) const gamemode: <T extends string>(gamemode: GAMEMODES, targets?: MultiplePlayersArgumentOf<false, T> | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/player/gamemode.ts"
   },
   "gamerule": {
@@ -795,7 +795,7 @@
     "definition": "src/context.ts"
   },
   "help": {
-    "signature": "(alias) const help: (command?: string, ...parameters: string[]) => FinalCommandOutput",
+    "signature": "(alias) const help: (command?: string, ...parameters: string[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/help.ts"
   },
   "item": {
@@ -807,11 +807,11 @@
     "definition": "src/sandstone.ts"
   },
   "kill": {
-    "signature": "(alias) const kill: (targets?: MultipleEntitiesArgument<false> | undefined) => FinalCommandOutput",
+    "signature": "(alias) const kill: (targets?: MultipleEntitiesArgument<false> | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/entity/kill.ts"
   },
   "list": {
-    "signature": "(alias) const list: (uuids?: boolean) => FinalCommandOutput",
+    "signature": "(alias) const list: (uuids?: boolean) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/list.ts"
   },
   "loadTags": {
@@ -843,11 +843,11 @@
     "definition": "src/sandstone.ts"
   },
   "me": {
-    "signature": "(alias) const me: (...actions: (string | MultipleEntitiesArgument<false>)[]) => FinalCommandOutput",
+    "signature": "(alias) const me: (...actions: (string | MultipleEntitiesArgument<false>)[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/me.ts"
   },
   "msg": {
-    "signature": "(alias) const msg: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "signature": "(alias) const msg: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/sandstone.ts"
   },
   "nbtResolver": {
@@ -867,7 +867,7 @@
     "definition": "src/commands/implementations/block/place.ts"
   },
   "playsound": {
-    "signature": "(alias) const playsound: <T extends string>(sound: SOUND_EVENTS, source?: SOUND_SOURCES | undefined, targets?: MultiplePlayersArgumentOf<false, T> | undefined, sourcePosition?: Coordinates<false> | undefined, volume?: number | undefined, pitch?: number | undefined, minVolume?: number | undefined) => FinalCommandOutput",
+    "signature": "(alias) const playsound: <T extends string>(sound: SOUND_EVENTS, source?: SOUND_SOURCES | undefined, targets?: MultiplePlayersArgumentOf<false, T> | undefined, sourcePosition?: Coordinates<false> | undefined, volume?: number | undefined, pitch?: number | undefined, minVolume?: number | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/player/playsound.ts"
   },
   "random": {
@@ -879,7 +879,7 @@
     "definition": "src/utils.ts"
   },
   "raw": {
-    "signature": "(alias) const raw: (...args: unknown[]) => FinalCommandOutput",
+    "signature": "(alias) const raw: (...args: unknown[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/_fake/raw.ts"
   },
   "recipe": {
@@ -895,7 +895,7 @@
     "definition": "src/variables/Coordinates.ts"
   },
   "reload": {
-    "signature": "(alias) const reload: () => FinalCommandOutput",
+    "signature": "(alias) const reload: () => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/reload.ts"
   },
   "resetContext": {
@@ -903,11 +903,11 @@
     "definition": "src/context.ts"
   },
   "resetSandstonePack": {
-    "signature": "(alias) function resetSandstonePack(): void",
+    "signature": "(alias) function resetSandstonePack(ctx?: SandstoneContext): void",
     "definition": "src/sandstone.ts"
   },
   "returnCmd": {
-    "signature": "(alias) const returnCmd: {\n    run: SandstoneCommands<false> & ((callback: () => void) => FinalCommandOutput);\n    fail: () => FinalCommandOutput;\n} & ((value?: number | undefined) => FinalCommandOutput)",
+    "signature": "(alias) const returnCmd: {\n    run: SandstoneCommands<false> & ((callback: () => void) => FinalCommandOutput);\n    fail: () => FinalCommandOutput<CommandNode<unknown[]>>;\n} & ((value?: number | undefined) => FinalCommandOutput<CommandNode<unknown[]>>)",
     "definition": "src/sandstone.ts"
   },
   "ride": {
@@ -923,7 +923,7 @@
     "definition": "src/sandstone.ts"
   },
   "say": {
-    "signature": "(alias) const say: (message: string) => FinalCommandOutput",
+    "signature": "(alias) const say: (message: string) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/say.ts"
   },
   "schedule": {
@@ -935,7 +935,7 @@
     "definition": "src/commands/implementations/entity/scoreboard.ts"
   },
   "seed": {
-    "signature": "(alias) const seed: () => FinalCommandOutput",
+    "signature": "(alias) const seed: () => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/world/seed.ts"
   },
   "setSandstoneContext": {
@@ -947,19 +947,19 @@
     "definition": "src/commands/implementations/block/setblock.ts"
   },
   "setidletimeout": {
-    "signature": "(alias) const setidletimeout: (minutes: number) => FinalCommandOutput",
+    "signature": "(alias) const setidletimeout: (minutes: number) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/setidletimeout.ts"
   },
   "setworldspawn": {
-    "signature": "(alias) const setworldspawn: (pos?: Coordinates<false> | undefined, angle?: Rotation<false> | undefined) => FinalCommandOutput",
+    "signature": "(alias) const setworldspawn: (pos?: Coordinates<false> | undefined, angle?: Rotation<false> | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/world/setworldspawn.ts"
   },
   "spawnpoint": {
-    "signature": "(alias) const spawnpoint: <T extends string>(targets?: MultiplePlayersArgumentOf<false, T> | undefined, pos?: Coordinates<false> | undefined, angle?: Rotation<false> | undefined) => FinalCommandOutput",
+    "signature": "(alias) const spawnpoint: <T extends string>(targets?: MultiplePlayersArgumentOf<false, T> | undefined, pos?: Coordinates<false> | undefined, angle?: Rotation<false> | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/player/spawnpoint.ts"
   },
   "spectate": {
-    "signature": "(alias) const spectate: <T extends string, P extends string>(target: SingleEntityArgumentOf<false, T>, player?: SinglePlayerArgumentOf<false, P> | undefined) => FinalCommandOutput",
+    "signature": "(alias) const spectate: <T extends string, P extends string>(target: SingleEntityArgumentOf<false, T>, player?: SinglePlayerArgumentOf<false, P> | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/player/spectate.ts"
   },
   "spreadplayers": {
@@ -967,7 +967,7 @@
     "definition": "src/commands/implementations/entity/spreadplayers.ts"
   },
   "stopsound": {
-    "signature": "(alias) const stopsound: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, source?: \"*\" | SOUND_SOURCES | undefined, sound?: SOUND_EVENTS | undefined) => FinalCommandOutput",
+    "signature": "(alias) const stopsound: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, source?: \"*\" | SOUND_SOURCES | undefined, sound?: SOUND_EVENTS | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/player/stopsound.ts"
   },
   "stopwatch": {
@@ -975,11 +975,11 @@
     "definition": "src/commands/implementations/server/stopwatch.ts"
   },
   "summon": {
-    "signature": "(alias) const summon: <ENTITY extends Macroable<Registry['minecraft:entity_type'], false>>(entity: ENTITY, pos?: Coordinates<false> | undefined, nbt?: AllowConst<ENTITY extends keyof EntityDispatcherMap ? NonNullable<EntityDispatcherMap[ENTITY]> : RootNBT> | undefined) => FinalCommandOutput",
+    "signature": "(alias) const summon: <ENTITY extends Macroable<Registry['minecraft:entity_type'], false>>(entity: ENTITY, pos?: Coordinates<false> | undefined, nbt?: AllowConst<ENTITY extends keyof EntityDispatcherMap ? NonNullable<EntityDispatcherMap[ENTITY]> : RootNBT> | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/entity/summon.ts"
   },
   "swing": {
-    "signature": "(alias) const swing: (targets?: MultipleEntitiesArgument<false>, hand?: 'mainhand' | 'offhand', animation?: 'none' | 'whack' | 'stab') => FinalCommandOutput",
+    "signature": "(alias) const swing: (targets?: MultipleEntitiesArgument<false>, hand?: 'mainhand' | 'offhand', animation?: 'none' | 'whack' | 'stab') => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/entity/swing.ts"
   },
   "tag": {
@@ -991,7 +991,7 @@
     "definition": "src/commands/implementations/entity/team.ts"
   },
   "teammsg": {
-    "signature": "(alias) const teammsg: (messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "signature": "(alias) const teammsg: (messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/sandstone.ts"
   },
   "teleport": {
@@ -999,11 +999,11 @@
     "definition": "src/commands/implementations/entity/teleport.ts"
   },
   "tell": {
-    "signature": "(alias) const tell: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "signature": "(alias) const tell: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/tell.ts"
   },
   "tellraw": {
-    "signature": "(alias) const tellraw: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, message: Text) => FinalCommandOutput",
+    "signature": "(alias) const tellraw: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, message: Text) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/tellraw.ts"
   },
   "test": {
@@ -1019,7 +1019,7 @@
     "definition": "src/commands/implementations/player/title.ts"
   },
   "tm": {
-    "signature": "(alias) const tm: (messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "signature": "(alias) const tm: (messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/sandstone.ts"
   },
   "tp": {
@@ -1027,7 +1027,7 @@
     "definition": "src/sandstone.ts"
   },
   "transfer": {
-    "signature": "(alias) const transfer: <T extends string>(hostname: string, port?: number | undefined, targets?: MultiplePlayersArgumentOf<false, T> | undefined) => FinalCommandOutput",
+    "signature": "(alias) const transfer: <T extends string>(hostname: string, port?: number | undefined, targets?: MultiplePlayersArgumentOf<false, T> | undefined) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/player/transfer.ts"
   },
   "trigger": {
@@ -1035,11 +1035,11 @@
     "definition": "src/commands/implementations/server/trigger.ts"
   },
   "version": {
-    "signature": "(alias) const version: () => FinalCommandOutput",
+    "signature": "(alias) const version: () => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/commands/implementations/server/version.ts"
   },
   "w": {
-    "signature": "(alias) const w: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput",
+    "signature": "(alias) const w: <T extends string>(targets: MultiplePlayersArgumentOf<false, T>, messages_0: MessageOrSelector, ...messages: MessageOrSelector[]) => FinalCommandOutput<CommandNode<unknown[]>>",
     "definition": "src/sandstone.ts"
   },
   "waypoint": {

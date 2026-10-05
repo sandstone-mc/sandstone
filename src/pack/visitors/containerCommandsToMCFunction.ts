@@ -4,13 +4,14 @@ import { FunctionCommandNode, ReturnRunCommandNode } from 'sandstone/commands'
 import type { MCFunctionNode } from 'sandstone/core'
 import { AwaitNode, ContainerCommandNode } from 'sandstone/core'
 import { WithClass } from 'sandstone/flow/macro'
+import type { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import { GenericSandstoneVisitor } from './visitor'
 
 /**
  * Transforms an execute with several nodes into an execute calling a new function.
  */
 export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisitor {
-  currentMCFunction: MCFunctionNode | null = null
+  currentMCFunction: MCFunctionNode | TestMCFunctionNode | null = null
 
   visitContainerCommandNode = (node_: ContainerCommandNode) => {
     const { node, mcFunction } = node_.createMCFunction(this.currentMCFunction)
@@ -74,6 +75,23 @@ export class ContainerCommandsToMCFunctionVisitor extends GenericSandstoneVisito
 
     this.currentMCFunction = prev
 
+    return result
+  }
+
+  /** Mirror of `visitMCFunctionNode` for test mcfunctions —
+   *  `TestMCFunctionNode` is a sibling of `MCFunctionNode` (both extend
+   *  `ContainerNode` directly) so the visitor dispatch via the class
+   *  name doesn't fall through to `visitMCFunctionNode`. Without this
+   *  override `createMCFunction` on any `ContainerCommandNode` inside a
+   *  test body would see `currentMCFunction === null` and skip its
+   *  body extraction. */
+  visitTestMCFunctionNode = (node: TestMCFunctionNode) => {
+    const prev = this.currentMCFunction
+    this.currentMCFunction = node
+    this.core.currentNode = node.resource.name
+    const result = this.genericVisit(node)
+    this.core.currentNode = prev?.resource.name ?? ''
+    this.currentMCFunction = prev
     return result
   }
 }

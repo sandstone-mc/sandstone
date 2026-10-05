@@ -6,6 +6,7 @@ import { formatDebugString } from '../utils'
 import { isMacroArgument, type MacroArgument } from './Macro'
 import type { MCFunctionClass, MCFunctionNode } from './resources/datapack'
 import type { SandstoneCore } from './sandstoneCore'
+import type { TestMCFunctionNode } from 'sandstone/test'
 
 /**
  * One frame of a captured command stack trace.
@@ -396,7 +397,7 @@ export abstract class ContainerCommandNode<ARGS extends unknown[] = unknown[]>
    *
    * The returned node will replace
    */
-  createMCFunction: (currentMCFunction: MCFunctionNode | null) => { node: Node | Node[]; mcFunction?: MCFunctionNode } =
+  createMCFunction: (currentMCFunction: TestMCFunctionNode | MCFunctionNode | null) => { node: Node | Node[]; mcFunction?: MCFunctionNode } =
     (_currentMCFunction) => ({ node: this })
 }
 
