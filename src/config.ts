@@ -408,6 +408,11 @@ export interface SandstoneConfig {
     exportZips?: boolean
   }
 
+  /**
+   * Connect daemon / `sand connect` / `sand watch` settings. 
+   */
+  connect?: SandstoneConnectConfig
+
   /** Some scripts that can run at defined moments. */
   scripts?: {
     /**
@@ -450,4 +455,158 @@ export interface SandstoneConfig {
       callback: (contents: HandlerFile | Promise<HandlerFile>) => HandlerFile | Promise<HandlerFile>
     }[]
   }
+}
+
+export type SandstoneHostType = (
+  | 'ssh'
+  | 'ftp'
+  | 'integrated'
+  | 'mcsmanager-login'
+)
+
+export interface SandstoneBaseHostConfig {
+  projectRoot?: string
+  verbose?: boolean
+  sandstoneConfig?: SandstoneConfig
+}
+
+export interface SandstoneRconConfig {
+  enabled?: boolean
+  password?: string
+  /** Defaults to 25575 (Minecraft's standard RCON port). */
+  port?: number
+}
+
+export interface SandstoneSshHostConfig extends SandstoneBaseHostConfig {
+  host: string
+  port?: number
+  username: string
+  password?: string
+  privateKey?: string | Buffer
+  serverDir: string
+  /** Shell command to launch the server (e.g. `systemctl start minecraft@main`, `screen -dmS mc ./start.sh`). */
+  startCommand: string
+  /** Shell command to force-kill if graceful stop times out. */
+  stopCommand: string
+  /** Seconds to wait for graceful `stop` to exit before falling back. Default 30. */
+  gracefulStopTimeoutSeconds?: number
+  /** screen/tmux session name. Drives `stop` internally during graceful stop. */
+  consoleSession?: string
+  /** Path to the log file. Default: `${serverDir}/logs/latest.log`. */
+  logPath?: string
+  rcon?: SandstoneRconConfig
+}
+
+export interface SandstoneFtpHostConfig extends SandstoneBaseHostConfig {
+  host: string
+  port?: number
+  user: string
+  password: string
+  serverPath: string
+  /** Path to the log file relative to serverPath. Default: 'logs/latest.log'. */
+  logPath?: string
+  /** How often to poll the log file for new bytes. Default 500ms. */
+  pollIntervalMs?: number
+  rcon?: SandstoneRconConfig
+}
+
+export interface SandstoneIntegratedHostModsConfig {
+  fabricApi?: boolean
+  packtest?: boolean
+  commandcrafter?: boolean
+  worldgenDevtools?: boolean
+  quickPack?: boolean
+  lithium?: boolean
+  krypton?: boolean
+  ferriteCore?: boolean
+  lazyDfu?: boolean
+  scalablelux?: boolean
+  additionalMods?: Array<{
+    modrinthId?: string
+    url?: string
+    filename?: string
+  }>
+}
+
+export interface SandstoneIntegratedHostConfig extends SandstoneBaseHostConfig {
+  /** Absolute path to the directory the CLI should manage the Fabric server inside. Default: `${projectRoot}/.sandstone/mc-server/`. */
+  serverDir?: string
+  verbose?: boolean
+  serverPort?: number
+  rcon?: {
+    enabled?: boolean
+    password?: string
+    /** Defaults to 25575 (Minecraft's standard RCON port). */
+    port?: number
+  }
+  /**
+   * Sandstone version (e.g. "1.2.5"). The MC version + Java major are
+   * derived from this via `sandstoneToMcVersion` + `requiredJavaMajor`.
+   */
+  sandstoneVersion?: string
+  /**
+   * Override MC version detection.
+   */
+  minecraftVersion?: string
+  /** Fabric loader version. Default: latest stable. */
+  fabricLoaderVersion?: string
+  /** Path to sandstone project root (where sandstone.config.ts lives). */
+  projectRoot: string
+  /** Seconds to wait for graceful `stop` to exit before SIGTERM/SIGKILL. Default 30. */
+  gracefulStopTimeoutSeconds?: number
+  javaDir?: string
+  preferSnapshot?: boolean
+  mods?: SandstoneIntegratedHostModsConfig
+  world?:
+    | 'void'
+    | 'overworld'
+    | { layers: Array<{ block: string; height: number }>; biome?: string }
+}
+
+export interface SandstoneMcsManagerHostConfig extends SandstoneBaseHostConfig {
+  endpoint: string
+  daemonId: string
+  uuid: string
+  /** Defaults to env-derived value. */
+  username?: string
+  /** base64-encoded, defaults to env-derived value. */
+  password?: string
+}
+
+export type SandstoneConnectHostConfig<T extends SandstoneHostType> =
+  T extends 'integrated' ? Partial<SandstoneIntegratedHostConfig>
+  : T extends 'ssh' ? SandstoneSshHostConfig
+  : T extends 'ftp' ? SandstoneFtpHostConfig
+  : T extends 'mcsmanager-login' ? SandstoneMcsManagerHostConfig
+  : never
+
+export type SandstoneConnectHost = (
+  | (Partial<SandstoneIntegratedHostConfig> & { type: 'integrated' })
+  | (SandstoneSshHostConfig & { type: 'ssh' })
+  | (SandstoneFtpHostConfig & { type: 'ftp' })
+  | (SandstoneMcsManagerHostConfig & { type: 'mcsmanager-login' })
+)
+
+export interface SandstoneConnectConfig {
+  /**
+   * Whether `sand watch` should start up a connect daemon in-process if no external one is reachable.
+   */
+  watcherAuto?: boolean,
+
+  /**
+   * Host `sand connect` and `sand watch` should use.
+   */
+  host?: SandstoneConnectHost,
+}
+
+export type SandstoneConnect = {
+  HostType: SandstoneHostType,
+  Host: SandstoneConnectHost,
+  Config: SandstoneConnectConfig,
+
+  SshHostConfig: SandstoneSshHostConfig,
+  FtpHostConfig: SandstoneFtpHostConfig,
+  IntegratedHostConfig: SandstoneIntegratedHostConfig,
+  IntegratedHostModsConfig: SandstoneIntegratedHostModsConfig,
+  McsManagerHostConfig: SandstoneMcsManagerHostConfig,
 }

@@ -402,4 +402,5 @@ export type {
   ResourcePackConfig,
   ContentStrategyKind,
   SandstoneConfig,
+  SandstoneConnect,
 } from './config'
