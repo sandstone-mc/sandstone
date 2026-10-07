@@ -89,7 +89,7 @@ export class TestLogCommandNode extends ContainerCommandNode {
       const segments = this.parentTestMCFunction.resource.path
       const namespace = segments[0]
       const helper = this.sandstonePack.MCFunction(
-        `${namespace}:__tests/${segments.join('/')}/${this.testID}`, // TODO: This should be `segments.slice(2).join('/')
+        `${namespace}:__tests/${segments.slice(2).join('/')}/${this.testID}`,
         {
           addToSandstoneCore: false,
           creator: 'sandstone',

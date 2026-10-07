@@ -529,8 +529,6 @@ export interface SandstoneIntegratedHostModsConfig {
 }
 
 export interface SandstoneIntegratedHostConfig extends SandstoneBaseHostConfig {
-  /** Absolute path to the directory the CLI should manage the Fabric server inside. Default: `${projectRoot}/.sandstone/mc-server/`. */
-  serverDir?: string
   verbose?: boolean
   serverPort?: number
   rcon?: {
@@ -561,6 +559,12 @@ export interface SandstoneIntegratedHostConfig extends SandstoneBaseHostConfig {
     | 'void'
     | 'overworld'
     | { layers: Array<{ block: string; height: number }>; biome?: string }
+  /**
+   * When `true`, on first setup of the MC server dir the CLI copies
+   * `resources/world/` (when it exists, with a `level.dat`) into
+   * the server dir's `world/` folder before launching.
+   */
+  worldTemplate?: boolean
 }
 
 export interface SandstoneMcsManagerHostConfig extends SandstoneBaseHostConfig {

@@ -1,6 +1,5 @@
 export * from './mcfunction'
 export * from './test'
-export * from './unit'
 export type { LogExtra } from './commands'
 
 /** Re-exported for `sand test` so the CLI can syntax-highlight raw
