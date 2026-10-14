@@ -34,7 +34,7 @@ export class SandstoneTest {
 
   private logTraceCounter = 0
 
-  readonly logTraces = new Map<string, { server_trace: TestLogTrace; build_trace?: TestLogTrace; extras?: LogExtra[] }>() // TODO: Types for extras
+  readonly logTraces = new Map<string, { server_trace: TestLogTrace; build_trace?: TestLogTrace; extras?: LogExtra[] }>()
 
   constructor(public core: SandstoneCore) {
     this.tests = new ResourceNodesMap()
@@ -54,6 +54,24 @@ export class SandstoneTest {
       },
     )
     this.tests.add(test.node)
+
+    // Override Minecraft's vanilla `minecraft:always_pass` test instance
+    // (which always passes and does nothing useful) with a sandstone variant
+    // pointing at a non-existent structure. The missing structure makes
+    // the game skip the test entirely instead of reporting a vacuous pass.
+    if (this.tests.size === 1 && this.core.testsEnabled) {
+      this.core.pack.TestInstance('minecraft:always_pass', {
+        type: 'function',
+        environment: 'default',
+        function: 'always_pass',
+        max_ticks: 1,
+        required: false,
+        setup_ticks: 1,
+        structure: 'sandstone:disabled_this_useless_test_on_purpose',
+      }, {
+        creator: 'sandstone'
+      })
+    }
 
     return test
   }

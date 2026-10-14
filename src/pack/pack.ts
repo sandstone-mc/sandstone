@@ -1655,8 +1655,12 @@ export class SandstonePack {
    * out.get('datapack/data/test/function/foo.mcfunction') // 'say hi'
    * ```
    */
-  compile(name: string, callback: () => void): Map<string, string> {
-    this.MCFunction(name, callback)
+  compile(): Map<string, string>
+  compile(name: string, callback: () => void): Map<string, string>
+  compile(name?: string, callback?: () => void): Map<string, string> {
+    if (name !== undefined && callback !== undefined) {
+      this.MCFunction(name, callback)
+    }
 
     const visitors = defaultVisitors(this)
     const resources = this.core.generateResources({ visitors })

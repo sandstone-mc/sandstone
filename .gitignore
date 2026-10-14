@@ -64,3 +64,6 @@ cache
 
 # Local scratch / agent temp files
 .temp/
+
+# Live-MC integration test runtime (see tests/integrated/__setup.ts).
+tests/integrated/.server/

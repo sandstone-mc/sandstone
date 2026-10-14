@@ -32,6 +32,7 @@
         "@typescript/typescript6": "^6.0.2",
         "magic-string": "^1.0.0",
         "oxlint": "^1.75.0",
+        "sandstone-cli": "link:sandstone-cli",
         "source-map-js": "^1.2.1",
         "ts-api-utils": "2.5.0",
         "typescript": "^7.0.2",
@@ -429,6 +430,8 @@
     "ret": ["ret@0.1.15", "", {}, "sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg=="],
 
     "safe-buffer": ["safe-buffer@5.2.1", "", {}, "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="],
+
+    "sandstone-cli": ["sandstone-cli@link:sandstone-cli", { "bin": { "sand": "./lib/index.js", "create-sandstone": "./lib/create.js" } }],
 
     "semver": ["semver@7.8.5", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA=="],
 

@@ -26,7 +26,7 @@ function chalkColorize(value: unknown): string {
     return chalk`{blue null}`
   }
   if (value instanceof NBTTypedArray) {
-    const renderedItems = value.values.map((it) => chalk`{green ${it}}`).join(chalk`, `)
+    const renderedItems = value.values.map((it) => chalk`{greenBright ${it}}`).join(chalk`, `)
     return chalk`[{blue ${value.unit}}; ${renderedItems}]`
   }
   if (Array.isArray(value)) {
@@ -49,7 +49,7 @@ function chalkColorize(value: unknown): string {
     return chalk`{yellow ${JSON.stringify(value)}}`
   }
   if (typeof value === 'number') {
-    return chalk`{green ${value}d}`
+    return chalk`{greenBright ${value}d}`
   }
-  return chalk`{green ${(value as NBTClass)[util.inspect.custom]()}}`
+  return chalk`{greenBright ${(value as NBTClass)[util.inspect.custom]()}}`
 }
