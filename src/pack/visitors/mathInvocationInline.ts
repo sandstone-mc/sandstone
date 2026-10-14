@@ -1,5 +1,6 @@
 import type { Node } from 'sandstone/core/nodes'
 import type { MCFunctionNode } from 'sandstone/core/resources/datapack/mcfunction'
+import type { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import { MathInvocationNode } from '../../flow/math/compile/MathInvocationNode'
 import { GenericSandstoneVisitor } from './visitor'
 import {
@@ -40,6 +41,25 @@ export class MathInvocationInlineVisitor extends GenericSandstoneVisitor {
    * commands would be duplicated.
    */
   override visitMCFunctionNode = (node: MCFunctionNode): MCFunctionNode => {
+    return this.inlineMathBridges(node) as MCFunctionNode
+  }
+
+  /**
+   * Test MCFunctions share the math-splice pipeline — `data modify …
+   * compute …` commands land inside the test body just like a real
+   * MCFunction body, so bridges created via `_.Math(...)()` inside a
+   * `Test(...)` body need the same inlining.
+   */
+  override visitTestMCFunctionNode = (node: TestMCFunctionNode): TestMCFunctionNode => {
+    return this.inlineMathBridges(node) as TestMCFunctionNode
+  }
+
+  /**
+   * Walk `node`'s body, splicing every `MathInvocationNode` into the
+   * host. Returns the node unchanged. The visitor pattern recurses
+   * into `node.body` separately so child visitors still see the body.
+   */
+  private inlineMathBridges = (node: { body: Node[] }): typeof node => {
     if (!this.processedBridges.has(node)) this.processedBridges.add(node)
     else return node
     // Collect every bridge in this MCFunction's body, then group
@@ -73,7 +93,7 @@ export class MathInvocationInlineVisitor extends GenericSandstoneVisitor {
     node.body = next
     return node
   }
-  private processedBridges = new WeakSet<MCFunctionNode>()
+  private processedBridges = new WeakSet<{ body: Node[] }>()
 
   /**
    * Lower a bridge's body at save time. Idempotency guard skips

@@ -2,6 +2,7 @@ import { DataCommandNode, ExecuteCommandNode, FunctionCommandNode, type SubComma
 import type { MCFunctionNode, Node } from 'sandstone/core'
 import { CommandNode, ContainerCommandNode, ContainerNode } from 'sandstone/core'
 import { ResolveNBTNode } from 'sandstone/variables/ResolveNBT'
+import type { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import { GenericSandstoneVisitor } from './visitor'
 
 type StoragePoint = {
@@ -119,6 +120,29 @@ const getExecuteStore = (node: Node, source: StoragePoint) => {
  */
 export class OptimizeMacroTemporariesVisitor extends GenericSandstoneVisitor {
   visitMCFunctionNode = (functionNode: MCFunctionNode) => {
+    this.optimize(functionNode)
+    return functionNode
+  }
+
+  /**
+   * Mirror of `visitMCFunctionNode` for test mcfunctions — without this,
+   * `_.with(env, …)` calls inside a `Test(...)` body keep their temporary
+   * data-modify copies instead of getting them folded into the macro
+   * call's compound argument.
+   */
+  visitTestMCFunctionNode = (functionNode: TestMCFunctionNode) => {
+    this.optimize(functionNode)
+    return functionNode
+  }
+
+  /**
+   * Shared body for `visitMCFunctionNode` / `visitTestMCFunctionNode`.
+   * Both mcfunction kinds extend `ContainerNode`; the per-call
+   * store-detect logic walks `body` without caring which resource
+   * owns it. Accepting `ContainerNode` lets us call `genericVisit` and
+   * `referencesStoragePoint` (both of which need a real `Node`).
+   */
+  private optimize = (functionNode: ContainerNode) => {
     this.genericVisit(functionNode)
 
     for (let callIndex = 0; callIndex < functionNode.body.length; callIndex++) {
@@ -206,7 +230,5 @@ export class OptimizeMacroTemporariesVisitor extends GenericSandstoneVisitor {
         callIndex -= 1
       }
     }
-
-    return functionNode
   }
 }

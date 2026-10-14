@@ -14,6 +14,7 @@ import { AndNode, IfNode, NotNode } from 'sandstone/flow'
 import { ElseNode } from 'sandstone/flow'
 import type { DataPointClass, Score } from 'sandstone/variables'
 import type { SandstonePack } from 'sandstone/pack'
+import { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import { GenericSandstoneVisitor } from './visitor'
 
 function* flattenIfNode(node: IfNode): IterableIterator<IfNode | ElseNode> {
@@ -253,6 +254,14 @@ export class IfElseTransformationVisitor extends GenericSandstoneVisitor {
     // 1. We may be an elseIf node, if so, should exit
     if (node_._isElseIf) {
       return []
+    }
+
+    // MCFunctions opted into inline transforms (TestMCFunctionNode always,
+    // plus any normal MCFunction flagged via `pack.compile({ inline: true })`)
+    // route through `InlineIfElseTransformationVisitor` — it avoids the
+    // `return run` / child-mcfunction extraction this visitor produces.
+    if (node_.parentMCFunction?.useInlineTransforms) {
+      return node_
     }
 
     // Restructure `_.not(_.and(...))` (root IfNode).

@@ -73,13 +73,6 @@ export class ConstantFoldingVisitor extends MathVisitor {
    */
   private _fn: MathFunctionNode | null = null
 
-  override run(fn: MathFunctionNode): void {
-    this._fn = fn
-    // eslint-disable-next-line no-console
-    console.log('[constantFolding] run start, allNodes=' + fn.allNodes.length + ' types=' + fn.allNodes.map((n) => n.constructor.name).join(','))
-    super.run(fn)
-  }
-
   /** Wrapping nodes absorbed during this pass — drained by the runner. */
   readonly orphans: Array<BinaryOpNode | AggregateNode | UnaryOpNode> = []
   /**
@@ -181,15 +174,11 @@ export class ConstantFoldingVisitor extends MathVisitor {
     // holds a stale reference to an orphan aggregate whose
     // children folded to constants.
     let current: MathExpressionNode = node.value as unknown as MathExpressionNode
-    // eslint-disable-next-line no-console
-    console.log('[constantFolding] visitReturnNode START current=' + current.constructor.name + (LiteralNode.is(current) ? (' value=' + (current as unknown as { value: number }).value) : ''))
     for (let iter = 0; iter < 32; iter++) {
       const next = this.visit(current) as MathExpressionNode
       if (next === current) break
       current = next
     }
-    // eslint-disable-next-line no-console
-    console.log('[constantFolding] visitReturnNode END current=' + current.constructor.name + (LiteralNode.is(current) ? (' value=' + (current as unknown as { value: number }).value) : ''))
     if (current !== node.value) {
       ;(node as unknown as { value: MathExpressionNode }).value = current
     }

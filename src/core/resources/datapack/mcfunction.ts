@@ -34,12 +34,29 @@ import { TestMCFunctionNode } from 'sandstone/test';
 export class MCFunctionNode extends ContainerNode implements ResourceNode {
   contextStack: (ContainerNode | ContainerCommandNode)[]
 
+  /**
+   * When `true`, the inline transformation visitors
+   * (`InlineIfElseTransformationVisitor`, `InlineOrTransformationVisitor`,
+   * `InlineSwitchTransformationVisitor`) transform this mcfunction's
+   * if/else/switch/OR chains into flat executes (no helper MCFunctions,
+   * no `return run`) instead of letting the main visitors extract them.
+   *
+   * Set in the constructor from `SandstoneCore.useInlineTransforms` —
+   * the global flag is mutated by `pack.compile({ inline: true })` so
+   * every MCFunction created during that compile opts in automatically
+   * without the caller having to flag each one.
+   *
+   * @internal
+   */
+  useInlineTransforms = false
+
   constructor(
     sandstoneCore: SandstoneCore,
     public resource: MCFunctionClass<any, any>,
   ) {
     super(sandstoneCore)
     this.contextStack = [this]
+    this.useInlineTransforms = sandstoneCore.useInlineTransforms
   }
 
   /**

@@ -470,7 +470,19 @@ async function runJsonTestProcess(
   pending: Map<string, BuildEntry>,
   attach: AttachContext,
 ) {
-  const proc = Bun.spawn([CLI_BIN, 'test', '--json', '--path', PROJECT_ROOT], {
+  const proc = Bun.spawn(
+    [
+      CLI_BIN,
+      'test',
+      '--json',
+      '--path', PROJECT_ROOT,
+      // Test mcfunctions are written into the test server's world
+      // datapacks dir, not the standard `.sandstone/output/`. Point
+      // `sand test`'s runtime trace resolver at the right directory so
+      // failure stacks point at real on-disk files.
+      '--output-dir', path.join(MC_WORLD_DATAPACKS, DATA_PACK_DIR_NAME),
+    ],
+    {
     stdout: 'pipe',
     stderr: 'pipe',
     env: process.env,

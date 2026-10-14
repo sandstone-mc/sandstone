@@ -125,6 +125,7 @@ import {
   IntegerNumberProviderClass,
 } from 'sandstone/core'
 import { CustomResourceClass } from 'sandstone/core/resources/custom'
+import type { ResourceNode } from 'sandstone/core/resources/resource'
 import { Flow, SandstoneConditions } from 'sandstone/flow'
 import type { LiteralUnion, NamespacedString, NonEmptyString } from 'sandstone/utils'
 import { makeCallable, randomUUID } from 'sandstone/utils'
@@ -174,6 +175,9 @@ import {
   InitConstantsVisitor,
   InitObjectivesVisitor,
   InlineFunctionCallVisitor,
+  InlineIfElseTransformationVisitor,
+  InlineOrTransformationVisitor,
+  InlineSwitchTransformationVisitor,
   LoopTransformationVisitor,
   MathInvocationInlineVisitor,
   OrTransformationVisitor,
@@ -1657,13 +1661,29 @@ export class SandstonePack {
    */
   compile(): Map<string, string>
   compile(name: string, callback: () => void): Map<string, string>
-  compile(name?: string, callback?: () => void): Map<string, string> {
-    if (name !== undefined && callback !== undefined) {
-      this.MCFunction(name, callback)
+  compile(opts: { name: string; callback: () => void; inline?: boolean }): Map<string, string>
+  compile(
+    nameOrOpts?: string | { name: string; callback: () => void; inline?: boolean },
+    callback?: () => void,
+  ): Map<string, string> {
+    if (typeof nameOrOpts === 'string' && callback !== undefined) {
+      this.MCFunction(nameOrOpts, callback)
+    } else if (typeof nameOrOpts === 'object') {
+      this.MCFunction(nameOrOpts.name, nameOrOpts.callback)
     }
 
-    const visitors = defaultVisitors(this)
-    const resources = this.core.generateResources({ visitors })
+    const inline = typeof nameOrOpts === 'object' ? nameOrOpts.inline === true : false
+    const visitors = inline ? inlineDefaultVisitors(this) : defaultVisitors(this)
+
+    if (inline) {
+      this.core.useInlineTransforms = true
+    }
+    let resources: Iterable<ResourceNode<any>>
+    try {
+      resources = this.core.generateResources({ visitors }) as Iterable<ResourceNode<any>>
+    } finally {
+      this.core.useInlineTransforms = false
+    }
 
     const out = new Map<string, string>()
     for (const node of resources) {
@@ -1700,8 +1720,53 @@ export function defaultVisitors(pack: SandstonePack) {
     // Transformation visitors
     new LoopTransformationVisitor(pack),
     new SwitchTransformationVisitor(pack),
+    new InlineSwitchTransformationVisitor(pack),
+    new InlineOrTransformationVisitor(pack),
     new OrTransformationVisitor(pack),
+    new InlineIfElseTransformationVisitor(pack),
     new IfElseTransformationVisitor(pack),
+    new ThrowInlineVisitor(pack),
+    new ContainerCommandsToMCFunctionVisitor(pack),
+
+    // Special visitors
+    new AwaitBodyVisitor(pack),
+    new ThrowPropagationVisitor(pack),
+    new WithNodeVisitor(pack),
+    new MathInvocationInlineVisitor(pack),
+
+    // Optimization
+    new OptimizeMacroTemporariesVisitor(pack),
+    new InlineFunctionCallVisitor(pack),
+    new UnifyChainedExecutesVisitor(pack),
+    new SimplifyExecuteFunctionVisitor(pack),
+    new SimplifyReturnRunFunctionVisitor(pack),
+  ]
+}
+
+/**
+ * Visitor pipeline that uses the inline transform visitors for every
+ * MCFunction instead of the ones that extract to helper MCFunctions +
+ * `return run`. Used by `sand run --ts` so a script's if/else/switch/OR
+ * blocks don't leak wrapper MCFunctions that the script can't see.
+ *
+ * Functionally equivalent to `defaultVisitors` for normal MCFs — the
+ * inline visitors emit code MC accepts without `return` or helper
+ * MCFunctions — but produces different output. Existing test/build
+ * snapshots are tied to `defaultVisitors`; this set is for ephemeral
+ * scratch use, not for building real packs.
+ */
+export function inlineDefaultVisitors(pack: SandstonePack) {
+  return [
+    // Initialization visitors
+    new InitObjectivesVisitor(pack),
+    new InitConstantsVisitor(pack),
+    new GenerateLazyMCFunction(pack),
+
+    // Transformation visitors — inline-only variants
+    new LoopTransformationVisitor(pack),
+    new InlineSwitchTransformationVisitor(pack),
+    new InlineOrTransformationVisitor(pack),
+    new InlineIfElseTransformationVisitor(pack),
     new ThrowInlineVisitor(pack),
     new ContainerCommandsToMCFunctionVisitor(pack),
 

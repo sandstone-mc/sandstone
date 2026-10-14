@@ -145,6 +145,19 @@ export class SandstoneCore {
   commandSerializationDepth = 0
 
   /**
+   * When `true`, every MCFunction created during this compile opts into
+   * the inline flow transform visitors (`InlineIfElse-`,
+   * `InlineOr-`, `InlineSwitchTransformationVisitor`) instead of letting
+   * the main visitors extract helper MCFunctions + `return run` chains.
+   *
+   * Set by `SandstonePack.compile({ inline: true })` for the duration
+   * of one compile (so `sand run --ts` can produce a single self-contained
+   * mcfunction). `MCFunctionNode` reads this in its constructor and
+   * copies the value onto itself; visitors then read the per-node flag.
+   */
+  useInlineTransforms = false
+
+  /**
    * @internal
    */
   macroAlreadyUsed = false

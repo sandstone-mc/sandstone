@@ -8,11 +8,12 @@ import type {
   GameRuleCommandNode,
   SayCommandNode,
 } from 'sandstone/commands'
-import type { GenericNodeVisitor } from 'sandstone/core/visitors'
+import type { GenericNodeVisitor, GenericResourceNodeVisitor } from 'sandstone/core/visitors'
 import { GenericCoreVisitor } from 'sandstone/core/visitors'
 import type { ConditionCaseNode, DefaultCaseNode, ElseNode, IfNode, LoopNode, StaticCaseNode, SwitchNode } from 'sandstone/flow'
 import type { SandstonePack } from 'sandstone/pack'
 import type { LoopArgument } from 'sandstone/variables'
+import type { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 
 export class GenericSandstoneVisitor extends GenericCoreVisitor {
   constructor(public readonly pack: SandstonePack) {
@@ -54,4 +55,7 @@ export class GenericSandstoneVisitor extends GenericCoreVisitor {
   visitGameruleCommandNode?: GenericNodeVisitor<GameRuleCommandNode>
 
   visitSayCommandNode?: GenericNodeVisitor<SayCommandNode>
+
+  // Resources
+  visitTestMCFunctionNode?: GenericResourceNodeVisitor<TestMCFunctionNode>
 }

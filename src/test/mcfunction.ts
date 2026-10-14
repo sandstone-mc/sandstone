@@ -180,6 +180,17 @@ export class TestMCFunctionNode extends ContainerNode implements ResourceNode {
    */
   currentIndex: number = 0
 
+  /**
+   * Test MCFunctions always use the inline flow transform visitors —
+   * PackTest's per-test result tracking forbids the helper MCFunctions
+   * + `return run` shape that the main `IfElseTransformationVisitor`
+   * produces. Set by construction so the inline visitors fire without
+   * the caller needing to flag it.
+   *
+   * @internal
+   */
+  useInlineTransforms = true
+
   throwableStack: Map<string, { trace: CommandStackFrame, command: string, line: number}> = new Map()
 
   getValue = () => {

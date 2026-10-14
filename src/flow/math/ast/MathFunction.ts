@@ -5,7 +5,9 @@ import { Score } from '../../../variables/Score'
 import type { MathFunctionOutputs } from './MathFunctionNode'
 import { MathFunctionNode } from './MathFunctionNode'
 import { LiteralNode, ScoreboardRefNode } from './nodes/leaves'
+import { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import type { SandstoneCore } from '../../../core/sandstoneCore'
+import type { MCFunctionNode } from 'sandstone/core'
 import type { MathKind, MathExpressionNode } from './MathExpressionNode'
 import { makeClassCallable } from '../../../utils'
 import type { MakeInstanceCallable } from '../../../utils'
@@ -290,7 +292,18 @@ class _RawMathFunction<P extends readonly MathInput[], R>
     // Throws if called outside any MCFunction — math runtime state
     // (the imperative `data modify ... compute ...`) must land in a
     // SandstoneFlow mcfunction, not at module top-level.
-    const parentFn = this.sandstoneCore.mcfunctionNodeOrThrow(this.sandstoneCore.currentMCFunction)
+    //
+    // Test MCFunctions are accepted alongside real MCFunctions: math
+    // operations in a test body produce `data modify … compute …` commands
+    // just like a real MCFunction, so the bridge splice path applies.
+    const currentFn = this.sandstoneCore.currentMCFunction
+    if (!currentFn) {
+      throw new Error(
+        '_.Math(...)() must be called inside an MCFunction body — the imperative '
+          + 'compute command has nowhere to land otherwise.',
+      )
+    }
+    const parentFn = currentFn as MCFunctionNode
     if (!parentFn) {
       throw new Error(
         '_.Math(...)() must be called inside an MCFunction body — the imperative '

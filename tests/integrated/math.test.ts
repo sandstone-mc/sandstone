@@ -1,6 +1,6 @@
 import { describe, expect } from 'bun:test'
 import { test } from './__setup'
-import { say, Float, NBT } from '../../dist/exports/index.js'
+import { Float, NBT } from '../../dist/exports/index.js'
 import chalk from 'chalk-template'
 
 console.log(chalk`{blue [test]} Registered 1 Test`)

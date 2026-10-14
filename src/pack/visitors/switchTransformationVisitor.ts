@@ -11,6 +11,7 @@ import {
   SwitchNode,
 } from 'sandstone/flow'
 import { DataPointClass, NBT, Score } from 'sandstone/variables'
+import { TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import { GenericSandstoneVisitor } from './visitor'
 import type { NonEmptyString } from 'sandstone/utils'
 
@@ -37,6 +38,15 @@ import type { NonEmptyString } from 'sandstone/utils'
  */
 export class SwitchTransformationVisitor extends GenericSandstoneVisitor {
   visitSwitchNode = (node: SwitchNode): Node | Node[] => {
+    // MCFunctions opted into inline transforms route through
+    // `InlineSwitchTransformationVisitor` — extracting cases into child
+    // mcfunctions + using `return` would break PackTest's per-test
+    // result tracking (and `sand run --ts` opts every scratch MCFunction
+    // in too).
+    if (node.parentMCFunction?.useInlineTransforms) {
+      return node
+    }
+
     const { value, staticCases, conditionCases, defaultCase, parentMCFunction } = node
     const { Data, initMCFunction, Macro, commands } = this.pack
     const { functionCmd } = commands

@@ -1,33 +1,61 @@
 import { FunctionCommandNode } from 'sandstone/commands'
-import type { MCFunctionNode } from 'sandstone/core'
-import { MCFunctionClass } from 'sandstone/core'
+import type { MCFunctionNode, Node } from 'sandstone/core'
+import { ContainerNode, MCFunctionClass } from 'sandstone/core'
+import type { TestMCFunctionClass, TestMCFunctionNode } from 'sandstone/test/mcfunction'
 import { GenericSandstoneVisitor } from './visitor'
 
 // TODO: Add support for macros
+
+type AnyFunctionResource = MCFunctionClass<any, any> | TestMCFunctionClass
 
 /**
  * Initialize the objectives of the pack.
  */
 export class InlineFunctionCallVisitor extends GenericSandstoneVisitor {
-  deletedMCFunction: [deleted: MCFunctionClass<any, any>, _new: MCFunctionClass<any, any>] | null = null
+  deletedMCFunction: [deleted: AnyFunctionResource, _new: AnyFunctionResource] | null = null
 
   visitFunctionCommandNode = (node: FunctionCommandNode) => {
-    const _mcFunction = node.args[0]
     if (!this.deletedMCFunction) {
       return node
     }
 
     const [deleted, newOne] = this.deletedMCFunction
-    if (node.args[0] instanceof MCFunctionClass && node.args[0] === deleted) {
-      node.args[0] = newOne
+    if (node.args[0] === deleted) {
+      // Test MCFunctions can't appear in a `function …` command target,
+      // so only rewrite when the replacement is an MCFunctionClass.
+      if (newOne instanceof MCFunctionClass) {
+        node.args[0] = newOne
+      }
     }
 
     return node
   }
 
   visitMCFunctionNode = (functionNode: MCFunctionNode) => {
+    this.inlineSingleCall(functionNode)
+    return functionNode
+  }
+
+  /**
+   * Mirror of `visitMCFunctionNode` for test mcfunctions — without this,
+   * test bodies never get the single-call inlining pass and the helper
+   * MCFunctions they reference survive even when they're trivially
+   * collapsible.
+   */
+  visitTestMCFunctionNode = (functionNode: TestMCFunctionNode) => {
+    this.inlineSingleCall(functionNode)
+    return functionNode
+  }
+
+  /**
+   * Shared body for `visitMCFunctionNode` / `visitTestMCFunctionNode`.
+   * Both mcfunction kinds extend `ContainerNode` and share a `body:
+   * Node[]` plus a resource with a `.creator` field, so the logic is
+   * identical; the entry points only differ in return-type.
+   */
+  private inlineSingleCall = (functionNode: { body: Node[]; resource: AnyFunctionResource }) => {
     if (functionNode.body.length > 1) {
-      return functionNode
+      return
     }
 
     const node = functionNode.body[0]
@@ -53,9 +81,12 @@ export class InlineFunctionCallVisitor extends GenericSandstoneVisitor {
       functionNode.body = sandstoneCreatedFunction.node.body
     }
 
-    this.genericVisit(functionNode)
+    // genericVisit needs a real ContainerNode — narrow by structural
+    // check, since the entry points' union type erased it.
+    if (functionNode instanceof ContainerNode) {
+      this.genericVisit(functionNode)
+    }
 
     this.deletedMCFunction = null
-    return functionNode
   }
 }

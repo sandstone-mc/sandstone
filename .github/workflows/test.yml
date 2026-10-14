@@ -37,14 +37,21 @@ jobs:
         fi
 
     # types/ holds tsc's declarations + .tsbuildinfo (incremental: true), so a
-    # restore lets tsc skip unchanged files. Key is unique per run to force a
-    # refresh; restore-keys pull in whatever the previous run left behind.
-    - name: Cache generated declarations
+    # restore lets tsc skip unchanged files. tests/integrated/.server/ is the
+    # gitignored test MC server + sandstone project, restored to skip the
+    # download/extract on every run. Both live in the same archive so a single
+    # key + restore-keys pair covers them; a half-emitted state for either path
+    # taints the whole archive, which is why the prune step drops superseded
+    # entries unconditionally. Key is unique per run to force a refresh;
+    # restore-keys pull in whatever the previous run left behind.
+    - name: Cache generated declarations and test server
       if: steps.cache-meta.outputs.prefix != ''
       continue-on-error: true
       uses: actions/cache@v6
       with:
-        path: types
+        path: |
+          types
+          tests/integrated/.server
         key: ${{ steps.cache-meta.outputs.prefix }}${{ github.run_id }}
         restore-keys: |
           ${{ steps.cache-meta.outputs.prefix }}

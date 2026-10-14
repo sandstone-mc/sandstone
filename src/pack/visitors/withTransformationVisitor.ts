@@ -38,6 +38,14 @@ import { TestMCFunctionNode } from 'sandstone/test'
 export class WithNodeVisitor extends GenericSandstoneVisitor {
   visitMCFunctionNode = (node: MCFunctionNode) => this.genericVisit(node)
 
+  /**
+   * Mirror of `visitMCFunctionNode` for test mcfunctions — without this,
+   * `_.with(env, cb)` bodies inside a `Test(...)` body never get the
+   * generic walk that prepares them for the `onEnd` pass that moves
+   * user callback bodies into child macro mcfunctions.
+   */
+  visitTestMCFunctionNode = (node: TestMCFunctionNode) => this.genericVisit(node)
+
   onEnd = () => {
     for (const withClass of this.pack.core.withNodes) {
       // The MCFunction that currently contains this WithClass. Updated

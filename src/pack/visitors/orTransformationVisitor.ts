@@ -24,6 +24,14 @@ class FunctionReturnConditionNode extends ConditionNode {
 
 export class OrTransformationVisitor extends GenericSandstoneVisitor {
   visitIfNode = (node_: IfNode) => {
+    // MCFunctions opted into inline transforms route through
+    // `InlineOrTransformationVisitor` — extracting to a child mcfunction
+    // + `return 1/0` would break PackTest's per-test result tracking
+    // (and `sand run --ts` opts every scratch MCFunction in too).
+    if (node_.parentMCFunction?.useInlineTransforms) {
+      return node_
+    }
+
     const { preNodes, conditionNode } = this.parseConditionNode(node_.condition, node_.parentMCFunction)
     node_.condition = conditionNode
     return [...preNodes, this.genericVisit(node_)]

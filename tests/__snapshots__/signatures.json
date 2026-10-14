@@ -458,6 +458,10 @@
     "signature": "(alias) interface SandstoneConfig",
     "definition": "src/config.ts"
   },
+  "SandstoneConnect": {
+    "signature": "(alias) type SandstoneConnect = {\n    HostType: SandstoneHostType;\n    Host: SandstoneConnectHost;\n    Config: SandstoneConnectConfig;\n    SshHostConfig: SandstoneSshHostConfig;\n    FtpHostConfig: SandstoneFtpHostConfig;\n    IntegratedHostConfig: SandstoneIntegratedHostConfig;\n    IntegratedHostModsConfig: SandstoneIntegratedHostModsConfig;\n    McsManagerHostConfig: SandstoneMcsManagerHostConfig;\n}",
+    "definition": "src/config.ts"
+  },
   "SandstoneContext": {
     "signature": "(alias) interface SandstoneContext",
     "definition": "src/context.ts"

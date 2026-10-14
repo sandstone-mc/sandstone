@@ -32,7 +32,7 @@
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@parcel/watcher": "^2.6.0",
-    "@sandstone-mc/mcdoc-ts-generator": "link:@sandstone-mc/mcdoc-ts-generator",
+    "@sandstone-mc/mcdoc-ts-generator": "^0.3.24",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.24",
@@ -43,7 +43,7 @@
     "@typescript/analyze-trace": "^0.11.1",
     "@typescript/typescript6": "^6.0.2",
     "magic-string": "^1.0.0",
-    "sandstone-cli": "link:sandstone-cli",
+    "sandstone-cli": "^2.6.9",
     "oxlint": "^1.75.0",
     "source-map-js": "^1.2.1",
     "ts-api-utils": "2.5.0",
@@ -83,6 +83,7 @@
     "test:update-snapshots": "UPDATE_SAND_TESTS=1 bun test --update-snapshots",
     "test:server:up": "bun scripts/test-server.ts up",
     "test:server:down": "bun scripts/test-server.ts down",
+    "sand": "cd tests/integrated/.server && bun ../../../node_modules/sandstone-cli/lib/index.js",
     "update-from-mcdoc": "bun run update-from-mcdoc:types && bun run update-from-mcdoc:json",
     "update-from-mcdoc:types": "MCDOC_TARGET_VERSION=26.3 mcdoc-ts-generator --out-dir \"src/arguments/generated/\" --no-tsconfig",
     "update-from-mcdoc:json": "MCDOC_TARGET_VERSION=26.3 MCDOC_TYPE_PREFIX=Json MCDOC_ALLOW_JS_NUMBER=1 MCDOC_IMPORT_ROOT=sandstone/arguments/generated/_json mcdoc-ts-generator --out-dir \"src/arguments/generated/_json/\" --no-tsconfig"
