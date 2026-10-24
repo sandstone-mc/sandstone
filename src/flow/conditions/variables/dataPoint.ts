@@ -1,6 +1,6 @@
 import type { NBTObject } from 'sandstone/arguments/nbt'
-import type { DataPointPickClass, Node, SandstoneCore } from 'sandstone/core'
-import type { DataPointClass, Score } from 'sandstone/variables'
+import type { DataPointPickClass, SandstoneCore } from 'sandstone/core'
+import { targetParser, type DataPointClass, type Score } from 'sandstone/variables'
 import { SingleConditionNode } from '../condition'
 
 export class DataPointExistsConditionNode extends SingleConditionNode {
@@ -12,7 +12,7 @@ export class DataPointExistsConditionNode extends SingleConditionNode {
   }
 
   getCondition(): string[] {
-    return ['data', this.dataPoint.type, this.dataPoint.currentTarget, this.dataPoint.path]
+    return ['data', this.dataPoint.type, targetParser(this.dataPoint.currentTarget), this.dataPoint.path]
   }
 }
 

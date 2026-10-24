@@ -1,5 +1,6 @@
 import type { SandstoneCore } from 'sandstone/core'
 import { SingleConditionNode } from '../condition'
+import { targetParser } from 'sandstone/variables'
 
 export class AdvancementConditionNode extends SingleConditionNode {
   protected advancementArgument: any
@@ -18,6 +19,6 @@ export class AdvancementConditionNode extends SingleConditionNode {
   }
 
   getCondition(): unknown[] {
-    return ['entity', this.sandstoneCore.pack.Selector('@s', { advancements: this.advancementArgument })]
+    return ['entity', targetParser(this.sandstoneCore.pack.Selector('@s', { advancements: this.advancementArgument }))]
   }
 }

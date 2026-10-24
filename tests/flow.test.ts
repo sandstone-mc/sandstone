@@ -12,6 +12,8 @@ import {
   say,
   tellraw,
   Variable,
+  UUID,
+  Data,
 } from '../dist/exports/index.js'
 import { compile, mcfunctionBody, snapshotAll, withDebugLogs } from './utils/index.js'
 
@@ -1561,5 +1563,25 @@ describe('execute→function inlining (SimplifyExecuteFunctionVisitor)', () => {
     expect(helpers).toEqual([])
 
     expect(logs).toMatchSnapshot()
+  })
+
+  test('_.if(UUID(), () => say("hi")) serializes known, random UUID correctly', () => {
+    const result = compile('known_random_uuid', () => {
+      const item_display = UUID()
+      _.if(item_display, () => say('hi'))
+    })
+
+    expect(mcfunctionBody(result, 'known_random_uuid')).not.toContain('[')
+  })
+
+  test('_.if(Data("entity", UUID(), "foo"), () => say("hi")) serializes known, random UUID correctly', () => {
+    const result = compile('data_point_exists_known_random_uuid', () => {
+      const item_display = UUID()
+      const foo_data = Data('entity', item_display, `foo`)
+      const bar_data = Data('entity', item_display, `bar`)
+      _.if(foo_data, () => bar_data.set(foo_data))
+    })
+
+    expect(mcfunctionBody(result, 'data_point_exists_known_random_uuid')).not.toContain('[')
   })
 })

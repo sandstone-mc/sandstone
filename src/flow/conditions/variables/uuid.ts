@@ -1,7 +1,7 @@
 import type { SandstoneCore } from 'sandstone/core'
 import type { UUIDClass } from 'sandstone/variables/UUID'
-import { CommandConditionNode } from '../command'
 import { SingleConditionNode } from '../condition'
+import { targetParser } from 'sandstone/variables'
 
 export class UUIDConditionNode extends SingleConditionNode {
   constructor(
@@ -12,12 +12,7 @@ export class UUIDConditionNode extends SingleConditionNode {
   }
 
   getCondition(): unknown[] {
-    if (this.UUID.primarySource === 'known') {
-      return new CommandConditionNode(this.sandstoneCore, 'result', (execute) =>
-        execute.as(this.UUID).if.entity('@s'),
-      ).getCondition()
-    }
     // TODO: Implement data & scores
-    return ['entity', `${this.UUID._toSelector()}`]
+    return ['entity', `${targetParser(this.UUID)}`]
   }
 }
