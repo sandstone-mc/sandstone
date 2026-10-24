@@ -82,7 +82,7 @@ export const rangeParser = (core: SandstoneCore, range: Range<boolean> | MacroAr
   if (Array.isArray(range)) {
     return `${sanitizeValue(core, range[0])}..${sanitizeValue(core, range[1])}`
   }
-  return range.toString()
+  return sanitizeValue(core, range)
 }
 
 export type StructureRotation = STRUCTURE_ROTATION | number | `${90 | 180 | 270}` | `-${90 | 180 | 270}`

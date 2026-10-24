@@ -357,13 +357,15 @@ export class SelectorClass<
       return this.target
     }
 
+    const { core } = this.sandstonePack
+
     const result: (readonly [string, string | ResolvedNBT])[] = []
 
     const args = { ...this.arguments }
 
     const modifiers = {
       // Parse scores
-      scores: (scores: ScoreArgument<MACRO>) => result.push(['scores', parseScore(this.sandstonePack.core, scores)]),
+      scores: (scores: ScoreArgument<MACRO>) => result.push(['scores', parseScore(core, scores)]),
 
       // Parse potentially multiple nbt
       nbt: (nbt: RootNBT | RootNBT[]) => {
@@ -413,7 +415,10 @@ export class SelectorClass<
         result.push(['team', teamRepr])
       },
 
-      distance: (range_: Range<MACRO>) => result.push(['distance', rangeParser(this.sandstonePack.core, range_)]),
+      distance: (range: Range<MACRO>) =>   result.push(['distance',   rangeParser(core, range)]),
+      level: (range: Range<MACRO>) =>      result.push(['level',      rangeParser(core, range)]),
+      x_rotation: (range: Range<MACRO>) => result.push(['x_rotation', rangeParser(core, range)]),
+      y_rotation: (range: Range<MACRO>) => result.push(['y_rotation', rangeParser(core, range)]),
     } as const
 
     Object.entries(args).forEach(([key_, value]) => {
